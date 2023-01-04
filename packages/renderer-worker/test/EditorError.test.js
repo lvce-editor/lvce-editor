@@ -6,20 +6,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const EditorError = await import('../src/parts/EditorError/EditorError.js')
 
 test('show', async () => {
@@ -29,24 +24,14 @@ test('show', async () => {
       rowIndex: 0,
       columnIndex: 0,
     },
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     columnWidth: 8,
     rowHeight: 20,
   }
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await EditorError.show(
-    editor,
-    'No Definition found',
-    /* rowIndex */ 2,
-    /* columnIndex */ 2
-  )
+  await EditorError.show(editor, 'No Definition found', /* rowIndex */ 2, /* columnIndex */ 2)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'EditorError.show',
-    'No Definition found',
-    16,
-    60
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('EditorError.show', 'No Definition found', 16, 60)
 })

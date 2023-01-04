@@ -9,8 +9,8 @@ test.skip('editorMoveRectangleSelection', () => {
       columnIndex: 2,
     },
     selections: [],
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     rowHeight: 20,
     columnWidth: 8,
   }

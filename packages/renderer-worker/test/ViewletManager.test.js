@@ -8,24 +8,17 @@ beforeEach(() => {
   ViewletManager.state.pendingModules = Object.create(null)
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
-const ViewletManager = await import(
-  '../src/parts/ViewletManager/ViewletManager.js'
-)
+const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 
 test.skip('load', async () => {
   // @ts-ignore
@@ -89,10 +82,7 @@ test('load - race condition', async () => {
   await promise
   expect(mockModule.create).toHaveBeenCalledTimes(1)
   expect(mockModule.loadContent).toHaveBeenCalledTimes(1)
-  expect(mockModule.loadContent).toHaveBeenCalledWith(
-    { x: 0, version: 11 },
-    undefined
-  )
+  expect(mockModule.loadContent).toHaveBeenCalledWith({ x: 0, version: 11 }, undefined)
   expect(mockModule.contentLoaded).not.toHaveBeenCalled()
 })
 
@@ -106,19 +96,10 @@ test('load - error - no create method', async () => {
   expect(await ViewletManager.load(state)).toEqual([
     ['Viewlet.create', '', ''],
     ['Viewlet.setBounds', '', 0, 0, 0, 0],
-    [
-      'Viewlet.handleError',
-      '',
-      '',
-      'TypeError: module.create is not a function',
-    ],
+    ['Viewlet.handleError', '', '', 'TypeError: module.create is not a function'],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    2,
-    'Viewlet.loadModule',
-    ''
-  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
 })
 
 test('load - error - create method throws error', async () => {
@@ -138,11 +119,7 @@ test('load - error - create method throws error', async () => {
     ['Viewlet.handleError', '', '', 'TypeError: x is not a function'],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    2,
-    'Viewlet.loadModule',
-    ''
-  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
 })
 
 test('load - error - no loadContent method', async () => {
@@ -159,19 +136,10 @@ test('load - error - no loadContent method', async () => {
   expect(await ViewletManager.load(state)).toEqual([
     ['Viewlet.create', '', ''],
     ['Viewlet.setBounds', '', 0, 0, 0, 0],
-    [
-      'Viewlet.handleError',
-      '',
-      '',
-      'TypeError: module.loadContent is not a function',
-    ],
+    ['Viewlet.handleError', '', '', 'TypeError: module.loadContent is not a function'],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    2,
-    'Viewlet.loadModule',
-    ''
-  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
 })
 
 test('load - error - loadContent method throws error', async () => {
@@ -196,11 +164,7 @@ test('load - error - loadContent method throws error', async () => {
     ['Viewlet.handleError', '', '', 'TypeError: x is not a function'],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    2,
-    'Viewlet.loadModule',
-    ''
-  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
 })
 
 test('load - error - contentLoaded is not of type function', async () => {
@@ -223,19 +187,10 @@ test('load - error - contentLoaded is not of type function', async () => {
   expect(await ViewletManager.load(state)).toEqual([
     ['Viewlet.create', '', ''],
     ['Viewlet.setBounds', '', 0, 0, 0, 0],
-    [
-      'Viewlet.handleError',
-      '',
-      '',
-      'TypeError: module.contentLoaded is not a function',
-    ],
+    ['Viewlet.handleError', '', '', 'TypeError: module.contentLoaded is not a function'],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    2,
-    'Viewlet.loadModule',
-    ''
-  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
 })
 
 test('load - error - contentLoaded method throws error', async () => {
@@ -263,11 +218,7 @@ test('load - error - contentLoaded method throws error', async () => {
     ['Viewlet.handleError', '', '', 'TypeError: x is not a function'],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    2,
-    'Viewlet.loadModule',
-    ''
-  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.loadModule', '')
 })
 
@@ -293,10 +244,7 @@ test('load - canceled', async () => {
   await ViewletManager.load(state)
   expect(mockModule.create).toHaveBeenCalledTimes(1)
   expect(mockModule.loadContent).toHaveBeenCalledTimes(1)
-  expect(mockModule.loadContent).toHaveBeenCalledWith(
-    { x: 0, version: 1 },
-    undefined
-  )
+  expect(mockModule.loadContent).toHaveBeenCalledWith({ x: 0, version: 1 }, undefined)
   expect(mockModule.contentLoaded).not.toHaveBeenCalled()
   expect(ViewletStates.getInstance('test')).toBeUndefined()
 })
@@ -356,8 +304,8 @@ test('backgroundLoad', async () => {
   const { title, uri } = await ViewletManager.backgroundLoad({
     getModule,
     id: '',
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 0,
     height: 0,
     props: {

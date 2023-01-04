@@ -1,18 +1,18 @@
 import { handleClick } from './ViewletActivityBarHandleClick.js'
 
 const getPosition = (state, index) => {
-  const { activityBarItems, top, left, height, itemHeight } = state
+  const { activityBarItems, x, y, height, itemHeight } = state
   if (index > activityBarItems.length - 2) {
     // at bottom
     return {
-      x: left,
-      y: top + height - (activityBarItems.length - 1 - index) * itemHeight,
+      x,
+      y: y + height - (activityBarItems.length - 1 - index) * itemHeight,
     }
   }
   // at top
   return {
-    x: left,
-    y: top + index * itemHeight,
+    x,
+    y: y + index * itemHeight,
   }
 }
 

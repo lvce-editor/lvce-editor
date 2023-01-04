@@ -4,12 +4,8 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-const ViewletExplorerHandleDragOver = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerHandleDragOver.js'
-)
-const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
-)
+const ViewletExplorerHandleDragOver = await import('../src/parts/ViewletExplorer/ViewletExplorerHandleDragOver.js')
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
 
 test('handleDragOver - outer', () => {
   const state = {
@@ -18,8 +14,8 @@ test('handleDragOver - outer', () => {
     focusedIndex: -1,
     items: [],
     pathSeparator: '/',
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     minLineY: 0,
     maxLineY: 0,
   }
@@ -34,8 +30,8 @@ test.skip('handleDragOver - first index', () => {
     focusedIndex: 1,
     items: [],
     pathSeparator: '/',
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     minLineY: 0,
     maxLineY: 0,
   }
@@ -51,8 +47,8 @@ test('handleDragOver - should return same state if drop targets are equal', () =
     focusedIndex: 1,
     items: [],
     pathSeparator: '/',
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     minLineY: 0,
     maxLineY: 0,
     dropTargets: [-1],

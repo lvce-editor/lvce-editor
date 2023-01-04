@@ -123,11 +123,7 @@ const getDefaultTitleBarHeight = () => {
   }
 }
 
-export const getPoints = (
-  source,
-  destination,
-  sideBarLocation = SideBarLocationType.Right
-) => {
+export const getPoints = (source, destination, sideBarLocation = SideBarLocationType.Right) => {
   const activityBarVisible = source[kActivityBarVisible]
   const panelVisible = source[kPanelVisible]
   const sideBarVisible = source[kSideBarVisible]
@@ -145,17 +141,9 @@ export const getPoints = (
   const activityBarWidth = source[kActivityBarWidth]
   const statusBarHeight = source[kStatusBarHeight]
 
-  const newSideBarWidth = Clamp.clamp(
-    sideBarWidth,
-    sideBarMinWidth,
-    sideBarMaxWidth
-  )
+  const newSideBarWidth = Clamp.clamp(sideBarWidth, sideBarMinWidth, sideBarMaxWidth)
 
-  const newPanelHeight = Clamp.clamp(
-    panelHeight,
-    panelMinHeight,
-    panelMaxHeight
-  ) // TODO check that it is in bounds of window
+  const newPanelHeight = Clamp.clamp(panelHeight, panelMinHeight, panelMaxHeight) // TODO check that it is in bounds of window
 
   if (sideBarLocation === SideBarLocationType.Right) {
     const p1 = /* Top */ 0
@@ -351,10 +339,7 @@ export const loadContent = (state, savedState) => {
   newPoints[kSideBarWidth] ||= 240
   newPoints[kStatusBarHeight] = 20
   newPoints[kStatusBarVisible] = 1
-  if (
-    Platform.platform === PlatformType.Electron &&
-    Preferences.get('window.titleBarStyle') === 'native'
-  ) {
+  if (Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native') {
     newPoints[kTitleBarHeight] = 0
     newPoints[kTitleBarVisible] = 0
   } else {
@@ -378,8 +363,8 @@ const show = async (state, module, currentViewletId) => {
   const newPoints = new Uint16Array(points)
   newPoints[kVisible] = 1
   getPoints(newPoints, newPoints)
-  const top = newPoints[kTop]
-  const left = newPoints[kLeft]
+  const x = newPoints[kTop]
+  const y = newPoints[kLeft]
   const width = newPoints[kWidth]
   const height = newPoints[kHeight]
   const commands = await ViewletManager.load(
@@ -391,8 +376,8 @@ const show = async (state, module, currentViewletId) => {
       uri: '',
       show: false,
       focus: false,
-      top,
-      left,
+      x,
+      y,
       width,
       height,
     },
@@ -545,8 +530,8 @@ const loadIfVisible = async (state, module) => {
   const { points, sideBarLocation } = state
   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
   const visible = points[kVisible]
-  const top = points[kTop]
-  const left = points[kLeft]
+  const x = points[kLeft]
+  const y = points[kTop]
   const width = points[kWidth]
   const height = points[kHeight]
   let commands = []
@@ -560,8 +545,8 @@ const loadIfVisible = async (state, module) => {
         uri: '',
         show: false,
         focus: false,
-        top,
-        left,
+        x,
+        y,
         width,
         height,
       },
@@ -692,20 +677,13 @@ const getResizeCommands = (oldPoints, newPoints) => {
       Assert.number(newWidth)
       Assert.number(newHeight)
       const resizeCommands = Viewlet.resize(moduleId, {
-        top: newTop,
-        left: newLeft,
+        x: newLeft,
+        y: newTop,
         width: newWidth,
         height: newHeight,
       })
       commands.push(...resizeCommands)
-      commands.push([
-        'Viewlet.setBounds',
-        moduleId,
-        newLeft,
-        newTop,
-        newWidth,
-        newHeight,
-      ])
+      commands.push(['Viewlet.setBounds', moduleId, newLeft, newTop, newWidth, newHeight])
     }
   }
   return commands
@@ -722,8 +700,8 @@ const showAsync = async (points, module) => {
       uri: '',
       show: false,
       focus: false,
-      top: points[kTop],
-      left: points[kLeft],
+      x: points[kLeft],
+      y: points[kTop],
       width: points[kWidth],
       height: points[kHeight],
     })
@@ -899,15 +877,7 @@ export const getInitialPlaceholderCommands = (state) => {
   for (const module of modules) {
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
     if (points[kVisible]) {
-      commands.push([
-        'Viewlet.createPlaceholder',
-        moduleId,
-        ViewletModuleId.Layout,
-        points[kTop],
-        points[kLeft],
-        points[kWidth],
-        points[kHeight],
-      ])
+      commands.push(['Viewlet.createPlaceholder', moduleId, ViewletModuleId.Layout, points[kTop], points[kLeft], points[kWidth], points[kHeight]])
     }
   }
   return commands
@@ -933,16 +903,16 @@ const renderSashes = {
       'setSashes',
       {
         id: 'SashSideBar',
-        top: sideBarTop,
-        left: sideBarLeft,
+        x: sideBarLeft,
+        y: sideBarTop,
         width: 4,
         height: sideBarHeight,
         direction: SashDirectionType.Horizontal,
       },
       {
         id: 'SashPanel',
-        top: panelTop,
-        left: panelLeft,
+        x: panelLeft,
+        y: panelTop,
         width: panelWidth,
         height: 4,
         direction: SashDirectionType.Vertical,

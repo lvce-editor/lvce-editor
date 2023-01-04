@@ -29,7 +29,7 @@ export const saveState = (state) => {
   }
 }
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     searchValue: '',
     suggestionState: /* Closed */ 0,
@@ -37,8 +37,8 @@ export const create = (id, uri, left, top, width, height) => {
     width,
     height,
     handleOffset: 0,
-    top,
-    left,
+    x,
+    y,
     message: '',
     focused: false,
     size: ViewletSize.None,

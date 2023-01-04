@@ -7,12 +7,12 @@ import * as PdfWorker from '../PdfWorker/PdfWorker.js'
 import * as PdfWorkerFunctions from '../PdfWorkerFunctions/PdfWorkerFunctions.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const create = (id, uri, top, left, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     id,
     uri,
-    top,
-    left,
+    x,
+    y,
     width,
     height,
     content: '',
@@ -40,11 +40,7 @@ export const loadContent = async (state) => {
   })
   const canvas = await OffscreenCanvas.create(canvasId)
   await PdfWorkerFunctions.sendCanvas(ipc, canvasId, canvas)
-  const { numberOfPages } = await PdfWorkerFunctions.setContent(
-    ipc,
-    canvasId,
-    content
-  )
+  const { numberOfPages } = await PdfWorkerFunctions.setContent(ipc, canvasId, content)
   await PdfWorkerFunctions.resize(ipc, canvasId, width, height)
   return {
     ...state,
@@ -83,12 +79,7 @@ const renderNumberOfPages = {
     return oldState.numberOfPages === newState.numberOfPages
   },
   apply(oldState, newState) {
-    return [
-      'Viewlet.send',
-      ViewletModuleId.Pdf,
-      'setNumberOfPages',
-      newState.numberOfPages,
-    ]
+    return ['Viewlet.send', ViewletModuleId.Pdf, 'setNumberOfPages', newState.numberOfPages]
   },
 }
 

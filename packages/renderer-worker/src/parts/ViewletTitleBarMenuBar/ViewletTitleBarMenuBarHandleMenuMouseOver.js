@@ -5,7 +5,7 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 export const handleMenuMouseOver = async (state, level, index) => {
   const { menus } = state
   const menu = menus[level]
-  const { items, focusedIndex, top, left } = menu
+  const { items, focusedIndex, y, x } = menu
   const item = items[index]
   if (focusedIndex === index) {
     if (index === -1) {
@@ -47,8 +47,8 @@ export const handleMenuMouseOver = async (state, level, index) => {
       level: menus.length,
       items: subMenuEntries,
       focusedIndex: -1,
-      top: top + index * 25,
-      left: left + Menu.MENU_WIDTH,
+      y: y + index * 25,
+      x: x + Menu.MENU_WIDTH,
     }
     const newParentMenu = {
       ...menu,

@@ -4,38 +4,26 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostDiagnostic.js',
-  () => {
-    return {
-      executeDiagnosticProvider: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostDiagnostic.js', () => {
+  return {
+    executeDiagnosticProvider: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+})
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ExtensionHostDiagnostic = await import(
-  '../src/parts/ExtensionHost/ExtensionHostDiagnostic.js'
-)
+const ExtensionHostDiagnostic = await import('../src/parts/ExtensionHost/ExtensionHostDiagnostic.js')
 
-const EditorDiagnostics = await import(
-  '../src/parts/EditorDiagnostics/EditorDiagnostics.js'
-)
+const EditorDiagnostics = await import('../src/parts/EditorDiagnostics/EditorDiagnostics.js')
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 test('scheduleDiagnostics', async () => {
   const editor = {
@@ -68,8 +56,8 @@ test('scheduleDiagnostics', async () => {
 
     [
       {
-        top: 20,
-        left: 0,
+        x: 0,
+        y: 20,
         width: 20,
         height: 20,
         type: undefined,

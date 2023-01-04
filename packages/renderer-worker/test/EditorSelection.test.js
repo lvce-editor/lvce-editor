@@ -3,27 +3,17 @@ import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
 
 test('getVisible', () => {
   const editor = {
-    top: 10,
-    left: 20,
+    x: 20,
+    y: 10,
     rowHeight: 20,
     columnWidth: 8,
     minLineY: 4,
     maxLineY: 8,
-    lines: [
-      'line 1',
-      'line 2',
-      'line 3',
-      'line 4',
-      'line 5',
-      'line 6',
-      'line 7',
-      'line 8',
-      'line 9',
-      'line 10',
-    ],
+    lines: ['line 1', 'line 2', 'line 3', 'line 4', 'line 5', 'line 6', 'line 7', 'line 8', 'line 9', 'line 10'],
     selections: new Uint32Array([1, 3, 2, 4, 3, 0, 6, 6, 8, 2, 8, 3]),
   }
   expect(EditorSelection.getVisible(editor)).toEqual(
+    // prettier-ignore
     new Uint32Array([
       /* top */ 0, /* left */ 0, /* width */ 48, /* height */ 20 /*  */,
       /* top */ 20, /* left */ 0, /* width */ 48, /* height */ 20 /*  */,
@@ -35,8 +25,8 @@ test('getVisible', () => {
 
 test('getVisible - bug with two lines', () => {
   const editor = {
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     rowHeight: 20,
     columnWidth: 8,
     minLineY: 0,
@@ -45,6 +35,7 @@ test('getVisible - bug with two lines', () => {
     selections: new Uint32Array([0, 4, 1, 4]),
   }
   expect(EditorSelection.getVisible(editor)).toEqual(
+    // prettier-ignore
     new Uint32Array([
       /* top */ 0, /* left */ 32, /* width */ 16, /* height */ 20 /*  */,
       /* top */ 20, /* left */ 0, /* width */ 32, /* height */ 20,
@@ -58,8 +49,8 @@ test('getVisible - cursors should be treated separately', () => {
     columnIndex: 4,
   }
   const editor = {
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     rowHeight: 20,
     columnWidth: 8,
     minLineY: 0,
@@ -72,27 +63,17 @@ test('getVisible - cursors should be treated separately', () => {
 
 test('getVisible - bug with multiple lines', () => {
   const editor = {
-    top: 10,
-    left: 20,
+    x: 20,
+    y: 10,
     rowHeight: 20,
     columnWidth: 8,
     minLineY: 0,
     maxLineY: 8,
-    lines: [
-      'line 1',
-      'line 2',
-      'line 3',
-      'line 4',
-      'line 5',
-      'line 6',
-      'line 7',
-      'line 8',
-      'line 9',
-      'line 10',
-    ],
+    lines: ['line 1', 'line 2', 'line 3', 'line 4', 'line 5', 'line 6', 'line 7', 'line 8', 'line 9', 'line 10'],
     selections: new Uint32Array([0, 3, 2, 3]),
   }
   expect(EditorSelection.getVisible(editor)).toEqual(
+    // prettier-ignore
     new Uint32Array([
       /* top */ 0, /* left */ 24, /* width */ 24, /* height */ 20 /*  */,
       /* top */ 20, /* left */ 0, /* width */ 48, /* height */ 20 /*  */,
@@ -128,8 +109,8 @@ test.skip('applyEdit - emoji ', () => {
     finalY: 0,
     finalDeltaY: 0,
     height: 645,
-    top: 55,
-    left: 0,
+    x: 0,
+    y: 55,
     columnWidth: 9,
     rowHeight: 20,
     fontSize: 15,

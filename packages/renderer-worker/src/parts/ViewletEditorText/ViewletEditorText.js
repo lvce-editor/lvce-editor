@@ -39,10 +39,10 @@ export const handleTokenizeChange = () => {
 }
 
 // TODO uri?
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   const instanceId = Id.create()
   const state = Editor.create(instanceId, uri, 'unknown', '')
-  const newState = Editor.setBounds(state, top, left, height, COLUMN_WIDTH)
+  const newState = Editor.setBounds(state, x, y, height, COLUMN_WIDTH)
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
   return {
@@ -132,21 +132,15 @@ export const contentLoaded = async (state) => {
 
 const updateSemanticTokens = async (state) => {
   try {
-    const newSemanticTokens =
-      await ExtensionHostSemanticTokens.executeSemanticTokenProvider(state)
-    await Command.execute(
-      /* Editor.setDecorations */ 'Editor.setDecorations',
-      /* decorations */ newSemanticTokens
-    )
+    const newSemanticTokens = await ExtensionHostSemanticTokens.executeSemanticTokenProvider(state)
+    await Command.execute(/* Editor.setDecorations */ 'Editor.setDecorations', /* decorations */ newSemanticTokens)
     // TODO apply semantic tokens to editor and rerender
     // TODO possibly overlay semantic tokens as decorations
   } catch (error) {
     if (
       error &&
       error instanceof Error &&
-      error.message.startsWith(
-        'Failed to execute semantic token provider: VError: no semantic token provider found for'
-      )
+      error.message.startsWith('Failed to execute semantic token provider: VError: no semantic token provider found for')
     ) {
       return
     }
@@ -168,10 +162,7 @@ export const contentLoadedEffects = async (state) => {
   // GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   // GlobalEventBus.addListener('editor.change', handleEditorChange)
   const newLanguageId = getLanguageId(state)
-  await Command.execute(
-    /* Editor.setLanguageId */ 'Editor.setLanguageId',
-    /* languageId */ newLanguageId
-  )
+  await Command.execute(/* Editor.setLanguageId */ 'Editor.setLanguageId', /* languageId */ newLanguageId)
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
@@ -184,13 +175,7 @@ export const handleLanguagesChanged = (state) => {
 }
 
 export const resize = (state, dimensions) => {
-  const newState = Editor.setBounds(
-    state,
-    dimensions.top,
-    dimensions.left,
-    dimensions.height,
-    state.columnWidth
-  )
+  const newState = Editor.setBounds(state, dimensions.x, dimensions.y, dimensions.height, state.columnWidth)
   const commands = [Editor.renderTextAndCursorAndSelectionsCommands(newState)]
   return {
     newState,

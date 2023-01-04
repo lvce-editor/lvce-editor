@@ -217,8 +217,8 @@ test('handleWheel - no zoom', () => {
 test('handleWheel - zoom in', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
   }
   const newState = ViewletEditorImage.handleWheel(state, 0, 0, 0, -26)
   expect(newState.domMatrix.a).toBe(1.13)
@@ -232,8 +232,8 @@ test('handleWheel - zoom in', () => {
 test('handleWheel - zoom in twice', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     domMatrix: new DOMMatrix([1.13, 0, 0, 1.13, 0, 0]),
   }
   const newState = ViewletEditorImage.handleWheel(state, 0, 0, 0, -26)
@@ -248,8 +248,8 @@ test('handleWheel - zoom in twice', () => {
 test('handleWheel - zoom in at top left - should move image to bottom right', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
   }
   const newState = ViewletEditorImage.handleWheel(state, 14, 11, 0, -26)
   expect(newState.domMatrix.a).toBe(1.13)
@@ -263,8 +263,8 @@ test('handleWheel - zoom in at top left - should move image to bottom right', ()
 test('handleWheel - zoom in at bottom right - should move image to top left', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
   }
@@ -280,8 +280,8 @@ test('handleWheel - zoom in at bottom right - should move image to top left', ()
 test('handleWheel - zoom into the middle', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
   }
@@ -309,8 +309,8 @@ test.skip('handleWheel - zoom out', () => {
 test('copyImage', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
     src: '/test/file.png',
@@ -327,8 +327,8 @@ test('copyImage', () => {
 test('handlePointerUp', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
     eventCache: [
@@ -346,8 +346,8 @@ test('handlePointerUp', () => {
 test('moveLeft', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
     eventCache: [],
@@ -359,8 +359,8 @@ test('moveLeft', () => {
 test('moveRight', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
     eventCache: [],
@@ -372,8 +372,8 @@ test('moveRight', () => {
 test('moveUp', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
     eventCache: [],
@@ -385,8 +385,8 @@ test('moveUp', () => {
 test('moveDown', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
     eventCache: [],
@@ -405,8 +405,8 @@ test('handleImageError - not found', async () => {
   }
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
     eventCache: [],

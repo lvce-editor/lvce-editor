@@ -16,9 +16,7 @@ beforeAll(() => {
 const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
 const Command = await import('../src/parts/Command/Command.js')
 
-const EditorCopy = await import(
-  '../src/parts/EditorCommand/EditorCommandCopy.js'
-)
+const EditorCopy = await import('../src/parts/EditorCommand/EditorCommandCopy.js')
 
 beforeAll(() => {
   Command.setLoad((moduleId) => {
@@ -51,8 +49,8 @@ test('editorCopy', async () => {
     finalY: 0,
     finalDeltaY: 0,
     height: 645,
-    top: 55,
-    left: 0,
+    x: 0,
+    y: 55,
     columnWidth: 9,
     rowHeight: 20,
     fontSize: 15,
@@ -89,8 +87,8 @@ test('editorCopy - error from clipboard - document is not focused', async () => 
     finalY: 0,
     finalDeltaY: 0,
     height: 645,
-    top: 55,
-    left: 0,
+    x: 0,
+    y: 55,
     columnWidth: 9,
     rowHeight: 20,
     fontSize: 15,
@@ -98,7 +96,5 @@ test('editorCopy - error from clipboard - document is not focused', async () => 
     scrollBarHeight: 0,
     undoStack: [],
   }
-  await expect(EditorCopy.copy(editor)).rejects.toThrowError(
-    new DOMException('Document is not focused.')
-  )
+  await expect(EditorCopy.copy(editor)).rejects.toThrowError(new DOMException('Document is not focused.'))
 })

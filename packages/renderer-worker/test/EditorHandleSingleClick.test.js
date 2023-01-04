@@ -5,38 +5,29 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const EditorSelection = await import(
-  '../src/parts/EditorSelection/EditorSelection.js'
-)
+const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.js')
 
-const EditorHandleSingleClick = await import(
-  '../src/parts/EditorCommand/EditorCommandHandleSingleClick.js'
-)
+const EditorHandleSingleClick = await import('../src/parts/EditorCommand/EditorCommandHandleSingleClick.js')
 
 test('editorHandleClick', async () => {
   const editor = {
     lines: ['11111', '22222'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
-    top: 10,
-    left: 20,
+    x: 20,
+    y: 10,
     rowHeight: 10,
     columnWidth: 8,
     deltaY: 0,
   }
-  expect(
-    await EditorHandleSingleClick.handleSingleClick(editor, '', 21, 11, 0)
-  ).toMatchObject({
+  expect(await EditorHandleSingleClick.handleSingleClick(editor, '', 21, 11, 0)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
@@ -49,15 +40,13 @@ test('editorHandleClick - with selection', async () => {
       columnIndex: 0,
     },
     selections: EditorSelection.fromRange(0, 1, 1, 2),
-    top: 10,
-    left: 20,
+    x: 20,
+    y: 10,
     rowHeight: 10,
     columnWidth: 8,
     deltaY: 0,
   }
-  expect(
-    await EditorHandleSingleClick.handleSingleClick(editor, '', 21, 11, 0)
-  ).toMatchObject({
+  expect(await EditorHandleSingleClick.handleSingleClick(editor, '', 21, 11, 0)).toMatchObject({
     lines: ['line 1', 'line 2'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -67,21 +56,13 @@ test('editorHandleClick - with ctrl - add second cursor', async () => {
   const editor = {
     lines: ['11111', '22222'],
     selections: new Uint32Array([0, 0, 0, 0]),
-    top: 10,
-    left: 20,
+    x: 20,
+    toy: 10,
     rowHeight: 10,
     columnWidth: 8,
     deltaY: 0,
   }
-  expect(
-    await EditorHandleSingleClick.handleSingleClick(
-      editor,
-      ModifierKey.Ctrl,
-      21,
-      11,
-      1
-    )
-  ).toMatchObject({
+  expect(await EditorHandleSingleClick.handleSingleClick(editor, ModifierKey.Ctrl, 21, 11, 1)).toMatchObject({
     selections: new Uint32Array([0, 0, 0, 0, 0, 1, 0, 1]),
   })
 })
@@ -90,22 +71,14 @@ test('editorHandleClick - with ctrl - remove second cursor', async () => {
   const editor = {
     lines: ['11111', '22222'],
     selections: new Uint32Array([0, 0, 0, 0, 0, 1, 0, 1]),
-    top: 10,
-    left: 20,
+    x: 20,
+    y: 10,
     rowHeight: 10,
     columnWidth: 8,
     deltaY: 0,
     maxLineY: 100,
   }
-  expect(
-    await EditorHandleSingleClick.handleSingleClick(
-      editor,
-      ModifierKey.Ctrl,
-      21,
-      11,
-      1
-    )
-  ).toMatchObject({
+  expect(await EditorHandleSingleClick.handleSingleClick(editor, ModifierKey.Ctrl, 21, 11, 1)).toMatchObject({
     selections: new Uint32Array([0, 0, 0, 0]),
   })
 })

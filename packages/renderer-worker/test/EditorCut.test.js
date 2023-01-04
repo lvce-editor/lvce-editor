@@ -24,9 +24,7 @@ const Command = await import('../src/parts/Command/Command.js')
 
 const EditorCut = await import('../src/parts/EditorCommand/EditorCommandCut.js')
 
-const EditorSelection = await import(
-  '../src/parts/EditorSelection/EditorSelection.js'
-)
+const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.js')
 
 test('editorCut', async () => {
   // @ts-ignore
@@ -35,8 +33,8 @@ test('editorCut', async () => {
     lines: ['line 1', 'line 2', 'line 3', ''],
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(1, 1, 2, 2),
-    top: 10,
-    left: 20,
+    x: 20,
+    y: 10,
     rowHeight: 10,
     columnWidth: 8,
     lineCache: [],
@@ -64,16 +62,14 @@ test('editorCut - error with clipboard', async () => {
   const editor = {
     lines: ['line 1', 'line 2', 'line 3', ''],
     selections: EditorSelection.fromRange(1, 1, 2, 2),
-    top: 10,
-    left: 20,
+    x: 20,
+    y: 10,
     rowHeight: 10,
     columnWidth: 8,
     lineCache: [],
     undoStack: [],
   }
-  await expect(EditorCut.cut(editor)).rejects.toThrowError(
-    new Error('Writing to clipboard not allowed')
-  )
+  await expect(EditorCut.cut(editor)).rejects.toThrowError(new Error('Writing to clipboard not allowed'))
 })
 
 test.skip('editorCut - no selection', async () => {

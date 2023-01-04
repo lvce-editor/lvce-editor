@@ -62,8 +62,8 @@ export const contentLoaded = async (state) => {
     [
       /* Viewlet.load */ 'Viewlet.load',
       /* id */ 'ContextMenu',
-      /* top */ y,
-      /* left */ x,
+      /* x */ x,
+      /* y */ y,
       /* width */ contextMenuWidth,
       /* height */ contextMenuHeight,
       /* items */ state.items,

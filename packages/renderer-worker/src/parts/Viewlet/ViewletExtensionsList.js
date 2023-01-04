@@ -16,7 +16,7 @@ export const name = 'ExtensionsList'
 
 // then state can be recycled by Viewlet when there is only a single ViewletExtensions instance
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     filteredExtensions: [],
     disposed: false,
@@ -29,8 +29,8 @@ export const create = (id, uri, left, top, width, height) => {
     negativeMargin: 0,
     scrollBarHeight: 0,
     handleOffset: 0,
-    top,
-    left,
+    x,
+    y,
     finalDeltaY: 2728,
   }
 }
@@ -45,18 +45,11 @@ export const loadContent = async (state) => {
   // TODO get installed extensions from extension host
   // TODO just get local extensions on demand (not when query string is already different)
   const extensions = await ExtensionManagement.getAllExtensions()
-  const viewObjects = filterExtensions(
-    extensions.map(toInstalledViewObject),
-    state.parsedValue
-  )
+  const viewObjects = filterExtensions(extensions.map(toInstalledViewObject), state.parsedValue)
 
   const listHeight = state.height
   const contentHeight = viewObjects.length * ITEM_HEIGHT
-  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
-    state.height,
-    contentHeight,
-    MINIMUM_SLIDER_SIZE
-  )
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(state.height, contentHeight, MINIMUM_SLIDER_SIZE)
 
   return {
     ...state,
@@ -178,8 +171,7 @@ export const focusIndex = (state, index) => {
     //  scroll down
     const maxLineY = index + 1
     const minLineY = maxLineY - Math.ceil(listHeight / ITEM_HEIGHT)
-    const negativeMargin =
-      -minLineY * ITEM_HEIGHT + (listHeight % ITEM_HEIGHT) - ITEM_HEIGHT
+    const negativeMargin = -minLineY * ITEM_HEIGHT + (listHeight % ITEM_HEIGHT) - ITEM_HEIGHT
     return {
       ...state,
       focusedIndex: index,
@@ -210,10 +202,7 @@ export const focusNextPage = (state) => {
   if (state.focusedIndex === state.filteredExtensions.length - 1) {
     return state
   }
-  const indexNextPage = Math.min(
-    state.maxLineY + (state.maxLineY - state.minLineY) - 2,
-    state.filteredExtensions.length - 1
-  )
+  const indexNextPage = Math.min(state.maxLineY + (state.maxLineY - state.minLineY) - 2, state.filteredExtensions.length - 1)
   return focusIndex(state, indexNextPage)
 }
 
@@ -229,10 +218,7 @@ export const focusPreviousPage = (state) => {
     return state
   }
 
-  const indexPreviousPage = Math.max(
-    state.minLineY - (state.maxLineY - state.minLineY) + 1,
-    0
-  )
+  const indexPreviousPage = Math.max(state.minLineY - (state.maxLineY - state.minLineY) + 1, 0)
   return focusIndex(state, indexPreviousPage)
 }
 
@@ -358,12 +344,7 @@ export const handleDisable = async (state, id) => {
 
 // TODO pass index instead
 export const handleContextMenu = async (state, x, y, extensionId) => {
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ MenuEntryId.ManageExtension
-  )
+  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.ManageExtension)
 }
 
 export const resize = (state, dimensions) => {
@@ -387,14 +368,8 @@ export const setDeltaY = (state, deltaY) => {
   const listHeight = state.height
   if (deltaY < 0) {
     deltaY = 0
-  } else if (
-    deltaY >
-    state.filteredExtensions.length * ITEM_HEIGHT - listHeight
-  ) {
-    deltaY = Math.max(
-      state.filteredExtensions.length * ITEM_HEIGHT - listHeight,
-      0
-    )
+  } else if (deltaY > state.filteredExtensions.length * ITEM_HEIGHT - listHeight) {
+    deltaY = Math.max(state.filteredExtensions.length * ITEM_HEIGHT - listHeight, 0)
   }
   if (state.deltaY === deltaY) {
     return state
@@ -441,10 +416,7 @@ const getNewDeltaPercent = (state, relativeY) => {
   }
   if (relativeY <= state.height - state.scrollBarHeight / 2) {
     // clicked in middle
-    return (
-      (relativeY - state.scrollBarHeight / 2) /
-      (state.height - state.scrollBarHeight)
-    )
+    return (relativeY - state.scrollBarHeight / 2) / (state.height - state.scrollBarHeight)
   }
   // clicked at bottom
   return 1
@@ -479,23 +451,11 @@ export const render = (oldState, newState) => {
     oldState.maxLineY !== newState.maxLineY
   ) {
     const visibleExtensions = getVisible(newState)
-    changes.push([
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Extensions',
-      /* method */ 'setExtensions',
-      /* visibleExtensions */ visibleExtensions,
-    ])
+    changes.push([/* Viewlet.send */ 'Viewlet.send', /* id */ 'Extensions', /* method */ 'setExtensions', /* visibleExtensions */ visibleExtensions])
   }
-  if (
-    oldState.filteredExtensions.length !== newState.filteredExtensions.length
-  ) {
+  if (oldState.filteredExtensions.length !== newState.filteredExtensions.length) {
     const contentHeight = newState.filteredExtensions.length * ITEM_HEIGHT
-    changes.push([
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Extensions',
-      /* method */ 'setContentHeight',
-      /* contentHeight */ contentHeight,
-    ])
+    changes.push([/* Viewlet.send */ 'Viewlet.send', /* id */ 'Extensions', /* method */ 'setContentHeight', /* contentHeight */ contentHeight])
   }
 
   if (oldState.negativeMargin !== newState.negativeMargin) {
@@ -517,9 +477,7 @@ export const render = (oldState, newState) => {
     ])
   }
   if (oldState.deltaY !== newState.deltaY) {
-    const scrollBarY =
-      (newState.deltaY / newState.finalDeltaY) *
-      (newState.height - newState.scrollBarHeight)
+    const scrollBarY = (newState.deltaY / newState.finalDeltaY) * (newState.height - newState.scrollBarHeight)
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',

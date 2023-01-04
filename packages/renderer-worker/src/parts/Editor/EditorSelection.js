@@ -74,47 +74,34 @@ export const getVisible = (editor) => {
     if (selectionStartRow > maxLineY) {
       break
     }
-    if (
-      EditorSelection.isEmpty(
-        selectionStartRow,
-        selectionStartColumn,
-        selectionEndRow,
-        selectionEndColumn
-      )
-    ) {
+    if (EditorSelection.isEmpty(selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn)) {
       continue
     }
     if (selectionStartRow === selectionEndRow) {
       visibleSelections.push(
-        /* top */ (selectionStartRow - minLineY) * rowHeight,
-        /* left */ selectionStartColumn * columnWidth,
+        /* y */ (selectionStartRow - minLineY) * rowHeight,
+        /* x */ selectionStartColumn * columnWidth,
         /* width */ (selectionEndColumn - selectionStartColumn) * columnWidth,
         /* height */ rowHeight
       )
     } else {
       if (selectionStartRow >= minLineY) {
         visibleSelections.push(
-          /* top */ (selectionStartRow - minLineY) * rowHeight,
-          /*left */ selectionStartColumn * columnWidth,
-          /* width */ (lines[selectionStartRow].length - selectionStartColumn) *
-            columnWidth,
+          /* y */ (selectionStartRow - minLineY) * rowHeight,
+          /* x */ selectionStartColumn * columnWidth,
+          /* width */ (lines[selectionStartRow].length - selectionStartColumn) * columnWidth,
           /* height */ rowHeight
         )
       }
       const iMin = Math.max(selectionStartRow + 1, minLineY)
       const iMax = Math.min(selectionEndRow, maxLineY)
       for (let i = iMin; i < iMax; i++) {
-        visibleSelections.push(
-          /* top */ (i - minLineY) * rowHeight,
-          /* left */ 0,
-          /* width */ lines[i].length * columnWidth,
-          /* height */ rowHeight
-        )
+        visibleSelections.push(/* y */ (i - minLineY) * rowHeight, /* x */ 0, /* width */ lines[i].length * columnWidth, /* height */ rowHeight)
       }
       if (selectionEndRow <= maxLineY) {
         visibleSelections.push(
-          /* top */ (selectionEndRow - minLineY) * rowHeight,
-          /* left */ 0,
+          /* y */ (selectionEndRow - minLineY) * rowHeight,
+          /* x */ 0,
           /* width */ selectionEndColumn * columnWidth,
           /* height */ rowHeight
         )

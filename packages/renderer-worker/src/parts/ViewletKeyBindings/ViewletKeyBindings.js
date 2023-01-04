@@ -8,7 +8,7 @@ import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js
 import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     parsedKeyBindings: [],
     filteredKeyBindings: [],
@@ -16,8 +16,8 @@ export const create = (id, uri, left, top, width, height) => {
     maxLineY: 0,
     maxVisibleItems: 0,
     rowHeight: 24,
-    top,
-    left,
+    x,
+    y,
     width,
     height,
     value: '',
@@ -48,15 +48,8 @@ const getSavedValue = (savedState) => {
   return ''
 }
 
-const getMaxVisibleItems = (
-  height,
-  searchHeaderHeight,
-  tableHeaderHeight,
-  rowHeight
-) => {
-  return Math.floor(
-    (height - searchHeaderHeight - tableHeaderHeight) / rowHeight
-  )
+const getMaxVisibleItems = (height, searchHeaderHeight, tableHeaderHeight, rowHeight) => {
+  return Math.floor((height - searchHeaderHeight - tableHeaderHeight) / rowHeight)
 }
 
 export const loadContent = async (state, savedState) => {
@@ -66,24 +59,12 @@ export const loadContent = async (state, savedState) => {
   const parsedKeyBindings = ParseKeyBindings.parseKeyBindings(keyBindings)
   const searchHeaderHeight = 50
   const tableHeaderHeight = 24
-  const maxVisibleItems = getMaxVisibleItems(
-    height,
-    searchHeaderHeight,
-    tableHeaderHeight,
-    rowHeight
-  )
+  const maxVisibleItems = getMaxVisibleItems(height, searchHeaderHeight, tableHeaderHeight, rowHeight)
   const savedValue = getSavedValue(savedState)
-  const filteredKeyBindings = FilterKeyBindings.getFilteredKeyBindings(
-    parsedKeyBindings,
-    savedValue
-  )
+  const filteredKeyBindings = FilterKeyBindings.getFilteredKeyBindings(parsedKeyBindings, savedValue)
   const listHeight = height - searchHeaderHeight - tableHeaderHeight
   const contentHeight = 2121
-  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
-    listHeight,
-    contentHeight,
-    10
-  )
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(listHeight, contentHeight, 10)
   const maxLineY = Math.min(filteredKeyBindings.length, maxVisibleItems)
   const finalDeltaY = Math.max(contentHeight - listHeight, 0)
   const contentWidth = width - contentPadding
@@ -107,10 +88,7 @@ export const loadContent = async (state, savedState) => {
 
 export const handleInput = (state, value) => {
   const { parsedKeyBindings, maxVisibleItems } = state
-  const filteredKeyBindings = FilterKeyBindings.getFilteredKeyBindings(
-    parsedKeyBindings,
-    value
-  )
+  const filteredKeyBindings = FilterKeyBindings.getFilteredKeyBindings(parsedKeyBindings, value)
   const maxLineY = Math.min(filteredKeyBindings.length, maxVisibleItems)
   return {
     ...state,
@@ -124,10 +102,7 @@ export const setDeltaY = (state, deltaY) => {
   const { maxVisibleItems, rowHeight, filteredKeyBindings } = state
   const tableHeight = maxVisibleItems * rowHeight
   const minDeltaY = 0
-  const maxDeltaY = Math.max(
-    filteredKeyBindings.length * rowHeight - tableHeight,
-    0
-  )
+  const maxDeltaY = Math.max(filteredKeyBindings.length * rowHeight - tableHeight, 0)
   if (deltaY < minDeltaY) {
     deltaY = minDeltaY
   } else if (deltaY > maxDeltaY) {
@@ -164,19 +139,11 @@ export const handleResizerClick = (state, id, x) => {
   }
 }
 
-export const handleResizerMove = (state, x) => {
-  const {
-    resizerDownId,
-    contentPadding,
-    width,
-    columnWidth1,
-    columnWidth2,
-    columnWidth3,
-    left,
-  } = state
+export const handleResizerMove = (state, eventX) => {
+  const { resizerDownId, contentPadding, width, columnWidth1, columnWidth2, columnWidth3, x } = state
   const contentWidth = width - contentPadding
   if (resizerDownId === 1) {
-    const newColumnWidth1 = x - contentPadding - left
+    const newColumnWidth1 = eventX - contentPadding - x
     const newColumnWidth3 = contentWidth - newColumnWidth1 - columnWidth2
     return {
       ...state,
@@ -184,7 +151,7 @@ export const handleResizerMove = (state, x) => {
       columnWidth3: newColumnWidth3,
     }
   }
-  const newColumnWidth3 = contentWidth - (x - contentPadding - left)
+  const newColumnWidth3 = contentWidth - (eventX - contentPadding - x)
   const newColumnWidth2 = contentWidth - newColumnWidth3 - columnWidth1
   return {
     ...state,

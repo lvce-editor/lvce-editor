@@ -28,8 +28,8 @@ export const openMenuAtIndex = async (state, index, shouldBeFocused) => {
   const offset = measureOffset(titleBarEntries, index, labelFontWeight, labelFontSize, labelFontFamily, labelPadding, labelLetterSpacing)
   // TODO race condition: another menu might already be open at this point
 
-  const left = offset
-  const top = titleBarHeight
+  const x = offset
+  const y = titleBarHeight
   const width = Menu.getMenuWidth()
   const height = Menu.getMenuHeight(items)
   const menuFocusedIndex = shouldBeFocused ? Menu.getIndexToFocusNextStartingAt(items, 0) : -1
@@ -38,8 +38,8 @@ export const openMenuAtIndex = async (state, index, shouldBeFocused) => {
     items,
     focusedIndex: menuFocusedIndex,
     level: 0,
-    left,
-    top,
+    x,
+    y,
     width,
     height,
   }

@@ -10,8 +10,8 @@ test('resize - increase height', () => {
     focused: true,
   }
   const { newState, commands } = ViewletEditorText.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 60,
   })
@@ -59,8 +59,8 @@ test('resize - same height', () => {
     focused: true,
   }
   const { newState, commands } = ViewletEditorText.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 60,
   })
@@ -109,8 +109,8 @@ test('resize - reduce height', () => {
     focused: true,
   }
   const { newState, commands } = ViewletEditorText.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 20,
   })

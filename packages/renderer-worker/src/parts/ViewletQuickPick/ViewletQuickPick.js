@@ -27,7 +27,7 @@ const QuickPickState = {
   Finished: 2,
 }
 
-export const create = (id, uri, top, left, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     state: QuickPickState.Default,
     picks: [],
@@ -136,10 +136,7 @@ export const loadContent = async (state) => {
   // @ts-ignore
   const label = provider.getLabel()
   const minLineY = 0
-  const maxLineY = Math.min(
-    minLineY + state.maxVisibleItems,
-    newPicks.length - 1
-  )
+  const maxLineY = Math.min(minLineY + state.maxVisibleItems, newPicks.length - 1)
   return {
     ...state,
     picks: newPicks,
@@ -244,24 +241,12 @@ export const handleInput = async (state, newValue, cursorOffset) => {
   }
 }
 
-export const handleBeforeInput = (
-  state,
-  inputType,
-  data,
-  selectionStart,
-  selectionEnd
-) => {
+export const handleBeforeInput = (state, inputType, data, selectionStart, selectionEnd) => {
   Assert.string(inputType)
   Assert.number(selectionStart)
   Assert.number(selectionEnd)
   const { value } = state
-  const { newValue, cursorOffset } = BeforeInput.getNewValue(
-    value,
-    inputType,
-    data,
-    selectionStart,
-    selectionEnd
-  )
+  const { newValue, cursorOffset } = BeforeInput.getNewValue(value, inputType, data, selectionStart, selectionEnd)
   return handleInput(state, newValue, cursorOffset)
 }
 
@@ -293,19 +278,13 @@ const renderValue = {
     return oldState.value === newState.value
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.QuickPick,
-      /* method */ 'setValue',
-      /* value */ newState.value,
-    ]
+    return [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.QuickPick, /* method */ 'setValue', /* value */ newState.value]
   },
 }
 
 const renderCursorOffset = {
   isEqual(oldState, newState) {
-    oldState.cursorOffset === newState.cursorOffset ||
-      newState.cursorOffset === newState.value.length
+    oldState.cursorOffset === newState.cursorOffset || newState.cursorOffset === newState.value.length
   },
   apply(oldState, newState) {
     return [
@@ -338,21 +317,13 @@ const getItemDomChanges = (oldState, newState) => {
 
 const renderItems = {
   isEqual(oldState, newState) {
-    return (
-      oldState.items === newState.items &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY
-    )
+    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
     if (newState.items.length === 0) {
       return [/* method */ 'showNoResults']
     }
-    const visibleItems = getVisible(
-      newState.items,
-      newState.minLineY,
-      newState.maxLineY
-    )
+    const visibleItems = getVisible(newState.items, newState.minLineY, newState.maxLineY)
     return [/* method */ 'setVisiblePicks', /* visiblePicks */ visibleItems]
   },
 }
@@ -364,11 +335,7 @@ const renderFocusedIndex = {
   apply(oldState, newState) {
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
-    return [
-      /* method */ 'setFocusedIndex',
-      /* oldFocusedIndex */ oldFocusedIndex,
-      /* newFocusedIndex */ newFocusedIndex,
-    ]
+    return [/* method */ 'setFocusedIndex', /* oldFocusedIndex */ oldFocusedIndex, /* newFocusedIndex */ newFocusedIndex]
   },
 }
 
@@ -384,12 +351,6 @@ const renderHeight = {
   },
 }
 
-export const render = [
-  renderItems,
-  renderValue,
-  renderCursorOffset,
-  renderFocusedIndex,
-  renderHeight,
-]
+export const render = [renderItems, renderValue, renderCursorOffset, renderFocusedIndex, renderHeight]
 
 export * from '../VirtualList/VirtualList.js'

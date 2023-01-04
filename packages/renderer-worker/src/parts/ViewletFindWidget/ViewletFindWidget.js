@@ -27,8 +27,8 @@ export const getPosition = () => {
   const editor = ViewletStates.getState('EditorText')
   if (!editor) {
     return {
-      top: 0,
-      left: 0,
+      x: 0,
+      y: 0,
       width: 0,
       height: 0,
     }
@@ -37,11 +37,11 @@ export const getPosition = () => {
   const height = 30
   const paddingTop = 10
   const paddingRight = 20
-  const left = editor.left + editor.width - width - paddingRight
-  const top = editor.top + paddingTop
+  const x = editor.x + editor.width - width - paddingRight
+  const y = editor.y + paddingTop
   return {
-    top,
-    left,
+    y,
+    x,
     width,
     height,
   }
@@ -99,12 +99,7 @@ export const focusIndex = async (state, index) => {
   // TODO find next match and highlight it
   const matchRowIndex = matches[index * 2]
   const matchColumnIndex = matches[index * 2 + 1]
-  const newSelections = new Uint32Array([
-    matchRowIndex,
-    matchColumnIndex,
-    matchRowIndex,
-    matchColumnIndex + value.length,
-  ])
+  const newSelections = new Uint32Array([matchRowIndex, matchColumnIndex, matchRowIndex, matchColumnIndex + value.length])
   // TODO set selections synchronously and render input match index,
   // input value and new selections at the same time
   await Command.execute('Editor.setSelections', newSelections)
@@ -146,12 +141,7 @@ const renderValue = {
     return oldState.value === newState.value
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.FindWidget,
-      /* method */ 'setValue',
-      /* value */ newState.value,
-    ]
+    return [/* Viewlet.invoke */ 'Viewlet.send', /* id */ ViewletModuleId.FindWidget, /* method */ 'setValue', /* value */ newState.value]
   },
 }
 
@@ -167,16 +157,10 @@ const getMatchCountText = (matchIndex, matchCount) => {
 
 const renderMatchCount = {
   isEqual(oldState, newState) {
-    return (
-      oldState.matchIndex === newState.matchIndex &&
-      oldState.matchCount === newState.matchCount
-    )
+    return oldState.matchIndex === newState.matchIndex && oldState.matchCount === newState.matchCount
   },
   apply(oldState, newState) {
-    const matchCountText = getMatchCountText(
-      newState.matchIndex,
-      newState.matchCount
-    )
+    const matchCountText = getMatchCountText(newState.matchIndex, newState.matchCount)
     return [/* method */ 'setMatchCountText', /* value */ matchCountText]
   },
 }
@@ -215,9 +199,4 @@ const renderAriaAnnouncement = {
   },
 }
 
-export const render = [
-  renderValue,
-  renderMatchCount,
-  renderAriaAnnouncement,
-  renderButtonsEnabled,
-]
+export const render = [renderValue, renderMatchCount, renderAriaAnnouncement, renderButtonsEnabled]
