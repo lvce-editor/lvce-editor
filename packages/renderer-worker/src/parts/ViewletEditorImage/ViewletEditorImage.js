@@ -10,6 +10,7 @@ import * as WheelEvent from '../WheelEvent/WheelEvent.js'
  */
 const UiStrings = {
   ImageCouldNotBeLoaded: `Image could not be loaded`,
+  ImageNotFound: `Image could not be loaded: Not Found`,
 }
 
 export const create = (id, uri, left, top, width, height) => {
@@ -201,10 +202,29 @@ export const handlePointerUp = (state, pointerId, x, y) => {
   }
 }
 
-export const handleImageError = (state) => {
+const getActualError = async (src) => {
+  try {
+    const response = await fetch(src)
+    if (!response.ok) {
+      switch (response.status) {
+        case 404:
+          return I18nString.i18nString(UiStrings.ImageNotFound)
+        default:
+          return I18nString.i18nString(UiStrings.ImageCouldNotBeLoaded)
+      }
+    }
+    return I18nString.i18nString(UiStrings.ImageCouldNotBeLoaded)
+  } catch (error) {
+    return I18nString.i18nString(UiStrings.ImageCouldNotBeLoaded)
+  }
+}
+
+export const handleImageError = async (state) => {
+  const { src } = state
+  const errorMessage = await getActualError(src)
   return {
     ...state,
-    errorMessage: I18nString.i18nString(UiStrings.ImageCouldNotBeLoaded),
+    errorMessage,
   }
 }
 
