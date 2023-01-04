@@ -4,6 +4,7 @@ import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSema
 // import * as ExtensionHostTextDocument from '../ExtensionHost/ExtensionHostTextDocument.js'
 import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as Font from '../Font/Font.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
@@ -12,7 +13,7 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as Platform from '../Platform/Platform.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -98,12 +99,21 @@ const getLanguageId = (state) => {
 
 const kLineHeight = 'editor.lineHeight'
 const kFontSize = 'editor.fontSize'
+const kFontFamily = 'editor.fontFamily'
 const kLetterSpacing = 'editor.letterSpacing'
+
+const unquoteString = (string) => {
+  if (string.startsWith(`'`) && string.endsWith(`'`)) {
+    return string.slice(1, -1)
+  }
+  return string
+}
 
 export const loadContent = async (state, savedState) => {
   const { uri } = state
   const rowHeight = Preferences.get(kLineHeight) || 20
   const fontSize = Preferences.get(kFontSize) || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
+  const fontFamily = Preferences.get(kFontFamily) || 'Fira Code'
   const letterSpacing = Preferences.get(kLetterSpacing) || 0.5
   const content = await getContent(uri)
   const newState1 = Editor.setText(state, content)
@@ -112,7 +122,11 @@ export const loadContent = async (state, savedState) => {
   const savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
   const newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
-  // const selections = new Uint32Array([10, 10, 10, 10])
+  if ((fontFamily === 'Fira Code' || fontFamily === `'Fira Code'`) && !Font.has(fontFamily, fontSize)) {
+    const assetDir = Platform.getAssetDir()
+    const fontName = unquoteString(fontFamily)
+    await Font.load(fontName, `url('${assetDir}/fonts/FiraCode-VariableFont.ttf')`)
+  }
   return {
     ...newState2,
     rowHeight,
@@ -132,21 +146,15 @@ export const contentLoaded = async (state) => {
 
 const updateSemanticTokens = async (state) => {
   try {
-    const newSemanticTokens =
-      await ExtensionHostSemanticTokens.executeSemanticTokenProvider(state)
-    await Command.execute(
-      /* Editor.setDecorations */ 'Editor.setDecorations',
-      /* decorations */ newSemanticTokens
-    )
+    const newSemanticTokens = await ExtensionHostSemanticTokens.executeSemanticTokenProvider(state)
+    await Command.execute(/* Editor.setDecorations */ 'Editor.setDecorations', /* decorations */ newSemanticTokens)
     // TODO apply semantic tokens to editor and rerender
     // TODO possibly overlay semantic tokens as decorations
   } catch (error) {
     if (
       error &&
       error instanceof Error &&
-      error.message.startsWith(
-        'Failed to execute semantic token provider: VError: no semantic token provider found for'
-      )
+      error.message.startsWith('Failed to execute semantic token provider: VError: no semantic token provider found for')
     ) {
       return
     }
@@ -168,10 +176,7 @@ export const contentLoadedEffects = async (state) => {
   // GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   // GlobalEventBus.addListener('editor.change', handleEditorChange)
   const newLanguageId = getLanguageId(state)
-  await Command.execute(
-    /* Editor.setLanguageId */ 'Editor.setLanguageId',
-    /* languageId */ newLanguageId
-  )
+  await Command.execute(/* Editor.setLanguageId */ 'Editor.setLanguageId', /* languageId */ newLanguageId)
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
@@ -184,13 +189,7 @@ export const handleLanguagesChanged = (state) => {
 }
 
 export const resize = (state, dimensions) => {
-  const newState = Editor.setBounds(
-    state,
-    dimensions.top,
-    dimensions.left,
-    dimensions.height,
-    state.columnWidth
-  )
+  const newState = Editor.setBounds(state, dimensions.top, dimensions.left, dimensions.height, state.columnWidth)
   const commands = [Editor.renderTextAndCursorAndSelectionsCommands(newState)]
   return {
     newState,

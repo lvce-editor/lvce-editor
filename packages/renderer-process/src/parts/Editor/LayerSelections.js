@@ -1,4 +1,3 @@
-import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 

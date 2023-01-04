@@ -1,7 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as Platform from '../Platform/Platform.js'
-import * as Logger from '../Logger/Logger.js'
 
 export const applyEdits = (editor, cursor) => {
   // TODO multiple cursors
@@ -12,34 +11,6 @@ export const applyEdits = (editor, cursor) => {
 
 const isInRange = (rowIndex, min, max) => {
   return rowIndex >= min && rowIndex <= max
-}
-
-const getTokenIndex = (lineCache, endColumnIndex) => {
-  if (!lineCache) {
-    // throw new Error('no line cache found')
-    return {
-      index: -1,
-      offset: -1,
-    }
-  }
-  Assert.number(endColumnIndex)
-  let offset = 0
-  for (let i = 0; i < lineCache.tokens.length; i += 2) {
-    const tokenLength = lineCache.tokens[i + 1]
-    const newOffset = offset + tokenLength
-    if (newOffset >= endColumnIndex) {
-      return {
-        index: i / 2,
-        offset: endColumnIndex - offset,
-      }
-    }
-    offset = newOffset
-  }
-  Logger.warn(`token at columnIndex ${endColumnIndex} not found`)
-  return {
-    index: -1,
-    offset: -1,
-  }
 }
 
 export const getVisible = (editor) => {
@@ -62,7 +33,7 @@ export const getVisible = (editor) => {
   // TODO could use uint16array here
   // TODO handle case when text segmenter not supported
   const visibleCursors = []
-  const { selections, minLineY, maxLineY, rowHeight } = editor
+  const { selections, minLineY, maxLineY, rowHeight, lines, fontSize, fontFamily, fontWeight, letterSpacing } = editor
   const selectionLength = selections.length
   for (let i = 0; i < selectionLength; i += 4) {
     const selectionStartRow = selections[i]
@@ -70,18 +41,15 @@ export const getVisible = (editor) => {
     const selectionEndRow = selections[i + 2]
     const selectionEndColumn = selections[i + 3]
     if (isInRange(selectionEndRow, minLineY, maxLineY)) {
-      const lineCache = editor.lineCache[selectionEndRow + 1]
-      if (!lineCache) {
-        // console.log('line caches', editor, editor.lineCache)
-      }
-      const tokenIndex = getTokenIndex(lineCache, selectionEndColumn)
-      // TODO maybe don't allocate object here, push numbers to flat array instead
-      visibleCursors.push({
-        top: (selectionEndRow - minLineY) * rowHeight,
-        topIndex: selectionEndRow - minLineY,
-        leftIndex: tokenIndex.index,
-        remainingOffset: tokenIndex.offset,
-      })
+      // TODO decide whether to use selection start or selection end for cursor
+      // TODO maybe use float32 array instead
+      const line = lines[selectionEndRow]
+      const partialText = line.slice(0, selectionEndColumn)
+      // TODO reuse same text measurements for selections and cursors
+      // TODO when font is monospace and ascii, could just multiply selectionEndColumn by charWidth to get offset
+      const left = selectionEndColumn === 0 ? 0 : MeasureTextWidth.measureTextWidth(partialText, fontWeight, fontSize, fontFamily, letterSpacing) - 1
+      const top = (selectionEndRow - minLineY) * rowHeight
+      visibleCursors.push(top, left)
     }
   }
   return visibleCursors

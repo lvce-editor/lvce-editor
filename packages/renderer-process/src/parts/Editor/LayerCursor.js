@@ -1,75 +1,56 @@
+import * as Assert from '../Assert/Assert.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
+
 const create$Cursor = () => {
   const $Cursor = document.createElement('div')
   $Cursor.className = 'EditorCursor'
   return $Cursor
 }
 
-const render$Cursor = ($Cursor, $Texts, cursor) => {
-  $Cursor.style.top = `${cursor.top}px`
-  const range = document.createRange()
-  if (cursor.leftIndex === -1) {
-    console.warn('cursor left is negative')
-    $Cursor.style.left = '0px' // TODO need to compute column width, this would only work for monospace fonts
-    return
-  }
-  const $Row = $Texts.children[cursor.topIndex]
-  if (!$Row) {
-    console.warn('no row', cursor, $Row)
-    return
-  }
-  const $Node = $Row.children[cursor.leftIndex]
-  if (!$Node) {
-    console.warn('no node', cursor, $Row)
-    return
-  }
-  if (cursor.leftIndex === 0 && cursor.remainingOffset === 0) {
-    $Cursor.style.left = '0px'
-  } else {
-    const $TextNode = $Node.firstChild
-    range.setStart($TextNode, cursor.remainingOffset)
-    range.setEnd($TextNode, cursor.remainingOffset)
-    const rect = range.getBoundingClientRect()
-    const left = Math.round(rect.left)
-    $Cursor.style.left = `${left}px`
-  }
+const render$Cursor = ($Cursor, cursors, i) => {
+  const top = cursors[i]
+  const left = cursors[i + 1]
+  SetBounds.setTopAndLeftTransform($Cursor, top, left)
 }
 
-const render$CursorsLess = ($Cursors, $Texts, cursors) => {
-  for (let i = 0; i < $Cursors.children.length; i++) {
-    render$Cursor($Cursors.children[i], $Texts, cursors[i])
+const render$CursorsLess = ($Cursors, childCount, cursors, cursorCount) => {
+  for (let i = 0, j = 0; i < childCount; i++, j += 2) {
+    render$Cursor($Cursors.children[i], cursors, j)
   }
   const fragment = document.createDocumentFragment()
-  for (let i = $Cursors.children.length; i < cursors.length; i++) {
+  for (let i = childCount; i < cursorCount; i++) {
     const $Cursor = create$Cursor()
-    render$Cursor($Cursor, $Texts, cursors[i])
+    render$Cursor($Cursor, cursors, i)
     fragment.append($Cursor)
   }
   $Cursors.append(fragment)
 }
 
-const render$CursorsEqual = ($Cursors, $Texts, cursors) => {
-  for (let i = 0; i < cursors.length; i++) {
-    render$Cursor($Cursors.children[i], $Texts, cursors[i])
+const render$CursorsEqual = ($Cursors, childCount, cursors, cursorCount) => {
+  for (let i = 0; i < cursorCount; i++) {
+    render$Cursor($Cursors.children[i], cursors, i)
   }
 }
 
-const render$CursorsMore = ($Cursors, $Texts, cursors) => {
-  for (let i = 0; i < cursors.length; i++) {
-    render$Cursor($Cursors.children[i], $Texts, cursors[i])
+const render$CursorsMore = ($Cursors, childCount, cursors, cursorCount) => {
+  for (let i = 0; i < cursorCount; i++) {
+    render$Cursor($Cursors.children[i], cursors, i)
   }
-  const diff = $Cursors.children.length - cursors.length
+  const diff = childCount - cursorCount
   for (let i = 0; i < diff; i++) {
     $Cursors.lastChild.remove()
   }
 }
 
-const render$Cursors = ($Cursors, $Texts, cursors) => {
-  if ($Cursors.children.length < cursors.length) {
-    render$CursorsLess($Cursors, $Texts, cursors)
-  } else if ($Cursors.children.length === cursors.length) {
-    render$CursorsEqual($Cursors, $Texts, cursors)
+const render$Cursors = ($Cursors, cursors) => {
+  const cursorCount = cursors.length / 2
+  const childCount = $Cursors.children.length
+  if (childCount < cursorCount) {
+    render$CursorsLess($Cursors, childCount, cursors, cursorCount)
+  } else if (childCount === cursorCount) {
+    render$CursorsEqual($Cursors, childCount, cursors, cursorCount)
   } else {
-    render$CursorsMore($Cursors, $Texts, cursors)
+    render$CursorsMore($Cursors, childCount, cursors, cursorCount)
   }
 }
 
@@ -118,5 +99,6 @@ const renderCursorsNative = (state, cursors) => {
 }
 
 export const setCursors = (state, cursors) => {
-  render$Cursors(state.$LayerCursor, state.$LayerText, cursors)
+  Assert.array(cursors)
+  render$Cursors(state.$LayerCursor, cursors)
 }

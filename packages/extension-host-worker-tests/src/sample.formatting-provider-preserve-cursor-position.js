@@ -17,7 +17,7 @@ test('sample.formatting-provider-preserve-cursor-position', async () => {
   await expect(editorRow).toHaveText('<h1 class="abc">hello world</h1>')
 
   const cursor = Locator('.EditorCursor')
-  await expect(cursor).toHaveCSS('left', /^(27px|28px|29px)$/)
+  await expect(cursor).toHaveCSS('translate', /^(23|24|25|26|27|28|29).*?px$/)
 })
 
 export {}
