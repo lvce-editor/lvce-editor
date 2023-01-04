@@ -12,7 +12,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
   return {
     invoke: () => {
       return {
-        left: 0,
+        x: 0,
         bottom: 0,
       }
     },
@@ -116,8 +116,8 @@ test('openMenu - when focusedIndex', async () => {
     menus: [
       {
         level: 0,
-        left: 0,
-        top: 20,
+        x: 0,
+        y: 20,
         items: [
           {
             flags: MenuItemFlags.Disabled,

@@ -1,7 +1,6 @@
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
-
 import { jest } from '@jest/globals'
 
 beforeEach(() => {
@@ -12,7 +11,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
   return {
     invoke: () => {
       return {
-        left: 0,
+        x: 0,
         bottom: 0,
       }
     },
