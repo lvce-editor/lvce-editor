@@ -19,6 +19,16 @@ export const setTopAndLeft = ($Element, top, left) => {
   $Element.style.left = `${left}px`
 }
 
+/**
+ *
+ * @param {HTMLElement} $Element
+ * @param {number} top
+ * @param {number} left
+ */
+export const setTopAndLeftTransform = ($Element, top, left) => {
+  $Element.style.translate = `${left}px ${top}px`
+}
+
 export const setHeight = ($Element, height) => {
   $Element.style.height = `${height}px`
 }
