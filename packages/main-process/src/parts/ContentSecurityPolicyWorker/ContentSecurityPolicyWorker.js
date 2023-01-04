@@ -8,6 +8,7 @@ exports.value = [
   `default-src 'none'`,
   `connect-src 'self'`,
   `script-src 'self'`,
+  `font-src 'self'`,
 ]
   .map(addSemicolon)
   .join(' ')

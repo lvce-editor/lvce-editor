@@ -69,6 +69,7 @@ const ContentSecurityPolicyWorker = {
     `default-src 'none'`,
     `connect-src 'self' ws:`, // TODO allow connecting to websocket urls for debugging but not other websocket urls
     `script-src 'self'`,
+    `font-src 'self'`,
   ]
     .map(addSemicolon)
     .join(' '),
