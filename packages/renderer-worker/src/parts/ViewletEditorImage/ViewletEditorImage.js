@@ -1,7 +1,6 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
 import * as BlobSrc from '../BlobSrc/BlobSrc.js'
-import * as Clamp from '../Clamp/Clamp.js'
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as WheelEvent from '../WheelEvent/WheelEvent.js'
@@ -32,6 +31,7 @@ export const create = (id, uri, left, top, width, height) => {
     eventCache: [],
     previousDiff: 0,
     errorMessage: '',
+    defaultMoveDelta: 8,
   }
 }
 
@@ -116,6 +116,50 @@ const handleMove = (state, x, y) => {
   }
 }
 
+export const moveLeft = (state) => {
+  const { domMatrix, defaultMoveDelta } = state
+  const deltaX = defaultMoveDelta
+  const deltaY = 0
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
+  return {
+    ...state,
+    domMatrix: newDomMatrix,
+  }
+}
+
+export const moveRight = (state) => {
+  const { domMatrix, defaultMoveDelta } = state
+  const deltaX = -defaultMoveDelta
+  const deltaY = 0
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
+  return {
+    ...state,
+    domMatrix: newDomMatrix,
+  }
+}
+
+export const moveUp = (state) => {
+  const { domMatrix, defaultMoveDelta } = state
+  const deltaX = 0
+  const deltaY = -defaultMoveDelta
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
+  return {
+    ...state,
+    domMatrix: newDomMatrix,
+  }
+}
+
+export const moveDown = (state) => {
+  const { domMatrix, defaultMoveDelta } = state
+  const deltaX = 0
+  const deltaY = defaultMoveDelta
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
+  return {
+    ...state,
+    domMatrix: newDomMatrix,
+  }
+}
+
 export const handlePointerMove = (state, pointerId, x, y) => {
   Assert.object(state)
   Assert.number(x)
@@ -164,16 +208,9 @@ export const handleImageError = (state) => {
   }
 }
 
-const getNewZoom = (zoom, currentZoomFactor, minZoom, maxZoom) => {
-  const newZoom = zoom * currentZoomFactor
-  return Clamp.clamp(newZoom, minZoom, maxZoom)
-}
-
 const getCurrentZoomFactor = (zoomFactor, deltaY) => {
-  // TODO use enum for direction
-  const direction = deltaY < 0 ? 'up' : 'down'
   const normalizedDeltaY = 1 + Math.abs(deltaY) / zoomFactor
-  const currentZoomFactor = direction === 'up' ? normalizedDeltaY : 1 / normalizedDeltaY
+  const currentZoomFactor = deltaY < 0 ? normalizedDeltaY : 1 / normalizedDeltaY
   return currentZoomFactor
 }
 
