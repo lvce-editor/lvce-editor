@@ -31,8 +31,6 @@ export const measureTextWidth = (text, fontWeight, fontSize, fontFamily, letterS
   // @ts-ignore
   ctx.letterSpacing = `${letterSpacing}px`
   ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`
-
   const metrics = ctx.measureText(text)
-  console.log({font:ctx.font, width: metrics.width})
   return metrics.width
 }
