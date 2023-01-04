@@ -5,9 +5,9 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 
-export const getIndexFromPosition = (state, x, y) => {
-  const { top, itemHeight, items } = state
-  const index = Math.floor((y - top) / itemHeight)
+export const getIndexFromPosition = (state, eventX, eventY) => {
+  const { y, itemHeight, items } = state
+  const index = Math.floor((eventY - y) / itemHeight)
   if (index < 0) {
     return 0
   }
