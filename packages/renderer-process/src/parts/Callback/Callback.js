@@ -1,3 +1,5 @@
+import * as Logger from '../Logger/Logger.js'
+
 const callbacks = Object.create(null)
 
 export const state = {
@@ -15,7 +17,7 @@ export const unregister = (id) => {
 
 export const resolve = (id, result) => {
   if (!(id in callbacks)) {
-    console.warn(`callback ${id} may already be disposed`)
+    Logger.warn(`callback ${id} may already be disposed`)
     return
   }
   callbacks[id].resolve(result)
@@ -23,7 +25,7 @@ export const resolve = (id, result) => {
 
 export const reject = (id, error) => {
   if (!(id in callbacks)) {
-    console.warn(`callback ${id} may already be disposed`)
+    Logger.warn(`callback ${id} may already be disposed`)
     return
   }
   callbacks[id].reject(error)

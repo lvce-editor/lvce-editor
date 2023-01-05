@@ -3,6 +3,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
+import * as Logger from '../Logger/Logger.js'
 
 const activeId = 'ActivityBarItemActive'
 
@@ -34,7 +35,7 @@ const create$ActivityBarItem = (item) => {
       $ActivityBarItem.ariaHasPopup = 'true'
       break
     default:
-      console.warn(`unknown activity bar item flags ${item.flags}`)
+      Logger.warn(`unknown activity bar item flags ${item.flags}`)
       break
   }
   $ActivityBarItem.append($ActivityBarItemIcon)

@@ -4,6 +4,7 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const state = {
   $$Menus: [],
@@ -63,7 +64,7 @@ const create$MenuItem = (item) => {
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
-      console.warn(`invalid menu item flags: "${item.flags}"`)
+      Logger.warn(`invalid menu item flags: "${item.flags}"`)
       break
   }
   return $MenuItem
@@ -77,11 +78,7 @@ const handleMouseDown = (event) => {
     return
   }
   const menuIndex = state.$$Menus.indexOf($Menu)
-  RendererWorker.send(
-    /* Menu.handleClick */ 'Menu.selectIndex',
-    /* menuIndex */ menuIndex,
-    /* index */ index
-  )
+  RendererWorker.send(/* Menu.handleClick */ 'Menu.selectIndex', /* menuIndex */ menuIndex, /* index */ index)
 }
 
 const handleMouseEnter = (event) => {
@@ -92,11 +89,7 @@ const handleMouseEnter = (event) => {
     return
   }
   const level = state.$$Menus.indexOf($Menu)
-  RendererWorker.send(
-    /* Menu.handleMouseEnter */ 'Menu.handleMouseEnter',
-    /* level */ level,
-    /* index */ index
-  )
+  RendererWorker.send(/* Menu.handleMouseEnter */ 'Menu.handleMouseEnter', /* level */ level, /* index */ index)
 }
 
 /**
