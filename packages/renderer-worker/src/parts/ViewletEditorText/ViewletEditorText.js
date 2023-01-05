@@ -135,6 +135,7 @@ export const loadContent = async (state, savedState) => {
     tokenizer,
     selections: savedSelections,
     deltaY: savedDeltaY,
+    fontFamily,
     // selections,
   }
 }

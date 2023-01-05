@@ -57,7 +57,7 @@ export const create = (id, uri, languageId, content) => {
      */
     handleOffset: 0,
     itemHeight: 20,
-    fontFamily: `'Fira Code'`,
+    fontFamily: '',
     fontWeight: 400,
   }
 }
