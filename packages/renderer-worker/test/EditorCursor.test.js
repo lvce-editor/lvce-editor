@@ -5,9 +5,15 @@ import { jest } from '@jest/globals'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
-  isMobileOrTablet: jest.fn().mockImplementation(() => {
+  isMobileOrTablet: jest.fn(() => {
     throw new Error('not implemented')
   }),
+}))
+
+jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', () => ({
+  measureTextWidth(text) {
+    return text.length * 5
+  },
 }))
 
 const Platform = await import('../src/parts/Platform/Platform.js')
@@ -45,14 +51,7 @@ test('getVisible - desktop', () => {
     ],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(EditorCursor.getVisible(editor)).toEqual([
-    {
-      leftIndex: -1,
-      remainingOffset: -1,
-      top: 0,
-      topIndex: 0,
-    },
-  ])
+  expect(EditorCursor.getVisible(editor)).toEqual([0, 0])
 })
 
 test('getVisible - cursor in middle of token', () => {
@@ -61,7 +60,7 @@ test('getVisible - cursor in middle of token', () => {
     return false
   })
   const editor = {
-    lines: [''],
+    lines: ['abcdefg'],
     minLineY: 0,
     maxLineY: 10,
     x: 5,
@@ -84,14 +83,7 @@ test('getVisible - cursor in middle of token', () => {
     ],
     selections: EditorSelection.fromRange(0, 7, 0, 7),
   }
-  expect(EditorCursor.getVisible(editor)).toEqual([
-    {
-      leftIndex: 2,
-      remainingOffset: 2,
-      top: 0,
-      topIndex: 0,
-    },
-  ])
+  expect(EditorCursor.getVisible(editor)).toEqual([0, 34])
 })
 
 test.skip('getVisible - native', () => {
@@ -122,7 +114,6 @@ test('getVisible - emoji - 👮🏽‍♀️', () => {
   Platform.isMobileOrTablet.mockImplementation(() => {
     return false
   })
-
   const editor = {
     lines: ['👮🏽‍♀️'],
     minLineY: 0,
@@ -142,12 +133,5 @@ test('getVisible - emoji - 👮🏽‍♀️', () => {
     ],
     focused: true,
   }
-  expect(EditorCursor.getVisible(editor)).toEqual([
-    {
-      leftIndex: 0,
-      remainingOffset: 7,
-      top: 0,
-      topIndex: 0,
-    },
-  ])
+  expect(EditorCursor.getVisible(editor)).toEqual([0, 34])
 })

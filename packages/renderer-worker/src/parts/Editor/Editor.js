@@ -42,7 +42,7 @@ export const create = (id, uri, languageId, content) => {
     x: 0,
     columnWidth: 0,
     rowHeight: 0,
-    fontSize: 0, // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
+    fontSize: 15, // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
     letterSpacing: 0,
     scrollBarHeight: 0,
     undoStack: [],
@@ -57,6 +57,8 @@ export const create = (id, uri, languageId, content) => {
      */
     handleOffset: 0,
     itemHeight: 20,
+    fontFamily: `'Fira Code'`,
+    fontWeight: 400,
   }
 }
 

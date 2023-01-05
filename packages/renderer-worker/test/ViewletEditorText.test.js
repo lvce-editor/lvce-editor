@@ -1,4 +1,19 @@
-import * as ViewletEditorText from '../src/parts/ViewletEditorText/ViewletEditorText.js'
+import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', () => {
+  return {
+    measureTextWidth(text) {
+      return text.length * 10
+    },
+  }
+})
+
+const ViewletEditorText = await import('../src/parts/ViewletEditorText/ViewletEditorText.js')
+const MeasureTextWidth = await import('../src/parts/MeasureTextWidth/MeasureTextWidth.js')
 
 test('resize - increase height', () => {
   const state = {
@@ -36,14 +51,7 @@ test('resize - increase height', () => {
         ['line 2', 'Token Text'],
         ['line 3', 'Token Text'],
       ],
-      [
-        {
-          leftIndex: 0,
-          remainingOffset: 0,
-          top: 0,
-          topIndex: 0,
-        },
-      ],
+      [0, 0],
       new Uint32Array(),
     ],
   ])
@@ -85,14 +93,7 @@ test('resize - same height', () => {
         ['line 2', 'Token Text'],
         ['line 3', 'Token Text'],
       ],
-      [
-        {
-          leftIndex: 0,
-          remainingOffset: 0,
-          top: 0,
-          topIndex: 0,
-        },
-      ],
+      [0, 0],
       new Uint32Array(),
     ],
   ])
@@ -124,22 +125,6 @@ test('resize - reduce height', () => {
     })
   )
   expect(commands).toEqual([
-    [
-      'Viewlet.send',
-      'EditorText',
-      'renderTextAndCursorsAndSelections',
-      0,
-      0,
-      [['line 1', 'Token Text']],
-      [
-        {
-          leftIndex: 0,
-          remainingOffset: 0,
-          top: 0,
-          topIndex: 0,
-        },
-      ],
-      new Uint32Array(),
-    ],
+    ['Viewlet.send', 'EditorText', 'renderTextAndCursorsAndSelections', 0, 0, [['line 1', 'Token Text']], [0, 0], new Uint32Array()],
   ])
 })
