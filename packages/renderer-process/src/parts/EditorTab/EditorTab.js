@@ -1,6 +1,7 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 
 // TODO windows
 const getFileName = (uri) => {
@@ -11,11 +12,7 @@ const handleEditorTabsContextMenu = (event) => {
   event.preventDefault()
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send(
-    /* editorTabsHandleContextMenu */ 'Main.handleTabContextMenu',
-    /* x */ x,
-    /* y */ y
-  )
+  RendererWorker.send(/* editorTabsHandleContextMenu */ 'Main.handleTabContextMenu', /* x */ x, /* y */ y)
 }
 
 /**
@@ -55,7 +52,7 @@ const create$Tab = () => {
   $Tab.tabIndex = 0
   // Set aria-description to empty string so that screen readers don't read title as well
   // More details https://github.com/microsoft/vscode/issues/95378
-  $Tab.setAttribute('aria-description', '')
+  $Tab.setAttribute(DomAttributeType.AriaDescription, '')
   const $TabLabel = document.createElement('span')
   return $Tab
 }
