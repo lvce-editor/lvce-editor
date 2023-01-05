@@ -29,7 +29,7 @@ const toColorRule = ([key, value]) => {
 }
 
 const toTokenColorRule = (tokenColor) => {
-  return `.Token.${tokenColor.name} { color: ${tokenColor.foreground} }`
+  return `.${tokenColor.name} { color: ${tokenColor.foreground}; contain: content; }`
 }
 
 export const createColorThemeFromJson = (colorThemeId, colorThemeJson) => {

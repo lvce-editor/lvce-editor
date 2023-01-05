@@ -8,7 +8,6 @@ const create$Row = () => {
 
 const create$Token = () => {
   const $Token = document.createElement('span')
-  $Token.className = 'Token'
   return $Token
 }
 
