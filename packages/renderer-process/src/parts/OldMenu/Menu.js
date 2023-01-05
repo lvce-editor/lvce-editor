@@ -7,6 +7,8 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+
 // TODO when pressing tab -> focus next element in tab order and close menu
 
 // TODO menu and contextmenu should have own keybinding logic
@@ -199,7 +201,7 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, mo
     const $ParentMenu = state.$$Menus[level - 1]
     const $ParentMenuItem = $ParentMenu.children[parentIndex]
     $ParentMenuItem.ariaExpanded = 'true'
-    $ParentMenuItem.setAttribute('aria-owns', $Menu.id)
+    $ParentMenuItem.setAttribute(DomAttributeType.AriaOwns, $Menu.id)
   }
 
   state.$$Menus.push($Menu)
@@ -273,7 +275,7 @@ export const showControlled = ({ x, y, items, handleKeyDown, handleFocusOut, $Pa
   if ($Parent) {
     // state.$Menu.ariaLabel=''
     // state.$Menu.ariaLabelledBy  =$Parent.id
-    $Parent.setAttribute('aria-owns', 'Menu')
+    $Parent.setAttribute(DomAttributeType.AriaOwns, 'Menu')
   } else {
     // state.$Menu.removeAttribute('aria-labelledby')
   }

@@ -9,6 +9,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 
 const activeId = 'ExtensionActive'
 
@@ -116,12 +117,12 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex, focused
   }
   if (newFocusedIndex === -1) {
     if (focused) {
-      $ListItems.removeAttribute('aria-activedescendant')
+      $ListItems.removeAttribute(DomAttributeType.AriaActiveDescendant)
       $ListItems.classList.add('FocusOutline')
     }
   } else if (newFocusedIndex >= 0 && newFocusedIndex < length) {
     $ListItems.children[newFocusedIndex].id = activeId
-    $ListItems.setAttribute('aria-activedescendant', activeId)
+    $ListItems.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
   }
   if (focused) {
     $ListItems.focus()
@@ -294,7 +295,7 @@ export const setExtensions = (state, extensions) => {
   Assert.object(state)
   Assert.array(extensions)
   const { $Viewlet, $ListItems } = state
-  $Viewlet.removeAttribute('aria-busy')
+  $Viewlet.removeAttribute(DomAttributeType.AriaBusy)
   render$Extensions($ListItems, extensions)
 }
 

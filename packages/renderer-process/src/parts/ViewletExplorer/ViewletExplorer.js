@@ -6,6 +6,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
@@ -155,12 +156,12 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
   switch (newIndex) {
     case -2:
       $Viewlet.classList.remove(focusClassName)
-      $Viewlet.removeAttribute('aria-activedescendant')
+      $Viewlet.removeAttribute(DomAttributeType.AriaActiveDescendant)
       break
     case -1:
       if (focused) {
         $Viewlet.classList.add(focusClassName)
-        $Viewlet.removeAttribute('aria-activedescendant')
+        $Viewlet.removeAttribute(DomAttributeType.AriaActiveDescendant)
       }
       break
     default:
@@ -170,7 +171,7 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
           break
         }
         $Dirent.id = activeId
-        $Viewlet.setAttribute('aria-activedescendant', activeId)
+        $Viewlet.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
         if (focused) {
           $Dirent.classList.add(focusClassName)
         }
