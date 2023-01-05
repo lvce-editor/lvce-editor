@@ -1,3 +1,4 @@
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
@@ -29,7 +30,7 @@ export const create$MenuItem = (item) => {
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItemCheckBox
-      $MenuItem.ariaChecked = 'true'
+      $MenuItem.ariaChecked = AriaBoolean.True
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
       break
@@ -37,7 +38,7 @@ export const create$MenuItem = (item) => {
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItemCheckBox
-      $MenuItem.ariaChecked = 'false'
+      $MenuItem.ariaChecked = AriaBoolean.False
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
       break
@@ -47,8 +48,8 @@ export const create$MenuItem = (item) => {
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
-      $MenuItem.ariaHasPopup = 'true'
-      $MenuItem.ariaExpanded = 'false'
+      $MenuItem.ariaHasPopup = AriaBoolean.True
+      $MenuItem.ariaExpanded = AriaBoolean.False
       break
     case MenuItemFlags.Disabled:
       $MenuItem.className = 'MenuItem'
@@ -56,7 +57,7 @@ export const create$MenuItem = (item) => {
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
-      $MenuItem.setAttribute('disabled', 'true')
+      $MenuItem.setAttribute('disabled', AriaBoolean.True)
       break
     default:
       $MenuItem.className = 'MenuItem'

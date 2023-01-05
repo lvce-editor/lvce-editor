@@ -1,5 +1,6 @@
 // based on https://github.com/microsoft/vscode/blob/5f87632829dc3ac80203e2377727935184399431/src/vs/base/browser/ui/aria/aria.ts (License MIT)
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 export const state = {
   $AriaAlert1: undefined,
@@ -12,13 +13,13 @@ const create$AriaAlert = () => {
   $AriaAlert.className = 'AriaAlert'
   // @ts-ignore
   $AriaAlert.role = AriaRoles.Alert
-  $AriaAlert.ariaAtomic = 'true'
+  $AriaAlert.ariaAtomic = AriaBoolean.True
   return $AriaAlert
 }
 
 const setMessage = ($Old, $New, message) => {
   $Old.textContent = String(Math.random())
-  $Old.ariaHidden = 'true'
+  $Old.ariaHidden = AriaBoolean.True
   $New.removeAttribute('aria-hidden')
   $New.textContent = message
 }
