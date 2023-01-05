@@ -9,6 +9,7 @@ import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -24,7 +25,7 @@ export const create = () => {
   $EditorInput.className = 'EditorInput'
   $EditorInput.ariaAutoComplete = 'list'
   $EditorInput.ariaRoleDescription = 'editor'
-  $EditorInput.ariaMultiLine = 'true'
+  $EditorInput.ariaMultiLine = AriaBoolean.True
   $EditorInput.setAttribute('autocomplete', 'off')
   $EditorInput.setAttribute('autocapitalize', 'off')
   $EditorInput.setAttribute('autocorrect', 'off')
