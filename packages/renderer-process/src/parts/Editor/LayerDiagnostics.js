@@ -7,7 +7,7 @@ const create$Diagnostic = () => {
 }
 
 const render$Diagnostic = ($Diagnostic, diagnostic) => {
-  SetBounds.setBounds($Diagnostic, diagnostic.top, diagnostic.left, diagnostic.width, diagnostic.height)
+  SetBounds.setBounds($Diagnostic, diagnostic.left, diagnostic.top, diagnostic.width, diagnostic.height)
 }
 
 const render$DiagnosticsLess = ($Diagnostics, diagnostics) => {
