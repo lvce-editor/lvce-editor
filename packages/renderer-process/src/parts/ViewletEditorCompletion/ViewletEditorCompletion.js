@@ -3,6 +3,7 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Label from '../Label/Label.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
 
@@ -67,7 +68,7 @@ export const dispose = (state) => {
 // TODO should pass maybe oldIndex to be removed
 // but keeping $ActiveItem in state also works
 export const setFocusedIndex = (state, oldIndex, newIndex) => {
-  const $Viewlet = state.$Viewlet
+  const { $Viewlet } = state
   if (oldIndex !== -1) {
     const $OldItem = $Viewlet.children[oldIndex]
     $OldItem.classList.remove('Focused')
@@ -82,7 +83,7 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
 
 export const showLoading = (state, x, y) => {
   const { $Viewlet } = state
-  $Viewlet.style.transform = `translate(${x}px, ${y}px)`
+  SetBounds.setXAndYTransform($Viewlet, x, y)
   const $Loading = document.createElement('div')
   $Loading.textContent = 'Loading'
   $Viewlet.append($Loading)
