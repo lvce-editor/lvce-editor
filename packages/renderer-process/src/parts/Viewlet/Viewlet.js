@@ -87,7 +87,7 @@ const isSpecial = (id) => {
 const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
   const $PlaceHolder = document.createElement('div')
   $PlaceHolder.className = `Viewlet ${viewletId}`
-  SetBounds.setBounds($PlaceHolder, top, left, width, height)
+  SetBounds.setBounds($PlaceHolder, left, top, width, height)
   if (isSpecial(viewletId)) {
     $PlaceHolder.id = viewletId
   }
@@ -327,5 +327,5 @@ export const setBounds = (id, left, top, width, height) => {
     return
   }
   const $Viewlet = instance.state.$Viewlet
-  SetBounds.setBounds($Viewlet, top, left, width, height)
+  SetBounds.setBounds($Viewlet, left, top, width, height)
 }

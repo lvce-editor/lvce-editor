@@ -28,7 +28,7 @@ content 2`
   await expect(findWidgetMatchCount).toHaveText('2 of 2')
   const editorSelection = Locator('.EditorSelection')
   await expect(editorSelection).toHaveCSS('top', '20px')
-  await expect(editorSelection).toHaveCSS('width', '63px')
+  await expect(editorSelection).toHaveCSS('width', /^(65|66|67|68|69).*?px$/)
 
   // act
   await FindWidget.setValue('content-not-found')

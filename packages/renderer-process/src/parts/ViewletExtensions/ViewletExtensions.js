@@ -286,7 +286,7 @@ const render$Extensions = ($ExtensionList, extensions) => {
 
 export const setNegativeMargin = (state, negativeMargin) => {
   const { $ListItems } = state
-  SetBounds.setBounds($ListItems, negativeMargin)
+  SetBounds.setTop($ListItems, negativeMargin)
   // Assert.number(negativeMargin)
   // const { $NegativeMargin } = state
   // $NegativeMargin.style.marginTop = `${negativeMargin}px`
@@ -312,7 +312,7 @@ export const openSuggest = (state) => {
   // const x = state.$InputBox.offsetLeft
   // const y = state.$InputBox.offsetTop
   state.$ExtensionSuggestions ||= create$ExtensionSuggestions()
-  SetBounds.setBounds(state.$ExtensionSuggestions, y, x, 100, 100)
+  SetBounds.setBounds(state.$ExtensionSuggestions, x, y, 100, 100)
   state.$ExtensionSuggestions.style.position = 'fixed'
   state.$ExtensionSuggestions.style.background = 'lime'
   // TODO check if already mounted

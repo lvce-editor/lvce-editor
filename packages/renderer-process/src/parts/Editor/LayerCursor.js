@@ -8,9 +8,9 @@ const create$Cursor = () => {
 }
 
 const render$Cursor = ($Cursor, cursors, i) => {
-  const top = cursors[i]
-  const left = cursors[i + 1]
-  SetBounds.setTopAndLeftTransform($Cursor, top, left)
+  const x = cursors[i]
+  const y = cursors[i + 1]
+  SetBounds.setXAndYTransform($Cursor, x, y)
 }
 
 const render$CursorsLess = ($Cursors, childCount, cursors, cursorCount) => {
@@ -99,6 +99,6 @@ const renderCursorsNative = (state, cursors) => {
 }
 
 export const setCursors = (state, cursors) => {
-  Assert.array(cursors)
+  Assert.float32Array(cursors)
   render$Cursors(state.$LayerCursor, cursors)
 }

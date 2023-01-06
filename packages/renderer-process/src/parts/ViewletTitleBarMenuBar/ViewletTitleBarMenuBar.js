@@ -219,7 +219,7 @@ export const setMenus = (state, changes) => {
         $Menu.onmouseover = ViewletTitleBarMenuBarEvents.handleMenuMouseOver
         $Menu.onmousedown = ViewletTitleBarMenuBarEvents.handleMenuMouseDown
         const { top, left, width, height, level, focusedIndex } = menu
-        SetBounds.setBounds($Menu, top, left, width, height)
+        SetBounds.setBounds($Menu, left, top, width, height)
         $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
         $Menu.id = `Menu-${level}`
         Widget.append($Menu)
@@ -239,7 +239,7 @@ export const setMenus = (state, changes) => {
         const replaceItems = change[3]
         const { level, top, left, width, height, focusedIndex, items, expanded } = menu
         const $Menu = $$Menus[level]
-        SetBounds.setBounds($Menu, top, left, width, height)
+        SetBounds.setBounds($Menu, left, top, width, height)
         // TODO recycle menu item nodes
         const $$Children = items.map(MenuItem.create$MenuItem)
         if (focusedIndex !== -1) {
