@@ -171,8 +171,8 @@ test('setMenus - add one menu', () => {
     [
       'addMenu',
       {
-        top: 0,
-        left: 0,
+        x: 0,
+        y: 0,
         width: 150,
         height: 150,
         focusedIndex: -1,
@@ -207,8 +207,8 @@ test('setMenus - open sub menu', () => {
     [
       'addMenu',
       {
-        top: 0,
-        left: 0,
+        x: 0,
+        y: 0,
         width: 150,
         height: 150,
         focusedIndex: -1,
@@ -234,8 +234,8 @@ test('setMenus - open sub menu', () => {
     [
       'updateMenu',
       {
-        top: 0,
-        left: 0,
+        x: 0,
+        y: 0,
         width: 150,
         height: 150,
         focusedIndex: 2,
@@ -259,8 +259,8 @@ test('setMenus - open sub menu', () => {
     [
       'addMenu',
       {
-        top: 0,
-        left: 150,
+        x: 150,
+        y: 0,
         width: 150,
         height: 150,
         focusedIndex: -1,
