@@ -2,6 +2,7 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 // TODO windows
 const getFileName = (uri) => {
@@ -48,7 +49,7 @@ const create$Tab = () => {
   // @ts-ignore
   $Tab.role = AriaRoles.Tab
   $Tab.className = 'EditorTab'
-  $Tab.ariaSelected = 'true'
+  $Tab.ariaSelected = AriaBoolean.True
   $Tab.tabIndex = 0
   // Set aria-description to empty string so that screen readers don't read title as well
   // More details https://github.com/microsoft/vscode/issues/95378
