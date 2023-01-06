@@ -2,8 +2,9 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
+import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.js'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -292,7 +293,7 @@ test('showMenu - with sub menu', () => {
   const $MenuItemOpenRecent = $Menu.children[5]
   expect($MenuItemOpenRecent.textContent).toBe('Open Recent')
   expect($MenuItemOpenRecent.ariaExpanded).toBe(AriaBoolean.True)
-  expect($MenuItemOpenRecent.getAttribute('aria-owns')).toBe('Menu-1')
+  expect($MenuItemOpenRecent.getAttribute(DomAttributeType.AriaOwns)).toBe('Menu-1')
 })
 
 test('event - click', () => {

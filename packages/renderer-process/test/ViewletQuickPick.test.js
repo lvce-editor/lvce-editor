@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import * as ViewletQuickPick from '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
+import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.js'
 
 test('create', () => {
   const state = ViewletQuickPick.create()
@@ -83,9 +84,7 @@ test('setPicks - with icons', () => {
   ])
   const { $QuickPickItems } = state
   expect($QuickPickItems.children).toHaveLength(2)
-  expect($QuickPickItems.children[0].innerHTML).toBe(
-    '<i class="FileIcon_file"></i><div class="Label">file-1.txt</div>'
-  )
+  expect($QuickPickItems.children[0].innerHTML).toBe('<i class="FileIcon_file"></i><div class="Label">file-1.txt</div>')
 })
 
 test('accessibility - QuickPick should have aria label', () => {
@@ -107,9 +106,7 @@ test('accessibility - QuickPickInput should have aria label', () => {
       label: 'item 2',
     },
   ])
-  expect(state.$QuickPickInput.ariaLabel).toBe(
-    'Type the name of a command to run.'
-  )
+  expect(state.$QuickPickInput.ariaLabel).toBe('Type the name of a command to run.')
 })
 
 test('accessibility - aria-activedescendant should point to quick pick item', () => {
@@ -127,9 +124,7 @@ test('accessibility - aria-activedescendant should point to quick pick item', ()
     },
   ])
   ViewletQuickPick.setFocusedIndex(state, -1, 0)
-  expect(state.$QuickPickInput.getAttribute('aria-activedescendant')).toBe(
-    'QuickPickItemActive'
-  )
+  expect(state.$QuickPickInput.getAttribute(DomAttributeType.AriaActiveDescendant)).toBe('QuickPickItemActive')
   // expect(state.$QuickPickItems.children[0].id).toBe('QuickPickItem-1')
 })
 
