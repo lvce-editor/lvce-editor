@@ -1,9 +1,10 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as Logger from '../Logger/Logger.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
-import * as Logger from '../Logger/Logger.js'
 
 const activeId = 'ActivityBarItemActive'
 
@@ -95,7 +96,7 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
   if (newIndex !== -1) {
     const $NewItem = $ActivityBar.children[newIndex]
     $NewItem.id = activeId
-    $ActivityBar.setAttribute('aria-activedescendant', activeId)
+    $ActivityBar.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
     if (focused) {
       $NewItem.classList.add('FocusOutline')
     }
