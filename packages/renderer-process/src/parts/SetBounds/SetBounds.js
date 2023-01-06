@@ -6,7 +6,7 @@ export const setBounds = ($Element, x, y, width, height) => {
 }
 
 export const setYAndHeight = ($Element, y, height) => {
-  $Element.style.top = `${y}px`
+  $Element.style.translate = `0 ${y}px`
   $Element.style.height = `${height}px`
 }
 
