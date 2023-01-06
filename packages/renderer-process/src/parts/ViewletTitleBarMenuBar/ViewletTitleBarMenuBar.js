@@ -136,7 +136,7 @@ export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocus
     capture: true,
   })
   if (unFocusIndex !== -1) {
-    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = 'false'
+    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = AriaBoolean.False
     $TitleBarMenuBar.children[unFocusIndex].removeAttribute(DomAttributeType.AriaOwns)
   }
   $TitleBarMenuBar.children[index].ariaExpanded = AriaBoolean.True
@@ -164,7 +164,7 @@ export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocus
 export const closeMenu = (state, unFocusIndex, index) => {
   const { $TitleBarMenuBar } = state
   if (unFocusIndex !== -1) {
-    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = 'false'
+    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = AriaBoolean.False
     $TitleBarMenuBar.children[unFocusIndex].removeAttribute(DomAttributeType.AriaOwns)
   }
   if (index !== -1) {

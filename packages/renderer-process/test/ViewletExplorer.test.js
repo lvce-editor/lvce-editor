@@ -3,23 +3,19 @@
  */
 import { jest } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
+import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
 
 /**
  * @jest-environment jsdom
  */
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(),
   }
-)
+})
 
-const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
-)
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
 
 beforeEach(() => {
   document.body.textContent = ''
@@ -93,13 +89,7 @@ test('updateDirents', () => {
       posInSet: 5,
     },
   ])
-  expect(getSimpleList(state)).toEqual([
-    '.gitkeep',
-    'another-folder',
-    'index.css',
-    'index.html',
-    'nested',
-  ])
+  expect(getSimpleList(state)).toEqual(['.gitkeep', 'another-folder', 'index.css', 'index.html', 'nested'])
 })
 
 // TODO test add items, remove items and both
@@ -393,7 +383,7 @@ test('updateDirents - bug with folder attributes on files', () => {
     },
   ])
   expect($Viewlet.children[0].textContent).toBe('folder-1')
-  expect($Viewlet.children[0].ariaExpanded).toBe('false')
+  expect($Viewlet.children[0].ariaExpanded).toBe(AriaBoolean.False)
   ViewletExplorer.updateDirents(state, [
     {
       name: 'file-1',
@@ -505,7 +495,7 @@ test('accessibility - dirents should have ariaSetSize, ariaPosInSet, ariaLevel a
   expect($DirentOne.ariaDescription).toBe('')
 
   const $DirentTwo = $Viewlet.children[1]
-  expect($DirentTwo.ariaExpanded).toBe('false')
+  expect($DirentTwo.ariaExpanded).toBe(AriaBoolean.False)
   expect($DirentTwo.ariaPosInSet).toBe('2')
   expect($DirentTwo.ariaSetSize).toBe('2')
   expect($DirentTwo.ariaLevel).toBe('1')

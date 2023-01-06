@@ -31,7 +31,7 @@ export const create = () => {
   $EditorInput.setAttribute('autocapitalize', 'off')
   $EditorInput.setAttribute('autocorrect', 'off')
   $EditorInput.setAttribute('wrap', 'off')
-  $EditorInput.setAttribute('spellcheck', 'false')
+  $EditorInput.setAttribute('spellcheck', AriaBoolean.False)
   // @ts-ignore
   $EditorInput.role = AriaRoles.TextBox
   $EditorInput.onpaste = EditorEvents.handlePaste
