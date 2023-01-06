@@ -166,7 +166,7 @@ export const openAnotherTab = async (state, tabLabel, tabTitle, unFocusIndex) =>
   $TabCloseButton.className = 'EditorTabCloseButton'
   $TabCloseButton.ariaLabel = 'Close'
   $Tab.append($TabLabel, $TabCloseButton)
-  state.$MainTabs.children[unFocusIndex].ariaSelected = 'false'
+  state.$MainTabs.children[unFocusIndex].ariaSelected = AriaBoolean.False
   state.$MainTabs.append($Tab)
 }
 
