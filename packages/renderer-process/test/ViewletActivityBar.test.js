@@ -3,6 +3,7 @@
  */
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as ViewletActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
+import * as AriaRoles from '../src/parts/AriaRoles/AriaRoles.js'
 
 const getTitle = ($Element) => {
   return $Element.title
@@ -37,11 +38,7 @@ test('create', () => {
       flags: ActivityBarItemFlags.Button,
     },
   ])
-  expect(getSimpleList(state.$ActivityBar)).toEqual([
-    'Explorer',
-    'Search',
-    'Settings',
-  ])
+  expect(getSimpleList(state.$ActivityBar)).toEqual(['Explorer', 'Search', 'Settings'])
 })
 
 test('setItems', () => {
@@ -92,11 +89,7 @@ test('setItems', () => {
       flags: ActivityBarItemFlags.Button,
     },
   ])
-  expect(getSimpleList(state.$ActivityBar)).toEqual([
-    'Run and Debug',
-    'Extensions',
-    'Settings',
-  ])
+  expect(getSimpleList(state.$ActivityBar)).toEqual(['Run and Debug', 'Extensions', 'Settings'])
 })
 
 test('setFocusedIndex', () => {
@@ -125,9 +118,7 @@ test('setFocusedIndex', () => {
     },
   ])
   ViewletActivityBar.setFocusedIndex(state, -1, 0, true)
-  expect(
-    state.$ActivityBar.children[0].classList.contains('FocusOutline')
-  ).toBe(true)
+  expect(state.$ActivityBar.children[0].classList.contains('FocusOutline')).toBe(true)
 })
 
 // TODO test interaction with sidebar
@@ -163,8 +154,11 @@ test('accessibility - ActivityBarItem tab should have role tab and aria-keyshort
       flags: ActivityBarItemFlags.Button,
     },
   ])
-  expect(state.$ActivityBar.firstChild.role).toBe('tab')
-  expect(state.$ActivityBar.firstChild.ariaKeyShortcuts).toBe('Control+Shift+X')
+  const { $ActivityBar } = state
+  // @ts-ignore
+  expect($ActivityBar.firstChild.role).toBe(AriaRoles.Tab)
+  // @ts-ignore
+  expect($ActivityBar.firstChild.ariaKeyShortcuts).toBe('Control+Shift+X')
 })
 
 test('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOrientation', () => {
@@ -192,9 +186,10 @@ test('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOr
       flags: ActivityBarItemFlags.Button,
     },
   ])
-  expect(state.$ActivityBar.role).toBe('toolbar')
-  expect(state.$ActivityBar.ariaRoleDescription).toBe('Activity Bar')
-  expect(state.$ActivityBar.ariaOrientation).toBe('vertical')
+  const { $ActivityBar } = state
+  expect($ActivityBar.role).toBe(AriaRoles.ToolBar)
+  expect($ActivityBar.ariaRoleDescription).toBe('Activity Bar')
+  expect($ActivityBar.ariaOrientation).toBe('vertical')
 })
 
 test('accessibility - ActivityBarItem button should have role button and ariaHasPopup', () => {
@@ -225,8 +220,11 @@ test('accessibility - ActivityBarItem button should have role button and ariaHas
       keyShortcuts: '',
     },
   ])
-  expect(state.$ActivityBar.lastChild.role).toBe('button')
-  expect(state.$ActivityBar.lastChild.ariaHasPopup).toBe('true')
+  const { $ActivityBar } = state
+  // @ts-ignore
+  expect($ActivityBar.lastChild.role).toBe(AriaRoles.Button)
+  // @ts-ignore
+  expect($ActivityBar.lastChild.ariaHasPopup).toBe('true')
 })
 
 test('accessibility - ActivityBarItems should have ariaKeyShortcuts if applicable', () => {
