@@ -18,9 +18,9 @@ export const state = {
 
 export const MENU_WIDTH = 150
 
-const CONTEXT_MENU_ITEM_HEIGHT = 28
-const CONTEXT_MENU_SEPARATOR_HEIGHT = 16
-const CONTEXT_MENU_PADDING = 20
+const CONTEXT_MENU_ITEM_HEIGHT = 26
+const CONTEXT_MENU_SEPARATOR_HEIGHT = 11
+const CONTEXT_MENU_PADDING = 8
 const CONTEXT_MENU_WIDTH = 250
 
 export const getMenuWidth = () => {
