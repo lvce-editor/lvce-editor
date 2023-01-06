@@ -12,6 +12,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 const activeId = 'ExtensionActive'
 
@@ -61,18 +62,10 @@ export const create = () => {
   }
   $ListItems.onfocus = ViewletExtensionsEvents.handleFocus
   $ListItems.onscroll = ViewletExtensionsEvents.handleScroll
-  $ListItems.addEventListener(DomEventType.TouchStart, ViewletExtensionsEvents.handleTouchStart, {
-    passive: true,
-  })
-  $ListItems.addEventListener(DomEventType.TouchMove, ViewletExtensionsEvents.handleTouchMove, {
-    passive: true,
-  })
-  $ListItems.addEventListener(DomEventType.TouchEnd, ViewletExtensionsEvents.handleTouchEnd, {
-    passive: true,
-  })
-  $ListItems.addEventListener(DomEventType.Wheel, ViewletExtensionsEvents.handleWheel, {
-    passive: true,
-  })
+  $ListItems.addEventListener(DomEventType.TouchStart, ViewletExtensionsEvents.handleTouchStart, DomEventOptions.Passive)
+  $ListItems.addEventListener(DomEventType.TouchMove, ViewletExtensionsEvents.handleTouchMove, DomEventOptions.Passive)
+  $ListItems.addEventListener(DomEventType.TouchEnd, ViewletExtensionsEvents.handleTouchEnd, DomEventOptions.Passive)
+  $ListItems.addEventListener(DomEventType.Wheel, ViewletExtensionsEvents.handleWheel, DomEventOptions.Passive)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'

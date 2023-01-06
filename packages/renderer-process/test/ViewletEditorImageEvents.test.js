@@ -3,6 +3,7 @@
  */
 import { jest } from '@jest/globals'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
+import * as DomEventOptions from '../src/parts/DomEventOptions/DomEventOptions.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -36,24 +37,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(() => {}),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(() => {}),
   }
-)
+})
 
-const ViewletEditorImage = await import(
-  '../src/parts/ViewletEditorImage/ViewletEditorImage.js'
-)
-const ViewletEditorImageEvents = await import(
-  '../src/parts/ViewletEditorImage/ViewletEditorImageEvents.js'
-)
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const ViewletEditorImage = await import('../src/parts/ViewletEditorImage/ViewletEditorImage.js')
+const ViewletEditorImageEvents = await import('../src/parts/ViewletEditorImage/ViewletEditorImageEvents.js')
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
 test('event - pointerdown', () => {
   const state = ViewletEditorImage.create()
@@ -67,12 +59,7 @@ test('event - pointerdown', () => {
   })
   $Viewlet.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'EditorImage.handlePointerDown',
-    0,
-    10,
-    20
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('EditorImage.handlePointerDown', 0, 10, 20)
 })
 
 test.skip('event - pointerdown - error - no active pointer with the given id is found', () => {
@@ -80,9 +67,7 @@ test.skip('event - pointerdown - error - no active pointer with the given id is 
     // @ts-ignore
     .spyOn(HTMLElement.prototype, 'setPointerCapture')
     .mockImplementation(() => {
-      throw new Error(
-        `DOMException: Failed to execute 'setPointerCapture' on 'Element': No active pointer with the given id is found.`
-      )
+      throw new Error(`DOMException: Failed to execute 'setPointerCapture' on 'Element': No active pointer with the given id is found.`)
     })
   const state = ViewletEditorImage.create()
   const { $Viewlet } = state
@@ -94,12 +79,7 @@ test.skip('event - pointerdown - error - no active pointer with the given id is 
   })
   $Viewlet.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'EditorImage.handlePointerDown',
-    0,
-    10,
-    20
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('EditorImage.handlePointerDown', 0, 10, 20)
 })
 
 test('event - pointermove after pointerdown', () => {
@@ -122,20 +102,8 @@ test('event - pointermove after pointerdown', () => {
   })
   $Viewlet.dispatchEvent(pointerMoveEvent)
   expect(RendererWorker.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(
-    1,
-    'EditorImage.handlePointerDown',
-    0,
-    10,
-    20
-  )
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(
-    2,
-    'EditorImage.handlePointerMove',
-    0,
-    30,
-    40
-  )
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(1, 'EditorImage.handlePointerDown', 0, 10, 20)
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(2, 'EditorImage.handlePointerMove', 0, 30, 40)
 })
 
 test('event - pointerup after pointerdown', () => {
@@ -157,24 +125,9 @@ test('event - pointerup after pointerdown', () => {
   // @ts-ignore
   $Viewlet.dispatchEvent(pointerDownEvent)
   expect(spy1).toHaveBeenCalledTimes(3)
-  expect(spy1).toHaveBeenNthCalledWith(
-    1,
-    'pointermove',
-    ViewletEditorImageEvents.handlePointerMove,
-    {
-      passive: false,
-    }
-  )
-  expect(spy1).toHaveBeenNthCalledWith(
-    2,
-    'pointerup',
-    ViewletEditorImageEvents.handlePointerUp
-  )
-  expect(spy1).toHaveBeenNthCalledWith(
-    3,
-    'lostpointercapture',
-    ViewletEditorImageEvents.handlePointerCaptureLost
-  )
+  expect(spy1).toHaveBeenNthCalledWith(1, 'pointermove', ViewletEditorImageEvents.handlePointerMove, DomEventOptions.Active)
+  expect(spy1).toHaveBeenNthCalledWith(2, 'pointerup', ViewletEditorImageEvents.handlePointerUp)
+  expect(spy1).toHaveBeenNthCalledWith(3, 'lostpointercapture', ViewletEditorImageEvents.handlePointerCaptureLost)
   expect(spy3).toHaveBeenCalledTimes(1)
   expect(spy3).toHaveBeenCalledWith(0)
   const pointerUpEvent = new PointerEvent('pointerup', {
@@ -195,16 +148,8 @@ test('event - pointerup after pointerdown', () => {
   $Viewlet.dispatchEvent(pointerLostEvent)
   expect(spy4).not.toHaveBeenCalled()
   expect(spy2).toHaveBeenCalledTimes(2)
-  expect(spy2).toHaveBeenNthCalledWith(
-    1,
-    'pointermove',
-    ViewletEditorImageEvents.handlePointerMove
-  )
-  expect(spy2).toHaveBeenNthCalledWith(
-    2,
-    'pointerup',
-    ViewletEditorImageEvents.handlePointerUp
-  )
+  expect(spy2).toHaveBeenNthCalledWith(1, 'pointermove', ViewletEditorImageEvents.handlePointerMove)
+  expect(spy2).toHaveBeenNthCalledWith(2, 'pointerup', ViewletEditorImageEvents.handlePointerUp)
 })
 
 // TODO some other test causes this test to fail
@@ -220,11 +165,5 @@ test.skip('event - wheel', () => {
   })
   $Image.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'EditorImage.handleWheel',
-    10,
-    20,
-    30,
-    40
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('EditorImage.handleWheel', 10, 20, 30, 40)
 })

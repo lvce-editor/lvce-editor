@@ -1,13 +1,14 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
 import * as AriaAlert from '../AriaAlert/AriaAlert.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -224,7 +225,7 @@ export const create = () => {
   // @ts-ignore
   $QuickPickItems.role = Roles.ListBox
   $QuickPickItems.onpointerdown = ViewletQuickPickEvents.handlePointerDown
-  $QuickPickItems.addEventListener(DomEventType.Wheel, ViewletQuickPickEvents.handleWheel, { passive: true })
+  $QuickPickItems.addEventListener(DomEventType.Wheel, ViewletQuickPickEvents.handleWheel, DomEventOptions.Passive)
 
   // TODO this works well with nvda but not with windows narrator
   // probably a bug with windows narrator that doesn't support ariaRoleDescription

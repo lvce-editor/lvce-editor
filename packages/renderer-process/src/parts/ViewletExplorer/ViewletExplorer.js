@@ -8,6 +8,7 @@ import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
@@ -22,11 +23,9 @@ export const create = () => {
   $Viewlet.onmousedown = ViewletExplorerEvents.handleMouseDown
   $Viewlet.oncontextmenu = ViewletExplorerEvents.handleContextMenu
   // TODO use the other mouse events that capture automatically
-  $Viewlet.addEventListener(DomEventType.MouseEnter, ViewletExplorerEvents.handleMouseEnter, { capture: true })
-  $Viewlet.addEventListener(DomEventType.MouseLeave, ViewletExplorerEvents.handleMouseLeave, { capture: true })
-  $Viewlet.addEventListener(DomEventType.Wheel, ViewletExplorerEvents.handleWheel, {
-    passive: true,
-  })
+  $Viewlet.addEventListener(DomEventType.MouseEnter, ViewletExplorerEvents.handleMouseEnter, DomEventOptions.Capture)
+  $Viewlet.addEventListener(DomEventType.MouseLeave, ViewletExplorerEvents.handleMouseLeave, DomEventOptions.Capture)
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletExplorerEvents.handleWheel, DomEventOptions.Passive)
   $Viewlet.onblur = ViewletExplorerEvents.handleBlur
   $Viewlet.ondragover = ViewletExplorerEvents.handleDragOver
   $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart

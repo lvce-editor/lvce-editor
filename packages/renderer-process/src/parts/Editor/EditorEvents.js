@@ -9,6 +9,7 @@ import * as ModifierKey from '../ModifierKey/ModifierKey.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
 // TODO tree shake out mobile support when targeting electron -> less code -> less event listeners -> less memory -> less cpu
@@ -104,9 +105,7 @@ export const handleSingleClick = (event, x, y, offset) => {
   // const $InputBox = $Target.closest('.Editor').firstElementChild
   // $InputBox.focus()
   // TODO this logic should be in renderer worker
-  document.addEventListener(DomEventType.MouseMove, handleSelectionMove, {
-    passive: true,
-  })
+  document.addEventListener(DomEventType.MouseMove, handleSelectionMove, DomEventOptions.Passive)
   document.addEventListener(DomEventType.MouseUp, handleSelectionDone)
 }
 
@@ -264,9 +263,7 @@ export const handleScrollBarPointerDown = (event) => {
   // @ts-ignore
   target.setPointerCapture(pointerId)
   // @ts-ignore
-  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, {
-    passive: false,
-  })
+  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, DomEventOptions.Active)
   // TODO use pointerlost event instead
   // @ts-ignore
   target.addEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
