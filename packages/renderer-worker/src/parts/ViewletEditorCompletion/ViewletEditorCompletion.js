@@ -112,13 +112,7 @@ const renderPosition = {
     return oldState.x === newState.x && oldState.y === newState.y
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.EditorCompletion,
-      /* method */ 'setPosition',
-      /* x */ newState.x,
-      /* y */ newState.y,
-    ]
+    return [/* method */ 'setPosition', /* x */ newState.x, /* y */ newState.y]
   },
 }
 
@@ -150,7 +144,7 @@ const renderBounds = {
   },
   apply(oldState, newState) {
     const { x, y, width, height } = newState
-    return [/* x */ x, /* y */ y, /* width */ width, /* height */ height]
+    return [/* method */ 'setBounds', /* x */ x, /* y */ y, /* width */ width, /* height */ height]
   },
 }
 
