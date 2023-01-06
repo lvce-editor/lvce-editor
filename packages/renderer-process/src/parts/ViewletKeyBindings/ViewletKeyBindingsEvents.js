@@ -1,6 +1,7 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 export const handleInput = (event) => {
   const { target } = event
@@ -36,17 +37,11 @@ export const handleTableClick = (event) => {
 }
 
 const handleWheelDeltaLine = (deltaY) => {
-  RendererWorker.send(
-    /* ViewletKeyBindings.handleWheel */ 'KeyBindings.handleWheel',
-    /* deltaY */ deltaY
-  )
+  RendererWorker.send(/* ViewletKeyBindings.handleWheel */ 'KeyBindings.handleWheel', /* deltaY */ deltaY)
 }
 
 const handleWheelDeltaPixel = (deltaY) => {
-  RendererWorker.send(
-    /* ViewletKeyBindings.handleWheel */ 'KeyBindings.handleWheel',
-    /* deltaY */ deltaY
-  )
+  RendererWorker.send(/* ViewletKeyBindings.handleWheel */ 'KeyBindings.handleWheel', /* deltaY */ deltaY)
 }
 
 export const handleWheel = (event) => {
@@ -63,10 +58,7 @@ export const handleWheel = (event) => {
 
 export const handleResizerPointerMove = (event) => {
   const { clientX } = event
-  RendererWorker.send(
-    /* KeyBindings.handleResizerMouseMove */ 'KeyBindings.handleResizerMove',
-    /* y */ clientX
-  )
+  RendererWorker.send(/* KeyBindings.handleResizerMouseMove */ 'KeyBindings.handleResizerMove', /* y */ clientX)
 }
 
 // TODO use lostpointercapture event instead
@@ -81,14 +73,8 @@ export const handleResizerPointerDown = (event) => {
   const { target, pointerId, clientX } = event
   console.log({ target })
   target.setPointerCapture(pointerId)
-  target.addEventListener(DomEventType.PointerMove, handleResizerPointerMove, {
-    passive: false,
-  })
+  target.addEventListener(DomEventType.PointerMove, handleResizerPointerMove, DomEventOptions.Active)
   target.addEventListener(DomEventType.PointerUp, handleResizerPointerUp)
   const id = target.nextSibling ? 1 : 2
-  RendererWorker.send(
-    /* KeyBindings.handleResizerPointerDown */ 'KeyBindings.handleResizerClick',
-    /* id */ id,
-    /* x */ clientX
-  )
+  RendererWorker.send(/* KeyBindings.handleResizerPointerDown */ 'KeyBindings.handleResizerClick', /* id */ id, /* x */ clientX)
 }

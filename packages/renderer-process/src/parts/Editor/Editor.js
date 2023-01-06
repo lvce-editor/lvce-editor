@@ -3,6 +3,7 @@
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Logger from '../Logger/Logger.js'
 import * as EditorEvents from './EditorEvents.js'
@@ -92,12 +93,8 @@ export const create = () => {
   $Editor.role = AriaRoles.Code
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
   $Editor.addEventListener(DomEventType.ContextMenu, EditorEvents.handleContextMenu)
-  $Editor.addEventListener(DomEventType.Wheel, EditorEvents.handleWheel, {
-    passive: true,
-  })
-  $Editor.addEventListener(DomEventType.MouseMove, EditorEvents.handlePointerMove, {
-    passive: true,
-  })
+  $Editor.addEventListener(DomEventType.Wheel, EditorEvents.handleWheel, DomEventOptions.Passive)
+  $Editor.addEventListener(DomEventType.MouseMove, EditorEvents.handlePointerMove, DomEventOptions.Passive)
   return {
     $LayerCursor,
     $LayerSelections,

@@ -2,6 +2,7 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 /**
  * @param {PointerEvent} event
@@ -41,9 +42,7 @@ export const handlePointerDown = (event) => {
   // @ts-ignore
   target.setPointerCapture(pointerId)
   // @ts-ignore
-  target.addEventListener(DomEventType.PointerMove, handlePointerMove, {
-    passive: false,
-  })
+  target.addEventListener(DomEventType.PointerMove, handlePointerMove, DomEventOptions.Active)
   // @ts-ignore
   target.addEventListener(DomEventType.PointerUp, handlePointerUp)
   target.addEventListener(DomEventType.LostPointerCapture, handlePointerCaptureLost)

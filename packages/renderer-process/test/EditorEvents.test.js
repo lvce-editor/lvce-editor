@@ -5,6 +5,7 @@ import { jest } from '@jest/globals'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
+import * as DomEventOptions from '../src/parts/DomEventOptions/DomEventOptions.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -38,20 +39,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
 const Editor = await import('../src/parts/Editor/Editor.js')
 const EditorEvents = await import('../src/parts/Editor/EditorEvents.js')
@@ -90,16 +86,8 @@ test('event - mousedown - left', () => {
       offset: 2,
     }
   }
-  state.$LayerText.dispatchEvent(
-    new MouseEvent('mousedown', { detail: 1, clientX: 8, clientY: 5 })
-  )
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Editor.handleSingleClick',
-    '',
-    8,
-    5,
-    2
-  )
+  state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 1, clientX: 8, clientY: 5 }))
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleSingleClick', '', 8, 5, 2)
 })
 
 test('event - mousedown - right', () => {
@@ -146,13 +134,7 @@ test('event - mousedown - left - out of viewport', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Editor.handleSingleClick',
-    '',
-    -10,
-    -10,
-    0
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleSingleClick', '', -10, -10, 0)
 })
 
 test('event - double click', () => {
@@ -171,15 +153,8 @@ test('event - double click', () => {
   }
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
-  state.$LayerText.dispatchEvent(
-    new MouseEvent('mousedown', { detail: 2, clientX: 8, clientY: 5 })
-  )
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Editor.handleDoubleClick',
-    8,
-    5,
-    2
-  )
+  state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 2, clientX: 8, clientY: 5 }))
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleDoubleClick', 8, 5, 2)
 })
 
 test.skip('event - double click and move mouse to create selection', () => {
@@ -189,12 +164,8 @@ test.skip('event - double click and move mouse to create selection', () => {
   Editor.setTextDocument(state, {
     lines: ['file2 content'],
   })
-  state.$LayerText.dispatchEvent(
-    new MouseEvent('mousedown', { detail: 2, clientX: 10, clientY: 5 })
-  )
-  document.dispatchEvent(
-    new MouseEvent('mousemove', { clientX: 15, clientY: 5 })
-  )
+  state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 2, clientX: 10, clientY: 5 }))
+  document.dispatchEvent(new MouseEvent('mousemove', { clientX: 15, clientY: 5 }))
   expect(RendererWorker.send).toHaveBeenCalledWith([
     363,
     {
@@ -202,9 +173,7 @@ test.skip('event - double click and move mouse to create selection', () => {
       rowIndex: 0,
     },
   ])
-  document.dispatchEvent(
-    new MouseEvent('mousemove', { clientX: 20, clientY: 5 })
-  )
+  document.dispatchEvent(new MouseEvent('mousemove', { clientX: 20, clientY: 5 }))
   expect(RendererWorker.send).toHaveBeenCalledWith([
     363,
     {
@@ -228,15 +197,8 @@ test('event - triple click', () => {
       offset: 2,
     }
   }
-  state.$LayerText.dispatchEvent(
-    new MouseEvent('mousedown', { detail: 3, clientX: 8, clientY: 5 })
-  )
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Editor.handleTripleClick',
-    8,
-    5,
-    2
-  )
+  state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 3, clientX: 8, clientY: 5 }))
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleTripleClick', 8, 5, 2)
 })
 
 test.skip('event - touchstart - single touch', () => {
@@ -378,11 +340,7 @@ test.skip('event - paste', () => {
     lines: ['file1 content'],
   })
   state.$EditorInput.dispatchEvent(new Event('paste', { bubbles: true }))
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    'Editor.handleSingleClick',
-    0,
-    2,
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Editor.handleSingleClick', 0, 2])
 })
 
 test('event - context menu', () => {
@@ -400,12 +358,7 @@ test('event - context menu', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'ContextMenu.show',
-    15,
-    30,
-    MenuEntryId.Editor
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('ContextMenu.show', 15, 30, MenuEntryId.Editor)
 })
 
 test.skip('event - beforeinput on contenteditable on mobile - no selection', () => {
@@ -421,9 +374,7 @@ test.skip('event - beforeinput on contenteditable on mobile - no selection', () 
     })
   )
   expect(RendererWorker.send).not.toHaveBeenCalled()
-  expect(spy).toHaveBeenCalledWith(
-    '[Editor] cannot handle input event without selection'
-  )
+  expect(spy).toHaveBeenCalledWith('[Editor] cannot handle input event without selection')
 })
 
 test('event - wheel', () => {
@@ -455,10 +406,7 @@ test('event - pointerdown - on scroll bar thumb', () => {
   })
   $ScrollBarThumb.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Editor.handleScrollBarPointerDown',
-    20
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleScrollBarPointerDown', 20)
 })
 
 test('event - pointermove after pointerdown - on scroll bar thumb', () => {
@@ -481,16 +429,8 @@ test('event - pointermove after pointerdown - on scroll bar thumb', () => {
   })
   $ScrollBarThumb.dispatchEvent(pointerMoveEvent)
   expect(RendererWorker.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(
-    1,
-    'Editor.handleScrollBarPointerDown',
-    20
-  )
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(
-    2,
-    'Editor.handleScrollBarMove',
-    40
-  )
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(1, 'Editor.handleScrollBarPointerDown', 20)
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(2, 'Editor.handleScrollBarMove', 40)
 })
 
 test('event - pointerup after pointerdown - on scroll bar thumb', () => {
@@ -511,17 +451,8 @@ test('event - pointerup after pointerdown - on scroll bar thumb', () => {
   })
   $ScrollBarThumb.dispatchEvent(pointerDownEvent)
   expect(spy1).toHaveBeenCalledTimes(2)
-  expect(spy1).toHaveBeenNthCalledWith(
-    1,
-    'pointermove',
-    EditorEvents.handleScrollBarThumbPointerMove,
-    { passive: false }
-  )
-  expect(spy1).toHaveBeenNthCalledWith(
-    2,
-    'pointerup',
-    EditorEvents.handleScrollBarPointerUp
-  )
+  expect(spy1).toHaveBeenNthCalledWith(1, 'pointermove', EditorEvents.handleScrollBarThumbPointerMove, DomEventOptions.Active)
+  expect(spy1).toHaveBeenNthCalledWith(2, 'pointerup', EditorEvents.handleScrollBarPointerUp)
   expect(spy3).toHaveBeenCalledTimes(1)
   expect(spy3).toHaveBeenCalledWith(0)
   const pointerUpEvent = new PointerEvent('pointerup', {
@@ -535,16 +466,8 @@ test('event - pointerup after pointerdown - on scroll bar thumb', () => {
   expect(spy4).toHaveBeenCalledTimes(1)
   expect(spy4).toHaveBeenCalledWith(0)
   expect(spy2).toHaveBeenCalledTimes(2)
-  expect(spy2).toHaveBeenNthCalledWith(
-    1,
-    'pointermove',
-    EditorEvents.handleScrollBarThumbPointerMove
-  )
-  expect(spy2).toHaveBeenNthCalledWith(
-    2,
-    'pointerup',
-    EditorEvents.handleScrollBarPointerUp
-  )
+  expect(spy2).toHaveBeenNthCalledWith(1, 'pointermove', EditorEvents.handleScrollBarThumbPointerMove)
+  expect(spy2).toHaveBeenNthCalledWith(2, 'pointerup', EditorEvents.handleScrollBarPointerUp)
 })
 
 test('event - context menu - on scroll bar', () => {
@@ -585,16 +508,12 @@ test.skip('event - beforeinput on contenteditable on mobile - cursor in middle',
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Editor.handleBeforeInputFromContentEditable',
-    'a',
-    {
-      startColumnIndex: 6,
-      startRowIndex: 0,
-      endColumnIndex: 6,
-      endRowIndex: 0,
-    }
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleBeforeInputFromContentEditable', 'a', {
+    startColumnIndex: 6,
+    startRowIndex: 0,
+    endColumnIndex: 6,
+    endRowIndex: 0,
+  })
 })
 
 test('event - composition', () => {
@@ -619,16 +538,8 @@ test('event - composition', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(
-    1,
-    'Editor.compositionStart',
-    'a'
-  )
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(
-    2,
-    'Editor.compositionEnd',
-    'ñ'
-  )
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(1, 'Editor.compositionStart', 'a')
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(2, 'Editor.compositionEnd', 'ñ')
 })
 
 test.skip('event - beforeinput on contenteditable on mobile - word in middle selected', () => {
@@ -655,16 +566,12 @@ test.skip('event - beforeinput on contenteditable on mobile - word in middle sel
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Editor.handleBeforeInputFromContentEditable',
-    'a',
-    {
-      startColumnIndex: 2,
-      startRowIndex: 0,
-      endColumnIndex: 12,
-      endRowIndex: 0,
-    }
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleBeforeInputFromContentEditable', 'a', {
+    startColumnIndex: 2,
+    startRowIndex: 0,
+    endColumnIndex: 12,
+    endRowIndex: 0,
+  })
 })
 
 test.skip('event - native selection change', () => {

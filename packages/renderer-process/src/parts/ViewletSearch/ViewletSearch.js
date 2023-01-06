@@ -7,6 +7,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 export const create = () => {
   const $ViewletSearchInput = InputBox.create()
@@ -30,9 +31,7 @@ export const create = () => {
   // TODO onclick vs onmousedown, should be consistent in whole application
   $ListItems.onmousedown = ViewletSearchEvents.handleClick
   $ListItems.oncontextmenu = ViewletSearchEvents.handleContextMenu
-  $ListItems.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, {
-    passive: true,
-  })
+  $ListItems.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'

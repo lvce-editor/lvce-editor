@@ -2,6 +2,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletkeyBindingsEvents from './ViewletKeyBindingsEvents.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 /**
  * @enum {string}
@@ -25,11 +26,7 @@ export const create = () => {
 
   const $KeyBindingsTableWrapper = document.createElement('div')
   $KeyBindingsTableWrapper.className = 'KeyBindingsTableWrapper'
-  $KeyBindingsTableWrapper.addEventListener(
-    DomEventType.Wheel,
-    ViewletkeyBindingsEvents.handleWheel,
-    { passive: true }
-  )
+  $KeyBindingsTableWrapper.addEventListener(DomEventType.Wheel, ViewletkeyBindingsEvents.handleWheel, DomEventOptions.Passive)
   $KeyBindingsTableWrapper.onclick = ViewletkeyBindingsEvents.handleTableClick
 
   const $ScrollBarThumb = document.createElement('div')
@@ -82,12 +79,7 @@ export const setValue = (state, value) => {
   $InputBox.value = value
 }
 
-export const setColumnWidths = (
-  state,
-  columnWidth1,
-  columnWidth2,
-  columnWidth3
-) => {
+export const setColumnWidths = (state, columnWidth1, columnWidth2, columnWidth3) => {
   const paddingLeft = 15
   const { $Resizer1, $Resizer2 } = state
   $Resizer1.style.left = `${paddingLeft + columnWidth1}px`
