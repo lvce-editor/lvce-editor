@@ -7,6 +7,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -212,7 +213,7 @@ export const create = () => {
   $QuickPickInput.ariaAutoComplete = 'list'
   $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
   $QuickPickInput.addEventListener(DomEventType.BeforeInput, ViewletQuickPickEvents.handleBeforeInput)
-  $QuickPickInput.ariaExpanded = 'true'
+  $QuickPickInput.ariaExpanded = AriaBoolean.True
 
   const $QuickPickHeader = document.createElement('div')
   $QuickPickHeader.id = Ids.QuickPickHeader

@@ -5,6 +5,7 @@
 import * as Menu from '../src/parts/OldMenu/Menu.js'
 import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
 
 const getTextContent = (node) => {
   return node.innerHTML
@@ -76,9 +77,9 @@ test('accessibility - TitleBarTopLevelEntry should have role menuitem and aria-h
   // @ts-ignore
   expect($TitleBarMenuBar.firstChild.role).toBe('menuitem')
   // @ts-ignore
-  expect($TitleBarMenuBar.firstChild.ariaExpanded).toBe('false')
+  expect($TitleBarMenuBar.firstChild.ariaExpanded).toBe(AriaBoolean.False)
   // @ts-ignore
-  expect($TitleBarMenuBar.firstChild.ariaHasPopup).toBe('true')
+  expect($TitleBarMenuBar.firstChild.ariaHasPopup).toBe(AriaBoolean.True)
 })
 
 // TODO test focusIndex in combination with menu and also check aria-attributes
