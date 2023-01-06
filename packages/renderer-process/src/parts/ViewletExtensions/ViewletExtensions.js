@@ -1,6 +1,7 @@
 // based on https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/extensions/browser/extensionsList.ts (License MIT)
 
 import * as FindIndex from '../../shared/findIndex.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaLiveType from '../AriaLiveType/AriaLiveType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
@@ -87,8 +88,8 @@ export const create = () => {
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Extensions'
-  $Viewlet.ariaBusy = 'true'
   $Viewlet.ariaLive = AriaLiveType.Polite
+  $Viewlet.ariaBusy = AriaBoolean.True
   // @ts-ignore
   $Viewlet.role = AriaRoles.None
   $Viewlet.append($ExtensionHeader, $List)

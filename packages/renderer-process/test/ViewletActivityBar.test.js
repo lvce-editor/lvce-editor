@@ -2,6 +2,8 @@
  * @jest-environment jsdom
  */
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
+import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
+import * as AriaOrientationType from '../src/parts/AriaOrientationType/AriaOrientationType.js'
 import * as ViewletActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 
 const getTitle = ($Element) => {
@@ -37,11 +39,7 @@ test('create', () => {
       flags: ActivityBarItemFlags.Button,
     },
   ])
-  expect(getSimpleList(state.$ActivityBar)).toEqual([
-    'Explorer',
-    'Search',
-    'Settings',
-  ])
+  expect(getSimpleList(state.$ActivityBar)).toEqual(['Explorer', 'Search', 'Settings'])
 })
 
 test('setItems', () => {
@@ -92,11 +90,7 @@ test('setItems', () => {
       flags: ActivityBarItemFlags.Button,
     },
   ])
-  expect(getSimpleList(state.$ActivityBar)).toEqual([
-    'Run and Debug',
-    'Extensions',
-    'Settings',
-  ])
+  expect(getSimpleList(state.$ActivityBar)).toEqual(['Run and Debug', 'Extensions', 'Settings'])
 })
 
 test('setFocusedIndex', () => {
@@ -125,9 +119,7 @@ test('setFocusedIndex', () => {
     },
   ])
   ViewletActivityBar.setFocusedIndex(state, -1, 0, true)
-  expect(
-    state.$ActivityBar.children[0].classList.contains('FocusOutline')
-  ).toBe(true)
+  expect(state.$ActivityBar.children[0].classList.contains('FocusOutline')).toBe(true)
 })
 
 // TODO test interaction with sidebar
@@ -194,7 +186,7 @@ test('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOr
   ])
   expect(state.$ActivityBar.role).toBe('toolbar')
   expect(state.$ActivityBar.ariaRoleDescription).toBe('Activity Bar')
-  expect(state.$ActivityBar.ariaOrientation).toBe('vertical')
+  expect(state.$ActivityBar.ariaOrientation).toBe(AriaOrientationType.Vertical)
 })
 
 test('accessibility - ActivityBarItem button should have role button and ariaHasPopup', () => {
@@ -226,7 +218,7 @@ test('accessibility - ActivityBarItem button should have role button and ariaHas
     },
   ])
   expect(state.$ActivityBar.lastChild.role).toBe('button')
-  expect(state.$ActivityBar.lastChild.ariaHasPopup).toBe('true')
+  expect(state.$ActivityBar.lastChild.ariaHasPopup).toBe(AriaBoolean.True)
 })
 
 test('accessibility - ActivityBarItems should have ariaKeyShortcuts if applicable', () => {

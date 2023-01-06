@@ -7,6 +7,7 @@ import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 const activeId = 'TitleBarEntryActive'
 
@@ -82,8 +83,8 @@ export const focus = (state) => {
 const create$TopLevelEntry = (item) => {
   const $TitleBarTopLevelEntry = document.createElement('div')
   $TitleBarTopLevelEntry.className = 'TitleBarTopLevelEntry'
-  $TitleBarTopLevelEntry.ariaHasPopup = 'true'
-  $TitleBarTopLevelEntry.ariaExpanded = 'false'
+  $TitleBarTopLevelEntry.ariaHasPopup = AriaBoolean.True
+  $TitleBarTopLevelEntry.ariaExpanded = AriaBoolean.False
   // @ts-ignore
   $TitleBarTopLevelEntry.role = AriaRoles.MenuItem
   if (item.keyboardShortCut) {
@@ -100,7 +101,7 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, 
   const { $TitleBarMenuBar } = state
   if (unFocusIndex !== -1) {
     const $Child = $TitleBarMenuBar.children[unFocusIndex]
-    $Child.ariaExpanded = 'false'
+    $Child.ariaExpanded = AriaBoolean.False
     $Child.removeAttribute(DomAttributeType.AriaOwns)
     $Child.removeAttribute('id')
   }
@@ -111,7 +112,7 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, 
     $TitleBarMenuBar.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
     if (newIsMenuOpen) {
       $Child.setAttribute(DomAttributeType.AriaOwns, 'Menu-0')
-      $Child.ariaExpanded = 'true'
+      $Child.ariaExpanded = AriaBoolean.True
     }
   }
 }
@@ -138,7 +139,7 @@ export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocus
     $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = 'false'
     $TitleBarMenuBar.children[unFocusIndex].removeAttribute(DomAttributeType.AriaOwns)
   }
-  $TitleBarMenuBar.children[index].ariaExpanded = 'true'
+  $TitleBarMenuBar.children[index].ariaExpanded = AriaBoolean.True
   const $$Menus = Menu.state.$$Menus
   Menu.state.$$Menus = []
   Menu.showControlled({

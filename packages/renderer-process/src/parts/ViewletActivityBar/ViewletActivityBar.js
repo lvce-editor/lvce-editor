@@ -1,5 +1,6 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
+import * as AriaOrientationType from '../AriaOrientationType/AriaOrientationType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
@@ -51,7 +52,7 @@ export const create = () => {
   // @ts-ignore
   $Viewlet.role = AriaRoles.ToolBar
   $Viewlet.ariaRoleDescription = 'Activity Bar'
-  $Viewlet.ariaOrientation = 'vertical'
+  $Viewlet.ariaOrientation = AriaOrientationType.Vertical
   $Viewlet.tabIndex = 0
   // $Viewlet.append(...activityBarItems.map(create$ActivityBarItem))
   $Viewlet.onmousedown = ViewletActivityBarEvents.handleMousedown
