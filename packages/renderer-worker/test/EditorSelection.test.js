@@ -15,7 +15,7 @@ jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', ()
 
 const EditorSelection = await import('../src/parts/Editor/EditorSelection.js')
 
-test.skip('getVisible', () => {
+test('getVisible', () => {
   const editor = {
     top: 10,
     left: 20,
@@ -38,7 +38,7 @@ test.skip('getVisible', () => {
     new Float32Array([
       /* x */ 0,  /* y */ 0,  /* width */ 48, /* height */ 20,
       /* x */ 0,  /* y */ 20, /* width */ 48, /* height */ 20,
-      /* x */ 0,  /* y */ 40,/* width */ 48, /* height */ 20,
+      /* x */ 0,  /* y */ 40, /* width */ 48, /* height */ 20,
       /* x */ 16, /* y */ 80, /* width */ 8,  /* height */ 20,
     ])
   )
@@ -66,7 +66,7 @@ test('getVisible - bug with two lines', () => {
     // prettier-ignore
     new Float32Array([
       /* x */ 32, /* y */ 0, /* width */ 16, /* height */ 20,
-      /* x */ 32, /* y */ 0, /* width */ 0,  /* height */ 20,
+      /* x */ 32, /* y */ 20, /* width */ 0,  /* height */ 20,
     ])
   )
 })

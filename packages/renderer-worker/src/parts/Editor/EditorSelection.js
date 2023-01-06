@@ -83,20 +83,20 @@ export const getVisible = (editor) => {
     if (isInRange(selectionEndRow, minLineY, maxLineY)) {
       const endLine = lines[selectionEndRow]
       const endLineEndX = getX(endLine, selectionEndColumn, fontWeight, fontSize, fontFamily, letterSpacing, halfCursorWidth)
-      const endLineEndY = getY(selectionEndRow, minLineY, rowHeight)
+      const endLineY = getY(selectionEndRow, minLineY, rowHeight)
       if (EditorSelection.isEmpty(selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn)) {
-        visibleCursors.push(endLineEndX, endLineEndY)
+        visibleCursors.push(endLineEndX, endLineY)
         continue
       }
       const endLineStartX = getX(endLine, selectionStartColumn, fontWeight, fontSize, fontFamily, letterSpacing, halfCursorWidth)
-      const endLineStartY = getY(selectionStartRow, minLineY, rowHeight)
+      const startLineY = getY(selectionStartRow, minLineY, rowHeight)
       if (selectionStartRow === selectionEndRow) {
-        visibleCursors.push(endLineEndX, endLineEndY)
+        visibleCursors.push(endLineEndX, endLineY)
         const width = endLineEndX - endLineStartX
-        visibleSelections.push(endLineStartX, endLineStartY, width, rowHeight)
+        visibleSelections.push(endLineStartX, startLineY, width, rowHeight)
       } else {
         if (selectionStartRow >= minLineY) {
-          visibleCursors.push(endLineStartX, endLineStartY)
+          visibleCursors.push(endLineStartX, startLineY)
           const startLine = lines[selectionStartRow]
           const startLineStartX = getX(startLine, selectionStartColumn, fontWeight, fontSize, fontFamily, letterSpacing, halfCursorWidth)
           const startLineEndX = getX(startLine, startLine.length, fontWeight, fontSize, fontFamily, letterSpacing, halfCursorWidth)
@@ -114,7 +114,7 @@ export const getVisible = (editor) => {
         }
         if (selectionEndRow <= maxLineY) {
           const width = endLineEndX - endLineStartX
-          visibleSelections.push(endLineStartX, endLineStartY, width, rowHeight)
+          visibleSelections.push(endLineStartX, endLineY, width, rowHeight)
         }
       }
     }
