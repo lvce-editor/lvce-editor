@@ -3,26 +3,22 @@
  */
 import { jest } from '@jest/globals'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
   Menu.state.$$Menus = []
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 const Menu = await import('../src/parts/OldMenu/Menu.js')
 
 const getTextContent = ($Node) => {
@@ -65,12 +61,7 @@ test('showControlled', () => {
     height: 100,
   })
   expect(Menu.state.$$Menus).toHaveLength(1)
-  expect(getSimpleList(Menu.state.$$Menus[0])).toEqual([
-    'item 1',
-    '',
-    'item 2',
-    'item 3',
-  ])
+  expect(getSimpleList(Menu.state.$$Menus[0])).toEqual(['item 1', '', 'item 2', 'item 3'])
 })
 
 test.skip('focus', () => {
@@ -301,7 +292,7 @@ test('showMenu - with sub menu', () => {
   const $MenuItemOpenRecent = $Menu.children[5]
   expect($MenuItemOpenRecent.textContent).toBe('Open Recent')
   expect($MenuItemOpenRecent.ariaExpanded).toBe('true')
-  expect($MenuItemOpenRecent.getAttribute('aria-owns')).toBe('Menu-1')
+  expect($MenuItemOpenRecent.getAttribute(DomAttributeType.AriaOwns)).toBe('Menu-1')
 })
 
 test('event - click', () => {
