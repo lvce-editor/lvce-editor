@@ -6,6 +6,7 @@ import * as Widget from '../Widget/Widget.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 
 const activeId = 'TitleBarEntryActive'
 
@@ -100,16 +101,16 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, 
   if (unFocusIndex !== -1) {
     const $Child = $TitleBarMenuBar.children[unFocusIndex]
     $Child.ariaExpanded = 'false'
-    $Child.removeAttribute('aria-owns')
+    $Child.removeAttribute(DomAttributeType.AriaOwns)
     $Child.removeAttribute('id')
   }
   if (focusIndex !== -1) {
     const $Child = $TitleBarMenuBar.children[focusIndex]
     $Child.id = activeId
     $TitleBarMenuBar.focus()
-    $TitleBarMenuBar.setAttribute('aria-activedescendant', activeId)
+    $TitleBarMenuBar.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
     if (newIsMenuOpen) {
-      $Child.setAttribute('aria-owns', 'Menu-0')
+      $Child.setAttribute(DomAttributeType.AriaOwns, 'Menu-0')
       $Child.ariaExpanded = 'true'
     }
   }
@@ -135,7 +136,7 @@ export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocus
   })
   if (unFocusIndex !== -1) {
     $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = 'false'
-    $TitleBarMenuBar.children[unFocusIndex].removeAttribute('aria-owns')
+    $TitleBarMenuBar.children[unFocusIndex].removeAttribute(DomAttributeType.AriaOwns)
   }
   $TitleBarMenuBar.children[index].ariaExpanded = 'true'
   const $$Menus = Menu.state.$$Menus
@@ -163,7 +164,7 @@ export const closeMenu = (state, unFocusIndex, index) => {
   const { $TitleBarMenuBar } = state
   if (unFocusIndex !== -1) {
     $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = 'false'
-    $TitleBarMenuBar.children[unFocusIndex].removeAttribute('aria-owns')
+    $TitleBarMenuBar.children[unFocusIndex].removeAttribute(DomAttributeType.AriaOwns)
   }
   if (index !== -1) {
     $TitleBarMenuBar.children[index].focus()
@@ -245,7 +246,7 @@ export const setMenus = (state, changes) => {
           $Child.classList.add('Focused')
           if (expanded) {
             $Child.ariaExpanded = true
-            $Child.setAttribute('aria-owns', `Menu-${level + 1}`)
+            $Child.setAttribute(DomAttributeType.AriaOwns, `Menu-${level + 1}`)
           }
         }
         $Menu.replaceChildren(...$$Children)

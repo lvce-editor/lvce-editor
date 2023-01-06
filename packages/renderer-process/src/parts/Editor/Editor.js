@@ -1,15 +1,16 @@
 // TODO so many things in this file
 
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Logger from '../Logger/Logger.js'
 import * as EditorEvents from './EditorEvents.js'
 import * as LayerCursor from './LayerCursor.js'
 import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
-import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -185,7 +186,7 @@ export const dispose = (state) => {}
 export const focus = (state) => {
   const { $EditorInput } = state
   if (!$EditorInput.isConnected) {
-    console.warn('unmounted editor cannot be focused')
+    Logger.warn('unmounted editor cannot be focused')
   }
   $EditorInput.focus()
 }

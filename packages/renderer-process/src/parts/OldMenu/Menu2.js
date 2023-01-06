@@ -1,9 +1,11 @@
 import * as FindIndex from '../../shared/findIndex.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Logger from '../Logger/Logger.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 
 export const state = {
   $$Menus: [],
@@ -28,7 +30,7 @@ const create$MenuItem = (item) => {
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItemCheckBox
-      $MenuItem.ariaChecked = 'true'
+      $MenuItem.ariaChecked = AriaBoolean.True
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       break
@@ -36,7 +38,7 @@ const create$MenuItem = (item) => {
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItemCheckBox
-      $MenuItem.ariaChecked = 'false'
+      $MenuItem.ariaChecked = AriaBoolean.False
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       break
@@ -46,8 +48,8 @@ const create$MenuItem = (item) => {
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
-      $MenuItem.ariaHasPopup = 'true'
-      $MenuItem.ariaExpanded = 'false'
+      $MenuItem.ariaHasPopup = AriaBoolean.True
+      $MenuItem.ariaExpanded = AriaBoolean.False
       break
     case MenuItemFlags.Disabled:
       $MenuItem.className = 'MenuItem'
@@ -55,7 +57,7 @@ const create$MenuItem = (item) => {
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
-      $MenuItem.setAttribute('disabled', 'true')
+      $MenuItem.setAttribute('disabled', AriaBoolean.True)
       break
     default:
       $MenuItem.className = 'MenuItem'
@@ -63,7 +65,7 @@ const create$MenuItem = (item) => {
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
-      console.warn(`invalid menu item flags: "${item.flags}"`)
+      Logger.warn(`invalid menu item flags: "${item.flags}"`)
       break
   }
   return $MenuItem
@@ -77,11 +79,7 @@ const handleMouseDown = (event) => {
     return
   }
   const menuIndex = state.$$Menus.indexOf($Menu)
-  RendererWorker.send(
-    /* Menu.handleClick */ 'Menu.selectIndex',
-    /* menuIndex */ menuIndex,
-    /* index */ index
-  )
+  RendererWorker.send(/* Menu.handleClick */ 'Menu.selectIndex', /* menuIndex */ menuIndex, /* index */ index)
 }
 
 const handleMouseEnter = (event) => {
@@ -92,11 +90,7 @@ const handleMouseEnter = (event) => {
     return
   }
   const level = state.$$Menus.indexOf($Menu)
-  RendererWorker.send(
-    /* Menu.handleMouseEnter */ 'Menu.handleMouseEnter',
-    /* level */ level,
-    /* index */ index
-  )
+  RendererWorker.send(/* Menu.handleMouseEnter */ 'Menu.handleMouseEnter', /* level */ level, /* index */ index)
 }
 
 /**

@@ -1,6 +1,9 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as Logger from '../Logger/Logger.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
 
@@ -26,15 +29,15 @@ const create$ActivityBarItem = (item) => {
     case ActivityBarItemFlags.Tab:
       // @ts-ignore
       $ActivityBarItem.role = AriaRoles.Tab
-      $ActivityBarItem.ariaSelected = 'false'
+      $ActivityBarItem.ariaSelected = AriaBoolean.False
       break
     case ActivityBarItemFlags.Button:
       // @ts-ignore
       $ActivityBarItem.role = AriaRoles.Button
-      $ActivityBarItem.ariaHasPopup = 'true'
+      $ActivityBarItem.ariaHasPopup = AriaBoolean.True
       break
     default:
-      console.warn(`unknown activity bar item flags ${item.flags}`)
+      Logger.warn(`unknown activity bar item flags ${item.flags}`)
       break
   }
   $ActivityBarItem.append($ActivityBarItemIcon)
@@ -76,11 +79,11 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
   const { $ActivityBar } = state
   if (oldIndex !== -1) {
     const $OldItem = $ActivityBar.children[oldIndex]
-    $OldItem.ariaSelected = 'false'
+    $OldItem.ariaSelected = AriaBoolean.False
   }
   if (newIndex !== -1) {
     const $NewItem = $ActivityBar.children[newIndex]
-    $NewItem.ariaSelected = 'true'
+    $NewItem.ariaSelected = AriaBoolean.True
   }
 }
 
@@ -94,7 +97,7 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
   if (newIndex !== -1) {
     const $NewItem = $ActivityBar.children[newIndex]
     $NewItem.id = activeId
-    $ActivityBar.setAttribute('aria-activedescendant', activeId)
+    $ActivityBar.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
     if (focused) {
       $NewItem.classList.add('FocusOutline')
     }
