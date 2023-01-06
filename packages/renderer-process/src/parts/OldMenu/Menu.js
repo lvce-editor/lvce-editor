@@ -8,6 +8,7 @@ import * as Widget from '../Widget/Widget.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 // TODO when pressing tab -> focus next element in tab order and close menu
 
@@ -200,7 +201,7 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, mo
   if (parentIndex !== -1) {
     const $ParentMenu = state.$$Menus[level - 1]
     const $ParentMenuItem = $ParentMenu.children[parentIndex]
-    $ParentMenuItem.ariaExpanded = 'true'
+    $ParentMenuItem.ariaExpanded = AriaBoolean.True
     $ParentMenuItem.setAttribute(DomAttributeType.AriaOwns, $Menu.id)
   }
 

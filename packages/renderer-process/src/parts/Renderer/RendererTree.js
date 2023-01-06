@@ -1,5 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 export const renderTemplate = () => {
   const label = document.createElement('div')
@@ -27,10 +28,10 @@ export const renderElement = (template, data, index) => {
       template.root.removeAttribute(DomAttributeType.AriaExpanded)
       break
     case /* expandedFolder */ 'directory-expanded':
-      template.root.setAttribute(DomAttributeType.AriaExpanded, 'true')
+      template.root.setAttribute(DomAttributeType.AriaExpanded, AriaBoolean.True)
       break
     case /* collapsedFolder */ 'directory':
-      template.root.setAttribute(DomAttributeType.AriaExpanded, 'false')
+      template.root.setAttribute(DomAttributeType.AriaExpanded, AriaBoolean.False)
       break
     default:
       break
@@ -40,5 +41,5 @@ export const renderElement = (template, data, index) => {
 export const renderWrapper = (wrapper) => {
   wrapper.role = AriaRoles.Tree
   wrapper.ariaLabel = 'Files Explorer'
-  wrapper.setAttribute(DomAttributeType.AriaMultiSelectable, 'true')
+  wrapper.setAttribute(DomAttributeType.AriaMultiSelectable, AriaBoolean.True)
 }
