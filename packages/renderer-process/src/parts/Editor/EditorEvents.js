@@ -168,11 +168,17 @@ export const handlePointerDown = (event) => {
   }
   event.preventDefault()
   const totalOffset = getTotalOffset(event)
+  const { clientX, clientY } = event
+  handleSingleClick(event, clientX, clientY, totalOffset)
+}
+export const handleMouseDown = (event) => {
+  if (isRightClick(event)) {
+    return
+  }
+  event.preventDefault()
+  const totalOffset = getTotalOffset(event)
   const { clientX, clientY, detail } = event
   switch (detail) {
-    case 1:
-      handleSingleClick(event, clientX, clientY, totalOffset)
-      break
     case 2:
       handleDoubleClick(event, clientX, clientY, totalOffset)
       break
