@@ -3,6 +3,7 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Label from '../Label/Label.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
 
@@ -93,4 +94,9 @@ export const showLoading = (state, x, y) => {
 export const handleError = (state, error) => {
   const { $Viewlet } = state
   $Viewlet.textContent = `${error}`
+}
+
+export const setBounds = (state, x, y, width, height) => {
+  const { $Viewlet } = state
+  SetBounds.setBounds($Viewlet, x, y, width, height)
 }
