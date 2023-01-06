@@ -8,19 +8,16 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: () => {
-        return {
-          left: 0,
-          bottom: 0,
-        }
-      },
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: () => {
+      return {
+        x: 0,
+        y: 0,
+      }
+    },
   }
-)
+})
 
 jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
   return {
@@ -77,9 +74,7 @@ jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
   }
 })
 
-const ViewletTitleBarMenuBarHandleMenuMouseOver = await import(
-  '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleMenuMouseOver.js'
-)
+const ViewletTitleBarMenuBarHandleMenuMouseOver = await import('../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleMenuMouseOver.js')
 
 test('handleMouseOverMenu - focus item', async () => {
   const state = {
@@ -109,13 +104,7 @@ test('handleMouseOverMenu - focus item', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarHandleMenuMouseOver.handleMenuMouseOver(
-      state,
-      0,
-      1
-    )
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarHandleMenuMouseOver.handleMenuMouseOver(state, 0, 1)).toMatchObject({
     menus: [
       {
         level: 0,
@@ -151,8 +140,8 @@ test('handleMouseOverMenu - focus item - already focused', async () => {
       {
         level: 0,
         focusedIndex: 1,
-        top: 0,
-        left: 0,
+        x: 0,
+        y: 0,
         items: [
           {
             flags: MenuItemFlags.Disabled,
@@ -173,13 +162,7 @@ test('handleMouseOverMenu - focus item - already focused', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarHandleMenuMouseOver.handleMenuMouseOver(
-      state,
-      0,
-      1
-    )
-  ).toBe(state)
+  expect(await ViewletTitleBarMenuBarHandleMenuMouseOver.handleMenuMouseOver(state, 0, 1)).toBe(state)
 })
 
 test('handleMouseOverMenu - open sub menu', async () => {
@@ -210,13 +193,7 @@ test('handleMouseOverMenu - open sub menu', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarHandleMenuMouseOver.handleMenuMouseOver(
-      state,
-      0,
-      2
-    )
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarHandleMenuMouseOver.handleMenuMouseOver(state, 0, 2)).toMatchObject({
     menus: [
       {
         level: 0,
@@ -300,13 +277,7 @@ test('handleMouseOverMenu - unfocus sub menu', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarHandleMenuMouseOver.handleMenuMouseOver(
-      state,
-      0,
-      2
-    )
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarHandleMenuMouseOver.handleMenuMouseOver(state, 0, 2)).toMatchObject({
     menus: [
       {
         level: 0,
@@ -390,13 +361,7 @@ test('handleMouseOverMenu - unfocus menu and sub menu', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarHandleMenuMouseOver.handleMenuMouseOver(
-      state,
-      0,
-      -1
-    )
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarHandleMenuMouseOver.handleMenuMouseOver(state, 0, -1)).toMatchObject({
     menus: [
       {
         level: 0,

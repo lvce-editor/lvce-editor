@@ -5,7 +5,7 @@ export const create = (x, y, hover) => {
   const $Hover = document.createElement('div')
   $Hover.id = 'EditorHover'
   $Hover.textContent = hover.label
-  SetBounds.setTopAndLeft($Hover, y, x)
+  SetBounds.setXAndY($Hover, x, y)
   Widget.append($Hover)
   return {
     $Hover,
@@ -15,7 +15,7 @@ export const create = (x, y, hover) => {
 export const update = (state, x, y, hover) => {
   const $Hover = state.$Hover
   $Hover.textContent = hover.label
-  SetBounds.setTopAndLeft($Hover, y, x)
+  SetBounds.setXAndY($Hover, x, y)
 }
 
 export const dispose = (state) => {}

@@ -35,16 +35,11 @@ export const openElectronQuickPick = async (...args) => {
   const height = 300
   const viewletLayout = ViewletStates.getState(ViewletModuleId.Layout)
   const windowWidth = viewletLayout.points[0]
-  const left = Math.round((windowWidth - width) / 2)
-  const top = 50
+  const x = Math.round((windowWidth - width) / 2)
+  const y = 50
   const keyBindings = await KeyBindings.getKeyBindings()
   const quickPickKeyBindings = getQuickPickKeyBindings(keyBindings)
-  await ElectronBrowserViewQuickPick.createBrowserViewQuickPick(
-    top,
-    left,
-    width,
-    height
-  )
+  await ElectronBrowserViewQuickPick.createBrowserViewQuickPick(x, y, width, height)
   const ipc = await IpcParent.create({
     method: IpcParentType.ElectronMessagePort,
     type: 'quickpick',
@@ -67,10 +62,7 @@ export const openElectronQuickPick = async (...args) => {
     if (method === 'Viewlet.closeWidget') {
       return closeWidgetElectronQuickPick()
     }
-    const newState = await instance.factory.Commands[method](
-      oldState,
-      ...params
-    )
+    const newState = await instance.factory.Commands[method](oldState, ...params)
     const commands = ViewletManager.render(instance.factory, oldState, newState)
     ipc.send({
       jsonrpc: JsonRpcVersion.Two,
@@ -80,12 +72,7 @@ export const openElectronQuickPick = async (...args) => {
     instance.state = newState
   }
   ipc.onmessage = handleMessage
-  commands.push([
-    'Viewlet.send',
-    'QuickPick',
-    'setKeyBindings',
-    quickPickKeyBindings,
-  ])
+  commands.push(['Viewlet.send', 'QuickPick', 'setKeyBindings', quickPickKeyBindings])
   ipc.send({
     jsonrpc: JsonRpcVersion.Two,
     method: 'executeCommands',

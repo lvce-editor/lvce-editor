@@ -559,8 +559,8 @@ test('resize', () => {
     itemHeight: 62,
   }
   const newState = ViewletExtensions.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 200,
   })
@@ -570,13 +570,13 @@ test('resize', () => {
     items: [],
     focusedIndex: -1,
     height: 200,
-    left: 200,
+    x: 200,
     minLineY: 0,
     maxLineY: 3,
     deltaY: 0,
     searchValue: '',
     suggestionState: 0,
-    top: 200,
+    y: 200,
     width: 200,
   })
 })

@@ -15,7 +15,7 @@ export const create = (x, y) => {
   const $RenameWidget = document.createElement('div')
   $RenameWidget.className = 'RenameWidget'
   $RenameWidget.append($RenameWidgetInputBox)
-  SetBounds.setTopAndLeft($RenameWidget, y, x)
+  SetBounds.setXAndY($RenameWidget, x, y)
   Widget.append($RenameWidget)
   Focus.focus($RenameWidgetInputBox, 'editorRename')
   return {

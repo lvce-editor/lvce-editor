@@ -8,7 +8,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const create = (id, uri, top, left, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     isOpened: false,
     openingReason: 0,
@@ -18,8 +18,8 @@ export const create = (id, uri, top, left, width, height) => {
     leadingWord: '',
     loadingTimeout: -1,
     unfilteredItems: [],
-    left: 0,
-    top: 0,
+    x: 0,
+    y: 0,
     width: 250,
     height: 150,
     ...VirtualList.create({
@@ -53,15 +53,15 @@ export const loadContent = async (state) => {
   const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, '')
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
-  const left = EditorPosition.x(editor, rowIndex, columnIndex)
-  const top = EditorPosition.y(editor, rowIndex, columnIndex)
+  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const newMaxLineY = Math.min(items.length, 8)
   return {
     ...state,
     unfilteredItems,
     items,
-    left,
-    top,
+    x,
+    y,
     maxLineY: newMaxLineY,
   }
 }
@@ -143,8 +143,8 @@ const renderBounds = {
     return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
-    const { left, top, width, height } = newState
-    return [/* method */ 'setBounds', /* left */ left, /* top */ top, /* width */ width, /* height */ height]
+    const { x, y, width, height } = newState
+    return [/* method */ 'setBounds', /* x */ x, /* y */ y, /* width */ width, /* height */ height]
   },
 }
 

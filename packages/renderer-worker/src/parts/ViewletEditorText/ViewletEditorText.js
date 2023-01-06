@@ -40,10 +40,10 @@ export const handleTokenizeChange = () => {
 }
 
 // TODO uri?
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   const instanceId = Id.create()
   const state = Editor.create(instanceId, uri, 'unknown', '')
-  const newState = Editor.setBounds(state, top, left, height, COLUMN_WIDTH)
+  const newState = Editor.setBounds(state, x, y, height, COLUMN_WIDTH)
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
   return {
@@ -190,7 +190,7 @@ export const handleLanguagesChanged = (state) => {
 }
 
 export const resize = (state, dimensions) => {
-  const newState = Editor.setBounds(state, dimensions.top, dimensions.left, dimensions.height, state.columnWidth)
+  const newState = Editor.setBounds(state, dimensions.x, dimensions.y, dimensions.height, state.columnWidth)
   const commands = [Editor.renderTextAndCursorAndSelectionsCommands(newState)]
   return {
     newState,

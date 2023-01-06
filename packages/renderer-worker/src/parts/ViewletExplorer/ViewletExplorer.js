@@ -32,15 +32,15 @@ import {
 
 // TODO instead of root string, there should be a root dirent
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     root: '',
     items: [],
     focusedIndex: -1,
     focused: false,
     hoverIndex: -1,
-    top,
-    left,
+    x,
+    y,
     height,
     deltaY: 0,
     minLineY: 0,
@@ -903,10 +903,10 @@ export const handleMouseEnter = async (state, index) => {
     // TODO preload content maybe when it is a long hover
     return state
   }
-  const { top, itemHeight, left, root } = state
+  const { top, itemHeight, x, root } = state
   const uri = `${root}${dirent.path}`
   const newTop = top + index * itemHeight
-  const right = left
+  const right = x
   await Command.execute(/* ImagePreview.show */ 9081, /* uri */ uri, /* top */ newTop, /* right */ right)
 }
 

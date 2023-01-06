@@ -19,11 +19,7 @@ test.skip('open', async () => {
     switch (message[0]) {
       case 909090:
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
+        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       default:
         throw new Error('unexpected message')
@@ -38,11 +34,7 @@ test.skip('open - cursor changes to row above', async () => {
     switch (message[0]) {
       case 909090:
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
+        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       case 'Viewlet.send':
         break
@@ -136,8 +128,8 @@ test.skip('open - cursor changes to row above', async () => {
     finalDeltaY: 122,
     height: 400,
     scrollBarHeight: 28,
-    top: 0,
-    left: 0,
+    y: 0,
+    x: 0,
     columnWidth: 8,
     rowHeight: 8,
     invalidStartIndex: 0,
@@ -145,12 +137,7 @@ test.skip('open - cursor changes to row above', async () => {
   await EditorCompletion.openCompletion(editor)
   await EditorCommandCursorUp.cursorUp(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
-    909090,
-    expect.any(Number),
-    'Viewlet.dispose',
-    'EditorCompletion',
-  ])
+  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [909090, expect.any(Number), 'Viewlet.dispose', 'EditorCompletion'])
 })
 
 test.skip('open - cursor changes to row below', async () => {
@@ -159,11 +146,7 @@ test.skip('open - cursor changes to row below', async () => {
     switch (message[0]) {
       case 909090:
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
+        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       case 'Viewlet.send':
         break
@@ -261,8 +244,8 @@ test.skip('open - cursor changes to row below', async () => {
     finalDeltaY: 122,
     height: 400,
     scrollBarHeight: 28,
-    top: 0,
-    left: 0,
+    y: 0,
+    x: 0,
     columnWidth: 8,
     rowHeight: 8,
     invalidStartIndex: 0,
@@ -270,12 +253,7 @@ test.skip('open - cursor changes to row below', async () => {
   await EditorCompletion.openCompletion(editor)
   await EditorCommandCursorDown.cursorDown(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
-    909090,
-    expect.any(Number),
-    'Viewlet.dispose',
-    'EditorCompletion',
-  ])
+  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [909090, expect.any(Number), 'Viewlet.dispose', 'EditorCompletion'])
 })
 
 test.skip('open - cursor changes to column left - matches word', async () => {
@@ -284,11 +262,7 @@ test.skip('open - cursor changes to column left - matches word', async () => {
     switch (message[0]) {
       case 909090:
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
+        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       case 'Viewlet.send':
         break
@@ -382,8 +356,8 @@ test.skip('open - cursor changes to column left - matches word', async () => {
     finalDeltaY: 122,
     height: 400,
     scrollBarHeight: 28,
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     columnWidth: 8,
     rowHeight: 8,
     invalidStartIndex: 0,
@@ -391,15 +365,7 @@ test.skip('open - cursor changes to column left - matches word', async () => {
   await EditorCompletion.openCompletion(editor)
   await EditorCommandCursorCharacterLeft.cursorCharacterLeft(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
-    'Viewlet.send',
-    'EditorCompletion',
-    'show',
-    8,
-    16,
-    [],
-    1,
-  ])
+  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, ['Viewlet.send', 'EditorCompletion', 'show', 8, 16, [], 1])
 })
 
 test.skip('open - cursor changes to column left - matches no word', async () => {
@@ -408,11 +374,7 @@ test.skip('open - cursor changes to column left - matches no word', async () => 
     switch (message[0]) {
       case 909090:
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
+        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       case 'Viewlet.send':
         break
@@ -506,8 +468,8 @@ test.skip('open - cursor changes to column left - matches no word', async () => 
     finalDeltaY: 122,
     height: 400,
     scrollBarHeight: 28,
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     columnWidth: 8,
     rowHeight: 8,
     invalidStartIndex: 0,
@@ -515,12 +477,7 @@ test.skip('open - cursor changes to column left - matches no word', async () => 
   await EditorCompletion.openCompletion(editor)
   await EditorCommandCursorCharacterLeft.cursorCharacterLeft(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
-    909090,
-    expect.any(Number),
-    'Viewlet.dispose',
-    'EditorCompletion',
-  ])
+  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [909090, expect.any(Number), 'Viewlet.dispose', 'EditorCompletion'])
 })
 
 test.skip('open - cursor changes to column right - matches word', async () => {
@@ -529,11 +486,7 @@ test.skip('open - cursor changes to column right - matches word', async () => {
     switch (message[0]) {
       case 909090:
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
+        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       case 'Viewlet.send':
         break
@@ -627,8 +580,8 @@ test.skip('open - cursor changes to column right - matches word', async () => {
     finalDeltaY: 122,
     height: 400,
     scrollBarHeight: 28,
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     columnWidth: 8,
     rowHeight: 8,
     invalidStartIndex: 0,
@@ -636,15 +589,7 @@ test.skip('open - cursor changes to column right - matches word', async () => {
   await EditorCompletion.openCompletion(editor)
   await EditorCommandCursorCharacterRight.cursorCharacterRight(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
-    'Viewlet.send',
-    'EditorCompletion',
-    'show',
-    24,
-    16,
-    [],
-    1,
-  ])
+  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, ['Viewlet.send', 'EditorCompletion', 'show', 24, 16, [], 1])
 })
 
 test.skip('open - cursor changes to column right - matches no word', async () => {
@@ -653,11 +598,7 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
     switch (message[0]) {
       case 909090:
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
+        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       case 'Viewlet.send':
         break
@@ -751,8 +692,8 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
     finalDeltaY: 122,
     height: 400,
     scrollBarHeight: 28,
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     columnWidth: 8,
     rowHeight: 8,
     invalidStartIndex: 0,
@@ -760,10 +701,5 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
   await EditorCompletion.openCompletion(editor)
   await EditorCommandCursorCharacterRight.cursorCharacterRight(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
-    909090,
-    expect.any(Number),
-    'Viewlet.dispose',
-    'EditorCompletion',
-  ])
+  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [909090, expect.any(Number), 'Viewlet.dispose', 'EditorCompletion'])
 })

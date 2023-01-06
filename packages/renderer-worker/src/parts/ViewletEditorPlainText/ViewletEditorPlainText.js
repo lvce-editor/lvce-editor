@@ -1,7 +1,7 @@
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     content: 'abc',
     uri,

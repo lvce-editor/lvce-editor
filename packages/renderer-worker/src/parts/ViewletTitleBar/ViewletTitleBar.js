@@ -1,10 +1,10 @@
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const create = (id, uri, top, left, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     disposed: false,
-    top,
-    left,
+    x,
+    y,
     width,
     height,
   }
@@ -16,13 +16,13 @@ export const loadContent = (state) => {
 
 export const getChildren = (state) => {
   const children = []
-  const { top, left, width, height } = state
+  const { x, y, width, height } = state
   if (true) {
     children.push({
       id: ViewletModuleId.TitleBarMenuBar,
-      top,
+      x,
+      y,
       height,
-      left,
     })
   }
   if (true) {

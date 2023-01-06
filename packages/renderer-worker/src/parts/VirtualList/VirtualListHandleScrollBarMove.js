@@ -9,9 +9,9 @@ const getNewPercent = (state, relativeY) => {
   return 1
 }
 
-export const handleScrollBarMove = (state, y) => {
-  const { top, headerHeight, handleOffset, finalDeltaY } = state
-  const relativeY = y - top - headerHeight - handleOffset
+export const handleScrollBarMove = (state, eventY) => {
+  const { y, headerHeight, handleOffset, finalDeltaY } = state
+  const relativeY = eventY - y - headerHeight - handleOffset
   const newPercent = getNewPercent(state, relativeY)
   const newDeltaY = newPercent * finalDeltaY
   return setDeltaY(state, newDeltaY)

@@ -29,7 +29,7 @@ export const showOverlayMessage = (state, x, y, content) => {
   $OverLayMessage.className = 'EditorOverlayMessage'
   $OverLayMessage.style.position = 'fixed'
   $OverLayMessage.textContent = content
-  SetBounds.setTopAndLeft($OverLayMessage, top, length)
+  SetBounds.setXAndY($OverLayMessage, x, y)
   Widget.append($OverLayMessage)
 }
 

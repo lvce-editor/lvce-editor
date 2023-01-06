@@ -38,8 +38,8 @@ export const create = (id, uri, languageId, content) => {
     finalY: 0,
     finalDeltaY: 0,
     height: 0,
-    top: 0,
-    left: 0,
+    y: 0,
+    x: 0,
     columnWidth: 0,
     rowHeight: 0,
     fontSize: 15, // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
@@ -269,7 +269,7 @@ export const hasSelection = (editor) => {
   return editor.selections && editor.selections.length > 0
 }
 
-export const setBounds = (editor, top, left, height, columnWidth) => {
+export const setBounds = (editor, x, y, height, columnWidth) => {
   const { itemHeight } = editor
   const numberOfVisibleLines = Math.floor(height / itemHeight)
   const total = editor.lines.length
@@ -278,8 +278,8 @@ export const setBounds = (editor, top, left, height, columnWidth) => {
   const finalDeltaY = finalY * itemHeight
   return {
     ...editor,
-    top,
-    left,
+    x,
+    y,
     height,
     columnWidth,
     numberOfVisibleLines,

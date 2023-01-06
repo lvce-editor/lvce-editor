@@ -6,38 +6,28 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostRename.js',
-  () => {
-    return {
-      executePrepareRenameProvider: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-      executeRenameProvider: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostRename.js', () => {
+  return {
+    executePrepareRenameProvider: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    executeRenameProvider: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
-const ExtensionHostRename = await import(
-  '../src/parts/ExtensionHost/ExtensionHostRename.js'
-)
+const ExtensionHostRename = await import('../src/parts/ExtensionHost/ExtensionHostRename.js')
 const EditorRename = await import('../src/parts/EditorRename/EditorRename.js')
 const Command = await import('../src/parts/Command/Command.js')
 
@@ -58,8 +48,8 @@ test('open - can rename', async () => {
     lines: [''],
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     columnWidth: 8,
     rowHeight: 20,
   }
@@ -82,8 +72,8 @@ test('open - cannot rename', async () => {
     lines: [''],
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     columnWidth: 8,
     rowHeight: 20,
   }
@@ -97,12 +87,7 @@ test('open - cannot rename', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await EditorRename.open(editor)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'EditorError.show',
-    'You cannot rename this element',
-    0,
-    20
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('EditorError.show', 'You cannot rename this element', 0, 20)
 })
 
 // TODO test errors
@@ -116,8 +101,8 @@ test('finish - empty workspace edits', async () => {
     lines: [''],
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     columnWidth: 8,
     rowHeight: 20,
   }
@@ -139,8 +124,8 @@ test('abort', async () => {
     lines: [''],
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     columnWidth: 8,
     rowHeight: 20,
   }

@@ -13,12 +13,12 @@ const UiStrings = {
   ImageNotFound: `Image could not be loaded: Not Found`,
 }
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     src: '',
     disposed: false,
-    top,
-    left,
+    x,
+    y,
     width,
     height,
     uri,
@@ -234,14 +234,14 @@ const getCurrentZoomFactor = (zoomFactor, deltaY) => {
   return currentZoomFactor
 }
 
-export const handleWheel = (state, x, y, deltaX, deltaY) => {
+export const handleWheel = (state, eventX, eventY, deltaX, deltaY) => {
   if (deltaY === 0) {
     return state
   }
   const normalizedDeltaY = WheelEvent.normalizeDelta(deltaY)
-  const { top, left } = state
-  const relativeX = x - left
-  const relativeY = y - top
+  const { x, y } = state
+  const relativeX = eventX - x
+  const relativeY = eventY - y
   const { domMatrix, zoomFactor, minZoom, maxZoom } = state
   const currentZoomFactor = getCurrentZoomFactor(zoomFactor, normalizedDeltaY)
   const newDomMatrix = DomMatrix.zoomInto(domMatrix, currentZoomFactor, relativeX, relativeY)

@@ -11,7 +11,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
   return {
     invoke: () => {
       return {
-        left: 0,
+        x: 0,
         bottom: 0,
       }
     },

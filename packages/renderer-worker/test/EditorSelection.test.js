@@ -17,8 +17,8 @@ const EditorSelection = await import('../src/parts/Editor/EditorSelection.js')
 
 test('getVisible', () => {
   const editor = {
-    top: 10,
-    left: 20,
+    x: 20,
+    y: 10,
     rowHeight: 20,
     columnWidth: 8,
     minLineY: 4,
@@ -46,8 +46,8 @@ test('getVisible', () => {
 
 test('getVisible - bug with two lines', () => {
   const editor = {
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     rowHeight: 20,
     columnWidth: 8,
     minLineY: 0,
@@ -73,8 +73,8 @@ test('getVisible - bug with two lines', () => {
 
 test('getVisible - cursors should be treated separately', () => {
   const editor = {
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     rowHeight: 20,
     columnWidth: 8,
     minLineY: 0,
@@ -94,8 +94,8 @@ test('getVisible - cursors should be treated separately', () => {
 
 test('getVisible - bug with multiple lines', () => {
   const editor = {
-    top: 10,
-    left: 20,
+    x: 20,
+    y: 10,
     rowHeight: 20,
     columnWidth: 8,
     minLineY: 0,
@@ -147,8 +147,8 @@ test.skip('applyEdit - emoji ', () => {
     finalY: 0,
     finalDeltaY: 0,
     height: 645,
-    top: 55,
-    left: 0,
+    x: 0,
+    y: 55,
     columnWidth: 9,
     rowHeight: 20,
     fontSize: 15,

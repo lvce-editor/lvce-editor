@@ -8,19 +8,16 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: () => {
-        return {
-          left: 0,
-          bottom: 0,
-        }
-      },
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: () => {
+      return {
+        x: 0,
+        bottom: 0,
+      }
+    },
   }
-)
+})
 
 jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
   return {
@@ -77,9 +74,7 @@ jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
   }
 })
 
-const ViewletTitleBarMenuBarHandleKeyArrowRight = await import(
-  '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleKeyArrowRight.js'
-)
+const ViewletTitleBarMenuBarHandleKeyArrowRight = await import('../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleKeyArrowRight.js')
 
 test('handleKeyArrowRight - open sub menu', async () => {
   const state = {
@@ -115,14 +110,12 @@ test('handleKeyArrowRight - open sub menu', async () => {
             id: MenuEntryId.OpenRecent,
           },
         ],
-        top: 0,
-        left: 0,
+        x: 0,
+        y: 0,
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarHandleKeyArrowRight.handleKeyArrowRight(state)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarHandleKeyArrowRight.handleKeyArrowRight(state)).toMatchObject({
     menus: [
       {
         level: 0,
@@ -150,8 +143,8 @@ test('handleKeyArrowRight - open sub menu', async () => {
             label: 'file-2.txt',
           },
         ],
-        top: 25,
-        left: 150,
+        x: 150,
+        y: 25,
       },
     ],
   })

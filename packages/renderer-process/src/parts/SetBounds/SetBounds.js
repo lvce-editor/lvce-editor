@@ -5,8 +5,8 @@ export const setBounds = ($Element, x, y, width, height) => {
   $Element.style.height = `${height}px`
 }
 
-export const setTopAndHeight = ($Element, top, height) => {
-  $Element.style.top = `${top}px`
+export const setYAndHeight = ($Element, y, height) => {
+  $Element.style.top = `${y}px`
   $Element.style.height = `${height}px`
 }
 
@@ -14,9 +14,9 @@ export const setTop = ($Element, top) => {
   $Element.style.top = `${top}px`
 }
 
-export const setTopAndLeft = ($Element, top, left) => {
-  $Element.style.top = `${top}px`
-  $Element.style.left = `${left}px`
+export const setXAndY = ($Element, x, y) => {
+  $Element.style.left = `${x}px`
+  $Element.style.top = `${y}px`
 }
 
 /**
