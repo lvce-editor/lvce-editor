@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as AriaRoles from '../src/parts/AriaRoles/AriaRoles.js'
 import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.js'
 
 beforeEach(() => {
@@ -67,7 +68,7 @@ test('accessibility - PanelTabs should have role tablist', () => {
   const state = ViewletPanel.create()
   ViewletPanel.setTabs(state, ['Problems', 'Output', 'Debug Console', 'Terminal'])
   // @ts-ignore
-  expect(state.$PanelTabs.role).toBe('tablist')
+  expect(state.$PanelTabs.role).toBe(AriaRoles.TabList)
 })
 
 test('accessibility - PanelTab should have role tab', () => {
@@ -75,7 +76,7 @@ test('accessibility - PanelTab should have role tab', () => {
   ViewletPanel.setTabs(state, ['Problems', 'Output', 'Debug Console', 'Terminal'])
   const $PanelTabProblems = state.$PanelTabs.children[0]
   // @ts-ignore
-  expect($PanelTabProblems.role).toBe('tab')
+  expect($PanelTabProblems.role).toBe(AriaRoles.Tab)
 })
 
 test('setSelectedIndex', () => {
