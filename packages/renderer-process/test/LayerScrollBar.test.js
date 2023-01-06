@@ -19,7 +19,7 @@ test('setPosition', () => {
     $ScrollBarThumb: document.createElement('div'),
   }
   LayerScrollBar.setPosition(state, 50)
-  expect(state.$ScrollBarThumb.style.top).toBe('50px')
+  expect(state.$ScrollBarThumb.style.translate).toBe('0 50px')
 })
 
 test('setDiagnostics - renderScrollBarDiagnosticsLess', () => {
@@ -34,9 +34,7 @@ test('setDiagnostics - renderScrollBarDiagnosticsLess', () => {
   ]
   const spy = jest.spyOn(document, 'createElement')
   LayerScrollBar.setDiagnostics(state, scrollBarDiagnostics)
-  expect(state.$ScrollBarDiagnostics.innerHTML).toBe(
-    '<div class="ScrollBarDiagnostic" style="top: 20px;"></div>'
-  )
+  expect(state.$ScrollBarDiagnostics.innerHTML).toBe('<div class="ScrollBarDiagnostic" style="top: 20px;"></div>')
   expect(spy).toHaveBeenCalledTimes(1)
 })
 
@@ -76,9 +74,7 @@ test('setDiagnostics - renderScrollBarDiagnosticsEqual', () => {
   ]
   const spy = jest.spyOn(document, 'createElement')
   LayerScrollBar.setDiagnostics(state, scrollBarDiagnostics)
-  expect(state.$ScrollBarDiagnostics.innerHTML).toBe(
-    '<div class="ScrollBarDiagnostic" style="top: 20px;"></div>'
-  )
+  expect(state.$ScrollBarDiagnostics.innerHTML).toBe('<div class="ScrollBarDiagnostic" style="top: 20px;"></div>')
   expect(spy).not.toHaveBeenCalled()
 })
 
