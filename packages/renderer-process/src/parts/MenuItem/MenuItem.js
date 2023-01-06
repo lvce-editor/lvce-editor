@@ -1,10 +1,11 @@
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as Logger from '../Logger/Logger.js'
 
 const getLabel = (item) => {
   if (!item || !item.label) {
-    console.warn('menu item has missing label', item)
+    Logger.warn('menu item has missing label', item)
     return 'n/a'
   }
   return item.label
@@ -65,7 +66,7 @@ export const create$MenuItem = (item) => {
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
-      console.warn('invalid menu item flags:', item)
+      Logger.warn('invalid menu item flags:', item)
       break
   }
   return $MenuItem
