@@ -6,7 +6,6 @@ import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletio
 import * as Height from '../Height/Height.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
