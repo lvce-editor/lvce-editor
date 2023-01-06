@@ -84,23 +84,14 @@ export const loadingContent = () => {
   const columnIndex = editor.selections[1]
   const x = EditorPosition.x(editor, rowIndex, columnIndex)
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
-  const changes = [
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'EditorCompletion',
-    /* method */ 'showLoading',
-    /* x */ x,
-    /* y */ y,
-  ]
+  const changes = [/* Viewlet.send */ 'Viewlet.send', /* id */ 'EditorCompletion', /* method */ 'showLoading', /* x */ x, /* y */ y]
   return changes
 }
 
 export const handleSelectionChange = (state, selectionChanges) => {}
 
 export const advance = (state, word) => {
-  const filteredItems = FilterCompletionItems.filterCompletionItems(
-    state.items,
-    word
-  )
+  const filteredItems = FilterCompletionItems.filterCompletionItems(state.items, word)
   return {
     ...state,
     filteredItems,
@@ -121,13 +112,7 @@ const renderPosition = {
     return oldState.x === newState.x && oldState.y === newState.y
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.EditorCompletion,
-      /* method */ 'setPosition',
-      /* x */ newState.x,
-      /* y */ newState.y,
-    ]
+    return [/* method */ 'setPosition', /* x */ newState.x, /* y */ newState.y]
   },
 }
 
@@ -145,38 +130,21 @@ const getVisibleItems = (filteredItems, minLineY, maxLineY) => {
 
 const renderItems = {
   isEqual(oldState, newState) {
-    return (
-      oldState.items === newState.items &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY
-    )
+    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
-    const visibleItems = getVisibleItems(
-      newState.items,
-      newState.minLineY,
-      newState.maxLineY
-    )
+    const visibleItems = getVisibleItems(newState.items, newState.minLineY, newState.maxLineY)
     return [/* method */ 'setItems', /* items */ visibleItems, /* reason */ 1]
   },
 }
 
 const renderBounds = {
   isEqual(oldState, newState) {
-    return (
-      oldState.items === newState.items &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY
-    )
+    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
     const { left, top, width, height } = newState
-    return [
-      /* left */ left,
-      /* top */ top,
-      /* width */ width,
-      /* height */ height,
-    ]
+    return [/* method */ 'setBounds', /* left */ left, /* top */ top, /* width */ width, /* height */ height]
   },
 }
 
@@ -185,19 +153,10 @@ const renderFocusedIndex = {
     return oldState.focusedIndex === newState.focusedIndex
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setFocusedIndex',
-      /* oldFocusedIndex */ oldState.focusedIndex,
-      /* newFocusedIndex */ newState.focusedIndex,
-    ]
+    return [/* method */ 'setFocusedIndex', /* oldFocusedIndex */ oldState.focusedIndex, /* newFocusedIndex */ newState.focusedIndex]
   },
 }
 
-export const render = [
-  renderItems,
-  renderPosition,
-  renderBounds,
-  renderFocusedIndex,
-]
+export const render = [renderItems, renderPosition, renderBounds, renderFocusedIndex]
 
 export * from '../VirtualList/VirtualList.js'
