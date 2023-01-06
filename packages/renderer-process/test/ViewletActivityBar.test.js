@@ -5,6 +5,7 @@ import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/Activit
 import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
 import * as AriaOrientationType from '../src/parts/AriaOrientationType/AriaOrientationType.js'
 import * as ViewletActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
+import * as AriaRoles from '../src/parts/AriaRoles/AriaRoles.js'
 
 const getTitle = ($Element) => {
   return $Element.title
@@ -155,8 +156,11 @@ test('accessibility - ActivityBarItem tab should have role tab and aria-keyshort
       flags: ActivityBarItemFlags.Button,
     },
   ])
-  expect(state.$ActivityBar.firstChild.role).toBe('tab')
-  expect(state.$ActivityBar.firstChild.ariaKeyShortcuts).toBe('Control+Shift+X')
+  const { $ActivityBar } = state
+  // @ts-ignore
+  expect($ActivityBar.firstChild.role).toBe(AriaRoles.Tab)
+  // @ts-ignore
+  expect($ActivityBar.firstChild.ariaKeyShortcuts).toBe('Control+Shift+X')
 })
 
 test('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOrientation', () => {
@@ -184,9 +188,10 @@ test('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOr
       flags: ActivityBarItemFlags.Button,
     },
   ])
-  expect(state.$ActivityBar.role).toBe('toolbar')
-  expect(state.$ActivityBar.ariaRoleDescription).toBe('Activity Bar')
-  expect(state.$ActivityBar.ariaOrientation).toBe(AriaOrientationType.Vertical)
+  const { $ActivityBar } = state
+  expect($ActivityBar.role).toBe(AriaRoles.ToolBar)
+  expect($ActivityBar.ariaRoleDescription).toBe('Activity Bar')
+  expect($ActivityBar.ariaOrientation).toBe(AriaOrientationType.Vertical)
 })
 
 test('accessibility - ActivityBarItem button should have role button and ariaHasPopup', () => {
@@ -217,8 +222,11 @@ test('accessibility - ActivityBarItem button should have role button and ariaHas
       keyShortcuts: '',
     },
   ])
-  expect(state.$ActivityBar.lastChild.role).toBe('button')
-  expect(state.$ActivityBar.lastChild.ariaHasPopup).toBe(AriaBoolean.True)
+  const { $ActivityBar } = state
+  // @ts-ignore
+  expect($ActivityBar.lastChild.role).toBe(AriaRoles.Button)
+  // @ts-ignore
+  expect($ActivityBar.lastChild.ariaHasPopup).toBe(AriaBoolean.True)
 })
 
 test('accessibility - ActivityBarItems should have ariaKeyShortcuts if applicable', () => {
