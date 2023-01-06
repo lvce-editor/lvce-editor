@@ -17,7 +17,7 @@ const handleImageError = (event) => {
 
 // TODO duplicate code with below
 
-export const showError = (message, top, left) => {
+export const showError = (message, y, x) => {
   const $ImagePreviewImage = document.createElement('img')
   $ImagePreviewImage.className = 'ImagePreviewImage'
   $ImagePreviewImage.alt = ''
@@ -27,7 +27,7 @@ export const showError = (message, top, left) => {
   const $ImagePreview = document.createElement('figure')
   $ImagePreview.className = 'ImagePreview'
   $ImagePreview.append($ImagePreviewImage, $ImagePreviewCaption)
-  SetBounds.setTopAndLeft($ImagePreview, top, left)
+  SetBounds.setXAndY($ImagePreview, x, y)
   $ImagePreview.style.display = 'none'
   Widget.append($ImagePreview)
   return {

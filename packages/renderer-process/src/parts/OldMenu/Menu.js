@@ -195,7 +195,7 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, mo
 
   const $Menu = create$Menu()
   $Menu.append(...items.map(MenuItem.create$MenuItem))
-  SetBounds.setTopAndLeft($Menu, y, x)
+  SetBounds.setXAndY($Menu, x, y)
   $Menu.id = `Menu-${level}`
 
   if (parentIndex !== -1) {
@@ -223,7 +223,7 @@ export const showContextMenu = (x, y, width, height, level, items) => {
   }
   const $Menu = create$Menu()
   $Menu.append(...items.map(MenuItem.create$MenuItem))
-  SetBounds.setTopAndLeft($Menu, y, x)
+  SetBounds.setXAndY($Menu, x, y)
   $Menu.id = `Menu-${level}`
   Widget.append($Menu)
   state.$$Menus.push($Menu)
