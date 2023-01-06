@@ -32,7 +32,7 @@ test('getVisible', () => {
     cursorWidth: 0,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual(new Float32Array([/* x */ 24, /* y */ 80]))
+  expect(cursorInfos).toEqual(new Float32Array([/*x */ 48, /* y */ 40, /* x */ 24, /* y */ 80]))
   expect(selectionInfos).toEqual(
     // prettier-ignore
     new Float32Array([
@@ -61,12 +61,12 @@ test('getVisible - bug with two lines', () => {
     cursorWidth: 0,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual(new Float32Array([/*x */ 32, /* y */ 0]))
+  expect(cursorInfos).toEqual(new Float32Array([/*x */ 32, /* y */ 20]))
   expect(selectionInfos).toEqual(
     // prettier-ignore
     new Float32Array([
       /* x */ 32, /* y */ 0, /* width */ 16, /* height */ 20,
-      /* x */ 32, /* y */ 20, /* width */ 0,  /* height */ 20,
+      /* x */ 0, /* y */ 20, /* width */ 32,  /* height */ 20,
     ])
   )
 })
@@ -92,7 +92,7 @@ test('getVisible - cursors should be treated separately', () => {
   expect(selectionInfos).toEqual(new Float32Array([]))
 })
 
-test.skip('getVisible - bug with multiple lines', () => {
+test('getVisible - bug with multiple lines', () => {
   const editor = {
     top: 10,
     left: 20,
@@ -109,12 +109,12 @@ test.skip('getVisible - bug with multiple lines', () => {
     cursorWidth: 0,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual(new Float32Array([/* x */ 24, /* y */ 0]))
+  expect(cursorInfos).toEqual(new Float32Array([/* x */ 24, /* y */ 40]))
   expect(selectionInfos).toEqual(
     // prettier-ignore
     new Float32Array([
       /* x */ 24,/* y */ 0,  /* width */ 24, /* height */ 20,
-      /* x */ 0, /* y */ 24, /* width */ 48, /* height */ 20,
+      /* x */ 0, /* y */ 20, /* width */ 48, /* height */ 20,
       /* x */ 0, /* y */ 40, /* width */ 24, /* height */ 20,
     ])
   )

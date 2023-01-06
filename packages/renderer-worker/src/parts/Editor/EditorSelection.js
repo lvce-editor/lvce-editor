@@ -88,15 +88,14 @@ export const getVisible = (editor) => {
         visibleCursors.push(endLineEndX, endLineY)
         continue
       }
-      const endLineStartX = getX(endLine, selectionStartColumn, fontWeight, fontSize, fontFamily, letterSpacing, halfCursorWidth)
       const startLineY = getY(selectionStartRow, minLineY, rowHeight)
       if (selectionStartRow === selectionEndRow) {
+        const startX = getX(endLine, selectionStartColumn, fontWeight, fontSize, fontFamily, letterSpacing, halfCursorWidth)
         visibleCursors.push(endLineEndX, endLineY)
-        const width = endLineEndX - endLineStartX
-        visibleSelections.push(endLineStartX, startLineY, width, rowHeight)
+        const width = endLineEndX - startX
+        visibleSelections.push(startX, startLineY, width, rowHeight)
       } else {
         if (selectionStartRow >= minLineY) {
-          visibleCursors.push(endLineStartX, startLineY)
           const startLine = lines[selectionStartRow]
           const startLineStartX = getX(startLine, selectionStartColumn, fontWeight, fontSize, fontFamily, letterSpacing, halfCursorWidth)
           const startLineEndX = getX(startLine, startLine.length, fontWeight, fontSize, fontFamily, letterSpacing, halfCursorWidth)
@@ -113,8 +112,9 @@ export const getVisible = (editor) => {
           visibleSelections.push(0, currentLineY, width, rowHeight)
         }
         if (selectionEndRow <= maxLineY) {
-          const width = endLineEndX - endLineStartX
-          visibleSelections.push(endLineStartX, endLineY, width, rowHeight)
+          const width = endLineEndX
+          visibleSelections.push(0, endLineY, width, rowHeight)
+          visibleCursors.push(endLineEndX, endLineY)
         }
       }
     }
