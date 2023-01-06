@@ -169,17 +169,16 @@ export const handleMouseDown = (event) => {
   }
   event.preventDefault()
   const totalOffset = getTotalOffset(event)
-  const x = event.clientX
-  const y = event.clientY
-  switch (event.detail) {
+  const { clientX, clientY, detail } = event
+  switch (detail) {
     case 1:
-      handleSingleClick(event, x, y, totalOffset)
+      handleSingleClick(event, clientX, clientY, totalOffset)
       break
     case 2:
-      handleDoubleClick(event, x, y, totalOffset)
+      handleDoubleClick(event, clientX, clientY, totalOffset)
       break
     case 3:
-      handleTripleClick(event, x, y, totalOffset)
+      handleTripleClick(event, clientX, clientY, totalOffset)
       break
     default:
       break
@@ -192,11 +191,15 @@ export const handleMouseDown = (event) => {
 // disabled for now because of constant cpu usage on mousemove
 // bad for performance
 export const handlePointerMove = (event) => {
-  const x = event.clientX
-  const y = event.clientY
-  if (event.altKey) {
+  const { clientX, clientY, altKey } = event
+  if (altKey) {
     const offset = getTotalOffset(event)
-    RendererWorker.send(/* Editor.handleMouseMoveWithAltKey */ 'Editor.handleMouseMoveWithAltKey', /* x */ x, /* y */ y, /* offset */ offset)
+    RendererWorker.send(
+      /* Editor.handleMouseMoveWithAltKey */ 'Editor.handleMouseMoveWithAltKey',
+      /* x */ clientX,
+      /* y */ clientY,
+      /* offset */ offset
+    )
   }
   // RendererWorker.send(/* Editor.handleMouseMove */ 389, /* x */ x, /* y */ y)
 }
@@ -224,7 +227,8 @@ export const handleWheel = (event) => {
 
 export const handlePaste = (event) => {
   event.preventDefault()
-  const text = event.clipboardData.getData(ClipBoardDataType.Text)
+  const { clipboardData } = event
+  const text = clipboardData.getData(ClipBoardDataType.Text)
   RendererWorker.send(/* Editor.paste */ 'Editor.paste', /* text */ text)
 }
 
