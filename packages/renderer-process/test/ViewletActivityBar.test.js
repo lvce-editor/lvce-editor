@@ -2,8 +2,9 @@
  * @jest-environment jsdom
  */
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as ViewletActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
+import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
 import * as AriaOrientationType from '../src/parts/AriaOrientationType/AriaOrientationType.js'
+import * as ViewletActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 
 const getTitle = ($Element) => {
   return $Element.title
@@ -217,7 +218,7 @@ test('accessibility - ActivityBarItem button should have role button and ariaHas
     },
   ])
   expect(state.$ActivityBar.lastChild.role).toBe('button')
-  expect(state.$ActivityBar.lastChild.ariaHasPopup).toBe('true')
+  expect(state.$ActivityBar.lastChild.ariaHasPopup).toBe(AriaBoolean.True)
 })
 
 test('accessibility - ActivityBarItems should have ariaKeyShortcuts if applicable', () => {

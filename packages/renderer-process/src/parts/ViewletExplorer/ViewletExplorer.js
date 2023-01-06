@@ -7,6 +7,7 @@ import * as Label from '../Label/Label.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
@@ -65,13 +66,13 @@ const render$Row = ($Row, rowInfo) => {
   switch (rowInfo.type) {
     // TODO decide on directory vs folder
     case DirentType.Directory:
-      $Row.ariaExpanded = 'false'
+      $Row.ariaExpanded = AriaBoolean.False
       break
     case DirentType.DirectoryExpanding:
-      $Row.ariaExpanded = 'true' // TODO tree should be aria-busy then
+      $Row.ariaExpanded = AriaBoolean.True // TODO tree should be aria-busy then
       break
     case DirentType.DirectoryExpanded:
-      $Row.ariaExpanded = 'true'
+      $Row.ariaExpanded = AriaBoolean.True
       break
     case DirentType.File:
       $Row.ariaExpanded = undefined
