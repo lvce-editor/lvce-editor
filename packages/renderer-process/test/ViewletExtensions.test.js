@@ -4,6 +4,7 @@
 import { jest } from '@jest/globals'
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
+import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.js'
 
 const isLeaf = (node) => {
   return node.childElementCount === 0
@@ -17,10 +18,7 @@ const getSimpleList = (state) => {
   const { $ListItems } = state
   return Array.from($ListItems.children).map((node) => {
     const children = node.querySelectorAll('*')
-    return Array.from(children)
-      .filter(isLeaf)
-      .map(getTextContent)
-      .filter(Boolean)
+    return Array.from(children).filter(isLeaf).map(getTextContent).filter(Boolean)
   })
 }
 
@@ -70,32 +68,16 @@ test.skip('setExtensionState', () => {
       name: 'Test Extension 2',
     },
   ])
-  ViewletExtensions.setExtensionState(
-    state,
-    'test-author.test-extension-2',
-    'installing'
-  )
+  ViewletExtensions.setExtensionState(state, 'test-author.test-extension-2', 'installing')
   // @ts-ignore
   expect($Extensions.children[1].dataset.state).toBe('installing')
-  ViewletExtensions.setExtensionState(
-    state,
-    'test-author.test-extension-2',
-    'installed'
-  )
+  ViewletExtensions.setExtensionState(state, 'test-author.test-extension-2', 'installed')
   // @ts-ignore
   expect($Extensions.children[1].dataset.state).toBe('installed')
-  ViewletExtensions.setExtensionState(
-    state,
-    'test-author.test-extension-2',
-    'uninstalling'
-  )
+  ViewletExtensions.setExtensionState(state, 'test-author.test-extension-2', 'uninstalling')
   // @ts-ignore
   expect($Extensions.children[1].dataset.state).toBe('uninstalling')
-  ViewletExtensions.setExtensionState(
-    state,
-    'test-author.test-extension-2',
-    'uninstalled'
-  )
+  ViewletExtensions.setExtensionState(state, 'test-author.test-extension-2', 'uninstalled')
   // @ts-ignore
   expect($Extensions.children[1].dataset.state).toBe('uninstalled')
   ViewletExtensions.setExtensionState(state, 'non-existing', 'installed')
@@ -141,9 +123,7 @@ test('icon - fallback src', () => {
   const $SecondExtension = $ListItems.children[1]
   const $SecondIcon = $SecondExtension.querySelector('.ExtensionListItemIcon')
   // @ts-ignore
-  expect($SecondIcon.src).toBe(
-    'http://localhost/test-publisher.test-extension/icon.png'
-  )
+  expect($SecondIcon.src).toBe('http://localhost/test-publisher.test-extension/icon.png')
 })
 
 test('icon - error', () => {
@@ -281,12 +261,8 @@ test('setExtensions - add one', () => {
   const { $ListItems } = state
   expect($ListItems.children).toHaveLength(1)
   const $ExtensionOne = $ListItems.children[0]
-  const $ListItemsItemName = $ExtensionOne.querySelector(
-    '.ExtensionListItemName'
-  )
-  const $ListItemsItemIcon = $ExtensionOne.querySelector(
-    '.ExtensionListItemIcon'
-  )
+  const $ListItemsItemName = $ExtensionOne.querySelector('.ExtensionListItemName')
+  const $ListItemsItemIcon = $ExtensionOne.querySelector('.ExtensionListItemIcon')
   expect($ListItemsItemName.textContent).toBe('Test Extension 1')
   // @ts-ignore
   expect($ListItemsItemIcon.src).toBe('http://localhost/images/logo.png')
@@ -316,9 +292,7 @@ test('setFocusedIndex - move focus down by one', () => {
   expect($ExtensionOne.className).not.toContain('Focused')
   const $ExtensionTwo = $ListItems.children[1]
   expect($ExtensionTwo.id).toBe('ExtensionActive')
-  expect($ListItems.getAttribute('aria-activedescendant')).toBe(
-    'ExtensionActive'
-  )
+  expect($ListItems.getAttribute(DomAttributeType.AriaActiveDescendant)).toBe('ExtensionActive')
 })
 
 test('setFocusedIndex - oldFocusedIndex out of range', () => {
@@ -345,9 +319,7 @@ test('setFocusedIndex - oldFocusedIndex out of range', () => {
   expect($ExtensionOne.className).not.toContain('Focused')
   const $ExtensionTwo = $ListItems.children[1]
   expect($ExtensionTwo.id).toBe('ExtensionActive')
-  expect($ListItems.getAttribute('aria-activedescendant')).toBe(
-    'ExtensionActive'
-  )
+  expect($ListItems.getAttribute(DomAttributeType.AriaActiveDescendant)).toBe('ExtensionActive')
 })
 
 test('setFocusedIndex - newFocusedIndex out of range', () => {
@@ -375,7 +347,7 @@ test('setFocusedIndex - newFocusedIndex out of range', () => {
   expect($ExtensionOne.className).not.toContain('Focused')
   const $ExtensionTwo = $ListItems.children[1]
   expect($ExtensionTwo.id).toBe('')
-  expect($ListItems.getAttribute('aria-activedescendant')).toBe(null)
+  expect($ListItems.getAttribute(DomAttributeType.AriaActiveDescendant)).toBe(null)
 })
 
 test('setExtensions - renderExtensionsEqual', () => {
