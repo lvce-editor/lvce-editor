@@ -59,6 +59,7 @@ export const create = (id, uri, languageId, content) => {
     itemHeight: 20,
     fontFamily: '',
     fontWeight: 400,
+    cursorWidth: 2,
   }
 }
 
