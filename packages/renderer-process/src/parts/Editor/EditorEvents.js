@@ -84,29 +84,29 @@ export const handleSelectionMove = (event) => {
 }
 
 export const handleSelectionDone = (event) => {
-  document.removeEventListener(DomEventType.MouseMove, handleSelectionMove)
-  document.removeEventListener(DomEventType.MouseUp, handleSelectionDone)
+  const { target } = event
+  target.removeEventListener(DomEventType.PointerMove, handleSelectionMove)
+  target.removeEventListener(DomEventType.LostPointerCapture, handleSelectionDone)
 }
 
-const getModifier = (event) => {
-  if (event.ctrlKey) {
+const getModifier = (ctrlKey, altKey) => {
+  if (ctrlKey) {
     return ModifierKey.Ctrl
   }
-  if (event.altKey) {
+  if (altKey) {
     return ModifierKey.Alt
   }
   return ModifierKey.None
 }
 
 export const handleSingleClick = (event, x, y, offset) => {
-  const modifier = getModifier(event)
+  const { ctrlKey, altKey, target, pointerId } = event
+  const modifier = getModifier(ctrlKey, altKey)
   RendererWorker.send(/* Editor.handleSingleClick */ 'Editor.handleSingleClick', /* modifier */ modifier, /* x */ x, /* y */ y, /* offset */ offset)
-  const $Target = event.target
-  // const $InputBox = $Target.closest('.Editor').firstElementChild
-  // $InputBox.focus()
-  // TODO this logic should be in renderer worker
-  document.addEventListener(DomEventType.MouseMove, handleSelectionMove, DomEventOptions.Passive)
-  document.addEventListener(DomEventType.MouseUp, handleSelectionDone)
+  // @ts-ignore
+  target.setPointerCapture(pointerId)
+  target.addEventListener(DomEventType.PointerMove, handleSelectionMove, DomEventOptions.Passive)
+  target.addEventListener(DomEventType.LostPointerCapture, handleSelectionDone)
 }
 
 export const handleDoubleClick = (event, x, y, offset) => {
@@ -162,7 +162,7 @@ const getTotalOffset = (event) => {
   throw new Error('caret position is not supported')
 }
 
-export const handleMouseDown = (event) => {
+export const handlePointerDown = (event) => {
   if (isRightClick(event)) {
     return
   }
@@ -244,14 +244,14 @@ export const handleScrollBarThumbPointerMove = (event) => {
  *
  * @param {PointerEvent} event
  */
-export const handleScrollBarPointerUp = (event) => {
+export const handleScrollBarPointerCaptureLost = (event) => {
   const { target, pointerId } = event
   // @ts-ignore
   target.releasePointerCapture(pointerId)
   // @ts-ignore
   target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove)
   // @ts-ignore
-  target.removeEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
+  target.removeEventListener(DomEventType.LostPointerCapture, handleScrollBarPointerCaptureLost)
 }
 
 /**
@@ -264,9 +264,8 @@ export const handleScrollBarPointerDown = (event) => {
   target.setPointerCapture(pointerId)
   // @ts-ignore
   target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, DomEventOptions.Active)
-  // TODO use pointerlost event instead
   // @ts-ignore
-  target.addEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
+  target.addEventListener(DomEventType.LostPointerCapture, handleScrollBarPointerCaptureLost)
   RendererWorker.send(/* EditorHandleScrollBarClick.editorHandleScrollBarPointerDown */ 'Editor.handleScrollBarPointerDown', /* y */ clientY)
 }
 

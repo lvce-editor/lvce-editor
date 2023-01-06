@@ -2,10 +2,11 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
-import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
-import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
 import * as DomEventOptions from '../src/parts/DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../src/parts/DomEventType/DomEventType.js'
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
+import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
+import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -17,6 +18,7 @@ beforeAll(() => {
       this.clientY = init.clientY
       this.pointerId = init.pointerId
       this.button = init.button
+      this.detail = init.detail
     }
   }
 
@@ -78,7 +80,8 @@ test('event - mousedown - left', () => {
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
   $EditorRow.append($Token)
-  state.$LayerText.append($EditorRow)
+  const { $LayerText } = state
+  $LayerText.append($EditorRow)
   // @ts-ignore
   document.caretPositionFromPoint = () => {
     return {
@@ -86,7 +89,7 @@ test('event - mousedown - left', () => {
       offset: 2,
     }
   }
-  state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 1, clientX: 8, clientY: 5 }))
+  $LayerText.dispatchEvent(new PointerEvent('pointerdown', { detail: 1, clientX: 8, clientY: 5 }))
   expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleSingleClick', '', 8, 5, 2)
 })
 
@@ -121,13 +124,14 @@ test('event - mousedown - left - out of viewport', () => {
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
   $EditorRow.append($Token)
-  state.$LayerText.append($EditorRow)
+  const { $LayerText } = state
+  $LayerText.append($EditorRow)
   // @ts-ignore
   document.caretPositionFromPoint = () => {
     return null
   }
-  state.$LayerText.dispatchEvent(
-    new MouseEvent('mousedown', {
+  $LayerText.dispatchEvent(
+    new PointerEvent('pointerdown', {
       detail: 1,
       clientX: -10,
       clientY: -10,
@@ -143,7 +147,8 @@ test('event - double click', () => {
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
   $EditorRow.append($Token)
-  state.$LayerText.append($EditorRow)
+  const { $LayerText } = state
+  $LayerText.append($EditorRow)
   // @ts-ignore
   document.caretPositionFromPoint = () => {
     return {
@@ -153,7 +158,7 @@ test('event - double click', () => {
   }
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
-  state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 2, clientX: 8, clientY: 5 }))
+  $LayerText.dispatchEvent(new PointerEvent('pointerdown', { detail: 2, clientX: 8, clientY: 5 }))
   expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleDoubleClick', 8, 5, 2)
 })
 
@@ -189,7 +194,8 @@ test('event - triple click', () => {
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
   $EditorRow.append($Token)
-  state.$LayerText.append($EditorRow)
+  const { $LayerText } = state
+  $LayerText.append($EditorRow)
   // @ts-ignore
   document.caretPositionFromPoint = () => {
     return {
@@ -197,7 +203,7 @@ test('event - triple click', () => {
       offset: 2,
     }
   }
-  state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 3, clientX: 8, clientY: 5 }))
+  $LayerText.dispatchEvent(new PointerEvent('pointerdown', { detail: 3, clientX: 8, clientY: 5 }))
   expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleTripleClick', 8, 5, 2)
 })
 
@@ -451,23 +457,23 @@ test('event - pointerup after pointerdown - on scroll bar thumb', () => {
   })
   $ScrollBarThumb.dispatchEvent(pointerDownEvent)
   expect(spy1).toHaveBeenCalledTimes(2)
-  expect(spy1).toHaveBeenNthCalledWith(1, 'pointermove', EditorEvents.handleScrollBarThumbPointerMove, DomEventOptions.Active)
-  expect(spy1).toHaveBeenNthCalledWith(2, 'pointerup', EditorEvents.handleScrollBarPointerUp)
+  expect(spy1).toHaveBeenNthCalledWith(1, DomEventType.PointerMove, EditorEvents.handleScrollBarThumbPointerMove, DomEventOptions.Active)
+  expect(spy1).toHaveBeenNthCalledWith(2, DomEventType.LostPointerCapture, EditorEvents.handleScrollBarPointerCaptureLost)
   expect(spy3).toHaveBeenCalledTimes(1)
   expect(spy3).toHaveBeenCalledWith(0)
-  const pointerUpEvent = new PointerEvent('pointerup', {
+  const pointerLostEvent = new PointerEvent('lostpointercapture', {
     bubbles: true,
     clientX: 10,
     clientY: 20,
     pointerId: 0,
     button: MouseEventType.LeftClick,
   })
-  $ScrollBarThumb.dispatchEvent(pointerUpEvent)
+  $ScrollBarThumb.dispatchEvent(pointerLostEvent)
   expect(spy4).toHaveBeenCalledTimes(1)
   expect(spy4).toHaveBeenCalledWith(0)
   expect(spy2).toHaveBeenCalledTimes(2)
-  expect(spy2).toHaveBeenNthCalledWith(1, 'pointermove', EditorEvents.handleScrollBarThumbPointerMove)
-  expect(spy2).toHaveBeenNthCalledWith(2, 'pointerup', EditorEvents.handleScrollBarPointerUp)
+  expect(spy2).toHaveBeenNthCalledWith(1, DomEventType.PointerMove, EditorEvents.handleScrollBarThumbPointerMove)
+  expect(spy2).toHaveBeenNthCalledWith(2, DomEventType.LostPointerCapture, EditorEvents.handleScrollBarPointerCaptureLost)
 })
 
 test('event - context menu - on scroll bar', () => {

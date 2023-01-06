@@ -51,7 +51,7 @@ export const create = () => {
   const $LayerText = document.createElement('div')
   $LayerText.className = 'EditorRows'
 
-  $LayerText.addEventListener(DomEventType.MouseDown, EditorEvents.handleMouseDown)
+  $LayerText.onpointerdown = EditorEvents.handlePointerDown
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -94,7 +94,7 @@ export const create = () => {
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
   $Editor.addEventListener(DomEventType.ContextMenu, EditorEvents.handleContextMenu)
   $Editor.addEventListener(DomEventType.Wheel, EditorEvents.handleWheel, DomEventOptions.Passive)
-  $Editor.addEventListener(DomEventType.MouseMove, EditorEvents.handlePointerMove, DomEventOptions.Passive)
+  $Editor.addEventListener(DomEventType.PointerMove, EditorEvents.handlePointerMove, DomEventOptions.Passive)
   return {
     $LayerCursor,
     $LayerSelections,
