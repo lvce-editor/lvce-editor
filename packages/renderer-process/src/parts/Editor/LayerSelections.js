@@ -11,13 +11,13 @@ const render$Selection = ($Selection, selections, i) => {
   Assert.object($Selection)
   Assert.number(i)
 
-  const top = selections[i * 4]
-  const left = selections[i * 4 + 1]
+  const x = selections[i * 4]
+  const y = selections[i * 4 + 1]
   const width = selections[i * 4 + 2]
   const height = selections[i * 4 + 3]
   // TODO have many decorations per row
   // no absolute positioning
-  SetBounds.setBounds($Selection, top, left, width, height)
+  SetBounds.setBounds($Selection, x, y, width, height)
 }
 
 const render$SelectionsLess = ($Selections, childCount, selections, selectionCount) => {

@@ -5,6 +5,8 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 const handleWheel = (event) => {
   switch (event.deltaMode) {
@@ -95,7 +97,7 @@ export const create = ({ create$ListItem, render$ListItem, handleClick }) => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet List'
   $Viewlet.append($List, $ScrollBar)
-  $Viewlet.addEventListener(DomEventType.Wheel, handleWheel, { passive: true })
+  $Viewlet.addEventListener(DomEventType.Wheel, handleWheel, DomEventOptions.Passive)
 
   return {
     $Viewlet,
@@ -116,10 +118,10 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
     $List.children[oldFocusedIndex].classList.remove('Focused')
   }
   if (newFocusedIndex === -1) {
-    $List.removeAttribute('aria-activedescendant')
+    $List.removeAttribute(DomAttributeType.AriaActiveDescendant)
     $List.classList.add('FocusOutline')
   } else {
-    $List.setAttribute('aria-activedescendant', $List.children[newFocusedIndex].id)
+    $List.setAttribute(DomAttributeType.AriaActiveDescendant, $List.children[newFocusedIndex].id)
     $List.classList.remove('FocusOutline')
     $List.children[newFocusedIndex].classList.add('Focused')
   }

@@ -2,6 +2,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Focus from '../Focus/Focus.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 
 const getNodeIndex = ($Node) => {
   let index = 0
@@ -18,15 +19,9 @@ const handleLocationsMouseDown = (event) => {
   const $Target = event.target
   if ($Target.classList.contains('TreeItem')) {
     const index = getNodeIndex($Target)
-    RendererWorker.send(
-      /* ViewletLocations.selectIndex */ 'Locations.selectIndex',
-      /* index */ index
-    )
+    RendererWorker.send(/* ViewletLocations.selectIndex */ 'Locations.selectIndex', /* index */ index)
   } else if ($Target.classList.contains('LocationList')) {
-    RendererWorker.send(
-      /* ViewletLocations.focusIndex */ 'Locations.focusIndex',
-      /* index */ -1
-    )
+    RendererWorker.send(/* ViewletLocations.focusIndex */ 'Locations.focusIndex', /* index */ -1)
   }
 }
 
@@ -43,7 +38,7 @@ export const create = () => {
   $Locations.ariaLabel = 'Locations'
   $Locations.tabIndex = 0
   $Locations.onmousedown = handleLocationsMouseDown
-  $Locations.setAttribute('aria-described-by', 'LocationsMessage')
+  $Locations.setAttribute(DomAttributeType.AriaDescribedBy, 'LocationsMessage')
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Locations'
   $Viewlet.append($Message, $Locations)
@@ -119,10 +114,7 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   if (newFocusedIndex === -1) {
     $Locations.classList.add('FocusOutline')
   } else {
-    $Locations.setAttribute(
-      'aria-activedescendant',
-      `Reference-${newFocusedIndex}`
-    )
+    $Locations.setAttribute(DomAttributeType.AriaActiveDescendant, `Reference-${newFocusedIndex}`)
     $Locations.children[newFocusedIndex].classList.add('Focused')
   }
 }

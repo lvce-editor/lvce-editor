@@ -1,6 +1,7 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Logger from '../Logger/Logger.js'
 
 const getIconClassName = (icon) => {
   switch (icon) {
@@ -12,7 +13,7 @@ const getIconClassName = (icon) => {
     case '$(source-control)':
       return 'StatusBarIcon'
     default:
-      console.warn(`unknown icon "${icon}"`)
+      Logger.warn(`unknown icon "${icon}"`)
       return ''
   }
 }

@@ -1,14 +1,18 @@
 // based on https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/extensions/browser/extensionsList.ts (License MIT)
 
 import * as FindIndex from '../../shared/findIndex.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
+import * as AriaLiveType from '../AriaLiveType/AriaLiveType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 const activeId = 'ExtensionActive'
 
@@ -58,18 +62,10 @@ export const create = () => {
   }
   $ListItems.onfocus = ViewletExtensionsEvents.handleFocus
   $ListItems.onscroll = ViewletExtensionsEvents.handleScroll
-  $ListItems.addEventListener(DomEventType.TouchStart, ViewletExtensionsEvents.handleTouchStart, {
-    passive: true,
-  })
-  $ListItems.addEventListener(DomEventType.TouchMove, ViewletExtensionsEvents.handleTouchMove, {
-    passive: true,
-  })
-  $ListItems.addEventListener(DomEventType.TouchEnd, ViewletExtensionsEvents.handleTouchEnd, {
-    passive: true,
-  })
-  $ListItems.addEventListener(DomEventType.Wheel, ViewletExtensionsEvents.handleWheel, {
-    passive: true,
-  })
+  $ListItems.addEventListener(DomEventType.TouchStart, ViewletExtensionsEvents.handleTouchStart, DomEventOptions.Passive)
+  $ListItems.addEventListener(DomEventType.TouchMove, ViewletExtensionsEvents.handleTouchMove, DomEventOptions.Passive)
+  $ListItems.addEventListener(DomEventType.TouchEnd, ViewletExtensionsEvents.handleTouchEnd, DomEventOptions.Passive)
+  $ListItems.addEventListener(DomEventType.Wheel, ViewletExtensionsEvents.handleWheel, DomEventOptions.Passive)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -85,8 +81,8 @@ export const create = () => {
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Extensions'
-  $Viewlet.ariaBusy = 'true'
-  $Viewlet.ariaLive = 'polite'
+  $Viewlet.ariaLive = AriaLiveType.Polite
+  $Viewlet.ariaBusy = AriaBoolean.True
   // @ts-ignore
   $Viewlet.role = AriaRoles.None
   $Viewlet.append($ExtensionHeader, $List)
@@ -116,12 +112,12 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex, focused
   }
   if (newFocusedIndex === -1) {
     if (focused) {
-      $ListItems.removeAttribute('aria-activedescendant')
+      $ListItems.removeAttribute(DomAttributeType.AriaActiveDescendant)
       $ListItems.classList.add('FocusOutline')
     }
   } else if (newFocusedIndex >= 0 && newFocusedIndex < length) {
     $ListItems.children[newFocusedIndex].id = activeId
-    $ListItems.setAttribute('aria-activedescendant', activeId)
+    $ListItems.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
   }
   if (focused) {
     $ListItems.focus()
@@ -283,7 +279,7 @@ const render$Extensions = ($ExtensionList, extensions) => {
 
 export const setNegativeMargin = (state, negativeMargin) => {
   const { $ListItems } = state
-  SetBounds.setBounds($ListItems, negativeMargin)
+  SetBounds.setTop($ListItems, negativeMargin)
   // Assert.number(negativeMargin)
   // const { $NegativeMargin } = state
   // $NegativeMargin.style.marginTop = `${negativeMargin}px`
@@ -294,7 +290,7 @@ export const setExtensions = (state, extensions) => {
   Assert.object(state)
   Assert.array(extensions)
   const { $Viewlet, $ListItems } = state
-  $Viewlet.removeAttribute('aria-busy')
+  $Viewlet.removeAttribute(DomAttributeType.AriaBusy)
   render$Extensions($ListItems, extensions)
 }
 
@@ -309,7 +305,7 @@ export const openSuggest = (state) => {
   // const x = state.$InputBox.offsetLeft
   // const y = state.$InputBox.offsetTop
   state.$ExtensionSuggestions ||= create$ExtensionSuggestions()
-  SetBounds.setBounds(state.$ExtensionSuggestions, y, x, 100, 100)
+  SetBounds.setBounds(state.$ExtensionSuggestions, x, y, 100, 100)
   state.$ExtensionSuggestions.style.position = 'fixed'
   state.$ExtensionSuggestions.style.background = 'lime'
   // TODO check if already mounted

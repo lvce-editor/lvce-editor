@@ -30,6 +30,8 @@
 
     "MainBackground": "#1e2324",
 
+    "MenuItemHoverBackground": "rgb(81, 95, 89)",
+
     "PanelBackground": "#1b2020",
     "PanelBorderTopColor": "rgba(128, 128, 128, 0.35)",
     "PanelTabForeground": "rgba(231, 231, 231, 0.6)",

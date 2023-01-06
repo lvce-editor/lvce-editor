@@ -51,8 +51,8 @@ test('resize - increase height', () => {
         ['line 2', 'Token Text'],
         ['line 3', 'Token Text'],
       ],
-      [0, 0],
-      new Uint32Array(),
+      new Float32Array([0, 0]),
+      new Float32Array(),
     ],
   ])
 })
@@ -93,8 +93,8 @@ test('resize - same height', () => {
         ['line 2', 'Token Text'],
         ['line 3', 'Token Text'],
       ],
-      [0, 0],
-      new Uint32Array(),
+      new Float32Array([0, 0]),
+      new Float32Array(),
     ],
   ])
 })
@@ -125,6 +125,15 @@ test('resize - reduce height', () => {
     })
   )
   expect(commands).toEqual([
-    ['Viewlet.send', 'EditorText', 'renderTextAndCursorsAndSelections', 0, 0, [['line 1', 'Token Text']], [0, 0], new Uint32Array()],
+    [
+      'Viewlet.send',
+      'EditorText',
+      'renderTextAndCursorsAndSelections',
+      0,
+      0,
+      [['line 1', 'Token Text']],
+      new Float32Array([0, 0]),
+      new Float32Array(),
+    ],
   ])
 })

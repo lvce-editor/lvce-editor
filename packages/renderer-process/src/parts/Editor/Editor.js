@@ -1,8 +1,11 @@
 // TODO so many things in this file
 
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Logger from '../Logger/Logger.js'
 import * as EditorEvents from './EditorEvents.js'
 import * as LayerCursor from './LayerCursor.js'
 import * as LayerDiagnostics from './LayerDiagnostics.js'
@@ -24,12 +27,12 @@ export const create = () => {
   $EditorInput.className = 'EditorInput'
   $EditorInput.ariaAutoComplete = 'list'
   $EditorInput.ariaRoleDescription = 'editor'
-  $EditorInput.ariaMultiLine = 'true'
+  $EditorInput.ariaMultiLine = AriaBoolean.True
   $EditorInput.setAttribute('autocomplete', 'off')
   $EditorInput.setAttribute('autocapitalize', 'off')
   $EditorInput.setAttribute('autocorrect', 'off')
   $EditorInput.setAttribute('wrap', 'off')
-  $EditorInput.setAttribute('spellcheck', 'false')
+  $EditorInput.setAttribute('spellcheck', AriaBoolean.False)
   // @ts-ignore
   $EditorInput.role = AriaRoles.TextBox
   $EditorInput.onpaste = EditorEvents.handlePaste
@@ -90,12 +93,8 @@ export const create = () => {
   $Editor.role = AriaRoles.Code
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
   $Editor.addEventListener(DomEventType.ContextMenu, EditorEvents.handleContextMenu)
-  $Editor.addEventListener(DomEventType.Wheel, EditorEvents.handleWheel, {
-    passive: true,
-  })
-  $Editor.addEventListener(DomEventType.MouseMove, EditorEvents.handlePointerMove, {
-    passive: true,
-  })
+  $Editor.addEventListener(DomEventType.Wheel, EditorEvents.handleWheel, DomEventOptions.Passive)
+  $Editor.addEventListener(DomEventType.MouseMove, EditorEvents.handlePointerMove, DomEventOptions.Passive)
   return {
     $LayerCursor,
     $LayerSelections,
@@ -142,6 +141,8 @@ export const renderTextAndCursors = (state, textInfos, cursorInfos) => {
 }
 
 export const setSelections = (state, cursorInfos, selectionInfos) => {
+  Assert.float32Array(cursorInfos)
+  Assert.float32Array(selectionInfos)
   LayerCursor.setCursors(state, cursorInfos)
   LayerSelections.setSelections(state, selectionInfos)
 }
@@ -182,7 +183,7 @@ export const dispose = (state) => {}
 export const focus = (state) => {
   const { $EditorInput } = state
   if (!$EditorInput.isConnected) {
-    console.warn('unmounted editor cannot be focused')
+    Logger.warn('unmounted editor cannot be focused')
   }
   $EditorInput.focus()
 }

@@ -1,6 +1,6 @@
-export const setBounds = ($Element, top, left, width, height) => {
-  $Element.style.top = `${top}px`
-  $Element.style.left = `${left}px`
+export const setBounds = ($Element, x, y, width, height) => {
+  $Element.style.top = `${y}px`
+  $Element.style.left = `${x}px`
   $Element.style.width = `${width}px`
   $Element.style.height = `${height}px`
 }
@@ -22,11 +22,11 @@ export const setTopAndLeft = ($Element, top, left) => {
 /**
  *
  * @param {HTMLElement} $Element
- * @param {number} top
- * @param {number} left
+ * @param {number} x
+ * @param {number} y
  */
-export const setTopAndLeftTransform = ($Element, top, left) => {
-  $Element.style.translate = `${left}px ${top}px`
+export const setXAndYTransform = ($Element, x, y) => {
+  $Element.style.translate = `${x}px ${y}px`
 }
 
 export const setHeight = ($Element, height) => {

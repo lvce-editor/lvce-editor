@@ -3,6 +3,7 @@
  */
 import { jest } from '@jest/globals'
 import * as AriaRoles from '../src/parts/AriaRoles/AriaRoles.js'
+import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.js'
 import * as EditorTabs from '../src/parts/EditorTab/EditorTab.js'
 import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
 
@@ -11,7 +12,7 @@ const create$Tab = () => {
   // @ts-ignore
   $Tab.role = AriaRoles.Tab
   $Tab.className = 'EditorTab'
-  $Tab.setAttribute('aria-description', '')
+  $Tab.setAttribute(DomAttributeType.AriaDescription, '')
   return $Tab
 }
 

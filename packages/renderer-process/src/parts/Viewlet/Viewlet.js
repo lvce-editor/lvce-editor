@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const state = {
   instances: Object.create(null),
@@ -32,11 +33,11 @@ export const loadModule = async (id) => {
 export const invoke = (viewletId, method, ...args) => {
   const instance = state.instances[viewletId]
   if (!instance) {
-    console.warn(`viewlet instance ${viewletId} not found`)
+    Logger.warn(`viewlet instance ${viewletId} not found`)
     return
   }
   if (typeof instance.factory[method] !== 'function') {
-    console.warn(`method ${method} in ${viewletId} not implemented`)
+    Logger.warn(`method ${method} in ${viewletId} not implemented`)
     return
   }
   return instance.factory[method](instance.state, ...args)
@@ -73,7 +74,7 @@ export const send = (viewletId, method, ...args) => {
     instance.factory[method](...args)
   } else {
     // TODO
-    console.warn('instance not present')
+    Logger.warn('instance not present')
   }
 }
 
@@ -86,7 +87,7 @@ const isSpecial = (id) => {
 const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
   const $PlaceHolder = document.createElement('div')
   $PlaceHolder.className = `Viewlet ${viewletId}`
-  SetBounds.setBounds($PlaceHolder, top, left, width, height)
+  SetBounds.setBounds($PlaceHolder, left, top, width, height)
   if (isSpecial(viewletId)) {
     $PlaceHolder.id = viewletId
   }
@@ -162,7 +163,7 @@ export const dispose = (id) => {
     Assert.string(id)
     const instance = state.instances[id]
     if (!instance) {
-      console.warn(`viewlet instance ${id} not found and cannot be disposed`)
+      Logger.warn(`viewlet instance ${id} not found and cannot be disposed`)
       return
     }
     if (instance.factory.dispose) {
@@ -326,5 +327,5 @@ export const setBounds = (id, left, top, width, height) => {
     return
   }
   const $Viewlet = instance.state.$Viewlet
-  SetBounds.setBounds($Viewlet, top, left, width, height)
+  SetBounds.setBounds($Viewlet, left, top, width, height)
 }

@@ -57,8 +57,9 @@ export const create = (id, uri, languageId, content) => {
      */
     handleOffset: 0,
     itemHeight: 20,
-    fontFamily: `'Fira Code'`,
+    fontFamily: '',
     fontWeight: 400,
+    cursorWidth: 2,
   }
 }
 
@@ -85,8 +86,7 @@ export const renderText = (editor) => {
 export const renderTextAndCursorAndSelectionsCommands = (editor) => {
   Assert.object(editor)
   const textInfos = EditorText.getVisible(editor)
-  const cursorInfos = EditorCursor.getVisible(editor)
-  const selectionInfos = EditorSelection.getVisible(editor)
+  const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   const scrollBarHeight = editor.scrollBarHeight
   const scrollBarY = (editor.deltaY / editor.finalDeltaY) * (editor.height - editor.scrollBarHeight)
   return [
@@ -328,8 +328,7 @@ const renderSelections = {
     return oldState.selections === newState.selections && oldState.focused === newState.focused && oldState.minLineY === newState.minLineY
   },
   apply(oldState, newState) {
-    const cursorInfos = EditorCursor.getVisible(newState)
-    const selectionInfos = EditorSelection.getVisible(newState)
+    const { cursorInfos, selectionInfos } = EditorSelection.getVisible(newState)
     return [/* method */ 'setSelections', /* cursorInfos */ cursorInfos, /* selectionInfos */ selectionInfos]
   },
 }
