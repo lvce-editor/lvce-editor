@@ -13,6 +13,8 @@ beforeAll(() => {
     set(value) {
       this._setProperty('translate', value)
     },
+    configurable: true,
+    enumerable: true,
   })
 })
 
