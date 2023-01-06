@@ -2,6 +2,8 @@
  * @jest-environment jsdom
  */
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
+import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
+import * as AriaOrientationType from '../src/parts/AriaOrientationType/AriaOrientationType.js'
 import * as ViewletActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 import * as AriaRoles from '../src/parts/AriaRoles/AriaRoles.js'
 
@@ -189,7 +191,7 @@ test('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOr
   const { $ActivityBar } = state
   expect($ActivityBar.role).toBe(AriaRoles.ToolBar)
   expect($ActivityBar.ariaRoleDescription).toBe('Activity Bar')
-  expect($ActivityBar.ariaOrientation).toBe('vertical')
+  expect($ActivityBar.ariaOrientation).toBe(AriaOrientationType.Vertical)
 })
 
 test('accessibility - ActivityBarItem button should have role button and ariaHasPopup', () => {
@@ -224,7 +226,7 @@ test('accessibility - ActivityBarItem button should have role button and ariaHas
   // @ts-ignore
   expect($ActivityBar.lastChild.role).toBe(AriaRoles.Button)
   // @ts-ignore
-  expect($ActivityBar.lastChild.ariaHasPopup).toBe('true')
+  expect($ActivityBar.lastChild.ariaHasPopup).toBe(AriaBoolean.True)
 })
 
 test('accessibility - ActivityBarItems should have ariaKeyShortcuts if applicable', () => {

@@ -10,6 +10,7 @@ import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 const activeId = 'ExtensionActive'
 
@@ -86,7 +87,7 @@ export const create = () => {
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Extensions'
-  $Viewlet.ariaBusy = 'true'
+  $Viewlet.ariaBusy = AriaBoolean.True
   $Viewlet.ariaLive = 'polite'
   // @ts-ignore
   $Viewlet.role = AriaRoles.None
