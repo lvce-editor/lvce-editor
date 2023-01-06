@@ -36,6 +36,6 @@ export const create = () => {
 
 export const setSashes = (state, sashSideBar, sashPanel) => {
   const { $SashSideBar, $SashPanel } = state
-  SetBounds.setBounds($SashSideBar, sashSideBar.left, sashSideBar.top, sashSideBar.width, sashSideBar.height)
-  SetBounds.setBounds($SashPanel, sashPanel.left, sashPanel.top, sashPanel.width, sashPanel.height)
+  SetBounds.setBounds($SashSideBar, sashSideBar.x, sashSideBar.y, sashSideBar.width, sashSideBar.height)
+  SetBounds.setBounds($SashPanel, sashPanel.x, sashPanel.y, sashPanel.width, sashPanel.height)
 }
