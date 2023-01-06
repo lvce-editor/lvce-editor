@@ -1,5 +1,7 @@
 // TODO so many things in this file
 
+import * as ClipBoardDataType from '../ClipBoardDataType/ClipBoardDataType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
@@ -7,7 +9,6 @@ import * as ModifierKey from '../ModifierKey/ModifierKey.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
 // TODO tree shake out mobile support when targeting electron -> less code -> less event listeners -> less memory -> less cpu
@@ -15,12 +16,7 @@ import * as DomEventType from '../DomEventType/DomEventType.js'
 export const handleContextMenu = (event) => {
   event.preventDefault()
   const { clientX, clientY } = event
-  RendererWorker.send(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ clientX,
-    /* y */ clientY,
-    /* id */ MenuEntryId.Editor
-  )
+  RendererWorker.send(/* ContextMenu.show */ 'ContextMenu.show', /* x */ clientX, /* y */ clientY, /* id */ MenuEntryId.Editor)
 }
 
 export const handleFocus = (event) => {
@@ -41,10 +37,7 @@ export const handleBeforeInput = (event) => {
   event.preventDefault()
   switch (event.inputType) {
     case InputEventType.InsertText:
-      RendererWorker.send(
-        /* Editor.type */ 'Editor.type',
-        /* text */ event.data
-      )
+      RendererWorker.send(/* Editor.type */ 'Editor.type', /* text */ event.data)
       break
     default:
       break
@@ -62,24 +55,15 @@ export const handleBeforeInput = (event) => {
 // - vscode does not draw a line, but displays characters during composition
 
 export const handleCompositionStart = (event) => {
-  RendererWorker.send(
-    /* Editor.compositionStart */ 'Editor.compositionStart',
-    /* text */ event.data
-  )
+  RendererWorker.send(/* Editor.compositionStart */ 'Editor.compositionStart', /* text */ event.data)
 }
 
 export const handleCompositionUpdate = (event) => {
-  RendererWorker.send(
-    /* Editor.compositionUpdate */ 'Editor.compositionUpdate',
-    /* text */ event.data
-  )
+  RendererWorker.send(/* Editor.compositionUpdate */ 'Editor.compositionUpdate', /* text */ event.data)
 }
 
 export const handleCompositionEnd = (event) => {
-  RendererWorker.send(
-    /* Editor.compositionEnd */ 'Editor.compositionEnd',
-    /* text */ event.data
-  )
+  RendererWorker.send(/* Editor.compositionEnd */ 'Editor.compositionEnd', /* text */ event.data)
 }
 
 export const handleCut = (event) => {
@@ -92,19 +76,9 @@ export const handleSelectionMove = (event) => {
   const y = event.clientY
   const totalOffset = getTotalOffset(event)
   if (event.altKey) {
-    RendererWorker.send(
-      /* Editor.moveRectangleSelectionPx */ 'Editor.moveRectangleSelectionPx',
-      /* x */ x,
-      /* y */ y,
-      /* offset */ totalOffset
-    )
+    RendererWorker.send(/* Editor.moveRectangleSelectionPx */ 'Editor.moveRectangleSelectionPx', /* x */ x, /* y */ y, /* offset */ totalOffset)
   } else {
-    RendererWorker.send(
-      /* Editor.moveSelectionPx */ 'Editor.moveSelectionPx',
-      /* x */ x,
-      /* y */ y,
-      /* offset */ totalOffset
-    )
+    RendererWorker.send(/* Editor.moveSelectionPx */ 'Editor.moveSelectionPx', /* x */ x, /* y */ y, /* offset */ totalOffset)
   }
 }
 
@@ -125,13 +99,7 @@ const getModifier = (event) => {
 
 export const handleSingleClick = (event, x, y, offset) => {
   const modifier = getModifier(event)
-  RendererWorker.send(
-    /* Editor.handleSingleClick */ 'Editor.handleSingleClick',
-    /* modifier */ modifier,
-    /* x */ x,
-    /* y */ y,
-    /* offset */ offset
-  )
+  RendererWorker.send(/* Editor.handleSingleClick */ 'Editor.handleSingleClick', /* modifier */ modifier, /* x */ x, /* y */ y, /* offset */ offset)
   const $Target = event.target
   // const $InputBox = $Target.closest('.Editor').firstElementChild
   // $InputBox.focus()
@@ -143,21 +111,11 @@ export const handleSingleClick = (event, x, y, offset) => {
 }
 
 export const handleDoubleClick = (event, x, y, offset) => {
-  RendererWorker.send(
-    /* Editor.handleDoubleClick */ 'Editor.handleDoubleClick',
-    /* x */ x,
-    /* y */ y,
-    /* offset */ offset
-  )
+  RendererWorker.send(/* Editor.handleDoubleClick */ 'Editor.handleDoubleClick', /* x */ x, /* y */ y, /* offset */ offset)
 }
 
 export const handleTripleClick = (event, x, y, offset) => {
-  RendererWorker.send(
-    /* Editor.handleTripleClick */ 'Editor.handleTripleClick',
-    /* x */ x,
-    /* y */ y,
-    /* offset */ offset
-  )
+  RendererWorker.send(/* Editor.handleTripleClick */ 'Editor.handleTripleClick', /* x */ x, /* y */ y, /* offset */ offset)
 }
 
 const isRightClick = (event) => {
@@ -238,12 +196,7 @@ export const handlePointerMove = (event) => {
   const y = event.clientY
   if (event.altKey) {
     const offset = getTotalOffset(event)
-    RendererWorker.send(
-      /* Editor.handleMouseMoveWithAltKey */ 'Editor.handleMouseMoveWithAltKey',
-      /* x */ x,
-      /* y */ y,
-      /* offset */ offset
-    )
+    RendererWorker.send(/* Editor.handleMouseMoveWithAltKey */ 'Editor.handleMouseMoveWithAltKey', /* x */ x, /* y */ y, /* offset */ offset)
   }
   // RendererWorker.send(/* Editor.handleMouseMove */ 389, /* x */ x, /* y */ y)
 }
@@ -259,16 +212,10 @@ export const handleWheel = (event) => {
   // TODO send editor id
   switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(
-        /* Editor.setDeltaY */ 'Editor.setDeltaY',
-        /* value */ deltaY
-      )
+      RendererWorker.send(/* Editor.setDeltaY */ 'Editor.setDeltaY', /* value */ deltaY)
       break
     case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(
-        /* Editor.setDeltaY */ 'Editor.setDeltaY',
-        /* value */ deltaY
-      )
+      RendererWorker.send(/* Editor.setDeltaY */ 'Editor.setDeltaY', /* value */ deltaY)
       break
     default:
       break
@@ -277,7 +224,7 @@ export const handleWheel = (event) => {
 
 export const handlePaste = (event) => {
   event.preventDefault()
-  const text = event.clipboardData.getData('text')
+  const text = event.clipboardData.getData(ClipBoardDataType.Text)
   RendererWorker.send(/* Editor.paste */ 'Editor.paste', /* text */ text)
 }
 
@@ -287,10 +234,7 @@ export const handlePaste = (event) => {
  */
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
-  RendererWorker.send(
-    /* Editor.handleScrollBarMouseMove */ 'Editor.handleScrollBarMove',
-    /* y */ clientY
-  )
+  RendererWorker.send(/* Editor.handleScrollBarMouseMove */ 'Editor.handleScrollBarMove', /* y */ clientY)
 }
 
 /**
@@ -302,10 +246,7 @@ export const handleScrollBarPointerUp = (event) => {
   // @ts-ignore
   target.releasePointerCapture(pointerId)
   // @ts-ignore
-  target.removeEventListener(
-    DomEventType.PointerMove,
-    handleScrollBarThumbPointerMove
-  )
+  target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove)
   // @ts-ignore
   target.removeEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
 }
@@ -319,19 +260,13 @@ export const handleScrollBarPointerDown = (event) => {
   // @ts-ignore
   target.setPointerCapture(pointerId)
   // @ts-ignore
-  target.addEventListener(
-    DomEventType.PointerMove,
-    handleScrollBarThumbPointerMove,
-    {
-      passive: false,
-    }
-  )
+  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, {
+    passive: false,
+  })
+  // TODO use pointerlost event instead
   // @ts-ignore
   target.addEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
-  RendererWorker.send(
-    /* EditorHandleScrollBarClick.editorHandleScrollBarPointerDown */ 'Editor.handleScrollBarPointerDown',
-    /* y */ clientY
-  )
+  RendererWorker.send(/* EditorHandleScrollBarClick.editorHandleScrollBarPointerDown */ 'Editor.handleScrollBarPointerDown', /* y */ clientY)
 }
 
 export const handleScrollBarContextMenu = (event) => {
@@ -361,18 +296,12 @@ const toSimpleTouchEvent = (event) => {
 
 export const handleTouchStart = (event) => {
   const touchEvent = toSimpleTouchEvent(event)
-  RendererWorker.send(
-    /* EditorHandleTouchStart.editorHandleTouchStart */ 'Editor.handleTouchStart',
-    /* touchEvent */ touchEvent
-  )
+  RendererWorker.send(/* EditorHandleTouchStart.editorHandleTouchStart */ 'Editor.handleTouchStart', /* touchEvent */ touchEvent)
 }
 
 export const handleTouchMove = (event) => {
   const touchEvent = toSimpleTouchEvent(event)
-  RendererWorker.send(
-    /* EditorHandleTouchMove.editorHandleTouchMove */ 'Editor.handleTouchMove',
-    /* touchEvent */ touchEvent
-  )
+  RendererWorker.send(/* EditorHandleTouchMove.editorHandleTouchMove */ 'Editor.handleTouchMove', /* touchEvent */ touchEvent)
 }
 
 export const handleTouchEnd = (event) => {
@@ -380,10 +309,7 @@ export const handleTouchEnd = (event) => {
     event.preventDefault()
   }
   const touchEvent = toSimpleTouchEvent(event)
-  RendererWorker.send(
-    /* EditorHandleTouchEnd.editorHandleTouchEnd */ 'Editor.handleTouchEnd',
-    /* touchEvent */ touchEvent
-  )
+  RendererWorker.send(/* EditorHandleTouchEnd.editorHandleTouchEnd */ 'Editor.handleTouchEnd', /* touchEvent */ touchEvent)
 }
 
 const getRangeFromSelection = (selection) => {
