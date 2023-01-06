@@ -1,4 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as Assert from '../Assert/Assert.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
@@ -97,6 +98,10 @@ export const handleError = (state, error) => {
 }
 
 export const setBounds = (state, x, y, width, height) => {
+  Assert.number(x)
+  Assert.number(y)
+  Assert.number(width)
+  Assert.number(height)
   const { $Viewlet } = state
   SetBounds.setBounds($Viewlet, x, y, width, height)
 }
