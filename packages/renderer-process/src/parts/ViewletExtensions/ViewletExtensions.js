@@ -1,15 +1,16 @@
 // based on https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/extensions/browser/extensionsList.ts (License MIT)
 
 import * as FindIndex from '../../shared/findIndex.js'
+import * as AriaLiveType from '../AriaLiveType/AriaLiveType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 
 const activeId = 'ExtensionActive'
 
@@ -87,7 +88,7 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Extensions'
   $Viewlet.ariaBusy = 'true'
-  $Viewlet.ariaLive = 'polite'
+  $Viewlet.ariaLive = AriaLiveType.Polite
   // @ts-ignore
   $Viewlet.role = AriaRoles.None
   $Viewlet.append($ExtensionHeader, $List)
