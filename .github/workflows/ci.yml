@@ -81,7 +81,7 @@ jobs:
           key: ${{ runner.os }}-electron-builder-${{ hashFiles('build/package-lock.json') }}
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2022'
-        run: node build/bin/build.js --target=electron-builder-windows-exe --force # --force workaround for issue with node-pty
+        run: node build/bin/build.js --target=electron-builder-windows-exe
       - name: Build static site
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --target=static
