@@ -14,7 +14,7 @@ file-2.txt`,
 
 const name = 'sample.source-control-provider-exec'
 
-test.skip('sample.source-control-provider-exec', async () => {
+test('sample.source-control-provider-exec', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
 

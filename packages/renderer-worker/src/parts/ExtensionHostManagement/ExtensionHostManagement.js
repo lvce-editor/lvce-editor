@@ -11,6 +11,7 @@ import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowse
 import * as ExtensionHostManagementElectron from './ExtensionHostManagementElectron.js'
 import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
 import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
+import * as TestState from '../TestState/TestState.js'
 
 export const state = {
   /**
@@ -70,8 +71,8 @@ const startSynching = async (extensionHost) => {
 
   const handleWorkspaceChange = async (workspacePath) => {
     await extensionHost.ipc.invoke('Workspace.setWorkspacePath', workspacePath)
-    if (Workspace.state.mockExec) {
-      await extensionHost.ipc.invoke('ExtensionHostMockExec.mockExec', `${Workspace.state.mockExec}`)
+    if (TestState.state.mockExec) {
+      await extensionHost.ipc.invoke('ExtensionHostMockExec.mockExec')
     }
   }
 
@@ -130,6 +131,10 @@ const actuallyActivateByEvent = async (event) => {
 // TODO add tests for this
 export const activateByEvent = async (event) => {
   Assert.string(event)
+  if (event === 'none') {
+    const all = await Promise.all(Object.values(state.cachedActivationEvents))
+    return all.flat(1)
+  }
   if (!(event in state.cachedActivationEvents)) {
     state.cachedActivationEvents[event] = actuallyActivateByEvent(event)
   }

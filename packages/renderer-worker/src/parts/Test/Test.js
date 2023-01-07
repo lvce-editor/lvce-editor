@@ -20,8 +20,7 @@ export const execute = async (href) => {
   // 2. import that script
   const module = await ImportScript.importScript(scriptUrl)
   if (module.mockExec) {
-    // TODO this should not be in workspace but in another module
-    Workspace.state.mockExec = module.mockExec
+    TestState.setMockExec(module.mockExec)
   }
   const tests = TestState.getTests()
   for (const test of tests) {
@@ -32,4 +31,14 @@ export const execute = async (href) => {
   // 4. run the test
   // 5. if test fails, display error message
   // 6. if test succeeds, display success message
+}
+
+export const executeMockExecFunction = async (...args) => {
+  const fn = TestState.getMockExec()
+  if (!fn) {
+    throw new Error(`mockExec does not exist`)
+  }
+  // @ts-ignore
+  const result = await fn(...args)
+  return result
 }
