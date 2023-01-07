@@ -1,8 +1,8 @@
 import * as Ajax from '../Ajax/Ajax.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as SourceMap from '../SourceMap/SourceMap.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const getErrorMessage = (error) => {
   if (!error) {
@@ -97,6 +97,8 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     const sourceMapMatch = lastLine.match(RE_SOURCE_MAP)
     const parsedLine = parseInt(line)
     const parsedColumn = parseInt(column)
+    const message = getErrorMessage(error)
+    const relevantStack = JoinLines.joinLines(lines.slice(1))
     if (sourceMapMatch) {
       const sourceMapUrl = sourceMapMatch[1]
       const sourceMapAbsolutePath = getSourceMapAbsolutePath(path, sourceMapUrl)
@@ -113,8 +115,6 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
           column: originalColumn,
         },
       })
-      const relevantStack = JoinLines.joinLines(lines.slice(1))
-      let message = getErrorMessage(error)
       return {
         message,
         codeFrame,
@@ -132,8 +132,6 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
         column: parsedColumn,
       },
     })
-    const relevantStack = JoinLines.joinLines(lines.slice(1))
-    let message = getErrorMessage(error)
     return {
       message,
       codeFrame,
