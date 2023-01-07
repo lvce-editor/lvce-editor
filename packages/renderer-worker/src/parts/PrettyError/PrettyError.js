@@ -2,6 +2,7 @@ import * as Ajax from '../Ajax/Ajax.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as SourceMap from '../SourceMap/SourceMap.js'
 
 const getErrorMessage = (error) => {
   if (!error) {
@@ -73,8 +74,6 @@ const getSourceMapAbsolutePath = (file, relativePath) => {
   return absolutePath
 }
 
-const getOriginalPosition = (sourceMap, line, column) => {}
-
 const prepareErrorMessageWithoutCodeFrame = async (error) => {
   try {
     const lines = SplitLines.splitLines(error.stack)
@@ -96,16 +95,33 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     const text = await Ajax.getText(path)
     const lastLine = getLastLine(text)
     const sourceMapMatch = lastLine.match(RE_SOURCE_MAP)
+    const parsedLine = parseInt(line)
+    const parsedColumn = parseInt(column)
     if (sourceMapMatch) {
       const sourceMapUrl = sourceMapMatch[1]
       const sourceMapAbsolutePath = getSourceMapAbsolutePath(path, sourceMapUrl)
       const sourceMap = await Ajax.getJson(sourceMapAbsolutePath)
-      const originalPosition = getOriginalPosition(sourceMap, line, column)
-      console.log({ sourceMap })
+      const { source, originalLine, originalColumn } = SourceMap.getOriginalPosition(sourceMap, parsedLine, parsedColumn)
+      const originalSourceContent = await Ajax.getText(source)
+      const codeFrame = CodeFrameColumns.create(originalSourceContent, {
+        start: {
+          line: originalLine,
+          column: originalColumn,
+        },
+        end: {
+          line: originalLine,
+          column: originalColumn,
+        },
+      })
+      const relevantStack = JoinLines.joinLines(lines.slice(1))
+      let message = getErrorMessage(error)
+      return {
+        message,
+        codeFrame,
+        stack: relevantStack,
+        type: error.constructor.name,
+      }
     }
-    // console.log({ text, lastLine, sourceMapMatch })
-    const parsedLine = parseInt(line)
-    const parsedColumn = parseInt(column)
     const codeFrame = CodeFrameColumns.create(text, {
       start: {
         line: parsedLine,
@@ -125,8 +141,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       type: error.constructor.name,
     }
   } catch (otherError) {
-    console.warn(`ErrorHandling Error`)
-    console.warn(otherError)
+    console.warn(`ErrorHandling Error: ${otherError}`)
     return error
   }
 }
