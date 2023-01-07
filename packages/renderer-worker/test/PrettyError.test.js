@@ -59,6 +59,7 @@ test('prepare - fetch codeFrame', async () => {
   at async Object.handleKeyBinding [as KeyBindings.handleKeyBinding] (test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
   at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`,
     type: 'ReferenceError',
+    _error: error,
   })
 })
 
@@ -77,9 +78,8 @@ test('prepare - fetch codeFrame - error', async () => {
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toBe(error)
-  expect(spy).toHaveBeenCalledTimes(2)
-  expect(spy).toHaveBeenNthCalledWith(1, 'ErrorHandling Error')
-  expect(spy).toHaveBeenNthCalledWith(2, new TypeError('x is not a function'))
+  expect(spy).toHaveBeenCalledTimes(1)
+  expect(spy).toHaveBeenNthCalledWith(1, 'ErrorHandling Error: TypeError: x is not a function')
 })
 
 test('prepare - error without stack', async () => {
@@ -140,6 +140,7 @@ TitleBarMenuBar/lazy/handleKeyArrowDown@test:///packages/renderer-worker/src/par
 Object.handleKeyBinding@test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3
 handleMessageFromRendererProcess@test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3`,
     type: 'ReferenceError',
+    _error: error,
   })
 })
 
