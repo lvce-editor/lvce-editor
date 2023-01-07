@@ -98,7 +98,6 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       return error
     }
     const [_, path, line, column] = match
-    console.log({ _, path, line, column })
     if (path === '<anonymous>' || path === 'debugger eval code') {
       return error
     }
