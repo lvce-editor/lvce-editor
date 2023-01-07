@@ -18,7 +18,7 @@ const getThemeName = (dirent) => {
 const replace = async (path, occurrence, replacement) => {
   const oldContent = await FileSystem.readFile(path)
   if (!oldContent.includes(occurrence)) {
-    throw new Error(`failed to replace occurrence ${occurrence}: Not found`)
+    throw new Error(`failed to replace occurrence ${occurrence} in ${path}: Not found`)
   }
   // @ts-ignore
   const newContent = oldContent.replaceAll(occurrence, replacement)
