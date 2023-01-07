@@ -58,15 +58,11 @@ const getVisibleActivityBarItems = (state) => {
     flags: ActivityBarItemFlags.Button,
     keyShortCuts: '',
   }
-  const visibleItems = [
-    ...items.slice(0, numberOfVisibleItems - 2),
-    showMoreItem,
-    items.at(-1),
-  ]
+  const visibleItems = [...items.slice(0, numberOfVisibleItems - 2), showMoreItem, items.at(-1)]
   return visibleItems
 }
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     // TODO declarative event api is good, but need to bind
     // listeners to state somehow
@@ -81,8 +77,8 @@ export const create = (id, uri, left, top, width, height) => {
     focusedIndex: -1,
     selectedIndex: -1,
     focused: false,
-    left,
-    top,
+    x,
+    y,
     width,
     height,
     itemHeight: Height.ActivityBarItem,
@@ -147,8 +143,7 @@ const getActivityBarItems = () => {
 export const loadContent = async (state) => {
   const activityBarItems = getActivityBarItems()
   const sideBar = ViewletStates.getInstance('SideBar')
-  const viewletId =
-    sideBar && sideBar.state ? sideBar.state.currentViewletId : ''
+  const viewletId = sideBar && sideBar.state ? sideBar.state.currentViewletId : ''
   const selectedIndex = findIndex(activityBarItems, viewletId)
   return {
     ...state,
@@ -186,9 +181,7 @@ export const updateSourceControlCount = async (state, count) => {
   if (count === 0) {
     return
   }
-  const index = state.activityBarItems.findIndex(
-    (item) => item.id === 'Source Control'
-  )
+  const index = state.activityBarItems.findIndex((item) => item.id === 'Source Control')
   if (index === -1) {
     return
   }
@@ -209,9 +202,7 @@ const isEnabled = (activityBarItem) => {
 }
 
 export const toggleActivityBarItem = async (state, item) => {
-  const activityBarItem = state.activityBarItems.find(
-    (activityBarItem) => activityBarItem.id === item.label
-  )
+  const activityBarItem = state.activityBarItems.find((activityBarItem) => activityBarItem.id === item.label)
   activityBarItem.enabled = !activityBarItem.enabled
   return {
     ...state,
@@ -220,12 +211,7 @@ export const toggleActivityBarItem = async (state, item) => {
 }
 
 export const handleContextMenu = async (state, x, y) => {
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ MenuEntryId.ActivityBar
-  )
+  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.ActivityBar)
   return state
 }
 
@@ -253,10 +239,7 @@ export const resize = (state, dimensions) => {
 
 const renderActivityBarItems = {
   isEqual(oldState, newState) {
-    return (
-      oldState.activityBarItems === newState.activityBarItems &&
-      oldState.height === newState.height
-    )
+    return oldState.activityBarItems === newState.activityBarItems && oldState.height === newState.height
   },
   apply(oldState, newState) {
     const visibleItems = getVisibleActivityBarItems(newState)
@@ -266,10 +249,7 @@ const renderActivityBarItems = {
 
 const renderFocusedIndex = {
   isEqual(oldState, newState) {
-    return (
-      oldState.focusedIndex === newState.focusedIndex &&
-      oldState.focused === newState.focused
-    )
+    return oldState.focusedIndex === newState.focusedIndex && oldState.focused === newState.focused
   },
   apply(oldState, newState) {
     return [
@@ -286,18 +266,10 @@ const renderSelectedIndex = {
     return oldState.selectedIndex === newState.selectedIndex
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setSelectedIndex',
-      /* oldIndex */ oldState.selectedIndex,
-      /* newIndex */ newState.selectedIndex,
-    ]
+    return [/* method */ 'setSelectedIndex', /* oldIndex */ oldState.selectedIndex, /* newIndex */ newState.selectedIndex]
   },
 }
 
-export const render = [
-  renderActivityBarItems,
-  renderFocusedIndex,
-  renderSelectedIndex,
-]
+export const render = [renderActivityBarItems, renderFocusedIndex, renderSelectedIndex]
 
 export const hasFunctionalRender = true

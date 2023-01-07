@@ -44,3 +44,7 @@ export const setPauseOnExceptions = (id) => {
 export const getProperties = (id, objectId) => {
   return ExtensionHostDebug.getProperties(id, objectId)
 }
+
+export const evaluate = (id, expression, callFrameId) => {
+  return ExtensionHostDebug.evaluate(id, expression, callFrameId)
+}

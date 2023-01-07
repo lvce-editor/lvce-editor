@@ -1,11 +1,11 @@
 import * as TitleBarButtons from '../TitleBarButtons/TitleBarButtons.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const create = (id, uri, top, left, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     buttons: [],
-    top,
-    left,
+    x,
+    y,
     width,
     height,
   }
@@ -42,10 +42,7 @@ const renderTitleBarButtons = {
     return oldState.titleBarButtons === newState.titleBarButtons
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setButtons',
-      /* titleBarEntries */ newState.titleBarButtons,
-    ]
+    return [/* method */ 'setButtons', /* titleBarEntries */ newState.titleBarButtons]
   },
 }
 

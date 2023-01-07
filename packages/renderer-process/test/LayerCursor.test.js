@@ -4,55 +4,18 @@
 import { jest } from '@jest/globals'
 import * as LayerCursor from '../src/parts/Editor/LayerCursor.js'
 
-const getVisualWidth = (text) => {
-  switch (text) {
-    case '👮🏽‍♀️':
-      return 2
-    default:
-      return text.length
-  }
-}
-
 beforeAll(() => {
-  // this is not yet supported by jsdom
-  // globalThis.CSS = {
-  //   // @ts-ignore
-  //   highlights: {
-  //     items: Object.create(null),
-  //     set(key, value) {
-  //       this.items[key] = value
-  //     },
-  //     get(key) {
-  //       return this.items[key]
-  //     },
-  //   },
-  // }
-  // globalThis.Highlight = class {
-  //   constructor() {
-  //     this.items = new Set()
-  //   }
-  //   add(item) {
-  //     this.items.add(item)
-  //   }
-  //   values() {
-  //     return this.items
-  //   }
-  // }
-  Range.prototype.getBoundingClientRect = function () {
-    const start = this.startContainer
-    const endOffset = this.endOffset
-    const text = this.startContainer.nodeValue
-    const partialText = text.slice(0, endOffset)
-    const visualWidth = getVisualWidth(partialText)
-    const charWidth = 4
-    const left = visualWidth * charWidth
-    return {
-      top: 0,
-      left,
-      width: 0,
-      height: 0,
-    }
-  }
+  // workaround for translate property not being supported in jsdom
+  Object.defineProperty(CSSStyleDeclaration.prototype, 'translate', {
+    get() {
+      return this.getPropertyValue('translate')
+    },
+    set(value) {
+      this._setProperty('translate', value)
+    },
+    configurable: true,
+    enumerable: true,
+  })
 })
 
 const simplifyStaticRange = (staticRange) => {
@@ -91,19 +54,10 @@ test('setCursor - renderCursorsLess', () => {
     $LayerCursor,
     $LayerText,
   }
-  const cursors = [
-    {
-      top: 10,
-      topIndex: 0,
-      leftIndex: 0,
-      remainingOffset: 5,
-    },
-  ]
+  const cursors = new Float32Array([/*x */ 20, /* y */ 10])
   const spy = jest.spyOn(document, 'createElement')
   LayerCursor.setCursors(state, cursors)
-  expect(state.$LayerCursor.innerHTML).toBe(
-    '<div class="EditorCursor" style="top: 10px; left: 20px;"></div>'
-  )
+  expect(state.$LayerCursor.innerHTML).toBe('<div class="EditorCursor" style="translate: 20px 10px;"></div>')
   expect(spy).toHaveBeenCalledTimes(1)
 })
 
@@ -120,19 +74,10 @@ test('setCursor - renderCursorsEqual', () => {
     $LayerCursor,
     $LayerText,
   }
-  const cursors = [
-    {
-      top: 10,
-      topIndex: 0,
-      leftIndex: 0,
-      remainingOffset: 5,
-    },
-  ]
+  const cursors = new Float32Array([/* x */ 20, /* y */ 10])
   const spy = jest.spyOn(document, 'createElement')
   LayerCursor.setCursors(state, cursors)
-  expect(state.$LayerCursor.innerHTML).toBe(
-    '<div class="EditorCursor" style="top: 10px; left: 20px;"></div>'
-  )
+  expect(state.$LayerCursor.innerHTML).toBe('<div class="EditorCursor" style="translate: 20px 10px;"></div>')
   expect(spy).not.toHaveBeenCalled()
 })
 
@@ -148,19 +93,10 @@ test('setCursor - renderCursorsEqual - Node without text', () => {
     $LayerCursor,
     $LayerText,
   }
-  const cursors = [
-    {
-      top: 10,
-      topIndex: 0,
-      leftIndex: 0,
-      remainingOffset: 0,
-    },
-  ]
+  const cursors = new Float32Array([/* x */ 0, /*y */ 10])
   const spy = jest.spyOn(document, 'createElement')
   LayerCursor.setCursors(state, cursors)
-  expect(state.$LayerCursor.innerHTML).toBe(
-    '<div class="EditorCursor" style="top: 10px; left: 0px;"></div>'
-  )
+  expect(state.$LayerCursor.innerHTML).toBe('<div class="EditorCursor" style="translate: 0px 10px;"></div>')
   expect(spy).not.toHaveBeenCalled()
 })
 
@@ -178,19 +114,10 @@ test('setCursor - renderCursorsMore', () => {
     $LayerCursor,
     $LayerText,
   }
-  const cursors = [
-    {
-      top: 10,
-      topIndex: 0,
-      leftIndex: 0,
-      remainingOffset: 5,
-    },
-  ]
+  const cursors = new Float32Array([/* x */ 20, /* y */ 10])
   const spy = jest.spyOn(document, 'createElement')
   LayerCursor.setCursors(state, cursors)
-  expect(state.$LayerCursor.innerHTML).toBe(
-    '<div class="EditorCursor" style="top: 10px; left: 20px;"></div>'
-  )
+  expect(state.$LayerCursor.innerHTML).toBe('<div class="EditorCursor" style="translate: 20px 10px;"></div>')
   expect(spy).not.toHaveBeenCalled()
 })
 
@@ -207,16 +134,7 @@ test('setCursor - emoji - 👮🏽‍♀️', () => {
     $LayerCursor,
     $LayerText,
   }
-  const cursors = [
-    {
-      top: 10,
-      topIndex: 0,
-      leftIndex: 0,
-      remainingOffset: 7,
-    },
-  ]
+  const cursors = new Float32Array([/* x */ 8, /* y */ 10])
   LayerCursor.setCursors(state, cursors)
-  expect(state.$LayerCursor.innerHTML).toBe(
-    '<div class="EditorCursor" style="top: 10px; left: 8px;"></div>'
-  )
+  expect(state.$LayerCursor.innerHTML).toBe('<div class="EditorCursor" style="translate: 8px 10px;"></div>')
 })

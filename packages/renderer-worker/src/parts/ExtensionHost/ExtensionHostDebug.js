@@ -92,3 +92,12 @@ export const getProperties = (debugId, objectId) => {
     noProviderFoundMessage: 'no debug provider found',
   })
 }
+
+export const evaluate = (debugId, expression, callFrameId) => {
+  return ExtensionHostShared.executeProvider({
+    event: `onDebug:${debugId}`,
+    method: 'ExtensionHostDebug.evaluate',
+    params: [debugId, expression, callFrameId],
+    noProviderFoundMessage: 'no debug provider found',
+  })
+}

@@ -1,4 +1,5 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Focus from '../Focus/Focus.js'
 
 export const handleInput = (event) => {
   const { target } = event
@@ -37,4 +38,12 @@ export const handleClick = (event) => {
     default:
       break
   }
+}
+
+export const handleInputBlur = (event) => {
+  Focus.setFocus('')
+}
+
+export const handleFocus = (event) => {
+  Focus.setFocus('FindWidget')
 }

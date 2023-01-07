@@ -4,20 +4,17 @@ import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 const handleWheel = (event) => {
   switch (event.deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(
-        /* ViewletExtensions.handleWheel */ 873,
-        /* deltaY */ event.deltaY
-      )
+      RendererWorker.send(/* ViewletExtensions.handleWheel */ 873, /* deltaY */ event.deltaY)
       break
     case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(
-        /* ViewletExtensions.handleWheel */ 873,
-        /* deltaY */ event.deltaY
-      )
+      RendererWorker.send(/* ViewletExtensions.handleWheel */ 873, /* deltaY */ event.deltaY)
       break
     default:
       break
@@ -60,10 +57,7 @@ const handleFocus = (event) => {
 const handleScrollBarMouseDown = (event) => {
   const $Target = event.target
   if ($Target.className === 'ScrollBarThumb') {
-    window.addEventListener(
-      DomEventType.MouseMove,
-      handleScrollBarThumbMouseMove
-    )
+    window.addEventListener(DomEventType.MouseMove, handleScrollBarThumbMouseMove)
     window.addEventListener(DomEventType.MouseUp, handleScrollBarThumbMouseUp)
   } else {
     const y = event.clientY
@@ -77,10 +71,7 @@ const handleScrollBarThumbMouseMove = (event) => {
 }
 
 const handleScrollBarThumbMouseUp = () => {
-  window.removeEventListener(
-    DomEventType.MouseMove,
-    handleScrollBarThumbMouseMove
-  )
+  window.removeEventListener(DomEventType.MouseMove, handleScrollBarThumbMouseMove)
   window.removeEventListener(DomEventType.MouseUp, handleScrollBarThumbMouseUp)
 }
 
@@ -106,7 +97,7 @@ export const create = ({ create$ListItem, render$ListItem, handleClick }) => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet List'
   $Viewlet.append($List, $ScrollBar)
-  $Viewlet.addEventListener(DomEventType.Wheel, handleWheel, { passive: true })
+  $Viewlet.addEventListener(DomEventType.Wheel, handleWheel, DomEventOptions.Passive)
 
   return {
     $Viewlet,
@@ -127,24 +118,16 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
     $List.children[oldFocusedIndex].classList.remove('Focused')
   }
   if (newFocusedIndex === -1) {
-    $List.removeAttribute('aria-activedescendant')
+    $List.removeAttribute(DomAttributeType.AriaActiveDescendant)
     $List.classList.add('FocusOutline')
   } else {
-    $List.setAttribute(
-      'aria-activedescendant',
-      $List.children[newFocusedIndex].id
-    )
+    $List.setAttribute(DomAttributeType.AriaActiveDescendant, $List.children[newFocusedIndex].id)
     $List.classList.remove('FocusOutline')
     $List.children[newFocusedIndex].classList.add('Focused')
   }
 }
 
-const render$ListLess = ({
-  $List,
-  create$ListItem,
-  render$ListItem,
-  items,
-}) => {
+const render$ListLess = ({ $List, create$ListItem, render$ListItem, items }) => {
   for (let i = 0; i < $List.children.length; i++) {
     render$ListItem($List.children[i], items[i])
   }
@@ -186,7 +169,7 @@ const render$List = (state) => {
 
 export const setNegativeMargin = (state, negativeMargin) => {
   const { $List } = state
-  $List.style.top = `${negativeMargin}px`
+  SetBounds.setTop($List, negativeMargin)
   // Assert.number(negativeMargin)
   // const { $NegativeMargin } = state
   // $NegativeMargin.style.marginTop = `${negativeMargin}px`

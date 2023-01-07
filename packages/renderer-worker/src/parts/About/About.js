@@ -1,12 +1,13 @@
 import * as Platform from '../Platform/Platform.js'
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as Logger from '../Logger/Logger.js'
 
 const showAboutWeb = () => {
-  console.warn('show about - not implemented')
+  Logger.warn('show about - not implemented')
 }
 
 const showAboutRemote = () => {
-  console.warn('show about - not implemented')
+  Logger.warn('show about - not implemented')
 }
 
 const showAboutElectron = async () => {

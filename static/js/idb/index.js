@@ -13,17 +13,21 @@ function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) 
     const openPromise = wrap(request);
     if (upgrade) {
         request.addEventListener('upgradeneeded', (event) => {
-            upgrade(wrap(request.result), event.oldVersion, event.newVersion, wrap(request.transaction));
+            upgrade(wrap(request.result), event.oldVersion, event.newVersion, wrap(request.transaction), event);
         });
     }
-    if (blocked)
-        request.addEventListener('blocked', () => blocked());
+    if (blocked) {
+        request.addEventListener('blocked', (event) => blocked(
+        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+        event.oldVersion, event.newVersion, event));
+    }
     openPromise
         .then((db) => {
         if (terminated)
             db.addEventListener('close', () => terminated());
-        if (blocking)
-            db.addEventListener('versionchange', () => blocking());
+        if (blocking) {
+            db.addEventListener('versionchange', (event) => blocking(event.oldVersion, event.newVersion, event));
+        }
     })
         .catch(() => { });
     return openPromise;
@@ -35,8 +39,11 @@ function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) 
  */
 function deleteDB(name, { blocked } = {}) {
     const request = indexedDB.deleteDatabase(name);
-    if (blocked)
-        request.addEventListener('blocked', () => blocked());
+    if (blocked) {
+        request.addEventListener('blocked', (event) => blocked(
+        // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+        event.oldVersion, event));
+    }
     return wrap(request).then(() => undefined);
 }
 

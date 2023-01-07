@@ -4,15 +4,12 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
+import * as Logger from '../Logger/Logger.js'
 
 const expectedErrorMessage = `Failed to execute formatting provider: FormattingError:`
 
 const isFormattingError = (error) => {
-  return (
-    error &&
-    error instanceof Error &&
-    error.message.startsWith(expectedErrorMessage)
-  )
+  return error && error instanceof Error && error.message.startsWith(expectedErrorMessage)
 }
 
 // TODO also format with cursor
@@ -20,7 +17,7 @@ export const format = async (editor) => {
   try {
     const edits = await Format.format(editor)
     if (!Array.isArray(edits)) {
-      console.warn('something is wrong with format on save', edits)
+      Logger.warn('something is wrong with format on save', edits)
       return editor
     }
     if (edits.length === 0) {
@@ -52,13 +49,7 @@ export const format = async (editor) => {
     }
     console.error(error)
     const displayErrorMessage = `${error}`
-    await EditorShowMessage.editorShowMessage(
-      editor,
-      0,
-      0,
-      displayErrorMessage,
-      true
-    )
+    await EditorShowMessage.editorShowMessage(editor, 0, 0, displayErrorMessage, true)
     return editor
   }
 }

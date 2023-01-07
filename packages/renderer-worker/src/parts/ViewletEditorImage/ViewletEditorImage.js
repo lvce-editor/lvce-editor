@@ -1,16 +1,24 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
 import * as BlobSrc from '../BlobSrc/BlobSrc.js'
-import * as Clamp from '../Clamp/Clamp.js'
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
+import * as I18nString from '../I18NString/I18NString.js'
 import * as WheelEvent from '../WheelEvent/WheelEvent.js'
 
-export const create = (id, uri, left, top, width, height) => {
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  ImageCouldNotBeLoaded: `Image could not be loaded`,
+  ImageNotFound: `Image could not be loaded: Not Found`,
+}
+
+export const create = (id, uri, x, y, width, height) => {
   return {
     src: '',
     disposed: false,
-    top,
-    left,
+    x,
+    y,
     width,
     height,
     uri,
@@ -24,6 +32,7 @@ export const create = (id, uri, left, top, width, height) => {
     eventCache: [],
     previousDiff: 0,
     errorMessage: '',
+    defaultMoveDelta: 8,
   }
 }
 
@@ -108,6 +117,50 @@ const handleMove = (state, x, y) => {
   }
 }
 
+export const moveLeft = (state) => {
+  const { domMatrix, defaultMoveDelta } = state
+  const deltaX = defaultMoveDelta
+  const deltaY = 0
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
+  return {
+    ...state,
+    domMatrix: newDomMatrix,
+  }
+}
+
+export const moveRight = (state) => {
+  const { domMatrix, defaultMoveDelta } = state
+  const deltaX = -defaultMoveDelta
+  const deltaY = 0
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
+  return {
+    ...state,
+    domMatrix: newDomMatrix,
+  }
+}
+
+export const moveUp = (state) => {
+  const { domMatrix, defaultMoveDelta } = state
+  const deltaX = 0
+  const deltaY = -defaultMoveDelta
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
+  return {
+    ...state,
+    domMatrix: newDomMatrix,
+  }
+}
+
+export const moveDown = (state) => {
+  const { domMatrix, defaultMoveDelta } = state
+  const deltaX = 0
+  const deltaY = defaultMoveDelta
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
+  return {
+    ...state,
+    domMatrix: newDomMatrix,
+  }
+}
+
 export const handlePointerMove = (state, pointerId, x, y) => {
   Assert.object(state)
   Assert.number(x)
@@ -149,43 +202,49 @@ export const handlePointerUp = (state, pointerId, x, y) => {
   }
 }
 
-export const handleImageError = (state) => {
-  return {
-    ...state,
-    errorMessage: `Image could not be loaded`,
+const getActualError = async (src) => {
+  try {
+    const response = await fetch(src)
+    if (!response.ok) {
+      switch (response.status) {
+        case 404:
+          return I18nString.i18nString(UiStrings.ImageNotFound)
+        default:
+          return I18nString.i18nString(UiStrings.ImageCouldNotBeLoaded)
+      }
+    }
+    return I18nString.i18nString(UiStrings.ImageCouldNotBeLoaded)
+  } catch (error) {
+    return I18nString.i18nString(UiStrings.ImageCouldNotBeLoaded)
   }
 }
 
-const getNewZoom = (zoom, currentZoomFactor, minZoom, maxZoom) => {
-  const newZoom = zoom * currentZoomFactor
-  return Clamp.clamp(newZoom, minZoom, maxZoom)
+export const handleImageError = async (state) => {
+  const { src } = state
+  const errorMessage = await getActualError(src)
+  return {
+    ...state,
+    errorMessage,
+  }
 }
 
 const getCurrentZoomFactor = (zoomFactor, deltaY) => {
-  // TODO use enum for direction
-  const direction = deltaY < 0 ? 'up' : 'down'
   const normalizedDeltaY = 1 + Math.abs(deltaY) / zoomFactor
-  const currentZoomFactor =
-    direction === 'up' ? normalizedDeltaY : 1 / normalizedDeltaY
+  const currentZoomFactor = deltaY < 0 ? normalizedDeltaY : 1 / normalizedDeltaY
   return currentZoomFactor
 }
 
-export const handleWheel = (state, x, y, deltaX, deltaY) => {
+export const handleWheel = (state, eventX, eventY, deltaX, deltaY) => {
   if (deltaY === 0) {
     return state
   }
   const normalizedDeltaY = WheelEvent.normalizeDelta(deltaY)
-  const { top, left } = state
-  const relativeX = x - left
-  const relativeY = y - top
+  const { x, y } = state
+  const relativeX = eventX - x
+  const relativeY = eventY - y
   const { domMatrix, zoomFactor, minZoom, maxZoom } = state
   const currentZoomFactor = getCurrentZoomFactor(zoomFactor, normalizedDeltaY)
-  const newDomMatrix = DomMatrix.zoomInto(
-    domMatrix,
-    currentZoomFactor,
-    relativeX,
-    relativeY
-  )
+  const newDomMatrix = DomMatrix.zoomInto(domMatrix, currentZoomFactor, relativeX, relativeY)
   return {
     ...state,
     domMatrix: newDomMatrix,
@@ -231,9 +290,4 @@ const renderErrorMessage = {
   },
 }
 
-export const render = [
-  renderSrc,
-  renderTransform,
-  renderCursor,
-  renderErrorMessage,
-]
+export const render = [renderSrc, renderTransform, renderCursor, renderErrorMessage]

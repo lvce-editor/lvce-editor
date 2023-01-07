@@ -5,6 +5,9 @@ import * as Menu from '../OldMenu/Menu.js'
 import * as Widget from '../Widget/Widget.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 const activeId = 'TitleBarEntryActive'
 
@@ -15,14 +18,8 @@ export const create = () => {
   $TitleBarMenuBar.role = AriaRoles.MenuBar
   $TitleBarMenuBar.tabIndex = 0
   $TitleBarMenuBar.onmousedown = ViewletTitleBarMenuBarEvents.handleClick
-  $TitleBarMenuBar.addEventListener(
-    DomEventType.FocusOut,
-    ViewletTitleBarMenuBarEvents.handleFocusOut
-  )
-  $TitleBarMenuBar.addEventListener(
-    DomEventType.FocusIn,
-    ViewletTitleBarMenuBarEvents.handleFocus
-  )
+  $TitleBarMenuBar.addEventListener(DomEventType.FocusOut, ViewletTitleBarMenuBarEvents.handleFocusOut)
+  $TitleBarMenuBar.addEventListener(DomEventType.FocusIn, ViewletTitleBarMenuBarEvents.handleFocus)
   $TitleBarMenuBar.onmouseover = ViewletTitleBarMenuBarEvents.handleMouseOver
 
   return {
@@ -86,8 +83,8 @@ export const focus = (state) => {
 const create$TopLevelEntry = (item) => {
   const $TitleBarTopLevelEntry = document.createElement('div')
   $TitleBarTopLevelEntry.className = 'TitleBarTopLevelEntry'
-  $TitleBarTopLevelEntry.ariaHasPopup = 'true'
-  $TitleBarTopLevelEntry.ariaExpanded = 'false'
+  $TitleBarTopLevelEntry.ariaHasPopup = AriaBoolean.True
+  $TitleBarTopLevelEntry.ariaExpanded = AriaBoolean.False
   // @ts-ignore
   $TitleBarTopLevelEntry.role = AriaRoles.MenuItem
   if (item.keyboardShortCut) {
@@ -97,59 +94,31 @@ const create$TopLevelEntry = (item) => {
   return $TitleBarTopLevelEntry
 }
 
-export const getMenuEntryBounds = (state, index) => {
-  const { $TitleBarMenuBar } = state
-  const $MenuEntry = $TitleBarMenuBar.children[index]
-  const rect = $MenuEntry.getBoundingClientRect()
-  return {
-    left: rect.left,
-    bottom: rect.bottom,
-  }
-}
-
-export const setFocusedIndex = (
-  state,
-  unFocusIndex,
-  focusIndex,
-  oldIsMenuOpen,
-  newIsMenuOpen
-) => {
+export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, newIsMenuOpen) => {
   Assert.object(state)
   Assert.number(unFocusIndex)
   Assert.number(focusIndex)
   const { $TitleBarMenuBar } = state
   if (unFocusIndex !== -1) {
     const $Child = $TitleBarMenuBar.children[unFocusIndex]
-    $Child.ariaExpanded = 'false'
-    $Child.removeAttribute('aria-owns')
+    $Child.ariaExpanded = AriaBoolean.False
+    $Child.removeAttribute(DomAttributeType.AriaOwns)
     $Child.removeAttribute('id')
   }
   if (focusIndex !== -1) {
     const $Child = $TitleBarMenuBar.children[focusIndex]
     $Child.id = activeId
     $TitleBarMenuBar.focus()
-    $TitleBarMenuBar.setAttribute('aria-activedescendant', activeId)
+    $TitleBarMenuBar.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
     if (newIsMenuOpen) {
-      $Child.setAttribute('aria-owns', 'Menu-0')
-      $Child.ariaExpanded = 'true'
+      $Child.setAttribute(DomAttributeType.AriaOwns, 'Menu-0')
+      $Child.ariaExpanded = AriaBoolean.True
     }
   }
 }
 
 // TODO the focus variable is confusing: false means keep focus in menubar, true means focus the menu
-export const openMenu = (
-  state,
-  unFocusIndex,
-  index,
-  level,
-  menuItems,
-  menuFocusedIndex,
-  focus,
-  x,
-  y,
-  width,
-  height
-) => {
+export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocusedIndex, focus, x, y, width, height) => {
   Assert.object(state)
   Assert.number(unFocusIndex)
   Assert.number(index)
@@ -163,18 +132,14 @@ export const openMenu = (
   Assert.number(height)
   const { $TitleBarMenuBar } = state
   // TODO this code is very unclean
-  $TitleBarMenuBar.addEventListener(
-    'mouseenter',
-    ViewletTitleBarMenuBarEvents.handleMouseOver,
-    {
-      capture: true,
-    }
-  )
+  $TitleBarMenuBar.addEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handleMouseOver, {
+    capture: true,
+  })
   if (unFocusIndex !== -1) {
-    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = 'false'
-    $TitleBarMenuBar.children[unFocusIndex].removeAttribute('aria-owns')
+    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = AriaBoolean.False
+    $TitleBarMenuBar.children[unFocusIndex].removeAttribute(DomAttributeType.AriaOwns)
   }
-  $TitleBarMenuBar.children[index].ariaExpanded = 'true'
+  $TitleBarMenuBar.children[index].ariaExpanded = AriaBoolean.True
   const $$Menus = Menu.state.$$Menus
   Menu.state.$$Menus = []
   Menu.showControlled({
@@ -199,20 +164,16 @@ export const openMenu = (
 export const closeMenu = (state, unFocusIndex, index) => {
   const { $TitleBarMenuBar } = state
   if (unFocusIndex !== -1) {
-    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = 'false'
-    $TitleBarMenuBar.children[unFocusIndex].removeAttribute('aria-owns')
+    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = AriaBoolean.False
+    $TitleBarMenuBar.children[unFocusIndex].removeAttribute(DomAttributeType.AriaOwns)
   }
   if (index !== -1) {
     $TitleBarMenuBar.children[index].focus()
   }
   Menu.hide(/* restoreFocus */ false)
-  $TitleBarMenuBar.removeEventListener(
-    'mouseenter',
-    ViewletTitleBarMenuBarEvents.handleMouseOver,
-    {
-      capture: true,
-    }
-  )
+  $TitleBarMenuBar.removeEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handleMouseOver, {
+    capture: true,
+  })
 }
 
 export const setEntries = (state, titleBarEntries) => {
@@ -257,11 +218,8 @@ export const setMenus = (state, changes) => {
         const $Menu = create$Menu()
         $Menu.onmouseover = ViewletTitleBarMenuBarEvents.handleMenuMouseOver
         $Menu.onmousedown = ViewletTitleBarMenuBarEvents.handleMenuMouseDown
-        const { top, left, width, height, level, focusedIndex } = menu
-        $Menu.style.width = `${width}px`
-        $Menu.style.height = `${height}px`
-        $Menu.style.top = `${top}px`
-        $Menu.style.left = `${left}px`
+        const { x, y, width, height, level, focusedIndex } = menu
+        SetBounds.setBounds($Menu, x, y, width, height)
         $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
         $Menu.id = `Menu-${level}`
         Widget.append($Menu)
@@ -279,21 +237,9 @@ export const setMenus = (state, changes) => {
         const menu = change[1]
         const newLength = change[2]
         const replaceItems = change[3]
-        const {
-          level,
-          top,
-          left,
-          width,
-          height,
-          focusedIndex,
-          items,
-          expanded,
-        } = menu
+        const { level, x, y, width, height, focusedIndex, items, expanded } = menu
         const $Menu = $$Menus[level]
-        $Menu.style.width = `${width}px`
-        $Menu.style.height = `${height}px`
-        $Menu.style.top = `${top}px`
-        $Menu.style.left = `${left}px`
+        SetBounds.setBounds($Menu, x, y, width, height)
         // TODO recycle menu item nodes
         const $$Children = items.map(MenuItem.create$MenuItem)
         if (focusedIndex !== -1) {
@@ -301,7 +247,7 @@ export const setMenus = (state, changes) => {
           $Child.classList.add('Focused')
           if (expanded) {
             $Child.ariaExpanded = true
-            $Child.setAttribute('aria-owns', `Menu-${level + 1}`)
+            $Child.setAttribute(DomAttributeType.AriaOwns, `Menu-${level + 1}`)
           }
         }
         $Menu.replaceChildren(...$$Children)

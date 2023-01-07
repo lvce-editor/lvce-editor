@@ -5,12 +5,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export const sharedProcessPath = join(__dirname, 'src', 'sharedProcessMain.js')
 
-export const exportStatic = async ({
-  extensionPath = process.cwd(),
-  testPath = '',
-} = {}) => {
+export const exportStatic = async ({ extensionPath = process.cwd(), testPath = '', root = '' } = {}) => {
+  if (!root) {
+    throw new Error(`root argument is required`)
+  }
   const fn = await import('./src/parts/ExportStatic/ExportStatic.js')
-  const root = process.cwd()
   if (extensionPath !== root) {
     extensionPath = join(root, extensionPath)
   }

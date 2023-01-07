@@ -5,6 +5,7 @@
 import * as Menu from '../src/parts/OldMenu/Menu.js'
 import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
 
 const getTextContent = (node) => {
   return node.innerHTML
@@ -76,9 +77,9 @@ test('accessibility - TitleBarTopLevelEntry should have role menuitem and aria-h
   // @ts-ignore
   expect($TitleBarMenuBar.firstChild.role).toBe('menuitem')
   // @ts-ignore
-  expect($TitleBarMenuBar.firstChild.ariaExpanded).toBe('false')
+  expect($TitleBarMenuBar.firstChild.ariaExpanded).toBe(AriaBoolean.False)
   // @ts-ignore
-  expect($TitleBarMenuBar.firstChild.ariaHasPopup).toBe('true')
+  expect($TitleBarMenuBar.firstChild.ariaHasPopup).toBe(AriaBoolean.True)
 })
 
 // TODO test focusIndex in combination with menu and also check aria-attributes
@@ -170,8 +171,8 @@ test('setMenus - add one menu', () => {
     [
       'addMenu',
       {
-        top: 0,
-        left: 0,
+        x: 0,
+        y: 0,
         width: 150,
         height: 150,
         focusedIndex: -1,
@@ -196,7 +197,7 @@ test('setMenus - add one menu', () => {
   const { $$Menus } = state
   expect($$Menus.length).toBe(1)
   expect($$Menus[0].outerHTML).toBe(
-    '<div class="Menu" tabindex="-1" style="width: 150px; height: 150px; top: 0px; left: 0px;" id="Menu-0"><div class="MenuItem" tabindex="-1" disabled="true">New File</div><div class="MenuItem" tabindex="-1" disabled="true">New Window</div><div class="MenuItem" tabindex="-1">Open Recent</div></div>'
+    '<div class="Menu" tabindex="-1" style="top: 0px; left: 0px; width: 150px; height: 150px;" id="Menu-0"><div class="MenuItem" tabindex="-1" disabled="true">New File</div><div class="MenuItem" tabindex="-1" disabled="true">New Window</div><div class="MenuItem" tabindex="-1">Open Recent</div></div>'
   )
 })
 
@@ -206,8 +207,8 @@ test('setMenus - open sub menu', () => {
     [
       'addMenu',
       {
-        top: 0,
-        left: 0,
+        x: 0,
+        y: 0,
         width: 150,
         height: 150,
         focusedIndex: -1,
@@ -233,8 +234,8 @@ test('setMenus - open sub menu', () => {
     [
       'updateMenu',
       {
-        top: 0,
-        left: 0,
+        x: 0,
+        y: 0,
         width: 150,
         height: 150,
         focusedIndex: 2,
@@ -258,8 +259,8 @@ test('setMenus - open sub menu', () => {
     [
       'addMenu',
       {
-        top: 0,
-        left: 150,
+        x: 150,
+        y: 0,
         width: 150,
         height: 150,
         focusedIndex: -1,
@@ -280,9 +281,9 @@ test('setMenus - open sub menu', () => {
   const { $$Menus } = state
   expect($$Menus.length).toBe(2)
   expect($$Menus[0].outerHTML).toBe(
-    '<div class="Menu" tabindex="-1" style="width: 150px; height: 150px; top: 0px; left: 0px;" id="Menu-0"><div class="MenuItem" tabindex="-1" disabled="true">New File</div><div class="MenuItem" tabindex="-1" disabled="true">New Window</div><div class="MenuItem Focused" tabindex="-1">Open Recent</div></div>'
+    '<div class="Menu" tabindex="-1" style="top: 0px; left: 0px; width: 150px; height: 150px;" id="Menu-0"><div class="MenuItem" tabindex="-1" disabled="true">New File</div><div class="MenuItem" tabindex="-1" disabled="true">New Window</div><div class="MenuItem Focused" tabindex="-1">Open Recent</div></div>'
   )
   expect($$Menus[1].outerHTML).toBe(
-    '<div class="Menu" tabindex="-1" style="width: 150px; height: 150px; top: 0px; left: 150px;" id="Menu-1"><div class="MenuItem" tabindex="-1">file-1.txt</div><div class="MenuItem" tabindex="-1">file-2.txt</div></div>'
+    '<div class="Menu" tabindex="-1" style="top: 0px; left: 150px; width: 150px; height: 150px;" id="Menu-1"><div class="MenuItem" tabindex="-1">file-1.txt</div><div class="MenuItem" tabindex="-1">file-2.txt</div></div>'
   )
 })

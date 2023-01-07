@@ -5,16 +5,18 @@ export const name = 'Run And Debug'
 // prettier-ignore
 export const Commands = {
   continue: ViewletRunAndDebug.resume,
-  resume: ViewletRunAndDebug.resume,
+  handleClickSectionBreakPoints: ViewletRunAndDebug.handleClickSectionBreakPoints,
+  handleClickSectionCallstack: ViewletRunAndDebug.handleClickSectionCallstack,
+  handleClickSectionScope: ViewletRunAndDebug.handleClickSectionScope,
+  handleClickSectionWatch: ViewletRunAndDebug.handleClickSectionWatch,
   pause: ViewletRunAndDebug.pause,
-  stepOver: ViewletRunAndDebug.stepOver,
+  resume: ViewletRunAndDebug.resume,
   stepInto: ViewletRunAndDebug.stepInto,
   stepOut: ViewletRunAndDebug.stepOut,
-  handleClickSectionWatch: ViewletRunAndDebug.handleClickSectionWatch,
-  handleClickSectionBreakPoints: ViewletRunAndDebug.handleClickSectionBreakPoints,
-  handleClickSectionScope: ViewletRunAndDebug.handleClickSectionScope,
-  handleClickSectionCallstack: ViewletRunAndDebug.handleClickSectionCallstack,
+  stepOver: ViewletRunAndDebug.stepOver,
   togglePause: ViewletRunAndDebug.togglePause,
+  handleEvaluate: ViewletRunAndDebug.handleEvaluate,
+  handleDebugInput: ViewletRunAndDebug.handleDebugInput
 }
 
 export const Events = {
@@ -23,10 +25,6 @@ export const Events = {
   'Debug.scriptParsed': ViewletRunAndDebug.handleScriptParsed,
 }
 
-export const Css = [
-  '/css/parts/MaskIcon.css',
-  '/css/parts/IconButton.css',
-  '/css/parts/ViewletRunAndDebug.css',
-]
+export const Css = ['/css/parts/MaskIcon.css', '/css/parts/IconButton.css', '/css/parts/ViewletRunAndDebug.css']
 
 export * from './ViewletRunAndDebug.js'

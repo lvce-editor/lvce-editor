@@ -1,5 +1,6 @@
 const App = require('../src/parts/App/App.js')
 const JsonRpcErrorCode = require('../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js')
+const JsonRpcVersion = require('../src/parts/JsonRpcVersion/JsonRpcVersion.js')
 
 jest.mock('electron', () => {
   return {
@@ -36,11 +37,11 @@ test.skip('handlePortForMainProcess - error - command not found', async () => {
 
   App.handlePortForMainProcess(event)
   await _listener({
-    data: { method: 'App.exit', params: [], jsonrpc: '2.0', id: 1 },
+    data: { method: 'App.exit', params: [], jsonrpc: JsonRpcVersion.Two, id: 1 },
   })
   expect(port.postMessage).toHaveBeenCalledTimes(1)
   expect(port.postMessage).toHaveBeenCalledWith({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     id: 1,
     error: {
       message: 'method not found App.exit',

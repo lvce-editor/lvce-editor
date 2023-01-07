@@ -2,6 +2,7 @@ const ChildProcess = require('../ChildProcess/ChildProcess.js')
 const Command = require('../Command/Command.js')
 const Path = require('../Path/Path.js')
 const Logger = require('../Logger/Logger.js')
+const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
 
 const state = (exports.state = {
   /**
@@ -36,7 +37,7 @@ const handleChildMessage = async (message) => {
       Logger.error(error)
       if (state.child) {
         state.child.send({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           code: /* UnexpectedError */ -32001,
           id: object.id,
           error: 'UnexpectedError',
@@ -47,7 +48,7 @@ const handleChildMessage = async (message) => {
     }
     if (state.child) {
       state.child.send({
-        jsonrpc: '2.0',
+        jsonrpc: JsonRpcVersion.Two,
         result,
         id: object.id,
       })

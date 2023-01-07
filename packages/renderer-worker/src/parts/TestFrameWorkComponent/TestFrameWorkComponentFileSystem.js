@@ -14,7 +14,7 @@ export const mkdir = async (path) => {
 export const getTmpDir = async ({ scheme = FileSystemProtocol.Memfs } = {}) => {
   switch (scheme) {
     case FileSystemProtocol.Memfs:
-      return 'memfs://'
+      return 'memfs:///workspace'
     default:
       return Platform.getTmpDir()
   }

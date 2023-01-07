@@ -18,14 +18,12 @@ beforeAll(() => {
     }
 
     translate(deltaX = 0, deltaY = 0) {
-      return new DOMMatrixReadOnly([
-        this.a,
-        this.b,
-        this.c,
-        this.d,
-        this.e + this.a * deltaX,
-        this.f + this.d * deltaY,
-      ])
+      return new DOMMatrixReadOnly([this.a, this.b, this.c, this.d, this.e + this.a * deltaX, this.f + this.d * deltaY])
+    }
+
+    toString() {
+      const { a, b, c, d, e, f } = this
+      return `matrix(${a}, ${b}, ${c}, ${d}, ${e}, ${f})`
     }
   }
 
@@ -47,14 +45,7 @@ beforeAll(() => {
     }
 
     translate(deltaX, deltaY) {
-      return new DOMMatrix([
-        this.a,
-        this.b,
-        this.c,
-        this.d,
-        this.e + this.a * deltaX,
-        this.f + this.d * deltaY,
-      ])
+      return new DOMMatrix([this.a, this.b, this.c, this.d, this.e + this.a * deltaX, this.f + this.d * deltaY])
     }
 
     scaleSelf(scaleX = 1, scaleY = scaleX) {
@@ -78,20 +69,18 @@ beforeAll(() => {
       this.f = newF
       return this
     }
+
+    toString() {
+      const { a, b, c, d, e, f } = this
+      return `matrix(${a}, ${b}, ${c}, ${d}, ${e}, ${f})`
+    }
   }
 })
 
-const ViewletManager = await import(
-  '../src/parts/ViewletManager/ViewletManager.js'
-)
+const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(
-    ViewletEditorImage,
-    oldState,
-    newState,
-    ViewletModuleId.EditorImage
-  )
+  return ViewletManager.render(ViewletEditorImage, oldState, newState, ViewletModuleId.EditorImage)
 }
 
 test('create', () => {
@@ -125,9 +114,7 @@ test('render', () => {
     ...oldState,
     src: '/test/image.png',
   }
-  expect(render(oldState, newState)).toEqual([
-    ['Viewlet.send', 'EditorImage', 'setSrc', '/test/image.png'],
-  ])
+  expect(render(oldState, newState)).toEqual([['Viewlet.send', 'EditorImage', 'setSrc', '/test/image.png']])
 })
 
 test('handlePointerMove - move left', () => {
@@ -230,8 +217,8 @@ test('handleWheel - no zoom', () => {
 test('handleWheel - zoom in', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
   }
   const newState = ViewletEditorImage.handleWheel(state, 0, 0, 0, -26)
   expect(newState.domMatrix.a).toBe(1.13)
@@ -245,8 +232,8 @@ test('handleWheel - zoom in', () => {
 test('handleWheel - zoom in twice', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     domMatrix: new DOMMatrix([1.13, 0, 0, 1.13, 0, 0]),
   }
   const newState = ViewletEditorImage.handleWheel(state, 0, 0, 0, -26)
@@ -261,8 +248,8 @@ test('handleWheel - zoom in twice', () => {
 test('handleWheel - zoom in at top left - should move image to bottom right', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
   }
   const newState = ViewletEditorImage.handleWheel(state, 14, 11, 0, -26)
   expect(newState.domMatrix.a).toBe(1.13)
@@ -276,8 +263,8 @@ test('handleWheel - zoom in at top left - should move image to bottom right', ()
 test('handleWheel - zoom in at bottom right - should move image to top left', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
   }
@@ -293,8 +280,8 @@ test('handleWheel - zoom in at bottom right - should move image to top left', ()
 test('handleWheel - zoom into the middle', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
   }
@@ -322,8 +309,8 @@ test.skip('handleWheel - zoom out', () => {
 test('copyImage', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
     src: '/test/file.png',
@@ -340,8 +327,8 @@ test('copyImage', () => {
 test('handlePointerUp', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     width: 100,
     height: 100,
     eventCache: [
@@ -354,4 +341,76 @@ test('handlePointerUp', () => {
   }
   const newState = ViewletEditorImage.handlePointerUp(state, 5, 0, 0)
   expect(newState.eventCache).toEqual([])
+})
+
+test('moveLeft', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+    eventCache: [],
+  }
+  const newState = ViewletEditorImage.moveLeft(state)
+  expect(newState.domMatrix.toString()).toBe('matrix(1, 0, 0, 1, 8, 0)')
+})
+
+test('moveRight', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+    eventCache: [],
+  }
+  const newState = ViewletEditorImage.moveRight(state)
+  expect(newState.domMatrix.toString()).toBe('matrix(1, 0, 0, 1, -8, 0)')
+})
+
+test('moveUp', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+    eventCache: [],
+  }
+  const newState = ViewletEditorImage.moveUp(state)
+  expect(newState.domMatrix.toString()).toBe('matrix(1, 0, 0, 1, 0, -8)')
+})
+
+test('moveDown', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+    eventCache: [],
+  }
+  const newState = ViewletEditorImage.moveDown(state)
+  expect(newState.domMatrix.toString()).toBe('matrix(1, 0, 0, 1, 0, 8)')
+})
+
+test('handleImageError - not found', async () => {
+  // @ts-ignore
+  globalThis.fetch = () => {
+    return {
+      ok: false,
+      status: 404,
+    }
+  }
+  const state = {
+    ...ViewletEditorImage.create(),
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+    eventCache: [],
+  }
+  const newState = await ViewletEditorImage.handleImageError(state)
+  expect(newState.errorMessage).toBe('Image could not be loaded: Not Found')
 })

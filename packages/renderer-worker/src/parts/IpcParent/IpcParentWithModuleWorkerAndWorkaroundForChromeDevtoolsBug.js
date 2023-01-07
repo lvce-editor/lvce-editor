@@ -1,12 +1,13 @@
 import * as Callback from '../Callback/Callback.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const create = async ({ url, name }) => {
   const response = await new Promise((resolve, reject) => {
     const id = Callback.register(resolve, reject)
     RendererProcess.send({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method: 'get-port',
       _id: id,
       params: [

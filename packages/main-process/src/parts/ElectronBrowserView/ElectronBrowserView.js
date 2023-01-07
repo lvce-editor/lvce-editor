@@ -9,6 +9,7 @@ const ElectronInputType = require('../ElectronInputType/ElectronInputType.js')
 const Debug = require('../Debug/Debug.js')
 const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
 const Logger = require('../Logger/Logger.js')
+const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -69,17 +70,9 @@ const handleWillNavigate = (event, url) => {
     return
   }
   port.postMessage({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'Viewlet.executeViewletCommand',
-    params: [
-      'SimpleBrowser',
-      'browserViewId',
-      webContents.id,
-      'handleWillNavigate',
-      url,
-      canGoBack,
-      canGoForward,
-    ],
+    params: ['SimpleBrowser', 'browserViewId', webContents.id, 'handleWillNavigate', url, canGoBack, canGoForward],
   })
 }
 /**
@@ -98,17 +91,9 @@ const handleDidNavigate = (event, url) => {
     return
   }
   port.postMessage({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'Viewlet.executeViewletCommand',
-    params: [
-      'SimpleBrowser',
-      'browserViewId',
-      webContents.id,
-      'handleDidNavigate',
-      url,
-      canGoBack,
-      canGoForward,
-    ],
+    params: ['SimpleBrowser', 'browserViewId', webContents.id, 'handleDidNavigate', url, canGoBack, canGoForward],
   })
 }
 
@@ -124,15 +109,9 @@ const handleContextMenu = (event, params) => {
     return
   }
   port.postMessage({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'Viewlet.executeViewletCommand',
-    params: [
-      'SimpleBrowser',
-      'browserViewId',
-      webContents.id,
-      'handleContextMenu',
-      params,
-    ],
+    params: ['SimpleBrowser', 'browserViewId', webContents.id, 'handleContextMenu', params],
   })
 }
 
@@ -144,15 +123,9 @@ const handlePageTitleUpdated = (event, title) => {
     return
   }
   port.postMessage({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'Viewlet.executeViewletCommand',
-    params: [
-      'SimpleBrowser',
-      'browserViewId',
-      webContents.id,
-      'handleTitleUpdated',
-      title,
-    ],
+    params: ['SimpleBrowser', 'browserViewId', webContents.id, 'handleTitleUpdated', title],
   })
 }
 
@@ -172,7 +145,7 @@ const handleBeforeInput = (event, input) => {
     if (fallThroughKeyBinding.key === identifier) {
       event.preventDefault()
       port.postMessage({
-        jsonrpc: '2.0',
+        jsonrpc: JsonRpcVersion.Two,
         method: fallThroughKeyBinding.command,
         params: fallThroughKeyBinding.args || [],
       })
@@ -222,14 +195,7 @@ exports.createBrowserView = async (restoreId) => {
    * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param0
    * @returns
    */
-  const handleWindowOpen = ({
-    url,
-    disposition,
-    features,
-    frameName,
-    referrer,
-    postBody,
-  }) => {
+  const handleWindowOpen = ({ url, disposition, features, frameName, referrer, postBody }) => {
     // TODO maybe need to put this function into a closure
     if (url === 'about:blank') {
       return { action: ElectronWindowOpenActionType.Allow }
@@ -245,7 +211,7 @@ exports.createBrowserView = async (restoreId) => {
         }
       }
       port.postMessage({
-        jsonrpc: '2.0',
+        jsonrpc: JsonRpcVersion.Two,
         method: 'SimpleBrowser.openBackgroundTab',
         params: [url],
       })

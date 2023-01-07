@@ -35,10 +35,7 @@ export const start = async (protocol, path) => {
       Rpc.send('Debug.scriptParsed', parsedScript)
     }
     const provider = getDebugProvider(protocol)
-    await provider.start(
-      { handlePaused, handleResumed, handleScriptParsed },
-      path
-    )
+    await provider.start({ handlePaused, handleResumed, handleScriptParsed }, path)
   } catch (error) {
     throw new VError(error, 'Failed to execute debug provider')
   }
@@ -122,6 +119,15 @@ export const getProperties = async (protocol, objectId) => {
   try {
     const provider = getDebugProvider(protocol)
     return await provider.getProperties(objectId)
+  } catch (error) {
+    throw new VError(error, 'Failed to execute debug provider')
+  }
+}
+
+export const evaluate = async (protocol, expression, callFrameId) => {
+  try {
+    const provider = getDebugProvider(protocol)
+    return await provider.evaluate(expression, callFrameId)
   } catch (error) {
     throw new VError(error, 'Failed to execute debug provider')
   }

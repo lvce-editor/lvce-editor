@@ -1,6 +1,7 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletLayoutEvents from './ViewletLayoutEvents.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 export const create = () => {
   // TODO use aria role splitter once supported https://github.com/w3c/aria/issues/1348
@@ -35,12 +36,6 @@ export const create = () => {
 
 export const setSashes = (state, sashSideBar, sashPanel) => {
   const { $SashSideBar, $SashPanel } = state
-  $SashSideBar.style.top = `${sashSideBar.top}px`
-  $SashSideBar.style.left = `${sashSideBar.left}px`
-  $SashSideBar.style.width = `${sashSideBar.width}px`
-  $SashSideBar.style.height = `${sashSideBar.height}px`
-  $SashPanel.style.top = `${sashPanel.top}px`
-  $SashPanel.style.left = `${sashPanel.left}px`
-  $SashPanel.style.width = `${sashPanel.width}px`
-  $SashPanel.style.height = `${sashPanel.height}px`
+  SetBounds.setBounds($SashSideBar, sashSideBar.x, sashSideBar.y, sashSideBar.width, sashSideBar.height)
+  SetBounds.setBounds($SashPanel, sashPanel.x, sashPanel.y, sashPanel.width, sashPanel.height)
 }

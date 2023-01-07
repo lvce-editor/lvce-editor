@@ -6,24 +6,17 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostStatusBarItems.js',
-  () => {
-    return {
-      getStatusBarItems: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostStatusBarItems.js', () => {
+  return {
+    getStatusBarItems: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ExtensionHostStatusBarItems = await import(
-  '../src/parts/ExtensionHost/ExtensionHostStatusBarItems.js'
-)
+const ExtensionHostStatusBarItems = await import('../src/parts/ExtensionHost/ExtensionHostStatusBarItems.js')
 
-const ViewletStatusBar = await import(
-  '../src/parts/ViewletStatusBar/ViewletStatusBar.js'
-)
+const ViewletStatusBar = await import('../src/parts/ViewletStatusBar/ViewletStatusBar.js')
 
 beforeEach(() => {
   Callback.state.id = 0
@@ -72,14 +65,7 @@ test.skip('contentLoaded', async () => {
 
 test('itemLeftCreate', () => {
   const state = ViewletStatusBar.create()
-  expect(
-    ViewletStatusBar.itemLeftCreate(
-      state,
-      'test name',
-      'test text',
-      'test tooltip'
-    )
-  ).toMatchObject({
+  expect(ViewletStatusBar.itemLeftCreate(state, 'test name', 'test text', 'test tooltip')).toMatchObject({
     statusBarItemsLeft: [
       {
         name: 'test name',
@@ -150,17 +136,17 @@ test('itemRightUpdate', () => {
 test('resize', () => {
   const state = ViewletStatusBar.create()
   const newState = ViewletStatusBar.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 200,
   })
   expect(newState).toEqual({
     height: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     statusBarItemsLeft: [],
     statusBarItemsRight: [],
-    top: 200,
     width: 200,
   })
 })

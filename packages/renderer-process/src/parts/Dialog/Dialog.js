@@ -2,6 +2,7 @@ import * as Widget from '../Widget/Widget.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 
 export const state = {
   $Dialog: undefined,
@@ -21,12 +22,7 @@ export const prompt = async (message) => {
     $DialogButtonOk.textContent = 'ok'
     const $DialogButtonCancel = document.createElement('button')
     $DialogButtonCancel.textContent = 'Cancel'
-    $Dialog.append(
-      $DialogTitle,
-      $DialogInput,
-      $DialogButtonCancel,
-      $DialogButtonOk
-    )
+    $Dialog.append($DialogTitle, $DialogInput, $DialogButtonCancel, $DialogButtonOk)
     $DialogTitle.textContent = message
     Widget.append($Dialog)
     // @ts-ignore
@@ -114,10 +110,7 @@ const getNodeIndex = ($Node) => {
 const handleDialogOptionClick = (event) => {
   const $Target = event.target
   const index = getNodeIndex($Target)
-  RendererWorker.send(
-    /* Dialog.handleClick */ 'Dialog.handleClick',
-    /* index */ index
-  )
+  RendererWorker.send(/* Dialog.handleClick */ 'Dialog.handleClick', /* index */ index)
 }
 
 const getErrorMessage = (error) => {
@@ -169,18 +162,13 @@ export const showErrorDialogWithOptions = (error, options) => {
   }
   const $DialogBody = document.createElement('div')
   $DialogBody.id = 'DialogBody'
-  $DialogBody.append(
-    $DialogBodyErrorMessage,
-    $DialogBodyErrorCodeFrame,
-    $DialogBodyErrorStack,
-    $DialogBodyOptions
-  )
+  $DialogBody.append($DialogBodyErrorMessage, $DialogBodyErrorCodeFrame, $DialogBodyErrorStack, $DialogBodyOptions)
   // TODO screen reader switches to browse mode for dialog and
   // reads dialog title and error message multiple times
   const $Dialog = document.createElement('dialog')
   $Dialog.id = 'Dialog'
-  $Dialog.setAttribute('aria-labelledby', 'DialogTitle')
-  $Dialog.setAttribute('aria-describedby', 'DialogBodyErrorMessage')
+  $Dialog.setAttribute(DomAttributeType.AriaLabelledBy, 'DialogTitle')
+  $Dialog.setAttribute(DomAttributeType.AriaDescribedBy, 'DialogBodyErrorMessage')
   $Dialog.append($DialogTitle, $DialogBody)
   Widget.append($Dialog)
   // @ts-ignore

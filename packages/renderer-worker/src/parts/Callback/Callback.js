@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Id from '../Id/Id.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const state = {
   callbacks: Object.create(null),
@@ -24,7 +25,7 @@ export const resolve = (id, args) => {
   Assert.number(id)
   if (!(id in state.callbacks)) {
     console.log(args)
-    console.warn(`callback ${id} may already be disposed`)
+    Logger.warn(`callback ${id} may already be disposed`)
     return
   }
   state.callbacks[id].resolve(args)
@@ -33,7 +34,7 @@ export const resolve = (id, args) => {
 
 export const resolveEmpty = (id) => {
   if (!(id in state.callbacks)) {
-    console.warn(`callback ${id} may already be disposed`)
+    Logger.warn(`callback ${id} may already be disposed`)
     return
   }
   state.callbacks[id].resolve()
@@ -42,7 +43,7 @@ export const resolveEmpty = (id) => {
 export const reject = (id, error) => {
   Assert.number(id)
   if (!(id in state.callbacks)) {
-    console.warn(`callback ${id} may already be disposed`)
+    Logger.warn(`callback ${id} may already be disposed`)
     return
   }
   state.callbacks[id].reject(error)
@@ -50,7 +51,5 @@ export const reject = (id, error) => {
 }
 
 export const isAllEmpty = () => {
-  return (
-    Object.keys(state.callbacks).length === 0 && state.onceListeners.size === 0
-  )
+  return Object.keys(state.callbacks).length === 0 && state.onceListeners.size === 0
 }

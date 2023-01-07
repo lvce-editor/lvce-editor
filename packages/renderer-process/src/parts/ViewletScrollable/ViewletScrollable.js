@@ -1,5 +1,6 @@
+import * as SetBounds from '../SetBounds/SetBounds.js'
+
 export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
   const { $ScrollBarThumb } = state
-  $ScrollBarThumb.style.top = `${scrollBarY}px`
-  $ScrollBarThumb.style.height = `${scrollBarHeight}px`
+  SetBounds.setYAndHeight($ScrollBarThumb, scrollBarY, scrollBarHeight)
 }

@@ -8,6 +8,7 @@ const Session = require('../ElectronSession/ElectronSession.js')
 const ColorTheme = require('../ColorTheme/ColorTheme.js')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
+const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
 
 exports.open = async () => {
   const colorThemeJson = await ColorTheme.getColorThemeJson()
@@ -18,14 +19,7 @@ exports.open = async () => {
     backgroundColor,
     webPreferences: {
       session: Session.get(),
-      preload: Path.join(
-        Root.root,
-        'packages',
-        'main-process',
-        'pages',
-        'process-explorer',
-        'process-explorer-preload.js'
-      ),
+      preload: Path.join(Root.root, 'packages', 'main-process', 'pages', 'process-explorer', 'process-explorer-preload.js'),
       sandbox: true,
       additionalArguments: ['--lvce-window-kind=process-explorer'],
     },
@@ -42,12 +36,9 @@ exports.open = async () => {
     const browserWindowPort = event.ports[0]
 
     const updateStats = async () => {
-      const processesWithMemoryUsage =
-        await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(
-          process.pid
-        )
+      const processesWithMemoryUsage = await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(process.pid)
       browserWindowPort.postMessage({
-        jsonrpc: '2.0',
+        jsonrpc: JsonRpcVersion.Two,
         method: 'processWithMemoryUsage',
         params: [processesWithMemoryUsage],
       })
@@ -97,9 +88,7 @@ exports.open = async () => {
   const processExplorerThemeCss = ColorTheme.toCss(colorThemeJson)
   await writeFile('/tmp/process-explorer-theme.css', processExplorerThemeCss)
   try {
-    await processExplorerWindow.loadURL(
-      `${Platform.scheme}://-/packages/main-process/pages/process-explorer/process-explorer.html`
-    )
+    await processExplorerWindow.loadURL(`${Platform.scheme}://-/packages/main-process/pages/process-explorer/process-explorer.html`)
   } catch (error) {
     throw new VError(
       // @ts-ignore

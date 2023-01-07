@@ -9,12 +9,16 @@ export const state = {
   rpcPromise: undefined,
 }
 
+const createRpc = async () => {
+  const type = ExtensionHostHelperProcessIpcType.getIpcType()
+  const ipc = await ExtensionHostHelperProcessIpc.create(type)
+  const rpc = ExtensionHostHelperProcessRpc.listen(ipc)
+  return rpc
+}
+
 export const getOrCreateRpc = () => {
   if (!state.rpcPromise) {
-    const type = ExtensionHostHelperProcessIpcType.getIpcType()
-    state.rpcPromise = ExtensionHostHelperProcessIpc.create(type).then(
-      ExtensionHostHelperProcessRpc.listen
-    )
+    state.rpcPromise = createRpc()
   }
   return state.rpcPromise
 }

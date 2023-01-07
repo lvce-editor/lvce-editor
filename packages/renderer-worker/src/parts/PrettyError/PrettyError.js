@@ -88,6 +88,9 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       return error
     }
     const [_, path, line, column] = match
+    if (path === '<anonymous>' || path === 'debugger eval code') {
+      return error
+    }
     const text = await Ajax.getText(path)
     const lastLine = getLastLine(text)
     const sourceMapMatch = lastLine.match(RE_SOURCE_MAP)

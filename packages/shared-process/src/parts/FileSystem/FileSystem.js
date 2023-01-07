@@ -18,16 +18,8 @@ export const copy = async (source, target) => {
   try {
     await fs.cp(source, target, { recursive: true })
   } catch (error) {
-    if (
-      error &&
-      error.message &&
-      error.message.startsWith(
-        'Invalid src or dest: cp returned EINVAL (src and dest cannot be the same)'
-      )
-    ) {
-      throw new VError(
-        `Failed to copy "${source}" to "${target}": src and dest cannot be the same`
-      )
+    if (error && error.message && error.message.startsWith('Invalid src or dest: cp returned EINVAL (src and dest cannot be the same)')) {
+      throw new VError(`Failed to copy "${source}" to "${target}": src and dest cannot be the same`)
     }
     throw new VError(error, `Failed to copy "${source}" to "${target}"`)
   }
@@ -65,11 +57,7 @@ export const readFile = async (path, encoding = EncodingType.Utf8) => {
  * @param {string} content
  * @param {BufferEncoding} encoding
  */
-export const writeFile = async (
-  path,
-  content,
-  encoding = EncodingType.Utf8
-) => {
+export const writeFile = async (path, content, encoding = EncodingType.Utf8) => {
   try {
     // queue would be more correct for concurrent writes but also slower
     // Queue.add(`writeFile/${path}`, () =>
@@ -166,6 +154,7 @@ const getType = (dirent) => {
   if (dirent.isCharacterDevice()) {
     return DirentType.CharacterDevice
   }
+  console.log({ dirent })
   return DirentType.Unknown
 }
 
@@ -182,6 +171,7 @@ const toPrettyDirent = (dirent) => {
 export const readDirWithFileTypes = async (path) => {
   try {
     const dirents = await fs.readdir(path, { withFileTypes: true })
+    console.log({ dirents: dirents.filter((x) => getType(x) === DirentType.Unknown) })
     const prettyDirents = dirents.map(toPrettyDirent)
     return prettyDirents
   } catch (error) {

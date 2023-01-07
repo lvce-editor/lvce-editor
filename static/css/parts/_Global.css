@@ -8,11 +8,13 @@
 html,
 body {
   height: 100%;
+  contain: strict;
 }
 
 body {
   font-family: system-ui, Ubuntu, Droid Sans, sans-serif;
   user-select: none;
+  color: var(--WorkbenchForeground);
 }
 
 #Workbench {

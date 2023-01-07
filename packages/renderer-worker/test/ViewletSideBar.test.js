@@ -8,12 +8,7 @@ test.skip('openViewlet', async () => {
   RendererProcess.state.send = jest.fn()
   await ViewletSideBar.openViewlet('Noop')
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    'Viewlet.appendViewlet',
-    'SideBar',
-    'Noop',
-    false,
-  ])
+  expect(RendererProcess.state.send).toHaveBeenCalledWith(['Viewlet.appendViewlet', 'SideBar', 'Noop', false])
 })
 
 // TODO sideBar is hard to test because of dependencies to Viewlet, Lifecycle and others, would need to mock Viewlet, Lifecycle etc. which would not be good
@@ -23,11 +18,7 @@ test.skip('showOrHideViewlet - show explorer, then search, then explorer again',
     switch (message[0]) {
       case 909090:
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
+        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       default:
         throw new Error('unexpected message')
@@ -57,16 +48,16 @@ test.skip('showOrHideViewlet - show explorer, then search, then explorer again',
 test('resize', () => {
   const state = ViewletSideBar.create()
   const { newState } = ViewletSideBar.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 200,
   })
   expect(newState).toEqual({
     currentViewletId: '',
     height: 200,
-    left: 200,
-    top: 200,
+    x: 200,
+    y: 200,
     width: 200,
     titleAreaHeight: 35,
   })

@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
-import { JsonRpcError } from '../src/parts/Errors/Errors.js'
+import { JsonRpcError } from '../src/parts/JsonRpcError/JsonRpcError.js'
 import * as JsonRpc from '../src/parts/JsonRpc/JsonRpc.js'
 import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
@@ -48,9 +48,7 @@ test('invoke - error - string', async () => {
       }
     }),
   }
-  const error = await getError(
-    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
-  )
+  const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error.message).toBe('JsonRpc Error: something went wrong')
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
@@ -78,9 +76,7 @@ test('invoke - error - TypeError', async () => {
       }
     }),
   }
-  const error = await getError(
-    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
-  )
+  const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error).toBeInstanceOf(TypeError)
   expect(error.message).toBe('x is not a function')
   expect(ipc.send).toHaveBeenCalledTimes(1)
@@ -112,13 +108,9 @@ test('invoke - error - TypeError object', async () => {
       }
     }),
   }
-  const error = await getError(
-    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
-  )
+  const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error).toBeInstanceOf(TypeError)
-  expect(error.message).toBe(
-    `Cannot set properties of undefined (setting 'id')`
-  )
+  expect(error.message).toBe(`Cannot set properties of undefined (setting 'id')`)
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
     jsonrpc: JsonRpcVersion.Two,
@@ -145,9 +137,7 @@ test('invoke - error - SyntaxError', async () => {
       }
     }),
   }
-  const error = await getError(
-    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
-  )
+  const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error).toBeInstanceOf(SyntaxError)
   expect(error.message).toBe('unexpected token')
   expect(ipc.send).toHaveBeenCalledTimes(1)
@@ -176,9 +166,7 @@ test('invoke - error - ReferenceError', async () => {
       }
     }),
   }
-  const error = await getError(
-    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
-  )
+  const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error).toBeInstanceOf(ReferenceError)
   expect(error.message).toBe('x is not defined')
   expect(ipc.send).toHaveBeenCalledTimes(1)
@@ -204,9 +192,7 @@ test('invoke - error - null', async () => {
       }
     }),
   }
-  const error = await getError(
-    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
-  )
+  const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error.message).toBe('JsonRpc Error: null')
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
@@ -231,9 +217,7 @@ test('invoke - error - empty object', async () => {
       }
     }),
   }
-  const error = await getError(
-    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
-  )
+  const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error.message).toBe(`JsonRpc Error: [object Object]`)
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
@@ -262,9 +246,7 @@ test('invoke - error - DOMException', async () => {
       }
     }),
   }
-  const error = await getError(
-    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
-  )
+  const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error).toBeInstanceOf(DOMException)
   expect(error.name).toBe('AbortError')
   expect(error.message).toBe(`The user aborted a request.`)
@@ -278,8 +260,7 @@ test('invoke - error - with stack', async () => {
         // @ts-ignore
         Callback.resolve(message.id, {
           error: {
-            message:
-              'Test failed: sample.tab-completion-provider: expected selector .Viewlet.Editor to have text "test3" but was "test"',
+            message: 'Test failed: sample.tab-completion-provider: expected selector .Viewlet.Editor to have text "test3" but was "test"',
             stack: `Error: expected selector .Viewlet.Editor to have text "test3" but was "test"
     at Object.checkSingleElementCondition [as TestFrameWork.checkSingleElementCondition] (http://localhost/packages/renderer-process/src/parts/TestFrameWork/TestFrameWork.js:122:9)
     at async Worker.handleMessageFromRendererWorker (http://localhost/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js:46:24)`,
@@ -290,13 +271,9 @@ test('invoke - error - with stack', async () => {
       }
     }),
   }
-  const error = await getError(
-    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
-  )
+  const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error).toBeInstanceOf(Error)
-  expect(error.message).toBe(
-    `Test failed: sample.tab-completion-provider: expected selector .Viewlet.Editor to have text \"test3\" but was \"test\"`
-  )
+  expect(error.message).toBe(`Test failed: sample.tab-completion-provider: expected selector .Viewlet.Editor to have text \"test3\" but was \"test\"`)
   expect(error.stack).toMatch(
     `Error: expected selector .Viewlet.Editor to have text \"test3\" but was \"test\"
     at Object.checkSingleElementCondition [as TestFrameWork.checkSingleElementCondition] (http://localhost/packages/renderer-process/src/parts/TestFrameWork/TestFrameWork.js:122:9)
@@ -324,9 +301,7 @@ test.skip('invoke - error - with only one line in stack', async () => {
       }
     }),
   }
-  const error = await getError(
-    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
-  )
+  const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error).toBeInstanceOf(DOMException)
   expect(error.message).toBe('The user aborted a request.')
   expect(error.stack).toMatch(
@@ -355,9 +330,7 @@ test('invoke - error - method not found', async () => {
       }
     }),
   }
-  const error = await getError(
-    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
-  )
+  const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error).toBeInstanceOf(JsonRpcError)
   expect(error.message).toBe('method not found')
   expect(ipc.send).toHaveBeenCalledTimes(1)
@@ -383,9 +356,7 @@ test('invoke', async () => {
       }
     }),
   }
-  expect(await JsonRpc.invoke(ipc, 'Test.execute', 'test message')).toEqual(
-    'success'
-  )
+  expect(await JsonRpc.invoke(ipc, 'Test.execute', 'test message')).toEqual('success')
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenCalledWith({
     jsonrpc: JsonRpcVersion.Two,

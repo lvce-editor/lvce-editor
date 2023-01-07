@@ -13,8 +13,8 @@ const EMPTY_EDITOR = {
     rowIndex: 0,
     columnIndex: 0,
   },
-  top: 0,
-  left: 0,
+  x: 0,
+  y: 0,
   columnWidth: 8,
   rowHeight: 20,
 }
@@ -173,11 +173,7 @@ test.skip('close', async () => {
     switch (message[0]) {
       case 909090:
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
+        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       default:
         throw new Error('unexpected message')

@@ -19,7 +19,8 @@ exports.parseCliArgs = (argv) => {
     },
   }
   Debug.debug('[info] parsing argv')
-  const parsedArgs = minimist(argv.slice(1), CLI_OPTIONS)
+  const relevantArgv = argv.slice(1)
+  const parsedArgs = minimist(relevantArgv, CLI_OPTIONS)
   // TODO tree-shake this out
   if (argv[0].endsWith('dist/electron')) {
     parsedArgs._ = parsedArgs._.slice(1)

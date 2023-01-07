@@ -43,8 +43,8 @@ test('dispose', () => {
 test('resize', () => {
   const state = ViewletRunAndDebug.create()
   const newState = ViewletRunAndDebug.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 200,
   })
@@ -53,8 +53,8 @@ test('resize', () => {
     disposed: false,
     height: 200,
     id: undefined,
-    left: 200,
-    top: 200,
+    x: 200,
+    y: 200,
     width: 200,
   })
 })

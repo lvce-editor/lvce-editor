@@ -69,18 +69,16 @@ const getMainEditors = (state) => {
 
 const hydrateLazy = async () => {
   // TODO this should be in extension host
-  await Command.execute(
-    /* EditorDiagnostics.hydrate */ 'EditorDiagnostics.hydrate'
-  )
+  await Command.execute(/* EditorDiagnostics.hydrate */ 'EditorDiagnostics.hydrate')
 }
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     editors: [],
     activeIndex: -1,
     focusedIndex: -1,
-    left,
-    top,
+    x,
+    y,
     width,
     height,
   }
@@ -181,21 +179,15 @@ export const contentLoaded = async (state) => {
     return []
   }
   const editor = Arrays.last(state.editors)
-  const top = state.top + TAB_HEIGHT
-  const left = state.left
+  const x = state.x
+  const y = state.y + TAB_HEIGHT
   const width = state.width
   const height = state.height - TAB_HEIGHT
   const id = ViewletMap.getId(editor.uri)
   const tabLabel = Workspace.pathBaseName(editor.uri)
   const tabTitle = getTabTitle(editor.uri)
   const commands = [
-    [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'openViewlet',
-      /* tabLabel */ tabLabel,
-      /* tabTitle */ tabTitle,
-    ],
+    [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
   ]
 
   // // TODO race condition: Viewlet may have been resized before it has loaded
@@ -207,8 +199,8 @@ export const contentLoaded = async (state) => {
       // @ts-ignore
       parentId: ViewletModuleId.Main,
       uri: editor.uri,
-      left,
-      top,
+      x,
+      y,
       width,
       height,
       show: false,
@@ -228,8 +220,8 @@ export const contentLoaded = async (state) => {
 export const openUri = async (state, uri, focus = true, options = {}) => {
   Assert.object(state)
   Assert.string(uri)
-  const top = state.top + TAB_HEIGHT
-  const left = state.left
+  const x = state.x
+  const y = state.y + TAB_HEIGHT
   const width = state.width
   const height = state.height - TAB_HEIGHT
   const id = ViewletMap.getId(uri)
@@ -238,16 +230,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     if (editor.uri === uri) {
       console.log('found existing editor')
       // TODO if the editor is already open, nothing needs to be done
-      const instance = ViewletManager.create(
-        ViewletModule.load,
-        id,
-        ViewletModuleId.Main,
-        uri,
-        left,
-        top,
-        width,
-        height
-      )
+      const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
       // @ts-ignore
 
       await ViewletManager.load(instance, focus, false, options)
@@ -255,16 +238,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     }
   }
 
-  const instance = ViewletManager.create(
-    ViewletModule.load,
-    id,
-    ViewletModuleId.Main,
-    uri,
-    left,
-    top,
-    width,
-    height
-  )
+  const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
   const oldActiveIndex = state.activeIndex
   const temporaryUri = `tmp://${Math.random()}`
   state.editors.push({ uri: temporaryUri })
@@ -303,15 +277,15 @@ export const openBackgroundTab = async (state, initialUri, props) => {
     /* oldActiveIndex */ -1,
     /* background */ true
   )
-  const top = state.top + TAB_HEIGHT
-  const left = state.left
+  const y = state.y + TAB_HEIGHT
+  const x = state.x
   const width = state.width
   const height = state.height - TAB_HEIGHT
   const { title, uri } = await ViewletManager.backgroundLoad({
     getModule: ViewletModule.load,
     id,
-    left,
-    top,
+    x,
+    y,
     width,
     height,
     props,
@@ -388,9 +362,7 @@ export const saveWithoutFormatting = async () => {
 
 export const handleDrop = async () => {
   console.log(['main drop'])
-  const clipBoardText = await SharedProcess.invoke(
-    /* ClipBoard.read */ 'ClipBoard.read'
-  )
+  const clipBoardText = await SharedProcess.invoke(/* ClipBoard.read */ 'ClipBoard.read')
   console.log({ clipBoardText })
 }
 
@@ -407,11 +379,7 @@ const getId = (editor) => {
 }
 
 export const closeAllEditors = async (state) => {
-  RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ ViewletModuleId.Main,
-    /* method */ 'dispose'
-  )
+  RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'dispose')
   const ids = state.editors.map(getId)
   state.editors = []
   state.focusedIndex = -1
@@ -429,8 +397,8 @@ export const closeEditor = async (state, index) => {
   if (state.editors.length === 1) {
     return closeAllEditors(state)
   }
-  const top = state.top
-  const left = state.left
+  const y = state.y
+  const x = state.x
   const width = state.width
   const height = state.height
   if (index === state.activeIndex) {
@@ -454,11 +422,7 @@ export const closeEditor = async (state, index) => {
     //   height: instance.state.height,
     //   columnWidth: COLUMN_WIDTH,
     // })
-    await RendererProcess.invoke(
-      /* Main.closeOneTab */ 'Main.closeOneTab',
-      /* closeIndex */ oldActiveIndex,
-      /* focusIndex */ newActiveIndex
-    )
+    await RendererProcess.invoke(/* Main.closeOneTab */ 'Main.closeOneTab', /* closeIndex */ oldActiveIndex, /* focusIndex */ newActiveIndex)
     return state
   }
   await RendererProcess.invoke(
@@ -481,12 +445,7 @@ export const closeFocusedTab = (state) => {
 }
 
 export const handleTabContextMenu = async (state, index, x, y) => {
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ MenuEntryId.Tab
-  )
+  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.Tab)
   return {
     ...state,
     focusedIndex: index,
@@ -501,8 +460,8 @@ export const focusIndex = async (state, index) => {
   state.activeIndex = index
 
   const editor = state.editors[index]
-  const top = state.top + TAB_HEIGHT
-  const left = state.left
+  const x = state.x
+  const y = state.top + TAB_HEIGHT
   const width = state.width
   const height = state.height - TAB_HEIGHT
   const id = ViewletMap.getId(editor.uri)
@@ -511,16 +470,7 @@ export const focusIndex = async (state, index) => {
   const oldId = ViewletMap.getId(oldEditor.uri)
   const oldInstance = ViewletStates.getInstance(oldId)
 
-  const viewlet = ViewletManager.create(
-    ViewletModule.load,
-    id,
-    ViewletModuleId.Main,
-    editor.uri,
-    left,
-    top,
-    width,
-    height
-  )
+  const viewlet = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, editor.uri, x, y, width, height)
 
   // TODO race condition
   RendererProcess.invoke(
@@ -558,14 +508,12 @@ export const focusLast = (state) => {
 }
 
 export const focusPrevious = (state) => {
-  const previousIndex =
-    state.activeIndex === 0 ? state.editors.length - 1 : state.activeIndex - 1
+  const previousIndex = state.activeIndex === 0 ? state.editors.length - 1 : state.activeIndex - 1
   return focusIndex(state, previousIndex)
 }
 
 export const focusNext = (state) => {
-  const nextIndex =
-    state.activeIndex === state.editors.length - 1 ? 0 : state.activeIndex + 1
+  const nextIndex = state.activeIndex === state.editors.length - 1 ? 0 : state.activeIndex + 1
   return focusIndex(state, nextIndex)
 }
 
@@ -644,13 +592,13 @@ export const closeTabsLeft = async (state) => {
 
 export const resize = (state, dimensions) => {
   const { editors } = state
-  const top = dimensions.top + TAB_HEIGHT
-  const left = dimensions.left
+  const x = dimensions.x
+  const y = dimensions.y + TAB_HEIGHT
   const width = dimensions.width
   const height = dimensions.height - TAB_HEIGHT
   const childDimensions = {
-    top,
-    left,
+    x,
+    y,
     width,
     height,
   }

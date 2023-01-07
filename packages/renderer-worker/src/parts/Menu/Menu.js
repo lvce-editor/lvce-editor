@@ -5,6 +5,7 @@ import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const state = {
   /**
@@ -17,9 +18,9 @@ export const state = {
 
 export const MENU_WIDTH = 150
 
-const CONTEXT_MENU_ITEM_HEIGHT = 28
-const CONTEXT_MENU_SEPARATOR_HEIGHT = 16
-const CONTEXT_MENU_PADDING = 20
+const CONTEXT_MENU_ITEM_HEIGHT = 26
+const CONTEXT_MENU_SEPARATOR_HEIGHT = 11
+const CONTEXT_MENU_PADDING = 8
 const CONTEXT_MENU_WIDTH = 250
 
 export const getMenuWidth = () => {
@@ -43,7 +44,7 @@ export const getMenuHeight = (items) => {
 
 const getCurrentMenu = () => {
   if (state.menus.length === 0) {
-    console.warn('menu not available')
+    Logger.warn('menu not available')
   }
   return state.menus.at(-1)
 }
@@ -112,10 +113,7 @@ export const show = async (x, y, id, mouseBlocking = false, ...args) => {
 export const closeSubMenu = () => {
   const menu = state.menus.pop()
   const parentMenu = state.menus.at(-1)
-  RendererProcess.invoke(
-    /* Menu.hideSubMenu */ 7903,
-    /* parentIndex */ parentMenu.focusedIndex
-  )
+  RendererProcess.invoke(/* Menu.hideSubMenu */ 7903, /* parentIndex */ parentMenu.focusedIndex)
 }
 
 const showSubMenuAtEnter = async (level, index, enterX, enterY) => {
@@ -154,26 +152,20 @@ export const showSubMenu = async (level, index) => {
 
 const selectIndexNone = async (item) => {
   if (!item.command) {
-    console.warn('item has missing command', item)
+    Logger.warn('item has missing command', item)
     return
   }
   const args = item.args || []
-  await Promise.all([
-    hide(/* restoreFocus */ false),
-    Command.execute(item.command, ...args),
-  ])
+  await Promise.all([hide(/* restoreFocus */ false), Command.execute(item.command, ...args)])
 }
 
 const selectIndexRestoreFocus = async (item) => {
   if (!item.command) {
-    console.warn('item has missing command', item)
+    Logger.warn('item has missing command', item)
     return
   }
   const args = item.args || []
-  await Promise.all([
-    hide(/* restoreFocus */ true),
-    Command.execute(item.command, ...args),
-  ])
+  await Promise.all([hide(/* restoreFocus */ true), Command.execute(item.command, ...args)])
 }
 
 const selectIndexSubMenu = async (menu, index) => {
@@ -222,10 +214,7 @@ export const hide = async (restoreFocus = true) => {
     return
   }
   state.menus = []
-  await RendererProcess.invoke(
-    /* Menu.hide */ 'Menu.hide',
-    /* restoreFocus */ restoreFocus
-  )
+  await RendererProcess.invoke(/* Menu.hide */ 'Menu.hide', /* restoreFocus */ restoreFocus)
 }
 
 // TODO difference between focusing with mouse or keyboard
@@ -235,10 +224,7 @@ export const hide = async (restoreFocus = true) => {
 const hideSubMenus = async (level) => {
   if (level < state.menus.length) {
     state.menus = state.menus.slice(0, level + 1)
-    await RendererProcess.invoke(
-      /* Menu.hideSubMenu */ 'Menu.hideSubMenu',
-      /* level */ level + 1
-    )
+    await RendererProcess.invoke(/* Menu.hideSubMenu */ 'Menu.hideSubMenu', /* level */ level + 1)
   }
 }
 
@@ -248,13 +234,7 @@ const resolveAfterTimeout = (fn) => {
   setTimeout(fn, MENU_DELAY_TRIANGLE)
 }
 
-export const handleMouseEnter = async (
-  level,
-  index,
-  enterX,
-  enterY,
-  enterTimeStamp
-) => {
+export const handleMouseEnter = async (level, index, enterX, enterY, enterTimeStamp) => {
   state.latestTimeStamp = enterTimeStamp
   if (level >= state.menus.length) {
     return
@@ -345,10 +325,7 @@ export const getIndexToFocusLast = (items) => {
 
 export const focusLast = async () => {
   const menu = getCurrentMenu()
-  const indexToFocus = getIndexToFocusPreviousStartingAt(
-    menu.items,
-    menu.items.length - 1
-  )
+  const indexToFocus = getIndexToFocusPreviousStartingAt(menu.items, menu.items.length - 1)
   await focusIndex(menu, indexToFocus)
 }
 
@@ -365,8 +342,7 @@ export const getIndexToFocusPreviousStartingAt = (items, startIndex) => {
 }
 
 export const getIndexToFocusPrevious = (menu) => {
-  const startIndex =
-    menu.focusedIndex === -1 ? menu.items.length - 1 : menu.focusedIndex - 1
+  const startIndex = menu.focusedIndex === -1 ? menu.items.length - 1 : menu.focusedIndex - 1
   return getIndexToFocusPreviousStartingAt(menu.items, startIndex)
 }
 

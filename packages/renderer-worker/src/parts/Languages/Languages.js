@@ -5,6 +5,7 @@ import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as ExtensionHostLanguages from '../ExtensionHost/ExtensionHostLanguages.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const state = {
   loadState: false,
@@ -74,9 +75,7 @@ const contributionPointFileExtensions = {
   key: 'fileExtensions',
   handle(value, languageId) {
     if (value) {
-      console.warn(
-        `[renderer-worker] unsupported property "fileExtensions" for language ${languageId}, use the property "extensions" instead`
-      )
+      Logger.warn(`[renderer-worker] unsupported property "fileExtensions" for language ${languageId}, use the property "extensions" instead`)
     }
   },
 }
@@ -90,9 +89,7 @@ const contributionPointFileNames = {
           const fileNameLower = fileName.toLowerCase()
           state.fileNameMap[fileNameLower] = languageId
         } else {
-          console.warn(
-            `[renderer-worker] language.fileNames for ${languageId} should be an array of strings but includes ${typeof fileName}`
-          )
+          Logger.warn(`[renderer-worker] language.fileNames for ${languageId} should be an array of strings but includes ${typeof fileName}`)
         }
       }
       state.fileNameMap
@@ -135,7 +132,7 @@ const warnFileNames = (languageId, language) => {
       column: columnIndex + 'filenames'.length + 1,
     },
   })
-  console.warn(
+  Logger.warn(
     `Please use "fileNames" instead of "filenames" for language ${languageId}
 ${codeFrame}
 `
@@ -158,9 +155,7 @@ const contributionPointExtensions = {
         if (typeof extension === 'string') {
           state.extensionMap[extension] = languageId
         } else {
-          console.warn(
-            `[renderer-worker] language.extensions for ${languageId} should be an array of strings but includes ${typeof extension}`
-          )
+          Logger.warn(`[renderer-worker] language.extensions for ${languageId} should be an array of strings but includes ${typeof extension}`)
         }
       }
     }
@@ -188,7 +183,7 @@ const contributionPoints = [
 export const addLanguage = (language) => {
   const languageId = language.id
   if (!languageId) {
-    console.warn(`[renderer-worker] language is missing id`, language)
+    Logger.warn(`[renderer-worker] language is missing id`, language)
     return
   }
   // TODO could use object destructuing here
@@ -229,13 +224,9 @@ export const waitForLoad = async () => {
 
 export const getLanguageConfiguration = async (editor) => {
   if (!hasLoaded()) {
-    throw new Error(
-      'languages must be loaded before requesting language configuration'
-    )
+    throw new Error('languages must be loaded before requesting language configuration')
   }
   editor.languageId = getLanguageId(editor.uri)
-  const languageConfiguration = ExtensionHostLanguages.getLanguageConfiguration(
-    editor.languageId
-  )
+  const languageConfiguration = ExtensionHostLanguages.getLanguageConfiguration(editor.languageId)
   return languageConfiguration
 }

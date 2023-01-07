@@ -1,4 +1,7 @@
 const stringifyError = (error) => {
+  if (error instanceof DOMException && error.message) {
+    return `DOMException: ${error.message}`
+  }
   const errorPrefixes = ['Error: ', 'VError: ']
   const stringifiedError = `${error}`
   for (const errorPrefix of errorPrefixes) {
@@ -23,6 +26,9 @@ const mergeStacks = (parent, child) => {
   }
   const parentNewLineIndex = parent.indexOf('\n')
   const childNewLineIndex = child.indexOf('\n')
+  if (childNewLineIndex === -1) {
+    return parent
+  }
   const parentFirstLine = parent.slice(0, parentNewLineIndex)
   const childRest = child.slice(childNewLineIndex)
   const childFirstLine = child.slice(0, childNewLineIndex)

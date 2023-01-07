@@ -1,16 +1,25 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as DebugDisplay from '../DebugDisplay/DebugDisplay.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
+import * as DebugState from '../DebugState/DebugState.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Assert from '../Assert/Assert.js'
+import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
+import * as DebugValueType from '../DebugValueType/DebugValueType.js'
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  NotPaused: 'Not paused',
+}
 
 export const create = (id) => {
   return {
     id,
     disposed: false,
     processes: [],
-    debugState: 'none',
+    debugState: DebugState.None,
     watchExpanded: false,
     breakPointsExpanded: false,
     scopeExpanded: false,
@@ -20,6 +29,9 @@ export const create = (id) => {
     parsedScripts: Object.create(null),
     pausedReason: DebugPausedReason.None,
     pausedMessage: '',
+    debugInputValue: '',
+    debugOutputValue: '',
+    callFrameId: '',
   }
 }
 
@@ -31,16 +43,18 @@ export const loadContent = async (state) => {
     ...state,
     processes,
     debugId,
-    debugState: 'default',
+    debugState: DebugState.Default,
+    scopeExpanded: true,
+    callStackExpanded: true,
   }
 }
 
 const getPropertyValueLabel = (property) => {
   switch (property.type) {
-    case 'number':
-    case 'object':
+    case DebugValueType.Number:
+    case DebugValueType.Object:
       return property.description
-    case 'undefined':
+    case DebugValueType.Undefined:
       return `undefined`
     default:
       return `${JSON.stringify(property)}`
@@ -52,7 +66,7 @@ const toDisplayScopeChain = (params, thisObject, scopeChain, knownProperties) =>
   for (const scope of scopeChain) {
     const label = DebugDisplay.getScopeLabel(scope)
     elements.push({
-      type: 'scope',
+      type: DebugScopeChainType.Scope,
       key: label,
       value: '',
       valueType: '',
@@ -64,7 +78,7 @@ const toDisplayScopeChain = (params, thisObject, scopeChain, knownProperties) =>
       if (params.reason === DebugPausedReason.Exception) {
         const value = params.data.description.replaceAll('\n', ' ')
         elements.push({
-          type: 'exception',
+          type: DebugScopeChainType.Exception,
           key: 'Exception',
           value,
           valueType: '',
@@ -73,7 +87,7 @@ const toDisplayScopeChain = (params, thisObject, scopeChain, knownProperties) =>
       }
       const valueLabel = getPropertyValueLabel(thisObject)
       elements.push({
-        type: 'this',
+        type: DebugScopeChainType.This,
         key: 'this',
         value: valueLabel,
         valueType: '',
@@ -85,7 +99,7 @@ const toDisplayScopeChain = (params, thisObject, scopeChain, knownProperties) =>
       for (const child of children.result.result) {
         const valueLabel = getPropertyValueLabel(child.value)
         elements.push({
-          type: 'property',
+          type: DebugScopeChainType.Property,
           key: child.name,
           value: valueLabel,
           valueType: child.value.type,
@@ -112,6 +126,7 @@ const toDisplayCallStack = (callFrames) => {
 export const handlePaused = async (state, params) => {
   const callStack = toDisplayCallStack(params.callFrames)
   const objectId = params.callFrames[0].scopeChain[0].object.objectId
+  const callFrameId = params.callFrames[0].callFrameId
   const { debugId } = state
   const properties = await Debug.getProperties(debugId, objectId)
   const thisObject = params.callFrames[0].this
@@ -123,23 +138,25 @@ export const handlePaused = async (state, params) => {
   const pausedMessage = DebugDisplay.getPausedMessage(params.reason)
   return {
     ...state,
-    debugState: 'paused',
+    debugState: DebugState.Paused,
     scopeChain,
     scopeExpanded: true,
     callStack,
     pausedReason,
     pausedMessage,
+    callFrameId,
   }
 }
 
 export const handleResumed = (state) => {
   return {
     ...state,
-    debugState: 'default',
+    debugState: DebugState.Default,
     scopeChain: [],
     callStack: [],
     pausedMessage: '',
     pausedReason: DebugPausedReason.None,
+    callFrameId: '',
   }
 }
 
@@ -168,7 +185,7 @@ export const pause = async (state) => {
 
 export const togglePause = async (state) => {
   const { debugState } = state
-  if (debugState === 'default') {
+  if (debugState === DebugState.Default) {
     return pause(state)
   }
   return resume(state)
@@ -224,6 +241,24 @@ export const handleClickSectionCallstack = (state) => {
   }
 }
 
+export const handleDebugInput = (state, value) => {
+  return {
+    ...state,
+    debugInputValue: value,
+  }
+}
+
+export const handleEvaluate = async (state) => {
+  const { debugInputValue, callFrameId, debugId } = state
+  const result = await Debug.evaluate(debugId, debugInputValue, callFrameId)
+  const actualResult = result.result.result.value
+  return {
+    ...state,
+    debugInputValue: '',
+    debugOutputValue: `${actualResult}`,
+  }
+}
+
 // TODO make sure dispose is actually called
 export const dispose = (state) => {
   return {
@@ -270,18 +305,24 @@ const renderSections = {
 
 const renderScopeChain = {
   isEqual(oldState, newState) {
-    return oldState.scopeChain === newState.scopeChain
+    return oldState.scopeChain === newState.scopeChain && oldState.debugState === newState.debugState
   },
   apply(oldState, newState) {
+    if (newState.debugState === DebugState.None || newState.debugState === DebugState.Default) {
+      return [/* method */ 'setScopeChainMessage', UiStrings.NotPaused]
+    }
     return [/* method */ 'setScopeChain', newState.scopeChain]
   },
 }
 
 const renderCallStack = {
   isEqual(oldState, newState) {
-    return oldState.scopeChain === newState.scopeChain
+    return oldState.scopeChain === newState.scopeChain && oldState.debugState === newState.debugState
   },
   apply(oldState, newState) {
+    if (newState.debugstate === DebugState.None || newState.debugState === DebugState.Default) {
+      return [/* method */ 'setCallStackMessage', UiStrings.NotPaused]
+    }
     return [/* method */ 'setCallStack', newState.callStack]
   },
 }
@@ -295,7 +336,16 @@ const renderPausedReason = {
   },
 }
 
-export const render = [renderProcesses, renderDebugState, renderSections, renderScopeChain, renderCallStack, renderPausedReason]
+const renderOutput = {
+  isEqual(oldState, newState) {
+    return oldState.debugOutputValue === newState.debugOutputValue
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setOutputValue', newState.debugOutputValue]
+  },
+}
+
+export const render = [renderProcesses, renderDebugState, renderSections, renderScopeChain, renderCallStack, renderPausedReason, renderOutput]
 
 export const resize = (state, dimensions) => {
   return { ...state, ...dimensions }
