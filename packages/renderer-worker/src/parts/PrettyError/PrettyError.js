@@ -73,6 +73,8 @@ const getSourceMapAbsolutePath = (file, relativePath) => {
   return absolutePath
 }
 
+const getOriginalPosition = (sourceMap, line, column) => {}
+
 const prepareErrorMessageWithoutCodeFrame = async (error) => {
   try {
     const lines = SplitLines.splitLines(error.stack)
@@ -98,6 +100,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       const sourceMapUrl = sourceMapMatch[1]
       const sourceMapAbsolutePath = getSourceMapAbsolutePath(path, sourceMapUrl)
       const sourceMap = await Ajax.getJson(sourceMapAbsolutePath)
+      const originalPosition = getOriginalPosition(sourceMap, line, column)
       console.log({ sourceMap })
     }
     // console.log({ text, lastLine, sourceMapMatch })
