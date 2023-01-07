@@ -1,6 +1,7 @@
 import * as Ajax from '../Ajax/Ajax.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as Platform from '../Platform/Platform.js'
 import * as SourceMap from '../SourceMap/SourceMap.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
@@ -23,6 +24,7 @@ const prepareErrorMessageWithCodeFrame = (error) => {
       stack: undefined,
       codeFrame: undefined,
       type: 'Error',
+      _error: error,
     }
   }
   const message = getErrorMessage(error)
@@ -32,6 +34,7 @@ const prepareErrorMessageWithCodeFrame = (error) => {
       stack: error.stack,
       codeFrame: error.codeFrame,
       type: error.constructor.name,
+      _error: error,
     }
   }
   return {
@@ -40,6 +43,7 @@ const prepareErrorMessageWithCodeFrame = (error) => {
     codeFrame: error.originalCodeFrame,
     category: error.category,
     stderr: error.stderr,
+    _error: error,
   }
 }
 
@@ -127,6 +131,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
         codeFrame,
         stack: relevantStack,
         type: error.constructor.name,
+        _error: error,
       }
     }
     const codeFrame = CodeFrameColumns.create(text, {
@@ -144,6 +149,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       codeFrame,
       stack: relevantStack,
       type: error.constructor.name,
+      _error: error,
     }
   } catch (otherError) {
     console.warn(`ErrorHandling Error: ${otherError}`)
@@ -162,22 +168,37 @@ export const prepare = async (error) => {
 }
 
 export const print = (error) => {
+  if (Platform.isFirefox) {
+    // Firefox does not support printing codeframe with error stack
+    console.log({ error })
+    if (error && error._error) {
+      console.error(error._error)
+      return
+    }
+    console.error(error)
+    return
+  }
   if (error && error.type && error.message && error.codeFrame) {
-    return `${error.type}: ${error.message}\n\n${error.codeFrame}\n\n${error.stack}`
+    console.error(`${error.type}: ${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
+    return
   }
   if (error && error.message && error.codeFrame) {
-    return `${error.message}\n\n${error.codeFrame}\n\n${error.stack}`
+    console.error(`${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
+    return
   }
   if (error && error.type && error.message) {
-    return `${error.type}: ${error.message}\n${error.stack}`
+    console.error(`${error.type}: ${error.message}\n${error.stack}`)
+    return
   }
   if (error && error.stack) {
-    return `${error.stack}`
+    console.error(`${error.stack}`)
+    return
   }
   if (error === null) {
-    return null
+    console.error(null)
+    return
   }
-  return `${error}`
+  console.error(error)
 }
 
 export const getMessage = (error) => {

@@ -200,6 +200,4 @@ export const startup = async (config) => {
   Performance.measure('code/loadPreferences', 'code/willLoadPreferences', 'code/didLoadPreferences')
   Performance.measure('code/loadColorTheme', 'code/willLoadColorTheme', 'code/didLoadColorTheme')
   Performance.measure('code/loadIconTheme', 'code/willLoadIconTheme', 'code/didLoadIconTheme')
-
-  throw new Error('oops')
 }
