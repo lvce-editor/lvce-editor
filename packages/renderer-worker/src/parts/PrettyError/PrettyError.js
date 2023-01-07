@@ -74,6 +74,11 @@ const getSourceMapAbsolutePath = (file, relativePath) => {
   return absolutePath
 }
 
+const toAbsoluteUrl = (file, relativePath) => {
+  const url = new URL(relativePath, file)
+  return url.href
+}
+
 const prepareErrorMessageWithoutCodeFrame = async (error) => {
   try {
     const lines = SplitLines.splitLines(error.stack)
@@ -89,6 +94,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       return error
     }
     const [_, path, line, column] = match
+    console.log({ _, path, line, column })
     if (path === '<anonymous>' || path === 'debugger eval code') {
       return error
     }
@@ -104,7 +110,8 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       const sourceMapAbsolutePath = getSourceMapAbsolutePath(path, sourceMapUrl)
       const sourceMap = await Ajax.getJson(sourceMapAbsolutePath)
       const { source, originalLine, originalColumn } = SourceMap.getOriginalPosition(sourceMap, parsedLine, parsedColumn)
-      const originalSourceContent = await Ajax.getText(source)
+      const absoluteSourceUrl = toAbsoluteUrl(path, source)
+      const originalSourceContent = await Ajax.getText(absoluteSourceUrl)
       const codeFrame = CodeFrameColumns.create(originalSourceContent, {
         start: {
           line: originalLine,
