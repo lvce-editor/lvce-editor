@@ -36,7 +36,7 @@ const constructError = (message, type, name) => {
   }
   if (ErrorConstructor === Error) {
     const error = new Error(message)
-    if (name) {
+    if (name && name !== 'VError') {
       error.name = name
     }
     return error

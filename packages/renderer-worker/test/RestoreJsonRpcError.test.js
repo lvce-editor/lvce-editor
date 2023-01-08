@@ -115,6 +115,24 @@ test('invoke - error - ExecError', () => {
   expect(error.name).toBe('ExecError')
 })
 
+test('invoke - error - VError', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    message: 'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42',
+    stack:
+      'VError: invalid tab completion result: tabCompletion must be of type object but is 42\n    at executeTabCompletionProvider (test://packages/extension-host-worker/src/parts/Registry/Registry.js:77:17)\n    at async Module.getResponse (test://packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:7:20)\n    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)',
+    name: 'VError',
+    type: 'VError',
+  })
+  expect(error).toBeInstanceOf(Error)
+  expect(error.message).toBe(
+    'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42'
+  )
+  expect(error.stack).toMatch(
+    'VError: invalid tab completion result: tabCompletion must be of type object but is 42\n    at executeTabCompletionProvider (test://packages/extension-host-worker/src/parts/Registry/Registry.js:77:17)\n    at async Module.getResponse (test://packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:7:20)\n    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)'
+  )
+  expect(error.name).toBe('Error')
+})
+
 test.skip('invoke - error - with only one line in stack', async () => {
   const ipc = {
     send: jest.fn((message) => {
