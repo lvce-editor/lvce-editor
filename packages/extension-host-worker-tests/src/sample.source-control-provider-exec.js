@@ -24,7 +24,6 @@ test('sample.source-control-provider-exec', async () => {
   await SideBar.open('Source Control')
 
   // assert
-  // assert
   const treeItems = Locator('.TreeItem')
   await expect(treeItems).toHaveCount(2)
   await expect(treeItems.nth(0)).toHaveText('file-1.txt')
