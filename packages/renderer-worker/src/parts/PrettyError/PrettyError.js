@@ -83,6 +83,19 @@ const toAbsoluteUrl = (file, relativePath) => {
   return url.href
 }
 
+const getSourceMapMatch = (text) => {
+  const index = text.lastIndexOf('\n', text.length - 2)
+  const lastLine = text.slice(index + 1, -1)
+  const lastLineMatch = lastLine.match(RE_SOURCE_MAP)
+  if (lastLineMatch) {
+    return lastLineMatch
+  }
+  const secondLastLineIndex = text.indexOf('\n', index - 1)
+  const secondLastLine = text.slice(secondLastLineIndex, index)
+  const secondLastLineMatch = secondLastLine.match(RE_SOURCE_MAP)
+  return secondLastLineMatch
+}
+
 const prepareErrorMessageWithoutCodeFrame = async (error) => {
   try {
     const lines = SplitLines.splitLines(error.stack)
@@ -102,8 +115,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       return error
     }
     const text = await Ajax.getText(path)
-    const lastLine = getLastLine(text)
-    const sourceMapMatch = lastLine.match(RE_SOURCE_MAP)
+    const sourceMapMatch = getSourceMapMatch(text)
     const parsedLine = parseInt(line)
     const parsedColumn = parseInt(column)
     const message = getErrorMessage(error)

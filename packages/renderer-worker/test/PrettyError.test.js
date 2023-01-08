@@ -9,11 +9,22 @@ jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
     getText: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    getJson: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+jest.unstable_mockModule('../src/parts/SourceMap/SourceMap.js', () => {
+  return {
+    getOriginalPosition: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
 const PrettyError = await import('../src/parts/PrettyError/PrettyError.js')
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
+const SourceMap = await import('../src/parts/SourceMap/SourceMap.js')
 
 test('prepare - fetch codeFrame', async () => {
   // @ts-ignore
@@ -59,6 +70,73 @@ test('prepare - fetch codeFrame', async () => {
   at async Object.handleKeyBinding [as KeyBindings.handleKeyBinding] (test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
   at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`,
     type: 'ReferenceError',
+    _error: error,
+  })
+})
+
+test('prepare - fetch codeFrame - with sourcemap', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation((url) => {
+    switch (url) {
+      case 'test://packages/renderer-worker/dist/rendererWorkerMain.js':
+        return `main();
+
+//# sourceMappingURL=rendererWorkerMain.js.map
+`
+      case 'test://packages/renderer-worker/src/parts/Command/Command.js':
+        return `import * as ModuleMap from '../ModuleMap/ModuleMap.js'
+
+const execute = () => {
+  throw new Error(\`Command did not register "\${command}"\`)
+}
+`
+      default:
+        throw new Error(`unsupported url ${url}`)
+    }
+  })
+  // @ts-ignore
+  Ajax.getJson.mockImplementation((url) => {
+    switch (url) {
+      case 'test://packages/renderer-worker/dist/rendererWorkerMain.js.map':
+        return {
+          version: 3,
+          sources: [],
+          sourcesContent: [],
+          mappings: ';;;',
+          names: [],
+        }
+      default:
+        throw new Error(`unsupported url ${url}`)
+    }
+  })
+  // @ts-ignore
+  SourceMap.getOriginalPosition.mockImplementation(() => {
+    return {
+      source: '../src/parts/Command/Command.js',
+      originalLine: 4,
+      originalColumn: 13,
+    }
+  })
+  const error = new Error('Command did not register: "ElectronWindow.openNew"')
+  error.stack = `Error: Command did not register "ElectronWindow.openNew"
+  at test://packages/renderer-worker/dist/rendererWorkerMain.js:353:17
+  at async selectIndexNone2 (test://packages/renderer-worker/dist/rendererWorkerMain.js:32978:7)
+  at async TitleBarMenuBar/lazy/handleMenuMouseDown (test://packages/renderer-worker/dist/rendererWorkerMain.js:7329:28)
+  at async handleMessageFromRendererProcess (test://packages/renderer-worker/dist/rendererWorkerMain.js:897:7)`
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: `Command did not register: "ElectronWindow.openNew"`,
+    codeFrame: `  2 |
+  3 | const execute = () => {
+> 4 |   throw new Error(\`Command did not register \"\${command}\"\`)
+    |             ^
+  5 | }
+  6 |`,
+    stack: `  at test://packages/renderer-worker/dist/rendererWorkerMain.js:353:17
+  at async selectIndexNone2 (test://packages/renderer-worker/dist/rendererWorkerMain.js:32978:7)
+  at async TitleBarMenuBar/lazy/handleMenuMouseDown (test://packages/renderer-worker/dist/rendererWorkerMain.js:7329:28)
+  at async handleMessageFromRendererProcess (test://packages/renderer-worker/dist/rendererWorkerMain.js:897:7)`,
+    type: 'Error',
     _error: error,
   })
 })
