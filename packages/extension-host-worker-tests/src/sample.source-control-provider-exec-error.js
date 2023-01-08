@@ -5,16 +5,16 @@ export const mockExec = (command, args, options) => {
         stdout: `file-1.txt
 file-2.txt`,
         stderr: ``,
-        exitCode: 0,
+        exitCode: 128,
       }
     }
   }
   throw new Error(`unexpected command ${command}`)
 }
 
-const name = 'sample.source-control-provider-exec'
+const name = 'sample.source-control-provider-exec-error'
 
-test('sample.source-control-provider-exec', async () => {
+test('sample.source-control-provider-exec-error', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -24,10 +24,8 @@ test('sample.source-control-provider-exec', async () => {
   await SideBar.open('Source Control')
 
   // assert
-  const treeItems = Locator('.TreeItem')
-  await expect(treeItems).toHaveCount(2)
-  await expect(treeItems.nth(0)).toHaveText('file-1.txt')
-  await expect(treeItems.nth(1)).toHaveText('file-2.txt')
+  const sourceControl = Locator('.SourceControl')
+  await expect(sourceControl).toHaveText('ExecError: Failed to execute test-source-control: process exited with code 128')
 })
 
 export {}
