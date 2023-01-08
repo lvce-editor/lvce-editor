@@ -240,6 +240,10 @@
       "foreground": "#B4B4B4"
     },
     {
+      "name": "MarkdownString",
+      "foreground": "#C6DD88"
+    },
+    {
       "name": "KeywordFunction",
       "foreground": "#D88F56"
     }
