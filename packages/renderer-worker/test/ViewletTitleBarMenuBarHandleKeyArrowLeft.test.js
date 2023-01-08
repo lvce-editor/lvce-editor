@@ -49,8 +49,8 @@ test('handleKeyArrowLeft - close sub menu', () => {
             label: 'file-2.txt',
           },
         ],
-        top: 25,
-        left: 150,
+        x: 150,
+        y: 25,
       },
     ],
   }

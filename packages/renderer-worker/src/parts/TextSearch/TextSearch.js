@@ -12,12 +12,12 @@ const getProvider = (scheme) => {
   }
 }
 
-export const textSearch = async (root, query) => {
+export const textSearch = async (root, query, options) => {
   Assert.string(root)
   Assert.string(query)
   const scheme = GetProtocol.getProtocol(root)
   const provider = await getProvider(scheme)
-  const results = await provider.textSearch(scheme, root, query)
+  const results = await provider.textSearch(scheme, root, query, options)
   return results
 }
 

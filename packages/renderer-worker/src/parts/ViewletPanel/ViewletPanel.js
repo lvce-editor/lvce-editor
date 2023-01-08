@@ -24,12 +24,7 @@ const getSavedViewletId = (savedState) => {
 
 export const loadContent = (state, savedState) => {
   const savedViewletId = getSavedViewletId(savedState)
-  const views = [
-    ViewletModuleId.Problems,
-    ViewletModuleId.Output,
-    ViewletModuleId.DebugConsole,
-    ViewletModuleId.Terminal,
-  ]
+  const views = [ViewletModuleId.Problems, ViewletModuleId.Output, ViewletModuleId.DebugConsole, ViewletModuleId.Terminal]
   const selectedIndex = views.indexOf(savedViewletId)
   return {
     ...state,
@@ -41,8 +36,8 @@ export const loadContent = (state, savedState) => {
 
 const getContentDimensions = (dimensions) => {
   return {
-    left: dimensions.left,
-    top: dimensions.top + 35,
+    x: dimensions.x,
+    y: dimensions.y + 35,
     width: dimensions.width,
     height: dimensions.height - 35,
   }
@@ -50,7 +45,7 @@ const getContentDimensions = (dimensions) => {
 
 // TODO
 export const getChildren = (state) => {
-  const { top, left, width, height, titleAreaHeight, currentViewletId } = state
+  const { y, x, width, height, titleAreaHeight, currentViewletId } = state
   return [
     {
       id: currentViewletId,
@@ -83,8 +78,8 @@ export const openViewlet = async (state, id, focus = false) => {
     show: false,
     focus: false,
     setBounds: false,
-    top: childDimensions.top,
-    left: childDimensions.left,
+    x: childDimensions.x,
+    y: childDimensions.y,
     width: childDimensions.width,
     height: childDimensions.height,
   })
@@ -120,11 +115,7 @@ const renderSelectedIndex = {
     return oldState.selectedIndex === newState.selectedIndex
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setSelectedIndex',
-      /* unFocusIndex */ oldState.selectedIndex,
-      /* focusIndex */ newState.selectedIndex,
-    ]
+    return [/* method */ 'setSelectedIndex', /* unFocusIndex */ oldState.selectedIndex, /* focusIndex */ newState.selectedIndex]
   },
 }
 

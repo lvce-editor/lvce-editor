@@ -1,7 +1,4 @@
-import {
-  getChildDirents,
-  getParentStartIndex,
-} from './ViewletExplorerShared.js'
+import { getChildDirents, getParentStartIndex } from './ViewletExplorerShared.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import { handleDropRoot } from './ViewletExplorerHandleDropRoot.js'
@@ -13,16 +10,12 @@ const handleDropIntoFolder = async (state, dirent, index, files) => {
     const to = dirent.path + pathSeparator + file.name
     await FileSystem.copy(from, to)
   }
-  const childDirents = await getChildDirents(root, pathSeparator, dirent)
+  const childDirents = await getChildDirents(pathSeparator, dirent)
   // TODO merge with child dirents
   const middleDirents = []
   const startIndex = index + 1
   const endIndex = index + 2
-  const mergedDirents = [
-    ...items.slice(0, startIndex),
-    ...childDirents,
-    ...items.slice(endIndex),
-  ]
+  const mergedDirents = [...items.slice(0, startIndex), ...childDirents, ...items.slice(endIndex)]
 
   // const mergedDirents = mergeDirents(dirents, childDirents)
   return {

@@ -4,13 +4,13 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as Height from '../Height/Height.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Path from '../Path/Path.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import {
@@ -22,7 +22,6 @@ import {
   getParentStartIndex,
   getTopLevelDirents,
 } from './ViewletExplorerShared.js'
-import * as Height from '../Height/Height.js'
 
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
@@ -33,15 +32,15 @@ import * as Height from '../Height/Height.js'
 
 // TODO instead of root string, there should be a root dirent
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     root: '',
     items: [],
     focusedIndex: -1,
     focused: false,
     hoverIndex: -1,
-    top,
-    left,
+    x,
+    y,
     height,
     deltaY: 0,
     minLineY: 0,
@@ -69,7 +68,7 @@ const getPath = (dirent) => {
   return dirent.path
 }
 
-const getSavedChildDirents = (map, path, depth, excluded) => {
+const getSavedChildDirents = (map, path, depth, excluded, pathSeparator) => {
   const children = map[path]
   if (!children) {
     return []
@@ -77,6 +76,7 @@ const getSavedChildDirents = (map, path, depth, excluded) => {
   const dirents = []
   children.sort(compareDirent)
   const visible = []
+  const displayRoot = path.endsWith(pathSeparator) ? path : path + pathSeparator
   for (const child of children) {
     if (excluded.includes(child.name)) {
       continue
@@ -87,8 +87,8 @@ const getSavedChildDirents = (map, path, depth, excluded) => {
   for (let i = 0; i < visibleLength; i++) {
     const child = visible[i]
     const { name, type } = child
-    const childPath = path + '/' + name
-    if (child.type === DirentType.Directory && childPath in map) {
+    const childPath = displayRoot + name
+    if ((child.type === DirentType.Directory || child.type === DirentType.SymLinkFolder) && childPath in map) {
       dirents.push({
         depth,
         posInSet: i + 1,
@@ -98,7 +98,7 @@ const getSavedChildDirents = (map, path, depth, excluded) => {
         path: childPath,
         type: DirentType.DirectoryExpanded,
       })
-      dirents.push(...getSavedChildDirents(map, childPath, depth + 1, excluded))
+      dirents.push(...getSavedChildDirents(map, childPath, depth + 1, excluded, pathSeparator))
     } else {
       dirents.push({
         depth,
@@ -114,12 +114,7 @@ const getSavedChildDirents = (map, path, depth, excluded) => {
   return dirents
 }
 
-const createDirents = (
-  root,
-  expandedDirentPaths,
-  expandedDirentChildren,
-  excluded
-) => {
+const createDirents = (root, expandedDirentPaths, expandedDirentChildren, excluded, pathSeparator) => {
   const dirents = []
   const map = Object.create(null)
   for (let i = 0; i < expandedDirentPaths.length; i++) {
@@ -129,38 +124,36 @@ const createDirents = (
       map[path] = children.value
     }
   }
-  dirents.push(...getSavedChildDirents(map, root, 1, excluded))
+  dirents.push(...getSavedChildDirents(map, root, 1, excluded, pathSeparator))
   return dirents
 }
 
-const restoreExpandedState = async (
-  savedState,
-  root,
-  pathSeparator,
-  excluded
-) => {
+const getSavedExpandedPaths = (savedState, root) => {
+  if (savedState && savedState.root !== root) {
+    return []
+  }
+  if (savedState && savedState.expandedPaths && Array.isArray(savedState.expandedPaths)) {
+    return savedState.expandedPaths
+  }
+  return []
+}
+
+const restoreExpandedState = async (savedState, root, pathSeparator, excluded) => {
   // TODO read all opened folders in parallel
   // ignore ENOENT errors
   // ignore ENOTDIR errors
   // merge all dirents
   // restore scroll location
-  if (!savedState || !savedState.expandedPaths || savedState.root !== root) {
-    return await getTopLevelDirents(root, pathSeparator, excluded)
+  const expandedPaths = getSavedExpandedPaths(savedState, root)
+  if (root === '') {
+    return []
   }
-  const expandedDirentPaths = [root, ...savedState.expandedPaths]
-  const expandedDirentChildren = await Promise.allSettled(
-    expandedDirentPaths.map(getChildDirentsRaw)
-  )
-  if (expandedDirentChildren[0].status === 'rejected') {
+  const expandedDirentPaths = [root, ...expandedPaths]
+  const expandedDirentChildren = await Promise.allSettled(expandedDirentPaths.map(getChildDirentsRaw))
+  if (expandedDirentChildren[0].status === PromiseStatus.Rejected) {
     throw expandedDirentChildren[0].reason
   }
-  const savedRoot = savedState.root
-  const dirents = createDirents(
-    savedRoot,
-    expandedDirentPaths,
-    expandedDirentChildren,
-    excluded
-  )
+  const dirents = createDirents(root, expandedDirentPaths, expandedDirentChildren, excluded, pathSeparator)
   return dirents
 }
 
@@ -192,12 +185,7 @@ export const loadContent = async (state, savedState) => {
   // TODO path separator could be restored from saved state
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const excluded = getExcluded()
-  const restoredDirents = await restoreExpandedState(
-    savedState,
-    root,
-    pathSeparator,
-    excluded
-  )
+  const restoredDirents = await restoreExpandedState(savedState, root, pathSeparator, excluded)
   const { itemHeight, height } = state
   let minLineY = 0
   if (savedState && typeof savedState.minLineY === 'number') {
@@ -413,7 +401,6 @@ export const computeRenamedDirent = (dirents, index, newName) => {
     }
   }
   endIndex--
-  // console.log({endi /})
 
   for (let j = startIndex; j < index; j++) {
     const dirent = dirents[j]
@@ -437,11 +424,7 @@ export const computeRenamedDirent = (dirents, index, newName) => {
     insertIndex = index
     return {
       focusedIndex: index,
-      newDirents: [
-        ...dirents.slice(0, index),
-        newDirent,
-        ...dirents.slice(index + 1),
-      ],
+      newDirents: [...dirents.slice(0, index), newDirent, ...dirents.slice(index + 1)],
     }
   }
   newDirent.posInSet = posInSet
@@ -469,11 +452,7 @@ export const acceptRename = async (state) => {
     await ErrorHandling.showErrorDialog(error)
     return state
   }
-  const { newDirents, focusedIndex } = computeRenamedDirent(
-    items,
-    editingIndex,
-    editingValue
-  )
+  const { newDirents, focusedIndex } = computeRenamedDirent(items, editingIndex, editingValue)
   //  TODO move focused index
   state.items = newDirents
   return {
@@ -513,10 +492,7 @@ export const copyRelativePath = async (state) => {
   const dirent = getFocusedDirent(state)
   const relativePath = dirent.path.slice(1)
   // TODO handle error
-  await Command.execute(
-    /* ClipBoard.writeText */ 'ClipBoard.writeText',
-    /* text */ relativePath
-  )
+  await Command.execute(/* ClipBoard.writeText */ 'ClipBoard.writeText', /* text */ relativePath)
   return state
 }
 
@@ -525,10 +501,7 @@ export const copyPath = async (state) => {
   // TODO windows paths
   // TODO handle error
   const path = dirent.path
-  await Command.execute(
-    /* ClipBoard.writeText */ 'ClipBoard.writeText',
-    /* text */ path
-  )
+  await Command.execute(/* ClipBoard.writeText */ 'ClipBoard.writeText', /* text */ path)
   return state
 }
 
@@ -594,9 +567,7 @@ const acceptCreate = async (state) => {
   if (!newFileName) {
     // TODO show error message that file name must not be empty
     // below input box
-    await ErrorHandling.showErrorDialog(
-      new Error('file name must not be empty')
-    )
+    await ErrorHandling.showErrorDialog(new Error('file name must not be empty'))
     return state
   }
   const parentFolder = getParentFolder(state.items, focusedIndex, state.root)
@@ -631,10 +602,7 @@ const acceptCreate = async (state) => {
     setSize: 1,
     depth,
     name: newFileName,
-    type:
-      editingType === ExplorerEditingType.CreateFile
-        ? DirentType.File
-        : DirentType.Directory,
+    type: editingType === ExplorerEditingType.CreateFile ? DirentType.File : DirentType.Directory,
     icon: '',
   }
   newDirent.icon = IconTheme.getIcon(newDirent)
@@ -678,11 +646,7 @@ export const newFolder = (state) => {
 }
 
 const handleClickFile = async (state, dirent, index, keepFocus = false) => {
-  await Command.execute(
-    /* Main.openAbsolutePath */ 'Main.openUri',
-    /* absolutePath */ dirent.path,
-    /* focus */ !keepFocus
-  )
+  await Command.execute(/* Main.openAbsolutePath */ 'Main.openUri', /* absolutePath */ dirent.path, /* focus */ !keepFocus)
   return {
     ...state,
     focusedIndex: index,
@@ -693,7 +657,7 @@ const handleClickFile = async (state, dirent, index, keepFocus = false) => {
 const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   dirent.type = DirentType.DirectoryExpanding
   // TODO handle error
-  const dirents = await getChildDirents(state.root, state.pathSeparator, dirent)
+  const dirents = await getChildDirents(state.pathSeparator, dirent)
   const state2 = Viewlet.getState('Explorer')
   if (!state2) {
     return state
@@ -704,14 +668,13 @@ const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   if (newIndex === -1) {
     return state
   }
-  // console.log(state.items[index] === dirent)
   const newDirents = [...state2.items]
   newDirents.splice(newIndex + 1, 0, ...dirents)
   dirent.type = DirentType.DirectoryExpanded
   dirent.icon = IconTheme.getIcon(dirent)
-  const { height, itemHeight } = state2
+  const { height, itemHeight, minLineY } = state2
   // TODO when focused index has changed while expanding, don't update it
-  const maxLineY = Math.min(Math.ceil(height / itemHeight), newDirents.length)
+  const maxLineY = minLineY + Math.min(Math.ceil(height / itemHeight), newDirents.length)
   return {
     ...state,
     items: newDirents,
@@ -764,40 +727,42 @@ const handleClickDirectoryExpanded = (state, dirent, index, keepFocus) => {
   }
 }
 
+const getClickFn = (direntType) => {
+  switch (direntType) {
+    case DirentType.File:
+    case DirentType.SymLinkFile:
+      return handleClickFile
+    case DirentType.Directory:
+    case DirentType.SymLinkFolder:
+      return handleClickDirectory
+    case DirentType.DirectoryExpanding:
+      return handleClickDirectoryExpanding
+    case DirentType.DirectoryExpanded:
+      return handleClickDirectoryExpanded
+    case DirentType.Symlink:
+      return handleClickSymLink
+    case DirentType.CharacterDevice:
+      throw new Error(`Cannot open character device files`)
+    case DirentType.BlockDevice:
+      throw new Error(`Cannot open block device files`)
+    default:
+      throw new Error(`unsupported dirent type ${direntType}`)
+  }
+}
+
 export const handleClick = (state, index, keepFocus = false) => {
+  const { items, minLineY } = state
   if (index === -1) {
     return focusIndex(state, -1)
   }
-  const actualIndex = index + state.minLineY
-  const dirent = state.items[actualIndex]
+  const actualIndex = index + minLineY
+  const dirent = items[actualIndex]
   if (!dirent) {
     console.warn(`[explorer] dirent at index ${actualIndex} not found`, state)
     return state
   }
-  const { type } = dirent
-  // TODO dirent type should be numeric
-  switch (type) {
-    case DirentType.File:
-    case DirentType.SymLinkFile:
-      return handleClickFile(state, dirent, actualIndex, keepFocus)
-    // TODO decide on one name
-    case DirentType.Directory:
-    case DirentType.SymLinkFolder:
-      return handleClickDirectory(state, dirent, actualIndex, keepFocus)
-    case DirentType.DirectoryExpanding:
-      return handleClickDirectoryExpanding(
-        state,
-        dirent,
-        actualIndex,
-        keepFocus
-      )
-    case DirentType.DirectoryExpanded:
-      return handleClickDirectoryExpanded(state, dirent, actualIndex, keepFocus)
-    case DirentType.Symlink:
-      return handleClickSymLink(state, dirent, state.focusedIndex)
-    default:
-      throw new Error(`unsupported dirent type ${type}`)
-  }
+  const clickFn = getClickFn(dirent.type)
+  return clickFn(state, dirent, actualIndex, keepFocus)
 }
 
 export const handleClickAt = (state, x, y) => {
@@ -810,11 +775,7 @@ export const handleClickCurrent = (state) => {
 }
 
 export const handleClickCurrentButKeepFocus = (state) => {
-  return handleClick(
-    state,
-    state.focusedIndex - state.minLineY,
-    /* keepFocus */ true
-  )
+  return handleClick(state, state.focusedIndex - state.minLineY, /* keepFocus */ true)
 }
 
 export const scrollUp = () => {}
@@ -899,9 +860,7 @@ export const handleUpload = async (state, dirents) => {
       // TODO reading text might be inefficient for binary files
       // but not sure how else to send them via jsonrpc
       const content = await dirent.file.text()
-      const absolutePath = [state.root, dirent.file.name].join(
-        state.pathSeparator
-      )
+      const absolutePath = [state.root, dirent.file.name].join(state.pathSeparator)
       await FileSystem.writeFile(absolutePath, content)
     }
   }
@@ -922,14 +881,7 @@ export const dispose = (state) => {
   // }
 }
 
-const IMAGE_EXTENSIONS = new Set([
-  '.png',
-  '.jpeg',
-  '.jpg',
-  '.gif',
-  '.svg',
-  '.ico',
-])
+const IMAGE_EXTENSIONS = new Set(['.png', '.jpeg', '.jpg', '.gif', '.svg', '.ico'])
 
 const getFileExtension = (file) => {
   return file.slice(file.lastIndexOf('.'))
@@ -951,16 +903,11 @@ export const handleMouseEnter = async (state, index) => {
     // TODO preload content maybe when it is a long hover
     return state
   }
-  const { top, itemHeight, left, root } = state
+  const { top, itemHeight, x, root } = state
   const uri = `${root}${dirent.path}`
   const newTop = top + index * itemHeight
-  const right = left
-  await Command.execute(
-    /* ImagePreview.show */ 9081,
-    /* uri */ uri,
-    /* top */ newTop,
-    /* right */ right
-  )
+  const right = x
+  await Command.execute(/* ImagePreview.show */ 9081, /* uri */ uri, /* top */ newTop, /* right */ right)
 }
 
 // TODO what happens when mouse leave and anther mouse enter event occur?
@@ -993,11 +940,7 @@ export const handleCopy = async (state) => {
   const absolutePath = dirent.path
   // TODO handle copy error gracefully
   const files = [absolutePath]
-  await Command.execute(
-    /* ClipBoard.writeNativeFiles */ 243,
-    /* type */ 'copy',
-    /* files */ files
-  )
+  await Command.execute(/* ClipBoard.writeNativeFiles */ 243, /* type */ 'copy', /* files */ files)
 }
 
 export const hasFunctionalResize = true
@@ -1028,11 +971,7 @@ export const expandAll = async (state) => {
       dirent.type = DirentType.DirectoryExpanding
       // TODO handle error
       // TODO race condition
-      const childDirents = await getChildDirents(
-        state.root,
-        state.pathSeparator,
-        dirent
-      )
+      const childDirents = await getChildDirents(state.pathSeparator, dirent)
       const newIndex = newDirents.indexOf(dirent)
       if (newIndex === -1) {
         continue
@@ -1119,11 +1058,7 @@ const getPathPartsToReveal = (root, pathParts, dirents) => {
 }
 
 const getPathPartChildren = (pathPart) => {
-  const children = getChildDirents(
-    pathPart.root,
-    pathPart.pathSeparator,
-    pathPart
-  )
+  const children = getChildDirents(pathPart.pathSeparator, pathPart)
   return children
 }
 
@@ -1177,9 +1112,7 @@ const mergeVisibleWithHiddenItems = (visibleItems, hiddenItems) => {
   // }
   // const mergedDirents = []
   // for(const v)
-  // console.log({ hiddenItems })
   // for (const visibleItem of visibleItems) {
-  //   console.log({ visibleItem, hiddenItemRoot, hiddenItems })
   //   if (visibleItem.path === hiddenItemRoot) {
   //     // TODO update aria posinset and aria setsize
   //     mergedDirents.push(...hiddenItems)
@@ -1209,17 +1142,13 @@ const orderDirents = (dirents) => {
   const withDeepChildren = (parent) => {
     const children = []
     for (const dirent of dirents) {
-      if (
-        dirent.depth === parent.depth + 1 &&
-        dirent.path.startsWith(parent.path)
-      ) {
+      if (dirent.depth === parent.depth + 1 && dirent.path.startsWith(parent.path)) {
         children.push(dirent, ...withDeepChildren(dirent))
       }
     }
     return [parent, ...children]
   }
   const topLevelDirents = dirents.filter(isTopLevel)
-
   const ordered = topLevelDirents.flatMap(withDeepChildren)
   return ordered
 }
@@ -1251,9 +1180,7 @@ const revealItemHidden = async (state, uri) => {
   const { root, pathSeparator, items, minLineY, maxLineY } = state
   const pathParts = getPathParts(root, uri, pathSeparator)
   const pathPartsToReveal = getPathPartsToReveal(root, pathParts, items)
-  const pathPartsChildren = await Promise.all(
-    pathPartsToReveal.map(getPathPartChildren)
-  )
+  const pathPartsChildren = await Promise.all(pathPartsToReveal.map(getPathPartChildren))
   const pathPartsChildrenFlat = pathPartsChildren.flat(1)
   const orderedPathParts = orderDirents(pathPartsChildrenFlat)
   const mergedDirents = mergeVisibleWithHiddenItems(items, orderedPathParts)
@@ -1297,10 +1224,7 @@ export const revealItem = async (state, uri) => {
 
 export const shouldApplyNewState = (newState, fn) => {
   if (newState.root !== Workspace.state.workspacePath) {
-    console.log(
-      'root does not match',
-      `${newState.root} !== ${Workspace.state.workspacePath}`
-    )
+    console.log('root does not match', `${newState.root} !== ${Workspace.state.workspacePath}`)
     return false
   }
   return true
@@ -1310,11 +1234,7 @@ export const hasFunctionalRender = true
 
 const renderItems = {
   isEqual(oldState, newState) {
-    return (
-      oldState.items === newState.items &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY
-    )
+    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
     const visibleDirents = getVisible(newState)
@@ -1324,20 +1244,12 @@ const renderItems = {
 
 const renderFocusedIndex = {
   isEqual(oldState, newState) {
-    return (
-      oldState.focusedIndex === newState.focusedIndex &&
-      oldState.focused === newState.focused
-    )
+    return oldState.focusedIndex === newState.focusedIndex && oldState.focused === newState.focused && oldState.minLineY === newState.minLineY
   },
   apply(oldState, newState) {
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
-    return [
-      /* method */ 'setFocusedIndex',
-      /* oldindex */ oldFocusedIndex,
-      /* newIndex */ newFocusedIndex,
-      /* focused */ newState.focused,
-    ]
+    return [/* method */ 'setFocusedIndex', /* oldindex */ oldFocusedIndex, /* newIndex */ newFocusedIndex, /* focused */ newState.focused]
   },
 }
 
@@ -1346,11 +1258,7 @@ const renderDropTargets = {
     return oldState.dropTargets === newState.dropTargets
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setDropTargets',
-      /* oldDropTargets */ oldState.dropTargets,
-      /* newDropTargets */ newState.dropTargets,
-    ]
+    return [/* method */ 'setDropTargets', /* oldDropTargets */ oldState.dropTargets, /* newDropTargets */ newState.dropTargets]
   },
 }
 
@@ -1361,41 +1269,18 @@ const renderEditingIndex = {
   apply(oldState, newState) {
     const { editingIndex, focusedIndex, editingType, editingValue } = newState
     if (editingIndex === -1) {
-      if (
-        oldState.editingType === ExplorerEditingType.CreateFile ||
-        oldState.editingType === ExplorerEditingType.CreateFolder
-      ) {
+      if (oldState.editingType === ExplorerEditingType.CreateFile || oldState.editingType === ExplorerEditingType.CreateFolder) {
         return [/* method */ 'hideEditBox', /* index */ oldState.editingIndex]
       }
       const dirent = newState.items[focusedIndex]
-      return [
-        /* method */ 'replaceEditBox',
-        /* index */ oldState.editingIndex,
-        /* dirent */ dirent,
-      ]
+      return [/* method */ 'replaceEditBox', /* index */ oldState.editingIndex, /* dirent */ dirent]
     } else {
-      if (
-        oldState.editingType === ExplorerEditingType.CreateFile ||
-        oldState.editingType === ExplorerEditingType.CreateFolder
-      ) {
-        return [
-          /* method */ 'insertEditBox',
-          /* index */ oldState.editingIndex,
-          /* value */ editingValue,
-        ]
+      if (oldState.editingType === ExplorerEditingType.CreateFile || oldState.editingType === ExplorerEditingType.CreateFolder) {
+        return [/* method */ 'insertEditBox', /* index */ oldState.editingIndex, /* value */ editingValue]
       }
-      return [
-        /* method */ 'replaceWithEditBox',
-        /* index */ editingIndex,
-        /* value */ editingValue,
-      ]
+      return [/* method */ 'replaceWithEditBox', /* index */ editingIndex, /* value */ editingValue]
     }
   },
 }
 
-export const render = [
-  renderEditingIndex,
-  renderItems,
-  renderDropTargets,
-  renderFocusedIndex,
-]
+export const render = [renderEditingIndex, renderItems, renderDropTargets, renderFocusedIndex]

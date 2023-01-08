@@ -100,23 +100,14 @@ const getObjectDependencies = (obj) => {
   if (!obj || !obj.dependencies) {
     return []
   }
-  return [
-    obj,
-    ...Object.values(obj.dependencies).flatMap(getObjectDependencies),
-  ]
+  return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
 const copySharedProcessFiles = async () => {
   await Copy.copy({
     from: 'packages/shared-process',
     to: 'build/.tmp/server/shared-process',
-    ignore: [
-      'node_modules',
-      '.nvmrc',
-      'tsconfig.json',
-      'package-lock.json',
-      'test',
-    ],
+    ignore: ['node_modules', '.nvmrc', 'tsconfig.json', 'package-lock.json', 'test'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
@@ -144,9 +135,7 @@ const copySharedProcessFiles = async () => {
   // TODO where should builtinExtension be located?
   const shouldBeCopied = (extensionName) => {
     return (
-      extensionName === 'builtin.vscode-icons' ||
-      extensionName.startsWith('builtin.theme-') ||
-      extensionName.startsWith('builtin.language-basics')
+      extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-') || extensionName.startsWith('builtin.language-basics')
     )
   }
   const extensionNames = await readdir(Path.absolute('extensions'))
@@ -182,8 +171,8 @@ const copyServerFiles = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: 'build/.tmp/server/server/src/server.js',
-    occurrence: `const immutable = argv.includes('--immutable')`,
-    replacement: `const immutable = true`,
+    occurrence: `const isImmutable = argv.includes('--immutable')`,
+    replacement: `const isImmutable = true`,
   })
   const content = `This project incorporates components from the projects listed below, that may have licenses
 differing from this project:
@@ -696,14 +685,7 @@ const copyExtensionHostFiles = async () => {
   await Copy.copy({
     from: 'packages/extension-host',
     to: 'build/.tmp/server/extension-host',
-    ignore: [
-      'tsconfig.json',
-      'node_modules',
-      'distmin',
-      'example',
-      'test',
-      'package-lock.json',
-    ],
+    ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test', 'package-lock.json'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
@@ -715,14 +697,7 @@ const copyExtensionHostHelperProcessFiles = async () => {
   await Copy.copy({
     from: 'packages/extension-host-helper-process',
     to: 'build/.tmp/server/extension-host-helper-process',
-    ignore: [
-      'tsconfig.json',
-      'node_modules',
-      'distmin',
-      'example',
-      'test',
-      'package-lock.json',
-    ],
+    ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test', 'package-lock.json'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
@@ -734,15 +709,7 @@ const copyPtyHostFiles = async () => {
   await Copy.copy({
     from: 'packages/pty-host',
     to: 'build/.tmp/server/pty-host',
-    ignore: [
-      'tsconfig.json',
-      'node_modules',
-      'distmin',
-      'example',
-      'test',
-      '.nvmrc',
-      'package-lock.json',
-    ],
+    ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test', '.nvmrc', 'package-lock.json'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
@@ -777,10 +744,7 @@ const setVersions = async () => {
     if (json.dependencies && json.dependencies['@lvce-editor/extension-host']) {
       json.dependencies['@lvce-editor/extension-host'] = gitTag
     }
-    if (
-      json.dependencies &&
-      json.dependencies['@lvce-editor/extension-host-helper-process']
-    ) {
+    if (json.dependencies && json.dependencies['@lvce-editor/extension-host-helper-process']) {
       json.dependencies['@lvce-editor/extension-host-helper-process'] = gitTag
     }
     if (json.version) {
@@ -794,12 +758,11 @@ const setVersions = async () => {
 }
 
 const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash }) => {
-  const rendererProcessCachePath =
-    await BundleRendererProcessCached.bundleRendererProcessCached({
-      commitHash,
-      platform: 'remote',
-      assetDir: `/${commitHash}`,
-    })
+  const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
+    commitHash,
+    platform: 'remote',
+    assetDir: `/${commitHash}`,
+  })
 
   console.time('copyRendererProcessFiles')
   await Copy.copy({
@@ -809,12 +772,11 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash }) => {
   })
   console.timeEnd('copyRendererProcessFiles')
 
-  const rendererWorkerCachePath =
-    await BundleRendererWorkerCached.bundleRendererWorkerCached({
-      commitHash,
-      platform: 'remote',
-      assetDir: `/${commitHash}`,
-    })
+  const rendererWorkerCachePath = await BundleRendererWorkerCached.bundleRendererWorkerCached({
+    commitHash,
+    platform: 'remote',
+    assetDir: `/${commitHash}`,
+  })
 
   console.time('copyRendererWorkerFiles')
   await Copy.copy({
@@ -824,12 +786,11 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash }) => {
   })
   console.timeEnd('copyRendererWorkerFiles')
 
-  const extensionHostWorkerCachePath =
-    await BundleExtensionHostWorkerCached.bundleExtensionHostWorkerCached({
-      commitHash,
-      platform: 'remote',
-      assetDir: `/${commitHash}`,
-    })
+  const extensionHostWorkerCachePath = await BundleExtensionHostWorkerCached.bundleExtensionHostWorkerCached({
+    commitHash,
+    platform: 'remote',
+    assetDir: `/${commitHash}`,
+  })
   console.time('copyExtensionHostWorkerFiles')
   await Copy.copy({
     from: extensionHostWorkerCachePath,

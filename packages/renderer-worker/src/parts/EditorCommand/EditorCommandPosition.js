@@ -7,11 +7,7 @@ export const at = (editor, x, y, offset) => {
   Assert.number(y)
   Assert.number(offset)
   const { maxLineY } = editor
-  const rowIndex = Clamp.clamp(
-    Math.floor((y - editor.top + editor.deltaY) / editor.rowHeight),
-    0,
-    maxLineY - 1
-  )
+  const rowIndex = Clamp.clamp(Math.floor((y - editor.y + editor.deltaY) / editor.rowHeight), 0, maxLineY - 1)
   const columnIndex = offset
   return {
     rowIndex,
@@ -29,11 +25,11 @@ export const at = (editor, x, y, offset) => {
  * @returns
  */
 export const x = (editor, rowIndex, columnIndex) => {
-  const x = columnIndex * editor.columnWidth + editor.left
+  const x = columnIndex * editor.columnWidth + editor.x
   return x
 }
 
 export const y = (editor, rowIndex, columnIndex) => {
-  const y = (rowIndex + 1) * editor.rowHeight + editor.top
+  const y = (rowIndex + 1) * editor.rowHeight + editor.y
   return y
 }

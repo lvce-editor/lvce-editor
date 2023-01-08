@@ -1,7 +1,7 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     id,
     interval: -1,
@@ -11,12 +11,7 @@ export const create = (id, uri, left, top, width, height) => {
 
 export const loadContent = (state) => {
   const update = async () => {
-    await RendererProcess.invoke(
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Clock,
-      /* method */ 'setTime',
-      /* time */ Date.now()
-    )
+    await RendererProcess.invoke(/* Viewlet.invoke */ 'Viewlet.send', /* id */ ViewletModuleId.Clock, /* method */ 'setTime', /* time */ Date.now())
   }
   return {
     ...state,

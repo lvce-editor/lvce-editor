@@ -1,5 +1,6 @@
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
+import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 
 const getCommandsFromExtension = (extension) => {
   if (!extension || !extension.commands) {
@@ -24,7 +25,7 @@ export const getCommands = async () => {
 export const executeCommand = (id) => {
   return ExtensionHostShared.executeProvider({
     event: `onCommand:${id}`,
-    method: 'ExtensionHost.executeCommand',
+    method: ExtensionHostCommandType.CommandExecute,
     params: [id],
     noProviderFoundMessage: 'No command provider found',
   })

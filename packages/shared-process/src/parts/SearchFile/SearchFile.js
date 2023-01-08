@@ -1,10 +1,8 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
-import * as Exec from '../Exec/Exec.js'
 import * as LimitString from '../LimitString/LimitString.js'
-import * as RgPath from '../RgPath/RgPath.js'
-
-const ripGrepPath = process.env.RIP_GREP_PATH || RgPath.rgPath
+import * as RipGrep from '../RipGrep/RipGrep.js'
+import * as Logger from '../Logger/Logger.js'
 
 const isEnoentErrorLinux = (error) => {
   return error.code === ErrorCodes.ENOENT
@@ -32,25 +30,23 @@ export const searchFile = async (path, searchTerm, limit) => {
     Assert.string(path)
     Assert.string(searchTerm)
     Assert.number(limit)
-    const { stdout, stderr } = await Exec.exec(
-      ripGrepPath,
-      ['--files', '--sort-files'],
-      {
-        cwd: path,
-      }
-    )
+    const { stdout, stderr } = await RipGrep.exec(['--files', '--sort-files'], {
+      cwd: path,
+    })
     return LimitString.limitString(stdout, limit)
   } catch (error) {
     // @ts-ignore
     if (isEnoentError(error)) {
-      console.info(`[info] ripgrep could not be found at "${ripGrepPath}"`)
-      return []
+      Logger.info(
+        `[shared-process] ripgrep could not be found at "${RipGrep.ripGrepPath}"`
+      )
+      return ``
     }
     // @ts-ignore
     if (error && error.stderr === '') {
-      return []
+      return ``
     }
-    console.error(error)
-    return []
+    Logger.error(error)
+    return ``
   }
 }

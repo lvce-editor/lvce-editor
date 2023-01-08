@@ -1,13 +1,10 @@
 import * as Platform from '../Platform/Platform.js'
 import { VError } from '../VError/VError.js'
+import * as Logger from '../Logger/Logger.js'
 
 const shouldIgnoreError = (error) => {
   // Firefox throws dom exception in private mode
-  return (
-    error &&
-    error instanceof DOMException &&
-    error.message === 'The operation is insecure.'
-  )
+  return error && error instanceof DOMException && error.message === 'The operation is insecure.'
 }
 
 // TODO when caches is not defined -> should return undefined
@@ -74,7 +71,7 @@ const setResponse = async (key, value, contentType) => {
     key = 'https://example.com' + key
   }
   if (typeof value !== 'string') {
-    console.warn(`invalid value ${value}`)
+    Logger.warn(`invalid value ${value}`)
     return
   }
   const cacheName = Platform.getCacheName()

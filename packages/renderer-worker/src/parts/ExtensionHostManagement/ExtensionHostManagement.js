@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Platform from '../Platform/Platform.js'
@@ -10,6 +11,7 @@ import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowse
 import * as ExtensionHostManagementElectron from './ExtensionHostManagementElectron.js'
 import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
 import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
+import * as TestState from '../TestState/TestState.js'
 
 export const state = {
   /**
@@ -33,10 +35,7 @@ const getExtensionHostManagementTypes = () => {
   }
 }
 
-const getManagersWithExtensionsToActivate = (
-  extensionHostManagers,
-  extensions
-) => {
+const getManagersWithExtensionsToActivate = (extensionHostManagers, extensions) => {
   const managersToActivate = []
   for (const manager of extensionHostManagers) {
     const toActivate = []
@@ -55,45 +54,25 @@ const getManagersWithExtensionsToActivate = (
 const startSynching = async (extensionHost) => {
   const handleEditorCreate = (editor) => {
     const text = TextDocument.getText(editor)
-    return extensionHost.ipc.invoke(
-      'ExtensionHostTextDocument.syncFull',
-      editor.uri,
-      editor.id,
-      editor.languageId,
-      text
-    )
+    return extensionHost.ipc.invoke('ExtensionHostTextDocument.syncFull', editor.uri, editor.id, editor.languageId, text)
   }
   GlobalEventBus.addListener('editor.create', handleEditorCreate)
 
   const handleEditorChange = (editor, changes) => {
-    return extensionHost.ipc.invoke(
-      'ExtensionHostTextDocument.syncIncremental',
-      editor.id,
-      changes
-    )
+    return extensionHost.ipc.invoke('ExtensionHostTextDocument.syncIncremental', editor.id, changes)
   }
   GlobalEventBus.addListener('editor.change', handleEditorChange)
 
   const handleEditorLanguageChange = (editor) => {
-    return extensionHost.ipc.invoke(
-      'ExtensionHostTextDocument.setLanguageId',
-      editor.id,
-      editor.languageId
-    )
+    return extensionHost.ipc.invoke('ExtensionHostTextDocument.setLanguageId', editor.id, editor.languageId)
   }
 
-  GlobalEventBus.addListener(
-    'editor.languageChange',
-    handleEditorLanguageChange
-  )
+  GlobalEventBus.addListener('editor.languageChange', handleEditorLanguageChange)
 
   const handleWorkspaceChange = async (workspacePath) => {
     await extensionHost.ipc.invoke('Workspace.setWorkspacePath', workspacePath)
-    if (Workspace.state.mockExec) {
-      await extensionHost.ipc.invoke(
-        'ExtensionHostMockExec.mockExec',
-        `${Workspace.state.mockExec}`
-      )
+    if (TestState.state.mockExec) {
+      await extensionHost.ipc.invoke('ExtensionHostMockExec.mockExec')
     }
   }
 
@@ -119,35 +98,25 @@ const actuallyActivateByEvent = async (event) => {
   // TODO if many (more than two?) extensions cannot be loaded,
   // it shouldn't should that many error messages
   await ExtensionMeta.handleRejectedExtensions(rejected)
-  const extensionsToActivate = ExtensionMeta.filterByMatchingEvent(
-    resolved,
-    event
-  )
+  const extensionsToActivate = ExtensionMeta.filterByMatchingEvent(resolved, event)
   // TODO how to handle when multiple reference providers are registered for nodejs and webworker extension host?
   // what happens when all of them / some of them throw error?
   // what happens when some of them take very long to activate?
 
   const extensionHostManagerTypes = getExtensionHostManagementTypes()
-  const extensionHostsWithExtensions = getManagersWithExtensionsToActivate(
-    extensionHostManagerTypes,
-    extensionsToActivate
-  )
+  const extensionHostsWithExtensions = getManagersWithExtensionsToActivate(extensionHostManagerTypes, extensionsToActivate)
   const extensionHosts = []
   for (const managerWithExtensions of extensionHostsWithExtensions) {
-    const extensionHost =
-      await ExtensionHostManagementShared.startExtensionHost(
-        managerWithExtensions.manager.name,
-        managerWithExtensions.manager.ipc
-      )
+    const extensionHost = await ExtensionHostManagementShared.startExtensionHost(
+      managerWithExtensions.manager.name,
+      managerWithExtensions.manager.ipc
+    )
     // TODO register text document change listener and sync text documents
     await startSynching(extensionHost)
     Assert.object(extensionHost)
     for (const extension of managerWithExtensions.toActivate) {
       // TODO tell extension host to activate extension
-      await extensionHost.ipc.invoke(
-        'ExtensionHostExtension.enableExtension',
-        extension
-      )
+      await extensionHost.ipc.invoke(ExtensionHostCommandType.ExtensionActivate, extension)
     }
     extensionHosts.push(extensionHost)
   }
@@ -162,6 +131,10 @@ const actuallyActivateByEvent = async (event) => {
 // TODO add tests for this
 export const activateByEvent = async (event) => {
   Assert.string(event)
+  if (event === 'none') {
+    const all = await Promise.all(Object.values(state.cachedActivationEvents))
+    return all.flat(1)
+  }
   if (!(event in state.cachedActivationEvents)) {
     state.cachedActivationEvents[event] = actuallyActivateByEvent(event)
   }

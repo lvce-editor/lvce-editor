@@ -3,6 +3,8 @@ import cleanStack from 'clean-stack'
 import { LinesAndColumns } from 'lines-and-columns'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as Json from '../Json/Json.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const getActualPath = (fileUri) => {
@@ -12,7 +14,59 @@ const getActualPath = (fileUri) => {
   return fileUri
 }
 
+const RE_MODULE_NOT_FOUND_STACK =
+  /Cannot find package '([^']+)' imported from (.+)$/
+
+const prepareModuleNotFoundError = (error) => {
+  const message = error.message
+  const match = message.match(RE_MODULE_NOT_FOUND_STACK)
+  if (!match) {
+    return {
+      message,
+      stack: error.stack,
+      codeFrame: '',
+    }
+  }
+  const notFoundModule = match[1]
+  const importedFrom = match[2]
+  const rawLines = readFileSync(importedFrom, 'utf-8')
+  let line = 0
+  let column = 0
+  const splittedLines = rawLines.split('\n')
+  for (let i = 0; i < splittedLines.length; i++) {
+    const splittedLine = splittedLines[i]
+    const index = splittedLine.indexOf(notFoundModule)
+    if (index !== -1) {
+      line = i + 1
+      column = index
+      break
+    }
+  }
+  const location = {
+    start: {
+      line,
+      column,
+    },
+  }
+  const codeFrame = codeFrameColumns(rawLines, location)
+  const stackLines = SplitLines.splitLines(error.stack)
+  const newStackLines = [
+    stackLines[0],
+    `    at ${importedFrom}:${line}:${column}`,
+    ...stackLines.slice(1),
+  ]
+  const newStack = newStackLines.join('\n')
+  return {
+    message,
+    stack: newStack,
+    codeFrame,
+  }
+}
+
 export const prepare = (error) => {
+  if (error && error.code === ErrorCodes.ERR_MODULE_NOT_FOUND) {
+    return prepareModuleNotFoundError(error)
+  }
   const message = error.message
   if (error && error.cause) {
     const cause = error.cause()
@@ -57,12 +111,8 @@ const fixBackslashes = (string) => {
   return string.replaceAll('\\\\', '\\')
 }
 
-const stringifyJson = (json) => {
-  return JSON.stringify(json, null, 2) + '\n'
-}
-
 export const prepareJsonError = (json, property, message) => {
-  const string = fixBackslashes(stringifyJson(json))
+  const string = fixBackslashes(Json.stringify(json))
   const stringifiedPropertyName = `"${property}"`
   const index = string.indexOf(stringifiedPropertyName) // TODO this could be wrong in some cases, find a better way
   console.log({ string, index })

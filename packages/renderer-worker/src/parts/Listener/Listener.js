@@ -1,5 +1,6 @@
 import * as Id from '../Id/Id.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const state = Object.create(null)
 
@@ -13,7 +14,7 @@ export const execute = (id, ...args) => {
   Assert.number(id)
   const listener = state[id]
   if (!listener) {
-    console.warn(`listener with id ${id} not found`)
+    Logger.warn(`listener with id ${id} not found`)
     return
   }
   return listener(...args)

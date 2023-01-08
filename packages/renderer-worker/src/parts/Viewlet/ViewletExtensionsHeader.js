@@ -6,22 +6,13 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
 
-const SUGGESTIONS = [
-  '@builtin',
-  '@disabled',
-  '@enabled',
-  '@installed',
-  '@outdated',
-  '@sort:installs',
-  '@id:',
-  '@category',
-]
+const SUGGESTIONS = ['@builtin', '@disabled', '@enabled', '@installed', '@outdated', '@sort:installs', '@id:', '@category']
 
 export const name = 'Extensions'
 
 // then state can be recycled by Viewlet when there is only a single ViewletExtensions instance
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     searchValue: '',
     parsedValue: {
@@ -54,11 +45,7 @@ export const openSuggest = async (state) => {
 
 export const closeSuggest = async (state) => {
   state.suggestionState = /* Closed */ 0
-  await RendererProcess.invoke(
-    /* viewletSend */ 'Viewlet.send',
-    /* id */ 'Extensions',
-    /* method */ 'closeSuggest'
-  )
+  await RendererProcess.invoke(/* viewletSend */ 'Viewlet.send', /* id */ 'Extensions', /* method */ 'closeSuggest')
 }
 
 export const toggleSuggest = async (state) => {

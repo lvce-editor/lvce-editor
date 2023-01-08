@@ -2,11 +2,13 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
+import * as Logger from '../Logger/Logger.js'
+import * as IconButton from '../IconButton/IconButton.js'
 import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 
 const create$Item = (item) => {
   const $Icon = document.createElement('div')
-  $Icon.className = `Icon${item.icon}`
+  $Icon.className = `FileIcon${item.icon}`
 
   const $Label = document.createElement('div')
   $Label.className = 'Label'
@@ -32,8 +34,9 @@ const getPlaceHolderText = () => {
 export const create = () => {
   const $ViewSourceControlInput = InputBox.create()
   $ViewSourceControlInput.placeholder = getPlaceHolderText()
-  $ViewSourceControlInput.onfocus = ViewletSourceControlEvents.handleFocus
   $ViewSourceControlInput.ariaLabel = 'Source Control Input'
+  $ViewSourceControlInput.onfocus = ViewletSourceControlEvents.handleFocus
+  $ViewSourceControlInput.oninput = ViewletSourceControlEvents.handleInput
 
   const $SourceControlHeader = document.createElement('div')
   $SourceControlHeader.className = 'SourceControlHeader'
@@ -86,7 +89,27 @@ export const focus = (state) => {
   $ViewSourceControlInput.focus()
 }
 
-export const setItemButtons = (state, index) => {
+const create$Button = (button) => {
+  const $Button = IconButton.create$Button(button.label, button.icon)
+  $Button.className = 'SourceControlButton'
+  return $Button
+}
+
+export const setItemButtons = (state, index, buttons) => {
+  Assert.number(index)
+  Assert.array(buttons)
   const { $ViewletTree } = state
+  if (index === -1) {
+    return
+  }
   const $Item = $ViewletTree.children[index]
+  if ($Item.children[2]) {
+    return
+  }
+  if (!$Item) {
+    Logger.warn(`no source control item found at index ${index}`)
+    return
+  }
+  // TODO handle icon loading error?
+  $Item.append(...buttons.map(create$Button))
 }

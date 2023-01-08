@@ -4,12 +4,7 @@ import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomE
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(
-    ViewletKeyBindings,
-    oldState,
-    newState,
-    ViewletModuleId.KeyBindings
-  )
+  return ViewletManager.render(ViewletKeyBindings, oldState, newState, ViewletModuleId.KeyBindings)
 }
 
 test.only('render - add one keybinding', () => {
@@ -40,13 +35,39 @@ test.only('render - add one keybinding', () => {
       'setTableDom',
       [
         {
-          childCount: 2,
+          childCount: 3,
           props: {
             ariaLabel: 'KeyBindings',
             ariaRowCount: 1,
             className: 'KeyBindingsTable',
           },
           type: VirtualDomElements.Table,
+        },
+        {
+          childCount: 3,
+          props: {},
+          type: VirtualDomElements.ColGroup,
+        },
+        {
+          childCount: 0,
+          props: {
+            width: 0,
+          },
+          type: VirtualDomElements.Col,
+        },
+        {
+          childCount: 0,
+          props: {
+            width: 0,
+          },
+          type: VirtualDomElements.Col,
+        },
+        {
+          childCount: 0,
+          props: {
+            width: 0,
+          },
+          type: VirtualDomElements.Col,
         },
         {
           childCount: 1,

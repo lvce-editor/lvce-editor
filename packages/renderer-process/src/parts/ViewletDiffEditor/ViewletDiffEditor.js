@@ -1,5 +1,7 @@
 import * as ViewletSash from '../ViewletSash/ViewletSash.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletDiffEditorEvents from './ViewletDiffEditorEvents.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 export const create = () => {
   const $ContentLeft = document.createElement('div')
@@ -20,9 +22,7 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet DiffEditor'
   $Viewlet.append($ContentLeft, $Sash, $ContentRight, $ScrollBar)
-  $Viewlet.addEventListener('wheel', ViewletDiffEditorEvents.handleWheel, {
-    passive: true,
-  })
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletDiffEditorEvents.handleWheel, DomEventOptions.Passive)
 
   return {
     $Viewlet,

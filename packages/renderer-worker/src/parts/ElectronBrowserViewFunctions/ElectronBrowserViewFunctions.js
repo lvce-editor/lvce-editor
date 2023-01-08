@@ -1,22 +1,11 @@
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
 
-export const resizeBrowserView = (id, left, top, width, height) => {
-  return ElectronProcess.invoke(
-    'ElectronBrowserViewFunctions.resizeBrowserView',
-    id,
-    left,
-    top,
-    width,
-    height
-  )
+export const resizeBrowserView = (id, x, y, width, height) => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.resizeBrowserView', id, x, y, width, height)
 }
 
 export const setIframeSrc = async (id, iframeSrc) => {
-  return ElectronProcess.invoke(
-    'ElectronBrowserViewFunctions.setIframeSrc',
-    id,
-    iframeSrc
-  )
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.setIframeSrc', id, iframeSrc)
 }
 
 export const focus = (id) => {
@@ -40,10 +29,7 @@ export const backward = (id) => {
 }
 
 export const cancelNavigation = (id) => {
-  return ElectronProcess.invoke(
-    'ElectronBrowserViewFunctions.cancelNavigation',
-    id
-  )
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.cancelNavigation', id)
 }
 
 export const show = (id) => {
@@ -55,28 +41,15 @@ export const hide = (id) => {
 }
 
 export const inspectElement = (id, x, y) => {
-  return ElectronProcess.invoke(
-    'ElectronBrowserViewFunctions.inspectElement',
-    id,
-    x,
-    y
-  )
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.inspectElement', id, x, y)
 }
 
 export const copyImageAt = (id, x, y) => {
-  return ElectronProcess.invoke(
-    'ElectronBrowserViewFunctions.copyImageAt',
-    id,
-    x,
-    y
-  )
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.copyImageAt', id, x, y)
 }
 
 export const setFallthroughKeyBindings = (fallthroughKeyBindings) => {
-  return ElectronProcess.invoke(
-    'ElectronBrowserViewFunctions.setFallthroughKeyBindings',
-    fallthroughKeyBindings
-  )
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.setFallthroughKeyBindings', fallthroughKeyBindings)
 }
 
 export const getStats = (id) => {

@@ -37,7 +37,7 @@ test('loadContent', async () => {
       },
     ]
   })
-  const state = ViewletKeyBindings.create()
+  const state = { ...ViewletKeyBindings.create(), width: 0 }
   expect(await ViewletKeyBindings.loadContent(state)).toMatchObject({
     parsedKeyBindings: [
       {

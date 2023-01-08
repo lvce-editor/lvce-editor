@@ -8,7 +8,7 @@ export const handleKeyArrowRightMenuOpen = async (state) => {
   const { menus } = state
   // if menu can open sub menu to the right -> do that
   const menu = menus.at(-1)
-  const { items, focusedIndex, left, top } = menu
+  const { items, focusedIndex, x, y } = menu
   if (focusedIndex === -1) {
     return focusNext(state)
   }
@@ -19,8 +19,8 @@ export const handleKeyArrowRightMenuOpen = async (state) => {
       level: menus.length,
       items: subMenuEntries,
       focusedIndex: 0,
-      top: top + focusedIndex * 25,
-      left: left + Menu.MENU_WIDTH,
+      y: y + focusedIndex * 25,
+      x: x + Menu.MENU_WIDTH,
     }
     const newParentMenu = {
       ...menu,

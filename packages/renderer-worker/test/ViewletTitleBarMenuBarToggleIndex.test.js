@@ -1,26 +1,30 @@
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
-
 import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: () => {
-        return {
-          left: 0,
-          bottom: 0,
-        }
-      },
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: () => {
+      return {
+        x: 0,
+        bottom: 0,
+      }
+    },
   }
-)
+})
+
+jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', () => {
+  return {
+    measureTextWidth: () => {
+      return 25
+    },
+  }
+})
 
 jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
   return {
@@ -77,9 +81,7 @@ jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
   }
 })
 
-const ViewletTitleBarMenuBarToggleIndex = await import(
-  '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarToggleIndex.js'
-)
+const ViewletTitleBarMenuBarToggleIndex = await import('../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarToggleIndex.js')
 
 test('toggleIndex - when open - when same index', async () => {
   const state = {
@@ -97,9 +99,7 @@ test('toggleIndex - when open - when same index', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarToggleIndex.toggleIndex(state, 0)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarToggleIndex.toggleIndex(state, 0)).toMatchObject({
     focusedIndex: 0,
     isMenuOpen: false,
   })
@@ -121,9 +121,7 @@ test('toggleIndex - when open - when different index', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarToggleIndex.toggleIndex(state, 1)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarToggleIndex.toggleIndex(state, 1)).toMatchObject({
     focusedIndex: 1,
     menus: [
       {
@@ -161,9 +159,7 @@ test('toggleIndex - when closed - when same index', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarToggleIndex.toggleIndex(state, 0)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarToggleIndex.toggleIndex(state, 0)).toMatchObject({
     focusedIndex: 0,
     isMenuOpen: true,
     menus: [
@@ -199,17 +195,15 @@ test('toggleIndex - when closed - when different index', async () => {
     titleBarEntries: [
       {
         id: MenuEntryId.File,
-        name: 'File',
+        label: 'File',
       },
       {
         id: MenuEntryId.Edit,
-        name: 'Edit',
+        label: 'Edit',
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarToggleIndex.toggleIndex(state, 1)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarToggleIndex.toggleIndex(state, 1)).toMatchObject({
     focusedIndex: 1,
     menus: [
       {

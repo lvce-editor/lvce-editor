@@ -1,7 +1,7 @@
 import * as Editor from '../Editor/Editor.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
 
 const getChanges = (lines, selections, snippet) => {
   // TODO verify that deleted fits in the line
@@ -16,10 +16,7 @@ const getChanges = (lines, selections, snippet) => {
     if (insertedLines.length > 1) {
       const line = TextDocument.getLine({ lines }, selectionStartRow)
       const indent = TextDocument.getIndent(line)
-      const insertedLinesHere = [
-        insertedLines[0],
-        ...insertedLines.slice(1).map((line) => indent + line),
-      ]
+      const insertedLinesHere = [insertedLines[0], ...insertedLines.slice(1).map((line) => indent + line)]
       const deleted = ['']
       changes.push({
         start: {
@@ -47,12 +44,7 @@ const getChanges = (lines, selections, snippet) => {
       if (placeholderIndex !== -1) {
         const inserted = line.replace('$0', '')
         const cursorColumnIndex = selectionEndColumn + 2
-        selectionChanges.push(
-          selectionStartRow,
-          cursorColumnIndex,
-          selectionStartRow,
-          cursorColumnIndex
-        )
+        selectionChanges.push(selectionStartRow, cursorColumnIndex, selectionStartRow, cursorColumnIndex)
         changes.push({
           start: {
             rowIndex: selectionStartRow,
@@ -68,12 +60,7 @@ const getChanges = (lines, selections, snippet) => {
         })
       } else {
         const cursorColumnIndex = selectionStartColumn - snippet.deleted
-        selectionChanges.push(
-          selectionStartRow,
-          cursorColumnIndex,
-          selectionStartRow,
-          cursorColumnIndex
-        )
+        selectionChanges.push(selectionStartRow, cursorColumnIndex, selectionStartRow, cursorColumnIndex)
         changes.push({
           start: {
             rowIndex: selectionStartRow,
@@ -98,12 +85,7 @@ const getChanges = (lines, selections, snippet) => {
 // TODO handle snippet tabstops and cursors $0 -> becomes cursor
 export const editorSnippet = (editor, snippet) => {
   // TODO verify that deleted fits in the line
-  const lines = editor.lines
-  const selections = editor.selections
+  const { lines, selections } = editor
   const { changes, selectionChanges } = getChanges(lines, selections, snippet)
-  return Editor.scheduleDocumentAndCursorsSelections(
-    editor,
-    changes,
-    selectionChanges
-  )
+  return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }

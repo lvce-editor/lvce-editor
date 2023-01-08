@@ -14,6 +14,7 @@
   tab-size: 2;
   font-display: block;
   cursor: text;
+  font-weight: 400;
 }
 
 .EditorLayers {
@@ -121,29 +122,6 @@
 
 .Token {
   contain: content;
-}
-
-.ScrollBar,
-.ScrollBarSmall {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 14px;
-  bottom: 0;
-  contain: strict;
-  cursor: default;
-}
-
-.ScrollBarSmall {
-  width: 10px;
-}
-
-.ScrollBarThumb {
-  width: 100%;
-  /* height: 40px; */
-  position: absolute;
-  contain: strict;
-  background: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6));
 }
 
 .LayerCursor {

@@ -32,5 +32,9 @@ export const toHaveId = (element, { id }) => {
 
 export const toHaveCss = (element, { key, value }) => {
   const style = getComputedStyle(element)
-  return style[key] === value
+  const actualValue = style[key]
+  if (value instanceof RegExp) {
+    return value.test(actualValue)
+  }
+  return actualValue === value
 }

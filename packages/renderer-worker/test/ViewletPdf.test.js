@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()

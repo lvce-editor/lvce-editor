@@ -5,16 +5,24 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
+jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => ({
+  error: jest.fn(() => {}),
+}))
+
+jest.unstable_mockModule('../src/parts/Process/Process.js', () => ({
+  setExitCode: jest.fn(() => {}),
+}))
+
 jest.unstable_mockModule('../src/parts/ExtensionLink/ExtensionLink.js', () => ({
   link: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
 
-const ExtensionLink = await import(
-  '../src/parts/ExtensionLink/ExtensionLink.js'
-)
+const ExtensionLink = await import('../src/parts/ExtensionLink/ExtensionLink.js')
 const CliLink = await import('../src/parts/CliLink/CliLink.js')
+const Process = await import('../src/parts/Process/Process.js')
+const Logger = await import('../src/parts/Logger/Logger.js')
 
 class ErrorWithCode extends Error {
   constructor(message, code) {
@@ -33,10 +41,11 @@ test('handleCliArgs - error - manifest not found', async () => {
       ErrorCodes.E_MANIFEST_NOT_FOUND
     )
   })
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   await CliLink.handleCliArgs([])
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(
     "Error: Failed to link extension: Failed to load extension manifest for test: File not found '/test/extension.json'"
   )
+  expect(Process.setExitCode).toHaveBeenCalledTimes(1)
+  expect(Process.setExitCode).toHaveBeenCalledWith(128)
 })

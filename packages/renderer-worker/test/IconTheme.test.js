@@ -227,3 +227,23 @@ test('getIcon - no fileNames property', () => {
     })
   ).toBe('_file')
 })
+
+test('getIcon - character device', () => {
+  IconTheme.state.iconTheme = {}
+  expect(
+    IconTheme.getIcon({
+      type: DirentType.CharacterDevice,
+      name: 'null',
+    })
+  ).toBe('_file')
+})
+
+test('getIcon - block device', () => {
+  IconTheme.state.iconTheme = {}
+  expect(
+    IconTheme.getIcon({
+      type: DirentType.BlockDevice,
+      name: 'null',
+    })
+  ).toBe('_file')
+})

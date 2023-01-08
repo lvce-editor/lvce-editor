@@ -1,6 +1,6 @@
-const { join } = require('path')
-const Root = require('../Root/Root.js')
+const { join } = require('node:path')
 const { tmpdir, homedir } = require('node:os')
+const Root = require('../Root/Root.js')
 
 exports.isLinux = process.platform === 'linux'
 

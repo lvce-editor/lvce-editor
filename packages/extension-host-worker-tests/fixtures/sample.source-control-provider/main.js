@@ -15,6 +15,9 @@ const sourceControlProvider = {
       },
     ]
   },
+  isActive() {
+    return true
+  },
 }
 
 export const activate = () => {

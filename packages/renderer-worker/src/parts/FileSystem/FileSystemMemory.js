@@ -84,11 +84,7 @@ export const readDirWithFileTypes = (uri) => {
     if (key.startsWith(uri)) {
       switch (value.type) {
         case DirentType.Directory:
-          if (
-            !key.slice(0, -1).includes(PathSeparatorType.Slash, uri.length) &&
-            key !== `${uri}/` &&
-            key !== uri
-          ) {
+          if (!key.slice(0, -1).includes(PathSeparatorType.Slash, uri.length) && key !== `${uri}/` && key !== uri) {
             dirents.push({
               type: value.type,
               name: key.slice(uri.length, -1),

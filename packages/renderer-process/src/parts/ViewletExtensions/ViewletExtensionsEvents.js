@@ -3,31 +3,25 @@ import * as Icon from '../Icon/Icon.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
-  RendererWorker.send(
-    /* Extensions.handleScrollBarMouseMove */ 'Extensions.handleScrollBarMove',
-    /* y */ clientY
-  )
+  RendererWorker.send(/* Extensions.handleScrollBarMouseMove */ 'Extensions.handleScrollBarMove', /* y */ clientY)
 }
 
 const handlePointerCaptureLost = (event) => {
   const { target } = event
-  target.removeEventListener('pointermove', handleScrollBarThumbPointerMove)
+  target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove)
 }
 
 export const handleScrollBarPointerDown = (event) => {
   const { target, pointerId, clientY } = event
   target.setPointerCapture(pointerId)
-  target.addEventListener('pointermove', handleScrollBarThumbPointerMove, {
-    passive: false,
-  })
-  target.addEventListener('lostpointercapture', handlePointerCaptureLost)
-  RendererWorker.send(
-    /* Extensions.handleScrollBarPointerDown */ 'Extensions.handleScrollBarClick',
-    /* y */ clientY
-  )
+  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, DomEventOptions.Active)
+  target.addEventListener(DomEventType.LostPointerCapture, handlePointerCaptureLost)
+  RendererWorker.send(/* Extensions.handleScrollBarPointerDown */ 'Extensions.handleScrollBarClick', /* y */ clientY)
 }
 
 export const handleFocus = (event) => {
@@ -44,26 +38,17 @@ const getNodeIndex = ($Node) => {
 
 const handlePointerDownExtension = ($Target) => {
   const index = getNodeIndex($Target)
-  RendererWorker.send(
-    /* Extensions.handleClick */ 'Extensions.handleClick',
-    /* index */ index
-  )
+  RendererWorker.send(/* Extensions.handleClick */ 'Extensions.handleClick', /* index */ index)
 }
 
 const handlePointerDownExtensionDetail = ($Target) => {
   const index = getNodeIndex($Target.parentNode.parentNode)
-  RendererWorker.send(
-    /* Extensions.handleClick */ 'Extensions.handleClick',
-    /* index */ index
-  )
+  RendererWorker.send(/* Extensions.handleClick */ 'Extensions.handleClick', /* index */ index)
 }
 
 const handlePointerDownExtensionAuthorName = ($Target) => {
   const index = getNodeIndex($Target.parentNode.parentNode.parentNode)
-  RendererWorker.send(
-    /* Extensions.handleClick */ 'Extensions.handleClick',
-    /* index */ index
-  )
+  RendererWorker.send(/* Extensions.handleClick */ 'Extensions.handleClick', /* index */ index)
 }
 
 export const handlePointerDown = (event) => {
@@ -90,11 +75,7 @@ export const handlePointerDown = (event) => {
 
 const handleContextMenuMouse = (event) => {
   const { clientX, clientY } = event
-  RendererWorker.send(
-    /* Extensions.handleContextMenu */ 'Extensions.handleContextMenu',
-    /* x */ clientX,
-    /* y */ clientY
-  )
+  RendererWorker.send(/* Extensions.handleContextMenu */ 'Extensions.handleContextMenu', /* x */ clientX, /* y */ clientY)
 }
 
 const handleContextMenuKeyboard = (event) => {}
@@ -112,16 +93,10 @@ export const handleContextMenu = (event) => {
 export const handleWheel = (event) => {
   switch (event.deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(
-        /* ViewletExtensions.handleWheel */ 'Extensions.handleWheel',
-        /* deltaY */ event.deltaY
-      )
+      RendererWorker.send(/* ViewletExtensions.handleWheel */ 'Extensions.handleWheel', /* deltaY */ event.deltaY)
       break
     case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(
-        /* ViewletExtensions.handleWheel */ 'Extensions.handleWheel',
-        /* deltaY */ event.deltaY
-      )
+      RendererWorker.send(/* ViewletExtensions.handleWheel */ 'Extensions.handleWheel', /* deltaY */ event.deltaY)
       break
     default:
       break
@@ -131,10 +106,7 @@ export const handleWheel = (event) => {
 export const handleInput = (event) => {
   const $Target = event.target
   const value = $Target.value
-  RendererWorker.send(
-    /* ViewletExtensions.handleInput */ 'Extensions.handleInput',
-    /* value */ value
-  )
+  RendererWorker.send(/* ViewletExtensions.handleInput */ 'Extensions.handleInput', /* value */ value)
   // TODO
   // TODO use beforeinput event to set value and extension list items at the same time
   // state.$Viewlet.ariaBusy = 'true'
@@ -173,11 +145,7 @@ const toArray = (touchList) => {
 export const handleTouchMove = (event) => {
   const { changedTouches, timeStamp } = event
   const changedTouchesArray = toArray(changedTouches)
-  RendererWorker.send(
-    'Extensions.handleTouchMove',
-    timeStamp,
-    changedTouchesArray
-  )
+  RendererWorker.send('Extensions.handleTouchMove', timeStamp, changedTouchesArray)
 }
 
 /**
@@ -186,11 +154,7 @@ export const handleTouchMove = (event) => {
 export const handleTouchStart = (event) => {
   const { changedTouches, timeStamp } = event
   const changedTouchesArray = toArray(changedTouches)
-  RendererWorker.send(
-    'Extensions.handleTouchStart',
-    timeStamp,
-    changedTouchesArray
-  )
+  RendererWorker.send('Extensions.handleTouchStart', timeStamp, changedTouchesArray)
 }
 
 /**

@@ -1,8 +1,23 @@
-const getCombinedMessage = (error, message) => {
-  if (message) {
-    return `${message}: ${error}`
+const stringifyError = (error) => {
+  if (error instanceof DOMException && error.message) {
+    return `DOMException: ${error.message}`
   }
-  return `${error}`
+  const errorPrefixes = ['Error: ', 'VError: ']
+  const stringifiedError = `${error}`
+  for (const errorPrefix of errorPrefixes) {
+    if (stringifiedError.startsWith(errorPrefix)) {
+      return stringifiedError.slice(errorPrefix.length)
+    }
+  }
+  return stringifiedError
+}
+
+const getCombinedMessage = (error, message) => {
+  const stringifiedError = stringifyError(error)
+  if (message) {
+    return `${message}: ${stringifiedError}`
+  }
+  return `${stringifiedError}`
 }
 
 const mergeStacks = (parent, child) => {
@@ -11,6 +26,9 @@ const mergeStacks = (parent, child) => {
   }
   const parentNewLineIndex = parent.indexOf('\n')
   const childNewLineIndex = child.indexOf('\n')
+  if (childNewLineIndex === -1) {
+    return parent
+  }
   const parentFirstLine = parent.slice(0, parentNewLineIndex)
   const childRest = child.slice(childNewLineIndex)
   const childFirstLine = child.slice(0, childNewLineIndex)
@@ -18,7 +36,6 @@ const mergeStacks = (parent, child) => {
     return parentFirstLine + childRest
   }
   return child
-  // console.log({ parent, child, childRest })
 }
 
 export class VError extends Error {

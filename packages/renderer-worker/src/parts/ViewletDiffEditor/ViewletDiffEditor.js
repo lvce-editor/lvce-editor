@@ -4,14 +4,14 @@ import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 
-export const create = (id, uri, top, left, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     uri,
     linesLeft: [],
     linesRight: [],
     changes: [],
-    top,
-    left,
+    x,
+    y,
     width,
     height,
     ...VirtualList.create({ itemHeight: 20 }),
@@ -34,11 +34,7 @@ export const loadContent = async (state) => {
   const total = Math.max(linesLeft.length, linesRight.length)
   const contentHeight = total * itemHeight
 
-  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
-    height,
-    contentHeight,
-    minimumSliderSize
-  )
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(height, contentHeight, minimumSliderSize)
 
   const numberOfVisible = Math.ceil(height / itemHeight)
   const maxLineY = Math.min(numberOfVisible, total)
@@ -81,36 +77,20 @@ const getVisible = (lines, minLineY, maxLineY) => {
 
 const renderLeft = {
   isEqual(oldState, newState) {
-    return (
-      oldState.linesLeft === newState.linesLeft &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY
-    )
+    return oldState.linesLeft === newState.linesLeft && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
-    const visible = getVisible(
-      newState.linesLeft,
-      newState.minLineY,
-      newState.maxLineY
-    )
+    const visible = getVisible(newState.linesLeft, newState.minLineY, newState.maxLineY)
     return [/* method */ 'setContentLeft', /* linesLeft */ visible]
   },
 }
 
 const renderRight = {
   isEqual(oldState, newState) {
-    return (
-      oldState.linesRight === newState.linesRight &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY
-    )
+    return oldState.linesRight === newState.linesRight && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
-    const visible = getVisible(
-      newState.linesRight,
-      newState.minLineY,
-      newState.maxLineY
-    )
+    const visible = getVisible(newState.linesRight, newState.minLineY, newState.maxLineY)
     return [/* method */ 'setContentRight', /* linesRight */ visible]
   },
 }
@@ -126,11 +106,7 @@ const renderChanges = {
 
 const renderScrollBar = {
   isEqual(oldState, newState) {
-    return (
-      oldState.deltaY === newState.deltaY &&
-      oldState.height === newState.height &&
-      oldState.finalDeltaY === newState.finalDeltaY
-    )
+    return oldState.deltaY === newState.deltaY && oldState.height === newState.height && oldState.finalDeltaY === newState.finalDeltaY
   },
   apply(oldState, newState) {
     const scrollBarY = ScrollBarFunctions.getScrollBarY(
@@ -139,11 +115,7 @@ const renderScrollBar = {
       newState.height - newState.headerHeight,
       newState.scrollBarHeight
     )
-    return [
-      /* method */ 'setScrollBar',
-      /* scrollBarY */ scrollBarY,
-      /* scrollBarHeight */ newState.scrollBarHeight,
-    ]
+    return [/* method */ 'setScrollBar', /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
   },
 }
 

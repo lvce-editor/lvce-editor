@@ -146,6 +146,7 @@ const getNewValueInsertLineBreak = (
 
 const getFn = (inputType) => {
   switch (inputType) {
+    case InputEventType.InsertFromPaste:
     case InputEventType.InsertText:
       return getNewValueInsertText
     case InputEventType.DeleteContentBackward:

@@ -1,6 +1,6 @@
-const { Console } = require('console')
-const { createWriteStream } = require('fs')
-const { tmpdir } = require('os')
+const { Console } = require('node:console')
+const { createWriteStream } = require('node:fs')
+const { tmpdir } = require('node:os')
 
 // TODO disable logging via environment variable, don't enable logging during tests
 

@@ -3,7 +3,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const ITEM_HEIGHT = 62
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     items: [],
     focusedIndex: -1,
@@ -15,8 +15,8 @@ export const create = (id, uri, left, top, width, height) => {
     negativeMargin: 0,
     scrollBarHeight: 0,
     handleOffset: 0,
-    top,
-    left,
+    x,
+    y,
     finalDeltaY: 2728,
   }
 }
@@ -54,8 +54,7 @@ export const focusIndex = (state, index) => {
     //  scroll down
     const maxLineY = index + 1
     const minLineY = maxLineY - Math.ceil(listHeight / ITEM_HEIGHT)
-    const negativeMargin =
-      -minLineY * ITEM_HEIGHT + (listHeight % ITEM_HEIGHT) - ITEM_HEIGHT
+    const negativeMargin = -minLineY * ITEM_HEIGHT + (listHeight % ITEM_HEIGHT) - ITEM_HEIGHT
     return {
       ...state,
       focusedIndex: index,
@@ -86,10 +85,7 @@ export const focusNextPage = (state) => {
   if (state.focusedIndex === state.items.length - 1) {
     return state
   }
-  const indexNextPage = Math.min(
-    state.maxLineY + (state.maxLineY - state.minLineY) - 2,
-    state.items.length - 1
-  )
+  const indexNextPage = Math.min(state.maxLineY + (state.maxLineY - state.minLineY) - 2, state.items.length - 1)
   return focusIndex(state, indexNextPage)
 }
 
@@ -105,10 +101,7 @@ export const focusPreviousPage = (state) => {
     return state
   }
 
-  const indexPreviousPage = Math.max(
-    state.minLineY - (state.maxLineY - state.minLineY) + 1,
-    0
-  )
+  const indexPreviousPage = Math.max(state.minLineY - (state.maxLineY - state.minLineY) + 1, 0)
   return focusIndex(state, indexPreviousPage)
 }
 
@@ -188,11 +181,11 @@ const getNewPercent = (state, relativeY) => {
   return 1
 }
 
-export const handleScrollBarMove = (state, y) => {
-  const relativeY = y - state.top - state.handleOffset
+export const handleScrollBarMove = (state, eventY) => {
+  const { y, handleOffset } = state
+  const relativeY = eventY - y - handleOffset
   const newPercent = getNewPercent(state, relativeY)
   const newDeltaY = newPercent * state.finalDeltaY
-  console.log({ relativeY, newPercent, newDeltaY })
   return setDeltaY(state, newDeltaY)
 }
 
@@ -203,17 +196,15 @@ const getNewDeltaPercent = (state, relativeY) => {
   }
   if (relativeY <= state.height - state.scrollBarHeight / 2) {
     // clicked in middle
-    return (
-      (relativeY - state.scrollBarHeight / 2) /
-      (state.height - state.scrollBarHeight)
-    )
+    return (relativeY - state.scrollBarHeight / 2) / (state.height - state.scrollBarHeight)
   }
   // clicked at bottom
   return 1
 }
 
-export const handleScrollBarClick = (state, y) => {
-  const relativeY = y - state.top
+export const handleScrollBarClick = (state, eventY) => {
+  const { y } = state
+  const relativeY = eventY - y
   const newPercent = getNewDeltaPercent(state, relativeY)
   const newDeltaY = newPercent * state.finalDeltaY
   return {
@@ -226,18 +217,9 @@ export const hasFunctionalRender = true
 
 export const render = (oldState, newState) => {
   const changes = []
-  if (
-    oldState.items !== newState.items ||
-    oldState.minLineY !== newState.minLineY ||
-    oldState.maxLineY !== newState.maxLineY
-  ) {
+  if (oldState.items !== newState.items || oldState.minLineY !== newState.minLineY || oldState.maxLineY !== newState.maxLineY) {
     const visibleItems = getVisible(newState)
-    changes.push([
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.List,
-      /* method */ 'setItems',
-      /* visibleExtensions */ visibleItems,
-    ])
+    changes.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.List, /* method */ 'setItems', /* visibleExtensions */ visibleItems])
   }
   if (oldState.items.length !== newState.items.length) {
     const contentHeight = newState.items.length * ITEM_HEIGHT
@@ -268,9 +250,7 @@ export const render = (oldState, newState) => {
     ])
   }
   if (oldState.deltaY !== newState.deltaY) {
-    const scrollBarY =
-      (newState.deltaY / newState.finalDeltaY) *
-      (newState.height - newState.scrollBarHeight)
+    const scrollBarY = (newState.deltaY / newState.finalDeltaY) * (newState.height - newState.scrollBarHeight)
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ ViewletModuleId.List,

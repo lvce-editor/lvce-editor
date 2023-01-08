@@ -122,15 +122,16 @@ const copyResults = async () => {
   }
 }
 
-const addRootPackageJson = async ({ cachePath }) => {
+const addRootPackageJson = async ({ cachePath, electronVersion }) => {
   const tag = await Tag.getGitTag()
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: {
-      main: 'packages/main-process/src/mainProcessMain.js',
       name: Product.applicationName,
       productName: Product.nameLong,
       version: tag,
+      electronVersion,
+      main: 'packages/main-process/src/mainProcessMain.js',
     },
   })
 }
@@ -173,6 +174,6 @@ export const bundleElectronAppDependencies = async ({
   console.timeEnd('copyMainProcessFiles')
 
   console.time('addRootPackageJson')
-  await addRootPackageJson({ cachePath })
+  await addRootPackageJson({ cachePath, electronVersion })
   console.timeEnd('addRootPackageJson')
 }

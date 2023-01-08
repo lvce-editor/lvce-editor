@@ -1,5 +1,5 @@
-const Electron = require('electron')
 const Platform = require('../Platform/Platform.js')
+const ElectronApp = require('../ElectronApp/ElectronApp.js')
 
 const getName = (object) => {
   return object.name
@@ -44,7 +44,7 @@ const getVersionString = () => {
 const handleCliArgs = (parsedArgs) => {
   const versionString = getVersionString()
   console.info(versionString)
-  Electron.app.exit(0)
+  ElectronApp.exit(0)
   return true
 }
 

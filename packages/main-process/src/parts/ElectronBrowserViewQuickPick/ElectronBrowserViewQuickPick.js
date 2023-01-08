@@ -1,11 +1,11 @@
 const { BrowserView, BrowserWindow } = require('electron')
+const { VError } = require('verror')
 const ElectronSession = require('../ElectronSession/ElectronSession.js')
 const Platform = require('../Platform/Platform.js')
 const Root = require('../Root/Root.js')
 const Path = require('../Path/Path.js')
 const PendingPorts = require('../PendingPorts/PendingPorts.js')
 const Logger = require('../Logger/Logger.js')
-const { VError } = require('verror')
 
 exports.disposeBrowserViewQuickPick = () => {
   const browserWindow = BrowserWindow.getFocusedWindow()
@@ -20,20 +20,13 @@ exports.disposeBrowserViewQuickPick = () => {
   browserWindow.removeBrowserView(quickPickView)
 }
 
-exports.createBrowserViewQuickPick = async (top, left, width, height) => {
+exports.createBrowserViewQuickPick = async (x, y, width, height) => {
   try {
     const browserWindow = BrowserWindow.getFocusedWindow()
     if (!browserWindow) {
       return
     }
-    const preloadUrl = Path.join(
-      Root.root,
-      'packages',
-      'main-process',
-      'pages',
-      'quickpick',
-      'preload.js'
-    )
+    const preloadUrl = Path.join(Root.root, 'packages', 'main-process', 'pages', 'quickpick', 'preload.js')
     const view = new BrowserView({
       webPreferences: {
         session: ElectronSession.get(),
@@ -41,7 +34,7 @@ exports.createBrowserViewQuickPick = async (top, left, width, height) => {
       },
     })
     browserWindow.addBrowserView(view)
-    view.setBounds({ x: left, y: top, width, height })
+    view.setBounds({ x, y, width, height })
     const quickPickUrl = `${Platform.scheme}://-/packages/main-process/pages/quickpick/quickpick.html`
     const handleNavigate = () => {
       view.webContents.closeDevTools()

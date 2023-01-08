@@ -1,2 +1,54 @@
 .RunAndDebug {
+  white-space: pre;
+  color: var(--TitleBarForeground);
+}
+
+.DebugSectionHeader {
+  height: 22px;
+  contain: strict;
+  background: var(--DebugSectionHeaderBackground, rgb(30, 37, 35));
+  border-top: 1px solid var(--SideBarBackground);
+  border-bottom: 1px solid var(--SideBarBackground);
+  padding-left: 3px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  gap: 2px;
+}
+
+.DebugMaskIcon {
+  position: static !important;
+  width: 12px;
+  height: 12px;
+  contain: strict;
+  display: inline-block;
+  flex-shrink: 0;
+  --MaskIconSize: 12px;
+}
+
+.DebugPropertyKey {
+  font-weight: 500;
+  color: #be9296;
+}
+
+.DebugValueNumber {
+  color: hsl(252deg 100% 75%);
+}
+
+.DebugValueUndefined {
+  color: rgb(128, 134, 139);
+}
+
+.DebugMessage,
+.DebugPausedMessage {
+  font-style: italic;
+  contain: strict;
+  height: 20px;
+  width: 100%;
+}
+
+.DebugRow {
+  contain: strict;
+  width: 100%;
+  height: 20px;
 }

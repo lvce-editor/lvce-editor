@@ -1,4 +1,5 @@
 import * as ExtensionHostActivationEvent from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionHostEditor from './ExtensionHostEditor.js'
 
 const combineResultsPrepareRename = (results) => {
@@ -9,7 +10,7 @@ export const executePrepareRenameProvider = (editor, offset) => {
   return ExtensionHostEditor.execute({
     editor,
     event: ExtensionHostActivationEvent.OnRename,
-    method: 'ExtensionHostRename.executePrepareRename',
+    method: ExtensionHostCommandType.RenamePrepareRename,
     args: [offset],
     noProviderFoundMessage: 'No rename provider found',
     combineResults: combineResultsPrepareRename,
@@ -24,7 +25,7 @@ export const executeRenameProvider = (editor, offset, newName) => {
   return ExtensionHostEditor.execute({
     editor,
     event: ExtensionHostActivationEvent.OnRename,
-    method: 'ExtensionHostRename.executeRename',
+    method: ExtensionHostCommandType.RenameExecuteRename,
     args: [offset, newName],
     noProviderFoundMessage: 'No rename provider found',
     combineResults: combineResultsPrepareRename,

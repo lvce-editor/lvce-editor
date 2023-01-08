@@ -1,3 +1,3 @@
-exports.clamp = (num, min, max) => {
-  return Math.min(Math.max(num, min), max)
+exports.clamp = (number_, min, max) => {
+  return Math.min(Math.max(number_, min), max)
 }

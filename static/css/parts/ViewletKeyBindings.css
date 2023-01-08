@@ -37,6 +37,7 @@
 
 .KeyBindingsTableWrapper {
   padding: 0 15px;
+  position: relative;
 }
 
 .KeyBindingsTable {
@@ -79,27 +80,11 @@
   contain: content;
 }
 
-/* TODO duplicate code with editor */
-
-.ScrollBar,
-.ScrollBarSmall {
+.Resizer {
+  cursor: ew-resize;
   position: absolute;
-  right: 0;
+  width: 5px;
+  height: 100%;
+  /* background: red; */
   top: 0;
-  width: 14px;
-  bottom: 0;
-  contain: strict;
-  cursor: default;
-}
-
-.ScrollBar {
-  width: 14px;
-}
-
-.ScrollBarThumb {
-  width: 100%;
-  /* height: 40px; */
-  position: absolute;
-  contain: strict;
-  background: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6));
 }

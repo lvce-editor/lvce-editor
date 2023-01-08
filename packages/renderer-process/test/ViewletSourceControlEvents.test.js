@@ -42,9 +42,7 @@ test('event - click', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Source Control',
-    'handleClick',
+    'Source Control.handleClick',
     0
   )
 })
@@ -66,9 +64,7 @@ test('event - mouseover', () => {
   })
   $ViewletTree.children[0].dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Source Control',
-    'handleMouseOver',
+    'Source Control.handleMouseOver',
     0
   )
 })
@@ -84,16 +80,32 @@ test('event - contextmenu', () => {
     },
   ])
   const { $ViewletTree } = state
-  const event = new Event('contextmenu', {
+  const event = new MouseEvent('contextmenu', {
     bubbles: true,
     cancelable: true,
+    clientX: 10,
+    clientY: 20,
   })
   $ViewletTree.children[0].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Source Control',
-    'handleContextMenu',
-    0
+    'Source Control.handleContextMenu',
+    10,
+    20
+  )
+})
+
+test('event - input', () => {
+  const state = ViewletSourceControl.create()
+  const { $ViewSourceControlInput } = state
+  $ViewSourceControlInput.value = 'test'
+  const event = new InputEvent('input', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $ViewSourceControlInput.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Source Control.handleInput',
+    'test'
   )
 })

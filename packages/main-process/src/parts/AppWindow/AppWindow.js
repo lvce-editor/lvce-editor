@@ -8,7 +8,6 @@ const Platform = require('../Platform/Platform.js')
 const Preferences = require('../Preferences/Preferences.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Logger = require('../Logger/Logger.js')
-const Electron = require('electron')
 const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
 
 // TODO impossible to test these methods
@@ -17,7 +16,7 @@ const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronAppl
  * @param {import('electron').Event} event
  */
 const handleWindowClose = (event) => {
-  const id = event.sender.id
+  const { id } = event.sender
   AppWindowStates.remove(id)
 }
 
@@ -52,7 +51,7 @@ exports.createAppWindow = async (
     preferences,
     'window.titleBarStyle'
   )
-  const frame = titleBarPreference === 'custom' ? false : true
+  const frame = titleBarPreference !== 'custom'
   const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
   const zoomLevelPreference = Preferences.get(preferences, 'window.zoomLevel')
   const zoomLevel = zoomLevelPreference

@@ -7,22 +7,22 @@
   {
     "name": "builtin.language-basics-c",
     "repository": "github.com/lvce-editor/language-basics-c",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-coffeescript",
     "repository": "github.com/lvce-editor/language-basics-coffeescript",
-    "version": "0.0.1"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-cpp",
     "repository": "github.com/lvce-editor/language-basics-cpp",
-    "version": "0.0.2"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
-    "version": "0.0.7"
+    "version": "0.0.14"
   },
   {
     "name": "builtin.language-basics-dart",
@@ -65,6 +65,11 @@
     "version": "0.0.3"
   },
   {
+    "name": "builtin.language-basics-gn",
+    "repository": "github.com/lvce-editor/language-basics-gn",
+    "version": "0.0.2"
+  },
+  {
     "name": "builtin.language-basics-go",
     "repository": "github.com/lvce-editor/language-basics-go",
     "version": "0.0.2"
@@ -82,17 +87,22 @@
   {
     "name": "builtin.language-basics-java",
     "repository": "github.com/lvce-editor/language-basics-java",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.9"
+    "version": "0.0.16"
   },
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
     "version": "0.0.17"
+  },
+  {
+    "name": "builtin.language-basics-json5",
+    "repository": "github.com/lvce-editor/language-basics-json5",
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-julia",
@@ -122,12 +132,12 @@
   {
     "name": "builtin.language-basics-perl",
     "repository": "github.com/lvce-editor/language-basics-perl",
-    "version": "0.0.2"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-plaintext",
     "repository": "github.com/lvce-editor/language-basics-plaintext",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-powershell",
@@ -137,7 +147,7 @@
   {
     "name": "builtin.language-basics-python",
     "repository": "github.com/lvce-editor/language-basics-python",
-    "version": "0.0.1"
+    "version": "0.0.8"
   },
   {
     "name": "builtin.language-basics-r",
@@ -145,14 +155,24 @@
     "version": "0.0.2"
   },
   {
+    "name": "builtin.language-basics-ruby",
+    "repository": "github.com/lvce-editor/language-basics-ruby",
+    "version": "0.0.5"
+  },
+  {
     "name": "builtin.language-basics-rust",
     "repository": "github.com/lvce-editor/language-basics-rust",
     "version": "0.0.2"
   },
   {
+    "name": "builtin.language-basics-scss",
+    "repository": "github.com/lvce-editor/language-basics-scss",
+    "version": "0.0.1"
+  },
+  {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "0.0.10"
+    "version": "0.0.17"
   },
   {
     "name": "builtin.language-basics-svelte",
@@ -162,22 +182,22 @@
   {
     "name": "builtin.language-basics-toml",
     "repository": "github.com/lvce-editor/language-basics-toml",
-    "version": "0.0.9"
+    "version": "0.0.10"
   },
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "0.0.3"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-xml",
     "repository": "github.com/lvce-editor/language-basics-xml",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.22"
+    "version": "0.0.23"
   },
   {
     "name": "builtin.language-features-css",
@@ -207,17 +227,17 @@
   {
     "name": "builtin.theme-ayu",
     "repository": "github.com/lvce-editor/theme-ayu",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.theme-cobalt2",
     "repository": "github.com/lvce-editor/theme-cobalt2",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.theme-gruvbox",
     "repository": "github.com/lvce-editor/theme-gruvbox",
-    "version": "0.0.9"
+    "version": "0.0.10"
   },
   {
     "name": "builtin.theme-high-contrast",
@@ -242,7 +262,7 @@
   {
     "name": "builtin.theme-palenight",
     "repository": "github.com/lvce-editor/theme-palenight",
-    "version": "0.0.5"
+    "version": "0.0.6"
   },
   {
     "name": "builtin.vscode-icons",

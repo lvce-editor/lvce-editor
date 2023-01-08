@@ -1,9 +1,13 @@
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 export const create = () => {
   const $ViewletSearchInput = InputBox.create()
@@ -27,9 +31,7 @@ export const create = () => {
   // TODO onclick vs onmousedown, should be consistent in whole application
   $ListItems.onmousedown = ViewletSearchEvents.handleClick
   $ListItems.oncontextmenu = ViewletSearchEvents.handleContextMenu
-  $ListItems.addEventListener('wheel', ViewletSearchEvents.handleWheel, {
-    passive: true,
-  })
+  $ListItems.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -80,21 +82,10 @@ const create$Row = () => {
 
 // TODO much duplication with explorer
 const render$Row = ($Row, rowInfo) => {
-  const {
-    top,
-    type,
-    matchStart,
-    matchLength,
-    text,
-    title,
-    icon,
-    setSize,
-    posInSet,
-    depth,
-  } = rowInfo
+  const { top, type, matchStart, matchLength, text, title, icon, setSize, posInSet, depth } = rowInfo
   const $Icon = $Row.childNodes[0]
   const $Label = $Row.childNodes[1]
-  $Icon.className = `Icon${icon}`
+  $Icon.className = `FileIcon${icon}`
   if (matchLength) {
     const before = text.slice(0, matchStart)
     const highlight = text.slice(matchStart, matchStart + matchLength)
@@ -114,14 +105,14 @@ const render$Row = ($Row, rowInfo) => {
   $Row.ariaPosInSet = `${posInSet}`
   $Row.ariaLabel = rowInfo.name
   $Row.ariaDescription = ''
-  $Row.style.top = `${top}px`
+  SetBounds.setTop($Row, top)
   switch (type) {
     // TODO type should be a number for efficiency
     case DirentType.Directory:
-      $Row.ariaExpanded = 'false'
+      $Row.ariaExpanded = AriaBoolean.False
       break
     case DirentType.DirectoryExpanded:
-      $Row.ariaExpanded = 'true'
+      $Row.ariaExpanded = AriaBoolean.True
       break
     case DirentType.File:
       $Row.ariaExpanded = undefined
@@ -196,12 +187,12 @@ export const dispose = () => {}
 
 export const setContentHeight = (state, height) => {
   const { $ListItems } = state
-  $ListItems.style.height = `${height}px`
+  SetBounds.setHeight($ListItems, height)
 }
 
 export const setNegativeMargin = (state, negativeMargin) => {
   const { $ListItems } = state
-  $ListItems.style.top = `${negativeMargin}px`
+  SetBounds.setTop($ListItems, negativeMargin)
 }
 
 export * from '../ViewletScrollable/ViewletScrollable.js'

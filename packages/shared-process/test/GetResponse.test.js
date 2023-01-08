@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -41,13 +42,13 @@ class NodeError extends Error {
 
 test('getResponse - error - ENOENT', async () => {
   // @ts-ignore
-  Command.invoke.mockImplementation(() => {
+  Command.execute.mockImplementation(() => {
     throw new NodeError(ErrorCodes.ENOENT)
   })
 
   expect(
     await GetResponse.getResponse({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method: 'Test.test',
       params: [],
       id: 1,
@@ -58,13 +59,13 @@ test('getResponse - error - ENOENT', async () => {
       message: 'Error: ENOENT',
     },
     id: 1,
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
   })
 })
 
 test('getResponse - error - search error', async () => {
   // @ts-ignore
-  Command.invoke.mockImplementation(() => {
+  Command.execute.mockImplementation(() => {
     throw new Error('files is not iterable')
   })
   // @ts-ignore
@@ -89,7 +90,7 @@ test('getResponse - error - search error', async () => {
   })
   expect(
     await GetResponse.getResponse({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method: 'Test.test',
       params: [],
       id: 1,
@@ -116,6 +117,6 @@ test('getResponse - error - search error', async () => {
       message: 'files is not iterable',
     },
     id: 1,
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
   })
 })

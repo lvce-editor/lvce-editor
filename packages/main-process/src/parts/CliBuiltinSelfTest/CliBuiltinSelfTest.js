@@ -1,4 +1,4 @@
-const { fork } = require('child_process')
+const { fork } = require('node:child_process')
 const Electron = require('../Electron/Electron.js')
 const Platform = require('../Platform/Platform.js')
 

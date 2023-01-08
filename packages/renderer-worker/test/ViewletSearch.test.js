@@ -28,15 +28,11 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
   }
 })
 
-const ViewletSearch = await import(
-  '../src/parts/ViewletSearch/ViewletSearch.js'
-)
+const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
 
 const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
 const Command = await import('../src/parts/Command/Command.js')
-const ErrorHandling = await import(
-  '../src/parts/ErrorHandling/ErrorHandling.js'
-)
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 
 test('create', () => {
   const state = ViewletSearch.create()
@@ -87,9 +83,7 @@ test('setValue - error - results is not of type array', async () => {
     message: 'Error: results must be of type array',
   })
   expect(ErrorHandling.logError).toHaveBeenCalledTimes(1)
-  expect(ErrorHandling.logError).toHaveBeenCalledWith(
-    new Error(`results must be of type array`)
-  )
+  expect(ErrorHandling.logError).toHaveBeenCalledWith(new Error(`results must be of type array`))
 })
 
 test('setValue - one match in one file', async () => {
@@ -310,8 +304,8 @@ test('handleClick', async () => {
 test('resize', () => {
   const state = ViewletSearch.create()
   const newState = ViewletSearch.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 200,
   })
@@ -319,11 +313,11 @@ test('resize', () => {
   expect(newState).toMatchObject({
     disposed: false,
     height: 200,
-    left: 200,
+    x: 200,
     searchId: -1,
     searchResults: [],
     stats: {},
-    top: 200,
+    y: 200,
     value: '',
     width: 200,
     fileCount: 0,
@@ -333,31 +327,19 @@ test('resize', () => {
 test('handleContextMenuMouseAt', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
-  const state = { ...ViewletSearch.create(), top: 0, left: 0 }
-  expect(await ViewletSearch.handleContextMenuMouseAt(state, 10, 10)).toBe(
-    state
-  )
+  const state = { ...ViewletSearch.create(), x: 0, y: 0 }
+  expect(await ViewletSearch.handleContextMenuMouseAt(state, 10, 10)).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'ContextMenu.show',
-    10,
-    10,
-    MenuEntryId.Search
-  )
+  expect(Command.execute).toHaveBeenCalledWith('ContextMenu.show', 10, 10, MenuEntryId.Search)
 })
 
 test('handleContextMenuKeyBoard', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
-  const state = { ...ViewletSearch.create(), top: 0, left: 0 }
+  const state = { ...ViewletSearch.create(), x: 0, y: 0 }
   expect(await ViewletSearch.handleContextMenuKeyboard(state)).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'ContextMenu.show',
-    0,
-    0,
-    MenuEntryId.Search
-  )
+  expect(Command.execute).toHaveBeenCalledWith('ContextMenu.show', 0, 0, MenuEntryId.Search)
 })
 
 test('selectIndex - negative index', async () => {

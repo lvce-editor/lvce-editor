@@ -15,4 +15,5 @@ declare const Explorer: {
   readonly removeDirent: () => Promise<void>
   readonly rename: () => Promise<void>
   readonly updateEditingValue: (value: string) => Promise<void>
+  readonly expandAll: () => Promise<void>
 }

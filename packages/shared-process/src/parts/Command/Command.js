@@ -1,8 +1,8 @@
 import * as ModuleMap from '../ModuleMap/ModuleMap.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   commands: Object.create(null),
-  invocables: Object.create(null),
   pendingModules: Object.create(null),
   async load(moduleId) {},
 }
@@ -19,67 +19,65 @@ const initializeModule = (module) => {
     }
     return
   }
-  throw new Error(`module ${module.name} is missing commands`)
+  throw new Error(
+    `module ${module.name} is missing an initialize function and commands`
+  )
+}
+
+const loadModule = async (moduleId) => {
+  try {
+    const module = await state.load(moduleId)
+    initializeModule(module)
+  } catch (error) {
+    if (
+      error &&
+      error instanceof SyntaxError &&
+      error.stack === `SyntaxError: ${error.message}`
+    ) {
+      Error.captureStackTrace(error, loadModule)
+    }
+    throw new VError(error, `failed to load module ${moduleId}`)
+  }
 }
 
 const getOrLoadModule = (moduleId) => {
   if (!state.pendingModules[moduleId]) {
-    const importPromise = state.load(moduleId)
-    state.pendingModules[moduleId] = importPromise
-      .then(initializeModule)
-      .catch((error) => {
-        console.error(error)
-      })
+    state.pendingModules[moduleId] = loadModule(moduleId)
   }
   return state.pendingModules[moduleId]
 }
 
-const loadCommand = (command) => getOrLoadModule(ModuleMap.getModuleId(command))
+const loadCommand = async (command) => {
+  await getOrLoadModule(ModuleMap.getModuleId(command))
+}
 
 export const register = (commandId, listener) => {
   state.commands[commandId] = listener
 }
 
-export const registerInvocable = (commandId, listener) => {
-  state.invocables[commandId] = listener
-}
+const hasThrown = new Set()
 
-export const invoke = async (command, ...args) => {
-  if (!(command in state.commands)) {
+const executeCommandAsync = async (command, ...args) => {
+  try {
     await loadCommand(command)
-    if (!(command in state.commands)) {
-      console.warn(`[shared process] Unknown command "${command}"`)
-      throw new Error(`Command ${command} not found`)
+  } catch (error) {
+    throw new VError(error, `Failed to load command ${command}`)
+  }
+  if (!(command in state.commands)) {
+    if (hasThrown.has(command)) {
+      return
     }
+    hasThrown.add(command)
+    throw new Error(`Command did not register "${command}"`)
   }
-  if (typeof state.commands[command] !== 'function') {
-    throw new TypeError(`Command ${command} is not a function`)
-  }
-  return state.commands[command](...args)
+  return execute(command, ...args)
 }
 
 export const execute = (command, ...args) => {
   if (command in state.commands) {
-    state.commands[command](...args)
-  } else {
-    loadCommand(command)
-      // TODO can skip then block in prod (only to prevent endless loop in dev)
-      .then(() => {
-        if (!(command in state.commands)) {
-          console.warn(`Unknown command "${command}"`)
-          return
-        }
-        try {
-          execute(command, ...args)
-        } catch (error) {
-          console.error('[shared process] command failed to execute')
-          console.error(error)
-        }
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    return state.commands[command](...args)
   }
+  return executeCommandAsync(command, ...args)
 }
 
 export const setLoad = (load) => {

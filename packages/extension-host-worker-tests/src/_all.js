@@ -3,8 +3,8 @@ import { fork } from 'child_process'
 import { readdir, rm } from 'fs/promises'
 import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { dirname, join } from 'path'
-import { fileURLToPath } from 'url'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..', '..', '..')
@@ -16,9 +16,7 @@ const isTestFile = (dirent) => {
 }
 
 const getRelativePath = (testFile) => {
-  return join(root, 'tests', testFile.replace('.js', '.html')).slice(
-    root.length
-  )
+  return join(root, 'tests', testFile.replace('.js', '.html')).slice(root.length)
 }
 
 const getPaths = async () => {
@@ -44,6 +42,7 @@ const testFile = async (page, name) => {
       break
     case 'fail':
       throw new Error(`Test Failed: ${name}: ${text}`)
+      break
     default:
       throw new Error(`unexpected test state: ${state}`)
   }
@@ -57,7 +56,7 @@ const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
-const main = async () => {
+const runTests = async () => {
   const configDir = await getTmpDir()
   const cacheDir = await getTmpDir()
   const dataDir = await getTmpDir()
@@ -101,6 +100,19 @@ const main = async () => {
     await context.close()
     await browser.close()
     server.kill('SIGKILL')
+  }
+}
+
+const main = async () => {
+  try {
+    await runTests()
+  } catch (error) {
+    if (error && error instanceof Error) {
+      console.error(error.message)
+    } else {
+      console.error(error)
+    }
+    process.exitCode = 128
   }
 }
 

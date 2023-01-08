@@ -69,13 +69,13 @@ const copyElectron = async ({
 }) => {
   const outDir = useInstalledElectronVersion
     ? Path.join(
-        Root.root,
-        'packages',
-        'main-process',
-        'node_modules',
-        'electron',
-        'dist'
-      )
+      Root.root,
+      'packages',
+      'main-process',
+      'node_modules',
+      'electron',
+      'dist'
+    )
     : Path.join(Root.root, 'build', '.tmp', 'electron', electronVersion)
   await Copy.copy({
     from: outDir,
@@ -260,16 +260,37 @@ const copyStaticFiles = async ({ arch }) => {
     ignore: ['css', 'js'],
   })
   await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index-electron.html`,
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
     occurrence: 'packages/renderer-process/src/rendererProcessMain.js',
     replacement: `packages/renderer-process/dist/rendererProcessMain.js`,
   })
   await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index-electron.html`,
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
     occurrence: 'packages/renderer-worker/src/rendererWorkerMain.js',
     replacement: `packages/renderer-worker/dist/rendererWorkerMain.js`,
   })
-  // await
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    occurrence: '\n    <link rel="manifest" href="/manifest.json" />',
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    occurrence:
+      '\n    <link rel="apple-touch-icon" href="/icons/pwa-icon-192.png" />',
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    occurrence: '\n    <meta name="theme-color" content="#282e2f" />',
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    occurrence:
+      '\n    <meta name="description" content="Online Code Editor" />',
+    replacement: ``,
+  })
 }
 
 const copyCss = async ({ arch }) => {
@@ -280,8 +301,7 @@ const copyCss = async ({ arch }) => {
 
 export const build = async () => {
   const arch = process.arch
-  const useInstalledElectronVersion = true
-  const electronVersion = await GetElectronVersion.getElectronVersion()
+  const { electronVersion, isInstalled } = await GetElectronVersion.getElectronVersion()
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
     arch,
@@ -292,6 +312,17 @@ export const build = async () => {
   )
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
   const commitHash = await CommitHash.getCommitHash()
+
+
+  if (!isInstalled) {
+    console.time('downloadElectron')
+    await downloadElectron({
+      arch,
+      electronVersion,
+      platform: process.platform,
+    })
+    console.timeEnd('downloadElectron')
+  }
 
   if (
     existsSync(dependencyCachePath) &&
@@ -312,21 +343,13 @@ export const build = async () => {
     console.timeEnd('bundleElectronAppDependencies')
   }
 
-  if (!useInstalledElectronVersion) {
-    console.time('downloadElectron')
-    await downloadElectron({
-      arch,
-      electronVersion,
-      platform: process.platform,
-    })
-    console.timeEnd('downloadElectron')
-  }
+
 
   console.time('copyElectron')
   await copyElectron({
     arch,
     electronVersion,
-    useInstalledElectronVersion,
+    useInstalledElectronVersion: isInstalled,
   })
   console.timeEnd('copyElectron')
 

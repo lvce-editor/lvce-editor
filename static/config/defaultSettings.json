@@ -7,6 +7,7 @@
   "editor.fontFamily": "'Fira Code'",
   "editor.lineHeight": 20,
   "editor.formatOnSave": false,
+  "editor.letterSpacing": 0.5,
 
   "extensions.autoUpdate": true,
 
@@ -17,6 +18,8 @@
     ".DS_Store": true,
     "Thumbs.db": true
   },
+
+  "search.threads": 1,
 
   "sessionReplay.enabled": false,
 
@@ -35,11 +38,5 @@
 
   "workspace.defaultWorkspace": "fetch:///playground",
 
-  "keyBindings.fallTroughBrowserView": [
-    "ctrl+p",
-    "ctrl+shift+p",
-    "ctrl+b",
-    "ctrl+m",
-    "ctrl+Tab"
-  ]
+  "keyBindings.fallTroughBrowserView": ["ctrl+p", "ctrl+shift+p", "ctrl+b", "ctrl+m", "ctrl+Tab"]
 }

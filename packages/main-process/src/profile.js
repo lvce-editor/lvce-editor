@@ -12,9 +12,9 @@ session.post('Profiler.enable', () => {
     require('./mainProcessMain.js')
     console.log('finish require')
     // some time later...
-    session.post('Profiler.stop', (err, { profile }) => {
+    session.post('Profiler.stop', (error, { profile }) => {
       // Write profile to disk, upload, etc.
-      if (!err) {
+      if (!error) {
         fs.writeFileSync('./profile.cpuprofile', JSON.stringify(profile))
       }
     })
