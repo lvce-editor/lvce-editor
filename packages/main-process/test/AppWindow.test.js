@@ -11,20 +11,24 @@ jest.mock('../src/parts/AppWindowStates/AppWindowStates.js', () => {
     add: jest.fn(),
   }
 })
-jest.mock(
-  '../src/parts/ElectronApplicationMenu/ElectronApplicationMenu.js',
-  () => {
-    return {
-      createTitleBar: jest.fn(),
-      setItems: jest.fn(),
-      setMenu: jest.fn(),
-    }
+jest.mock('../src/parts/ElectronApplicationMenu/ElectronApplicationMenu.js', () => {
+  return {
+    createTitleBar: jest.fn(),
+    setItems: jest.fn(),
+    setMenu: jest.fn(),
   }
-)
+})
 
 jest.mock('electron', () => {
   const EventEmitter = require('node:events')
-  const BrowserWindow = class extends EventEmitter {}
+  const BrowserWindow = class extends EventEmitter {
+    constructor() {
+      super()
+      this.webContents = {
+        id: 1,
+      }
+    }
+  }
   BrowserWindow.prototype.loadURL = jest.fn()
   BrowserWindow.prototype.setMenuBarVisibility = jest.fn()
   BrowserWindow.prototype.setAutoHideMenuBar = jest.fn()
@@ -76,8 +80,6 @@ test('createAppWindow - error', async () => {
   })
   // TODO error message should be improved
   await expect(AppWindow.createAppWindow([], '')).rejects.toThrowError(
-    new Error(
-      'Failed to load window url "lvce-oss://-": ERR_FAILED (-2) loading \'lvce-oss://-\''
-    )
+    new Error('Failed to load window url "lvce-oss://-": ERR_FAILED (-2) loading \'lvce-oss://-\'')
   )
 })
