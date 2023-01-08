@@ -1,4 +1,4 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Logger from '../Logger/Logger.js'
 
 const modules = [
   'ActivityBar',
@@ -52,5 +52,5 @@ export const showState = async () => {
       state[module] = imported.state
     }
   }
-  console.info(state)
+  Logger.info(state)
 }

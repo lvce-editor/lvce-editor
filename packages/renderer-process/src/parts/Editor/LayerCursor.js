@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const create$Cursor = () => {
@@ -56,7 +57,7 @@ const render$Cursors = ($Cursors, cursors) => {
 
 const renderCursorsNative = (state, cursors) => {
   if (cursors.length > 1) {
-    console.warn('[editor] cannot render more than one native cursor')
+    Logger.warn('[editor] cannot render more than one native cursor')
     return
   }
   if (cursors.length === 0) {
