@@ -118,8 +118,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Platform
     case 'Preferences.getAll':
       return ModuleId.Preferences
-    case 'Crash.crash':
-    case 'Crash.crashAsync':
+    case 'ProcessCrash.crash':
+    case 'ProcessCrash.crashAsync':
       return ModuleId.ProcessCrash
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened
@@ -139,9 +139,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
-    case 'ProcessCrash.crash':
-    case 'ProcessCrash.crashAsync':
-      return ModuleId.ProcessCrash
     default:
       throw new Error(`command ${commandId} not found`)
   }

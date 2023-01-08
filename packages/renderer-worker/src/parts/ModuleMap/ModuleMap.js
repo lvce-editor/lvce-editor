@@ -63,6 +63,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronClipBoard
     case 'ElectronContextMenu':
       return ModuleId.ElectronContextMenu
+    case 'ElectronProcessCrash':
+      return ModuleId.ElectronProcessCrash
     case 'ElectronWindow':
       return ModuleId.ElectronWindow
     case 'ErrorHandling':
@@ -123,6 +125,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.SessionReplay
     case 'SessionStorage':
       return ModuleId.SessionStorage
+    case 'SharedProcessCrash':
+      return ModuleId.SharedProcessCrash
     case 'Test':
       return ModuleId.Test
     case '001':
@@ -140,10 +144,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workbench
     case 'Workspace':
       return ModuleId.Workspace
-    case 'ElectronProcessCrash':
-      return ModuleId.ElectronProcessCrash
-    case 'SharedProcessCrash':
-      return ModuleId.SharedProcessCrash
     default:
       throw new Error(`command ${commandId} not found`)
   }
