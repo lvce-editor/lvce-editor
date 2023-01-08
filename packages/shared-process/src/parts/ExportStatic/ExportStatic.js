@@ -208,18 +208,24 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
       Path.join(root, 'dist', commitHash, 'file-icons')
     )
   }
-  if (pathPrefix) {
-    await replace(Path.join(root, 'dist', 'index.html'), `favicon.ico`, `${pathPrefix}/favicon.ico`)
-  }
   await replace(Path.join(root, 'dist', 'index.html'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
   await replace(Path.join(root, 'dist', 'index.html'), `/manifest.json`, `${pathPrefix}/manifest.json`)
 
-  await replace(
-    Path.join(root, 'dist', 'index.html'),
-    '</title>',
-    `</title>
+  if (pathPrefix) {
+    await replace(
+      Path.join(root, 'dist', 'index.html'),
+      '</title>',
+      `</title>
+    <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`
+    )
+  } else {
+    await replace(
+      Path.join(root, 'dist', 'index.html'),
+      '</title>',
+      `</title>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">`
-  )
+    )
+  }
   await replace(Path.join(root, 'dist', 'manifest.json'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
   await replace(Path.join(root, 'dist', commitHash, 'css', 'parts', 'ViewletTitleBarButtons.css'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
 }
