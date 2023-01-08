@@ -9,10 +9,10 @@ export const Commands = {
   handlePointerMove: ViewletEditorImage.handlePointerMove,
   handlePointerUp: ViewletEditorImage.handlePointerUp,
   handleWheel: ViewletEditorImage.handleWheel,
-  moveUp: ViewletEditorImage.moveUp,
   moveDown: ViewletEditorImage.moveDown,
   moveLeft: ViewletEditorImage.moveLeft,
   moveRight: ViewletEditorImage.moveRight,
+  moveUp: ViewletEditorImage.moveUp,
 }
 
 // prettier-ignore
