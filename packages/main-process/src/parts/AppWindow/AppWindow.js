@@ -41,23 +41,14 @@ const loadUrl = async (browserWindow, url) => {
 const defaultUrl = `${Platform.scheme}://-`
 
 // TODO avoid mixing BrowserWindow, childprocess and various lifecycle methods in one file -> separate concerns
-exports.createAppWindow = async (
-  parsedArgs,
-  workingDirectory,
-  url = defaultUrl
-) => {
+exports.createAppWindow = async (parsedArgs, workingDirectory, url = defaultUrl) => {
   const preferences = await Preferences.load()
-  const titleBarPreference = Preferences.get(
-    preferences,
-    'window.titleBarStyle'
-  )
+  const titleBarPreference = Preferences.get(preferences, 'window.titleBarStyle')
   const frame = titleBarPreference !== 'custom'
   const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
   const zoomLevelPreference = Preferences.get(preferences, 'window.zoomLevel')
   const zoomLevel = zoomLevelPreference
-  const windowControlsOverlayPreference =
-    Platform.isWindows &&
-    Preferences.get(preferences, 'window.controlsOverlay.enabled')
+  const windowControlsOverlayPreference = Platform.isWindows && Preferences.get(preferences, 'window.controlsOverlay.enabled')
   const titleBarOverlay = windowControlsOverlayPreference
     ? {
         color: '#1e2324',
