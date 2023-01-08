@@ -1,4 +1,5 @@
 // TODO treeshake out this whole module in production
+
 import { AssertionError } from '../AssertionError/AssertionError.js'
 
 const getType = (value) => {
@@ -15,6 +16,9 @@ const getType = (value) => {
       }
       if (Array.isArray(value)) {
         return 'array'
+      }
+      if (value instanceof Uint32Array) {
+        return 'uint32array'
       }
       return 'object'
     case 'boolean':
@@ -35,6 +39,9 @@ export const number = (value) => {
   const type = getType(value)
   if (type !== 'number') {
     throw new AssertionError('expected value to be of type number')
+  }
+  if (isNaN(value)) {
+    throw new AssertionError('value is NaN')
   }
 }
 
@@ -63,5 +70,19 @@ export const boolean = (value) => {
   const type = getType(value)
   if (type !== 'boolean') {
     throw new AssertionError('expected value to be of type boolean')
+  }
+}
+
+export const fn = (value) => {
+  const type = getType(value)
+  if (type !== 'function') {
+    throw new AssertionError('expected value to be of type function')
+  }
+}
+
+export const uint32array = (value) => {
+  const type = getType(value)
+  if (type !== 'uint32array') {
+    throw new AssertionError('expected value to be of type uint32array')
   }
 }

@@ -2,7 +2,7 @@ import * as SourceMap from '../src/parts/SourceMap/SourceMap.js'
 
 test('getOriginalPosition - error - source map is null', () => {
   expect(() => SourceMap.getOriginalPosition(null, 0, 0)).toThrowError(
-    new Error('Failed to get original sourcemap position: expected value to be of type object')
+    new Error('Failed to get original sourcemap position: AssertionError: expected value to be of type object')
   )
 })
 
@@ -17,7 +17,7 @@ test('getOriginalPosition - error - line is not of type number', () => {
       '0',
       0
     )
-  ).toThrowError(new Error('Failed to get original sourcemap position: expected value to be of type number'))
+  ).toThrowError(new Error('Failed to get original sourcemap position: AssertionError: expected value to be of type number'))
 })
 
 test('getOriginalPosition - error - column is not of type number', () => {
@@ -31,7 +31,7 @@ test('getOriginalPosition - error - column is not of type number', () => {
       0,
       '0'
     )
-  ).toThrowError(new Error('Failed to get original sourcemap position: expected value to be of type number'))
+  ).toThrowError(new Error('Failed to get original sourcemap position: AssertionError: expected value to be of type number'))
 })
 
 test.skip('getOriginalPosition', () => {
