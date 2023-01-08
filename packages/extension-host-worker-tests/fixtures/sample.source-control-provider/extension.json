@@ -1,4 +1,4 @@
 {
   "browser": "main.js",
-  "activation": ["onSourceControl"]
+  "activation": ["onSourceControl:memfs"]
 }
