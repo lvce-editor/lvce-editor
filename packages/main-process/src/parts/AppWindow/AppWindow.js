@@ -16,8 +16,8 @@ const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronAppl
  * @param {import('electron').Event} event
  */
 const handleWindowClose = (event) => {
-  const { id } = event.sender
-  AppWindowStates.remove(id)
+  const browserWindow = event.sender
+  AppWindowStates.remove(browserWindow.webContents.id)
 }
 
 const loadUrl = async (browserWindow, url) => {
@@ -78,10 +78,9 @@ exports.createAppWindow = async (parsedArgs, workingDirectory, url = defaultUrl)
   window.setAutoHideMenuBar(false)
   window.on('close', handleWindowClose)
   AppWindowStates.add({
-    window,
     parsedArgs,
     workingDirectory,
-    id: window.id,
+    id: window.webContents.id,
   })
   await loadUrl(window, url)
 }
