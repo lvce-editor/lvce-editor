@@ -238,6 +238,10 @@
     {
       "name": "KeywordOperator",
       "foreground": "#B4B4B4"
+    },
+    {
+      "name": "KeywordFunction",
+      "foreground": "#D88F56"
     }
   ]
 }
