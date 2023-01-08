@@ -1,38 +1,39 @@
-import * as Platform from '../Platform/Platform.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as Workspace from '../Workspace/Workspace.js'
+import * as ExtensionHostSourceControl from '../ExtensionHost/ExtensionHostSourceControl.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const state = {
-  count: 0,
-  decorations: [],
-  listeners: [],
+  enabledProviders: [],
+  initialized: false,
 }
 
-export const onDidChangeCount = (listener) => {
-  state.listeners.push(listener)
+export const acceptInput = (providerId, text) => {
+  Assert.string(providerId)
+  Assert.string(text)
+  return ExtensionHostSourceControl.acceptInput(providerId, text)
 }
 
-export const setCount = (count) => {
-  state.count = count
-  for (const listener of state.listeners) {
-    listener()
-  }
+export const getChangedFiles = (providerId) => {
+  return ExtensionHostSourceControl.getChangedFiles(providerId)
 }
 
-export const updateDecorations = () => {
-  for (const listener of state.listeners) {
-    listener()
-  }
+export const getFileBefore = (file) => {
+  return ExtensionHostSourceControl.getFileBefore(file)
 }
 
-export const getBadgeCount = async () => {
-  if (Platform.platform === 'web') {
-    return 0
-  }
-  const workspacePath = Workspace.getWorkspacePath()
-  const count = await SharedProcess.invoke(
-    /* ExtensionHost.getSourceControlBadgeCount */ 'ExtensionHostSourceControl.getSourceControlBadgeCount',
-    /* cwd */ workspacePath
-  )
-  return count
+export const add = (file) => {
+  return ExtensionHostSourceControl.add(file)
+}
+
+export const discard = (file) => {
+  return ExtensionHostSourceControl.discard(file)
+}
+
+export const openFile = (file) => {
+  // TODO
+}
+
+export const getEnabledProviderIds = (scheme, root) => {
+  Assert.string(scheme)
+  Assert.string(root)
+  return ExtensionHostSourceControl.getEnabledProviderIds(scheme, root)
 }

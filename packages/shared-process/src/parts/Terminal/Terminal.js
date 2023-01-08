@@ -3,6 +3,7 @@ import { ChildProcess, fork } from 'node:child_process'
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as PtyHostPath from '../PtyHostPath/PtyHostPath.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const state = {
   /**
@@ -75,7 +76,7 @@ export const create = async (socket, id, cwd) => {
         const handleMessage = (message) => {
           const data = message.params[1]
           socket.send({
-            jsonrpc: '2.0',
+            jsonrpc: JsonRpcVersion.Two,
             method: 'Viewlet.send',
             params: ['Terminal', 'handleData', data],
           })
@@ -102,7 +103,7 @@ export const create = async (socket, id, cwd) => {
       break
   }
   state.send({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'Terminal.create',
     params: [id, cwd],
   })
@@ -128,7 +129,7 @@ export const write = (id, data) => {
     return
   }
   state.send({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'Terminal.write',
     params: [id, data],
   })
@@ -140,7 +141,7 @@ export const resize = (state, columns, rows) => {
 
 export const dispose = (id) => {
   state.send({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'Terminal.dispose',
     params: [id],
   })

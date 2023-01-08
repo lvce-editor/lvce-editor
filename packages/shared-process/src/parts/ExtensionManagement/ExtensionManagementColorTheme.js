@@ -5,6 +5,7 @@ import * as FileSystemWatch from '../FileSystemWatch/FileSystemWatch.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 // TODO test this function
 // TODO very similar with getIconTheme
@@ -74,12 +75,10 @@ export const watch = async (socket, colorThemeId) => {
   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
   const verbose = process.argv.includes('--verbose')
   if (verbose) {
-    console.info(
-      `[shared-process] starting to watch color theme ${colorThemeId} at ${colorThemePath}`
-    )
+    console.info(`[shared-process] starting to watch color theme ${colorThemeId} at ${colorThemePath}`)
   }
   const watcher = FileSystemWatch.watchFile(colorThemePath)
   for await (const event of watcher) {
-    socket.send({ jsonrpc: '2.0', method: 'ColorTheme.reload', params: [] })
+    socket.send({ jsonrpc: JsonRpcVersion.Two, method: 'ColorTheme.reload', params: [] })
   }
 }

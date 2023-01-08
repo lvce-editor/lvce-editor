@@ -1,7 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
-import * as ElectronWindowAbout from '../ElectronWindowAbout/ElectronWindowAbout.js'
 import * as IsAbortError from '../IsAbortError/IsAbortError.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -28,17 +28,11 @@ const openFolderWeb = async () => {
 }
 
 const openFolderRemote = async () => {
-  const path = await RendererProcess.invoke(
-    /* Dialog.prompt */ 'Dialog.prompt',
-    /* message */ 'Choose path:'
-  )
+  const path = await RendererProcess.invoke(/* Dialog.prompt */ 'Dialog.prompt', /* message */ 'Choose path:')
   if (!path) {
     return
   }
-  await Command.execute(
-    /* Workspace.setPath */ 'Workspace.setPath',
-    /* path */ path
-  )
+  await Command.execute(/* Workspace.setPath */ 'Workspace.setPath', /* path */ path)
 }
 
 const openFolderElectron = async () => {
@@ -50,10 +44,7 @@ const openFolderElectron = async () => {
     return
   }
   const path = folders[0]
-  await Command.execute(
-    /* Workspace.setPath */ 'Workspace.setPath',
-    /* path */ path
-  )
+  await Command.execute(/* Workspace.setPath */ 'Workspace.setPath', /* path */ path)
 }
 
 export const openFolder = () => {
@@ -70,19 +61,15 @@ export const openFolder = () => {
 }
 
 const openFileWeb = () => {
-  console.warn('open file - not implemented')
+  Logger.warn('open file - not implemented')
 }
 
 const openFileRemote = () => {
-  console.warn('open file - not implemented')
+  Logger.warn('open file - not implemented')
 }
 
 const openFileElectron = async () => {
-  const [file] = await ElectronDialog.showOpenDialog('Open File', [
-    'openFile',
-    'dontAddToRecent',
-    'showHiddenFiles',
-  ])
+  const [file] = await ElectronDialog.showOpenDialog('Open File', ['openFile', 'dontAddToRecent', 'showHiddenFiles'])
   await Command.execute('Main.openUri', file)
 }
 
@@ -94,31 +81,6 @@ export const openFile = () => {
       return openFileRemote()
     case PlatformType.Electron:
       return openFileElectron()
-    default:
-      return
-  }
-}
-
-const showAboutWeb = () => {
-  console.warn('show about - not implemented')
-}
-
-const showAboutRemote = () => {
-  console.warn('show about - not implemented')
-}
-
-const showAboutElectron = async () => {
-  await ElectronWindowAbout.open()
-}
-
-export const showAbout = async () => {
-  switch (Platform.platform) {
-    case 'web':
-      return showAboutWeb()
-    case 'remote':
-      return showAboutRemote()
-    case 'electron':
-      return showAboutElectron()
     default:
       return
   }
@@ -142,10 +104,7 @@ export const showMessage = async (message, options) => {
   }
 
   if (Platform.platform === 'electron') {
-    const index = await ElectronDialog.showMessageBox(
-      /* message */ message.message,
-      /* buttons */ options
-    )
+    const index = await ElectronDialog.showMessageBox(/* message */ message.message, /* buttons */ options)
 
     if (index === -1) {
       // TODO can this even happen?

@@ -1,6 +1,7 @@
 const { Menu, BrowserWindow } = require('electron')
 const Assert = require('../Assert/Assert.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
+const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
 
 const getPort = (browserWindow) => {
   const state = AppWindowStates.findById(browserWindow.webContents.id)
@@ -18,7 +19,7 @@ const click = (menuItem, browserWindow) => {
     return
   }
   port.postMessage({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'ElectronContextMenu.handleSelect',
     params: [label],
   })
@@ -51,7 +52,7 @@ exports.openContextMenu = (menuItems, x, y) => {
       return
     }
     port.postMessage({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method: 'ElectronContextMenu.handleMenuClose',
       params: [],
     })

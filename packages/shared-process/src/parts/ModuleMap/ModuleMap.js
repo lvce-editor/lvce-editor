@@ -123,7 +123,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.ProcessCrash
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened
-    case 'Search.search':
+    case 'TextSearch.search':
       return ModuleId.Search
     case 'SearchFile.searchFile':
       return ModuleId.SearchFile

@@ -1,10 +1,11 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const formatViewletModule = async (absolutePath) => {
   const content = await ReadFile.readFile(absolutePath)
-  const lines = content.split('\n')
+  const lines = SplitLines.splitLines(content)
   const newLines = []
   let i = 1
   const State = {

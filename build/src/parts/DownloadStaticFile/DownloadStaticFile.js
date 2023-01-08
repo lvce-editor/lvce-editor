@@ -7,6 +7,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const downloadFile = async (url, outFile) => {
   try {
@@ -48,13 +49,13 @@ const getImportExportUrl = (line) => {
   const startIndex = line.indexOf(quote)
   const endIndex = line.lastIndexOf(quote)
   if (startIndex === -1 || endIndex === -1 || startIndex === endIndex) {
-    throw new VError('failed to extract actual url')
+    throw new VError(`failed to extract actual url for ${line}`)
   }
   return line.slice(startIndex + 1, endIndex)
 }
 
-const getActualFileUrl = (text) => {
-  const lines = text.split('\n')
+const getActualFileUrl = (url, text) => {
+  const lines = SplitLines.splitLines(text)
   for (const line of lines) {
     if (line.startsWith('export * from')) {
       const actualUrlRelative = getImportExportUrl(line)
@@ -62,7 +63,7 @@ const getActualFileUrl = (text) => {
       return actualUrl
     }
   }
-  throw new VError('failed to extract actual url')
+  throw new VError(`failed to extract actual url for ${url}`)
 }
 
 const parseImportExportUrl = (importExportUrl) => {
@@ -92,12 +93,12 @@ const downloadStaticFileJs = async (staticFile) => {
   const rootVersion = staticFile.version
   const url = `https://cdn.skypack.dev/${rootName}@${rootVersion}`
   const text = await getText(url)
-  const actualUrl = getActualFileUrl(text)
+  const actualUrl = getActualFileUrl(url, text)
   const outFileName = getOutFileNameJs(rootName)
   const outFile = Path.absolute(`static/js/${outFileName}.js`)
   await downloadFile(actualUrl, outFile)
   const content = await readFile(outFile, EncodingType.Utf8)
-  const lines = content.split('\n')
+  const lines = SplitLines.splitLines(content)
   const replacements = []
   for (const line of lines) {
     if (line.startsWith('import')) {
@@ -116,10 +117,7 @@ const downloadStaticFileJs = async (staticFile) => {
   if (replacements.length > 0) {
     let newContent = content
     for (const replacement of replacements) {
-      newContent = newContent.replace(
-        replacement.occurrence,
-        replacement.replacement
-      )
+      newContent = newContent.replace(replacement.occurrence, replacement.replacement)
     }
     await writeFile(outFile, newContent)
   }

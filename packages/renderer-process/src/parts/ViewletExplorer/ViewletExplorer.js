@@ -4,7 +4,11 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
@@ -19,19 +23,9 @@ export const create = () => {
   $Viewlet.onmousedown = ViewletExplorerEvents.handleMouseDown
   $Viewlet.oncontextmenu = ViewletExplorerEvents.handleContextMenu
   // TODO use the other mouse events that capture automatically
-  $Viewlet.addEventListener(
-    'mouseenter',
-    ViewletExplorerEvents.handleMouseEnter,
-    { capture: true }
-  )
-  $Viewlet.addEventListener(
-    'mouseleave',
-    ViewletExplorerEvents.handleMouseLeave,
-    { capture: true }
-  )
-  $Viewlet.addEventListener('wheel', ViewletExplorerEvents.handleWheel, {
-    passive: true,
-  })
+  $Viewlet.addEventListener(DomEventType.MouseEnter, ViewletExplorerEvents.handleMouseEnter, DomEventOptions.Capture)
+  $Viewlet.addEventListener(DomEventType.MouseLeave, ViewletExplorerEvents.handleMouseLeave, DomEventOptions.Capture)
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletExplorerEvents.handleWheel, DomEventOptions.Passive)
   $Viewlet.onblur = ViewletExplorerEvents.handleBlur
   $Viewlet.ondragover = ViewletExplorerEvents.handleDragOver
   $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart
@@ -58,7 +52,7 @@ const create$Row = () => {
 const render$Row = ($Row, rowInfo) => {
   const $Icon = $Row.childNodes[0]
   const $LabelText = $Row.childNodes[1].childNodes[0]
-  $Icon.className = `Icon${rowInfo.icon}`
+  $Icon.className = `FileIcon${rowInfo.icon}`
   $LabelText.data = rowInfo.name
   $Row.title = rowInfo.path
   $Row.ariaSetSize = `${rowInfo.setSize}`
@@ -71,13 +65,13 @@ const render$Row = ($Row, rowInfo) => {
   switch (rowInfo.type) {
     // TODO decide on directory vs folder
     case DirentType.Directory:
-      $Row.ariaExpanded = 'false'
+      $Row.ariaExpanded = AriaBoolean.False
       break
     case DirentType.DirectoryExpanding:
-      $Row.ariaExpanded = 'true' // TODO tree should be aria-busy then
+      $Row.ariaExpanded = AriaBoolean.True // TODO tree should be aria-busy then
       break
     case DirentType.DirectoryExpanded:
-      $Row.ariaExpanded = 'true'
+      $Row.ariaExpanded = AriaBoolean.True
       break
     case DirentType.File:
       $Row.ariaExpanded = undefined
@@ -129,13 +123,15 @@ const render$Rows = ($Rows, rowInfos) => {
 export const handleError = (state, message) => {
   Assert.object(state)
   Assert.string(message)
-  state.$Viewlet.textContent = message
+  const { $Viewlet } = state
+  $Viewlet.textContent = message
 }
 
 export const updateDirents = (state, dirents) => {
   Assert.object(state)
   Assert.array(dirents)
-  render$Rows(state.$Viewlet, dirents)
+  const { $Viewlet } = state
+  render$Rows($Viewlet, dirents)
 }
 
 export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
@@ -160,19 +156,22 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
   switch (newIndex) {
     case -2:
       $Viewlet.classList.remove(focusClassName)
-      $Viewlet.removeAttribute('aria-activedescendant')
+      $Viewlet.removeAttribute(DomAttributeType.AriaActiveDescendant)
       break
     case -1:
       if (focused) {
         $Viewlet.classList.add(focusClassName)
-        $Viewlet.removeAttribute('aria-activedescendant')
+        $Viewlet.removeAttribute(DomAttributeType.AriaActiveDescendant)
       }
       break
     default:
       if (newIndex >= 0) {
         const $Dirent = $Viewlet.children[newIndex]
+        if (!$Dirent) {
+          break
+        }
         $Dirent.id = activeId
-        $Viewlet.setAttribute('aria-activedescendant', activeId)
+        $Viewlet.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
         if (focused) {
           $Dirent.classList.add(focusClassName)
         }
@@ -205,8 +204,15 @@ export const replaceWithEditBox = (state, index, value) => {
   $InputBox.value = value
   $InputBox.oninput = ViewletExplorerEvents.handleEditingInput
   const $Dirent = $Viewlet.children[index]
-  const $Label = $Dirent.children[1]
-  $Label.replaceWith($InputBox)
+  if ($Dirent) {
+    const $Label = $Dirent.children[1]
+    $Label.replaceWith($InputBox)
+  } else {
+    const $Dirent = document.createElement('div')
+    $Dirent.className = 'ExplorerItem'
+    $Dirent.append($InputBox)
+    $Viewlet.append($Dirent)
+  }
   $InputBox.select()
   $InputBox.setSelectionRange(0, value.length)
   $InputBox.focus()

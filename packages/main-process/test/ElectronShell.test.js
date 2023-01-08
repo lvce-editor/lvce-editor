@@ -13,9 +13,8 @@ jest.mock('electron', () => {
   }
 })
 
-const ElectronShell = require('../src/parts/ElectronShell/ElectronShell.js')
-
 const electron = require('electron')
+const ElectronShell = require('../src/parts/ElectronShell/ElectronShell.js')
 
 test('showItemInFolder', () => {
   // @ts-ignore

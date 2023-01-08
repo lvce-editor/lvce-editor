@@ -3,4 +3,5 @@
   overflow: hidden;
   display: inline-block;
   white-space: nowrap;
+  flex: 1;
 }

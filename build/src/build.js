@@ -40,6 +40,8 @@ const getBuildModule = (target) => {
       return import('./parts/BuildEditor/BuildEditor.js')
     case 'server':
       return import('./parts/BuildServer/BuildServer.js')
+    case 'arch-linux':
+      return import('./parts/BuildArchLinux/BuildArchLinux.js')
     default:
       Logger.info(`unknown target "${target}"`)
       Process.exit(1)

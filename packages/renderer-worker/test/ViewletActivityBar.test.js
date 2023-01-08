@@ -591,8 +591,8 @@ test('resize', () => {
     ],
   }
   const newState = ViewletActivityBar.resize(state, {
-    top: 150,
-    left: 150,
+    x: 150,
+    y: 150,
     width: 150,
     height: 150,
   })
@@ -655,9 +655,9 @@ test('resize', () => {
     },
     focusedIndex: -1,
     height: 150,
-    left: 150,
+    x: 150,
     selectedIndex: -1,
-    top: 150,
+    y: 150,
     width: 150,
     focused: false,
   })

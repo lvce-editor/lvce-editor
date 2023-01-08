@@ -1,12 +1,54 @@
+.SourceControl {
+  display: flex;
+  flex-direction: column;
+}
+
 .SourceControl:focus {
-  outline: 1px solid red;
+  outline: var(--FocusOutline);
   outline-offset: -1px;
+  outline-style: solid;
+  outline-width: 1px;
 }
 
 .ViewSourceControlInput {
   /* margin: 20px; */
 }
 
+.SourceControlHeader {
+  display: grid;
+  padding: 5px 12px 6px 16px;
+}
+
 .ViewSourceControlInput[aria-busy] {
   background: lightblue;
+}
+
+.ListItems {
+  user-select: none;
+}
+
+.ListItems.DropTarget {
+  background: darkblue;
+}
+
+.SourceControlItems {
+  flex: 1;
+}
+
+.SourceControlButton {
+  width: 20px;
+  height: 20px;
+  contain: strict;
+  flex-shrink: 0;
+  border: none;
+  color: #c5c5c5;
+  background: transparent;
+}
+
+.SourceControlButton[disabled] {
+  color: rgba(204, 204, 204, 0.5);
+}
+
+.SourceControlButton:hover {
+  background-color: hsla(0, 0%, 100%, 0.1);
 }

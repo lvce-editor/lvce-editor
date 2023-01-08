@@ -1,15 +1,17 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as Compare from '../Compare/Compare.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as Height from '../Height/Height.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
-import * as SearchResultType from '../SearchResultType/SearchResultType.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
+import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Preferences from '../Preferences/Preferences.js'
 
 /**
  * @enum {string}
@@ -21,7 +23,7 @@ export const UiStrings = {
   ManyResultsInManyFiles: `Found {PH1} results in {PH2} files`,
 }
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     searchResults: [],
     stats: {},
@@ -29,8 +31,8 @@ export const create = (id, uri, left, top, width, height) => {
     value: '',
     disposed: false,
     fileCount: 0,
-    left,
-    top,
+    x,
+    y,
     width,
     height,
     ...VirtualList.create({
@@ -38,6 +40,7 @@ export const create = (id, uri, left, top, width, height) => {
       minimumSliderSize: Height.MinimumSliderSize,
       headerHeight: 61, // TODO
     }),
+    threads: 0,
   }
 }
 
@@ -55,12 +58,21 @@ export const saveState = (state) => {
   }
 }
 
+const getThreads = () => {
+  const value = Preferences.get('search.threads')
+  if (typeof value !== 'number' || value < 0 || value > 8) {
+    return 0
+  }
+  return value
+}
+
 export const loadContent = async (state, savedState) => {
   const savedValue = getSavedValue(savedState)
+  const threads = getThreads()
   if (savedValue) {
-    return setValue(state, savedValue)
+    return setValue(state, savedValue, threads)
   }
-  return state
+  return { ...state, threads }
 }
 
 const getStatusMessage = (resultCount, fileResultCount) => {
@@ -83,14 +95,23 @@ const getStatusMessage = (resultCount, fileResultCount) => {
 
 const getResultCounts = (results) => {
   let resultCount = 0
+  let fileCount = 0
   for (const result of results) {
-    const [fileName, matches] = result
-    resultCount += matches.length
+    switch (result.type) {
+      case TextSearchResultType.File:
+        fileCount++
+        break
+      case TextSearchResultType.Match:
+        resultCount++
+        break
+      default:
+        break
+    }
   }
-  return resultCount
+  return { fileCount, resultCount }
 }
 
-export const setValue = async (state, value) => {
+export const setValue = async (state, value, threads = state.threads) => {
   try {
     if (value === '') {
       return {
@@ -103,28 +124,24 @@ export const setValue = async (state, value) => {
         matchIndex: 0,
         matchCount: 0,
         message: '',
+        threads,
       }
     }
     const { height, itemHeight, minimumSliderSize, headerHeight } = state
     const root = Workspace.state.workspacePath
-    const results = await TextSearch.textSearch(root, value)
-    const resultCount = getResultCounts(results)
-    const displayResults = toDisplayResults(
-      results,
-      itemHeight,
-      resultCount,
-      value
-    )
-    const fileResultCount = results.length
-    const message = getStatusMessage(resultCount, fileResultCount)
+    const results = await TextSearch.textSearch(root, value, {
+      threads,
+    })
+    if (!Array.isArray(results)) {
+      throw new Error(`results must be of type array`)
+    }
+    const { fileCount, resultCount } = getResultCounts(results)
+    const displayResults = toDisplayResults(results, itemHeight, resultCount, value)
+    const message = getStatusMessage(resultCount, fileCount)
     const total = displayResults.length
     const contentHeight = total * itemHeight
     const listHeight = height - headerHeight
-    const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
-      height,
-      contentHeight,
-      minimumSliderSize
-    )
+    const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(height, contentHeight, minimumSliderSize)
     const numberOfVisible = Math.ceil(listHeight / itemHeight)
     const maxLineY = Math.min(numberOfVisible, total)
     const finalDeltaY = Math.max(contentHeight - listHeight, 0)
@@ -136,19 +153,22 @@ export const setValue = async (state, value) => {
       maxLineY: maxLineY,
       scrollBarHeight,
       finalDeltaY,
+      threads,
     }
   } catch (error) {
+    ErrorHandling.logError(error)
     return {
       ...state,
       message: `${error}`,
       value,
+      threads,
     }
   }
 }
 
 const updateIcon = (item) => {
   switch (item.type) {
-    case SearchResultType.File:
+    case TextSearchResultType.File:
       return {
         ...item,
         icon: IconTheme.getFileIcon({ name: item.text }),
@@ -178,21 +198,9 @@ export const dispose = async (state) => {
   }
 }
 
-const getPath = (result) => {
-  return result[0]
-}
-
-const getPreviews = (result) => {
-  const previews = result[1]
-  if (!Array.isArray(previews)) {
-    throw new Error('previews must be of type array')
-  }
-  return previews
-}
-
 const compareResults = (resultA, resultB) => {
-  const pathA = getPath(resultA)
-  const pathB = getPath(resultB)
+  const pathA = resultA.text
+  const pathB = resultB.text
   return Compare.compareString(pathA, pathB)
 }
 
@@ -205,42 +213,47 @@ const getMatchStart = (preview, searchTerm) => {
 }
 
 const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
-  results.sort(compareResults)
+  // results.sort(compareResults)
   const displayResults = []
   let i = -1
   const setSize = resultCount
+  let path = ''
   for (const result of results) {
     i++
-    const path = getPath(result)
-    const previews = getPreviews(result)
-    const absolutePath = Workspace.getAbsolutePath(path)
-    const baseName = Workspace.pathBaseName(path)
-    displayResults.push({
-      title: absolutePath,
-      type: SearchResultType.File,
-      text: baseName,
-      icon: IconTheme.getFileIcon({ name: baseName }),
-      posInSet: i + 1,
-      setSize,
-      top: i * itemHeight,
-      lineNumber: result.lineNumber,
-      matchStart: 0,
-      matchLength: 0,
-    })
-    for (const preview of previews) {
-      i++
-      displayResults.push({
-        title: preview.preview,
-        type: SearchResultType.Preview,
-        text: preview.preview,
-        icon: '',
-        posInSet: i + 1,
-        setSize,
-        top: i * itemHeight,
-        lineNumber: preview.lineNumber,
-        matchStart: getMatchStart(preview, searchTerm),
-        matchLength: searchTerm.length,
-      })
+    switch (result.type) {
+      case TextSearchResultType.File:
+        path = result.text
+        const absolutePath = Workspace.getAbsolutePath(path)
+        const baseName = Workspace.pathBaseName(path)
+        displayResults.push({
+          title: absolutePath,
+          type: TextSearchResultType.File,
+          text: baseName,
+          icon: IconTheme.getFileIcon({ name: baseName }),
+          posInSet: i + 1,
+          setSize,
+          top: i * itemHeight,
+          lineNumber: result.lineNumber,
+          matchStart: 0,
+          matchLength: 0,
+        })
+        break
+      case TextSearchResultType.Match:
+        displayResults.push({
+          title: result.text,
+          type: TextSearchResultType.Match,
+          text: result.text,
+          icon: '',
+          posInSet: i + 1,
+          setSize,
+          top: i * itemHeight,
+          lineNumber: result.lineNumber,
+          matchStart: result.start,
+          matchLength: searchTerm.length,
+        })
+        break
+      default:
+        break
     }
   }
   return displayResults
@@ -263,7 +276,7 @@ const getFileIndex = (items, index) => {
   console.log({ items })
   for (let i = index; i >= 0; i--) {
     const item = items[i]
-    if (item.type === SearchResultType.File) {
+    if (item.type === TextSearchResultType.File) {
       return i
     }
   }
@@ -288,14 +301,9 @@ const selectIndexPreview = async (state, searchResult, index) => {
   const fileResult = items[fileIndex]
   const path = fileResult.title
   Assert.string(path)
-  await Command.execute(
-    /* Main.openUri */ 'Main.openUri',
-    /* uri */ path,
-    /* focus */ true,
-    {
-      selections: new Uint32Array([lineNumber, 0, lineNumber, 0]),
-    }
-  )
+  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path, /* focus */ true, {
+    selections: new Uint32Array([lineNumber, 0, lineNumber, 0]),
+  })
   return state
 }
 
@@ -306,9 +314,9 @@ export const selectIndex = async (state, index) => {
   const { items } = state
   const searchResult = items[index]
   switch (searchResult.type) {
-    case SearchResultType.File:
+    case TextSearchResultType.File:
       return selectIndexFile(state, searchResult, index)
-    case SearchResultType.Preview:
+    case TextSearchResultType.Match:
       return selectIndexPreview(state, searchResult, index)
     default:
       throw new Error(`unexpected search result type ${searchResult.type}`)
@@ -317,25 +325,15 @@ export const selectIndex = async (state, index) => {
 
 export const handleContextMenuMouseAt = async (state, x, y) => {
   const index = 1
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ MenuEntryId.Search
-  )
+  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.Search)
   return state
 }
 
 export const handleContextMenuKeyboard = async (state) => {
   const index = 1
-  const x = state.left // TODO
-  const y = state.top // TODO
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ MenuEntryId.Search
-  )
+  const x = state.x // TODO
+  const y = state.y // TODO
+  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.Search)
   return state
 }
 
@@ -363,11 +361,7 @@ const getVisible = (state) => {
 
 const renderItems = {
   isEqual(oldState, newState) {
-    return (
-      oldState.items === newState.items &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY
-    )
+    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
     const visible = getVisible(newState)
@@ -377,11 +371,7 @@ const renderItems = {
 
 const renderScrollBar = {
   isEqual(oldState, newState) {
-    return (
-      oldState.deltaY === newState.deltaY &&
-      oldState.height === newState.height &&
-      oldState.finalDeltaY === newState.finalDeltaY
-    )
+    return oldState.deltaY === newState.deltaY && oldState.height === newState.height && oldState.finalDeltaY === newState.finalDeltaY
   },
   apply(oldState, newState) {
     const scrollBarY = ScrollBarFunctions.getScrollBarY(
@@ -390,11 +380,7 @@ const renderScrollBar = {
       newState.height - newState.headerHeight,
       newState.scrollBarHeight
     )
-    return [
-      /* method */ 'setScrollBar',
-      /* scrollBarY */ scrollBarY,
-      /* scrollBarHeight */ newState.scrollBarHeight,
-    ]
+    return [/* method */ 'setScrollBar', /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
   },
 }
 
@@ -432,18 +418,8 @@ const renderNegativeMargin = {
     return oldState.deltaY === newState.deltaY
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setNegativeMargin',
-      /* negativeMargin */ -newState.deltaY,
-    ]
+    return [/* method */ 'setNegativeMargin', /* negativeMargin */ -newState.deltaY]
   },
 }
 
-export const render = [
-  renderItems,
-  renderMessage,
-  renderValue,
-  renderScrollBar,
-  renderHeight,
-  renderNegativeMargin,
-]
+export const render = [renderItems, renderMessage, renderValue, renderScrollBar, renderHeight, renderNegativeMargin]

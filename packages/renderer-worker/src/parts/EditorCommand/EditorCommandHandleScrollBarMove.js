@@ -15,9 +15,9 @@ const getNewPercent = (state, relativeY) => {
   return 1
 }
 
-export const handleScrollBarMove = (state, y) => {
-  const { top, finalDeltaY, handleOffset } = state
-  const relativeY = y - top - handleOffset
+export const handleScrollBarMove = (state, eventY) => {
+  const { y, finalDeltaY, handleOffset } = state
+  const relativeY = eventY - y - handleOffset
   const newPercent = getNewPercent(state, relativeY)
   const newDeltaY = newPercent * finalDeltaY
   return Editor.setDeltaYFixedValue(state, newDeltaY)

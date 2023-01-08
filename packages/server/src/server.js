@@ -13,9 +13,10 @@ import { fileURLToPath, parse as parseUrl } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
 const STATIC = resolve(__dirname, '../../../static')
-const PORT = process.env.PORT || 3000
 
-const { argv } = process
+const { argv, env } = process
+
+const PORT = env.PORT ? parseInt(env.PORT) : 3000
 
 let argv2 = argv[2]
 
@@ -34,7 +35,9 @@ if (!argv2) {
 
 const FOLDER = resolve(process.cwd(), argv2)
 
-const immutable = argv.includes('--immutable')
+const isImmutable = argv.includes('--immutable')
+
+const isPublic = argv.includes('--public')
 
 const IS_WINDOWS = process.platform === 'win32'
 
@@ -60,12 +63,21 @@ const ContentSecurityPolicy = {
     .join(' '),
 }
 
+const ContentSecurityPolicyWorker = {
+  key: 'Content-Security-Policy',
+  value: [
+    `default-src 'none'`,
+    `connect-src 'self' ws:`, // TODO allow connecting to websocket urls for debugging but not other websocket urls
+    `script-src 'self'`,
+    `font-src 'self'`,
+  ]
+    .map(addSemicolon)
+    .join(' '),
+}
+
 const ContentSecurityPolicyTests = {
   key: ContentSecurityPolicy.key,
-  value: ContentSecurityPolicy.value.replace(
-    `script-src 'self'`,
-    `script-src 'self' 'unsafe-eval'`
-  ),
+  value: ContentSecurityPolicy.value.replace(`script-src 'self'`, `script-src 'self' 'unsafe-eval'`),
 }
 
 const CrossOriginOpenerPolicy = {
@@ -119,17 +131,12 @@ const serveStatic = (root, skip = '') =>
     } catch {
       return next()
     }
-    const etag = `W/"${[
-      fileStat.ino,
-      fileStat.size,
-      fileStat.mtime.getTime(),
-    ].join('-')}"`
+    const etag = `W/"${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}"`
     if (req.headers['if-none-match'] === etag) {
       res.writeHead(304)
       return res.end()
     }
-    const cachingHeader =
-      immutable && root === STATIC ? 'public, max-age=31536000, immutable' : ''
+    const cachingHeader = isImmutable && root === STATIC ? 'public, max-age=31536000, immutable' : ''
     const contentType = getContentType(filePath)
     const headers = {
       'Content-Type': contentType,
@@ -144,6 +151,7 @@ const serveStatic = (root, skip = '') =>
     }
     if (filePath.endsWith('WorkerMain.js')) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
+      headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
     }
     res.writeHead(200, headers)
     try {
@@ -540,9 +548,7 @@ app.on('upgrade', handleUpgrade)
 app.on('error', (error) => {
   // @ts-ignore
   if (error && error.code === 'EADDRINUSE') {
-    console.error(
-      `[server] Error: port ${PORT} is already taken (possible solution: Run \`killall node\` to free up the port)`
-    )
+    console.error(`[server] Error: port ${PORT} is already taken (possible solution: Run \`killall node\` to free up the port)`)
   } else {
     console.error('[info: server error]', error)
   }
@@ -575,7 +581,12 @@ const main = () => {
   process.on('message', handleMessageFromParent)
   process.on('exit', handleProcessExit)
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
-  app.listen(PORT, handleAppReady)
+  app.on('listening', handleAppReady)
+  if (isPublic) {
+    app.listen(PORT)
+  } else {
+    app.listen(PORT, 'localhost')
+  }
 }
 
 main()

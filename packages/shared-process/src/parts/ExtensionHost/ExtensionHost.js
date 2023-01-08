@@ -4,6 +4,7 @@ import * as Callback from '../Callback/Callback.js'
 import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 // TODO maybe rename to extension host management for clarity
 
@@ -54,20 +55,16 @@ export const send = async (socket, id, message) => {
     throw new VError(`no extension host with id ${id} found`)
   }
   try {
-    const result = await JsonRpc.invoke(
-      extensionHost,
-      message.method,
-      ...message.params
-    )
+    const result = await JsonRpc.invoke(extensionHost, message.method, ...message.params)
     socket.send({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       id: message.id,
       result,
     })
   } catch (error) {
     // console.log({ error })
     socket.send({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       id: message.id,
       error,
     })

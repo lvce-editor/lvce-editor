@@ -1,8 +1,8 @@
 import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as ViewletPdfEvents from './ViewletPdfEvents.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as Icon from '../Icon/Icon.js'
+import * as ViewletPdfEvents from './ViewletPdfEvents.js'
 
 /**
  * @enum {string}

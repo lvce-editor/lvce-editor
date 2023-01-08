@@ -1,6 +1,6 @@
-const Electron = require('electron')
+const { Worker } = require('node:worker_threads')
 const Platform = require('../Platform/Platform.js')
-const { Worker } = require('worker_threads')
+const ElectronApp = require('../ElectronApp/ElectronApp.js')
 
 const handleCliArgs = async (parsedArgs) => {
   const sharedProcessPath = Platform.getSharedProcessPath()
@@ -12,7 +12,7 @@ const handleCliArgs = async (parsedArgs) => {
     worker.on('error', reject)
     worker.on('exit', resolve)
   })
-  Electron.app.quit()
+  ElectronApp.quit()
 }
 
 exports.handleCliArgs = handleCliArgs

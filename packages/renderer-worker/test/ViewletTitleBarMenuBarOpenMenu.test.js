@@ -8,19 +8,16 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: () => {
-        return {
-          left: 0,
-          bottom: 0,
-        }
-      },
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: () => {
+      return {
+        x: 0,
+        bottom: 0,
+      }
+    },
   }
-)
+})
 
 jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
   return {
@@ -77,9 +74,7 @@ jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
   }
 })
 
-const ViewletTitleBarMenuBarOpenMenu = await import(
-  '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarOpenMenu.js'
-)
+const ViewletTitleBarMenuBarOpenMenu = await import('../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarOpenMenu.js')
 
 test('openMenu - when no focusedIndex', async () => {
   const state = {
@@ -96,9 +91,7 @@ test('openMenu - when no focusedIndex', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarOpenMenu.openMenu(state, /* focus */ false)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarOpenMenu.openMenu(state, /* focus */ false)).toMatchObject({
     isMenuOpen: false,
   })
 })
@@ -117,15 +110,14 @@ test('openMenu - when focusedIndex', async () => {
         name: 'Edit',
       },
     ],
+    titleBarHeight: 20,
   }
-  expect(
-    await ViewletTitleBarMenuBarOpenMenu.openMenu(state, /* focus */ true)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarOpenMenu.openMenu(state, /* focus */ true)).toMatchObject({
     menus: [
       {
         level: 0,
-        left: 0,
-        top: 0,
+        x: 0,
+        y: 20,
         items: [
           {
             flags: MenuItemFlags.Disabled,

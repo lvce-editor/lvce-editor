@@ -1,7 +1,7 @@
 import { getError } from './errorMessage.js'
 
 const main = () => {
-  const href = location.href
+  const { href } = location
   const url = new URL(href)
   const code = url.searchParams.get('code')
   const error = getError(code)

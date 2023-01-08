@@ -1,4 +1,19 @@
-import * as ViewletEditorText from '../src/parts/ViewletEditorText/ViewletEditorText.js'
+import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', () => {
+  return {
+    measureTextWidth(text) {
+      return text.length * 10
+    },
+  }
+})
+
+const ViewletEditorText = await import('../src/parts/ViewletEditorText/ViewletEditorText.js')
+const MeasureTextWidth = await import('../src/parts/MeasureTextWidth/MeasureTextWidth.js')
 
 test('resize - increase height', () => {
   const state = {
@@ -10,8 +25,8 @@ test('resize - increase height', () => {
     focused: true,
   }
   const { newState, commands } = ViewletEditorText.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 60,
   })
@@ -36,15 +51,8 @@ test('resize - increase height', () => {
         ['line 2', 'Token Text'],
         ['line 3', 'Token Text'],
       ],
-      [
-        {
-          leftIndex: 0,
-          remainingOffset: 0,
-          top: 0,
-          topIndex: 0,
-        },
-      ],
-      new Uint32Array(),
+      new Float32Array([0, 0]),
+      new Float32Array(),
     ],
   ])
 })
@@ -59,8 +67,8 @@ test('resize - same height', () => {
     focused: true,
   }
   const { newState, commands } = ViewletEditorText.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 60,
   })
@@ -85,15 +93,8 @@ test('resize - same height', () => {
         ['line 2', 'Token Text'],
         ['line 3', 'Token Text'],
       ],
-      [
-        {
-          leftIndex: 0,
-          remainingOffset: 0,
-          top: 0,
-          topIndex: 0,
-        },
-      ],
-      new Uint32Array(),
+      new Float32Array([0, 0]),
+      new Float32Array(),
     ],
   ])
 })
@@ -109,8 +110,8 @@ test('resize - reduce height', () => {
     focused: true,
   }
   const { newState, commands } = ViewletEditorText.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 20,
   })
@@ -131,15 +132,8 @@ test('resize - reduce height', () => {
       0,
       0,
       [['line 1', 'Token Text']],
-      [
-        {
-          leftIndex: 0,
-          remainingOffset: 0,
-          top: 0,
-          topIndex: 0,
-        },
-      ],
-      new Uint32Array(),
+      new Float32Array([0, 0]),
+      new Float32Array(),
     ],
   ])
 })

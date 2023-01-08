@@ -1,4 +1,5 @@
 import * as ExtensionHostActivationEvent from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionHostEditor from './ExtensionHostEditor.js'
 
 const combineResults = (results) => {
@@ -9,7 +10,7 @@ export const executeTabCompletionProvider = (editor, offset) => {
   return ExtensionHostEditor.execute({
     editor,
     event: ExtensionHostActivationEvent.OnTabCompletion,
-    method: 'ExtensionHost.executeTabCompletionProvider',
+    method: ExtensionHostCommandType.TabCompletionExecuteTabCompletionProvider,
     args: [offset],
     noProviderFoundMessage: 'No tab completion provider found',
     combineResults,

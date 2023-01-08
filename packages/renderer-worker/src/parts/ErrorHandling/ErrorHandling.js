@@ -8,16 +8,16 @@ export const state = {
   seenWarnings: [],
 }
 
+export const logError = async (error) => {
+  const prettyError = await PrettyError.prepare(error)
+  PrettyError.print(prettyError)
+  return prettyError
+}
+
 export const handleError = async (error) => {
   try {
-    const prettyError = await PrettyError.prepare(error)
-    const prettyErrorString = PrettyError.print(prettyError)
-    console.error(prettyErrorString)
-    await Command.execute(
-      /* Notification.create */ 'Notification.create',
-      /* type */ 'error',
-      /* text */ PrettyError.getMessage(prettyError)
-    )
+    const prettyError = await logError(error)
+    await Command.execute(/* Notification.create */ 'Notification.create', /* type */ 'error', /* text */ PrettyError.getMessage(prettyError))
   } catch (otherError) {
     console.warn(`ErrorHandling error`)
     console.warn(otherError)
@@ -28,10 +28,7 @@ export const handleError = async (error) => {
 export const showErrorDialog = async (error) => {
   try {
     const prettyError = await PrettyError.prepare(error)
-    await Command.execute(
-      /* Dialog.showMessage */ 'Dialog.showMessage',
-      /* message */ prettyError
-    )
+    await Command.execute(/* Dialog.showMessage */ 'Dialog.showMessage', /* message */ prettyError)
   } catch {
     // ignore
   }

@@ -1,7 +1,7 @@
 import VError from 'verror'
-import * as Assert from '../Assert/Assert.js'
 import * as Extract from '../Extract/Extract.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 
@@ -24,8 +24,7 @@ export const install = async ({ path }) => {
     await Extract.extractTarBr(path, cachedExtensionPath)
     const extensionsPath = Platform.getExtensionsPath()
     const manifestPath = Path.join(cachedExtensionPath, 'extension.json')
-    const manifestContent = await FileSystem.readFile(manifestPath)
-    const manifestJson = JSON.parse(manifestContent)
+    const manifestJson = await JsonFile.readJson(manifestPath)
     const id = manifestJson.id
     if (!id) {
       throw new Error('missing id in extension manifest')

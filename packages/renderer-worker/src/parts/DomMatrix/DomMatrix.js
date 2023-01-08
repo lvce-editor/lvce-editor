@@ -4,10 +4,10 @@ export const create = (init = [1, 0, 0, 1, 0, 0]) => {
 
 export const scaleUp = (domMatrix, deltaScale) => {
   return new DOMMatrixReadOnly([
-    (domMatrix.a *= deltaScale),
+    (domMatrix.a * deltaScale),
     domMatrix.b,
     domMatrix.c,
-    (domMatrix.d *= deltaScale),
+    (domMatrix.d * deltaScale),
     domMatrix.e,
     domMatrix.f,
   ])

@@ -1,5 +1,5 @@
-const Electron = require('electron')
 const Platform = require('../Platform/Platform.js')
+const ElectronApp = require('../ElectronApp/ElectronApp.js')
 
 const getHelpString = () => {
   return `${Platform.ProductName} v${Platform.version}
@@ -12,7 +12,7 @@ Usage:
 const handleCliArgs = (parsedArgs) => {
   const helpString = getHelpString()
   console.info(helpString)
-  Electron.app.exit(0)
+  ElectronApp.exit(0)
   return true
 }
 

@@ -1,7 +1,11 @@
 // TODO so many things in this file
 
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Logger from '../Logger/Logger.js'
 import * as EditorEvents from './EditorEvents.js'
 import * as LayerCursor from './LayerCursor.js'
 import * as LayerDiagnostics from './LayerDiagnostics.js'
@@ -23,29 +27,20 @@ export const create = () => {
   $EditorInput.className = 'EditorInput'
   $EditorInput.ariaAutoComplete = 'list'
   $EditorInput.ariaRoleDescription = 'editor'
-  $EditorInput.ariaMultiLine = 'true'
+  $EditorInput.ariaMultiLine = AriaBoolean.True
   $EditorInput.setAttribute('autocomplete', 'off')
   $EditorInput.setAttribute('autocapitalize', 'off')
   $EditorInput.setAttribute('autocorrect', 'off')
   $EditorInput.setAttribute('wrap', 'off')
-  $EditorInput.setAttribute('spellcheck', 'false')
+  $EditorInput.setAttribute('spellcheck', AriaBoolean.False)
   // @ts-ignore
   $EditorInput.role = AriaRoles.TextBox
   $EditorInput.onpaste = EditorEvents.handlePaste
   // TODO where to best put listeners (side effects)
-  $EditorInput.addEventListener('beforeinput', EditorEvents.handleBeforeInput)
-  $EditorInput.addEventListener(
-    'compositionstart',
-    EditorEvents.handleCompositionStart
-  )
-  $EditorInput.addEventListener(
-    'compositionupdate',
-    EditorEvents.handleCompositionUpdate
-  )
-  $EditorInput.addEventListener(
-    'compositionend',
-    EditorEvents.handleCompositionEnd
-  )
+  $EditorInput.addEventListener(DomEventType.BeforeInput, EditorEvents.handleBeforeInput)
+  $EditorInput.addEventListener(DomEventType.CompositionStart, EditorEvents.handleCompositionStart)
+  $EditorInput.addEventListener(DomEventType.CompositionUpdate, EditorEvents.handleCompositionUpdate)
+  $EditorInput.addEventListener(DomEventType.CompositionEnd, EditorEvents.handleCompositionEnd)
   $EditorInput.onfocus = EditorEvents.handleFocus
   $EditorInput.onblur = EditorEvents.handleBlur
   $EditorInput.oncut = EditorEvents.handleCut
@@ -56,7 +51,7 @@ export const create = () => {
   const $LayerText = document.createElement('div')
   $LayerText.className = 'EditorRows'
 
-  $LayerText.addEventListener('mousedown', EditorEvents.handleMouseDown)
+  $LayerText.addEventListener(DomEventType.MouseDown, EditorEvents.handleMouseDown)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -90,23 +85,16 @@ export const create = () => {
 
   const $EditorLayers = document.createElement('div')
   $EditorLayers.className = 'EditorLayers'
-  $EditorLayers.append(
-    $LayerSelections,
-    $LayerText,
-    $LayerCursor,
-    $LayerDiagnostics
-  )
+  $EditorLayers.append($LayerSelections, $LayerText, $LayerCursor, $LayerDiagnostics)
 
   const $Editor = document.createElement('div')
   $Editor.className = 'Viewlet Editor'
   // @ts-ignore
   $Editor.role = AriaRoles.Code
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
-  $Editor.addEventListener('contextmenu', EditorEvents.handleContextMenu)
-  $Editor.addEventListener('wheel', EditorEvents.handleWheel, { passive: true })
-  $Editor.addEventListener('mousemove', EditorEvents.handlePointerMove, {
-    passive: true,
-  })
+  $Editor.addEventListener(DomEventType.ContextMenu, EditorEvents.handleContextMenu)
+  $Editor.addEventListener(DomEventType.Wheel, EditorEvents.handleWheel, DomEventOptions.Passive)
+  $Editor.addEventListener(DomEventType.MouseMove, EditorEvents.handlePointerMove, DomEventOptions.Passive)
   return {
     $LayerCursor,
     $LayerSelections,
@@ -132,7 +120,7 @@ export const setSettings = (state, fontSize, lineHeight, letterSpacing) => {
   const root = document.documentElement
   root.style.setProperty('--EditorFontSize', `${fontSize}px`)
   root.style.setProperty('--EditorLineHeight', `${lineHeight}px`)
-  root.style.setProperty('--EditorLetterSpacing', letterSpacing)
+  root.style.setProperty('--EditorLetterSpacing', `${letterSpacing}px`)
 }
 
 export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
@@ -153,18 +141,13 @@ export const renderTextAndCursors = (state, textInfos, cursorInfos) => {
 }
 
 export const setSelections = (state, cursorInfos, selectionInfos) => {
+  Assert.float32Array(cursorInfos)
+  Assert.float32Array(selectionInfos)
   LayerCursor.setCursors(state, cursorInfos)
   LayerSelections.setSelections(state, selectionInfos)
 }
 
-export const renderTextAndCursorsAndSelections = (
-  state,
-  scrollBarY,
-  scrollBarHeight,
-  textInfos,
-  cursorInfos,
-  selectionInfos
-) => {
+export const renderTextAndCursorsAndSelections = (state, scrollBarY, scrollBarHeight, textInfos, cursorInfos, selectionInfos) => {
   Assert.object(state)
   Assert.number(scrollBarY)
   Assert.number(scrollBarHeight)
@@ -200,7 +183,7 @@ export const dispose = (state) => {}
 export const focus = (state) => {
   const { $EditorInput } = state
   if (!$EditorInput.isConnected) {
-    console.warn('unmounted editor cannot be focused')
+    Logger.warn('unmounted editor cannot be focused')
   }
   $EditorInput.focus()
 }

@@ -7,7 +7,22 @@ const renderDomTextNode = (element) => {
 
 const setProps = ($Element, props) => {
   for (const key in props) {
-    $Element[key] = props[key]
+    switch (key) {
+      case 'maskImage':
+        $Element.style.maskImage = `url('${props.maskImage}')`
+        $Element.style.webkitMaskImage = `url('${props.maskImage}')`
+        break
+      case 'paddingLeft':
+        $Element.style.paddingLeft = `${props.paddingLeft}px`
+        break
+      case 'width':
+        $Element.style.width = `${props.width}px`
+        break
+      case 'style':
+        throw new Error('style property is not supported')
+      default:
+        $Element[key] = props[key]
+    }
   }
 }
 

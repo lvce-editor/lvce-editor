@@ -1,4 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
+import { VError } from '../VError/VError.js'
+import * as ImportScript from '../ImportScript/ImportScript.js'
 
 const getAbsolutePath = (isWeb, path, relativePath, origin) => {
   if (path.startsWith('http')) {
@@ -41,11 +43,11 @@ export const activate = async (extension) => {
       extension.browser,
       location.origin
     )
-    const module = await import(absolutePath)
+    const module = await ImportScript.importScript(absolutePath)
     await module.activate()
   } catch (error) {
     const id = getId(extension)
-    throw new Error(`Failed to activate extension ${id}: ${error}`)
+    throw new VError(error, `Failed to activate extension ${id}`)
   }
   // console.info('activated', path)
 }

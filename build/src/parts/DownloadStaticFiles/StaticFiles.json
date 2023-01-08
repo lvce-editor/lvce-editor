@@ -1,12 +1,12 @@
 [
   {
     "name": "ky",
-    "version": "0.31.3",
+    "version": "0.33.1",
     "type": "javascript"
   },
   {
     "name": "p-min-delay",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "type": "javascript"
   },
   {
@@ -37,17 +37,14 @@
   },
   {
     "name": "dompurify",
-    "version": "2.4.0",
+    "version": "2.4.1",
     "type": "javascript"
   },
   {
     "name": "pdfjs",
     "version": "3.0.279",
     "type": "file-collection",
-    "urls": [
-      "https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.js",
-      "https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.js"
-    ]
+    "urls": ["https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.js", "https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.js"]
   },
   {
     "name": "termterm",
@@ -63,13 +60,13 @@
   },
   {
     "name": "idb",
-    "version": "7.0.2",
+    "version": "7.1.1",
     "type": "file-collection",
     "urls": [
-      "https://unpkg.com/idb@7.0.2/build/index.js",
-      "https://unpkg.com/idb@7.0.2/with-async-ittr.js",
-      "https://unpkg.com/idb@7.0.2/build/wrap-idb-value.js",
-      "https://unpkg.com/idb@7.0.2/build/async-iterators.js"
+      "https://unpkg.com/idb@7.1.1/build/index.js",
+      "https://unpkg.com/idb@7.1.1/with-async-ittr.js",
+      "https://unpkg.com/idb@7.1.1/build/wrap-idb-value.js",
+      "https://unpkg.com/idb@7.1.1/build/async-iterators.js"
     ],
     "additionalFiles": [
       {

@@ -137,7 +137,7 @@ test('readDirWithFileTypes - error', async () => {
     FileSystemHtml.readDirWithFileTypes('test-folder')
   ).rejects.toThrowError(
     new Error(
-      'failed to read directory: VError: failed to get child handles: TypeError: x is not a function'
+      'failed to read directory: failed to get child handles: TypeError: x is not a function'
     )
   )
 })
@@ -274,7 +274,7 @@ test('readDirWithFileTypes - error - user activation required', async () => {
     FileSystemHtml.readDirWithFileTypes('test-folder')
   ).rejects.toThrowError(
     new TypeError(
-      'failed to read directory: Error: User activation is required to request permissions.'
+      'failed to read directory: User activation is required to request permissions.'
     )
   )
 })

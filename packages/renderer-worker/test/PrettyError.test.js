@@ -59,6 +59,7 @@ test('prepare - fetch codeFrame', async () => {
   at async Object.handleKeyBinding [as KeyBindings.handleKeyBinding] (test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
   at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`,
     type: 'ReferenceError',
+    _error: error,
   })
 })
 
@@ -77,9 +78,8 @@ test('prepare - fetch codeFrame - error', async () => {
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toBe(error)
-  expect(spy).toHaveBeenCalledTimes(2)
-  expect(spy).toHaveBeenNthCalledWith(1, 'ErrorHandling Error')
-  expect(spy).toHaveBeenNthCalledWith(2, new TypeError('x is not a function'))
+  expect(spy).toHaveBeenCalledTimes(1)
+  expect(spy).toHaveBeenNthCalledWith(1, 'ErrorHandling Error: TypeError: x is not a function')
 })
 
 test('prepare - error without stack', async () => {
@@ -94,4 +94,78 @@ test('prepare - error without stack', async () => {
   const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toBe(error)
   expect(spy).not.toHaveBeenCalled()
+})
+
+test('prepare - error with firefox stacktrace', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    return `export const handleKeyArrowDownMenuOpen = (state) => {
+  const { menus } = state
+  const menu = menus.at(-1)
+  const newFocusedIndex = Menu.getIndexToFocusNext(menu)
+  const newMenus = [
+    ...menus.slice(0, -1),
+    {
+      ...menu,
+      focusedIndex: newFocusedIndex,
+    },
+  ]
+  return {
+    ...state,
+    menus: newMenus,
+  }
+}
+`
+  })
+  const error = new ReferenceError('Menu is not defined')
+  error.stack = `ReferenceError: Menu is not defined
+handleKeyArrowDownMenuOpen@test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleKeyArrowDownMenuOpen.js:4:27
+ifElseFunction@test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarIfElse.js:5:14
+TitleBarMenuBar/lazy/handleKeyArrowDown@test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:115:30
+Object.handleKeyBinding@test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3
+handleMessageFromRendererProcess@test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3`
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: 'Menu is not defined',
+    codeFrame: `  2 |   const { menus } = state
+  3 |   const menu = menus.at(-1)
+> 4 |   const newFocusedIndex = Menu.getIndexToFocusNext(menu)
+    |                           ^
+  5 |   const newMenus = [
+  6 |     ...menus.slice(0, -1),
+  7 |     {`,
+    stack: `handleKeyArrowDownMenuOpen@test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleKeyArrowDownMenuOpen.js:4:27
+ifElseFunction@test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarIfElse.js:5:14
+TitleBarMenuBar/lazy/handleKeyArrowDown@test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:115:30
+Object.handleKeyBinding@test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3
+handleMessageFromRendererProcess@test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3`,
+    type: 'ReferenceError',
+    _error: error,
+  })
+})
+
+test('prepare - anonymous stack', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    throw new Error('not implemented')
+  })
+  const error = new TypeError('Illegal invocation')
+  error.stack = `  at HTMLElement.focus (<anonymous>:1:65)
+  at Module.setFocusedIndex (ViewletTitleBarMenuBar.js:109:22)`
+  const prettyError = await PrettyError.prepare(error)
+  expect(Ajax.getText).not.toHaveBeenCalled()
+  expect(prettyError).toBe(error)
+})
+
+test('prepare - debugger eval code stack', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    throw new Error('not implemented')
+  })
+  const error = new ReferenceError('original is not defined')
+  error.stack = `  HTMLElement.prototype.focus@debugger eval code:1:56
+  setFocusedIndex@http://localhost:3000/packages/renderer-process/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js:109:22`
+  const prettyError = await PrettyError.prepare(error)
+  expect(Ajax.getText).not.toHaveBeenCalled()
+  expect(prettyError).toBe(error)
 })

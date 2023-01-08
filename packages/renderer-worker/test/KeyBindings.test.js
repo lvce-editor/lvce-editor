@@ -221,7 +221,7 @@ test('hydrate - error with ajax', async () => {
   await KeyBindings.hydrate()
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.handleError).toHaveBeenCalledWith(
-    new Error('Failed to load KeyBindings: Error: 404 - not found')
+    new Error('Failed to load KeyBindings: 404 - not found')
   )
 })
 

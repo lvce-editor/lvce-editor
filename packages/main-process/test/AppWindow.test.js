@@ -23,7 +23,7 @@ jest.mock(
 )
 
 jest.mock('electron', () => {
-  const EventEmitter = require('events')
+  const EventEmitter = require('node:events')
   const BrowserWindow = class extends EventEmitter {}
   BrowserWindow.prototype.loadURL = jest.fn()
   BrowserWindow.prototype.setMenuBarVisibility = jest.fn()
@@ -57,10 +57,10 @@ jest.mock('electron', () => {
   }
 })
 
+const electron = require('electron')
 const AppWindowStates = require('../src/parts/AppWindowStates/AppWindowStates.js')
 
 const AppWindow = require('../src/parts/AppWindow/AppWindow.js')
-const electron = require('electron')
 
 test('createAppWindow', async () => {
   // @ts-ignore

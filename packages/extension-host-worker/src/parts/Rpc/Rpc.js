@@ -1,54 +1,43 @@
-import * as Command from '../Command/Command.js'
-import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as Callback from '../Callback/Callback.js'
+import * as GetResponse from '../GetResponse/GetResponse.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 
-const getResponse = async (message) => {
-  try {
-    const result = await Command.execute(message.method, ...message.params)
-    return {
-      jsonrpc: JsonRpcVersion.Two,
-      id: message.id,
-      result,
-    }
-  } catch (error) {
-    if (
-      error &&
-      error instanceof Error &&
-      error.message &&
-      error.message.startsWith('method not found')
-    ) {
-      return {
-        jsonrpc: JsonRpcVersion.Two,
-        id: message.id,
-        error: {
-          code: JsonRpcErrorCode.MethodNotFound,
-          message: error.message,
-          data: error.stack,
-        },
-      }
-    }
-    return {
-      jsonrpc: JsonRpcVersion.Two,
-      id: message.id,
-      error,
-    }
-  }
+export const state = {
+  /**
+   * @type {any}
+   */
+  ipc: undefined,
+}
+
+export const send = (method, ...params) => {
+  const { ipc } = state
+  ipc.send({
+    jsonrpc: '2.0',
+    method,
+    params,
+  })
 }
 
 export const listen = (ipc) => {
   const handleMessage = async (event) => {
     const message = event.data
     if ('method' in message) {
-      const response = await getResponse(message)
-      ipc.send(response)
+      const response = await GetResponse.getResponse(message)
+      try {
+        ipc.send(response)
+      } catch (error) {
+        await ErrorHandling.logError(error)
+        const errorResponse = GetResponse.getErrorResponse(message, error)
+        ipc.send(errorResponse)
+      }
     } else if ('result' in message) {
-      Callback.resolve(message.id, message.result)
+      Callback.resolve(message.id, message)
     } else if ('error' in message) {
-      Callback.reject(message.id, message.error)
+      Callback.reject(message.id, message)
     } else {
       console.log({ message })
     }
   }
   ipc.onmessage = handleMessage
+  state.ipc = ipc
 }

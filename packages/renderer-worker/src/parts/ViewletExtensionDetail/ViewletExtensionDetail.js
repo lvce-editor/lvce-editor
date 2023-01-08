@@ -11,12 +11,12 @@ import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 
-export const create = (id, uri, top, left, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     name: '',
     uri,
-    top,
-    left,
+    x,
+    y,
     width,
     height,
     size: ViewletSize.None,
@@ -44,7 +44,7 @@ const getIconSrc = (extension) => {
     return ExtensionDisplay.getIcon(extension)
   }
   if (extension.name && extension.name.startsWith('Language Basics')) {
-    return Icon.EXtensionLanguageBasics
+    return Icon.ExtensionLanguageBasics
   }
   if (extension.name && extension.name.endsWith(' Theme')) {
     return Icon.ExtensionTheme
@@ -135,12 +135,7 @@ const renderName = {
     return oldState.name === newState.name
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.ExtensionDetail,
-      /* method */ 'setName',
-      /* name */ newState.name,
-    ]
+    return [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.ExtensionDetail, /* method */ 'setName', /* name */ newState.name]
   },
 }
 
@@ -149,10 +144,7 @@ const renderDescription = {
     return oldState.description === newState.description
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setDescription',
-      /* description */ newState.description,
-    ]
+    return [/* method */ 'setDescription', /* description */ newState.description]
   },
 }
 
@@ -161,10 +153,7 @@ const renderReadme = {
     return oldState.sanitizedReadmeHtml === newState.sanitizedReadmeHtml
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setReadmeHtml',
-      /* sanizedHtml */ newState.sanitizedReadmeHtml,
-    ]
+    return [/* method */ 'setReadmeHtml', /* sanizedHtml */ newState.sanitizedReadmeHtml]
   },
 }
 
@@ -182,18 +171,8 @@ const renderSize = {
     return oldState.size === newState.size
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setSize',
-      /* oldSize */ oldState.size,
-      /* newSize */ newState.size,
-    ]
+    return [/* method */ 'setSize', /* oldSize */ oldState.size, /* newSize */ newState.size]
   },
 }
 
-export const render = [
-  renderName,
-  renderReadme,
-  renderDescription,
-  renderIcon,
-  renderSize,
-]
+export const render = [renderName, renderReadme, renderDescription, renderIcon, renderSize]

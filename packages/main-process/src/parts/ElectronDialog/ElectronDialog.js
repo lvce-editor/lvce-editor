@@ -31,7 +31,19 @@ exports.showOpenDialog = async (title, properties) => {
   return result.filePaths
 }
 
-exports.showMessageBox = async (message, buttons) => {
+/**
+ *
+ * @param {any} message
+ * @param {string[]} buttons
+ * @param {string} type
+ * @returns
+ */
+exports.showMessageBox = async (
+  message,
+  buttons,
+  type = ElectronMessageBoxType.Error,
+  detail
+) => {
   Assert.string(message)
   Assert.array(buttons)
   await enableElectronFreezeDesktopWorkaround()
@@ -44,11 +56,12 @@ exports.showMessageBox = async (message, buttons) => {
   }
   const appName = Platform.applicationName
   const result = await Electron.dialog.showMessageBox(focusedWindow, {
-    type: ElectronMessageBoxType.Error,
+    type,
     message,
     title: appName,
     buttons,
     cancelId: 1,
+    detail,
   })
   const selectedButtonIndex = result.response
   return selectedButtonIndex

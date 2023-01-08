@@ -1,7 +1,7 @@
+const { VError } = require('verror')
 const Platform = require('../Platform/Platform.js')
 const JsonFile = require('../JsonFile/JsonFile.js')
 const ErrorCodes = require('../ErrorCodes/ErrorCodes.js')
-const { VError } = require('verror')
 
 const get = (options, key) => {
   return options[key]

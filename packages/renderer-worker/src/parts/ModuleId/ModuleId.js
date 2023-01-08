@@ -66,3 +66,4 @@ export const SaveFileAs = 64
 export const ElectronApplicationMenu = 65
 export const ElectronProcessCrash = 66
 export const SharedProcessCrash = 67
+export const About = 68

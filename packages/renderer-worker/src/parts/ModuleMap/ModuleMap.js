@@ -11,6 +11,8 @@ export const getModuleId = (commandId) => {
   const prefix = getPrefix(commandId)
   switch (prefix) {
     // TODO this should be in layout module
+    case 'About':
+      return ModuleId.About
     case 'Ajax':
       return ModuleId.Ajax
     case 'Audio':

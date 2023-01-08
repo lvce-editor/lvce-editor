@@ -385,7 +385,7 @@ const handleContextMenu = (event) => {
  * @param {KeyboardEvent} event
  */
 const handleKeyDown = (event) => {
-  const key = event.key
+  const { key } = event
   const control = event.ctrlKey
   switch (key) {
     case 'ArrowDown':
@@ -437,7 +437,7 @@ const render$Process = ($Process, process) => {
   const $Id = $Process.children[1]
   const $Memory = $Process.children[2]
 
-  const name = process.name
+  const { name } = process
   const id = `${process.pid}`
   const memory = formatMemory(process.memory)
 

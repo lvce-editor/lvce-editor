@@ -1,5 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const state = {
   instances: Object.create(null),
@@ -31,11 +33,11 @@ export const loadModule = async (id) => {
 export const invoke = (viewletId, method, ...args) => {
   const instance = state.instances[viewletId]
   if (!instance) {
-    console.warn(`viewlet instance ${viewletId} not found`)
+    Logger.warn(`viewlet instance ${viewletId} not found`)
     return
   }
   if (typeof instance.factory[method] !== 'function') {
-    console.warn(`method ${method} in ${viewletId} not implemented`)
+    Logger.warn(`method ${method} in ${viewletId} not implemented`)
     return
   }
   return instance.factory[method](instance.state, ...args)
@@ -72,30 +74,20 @@ export const send = (viewletId, method, ...args) => {
     instance.factory[method](...args)
   } else {
     // TODO
-    console.warn('instance not present')
+    Logger.warn('instance not present')
   }
 }
 
-const specialIds = [
-  'TitleBar',
-  'SideBar',
-  'Main',
-  'ActivityBar',
-  'StatusBar',
-  'Panel',
-]
+const specialIds = new Set(['TitleBar', 'SideBar', 'Main', 'ActivityBar', 'StatusBar', 'Panel'])
 
 const isSpecial = (id) => {
-  return specialIds.includes(id)
+  return specialIds.has(id)
 }
 
 const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
   const $PlaceHolder = document.createElement('div')
   $PlaceHolder.className = `Viewlet ${viewletId}`
-  $PlaceHolder.style.top = `${top}px`
-  $PlaceHolder.style.left = `${left}px`
-  $PlaceHolder.style.width = `${width}px`
-  $PlaceHolder.style.height = `${height}px`
+  SetBounds.setBounds($PlaceHolder, left, top, width, height)
   if (isSpecial(viewletId)) {
     $PlaceHolder.id = viewletId
   }
@@ -113,26 +105,55 @@ const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
 export const sendMultiple = (commands) => {
   for (const command of commands) {
     const [_, viewletId, method, ...args] = command
-    if (_ === 'Viewlet.ariaAnnounce') {
-      ariaAnnounce(viewletId)
-    } else if (_ === 'Viewlet.setBounds') {
-      setBounds(viewletId, method, ...args)
-    } else if (_ === 'Viewlet.create') {
-      create(viewletId)
-    } else if (_ === 'Viewlet.append') {
-      append(viewletId, method, ...args)
-    } else if (_ === 'Viewlet.dispose') {
-      dispose(viewletId)
-    } else if (_ === 'Viewlet.createPlaceholder') {
-      createPlaceholder(viewletId, method, ...args)
-    } else if (_ === 'Viewlet.handleError') {
-      handleError(viewletId, method, ...args)
-    } else if (_ === 'Viewlet.focus') {
-      focus(viewletId)
-    } else if (_ === 'Viewlet.appendViewlet') {
-      appendViewlet(viewletId, method, ...args)
-    } else {
-      invoke(viewletId, method, ...args)
+    switch (_) {
+      case 'Viewlet.ariaAnnounce': {
+        ariaAnnounce(viewletId)
+
+        break
+      }
+      case 'Viewlet.setBounds': {
+        setBounds(viewletId, method, ...args)
+
+        break
+      }
+      case 'Viewlet.create': {
+        create(viewletId)
+
+        break
+      }
+      case 'Viewlet.append': {
+        append(viewletId, method, ...args)
+
+        break
+      }
+      case 'Viewlet.dispose': {
+        dispose(viewletId)
+
+        break
+      }
+      case 'Viewlet.createPlaceholder': {
+        createPlaceholder(viewletId, method, ...args)
+
+        break
+      }
+      case 'Viewlet.handleError': {
+        handleError(viewletId, method, ...args)
+
+        break
+      }
+      case 'Viewlet.focus': {
+        focus(viewletId)
+
+        break
+      }
+      case 'Viewlet.appendViewlet': {
+        appendViewlet(viewletId, method, ...args)
+
+        break
+      }
+      default: {
+        invoke(viewletId, method, ...args)
+      }
     }
   }
 }
@@ -142,7 +163,7 @@ export const dispose = (id) => {
     Assert.string(id)
     const instance = state.instances[id]
     if (!instance) {
-      console.warn(`viewlet instance ${id} not found and cannot be disposed`)
+      Logger.warn(`viewlet instance ${id} not found and cannot be disposed`)
       return
     }
     if (instance.factory.dispose) {
@@ -152,7 +173,7 @@ export const dispose = (id) => {
       instance.state.$Viewlet.remove()
     }
     delete state.instances[id]
-  } catch (error) {
+  } catch {
     throw new Error(`Failed to dispose ${id}`)
   }
 }
@@ -179,13 +200,8 @@ export const handleError = (id, parentId, message) => {
   }
   // TODO error should bubble up to until highest possible component
   const parentInstance = state.instances[parentId]
-  if (
-    parentInstance &&
-    parentInstance.factory &&
-    parentInstance.factory.handleError
-  ) {
+  if (parentInstance && parentInstance.factory && parentInstance.factory.handleError) {
     parentInstance.factory.handleError(instance.state, message)
-    return
   }
 }
 
@@ -203,11 +219,7 @@ export const appendViewlet = (parentId, childId, focus) => {
   if (!childInstance) {
     throw new Error('child instance must be defined to be appended to parent')
   }
-  parentModule.appendViewlet(
-    parentInstanceState.state,
-    childInstance.factory.name,
-    childInstance.state.$Viewlet
-  )
+  parentModule.appendViewlet(parentInstanceState.state, childInstance.factory.name, childInstance.state.$Viewlet)
   if (focus && childInstance.factory.focus) {
     childInstance.factory.focus(childInstance.state)
   }
@@ -315,8 +327,5 @@ export const setBounds = (id, left, top, width, height) => {
     return
   }
   const $Viewlet = instance.state.$Viewlet
-  $Viewlet.style.left = `${left}px`
-  $Viewlet.style.top = `${top}px`
-  $Viewlet.style.width = `${width}px`
-  $Viewlet.style.height = `${height}px`
+  SetBounds.setBounds($Viewlet, left, top, width, height)
 }

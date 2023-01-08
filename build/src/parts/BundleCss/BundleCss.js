@@ -1,14 +1,15 @@
 import { readdir, readFile } from 'node:fs/promises'
-import path, { join } from 'node:path'
-import * as Root from '../Root/Root.js'
-import * as WriteFile from '../WriteFile/WriteFile.js'
-import * as Path from '../Path/Path.js'
+import { join } from 'node:path'
 import * as Copy from '../Copy/Copy.js'
-import * as Replace from '../Replace/Replace.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
+import * as Path from '../Path/Path.js'
+import * as Replace from '../Replace/Replace.js'
+import * as Root from '../Root/Root.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const getParts = (appCss) => {
-  const lines = appCss.split('\n')
+  const lines = SplitLines.splitLines(appCss)
   const parts = []
   for (const line of lines) {
     if (line.startsWith(`@import './parts/`)) {
@@ -57,22 +58,25 @@ export const bundleCss = async ({
   const cwd = join(Root.root, 'static', 'css', 'parts')
   const dirents = await readdir(cwd)
   const sortedDirents = toSorted(dirents)
+  console.log({ sortedDirents })
   for (const dirent of sortedDirents) {
     if (parts.includes(dirent)) {
-      for (const part of parts) {
-        const absolutePath = join(cwd, part)
-        const content = await readFile(absolutePath, EncodingType.Utf8)
-        css += `/*************/\n`
-        css += `/* ${part} */\n`
-        css += `/*************/\n`
-        css += content
-      }
+      // ignore
     } else {
       await Copy.copy({
         from: `static/css/parts/${dirent}`,
         to: Path.join(outDir, 'parts', dirent),
       })
     }
+  }
+
+  for (const part of parts) {
+    const absolutePath = join(cwd, part)
+    const content = await readFile(absolutePath, EncodingType.Utf8)
+    css += `/*************/\n`
+    css += `/* ${part} */\n`
+    css += `/*************/\n`
+    css += content
   }
 
   const appCssPath = Path.join(outDir, 'App.css')
@@ -99,6 +103,6 @@ export const bundleCss = async ({
   await Replace.replace({
     path: appCssPath,
     occurrence: `url(/fonts/`,
-    replacement: `url(${pathPrefix}/fonts/`,
+    replacement: `url(${assetDir}/fonts/`,
   })
 }

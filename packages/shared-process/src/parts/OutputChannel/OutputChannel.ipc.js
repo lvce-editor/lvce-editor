@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as OutputChannel from './OutputChannel.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const state = {
   outputChannels: Object.create(null),
@@ -21,7 +22,7 @@ const open = (socket, id, path) => {
   const onData = (data) => {
     console.log('send data', data)
     socket.send({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method: 2133,
       params: ['Output', 'handleData', data],
     })
@@ -29,7 +30,7 @@ const open = (socket, id, path) => {
   const onError = (error) => {
     console.info(`[shared process] output channel error: ${error}`)
     socket.send({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method: 2133,
       params: ['Output', 'handleError', error],
     })

@@ -1,4 +1,4 @@
-/* TODO very much copy paste from ContextMenu.css */
+/* based on https://github.com/microsoft/vscode/blob/91687c47955bd84db607ef8aaf24b7cf35bfd1ad/src/vs/base/browser/ui/menu/menu.ts#L1005 by Microsoft (License MIT) */
 
 .Menu {
   top: 0;
@@ -6,22 +6,23 @@
   position: absolute;
   background: var(--MenuBackground, rgb(60, 60, 60));
   color: var(--MenuForeground, white);
-  box-shadow: var(--MenuBoxShadow, rgb(0, 0, 0) 0px 2px 4px);
+  box-shadow: var(--MenuBoxShadow, rgb(0 0 0 / 36%) 0px 2px 8px);
   user-select: none;
   min-width: 150px;
   /* width: 150px; */
   margin: 0;
-  padding: 10px 0;
+  padding: 4px 0;
   font-size: 13px;
   z-index: 1;
   outline: none;
   pointer-events: auto;
+  border-radius: 5px;
 }
 
 .MenuItem {
   /* border: thin solid transparent; */
   /* TODO using px and rem -> decide */
-  height: 28px;
+  height: 26px;
   padding: 0 28px;
   display: flex;
   align-items: center;
@@ -30,6 +31,8 @@
   outline: none;
   display: flex;
   contain: content;
+  margin: 0 4px;
+  border-radius: 4px;
 }
 
 .MenuItem.Focused {
@@ -78,19 +81,19 @@
 }
 
 .MenuItemSeparator {
-  list-style: none;
-  height: 16px;
+  height: 11px;
   position: relative;
+  contain: strict;
 }
 
 .MenuItemSeparator::after {
   position: absolute;
   content: '';
   display: block;
-  width: calc(100% - 1.6rem);
+  width: 100%;
   height: 1px;
-  background: rgb(136, 136, 136);
+  background: #606060;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  translate: -50% -50%;
 }

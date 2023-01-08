@@ -88,7 +88,8 @@
       "n/prefer-global/process": "off",
       "no-mixed-operators": "off",
       "radix": "off",
-      "unicorn/prefer-query-selector": "off"
+      "unicorn/prefer-query-selector": "off",
+      "unicorn/switch-case-braces": "off"
     },
     "ignores": [
       "distmin"

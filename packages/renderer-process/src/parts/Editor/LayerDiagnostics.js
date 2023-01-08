@@ -1,3 +1,5 @@
+import * as SetBounds from '../SetBounds/SetBounds.js'
+
 const create$Diagnostic = () => {
   const $Diagnostic = document.createElement('div')
   $Diagnostic.className = 'EditorDiagnostic'
@@ -5,10 +7,7 @@ const create$Diagnostic = () => {
 }
 
 const render$Diagnostic = ($Diagnostic, diagnostic) => {
-  $Diagnostic.style.top = `${diagnostic.top}px`
-  $Diagnostic.style.left = `${diagnostic.left}px`
-  $Diagnostic.style.width = `${diagnostic.width}px`
-  $Diagnostic.style.height = `${diagnostic.height}px`
+  SetBounds.setBounds($Diagnostic, diagnostic.left, diagnostic.top, diagnostic.width, diagnostic.height)
 }
 
 const render$DiagnosticsLess = ($Diagnostics, diagnostics) => {

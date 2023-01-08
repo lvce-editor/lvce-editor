@@ -1,3 +1,5 @@
+import * as Logger from '../Logger/Logger.js'
+
 const rgba = (r, g, b, a) => {
   r = Math.min(255, Math.max(0, r)) | 0
   g = Math.min(255, Math.max(0, g)) | 0
@@ -32,21 +34,15 @@ const toTokenColorRule = (tokenColor) => {
 
 export const createColorThemeFromJson = (colorThemeId, colorThemeJson) => {
   if (!colorThemeJson) {
-    console.warn(
-      `color theme json for "${colorThemeId}" is empty: "${colorThemeJson}"`
-    )
+    Logger.warn(`color theme json for "${colorThemeId}" is empty: "${colorThemeJson}"`)
     return ''
   }
   if (typeof colorThemeJson !== 'object') {
-    console.warn(
-      `color theme json for "${colorThemeId}" cannot be converted to css: "${colorThemeJson}"`
-    )
+    Logger.warn(`color theme json for "${colorThemeId}" cannot be converted to css: "${colorThemeJson}"`)
     return ''
   }
   if (Array.isArray(colorThemeJson)) {
-    console.warn(
-      `color theme json for "${colorThemeId}" cannot be converted to css, it must be of type object but was of type array`
-    )
+    Logger.warn(`color theme json for "${colorThemeId}" cannot be converted to css, it must be of type object but was of type array`)
     return ''
   }
   const colors = colorThemeJson.colors
@@ -55,10 +51,7 @@ export const createColorThemeFromJson = (colorThemeId, colorThemeJson) => {
   }
   if (!colors.ActivityBarInactiveForeground) {
     // TODO don't assign, avoid mutation
-    colors.ActivityBarInactiveForeground = transparent(
-      colors.ActivityBarForeground,
-      0.4
-    )
+    colors.ActivityBarInactiveForeground = transparent(colors.ActivityBarForeground, 0.4)
   }
   const colorRules = Object.entries(colors).map(toColorRule)
   const tokenColors = colorThemeJson.tokenColors || []
@@ -83,9 +76,7 @@ export const createColorThemeFromJson = (colorThemeId, colorThemeJson) => {
 }`
     )
   }
-  const colorThemeCss = `:root {\n${colorRules.join(
-    '\n'
-  )}\n}\n\n${tokenColorRules.join('\n')}\n\n${extraRules.join('\n')}`
+  const colorThemeCss = `:root {\n${colorRules.join('\n')}\n}\n\n${tokenColorRules.join('\n')}\n\n${extraRules.join('\n')}`
   return colorThemeCss
 }
 

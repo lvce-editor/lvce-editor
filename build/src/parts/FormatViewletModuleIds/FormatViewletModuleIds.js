@@ -3,11 +3,12 @@ import * as Root from '../Root/Root.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as Arrays from '../Arrays/Arrays.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const formatViewletModuleIds = async (relativePath) => {
   const absolutePath = Path.join(Root.root, relativePath)
   const content = await ReadFile.readFile(absolutePath)
-  const lines = content.split('\n')
+  const lines = SplitLines.splitLines(content)
   const map = Object.create(null)
   for (const line of lines) {
     if (line.includes('export const ')) {

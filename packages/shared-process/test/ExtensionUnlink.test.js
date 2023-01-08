@@ -71,7 +71,7 @@ test('link - error - no manifest file found', async () => {
     ExtensionUnlink.unlink('/test/documents/my-extension')
   ).rejects.toThrowError(
     new Error(
-      "Failed to unlink extension: Failed to load extension manifest for my-extension: File not found '/test/documents/my-extension/extension.json'"
+      "Failed to unlink extension: Failed to load extension manifest for my-extension: FileNotFoundError: File not found '/test/documents/my-extension/extension.json'"
     )
   )
 })

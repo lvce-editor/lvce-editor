@@ -5,42 +5,28 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostSourceControl.js',
-  () => {
-    return {
-      acceptInput: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-      getChangedFiles: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-      getFileBefore: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostSourceControl.js', () => {
+  return {
+    acceptInput: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    getChangedFiles: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    getFileBefore: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ViewletSourceControl = await import(
-  '../src/parts/ViewletSourceControl/ViewletSourceControl.js'
-)
+const ViewletSourceControl = await import('../src/parts/ViewletSourceControl/ViewletSourceControl.js')
 
-const ExtensionHostSourceControl = await import(
-  '../src/parts/ExtensionHost/ExtensionHostSourceControl.js'
-)
+const ExtensionHostSourceControl = await import('../src/parts/ExtensionHost/ExtensionHostSourceControl.js')
 
-const ViewletManager = await import(
-  '../src/parts/ViewletManager/ViewletManager.js'
-)
+const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(
-    ViewletSourceControl,
-    oldState,
-    newState,
-    ViewletModuleId.SourceControl
-  )
+  return ViewletManager.render(ViewletSourceControl, oldState, newState, ViewletModuleId.SourceControl)
 }
 
 test('create', () => {
@@ -71,8 +57,8 @@ test('dispose', () => {
 test('resize', () => {
   const state = ViewletSourceControl.create()
   const newState = ViewletSourceControl.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 200,
   })
@@ -81,9 +67,9 @@ test('resize', () => {
     disposed: false,
     height: 200,
     index: [],
-    left: 200,
+    x: 200,
+    y: 200,
     merge: [],
-    top: 200,
     untracked: [],
     width: 200,
     workingTree: [],
@@ -105,7 +91,12 @@ test('render - inputValue changed', () => {
     ...oldState,
     inputValue: 'abc',
   }
-  expect(render(oldState, newState)).toEqual([
-    ['Viewlet.send', 'Source Control', 'setInputValue', 'abc'],
-  ])
+  expect(render(oldState, newState)).toEqual([['Viewlet.send', 'Source Control', 'setInputValue', 'abc']])
+})
+
+test('handleMouseOver', () => {
+  const state = { ...ViewletSourceControl.create(), displayItems: [] }
+  expect(ViewletSourceControl.handleMouseOver(state, 0)).toMatchObject({
+    buttonIndex: 0,
+  })
 })

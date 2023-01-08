@@ -1,8 +1,23 @@
-import * as ExtensionHostSourceControl from '../ExtensionHost/ExtensionHostSourceControl.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-
+import * as SourceControl from '../SourceControl/SourceControl.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as Icon from '../Icon/Icon.js'
+import * as Command from '../Command/Command.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as Workspace from '../Workspace/Workspace.js'
+import * as GetProtocol from '../GetProtocol/GetProtocol.js'
+import * as Logger from '../Logger/Logger.js'
+import * as Assert from '../Assert/Assert.js'
 // TODO when accept input is invoked multiple times, it should not lead to errors
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  Add: 'Add',
+  Restore: 'Restore',
+  OpenFile: 'Open File',
+}
 
 export const create = () => {
   return {
@@ -12,6 +27,9 @@ export const create = () => {
     workingTree: [],
     disposed: false,
     inputValue: '',
+    displayItems: [],
+    buttonIndex: -1,
+    enabledProviderIds: [],
   }
 }
 
@@ -22,28 +40,68 @@ export const dispose = (state) => {
   }
 }
 
-export const acceptInput = async (state, text) => {
-  state.inputValue = text // TODO avoid side effect here
-  await ExtensionHostSourceControl.acceptInput(text)
+export const handleInput = (state, text) => {
+  Assert.string(text)
+  return {
+    ...state,
+    inputValue: text,
+  }
+}
+
+export const acceptInput = async (state) => {
+  const { inputValue, enabledProviderIds } = state
+  if (enabledProviderIds.length === 0) {
+    Logger.info(`[ViewletSourceControl] no source control provider found`)
+    return state
+  }
+  const providerId = enabledProviderIds[0]
+  await SourceControl.acceptInput(providerId, inputValue)
   return {
     ...state,
     inputValue: '',
   }
 }
 
-const getChangedFiles = async () => {
-  const changedFiles = await ExtensionHostSourceControl.getChangedFiles()
+const getChangedFiles = async (enabledProviderIds) => {
+  const allChangedFiles = []
+  for (const providerId of enabledProviderIds) {
+    const changedFiles = await SourceControl.getChangedFiles(providerId)
+    allChangedFiles.push(...changedFiles)
+  }
   return {
     index: [],
     merge: [],
     untracked: [],
-    workingTree: changedFiles,
+    workingTree: allChangedFiles,
     gitRoot: '',
   }
 }
 
+const getDisplayItems = (workingTree) => {
+  const displayItems = []
+  const setSize = workingTree.length
+  for (let i = 0; i < workingTree.length; i++) {
+    const item = workingTree[i]
+    displayItems.push({
+      file: item.file,
+      label: item.file,
+      posInSet: i + 1,
+      setSize,
+      icon: IconTheme.getFileIcon({ name: item.file }),
+    })
+  }
+  return displayItems
+}
+
 export const loadContent = async (state) => {
-  const changedFiles = await getChangedFiles()
+  const root = Workspace.state.workspacePath
+  const scheme = GetProtocol.getProtocol(root)
+  const enabledProviderIds = await SourceControl.getEnabledProviderIds(
+    scheme,
+    root
+  )
+  const changedFiles = await getChangedFiles(enabledProviderIds)
+  const displayItems = getDisplayItems(changedFiles.workingTree)
   return {
     ...state,
     index: changedFiles.index,
@@ -51,7 +109,29 @@ export const loadContent = async (state) => {
     untracked: changedFiles.untracked,
     workingTree: changedFiles.workingTree,
     gitRoot: changedFiles.gitRoot,
+    displayItems,
+    enabledProviderIds,
   }
+}
+
+const updateIcon = (displayItem) => {
+  return {
+    ...displayItem,
+    icon: IconTheme.getFileIcon({ name: displayItem.file }),
+  }
+}
+
+export const updateIcons = (state) => {
+  const { displayItems } = state
+  const newDisplayItems = displayItems.map(updateIcon)
+  return {
+    ...state,
+    displayItems: newDisplayItems,
+  }
+}
+
+export const handleIconThemeChange = (state) => {
+  return updateIcons(state)
 }
 
 export const handleClick = async (state, index) => {
@@ -59,13 +139,60 @@ export const handleClick = async (state, index) => {
   const absolutePath = `${state.gitRoot}/${item.file}`
   // TODO handle error
   const [fileBefore, fileNow] = await Promise.all([
-    ExtensionHostSourceControl.getFileBefore(item.file),
+    SourceControl.getFileBefore(item.file),
     FileSystem.readFile(absolutePath),
   ])
   const content = `before:\n${fileBefore}\n\n\nnow:\n${fileNow}`
   // const content
   // await Main.openRawText(`diff://${absolutePath}`, content, 'plaintext')
   // await Main.openAbsolutePath(absolutePath)
+}
+
+export const handleMouseOver = (state, index) => {
+  return {
+    ...state,
+    buttonIndex: index,
+    buttons: [
+      {
+        label: UiStrings.OpenFile,
+        icon: Icon.GoToFile,
+      },
+      {
+        label: UiStrings.Restore,
+        icon: Icon.Discard,
+      },
+      {
+        label: UiStrings.Add,
+        icon: Icon.Add,
+      },
+    ],
+  }
+}
+
+export const handleContextMenu = async (state, x, y) => {
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ MenuEntryId.SourceControl
+  )
+  return state
+}
+
+export const handleClickAdd = async (state, index) => {
+  const { displayItems } = state
+  const item = displayItems[index]
+  const { file } = item
+  await SourceControl.add(file)
+  return state
+}
+
+export const handleClickRestore = (state, index) => {
+  return state
+}
+
+export const handleClickDiscard = (state, index) => {
+  return state
 }
 
 export const hasFunctionalResize = true
@@ -88,16 +215,32 @@ const renderValue = {
   },
 }
 
-const renderChangeFiles = {
+const renderChangedFiles = {
   isEqual(oldState, newState) {
-    return oldState.workingTree === newState.workingTree
+    return oldState.displayItems === newState.displayItems
   },
   apply(oldState, newState) {
     return [
       /* method */ 'setChangedFiles',
-      /* changedFiles */ newState.workingTree,
+      /* changedFiles */ newState.displayItems,
     ]
   },
 }
 
-export const render = [renderValue, renderChangeFiles]
+const renderButtons = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.buttonIndex === newState.buttonIndex &&
+      oldState.buttons === newState.buttons
+    )
+  },
+  apply(oldState, newState) {
+    return [
+      /* method */ 'setItemButtons',
+      /* index */ newState.buttonIndex,
+      /* buttons */ newState.buttons,
+    ]
+  },
+}
+
+export const render = [renderValue, renderChangedFiles, renderButtons]

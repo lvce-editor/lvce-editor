@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -86,29 +87,44 @@ test('textSearch - file', async () => {
   SharedProcess.invoke.mockImplementation(() => {
     return {
       results: [
-        [
-          './index.txt',
-          {
-            absoluteOffset: 208,
-            preview: '    <title>Document</title>\n',
-          },
-        ],
+        {
+          type: TextSearchResultType.File,
+          text: './index.txt',
+          start: 0,
+          end: 0,
+          lineNumber: 0,
+        },
+        {
+          type: TextSearchResultType.Match,
+          text: '    <title>Document</title>\n',
+          start: 0,
+          end: 0,
+          lineNumber: 0,
+        },
       ],
     }
   })
-  expect(await TextSearch.textSearch('/test', 'abc')).toEqual([
-    [
-      './index.txt',
-      {
-        absoluteOffset: 208,
-        preview: '    <title>Document</title>\n',
-      },
-    ],
+  expect(await TextSearch.textSearch('/test', 'abc', {})).toEqual([
+    {
+      type: TextSearchResultType.File,
+      text: './index.txt',
+      start: 0,
+      end: 0,
+      lineNumber: 0,
+    },
+    {
+      type: TextSearchResultType.Match,
+      text: '    <title>Document</title>\n',
+      start: 0,
+      end: 0,
+      lineNumber: 0,
+    },
   ])
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'Search.search',
+    'TextSearch.search',
     '/test',
-    'abc'
+    'abc',
+    {}
   )
 })

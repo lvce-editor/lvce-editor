@@ -1,16 +1,16 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Platform from '../Platform/Platform.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
 
-export const setInlineStyle = async (id, css) => {
-  await RendererProcess.invoke(
-    /* Css.setInlineStyle */ 'Css.setInlineStyle',
-    /* id */ id,
-    /* css */ css
-  )
+export const state = {
+  pending: Object.create(null),
 }
 
-export const loadCssStyleSheet = async (css) => {
+export const setInlineStyle = async (id, css) => {
+  await RendererProcess.invoke(/* Css.setInlineStyle */ 'Css.setInlineStyle', /* id */ id, /* css */ css)
+}
+
+const actuallyLoadCssStyleSheet = async (css) => {
   try {
     const assetDir = Platform.getAssetDir()
     const url = `${assetDir}${css}`
@@ -27,6 +27,13 @@ export const loadCssStyleSheet = async (css) => {
   } catch (error) {
     throw new VError(error, `Failed to load css ${css}`)
   }
+}
+
+export const loadCssStyleSheet = async (css) => {
+  if (!state.pending[css]) {
+    state.pending[css] = actuallyLoadCssStyleSheet(css)
+  }
+  return state.pending[css]
 }
 
 export const loadCssStyleSheets = async (css) => {

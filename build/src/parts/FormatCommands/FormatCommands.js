@@ -4,10 +4,11 @@ import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const formatCommands = async (absolutePath) => {
   const content = await ReadFile.readFile(absolutePath)
-  const lines = content.split('\n')
+  const lines = SplitLines.splitLines(content)
   const newLines = []
   let commandsIndex = -1
   for (let i = 0; i < lines.length; i++) {
@@ -51,7 +52,7 @@ const formatCommands = async (absolutePath) => {
 const getIpcFiles = async (...roots) => {
   const allIpcFiles = []
   const getIpcFilesInternal = async (root) => {
-    const dirents = await ReadDir.readDir(root)
+    const dirents = await ReadDir.readDirWithFileTypes(root)
     for (const dirent of dirents) {
       if (dirent.isDirectory()) {
         const folderPath = Path.join(root, dirent.name)

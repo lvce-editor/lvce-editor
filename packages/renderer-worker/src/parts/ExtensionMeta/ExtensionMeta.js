@@ -1,6 +1,6 @@
 import * as Command from '../Command/Command.js'
-import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'

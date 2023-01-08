@@ -3,10 +3,11 @@ import * as Path from '../Path/Path.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const formatModuleMap = async (absolutePath) => {
   const content = await ReadFile.readFile(absolutePath)
-  const lines = content.split('\n')
+  const lines = SplitLines.splitLines(content)
   const newLines = []
   let i = 1
   const State = {
@@ -26,7 +27,7 @@ const formatModuleMap = async (absolutePath) => {
       state = State.Switch
     } else if (trimmedLine.startsWith('case')) {
       state = State.Case
-    } else if (trimmedLine.startsWith('return')) {
+    } else if (trimmedLine.startsWith('return ModuleId.')) {
       state = State.Return
     } else if (trimmedLine.startsWith('default')) {
       state = State.Default

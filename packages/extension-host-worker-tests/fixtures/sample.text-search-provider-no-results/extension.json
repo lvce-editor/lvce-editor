@@ -1,0 +1,4 @@
+{
+  "browser": "main.js",
+  "activation": ["onTextSearch:memfs"]
+}

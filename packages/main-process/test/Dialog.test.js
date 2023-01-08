@@ -11,9 +11,8 @@ jest.mock('electron', () => {
   }
 })
 
-const Dialog = require('../src/parts/ElectronDialog/ElectronDialog.js')
-
 const electron = require('electron')
+const Dialog = require('../src/parts/ElectronDialog/ElectronDialog.js')
 
 test.only('showOpenDialog', async () => {
   // @ts-ignore

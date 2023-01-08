@@ -6,11 +6,11 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     currentViewletId: '',
-    left,
-    top,
+    x,
+    y,
     width,
     height,
     titleAreaHeight: 35,
@@ -45,8 +45,8 @@ export const loadContent = (state, savedState) => {
  */
 const getContentDimensions = (dimensions, titleAreaHeight) => {
   return {
-    left: dimensions.left,
-    top: dimensions.top + titleAreaHeight,
+    x: dimensions.x,
+    y: dimensions.y + titleAreaHeight,
     width: dimensions.width,
     height: dimensions.height - titleAreaHeight,
   }
@@ -54,7 +54,7 @@ const getContentDimensions = (dimensions, titleAreaHeight) => {
 
 // TODO
 export const getChildren = (state) => {
-  const { top, left, width, height, titleAreaHeight, currentViewletId } = state
+  const { y, x, width, height, titleAreaHeight, currentViewletId } = state
   return [
     {
       id: currentViewletId,
@@ -84,8 +84,8 @@ export const openViewlet = async (state, id, focus = false) => {
     show: false,
     focus: false,
     setBounds: false,
-    top: childDimensions.top,
-    left: childDimensions.left,
+    x: childDimensions.x,
+    y: childDimensions.y,
     width: childDimensions.width,
     height: childDimensions.height,
   })
@@ -95,15 +95,8 @@ export const openViewlet = async (state, id, focus = false) => {
     const activityBar = ViewletStates.getInstance(ViewletModuleId.ActivityBar)
     if (activityBar) {
       const oldState = activityBar.state
-      const newState = activityBar.factory.handleSideBarViewletChange(
-        oldState,
-        id
-      )
-      const extraCommands = ViewletManager.render(
-        activityBar.factory,
-        oldState,
-        newState
-      )
+      const newState = activityBar.factory.handleSideBarViewletChange(oldState, id)
+      const extraCommands = ViewletManager.render(activityBar.factory, oldState, newState)
       activityBar.state = newState
       commands.push(...extraCommands)
     }
@@ -189,12 +182,7 @@ const renderTitle = {
     return false
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'SideBar',
-      /* method */ 'setTitle',
-      /* name */ newState.currentViewletId,
-    ]
+    return [/* Viewlet.send */ 'Viewlet.send', /* id */ 'SideBar', /* method */ 'setTitle', /* name */ newState.currentViewletId]
   },
 }
 

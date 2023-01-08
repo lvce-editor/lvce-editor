@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as SearchResultType from '../src/parts/SearchResultType/SearchResultType.js'
+import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
 beforeEach(() => {
@@ -22,13 +22,17 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
+  return {
+    logError: jest.fn(() => {}),
+  }
+})
 
-const ViewletSearch = await import(
-  '../src/parts/ViewletSearch/ViewletSearch.js'
-)
+const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
 
 const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
 const Command = await import('../src/parts/Command/Command.js')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 
 test('create', () => {
   const state = ViewletSearch.create()
@@ -63,23 +67,23 @@ test('loadContent - restore value', async () => {
   })
 })
 
-test('setValue - error - preview is not of type array', async () => {
+test('setValue - error - results is not of type array', async () => {
   const state = ViewletSearch.create()
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
-    return [
-      [
-        './file-1.txt',
-        {
-          preview: 'abc',
-          absoluteOffset: 0,
-        },
-      ],
-    ]
+    return {
+      type: TextSearchResultType.File,
+      text: './file-1.txt',
+      start: 0,
+      end: 0,
+      lineNumber: 0,
+    }
   })
   expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
-    message: 'Error: previews must be of type array',
+    message: 'Error: results must be of type array',
   })
+  expect(ErrorHandling.logError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.logError).toHaveBeenCalledWith(new Error(`results must be of type array`))
 })
 
 test('setValue - one match in one file', async () => {
@@ -87,15 +91,20 @@ test('setValue - one match in one file', async () => {
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
     return [
-      [
-        './file-1.txt',
-        [
-          {
-            preview: 'abc',
-            absoluteOffset: 0,
-          },
-        ],
-      ],
+      {
+        type: TextSearchResultType.File,
+        text: './file-1.txt',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'abc',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
+      },
     ]
   })
   expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
@@ -105,13 +114,13 @@ test('setValue - one match in one file', async () => {
         icon: '',
         text: 'file-1.txt',
         title: '/file-1.txt',
-        type: SearchResultType.File,
+        type: TextSearchResultType.File,
       },
       {
         icon: '',
         text: 'abc',
         title: 'abc',
-        type: SearchResultType.Preview,
+        type: TextSearchResultType.Match,
       },
     ],
     message: 'Found 1 result in 1 file',
@@ -123,19 +132,27 @@ test('setValue - two matches in one file', async () => {
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
     return [
-      [
-        './file-1.txt',
-        [
-          {
-            preview: 'abc',
-            absoluteOffset: 0,
-          },
-          {
-            preview: 'abc',
-            absoluteOffset: 1,
-          },
-        ],
-      ],
+      {
+        type: TextSearchResultType.File,
+        text: './file-1.txt',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'abc',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'abc',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
+      },
     ]
   })
   expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
@@ -145,19 +162,19 @@ test('setValue - two matches in one file', async () => {
         icon: '',
         text: 'file-1.txt',
         title: '/file-1.txt',
-        type: SearchResultType.File,
+        type: TextSearchResultType.File,
       },
       {
         icon: '',
         text: 'abc',
         title: 'abc',
-        type: SearchResultType.Preview,
+        type: TextSearchResultType.Match,
       },
       {
         icon: '',
         text: 'abc',
         title: 'abc',
-        type: SearchResultType.Preview,
+        type: TextSearchResultType.Match,
       },
     ],
     message: 'Found 2 results in 1 file',
@@ -169,24 +186,34 @@ test('setValue - two matches in two files', async () => {
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
     return [
-      [
-        './file-1.txt',
-        [
-          {
-            preview: 'abc',
-            absoluteOffset: 0,
-          },
-        ],
-      ],
-      [
-        './file-2.txt',
-        [
-          {
-            preview: 'abc',
-            absoluteOffset: 0,
-          },
-        ],
-      ],
+      {
+        type: TextSearchResultType.File,
+        text: './file-1.txt',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'abc',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
+      },
+      {
+        type: TextSearchResultType.File,
+        text: './file-2.txt',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'abc',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
+      },
     ]
   })
   expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
@@ -196,25 +223,25 @@ test('setValue - two matches in two files', async () => {
         icon: '',
         text: 'file-1.txt',
         title: '/file-1.txt',
-        type: SearchResultType.File,
+        type: TextSearchResultType.File,
       },
       {
         icon: '',
         text: 'abc',
         title: 'abc',
-        type: SearchResultType.Preview,
+        type: TextSearchResultType.Match,
       },
       {
         icon: '',
         text: 'file-2.txt',
         title: '/file-2.txt',
-        type: SearchResultType.File,
+        type: TextSearchResultType.File,
       },
       {
         icon: '',
         text: 'abc',
         title: 'abc',
-        type: SearchResultType.Preview,
+        type: TextSearchResultType.Match,
       },
     ],
     message: 'Found 2 results in 2 files',
@@ -261,7 +288,7 @@ test('handleClick', async () => {
     ...ViewletSearch.create(),
     items: [
       {
-        type: SearchResultType.File,
+        type: TextSearchResultType.File,
         text: './test.txt',
         title: '/test/test.txt',
       },
@@ -277,8 +304,8 @@ test('handleClick', async () => {
 test('resize', () => {
   const state = ViewletSearch.create()
   const newState = ViewletSearch.resize(state, {
-    top: 200,
-    left: 200,
+    x: 200,
+    y: 200,
     width: 200,
     height: 200,
   })
@@ -286,11 +313,11 @@ test('resize', () => {
   expect(newState).toMatchObject({
     disposed: false,
     height: 200,
-    left: 200,
+    x: 200,
     searchId: -1,
     searchResults: [],
     stats: {},
-    top: 200,
+    y: 200,
     value: '',
     width: 200,
     fileCount: 0,
@@ -300,31 +327,19 @@ test('resize', () => {
 test('handleContextMenuMouseAt', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
-  const state = { ...ViewletSearch.create(), top: 0, left: 0 }
-  expect(await ViewletSearch.handleContextMenuMouseAt(state, 10, 10)).toBe(
-    state
-  )
+  const state = { ...ViewletSearch.create(), x: 0, y: 0 }
+  expect(await ViewletSearch.handleContextMenuMouseAt(state, 10, 10)).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'ContextMenu.show',
-    10,
-    10,
-    MenuEntryId.Search
-  )
+  expect(Command.execute).toHaveBeenCalledWith('ContextMenu.show', 10, 10, MenuEntryId.Search)
 })
 
 test('handleContextMenuKeyBoard', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
-  const state = { ...ViewletSearch.create(), top: 0, left: 0 }
+  const state = { ...ViewletSearch.create(), x: 0, y: 0 }
   expect(await ViewletSearch.handleContextMenuKeyboard(state)).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'ContextMenu.show',
-    0,
-    0,
-    MenuEntryId.Search
-  )
+  expect(Command.execute).toHaveBeenCalledWith('ContextMenu.show', 0, 0, MenuEntryId.Search)
 })
 
 test('selectIndex - negative index', async () => {

@@ -129,7 +129,7 @@ test('hydrate - color theme fails to load from shared process', async () => {
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(
     new Error(
-      'Failed to apply color theme "atom-one-dark": Error: Color theme "atom-one-dark" not found in extensions folder'
+      'Failed to apply color theme "atom-one-dark": Color theme "atom-one-dark" not found in extensions folder'
     )
   )
 })
@@ -164,14 +164,14 @@ test('hydrate - color theme fails to load and fallback color theme also fails to
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   await expect(ColorTheme.hydrate()).rejects.toThrowError(
     new Error(
-      'Failed to apply color theme "slime": Error: Color theme "slime" not found in extensions folder'
+      'Failed to apply color theme "slime": Color theme "slime" not found in extensions folder'
     )
   )
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenNthCalledWith(
     1,
     new Error(
-      'Failed to apply color theme "atom-one-dark": Error: Color theme "atom-one-dark" not found in extensions folder'
+      'Failed to apply color theme "atom-one-dark": Color theme "atom-one-dark" not found in extensions folder'
     )
   )
 })
@@ -198,7 +198,7 @@ test('hydrate - color id is fallback color theme id and fails to load', async ()
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   await expect(ColorTheme.hydrate()).rejects.toThrowError(
     new Error(
-      'Failed to apply color theme "slime": Error: Color theme "slime" not found in extensions folder'
+      'Failed to apply color theme "slime": Color theme "slime" not found in extensions folder'
     )
   )
   expect(spy).not.toHaveBeenCalled()

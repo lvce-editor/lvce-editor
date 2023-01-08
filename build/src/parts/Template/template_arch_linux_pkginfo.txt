@@ -1,0 +1,13 @@
+pkgname = @@APPNAME@@
+pkgver = @@VERSION@@
+pkgdesc =
+ abc
+url = https://lvce-editor.netlify.app
+builddate = @@BUILD_DATE@@
+packager = @@PACKAGER@@
+size = @@SIZE@@
+arch = x86_64
+license = @@LICENSE@@
+group = default
+depend = electron19
+depend = ripgrep

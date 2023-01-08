@@ -25,7 +25,7 @@ export const getMenuEntries = () => {
       id: 'about',
       label: I18nString.i18nString(UiStrings.About),
       flags: MenuItemFlags.None,
-      command: 'Dialog.showAbout',
+      command: 'About.showAbout',
     },
   ]
 }

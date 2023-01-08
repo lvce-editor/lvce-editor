@@ -39,9 +39,7 @@ const wrapViewletCommand = (id, fn) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
     if (!activeInstance) {
-      console.info(
-        `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
-      )
+      console.info(`cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`)
       return
     }
     if (activeInstance.factory && activeInstance.factory.hasFunctionalRender) {
@@ -57,10 +55,7 @@ const wrapViewletCommand = (id, fn) => {
       }
       const commands = render(activeInstance.factory, oldState, newState)
       ViewletStates.setState(id, newState)
-      await RendererProcess.invoke(
-        /* Viewlet.sendMultiple */ kSendMultiple,
-        /* commands */ commands
-      )
+      await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     } else {
       return fn(activeInstance.state, ...args)
     }
@@ -74,9 +69,7 @@ const wrapViewletCommandWithSideEffect = (id, fn) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
     if (!activeInstance) {
-      console.info(
-        `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
-      )
+      console.info(`cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`)
       return
     }
     const oldState = activeInstance.state
@@ -87,10 +80,7 @@ const wrapViewletCommandWithSideEffect = (id, fn) => {
       commands.push(...render(activeInstance.factory, oldState, newState))
       ViewletStates.setState(id, newState)
     }
-    await RendererProcess.invoke(
-      /* Viewlet.sendMultiple */ kSendMultiple,
-      /* commands */ commands
-    )
+    await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
   }
   NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, fn.name)
   return wrappedViewletCommand
@@ -105,9 +95,7 @@ const wrapViewletCommandLazy = (id, key, importFn) => {
     }
     const activeInstance = ViewletStates.getInstance(id)
     if (!activeInstance) {
-      console.info(
-        `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
-      )
+      console.info(`cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`)
       return
     }
     if (activeInstance.factory && activeInstance.factory.hasFunctionalRender) {
@@ -123,10 +111,7 @@ const wrapViewletCommandLazy = (id, key, importFn) => {
       }
       const commands = render(activeInstance.factory, oldState, newState)
       ViewletStates.setState(id, newState)
-      await RendererProcess.invoke(
-        /* Viewlet.sendMultiple */ kSendMultiple,
-        /* commands */ commands
-      )
+      await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     } else {
       return fn(activeInstance.state, ...args)
     }
@@ -140,22 +125,13 @@ const wrapViewletCommandLazy = (id, key, importFn) => {
  * @param {()=>any} getModule
  * @returns
  */
-export const create = (
-  getModule,
-  id,
-  parentId,
-  uri,
-  left,
-  top,
-  width,
-  height
-) => {
+export const create = (getModule, id, parentId, uri, x, y, width, height) => {
   Assert.fn(getModule)
   Assert.string(id)
   Assert.string(parentId)
   Assert.string(uri)
-  Assert.number(left)
-  Assert.number(top)
+  Assert.number(x)
+  Assert.number(y)
   Assert.number(width)
   Assert.number(height)
   return {
@@ -164,8 +140,8 @@ export const create = (
     id,
     parentId,
     uri,
-    left,
-    top,
+    x,
+    y,
     width,
     height,
   }
@@ -184,10 +160,7 @@ const getRenderCommands = (module, oldState, newState, name = module.name) => {
     for (const item of module.render) {
       if (!item.isEqual(oldState, newState)) {
         const command = item.apply(oldState, newState)
-        if (
-          command[0] !== 'Viewlet.send' &&
-          command[0] !== 'Viewlet.ariaAnnounce'
-        ) {
+        if (command[0] !== 'Viewlet.send' && command[0] !== 'Viewlet.ariaAnnounce') {
           command.unshift('Viewlet.send', name)
         }
         commands.push(command)
@@ -196,7 +169,6 @@ const getRenderCommands = (module, oldState, newState, name = module.name) => {
     return commands
   }
   if (module.render) {
-    console.log('else')
     return module.render(oldState, newState)
   }
   return []
@@ -224,10 +196,7 @@ const maybeRegisterWrappedCommands = (module) => {
   }
   if (module.CommandsWithSideEffects) {
     for (const [key, value] of Object.entries(module.CommandsWithSideEffects)) {
-      const wrappedCommand = wrapViewletCommandWithSideEffect(
-        module.name,
-        value
-      )
+      const wrappedCommand = wrapViewletCommandWithSideEffect(module.name, value)
       registerWrappedCommand(module.name, key, wrappedCommand)
     }
   }
@@ -243,23 +212,19 @@ const maybeRegisterEvents = (module) => {
   if (module.Events) {
     // TODO remove event listeners when viewlet is disposed
     for (const [key, value] of Object.entries(module.Events)) {
-      const handleUpdate = async () => {
+      const handleUpdate = async (...params) => {
         const instance = ViewletStates.getInstance(module.name)
-        const newState = await value(instance.state)
+        const newState = await value(instance.state, ...params)
         if (!newState) {
           throw new Error('newState must be defined')
         }
-        if (!module.shouldApplyNewState(newState)) {
+        if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
           console.log('[viewlet manager] return', newState)
-
           return
         }
         const commands = render(instance.factory, instance.state, newState)
         instance.state = newState
-        await RendererProcess.invoke(
-          /* Viewlet.sendMultiple */ kSendMultiple,
-          /* commands */ commands
-        )
+        await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
       }
       GlobalEventBus.addListener(key, handleUpdate)
     }
@@ -292,17 +257,9 @@ const loadModule = (getModule, id) => {
 
 // TODO add lots of unit tests for this
 
-export const backgroundLoad = async ({
-  getModule,
-  id,
-  left,
-  top,
-  width,
-  height,
-  props,
-}) => {
+export const backgroundLoad = async ({ getModule, id, x, y, width, height, props }) => {
   const module = await loadModule(getModule, id)
-  const viewletState = module.create(id, '', top, left, width, height)
+  const viewletState = module.create(id, '', y, x, width, height)
   const { title, uri } = await module.backgroundLoadContent(viewletState, props)
   return {
     title,
@@ -314,12 +271,7 @@ export const backgroundLoad = async ({
  * @param {{getModule:()=>any, type:number, id:string, disposed:boolean }} viewlet
  * @returns
  */
-export const load = async (
-  viewlet,
-  focus = false,
-  restore = false,
-  restoreState = undefined
-) => {
+export const load = async (viewlet, focus = false, restore = false, restoreState = undefined) => {
   // console.time(`load/${viewlet.id}`)
   if (viewlet.type !== 0) {
     console.log('viewlet must be empty')
@@ -338,29 +290,21 @@ export const load = async (
       return
     }
     state = ViewletState.ModuleLoaded
-    let left = viewlet.left
-    let top = viewlet.top
+    let x = viewlet.x
+    let y = viewlet.y
     let width = viewlet.width
     let height = viewlet.height
     if (module.getPosition) {
       const position = module.getPosition()
-      left = position.left
-      top = position.top
+      x = position.x
+      y = position.y
       width = position.width
       height = position.height
     }
 
-    const viewletState = module.create(
-      viewlet.id,
-      viewlet.uri,
-      left,
-      top,
-      width,
-      height
-    )
+    const viewletState = module.create(viewlet.id, viewlet.uri, x, y, width, height)
 
-    const oldVersion =
-      viewletState.version === undefined ? undefined : ++viewletState.version
+    const oldVersion = viewletState.version === undefined ? undefined : ++viewletState.version
     let instanceSavedState
     if (restore) {
       const stateToSave = await SaveState.getSavedState()
@@ -369,10 +313,7 @@ export const load = async (
       instanceSavedState = restoreState
     }
     let newState = await module.loadContent(viewletState, instanceSavedState)
-    if (
-      (viewlet.visible === undefined || viewlet.visible === true) &&
-      module.show
-    ) {
+    if ((viewlet.visible === undefined || viewlet.visible === true) && module.show) {
       await module.show(newState)
     }
     const extraCommands = []
@@ -382,14 +323,7 @@ export const load = async (
       for (const child of children) {
         const childModule = await loadModule(viewlet.getModule, child.id)
         // TODO get position of child module
-        const oldState = childModule.create(
-          '',
-          '',
-          child.left,
-          child.top,
-          child.width,
-          child.height
-        )
+        const oldState = childModule.create('', '', child.x, child.y, child.width, child.height)
         let instanceSavedState
         if (restore) {
           const stateToSave = await SaveState.getSavedState()
@@ -397,10 +331,7 @@ export const load = async (
         } else if (restoreState) {
           instanceSavedState = restoreState
         }
-        const newState = await childModule.loadContent(
-          oldState,
-          instanceSavedState
-        )
+        const newState = await childModule.loadContent(oldState, instanceSavedState)
         const childInstance = {
           state: newState,
           factory: childModule,
@@ -430,10 +361,7 @@ export const load = async (
     state = ViewletState.ContentLoaded
     if (viewlet.show === false) {
     } else {
-      await RendererProcess.invoke(
-        /* Viewlet.loadModule */ kLoadModule,
-        /* id */ viewlet.id
-      )
+      await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.id)
     }
     if (viewlet.disposed) {
       // TODO unload the module from renderer process
@@ -477,14 +405,7 @@ export const load = async (
           // ['Viewlet.show', viewlet.id],
         ]
         if (viewlet.setBounds !== false) {
-          allCommands.splice(1, 0, [
-            kSetBounds,
-            viewlet.id,
-            left,
-            top,
-            width,
-            height,
-          ])
+          allCommands.splice(1, 0, [kSetBounds, viewlet.id, x, y, width, height])
         }
         if (module.contentLoadedEffects) {
           module.contentLoadedEffects(newState)
@@ -493,10 +414,7 @@ export const load = async (
       }
       // console.log('else', viewlet.id, { commands })
       commands.push(...extraCommands)
-      await RendererProcess.invoke(
-        /* Viewlet.sendMultiple */ kSendMultiple,
-        /* commands */ commands
-      )
+      await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     }
     if (module.contentLoadedEffects) {
       module.contentLoadedEffects(newState)
@@ -507,12 +425,7 @@ export const load = async (
     }
     state = ViewletState.ContentRendered
     if (viewlet.parentId && viewlet.show !== false) {
-      await RendererProcess.invoke(
-        /* Viewlet.append */ kAppendViewlet,
-        /* parentId */ viewlet.parentId,
-        /* id */ viewlet.id,
-        /* focus */ focus
-      )
+      await RendererProcess.invoke(/* Viewlet.append */ kAppendViewlet, /* parentId */ viewlet.parentId, /* id */ viewlet.id, /* focus */ focus)
     }
     state = ViewletState.Appended
 
@@ -533,26 +446,11 @@ export const load = async (
       }
       const commands = []
       if (state < ViewletState.RendererProcessViewletLoaded) {
-        await RendererProcess.invoke(
-          /* Viewlet.loadModule */ kLoadModule,
-          /* id */ viewlet.id
-        )
+        await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.id)
       }
       commands.push([kCreate, viewlet.id, viewlet.parentId])
-      commands.push([
-        kSetBounds,
-        viewlet.id,
-        viewlet.left,
-        viewlet.top,
-        viewlet.width,
-        viewlet.height,
-      ])
-      commands.push([
-        /* viewlet.handleError */ kHandleError,
-        /* id */ viewlet.id,
-        /* parentId */ viewlet.parentId,
-        /* message */ `${error}`,
-      ])
+      commands.push([kSetBounds, viewlet.id, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
+      commands.push([/* viewlet.handleError */ kHandleError, /* id */ viewlet.id, /* parentId */ viewlet.parentId, /* message */ `${error}`])
       return commands
     } catch (error) {
       console.error(error)

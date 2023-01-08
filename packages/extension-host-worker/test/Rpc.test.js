@@ -1,0 +1,134 @@
+import { jest } from '@jest/globals'
+import { setTimeout } from 'timers/promises'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/GetResponse/GetResponse.js', () => ({
+  getResponse: jest.fn(),
+  getErrorResponse: jest.fn(),
+}))
+
+jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => ({
+  logError: jest.fn(),
+}))
+
+const GetResponse = await import('../src/parts/GetResponse/GetResponse.js')
+const ErrorHandling = await import(
+  '../src/parts/ErrorHandling/ErrorHandling.js'
+)
+
+const Rpc = await import('../src/parts/Rpc/Rpc.js')
+
+test('send - error - promise could not be cloned', async () => {
+  const mockResult = Promise.resolve()
+  // @ts-ignore
+  GetResponse.getResponse.mockImplementation((message) => {
+    return {
+      jsonrpc: '2.0',
+      id: message,
+      result: mockResult,
+    }
+  })
+  // @ts-ignore
+  GetResponse.getErrorResponse.mockImplementation((message, error) => {
+    return {
+      jsonrpc: '2.0',
+      error: {
+        message: `${error}`,
+      },
+    }
+  })
+  let i = 0
+  const ipc = {
+    _onmessage: null,
+    get onmessage() {
+      return this._onmessage
+    },
+    set onmessage(listener) {
+      this._onmessage = listener
+    },
+    send: jest.fn(() => {
+      if (i++ === 0) {
+        throw new DOMException(
+          `Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.`
+        )
+      }
+    }),
+  }
+  Rpc.listen(ipc)
+  // @ts-ignore
+  ipc._onmessage({
+    data: {
+      jsonrpc: '2.0',
+      method: 'test',
+      params: [],
+      id: 1,
+    },
+  })
+  await setTimeout(0)
+  expect(ipc.send).toHaveBeenCalledTimes(2)
+  expect(ipc.send).toHaveBeenNthCalledWith(1, {
+    id: {
+      id: 1,
+      jsonrpc: '2.0',
+      method: 'test',
+      params: [],
+    },
+    jsonrpc: '2.0',
+    result: mockResult,
+  })
+  expect(ipc.send).toHaveBeenNthCalledWith(2, {
+    error: {
+      message:
+        "Error: Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.",
+    },
+    jsonrpc: '2.0',
+  })
+  expect(ErrorHandling.logError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.logError).toHaveBeenCalledWith(
+    new DOMException(
+      `Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.`
+    )
+  )
+})
+
+test('send', async () => {
+  // @ts-ignore
+  GetResponse.getResponse.mockImplementation((message) => {
+    return {
+      jsonrpc: '2.0',
+      id: message.id,
+      result: 42,
+    }
+  })
+  const ipc = {
+    _onmessage: null,
+    get onmessage() {
+      return this._onmessage
+    },
+    set onmessage(listener) {
+      this._onmessage = listener
+      // @ts-ignore
+    },
+    send: jest.fn(() => {}),
+  }
+  Rpc.listen(ipc)
+  // @ts-ignore
+  ipc._onmessage({
+    data: {
+      jsonrpc: '2.0',
+      method: 'test',
+      params: [],
+      id: 1,
+    },
+  })
+  await setTimeout(0)
+  expect(ipc.send).toHaveBeenCalledTimes(1)
+  expect(ipc.send).toHaveBeenNthCalledWith(1, {
+    jsonrpc: '2.0',
+    id: 1,
+    result: 42,
+  })
+})

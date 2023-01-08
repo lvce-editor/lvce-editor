@@ -24,9 +24,9 @@ export const getMenuEntries = () => {
     },
     {
       id: 'uninstall',
-      label: I18nString.i18nString(UiStrings.Disable),
+      label: I18nString.i18nString(UiStrings.Uninstall),
       flags: MenuItemFlags.None,
-      command: -1,
+      command: 'Extensions.uninstall',
     },
     {
       id: 'installAnotherVersion',

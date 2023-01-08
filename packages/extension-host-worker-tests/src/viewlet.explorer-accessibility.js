@@ -35,9 +35,7 @@ test('viewlet.explorer-accessibility', async () => {
   await expect(treeItemLanguages).toHaveAttribute('aria-expanded', 'false')
 
   const titleSampleFolder = '/sample-folder'
-  const treeItemSampleFolder = Locator(
-    `.TreeItem[title$="${titleSampleFolder}"]`
-  )
+  const treeItemSampleFolder = Locator(`.TreeItem[title$="${titleSampleFolder}"]`)
   await expect(treeItemSampleFolder).toHaveAttribute('tabindex', null)
   await expect(treeItemSampleFolder).toHaveAttribute('role', 'treeitem')
   await expect(treeItemSampleFolder).toHaveAttribute('aria-level', '1')
