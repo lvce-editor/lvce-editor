@@ -31,9 +31,9 @@ export const listen = (ipc) => {
         ipc.send(errorResponse)
       }
     } else if ('result' in message) {
-      Callback.resolve(message.id, message.result)
+      Callback.resolve(message.id, message)
     } else if ('error' in message) {
-      Callback.reject(message.id, message.error)
+      Callback.reject(message.id, message)
     } else {
       console.log({ message })
     }
