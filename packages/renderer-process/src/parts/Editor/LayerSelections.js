@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const create$Selection = () => {
@@ -63,7 +64,7 @@ const render$Selections = ($Selections, selections) => {
 
 const renderSelectionsNative = (state, selections) => {
   if (selections.length > 1) {
-    console.warn('[editor] cannot render more than one native selection')
+    Logger.warn('[editor] cannot render more than one native selection')
   }
 }
 

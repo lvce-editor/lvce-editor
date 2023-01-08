@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
-import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Logger from '../Logger/Logger.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 
 export const state = {
   instances: Object.create(null),
@@ -60,7 +60,6 @@ export const refresh = (viewletId, viewletContext) => {
   if (instance) {
     instance.factory.refresh(instance.state, viewletContext)
   } else {
-    // console.warn('no instance yet of ' + viewletId)
     state.refreshContext[viewletId] = viewletContext
   }
 }
@@ -186,7 +185,7 @@ export const replace = () => {
 }
 
 export const handleError = (id, parentId, message) => {
-  console.info(`[viewlet-error] ${id}: ${message}`)
+  Logger.info(`[viewlet-error] ${id}: ${message}`)
   const instance = state.instances[id]
   if (instance && instance.state.$Viewlet.isConnected) {
     instance.state.$Viewlet.remove()

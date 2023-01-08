@@ -1,8 +1,9 @@
-import * as Widget from '../Widget/Widget.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as Focus from '../Focus/Focus.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as Widget from '../Widget/Widget.js'
 
 export const state = {
   $Dialog: undefined,
@@ -129,7 +130,7 @@ const getErrorMessage = (error) => {
 // TODO this show be a viewlet
 export const showErrorDialogWithOptions = (error, options) => {
   if (!Platform.supportsHtml5Dialog()) {
-    console.info('the dialog api is not available on this browser')
+    Logger.info('the dialog api is not available on this browser')
     alert(error) // TODO in electron this will do nothing, but electron always supports dialogs
     return
   }
