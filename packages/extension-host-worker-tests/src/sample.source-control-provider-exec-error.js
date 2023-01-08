@@ -5,16 +5,16 @@ export const mockExec = (command, args, options) => {
         stdout: `file-1.txt
 file-2.txt`,
         stderr: ``,
-        exitCode: 0,
+        exitCode: 128,
       }
     }
   }
   throw new Error(`unexpected command ${command}`)
 }
 
-const name = 'sample.source-control-provider-exec'
+const name = 'sample.source-control-provider-exec-error'
 
-test('sample.source-control-provider-exec', async () => {
+test('sample.source-control-provider-exec-error', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
