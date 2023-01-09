@@ -2,33 +2,19 @@ const { spawn } = require('node:child_process')
 const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
 const Platform = require('../Platform/Platform.js')
 const Debug = require('../Debug/Debug.js')
-const LifeCycle = require('../LifeCycle/LifeCycle.js')
 const Performance = require('../Performance/Performance.js')
 const Cli = require('../Cli/Cli.js')
-const AppWindow = require('../AppWindow/AppWindow.js')
 const HandleMessagePort = require('../HandleMessagePort/HandleMessagePort.js')
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
 const ElectronProtocol = require('../ElectronProtocol/ElectronProtocol.js')
 const ElectronIpcMain = require('../ElectronIpcMain/ElectronIpcMain.js')
 const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
+const ElectronAppListeners = require('../ElectronAppListeners/ElectronAppListeners.js')
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
 // const handleAppReady = async () => {
 
 // }
-
-const handleWindowAllClosed = () => {
-  Debug.debug('[info] all windows closed')
-  if (!Platform.isMacOs) {
-    Debug.debug('[info] quitting')
-    ElectronApp.quit()
-  }
-}
-
-const handleBeforeQuit = () => {
-  LifeCycle.setShutDown()
-  Debug.debug('[info] before quit')
-}
 
 // TODO maybe handle critical (first render) request via ipcMain
 // and spawn shared process when page is idle/loaded
@@ -37,26 +23,6 @@ const handleBeforeQuit = () => {
 
 // map windows to folders and ports
 // const windowConfigMap = new Map()
-
-const handleReady = async (parsedArgs, workingDirectory) => {
-  await AppWindow.createAppWindow(parsedArgs, workingDirectory)
-}
-
-const handleSecondInstance = async (
-  event,
-  commandLine,
-  workingDirectory,
-  additionalData // additionalData is the actual process.argv https://github.com/electron/electron/pull/30891
-) => {
-  Debug.debug('[info] second instance')
-  const parsedArgs = Cli.parseCliArgs(additionalData)
-  Debug.debug('[info] second instance args', additionalData, parsedArgs)
-  const handled = Cli.handleFastCliArgsMaybe(parsedArgs) // TODO don't like the side effect here
-  if (handled) {
-    return
-  }
-  await handleReady(parsedArgs, workingDirectory)
-}
 
 exports.hydrate = async () => {
   ElectronApplicationMenu.setMenu(null)
@@ -125,17 +91,17 @@ exports.hydrate = async () => {
   ElectronIpcMain.on('port', HandleMessagePort.handlePort)
 
   // app
-  ElectronApp.on('window-all-closed', handleWindowAllClosed)
-  ElectronApp.on('before-quit', handleBeforeQuit)
+  ElectronApp.on('window-all-closed', ElectronAppListeners.handleWindowAllClosed)
+  ElectronApp.on('before-quit', ElectronAppListeners.handleBeforeQuit)
   // Electron.app.on('ready', handleAppReady)
-  ElectronApp.on('second-instance', handleSecondInstance)
+  ElectronApp.on('second-instance', ElectronAppListeners.handleSecondInstance)
   await ElectronApp.whenReady()
   Performance.mark('code/appReady')
 
-  await handleReady(parsedCliArgs, process.cwd())
+  await ElectronAppListeners.handleReady(parsedCliArgs, process.cwd())
   Debug.debug('[info] app window created')
 }
 
 exports.exit = () => {
-  app.quit()
+  ElectronApp.quit()
 }
