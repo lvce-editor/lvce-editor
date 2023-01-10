@@ -19,7 +19,7 @@
     "@electron/get": "^2.0.2",
     "@electron/rebuild": "^3.2.10",
     "@types/bytes": "^3.1.1",
-    "@types/fs-extra": "^9.0.13",
+    "@types/fs-extra": "^11.0.0",
     "@types/tar-fs": "^2.0.1",
     "@types/verror": "^1.10.6",
     "electron-builder": "^23.6.0",
@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "bytes": "^3.1.2",
-    "esbuild": "^0.16.15",
+    "esbuild": "^0.16.16",
     "fs-extra": "^11.1.0",
     "got": "^12.5.3",
     "gzip-size": "^7.0.0",
