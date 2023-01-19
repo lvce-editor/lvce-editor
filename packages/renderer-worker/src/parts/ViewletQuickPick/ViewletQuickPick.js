@@ -49,6 +49,10 @@ export const create = (id, uri, x, y, width, height) => {
       headerHeight: 30,
       minimumSliderSize: Height.MinimumSliderSize,
     }),
+    inputFontSize: 13,
+    inputFontFamily: 'Ubuntu',
+    inputLetterSpacing: 'normal',
+    inputFontWeight: 400,
   }
 }
 
@@ -288,7 +292,14 @@ const renderCursorOffset = {
     return oldState.cursorOffset === newState.cursorOffset
   },
   apply(oldState, newState) {
-    const cursorOffsetPx = MeasureTextWidth.measureTextWidth(newState.value, 400, 15, 'Ubuntu', 'normal')
+    const cursorOffsetPx =
+      MeasureTextWidth.measureTextWidth(
+        newState.value.slice(0, newState.cursorOffset),
+        newState.inputFontWeight,
+        newState.inputFontSize,
+        newState.inputFontFamily,
+        newState.inputLetterSpacing
+      ) + 6
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ ViewletModuleId.QuickPick,

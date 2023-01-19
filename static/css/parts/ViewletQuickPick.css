@@ -76,6 +76,8 @@
   height: 20px;
   background: green;
   width: 2px;
+  top: 6px;
+  left: 6px;
 }
 
 .ScrollWrapper {

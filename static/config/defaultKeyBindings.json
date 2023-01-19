@@ -785,5 +785,10 @@
     "key": "ArrowLeft",
     "command": "QuickPick.cursorLeft",
     "when": "focus.quickPickInput"
+  },
+  {
+    "key": "ArrowRight",
+    "command": "QuickPick.cursorRight",
+    "when": "focus.quickPickInput"
   }
 ]

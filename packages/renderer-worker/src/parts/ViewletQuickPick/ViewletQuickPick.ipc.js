@@ -17,6 +17,7 @@ export const Commands = {
 // prettier-ignore
 export const LazyCommands = {
   cursorLeft: () => import('./ViewletQuickPickCursorLeft.js'),
+  cursorRight: () => import('./ViewletQuickPickCursorRight.js'),
   deleteCharacterLeft: () => import('./ViewletQuickPickFocusDeleteCharacterLeft.js'),
   focusFirst: () => import('./ViewletQuickPickFocusFirst.js'),
   focusIndex: () => import('./ViewletQuickPickFocusIndex.js'),
