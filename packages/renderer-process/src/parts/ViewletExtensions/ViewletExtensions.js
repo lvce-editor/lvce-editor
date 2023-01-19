@@ -13,6 +13,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const activeId = 'ExtensionActive'
 
@@ -319,7 +320,7 @@ export const closeSuggest = (state) => {
 
 export const setContentHeight = (state, height) => {
   const { $ListItems } = state
-  $ListItems.style.height = `${height}px`
+  SetBounds.setHeight($ListItems, height)
 }
 
 export const handleError = (state, message) => {

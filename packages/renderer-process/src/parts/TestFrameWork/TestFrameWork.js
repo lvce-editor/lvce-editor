@@ -5,6 +5,7 @@ import * as SingleElementConditions from './SingleElementConditions.js'
 import * as MultiElementConditions from './MultiElementConditions.js'
 import * as ConditionErrors from './ConditionErrors.js'
 import * as KeyBoardActions from './KeyBoardActions.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const create$Overlay = () => {
   const $TestOverlay = document.createElement('div')
@@ -13,7 +14,7 @@ const create$Overlay = () => {
   $TestOverlay.style.bottom = '0px'
   $TestOverlay.style.left = '0px'
   $TestOverlay.style.right = '0px'
-  $TestOverlay.style.height = '20px'
+  SetBounds.setHeight($TestOverlay, 20)
   $TestOverlay.style.whiteSpace = 'nowrap'
   $TestOverlay.style.contain = 'strict'
   $TestOverlay.style.userSelect = 'text'

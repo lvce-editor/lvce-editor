@@ -1,3 +1,5 @@
+import * as SetBounds from '../SetBounds/SetBounds.js'
+
 export const addMarker = (state, marker) => {
   state.selections.push(marker)
 }
@@ -17,7 +19,7 @@ const create$Selection = (x1, x2, i) => {
   const $Selection = document.createElement('div')
   $Selection.className = 'EditorSelection'
   $Selection.style.width = `${x2 - x1}px`
-  $Selection.style.height = `${LINE_HEIGHT}px`
+  SetBounds.setHeight($Selection, LINE_HEIGHT)
   $Selection.style.transform = `translate(${x1}px, ${y}px)`
   return $Selection
 }
@@ -53,11 +55,7 @@ export const update = (state, config) => {
       const $Selection = create$Selection(x1, x2, selection.start.rowIndex)
       $$Selections.push($Selection)
     }
-    for (
-      let i = selection.start.rowIndex + 1;
-      i < selection.end.rowIndex;
-      i++
-    ) {
+    for (let i = selection.start.rowIndex + 1; i < selection.end.rowIndex; i++) {
       const x1 = 0
       const x2 = maxLineLength * config.columnWidth
       const $Selection = create$Selection(x1, x2, i)

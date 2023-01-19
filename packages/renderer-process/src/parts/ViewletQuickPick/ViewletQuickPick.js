@@ -9,6 +9,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -299,7 +300,7 @@ export const setCursorOffset = (state, cursorOffset) => {
 
 export const setItemsHeight = (state, itemsHeight) => {
   const { $QuickPickItems } = state
-  $QuickPickItems.style.height = `${itemsHeight}px`
+  SetBounds.setHeight($QuickPickItems, itemsHeight)
 }
 
 export const noop = (state) => {}
