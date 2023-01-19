@@ -23,6 +23,7 @@
   /* inset: 0; */
   /* will-change: transform; */
   box-shadow: rgb(0 0 0 / 15%) 0px 0px 8px 2px;
+  backface-visibility: hidden; /* force layer */
 }
 
 #QuickPickHeader {
