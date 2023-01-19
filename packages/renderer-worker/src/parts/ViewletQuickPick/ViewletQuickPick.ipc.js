@@ -16,12 +16,13 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
+  cursorLeft: () => import('./ViewletQuickPickCursorLeft.js'),
+  deleteCharacterLeft: () => import('./ViewletQuickPickFocusDeleteCharacterLeft.js'),
   focusFirst: () => import('./ViewletQuickPickFocusFirst.js'),
   focusIndex: () => import('./ViewletQuickPickFocusIndex.js'),
   focusLast: () => import('./ViewletQuickPickFocusLast.js'),
   focusNext: () => import('./ViewletQuickPickFocusNext.js'),
   focusPrevious: () => import('./ViewletQuickPickFocusPrevious.js'),
-  deleteCharacterLeft: () => import('./ViewletQuickPickFocusDeleteCharacterLeft.js'),
   handleBeforeInput: () => import('./ViewletQuickPickHandleBeforeInput.js'),
 }
 

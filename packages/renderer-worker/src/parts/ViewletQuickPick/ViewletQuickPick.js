@@ -8,6 +8,7 @@ import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnVa
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Height from '../Height/Height.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -284,14 +285,15 @@ const renderValue = {
 
 const renderCursorOffset = {
   isEqual(oldState, newState) {
-    oldState.cursorOffset === newState.cursorOffset || newState.cursorOffset === newState.value.length
+    return oldState.cursorOffset === newState.cursorOffset
   },
   apply(oldState, newState) {
+    const cursorOffsetPx = MeasureTextWidth.measureTextWidth(newState.value, 400, 15, 'Ubuntu', 'normal')
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ ViewletModuleId.QuickPick,
       /* method */ 'setCursorOffset',
-      /* cursorOffset */ newState.cursorOffset,
+      /* cursorOffsetPx */ cursorOffsetPx,
     ]
   },
 }

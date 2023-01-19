@@ -9,6 +9,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -225,12 +226,12 @@ export const create = () => {
   const $QuickPickText = document.createTextNode('abc')
   $VirtualInputBox.append($QuickPickText)
 
-  const $QuickPickCursor = document.createElement('div')
-  $QuickPickCursor.className = 'QuickPickCursor'
+  const $VirtualInputBoxCursor = document.createElement('div')
+  $VirtualInputBoxCursor.className = 'VirtualInputBoxCursor'
 
   const $QuickPickHeader = document.createElement('div')
   $QuickPickHeader.id = Ids.QuickPickHeader
-  $QuickPickHeader.append($QuickPickInput, $VirtualInputBox, $QuickPickCursor)
+  $QuickPickHeader.append($QuickPickInput, $VirtualInputBox, $VirtualInputBoxCursor)
 
   const $QuickPickItems = document.createElement('div')
   $QuickPickItems.id = Ids.QuickPickItems
@@ -257,6 +258,7 @@ export const create = () => {
     $QuickPickItems,
     $QuickPickStatus: undefined,
     $QuickPickText,
+    $VirtualInputBoxCursor,
   }
 }
 
@@ -306,9 +308,8 @@ export const setValue = (state, value) => {
 }
 
 export const setCursorOffset = (state, cursorOffset) => {
-  const { $QuickPickInput } = state
-  $QuickPickInput.selectionStart = cursorOffset
-  $QuickPickInput.selectionEnd = cursorOffset
+  const { $VirtualInputBoxCursor } = state
+  SetBounds.setXAndYTransform($VirtualInputBoxCursor, cursorOffset, 0)
 }
 
 export const setItemsHeight = (state, itemsHeight) => {

@@ -33,6 +33,7 @@
   /* contain: strict; */
   height: 30px;
   contain: strict;
+  position: relative;
   /* margin-bottom: -2px; */
 }
 
@@ -65,6 +66,15 @@
   background: var(--InputBoxBackground);
   padding: 0 5px;
   contain: strict;
+}
+
+.VirtualInputBoxCursor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  height: 20px;
+  background: green;
+  width: 2px;
 }
 
 .ScrollWrapper {

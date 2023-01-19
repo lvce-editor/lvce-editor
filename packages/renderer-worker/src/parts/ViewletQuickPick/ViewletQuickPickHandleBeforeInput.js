@@ -1,9 +1,13 @@
 import * as InputEventType from '../InputEventType/InputEventType.js'
 
 const handleBeforeInputInsertText = (state, data) => {
+  const { value } = state
+  const newValue = value + data
+  const newCursorOffset = newValue.length
   return {
     ...state,
-    value: state.value + data,
+    value: newValue,
+    cursorOffset: newCursorOffset,
   }
 }
 

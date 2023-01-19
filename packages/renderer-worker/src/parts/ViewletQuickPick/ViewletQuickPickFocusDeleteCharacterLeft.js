@@ -3,8 +3,11 @@ export const deleteCharacterLeft = (state) => {
   if (value === '') {
     return state
   }
+  const newValue = value.slice(0, -1)
+  const newCursorOffset = newValue.length
   return {
     ...state,
-    value: value.slice(0, -1),
+    value: newValue,
+    cursorOffset: newCursorOffset,
   }
 }

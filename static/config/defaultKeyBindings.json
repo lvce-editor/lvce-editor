@@ -780,5 +780,10 @@
     "key": "Backspace",
     "command": "QuickPick.deleteCharacterLeft",
     "when": "focus.quickPickInput"
+  },
+  {
+    "key": "ArrowLeft",
+    "command": "QuickPick.cursorLeft",
+    "when": "focus.quickPickInput"
   }
 ]
