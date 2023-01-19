@@ -47,6 +47,7 @@ const Ids = {
   QuickPickHeader: 'QuickPickHeader',
   QuickPickItems: 'QuickPickItems',
   QuickPick: 'QuickPick',
+  QuickPickInput: 'QuickPickInput',
 }
 
 /**
@@ -206,7 +207,8 @@ export const focus = (state) => {
 // - for nvda ariaRoleDescription works better
 
 export const create = () => {
-  const $QuickPickInput = InputBox.create()
+  const $QuickPickInput = document.createElement('input')
+  $QuickPickInput.id = Ids.QuickPickInput
   $QuickPickInput.setAttribute(DomAttributeType.AriaControls, Ids.QuickPickItems) // TODO use idl once supported
   // @ts-ignore
   $QuickPickInput.role = Roles.ComboBox
