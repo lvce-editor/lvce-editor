@@ -198,6 +198,7 @@ const focusElement = ($Element) => {
 
 export const focus = (state) => {
   const { $QuickPickInput } = state
+  console.log('focus')
   focusElement($QuickPickInput)
   Focus.setFocus('quickPickInput')
 }
@@ -218,9 +219,18 @@ export const create = () => {
   $QuickPickInput.addEventListener(DomEventType.BeforeInput, ViewletQuickPickEvents.handleBeforeInput)
   $QuickPickInput.ariaExpanded = AriaBoolean.True
 
+  const $VirtualInputBox = document.createElement('div')
+  $VirtualInputBox.className = 'VirtualInputBox'
+
+  const $QuickPickText = document.createTextNode('abc')
+  $VirtualInputBox.append($QuickPickText)
+
+  const $QuickPickCursor = document.createElement('div')
+  $QuickPickCursor.className = 'QuickPickCursor'
+
   const $QuickPickHeader = document.createElement('div')
   $QuickPickHeader.id = Ids.QuickPickHeader
-  $QuickPickHeader.append($QuickPickInput)
+  $QuickPickHeader.append($QuickPickInput, $VirtualInputBox, $QuickPickCursor)
 
   const $QuickPickItems = document.createElement('div')
   $QuickPickItems.id = Ids.QuickPickItems
@@ -246,6 +256,7 @@ export const create = () => {
     $QuickPickInput,
     $QuickPickItems,
     $QuickPickStatus: undefined,
+    $QuickPickText,
   }
 }
 
@@ -289,8 +300,9 @@ export const dispose = (state) => {
 }
 
 export const setValue = (state, value) => {
-  const { $QuickPickInput } = state
-  $QuickPickInput.value = value
+  const { $QuickPickInput, $QuickPickText } = state
+  // $QuickPickInput.value = value
+  $QuickPickText.nodeValue = value
 }
 
 export const setCursorOffset = (state, cursorOffset) => {

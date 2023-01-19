@@ -21,11 +21,10 @@ export const LazyCommands = {
   focusLast: () => import('./ViewletQuickPickFocusLast.js'),
   focusNext: () => import('./ViewletQuickPickFocusNext.js'),
   focusPrevious: () => import('./ViewletQuickPickFocusPrevious.js'),
+  deleteCharacterLeft: () => import('./ViewletQuickPickFocusDeleteCharacterLeft.js'),
+  handleBeforeInput: () => import('./ViewletQuickPickHandleBeforeInput.js'),
 }
 
-export const Css = [
-  '/css/parts/ViewletQuickPick.css',
-  '/css/parts/InputBox.css',
-]
+export const Css = ['/css/parts/ViewletQuickPick.css', '/css/parts/InputBox.css']
 
 export * from './ViewletQuickPick.js'

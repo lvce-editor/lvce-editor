@@ -775,5 +775,10 @@
     "key": "ArrowDown",
     "command": "EditorImage.moveDown",
     "when": "focus.EditorImage"
+  },
+  {
+    "key": "Backspace",
+    "command": "QuickPick.deleteCharacterLeft",
+    "when": "focus.quickPickInput"
   }
 ]

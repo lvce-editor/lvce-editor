@@ -40,16 +40,10 @@ const getTargetIndex = ($Target) => {
 export const handleWheel = (event) => {
   switch (event.deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(
-        /* QuickPick.handleWheel */ 'QuickPick.handleWheel',
-        /* deltaY */ event.deltaY
-      )
+      RendererWorker.send(/* QuickPick.handleWheel */ 'QuickPick.handleWheel', /* deltaY */ event.deltaY)
       break
     case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(
-        /* QuickPick.handleWheel */ 'QuickPick.handleWheel',
-        /* deltaY */ event.deltaY
-      )
+      RendererWorker.send(/* QuickPick.handleWheel */ 'QuickPick.handleWheel', /* deltaY */ event.deltaY)
       break
     default:
       break
@@ -66,11 +60,7 @@ export const handlePointerDown = (event) => {
   }
   event.preventDefault()
   const { clientX, clientY } = event
-  RendererWorker.send(
-    /* QuickPick.selectIndex */ 'QuickPick.handleClickAt',
-    /* x */ clientX,
-    /* y */ clientY
-  )
+  RendererWorker.send(/* QuickPick.selectIndex */ 'QuickPick.handleClickAt', /* x */ clientX, /* y */ clientY)
 }
 
 // TODO beforeinput event should prevent input event maybe
@@ -85,13 +75,13 @@ export const handlePointerDown = (event) => {
 //   )
 // }
 
-export const handleInput = (event) => {
-  const $Target = event.target
-  RendererWorker.send(
-    /* quickPickHandleInput */ 'QuickPick.handleInput',
-    /* value */ $Target.value
-  )
-}
+// export const handleInput = (event) => {
+//   const $Target = event.target
+//   RendererWorker.send(
+//     /* quickPickHandleInput */ 'QuickPick.handleInput',
+//     /* value */ $Target.value
+//   )
+// }
 
 export const handleBlur = (event) => {
   RendererWorker.send(/* QuickPick.handleBlur */ 'QuickPick.handleBlur')
@@ -103,13 +93,6 @@ export const handleBlur = (event) => {
 
 export const handleBeforeInput = (event) => {
   event.preventDefault()
-  const { target, inputType, data } = event
-  const { selectionStart, selectionEnd } = target
-  RendererWorker.send(
-    'QuickPick.handleBeforeInput',
-    /* inputType */ inputType,
-    /* data */ data,
-    /* selectionStart */ selectionStart,
-    /* selectionEnd */ selectionEnd
-  )
+  const { inputType, data } = event
+  RendererWorker.send('QuickPick.handleBeforeInput', /* inputType */ inputType, /* data */ data)
 }

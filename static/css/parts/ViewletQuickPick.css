@@ -45,7 +45,6 @@
 }
 
 #QuickPickInput {
-  display: none;
   position: absolute;
   width: 0;
   height: 0;
@@ -57,6 +56,15 @@
   font-size: 1px; /* needs to be at least one pixel because otherwise chrome will not emit input events */
   top: -9999px;
   left: -9999px;
+  contain: strict;
+}
+
+.VirtualInputBox {
+  border: 1px solid rgb(55, 65, 63);
+  flex: 1;
+  background: var(--InputBoxBackground);
+  padding: 0 5px;
+  contain: strict;
 }
 
 .ScrollWrapper {
