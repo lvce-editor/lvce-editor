@@ -6,12 +6,12 @@ import * as Height from '../Height/Height.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Preferences from '../Preferences/Preferences.js'
 
 /**
  * @enum {string}
