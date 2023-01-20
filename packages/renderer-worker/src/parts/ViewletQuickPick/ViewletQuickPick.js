@@ -9,6 +9,8 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Height from '../Height/Height.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
+import * as ViewletQuickPickHandleInput from './ViewletQuickPickHandleInput.js'
+import * as FilterQuickPickItems from '../FilterQuickPickItems/FilterQuickPickItems.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -58,39 +60,6 @@ export const create = (id, uri, x, y, width, height) => {
 
 // TODO naming for provider.getNoResults is a bit weird
 
-const filterPicks = (state, picks, exclude, value) => {
-  // TODO every pick should have label
-  const filterPick = (pick) => {
-    if (exclude.has(pick.id)) {
-      return false
-    }
-    if (!pick.label && !state.warned.includes(JSON.stringify(pick))) {
-      console.warn('[QuickPick] item has missing label', pick)
-      state.warned.push(JSON.stringify(pick))
-      return false
-    }
-    const labelMatch = FuzzySearch.fuzzySearch(value, pick.label || pick.id)
-    if (labelMatch) {
-      return labelMatch
-    }
-    // TODO also filtering for aliases might be expensive
-    // TODO maybe only filter for aliases if prefix is longer than 4-5 characters
-    // otherwise both will be found anywayf
-    // e.g. "Relo" matches  "Window Reload"  and "Reload Window"
-    // But "Reload Win" only matches "Reload Window"
-    if (pick.aliases) {
-      for (const alias of pick.aliases) {
-        if (FuzzySearch.fuzzySearch(value, alias)) {
-          return true
-        }
-      }
-    }
-    return false
-  }
-  const items = picks.filter(filterPick)
-  return items
-}
-
 const getVisible = (items, minLineY, maxLineY) => {
   const visibleItems = []
   const setSize = items.length
@@ -105,18 +74,6 @@ const getVisible = (items, minLineY, maxLineY) => {
     })
   }
   return visibleItems
-}
-
-const getFilteredItems = (state, picks, filterValue) => {
-  Assert.object(state)
-  Assert.array(picks)
-  Assert.string(filterValue)
-  const items = filterPicks(state, picks, state.recentPickIds, filterValue)
-  return items
-  // TODO avoid mutation
-  // state.items = items
-  // const slicedPicks = slicePicks(items)
-  // return toDisplayPicks(slicedPicks)
 }
 
 const getDefaultValue = (uri) => {
@@ -136,7 +93,7 @@ export const loadContent = async (state) => {
   Assert.array(newPicks)
   // @ts-ignore
   const filterValue = provider.getFilterValue(value)
-  const items = getFilteredItems(state, newPicks, filterValue)
+  const items = FilterQuickPickItems.getFilteredItems(state, newPicks, filterValue)
   const placeholder = provider.getPlaceholder()
   // @ts-ignore
   const label = provider.getLabel()
@@ -228,32 +185,6 @@ export const selectCurrentIndex = (state) => {
 }
 
 // TODO when user types letters -> no need to query provider again -> just filter existing results
-export const handleInput = async (state, newValue, cursorOffset) => {
-  if (state.value === newValue) {
-    return state
-  }
-  const newPicks = await state.provider.getPicks(newValue)
-  const filterValue = state.provider.getFilterValue(newValue)
-  const items = getFilteredItems(state, newPicks, filterValue)
-  const focusedIndex = items.length === 0 ? -1 : 0
-  return {
-    ...state,
-    value: newValue,
-    picks: newPicks,
-    items,
-    focusedIndex,
-    cursorOffset,
-  }
-}
-
-export const handleBeforeInput = (state, inputType, data, selectionStart, selectionEnd) => {
-  Assert.string(inputType)
-  Assert.number(selectionStart)
-  Assert.number(selectionEnd)
-  const { value } = state
-  const { newValue, cursorOffset } = BeforeInput.getNewValue(value, inputType, data, selectionStart, selectionEnd)
-  return handleInput(state, newValue, cursorOffset)
-}
 
 // TODO use reactive Programming
 // https://angular-2-training-book.rangle.io/http/search_with_switchmap
