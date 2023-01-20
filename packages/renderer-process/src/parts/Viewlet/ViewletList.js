@@ -1,13 +1,12 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
-import * as Focus from '../Focus/Focus.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Focus from '../Focus/Focus.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 const handleWheel = (event) => {
   switch (event.deltaMode) {
