@@ -6,13 +6,13 @@ import * as AriaLiveType from '../AriaLiveType/AriaLiveType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 const activeId = 'ExtensionActive'
 
@@ -319,7 +319,7 @@ export const closeSuggest = (state) => {
 
 export const setContentHeight = (state, height) => {
   const { $ListItems } = state
-  $ListItems.style.height = `${height}px`
+  SetBounds.setHeight($ListItems, height)
 }
 
 export const handleError = (state, message) => {
