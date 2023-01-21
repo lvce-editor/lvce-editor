@@ -1,4 +1,4 @@
-test.skip('viewlet.explorer-expand-all', async () => {
+test('viewlet.explorer-expand-all', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/1.txt`, '')
