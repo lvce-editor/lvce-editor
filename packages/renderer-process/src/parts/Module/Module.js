@@ -54,14 +54,14 @@ export const load = (moduleId) => {
       return import('../ServiceWorker/ServiceWorker.ipc.js')
     case ModuleId.TestFrameWork:
       return import('../TestFrameWork/TestFrameWork.ipc.js')
+    case ModuleId.Transferrable:
+      return import('../Transferrable/Transferrable.ipc.js')
     case ModuleId.Viewlet:
       return import('../Viewlet/Viewlet.ipc.js')
     case ModuleId.WebStorage:
       return import('../WebStorage/WebStorage.ipc.js')
     case ModuleId.Window:
       return import('../Window/Window.ipc.js')
-    case ModuleId.Transferrable:
-      return import('../Transferrable/Transferrable.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
