@@ -11,24 +11,23 @@ const getSrcRemote = (uri) => {
 const getSrcWithBlobUrl = async (uri) => {
   const content = await FileSystem.readFile(uri)
   const mimeType = await Command.execute('Mime.getMediaMimeType', uri)
-  const blob = await Command.execute(
-    'Blob.binaryStringToBlob',
-    content,
-    mimeType
-  )
+  const blob = await Command.execute('Blob.binaryStringToBlob', content, mimeType)
   const dataUrl = await Command.execute('Url.createObjectUrl', blob)
   return dataUrl
 }
 
 const canUseRemoteLoading = (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
+  console.log({ protocol })
   return protocol === ''
 }
 
 export const getSrc = (uri) => {
   if (canUseRemoteLoading(uri)) {
+    console.log('use remote')
     return getSrcRemote(uri)
   }
+  console.log('use none')
   return getSrcWithBlobUrl(uri)
 }
 

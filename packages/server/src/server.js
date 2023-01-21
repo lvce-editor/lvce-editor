@@ -54,7 +54,7 @@ const ContentSecurityPolicy = {
     `frame-src *`,
     `img-src 'self' https: data: blob:`,
     `script-src 'self'`,
-    `media-src 'self'`,
+    `media-src 'self' blob:`,
     `prefetch-src 'self'`,
     `manifest-src 'self'`,
     `style-src 'self' 'unsafe-inline'`, // TODO remove unsafe-inline

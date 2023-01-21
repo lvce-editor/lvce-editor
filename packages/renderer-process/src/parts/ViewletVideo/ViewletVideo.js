@@ -1,6 +1,8 @@
 // based on the video editor by vscode
 
 import * as ViewletVideoEvents from './ViewletVideoEvents.js'
+import * as Transferrable from '../Transferrable/Transferrable.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const create = () => {
   const $Video = document.createElement('video')
@@ -22,9 +24,17 @@ export const create = () => {
   }
 }
 
-export const setSrc = (state, src) => {
+export const setMediaSourceId = (state, objectId) => {
+  Assert.object(state)
+  Assert.number(objectId)
   const { $Video } = state
-  $Video.src = src
+  const handle = Transferrable.get(objectId)
+  $Video.srcObject = handle
+}
+
+export const setObjectUrl = (state, objectUrl) => {
+  const { $Video } = state
+  $Video.srcObject = objectUrl
 }
 
 export const setAudioErrorMessage = (state, videoErrorMessage) => {
