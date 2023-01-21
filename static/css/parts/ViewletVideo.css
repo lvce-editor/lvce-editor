@@ -1,0 +1,8 @@
+.Video {
+  display: grid;
+  place-items: center;
+}
+
+.VideoErrorMessage {
+  color: white;
+}
