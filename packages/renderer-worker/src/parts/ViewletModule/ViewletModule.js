@@ -70,6 +70,8 @@ export const load = (moduleId) => {
       return import('../ViewletTitleBarButtons/ViewletTitleBarButtons.ipc.js')
     case ViewletModuleId.TitleBarMenuBar:
       return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.ipc.js')
+    case ViewletModuleId.Video:
+      return import('../ViewletVideo/ViewletVideo.ipc.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }
