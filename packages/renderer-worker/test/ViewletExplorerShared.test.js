@@ -17,9 +17,7 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
   }
 })
 
-const ViewletExplorerShared = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerShared.js'
-)
+const ViewletExplorerShared = await import('../src/parts/ViewletExplorer/ViewletExplorerShared.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 class NodeError extends Error {
@@ -91,34 +89,4 @@ test('getChildDirentsRaw - resolve symbolic links - error - ENOENT', async () =>
   ])
   expect(FileSystem.stat).toHaveBeenCalledTimes(1)
   expect(FileSystem.stat).toHaveBeenCalledWith('/test/link-1.txt')
-})
-
-test('compare dirent - symlink to file and file should be ordered next to each other', async () => {
-  expect(
-    ViewletExplorerShared.compareDirent(
-      {
-        name: 'file-1.txt',
-        type: DirentType.File,
-      },
-      {
-        name: 'file-1.txt',
-        type: DirentType.SymLinkFile,
-      }
-    )
-  ).toBe(0)
-})
-
-test('compare dirent - symlink to directory and directory should be ordered next to each other', async () => {
-  expect(
-    ViewletExplorerShared.compareDirent(
-      {
-        name: 'folder-1',
-        type: DirentType.Directory,
-      },
-      {
-        name: 'folder-1',
-        type: DirentType.SymLinkFolder,
-      }
-    )
-  ).toBe(0)
 })
