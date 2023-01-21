@@ -111,6 +111,8 @@ export const getModuleId = (commandId) => {
     case 'TestFrameWork.performKeyBoardAction':
     case 'TestFrameWork.showOverlay':
       return ModuleId.TestFrameWork
+    case 'Transferrable.transfer':
+      return ModuleId.Transferrable
     case 'Viewlet.appendViewlet':
     case 'Viewlet.dispose':
     case 'Viewlet.focus':
@@ -142,8 +144,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Window
     case 33111:
       return ModuleId.Workbench
-    case 'Transferrable.transfer':
-      return ModuleId.Transferrable
     default:
       throw new Error(`command ${commandId} not found`)
   }
