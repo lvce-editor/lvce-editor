@@ -13,6 +13,7 @@ const mapExtToEditorType = {
   '.pdf': ViewletModuleId.Pdf,
   '.mp3': ViewletModuleId.Audio,
   '.mp4': ViewletModuleId.Video,
+  '.ogg': ViewletModuleId.Audio,
 }
 
 export const getId = (uri) => {
