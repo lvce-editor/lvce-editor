@@ -22,7 +22,7 @@
   {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
-    "version": "0.0.14"
+    "version": "0.0.15"
   },
   {
     "name": "builtin.language-basics-dart",
@@ -42,7 +42,7 @@
   {
     "name": "builtin.language-basics-dotenv",
     "repository": "github.com/lvce-editor/language-basics-dotenv",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-editorconfig",
@@ -82,7 +82,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "0.0.7"
+    "version": "0.0.9"
   },
   {
     "name": "builtin.language-basics-java",
@@ -92,12 +92,12 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.16"
+    "version": "0.0.21"
   },
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.0.17"
+    "version": "0.0.19"
   },
   {
     "name": "builtin.language-basics-json5",
@@ -122,7 +122,7 @@
   {
     "name": "builtin.language-basics-markdown",
     "repository": "github.com/lvce-editor/language-basics-markdown",
-    "version": "0.0.5"
+    "version": "0.0.6"
   },
   {
     "name": "builtin.language-basics-nvmrc",
@@ -172,7 +172,7 @@
   {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "0.0.17"
+    "version": "0.0.18"
   },
   {
     "name": "builtin.language-basics-svelte",
@@ -187,7 +187,7 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "0.0.5"
+    "version": "0.0.6"
   },
   {
     "name": "builtin.language-basics-xml",
@@ -197,7 +197,7 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.23"
+    "version": "0.0.24"
   },
   {
     "name": "builtin.language-features-css",
@@ -222,22 +222,22 @@
   {
     "name": "builtin.theme-atom-one-dark",
     "repository": "github.com/lvce-editor/theme-atom-one-dark",
-    "version": "0.0.9"
+    "version": "0.0.11"
   },
   {
     "name": "builtin.theme-ayu",
     "repository": "github.com/lvce-editor/theme-ayu",
-    "version": "0.0.5"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.theme-cobalt2",
     "repository": "github.com/lvce-editor/theme-cobalt2",
-    "version": "0.0.5"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.theme-gruvbox",
     "repository": "github.com/lvce-editor/theme-gruvbox",
-    "version": "0.0.10"
+    "version": "0.0.12"
   },
   {
     "name": "builtin.theme-high-contrast",
@@ -257,12 +257,12 @@
   {
     "name": "builtin.theme-noctis-uva",
     "repository": "github.com/lvce-editor/theme-noctis-uva",
-    "version": "0.0.5"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.theme-palenight",
     "repository": "github.com/lvce-editor/theme-palenight",
-    "version": "0.0.6"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.vscode-icons",
