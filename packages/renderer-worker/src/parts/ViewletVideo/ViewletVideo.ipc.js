@@ -3,7 +3,7 @@ import * as ViewletVideo from './ViewletVideo.js'
 export const name = 'Video'
 
 export const Commands = {
-  handleAudioError: ViewletVideo.handleAudioError,
+  handleVideoError: ViewletVideo.handleVideoError,
 }
 
 export const Css = ['/css/parts/ViewletVideo.css']

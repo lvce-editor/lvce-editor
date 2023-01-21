@@ -31,7 +31,7 @@ const getImprovedErrorMessage = (message) => {
   })
 }
 
-export const handleAudioError = (state, code, message) => {
+export const handleVideoError = (state, code, message) => {
   const improvedMessage = getImprovedErrorMessage(message)
   return {
     ...state,
