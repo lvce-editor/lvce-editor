@@ -190,6 +190,11 @@
     "version": "0.0.6"
   },
   {
+    "name": "builtin.language-basics-vue",
+    "repository": "github.com/lvce-editor/language-basics-vue",
+    "version": "0.0.2"
+  },
+  {
     "name": "builtin.language-basics-xml",
     "repository": "github.com/lvce-editor/language-basics-xml",
     "version": "0.0.5"
