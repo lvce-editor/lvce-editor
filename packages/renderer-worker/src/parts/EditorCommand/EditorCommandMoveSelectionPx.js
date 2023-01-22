@@ -22,7 +22,6 @@ const moveUpwards = async () => {
     const newDeltaY = position.rowIndex * editor.rowHeight
     const anchor = EditorMoveSelectionAnchorState.getPosition()
     const newSelections = new Uint32Array([position.rowIndex - 1, position.columnIndex, anchor.rowIndex, anchor.columnIndex])
-    console.log({ selections: editor.selections })
     const newEditor = {
       ...editor,
       minLineY: newMinLineY,
