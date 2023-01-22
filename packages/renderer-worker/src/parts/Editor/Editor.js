@@ -329,7 +329,6 @@ const renderSelections = {
   },
   apply(oldState, newState) {
     const { cursorInfos, selectionInfos } = EditorSelection.getVisible(newState)
-    console.log({ selectionInfos, minlineY: newState.minLineY, maxLineY: newState.maxLineY })
     return [/* method */ 'setSelections', /* cursorInfos */ cursorInfos, /* selectionInfos */ selectionInfos]
   },
 }
