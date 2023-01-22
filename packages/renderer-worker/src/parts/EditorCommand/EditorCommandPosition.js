@@ -6,8 +6,8 @@ export const at = (editor, eventX, eventY) => {
   Assert.object(editor)
   Assert.number(eventX)
   Assert.number(eventY)
-  const { maxLineY, y, deltaY, rowHeight, fontSize, fontWeight, fontFamily, letterSpacing, lines } = editor
-  const rowIndex = Clamp.clamp(Math.floor((eventY - y + deltaY) / rowHeight), 0, maxLineY - 1)
+  const { y, deltaY, rowHeight, fontSize, fontWeight, fontFamily, letterSpacing, lines } = editor
+  const rowIndex = Clamp.clamp(Math.floor((eventY - y + deltaY) / rowHeight), 0, lines.length - 1)
   const line = lines[rowIndex]
   const columnIndex = GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, eventX)
   return {
