@@ -64,7 +64,7 @@ const getFn = (modifier) => {
   }
 }
 
-export const handleSingleClick = (editor, modifier, x, y, offset) => {
+export const handleSingleClick = (editor, modifier, x, y) => {
   Assert.object(editor)
   Assert.string(modifier)
   Assert.number(x)
