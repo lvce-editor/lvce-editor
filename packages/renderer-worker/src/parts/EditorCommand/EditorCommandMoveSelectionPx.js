@@ -3,21 +3,33 @@ import * as EditorSelectionAutoMoveState from '../EditorSelectionAutoMoveState/E
 import * as RequestAnimationFrame from '../RequestAnimationFrame/RequestAnimationFrame.js'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 import * as EditorPosition from './EditorCommandPosition.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
-const moveUpwards = () => {
+const moveUpwards = async () => {
   const editor = EditorSelectionAutoMoveState.getEditor()
   if (!editor) {
     return
   }
   const position = EditorSelectionAutoMoveState.getPosition()
   if (position.rowIndex < editor.minLineY) {
-    console.log('move upwards')
+    const diff = editor.maxLineY - editor.minLineY
+    const newMinLineY = position.rowIndex
+    const newMaxLineY = position.rowIndex + diff
+    const newDeltaY = position.rowIndex * editor.rowHeight
+    const newEditor = {
+      ...editor,
+      minLineY: newMinLineY,
+      maxLineY: newMaxLineY,
+      deltaY: newDeltaY,
+    }
+    await Viewlet.setState('EditorText', newEditor)
+    EditorSelectionAutoMoveState.setPosition({ rowIndex: position.rowIndex - 1, columnIndex: position.columnIndex })
+    RequestAnimationFrame.requestAnimationFrame(moveUpwards)
   }
   // TODO get editor state
   // if editor is disposed, return and remove animation frame
   // on cursor up, remove animation frame
   //
-  RequestAnimationFrame.requestAnimationFrame(moveUpwards)
 }
 
 export const moveSelectionPx = (editor, x, y) => {
@@ -26,9 +38,9 @@ export const moveSelectionPx = (editor, x, y) => {
   Assert.number(y)
   const position = EditorPosition.at(editor, x, y)
   if (position.rowIndex < editor.minLineY && !EditorSelectionAutoMoveState.hasListener()) {
-    const animationFrameId = RequestAnimationFrame.requestAnimationFrame(moveUpwards)
+    RequestAnimationFrame.requestAnimationFrame(moveUpwards)
     EditorSelectionAutoMoveState.setEditor(editor)
-    console.log({ position })
+    EditorSelectionAutoMoveState.setPosition(position)
   }
   return EditorMoveSelection.editorMoveSelection(editor, position)
 }
