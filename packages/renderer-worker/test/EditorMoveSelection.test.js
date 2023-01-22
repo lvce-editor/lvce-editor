@@ -1,4 +1,5 @@
 import * as EditorMoveSelection from '../src/parts/EditorCommand/EditorCommandMoveSelection.js'
+import * as EditorMoveSelectionAnchorState from '../src/parts/EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorMoveSelection', () => {
@@ -7,10 +8,7 @@ test('editorMoveSelection', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 1, 0, 1),
   }
-  EditorMoveSelection.state.position = {
-    rowIndex: 0,
-    columnIndex: 1,
-  }
+  EditorMoveSelectionAnchorState.setPosition({ rowIndex: 0, columnIndex: 1 })
   expect(
     EditorMoveSelection.editorMoveSelection(editor, {
       rowIndex: 2,
@@ -27,10 +25,10 @@ test('editorMoveSelection - to the left', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 1, 0, 1),
   }
-  EditorMoveSelection.state.position = {
+  EditorMoveSelectionAnchorState.setPosition({
     rowIndex: 0,
     columnIndex: 1,
-  }
+  })
   expect(
     EditorMoveSelection.editorMoveSelection(editor, {
       rowIndex: 0,
@@ -47,10 +45,10 @@ test('editorMoveSelection - anchor same as cursor position', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 1, 0, 1),
   }
-  EditorMoveSelection.state.position = {
+  EditorMoveSelectionAnchorState.setPosition({
     rowIndex: 0,
     columnIndex: 1,
-  }
+  })
   expect(
     EditorMoveSelection.editorMoveSelection(editor, {
       rowIndex: 0,
@@ -67,10 +65,10 @@ test.skip('editorMoveSelection - single line backwards selection', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 4, 0, 4),
   }
-  EditorMoveSelection.state.position = {
+  EditorMoveSelectionAnchorState.setPosition({
     rowIndex: 0,
     columnIndex: 4,
-  }
+  })
   expect(
     EditorMoveSelection.editorMoveSelection(editor, {
       rowIndex: 0,
