@@ -2,10 +2,11 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
-import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
-import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
 import * as DomEventOptions from '../src/parts/DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../src/parts/DomEventType/DomEventType.js'
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
+import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
+import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -483,6 +484,50 @@ test('event - context menu - on scroll bar', () => {
   $ScrollBarThumb.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).not.toHaveBeenCalled()
+})
+
+test('event - pointerup after pointerdown - on editor', () => {
+  const state = Editor.create()
+  const spy1 = jest.spyOn(HTMLElement.prototype, 'addEventListener')
+  const spy2 = jest.spyOn(HTMLElement.prototype, 'removeEventListener')
+  // @ts-ignore
+  const spy3 = jest.spyOn(HTMLElement.prototype, 'setPointerCapture')
+  // @ts-ignore
+  const spy4 = jest.spyOn(HTMLElement.prototype, 'releasePointerCapture')
+  const { $LayerText } = state
+  const pointerDownEvent = new PointerEvent('pointerdown', {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    pointerId: 0,
+    button: MouseEventType.LeftClick,
+  })
+  $LayerText.dispatchEvent(pointerDownEvent)
+  expect(spy1).toHaveBeenCalledTimes(2)
+  expect(spy1).toHaveBeenNthCalledWith(1, DomEventType.PointerMove, EditorEvents.handleEditorPointerMove, { passive: false })
+  expect(spy1).toHaveBeenNthCalledWith(2, DomEventType.LostPointerCapture, EditorEvents.handleEditorLostPointerCapture)
+  expect(spy3).toHaveBeenCalledTimes(1)
+  expect(spy3).toHaveBeenCalledWith(0)
+  const pointerUpEvent = new PointerEvent(DomEventType.PointerUp, {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    pointerId: 0,
+    button: MouseEventType.LeftClick,
+  })
+  $LayerText.dispatchEvent(pointerUpEvent)
+  const pointerLostEvent = new PointerEvent(DomEventType.LostPointerCapture, {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    pointerId: 0,
+    button: MouseEventType.LeftClick,
+  })
+  $LayerText.dispatchEvent(pointerLostEvent)
+  expect(spy4).not.toHaveBeenCalled()
+  expect(spy2).toHaveBeenCalledTimes(2)
+  expect(spy2).toHaveBeenNthCalledWith(1, DomEventType.PointerMove, EditorEvents.handleEditorPointerMove)
+  expect(spy2).toHaveBeenNthCalledWith(2, DomEventType.LostPointerCapture, EditorEvents.handleEditorLostPointerCapture)
 })
 
 test.skip('event - beforeinput on contenteditable on mobile - cursor in middle', () => {
