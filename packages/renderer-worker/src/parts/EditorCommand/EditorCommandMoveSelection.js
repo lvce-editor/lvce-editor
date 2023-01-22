@@ -1,20 +1,21 @@
+import * as CompareResultType from '../CompareResultType/CompareResultType.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.js'
 
 const compare = (positionA, positionB) => {
   if (positionA.rowIndex > positionB.rowIndex) {
-    return 1
+    return CompareResultType.GreaterThan
   }
   if (positionA.rowIndex === positionB.rowIndex) {
     if (positionA.columnIndex > positionB.columnIndex) {
-      return 1
+      return CompareResultType.GreaterThan
     }
     if (positionA.columnIndex < positionB.columnIndex) {
-      return -1
+      return CompareResultType.LessThan
     }
-    return 0
+    return CompareResultType.Equal
   }
-  return -1
+  return CompareResultType.LessThan
 }
 
 const editorMoveSelectionBackwards = (anchor, position) => {
@@ -31,11 +32,11 @@ const editorMoveSelectionForwards = (anchor, position) => {
 
 const getNewSelections = (anchor, position) => {
   switch (compare(position, anchor)) {
-    case -1:
+    case CompareResultType.LessThan:
       return editorMoveSelectionBackwards(anchor, position)
-    case 0:
+    case CompareResultType.Equal:
       return editorMoveSelectionEqual(anchor, position)
-    case 1:
+    case CompareResultType.GreaterThan:
       return editorMoveSelectionForwards(anchor, position)
     default:
       throw new Error('unexpected comparison result')
