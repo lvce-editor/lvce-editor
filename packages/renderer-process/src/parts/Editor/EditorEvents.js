@@ -109,49 +109,12 @@ const getTextNodeOffset = (textNode) => {
   return offset
 }
 
-const getTotalOffset = (event) => {
-  if (document.caretRangeFromPoint) {
-    // chrome uses deprecated version
-    const range = document.caretRangeFromPoint(event.clientX, event.clientY)
-    if (!range) {
-      return 0
-    }
-    const textNode = range.startContainer
-    const textNodeOffset = getTextNodeOffset(textNode)
-    const offset = range.startOffset
-    const totalOffset = textNodeOffset + offset
-    return totalOffset
-    // @ts-ignore
-  }
-  // @ts-ignore
-  if (document.caretPositionFromPoint) {
-    // firefox uses new version
-    // @ts-ignore
-    const range = document.caretPositionFromPoint(event.clientX, event.clientY)
-    if (!range) {
-      return 0
-    }
-    const textNode = range.offsetNode
-    const textNodeOffset = getTextNodeOffset(textNode)
-    const offset = range.offset
-    const totalOffset = textNodeOffset + offset
-    return totalOffset
-  }
-  throw new Error('caret position is not supported')
-}
-
 export const handleEditorPointerMove = (event) => {
   const { clientX, clientY, altKey } = event
-  const totalOffset = getTotalOffset(event)
   if (altKey) {
-    RendererWorker.send(
-      /* Editor.moveRectangleSelectionPx */ 'Editor.moveRectangleSelectionPx',
-      /* x */ clientX,
-      /* y */ clientY,
-      /* offset */ totalOffset
-    )
+    RendererWorker.send(/* Editor.moveRectangleSelectionPx */ 'Editor.moveRectangleSelectionPx', /* x */ clientX, /* y */ clientY)
   } else {
-    RendererWorker.send(/* Editor.moveSelectionPx */ 'Editor.moveSelectionPx', /* x */ clientX, /* y */ clientY, /* offset */ totalOffset)
+    RendererWorker.send(/* Editor.moveSelectionPx */ 'Editor.moveSelectionPx', /* x */ clientX, /* y */ clientY)
   }
 }
 
@@ -182,17 +145,16 @@ export const handleMouseDown = (event) => {
     return
   }
   event.preventDefault()
-  const totalOffset = getTotalOffset(event)
   const { clientX, clientY, detail } = event
   switch (detail) {
     case 1:
-      handleSingleClick(event, clientX, clientY, totalOffset)
+      handleSingleClick(event, clientX, clientY)
       break
     case 2:
-      handleDoubleClick(event, clientX, clientY, totalOffset)
+      handleDoubleClick(event, clientX, clientY)
       break
     case 3:
-      handleTripleClick(event, clientX, clientY, totalOffset)
+      handleTripleClick(event, clientX, clientY)
       break
     default:
       break
@@ -201,22 +163,6 @@ export const handleMouseDown = (event) => {
 
 // TODO figure out whether it is possible to register hover provider without mousemove
 // mousemove handler is called very often and could slow down editor / drain battery
-
-// disabled for now because of constant cpu usage on mousemove
-// bad for performance
-export const handlePointerMove = (event) => {
-  const { clientX, clientY, altKey } = event
-  if (altKey) {
-    const offset = getTotalOffset(event)
-    RendererWorker.send(
-      /* Editor.handleMouseMoveWithAltKey */ 'Editor.handleMouseMoveWithAltKey',
-      /* x */ clientX,
-      /* y */ clientY,
-      /* offset */ offset
-    )
-  }
-  // RendererWorker.send(/* Editor.handleMouseMove */ 389, /* x */ x, /* y */ y)
-}
 
 /**
  *

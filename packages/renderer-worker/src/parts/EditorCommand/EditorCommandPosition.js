@@ -1,14 +1,15 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
+import * as GetAccurateColumnIndex from '../GetAccurateColumnIndex/GetAccurateColumnIndex.js'
 
-export const at = (editor, x, y, offset) => {
+export const at = (editor, eventX, eventY) => {
   Assert.object(editor)
-  Assert.number(x)
-  Assert.number(y)
-  Assert.number(offset)
-  const { maxLineY } = editor
-  const rowIndex = Clamp.clamp(Math.floor((y - editor.y + editor.deltaY) / editor.rowHeight), 0, maxLineY - 1)
-  const columnIndex = offset
+  Assert.number(eventX)
+  Assert.number(eventY)
+  const { maxLineY, y, deltaY, rowHeight, fontSize, fontWeight, fontFamily, letterSpacing, lines } = editor
+  const rowIndex = Clamp.clamp(Math.floor((eventY - y + deltaY) / rowHeight), 0, maxLineY - 1)
+  const line = lines[rowIndex]
+  const columnIndex = GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, eventX)
   return {
     rowIndex,
     columnIndex,
