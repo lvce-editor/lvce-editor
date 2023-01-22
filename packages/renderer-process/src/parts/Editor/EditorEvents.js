@@ -72,22 +72,6 @@ export const handleCut = (event) => {
   RendererWorker.send(/* Editor.cut */ 'Editor.cut')
 }
 
-export const handleSelectionMove = (event) => {
-  const x = event.clientX
-  const y = event.clientY
-  const totalOffset = getTotalOffset(event)
-  if (event.altKey) {
-    RendererWorker.send(/* Editor.moveRectangleSelectionPx */ 'Editor.moveRectangleSelectionPx', /* x */ x, /* y */ y, /* offset */ totalOffset)
-  } else {
-    RendererWorker.send(/* Editor.moveSelectionPx */ 'Editor.moveSelectionPx', /* x */ x, /* y */ y, /* offset */ totalOffset)
-  }
-}
-
-export const handleSelectionDone = (event) => {
-  document.removeEventListener(DomEventType.MouseMove, handleSelectionMove)
-  document.removeEventListener(DomEventType.MouseUp, handleSelectionDone)
-}
-
 const getModifier = (event) => {
   if (event.ctrlKey) {
     return ModifierKey.Ctrl
@@ -101,12 +85,6 @@ const getModifier = (event) => {
 export const handleSingleClick = (event, x, y, offset) => {
   const modifier = getModifier(event)
   RendererWorker.send(/* Editor.handleSingleClick */ 'Editor.handleSingleClick', /* modifier */ modifier, /* x */ x, /* y */ y, /* offset */ offset)
-  const $Target = event.target
-  // const $InputBox = $Target.closest('.Editor').firstElementChild
-  // $InputBox.focus()
-  // TODO this logic should be in renderer worker
-  document.addEventListener(DomEventType.MouseMove, handleSelectionMove, DomEventOptions.Passive)
-  document.addEventListener(DomEventType.MouseUp, handleSelectionDone)
 }
 
 export const handleDoubleClick = (event, x, y, offset) => {
@@ -160,6 +138,43 @@ const getTotalOffset = (event) => {
     return totalOffset
   }
   throw new Error('caret position is not supported')
+}
+
+export const handleEditorPointerMove = (event) => {
+  const { clientX, clientY, altKey } = event
+  const totalOffset = getTotalOffset(event)
+  if (altKey) {
+    RendererWorker.send(
+      /* Editor.moveRectangleSelectionPx */ 'Editor.moveRectangleSelectionPx',
+      /* x */ clientX,
+      /* y */ clientY,
+      /* offset */ totalOffset
+    )
+  } else {
+    RendererWorker.send(/* Editor.moveSelectionPx */ 'Editor.moveSelectionPx', /* x */ clientX, /* y */ clientY, /* offset */ totalOffset)
+  }
+}
+
+export const handleEditorLostPointerCapture = (event) => {
+  const { target } = event
+  target.removeEventListener(DomEventType.PointerMove, handleEditorPointerMove)
+  target.removeEventListener(DomEventType.LostPointerCapture, handleEditorLostPointerCapture)
+}
+
+export const handleEditorGotPointerCapture = () => {}
+
+/**
+ *
+ * @param {PointerEvent} event
+ */
+export const handleEditorPointerDown = (event) => {
+  const { target, pointerId } = event
+  // @ts-ignore
+  target.setPointerCapture(pointerId)
+  // @ts-ignore
+  target.addEventListener(DomEventType.PointerMove, handleEditorPointerMove, DomEventOptions.Active)
+  // @ts-ignore
+  target.addEventListener(DomEventType.LostPointerCapture, handleEditorLostPointerCapture)
 }
 
 export const handleMouseDown = (event) => {

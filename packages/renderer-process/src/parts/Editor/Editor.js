@@ -52,6 +52,7 @@ export const create = () => {
   $LayerText.className = 'EditorRows'
 
   $LayerText.addEventListener(DomEventType.MouseDown, EditorEvents.handleMouseDown)
+  $LayerText.addEventListener(DomEventType.PointerDown, EditorEvents.handleEditorPointerDown)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
