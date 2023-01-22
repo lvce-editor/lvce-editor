@@ -112,6 +112,7 @@ export const handleEditorLostPointerCapture = (event) => {
   const { target } = event
   target.removeEventListener(DomEventType.PointerMove, handleEditorPointerMove)
   target.removeEventListener(DomEventType.LostPointerCapture, handleEditorLostPointerCapture)
+  RendererWorker.send(/* Editor.handlePointerCaptureLost */ 'Editor.handlePointerCaptureLost')
 }
 
 export const handleEditorGotPointerCapture = () => {}
