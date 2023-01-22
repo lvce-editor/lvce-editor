@@ -88,7 +88,7 @@ test('event - mousedown - left', () => {
     }
   }
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 1, clientX: 8, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleSingleClick', '', 8, 5, 2)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleSingleClick', '', 8, 5)
 })
 
 test('event - mousedown - right', () => {
@@ -135,7 +135,7 @@ test('event - mousedown - left - out of viewport', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleSingleClick', '', -10, -10, 0)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleSingleClick', '', -10, -10)
 })
 
 test('event - double click', () => {
@@ -155,7 +155,7 @@ test('event - double click', () => {
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 2, clientX: 8, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleDoubleClick', 8, 5, 2)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleDoubleClick', 8, 5)
 })
 
 test.skip('event - double click and move mouse to create selection', () => {
@@ -199,7 +199,7 @@ test('event - triple click', () => {
     }
   }
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 3, clientX: 8, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleTripleClick', 8, 5, 2)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleTripleClick', 8, 5)
 })
 
 test.skip('event - touchstart - single touch', () => {

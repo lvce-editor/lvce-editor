@@ -82,31 +82,21 @@ const getModifier = (event) => {
   return ModifierKey.None
 }
 
-export const handleSingleClick = (event, x, y, offset) => {
+export const handleSingleClick = (event, x, y) => {
   const modifier = getModifier(event)
-  RendererWorker.send(/* Editor.handleSingleClick */ 'Editor.handleSingleClick', /* modifier */ modifier, /* x */ x, /* y */ y, /* offset */ offset)
+  RendererWorker.send(/* Editor.handleSingleClick */ 'Editor.handleSingleClick', /* modifier */ modifier, /* x */ x, /* y */ y)
 }
 
-export const handleDoubleClick = (event, x, y, offset) => {
-  RendererWorker.send(/* Editor.handleDoubleClick */ 'Editor.handleDoubleClick', /* x */ x, /* y */ y, /* offset */ offset)
+export const handleDoubleClick = (event, x, y) => {
+  RendererWorker.send(/* Editor.handleDoubleClick */ 'Editor.handleDoubleClick', /* x */ x, /* y */ y)
 }
 
-export const handleTripleClick = (event, x, y, offset) => {
-  RendererWorker.send(/* Editor.handleTripleClick */ 'Editor.handleTripleClick', /* x */ x, /* y */ y, /* offset */ offset)
+export const handleTripleClick = (event, x, y) => {
+  RendererWorker.send(/* Editor.handleTripleClick */ 'Editor.handleTripleClick', /* x */ x, /* y */ y)
 }
 
 const isRightClick = (event) => {
   return event.button === MouseEventType.RightClick
-}
-
-const getTextNodeOffset = (textNode) => {
-  let $Token = textNode.parentElement
-  let offset = 0
-  while ($Token.previousSibling) {
-    $Token = $Token.previousSibling
-    offset += $Token.textContent.length
-  }
-  return offset
 }
 
 export const handleEditorPointerMove = (event) => {
