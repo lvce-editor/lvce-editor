@@ -12,12 +12,27 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/EditorCommand/EditorCommandPosition.js', () => {
+  return {
+    at: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 
 const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.js')
 
 const EditorHandleSingleClick = await import('../src/parts/EditorCommand/EditorCommandHandleSingleClick.js')
+const EditorPosition = await import('../src/parts/EditorCommand/EditorCommandPosition.js')
 
-test('editorHandleClick', async () => {
+test('editorHandleClick', () => {
+  // @ts-ignore
+  EditorPosition.at.mockImplementation(() => {
+    return {
+      rowIndex: 0,
+      columnIndex: 0,
+    }
+  })
   const editor = {
     lines: ['11111', '22222'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
@@ -27,12 +42,19 @@ test('editorHandleClick', async () => {
     columnWidth: 8,
     deltaY: 0,
   }
-  expect(await EditorHandleSingleClick.handleSingleClick(editor, '', 21, 11, 0)).toMatchObject({
+  expect(EditorHandleSingleClick.handleSingleClick(editor, '', 21, 11)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
 
 test('editorHandleClick - with selection', async () => {
+  // @ts-ignore
+  EditorPosition.at.mockImplementation(() => {
+    return {
+      rowIndex: 0,
+      columnIndex: 0,
+    }
+  })
   const editor = {
     lines: ['line 1', 'line 2'],
     cursor: {
@@ -46,13 +68,20 @@ test('editorHandleClick - with selection', async () => {
     columnWidth: 8,
     deltaY: 0,
   }
-  expect(await EditorHandleSingleClick.handleSingleClick(editor, '', 21, 11, 0)).toMatchObject({
+  expect(await EditorHandleSingleClick.handleSingleClick(editor, '', 21, 11)).toMatchObject({
     lines: ['line 1', 'line 2'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
 
 test('editorHandleClick - with ctrl - add second cursor', async () => {
+  // @ts-ignore
+  EditorPosition.at.mockImplementation(() => {
+    return {
+      rowIndex: 0,
+      columnIndex: 1,
+    }
+  })
   const editor = {
     lines: ['11111', '22222'],
     selections: new Uint32Array([0, 0, 0, 0]),
@@ -62,12 +91,19 @@ test('editorHandleClick - with ctrl - add second cursor', async () => {
     columnWidth: 8,
     deltaY: 0,
   }
-  expect(await EditorHandleSingleClick.handleSingleClick(editor, ModifierKey.Ctrl, 21, 11, 1)).toMatchObject({
+  expect(await EditorHandleSingleClick.handleSingleClick(editor, ModifierKey.Ctrl, 21, 11)).toMatchObject({
     selections: new Uint32Array([0, 0, 0, 0, 0, 1, 0, 1]),
   })
 })
 
 test('editorHandleClick - with ctrl - remove second cursor', async () => {
+  // @ts-ignore
+  EditorPosition.at.mockImplementation(() => {
+    return {
+      rowIndex: 0,
+      columnIndex: 1,
+    }
+  })
   const editor = {
     lines: ['11111', '22222'],
     selections: new Uint32Array([0, 0, 0, 0, 0, 1, 0, 1]),
@@ -78,7 +114,7 @@ test('editorHandleClick - with ctrl - remove second cursor', async () => {
     deltaY: 0,
     maxLineY: 100,
   }
-  expect(await EditorHandleSingleClick.handleSingleClick(editor, ModifierKey.Ctrl, 21, 11, 1)).toMatchObject({
+  expect(await EditorHandleSingleClick.handleSingleClick(editor, ModifierKey.Ctrl, 21, 11)).toMatchObject({
     selections: new Uint32Array([0, 0, 0, 0]),
   })
 })

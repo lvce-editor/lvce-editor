@@ -1,4 +1,20 @@
-import * as EditorPosition from '../src/parts/EditorCommand/EditorCommandPosition.js'
+import { jest } from '@jest/globals'
+import * as ModifierKey from '../src/parts/ModifierKey/ModifierKey.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/GetAccurateColumnIndex/GetAccurateColumnIndex.js', () => {
+  return {
+    getAccurateColumnIndex: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const EditorPosition = await import('../src/parts/EditorCommand/EditorCommandPosition.js')
+const GetAccurateColumnIndex = await import('../src/parts/GetAccurateColumnIndex/GetAccurateColumnIndex.js')
 
 test('x', () => {
   const editor = {
@@ -31,6 +47,10 @@ test('y', () => {
 })
 
 test('at - longer than editor content', () => {
+  // @ts-ignore
+  GetAccurateColumnIndex.getAccurateColumnIndex.mockImplementation(() => {
+    return 0
+  })
   const editor = {
     lines: [''],
     cursor: {
@@ -45,7 +65,7 @@ test('at - longer than editor content', () => {
     maxLineY: 1,
     deltaY: 0,
   }
-  expect(EditorPosition.at(editor, 0, 40, 0)).toEqual({
+  expect(EditorPosition.at(editor, 0, 40)).toEqual({
     rowIndex: 0,
     columnIndex: 0,
   })

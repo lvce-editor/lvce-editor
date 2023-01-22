@@ -32,5 +32,8 @@ export const create = () => {
       }
       return line.length
     },
+    getSegments(line) {
+      return segmenter.segment(line)
+    },
   }
 }
