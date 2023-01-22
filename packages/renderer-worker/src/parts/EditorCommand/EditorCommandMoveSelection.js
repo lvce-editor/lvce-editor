@@ -1,14 +1,6 @@
 import * as CompareResultType from '../CompareResultType/CompareResultType.js'
 import * as Editor from '../Editor/Editor.js'
-
-// TODO not sure where this state should be
-// TODO maybe rename to selection anchor
-export const state = {
-  position: {
-    rowIndex: 0,
-    columnIndex: 0,
-  },
-}
+import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.js'
 
 const compare = (positionA, positionB) => {
   if (positionA.rowIndex > positionB.rowIndex) {
@@ -52,7 +44,7 @@ const getNewSelections = (anchor, position) => {
 }
 
 export const editorMoveSelection = (editor, position) => {
-  const anchor = state.position
+  const anchor = EditorMoveSelectionAnchorState.getPosition()
   const newSelections = getNewSelections(anchor, position)
   // TODO if selection equals previous selection -> do nothing
   return Editor.scheduleSelections(editor, newSelections)
