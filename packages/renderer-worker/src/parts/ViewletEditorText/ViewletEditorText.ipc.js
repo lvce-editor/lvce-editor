@@ -96,6 +96,7 @@ export const LazyCommands = {
   type: () => import('../EditorCommand/EditorCommandType.js'),
   undo: () => import('../EditorCommand/EditorCommandUndo.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
+  handlePointerCaptureLost: () => import('../EditorCommand/EditorCommandHandlePointerCaptureLost.js'),
 }
 
 // prettier-ignore
