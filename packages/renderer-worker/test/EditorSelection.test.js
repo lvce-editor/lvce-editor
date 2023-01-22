@@ -219,7 +219,7 @@ test.skip('applyEdit - emoji ', () => {
   expect(EditorSelection.applyEdit(editor, changes)).toMatchObject({})
 })
 
-test.only('getVisible - only start of selection visible', () => {
+test('getVisible - only start of selection visible', () => {
   const editor = {
     x: 20,
     y: 10,
@@ -236,13 +236,18 @@ test.only('getVisible - only start of selection visible', () => {
     cursorWidth: 0,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual(new Float32Array([/* x */ 24, /* y */ 40]))
+  expect(cursorInfos).toEqual(new Float32Array([]))
   expect(selectionInfos).toEqual(
     // prettier-ignore
     new Float32Array([
-      /* x */ 24,/* y */ 0,  /* width */ 24, /* height */ 20,
-      /* x */ 0, /* y */ 20, /* width */ 48, /* height */ 20,
-      /* x */ 0, /* y */ 40, /* width */ 24, /* height */ 20,
+     /* x */ 0, /* y */ 0, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 20, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 40, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 60, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 80, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 100, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 120, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 140, /* width */ 48, /* height */ 20,
     ])
   )
 })
