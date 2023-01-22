@@ -1,3 +1,4 @@
+import * as CompareResultType from '../CompareResultType/CompareResultType.js'
 import * as Editor from '../Editor/Editor.js'
 
 // TODO not sure where this state should be
@@ -11,54 +12,39 @@ export const state = {
 
 const compare = (positionA, positionB) => {
   if (positionA.rowIndex > positionB.rowIndex) {
-    return 1
+    return CompareResultType.GreaterThan
   }
   if (positionA.rowIndex === positionB.rowIndex) {
     if (positionA.columnIndex > positionB.columnIndex) {
-      return 1
+      return CompareResultType.GreaterThan
     }
     if (positionA.columnIndex < positionB.columnIndex) {
-      return -1
+      return CompareResultType.LessThan
     }
-    return 0
+    return CompareResultType.Equal
   }
-  return -1
+  return CompareResultType.LessThan
 }
 
 const editorMoveSelectionBackwards = (anchor, position) => {
-  return new Uint32Array([
-    position.rowIndex,
-    position.columnIndex,
-    anchor.rowIndex,
-    anchor.columnIndex,
-  ])
+  return new Uint32Array([position.rowIndex, position.columnIndex, anchor.rowIndex, anchor.columnIndex])
 }
 
 const editorMoveSelectionEqual = (anchor, position) => {
-  return new Uint32Array([
-    position.rowIndex,
-    position.columnIndex,
-    position.rowIndex,
-    position.columnIndex,
-  ])
+  return new Uint32Array([position.rowIndex, position.columnIndex, position.rowIndex, position.columnIndex])
 }
 
 const editorMoveSelectionForwards = (anchor, position) => {
-  return new Uint32Array([
-    anchor.rowIndex,
-    anchor.columnIndex,
-    position.rowIndex,
-    position.columnIndex,
-  ])
+  return new Uint32Array([anchor.rowIndex, anchor.columnIndex, position.rowIndex, position.columnIndex])
 }
 
 const getNewSelections = (anchor, position) => {
   switch (compare(position, anchor)) {
-    case -1:
+    case CompareResultType.LessThan:
       return editorMoveSelectionBackwards(anchor, position)
-    case 0:
+    case CompareResultType.Equal:
       return editorMoveSelectionEqual(anchor, position)
-    case 1:
+    case CompareResultType.GreaterThan:
       return editorMoveSelectionForwards(anchor, position)
     default:
       throw new Error('unexpected comparison result')
