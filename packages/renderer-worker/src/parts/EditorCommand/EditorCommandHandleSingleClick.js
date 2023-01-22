@@ -1,8 +1,8 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Editor from '../Editor/Editor.js'
+import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.js'
 import * as ModifierKey from '../ModifierKey/ModifierKey.js'
 import * as EditorGoToDefinition from './EditorCommandGoToDefinition.js'
-import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 
 const handleSingleClickWithAlt = async (editor, position) => {
@@ -45,7 +45,7 @@ const handleSingleClickWithCtrl = async (editor, position) => {
 }
 
 const handleSingleClickDefault = (editor, position) => {
-  EditorMoveSelection.state.position = position
+  EditorMoveSelectionAnchorState.setPosition(position)
   return {
     ...editor,
     selections: new Uint32Array([position.rowIndex, position.columnIndex, position.rowIndex, position.columnIndex]),
