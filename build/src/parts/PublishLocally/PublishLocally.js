@@ -49,17 +49,13 @@ const installPackagesLocally = async () => {
     to: Path.join(tmpDir, 'package.json'),
     content: '{}',
   })
-  await Exec.exec(
-    'npm',
-    ['install', '--prefer-offline', '--no-audit', '@lvce-editor/server'],
-    {
-      cwd: tmpDir,
-      env: {
-        ...process.env,
-        npm_config_registry: registryUrl,
-      },
-    }
-  )
+  await Exec.exec('npm', ['install', '--no-audit', '@lvce-editor/server'], {
+    cwd: tmpDir,
+    env: {
+      ...process.env,
+      npm_config_registry: registryUrl,
+    },
+  })
 }
 
 const startVerdaccio = async () => {
@@ -81,7 +77,9 @@ const main = async () => {
 
   Logger.info('published packages successfully')
 
-  Process.exit(0)
+  if (!process.argv.includes('--wait')) {
+    Process.exit(0)
+  }
 }
 
 main()

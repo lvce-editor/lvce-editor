@@ -1,11 +1,9 @@
-import { rm } from 'node:fs/promises'
 import { startVerdaccio } from 'verdaccio'
+import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
-import * as Mkdir from '../Mkdir/Mkdir.js'
 
 export const start = async () => {
-  console.log({ startVerdaccio })
   const cachePath = Path.absolute('build/.tmp/verdaccio-cache')
   await Remove.remove(cachePath)
   await Mkdir.mkdir(cachePath)
