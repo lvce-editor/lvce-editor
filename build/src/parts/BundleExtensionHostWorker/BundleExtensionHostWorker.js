@@ -17,6 +17,11 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
     occurrence: `../../../../../static/`,
     replacement: `../../../static/`,
   })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/BabelParser/BabelParser.js`,
+    occurrence: `../../../../../static/`,
+    replacement: `../../../static/`,
+  })
   await BundleJs.bundleJs({
     cwd: cachePath,
     from: `./src/extensionHostWorkerMain.js`,

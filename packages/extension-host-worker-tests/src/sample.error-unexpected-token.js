@@ -12,11 +12,13 @@ test('sample.error-unexpected-token', async () => {
   // assert
   const dialog = Locator('#Dialog')
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
-  await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.error-unexpected-token: Failed to import http://localhost:3000/packages/extension-host-worker-tests/fixtures/sample.error-unexpected-token/main.js: SyntaxError: Unexpected number`
+  await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-unexpected-token: SyntaxError: Missing semicolon.`)
+  const codeFrame = Locator('#DialogBodyErrorCodeFrame')
+  expect(codeFrame).toHaveText(
+    `> 1 | []0
+    |   ^
+  2 |`
   )
-  // TODO error message is not good
-  // TODO code frame has wrong location
 })
 
 export {}

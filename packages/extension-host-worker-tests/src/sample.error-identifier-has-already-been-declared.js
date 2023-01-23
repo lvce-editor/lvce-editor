@@ -10,12 +10,18 @@ test('sample.error-identifier-has-already-been-declared', async () => {
   await QuickPick.selectItem('Sample Command')
 
   // assert
-  const dialog = Locator('#Dialog')
-  const errorMessage = dialog.locator('#DialogBodyErrorMessage')
+  const errorMessage = Locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.error-identifier-has-already-been-declared: Failed to import http://localhost:3000/packages/extension-host-worker-tests/fixtures/sample.error-identifier-has-already-been-declared/main.js: SyntaxError: Identifier 'x' has already been declared`
+    `Error: Failed to activate extension sample.error-identifier-has-already-been-declared: SyntaxError: Identifier 'x' has already been declared.`
   )
-  // TODO code frame has wrong location
+  const codeFrame = Locator('#DialogBodyErrorCodeFrame')
+  expect(codeFrame).toHaveText(`  1 | let x = 1
+  2 |
+> 3 | let x = 2
+    |     ^
+  4 |
+  5 | export const activate = () => {}
+  6 |`)
 })
 
 export {}
