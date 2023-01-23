@@ -81,7 +81,6 @@ export const getVisible = (editor) => {
     const selectionEndRow = selections[i + 2]
     const selectionEndColumn = selections[i + 3]
     if (selectionEndRow < minLineY || selectionStartRow > maxLineY) {
-      console.log('con')
       continue
     }
     const endLine = lines[selectionEndRow]
