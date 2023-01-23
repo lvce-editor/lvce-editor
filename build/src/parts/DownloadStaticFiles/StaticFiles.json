@@ -26,6 +26,11 @@
     "type": "javascript"
   },
   {
+    "name": "@babel/parser",
+    "version": "7.20.13",
+    "type": "javascript"
+  },
+  {
     "name": "termterm",
     "version": "0.0.22",
     "type": "javascript"
