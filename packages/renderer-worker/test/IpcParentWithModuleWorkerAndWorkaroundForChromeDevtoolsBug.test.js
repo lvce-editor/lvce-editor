@@ -28,7 +28,7 @@ jest.unstable_mockModule('../src/parts/Callback/Callback.js', () => {
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const Callback = await import('../src/parts/Callback/Callback.js')
 const IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug = await import(
-  '../src/parts/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js/index.js'
+  '../src/parts/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js'
 )
 
 test('create', async () => {
