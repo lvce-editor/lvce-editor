@@ -28,4 +28,11 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
     occurrence: `../../../static/`,
     replacement: `../../../../../static/`,
   })
+  // workaround for firefox bug
+  await Replace.replace({
+    path: `${cachePath}/dist/extensionHostWorkerMain.js`,
+    occurrence: `//# sourceMappingURL`,
+    replacement: `export {}
+//# sourceMappingURL`,
+  })
 }
