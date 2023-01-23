@@ -175,9 +175,14 @@ const serveStatic = (root, skip = '') =>
 const serve404 = () =>
   function serve404(req, res, next) {
     console.info(`[web] Failed to serve static file "${req.url}"`)
-    res.writeHead(404, {
+    const headers = {
       'Content-Type': 'text/plain',
-    })
+    }
+    if (req.url.endsWith('WorkerMain.js')) {
+      headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
+      headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
+    }
+    res.writeHead(404, headers)
     return res.end('Not found')
   }
 
