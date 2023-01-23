@@ -1,21 +1,25 @@
-export const ArrowDown = '/icons/arrow-down.svg'
-export const ArrowLeft = '/icons/arrow-left.svg'
-export const ArrowRight = '/icons/arrow-right.svg'
-export const ArrowUp = '/icons/arrow-up.svg'
-export const ChevronDown = '/icons/chevron-down.svg'
-export const ChevronUp = '/icons/chevron-up.svg'
-export const Close = '/icons/close.svg'
-export const DebugContinue = '/icons/debug-continue.svg'
-export const DebugPause = '/icons/debug-pause.svg'
-export const DebugStepInto = '/icons/debug-step-into.svg'
-export const DebugStepOut = '/icons/debug-step-out.svg'
-export const DebugStepOver = '/icons/debug-step-over.svg'
-export const ExtensionDefaultIcon = '/icons/extensionDefaultIcon.png'
-export const LinkExternal = '/icons/link-external.svg'
-export const NextMatch = '/icons/arrow-down.svg'
-export const PreviousMatch = '/icons/arrow-up.svg'
-export const Refresh = '/icons/refresh.svg'
-export const TriangleDown = '/icons/triangle-down.svg'
-export const TriangleRight = '/icons/triangle-right.svg'
-export const ZoomIn = '/icons/zoom-in.svg'
-export const ZoomOut = '/icons/zoom-out.svg'
+import * as Platform from '../Platform/Platform.js'
+
+const assetDir = Platform.getAssetDir()
+
+export const ArrowDown = `${assetDir}/icons/arrow-down.svg`
+export const ArrowLeft = `${assetDir}/icons/arrow-left.svg`
+export const ArrowRight = `${assetDir}/icons/arrow-right.svg`
+export const ArrowUp = `${assetDir}/icons/arrow-up.svg`
+export const ChevronDown = `${assetDir}/icons/chevron-down.svg`
+export const ChevronUp = `${assetDir}/icons/chevron-up.svg`
+export const Close = `${assetDir}/icons/close.svg`
+export const DebugContinue = `${assetDir}/icons/debug-continue.svg`
+export const DebugPause = `${assetDir}/icons/debug-pause.svg`
+export const DebugStepInto = `${assetDir}/icons/debug-step-into.svg`
+export const DebugStepOut = `${assetDir}/icons/debug-step-out.svg`
+export const DebugStepOver = `${assetDir}/icons/debug-step-over.svg`
+export const ExtensionDefaultIcon = `${assetDir}/icons/extensionDefaultIcon.png`
+export const LinkExternal = `${assetDir}/icons/link-external.svg`
+export const NextMatch = `${assetDir}/icons/arrow-down.svg`
+export const PreviousMatch = `${assetDir}/icons/arrow-up.svg`
+export const Refresh = `${assetDir}/icons/refresh.svg`
+export const TriangleDown = `${assetDir}/icons/triangle-down.svg`
+export const TriangleRight = `${assetDir}/icons/triangle-right.svg`
+export const ZoomIn = `${assetDir}/icons/zoom-in.svg`
+export const ZoomOut = `${assetDir}/icons/zoom-out.svg`
