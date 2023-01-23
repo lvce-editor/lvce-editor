@@ -16,11 +16,7 @@ const tryToGetActualErrorMessage = async ({ url, name }) => {
     await import(url)
     return `Failed to start ${displayName}: Unknown Error`
   } catch (error) {
-    if (
-      error &&
-      error instanceof Error &&
-      error.message.startsWith('Failed to fetch dynamically imported module')
-    ) {
+    if (error && error instanceof Error && error.message.startsWith('Failed to fetch dynamically imported module')) {
       try {
         const response = await fetch(url)
         switch (response.status) {
@@ -81,14 +77,8 @@ export const create = async ({ url, name }) => {
     })
     return worker
   } catch (error) {
-    if (
-      error &&
-      error instanceof Error &&
-      error.message === 'module workers are not supported in firefox'
-    ) {
-      const IpcParentWithMessagePort = await import(
-        './IpcParentWithMessagePort.js'
-      )
+    if (error && error instanceof Error && error.message === 'module workers are not supported in firefox') {
+      const IpcParentWithMessagePort = await import('../IpcParentWithMessagePort/IpcParentWithMessagePort.js')
       return IpcParentWithMessagePort.create({ url })
     }
     throw error
