@@ -7,7 +7,8 @@ import * as Mkdir from '../Mkdir/Mkdir.js'
 export const start = async () => {
   console.log({ startVerdaccio })
   const cachePath = Path.absolute('build/.tmp/verdaccio-cache')
-  await Remove.remove(cachePath)
+  const lvceEditorPath = Path.join(cachePath, '@lvce-editor')
+  await Remove.remove(lvceEditorPath)
   await Mkdir.mkdir(cachePath)
   await new Promise((resolve) => {
     startVerdaccio(
