@@ -7,7 +7,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/IpcParent/IpcParentWithMessagePort.js', () => {
+jest.unstable_mockModule('../src/parts/IpcParentWithMessagePort/IpcParentWithMessagePort.js', () => {
   return {
     create: jest.fn(() => {
       return {}
@@ -24,7 +24,7 @@ jest.unstable_mockModule('https://example.com/not-found.js', () => {}, {
 })
 
 const IpcParentWithMessagePort = await import('../src/parts/IpcParentWithMessagePort/IpcParentWithMessagePort.js')
-const IpcParentWithModuleWorker = await import('../src/parts/IpcParentWithModuleWorker/IpcParentWithModuleWorker.js/index.js')
+const IpcParentWithModuleWorker = await import('../src/parts/IpcParentWithModuleWorker/IpcParentWithModuleWorker.js')
 
 test('create - error - not supported in firefox', async () => {
   // @ts-ignore
@@ -119,7 +119,7 @@ test('create - error - not found', async () => {
     })
   ).rejects.toThrowError(
     new Error(
-      "Failed to start renderer worker: Error: Cannot find module 'https://example.com/not-found.js' from 'src/parts/IpcParent/IpcParentWithModuleWorker.js'"
+      "Failed to start renderer worker: Error: Cannot find module 'https://example.com/not-found.js' from 'src/parts/IpcParentWithModuleWorker/IpcParentWithModuleWorker.js'"
     )
   )
 })
