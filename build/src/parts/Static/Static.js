@@ -38,24 +38,24 @@ const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
 const getModule = (method) => {
   switch (method) {
     case IpcParentType.ModuleWorker:
-      return import('./IpcParentWithModuleWorker.js')
+      return import('../IpcParentWithModuleWorker/IpcParentWithModuleWorker.js')
     case IpcParentType.MessagePort:
-      return import('./IpcParentWithMessagePort.js')
+      return import('../IpcParentWithMessagePort/IpcParentWithMessagePort.js')
     case IpcParentType.ReferencePort:
-      return import('./IpcParentWithReferencePort.js')
+      return import('../IpcParentWithReferencePort/IpcParentWithReferencePort.js')
     case IpcParentType.ModuleWorkerWithMessagePort:
-      return import('./IpcParentWithModuleWorkerWithMessagePort.js')
+      return import('../IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.js')
     case IpcParentType.Electron:
-      return import('./IpcParentWithElectron.js')
+      return import('../IpcParentWithElectron/IpcParentWithElectron.js')
     default:
       throw new Error('unexpected ipc type')
   }
 }`,
     replacement: `import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as IpcParentWithModuleWorker from './IpcParentWithModuleWorker.js'
-import * as IpcParentWithModuleWorkerWithMessagePort from './IpcParentWithModuleWorkerWithMessagePort.js'
-import * as IpcParentWithMessagePort from './IpcParentWithMessagePort.js'
-import * as IpcParentWithReferencePort from './IpcParentWithReferencePort.js'
+import * as IpcParentWithModuleWorker from '../IpcParentWithModuleWorker/IpcParentWithModuleWorker.js'
+import * as IpcParentWithModuleWorkerWithMessagePort from '../IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.js'
+import * as IpcParentWithMessagePort from '../IpcParentWithMessagePort/IpcParentWithMessagePort.js'
+import * as IpcParentWithReferencePort from '../IpcParentWithReferencePort/IpcParentWithReferencePort.js'
 
 const getModule = (method) => {
   switch (method) {
