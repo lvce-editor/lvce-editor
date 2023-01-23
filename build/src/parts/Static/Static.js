@@ -170,11 +170,11 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
 const getModule = (method) => {
   switch (method) {
     case IpcChildType.MessagePort:
-      return import('./IpcChildWithMessagePort.js')
+      return import('../IpcChildWithMessagePort/IpcChildWithMessagePort.js')
     case IpcChildType.ModuleWorker:
-      return import('./IpcChildWithModuleWorker.js')
+      return import('../IpcChildWithModuleWorker/IpcChildWithModuleWorker.js')
     case IpcChildType.ReferencePort:
-      return import('./IpcChildWithReferencePort.js')
+      return import('../IpcChildWithReferencePort/IpcChildWithReferencePort.js')
     default:
       throw new Error('unexpected ipc type')
   }
@@ -186,9 +186,9 @@ export const listen = async ({ method }) => {
 }
 `,
     replacement: `import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-import * as IpcChildWithMessagePort from './IpcChildWithMessagePort.js'
-import * as IpcChildWithModuleWorker from './IpcChildWithModuleWorker.js'
-import * as IpcChildWithReferencePort from './IpcChildWithReferencePort.js'
+import * as IpcChildWithMessagePort from '../IpcChildWithMessagePort/IpcChildWithMessagePort.js'
+import * as IpcChildWithModuleWorker from '../IpcChildWithModuleWorker/IpcChildWithModuleWorker.js'
+import * as IpcChildWithReferencePort from '../IpcChildWithReferencePort/IpcChildWithReferencePort.js'
 
 const getModule = (method) => {
   switch (method) {
