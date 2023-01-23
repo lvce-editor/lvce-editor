@@ -15,7 +15,7 @@ const isErrorMessage = (message) => {
 
 const handleMessageMethod = async (message, event) => {
   if (message.method === 'ElectronMessagePort.create') {
-    const IpcParentWithElectron = await import('../IpcParent/IpcParentWithElectron.js')
+    const IpcParentWithElectron = await import('../IpcParentWithElectron/IpcParentWithElectron.js')
     const ipc = await IpcParentWithElectron.create({
       type: 'extension-host-helper-process',
     })
