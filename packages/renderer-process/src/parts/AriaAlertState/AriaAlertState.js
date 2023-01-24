@@ -15,7 +15,7 @@ export const getAriaAlert2 = () => {
 }
 
 export const setElements = ($AriaMessages, $AriaAlert1, $AriaAlert2) => {
-  state.$AriaMessages - $AriaMessages
+  state.$AriaMessages = $AriaMessages
   state.$AriaAlert1 = $AriaAlert1
   state.$AriaAlert2 = $AriaAlert2
 }

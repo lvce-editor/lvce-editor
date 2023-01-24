@@ -24,7 +24,6 @@ export const alert = (message) => {
   if (!message) {
     return
   }
-
   if (!AriaAlertState.hasElements()) {
     const $AriaAlert1 = create$AriaAlert()
     const $AriaAlert2 = create$AriaAlert()
