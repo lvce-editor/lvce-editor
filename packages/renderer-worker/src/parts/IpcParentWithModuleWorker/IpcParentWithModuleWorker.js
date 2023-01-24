@@ -1,5 +1,6 @@
 import * as GetWorkerDisplayName from '../GetWorkerDisplayName/GetWorkerDisplayName.js'
 import * as WorkerType from '../WorkerType/WorkerType.js'
+import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerError.js'
 
 const tryToGetActualErrorMessage = async ({ url, name }) => {
   const displayName = GetWorkerDisplayName.getWorkerDisplayName(name)
@@ -24,13 +25,6 @@ const tryToGetActualErrorMessage = async ({ url, name }) => {
   }
 }
 
-const isFirefoxError = (message) => {
-  return [
-    'SyntaxError: import declarations may only appear at top level of a module',
-    'SyntaxError: export declarations may only appear at top level of a module',
-  ].includes(message)
-}
-
 export const create = async ({ url, name }) => {
   try {
     const worker = new Worker(url, {
@@ -52,7 +46,7 @@ export const create = async ({ url, name }) => {
       }
       const handleFirstError = async (event) => {
         cleanup()
-        if (isFirefoxError(event.message)) {
+        if (IsFirefoxWorkerError.isFirefoxError(event.message)) {
           event.preventDefault()
           reject(new Error('module workers are not supported in firefox'))
         } else {
