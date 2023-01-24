@@ -38,6 +38,11 @@ jobs:
         with:
           path: '~/.electron-gyp'
           key: ${{ runner.os }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v3
+        id: build-cache
+        with:
+          path: 'build/.tmp/cachedDependencies'
+          key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: npm ci
         if: steps.npm-cache.outputs.cache-hit != 'true'
