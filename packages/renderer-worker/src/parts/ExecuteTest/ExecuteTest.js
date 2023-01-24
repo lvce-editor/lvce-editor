@@ -10,14 +10,14 @@ const printError = (error) => {
   }
 }
 
-export const executeTest = async (name, fn) => {
+export const executeTest = async (name, fn, globals = {}) => {
   let _error
   let _start
   let _end
   let _duration
   try {
     _start = Timestamp.now()
-    await fn()
+    await fn(globals)
     _end = Timestamp.now()
     _duration = `${_end - _start}ms`
     console.info(`[test passed] ${name} in ${_duration}`)
