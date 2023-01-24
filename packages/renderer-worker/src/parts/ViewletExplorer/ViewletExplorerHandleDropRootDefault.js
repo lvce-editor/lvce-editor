@@ -34,7 +34,7 @@ const uploadFilesDefault = async (root, pathSeparator, fileSystemHandles) => {
     if (kind === FileHandleType.Directory) {
       throw new Error('folder upload is not yet supported')
     }
-    const content = await FilesystemHandle.getText(fileSystemHandle)
+    const content = await FilesystemHandle.getBinaryString(fileSystemHandle)
     const to = Path.join(pathSeparator, root, fileSystemHandle.name)
     await FileSystem.writeFile(to, content, EncodingType.Binary)
   }

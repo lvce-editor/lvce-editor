@@ -6,9 +6,9 @@ export const getFile = (handle) => {
   return handle.getFile()
 }
 
-export const getText = async (handle) => {
+export const getBinaryString = async (handle) => {
   const file = await getFile(handle)
-  const text = await HtmlFile.getText(file)
+  const text = await HtmlFile.getBinaryString(file)
   return text
 }
 
