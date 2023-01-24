@@ -4,6 +4,7 @@ import * as ViewletVideoEvents from './ViewletVideoEvents.js'
 
 export const create = () => {
   const $Video = document.createElement('video')
+  $Video.className = 'VideoVideo'
   $Video.controls = true
   $Video.onerror = ViewletVideoEvents.handleVideoError
 
