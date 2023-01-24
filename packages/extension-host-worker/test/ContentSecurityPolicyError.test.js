@@ -7,5 +7,6 @@ test('ContentSecurityPolicyError', () => {
   const columnNumber = 11
   const error = new ContentSecurityPolicyError(violatedDirective, sourceFile, lineNumber, columnNumber)
   expect(error.message).toBe('Content Security Policy Violation: script-src-elem')
-  expect(error.stack).toMatch(``)
+  expect(error.stack).toMatch(`Content Security Policy Violation
+  at http://localhost:3000/packages/extension-host-worker-tests/fixtures/sample.error-import-data-url-csp-violation/main.js:1:11`)
 })
