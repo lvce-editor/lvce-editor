@@ -1,8 +1,9 @@
 import * as Command from '../Command/Command.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as FileHandleType from '../FileHandleType/FileHandleType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as FilesystemHandle from '../FileSystemHandle/FileSystemHandle.js'
 import * as Path from '../Path/Path.js'
-import * as EncodingType from '../EncodingType/EncodingType.js'
 import { getChildDirents } from './ViewletExplorerShared.js'
 
 const mergeDirents = (oldDirents, newDirents) => {
@@ -18,9 +19,9 @@ const getMergedDirents = async (root, pathSeparator, dirents) => {
   return mergedDirents
 }
 
-const uploadFilesDefault = async (root, pathSeparator, files) => {
-  if (files.length === 1) {
-    const file = files[0]
+const uploadFilesDefault = async (root, pathSeparator, fileSystemHandles) => {
+  if (fileSystemHandles.length === 1) {
+    const file = fileSystemHandles[0]
     const { name, kind } = file
     if (kind === FileHandleType.Directory) {
       await Command.execute('PersistentFileHandle.addHandle', `html://${name}`, file)
@@ -28,13 +29,13 @@ const uploadFilesDefault = async (root, pathSeparator, files) => {
       return true
     }
   }
-  for (const file of files) {
-    const { name, kind } = file
+  for (const fileSystemHandle of fileSystemHandles) {
+    const { name, kind } = fileSystemHandle
     if (kind === FileHandleType.Directory) {
       throw new Error('folder upload is not yet supported')
     }
-    const content = await Command.execute('Blob.blobToBinaryString', file)
-    const to = Path.join(pathSeparator, root, file.name)
+    const content = await FilesystemHandle.getBinaryString(fileSystemHandle)
+    const to = Path.join(pathSeparator, root, fileSystemHandle.name)
     await FileSystem.writeFile(to, content, EncodingType.Binary)
   }
   return false
