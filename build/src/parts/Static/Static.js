@@ -236,6 +236,11 @@ const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
     from: 'packages/extension-host-worker/src',
     to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
   })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
+    occurrence: `/src/extensionHostWorkerMain.js`,
+    replacement: '/dist/extensionHostWorkerMain.js',
+  })
   // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/extensionHostWorkerMain.js`,
