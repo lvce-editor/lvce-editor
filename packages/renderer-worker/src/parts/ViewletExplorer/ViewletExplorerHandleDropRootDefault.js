@@ -1,13 +1,10 @@
 import * as Command from '../Command/Command.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as FileHandleType from '../FileHandleType/FileHandleType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as Path from '../Path/Path.js'
-import * as EncodingType from '../EncodingType/EncodingType.js'
-import { getChildDirents } from './ViewletExplorerShared.js'
 import * as FilesystemHandle from '../FileSystemHandle/FileSystemHandle.js'
-import * as HtmlFile from '../HtmlFile/HtmlFile.js'
-import * as HtmlFileSystemSyncAccessHandle from '../HtmlFileSystemSyncAccessHandle/HtmlFileSystemSyncAccessHandle.js'
-import * as HtmlFileSystemFileHandle from '../HtmlFileSystemFileHandle/HtmlFileSystemFileHandle.js'
+import * as Path from '../Path/Path.js'
+import { getChildDirents } from './ViewletExplorerShared.js'
 
 const mergeDirents = (oldDirents, newDirents) => {
   return newDirents
