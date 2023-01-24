@@ -1,11 +1,11 @@
 import * as Assert from '../Assert/Assert.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as ConditionErrorMap from './ConditionErrorMap.js'
 import * as ElementActions from './ElementActions.js'
+import * as KeyBoardActions from './KeyBoardActions.js'
+import * as MultiElementConditions from './MultiElementConditions.js'
 import * as QuerySelector from './QuerySelector.js'
 import * as SingleElementConditions from './SingleElementConditions.js'
-import * as MultiElementConditions from './MultiElementConditions.js'
-import * as ConditionErrors from './ConditionErrors.js'
-import * as KeyBoardActions from './KeyBoardActions.js'
-import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const create$Overlay = () => {
   const $TestOverlay = document.createElement('div')
@@ -128,7 +128,8 @@ export const checkSingleElementCondition = async (locator, fnName, options) => {
     await Timeout.waitForMutation(100)
     currentTime = Time.getTimeStamp()
   }
-  const message = ConditionErrors[fn.name](locator, options)
+  const errorMessageFn = ConditionErrorMap.getFunction(fnName)
+  const message = errorMessageFn(locator, options)
   throw new AssertionError(message)
 }
 
@@ -146,6 +147,7 @@ export const checkMultiElementCondition = async (locator, fnName, options) => {
     await Timeout.waitForMutation(100)
     currentTime = Time.getTimeStamp()
   }
-  const message = ConditionErrors[fn.name](locator, options)
+  const errorMessageFn = ConditionErrorMap.getFunction(fnName)
+  const message = errorMessageFn(locator, options)
   throw new AssertionError(message)
 }
