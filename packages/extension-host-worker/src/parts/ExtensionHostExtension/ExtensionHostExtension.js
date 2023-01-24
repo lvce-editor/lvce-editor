@@ -37,12 +37,7 @@ export const activate = async (extension) => {
   try {
     Assert.string(extension.path)
     Assert.string(extension.browser)
-    const absolutePath = getAbsolutePath(
-      extension.isWeb,
-      extension.path,
-      extension.browser,
-      location.origin
-    )
+    const absolutePath = getAbsolutePath(extension.isWeb, extension.path, extension.browser, location.origin)
     const module = await ImportScript.importScript(absolutePath)
     await module.activate()
   } catch (error) {
