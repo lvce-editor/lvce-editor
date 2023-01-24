@@ -1,20 +1,27 @@
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as TryToGetActualErrorMessageWhenNetworkRequestSucceeds from '../TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js'
 
-export const tryToGetActualImportErrorMessage = async (url) => {
+class NotFoundError extends Error {
+  constructor(url) {
+    super(`Failed to import ${url}: Not found (404)`)
+    this.name = 'NotFoundError'
+  }
+}
+
+export const tryToGetActualImportErrorMessage = async (url, error) => {
+  let response
   try {
-    await import(url)
-    return `Failed to import ${url}: Unknown Error`
+    response = await fetch(url)
   } catch (error) {
-    try {
-      const response = await fetch(url)
-      switch (response.status) {
-        case 404:
-          return `Failed to import ${url}: Not found (404)`
-        default:
-          return TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage(error, url, response)
-      }
-    } catch {
+    return `Failed to import ${url}: ${error}`
+  }
+  if (response.ok) {
+    return await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage(error, url, response)
+  }
+  switch (response.status) {
+    case HttpStatusCode.NotFound:
+      throw new NotFoundError(url)
+    default:
       return `Failed to import ${url}: ${error}`
-    }
   }
 }
