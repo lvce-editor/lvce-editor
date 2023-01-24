@@ -20,6 +20,7 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
     execute: jest.fn(() => {
@@ -27,6 +28,15 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     }),
   }
 })
+
+jest.unstable_mockModule('../src/parts/FileSystemHandle/FileSystemHandle.js', () => {
+  return {
+    getBinaryString: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: 'electron',
@@ -34,9 +44,10 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
 })
 
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
-const Command = await import('../src/parts/Command/Command.js')
 const ViewletExplorerHandleDropRootDefault = await import('../src/parts/ViewletExplorer/ViewletExplorerHandleDropRootDefault.js')
 const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
+const FileSystemHandle = await import('../src/parts/FileSystemHandle/FileSystemHandle.js')
+const Command = await import('../src/parts/Command/Command.js')
 
 test('handleDrop - single folder', async () => {
   const state = {
@@ -78,6 +89,10 @@ test('handleDrop - single file', async () => {
         throw new Error(`file not found ${uri}`)
     }
   })
+  // @ts-ignore
+  FileSystemHandle.getBinaryString.mockImplementation(() => {
+    return 'file 1 content'
+  })
   const state = {
     ...ViewletExplorer.create(),
     root: '/test',
@@ -90,13 +105,6 @@ test('handleDrop - single file', async () => {
       {
         kind: FileHandleType.File,
         name: 'file-1.txt',
-        getFile() {
-          return {
-            text() {
-              return 'file 1 content'
-            },
-          }
-        },
       },
     ])
   ).toMatchObject({
@@ -114,4 +122,9 @@ test('handleDrop - single file', async () => {
   })
   expect(FileSystem.writeFile).toHaveBeenCalledTimes(1)
   expect(FileSystem.writeFile).toHaveBeenCalledWith('/test/file-1.txt', 'file 1 content', EncodingType.Binary)
+  expect(FileSystemHandle.getBinaryString).toHaveBeenCalledTimes(1)
+  expect(FileSystemHandle.getBinaryString).toHaveBeenCalledWith({
+    kind: 'file',
+    name: 'file-1.txt',
+  })
 })
