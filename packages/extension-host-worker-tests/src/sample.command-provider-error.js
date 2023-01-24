@@ -1,10 +1,8 @@
-const name = 'sample.command-provider-error'
+export const name = 'sample.command-provider-error'
 
-test('sample.command-provider-error', async () => {
+export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
   // act
   await QuickPick.open()
@@ -18,9 +16,5 @@ test('sample.command-provider-error', async () => {
   // TODO less obstrusive error message, maybe notification
   // TODO should show stack trace
   // TODO should show babel code frame
-  await expect(dialogErrorMessage).toHaveText(
-    'Error: Failed to execute command: oops'
-  )
-})
-
-export {}
+  await expect(dialogErrorMessage).toHaveText('Error: Failed to execute command: oops')
+}
