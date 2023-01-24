@@ -164,7 +164,8 @@ export const startup = async (config) => {
 
   if (Workspace.isTest()) {
     const testPath = await Platform.getTestPath()
-    const fileName = initData.Location.href.slice(initData.location.href.lastIndexOf('/') + 1)
+    const href = initData.Location.href
+    const fileName = href.slice(href.lastIndexOf('/') + 1)
     const jsfileName = fileName.replace(/\.html$/, '.js')
     const jsPath = `${testPath}/src/${jsfileName}`
     await Command.execute('Test.execute', jsPath)
