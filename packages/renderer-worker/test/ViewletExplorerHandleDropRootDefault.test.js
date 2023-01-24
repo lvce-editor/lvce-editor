@@ -66,8 +66,8 @@ test('handleDrop - single folder', async () => {
     ])
   ).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(2)
-  expect(Command.execute).toHaveBeenNthCalledWith(1, 'PersistentFileHandle.addHandle', 'html://folder-1', { kind: 'directory', name: 'folder-1' })
-  expect(Command.execute).toHaveBeenNthCalledWith(2, 'Workspace.setPath', 'html://folder-1')
+  expect(Command.execute).toHaveBeenNthCalledWith(1, 'PersistentFileHandle.addHandle', '/folder-1', { kind: 'directory', name: 'folder-1' })
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'Workspace.setPath', 'html:///folder-1')
 })
 
 test('handleDrop - single file', async () => {

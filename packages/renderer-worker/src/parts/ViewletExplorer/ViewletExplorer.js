@@ -180,8 +180,15 @@ const getExcluded = () => {
   return excluded
 }
 
+const getSavedRoot = (savedState, workspacePath) => {
+  if (savedState && savedState.root && !savedState.root.startsWith('html://')) {
+    return savedState.root
+  }
+  return workspacePath
+}
+
 export const loadContent = async (state, savedState) => {
-  const root = state.root || Workspace.state.workspacePath
+  const root = getSavedRoot(savedState, Workspace.state.workspacePath)
   // TODO path separator could be restored from saved state
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const excluded = getExcluded()

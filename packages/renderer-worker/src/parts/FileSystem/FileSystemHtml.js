@@ -27,12 +27,9 @@ export const getDirents = (handles) => {
 const getChildHandlesFallbackPrompt = async (handle) => {
   // TODO cannot prompt without user activation, else error occurs
   // maybe need to show
-  const permissionTypeNow = await FileSytemHandlePermission.requestPermission(
-    handle,
-    {
-      mode: FileHandleEditMode.ReadWrite,
-    }
-  )
+  const permissionTypeNow = await FileSytemHandlePermission.requestPermission(handle, {
+    mode: FileHandleEditMode.ReadWrite,
+  })
   switch (permissionTypeNow) {
     case FileHandlePermissionType.Granted:
       return FileSystemHandle.getChildHandles(handle)
@@ -46,12 +43,9 @@ const getChildHandlesFallbackPrompt = async (handle) => {
 }
 
 const getChildHandlesFallback = async (handle) => {
-  const permissionType = await FileSytemHandlePermission.queryPermission(
-    handle,
-    {
-      mode: FileHandleEditMode.ReadWrite,
-    }
-  )
+  const permissionType = await FileSytemHandlePermission.queryPermission(handle, {
+    mode: FileHandleEditMode.ReadWrite,
+  })
   switch (permissionType) {
     case FileHandlePermissionType.Granted:
       throw new VError(`invalid state`)
