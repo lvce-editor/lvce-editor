@@ -1,4 +1,5 @@
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
+import * as GetFileHandlesFromDataTransferItems from '../GetFileHandlesFromDataTransferItems/GetFileHandlesFromDataTransferItems.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
@@ -8,9 +9,7 @@ import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 // TODO drag and drop should be loaded on demand
 const getAllEntries = async (dataTransfer) => {
-  const topLevelEntries = Array.from(dataTransfer.items).map((item) =>
-    item.webkitGetAsEntry()
-  )
+  const topLevelEntries = Array.from(dataTransfer.items).map((item) => item.webkitGetAsEntry())
   const allEntries = await new Promise((resolve, reject) => {
     const result = []
     let finished = 0
@@ -56,7 +55,8 @@ const getAllEntries = async (dataTransfer) => {
           handleEntryFile(entry)
         } else if (entry.isDirectory) {
           handleEntryDirectory(entry)
-        } else {}
+        } else {
+        }
       }
     }
 
@@ -103,17 +103,6 @@ export const handleDragStart = (event) => {
   // event.dataTransfer.setData('text/plain', 'abc')
 }
 
-const getHandle = async (item) => {
-  const entry = await item.getAsFileSystemHandle()
-  return entry
-}
-
-const getHandles = async (items) => {
-  const itemsArray = [...items]
-  const handles = await Promise.all(itemsArray.map(getHandle))
-  return handles
-}
-
 /**
  *
  * @param {DragEvent} event
@@ -128,24 +117,18 @@ export const handleDrop = async (event) => {
   } else {
     // unfortunately, DataTransferItem cannot be transferred to web worker
     // therefore the file system handles are sent to the web worker
-    const handles = await getHandles(items)
+    const handles = await GetFileHandlesFromDataTransferItems.getFileHandles(items)
     RendererWorker.send('Explorer.handleDrop', clientX, clientY, handles)
   }
 }
 
 const handleContextMenuMouse = (event) => {
   const { clientX, clientY } = event
-  RendererWorker.send(
-    /* Explorer.handleContextMenuMouseAt */ 'Explorer.handleContextMenuMouseAt',
-    /* x */ clientX,
-    /* y */ clientY
-  )
+  RendererWorker.send(/* Explorer.handleContextMenuMouseAt */ 'Explorer.handleContextMenuMouseAt', /* x */ clientX, /* y */ clientY)
 }
 
 const handleContextMenuKeyboard = (event) => {
-  RendererWorker.send(
-    /* Explorer.handleContextMenuKeyboard */ 'Explorer.handleContextMenuKeyboard'
-  )
+  RendererWorker.send(/* Explorer.handleContextMenuKeyboard */ 'Explorer.handleContextMenuKeyboard')
 }
 
 // TODO maybe use aria active descendant instead
@@ -174,27 +157,17 @@ export const handleMouseDown = (event) => {
   if (button !== MouseEventType.LeftClick) {
     return
   }
-  RendererWorker.send(
-    /* Explorer.handleClickAt */ 'Explorer.handleClickAt',
-    /* x */ clientX,
-    /* y */ clientY
-  )
+  RendererWorker.send(/* Explorer.handleClickAt */ 'Explorer.handleClickAt', /* x */ clientX, /* y */ clientY)
 }
 
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
   switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(
-        /* Explorer.handleWheel */ 'Explorer.handleWheel',
-        /* deltaY */ deltaY
-      )
+      RendererWorker.send(/* Explorer.handleWheel */ 'Explorer.handleWheel', /* deltaY */ deltaY)
       break
     case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(
-        /* Explorer.handleWheel */ 'Explorer.handleWheel',
-        /* deltaY */ deltaY
-      )
+      RendererWorker.send(/* Explorer.handleWheel */ 'Explorer.handleWheel', /* deltaY */ deltaY)
       break
     default:
       break
@@ -228,8 +201,5 @@ export const handleMouseLeave = (event) => {
 export const handleEditingInput = (event) => {
   const { target } = event
   const { value } = target
-  RendererWorker.send(
-    /* Explorer.updateEditingValue */ 'Explorer.updateEditingValue',
-    /* value */ value
-  )
+  RendererWorker.send(/* Explorer.updateEditingValue */ 'Explorer.updateEditingValue', /* value */ value)
 }
