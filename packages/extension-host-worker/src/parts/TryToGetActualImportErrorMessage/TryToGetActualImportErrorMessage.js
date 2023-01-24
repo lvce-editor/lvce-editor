@@ -1,3 +1,4 @@
+import { ContentSecurityPolicyError } from '../ContentSecurityPolicyError/ContentSecurityPolicyError.js'
 import * as TryToGetActualErrorMessageWhenNetworkRequestSucceeds from '../TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js'
 
 export const tryToGetActualImportErrorMessage = async (url) => {
@@ -11,9 +12,12 @@ export const tryToGetActualImportErrorMessage = async (url) => {
         case 404:
           return `Failed to import ${url}: Not found (404)`
         default:
-          return TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage(error, url, response)
+          return await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage(error, url, response)
       }
-    } catch {
+    } catch (outerError) {
+      if (outerError instanceof ContentSecurityPolicyError) {
+        throw outerError
+      }
       return `Failed to import ${url}: ${error}`
     }
   }

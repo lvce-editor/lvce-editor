@@ -13,10 +13,15 @@ test('sample.error-import-data-url-csp-violation', async () => {
   const dialog = Locator('#Dialog')
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.error-import-data-url-csp-violation: Failed to import http://localhost:3000/packages/extension-host-worker-tests/fixtures/sample.error-import-data-url-csp-violation/main.js: Unknown Network Error`
+    `Error: Failed to activate extension sample.error-import-data-url-csp-violation: ContentSecurityPolicyError: Content Security Policy Violation: script-src-elem`
   )
-  // TODO error message is not good
-  // TODO code frame has wrong location
+  const codeFrame = Locator('#DialogBodyErrorCodeFrame')
+  await expect(codeFrame).toHaveText(`> 1 | const p = await import(\`data:text/javascript,
+    |           ^
+  2 |   export default import("./foo.js");
+  3 | \`)
+  4 |`)
+  // TODO error message could be improved
 })
 
 export {}
