@@ -10,8 +10,8 @@ export const uploadFileSystemHandles = async (root, pathSeparator, fileSystemHan
     const file = fileSystemHandles[0]
     const { name, kind } = file
     if (kind === FileHandleType.Directory) {
-      await Command.execute('PersistentFileHandle.addHandle', `html://${name}`, file)
-      await Command.execute('Workspace.setPath', `html://${name}`)
+      await Command.execute('PersistentFileHandle.addHandle', `/${name}`, file)
+      await Command.execute('Workspace.setPath', `html:///${name}`)
       return true
     }
   }
