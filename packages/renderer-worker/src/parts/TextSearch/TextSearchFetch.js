@@ -1,7 +1,7 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
-import * as Assert from '../Assert/Assert.js'
 
 const textSearchInFile = (file, content, query) => {
   const results = []
@@ -39,10 +39,12 @@ export const textSearch = async (scheme, root, query, options) => {
   const fetchUri = `${assetDir}/config/fileMap.json`
   const fileList = await Command.execute('Ajax.getJson', fetchUri)
   const allResults = []
+  const relativeRoot = root.slice('fetch://'.length)
   for (const uri of fileList) {
     const fetchUri = `${assetDir}${uri}`
     const content = await Command.execute('Ajax.getText', fetchUri)
-    const results = textSearchInFile(fetchUri, content, query)
+    const relativeUri = uri.slice(relativeRoot.length + 1)
+    const results = textSearchInFile(relativeUri, content, query)
     allResults.push(...results)
   }
   return allResults

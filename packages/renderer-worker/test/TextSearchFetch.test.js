@@ -31,10 +31,10 @@ test('textSearch', async () => {
         break
     }
   })
-  expect(await TextSearchFetch.textSearch('', '', 'test')).toEqual([
+  expect(await TextSearchFetch.textSearch('fetch', 'fetch:///test', 'test')).toEqual([
     {
       type: TextSearchResultType.File,
-      text: '/test/file-1.txt',
+      text: 'file-1.txt',
       start: 0,
       end: 0,
       lineNumber: 0,
