@@ -76,16 +76,7 @@ export const startup = async (config) => {
   LifeCycle.mark(LifeCyclePhase.Four)
 
   Performance.mark('code/willShowLayout')
-  const layout = ViewletManager.create(
-    ViewletModule.load,
-    ViewletModuleId.Layout,
-    '',
-    '',
-    0,
-    0,
-    0,
-    0
-  )
+  const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.Layout, '', '', 0, 0, 0, 0)
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
@@ -101,8 +92,7 @@ export const startup = async (config) => {
   )
   commands.splice(1, 1)
   const layoutModule = ViewletStates.getInstance(ViewletModuleId.Layout)
-  const placeholderCommands =
-    layoutModule.factory.getInitialPlaceholderCommands(layoutModule.state)
+  const placeholderCommands = layoutModule.factory.getInitialPlaceholderCommands(layoutModule.state)
   commands.push(...placeholderCommands)
   commands.push(['Viewlet.appendToBody', ViewletModuleId.Layout])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
@@ -162,10 +152,7 @@ export const startup = async (config) => {
 
   LifeCycle.mark(LifeCyclePhase.Fourteen)
 
-  if (
-    Platform.platform === PlatformType.Electron &&
-    Preferences.get('window.titleBarStyle') === 'native'
-  ) {
+  if (Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native') {
     await Command.execute('ElectronApplicationMenu.hydrate')
   } else {
     Performance.mark('code/willLoadTitleBar')
@@ -177,9 +164,9 @@ export const startup = async (config) => {
 
   if (Workspace.isTest()) {
     const testPath = await Platform.getTestPath()
-    const jsPath = initData.Location.href
-      .replace('/tests', `${testPath}/src`)
-      .replace(/\.html$/, '.js')
+    const fileName = initData.Location.href.slice(initData.location.href.lastIndexOf('/') + 1)
+    const jsfileName = fileName.replace(/\.html$/, '.js')
+    const jsPath = `${testPath}/src/${jsfileName}`
     await Command.execute('Test.execute', jsPath)
     return
   } else {
@@ -204,55 +191,15 @@ export const startup = async (config) => {
   await Location.hydrate()
   Performance.mark('code/didLoadLocation')
 
-  Performance.measure(
-    'code/loadKeyBindings',
-    'code/willLoadKeyBindings',
-    'code/didLoadKeyBindings'
-  )
-  Performance.measure(
-    'code/openWorkspace',
-    'code/willOpenWorkspace',
-    'code/didOpenWorkspace'
-  )
+  Performance.measure('code/loadKeyBindings', 'code/willLoadKeyBindings', 'code/didLoadKeyBindings')
+  Performance.measure('code/openWorkspace', 'code/willOpenWorkspace', 'code/didOpenWorkspace')
   Performance.measure('code/loadMain', 'code/willLoadMain', 'code/didLoadMain')
-  Performance.measure(
-    'code/loadSideBar',
-    'code/willLoadSideBar',
-    'code/didLoadSideBar'
-  )
-  Performance.measure(
-    'code/showLayout',
-    'code/willShowLayout',
-    'code/didShowLayout'
-  )
-  Performance.measure(
-    'code/loadPanel',
-    'code/willLoadPanel',
-    'code/didLoadPanel'
-  )
-  Performance.measure(
-    'code/loadActivityBar',
-    'code/willLoadActivityBar',
-    'code/didLoadActivityBar'
-  )
-  Performance.measure(
-    'code/loadStatusBar',
-    'code/willLoadStatusBar',
-    'code/didLoadStatusBar'
-  )
-  Performance.measure(
-    'code/loadPreferences',
-    'code/willLoadPreferences',
-    'code/didLoadPreferences'
-  )
-  Performance.measure(
-    'code/loadColorTheme',
-    'code/willLoadColorTheme',
-    'code/didLoadColorTheme'
-  )
-  Performance.measure(
-    'code/loadIconTheme',
-    'code/willLoadIconTheme',
-    'code/didLoadIconTheme'
-  )
+  Performance.measure('code/loadSideBar', 'code/willLoadSideBar', 'code/didLoadSideBar')
+  Performance.measure('code/showLayout', 'code/willShowLayout', 'code/didShowLayout')
+  Performance.measure('code/loadPanel', 'code/willLoadPanel', 'code/didLoadPanel')
+  Performance.measure('code/loadActivityBar', 'code/willLoadActivityBar', 'code/didLoadActivityBar')
+  Performance.measure('code/loadStatusBar', 'code/willLoadStatusBar', 'code/didLoadStatusBar')
+  Performance.measure('code/loadPreferences', 'code/willLoadPreferences', 'code/didLoadPreferences')
+  Performance.measure('code/loadColorTheme', 'code/willLoadColorTheme', 'code/didLoadColorTheme')
+  Performance.measure('code/loadIconTheme', 'code/willLoadIconTheme', 'code/didLoadIconTheme')
 }
