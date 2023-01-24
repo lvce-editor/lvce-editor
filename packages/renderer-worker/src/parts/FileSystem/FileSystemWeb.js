@@ -12,8 +12,6 @@ export const state = {
   files: Object.create(null),
 }
 
-state.files['/.gitkeep'] = ''
-
 state.files['/languages/index.dart'] = `void main() {
   print('Hello, World!');
 }`
