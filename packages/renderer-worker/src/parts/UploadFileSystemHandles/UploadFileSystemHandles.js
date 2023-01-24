@@ -1,9 +1,12 @@
 import * as Command from '../Command/Command.js'
-import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as FileHandleType from '../FileHandleType/FileHandleType.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as FilesystemHandle from '../FileSystemHandle/FileSystemHandle.js'
-import * as Path from '../Path/Path.js'
+import * as UploadFileSystemHandle from '../UploadFileSystemHandle/UploadFileSystemHandle.js'
+
+const uploadHandles = async (fileSystemHandles, pathSeparator, root) => {
+  for (const fileSystemHandle of fileSystemHandles) {
+    await UploadFileSystemHandle.uploadHandle(fileSystemHandle, pathSeparator, root, uploadHandles)
+  }
+}
 
 export const uploadFileSystemHandles = async (root, pathSeparator, fileSystemHandles) => {
   if (fileSystemHandles.length === 1) {
@@ -15,14 +18,6 @@ export const uploadFileSystemHandles = async (root, pathSeparator, fileSystemHan
       return true
     }
   }
-  for (const fileSystemHandle of fileSystemHandles) {
-    const { name, kind } = fileSystemHandle
-    if (kind === FileHandleType.Directory) {
-      throw new Error('folder upload is not yet supported')
-    }
-    const content = await FilesystemHandle.getBinaryString(fileSystemHandle)
-    const to = Path.join(pathSeparator, root, name)
-    await FileSystem.writeFile(to, content, EncodingType.Binary)
-  }
+  await uploadHandles(fileSystemHandles, pathSeparator, root)
   return false
 }
