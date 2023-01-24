@@ -10,9 +10,7 @@ test('sample.reference-provider-error-main-not-found', async () => {
   )
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
@@ -25,12 +23,9 @@ test('sample.reference-provider-error-main-not-found', async () => {
 
   // TODO should show part of stack trace maybe?
   // const origin = location.origin
-  const mainUrl = new URL(
-    '../fixtures/sample.reference-provider-error-main-not-found/not-found.js',
-    import.meta.url
-  ).toString()
+  const mainUrl = new URL('../fixtures/sample.reference-provider-error-main-not-found/not-found.js', import.meta.url).toString()
   await expect(viewletLocations).toHaveText(
-    `Error: Failed to activate extension sample.reference-provider-error-main-not-found: Failed to import ${mainUrl}: Not found (404)`
+    `Error: Failed to activate extension sample.reference-provider-error-main-not-found: NotFoundError: Failed to import ${mainUrl}: Not found (404)`
   )
 })
 
