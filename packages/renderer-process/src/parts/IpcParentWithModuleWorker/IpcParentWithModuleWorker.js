@@ -1,17 +1,8 @@
+import * as GetWorkerDisplayName from '../GetWorkerDisplayName/GetWorkerDisplayName.js'
 import * as WorkerType from '../WorkerType/WorkerType.js'
 
-const getDisplayName = (name) => {
-  if (!name) {
-    return '<unknown> worker'
-  }
-  if (name.endsWith('Worker')) {
-    return name.toLowerCase()
-  }
-  return `${name} worker`
-}
-
 const tryToGetActualErrorMessage = async ({ url, name }) => {
-  const displayName = getDisplayName(name)
+  const displayName = GetWorkerDisplayName.getWorkerDisplayName(name)
   try {
     globalThis.DONT_EXECUTE = 1
     await import(url)
