@@ -7,11 +7,18 @@ export const at = (editor, eventX, eventY) => {
   Assert.number(eventX)
   Assert.number(eventY)
   const { y, deltaY, rowHeight, fontSize, fontWeight, fontFamily, letterSpacing, lines } = editor
-  const rowIndex = Clamp.clamp(Math.floor((eventY - y + deltaY) / rowHeight), 0, lines.length - 1)
-  const line = lines[rowIndex]
+  const rowIndex = Math.floor((eventY - y + deltaY) / rowHeight)
+  if (rowIndex < 0) {
+    return {
+      rowIndex: 0,
+      columnIndex: 0,
+    }
+  }
+  const clampedRowIndex = Clamp.clamp(rowIndex, 0, lines.length - 1)
+  const line = lines[clampedRowIndex]
   const columnIndex = GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, eventX)
   return {
-    rowIndex,
+    rowIndex: clampedRowIndex,
     columnIndex,
   }
 }

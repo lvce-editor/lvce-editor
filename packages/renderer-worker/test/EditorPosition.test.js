@@ -70,3 +70,28 @@ test('at - longer than editor content', () => {
     columnIndex: 0,
   })
 })
+
+test('at - rowIndex less than zero', () => {
+  // @ts-ignore
+  GetAccurateColumnIndex.getAccurateColumnIndex.mockImplementation(() => {
+    return 0
+  })
+  const editor = {
+    lines: ['test'],
+    cursor: {
+      rowIndex: 0,
+      columnIndex: 0,
+    },
+    x: 0,
+    y: 60,
+    columnWidth: 8,
+    rowHeight: 20,
+    minLineY: 0,
+    maxLineY: 1,
+    deltaY: 0,
+  }
+  expect(EditorPosition.at(editor, 20, 40)).toEqual({
+    rowIndex: 0,
+    columnIndex: 0,
+  })
+})
