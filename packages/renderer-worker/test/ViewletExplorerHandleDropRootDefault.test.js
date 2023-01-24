@@ -35,12 +35,8 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
 
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 const Command = await import('../src/parts/Command/Command.js')
-const ViewletExplorerHandleDropRootDefault = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerHandleDropRootDefault.js'
-)
-const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
-)
+const ViewletExplorerHandleDropRootDefault = await import('../src/parts/ViewletExplorer/ViewletExplorerHandleDropRootDefault.js')
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
 
 test('handleDrop - single folder', async () => {
   const state = {
@@ -59,17 +55,8 @@ test('handleDrop - single folder', async () => {
     ])
   ).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(2)
-  expect(Command.execute).toHaveBeenNthCalledWith(
-    1,
-    'PersistentFileHandle.addHandle',
-    'html://folder-1',
-    { kind: 'directory', name: 'folder-1' }
-  )
-  expect(Command.execute).toHaveBeenNthCalledWith(
-    2,
-    'Workspace.setPath',
-    'html://folder-1'
-  )
+  expect(Command.execute).toHaveBeenNthCalledWith(1, 'PersistentFileHandle.addHandle', 'html://folder-1', { kind: 'directory', name: 'folder-1' })
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'Workspace.setPath', 'html://folder-1')
 })
 
 test('handleDrop - single file', async () => {
@@ -91,10 +78,6 @@ test('handleDrop - single file', async () => {
         throw new Error(`file not found ${uri}`)
     }
   })
-  // @ts-ignore
-  Command.execute.mockImplementation(() => {
-    return 'file 1 content'
-  })
   const state = {
     ...ViewletExplorer.create(),
     root: '/test',
@@ -107,6 +90,13 @@ test('handleDrop - single file', async () => {
       {
         kind: FileHandleType.File,
         name: 'file-1.txt',
+        getFile() {
+          return {
+            text() {
+              return 'file 1 content'
+            },
+          }
+        },
       },
     ])
   ).toMatchObject({
@@ -122,15 +112,6 @@ test('handleDrop - single file', async () => {
       },
     ],
   })
-  expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('Blob.blobToBinaryString', {
-    kind: 'file',
-    name: 'file-1.txt',
-  })
   expect(FileSystem.writeFile).toHaveBeenCalledTimes(1)
-  expect(FileSystem.writeFile).toHaveBeenCalledWith(
-    '/test/file-1.txt',
-    'file 1 content',
-    EncodingType.Binary
-  )
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('/test/file-1.txt', 'file 1 content', EncodingType.Binary)
 })
