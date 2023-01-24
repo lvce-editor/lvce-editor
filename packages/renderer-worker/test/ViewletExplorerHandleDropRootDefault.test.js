@@ -29,7 +29,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/FileSystemHandle/FileSystemHandle.js', () => {
+jest.unstable_mockModule('../src/parts/FileSystemFileHandle/FileSystemFileHandle.js', () => {
   return {
     getBinaryString: jest.fn(() => {
       throw new Error('not implemented')
@@ -46,7 +46,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 const ViewletExplorerHandleDropRootDefault = await import('../src/parts/ViewletExplorer/ViewletExplorerHandleDropRootDefault.js')
 const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
-const FileSystemHandle = await import('../src/parts/FileSystemHandle/FileSystemHandle.js')
+const FileSystemFileHandle = await import('../src/parts/FileSystemFileHandle/FileSystemFileHandle.js')
 const Command = await import('../src/parts/Command/Command.js')
 
 test('handleDrop - single folder', async () => {
@@ -90,7 +90,7 @@ test('handleDrop - single file', async () => {
     }
   })
   // @ts-ignore
-  FileSystemHandle.getBinaryString.mockImplementation(() => {
+  FileSystemFileHandle.getBinaryString.mockImplementation(() => {
     return 'file 1 content'
   })
   const state = {
@@ -122,8 +122,8 @@ test('handleDrop - single file', async () => {
   })
   expect(FileSystem.writeFile).toHaveBeenCalledTimes(1)
   expect(FileSystem.writeFile).toHaveBeenCalledWith('/test/file-1.txt', 'file 1 content', EncodingType.Binary)
-  expect(FileSystemHandle.getBinaryString).toHaveBeenCalledTimes(1)
-  expect(FileSystemHandle.getBinaryString).toHaveBeenCalledWith({
+  expect(FileSystemFileHandle.getBinaryString).toHaveBeenCalledTimes(1)
+  expect(FileSystemFileHandle.getBinaryString).toHaveBeenCalledWith({
     kind: 'file',
     name: 'file-1.txt',
   })
