@@ -15,19 +15,15 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 })
 
 const Command = await import('../src/parts/Command/Command.js')
-const ViewletExplorerHandleContextMenuKeyboard = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerHandleContextMenuKeyboard.js'
-)
-const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
-)
+const ViewletExplorerHandleContextMenuKeyboard = await import('../src/parts/ViewletExplorer/ViewletExplorerHandleContextMenuKeyboard.js')
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
 
 test('handleContextMenuKeyboard', async () => {
   const state = {
     ...ViewletExplorer.create(),
     focusedIndex: 2,
-    left: 10,
-    top: 20,
+    x: 10,
+    y: 20,
     itemHeight: 20,
     items: [
       {
@@ -61,18 +57,9 @@ test('handleContextMenuKeyboard', async () => {
   }
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
-  expect(
-    await ViewletExplorerHandleContextMenuKeyboard.handleContextMenuKeyboard(
-      state
-    )
-  ).toMatchObject({
+  expect(await ViewletExplorerHandleContextMenuKeyboard.handleContextMenuKeyboard(state)).toMatchObject({
     focusedIndex: 2,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'ContextMenu.show',
-    10,
-    80,
-    MenuEntryId.Explorer
-  )
+  expect(Command.execute).toHaveBeenCalledWith('ContextMenu.show', 10, 80, MenuEntryId.Explorer)
 })

@@ -7,12 +7,12 @@ import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     id,
     uri,
-    top,
-    left,
+    x,
+    y,
     width,
     height,
     headerHeight: 30,
@@ -50,28 +50,17 @@ const getUrlFromSavedState = (savedState) => {
 
 export const backgroundLoadContent = async (state, savedState) => {
   // TODO duplicate code with loadContent
-  const { top, left, width, height, headerHeight } = state
+  const { x, y, width, height, headerHeight } = state
   const iframeSrc = getUrlFromSavedState(savedState)
   // TODO since browser view is not visible at this point
   // it is not necessary to load keybindings for it
   const keyBindings = await KeyBindings.getKeyBindings()
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(0)
-  await ElectronBrowserViewFunctions.setFallthroughKeyBindings(
-    fallThroughKeyBindings
-  )
+  await ElectronBrowserViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
   Assert.number(browserViewId)
-  await ElectronBrowserViewFunctions.resizeBrowserView(
-    browserViewId,
-    top + headerHeight,
-    left,
-    width,
-    height - headerHeight
-  )
-  const { newTitle } = await ElectronBrowserViewFunctions.setIframeSrc(
-    browserViewId,
-    iframeSrc
-  )
+  await ElectronBrowserViewFunctions.resizeBrowserView(browserViewId, x, y + headerHeight, width, height - headerHeight)
+  const { newTitle } = await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
   return {
     title: newTitle,
     uri: `simple-browser://${browserViewId}`,
@@ -87,7 +76,7 @@ const getId = (idPart) => {
 }
 
 export const loadContent = async (state, savedState) => {
-  const { top, left, width, height, headerHeight, uri } = state
+  const { x, y, width, height, headerHeight, uri } = state
   const idPart = uri.slice('simple-browser://'.length)
   const id = getId(idPart)
   const iframeSrc = getUrlFromSavedState(savedState)
@@ -96,13 +85,7 @@ export const loadContent = async (state, savedState) => {
   if (id) {
     const actualId = await ElectronBrowserView.createBrowserView(id)
     await ElectronBrowserViewFunctions.setFallthroughKeyBindings(keyBindings)
-    await ElectronBrowserViewFunctions.resizeBrowserView(
-      actualId,
-      top + headerHeight,
-      left,
-      width,
-      height - headerHeight
-    )
+    await ElectronBrowserViewFunctions.resizeBrowserView(actualId, y + headerHeight, x, width, height - headerHeight)
     if (id !== actualId) {
       await ElectronBrowserViewFunctions.setIframeSrc(actualId, iframeSrc)
     }
@@ -115,23 +98,12 @@ export const loadContent = async (state, savedState) => {
   }
 
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
-  const browserViewId = await ElectronBrowserView.createBrowserView(
-    /* restoreId */ 0
-  )
-  await ElectronBrowserViewFunctions.setFallthroughKeyBindings(
-    fallThroughKeyBindings
-  )
-  await ElectronBrowserViewFunctions.resizeBrowserView(
-    browserViewId,
-    top + headerHeight,
-    left,
-    width,
-    height - headerHeight
-  )
+  const browserViewId = await ElectronBrowserView.createBrowserView(/* restoreId */ 0)
+  await ElectronBrowserViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
+  await ElectronBrowserViewFunctions.resizeBrowserView(browserViewId, x, y + headerHeight, width, height - headerHeight)
   Assert.number(browserViewId)
   await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
-  const { title, canGoBack, canGoForward } =
-    await ElectronBrowserViewFunctions.getStats(browserViewId)
+  const { title, canGoBack, canGoForward } = await ElectronBrowserViewFunctions.getStats(browserViewId)
   return {
     ...state,
     iframeSrc,
@@ -220,14 +192,8 @@ export const resize = (state, dimensions) => {
 }
 
 export const resizeEffect = async (state) => {
-  const { headerHeight, browserViewId, top, left, width, height } = state
-  await ElectronBrowserViewFunctions.resizeBrowserView(
-    browserViewId,
-    top + headerHeight,
-    left,
-    width,
-    height - headerHeight
-  )
+  const { headerHeight, browserViewId, x, y, width, height } = state
+  await ElectronBrowserViewFunctions.resizeBrowserView(browserViewId, x, y + headerHeight, width, height - headerHeight)
 }
 
 export const dispose = async (state) => {
@@ -250,29 +216,16 @@ const renderTitle = {
     return oldState.title === newState.title
   },
   apply(oldState, newState) {
-    return [
-      'Viewlet.send',
-      ViewletModuleId.Main,
-      'updateTab',
-      0,
-      newState.title,
-    ]
+    return ['Viewlet.send', ViewletModuleId.Main, 'updateTab', 0, newState.title]
   },
 }
 
 const renderButtonsEnabled = {
   isEqual(oldState, newState) {
-    return (
-      oldState.canGoBack === newState.canGoBack &&
-      oldState.canGoForward === newState.canGoForward
-    )
+    return oldState.canGoBack === newState.canGoBack && oldState.canGoForward === newState.canGoForward
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setButtonsEnabled',
-      /* canGoBack */ newState.canGoBack,
-      /* canGoFoward */ newState.canGoForward,
-    ]
+    return [/* method */ 'setButtonsEnabled', /* canGoBack */ newState.canGoBack, /* canGoFoward */ newState.canGoForward]
   },
 }
 
@@ -285,9 +238,4 @@ const renderLoading = {
   },
 }
 
-export const render = [
-  renderIframeSrc,
-  renderTitle,
-  renderButtonsEnabled,
-  renderLoading,
-]
+export const render = [renderIframeSrc, renderTitle, renderButtonsEnabled, renderLoading]

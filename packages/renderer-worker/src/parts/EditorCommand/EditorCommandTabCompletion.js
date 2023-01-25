@@ -21,11 +21,6 @@ export const tabCompletion = async (editor) => {
     // TODO cursor should always be of type object
     const rowIndex = editor.selections[0]
     const columnIndex = editor.selections[1]
-    return EditorShowMessage.showErrorMessage(
-      editor,
-      rowIndex,
-      columnIndex,
-      getErrorMessage(error)
-    )
+    return EditorShowMessage.showErrorMessage(editor, rowIndex, columnIndex, getErrorMessage(error))
   }
 }

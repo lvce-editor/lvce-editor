@@ -15,12 +15,8 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 })
 
 const Command = await import('../src/parts/Command/Command.js')
-const ViewletExplorerHandleContextMenuMouseAt = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerHandleContextMenuMouseAt.js'
-)
-const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
-)
+const ViewletExplorerHandleContextMenuMouseAt = await import('../src/parts/ViewletExplorer/ViewletExplorerHandleContextMenuMouseAt.js')
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
 
 test('handleContextMenuMouse', async () => {
   // @ts-ignore
@@ -28,24 +24,13 @@ test('handleContextMenuMouse', async () => {
   const state = {
     ...ViewletExplorer.create(),
     focusedIndex: -1,
-    top: 0,
+    y: 0,
   }
-  expect(
-    await ViewletExplorerHandleContextMenuMouseAt.handleContextMenuMouseAt(
-      state,
-      /* x */ 0,
-      /* y */ 100
-    )
-  ).toMatchObject({
+  expect(await ViewletExplorerHandleContextMenuMouseAt.handleContextMenuMouseAt(state, /* x */ 0, /* y */ 100)).toMatchObject({
     focusedIndex: -1,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'ContextMenu.show',
-    0,
-    100,
-    MenuEntryId.Explorer
-  )
+  expect(Command.execute).toHaveBeenCalledWith('ContextMenu.show', 0, 100, MenuEntryId.Explorer)
 })
 
 test('event - issue with blur event after context menu event', async () => {
@@ -87,12 +72,7 @@ test('event - issue with blur event after context menu event', async () => {
     minLineY: 0,
     maxLineY: 100,
   }
-  const state2 =
-    await ViewletExplorerHandleContextMenuMouseAt.handleContextMenuMouseAt(
-      state,
-      0,
-      0
-    )
+  const state2 = await ViewletExplorerHandleContextMenuMouseAt.handleContextMenuMouseAt(state, 0, 0)
   const state3 = await ViewletExplorer.handleBlur(state2)
   expect(state3).toMatchObject({ focusedIndex: 0, focused: false })
 })

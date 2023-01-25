@@ -1,4 +1,6 @@
 import * as Editor from '../Editor/Editor.js'
+import * as Logger from '../Logger/Logger.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Widget from '../Widget/Widget.js'
 
 export const create = Editor.create
@@ -16,7 +18,7 @@ export const setScrollBar = Editor.setScrollBar
 export const highlightAsLink = (state, relativeY, tokenIndex) => {
   const $Row = state.$LayerText.children[relativeY]
   if (!$Row) {
-    console.info('no row found')
+    Logger.info('no row found')
     return
   }
   const $Token = $Row.children[tokenIndex + 1]
@@ -28,8 +30,7 @@ export const showOverlayMessage = (state, x, y, content) => {
   $OverLayMessage.className = 'EditorOverlayMessage'
   $OverLayMessage.style.position = 'fixed'
   $OverLayMessage.textContent = content
-  $OverLayMessage.style.top = `${y}px`
-  $OverLayMessage.style.left = `${x}px`
+  SetBounds.setXAndY($OverLayMessage, x, y)
   Widget.append($OverLayMessage)
 }
 

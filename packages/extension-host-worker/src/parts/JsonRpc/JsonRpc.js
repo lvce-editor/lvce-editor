@@ -1,4 +1,5 @@
 import * as Callback from '../Callback/Callback.js'
+import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as RestoreJsonRpcError from '../RestoreJsonRpcError/RestoreJsonRpcError.js'
 
@@ -28,8 +29,7 @@ export const invoke = async (ipc, method, ...params) => {
   if ('result' in responseMessage) {
     return responseMessage.result
   }
-
-  throw new Error('unexpected response message')
+  throw new JsonRpcError('unexpected response message')
 }
 
 export const handleMessage = (message) => {

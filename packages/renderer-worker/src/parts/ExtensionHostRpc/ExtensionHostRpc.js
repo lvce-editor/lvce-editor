@@ -3,6 +3,7 @@ import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as GetResponse from '../GetResponse/GetResponse.js'
 
 const isResultMessage = (message) => {
   return 'result' in message
@@ -14,7 +15,7 @@ const isErrorMessage = (message) => {
 
 const handleMessageMethod = async (message, event) => {
   if (message.method === 'ElectronMessagePort.create') {
-    const IpcParentWithElectron = await import('../IpcParent/IpcParentWithElectron.js')
+    const IpcParentWithElectron = await import('../IpcParentWithElectron/IpcParentWithElectron.js')
     const ipc = await IpcParentWithElectron.create({
       type: 'extension-host-helper-process',
     })
@@ -26,9 +27,10 @@ const handleMessageMethod = async (message, event) => {
       },
       [ipc._port]
     )
-    console.log({ ipc, event, target: event.target })
+  } else if (message.method === 'Test.executeMockExecFunction') {
+    const response = await GetResponse.getResponse(message)
+    event.target.send(response)
   } else {
-    console.log('emit', message.method)
     await GlobalEventBus.emitEvent(message.method, ...message.params)
   }
 }
@@ -43,7 +45,6 @@ const handleMessage = async (message, event) => {
       throw new JsonRpcError('unexpected message type')
     }
   } else if (message.method) {
-    console.log({ message })
     await GlobalEventBus.emitEvent(message.method, ...message.params)
   } else {
     throw new JsonRpcError('unexpected message type')

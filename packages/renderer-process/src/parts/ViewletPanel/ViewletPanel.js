@@ -4,6 +4,7 @@ import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletPanelEvents from './ViewletPanelEvents.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 
 /**
  * @enum {string}
@@ -35,10 +36,7 @@ const panelTabsHandleClick = (event) => {
   switch ($Target.className) {
     case 'PanelTab': {
       const index = getNodeIndex($Target)
-      RendererWorker.send(
-        /* Panel.selectIndex */ 'Panel.selectIndex',
-        /* index */ index
-      )
+      RendererWorker.send(/* Panel.selectIndex */ 'Panel.selectIndex', /* index */ index)
       break
     }
     default:
@@ -130,11 +128,11 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
   const { $PanelTabs } = state
   if (oldIndex !== -1) {
     const $PanelTab = $PanelTabs.children[oldIndex]
-    $PanelTab.removeAttribute('aria-selected')
+    $PanelTab.removeAttribute(DomAttributeType.AriaSelected)
   }
   if (newIndex !== -1) {
     const $PanelTab = $PanelTabs.children[newIndex]
     $PanelTab.ariaSelected = true
-    $PanelTabs.setAttribute('aria-activedescendant', $PanelTab.id)
+    $PanelTabs.setAttribute(DomAttributeType.AriaActiveDescendant, $PanelTab.id)
   }
 }

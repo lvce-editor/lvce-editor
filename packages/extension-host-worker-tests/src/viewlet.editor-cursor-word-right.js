@@ -1,5 +1,4 @@
-// TODO test is broken in ci, not sure why https://github.com/lvce-editor/lvce-editor/runs/7692111020?check_suite_focus=true
-test.skip('viewlet.editor-cursor-word-right', async () => {
+test('viewlet.editor-cursor-word-right', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file1.txt`, `<title>Document</title>`)
@@ -11,11 +10,11 @@ test.skip('viewlet.editor-cursor-word-right', async () => {
 
   // assert
   const cursor = Locator('.EditorCursor')
-  await expect(cursor).toHaveCSS('left', '66px')
+  await expect(cursor).toHaveCSS('translate', /^(63|64|65|66|67|68|69).*?px$/)
 
   // act
   await Editor.cursorWordRight()
 
   // assert
-  await expect(cursor).toHaveCSS('left', '142px')
+  await expect(cursor).toHaveCSS('translate', /^(134|135|136|137|138|139|140|141|142|143|144|145|146).*?px$/)
 })

@@ -54,6 +54,8 @@ export const load = (moduleId) => {
       return import('../ServiceWorker/ServiceWorker.ipc.js')
     case ModuleId.TestFrameWork:
       return import('../TestFrameWork/TestFrameWork.ipc.js')
+    case ModuleId.Transferrable:
+      return import('../Transferrable/Transferrable.ipc.js')
     case ModuleId.Viewlet:
       return import('../Viewlet/Viewlet.ipc.js')
     case ModuleId.WebStorage:

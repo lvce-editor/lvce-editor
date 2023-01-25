@@ -34,8 +34,8 @@ test('selectCurrent - settings', async () => {
     ...ViewletActivityBar.create(),
     focusedIndex: 5,
     height: ACTIVITY_BAR_ITEM_HEIGHT * 6 + 100,
-    top: 20,
-    left: 750,
+    y: 20,
+    x: 750,
     activityBarItems: [
       // Top
       {

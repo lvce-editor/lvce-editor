@@ -171,7 +171,6 @@ const toPrettyDirent = (dirent) => {
 export const readDirWithFileTypes = async (path) => {
   try {
     const dirents = await fs.readdir(path, { withFileTypes: true })
-    console.log({ dirents: dirents.filter((x) => getType(x) === DirentType.Unknown) })
     const prettyDirents = dirents.map(toPrettyDirent)
     return prettyDirents
   } catch (error) {

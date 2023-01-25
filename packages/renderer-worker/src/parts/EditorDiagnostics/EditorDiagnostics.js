@@ -8,9 +8,7 @@ const getDiagnostics = async (editor) => {
     console.info('diagnostics not yet implemented for web')
     return []
   }
-  const diagnostics = await ExtensionHostDiagnostics.executeDiagnosticProvider(
-    editor
-  )
+  const diagnostics = await ExtensionHostDiagnostics.executeDiagnosticProvider(editor)
   return diagnostics
 }
 
@@ -22,8 +20,8 @@ const getVisibleDiagnostics = (editor, diagnostics) => {
   const visibleDiagnostics = []
   for (const diagnostic of diagnostics) {
     visibleDiagnostics.push({
-      top: (diagnostic.rowIndex - editor.minLineY) * editor.rowHeight,
-      left: diagnostic.columnIndex * editor.columnWidth,
+      x: diagnostic.columnIndex * editor.columnWidth,
+      y: (diagnostic.rowIndex - editor.minLineY) * editor.rowHeight,
       width: 20,
       height: editor.rowHeight,
       type: getDiagnosticType(diagnostic),

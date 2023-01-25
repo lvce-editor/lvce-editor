@@ -1,3 +1,7 @@
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
 jest.mock('node:fs', () => ({
   readFileSync: jest.fn(() => {
     throw new Error('not implemented')
@@ -240,8 +244,7 @@ exports.findById = (id) => {
 })
 
 test('prepare - module not found error', async () => {
-  const error =
-    new Error(`Cannot find module '../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js/index.js.js'
+  const error = new Error(`Cannot find module '../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js/index.js.js'
 Require stack:
 - /test/packages/main-process/src/parts/Module/Module.js
 - /test/packages/main-process/src/mainProcessMain.js
@@ -490,4 +493,76 @@ exports.getProcessTree = getProcessTree;
     message: `Module did not self-register: 'C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\build\\Release\\windows_process_tree.node'.`,
     stack: `    at Object.<anonymous> (C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\lib\\index.js:8:16)`,
   })
+})
+
+test('prepare - error stack with node:events', async () => {
+  const error = new TypeError(`Cannot read properties of undefined (reading 'id')`)
+  error.stack = `TypeError: Cannot read properties of undefined (reading 'id')
+  at exports.findById (/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js:10:28)
+  at exports.findById (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:94:26)
+  at handlePortForSharedProcess (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:130:28)
+  at exports.handlePort (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:234:14)
+  at IpcMainImpl.emit (node:events:513:28)
+  at EventEmitter.<anonymous> (node:electron/js2c/browser_init:2:81930)
+  at EventEmitter.emit (node:events:513:28)`
+  // @ts-ignore
+  fs.readFileSync.mockImplementation((path) => {
+    if (path !== '/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js') {
+      throw new Error(`file not found ${path}`)
+    }
+    return `exports.state = {
+  /**
+   * @type {any[]}
+   */
+  windows: [],
+}
+
+exports.findById = (id) => {
+  for (const window of this.state.windows) {
+    if (window.webContents.id === id) {
+      return window
+    }
+  }
+  return undefined
+}
+
+exports.findIndexById = (id) => {
+  for (const window of this.state.windows) {
+    if (window.webContents.id === id) {
+      return window
+    }
+  }
+  return undefined
+}
+
+exports.remove = (id) => {
+  const index = this.findIndexById(id)
+  if (index === -1) {
+    throw new Error(\`expected window \${id} to be in windows array\`)
+  }
+  exports.state.windows.splice(index, 1)
+}
+
+exports.add = (config) => {
+  exports.state.windows.push(config)
+}
+`
+  })
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    codeFrame: `   8 | exports.findById = (id) => {
+   9 |   for (const window of this.state.windows) {
+> 10 |     if (window.webContents.id === id) {
+     |                            ^
+  11 |       return window
+  12 |     }
+  13 |   }`,
+    message: "Cannot read properties of undefined (reading 'id')",
+    stack: `  at exports.findById (/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js:10:28)
+  at exports.findById (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:94:26)
+  at handlePortForSharedProcess (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:130:28)
+  at exports.handlePort (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:234:14)`,
+  })
+  expect(fs.readFileSync).toHaveBeenCalledTimes(1)
+  expect(fs.readFileSync).toHaveBeenCalledWith(`/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js`, 'utf-8')
 })

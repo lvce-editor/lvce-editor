@@ -2,6 +2,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as EditorGroup from '../EditorGroup/EditorGroup.js'
 import * as Label from '../Label/Label.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 const create$MainTabs = () => {
   const $MainTabs = document.createElement('div')
@@ -63,12 +64,7 @@ export const addEditor = (state, id, uri, languageId) => {
 // 3. editor group exists and editor should be replaced
 export const openEditor = async (state, id, uri, languageId) => {
   state.editorGroup = EditorGroup.create()
-  state.activeEditorState = EditorGroup.addOne(
-    state.editorGroup,
-    id,
-    uri,
-    languageId
-  )
+  state.activeEditorState = EditorGroup.addOne(state.editorGroup, id, uri, languageId)
 }
 
 export const closeAllViewlets = (state) => {
@@ -89,13 +85,7 @@ export const closeViewletAndTab = (state, index) => {
 
 export const focus = () => {}
 
-export const openViewlet = (
-  state,
-  tabLabel,
-  tabTitle,
-  oldActiveIndex,
-  background = false
-) => {
+export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex, background = false) => {
   const $TabLabel = Label.create(tabLabel)
 
   const $TabCloseButton = document.createElement('button')
@@ -106,7 +96,7 @@ export const openViewlet = (
   const $Tab = document.createElement('div')
   $Tab.title = tabTitle
   if (!background) {
-    $Tab.ariaSelected = 'true'
+    $Tab.ariaSelected = AriaBoolean.True
   }
   // @ts-ignore
   $Tab.role = AriaRoles.Tab
@@ -116,7 +106,7 @@ export const openViewlet = (
   if (oldActiveIndex !== -1 && state.$MainTabs) {
     const $OldTab = state.$MainTabs.children[oldActiveIndex]
     if ($OldTab) {
-      $OldTab.ariaSelected = 'false'
+      $OldTab.ariaSelected = AriaBoolean.False
     }
   }
 
@@ -162,17 +152,12 @@ export const appendViewlet = (state, childName, $Child) => {
 
 // TODO when there is not enough space available, only show tab close button
 // for focused tab (that's how chrome and firefox do it)
-export const openAnotherTab = async (
-  state,
-  tabLabel,
-  tabTitle,
-  unFocusIndex
-) => {
+export const openAnotherTab = async (state, tabLabel, tabTitle, unFocusIndex) => {
   const $Tab = document.createElement('div')
   $Tab.className = 'MainTab'
   $Tab.textContent = tabLabel
   $Tab.title = tabTitle
-  $Tab.ariaSelected = 'true'
+  $Tab.ariaSelected = AriaBoolean.True
   // @ts-ignore
   $Tab.role = AriaRoles.Tab
   $Tab.tabIndex = 0
@@ -181,13 +166,13 @@ export const openAnotherTab = async (
   $TabCloseButton.className = 'EditorTabCloseButton'
   $TabCloseButton.ariaLabel = 'Close'
   $Tab.append($TabLabel, $TabCloseButton)
-  state.$MainTabs.children[unFocusIndex].ariaSelected = 'false'
+  state.$MainTabs.children[unFocusIndex].ariaSelected = AriaBoolean.False
   state.$MainTabs.append($Tab)
 }
 
 export const closeOneTab = (state, closeIndex, focusIndex) => {
   state.$MainTabs.children[closeIndex].remove()
-  state.$MainTabs.children[focusIndex].ariaSelected = 'true'
+  state.$MainTabs.children[focusIndex].ariaSelected = AriaBoolean.True
 }
 
 export const closeOneTabOnly = (state, closeIndex) => {
@@ -195,15 +180,15 @@ export const closeOneTabOnly = (state, closeIndex) => {
 }
 
 export const focusAnotherTab = (state, unFocusIndex, focusIndex) => {
-  state.$MainTabs.children[unFocusIndex].ariaSelected = 'false'
-  state.$MainTabs.children[focusIndex].ariaSelected = 'true'
+  state.$MainTabs.children[unFocusIndex].ariaSelected = AriaBoolean.False
+  state.$MainTabs.children[focusIndex].ariaSelected = AriaBoolean.True
 }
 
 export const closeOthers = (state, keepIndex, focusIndex) => {
   for (let i = state.$MainTabs.children.length - 1; i >= 0; i--) {
     const $Tab = state.$MainTabs.children[i]
     if (i === keepIndex) {
-      $Tab.ariaSelected = 'true'
+      $Tab.ariaSelected = AriaBoolean.True
       $Tab.tabIndex = 0
     } else {
       $Tab.remove()
@@ -217,7 +202,7 @@ export const closeTabsRight = (state, index) => {
     $Tab.remove()
   }
   const $Tab = state.$MainTabs.children[index]
-  $Tab.ariaSelected = 'true'
+  $Tab.ariaSelected = AriaBoolean.True
   $Tab.tabIndex = 0
 }
 
@@ -227,7 +212,7 @@ export const closeTabsLeft = (state, index) => {
     $Tab.remove()
   }
   const $Tab = state.$MainTabs.children[0]
-  $Tab.ariaSelected = 'true'
+  $Tab.ariaSelected = AriaBoolean.True
   $Tab.tabIndex = 0
 }
 

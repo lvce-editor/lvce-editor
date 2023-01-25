@@ -1,7 +1,9 @@
-import * as Widget from '../Widget/Widget.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as Focus from '../Focus/Focus.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Widget from '../Widget/Widget.js'
 
 export const state = {
   $Dialog: undefined,
@@ -21,12 +23,7 @@ export const prompt = async (message) => {
     $DialogButtonOk.textContent = 'ok'
     const $DialogButtonCancel = document.createElement('button')
     $DialogButtonCancel.textContent = 'Cancel'
-    $Dialog.append(
-      $DialogTitle,
-      $DialogInput,
-      $DialogButtonCancel,
-      $DialogButtonOk
-    )
+    $Dialog.append($DialogTitle, $DialogInput, $DialogButtonCancel, $DialogButtonOk)
     $DialogTitle.textContent = message
     Widget.append($Dialog)
     // @ts-ignore
@@ -114,10 +111,7 @@ const getNodeIndex = ($Node) => {
 const handleDialogOptionClick = (event) => {
   const $Target = event.target
   const index = getNodeIndex($Target)
-  RendererWorker.send(
-    /* Dialog.handleClick */ 'Dialog.handleClick',
-    /* index */ index
-  )
+  RendererWorker.send(/* Dialog.handleClick */ 'Dialog.handleClick', /* index */ index)
 }
 
 const getErrorMessage = (error) => {
@@ -136,7 +130,7 @@ const getErrorMessage = (error) => {
 // TODO this show be a viewlet
 export const showErrorDialogWithOptions = (error, options) => {
   if (!Platform.supportsHtml5Dialog()) {
-    console.info('the dialog api is not available on this browser')
+    Logger.info('the dialog api is not available on this browser')
     alert(error) // TODO in electron this will do nothing, but electron always supports dialogs
     return
   }
@@ -169,18 +163,13 @@ export const showErrorDialogWithOptions = (error, options) => {
   }
   const $DialogBody = document.createElement('div')
   $DialogBody.id = 'DialogBody'
-  $DialogBody.append(
-    $DialogBodyErrorMessage,
-    $DialogBodyErrorCodeFrame,
-    $DialogBodyErrorStack,
-    $DialogBodyOptions
-  )
+  $DialogBody.append($DialogBodyErrorMessage, $DialogBodyErrorCodeFrame, $DialogBodyErrorStack, $DialogBodyOptions)
   // TODO screen reader switches to browse mode for dialog and
   // reads dialog title and error message multiple times
   const $Dialog = document.createElement('dialog')
   $Dialog.id = 'Dialog'
-  $Dialog.setAttribute('aria-labelledby', 'DialogTitle')
-  $Dialog.setAttribute('aria-describedby', 'DialogBodyErrorMessage')
+  $Dialog.setAttribute(DomAttributeType.AriaLabelledBy, 'DialogTitle')
+  $Dialog.setAttribute(DomAttributeType.AriaDescribedBy, 'DialogBodyErrorMessage')
   $Dialog.append($DialogTitle, $DialogBody)
   Widget.append($Dialog)
   // @ts-ignore

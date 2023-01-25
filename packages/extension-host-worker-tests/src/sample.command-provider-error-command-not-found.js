@@ -1,10 +1,8 @@
-const name = 'sample.command-provider-error-command-not-found'
+export const name = 'sample.command-provider-error-command-not-found'
 
-test('sample.command-provider-error', async () => {
+export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
   // act
   await QuickPick.open()
@@ -16,9 +14,5 @@ test('sample.command-provider-error', async () => {
   await expect(dialogErrorMessage).toBeVisible()
   // TODO better error message
   // TODO less obstrusive error message, maybe notification
-  await expect(dialogErrorMessage).toHaveText(
-    'Error: Failed to execute command: command xyz.sampleCommand not found'
-  )
-})
-
-export {}
+  await expect(dialogErrorMessage).toHaveText('Error: Failed to execute command: command xyz.sampleCommand not found')
+}

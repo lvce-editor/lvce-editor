@@ -24,31 +24,21 @@ exports.wrapBrowserViewCommand = (fn) => {
 /**
  *
  * @param {Electron.BrowserView} view
- * @param {number} top
- * @param {number} left
+ * @param {number} x
+ * @param {number} y
  * @param {number} width
  * @param {number} height
  */
-exports.resizeBrowserView = (view, top, left, width, height) => {
-  view.setBounds({ x: left, y: top, width, height })
+exports.resizeBrowserView = (view, x, y, width, height) => {
+  view.setBounds({ x, y, width, height })
 }
 
 const setIframeSrcFallback = async (view, error) => {
-  await view.webContents.loadFile(
-    Path.join(
-      Root.root,
-      'packages',
-      'main-process',
-      'pages',
-      'error',
-      'error.html'
-    ),
-    {
-      query: {
-        code: error.code,
-      },
-    }
-  )
+  await view.webContents.loadFile(Path.join(Root.root, 'packages', 'main-process', 'pages', 'error', 'error.html'), {
+    query: {
+      code: error.code,
+    },
+  })
 }
 
 /**
@@ -77,11 +67,7 @@ exports.setIframeSrc = async (view, iframeSrc) => {
       Debug.debug(`[main process] navigation to ${iframeSrc} aborted`)
       return
     }
-    if (
-      error &&
-      error.code === LoadErrorCode.ERR_FAILED &&
-      ElectronBrowserViewState.isCanceled(webContents.id)
-    ) {
+    if (error && error.code === LoadErrorCode.ERR_FAILED && ElectronBrowserViewState.isCanceled(webContents.id)) {
       Debug.debug(`[main process] navigation to ${iframeSrc} canceled`)
       ElectronBrowserViewState.removeCanceled(webContents.id)
       return

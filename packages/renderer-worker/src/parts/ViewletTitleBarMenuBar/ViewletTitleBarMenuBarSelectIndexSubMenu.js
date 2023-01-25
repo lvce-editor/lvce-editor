@@ -3,15 +3,15 @@ import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 
 export const selectIndexSubMenu = async (state, menu, index) => {
   const { menus } = state
-  const { items, top, left, level } = menu
+  const { items, x, y, level } = menu
   const item = items[index]
   const subMenuEntries = await MenuEntries.getMenuEntries(item.id)
   const subMenu = {
     level: menus.length,
     items: subMenuEntries,
     focusedIndex: -1,
-    top: top + index * 25,
-    left: left + Menu.MENU_WIDTH,
+    x: x + Menu.MENU_WIDTH,
+    y: y + index * 25,
   }
   const newParentMenu = {
     ...menu,

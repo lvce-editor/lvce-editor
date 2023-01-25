@@ -11,8 +11,11 @@ export const state = {
 }
 
 export const execute = async (href) => {
-  ExposeGlobals.exposeGlobals(globalThis, TestFrameWorkComponent)
-  ExposeGlobals.exposeGlobals(globalThis, TestFrameWork)
+  const globals = {
+    ...TestFrameWorkComponent,
+    ...TestFrameWork,
+  }
+  ExposeGlobals.exposeGlobals(globalThis, globals)
   // TODO
   // 0. wait for page to be ready
   // 1. get script to import from renderer process (url or from html)
@@ -20,16 +23,30 @@ export const execute = async (href) => {
   // 2. import that script
   const module = await ImportScript.importScript(scriptUrl)
   if (module.mockExec) {
-    // TODO this should not be in workspace but in another module
-    Workspace.state.mockExec = module.mockExec
+    TestState.setMockExec(module.mockExec)
   }
-  const tests = TestState.getTests()
-  for (const test of tests) {
-    await ExecuteTest.executeTest(test.name, test.fn)
+  if (module.test) {
+    ExposeGlobals.unExposeGlobals(globalThis, globals)
+    await ExecuteTest.executeTest(module.name, module.test, globals)
+  } else {
+    const tests = TestState.getTests()
+    for (const test of tests) {
+      await ExecuteTest.executeTest(test.name, test.fn)
+    }
   }
   // 3. if import fails, display error message
 
   // 4. run the test
   // 5. if test fails, display error message
   // 6. if test succeeds, display success message
+}
+
+export const executeMockExecFunction = async (...args) => {
+  const fn = TestState.getMockExec()
+  if (!fn) {
+    throw new Error(`mockExec does not exist`)
+  }
+  // @ts-ignore
+  const result = await fn(...args)
+  return result
 }

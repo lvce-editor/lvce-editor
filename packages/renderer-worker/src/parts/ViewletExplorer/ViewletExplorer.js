@@ -14,7 +14,6 @@ import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewl
 import * as Workspace from '../Workspace/Workspace.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import {
-  compareDirent,
   getChildDirents,
   getChildDirentsRaw,
   getIndexFromPosition,
@@ -22,6 +21,7 @@ import {
   getParentStartIndex,
   getTopLevelDirents,
 } from './ViewletExplorerShared.js'
+import * as SortExplorerItems from '../SortExplorerItems/SortExplorerItems.js'
 
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
@@ -32,15 +32,15 @@ import {
 
 // TODO instead of root string, there should be a root dirent
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     root: '',
     items: [],
     focusedIndex: -1,
     focused: false,
     hoverIndex: -1,
-    top,
-    left,
+    x,
+    y,
     height,
     deltaY: 0,
     minLineY: 0,
@@ -74,7 +74,7 @@ const getSavedChildDirents = (map, path, depth, excluded, pathSeparator) => {
     return []
   }
   const dirents = []
-  children.sort(compareDirent)
+  SortExplorerItems.sortExplorerItems(children)
   const visible = []
   const displayRoot = path.endsWith(pathSeparator) ? path : path + pathSeparator
   for (const child of children) {
@@ -180,8 +180,15 @@ const getExcluded = () => {
   return excluded
 }
 
+const getSavedRoot = (savedState, workspacePath) => {
+  if (savedState && savedState.root && !savedState.root.startsWith('html://')) {
+    return savedState.root
+  }
+  return workspacePath
+}
+
 export const loadContent = async (state, savedState) => {
-  const root = state.root || Workspace.state.workspacePath
+  const root = getSavedRoot(savedState, Workspace.state.workspacePath)
   // TODO path separator could be restored from saved state
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const excluded = getExcluded()
@@ -365,7 +372,7 @@ export const computeRenamedDirent = (dirents, index, newName) => {
     if (dirent.depth < depth) {
       break
     }
-    if (compareDirent(dirent, newDirent) === 1) {
+    if (SortExplorerItems.compareDirent(dirent, newDirent) === 1) {
       insertIndex = startIndex
       posInSet = dirent.posInSet
       // dirent.posInSet++
@@ -392,7 +399,7 @@ export const computeRenamedDirent = (dirents, index, newName) => {
     if (dirent.depth < depth) {
       break
     }
-    if (insertIndex === -1 && compareDirent(dirent, newDirent === -1)) {
+    if (insertIndex === -1 && SortExplorerItems.compareDirent(dirent, newDirent === -1)) {
       for (; endIndex < dirents.length; endIndex++) {
         const childDirent = dirents[endIndex]
       }
@@ -616,7 +623,7 @@ const acceptCreate = async (state) => {
     if (dirent.depth !== depth) {
       break
     }
-    const compareResult = compareDirent(dirent, newDirent)
+    const compareResult = SortExplorerItems.compareDirent(dirent, newDirent)
     if (compareResult === 1) {
       insertIndex = i
       deltaPosInSet = 1
@@ -903,10 +910,10 @@ export const handleMouseEnter = async (state, index) => {
     // TODO preload content maybe when it is a long hover
     return state
   }
-  const { top, itemHeight, left, root } = state
+  const { top, itemHeight, x, root } = state
   const uri = `${root}${dirent.path}`
   const newTop = top + index * itemHeight
-  const right = left
+  const right = x
   await Command.execute(/* ImagePreview.show */ 9081, /* uri */ uri, /* top */ newTop, /* right */ right)
 }
 

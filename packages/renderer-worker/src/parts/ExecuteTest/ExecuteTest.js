@@ -1,10 +1,6 @@
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-
-export const state = {
-  tests: [],
-}
 
 const printError = (error) => {
   if (error && error.constructor.name === 'AssertionError') {
@@ -14,14 +10,14 @@ const printError = (error) => {
   }
 }
 
-export const executeTest = async (name, fn) => {
+export const executeTest = async (name, fn, globals = {}) => {
   let _error
   let _start
   let _end
   let _duration
   try {
     _start = Timestamp.now()
-    await fn()
+    await fn(globals)
     _end = Timestamp.now()
     _duration = `${_end - _start}ms`
     console.info(`[test passed] ${name} in ${_duration}`)
@@ -52,10 +48,5 @@ export const executeTest = async (name, fn) => {
     text = `test passed in ${_duration}`
     state = 'pass'
   }
-  await RendererProcess.invoke(
-    'TestFrameWork.showOverlay',
-    state,
-    background,
-    text
-  )
+  await RendererProcess.invoke('TestFrameWork.showOverlay', state, background, text)
 }

@@ -1,13 +1,13 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Compare from '../Compare/Compare.js'
 import * as DirentType from '../DirentType/DirentType.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as SortExplorerItems from '../SortExplorerItems/SortExplorerItems.js'
 
-export const getIndexFromPosition = (state, x, y) => {
-  const { top, itemHeight, items } = state
-  const index = Math.floor((y - top) / itemHeight)
+export const getIndexFromPosition = (state, eventX, eventY) => {
+  const { y, itemHeight, items } = state
+  const index = Math.floor((eventY - y) / itemHeight)
   if (index < 0) {
     return 0
   }
@@ -17,29 +17,8 @@ export const getIndexFromPosition = (state, x, y) => {
   return index
 }
 
-const priorityMapFoldersFirst = {
-  [DirentType.Directory]: 1,
-  [DirentType.SymLinkFolder]: 1,
-  [DirentType.File]: 0,
-  [DirentType.SymLinkFile]: 0,
-  [DirentType.Unknown]: 0,
-  [DirentType.Socket]: 0,
-}
-
-const compareDirentType = (direntA, direntB) => {
-  return priorityMapFoldersFirst[direntB.type] - priorityMapFoldersFirst[direntA.type]
-}
-
-const compareDirentName = (direntA, direntB) => {
-  return Compare.compareString(direntA.name, direntB.name)
-}
-
-export const compareDirent = (direntA, direntB) => {
-  return compareDirentType(direntA, direntB) || compareDirentName(direntA, direntB)
-}
-
 const toDisplayDirents = (pathSeparator, rawDirents, parentDirent, excluded) => {
-  rawDirents.sort(compareDirent) // TODO maybe shouldn't mutate input argument, maybe sort after mapping
+  SortExplorerItems.sortExplorerItems(rawDirents)
   // TODO figure out whether this uses too much memory (name,path -> redundant, depth could be computed on demand)
   const toDisplayDirent = (rawDirent, index) => {
     const path = [parentDirent.path, rawDirent.name].join(pathSeparator)

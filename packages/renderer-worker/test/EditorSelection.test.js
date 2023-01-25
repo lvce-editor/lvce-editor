@@ -1,102 +1,121 @@
-import * as EditorSelection from '../src/parts/Editor/EditorSelection.js'
 import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
+import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', () => {
+  return {
+    measureTextWidth(text) {
+      return text.length * 8
+    },
+  }
+})
+
+const EditorSelection = await import('../src/parts/Editor/EditorSelection.js')
 
 test('getVisible', () => {
   const editor = {
-    top: 10,
-    left: 20,
+    x: 20,
+    y: 10,
     rowHeight: 20,
     columnWidth: 8,
     minLineY: 4,
     maxLineY: 8,
-    lines: [
-      'line 1',
-      'line 2',
-      'line 3',
-      'line 4',
-      'line 5',
-      'line 6',
-      'line 7',
-      'line 8',
-      'line 9',
-      'line 10',
-    ],
+    lines: ['line 1', 'line 2', 'line 3', 'line 4', 'line 5', 'line 6', 'line 7', 'line 8', 'line 9', 'line 10'],
     selections: new Uint32Array([1, 3, 2, 4, 3, 0, 6, 6, 8, 2, 8, 3]),
+    fontWeight: 400,
+    fontFamily: 'Test',
+    letterSpacing: 0,
+    fontSize: 15,
+    cursorWidth: 0,
   }
-  expect(EditorSelection.getVisible(editor)).toEqual(
-    new Uint32Array([
-      /* top */ 0, /* left */ 0, /* width */ 48, /* height */ 20 /*  */,
-      /* top */ 20, /* left */ 0, /* width */ 48, /* height */ 20 /*  */,
-      /* top */ 40, /* left */ 0, /* width */ 48, /* height */ 20 /*  */,
-      /* top */ 80, /* left */ 16, /* width */ 8, /* height */ 20,
+  const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
+  expect(cursorInfos).toEqual(new Float32Array([/*x */ 48, /* y */ 40, /* x */ 24, /* y */ 80]))
+  expect(selectionInfos).toEqual(
+    // prettier-ignore
+    new Float32Array([
+      /* x */ 0,  /* y */ 0,  /* width */ 48, /* height */ 20,
+      /* x */ 0,  /* y */ 20, /* width */ 48, /* height */ 20,
+      /* x */ 0,  /* y */ 40, /* width */ 48, /* height */ 20,
+      /* x */ 16, /* y */ 80, /* width */ 8,  /* height */ 20,
     ])
   )
 })
 
 test('getVisible - bug with two lines', () => {
   const editor = {
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     rowHeight: 20,
     columnWidth: 8,
     minLineY: 0,
     maxLineY: 4,
     lines: ['line 1', 'line 2', 'line 3', 'line 4'],
     selections: new Uint32Array([0, 4, 1, 4]),
+    fontWeight: 400,
+    fontFamily: 'Test',
+    letterSpacing: 0,
+    fontSize: 15,
+    cursorWidth: 0,
   }
-  expect(EditorSelection.getVisible(editor)).toEqual(
-    new Uint32Array([
-      /* top */ 0, /* left */ 32, /* width */ 16, /* height */ 20 /*  */,
-      /* top */ 20, /* left */ 0, /* width */ 32, /* height */ 20,
+  const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
+  expect(cursorInfos).toEqual(new Float32Array([/*x */ 32, /* y */ 20]))
+  expect(selectionInfos).toEqual(
+    // prettier-ignore
+    new Float32Array([
+      /* x */ 32, /* y */ 0, /* width */ 16, /* height */ 20,
+      /* x */ 0, /* y */ 20, /* width */ 32,  /* height */ 20,
     ])
   )
 })
 
 test('getVisible - cursors should be treated separately', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 4,
-  }
   const editor = {
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     rowHeight: 20,
     columnWidth: 8,
     minLineY: 0,
     maxLineY: 4,
     lines: ['line 1', 'line 2', 'line 3', 'line 4'],
     selections: new Uint32Array([0, 4, 0, 4]),
+    fontWeight: 400,
+    fontFamily: 'Test',
+    letterSpacing: 0,
+    fontSize: 15,
+    cursorWidth: 0,
   }
-  expect(EditorSelection.getVisible(editor)).toEqual(new Uint32Array([]))
+  const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
+  expect(cursorInfos).toEqual(new Float32Array([/*x */ 32, /* y */ 0]))
+  expect(selectionInfos).toEqual(new Float32Array([]))
 })
 
 test('getVisible - bug with multiple lines', () => {
   const editor = {
-    top: 10,
-    left: 20,
+    x: 20,
+    y: 10,
     rowHeight: 20,
     columnWidth: 8,
     minLineY: 0,
     maxLineY: 8,
-    lines: [
-      'line 1',
-      'line 2',
-      'line 3',
-      'line 4',
-      'line 5',
-      'line 6',
-      'line 7',
-      'line 8',
-      'line 9',
-      'line 10',
-    ],
+    lines: ['line 1', 'line 2', 'line 3', 'line 4', 'line 5', 'line 6', 'line 7', 'line 8', 'line 9', 'line 10'],
     selections: new Uint32Array([0, 3, 2, 3]),
+    fontWeight: 400,
+    fontFamily: 'Test',
+    letterSpacing: 0,
+    fontSize: 15,
+    cursorWidth: 0,
   }
-  expect(EditorSelection.getVisible(editor)).toEqual(
-    new Uint32Array([
-      /* top */ 0, /* left */ 24, /* width */ 24, /* height */ 20 /*  */,
-      /* top */ 20, /* left */ 0, /* width */ 48, /* height */ 20 /*  */,
-      /* top */ 40, /* left */ 0, /* width */ 24, /* height */ 20,
+  const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
+  expect(cursorInfos).toEqual(new Float32Array([/* x */ 24, /* y */ 40]))
+  expect(selectionInfos).toEqual(
+    // prettier-ignore
+    new Float32Array([
+      /* x */ 24,/* y */ 0,  /* width */ 24, /* height */ 20,
+      /* x */ 0, /* y */ 20, /* width */ 48, /* height */ 20,
+      /* x */ 0, /* y */ 40, /* width */ 24, /* height */ 20,
     ])
   )
 })
@@ -128,8 +147,8 @@ test.skip('applyEdit - emoji ', () => {
     finalY: 0,
     finalDeltaY: 0,
     height: 645,
-    top: 55,
-    left: 0,
+    x: 0,
+    y: 55,
     columnWidth: 9,
     rowHeight: 20,
     fontSize: 15,
@@ -198,4 +217,37 @@ test.skip('applyEdit - emoji ', () => {
     },
   ]
   expect(EditorSelection.applyEdit(editor, changes)).toMatchObject({})
+})
+
+test('getVisible - only start of selection visible', () => {
+  const editor = {
+    x: 20,
+    y: 10,
+    rowHeight: 20,
+    columnWidth: 8,
+    minLineY: 0,
+    maxLineY: 8,
+    lines: ['line 1', 'line 2', 'line 3', 'line 4', 'line 5', 'line 6', 'line 7', 'line 8', 'line 9', 'line 10', 'line 11', 'line 12', 'line 13'],
+    selections: new Uint32Array([0, 0, 12, 0]),
+    fontWeight: 400,
+    fontFamily: 'Test',
+    letterSpacing: 0,
+    fontSize: 15,
+    cursorWidth: 0,
+  }
+  const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
+  expect(cursorInfos).toEqual(new Float32Array([]))
+  expect(selectionInfos).toEqual(
+    // prettier-ignore
+    new Float32Array([
+     /* x */ 0, /* y */ 0, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 20, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 40, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 60, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 80, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 100, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 120, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 140, /* width */ 48, /* height */ 20,
+    ])
+  )
 })

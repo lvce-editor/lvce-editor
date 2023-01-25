@@ -1,5 +1,12 @@
 import * as BlobSrc from '../BlobSrc/BlobSrc.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as I18nString from '../I18NString/I18NString.js'
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  FailedToLoadAudio: `Failed to load audio: {PH1}`,
+}
 
 export const create = (id, uri) => {
   return {
@@ -10,7 +17,6 @@ export const create = (id, uri) => {
 }
 
 export const loadContent = async (state) => {
-  // TODO get src from uri
   const { uri } = state
   const src = await BlobSrc.getSrc(uri)
   return {
@@ -20,7 +26,9 @@ export const loadContent = async (state) => {
 }
 
 const getImprovedErrorMessage = (message) => {
-  return `Failed to load audio: ${message}`
+  return I18nString.i18nString(UiStrings.FailedToLoadAudio, {
+    PH1: message,
+  })
 }
 
 export const handleAudioError = (state, code, message) => {
@@ -53,10 +61,7 @@ const renderAudioErrorMessage = {
     return oldState.audioErrorMessage === newState.audioErrorMessage
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setAudioErrorMessage',
-      /* src */ newState.audioErrorMessage,
-    ]
+    return [/* method */ 'setAudioErrorMessage', /* src */ newState.audioErrorMessage]
   },
 }
 

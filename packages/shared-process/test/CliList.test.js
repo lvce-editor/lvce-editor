@@ -10,25 +10,26 @@ jest.unstable_mockModule('../src/parts/ExtensionList/ExtensionList.js', () => ({
   }),
 }))
 
-const ExtensionList = await import(
-  '../src/parts/ExtensionList/ExtensionList.js'
-)
+jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => ({
+  error: jest.fn(() => {}),
+  info: jest.fn(() => {}),
+}))
+
+jest.unstable_mockModule('../src/parts/Process/Process.js', () => ({
+  setExitCode: jest.fn(() => {}),
+}))
+
+const ExtensionList = await import('../src/parts/ExtensionList/ExtensionList.js')
 const CliList = await import('../src/parts/CliList/CliList.js')
+const Process = await import('../src/parts/Process/Process.js')
+const Logger = await import('../src/parts/Logger/Logger.js')
 
 test('handleCliArgs - error', async () => {
   // @ts-ignore
   ExtensionList.list.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  const stdout = {
-    write: jest.fn(),
-  }
-  const stderr = {
-    write: jest.fn(),
-  }
-  await expect(CliList.handleCliArgs([], stdout, stderr)).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(CliList.handleCliArgs([])).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('handleCliArgs', async () => {
@@ -41,12 +42,9 @@ test('handleCliArgs', async () => {
       },
     ]
   })
-  const console = {
-    info: jest.fn(),
-    error: jest.fn(),
-  }
-  await CliList.handleCliArgs([], console)
-  expect(console.info).toHaveBeenCalledTimes(1)
-  expect(console.info).toHaveBeenCalledWith(`extension-1: 0.0.1`)
-  expect(console.error).not.toHaveBeenCalled()
+
+  await CliList.handleCliArgs([])
+  expect(Logger.info).toHaveBeenCalledTimes(1)
+  expect(Logger.info).toHaveBeenCalledWith(`extension-1: 0.0.1`)
+  expect(Logger.error).not.toHaveBeenCalled()
 })

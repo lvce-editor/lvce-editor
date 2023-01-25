@@ -13,9 +13,23 @@ import { getListHeight } from './ViewletExtensionsShared.js'
 
 const SUGGESTIONS = ['@builtin', '@disabled', '@enabled', '@installed', '@outdated', '@sort:installs', '@id:', '@category']
 
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  NoExtensionsFound: 'No extensions found',
+}
+
 // then state can be recycled by Viewlet when there is only a single ViewletExtensions instance
 
-export const create = (id, uri, left, top, width, height) => {
+export const saveState = (state) => {
+  const { searchValue } = state
+  return {
+    searchValue,
+  }
+}
+
+export const create = (id, uri, x, y, width, height) => {
   return {
     searchValue: '',
     suggestionState: /* Closed */ 0,
@@ -23,9 +37,9 @@ export const create = (id, uri, left, top, width, height) => {
     width,
     height,
     handleOffset: 0,
-    top,
-    left,
-    error: '',
+    x,
+    y,
+    message: '',
     focused: false,
     size: ViewletSize.None,
     ...VirtualList.create({
@@ -59,6 +73,20 @@ export const handleInput = async (state, value) => {
     // TODO cancel ongoing requests
     // TODO handle errors
     const items = await SearchExtensions.searchExtensions(allExtensions, value)
+    if (items.length === 0) {
+      return {
+        ...state,
+        items,
+        minLineY: 0,
+        deltaY: 0,
+        allExtensions,
+        maxLineY: 0,
+        scrollBarHeight: 0,
+        finalDeltaY: 0,
+        message: UiStrings.NoExtensionsFound,
+        searchValue: value,
+      }
+    }
     const listHeight = getListHeight(state)
     const total = items.length
     const contentHeight = total * itemHeight
@@ -75,6 +103,8 @@ export const handleInput = async (state, value) => {
       maxLineY,
       scrollBarHeight,
       finalDeltaY,
+      message: '',
+      searchValue: value,
     }
 
     // TODO handle out of order responses (a bit complicated)
@@ -83,16 +113,24 @@ export const handleInput = async (state, value) => {
     await ErrorHandling.handleError(error)
     return {
       ...state,
-      error: `${error}`,
+      searchValue: value,
+      message: `${error}`,
     }
   }
 }
 
-export const loadContent = async (state) => {
-  const { width, searchValue } = state
+const getSavedValue = (savedState) => {
+  if (savedState && savedState.searchValue) {
+    return savedState.searchValue
+  }
+  return ''
+}
+
+export const loadContent = async (state, savedState) => {
+  const { width } = state
+  const searchValue = getSavedValue(savedState)
   // TODO just get local extensions on demand (not when query string is already different)
   const allExtensions = await ExtensionManagement.getAllExtensions()
-  console.log({ allExtensions })
   const size = getSize(width)
   return handleInput({ ...state, allExtensions, size }, searchValue)
   // TODO get installed extensions from extension host
@@ -340,12 +378,12 @@ const renderScrollBar = {
   },
 }
 
-const renderError = {
+const renderMessage = {
   isEqual(oldState, newState) {
-    return oldState.error === newState.error
+    return oldState.message === newState.message
   },
   apply(oldState, newState) {
-    return [/* method */ 'setError', /* error */ newState.error]
+    return [/* method */ 'setMessage', /* message */ newState.message]
   },
 }
 
@@ -358,4 +396,22 @@ const renderSize = {
   },
 }
 
-export const render = [renderHeight, renderFocusedIndex, renderScrollBar, renderNegativeMargin, renderExtensions, renderError, renderSize]
+const renderSearchValue = {
+  isEqual(oldState, newState) {
+    return oldState.searchValue === newState.searchValue
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setSearchValue', oldState.searchValue, newState.searchValue]
+  },
+}
+
+export const render = [
+  renderHeight,
+  renderFocusedIndex,
+  renderScrollBar,
+  renderNegativeMargin,
+  renderMessage,
+  renderExtensions,
+  renderSize,
+  renderSearchValue,
+]

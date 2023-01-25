@@ -29,11 +29,32 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v3
+        id: electron-rebuild-cache
+        with:
+          path: '~/.electron-gyp'
+          key: ${{ runner.os }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v3
+        id: build-cache
+        with:
+          path: 'build/.tmp/cachedDependencies'
+          key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: npm ci
         if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      - name: Compute builtin extensions cache key
+        id: builtinExtensionsCacheKey
+        run: echo "value=$(node build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        id: builtin-extensions-cache
+        with:
+          path: extensions
+          key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
+      - name: Download Builtin Extensions
+        run: node build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
+        if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
       - run: npx lerna run test --since origin/main
       - name: install playwright dependencies
         working-directory: ./packages/e2e
@@ -67,7 +88,14 @@ jobs:
         run: node build/bin/build.js --target=server
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --target=electron-deb --force # --force workaround for issue with node-pty
+        run: node build/bin/build.js --target=electron-deb
+      - name: Cache Electron Builder Dependencies (Windows)
+        uses: actions/cache@v3
+        id: electron-builder-cache-windows
+        if: matrix.os == 'windows-2022'
+        with:
+          path: '~\AppData\Local\electron-builder'
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('build/package-lock.json') }}
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2022'
-        run: node build/bin/build.js --target=electron-builder-windows-exe --force # --force workaround for issue with node-pty
+        run: node build/bin/build.js --target=electron-builder-windows-exe

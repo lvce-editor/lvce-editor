@@ -30,7 +30,7 @@
 } */
 
 #TreeItemActive {
-  background: rgba(59, 71, 66, 0.5);
+  background: var(--TreeItemActiveBackground, rgba(59, 71, 66, 0.5));
 }
 
 .TreeItem:hover {

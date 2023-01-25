@@ -4,26 +4,17 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ViewletExplorer/ViewletExplorerHandleDropRoot.js',
-  () => {
-    return {
-      handleDropRoot: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ViewletExplorer/ViewletExplorerHandleDropRoot.js', () => {
+  return {
+    handleDropRoot: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ViewletExplorerHandleDrop = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerHandleDrop.js'
-)
-const ViewletExplorerHandleDropRoot = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerHandleDropRoot.js'
-)
-const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
-)
+const ViewletExplorerHandleDrop = await import('../src/parts/ViewletExplorer/ViewletExplorerHandleDrop.js')
+const ViewletExplorerHandleDropRoot = await import('../src/parts/ViewletExplorer/ViewletExplorerHandleDropRoot.js')
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
 test('handleDrop - error', async () => {
   // @ts-ignore
   ViewletExplorerHandleDropRoot.handleDropRoot.mockImplementation(async () => {
@@ -31,12 +22,10 @@ test('handleDrop - error', async () => {
   })
   const state = {
     ...ViewletExplorer.create(),
-    top: 0,
+    y: 0,
     height: 0,
   }
-  await expect(
-    ViewletExplorerHandleDrop.handleDrop(state, 0, 0, [])
-  ).rejects.toThrowError(
+  await expect(ViewletExplorerHandleDrop.handleDrop(state, 0, 0, [])).rejects.toThrowError(
     new Error('Failed to drop files: TypeError: x is not a function')
   )
 })

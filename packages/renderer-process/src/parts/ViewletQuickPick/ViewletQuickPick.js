@@ -1,11 +1,16 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
 import * as AriaAlert from '../AriaAlert/AriaAlert.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
+
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
 // be good as well but is not as important as fast show/hide
@@ -118,11 +123,7 @@ const render$QuickPickItemsLess = ($QuickPickItems, quickPickItems) => {
     render$QuickPickItem($QuickPickItems.children[i], quickPickItems[i])
   }
   const fragment = document.createDocumentFragment()
-  for (
-    let i = $QuickPickItems.children.length;
-    i < quickPickItems.length;
-    i++
-  ) {
+  for (let i = $QuickPickItems.children.length; i < quickPickItems.length; i++) {
     const $QuickPickItem = create$QuickPickItem()
     render$QuickPickItem($QuickPickItem, quickPickItems[i])
     fragment.append($QuickPickItem)
@@ -175,7 +176,7 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
     const $NewItem = $QuickPickItems.children[newFocusedIndex]
     if ($NewItem) {
       $NewItem.id = activeId
-      $QuickPickInput.setAttribute('aria-activedescendant', activeId)
+      $QuickPickInput.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
     }
   }
 }
@@ -207,17 +208,14 @@ export const focus = (state) => {
 
 export const create = () => {
   const $QuickPickInput = InputBox.create()
-  $QuickPickInput.setAttribute('aria-controls', Ids.QuickPickItems) // TODO use idl once supported
+  $QuickPickInput.setAttribute(DomAttributeType.AriaControls, Ids.QuickPickItems) // TODO use idl once supported
   // @ts-ignore
   $QuickPickInput.role = Roles.ComboBox
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   $QuickPickInput.ariaAutoComplete = 'list'
   $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
-  $QuickPickInput.addEventListener(
-    DomEventType.BeforeInput,
-    ViewletQuickPickEvents.handleBeforeInput
-  )
-  $QuickPickInput.ariaExpanded = 'true'
+  $QuickPickInput.addEventListener(DomEventType.BeforeInput, ViewletQuickPickEvents.handleBeforeInput)
+  $QuickPickInput.ariaExpanded = AriaBoolean.True
 
   const $QuickPickHeader = document.createElement('div')
   $QuickPickHeader.id = Ids.QuickPickHeader
@@ -228,11 +226,7 @@ export const create = () => {
   // @ts-ignore
   $QuickPickItems.role = Roles.ListBox
   $QuickPickItems.onpointerdown = ViewletQuickPickEvents.handlePointerDown
-  $QuickPickItems.addEventListener(
-    DomEventType.Wheel,
-    ViewletQuickPickEvents.handleWheel,
-    { passive: true }
-  )
+  $QuickPickItems.addEventListener(DomEventType.Wheel, ViewletQuickPickEvents.handleWheel, DomEventOptions.Passive)
 
   // TODO this works well with nvda but not with windows narrator
   // probably a bug with windows narrator that doesn't support ariaRoleDescription
@@ -306,7 +300,7 @@ export const setCursorOffset = (state, cursorOffset) => {
 
 export const setItemsHeight = (state, itemsHeight) => {
   const { $QuickPickItems } = state
-  $QuickPickItems.style.height = `${itemsHeight}px`
+  SetBounds.setHeight($QuickPickItems, itemsHeight)
 }
 
 export const noop = (state) => {}

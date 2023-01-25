@@ -52,9 +52,7 @@ const handlePortForExtensionHost = async (event) => {
   const end = Date.now()
   const { pid } = extensionHost
   const forkTime = end - start
-  Logger.info(
-    `[main-process] Starting extension host with pid ${pid} (fork took ${forkTime} ms).`
-  )
+  Logger.info(`[main-process] Starting extension host with pid ${pid} (fork took ${forkTime} ms).`)
   const browserWindowPort = event.ports[0]
 
   await new Promise((resolve, reject) => {
@@ -91,9 +89,7 @@ const handlePortForExtensionHostHelperProcess = async (event) => {
   const end = Date.now()
   const { pid } = extensionHost
   const forkTime = end - start
-  Logger.info(
-    `[main-process] Starting extension host helper with pid ${pid} (fork took ${forkTime} ms).`
-  )
+  Logger.info(`[main-process] Starting extension host helper with pid ${pid} (fork took ${forkTime} ms).`)
   const browserWindowPort = event.ports[0]
 
   await new Promise((resolve, reject) => {
@@ -125,6 +121,11 @@ const getFolder = (args) => {
   return args._[0]
 }
 
+/**
+ *
+ * @param {import('electron').IpcMainEvent} event
+ * @returns
+ */
 const handlePortForSharedProcess = async (event) => {
   const config = AppWindow.findById(event.sender.id)
   if (!config) {
@@ -169,6 +170,10 @@ const handlePortForSharedProcess = async (event) => {
   browserWindowPort.start()
 }
 
+/**
+ *
+ * @param {import('electron').IpcMainEvent} event
+ */
 const handlePortForMainProcess = (event) => {
   const browserWindowPort = event.ports[0]
   const { id } = event.sender

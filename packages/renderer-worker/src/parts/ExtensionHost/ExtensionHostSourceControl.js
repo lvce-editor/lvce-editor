@@ -3,7 +3,7 @@ import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 export const acceptInput = async (providerId, text) => {
   return ExtensionHostShared.executeProvider({
-    event: 'onSourceControl',
+    event: 'none',
     method: ExtensionHostCommandType.SourceControlAcceptInput,
     params: [providerId, text],
     noProviderFoundMessage: 'No source control provider found',
@@ -12,43 +12,43 @@ export const acceptInput = async (providerId, text) => {
 
 export const getChangedFiles = (providerId) => {
   return ExtensionHostShared.executeProvider({
-    event: 'onSourceControl',
+    event: 'none',
     method: ExtensionHostCommandType.SourceControlGetChangedFiles,
     params: [providerId],
     noProviderFoundMessage: 'No source control provider found',
   })
 }
 
-export const getFileBefore = (path) => {
+export const getFileBefore = (providerId, path) => {
   return ExtensionHostShared.executeProvider({
-    event: 'onSourceControl',
+    event: 'none',
     method: ExtensionHostCommandType.SourceControlGetFileBefore,
-    params: [path],
+    params: [providerId, path],
     noProviderFoundMessage: 'No source control provider found',
   })
 }
 
-export const add = (path) => {
+export const add = (providerId, path) => {
   return ExtensionHostShared.executeProvider({
-    event: 'onSourceControl',
+    event: 'none',
     method: ExtensionHostCommandType.SourceControlAdd,
-    params: [path],
+    params: [providerId, path],
     noProviderFoundMessage: 'No source control provider found',
   })
 }
 
-export const discard = (path) => {
+export const discard = (providerId, path) => {
   return ExtensionHostShared.executeProvider({
-    event: 'onSourceControl',
+    event: 'none',
     method: ExtensionHostCommandType.SourceControlDiscard,
-    params: [path],
+    params: [providerId, path],
     noProviderFoundMessage: 'No source control provider found',
   })
 }
 
 export const getEnabledProviderIds = (scheme, root) => {
   return ExtensionHostShared.executeProvider({
-    event: 'onSourceControl',
+    event: `onSourceControl:${scheme}`,
     method: ExtensionHostCommandType.SourceControlGetEnabledProviderIds,
     params: [scheme, root],
     noProviderFoundMessage: 'No source control provider found',

@@ -67,3 +67,9 @@ test('VError - dynamic import error stack', () => {
   )
   expect(stackLines[1]).toMatch('VError.test.js')
 })
+
+test('VError - DomException - Syntax Error', () => {
+  const error = new DOMException(`Could not resolve 'Test Font' as a font.`, 'SyntaxError')
+  const verror = new VError(error, `Failed to font Test Font`)
+  expect(verror.message).toBe(`Failed to font Test Font: DOMException: Could not resolve 'Test Font' as a font.`)
+})

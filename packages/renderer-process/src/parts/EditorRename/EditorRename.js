@@ -2,6 +2,7 @@ import * as Widget from '../Widget/Widget.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const handleBlur = () => {
   RendererWorker.send(/* EditorRename.abort */ 'EditorRename.abort')
@@ -14,8 +15,7 @@ export const create = (x, y) => {
   const $RenameWidget = document.createElement('div')
   $RenameWidget.className = 'RenameWidget'
   $RenameWidget.append($RenameWidgetInputBox)
-  $RenameWidget.style.left = `${x}px`
-  $RenameWidget.style.top = `${y}px`
+  SetBounds.setXAndY($RenameWidget, x, y)
   Widget.append($RenameWidget)
   Focus.focus($RenameWidgetInputBox, 'editorRename')
   return {

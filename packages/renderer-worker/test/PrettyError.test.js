@@ -9,11 +9,22 @@ jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
     getText: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    getJson: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+jest.unstable_mockModule('../src/parts/SourceMap/SourceMap.js', () => {
+  return {
+    getOriginalPosition: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
 const PrettyError = await import('../src/parts/PrettyError/PrettyError.js')
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
+const SourceMap = await import('../src/parts/SourceMap/SourceMap.js')
 
 test('prepare - fetch codeFrame', async () => {
   // @ts-ignore
@@ -59,6 +70,74 @@ test('prepare - fetch codeFrame', async () => {
   at async Object.handleKeyBinding [as KeyBindings.handleKeyBinding] (test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
   at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`,
     type: 'ReferenceError',
+    _error: error,
+  })
+})
+
+test('prepare - fetch codeFrame - with sourcemap', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation((url) => {
+    switch (url) {
+      case 'test://packages/renderer-worker/dist/rendererWorkerMain.js':
+        return `main();
+
+//# sourceMappingURL=rendererWorkerMain.js.map
+`
+      case 'test://packages/renderer-worker/src/parts/Command/Command.js':
+        return `import * as ModuleMap from '../ModuleMap/ModuleMap.js'
+
+const execute = () => {
+  throw new Error(\`Command did not register "\${command}"\`)
+}
+`
+      default:
+        throw new Error(`unsupported url ${url}`)
+    }
+  })
+  // @ts-ignore
+  Ajax.getJson.mockImplementation((url) => {
+    switch (url) {
+      case 'test://packages/renderer-worker/dist/rendererWorkerMain.js.map':
+        return {
+          version: 3,
+          sources: [],
+          sourcesContent: [],
+          mappings: ';;;',
+          names: [],
+        }
+      default:
+        throw new Error(`unsupported url ${url}`)
+    }
+  })
+  // @ts-ignore
+  SourceMap.getOriginalPosition.mockImplementation(() => {
+    return {
+      source: '../src/parts/Command/Command.js',
+      originalLine: 4,
+      originalColumn: 13,
+    }
+  })
+  const error = new Error('Command did not register: "ElectronWindow.openNew"')
+  error.stack = `Error: Command did not register "ElectronWindow.openNew"
+  at test://packages/renderer-worker/dist/rendererWorkerMain.js:353:17
+  at async selectIndexNone2 (test://packages/renderer-worker/dist/rendererWorkerMain.js:32978:7)
+  at async TitleBarMenuBar/lazy/handleMenuMouseDown (test://packages/renderer-worker/dist/rendererWorkerMain.js:7329:28)
+  at async handleMessageFromRendererProcess (test://packages/renderer-worker/dist/rendererWorkerMain.js:897:7)`
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: `Command did not register: "ElectronWindow.openNew"`,
+    codeFrame: `  2 |
+  3 | const execute = () => {
+> 4 |   throw new Error(\`Command did not register \"\${command}\"\`)
+    |             ^
+  5 | }
+  6 |`,
+    stack: `  at test://packages/renderer-worker/dist/rendererWorkerMain.js:353:17
+  at async selectIndexNone2 (test://packages/renderer-worker/dist/rendererWorkerMain.js:32978:7)
+  at async TitleBarMenuBar/lazy/handleMenuMouseDown (test://packages/renderer-worker/dist/rendererWorkerMain.js:7329:28)
+  at async handleMessageFromRendererProcess (test://packages/renderer-worker/dist/rendererWorkerMain.js:897:7)`,
+    type: 'Error',
+    _error: error,
   })
 })
 
@@ -77,9 +156,8 @@ test('prepare - fetch codeFrame - error', async () => {
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toBe(error)
-  expect(spy).toHaveBeenCalledTimes(2)
-  expect(spy).toHaveBeenNthCalledWith(1, 'ErrorHandling Error')
-  expect(spy).toHaveBeenNthCalledWith(2, new TypeError('x is not a function'))
+  expect(spy).toHaveBeenCalledTimes(1)
+  expect(spy).toHaveBeenNthCalledWith(1, 'ErrorHandling Error: TypeError: x is not a function')
 })
 
 test('prepare - error without stack', async () => {
@@ -140,5 +218,32 @@ TitleBarMenuBar/lazy/handleKeyArrowDown@test:///packages/renderer-worker/src/par
 Object.handleKeyBinding@test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3
 handleMessageFromRendererProcess@test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3`,
     type: 'ReferenceError',
+    _error: error,
   })
+})
+
+test('prepare - anonymous stack', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    throw new Error('not implemented')
+  })
+  const error = new TypeError('Illegal invocation')
+  error.stack = `  at HTMLElement.focus (<anonymous>:1:65)
+  at Module.setFocusedIndex (ViewletTitleBarMenuBar.js:109:22)`
+  const prettyError = await PrettyError.prepare(error)
+  expect(Ajax.getText).not.toHaveBeenCalled()
+  expect(prettyError).toBe(error)
+})
+
+test('prepare - debugger eval code stack', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    throw new Error('not implemented')
+  })
+  const error = new ReferenceError('original is not defined')
+  error.stack = `  HTMLElement.prototype.focus@debugger eval code:1:56
+  setFocusedIndex@http://localhost:3000/packages/renderer-process/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js:109:22`
+  const prettyError = await PrettyError.prepare(error)
+  expect(Ajax.getText).not.toHaveBeenCalled()
+  expect(prettyError).toBe(error)
 })

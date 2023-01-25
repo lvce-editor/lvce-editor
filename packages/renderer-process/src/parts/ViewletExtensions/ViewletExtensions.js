@@ -1,12 +1,17 @@
 // based on https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/extensions/browser/extensionsList.ts (License MIT)
 
 import * as FindIndex from '../../shared/findIndex.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
+import * as AriaLiveType from '../AriaLiveType/AriaLiveType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 
 const activeId = 'ExtensionActive'
@@ -57,34 +62,10 @@ export const create = () => {
   }
   $ListItems.onfocus = ViewletExtensionsEvents.handleFocus
   $ListItems.onscroll = ViewletExtensionsEvents.handleScroll
-  $ListItems.addEventListener(
-    DomEventType.TouchStart,
-    ViewletExtensionsEvents.handleTouchStart,
-    {
-      passive: true,
-    }
-  )
-  $ListItems.addEventListener(
-    DomEventType.TouchMove,
-    ViewletExtensionsEvents.handleTouchMove,
-    {
-      passive: true,
-    }
-  )
-  $ListItems.addEventListener(
-    DomEventType.TouchEnd,
-    ViewletExtensionsEvents.handleTouchEnd,
-    {
-      passive: true,
-    }
-  )
-  $ListItems.addEventListener(
-    DomEventType.Wheel,
-    ViewletExtensionsEvents.handleWheel,
-    {
-      passive: true,
-    }
-  )
+  $ListItems.addEventListener(DomEventType.TouchStart, ViewletExtensionsEvents.handleTouchStart, DomEventOptions.Passive)
+  $ListItems.addEventListener(DomEventType.TouchMove, ViewletExtensionsEvents.handleTouchMove, DomEventOptions.Passive)
+  $ListItems.addEventListener(DomEventType.TouchEnd, ViewletExtensionsEvents.handleTouchEnd, DomEventOptions.Passive)
+  $ListItems.addEventListener(DomEventType.Wheel, ViewletExtensionsEvents.handleWheel, DomEventOptions.Passive)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -100,8 +81,8 @@ export const create = () => {
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Extensions'
-  $Viewlet.ariaBusy = 'true'
-  $Viewlet.ariaLive = 'polite'
+  $Viewlet.ariaLive = AriaLiveType.Polite
+  $Viewlet.ariaBusy = AriaBoolean.True
   // @ts-ignore
   $Viewlet.role = AriaRoles.None
   $Viewlet.append($ExtensionHeader, $List)
@@ -113,16 +94,12 @@ export const create = () => {
     $InputBox,
     $ExtensionSuggestions: undefined,
     $ScrollBarThumb,
+    $Message: undefined,
   }
 }
 
 // TODO possibly use aria active descendant instead
-export const setFocusedIndex = (
-  state,
-  oldFocusedIndex,
-  newFocusedIndex,
-  focused
-) => {
+export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex, focused) => {
   Assert.object(state)
   Assert.number(oldFocusedIndex)
   Assert.number(newFocusedIndex)
@@ -135,12 +112,12 @@ export const setFocusedIndex = (
   }
   if (newFocusedIndex === -1) {
     if (focused) {
-      $ListItems.removeAttribute('aria-activedescendant')
+      $ListItems.removeAttribute(DomAttributeType.AriaActiveDescendant)
       $ListItems.classList.add('FocusOutline')
     }
   } else if (newFocusedIndex >= 0 && newFocusedIndex < length) {
     $ListItems.children[newFocusedIndex].id = activeId
-    $ListItems.setAttribute('aria-activedescendant', activeId)
+    $ListItems.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
   }
   if (focused) {
     $ListItems.focus()
@@ -162,17 +139,20 @@ export const setExtensionState = (state, id, extensionState) => {
   // render(state)
 }
 
-export const setError = (state, error) => {
+export const setMessage = (state, message) => {
   Assert.object(state)
-  Assert.string(error)
+  Assert.string(message)
+  const { $List, $ListItems, $ScrollBar } = state
+  if (!message) {
+    $List.replaceChildren($ListItems, $ScrollBar)
+    state.$Message = undefined
+    return
+  }
   const $Message = document.createElement('div')
   $Message.className = 'ViewletExtensionMessage'
-  $Message.textContent = error
-  const { $List } = state
-  while ($List.firstChild) {
-    $List.firstChild.remove()
-  }
-  $List.append($Message)
+  $Message.textContent = message
+  $List.replaceChildren($Message)
+  state.$Message = $Message
 }
 
 const render$Extension = ($Extension, extension) => {
@@ -185,7 +165,7 @@ const render$Extension = ($Extension, extension) => {
   $Extension.ariaSetSize = extension.setSize
   $Extension.dataset.state = extension.state
   $Extension.dataset.id = extension.id
-  $Extension.style.top = `${extension.top}px`
+  SetBounds.setTop($Extension, extension.top)
 
   $ExtensionDetailName.firstChild.nodeValue = extension.name
   $ExtensionDetailDescription.firstChild.nodeValue = extension.description
@@ -246,11 +226,7 @@ const create$Extension = () => {
   $ExtensionFooter.append($ExtensionAuthorName, $ExtensionActions)
   const $ExtensionDetail = document.createElement('div')
   $ExtensionDetail.className = 'ExtensionListItemDetail'
-  $ExtensionDetail.append(
-    $ExtensionDetailName,
-    $ExtensionDetailDescription,
-    $ExtensionFooter
-  )
+  $ExtensionDetail.append($ExtensionDetailName, $ExtensionDetailDescription, $ExtensionFooter)
   const $ExtensionListItem = document.createElement('div')
   // @ts-ignore
   $ExtensionListItem.role = AriaRoles.Article
@@ -303,7 +279,7 @@ const render$Extensions = ($ExtensionList, extensions) => {
 
 export const setNegativeMargin = (state, negativeMargin) => {
   const { $ListItems } = state
-  $ListItems.style.top = `${negativeMargin}px`
+  SetBounds.setTop($ListItems, negativeMargin)
   // Assert.number(negativeMargin)
   // const { $NegativeMargin } = state
   // $NegativeMargin.style.marginTop = `${negativeMargin}px`
@@ -314,18 +290,8 @@ export const setExtensions = (state, extensions) => {
   Assert.object(state)
   Assert.array(extensions)
   const { $Viewlet, $ListItems } = state
-  $Viewlet.removeAttribute('aria-busy')
-  if (extensions.length === 0) {
-    const $Message = document.createElement('div')
-    $Message.className = 'ViewletExtensionMessage'
-    $Message.textContent = 'No extensions found.'
-    while ($ListItems.firstChild) {
-      $ListItems.firstChild.remove()
-    }
-    $ListItems.append($Message)
-  } else {
-    render$Extensions($ListItems, extensions)
-  }
+  $Viewlet.removeAttribute(DomAttributeType.AriaBusy)
+  render$Extensions($ListItems, extensions)
 }
 
 export const dispose = (state) => {}
@@ -339,11 +305,8 @@ export const openSuggest = (state) => {
   // const x = state.$InputBox.offsetLeft
   // const y = state.$InputBox.offsetTop
   state.$ExtensionSuggestions ||= create$ExtensionSuggestions()
-  state.$ExtensionSuggestions.style.left = `${x}px`
-  state.$ExtensionSuggestions.style.top = `${y}px`
+  SetBounds.setBounds(state.$ExtensionSuggestions, x, y, 100, 100)
   state.$ExtensionSuggestions.style.position = 'fixed'
-  state.$ExtensionSuggestions.style.width = '100px'
-  state.$ExtensionSuggestions.style.height = '100px'
   state.$ExtensionSuggestions.style.background = 'lime'
   // TODO check if already mounted
   // TODO don't append to body, have separate container for widgets (https://news.ycombinator.com/item?id=28230977)
@@ -356,7 +319,7 @@ export const closeSuggest = (state) => {
 
 export const setContentHeight = (state, height) => {
   const { $ListItems } = state
-  $ListItems.style.height = `${height}px`
+  SetBounds.setHeight($ListItems, height)
 }
 
 export const handleError = (state, message) => {
@@ -364,6 +327,11 @@ export const handleError = (state, message) => {
   Assert.string(message)
   const { $ListItems } = state
   $ListItems.textContent = message
+}
+
+export const setSearchValue = (state, oldValue, newValue) => {
+  const { $InputBox } = state
+  $InputBox.value = newValue
 }
 
 export * from '../ViewletScrollable/ViewletScrollable.js'

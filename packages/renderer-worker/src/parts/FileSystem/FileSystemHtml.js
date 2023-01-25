@@ -1,12 +1,13 @@
 import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.js'
 import * as FileHandleEditMode from '../FileHandleEditMode/FileHandleEditMode.js'
 import * as FileHandlePermissionType from '../FileHandlePermissionType/FileHandlePermissionType.js'
-import * as FileSystemHandle from '../FileSystemHandle/FileSystemHandle.js'
+import * as FileHandleTypeMap from '../FileHandleTypeMap/FileHandleTypeMap.js'
+import * as FileSystemDirectoryHandle from '../FileSystemDirectoryHandle/FileSystemDirectoryHandle.js'
+import * as FileSystemFileHandle from '../FileSystemFileHandle/FileSystemFileHandle.js'
 import * as FileSytemHandlePermission from '../FileSystemHandlePermission/FileSystemHandlePermission.js'
 import * as Path from '../Path/Path.js'
 import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
 import { VError } from '../VError/VError.js'
-import * as FileHandleTypeMap from '../FileHandleTypeMap/FileHandleTypeMap.js'
 
 const pathSeparator = '/'
 
@@ -27,15 +28,12 @@ export const getDirents = (handles) => {
 const getChildHandlesFallbackPrompt = async (handle) => {
   // TODO cannot prompt without user activation, else error occurs
   // maybe need to show
-  const permissionTypeNow = await FileSytemHandlePermission.requestPermission(
-    handle,
-    {
-      mode: FileHandleEditMode.ReadWrite,
-    }
-  )
+  const permissionTypeNow = await FileSytemHandlePermission.requestPermission(handle, {
+    mode: FileHandleEditMode.ReadWrite,
+  })
   switch (permissionTypeNow) {
     case FileHandlePermissionType.Granted:
-      return FileSystemHandle.getChildHandles(handle)
+      return FileSystemDirectoryHandle.getChildHandles(handle)
     case FileHandlePermissionType.Prompt:
     case FileHandlePermissionType.Denied:
       // TODO maybe throw error in this case
@@ -46,12 +44,9 @@ const getChildHandlesFallbackPrompt = async (handle) => {
 }
 
 const getChildHandlesFallback = async (handle) => {
-  const permissionType = await FileSytemHandlePermission.queryPermission(
-    handle,
-    {
-      mode: FileHandleEditMode.ReadWrite,
-    }
-  )
+  const permissionType = await FileSytemHandlePermission.queryPermission(handle, {
+    mode: FileHandleEditMode.ReadWrite,
+  })
   switch (permissionType) {
     case FileHandlePermissionType.Granted:
       throw new VError(`invalid state`)
@@ -66,7 +61,7 @@ const getChildHandlesFallback = async (handle) => {
 
 const getChildHandles = async (handle) => {
   try {
-    return await FileSystemHandle.getChildHandles(handle)
+    return await FileSystemDirectoryHandle.getChildHandles(handle)
   } catch (error) {
     if (BrowserErrorTypes.isNotAllowedError(error)) {
       return getChildHandlesFallback(handle)
@@ -115,7 +110,7 @@ const getFileHandle = async (uri) => {
     return undefined
   }
   const baseName = Path.getBaseName(pathSeparator, uri)
-  const fileHandle = FileSystemHandle.getFileHandle(parentHandle, baseName)
+  const fileHandle = FileSystemDirectoryHandle.getFileHandle(parentHandle, baseName)
   return fileHandle
 }
 
@@ -125,7 +120,7 @@ export const readFile = async (uri) => {
     if (!handle) {
       throw new VError(`File not found ${uri}`)
     }
-    const file = await FileSystemHandle.getFile(handle)
+    const file = await FileSystemFileHandle.getFile(handle)
     const text = await file.text()
     return text
   } catch (error) {
@@ -139,7 +134,7 @@ export const writeFile = async (uri, content) => {
     if (!handle) {
       throw new VError(`File not found ${uri}`)
     }
-    await FileSystemHandle.write(handle, content)
+    await FileSystemFileHandle.write(handle, content)
   } catch (error) {
     throw new VError(error, `Failed to save file`)
   }

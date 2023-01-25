@@ -111,6 +111,8 @@ export const getModuleId = (commandId) => {
     case 'TestFrameWork.performKeyBoardAction':
     case 'TestFrameWork.showOverlay':
       return ModuleId.TestFrameWork
+    case 'Transferrable.transfer':
+      return ModuleId.Transferrable
     case 'Viewlet.appendViewlet':
     case 'Viewlet.dispose':
     case 'Viewlet.focus':

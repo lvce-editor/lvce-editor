@@ -1,20 +1,24 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
+import * as GetAccurateColumnIndex from '../GetAccurateColumnIndex/GetAccurateColumnIndex.js'
 
-export const at = (editor, x, y, offset) => {
+export const at = (editor, eventX, eventY) => {
   Assert.object(editor)
-  Assert.number(x)
-  Assert.number(y)
-  Assert.number(offset)
-  const { maxLineY } = editor
-  const rowIndex = Clamp.clamp(
-    Math.floor((y - editor.top + editor.deltaY) / editor.rowHeight),
-    0,
-    maxLineY - 1
-  )
-  const columnIndex = offset
+  Assert.number(eventX)
+  Assert.number(eventY)
+  const { y, deltaY, rowHeight, fontSize, fontWeight, fontFamily, letterSpacing, lines } = editor
+  const rowIndex = Math.floor((eventY - y + deltaY) / rowHeight)
+  if (rowIndex < 0) {
+    return {
+      rowIndex: 0,
+      columnIndex: 0,
+    }
+  }
+  const clampedRowIndex = Clamp.clamp(rowIndex, 0, lines.length - 1)
+  const line = lines[clampedRowIndex]
+  const columnIndex = GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, eventX)
   return {
-    rowIndex,
+    rowIndex: clampedRowIndex,
     columnIndex,
   }
 }
@@ -29,11 +33,11 @@ export const at = (editor, x, y, offset) => {
  * @returns
  */
 export const x = (editor, rowIndex, columnIndex) => {
-  const x = columnIndex * editor.columnWidth + editor.left
+  const x = columnIndex * editor.columnWidth + editor.x
   return x
 }
 
 export const y = (editor, rowIndex, columnIndex) => {
-  const y = (rowIndex + 1) * editor.rowHeight + editor.top
+  const y = (rowIndex + 1) * editor.rowHeight + editor.y
   return y
 }

@@ -29,27 +29,16 @@ const getFile = (lines) => {
 }
 
 const isInternalLine = (line) => {
-  return line.includes('node:electron') || line.includes('node:internal')
+  return line.includes('node:')
 }
 
-const isNotInternalLine = (line) => {
+const isRelevantLine = (line) => {
   return !isInternalLine(line)
 }
 
 const cleanStack = (stack) => {
   const lines = stack.split('\n')
-  for (let i = lines.length - 1; i >= 0; i--) {
-    if (isInternalLine(lines[i])) {
-      if (i === lines.length - 1) {
-        continue
-      }
-      return lines
-        .slice(i + 1)
-        .filter(isNotInternalLine)
-        .join('\n')
-    }
-  }
-  return stack
+  return lines.filter(isRelevantLine)
 }
 
 const prepareMessage = (message) => {
@@ -64,8 +53,7 @@ exports.prepare = (error) => {
   if (error instanceof VError) {
     error = error.cause()
   }
-  const cleanedStack = cleanStack(error.stack)
-  const lines = cleanedStack.split('\n')
+  const lines = cleanStack(error.stack)
   const file = getFile(lines)
   let codeFrame = ''
   if (error.codeFrame) {
@@ -125,9 +113,7 @@ exports.prepareJsonError = (json, property, message) => {
   }
   if (index !== -1) {
     const lines = new LinesAndColumns(string)
-    const location = lines.locationForIndex(
-      index + stringifiedPropertyName.length + 1
-    )
+    const location = lines.locationForIndex(index + stringifiedPropertyName.length + 1)
     const codeFrame = codeFrameColumns(string, {
       // @ts-ignore
       start: { line: location.line + 1, column: location.column + 1 },
@@ -139,9 +125,7 @@ exports.prepareJsonError = (json, property, message) => {
 }
 
 exports.print = (prettyError) => {
-  console.error(
-    `Error: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}`
-  )
+  console.error(`Error: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}`)
 }
 
 exports.firstErrorLine = (error) => {
