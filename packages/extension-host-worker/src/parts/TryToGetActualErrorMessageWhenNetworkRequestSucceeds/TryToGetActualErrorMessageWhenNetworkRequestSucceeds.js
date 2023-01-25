@@ -3,6 +3,7 @@ import { ContentSecurityPolicyError } from '../ContentSecurityPolicyError/Conten
 import * as ContentSecurityPolicyErrorState from '../ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.js'
 import * as GetLineAndColumn from '../GetLineAndColumn/GetLineAndColumn.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
+import * as IsBabelParseError from '../IsBabelParseError/IsBabelParseError.js'
 
 const RE_LINE_COLUMN = /(.*)(?:\(\d+\:\d+\))/
 
@@ -12,11 +13,6 @@ const getBabelErrorMessage = (message) => {
     return match[1].trim()
   }
   return message
-}
-
-const isBabelError = (error) => {
-  // @ts-ignore
-  return error && error instanceof SyntaxError && error.code === 'BABEL_PARSER_SYNTAX_ERROR'
 }
 
 const restoreBabelError = (url, error) => {
@@ -55,7 +51,6 @@ class NotFoundError extends Error {
 
 class DependencyNotFoundError extends Error {
   constructor(code, start, end, dependencyRelativePath, dependencyUrl) {
-    console.log({ dependencyUrl })
     super(`dependency not found ${dependencyRelativePath}`)
     const { line, column } = GetLineAndColumn.getLineAndColumn(code, start, end)
     this.stack = `dependency not found ${dependencyRelativePath}
@@ -104,7 +99,7 @@ export const tryToGetActualErrorMessage = async (error, url, response) => {
       sourceType: 'module',
     })
   } catch (error) {
-    if (isBabelError(error)) {
+    if (IsBabelParseError.isBabelError(error)) {
       return restoreBabelError(error)
     }
     throw error
