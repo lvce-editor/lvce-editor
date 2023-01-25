@@ -6,7 +6,7 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet RunAndDebug'
   $Viewlet.tabIndex = 0
-  $Viewlet.onmousedown = ViewletDebugEvents.handleMouseDown
+  $Viewlet.onpointerdown = ViewletDebugEvents.handlePointerDown
 
   return {
     $Viewlet,

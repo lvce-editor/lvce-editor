@@ -83,7 +83,7 @@ const handleClickDebugSectionHeader = (event, target) => {
   }
 }
 
-export const handleMouseDown = (event) => {
+export const handlePointerDown = (event) => {
   const { target } = event
   switch (target.className) {
     case 'IconButton DebugButton':

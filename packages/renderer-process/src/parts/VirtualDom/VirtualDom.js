@@ -31,6 +31,11 @@ const isEqualNodeName = ($Node, node) => {
 }
 
 export const renderInto = ($Parent, dom) => {
+  $Parent.textContent = ''
+  renderInternal($Parent, dom)
+}
+
+export const renderIncremental = ($Parent, dom) => {
   if ($Parent.textContent === '') {
     renderInternal($Parent, dom)
     return
