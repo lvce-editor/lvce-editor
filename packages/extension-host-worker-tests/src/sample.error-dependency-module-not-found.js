@@ -1,6 +1,6 @@
-const name = 'sample.error-dependency-module-not-found'
+export const name = 'sample.error-dependency-module-not-found'
 
-test.skip('sample.error-dependency-module-not-found', async () => {
+export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
@@ -16,6 +16,4 @@ test.skip('sample.error-dependency-module-not-found', async () => {
   // TODO error message could be improved
   // TODO show code frame
   // TODO stack could be improved
-})
-
-export {}
+}
