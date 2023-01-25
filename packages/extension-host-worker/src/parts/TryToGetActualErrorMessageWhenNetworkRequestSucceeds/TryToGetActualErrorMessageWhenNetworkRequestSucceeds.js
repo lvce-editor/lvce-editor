@@ -1,31 +1,10 @@
+import { BabelParseError } from '../BabelParseError/BabelParseError.js'
 import * as BabelParser from '../BabelParser/BabelParser.js'
 import { ContentSecurityPolicyError } from '../ContentSecurityPolicyError/ContentSecurityPolicyError.js'
 import * as ContentSecurityPolicyErrorState from '../ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.js'
-import * as GetLineAndColumn from '../GetLineAndColumn/GetLineAndColumn.js'
+import { DependencyNotFoundError } from '../DependencyNotFoundError/DependencyNotFoundError.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as IsBabelParseError from '../IsBabelParseError/IsBabelParseError.js'
-
-const RE_LINE_COLUMN = /(.*)(?:\(\d+\:\d+\))/
-
-const getBabelErrorMessage = (message) => {
-  const match = message.match(RE_LINE_COLUMN)
-  if (match) {
-    return match[1].trim()
-  }
-  return message
-}
-
-const restoreBabelError = (url, error) => {
-  const message = getBabelErrorMessage(error.message)
-  const betterError = new SyntaxError(message)
-  // @ts-ignore
-  const line = error.loc.line
-  // @ts-ignore
-  const column = error.loc.column + 1
-  betterError.stack = `${message}
-  at ${url}:${line}:${column}`
-  throw betterError
-}
 
 const getDependencies = (code, ast) => {
   const { program } = ast
@@ -40,22 +19,6 @@ const getDependencies = (code, ast) => {
     }
   }
   return dependencies
-}
-
-class NotFoundError extends Error {
-  constructor(url) {
-    super(`Failed to import ${url}: Not found (404)`)
-    this.name = 'NotFoundError'
-  }
-}
-
-class DependencyNotFoundError extends Error {
-  constructor(code, start, end, dependencyRelativePath, dependencyUrl) {
-    super(`dependency not found ${dependencyRelativePath}`)
-    const { line, column } = GetLineAndColumn.getLineAndColumn(code, start, end)
-    this.stack = `dependency not found ${dependencyRelativePath}
-    at ${dependencyUrl}:${line}:${column}`
-  }
 }
 
 const getErrorInDependencies = async (url, dependencies) => {
@@ -100,7 +63,7 @@ export const tryToGetActualErrorMessage = async (error, url, response) => {
     })
   } catch (error) {
     if (IsBabelParseError.isBabelError(error)) {
-      return restoreBabelError(error)
+      throw new BabelParseError(url, error)
     }
     throw error
   }
