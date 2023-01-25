@@ -1,5 +1,5 @@
 import * as FileHandleType from '../src/parts/FileHandleType/FileHandleType.js'
-import * as FileSystemHandle from '../src/parts/FileSystemHandle/FileSystemHandle.js'
+import * as FileSystemDirectoryHandle from '../src/parts/FileSystemDirectoryHandle/FileSystemDirectoryHandle.js'
 
 test('getChildHandles', async () => {
   const handle = {
@@ -18,7 +18,7 @@ test('getChildHandles', async () => {
       }
     },
   }
-  expect(await FileSystemHandle.getChildHandles(handle)).toEqual([
+  expect(await FileSystemDirectoryHandle.getChildHandles(handle)).toEqual([
     {
       name: 'file-1.txt',
       kind: FileHandleType.File,

@@ -14,48 +14,36 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     }),
   }
 })
-jest.unstable_mockModule(
-  '../src/parts/FileSystemHandle/FileSystemHandle.js',
-  () => {
-    return {
-      getDirents: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-      getChildHandles: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/FileSystemDirectoryHandle/FileSystemDirectoryHandle.js', () => {
+  return {
+    getDirents: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    getChildHandles: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
-jest.unstable_mockModule(
-  '../src/parts/FileSystemHandlePermission/FileSystemHandlePermission.js',
-  () => {
-    return {
-      requestPermission: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-      queryPermission: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+})
+jest.unstable_mockModule('../src/parts/FileSystemHandlePermission/FileSystemHandlePermission.js', () => {
+  return {
+    requestPermission: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    queryPermission: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
 const Command = await import('../src/parts/Command/Command.js')
 
 const FileSystemHtml = await import('../src/parts/FileSystem/FileSystemHtml.js')
-const FileSystemHandle = await import(
-  '../src/parts/FileSystemHandle/FileSystemHandle.js'
-)
-const FileSystemHandlePermission = await import(
-  '../src/parts/FileSystemHandlePermission/FileSystemHandlePermission.js'
-)
+const FileSystemDirectoryHandle = await import('../src/parts/FileSystemDirectoryHandle/FileSystemDirectoryHandle.js')
+const FileSystemHandlePermission = await import('../src/parts/FileSystemHandlePermission/FileSystemHandlePermission.js')
 
 class NotAllowedError extends Error {
   constructor() {
-    super(
-      'The request is not allowed by the user agent or the platform in the current context.'
-    )
+    super('The request is not allowed by the user agent or the platform in the current context.')
     this.name = 'NotAllowedError'
   }
 }
@@ -94,7 +82,7 @@ test('readDirWithFileTypes', async () => {
     }
   })
   // @ts-ignore
-  FileSystemHandle.getChildHandles.mockImplementation(() => {
+  FileSystemDirectoryHandle.getChildHandles.mockImplementation(() => {
     return [
       {
         name: 'file-1.txt',
@@ -130,15 +118,11 @@ test('readDirWithFileTypes - error', async () => {
     }
   })
   // @ts-ignore
-  FileSystemHandle.getChildHandles.mockImplementation(() => {
+  FileSystemDirectoryHandle.getChildHandles.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    FileSystemHtml.readDirWithFileTypes('test-folder')
-  ).rejects.toThrowError(
-    new Error(
-      'failed to read directory: failed to get child handles: TypeError: x is not a function'
-    )
+  await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrowError(
+    new Error('failed to read directory: failed to get child handles: TypeError: x is not a function')
   )
 })
 
@@ -169,7 +153,7 @@ test('readDirWithFileTypes - not allowed - fallback succeeds', async () => {
     }
   })
   // @ts-ignore
-  FileSystemHandle.getChildHandles.mockImplementation(() => {
+  FileSystemDirectoryHandle.getChildHandles.mockImplementation(() => {
     if (j++ === 0) {
       throw new NotAllowedError()
     } else {
@@ -223,16 +207,14 @@ test('readDirWithFileTypes - not allowed - fallback fails', async () => {
     }
   })
   // @ts-ignore
-  FileSystemHandle.getChildHandles.mockImplementation(() => {
+  FileSystemDirectoryHandle.getChildHandles.mockImplementation(() => {
     if (j++ === 0) {
       throw new NotAllowedError()
     } else {
       throw new TypeError('x is not a function')
     }
   })
-  await expect(
-    FileSystemHtml.readDirWithFileTypes('test-folder')
-  ).rejects.toThrowError(
+  await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrowError(
     new TypeError('failed to read directory: TypeError: x is not a function')
   )
 })
@@ -263,19 +245,15 @@ test('readDirWithFileTypes - error - user activation required', async () => {
     }
   })
   // @ts-ignore
-  FileSystemHandle.getChildHandles.mockImplementation(() => {
+  FileSystemDirectoryHandle.getChildHandles.mockImplementation(() => {
     if (j++ === 0) {
       throw new NotAllowedError()
     } else {
       throw new UserActivationRequiredError()
     }
   })
-  await expect(
-    FileSystemHtml.readDirWithFileTypes('test-folder')
-  ).rejects.toThrowError(
-    new TypeError(
-      'failed to read directory: User activation is required to request permissions.'
-    )
+  await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrowError(
+    new TypeError('failed to read directory: User activation is required to request permissions.')
   )
 })
 

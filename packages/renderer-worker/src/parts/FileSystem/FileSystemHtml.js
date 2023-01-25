@@ -1,12 +1,13 @@
 import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.js'
 import * as FileHandleEditMode from '../FileHandleEditMode/FileHandleEditMode.js'
 import * as FileHandlePermissionType from '../FileHandlePermissionType/FileHandlePermissionType.js'
-import * as FileSystemHandle from '../FileSystemHandle/FileSystemHandle.js'
+import * as FileHandleTypeMap from '../FileHandleTypeMap/FileHandleTypeMap.js'
+import * as FileSystemDirectoryHandle from '../FileSystemDirectoryHandle/FileSystemDirectoryHandle.js'
+import * as FileSystemFileHandle from '../FileSystemFileHandle/FileSystemFileHandle.js'
 import * as FileSytemHandlePermission from '../FileSystemHandlePermission/FileSystemHandlePermission.js'
 import * as Path from '../Path/Path.js'
 import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
 import { VError } from '../VError/VError.js'
-import * as FileHandleTypeMap from '../FileHandleTypeMap/FileHandleTypeMap.js'
 
 const pathSeparator = '/'
 
@@ -32,7 +33,7 @@ const getChildHandlesFallbackPrompt = async (handle) => {
   })
   switch (permissionTypeNow) {
     case FileHandlePermissionType.Granted:
-      return FileSystemHandle.getChildHandles(handle)
+      return FileSystemDirectoryHandle.getChildHandles(handle)
     case FileHandlePermissionType.Prompt:
     case FileHandlePermissionType.Denied:
       // TODO maybe throw error in this case
@@ -60,7 +61,7 @@ const getChildHandlesFallback = async (handle) => {
 
 const getChildHandles = async (handle) => {
   try {
-    return await FileSystemHandle.getChildHandles(handle)
+    return await FileSystemDirectoryHandle.getChildHandles(handle)
   } catch (error) {
     if (BrowserErrorTypes.isNotAllowedError(error)) {
       return getChildHandlesFallback(handle)
@@ -109,7 +110,7 @@ const getFileHandle = async (uri) => {
     return undefined
   }
   const baseName = Path.getBaseName(pathSeparator, uri)
-  const fileHandle = FileSystemHandle.getFileHandle(parentHandle, baseName)
+  const fileHandle = FileSystemDirectoryHandle.getFileHandle(parentHandle, baseName)
   return fileHandle
 }
 
@@ -119,7 +120,7 @@ export const readFile = async (uri) => {
     if (!handle) {
       throw new VError(`File not found ${uri}`)
     }
-    const file = await FileSystemHandle.getFile(handle)
+    const file = await FileSystemFileHandle.getFile(handle)
     const text = await file.text()
     return text
   } catch (error) {
@@ -133,7 +134,7 @@ export const writeFile = async (uri, content) => {
     if (!handle) {
       throw new VError(`File not found ${uri}`)
     }
-    await FileSystemHandle.write(handle, content)
+    await FileSystemFileHandle.write(handle, content)
   } catch (error) {
     throw new VError(error, `Failed to save file`)
   }

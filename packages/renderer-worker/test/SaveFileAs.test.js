@@ -12,16 +12,13 @@ jest.unstable_mockModule('../src/parts/FilePicker/FilePicker.js', () => {
     }),
   }
 })
-jest.unstable_mockModule(
-  '../src/parts/FileSystemHandle/FileSystemHandle.js',
-  () => {
-    return {
-      writeResponse: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/FileSystemFileHandle/FileSystemFileHandle.js', () => {
+  return {
+    writeResponse: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
 jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
   return {
@@ -34,9 +31,7 @@ jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
 const FilePicker = await import('../src/parts/FilePicker/FilePicker.js')
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 const SaveFileAs = await import('../src/parts/SaveFileAs/SaveFileAs.js')
-const FileSystemHandle = await import(
-  '../src/parts/FileSystemHandle/FileSystemHandle.js'
-)
+const FileSystemFileHandle = await import('../src/parts/FileSystemFileHandle/FileSystemFileHandle.js')
 
 class FileHandle {
   constructor() {
@@ -75,11 +70,8 @@ test('saveFileAs', async () => {
   })
   expect(Ajax.getResponse).toHaveBeenCalledTimes(1)
   expect(Ajax.getResponse).toHaveBeenCalledWith('https://example.com/image.png')
-  expect(FileSystemHandle.writeResponse).toHaveBeenCalledTimes(1)
-  expect(FileSystemHandle.writeResponse).toHaveBeenCalledWith(
-    new FileHandle(),
-    new Response()
-  )
+  expect(FileSystemFileHandle.writeResponse).toHaveBeenCalledTimes(1)
+  expect(FileSystemFileHandle.writeResponse).toHaveBeenCalledWith(new FileHandle(), new Response())
 })
 
 test('saveFileAs - error', async () => {
@@ -91,9 +83,7 @@ test('saveFileAs - error', async () => {
   Ajax.getResponse.mockImplementation(() => {
     return new Response()
   })
-  await expect(
-    SaveFileAs.saveFileAs('image.png', 'https://example.com/image.png')
-  ).rejects.toThrowError(
+  await expect(SaveFileAs.saveFileAs('image.png', 'https://example.com/image.png')).rejects.toThrowError(
     new Error('Failed to save file: TypeError: x is not a function')
   )
 })
@@ -107,12 +97,8 @@ test('saveFileAs - error - not supported', async () => {
   Ajax.getResponse.mockImplementation(() => {
     return new Response()
   })
-  await expect(
-    SaveFileAs.saveFileAs('image.png', 'https://example.com/image.png')
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to save file: showSaveFilePicker not supported on this browser'
-    )
+  await expect(SaveFileAs.saveFileAs('image.png', 'https://example.com/image.png')).rejects.toThrowError(
+    new Error('Failed to save file: showSaveFilePicker not supported on this browser')
   )
 })
 

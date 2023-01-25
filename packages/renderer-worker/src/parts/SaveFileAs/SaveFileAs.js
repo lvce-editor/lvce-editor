@@ -1,6 +1,6 @@
 import * as Ajax from '../Ajax/Ajax.js'
 import * as FilePicker from '../FilePicker/FilePicker.js'
-import * as FileSystemHandle from '../FileSystemHandle/FileSystemHandle.js'
+import * as FileSystemFileHandle from '../FileSystemFileHandle/FileSystemFileHandle.js'
 import * as IsAbortError from '../IsAbortError/IsAbortError.js'
 import { VError } from '../VError/VError.js'
 import * as WellKnownDirectoryType from '../WellKnownDirectoryType/WellKnownDirectoryType.js'
@@ -20,7 +20,7 @@ export const saveFileAs = async (fileName, url) => {
       ],
     })
     const response = await Ajax.getResponse(url)
-    await FileSystemHandle.writeResponse(fileHandle, response)
+    await FileSystemFileHandle.writeResponse(fileHandle, response)
   } catch (error) {
     if (IsAbortError.isAbortError(error)) {
       return
