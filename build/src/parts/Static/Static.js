@@ -658,6 +658,14 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
     to: `build/.tmp/dist/tests/index.html`,
     content: testOverviewHtml,
   })
+  if (pathPrefix) {
+    await Replace.replace({
+      path: `build/.tmp/dist/tests/index.html`,
+      occurrence: '</title>',
+      replacement: `</title>
+    <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`,
+    })
+  }
 }
 
 const copyPlaygroundFiles = async ({ commitHash }) => {
