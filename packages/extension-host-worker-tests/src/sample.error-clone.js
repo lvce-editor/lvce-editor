@@ -16,7 +16,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
     `Error: Failed to activate extension sample.error-clone: DataCloneError: Failed to execute 'structuredClone' on 'WorkerGlobalScope': #<Promise> could not be cloned.`
   )
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
-  expect(codeFrame).toHaveText(
+  await expect(codeFrame).toHaveText(
     `> 1 | structuredClone(new Promise(() => {}))
     | ^
   2 |
