@@ -3,23 +3,9 @@ import * as BabelParser from '../BabelParser/BabelParser.js'
 import { ContentSecurityPolicyError } from '../ContentSecurityPolicyError/ContentSecurityPolicyError.js'
 import * as ContentSecurityPolicyErrorState from '../ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.js'
 import { DependencyNotFoundError } from '../DependencyNotFoundError/DependencyNotFoundError.js'
+import * as GetBabelAstDependencies from '../GetBabelAstDependencies/GetBabelAstDependencies.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as IsBabelParseError from '../IsBabelParseError/IsBabelParseError.js'
-
-const getDependencies = (code, ast) => {
-  const { program } = ast
-  const { body } = program
-  const dependencies = []
-  for (const node of body) {
-    if (node.type === 'ImportDeclaration') {
-      const relativePath = node.source.extra.rawValue
-      const start = node.source.start
-      const end = node.source.end
-      dependencies.push({ relativePath, code, start, end })
-    }
-  }
-  return dependencies
-}
 
 const getErrorInDependencies = async (url, dependencies) => {
   for (const dependency of dependencies) {
@@ -67,7 +53,7 @@ export const tryToGetActualErrorMessage = async (error, url, response) => {
     }
     throw error
   }
-  const dependencies = getDependencies(text, ast)
+  const dependencies = GetBabelAstDependencies.getBabelAstDependencies(text, ast)
   await getErrorInDependencies(url, dependencies)
   if (ContentSecurityPolicyErrorState.hasRecentErrors()) {
     const recentError = ContentSecurityPolicyErrorState.getRecentError()
