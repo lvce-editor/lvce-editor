@@ -1,6 +1,6 @@
-const name = 'sample.error-unexpected-token'
+export const name = 'sample.error-unexpected-token'
 
-test('sample.error-unexpected-token', async () => {
+export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
@@ -19,6 +19,4 @@ test('sample.error-unexpected-token', async () => {
     |   ^
   2 |`
   )
-})
-
-export {}
+}
