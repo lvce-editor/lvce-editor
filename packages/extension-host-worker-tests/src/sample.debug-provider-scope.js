@@ -1,12 +1,10 @@
-const name = 'sample.debug-provider-scope'
+export const name = 'sample.debug-provider-scope'
 
-test('sample.debug-provider-scope', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
   // act
   await SideBar.open('Run And Debug')
@@ -24,6 +22,4 @@ test('sample.debug-provider-scope', async () => {
   await expect(rows.nth(5)).toHaveText('Closure (getTimerCallbacks)')
   await expect(rows.nth(6)).toHaveText('Closure')
   await expect(rows.nth(7)).toHaveText('Global')
-})
-
-export {}
+}

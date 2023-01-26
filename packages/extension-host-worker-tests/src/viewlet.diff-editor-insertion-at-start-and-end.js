@@ -1,4 +1,6 @@
-test('sample.diff-editor-insertion-at-start-and-end', async () => {
+export const name = 'sample.diff-editor-insertion-at-start-and-end'
+
+export const test = async ({ FileSystem, Workspace, Main, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file-1.txt`, `c`)
@@ -19,4 +21,4 @@ d`
   const contentRight = Locator('.DiffEditorContentRight')
   await expect(contentLeft).toHaveText('c')
   await expect(contentRight).toHaveText('abcd')
-})
+}

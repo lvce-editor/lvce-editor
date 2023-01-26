@@ -1,4 +1,6 @@
-test('viewlet.explorer-rename-file-cancel', async () => {
+export const name = 'viewlet.explorer-rename-file-cancel'
+
+export const test = async ({ FileSystem, Workspace, Explorer, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file1.txt`, 'content 1')
@@ -26,4 +28,4 @@ test('viewlet.explorer-rename-file-cancel', async () => {
   await expect(file2).toBeVisible()
   await expect(explorer).toBeFocused()
   await expect(file2).toHaveId('TreeItemActive')
-})
+}

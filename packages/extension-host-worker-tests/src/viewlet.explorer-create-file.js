@@ -1,5 +1,8 @@
 // TODO test might be flaky https://github.com/lvce-editor/lvce-editor/runs/7490211933?check_suite_focus=true
-test('viewlet.explorer-create-file', async () => {
+
+export const name = 'viewlet.explorer-create-file'
+
+export const test = async ({ FileSystem, Workspace, Explorer, ContextMenu, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file1.txt`, 'content 1')
@@ -25,4 +28,4 @@ test('viewlet.explorer-create-file', async () => {
   // assert
   const newFile = Locator('text=created.txt')
   await expect(newFile).toBeVisible()
-})
+}
