@@ -1,13 +1,11 @@
-const name = 'sample.text-search-provider-error'
+export const name = 'sample.text-search-provider-error'
 
-test('sample.text-search-provider-error', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, SideBar, Search, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
   await SideBar.open('Search')
 
   // act
@@ -16,9 +14,5 @@ test('sample.text-search-provider-error', async () => {
   // assert
   const viewletSearch = Locator('.Search')
   const message = viewletSearch.locator('[role="status"]')
-  await expect(message).toHaveText(
-    'Error: Failed to execute text search provider: oops'
-  )
-})
-
-export {}
+  await expect(message).toHaveText('Error: Failed to execute text search provider: oops')
+}
