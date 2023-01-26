@@ -1,4 +1,6 @@
-test('viewlet.editor-cursor-down', async () => {
+export const name = 'viewlet.editor-cursor-down'
+
+export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -21,4 +23,4 @@ content 2`
 
   // assert
   await expect(cursor).toHaveCSS('translate', /^(6|7|8|9|10).*?px 20px$/)
-})
+}
