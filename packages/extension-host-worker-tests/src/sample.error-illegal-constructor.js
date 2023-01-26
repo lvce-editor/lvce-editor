@@ -12,17 +12,13 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // assert
   const dialog = Locator('#Dialog')
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
-  await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.error-illegal-constructor: Failed to import http://localhost:3000/packages/extension-host-worker-tests/fixtures/sample.error-illegal-constructor/main.js: Unknown Network Error`
-  )
+  await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-illegal-constructor: TypeError: Illegal constructor`)
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   expect(codeFrame).toHaveText(
-    `    6 |   } catch (error) {
-   7 |     const actualErrorMessage = await TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage(url, error)
->  8 |     throw new Error(actualErrorMessage)
-     |           ^
-   9 |   }
-  10 | }
-  11 |`
+    `> 1 | new ImageBitmap()
+    | ^
+  2 |
+  3 | export const activate = () => {}
+  4 |`
   )
 }
