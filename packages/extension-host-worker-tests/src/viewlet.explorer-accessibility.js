@@ -12,7 +12,7 @@
 
 export const name = 'viewlet.explorer-accessibility'
 
-export const test = async ({ FileSystem, Workspace, Main, Locator, expectd }) => {
+export const test = async ({ FileSystem, Workspace, Main, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.mkdir(`${tmpDir}/languages`)
