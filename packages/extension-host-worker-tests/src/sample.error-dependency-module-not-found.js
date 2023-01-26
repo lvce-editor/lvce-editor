@@ -10,8 +10,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   await QuickPick.selectItem('Sample Command')
 
   // assert
-  const dialog = Locator('#Dialog')
-  const errorMessage = dialog.locator('#DialogBodyErrorMessage')
+  const errorMessage = Locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText(
     `Error: Failed to activate extension sample.error-dependency-module-not-found: module not found ./not-found.js`
   )
