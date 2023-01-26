@@ -12,7 +12,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // assert
   const errorMessage = Locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.import-json-syntax-error: SyntaxError: This experimental syntax requires enabling the parser plugin: "importAssertions".`
+    `Error: Failed to activate extension sample.import-json-syntax-error: BabelParseError: This experimental syntax requires enabling the parser plugin: "importAssertions".`
   )
   // TODO enable that babel plugin
   // TODO show useful code frame
