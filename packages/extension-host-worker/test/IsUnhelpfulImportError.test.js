@@ -6,7 +6,13 @@ test('isUnhelpfulImportError - type error', () => {
 })
 
 // TODO maybe rename function to isHelpfulImportError to avoid double negative
-test('isUnhelpfulImportError - chrome error', () => {
+test('isUnhelpfulImportError - type error - failed to fetch dynamically imported module', () => {
   const error = new TypeError('Failed to fetch dynamically imported module')
+  expect(IsUnhelpfulImportError.isUnhelpfulImportError(error)).toBe(true)
+})
+
+test('isUnhelpfulImportError - syntax error without stack trace', () => {
+  const error = new SyntaxError(`Identifier 'x' has already been declared`)
+  error.stack = "SyntaxError: Identifier 'x' has already been declared"
   expect(IsUnhelpfulImportError.isUnhelpfulImportError(error)).toBe(true)
 })
