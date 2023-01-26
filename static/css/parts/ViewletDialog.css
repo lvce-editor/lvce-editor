@@ -15,12 +15,18 @@
 
 .DialogHeader {
   display: flex;
-}
-
-#DialogTitle {
   background: #ecf0f1;
   color: #484b4c;
   padding: 1rem;
+  align-items: center;
+}
+
+.DialogHeader .IconButton {
+  color: black;
+  --MaskIconSize: 25px;
+}
+
+#DialogTitle {
   margin: 0;
   flex-grow: 1;
 }
