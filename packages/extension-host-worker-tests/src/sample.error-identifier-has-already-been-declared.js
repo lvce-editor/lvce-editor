@@ -15,7 +15,7 @@ test('sample.error-identifier-has-already-been-declared', async () => {
     `Error: Failed to activate extension sample.error-identifier-has-already-been-declared: SyntaxError: Identifier 'x' has already been declared.`
   )
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
-  expect(codeFrame).toHaveText(`  1 | let x = 1
+  await expect(codeFrame).toHaveText(`  1 | let x = 1
   2 |
 > 3 | let x = 2
     |     ^
