@@ -46,7 +46,7 @@ export const create = async ({ url, name }) => {
       }
       const handleFirstError = async (event) => {
         cleanup()
-        if (IsFirefoxWorkerError.isFirefoxError(event.message)) {
+        if (IsFirefoxWorkerError.isFirefoxWorkerError(event.message)) {
           event.preventDefault()
           reject(new Error('module workers are not supported in firefox'))
         } else {
