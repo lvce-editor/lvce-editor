@@ -1,4 +1,6 @@
-test('viewlet.explorer-keyboard-navigation', async () => {
+export const name = 'viewlet.explorer-keyboard-navigation'
+
+export const test = async ({ FileSystem, Workspace, Explorer, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.mkdir(`${tmpDir}/a/b`)
@@ -111,4 +113,4 @@ test('viewlet.explorer-keyboard-navigation', async () => {
   const titleFolder1 = `/folder-1`
   const treeItemFolder1 = Locator(`.TreeItem[title$="${titleFolder1}"]`)
   await expect(treeItemFolder1).toHaveId('TreeItemActive')
-})
+}

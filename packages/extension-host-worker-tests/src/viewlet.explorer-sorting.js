@@ -1,4 +1,6 @@
-test('viewlet.explorer-expand-all', async () => {
+export const name = 'viewlet.explorer-sorting'
+
+export const test = async ({ FileSystem, Workspace, Explorer, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/1.txt`, '')
@@ -37,4 +39,4 @@ test('viewlet.explorer-expand-all', async () => {
   await expect(itemEight).toHaveText('8.txt')
   await expect(itemNine).toHaveText('9.txt')
   await expect(itemTen).toHaveText('10.txt')
-})
+}

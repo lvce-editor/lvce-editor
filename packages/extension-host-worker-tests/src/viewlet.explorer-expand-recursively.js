@@ -1,5 +1,8 @@
 // TODO maybe merge this test with the other explorer test, less end to end tests will run faster
-test('viewlet.explorer-expand-recursively', async () => {
+
+export const name = 'viewlet.explorer-expand-recursively'
+
+export const test = async ({ FileSystem, Workspace, Explorer, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.mkdir(`${tmpDir}/a/b`)
@@ -19,4 +22,4 @@ test('viewlet.explorer-expand-recursively', async () => {
   await expect(treeItems.nth(0)).toHaveText('a')
   await expect(treeItems.nth(1)).toHaveText('b')
   await expect(treeItems.nth(2)).toHaveText('c.txt')
-})
+}

@@ -1,4 +1,6 @@
-test('viewlet.explorer-expand-all', async () => {
+export const name = 'viewlet.explorer-expand-all'
+
+export const test = async ({ FileSystem, Workspace, Explorer, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.mkdir(`${tmpDir}/folder-1`)
@@ -46,4 +48,4 @@ test('viewlet.explorer-expand-all', async () => {
   await expect(itemTen).toHaveText('a.txt')
   await expect(itemEleven).toHaveText('b.txt')
   await expect(itemTwelve).toHaveText('c.txt')
-})
+}
