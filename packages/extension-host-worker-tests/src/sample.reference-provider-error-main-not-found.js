@@ -1,6 +1,6 @@
-const name = 'sample.reference-provider-error-main-not-found'
+export const name = 'sample.reference-provider-error-main-not-found'
 
-test('sample.reference-provider-error-main-not-found', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -27,6 +27,4 @@ test('sample.reference-provider-error-main-not-found', async () => {
   await expect(viewletLocations).toHaveText(
     `Error: Failed to activate extension sample.reference-provider-error-main-not-found: NotFoundError: Failed to import ${mainUrl}: Not found (404)`
   )
-})
-
-export {}
+}

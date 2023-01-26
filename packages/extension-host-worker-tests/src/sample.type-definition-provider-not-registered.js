@@ -1,4 +1,6 @@
-test('sample.type-definition-provider-not-registered', async () => {
+export const name = 'sample.type-definition-provider-not-registered'
+
+export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -21,9 +23,5 @@ add(1, 2)
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
   // TODO should say "no type definition provider found"
-  await expect(overlayMessage).toHaveText(
-    `No type definition found for 'export'`
-  )
-})
-
-export {}
+  await expect(overlayMessage).toHaveText(`No type definition found for 'export'`)
+}
