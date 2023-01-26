@@ -11,8 +11,15 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
 
   // assert
   const dialog = Locator('#Dialog')
+  // TODO error message should say module not found "./add.js"
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
-  await expect(errorMessage).toHaveText(`Failed to activate extension sample.error-module-not-found: dependency not found ./add.js`)
-  // TODO error message is not good
-  // TODO code frame has wrong location
+  await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-module-not-found: module not found ./add.js`)
+
+  const codeFrame = Locator('#DialogBodyErrorCodeFrame')
+  await expect(codeFrame).toHaveText(
+    `> 1 | import add from './add.js'
+  2 |
+  3 | export const activate = () => {
+  4 |   add(1, 2)`
+  )
 }

@@ -19,7 +19,7 @@ const getErrorInDependencies = async (url, dependencies) => {
     } else {
       switch (dependencyResponse.status) {
         case HttpStatusCode.NotFound:
-          throw new DependencyNotFoundError(dependency.code, dependency.start, dependency.end, dependency.relativePath, dependencyUrl)
+          throw new DependencyNotFoundError(dependency.code, dependency.start, dependency.end, dependency.relativePath, dependencyUrl, url)
         default:
           break
         // return `Failed to import ${url}: ${error}`

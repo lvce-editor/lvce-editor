@@ -14,7 +14,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-illegal-constructor: TypeError: Illegal constructor`)
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
-  expect(codeFrame).toHaveText(
+  await expect(codeFrame).toHaveText(
     `> 1 | new ImageBitmap()
     | ^
   2 |
