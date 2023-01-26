@@ -6,8 +6,13 @@ test('isUnhelpfulImportError - type error', () => {
 })
 
 // TODO maybe rename function to isHelpfulImportError to avoid double negative
-test('isUnhelpfulImportError - type error - failed to fetch dynamically imported module', () => {
+test('isUnhelpfulImportError - chrome import error', () => {
   const error = new TypeError('Failed to fetch dynamically imported module')
+  expect(IsUnhelpfulImportError.isUnhelpfulImportError(error)).toBe(true)
+})
+
+test('isUnhelpfulImportError - firefox import error', () => {
+  const error = new TypeError('error loading dynamically imported module')
   expect(IsUnhelpfulImportError.isUnhelpfulImportError(error)).toBe(true)
 })
 

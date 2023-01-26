@@ -266,7 +266,6 @@ const append = (parentId, childId, referenceNodes) => {
     $Parent.append($Child)
   }
   if (childInstance.factory.postAppend) {
-    console.log('post append')
     childInstance.factory.postAppend(childInstance.state)
   }
 }
