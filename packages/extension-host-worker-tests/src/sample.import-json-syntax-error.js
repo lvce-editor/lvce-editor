@@ -1,6 +1,6 @@
-const name = 'sample.import-json-syntax-error'
+export const name = 'sample.import-json-syntax-error'
 
-test('sample.import-json-syntax-error', async () => {
+export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
@@ -16,6 +16,4 @@ test('sample.import-json-syntax-error', async () => {
   )
   // TODO enable that babel plugin
   // TODO show useful code frame
-})
-
-export {}
+}
