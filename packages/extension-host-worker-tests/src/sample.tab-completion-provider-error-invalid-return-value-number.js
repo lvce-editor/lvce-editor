@@ -1,6 +1,6 @@
-const name = 'sample.tab-completion-provider-error-invalid-return-value-number'
+export const name = 'sample.tab-completion-provider-error-invalid-return-value-number'
 
-test('sample.tab-completion-provider-error-invalid-return-value-number', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -10,9 +10,7 @@ test('sample.tab-completion-provider-error-invalid-return-value-number', async (
   )
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
@@ -25,4 +23,4 @@ test('sample.tab-completion-provider-error-invalid-return-value-number', async (
   await expect(overlayMessage).toHaveText(
     'Error: Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42'
   )
-})
+}
