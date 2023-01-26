@@ -1,6 +1,6 @@
 import * as GetWorkerDisplayName from '../GetWorkerDisplayName/GetWorkerDisplayName.js'
-import * as WorkerType from '../WorkerType/WorkerType.js'
 import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerError.js'
+import * as WorkerType from '../WorkerType/WorkerType.js'
 
 const tryToGetActualErrorMessage = async ({ url, name }) => {
   const displayName = GetWorkerDisplayName.getWorkerDisplayName(name)
@@ -46,7 +46,7 @@ export const create = async ({ url, name }) => {
       }
       const handleFirstError = async (event) => {
         cleanup()
-        if (IsFirefoxWorkerError.isFirefoxError(event.message)) {
+        if (IsFirefoxWorkerError.isFirefoxWorkerError(event.message)) {
           event.preventDefault()
           reject(new Error('module workers are not supported in firefox'))
         } else {
