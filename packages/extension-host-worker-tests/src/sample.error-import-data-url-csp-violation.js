@@ -1,6 +1,6 @@
-const name = 'sample.error-import-data-url-csp-violation'
+export const name = 'sample.error-import-data-url-csp-violation'
 
-test('sample.error-import-data-url-csp-violation', async () => {
+export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
@@ -22,6 +22,4 @@ test('sample.error-import-data-url-csp-violation', async () => {
   3 | \`)
   4 |`)
   // TODO error message could be improved
-})
-
-export {}
+}
