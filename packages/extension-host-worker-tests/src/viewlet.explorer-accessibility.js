@@ -10,7 +10,9 @@
 // windows narrator says: "sample folder, two of five, collapsed, selected, heading level 1" ❌
 // orca says: "sample-folder, collapsed"
 
-test('viewlet.explorer-accessibility', async () => {
+export const name = 'viewlet.explorer-accessibility'
+
+export const test = async ({ FileSystem, Workspace, Main, Locator, expectd }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.mkdir(`${tmpDir}/languages`)
@@ -64,4 +66,4 @@ test('viewlet.explorer-accessibility', async () => {
   await expect(treeItemIndexHtml).toHaveAttribute('aria-posinset', '1')
   await expect(treeItemIndexHtml).toHaveAttribute('aria-setsize', '1')
   // await expect(treeItemIndexHtml).not.toHaveAttribute('aria-expanded', 'false') // TODO
-})
+}
