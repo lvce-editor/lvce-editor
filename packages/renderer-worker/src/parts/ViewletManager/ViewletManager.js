@@ -35,6 +35,8 @@ const kDispose = 'Viewlet.dispose'
 // then check if instance.factory matches module -> only compare reference (int) instead of string
 // should be faster
 const wrapViewletCommand = (id, fn) => {
+  Assert.string(id)
+  Assert.fn(fn)
   const wrappedViewletCommand = async (...args) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
@@ -312,7 +314,8 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     } else if (restoreState) {
       instanceSavedState = restoreState
     }
-    let newState = await module.loadContent(viewletState, instanceSavedState)
+    const args = viewlet.args || []
+    let newState = await module.loadContent(viewletState, instanceSavedState, ...args)
     if ((viewlet.visible === undefined || viewlet.visible === true) && module.show) {
       await module.show(newState)
     }
