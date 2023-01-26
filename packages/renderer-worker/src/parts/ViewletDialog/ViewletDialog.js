@@ -11,24 +11,20 @@ export const create = () => {
   }
 }
 
-const getErrorMessage = (error) => {
-  if (typeof error === 'string') {
-    return error
+const getErrorMessage = (type, message) => {
+  if (type && message) {
+    return `${type}: ${message}`
   }
-  if (error.type && error.message) {
-    return `${error.type}: ${error.message}`
+  if (message) {
+    return `${message}`
   }
-  if (error.message) {
-    return `${error.message}`
-  }
-  return `${error}`
+  return `${message}`
 }
 
 export const loadContent = (state, savedState, ...args) => {
   const [options, buttons] = args
   const { message, codeFrame, stack, type } = options
-  const normalizedMessage = getErrorMessage(message)
-  console.log({ normalizedMessage, message })
+  const normalizedMessage = getErrorMessage(type, message)
   return {
     ...state,
     message: normalizedMessage,
