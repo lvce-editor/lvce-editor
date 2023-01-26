@@ -1,4 +1,6 @@
-test('sample.completion-provider-error', async () => {
+export const name = 'sample.completion-provider-error'
+
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -8,12 +10,7 @@ test('sample.completion-provider-error', async () => {
   )
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(
-      '../fixtures/sample.completion-provider-error',
-      import.meta.url
-    ).toString()
-  )
+  await Extension.addWebExtension(new URL('../fixtures/sample.completion-provider-error', import.meta.url).toString())
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
@@ -23,9 +20,5 @@ test('sample.completion-provider-error', async () => {
   // assert
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
-  await expect(overlayMessage).toHaveText(
-    'Failed to execute completion provider: oops'
-  )
-})
-
-export {}
+  await expect(overlayMessage).toHaveText('Failed to execute completion provider: oops')
+}

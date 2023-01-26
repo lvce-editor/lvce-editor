@@ -1,4 +1,6 @@
-test('sample.completion-provider-error-invalid-return-value-number', async () => {
+export const name = 'sample.completion-provider-error-invalid-return-value-number'
+
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
     `${tmpDir}/test.xyz`,
@@ -7,12 +9,7 @@ test('sample.completion-provider-error-invalid-return-value-number', async () =>
   )
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(
-      '../fixtures/sample.completion-provider-error-invalid-return-value-number',
-      import.meta.url
-    ).toString()
-  )
+  await Extension.addWebExtension(new URL('../fixtures/sample.completion-provider-error-invalid-return-value-number', import.meta.url).toString())
   await Main.openUri(`${tmpDir}/test.xyz`)
   await Editor.setCursor(0, 0)
   await Editor.openCompletion()
@@ -24,6 +21,4 @@ test('sample.completion-provider-error-invalid-return-value-number', async () =>
   await expect(overlayMessage).toHaveText(
     `Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is 42`
   )
-})
-
-export {}
+}
