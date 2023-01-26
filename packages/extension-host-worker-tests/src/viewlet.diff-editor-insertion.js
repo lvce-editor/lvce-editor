@@ -1,4 +1,6 @@
-test('sample.diff-editor-insertion', async () => {
+export const name = 'sample.diff-editor-insertion'
+
+export const test = async ({ FileSystem, Workspace, Main, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file-1.txt`, ``)
@@ -17,4 +19,4 @@ test('sample.diff-editor-insertion', async () => {
   await expect(rowLeft).toHaveClass('Deletion')
   const rowRight = contentRight.locator('.EditorRow')
   await expect(rowRight).toHaveClass('Insertion')
-})
+}

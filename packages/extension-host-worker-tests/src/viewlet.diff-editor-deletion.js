@@ -1,4 +1,6 @@
-test('sample.diff-editor-deletion', async () => {
+export const name = 'sample.diff-editor-deletion'
+
+export const test = async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file-1.txt`, `abc`)
@@ -13,4 +15,4 @@ test('sample.diff-editor-deletion', async () => {
   const contentRight = Locator('.DiffEditorContentRight')
   await expect(contentLeft).toHaveText('abc')
   await expect(contentRight).toHaveText('')
-})
+}
