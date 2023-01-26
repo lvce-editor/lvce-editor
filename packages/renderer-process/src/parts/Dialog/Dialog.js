@@ -4,6 +4,8 @@ import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
+import * as IconButton from '../IconButton/IconButton.js'
+import * as Icon from '../Icon/Icon.js'
 
 export const state = {
   $Dialog: undefined,
@@ -140,6 +142,12 @@ export const showErrorDialogWithOptions = (error, options) => {
   $DialogTitle.id = 'DialogTitle'
   $DialogTitle.textContent = error.category || 'Extension Error'
 
+  const $DialogCloseButton = IconButton.create$Button('Close', Icon.Close)
+
+  const $DialogHeader = document.createElement('div')
+  $DialogHeader.className = 'DialogHeader'
+  $DialogHeader.append($DialogTitle, $DialogCloseButton)
+
   const $DialogBodyErrorMessage = document.createElement('p')
   $DialogBodyErrorMessage.id = 'DialogBodyErrorMessage'
   $DialogBodyErrorMessage.textContent = getErrorMessage(error)
@@ -170,7 +178,7 @@ export const showErrorDialogWithOptions = (error, options) => {
   $Dialog.id = 'Dialog'
   $Dialog.setAttribute(DomAttributeType.AriaLabelledBy, 'DialogTitle')
   $Dialog.setAttribute(DomAttributeType.AriaDescribedBy, 'DialogBodyErrorMessage')
-  $Dialog.append($DialogTitle, $DialogBody)
+  $Dialog.append($DialogHeader, $DialogBody)
   Widget.append($Dialog)
   // @ts-ignore
   $Dialog.showModal()

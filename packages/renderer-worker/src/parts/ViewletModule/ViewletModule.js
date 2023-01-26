@@ -10,6 +10,8 @@ export const load = (moduleId) => {
       return import('../ViewletClock/ViewletClock.ipc.js')
     case ViewletModuleId.DebugConsole:
       return import('../ViewletDebugConsole/ViewletDebugConsole.ipc.js')
+    case ViewletModuleId.Dialog:
+      return import('../ViewletDialog/ViewletDialog.ipc.js')
     case ViewletModuleId.DiffEditor:
       return import('../ViewletDiffEditor/ViewletDiffEditor.ipc.js')
     case ViewletModuleId.EditorCompletion:

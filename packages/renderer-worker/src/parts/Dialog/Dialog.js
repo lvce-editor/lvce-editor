@@ -6,6 +6,8 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const state = {
   dialog: undefined,
@@ -112,37 +114,6 @@ export const showMessage = async (message, options) => {
     }
     await handleClick(index)
   } else {
-    await RendererProcess.invoke(
-      /* Dialog.showErrorDialogWithOptions */ 'Dialog.showErrorDialogWithOptions',
-      /* message */ message,
-      /* options */ options
-    )
-  }
-}
-
-export const close = async () => {
-  // TODO support closing of electron dialogs
-  if (!state.dialog) {
-    console.info('no dialog to close')
-    return
-  }
-  state.dialog = undefined
-  await RendererProcess.invoke(/* Dialog.close */ 7836)
-}
-
-export const handleClick = async (index) => {
-  const dialog = state.dialog
-  const option = dialog.options[index]
-  // TODO handle case when index is out of bounds
-  switch (option) {
-    case 'Show Command Output':
-      await close()
-      const uri = `data://${dialog.message.stderr}`
-      await Command.execute(/* Main.openUri */ 'Main.openUri', uri)
-      // TODO show stderr in editor
-      // TODO close dialog
-      break
-    default:
-      break
+    await Viewlet.openWidget(ViewletModuleId.Dialog, message, options)
   }
 }

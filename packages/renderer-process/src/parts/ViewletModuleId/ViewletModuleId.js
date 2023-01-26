@@ -6,6 +6,8 @@ export const Clock = 'Clock'
 
 export const DebugConsole = 'Debug Console'
 
+export const Dialog = 'Dialog'
+
 export const DiffEditor = 'DiffEditor'
 
 export const EditorCompletion = 'EditorCompletion'
