@@ -1,4 +1,6 @@
-test('viewlet.editor-cursor-word-right', async () => {
+export const name = 'viewlet.editor-cursor-word-right'
+
+export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file1.txt`, `<title>Document</title>`)
@@ -17,4 +19,4 @@ test('viewlet.editor-cursor-word-right', async () => {
 
   // assert
   await expect(cursor).toHaveCSS('translate', /^(134|135|136|137|138|139|140|141|142|143|144|145|146).*?px$/)
-})
+}
