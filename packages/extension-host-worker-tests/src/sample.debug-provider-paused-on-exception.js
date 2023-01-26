@@ -1,12 +1,10 @@
-const name = 'sample.debug-provider-paused-on-exception'
+export const name = 'sample.debug-provider-paused-on-exception'
 
-test('sample.debug-provider-paused-on-exception', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
   // act
   await SideBar.open('Run And Debug')
@@ -24,6 +22,4 @@ test('sample.debug-provider-paused-on-exception', async () => {
   )
   await expect(rows.nth(2)).toHaveText('this: undefined')
   await expect(rows.nth(3)).toHaveText('Global')
-})
-
-export {}
+}
