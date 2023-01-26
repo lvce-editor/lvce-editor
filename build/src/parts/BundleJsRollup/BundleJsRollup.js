@@ -7,15 +7,7 @@ import * as Process from '../Process/Process.js'
  * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean,
  * allowCyclicDependencies?:boolean }} param0
  */
-export const bundleJs = async ({
-  cwd,
-  from,
-  platform,
-  exclude,
-  minify = false,
-  codeSplitting = false,
-  allowCyclicDependencies = false,
-}) => {
+export const bundleJs = async ({ cwd, from, platform, exclude, minify = false, codeSplitting = false, allowCyclicDependencies = false }) => {
   /**
    * @type {import('rollup').RollupOptions}
    */
@@ -72,6 +64,7 @@ export const bundleJs = async ({
       constBindings: true,
       objectShorthand: true,
     },
+    hoistTransitiveImports: false,
   }
   await result.write(outputOptions)
 }
