@@ -12,6 +12,7 @@ export class BabelParseError extends SyntaxError {
   constructor(url, error) {
     const message = getBabelErrorMessage(error.message)
     super(message)
+    this.name = 'BabelParseError'
     // @ts-ignore
     const line = error.loc.line
     // @ts-ignore
