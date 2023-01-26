@@ -17,18 +17,14 @@ export const focus = async (id) => {
   if (instance && instance.factory.focus) {
     const oldState = instance.state
     const newState = instance.factory.focus(oldState)
-    commands.push(
-      ...ViewletManager.render(instance.factory, oldState, newState)
-    )
+    commands.push(...ViewletManager.render(instance.factory, oldState, newState))
   }
   const oldInstance = ViewletStates.getFocusedInstance()
   if (oldInstance) {
     if (oldInstance && oldInstance.factory.handleBlur) {
       const oldState = oldInstance.state
       const newState = oldInstance.factory.handleBlur(oldState)
-      commands.push(
-        ...ViewletManager.render(oldInstance.factory, oldState, newState)
-      )
+      commands.push(...ViewletManager.render(oldInstance.factory, oldState, newState))
     }
   }
   ViewletStates.setFocusedInstance(instance)
@@ -117,10 +113,7 @@ export const dispose = async (id) => {
       throw new Error(`${id} is missing a factory function`)
     }
     instance.factory.dispose(instance.state)
-    await RendererProcess.invoke(
-      /* Viewlet.dispose */ 'Viewlet.dispose',
-      /* id */ id
-    )
+    await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id)
   } catch (error) {
     console.error(error)
     // TODO use Error.cause once proper stack traces are supported by chrome
@@ -177,9 +170,7 @@ export const resize = (id, dimensions) => {
   if (instance.factory.hasFunctionalResize) {
     newState = instance.factory.resize(oldState, dimensions)
     if ('newState' in newState) {
-      throw new Error(
-        `functional resize not supported in ${instance.factory.name}`
-      )
+      throw new Error(`functional resize not supported in ${instance.factory.name}`)
     }
     if (instance.factory.resizeEffect) {
       // TODO handle promise rejection gracefully
@@ -208,10 +199,7 @@ export const setState = async (id, newState) => {
     const oldState = instance.state
     const commands = ViewletManager.render(instance.factory, oldState, newState)
     instance.state = newState
-    await RendererProcess.invoke(
-      /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
-      /* commands */ commands
-    )
+    await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
   }
 }
 
@@ -241,6 +229,7 @@ export const openWidget = async (id, ...args) => {
     uri: `quickPick://${type}`,
     show: false,
     focus: true,
+    args,
   })
   if (!commands) {
     throw new Error('expected commands to be of type array')
@@ -251,6 +240,7 @@ export const openWidget = async (id, ...args) => {
   }
   commands.push(['Viewlet.append', 'Layout', id])
   commands.push(['Viewlet.focus', id])
+  console.log({ commands })
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // TODO commands should be like this
   // viewlet.create quickpick
@@ -262,17 +252,11 @@ export const openWidget = async (id, ...args) => {
 }
 
 export const closeWidget = async (id) => {
-  if (
-    ElectronBrowserView.isOpen() &&
-    id === ViewletElectron.isQuickPickOpen()
-  ) {
+  if (ElectronBrowserView.isOpen() && id === ViewletElectron.isQuickPickOpen()) {
     return ViewletElectron.closeWidgetElectronQuickPick()
   }
   ViewletStates.remove(id)
-  await RendererProcess.invoke(
-    /* Viewlet.dispose */ 'Viewlet.dispose',
-    /* id */ id
-  )
+  await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id)
   // TODO restore focus
 }
 
@@ -293,32 +277,16 @@ const getFn = async (module, fnName) => {
   return lazyFn
 }
 
-export const executeViewletCommand = async (
-  moduleId,
-  uidKey,
-  uidValue,
-  fnName,
-  ...args
-) => {
+export const executeViewletCommand = async (moduleId, uidKey, uidValue, fnName, ...args) => {
   const instances = ViewletStates.state.instances
   for (const instance of Object.values(instances)) {
-    if (
-      instance.factory.name === moduleId &&
-      instance.state[uidKey] === uidValue
-    ) {
+    if (instance.factory.name === moduleId && instance.state[uidKey] === uidValue) {
       const fn = await getFn(instance.factory, fnName)
       const oldState = instance.state
       const newState = await fn(oldState, ...args)
-      const commands = ViewletManager.render(
-        instance.factory,
-        oldState,
-        newState
-      )
+      const commands = ViewletManager.render(instance.factory, oldState, newState)
       ViewletStates.setState(moduleId, newState)
-      await RendererProcess.invoke(
-        /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
-        /* commands */ commands
-      )
+      await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
       return
     }
   }
