@@ -1,6 +1,6 @@
 export const name = 'sample.diff-editor-deletion'
 
-export const test = async () => {
+export const test = async ({ FileSystem, Workspace, Main, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file-1.txt`, `abc`)
