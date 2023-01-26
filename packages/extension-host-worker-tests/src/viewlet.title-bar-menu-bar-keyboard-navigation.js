@@ -1,4 +1,6 @@
-test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
+export const name = 'viewlet.title-bar-menu-bar-keyboard-navigation'
+
+export const test = async ({ TitleBarMenuBar, Locator, expect }) => {
   // act
   await TitleBarMenuBar.focus()
 
@@ -129,4 +131,4 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
 
   await expect(menu1).toBeHidden()
   await expect(menuItemOpenRecent).toBeFocused()
-})
+}

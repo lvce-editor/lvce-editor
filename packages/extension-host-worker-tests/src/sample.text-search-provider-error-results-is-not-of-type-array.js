@@ -1,13 +1,11 @@
-const name = 'sample.text-search-provider-error-results-is-not-of-type-array'
+export const name = 'sample.text-search-provider-error-results-is-not-of-type-array'
 
-test('sample.text-search-provider-error-results-is-not-of-type-array', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, SideBar, Search, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
   await SideBar.open('Search')
 
   // act
@@ -20,6 +18,4 @@ test('sample.text-search-provider-error-results-is-not-of-type-array', async () 
 
   // TODO trace back error to return value of extension and
   // show stack trace for extension return value
-})
-
-export {}
+}

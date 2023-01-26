@@ -15,7 +15,9 @@
 // windows narrator says: "" ❌
 // orca says: ""
 
-test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
+export const name = 'viewlet.title-bar-menu-bar-keyboard-navigation'
+
+export const test = async ({ TitleBarMenuBar, Locator, expect }) => {
   // assert
   const titleBarMenuBar = Locator('#TitleBarMenuBar')
   await expect(titleBarMenuBar).toHaveAttribute('role', 'menubar')
@@ -26,10 +28,7 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
 
   // assert
   await expect(titleBarMenuBar).toBeFocused()
-  await expect(titleBarMenuBar).toHaveAttribute(
-    'aria-activedescendant',
-    'TitleBarEntryActive'
-  )
+  await expect(titleBarMenuBar).toHaveAttribute('aria-activedescendant', 'TitleBarEntryActive')
   const titleBarItemFile = Locator('.TitleBarTopLevelEntry', {
     hasText: 'File',
   })
@@ -81,4 +80,4 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
   await expect(titleBarItemFile).toHaveAttribute('id', 'TitleBarEntryActive')
   await expect(titleBarItemFile).toHaveAttribute('aria-expanded', 'false')
   await expect(titleBarItemFile).toHaveAttribute('aria-owns', null)
-})
+}

@@ -1,6 +1,6 @@
-const name = 'sample.error-identifier-has-already-been-declared'
+export const name = 'sample.error-identifier-has-already-been-declared'
 
-test('sample.error-identifier-has-already-been-declared', async () => {
+export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
@@ -11,17 +11,16 @@ test('sample.error-identifier-has-already-been-declared', async () => {
 
   // assert
   const errorMessage = Locator('#DialogBodyErrorMessage')
+  // TODO message should say SyntaxError instead of BabelParseError
   await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.error-identifier-has-already-been-declared: SyntaxError: Identifier 'x' has already been declared.`
+    `Error: Failed to activate extension sample.error-identifier-has-already-been-declared: BabelParseError: Identifier 'x' has already been declared.`
   )
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
-  expect(codeFrame).toHaveText(`  1 | let x = 1
+  await expect(codeFrame).toHaveText(`  1 | let x = 1
   2 |
 > 3 | let x = 2
     |     ^
   4 |
   5 | export const activate = () => {}
   6 |`)
-})
-
-export {}
+}

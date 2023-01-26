@@ -12,9 +12,9 @@ file-2.txt`,
   throw new Error(`unexpected command ${command}`)
 }
 
-const name = 'sample.source-control-provider-exec-error'
+export const name = 'sample.source-control-provider-exec-error'
 
-test('sample.source-control-provider-exec-error', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -26,6 +26,4 @@ test('sample.source-control-provider-exec-error', async () => {
   // assert
   const sourceControl = Locator('.SourceControl')
   await expect(sourceControl).toHaveText('ExecError: Failed to execute test-source-control: process exited with code 128')
-})
-
-export {}
+}

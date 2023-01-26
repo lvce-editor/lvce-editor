@@ -1,4 +1,4 @@
-/*! @license DOMPurify 2.4.1 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.4.1/LICENSE */
+/*! @license DOMPurify 2.4.3 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.4.3/LICENSE */
 function _typeof(obj) {
   "@babel/helpers - typeof";
   return _typeof = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(obj2) {
@@ -154,7 +154,7 @@ function clone(object) {
   var newObject = create(null);
   var property;
   for (property in object) {
-    if (apply(hasOwnProperty, object, [property])) {
+    if (apply(hasOwnProperty, object, [property]) === true) {
       newObject[property] = object[property];
     }
   }
@@ -231,7 +231,7 @@ function createDOMPurify() {
   var DOMPurify = function DOMPurify2(root) {
     return createDOMPurify(root);
   };
-  DOMPurify.version = "2.4.1";
+  DOMPurify.version = "2.4.3";
   DOMPurify.removed = [];
   if (!window2 || !window2.document || window2.document.nodeType !== 9) {
     DOMPurify.isSupported = false;
@@ -552,7 +552,7 @@ function createDOMPurify() {
     if (!doc || !doc.documentElement) {
       doc = implementation.createDocument(NAMESPACE, "template", null);
       try {
-        doc.documentElement.innerHTML = IS_EMPTY_INPUT ? "" : dirtyPayload;
+        doc.documentElement.innerHTML = IS_EMPTY_INPUT ? emptyHTML : dirtyPayload;
       } catch (_) {
       }
     }

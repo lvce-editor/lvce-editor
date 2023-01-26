@@ -1,4 +1,6 @@
-test('viewlet.explorer-mouse-navigation', async () => {
+export const name = 'viewlet.explorer-mouse-navigation'
+
+export const test = async ({ FileSystem, Workspace, Explorer, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.mkdir(`${tmpDir}/a/b`)
@@ -35,4 +37,4 @@ test('viewlet.explorer-mouse-navigation', async () => {
 
   // assert
   await expect(treeItemB).toHaveId('TreeItemActive')
-})
+}

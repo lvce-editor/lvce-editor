@@ -1,6 +1,6 @@
-const name = 'sample.error-unexpected-token'
+export const name = 'sample.error-unexpected-token'
 
-test('sample.error-unexpected-token', async () => {
+export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
@@ -12,13 +12,11 @@ test('sample.error-unexpected-token', async () => {
   // assert
   const dialog = Locator('#Dialog')
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
-  await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-unexpected-token: SyntaxError: Missing semicolon.`)
+  await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-unexpected-token: BabelParseError: Missing semicolon.`)
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   expect(codeFrame).toHaveText(
     `> 1 | []0
     |   ^
   2 |`
   )
-})
-
-export {}
+}

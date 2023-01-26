@@ -1,13 +1,11 @@
-const name = 'sample.source-control-provider'
+export const name = 'sample.source-control-provider'
 
-test('sample.source-control-provider', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
   await SideBar.open('Source Control')
 
   const viewletTree = Locator('.SourceControlItems')
@@ -18,6 +16,4 @@ test('sample.source-control-provider', async () => {
   await expect(treeItem1).toHaveText('/test/file-1.txt')
   const treeItem2 = Locator('.TreeItem').nth(1)
   await expect(treeItem2).toHaveText('/test/file-2.txt')
-})
-
-export {}
+}

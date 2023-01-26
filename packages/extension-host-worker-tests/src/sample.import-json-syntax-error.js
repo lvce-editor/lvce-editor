@@ -1,6 +1,6 @@
-const name = 'sample.import-json-syntax-error'
+export const name = 'sample.import-json-syntax-error'
 
-test('sample.import-json-syntax-error', async () => {
+export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
@@ -12,10 +12,8 @@ test('sample.import-json-syntax-error', async () => {
   // assert
   const errorMessage = Locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.import-json-syntax-error: SyntaxError: This experimental syntax requires enabling the parser plugin: "importAssertions".`
+    `Error: Failed to activate extension sample.import-json-syntax-error: BabelParseError: This experimental syntax requires enabling the parser plugin: "importAssertions".`
   )
   // TODO enable that babel plugin
   // TODO show useful code frame
-})
-
-export {}
+}

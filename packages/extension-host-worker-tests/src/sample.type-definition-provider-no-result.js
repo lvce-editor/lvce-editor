@@ -1,6 +1,6 @@
-const name = 'sample.type-definition-provider-no-result'
+export const name = 'sample.type-definition-provider-no-result'
 
-test('sample.type-definition-provider-no-result', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -13,9 +13,7 @@ add(1, 2)
     `
   )
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
   await Main.openUri(`${tmpDir}/test.xyz`)
   await Editor.setCursor(0, 0)
 
@@ -25,9 +23,5 @@ add(1, 2)
   // assert
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
-  await expect(overlayMessage).toHaveText(
-    `No type definition found for 'export'`
-  )
-})
-
-export {}
+  await expect(overlayMessage).toHaveText(`No type definition found for 'export'`)
+}

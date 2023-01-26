@@ -1,4 +1,6 @@
-test('viewlet.editor-copy-line-down', async () => {
+export const name = 'viewlet.editor-copy-line-down'
+
+export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file1.txt`, 'content 1')
@@ -11,4 +13,4 @@ test('viewlet.editor-copy-line-down', async () => {
 
   const editor = Locator('.Editor')
   await expect(editor).toHaveText('content 1content 1')
-})
+}

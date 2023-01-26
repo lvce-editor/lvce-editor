@@ -1,6 +1,6 @@
-const name = 'sample.error-identifier-has-already-been-declared-other-file'
+export const name = 'sample.error-identifier-has-already-been-declared-other-file'
 
-test('sample.error-identifier-has-already-been-declared-other-file', async () => {
+export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
   await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
@@ -11,12 +11,16 @@ test('sample.error-identifier-has-already-been-declared-other-file', async () =>
 
   // assert
   const errorMessage = Locator('#DialogBodyErrorMessage')
+  // TODO instead of BabelParseError, should say SyntaxError
   await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.error-identifier-has-already-been-declared-other-file: Failed to import http://localhost:3000/packages/extension-host-worker-tests/fixtures/sample.error-identifier-has-already-been-declared-other-file/main.js: Unknown Network Error`
+    `Error: Failed to activate extension sample.error-identifier-has-already-been-declared-other-file: BabelParseError: Identifier 'x' has already been declared.`
   )
-  // TODO improve error message
-  // TODO show useful codeframe
-  // const codeFrame = Locator('#DialogBodyErrorCodeFrame')
-})
-
-export {}
+  const codeFrame = Locator('#DialogBodyErrorCodeFrame')
+  await expect(codeFrame).toHaveText(`  1 | let x = 1
+  2 |
+> 3 | let x = 2
+    |     ^
+  4 |
+  5 | export const add = (a, b) => {
+  6 |   return a + b`)
+}

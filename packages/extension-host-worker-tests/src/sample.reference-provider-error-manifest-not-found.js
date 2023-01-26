@@ -1,6 +1,6 @@
-const name = 'sample.reference-provider-error-main-not-found'
+export const name = 'sample.reference-provider-error-main-not-found'
 
-test('sample.reference-provider-error-manifest-not-found', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -10,9 +10,7 @@ test('sample.reference-provider-error-manifest-not-found', async () => {
   )
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
@@ -28,6 +26,4 @@ test('sample.reference-provider-error-manifest-not-found', async () => {
   // )
 
   // TODO should show dialog with json stack trace
-})
-
-export {}
+}

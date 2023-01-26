@@ -1,6 +1,6 @@
-const name = 'sample.tab-completion-provider-snippet'
+export const name = 'sample.tab-completion-provider-snippet'
 
-test('sample.tab-completion-provider-snippet', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -22,4 +22,4 @@ test('sample.tab-completion-provider-snippet', async () => {
   await expect(editor).toHaveText(`<h1></h1>`)
   const cursor = Locator('.EditorCursor')
   await expect(cursor).toHaveCSS('translate', /^(32|33|34|35|36|37|38|39).*?px$/)
-})
+}

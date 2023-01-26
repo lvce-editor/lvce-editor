@@ -1,5 +1,7 @@
 // TODO maybe call removeDirent function directly instead of opening context menu
-test('viewlet.explorer-delete-file', async () => {
+export const name = 'viewlet.explorer-delete-file'
+
+export const test = async ({ FileSystem, Workspace, Explorer, ContextMenu, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file1.txt`, 'content 1')
@@ -15,4 +17,4 @@ test('viewlet.explorer-delete-file', async () => {
   await ContextMenu.selectItem('Delete')
   const file1 = Locator('text=file1.txt')
   await expect(file1).toBeHidden()
-})
+}

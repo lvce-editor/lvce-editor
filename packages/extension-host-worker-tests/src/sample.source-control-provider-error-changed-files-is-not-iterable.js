@@ -1,6 +1,6 @@
-const name = 'sample.source-control-provider-error-changed-files-is-not-iterable'
+export const name = 'sample.source-control-provider-error-changed-files-is-not-iterable'
 
-test('sample.source-control-provider-error-changed-files-is-not-iterable', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -13,6 +13,4 @@ test('sample.source-control-provider-error-changed-files-is-not-iterable', async
   const sourceControl = Locator('.SourceControl')
   // TODO error message could be improved: Failed to query changed files from test-source-control-provider: changedFiles must be of type array but was undefined
   await expect(sourceControl).toHaveText('TypeError: changedFiles is not iterable (cannot read property undefined)')
-})
-
-export {}
+}

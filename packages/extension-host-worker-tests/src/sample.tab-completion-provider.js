@@ -1,7 +1,7 @@
-const name = 'sample.tab-completion-provider'
+export const name = 'sample.tab-completion-provider'
 
 // TODO test is flaky https://github.com/lvce-editor/lvce-editor/runs/7821552259?check_suite_focus=true
-test('sample.tab-completion-provider', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -11,9 +11,7 @@ test('sample.tab-completion-provider', async () => {
   )
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
@@ -23,4 +21,4 @@ test('sample.tab-completion-provider', async () => {
   // assert
   const editor = Locator('.Viewlet.Editor')
   await expect(editor).toHaveText(`test`)
-})
+}

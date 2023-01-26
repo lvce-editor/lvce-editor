@@ -1,4 +1,3 @@
-var _a;
 class HTTPError extends Error {
   constructor(response, request, options) {
     const code = response.status || response.status === 0 ? response.status : "";
@@ -162,10 +161,15 @@ async function timeout(request, abortController, options) {
     });
   });
 }
-const DOMException = (_a = globalThis.DOMException) != null ? _a : Error;
+const isDomExceptionSupported = Boolean(globalThis.DOMException);
 function composeAbortError(signal) {
-  var _a2;
-  return new DOMException((_a2 = signal == null ? void 0 : signal.reason) != null ? _a2 : "The operation was aborted.");
+  var _a, _b;
+  if (isDomExceptionSupported) {
+    return new DOMException((_a = signal == null ? void 0 : signal.reason) != null ? _a : "The operation was aborted.", "AbortError");
+  }
+  const error = new Error((_b = signal == null ? void 0 : signal.reason) != null ? _b : "The operation was aborted.");
+  error.name = "AbortError";
+  return error;
 }
 async function delay(ms, {signal}) {
   return new Promise((resolve, reject) => {
@@ -246,7 +250,7 @@ class Ky {
     return result;
   }
   constructor(input, options = {}) {
-    var _a2, _b, _c;
+    var _a, _b, _c;
     Object.defineProperty(this, "request", {
       enumerable: true,
       configurable: true,
@@ -288,7 +292,7 @@ class Ky {
         beforeError: [],
         afterResponse: []
       }, options.hooks),
-      method: normalizeRequestMethod((_a2 = options.method) != null ? _a2 : this._input.method),
+      method: normalizeRequestMethod((_a = options.method) != null ? _a : this._input.method),
       prefixUrl: String(options.prefixUrl || ""),
       retry: normalizeRetryOptions(options.retry),
       throwHttpErrors: options.throwHttpErrors !== false,

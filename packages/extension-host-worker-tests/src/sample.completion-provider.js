@@ -1,4 +1,6 @@
-test('sample.completion-provider', async () => {
+export const name = 'sample.completion-provider'
+
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, ['   line   ', '   line   ', '   line   '].join('\n'))
@@ -73,6 +75,4 @@ test('sample.completion-provider', async () => {
   // // move cursor right (doesn't match word)
   // await page.keyboard.press('ArrowRight')
   // await expect(completions).toBeHidden()
-})
-
-export {}
+}
