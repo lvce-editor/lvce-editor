@@ -1,4 +1,6 @@
-test('viewlet.editor-image', async () => {
+export const name = 'viewlet.editor-image'
+
+export const test = async ({ FileSystem, Workspace, Main, Locator, Eval, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -26,10 +28,7 @@ test('viewlet.editor-image', async () => {
 
   // assert
   const imageWrapper = Locator('.ImageWrapper')
-  await expect(imageWrapper).toHaveCSS(
-    'transform',
-    'matrix(1.13, 0, 0, 1.13, 0, 7.15)'
-  )
+  await expect(imageWrapper).toHaveCSS('transform', 'matrix(1.13, 0, 0, 1.13, 0, 7.15)')
 
   // workaround for not being setPointerCapture() not working on
   // synthetic events
@@ -59,13 +58,10 @@ Element.prototype.releasePointerCapture = () => {}
   })
 
   // assert
-  await expect(imageWrapper).toHaveCSS(
-    'transform',
-    'matrix(1.13, 0, 0, 1.13, 1, 7.15)'
-  )
+  await expect(imageWrapper).toHaveCSS('transform', 'matrix(1.13, 0, 0, 1.13, 1, 7.15)')
 
   await Eval.evalInRendererProcess(`
 Element.prototype.setPointerCapture = globalThis._originalSetPointerCapture
 Element.prototype.releasePointerCapture = globalThis._originalReleasePointerCapture
 `)
-})
+}
