@@ -308,14 +308,11 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
       occurrence: '/manifest.json',
       replacement: `${pathPrefix}/manifest.json`,
     })
-  }
-
-  if (pathPrefix) {
     await Replace.replace({
       path: `build/.tmp/dist/index.html`,
       occurrence: '</title>',
       replacement: `</title>
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">`,
+    <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`,
     })
   }
   await Replace.replace({

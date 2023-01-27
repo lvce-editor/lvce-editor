@@ -1,4 +1,4 @@
-export const name = 'sample.error-dependency-module-not-found'
+export const name = 'sample.error-export-not-found'
 
 export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
@@ -11,15 +11,11 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
 
   // assert
   const errorMessage = Locator('#DialogBodyErrorMessage')
-  await expect(errorMessage).toHaveText(
-    `Error: Failed to activate extension sample.error-dependency-module-not-found: module not found "./not-found.js"`
-  )
+  await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-export-not-found: module not found "./add.js"`)
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(
-    `> 1 | import notFound from './not-found.js'
-  2 |
-  3 | export const add = (a, b) => {
-  4 |   return a + b`
+    `> 1 | export * from './add.js'
+  2 |`
   )
   // TODO stack could be improved
 }
