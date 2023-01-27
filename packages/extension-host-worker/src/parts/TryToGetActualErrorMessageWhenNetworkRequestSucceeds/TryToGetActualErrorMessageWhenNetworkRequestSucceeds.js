@@ -19,7 +19,7 @@ const getErrorInDependencies = async (url, dependencies) => {
     } else {
       switch (dependencyResponse.status) {
         case HttpStatusCode.NotFound:
-          throw new DependencyNotFoundError(dependency.code, dependency.start, dependency.end, dependency.relativePath, dependencyUrl)
+          throw new DependencyNotFoundError(dependency.code, dependency.start, dependency.end, dependency.relativePath, dependencyUrl, url)
         default:
           break
         // return `Failed to import ${url}: ${error}`
@@ -34,12 +34,10 @@ const getErrorInDependencies = async (url, dependencies) => {
  * @returns
  */
 export const tryToGetActualErrorMessage = async (error, url, response) => {
-  console.log({ error })
   let text
   try {
     text = await response.text()
   } catch (error) {
-    console.log({ error, url })
     return `Failed to import ${url}: Unknown Network Error`
   }
   let ast

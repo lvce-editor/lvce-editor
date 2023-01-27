@@ -1,4 +1,4 @@
-export const name = 'sample.error-module-not-found'
+export const name = 'sample.error-clone'
 
 export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
@@ -11,15 +11,16 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
 
   // assert
   const dialog = Locator('#Dialog')
-  // TODO error message should say module not found "./add.js"
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
-  await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-module-not-found: module not found ./add.js`)
-
+  await expect(errorMessage).toHaveText(
+    `Error: Failed to activate extension sample.error-clone: DataCloneError: Failed to execute 'structuredClone' on 'WorkerGlobalScope': #<Promise> could not be cloned.`
+  )
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(
-    `> 1 | import add from './add.js'
+    `> 1 | structuredClone(new Promise(() => {}))
+    | ^
   2 |
-  3 | export const activate = () => {
-  4 |   add(1, 2)`
+  3 | export const activate = () => {}
+  4 |`
   )
 }

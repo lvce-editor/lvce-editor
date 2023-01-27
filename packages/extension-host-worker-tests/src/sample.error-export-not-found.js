@@ -1,4 +1,4 @@
-export const name = 'sample.error-unexpected-token'
+export const name = 'sample.error-export-not-found'
 
 export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
@@ -10,13 +10,12 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   await QuickPick.selectItem('Sample Command')
 
   // assert
-  const dialog = Locator('#Dialog')
-  const errorMessage = dialog.locator('#DialogBodyErrorMessage')
-  await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-unexpected-token: BabelParseError: Missing semicolon.`)
+  const errorMessage = Locator('#DialogBodyErrorMessage')
+  await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-export-not-found: module not found ./add.js`)
   const codeFrame = Locator('#DialogBodyErrorCodeFrame')
   await expect(codeFrame).toHaveText(
-    `> 1 | []0
-    |   ^
+    `> 1 | export * from './add.js'
   2 |`
   )
+  // TODO stack could be improved
 }

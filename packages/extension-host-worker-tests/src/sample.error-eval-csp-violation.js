@@ -1,4 +1,4 @@
-export const name = 'sample.error-module-not-found'
+export const name = 'sample.error-eval-csp-violation'
 
 export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
@@ -11,15 +11,15 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
 
   // assert
   const dialog = Locator('#Dialog')
-  // TODO error message should say module not found "./add.js"
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
-  await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-module-not-found: module not found ./add.js`)
-
-  const codeFrame = Locator('#DialogBodyErrorCodeFrame')
-  await expect(codeFrame).toHaveText(
-    `> 1 | import add from './add.js'
-  2 |
-  3 | export const activate = () => {
-  4 |   add(1, 2)`
+  // TODO error message could be improved
+  await expect(errorMessage).toHaveText(
+    `Error: Failed to activate extension sample.error-eval-csp-violation: ContentSecurityPolicyError: Content Security Policy Violation: script-src`
   )
+  const codeFrame = Locator('#DialogBodyErrorCodeFrame')
+  await expect(codeFrame).toHaveText(`> 1 | eval('1+1')
+    | ^
+  2 |
+  3 | export const activate = () => {}
+  4 |`)
 }
