@@ -25,11 +25,11 @@ const handleClickStepOut = (event) => {
 
 const handleClickDebugButton = (event, target) => {
   event.preventDefault()
-  switch (target.ariaLabel) {
-    case 'pause':
+  switch (target.title) {
+    case 'Pause':
       handleClickPause()
       break
-    case 'continue':
+    case 'Resume':
       handleClickContinue()
       break
     case 'Step over':
@@ -83,9 +83,8 @@ const handleClickDebugSectionHeader = (event, target) => {
   }
 }
 
-export const handleMouseDown = (event) => {
+export const handlePointerDown = (event) => {
   const { target } = event
-  console.log(target.className)
   switch (target.className) {
     case 'IconButton DebugButton':
       handleClickDebugButton(event, target)
