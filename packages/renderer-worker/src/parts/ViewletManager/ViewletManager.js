@@ -4,6 +4,7 @@ import * as Css from '../Css/Css.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
+import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -442,7 +443,9 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       return
     }
     viewlet.type = 4
-    console.error(error)
+    console.log({ stack: error.stack })
+    const prettyError = await PrettyError.prepare(error)
+    PrettyError.print(prettyError)
     try {
       if (module && module.handleError) {
         return await module.handleError(error)
