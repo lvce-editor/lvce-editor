@@ -8,7 +8,6 @@ import * as GetInstalledSize from '../GetInstalledSize/GetInstalledSize.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
-import * as Product from '../Product/Product.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
@@ -29,101 +28,74 @@ const getDebPackageArch = (arch) => {
   }
 }
 
-const bundleElectronMaybe = async () => {
+const bundleElectronMaybe = async ({ product }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
   //   console.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build()
+  await build({ product })
 }
 
-const copyElectronResult = async () => {
-  await bundleElectronMaybe()
+const copyElectronResult = async ({ product }) => {
+  await bundleElectronMaybe({ product })
   const debArch = 'amd64'
   await Copy.copy({
     from: `build/.tmp/electron-bundle/x64`,
-    to: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}`,
+    to: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}`,
   })
   await Remove.remove(
-    `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`
+    `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`
   )
   await Replace.replace({
-    path: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/shared-process/src/parts/RgPath/RgPath.js`,
+    path: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/src/parts/RgPath/RgPath.js`,
     occurrence: `export { rgPath } from 'vscode-ripgrep-with-github-api-error-fix'`,
     replacement: `export const rgPath = 'rg'`,
   })
 }
 
-const copyMetaFiles = async () => {
+const copyMetaFiles = async ({ product }) => {
   const debArch = 'amd64'
 
-  await Template.write(
-    'linux_desktop',
-    `build/.tmp/linux/deb/${debArch}/app/usr/share/applications/${Product.applicationName}.desktop`,
-    {
-      '@@NAME_LONG@@': Product.nameLong,
-      '@@NAME_SHORT@@': Product.nameShort,
-      '@@NAME@@': Product.applicationName,
-      '@@EXEC@@': `${Product.applicationName} %U`,
-      '@@ICON@@': Product.applicationName,
-      '@@URL_PROTOCOL@@': Product.applicationName,
-      '@@SUMMARY@@': Product.linuxSummary,
-      '@@KEYWORDS@@': `${Product.applicationName};`,
-    }
-  )
-  await Template.write(
-    'bash_completion',
-    `build/.tmp/linux/deb/${debArch}/app/usr/share/bash-completion/completions/${Product.applicationName}`,
-    {
-      '@@APPNAME@@': Product.applicationName,
-    }
-  )
-  await Template.write(
-    'lintian_overrides',
-    `build/.tmp/linux/deb/${debArch}/app/usr/share/lintian/overrides/${Product.applicationName}`,
-    {}
-  )
+  await Template.write('linux_desktop', `build/.tmp/linux/deb/${debArch}/app/usr/share/applications/${product.applicationName}.desktop`, {
+    '@@NAME_LONG@@': product.nameLong,
+    '@@NAME_SHORT@@': product.nameShort,
+    '@@NAME@@': product.applicationName,
+    '@@EXEC@@': `${product.applicationName} %U`,
+    '@@ICON@@': product.applicationName,
+    '@@URL_PROTOCOL@@': product.applicationName,
+    '@@SUMMARY@@': product.linuxSummary,
+    '@@KEYWORDS@@': `${product.applicationName};`,
+  })
+  await Template.write('bash_completion', `build/.tmp/linux/deb/${debArch}/app/usr/share/bash-completion/completions/${product.applicationName}`, {
+    '@@APPNAME@@': product.applicationName,
+  })
+  await Template.write('lintian_overrides', `build/.tmp/linux/deb/${debArch}/app/usr/share/lintian/overrides/${product.applicationName}`, {})
   await Copy.copyFile({
     from: 'build/files/icon.png',
-    to: `build/.tmp/linux/deb/${debArch}/app/usr/share/pixmaps/${Product.applicationName}.png`,
+    to: `build/.tmp/linux/deb/${debArch}/app/usr/share/pixmaps/${product.applicationName}.png`,
   })
 
-  const installedSize = await GetInstalledSize.getInstalledSize(
-    Path.absolute(`build/.tmp/linux/deb/${debArch}/app`)
-  )
+  const installedSize = await GetInstalledSize.getInstalledSize(Path.absolute(`build/.tmp/linux/deb/${debArch}/app`))
   const tag = await Tag.getGitTag()
-  const defaultDepends = [
-    'libnss3 (>= 2:3.26)',
-    'gnupg',
-    'apt',
-    'libxkbfile1',
-    'libsecret-1-0',
-    'libgtk-3-0 (>= 3.10.0)',
-    'libxss1',
-    'libgbm1',
-  ]
+  const defaultDepends = ['libnss3 (>= 2:3.26)', 'gnupg', 'apt', 'libxkbfile1', 'libsecret-1-0', 'libgtk-3-0 (>= 3.10.0)', 'libxss1', 'libgbm1']
   // TODO add options to process.argv whether or not ripgrep should be bundled or a dependency
   const additionalDepends = ['ripgrep']
   const depends = [...defaultDepends, ...additionalDepends].join(', ')
-  await Template.write(
-    'debian_control',
-    `build/.tmp/linux/deb/${debArch}/DEBIAN/control`,
-    {
-      '@@NAME@@': Product.applicationName,
-      '@@VERSION@@': tag,
-      '@@ARCHITECTURE@@': debArch,
-      '@@INSTALLED_SIZE@@': `${installedSize}`,
-      '@@HOMEPAGE@@': Product.homePage,
-      '@@MAINTAINER@@': Product.linuxMaintainer,
-      '@@DEPENDS@@': depends,
-    }
-  )
+  await Template.write('debian_control', `build/.tmp/linux/deb/${debArch}/DEBIAN/control`, {
+    '@@NAME@@': product.applicationName,
+    '@@VERSION@@': tag,
+    '@@ARCHITECTURE@@': debArch,
+    '@@INSTALLED_SIZE@@': `${installedSize}`,
+    '@@HOMEPAGE@@': product.homePage,
+    '@@MAINTAINER@@': product.linuxMaintainer,
+    '@@DEPENDS@@': depends,
+  })
   await Template.write(
     'debian_postinst',
     `build/.tmp/linux/deb/${debArch}/DEBIAN/postinst`,
     {
-      '@@NAME@@': Product.applicationName,
+      '@@NAME@@': product.applicationName,
     },
     755
   )
@@ -131,7 +103,7 @@ const copyMetaFiles = async () => {
     'debian_postrm',
     `build/.tmp/linux/deb/${debArch}/DEBIAN/postrm`,
     {
-      '@@NAME@@': Product.applicationName,
+      '@@NAME@@': product.applicationName,
     },
     755
   )
@@ -139,21 +111,17 @@ const copyMetaFiles = async () => {
   //   'debian_prerm',
   //   `build/.tmp/linux/deb/${debArch}/DEBIAN/prerm`,
   //   {
-  //     '@@NAME@@': Product.applicationName,
+  //     '@@NAME@@': product.applicationName,
   //   },
   //   755
   // )
 
   // TODO include electron/chromium licenses here? They are already at <appName>/Licenses.chromium.html
   // TODO include licenses of all used npm modules here?
-  await Template.write(
-    'linux_copyright',
-    `build/.tmp/linux/deb/${debArch}/app/usr/share/doc/${Product.applicationName}/copyright`,
-    {
-      '@@COPYRIGHT@@': Product.copyrightShort,
-      '@@LICENSE@@': Product.licenseName,
-    }
-  )
+  await Template.write('linux_copyright', `build/.tmp/linux/deb/${debArch}/app/usr/share/doc/${product.applicationName}/copyright`, {
+    '@@COPYRIGHT@@': product.copyrightShort,
+    '@@LICENSE@@': product.licenseName,
+  })
   // await mkdir(Path.absolute(`build/.tmp/linux/deb/${debArch}/app/usr/bin`), {
   //   recursive: true,
   // })
@@ -200,13 +168,13 @@ const createDebianBinaryFile = async () => {
   await writeFile(Path.join(cwd, 'debian-binary'), '2.0\n')
 }
 
-const createDeb = async () => {
+const createDeb = async ({ product }) => {
   try {
     const debArch = 'amd64'
     const cwd = Path.absolute(`build/.tmp/linux/deb/${debArch}`)
     const releases = Path.absolute(`build/.tmp/releases`)
     await Mkdir.mkdir(releases)
-    const appName = Product.applicationName
+    const appName = product.applicationName
     await Compress.deb('control.tar.xz', 'data.tar.xz', {
       cwd,
     })
@@ -220,14 +188,10 @@ const createDeb = async () => {
   }
 }
 
-const printDebSize = async () => {
+const printDebSize = async ({ product }) => {
   try {
     const debArch = 'amd64'
-    const size = await Stat.getFileSize(
-      Path.absolute(
-        `build/.tmp/releases/${Product.applicationName}-${debArch}.deb`
-      )
-    )
+    const size = await Stat.getFileSize(Path.absolute(`build/.tmp/releases/${product.applicationName}-${debArch}.deb`))
     Logger.info(`deb size: ${size}`)
   } catch (error) {
     // @ts-ignore
@@ -246,46 +210,20 @@ const fixPermissions = async () => {
     const debArch = 'amd64'
     const folder = Path.absolute(`build/.tmp/linux/deb/${debArch}/app`)
     // change permissions from 775 to 755
-    await Exec.exec(
-      'find',
-      [
-        folder,
-        '-type',
-        'd',
-        '-perm',
-        '775',
-        '-print',
-        '-exec',
-        'chmod',
-        '755',
-        '{}',
-        '+',
-      ],
-      { stdout: 'ignore', stderr: 'inherit' }
-    )
+    await Exec.exec('find', [folder, '-type', 'd', '-perm', '775', '-print', '-exec', 'chmod', '755', '{}', '+'], {
+      stdout: 'ignore',
+      stderr: 'inherit',
+    })
     // change permissions from 664 to 644
-    await Exec.exec(
-      'find',
-      [
-        folder,
-        '-type',
-        'f',
-        '-perm',
-        '664',
-        '-print',
-        '-exec',
-        'chmod',
-        '644',
-        '{}',
-        '+',
-      ],
-      { stdout: 'ignore', stderr: 'inherit' }
-    )
+    await Exec.exec('find', [folder, '-type', 'f', '-perm', '664', '-print', '-exec', 'chmod', '644', '{}', '+'], {
+      stdout: 'ignore',
+      stderr: 'inherit',
+    })
     const extraFiles = [
-      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/web/bin/web.js`,
-      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node`,
-      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node`,
-      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-106/node-pty.node`,
+      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/web/bin/web.js`,
+      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node`,
+      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node`,
+      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-106/node-pty.node`,
     ]
     for (const extraFile of extraFiles) {
       await chmod(Path.absolute(extraFile), 0o755)
@@ -296,18 +234,18 @@ const fixPermissions = async () => {
   }
 }
 
-export const build = async () => {
+export const build = async ({ product }) => {
   if (!isFakeRoot()) {
     Logger.info('[info] enabling fakeroot')
     await Exec.exec('fakeroot', process.argv, { stdio: 'inherit' })
     return
   }
   console.time('copyElectronResult')
-  await copyElectronResult()
+  await copyElectronResult({ product })
   console.timeEnd('copyElectronResult')
 
   console.time('copyMetaFiles')
-  await copyMetaFiles()
+  await copyMetaFiles({ product })
   console.timeEnd('copyMetaFiles')
 
   console.time('fixPermissions')
@@ -327,8 +265,8 @@ export const build = async () => {
   console.timeEnd('createDebianBinaryFile')
 
   console.time('createDeb')
-  await createDeb()
+  await createDeb({ product })
   console.timeEnd('createDeb')
 
-  await printDebSize()
+  await printDebSize({ product })
 }

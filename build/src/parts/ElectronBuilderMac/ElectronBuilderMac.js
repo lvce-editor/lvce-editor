@@ -2,7 +2,7 @@ import * as ElectronBuilder from '../ElectronBuilder/ElectronBuilder.js'
 import * as Process from '../Process/Process.js'
 import * as Logger from '../Logger/Logger.js'
 
-export const build = async () => {
+export const build = async ({ product }) => {
   if (Process.platform === 'linux') {
     Logger.info('building macos dmg is not supported on linux')
     Process.exit(1)
@@ -13,5 +13,6 @@ export const build = async () => {
   }
   await ElectronBuilder.build({
     config: 'electron_builder_mac',
+    product,
   })
 }

@@ -1,9 +1,8 @@
+import * as ArchType from '../ArchType/ArchType.js'
+import * as Copy from '../Copy/Copy.js'
 import * as Exec from '../Exec/Exec.js'
 import * as Path from '../Path/Path.js'
-import * as Product from '../Product/Product.js'
 import * as Template from '../Template/Template.js'
-import * as Copy from '../Copy/Copy.js'
-import * as ArchType from '../ArchType/ArchType.js'
 
 const getRpmArch = (arch) => {
   switch (arch) {
@@ -18,69 +17,57 @@ const getRpmArch = (arch) => {
   }
 }
 
-const copyMetaFiles = async (arch) => {
+const copyMetaFiles = async ({ arch, product }) => {
   const rpmArch = getRpmArch(arch)
-  await Template.write(
-    'linux_desktop',
-    `build/.tmp/linux/rpm/${rpmArch}/rpmbuild/BUILD/usr/share/applications/${Product.applicationName}.desktop`,
-    {
-      '@@NAME_LONG@@': Product.nameLong,
-      '@@NAME_SHORT@@': Product.nameShort,
-      '@@NAME@@': Product.applicationName,
-      '@@EXEC@@': Product.applicationName,
-      '@@ICON@@': Product.applicationName,
-      '@@URLPROTOCOL@@': Product.applicationName,
-      '@@SUMMARY@@': Product.linuxSummary,
-      '@@KEYWORDS@@': `${Product.applicationName};`,
-    }
-  )
+  await Template.write('linux_desktop', `build/.tmp/linux/rpm/${rpmArch}/rpmbuild/BUILD/usr/share/applications/${product.applicationName}.desktop`, {
+    '@@NAME_LONG@@': product.nameLong,
+    '@@NAME_SHORT@@': product.nameShort,
+    '@@NAME@@': product.applicationName,
+    '@@EXEC@@': product.applicationName,
+    '@@ICON@@': product.applicationName,
+    '@@URLPROTOCOL@@': product.applicationName,
+    '@@SUMMARY@@': product.linuxSummary,
+    '@@KEYWORDS@@': `${product.applicationName};`,
+  })
   await Template.write(
     'linux_app_data_xml',
-    `build/.tmp/linux/rpm/${rpmArch}/rpmbuild/BUILD/usr/share/appdata/${Product.applicationName}.appdata.xml`,
+    `build/.tmp/linux/rpm/${rpmArch}/rpmbuild/BUILD/usr/share/appdata/${product.applicationName}.appdata.xml`,
     {
-      '@@NAME_LONG@@': Product.nameLong,
-      '@@NAME@@': Product.applicationName,
-      '@@LICENSE@@': Product.licenseName,
-      '@@HOMEPAGE@@': Product.homePage,
-      '@@SUMMARY@@': Product.linuxSummary,
+      '@@NAME_LONG@@': product.nameLong,
+      '@@NAME@@': product.applicationName,
+      '@@LICENSE@@': product.licenseName,
+      '@@HOMEPAGE@@': product.homePage,
+      '@@SUMMARY@@': product.linuxSummary,
     }
   )
   await Copy.copyFile({
     from: 'build/files/icon.png',
-    to: `build/.tmp/linux/rpm/${rpmArch}/rpmbuild/${Product.applicationName}/usr/share/pixmaps/${Product.applicationName}.png`,
+    to: `build/.tmp/linux/rpm/${rpmArch}/rpmbuild/${product.applicationName}/usr/share/pixmaps/${product.applicationName}.png`,
   })
 }
 
-const createRpm = async (arch) => {
+const createRpm = async ({ arch, product }) => {
   const rpmArch = getRpmArch(arch)
   const cwd = Path.absolute(`build/.tmp/linux/rpm/${rpmArch}/rpmbuild`)
   const rpmBuildPath = Path.absolute(`build/.tmp/linux/rpm/${rpmArch}/rpmbuild`)
-  const rpmOut = Path.absolute(
-    `build/.tmp/linux/rpm/${rpmArch}/rpmbuild/RPMS/${rpmArch}`
-  )
+  const rpmOut = Path.absolute(`build/.tmp/linux/rpm/${rpmArch}/rpmbuild/RPMS/${rpmArch}`)
   const destination = Path.absolute(`build/.tmp/linux/rpm/${rpmArch}`)
-  const specPath = Path.absolute(
-    `build/.tmp/linux/rpm/${rpmArch}/rpmbuild/SPECS/${Product.applicationName}.spec`
-  )
-  await Exec.exec(
-    'fakeroot',
-    [`rpmbuild --bb ${specPath} --target=${rpmArch}`],
-    {
-      env: {
-        HOME: destination,
-      },
-    }
-  )
+  const specPath = Path.absolute(`build/.tmp/linux/rpm/${rpmArch}/rpmbuild/SPECS/${product.applicationName}.spec`)
+  await Exec.exec('fakeroot', [`rpmbuild --bb ${specPath} --target=${rpmArch}`], {
+    env: {
+      HOME: destination,
+    },
+  })
 }
 
-export const build = async () => {
+export const build = async ({ product }) => {
   const arch = 'x64'
 
   console.time('copyMetaFiles')
-  await copyMetaFiles(arch)
+  await copyMetaFiles({ arch, product })
   console.timeEnd('copyMetaFiles')
 
   console.time('createRpm')
-  await createRpm(arch)
+  await createRpm({ arch, product })
   console.timeEnd('createRpm')
 }
