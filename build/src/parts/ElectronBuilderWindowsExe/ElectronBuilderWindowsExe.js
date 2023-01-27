@@ -1,7 +1,7 @@
 import * as ElectronBuilder from '../ElectronBuilder/ElectronBuilder.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
-import * as Logger from '../Logger/Logger.js'
 
 export const build = async ({ product }) => {
   if (Platform.isLinux()) {

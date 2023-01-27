@@ -1,6 +1,7 @@
 import * as ElectronBuilder from 'electron-builder'
 import { readdir } from 'node:fs/promises'
 import VError from 'verror'
+import * as Assert from '../Assert/Assert.js'
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Logger from '../Logger/Logger.js'
@@ -163,6 +164,8 @@ const renameReleaseFile = async ({ config, version, product }) => {
 }
 
 export const build = async ({ config, product }) => {
+  Assert.string(config)
+  Assert.object(product)
   // workaround for https://github.com/electron-userland/electron-builder/issues/4594
   // @ts-ignore
   process.env.USE_HARD_LINKS = false
