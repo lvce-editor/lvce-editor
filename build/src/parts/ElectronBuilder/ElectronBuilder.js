@@ -150,6 +150,12 @@ const copyElectronResult = async ({ config, version, product }) => {
       replacement: `exports.isArchLinux = true`,
     })
   }
+  if (config === 'electron_builder_windows_exe') {
+    await Copy.copyFile({
+      from: `build/files/windows/cli.cmd`,
+      to: `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}.cmd`,
+    })
+  }
 }
 
 const renameReleaseFile = async ({ config, version, product }) => {
