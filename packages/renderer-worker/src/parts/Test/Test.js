@@ -26,8 +26,12 @@ export const execute = async (href) => {
     TestState.setMockExec(module.mockExec)
   }
   if (module.test) {
-    ExposeGlobals.unExposeGlobals(globalThis, globals)
-    await ExecuteTest.executeTest(module.name, module.test, globals)
+    if (module.skip) {
+      await TestFrameWork.test.skip(module.name, () => {})
+    } else {
+      ExposeGlobals.unExposeGlobals(globalThis, globals)
+      await ExecuteTest.executeTest(module.name, module.test, globals)
+    }
   } else {
     const tests = TestState.getTests()
     for (const test of tests) {

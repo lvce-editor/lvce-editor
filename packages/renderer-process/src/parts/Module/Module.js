@@ -10,8 +10,6 @@ export const load = (moduleId) => {
       return import('../Css/Css.ipc.js')
     case ModuleId.Developer:
       return import('../Developer/Developer.ipc.js')
-    case ModuleId.Dialog:
-      return import('../Dialog/Dialog.ipc.js')
     case ModuleId.Download:
       return import('../Download/Download.ipc.js')
     case ModuleId.EditorError:

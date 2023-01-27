@@ -2,7 +2,6 @@ export const Audio = 1
 export const ClipBoard = 2
 export const Css = 3
 export const Developer = 4
-export const Dialog = 5
 export const Download = 6
 export const EditorController = 7
 export const EditorError = 8
