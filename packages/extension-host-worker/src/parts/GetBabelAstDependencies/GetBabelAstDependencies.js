@@ -2,7 +2,6 @@ export const getBabelAstDependencies = (code, ast) => {
   const { program } = ast
   const { body } = program
   const dependencies = []
-  console.log({ code, ast })
   for (const node of body) {
     if (node.type === 'ImportDeclaration' || node.type === 'ExportAllDeclaration') {
       const relativePath = node.source.extra.rawValue
