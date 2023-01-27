@@ -15,11 +15,6 @@ export const getModuleId = (commandId) => {
     case 'Developer.getMemoryUsage':
     case 'Developer.showState':
       return ModuleId.Developer
-    case 'Dialog.alert':
-    case 'Dialog.close':
-    case 'Dialog.prompt':
-    case 'Dialog.showErrorDialogWithOptions':
-      return ModuleId.Dialog
     case 'Download.downloadFile':
       return ModuleId.Download
     case 764:
