@@ -1,4 +1,4 @@
-export const name = 'sample.error-cannot-read-properties-of-null'
+export const name = 'sample.error-cannot-read-properties-of-null-reading-value'
 
 export const test = async ({ Extension, QuickPick, Locator, expect }) => {
   // arrange
