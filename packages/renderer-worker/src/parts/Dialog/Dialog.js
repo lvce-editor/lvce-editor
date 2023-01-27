@@ -88,6 +88,22 @@ export const openFile = () => {
   }
 }
 
+export const handleClick = async (index) => {
+  const { options } = state.dialog
+  const option = options[index]
+  // TODO handle case when index is out of bounds
+  switch (option) {
+    case 'Show Command Output':
+      const uri = `data://`
+      await Command.execute(/* Main.openUri */ 'Main.openUri', uri)
+      // TODO show stderr in editor
+      // TODO close dialog
+      break
+    default:
+      break
+  }
+}
+
 export const showMessage = async (message, options) => {
   if (state.dialog) {
     console.info('cannot show multiple dialogs at the same time', message)
