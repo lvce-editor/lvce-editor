@@ -89,6 +89,7 @@ export const openFile = () => {
 }
 
 export const handleClick = async (index) => {
+  // @ts-ignore
   const { options } = state.dialog
   const option = options[index]
   // TODO handle case when index is out of bounds
