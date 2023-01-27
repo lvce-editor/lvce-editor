@@ -154,7 +154,7 @@ const copyElectronResult = async ({ config, version, product }) => {
 
 const renameReleaseFile = async ({ config, version, product }) => {
   const finalFileName = getFinalFileName({ config, version, product })
-  const releaseFileName = getReleaseFileName(config)
+  const releaseFileName = getReleaseFileName({ config, product })
   const releaseFilePath = `build/.tmp/releases/${releaseFileName}`
   await Rename.rename({
     from: finalFileName,
