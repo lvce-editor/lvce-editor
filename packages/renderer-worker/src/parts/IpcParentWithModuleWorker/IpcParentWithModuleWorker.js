@@ -1,5 +1,6 @@
 import * as GetWorkerDisplayName from '../GetWorkerDisplayName/GetWorkerDisplayName.js'
 import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerError.js'
+import { ModuleWorkersAreNotSupportedInFirefoxError } from '../ModuleWorkersAreNotSupportedInFirefoxError/ModuleWorkersAreNotSupportedInFirefoxError.js'
 import * as WorkerType from '../WorkerType/WorkerType.js'
 
 const tryToGetActualErrorMessage = async ({ url, name }) => {
@@ -48,7 +49,7 @@ export const create = async ({ url, name }) => {
         cleanup()
         if (IsFirefoxWorkerError.isFirefoxWorkerError(event.message)) {
           event.preventDefault()
-          reject(new Error('module workers are not supported in firefox'))
+          reject(new ModuleWorkersAreNotSupportedInFirefoxError())
         } else {
           const actualErrorMessage = await tryToGetActualErrorMessage({
             url,
@@ -62,7 +63,7 @@ export const create = async ({ url, name }) => {
     })
     return worker
   } catch (error) {
-    if (error && error instanceof Error && error.message === 'module workers are not supported in firefox') {
+    if (error && error instanceof ModuleWorkersAreNotSupportedInFirefoxError) {
       const IpcParentWithMessagePort = await import('../IpcParentWithMessagePort/IpcParentWithMessagePort.js')
       return IpcParentWithMessagePort.create({ url })
     }
