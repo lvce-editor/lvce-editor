@@ -16,6 +16,53 @@ const state = {
   session: undefined,
 }
 
+const handleHeadersReceivedMainFrame = (responseHeaders) => {
+  return {
+    responseHeaders: {
+      ...responseHeaders,
+      [ContentSecurityPolicy.key]: ContentSecurityPolicy.value,
+      [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
+      [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+    },
+  }
+}
+
+const handleHeadersReceivedSubFrame = (responseHeaders) => {
+  return {
+    responseHeaders: {
+      ...responseHeaders,
+      [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
+      [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+    },
+  }
+}
+
+const handleHeadersReceivedDefault = (responseHeaders, url) => {
+  if (url.endsWith('WorkerMain.js')) {
+    return {
+      responseHeaders: {
+        ...responseHeaders,
+        [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+        [ContentSecurityPolicyWorker.key]: ContentSecurityPolicyWorker.value,
+      },
+    }
+  }
+  return {
+    responseHeaders,
+  }
+}
+
+const getHeadersReceivedFunction = (resourceType) => {
+  switch (resourceType) {
+    case ElectronResourceType.MainFrame:
+      return handleHeadersReceivedMainFrame
+    case ElectronResourceType.SubFrame:
+      return handleHeadersReceivedSubFrame
+    default:
+      return handleHeadersReceivedDefault
+  }
+}
+
 /**
  *
  * @param {import('electron').OnHeadersReceivedListenerDetails} details
@@ -23,42 +70,8 @@ const state = {
  */
 const handleHeadersReceived = (details, callback) => {
   const { responseHeaders, resourceType, url } = details
-  switch (resourceType) {
-    case ElectronResourceType.MainFrame:
-      callback({
-        responseHeaders: {
-          ...responseHeaders,
-          [ContentSecurityPolicy.key]: ContentSecurityPolicy.value,
-          [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
-          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-        },
-      })
-      break
-    case ElectronResourceType.SubFrame:
-      callback({
-        responseHeaders: {
-          ...responseHeaders,
-          [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
-          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-        },
-      })
-      break
-    default:
-      if (url.endsWith('WorkerMain.js')) {
-        callback({
-          responseHeaders: {
-            ...responseHeaders,
-            [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-            [ContentSecurityPolicyWorker.key]: ContentSecurityPolicyWorker.value,
-          },
-        })
-        break
-      }
-      callback({
-        responseHeaders,
-      })
-      break
-  }
+  const fn = getHeadersReceivedFunction(resourceType)
+  callback(fn(responseHeaders, url))
 }
 
 const isAllowedPermission = (permission) => {
