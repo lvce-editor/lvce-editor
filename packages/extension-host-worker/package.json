@@ -1,5 +1,5 @@
 {
-  "name": "extension-host-worker",
+  "name": "@lvce-editor/extension-host-worker",
   "version": "0.0.0-dev",
   "description": "",
   "main": "src/extensionHostWorkerMain.js",

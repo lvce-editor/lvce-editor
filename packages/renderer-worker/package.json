@@ -1,5 +1,5 @@
 {
-  "name": "renderer-worker",
+  "name": "@lvce-editor/renderer-worker",
   "version": "0.0.0-dev",
   "description": "",
   "main": "src/rendererWorkerMain.js",
