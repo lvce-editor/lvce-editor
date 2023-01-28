@@ -1,3 +1,50 @@
+const walk = (node, visitor) => {
+  if (!node) {
+    return
+  }
+  if (Array.isArray(node)) {
+    for (const item of node) {
+      walk(item, visitor)
+    }
+    return
+  }
+  visitor(node)
+  switch (node.type) {
+    case 'File':
+      walk(node.program, visitor)
+      break
+    case 'Program':
+      walk(node.body, visitor)
+      break
+    case 'ExportNamedDeclaration':
+      walk(node.declaration, visitor)
+      break
+    case 'VariableDeclaration':
+      walk(node.declarations, visitor)
+      break
+    case 'VariableDeclarator':
+      walk(node.init, visitor)
+      break
+    case 'ArrowFunctionExpression':
+      walk(node.body, visitor)
+      break
+    case 'BlockStatement':
+      walk(node.body, visitor)
+      break
+    case 'ExpressionStatement':
+      walk(node.expression, visitor)
+      break
+    case 'AwaitExpression':
+      walk(node.argument, visitor)
+      break
+    case 'CallExpression':
+      walk(node.callee, visitor)
+      break
+    default:
+      break
+  }
+}
+
 export const getBabelAstDependencies = (code, ast) => {
   const { program } = ast
   const { body } = program
@@ -29,5 +76,23 @@ export const getBabelAstDependencies = (code, ast) => {
       dependencies.push({ relativePath, code, start, end })
     }
   }
+
+  const visitor = (node) => {
+    if (
+      node &&
+      node.type === 'CallExpression' &&
+      node.callee &&
+      node.callee.type === 'Import' &&
+      node.arguments &&
+      node.arguments[0] &&
+      node.arguments[0].type === 'StringLiteral'
+    ) {
+      const relativePath = node.arguments[0].extra.rawValue
+      const start = node.arguments[0].start
+      const end = node.arguments[0].end
+      dependencies.push({ relativePath, code, start, end })
+    }
+  }
+  walk(ast, visitor)
   return dependencies
 }

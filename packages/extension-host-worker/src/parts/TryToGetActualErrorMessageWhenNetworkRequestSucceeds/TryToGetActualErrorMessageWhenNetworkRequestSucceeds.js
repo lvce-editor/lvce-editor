@@ -28,6 +28,7 @@ const getErrorInDependencies = async (url, dependencies) => {
     }
   }
 }
+
 /**
  *
  * @param {string} url
