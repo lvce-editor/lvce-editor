@@ -6,10 +6,11 @@ import { DependencyNotFoundError } from '../DependencyNotFoundError/DependencyNo
 import * as GetBabelAstDependencies from '../GetBabelAstDependencies/GetBabelAstDependencies.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as IsBabelParseError from '../IsBabelParseError/IsBabelParseError.js'
+import * as Url from '../Url/Url.js'
 
 const getErrorInDependencies = async (url, dependencies) => {
   for (const dependency of dependencies) {
-    const dependencyUrl = new URL(dependency.relativePath, url).toString()
+    const dependencyUrl = Url.getAbsoluteUrl(dependency.relativePath, url)
     // let dependencyResponse
     // try {
     const dependencyResponse = await fetch(dependencyUrl)
