@@ -44,7 +44,7 @@ test(
         },
         {
           type: TextSearchResultType.Match,
-          lineNumber: 7,
+          lineNumber: 6,
           start: 11,
           end: 19,
           text: '    <title>Document</title>\n',
