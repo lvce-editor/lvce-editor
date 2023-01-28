@@ -1,5 +1,5 @@
 {
-  "name": "main-process",
+  "name": "@lvce-editor/main-process",
   "version": "0.0.0-dev",
   "description": "",
   "main": "src/mainProcessMain.js",
