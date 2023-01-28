@@ -23,13 +23,7 @@ export const listen = (ipc) => {
     const message = event.data
     if ('method' in message) {
       const response = await GetResponse.getResponse(message)
-      try {
-        ipc.send(response)
-      } catch (error) {
-        await ErrorHandling.logError(error)
-        const errorResponse = GetResponse.getErrorResponse(message, error)
-        ipc.send(errorResponse)
-      }
+      ipc.send(response)
     } else if ('result' in message) {
       Callback.resolve(message.id, message)
     } else if ('error' in message) {
