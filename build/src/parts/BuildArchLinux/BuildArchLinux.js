@@ -121,7 +121,7 @@ const createMTree = async () => {
 }
 
 const compress = async ({ product }) => {
-  const cwd = `build/.tmp/arch-linux/x64`
+  const cwd = Path.absolute(`build/.tmp/arch-linux/x64`)
   const outFile = Path.absolute(`build/.tmp/releases/${product.applicationName}.tar.xz`)
   const otherDirents = await getOtherDirents()
   await Mkdir.mkdir(`build/.tmp/releases`)
