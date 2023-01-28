@@ -288,6 +288,13 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
     occurrence: '/icons',
     replacement: `${pathPrefix}/${commitHash}/icons`,
   })
+  if (pathPrefix) {
+    await Replace.replace({
+      path: `build/.tmp/dist/manifest.json`,
+      occurrence: '"start_url": "/"',
+      replacement: `"start_url": "${pathPrefix}/"`,
+    })
+  }
   await Replace.replace({
     path: `build/.tmp/dist/serviceWorker.js`,
     occurrence: `const CACHE_STATIC_NAME = 'static-v4'`,
