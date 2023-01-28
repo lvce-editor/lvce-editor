@@ -62,9 +62,12 @@ const handleHeadersReceived = (details, callback) => {
 }
 
 const isAllowedPermission = (permission) => {
+  console.log({ permission })
   switch (permission) {
     case ElectronPermissionType.ClipBoardRead:
     case ElectronPermissionType.ClipBoardSanitizedWrite:
+    case ElectronPermissionType.FullScreen:
+    case ElectronPermissionType.WindowPlacement:
       return true
     default:
       return false
