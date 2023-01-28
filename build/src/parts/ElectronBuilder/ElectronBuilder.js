@@ -64,7 +64,7 @@ const runElectronBuilder = async ({ config }) => {
   }
 }
 
-const copyBuildResources = async () => {
+const copyBuildResources = async ({ config }) => {
   await Copy.copyFile({
     from: `build/files/icon.png`,
     to: 'build/.tmp/electron-builder/build/icon.png',
@@ -73,6 +73,16 @@ const copyBuildResources = async () => {
     from: `build/files/icon.png`,
     to: 'build/.tmp/electron-builder/build/icons/512x512.png',
   })
+  if (config === 'electron_builder_windows_exe') {
+    await Copy.copyFile({
+      from: `build/files/windows/installer.nsh`,
+      to: `build/.tmp/electron-builder/build/installer.nsh`,
+    })
+    await Copy.copyFile({
+      from: `build/files/windows/EnvVarUpdate.nsh`,
+      to: `build/.tmp/electron-builder/build/EnvVarUpdate.nsh`,
+    })
+  }
 }
 
 const getFinalFileName = ({ config, version, product }) => {
@@ -186,7 +196,7 @@ export const build = async ({ config, product }) => {
   console.timeEnd('copyElectronBuilderConfig')
 
   console.time('copyBuildResources')
-  await copyBuildResources()
+  await copyBuildResources({ config })
   console.timeEnd('copyBuildResources')
 
   console.time('runElectronBuilder')
