@@ -228,6 +228,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   }
   await replace(Path.join(root, 'dist', 'manifest.json'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
   await replace(Path.join(root, 'dist', commitHash, 'css', 'parts', 'ViewletTitleBarButtons.css'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
+  await replace(Path.join(root, 'dist', commitHash, 'css', 'App.css'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
 }
 
 const addExtensionSeo = async ({ root, name, description }) => {
