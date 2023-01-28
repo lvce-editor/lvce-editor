@@ -1,6 +1,7 @@
 import * as Callback from '../Callback/Callback.js'
-import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
+import * as GetResponse from '../GetResponse/GetResponse.js'
 
 export const state = {
   /**
@@ -27,7 +28,7 @@ export const listen = (ipc) => {
         ipc.send(response)
       } catch (error) {
         await ErrorHandling.logError(error)
-        const errorResponse = GetResponse.getErrorResponse(message, error)
+        const errorResponse = GetErrorResponse.getErrorResponse(message, error)
         ipc.send(errorResponse)
       }
     } else if ('result' in message) {
