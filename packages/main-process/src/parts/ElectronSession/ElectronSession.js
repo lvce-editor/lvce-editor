@@ -62,7 +62,6 @@ const handleHeadersReceived = (details, callback) => {
 }
 
 const isAllowedPermission = (permission) => {
-  console.log({ permission })
   switch (permission) {
     case ElectronPermissionType.ClipBoardRead:
     case ElectronPermissionType.ClipBoardSanitizedWrite:
