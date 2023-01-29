@@ -3,6 +3,7 @@ import * as GetWorkerDisplayName from '../GetWorkerDisplayName/GetWorkerDisplayN
 export const tryToGetActualErrorMessage = async ({ url, name }) => {
   const displayName = GetWorkerDisplayName.getWorkerDisplayName(name)
   try {
+    globalThis.DONT_EXECUTE = 1
     await import(url)
     return `Failed to start ${displayName}: Unknown Error`
   } catch (error) {
