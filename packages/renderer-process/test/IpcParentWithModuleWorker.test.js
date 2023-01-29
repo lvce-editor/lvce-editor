@@ -119,7 +119,7 @@ test('create - error - not found', async () => {
     })
   ).rejects.toThrowError(
     new Error(
-      "Failed to start renderer worker: Error: Cannot find module 'https://example.com/not-found.js' from 'src/parts/IpcParentWithModuleWorker/IpcParentWithModuleWorker.js'"
+      "Failed to start renderer worker: Error: Cannot find module 'https://example.com/not-found.js' from 'src/parts/TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js'"
     )
   )
 })
