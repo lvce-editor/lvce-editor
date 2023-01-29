@@ -1,3 +1,5 @@
+import * as FirstWorkerEventType from '../FirstWorkerEventType/FirstWorkerEventType.js'
+import * as GetFirstWorkerEvent from '../GetFirstWorkerEvent/GetFirstWorkerEvent.js'
 import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerError.js'
 import { ModuleWorkersAreNotSupportedInFirefoxError } from '../ModuleWorkersAreNotSupportedInFirefoxError/ModuleWorkersAreNotSupportedInFirefoxError.js'
 import * as TryToGetActualWorkerErrorMessage from '../TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js'
@@ -9,35 +11,26 @@ export const create = async ({ url, name }) => {
       type: WorkerType.Module,
       name,
     })
-    await new Promise((resolve, reject) => {
-      const cleanup = () => {
-        worker.onmessage = null
-        worker.onerror = null
-      }
-      const handleFirstMessage = (event) => {
-        cleanup()
-        if (event.data === 'ready') {
-          resolve(undefined)
-        } else {
-          reject(new Error('unexpected first message from worker'))
+    const { type, event } = await GetFirstWorkerEvent.getFirstWorkerEvent(worker)
+    switch (type) {
+      case FirstWorkerEventType.Message:
+        if (event.data !== 'ready') {
+          throw new Error('unexpected first message from worker')
         }
-      }
-      const handleFirstError = async (event) => {
-        cleanup()
+        break
+      case FirstWorkerEventType.Error:
         if (IsFirefoxWorkerError.isFirefoxWorkerError(event.message)) {
           event.preventDefault()
-          reject(new ModuleWorkersAreNotSupportedInFirefoxError())
-        } else {
-          const actualErrorMessage = await TryToGetActualWorkerErrorMessage.tryToGetActualErrorMessage({
-            url,
-            name,
-          })
-          reject(new Error(actualErrorMessage))
+          throw new ModuleWorkersAreNotSupportedInFirefoxError()
         }
-      }
-      worker.onmessage = handleFirstMessage
-      worker.onerror = handleFirstError
-    })
+        const actualErrorMessage = await TryToGetActualWorkerErrorMessage.tryToGetActualErrorMessage({
+          url,
+          name,
+        })
+        throw new Error(actualErrorMessage)
+      default:
+        break
+    }
     return worker
   } catch (error) {
     if (error && error instanceof ModuleWorkersAreNotSupportedInFirefoxError) {
