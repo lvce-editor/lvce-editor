@@ -249,6 +249,13 @@ const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
   })
 }
 
+const copyPdfWorkerFiles = async ({ commitHash }) => {
+  await Copy.copy({
+    from: 'packages/pdf-worker/src',
+    to: `build/.tmp/dist/${commitHash}/packages/pdf-worker/src`,
+  })
+}
+
 const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
   const commitHash = await CommitHash.getCommitHash()
   await Copy.copy({
@@ -702,6 +709,10 @@ export const build = async () => {
   Console.time('copyExtensionHostWorkerFiles')
   await copyExtensionHostWorkerFiles({ commitHash })
   Console.timeEnd('copyExtensionHostWorkerFiles')
+
+  Console.time('copyPdfWorkerFiles')
+  await copyPdfWorkerFiles({ commitHash })
+  Console.timeEnd('copyPdfWorkerFiles')
 
   Console.time('applyJsOverrides')
   await applyJsOverrides({ pathPrefix, commitHash })
