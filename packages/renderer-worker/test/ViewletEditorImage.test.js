@@ -3,6 +3,7 @@
  */
 import * as ViewletEditorImage from '../src/parts/ViewletEditorImage/ViewletEditorImage.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting DOMMatrixReadonly
@@ -400,7 +401,7 @@ test('handleImageError - not found', async () => {
   globalThis.fetch = () => {
     return {
       ok: false,
-      status: 404,
+      status: HttpStatusCode.NotFound,
     }
   }
   const state = {
