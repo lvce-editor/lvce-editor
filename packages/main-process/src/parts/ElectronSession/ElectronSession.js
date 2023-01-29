@@ -1,13 +1,13 @@
-const Electron = require('electron')
 const ContentSecurityPolicy = require('../ContentSecurityPolicy/ContentSecurityPolicy.js')
 const ContentSecurityPolicyWorker = require('../ContentSecurityPolicyWorker/ContentSecurityPolicyWorker.js')
 const CrossOriginEmbedderPolicy = require('../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js')
 const CrossOriginOpenerPolicy = require('../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js')
+const Electron = require('electron')
 const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
+const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.js')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const Root = require('../Root/Root.js')
-const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.js')
 
 const state = {
   /**
