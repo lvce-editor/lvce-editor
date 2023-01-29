@@ -1,30 +1,7 @@
-import * as GetWorkerDisplayName from '../GetWorkerDisplayName/GetWorkerDisplayName.js'
 import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerError.js'
 import { ModuleWorkersAreNotSupportedInFirefoxError } from '../ModuleWorkersAreNotSupportedInFirefoxError/ModuleWorkersAreNotSupportedInFirefoxError.js'
+import * as TryToGetActualWorkerErrorMessage from '../TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js'
 import * as WorkerType from '../WorkerType/WorkerType.js'
-
-const tryToGetActualErrorMessage = async ({ url, name }) => {
-  const displayName = GetWorkerDisplayName.getWorkerDisplayName(name)
-  try {
-    await import(url)
-    return `Failed to start ${displayName}: Unknown Error`
-  } catch (error) {
-    if (error && error instanceof Error && error.message.startsWith('Failed to fetch dynamically imported module')) {
-      try {
-        const response = await fetch(url)
-        switch (response.status) {
-          case 404:
-            return `Failed to start ${displayName}: Not found (404)`
-          default:
-            return `Failed to start ${displayName}: Unknown Network Error`
-        }
-      } catch {
-        return `Failed to start ${displayName}: Unknown Network Error`
-      }
-    }
-    return `Failed to start ${displayName}: ${error}`
-  }
-}
 
 export const create = async ({ url, name }) => {
   try {
@@ -51,7 +28,7 @@ export const create = async ({ url, name }) => {
           event.preventDefault()
           reject(new ModuleWorkersAreNotSupportedInFirefoxError())
         } else {
-          const actualErrorMessage = await tryToGetActualErrorMessage({
+          const actualErrorMessage = await TryToGetActualWorkerErrorMessage.tryToGetActualErrorMessage({
             url,
             name,
           })
