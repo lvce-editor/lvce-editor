@@ -4,6 +4,7 @@ import * as BlobSrc from '../BlobSrc/BlobSrc.js'
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as WheelEvent from '../WheelEvent/WheelEvent.js'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 
 /**
  * @enum {string}
@@ -207,7 +208,7 @@ const getActualError = async (src) => {
     const response = await fetch(src)
     if (!response.ok) {
       switch (response.status) {
-        case 404:
+        case HttpStatusCode.NotFound:
           return I18nString.i18nString(UiStrings.ImageNotFound)
         default:
           return I18nString.i18nString(UiStrings.ImageCouldNotBeLoaded)
