@@ -226,6 +226,13 @@ const copyExtensionHostHelperProcessSources = async ({ arch }) => {
   })
 }
 
+const copyPdfWorkerSources = async ({ arch }) => {
+  await Copy.copy({
+    from: 'packages/pdf-worker/src',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/pdf-worker/src`,
+  })
+}
+
 const copyExtensions = async ({ arch }) => {
   await Copy.copy({
     from: 'extensions',
@@ -348,6 +355,10 @@ export const build = async ({ product }) => {
   console.time('copyExtensionHostHelperProcessSources')
   await copyExtensionHostHelperProcessSources({ arch })
   console.timeEnd('copyExtensionHostHelperProcessSources')
+
+  console.time('copyPdfWorkerSources')
+  await copyPdfWorkerSources({ arch })
+  console.timeEnd('copyPdfWorkerSources')
 
   console.time('copyExtensions')
   await copyExtensions({ arch })
