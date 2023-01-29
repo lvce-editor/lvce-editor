@@ -1,4 +1,5 @@
 import * as Json from '../Json/Json.js'
+import * as WaitForWebSocketToBeOpen from '../WaitForWebSocketToBeOpen/WaitForWebSocketToBeOpen.js'
 import * as WebSocketProtocol from '../WebSocketProtocol/WebSocketProtocol.js'
 
 const getWsUrl = () => {
@@ -10,12 +11,7 @@ export const create = async ({ protocol }) => {
   // TODO replace this during build
   const wsUrl = getWsUrl()
   const webSocket = new WebSocket(wsUrl, [protocol])
-  await new Promise((resolve) => {
-    webSocket.onopen = () => {
-      webSocket.onopen = null
-      resolve(undefined)
-    }
-  })
+  await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
   return webSocket
 }
 
