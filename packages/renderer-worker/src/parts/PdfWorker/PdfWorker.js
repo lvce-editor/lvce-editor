@@ -15,11 +15,12 @@ export const create = async ({ method }) => {
   const ipc = await PdfWorkerIpc.create({ method })
   ipc.onmessage = handleMessage
   return {
+    ipc,
     send(message) {
-      ipc.send(message)
+      this.ipc.send(message)
     },
     sendAndTransfer(message, transfer) {
-      ipc.sendAndTransfer(message, transfer)
+      this.ipc.sendAndTransfer(message, transfer)
     },
   }
 }
