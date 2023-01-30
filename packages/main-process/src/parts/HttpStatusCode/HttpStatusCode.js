@@ -1,0 +1,1 @@
+exports.NotFound = 404
