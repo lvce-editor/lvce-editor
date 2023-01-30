@@ -1,4 +1,5 @@
 import * as GetWorkerDisplayName from '../GetWorkerDisplayName/GetWorkerDisplayName.js'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 
 export const tryToGetActualErrorMessage = async ({ url, name }) => {
   const displayName = GetWorkerDisplayName.getWorkerDisplayName(name)
@@ -10,7 +11,7 @@ export const tryToGetActualErrorMessage = async ({ url, name }) => {
       try {
         const response = await fetch(url)
         switch (response.status) {
-          case 404:
+          case HttpStatusCode.NotFound:
             return `Failed to start ${displayName}: Not found (404)`
           default:
             return `Failed to start ${displayName}: Unknown Network Error`
