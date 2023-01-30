@@ -19,6 +19,8 @@
     "Thumbs.db": true
   },
 
+  "languages.jsFilesAsJsx": false,
+
   "search.threads": 1,
 
   "sessionReplay.enabled": false,
