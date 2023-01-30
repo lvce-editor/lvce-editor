@@ -247,3 +247,10 @@ test('getIcon - block device', () => {
     })
   ).toBe('_file')
 })
+
+test('getFileIcon - match by long extension', () => {
+  IconTheme.state.iconTheme = {
+    fileExtensions: { 'd.ts': '_f_dts', ts: '_f_ts' },
+  }
+  expect(IconTheme.getFileIcon({ name: 'test.d.ts' })).toBe('_f_dts')
+})

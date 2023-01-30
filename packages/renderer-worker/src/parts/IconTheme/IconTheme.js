@@ -55,7 +55,7 @@ const getIconThemeJson = async (iconThemeId) => {
 }
 
 const getExtension = (file) => {
-  return file.slice(file.lastIndexOf('.') + 1).toLowerCase()
+  return file.slice(file.indexOf('.') + 1).toLowerCase()
 }
 
 export const getFileIcon = (file) => {
