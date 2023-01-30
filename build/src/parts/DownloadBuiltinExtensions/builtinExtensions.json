@@ -10,6 +10,11 @@
     "version": "0.0.4"
   },
   {
+    "name": "builtin.language-basics-jsx",
+    "repository": "github.com/lvce-editor/language-basics-jsx",
+    "version": "0.0.1"
+  },
+  {
     "name": "builtin.language-basics-coffeescript",
     "repository": "github.com/lvce-editor/language-basics-coffeescript",
     "version": "0.0.4"
@@ -277,6 +282,6 @@
   {
     "name": "builtin.vscode-icons",
     "repository": "github.com/lvce-editor/vscode-icons",
-    "version": "0.0.8"
+    "version": "0.0.9"
   }
 ]

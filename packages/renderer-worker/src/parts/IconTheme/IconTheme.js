@@ -83,6 +83,12 @@ export const getFileIcon = (file) => {
     if (languageIcon) {
       return languageIcon
     }
+    if (languageId === 'jsx') {
+      const alternativeFileIcon = iconTheme.languageIds['javascript']
+      if (alternativeFileIcon) {
+        return alternativeFileIcon
+      }
+    }
   }
   return DefaultIcon.File
 }
