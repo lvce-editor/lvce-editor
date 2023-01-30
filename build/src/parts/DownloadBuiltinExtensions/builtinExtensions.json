@@ -125,6 +125,11 @@
     "version": "0.0.6"
   },
   {
+    "name": "builtin.language-basics-mdx",
+    "repository": "github.com/lvce-editor/language-basics-mdx",
+    "version": "0.0.1"
+  },
+  {
     "name": "builtin.language-basics-nvmrc",
     "repository": "github.com/lvce-editor/language-basics-nvmrc",
     "version": "0.0.1"
