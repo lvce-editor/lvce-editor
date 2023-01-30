@@ -26,10 +26,7 @@ const getName = (extension) => {
 const getHttpErrorMessage = (error) => {
   try {
     const body = error.response.body
-    if (
-      error.response.url.includes('api.github.com') &&
-      typeof body === 'string'
-    ) {
+    if (error.response.url.includes('api.github.com') && typeof body === 'string') {
       const json = JSON.parse(body)
       if (json.message) {
         const message = json.message
@@ -49,8 +46,11 @@ const getHttpErrorMessage = (error) => {
   return `${error.message}`
 }
 
-const parseVersionFromUrl = (url) => {
+const parseVersionFromUrl = (url, repository) => {
   if (!url.includes('releases/tag')) {
+    if (url.endsWith('/releases')) {
+      throw new Error(`no releases found for ${repository}`)
+    }
     throw new Error(`cannot parse release version from url ${url}`)
   }
   const slashIndex = url.lastIndexOf('/')
@@ -63,18 +63,14 @@ const parseVersionFromUrl = (url) => {
 
 const getLatestReleaseVersion = async (repository) => {
   try {
-    const json = await got.head(
-      `https://github.com/${repository}/releases/latest`
-    )
+    const json = await got.head(`https://github.com/${repository}/releases/latest`)
     const finalUrl = json.url
-    const version = parseVersionFromUrl(finalUrl)
+    const version = parseVersionFromUrl(finalUrl, repository)
     return version
   } catch (error) {
     if (error instanceof HTTPError) {
       const httpErrorMessage = getHttpErrorMessage(error)
-      throw new VError(
-        `Failed to get latest release for ${repository}: ${httpErrorMessage}`
-      )
+      throw new VError(`Failed to get latest release for ${repository}: ${httpErrorMessage}`)
     }
     // @ts-ignore
     throw new VError(error, `Failed to get latest release for ${repository}`)
@@ -107,31 +103,16 @@ const getNewBuiltinExtensions = (builtinExtensions, versions) => {
 const updateBuiltinExtensions = async () => {
   const start = performance.now()
   const repositories = builtinExtensions.map(getName).map(getRepository)
-  const newVersions = await Promise.all(
-    repositories.map(getLatestReleaseVersion)
-  )
-  const newBuiltinExtensions = getNewBuiltinExtensions(
-    builtinExtensions,
-    newVersions
-  )
+  const newVersions = await Promise.all(repositories.map(getLatestReleaseVersion))
+  const newBuiltinExtensions = getNewBuiltinExtensions(builtinExtensions, newVersions)
   const end = performance.now()
   const duration = end - start
   const diffCount = getDiffCount(builtinExtensions, newBuiltinExtensions)
   if (diffCount === 0) {
     Logger.info(`All releases are up to date in ${duration}ms`)
   } else {
-    const builtinExtensionsPath = join(
-      Root.root,
-      'build',
-      'src',
-      'parts',
-      'DownloadBuiltinExtensions',
-      'builtinExtensions.json'
-    )
-    await writeFile(
-      builtinExtensionsPath,
-      JSON.stringify(newBuiltinExtensions, null, 2) + '\n'
-    )
+    const builtinExtensionsPath = join(Root.root, 'build', 'src', 'parts', 'DownloadBuiltinExtensions', 'builtinExtensions.json')
+    await writeFile(builtinExtensionsPath, JSON.stringify(newBuiltinExtensions, null, 2) + '\n')
     // TODO print which releases were updated
     if (diffCount === 1) {
       Logger.info(`Updated ${diffCount} release in ${duration}ms`)
@@ -146,11 +127,9 @@ const main = async () => {
   try {
     await updateBuiltinExtensions()
   } catch (error) {
-    if (
-      error &&
-      error instanceof Error &&
-      error.message.includes('rate limit')
-    ) {
+    if (error && error instanceof Error && error.message.includes('rate limit')) {
+      console.error(error.message)
+    } else if (error && error instanceof Error && error.message.includes('no releases found for')) {
       console.error(error.message)
     } else {
       console.error(error)
