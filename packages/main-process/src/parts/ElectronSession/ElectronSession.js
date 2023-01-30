@@ -8,6 +8,9 @@ const ElectronResourceType = require('../ElectronResourceType/ElectronResourceTy
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const Root = require('../Root/Root.js')
+const { existsSync } = require('node:fs')
+const { join } = require('node:path')
+const HttpStatusCode = require('../HttpStatusCode/HttpStatusCode.js')
 
 const state = {
   /**
@@ -52,12 +55,26 @@ const handleHeadersReceivedDefault = (responseHeaders, url) => {
   }
 }
 
+const handleHeadersReceivedXhr = (responseHeaders, url) => {
+  // workaround for electron bug
+  // when using fetch, it doesn't return a response for 404
+  // console.log({ url, responseHeaders })
+  return {
+    responseHeaders: {
+      ...responseHeaders,
+    },
+  }
+}
+
 const getHeadersReceivedFunction = (resourceType) => {
+  // console.log({ resourceType })
   switch (resourceType) {
     case ElectronResourceType.MainFrame:
       return handleHeadersReceivedMainFrame
     case ElectronResourceType.SubFrame:
       return handleHeadersReceivedSubFrame
+    case ElectronResourceType.Xhr:
+      return handleHeadersReceivedXhr
     default:
       return handleHeadersReceivedDefault
   }
@@ -128,6 +145,14 @@ const getAbsolutePath = (requestUrl) => {
 const handleRequest = (request, callback) => {
   // const path = join(__dirname, request.url.slice(6))
   const path = getAbsolutePath(request.url)
+  if (!existsSync(path)) {
+    // TODO doing this for every request is really slow
+    // but without this, fetch would not received a response for 404 requests
+    return callback({
+      statusCode: HttpStatusCode.NotFound,
+      path: join(__dirname, 'not-found.txt'),
+    })
+  }
   // console.log(request.url, '->', path)
   callback({
     path,
