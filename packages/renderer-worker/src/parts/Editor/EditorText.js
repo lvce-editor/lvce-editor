@@ -1,5 +1,8 @@
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
+import * as Languages from '../Languages/Languages.js'
+import * as Tokenizer from '../Tokenizer/Tokenizer.js'
+import * as TokenizePlainText from '../Tokenizer/TokenizePlainText.js'
 
 // const getTokens = (editor) => {
 //   const tokens = []
@@ -34,6 +37,8 @@ import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
 // }
 
 const getTokensFromCache = (result) => {
+  if (result.embedResult) {
+  }
   return result.tokens
 }
 
@@ -62,6 +67,8 @@ const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   const { hasArrayReturn, tokenizeLine, initialLineState } = tokenizer
   const tokenizeStartIndex = invalidStartIndex
   const tokenizeEndIndex = invalidStartIndex < endLineIndex ? endLineIndex : tokenizeStartIndex
+  const tokenizersToLoad = []
+  const embedResults = []
   for (let i = tokenizeStartIndex; i < tokenizeEndIndex; i++) {
     const lineState = i === 0 ? initialLineState : lineCache[i]
     const line = lines[i]
@@ -69,9 +76,48 @@ const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
 
     // TODO if lineCacheEnd matches the one before, skip tokenizing lines after
     lineCache[i + 1] = result
+    // console.log({ result })
+    if (result.embeddedLanguage) {
+      console.log({ line })
+      const { embeddedLanguage, embeddedLanguageStart, embeddedLanguageEnd } = result
+      const embeddedTokenizer = Tokenizer.getTokenizer(embeddedLanguage)
+      if (embeddedTokenizer && embeddedTokenizer !== TokenizePlainText) {
+        console.log({ embeddedTokenizer })
+        const embedResult = SafeTokenizeLine.safeTokenizeLine(
+          embeddedTokenizer.tokenizeLine,
+          line,
+          embeddedTokenizer.initialLineState,
+          embeddedTokenizer.hasArrayReturn
+        )
+        embedResult.TokenMap = embeddedTokenizer.TokenMap
+        embedResults.push(embedResult)
+        // result.embedResult = embedResult
+        // result.tokens = embedResult.tokens
+        // console.log({ embedResult })
+      } else {
+        tokenizersToLoad.push(embeddedLanguage)
+      }
+      // TODO fetch embedded tokenizers
+      // TODO tokenize part
+      // TODO merge tokens
+    }
+    const { tokens } = result
   }
-  editor.invalidStartIndex = Math.max(invalidStartIndex, tokenizeEndIndex)
-  return lineCache.slice(startLineIndex + 1, endLineIndex + 1).map(getTokensFromCache)
+  if (tokenizersToLoad.length === 0) {
+    editor.invalidStartIndex = Math.max(invalidStartIndex, tokenizeEndIndex)
+  }
+  return {
+    tokens: lineCache.slice(startLineIndex + 1, endLineIndex + 1).map(getTokensFromCache),
+    embedResults,
+    tokenizersToLoad,
+  }
+}
+
+export const loadTokenizers = async (languageIds) => {
+  console.log('load', languageIds)
+  for (const languageId of languageIds) {
+    await Tokenizer.loadTokenizer(languageId)
+  }
 }
 
 const invalidateLine = (editor, index) => {
@@ -168,7 +214,7 @@ const getDecorationClassName = (type) => {
   }
 }
 
-const getLineInfo = (line, tokens, decorations, TokenMap, lineOffset) => {
+const getLineInfo = (line, tokens, embeddedResults, decorations, TokenMap, lineOffset) => {
   let start = 0
   let end = 0
   const lineInfo = []
@@ -201,22 +247,40 @@ const getLineInfo = (line, tokens, decorations, TokenMap, lineOffset) => {
 
     end += tokenLength
     const text = line.slice(start, end)
-    const className = `Token ${extraClassName || TokenMap[tokenType] || 'Unknown'}`
-    lineInfo.push(text, className)
+    if (tokenType === 999 && embeddedResults.length > 0) {
+      const embeddedResult = embeddedResults[1]
+      const actualTokens = embeddedResult.tokens
+      console.log({ actualTokens })
+      for (let j = 0; j < actualTokens.length; j += 2) {
+        const tokenType = actualTokens[j]
+        const tokenLength = actualTokens[j + 1]
+        end += tokenLength
+        console.log({ tokenType })
+        const className = `Token ${embeddedResult.TokenMap[tokenType] || 'Unknown'}`
+        const text = line.slice(start, end)
+        lineInfo.push(text, className)
+        start = end
+      }
+      for (const token of actualTokens) {
+      }
+    } else {
+      const className = `Token ${extraClassName || TokenMap[tokenType] || 'Unknown'}`
+      lineInfo.push(text, className)
+    }
     start = end
   }
   return lineInfo
 }
 
 // TODO need lots of tests for this
-const getLineInfosViewport = (editor, tokens, minLineY, maxLineY, minLineOffset) => {
+const getLineInfosViewport = (editor, tokens, embedResults, minLineY, maxLineY, minLineOffset) => {
   const result = []
   const { lines, tokenizer, decorations } = editor
   const { TokenMap } = tokenizer
   let offset = minLineOffset
   for (let i = minLineY; i < maxLineY; i++) {
     const line = lines[i]
-    result.push(getLineInfo(line, tokens[i - minLineY], decorations, TokenMap, offset))
+    result.push(getLineInfo(line, tokens[i - minLineY], embedResults, decorations, TokenMap, offset))
     offset += line.length + 1
   }
   return result
@@ -230,8 +294,11 @@ export const getVisible = (editor) => {
   // editor.invalidStartIndex = changes[0].start.rowIndex
   const { minLineY, numberOfVisibleLines, lines } = editor
   const maxLineY = Math.min(minLineY + numberOfVisibleLines, lines.length)
-  const tokens = getTokensViewport(editor, minLineY, maxLineY)
+  const { tokens, tokenizersToLoad, embedResults } = getTokensViewport(editor, minLineY, maxLineY)
   const minLineOffset = TextDocument.offsetAt(editor, minLineY, 0)
-  const textInfos = getLineInfosViewport(editor, tokens, minLineY, maxLineY, minLineOffset)
+  const textInfos = getLineInfosViewport(editor, tokens, embedResults, minLineY, maxLineY, minLineOffset)
+  if (tokenizersToLoad.length > 0) {
+    loadTokenizers(tokenizersToLoad)
+  }
   return textInfos
 }

@@ -196,6 +196,7 @@ export const getState = (id) => {
 export const setState = async (id, newState) => {
   const instance = ViewletStates.getInstance(id)
   if (instance && instance.factory && instance.factory.hasFunctionalRender) {
+    console.log('render', id)
     const oldState = instance.state
     const commands = ViewletManager.render(instance.factory, oldState, newState)
     instance.state = newState
