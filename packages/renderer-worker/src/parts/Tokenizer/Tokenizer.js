@@ -1,4 +1,5 @@
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Languages from '../Languages/Languages.js'
 import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.js'
 
 export const state = {
