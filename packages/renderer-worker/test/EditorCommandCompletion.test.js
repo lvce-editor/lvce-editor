@@ -7,7 +7,7 @@ import * as EditorCommandCursorUp from '../src/parts/EditorCommand/EditorCommand
 import * as Languages from '../src/parts/Languages/Languages.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {

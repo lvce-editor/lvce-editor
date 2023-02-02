@@ -1,5 +1,5 @@
 import * as EditorCopyLineDown from '../src/parts/EditorCommand/EditorCommandCopyLineDown.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorCopyLineDown - cursor at start of line', () => {
