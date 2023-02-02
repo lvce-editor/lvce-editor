@@ -1,5 +1,5 @@
 import * as EditorGetSelectionFromNativeRange from '../src/parts/EditorCommand/EditorCommandGetSelectionFromNativeRange.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
 test('editorGetSelectionFromNativeRange', () => {
   const editor = {

@@ -1,5 +1,5 @@
 import * as EditorSelectAllRight from '../src/parts/EditorCommand/EditorCommandSelectAllRight.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectAllRight = at start', () => {

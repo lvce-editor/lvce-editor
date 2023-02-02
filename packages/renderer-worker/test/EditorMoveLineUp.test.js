@@ -1,5 +1,5 @@
 import * as EditorMoveLineUp from '../src/parts/EditorCommand/EditorCommandMoveLineUp.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
 test.skip('editorMoveLineUp', () => {
   const editor = {

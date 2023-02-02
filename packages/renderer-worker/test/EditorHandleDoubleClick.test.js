@@ -15,7 +15,7 @@ jest.unstable_mockModule('../src/parts/EditorCommand/EditorCommandPosition.js', 
 
 const EditorPosition = await import('../src/parts/EditorCommand/EditorCommandPosition.js')
 const EditorHandleDoubleClick = await import('../src/parts/EditorCommand/EditorCommandHandleDoubleClick.js')
-const TokenizePlainText = await import('../src/parts/Tokenizer/TokenizePlainText.js')
+const TokenizePlainText = await import('../src/parts/TokenizePlainText/TokenizePlainText.js')
 const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.js')
 
 test('editorHandleDoubleClick - with selection', () => {
