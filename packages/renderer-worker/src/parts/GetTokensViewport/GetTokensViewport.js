@@ -1,5 +1,5 @@
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
-import * as TokenizePlainText from '../Tokenizer/TokenizePlainText.js'
+import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 
 const getTokensViewportEmbedded = (lines, lineCache, linesWithEmbed) => {

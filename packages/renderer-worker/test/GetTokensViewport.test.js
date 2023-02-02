@@ -14,7 +14,7 @@ jest.unstable_mockModule('../src/parts/Tokenizer/Tokenizer.js', () => {
 
 const GetTokensViewport = await import('../src/parts/GetTokensViewport/GetTokensViewport.js')
 const Tokenizer = await import('../src/parts/Tokenizer/Tokenizer.js')
-const TokenizePlainText = await import('../src/parts/Tokenizer/TokenizePlainText.js')
+const TokenizePlainText = await import('../src/parts/TokenizePlainText/TokenizePlainText.js')
 
 test('getTokensViewport', () => {
   const editor = {
