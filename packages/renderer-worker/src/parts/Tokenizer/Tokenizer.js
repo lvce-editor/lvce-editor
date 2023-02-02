@@ -43,7 +43,6 @@ export const loadTokenizer = async (languageId) => {
     console.error(error)
     return
   }
-  console.log('emit', languageId)
   GlobalEventBus.emitEvent('tokenizer.changed', languageId)
 }
 

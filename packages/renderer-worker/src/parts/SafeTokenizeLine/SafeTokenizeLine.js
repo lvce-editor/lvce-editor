@@ -13,12 +13,7 @@ const flattenTokensArray = (tokens) => {
  * @param {boolean} hasArrayReturn
  * @returns
  */
-export const safeTokenizeLine = (
-  tokenizeLine,
-  line,
-  lineStateAtStart,
-  hasArrayReturn
-) => {
+export const safeTokenizeLine = (tokenizeLine, line, lineStateAtStart, hasArrayReturn) => {
   try {
     const lineState = tokenizeLine(line, lineStateAtStart)
     if (!lineState || !lineState.tokens || !lineState.state) {

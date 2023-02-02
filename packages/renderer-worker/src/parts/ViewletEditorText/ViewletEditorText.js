@@ -24,7 +24,6 @@ const getContent = async (uri) => {
 
 // TODO how to connect this function with tokenizer?
 export const handleTokenizeChange = () => {
-  console.log('hanlde change')
   const instances = ViewletStates.getAllInstances()
   const instance = instances.EditorText
   if (!instance) {
@@ -172,7 +171,6 @@ export const handleEditorChange = async (editor, changes) => {
 }
 
 export const contentLoadedEffects = async (state) => {
-  console.log('add listenr')
   // TODO dispose listener
   // TODO don't like side effect here, where to put it?
   // GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
