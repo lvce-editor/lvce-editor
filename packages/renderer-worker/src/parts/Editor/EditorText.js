@@ -35,13 +35,6 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 //   return tokens
 // }
 
-// const getTokensFromCache = (result) => {
-//   if (result.actualResult) {
-//     return result.actualResult.tokens
-//   }
-//   return result.tokens
-// }
-
 // TODO vscode has an interesting approach for tokenizing:
 // first, the viewport is tokenized from startLine to endLine
 // the first iteration might not be accurate because for example
