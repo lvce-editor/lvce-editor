@@ -314,7 +314,8 @@ const renderLines = {
       oldState.lines === newState.lines &&
       oldState.tokenizer === newState.tokenizer &&
       oldState.minLineY === newState.minLineY &&
-      oldState.decorations === newState.decorations
+      oldState.decorations === newState.decorations &&
+      oldState.embeds === newState.embeds
     )
   },
   apply(oldState, newState) {

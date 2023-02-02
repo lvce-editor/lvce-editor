@@ -1,11 +1,32 @@
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
 import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.js'
+import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as TokenizerState from '../TokenizerState/TokenizerState.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const getTokenizePath = (languageId) => {
   const tokenizePath = Languages.getTokenizeFunctionPath(languageId)
   return tokenizePath
+}
+
+export const handleTokenizeChange = async () => {
+  const instances = ViewletStates.getAllInstances()
+  const instance = instances.EditorText
+  if (!instance) {
+    return
+  }
+  const state = instance.state
+  if (!TokenizerState.isConnectedEditor(state.id)) {
+    return
+  }
+  const tokenizer = Tokenizer.getTokenizer(state.languageId)
+  const newState = {
+    ...instance.state,
+    tokenizer,
+    embeds: [], // force rendering
+  }
+  await Viewlet.setState('EditorText', newState)
 }
 
 // TODO loadTokenizer should be invoked from renderer worker
@@ -32,12 +53,11 @@ export const loadTokenizer = async (languageId) => {
     }
     TokenizerState.set(languageId, tokenizer)
   } catch (error) {
-    TokenizerState.set(languageId, TokenizePlainText)
     // TODO better error handling
     console.error(error)
     return
   }
-  GlobalEventBus.emitEvent('tokenizer.changed', languageId)
+  await handleTokenizeChange()
 }
 
 export const getTokenizer = (languageId) => {
@@ -48,4 +68,12 @@ export const getTokenizer = (languageId) => {
     return TokenizePlainText
   }
   return TokenizePlainText
+}
+
+export const addConnectedEditor = (id) => {
+  TokenizerState.addConnectedEditor(id)
+}
+
+export const removeConnectedEditor = (id) => {
+  TokenizerState.removeConnectedEditor(id)
 }
