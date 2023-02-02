@@ -1,8 +1,9 @@
+import { jest } from '@jest/globals'
 import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { jest } from '@jest/globals'
 import * as Tokenizer from '../src/parts/Tokenizer/Tokenizer.js'
+import * as TokenizerState from '../src/parts/TokenizerState/TokenizerState.js'
 
 const getTemporaryDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -22,18 +23,18 @@ test.skip('loadTokenizer', async () => {
 export const TokenMap = {}`
   )
   await writeFile(join(temporaryDir, 'package.json'), '{ "type": "module" }')
-  Tokenizer.state.tokenizePaths[id] = tokenizePath
+  TokenizerState.set(id, tokenizePath)
   await Tokenizer.loadTokenizer(id)
-  expect(Tokenizer.state.tokenizers[id]).toMatchObject({
+  expect(TokenizerState.get(id)).toMatchObject({
     tokenizeLine: expect.any(Function),
     TokenMap: expect.any(Object),
   })
 })
 
 test('loadTokenizer - fallback', async () => {
-  delete Tokenizer.state.tokenizePaths.test
+  TokenizerState.set('test', undefined)
   await Tokenizer.loadTokenizer('test')
-  expect(Tokenizer.state.tokenizers.test).not.toBeDefined()
+  expect(TokenizerState.get('test')).not.toBeDefined()
 })
 
 // TODO failing for some reason
@@ -42,9 +43,7 @@ test.skip('loadTokenizer - module not found', async () => {
   Tokenizer.state.tokenizePaths[id] = '/abc'
   const spy = jest.spyOn(console, 'error')
   await Tokenizer.loadTokenizer(id)
-  expect(spy).toHaveBeenCalledWith(
-    new Error('Cannot find module \'/abc\' from \'src/parts/Editor/Tokenizer.js\'')
-  )
+  expect(spy).toHaveBeenCalledWith(new Error("Cannot find module '/abc' from 'src/parts/Editor/Tokenizer.js'"))
   spy.mockRestore()
 })
 
@@ -54,7 +53,7 @@ test.skip('loadTokenizer - immediate error', async () => {
   const tokenizePath = join(temporaryDir, 'tokenize.js')
   await writeFile(tokenizePath, 'throw new TypeError("oops")')
   await writeFile(join(temporaryDir, 'package.json'), '{ "type": "module" }')
-  Tokenizer.state.tokenizePaths[id] = tokenizePath
+  TokenizerState.set(id, tokenizePath)
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   await Tokenizer.loadTokenizer(id)
   expect(spy).toHaveBeenCalledWith(new TypeError('oops'))
@@ -70,9 +69,7 @@ test.skip('loadTokenizer - tokenizeLine is not a function', async () => {
   Tokenizer.state.tokenizePaths[id] = tokenizePath
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   await Tokenizer.loadTokenizer(id)
-  expect(spy).toHaveBeenCalledWith(
-    `tokenizer.tokenizeLine should be a function in \"${tokenizePath}\"`
-  )
+  expect(spy).toHaveBeenCalledWith(`tokenizer.tokenizeLine should be a function in \"${tokenizePath}\"`)
   spy.mockRestore()
 })
 
@@ -86,11 +83,9 @@ test.skip('loadTokenizer - TokenMap should be an Object', async () => {
 export const TokenMap = 2`
   )
   await writeFile(join(temporaryDir, 'package.json'), '{ "type": "module" }')
-  Tokenizer.state.tokenizePaths[id] = tokenizePath
+  TokenizerState.set(id, tokenizePath)
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   await Tokenizer.loadTokenizer(id)
-  expect(spy).toHaveBeenCalledWith(
-    `tokenizer.TokenMap should be an object in \"${tokenizePath}\"`
-  )
+  expect(spy).toHaveBeenCalledWith(`tokenizer.TokenMap should be an object in \"${tokenizePath}\"`)
   spy.mockRestore()
 })
