@@ -9,8 +9,10 @@ jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.js', () => ({
 
 beforeAll(() => {
   // TODO remove this when using newer node version
-  // @ts-ignore
-  globalThis.DOMException = globalThis.Error
+  if (typeof DOMException === 'undefined') {
+    // @ts-ignore
+    globalThis.DOMException = globalThis.Error
+  }
 })
 
 const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
