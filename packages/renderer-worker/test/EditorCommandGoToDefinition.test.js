@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
 jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostDefinition.js', () => ({
   executeDefinitionProvider: jest.fn().mockImplementation(() => {

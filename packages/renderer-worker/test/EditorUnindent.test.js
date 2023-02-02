@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import * as EditorUnindent from '../src/parts/EditorCommand/EditorCommandUnindent.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
 test.skip('editorUnindent - no selection - single line', () => {
   const editor = {

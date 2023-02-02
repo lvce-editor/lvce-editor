@@ -2,7 +2,7 @@ import { jest } from '@jest/globals'
 import * as Editor from '../src/parts/Editor/Editor.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
 test('create', () => {
   const editor = Editor.create('', '', '', '')
@@ -110,9 +110,7 @@ test('scheduleDocumentAndCursorsSelections', () => {
       origin: EditOrigin.CompositionUpdate,
     },
   ]
-  expect(
-    Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-  ).toMatchObject({
+  expect(Editor.scheduleDocumentAndCursorsSelections(editor, changes)).toMatchObject({
     lines: ['KEY=42   ä'],
     undoStack: [changes],
   })
@@ -173,9 +171,7 @@ test('scheduleDocumentAndCursorsSelections - add one character', () => {
       origin: EditOrigin.CompositionUpdate,
     },
   ]
-  expect(
-    Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-  ).toMatchObject({
+  expect(Editor.scheduleDocumentAndCursorsSelections(editor, changes)).toMatchObject({
     undoStack: [changes],
     lines: ['a'],
   })
@@ -236,9 +232,7 @@ test('scheduleDocumentAndCursorsSelections - delete one character', () => {
       origin: EditOrigin.CompositionUpdate,
     },
   ]
-  expect(
-    Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-  ).toMatchObject({
+  expect(Editor.scheduleDocumentAndCursorsSelections(editor, changes)).toMatchObject({
     undoStack: [changes],
     lines: [''],
   })
