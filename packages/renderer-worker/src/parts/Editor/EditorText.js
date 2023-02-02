@@ -126,6 +126,7 @@ const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   const visibleLines = lineCache.slice(startLineIndex + 1, endLineIndex + 1)
   if (linesWithEmbed.length > 0) {
     const { tokenizersToLoad, embeddedResults } = getTokensViewportEmbedded(lines, lineCache, linesWithEmbed)
+    // TODO support lineCache with embedded content
     editor.invalidStartIndex = 0
     return {
       tokens: visibleLines,
