@@ -20,14 +20,11 @@ export const initialLineState = {
   state: State.TopLevelContent,
 }
 
+export const hasArrayReturn = true
+
 export const tokenizeLine = (line, lineState) => {
   return {
-    tokens: [
-      {
-        length: line.length,
-        type: TokenType.Text,
-      },
-    ],
+    tokens: [line.length, TokenType.Text],
     state: lineState.state,
   }
 }
