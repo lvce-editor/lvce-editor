@@ -174,7 +174,7 @@ export const contentLoadedEffects = async (state) => {
   // TODO dispose listener
   // TODO don't like side effect here, where to put it?
   // GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
-  GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
+  // GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   // GlobalEventBus.addListener('editor.change', handleEditorChange)
   const newLanguageId = getLanguageId(state)
   await Command.execute(/* Editor.setLanguageId */ 'Editor.setLanguageId', /* languageId */ newLanguageId)
