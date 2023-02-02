@@ -35,7 +35,10 @@ const getTokensViewportEmbedded = (lines, lineCache, linesWithEmbed) => {
           isFull: false,
           TokenMap: [],
         })
+        topContext = undefined
       }
+    } else {
+      topContext = undefined
     }
   }
   return {
