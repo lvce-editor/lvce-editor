@@ -24,7 +24,7 @@ export const hasArrayReturn = true
 
 export const tokenizeLine = (line, lineState) => {
   return {
-    tokens: [line.length, TokenType.Text],
+    tokens: [TokenType.Text, line.length],
     state: lineState.state,
   }
 }
