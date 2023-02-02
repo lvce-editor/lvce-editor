@@ -1,13 +1,7 @@
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
 import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.js'
-
-export const state = {
-  tokenizers: Object.create(null),
-  tokenizePaths: Object.create(null),
-  listeners: [],
-  pending: Object.create(null),
-}
+import * as TokenizerState from '../TokenizerState/TokenizerState.js'
 
 const getTokenizePath = (languageId) => {
   const tokenizePath = Languages.getTokenizeFunctionPath(languageId)
@@ -16,7 +10,7 @@ const getTokenizePath = (languageId) => {
 
 // TODO loadTokenizer should be invoked from renderer worker
 export const loadTokenizer = async (languageId) => {
-  if (languageId in state.tokenizers) {
+  if (TokenizerState.has(languageId)) {
     return
   }
   const tokenizePath = getTokenizePath(languageId)
@@ -36,9 +30,9 @@ export const loadTokenizer = async (languageId) => {
       console.warn(`tokenizer.TokenMap should be an object in "${tokenizePath}"`)
       return
     }
-    state.tokenizers[languageId] = tokenizer
+    TokenizerState.set(languageId, tokenizer)
   } catch (error) {
-    state.tokenizers[languageId] = TokenizePlainText
+    TokenizerState.set(languageId, TokenizePlainText)
     // TODO better error handling
     console.error(error)
     return
@@ -47,10 +41,10 @@ export const loadTokenizer = async (languageId) => {
 }
 
 export const getTokenizer = (languageId) => {
-  if (languageId in state.tokenizers) {
-    return state.tokenizers[languageId]
+  if (TokenizerState.has(languageId)) {
+    return TokenizerState.get(languageId)
   }
-  if (languageId in state.pending) {
+  if (TokenizerState.isPending(languageId)) {
     return TokenizePlainText
   }
   return TokenizePlainText
