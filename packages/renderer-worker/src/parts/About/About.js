@@ -8,7 +8,7 @@ const showAboutDefault = async () => {
 }
 
 const showAboutElectron = async () => {
-  await ElectronProcess.invoke('About.showAbout')
+  ElectronProcess.invoke('About.showAbout')
 }
 
 const getFn = () => {

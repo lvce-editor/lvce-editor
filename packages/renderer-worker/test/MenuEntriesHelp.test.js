@@ -5,7 +5,7 @@ test('getMenuEntries', () => {
   const menuEntries = MenuEntriesHelp.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: 'About.showAbout',
-    flags: MenuItemFlags.None,
+    flags: MenuItemFlags.RestoreFocus,
     id: 'about',
     label: 'About',
   })

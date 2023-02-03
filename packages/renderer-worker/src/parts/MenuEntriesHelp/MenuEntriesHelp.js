@@ -1,6 +1,9 @@
 import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
+/**
+ * @enum {string}
+ */
 export const UiStrings = {
   About: 'About',
   ToggleDeveloperTools: 'Toggle Developer Tools',
@@ -24,7 +27,7 @@ export const getMenuEntries = () => {
     {
       id: 'about',
       label: I18nString.i18nString(UiStrings.About),
-      flags: MenuItemFlags.None,
+      flags: MenuItemFlags.RestoreFocus,
       command: 'About.showAbout',
     },
   ]
