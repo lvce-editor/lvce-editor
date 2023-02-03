@@ -1,8 +1,8 @@
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletkeyBindingsEvents from './ViewletKeyBindingsEvents.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 /**
  * @enum {string}
@@ -18,7 +18,6 @@ export const create = () => {
   $InputBox.placeholder = UiStrings.SearchKeyBindings
   // @ts-ignore
   $InputBox.ariaDescription = UiStrings.ResultsWillUpdateAsYouType
-  $InputBox.oninput = ViewletkeyBindingsEvents.handleInput
 
   const $KeyBindingsHeader = document.createElement('div')
   $KeyBindingsHeader.className = 'KeyBindingsHeader'
@@ -26,30 +25,28 @@ export const create = () => {
 
   const $KeyBindingsTableWrapper = document.createElement('div')
   $KeyBindingsTableWrapper.className = 'KeyBindingsTableWrapper'
-  $KeyBindingsTableWrapper.addEventListener(DomEventType.Wheel, ViewletkeyBindingsEvents.handleWheel, DomEventOptions.Passive)
-  $KeyBindingsTableWrapper.onclick = ViewletkeyBindingsEvents.handleTableClick
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
 
   const $ScrollBar = document.createElement('div')
   $ScrollBar.className = 'ScrollBar'
-  $ScrollBar.onpointerdown = ViewletkeyBindingsEvents.handleScrollBarPointerDown
   $ScrollBar.append($ScrollBarThumb)
+
+  const $Resizer1 = document.createElement('div')
+  $Resizer1.className = 'Resizer'
+
+  const $Resizer2 = document.createElement('div')
+  $Resizer2.className = 'Resizer'
+
+  $KeyBindingsTableWrapper.append($Resizer1, $Resizer2)
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet KeyBindings'
   $Viewlet.append($KeyBindingsHeader, $KeyBindingsTableWrapper, $ScrollBar)
-
-  const $Resizer1 = document.createElement('div')
-  $Resizer1.className = 'Resizer'
-  $Resizer1.onpointerdown = ViewletkeyBindingsEvents.handleResizerPointerDown
-
-  const $Resizer2 = document.createElement('div')
-  $Resizer2.className = 'Resizer'
-  $Resizer2.onpointerdown = ViewletkeyBindingsEvents.handleResizerPointerDown
-
-  $KeyBindingsTableWrapper.append($Resizer1, $Resizer2)
+  $Viewlet.onpointerdown = ViewletkeyBindingsEvents.handlePointerDown
+  $Viewlet.addEventListener(DomEventType.Input, ViewletkeyBindingsEvents.handleInput, { capture: true })
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletkeyBindingsEvents.handleWheel, DomEventOptions.Passive)
 
   return {
     $Viewlet,

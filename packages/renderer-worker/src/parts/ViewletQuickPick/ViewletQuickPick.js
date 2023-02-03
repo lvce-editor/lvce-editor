@@ -1,12 +1,12 @@
 import * as Assert from '../Assert/Assert.js'
 import * as BeforeInput from '../BeforeInput/BeforeInput.js'
-import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
+import * as FilterQuickPickItems from '../FilterQuickPickItems/FilterQuickPickItems.js'
+import * as Height from '../Height/Height.js'
 import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as Height from '../Height/Height.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 
 // TODO send open signal to renderer process before items are ready
@@ -53,39 +53,6 @@ export const create = (id, uri, x, y, width, height) => {
 
 // TODO naming for provider.getNoResults is a bit weird
 
-const filterPicks = (state, picks, exclude, value) => {
-  // TODO every pick should have label
-  const filterPick = (pick) => {
-    if (exclude.has(pick.id)) {
-      return false
-    }
-    if (!pick.label && !state.warned.includes(JSON.stringify(pick))) {
-      console.warn('[QuickPick] item has missing label', pick)
-      state.warned.push(JSON.stringify(pick))
-      return false
-    }
-    const labelMatch = FuzzySearch.fuzzySearch(value, pick.label || pick.id)
-    if (labelMatch) {
-      return labelMatch
-    }
-    // TODO also filtering for aliases might be expensive
-    // TODO maybe only filter for aliases if prefix is longer than 4-5 characters
-    // otherwise both will be found anywayf
-    // e.g. "Relo" matches  "Window Reload"  and "Reload Window"
-    // But "Reload Win" only matches "Reload Window"
-    if (pick.aliases) {
-      for (const alias of pick.aliases) {
-        if (FuzzySearch.fuzzySearch(value, alias)) {
-          return true
-        }
-      }
-    }
-    return false
-  }
-  const items = picks.filter(filterPick)
-  return items
-}
-
 const getVisible = (items, minLineY, maxLineY) => {
   const visibleItems = []
   const setSize = items.length
@@ -106,7 +73,7 @@ const getFilteredItems = (state, picks, filterValue) => {
   Assert.object(state)
   Assert.array(picks)
   Assert.string(filterValue)
-  const items = filterPicks(state, picks, state.recentPickIds, filterValue)
+  const items = FilterQuickPickItems.getFilteredItems(state, picks, state.recentPickIds, filterValue)
   return items
   // TODO avoid mutation
   // state.items = items

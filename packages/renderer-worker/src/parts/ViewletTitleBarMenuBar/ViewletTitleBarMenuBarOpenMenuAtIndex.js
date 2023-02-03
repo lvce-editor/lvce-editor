@@ -6,8 +6,9 @@ const measureOffset = (titleBarEntries, index, labelFontWeight, labelFontSize, l
   let offset = 0
   for (let i = 0; i < index; i++) {
     const titleBarEntry = titleBarEntries[i]
-    offset += MeasureTextWidth.measureTextWidth(titleBarEntry.label, labelFontWeight, labelFontSize, labelFontFamily, labelLetterSpacing)
-    offset += labelPadding * 2
+    const textWidth = MeasureTextWidth.measureTextWidth(titleBarEntry.label, labelFontWeight, labelFontSize, labelFontFamily, labelLetterSpacing)
+    const totalPadding = labelPadding * 2
+    offset += textWidth + totalPadding
   }
   return offset
 }

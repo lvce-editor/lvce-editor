@@ -1,9 +1,7 @@
 import * as IframeSrc from '../src/parts/IframeSrc/IframeSrc.js'
 
 test('localhost url', () => {
-  expect(IframeSrc.toIframeSrc('http://localhost:3000')).toBe(
-    'http://localhost:3000'
-  )
+  expect(IframeSrc.toIframeSrc('http://localhost:3000')).toBe('http://localhost:3000')
 })
 
 test('http url', () => {
@@ -11,9 +9,7 @@ test('http url', () => {
 })
 
 test('https url', () => {
-  expect(IframeSrc.toIframeSrc('https://example.com')).toBe(
-    'https://example.com'
-  )
+  expect(IframeSrc.toIframeSrc('https://example.com')).toBe('https://example.com')
 })
 
 test('url without protocol', () => {
@@ -21,9 +17,7 @@ test('url without protocol', () => {
 })
 
 test('search term', () => {
-  expect(IframeSrc.toIframeSrc('example')).toBe(
-    'https://www.google.com/search?q=example'
-  )
+  expect(IframeSrc.toIframeSrc('example')).toBe('https://www.google.com/search?q=example')
 })
 
 test('not a url', () => {
@@ -31,17 +25,17 @@ test('not a url', () => {
 })
 
 test('british url', () => {
-  expect(IframeSrc.toIframeSrc('https://example.co.uk')).toBe(
-    'https://example.co.uk'
-  )
+  expect(IframeSrc.toIframeSrc('https://example.co.uk')).toBe('https://example.co.uk')
 })
 
 test('file url', () => {
-  expect(IframeSrc.toIframeSrc('file:///test/file.txt')).toBe(
-    'file:///test/file.txt'
-  )
+  expect(IframeSrc.toIframeSrc('file:///test/file.txt')).toBe('file:///test/file.txt')
 })
 
 test('file path', () => {
   expect(IframeSrc.toIframeSrc('/test/file.txt')).toBe('file:///test/file.txt')
+})
+
+test('localhost url', () => {
+  expect(IframeSrc.toIframeSrc('localhost:3000')).toBe('http://localhost:3000')
 })

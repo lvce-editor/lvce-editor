@@ -1,1 +1,6 @@
 exports.BackgroundTab = 'background-tab'
+exports.Default = 'default'
+exports.ForegroundTab = 'foreground-tab'
+exports.NewWindow = 'new-window'
+exports.Other = 'other'
+exports.SaveToDisk = 'save-to-disk'
