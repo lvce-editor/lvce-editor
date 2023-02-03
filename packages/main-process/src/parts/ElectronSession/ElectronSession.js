@@ -11,6 +11,7 @@ const Root = require('../Root/Root.js')
 const { existsSync } = require('node:fs')
 const { join } = require('node:path')
 const HttpStatusCode = require('../HttpStatusCode/HttpStatusCode.js')
+const { fileURLToPath } = require('node:url')
 
 const state = {
   /**
@@ -132,7 +133,11 @@ const getAbsolutePath = (requestUrl) => {
   }
   // TODO maybe have a separate protocol for remote, e.g. vscode has vscode-remote
   if (pathName.startsWith(`/remote`)) {
-    return pathName.slice('/remote'.length)
+    const uri = pathName.slice('/remote'.length)
+    if (Platform.isWindows) {
+      return fileURLToPath(`file://` + uri)
+    }
+    return uri
   }
   return Path.join(Root.root, 'static', pathName)
 }
@@ -153,7 +158,6 @@ const handleRequest = (request, callback) => {
       path: join(__dirname, 'not-found.txt'),
     })
   }
-  // console.log(request.url, '->', path)
   callback({
     path,
     headers: {
