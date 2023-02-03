@@ -35,9 +35,16 @@ const isValidFilePath = (input) => {
   return input.startsWith('/')
 }
 
+const isLocalHostUrlWithOutHttp = (input) => {
+  return input.startsWith('localhost:')
+}
+
 export const toIframeSrc = (input) => {
   if (isValidHttpUrl(input) || isValidFileUrl(input)) {
     return input
+  }
+  if (isLocalHostUrlWithOutHttp(input)) {
+    return `http://${input}`
   }
   if (isValidFilePath(input)) {
     return 'file://' + input
