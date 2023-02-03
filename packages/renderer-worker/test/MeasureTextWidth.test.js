@@ -1,4 +1,5 @@
 import * as MeasureTextWidth from '../src/parts/MeasureTextWidth/MeasureTextWidth.js'
+import * as MeasureTextWidthState from '../src/parts/MeasureTextWidthState/MeasureTextWidthState.js'
 
 beforeAll(() => {
   // @ts-ignore
@@ -34,5 +35,5 @@ beforeAll(() => {
 test('measureTextWidth', () => {
   expect(MeasureTextWidth.measureTextWidth('test', 400, 15, "'Test Font'", 0.5)).toBe(40)
   // @ts-ignore
-  expect(MeasureTextWidth.state.ctx._font).toBe("400 15px 'Test Font'")
+  expect(MeasureTextWidthState.state.ctx._font).toBe("400 15px 'Test Font'")
 })
