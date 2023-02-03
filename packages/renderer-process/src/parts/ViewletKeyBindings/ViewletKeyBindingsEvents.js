@@ -98,3 +98,18 @@ export const handlePointerDown = (event) => {
   }
   pointerDownFunction(event)
 }
+
+export const handleInputClick = (event) => {
+  const { clientX, clientY } = event
+  RendererWorker.send(/* KeyBindings.handleInputClick */ 'KeyBindings.handleInputClick', /* x */ clientX, /* y */ clientY)
+}
+
+export const handleBeforeInput = (event) => {
+  event.preventDefault()
+  const { inputType, data } = event
+  RendererWorker.send(/* KeyBindings.handleBeforeInput */ 'KeyBindings.handleBeforeInput', /* inputType */ inputType, /* data */ data)
+}
+
+export const handleInputBlur = (event) => {
+  RendererWorker.send(/* KeyBindings.handleInputBlur */ 'KeyBindings.handleInputBlur')
+}

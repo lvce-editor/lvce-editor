@@ -14,6 +14,10 @@ export const setTop = ($Element, top) => {
   $Element.style.top = `${top}px`
 }
 
+export const setX = ($Element, x) => {
+  $Element.style.translate = `${x}px`
+}
+
 export const setXAndY = ($Element, x, y) => {
   $Element.style.left = `${x}px`
   $Element.style.top = `${y}px`

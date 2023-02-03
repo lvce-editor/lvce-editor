@@ -1,8 +1,8 @@
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as InputBox from '../InputBox/InputBox.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletkeyBindingsEvents from './ViewletKeyBindingsEvents.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 /**
  * @enum {string}
@@ -13,15 +13,25 @@ const UiStrings = {
 }
 
 export const create = () => {
-  const $InputBox = InputBox.create()
-  $InputBox.type = 'search'
-  $InputBox.placeholder = UiStrings.SearchKeyBindings
-  // @ts-ignore
-  $InputBox.ariaDescription = UiStrings.ResultsWillUpdateAsYouType
+  const $VirtualInputBoxText = document.createElement('span')
+  $VirtualInputBoxText.className = 'VirtualInputBoxText'
+
+  const $HiddenInput = document.createElement('input')
+  $HiddenInput.className = 'HiddenInput'
+  $HiddenInput.onblur = ViewletkeyBindingsEvents.handleInputBlur
+
+  const $VirtualInputBoxCursor = document.createElement('div')
+  $VirtualInputBoxCursor.className = 'VirtualInputBoxCursor'
+
+  const $VirtualInputBox = document.createElement('div')
+  $VirtualInputBox.className = 'VirtualInputBox'
+  $VirtualInputBox.append($HiddenInput, $VirtualInputBoxText, $VirtualInputBoxCursor)
+  $VirtualInputBox.onclick = ViewletkeyBindingsEvents.handleInputClick
+  $VirtualInputBox.onbeforeinput = ViewletkeyBindingsEvents.handleBeforeInput
 
   const $KeyBindingsHeader = document.createElement('div')
   $KeyBindingsHeader.className = 'KeyBindingsHeader'
-  $KeyBindingsHeader.append($InputBox)
+  $KeyBindingsHeader.append($VirtualInputBox)
 
   const $KeyBindingsTableWrapper = document.createElement('div')
   $KeyBindingsTableWrapper.className = 'KeyBindingsTableWrapper'
@@ -50,13 +60,15 @@ export const create = () => {
 
   return {
     $Viewlet,
-    $InputBox,
+    $HiddenInput,
     $KeyBindingsHeader,
     $KeyBindingsTableWrapper,
     $ScrollBarThumb,
     $ScrollBar,
     $Resizer1,
     $Resizer2,
+    $VirtualInputBoxText,
+    $VirtualInputBoxCursor,
   }
 }
 
@@ -71,9 +83,9 @@ export const setTableDom = (state, dom) => {
   }
 }
 
-export const setValue = (state, value) => {
-  const { $InputBox } = state
-  $InputBox.value = value
+export const setInputValue = (state, value) => {
+  const { $VirtualInputBoxText } = state
+  $VirtualInputBoxText.textContent = value
 }
 
 export const setColumnWidths = (state, columnWidth1, columnWidth2, columnWidth3) => {
@@ -81,6 +93,18 @@ export const setColumnWidths = (state, columnWidth1, columnWidth2, columnWidth3)
   const { $Resizer1, $Resizer2 } = state
   $Resizer1.style.left = `${paddingLeft + columnWidth1}px`
   $Resizer2.style.left = `${paddingLeft + columnWidth1 + columnWidth2}px`
+}
+
+export const setInputFocused = (state, isFocused) => {
+  const { $HiddenInput } = state
+  if (isFocused) {
+    $HiddenInput.focus()
+  }
+}
+
+export const setInputSelection = (state, selectionStart, selectionEnd) => {
+  const { $VirtualInputBoxCursor } = state
+  SetBounds.setX($VirtualInputBoxCursor, selectionStart * 8)
 }
 
 export * from '../ViewletScrollable/ViewletScrollable.js'

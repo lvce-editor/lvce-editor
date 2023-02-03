@@ -239,12 +239,12 @@ const renderColumnWidths = {
   },
 }
 
-const renderValue = {
+const renderInputValue = {
   isEqual(oldState, newState) {
     return oldState.value === newState.value
   },
   apply(oldState, newState) {
-    return [/* method */ 'setValue', /* setValue */ newState.value]
+    return [/* method */ 'setInputValue', /* setValue */ newState.value]
   },
 }
 
@@ -273,4 +273,22 @@ const renderScrollBar = {
   },
 }
 
-export const render = [renderKeyBindings, renderValue, renderNoResults, renderScrollBar, renderColumnWidths]
+const renderInputFocused = {
+  isEqual(oldState, newState) {
+    return oldState.inputFocused === newState.inputFocused
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setInputFocused', newState.inputFocused]
+  },
+}
+
+const renderSelection = {
+  isEqual(oldState, newState) {
+    return oldState.selectionStart === newState.selectionStart && oldState.selectionEnd === newState.selectionEnd
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setInputSelection', newState.selectionStart, newState.selectionEnd]
+  },
+}
+
+export const render = [renderKeyBindings, renderInputValue, renderNoResults, renderScrollBar, renderColumnWidths, renderInputFocused]

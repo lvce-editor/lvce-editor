@@ -1,0 +1,38 @@
+.VirtualInputBox {
+  border: 1px solid rgb(55, 65, 63);
+  flex: 1;
+  background: var(--InputBoxBackground);
+  padding: 0 5px;
+  contain: strict;
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+.VirtualInputBoxText {
+  contain: content;
+}
+
+.VirtualInputBoxCursor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  height: 20px;
+  background: green;
+  width: 2px;
+  top: 4px;
+  left: 4px;
+  contain: strict;
+}
+
+.HiddenInput {
+  position: absolute;
+  width: 0px;
+  height: 0px;
+  opacity: 0;
+  padding: 0px;
+  border: 0px;
+  font-size: 1px;
+  top: -9999px;
+  left: -9999px;
+}

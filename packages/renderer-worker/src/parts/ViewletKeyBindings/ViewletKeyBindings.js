@@ -31,6 +31,9 @@ export const create = (id, uri, x, y, width, height) => {
     columnWidth3: 0,
     contentPadding: 30,
     resizerDownId: 0,
+    inputFocused: false,
+    selectionStart: 0,
+    selectionEnd: 0,
   }
 }
 
@@ -83,18 +86,6 @@ export const loadContent = async (state, savedState) => {
     columnWidth1,
     columnWidth2,
     columnWidth3,
-  }
-}
-
-export const handleInput = (state, value) => {
-  const { parsedKeyBindings, maxVisibleItems } = state
-  const filteredKeyBindings = FilterKeyBindings.getFilteredKeyBindings(parsedKeyBindings, value)
-  const maxLineY = Math.min(filteredKeyBindings.length, maxVisibleItems)
-  return {
-    ...state,
-    value,
-    filteredKeyBindings,
-    maxLineY,
   }
 }
 
