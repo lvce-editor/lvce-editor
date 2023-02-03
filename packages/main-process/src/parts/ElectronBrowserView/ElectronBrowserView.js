@@ -10,6 +10,7 @@ const Debug = require('../Debug/Debug.js')
 const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
 const Logger = require('../Logger/Logger.js')
 const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
+const DisposeWebContents = require('../DisposeWebContents/DisposeWebContents.js')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -235,26 +236,10 @@ exports.createBrowserView = async (restoreId) => {
   return id
 }
 
-/**
- *
- * @param {Electron.WebContents} webContents
- */
-const disposeWebContents = (webContents) => {
-  if (webContents.close) {
-    // electron v22
-    webContents.close()
-    // @ts-ignore
-  } else if (webContents.destroy) {
-    // older versions of electron
-    // @ts-ignore
-    webContents.destroy()
-  }
-}
-
 exports.disposeBrowserView = (id) => {
   console.log('[main process] dispose browser view', id)
   const { view, browserWindow } = ElectronBrowserViewState.get(id)
   ElectronBrowserViewState.remove(id)
   browserWindow.removeBrowserView(view)
-  disposeWebContents(view.webContents)
+  DisposeWebContents.disposeWebContents(view.webContents)
 }
