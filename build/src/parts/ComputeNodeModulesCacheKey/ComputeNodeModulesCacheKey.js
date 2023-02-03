@@ -1,6 +1,7 @@
 import * as ComputeCacheKey from '../ComputeCacheKey/ComputeCacheKey.js'
 
 const locations = [
+  '.nvmrc',
   'lerna.json',
   'package-lock.json',
   'build/package-lock.json',
