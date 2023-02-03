@@ -78,3 +78,23 @@ export const handleResizerPointerDown = (event) => {
   const id = target.nextSibling ? 1 : 2
   RendererWorker.send(/* KeyBindings.handleResizerPointerDown */ 'KeyBindings.handleResizerClick', /* id */ id, /* x */ clientX)
 }
+
+const getPointerDownFunction = (event) => {
+  const { target } = event
+  switch (target.className) {
+    case 'Resizer':
+      return handleResizerPointerDown
+    case 'KeyBindingsTableWrapper':
+      return handleTableClick
+    default:
+      return undefined
+  }
+}
+
+export const handlePointerDown = (event) => {
+  const pointerDownFunction = getPointerDownFunction(event)
+  if (!pointerDownFunction) {
+    return
+  }
+  pointerDownFunction(event)
+}
