@@ -1,16 +1,9 @@
-import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
+import * as MeasureTotalTextWidth from '../MeasureTotalTextWidth/MeasureTotalTextWIdth.js'
 import * as Menu from '../Menu/Menu.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 
-const measureOffset = (titleBarEntries, index, labelFontWeight, labelFontSize, labelFontFamily, labelPadding, labelLetterSpacing) => {
-  let offset = 0
-  for (let i = 0; i < index; i++) {
-    const titleBarEntry = titleBarEntries[i]
-    const textWidth = MeasureTextWidth.measureTextWidth(titleBarEntry.label, labelFontWeight, labelFontSize, labelFontFamily, labelLetterSpacing)
-    const totalPadding = labelPadding * 2
-    offset += textWidth + totalPadding
-  }
-  return offset
+const getLabel = (titleBarEntry) => {
+  return titleBarEntry.label
 }
 
 /**
@@ -24,9 +17,12 @@ export const openMenuAtIndex = async (state, index, shouldBeFocused) => {
   // 1. open menu, items to show
   // 2. focus menu
   const titleBarEntry = titleBarEntries[index]
-  const { id, label } = titleBarEntry
+  const { id } = titleBarEntry
   const items = await MenuEntries.getMenuEntries(id)
-  const offset = measureOffset(titleBarEntries, index, labelFontWeight, labelFontSize, labelFontFamily, labelPadding, labelLetterSpacing)
+  const labels = titleBarEntries.slice(0, index).map(getLabel)
+  const textWidths = MeasureTotalTextWidth.measureTotalTextWidth(labels, labelFontWeight, labelFontSize, labelFontFamily, labelLetterSpacing)
+  const paddings = index * labelPadding * 2
+  const offset = textWidths + paddings
   // TODO race condition: another menu might already be open at this point
 
   const x = offset
