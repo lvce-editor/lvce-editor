@@ -11,7 +11,7 @@ const showAboutRemote = () => {
 }
 
 const showAboutElectron = async () => {
-  await ElectronProcess.invoke('About.showAbout')
+  ElectronProcess.invoke('About.showAbout')
 }
 
 export const showAbout = async () => {
