@@ -1,9 +1,10 @@
 const { BrowserView, BrowserWindow } = require('electron')
-const ElectronSessionForBrowserView = require('../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js')
-const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 const Assert = require('../Assert/Assert.js')
+const DisposeWebContents = require('../DisposeWebContents/DisposeWebContents.js')
 const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
 const ElectronBrowserViewEventListeners = require('../ElectronBrowserViewEventListeners/ElectronBrowserViewEventListeners.js')
+const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
+const ElectronSessionForBrowserView = require('../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js')
 
 /**
  *
@@ -54,26 +55,10 @@ exports.createBrowserView = async (restoreId) => {
   return id
 }
 
-/**
- *
- * @param {Electron.WebContents} webContents
- */
-const disposeWebContents = (webContents) => {
-  if (webContents.close) {
-    // electron v22
-    webContents.close()
-    // @ts-ignore
-  } else if (webContents.destroy) {
-    // older versions of electron
-    // @ts-ignore
-    webContents.destroy()
-  }
-}
-
 exports.disposeBrowserView = (id) => {
   console.log('[main process] dispose browser view', id)
   const { view, browserWindow } = ElectronBrowserViewState.get(id)
   ElectronBrowserViewState.remove(id)
   browserWindow.removeBrowserView(view)
-  disposeWebContents(view.webContents)
+  DisposeWebContents.disposeWebContents(view.webContents)
 }
