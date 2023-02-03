@@ -185,6 +185,11 @@ exports.handleWindowOpen = (webContents, { url, disposition, features, frameName
       action: ElectronWindowOpenActionType.Deny,
     }
   }
+  if (disposition === ElectronDispositionType.NewWindow) {
+    return {
+      action: ElectronWindowOpenActionType.Allow,
+    }
+  }
   Logger.info(`[main-process] blocked popup for ${url}`)
   return {
     action: ElectronWindowOpenActionType.Deny,
