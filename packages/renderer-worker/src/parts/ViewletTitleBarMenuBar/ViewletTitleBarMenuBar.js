@@ -10,7 +10,7 @@ export const create = (id, uri, x, y, width, height) => {
     labelFontSize: 13,
     labelFontFamily: 'system-ui, Ubuntu, Droid Sans, sans-serif',
     labelPadding: 5,
-    labelLetterSpacing: 'normal',
+    labelLetterSpacing: 0,
     titleBarHeight: height,
   }
 }
