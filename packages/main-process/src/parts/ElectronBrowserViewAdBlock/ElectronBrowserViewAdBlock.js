@@ -20,11 +20,7 @@ const cancelIfStartsWith = (url, canceledUrls) => {
 }
 
 const getBeforeRequestResponseXhrPost = (url) => {
-  const canceledUrls = [
-    'https://www.youtube.com/api/stats/qoe',
-    'https://www.youtube.com/youtubei/v1/log_event',
-    'https://play.google.com/log',
-  ]
+  const canceledUrls = ['https://www.youtube.com/api/stats/qoe', 'https://www.youtube.com/youtubei/v1/log_event', 'https://play.google.com/log']
   return cancelIfStartsWith(url, canceledUrls)
 }
 
@@ -67,15 +63,7 @@ const getBeforeRequestResponseXhr = (method, url) => {
   }
 }
 
-const getBeforeRequestResponseImage = (method, url) => {
-  return {}
-}
-
-const getBeforeRequestResponseFont = (method, url) => {
-  return {}
-}
-
-const getBeforeRequestResponseMedia = (method, url) => {
+const getBeforeRequestResponseDefault = (method, url) => {
   return {}
 }
 
@@ -85,35 +73,16 @@ const getBeforeRequestResponseScript = (method, url) => {
 }
 
 const getBeforeRequestResponse = (details) => {
-  const {
-    id,
-    method,
-    referrer,
-    resourceType,
-    timestamp,
-    uploadData,
-    url,
-    frame,
-  } = details
-
+  const { id, method, referrer, resourceType, timestamp, uploadData, url, frame } = details
   switch (resourceType) {
     case ElectronResourceType.MainFrame:
       return getBeforeRequestResponseMainFrame(method, url)
-    case ElectronResourceType.Stylesheet:
-      return {}
     case ElectronResourceType.Script:
       return getBeforeRequestResponseScript(method, url)
     case ElectronResourceType.Xhr:
       return getBeforeRequestResponseXhr(method, url)
-    case ElectronResourceType.Image:
-      return getBeforeRequestResponseImage(method, url)
-    case ElectronResourceType.Font:
-      return getBeforeRequestResponseFont(method, url)
-    case ElectronResourceType.Media:
-      return getBeforeRequestResponseMedia(method, url)
     default:
-      console.log({ resourceType })
-      return {}
+      return getBeforeRequestResponseDefault(method, url)
   }
 }
 
