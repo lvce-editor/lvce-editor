@@ -37,3 +37,9 @@ test('measureTextWidth', () => {
   // @ts-ignore
   expect(MeasureTextWidthState.state.ctx._font).toBe("400 15px 'Test Font'")
 })
+
+test('measureTextWidth - letter-spacing string', () => {
+  expect(() => MeasureTextWidth.measureTextWidth('test', 400, 15, "'Test Font'", 'normal')).toThrowError(
+    new Error(`letterSpacing must be of type number`)
+  )
+})

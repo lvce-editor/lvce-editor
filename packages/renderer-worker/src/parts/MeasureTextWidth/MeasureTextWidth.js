@@ -11,9 +11,6 @@ const createCtx = () => {
 }
 
 const getLetterSpacingString = (letterSpacing) => {
-  if (typeof letterSpacing === 'string') {
-    return letterSpacing
-  }
   return `${letterSpacing}px`
 }
 
@@ -26,8 +23,8 @@ export const measureTextWidth = (text, fontWeight, fontSize, fontFamily, letterS
   Assert.number(fontWeight)
   Assert.number(fontSize)
   Assert.string(fontFamily)
-  if (typeof letterSpacing !== 'number' && typeof letterSpacing !== 'string') {
-    throw new Error('letterSpacing must be of type number or of type string')
+  if (typeof letterSpacing !== 'number') {
+    throw new Error('letterSpacing must be of type number')
   }
   const letterSpacingString = getLetterSpacingString(letterSpacing)
   const fontString = getFontString(fontWeight, fontSize, fontFamily)
