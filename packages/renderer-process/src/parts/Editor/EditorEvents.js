@@ -72,22 +72,6 @@ export const handleCut = (event) => {
   RendererWorker.send(/* Editor.cut */ 'Editor.cut')
 }
 
-export const handleSelectionMove = (event) => {
-  const x = event.clientX
-  const y = event.clientY
-  const totalOffset = getTotalOffset(event)
-  if (event.altKey) {
-    RendererWorker.send(/* Editor.moveRectangleSelectionPx */ 'Editor.moveRectangleSelectionPx', /* x */ x, /* y */ y, /* offset */ totalOffset)
-  } else {
-    RendererWorker.send(/* Editor.moveSelectionPx */ 'Editor.moveSelectionPx', /* x */ x, /* y */ y, /* offset */ totalOffset)
-  }
-}
-
-export const handleSelectionDone = (event) => {
-  document.removeEventListener(DomEventType.MouseMove, handleSelectionMove)
-  document.removeEventListener(DomEventType.MouseUp, handleSelectionDone)
-}
-
 const getModifier = (event) => {
   if (event.ctrlKey) {
     return ModifierKey.Ctrl
@@ -98,68 +82,53 @@ const getModifier = (event) => {
   return ModifierKey.None
 }
 
-export const handleSingleClick = (event, x, y, offset) => {
+export const handleSingleClick = (event, x, y) => {
   const modifier = getModifier(event)
-  RendererWorker.send(/* Editor.handleSingleClick */ 'Editor.handleSingleClick', /* modifier */ modifier, /* x */ x, /* y */ y, /* offset */ offset)
-  const $Target = event.target
-  // const $InputBox = $Target.closest('.Editor').firstElementChild
-  // $InputBox.focus()
-  // TODO this logic should be in renderer worker
-  document.addEventListener(DomEventType.MouseMove, handleSelectionMove, DomEventOptions.Passive)
-  document.addEventListener(DomEventType.MouseUp, handleSelectionDone)
+  RendererWorker.send(/* Editor.handleSingleClick */ 'Editor.handleSingleClick', /* modifier */ modifier, /* x */ x, /* y */ y)
 }
 
-export const handleDoubleClick = (event, x, y, offset) => {
-  RendererWorker.send(/* Editor.handleDoubleClick */ 'Editor.handleDoubleClick', /* x */ x, /* y */ y, /* offset */ offset)
+export const handleDoubleClick = (event, x, y) => {
+  RendererWorker.send(/* Editor.handleDoubleClick */ 'Editor.handleDoubleClick', /* x */ x, /* y */ y)
 }
 
-export const handleTripleClick = (event, x, y, offset) => {
-  RendererWorker.send(/* Editor.handleTripleClick */ 'Editor.handleTripleClick', /* x */ x, /* y */ y, /* offset */ offset)
+export const handleTripleClick = (event, x, y) => {
+  RendererWorker.send(/* Editor.handleTripleClick */ 'Editor.handleTripleClick', /* x */ x, /* y */ y)
 }
 
 const isRightClick = (event) => {
   return event.button === MouseEventType.RightClick
 }
 
-const getTextNodeOffset = (textNode) => {
-  let $Token = textNode.parentElement
-  let offset = 0
-  while ($Token.previousSibling) {
-    $Token = $Token.previousSibling
-    offset += $Token.textContent.length
+export const handleEditorPointerMove = (event) => {
+  const { clientX, clientY, altKey } = event
+  if (altKey) {
+    RendererWorker.send(/* Editor.moveRectangleSelectionPx */ 'Editor.moveRectangleSelectionPx', /* x */ clientX, /* y */ clientY)
+  } else {
+    RendererWorker.send(/* Editor.moveSelectionPx */ 'Editor.moveSelectionPx', /* x */ clientX, /* y */ clientY)
   }
-  return offset
 }
 
-const getTotalOffset = (event) => {
-  if (document.caretRangeFromPoint) {
-    // chrome uses deprecated version
-    const range = document.caretRangeFromPoint(event.clientX, event.clientY)
-    if (!range) {
-      return 0
-    }
-    const textNode = range.startContainer
-    const textNodeOffset = getTextNodeOffset(textNode)
-    const offset = range.startOffset
-    const totalOffset = textNodeOffset + offset
-    return totalOffset
-    // @ts-ignore
-  }
+export const handleEditorLostPointerCapture = (event) => {
+  const { target } = event
+  target.removeEventListener(DomEventType.PointerMove, handleEditorPointerMove)
+  target.removeEventListener(DomEventType.LostPointerCapture, handleEditorLostPointerCapture)
+  RendererWorker.send(/* Editor.handlePointerCaptureLost */ 'Editor.handlePointerCaptureLost')
+}
+
+export const handleEditorGotPointerCapture = () => {}
+
+/**
+ *
+ * @param {PointerEvent} event
+ */
+export const handleEditorPointerDown = (event) => {
+  const { target, pointerId } = event
   // @ts-ignore
-  if (document.caretPositionFromPoint) {
-    // firefox uses new version
-    // @ts-ignore
-    const range = document.caretPositionFromPoint(event.clientX, event.clientY)
-    if (!range) {
-      return 0
-    }
-    const textNode = range.offsetNode
-    const textNodeOffset = getTextNodeOffset(textNode)
-    const offset = range.offset
-    const totalOffset = textNodeOffset + offset
-    return totalOffset
-  }
-  throw new Error('caret position is not supported')
+  target.setPointerCapture(pointerId)
+  // @ts-ignore
+  target.addEventListener(DomEventType.PointerMove, handleEditorPointerMove, DomEventOptions.Active)
+  // @ts-ignore
+  target.addEventListener(DomEventType.LostPointerCapture, handleEditorLostPointerCapture)
 }
 
 export const handleMouseDown = (event) => {
@@ -167,17 +136,16 @@ export const handleMouseDown = (event) => {
     return
   }
   event.preventDefault()
-  const totalOffset = getTotalOffset(event)
   const { clientX, clientY, detail } = event
   switch (detail) {
     case 1:
-      handleSingleClick(event, clientX, clientY, totalOffset)
+      handleSingleClick(event, clientX, clientY)
       break
     case 2:
-      handleDoubleClick(event, clientX, clientY, totalOffset)
+      handleDoubleClick(event, clientX, clientY)
       break
     case 3:
-      handleTripleClick(event, clientX, clientY, totalOffset)
+      handleTripleClick(event, clientX, clientY)
       break
     default:
       break
@@ -186,22 +154,6 @@ export const handleMouseDown = (event) => {
 
 // TODO figure out whether it is possible to register hover provider without mousemove
 // mousemove handler is called very often and could slow down editor / drain battery
-
-// disabled for now because of constant cpu usage on mousemove
-// bad for performance
-export const handlePointerMove = (event) => {
-  const { clientX, clientY, altKey } = event
-  if (altKey) {
-    const offset = getTotalOffset(event)
-    RendererWorker.send(
-      /* Editor.handleMouseMoveWithAltKey */ 'Editor.handleMouseMoveWithAltKey',
-      /* x */ clientX,
-      /* y */ clientY,
-      /* offset */ offset
-    )
-  }
-  // RendererWorker.send(/* Editor.handleMouseMove */ 389, /* x */ x, /* y */ y)
-}
 
 /**
  *

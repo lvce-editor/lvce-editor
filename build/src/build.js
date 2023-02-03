@@ -2,6 +2,15 @@ import minimist from 'minimist'
 import * as Process from './parts/Process/Process.js'
 import * as Logger from './parts/Logger/Logger.js'
 
+const getProduct = (productName) => {
+  switch (productName) {
+    case 'lvce':
+      return import('../files/products/lvce.js')
+    default:
+      return import('../files/products/lvce-oss.js')
+  }
+}
+
 const getBuildModule = (target) => {
   console.log({ target })
   switch (target) {
@@ -25,13 +34,9 @@ const getBuildModule = (target) => {
     case 'electron-builder-deb':
       return import('./parts/ElectronBuilderDeb/ElectronBuilderDeb.js')
     case 'electron-builder-arch-linux':
-      return import(
-        './parts/ElectronBuilderArchLinux/ElectronBuilderArchLinux.js'
-      )
+      return import('./parts/ElectronBuilderArchLinux/ElectronBuilderArchLinux.js')
     case 'electron-builder-windows-exe':
-      return import(
-        './parts/ElectronBuilderWindowsExe/ElectronBuilderWindowsExe.js'
-      )
+      return import('./parts/ElectronBuilderWindowsExe/ElectronBuilderWindowsExe.js')
     case 'electron-builder-snap':
       return import('./parts/ElectronBuilderSnap/ElectronBuilderSnap.js')
     case 'electron-builder-mac':
@@ -58,9 +63,10 @@ const main = async () => {
     console.error(`Hint: Try using "node build.js --target=static"`)
     Process.exit(1)
   }
+  const product = await getProduct(argv.product)
   const module = await getBuildModule(target)
   try {
-    await module.build()
+    await module.build({ product })
   } catch (error) {
     console.error(`Build failed:`)
     console.error(error)

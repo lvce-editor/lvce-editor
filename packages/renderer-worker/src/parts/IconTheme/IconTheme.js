@@ -55,7 +55,7 @@ const getIconThemeJson = async (iconThemeId) => {
 }
 
 const getExtension = (file) => {
-  return file.slice(file.lastIndexOf('.') + 1).toLowerCase()
+  return file.slice(file.indexOf('.') + 1).toLowerCase()
 }
 
 export const getFileIcon = (file) => {
@@ -71,10 +71,13 @@ export const getFileIcon = (file) => {
     }
   }
   if (iconTheme.fileExtensions) {
-    const extension = getExtension(fileNameLower)
-    const extensionIcon = iconTheme.fileExtensions[extension]
-    if (extensionIcon) {
-      return extensionIcon
+    let index = -1
+    while ((index = fileNameLower.indexOf('.', index + 1)) !== -1) {
+      const shorterExtension = fileNameLower.slice(index + 1)
+      const extensionIcon = iconTheme.fileExtensions[shorterExtension]
+      if (extensionIcon) {
+        return extensionIcon
+      }
     }
   }
   if (iconTheme.languageIds) {
@@ -82,6 +85,12 @@ export const getFileIcon = (file) => {
     const languageIcon = iconTheme.languageIds[languageId]
     if (languageIcon) {
       return languageIcon
+    }
+    if (languageId === 'jsx') {
+      const alternativeFileIcon = iconTheme.languageIds['javascript']
+      if (alternativeFileIcon) {
+        return alternativeFileIcon
+      }
     }
   }
   return DefaultIcon.File

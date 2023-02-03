@@ -175,9 +175,14 @@ const serveStatic = (root, skip = '') =>
 const serve404 = () =>
   function serve404(req, res, next) {
     console.info(`[web] Failed to serve static file "${req.url}"`)
-    res.writeHead(404, {
+    const headers = {
       'Content-Type': 'text/plain',
-    })
+    }
+    if (req.url.endsWith('WorkerMain.js')) {
+      headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
+      headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
+    }
+    res.writeHead(404, headers)
     return res.end('Not found')
   }
 
@@ -236,7 +241,6 @@ const generateTestOverviewHtml = (dirents) => {
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tests</title>
   </head>

@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import * as EditorPaste from '../src/parts/EditorCommand/EditorCommandPaste.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
 // TODO jest unstable_mockModule doesn't seem to work anymore after upgrade from jest 27 to jest 28
 jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.js', () => {

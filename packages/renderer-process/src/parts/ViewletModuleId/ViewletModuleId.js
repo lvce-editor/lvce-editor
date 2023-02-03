@@ -6,6 +6,8 @@ export const Clock = 'Clock'
 
 export const DebugConsole = 'Debug Console'
 
+export const Dialog = 'Dialog'
+
 export const DiffEditor = 'DiffEditor'
 
 export const EditorCompletion = 'EditorCompletion'
@@ -67,3 +69,5 @@ export const TitleBar = 'TitleBar'
 export const TitleBarButtons = 'TitleBarButtons'
 
 export const TitleBarMenuBar = 'TitleBarMenuBar'
+
+export const Video = 'Video'

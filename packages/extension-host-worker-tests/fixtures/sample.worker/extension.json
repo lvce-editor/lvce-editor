@@ -1,0 +1,10 @@
+{
+  "browser": "main.js",
+  "activation": "onCommand:xyz.sampleCommand",
+  "commands": [
+    {
+      "id": "xyz.sampleCommand",
+      "label": "Sample Command"
+    }
+  ]
+}

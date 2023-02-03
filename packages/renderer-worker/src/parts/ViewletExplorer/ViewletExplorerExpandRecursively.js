@@ -12,7 +12,7 @@ const makeExpanded = (dirent) => {
 }
 
 export const expandRecursively = async (state) => {
-  const { items, focusedIndex, pathSeparator, root } = state
+  const { items, focusedIndex, pathSeparator, root, height, itemHeight, minLineY } = state
   const dirent =
     focusedIndex < 0
       ? {
@@ -51,7 +51,8 @@ export const expandRecursively = async (state) => {
   if (focusedIndex >= 0) {
     const endIndex = getParentEndIndex(items, focusedIndex)
     const newDirents = [...items.slice(0, startIndex), ...childDirents, ...items.slice(endIndex)]
-    return { ...state, items: newDirents }
+    const maxLineY = minLineY + Math.min(Math.ceil(height / itemHeight), newDirents.length)
+    return { ...state, items: newDirents, maxLineY }
   }
   return {
     ...state,

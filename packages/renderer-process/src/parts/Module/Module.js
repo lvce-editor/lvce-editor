@@ -10,8 +10,6 @@ export const load = (moduleId) => {
       return import('../Css/Css.ipc.js')
     case ModuleId.Developer:
       return import('../Developer/Developer.ipc.js')
-    case ModuleId.Dialog:
-      return import('../Dialog/Dialog.ipc.js')
     case ModuleId.Download:
       return import('../Download/Download.ipc.js')
     case ModuleId.EditorError:
@@ -54,6 +52,8 @@ export const load = (moduleId) => {
       return import('../ServiceWorker/ServiceWorker.ipc.js')
     case ModuleId.TestFrameWork:
       return import('../TestFrameWork/TestFrameWork.ipc.js')
+    case ModuleId.Transferrable:
+      return import('../Transferrable/Transferrable.ipc.js')
     case ModuleId.Viewlet:
       return import('../Viewlet/Viewlet.ipc.js')
     case ModuleId.WebStorage:

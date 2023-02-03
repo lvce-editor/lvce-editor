@@ -12,6 +12,11 @@ const mapExtToEditorType = {
   '.jpeg': ViewletModuleId.EditorImage,
   '.pdf': ViewletModuleId.Pdf,
   '.mp3': ViewletModuleId.Audio,
+  '.mp4': ViewletModuleId.Video,
+  '.mkv': ViewletModuleId.Video,
+  '.webm': ViewletModuleId.Video,
+  '.ogg': ViewletModuleId.Audio,
+  '.opus': ViewletModuleId.Audio,
 }
 
 export const getId = (uri) => {

@@ -4,6 +4,7 @@ import * as Css from '../Css/Css.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
+import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -35,6 +36,8 @@ const kDispose = 'Viewlet.dispose'
 // then check if instance.factory matches module -> only compare reference (int) instead of string
 // should be faster
 const wrapViewletCommand = (id, fn) => {
+  Assert.string(id)
+  Assert.fn(fn)
   const wrappedViewletCommand = async (...args) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
@@ -312,7 +315,8 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     } else if (restoreState) {
       instanceSavedState = restoreState
     }
-    let newState = await module.loadContent(viewletState, instanceSavedState)
+    const args = viewlet.args || []
+    let newState = await module.loadContent(viewletState, instanceSavedState, ...args)
     if ((viewlet.visible === undefined || viewlet.visible === true) && module.show) {
       await module.show(newState)
     }
@@ -439,7 +443,9 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       return
     }
     viewlet.type = 4
-    console.error(error)
+    console.log({ stack: error.stack })
+    const prettyError = await PrettyError.prepare(error)
+    PrettyError.print(prettyError)
     try {
       if (module && module.handleError) {
         return await module.handleError(error)

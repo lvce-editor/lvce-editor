@@ -1,0 +1,13 @@
+.Video {
+  display: grid;
+  place-items: center;
+}
+
+.VideoErrorMessage {
+  color: white;
+}
+
+.VideoVideo {
+  max-width: 100%;
+  max-height: 100%;
+}

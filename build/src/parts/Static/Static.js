@@ -38,24 +38,24 @@ const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
 const getModule = (method) => {
   switch (method) {
     case IpcParentType.ModuleWorker:
-      return import('./IpcParentWithModuleWorker.js')
+      return import('../IpcParentWithModuleWorker/IpcParentWithModuleWorker.js')
     case IpcParentType.MessagePort:
-      return import('./IpcParentWithMessagePort.js')
+      return import('../IpcParentWithMessagePort/IpcParentWithMessagePort.js')
     case IpcParentType.ReferencePort:
-      return import('./IpcParentWithReferencePort.js')
+      return import('../IpcParentWithReferencePort/IpcParentWithReferencePort.js')
     case IpcParentType.ModuleWorkerWithMessagePort:
-      return import('./IpcParentWithModuleWorkerWithMessagePort.js')
+      return import('../IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.js')
     case IpcParentType.Electron:
-      return import('./IpcParentWithElectron.js')
+      return import('../IpcParentWithElectron/IpcParentWithElectron.js')
     default:
       throw new Error('unexpected ipc type')
   }
 }`,
     replacement: `import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as IpcParentWithModuleWorker from './IpcParentWithModuleWorker.js'
-import * as IpcParentWithModuleWorkerWithMessagePort from './IpcParentWithModuleWorkerWithMessagePort.js'
-import * as IpcParentWithMessagePort from './IpcParentWithMessagePort.js'
-import * as IpcParentWithReferencePort from './IpcParentWithReferencePort.js'
+import * as IpcParentWithModuleWorker from '../IpcParentWithModuleWorker/IpcParentWithModuleWorker.js'
+import * as IpcParentWithModuleWorkerWithMessagePort from '../IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.js'
+import * as IpcParentWithMessagePort from '../IpcParentWithMessagePort/IpcParentWithMessagePort.js'
+import * as IpcParentWithReferencePort from '../IpcParentWithReferencePort/IpcParentWithReferencePort.js'
 
 const getModule = (method) => {
   switch (method) {
@@ -170,11 +170,11 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
 const getModule = (method) => {
   switch (method) {
     case IpcChildType.MessagePort:
-      return import('./IpcChildWithMessagePort.js')
+      return import('../IpcChildWithMessagePort/IpcChildWithMessagePort.js')
     case IpcChildType.ModuleWorker:
-      return import('./IpcChildWithModuleWorker.js')
+      return import('../IpcChildWithModuleWorker/IpcChildWithModuleWorker.js')
     case IpcChildType.ReferencePort:
-      return import('./IpcChildWithReferencePort.js')
+      return import('../IpcChildWithReferencePort/IpcChildWithReferencePort.js')
     default:
       throw new Error('unexpected ipc type')
   }
@@ -186,9 +186,9 @@ export const listen = async ({ method }) => {
 }
 `,
     replacement: `import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-import * as IpcChildWithMessagePort from './IpcChildWithMessagePort.js'
-import * as IpcChildWithModuleWorker from './IpcChildWithModuleWorker.js'
-import * as IpcChildWithReferencePort from './IpcChildWithReferencePort.js'
+import * as IpcChildWithMessagePort from '../IpcChildWithMessagePort/IpcChildWithMessagePort.js'
+import * as IpcChildWithModuleWorker from '../IpcChildWithModuleWorker/IpcChildWithModuleWorker.js'
+import * as IpcChildWithReferencePort from '../IpcChildWithReferencePort/IpcChildWithReferencePort.js'
 
 const getModule = (method) => {
   switch (method) {
@@ -236,11 +236,23 @@ const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
     from: 'packages/extension-host-worker/src',
     to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
   })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
+    occurrence: `/src/extensionHostWorkerMain.js`,
+    replacement: '/dist/extensionHostWorkerMain.js',
+  })
   // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/extensionHostWorkerMain.js`,
     occurrence: `main()`,
     replacement: `main()\n\nexport const x = 42`,
+  })
+}
+
+const copyPdfWorkerFiles = async ({ commitHash }) => {
+  await Copy.copy({
+    from: 'packages/pdf-worker/src',
+    to: `build/.tmp/dist/${commitHash}/packages/pdf-worker/src`,
   })
 }
 
@@ -283,6 +295,13 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
     occurrence: '/icons',
     replacement: `${pathPrefix}/${commitHash}/icons`,
   })
+  if (pathPrefix) {
+    await Replace.replace({
+      path: `build/.tmp/dist/manifest.json`,
+      occurrence: '"start_url": "/"',
+      replacement: `"start_url": "${pathPrefix}/"`,
+    })
+  }
   await Replace.replace({
     path: `build/.tmp/dist/serviceWorker.js`,
     occurrence: `const CACHE_STATIC_NAME = 'static-v4'`,
@@ -303,14 +322,11 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
       occurrence: '/manifest.json',
       replacement: `${pathPrefix}/manifest.json`,
     })
-  }
-
-  if (pathPrefix) {
     await Replace.replace({
       path: `build/.tmp/dist/index.html`,
       occurrence: '</title>',
       replacement: `</title>
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">`,
+    <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`,
     })
   }
   await Replace.replace({
@@ -593,7 +609,6 @@ const generateTestOverviewHtml = (dirents) => {
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tests</title>
   </head>
@@ -653,6 +668,14 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
     to: `build/.tmp/dist/tests/index.html`,
     content: testOverviewHtml,
   })
+  if (pathPrefix) {
+    await Replace.replace({
+      path: `build/.tmp/dist/tests/index.html`,
+      occurrence: '</title>',
+      replacement: `</title>
+    <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`,
+    })
+  }
 }
 
 const copyPlaygroundFiles = async ({ commitHash }) => {
@@ -686,6 +709,10 @@ export const build = async () => {
   Console.time('copyExtensionHostWorkerFiles')
   await copyExtensionHostWorkerFiles({ commitHash })
   Console.timeEnd('copyExtensionHostWorkerFiles')
+
+  Console.time('copyPdfWorkerFiles')
+  await copyPdfWorkerFiles({ commitHash })
+  Console.timeEnd('copyPdfWorkerFiles')
 
   Console.time('applyJsOverrides')
   await applyJsOverrides({ pathPrefix, commitHash })

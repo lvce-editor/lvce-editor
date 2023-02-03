@@ -1,19 +1,83 @@
-const Electron = require('electron')
 const ContentSecurityPolicy = require('../ContentSecurityPolicy/ContentSecurityPolicy.js')
 const ContentSecurityPolicyWorker = require('../ContentSecurityPolicyWorker/ContentSecurityPolicyWorker.js')
 const CrossOriginEmbedderPolicy = require('../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js')
 const CrossOriginOpenerPolicy = require('../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js')
+const Electron = require('electron')
 const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
+const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.js')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const Root = require('../Root/Root.js')
-const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.js')
+const { existsSync } = require('node:fs')
+const { join } = require('node:path')
+const HttpStatusCode = require('../HttpStatusCode/HttpStatusCode.js')
 
 const state = {
   /**
    * @type {import('electron').Session|undefined}
    */
   session: undefined,
+}
+
+const handleHeadersReceivedMainFrame = (responseHeaders) => {
+  return {
+    responseHeaders: {
+      ...responseHeaders,
+      [ContentSecurityPolicy.key]: ContentSecurityPolicy.value,
+      [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
+      [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+    },
+  }
+}
+
+const handleHeadersReceivedSubFrame = (responseHeaders) => {
+  return {
+    responseHeaders: {
+      ...responseHeaders,
+      [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
+      [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+    },
+  }
+}
+
+const handleHeadersReceivedDefault = (responseHeaders, url) => {
+  if (url.endsWith('WorkerMain.js')) {
+    return {
+      responseHeaders: {
+        ...responseHeaders,
+        [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+        [ContentSecurityPolicyWorker.key]: ContentSecurityPolicyWorker.value,
+      },
+    }
+  }
+  return {
+    responseHeaders,
+  }
+}
+
+const handleHeadersReceivedXhr = (responseHeaders, url) => {
+  // workaround for electron bug
+  // when using fetch, it doesn't return a response for 404
+  // console.log({ url, responseHeaders })
+  return {
+    responseHeaders: {
+      ...responseHeaders,
+    },
+  }
+}
+
+const getHeadersReceivedFunction = (resourceType) => {
+  // console.log({ resourceType })
+  switch (resourceType) {
+    case ElectronResourceType.MainFrame:
+      return handleHeadersReceivedMainFrame
+    case ElectronResourceType.SubFrame:
+      return handleHeadersReceivedSubFrame
+    case ElectronResourceType.Xhr:
+      return handleHeadersReceivedXhr
+    default:
+      return handleHeadersReceivedDefault
+  }
 }
 
 /**
@@ -23,48 +87,16 @@ const state = {
  */
 const handleHeadersReceived = (details, callback) => {
   const { responseHeaders, resourceType, url } = details
-  switch (resourceType) {
-    case ElectronResourceType.MainFrame:
-      callback({
-        responseHeaders: {
-          ...responseHeaders,
-          [ContentSecurityPolicy.key]: ContentSecurityPolicy.value,
-          [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
-          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-        },
-      })
-      break
-    case ElectronResourceType.SubFrame:
-      callback({
-        responseHeaders: {
-          ...responseHeaders,
-          [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
-          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-        },
-      })
-      break
-    default:
-      if (url.endsWith('WorkerMain.js')) {
-        callback({
-          responseHeaders: {
-            ...responseHeaders,
-            [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-            [ContentSecurityPolicyWorker.key]: ContentSecurityPolicyWorker.value,
-          },
-        })
-        break
-      }
-      callback({
-        responseHeaders,
-      })
-      break
-  }
+  const fn = getHeadersReceivedFunction(resourceType)
+  callback(fn(responseHeaders, url))
 }
 
 const isAllowedPermission = (permission) => {
   switch (permission) {
     case ElectronPermissionType.ClipBoardRead:
     case ElectronPermissionType.ClipBoardSanitizedWrite:
+    case ElectronPermissionType.FullScreen:
+    case ElectronPermissionType.WindowPlacement:
       return true
     default:
       return false
@@ -113,6 +145,14 @@ const getAbsolutePath = (requestUrl) => {
 const handleRequest = (request, callback) => {
   // const path = join(__dirname, request.url.slice(6))
   const path = getAbsolutePath(request.url)
+  if (!existsSync(path)) {
+    // TODO doing this for every request is really slow
+    // but without this, fetch would not received a response for 404 requests
+    return callback({
+      statusCode: HttpStatusCode.NotFound,
+      path: join(__dirname, 'not-found.txt'),
+    })
+  }
   // console.log(request.url, '->', path)
   callback({
     path,

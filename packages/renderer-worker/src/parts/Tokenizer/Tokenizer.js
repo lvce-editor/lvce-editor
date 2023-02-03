@@ -1,22 +1,37 @@
 import * as Languages from '../Languages/Languages.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as TokenizePlainText from './TokenizePlainText.js'
-
-export const state = {
-  tokenizers: Object.create(null),
-  tokenizePaths: Object.create(null),
-  listeners: [],
-  pending: Object.create(null),
-}
+import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.js'
+import * as Tokenizer from '../Tokenizer/Tokenizer.js'
+import * as TokenizerState from '../TokenizerState/TokenizerState.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const getTokenizePath = (languageId) => {
   const tokenizePath = Languages.getTokenizeFunctionPath(languageId)
   return tokenizePath
 }
 
+export const handleTokenizeChange = async () => {
+  const instances = ViewletStates.getAllInstances()
+  const instance = instances.EditorText
+  if (!instance) {
+    return
+  }
+  const state = instance.state
+  if (!TokenizerState.isConnectedEditor(state.id)) {
+    return
+  }
+  const tokenizer = Tokenizer.getTokenizer(state.languageId)
+  const newState = {
+    ...instance.state,
+    tokenizer,
+    embeds: [], // force rendering
+  }
+  await Viewlet.setState('EditorText', newState)
+}
+
 // TODO loadTokenizer should be invoked from renderer worker
 export const loadTokenizer = async (languageId) => {
-  if (languageId in state.tokenizers) {
+  if (TokenizerState.has(languageId)) {
     return
   }
   const tokenizePath = getTokenizePath(languageId)
@@ -29,37 +44,36 @@ export const loadTokenizer = async (languageId) => {
     // 2. getTokenClass should be of type function
     const tokenizer = await import(tokenizePath)
     if (typeof tokenizer.tokenizeLine !== 'function') {
-      console.warn(
-        `tokenizer.tokenizeLine should be a function in "${tokenizePath}"`
-      )
+      console.warn(`tokenizer.tokenizeLine should be a function in "${tokenizePath}"`)
       return
     }
-    if (
-      !tokenizer.TokenMap ||
-      typeof tokenizer.TokenMap !== 'object' ||
-      Array.isArray(tokenizer.TokenMap)
-    ) {
-      console.warn(
-        `tokenizer.TokenMap should be an object in "${tokenizePath}"`
-      )
+    if (!tokenizer.TokenMap || typeof tokenizer.TokenMap !== 'object' || Array.isArray(tokenizer.TokenMap)) {
+      console.warn(`tokenizer.TokenMap should be an object in "${tokenizePath}"`)
       return
     }
-    state.tokenizers[languageId] = tokenizer
+    TokenizerState.set(languageId, tokenizer)
   } catch (error) {
-    state.tokenizers[languageId] = TokenizePlainText
     // TODO better error handling
     console.error(error)
     return
   }
-  GlobalEventBus.emitEvent('tokenizer.changed', languageId)
+  await handleTokenizeChange()
 }
 
 export const getTokenizer = (languageId) => {
-  if (languageId in state.tokenizers) {
-    return state.tokenizers[languageId]
+  if (TokenizerState.has(languageId)) {
+    return TokenizerState.get(languageId)
   }
-  if (languageId in state.pending) {
+  if (TokenizerState.isPending(languageId)) {
     return TokenizePlainText
   }
   return TokenizePlainText
+}
+
+export const addConnectedEditor = (id) => {
+  TokenizerState.addConnectedEditor(id)
+}
+
+export const removeConnectedEditor = (id) => {
+  TokenizerState.removeConnectedEditor(id)
 }

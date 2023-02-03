@@ -34,11 +34,11 @@ const filterPicks = (state, picks, exclude, value) => {
   return items
 }
 
-export const getFilteredItems = (state, picks, filterValue) => {
+export const getFilteredItems = (state, picks, recentPickIds, filterValue) => {
   Assert.object(state)
   Assert.array(picks)
   Assert.string(filterValue)
-  const items = filterPicks(state, picks, state.recentPickIds, filterValue)
+  const items = filterPicks(state, picks, recentPickIds, filterValue)
   return items
   // TODO avoid mutation
   // state.items = items

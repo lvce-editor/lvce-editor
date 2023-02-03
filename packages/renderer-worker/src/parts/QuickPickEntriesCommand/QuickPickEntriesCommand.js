@@ -43,10 +43,7 @@ export const getNoResults = () => {
 const getBuiltinPicks = async () => {
   const assetDir = Platform.getAssetDir()
   const url = `${assetDir}/config/builtinCommands.json`
-  const builtinPicks = await Command.execute(
-    /* Ajax.getJson */ 'Ajax.getJson',
-    /* url */ url
-  )
+  const builtinPicks = await Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
   return builtinPicks
 }
 
@@ -82,10 +79,6 @@ const getExtensionPicks = async () => {
 // TODO send strings to renderer process only once for next occurrence send uint16array of ids of strings
 
 export const getPicks = async () => {
-  if (Platform.platform === PlatformType.Web) {
-    const builtinPicks = await getBuiltinPicks()
-    return builtinPicks
-  }
   const builtinPicks = await getBuiltinPicks()
   const extensionPicks = await getExtensionPicks()
   return [...builtinPicks, ...extensionPicks]

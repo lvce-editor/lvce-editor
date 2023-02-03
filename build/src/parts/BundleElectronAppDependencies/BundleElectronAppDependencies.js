@@ -8,7 +8,6 @@ import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependen
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
-import * as Product from '../Product/Product.js'
 import * as Tag from '../Tag/Tag.js'
 
 const isLanguageBasics = (name) => {
@@ -24,11 +23,9 @@ const copyPtyHostFiles = async ({ arch, electronVersion, cachePath }) => {
 }
 
 const copyExtensionHostHelperProcessFiles = async ({ cachePath }) => {
-  await BundleExtensionHostHelperProcessDependencies.bundleExtensionHostHelperProcessDependencies(
-    {
-      to: `${cachePath}/packages/extension-host-helper-process`,
-    }
-  )
+  await BundleExtensionHostHelperProcessDependencies.bundleExtensionHostHelperProcessDependencies({
+    to: `${cachePath}/packages/extension-host-helper-process`,
+  })
 }
 
 const copyExtensionHostFiles = async ({ cachePath }) => {
@@ -93,9 +90,7 @@ const copyResults = async () => {
     to: `build/.tmp/bundle/electron-result/resources/app/static`,
   })
 
-  for (const dirent of await readdir(
-    Path.absolute(`build/.tmp/bundle/electron/extensions`)
-  )) {
+  for (const dirent of await readdir(Path.absolute(`build/.tmp/bundle/electron/extensions`))) {
     if (isLanguageBasics(dirent)) {
       await Copy.copy({
         from: `build/.tmp/bundle/electron/extensions/${dirent}`,
@@ -108,9 +103,7 @@ const copyResults = async () => {
     to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.theme-slime`,
   })
 
-  for (const dirent of await readdir(
-    Path.absolute(`build/.tmp/bundle/electron/extensions`)
-  )) {
+  for (const dirent of await readdir(Path.absolute(`build/.tmp/bundle/electron/extensions`))) {
     if (!dirent.startsWith('builtin.theme-')) {
       continue
     }
@@ -122,13 +115,13 @@ const copyResults = async () => {
   }
 }
 
-const addRootPackageJson = async ({ cachePath, electronVersion }) => {
+const addRootPackageJson = async ({ cachePath, electronVersion, product }) => {
   const tag = await Tag.getGitTag()
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: {
-      name: Product.applicationName,
-      productName: Product.nameLong,
+      name: product.applicationName,
+      productName: product.nameLong,
       version: tag,
       electronVersion,
       main: 'packages/main-process/src/mainProcessMain.js',
@@ -136,11 +129,7 @@ const addRootPackageJson = async ({ cachePath, electronVersion }) => {
   })
 }
 
-export const bundleElectronAppDependencies = async ({
-  cachePath,
-  arch,
-  electronVersion,
-}) => {
+export const bundleElectronAppDependencies = async ({ cachePath, arch, electronVersion, product }) => {
   console.time('copyPtyHostFiles')
   await copyPtyHostFiles({
     arch,
@@ -174,6 +163,6 @@ export const bundleElectronAppDependencies = async ({
   console.timeEnd('copyMainProcessFiles')
 
   console.time('addRootPackageJson')
-  await addRootPackageJson({ cachePath, electronVersion })
+  await addRootPackageJson({ cachePath, electronVersion, product })
   console.timeEnd('addRootPackageJson')
 }

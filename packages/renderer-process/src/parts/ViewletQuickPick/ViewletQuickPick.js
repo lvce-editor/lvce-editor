@@ -314,7 +314,7 @@ export const setCursorOffset = (state, cursorOffset) => {
 
 export const setItemsHeight = (state, itemsHeight) => {
   const { $QuickPickItems } = state
-  $QuickPickItems.style.height = `${itemsHeight}px`
+  SetBounds.setHeight($QuickPickItems, itemsHeight)
 }
 
 export const noop = (state) => {}

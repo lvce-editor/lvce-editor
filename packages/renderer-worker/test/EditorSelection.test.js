@@ -218,3 +218,36 @@ test.skip('applyEdit - emoji ', () => {
   ]
   expect(EditorSelection.applyEdit(editor, changes)).toMatchObject({})
 })
+
+test('getVisible - only start of selection visible', () => {
+  const editor = {
+    x: 20,
+    y: 10,
+    rowHeight: 20,
+    columnWidth: 8,
+    minLineY: 0,
+    maxLineY: 8,
+    lines: ['line 1', 'line 2', 'line 3', 'line 4', 'line 5', 'line 6', 'line 7', 'line 8', 'line 9', 'line 10', 'line 11', 'line 12', 'line 13'],
+    selections: new Uint32Array([0, 0, 12, 0]),
+    fontWeight: 400,
+    fontFamily: 'Test',
+    letterSpacing: 0,
+    fontSize: 15,
+    cursorWidth: 0,
+  }
+  const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
+  expect(cursorInfos).toEqual(new Float32Array([]))
+  expect(selectionInfos).toEqual(
+    // prettier-ignore
+    new Float32Array([
+     /* x */ 0, /* y */ 0, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 20, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 40, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 60, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 80, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 100, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 120, /* width */ 48, /* height */ 20,
+     /* x */ 0, /* y */ 140, /* width */ 48, /* height */ 20,
+    ])
+  )
+})

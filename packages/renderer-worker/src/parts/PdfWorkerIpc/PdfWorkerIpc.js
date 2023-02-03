@@ -1,10 +1,8 @@
 import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as PdfWorkerUrl from '../PdfWorkerUrl/PdfWorkerUrl.js'
 
 export const create = async ({ method }) => {
-  const url = new URL(
-    '../../../../pdf-worker/src/pdfWorkerMain.js',
-    import.meta.url
-  ).toString()
+  const url = PdfWorkerUrl.getUrl()
   const worker = await IpcParent.create({
     method,
     url,

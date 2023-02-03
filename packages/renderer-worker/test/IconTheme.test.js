@@ -247,3 +247,17 @@ test('getIcon - block device', () => {
     })
   ).toBe('_file')
 })
+
+test('getFileIcon - match by long extension', () => {
+  IconTheme.state.iconTheme = {
+    fileExtensions: { 'd.ts': '_f_dts', ts: '_f_ts' },
+  }
+  expect(IconTheme.getFileIcon({ name: 'test.d.ts' })).toBe('_f_dts')
+})
+
+test('getFileIcon - fall back to shortest extension', () => {
+  IconTheme.state.iconTheme = {
+    fileExtensions: { png: '_f_png' },
+  }
+  expect(IconTheme.getFileIcon({ name: 'test.snap.png' })).toBe('_f_png')
+})

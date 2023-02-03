@@ -13,6 +13,9 @@
     "asar": false,
     "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",
+    "nsis": {
+      "warningsAsErrors": false
+    },
     "win": {
       "target": [{ "target": "nsis" }]
     }

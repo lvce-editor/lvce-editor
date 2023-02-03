@@ -182,6 +182,7 @@ export const contentLoadedEffects = async (state) => {
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
   GlobalEventBus.emitEvent('editor.create', state)
+  Tokenizer.addConnectedEditor(state.id)
 }
 
 export const handleLanguagesChanged = (state) => {
@@ -196,6 +197,10 @@ export const resize = (state, dimensions) => {
     newState,
     commands,
   }
+}
+
+export const dispose = (state) => {
+  Tokenizer.removeConnectedEditor(state.id)
 }
 
 export const hasFunctionalRender = true

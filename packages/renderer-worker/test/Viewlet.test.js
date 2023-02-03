@@ -6,33 +6,23 @@ beforeEach(() => {
   ViewletStates.reset()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
-jest.unstable_mockModule(
-  '../src/parts/ViewletManager/ViewletManager.js',
-  () => {
-    return {
-      load: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+})
+jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => {
+  return {
+    load: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ViewletManager = await import(
-  '../src/parts/ViewletManager/ViewletManager.js'
-)
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
 test.skip('focus', () => {
@@ -67,6 +57,7 @@ test('openWidget - once', async () => {
     show: false,
     type: 0,
     uri: 'quickPick://everything',
+    args: [['everything']],
   })
 })
 
@@ -89,6 +80,7 @@ test('openWidget - should not open again when already open', async () => {
     show: false,
     type: 0,
     uri: 'quickPick://everything',
+    args: [['everything']],
   })
   expect(ViewletManager.load).toHaveBeenNthCalledWith(2, {
     focus: true,
@@ -97,23 +89,16 @@ test('openWidget - should not open again when already open', async () => {
     show: false,
     type: 0,
     uri: 'quickPick://file',
+    args: [['file']],
   })
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    1,
-    'Viewlet.executeCommands',
-    [
-      ['Viewlet.append', 'Layout', 'QuickPick'],
-      ['Viewlet.focus', 'QuickPick'],
-    ]
-  )
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    2,
-    'Viewlet.executeCommands',
-    [
-      ['Viewlet.dispose', 'QuickPick'],
-      ['Viewlet.append', 'Layout', 'QuickPick'],
-      ['Viewlet.focus', 'QuickPick'],
-    ]
-  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.executeCommands', [
+    ['Viewlet.append', 'Layout', 'QuickPick'],
+    ['Viewlet.focus', 'QuickPick'],
+  ])
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.executeCommands', [
+    ['Viewlet.dispose', 'QuickPick'],
+    ['Viewlet.append', 'Layout', 'QuickPick'],
+    ['Viewlet.focus', 'QuickPick'],
+  ])
 })

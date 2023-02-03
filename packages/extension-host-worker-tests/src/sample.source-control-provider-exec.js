@@ -12,9 +12,9 @@ file-2.txt`,
   throw new Error(`unexpected command ${command}`)
 }
 
-const name = 'sample.source-control-provider-exec'
+export const name = 'sample.source-control-provider-exec'
 
-test('sample.source-control-provider-exec', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -28,6 +28,4 @@ test('sample.source-control-provider-exec', async () => {
   await expect(treeItems).toHaveCount(2)
   await expect(treeItems.nth(0)).toHaveText('file-1.txt')
   await expect(treeItems.nth(1)).toHaveText('file-2.txt')
-})
-
-export {}
+}

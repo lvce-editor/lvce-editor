@@ -1,16 +1,14 @@
-const name = 'sample.source-control-provider-accept-input-error'
+export const name = 'sample.source-control-provider-accept-input-error'
 
 // TODO add test for when source control provider returns invalid changed files
 // e.g. string[] instead of {file:string}[]
 // currently it throws an error `cannot read properties of undefined, reading toLowerCase` in IconTheme.js
 
-test('sample.source-control-provider-accept-input-error', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, SideBar, SourceControl }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
   await SideBar.open('Source Control')
   await SourceControl.handleInput('abc')
 
@@ -21,6 +19,4 @@ test('sample.source-control-provider-accept-input-error', async () => {
 
   // TODO error dialog should be shown
   // TODO error and codeframe should be printed to console
-})
-
-export {}
+}

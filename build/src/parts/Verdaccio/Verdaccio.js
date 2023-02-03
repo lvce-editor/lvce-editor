@@ -1,53 +1,46 @@
-import { rm } from 'node:fs/promises'
-import { startVerdaccio } from 'verdaccio'
+import { runServer } from 'verdaccio'
+import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
-import * as Mkdir from '../Mkdir/Mkdir.js'
+import * as Root from '../Root/Root.js'
 
 export const start = async () => {
-  console.log({ startVerdaccio })
   const cachePath = Path.absolute('build/.tmp/verdaccio-cache')
-  await Remove.remove(cachePath)
+  const lvceEditorPath = Path.join(cachePath, '@lvce-editor')
+  await Remove.remove(lvceEditorPath)
   await Mkdir.mkdir(cachePath)
-  await new Promise((resolve) => {
-    startVerdaccio(
-      {
-        storage: cachePath,
-        self_path: './',
-        port: 4873, // default
-        max_body_size: `1000mb`,
-        web: {
-          enable: true,
-          title: `lvce`,
-        },
-        packages: {
-          '**': {
-            access: `$all`,
-            publish: `$all`,
-            proxy: `npmjs`,
-          },
-        },
-        uplinks: {
-          npmjs: {
-            url: `https://registry.npmjs.org/`,
-            max_fails: 10,
-          },
-        },
-        log: {
-          type: 'stdout',
-          format: 'pretty',
-          level: 'http',
-        },
+  // @ts-ignore
+  const app = await runServer({
+    self_path: Root.root,
+    storage: cachePath,
+    port: 4873, // default
+    max_body_size: `1000mb`,
+    web: {
+      enable: true,
+      title: `lvce`,
+    },
+    packages: {
+      '**': {
+        access: `$all`,
+        publish: `$all`,
+        proxy: `npmjs`,
       },
-      4873,
-      undefined,
-      '1.0.0',
-      'verdaccio',
-      (webServer, addrs) => {
-        webServer.listen(addrs.port || addrs.path, addrs.host, () => {
-          resolve(undefined)
-        })
-      }
-    )
+    },
+    uplinks: {
+      npmjs: {
+        url: `https://registry.npmjs.org/`,
+        max_fails: 10,
+      },
+    },
+    log: {
+      type: 'stdout',
+      format: 'pretty',
+      level: 'http',
+    },
+  })
+  await new Promise((resolve) => {
+    app.listen(4873, (event) => {
+      resolve(undefined)
+    })
   })
 }

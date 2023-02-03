@@ -38,6 +38,11 @@ jobs:
         with:
           path: '~/.electron-gyp'
           key: ${{ runner.os }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v3
+        id: build-cache
+        with:
+          path: 'build/.tmp/cachedDependencies'
+          key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: npm ci
         if: steps.npm-cache.outputs.cache-hit != 'true'
@@ -77,6 +82,9 @@ jobs:
         run: npm run e2e:headless
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Build Electron App (deb)
+        if: matrix.os == 'ubuntu-22.04'
+        run: node build/bin/build.js --target=electron-deb
       - name: Cache Electron Builder Dependencies (Windows)
         uses: actions/cache@v3
         id: electron-builder-cache-windows

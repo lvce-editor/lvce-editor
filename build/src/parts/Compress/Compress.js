@@ -34,14 +34,19 @@ export const tarXz = async (inDir, outFile, options) => {
  * @param {import('execa').Options} options
  */
 export const tarXzFolders = async (inDirs, outFile, options) => {
-  const xzOptions = getXzOptions()
-  await Exec.exec('tar', ['cfJ', outFile, ...inDirs], {
-    ...options,
-    env: {
-      ...options.env,
-      XZ_OPT: xzOptions,
-    },
-  })
+  try {
+    const xzOptions = getXzOptions()
+    await Exec.exec('tar', ['cfJ', outFile, ...inDirs], {
+      ...options,
+      env: {
+        ...options.env,
+        XZ_OPT: xzOptions,
+      },
+    })
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, `Failed to compress folders`)
+  }
 }
 
 /**
@@ -93,11 +98,7 @@ export const tarAdd = async (inDir, outFile, options) => {
  * @param {import('execa').Options} options
  */
 export const deb = async (controlArchive, dataArchive, options) => {
-  await Exec.exec(
-    'ar',
-    ['r', 'app.deb', 'debian-binary', controlArchive, dataArchive],
-    options
-  )
+  await Exec.exec('ar', ['r', 'app.deb', 'debian-binary', controlArchive, dataArchive], options)
 }
 
 /**
@@ -107,15 +108,7 @@ export const createMTree = async (cwd, dirents) => {
   try {
     await Exec.exec(
       `bsdtar`,
-      [
-        '-czf',
-        '.MTREE',
-        '--format',
-        'mtree',
-        '--options',
-        '!all,use-set,type,uid,gid,mode,time,size,md5,sha256,link',
-        ...dirents,
-      ],
+      ['-czf', '.MTREE', '--format', 'mtree', '--options', '!all,use-set,type,uid,gid,mode,time,size,md5,sha256,link', ...dirents],
       {
         env: {
           ...process.env,

@@ -1,16 +1,13 @@
 import * as Assert from '../Assert/Assert.js'
-import * as BeforeInput from '../BeforeInput/BeforeInput.js'
-import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
+import * as FilterQuickPickItems from '../FilterQuickPickItems/FilterQuickPickItems.js'
+import * as Height from '../Height/Height.js'
+import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as Height from '../Height/Height.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
-import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
-import * as ViewletQuickPickHandleInput from './ViewletQuickPickHandleInput.js'
-import * as FilterQuickPickItems from '../FilterQuickPickItems/FilterQuickPickItems.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading

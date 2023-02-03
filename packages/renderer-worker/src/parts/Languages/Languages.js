@@ -4,8 +4,9 @@ import * as Assert from '../Assert/Assert.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as ExtensionHostLanguages from '../ExtensionHost/ExtensionHostLanguages.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as Logger from '../Logger/Logger.js'
+import * as Preferences from '../Preferences/Preferences.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 export const state = {
   loadState: false,
@@ -67,6 +68,10 @@ export const hydrate = async () => {
   const languages = await ExtensionHostLanguages.getLanguages()
   // TODO avoid side effect here, but how?
   await addLanguages(languages)
+  const useJsx = Preferences.get('languages.jsFilesAsJsx')
+  if (useJsx) {
+    state.extensionMap['.js'] = 'jsx'
+  }
   state.loaded = true
 }
 

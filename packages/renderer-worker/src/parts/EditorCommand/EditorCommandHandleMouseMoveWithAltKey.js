@@ -16,40 +16,25 @@ const getTokenIndex = (tokens, offset) => {
   return -1
 }
 
-export const handleMouseMoveWithAltKey = async (editor, x, y, offset) => {
+export const handleMouseMoveWithAltKey = async (editor, x, y) => {
   Assert.object(editor)
   Assert.number(x)
   Assert.number(y)
-  Assert.number(offset)
-  const position = EditorPosition.at(editor, x, y, offset)
-  const documentOffset = TextDocument.offsetAt(
-    editor,
-    position.rowIndex,
-    position.columnIndex
-  )
+  const position = EditorPosition.at(editor, x, y)
+  const documentOffset = TextDocument.offsetAt(editor, position.rowIndex, position.columnIndex)
   try {
-    const definition = await ExtensionHostDefinition.executeDefinitionProvider(
-      editor,
-      documentOffset
-    )
+    const definition = await ExtensionHostDefinition.executeDefinitionProvider(editor, documentOffset)
     if (!definition) {
       return editor
     }
 
     // TODO make sure that editor is not disposed
 
-    const definitionStartPosition = TextDocument.positionAt(
-      editor,
-      definition.startOffset
-    )
-    const definitionEndPosition = TextDocument.positionAt(
-      editor,
-      definition.endOffset
-    )
+    const definitionStartPosition = TextDocument.positionAt(editor, definition.startOffset)
+    const definitionEndPosition = TextDocument.positionAt(editor, definition.endOffset)
     const definitionRelativeStartX = definitionStartPosition.columnIndex
     const definitionRelativeEndX = definitionEndPosition.columnIndex
-    const definitionRelativeY =
-      definitionStartPosition.rowIndex - editor.minLineY
+    const definitionRelativeY = definitionStartPosition.rowIndex - editor.minLineY
 
     const lineTokenMap = editor.lineCache[definitionStartPosition.rowIndex + 1]
     console.log({ tokenMap: lineTokenMap })
@@ -60,10 +45,7 @@ export const handleMouseMoveWithAltKey = async (editor, x, y, offset) => {
     if (!lineTokenMap) {
       return editor
     }
-    const tokenIndex = getTokenIndex(
-      lineTokenMap.tokens,
-      definitionStartPosition.columnIndex
-    )
+    const tokenIndex = getTokenIndex(lineTokenMap.tokens, definitionStartPosition.columnIndex)
     if (tokenIndex === -1) {
       return editor
     }
@@ -79,12 +61,7 @@ export const handleMouseMoveWithAltKey = async (editor, x, y, offset) => {
     console.log({ definition })
     return editor
   } catch (error) {
-    if (
-      error &&
-      error.message.startsWith(
-        'Failed to execute definition provider: No definition provider found'
-      )
-    ) {
+    if (error && error.message.startsWith('Failed to execute definition provider: No definition provider found')) {
       return editor
     }
     throw error

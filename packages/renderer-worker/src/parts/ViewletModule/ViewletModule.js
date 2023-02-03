@@ -10,6 +10,8 @@ export const load = (moduleId) => {
       return import('../ViewletClock/ViewletClock.ipc.js')
     case ViewletModuleId.DebugConsole:
       return import('../ViewletDebugConsole/ViewletDebugConsole.ipc.js')
+    case ViewletModuleId.Dialog:
+      return import('../ViewletDialog/ViewletDialog.ipc.js')
     case ViewletModuleId.DiffEditor:
       return import('../ViewletDiffEditor/ViewletDiffEditor.ipc.js')
     case ViewletModuleId.EditorCompletion:
@@ -70,6 +72,8 @@ export const load = (moduleId) => {
       return import('../ViewletTitleBarButtons/ViewletTitleBarButtons.ipc.js')
     case ViewletModuleId.TitleBarMenuBar:
       return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.ipc.js')
+    case ViewletModuleId.Video:
+      return import('../ViewletVideo/ViewletVideo.ipc.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }

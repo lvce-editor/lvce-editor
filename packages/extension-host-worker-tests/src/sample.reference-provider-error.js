@@ -1,6 +1,6 @@
-const name = 'sample.reference-provider-error'
+export const name = 'sample.reference-provider-error'
 
-test('sample.reference-provider-error', async () => {
+export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -11,9 +11,7 @@ test('sample.reference-provider-error', async () => {
 
   // act
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
   await Main.openUri(`${tmpDir}/test.xyz`)
   await Editor.setCursor(0, 0)
   await Editor.findAllReferences()
@@ -23,7 +21,5 @@ test('sample.reference-provider-error', async () => {
   await expect(viewletLocations).toBeVisible()
 
   // TODO should show part of stack trace maybe?
-  await expect(viewletLocations).toHaveText(
-    `Error: Failed to execute reference provider: oops`
-  )
-})
+  await expect(viewletLocations).toHaveText(`Error: Failed to execute reference provider: oops`)
+}

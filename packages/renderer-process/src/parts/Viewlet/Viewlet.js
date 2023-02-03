@@ -265,6 +265,9 @@ const append = (parentId, childId, referenceNodes) => {
   } else {
     $Parent.append($Child)
   }
+  if (childInstance.factory.postAppend) {
+    childInstance.factory.postAppend(childInstance.state)
+  }
 }
 
 const appendToBody = (childId) => {

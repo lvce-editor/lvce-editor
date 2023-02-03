@@ -2,7 +2,6 @@ import * as Copy from '../Copy/Copy.js'
 import * as Exec from '../Exec/Exec.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
-import * as Product from '../Product/Product.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
 import * as ArchType from '../ArchType/ArchType.js'
@@ -17,36 +16,28 @@ const getSnapArch = (arch) => {
   }
 }
 
-const copyMetaFiles = async (arch) => {
+const copyMetaFiles = async ({ arch, product }) => {
   const snapArch = getSnapArch(arch)
   const tag = await Tag.getGitTag()
-  await Template.write(
-    'linux_snapcraft_yaml',
-    `build/.tmp/linux/snap/${arch}/snap/snapcraft.yaml`,
-    {
-      '@@NAME@@': Product.applicationName,
-      '@@VERSION@@': tag,
-      '@@ARCHITECTURE@@': snapArch,
-      '@@SUMMARY@@': Product.linuxSummary,
-      '@@SOURCE_CODE@@': Product.repoUrl,
-      '@@LICENSE@@': Product.licenseName,
-    }
-  )
+  await Template.write('linux_snapcraft_yaml', `build/.tmp/linux/snap/${arch}/snap/snapcraft.yaml`, {
+    '@@NAME@@': product.applicationName,
+    '@@VERSION@@': tag,
+    '@@ARCHITECTURE@@': snapArch,
+    '@@SUMMARY@@': product.linuxSummary,
+    '@@SOURCE_CODE@@': product.repoUrl,
+    '@@LICENSE@@': product.licenseName,
+  })
   // TODO vscode has an electron launch file (not yet sure if that is needed)
-  await Template.write(
-    'linux_desktop',
-    `build/.tmp/linux/snap/${arch}/snap/gui/${Product.applicationName}.desktop`,
-    {
-      '@@NAME_LONG@@': Product.nameLong,
-      '@@NAME_SHORT@@': Product.nameShort,
-      '@@NAME@@': Product.applicationName,
-      '@@EXEC@@': Product.applicationName,
-      '@@ICON@@': `\${SNAP}/meta/gui/${Product.applicationName}.png`,
-      '@@URLPROTOCOL@@': Product.applicationName,
-      '@@SUMMARY@@': Product.linuxSummary,
-      '@@KEYWORDS@@': `${Product.applicationName};`,
-    }
-  )
+  await Template.write('linux_desktop', `build/.tmp/linux/snap/${arch}/snap/gui/${product.applicationName}.desktop`, {
+    '@@NAME_LONG@@': product.nameLong,
+    '@@NAME_SHORT@@': product.nameShort,
+    '@@NAME@@': product.applicationName,
+    '@@EXEC@@': product.applicationName,
+    '@@ICON@@': `\${SNAP}/meta/gui/${product.applicationName}.png`,
+    '@@URLPROTOCOL@@': product.applicationName,
+    '@@SUMMARY@@': product.linuxSummary,
+    '@@KEYWORDS@@': `${product.applicationName};`,
+  })
 }
 
 const copyCode = async (arch) => {
@@ -201,23 +192,21 @@ const createSnap = async (arch) => {
   })
 }
 
-const printSnapSize = async (arch) => {
+const printSnapSize = async ({ arch, product }) => {
   const Stat = await import('../Stat/Stat.js')
   const snapArch = getSnapArch(arch)
   const tag = await Tag.getGitTag()
-  const size = await Stat.getFileSize(
-    `build/.tmp/linux/snap/${arch}/${Product.applicationName}_${tag}_${snapArch}.snap`
-  )
+  const size = await Stat.getFileSize(`build/.tmp/linux/snap/${arch}/${product.applicationName}_${tag}_${snapArch}.snap`)
   Logger.info(`snap size: ${size}`)
 }
 
 // TODO automatically run bundleCode if not exists
 
-export const build = async () => {
+export const build = async ({ product }) => {
   const arch = 'x64'
 
   console.time('copyMetaFiles')
-  await copyMetaFiles(arch)
+  await copyMetaFiles({ arch, product })
   console.timeEnd('copyMetaFiles')
 
   console.time('copyCode')
@@ -228,5 +217,5 @@ export const build = async () => {
   await createSnap(arch)
   console.timeEnd('createSnap')
 
-  await printSnapSize(arch)
+  await printSnapSize({ arch, product })
 }

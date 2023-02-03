@@ -531,7 +531,8 @@ test('loadContent - restore from saved state - sort dirents', async () => {
 })
 
 test('loadContent - restore from saved state - no saved state exists', async () => {
-  const state = { ...ViewletExplorer.create(), root: '/test' }
+  Workspace.state.workspacePath = '/test'
+  const state = ViewletExplorer.create()
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
     switch (uri) {

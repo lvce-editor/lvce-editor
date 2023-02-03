@@ -11,8 +11,11 @@ export const state = {
 }
 
 export const execute = async (href) => {
-  ExposeGlobals.exposeGlobals(globalThis, TestFrameWorkComponent)
-  ExposeGlobals.exposeGlobals(globalThis, TestFrameWork)
+  const globals = {
+    ...TestFrameWorkComponent,
+    ...TestFrameWork,
+  }
+  ExposeGlobals.exposeGlobals(globalThis, globals)
   // TODO
   // 0. wait for page to be ready
   // 1. get script to import from renderer process (url or from html)
@@ -22,9 +25,18 @@ export const execute = async (href) => {
   if (module.mockExec) {
     TestState.setMockExec(module.mockExec)
   }
-  const tests = TestState.getTests()
-  for (const test of tests) {
-    await ExecuteTest.executeTest(test.name, test.fn)
+  if (module.test) {
+    if (module.skip) {
+      await TestFrameWork.test.skip(module.name, () => {})
+    } else {
+      ExposeGlobals.unExposeGlobals(globalThis, globals)
+      await ExecuteTest.executeTest(module.name, module.test, globals)
+    }
+  } else {
+    const tests = TestState.getTests()
+    for (const test of tests) {
+      await ExecuteTest.executeTest(test.name, test.fn)
+    }
   }
   // 3. if import fails, display error message
 

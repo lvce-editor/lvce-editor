@@ -8,7 +8,6 @@ out.txt
 distmin
 /playground
 videos
-!/playground/.gitkeep
 benchmark/profiles
 
 # Logs

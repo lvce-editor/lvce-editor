@@ -1,5 +1,5 @@
 {
-  "name": "renderer-worker",
+  "name": "@lvce-editor/renderer-worker",
   "version": "0.0.0-dev",
   "description": "",
   "main": "src/rendererWorkerMain.js",
@@ -21,7 +21,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "msw": "0.49.2",
+    "msw": "1.0.0",
     "node-fetch": "^3.3.0"
   },
   "jest": {
