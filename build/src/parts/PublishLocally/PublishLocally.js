@@ -1,14 +1,14 @@
 import * as os from 'node:os'
 import * as Exec from '../Exec/Exec.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
+import * as Process from '../Process/Process.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Root from '../Root/Root.js'
 import * as Verdaccio from '../Verdaccio/Verdaccio.js'
-import * as Process from '../Process/Process.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-import * as Logger from '../Logger/Logger.js'
 
 const registryUrl = 'http://localhost:4873'
 

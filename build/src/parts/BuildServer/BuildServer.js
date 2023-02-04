@@ -152,7 +152,7 @@ const copySharedProcessFiles = async () => {
   return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
 }
 `,
-    replacement: `export const getExtensionHostHelperProcessPath = async () => {
+    replacement: `export const getExtensionHostPath = async () => {
   const { extensionHostPath } = await import(
     '@lvce-editor/extension-host'
   )
