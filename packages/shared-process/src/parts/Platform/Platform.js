@@ -1,7 +1,6 @@
-import { extensionHostPath } from '@lvce-editor/extension-host'
 import { homedir, tmpdir } from 'node:os'
-import { dirname, join, resolve, sep } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join, resolve, sep } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
@@ -23,8 +22,6 @@ export const cacheDir = Path.join(xdgCache || tmpdir(), applicationName)
 export const homeDir = isWindows ? '' : homedir()
 
 export const appDir = Root.root
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export const getExtensionsPath = () => {
   return Path.join(dataDir, 'extensions')
@@ -55,17 +52,12 @@ export const getChromeExtensionsPath = () => {
 }
 
 export const getMarketplaceUrl = () => {
-  return (
-    env.LVCE_MARKETPLACE_URL || 'https://marketplace.22e924c84de072d4b25b.com'
-  )
+  return env.LVCE_MARKETPLACE_URL || 'https://marketplace.22e924c84de072d4b25b.com'
 }
 
 export const getDesktop = () => {
   const { ORIGINAL_XDG_CURRENT_DESKTOP, XDG_CURRENT_DESKTOP } = env
-  if (
-    ORIGINAL_XDG_CURRENT_DESKTOP &&
-    ORIGINAL_XDG_CURRENT_DESKTOP !== 'undefined'
-  ) {
+  if (ORIGINAL_XDG_CURRENT_DESKTOP && ORIGINAL_XDG_CURRENT_DESKTOP !== 'undefined') {
     if (ORIGINAL_XDG_CURRENT_DESKTOP === 'ubuntu:GNOME') {
       return 'gnome'
     }
@@ -99,15 +91,12 @@ export const getUserSettingsPath = () => {
   return Path.join(configDir, 'settings.json')
 }
 
-export const getExtensionHostPath = () => {
-  return extensionHostPath
+export const getExtensionHostPath = async () => {
+  return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
 }
 
 export const getExtensionHostHelperProcessPath = async () => {
-  const { extensionHostHelperProcessPath } = await import(
-    '@lvce-editor/extension-host-helper-process'
-  )
-  return extensionHostHelperProcessPath
+  return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
 }
 
 export const getRecentlyOpenedPath = () => {
@@ -125,9 +114,7 @@ export const setEnvironmentVariables = (variables) => {
 
 export const getTestPath = () => {
   if (env.TEST_PATH) {
-    const testPath =
-      '/remote' +
-      pathToFileURL(Path.join(process.cwd(), env.TEST_PATH)).toString().slice(7)
+    const testPath = '/remote' + pathToFileURL(Path.join(process.cwd(), env.TEST_PATH)).toString().slice(7)
     return testPath
   }
   return '/packages/extension-host-worker-tests'

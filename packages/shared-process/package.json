@@ -21,9 +21,6 @@
   },
   "dependencies": {
     "@babel/code-frame": "^7.18.6",
-    "@lvce-editor/extension-host": "file:../extension-host",
-    "@lvce-editor/extension-host-helper-process": "file:../extension-host-helper-process",
-    "@lvce-editor/pty-host": "file:../pty-host",
     "debug": "^4.3.4",
     "execa": "^6.1.0",
     "exit-hook": "^3.2.0",

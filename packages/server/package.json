@@ -17,7 +17,5 @@
   "engines": {
     "node": ">=16"
   },
-  "dependencies": {
-    "@lvce-editor/shared-process": "file:../shared-process"
-  }
+  "dependencies": {}
 }
