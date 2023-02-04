@@ -150,7 +150,7 @@ export const showSubMenu = async (level, index) => {
   await showSubMenuAtEnter(level, index, -1, -1)
 }
 
-const selectIndexNone = async (item) => {
+const selectIndexNone = async (menu, item, index) => {
   await Promise.all([hide(/* restoreFocus */ false), ExecuteMenuItemCommand.executeMenuItemCommand(item)])
 }
 
