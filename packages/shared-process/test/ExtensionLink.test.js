@@ -48,15 +48,20 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
 })
 
 const SymLink = await import('../src/parts/SymLink/SymLink.js')
-const ExtensionLink = await import(
-  '../src/parts/ExtensionLink/ExtensionLink.js'
-)
+const ExtensionLink = await import('../src/parts/ExtensionLink/ExtensionLink.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 class NodeError extends Error {
   constructor(code) {
     super(code)
     this.code = code
+  }
+}
+
+class PermissionDeniedError extends Error {
+  constructor(from, to) {
+    super(`EPERM: operation not permittet, symlink ${from} -> ${to}`)
+    this.code = 'EPERM'
   }
 }
 
@@ -69,10 +74,7 @@ test('link', async () => {
   })
   await ExtensionLink.link('/test/my-extension')
   expect(SymLink.createSymLink).toHaveBeenCalledTimes(1)
-  expect(SymLink.createSymLink).toHaveBeenCalledWith(
-    '/test/my-extension',
-    '/test/linked-extensions/my-extension'
-  )
+  expect(SymLink.createSymLink).toHaveBeenCalledWith('/test/my-extension', '/test/linked-extensions/my-extension')
 })
 
 // TODO handle ENOENT error when extension folder does not exist
@@ -96,20 +98,10 @@ test('link - error - symlink already exists', async () => {
   })
   await ExtensionLink.link('/test/my-extension')
   expect(SymLink.createSymLink).toHaveBeenCalledTimes(2)
-  expect(SymLink.createSymLink).toHaveBeenNthCalledWith(
-    1,
-    '/test/my-extension',
-    '/test/linked-extensions/my-extension'
-  )
-  expect(SymLink.createSymLink).toHaveBeenNthCalledWith(
-    2,
-    '/test/my-extension',
-    '/test/linked-extensions/my-extension'
-  )
+  expect(SymLink.createSymLink).toHaveBeenNthCalledWith(1, '/test/my-extension', '/test/linked-extensions/my-extension')
+  expect(SymLink.createSymLink).toHaveBeenNthCalledWith(2, '/test/my-extension', '/test/linked-extensions/my-extension')
   expect(FileSystem.remove).toHaveBeenCalledTimes(1)
-  expect(FileSystem.remove).toHaveBeenCalledWith(
-    '/test/linked-extensions/my-extension'
-  )
+  expect(FileSystem.remove).toHaveBeenCalledWith('/test/linked-extensions/my-extension')
 })
 
 test('link - error - no manifest file found', async () => {
@@ -121,5 +113,19 @@ test('link - error - no manifest file found', async () => {
     new Error(
       "Failed to link extension: Failed to load extension manifest for my-extension: FileNotFoundError: File not found '/test/my-extension/extension.json'"
     )
+  )
+})
+
+test('link - error - permission denied', async () => {
+  // @ts-ignore
+  FileSystem.readFile.mockImplementation(() => {
+    return '{ "id": "my-extension" }'
+  })
+  // @ts-ignore
+  SymLink.createSymLink.mockImplementation((from, to) => {
+    throw new PermissionDeniedError(from, to)
+  })
+  await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrowError(
+    new Error('Failed to link extension: EPERM: operation not permittet, symlink /test/my-extension -> /test/linked-extensions/my-extension')
   )
 })
