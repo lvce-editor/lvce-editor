@@ -1,5 +1,6 @@
-const Platform = require('../Platform/Platform.js')
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
+const JoinLines = require('../JoinLines/JoinLines.js')
+const Platform = require('../Platform/Platform.js')
 
 const getName = (object) => {
   return object.name
@@ -38,7 +39,7 @@ const getVersionString = () => {
   for (const version of versions) {
     lines.push(version.name.padEnd(longestLength, ' ') + ': ' + version.version)
   }
-  return lines.join('\n')
+  return JoinLines.joinLines(lines)
 }
 
 const handleCliArgs = (parsedArgs) => {
