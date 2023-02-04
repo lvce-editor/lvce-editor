@@ -49,3 +49,16 @@ test('handleCliArgs - error - manifest not found', async () => {
   expect(Process.setExitCode).toHaveBeenCalledTimes(1)
   expect(Process.setExitCode).toHaveBeenCalledWith(128)
 })
+
+test('handleCliArgs - error - permission denied', async () => {
+  // @ts-ignore
+  ExtensionLink.link.mockImplementation(() => {
+    throw new ErrorWithCode(
+      'Failed to link extension: EPERM: operation not permittet, symlink /test/my-extension -> /test/linked-extensions/my-extension',
+      ErrorCodes.EPERM
+    )
+  })
+  await expect(CliLink.handleCliArgs([])).rejects.toThrowError(
+    new Error('Failed to link extension: EPERM: operation not permittet, symlink /test/my-extension -> /test/linked-extensions/my-extension')
+  )
+})

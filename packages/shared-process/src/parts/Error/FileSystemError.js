@@ -1,4 +1,4 @@
-import VError from 'verror'
+import { VError } from '../VError/VError.js'
 
 export class FileSystemError extends VError {
   constructor(error, message) {
