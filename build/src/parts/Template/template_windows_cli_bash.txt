@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+NAME="@@NAME@@"
+BASE_PATH="$(dirname "$(dirname "$(realpath "$0")")")"
+ELECTRON="$BASE_PATH/$NAME.exe"
+
+if [ -x "$(command -v cygpath)" ]; then
+	CLI=$(cygpath -m "$BASE_PATH/resources/app/packages/main-process/src/mainProcessMain.js")
+else
+	CLI="$BASE_PATH/resources/app/packages/main-process/src/mainProcessMain.js"
+fi
+"$ELECTRON" "$CLI" "$@"
+exit $?

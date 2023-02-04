@@ -165,6 +165,9 @@ const copyElectronResult = async ({ config, version, product }) => {
       from: `build/files/windows/cli.cmd`,
       to: `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}.cmd`,
     })
+    await Template.write('windows_cli_bash', `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}`, {
+      '@@NAME@@': product.applicationName,
+    })
   }
 }
 

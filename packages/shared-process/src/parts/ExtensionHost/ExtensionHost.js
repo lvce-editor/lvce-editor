@@ -18,7 +18,7 @@ export const state = {
 // TODO this function is very ugly and has probably memory leaks
 const createExtensionHost = async (socket) => {
   Assert.object(socket)
-  const ipc = ExtensionHostIpc.create()
+  const ipc = await ExtensionHostIpc.create()
   const rpc = ExtensionHostRpc.create(ipc, socket)
   return rpc
 }
