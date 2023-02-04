@@ -21,7 +21,7 @@ export const getMenuEntries = () => {
     {
       id: 'openProcessExplorer',
       label: I18nString.i18nString(UiStrings.OpenProcessExplorer),
-      flags: MenuItemFlags.None,
+      flags: MenuItemFlags.RestoreFocus,
       command: 'Developer.openProcessExplorer',
     },
     {

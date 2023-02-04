@@ -1,11 +1,11 @@
-import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 // TODO lazyload menuEntries and use Command.execute (maybe)
+import * as ExecuteMenuItemCommand from '../ExecuteMenuItemCommand/ExecuteMenuItemCommand.js'
+import * as Logger from '../Logger/Logger.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as Logger from '../Logger/Logger.js'
 
 export const state = {
   /**
@@ -151,44 +151,48 @@ export const showSubMenu = async (level, index) => {
 }
 
 const selectIndexNone = async (item) => {
-  if (!item.command) {
-    Logger.warn('item has missing command', item)
-    return
-  }
-  const args = item.args || []
-  await Promise.all([hide(/* restoreFocus */ false), Command.execute(item.command, ...args)])
+  await Promise.all([hide(/* restoreFocus */ false), ExecuteMenuItemCommand.executeMenuItemCommand(item)])
 }
 
-const selectIndexRestoreFocus = async (item) => {
-  if (!item.command) {
-    Logger.warn('item has missing command', item)
-    return
-  }
-  const args = item.args || []
-  await Promise.all([hide(/* restoreFocus */ true), Command.execute(item.command, ...args)])
+const selectIndexRestoreFocus = async (menu, item, index) => {
+  await Promise.all([hide(/* restoreFocus */ true), ExecuteMenuItemCommand.executeMenuItemCommand(item)])
 }
 
-const selectIndexSubMenu = async (menu, index) => {
+const selectIndexSubMenu = async (menu, item, index) => {
   if (menu.focusedIndex === index) {
     return
   }
   await showSubMenu(menu.level, menu.focusedIndex)
 }
 
+const selectIndexDefault = (menu, item, index) => {}
+
+const selectIndexIgnore = async (menu, item, index) => {
+  await ExecuteMenuItemCommand.executeMenuItemCommand(item)
+}
+
+const getSelectIndexFunction = (flags) => {
+  switch (flags) {
+    case MenuItemFlags.None:
+      return selectIndexNone
+    case MenuItemFlags.SubMenu:
+      return selectIndexSubMenu
+    case MenuItemFlags.RestoreFocus:
+      return selectIndexRestoreFocus
+    case MenuItemFlags.Ignore:
+      return selectIndexIgnore
+    default:
+      return selectIndexDefault
+  }
+}
+
 export const selectIndex = async (level, index) => {
   const menu = state.menus[level]
+  // TODO avoid assignment
   menu.focusedIndex = index
   const item = menu.items[menu.focusedIndex]
-  switch (item.flags) {
-    case MenuItemFlags.None:
-      return selectIndexNone(item)
-    case MenuItemFlags.SubMenu:
-      return selectIndexSubMenu(menu, index)
-    case MenuItemFlags.RestoreFocus:
-      return selectIndexRestoreFocus(item)
-    default:
-      break
-  }
+  const fn = getSelectIndexFunction(item.flags)
+  fn(menu, item, index)
 }
 
 export const selectItem = (text) => {

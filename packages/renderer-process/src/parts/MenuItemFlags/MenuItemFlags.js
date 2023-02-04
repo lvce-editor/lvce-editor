@@ -11,3 +11,5 @@ export const Unchecked = 3
 export const Disabled = 5
 
 export const RestoreFocus = 6
+
+export const Ignore = 7

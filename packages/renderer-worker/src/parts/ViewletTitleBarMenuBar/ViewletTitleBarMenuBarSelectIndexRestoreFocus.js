@@ -1,8 +1,7 @@
-import * as Command from '../Command/Command.js'
+import * as ExecuteMenuItemCommand from '../ExecuteMenuItemCommand/ExecuteMenuItemCommand.js'
 
 export const selectIndexRestoreFocus = async (state, item) => {
-  const args = item.args || []
-  await Command.execute(item.command, ...args)
+  await ExecuteMenuItemCommand.executeMenuItemCommand(item)
   return {
     ...state,
     menus: [],

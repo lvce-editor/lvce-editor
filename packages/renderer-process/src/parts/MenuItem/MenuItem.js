@@ -16,6 +16,7 @@ export const create$MenuItem = (item) => {
   switch (item.flags) {
     case MenuItemFlags.None:
     case MenuItemFlags.RestoreFocus:
+    case MenuItemFlags.Ignore:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
