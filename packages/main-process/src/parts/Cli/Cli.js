@@ -1,15 +1,16 @@
 const minimist = require('minimist')
 const Debug = require('../Debug/Debug.js')
+const CliCommandType = require('../CliCommandType/CliCommandType.js')
 
 exports.parseCliArgs = (argv) => {
   const CLI_OPTIONS = {
     boolean: [
-      'version',
-      'help',
-      'wait',
-      'built-in-self-test',
-      'web',
-      'sandbox',
+      CliCommandType.Version,
+      CliCommandType.Help,
+      CliCommandType.Wait,
+      CliCommandType.BuiltinSelfTest,
+      CliCommandType.Web,
+      CliCommandType.SandBox,
     ],
     alias: {
       version: 'v',
@@ -30,24 +31,19 @@ exports.parseCliArgs = (argv) => {
 
 const getModule = (parsedArgs) => {
   const arg0 = parsedArgs._[0]
-  if (parsedArgs.help) {
+  if (parsedArgs[CliCommandType.Help]) {
     return require('../CliHelp/CliHelp.js')
   }
-  if (parsedArgs.version) {
+  if (parsedArgs[CliCommandType.Version]) {
     return require('../CliVersion/CliVersion.js')
   }
-  if (parsedArgs.web) {
+  if (parsedArgs[CliCommandType.Web]) {
     return require('../CliWeb/CliWeb.js')
   }
-  if (
-    arg0 === 'install' ||
-    arg0 === 'list' ||
-    arg0 === 'link' ||
-    arg0 === 'unlink'
-  ) {
+  if (arg0 === CliCommandType.Install || arg0 === CliCommandType.List || arg0 === CliCommandType.Link || arg0 === CliCommandType.Unlink) {
     return require('../CliForwardToSharedProcess/CliForwardToSharedProcess.js')
   }
-  if (parsedArgs['built-in-self-test']) {
+  if (parsedArgs[CliCommandType.BuiltinSelfTest]) {
     return require('../CliBuiltinSelfTest/CliBuiltinSelfTest.js')
   }
   return undefined
