@@ -1,6 +1,6 @@
 import * as I18nString from '../I18NString/I18NString.js'
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 /**
  * @enum {string}
