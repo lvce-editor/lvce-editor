@@ -12,7 +12,7 @@ test('getMenuEntries', () => {
   })
   expect(menuEntries).toContainEqual({
     command: 'Dialog.openFolder',
-    flags: MenuItemFlags.None,
+    flags: MenuItemFlags.RestoreFocus,
     id: 'openFolder',
     label: 'Open Folder',
   })
