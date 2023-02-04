@@ -42,17 +42,13 @@ const handleWebSocketSharedProcess = (message, handle) => {
     }
     console.info('[info shared process: handle error]', error)
   })
-  Command.execute(
-    /* WebSocketServer.handleUpgrade */ 'WebSocketServer.handleUpgrade',
-    /* message */ message,
-    /* handle */ handle
-  )
+  Command.execute(/* WebSocketServer.handleUpgrade */ 'WebSocketServer.handleUpgrade', /* message */ message, /* handle */ handle)
 }
 
 // TODO lazyload modules for spawning extension host, they are only needed later
 const handleWebSocketExtensionHost = async (message, handle) => {
   // console.log('[shared-process] received extension host websocket', message)
-  const ipc = ExtensionHostIpc.create()
+  const ipc = await ExtensionHostIpc.create()
   console.info('[sharedprocess] creating extension ipc')
   const rpc = await ExtensionHostRpc.create(ipc, handle)
   console.info('[sharedprocess] created extension host rpc')

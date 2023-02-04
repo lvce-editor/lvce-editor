@@ -103,32 +103,6 @@ const copySharedProcessSources = async ({ arch, product }) => {
     occurrence: `applicationName = 'lvce-oss'`,
     replacement: `applicationName = '${product.applicationName}'`,
   })
-  await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src/parts/Platform/Platform.js`,
-    occurrence: `import { extensionHostPath } from '@lvce-editor/extension-host'\n`,
-    replacement: '',
-  })
-  await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src/parts/Platform/Platform.js`,
-    occurrence: `export const getExtensionHostPath = () => {
-  return extensionHostPath
-}`,
-    replacement: `export const getExtensionHostPath = () => {
-  return Path.join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
-}`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src/parts/Platform/Platform.js`,
-    occurrence: `export const getExtensionHostHelperProcessPath = async () => {
-  const { extensionHostHelperProcessPath } = await import(
-    '@lvce-editor/extension-host-helper-process'
-  )
-  return extensionHostHelperProcessPath
-}`,
-    replacement: `export const getExtensionHostHelperProcessPath = () => {
-  return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
-}`,
-  })
 }
 
 const copyPlaygroundFiles = async ({ arch }) => {

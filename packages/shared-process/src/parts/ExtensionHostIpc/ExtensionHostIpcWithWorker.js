@@ -1,14 +1,10 @@
 import { Worker } from 'node:worker_threads'
 import * as Platform from '../Platform/Platform.js'
 
-export const create = () => {
-  const extensionHostPath = Platform.getExtensionHostPath()
+export const create = async () => {
+  const extensionHostPath = await Platform.getExtensionHostPath()
   const child = new Worker(extensionHostPath, {
-    execArgv: [
-      '--experimental-json-modules',
-      '--max-old-space-size=60',
-      '--enable-source-maps',
-    ],
+    execArgv: ['--experimental-json-modules', '--max-old-space-size=60', '--enable-source-maps'],
     env: {
       ...process.env,
       LOGS_DIR: Platform.getLogsDir(),
