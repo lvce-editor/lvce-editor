@@ -23,6 +23,7 @@ jobs:
       - name: Compute node modules cache key
         id: nodeModulesCacheKey
         run: echo "value=$(node build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)" >> $GITHUB_OUTPUT
+        shell: bash
       - uses: actions/cache@v3
         id: npm-cache
         with:
