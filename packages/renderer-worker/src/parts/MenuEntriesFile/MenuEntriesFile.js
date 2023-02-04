@@ -1,6 +1,6 @@
 import * as I18nString from '../I18NString/I18NString.js'
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 /**
  * @enum {string}
@@ -44,7 +44,7 @@ export const getMenuEntries = () => {
     {
       id: 'openFolder',
       label: I18nString.i18nString(UiStrings.OpenFolder),
-      flags: MenuItemFlags.None,
+      flags: MenuItemFlags.RestoreFocus,
       command: 'Dialog.openFolder',
     },
     {
@@ -62,7 +62,7 @@ export const getMenuEntries = () => {
     {
       id: 'exit',
       label: I18nString.i18nString(UiStrings.Exit),
-      flags: MenuItemFlags.None,
+      flags: MenuItemFlags.Ignore,
       command: 'Chrome.exit',
     },
   ]
