@@ -1,17 +1,5 @@
-import { mkdir, symlink } from 'node:fs/promises'
-import { dirname } from 'node:path'
-import { FileSystemError } from '../Error/FileSystemError.js'
-
-// TODO maybe move this to FileSystem module
+import symlinkDir from 'symlink-dir'
 
 export const createSymLink = async (target, path) => {
-  try {
-    await mkdir(dirname(path), { recursive: true })
-    await symlink(target, path)
-  } catch (error) {
-    throw new FileSystemError(
-      error,
-      `Failed to create symbolic link from ${target} to ${path}`
-    )
-  }
+  await symlinkDir(target, path)
 }

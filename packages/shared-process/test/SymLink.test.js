@@ -5,19 +5,16 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('node:fs/promises', () => {
+jest.unstable_mockModule('symlink-dir', () => {
   return {
-    symlink: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-    mkdir: jest.fn(() => {
+    default: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
 })
 
-const fs = await import('node:fs/promises')
 const SymLink = await import('../src/parts/SymLink/SymLink.js')
+const symlinkDir = (await import('symlink-dir')).default
 
 class NodeError extends Error {
   constructor(code) {
@@ -28,34 +25,24 @@ class NodeError extends Error {
 
 test('createSymLink - error', async () => {
   // @ts-ignore
-  fs.symlink.mockImplementation(async () => {
+  symlinkDir.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  // @ts-ignore
-  fs.mkdir.mockImplementation(async () => {})
-  await expect(SymLink.createSymLink('/test/from', '/test/to')).rejects.toThrowError(
-    new Error('Failed to create symbolic link from /test/from to /test/to: TypeError: x is not a function')
-  )
+  await expect(SymLink.createSymLink('/test/from', '/test/to')).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('createSymLink - error - EEXIST', async () => {
   // @ts-ignore
-  fs.symlink.mockImplementation(async () => {
+  symlinkDir.mockImplementation(async () => {
     throw new NodeError(ErrorCodes.EEXIST)
   })
-  // @ts-ignore
-  fs.mkdir.mockImplementation(() => {})
   await expect(SymLink.createSymLink('/test/from', '/test/to')).rejects.toHaveProperty('code', ErrorCodes.EEXIST)
 })
 
 test('createSymLink', async () => {
   // @ts-ignore
-  fs.symlink.mockImplementation(() => {})
-  // @ts-ignore
-  fs.mkdir.mockImplementation(() => {})
+  symlinkDir.mockImplementation(() => {})
   await SymLink.createSymLink('/test/from', '/test/to')
-  expect(fs.symlink).toHaveBeenCalledTimes(1)
-  expect(fs.symlink).toHaveBeenCalledWith('/test/from', '/test/to')
-  expect(fs.mkdir).toHaveBeenCalledTimes(1)
-  expect(fs.mkdir).toHaveBeenCalledWith('/test', { recursive: true })
+  expect(symlinkDir).toHaveBeenCalledTimes(1)
+  expect(symlinkDir).toHaveBeenCalledWith('/test/from', '/test/to')
 })
