@@ -33,12 +33,8 @@ test('createSymLink - error', async () => {
   })
   // @ts-ignore
   fs.mkdir.mockImplementation(async () => {})
-  await expect(
-    SymLink.createSymLink('/test/from', '/test/to')
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to create symbolic link from /test/from to /test/to: x is not a function'
-    )
+  await expect(SymLink.createSymLink('/test/from', '/test/to')).rejects.toThrowError(
+    new Error('Failed to create symbolic link from /test/from to /test/to: TypeError: x is not a function')
   )
 })
 
@@ -49,9 +45,7 @@ test('createSymLink - error - EEXIST', async () => {
   })
   // @ts-ignore
   fs.mkdir.mockImplementation(() => {})
-  await expect(
-    SymLink.createSymLink('/test/from', '/test/to')
-  ).rejects.toHaveProperty('code', ErrorCodes.EEXIST)
+  await expect(SymLink.createSymLink('/test/from', '/test/to')).rejects.toHaveProperty('code', ErrorCodes.EEXIST)
 })
 
 test('createSymLink', async () => {
