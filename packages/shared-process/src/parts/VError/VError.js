@@ -1,12 +1,8 @@
 import * as MergeStacks from '../MergeStacks/MergeStacks.js'
+import * as NormalizeErrorLine from '../NormalizeErrorLine/NormalizeErrorLine.js'
 
 const getCombinedMessage = (error, message) => {
-  let stringifiedError = `${error}`
-  if (stringifiedError.startsWith('Error: ')) {
-    stringifiedError = stringifiedError.slice(`Error: `.length)
-  } else if (stringifiedError.startsWith('VError: ')) {
-    stringifiedError = stringifiedError.slice(`VError: `.length)
-  }
+  const stringifiedError = NormalizeErrorLine.normalizeLine(`${error}`)
   if (message) {
     return `${message}: ${stringifiedError}`
   }
