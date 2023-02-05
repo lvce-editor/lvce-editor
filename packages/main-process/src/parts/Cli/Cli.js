@@ -23,7 +23,7 @@ exports.parseCliArgs = (argv) => {
   const relevantArgv = argv.slice(1)
   const parsedArgs = minimist(relevantArgv, CLI_OPTIONS)
   // TODO tree-shake this out
-  if (argv[0].endsWith('dist/electron')) {
+  if (argv[0].endsWith('dist/electron') || argv[0].endsWith('dist\\electron.exe')) {
     parsedArgs._ = parsedArgs._.slice(1)
   }
   return parsedArgs
