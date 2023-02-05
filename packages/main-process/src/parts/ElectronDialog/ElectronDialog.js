@@ -57,6 +57,7 @@ exports.showMessageBox = async (message, buttons, type = ElectronMessageBoxType.
     buttons,
     cancelId: 1,
     detail,
+    noLink: true,
   })
   const selectedButtonIndex = result.response
   return selectedButtonIndex
