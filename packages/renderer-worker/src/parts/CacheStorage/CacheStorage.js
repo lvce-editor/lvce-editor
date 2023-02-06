@@ -1,12 +1,9 @@
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Response from '../Response/Response.js'
+import * as ShouldIgnoreCacheStorageError from '../ShouldIgnoreCacheStorageError/ShouldIgnoreCacheStorageError.js'
 import { VError } from '../VError/VError.js'
-
-const shouldIgnoreError = (error) => {
-  // Firefox throws dom exception in private mode
-  return error && error instanceof DOMException && error.message === 'The operation is insecure.'
-}
 
 // TODO when caches is not defined -> should return undefined
 
@@ -19,7 +16,7 @@ const getResponse = async (key) => {
   if (typeof caches === 'undefined') {
     return undefined
   }
-  if (Platform.platform === 'electron' && key.startsWith('/')) {
+  if (Platform.platform === PlatformType.Electron && key.startsWith('/')) {
     // workaround for custom protocol not working with cache storage
     key = 'https://example.com' + key
   }
@@ -37,7 +34,7 @@ export const getJson = async (key) => {
     const json = await Response.getJson(response)
     return json
   } catch (error) {
-    if (shouldIgnoreError(error)) {
+    if (ShouldIgnoreCacheStorageError.shouldIgnoreCacheStorageError(error)) {
       return undefined
     }
     throw new VError(error, `Failed to get json from cache "${key}"`)
@@ -53,7 +50,7 @@ export const getTextFromCache = async (key) => {
     const text = await Response.getText(response)
     return text
   } catch (error) {
-    if (shouldIgnoreError(error)) {
+    if (ShouldIgnoreCacheStorageError.shouldIgnoreCacheStorageError(error)) {
       return undefined
     }
     throw new VError(error, `Failed to get text from cache "${key}"`)
@@ -92,7 +89,7 @@ export const setText = async (key, value, contentType) => {
   try {
     await setResponse(key, value, contentType)
   } catch (error) {
-    if (shouldIgnoreError(error)) {
+    if (ShouldIgnoreCacheStorageError.shouldIgnoreCacheStorageError(error)) {
       return undefined
     }
     throw new VError(error, `Failed to put item into cache "${key}"`)
@@ -103,7 +100,7 @@ export const setJson = async (key, value) => {
   try {
     await setResponse(key, JSON.stringify(value), 'application/json')
   } catch (error) {
-    if (shouldIgnoreError(error)) {
+    if (ShouldIgnoreCacheStorageError.shouldIgnoreCacheStorageError(error)) {
       return
     }
     throw new VError(error, `Failed to put json into cache "${key}"`)
@@ -118,7 +115,7 @@ export const clearCache = async () => {
     const cacheName = Platform.getCacheName()
     await caches.delete(cacheName)
   } catch (error) {
-    if (shouldIgnoreError(error)) {
+    if (ShouldIgnoreCacheStorageError.shouldIgnoreCacheStorageError(error)) {
       return
     }
     throw new VError(error, 'Failed to clear cache')
