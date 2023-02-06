@@ -1,19 +1,11 @@
+import { execSync } from 'child_process'
 import { createHash } from 'crypto'
-import { stat } from 'fs/promises'
-import { join } from 'path'
 import * as ExecCommand from '../ExecCommand/ExecCommand.js'
 import * as FileSearchResultType from '../FileSearchResultType/FileSearchResultType.js'
 
-const state = {
-  /**
-   * @type {any}
-   */
-  cache: undefined,
-}
-
-const gitLsFilesUncached = async (cwd) => {
+const gitLsFilesUncached = async (gitPath, cwd) => {
   const s = performance.now()
-  const { stdout, stderr } = await ExecCommand.execCommand('git', ['ls-files'], {
+  const { stdout, stderr } = await ExecCommand.execCommand(gitPath, ['ls-files'], {
     cwd,
   })
   const e = performance.now()
@@ -27,31 +19,13 @@ const gitLsFilesUncached = async (cwd) => {
   }
 }
 
-const statOne = async (file) => {
-  const info = await stat(file)
-  return info.mtime
-}
-
-const statAll = (files) => {
-  return Promise.all(files.map(statOne))
-}
-
-const toAbsolutePaths = (root, files) => {
-  const absolutePaths = []
-  for (const file of files) {
-    absolutePaths.push(join(root, file))
-  }
-  return absolutePaths
-}
-
-const gitLsFilesCached = async (cwd, cached) => {
+const gitLsFilesCached = async (gitPath, cwd) => {
   const s = performance.now()
-  const originalHash = createHash('sha1').update(cached).digest('hex')
-  const finalHash = await ExecCommand.execCommandHash('git', ['ls-files'], {
+  const finalHash = await ExecCommand.execCommandHash(gitPath, ['ls-files'], {
     cwd,
   })
   const e = performance.now()
-  console.log(`git ls files took ${e - s}, ${finalHash} ${originalHash}`)
+  console.log(`git ls files took ${e - s}, ${finalHash} `)
   // TODO limit stdout lines to given limit
   return {
     type: FileSearchResultType.FromCache,
@@ -60,15 +34,25 @@ const gitLsFilesCached = async (cwd, cached) => {
   }
 }
 
-export const gitLsFiles = async (cwd, limit) => {
-  if (state.cache) {
-    return gitLsFilesCached(cwd, state.cache)
-  }
-  const result = await gitLsFilesUncached(cwd)
-  state.cache = result.stdout
+export const gitLsFiles = async (gitPath, cwd, limit) => {
+  const result = await gitLsFilesUncached(gitPath, cwd)
   return {
     type: FileSearchResultType.New,
     cacheId: result.cacheId,
     stdout: result.stdout,
   }
+}
+
+export const gitLsFilesHash = async (gitPath, cwd, limit) => {
+  const result = await gitLsFilesCached(gitPath, cwd)
+  return {
+    type: FileSearchResultType.New,
+    cacheId: result.cacheId,
+    stdout: '',
+  }
+}
+
+export const resolveGit = async () => {
+  const bin = execSync(`which git`).toString().trim()
+  return bin
 }

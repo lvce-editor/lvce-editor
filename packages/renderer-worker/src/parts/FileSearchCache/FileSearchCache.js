@@ -19,7 +19,6 @@ export const get = async (cacheKey) => {
       return undefined
     }
     const text = await Response.getText(response)
-    console.log({ text })
     return text
   } catch (error) {
     throw new VError(error, `Failed to get value from file search cache`)

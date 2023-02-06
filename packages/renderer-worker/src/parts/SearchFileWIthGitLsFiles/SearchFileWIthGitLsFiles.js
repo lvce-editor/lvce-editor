@@ -3,23 +3,32 @@ import * as FileSearchResultType from '../FileSearchResultType/FileSearchResultT
 import * as GitLsFiles from '../GitLsFiles/GitLsFiles.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
-const getStdout = async (result) => {
-  const { type, stdout, cacheId } = result
-  if (type === FileSearchResultType.New) {
-    await FileSearchCache.set(cacheId, stdout)
-    return stdout
+export const state = {
+  resolvedGit: '',
+}
+
+const resolveGit = async () => {
+  return GitLsFiles.resolveGit()
+}
+
+const getOrResolveGit = async () => {
+  if (!state.resolvedGit) {
+    state.resolvedGit = await resolveGit()
   }
-  if (result.type === FileSearchResultType.FromCache) {
-    return FileSearchCache.get(cacheId)
-  }
-  throw new Error('unknown result type')
+  return state.resolvedGit
 }
 
 export const searchFile = async (path, value) => {
-  console.log({ path })
   const limit = 512
-  const result = await GitLsFiles.gitLsFiles(path, limit)
-  const stdout = await getStdout(result)
-  const files = SplitLines.splitLines(stdout)
+  const gitPath = await getOrResolveGit()
+  const result = await GitLsFiles.gitLsFilesHash(gitPath, path, limit)
+  const { cacheId } = result
+  const cachedResult = await FileSearchCache.get(cacheId)
+  if (cachedResult) {
+    return SplitLines.splitLines(cachedResult)
+  }
+  const actualResult = await GitLsFiles.gitLsFiles(gitPath, path, limit)
+  await FileSearchCache.set(actualResult.cacheId, actualResult.stdout)
+  const files = SplitLines.splitLines(actualResult.stdout)
   return files
 }
