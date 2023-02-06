@@ -12,7 +12,7 @@ const filterPicks = (state, picks, exclude, value) => {
       state.warned.push(JSON.stringify(pick))
       return false
     }
-    const labelMatch = FuzzySearch.fuzzySearch(value, pick.label || pick.id)
+    const labelMatch = FuzzySearch.fuzzySearch(value, pick.label ?? pick.id)
     if (labelMatch) {
       return labelMatch
     }
