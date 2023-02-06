@@ -1,6 +1,7 @@
-import * as Platform from '../Platform/Platform.js'
-import { VError } from '../VError/VError.js'
 import * as Logger from '../Logger/Logger.js'
+import * as Platform from '../Platform/Platform.js'
+import * as Response from '../Response/Response.js'
+import { VError } from '../VError/VError.js'
 
 const shouldIgnoreError = (error) => {
   // Firefox throws dom exception in private mode
@@ -33,7 +34,7 @@ export const getJson = async (key) => {
     if (!response) {
       return undefined
     }
-    const json = await response.json()
+    const json = await Response.getJson(response)
     return json
   } catch (error) {
     if (shouldIgnoreError(error)) {
@@ -49,7 +50,7 @@ export const getTextFromCache = async (key) => {
     if (!response) {
       return undefined
     }
-    const text = await response.text()
+    const text = await Response.getText(response)
     return text
   } catch (error) {
     if (shouldIgnoreError(error)) {
@@ -78,7 +79,7 @@ const setResponse = async (key, value, contentType) => {
   const cache = await caches.open(cacheName)
   await cache.put(
     key,
-    new Response(value, {
+    Response.create(value, {
       headers: new Headers({
         'Content-Type': contentType,
         'Content-Length': `${value.length}`,
