@@ -2,6 +2,7 @@ import { createHash } from 'crypto'
 import { stat } from 'fs/promises'
 import { join } from 'path'
 import * as ExecCommand from '../ExecCommand/ExecCommand.js'
+import * as FileSearchResultType from '../FileSearchResultType/FileSearchResultType.js'
 
 const state = {
   /**
@@ -53,7 +54,7 @@ const gitLsFilesCached = async (cwd, cached) => {
   console.log(`git ls files took ${e - s}, ${finalHash} ${originalHash}`)
   // TODO limit stdout lines to given limit
   return {
-    type: 'from-cache',
+    type: FileSearchResultType.FromCache,
     cacheId: finalHash,
     stdout: '',
   }
@@ -66,7 +67,7 @@ export const gitLsFiles = async (cwd, limit) => {
   const result = await gitLsFilesUncached(cwd)
   state.cache = result.stdout
   return {
-    type: 'new',
+    type: FileSearchResultType.New,
     cacheId: result.cacheId,
     stdout: result.stdout,
   }

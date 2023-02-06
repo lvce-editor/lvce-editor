@@ -1,14 +1,15 @@
 import * as FileSearchCache from '../FileSearchCache/FileSearchCache.js'
+import * as FileSearchResultType from '../FileSearchResultType/FileSearchResultType.js'
 import * as GitLsFiles from '../GitLsFiles/GitLsFiles.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const getStdout = async (result) => {
   const { type, stdout, cacheId } = result
-  if (type === 'new') {
+  if (type === FileSearchResultType.New) {
     await FileSearchCache.set(cacheId, stdout)
     return stdout
   }
-  if (result.type === 'from-cache') {
+  if (result.type === FileSearchResultType.FromCache) {
     return FileSearchCache.get(cacheId)
   }
   throw new Error('unknown result type')
