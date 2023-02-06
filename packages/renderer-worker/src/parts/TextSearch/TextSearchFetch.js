@@ -1,11 +1,12 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 
 const textSearchInFile = (file, content, query) => {
   const results = []
-  const lines = content.split('\n')
+  const lines = SplitLines.splitLines(content)
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
     const index = line.indexOf(query)

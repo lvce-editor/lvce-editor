@@ -3,6 +3,7 @@ const { fileURLToPath } = require('node:url')
 const VError = require('verror')
 const { codeFrameColumns } = require('@babel/code-frame')
 const { LinesAndColumns } = require('lines-and-columns')
+const SplitLines = require('../SplitLines/SplitLines.js')
 
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
@@ -37,7 +38,7 @@ const isRelevantLine = (line) => {
 }
 
 const cleanStack = (stack) => {
-  const lines = stack.split('\n')
+  const lines = SplitLines.splitLines(stack)
   return lines.filter(isRelevantLine)
 }
 
