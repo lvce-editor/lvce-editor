@@ -1,5 +1,6 @@
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Response from '../Response/Response.js'
 import { VError } from '../VError/VError.js'
 
 export const state = {
@@ -18,7 +19,7 @@ const actuallyLoadCssStyleSheet = async (css) => {
     if (!response.ok) {
       throw new Error(response.statusText)
     }
-    const text = await response.text()
+    const text = await Response.getText(response)
     await RendererProcess.invoke(
       /* Css.addCssStyleSheet */
       'Css.addCssStyleSheet',
