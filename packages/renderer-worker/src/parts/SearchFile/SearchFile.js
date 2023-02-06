@@ -4,6 +4,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 
 const getModule = (protocol) => {
   if (protocol === '') {
+    // TODO only read preference once when opening quickpick
     const preference = Preferences.get('search.searchWith')
     if (preference === 'git-ls-files') {
       return import('../SearchFileWIthGitLsFiles/SearchFileWIthGitLsFiles.js')
@@ -17,7 +18,7 @@ const getModule = (protocol) => {
     case FileSystemProtocol.Fetch:
       return import('../SearchFileWithFetch/SearchFileWithFetch.js')
     default:
-      return import('../SearchFileRemote/SearchFileRemote.js')
+      return import('../SearchFileWithRipGrep/SearchFileWithRipGrep.js')
   }
 }
 
