@@ -5,3 +5,5 @@ export const EXDEV = 'EXDEV'
 export const EEXIST = 'EEXIST'
 
 export const ENOTDIR = 'ENOTDIR'
+
+export const ELSPROBLEMS = 'ELSPROBLEMS'
