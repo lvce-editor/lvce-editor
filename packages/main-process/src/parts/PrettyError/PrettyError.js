@@ -4,6 +4,7 @@ const VError = require('verror')
 const { codeFrameColumns } = require('@babel/code-frame')
 const { LinesAndColumns } = require('lines-and-columns')
 const SplitLines = require('../SplitLines/SplitLines.js')
+const Json = require('../Json/Json.js')
 
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
@@ -101,12 +102,8 @@ const fixBackslashes = (string) => {
   return string.replaceAll('\\\\', '\\')
 }
 
-const stringifyJson = (json) => {
-  return JSON.stringify(json, null, 2) + '\n'
-}
-
 exports.prepareJsonError = (json, property, message) => {
-  const string = fixBackslashes(stringifyJson(json))
+  const string = fixBackslashes(Json.stringify(json))
   const stringifiedPropertyName = `"${property}"`
   const index = string.indexOf(stringifiedPropertyName) // TODO this could be wrong in some cases, find a better way
   const jsonError = {
