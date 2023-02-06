@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.js'
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
@@ -13,21 +14,14 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   }),
 }))
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionManifests/ExtensionManifests',
-  () => ({
-    getAll: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  })
-)
+jest.unstable_mockModule('../src/parts/ExtensionManifests/ExtensionManifests', () => ({
+  getAll: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
 
-const ExtensionList = await import(
-  '../src/parts/ExtensionList/ExtensionList.js'
-)
-const ExtensionManifests = await import(
-  '../src/parts/ExtensionManifests/ExtensionManifests.js'
-)
+const ExtensionList = await import('../src/parts/ExtensionList/ExtensionList.js')
+const ExtensionManifests = await import('../src/parts/ExtensionManifests/ExtensionManifests.js')
 
 class NodeError extends Error {
   constructor(code, message = code) {
@@ -47,11 +41,9 @@ test('list - error - folder does not exist', async () => {
 test('list - error - permission denied', async () => {
   // @ts-ignore
   ExtensionManifests.getAll.mockImplementation(() => {
-    throw new NodeError('EPERM')
+    throw new NodeError(ErrorCodes.EPERM)
   })
-  await expect(ExtensionList.list()).rejects.toThrowError(
-    new Error('Failed to list extensions: EPERM')
-  )
+  await expect(ExtensionList.list()).rejects.toThrowError(new Error('Failed to list extensions: EPERM'))
 })
 
 test.skip('list - error - manifest json is null', async () => {
@@ -111,7 +103,7 @@ test('list - error - manifest is a directory', async () => {
     return [
       {
         status: ExtensionManifestStatus.Rejected,
-        reason: new NodeError('EISDIR'),
+        reason: new NodeError(ErrorCodes.EISDIR),
       },
       {
         status: ExtensionManifestStatus.Resolved,

@@ -60,7 +60,6 @@ const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplor
 const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
 
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
-
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const Command = await import('../src/parts/Command/Command.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
@@ -449,7 +448,7 @@ test('loadContent - restore from saved state - error root not found', async () =
     root: '/test',
     expandedPaths: ['/test/a'],
   }
-  await expect(ViewletExplorer.loadContent(state, savedState)).rejects.toThrowError(new Error('ENOENT'))
+  await expect(ViewletExplorer.loadContent(state, savedState)).rejects.toThrowError(new Error(ErrorCodes.ENOENT))
 })
 
 test('loadContent - restore from saved state - sort dirents', async () => {
@@ -607,7 +606,7 @@ test('loadContent - restore from saved state - error - ENOENT for child folder',
           },
         ]
       case '/test/a/c':
-        throw new NodeError('ENOENT')
+        throw new NodeError(ErrorCodes.ENOENT)
       case '/test/b/d':
         return [
           {
