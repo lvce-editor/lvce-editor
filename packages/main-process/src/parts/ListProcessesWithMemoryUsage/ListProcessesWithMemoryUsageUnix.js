@@ -6,6 +6,7 @@ const { VError } = require('verror')
 const Assert = require('../Assert/Assert.js')
 const ListProcessGetName = require('../ListProcessGetName/ListProcessGetName.js')
 const ErrorCodes = require('../ErrorCodes/ErrorCodes.js')
+const SplitLines = require('../SplitLines/SplitLines.js')
 
 const execFile = util.promisify(childProcess.execFile)
 
@@ -31,7 +32,7 @@ const parsePsOutputLine = (line) => {
 const parsePsOutput = (stdout, rootPid) => {
   Assert.string(stdout)
   Assert.number(rootPid)
-  const lines = stdout.split('\n')
+  const lines = SplitLines.splitLines(stdout)
   const result = []
   const depthMap = Object.create(null)
   depthMap[rootPid] = 1
@@ -85,11 +86,7 @@ const getAccurateMemoryUsage = async (pid) => {
 
 const getPsOutput = async () => {
   try {
-    const { stdout } = await execFile('ps', [
-      '-ax',
-      '-o',
-      'pid=,ppid=,pcpu=,pmem=,command=',
-    ])
+    const { stdout } = await execFile('ps', ['-ax', '-o', 'pid=,ppid=,pcpu=,pmem=,command='])
     return stdout.trim()
   } catch (error) {
     // @ts-ignore
@@ -118,9 +115,7 @@ exports.listProcessesWithMemoryUsage = async (rootPid) => {
   const parsed = parsePsOutput(stdout, rootPid)
   // console.timeEnd('parsePsOutput')
   // console.time('addAccurateMemoryUsage')
-  const parsedWithAccurateMemoryUsage = await Promise.all(
-    parsed.map(addAccurateMemoryUsage)
-  )
+  const parsedWithAccurateMemoryUsage = await Promise.all(parsed.map(addAccurateMemoryUsage))
   // console.timeEnd('addAccurateMemoryUsage')
   const filtered = parsedWithAccurateMemoryUsage.filter(hasPositiveMemoryUsage)
   return filtered

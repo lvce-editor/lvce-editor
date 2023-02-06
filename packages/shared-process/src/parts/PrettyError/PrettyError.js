@@ -14,8 +14,7 @@ const getActualPath = (fileUri) => {
   return fileUri
 }
 
-const RE_MODULE_NOT_FOUND_STACK =
-  /Cannot find package '([^']+)' imported from (.+)$/
+const RE_MODULE_NOT_FOUND_STACK = /Cannot find package '([^']+)' imported from (.+)$/
 
 const prepareModuleNotFoundError = (error) => {
   const message = error.message
@@ -32,7 +31,7 @@ const prepareModuleNotFoundError = (error) => {
   const rawLines = readFileSync(importedFrom, 'utf-8')
   let line = 0
   let column = 0
-  const splittedLines = rawLines.split('\n')
+  const splittedLines = SplitLines.splitLines(rawLines)
   for (let i = 0; i < splittedLines.length; i++) {
     const splittedLine = splittedLines[i]
     const index = splittedLine.indexOf(notFoundModule)
@@ -50,11 +49,7 @@ const prepareModuleNotFoundError = (error) => {
   }
   const codeFrame = codeFrameColumns(rawLines, location)
   const stackLines = SplitLines.splitLines(error.stack)
-  const newStackLines = [
-    stackLines[0],
-    `    at ${importedFrom}:${line}:${column}`,
-    ...stackLines.slice(1),
-  ]
+  const newStackLines = [stackLines[0], `    at ${importedFrom}:${line}:${column}`, ...stackLines.slice(1)]
   const newStack = newStackLines.join('\n')
   return {
     message,
@@ -121,9 +116,7 @@ export const prepareJsonError = (json, property, message) => {
   }
   if (index !== -1) {
     const lines = new LinesAndColumns(string)
-    const location = lines.locationForIndex(
-      index + stringifiedPropertyName.length + 1
-    )
+    const location = lines.locationForIndex(index + stringifiedPropertyName.length + 1)
     const codeFrame = codeFrameColumns(string, {
       start: { line: location.line + 1, column: location.column + 1 },
     })
@@ -134,7 +127,5 @@ export const prepareJsonError = (json, property, message) => {
 }
 
 export const print = (prettyError, prefix = '') => {
-  console.error(
-    `${prefix}Error: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}`
-  )
+  console.error(`${prefix}Error: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}`)
 }

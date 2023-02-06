@@ -33,18 +33,12 @@ const getNpmDependenciesRaw = async (root) => {
     const nodeVersion = process.versions.node
     const nodeVersionMajor = getNodeVersionMajor(nodeVersion)
     if (nodeVersionMajor < 18) {
-      throw new VError(
-        `NodeJs Version >=18 is required but current Node version is ${nodeVersion}`
-      )
+      throw new VError(`NodeJs Version >=18 is required but current Node version is ${nodeVersion}`)
     }
-    const { stdout } = await Exec.exec(
-      'npm',
-      ['list', '--omit=dev', '--parseable', '--all'],
-      {
-        cwd: absoluteRoot,
-      }
-    )
-    const lines = stdout.split('\n').map(trimLine)
+    const { stdout } = await Exec.exec('npm', ['list', '--omit=dev', '--parseable', '--all'], {
+      cwd: absoluteRoot,
+    })
+    const lines = SplitLines.splitLines(stdout).map(trimLine)
     return lines.slice(1)
   } catch (error) {
     if (error && error.message.includes('ELSPROBLEMS')) {
@@ -59,13 +53,9 @@ const getNpmDependenciesRaw = async (root) => {
 export const getNpmDependenciesRawJson = async (root) => {
   try {
     const absoluteRoot = Path.absolute(root)
-    const { stdout } = await Exec.exec(
-      'npm',
-      ['list', '--omit=dev', '--all', '--json', '--long'],
-      {
-        cwd: absoluteRoot,
-      }
-    )
+    const { stdout } = await Exec.exec('npm', ['list', '--omit=dev', '--all', '--json', '--long'], {
+      cwd: absoluteRoot,
+    })
     const json = JSON.parse(stdout)
     return json
   } catch (error) {
