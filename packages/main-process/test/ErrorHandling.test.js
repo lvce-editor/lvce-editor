@@ -44,9 +44,7 @@ test('handleUncaughtExceptionMonitor', () => {
   })
   ErrorHandling.handleUncaughtExceptionMonitor(error)
   expect(Logger.info).toHaveBeenCalledTimes(1)
-  expect(Logger.info).toHaveBeenCalledWith(
-    '[main process] uncaught exception: Error: oops'
-  )
+  expect(Logger.info).toHaveBeenCalledWith('[main process] uncaught exception: Error: oops')
   expect(Logger.error).toHaveBeenCalledTimes(2)
   expect(Logger.error).toHaveBeenNthCalledWith(
     1,
@@ -58,10 +56,7 @@ test('handleUncaughtExceptionMonitor', () => {
   21 | }
   22 |`
   )
-  expect(Logger.error).toHaveBeenNthCalledWith(
-    2,
-    `at main (/test/packages/main-process/src/mainProcessMain.js:19:11)`
-  )
+  expect(Logger.error).toHaveBeenNthCalledWith(2, `at main (/test/packages/main-process/src/mainProcessMain.js:19:11)`)
   expect(Process.exit).toHaveBeenCalledTimes(1)
   expect(Process.exit).toHaveBeenCalledWith(1)
 })
@@ -72,7 +67,7 @@ test('handleUnhandledRejection', () => {
     return {
       message: 'oops',
       stack: `at main (/test/packages/main-process/src/mainProcessMain.js:19:11)`,
-      codeFrame: `  17 |
+      codeFrame: `    17 |
     18 |   if (Math) {
   > 19 |     throw new Error('oops')
        |           ^
@@ -83,24 +78,21 @@ test('handleUnhandledRejection', () => {
   })
   const error = new Error('oops')
   ErrorHandling.handleUnhandledRejection(error)
-  expect(Logger.info).toHaveBeenCalledTimes(1)
-  expect(Logger.info).toHaveBeenCalledWith(
-    '[main process] unhandled rejection: Error: oops'
-  )
-  expect(Logger.error).toHaveBeenCalledTimes(2)
+  expect(Logger.error).toHaveBeenCalledTimes(1)
   expect(Logger.error).toHaveBeenNthCalledWith(
     1,
-    `  17 |
+    `[main process] unhandled rejection: Error: oops
+
+    17 |
     18 |   if (Math) {
   > 19 |     throw new Error('oops')
        |           ^
     20 |   }
     21 | }
-    22 |`
-  )
-  expect(Logger.error).toHaveBeenNthCalledWith(
-    2,
-    `at main (/test/packages/main-process/src/mainProcessMain.js:19:11)`
+    22 |
+
+at main (/test/packages/main-process/src/mainProcessMain.js:19:11)
+`
   )
   expect(Process.exit).toHaveBeenCalledTimes(1)
   expect(Process.exit).toHaveBeenCalledWith(1)

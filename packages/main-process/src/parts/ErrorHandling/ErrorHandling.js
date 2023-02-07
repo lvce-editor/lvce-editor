@@ -45,9 +45,7 @@ exports.handleUncaughtExceptionMonitor = (error, origin) => {
 }
 
 exports.handleUnhandledRejection = (reason, promise) => {
-  Logger.info(`[main process] unhandled rejection: ${firstErrorLine(reason)}`)
   const prettyError = PrettyError.prepare(reason)
-  Logger.error(prettyError.codeFrame)
-  Logger.error(prettyError.stack)
+  Logger.error(`[main process] unhandled rejection: ${[firstErrorLine(reason)]}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}\n`)
   Process.exit(ExitCode.Error)
 }
