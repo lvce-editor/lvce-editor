@@ -52,3 +52,67 @@ test('prepare - module not found error', async () => {
     |                        ^`.trim(),
   })
 })
+
+test('prepare - maximum call stack size exceeded', async () => {
+  const error = new RangeError('Maximum call stack size exceeded')
+  error.stack = ` RangeError: Maximum call stack size exceeded
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:3)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)`
+  // @ts-ignore
+  fs.readFileSync.mockImplementation(() => {
+    return `import { spawn } from 'node:child_process'
+import { once } from 'node:events'
+import * as ExecPromise from '../ExecPromise/ExecPromise.js'
+import * as Hash from '../Hash/Hash.js'
+
+export const execCommand = async (command, args, options) => {
+  const { stdout, stderr } = await ExecPromise.execPromise(command, args, options)
+  return {
+    stdout,
+    stderr,
+  }
+}
+
+export const execCommandHash = async (command, args, options) => {
+  const child = spawn(command, args, options)
+  const hash = Hash.createHash('sha1')
+  child.stdout.pipe(hash)
+  await once(child, 'exit')
+  const finalHash = hash.digest('hex')
+  return finalHash
+}
+
+export const execSync = (command) => {
+  return execSync(command).toString().trim()
+}
+`
+  })
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: 'Maximum call stack size exceeded',
+    stack: `  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:3)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)`,
+    codeFrame: `  22 |
+  23 | export const execSync = (command) => {
+> 24 |   return execSync(command).toString().trim()
+     |   ^
+  25 | }
+  26 |`,
+  })
+})
