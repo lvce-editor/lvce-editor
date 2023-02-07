@@ -63,6 +63,9 @@ const getActualFileUrl = (url, text) => {
       return actualUrl
     }
   }
+  if (text.includes('console.warn("[Package Error]')) {
+    throw new VError(`failed to extract actual url for ${url}: skypack cdn error`)
+  }
   throw new VError(`failed to extract actual url for ${url}`)
 }
 
