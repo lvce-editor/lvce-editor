@@ -1,4 +1,5 @@
 import * as GetWorkerDisplayName from '../GetWorkerDisplayName/GetWorkerDisplayName.js'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerError.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import { ModuleWorkersAreNotSupportedInFirefoxError } from '../ModuleWorkersAreNotSupportedInFirefoxError/ModuleWorkersAreNotSupportedInFirefoxError.js'
@@ -15,7 +16,7 @@ const tryToGetActualErrorMessage = async ({ url, name }) => {
       try {
         const response = await fetch(url)
         switch (response.status) {
-          case 404:
+          case HttpStatusCode.NotFound:
             return `Failed to start ${displayName}: Not found (404)`
           default:
             return `Failed to start ${displayName}: Unknown Network Error`
