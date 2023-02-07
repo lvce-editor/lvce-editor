@@ -1,8 +1,8 @@
 import { codeFrameColumns } from '@babel/code-frame'
-import cleanStack from 'clean-stack'
 import { LinesAndColumns } from 'lines-and-columns'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Json from '../Json/Json.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
@@ -70,7 +70,7 @@ export const prepare = (error) => {
       error = cause
     }
   }
-  const cleanedStack = cleanStack(error.stack)
+  const cleanedStack = CleanStack.cleanStack(error.stack)
   const lines = SplitLines.splitLines(cleanedStack)
   const file = lines[1]
   let codeFrame = ''
@@ -119,6 +119,7 @@ export const prepareJsonError = (json, property, message) => {
     const lines = new LinesAndColumns(string)
     const location = lines.locationForIndex(index + stringifiedPropertyName.length + 1)
     const codeFrame = codeFrameColumns(string, {
+      // @ts-ignore
       start: { line: location.line + 1, column: location.column + 1 },
     })
     jsonError.codeFrame = codeFrame
