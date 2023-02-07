@@ -1,16 +1,19 @@
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 const GetFirstNodeWorkerEvent = require('../GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js')
-const NodeWorker = require('../NodeWorker/NodeWorker.js')
 const Platform = require('../Platform/Platform.js')
+const IpcParent = require('../IpcParent/IpcParent.js')
+const IpcParentType = require('../IpcParentType/IpcParentType.js')
 
 const handleCliArgs = async (parsedArgs) => {
   const sharedProcessPath = Platform.getSharedProcessPath()
-  const worker = NodeWorker.create(sharedProcessPath, {
+  const ipc = await IpcParent.create({
+    method: IpcParentType.NodeWorker,
+    path: sharedProcessPath,
     argv: parsedArgs._,
   })
-  worker.postMessage({ method: '' })
-  const { type, event } = await GetFirstNodeWorkerEvent.getFirstNodeWorkerEvent(worker)
+  ipc.send({ method: '' })
+  const { type, event } = await GetFirstNodeWorkerEvent.getFirstNodeWorkerEvent(ipc)
   switch (type) {
     case FirstNodeWorkerEventType.Error:
       throw event

@@ -1,10 +1,10 @@
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 
-const getFirstNodeWorkerEvent = async (worker) => {
+const getFirstNodeWorkerEvent = async (ipc) => {
   const { type, event } = await new Promise((resolve, reject) => {
     const cleanup = () => {
-      worker.off('exit', handleExit)
-      worker.off('error', handleError)
+      ipc.off('exit', handleExit)
+      ipc.off('error', handleError)
     }
     const handleExit = (event) => {
       cleanup()
@@ -14,8 +14,8 @@ const getFirstNodeWorkerEvent = async (worker) => {
       cleanup()
       resolve({ type: FirstNodeWorkerEventType.Error, event })
     }
-    worker.on('exit', handleExit)
-    worker.on('error', handleError)
+    ipc.on('exit', handleExit)
+    ipc.on('error', handleError)
   })
   return { type, event }
 }
