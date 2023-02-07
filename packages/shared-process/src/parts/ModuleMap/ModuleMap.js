@@ -93,6 +93,8 @@ export const getModuleId = (commandId) => {
     case 'FileSystem.writeFile':
       return ModuleId.FileSystem
     case 'GitLsFiles.gitLsFiles':
+    case 'GitLsFiles.gitLsFilesHash':
+    case 'GitLsFiles.resolveGit':
       return ModuleId.GitLsFiles
     case 'Native.openFolder':
       return ModuleId.Native

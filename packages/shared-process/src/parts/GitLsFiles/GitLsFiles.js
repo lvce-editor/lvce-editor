@@ -1,9 +1,25 @@
-import * as Exec from '../Exec/Exec.js'
+import * as ExecCommand from '../ExecCommand/ExecCommand.js'
+import * as Hash from '../Hash/Hash.js'
 
-export const gitLsFiles = async (cwd, limit) => {
-  const { stdout, stderr } = await Exec.exec('git', ['ls-files'], {
+export const gitLsFiles = async (gitPath, cwd, limit) => {
+  const { stdout, stderr } = await ExecCommand.execCommand(gitPath, ['ls-files'], {
     cwd,
   })
-  // TODO limit stdout lines to given limit
-  return stdout
+  const hash = Hash.fromString(stdout)
+  return {
+    stdout,
+    cacheId: hash,
+  }
+}
+
+export const gitLsFilesHash = async (gitPath, cwd, limit) => {
+  const hash = await ExecCommand.execCommandHash(gitPath, ['ls-files'], {
+    cwd,
+  })
+  return hash
+}
+
+export const resolveGit = async () => {
+  const bin = ExecCommand.execSync(`which git`)
+  return bin
 }
