@@ -103,6 +103,7 @@ exports.invoke = async (command, ...args) => {
   65 |     }
   66 |   }
   67 |   return commands[command](...args)`,
+    type: 'Error',
   })
 })
 
@@ -240,6 +241,7 @@ exports.findById = (id) => {
   85 |
   86 |   // window.setMenu(menu)
   87 |   window.setMenuBarVisibility(true)`,
+    type: 'TypeError',
   })
 })
 
@@ -329,6 +331,7 @@ exports.load = async (moduleId) => {
     at getOrLoadModule (/test/packages/main-process/src/parts/Command/Command.js:26:33)
     at loadCommand (/test/packages/main-process/src/parts/Command/Command.js:32:34)
     at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:64:11)`,
+    type: 'Error',
   })
 })
 
@@ -492,6 +495,7 @@ exports.getProcessTree = getProcessTree;
   11 |     ProcessDataFlag[ProcessDataFlag[\"None\"] = 0] = \"None\";`,
     message: `Module did not self-register: 'C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\build\\Release\\windows_process_tree.node'.`,
     stack: `    at Object.<anonymous> (C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\lib\\index.js:8:16)`,
+    type: 'Error',
   })
 })
 
@@ -562,6 +566,7 @@ exports.add = (config) => {
   at exports.findById (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:94:26)
   at handlePortForSharedProcess (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:130:28)
   at exports.handlePort (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:234:14)`,
+    type: 'TypeError',
   })
   expect(fs.readFileSync).toHaveBeenCalledTimes(1)
   expect(fs.readFileSync).toHaveBeenCalledWith(`/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js`, 'utf-8')
@@ -774,6 +779,7 @@ module.exports = copySync
     message: "Cannot find module 'graceful-fs'",
     // TODO should print more of the stack trace
     stack: '    at Object.<anonymous> (/test/packages/shared-process/node_modules/fs-extra/lib/copy/copy-sync.js:3:12)',
+    type: 'Error',
   })
 })
 
@@ -834,5 +840,6 @@ exports.getFirstNodeWorkerEvent = getFirstNodeWorkerEvent
     message: "Unexpected token 'export'",
     stack: `    at /test/packages/main-process/src/parts/GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js:3
     at Object.<anonymous> (/test/packages/main-process/src/parts/CliForwardToSharedProcess/CliForwardToSharedProcess.js:4:33)`,
+    type: 'SyntaxError',
   })
 })
