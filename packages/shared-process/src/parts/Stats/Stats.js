@@ -2,6 +2,7 @@
 
 import * as Exec from '../Exec/Exec.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as ParseInt from '../ParseInt/ParseInt.js'
 
 const PID_CMD = /^\s*(\d+)\s+(\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(.+)$/
 
@@ -9,11 +10,11 @@ const parsePsOutputLine = (line) => {
   const matches = PID_CMD.exec(line.trim())
   if (matches && matches.length === 6) {
     return {
-      pid: Number.parseInt(matches[1]),
-      ppid: Number.parseInt(matches[2]),
+      pid: ParseInt.parseInt(matches[1]),
+      ppid: ParseInt.parseInt(matches[2]),
       cwd: matches[5],
-      load: Number.parseInt(matches[3]),
-      mem: Number.parseInt(matches[4]),
+      load: ParseInt.parseInt(matches[3]),
+      mem: ParseInt.parseInt(matches[4]),
     }
   }
 }
@@ -23,13 +24,9 @@ const parsePsOutput = (stdout, rootPid) => {
 }
 
 const getPsOutput = async (rootPid) => {
-  const { stdout } = await Exec.exec(
-    'ps',
-    ['-g', `${rootPid}`, '-a', '-o', 'pid=,ppid=,pcpu=,pmem=,command='],
-    {
-      shell: true,
-    }
-  )
+  const { stdout } = await Exec.exec('ps', ['-g', `${rootPid}`, '-a', '-o', 'pid=,ppid=,pcpu=,pmem=,command='], {
+    shell: true,
+  })
   return stdout
 }
 
