@@ -1,8 +1,9 @@
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
-import * as PrettyError from '../PrettyError/PrettyError.js'
-import * as Socket from '../Socket/Socket.js'
-import * as Process from '../Process/Process.js'
+import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as PrettyError from '../PrettyError/PrettyError.js'
+import * as Process from '../Process/Process.js'
+import * as Socket from '../Socket/Socket.js'
 
 export const state = {
   seenErrors: [],
@@ -70,5 +71,5 @@ export const handleUncaughtExceptionMonitor = (error, origin) => {
   // console.error(prettyError.message)
   console.error(prettyError.codeFrame)
   console.error(prettyError.stack)
-  Process.exit(1)
+  Process.exit(ExitCode.Error)
 }

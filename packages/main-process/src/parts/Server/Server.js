@@ -3,6 +3,8 @@ const Command = require('../Command/Command.js')
 const Path = require('../Path/Path.js')
 const Logger = require('../Logger/Logger.js')
 const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
+const ExitCode = require('../ExitCode/ExitCode.js')
+const Process = require('../Process/Process.js')
 
 const state = (exports.state = {
   /**
@@ -14,13 +16,13 @@ const state = (exports.state = {
 const handleChildError = (error) => {
   Logger.info('[main] Child Error')
   Logger.error(error)
-  process.exit(1)
+  Process.exit(ExitCode.Error)
 }
 
 const handleStdError = (error) => {
   Logger.info('[main] Child std error')
   Logger.error(error)
-  process.exit(1)
+  Process.exit(ExitCode.Error)
 }
 
 const handleChildMessage = async (message) => {
@@ -66,7 +68,7 @@ const handleProcessExit = () => {
 
 const handleChildExit = (code) => {
   Logger.info(`[main] web process exited with code ${code}`)
-  process.exit(code)
+  Process.exit(code)
 }
 
 const handleChildDisconnect = () => {
