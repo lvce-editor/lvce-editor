@@ -28,7 +28,7 @@ test('prepare - module not found error', async () => {
   // @ts-ignore
   error.code = ErrorCodes.ERR_MODULE_NOT_FOUND
   // @ts-ignore
-  fs.readtestSync.mockImplementation(() => {
+  fs.readFileSync.mockImplementation(() => {
     return `export { rgPath } from 'vscode-ripgrep-with-github-api-error-fix121'`
   })
   const prettyError = PrettyError.prepare(error)
@@ -67,7 +67,7 @@ test('prepare - maximum call stack size exceeded', async () => {
   at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
   at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)`
   // @ts-ignore
-  fs.readtestSync.mockImplementation(() => {
+  fs.readFileSync.mockImplementation(() => {
     return `import { spawn } from 'node:child_process'
 import { once } from 'node:events'
 import * as ExecPromise from '../ExecPromise/ExecPromise.js'
