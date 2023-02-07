@@ -1,7 +1,7 @@
+import { pipeline } from 'node:stream/promises'
+import { createGunzip } from 'node:zlib'
 import got, { RequestError } from 'got'
-import { pipeline } from 'stream/promises'
 import tar from 'tar-fs'
-import { createGunzip } from 'zlib'
 import { VError } from '../VError/VError.js'
 
 export const downloadAndExtractTarGz = async ({ url, outDir, strip }) => {

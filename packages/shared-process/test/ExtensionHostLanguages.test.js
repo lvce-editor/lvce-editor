@@ -9,27 +9,20 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionManagement/ExtensionManagement.js',
-  () => {
-    return {
-      getExtensions: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-      getThemeExtensions: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.js', () => {
+  return {
+    getExtensions: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    getThemeExtensions: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ExtensionHostLanguages = await import(
-  '../src/parts/ExtensionManagement/ExtensionManagementLanguages.js'
-)
+const ExtensionHostLanguages = await import('../src/parts/ExtensionManagement/ExtensionManagementLanguages.js')
 
-const ExtensionManagement = await import(
-  '../src/parts/ExtensionManagement/ExtensionManagement.js'
-)
+const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -58,11 +51,7 @@ test('getLanguages', async () => {
     {
       id: 'plaintext',
       label: 'Plaintext',
-      tokenize: `/remote/${pathToFileURL(
-        join(tmpDir, 'src/tokenizePlainText.js')
-      )
-        .toString()
-        .slice(8)}`,
+      tokenize: `/remote/${pathToFileURL(join(tmpDir, 'src/tokenizePlainText.js')).toString().slice(8)}`,
     },
   ])
 })
@@ -82,9 +71,7 @@ test('getLanguages - error - property languages is not of type array', async () 
     ]
   })
   // TODO should handle error gracefully
-  await expect(ExtensionHostLanguages.getLanguages()).rejects.toThrowError(
-    new TypeError('extension.languages.map is not a function')
-  )
+  await expect(ExtensionHostLanguages.getLanguages()).rejects.toThrowError(new TypeError('extension.languages.map is not a function'))
 })
 
 test('getLanguages - language without tokenize property', async () => {
@@ -143,9 +130,7 @@ test('getLanguages - error - property tokenize is of type array', async () => {
     },
   ])
   expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(
-    '[info] python: language.tokenize must be of type string but was of type object'
-  )
+  expect(spy).toHaveBeenCalledWith('[info] python: language.tokenize must be of type string but was of type object')
 })
 
 test('getLanguageConfiguration', async () => {
@@ -179,9 +164,7 @@ test('getLanguageConfiguration', async () => {
       },
     ]
   })
-  expect(
-    await ExtensionHostLanguages.getLanguageConfiguration('javascript')
-  ).toEqual({
+  expect(await ExtensionHostLanguages.getLanguageConfiguration('javascript')).toEqual({
     comments: {
       blockComment: ['/*', '*/'],
       lineComment: '//',
@@ -209,12 +192,8 @@ test('getLanguageConfiguration - error - language configuration not found', asyn
     ]
   })
   const languageConfigurationPath = join(tmpDir, 'languageConfiguration.json')
-  await expect(
-    ExtensionHostLanguages.getLanguageConfiguration('javascript')
-  ).rejects.toThrowError(
-    new Error(
-      `Failed to load language configuration for javascript: File not found '${languageConfigurationPath}'`
-    )
+  await expect(ExtensionHostLanguages.getLanguageConfiguration('javascript')).rejects.toThrowError(
+    new Error(`Failed to load language configuration for javascript: File not found '${languageConfigurationPath}'`)
   )
 })
 
@@ -240,11 +219,7 @@ test('getLanguageConfiguration - error - language configuration has invalid json
     ]
   })
   // TODO should display path as well
-  await expect(
-    ExtensionHostLanguages.getLanguageConfiguration('javascript')
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to load language configuration for javascript: Json Parsing Error'
-    )
+  await expect(ExtensionHostLanguages.getLanguageConfiguration('javascript')).rejects.toThrowError(
+    new Error('Failed to load language configuration for javascript: Json Parsing Error')
   )
 })

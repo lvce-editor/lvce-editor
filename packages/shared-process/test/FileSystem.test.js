@@ -73,28 +73,18 @@ test('copy - error - source does not exist', async () => {
   fs.cp.mockImplementation((source) => {
     throw new Error(`ENOENT: no such file or directory, lstat '${source}'`)
   })
-  await expect(
-    FileSystem.copy('/test-1/a.txt', '/test-2/a.txt')
-  ).rejects.toThrowError(
-    new Error(
-      `Failed to copy "/test-1/a.txt" to "/test-2/a.txt": ENOENT: no such file or directory, lstat '/test-1/a.txt'`
-    )
+  await expect(FileSystem.copy('/test-1/a.txt', '/test-2/a.txt')).rejects.toThrowError(
+    new Error(`Failed to copy "/test-1/a.txt" to "/test-2/a.txt": ENOENT: no such file or directory, lstat '/test-1/a.txt'`)
   )
 })
 
 test('copy - to self', async () => {
   // @ts-ignore
   fs.cp.mockImplementation((source) => {
-    throw new Error(
-      `Invalid src or dest: cp returned EINVAL (src and dest cannot be the same)`
-    )
+    throw new Error(`Invalid src or dest: cp returned EINVAL (src and dest cannot be the same)`)
   })
-  await expect(
-    FileSystem.copy('/test/a.txt', '/test/a.txt')
-  ).rejects.toThrowError(
-    new Error(
-      `Failed to copy "/test/a.txt" to "/test/a.txt": src and dest cannot be the same`
-    )
+  await expect(FileSystem.copy('/test/a.txt', '/test/a.txt')).rejects.toThrowError(
+    new Error(`Failed to copy "/test/a.txt" to "/test/a.txt": src and dest cannot be the same`)
   )
 })
 
@@ -129,9 +119,7 @@ test('create folder - should fail if folder already exists', async () => {
   fs.mkdir.mockImplementation((path) => {
     throw new Error(`EEXIST: file already exists, mkdir '${path}'`)
   })
-  expect(FileSystem.createFolder('/test/a')).rejects.toThrowError(
-    `Failed to create folder "/test/a": EEXIST: file already exists, mkdir '/test/a'`
-  )
+  expect(FileSystem.createFolder('/test/a')).rejects.toThrowError(`Failed to create folder "/test/a": EEXIST: file already exists, mkdir '/test/a'`)
 })
 
 // TODO test recursive create folder
@@ -141,11 +129,7 @@ test('writeFile', async () => {
   fs.writeFile.mockImplementation(() => {})
   await FileSystem.writeFile('/test/a.txt', 'Hello World')
   expect(fs.writeFile).toHaveBeenCalledTimes(1)
-  expect(fs.writeFile).toHaveBeenCalledWith(
-    '/test/a.txt',
-    'Hello World',
-    EncodingType.Utf8
-  )
+  expect(fs.writeFile).toHaveBeenCalledWith('/test/a.txt', 'Hello World', EncodingType.Utf8)
 })
 
 test('writeFile - nonexistent file', async () => {
@@ -153,9 +137,7 @@ test('writeFile - nonexistent file', async () => {
   fs.writeFile.mockImplementation(() => {
     throw new NodeError(ErrorCodes.ENOENT)
   })
-  await expect(
-    FileSystem.writeFile('/test/non-existing-file.txt', 'Hello World')
-  ).rejects.toThrow(`File not found '/test/non-existing-file.txt'`)
+  await expect(FileSystem.writeFile('/test/non-existing-file.txt', 'Hello World')).rejects.toThrow(`File not found '/test/non-existing-file.txt'`)
 })
 
 test.skip('writeFile - parallel write on different files works', async () => {
@@ -219,10 +201,7 @@ test('ensureFile - created parent folders recursively', async () => {
   expect(fs.mkdir).toHaveBeenCalledTimes(1)
   expect(fs.mkdir).toHaveBeenCalledWith('/test/a/b/c/d', { recursive: true })
   expect(fs.writeFile).toHaveBeenCalledTimes(1)
-  expect(fs.writeFile).toHaveBeenCalledWith(
-    '/test/a/b/c/d/writefile.txt',
-    'Hello World'
-  )
+  expect(fs.writeFile).toHaveBeenCalledWith('/test/a/b/c/d/writefile.txt', 'Hello World')
 })
 
 test('remove', async () => {
@@ -244,15 +223,9 @@ test('remove - non-existing file', async () => {
 test('rename', async () => {
   // @ts-ignore
   fs.rename.mockImplementation(() => {})
-  await FileSystem.rename(
-    '/test/file-to-be-moved.txt',
-    '/test/file-has-been-moved.txt'
-  )
+  await FileSystem.rename('/test/file-to-be-moved.txt', '/test/file-has-been-moved.txt')
   expect(fs.rename).toHaveBeenCalledTimes(1)
-  expect(fs.rename).toHaveBeenCalledWith(
-    '/test/file-to-be-moved.txt',
-    '/test/file-has-been-moved.txt'
-  )
+  expect(fs.rename).toHaveBeenCalledWith('/test/file-to-be-moved.txt', '/test/file-has-been-moved.txt')
 })
 
 test('rename - error - non existing old path', async () => {
@@ -260,9 +233,7 @@ test('rename - error - non existing old path', async () => {
   fs.rename.mockImplementation(() => {
     throw new Error(ErrorCodes.ENOENT)
   })
-  await expect(
-    FileSystem.rename('/test/non-existing.txt', '/test/file-has-been-moved.txt')
-  ).rejects.toThrow(
+  await expect(FileSystem.rename('/test/non-existing.txt', '/test/file-has-been-moved.txt')).rejects.toThrow(
     `Failed to rename "/test/non-existing.txt" to "/test/file-has-been-moved.txt": ENOENT`
   )
 })
@@ -276,16 +247,9 @@ test('rename - error - EXDEV', async () => {
   fs.cp.mockImplementation(() => {})
   // @ts-ignore
   fs.rm.mockImplementation(() => {})
-  await FileSystem.rename(
-    '/test/non-existing.txt',
-    '/test/file-has-been-moved.txt'
-  )
+  await FileSystem.rename('/test/non-existing.txt', '/test/file-has-been-moved.txt')
   expect(fs.cp).toHaveBeenCalledTimes(1)
-  expect(fs.cp).toHaveBeenCalledWith(
-    '/test/non-existing.txt',
-    '/test/file-has-been-moved.txt',
-    { recursive: true }
-  )
+  expect(fs.cp).toHaveBeenCalledWith('/test/non-existing.txt', '/test/file-has-been-moved.txt', { recursive: true })
   expect(fs.rm).toHaveBeenCalledTimes(1)
   expect(fs.rm).toHaveBeenCalledWith('/test/non-existing.txt', {
     recursive: true,
@@ -297,12 +261,7 @@ test('rename - error - new path in non-existing nested directory', async () => {
   fs.rename.mockImplementation(() => {
     throw new Error(ErrorCodes.ENOENT)
   })
-  await expect(
-    FileSystem.rename(
-      '/test/file-to-be-moved.txt',
-      '/test/nested/nested/nested/file-has-been-moved.txt'
-    )
-  ).rejects.toThrow(
+  await expect(FileSystem.rename('/test/file-to-be-moved.txt', '/test/nested/nested/nested/file-has-been-moved.txt')).rejects.toThrow(
     `Failed to rename "/test/file-to-be-moved.txt" to "/test/nested/nested/nested/file-has-been-moved.txt": ENOENT`
   )
 })
@@ -421,9 +380,7 @@ test('getRealPath - error - broken symlink - file not found', async () => {
   fs.readlink.mockImplementation(() => {
     return '/test/non-existing.txt'
   })
-  await expect(FileSystem.getRealPath('/test-1/a.txt')).rejects.toThrowError(
-    new Error(`Broken symbolic link: File not found /test/non-existing.txt`)
-  )
+  await expect(FileSystem.getRealPath('/test-1/a.txt')).rejects.toThrowError(new Error(`Broken symbolic link: File not found /test/non-existing.txt`))
 })
 
 test('getRealPath - error - broken symlink and error with readlink', async () => {
@@ -435,9 +392,7 @@ test('getRealPath - error - broken symlink and error with readlink', async () =>
   fs.readlink.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(FileSystem.getRealPath('/test-1/a.txt')).rejects.toThrowError(
-    new Error(`Failed to resolve real path for /test-1/a.txt: ENOENT`)
-  )
+  await expect(FileSystem.getRealPath('/test-1/a.txt')).rejects.toThrowError(new Error(`Failed to resolve real path for /test-1/a.txt: ENOENT`))
 })
 
 test('readFile - error - file not found', async () => {
@@ -445,7 +400,5 @@ test('readFile - error - file not found', async () => {
   fs.readFile.mockImplementation(() => {
     throw new NodeError(ErrorCodes.ENOENT)
   })
-  await expect(
-    FileSystem.readFile('/test/non-existing.txt')
-  ).rejects.toThrowError(new Error(`File not found '/test/non-existing.txt'`))
+  await expect(FileSystem.readFile('/test/non-existing.txt')).rejects.toThrowError(new Error(`File not found '/test/non-existing.txt'`))
 })

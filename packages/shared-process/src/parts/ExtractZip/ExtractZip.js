@@ -1,5 +1,5 @@
-import extract from 'extract-zip'
 import { mkdir } from 'node:fs/promises'
+import extract from 'extract-zip'
 import VError from 'verror'
 
 export const extractZip = async ({ inFile, outDir }) => {

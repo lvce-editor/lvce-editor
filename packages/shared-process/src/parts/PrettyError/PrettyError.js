@@ -1,7 +1,7 @@
-import { codeFrameColumns } from '@babel/code-frame'
-import { LinesAndColumns } from 'lines-and-columns'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import { codeFrameColumns } from '@babel/code-frame'
+import { LinesAndColumns } from 'lines-and-columns'
 import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Json from '../Json/Json.js'
@@ -18,7 +18,7 @@ const getActualPath = (fileUri) => {
 const RE_MODULE_NOT_FOUND_STACK = /Cannot find package '([^']+)' imported from (.+)$/
 
 const prepareModuleNotFoundError = (error) => {
-  const message = error.message
+  const { message } = error
   const match = message.match(RE_MODULE_NOT_FOUND_STACK)
   if (!match) {
     return {
@@ -63,7 +63,7 @@ export const prepare = (error) => {
   if (error && error.code === ErrorCodes.ERR_MODULE_NOT_FOUND) {
     return prepareModuleNotFoundError(error)
   }
-  const message = error.message
+  const { message } = error
   if (error && error.cause) {
     const cause = error.cause()
     if (cause) {
