@@ -30,17 +30,16 @@ export const searchFile = async (path, searchTerm, limit) => {
     Assert.string(path)
     Assert.string(searchTerm)
     Assert.number(limit)
-    const s = performance.now()
     const { stdout, stderr } = await RipGrep.exec(['--files', '--sort-files'], {
       cwd: path,
     })
-    const e = performance.now()
-    console.log(`ripgrep took ${e - s} ms`)
     return LimitString.limitString(stdout, limit)
   } catch (error) {
     // @ts-ignore
     if (isEnoentError(error)) {
-      Logger.info(`[shared-process] ripgrep could not be found at "${RipGrep.ripGrepPath}"`)
+      Logger.info(
+        `[shared-process] ripgrep could not be found at "${RipGrep.ripGrepPath}"`
+      )
       return ``
     }
     // @ts-ignore
