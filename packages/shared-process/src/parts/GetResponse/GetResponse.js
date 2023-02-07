@@ -39,6 +39,7 @@ export const getResponse = async (message, handle) => {
         },
       }
     }
+    console.log({ error })
     const prettyError = PrettyError.prepare(error)
     PrettyError.print(prettyError, `[shared-process] `)
     return {

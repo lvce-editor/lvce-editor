@@ -1,16 +1,10 @@
-import { execFile, spawn } from 'node:child_process'
-import { createHash } from 'node:crypto'
+import { spawn } from 'node:child_process'
 import { once } from 'node:events'
-import { promisify } from 'node:util'
-
-const execPromise = promisify(execFile)
+import * as ExecPromise from '../ExecPromise/ExecPromise.js'
+import * as Hash from '../Hash/Hash.js'
 
 export const execCommand = async (command, args, options) => {
-  // execf
-  const act = performance.now()
-  const { stdout, stderr } = await execPromise(command, args, options)
-  const end = performance.now()
-  console.log(`act ${end - act}`)
+  const { stdout, stderr } = await ExecPromise.execPromise(command, args, options)
   return {
     stdout,
     stderr,
@@ -18,15 +12,14 @@ export const execCommand = async (command, args, options) => {
 }
 
 export const execCommandHash = async (command, args, options) => {
-  // execf
-  const act = performance.now()
   const child = spawn(command, args, options)
-  const hash = createHash('sha1')
+  const hash = Hash.createHash('sha1')
   child.stdout.pipe(hash)
   await once(child, 'exit')
   const finalHash = hash.digest('hex')
-  const end = performance.now()
-  console.log(`act ${end - act}`)
-  // console.log({ bin })
   return finalHash
+}
+
+export const execSync = (command) => {
+  return execSync(command).toString().trim()
 }

@@ -1,5 +1,4 @@
 import * as FileSearchCache from '../FileSearchCache/FileSearchCache.js'
-import * as FileSearchResultType from '../FileSearchResultType/FileSearchResultType.js'
 import * as GitLsFiles from '../GitLsFiles/GitLsFiles.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
@@ -21,8 +20,7 @@ const getOrResolveGit = async () => {
 export const searchFile = async (path, value) => {
   const limit = 512
   const gitPath = await getOrResolveGit()
-  const result = await GitLsFiles.gitLsFilesHash(gitPath, path, limit)
-  const { cacheId } = result
+  const cacheId = await GitLsFiles.gitLsFilesHash(gitPath, path, limit)
   const cachedResult = await FileSearchCache.get(cacheId)
   if (cachedResult) {
     return SplitLines.splitLines(cachedResult)
