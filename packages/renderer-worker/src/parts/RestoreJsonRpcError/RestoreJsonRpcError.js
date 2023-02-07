@@ -1,36 +1,9 @@
+import * as GetErrorConstructor from '../GetErrorConstructor/GetErrorConstructor.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
-import * as ErrorType from '../ErrorType/ErrorType.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 
-const getErrorConstructor = (message, type) => {
-  if (type) {
-    switch (type) {
-      case ErrorType.DomException:
-        return DOMException
-      case ErrorType.TypeError:
-        return TypeError
-      case ErrorType.SyntaxError:
-        return SyntaxError
-      case ErrorType.ReferenceError:
-        return ReferenceError
-      default:
-        return Error
-    }
-  }
-  if (message.startsWith('TypeError: ')) {
-    return TypeError
-  }
-  if (message.startsWith('SyntaxError: ')) {
-    return SyntaxError
-  }
-  if (message.startsWith('ReferenceError: ')) {
-    return ReferenceError
-  }
-  return Error
-}
-
 const constructError = (message, type, name) => {
-  const ErrorConstructor = getErrorConstructor(message, type)
+  const ErrorConstructor = GetErrorConstructor.getErrorConstructor(message, type)
   if (ErrorConstructor === DOMException && name) {
     return new ErrorConstructor(message, name)
   }
