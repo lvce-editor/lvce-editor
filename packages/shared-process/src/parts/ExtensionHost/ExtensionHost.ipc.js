@@ -6,7 +6,6 @@ import * as ExtensionHostKeyBindings from './ExtensionHostKeyBindings.js'
 // prettier-ignore
 export const Commands = {
 
-
   'ExtensionHost.dispose': ExtensionHost.dispose,
   'ExtensionHost.getCommands': ExtensionHostCommand.getCommandsIpc,
   'ExtensionHost.send': ExtensionHost.send,

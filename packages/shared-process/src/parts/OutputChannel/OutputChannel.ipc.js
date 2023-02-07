@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
-import * as OutputChannel from './OutputChannel.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as OutputChannel from './OutputChannel.js'
 
 export const state = {
   outputChannels: Object.create(null),

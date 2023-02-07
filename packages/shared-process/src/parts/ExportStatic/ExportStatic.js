@@ -446,7 +446,7 @@ const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
 export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath }) => {
   if (pathPrefix === 'auto') {
     const extensionJson = await readExtensionManifest(Path.join(extensionPath, 'extension.json'))
-    const id = extensionJson.id
+    const { id } = extensionJson
     const [author, name] = id.split('.')
     pathPrefix = `/${name}`
   }

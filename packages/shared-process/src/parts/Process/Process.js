@@ -14,7 +14,7 @@ export const setExitCode = (exitCode) => {
   process.exitCode = exitCode
 }
 
-export const argv = process.argv
+export const { argv } = process
 
 export const cwd = () => {
   return process.cwd()
@@ -28,4 +28,4 @@ export const isConnected = () => {
   return process.connected
 }
 
-export const platform = process.platform
+export const { platform } = process

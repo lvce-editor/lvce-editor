@@ -18,7 +18,7 @@ export const install = async ({ user, repo, branch }) => {
     const extensionsPath = Platform.getExtensionsPath()
     const manifestPath = Path.join(cachedExtensionPath, 'extension.json')
     const manifestJson = await JsonFile.readJson(manifestPath)
-    const id = manifestJson.id
+    const { id } = manifestJson
     if (!id) {
       throw new Error('missing id in extension manifest')
     }

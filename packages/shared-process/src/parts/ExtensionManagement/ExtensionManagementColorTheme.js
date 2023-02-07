@@ -4,8 +4,8 @@ import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as FileSystemWatch from '../FileSystemWatch/FileSystemWatch.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
-import * as ExtensionManagement from './ExtensionManagement.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as ExtensionManagement from './ExtensionManagement.js'
 
 // TODO test this function
 // TODO very similar with getIconTheme
