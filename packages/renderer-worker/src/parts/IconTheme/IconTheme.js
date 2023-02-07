@@ -13,6 +13,7 @@ import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 
 export const state = {
   seenFiles: [],
@@ -171,7 +172,7 @@ const getIconThemeCss2 = (iconTheme) => {
     const backgroundUrl = getBackgroundUrl(extensionPath, value)
     rules.push(`.FileIcon${key} { background-image: url(${backgroundUrl}) }`)
   }
-  const rulesCss = rules.join('\n')
+  const rulesCss = JoinLines.joinLines(rules)
   return rulesCss
 }
 

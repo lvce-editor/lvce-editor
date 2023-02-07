@@ -10,7 +10,7 @@ import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-
+import * as JoinLines from '../JoinLines/JoinLines.js'
 // TODO vscode's version of this is shorter
 // if it is a bottleneck, check performance of this function (not very optimized now)
 
@@ -148,12 +148,7 @@ const getFirstTimeOrigin = ({ measureEntries, electronEntries }) => {
   return 0
 }
 
-const formatStartupPerformance = ({
-  measureEntries,
-  webVitals,
-  nodeStartupTiming,
-  electronEntries,
-}) => {
+const formatStartupPerformance = ({ measureEntries, webVitals, nodeStartupTiming, electronEntries }) => {
   const firstTimeOrigin = getFirstTimeOrigin({
     measureEntries,
     electronEntries,
@@ -162,24 +157,16 @@ const formatStartupPerformance = ({
   lines.push('# Startup Performance')
   lines.push('')
   if (electronEntries) {
-    const formattedElectronEntries = formatStartupPerformanceEntries(
-      electronEntries,
-      firstTimeOrigin
-    )
+    const formattedElectronEntries = formatStartupPerformanceEntries(electronEntries, firstTimeOrigin)
     lines.push('## main-process')
     lines.push('')
     lines.push(...SplitLines.splitLines(formattedElectronEntries))
     lines.push('')
   }
   if (measureEntries) {
-    const formattedMeasureEntries = formatStartupPerformanceEntries(
-      measureEntries,
-      firstTimeOrigin
-    )
+    const formattedMeasureEntries = formatStartupPerformanceEntries(measureEntries, firstTimeOrigin)
     if (electronEntries) {
-      const deltaTimeOrigin = (
-        measureEntries.timeOrigin - electronEntries.timeOrigin
-      ).toFixed(2)
+      const deltaTimeOrigin = (measureEntries.timeOrigin - electronEntries.timeOrigin).toFixed(2)
       lines.push(`## renderer-worker (+${deltaTimeOrigin}ms)`)
     } else {
       lines.push('## renderer-worker')
@@ -204,7 +191,7 @@ const formatStartupPerformance = ({
   }
   lines.push('## Extension Host')
   lines.push('')
-  const content = lines.join('\n')
+  const content = JoinLines.joinLines(lines)
   return content
 }
 
@@ -218,10 +205,7 @@ const getMeasureEntries = () => {
 }
 
 const getElectronEntries = async () => {
-  if (
-    Platform.platform === PlatformType.Web ||
-    Platform.platform === PlatformType.Remote
-  ) {
+  if (Platform.platform === PlatformType.Web || Platform.platform === PlatformType.Remote) {
     return undefined
   }
   const result = await ElectronDeveloper.getPerformanceEntries()
@@ -255,10 +239,7 @@ export const getStartupPerformanceContent = async () => {
 }
 
 export const showStartupPerformance = async () => {
-  await Command.execute(
-    /* Main.openUri */ 'Main.openUri',
-    /* uri */ 'app://startup-performance'
-  )
+  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ 'app://startup-performance')
 }
 
 const formatNodeMemoryUsage = (memoryUsage) => {
@@ -272,20 +253,13 @@ const formatNodeMemoryUsage = (memoryUsage) => {
   return toMarkdownTable(header, rows)
 }
 
-const formatRendererWorkerData = ({
-  userAgentSpecificMemory,
-  sent,
-  received,
-}) => {
+const formatRendererWorkerData = ({ userAgentSpecificMemory, sent, received }) => {
   let content = ''
   if (userAgentSpecificMemory) {
     const header = ['Name', 'Value']
     const rows = []
     if (userAgentSpecificMemory.bytes) {
-      rows.push([
-        'Bytes',
-        PrettyBytes.formatBytes(userAgentSpecificMemory.bytes),
-      ])
+      rows.push(['Bytes', PrettyBytes.formatBytes(userAgentSpecificMemory.bytes)])
     }
     if (userAgentSpecificMemory.breakdown) {
       for (const item of userAgentSpecificMemory.breakdown) {
@@ -314,9 +288,7 @@ const formatRendererProcessData = ({ memoryUsage }) => {
 }
 
 const getSharedProcessMemoryUsage = () => {
-  return SharedProcess.invoke(
-    /* Developer.sharedProcessMemoryUsage */ 'Developer.sharedProcessMemoryUsage'
-  )
+  return SharedProcess.invoke(/* Developer.sharedProcessMemoryUsage */ 'Developer.sharedProcessMemoryUsage')
 }
 
 const getPerformanceMemory = () => {
@@ -330,9 +302,7 @@ const getPerformanceUserAgentSpecificMemory = () => {
 // TODO handle case when renderer process and renderer worker are same process communicating via messagePort
 export const getMemoryUsageContent = async () => {
   const sharedProcessMemoryUsage = await getSharedProcessMemoryUsage()
-  const formattedSharedProcessMemoryUsage = formatNodeMemoryUsage(
-    sharedProcessMemoryUsage
-  )
+  const formattedSharedProcessMemoryUsage = formatNodeMemoryUsage(sharedProcessMemoryUsage)
   const userAgentSpecificMemory = await getPerformanceUserAgentSpecificMemory()
   const totalSent = SharedProcess.state.totalSent
   const totalReceived = SharedProcess.state.totalReceived
@@ -375,23 +345,16 @@ ${formattedSharedProcessMemoryUsage}
 }
 
 export const showMemoryUsage = () => {
-  return Command.execute(
-    /* Main.openUri */ 'Main.openUri',
-    /* uri */ 'app://memory-usage'
-  )
+  return Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ 'app://memory-usage')
 }
 
 // TODO not sure if this function is useful
 export const allocateMemoryInSharedProcess = () => {
-  return SharedProcess.invoke(
-    /* Developer.allocateMemoryInSharedProcess */ 'Developer.allocateMemoryInSharedProcess'
-  )
+  return SharedProcess.invoke(/* Developer.allocateMemoryInSharedProcess */ 'Developer.allocateMemoryInSharedProcess')
 }
 
 export const crashSharedProcess = () => {
-  return SharedProcess.invoke(
-    /* Developer.crashSharedProcess */ 'Developer.crashSharedProcess'
-  )
+  return SharedProcess.invoke(/* Developer.crashSharedProcess */ 'Developer.crashSharedProcess')
 }
 
 export const crashRendererProcess = () => {}
@@ -399,9 +362,7 @@ export const crashRendererProcess = () => {}
 export const crashRendererWorker = () => {}
 
 export const crashMainProcess = () => {
-  return SharedProcess.invoke(
-    /* Electron.crashMainProcess */ 'Electron.crashMainProcess'
-  )
+  return SharedProcess.invoke(/* Electron.crashMainProcess */ 'Electron.crashMainProcess')
 }
 
 export const openExtensionsFolder = () => {
@@ -414,10 +375,7 @@ export const openLogsFolder = async () => {
     return
   }
   const logsFolder = await Platform.getLogsDir()
-  await Command.execute(
-    /* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder',
-    /* path */ logsFolder
-  )
+  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ logsFolder)
 }
 
 export const toggleDeveloperTools = () => {
@@ -430,15 +388,11 @@ export const showIconThemeCss = async () => {
 }
 
 export const createSharedProcessHeapSnapshot = async () => {
-  await SharedProcess.invoke(
-    /* Developer.createSharedProcessHeapSnapshot */ 'Developer.createSharedProcessHeapSnapshot'
-  )
+  await SharedProcess.invoke(/* Developer.createSharedProcessHeapSnapshot */ 'Developer.createSharedProcessHeapSnapshot')
 }
 
 export const createSharedProcessProfile = async () => {
-  await SharedProcess.invoke(
-    /* Developer.createProfile */ 'Developer.createProfile'
-  )
+  await SharedProcess.invoke(/* Developer.createProfile */ 'Developer.createProfile')
 }
 
 export const reloadIconTheme = async () => {
@@ -469,28 +423,17 @@ export const editors = {
 
 export const openConfigFolder = async () => {
   const configFolder = await Platform.getConfigPath()
-  await Command.execute(
-    /* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder',
-    /* path */ configFolder
-  )
+  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ configFolder)
 }
 
 export const openCacheFolder = async () => {
   const cacheFolder = await Platform.getCachePath()
-  await Command.execute(
-    /* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder',
-    /* path */ cacheFolder
-  )
+  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ cacheFolder)
 }
 
 export const openDataFolder = async () => {
-  const dataFolder = await SharedProcess.invoke(
-    /* Platform.getDataDir */ 'Platform.getDataDir'
-  )
-  await Command.execute(
-    /* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder',
-    /* path */ dataFolder
-  )
+  const dataFolder = await SharedProcess.invoke(/* Platform.getDataDir */ 'Platform.getDataDir')
+  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ dataFolder)
 }
 
 export const showMessageBox = () => {}
@@ -501,9 +444,5 @@ export const openProcessExplorer = () => {
 
 export const downloadViewletState = async () => {
   const states = await Command.execute('Viewlet.getAllStates')
-  await Command.execute(
-    'Download.downloadJson',
-    /* json */ states,
-    /* fileName */ 'viewlets.json'
-  )
+  await Command.execute('Download.downloadJson', /* json */ states, /* fileName */ 'viewlets.json')
 }

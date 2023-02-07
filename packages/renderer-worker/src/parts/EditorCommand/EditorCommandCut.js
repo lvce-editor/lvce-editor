@@ -2,6 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 
 export const cut = async (editor) => {
   const selection = editor.selections[0]
@@ -11,11 +12,8 @@ export const cut = async (editor) => {
     // cut selection
   }
   const changes = editorReplaceSelections(editor, [''], EditOrigin.EditorCut)
-  const text = changes[0].deleted.join('\n')
+  const text = JoinLines.joinLines(changes[0].deleted)
   // TODO remove selected text from document
-  await Command.execute(
-    /* ClipBoard.writeText */ 'ClipBoard.writeText',
-    /* text */ text
-  )
+  await Command.execute(/* ClipBoard.writeText */ 'ClipBoard.writeText', /* text */ text)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
