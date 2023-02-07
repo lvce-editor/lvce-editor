@@ -1,15 +1,16 @@
+import * as CliCommandType from '../CliCommandType/CliCommandType.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Process from '../Process/Process.js'
 
 const getModule = (argv0) => {
   switch (argv0) {
-    case 'install':
+    case CliCommandType.Install:
       return import('../CliInstall/CliInstall.js')
-    case 'list':
+    case CliCommandType.List:
       return import('../CliList/CliList.js')
-    case 'link':
+    case CliCommandType.Link:
       return import('../CliLink/CliLink.js')
-    case 'unlink':
+    case CliCommandType.Unlink:
       return import('../CliUnlink/CliUnlink.js')
     default:
       throw new Error(`command not found ${argv0}`)
