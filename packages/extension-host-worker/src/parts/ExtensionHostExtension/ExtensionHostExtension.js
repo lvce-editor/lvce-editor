@@ -1,8 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
-import { VError } from '../VError/VError.js'
+import * as GetExtensionId from '../GetExtensionId/GetExtensionId.js'
 import * as ImportScript from '../ImportScript/ImportScript.js'
 import * as IsUnhelpfulImportError from '../IsUnhelpfulImportError/IsUnhelpfulImportError.js'
 import * as TryToGetActualImportErrorMessage from '../TryToGetActualImportErrorMessage/TryToGetActualImportErrorMessage.js'
+import { VError } from '../VError/VError.js'
 
 const getAbsolutePath = (isWeb, path, relativePath, origin) => {
   if (path.startsWith('http')) {
@@ -18,21 +19,6 @@ const getAbsolutePath = (isWeb, path, relativePath, origin) => {
     return path + '/' + relativePath
   }
   return new URL('/remote' + path + '/' + relativePath, origin).toString()
-}
-
-const baseName = (path) => {
-  const slashIndex = path.lastIndexOf('/')
-  return path.slice(slashIndex + 1)
-}
-
-const getId = (extension) => {
-  if (extension && extension.id) {
-    return extension.id
-  }
-  if (extension && extension.path) {
-    return baseName(extension.path)
-  }
-  return '<unknown>'
 }
 
 export const activate = async (extension) => {
@@ -51,7 +37,7 @@ export const activate = async (extension) => {
       throw error
     }
   } catch (error) {
-    const id = getId(extension)
+    const id = GetExtensionId.getExtensionId(extension)
     throw new VError(error, `Failed to activate extension ${id}`)
   }
   // console.info('activated', path)
