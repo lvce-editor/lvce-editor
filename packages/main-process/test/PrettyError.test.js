@@ -610,7 +610,7 @@ function copySync (src, dest, opts) {
   // Warn about using preserveTimestamps on 32-bit node
   if (opts.preserveTimestamps && process.arch === 'ia32') {
     process.emitWarning(
-      'Using the preserveTimestamps option in 32-bit node is not recommended;\n\n' +
+      'Using the preserveTimestamps option in 32-bit node is not recommended;\n
       '\tsee https://github.com/jprichardson/node-fs-extra/issues/269',
       'Warning', 'fs-extra-WARN0002'
     )
@@ -774,5 +774,65 @@ module.exports = copySync
     message: "Cannot find module 'graceful-fs'",
     // TODO should print more of the stack trace
     stack: '    at Object.<anonymous> (/test/packages/shared-process/node_modules/fs-extra/lib/copy/copy-sync.js:3:12)',
+  })
+})
+
+test('prepare - syntax error - unexpected token export', async () => {
+  const error = new SyntaxError(`Unexpected token 'export'`)
+  error.stack = `/test/packages/main-process/src/parts/GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js:3
+export const getFirstNodeWorkerEvent = async (worker) => {
+^^^^^^
+
+SyntaxError: Unexpected token 'export'
+    at Object.compileFunction (node:vm:360:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1095:15)
+    at Module._compile (node:internal/modules/cjs/loader:1130:27)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1229:10)
+    at Module.load (node:internal/modules/cjs/loader:1044:32)
+    at Module._load (node:internal/modules/cjs/loader:885:12)
+    at f._load (node:electron/js2c/asar_bundle:2:13330)
+    at Module.require (node:internal/modules/cjs/loader:1068:19)
+    at require (node:internal/modules/cjs/helpers:103:18)
+    at Object.<anonymous> (/test/packages/main-process/src/parts/CliForwardToSharedProcess/CliForwardToSharedProcess.js:4:33)`
+
+  // @ts-ignore
+  fs.readFileSync.mockImplementation(() => {
+    return `const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
+
+export const getFirstNodeWorkerEvent = async (worker) => {
+  const { type, event } = await new Promise((resolve, reject) => {
+    const cleanup = () => {
+      worker.off('exit', handleExit)
+      worker.off('error', handleError)
+    }
+    const handleExit = (event) => {
+      cleanup()
+      resolve({ type: FirstNodeWorkerEventType.Exit, event })
+    }
+    const handleError = (event) => {
+      cleanup()
+      resolve({ type: FirstNodeWorkerEventType.Error, event })
+    }
+    worker.on('exit', handleExit)
+    worker.on('error', handleError)
+  })
+  return { type, event }
+}
+
+exports.getFirstNodeWorkerEvent = getFirstNodeWorkerEvent
+`
+  })
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    codeFrame: `  1 | const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
+  2 |
+> 3 | export const getFirstNodeWorkerEvent = async (worker) => {
+    | ^
+  4 |   const { type, event } = await new Promise((resolve, reject) => {
+  5 |     const cleanup = () => {
+  6 |       worker.off('exit', handleExit)`,
+    message: "Unexpected token 'export'",
+    stack: `    at /test/packages/main-process/src/parts/GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js:3
+    at Object.<anonymous> (/test/packages/main-process/src/parts/CliForwardToSharedProcess/CliForwardToSharedProcess.js:4:33)`,
   })
 })
