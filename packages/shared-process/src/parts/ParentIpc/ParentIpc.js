@@ -8,7 +8,7 @@ import * as ExtensionHostHelperProcessIpc from '../ExtensionHostHelperProcessIpc
 import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
-
+import * as ProtocolType from '../ProtocolType/ProtocolType.js'
 // TODO add tests for this
 
 // TODO handle structure: one shared process multiple extension hosts
@@ -73,11 +73,11 @@ const handleWebSocket = (message, handle) => {
     throw new VError('missing sec websocket protocol header')
   }
   switch (protocol) {
-    case 'lvce.shared-process':
+    case ProtocolType.SharedProcess:
       return handleWebSocketSharedProcess(message, handle)
-    case 'lvce.extension-host':
+    case ProtocolType.ExtensionHost:
       return handleWebSocketExtensionHost(message, handle)
-    case 'lvce.extension-host-helper-process':
+    case ProtocolType.ExtensionHostHelperProcess:
       return handleWebSocketExtensionHostHelperProcess(message, handle)
     default:
       console.warn(`unsupported sec-websocket-procotol ${protocol}`)
