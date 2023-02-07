@@ -1,11 +1,8 @@
 import * as Copy from '../Copy/Copy.js'
-import * as Exec from '../Exec/Exec.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
-import * as Path from '../Path/Path.js'
-import VError from 'verror'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
-
+import * as Path from '../Path/Path.js'
 
 const walkDependencies = (object, fn) => {
   const shouldContinue = fn(object)
@@ -13,9 +10,23 @@ const walkDependencies = (object, fn) => {
     return
   }
   if (!object.dependencies) {
+    if (!object._dependencies) {
+      return
+    }
+    const hiddenDependencies = Object.keys(object._dependencies)
+    for (const hiddenDependency of hiddenDependencies) {
+      walkDependencies(
+        {
+          path: object.path.slice(0, -object.name.length) + hiddenDependency,
+          name: hiddenDependency,
+        },
+        fn
+      )
+    }
     return
   }
-  for (const value of Object.values(object.dependencies)) {
+  const visibleDependencies = Object.values(object.dependencies)
+  for (const value of visibleDependencies) {
     walkDependencies(value, fn)
   }
 }
@@ -57,9 +68,7 @@ export const bundleSharedProcessDependencies = async ({ to }) => {
   const projectPath = Path.absolute('packages/shared-process')
   const npmDependenciesRaw = await NpmDependencies.getNpmDependenciesRawJson(projectPath)
   const npmDependencies = getNpmDependencies(npmDependenciesRaw)
-  const packageJson = await JsonFile.readJson(
-    'packages/shared-process/package.json'
-  )
+  const packageJson = await JsonFile.readJson('packages/shared-process/package.json')
   await JsonFile.writeJson({
     to: `${to}/package.json`,
     value: {
