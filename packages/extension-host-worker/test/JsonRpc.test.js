@@ -36,5 +36,5 @@ test('invoke - unexpected response message', async () => {
   }
   const error = await getError(JsonRpc.invoke(ipc, 'Test.execute', 'test message'))
   expect(error).toBeInstanceOf(JsonRpcError)
-  expect(error.message).toBe(`unexpected response message`)
+  expect(error.message).toBe('unexpected response message')
 })

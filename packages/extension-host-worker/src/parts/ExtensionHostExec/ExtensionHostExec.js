@@ -2,7 +2,7 @@ import * as ExtensionHostHelperProcess from '../ExtensionHostHelperProcess/Exten
 
 class ExecError extends Error {
   constructor(stdout, stderr, exitCode) {
-    super(`Failed to execute`)
+    super('Failed to execute')
     this.stdout = stdout
     this.stderr = stderr
     this.exitCode = exitCode

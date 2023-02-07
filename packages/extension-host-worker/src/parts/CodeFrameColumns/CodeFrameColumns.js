@@ -57,8 +57,7 @@ const getMarkerLines = (loc, source, opts) => {
         markerLines[lineNumber] = [0, sourceLength]
       }
     }
-  } else {
-    if (startColumn === endColumn) {
+  } else if (startColumn === endColumn) {
       if (startColumn) {
         markerLines[startLine] = [startColumn, 0]
       } else {
@@ -67,7 +66,6 @@ const getMarkerLines = (loc, source, opts) => {
     } else {
       markerLines[startLine] = [startColumn, endColumn - startColumn]
     }
-  }
 
   return { start, end, markerLines }
 }
@@ -114,9 +112,9 @@ export const create = (rawLines, loc, opts = {}) => {
           line.length > 0 ? ` ${line}` : '',
           markerLine,
         ].join('')
-      } else {
-        return ` ${gutter}${line.length > 0 ? ` ${line}` : ''}`
       }
+        return ` ${gutter}${line.length > 0 ? ` ${line}` : ''}`
+
     })
     .join('\n')
 

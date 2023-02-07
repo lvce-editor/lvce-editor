@@ -116,7 +116,7 @@ test('executeReferenceProvider - error - no reference provider found', async () 
     ExtensionHostReference.executeReferenceProvider(1, 0)
   ).rejects.toThrowError(
     new Error(
-      `Failed to execute reference provider: VError: No reference provider found for javascript`
+      'Failed to execute reference provider: VError: No reference provider found for javascript'
     )
   )
 })

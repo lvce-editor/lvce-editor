@@ -19,7 +19,7 @@ test('executeFormattingProvider - error - result value is of type string', async
     ExtensionHostFormatting.executeFormattingProvider(1, 0)
   ).rejects.toThrowError(
     new Error(
-      `Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is b`
+      'Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is b'
     )
   )
 })
@@ -38,7 +38,7 @@ test('executeFormattingProvider - error - result value is of type object', async
     ExtensionHostFormatting.executeFormattingProvider(1, 0)
   ).rejects.toThrowError(
     new Error(
-      `Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is object`
+      'Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is object'
     )
   )
 })

@@ -14,7 +14,7 @@ export const registerTextSearchProvider = (textSearchProvider) => {
     }
     state.textSearchProviders[textSearchProvider.scheme] = textSearchProvider
   } catch (error) {
-    throw new VError(error, `Failed to register text search provider`)
+    throw new VError(error, 'Failed to register text search provider')
   }
 }
 
@@ -27,7 +27,7 @@ export const executeTextSearchProvider = async (scheme, query) => {
     const results = await textSearchProvider.provideTextSearchResults(query)
     return results
   } catch (error) {
-    throw new VError(error, `Failed to execute text search provider`)
+    throw new VError(error, 'Failed to execute text search provider')
   }
 }
 

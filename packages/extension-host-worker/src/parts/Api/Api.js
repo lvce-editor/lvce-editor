@@ -31,12 +31,12 @@ class FormattingError extends Error {
 }
 
 // prettier-ignore
-export const api =  {
+export const api = {
   // Ajax
   getJson: ExtensionHostAjax.getJson,
 
   // Brace Completion
-  registerBraceCompletionProvider:ExtensionHostBraceCompletion.registerBraceCompletionProvider,
+  registerBraceCompletionProvider: ExtensionHostBraceCompletion.registerBraceCompletionProvider,
   executeBraceCompletionProvider: ExtensionHostBraceCompletion.executeBraceCompletionProvider,
 
   // Command
@@ -44,7 +44,7 @@ export const api =  {
   executeCommand: ExtensionHostCommand.executeCommand,
 
   // Completion
-  registerCompletionProvider:ExtensionHostCompletion.registerCompletionProvider,
+  registerCompletionProvider: ExtensionHostCompletion.registerCompletionProvider,
   executeCompletionProvider: ExtensionHostCompletion.executeCompletionProvider,
   EditorCompletionType,
 
@@ -70,7 +70,6 @@ export const api =  {
 
   // File System
   registerFileSystemProvider: ExtensionHostFileSystem.registerFileSystemProvider,
-
 
   // Formatting
   registerFormattingProvider: ExtensionHostFormatting.registerFormattingProvider,

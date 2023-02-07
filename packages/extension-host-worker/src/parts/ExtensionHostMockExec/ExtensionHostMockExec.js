@@ -15,6 +15,6 @@ export const mockExec = () => {
       return { stdout, stderr, exitCode }
     }
   } catch (error) {
-    throw new VError(error, `Failed to mock exec function`)
+    throw new VError(error, 'Failed to mock exec function')
   }
 }
