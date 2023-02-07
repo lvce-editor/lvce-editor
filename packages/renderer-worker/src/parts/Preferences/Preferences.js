@@ -6,31 +6,23 @@ import * as Json from '../Json/Json.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 
 export const state = Object.create(null)
 
 export const openSettingsJson = async () => {
-  await Command.execute(
-    /* Main.openUri */ 'Main.openUri',
-    /* uri */ 'app://settings.json'
-  )
+  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ 'app://settings.json')
 }
 
 export const openKeyBindingsJson = async () => {
-  await Command.execute(
-    /* Main.openUri */ 'Main.openUri',
-    /* uri */ 'app://keyBindings.json'
-  )
+  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ 'app://keyBindings.json')
 }
 
 // TODO command for opening workspace settings
 
 const getPreferencesJson = async () => {
   if (Platform.platform === PlatformType.Web) {
-    const cachedPreferences = await Command.execute(
-      /* LocalStorage.getJson */ 'LocalStorage.getJson',
-      /* key */ 'settings'
-    )
+    const cachedPreferences = await Command.execute(/* LocalStorage.getJson */ 'LocalStorage.getJson', /* key */ 'settings')
     if (cachedPreferences) {
       return cachedPreferences
     }
@@ -72,14 +64,10 @@ export const hydrate = async () => {
       styles.push(`  --EditorLetterSpacing: ${letterSpacing}px;`)
     }
     const css = `:root {
-${styles.join('\n')}
+${JoinLines.joinLines(styles)}
 }`
     // TODO make Css.setInlineStyle a separate module in renderer-worker
-    await RendererProcess.invoke(
-      /* Css.setInlineStyle */ 'Css.setInlineStyle',
-      /* id */ 'Settings',
-      /* css */ css
-    )
+    await RendererProcess.invoke(/* Css.setInlineStyle */ 'Css.setInlineStyle', /* id */ 'Settings', /* css */ css)
   } catch (error) {
     console.error(error)
   }
@@ -93,11 +81,7 @@ export const set = async (key, value) => {
   state[key] = value
   if (Platform.platform === 'web') {
     const preferences = { ...state, [key]: value }
-    await Command.execute(
-      /* LocalStorage.setJson */ 'LocalStorage.setJson',
-      /* key */ 'preferences',
-      /* value */ preferences
-    )
+    await Command.execute(/* LocalStorage.setJson */ 'LocalStorage.setJson', /* key */ 'preferences', /* value */ preferences)
     return
   }
   const content = Json.stringify(state)

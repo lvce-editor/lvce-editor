@@ -4,6 +4,7 @@
 
 import VError from 'verror'
 import * as Exec from '../Exec/Exec.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const removePrefix = (file) => {
@@ -20,17 +21,12 @@ const addPrefix = (file) => {
 export const readFiles = async () => {
   let result
   try {
-    result = await Exec.exec(
-      'xclip',
-      ['-selection', 'clipboard', '-o', '-t', 'x-special/gnome-copied-files'],
-      {}
-    )
+    result = await Exec.exec('xclip', ['-selection', 'clipboard', '-o', '-t', 'x-special/gnome-copied-files'], {})
   } catch (error) {
     if (
       error &&
       // @ts-ignore
-      error.stderr ===
-        'Error: target x-special/gnome-copied-files not available'
+      error.stderr === 'Error: target x-special/gnome-copied-files not available'
     ) {
       return
     }
@@ -47,31 +43,19 @@ export const readFiles = async () => {
 
 export const writeFiles = async (type, files) => {
   const filesWithPrefix = files.map(addPrefix)
-  const gnomeCopiedFilesContent = [type, ...filesWithPrefix].join('\n')
-  const uriListContent = filesWithPrefix.join('\n')
-  const plainContent = files.join('\n')
+  const gnomeCopiedFilesContent = JoinLines.joinLines([type, ...filesWithPrefix])
+  const uriListContent = JoinLines.joinLines(filesWithPrefix)
+  const plainContent = JoinLines.joinLines(files)
   try {
-    await Exec.exec(
-      'xclip',
-      ['-i', '-selection', 'clipboard', '-t', 'x-special/gnome-copied-files'],
-      {
-        input: gnomeCopiedFilesContent,
-      }
-    )
-    await Exec.exec(
-      'xclip',
-      ['-i', '-selection', 'clipboard', '-t', 'text/uri-list'],
-      {
-        input: uriListContent,
-      }
-    )
-    await Exec.exec(
-      'xclip',
-      ['-i', '-selection', 'clipboard', '-t', 'text/plain'],
-      {
-        input: plainContent,
-      }
-    )
+    await Exec.exec('xclip', ['-i', '-selection', 'clipboard', '-t', 'x-special/gnome-copied-files'], {
+      input: gnomeCopiedFilesContent,
+    })
+    await Exec.exec('xclip', ['-i', '-selection', 'clipboard', '-t', 'text/uri-list'], {
+      input: uriListContent,
+    })
+    await Exec.exec('xclip', ['-i', '-selection', 'clipboard', '-t', 'text/plain'], {
+      input: plainContent,
+    })
   } catch (error) {
     // @ts-ignore
     throw new VError(error, 'Failed to copy files to clipboard')

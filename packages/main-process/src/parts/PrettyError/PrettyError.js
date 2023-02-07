@@ -5,6 +5,7 @@ const { readFileSync } = require('node:fs')
 const CleanStack = require('../CleanStack/CleanStack.js')
 const Json = require('../Json/Json.js')
 const VError = require('verror')
+const JoinLines = require('../JoinLines/JoinLines.js')
 
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
@@ -79,7 +80,7 @@ exports.prepare = (error) => {
   }
   return {
     message,
-    stack: relevantStack.join('\n'),
+    stack: JoinLines.joinLines(relevantStack),
     codeFrame,
     stderr: error.stderr,
   }

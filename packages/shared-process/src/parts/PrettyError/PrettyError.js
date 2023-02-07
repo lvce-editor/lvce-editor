@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Json from '../Json/Json.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 
 const getActualPath = (fileUri) => {
   if (fileUri.startsWith('file://')) {
@@ -50,7 +51,7 @@ const prepareModuleNotFoundError = (error) => {
   const codeFrame = codeFrameColumns(rawLines, location)
   const stackLines = SplitLines.splitLines(error.stack)
   const newStackLines = [stackLines[0], `    at ${importedFrom}:${line}:${column}`, ...stackLines.slice(1)]
-  const newStack = newStackLines.join('\n')
+  const newStack = JoinLines.joinLines(newStackLines)
   return {
     message,
     stack: newStack,
@@ -94,7 +95,7 @@ export const prepare = (error) => {
       codeFrame = codeFrameColumns(rawLines, location)
     }
   }
-  const relevantStack = lines.slice(1).join('\n')
+  const relevantStack = JoinLines.joinLines(lines.slice(1))
   return {
     message,
     stack: relevantStack,
