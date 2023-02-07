@@ -2,7 +2,7 @@ import { jest } from '@jest/globals'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 jest.unstable_mockModule('node:fs', () => ({
-  readtestSync: jest.fn(() => {
+  readFileSync: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
