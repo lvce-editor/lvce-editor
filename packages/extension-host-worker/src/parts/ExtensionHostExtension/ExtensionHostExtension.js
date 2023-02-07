@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as GetExtensionAbsolutePath from '../GetExtensionAbsolutePath/GetExtensionAbsolutePath.js'
 import * as ImportScript from '../ImportScript/ImportScript.js'
-import * as IsUnhelpfulImportError from '../IsUnhelpfulImportError/IsUnhelpfulImportError.js'
+import * as IsImportError from '../IsImportError/IsImportError.js'
 import * as TryToGetActualImportErrorMessage from '../TryToGetActualImportErrorMessage/TryToGetActualImportErrorMessage.js'
 import { VError } from '../VError/VError.js'
 
@@ -29,7 +29,7 @@ export const activate = async (extension) => {
     try {
       await module.activate()
     } catch (error) {
-      if (IsUnhelpfulImportError.isUnhelpfulImportError(error)) {
+      if (IsImportError.isImportError(error)) {
         const actualErrorMessage = await TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage(absolutePath, error)
         throw new Error(actualErrorMessage)
       }
