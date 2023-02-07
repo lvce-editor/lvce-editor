@@ -1,10 +1,10 @@
-const { readFileSync } = require('node:fs')
-const { fileURLToPath } = require('node:url')
-const VError = require('verror')
 const { codeFrameColumns } = require('@babel/code-frame')
+const { fileURLToPath } = require('node:url')
 const { LinesAndColumns } = require('lines-and-columns')
-const SplitLines = require('../SplitLines/SplitLines.js')
+const { readFileSync } = require('node:fs')
+const CleanStack = require('../CleanStack/CleanStack.js')
 const Json = require('../Json/Json.js')
+const VError = require('verror')
 
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
@@ -30,19 +30,6 @@ const getFile = (lines) => {
   return ''
 }
 
-const isInternalLine = (line) => {
-  return line.includes('node:')
-}
-
-const isRelevantLine = (line) => {
-  return !isInternalLine(line)
-}
-
-const cleanStack = (stack) => {
-  const lines = SplitLines.splitLines(stack)
-  return lines.filter(isRelevantLine)
-}
-
 const prepareMessage = (message) => {
   if (message.startsWith('Cannot find module ') && message.includes('\n')) {
     return message.slice(0, message.indexOf('\n'))
@@ -55,7 +42,7 @@ exports.prepare = (error) => {
   if (error instanceof VError) {
     error = error.cause()
   }
-  const lines = cleanStack(error.stack)
+  const lines = CleanStack.cleanStack(error.stack)
   const file = getFile(lines)
   let codeFrame = ''
   if (error.codeFrame) {
