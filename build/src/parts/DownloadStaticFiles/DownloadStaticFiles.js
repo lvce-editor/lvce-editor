@@ -17,11 +17,9 @@ const main = async () => {
     await Remove.remove('static/lib-css')
     await downloadStaticFiles(staticFiles)
   } catch (error) {
-    if (
-      error &&
-      error instanceof Error &&
-      error.message.includes('Response code 404')
-    ) {
+    if (error && error instanceof Error && error.message.includes('Response code 404')) {
+      console.error(error.message)
+    } else if (error && error instanceof Error && error.message.includes('failed to extract actual url for')) {
       console.error(error.message)
     } else {
       console.error(error)
