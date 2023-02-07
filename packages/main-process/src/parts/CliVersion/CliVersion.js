@@ -1,6 +1,7 @@
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
 const JoinLines = require('../JoinLines/JoinLines.js')
 const Platform = require('../Platform/Platform.js')
+const ExitCode = require('../ExitCode/ExitCode.js')
 
 const getName = (object) => {
   return object.name
@@ -45,7 +46,7 @@ const getVersionString = () => {
 const handleCliArgs = (parsedArgs) => {
   const versionString = getVersionString()
   console.info(versionString)
-  ElectronApp.exit(0)
+  ElectronApp.exit(ExitCode.Sucess)
   return true
 }
 

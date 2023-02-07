@@ -2,6 +2,7 @@ const { dialog } = require('electron')
 const Logger = require('../Logger/Logger.js')
 const Process = require('../Process/Process.js')
 const PrettyError = require('../PrettyError/PrettyError.js')
+const ExitCode = require('../ExitCode/ExitCode.js')
 
 const getDisplayMessage = (error) => {
   if (!error || !error.stack) {
@@ -40,7 +41,7 @@ exports.handleUncaughtExceptionMonitor = (error, origin) => {
   const prettyError = PrettyError.prepare(error)
   Logger.error(prettyError.codeFrame)
   Logger.error(prettyError.stack)
-  Process.exit(1)
+  Process.exit(ExitCode.Error)
 }
 
 exports.handleUnhandledRejection = (reason, promise) => {
@@ -48,5 +49,5 @@ exports.handleUnhandledRejection = (reason, promise) => {
   const prettyError = PrettyError.prepare(reason)
   Logger.error(prettyError.codeFrame)
   Logger.error(prettyError.stack)
-  Process.exit(1)
+  Process.exit(ExitCode.Error)
 }
