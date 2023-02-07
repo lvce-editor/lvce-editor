@@ -1,3 +1,5 @@
+const JoinLines = require('../JoinLines/JoinLines.js')
+
 const getExtensions = () => {}
 
 exports.getColorThemeJson = async () => {
@@ -15,7 +17,7 @@ const toInnerLine = ([key, value]) => {
 exports.toCss = (colorThemeJson) => {
   const innerLines = Object.entries(colorThemeJson).map(toInnerLine)
   const css = `:root {
-${innerLines.join('\n')}
+${JoinLines.joinLines(innerLines)}
 }`
   return css
 }

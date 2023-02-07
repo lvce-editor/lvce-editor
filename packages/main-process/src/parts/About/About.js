@@ -3,6 +3,7 @@ const ElectronMessageBoxType = require('../ElectronMessageBoxType/ElectronMessag
 const Process = require('../Process/Process.js')
 const Platform = require('../Platform/Platform.js')
 const ElectronClipBoard = require('../ElectronClipBoard/ElectronClipBoard.js')
+const JoinLines = require('../JoinLines/JoinLines.js')
 
 /**
  * @enum {string}
@@ -27,17 +28,12 @@ const getDetailString = () => {
     `Node: ${nodeVersion}`,
     `V8: ${v8Version}`,
   ]
-  return lines.join('\n')
+  return JoinLines.joinLines(lines)
 }
 
 exports.showAbout = async () => {
   const detail = getDetailString()
-  const result = await ElectronDialog.showMessageBox(
-    Platform.ProductName,
-    [UiStrings.Copy, UiStrings.Ok],
-    ElectronMessageBoxType.Info,
-    detail
-  )
+  const result = await ElectronDialog.showMessageBox(Platform.ProductName, [UiStrings.Copy, UiStrings.Ok], ElectronMessageBoxType.Info, detail)
   switch (result) {
     case 0:
       ElectronClipBoard.writeText(detail)

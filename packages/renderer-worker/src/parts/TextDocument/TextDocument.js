@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Arrays from '../Arrays/Arrays.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 
 export const create = (text) => {
   const lines = SplitLines.splitLines(text)
@@ -49,48 +50,23 @@ export const applyEdits = (textDocument, changes) => {
         const line = newLines[startRowIndex]
         const before = line.slice(0, startColumnIndex) + inserted[0]
         const after = inserted.at(-1) + line.slice(endColumnIndex)
-        Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [
-          before,
-          ...inserted.slice(1, -1),
-          after,
-        ])
+        Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [before, ...inserted.slice(1, -1), after])
         // TODO only do this once after all edits, not inside loop
-        textDocument.maxLineY = Math.min(
-          textDocument.numberOfVisibleLines,
-          newLines.length
-        )
+        textDocument.maxLineY = Math.min(textDocument.numberOfVisibleLines, newLines.length)
       }
     } else {
       if (inserted.length === 1) {
-        const before =
-          newLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
-        const after =
-          endRowIndex >= newLines.length
-            ? ''
-            : newLines[endRowIndex].slice(endColumnIndex)
-        Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [
-          before + after,
-        ])
+        const before = newLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
+        const after = endRowIndex >= newLines.length ? '' : newLines[endRowIndex].slice(endColumnIndex)
+        Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [before + after])
       } else {
-        const before =
-          newLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
+        const before = newLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
         const middle = inserted.slice(1, -1)
-        const after =
-          inserted.at(-1) +
-          (endRowIndex >= newLines.length
-            ? ''
-            : newLines[endRowIndex].slice(endColumnIndex))
-        Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [
-          before,
-          ...middle,
-          after,
-        ])
+        const after = inserted.at(-1) + (endRowIndex >= newLines.length ? '' : newLines[endRowIndex].slice(endColumnIndex))
+        Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [before, ...middle, after])
       }
       // TODO only do this once after all edits, not inside loop
-      textDocument.maxLineY = Math.min(
-        textDocument.numberOfVisibleLines,
-        textDocument.lines.length
-      )
+      textDocument.maxLineY = Math.min(textDocument.numberOfVisibleLines, textDocument.lines.length)
     }
   }
   return newLines
@@ -105,7 +81,7 @@ export const getLineLength = (textDocument, index) => {
 }
 
 export const getText = (state) => {
-  return state.lines.join('\n')
+  return JoinLines.joinLines(state.lines)
 }
 const RE_WHITESPACE = /^\s+/
 
@@ -125,18 +101,13 @@ export const getSelectionText = (textDocument, range) => {
   // console.log(textDocument)
   const startRowIndex = range.start.rowIndex
   const startColumnIndex = range.start.columnIndex
-  const endRowIndex = Math.min(
-    range.end.rowIndex,
-    textDocument.lines.length - 1
-  )
+  const endRowIndex = Math.min(range.end.rowIndex, textDocument.lines.length - 1)
   const endColumnIndex = range.end.columnIndex
 
   if (startRowIndex === endRowIndex) {
     // console.log(startRowIndex)
     // console.log(textDocument.lines)
-    return [
-      textDocument.lines[startRowIndex].slice(startColumnIndex, endColumnIndex),
-    ]
+    return [textDocument.lines[startRowIndex].slice(startColumnIndex, endColumnIndex)]
   }
   const selectedLines = [
     textDocument.lines[startRowIndex].slice(startColumnIndex),
@@ -146,11 +117,7 @@ export const getSelectionText = (textDocument, range) => {
   return selectedLines
 }
 
-export const offsetAt = (
-  textDocument,
-  positionRowIndex,
-  positionColumnIndex
-) => {
+export const offsetAt = (textDocument, positionRowIndex, positionColumnIndex) => {
   Assert.object(textDocument)
   Assert.number(positionRowIndex)
   Assert.number(positionColumnIndex)

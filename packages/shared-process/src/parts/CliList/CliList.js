@@ -1,4 +1,5 @@
 import * as ExtensionList from '../ExtensionList/ExtensionList.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Logger from '../Logger/Logger.js'
 
 const getOutputLine = (extension) => {
@@ -6,7 +7,8 @@ const getOutputLine = (extension) => {
 }
 
 const getOutput = (extensions) => {
-  return extensions.map(getOutputLine).join('\n')
+  const lines = extensions.map(getOutputLine)
+  return JoinLines.joinLines(lines)
 }
 
 export const handleCliArgs = async (argv) => {

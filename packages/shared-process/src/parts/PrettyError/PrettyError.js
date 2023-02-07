@@ -1,11 +1,12 @@
 import { codeFrameColumns } from '@babel/code-frame'
-import cleanStack from 'clean-stack'
 import { LinesAndColumns } from 'lines-and-columns'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Json from '../Json/Json.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 
 const getActualPath = (fileUri) => {
   if (fileUri.startsWith('file://')) {
@@ -50,7 +51,7 @@ const prepareModuleNotFoundError = (error) => {
   const codeFrame = codeFrameColumns(rawLines, location)
   const stackLines = SplitLines.splitLines(error.stack)
   const newStackLines = [stackLines[0], `    at ${importedFrom}:${line}:${column}`, ...stackLines.slice(1)]
-  const newStack = newStackLines.join('\n')
+  const newStack = JoinLines.joinLines(newStackLines)
   return {
     message,
     stack: newStack,
@@ -69,7 +70,7 @@ export const prepare = (error) => {
       error = cause
     }
   }
-  const cleanedStack = cleanStack(error.stack)
+  const cleanedStack = CleanStack.cleanStack(error.stack)
   const lines = SplitLines.splitLines(cleanedStack)
   const file = lines[1]
   let codeFrame = ''
@@ -94,7 +95,7 @@ export const prepare = (error) => {
       codeFrame = codeFrameColumns(rawLines, location)
     }
   }
-  const relevantStack = lines.slice(1).join('\n')
+  const relevantStack = JoinLines.joinLines(lines.slice(1))
   return {
     message,
     stack: relevantStack,
@@ -118,14 +119,11 @@ export const prepareJsonError = (json, property, message) => {
     const lines = new LinesAndColumns(string)
     const location = lines.locationForIndex(index + stringifiedPropertyName.length + 1)
     const codeFrame = codeFrameColumns(string, {
+      // @ts-ignore
       start: { line: location.line + 1, column: location.column + 1 },
     })
     jsonError.codeFrame = codeFrame
   }
   // jsonError.stack = `${bottomMessage}\n    at ${filePath}`
   return jsonError
-}
-
-export const print = (prettyError, prefix = '') => {
-  console.error(`${prefix}Error: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}`)
 }

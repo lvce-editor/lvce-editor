@@ -3,6 +3,7 @@ import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
+import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.js'
 import { requiresSocket } from '../RequiresSocket/RequiresSocket.js'
 
 export const getResponse = async (message, handle) => {
@@ -41,7 +42,7 @@ export const getResponse = async (message, handle) => {
     }
     console.log({ error })
     const prettyError = PrettyError.prepare(error)
-    PrettyError.print(prettyError, `[shared-process] `)
+    PrintPrettyError.printPrettyError(prettyError, `[shared-process] `)
     return {
       jsonrpc: JsonRpcVersion.Two,
       id: message.id,

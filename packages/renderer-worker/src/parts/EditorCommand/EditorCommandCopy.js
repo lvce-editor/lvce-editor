@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Editor from '../Editor/Editor.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 
 // TODO add test
 export const copy = async (editor) => {
@@ -22,10 +23,8 @@ export const copy = async (editor) => {
       columnIndex: selectionEndColumnIndex,
     },
   }
-  const text = TextDocument.getSelectionText(editor, range).join('\n')
-  await Command.execute(
-    /* ClipBoard.writeText */ 'ClipBoard.writeText',
-    /* text */ text
-  )
+  const selectedLines = TextDocument.getSelectionText(editor, range)
+  const text = JoinLines.joinLines(selectedLines)
+  await Command.execute(/* ClipBoard.writeText */ 'ClipBoard.writeText', /* text */ text)
   return editor
 }
