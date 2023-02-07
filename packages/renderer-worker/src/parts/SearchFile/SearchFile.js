@@ -1,6 +1,6 @@
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
-import * as IsUnhelpfulImportError from '../IsUnhelpfulImportError/IsUnhelpfulImportError.js'
+import * as IsImportError from '../IsImportError/IsImportError.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as TryToGetActualImportErrorMessage from '../TryToGetActualImportErrorMessage/TryToGetActualImportErrorMessage.js'
 
@@ -30,7 +30,7 @@ export const searchFile = async (path, value) => {
     const module = await getModule(protocol)
     return module.searchFile(path, value)
   } catch (error) {
-    if (IsUnhelpfulImportError.isUnhelpfulImportError(error)) {
+    if (IsImportError.isImportError(error)) {
       const actualErrorMessage = await TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage(error)
       throw new Error(actualErrorMessage)
     }
