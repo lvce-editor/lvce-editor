@@ -32,10 +32,10 @@ const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
     replacement: "'web'",
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/IpcParent/IpcParent.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/IpcParentModule/IpcParentModule.js`,
     occurrence: `import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
-const getModule = (method) => {
+export const getModule = (method) => {
   switch (method) {
     case IpcParentType.ModuleWorker:
       return import('../IpcParentWithModuleWorker/IpcParentWithModuleWorker.js')
@@ -57,7 +57,7 @@ import * as IpcParentWithModuleWorkerWithMessagePort from '../IpcParentWithModul
 import * as IpcParentWithMessagePort from '../IpcParentWithMessagePort/IpcParentWithMessagePort.js'
 import * as IpcParentWithReferencePort from '../IpcParentWithReferencePort/IpcParentWithReferencePort.js'
 
-const getModule = (method) => {
+export const getModule = (method) => {
   switch (method) {
     case IpcParentType.ModuleWorker:
       return IpcParentWithModuleWorker
