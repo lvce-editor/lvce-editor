@@ -2,7 +2,7 @@ import { jest } from '@jest/globals'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 jest.unstable_mockModule('node:fs', () => ({
-  readFileSync: jest.fn(() => {
+  readtestSync: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
@@ -28,7 +28,7 @@ test('prepare - module not found error', async () => {
   // @ts-ignore
   error.code = ErrorCodes.ERR_MODULE_NOT_FOUND
   // @ts-ignore
-  fs.readFileSync.mockImplementation(() => {
+  fs.readtestSync.mockImplementation(() => {
     return `export { rgPath } from 'vscode-ripgrep-with-github-api-error-fix121'`
   })
   const prettyError = PrettyError.prepare(error)
@@ -56,18 +56,18 @@ test('prepare - module not found error', async () => {
 test('prepare - maximum call stack size exceeded', async () => {
   const error = new RangeError('Maximum call stack size exceeded')
   error.stack = ` RangeError: Maximum call stack size exceeded
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:3)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)`
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:3)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)`
   // @ts-ignore
-  fs.readFileSync.mockImplementation(() => {
+  fs.readtestSync.mockImplementation(() => {
     return `import { spawn } from 'node:child_process'
 import { once } from 'node:events'
 import * as ExecPromise from '../ExecPromise/ExecPromise.js'
@@ -98,16 +98,16 @@ export const execSync = (command) => {
   const prettyError = PrettyError.prepare(error)
   expect(prettyError).toEqual({
     message: 'Maximum call stack size exceeded',
-    stack: `  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:3)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
-  at execSync (file:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)`,
+    stack: `  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:3)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)
+  at execSync (test:///test/packages/shared-process/src/parts/ExecCommand/ExecCommand.js:24:10)`,
     codeFrame: `  22 |
   23 | export const execSync = (command) => {
 > 24 |   return execSync(command).toString().trim()
