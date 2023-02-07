@@ -1,3 +1,5 @@
+import * as JoinLines from '../JoinLines/JoinLines.js'
+
 export const state = {
   textDocuments: Object.create(null),
   /** @type{any[]} */
@@ -29,7 +31,7 @@ export const applyEdit = (socket, textDocument, documentEdits) => {
 }
 
 export const getText = (textDocument) => {
-  return textDocument.lines.join('\n')
+  return JoinLines.joinLines(textDocument.lines)
 }
 
 export const onChange = (listener) => {
