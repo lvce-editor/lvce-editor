@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
+import * as ExitCode from '../src/parts/ExitCode/ExitCode.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -47,7 +48,7 @@ test('handleCliArgs - error - manifest not found', async () => {
     "Error: Failed to link extension: Failed to load extension manifest for test: File not found '/test/extension.json'"
   )
   expect(Process.setExitCode).toHaveBeenCalledTimes(1)
-  expect(Process.setExitCode).toHaveBeenCalledWith(128)
+  expect(Process.setExitCode).toHaveBeenCalledWith(ExitCode.ExpectedError)
 })
 
 test('handleCliArgs - error - permission denied', async () => {

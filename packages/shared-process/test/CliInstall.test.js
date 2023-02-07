@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ExitCode from '../src/parts/ExitCode/ExitCode.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -52,7 +53,7 @@ test('handleCliArgs - error - not found', async () => {
   expect(Logger.error).toHaveBeenCalledTimes(1)
   expect(Logger.error).toHaveBeenCalledWith('Failed to install test-extension: Failed to download test://not-found: Response code 404 (Not Found)')
   expect(Process.setExitCode).toHaveBeenCalledTimes(1)
-  expect(Process.setExitCode).toHaveBeenCalledWith(128)
+  expect(Process.setExitCode).toHaveBeenCalledWith(ExitCode.ExpectedError)
 })
 
 test('handleCliArgs - error - offline', async () => {
@@ -66,7 +67,7 @@ test('handleCliArgs - error - offline', async () => {
     'Failed to install test-extension: Failed to download test://test-extension: getaddrinfo EAI_AGAIN test://test-extension'
   )
   expect(Process.setExitCode).toHaveBeenCalledTimes(1)
-  expect(Process.setExitCode).toHaveBeenCalledWith(128)
+  expect(Process.setExitCode).toHaveBeenCalledWith(ExitCode.ExpectedError)
 })
 
 test('handleCliArgs', async () => {

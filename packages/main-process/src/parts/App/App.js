@@ -10,6 +10,7 @@ const ElectronProtocol = require('../ElectronProtocol/ElectronProtocol.js')
 const ElectronIpcMain = require('../ElectronIpcMain/ElectronIpcMain.js')
 const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
 const ElectronAppListeners = require('../ElectronAppListeners/ElectronAppListeners.js')
+const ExitCode = require('../ExitCode/ExitCode.js')
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
 // const handleAppReady = async () => {
@@ -61,7 +62,7 @@ exports.hydrate = async () => {
       detached: true,
       stdio: 'ignore',
     })
-    process.exit(0)
+    process.exit(ExitCode.Sucess)
   }
 
   // command line switches
