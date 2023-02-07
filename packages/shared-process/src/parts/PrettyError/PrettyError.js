@@ -125,7 +125,3 @@ export const prepareJsonError = (json, property, message) => {
   // jsonError.stack = `${bottomMessage}\n    at ${filePath}`
   return jsonError
 }
-
-export const print = (prettyError, prefix = '') => {
-  console.error(`${prefix}Error: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}`)
-}
