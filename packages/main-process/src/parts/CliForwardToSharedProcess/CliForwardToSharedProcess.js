@@ -1,10 +1,10 @@
-const { Worker } = require('node:worker_threads')
-const Platform = require('../Platform/Platform.js')
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
+const NodeWorker = require('../NodeWorker/NodeWorker.js')
+const Platform = require('../Platform/Platform.js')
 
 const handleCliArgs = async (parsedArgs) => {
   const sharedProcessPath = Platform.getSharedProcessPath()
-  const worker = new Worker(sharedProcessPath, {
+  const worker = NodeWorker.create(sharedProcessPath, {
     argv: parsedArgs._,
   })
   worker.postMessage({ method: '' })
