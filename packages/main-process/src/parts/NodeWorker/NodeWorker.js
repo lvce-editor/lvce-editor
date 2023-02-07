@@ -7,6 +7,9 @@ const create = (url, options) => {
     on(event, listener) {
       this.worker.on(event, listener)
     },
+    off(event, listener) {
+      this.worker.off(event, listener)
+    },
     postMessage(message) {
       this.worker.postMessage(message)
     },

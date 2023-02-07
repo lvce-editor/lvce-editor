@@ -9,6 +9,7 @@ const JoinLines = require('../JoinLines/JoinLines.js')
 
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
+const RE_PATH_3 = /at (.*):(\d+)$/
 
 const getActualPath = (fileUri) => {
   if (fileUri.startsWith('file://')) {
@@ -24,7 +25,7 @@ const getActualPath = (fileUri) => {
  */
 const getFile = (lines) => {
   for (const line of lines) {
-    if (RE_PATH_1.test(line) || RE_PATH_2.test(line)) {
+    if (RE_PATH_1.test(line) || RE_PATH_2.test(line) || RE_PATH_3.test(line)) {
       return line
     }
   }
@@ -52,6 +53,9 @@ exports.prepare = (error) => {
     let match = file.match(RE_PATH_1)
     if (!match) {
       match = file.match(RE_PATH_2)
+    }
+    if (!match) {
+      match = file.match(RE_PATH_3)
     }
     if (match) {
       const [_, path, line, column] = match
