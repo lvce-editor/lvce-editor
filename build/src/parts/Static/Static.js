@@ -164,10 +164,10 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
     replacement: `'web'`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IpcChild/IpcChild.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IpcChildModule/IpcChildModule.js`,
     occurrence: `import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 
-const getModule = (method) => {
+export const getModule = (method) => {
   switch (method) {
     case IpcChildType.MessagePort:
       return import('../IpcChildWithMessagePort/IpcChildWithMessagePort.js')
@@ -179,18 +179,13 @@ const getModule = (method) => {
       throw new Error('unexpected ipc type')
   }
 }
-
-export const listen = async ({ method }) => {
-  const module = await getModule(method)
-  return module.listen()
-}
 `,
     replacement: `import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as IpcChildWithMessagePort from '../IpcChildWithMessagePort/IpcChildWithMessagePort.js'
 import * as IpcChildWithModuleWorker from '../IpcChildWithModuleWorker/IpcChildWithModuleWorker.js'
 import * as IpcChildWithReferencePort from '../IpcChildWithReferencePort/IpcChildWithReferencePort.js'
 
-const getModule = (method) => {
+export const getModule = (method) => {
   switch (method) {
     case IpcChildType.MessagePort:
       return IpcChildWithMessagePort
@@ -201,11 +196,6 @@ const getModule = (method) => {
     default:
       throw new Error('unexpected ipc type')
   }
-}
-
-export const listen = ({ method }) => {
-  const module = getModule(method)
-  return module.listen()
 }
 `,
   })
