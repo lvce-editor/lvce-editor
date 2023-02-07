@@ -18,7 +18,7 @@ export const handleError = async (error) => {
   try {
     const prettyError = await logError(error)
   } catch (otherError) {
-    console.warn(`ErrorHandling error`)
+    console.warn('ErrorHandling error')
     console.warn(otherError)
     console.error(error)
   }

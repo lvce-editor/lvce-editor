@@ -1,12 +1,12 @@
+import { jest } from '@jest/globals'
 import * as ExtensionHostCompletion from '../src/parts/ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
-import { jest } from '@jest/globals'
 
 test('registerCompletionProvider - no argument provided', () => {
   expect(() =>
     ExtensionHostCompletion.registerCompletionProvider()
   ).toThrowError(
-    new Error("Cannot read properties of undefined (reading 'languageId')")
+    new Error('Cannot read properties of undefined (reading \'languageId\')')
   )
 })
 
@@ -160,7 +160,7 @@ test('executeCompletionProvider - invalid return value - array with undefined va
     ExtensionHostCompletion.executeCompletionProvider(1, 1)
   ).rejects.toThrowError(
     new Error(
-      `Failed to execute completion provider: VError: invalid completion result: expected completion item to be of type object but was of type undefined`
+      'Failed to execute completion provider: VError: invalid completion result: expected completion item to be of type object but was of type undefined'
     )
   )
 })

@@ -14,7 +14,7 @@ test('registerTabCompletionProvider - no argument provided', () => {
   expect(() =>
     ExtensionHostTabCompletion.registerTabCompletionProvider()
   ).toThrowError(
-    new Error("Cannot read properties of undefined (reading 'languageId')")
+    new Error('Cannot read properties of undefined (reading \'languageId\')')
   )
 })
 

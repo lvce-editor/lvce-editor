@@ -18,7 +18,7 @@ test('registerFileSystemProvider - error - missing id', () => {
       },
     })
   ).toThrowError(
-    new Error(`Failed to register file system provider: missing id`)
+    new Error('Failed to register file system provider: missing id')
   )
 })
 

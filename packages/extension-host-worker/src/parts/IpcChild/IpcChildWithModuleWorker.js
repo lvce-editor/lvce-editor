@@ -12,7 +12,7 @@ export const listen = async () => {
   postMessageFn('ready')
   const firstMessage = await getFirstMessage()
   if (firstMessage.method !== 'initialize') {
-    throw new Error(`unexpected first message`)
+    throw new Error('unexpected first message')
   }
   const type = firstMessage.params[0]
   if (type === 'message-port') {

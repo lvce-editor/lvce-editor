@@ -6,7 +6,7 @@ test('validate - item must be of type object but is of type function', () => {
     type: 'object',
   }
   expect(Validation.validate(item, shape)).toBe(
-    `item must be of type object but is () => {}`
+    'item must be of type object but is () => {}'
   )
 })
 
@@ -16,7 +16,7 @@ test('validate - item must be of type object but is of type array', () => {
     type: 'object',
   }
   expect(Validation.validate(item, shape)).toBe(
-    `item must be of type object but is []`
+    'item must be of type object but is []'
   )
 })
 
@@ -33,7 +33,7 @@ test('validate - object property must be of type string but is of type object', 
     },
   }
   expect(Validation.validate(item, shape)).toBe(
-    `item.uri must be of type string`
+    'item.uri must be of type string'
   )
 })
 
@@ -48,7 +48,7 @@ test('validate - object property must be of type number but is missing', () => {
     },
   }
   expect(Validation.validate(item, shape)).toBe(
-    `item.endOffset must be of type number`
+    'item.endOffset must be of type number'
   )
 })
 

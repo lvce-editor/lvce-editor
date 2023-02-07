@@ -46,7 +46,7 @@ class BabelSyntaxError extends SyntaxError {
 test('tryToGetActualErrorMessage - syntax error - identifier has already been declared', async () => {
   // @ts-ignore
   BabelParser.parse.mockImplementation(() => {
-    throw new BabelSyntaxError(`Identifier 'x' has already been declared. (3:4)`, {
+    throw new BabelSyntaxError("Identifier 'x' has already been declared. (3:4)", {
       line: 3,
       column: 4,
     })
@@ -72,7 +72,7 @@ export const activate = () => {}
 test('tryToGetActualErrorMessage - syntax error - missing semicolon', async () => {
   // @ts-ignore
   BabelParser.parse.mockImplementation(() => {
-    throw new BabelSyntaxError(`SyntaxError: Missing semicolon. (1:2)`, {
+    throw new BabelSyntaxError('SyntaxError: Missing semicolon. (1:2)', {
       line: 1,
       column: 2,
     })

@@ -35,7 +35,7 @@ test('activate - error - module not found', async () => {
     })
   ).rejects.toThrowError(
     new Error(
-      `Failed to activate extension test: Failed to import /test/extension.js: Not found (404)`
+      'Failed to activate extension test: Failed to import /test/extension.js: Not found (404)'
     )
   )
 })
@@ -62,7 +62,7 @@ test('activate - error', async () => {
     })
   ).rejects.toThrowError(
     new Error(
-      `Failed to activate extension test: TypeError: x is not a function`
+      'Failed to activate extension test: TypeError: x is not a function'
     )
   )
 })
