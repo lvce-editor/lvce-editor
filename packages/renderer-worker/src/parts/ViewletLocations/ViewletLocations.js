@@ -2,6 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as ListIndex from '../ListIndex/ListIndex.js'
 
 /**
  * @enum {string}
@@ -183,31 +184,30 @@ export const focusIndex = (state, index) => {
 }
 
 export const focusFirst = (state) => {
-  if (state.displayReferences.length === 0) {
+  const { displayReferences } = state
+  if (displayReferences.length === 0) {
     return state
   }
-  return focusIndex(state, 0)
+  const firstIndex = ListIndex.first()
+  return focusIndex(state, firstIndex)
 }
 
 export const focusPrevious = (state) => {
-  if (state.focusedIndex === 0 || state.focusedIndex === -1) {
-    return state
-  }
-  return focusIndex(state, state.focusedIndex - 1)
+  const { displayReferences, focusedIndex } = state
+  const previousIndex = ListIndex.previousNoCycle(displayReferences, focusedIndex)
+  return focusIndex(state, previousIndex)
 }
 
 export const focusNext = (state) => {
-  if (state.focusedIndex === state.displayReferences.length - 1) {
-    return state
-  }
-  return focusIndex(state, state.focusedIndex + 1)
+  const { displayReferences, focusedIndex } = state
+  const nextIndex = ListIndex.nextNoCycle(displayReferences, focusedIndex)
+  return focusIndex(state, nextIndex)
 }
 
 export const focusLast = (state) => {
-  if (state.focusedIndex === state.displayReferences.length - 1) {
-    return state
-  }
-  return focusIndex(state, state.displayReferences.length - 1)
+  const { displayReferences } = state
+  const lastIndex = ListIndex.last(displayReferences)
+  return focusIndex(state, lastIndex)
 }
 
 export const selectCurrent = (state) => {
@@ -224,12 +224,7 @@ const renderLocations = {
     return oldState.displayReferences === newState.displayReferences
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ newState.id,
-      /* method */ 'setLocations',
-      /* references */ newState.displayReferences,
-    ]
+    return [/* Viewlet.invoke */ 'Viewlet.send', /* id */ newState.id, /* method */ 'setLocations', /* references */ newState.displayReferences]
   },
 }
 
@@ -238,12 +233,7 @@ const renderMessage = {
     return oldState.message === newState.message
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ newState.id,
-      /* method */ 'setMessage',
-      /* message */ newState.message,
-    ]
+    return [/* Viewlet.invoke */ 'Viewlet.send', /* id */ newState.id, /* method */ 'setMessage', /* message */ newState.message]
   },
 }
 

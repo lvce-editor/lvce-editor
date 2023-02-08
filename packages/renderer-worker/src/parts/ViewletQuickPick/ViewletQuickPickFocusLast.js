@@ -1,5 +1,7 @@
 import { focusIndex } from './ViewletQuickPickFocusIndex.js'
+import * as ListIndex from '../ListIndex/ListIndex.js'
 
 export const focusLast = (state) => {
-  return focusIndex(state, state.items.length - 1)
+  const { items } = state
+  return focusIndex(state, ListIndex.last(items))
 }

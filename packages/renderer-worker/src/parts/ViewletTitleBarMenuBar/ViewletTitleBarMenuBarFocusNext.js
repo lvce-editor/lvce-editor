@@ -1,14 +1,8 @@
 import { focusIndex } from './ViewletTitleBarMenuBarFocusIndex.js'
-
-const getIndexToFocusNextStartingAt = (items, index) => {
-  return index % items.length
-}
+import * as ListIndex from '../ListIndex/ListIndex.js'
 
 export const focusNext = (state) => {
   const { titleBarEntries, focusedIndex } = state
-  const indexToFocus = getIndexToFocusNextStartingAt(
-    titleBarEntries,
-    focusedIndex + 1
-  )
+  const indexToFocus = ListIndex.next(titleBarEntries, focusedIndex)
   return focusIndex(state, indexToFocus)
 }

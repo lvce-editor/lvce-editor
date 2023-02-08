@@ -1,5 +1,6 @@
 import { focusIndex } from './ViewletQuickPickFocusIndex.js'
+import * as ListIndex from '../ListIndex/ListIndex.js'
 
 export const focusFirst = (state) => {
-  return focusIndex(state, 0)
+  return focusIndex(state, ListIndex.first())
 }
