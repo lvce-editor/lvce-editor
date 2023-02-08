@@ -1,7 +1,9 @@
 import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.js'
+import * as DomExceptionType from '../DomExceptionType/DomExceptionType.js'
 import * as FileHandleEditMode from '../FileHandleEditMode/FileHandleEditMode.js'
 import * as FileHandlePermissionType from '../FileHandlePermissionType/FileHandlePermissionType.js'
 import * as FileHandleTypeMap from '../FileHandleTypeMap/FileHandleTypeMap.js'
+import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
 import * as FileSystemDirectoryHandle from '../FileSystemDirectoryHandle/FileSystemDirectoryHandle.js'
 import * as FileSystemFileHandle from '../FileSystemFileHandle/FileSystemFileHandle.js'
 import * as FileSytemHandlePermission from '../FileSystemHandlePermission/FileSystemHandlePermission.js'
@@ -110,7 +112,7 @@ const getFileHandle = async (uri) => {
     return undefined
   }
   const baseName = Path.getBaseName(pathSeparator, uri)
-  const fileHandle = FileSystemDirectoryHandle.getFileHandle(parentHandle, baseName)
+  const fileHandle = await FileSystemDirectoryHandle.getFileHandle(parentHandle, baseName)
   return fileHandle
 }
 
@@ -124,6 +126,9 @@ export const readFile = async (uri) => {
     const text = await file.text()
     return text
   } catch (error) {
+    if (error && error instanceof DOMException && error.name === DomExceptionType.NotFoundError) {
+      throw new FileNotFoundError(uri)
+    }
     throw new VError(error, `Failed to read file`)
   }
 }

@@ -1,4 +1,4 @@
-import * as ErrorCodes from '../../../../main-process/src/parts/ErrorCodes/ErrorCodes.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 
 export class FileNotFoundError extends Error {
   constructor(path) {
