@@ -1,6 +1,8 @@
 import { focusIndex } from './VirtualListFocusIndex.js'
+import * as ListIndex from '../ListIndex/ListIndex.js'
 
 export const focusLast = (state) => {
   const { items } = state
-  return focusIndex(state, items.length - 1)
+  const lastIndex = ListIndex.last(items)
+  return focusIndex(state, lastIndex)
 }

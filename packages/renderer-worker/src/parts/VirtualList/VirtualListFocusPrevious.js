@@ -1,9 +1,11 @@
 import { focusIndex } from './VirtualListFocusIndex.js'
+import * as ListIndex from '../ListIndex/ListIndex.js'
 
 export const focusPrevious = (state) => {
-  const { focusedIndex } = state
+  const { focusedIndex, items } = state
   if (focusedIndex === 0 || focusedIndex === -1) {
     return state
   }
-  return focusIndex(state, focusedIndex - 1)
+  const previousIndex = ListIndex.previous(items, focusedIndex)
+  return focusIndex(state, previousIndex)
 }
