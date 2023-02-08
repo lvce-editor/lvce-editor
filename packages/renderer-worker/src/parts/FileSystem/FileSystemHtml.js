@@ -1,5 +1,4 @@
 import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.js'
-import * as DomExceptionType from '../DomExceptionType/DomExceptionType.js'
 import * as FileHandleEditMode from '../FileHandleEditMode/FileHandleEditMode.js'
 import * as FileHandlePermissionType from '../FileHandlePermissionType/FileHandlePermissionType.js'
 import * as FileHandleTypeMap from '../FileHandleTypeMap/FileHandleTypeMap.js'
@@ -126,7 +125,7 @@ export const readFile = async (uri) => {
     const text = await file.text()
     return text
   } catch (error) {
-    if (error && error instanceof DOMException && error.name === DomExceptionType.NotFoundError) {
+    if (BrowserErrorTypes.isNotFoundError(error)) {
       throw new FileNotFoundError(uri)
     }
     throw new VError(error, `Failed to read file`)
