@@ -1,4 +1,4 @@
-import * as Platform from '../Platform/Platform.js'
+import * as IsFileSystemAccessNotSupportedOnFireFoxError from '../IsFileSystemAccessNotSupportedOnFireFoxError/IsFileSystemAccessNotSupportedOnFirefoxError.js'
 
 const getHandle = async (item) => {
   const entry = await item.getAsFileSystemHandle()
@@ -11,7 +11,7 @@ export const getFileHandles = async (items) => {
     const handles = await Promise.all(itemsArray.map(getHandle))
     return handles
   } catch (error) {
-    if (error instanceof TypeError && error.message === 'item.getAsFileSystemHandle is not a function' && Platform.getBrowser() === 'firefox') {
+    if (IsFileSystemAccessNotSupportedOnFireFoxError.isFileSystemAccessNotSupportedOnFireFoxError(error)) {
       throw new Error(`The File System Access Api is not supported on Firefox`)
     }
     throw error
