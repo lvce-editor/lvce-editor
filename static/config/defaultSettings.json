@@ -8,6 +8,7 @@
   "editor.lineHeight": 20,
   "editor.formatOnSave": false,
   "editor.letterSpacing": 0.5,
+  "editor.fontLigatures": true,
 
   "extensions.autoUpdate": true,
 

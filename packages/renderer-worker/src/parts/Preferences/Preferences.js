@@ -63,6 +63,10 @@ export const hydrate = async () => {
     if (letterSpacing) {
       styles.push(`  --EditorLetterSpacing: ${letterSpacing}px;`)
     }
+    const fontLigatures = preferences['editor.fontLigatures']
+    if (fontLigatures) {
+      styles.push(`  --EditorFontFeatureSettings: "liga" 1, "calt" 1;`)
+    }
     const css = `:root {
 ${JoinLines.joinLines(styles)}
 }`
