@@ -181,9 +181,6 @@ const getExcluded = () => {
 }
 
 const getSavedRoot = (savedState, workspacePath) => {
-  if (savedState && savedState.root && !savedState.root.startsWith('html://')) {
-    return savedState.root
-  }
   return workspacePath
 }
 
@@ -752,6 +749,8 @@ const getClickFn = (direntType) => {
       throw new Error(`Cannot open character device files`)
     case DirentType.BlockDevice:
       throw new Error(`Cannot open block device files`)
+    case DirentType.Socket:
+      throw new Error(`Cannot open socket files`)
     default:
       throw new Error(`unsupported dirent type ${direntType}`)
   }
