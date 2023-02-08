@@ -9,9 +9,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
 const ViewletMain = await import('../src/parts/ViewletMain/ViewletMain.js')
 const Command = await import('../src/parts/Command/Command.js')
 
-const ViewletStates = await import(
-  '../src/parts/ViewletStates/ViewletStates.js'
-)
+const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 
 beforeAll(() => {
   ViewletStates.reset()
@@ -36,10 +34,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-const ViewletLocations = await import(
-  '../src/parts/ViewletLocations/ViewletLocations.js'
-)
-
+const ViewletLocations = await import('../src/parts/ViewletLocations/ViewletLocations.js')
 
 test('create', () => {
   const state = ViewletLocations.create()
@@ -49,16 +44,10 @@ test('create', () => {
 test('loadContent - error - location provider throws error', async () => {
   const state = ViewletLocations.create()
   const provideLocations = () => {
-    throw new Error(
-      'Failed to execute reference provider: TypeError: x is not a function'
-    )
+    throw new Error('Failed to execute reference provider: TypeError: x is not a function')
   }
-  await expect(
-    ViewletLocations.loadContent(state, provideLocations)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute reference provider: TypeError: x is not a function'
-    )
+  await expect(ViewletLocations.loadContent(state, provideLocations)).rejects.toThrowError(
+    new Error('Failed to execute reference provider: TypeError: x is not a function')
   )
 })
 
@@ -67,9 +56,7 @@ test('loadContent - no locations found', async () => {
   const provideLocations = () => {
     return []
   }
-  expect(
-    await ViewletLocations.loadContent(state, provideLocations)
-  ).toMatchObject({
+  expect(await ViewletLocations.loadContent(state, provideLocations)).toMatchObject({
     references: [],
   })
 })
@@ -86,9 +73,7 @@ test('loadContent - one result in one file', async () => {
       },
     ]
   }
-  expect(
-    await ViewletLocations.loadContent(state, provideLocations)
-  ).toMatchObject({
+  expect(await ViewletLocations.loadContent(state, provideLocations)).toMatchObject({
     displayReferences: [
       {
         depth: 1,
@@ -131,9 +116,7 @@ test('loadContent - multiple results in one file', async () => {
       },
     ]
   }
-  expect(
-    await ViewletLocations.loadContent(state, provideLocations)
-  ).toMatchObject({
+  expect(await ViewletLocations.loadContent(state, provideLocations)).toMatchObject({
     displayReferences: [
       {
         depth: 1,
@@ -197,9 +180,7 @@ test('loadContent - multiple results in multiple file', async () => {
       },
     ]
   }
-  expect(
-    await ViewletLocations.loadContent(state, provideLocations)
-  ).toMatchObject({
+  expect(await ViewletLocations.loadContent(state, provideLocations)).toMatchObject({
     displayReferences: [
       {
         depth: 1,
@@ -365,7 +346,7 @@ test('focusLast - no references', () => {
     ...ViewletLocations.create(),
     displayReferences: [],
   }
-  expect(ViewletLocations.focusLast(state)).toBe(state)
+  expect(ViewletLocations.focusLast(state)).toEqual(state)
 })
 
 test('focusNext', () => {
@@ -423,7 +404,7 @@ test('focusNext - already at end', () => {
     ],
     focusedIndex: 1,
   }
-  expect(ViewletLocations.focusNext(state)).toBe(state)
+  expect(ViewletLocations.focusNext(state)).toEqual(state)
 })
 
 test('focusPrevious', () => {
@@ -481,7 +462,7 @@ test('focusPrevious - already at start', () => {
     ],
     focusedIndex: 0,
   }
-  expect(ViewletLocations.focusPrevious(state)).toBe(state)
+  expect(ViewletLocations.focusPrevious(state)).toEqual(state)
 })
 
 test('selectCurrent - no item focused', () => {

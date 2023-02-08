@@ -194,13 +194,13 @@ export const focusFirst = (state) => {
 
 export const focusPrevious = (state) => {
   const { displayReferences, focusedIndex } = state
-  const previousIndex = ListIndex.previous(displayReferences, focusedIndex)
+  const previousIndex = ListIndex.previousNoCycle(displayReferences, focusedIndex)
   return focusIndex(state, previousIndex)
 }
 
 export const focusNext = (state) => {
   const { displayReferences, focusedIndex } = state
-  const nextIndex = ListIndex.next(displayReferences, focusedIndex)
+  const nextIndex = ListIndex.nextNoCycle(displayReferences, focusedIndex)
   return focusIndex(state, nextIndex)
 }
 
