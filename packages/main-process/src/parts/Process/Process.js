@@ -38,3 +38,5 @@ exports.cwd = () => {
 exports.pid = process.pid
 
 exports.execPath = process.execPath
+
+exports.argv = process.argv
