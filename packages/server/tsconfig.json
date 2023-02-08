@@ -5,7 +5,7 @@
     "checkJs": true,
     "module": "esnext",
     "types": ["node"],
-    "moduleresolution": "nodenext",
+    "moduleResolution": "nodenext",
     "isolatedModules": true,
     "noImplicitAny": false,
     "skipLibCheck": true,
