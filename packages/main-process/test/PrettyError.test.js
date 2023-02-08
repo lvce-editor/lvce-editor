@@ -843,3 +843,63 @@ exports.getFirstNodeWorkerEvent = getFirstNodeWorkerEvent
     type: 'SyntaxError',
   })
 })
+
+test('prepare - type error - object that needs transfer was found in message but not listed in transferList', async () => {
+  const error = new TypeError(`Object that needs transfer was found in message but not listed in transferList`)
+  error.stack = `TypeError: Object that needs transfer was found in message but not listed in transferList
+    at Worker.postMessage (node:internal/worker:343:5)
+    at Object.send (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:24:19)
+    at handlePortForSharedProcess (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:153:17)`
+
+  // @ts-ignore
+  fs.readFileSync.mockImplementation(() => {
+    return `const Assert = require('../Assert/Assert.js')
+const { Worker } = require('node:worker_threads')
+const GetFirstNodeWorkerEvent = require('../GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js')
+
+exports.create = async ({ path, argv, env, execArgv }) => {
+  Assert.string(path)
+  const worker = new Worker(path, {
+    argv,
+    env,
+    execArgv,
+  })
+  const { type, event } = await GetFirstNodeWorkerEvent.getFirstNodeWorkerEvent(worker)
+  console.log({ type })
+  return worker
+}
+
+exports.wrap = (worker) => {
+  return {
+    worker,
+    on(event, listener) {
+      this.worker.on(event, listener)
+    },
+    send(message) {
+      this.worker.postMessage(message)
+    },
+    sendAndTransfer(message, transfer) {
+      this.worker.postMessage(message, transfer)
+    },
+    dispose() {
+      this.worker.terminate()
+    },
+  }
+}
+`
+  })
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    codeFrame: `  22 |     },
+  23 |     send(message) {
+> 24 |       this.worker.postMessage(message)
+     |                   ^
+  25 |     },
+  26 |     sendAndTransfer(message, transfer) {
+  27 |       this.worker.postMessage(message, transfer)`,
+    message: 'Object that needs transfer was found in message but not listed in transferList',
+    stack: `    at Object.send (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:24:19)
+    at handlePortForSharedProcess (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:153:17)`,
+    type: 'TypeError',
+  })
+})
