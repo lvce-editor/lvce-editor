@@ -130,7 +130,7 @@ exports.hydrate = async (env = {}) => {
   // TODO inherit stdout but listen to ready event
   const sharedProcessPath = Platform.getSharedProcessPath()
   const sharedProcess = await IpcParent.create({
-    method: IpcParentType.NodeWorker,
+    method: IpcParentType.NodeForkedProcess,
     path: sharedProcessPath,
     env: {
       ...process.env,
