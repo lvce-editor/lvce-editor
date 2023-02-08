@@ -355,6 +355,7 @@ test('loadContent - restore from saved state - root and symlinked open folder', 
 // TODO handle ENOTDIR error
 
 test('loadContent - restore from saved state', async () => {
+  Workspace.state.workspacePath = '/test'
   const state = {
     ...ViewletExplorer.create(),
     root: '/test',
@@ -423,6 +424,7 @@ test('loadContent - restore from saved state', async () => {
 })
 
 test('loadContent - restore from saved state - error root not found', async () => {
+  Workspace.state.workspacePath = '/test'
   const state = {
     ...ViewletExplorer.create(),
     root: '/test',
@@ -452,6 +454,7 @@ test('loadContent - restore from saved state - error root not found', async () =
 })
 
 test('loadContent - restore from saved state - sort dirents', async () => {
+  Workspace.state.workspacePath = '/test'
   const state = { ...ViewletExplorer.create(), root: '/test' }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
