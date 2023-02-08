@@ -11,6 +11,7 @@ const ElectronIpcMain = require('../ElectronIpcMain/ElectronIpcMain.js')
 const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
 const ElectronAppListeners = require('../ElectronAppListeners/ElectronAppListeners.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
+const Process = require('../Process/Process.js')
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
 // const handleAppReady = async () => {
@@ -57,12 +58,12 @@ exports.hydrate = async () => {
 
   // TODO tree shake out the .env.DEV check: reading from env variables is expensive
   if (process.stdout.isTTY && !parsedCliArgs.wait && !process.env.DEV) {
-    spawn(process.execPath, argv.slice(1), {
+    spawn(Process.execPath, argv.slice(1), {
       // env: { ...process.env },
       detached: true,
       stdio: 'ignore',
     })
-    process.exit(ExitCode.Sucess)
+    Process.exit(ExitCode.Sucess)
   }
 
   // command line switches
@@ -99,7 +100,7 @@ exports.hydrate = async () => {
   await ElectronApp.whenReady()
   Performance.mark('code/appReady')
 
-  await ElectronAppListeners.handleReady(parsedCliArgs, process.cwd())
+  await ElectronAppListeners.handleReady(parsedCliArgs, Process.cwd())
   Debug.debug('[info] app window created')
 }
 

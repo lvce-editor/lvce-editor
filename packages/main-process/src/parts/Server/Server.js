@@ -98,7 +98,7 @@ exports.hydrate = async () => {
   state.child.on('message', handleChildMessage)
   state.child.on('exit', handleChildExit)
   state.child.on('disconnect', handleChildDisconnect)
-  process.on('exit', handleProcessExit)
+  Process.on('exit', handleProcessExit)
   await new Promise((resolve) => {
     state.child.on('ready', resolve)
   })
