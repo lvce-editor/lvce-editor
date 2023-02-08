@@ -18,29 +18,20 @@ const { env } = process
 
 exports.applicationName = 'lvce-oss'
 
-const xdgConfig =
-  env.XDG_CONFIG_HOME ||
-  (homeDirectory ? join(homeDirectory, '.config') : undefined)
+const xdgConfig = env.XDG_CONFIG_HOME || (homeDirectory ? join(homeDirectory, '.config') : undefined)
 
 const configDir = join(xdgConfig || tmpdir(), exports.applicationName)
 
-const xdgData =
-  env.XDG_DATA_HOME ||
-  (homeDirectory ? join(homeDirectory, '.local', 'share') : undefined)
+const xdgData = env.XDG_DATA_HOME || (homeDirectory ? join(homeDirectory, '.local', 'share') : undefined)
 
 const dataDir = join(xdgData || tmpdir(), exports.applicationName)
 
 exports.getBuiltinSelfTestPath = () => {
-  return (
-    process.env.BUILTIN_SELF_TEST_PATH ||
-    join(Root.root, 'extensions', 'builtin.self-test', 'bin', 'SelfTest.js')
-  )
+  return process.env.BUILTIN_SELF_TEST_PATH || join(Root.root, 'extensions', 'builtin.self-test', 'bin', 'SelfTest.js')
 }
 
 exports.getWebPath = () => {
-  return (
-    process.env.WEB_PATH || join(Root.root, 'packages', 'web', 'src', 'web.js')
-  )
+  return process.env.WEB_PATH || join(Root.root, 'packages', 'web', 'src', 'web.js')
 }
 
 exports.version = '0.0.0-dev'
@@ -56,23 +47,11 @@ exports.getSessionId = () => {
 }
 
 exports.getSharedProcessPath = () => {
-  return join(
-    Root.root,
-    'packages',
-    'shared-process',
-    'src',
-    'sharedProcessMain.js'
-  )
+  return join(Root.root, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
 }
 
 exports.getExtensionHostPath = () => {
-  return join(
-    Root.root,
-    'packages',
-    'extension-host',
-    'src',
-    'extensionHostMain.js'
-  )
+  return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
 }
 
 exports.getDefaultSettingsPath = () => {
@@ -91,11 +70,5 @@ exports.getChromeExtensionsPath = () => {
 }
 
 exports.getExtensionHostHelperProcessPath = () => {
-  return join(
-    Root.root,
-    'packages',
-    'extension-host-helper-process',
-    'src',
-    'extensionHostHelperProcessMain.js'
-  )
+  return join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
 }

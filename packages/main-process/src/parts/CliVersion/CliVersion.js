@@ -1,7 +1,8 @@
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
+const ExitCode = require('../ExitCode/ExitCode.js')
 const JoinLines = require('../JoinLines/JoinLines.js')
 const Platform = require('../Platform/Platform.js')
-const ExitCode = require('../ExitCode/ExitCode.js')
+const Process = require('../Process/Process.js')
 
 const getName = (object) => {
   return object.name
@@ -15,18 +16,19 @@ const getVersions = () => {
     },
     {
       name: 'Electron',
-      version: process.versions.electron,
+      version: Process.getElectronVersion(),
     },
     {
       name: 'Chrome',
-      version: process.versions.chrome,
+      version: Process.getChromeVersion(),
     },
     {
       name: 'Node',
-      version: process.versions.node,
+      version: Process.getNodeVersion(),
     },
   ]
 }
+
 const getLength = (string) => {
   return string.length
 }
