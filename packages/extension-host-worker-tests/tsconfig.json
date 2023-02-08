@@ -6,7 +6,7 @@
     "module": "esnext",
     "target": "esnext",
     "types": ["node"],
-    "moduleResolution": "node",
+    "moduleresolution": "nodenext",
     "skipLibCheck": true,
     "noEmit": true,
     "allowSyntheticDefaultImports": true,

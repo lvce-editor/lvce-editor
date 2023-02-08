@@ -5,7 +5,7 @@
     "checkJs": true,
     "module": "esnext",
     "types": ["node", "jest"],
-    "moduleResolution": "node",
+    "moduleresolution": "nodenext",
     "isolatedModules": true,
     "noImplicitAny": false,
     "skipLibCheck": true,

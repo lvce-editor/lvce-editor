@@ -5,7 +5,7 @@
     "module": "esnext",
     "target": "esnext",
     "types": ["jest"],
-    "moduleResolution": "node",
+    "moduleresolution": "nodenext",
     "skipLibCheck": true,
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
