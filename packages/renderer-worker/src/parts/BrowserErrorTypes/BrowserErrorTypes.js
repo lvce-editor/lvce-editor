@@ -1,10 +1,7 @@
-export const BrowserErrorNames = {
-  NotAllowedError: 'NotAllowedError',
-  UnknownError: 'UnknownError',
-}
+import * as DomExceptionType from '../DomExceptionType/DomExceptionType.js'
 
 export const isNotAllowedError = (error) => {
-  return error && error.name === BrowserErrorNames.NotAllowedError
+  return error && error.name === DomExceptionType.NotAllowedError
 }
 
 // export const isUserActivationError
