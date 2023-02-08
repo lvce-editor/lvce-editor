@@ -48,9 +48,6 @@ const getType = (error) => {
 
 exports.prepare = (error) => {
   const message = prepareMessage(error.message)
-  if (error instanceof VError) {
-    error = error.cause()
-  }
   const lines = CleanStack.cleanStack(error.stack)
   const file = getFile(lines)
   let codeFrame = ''

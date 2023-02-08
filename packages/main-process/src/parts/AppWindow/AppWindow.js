@@ -9,6 +9,7 @@ const Preferences = require('../Preferences/Preferences.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Logger = require('../Logger/Logger.js')
 const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
+const { WindowLoadError } = require('../WindowLoadError/WindowLoadError.js')
 
 // TODO impossible to test these methods
 // and ensure that there is no memory leak
@@ -28,11 +29,7 @@ const loadUrl = async (browserWindow, url) => {
     if (LifeCycle.isShutDown()) {
       Logger.info('error during shutdown', error)
     } else {
-      throw new VError(
-        // @ts-ignore
-        error,
-        `Failed to load window url "${url}"`
-      )
+      throw new WindowLoadError(error, url)
     }
   }
   Performance.mark('code/didLoadUrl')
