@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -38,7 +39,7 @@ const getError = async (promise) => {
 class BabelSyntaxError extends SyntaxError {
   constructor(message, loc) {
     super(message)
-    this.code = 'BABEL_PARSER_SYNTAX_ERROR'
+    this.code = ErrorCodes.BABEL_PARSER_SYNTAX_ERROR
     this.loc = loc
   }
 }
