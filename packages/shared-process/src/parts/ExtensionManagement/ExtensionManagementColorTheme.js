@@ -3,8 +3,9 @@ import * as Error from '../Error/Error.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as FileSystemWatch from '../FileSystemWatch/FileSystemWatch.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
-import * as Path from '../Path/Path.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as Path from '../Path/Path.js'
+import * as Process from '../Process/Process.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
 
 // TODO test this function
@@ -73,7 +74,7 @@ export const watch = async (socket, colorThemeId) => {
   // console.log({ socket, colorThemeId })
   const extensions = await ExtensionManagement.getExtensions()
   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
-  const verbose = process.argv.includes('--verbose')
+  const verbose = Process.argv.includes('--verbose')
   if (verbose) {
     console.info(`[shared-process] starting to watch color theme ${colorThemeId} at ${colorThemePath}`)
   }

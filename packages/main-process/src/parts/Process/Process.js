@@ -30,3 +30,5 @@ exports.getNodeVersion = () => {
 exports.getV8Version = () => {
   return process.versions.v8
 }
+
+exports.argv = process.argv
