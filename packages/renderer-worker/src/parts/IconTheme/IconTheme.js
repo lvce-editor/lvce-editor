@@ -142,6 +142,7 @@ export const getIcon = (dirent) => {
     case DirentType.Symlink:
     case DirentType.CharacterDevice:
     case DirentType.BlockDevice:
+    case DirentType.Socket:
       return DefaultIcon.File
     default:
       Logger.warn(`unsupported type ${dirent.type}`)
