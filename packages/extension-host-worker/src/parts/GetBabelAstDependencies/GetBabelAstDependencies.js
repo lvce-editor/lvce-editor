@@ -52,25 +52,25 @@ export const getBabelAstDependencies = (code, ast) => {
   const { body } = program
   const dependencies = []
   for (const node of body) {
-    if (node.type === 'ImportDeclaration' || node.type === 'ExportAllDeclaration') {
+    if (node.type === BabelNodeType.ImportDeclaration || node.type === BabelNodeType.ExportAllDeclaration) {
       const relativePath = node.source.extra.rawValue
       const start = node.source.start
       const end = node.source.end
       dependencies.push({ relativePath, code, start, end })
     } else if (
-      node.type === 'VariableDeclaration' &&
+      node.type === BabelNodeType.VariableDeclaration &&
       node.declarations &&
       node.declarations[0] &&
-      node.declarations[0].type === 'VariableDeclarator' &&
+      node.declarations[0].type === BabelNodeType.VariableDeclarator &&
       node.declarations[0].init &&
-      node.declarations[0].init.type === 'AwaitExpression' &&
+      node.declarations[0].init.type === BabelNodeType.AwaitExpression &&
       node.declarations[0].init.argument &&
-      node.declarations[0].init.argument.type === 'CallExpression' &&
+      node.declarations[0].init.argument.type === BabelNodeType.CallExpression &&
       node.declarations[0].init.argument.callee &&
-      node.declarations[0].init.argument.callee.type === 'Import' &&
+      node.declarations[0].init.argument.callee.type === BabelNodeType.Import &&
       node.declarations[0].init.argument.arguments &&
       node.declarations[0].init.argument.arguments[0] &&
-      node.declarations[0].init.argument.arguments[0].type === 'StringLiteral'
+      node.declarations[0].init.argument.arguments[0].type === BabelNodeType.StringLiteral
     ) {
       const relativePath = node.declarations[0].init.argument.arguments[0].extra.rawValue
       const start = node.declarations[0].init.argument.arguments[0].start
@@ -82,12 +82,12 @@ export const getBabelAstDependencies = (code, ast) => {
   const visitor = (node) => {
     if (
       node &&
-      node.type === 'CallExpression' &&
+      node.type === BabelNodeType.CallExpression &&
       node.callee &&
-      node.callee.type === 'Import' &&
+      node.callee.type === BabelNodeType.Import &&
       node.arguments &&
       node.arguments[0] &&
-      node.arguments[0].type === 'StringLiteral'
+      node.arguments[0].type === BabelNodeType.StringLiteral
     ) {
       const relativePath = node.arguments[0].extra.rawValue
       const start = node.arguments[0].start
