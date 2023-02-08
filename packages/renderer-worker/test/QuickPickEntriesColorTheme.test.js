@@ -6,16 +6,13 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -24,12 +21,8 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
-const QuickPickEntriesColorTheme = await import(
-  '../src/parts/QuickPickEntriesColorTheme/QuickPickEntriesColorTheme.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const QuickPickEntriesColorTheme = await import('../src/parts/QuickPickEntriesColorTheme/QuickPickEntriesColorTheme.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 test('getPlaceholder', () => {
   expect(QuickPickEntriesColorTheme.getPlaceholder()).toBe('Select Color Theme')
@@ -45,17 +38,7 @@ test('getPicks', async () => {
         throw new Error('unexpected message')
     }
   })
-  expect(await QuickPickEntriesColorTheme.getPicks()).toEqual([
-    {
-      label: 'monokai',
-    },
-    {
-      label: 'shades-of-purple',
-    },
-    {
-      label: 'slime',
-    },
-  ])
+  expect(await QuickPickEntriesColorTheme.getPicks()).toEqual(['monokai', 'shades-of-purple', 'slime'])
 })
 
 test.skip('getPicks - error', async () => {
@@ -76,9 +59,7 @@ test.skip('getPicks - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(QuickPickEntriesColorTheme.getPicks()).rejects.toThrowError(
-    new Error('Color theme "undefined" not found in extensions folder')
-  )
+  await expect(QuickPickEntriesColorTheme.getPicks()).rejects.toThrowError(new Error('Color theme "undefined" not found in extensions folder'))
 })
 
 test.skip('selectPick', () => {
@@ -86,9 +67,7 @@ test.skip('selectPick', () => {
     QuickPickEntriesColorTheme.selectPick({
       label: 'slime',
     })
-  ).rejects.toThrowError(
-    new Error('Color theme "undefined" not found in extensions folder')
-  )
+  ).rejects.toThrowError(new Error('Color theme "undefined" not found in extensions folder'))
 })
 
 test.skip('selectPick - error', async () => {

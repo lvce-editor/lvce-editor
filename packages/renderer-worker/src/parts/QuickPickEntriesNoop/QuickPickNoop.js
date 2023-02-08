@@ -34,3 +34,7 @@ export const selectPick = async (item) => {
 export const getFilterValue = (value) => {
   return value
 }
+
+export const getPickFilterValue = (pick) => {
+  return pick
+}

@@ -11,16 +11,11 @@ export const UiStrings = {
 }
 
 const getRecentlyOpened = () => {
-  return Command.execute(
-    /* RecentlyOpened.getRecentlyOpened */ 'RecentlyOpened.getRecentlyOpened'
-  )
+  return Command.execute(/* RecentlyOpened.getRecentlyOpened */ 'RecentlyOpened.getRecentlyOpened')
 }
 
 const openWorkspaceFolder = (uri) => {
-  return Command.execute(
-    /* Workspace.setPath */ 'Workspace.setPath',
-    /* path */ uri
-  )
+  return Command.execute(/* Workspace.setPath */ 'Workspace.setPath', /* path */ uri)
 }
 
 export const getPlaceholder = () => {
@@ -41,12 +36,6 @@ export const getNoResults = () => {
   }
 }
 
-const toPick = (path) => {
-  return {
-    label: path,
-  }
-}
-
 // TODO could also change api so that getPicks returns an array of anything
 // and the transformPick gets the label for each pick
 // This would make the code more module since the code for getting the picks
@@ -54,7 +43,7 @@ const toPick = (path) => {
 
 export const getPicks = async () => {
   const recentlyOpened = await getRecentlyOpened()
-  return recentlyOpened.map(toPick)
+  return recentlyOpened
 }
 
 // TODO selectPick should be independent of show/hide
@@ -68,4 +57,16 @@ export const selectPick = async (pick) => {
 
 export const getFilterValue = (value) => {
   return value
+}
+
+export const getPickFilterValue = (pick) => {
+  return pick
+}
+
+export const getPickLabel = (pick) => {
+  return pick
+}
+
+export const getPickIcon = (pick) => {
+  return ''
 }

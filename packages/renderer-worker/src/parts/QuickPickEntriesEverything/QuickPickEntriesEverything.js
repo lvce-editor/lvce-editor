@@ -65,9 +65,7 @@ const getQuickPickProvider = (prefix) => {
     case QuickPickPrefix.Symbol:
       return import('../QuickPickEntriesSymbol/QuickPickEntriesSymbol.js')
     case QuickPickPrefix.WorkspaceSymbol:
-      return import(
-        '../QuickPickEntriesWorkspaceSymbol/QuickPickEntriesWorkspaceSymbol.js'
-      )
+      return import('../QuickPickEntriesWorkspaceSymbol/QuickPickEntriesWorkspaceSymbol.js')
     case QuickPickPrefix.GoToLine:
       return import('../QuickPickEntriesGoToLine/QuickPickEntriesGoToLine.js')
     case QuickPickPrefix.View:
@@ -117,4 +115,19 @@ export const openView = () => {
 
 export const getFilterValue = (value) => {
   return value.slice(state.prefix.length)
+}
+
+export const getPickFilterValue = (pick) => {
+  const { provider } = state
+  return provider.getPickFilterValue(pick)
+}
+
+export const getPickLabel = (pick) => {
+  const { provider } = state
+  return provider.getPickLabel(pick)
+}
+
+export const getPickIcon = (pick) => {
+  const { provider } = state
+  return provider.getPickIcon(pick)
 }
