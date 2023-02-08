@@ -76,6 +76,8 @@ export const load = (moduleId) => {
       return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
     case ViewletModuleId.Video:
       return import('../ViewletVideo/ViewletVideo.js')
+    case ViewletModuleId.ColorPicker:
+      return import('../ViewletColorPicker/ViewletColorPicker.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }

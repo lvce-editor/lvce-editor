@@ -775,5 +775,10 @@
     "key": "ArrowDown",
     "command": "EditorImage.moveDown",
     "when": "focus.EditorImage"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "Viewlet.openWidget",
+    "args": ["ColorPicker"]
   }
 ]

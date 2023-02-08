@@ -1,0 +1,41 @@
+.ColorPicker {
+  /* TODO */
+  width: 300px;
+  height: 200px;
+  contain: strict;
+  display: flex;
+  flex-direction: column;
+}
+
+.ColorPickerRectangle {
+  contain: strict;
+  flex: 1;
+}
+
+.ColorPickerBackgroundColor,
+.ColorPickerLight,
+.ColorPickerDark {
+  position: absolute;
+  inset: 0;
+}
+
+.ColorPickerBackgroundColor {
+  background: red;
+}
+
+.ColorPickerLight {
+  background: linear-gradient(to right, rgb(255, 255, 255), rgba(255, 255, 255, 0));
+}
+
+.ColorPickerDark {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgb(0, 0, 0));
+}
+
+.ColorPickerSlider {
+  height: 10px;
+  width: 100%;
+  background: linear-gradient(to right, red 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, red);
+  border-radius: 5px;
+  position: relative;
+  margin: 20px auto;
+}
