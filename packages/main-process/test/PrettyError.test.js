@@ -848,8 +848,8 @@ test('prepare - type error - object that needs transfer was found in message but
   const error = new TypeError(`Object that needs transfer was found in message but not listed in transferList`)
   error.stack = `TypeError: Object that needs transfer was found in message but not listed in transferList
     at Worker.postMessage (node:internal/worker:343:5)
-    at Object.send (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:24:19)
-    at handlePortForSharedProcess (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:153:17)`
+    at Object.send (/test/packages/main-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:24:19)
+    at handlePortForSharedProcess (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:153:17)`
 
   // @ts-ignore
   fs.readFileSync.mockImplementation(() => {
@@ -898,8 +898,134 @@ exports.wrap = (worker) => {
   26 |     sendAndTransfer(message, transfer) {
   27 |       this.worker.postMessage(message, transfer)`,
     message: 'Object that needs transfer was found in message but not listed in transferList',
-    stack: `    at Object.send (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:24:19)
-    at handlePortForSharedProcess (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:153:17)`,
+    stack: `    at Object.send (/test/packages/main-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:24:19)
+    at handlePortForSharedProcess (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:153:17)`,
     type: 'TypeError',
+  })
+})
+
+test('prepare - error - failed to load window', async () => {
+  const error = new Error(`Failed to load window url "lvce-oss://-": ERR_INVALID_URL (-300) loading 'lvce-oss://-/`)
+  error.stack = `VError: Failed to load window url "lvce-oss://-": ERR_INVALID_URL (-300) loading 'lvce-oss://-/'
+    at loadUrl (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:31:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async exports.createAppWindow (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:85:3)
+    at async exports.handleReady (/test/packages/main-process/src/parts/ElectronAppListeners/ElectronAppListeners.js:30:3)
+    at async exports.hydrate (/test/packages/main-process/src/parts/App/App.js:102:3)
+    at async main (/test/packages/main-process/src/mainProcessMain.js:15:3)`
+  // @ts-ignore
+  fs.readFileSync.mockImplementation(() => {
+    return `const VError = require('verror')
+const Screen = require('../ElectronScreen/ElectronScreen.js')
+const Window = require('../ElectronWindow/ElectronWindow.js')
+const Performance = require('../Performance/Performance.js')
+const LifeCycle = require('../LifeCycle/LifeCycle.js')
+const Session = require('../ElectronSession/ElectronSession.js')
+const Platform = require('../Platform/Platform.js')
+const Preferences = require('../Preferences/Preferences.js')
+const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
+const Logger = require('../Logger/Logger.js')
+const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
+
+// TODO impossible to test these methods
+// and ensure that there is no memory leak
+/**
+ * @param {import('electron').Event} event
+ */
+const handleWindowClose = (event) => {
+  const browserWindow = event.sender
+  AppWindowStates.remove(browserWindow.webContents.id)
+}
+
+const loadUrl = async (browserWindow, url) => {
+  Performance.mark('code/willLoadUrl')
+  try {
+    await browserWindow.loadURL(url)
+  } catch (error) {
+    if (LifeCycle.isShutDown()) {
+      Logger.info('error during shutdown', error)
+    } else {
+      throw new VError(
+        // @ts-ignore
+        error,
+        \`Failed to load window url "\${url}"\`
+      )
+    }
+  }
+  Performance.mark('code/didLoadUrl')
+}
+
+const defaultUrl = \`\${Platform.scheme}://-\`
+
+// TODO avoid mixing BrowserWindow, childprocess and various lifecycle methods in one file -> separate concerns
+exports.createAppWindow = async (parsedArgs, workingDirectory, url = defaultUrl) => {
+  const preferences = await Preferences.load()
+  const titleBarPreference = Preferences.get(preferences, 'window.titleBarStyle')
+  const frame = titleBarPreference !== 'custom'
+  const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
+  const zoomLevelPreference = Preferences.get(preferences, 'window.zoomLevel')
+  const zoomLevel = zoomLevelPreference
+  const windowControlsOverlayPreference = Platform.isWindows && Preferences.get(preferences, 'window.controlsOverlay.enabled')
+  const titleBarOverlay = windowControlsOverlayPreference
+    ? {
+        color: '#1e2324',
+        symbolColor: '#74b1be',
+        height: 29,
+      }
+    : undefined
+  const session = Session.get()
+  const window = Window.create({
+    y: 0,
+    x: Screen.getWidth() - 800,
+    width: 800,
+    height: Screen.getHeight(),
+    menu: true,
+    background: '#1e2324',
+    session,
+    titleBarStyle,
+    frame,
+    zoomLevel,
+    titleBarOverlay,
+  })
+  const menu = ElectronApplicationMenu.createTitleBar()
+  ElectronApplicationMenu.setMenu(menu)
+
+  // window.setMenu(menu)
+  window.setMenuBarVisibility(true)
+  window.setAutoHideMenuBar(false)
+  window.on('close', handleWindowClose)
+  AppWindowStates.add({
+    parsedArgs,
+    workingDirectory,
+    id: window.webContents.id,
+  })
+  await loadUrl(window, url)
+}
+
+exports.openNew = (url) => {
+  return exports.createAppWindow([], '', url)
+}
+
+exports.findById = (id) => {
+  return AppWindowStates.findById(id)
+}
+`
+  })
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    codeFrame: `  29 |       Logger.info('error during shutdown', error)
+  30 |     } else {
+> 31 |       throw new VError(
+     |             ^
+  32 |         // @ts-ignore
+  33 |         error,
+  34 |         \`Failed to load window url \"\${url}\"\``,
+    message: 'Failed to load window url "lvce-oss://-": ERR_INVALID_URL (-300) loading \'lvce-oss://-/',
+    stack: `    at loadUrl (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:31:13)
+    at async exports.createAppWindow (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:85:3)
+    at async exports.handleReady (/test/packages/main-process/src/parts/ElectronAppListeners/ElectronAppListeners.js:30:3)
+    at async exports.hydrate (/test/packages/main-process/src/parts/App/App.js:102:3)
+    at async main (/test/packages/main-process/src/mainProcessMain.js:15:3)`,
+    type: 'Error',
   })
 })
