@@ -48,7 +48,7 @@ export const getPicks = async () => {
 
 // TODO selectPick should be independent of show/hide
 export const selectPick = async (pick) => {
-  const path = pick.label
+  const path = pick
   await openWorkspaceFolder(path)
   return {
     command: QuickPickReturnValue.Hide,
