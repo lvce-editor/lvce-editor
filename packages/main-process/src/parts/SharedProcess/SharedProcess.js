@@ -70,7 +70,7 @@ const handleProcessExit = async () => {
     // await state.sharedProcess.terminate()
     // state.sharedProcess.postMessage('terminate')
     Logger.info('[main-process] terminating shared process')
-    await state.sharedProcess.terminate()
+    await state.sharedProcess.dispose()
     // state.sharedProcess.
   }
 }
