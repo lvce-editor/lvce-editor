@@ -9,6 +9,7 @@ const ColorTheme = require('../ColorTheme/ColorTheme.js')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
+const Process = require('../Process/Process.js')
 
 exports.open = async () => {
   const colorThemeJson = await ColorTheme.getColorThemeJson()
@@ -36,7 +37,7 @@ exports.open = async () => {
     const browserWindowPort = event.ports[0]
 
     const updateStats = async () => {
-      const processesWithMemoryUsage = await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(process.pid)
+      const processesWithMemoryUsage = await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(Process.pid)
       browserWindowPort.postMessage({
         jsonrpc: JsonRpcVersion.Two,
         method: 'processWithMemoryUsage',

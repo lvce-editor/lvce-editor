@@ -31,4 +31,12 @@ exports.getV8Version = () => {
   return process.versions.v8
 }
 
+exports.cwd = () => {
+  return process.cwd()
+}
+
+exports.pid = process.pid
+
+exports.execPath = process.execPath
+
 exports.argv = process.argv
