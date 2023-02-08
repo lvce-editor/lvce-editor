@@ -80,6 +80,6 @@ test('createAppWindow - error', async () => {
   })
   // TODO error message should be improved
   await expect(AppWindow.createAppWindow([], '')).rejects.toThrowError(
-    new Error('Failed to load window url "lvce-oss://-": ERR_FAILED (-2) loading \'lvce-oss://-\'')
+    new Error("Failed to load url lvce-oss://-: ERR_FAILED (-2) loading 'lvce-oss://-'")
   )
 })
