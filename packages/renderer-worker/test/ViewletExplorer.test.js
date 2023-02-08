@@ -355,6 +355,7 @@ test('loadContent - restore from saved state - root and symlinked open folder', 
 // TODO handle ENOTDIR error
 
 test('loadContent - restore from saved state', async () => {
+  Workspace.state.workspacePath = '/test'
   const state = {
     ...ViewletExplorer.create(),
     root: '/test',
@@ -423,6 +424,7 @@ test('loadContent - restore from saved state', async () => {
 })
 
 test('loadContent - restore from saved state - error root not found', async () => {
+  Workspace.state.workspacePath = '/test'
   const state = {
     ...ViewletExplorer.create(),
     root: '/test',
@@ -452,6 +454,7 @@ test('loadContent - restore from saved state - error root not found', async () =
 })
 
 test('loadContent - restore from saved state - sort dirents', async () => {
+  Workspace.state.workspacePath = '/test'
   const state = { ...ViewletExplorer.create(), root: '/test' }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
@@ -1116,6 +1119,35 @@ test('handleClick - character device', async () => {
     }
   })
   expect(() => ViewletExplorer.handleClick(state, 0)).toThrowError(new Error('Cannot open character device files'))
+  expect(Command.execute).not.toHaveBeenCalled()
+})
+
+test('handleClick - socket', async () => {
+  const state = {
+    root: '/test',
+    focusedIndex: -1,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    items: [
+      {
+        name: 'Socket',
+        type: DirentType.Socket,
+        path: '/Socket',
+      },
+    ],
+  }
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Main.openUri':
+        break
+      default:
+        throw new Error('unexpected method')
+    }
+  })
+  expect(() => ViewletExplorer.handleClick(state, 0)).toThrowError(new Error('Cannot open socket files'))
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
