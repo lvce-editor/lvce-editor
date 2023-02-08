@@ -11,6 +11,7 @@
   white-space: pre;
   font-size: var(--EditorFontSize);
   letter-spacing: var(--EditorLetterSpacing);
+  font-feature-settings: var(--EditorFontFeatureSettings);
   tab-size: 2;
   font-display: block;
   cursor: text;
