@@ -7,13 +7,14 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Font from '../Font/Font.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Languages from '../Languages/Languages.js'
+import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Platform from '../Platform/Platform.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -216,4 +217,32 @@ export const focus = (state) => {
 
 export const shouldApplyNewState = (newState) => {
   return true
+}
+
+export const getDynamicCss = (preferences) => {
+  const styles = []
+  const fontSize = preferences['editor.fontSize']
+  if (fontSize) {
+    styles.push(`  --EditorFontSize: ${fontSize}px;`)
+  }
+  const fontFamily = preferences['editor.fontFamily']
+  if (fontFamily) {
+    styles.push(`  --EditorFontFamily: ${fontFamily};`)
+  }
+  const lineHeight = preferences['editor.lineHeight']
+  if (lineHeight) {
+    styles.push(`  --EditorLineHeight: ${lineHeight}px;`)
+  }
+  const letterSpacing = preferences['editor.letterSpacing']
+  if (letterSpacing) {
+    styles.push(`  --EditorLetterSpacing: ${letterSpacing}px;`)
+  }
+  const fontLigatures = preferences['editor.fontLigatures']
+  if (fontLigatures) {
+    styles.push(`  --EditorFontFeatureSettings: "liga" 1, "calt" 1;`)
+  }
+  const css = `:root {
+${JoinLines.joinLines(styles)}
+}`
+  return css
 }

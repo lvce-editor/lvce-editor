@@ -1,12 +1,10 @@
 import * as Command from '../Command/Command.js'
-import * as Platform from '../Platform/Platform.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as Json from '../Json/Json.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Json from '../Json/Json.js'
+import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const state = Object.create(null)
 
@@ -45,33 +43,6 @@ export const hydrate = async () => {
     // TODO probably not all preferences need to be kept in memory
     const preferences = await getPreferences()
     Object.assign(state, preferences)
-
-    const styles = []
-    const fontSize = preferences['editor.fontSize']
-    if (fontSize) {
-      styles.push(`  --EditorFontSize: ${fontSize}px;`)
-    }
-    const fontFamily = preferences['editor.fontFamily']
-    if (fontFamily) {
-      styles.push(`  --EditorFontFamily: ${fontFamily};`)
-    }
-    const lineHeight = preferences['editor.lineHeight']
-    if (lineHeight) {
-      styles.push(`  --EditorLineHeight: ${lineHeight}px;`)
-    }
-    const letterSpacing = preferences['editor.letterSpacing']
-    if (letterSpacing) {
-      styles.push(`  --EditorLetterSpacing: ${letterSpacing}px;`)
-    }
-    const fontLigatures = preferences['editor.fontLigatures']
-    if (fontLigatures) {
-      styles.push(`  --EditorFontFeatureSettings: "liga" 1, "calt" 1;`)
-    }
-    const css = `:root {
-${JoinLines.joinLines(styles)}
-}`
-    // TODO make Css.setInlineStyle a separate module in renderer-worker
-    await RendererProcess.invoke(/* Css.setInlineStyle */ 'Css.setInlineStyle', /* id */ 'Settings', /* css */ css)
   } catch (error) {
     console.error(error)
   }

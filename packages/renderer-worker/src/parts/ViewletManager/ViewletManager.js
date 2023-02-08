@@ -4,11 +4,11 @@ import * as Css from '../Css/Css.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-
 export const state = {
   pendingModules: Object.create(null),
 }
@@ -245,6 +245,9 @@ const actuallyLoadModule = async (getModule, id) => {
     } else {
       await Css.loadCssStyleSheet(module.Css)
     }
+  }
+  if (module.getDynamicCss) {
+    await Css.addDynamicCss(module.id, module.getDynamicCss, Preferences.state)
   }
   maybeRegisterWrappedCommands(module)
   maybeRegisterEvents(module)
