@@ -2,6 +2,8 @@ import { jest } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as FileHandlePermissionType from '../src/parts/FileHandlePermissionType/FileHandlePermissionType.js'
 import * as FileHandleType from '../src/parts/FileHandleType/FileHandleType.js'
+import { FileNotFoundError } from '../src/parts/FileNotFoundError/FileNotFoundError.js'
+import * as DomExceptionType from '../src/parts/DomExceptionType/DomExceptionType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -14,6 +16,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/FileSystemDirectoryHandle/FileSystemDirectoryHandle.js', () => {
   return {
     getDirents: jest.fn(() => {
@@ -22,8 +25,12 @@ jest.unstable_mockModule('../src/parts/FileSystemDirectoryHandle/FileSystemDirec
     getChildHandles: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    getFileHandle: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/FileSystemHandlePermission/FileSystemHandlePermission.js', () => {
   return {
     requestPermission: jest.fn(() => {
@@ -34,12 +41,23 @@ jest.unstable_mockModule('../src/parts/FileSystemHandlePermission/FileSystemHand
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/PersistentFileHandle/PersistentFileHandle.js', () => {
+  return {
+    getHandle: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    addHandles: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 
 const Command = await import('../src/parts/Command/Command.js')
 
 const FileSystemHtml = await import('../src/parts/FileSystem/FileSystemHtml.js')
 const FileSystemDirectoryHandle = await import('../src/parts/FileSystemDirectoryHandle/FileSystemDirectoryHandle.js')
 const FileSystemHandlePermission = await import('../src/parts/FileSystemHandlePermission/FileSystemHandlePermission.js')
+const PersistentFileHandle = await import('../src/parts/PersistentFileHandle/PersistentFileHandle.js')
 
 class NotAllowedError extends Error {
   constructor() {
@@ -47,9 +65,27 @@ class NotAllowedError extends Error {
     this.name = 'NotAllowedError'
   }
 }
+
 class UserActivationRequiredError extends Error {
   constructor() {
     super('User activation is required to request permissions.')
+  }
+}
+
+class NoErrorThrownError extends Error {}
+
+/**
+ *
+ * @param {any} promise
+ * @returns {Promise<Error>}
+ *  */
+const getError = async (promise) => {
+  try {
+    await promise
+    throw new NoErrorThrownError()
+  } catch (error) {
+    // @ts-ignore
+    return error
   }
 }
 
@@ -58,6 +94,10 @@ test('getPathSeparator', async () => {
 })
 
 test('readDirWithFileTypes', async () => {
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockImplementation(() => {
+    return {}
+  })
   // @ts-ignore
   Command.execute.mockImplementation(async (method, ...parameters) => {
     return {
@@ -110,6 +150,10 @@ test('readDirWithFileTypes', async () => {
 
 test('readDirWithFileTypes - error', async () => {
   // @ts-ignore
+  PersistentFileHandle.getHandle.mockImplementation(() => {
+    return {}
+  })
+  // @ts-ignore
   Command.execute.mockImplementation(async (method, ...parameters) => {
     return {
       kind: FileHandleType.Directory,
@@ -127,6 +171,10 @@ test('readDirWithFileTypes - error', async () => {
 })
 
 test('readDirWithFileTypes - not allowed - fallback succeeds', async () => {
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockImplementation(() => {
+    return {}
+  })
   let i = 0
   let j = 0
   // @ts-ignore
@@ -182,6 +230,10 @@ test('readDirWithFileTypes - not allowed - fallback succeeds', async () => {
 })
 
 test('readDirWithFileTypes - not allowed - fallback fails', async () => {
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockImplementation(() => {
+    return {}
+  })
   let i = 0
   let j = 0
   // @ts-ignore
@@ -220,6 +272,10 @@ test('readDirWithFileTypes - not allowed - fallback fails', async () => {
 })
 
 test('readDirWithFileTypes - error - user activation required', async () => {
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockImplementation(() => {
+    return {}
+  })
   let i = 0
   let j = 0
   // @ts-ignore
@@ -269,4 +325,38 @@ test.skip('writeFile - not allowed', async () => {
     }
   })
   expect(await FileSystemHtml.readDirWithFileTypes('test-folder')).toEqual([])
+})
+
+test('readFile', async () => {
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockImplementation(() => {
+    return {
+      getFile() {
+        return {
+          text() {
+            return 'test'
+          },
+        }
+      },
+    }
+  })
+  expect(await FileSystemHtml.readFile('/test/file.txt')).toBe('test')
+})
+
+test('readFile - not found', async () => {
+  let i = 0
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockImplementation(() => {
+    if (i++ === 0) {
+      return undefined
+    }
+    return {}
+  })
+  // @ts-ignore
+  FileSystemDirectoryHandle.getFileHandle.mockImplementation(() => {
+    throw new DOMException('A requested file or directory could not be found at the time an operation was processed.', DomExceptionType.NotFoundError)
+  })
+  const error = await getError(FileSystemHtml.readFile('/test/not-found.txt'))
+  expect(error).toBeInstanceOf(FileNotFoundError)
+  expect(error.message).toBe("File not found '/test/not-found.txt'")
 })
