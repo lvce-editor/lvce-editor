@@ -38,9 +38,7 @@ jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
   }
 })
 
-const QuickPickEntriesFile = await import(
-  '../src/parts/QuickPickEntriesFile/QuickPickEntriesFile.js'
-)
+const QuickPickEntriesFile = await import('../src/parts/QuickPickEntriesFile/QuickPickEntriesFile.js')
 const SearchFile = await import('../src/parts/SearchFile/SearchFile.js')
 const IconTheme = await import('../src/parts/IconTheme/IconTheme.js')
 
@@ -76,26 +74,9 @@ test('getPicks', async () => {
   IconTheme.getFileIcon.mockImplementation(() => {
     return '_file'
   })
-  expect(await QuickPickEntriesFile.getPicks('/test/file.txt')).toEqual([
-    {
-      icon: '_file',
-      label: '/test/file-1.txt',
-    },
-    {
-      icon: '_file',
-      label: '/test/file-2.txt',
-    },
-    {
-      icon: '_file',
-      label: '/test/file-3.txt',
-    },
-  ])
+  expect(await QuickPickEntriesFile.getPicks('/test/file.txt')).toEqual(['/test/file-1.txt', '/test/file-2.txt', '/test/file-3.txt'])
   expect(SearchFile.searchFile).toHaveBeenCalledTimes(1)
   expect(SearchFile.searchFile).toHaveBeenCalledWith('/test', '/test/file.txt')
-  expect(IconTheme.getFileIcon).toHaveBeenCalledTimes(3)
-  expect(IconTheme.getFileIcon).toHaveBeenNthCalledWith(1, {
-    name: 'file-1.txt',
-  })
 })
 
 test('getPicks - empty', async () => {
@@ -111,9 +92,7 @@ test('getPicks - error', async () => {
   SearchFile.searchFile.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    QuickPickEntriesFile.getPicks('/test/file.txt')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(QuickPickEntriesFile.getPicks('/test/file.txt')).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test.skip('selectPick', async () => {
@@ -127,8 +106,5 @@ test.skip('selectPick', async () => {
     command: QuickPickReturnValue.Hide,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'Main.openUri',
-    'test-file-1.txt'
-  )
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', 'test-file-1.txt')
 })

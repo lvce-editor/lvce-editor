@@ -14,25 +14,11 @@ const UiStrings = {
 }
 
 const searchFile = async (path, value) => {
-  const files = await SearchFile.searchFile(
-    /* path */ path,
-    /* searchTerm */ value
-  )
+  const files = await SearchFile.searchFile(/* path */ path, /* searchTerm */ value)
   return files
 }
 
-const getIcon = (file) => {
-  const baseName = Workspace.pathBaseName(file)
-  return IconTheme.getFileIcon({ name: baseName })
-}
-
-const toPick = (file) => {
-  const icon = getIcon(file)
-  return {
-    label: file,
-    icon,
-  }
-}
+const getIcon = (file) => {}
 
 export const name = 'file'
 
@@ -66,17 +52,14 @@ export const getPicks = async (searchValue) => {
     return []
   }
   const files = await searchFile(workspace, searchValue)
-  const picks = files.map(toPick)
-  return picks
+  // const picks = files.map(toPick)
+  return files
 }
 
-export const selectPick = async (item) => {
+export const selectPick = async (pick) => {
   const workspace = Workspace.state.workspacePath
-  const absolutePath = `${workspace}/${item.label}`
-  await Command.execute(
-    /* Main.openUri */ 'Main.openUri',
-    /* uri */ absolutePath
-  )
+  const absolutePath = `${workspace}/${pick}`
+  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ absolutePath)
   return {
     command: QuickPickReturnValue.Hide,
   }
@@ -84,4 +67,17 @@ export const selectPick = async (item) => {
 
 export const getFilterValue = (value) => {
   return value
+}
+
+export const getPickFilterValue = (pick) => {
+  return pick
+}
+
+export const getPickLabel = (pick) => {
+  return pick
+}
+
+export const getPickIcon = (pick) => {
+  const baseName = Workspace.pathBaseName(pick)
+  return IconTheme.getFileIcon({ name: baseName })
 }

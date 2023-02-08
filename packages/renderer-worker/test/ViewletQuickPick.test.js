@@ -12,20 +12,11 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   }
 })
 
-const ViewletQuickPick = await import(
-  '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
-)
-const ViewletManager = await import(
-  '../src/parts/ViewletManager/ViewletManager.js'
-)
+const ViewletQuickPick = await import('../src/parts/ViewletQuickPick/ViewletQuickPick.js')
+const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(
-    ViewletQuickPick,
-    oldState,
-    newState,
-    ViewletModuleId.QuickPick
-  )
+  return ViewletManager.render(ViewletQuickPick, oldState, newState, ViewletModuleId.QuickPick)
 }
 
 test('create', () => {
@@ -47,9 +38,7 @@ test('handleBeforeInput - insertText - at end', async () => {
     },
     filteredPicks: [],
   }
-  expect(
-    await ViewletQuickPick.handleBeforeInput(state, 'insertText', 'c', 2, 2)
-  ).toMatchObject({
+  expect(await ViewletQuickPick.handleBeforeInput(state, 'insertText', 'c', 2, 2)).toMatchObject({
     value: 'abc',
     cursorOffset: 3,
   })
@@ -70,9 +59,7 @@ test('handleBeforeInput - insertText - at start', async () => {
     },
     filteredPicks: [],
   }
-  expect(
-    await ViewletQuickPick.handleBeforeInput(state, 'insertText', 'a', 0, 0)
-  ).toMatchObject({
+  expect(await ViewletQuickPick.handleBeforeInput(state, 'insertText', 'a', 0, 0)).toMatchObject({
     value: 'abc',
     cursorOffset: 1,
   })
@@ -93,15 +80,7 @@ test('handleBeforeInput - deleteContentForward - at start', async () => {
     },
     filteredPicks: [],
   }
-  expect(
-    await ViewletQuickPick.handleBeforeInput(
-      state,
-      'deleteContentForward',
-      null,
-      0,
-      0
-    )
-  ).toMatchObject({
+  expect(await ViewletQuickPick.handleBeforeInput(state, 'deleteContentForward', null, 0, 0)).toMatchObject({
     value: 'bc',
     cursorOffset: 0,
   })
@@ -122,15 +101,7 @@ test('handleBeforeInput - deleteContentForward - in middle', async () => {
     },
     filteredPicks: [],
   }
-  expect(
-    await ViewletQuickPick.handleBeforeInput(
-      state,
-      'deleteContentForward',
-      null,
-      1,
-      1
-    )
-  ).toMatchObject({
+  expect(await ViewletQuickPick.handleBeforeInput(state, 'deleteContentForward', null, 1, 1)).toMatchObject({
     value: 'ac',
     cursorOffset: 1,
   })
@@ -151,15 +122,7 @@ test('handleBeforeInput - deleteContentBackward - at end', async () => {
     },
     filteredPicks: [],
   }
-  expect(
-    await ViewletQuickPick.handleBeforeInput(
-      state,
-      'deleteContentBackward',
-      null,
-      3,
-      3
-    )
-  ).toMatchObject({
+  expect(await ViewletQuickPick.handleBeforeInput(state, 'deleteContentBackward', null, 3, 3)).toMatchObject({
     value: 'ab',
     cursorOffset: 2,
   })
@@ -180,15 +143,7 @@ test('handleBeforeInput - deleteWordBackward', async () => {
     },
     filteredPicks: [],
   }
-  expect(
-    await ViewletQuickPick.handleBeforeInput(
-      state,
-      'deleteWordBackward',
-      null,
-      3,
-      3
-    )
-  ).toMatchObject({
+  expect(await ViewletQuickPick.handleBeforeInput(state, 'deleteWordBackward', null, 3, 3)).toMatchObject({
     value: '',
     cursorOffset: 0,
   })
@@ -209,15 +164,7 @@ test('handleBeforeInput - deleteWordForward', async () => {
     },
     filteredPicks: [],
   }
-  expect(
-    await ViewletQuickPick.handleBeforeInput(
-      state,
-      'deleteWordForward',
-      null,
-      0,
-      0
-    )
-  ).toMatchObject({
+  expect(await ViewletQuickPick.handleBeforeInput(state, 'deleteWordForward', null, 0, 0)).toMatchObject({
     value: '',
     cursorOffset: 0,
   })
@@ -300,6 +247,14 @@ test('render - set correct height', () => {
     items: [],
     minLineY: 0,
     maxLineY: 10,
+    provider: {
+      getPickLabel(pick) {
+        return pick.label
+      },
+      getPickIcon() {
+        return ''
+      },
+    },
   }
   const newState = {
     ...oldState,
@@ -316,7 +271,7 @@ test('render - set correct height', () => {
       'setVisiblePicks',
       [
         {
-          icon: undefined,
+          icon: '',
           label: 'index.css',
           posInSet: 1,
           setSize: 1,

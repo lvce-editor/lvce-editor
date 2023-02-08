@@ -2,7 +2,6 @@ import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
 import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 
 /**
@@ -126,4 +125,16 @@ export const selectPick = (item) => {
 
 export const getFilterValue = (value) => {
   return value
+}
+
+export const getPickFilterValue = (pick) => {
+  return pick.label
+}
+
+export const getPickLabel = (pick) => {
+  return pick.label
+}
+
+export const getPickIcon = () => {
+  return ''
 }

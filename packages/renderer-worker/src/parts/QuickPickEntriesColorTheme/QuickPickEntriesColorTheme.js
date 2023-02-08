@@ -18,16 +18,11 @@ const getColorThemeNames = async () => {
     const url = `${assetDir}/config/themes.json`
     return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
   }
-  return SharedProcess.invoke(
-    /* ExtensionHost.getColorThemeNames */ 'ExtensionHost.getColorThemeNames'
-  )
+  return SharedProcess.invoke(/* ExtensionHost.getColorThemeNames */ 'ExtensionHost.getColorThemeNames')
 }
 
 const setColorTheme = (id) => {
-  return Command.execute(
-    /* ColorTheme.setColorTheme */ 'ColorTheme.setColorTheme',
-    /* colorThemeId */ id
-  )
+  return Command.execute(/* ColorTheme.setColorTheme */ 'ColorTheme.setColorTheme', /* colorThemeId */ id)
 }
 
 export const getPlaceholder = () => {
@@ -38,32 +33,21 @@ export const getLabel = () => {
   return UiStrings.SelectColorTheme
 }
 
-const toPick = (colorThemeName) => {
-  return {
-    label: colorThemeName,
-  }
-}
-
-export const getPickLabel = (colorThemeName) => {
-  return colorThemeName
-}
-
 export const getPicks = async (searchValue) => {
   const colorThemeNames = await getColorThemeNames()
-  const picks = colorThemeNames.map(toPick)
-  return picks
+  return colorThemeNames
 }
 
-export const selectPick = async (item) => {
-  await setColorTheme(/* colorThemeId */ item.label)
+export const selectPick = async (pick) => {
+  await setColorTheme(/* colorThemeId */ pick)
   return {
     command: QuickPickReturnValue.Hide,
   }
 }
 
-export const focusPick = async (item) => {
-  console.log('focus pick', item)
-  await setColorTheme(/* colorThemeId */ item.label)
+export const focusPick = async (pick) => {
+  console.log('focus pick', pick)
+  await setColorTheme(/* colorThemeId */ pick)
 }
 
 export const getFilterValue = (value) => {
@@ -74,4 +58,16 @@ export const getNoResults = () => {
   return {
     label: UiStrings.NoMatchingColorThemesFound,
   }
+}
+
+export const getPickFilterValue = (pick) => {
+  return pick
+}
+
+export const getPickLabel = (pick) => {
+  return pick
+}
+
+export const getPickIcon = (pick) => {
+  return ''
 }

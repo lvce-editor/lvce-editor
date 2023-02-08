@@ -1,18 +1,20 @@
 import * as Assert from '../Assert/Assert.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 
-const filterPicks = (state, picks, exclude, value) => {
+const filterPicks = (state, picks, exclude, value, provider) => {
   // TODO every pick should have label
   const filterPick = (pick) => {
-    if (exclude.has(pick.id)) {
+    const filterValue = provider.getPickFilterValue(pick)
+    Assert.string(filterValue)
+    if (exclude.has(filterValue)) {
       return false
     }
-    if (!pick.label && !state.warned.includes(JSON.stringify(pick))) {
+    if (!filterValue && !state.warned.includes(JSON.stringify(pick))) {
       console.warn('[QuickPick] item has missing label', pick)
       state.warned.push(JSON.stringify(pick))
       return false
     }
-    const labelMatch = FuzzySearch.fuzzySearch(value, pick.label ?? pick.id)
+    const labelMatch = FuzzySearch.fuzzySearch(value, filterValue)
     if (labelMatch) {
       return labelMatch
     }
@@ -34,11 +36,11 @@ const filterPicks = (state, picks, exclude, value) => {
   return items
 }
 
-export const getFilteredItems = (state, picks, recentPickIds, filterValue) => {
+export const getFilteredItems = (state, picks, recentPickIds, filterValue, provider) => {
   Assert.object(state)
   Assert.array(picks)
   Assert.string(filterValue)
-  const items = filterPicks(state, picks, recentPickIds, filterValue)
+  const items = filterPicks(state, picks, recentPickIds, filterValue, provider)
   return items
   // TODO avoid mutation
   // state.items = items

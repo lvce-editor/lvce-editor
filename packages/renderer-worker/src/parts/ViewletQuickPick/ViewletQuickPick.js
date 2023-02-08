@@ -53,15 +53,17 @@ export const create = (id, uri, x, y, width, height) => {
 
 // TODO naming for provider.getNoResults is a bit weird
 
-const getVisible = (items, minLineY, maxLineY) => {
+const getVisible = (provider, items, minLineY, maxLineY) => {
   const visibleItems = []
   const setSize = items.length
   const max = Math.min(items.length, maxLineY)
   for (let i = minLineY; i < max; i++) {
     const item = items[i]
+    const label = provider.getPickLabel(item)
+    const icon = provider.getPickIcon(item)
     visibleItems.push({
-      label: item.label,
-      icon: item.icon,
+      label,
+      icon,
       posInSet: i + 1,
       setSize,
     })
@@ -69,11 +71,11 @@ const getVisible = (items, minLineY, maxLineY) => {
   return visibleItems
 }
 
-const getFilteredItems = (state, picks, filterValue) => {
+const getFilteredItems = (state, picks, filterValue, provider) => {
   Assert.object(state)
   Assert.array(picks)
   Assert.string(filterValue)
-  const items = FilterQuickPickItems.getFilteredItems(state, picks, state.recentPickIds, filterValue)
+  const items = FilterQuickPickItems.getFilteredItems(state, picks, state.recentPickIds, filterValue, provider)
   return items
   // TODO avoid mutation
   // state.items = items
@@ -91,14 +93,16 @@ const getDefaultValue = (uri) => {
 }
 
 export const loadContent = async (state) => {
+  console.log('load')
   const uri = state.uri
   const value = getDefaultValue(uri)
   const provider = await QuickPickEntries.load(uri)
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
+  console.log({ provider, newPicks })
   // @ts-ignore
   const filterValue = provider.getFilterValue(value)
-  const items = getFilteredItems(state, newPicks, filterValue)
+  const items = getFilteredItems(state, newPicks, filterValue, provider)
   const placeholder = provider.getPlaceholder()
   // @ts-ignore
   const label = provider.getLabel()
@@ -196,7 +200,7 @@ export const handleInput = async (state, newValue, cursorOffset) => {
   }
   const newPicks = await state.provider.getPicks(newValue)
   const filterValue = state.provider.getFilterValue(newValue)
-  const items = getFilteredItems(state, newPicks, filterValue)
+  const items = getFilteredItems(state, newPicks, filterValue, state.provider)
   const focusedIndex = items.length === 0 ? -1 : 0
   return {
     ...state,
@@ -290,7 +294,7 @@ const renderItems = {
     if (newState.items.length === 0) {
       return [/* method */ 'showNoResults']
     }
-    const visibleItems = getVisible(newState.items, newState.minLineY, newState.maxLineY)
+    const visibleItems = getVisible(newState.provider, newState.items, newState.minLineY, newState.maxLineY)
     return [/* method */ 'setVisiblePicks', /* visiblePicks */ visibleItems]
   },
 }
