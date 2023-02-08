@@ -4,6 +4,7 @@ import { pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as DesktopType from '../DesktopType/DesktopType.js'
 import * as Path from '../Path/Path.js'
+import * as Process from '../Process/Process.js'
 import * as Root from '../Root/Root.js'
 
 const { env, platform } = process
@@ -122,7 +123,7 @@ export const getTestPath = () => {
 }
 
 export const getNodePath = () => {
-  return process.argv[0]
+  return Process.argv[0]
 }
 
 export const getTmpDir = () => {

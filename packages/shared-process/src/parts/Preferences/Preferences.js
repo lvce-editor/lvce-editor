@@ -1,6 +1,7 @@
 import VError from 'verror'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Process from '../Process/Process.js'
 
 // TODO need jsonc parser for settings with comments
 
@@ -38,7 +39,7 @@ export const getDefaultPreferences = async () => {
 //                                   -> on idle check preferences
 
 const getOverrides = () => {
-  const argvSliced = process.argv.slice(2)
+  const argvSliced = Process.argv.slice(2)
   const overrides = {}
   for (const argv of argvSliced) {
     if (argv.startsWith('--theme=')) {
