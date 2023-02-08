@@ -4,6 +4,7 @@ const GetFirstNodeWorkerEvent = require('../GetFirstNodeWorkerEvent/GetFirstNode
 const Platform = require('../Platform/Platform.js')
 const IpcParent = require('../IpcParent/IpcParent.js')
 const IpcParentType = require('../IpcParentType/IpcParentType.js')
+const WaitForIpcToExit = require('../WaitForIpcToExit/WaitForIpcToExit.js')
 
 const handleCliArgs = async (parsedArgs) => {
   const sharedProcessPath = Platform.getSharedProcessPath()
@@ -13,7 +14,8 @@ const handleCliArgs = async (parsedArgs) => {
     argv: parsedArgs._,
   })
   ipc.send({ method: '' })
-  const { type, event } = await GetFirstNodeWorkerEvent.getFirstNodeWorkerEvent(ipc)
+  const { type, event } = await WaitForIpcToExit.waitforIpcToExit(ipc)
+  console.log({ type, event })
   switch (type) {
     case FirstNodeWorkerEventType.Error:
       throw event

@@ -6,10 +6,12 @@ const Logger = require('../Logger/Logger.js')
 const GetResponse = require('../GetResponse/GetResponse.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
 const Process = require('../Process/Process.js')
+const IpcParent = require('../IpcParent/IpcParent.js')
+const IpcParentType = require('../IpcParentType/IpcParentType.js')
 
 const state = (exports.state = {
   /**
-   * @type{Worker|undefined}
+   * @type{any}
    */
   sharedProcess: undefined,
   onMessage(message) {},
@@ -52,7 +54,7 @@ const handleChildMessage = async (message) => {
     }
     const response = await GetResponse.getResponse(message)
     if (state.sharedProcess) {
-      state.sharedProcess.postMessage(response)
+      state.sharedProcess.send(response)
     }
   } else {
     try {
@@ -84,13 +86,13 @@ const handleChildDisconnect = () => {
 
 exports.send = (message) => {
   // @ts-ignore
-  state.sharedProcess.postMessage(message)
+  state.sharedProcess.send(message)
 }
 
 exports.sendPort = (port) => {
   console.log('send port to shared process')
   // @ts-ignore
-  state.sharedProcess.postMessage(port, [port])
+  state.sharedProcess.sendAndTransfer(port, [port])
 }
 
 exports.setOnMessage = (fn) => {
@@ -120,14 +122,16 @@ exports.hydrate = async (env = {}) => {
     // @ts-ignore
     state.sharedProcess.off('exit', handleChildExit)
     // @ts-ignore
-    state.sharedProcess.terminate()
+    state.sharedProcess.dispose()
     state.sharedProcess = undefined
   }
   // console.log('env', process.env.ELECTRON_RUN_AS_NODE)
   // console.log(process.env)
   // TODO inherit stdout but listen to ready event
   const sharedProcessPath = Platform.getSharedProcessPath()
-  const sharedProcess = new Worker(sharedProcessPath, {
+  const sharedProcess = await IpcParent.create({
+    method: IpcParentType.NodeWorker,
+    path: sharedProcessPath,
     env: {
       ...process.env,
       ELECTRON_RUN_AS_NODE: '1', // TODO

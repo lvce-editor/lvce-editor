@@ -150,7 +150,7 @@ const handlePortForSharedProcess = async (event) => {
     // console.log('send message to browser window', message)
     browserWindowPort.postMessage(message)
   })
-  sharedProcess.postMessage(
+  sharedProcess.send(
     {
       initialize: {
         port: port1,

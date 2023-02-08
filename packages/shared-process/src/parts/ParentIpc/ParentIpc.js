@@ -168,15 +168,18 @@ const handleMessageFromParentProcessElectron = async (message) => {
 
 // TODO maybe rename to hydrate
 export const listen = () => {
+  console.log('listen')
   // TODO tree-shake out if-else
   // console.log({ ...process.env })
   if (process.env.ELECTRON_RUN_AS_NODE && parentPort) {
+    console.log('parent port')
     // electron process listens to main process ipc
     Debug.debug('is electron')
     // @ts-ignore
     parentPort.on('message', handleMessageFromParentProcessElectron)
     electronSend('ready')
   } else {
+    console.log('is not electron')
     Debug.debug('is not electron')
     // otherwise listen to web process ipc
     // and when a socket is transferred,
