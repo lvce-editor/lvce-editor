@@ -172,6 +172,16 @@ test('getIcon - symlink', () => {
   ).toBe('_file')
 })
 
+test('getIcon - socket', () => {
+  IconTheme.state.iconTheme = {}
+  expect(
+    IconTheme.getIcon({
+      type: DirentType.Socket,
+      name: 'a',
+    })
+  ).toBe('_file')
+})
+
 test('getIcon - file extension should have priority over language id', () => {
   // @ts-ignore
   Languages.getLanguageId.mockImplementation(() => {
