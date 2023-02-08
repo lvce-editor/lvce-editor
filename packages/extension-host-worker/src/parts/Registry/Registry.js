@@ -23,7 +23,7 @@ const improveValidationError = (name, validationError) => {
   const pre = `invalid ${spacedOutName} result`
   const post = validationError
     .replace('item', camelCaseName)
-    .replace(`result`, `${camelCaseName} item`)
+    .replace('result', `${camelCaseName} item`)
   return pre + ': ' + post
 }
 

@@ -1,4 +1,4 @@
-import { dirname } from 'path'
+import { dirname } from 'node:path'
 import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
 import { FileNotFoundError } from '../Error/FileNotFoundError.js'

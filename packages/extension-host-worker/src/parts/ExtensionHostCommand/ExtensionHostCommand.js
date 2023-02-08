@@ -17,7 +17,7 @@ export const registerCommand = (command) => {
     }
     state.commands[command.id] = command
   } catch (error) {
-    throw new VError(error, `Failed to register command`)
+    throw new VError(error, 'Failed to register command')
   }
 }
 
@@ -33,7 +33,7 @@ export const executeCommand = async (id, ...args) => {
     if (error && error.isExpected) {
       throw error
     }
-    throw new VError(error, `Failed to execute command`)
+    throw new VError(error, 'Failed to execute command')
   }
 }
 

@@ -1,4 +1,5 @@
 import VError from 'verror'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Exec from '../Exec/Exec.js'
 import * as Path from '../Path/Path.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
@@ -41,7 +42,7 @@ const getNpmDependenciesRaw = async (root) => {
     const lines = SplitLines.splitLines(stdout).map(trimLine)
     return lines.slice(1)
   } catch (error) {
-    if (error && error.message.includes('ELSPROBLEMS')) {
+    if (error && error instanceof Error && error.message.includes(ErrorCodes.ELSPROBLEMS)) {
       const message = getElsProblemMessage(error.message)
       throw new VError(`Failed to get npm dependencies for ${root}: ${message}`)
     }
@@ -59,7 +60,7 @@ export const getNpmDependenciesRawJson = async (root) => {
     const json = JSON.parse(stdout)
     return json
   } catch (error) {
-    if (error && error.message.includes('ELSPROBLEMS')) {
+    if (error && error instanceof Error && error.message.includes(ErrorCodes.ELSPROBLEMS)) {
       const message = getElsProblemMessage(error.message)
       throw new VError(`Failed to get npm dependencies for ${root}: ${message}`)
     }

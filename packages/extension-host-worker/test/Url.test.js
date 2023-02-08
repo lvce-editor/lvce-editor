@@ -19,7 +19,7 @@ test('getAbsoluteUrl - source url starts with slash', () => {
   Location.getOrigin.mockImplementation(() => {
     return 'test://example.com'
   })
-  expect(Url.getAbsoluteUrl('./file.txt', '/test/folder/other-file.txt')).toBe(`test://example.com/test/folder/file.txt`)
+  expect(Url.getAbsoluteUrl('./file.txt', '/test/folder/other-file.txt')).toBe('test://example.com/test/folder/file.txt')
 })
 
 test('getAbsoluteUrl - source url starts with https', () => {
@@ -27,5 +27,5 @@ test('getAbsoluteUrl - source url starts with https', () => {
   Location.getOrigin.mockImplementation(() => {
     return 'https://example.com'
   })
-  expect(Url.getAbsoluteUrl('./file.txt', '/test/folder/other-file.txt')).toBe(`https://example.com/test/folder/file.txt`)
+  expect(Url.getAbsoluteUrl('./file.txt', '/test/folder/other-file.txt')).toBe('https://example.com/test/folder/file.txt')
 })

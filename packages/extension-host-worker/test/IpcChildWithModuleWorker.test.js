@@ -21,15 +21,11 @@ test('send - error - Promise could not be cloned', async () => {
       }, 0)
       return
     }
-    throw new DOMException(
-      `Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.`
-    )
+    throw new DOMException("Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.")
   }
   const ipc = await IpcChildWithModuleWorker.listen()
   expect(() => ipc.send(Promise.resolve())).toThrowError(
-    new DOMException(
-      `Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.`
-    )
+    new DOMException("Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.")
   )
 })
 
@@ -44,7 +40,6 @@ test('send', async () => {
           })
         )
       }, 0)
-      return
     }
   })
   const ipc = await IpcChildWithModuleWorker.listen()

@@ -1,5 +1,5 @@
-import * as ExtensionHostSourceControl from '../src/parts/ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 import { jest } from '@jest/globals'
+import * as ExtensionHostSourceControl from '../src/parts/ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 
 beforeEach(() => {
   ExtensionHostSourceControl.reset()

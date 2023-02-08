@@ -38,6 +38,6 @@ export const handleMessage = (message) => {
       throw new Error('not implemented')
     }
     Callback.resolve(message.id, message)
-    return
+
   }
 }

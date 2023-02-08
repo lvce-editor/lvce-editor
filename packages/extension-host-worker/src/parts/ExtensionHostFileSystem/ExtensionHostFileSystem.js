@@ -14,7 +14,7 @@ const getFileSystemProvider = (protocol) => {
 
 export const registerFileSystemProvider = (fileSystemProvider) => {
   if (!fileSystemProvider.id) {
-    throw new Error(`Failed to register file system provider: missing id`)
+    throw new Error('Failed to register file system provider: missing id')
   }
   state.fileSystemProviderMap[fileSystemProvider.id] = fileSystemProvider
 }

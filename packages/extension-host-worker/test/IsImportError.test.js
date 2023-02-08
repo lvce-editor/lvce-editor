@@ -16,7 +16,7 @@ test('isImportError - firefox import error', () => {
 })
 
 test('isImportError - syntax error without stack trace', () => {
-  const error = new SyntaxError(`Identifier 'x' has already been declared`)
+  const error = new SyntaxError("Identifier 'x' has already been declared")
   error.stack = "SyntaxError: Identifier 'x' has already been declared"
   expect(IsImportError.isImportError(error)).toBe(true)
 })

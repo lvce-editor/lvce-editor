@@ -1,5 +1,5 @@
-import { rename, rm } from 'fs/promises'
-import { join } from 'path'
+import { rename, rm } from 'node:fs/promises'
+import { join } from 'node:path'
 import VError from 'verror'
 import * as Download from '../Download/Download.js'
 import * as Extract from '../Extract/Extract.js'
@@ -19,7 +19,7 @@ export const install = async ({ url }) => {
     await Extract.extractTarBr(tmpFile, tmpDir)
     const manifestPath = join(tmpDir, 'extension.json')
     const manifestJson = await JsonFile.readJson(manifestPath)
-    const id = manifestJson.id
+    const { id } = manifestJson
     if (!id) {
       throw new Error('missing id in extension manifest')
     }

@@ -1,10 +1,10 @@
+import { jest } from '@jest/globals'
 import { mkdtemp, writeFile } from 'node:fs/promises'
 import http from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { WebSocket } from 'ws'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
-import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()

@@ -1,5 +1,5 @@
+import { setTimeout } from 'node:timers/promises'
 import { jest } from '@jest/globals'
-import { setTimeout } from 'timers/promises'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -54,7 +54,7 @@ test('send - error - promise could not be cloned', async () => {
     },
     send: jest.fn(() => {
       if (i++ === 0) {
-        throw new DOMException(`Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.`)
+        throw new DOMException('Failed to execute \'postMessage\' on \'DedicatedWorkerGlobalScope\': #<Promise> could not be cloned.')
       }
     }),
   }
@@ -82,14 +82,14 @@ test('send - error - promise could not be cloned', async () => {
   })
   expect(ipc.send).toHaveBeenNthCalledWith(2, {
     error: {
-      message: "Error: Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.",
+      message: 'Error: Failed to execute \'postMessage\' on \'DedicatedWorkerGlobalScope\': #<Promise> could not be cloned.',
     },
     id: 1,
     jsonrpc: '2.0',
   })
   expect(ErrorHandling.logError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.logError).toHaveBeenCalledWith(
-    new DOMException(`Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.`)
+    new DOMException('Failed to execute \'postMessage\' on \'DedicatedWorkerGlobalScope\': #<Promise> could not be cloned.')
   )
 })
 

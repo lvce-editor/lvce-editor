@@ -16,7 +16,7 @@ const getDebugProvider = (id) => {
 
 export const registerDebugProvider = (debugProvider) => {
   if (!debugProvider.id) {
-    throw new Error(`Failed to register debug system provider: missing id`)
+    throw new Error('Failed to register debug system provider: missing id')
   }
   state.debugProviderMap[debugProvider.id] = debugProvider
 }

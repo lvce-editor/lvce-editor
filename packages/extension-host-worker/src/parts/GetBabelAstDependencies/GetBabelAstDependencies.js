@@ -1,3 +1,5 @@
+import * as BabelNodeType from '../BabelNodeType/BabelNodeType.js'
+
 const walk = (node, visitor) => {
   if (!node) {
     return
@@ -10,34 +12,34 @@ const walk = (node, visitor) => {
   }
   visitor(node)
   switch (node.type) {
-    case 'File':
+    case BabelNodeType.File:
       walk(node.program, visitor)
       break
-    case 'Program':
+    case BabelNodeType.Program:
       walk(node.body, visitor)
       break
-    case 'ExportNamedDeclaration':
+    case BabelNodeType.ExportNamedDeclaration:
       walk(node.declaration, visitor)
       break
-    case 'VariableDeclaration':
+    case BabelNodeType.VariableDeclaration:
       walk(node.declarations, visitor)
       break
-    case 'VariableDeclarator':
+    case BabelNodeType.VariableDeclarator:
       walk(node.init, visitor)
       break
-    case 'ArrowFunctionExpression':
+    case BabelNodeType.ArrowFunctionExpression:
       walk(node.body, visitor)
       break
-    case 'BlockStatement':
+    case BabelNodeType.BlockStatement:
       walk(node.body, visitor)
       break
-    case 'ExpressionStatement':
+    case BabelNodeType.ExpressionStatement:
       walk(node.expression, visitor)
       break
-    case 'AwaitExpression':
+    case BabelNodeType.AwaitExpression:
       walk(node.argument, visitor)
       break
-    case 'CallExpression':
+    case BabelNodeType.CallExpression:
       walk(node.callee, visitor)
       break
     default:

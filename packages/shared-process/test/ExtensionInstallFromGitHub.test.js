@@ -13,14 +13,11 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   },
 }))
 
-jest.unstable_mockModule(
-  '../src/parts/DownloadAndExtract/DownloadAndExtract.js',
-  () => ({
-    downloadAndExtractTarGz: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  })
-)
+jest.unstable_mockModule('../src/parts/DownloadAndExtract/DownloadAndExtract.js', () => ({
+  downloadAndExtractTarGz: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
 jest.unstable_mockModule('../src/parts/Path/Path.js', () => ({
   join: jest.fn(() => {
     throw new Error('not implemented')
@@ -39,12 +36,8 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   }),
 }))
 
-const ExtensionInstallFromGitHub = await import(
-  '../src/parts/ExtensionInstallFromGitHub/ExtensionInstallFromGitHub.js'
-)
-const DownloadAndExtract = await import(
-  '../src/parts/DownloadAndExtract/DownloadAndExtract.js'
-)
+const ExtensionInstallFromGitHub = await import('../src/parts/ExtensionInstallFromGitHub/ExtensionInstallFromGitHub.js')
+const DownloadAndExtract = await import('../src/parts/DownloadAndExtract/DownloadAndExtract.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 const Path = await import('../src/parts/Path/Path.js')
 
@@ -59,9 +52,7 @@ test('install - error with download', async () => {
       repo: 'repo',
       branch: 'HEAD',
     })
-  ).rejects.toThrowError(
-    new Error('Failed to install user/repo: Failed to download')
-  )
+  ).rejects.toThrowError(new Error('Failed to install user/repo: Failed to download'))
 })
 
 test('install - error with extraction', async () => {
@@ -75,9 +66,7 @@ test('install - error with extraction', async () => {
       repo: 'repo',
       branch: 'HEAD',
     })
-  ).rejects.toThrowError(
-    new Error(`Failed to install user/repo: Failed to extract file`)
-  )
+  ).rejects.toThrowError(new Error(`Failed to install user/repo: Failed to extract file`))
 })
 
 test('install - error - missing id in extension manifest', async () => {
@@ -101,9 +90,7 @@ test('install - error - missing id in extension manifest', async () => {
       repo: 'repo',
       branch: 'HEAD',
     })
-  ).rejects.toThrowError(
-    new Error(`Failed to install user/repo: missing id in extension manifest`)
-  )
+  ).rejects.toThrowError(new Error(`Failed to install user/repo: missing id in extension manifest`))
 })
 
 // TODO improve error handling
@@ -128,11 +115,7 @@ test('install - error - manifest contains null', async () => {
       repo: 'repo',
       branch: 'HEAD',
     })
-  ).rejects.toThrowError(
-    new Error(
-      "Failed to install user/repo: Cannot read properties of null (reading 'id')"
-    )
-  )
+  ).rejects.toThrowError(new Error("Failed to install user/repo: Cannot destructure property 'id' of 'manifestJson' as it is null."))
 })
 
 test('install', async () => {
@@ -164,12 +147,7 @@ test('install', async () => {
     url: 'https://codeload.github.com/user/repo/tar.gz/HEAD',
   })
   expect(FileSystem.readFile).toHaveBeenCalledTimes(1)
-  expect(FileSystem.readFile).toHaveBeenCalledWith(
-    `/test/cached-extensions/github-user-repo-HEAD/extension.json`
-  )
+  expect(FileSystem.readFile).toHaveBeenCalledWith(`/test/cached-extensions/github-user-repo-HEAD/extension.json`)
   expect(FileSystem.rename).toHaveBeenCalledTimes(1)
-  expect(FileSystem.rename).toHaveBeenCalledWith(
-    '/test/cached-extensions/github-user-repo-HEAD',
-    '/test/extensions/test.test-extension'
-  )
+  expect(FileSystem.rename).toHaveBeenCalledWith('/test/cached-extensions/github-user-repo-HEAD', '/test/extensions/test.test-extension')
 })

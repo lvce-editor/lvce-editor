@@ -52,7 +52,7 @@ const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
  */
 const getFile = (lines) => {
   for (const line of lines) {
-    if (line.match(RE_PATH_1) || line.match(RE_PATH_2)) {
+    if (RE_PATH_1.test(line) || RE_PATH_2.test(line)) {
       return line
     }
   }
@@ -72,8 +72,8 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     }
     const [_, path, line, column] = match
     const text = await Ajax.getText(path)
-    const parsedLine = parseInt(line)
-    const parsedColumn = parseInt(column)
+    const parsedLine = Number.parseInt(line)
+    const parsedColumn = Number.parseInt(column)
     const codeFrame = CodeFrameColumns.create(text, {
       start: {
         line: parsedLine,
@@ -85,7 +85,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       },
     })
     const relevantStack = JoinLines.joinLines(lines.slice(1))
-    let message = getErrorMessage(error)
+    const message = getErrorMessage(error)
     return {
       message,
       codeFrame,
@@ -93,7 +93,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       type: error.constructor.name,
     }
   } catch (otherError) {
-    console.warn(`ErrorHandling Error`)
+    console.warn('ErrorHandling Error')
     console.warn(otherError)
     return error
   }

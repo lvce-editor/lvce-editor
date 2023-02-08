@@ -39,6 +39,13 @@ const prepareMessage = (message) => {
   return message
 }
 
+const getType = (error) => {
+  if (!error) {
+    return 'Error'
+  }
+  return error.constructor.name || 'Error'
+}
+
 exports.prepare = (error) => {
   const message = prepareMessage(error.message)
   if (error instanceof VError) {
@@ -82,11 +89,13 @@ exports.prepare = (error) => {
       match = line.match(RE_PATH_2)
     }
   }
+  const type = getType(error)
   return {
     message,
     stack: JoinLines.joinLines(relevantStack),
     codeFrame,
     stderr: error.stderr,
+    type,
   }
 }
 
