@@ -7,6 +7,7 @@ import * as DomEventType from '../src/parts/DomEventType/DomEventType.js'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
+import * as ModifierKey from '../src/parts/ModifierKey/ModifierKey.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -88,7 +89,7 @@ test('event - mousedown - left', () => {
     }
   }
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 1, clientX: 8, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', '', 8, 5, 1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', ModifierKey.None, 8, 5, 1)
 })
 
 test('event - mousedown - right', () => {
@@ -135,7 +136,7 @@ test('event - mousedown - left - out of viewport', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', '', -10, -10, 1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', ModifierKey.None, -10, -10, 1)
 })
 
 test('event - double click', () => {
@@ -155,7 +156,7 @@ test('event - double click', () => {
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 2, clientX: 8, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', '', 8, 5, 2)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', ModifierKey.None, 8, 5, 2)
 })
 
 test.skip('event - double click and move mouse to create selection', () => {
@@ -199,7 +200,7 @@ test('event - triple click', () => {
     }
   }
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 3, clientX: 8, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', '', 8, 5, 3)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', ModifierKey.None, 8, 5, 3)
 })
 
 test.skip('event - touchstart - single touch', () => {
