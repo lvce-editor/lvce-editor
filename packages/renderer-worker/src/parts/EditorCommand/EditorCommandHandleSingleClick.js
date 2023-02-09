@@ -66,7 +66,7 @@ const getFn = (modifier) => {
 
 export const handleSingleClick = (editor, modifier, x, y) => {
   Assert.object(editor)
-  Assert.string(modifier)
+  Assert.number(modifier)
   Assert.number(x)
   Assert.number(y)
   const position = EditorPosition.at(editor, x, y)
