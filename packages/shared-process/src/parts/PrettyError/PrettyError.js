@@ -1,12 +1,12 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { codeFrameColumns } from '@babel/code-frame'
 import { LinesAndColumns } from 'lines-and-columns'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Json from '../Json/Json.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
 
 const getActualPath = (fileUri) => {
   if (fileUri.startsWith('file://')) {
