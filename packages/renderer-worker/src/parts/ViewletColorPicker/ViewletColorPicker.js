@@ -1,6 +1,7 @@
 export const create = () => {
   return {
     color: '',
+    offsetX: 0,
   }
 }
 
@@ -24,6 +25,7 @@ export const handleSliderPointerDown = (state, x, y) => {
   return {
     ...state,
     color: newColor,
+    offsetX: x,
   }
 }
 
@@ -32,6 +34,7 @@ export const handleSliderPointerMove = (state, x, y) => {
   return {
     ...state,
     color: newColor,
+    offsetX: x,
   }
 }
 
@@ -46,4 +49,13 @@ const renderColor = {
   },
 }
 
-export const render = [renderColor]
+const renderOffsetX = {
+  isEqual(oldState, newState) {
+    return oldState.offsetX === newState.offsetX
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setOffsetX', /* offsetX */ newState.offsetX]
+  },
+}
+
+export const render = [renderColor, renderOffsetX]

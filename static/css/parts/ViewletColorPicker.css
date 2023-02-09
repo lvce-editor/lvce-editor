@@ -39,3 +39,14 @@
   position: relative;
   margin: 20px auto;
 }
+
+.ColorPickerSliderThumb {
+  position: absolute;
+  top: calc(-15px + 2px + 5px);
+  left: calc(-15px + 2px + 5px);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid white;
+  touch-action: none;
+}

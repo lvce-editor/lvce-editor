@@ -1,4 +1,5 @@
 import * as ViewletColorPickerEvents from './ViewletColorPickerEvents.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 export const create = () => {
   const $BackgroundColor = document.createElement('div')
@@ -28,10 +29,17 @@ export const create = () => {
   return {
     $Viewlet,
     $BackgroundColor,
+    $ColorPickerSliderThumb,
   }
 }
 
 export const setColor = (state, color) => {
-  const { $BackgroundColor } = state
+  const { $BackgroundColor, $ColorPickerSliderThumb } = state
   $BackgroundColor.style.background = color
+  $ColorPickerSliderThumb.style.background = color
+}
+
+export const setOffsetX = (state, offsetX) => {
+  const { $ColorPickerSliderThumb } = state
+  SetBounds.setXAndYTransform($ColorPickerSliderThumb, offsetX, 0)
 }
