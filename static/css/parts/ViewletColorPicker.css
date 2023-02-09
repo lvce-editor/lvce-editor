@@ -5,6 +5,7 @@
   contain: strict;
   display: flex;
   flex-direction: column;
+  background: var(--MainBackground);
 }
 
 .ColorPickerRectangle {
@@ -35,7 +36,7 @@
 .ColorPickerSlider {
   height: 10px;
   width: 100%;
-  background: linear-gradient(to right, rgb(187, 255, 0) 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, red);
+  background: linear-gradient(to right, red 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, red);
   border-radius: 5px;
   position: relative;
   margin: 20px auto;
