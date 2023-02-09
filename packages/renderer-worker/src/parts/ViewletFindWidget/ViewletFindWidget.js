@@ -1,17 +1,8 @@
 import * as Command from '../Command/Command.js'
-import * as I18nString from '../I18NString/I18NString.js'
 import * as TextDocumentSearch from '../TextDocumentSearch/TextDocumentSearch.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  MatchesFoundFor: `{PH1} of {PH2} found for {PH3}`,
-  MatchOf: `{PH1} of {PH2}`,
-  NoResults: 'No Results',
-}
+import * as ViewletFindWidgetStrings from './ViewletFindWidgetStrings.js'
 
 export const create = () => {
   return {
@@ -147,12 +138,9 @@ const renderValue = {
 
 const getMatchCountText = (matchIndex, matchCount) => {
   if (matchCount === 0) {
-    return I18nString.i18nString(UiStrings.NoResults)
+    return ViewletFindWidgetStrings.noResults()
   }
-  return I18nString.i18nString(UiStrings.MatchOf, {
-    PH1: matchIndex + 1,
-    PH2: matchCount,
-  })
+  return ViewletFindWidgetStrings.matchOf(matchIndex + 1, matchCount)
 }
 
 const renderMatchCount = {
@@ -177,11 +165,7 @@ const renderButtonsEnabled = {
 
 const getAriaLabel = (state) => {
   const { matchIndex, matchCount, value } = state
-  return I18nString.i18nString(UiStrings.MatchesFoundFor, {
-    PH1: matchIndex,
-    PH2: matchCount,
-    PH3: value,
-  })
+  return ViewletFindWidgetStrings.matchesFoundFor(matchIndex, matchCount, value)
 }
 
 const renderAriaAnnouncement = {

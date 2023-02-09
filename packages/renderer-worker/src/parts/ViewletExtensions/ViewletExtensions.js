@@ -10,15 +10,9 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import { getListHeight } from './ViewletExtensionsShared.js'
+import * as ViewletExtensionsStrings from './ViewletExtensionsStrings.js'
 
 const SUGGESTIONS = ['@builtin', '@disabled', '@enabled', '@installed', '@outdated', '@sort:installs', '@id:', '@category']
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  NoExtensionsFound: 'No extensions found',
-}
 
 // then state can be recycled by Viewlet when there is only a single ViewletExtensions instance
 
@@ -83,7 +77,7 @@ export const handleInput = async (state, value) => {
         maxLineY: 0,
         scrollBarHeight: 0,
         finalDeltaY: 0,
-        message: UiStrings.NoExtensionsFound,
+        message: ViewletExtensionsStrings.noExtensionsFound(),
         searchValue: value,
       }
     }

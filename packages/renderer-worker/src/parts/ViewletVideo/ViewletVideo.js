@@ -1,12 +1,5 @@
 import * as BlobSrc from '../BlobSrc/BlobSrc.js'
-import * as I18nString from '../I18NString/I18NString.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  FailedToLoadVideo: `Failed to load video: {PH1}`,
-}
+import * as ViewletVideoStrings from './ViewletVideoStrings.js'
 
 export const create = (id, uri) => {
   return {
@@ -26,9 +19,7 @@ export const loadContent = async (state) => {
 }
 
 const getImprovedErrorMessage = (message) => {
-  return I18nString.i18nString(UiStrings.FailedToLoadVideo, {
-    PH1: message,
-  })
+  return ViewletVideoStrings.failedToLoadVideo(message)
 }
 
 export const handleVideoError = (state, code, message) => {

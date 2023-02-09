@@ -3,7 +3,6 @@ import * as Command from '../Command/Command.js'
 import * as Compare from '../Compare/Compare.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as Height from '../Height/Height.js'
-import * as I18nString from '../I18NString/I18NString.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -12,16 +11,7 @@ import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as Workspace from '../Workspace/Workspace.js'
-
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  NoResults: 'No results found',
-  Oneresult: 'Found 1 result in 1 file',
-  ManyResultsInOneFile: `Found {PH1} results in 1 file`,
-  ManyResultsInManyFiles: `Found {PH1} results in {PH2} files`,
-}
+import * as ViewletSearchStrings from './ViewletSearchStrings.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -77,20 +67,15 @@ export const loadContent = async (state, savedState) => {
 
 const getStatusMessage = (resultCount, fileResultCount) => {
   if (resultCount === 0) {
-    return I18nString.i18nString(UiStrings.NoResults)
+    return ViewletSearchStrings.noResults()
   }
   if (resultCount === 1) {
-    return I18nString.i18nString(UiStrings.Oneresult)
+    return ViewletSearchStrings.oneResult()
   }
   if (fileResultCount === 1) {
-    return I18nString.i18nString(UiStrings.ManyResultsInOneFile, {
-      PH1: resultCount,
-    })
+    return ViewletSearchStrings.manyResultsInOneFile(resultCount)
   }
-  return I18nString.i18nString(UiStrings.ManyResultsInManyFiles, {
-    PH1: resultCount,
-    PH2: fileResultCount,
-  })
+  return ViewletSearchStrings.manyResultsInManyFiles(resultCount, fileResultCount)
 }
 
 const getResultCounts = (results) => {
