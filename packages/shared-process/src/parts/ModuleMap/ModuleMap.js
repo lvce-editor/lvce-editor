@@ -1,3 +1,4 @@
+import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
 import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
@@ -139,6 +140,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
     default:
-      throw new Error(`command ${commandId} not found`)
+      throw new CommandNotFoundError(commandId)
   }
 }
