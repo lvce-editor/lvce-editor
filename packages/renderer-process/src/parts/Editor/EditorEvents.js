@@ -1,15 +1,16 @@
 // TODO so many things in this file
 
 import * as ClipBoardDataType from '../ClipBoardDataType/ClipBoardDataType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
+import * as GetModifierKey from '../GetModifierKey/GetModifierKey.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
-import * as ModifierKey from '../ModifierKey/ModifierKey.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
 // TODO tree shake out mobile support when targeting electron -> less code -> less event listeners -> less memory -> less cpu
@@ -72,16 +73,6 @@ export const handleCut = (event) => {
   RendererWorker.send(/* Editor.cut */ 'Editor.cut')
 }
 
-const getModifier = (event) => {
-  if (event.ctrlKey) {
-    return ModifierKey.Ctrl
-  }
-  if (event.altKey) {
-    return ModifierKey.Alt
-  }
-  return ModifierKey.None
-}
-
 const isRightClick = (event) => {
   return event.button === MouseEventType.RightClick
 }
@@ -124,7 +115,7 @@ export const handleMouseDown = (event) => {
   }
   event.preventDefault()
   const { clientX, clientY, detail } = event
-  const modifier = getModifier(event)
+  const modifier = GetModifierKey.getModifierKey(event)
   RendererWorker.send('Editor.handleMouseDown', /* motifier */ modifier, /* x */ clientX, /* y */ clientY, /* detail */ detail)
 }
 
