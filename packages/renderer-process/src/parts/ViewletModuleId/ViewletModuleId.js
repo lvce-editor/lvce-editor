@@ -71,3 +71,5 @@ export const TitleBarButtons = 'TitleBarButtons'
 export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const Video = 'Video'
+
+export const ColorPicker = 'ColorPicker'
