@@ -17,10 +17,11 @@
 .ColorPickerDark {
   position: absolute;
   inset: 0;
+  contain: strict;
 }
 
 .ColorPickerBackgroundColor {
-  background: red;
+  background: var(--ColorPickerColor);
 }
 
 .ColorPickerLight {
@@ -34,19 +35,22 @@
 .ColorPickerSlider {
   height: 10px;
   width: 100%;
-  background: linear-gradient(to right, red 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, red);
+  background: linear-gradient(to right, rgb(187, 255, 0) 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, red);
   border-radius: 5px;
   position: relative;
   margin: 20px auto;
+  contain: strict;
 }
 
 .ColorPickerSliderThumb {
   position: absolute;
-  top: calc(-15px + 2px + 5px);
+  top: calc(-15px + 2px + 5px + 150px + 20px + 2px);
   left: calc(-15px + 2px + 5px);
   width: 20px;
   height: 20px;
   border-radius: 50%;
   border: 2px solid white;
   touch-action: none;
+  background: var(--ColorPickerColor);
+  contain: strict;
 }
