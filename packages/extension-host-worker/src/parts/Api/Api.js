@@ -19,7 +19,7 @@ import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHost
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.js'
 import * as ExtensionHostAjax from '../ExtensionHostAjax/ExtensionHostAjax.js'
-
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import { VError } from '../VError/VError.js'
 
 class FormattingError extends Error {
@@ -101,6 +101,9 @@ export const api = {
   // Type Definition
   registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,
   executeTypeDefinitionProvider: ExtensionHostTypeDefinition.executeTypeDefinitionProvider,
+
+  // Worker
+  createWorker: ExtensionHostWorker.createWorker,
 
   // Workspace
   getWorkspaceFolder: ExtensionHostWorkspace.getWorkspaceFolder
