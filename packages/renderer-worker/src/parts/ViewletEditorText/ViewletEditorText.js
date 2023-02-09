@@ -102,6 +102,7 @@ const kLineHeight = 'editor.lineHeight'
 const kFontSize = 'editor.fontSize'
 const kFontFamily = 'editor.fontFamily'
 const kLetterSpacing = 'editor.letterSpacing'
+const kLinks = 'editor.links'
 
 const unquoteString = (string) => {
   if (string.startsWith(`'`) && string.endsWith(`'`)) {
@@ -116,6 +117,7 @@ export const loadContent = async (state, savedState) => {
   const fontSize = Preferences.get(kFontSize) || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
   const fontFamily = Preferences.get(kFontFamily) || 'Fira Code'
   const letterSpacing = Preferences.get(kLetterSpacing) || 0.5
+  const links = Preferences.get(kLinks) || false
   const content = await getContent(uri)
   const newState1 = Editor.setText(state, content)
   const languageId = getLanguageId(newState1)
@@ -137,6 +139,7 @@ export const loadContent = async (state, savedState) => {
     selections: savedSelections,
     deltaY: savedDeltaY,
     fontFamily,
+    links,
     // selections,
   }
 }

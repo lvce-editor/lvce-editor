@@ -9,6 +9,7 @@
   "editor.formatOnSave": false,
   "editor.letterSpacing": 0.5,
   "editor.fontLigatures": true,
+  "editor.links": true,
 
   "extensions.autoUpdate": true,
 
