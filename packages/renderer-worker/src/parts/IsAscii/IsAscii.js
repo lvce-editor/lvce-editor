@@ -1,4 +1,4 @@
-const RE_ASCII = /^[a-z\d\s]+$/i
+const RE_ASCII = /[\p{ASCII}]+/u
 
 export const isAscii = (line) => {
   return RE_ASCII.test(line)
