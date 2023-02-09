@@ -150,3 +150,7 @@
   pointer-events: all;
   user-select: text;
 }
+
+.Link {
+  text-decoration: underline;
+}

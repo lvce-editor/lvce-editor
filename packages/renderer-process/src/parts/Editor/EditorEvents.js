@@ -82,19 +82,6 @@ const getModifier = (event) => {
   return ModifierKey.None
 }
 
-export const handleSingleClick = (event, x, y) => {
-  const modifier = getModifier(event)
-  RendererWorker.send(/* Editor.handleSingleClick */ 'Editor.handleSingleClick', /* modifier */ modifier, /* x */ x, /* y */ y)
-}
-
-export const handleDoubleClick = (event, x, y) => {
-  RendererWorker.send(/* Editor.handleDoubleClick */ 'Editor.handleDoubleClick', /* x */ x, /* y */ y)
-}
-
-export const handleTripleClick = (event, x, y) => {
-  RendererWorker.send(/* Editor.handleTripleClick */ 'Editor.handleTripleClick', /* x */ x, /* y */ y)
-}
-
 const isRightClick = (event) => {
   return event.button === MouseEventType.RightClick
 }
@@ -137,19 +124,8 @@ export const handleMouseDown = (event) => {
   }
   event.preventDefault()
   const { clientX, clientY, detail } = event
-  switch (detail) {
-    case 1:
-      handleSingleClick(event, clientX, clientY)
-      break
-    case 2:
-      handleDoubleClick(event, clientX, clientY)
-      break
-    case 3:
-      handleTripleClick(event, clientX, clientY)
-      break
-    default:
-      break
-  }
+  const modifier = getModifier(event)
+  RendererWorker.send('Editor.handleMouseDown', /* motifier */ modifier, /* x */ clientX, /* y */ clientY, /* detail */ detail)
 }
 
 // TODO figure out whether it is possible to register hover provider without mousemove
