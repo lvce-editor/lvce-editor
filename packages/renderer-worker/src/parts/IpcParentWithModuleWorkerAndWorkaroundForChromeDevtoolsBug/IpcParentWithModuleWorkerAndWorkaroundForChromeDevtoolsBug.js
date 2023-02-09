@@ -27,8 +27,8 @@ export const wrap = (port) => {
   let handleMessage
   const fakeEvent = {
     target: {
-      send(message) {
-        port.postMessage(message)
+      send(message, transfer) {
+        port.postMessage(message, transfer)
       },
     },
   }

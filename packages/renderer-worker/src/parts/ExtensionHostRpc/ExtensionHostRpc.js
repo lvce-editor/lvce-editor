@@ -30,6 +30,22 @@ const handleMessageMethod = async (message, event) => {
   } else if (message.method === 'Test.executeMockExecFunction') {
     const response = await GetResponse.getResponse(message)
     event.target.send(response)
+  } else if (message.method === 'get-port') {
+    const IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug = await import(
+      '../IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js'
+    )
+    const port = await IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.create({
+      url: message.params[0],
+      name: message.params[1],
+    })
+    event.target.send(
+      {
+        jsonrpc: JsonRpcVersion.Two,
+        id: message.id,
+        result: port,
+      },
+      [port]
+    )
   } else {
     await GlobalEventBus.emitEvent(message.method, ...message.params)
   }
