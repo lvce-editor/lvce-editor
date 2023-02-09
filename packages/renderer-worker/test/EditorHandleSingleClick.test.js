@@ -42,7 +42,7 @@ test('editorHandleClick', () => {
     columnWidth: 8,
     deltaY: 0,
   }
-  expect(EditorHandleSingleClick.handleSingleClick(editor, '', 21, 11)).toMatchObject({
+  expect(EditorHandleSingleClick.handleSingleClick(editor, ModifierKey.None, 21, 11)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
@@ -68,7 +68,7 @@ test('editorHandleClick - with selection', async () => {
     columnWidth: 8,
     deltaY: 0,
   }
-  expect(await EditorHandleSingleClick.handleSingleClick(editor, '', 21, 11)).toMatchObject({
+  expect(await EditorHandleSingleClick.handleSingleClick(editor, ModifierKey.None, 21, 11)).toMatchObject({
     lines: ['line 1', 'line 2'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
