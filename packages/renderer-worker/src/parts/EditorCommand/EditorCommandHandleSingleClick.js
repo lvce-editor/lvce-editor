@@ -1,11 +1,41 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.js'
 import * as ModifierKey from '../ModifierKey/ModifierKey.js'
 import * as EditorGoToDefinition from './EditorCommandGoToDefinition.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 
+const getPossibleLinkDecoration = (editor, position) => {
+  const { decorations, lines } = editor
+  let rowIndex = 0
+  let offset = 0
+  let lineIndex = 0
+  for (let i = 0; i < decorations.length; i += 4) {
+    const decorationOffset = decorations[i]
+    if (decorationOffset >= offset && rowIndex === position.rowIndex) {
+      return {
+        url: 'https://example.com',
+      }
+    }
+    while (offset < decorationOffset && lineIndex < lines.length) {
+      lineIndex++
+      const line = lines[i]
+      offset += line.length
+    }
+  }
+  return undefined
+}
+
 const handleSingleClickWithAlt = async (editor, position) => {
+  const linkDecoration = getPossibleLinkDecoration(editor, position)
+  console.log({ linkDecoration })
+  if (linkDecoration) {
+    await Command.execute('Open.openUrl', linkDecoration.url)
+    return editor
+  }
+  console.log({ position })
+  console.log('single click with alt')
   // TODO rectangular selection with alt click,
   // but also go to definition with alt click
   const newEditor = await EditorGoToDefinition.goToDefinition(editor, position, /* explicit */ false)

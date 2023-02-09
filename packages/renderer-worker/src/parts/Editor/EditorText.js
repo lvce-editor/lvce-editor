@@ -1,7 +1,7 @@
 import * as GetTokensViewport from '../GetTokensViewport/GetTokensViewport.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
-
+import * as GetDecorationClassName from '../GetDecorationClassName/GetDecorationClassName.js'
 // const getTokens = (editor) => {
 //   const tokens = []
 //   const lines = editor.lines
@@ -105,55 +105,6 @@ const applyChangesToSyntaxHighlighting = (editor, changes) => {
 //   return result
 // }
 
-const getDecorationClassName = (type) => {
-  switch (type) {
-    case 2816:
-    case 2817:
-    case 2824:
-    case 2825:
-    case 2856:
-    case 2857:
-    case 3072:
-    case 3073:
-    case 3077:
-    case 3088:
-      return 'Function'
-    case 1792:
-    case 1793:
-      return 'Parameter'
-    case 512:
-    case 513:
-    case 769:
-    case 1024:
-    case 1536:
-    case 1537:
-    case 1544:
-    case 1545:
-      return 'Type'
-    case 2048:
-    case 2049:
-    case 2056:
-    case 2057:
-    case 2064:
-    case 2080:
-    case 2081:
-    case 2088:
-    case 2089:
-    case 2313:
-    case 2560:
-    case 2561:
-    case 2569:
-    case 2584:
-      return 'VariableName'
-    case 256:
-    case 257:
-    case 272:
-      return 'Class'
-    default:
-      return `Unknown-${type}`
-  }
-}
-
 const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line) => {
   let start = 0
   let end = 0
@@ -185,6 +136,7 @@ const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, To
       break
     }
   }
+  console.log({ decorationIndex })
   const tokens = tokenResults.tokens
   // console.log({ tokens, decorations })
   for (let i = 0; i < tokens.length; i += 2) {
@@ -192,17 +144,21 @@ const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, To
     const tokenLength = tokens[i + 1]
     const decorationOffset = decorations[decorationIndex]
     let extraClassName = ''
+    console.log({ decorationOffset, lineOffset, start, decorationIndex })
     if (decorationOffset !== undefined && decorationOffset - lineOffset === start) {
       const decorationLength = decorations[++decorationIndex]
       const decorationType = decorations[++decorationIndex]
       const decorationModifiers = decorations[++decorationIndex]
+      decorationIndex++
       // console.log('MATCHING DECORATION', {
       //   decorationIndex,
       //   decorationLength,
       //   decorationType,
       //   decorationModifiers,
       // })
-      extraClassName = getDecorationClassName(decorationType)
+      console.log({ decorationType })
+      extraClassName = GetDecorationClassName.getDecorationClassName(decorationType)
+      console.log({ extraClassName })
     }
 
     end += tokenLength
@@ -236,6 +192,8 @@ const getLineInfosViewport = (editor, tokens, embeddedResults, minLineY, maxLine
     result.push(getLineInfo(line, tokens[i - minLineY], embeddedResults, decorations, TokenMap, offset))
     offset += line.length + 1
   }
+
+  // console.log({ visibleLines })
   return result
 }
 

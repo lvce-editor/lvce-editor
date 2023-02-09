@@ -49,7 +49,7 @@ const getTokensViewportEmbedded = (lines, lineCache, linesWithEmbed) => {
 
 // TODO only send changed lines to renderer process instead of all lines in viewport
 export const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
-  const { invalidStartIndex, lineCache } = editor
+  const { invalidStartIndex, lineCache, decorations } = editor
   const { tokenizer, lines } = editor
   const { hasArrayReturn, tokenizeLine, initialLineState } = tokenizer
   const tokenizeStartIndex = invalidStartIndex
@@ -57,6 +57,7 @@ export const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   const tokenizersToLoad = []
   const embeddedResults = []
   const linesWithEmbed = []
+  console.log({ decorations })
   for (let i = tokenizeStartIndex; i < tokenizeEndIndex; i++) {
     const lineState = i === 0 ? initialLineState : lineCache[i]
     const line = lines[i]
@@ -80,6 +81,7 @@ export const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
     }
   }
   editor.invalidStartIndex = Math.max(invalidStartIndex, tokenizeEndIndex)
+
   return {
     tokens: visibleLines,
     tokenizersToLoad,
