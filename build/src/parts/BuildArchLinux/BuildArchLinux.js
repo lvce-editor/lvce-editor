@@ -6,6 +6,7 @@ import * as Exec from '../Exec/Exec.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
+import * as Process from '../Process/Process.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
@@ -151,7 +152,7 @@ const printFinalSize = async ({ product }) => {
 export const build = async ({ product }) => {
   if (!isFakeRoot()) {
     Logger.info('[info] enabling fakeroot')
-    await Exec.exec('fakeroot', process.argv, { stdio: 'inherit' })
+    await Exec.exec('fakeroot', Process.argv, { stdio: 'inherit' })
     return
   }
   console.time('copyElectronResult')

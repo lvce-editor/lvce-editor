@@ -11,6 +11,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Process from '../Process/Process.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
@@ -678,7 +679,7 @@ const copyPlaygroundFiles = async ({ commitHash }) => {
 export const build = async () => {
   const commitHash = await CommitHash.getCommitHash()
   const pathPrefix = Platform.getPathPrefix()
-  const ignoreIconTheme = process.argv.includes('--ignore-icon-theme')
+  const ignoreIconTheme = Process.argv.includes('--ignore-icon-theme')
 
   Console.time('clean')
   await Remove.remove('build/.tmp/dist')
