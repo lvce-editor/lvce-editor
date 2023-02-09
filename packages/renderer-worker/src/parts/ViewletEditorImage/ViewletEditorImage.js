@@ -2,17 +2,9 @@ import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
 import * as BlobSrc from '../BlobSrc/BlobSrc.js'
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
-import * as I18nString from '../I18NString/I18NString.js'
-import * as WheelEvent from '../WheelEvent/WheelEvent.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  ImageCouldNotBeLoaded: `Image could not be loaded`,
-  ImageNotFound: `Image could not be loaded: Not Found`,
-}
+import * as WheelEvent from '../WheelEvent/WheelEvent.js'
+import * as ViewletEditorImageStrings from './ViewletEditorImageStrings.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -209,14 +201,14 @@ const getActualError = async (src) => {
     if (!response.ok) {
       switch (response.status) {
         case HttpStatusCode.NotFound:
-          return I18nString.i18nString(UiStrings.ImageNotFound)
+          return ViewletEditorImageStrings.imageNotFound()
         default:
-          return I18nString.i18nString(UiStrings.ImageCouldNotBeLoaded)
+          return ViewletEditorImageStrings.imageNotFound()
       }
     }
-    return I18nString.i18nString(UiStrings.ImageCouldNotBeLoaded)
+    return ViewletEditorImageStrings.imageCouldNotBeLoaded()
   } catch (error) {
-    return I18nString.i18nString(UiStrings.ImageCouldNotBeLoaded)
+    return ViewletEditorImageStrings.imageCouldNotBeLoaded()
   }
 }
 

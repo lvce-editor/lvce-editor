@@ -7,19 +7,7 @@ import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { focusIndex } from './ViewletActivityBarFocusIndex.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  Explorer: 'Explorer',
-  Search: 'Search',
-  SourceControl: 'Source Control',
-  RunAndDebug: 'Run and Debug',
-  Extensions: 'Extensions',
-  Settings: 'Settings',
-  AdditionalViews: 'Additional Views',
-}
+import * as ViewletActivityBarStrings from './ViewletActivityBarStrings.js'
 
 // TODO rename viewlet parameter to something else (e.g. clicking settings opens context menu not settings viewlet)
 // TODO should just pass index
@@ -52,7 +40,7 @@ const getVisibleActivityBarItems = (state) => {
   }
   const showMoreItem = {
     id: 'Additional Views',
-    title: I18nString.i18nString(UiStrings.AdditionalViews),
+    title: ViewletActivityBarStrings.additionalViews(),
     icon: Icon.Ellipsis,
     enabled: true,
     flags: ActivityBarItemFlags.Button,
@@ -90,7 +78,7 @@ const getActivityBarItems = () => {
     // Top
     {
       id: ViewletModuleId.Explorer,
-      title: I18nString.i18nString(UiStrings.Explorer),
+      title: ViewletActivityBarStrings.explorer(),
       icon: Icon.Files,
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
@@ -98,7 +86,7 @@ const getActivityBarItems = () => {
     },
     {
       id: ViewletModuleId.Search,
-      title: I18nString.i18nString(UiStrings.Search),
+      title: ViewletActivityBarStrings.search(),
       icon: Icon.Search,
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
@@ -106,7 +94,7 @@ const getActivityBarItems = () => {
     },
     {
       id: ViewletModuleId.SourceControl,
-      title: I18nString.i18nString(UiStrings.SourceControl),
+      title: ViewletActivityBarStrings.sourceControl(),
       icon: Icon.SourceControl,
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
@@ -114,7 +102,7 @@ const getActivityBarItems = () => {
     },
     {
       id: ViewletModuleId.RunAndDebug,
-      title: I18nString.i18nString(UiStrings.RunAndDebug),
+      title: ViewletActivityBarStrings.runAndDebug(),
       icon: Icon.DebugAlt2,
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
@@ -122,7 +110,7 @@ const getActivityBarItems = () => {
     },
     {
       id: ViewletModuleId.Extensions,
-      title: I18nString.i18nString(UiStrings.Extensions),
+      title: ViewletActivityBarStrings.extensions(),
       icon: Icon.Extensions,
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
@@ -131,7 +119,7 @@ const getActivityBarItems = () => {
     // Bottom
     {
       id: 'Settings',
-      title: I18nString.i18nString(UiStrings.Settings),
+      title: ViewletActivityBarStrings.settings(),
       icon: Icon.SettingsGear,
       enabled: true,
       flags: ActivityBarItemFlags.Button,

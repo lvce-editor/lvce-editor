@@ -1,18 +1,8 @@
 import * as Command from '../Command/Command.js'
-import * as I18nString from '../I18NString/I18NString.js'
-import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as ListIndex from '../ListIndex/ListIndex.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  NoResults: 'No Results',
-  OneResultInOneFile: '1 result in 1 file',
-  ManyResultsInOneFile: '{PH1} results in 1 file',
-  ManyResultsInManyFiles: '{PH1} results in {PH2} files',
-}
+import * as ViewletLocationsStrings from './ViewletLocationsStrings.js'
 
 export const create = (id, uri) => {
   return {
@@ -26,20 +16,15 @@ export const create = (id, uri) => {
 
 const getMessage = (resultCount, fileCount) => {
   if (resultCount === 0) {
-    return I18nString.i18nString(UiStrings.NoResults)
+    return ViewletLocationsStrings.noResults()
   }
   if (resultCount === 1 && fileCount === 1) {
-    return I18nString.i18nString(UiStrings.OneResultInOneFile)
+    return ViewletLocationsStrings.oneResultInOneFile()
   }
   if (fileCount === 1) {
-    return I18nString.i18nString(UiStrings.ManyResultsInOneFile, {
-      PH1: resultCount,
-    })
+    return ViewletLocationsStrings.ManyResultsInOneFile(resultCount)
   }
-  return I18nString.i18nString(UiStrings.ManyResultsInManyFiles, {
-    PH1: resultCount,
-    PH2: fileCount,
-  })
+  return ViewletLocationsStrings.manyResultsInManyFiles(resultCount, fileCount)
 }
 
 const getName = (uri) => {
