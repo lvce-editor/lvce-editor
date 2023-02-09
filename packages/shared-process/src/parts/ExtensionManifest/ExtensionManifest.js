@@ -31,11 +31,21 @@ export const get = async (path) => {
     }
   } catch (error) {
     const id = inferExtensionId(path)
-    const enhancedError = new VError(
-      error,
-      `Failed to load extension manifest for ${id}`
-    )
+    const enhancedError = new VError(error, `Failed to load extension manifest for ${id}`)
     if (error.code === ErrorCodes.ENOENT) {
+      try {
+        const monoRepoPath = Path.join(path, `packages`, 'extension', 'extension.json')
+        const json = await ReadJson.readJson(monoRepoPath)
+        if (!isObject(json)) {
+          // TODO should include stack of extension json file here
+          throw new VError('Invalid manifest file: Not an JSON object.')
+        }
+        return {
+          ...json,
+          path: Path.join(path, 'packages', 'extension'),
+          status: ExtensionManifestStatus.Resolved,
+        }
+      } catch {}
       // @ts-ignore
       enhancedError.code = ErrorCodes.E_MANIFEST_NOT_FOUND
     } else {

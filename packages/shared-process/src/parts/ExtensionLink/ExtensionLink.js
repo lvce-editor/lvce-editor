@@ -23,6 +23,22 @@ const linkFallBack = async (path) => {
   }
 }
 
+const linkMonoRepo = async (path, error) => {
+  try {
+    const monoRepoPath = Path.join(path, 'packages', 'extension')
+    const manifest = await ExtensionManifest.get(monoRepoPath)
+    if (manifest.status === ExtensionManifestStatus.Rejected) {
+      throw manifest.reason
+    }
+    const linkedExtensionsPath = Platform.getLinkedExtensionsPath()
+    // @ts-ignore
+    const to = Path.join(linkedExtensionsPath, manifest.id)
+    await SymLink.createSymLink(monoRepoPath, to)
+  } catch {
+    throw error
+  }
+}
+
 export const link = async (path) => {
   try {
     const manifest = await ExtensionManifest.get(path)
@@ -36,6 +52,9 @@ export const link = async (path) => {
   } catch (error) {
     if (error && error.code === ErrorCodes.EEXIST) {
       return linkFallBack(path)
+    }
+    if (error && error.code === ErrorCodes.E_MANIFEST_NOT_FOUND) {
+      await linkMonoRepo(path, new VError(error, `Failed to link extension`))
     }
     throw new VError(error, `Failed to link extension`)
   }
