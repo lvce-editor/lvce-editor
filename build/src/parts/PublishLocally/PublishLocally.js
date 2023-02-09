@@ -77,7 +77,7 @@ const main = async () => {
 
   Logger.info('published packages successfully')
 
-  if (!process.argv.includes('--wait')) {
+  if (!Process.argv.includes('--wait')) {
     Process.exit(0)
   }
 }
