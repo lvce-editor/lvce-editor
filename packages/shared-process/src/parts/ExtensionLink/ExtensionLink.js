@@ -54,7 +54,7 @@ export const link = async (path) => {
       return linkFallBack(path)
     }
     if (error && error.code === ErrorCodes.E_MANIFEST_NOT_FOUND) {
-      await linkMonoRepo(path, error)
+      await linkMonoRepo(path, new VError(error, `Failed to link extension`))
     }
     throw new VError(error, `Failed to link extension`)
   }
