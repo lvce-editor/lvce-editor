@@ -1,49 +1,82 @@
-# electron embedded libraries
-lvce-oss: embedded-library freetype usr/lib/lvce-oss/lvce-oss
-lvce-oss: embedded-library lcms2 usr/lib/lvce-oss/lvce-oss
-lvce-oss: embedded-library libjpeg usr/lib/lvce-oss/lvce-oss
-lvce-oss: embedded-library libjsoncpp usr/lib/lvce-oss/lvce-oss
-lvce-oss: embedded-library libpng usr/lib/lvce-oss/lvce-oss
-lvce-oss: embedded-library openjpeg usr/lib/lvce-oss/lvce-oss
-lvce-oss: embedded-library srtp usr/lib/lvce-oss/lvce-oss
-lvce-oss: embedded-library tiff usr/lib/lvce-oss/lvce-oss
 
 # electron executables
-lvce-oss: shared-library-is-executable usr/lib/lvce-oss/libEGL.so 0755
-lvce-oss: shared-library-is-executable usr/lib/lvce-oss/libGLESv2.so 0755
-lvce-oss: shared-library-is-executable usr/lib/lvce-oss/libffmpeg.so 0755
-lvce-oss: shared-library-is-executable usr/lib/lvce-oss/libvk_swiftshader.so 0755
-lvce-oss: shared-library-is-executable usr/lib/lvce-oss/libvulkan.so.1 0755
-lvce-oss: shared-library-is-executable usr/lib/lvce-oss/swiftshader/libEGL.so 0755
-lvce-oss: shared-library-is-executable usr/lib/lvce-oss/swiftshader/libGLESv2.so 0755
+lvce-oss: shared-library-is-executable 0755 [usr/lib/lvce-oss/libEGL.so]
+lvce-oss: shared-library-is-executable 0755 [usr/lib/lvce-oss/libGLESv2.so]
+lvce-oss: shared-library-is-executable 0755 [usr/lib/lvce-oss/libffmpeg.so]
+lvce-oss: shared-library-is-executable 0755 [usr/lib/lvce-oss/libvk_swiftshader.so]
+lvce-oss: shared-library-is-executable 0755 [usr/lib/lvce-oss/libvulkan.so.1]
 
 # electron/chrome binaries
-lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/chrome-sandbox
-lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/libEGL.so
-lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/libGLESv2.so
-lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/libffmpeg.so
-lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/libvk_swiftshader.so
-lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/libvulkan.so.1
-lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/lvce-oss
-lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/swiftshader/libEGL.so
-lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/swiftshader/libGLESv2.so
+lvce-oss: unstripped-binary-or-object [usr/lib/lvce-oss/chrome-sandbox]
+lvce-oss: unstripped-binary-or-object [usr/lib/lvce-oss/libEGL.so]
+lvce-oss: unstripped-binary-or-object [usr/lib/lvce-oss/libGLESv2.so]
+lvce-oss: unstripped-binary-or-object [usr/lib/lvce-oss/libffmpeg.so]
+lvce-oss: unstripped-binary-or-object [usr/lib/lvce-oss/libvk_swiftshader.so]
+lvce-oss: unstripped-binary-or-object [usr/lib/lvce-oss/libvulkan.so.1]
+lvce-oss: unstripped-binary-or-object [usr/lib/lvce-oss/lvce-oss]
 
 # electron missing dependencies
-lvce-oss: missing-dependency-on-libc needed by usr/lib/lvce-oss/chrome-sandbox and 11 others
-
-# node-pty - not sure how to fix this
-lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-103/node-pty.node
-lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node
-lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node
-lvce-oss: shared-library-is-executable usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-103/node-pty.node 0755
-lvce-oss: shared-library-is-executable usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node 0755
-lvce-oss: shared-library-is-executable usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node 0755
+lvce-oss: missing-dependency-on-libc needed by usr/lib/lvce-oss/chrome-sandbox and 13 others
 
 # ripgrep - how to resolve this error?
 lvce-oss: statically-linked-binary usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/bin/rg
 
 # binary is symlinked in postinstall script
-lvce-oss: desktop-command-not-in-package usr/share/applications/lvce-oss.desktop lvce-oss
+lvce-oss: desktop-command-not-in-package lvce-oss [usr/share/applications/lvce-oss.desktop]
 
 # too much effort to create another changelog file, skip this
 lvce-oss: no-changelog usr/share/doc/lvce-oss/changelog.gz (native package)
+
+# node modules
+lvce-oss: executable-not-elf-or-script [usr/lib/lvce-oss/resources/app/packages/extension-host-helper-process/node_modules/@types/http-cache-semantics/package.json]
+lvce-oss: executable-not-elf-or-script [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/trash/lib/macos-trash]
+lvce-oss: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/lvce-oss/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
+lvce-oss: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/nan/tools/1to2.js]
+lvce-oss: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/lvce-oss/resources/app/packages/shared-process-helper-process/node_modules/which/bin/node-which]
+lvce-oss: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/extract-zip/cli.js]
+lvce-oss: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/is-docker/cli.js]
+lvce-oss: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/node-addon-api/tools/conversion.js]
+lvce-oss: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/rimraf/bin.js]
+lvce-oss: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/symlink-dir/dist/cli.js]
+lvce-oss: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/uuid/dist/bin/uuid]
+lvce-oss: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/which/bin/node-which]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/extension-host-helper-process/node_modules/@types/http-cache-semantics/package.json]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/nan/tools/1to2.js]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-106/node-pty.node]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-110/node-pty.node]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-113/node-pty.node]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/shared-process-helper-process/node_modules/which/bin/node-which]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/extract-zip/cli.js]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/is-docker/cli.js]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/keytar/build/Release/keytar.node]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/node-addon-api/tools/conversion.js]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/open/xdg-open]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/rimraf/bin.js]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/symlink-dir/dist/cli.js]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/trash/lib/macos-trash]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/uuid/dist/bin/uuid]
+lvce-oss: non-standard-executable-perm 0775 != 0755 [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/which/bin/node-which]
+lvce-oss: script-not-executable [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/node-addon-api/tools/clang-format.js]
+lvce-oss: script-not-executable [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/node-addon-api/tools/eslint-format.js]
+lvce-oss: script-not-executable [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/symlink-dir/dist/cli.d.ts]
+lvce-oss: shared-library-is-executable 0775 [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-106/node-pty.node]
+lvce-oss: shared-library-is-executable 0775 [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-110/node-pty.node]
+lvce-oss: shared-library-is-executable 0775 [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-113/node-pty.node]
+lvce-oss: shared-library-is-executable 0775 [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node]
+lvce-oss: shared-library-is-executable 0775 [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
+lvce-oss: shared-library-is-executable 0775 [usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/keytar/build/Release/keytar.node]
+lvce-oss: unstripped-binary-or-object [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-106/node-pty.node]
+lvce-oss: unstripped-binary-or-object [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-110/node-pty.node]
+lvce-oss: unstripped-binary-or-object [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-113/node-pty.node]
+lvce-oss: unstripped-binary-or-object [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node]
+lvce-oss: unstripped-binary-or-object [usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
+
+# extensions
+lvce-oss: package-contains-vcs-control-file [usr/lib/lvce-oss/resources/app/extensions/builtin.language-features-typescript/node_modules/extsprintf/.gitmodules]
+lvce-oss: package-contains-vcs-control-file [usr/lib/lvce-oss/resources/app/extensions/builtin.prettier/node_modules/extsprintf/.gitmodules]
+
+# other
+lvce-oss: extended-description-is-empty
