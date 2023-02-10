@@ -52,6 +52,7 @@ test('getLanguages', async () => {
       id: 'plaintext',
       label: 'Plaintext',
       tokenize: `/remote/${pathToFileURL(join(tmpDir, 'src/tokenizePlainText.js')).toString().slice(8)}`,
+      extensionPath: expect.any(String),
     },
   ])
 })
@@ -127,6 +128,7 @@ test('getLanguages - error - property tokenize is of type array', async () => {
       extensions: ['.py'],
       id: 'python',
       tokenize: '',
+      extensionPath: expect.any(String),
     },
   ])
   expect(spy).toHaveBeenCalledTimes(1)
