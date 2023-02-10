@@ -1,5 +1,5 @@
 import * as CommandMap from '../src/parts/CommandMap/CommandMap.js'
-import { CommandNotFoundError } from '../src/parts/Errors/Errors.js'
+import { CommandNotFoundError } from '../src/parts/CommandNotFoundError/CommandNotFoundError.js'
 
 class NoErrorThrownError extends Error {}
 
@@ -21,5 +21,5 @@ const getError = async (fn) => {
 test('getFn', async () => {
   const error = await getError(() => CommandMap.getFn('test.not-found'))
   expect(error).toBeInstanceOf(CommandNotFoundError)
-  expect(error.message).toBe('method not found: test.not-found')
+  expect(error.message).toBe('command test.not-found not found')
 })
