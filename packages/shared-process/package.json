@@ -27,7 +27,7 @@
     "got": "^12.5.3",
     "is-object": "^1.0.2",
     "lines-and-columns": "^2.0.3",
-    "open": "^8.4.0",
+    "open": "^8.4.1",
     "p-queue": "^7.3.4",
     "parse-json": "^6.0.2",
     "symlink-dir": "^5.1.1",
