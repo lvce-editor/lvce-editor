@@ -87,7 +87,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "0.0.12"
+    "version": "0.0.13"
   },
   {
     "name": "builtin.language-basics-java",
@@ -212,7 +212,7 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.25"
+    "version": "0.0.26"
   },
   {
     "name": "builtin.language-features-css",
@@ -227,7 +227,7 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.prettier",
