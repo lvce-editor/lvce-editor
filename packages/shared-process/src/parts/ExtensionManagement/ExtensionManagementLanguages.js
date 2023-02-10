@@ -1,9 +1,7 @@
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import VError from 'verror'
-import * as Error from '../Error/Error.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
-import * as Path from '../Path/Path.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
 
 const getExtensionLanguages = (extension) => {
@@ -23,22 +21,21 @@ const getLanguagesFromExtension = (extension) => {
   if (!extension.languages) {
     return []
   }
+  const extensionPath = extension.path
   const getLanguageFromExtension = (language) => {
     if (language.tokenize) {
       if (typeof language.tokenize !== 'string') {
-        console.warn(
-          `[info] ${
-            language.id
-          }: language.tokenize must be of type string but was of type ${typeof language.tokenize}`
-        )
+        console.warn(`[info] ${language.id}: language.tokenize must be of type string but was of type ${typeof language.tokenize}`)
         return {
           ...language,
+          extensionPath,
           tokenize: '',
         }
       }
       return {
         ...language,
-        tokenize: toRemoteUrl(join(extension.path, language.tokenize)),
+        extensionPath,
+        tokenize: toRemoteUrl(join(extensionPath, language.tokenize)),
       }
     }
     return language
@@ -72,13 +69,9 @@ const getLanguageConfigurationPathFromExtensions = (extensions, languageId) => {
 export const getLanguageConfiguration = async (languageId) => {
   try {
     const extensions = await ExtensionManagement.getExtensions()
-    const languageConfigurationPath =
-      getLanguageConfigurationPathFromExtensions(extensions, languageId)
+    const languageConfigurationPath = getLanguageConfigurationPathFromExtensions(extensions, languageId)
     return await ReadJson.readJson(languageConfigurationPath)
   } catch (error) {
-    throw new VError(
-      error,
-      `Failed to load language configuration for ${languageId}`
-    )
+    throw new VError(error, `Failed to load language configuration for ${languageId}`)
   }
 }
