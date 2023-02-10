@@ -1,4 +1,4 @@
-import { chmod, writeFile } from 'node:fs/promises'
+import { chmod, symlink, writeFile } from 'node:fs/promises'
 import VError from 'verror'
 import * as ArchType from '../ArchType/ArchType.js'
 import * as Compress from '../Compress/Compress.js'
@@ -92,30 +92,6 @@ const copyMetaFiles = async ({ product }) => {
     '@@MAINTAINER@@': product.linuxMaintainer,
     '@@DEPENDS@@': depends,
   })
-  await Template.write(
-    'debian_postinst',
-    `build/.tmp/linux/deb/${debArch}/DEBIAN/postinst`,
-    {
-      '@@NAME@@': product.applicationName,
-    },
-    755
-  )
-  await Template.write(
-    'debian_postrm',
-    `build/.tmp/linux/deb/${debArch}/DEBIAN/postrm`,
-    {
-      '@@NAME@@': product.applicationName,
-    },
-    755
-  )
-  // await Template.write(
-  //   'debian_prerm',
-  //   `build/.tmp/linux/deb/${debArch}/DEBIAN/prerm`,
-  //   {
-  //     '@@NAME@@': product.applicationName,
-  //   },
-  //   755
-  // )
 
   // TODO include electron/chromium licenses here? They are already at <appName>/Licenses.chromium.html
   // TODO include licenses of all used npm modules here?
@@ -123,16 +99,9 @@ const copyMetaFiles = async ({ product }) => {
     '@@COPYRIGHT@@': product.copyrightShort,
     '@@LICENSE@@': product.licenseName,
   })
-  // await mkdir(Path.absolute(`build/.tmp/linux/deb/${debArch}/app/usr/bin`), {
-  //   recursive: true,
-  // })
-  // await rm(Path.absolute(`build/.tmp/linux/deb/amd64/app/usr/bin/lvce-oss`), {
-  //   force: true,
-  // })
-  // await symlink(
-  //   `../../usr/lib/lvce-oss/lvce-oss`,
-  //   Path.absolute(`build/.tmp/linux/deb/amd64/app/usr/bin/lvce-oss`)
-  // )
+  await Mkdir.mkdir(`build/.tmp/linux/deb/${debArch}/app/usr/bin`)
+  await Remove.remove(`build/.tmp/linux/deb/amd64/app/usr/bin/lvce-oss`)
+  await symlink(`../lib/lvce-oss/lvce-oss`, Path.absolute(`build/.tmp/linux/deb/amd64/app/usr/bin/lvce-oss`))
 }
 
 const compressData = async () => {
