@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import { CommandNotFoundError } from '../src/parts/Errors/Errors.js'
 
 beforeEach(() => {
   jest.resetAllMocks()

@@ -1,4 +1,4 @@
-import { CommandNotFoundError } from '../Errors/Errors.js'
+import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
@@ -88,6 +88,6 @@ export const getFn = (method) => {
     case 'ExtensionHostDebug.evaluate':
       return ExtensionHostDebug.evaluate
     default:
-      throw new CommandNotFoundError(`method not found: ${method}`)
+      throw new CommandNotFoundError(method)
   }
 }

@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import { CommandNotFoundError } from '../src/parts/Errors/Errors.js'
+import { CommandNotFoundError } from '../src/parts/CommandNotFoundError/CommandNotFoundError.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -19,7 +19,7 @@ const GetResponse = await import('../src/parts/GetResponse/GetResponse.js')
 test('getResponse - error - method not found', async () => {
   // @ts-ignore
   Command.execute.mockImplementation((id) => {
-    throw new CommandNotFoundError(`method ${id} not found`)
+    throw new CommandNotFoundError(id)
   })
   expect(
     await GetResponse.getResponse({
@@ -33,10 +33,8 @@ test('getResponse - error - method not found', async () => {
     id: 1,
     error: {
       code: -32601,
-      data: expect.stringMatching(
-        'CommandNotFoundError: method test.not-found not found'
-      ),
-      message: 'method test.not-found not found',
+      data: expect.stringMatching('CommandNotFoundError: command test.not-found not found'),
+      message: 'command test.not-found not found',
     },
   })
 })

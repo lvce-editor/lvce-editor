@@ -4,10 +4,3 @@ export class ExtensionActivationError extends Error {
     this.name = 'ExtensionActivationError'
   }
 }
-
-export class CommandNotFoundError extends Error {
-  constructor(message) {
-    super(message)
-    this.name = 'CommandNotFoundError'
-  }
-}

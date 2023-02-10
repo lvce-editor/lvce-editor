@@ -1,4 +1,4 @@
-import { CommandNotFoundError } from '../Errors/Errors.js'
+import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
