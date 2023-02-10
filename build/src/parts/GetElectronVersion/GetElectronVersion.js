@@ -7,6 +7,9 @@ export const getElectronVersion = async () => {
   if (options.electronVersion) {
     return { electronVersion: `${options.electronVersion}`, isInstalled: false }
   }
+  if (options['electron-version']) {
+    return { electronVersion: `${options['electron-version']}`, isInstalled: false }
+  }
   const packageJson = await JsonFile.readJson('packages/main-process/node_modules/electron/package.json')
   return { electronVersion: packageJson.version, isInstalled: true }
 }
