@@ -84,14 +84,14 @@ export const getFileIcon = (file) => {
   if (iconTheme.languageIds) {
     const languageId = Languages.getLanguageId(fileNameLower)
     const languageIcon = iconTheme.languageIds[languageId]
-    if (languageIcon) {
-      return languageIcon
-    }
-    if (languageId === 'jsx') {
+    if (languageId === 'jsx' && fileNameLower.endsWith('.js')) {
       const alternativeFileIcon = iconTheme.languageIds['javascript']
       if (alternativeFileIcon) {
         return alternativeFileIcon
       }
+    }
+    if (languageIcon) {
+      return languageIcon
     }
   }
   return DefaultIcon.File
