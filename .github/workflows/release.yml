@@ -32,8 +32,12 @@ jobs:
   build-release:
     name: build-release
     needs: ['create-release']
-    runs-on: ubuntu-22.04
-    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-12, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -76,27 +80,60 @@ jobs:
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
       - run: npm test
       - run: node build/bin/build.js --target=server
+      - name: Cache Electron Builder Dependencies (Windows)
+        uses: actions/cache@v3
+        id: electron-builder-cache-windows
+        if: matrix.os == 'windows-2022'
+        with:
+          path: '~\AppData\Local\electron-builder'
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('build/package-lock.json') }}
+      - name: Build Electron App (exe)
+        if: matrix.os == 'windows-2022'
+        run: node build/bin/build.js --product=lvce --target=electron-builder-windows-exe
+      - name: Rename Electron App (exe)
+        if: matrix.os == 'windows-2022'
+        shell: bash
+        run: |
+          staging="Lvce-Setup-${{ needs.create-release.outputs.rg_version }}.exe"
+          mv "build/.tmp/releases/lvce.exe" "$staging"
+          echo "ASSET_WINDOWS_EXE_X64=$staging" >> $GITHUB_ENV
+      - name: Release Electron App (exe)
+        uses: actions/upload-release-asset@v1.0.1
+        if: matrix.os == 'windows-2022'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.ASSET_WINDOWS_EXE_X64 }}
+          asset_name: ${{ env.ASSET_WINDOWS_EXE_X64 }}
+          asset_content_type: application/octet-stream
       - run: npm publish --access public
+        if: matrix.os == 'ubuntu-22.04'
         working-directory: ./build/.tmp/server/extension-host
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
+        if: matrix.os == 'ubuntu-22.04'
         working-directory: ./build/.tmp/server/extension-host-helper-process
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
+        if: matrix.os == 'ubuntu-22.04'
         working-directory: ./build/.tmp/server/jest-environment
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
+        if: matrix.os == 'ubuntu-22.04'
         working-directory: ./build/.tmp/server/pty-host
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
+        if: matrix.os == 'ubuntu-22.04'
         working-directory: ./build/.tmp/server/server
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
+        if: matrix.os == 'ubuntu-22.04'
         working-directory: ./build/.tmp/server/shared-process
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
