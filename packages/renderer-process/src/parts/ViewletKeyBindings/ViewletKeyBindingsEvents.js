@@ -1,12 +1,12 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as ViewletKeyBindingsFunctions from './ViewletKeyBindingsFunctions.js'
 
 export const handleInput = (event) => {
   const { target } = event
   const { value } = target
-  RendererWorker.send('KeyBindings.handleInput', value)
+  ViewletKeyBindingsFunctions.handleInput(value)
 }
 
 const getNodeIndex = ($Node) => {
@@ -33,24 +33,15 @@ export const handleTableClick = (event) => {
   if (index === -1) {
     return
   }
-  RendererWorker.send('KeyBindings.handleClick', index)
-}
-
-const handleWheelDeltaLine = (deltaY) => {
-  RendererWorker.send(/* ViewletKeyBindings.handleWheel */ 'KeyBindings.handleWheel', /* deltaY */ deltaY)
-}
-
-const handleWheelDeltaPixel = (deltaY) => {
-  RendererWorker.send(/* ViewletKeyBindings.handleWheel */ 'KeyBindings.handleWheel', /* deltaY */ deltaY)
+  ViewletKeyBindingsFunctions.handleClick(index)
 }
 
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
   switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
-      return handleWheelDeltaLine(deltaY)
     case WheelEventType.DomDeltaPixel:
-      return handleWheelDeltaPixel(deltaY)
+      return ViewletKeyBindingsFunctions.handleWheel(deltaY)
     default:
       break
   }
@@ -58,7 +49,7 @@ export const handleWheel = (event) => {
 
 export const handleResizerPointerMove = (event) => {
   const { clientX } = event
-  RendererWorker.send(/* KeyBindings.handleResizerMouseMove */ 'KeyBindings.handleResizerMove', /* y */ clientX)
+  ViewletKeyBindingsFunctions.handleResizerMove(clientX)
 }
 
 // TODO use lostpointercapture event instead
@@ -76,7 +67,7 @@ export const handleResizerPointerDown = (event) => {
   target.addEventListener(DomEventType.PointerMove, handleResizerPointerMove, DomEventOptions.Active)
   target.addEventListener(DomEventType.PointerUp, handleResizerPointerUp)
   const id = target.nextSibling ? 1 : 2
-  RendererWorker.send(/* KeyBindings.handleResizerPointerDown */ 'KeyBindings.handleResizerClick', /* id */ id, /* x */ clientX)
+  ViewletKeyBindingsFunctions.handlResizerClick(id, clientX)
 }
 
 const getPointerDownFunction = (event) => {

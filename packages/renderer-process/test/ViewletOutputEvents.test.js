@@ -7,22 +7,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(() => {}),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(() => {}),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
-const ViewletOutput = await import(
-  '../src/parts/ViewletOutput/ViewletOutput.js'
-)
+const ViewletOutput = await import('../src/parts/ViewletOutput/ViewletOutput.js')
 
 test('event - change', () => {
   const state = ViewletOutput.create()
@@ -42,10 +35,5 @@ test('event - change', () => {
   })
   $Select.children[1].dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Output',
-    'setOutputChannel',
-    '/test/log-extension-host.txt'
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Output', 'setOutputChannel', '/test/log-extension-host.txt')
 })

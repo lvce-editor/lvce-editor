@@ -1,12 +1,7 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ViewletOutputFunctions from './ViewletOutputFunctions.js'
 
 export const handleChange = (event) => {
   const $Target = event.target
   const value = $Target.value
-  RendererWorker.send(
-    /* viewletSend */ 'Viewlet.send',
-    /* ViewletId */ 'Output',
-    /* method */ 'setOutputChannel',
-    /* option */ value
-  )
+  ViewletOutputFunctions.setOutputChannel(value)
 }
