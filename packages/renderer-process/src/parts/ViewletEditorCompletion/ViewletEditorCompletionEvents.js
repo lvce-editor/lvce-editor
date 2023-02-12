@@ -1,5 +1,5 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as ViewletEditorCompletionFunctions from './ViewletEditorCompletionFunctions.js'
 
 const getNodeIndex = ($Node) => {
   let index = 0
@@ -23,25 +23,15 @@ export const handleMousedown = (event) => {
   if (index === -1) {
     return
   }
-  RendererWorker.send(
-    /* ViewletEditorCompletion.selectIndex */ 'EditorCompletion.selectIndex',
-    /* index */ index
-  )
+  ViewletEditorCompletionFunctions.selectIndex(index)
 }
 
 export const handleWheel = (event) => {
-  switch (event.deltaMode) {
+  const { deltaMode, deltaY } = event
+  switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(
-        /* EditorCompletion.handleWheel */ 'EditorCompletion.handleWheel',
-        /* deltaY */ event.deltaY
-      )
-      break
     case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(
-        /* EditorCompletion.handleWheel */ 'EditorCompletion.handleWheel',
-        /* deltaY */ event.deltaY
-      )
+      ViewletEditorCompletionFunctions.handleWheel(deltaY)
       break
     default:
       break
