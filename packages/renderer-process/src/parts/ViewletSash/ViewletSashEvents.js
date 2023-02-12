@@ -1,5 +1,5 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as ViewletSashFunctions from './ViewletSashFunctions.js'
 
 // export const handleResize = (event) => {
 //   RendererWorker.send(
@@ -20,11 +20,7 @@ const getSashId = ($Target) => {
 
 export const handleSashPointerMove = (event) => {
   const { clientX, clientY } = event
-  RendererWorker.send(
-    /* Layout.handleSashPointerMove */ 'Layout.handleSashPointerMove',
-    /* x */ clientX,
-    /* y */ clientY
-  )
+  ViewletSashFunctions.handleSashPointerMove(clientX, clientY)
 }
 
 export const handleSashPointerUp = (event) => {
@@ -41,8 +37,5 @@ export const handleSashPointerDown = (event) => {
   target.addEventListener(DomEventType.PointerUp, handleSashPointerUp)
   const $Target = event.target
   const id = getSashId($Target)
-  RendererWorker.send(
-    /* Layout.handleSashPointerDown */ 'Layout.handleSashPointerDown',
-    /* id */ id
-  )
+  ViewletSashFunctions.handleSashPointerDown(id)
 }
