@@ -1,13 +1,8 @@
 import * as Focus from '../Focus/Focus.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ViewletTerminalFunctions from './ViewletTerminalFunctions.js'
 
 export const handleInput = (input) => {
-  RendererWorker.send(
-    /* viewletSend */ 'Viewlet.send',
-    /* viewletId */ 'Terminal',
-    /* method */ 'write',
-    /* input */ input
-  )
+  ViewletTerminalFunctions.handleInput(input)
 }
 
 export const handleFocus = () => {
