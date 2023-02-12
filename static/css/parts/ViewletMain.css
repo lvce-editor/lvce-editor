@@ -23,3 +23,11 @@
 .Clock {
   color: white;
 }
+
+.DragOverlay {
+  position: absolute;
+  background: aqua;
+  z-index: 1;
+  pointer-events: none;
+  transition: all 100ms;
+}
