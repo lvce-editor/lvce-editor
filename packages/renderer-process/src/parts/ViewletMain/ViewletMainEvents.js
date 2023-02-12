@@ -16,7 +16,8 @@ export const handleDragStart = (event) => {
 
 export const handleDragOver = (event) => {
   Event.preventDefault(event)
-  ViewletMainFunctions.handleDragOver()
+  const { clientX, clientY } = event
+  ViewletMainFunctions.handleDragOver(clientX, clientY)
 }
 
 /**
