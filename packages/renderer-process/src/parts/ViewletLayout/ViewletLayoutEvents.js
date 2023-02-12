@@ -1,5 +1,5 @@
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ViewletLayoutFunctions from './ViewletLayoutFunctions.js'
 
 const getSashId = ($Target) => {
   if ($Target.id === 'SashPanel') {
@@ -13,7 +13,7 @@ const getSashId = ($Target) => {
 
 export const handleSashPointerMove = (event) => {
   const { clientX, clientY } = event
-  RendererWorker.send(/* Layout.handleSashPointerMove */ 'Layout.handleSashPointerMove', /* x */ clientX, /* y */ clientY)
+  ViewletLayoutFunctions.handleSashPointerMove(clientX, clientY)
 }
 
 export const handlePointerCaptureLost = (event) => {
@@ -28,16 +28,16 @@ export const handleSashPointerDown = (event) => {
   target.addEventListener(DomEventType.PointerMove, handleSashPointerMove)
   target.addEventListener(DomEventType.LostPointerCapture, handlePointerCaptureLost)
   const id = getSashId(target)
-  RendererWorker.send(/* Layout.handleSashPointerDown */ 'Layout.handleSashPointerDown', /* id */ id)
+  ViewletLayoutFunctions.handleSashPointerDown(id)
 }
 
 export const handleSashDoubleClick = (event) => {
   const { target } = event
   const id = getSashId(target)
-  RendererWorker.send(/* Layout.handleSashDoubleClick */ 'Layout.handleSashDoubleClick', /* id */ id)
+  ViewletLayoutFunctions.handleSashDoubleClick(id)
 }
 
 export const handleResize = () => {
   const { innerWidth, innerHeight } = window
-  RendererWorker.send(/* Layout.handleResize */ 'Layout.handleResize', /* width */ innerWidth, /* height */ innerHeight)
+  ViewletLayoutFunctions.handleResize(innerWidth, innerHeight)
 }
