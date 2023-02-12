@@ -1,16 +1,4 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-
-const handleClickMinmize = () => {
-  RendererWorker.send('TitleBarButtons.handleClickMinimize')
-}
-
-const handleClickToggleMaximize = () => {
-  RendererWorker.send('TitleBarButtons.handleClickToggleMaximize')
-}
-
-const handleClickClose = () => {
-  RendererWorker.send('TitleBarButtons.handleClickClose')
-}
+import * as ViewletTitleBarButtonsFunctions from './ViewletTitleBarButtonsFunctions.js'
 
 /**
  *
@@ -22,13 +10,13 @@ export const handleTitleBarButtonsClick = (event) => {
   const { id } = target
   switch (id) {
     case 'TitleBarButtonMinimize':
-      handleClickMinmize()
+      ViewletTitleBarButtonsFunctions.handleClickMinmize()
       break
     case 'TitleBarButtonToggleMaximize':
-      handleClickToggleMaximize()
+      ViewletTitleBarButtonsFunctions.handleClickToggleMaximize()
       break
     case 'TitleBarButtonClose':
-      handleClickClose()
+      ViewletTitleBarButtonsFunctions.handleClickClose()
       break
     default:
       break

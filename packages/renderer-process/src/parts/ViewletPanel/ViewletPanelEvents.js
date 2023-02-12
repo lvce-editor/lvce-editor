@@ -1,5 +1,5 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ViewletPanelFunctions from './ViewletPanelFunctions.js'
 
 export const handleClickClose = (event) => {
-  RendererWorker.send('Layout.hidePanel')
+  ViewletPanelFunctions.hidePanel()
 }
