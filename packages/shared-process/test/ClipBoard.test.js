@@ -6,14 +6,14 @@ jest.unstable_mockModule('../src/parts/Exec/Exec.js', () => ({
   }),
 }))
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+jest.unstable_mockModule('../src/parts/Desktop/Desktop.js', () => ({
   getDesktop: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
 
 const Exec = await import('../src/parts/Exec/Exec.js')
-const Platform = await import('../src/parts/Platform/Platform.js')
+const Desktop = await import('../src/parts/Desktop/Desktop.js')
 const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
 
 afterEach(() => {
@@ -22,7 +22,7 @@ afterEach(() => {
 
 test('readFiles - gnome - copied files', async () => {
   // @ts-ignore
-  Platform.getDesktop.mockImplementation(() => 'gnome')
+  Desktop.getDesktop.mockImplementation(() => 'gnome')
   // @ts-ignore
   Exec.exec.mockImplementation(() => {
     return {
@@ -41,7 +41,7 @@ file:///test/my-folder`,
 
 test('readFiles - gnome - target not available', async () => {
   // @ts-ignore
-  Platform.getDesktop.mockImplementation(() => 'gnome')
+  Desktop.getDesktop.mockImplementation(() => 'gnome')
   // @ts-ignore
   Exec.exec.mockImplementation(() => {
     const error = new Error('command failed with exit code 1')
@@ -54,43 +54,28 @@ test('readFiles - gnome - target not available', async () => {
 
 test('writeFiles - gnome - copied files', async () => {
   // @ts-ignore
-  Platform.getDesktop.mockImplementation(() => 'gnome')
+  Desktop.getDesktop.mockImplementation(() => 'gnome')
   // @ts-ignore
   Exec.exec.mockImplementation(async () => {
     return { stdout: '', stderr: '' }
   })
   await ClipBoard.writeFiles('copy', ['/test/my-folder'])
   expect(Exec.exec).toHaveBeenCalledTimes(3)
-  expect(Exec.exec).toHaveBeenNthCalledWith(
-    1,
-    'xclip',
-    ['-i', '-selection', 'clipboard', '-t', 'x-special/gnome-copied-files'],
-    {
-      input: `copy
+  expect(Exec.exec).toHaveBeenNthCalledWith(1, 'xclip', ['-i', '-selection', 'clipboard', '-t', 'x-special/gnome-copied-files'], {
+    input: `copy
 file:///test/my-folder`,
-    }
-  )
-  expect(Exec.exec).toHaveBeenNthCalledWith(
-    2,
-    'xclip',
-    ['-i', '-selection', 'clipboard', '-t', 'text/uri-list'],
-    {
-      input: 'file:///test/my-folder',
-    }
-  )
-  expect(Exec.exec).toHaveBeenNthCalledWith(
-    3,
-    'xclip',
-    ['-i', '-selection', 'clipboard', '-t', 'text/plain'],
-    {
-      input: '/test/my-folder',
-    }
-  )
+  })
+  expect(Exec.exec).toHaveBeenNthCalledWith(2, 'xclip', ['-i', '-selection', 'clipboard', '-t', 'text/uri-list'], {
+    input: 'file:///test/my-folder',
+  })
+  expect(Exec.exec).toHaveBeenNthCalledWith(3, 'xclip', ['-i', '-selection', 'clipboard', '-t', 'text/plain'], {
+    input: '/test/my-folder',
+  })
 })
 
 test('writeFiles - unsupported desktop', async () => {
   // @ts-ignore
-  Platform.getDesktop.mockImplementation(() => 'test-desktop')
+  Desktop.getDesktop.mockImplementation(() => 'test-desktop')
   // @ts-ignore
   Exec.exec.mockImplementation(async () => {
     return { stdout: '', stderr: '' }
@@ -99,7 +84,5 @@ test('writeFiles - unsupported desktop', async () => {
   await ClipBoard.writeFiles('copy', ['/test/my-folder'])
   expect(Exec.exec).not.toHaveBeenCalled()
   expect(consoleSpy).toHaveBeenCalledTimes(1)
-  expect(consoleSpy).toHaveBeenCalledWith(
-    'writing files to clipboard is not yet supported on test-desktop'
-  )
+  expect(consoleSpy).toHaveBeenCalledWith('writing files to clipboard is not yet supported on test-desktop')
 })

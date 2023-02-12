@@ -1,4 +1,4 @@
-import * as Platform from '../Platform/Platform.js'
+import * as Desktop from '../Desktop/Desktop.js'
 
 export const readFiles = async () => {
   return {
@@ -9,6 +9,6 @@ export const readFiles = async () => {
 }
 
 export const writeFiles = (type, files) => {
-  const desktop = Platform.getDesktop()
+  const desktop = Desktop.getDesktop()
   console.info(`writing files to clipboard is not yet supported on ${desktop}`)
 }

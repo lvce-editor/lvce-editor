@@ -2,7 +2,6 @@ import { homedir, tmpdir } from 'node:os'
 import { join, resolve, sep } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
-import * as DesktopType from '../DesktopType/DesktopType.js'
 import * as Path from '../Path/Path.js'
 import * as Process from '../Process/Process.js'
 import * as Root from '../Root/Root.js'
@@ -55,26 +54,6 @@ export const getChromeExtensionsPath = () => {
 
 export const getMarketplaceUrl = () => {
   return env.LVCE_MARKETPLACE_URL || 'https://marketplace.22e924c84de072d4b25b.com'
-}
-
-export const getDesktop = () => {
-  const { ORIGINAL_XDG_CURRENT_DESKTOP, XDG_CURRENT_DESKTOP } = env
-  if (ORIGINAL_XDG_CURRENT_DESKTOP && ORIGINAL_XDG_CURRENT_DESKTOP !== 'undefined') {
-    if (ORIGINAL_XDG_CURRENT_DESKTOP === 'ubuntu:GNOME') {
-      return DesktopType.Gnome
-    }
-    return ORIGINAL_XDG_CURRENT_DESKTOP
-  }
-  if (XDG_CURRENT_DESKTOP) {
-    if (XDG_CURRENT_DESKTOP === 'ubuntu:GNOME') {
-      return DesktopType.Gnome
-    }
-    return XDG_CURRENT_DESKTOP
-  }
-  if (isWindows) {
-    return DesktopType.Windows
-  }
-  return DesktopType.Unknown
 }
 
 export const getPathSeparator = () => {

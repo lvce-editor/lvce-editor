@@ -40,10 +40,6 @@ test('getMarketplaceUrl', () => {
   expect(Platform.getMarketplaceUrl()).toEqual(expect.any(String))
 })
 
-test('getDesktop', () => {
-  expect(Platform.getDesktop()).toEqual(expect.any(String))
-})
-
 test('getPathSeparator', () => {
   expect(Platform.getPathSeparator()).toEqual(expect.any(String))
 })
