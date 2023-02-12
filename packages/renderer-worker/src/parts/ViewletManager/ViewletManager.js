@@ -447,7 +447,6 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       return
     }
     viewlet.type = 4
-    console.log({ stack: error.stack })
     const prettyError = await PrettyError.prepare(error)
     PrettyError.print(prettyError)
     try {
