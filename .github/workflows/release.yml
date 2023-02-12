@@ -107,6 +107,26 @@ jobs:
           asset_path: ${{ env.ASSET_WINDOWS_EXE_X64 }}
           asset_name: ${{ env.ASSET_WINDOWS_EXE_X64 }}
           asset_content_type: application/octet-stream
+      - name: Build Electron App (AppImage)
+        if: matrix.os == 'ubuntu-22.04'
+        run: node build/bin/build.js --product=lvce --target=electron-builder-app-image
+      - name: Rename Electron App (AppImage)
+        if: matrix.os == 'ubuntu-22.04'
+        shell: bash
+        run: |
+          staging="Lvce-${{ needs.create-release.outputs.rg_version }}.AppImage"
+          mv "build/.tmp/releases/lvce.AppImage" "$staging"
+          echo "ASSET_APP_IMAGE_X64=$staging" >> $GITHUB_ENV
+      - name: Release Electron App (AppImage)
+        uses: actions/upload-release-asset@v1.0.1
+        if: matrix.os == 'ubuntu-22.04'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.ASSET_APP_IMAGE_X64 }}
+          asset_name: ${{ env.ASSET_APP_IMAGE_X64 }}
+          asset_content_type: application/octet-stream
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-22.04'
         working-directory: ./build/.tmp/server/extension-host
