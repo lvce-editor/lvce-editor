@@ -1,8 +1,8 @@
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as EditorGroup from '../EditorGroup/EditorGroup.js'
-import * as Label from '../Label/Label.js'
+import * as Tab from '../Tab/Tab.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
-import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 const create$MainTabs = () => {
   const $MainTabs = document.createElement('div')
@@ -86,22 +86,7 @@ export const closeViewletAndTab = (state, index) => {
 export const focus = () => {}
 
 export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex, background = false) => {
-  const $TabLabel = Label.create(tabLabel)
-
-  const $TabCloseButton = document.createElement('button')
-  $TabCloseButton.className = 'EditorTabCloseButton'
-  $TabCloseButton.ariaLabel = 'Close'
-  $TabCloseButton.title = ''
-
-  const $Tab = document.createElement('div')
-  $Tab.title = tabTitle
-  if (!background) {
-    $Tab.ariaSelected = AriaBoolean.True
-  }
-  // @ts-ignore
-  $Tab.role = AriaRoles.Tab
-  $Tab.className = 'MainTab'
-  $Tab.append($TabLabel, $TabCloseButton)
+  const $Tab = Tab.create(tabLabel, tabTitle, background)
 
   if (oldActiveIndex !== -1 && state.$MainTabs) {
     const $OldTab = state.$MainTabs.children[oldActiveIndex]
@@ -153,19 +138,7 @@ export const appendViewlet = (state, childName, $Child) => {
 // TODO when there is not enough space available, only show tab close button
 // for focused tab (that's how chrome and firefox do it)
 export const openAnotherTab = async (state, tabLabel, tabTitle, unFocusIndex) => {
-  const $Tab = document.createElement('div')
-  $Tab.className = 'MainTab'
-  $Tab.textContent = tabLabel
-  $Tab.title = tabTitle
-  $Tab.ariaSelected = AriaBoolean.True
-  // @ts-ignore
-  $Tab.role = AriaRoles.Tab
-  $Tab.tabIndex = 0
-  const $TabLabel = Label.create(tabLabel)
-  const $TabCloseButton = document.createElement('button')
-  $TabCloseButton.className = 'EditorTabCloseButton'
-  $TabCloseButton.ariaLabel = 'Close'
-  $Tab.append($TabLabel, $TabCloseButton)
+  const $Tab = Tab.create(tabLabel, tabTitle, false)
   state.$MainTabs.children[unFocusIndex].ariaSelected = AriaBoolean.False
   state.$MainTabs.append($Tab)
 }
