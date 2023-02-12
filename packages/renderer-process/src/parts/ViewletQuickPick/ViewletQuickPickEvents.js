@@ -1,9 +1,9 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
-import * as Platform from '../Platform/Platform.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as Event from '../Event/Event.js'
+import * as Platform from '../Platform/Platform.js'
+import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as ViewletQuickPickFunctions from './ViewletQuickPickFunctions.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -39,12 +39,11 @@ const getTargetIndex = ($Target) => {
 }
 
 export const handleWheel = (event) => {
-  switch (event.deltaMode) {
+  const { deltaMode, deltaY } = event
+  switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(/* QuickPick.handleWheel */ 'QuickPick.handleWheel', /* deltaY */ event.deltaY)
-      break
     case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(/* QuickPick.handleWheel */ 'QuickPick.handleWheel', /* deltaY */ event.deltaY)
+      ViewletQuickPickFunctions.handleWheel(deltaY)
       break
     default:
       break
@@ -61,7 +60,7 @@ export const handlePointerDown = (event) => {
   }
   Event.preventDefault(event)
   const { clientX, clientY } = event
-  RendererWorker.send(/* QuickPick.selectIndex */ 'QuickPick.handleClickAt', /* x */ clientX, /* y */ clientY)
+  ViewletQuickPickFunctions.handleClickAt(clientX, clientY)
 }
 
 // TODO beforeinput event should prevent input event maybe
@@ -78,11 +77,12 @@ export const handlePointerDown = (event) => {
 
 export const handleInput = (event) => {
   const $Target = event.target
-  RendererWorker.send(/* quickPickHandleInput */ 'QuickPick.handleInput', /* value */ $Target.value)
+  const { value } = $Target
+  ViewletQuickPickFunctions.handleInput(value)
 }
 
 export const handleBlur = (event) => {
-  RendererWorker.send(/* QuickPick.handleBlur */ 'QuickPick.handleBlur')
+  ViewletQuickPickFunctions.handleBlur()
 }
 
 // TODO
@@ -93,11 +93,5 @@ export const handleBeforeInput = (event) => {
   Event.preventDefault(event)
   const { target, inputType, data } = event
   const { selectionStart, selectionEnd } = target
-  RendererWorker.send(
-    'QuickPick.handleBeforeInput',
-    /* inputType */ inputType,
-    /* data */ data,
-    /* selectionStart */ selectionStart,
-    /* selectionEnd */ selectionEnd
-  )
+  ViewletQuickPickFunctions.handleBeforeInput(inputType, data, selectionStart, selectionEnd)
 }
