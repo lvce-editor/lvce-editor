@@ -4,6 +4,7 @@ import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerEr
 import { ModuleWorkersAreNotSupportedInFirefoxError } from '../ModuleWorkersAreNotSupportedInFirefoxError/ModuleWorkersAreNotSupportedInFirefoxError.js'
 import * as TryToGetActualWorkerErrorMessage from '../TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js'
 import * as WorkerType from '../WorkerType/WorkerType.js'
+import * as Event from '../Event/Event.js'
 
 export const create = async ({ url, name }) => {
   try {
@@ -20,7 +21,7 @@ export const create = async ({ url, name }) => {
         break
       case FirstWorkerEventType.Error:
         if (IsFirefoxWorkerError.isFirefoxWorkerError(event.message)) {
-          event.preventDefault()
+          Event.preventDefault(event)
           throw new ModuleWorkersAreNotSupportedInFirefoxError()
         }
         const actualErrorMessage = await TryToGetActualWorkerErrorMessage.tryToGetActualErrorMessage({

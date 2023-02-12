@@ -3,6 +3,7 @@
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as Event from '../Event/Event.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -40,16 +41,10 @@ const getTargetIndex = ($Target) => {
 export const handleWheel = (event) => {
   switch (event.deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(
-        /* QuickPick.handleWheel */ 'QuickPick.handleWheel',
-        /* deltaY */ event.deltaY
-      )
+      RendererWorker.send(/* QuickPick.handleWheel */ 'QuickPick.handleWheel', /* deltaY */ event.deltaY)
       break
     case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(
-        /* QuickPick.handleWheel */ 'QuickPick.handleWheel',
-        /* deltaY */ event.deltaY
-      )
+      RendererWorker.send(/* QuickPick.handleWheel */ 'QuickPick.handleWheel', /* deltaY */ event.deltaY)
       break
     default:
       break
@@ -64,13 +59,9 @@ export const handlePointerDown = (event) => {
     // @ts-ignore
     $Input.readOnly = true
   }
-  event.preventDefault()
+  Event.preventDefault(event)
   const { clientX, clientY } = event
-  RendererWorker.send(
-    /* QuickPick.selectIndex */ 'QuickPick.handleClickAt',
-    /* x */ clientX,
-    /* y */ clientY
-  )
+  RendererWorker.send(/* QuickPick.selectIndex */ 'QuickPick.handleClickAt', /* x */ clientX, /* y */ clientY)
 }
 
 // TODO beforeinput event should prevent input event maybe
@@ -87,10 +78,7 @@ export const handlePointerDown = (event) => {
 
 export const handleInput = (event) => {
   const $Target = event.target
-  RendererWorker.send(
-    /* quickPickHandleInput */ 'QuickPick.handleInput',
-    /* value */ $Target.value
-  )
+  RendererWorker.send(/* quickPickHandleInput */ 'QuickPick.handleInput', /* value */ $Target.value)
 }
 
 export const handleBlur = (event) => {
@@ -102,7 +90,7 @@ export const handleBlur = (event) => {
 // - for nvda ariaRoleDescription works better
 
 export const handleBeforeInput = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   const { target, inputType, data } = event
   const { selectionStart, selectionEnd } = target
   RendererWorker.send(

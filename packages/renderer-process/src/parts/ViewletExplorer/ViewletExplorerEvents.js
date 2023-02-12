@@ -4,6 +4,7 @@ import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as Event from '../Event/Event.js'
 
 // TODO put drop into separate module and use executeCommand to call it
 
@@ -85,7 +86,7 @@ export const handleBlur = (event) => {
 export const handleDragOver = (event) => {
   event.dataTransfer.effectAllowed = 'copyMove'
   event.dataTransfer.dropEffect = 'copy'
-  event.preventDefault()
+  Event.preventDefault(event)
   const { clientX, clientY } = event
   RendererWorker.send('Explorer.handleDragOver', clientX, clientY)
   // state.element.classList.add('DropTarget')
@@ -108,8 +109,8 @@ export const handleDragStart = (event) => {
  * @param {DragEvent} event
  */
 export const handleDrop = async (event) => {
-  event.preventDefault()
-  event.stopPropagation()
+  Event.preventDefault(event)
+  Event.stopPropagation(event)
   const { files, dropEffect, items } = event.dataTransfer
   const { clientX, clientY } = event
   if (Platform.isElectron()) {

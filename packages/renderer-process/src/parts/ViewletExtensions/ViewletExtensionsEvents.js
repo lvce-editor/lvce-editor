@@ -5,6 +5,7 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as Event from '../Event/Event.js'
 
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
@@ -81,7 +82,7 @@ const handleContextMenuMouse = (event) => {
 const handleContextMenuKeyboard = (event) => {}
 
 export const handleContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   switch (event.button) {
     case MouseEventType.Keyboard:
       return handleContextMenuKeyboard(event)

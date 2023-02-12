@@ -1,3 +1,4 @@
+import * as Event from '../Event/Event.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 export const handleIconError = (event) => {
@@ -13,7 +14,7 @@ const isImage = ($Element) => {
 }
 
 export const handleReadmeContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   const { clientX, clientY, target } = event
   const props = Object.create(null)
   if (isLink(target)) {
@@ -23,10 +24,5 @@ export const handleReadmeContextMenu = (event) => {
     props.isImage = true
     props.url = target.src
   }
-  RendererWorker.send(
-    'ExtensionDetail.handleReadmeContextMenu',
-    clientX,
-    clientY,
-    props
-  )
+  RendererWorker.send('ExtensionDetail.handleReadmeContextMenu', clientX, clientY, props)
 }

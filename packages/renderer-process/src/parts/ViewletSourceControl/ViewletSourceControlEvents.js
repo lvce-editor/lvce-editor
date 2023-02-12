@@ -1,4 +1,5 @@
 import { findIndex } from '../../shared/findIndex.js'
+import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
@@ -28,43 +29,27 @@ export const handleClick = (event) => {
   }
   if (target.className === 'SourceControlButton') {
     const fnName = getButtonFunctionName(target.title)
-    RendererWorker.send(
-      /* SourceControl.handleClick */ fnName,
-      /* index */ index
-    )
+    RendererWorker.send(/* SourceControl.handleClick */ fnName, /* index */ index)
     return
   }
-  RendererWorker.send(
-    /* SourceControl.handleClick */ 'Source Control.handleClick',
-    /* index */ index
-  )
+  RendererWorker.send(/* SourceControl.handleClick */ 'Source Control.handleClick', /* index */ index)
 }
 
 export const handleMouseOver = (event) => {
   const { target } = event
   const $Parent = target.closest('.SourceControlItems')
   const index = findIndex($Parent, target)
-  RendererWorker.send(
-    /* SourceControl.handleMouseOver */ 'Source Control.handleMouseOver',
-    /* index */ index
-  )
+  RendererWorker.send(/* SourceControl.handleMouseOver */ 'Source Control.handleMouseOver', /* index */ index)
 }
 
 export const handleContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   const { clientX, clientY } = event
-  RendererWorker.send(
-    /* SourceControl.handleContextMenu */ 'Source Control.handleContextMenu',
-    /* x */ clientX,
-    /* y */ clientY
-  )
+  RendererWorker.send(/* SourceControl.handleContextMenu */ 'Source Control.handleContextMenu', /* x */ clientX, /* y */ clientY)
 }
 
 export const handleInput = (event) => {
   const { target } = event
   const { value } = target
-  RendererWorker.send(
-    /* SourceControl.handleContextMenu */ 'Source Control.handleInput',
-    /* value */ value
-  )
+  RendererWorker.send(/* SourceControl.handleContextMenu */ 'Source Control.handleInput', /* value */ value)
 }

@@ -1,5 +1,6 @@
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Event from '../Event/Event.js'
 
 const ClassNames = {
   Label: 'Label',
@@ -8,11 +9,11 @@ const ClassNames = {
 }
 
 export const handleDragOver = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
 }
 
-export const handleDrop = async (event) => {
-  event.preventDefault()
+export const handleDrop = (event) => {
+  Event.preventDefault(event)
   RendererWorker.send(/* handleDrop */ 'Main.handleDrop')
 }
 
@@ -37,26 +38,17 @@ const getIndex = ($Target) => {
 }
 
 export const handleTabCloseButtonMouseDown = (event, index) => {
-  RendererWorker.send(
-    /* Main.closeEditor */ 'Main.closeEditor',
-    /* index */ index
-  )
+  RendererWorker.send(/* Main.closeEditor */ 'Main.closeEditor', /* index */ index)
 }
 
 export const handleTabMouseDown = (event, index) => {
   const { button } = event
   switch (button) {
     case MouseEventType.LeftClick:
-      RendererWorker.send(
-        /* Main.handleTabClick */ 'Main.handleTabClick',
-        /* index */ index
-      )
+      RendererWorker.send(/* Main.handleTabClick */ 'Main.handleTabClick', /* index */ index)
       break
     case MouseEventType.MiddleClick:
-      RendererWorker.send(
-        /* Main.closeEditor */ 'Main.closeEditor',
-        /* index */ index
-      )
+      RendererWorker.send(/* Main.closeEditor */ 'Main.closeEditor', /* index */ index)
       break
     case MouseEventType.RightClick:
       break
@@ -71,7 +63,7 @@ export const handleTabsMouseDown = (event) => {
   if (index === -1) {
     return
   }
-  event.preventDefault()
+  Event.preventDefault(event)
   switch (target.className) {
     case ClassNames.EditorTabCloseButton:
       handleTabCloseButtonMouseDown(event, index)
@@ -91,11 +83,6 @@ export const handleTabsContextMenu = (event) => {
   if (index === -1) {
     return
   }
-  event.preventDefault()
-  RendererWorker.send(
-    /* Main.handleTabContextMenu */ 'Main.handleTabContextMenu',
-    /* index */ index,
-    /* x */ clientX,
-    /* y */ clientY
-  )
+  Event.preventDefault(event)
+  RendererWorker.send(/* Main.handleTabContextMenu */ 'Main.handleTabContextMenu', /* index */ index, /* x */ clientX, /* y */ clientY)
 }

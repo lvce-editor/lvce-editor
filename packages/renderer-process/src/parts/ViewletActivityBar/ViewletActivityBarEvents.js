@@ -1,3 +1,4 @@
+import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
@@ -30,29 +31,20 @@ export const handleMousedown = (event) => {
   if (!$Item) {
     return
   }
-  event.preventDefault()
-  event.stopPropagation()
+  Event.preventDefault(event)
+  Event.stopPropagation(event)
   const index = getNodeIndex($Item)
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send(
-    /* ActivityBar.handleClick */ 'ActivityBar.handleClick',
-    /* index */ index,
-    /* x */ x,
-    /* y */ y
-  )
+  RendererWorker.send(/* ActivityBar.handleClick */ 'ActivityBar.handleClick', /* index */ index, /* x */ x, /* y */ y)
 }
 
 export const handleContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   // TODO also move side bar position command
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send(
-    /* activityBarHandleContextMenu */ 'ActivityBar.handleContextMenu',
-    /* x */ x,
-    /* y */ y
-  )
+  RendererWorker.send(/* activityBarHandleContextMenu */ 'ActivityBar.handleContextMenu', /* x */ x, /* y */ y)
 }
 
 export const handleBlur = () => {

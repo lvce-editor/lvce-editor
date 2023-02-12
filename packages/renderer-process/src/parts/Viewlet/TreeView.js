@@ -4,6 +4,7 @@ import * as Context from '../Context/Context.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Renderer from '../Renderer/Renderer.js'
 import * as RendererTree from '../Renderer/RendererTree.js'
+import * as Event from '../Event/Event.js'
 
 // class Dirent {
 //   constructor(name, type) {
@@ -138,9 +139,7 @@ export const create = (props) => {
         } else {
           state.state = 'loading'
           // TODO cancel this if tree is disposed
-          const newChildren = await props.getChildren(
-            `${state.root}/${dirent.name}`
-          )
+          const newChildren = await props.getChildren(`${state.root}/${dirent.name}`)
 
           const treeItems = newChildren.map(toTreeItem(dirent.level + 1))
           state.items.splice(index + 1, 0, ...treeItems)
@@ -190,7 +189,7 @@ export const create = (props) => {
   }
 
   const handleContextMenu = (event) => {
-    event.preventDefault()
+    Event.preventDefault(event)
     const $Target = event.target
     const index = findIndex($Viewlet, $Target)
     if (index === -1) {

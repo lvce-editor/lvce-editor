@@ -4,6 +4,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as Event from '../Event/Event.js'
 
 export const handleInput = (event) => {
   const { target } = event
@@ -62,7 +63,7 @@ const handleContextMenuKeyboard = (event) => {
 }
 
 export const handleContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   switch (event.button) {
     case MouseEventType.Keyboard:
       return handleContextMenuKeyboard(event)

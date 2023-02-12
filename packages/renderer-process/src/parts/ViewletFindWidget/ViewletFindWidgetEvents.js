@@ -1,5 +1,6 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Focus from '../Focus/Focus.js'
+import * as Event from '../Event/Event.js'
 
 export const handleInput = (event) => {
   const { target } = event
@@ -8,17 +9,17 @@ export const handleInput = (event) => {
 }
 
 const handleClickClose = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   RendererWorker.send('Viewlet.closeWidget', 'FindWidget')
 }
 
 const handleClickPreviousMatch = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   RendererWorker.send('FindWidget.focusPrevious')
 }
 
 const handleClickNextMatch = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   RendererWorker.send('FindWidget.focusNext')
 }
 

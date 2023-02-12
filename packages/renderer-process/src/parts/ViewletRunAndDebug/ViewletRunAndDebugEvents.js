@@ -1,5 +1,6 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Focus from '../Focus/Focus.js'
+import * as Event from '../Event/Event.js'
 
 const handleClickContinue = () => {
   RendererWorker.send('Run And Debug.continue')
@@ -24,7 +25,7 @@ const handleClickStepOut = (event) => {
 }
 
 const handleClickDebugButton = (event, target) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   switch (target.title) {
     case 'Pause':
       handleClickPause()
@@ -64,7 +65,7 @@ const handleClickSectionCallstack = () => {
 }
 
 const handleClickDebugSectionHeader = (event, target) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   switch (target.textContent) {
     case 'Watch':
       handleClickSectionWatch()

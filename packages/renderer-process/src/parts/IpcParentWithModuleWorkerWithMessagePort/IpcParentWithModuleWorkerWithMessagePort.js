@@ -4,6 +4,7 @@ import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerEr
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import { ModuleWorkersAreNotSupportedInFirefoxError } from '../ModuleWorkersAreNotSupportedInFirefoxError/ModuleWorkersAreNotSupportedInFirefoxError.js'
 import * as WorkerType from '../WorkerType/WorkerType.js'
+import * as Event from '../Event/Event.js'
 
 const tryToGetActualErrorMessage = async ({ url, name }) => {
   const displayName = GetWorkerDisplayName.getWorkerDisplayName(name)
@@ -51,7 +52,7 @@ export const create = async ({ url, name }) => {
       const handleFirstError = async (event) => {
         cleanup()
         if (IsFirefoxWorkerError.isFirefoxWorkerError(event.message)) {
-          event.preventDefault()
+          Event.preventDefault(event)
           reject(new ModuleWorkersAreNotSupportedInFirefoxError())
         } else {
           const actualErrorMessage = await tryToGetActualErrorMessage({

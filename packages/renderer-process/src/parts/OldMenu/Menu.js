@@ -9,7 +9,7 @@ import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
-
+import * as Event from '../Event/Event.js'
 // TODO when pressing tab -> focus next element in tab order and close menu
 
 // TODO menu and contextmenu should have own keybinding logic
@@ -58,7 +58,7 @@ const handleMouseDown = (event) => {
   if (index === -1) {
     return
   }
-  event.preventDefault()
+  Event.preventDefault(event)
   const level = getLevel($Menu)
   RendererWorker.send(/* Menu.handleClick */ 'Menu.selectIndex', /* level */ level, /* index */ index)
 }
@@ -175,13 +175,13 @@ export const focusIndex = (level, oldFocusedIndex, newFocusedIndex) => {
 // TODO replace function that recycles menu dom nodes
 
 const handleBackDropMouseDown = (event) => {
-  event.preventDefault()
-  event.stopPropagation()
+  Event.preventDefault(event)
+  Event.stopPropagation(event)
   RendererWorker.send(/* Menu.hide */ 'Menu.hide')
 }
 
 const handleContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
 }
 
 export const showMenu = (x, y, width, height, items, level, parentIndex = -1, mouseBlocking = false) => {
