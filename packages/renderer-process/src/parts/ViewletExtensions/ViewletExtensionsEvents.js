@@ -161,7 +161,7 @@ export const handleTouchStart = (event) => {
  * @param {TouchEvent} event
  */
 export const handleTouchEnd = (event) => {
-  const { changedTouches, timeStamp } = event
+  const { changedTouches } = event
   const changedTouchesArray = toArray(changedTouches)
-  ViewletExtensionsFunctions.handleTouchEnd(timeStamp, changedTouchesArray)
+  ViewletExtensionsFunctions.handleTouchEnd(changedTouchesArray)
 }

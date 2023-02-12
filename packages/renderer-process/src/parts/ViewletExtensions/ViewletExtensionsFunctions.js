@@ -49,8 +49,7 @@ export const handleTouchStart = (timeStamp, changedTouchesArray) => {
 
 /**
  *
- * @param {number} timeStamp
  */
-export const handleTouchEnd = (timeStamp, changedTouchesArray) => {
-  RendererWorker.send('Extensions.handleTouchEnd', timeStamp, changedTouchesArray)
+export const handleTouchEnd = (changedTouchesArray) => {
+  RendererWorker.send('Extensions.handleTouchEnd', changedTouchesArray)
 }
