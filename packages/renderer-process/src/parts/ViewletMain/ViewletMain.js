@@ -1,8 +1,8 @@
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as EditorGroup from '../EditorGroup/EditorGroup.js'
 import * as Label from '../Label/Label.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
-import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 
 const create$MainTabs = () => {
   const $MainTabs = document.createElement('div')
@@ -115,7 +115,8 @@ export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex, backgroun
     state.$Main.append(state.$MainTabs)
   }
 
-  state.$MainTabs.append($Tab)
+  const { $MainTabs } = state
+  $MainTabs.append($Tab)
 
   // await Viewlet.load(id)
   // const instance = Viewlet.state.instances[id]
@@ -136,11 +137,12 @@ export const appendViewlet = (state, childName, $Child) => {
     state.$MainContent = create$MainContent()
     state.$Main.append(state.$MainContent)
   }
+  const { $MainContent } = state
   // TODO should bring back old optimization of reusing existing editor dom nodes if possible
-  while (state.$MainContent.firstChild) {
-    state.$MainContent.firstChild.remove()
+  while ($MainContent.firstChild) {
+    $MainContent.firstChild.remove()
   }
-  state.$MainContent.append($Child)
+  $MainContent.append($Child)
 
   // await Viewlet.load(id)
   // const instance = Viewlet.state.instances[id]
@@ -166,22 +168,26 @@ export const openAnotherTab = async (state, tabLabel, tabTitle, unFocusIndex) =>
   $TabCloseButton.className = 'EditorTabCloseButton'
   $TabCloseButton.ariaLabel = 'Close'
   $Tab.append($TabLabel, $TabCloseButton)
-  state.$MainTabs.children[unFocusIndex].ariaSelected = AriaBoolean.False
-  state.$MainTabs.append($Tab)
+  const { $MainTabs } = state
+  $MainTabs.children[unFocusIndex].ariaSelected = AriaBoolean.False
+  $MainTabs.append($Tab)
 }
 
 export const closeOneTab = (state, closeIndex, focusIndex) => {
-  state.$MainTabs.children[closeIndex].remove()
-  state.$MainTabs.children[focusIndex].ariaSelected = AriaBoolean.True
+  const { $MainTabs } = state
+  $MainTabs.children[closeIndex].remove()
+  $MainTabs.children[focusIndex].ariaSelected = AriaBoolean.True
 }
 
 export const closeOneTabOnly = (state, closeIndex) => {
-  state.$MainTabs.children[closeIndex].remove()
+  const { $MainTabs } = state
+  $MainTabs.children[closeIndex].remove()
 }
 
 export const focusAnotherTab = (state, unFocusIndex, focusIndex) => {
-  state.$MainTabs.children[unFocusIndex].ariaSelected = AriaBoolean.False
-  state.$MainTabs.children[focusIndex].ariaSelected = AriaBoolean.True
+  const { $MainTabs } = state
+  $MainTabs.children[unFocusIndex].ariaSelected = AriaBoolean.False
+  $MainTabs.children[focusIndex].ariaSelected = AriaBoolean.True
 }
 
 export const closeOthers = (state, keepIndex, focusIndex) => {
