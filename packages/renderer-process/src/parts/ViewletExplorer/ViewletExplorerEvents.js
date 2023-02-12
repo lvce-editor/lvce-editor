@@ -1,3 +1,5 @@
+import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
+import * as DropEffectType from '../DropEffectType/DropEffectType.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as GetFileHandlesFromDataTransferItems from '../GetFileHandlesFromDataTransferItems/GetFileHandlesFromDataTransferItems.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
@@ -83,8 +85,8 @@ export const handleBlur = (event) => {
  * @param {DragEvent} event
  */
 export const handleDragOver = (event) => {
-  event.dataTransfer.effectAllowed = 'copyMove'
-  event.dataTransfer.dropEffect = 'copy'
+  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
+  event.dataTransfer.dropEffect = DropEffectType.Copy
   event.preventDefault()
   const { clientX, clientY } = event
   RendererWorker.send('Explorer.handleDragOver', clientX, clientY)
@@ -95,7 +97,7 @@ export const handleDragOver = (event) => {
  * @param {DragEvent} event
  */
 export const handleDragStart = (event) => {
-  event.dataTransfer.effectAllowed = 'copyMove'
+  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
   // event.dataTransfer.setData('DownloadURL', '/tmp/some-file.txt')
   // event.preventDefault()
   event.dataTransfer.setData('text/uri-list', 'https://example.com/foobar')

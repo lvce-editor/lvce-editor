@@ -3,6 +3,7 @@ import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as HandleContextMenu from '../HandleContextMenu/HandleContextMenu.js'
 
 /**
  * @param {PointerEvent} event
@@ -62,9 +63,7 @@ export const handleWheel = (event) => {
  * @param {MouseEvent} event
  */
 export const handleContextMenu = (event) => {
-  event.preventDefault()
-  const { clientX, clientY } = event
-  RendererWorker.send('EditorImage.handleContextMenu', clientX, clientY)
+  HandleContextMenu.handleContextMenu('EditorImage.handleContextMenu', event)
 }
 
 export const handleError = (event) => {
