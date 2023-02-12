@@ -3,6 +3,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as HandleContextMenu from '../HandleContextMenu/HandleContextMenu.js'
 import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ViewletActivityBarFunctions from './ViewletActivityBarFunctions.js'
 
 const get$ItemFromEvent = (event) => {
   const $Target = event.target
@@ -37,7 +38,7 @@ export const handleMousedown = (event) => {
   const index = getNodeIndex($Item)
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send(/* ActivityBar.handleClick */ 'ActivityBar.handleClick', /* index */ index, /* x */ x, /* y */ y)
+  ViewletActivityBarFunctions.handleClick(index, x, y)
 }
 
 export const handleContextMenu = (event) => {
@@ -46,9 +47,10 @@ export const handleContextMenu = (event) => {
 
 export const handleBlur = () => {
   RendererWorker.send('ActivityBar.handleBlur')
+  ViewletActivityBarFunctions.handleBlur()
 }
 
 export const handleFocus = (event) => {
   Focus.setFocus('activityBar')
-  RendererWorker.send('ActivityBar.focus')
+  ViewletActivityBarFunctions.handleFocus()
 }
