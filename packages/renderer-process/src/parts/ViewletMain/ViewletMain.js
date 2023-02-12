@@ -1,6 +1,7 @@
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as EditorGroup from '../EditorGroup/EditorGroup.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Tab from '../Tab/Tab.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
 
@@ -41,6 +42,7 @@ export const create = () => {
     $Main: $Viewlet,
     $MainContent: undefined,
     $MainTabs: undefined,
+    $DragOverlay: undefined,
   }
 }
 
@@ -212,4 +214,30 @@ export const highlightDragOver = (state) => {
 export const stopHighlightDragOver = (state) => {
   const { $MainTabs } = state
   $MainTabs.classList.remove('DragOver')
+}
+
+const create$DragOverlay = () => {
+  const $Overlay = document.createElement('div')
+  $Overlay.className = 'DragOverlay'
+  return $Overlay
+}
+
+export const showDragOverlay = (state, x, y, width, height) => {
+  const hasOverlay = state.$DragOverlay
+  if (!hasOverlay) {
+    state.$DragOverlay = create$DragOverlay()
+  }
+  const { $DragOverlay } = state
+  SetBounds.setBounds($DragOverlay, x, y, width, height)
+  if (!hasOverlay) {
+    document.body.append($DragOverlay)
+  }
+}
+
+export const hideDragOverlay = (state) => {
+  if (!state.$DragOverlay) {
+    return
+  }
+  state.$DragOverlay.remove()
+  state.$DragOverlay = undefined
 }
