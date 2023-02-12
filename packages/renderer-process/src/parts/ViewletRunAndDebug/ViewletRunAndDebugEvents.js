@@ -1,26 +1,25 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Focus from '../Focus/Focus.js'
+import * as ViewletRunAndDebugFunctions from './ViewletRunAndDebugFunctions.js'
 
+// TODO rename to resume
 const handleClickContinue = () => {
-  RendererWorker.send('Run And Debug.continue')
+  ViewletRunAndDebugFunctions.handleContinue()
 }
 
 const handleClickPause = (event) => {
-  console.log('pause debugger')
-  RendererWorker.send('Run And Debug.pause')
+  ViewletRunAndDebugFunctions.pause()
 }
 
 const handleClickStepOver = (event) => {
-  console.log('step over')
-  RendererWorker.send('Run And Debug.stepOver')
+  ViewletRunAndDebugFunctions.stepOver()
 }
 
 const handleClickStepInto = (event) => {
-  RendererWorker.send('Run And Debug.stepInto')
+  ViewletRunAndDebugFunctions.stepInto()
 }
 
 const handleClickStepOut = (event) => {
-  RendererWorker.send('Run And Debug.stepOut')
+  ViewletRunAndDebugFunctions.stepOut()
 }
 
 const handleClickDebugButton = (event, target) => {
@@ -48,19 +47,19 @@ const handleClickDebugButton = (event, target) => {
 }
 
 const handleClickSectionWatch = () => {
-  RendererWorker.send('Run And Debug.handleClickSectionWatch')
+  ViewletRunAndDebugFunctions.handleClickSectionWatch()
 }
 
 const handleClickSectionBreakpoints = () => {
-  RendererWorker.send('Run And Debug.handleClickSectionBreakPoints')
+  ViewletRunAndDebugFunctions.handleClickSectionBreakpoints()
 }
 
 const handleClickSectionScope = () => {
-  RendererWorker.send('Run And Debug.handleClickSectionScope')
+  ViewletRunAndDebugFunctions.handleClickSectionScope()
 }
 
 const handleClickSectionCallstack = () => {
-  RendererWorker.send('Run And Debug.handleClickSectionCallstack')
+  ViewletRunAndDebugFunctions.handleClickSectionCallstack()
 }
 
 const handleClickDebugSectionHeader = (event, target) => {
@@ -104,5 +103,5 @@ export const handleDebugInputFocus = () => {
 export const handleDebugInput = (event) => {
   const { target } = event
   const { value } = target
-  RendererWorker.send('Run And Debug.handleDebugInput', value)
+  ViewletRunAndDebugFunctions.handleDebugInput(value)
 }
