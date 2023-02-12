@@ -2,7 +2,7 @@ import * as DesktopType from '../DesktopType/DesktopType.js'
 import * as Platform from '../Platform/Platform.js'
 
 export const getDesktop = () => {
-  const { ORIGINAL_XDG_CURRENT_DESKTOP, XDG_CURRENT_DESKTOP } = env
+  const { ORIGINAL_XDG_CURRENT_DESKTOP, XDG_CURRENT_DESKTOP } = process.env
   if (ORIGINAL_XDG_CURRENT_DESKTOP && ORIGINAL_XDG_CURRENT_DESKTOP !== 'undefined') {
     if (ORIGINAL_XDG_CURRENT_DESKTOP === 'ubuntu:GNOME') {
       return DesktopType.Gnome
