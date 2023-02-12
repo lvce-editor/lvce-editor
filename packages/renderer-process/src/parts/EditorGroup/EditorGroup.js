@@ -2,16 +2,13 @@ import * as Editor from '../Editor/Editor.js'
 import * as EditorHelper from '../Editor/EditorHelper.js'
 import * as EditorTabs from '../EditorTab/EditorTab.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Event from '../Event/Event.js'
 
 const handleEditorTabsContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send(
-    /* editorTabsHandleContextMenu */ 'Main.handleTabContextMenu',
-    /* x */ x,
-    /* y */ y
-  )
+  RendererWorker.send(/* editorTabsHandleContextMenu */ 'Main.handleTabContextMenu', /* x */ x, /* y */ y)
 }
 
 export const create = () => {

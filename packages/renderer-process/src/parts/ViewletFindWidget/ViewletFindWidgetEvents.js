@@ -1,3 +1,4 @@
+import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as ViewletFindWidgetFunctions from './ViewletFindWidgetFunctions.js'
 
@@ -8,7 +9,7 @@ export const handleInput = (event) => {
 }
 
 const handleClickClose = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   ViewletFindWidgetFunctions.close()
 }
 

@@ -10,13 +10,14 @@ import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as Event from '../Event/Event.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
 // TODO tree shake out mobile support when targeting electron -> less code -> less event listeners -> less memory -> less cpu
 
 export const handleContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   const { clientX, clientY } = event
   RendererWorker.send(/* ContextMenu.show */ 'ContextMenu.show', /* x */ clientX, /* y */ clientY, /* id */ MenuEntryId.Editor)
 }
@@ -36,7 +37,7 @@ export const handleBlur = (event) => {
  * @param {InputEvent} event
  */
 export const handleBeforeInput = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   switch (event.inputType) {
     case InputEventType.InsertText:
       RendererWorker.send(/* Editor.type */ 'Editor.type', /* text */ event.data)
@@ -69,7 +70,7 @@ export const handleCompositionEnd = (event) => {
 }
 
 export const handleCut = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   RendererWorker.send(/* Editor.cut */ 'Editor.cut')
 }
 
@@ -113,7 +114,7 @@ export const handleMouseDown = (event) => {
   if (isRightClick(event)) {
     return
   }
-  event.preventDefault()
+  Event.preventDefault(event)
   const { clientX, clientY, detail } = event
   const modifier = GetModifierKey.getModifierKey(event)
   RendererWorker.send('Editor.handleMouseDown', /* motifier */ modifier, /* x */ clientX, /* y */ clientY, /* detail */ detail)
@@ -144,7 +145,7 @@ export const handleWheel = (event) => {
 }
 
 export const handlePaste = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   const { clipboardData } = event
   const text = clipboardData.getData(ClipBoardDataType.Text)
   RendererWorker.send(/* Editor.paste */ 'Editor.paste', /* text */ text)
@@ -190,8 +191,8 @@ export const handleScrollBarPointerDown = (event) => {
 }
 
 export const handleScrollBarContextMenu = (event) => {
-  event.preventDefault()
-  event.stopPropagation()
+  Event.preventDefault(event)
+  Event.stopPropagation(event)
 }
 
 const toSimpleTouch = (touch) => {
@@ -226,7 +227,7 @@ export const handleTouchMove = (event) => {
 
 export const handleTouchEnd = (event) => {
   if (event.cancelable) {
-    event.preventDefault()
+    Event.preventDefault(event)
   }
   const touchEvent = toSimpleTouchEvent(event)
   RendererWorker.send(/* EditorHandleTouchEnd.editorHandleTouchEnd */ 'Editor.handleTouchEnd', /* touchEvent */ touchEvent)

@@ -1,3 +1,4 @@
+import * as Event from '../Event/Event.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as ViewletEditorCompletionFunctions from './ViewletEditorCompletionFunctions.js'
 
@@ -17,7 +18,7 @@ const getIndex = ($Target) => {
 }
 
 export const handleMousedown = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   const $Target = event.target
   const index = getIndex($Target)
   if (index === -1) {

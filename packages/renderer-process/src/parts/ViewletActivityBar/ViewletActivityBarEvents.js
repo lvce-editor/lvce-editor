@@ -1,3 +1,4 @@
+import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as HandleContextMenu from '../HandleContextMenu/HandleContextMenu.js'
 import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
@@ -32,8 +33,8 @@ export const handleMousedown = (event) => {
   if (!$Item) {
     return
   }
-  event.preventDefault()
-  event.stopPropagation()
+  Event.preventDefault(event)
+  Event.stopPropagation(event)
   const index = getNodeIndex($Item)
   const x = event.clientX
   const y = event.clientY

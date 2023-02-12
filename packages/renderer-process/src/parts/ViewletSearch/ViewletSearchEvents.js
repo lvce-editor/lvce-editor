@@ -1,5 +1,6 @@
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
@@ -62,7 +63,7 @@ const handleContextMenuKeyboard = (event) => {
 }
 
 export const handleContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   switch (event.button) {
     case MouseEventType.Keyboard:
       return handleContextMenuKeyboard(event)

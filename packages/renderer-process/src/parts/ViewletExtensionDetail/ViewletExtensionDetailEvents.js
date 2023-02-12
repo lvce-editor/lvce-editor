@@ -1,3 +1,5 @@
+import * as Event from '../Event/Event.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletExtensionDetailFunctions from './ViewletExtensionDetailFunctions.js'
 
 export const handleIconError = (event) => {
@@ -13,7 +15,7 @@ const isImage = ($Element) => {
 }
 
 export const handleReadmeContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   const { clientX, clientY, target } = event
   const props = Object.create(null)
   if (isLink(target)) {

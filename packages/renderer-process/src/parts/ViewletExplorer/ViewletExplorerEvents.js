@@ -1,5 +1,6 @@
 import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
 import * as DropEffectType from '../DropEffectType/DropEffectType.js'
+import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as GetFileHandlesFromDataTransferItems from '../GetFileHandlesFromDataTransferItems/GetFileHandlesFromDataTransferItems.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
@@ -85,9 +86,9 @@ export const handleBlur = (event) => {
  * @param {DragEvent} event
  */
 export const handleDragOver = (event) => {
+  Event.preventDefault(event)
   event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
   event.dataTransfer.dropEffect = DropEffectType.Copy
-  event.preventDefault()
   const { clientX, clientY } = event
   RendererWorker.send('Explorer.handleDragOver', clientX, clientY)
   // state.element.classList.add('DropTarget')
@@ -110,8 +111,8 @@ export const handleDragStart = (event) => {
  * @param {DragEvent} event
  */
 export const handleDrop = async (event) => {
-  event.preventDefault()
-  event.stopPropagation()
+  Event.preventDefault(event)
+  Event.stopPropagation(event)
   const { files, dropEffect, items } = event.dataTransfer
   const { clientX, clientY } = event
   if (Platform.isElectron()) {

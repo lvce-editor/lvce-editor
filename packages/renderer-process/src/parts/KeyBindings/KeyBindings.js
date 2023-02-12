@@ -2,6 +2,7 @@ import * as Context from '../Context/Context.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Platform from '../Platform/Platform.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Event from '../Event/Event.js'
 
 const RE_ASCII = /[\p{ASCII}]+/u
 
@@ -100,10 +101,7 @@ const handleMatchingKeyBinding = (matchingKeyBinding) => {
   // TODO should args always be defined? (probably yes -> monomorphism & simpler code since all objects are the same)
 
   // TODO matchingKeyBinding.command should always be number
-  RendererWorker.send(
-    /* KeyBindings.handleKeyBinding */ 'KeyBindings.handleKeyBinding',
-    /* keyBinding */ matchingKeyBinding
-  )
+  RendererWorker.send(/* KeyBindings.handleKeyBinding */ 'KeyBindings.handleKeyBinding', /* keyBinding */ matchingKeyBinding)
 }
 
 const handleKeyDown = (event) => {
@@ -112,7 +110,7 @@ const handleKeyDown = (event) => {
   if (!matchingKeyBinding) {
     return
   }
-  event.preventDefault()
+  Event.preventDefault(event)
   handleMatchingKeyBinding(matchingKeyBinding)
 }
 
