@@ -1,7 +1,7 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
-export const handleDragOver = () => {
-  RendererWorker.send('Main.handleDragOver')
+export const handleDragOver = (x, y) => {
+  RendererWorker.send('Main.handleDragOver', x, y)
 }
 
 export const handleDrop = (files) => {
