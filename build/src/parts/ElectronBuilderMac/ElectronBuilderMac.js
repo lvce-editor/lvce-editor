@@ -1,6 +1,7 @@
 import * as ElectronBuilder from '../ElectronBuilder/ElectronBuilder.js'
-import * as Process from '../Process/Process.js'
+import * as ElectronBuilderConfigType from '../ElectronBuilderConfigType/ElectronBuilderConfigType.js'
 import * as Logger from '../Logger/Logger.js'
+import * as Process from '../Process/Process.js'
 
 export const build = async ({ product }) => {
   if (Process.platform === 'linux') {
@@ -12,7 +13,7 @@ export const build = async ({ product }) => {
     Process.exit(1)
   }
   await ElectronBuilder.build({
-    config: 'electron_builder_mac',
+    config: ElectronBuilderConfigType.Mac,
     product,
   })
 }

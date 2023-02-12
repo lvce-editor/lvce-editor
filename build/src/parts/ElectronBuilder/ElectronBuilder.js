@@ -11,6 +11,7 @@ import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
+import * as ElectronBuilderConfigType from '../ElectronBuilderConfigType/ElectronBuilderConfigType.js'
 
 // TODO don't need to include whole node-pty module
 // TODO maybe don't need to include nan module
@@ -73,7 +74,7 @@ const copyBuildResources = async ({ config }) => {
     from: `build/files/icon.png`,
     to: 'build/.tmp/electron-builder/build/icons/512x512.png',
   })
-  if (config === 'electron_builder_windows_exe') {
+  if (config === ElectronBuilderConfigType.WindowsExe) {
     await Copy.copyFile({
       from: `build/files/windows/installer.nsh`,
       to: `build/.tmp/electron-builder/build/installer.nsh`,
@@ -87,15 +88,15 @@ const copyBuildResources = async ({ config }) => {
 
 const getFinalFileName = ({ config, version, product }) => {
   switch (config) {
-    case 'electron_builder_arch_linux':
+    case ElectronBuilderConfigType.ArchLinux:
       return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.pacman`
-    case 'electron_builder_deb':
+    case ElectronBuilderConfigType.Deb:
       return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.deb`
-    case 'electron_builder_windows_exe':
+    case ElectronBuilderConfigType.WindowsExe:
       return `build/.tmp/electron-builder/dist/${product.applicationName} Setup ${version}.exe`
-    case 'electron_builder_snap':
+    case ElectronBuilderConfigType.Snap:
       return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.snap`
-    case 'electron_builder_mac':
+    case ElectronBuilderConfigType.Mac:
       return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.dmg`
     default:
       throw new Error(`cannot get final file name for target ${config}`)
@@ -104,15 +105,15 @@ const getFinalFileName = ({ config, version, product }) => {
 
 const getReleaseFileName = ({ config, product }) => {
   switch (config) {
-    case 'electron_builder_arch_linux':
+    case ElectronBuilderConfigType.ArchLinux:
       return `${product.applicationName}.pacman`
-    case 'electron_builder_deb':
+    case ElectronBuilderConfigType.Deb:
       return `${product.applicationName}-amd64.deb`
-    case 'electron_builder_windows_exe':
+    case ElectronBuilderConfigType.WindowsExe:
       return `${product.applicationName}.exe`
-    case 'electron_builder_snap':
+    case ElectronBuilderConfigType.Snap:
       return `${product.applicationName}.snap`
-    case 'electron_builder_mac':
+    case ElectronBuilderConfigType.Mac:
       return `${product.applicationName}-amd64.dmg`
     default:
       throw new Error(`cannot get final file name for target ${config}`)
@@ -153,14 +154,14 @@ const copyElectronResult = async ({ config, version, product }) => {
     version,
     product,
   })
-  if (config === 'electron_builder_arch_linux') {
+  if (config === ElectronBuilderConfigType.ArchLinux) {
     await Replace.replace({
       path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
       occurrence: `exports.isArchLinux = false`,
       replacement: `exports.isArchLinux = true`,
     })
   }
-  if (config === 'electron_builder_windows_exe') {
+  if (config === ElectronBuilderConfigType.WindowsExe) {
     await Copy.copyFile({
       from: `build/files/windows/cli.cmd`,
       to: `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}.cmd`,
