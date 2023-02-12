@@ -1,10 +1,10 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Focus from '../Focus/Focus.js'
+import * as ViewletSimpleBrowserFunctions from './ViewletSimpleBrowserFunctions.js'
 
 export const handleInput = (event) => {
   const { target } = event
   const { value } = target
-  RendererWorker.send('SimpleBrowser.handleInput', value)
+  ViewletSimpleBrowserFunctions.handleInput(value)
 }
 
 export const handleFocus = (event) => {
@@ -21,23 +21,23 @@ export const handleBlur = (event) => {
 }
 
 export const handleClickForward = () => {
-  RendererWorker.send('SimpleBrowser.forward')
+  ViewletSimpleBrowserFunctions.forward()
 }
 
 export const handleClickBackward = () => {
-  RendererWorker.send('SimpleBrowser.backward')
+  ViewletSimpleBrowserFunctions.backward()
 }
 
 export const handleClickReload = (event) => {
   const { target } = event
   // TODO maybe set data attribute to check if it is a cancel button
   if (target.title === 'Cancel') {
-    RendererWorker.send('SimpleBrowser.cancelNavigation')
+    ViewletSimpleBrowserFunctions.cancelNavigation()
   } else {
-    RendererWorker.send('SimpleBrowser.reload')
+    ViewletSimpleBrowserFunctions.reload()
   }
 }
 
 export const handleClickOpenExternal = () => {
-  RendererWorker.send('SimpleBrowser.openExternal')
+  ViewletSimpleBrowserFunctions.openExternal()
 }
