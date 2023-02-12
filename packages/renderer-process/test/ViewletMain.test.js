@@ -162,3 +162,24 @@ test('accessibility - viewlet should have a role of main', () => {
   // @ts-ignore
   expect($Viewlet.role).toBe('main')
 })
+
+test('closeTabsLeft - highlightDragOver', () => {
+  const state = Main.create()
+  const $Tab1 = document.createElement('div')
+  const $Tabs = document.createElement('div')
+  $Tabs.append($Tab1)
+  state.$MainTabs = $Tabs
+  Main.highlightDragOver(state)
+  expect($Tabs.classList.contains('DragOver')).toBe(true)
+})
+
+test('closeTabsLeft - stopHighlightDragOver', () => {
+  const state = Main.create()
+  const $Tab1 = document.createElement('div')
+  const $Tabs = document.createElement('div')
+  $Tabs.className = 'MainTabs DragOver'
+  $Tabs.append($Tab1)
+  state.$MainTabs = $Tabs
+  Main.highlightDragOver(state)
+  expect($Tabs.classList.contains('DragOver')).toBe(false)
+})

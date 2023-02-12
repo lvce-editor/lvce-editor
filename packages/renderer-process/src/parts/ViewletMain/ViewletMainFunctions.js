@@ -1,7 +1,11 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
-export const handleDrop = () => {
-  RendererWorker.send('Main.handleDrop')
+export const handleDragOver = () => {
+  RendererWorker.send('Main.handleDragOver')
+}
+
+export const handleDrop = (files) => {
+  RendererWorker.send('Main.handleDrop', files)
 }
 
 export const closeEditor = (index) => {

@@ -6,9 +6,7 @@
   width: 100%;
   margin: 0;
   padding: 0;
-  background: var(
-    --TabsBackground
-  ); /* TODO variable name should match class name */
+  background: var(--TabsBackground); /* TODO variable name should match class name */
   /* TODO investigate perf */
   /* contain: children; */
 }
@@ -115,6 +113,9 @@
 
 .EditorTabStatus[data-status='2'] /* modified */ {
   background: white;
-  -webkit-mask: url(/packages/renderer-process/assets/icons/circle-filled.svg)
-    100% 50% / 15px no-repeat;
+  -webkit-mask: url(/packages/renderer-process/assets/icons/circle-filled.svg) 100% 50% / 15px no-repeat;
+}
+
+.DragOver {
+  background-color: rgba(83, 89, 93, 0.5);
 }

@@ -21,6 +21,27 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/Css/Css.js', () => {
+  return {
+    loadCssStyleSheet: jest.fn(() => {}),
+    loadCssStyleSheets: jest.fn(() => {}),
+    addDynamicCss: jest.fn(() => {}),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ViewletEditorText/ViewletEditorText.js', () => {
+  return {
+    create() {
+      return {}
+    },
+    loadContent(state) {
+      return state
+    },
+    hasFunctionalRender: true,
+    render: [],
+  }
+})
+
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
@@ -1956,4 +1977,51 @@ test.skip('resize', () => {
     y: 200,
     width: 200,
   })
+})
+
+test('handleDrop - one file', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  const state = {
+    ...ViewletMain.create(),
+    editors: [
+      {
+        uri: '/test/file-1.txt',
+      },
+    ],
+    activeIndex: 0,
+    focusedIndex: 2,
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+  }
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
+    },
+    state: {},
+  })
+  const fileList = [
+    {
+      path: '/test/dropped-file.txt',
+    },
+  ]
+  await ViewletMain.handleDrop(state, fileList)
+  expect(state.editors).toEqual([
+    {
+      uri: '/test/file-1.txt',
+    },
+    {
+      uri: undefined,
+    },
+  ])
+  expect(RendererProcess.invoke).toHaveReturnedTimes(6)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', 'Main', 'openViewlet', 'dropped-file.txt', '/test/dropped-file.txt', 0)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', 'EditorText')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, 'Viewlet.loadModule', 'EditorText')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(4, 'Viewlet.sendMultiple', [['Viewlet.create', 'EditorText']])
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(5, 'Viewlet.appendViewlet', 'Main', 'EditorText', true)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(6, 'Viewlet.send', 'Main', 'stopHighlightDragOver')
 })

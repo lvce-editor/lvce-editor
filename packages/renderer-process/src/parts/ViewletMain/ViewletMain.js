@@ -11,6 +11,7 @@ const create$MainTabs = () => {
   $MainTabs.role = AriaRoles.TabList
   $MainTabs.onmousedown = ViewletMainEvents.handleTabsMouseDown
   $MainTabs.oncontextmenu = ViewletMainEvents.handleTabsContextMenu
+  $MainTabs.ondragstart = ViewletMainEvents.handleDragStart
   // TODO race condition: what if tab has already been closed?
   return $MainTabs
 }
@@ -201,4 +202,14 @@ export const updateTab = (state, index, text) => {
   const $TabLabel = $Tab.firstChild
   $Tab.title = text
   $TabLabel.textContent = text
+}
+
+export const highlightDragOver = (state) => {
+  const { $MainTabs } = state
+  $MainTabs.classList.add('DragOver')
+}
+
+export const stopHighlightDragOver = (state) => {
+  const { $MainTabs } = state
+  $MainTabs.classList.remove('DragOver')
 }
