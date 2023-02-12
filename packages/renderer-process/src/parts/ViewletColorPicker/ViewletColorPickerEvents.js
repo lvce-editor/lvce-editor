@@ -1,5 +1,5 @@
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ViewletColorPickerFunctions from './ViewletColorPickerFunctions.js'
 
 export const handleSliderPointerCaptureLost = (event) => {
   const { target } = event
@@ -9,7 +9,7 @@ export const handleSliderPointerCaptureLost = (event) => {
 
 export const handleSliderPointerMove = (event) => {
   const { clientX, clientY } = event
-  RendererWorker.send('ColorPicker.handleSliderPointerMove', /* x */ clientX, /* y */ clientY)
+  ViewletColorPickerFunctions.handleSliderPointerMove(clientX, clientY)
 }
 
 export const handleSliderPointerDown = (event) => {
@@ -17,5 +17,5 @@ export const handleSliderPointerDown = (event) => {
   target.setPointerCapture(pointerId)
   target.addEventListener(DomEventType.PointerMove, handleSliderPointerMove)
   target.addEventListener(DomEventType.LostPointerCapture, handleSliderPointerCaptureLost)
-  RendererWorker.send('ColorPicker.handleSliderPointerDown', /* x */ clientX, /* y */ clientY)
+  ViewletColorPickerFunctions.handleSliderPointerDown(clientX, clientY)
 }
