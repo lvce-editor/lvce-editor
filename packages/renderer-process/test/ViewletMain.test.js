@@ -180,6 +180,6 @@ test('closeTabsLeft - stopHighlightDragOver', () => {
   $Tabs.className = 'MainTabs DragOver'
   $Tabs.append($Tab1)
   state.$MainTabs = $Tabs
-  Main.highlightDragOver(state)
+  Main.stopHighlightDragOver(state)
   expect($Tabs.classList.contains('DragOver')).toBe(false)
 })
