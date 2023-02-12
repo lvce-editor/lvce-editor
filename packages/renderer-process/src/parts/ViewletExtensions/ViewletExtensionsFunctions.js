@@ -29,14 +29,28 @@ export const handleInput = (value) => {
   RendererWorker.send('Extensions.handleInput', value)
 }
 
+/**
+ *
+ * @param {number} timeStamp
+ * @param {*} changedTouchesArray
+ */
 export const handleTouchMove = (timeStamp, changedTouchesArray) => {
   RendererWorker.send('Extensions.handleTouchMove', timeStamp, changedTouchesArray)
 }
 
+/**
+ *
+ * @param {number} timeStamp
+ * @param {*} changedTouchesArray
+ */
 export const handleTouchStart = (timeStamp, changedTouchesArray) => {
   RendererWorker.send('Extensions.handleTouchStart', timeStamp, changedTouchesArray)
 }
 
+/**
+ *
+ * @param {number} timeStamp
+ */
 export const handleTouchEnd = (timeStamp, changedTouchesArray) => {
   RendererWorker.send('Extensions.handleTouchEnd', timeStamp, changedTouchesArray)
 }
