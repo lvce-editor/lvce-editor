@@ -1,6 +1,6 @@
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Event from '../Event/Event.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as ViewletMainFunctions from './ViewletMainFunctions.js'
 
 const ClassNames = {
   Label: 'Label',
@@ -14,7 +14,7 @@ export const handleDragOver = (event) => {
 
 export const handleDrop = (event) => {
   Event.preventDefault(event)
-  RendererWorker.send(/* handleDrop */ 'Main.handleDrop')
+  ViewletMainFunctions.handleDrop()
 }
 
 const getNodeIndex = ($Node) => {
@@ -38,17 +38,17 @@ const getIndex = ($Target) => {
 }
 
 export const handleTabCloseButtonMouseDown = (event, index) => {
-  RendererWorker.send(/* Main.closeEditor */ 'Main.closeEditor', /* index */ index)
+  ViewletMainFunctions.closeEditor(index)
 }
 
 export const handleTabMouseDown = (event, index) => {
   const { button } = event
   switch (button) {
     case MouseEventType.LeftClick:
-      RendererWorker.send(/* Main.handleTabClick */ 'Main.handleTabClick', /* index */ index)
+      ViewletMainFunctions.handleTabClick(index)
       break
     case MouseEventType.MiddleClick:
-      RendererWorker.send(/* Main.closeEditor */ 'Main.closeEditor', /* index */ index)
+      ViewletMainFunctions.closeEditor(index)
       break
     case MouseEventType.RightClick:
       break
@@ -84,5 +84,5 @@ export const handleTabsContextMenu = (event) => {
     return
   }
   Event.preventDefault(event)
-  RendererWorker.send(/* Main.handleTabContextMenu */ 'Main.handleTabContextMenu', /* index */ index, /* x */ clientX, /* y */ clientY)
+  ViewletMainFunctions.handleTabContextMenu(index, clientX, clientY)
 }
