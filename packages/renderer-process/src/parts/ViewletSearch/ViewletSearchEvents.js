@@ -2,13 +2,13 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as ViewletSearchFunctions from './ViewletSearchFunctions.js'
 
 export const handleInput = (event) => {
   const { target } = event
   const { value } = target
-  RendererWorker.send(/* ViewletSearch.handleInput */ 'Search.handleInput', /* value */ value)
+  ViewletSearchFunctions.handleInput(value)
 }
 
 export const handleFocus = (event) => {
@@ -48,17 +48,17 @@ export const handleClick = (event) => {
     return
   }
   const index = getIndex(target)
-  RendererWorker.send(/* Search.handleClick */ 'Search.handleClick', /* index */ index)
+  ViewletSearchFunctions.handleClick(index)
 }
 
 const handleContextMenuMouse = (event) => {
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send(/* Search.handleContextMenuMouseAt */ 'Search.handleContextMenuMouseAt', /* x */ x, /* y */ y)
+  ViewletSearchFunctions.handleContextMenuMouseAt(x, y)
 }
 
 const handleContextMenuKeyboard = (event) => {
-  RendererWorker.send(/* Search.handleContextMenuKeyboard */ 'Search.handleContextMenuKeyboard')
+  ViewletSearchFunctions.handleContextMenuKeyBoard()
 }
 
 export const handleContextMenu = (event) => {
@@ -73,7 +73,7 @@ export const handleContextMenu = (event) => {
 
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
-  RendererWorker.send(/* Search.handleScrollBarMouseMove */ 'Search.handleScrollBarMove', /* y */ clientY)
+  ViewletSearchFunctions.handleScrollBarMove(clientY)
 }
 
 export const handleScrollBarPointerUp = (event) => {
@@ -88,16 +88,15 @@ export const handleScrollBarPointerDown = (event) => {
   target.setPointerCapture(pointerId)
   target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, DomEventOptions.Active)
   target.addEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
-  RendererWorker.send(/* Search.handleScrollBarPointerDown */ 'Search.handleScrollBarClick', /* y */ clientY)
+  ViewletSearchFunctions.handleScrollBarClick(clientY)
 }
 
 export const handleWheel = (event) => {
-  switch (event.deltaMode) {
+  const { deltaMode, deltaY } = event
+  switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(/* ViewletSearch.handleWheel */ 'Search.handleWheel', /* deltaY */ event.deltaY)
-      break
     case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(/* ViewletSearch.handleWheel */ 'Search.handleWheel', /* deltaY */ event.deltaY)
+      ViewletSearchFunctions.handleWheel(deltaY)
       break
     default:
       break
