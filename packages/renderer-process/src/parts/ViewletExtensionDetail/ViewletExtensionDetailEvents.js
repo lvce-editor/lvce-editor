@@ -1,7 +1,7 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ViewletExtensionDetailFunctions from './ViewletExtensionDetailFunctions.js'
 
 export const handleIconError = (event) => {
-  RendererWorker.send('ExtensionDetail.handleIconError')
+  ViewletExtensionDetailFunctions.handleIconError()
 }
 
 const isLink = ($Element) => {
@@ -23,10 +23,5 @@ export const handleReadmeContextMenu = (event) => {
     props.isImage = true
     props.url = target.src
   }
-  RendererWorker.send(
-    'ExtensionDetail.handleReadmeContextMenu',
-    clientX,
-    clientY,
-    props
-  )
+  ViewletExtensionDetailFunctions.handleReadmeContextMenu(clientX, clientY, props)
 }
