@@ -124,5 +124,5 @@ test('event - dragover', () => {
   $MainTabs.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Main.handleDragOver')
+  expect(RendererWorker.send).toHaveBeenCalledWith('Main.handleDragOver', 0, 0)
 })
