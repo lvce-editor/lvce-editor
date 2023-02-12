@@ -1,5 +1,5 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as ViewletDiffEditorFunctions from './ViewletDiffEditorFunctions.js'
 
 /**
  * @param {WheelEvent} event
@@ -11,16 +11,7 @@ export const handleWheel = (event) => {
   // TODO send editor id
   switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(
-        /* DiffEditor.handleWheel */ 'DiffEditor.handleWheel',
-        /* value */ deltaY
-      )
-      break
-    case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(
-        /* DiffEditor.handleWheel */ 'DiffEditor.handleWheel',
-        /* value */ deltaY
-      )
+      ViewletDiffEditorFunctions.handleWheel(deltaY)
       break
     default:
       break
