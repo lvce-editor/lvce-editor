@@ -1,10 +1,12 @@
+import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
+import * as DropEffectType from '../DropEffectType/DropEffectType.js'
+import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as GetFileHandlesFromDataTransferItems from '../GetFileHandlesFromDataTransferItems/GetFileHandlesFromDataTransferItems.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
-import * as Event from '../Event/Event.js'
 
 // TODO put drop into separate module and use executeCommand to call it
 
@@ -84,9 +86,9 @@ export const handleBlur = (event) => {
  * @param {DragEvent} event
  */
 export const handleDragOver = (event) => {
-  event.dataTransfer.effectAllowed = 'copyMove'
-  event.dataTransfer.dropEffect = 'copy'
   Event.preventDefault(event)
+  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
+  event.dataTransfer.dropEffect = DropEffectType.Copy
   const { clientX, clientY } = event
   RendererWorker.send('Explorer.handleDragOver', clientX, clientY)
   // state.element.classList.add('DropTarget')
@@ -96,7 +98,7 @@ export const handleDragOver = (event) => {
  * @param {DragEvent} event
  */
 export const handleDragStart = (event) => {
-  event.dataTransfer.effectAllowed = 'copyMove'
+  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
   // event.dataTransfer.setData('DownloadURL', '/tmp/some-file.txt')
   // event.preventDefault()
   event.dataTransfer.setData('text/uri-list', 'https://example.com/foobar')

@@ -1,5 +1,6 @@
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
+import * as HandleContextMenu from '../HandleContextMenu/HandleContextMenu.js'
 import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
@@ -40,11 +41,7 @@ export const handleMousedown = (event) => {
 }
 
 export const handleContextMenu = (event) => {
-  Event.preventDefault(event)
-  // TODO also move side bar position command
-  const x = event.clientX
-  const y = event.clientY
-  RendererWorker.send(/* activityBarHandleContextMenu */ 'ActivityBar.handleContextMenu', /* x */ x, /* y */ y)
+  HandleContextMenu.handleContextMenu('ActivityBar.handleContextMenu', event)
 }
 
 export const handleBlur = () => {

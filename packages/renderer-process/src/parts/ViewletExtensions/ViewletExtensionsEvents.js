@@ -1,11 +1,12 @@
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
+import * as HandleContextMenu from '../HandleContextMenu/HandleContextMenu.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
-import * as Event from '../Event/Event.js'
 
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
@@ -75,8 +76,7 @@ export const handlePointerDown = (event) => {
 }
 
 const handleContextMenuMouse = (event) => {
-  const { clientX, clientY } = event
-  RendererWorker.send(/* Extensions.handleContextMenu */ 'Extensions.handleContextMenu', /* x */ clientX, /* y */ clientY)
+  HandleContextMenu.handleContextMenu('Extensions.handleContextMenu', event)
 }
 
 const handleContextMenuKeyboard = (event) => {}
