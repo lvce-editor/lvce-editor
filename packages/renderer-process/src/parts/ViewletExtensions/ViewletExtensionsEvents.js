@@ -1,11 +1,12 @@
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
+import * as HandleContextMenu from '../HandleContextMenu/HandleContextMenu.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
-import * as HandleContextMenu from '../HandleContextMenu/HandleContextMenu.js'
+import * as ViewletExtensionsFunctions from './ViewletExtensionsFunctions.js'
 
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
@@ -22,7 +23,7 @@ export const handleScrollBarPointerDown = (event) => {
   target.setPointerCapture(pointerId)
   target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, DomEventOptions.Active)
   target.addEventListener(DomEventType.LostPointerCapture, handlePointerCaptureLost)
-  RendererWorker.send(/* Extensions.handleScrollBarPointerDown */ 'Extensions.handleScrollBarClick', /* y */ clientY)
+  ViewletExtensionsFunctions.handleScrollBarClick(clientY)
 }
 
 export const handleFocus = (event) => {
@@ -39,17 +40,17 @@ const getNodeIndex = ($Node) => {
 
 const handlePointerDownExtension = ($Target) => {
   const index = getNodeIndex($Target)
-  RendererWorker.send(/* Extensions.handleClick */ 'Extensions.handleClick', /* index */ index)
+  ViewletExtensionsFunctions.handleClick(index)
 }
 
 const handlePointerDownExtensionDetail = ($Target) => {
   const index = getNodeIndex($Target.parentNode.parentNode)
-  RendererWorker.send(/* Extensions.handleClick */ 'Extensions.handleClick', /* index */ index)
+  ViewletExtensionsFunctions.handleClick(index)
 }
 
 const handlePointerDownExtensionAuthorName = ($Target) => {
   const index = getNodeIndex($Target.parentNode.parentNode.parentNode)
-  RendererWorker.send(/* Extensions.handleClick */ 'Extensions.handleClick', /* index */ index)
+  ViewletExtensionsFunctions.handleClick(index)
 }
 
 export const handlePointerDown = (event) => {
@@ -91,12 +92,11 @@ export const handleContextMenu = (event) => {
 }
 
 export const handleWheel = (event) => {
-  switch (event.deltaMode) {
+  const { deltaMode, deltaY } = event
+  switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(/* ViewletExtensions.handleWheel */ 'Extensions.handleWheel', /* deltaY */ event.deltaY)
-      break
     case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(/* ViewletExtensions.handleWheel */ 'Extensions.handleWheel', /* deltaY */ event.deltaY)
+      ViewletExtensionsFunctions.handleWheel(deltaY)
       break
     default:
       break
@@ -106,7 +106,7 @@ export const handleWheel = (event) => {
 export const handleInput = (event) => {
   const $Target = event.target
   const value = $Target.value
-  RendererWorker.send(/* ViewletExtensions.handleInput */ 'Extensions.handleInput', /* value */ value)
+  ViewletExtensionsFunctions.handleInput(value)
   // TODO
   // TODO use beforeinput event to set value and extension list items at the same time
   // state.$Viewlet.ariaBusy = 'true'
@@ -145,7 +145,7 @@ const toArray = (touchList) => {
 export const handleTouchMove = (event) => {
   const { changedTouches, timeStamp } = event
   const changedTouchesArray = toArray(changedTouches)
-  RendererWorker.send('Extensions.handleTouchMove', timeStamp, changedTouchesArray)
+  ViewletExtensionsFunctions.handleTouchMove(timeStamp, changedTouchesArray)
 }
 
 /**
@@ -154,7 +154,7 @@ export const handleTouchMove = (event) => {
 export const handleTouchStart = (event) => {
   const { changedTouches, timeStamp } = event
   const changedTouchesArray = toArray(changedTouches)
-  RendererWorker.send('Extensions.handleTouchStart', timeStamp, changedTouchesArray)
+  ViewletExtensionsFunctions.handleTouchStart(timeStamp, changedTouchesArray)
 }
 
 /**
@@ -163,5 +163,5 @@ export const handleTouchStart = (event) => {
 export const handleTouchEnd = (event) => {
   const { changedTouches } = event
   const changedTouchesArray = toArray(changedTouches)
-  RendererWorker.send('Extensions.handleTouchEnd', changedTouchesArray)
+  ViewletExtensionsFunctions.handleTouchEnd(changedTouchesArray)
 }
