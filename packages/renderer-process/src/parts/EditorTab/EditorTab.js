@@ -3,6 +3,7 @@ import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
+import * as Event from '../Event/Event.js'
 
 // TODO windows
 const getFileName = (uri) => {
@@ -10,10 +11,9 @@ const getFileName = (uri) => {
 }
 
 const handleEditorTabsContextMenu = (event) => {
-  event.preventDefault()
-  const x = event.clientX
-  const y = event.clientY
-  RendererWorker.send(/* editorTabsHandleContextMenu */ 'Main.handleTabContextMenu', /* x */ x, /* y */ y)
+  Event.preventDefault(event)
+  const { clientX, clientY } = event
+  RendererWorker.send(/* editorTabsHandleContextMenu */ 'Main.handleTabContextMenu', /* x */ clientX, /* y */ clientY)
 }
 
 /**

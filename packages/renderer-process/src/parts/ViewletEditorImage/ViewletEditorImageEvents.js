@@ -1,9 +1,9 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as HandleContextMenu from '../HandleContextMenu/HandleContextMenu.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 /**
  * @param {PointerEvent} event

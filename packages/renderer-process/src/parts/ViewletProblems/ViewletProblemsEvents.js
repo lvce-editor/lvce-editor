@@ -1,6 +1,7 @@
+import * as Event from '../Event/Event.js'
 import * as ViewletProblemsFunctions from './ViewletProblemsFunctions.js'
 
 export const handlePointerDown = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   ViewletProblemsFunctions.focusIndex(-1)
 }

@@ -4,9 +4,10 @@ import * as Module from './parts/Module/Module.js'
 import * as Platform from './parts/Platform/Platform.js'
 import * as PlatformType from './parts/PlatformType/PlatformType.js'
 import * as RendererWorker from './parts/RendererWorker/RendererWorker.js'
+import * as Event from './parts/Event/Event.js'
 
 const handleBeforeInstallPrompt = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
 }
 
 const main = async () => {

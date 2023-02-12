@@ -1,5 +1,7 @@
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletMainFunctions from './ViewletMainFunctions.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Event from '../Event/Event.js'
 
 const ClassNames = {
   Label: 'Label',
@@ -8,11 +10,11 @@ const ClassNames = {
 }
 
 export const handleDragOver = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
 }
 
 export const handleDrop = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   ViewletMainFunctions.handleDrop()
 }
 
@@ -62,7 +64,7 @@ export const handleTabsMouseDown = (event) => {
   if (index === -1) {
     return
   }
-  event.preventDefault()
+  Event.preventDefault(event)
   switch (target.className) {
     case ClassNames.EditorTabCloseButton:
       handleTabCloseButtonMouseDown(event, index)
@@ -82,6 +84,6 @@ export const handleTabsContextMenu = (event) => {
   if (index === -1) {
     return
   }
-  event.preventDefault()
+  Event.preventDefault(event)
   ViewletMainFunctions.handleTabContextMenu(index, clientX, clientY)
 }

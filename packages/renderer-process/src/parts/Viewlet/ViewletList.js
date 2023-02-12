@@ -3,6 +3,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
@@ -22,7 +23,7 @@ const handleWheel = (event) => {
 }
 
 const handleContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   const $Target = event.target
   // const index = FindIndex.findIndex(state.$Extensions, $Target)
   // if (index === -1) {
