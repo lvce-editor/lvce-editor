@@ -1,7 +1,6 @@
+import * as Event from '../Event/Event.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletMainFunctions from './ViewletMainFunctions.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Event from '../Event/Event.js'
 
 const ClassNames = {
   Label: 'Label',
