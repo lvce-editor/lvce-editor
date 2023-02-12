@@ -17,7 +17,7 @@ const getBuildModule = (target) => {
     case 'remote':
       return import('./parts/Remote/Remote.js')
     case 'electron-deb':
-      return import('./parts/Deb/Deb.js')
+      return import('./parts/BuildDeb/BuildDeb.js')
     case 'electron-snap':
       return import('./parts/Snap/Snap.js')
     case 'electron-rpm':
