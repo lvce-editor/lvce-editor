@@ -98,6 +98,8 @@ const getFinalFileName = ({ config, version, product }) => {
       return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.snap`
     case ElectronBuilderConfigType.Mac:
       return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.dmg`
+    case ElectronBuilderConfigType.AppImage:
+      return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.AppImage`
     default:
       throw new Error(`cannot get final file name for target ${config}`)
   }
@@ -115,6 +117,8 @@ const getReleaseFileName = ({ config, product }) => {
       return `${product.applicationName}.snap`
     case ElectronBuilderConfigType.Mac:
       return `${product.applicationName}-amd64.dmg`
+    case ElectronBuilderConfigType.AppImage:
+      return `${product.applicationName}.AppImage`
     default:
       throw new Error(`cannot get final file name for target ${config}`)
   }

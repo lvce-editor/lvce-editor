@@ -1,5 +1,6 @@
+export const AppImage = 'electron_builder_app_image'
 export const ArchLinux = 'electron_builder_arch_linux'
 export const Deb = 'electron_builder_deb'
-export const WindowsExe = 'electron_builder_windows_exe'
-export const Snap = 'electron_builder_snap'
 export const Mac = 'electron_builder_mac'
+export const Snap = 'electron_builder_snap'
+export const WindowsExe = 'electron_builder_windows_exe'
