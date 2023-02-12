@@ -1,25 +1,25 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Focus from '../Focus/Focus.js'
+import * as ViewletFindWidgetFunctions from './ViewletFindWidgetFunctions.js'
 
 export const handleInput = (event) => {
   const { target } = event
   const { value } = target
-  RendererWorker.send('FindWidget.handleInput', value)
+  ViewletFindWidgetFunctions.handleInput(value)
 }
 
 const handleClickClose = (event) => {
   event.preventDefault()
-  RendererWorker.send('Viewlet.closeWidget', 'FindWidget')
+  ViewletFindWidgetFunctions.close()
 }
 
 const handleClickPreviousMatch = (event) => {
   event.preventDefault()
-  RendererWorker.send('FindWidget.focusPrevious')
+  ViewletFindWidgetFunctions.focusPrevious()
 }
 
 const handleClickNextMatch = (event) => {
   event.preventDefault()
-  RendererWorker.send('FindWidget.focusNext')
+  ViewletFindWidgetFunctions.focusNext()
 }
 
 export const handleClick = (event) => {
