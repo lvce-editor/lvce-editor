@@ -1,8 +1,8 @@
-import * as Platform from '../Platform/Platform.js'
+import * as Desktop from '../Desktop/Desktop.js'
 import * as DesktopType from '../DesktopType/DesktopType.js'
 
 const getClipboard = () => {
-  const desktop = Platform.getDesktop()
+  const desktop = Desktop.getDesktop()
   switch (desktop) {
     case DesktopType.Gnome:
       return import('./ClipBoardGnome.js')
