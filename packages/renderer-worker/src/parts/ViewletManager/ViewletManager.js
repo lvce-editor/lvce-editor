@@ -9,6 +9,7 @@ import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+
 export const state = {
   pendingModules: Object.create(null),
 }

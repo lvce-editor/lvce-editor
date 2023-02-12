@@ -17,6 +17,7 @@ export const Commands = {
   focusLast: ViewletMain.focusLast,
   focusNext: ViewletMain.focusNext,
   focusPrevious: ViewletMain.focusPrevious,
+  handleDragOver: ViewletMain.handleDragOver,
   handleDrop: ViewletMain.handleDrop,
   handleTabClick: ViewletMain.handleTabClick,
   handleTabContextMenu: ViewletMain.handleTabContextMenu,

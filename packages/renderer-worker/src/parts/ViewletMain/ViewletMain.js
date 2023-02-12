@@ -360,10 +360,23 @@ export const saveWithoutFormatting = async () => {
   console.warn('not implemented')
 }
 
-export const handleDrop = async () => {
-  console.log(['main drop'])
-  const clipBoardText = await SharedProcess.invoke(/* ClipBoard.read */ 'ClipBoard.read')
-  console.log({ clipBoardText })
+export const handleDrop = async (state, files) => {
+  for (const file of files) {
+    if (file.path) {
+      await openUri(state, file.path)
+    } else {
+      // TODO
+    }
+    console.log(file)
+  }
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
+  return state
+}
+
+export const handleDragOver = async (state) => {
+  console.log('drag over')
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'highlightDragOver')
+  return state
 }
 
 export const closeActiveEditor = (state) => {

@@ -1,3 +1,4 @@
+import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
 import * as Event from '../Event/Event.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletMainFunctions from './ViewletMainFunctions.js'
@@ -8,13 +9,25 @@ const ClassNames = {
   MainTab: 'MainTab',
 }
 
-export const handleDragOver = (event) => {
-  Event.preventDefault(event)
+export const handleDragStart = (event) => {
+  console.log('drag start')
+  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
 }
 
+export const handleDragOver = (event) => {
+  Event.preventDefault(event)
+  ViewletMainFunctions.handleDragOver()
+}
+
+/**
+ *
+ * @param {DragEvent} event
+ */
 export const handleDrop = (event) => {
   Event.preventDefault(event)
-  ViewletMainFunctions.handleDrop()
+  const dataTransfer = event.dataTransfer
+  const files = dataTransfer.files
+  ViewletMainFunctions.handleDrop(files)
 }
 
 const getNodeIndex = ($Node) => {
@@ -63,7 +76,6 @@ export const handleTabsMouseDown = (event) => {
   if (index === -1) {
     return
   }
-  Event.preventDefault(event)
   switch (target.className) {
     case ClassNames.EditorTabCloseButton:
       handleTabCloseButtonMouseDown(event, index)
