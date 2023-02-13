@@ -99,10 +99,13 @@ export const handleDragOver = (event) => {
  */
 export const handleDragStart = (event) => {
   const { target, dataTransfer } = event
-  // @ts-ignore
+  if (!(target instanceof HTMLElement)) {
+    return
+  }
   const filePath = target.title
+  const fileName = target.textContent
   DataTransfer.setEffectAllowed(dataTransfer, AllowedDragEffectType.CopyMove)
-  DataTransfer.setFilePath(dataTransfer, filePath)
+  DataTransfer.setFilePath(dataTransfer, filePath, fileName)
 }
 
 /**

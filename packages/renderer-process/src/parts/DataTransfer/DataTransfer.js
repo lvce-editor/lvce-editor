@@ -1,3 +1,4 @@
+import * as Platform from '../Platform/Platform.js'
 import * as DataTransferType from '../DataTransferType/DataTransferType.js'
 
 export const setEffectAllowed = (dataTransfer, effectAllowed) => {
@@ -16,9 +17,22 @@ export const getData = (dataTransfer, key) => {
   return dataTransfer.getData(key)
 }
 
-export const setFilePath = (dataTransfer, filePath) => {
+export const setFilePath = (dataTransfer, filePath, fileName) => {
   dataTransfer.setData(DataTransferType.ResourceUrls, JSON.stringify([filePath]))
   dataTransfer.setData(DataTransferType.Text, filePath)
+  const dragImage = document.createElement('div')
+  dragImage.className = 'DragImage'
+  if (Platform.getBrowser() !== 'chromium') {
+    // chrome doesn't support border radius
+    dragImage.style.borderRadius = '100px'
+  }
+  dragImage.textContent = fileName
+  document.body.append(dragImage)
+  dataTransfer.setDragImage(dragImage, -10, -10)
+  const handleTimeOut = () => {
+    dragImage.remove()
+  }
+  setTimeout(handleTimeOut, 0)
 }
 
 export const getFilePath = (dataTransfer) => {

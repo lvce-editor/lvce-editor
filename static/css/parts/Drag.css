@@ -1,0 +1,11 @@
+.DragImage {
+  width: 100px;
+  height: 20px;
+  background: var(--SideBarBackground);
+  position: absolute;
+  top: 0;
+  padding: 0 4px;
+  translate: 0 0;
+  transform: translate(0, 0);
+  willchange: transform;
+}
