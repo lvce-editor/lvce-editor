@@ -1,0 +1,6 @@
+export const TextPlain = 'text/plain'
+export const TextUrl = 'text/url'
+export const TextUriList = 'text/uri-list'
+export const TextHtml = 'text/html'
+export const Text = 'text'
+export const ResourceUrls = 'resourceurls'

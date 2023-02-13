@@ -375,14 +375,22 @@ export const handleDrop = async (state, files) => {
   return state
 }
 
+export const handleDropFilePath = async (state, filePath) => {
+  await openUri(state, filePath)
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
+  return state
+}
+
+export const handleDragEnd = async (state, x, y) => {
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
+  return state
+}
+
 export const handleDragOver = async (state, eventX, eventY) => {
   const { x, y, width, height } = state
-  const relativeX = eventX - x
-  const relativeY = eventY - y
-  const percentX = relativeX / width
-  const percentY = relativeY / height
   const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + TAB_HEIGHT, width, height - TAB_HEIGHT, eventX, eventY)
-  console.log({ splitDirection })
   const { overlayX, overlayY, overlayWidth, overlayHeight } = GetSplitOverlayDimensions.getSplitOverlayDimensions(
     x,
     y + TAB_HEIGHT,
@@ -400,7 +408,6 @@ export const handleDragOver = async (state, eventX, eventY) => {
     overlayWidth,
     overlayHeight
   )
-  console.log('drag over', { percentX, percentY })
   await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'highlightDragOver')
   return state
 }

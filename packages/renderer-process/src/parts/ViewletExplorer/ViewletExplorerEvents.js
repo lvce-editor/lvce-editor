@@ -1,4 +1,5 @@
 import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
+import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as DropEffectType from '../DropEffectType/DropEffectType.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
@@ -87,23 +88,21 @@ export const handleBlur = (event) => {
  */
 export const handleDragOver = (event) => {
   Event.preventDefault(event)
-  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
-  event.dataTransfer.dropEffect = DropEffectType.Copy
-  const { clientX, clientY } = event
+  const { dataTransfer, clientX, clientY } = event
+  DataTransfer.setEffectAllowed(dataTransfer, AllowedDragEffectType.CopyMove)
+  DataTransfer.setDropEffect(dataTransfer, DropEffectType.Copy)
   RendererWorker.send('Explorer.handleDragOver', clientX, clientY)
-  // state.element.classList.add('DropTarget')
 }
 
 /**
  * @param {DragEvent} event
  */
 export const handleDragStart = (event) => {
-  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
-  // event.dataTransfer.setData('DownloadURL', '/tmp/some-file.txt')
-  // event.preventDefault()
-  event.dataTransfer.setData('text/uri-list', 'https://example.com/foobar')
-  // event.dataTransfer.setData('x-special/nautilus-clipboard', 'hello-world')
-  // event.dataTransfer.setData('text/plain', 'abc')
+  const { target, dataTransfer } = event
+  // @ts-ignore
+  const filePath = target.title
+  DataTransfer.setEffectAllowed(dataTransfer, AllowedDragEffectType.CopyMove)
+  DataTransfer.setFilePath(dataTransfer, filePath)
 }
 
 /**
