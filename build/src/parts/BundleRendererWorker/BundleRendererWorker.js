@@ -12,36 +12,13 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
     from: 'static/js',
     to: Path.join(cachePath, 'static', 'js'),
   })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/PrettyBytes/PrettyBytes.js`,
-    occurrence: `../../../../../static/js/pretty-bytes.js`,
-    replacement: `../../../static/js/pretty-bytes.js`,
-  })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/Blob/Blob.js`,
-    occurrence: `../../../../../static/js/blob-util.js`,
-    replacement: `../../../static/js/blob-util.js`,
-  })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/Base64/Base64.js`,
-    occurrence: `../../../../../static/`,
-    replacement: `../../../static/`,
-  })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/Ajax/Ajax.js`,
-    occurrence: `../../../../../static/`,
-    replacement: `../../../static/`,
-  })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/Markdown/Markdown.js`,
-    occurrence: `../../../../../static/`,
-    replacement: `../../../static/`,
-  })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/IndexedDb/IndexedDb.js`,
-    occurrence: `../../../../../static/`,
-    replacement: `../../../static/`,
-  })
+  for (const file of ['PrettyBytes', 'BabelParser', 'Blob', 'Base64', 'Ajax', 'Markdown', 'IndexedDb']) {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/${file}/${file}.js`,
+      occurrence: `../../../../../static/`,
+      replacement: `../../../static/`,
+    })
+  }
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: `ASSET_DIR`,
