@@ -25,7 +25,7 @@ export const tryToGetActualImportErrorMessage = async (url, error) => {
   let response
   try {
     response = await fetch(url)
-  } catch (error) {
+  } catch {
     return `Failed to import ${url}: ${error}`
   }
   if (response.ok) {

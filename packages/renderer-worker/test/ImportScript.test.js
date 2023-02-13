@@ -2,9 +2,7 @@ import * as ImportScript from '../src/parts/ImportScript/ImportScript.js'
 
 test('importScript - error - cannot find module', async () => {
   await expect(ImportScript.importScript('test://file.js')).rejects.toThrowError(
-    new Error(
-      "Failed to import test://file.js: Error: Cannot find module 'test://file.js' from 'src/parts/TryToGetActualImportErrorMessage/TryToGetActualImportErrorMessage.js'"
-    )
+    new Error("Failed to import test://file.js: Error: Cannot find module 'test://file.js' from 'src/parts/ImportScript/ImportScript.js'")
   )
 })
 
