@@ -3,11 +3,12 @@ import * as Assert from '../Assert/Assert.js'
 import * as BackgroundTabs from '../BackgroundTabs/BackgroundTabs.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
+import * as GetSplitOverlayDimensions from '../GetSplitOverlayDimensions/GetSplitOverlayDimensions.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
@@ -370,11 +371,36 @@ export const handleDrop = async (state, files) => {
     console.log(file)
   }
   await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
   return state
 }
 
-export const handleDragOver = async (state) => {
-  console.log('drag over')
+export const handleDragOver = async (state, eventX, eventY) => {
+  const { x, y, width, height } = state
+  const relativeX = eventX - x
+  const relativeY = eventY - y
+  const percentX = relativeX / width
+  const percentY = relativeY / height
+  const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + TAB_HEIGHT, width, height - TAB_HEIGHT, eventX, eventY)
+  console.log({ splitDirection })
+  const { overlayX, overlayY, overlayWidth, overlayHeight } = GetSplitOverlayDimensions.getSplitOverlayDimensions(
+    x,
+    y + TAB_HEIGHT,
+    width,
+    height - TAB_HEIGHT,
+    splitDirection
+  )
+  // TODO show overlay for left area
+  await RendererProcess.invoke(
+    /* Viewlet.send */ 'Viewlet.send',
+    /* id */ ViewletModuleId.Main,
+    /* method */ 'showDragOverlay',
+    overlayX,
+    overlayY,
+    overlayWidth,
+    overlayHeight
+  )
+  console.log('drag over', { percentX, percentY })
   await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'highlightDragOver')
   return state
 }
