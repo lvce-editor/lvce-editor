@@ -8,14 +8,14 @@ export const getSplitOverlayDimensions = (x, y, width, height, splitDirection) =
       return {
         overlayX: x,
         overlayY: y,
-        overlayWidth: x,
+        overlayWidth: width,
         overlayHeight: halfHeight,
       }
     case EditorSplitDirectionType.Down:
       return {
         overlayX: x,
         overlayY: y + halfHeight,
-        overlayWidth: x,
+        overlayWidth: width,
         overlayHeight: halfHeight,
       }
     case EditorSplitDirectionType.Left:
