@@ -27,14 +27,11 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(() => {}),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(() => {}),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     isElectron: () => {
@@ -43,16 +40,10 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   }
 })
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
-const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
-)
-const ViewletExplorerEvents = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerEvents.js'
-)
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
+const ViewletExplorerEvents = await import('../src/parts/ViewletExplorer/ViewletExplorerEvents.js')
 
 test('event - contextmenu', () => {
   const state = ViewletExplorer.create()
@@ -109,11 +100,7 @@ test('event - contextmenu', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.handleContextMenuMouseAt',
-    50,
-    50
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleContextMenuMouseAt', 50, 50)
 })
 
 test('event - contextmenu - activated via keyboard', () => {
@@ -146,9 +133,7 @@ test('event - contextmenu - activated via keyboard', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.handleContextMenuKeyboard'
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleContextMenuKeyboard')
 })
 
 // TODO test expand/collapse
@@ -209,11 +194,7 @@ test('event - click', () => {
   })
   $GitKeep.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.handleClickAt',
-    50,
-    50
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleClickAt', 50, 50)
   expect(event.defaultPrevented).toBe(false)
 })
 
@@ -241,11 +222,7 @@ test('event - click on wrapper div', () => {
   })
   state.$Viewlet.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.handleClickAt',
-    50,
-    50
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleClickAt', 50, 50)
 })
 
 test('event - right click', () => {
@@ -353,11 +330,9 @@ test('event - dragStart', () => {
   })
   const spy = jest.spyOn(event.dataTransfer, 'setData')
   $File1.dispatchEvent(event)
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(
-    'text/uri-list',
-    'https://example.com/foobar'
-  )
+  expect(spy).toHaveBeenCalledTimes(2)
+  expect(spy).toHaveBeenNthCalledWith(1, 'resourceurls', `["/test/file-1.txt"]`)
+  expect(spy).toHaveBeenNthCalledWith(2, 'text', '/test/file-1.txt')
   expect(event.dataTransfer.effectAllowed).toBe('copyMove')
 })
 
@@ -382,11 +357,7 @@ test('event - dragover', () => {
   $File1.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.handleDragOver',
-    10,
-    20
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleDragOver', 10, 20)
 })
 
 test('event - drop', () => {
@@ -426,22 +397,17 @@ test('event - drop', () => {
   expect(event.defaultPrevented).toBe(true)
   expect(stopProgationSpy).toHaveBeenCalled()
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.handleDrop',
-    0,
-    0,
-    [
-      {
-        lastModified: 0,
-        lastModifiedDate: modifiedDate,
-        name: 'file.json',
-        path: '/test/file.json',
-        size: 756705,
-        type: 'application/json',
-        webkitRelativePath: '',
-      },
-    ]
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleDrop', 0, 0, [
+    {
+      lastModified: 0,
+      lastModifiedDate: modifiedDate,
+      name: 'file.json',
+      path: '/test/file.json',
+      size: 756705,
+      type: 'application/json',
+      webkitRelativePath: '',
+    },
+  ])
 })
 
 test('event - input on rename input box', () => {
@@ -477,8 +443,5 @@ test('event - input on rename input box', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.updateEditingValue',
-    'file-3'
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.updateEditingValue', 'file-3')
 })
