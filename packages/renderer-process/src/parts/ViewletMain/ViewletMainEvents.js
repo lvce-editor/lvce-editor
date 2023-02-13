@@ -3,6 +3,7 @@ import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as Event from '../Event/Event.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletMainFunctions from './ViewletMainFunctions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 const ClassNames = {
   Label: 'Label',
@@ -31,18 +32,15 @@ export const handleDragEnd = (event) => {
  */
 export const handleDrop = (event) => {
   Event.preventDefault(event)
-  const { dataTransfer } = event
+  const { dataTransfer, clientX, clientY } = event
   const { files } = dataTransfer
-  console.log(dataTransfer.items.length)
-  const item = dataTransfer.items[0]
-  console.log({ item, kind: item.kind, type: item.type })
   if (files.length > 0) {
-    ViewletMainFunctions.handleDropFiles(files)
+    ViewletMainFunctions.handleDropFiles(clientX, clientY, files)
     return
   }
   const filePath = DataTransfer.getFilePath(dataTransfer)
   if (filePath) {
-    ViewletMainFunctions.handleDropFilePath(filePath)
+    ViewletMainFunctions.handleDropFilePath(clientX, clientY, filePath)
     return
   }
 }
@@ -114,4 +112,22 @@ export const handleTabsContextMenu = (event) => {
   }
   Event.preventDefault(event)
   ViewletMainFunctions.handleTabContextMenu(index, clientX, clientY)
+}
+
+const handleSashPointerMove = () => {
+  //
+}
+
+const handleSashPointerCaptureLost = (event) => {
+  const { target } = event
+  target.removeEventListener(DomEventType.PointerMove, handleSashPointerMove)
+  target.removeEventListener(DomEventType.LostPointerCapture, handleSashPointerCaptureLost)
+}
+
+export const handleSashPointerDown = (event) => {
+  const { clientX, clientY, target, pointerId } = event
+  target.setPointerCapture(pointerId)
+  target.addEventListener(DomEventType.PointerMove, handleSashPointerMove)
+  target.addEventListener(DomEventType.LostPointerCapture, handleSashPointerCaptureLost)
+  ViewletMainFunctions.handleSashPointerDown(clientX, clientY)
 }

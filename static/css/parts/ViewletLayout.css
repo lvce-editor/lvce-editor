@@ -14,3 +14,15 @@
   width: 4px;
   cursor: col-resize;
 }
+
+.SashVisible {
+  display: flex;
+  justify-content: center;
+}
+
+.SashContent {
+  background: #444444;
+  width: 1px;
+  left: 1px;
+  height: 100%;
+}

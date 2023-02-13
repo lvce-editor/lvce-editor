@@ -4,6 +4,8 @@ import * as EditorGroup from '../EditorGroup/EditorGroup.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Tab from '../Tab/Tab.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
+import * as ViewletSash from '../ViewletSash/ViewletSash.js'
+import * as VisibleSash from '../VisibleSash/VisibleSash.js'
 
 const create$MainTabs = () => {
   const $MainTabs = document.createElement('div')
@@ -44,6 +46,7 @@ export const create = () => {
     $MainContent: undefined,
     $MainTabs: undefined,
     $DragOverlay: undefined,
+    $ContentMap: Object.create(null),
   }
 }
 
@@ -241,4 +244,34 @@ export const hideDragOverlay = (state) => {
   }
   state.$DragOverlay.remove()
   state.$DragOverlay = undefined
+}
+
+export const split = (state, splitDirection, x, y, width, height, tabs, uid) => {
+  const { $Viewlet } = state
+  const $MainTabs = create$MainTabs()
+  for (const tab of tabs) {
+    const $Tab = Tab.create(tab.label, tab.title)
+    $MainTabs.append($Tab)
+  }
+  const top = parseInt($Viewlet.style.top)
+  SetBounds.setBounds($MainTabs, x, y - top - 35, width, 35)
+  const $MainContent = document.createElement('div')
+  $MainContent.className = 'MainContent'
+  SetBounds.setBounds($MainContent, x, y - top, width, height)
+  $Viewlet.append($MainTabs, $MainContent)
+  state.$ContentMap[uid] = $MainContent
+}
+
+export const addSash = (state, sashId, x, y, width, height) => {
+  const { $Viewlet } = state
+  const $Sash = VisibleSash.create()
+  $Sash.onpointerdown = ViewletMainEvents.handleSashPointerDown
+  SetBounds.setBounds($Sash, x, y, width, height)
+  $Viewlet.append($Sash)
+}
+
+export const appendContent = (state, contentId, $Child) => {
+  const { $ContentMap } = state
+  const $Content = $ContentMap[contentId]
+  $Content.append($Child)
 }

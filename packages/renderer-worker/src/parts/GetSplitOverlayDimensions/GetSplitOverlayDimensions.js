@@ -1,6 +1,6 @@
 import * as EditorSplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
 
-export const getSplitOverlayDimensions = (x, y, width, height, splitDirection) => {
+export const getSplitOverlayDimensions = (x, y, width, height, splitDirection, sashVisibleSize = 0) => {
   const halfHeight = height / 2
   const halfWidth = width / 2
   switch (splitDirection) {
@@ -22,14 +22,14 @@ export const getSplitOverlayDimensions = (x, y, width, height, splitDirection) =
       return {
         overlayX: x,
         overlayY: y,
-        overlayWidth: halfWidth,
+        overlayWidth: halfWidth - sashVisibleSize,
         overlayHeight: height,
       }
     case EditorSplitDirectionType.Right:
       return {
-        overlayX: x + halfWidth,
+        overlayX: x + halfWidth + sashVisibleSize,
         overlayY: y,
-        overlayWidth: halfWidth,
+        overlayWidth: halfWidth - sashVisibleSize,
         overlayHeight: height,
       }
     case EditorSplitDirectionType.None:

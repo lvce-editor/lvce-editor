@@ -16,6 +16,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as EditorSplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -361,7 +362,7 @@ export const saveWithoutFormatting = async () => {
   console.warn('not implemented')
 }
 
-export const handleDrop = async (state, files) => {
+export const handleDrop = async (state, eventX, eventY, files) => {
   for (const file of files) {
     if (file.path) {
       await openUri(state, file.path)
@@ -375,10 +376,78 @@ export const handleDrop = async (state, files) => {
   return state
 }
 
-export const handleDropFilePath = async (state, filePath) => {
-  await openUri(state, filePath)
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
+export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
+  const { x, y, width, height } = state
+  const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + TAB_HEIGHT, width, height - TAB_HEIGHT, eventX, eventY)
+  if (splitDirection === EditorSplitDirectionType.None) {
+    await openUri(state, filePath)
+    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
+    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
+  } else {
+    // TODO split main
+    console.log('split', splitDirection)
+    const sashVisibleSize = 1
+    const { overlayX, overlayY, overlayWidth, overlayHeight } = GetSplitOverlayDimensions.getSplitOverlayDimensions(
+      x,
+      y + TAB_HEIGHT,
+      width,
+      height - TAB_HEIGHT,
+      splitDirection,
+      sashVisibleSize
+    )
+    const tabs = [
+      {
+        label: Workspace.pathBaseName(filePath),
+        title: filePath,
+      },
+    ]
+    const uri = filePath
+    const id = ViewletMap.getId(uri)
+    const uid = 12345
+
+    const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
+    instance.show = false
+    const oldActiveIndex = state.activeIndex
+    const temporaryUri = `tmp://${Math.random()}`
+    state.editors.push({ uri: temporaryUri })
+    state.activeIndex = state.editors.length - 1
+    const tabLabel = Workspace.pathBaseName(uri)
+    const tabTitle = getTabTitle(uri)
+    await RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ ViewletModuleId.Main,
+      /* method */ 'split',
+      splitDirection,
+      overlayX,
+      overlayY,
+      overlayWidth,
+      overlayHeight,
+      tabs,
+      uid
+    )
+    // @ts-ignore
+    await ViewletManager.load(instance, true)
+    await RendererProcess.invoke(
+      /* Viewlet.append */ 'Viewlet.appendCustom',
+      /* parentId */ ViewletModuleId.Main,
+      /* method */ 'appendContent',
+      uid,
+      /* id  */ instance.id
+    )
+    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
+    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
+    // TODO sash could be horizontal or vertical
+    await RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ ViewletModuleId.Main,
+      /* method */ 'addSash',
+      /* id */ '',
+      /* x */ overlayX,
+      /* y */ overlayY - y - TAB_HEIGHT,
+      /* width */ 4,
+      /* height */ overlayHeight + TAB_HEIGHT
+    )
+  }
   return state
 }
 

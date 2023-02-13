@@ -125,6 +125,11 @@ export const sendMultiple = (commands) => {
 
         break
       }
+      case 'Viewlet.appendCustom': {
+        appendCustom(viewletId, method, ...args)
+
+        break
+      }
       case 'Viewlet.dispose': {
         dispose(viewletId)
 
@@ -268,6 +273,13 @@ const append = (parentId, childId, referenceNodes) => {
   if (childInstance.factory.postAppend) {
     childInstance.factory.postAppend(childInstance.state)
   }
+}
+
+export const appendCustom = (parentId, method, uid, childId) => {
+  const parentInstance = state.instances[parentId]
+  const childInstance = state.instances[childId]
+  const $Child = childInstance.state.$Viewlet
+  parentInstance.factory[method](parentInstance.state, uid, $Child)
 }
 
 const appendToBody = (childId) => {

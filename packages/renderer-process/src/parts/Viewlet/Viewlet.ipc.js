@@ -15,4 +15,5 @@ export const Commands = {
   sendMultiple: Viewlet.sendMultiple,
   setBounds: Viewlet.setBounds,
   show: Viewlet.show,
+  appendCustom: Viewlet.appendCustom,
 }
