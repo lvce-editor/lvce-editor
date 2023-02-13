@@ -1,4 +1,5 @@
 import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
+import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as Event from '../Event/Event.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletMainFunctions from './ViewletMainFunctions.js'
@@ -10,7 +11,6 @@ const ClassNames = {
 }
 
 export const handleDragStart = (event) => {
-  console.log('drag start')
   event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
 }
 
@@ -20,15 +20,31 @@ export const handleDragOver = (event) => {
   ViewletMainFunctions.handleDragOver(clientX, clientY)
 }
 
+export const handleDragEnd = (event) => {
+  const { clientX, clientY } = event
+  ViewletMainFunctions.handleDragEnd(clientX, clientY)
+}
+
 /**
  *
  * @param {DragEvent} event
  */
 export const handleDrop = (event) => {
   Event.preventDefault(event)
-  const dataTransfer = event.dataTransfer
-  const files = dataTransfer.files
-  ViewletMainFunctions.handleDrop(files)
+  const { dataTransfer } = event
+  const { files } = dataTransfer
+  console.log(dataTransfer.items.length)
+  const item = dataTransfer.items[0]
+  console.log({ item, kind: item.kind, type: item.type })
+  if (files.length > 0) {
+    ViewletMainFunctions.handleDropFiles(files)
+    return
+  }
+  const filePath = DataTransfer.getFilePath(dataTransfer)
+  if (filePath) {
+    ViewletMainFunctions.handleDropFilePath(filePath)
+    return
+  }
 }
 
 const getNodeIndex = ($Node) => {

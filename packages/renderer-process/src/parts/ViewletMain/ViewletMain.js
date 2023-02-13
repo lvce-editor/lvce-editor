@@ -24,6 +24,7 @@ export const create = () => {
   $Viewlet.className = 'Viewlet Main'
   $Viewlet.ondrop = ViewletMainEvents.handleDrop
   $Viewlet.ondragover = ViewletMainEvents.handleDragOver
+  $Viewlet.ondragend = ViewletMainEvents.handleDragEnd
   // @ts-ignore
   $Viewlet.role = AriaRoles.Main
 

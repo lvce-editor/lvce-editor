@@ -4,8 +4,16 @@ export const handleDragOver = (x, y) => {
   RendererWorker.send('Main.handleDragOver', x, y)
 }
 
-export const handleDrop = (files) => {
+export const handleDropFiles = (files) => {
   RendererWorker.send('Main.handleDrop', files)
+}
+
+export const handleDropFilePath = (filePath) => {
+  RendererWorker.send('Main.handleDropFilePath', filePath)
+}
+
+export const handleDragEnd = (x, y) => {
+  RendererWorker.send('Main.handleDragEnd', x, y)
 }
 
 export const closeEditor = (index) => {
