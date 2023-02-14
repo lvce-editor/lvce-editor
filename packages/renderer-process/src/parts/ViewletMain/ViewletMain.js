@@ -77,13 +77,13 @@ export const appendViewlet = (state, childName, $Child) => {
 // for focused tab (that's how chrome and firefox do it)
 
 export const highlightDragOver = (state) => {
-  const { $MainTabs } = state
-  $MainTabs.classList.add('DragOver')
+  // const { $MainTabs } = state
+  // $MainTabs.classList.add('DragOver')
 }
 
 export const stopHighlightDragOver = (state) => {
-  const { $MainTabs } = state
-  $MainTabs.classList.remove('DragOver')
+  // const { $MainTabs } = state
+  // $MainTabs.classList.remove('DragOver')
 }
 
 const create$DragOverlay = () => {
