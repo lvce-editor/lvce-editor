@@ -1,5 +1,4 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as EditorGroup from '../EditorGroup/EditorGroup.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as VisibleSash from '../VisibleSash/VisibleSash.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
@@ -27,22 +26,15 @@ export const dispose = (state) => {
   state.$MainTabs.remove()
 }
 
-export const replaceEditor = (state, id, uri, languageId) => {
-  EditorGroup.replaceOne(state.editorGroup, id, uri, languageId)
-}
+export const replaceEditor = (state, id, uri, languageId) => {}
 
-export const addEditor = (state, id, uri, languageId) => {
-  EditorGroup.addOne(state.editorGroup, id, uri, languageId)
-}
+export const addEditor = (state, id, uri, languageId) => {}
 
 // TODO there are 3 cases
 // 1. no editor group and no editor
 // 2. editor group exists and new editor should be added
 // 3. editor group exists and editor should be replaced
-export const openEditor = async (state, id, uri, languageId) => {
-  state.editorGroup = EditorGroup.create()
-  state.activeEditorState = EditorGroup.addOne(state.editorGroup, id, uri, languageId)
-}
+export const openEditor = async (state, id, uri, languageId) => {}
 
 export const closeAllViewlets = (state) => {
   const { $Main } = state

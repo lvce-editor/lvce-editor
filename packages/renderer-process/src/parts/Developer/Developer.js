@@ -12,7 +12,6 @@ const modules = [
   'Developer',
   'DomPool',
   'Editor',
-  'EditorGroup',
   'Exec',
   'ExtensionHost',
   'FileSystem',

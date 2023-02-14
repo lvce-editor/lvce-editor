@@ -1,9 +1,8 @@
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
-export const handleContextMenu = (x, y) => {
-  // TODO this should go to editor module first, which then calls context menu module
-  RendererWorker.send('ContextMenu.show', x, y, MenuEntryId.Editor)
+export const handleContextMenu = (button, x, y) => {
+  RendererWorker.send('Editor.handleContextMenu', button, x, y, MenuEntryId.Editor)
 }
 
 export const handleBlur = () => {

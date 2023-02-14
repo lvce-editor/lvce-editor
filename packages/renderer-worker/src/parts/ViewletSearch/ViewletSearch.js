@@ -308,20 +308,6 @@ export const selectIndex = async (state, index) => {
   }
 }
 
-export const handleContextMenuMouseAt = async (state, x, y) => {
-  const index = 1
-  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.Search)
-  return state
-}
-
-export const handleContextMenuKeyboard = async (state) => {
-  const index = 1
-  const x = state.x // TODO
-  const y = state.y // TODO
-  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.Search)
-  return state
-}
-
 export const handleClick = async (state, index) => {
   const { minLineY } = state
   const actualIndex = index + minLineY

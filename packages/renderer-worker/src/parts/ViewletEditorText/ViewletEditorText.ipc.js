@@ -14,6 +14,7 @@ export const LazyCommands = {
   braceCompletion: () => import('../EditorCommand/EditorCommandBraceCompletion.js'),
   cancelSelection: () => import('../EditorCommand/EditorCommandCancelSelection.js'),
   contextMenu: () => import('../EditorCommand/EditorCommandHandleContextMenu.js'),
+  handleContextMenu: () => import('../EditorCommand/EditorCommandHandleContextMenu.js'),
   copyLineDown: () => import('../EditorCommand/EditorCommandCopyLineDown.js'),
   copyLineUp: () => import('../EditorCommand/EditorCommandCopyLineUp.js'),
   cursorLeft: () => import('../EditorCommand/EditorCommandCursorCharacterLeft.js'),
