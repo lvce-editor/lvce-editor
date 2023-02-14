@@ -127,15 +127,6 @@ export const handleDrop = async (event) => {
   }
 }
 
-const handleContextMenuMouse = (event) => {
-  const { clientX, clientY } = event
-  ViewletExplorerFunctions.handleContextMenuMouseAt(clientX, clientY)
-}
-
-const handleContextMenuKeyboard = (event) => {
-  ViewletExplorerFunctions.handleContextMenuKeyBoard()
-}
-
 // TODO maybe use aria active descendant instead
 const getFocusedIndexFromFocusOutline = ($Viewlet) => {
   for (let i = 0; i < $Viewlet.children.length; i++) {
@@ -149,12 +140,8 @@ const getFocusedIndexFromFocusOutline = ($Viewlet) => {
 
 export const handleContextMenu = (event) => {
   event.preventDefault()
-  switch (event.button) {
-    case MouseEventType.Keyboard:
-      return handleContextMenuKeyboard(event)
-    default:
-      return handleContextMenuMouse(event)
-  }
+  const { button, clientX, clientY } = event
+  ViewletExplorerFunctions.handleContextMenu(button, clientX, clientY)
 }
 
 export const handleMouseDown = (event) => {

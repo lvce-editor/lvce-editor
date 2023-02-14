@@ -16,12 +16,8 @@ export const handleDrop = (x, y, files) => {
   RendererWorker.send('Explorer.handleDrop', x, y, files)
 }
 
-export const handleContextMenuMouseAt = (x, y) => {
-  RendererWorker.send('Explorer.handleContextMenuMouseAt', x, y)
-}
-
-export const handleContextMenuKeyBoard = () => {
-  RendererWorker.send('Explorer.handleContextMenuKeyboard')
+export const handleContextMenu = (button, x, y) => {
+  RendererWorker.send('Explorer.handleContextMenu', button, x, y)
 }
 
 export const handleClickAt = (x, y) => {
