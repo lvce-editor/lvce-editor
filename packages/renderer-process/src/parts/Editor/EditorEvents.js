@@ -1,6 +1,6 @@
 // TODO so many things in this file
 
-import * as ClipBoardDataType from '../ClipBoardDataType/ClipBoardDataType.js'
+import * as ClipBoardData from '../ClipBoardData/ClipBoardData.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
@@ -149,7 +149,7 @@ export const handleWheel = (event) => {
 export const handlePaste = (event) => {
   Event.preventDefault(event)
   const { clipboardData } = event
-  const text = clipboardData.getData(ClipBoardDataType.Text)
+  const text = ClipBoardData.getText(clipboardData)
   EditorFunctions.paste(text)
 }
 
