@@ -1,6 +1,6 @@
 import { findIndex } from '../../shared/findIndex.js'
+import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletSourceControlFunctions from './ViewletSourceControlFunctions.js'
 
 export const handleFocus = () => {
@@ -43,9 +43,9 @@ export const handleMouseOver = (event) => {
 }
 
 export const handleContextMenu = (event) => {
-  event.preventDefault()
-  const { clientX, clientY } = event
-  RendererWorker.send(/* SourceControl.handleContextMenu */ 'Source Control.handleContextMenu', /* x */ clientX, /* y */ clientY)
+  Event.preventDefault(event)
+  const { button, clientX, clientY } = event
+  ViewletSourceControlFunctions.handleContextMenu(button, clientX, clientY)
 }
 
 export const handleInput = (event) => {

@@ -41,3 +41,7 @@ export const handleClickRestore = (index) => {
 export const handleClickOpenFile = (index) => {
   RendererWorker.send('Source Control.handleClickOpenFile', index)
 }
+
+export const handleContextMenu = (button, x, y) => {
+  RendererWorker.send('Source Control.handleContextMenu', button, x, y)
+}
