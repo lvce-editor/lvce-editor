@@ -38,6 +38,8 @@ export const Layout = 'Layout'
 
 export const Main = 'Main'
 
+export const MainTabs = 'MainTabs'
+
 export const Output = 'Output'
 
 export const Panel = 'Panel'
