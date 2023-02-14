@@ -36,9 +36,8 @@ export const handleMousedown = (event) => {
   Event.preventDefault(event)
   Event.stopPropagation(event)
   const index = getNodeIndex($Item)
-  const x = event.clientX
-  const y = event.clientY
-  ViewletActivityBarFunctions.handleClick(index, x, y)
+  const { clientX, clientY } = event
+  ViewletActivityBarFunctions.handleClick(index, clientX, clientY)
 }
 
 export const handleContextMenu = (event) => {
