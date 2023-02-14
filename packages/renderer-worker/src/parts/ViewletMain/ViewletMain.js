@@ -272,7 +272,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   ])
   allCommands.push(['Viewlet.setBounds', ViewletModuleId.MainTabs, x, 0, width, TAB_HEIGHT])
   // @ts-ignore
-  const commands = await ViewletManager.load(instance, focus)
+  const commands = await ViewletManager.load(instance, false)
   allCommands.push(...commands)
   allCommands.push([
     /* Viewlet.append */ 'Viewlet.appendCustom',
@@ -286,7 +286,9 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     /* method */ 'appendContent',
     /* id  */ instance.id,
   ])
-  console.log({ allCommands })
+  if (focus) {
+    allCommands.push(...Viewlet.getFocusCommands(instance.id))
+  }
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ allCommands)
   if (!ViewletStates.hasInstance(id)) {
     return state

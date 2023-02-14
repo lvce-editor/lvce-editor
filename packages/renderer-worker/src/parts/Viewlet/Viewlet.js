@@ -8,10 +8,10 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletElectron from './ViewletElectron.js'
 
-export const focus = async (id) => {
+export const getFocusCommands = (id) => {
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
-    return
+    return []
   }
   const commands = []
   if (instance && instance.factory.focus) {
@@ -28,7 +28,15 @@ export const focus = async (id) => {
     }
   }
   ViewletStates.setFocusedInstance(instance)
-  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  return commands
+}
+
+export const focus = async (id) => {
+  const focusCommands = getFocusCommands(id)
+  if (focusCommands.length === 0) {
+    return
+  }
+  await RendererProcess.invoke('Viewlet.sendMultiple', focusCommands)
 }
 // export const createOrFocus = async id=>{
 //   const instance = state.instances[id] || await create(id)
