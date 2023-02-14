@@ -36,22 +36,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(),
   }
-)
+})
 
-const ViewletExtensions = await import(
-  '../src/parts/ViewletExtensions/ViewletExtensions.js'
-)
+const ViewletExtensions = await import('../src/parts/ViewletExtensions/ViewletExtensions.js')
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
 beforeAll(() => {
   // workaround for jsdom not supporting Touch constructor
@@ -80,10 +73,7 @@ test('event - input', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Extensions.handleInput',
-    'abc'
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleInput', 'abc')
   ViewletExtensions.setExtensions(state, [])
 })
 
@@ -107,13 +97,7 @@ test.skip('event - click on install', () => {
         cancelable: true,
       })
     )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    1,
-    2133,
-    'Extensions',
-    'handleInstall',
-    'test-author.test=extension-1',
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith([1, 2133, 'Extensions', 'handleInstall', 'test-author.test=extension-1'])
 })
 
 test.skip('user clicks while installing', () => {
@@ -177,13 +161,7 @@ test.skip('user clicks uninstall', () => {
         cancelable: true,
       })
     )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    1,
-    2133,
-    'Extensions',
-    'handleUninstall',
-    'test-author.test-extension-1',
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith([1, 2133, 'Extensions', 'handleUninstall', 'test-author.test-extension-1'])
 })
 
 test('icon - error', () => {
@@ -249,11 +227,7 @@ test('event - touchstart', () => {
   })
   $ListItems.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Extensions.handleTouchStart',
-    expect.any(Number),
-    [{ clientX: 10, clientY: 10, identifier: 0 }]
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleTouchStart', expect.any(Number), [{ clientX: 10, clientY: 10, identifier: 0 }])
 })
 
 test('event - touchmove', () => {
@@ -273,11 +247,7 @@ test('event - touchmove', () => {
   })
   $ListItems.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Extensions.handleTouchMove',
-    expect.any(Number),
-    [{ clientX: 10, clientY: 10, identifier: 0 }]
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleTouchMove', expect.any(Number), [{ clientX: 10, clientY: 10, identifier: 0 }])
 })
 
 test('event - touchend', () => {
@@ -297,10 +267,7 @@ test('event - touchend', () => {
   })
   $ListItems.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Extensions.handleTouchEnd',
-    [{ clientX: 10, clientY: 10, identifier: 0 }]
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleTouchEnd', [{ clientX: 10, clientY: 10, identifier: 0 }])
 })
 
 test('event - pointerdown - on scroll bar thumb', () => {
@@ -315,8 +282,20 @@ test('event - pointerdown - on scroll bar thumb', () => {
   })
   $ScrollBarThumb.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Extensions.handleScrollBarClick',
-    20
+  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleScrollBarClick', 20)
+})
+
+test('event - contextmenu - activated via keyboard', () => {
+  const state = ViewletExtensions.create()
+  const { $ListItems } = state
+  $ListItems.dispatchEvent(
+    new MouseEvent('contextmenu', {
+      clientX: 50,
+      clientY: 50,
+      bubbles: true,
+      button: -1,
+    })
   )
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleContextMenu', -1, 50, 50)
 })

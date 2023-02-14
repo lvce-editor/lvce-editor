@@ -1,8 +1,6 @@
-import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js' // TODO use Command.execute instead
 import * as Height from '../Height/Height.js'
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SearchExtensions from '../SearchExtensions/SearchExtensions.js'
@@ -239,16 +237,6 @@ export const handleDisable = async (state, id) => {
     /* id */ id,
     /* state */ 'disabled'
   )
-}
-
-const handleContextMenuMouse = (state, x, y) => {}
-
-const handleContextMenuIndex = (state, index) => {}
-
-// TODO pass index instead
-export const handleContextMenu = async (state, x, y, index) => {
-  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.ManageExtension)
-  return state
 }
 
 export const openSuggest = async (state) => {
