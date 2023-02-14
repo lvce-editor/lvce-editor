@@ -41,7 +41,8 @@ export const handleMousedown = (event) => {
 }
 
 export const handleContextMenu = (event) => {
-  HandleContextMenu.handleContextMenu('ActivityBar.handleContextMenu', event)
+  const { button, clientX, clientY } = event
+  ViewletActivityBarFunctions.handleContextMenu(button, clientX, clientY)
 }
 
 export const handleBlur = () => {

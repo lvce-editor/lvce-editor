@@ -6,7 +6,6 @@ export const name = 'ActivityBar'
 export const Commands = {
   getHiddenItems: ViewletActivityBar.getHiddenItems,
   handleBlur:  ViewletActivityBar.handleBlur,
-  handleContextMenu:  ViewletActivityBar.handleContextMenu,
   handleSideBarHidden: ViewletActivityBar.handleSideBarHidden,
   handleSideBarViewletChange: ViewletActivityBar.handleSideBarViewletChange,
   toggleItem: ViewletActivityBar.toggleItem,
@@ -23,6 +22,7 @@ export const LazyCommands={
   focusPrevious: () => import('./ViewletActivityBarFocusPrevious.js'),
   selectCurrent: () => import('./ViewletActivityBarSelectCurrent.js'),
   handleClick: () => import('./ViewletActivityBarHandleClick.js'),
+  handleContextMenu: () => import('./ViewletActivityBarHandleContextMenu.js')
 }
 
 export const Events = {
@@ -31,9 +31,6 @@ export const Events = {
   'SideBar.viewletChange': ViewletActivityBar.handleSideBarViewletChange,
 }
 
-export const Css = [
-  '/css/parts/ViewletActivityBar.css',
-  '/css/parts/MaskIcon.css',
-]
+export const Css = ['/css/parts/ViewletActivityBar.css', '/css/parts/MaskIcon.css']
 
 export * from './ViewletActivityBar.js'
