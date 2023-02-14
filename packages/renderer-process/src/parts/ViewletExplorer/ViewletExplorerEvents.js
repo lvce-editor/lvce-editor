@@ -144,7 +144,7 @@ export const handleContextMenu = (event) => {
   ViewletExplorerFunctions.handleContextMenu(button, clientX, clientY)
 }
 
-export const handleMouseDown = (event) => {
+export const handleClick = (event) => {
   const { button, clientX, clientY } = event
   if (button !== MouseEventType.LeftClick) {
     return
