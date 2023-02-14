@@ -20,7 +20,7 @@ export const create = () => {
   // @ts-ignore
   $Viewlet.role = AriaRoles.Tree
   $Viewlet.ariaLabel = 'Files Explorer'
-  $Viewlet.onmousedown = ViewletExplorerEvents.handleMouseDown
+  $Viewlet.onclick = ViewletExplorerEvents.handleClick
   $Viewlet.oncontextmenu = ViewletExplorerEvents.handleContextMenu
   // TODO use the other mouse events that capture automatically
   $Viewlet.addEventListener(DomEventType.MouseEnter, ViewletExplorerEvents.handleMouseEnter, DomEventOptions.Capture)

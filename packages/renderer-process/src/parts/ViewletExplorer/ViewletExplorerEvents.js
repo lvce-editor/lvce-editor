@@ -157,7 +157,7 @@ export const handleContextMenu = (event) => {
   }
 }
 
-export const handleMouseDown = (event) => {
+export const handleClick = (event) => {
   const { button, clientX, clientY } = event
   if (button !== MouseEventType.LeftClick) {
     return
