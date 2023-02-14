@@ -1,14 +1,14 @@
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
@@ -20,6 +20,13 @@ export const create = () => {
   // @ts-ignore
   $Viewlet.role = AriaRoles.Tree
   $Viewlet.ariaLabel = 'Files Explorer'
+  return {
+    $Viewlet,
+  }
+}
+
+export const attachEvents = (state) => {
+  const { $Viewlet } = state
   $Viewlet.onclick = ViewletExplorerEvents.handleClick
   $Viewlet.oncontextmenu = ViewletExplorerEvents.handleContextMenu
   // TODO use the other mouse events that capture automatically
@@ -31,9 +38,6 @@ export const create = () => {
   $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart
   $Viewlet.ondrop = ViewletExplorerEvents.handleDrop
   $Viewlet.onfocus = ViewletExplorerEvents.handleFocus
-  return {
-    $Viewlet,
-  }
 }
 
 const create$Row = () => {

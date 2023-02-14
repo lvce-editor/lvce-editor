@@ -54,17 +54,18 @@ export const create = () => {
   $Viewlet.ariaRoleDescription = 'Activity Bar'
   $Viewlet.ariaOrientation = AriaOrientationType.Vertical
   $Viewlet.tabIndex = 0
-  // $Viewlet.append(...activityBarItems.map(create$ActivityBarItem))
-  $Viewlet.onmousedown = ViewletActivityBarEvents.handleMousedown
-  $Viewlet.oncontextmenu = ViewletActivityBarEvents.handleContextMenu
-  // $Viewlet.addEventListener('focusout', ViewletActivityBarEvents.handleBlur)
-  $Viewlet.onfocus = ViewletActivityBarEvents.handleFocus
-  $Viewlet.onblur = ViewletActivityBarEvents.handleBlur
-  // $ActivityBar.children[focusedIndex].tabIndex = 0
   return {
     $ActivityBar: $Viewlet,
     $Viewlet,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $Viewlet } = state
+  $Viewlet.onmousedown = ViewletActivityBarEvents.handleMousedown
+  $Viewlet.oncontextmenu = ViewletActivityBarEvents.handleContextMenu
+  $Viewlet.onfocus = ViewletActivityBarEvents.handleFocus
+  $Viewlet.onblur = ViewletActivityBarEvents.handleBlur
 }
 
 export const dispose = (state) => {}

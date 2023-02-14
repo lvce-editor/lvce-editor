@@ -4,7 +4,6 @@ import * as ViewletAudioEvents from './ViewletAudioEvents.js'
 export const create = () => {
   const $Audio = document.createElement('audio')
   $Audio.controls = true
-  $Audio.onerror = ViewletAudioEvents.handleAudioError
 
   const $Content = document.createElement('div')
   $Content.className = 'AudioContent'
@@ -19,6 +18,11 @@ export const create = () => {
     $Content,
     $AudioErrorMessage: undefined,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $Audio } = state
+  $Audio.onerror = ViewletAudioEvents.handleAudioError
 }
 
 export const setSrc = (state, src) => {

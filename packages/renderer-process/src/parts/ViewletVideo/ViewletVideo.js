@@ -6,7 +6,6 @@ export const create = () => {
   const $Video = document.createElement('video')
   $Video.className = 'VideoVideo'
   $Video.controls = true
-  $Video.onerror = ViewletVideoEvents.handleVideoError
 
   const $Content = document.createElement('div')
   $Content.className = 'VideoContent'
@@ -21,6 +20,11 @@ export const create = () => {
     $Content,
     $VideoErrorMessage: undefined,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $Video } = state
+  $Video.onerror = ViewletVideoEvents.handleVideoError
 }
 
 export const setSrc = (state, src) => {

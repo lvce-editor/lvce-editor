@@ -19,8 +19,12 @@ export const create = (id) => {
   if (state.instances[id] && state.instances[id].state.$Viewlet.isConnected) {
     state.instances[id].state.$Viewlet.remove()
   }
+  const instanceState = module.create()
+  if (module.attachEvents) {
+    module.attachEvents(instanceState)
+  }
   state.instances[id] = {
-    state: module.create(),
+    state: instanceState,
     factory: module,
   }
 }

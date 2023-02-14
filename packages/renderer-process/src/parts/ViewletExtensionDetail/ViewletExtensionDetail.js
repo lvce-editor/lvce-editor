@@ -8,8 +8,6 @@ export const create = () => {
   $ReadmeHtml.className = 'Markdown'
   // @ts-ignore
   $ReadmeHtml.role = AriaRoles.Document
-  $ReadmeHtml.oncontextmenu =
-    ViewletExtensionDetailEvents.handleReadmeContextMenu
 
   const $ExtensionDetailIcon = document.createElement('img')
   $ExtensionDetailIcon.className = 'ExtensionDetailIcon'
@@ -17,7 +15,6 @@ export const create = () => {
   $ExtensionDetailIcon.draggable = false
   $ExtensionDetailIcon.width = 150
   $ExtensionDetailIcon.height = 150
-  $ExtensionDetailIcon.onerror = ViewletExtensionDetailEvents.handleIconError
 
   const $Name = document.createElement('h3')
   $Name.className = 'ExtensionDetailName'
@@ -32,10 +29,7 @@ export const create = () => {
 
   const $ExtensionDetailHeader = document.createElement('div')
   $ExtensionDetailHeader.className = 'ExtensionDetailHeader'
-  $ExtensionDetailHeader.append(
-    $ExtensionDetailIcon,
-    $ExtensionDetailHeaderDetails
-  )
+  $ExtensionDetailHeader.append($ExtensionDetailIcon, $ExtensionDetailHeaderDetails)
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet ExtensionDetail'
@@ -48,6 +42,12 @@ export const create = () => {
     $ExtensionDetailIcon,
     $Description,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $ReadmeHtml, $ExtensionDetailIcon } = state
+  $ReadmeHtml.oncontextmenu = ViewletExtensionDetailEvents.handleReadmeContextMenu
+  $ExtensionDetailIcon.onerror = ViewletExtensionDetailEvents.handleIconError
 }
 
 export const setName = (state, name) => {

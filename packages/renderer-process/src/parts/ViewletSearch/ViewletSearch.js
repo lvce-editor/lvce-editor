@@ -2,20 +2,18 @@ import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 export const create = () => {
   const $ViewletSearchInput = InputBox.create()
   $ViewletSearchInput.placeholder = 'Search'
   $ViewletSearchInput.type = 'search'
   $ViewletSearchInput.enterKeyHint = 'search'
-  $ViewletSearchInput.oninput = ViewletSearchEvents.handleInput
-  $ViewletSearchInput.onfocus = ViewletSearchEvents.handleFocus
 
   const $SearchStatus = document.createElement('div')
   // @ts-ignore
@@ -29,16 +27,12 @@ export const create = () => {
   const $ListItems = document.createElement('div')
   $ListItems.className = 'ListItems'
   // TODO onclick vs onmousedown, should be consistent in whole application
-  $ListItems.onmousedown = ViewletSearchEvents.handleClick
-  $ListItems.oncontextmenu = ViewletSearchEvents.handleContextMenu
-  $ListItems.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
 
   const $ScrollBar = document.createElement('div')
   $ScrollBar.className = 'ScrollBarSmall'
-  $ScrollBar.onpointerdown = ViewletSearchEvents.handleScrollBarPointerDown
   $ScrollBar.append($ScrollBarThumb)
 
   const $List = document.createElement('div')
@@ -58,6 +52,18 @@ export const create = () => {
     $ScrollBar,
     $ScrollBarThumb,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $ViewletSearchInput, $ListItems, $ScrollBar } = state
+  $ViewletSearchInput.oninput = ViewletSearchEvents.handleInput
+  $ViewletSearchInput.onfocus = ViewletSearchEvents.handleFocus
+
+  $ListItems.onmousedown = ViewletSearchEvents.handleClick
+  $ListItems.oncontextmenu = ViewletSearchEvents.handleContextMenu
+  $ListItems.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
+
+  $ScrollBar.onpointerdown = ViewletSearchEvents.handleScrollBarPointerDown
 }
 
 export const refresh = (state, context) => {

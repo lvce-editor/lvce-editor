@@ -1,13 +1,13 @@
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as Menu from '../OldMenu/Menu.js'
-import * as Widget from '../Widget/Widget.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
+import * as Widget from '../Widget/Widget.js'
+import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 
 const activeId = 'TitleBarEntryActive'
 
@@ -17,16 +17,20 @@ export const create = () => {
   // @ts-ignore
   $TitleBarMenuBar.role = AriaRoles.MenuBar
   $TitleBarMenuBar.tabIndex = 0
-  $TitleBarMenuBar.onmousedown = ViewletTitleBarMenuBarEvents.handleClick
-  $TitleBarMenuBar.addEventListener(DomEventType.FocusOut, ViewletTitleBarMenuBarEvents.handleFocusOut)
-  $TitleBarMenuBar.addEventListener(DomEventType.FocusIn, ViewletTitleBarMenuBarEvents.handleFocus)
-  $TitleBarMenuBar.onmouseover = ViewletTitleBarMenuBarEvents.handleMouseOver
 
   return {
     $Viewlet: $TitleBarMenuBar,
     $TitleBarMenuBar,
     $$Menus: [],
   }
+}
+
+export const attachEvents = (state) => {
+  const { $TitleBarMenuBar } = state
+  $TitleBarMenuBar.onmousedown = ViewletTitleBarMenuBarEvents.handleClick
+  $TitleBarMenuBar.addEventListener(DomEventType.FocusOut, ViewletTitleBarMenuBarEvents.handleFocusOut)
+  $TitleBarMenuBar.addEventListener(DomEventType.FocusIn, ViewletTitleBarMenuBarEvents.handleFocus)
+  $TitleBarMenuBar.onmouseover = ViewletTitleBarMenuBarEvents.handleMouseOver
 }
 
 export const dispose = (state) => {}
