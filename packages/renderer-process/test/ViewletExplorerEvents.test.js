@@ -14,6 +14,7 @@ beforeAll(() => {
       this.dataTransfer = options.dataTransfer || {}
       // @ts-ignore
       this.dataTransfer.setData ||= () => {}
+      this.dataTransfer.setDragImage ||= () => {}
       // @ts-ignore
       this.dataTransfer.items ||= []
       this.dataTransfer.files ||= []
@@ -32,10 +33,14 @@ jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => 
     send: jest.fn(() => {}),
   }
 })
+
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
-    isElectron: () => {
+    isElectron() {
       return true
+    },
+    getBrowser() {
+      return 'test'
     },
   }
 })
