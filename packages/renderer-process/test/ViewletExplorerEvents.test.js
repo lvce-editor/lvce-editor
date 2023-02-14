@@ -190,7 +190,7 @@ test('event - click', () => {
     },
   ])
   const $GitKeep = state.$Viewlet.children[0]
-  const event = new MouseEvent('mousedown', {
+  const event = new MouseEvent('click', {
     clientX: 50,
     clientY: 50,
     bubbles: true,
@@ -219,7 +219,7 @@ test('event - click on wrapper div', () => {
       path: '/index.html',
     },
   ])
-  const event = new MouseEvent('mousedown', {
+  const event = new MouseEvent('click', {
     clientX: 50,
     clientY: 50,
     bubbles: true,
