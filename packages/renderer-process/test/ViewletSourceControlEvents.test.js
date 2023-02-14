@@ -7,22 +7,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
-const ViewletSourceControl = await import(
-  '../src/parts/ViewletSourceControl/ViewletSourceControl.js'
-)
+const ViewletSourceControl = await import('../src/parts/ViewletSourceControl/ViewletSourceControl.js')
 
 test('event - click', () => {
   const state = ViewletSourceControl.create()
@@ -41,10 +34,7 @@ test('event - click', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Source Control.handleClick',
-    0
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Source Control.handleClick', 0)
 })
 
 test('event - mouseover', () => {
@@ -63,10 +53,7 @@ test('event - mouseover', () => {
     cancelable: true,
   })
   $ViewletTree.children[0].dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Source Control.handleMouseOver',
-    0
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Source Control.handleMouseOver', 0)
 })
 
 test('event - contextmenu', () => {
@@ -88,11 +75,7 @@ test('event - contextmenu', () => {
   })
   $ViewletTree.children[0].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Source Control.handleContextMenu',
-    10,
-    20
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Source Control.handleContextMenu', 0, 10, 20)
 })
 
 test('event - input', () => {
@@ -104,8 +87,5 @@ test('event - input', () => {
     cancelable: true,
   })
   $ViewSourceControlInput.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Source Control.handleInput',
-    'test'
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Source Control.handleInput', 'test')
 })

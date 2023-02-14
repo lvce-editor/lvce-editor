@@ -9,9 +9,12 @@ export const Commands = {
   handleClickAdd: ViewletSourceControl.handleClickAdd,
   handleClickDiscard: ViewletSourceControl.handleClickDiscard,
   handleClickRestore: ViewletSourceControl.handleClickRestore,
-  handleContextMenu: ViewletSourceControl.handleContextMenu,
   handleInput: ViewletSourceControl.handleInput,
   handleMouseOver: ViewletSourceControl.handleMouseOver,
+}
+
+export const LazyCommands = {
+  handleContextMenu: () => import('./ViewletSourceControlHandleContextMenu.js'),
 }
 
 export const Css = [
