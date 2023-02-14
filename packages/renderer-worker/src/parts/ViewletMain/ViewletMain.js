@@ -179,7 +179,7 @@ export const getChildren = (state) => {
 // TODO content loaded should return commands which
 // get picked up by viewletlayout and sent to renderer process
 export const contentLoaded = async (state) => {
-  if (state.editors.length === 0) {
+  if (state.grid.length === 0) {
     return []
   }
   const editor = Arrays.last(state.editors)
