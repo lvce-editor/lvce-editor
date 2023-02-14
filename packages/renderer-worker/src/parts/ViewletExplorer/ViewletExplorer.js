@@ -32,7 +32,7 @@ import * as SortExplorerItems from '../SortExplorerItems/SortExplorerItems.js'
 
 // TODO instead of root string, there should be a root dirent
 
-export const create = (id, uri, x, y, width, height) => {
+export const create = (id, uri, x, y, width, height, uid) => {
   return {
     root: '',
     items: [],
@@ -53,6 +53,7 @@ export const create = (id, uri, x, y, width, height) => {
     excluded: [],
     editingValue: '',
     editingType: ExplorerEditingType.None,
+    uid,
   }
 }
 

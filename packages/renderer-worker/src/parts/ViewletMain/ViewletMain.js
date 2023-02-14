@@ -245,6 +245,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   }
 
   const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, TAB_HEIGHT, width, height - TAB_HEIGHT)
+  instance.uid = instanceUid
   instance.show = false
   const gridItem = {
     x,
@@ -254,6 +255,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     childCount: 0,
     uri,
     uid: 678,
+    id: instance.id,
   }
   state.grid.push(gridItem)
   state.activeIndex = state.grid.length - 1
@@ -282,15 +284,16 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     /* Viewlet.append */ 'Viewlet.appendCustom',
     /* parentId */ ViewletModuleId.Main,
     /* method */ 'appendContent',
-    /* id  */ instance.id,
+    /* id  */ instanceUid,
   ])
   if (focus) {
-    allCommands.push(...Viewlet.getFocusCommands(instance.id))
+    allCommands.push(...Viewlet.getFocusCommands(instance.id, instanceUid))
   }
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ allCommands)
   if (!ViewletStates.hasInstance(id)) {
     return state
   }
+  console.log({ ...ViewletStates.state.instances })
   return state
 }
 
@@ -433,7 +436,6 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const id = ViewletMap.getId(uri)
     const uid = Id.create()
     const tabsId = Id.create()
-
     const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
     instance.show = false
     instance.uid = uid
@@ -442,6 +444,13 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const tabLabel = Workspace.pathBaseName(uri)
     const tabTitle = getTabTitle(uri)
     const allCommands = []
+    const firstGridItem = state.grid[0]
+    // resize content
+    allCommands.push(...Viewlet.resize(firstGridItem.uid, { x: 0, y: 0, width: width - overlayWidth, height }))
+    // resize tabs
+    // TODO
+    // allCommands.push(Viewlet.resize())
+    console.log(state.grid[0])
     allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver'])
     allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay'])
     allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsId])

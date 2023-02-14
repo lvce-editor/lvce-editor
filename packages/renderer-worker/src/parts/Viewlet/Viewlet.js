@@ -8,7 +8,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletElectron from './ViewletElectron.js'
 
-export const getFocusCommands = (id) => {
+export const getFocusCommands = (id, uid) => {
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
     return []
@@ -17,22 +17,22 @@ export const getFocusCommands = (id) => {
   if (instance && instance.factory.focus) {
     const oldState = instance.state
     const newState = instance.factory.focus(oldState)
-    commands.push(...ViewletManager.render(instance.factory, oldState, newState))
+    commands.push(...ViewletManager.render(instance.factory, oldState, newState, uid))
   }
   const oldInstance = ViewletStates.getFocusedInstance()
   if (oldInstance) {
     if (oldInstance && oldInstance.factory.handleBlur) {
       const oldState = oldInstance.state
       const newState = oldInstance.factory.handleBlur(oldState)
-      commands.push(...ViewletManager.render(oldInstance.factory, oldState, newState))
+      commands.push(...ViewletManager.render(oldInstance.factory, oldState, newState, uid))
     }
   }
   ViewletStates.setFocusedInstance(instance)
   return commands
 }
 
-export const focus = async (id) => {
-  const focusCommands = getFocusCommands(id)
+export const focus = async (id, uid) => {
+  const focusCommands = getFocusCommands(id, uid)
   if (focusCommands.length === 0) {
     return
   }

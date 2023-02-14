@@ -48,9 +48,14 @@ export const getState = (key) => {
 }
 
 export const setState = (key, newState) => {
-  Assert.string(key)
+  if (!key) {
+    throw new Error(`[setState] key must be defined but is ${key}`)
+  }
   Assert.object(newState)
   const instance = getInstance(key)
+  if (!instance) {
+    throw new Error(`instance ${key} not found`)
+  }
   instance.state = newState
 }
 
