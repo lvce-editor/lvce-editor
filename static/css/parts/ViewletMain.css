@@ -5,6 +5,7 @@
   position: absolute;
 }
 
+.MainContent,
 #MainContent {
   contain: strict;
   flex: 1;
@@ -26,7 +27,7 @@
 
 .DragOverlay {
   position: absolute;
-  background: aqua;
+  background: rgba(83, 89, 93, 0.5);
   z-index: 1;
   pointer-events: none;
   transition: all 100ms;
