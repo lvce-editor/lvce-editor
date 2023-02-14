@@ -121,7 +121,7 @@ export const handleMouseDown = (event) => {
   Event.preventDefault(event)
   const { clientX, clientY, detail } = event
   const modifier = GetModifierKey.getModifierKey(event)
-  EditorFunctions.handleMouseDown(clientX, clientY, detail)
+  EditorFunctions.handleMouseDown(modifier, clientX, clientY, detail)
 }
 
 // TODO figure out whether it is possible to register hover provider without mousemove
