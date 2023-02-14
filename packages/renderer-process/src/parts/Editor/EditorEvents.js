@@ -11,6 +11,7 @@ import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as Event from '../Event/Event.js'
+import * as TouchEvent from '../TouchEvent/TouchEvent.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -195,33 +196,17 @@ export const handleScrollBarContextMenu = (event) => {
   Event.stopPropagation(event)
 }
 
-const toSimpleTouch = (touch) => {
-  return {
-    x: touch.clientX,
-    y: touch.clientY,
-  }
-}
-
-const toSimpleTouchEvent = (event) => {
-  const touches = Array.from(event.touches).map(toSimpleTouch)
-  const changedTouches = Array.from(event.changedTouches).map(toSimpleTouch)
-  return {
-    touches,
-    changedTouches,
-  }
-}
-
 // TODO add touch cancel handler
 
 // TODO use touch events for scrolling
 
 export const handleTouchStart = (event) => {
-  const touchEvent = toSimpleTouchEvent(event)
+  const touchEvent = TouchEvent.toSimpleTouchEvent(event)
   RendererWorker.send(/* EditorHandleTouchStart.editorHandleTouchStart */ 'Editor.handleTouchStart', /* touchEvent */ touchEvent)
 }
 
 export const handleTouchMove = (event) => {
-  const touchEvent = toSimpleTouchEvent(event)
+  const touchEvent = TouchEvent.toSimpleTouchEvent(event)
   RendererWorker.send(/* EditorHandleTouchMove.editorHandleTouchMove */ 'Editor.handleTouchMove', /* touchEvent */ touchEvent)
 }
 
@@ -229,7 +214,7 @@ export const handleTouchEnd = (event) => {
   if (event.cancelable) {
     Event.preventDefault(event)
   }
-  const touchEvent = toSimpleTouchEvent(event)
+  const touchEvent = TouchEvent.toSimpleTouchEvent(event)
   RendererWorker.send(/* EditorHandleTouchEnd.editorHandleTouchEnd */ 'Editor.handleTouchEnd', /* touchEvent */ touchEvent)
 }
 
