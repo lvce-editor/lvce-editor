@@ -18,15 +18,10 @@ export const LazyCommands = {
   handleClick: () => import('./ViewletExtensionsHandleClick.js'),
   handleClickCurrent: () => import('./ViewletExtensionsHandleClickCurrent.js'),
   handleClickCurrentButKeepFocus: () => import('./ViewletExtensionsHandleClickCurrentButKeepFocus.js'),
-  handleContextMenu: () => import('./ViewletExtensionsHandleContextMenu.js')
+  handleContextMenu: () => import('./ViewletExtensionsHandleContextMenu.js'),
   ...VirtualList.LazyCommands
 }
 
-export const Css = [
-  '/css/parts/ViewletExtensions.css',
-  '/css/parts/ViewletList.css',
-  '/css/parts/InputBox.css',
-  '/css/parts/ScrollBar.css',
-]
+export const Css = ['/css/parts/ViewletExtensions.css', '/css/parts/ViewletList.css', '/css/parts/InputBox.css', '/css/parts/ScrollBar.css']
 
 export * from './ViewletExtensions.js'
