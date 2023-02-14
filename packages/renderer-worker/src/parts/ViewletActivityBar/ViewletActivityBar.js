@@ -1,9 +1,6 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as Command from '../Command/Command.js'
 import * as Height from '../Height/Height.js'
-import * as I18nString from '../I18NString/I18NString.js'
 import * as Icon from '../Icon/Icon.js'
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { focusIndex } from './ViewletActivityBarFocusIndex.js'
@@ -196,11 +193,6 @@ export const toggleActivityBarItem = async (state, item) => {
     ...state,
     items: state.activityBarItems.filter(isEnabled),
   }
-}
-
-export const handleContextMenu = async (state, x, y) => {
-  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.ActivityBar)
-  return state
 }
 
 export const handleBlur = (state) => {

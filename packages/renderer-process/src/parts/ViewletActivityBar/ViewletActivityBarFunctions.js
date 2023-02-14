@@ -17,3 +17,7 @@ export const handleBlur = () => {
 export const handleFocus = () => {
   RendererWorker.send('ActivityBar.focus')
 }
+
+export const handleContextMenu = (button, x, y) => {
+  RendererWorker.send('ActivityBar.handleContextMenu', button, x, y)
+}
