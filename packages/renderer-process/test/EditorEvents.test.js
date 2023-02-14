@@ -360,7 +360,7 @@ test('event - context menu', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('ContextMenu.show', 15, 30, MenuEntryId.Editor)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleContextMenu', 0, 15, 30, MenuEntryId.Editor)
 })
 
 test.skip('event - beforeinput on contenteditable on mobile - no selection', () => {

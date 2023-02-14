@@ -18,8 +18,8 @@ import * as EditorFunctions from './EditorFunctions.js'
 
 export const handleContextMenu = (event) => {
   Event.preventDefault(event)
-  const { clientX, clientY } = event
-  EditorFunctions.handleContextMenu(clientX, clientY)
+  const { button, clientX, clientY } = event
+  EditorFunctions.handleContextMenu(button, clientX, clientY)
 }
 
 export const handleFocus = (event) => {
