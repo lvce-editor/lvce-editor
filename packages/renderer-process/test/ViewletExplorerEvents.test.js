@@ -105,7 +105,7 @@ test('event - contextmenu', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleContextMenuMouseAt', 50, 50)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleContextMenu', 2, 50, 50)
 })
 
 test('event - contextmenu - activated via keyboard', () => {
@@ -138,7 +138,7 @@ test('event - contextmenu - activated via keyboard', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleContextMenuKeyboard')
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleContextMenu', -1, 50, 50)
 })
 
 // TODO test expand/collapse

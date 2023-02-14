@@ -53,9 +53,8 @@ export const handleClick = (event) => {
 }
 
 const handleContextMenuMouse = (event) => {
-  const x = event.clientX
-  const y = event.clientY
-  ViewletSearchFunctions.handleContextMenuMouseAt(x, y)
+  const { clientX, clientY } = event
+  ViewletSearchFunctions.handleContextMenuMouseAt(clientX, clientY)
 }
 
 const handleContextMenuKeyboard = (event) => {
@@ -64,7 +63,8 @@ const handleContextMenuKeyboard = (event) => {
 
 export const handleContextMenu = (event) => {
   Event.preventDefault(event)
-  switch (event.button) {
+  const { button } = event
+  switch (button) {
     case MouseEventType.Keyboard:
       return handleContextMenuKeyboard(event)
     default:
