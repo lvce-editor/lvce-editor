@@ -6,8 +6,8 @@ import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at star
 import * as GetFileHandlesFromDataTransferItems from '../GetFileHandlesFromDataTransferItems/GetFileHandlesFromDataTransferItems.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Platform from '../Platform/Platform.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as ViewletExplorerFunctions from './ViewletExplorerFunctions.js'
 
 // TODO put drop into separate module and use executeCommand to call it
 
@@ -75,11 +75,11 @@ export const handleFocus = (event) => {
   if (!isTrusted || target.className === 'InputBox') {
     return
   }
-  RendererWorker.send('Explorer.focus')
+  ViewletExplorerFunctions.focus()
 }
 
 export const handleBlur = (event) => {
-  RendererWorker.send('Explorer.handleBlur')
+  ViewletExplorerFunctions.handleBlur()
 }
 
 /**
@@ -91,7 +91,7 @@ export const handleDragOver = (event) => {
   const { dataTransfer, clientX, clientY } = event
   DataTransfer.setEffectAllowed(dataTransfer, AllowedDragEffectType.CopyMove)
   DataTransfer.setDropEffect(dataTransfer, DropEffectType.Copy)
-  RendererWorker.send('Explorer.handleDragOver', clientX, clientY)
+  ViewletExplorerFunctions.handleDragOver(clientX, clientY)
 }
 
 /**
@@ -118,22 +118,22 @@ export const handleDrop = async (event) => {
   const { files, dropEffect, items } = event.dataTransfer
   const { clientX, clientY } = event
   if (Platform.isElectron()) {
-    RendererWorker.send('Explorer.handleDrop', clientX, clientY, files)
+    ViewletExplorerFunctions.handleDrop(clientX, clientY, files)
   } else {
     // unfortunately, DataTransferItem cannot be transferred to web worker
     // therefore the file system handles are sent to the web worker
     const handles = await GetFileHandlesFromDataTransferItems.getFileHandles(items)
-    RendererWorker.send('Explorer.handleDrop', clientX, clientY, handles)
+    ViewletExplorerFunctions.handleDrop(clientX, clientY, handles)
   }
 }
 
 const handleContextMenuMouse = (event) => {
   const { clientX, clientY } = event
-  RendererWorker.send(/* Explorer.handleContextMenuMouseAt */ 'Explorer.handleContextMenuMouseAt', /* x */ clientX, /* y */ clientY)
+  ViewletExplorerFunctions.handleContextMenuMouseAt(clientX, clientY)
 }
 
 const handleContextMenuKeyboard = (event) => {
-  RendererWorker.send(/* Explorer.handleContextMenuKeyboard */ 'Explorer.handleContextMenuKeyboard')
+  ViewletExplorerFunctions.handleContextMenuKeyBoard()
 }
 
 // TODO maybe use aria active descendant instead
@@ -162,17 +162,15 @@ export const handleClick = (event) => {
   if (button !== MouseEventType.LeftClick) {
     return
   }
-  RendererWorker.send(/* Explorer.handleClickAt */ 'Explorer.handleClickAt', /* x */ clientX, /* y */ clientY)
+  ViewletExplorerFunctions.handleClickAt(clientX, clientY)
 }
 
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
   switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(/* Explorer.handleWheel */ 'Explorer.handleWheel', /* deltaY */ deltaY)
-      break
     case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(/* Explorer.handleWheel */ 'Explorer.handleWheel', /* deltaY */ deltaY)
+      ViewletExplorerFunctions.handleWheel(deltaY)
       break
     default:
       break
@@ -206,5 +204,5 @@ export const handleMouseLeave = (event) => {
 export const handleEditingInput = (event) => {
   const { target } = event
   const { value } = target
-  RendererWorker.send(/* Explorer.updateEditingValue */ 'Explorer.updateEditingValue', /* value */ value)
+  ViewletExplorerFunctions.updateEditingValue(value)
 }
