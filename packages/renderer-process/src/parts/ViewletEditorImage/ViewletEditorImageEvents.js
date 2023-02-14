@@ -1,7 +1,6 @@
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
-import * as HandleContextMenu from '../HandleContextMenu/HandleContextMenu.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletEditorImageFunctions from './ViewletEditorImageFunctions.js'
 
@@ -63,7 +62,8 @@ export const handleWheel = (event) => {
  * @param {MouseEvent} event
  */
 export const handleContextMenu = (event) => {
-  HandleContextMenu.handleContextMenu('EditorImage.handleContextMenu', event)
+  const { button, clientX, clientY } = event
+  ViewletEditorImageFunctions.handleContextMenu(button, clientX, clientY)
 }
 
 export const handleError = (event) => {
