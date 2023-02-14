@@ -14,12 +14,13 @@ export const mount = ($Parent, state) => {
   $Parent.replaceChildren(state.$Viewlet)
 }
 
-export const create = (id) => {
+export const create = (id, uid = id) => {
+  console.log({ id, uid })
   const module = state.modules[id]
   if (state.instances[id] && state.instances[id].state.$Viewlet.isConnected) {
     state.instances[id].state.$Viewlet.remove()
   }
-  state.instances[id] = {
+  state.instances[uid] = {
     state: module.create(),
     factory: module,
   }
@@ -116,7 +117,7 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.create': {
-        create(viewletId)
+        create(viewletId, method)
 
         break
       }

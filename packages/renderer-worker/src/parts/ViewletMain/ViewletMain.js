@@ -17,6 +17,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as EditorSplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
+import * as Id from '../Id/Id.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -228,6 +229,8 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const width = state.width
   const height = state.height - TAB_HEIGHT
   const id = ViewletMap.getId(uri)
+  const tabsUid = Id.create()
+  const instanceUid = Id.create()
 
   for (const editor of state.grid) {
     if (editor.uri === uri) {
@@ -258,10 +261,10 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const tabTitle = getTabTitle(uri)
   const allCommands = []
   await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
-  allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs])
+  allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
   allCommands.push([
     'Viewlet.send',
-    ViewletModuleId.MainTabs,
+    tabsUid,
     'setTabs',
     [
       {
@@ -270,16 +273,11 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       },
     ],
   ])
-  allCommands.push(['Viewlet.setBounds', ViewletModuleId.MainTabs, x, 0, width, TAB_HEIGHT])
+  allCommands.push(['Viewlet.setBounds', tabsUid, x, 0, width, TAB_HEIGHT])
   // @ts-ignore
   const commands = await ViewletManager.load(instance, false)
   allCommands.push(...commands)
-  allCommands.push([
-    /* Viewlet.append */ 'Viewlet.appendCustom',
-    /* parentId */ ViewletModuleId.Main,
-    /* method */ 'appendTabs',
-    /* id  */ ViewletModuleId.MainTabs,
-  ])
+  allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsUid])
   allCommands.push([
     /* Viewlet.append */ 'Viewlet.appendCustom',
     /* parentId */ ViewletModuleId.Main,
@@ -433,41 +431,28 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     ]
     const uri = filePath
     const id = ViewletMap.getId(uri)
-    const uid = 12345
+    const uid = Id.create()
+    const tabsId = Id.create()
 
     const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
     instance.show = false
-    const oldActiveIndex = state.activeIndex
-    const temporaryUri = `tmp://${Math.random()}`
-    state.editors.push({ uri: temporaryUri })
-    state.activeIndex = state.editors.length - 1
+    instance.uid = uid
+    state.grid.push({ uri, uid })
+    state.activeIndex = state.grid.length - 1
     const tabLabel = Workspace.pathBaseName(uri)
     const tabTitle = getTabTitle(uri)
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'split',
-      splitDirection,
-      overlayX,
-      overlayY,
-      overlayWidth,
-      overlayHeight,
-      tabs,
-      uid
-    )
+    const allCommands = []
+    allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver'])
+    allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay'])
+    allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsId])
+    allCommands.push(['Viewlet.send', tabsId, 'setTabs', [{ label: tabLabel, title: tabTitle }]])
+    allCommands.push(['Viewlet.setBounds', tabsId, overlayX, overlayY - y - TAB_HEIGHT, overlayWidth, TAB_HEIGHT])
     // @ts-ignore
-    await ViewletManager.load(instance, true)
-    await RendererProcess.invoke(
-      /* Viewlet.append */ 'Viewlet.appendCustom',
-      /* parentId */ ViewletModuleId.Main,
-      /* method */ 'appendContent',
-      uid,
-      /* id  */ instance.id
-    )
-    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
-    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
+    const commands = await ViewletManager.load(instance, false)
+    allCommands.push(...commands)
+    allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsId])
     // TODO sash could be horizontal or vertical
-    await RendererProcess.invoke(
+    allCommands.push([
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ ViewletModuleId.Main,
       /* method */ 'addSash',
@@ -475,8 +460,9 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
       /* x */ overlayX,
       /* y */ overlayY - y - TAB_HEIGHT,
       /* width */ 4,
-      /* height */ overlayHeight + TAB_HEIGHT
-    )
+      /* height */ overlayHeight + TAB_HEIGHT,
+    ])
+    await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ allCommands)
   }
   return state
 }
