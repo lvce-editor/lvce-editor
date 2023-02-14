@@ -275,11 +275,14 @@ const append = (parentId, childId, referenceNodes) => {
   }
 }
 
-export const appendCustom = (parentId, method, uid, childId) => {
+export const appendCustom = (parentId, method, childId) => {
   const parentInstance = state.instances[parentId]
   const childInstance = state.instances[childId]
+  if (!childInstance) {
+    throw new Error(`appendCustom: childInstance ${childId} must be defined`)
+  }
   const $Child = childInstance.state.$Viewlet
-  parentInstance.factory[method](parentInstance.state, uid, $Child)
+  parentInstance.factory[method](parentInstance.state, $Child)
 }
 
 const appendToBody = (childId) => {

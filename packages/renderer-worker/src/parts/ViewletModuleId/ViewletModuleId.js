@@ -42,6 +42,8 @@ export const Locations = 'Locations'
 
 export const Main = 'Main'
 
+export const MainTabs = 'MainTabs'
+
 export const None = ''
 
 export const Noop = 'Noop'

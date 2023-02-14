@@ -1,9 +1,8 @@
 import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
 import * as DataTransfer from '../DataTransfer/DataTransfer.js'
-import * as Event from '../Event/Event.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as ViewletMainFunctions from './ViewletMainFunctions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Event from '../Event/Event.js'
+import * as ViewletMainFunctions from './ViewletMainFunctions.js'
 
 const ClassNames = {
   Label: 'Label',
@@ -63,55 +62,6 @@ const getIndex = ($Target) => {
     default:
       return -1
   }
-}
-
-export const handleTabCloseButtonMouseDown = (event, index) => {
-  ViewletMainFunctions.closeEditor(index)
-}
-
-export const handleTabMouseDown = (event, index) => {
-  const { button } = event
-  switch (button) {
-    case MouseEventType.LeftClick:
-      ViewletMainFunctions.handleTabClick(index)
-      break
-    case MouseEventType.MiddleClick:
-      ViewletMainFunctions.closeEditor(index)
-      break
-    case MouseEventType.RightClick:
-      break
-    default:
-      break
-  }
-}
-
-export const handleTabsMouseDown = (event) => {
-  const { target } = event
-  const index = getIndex(target)
-  if (index === -1) {
-    return
-  }
-  switch (target.className) {
-    case ClassNames.EditorTabCloseButton:
-      handleTabCloseButtonMouseDown(event, index)
-      break
-    case ClassNames.MainTab:
-    case ClassNames.Label:
-      handleTabMouseDown(event, index)
-      break
-    default:
-      break
-  }
-}
-
-export const handleTabsContextMenu = (event) => {
-  const { clientX, clientY, target } = event
-  const index = getIndex(target)
-  if (index === -1) {
-    return
-  }
-  Event.preventDefault(event)
-  ViewletMainFunctions.handleTabContextMenu(index, clientX, clientY)
 }
 
 const handleSashPointerMove = () => {

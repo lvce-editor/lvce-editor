@@ -1,23 +1,8 @@
-import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as EditorGroup from '../EditorGroup/EditorGroup.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
-import * as Tab from '../Tab/Tab.js'
-import * as ViewletMainEvents from './ViewletMainEvents.js'
-import * as ViewletSash from '../ViewletSash/ViewletSash.js'
 import * as VisibleSash from '../VisibleSash/VisibleSash.js'
-
-const create$MainTabs = () => {
-  const $MainTabs = document.createElement('div')
-  $MainTabs.className = 'MainTabs'
-  // @ts-ignore
-  $MainTabs.role = AriaRoles.TabList
-  $MainTabs.onmousedown = ViewletMainEvents.handleTabsMouseDown
-  $MainTabs.oncontextmenu = ViewletMainEvents.handleTabsContextMenu
-  $MainTabs.ondragstart = ViewletMainEvents.handleDragStart
-  // TODO race condition: what if tab has already been closed?
-  return $MainTabs
-}
+import * as ViewletMainEvents from './ViewletMainEvents.js'
 
 // TODO Main should not be bound to Editor -> Lazy load Editor
 export const create = () => {
@@ -30,31 +15,16 @@ export const create = () => {
   // @ts-ignore
   $Viewlet.role = AriaRoles.Main
 
-  // const $MainContent = document.createElement('div')
-  // $MainContent.id = 'MainContent'
-
-  // const $MainTabs = document.createElement('div')
-  // $MainTabs.className = 'MainTabs'
-  // $MainTabs.onmousedown = handleTabsMouseDown
-  // $MainTabs.oncontextmenu = handleTabsContextMenu
-  // // TODO race condition: what if tab has already been closed?
-  // $Main.append($MainTabs, $MainContent)
-
   return {
     $Viewlet,
     $Main: $Viewlet,
-    $MainContent: undefined,
-    $MainTabs: undefined,
     $DragOverlay: undefined,
     $ContentMap: Object.create(null),
   }
 }
 
 export const dispose = (state) => {
-  state.$MainContent.remove()
-  state.$MainContent = undefined
   state.$MainTabs.remove()
-  state.$MainTabs = undefined
 }
 
 export const replaceEditor = (state, id, uri, languageId) => {
@@ -79,13 +49,10 @@ export const closeAllViewlets = (state) => {
   while ($Main.firstChild) {
     $Main.firstChild.remove()
   }
-  state.$MainContent = undefined
   state.$MainTabs = undefined
 }
 
 export const closeViewletAndTab = (state, index) => {
-  state.$MainContent.remove()
-  state.$MainContent = undefined
   state.$MainTabs.remove()
   state.$MainTabs = undefined
 }
@@ -93,122 +60,21 @@ export const closeViewletAndTab = (state, index) => {
 export const focus = () => {}
 
 export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex, background = false) => {
-  const $Tab = Tab.create(tabLabel, tabTitle, background)
-
-  if (oldActiveIndex !== -1 && state.$MainTabs) {
-    const $OldTab = state.$MainTabs.children[oldActiveIndex]
-    if ($OldTab) {
-      $OldTab.ariaSelected = AriaBoolean.False
-    }
-  }
-
-  if (!state.$MainTabs) {
-    state.$MainTabs = create$MainTabs()
-    state.$Main.append(state.$MainTabs)
-  }
-
-  const { $MainTabs } = state
-  $MainTabs.append($Tab)
-
   // await Viewlet.load(id)
   // const instance = Viewlet.state.instances[id]
   // // TODO race condition: what if tab has already been closed?
-  // Viewlet.mount(state.$MainContent, instance.state)
   // Viewlet.focus(id)
-  // Layout.state.$Main.append(state.$MainTabs, state.$MainContent)
-}
-
-const create$MainContent = () => {
-  const $MainContent = document.createElement('div')
-  $MainContent.id = 'MainContent'
-  return $MainContent
 }
 
 export const appendViewlet = (state, childName, $Child) => {
-  if (!state.$MainContent) {
-    state.$MainContent = create$MainContent()
-    state.$Main.append(state.$MainContent)
-  }
-  const { $MainContent } = state
-  // TODO should bring back old optimization of reusing existing editor dom nodes if possible
-  while ($MainContent.firstChild) {
-    $MainContent.firstChild.remove()
-  }
-  $MainContent.append($Child)
-
   // await Viewlet.load(id)
   // const instance = Viewlet.state.instances[id]
   // // TODO race condition: what if tab has already been closed?
-  // Viewlet.mount(state.$MainContent, instance.state)
   // Viewlet.focus(id)
-  // Layout.state.$Main.append(state.$MainTabs, state.$MainContent)
 }
 
 // TODO when there is not enough space available, only show tab close button
 // for focused tab (that's how chrome and firefox do it)
-export const openAnotherTab = async (state, tabLabel, tabTitle, unFocusIndex) => {
-  const $Tab = Tab.create(tabLabel, tabTitle, false)
-  const { $MainTabs } = state
-  $MainTabs.children[unFocusIndex].ariaSelected = AriaBoolean.False
-  $MainTabs.append($Tab)
-}
-
-export const closeOneTab = (state, closeIndex, focusIndex) => {
-  const { $MainTabs } = state
-  $MainTabs.children[closeIndex].remove()
-  $MainTabs.children[focusIndex].ariaSelected = AriaBoolean.True
-}
-
-export const closeOneTabOnly = (state, closeIndex) => {
-  const { $MainTabs } = state
-  $MainTabs.children[closeIndex].remove()
-}
-
-export const focusAnotherTab = (state, unFocusIndex, focusIndex) => {
-  const { $MainTabs } = state
-  $MainTabs.children[unFocusIndex].ariaSelected = AriaBoolean.False
-  $MainTabs.children[focusIndex].ariaSelected = AriaBoolean.True
-}
-
-export const closeOthers = (state, keepIndex, focusIndex) => {
-  for (let i = state.$MainTabs.children.length - 1; i >= 0; i--) {
-    const $Tab = state.$MainTabs.children[i]
-    if (i === keepIndex) {
-      $Tab.ariaSelected = AriaBoolean.True
-      $Tab.tabIndex = 0
-    } else {
-      $Tab.remove()
-    }
-  }
-}
-
-export const closeTabsRight = (state, index) => {
-  for (let i = state.$MainTabs.children.length - 1; i > index; i--) {
-    const $Tab = state.$MainTabs.children[i]
-    $Tab.remove()
-  }
-  const $Tab = state.$MainTabs.children[index]
-  $Tab.ariaSelected = AriaBoolean.True
-  $Tab.tabIndex = 0
-}
-
-export const closeTabsLeft = (state, index) => {
-  for (let i = index - 1; i >= 0; i--) {
-    const $Tab = state.$MainTabs.children[i]
-    $Tab.remove()
-  }
-  const $Tab = state.$MainTabs.children[0]
-  $Tab.ariaSelected = AriaBoolean.True
-  $Tab.tabIndex = 0
-}
-
-export const updateTab = (state, index, text) => {
-  const { $MainTabs } = state
-  const $Tab = $MainTabs.children[index]
-  const $TabLabel = $Tab.firstChild
-  $Tab.title = text
-  $TabLabel.textContent = text
-}
 
 export const highlightDragOver = (state) => {
   const { $MainTabs } = state
@@ -246,22 +112,6 @@ export const hideDragOverlay = (state) => {
   state.$DragOverlay = undefined
 }
 
-export const split = (state, splitDirection, x, y, width, height, tabs, uid) => {
-  const { $Viewlet } = state
-  const $MainTabs = create$MainTabs()
-  for (const tab of tabs) {
-    const $Tab = Tab.create(tab.label, tab.title)
-    $MainTabs.append($Tab)
-  }
-  const top = parseInt($Viewlet.style.top)
-  SetBounds.setBounds($MainTabs, x, y - top - 35, width, 35)
-  const $MainContent = document.createElement('div')
-  $MainContent.className = 'MainContent'
-  SetBounds.setBounds($MainContent, x, y - top, width, height)
-  $Viewlet.append($MainTabs, $MainContent)
-  state.$ContentMap[uid] = $MainContent
-}
-
 export const addSash = (state, sashId, x, y, width, height) => {
   const { $Viewlet } = state
   const $Sash = VisibleSash.create()
@@ -270,8 +120,13 @@ export const addSash = (state, sashId, x, y, width, height) => {
   $Viewlet.append($Sash)
 }
 
-export const appendContent = (state, contentId, $Child) => {
-  const { $ContentMap } = state
-  const $Content = $ContentMap[contentId]
-  $Content.append($Child)
+export const appendContent = (state, $Child) => {
+  const { $Viewlet } = state
+  $Viewlet.append($Child)
+}
+
+export const appendTabs = (state, $Child) => {
+  const { $Viewlet } = state
+  console.log({ $Child })
+  $Viewlet.append($Child)
 }

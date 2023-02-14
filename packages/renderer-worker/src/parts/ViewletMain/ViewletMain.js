@@ -83,6 +83,7 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
+    grid: [],
   }
 }
 
@@ -228,7 +229,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const height = state.height - TAB_HEIGHT
   const id = ViewletMap.getId(uri)
 
-  for (const editor of state.editors) {
+  for (const editor of state.grid) {
     if (editor.uri === uri) {
       console.log('found existing editor')
       // TODO if the editor is already open, nothing needs to be done
@@ -240,29 +241,56 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     }
   }
 
-  const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
-  const oldActiveIndex = state.activeIndex
-  const temporaryUri = `tmp://${Math.random()}`
-  state.editors.push({ uri: temporaryUri })
-  state.activeIndex = state.editors.length - 1
+  const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, TAB_HEIGHT, width, height - TAB_HEIGHT)
+  instance.show = false
+  const gridItem = {
+    x,
+    y,
+    width,
+    height,
+    childCount: 0,
+    uri,
+    uid: 678,
+  }
+  state.grid.push(gridItem)
+  state.activeIndex = state.grid.length - 1
   const tabLabel = Workspace.pathBaseName(uri)
   const tabTitle = getTabTitle(uri)
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ ViewletModuleId.Main,
-    /* method */ 'openViewlet',
-    /* tabLabel */ tabLabel,
-    /* tabTitle */ tabTitle,
-    /* oldActiveIndex */ oldActiveIndex
-  )
+  const allCommands = []
+  await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
+  allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs])
+  allCommands.push([
+    'Viewlet.send',
+    ViewletModuleId.MainTabs,
+    'setTabs',
+    [
+      {
+        label: tabLabel,
+        title: tabTitle,
+      },
+    ],
+  ])
+  allCommands.push(['Viewlet.setBounds', ViewletModuleId.MainTabs, x, 0, width, TAB_HEIGHT])
   // @ts-ignore
-  await ViewletManager.load(instance, focus)
+  const commands = await ViewletManager.load(instance, focus)
+  allCommands.push(...commands)
+  allCommands.push([
+    /* Viewlet.append */ 'Viewlet.appendCustom',
+    /* parentId */ ViewletModuleId.Main,
+    /* method */ 'appendTabs',
+    /* id  */ ViewletModuleId.MainTabs,
+  ])
+  allCommands.push([
+    /* Viewlet.append */ 'Viewlet.appendCustom',
+    /* parentId */ ViewletModuleId.Main,
+    /* method */ 'appendContent',
+    /* id  */ instance.id,
+  ])
+  console.log({ allCommands })
+  await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ allCommands)
   if (!ViewletStates.hasInstance(id)) {
     return state
   }
-  const actualUri = ViewletStates.getState(id).uri
-  const index = state.editors.findIndex((editor) => editor.uri === temporaryUri)
-  state.editors[index].uri = actualUri
   return state
 }
 
