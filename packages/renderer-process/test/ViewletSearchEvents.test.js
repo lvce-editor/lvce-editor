@@ -8,24 +8,17 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
-const ViewletSearch = await import(
-  '../src/parts/ViewletSearch/ViewletSearch.js'
-)
+const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
 
 test('event - input', () => {
   const state = ViewletSearch.create()
@@ -39,10 +32,7 @@ test('event - input', () => {
   })
   $ViewletSearchInput.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Search.handleInput',
-    'test search'
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Search.handleInput', 'test search')
 })
 test('event - click', () => {
   const state = ViewletSearch.create()
@@ -84,9 +74,7 @@ test('event - contextmenu - activated via keyboard', () => {
   $ListItems.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Search.handleContextMenuKeyboard'
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Search.handleContextMenu', -1, 50, 50)
 })
 
 test('event - contextmenu - activated via mouse', () => {
@@ -109,9 +97,5 @@ test('event - contextmenu - activated via mouse', () => {
   $ListItems.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Search.handleContextMenuMouseAt',
-    50,
-    50
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Search.handleContextMenu', 0, 50, 50)
 })

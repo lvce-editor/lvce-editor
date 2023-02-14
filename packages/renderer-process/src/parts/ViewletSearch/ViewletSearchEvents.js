@@ -52,24 +52,10 @@ export const handleClick = (event) => {
   ViewletSearchFunctions.handleClick(index)
 }
 
-const handleContextMenuMouse = (event) => {
-  const { clientX, clientY } = event
-  ViewletSearchFunctions.handleContextMenuMouseAt(clientX, clientY)
-}
-
-const handleContextMenuKeyboard = (event) => {
-  ViewletSearchFunctions.handleContextMenuKeyBoard()
-}
-
 export const handleContextMenu = (event) => {
   Event.preventDefault(event)
-  const { button } = event
-  switch (button) {
-    case MouseEventType.Keyboard:
-      return handleContextMenuKeyboard(event)
-    default:
-      return handleContextMenuMouse(event)
-  }
+  const { button, clientX, clientY } = event
+  ViewletSearchFunctions.handleContextMenu(button, clientX, clientY)
 }
 
 export const handleScrollBarThumbPointerMove = (event) => {

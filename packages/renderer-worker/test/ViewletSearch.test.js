@@ -1,6 +1,5 @@
 import { jest } from '@jest/globals'
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
-import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -322,24 +321,6 @@ test('resize', () => {
     width: 200,
     fileCount: 0,
   })
-})
-
-test('handleContextMenuMouseAt', async () => {
-  // @ts-ignore
-  Command.execute.mockImplementation(() => {})
-  const state = { ...ViewletSearch.create(), x: 0, y: 0 }
-  expect(await ViewletSearch.handleContextMenuMouseAt(state, 10, 10)).toBe(state)
-  expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('ContextMenu.show', 10, 10, MenuEntryId.Search)
-})
-
-test('handleContextMenuKeyBoard', async () => {
-  // @ts-ignore
-  Command.execute.mockImplementation(() => {})
-  const state = { ...ViewletSearch.create(), x: 0, y: 0 }
-  expect(await ViewletSearch.handleContextMenuKeyboard(state)).toBe(state)
-  expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('ContextMenu.show', 0, 0, MenuEntryId.Search)
 })
 
 test('selectIndex - negative index', async () => {

@@ -16,12 +16,8 @@ export const handleClick = (index) => {
   RendererWorker.send('Search.handleClick', index)
 }
 
-export const handleContextMenuMouseAt = (x, y) => {
-  RendererWorker.send('Search.handleContextMenuMouseAt', x, y)
-}
-
-export const handleContextMenuKeyBoard = () => {
-  RendererWorker.send('Search.handleContextMenuKeyboard')
+export const handleContextMenu = (button, x, y) => {
+  RendererWorker.send('Search.handleContextMenu', button, x, y)
 }
 
 export const handleScrollBarMove = (y) => {
