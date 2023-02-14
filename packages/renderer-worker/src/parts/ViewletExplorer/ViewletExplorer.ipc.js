@@ -52,6 +52,7 @@ export const LazyCommands = {
   focusPrevious: () => import('./ViewletExplorerFocusPrevious.js'),
   handleContextMenuKeyboard: () => import('./ViewletExplorerHandleContextMenuKeyboard.js'),
   handleContextMenuMouseAt: ()=>import('./ViewletExplorerHandleContextMenuMouseAt.js'),
+  handleContextMenu:() => import('./ViewletExplorerHandleContextMenu.js'),
   handleDragOver: () => import('./ViewletExplorerHandleDragOver.js'),
   handleDrop: () => import('./ViewletExplorerHandleDrop.js'),
   handlePaste: () => import('./ViewletExplorerHandlePaste.js'),

@@ -5,7 +5,8 @@
   position: absolute;
 }
 
-.MainContent {
+.MainContent,
+#MainContent {
   contain: strict;
   flex: 1;
   display: flex;

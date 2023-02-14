@@ -1,13 +1,11 @@
-import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as SourceControl from '../SourceControl/SourceControl.js'
-import * as IconTheme from '../IconTheme/IconTheme.js'
-import * as Icon from '../Icon/Icon.js'
-import * as Command from '../Command/Command.js'
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
-import * as Workspace from '../Workspace/Workspace.js'
-import * as GetProtocol from '../GetProtocol/GetProtocol.js'
-import * as Logger from '../Logger/Logger.js'
 import * as Assert from '../Assert/Assert.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetProtocol from '../GetProtocol/GetProtocol.js'
+import * as Icon from '../Icon/Icon.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as Logger from '../Logger/Logger.js'
+import * as SourceControl from '../SourceControl/SourceControl.js'
+import * as Workspace from '../Workspace/Workspace.js'
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
 /**
@@ -96,10 +94,7 @@ const getDisplayItems = (workingTree) => {
 export const loadContent = async (state) => {
   const root = Workspace.state.workspacePath
   const scheme = GetProtocol.getProtocol(root)
-  const enabledProviderIds = await SourceControl.getEnabledProviderIds(
-    scheme,
-    root
-  )
+  const enabledProviderIds = await SourceControl.getEnabledProviderIds(scheme, root)
   const changedFiles = await getChangedFiles(enabledProviderIds)
   const displayItems = getDisplayItems(changedFiles.workingTree)
   return {
@@ -138,10 +133,7 @@ export const handleClick = async (state, index) => {
   const item = state.workingTree[index]
   const absolutePath = `${state.gitRoot}/${item.file}`
   // TODO handle error
-  const [fileBefore, fileNow] = await Promise.all([
-    SourceControl.getFileBefore(item.file),
-    FileSystem.readFile(absolutePath),
-  ])
+  const [fileBefore, fileNow] = await Promise.all([SourceControl.getFileBefore(item.file), FileSystem.readFile(absolutePath)])
   const content = `before:\n${fileBefore}\n\n\nnow:\n${fileNow}`
   // const content
   // await Main.openRawText(`diff://${absolutePath}`, content, 'plaintext')
@@ -167,16 +159,6 @@ export const handleMouseOver = (state, index) => {
       },
     ],
   }
-}
-
-export const handleContextMenu = async (state, x, y) => {
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ MenuEntryId.SourceControl
-  )
-  return state
 }
 
 export const handleClickAdd = async (state, index) => {
@@ -220,26 +202,16 @@ const renderChangedFiles = {
     return oldState.displayItems === newState.displayItems
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setChangedFiles',
-      /* changedFiles */ newState.displayItems,
-    ]
+    return [/* method */ 'setChangedFiles', /* changedFiles */ newState.displayItems]
   },
 }
 
 const renderButtons = {
   isEqual(oldState, newState) {
-    return (
-      oldState.buttonIndex === newState.buttonIndex &&
-      oldState.buttons === newState.buttons
-    )
+    return oldState.buttonIndex === newState.buttonIndex && oldState.buttons === newState.buttons
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setItemButtons',
-      /* index */ newState.buttonIndex,
-      /* buttons */ newState.buttons,
-    ]
+    return [/* method */ 'setItemButtons', /* index */ newState.buttonIndex, /* buttons */ newState.buttons]
   },
 }
 

@@ -53,3 +53,10 @@ export const handleTouchStart = (timeStamp, changedTouchesArray) => {
 export const handleTouchEnd = (changedTouchesArray) => {
   RendererWorker.send('Extensions.handleTouchEnd', changedTouchesArray)
 }
+
+/**
+ *
+ */
+export const handleContextMenu = (button, clientX, clientY) => {
+  RendererWorker.send('Extensions.handleContextMenu', button, clientX, clientY)
+}
