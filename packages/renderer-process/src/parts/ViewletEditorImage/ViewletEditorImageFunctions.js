@@ -19,3 +19,7 @@ export const handleWheel = (clientX, clientY, deltaX, deltaY) => {
 export const handleImageError = () => {
   RendererWorker.send('EditorImage.handleImageError')
 }
+
+export const handleContextMenu = (button, x, y) => {
+  RendererWorker.send('EditorImage.handleContextMenu', button, x, y)
+}
