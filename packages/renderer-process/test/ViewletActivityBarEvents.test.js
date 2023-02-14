@@ -8,22 +8,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
-const ViewletActivityBar = await import(
-  '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
-)
+const ViewletActivityBar = await import('../src/parts/ViewletActivityBar/ViewletActivityBar.js')
 
 const getTitle = ($Element) => {
   return $Element.title
@@ -63,12 +56,7 @@ test('event - handleClick - top', () => {
   })
   state.$ActivityBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'ActivityBar.handleClick',
-    1,
-    15,
-    30
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('ActivityBar.handleClick', 1, 15, 30)
 })
 
 test('event - handleClick - bottom', () => {
@@ -103,12 +91,7 @@ test('event - handleClick - bottom', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'ActivityBar.handleClick',
-    2,
-    15,
-    30
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('ActivityBar.handleClick', 2, 15, 30)
 })
 
 test('event - handleClick - no item is clicked', () => {
@@ -181,9 +164,5 @@ test('event - handleContextMenu', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'ActivityBar.handleContextMenu',
-    15,
-    30
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('ActivityBar.handleContextMenu', 0, 15, 30)
 })
