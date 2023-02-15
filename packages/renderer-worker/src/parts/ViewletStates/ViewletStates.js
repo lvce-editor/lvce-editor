@@ -19,6 +19,19 @@ export const getInstance = (key) => {
   return state.instances[key]
 }
 
+export const getAFocusedInstance = (key) => {
+  const { instances } = state
+  if (instances[key]) {
+    return instances[key]
+  }
+  for (const instance of Object.values(instances)) {
+    if (instance.factory.name === key && instance.state.focused) {
+      return instance
+    }
+  }
+  return undefined
+}
+
 export const hasInstance = (key) => {
   return key in state.instances
 }

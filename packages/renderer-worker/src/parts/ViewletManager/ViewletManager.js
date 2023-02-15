@@ -98,7 +98,7 @@ const wrapViewletCommandLazy = (id, key, importFn) => {
     if (typeof fn !== 'function') {
       throw new Error(`${id}.${key} is not a function`)
     }
-    const activeInstance = ViewletStates.getInstance(id)
+    const activeInstance = ViewletStates.getAFocusedInstance(id)
     if (!activeInstance) {
       console.info(`cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`)
       return
