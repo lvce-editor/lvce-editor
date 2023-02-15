@@ -11,14 +11,14 @@ test('getSplitDimensionsRight', () => {
   const sashVisibleSize = 1
   const tabHeight = 35
   expect(GetSplitDimensionsRight.getSplitDimensionsRight(x, y, width, height, halfWidth, halfHeight, sashSize, sashVisibleSize, tabHeight)).toEqual({
-    originalHeight: 100,
+    originalHeight: 65,
     originalTabsHeight: 35,
     originalTabsWidth: 50,
     originalTabsX: 0,
     originalTabsY: 0,
     originalWidth: 50,
     originalX: 0,
-    originalY: 0,
+    originalY: 35,
     overlayHeight: 65,
     overlayTabsHeight: 35,
     overlayTabsWidth: 50,

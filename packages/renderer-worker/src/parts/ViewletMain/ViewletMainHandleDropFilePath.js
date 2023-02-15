@@ -64,12 +64,12 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     ]
     const uri = filePath
     const id = ViewletMap.getId(uri)
-    const uid = Id.create()
+    const instanceUid = Id.create()
     const tabsId = Id.create()
-    const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
+    const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, overlayX, overlayY, overlayWidth, overlayHeight)
     instance.show = false
-    instance.uid = uid
-    state.grid.push({ uri, uid })
+    instance.uid = instanceUid
+    state.grid.push({ uri, uid: instanceUid })
     state.activeIndex = state.grid.length - 1
     const tabLabel = Workspace.pathBaseName(uri)
     const tabTitle = getTabTitle(uri)
@@ -94,6 +94,12 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const commands = await ViewletManager.load(instance, false)
     allCommands.push(...commands)
     allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsId])
+    allCommands.push([
+      /* Viewlet.append */ 'Viewlet.appendCustom',
+      /* parentId */ ViewletModuleId.Main,
+      /* method */ 'appendContent',
+      /* id  */ instanceUid,
+    ])
     // TODO sash could be horizontal or vertical
     allCommands.push([
       /* Viewlet.send */ 'Viewlet.send',
