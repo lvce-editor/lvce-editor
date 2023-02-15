@@ -80,7 +80,7 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const resizeCommands = Viewlet.resize(firstGridItem.uid, { x: 0, y: 0, width: width - overlayWidth, height })
     console.log({ resizeCommands })
     allCommands.push(...resizeCommands)
-    allCommands.push(['Viewlet.setBounds', firstGridItem.uid, originalX, tabHeight, originalWidth, originalHeight])
+    allCommands.push(['Viewlet.setBounds', firstGridItem.uid, originalX, originalY, originalWidth, originalHeight])
     // resize tabs
     allCommands.push(['Viewlet.setBounds', firstGroupItem.uid, originalTabsX, originalTabsY, originalTabsWidth, originalTabsHeight])
     // TODO

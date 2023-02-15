@@ -1,9 +1,9 @@
 export const getSplitDimensionsDown = (x, y, width, height, halfWidth, halfHeight, sashSize, sashVisibleSize, tabHeight) => {
   return {
     originalX: 0,
-    originalY: 0,
+    originalY: tabHeight,
     originalWidth: width,
-    orignalHeight: halfHeight,
+    originalHeight: halfHeight - tabHeight,
     originalTabs: 0,
     originalTabsY: 0,
     originalTabsWidth: width,
