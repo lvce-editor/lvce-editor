@@ -16,7 +16,7 @@ export const getSplitDimensionsRight = (x, y, width, height, halfWidth, halfHeig
     overlayTabsY: 0,
     overlayTabsWidth: halfWidth,
     overlayTabsHeight: tabHeight,
-    sashX: 0 + halfWidth,
+    sashX: 0 + halfWidth - sashSize / 2 + sashVisibleSize / 2,
     sashY: 0,
     sashWidth: sashSize,
     sashHeight: height,

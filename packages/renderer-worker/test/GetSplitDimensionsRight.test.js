@@ -29,7 +29,7 @@ test('getSplitDimensionsRight', () => {
     overlayY: 35,
     sashHeight: 100,
     sashWidth: 4,
-    sashX: 50,
+    sashX: 48.5,
     sashY: 0,
   })
 })
