@@ -25,7 +25,7 @@ export const create = (id, uid = id) => {
   if (module.attachEvents) {
     module.attachEvents(instanceState)
   }
-  state.instances[id] = {
+  state.instances[uid] = {
     state: instanceState,
     factory: module,
   }
