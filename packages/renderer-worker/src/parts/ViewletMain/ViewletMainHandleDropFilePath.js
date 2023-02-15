@@ -10,6 +10,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { openUri } from './ViewletMainOpenUri.js'
+import * as GetSplitDimensions from '../GetSplitDimensions/GetSplitDimensions.js'
 
 const sashSize = 4
 const sashVisibleSize = 1
@@ -32,14 +33,29 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
   } else {
     const sashVisibleSize = 1
-    const { overlayX, overlayY, overlayWidth, overlayHeight } = GetSplitOverlayDimensions.getSplitOverlayDimensions(
-      x,
-      y + tabHeight,
-      width,
-      height - tabHeight,
-      splitDirection,
-      sashVisibleSize
-    )
+    const sashSize = 4
+    const {
+      originalX,
+      originalY,
+      originalWidth,
+      originalHeight,
+      originalTabsX,
+      originalTabsY,
+      originalTabsWidth,
+      originalTabsHeight,
+      overlayX,
+      overlayY,
+      overlayWidth,
+      overlayHeight,
+      overlayTabsX,
+      overlayTabsY,
+      overlayTabsWidth,
+      overlayTabsHeight,
+      sashX,
+      sashY,
+      sashWidth,
+      sashHeight,
+    } = GetSplitDimensions.getSplitDimensions(x, y, width, height, splitDirection, sashSize, sashVisibleSize, tabHeight)
     const tabs = [
       {
         label: Workspace.pathBaseName(filePath),
@@ -62,18 +78,18 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const firstGridItem = state.grid[1]
     // resize content
     const resizeCommands = Viewlet.resize(firstGridItem.uid, { x: 0, y: 0, width: width - overlayWidth, height })
-    allCommands.push(['Viewlet.setBounds', firstGridItem.uid, 0, tabHeight, width - overlayWidth - sashVisibleSize, height])
+    console.log({ resizeCommands })
     allCommands.push(...resizeCommands)
-    allCommands.push(['Viewlet.setBounds', firstGridItem.uid, 0, tabHeight, width - overlayWidth - sashVisibleSize, height])
+    allCommands.push(['Viewlet.setBounds', firstGridItem.uid, originalX, tabHeight, originalWidth, originalHeight])
     // resize tabs
-    allCommands.push(['Viewlet.setBounds', firstGroupItem.uid, 0, 0, width - overlayWidth - sashVisibleSize, tabHeight])
+    allCommands.push(['Viewlet.setBounds', firstGroupItem.uid, originalTabsX, originalTabsY, originalTabsWidth, originalTabsHeight])
     // TODO
     // allCommands.push(Viewlet.resize())
     allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver'])
     allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay'])
     allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsId])
     allCommands.push(['Viewlet.send', tabsId, 'setTabs', [{ label: tabLabel, title: tabTitle }]])
-    allCommands.push(['Viewlet.setBounds', tabsId, overlayX, overlayY - y - tabHeight, overlayWidth, tabHeight])
+    allCommands.push(['Viewlet.setBounds', tabsId, overlayTabsX, overlayTabsY, overlayTabsWidth, overlayTabsHeight])
     // @ts-ignore
     const commands = await ViewletManager.load(instance, false)
     allCommands.push(...commands)
@@ -84,11 +100,12 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
       /* id */ ViewletModuleId.Main,
       /* method */ 'addSash',
       /* id */ '',
-      /* x */ overlayX - sashSize / 2 - sashVisibleSize,
-      /* y */ overlayY - y - tabHeight,
-      /* width */ 4,
-      /* height */ overlayHeight + tabHeight,
+      /* x */ sashX,
+      /* y */ sashY,
+      /* width */ sashWidth,
+      /* height */ sashHeight,
     ])
+    console.log({ allCommands })
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ allCommands)
   }
   return state

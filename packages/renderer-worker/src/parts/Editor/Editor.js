@@ -2,10 +2,9 @@ import * as Assert from '../Assert/Assert.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
-import * as EditorCursor from './EditorCursor.js'
 import * as EditorScrolling from './EditorScrolling.js'
 import * as EditorSelection from './EditorSelection.js'
 import * as EditorText from './EditorText.js'
@@ -71,8 +70,6 @@ export const renderText = (editor) => {
   Assert.object(editor)
   const textInfos = EditorText.getVisible(editor)
   RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'EditorText',
     /* method */ 'renderText',
     /* scrollBarY */ editor.scrollBarY,
     /* scrollBarHeight */ editor.scrollBarHeight,
@@ -90,8 +87,6 @@ export const renderTextAndCursorAndSelectionsCommands = (editor) => {
   const scrollBarHeight = editor.scrollBarHeight
   const scrollBarY = (editor.deltaY / editor.finalDeltaY) * (editor.height - editor.scrollBarHeight)
   return [
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'EditorText',
     /* method */ 'renderTextAndCursorsAndSelections',
     /* scrollBarY */ scrollBarY,
     /* scrollBarHeight */ scrollBarHeight,
@@ -315,7 +310,8 @@ const renderLines = {
       oldState.tokenizer === newState.tokenizer &&
       oldState.minLineY === newState.minLineY &&
       oldState.decorations === newState.decorations &&
-      oldState.embeds === newState.embeds
+      oldState.embeds === newState.embeds &&
+      oldState.numberOfVisibleLines === newState.numberOfVisibleLines
     )
   },
   apply(oldState, newState) {

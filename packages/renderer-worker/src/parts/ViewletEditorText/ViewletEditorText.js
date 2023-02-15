@@ -213,11 +213,8 @@ export const handleLanguagesChanged = (state) => {
 
 export const resize = (state, dimensions) => {
   const newState = Editor.setBounds(state, dimensions.x, dimensions.y, dimensions.height, state.columnWidth)
-  const commands = [Editor.renderTextAndCursorAndSelectionsCommands(newState)]
-  return {
-    newState,
-    commands,
-  }
+  // const commands = [Editor.renderTextAndCursorAndSelectionsCommands(newState)]
+  return newState
 }
 
 export const dispose = (state) => {
@@ -225,6 +222,8 @@ export const dispose = (state) => {
 }
 
 export const hasFunctionalRender = true
+
+export const hasFunctionalResize = true
 
 export const render = Editor.render
 
