@@ -46,12 +46,11 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
 })
 
 const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
-
 const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
-const ViewletExplorerEvents = await import('../src/parts/ViewletExplorer/ViewletExplorerEvents.js')
 
 test('event - contextmenu', () => {
   const state = ViewletExplorer.create()
+  ViewletExplorer.attachEvents(state)
   ViewletExplorer.updateDirents(state, [
     {
       name: '.gitkeep',
@@ -110,6 +109,7 @@ test('event - contextmenu', () => {
 
 test('event - contextmenu - activated via keyboard', () => {
   const state = ViewletExplorer.create()
+  ViewletExplorer.attachEvents(state)
   ViewletExplorer.updateDirents(state, [
     {
       name: 'index.css',
@@ -147,6 +147,7 @@ test('event - contextmenu - activated via keyboard', () => {
 
 test('event - click', () => {
   const state = ViewletExplorer.create()
+  ViewletExplorer.attachEvents(state)
   ViewletExplorer.updateDirents(state, [
     {
       name: '.gitkeep',
@@ -205,6 +206,7 @@ test('event - click', () => {
 
 test('event - click on wrapper div', () => {
   const state = ViewletExplorer.create()
+  ViewletExplorer.attachEvents(state)
   ViewletExplorer.updateDirents(state, [
     {
       name: 'index.css',
@@ -232,6 +234,7 @@ test('event - click on wrapper div', () => {
 
 test('event - right click', () => {
   const state = ViewletExplorer.create()
+  ViewletExplorer.attachEvents(state)
   ViewletExplorer.updateDirents(state, [
     {
       name: '.gitkeep',
@@ -277,6 +280,7 @@ test('event - right click', () => {
 
 test('event - blur', () => {
   const state = ViewletExplorer.create()
+  ViewletExplorer.attachEvents(state)
   ViewletExplorer.updateDirents(state, [
     {
       name: '.gitkeep',
@@ -320,6 +324,7 @@ test('event - blur', () => {
 
 test('event - dragStart', () => {
   const state = ViewletExplorer.create()
+  ViewletExplorer.attachEvents(state)
   ViewletExplorer.updateDirents(state, [
     {
       name: 'file-1.txt',
@@ -343,6 +348,7 @@ test('event - dragStart', () => {
 
 test('event - dragover', () => {
   const state = ViewletExplorer.create()
+  ViewletExplorer.attachEvents(state)
   ViewletExplorer.updateDirents(state, [
     {
       name: 'file-1.txt',
@@ -367,6 +373,7 @@ test('event - dragover', () => {
 
 test('event - drop', () => {
   const state = ViewletExplorer.create()
+  ViewletExplorer.attachEvents(state)
   ViewletExplorer.updateDirents(state, [
     {
       name: 'file-1.txt',

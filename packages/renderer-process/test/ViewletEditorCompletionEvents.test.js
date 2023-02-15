@@ -8,25 +8,18 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(() => {}),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(() => {}),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
-
-const ViewletEditorCompletion = await import(
-  '../src/parts/ViewletEditorCompletion/ViewletEditorCompletion.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const ViewletEditorCompletion = await import('../src/parts/ViewletEditorCompletion/ViewletEditorCompletion.js')
 
 test('event - mousedown', () => {
   const state = ViewletEditorCompletion.create()
+  ViewletEditorCompletion.attachEvents(state)
   ViewletEditorCompletion.setItems(state, [
     {
       label: 'item 1',
@@ -47,14 +40,12 @@ test('event - mousedown', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'EditorCompletion.selectIndex',
-    0
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('EditorCompletion.selectIndex', 0)
 })
 
 test('event - click outside', () => {
   const state = ViewletEditorCompletion.create()
+  ViewletEditorCompletion.attachEvents(state)
   ViewletEditorCompletion.setItems(state, [
     {
       label: 'item 1',
@@ -77,6 +68,7 @@ test('event - click outside', () => {
 
 test('event - wheel', () => {
   const state = ViewletEditorCompletion.create()
+  ViewletEditorCompletion.attachEvents(state)
   const event = new WheelEvent('wheel', {
     deltaY: 53,
     deltaMode: WheelEventType.DomDeltaLine,
@@ -84,8 +76,5 @@ test('event - wheel', () => {
   const { $Viewlet } = state
   $Viewlet.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'EditorCompletion.handleWheel',
-    53
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('EditorCompletion.handleWheel', 53)
 })

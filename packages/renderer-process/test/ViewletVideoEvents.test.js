@@ -19,6 +19,7 @@ const ViewletVideo = await import('../src/parts/ViewletVideo/ViewletVideo.js')
 
 test('event - error', () => {
   const state = ViewletVideo.create()
+  ViewletVideo.attachEvents(state)
   const { $Video } = state
   // @ts-ignore
   $Video.error = {

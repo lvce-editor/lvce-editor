@@ -80,6 +80,7 @@ export const create = () => {
     $InputBox,
     $ExtensionSuggestions: undefined,
     $ScrollBarThumb,
+    $ScrollBar,
     $Message: undefined,
   }
 }
