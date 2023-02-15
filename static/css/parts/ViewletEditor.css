@@ -1,7 +1,5 @@
 /* TODO this should not be global */
 .Editor {
-  width: 100%;
-  height: 100%;
   background: var(--MainBackground);
   color: white;
   outline: none;
@@ -16,6 +14,7 @@
   font-display: block;
   cursor: text;
   font-weight: 400;
+  position: absolute;
 }
 
 .EditorLayers {
