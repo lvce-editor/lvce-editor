@@ -287,14 +287,16 @@ const getFn = async (module, fnName) => {
 export const executeViewletCommand = async (moduleId, uidKey, uidValue, fnName, ...args) => {
   const instances = ViewletStates.state.instances
   for (const instance of Object.values(instances)) {
-    if (instance.factory.name === moduleId && instance.state[uidKey] === uidValue) {
+    if ((instance.factory.name === moduleId || instance.state.uid === moduleId) && instance.state[uidKey] === uidValue) {
       const fn = await getFn(instance.factory, fnName)
       const oldState = instance.state
       const newState = await fn(oldState, ...args)
-      const commands = ViewletManager.render(instance.factory, oldState, newState)
+      const commands = ViewletManager.render(instance.factory, oldState, newState, newState.uid || instance.factory.name)
       ViewletStates.setState(moduleId, newState)
+      console.log({ commands })
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
       return
     }
   }
+  console.warn(`viewlet ${moduleId} not found`)
 }
