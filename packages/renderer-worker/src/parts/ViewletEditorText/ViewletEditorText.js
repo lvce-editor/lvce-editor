@@ -157,6 +157,7 @@ const updateSemanticTokens = async (state) => {
     const newSemanticTokens = await ExtensionHostSemanticTokens.executeSemanticTokenProvider(state)
     await Command.execute(
       /* Editor.setDecorations */ 'Viewlet.executeViewletCommand',
+      state.uid,
       'uid',
       state.uid,
       'setDecorations',
@@ -190,7 +191,14 @@ export const contentLoadedEffects = async (state) => {
   // GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   // GlobalEventBus.addListener('editor.change', handleEditorChange)
   const newLanguageId = getLanguageId(state)
-  await Command.execute('Viewlet.executeViewletCommand', 'uid', state.uid, /* Editor.setLanguageId */ 'setLanguageId', /* languageId */ newLanguageId)
+  await Command.execute(
+    'Viewlet.executeViewletCommand',
+    state.uid,
+    'uid',
+    state.uid,
+    /* Editor.setLanguageId */ 'setLanguageId',
+    /* languageId */ newLanguageId
+  )
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
