@@ -64,8 +64,9 @@ const getIndex = ($Target) => {
   }
 }
 
-const handleSashPointerMove = () => {
-  //
+const handleSashPointerMove = (event) => {
+  const { clientX, clientY } = event
+  ViewletMainFunctions.handleSashPointerMove(clientX, clientY)
 }
 
 const handleSashPointerCaptureLost = (event) => {
