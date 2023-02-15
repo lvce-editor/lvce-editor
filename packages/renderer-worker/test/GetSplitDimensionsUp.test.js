@@ -18,7 +18,7 @@ test('getSplitDimensionsUp', () => {
     originalTabsY: 50,
     originalWidth: 100,
     originalX: 0,
-    originalY: 50,
+    originalY: 85,
     overlayHeight: 15,
     overlayTabsHeight: 35,
     overlayTabsWidth: 100,
