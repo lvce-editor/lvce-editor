@@ -11,6 +11,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { openUri } from './ViewletMainOpenUri.js'
 import * as GetSplitDimensions from '../GetSplitDimensions/GetSplitDimensions.js'
+import * as SashOrientation from '../SashOrientation/SashOrientation.js'
 
 const sashSize = 4
 const sashVisibleSize = 1
@@ -55,6 +56,7 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
       sashY,
       sashWidth,
       sashHeight,
+      sashOrientation,
     } = GetSplitDimensions.getSplitDimensions(x, y, width, height, splitDirection, sashSize, sashVisibleSize, tabHeight)
     const tabs = [
       {
@@ -119,12 +121,14 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
       /* method */ 'appendContent',
       /* id  */ instanceUid,
     ])
+    // const sashOrientation = splitDirection===
     // TODO sash could be horizontal or vertical
     allCommands.push([
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ ViewletModuleId.Main,
       /* method */ 'addSash',
       /* id */ '',
+      /* orientation */ sashOrientation,
       /* x */ sashX,
       /* y */ sashY,
       /* width */ sashWidth,

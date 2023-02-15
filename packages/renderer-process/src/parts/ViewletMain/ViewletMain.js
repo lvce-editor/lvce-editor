@@ -103,9 +103,9 @@ export const hideDragOverlay = (state) => {
   state.$DragOverlay = undefined
 }
 
-export const addSash = (state, sashId, x, y, width, height) => {
+export const addSash = (state, sashId, sashOrientation, x, y, width, height) => {
   const { $Viewlet } = state
-  const $Sash = VisibleSash.create()
+  const $Sash = VisibleSash.create(sashOrientation)
   $Sash.onpointerdown = ViewletMainEvents.handleSashPointerDown
   SetBounds.setBounds($Sash, x, y, width, height)
   $Viewlet.append($Sash)

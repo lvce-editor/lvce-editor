@@ -1,3 +1,5 @@
+import * as SashOrientation from '../SashOrientation/SashOrientation.js'
+
 export const getSplitDimensionsLeft = (x, y, width, height, halfWidth, halfHeight, sashSize, sashVisibleSize, tabHeight) => {
   return {
     originalX: halfWidth,
@@ -20,5 +22,6 @@ export const getSplitDimensionsLeft = (x, y, width, height, halfWidth, halfHeigh
     sashY: 0,
     sashWidth: sashVisibleSize,
     sashHeight: height,
+    sashOrientation: SashOrientation.Vertical,
   }
 }
