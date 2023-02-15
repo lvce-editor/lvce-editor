@@ -21,7 +21,8 @@ const getTabTitle = (uri) => {
 }
 
 export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
-  const { x, y, width, height, tabHeight } = state
+  const { x, y, width, height, tabHeight, grid } = state
+  console.log({ x, y, width, height, tabHeight, grid: [...grid], eventX, eventY })
   const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + tabHeight, width, height - tabHeight, eventX, eventY)
   if (splitDirection === EditorSplitDirectionType.None) {
     await openUri(state, filePath)
@@ -59,7 +60,6 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const firstGridItem = state.grid[1]
     // resize content
     const resizeCommands = Viewlet.resize(firstGridItem.uid, { x: 0, y: 0, width: width - overlayWidth, height })
-    console.log({ resizeCommands })
     allCommands.push(['Viewlet.setBounds', firstGridItem.uid, 0, tabHeight, width - overlayWidth, height])
     allCommands.push(...resizeCommands)
     allCommands.push(['Viewlet.setBounds', firstGridItem.uid, 0, tabHeight, width - overlayWidth, height])
@@ -87,7 +87,6 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
       /* width */ 4,
       /* height */ overlayHeight + tabHeight,
     ])
-    console.log({ allCommands })
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ allCommands)
   }
   return state
