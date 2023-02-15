@@ -39,10 +39,11 @@ export const handleBlur = (event) => {
  */
 export const handleBeforeInput = (event) => {
   Event.preventDefault(event)
-  const { inputType, data } = event
+  const { inputType, data, target } = event
+  const uid = ComponentUid.get(target)
   switch (inputType) {
     case InputEventType.InsertText:
-      EditorFunctions.type(data)
+      EditorFunctions.type(uid, data)
       break
     default:
       break

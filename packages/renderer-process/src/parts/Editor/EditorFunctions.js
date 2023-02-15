@@ -9,8 +9,8 @@ export const handleBlur = () => {
   RendererWorker.send('Editor.blur')
 }
 
-export const type = (text) => {
-  RendererWorker.send('Editor.type', text)
+export const type = (uid, text) => {
+  RendererWorker.send('Viewlet.executeViewletCommand', uid, 'uid', uid, 'type', text)
 }
 
 export const compositionStart = (data) => {

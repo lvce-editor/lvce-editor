@@ -293,7 +293,6 @@ export const executeViewletCommand = async (moduleId, uidKey, uidValue, fnName, 
       const newState = await fn(oldState, ...args)
       const commands = ViewletManager.render(instance.factory, oldState, newState, newState.uid || instance.factory.name)
       ViewletStates.setState(moduleId, newState)
-      console.log({ commands })
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
       return
     }
