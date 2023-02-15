@@ -1,5 +1,4 @@
 import * as Arrays from '../Arrays/Arrays.js'
-import * as Assert from '../Assert/Assert.js'
 import * as BackgroundTabs from '../BackgroundTabs/BackgroundTabs.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
@@ -16,8 +15,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as EditorSplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
-import * as Id from '../Id/Id.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -85,6 +82,7 @@ export const create = (id, uri, x, y, width, height) => {
     width,
     height,
     grid: [],
+    tabHeight: 35,
   }
 }
 
@@ -135,8 +133,6 @@ const findEditorWithUri = (editors, uri) => {
   return -1
 }
 
-const TAB_HEIGHT = 35
-
 const getRestoredEditors = (savedState) => {
   if (Workspace.isTest()) {
     return []
@@ -182,11 +178,12 @@ export const contentLoaded = async (state) => {
   if (state.grid.length === 0) {
     return []
   }
+  const { tabHeight } = state
   const editor = Arrays.last(state.editors)
   const x = state.x
-  const y = state.y + TAB_HEIGHT
+  const y = state.y + tabHeight
   const width = state.width
-  const height = state.height - TAB_HEIGHT
+  const height = state.height - tabHeight
   const id = ViewletMap.getId(editor.uri)
   const tabLabel = Workspace.pathBaseName(editor.uri)
   const tabTitle = getTabTitle(editor.uri)
@@ -221,92 +218,6 @@ export const contentLoaded = async (state) => {
   return commands
 }
 
-export const openUri = async (state, uri, focus = true, options = {}) => {
-  Assert.object(state)
-  Assert.string(uri)
-  const x = state.x
-  const y = state.y + TAB_HEIGHT
-  const width = state.width
-  const height = state.height - TAB_HEIGHT
-  const id = ViewletMap.getId(uri)
-  const tabsUid = Id.create()
-  const instanceUid = Id.create()
-
-  for (const editor of state.grid) {
-    if (editor.uri === uri) {
-      console.log('found existing editor')
-      // TODO if the editor is already open, nothing needs to be done
-      const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
-      // @ts-ignore
-
-      await ViewletManager.load(instance, focus, false, options)
-      return state
-    }
-  }
-
-  const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, TAB_HEIGHT, width, height - TAB_HEIGHT)
-  instance.uid = instanceUid
-  instance.show = false
-  const groupItem = {
-    x,
-    y,
-    width,
-    height,
-    childCount: 1,
-    uri,
-    uid: tabsUid,
-    id: instance.id,
-  }
-  const leafItem = {
-    x,
-    y: y + TAB_HEIGHT,
-    width,
-    height: height - TAB_HEIGHT,
-    childCount: 0,
-    uri,
-    uid: instanceUid,
-    id: instance.id,
-  }
-  state.grid.push(groupItem, leafItem)
-  state.activeIndex = state.grid.length - 1
-  const tabLabel = Workspace.pathBaseName(uri)
-  const tabTitle = getTabTitle(uri)
-  const allCommands = []
-  await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
-  allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
-  allCommands.push([
-    'Viewlet.send',
-    tabsUid,
-    'setTabs',
-    [
-      {
-        label: tabLabel,
-        title: tabTitle,
-      },
-    ],
-  ])
-  allCommands.push(['Viewlet.setBounds', tabsUid, x, 0, width, TAB_HEIGHT])
-  // @ts-ignore
-  const commands = await ViewletManager.load(instance, false)
-  allCommands.push(...commands)
-  allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsUid])
-  allCommands.push([
-    /* Viewlet.append */ 'Viewlet.appendCustom',
-    /* parentId */ ViewletModuleId.Main,
-    /* method */ 'appendContent',
-    /* id  */ instanceUid,
-  ])
-  if (focus) {
-    allCommands.push(...Viewlet.getFocusCommands(instance.id, instanceUid))
-  }
-  await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ allCommands)
-  if (!ViewletStates.hasInstance(id)) {
-    return state
-  }
-  console.log({ ...ViewletStates.state.instances })
-  return state
-}
-
 export const openBackgroundTab = async (state, initialUri, props) => {
   const id = ViewletMap.getId(initialUri)
   const tabLabel = 'Loading'
@@ -320,10 +231,11 @@ export const openBackgroundTab = async (state, initialUri, props) => {
     /* oldActiveIndex */ -1,
     /* background */ true
   )
-  const y = state.y + TAB_HEIGHT
+  const { tabHeight } = state
+  const y = state.y + tabHeight
   const x = state.x
   const width = state.width
-  const height = state.height - TAB_HEIGHT
+  const height = state.height - tabHeight
   const { title, uri } = await ViewletManager.backgroundLoad({
     getModule: ViewletModule.load,
     id,
@@ -403,93 +315,6 @@ export const saveWithoutFormatting = async () => {
   console.warn('not implemented')
 }
 
-export const handleDrop = async (state, eventX, eventY, files) => {
-  for (const file of files) {
-    if (file.path) {
-      await openUri(state, file.path)
-    } else {
-      // TODO
-    }
-    console.log(file)
-  }
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
-  return state
-}
-
-export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
-  const { x, y, width, height } = state
-  const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + TAB_HEIGHT, width, height - TAB_HEIGHT, eventX, eventY)
-  if (splitDirection === EditorSplitDirectionType.None) {
-    await openUri(state, filePath)
-    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
-    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
-  } else {
-    const sashVisibleSize = 1
-    const { overlayX, overlayY, overlayWidth, overlayHeight } = GetSplitOverlayDimensions.getSplitOverlayDimensions(
-      x,
-      y + TAB_HEIGHT,
-      width,
-      height - TAB_HEIGHT,
-      splitDirection,
-      sashVisibleSize
-    )
-    const tabs = [
-      {
-        label: Workspace.pathBaseName(filePath),
-        title: filePath,
-      },
-    ]
-    const uri = filePath
-    const id = ViewletMap.getId(uri)
-    const uid = Id.create()
-    const tabsId = Id.create()
-    const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
-    instance.show = false
-    instance.uid = uid
-    state.grid.push({ uri, uid })
-    state.activeIndex = state.grid.length - 1
-    const tabLabel = Workspace.pathBaseName(uri)
-    const tabTitle = getTabTitle(uri)
-    const allCommands = []
-    const firstGroupItem = state.grid[0]
-    const firstGridItem = state.grid[1]
-    // resize content
-    const resizeCommands = Viewlet.resize(firstGridItem.uid, { x: 0, y: 0, width: width - overlayWidth, height })
-    console.log({ resizeCommands })
-    allCommands.push(['Viewlet.setBounds', firstGridItem.uid, 0, TAB_HEIGHT, width - overlayWidth, height])
-    allCommands.push(...resizeCommands)
-    allCommands.push(['Viewlet.setBounds', firstGridItem.uid, 0, TAB_HEIGHT, width - overlayWidth, height])
-    // resize tabs
-    allCommands.push(['Viewlet.setBounds', firstGroupItem.uid, 0, 0, width - overlayWidth, TAB_HEIGHT])
-    // TODO
-    // allCommands.push(Viewlet.resize())
-    allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver'])
-    allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay'])
-    allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsId])
-    allCommands.push(['Viewlet.send', tabsId, 'setTabs', [{ label: tabLabel, title: tabTitle }]])
-    allCommands.push(['Viewlet.setBounds', tabsId, overlayX, overlayY - y - TAB_HEIGHT, overlayWidth, TAB_HEIGHT])
-    // @ts-ignore
-    const commands = await ViewletManager.load(instance, false)
-    allCommands.push(...commands)
-    allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsId])
-    // TODO sash could be horizontal or vertical
-    allCommands.push([
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'addSash',
-      /* id */ '',
-      /* x */ overlayX,
-      /* y */ overlayY - y - TAB_HEIGHT,
-      /* width */ 4,
-      /* height */ overlayHeight + TAB_HEIGHT,
-    ])
-    console.log({ allCommands })
-    await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ allCommands)
-  }
-  return state
-}
-
 export const handleDragEnd = async (state, x, y) => {
   await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
   await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
@@ -497,13 +322,13 @@ export const handleDragEnd = async (state, x, y) => {
 }
 
 export const handleDragOver = async (state, eventX, eventY) => {
-  const { x, y, width, height } = state
-  const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + TAB_HEIGHT, width, height - TAB_HEIGHT, eventX, eventY)
+  const { x, y, width, height, tabHeight } = state
+  const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + tabHeight, width, height - tabHeight, eventX, eventY)
   const { overlayX, overlayY, overlayWidth, overlayHeight } = GetSplitOverlayDimensions.getSplitOverlayDimensions(
     x,
-    y + TAB_HEIGHT,
+    y + tabHeight,
     width,
-    height - TAB_HEIGHT,
+    height - tabHeight,
     splitDirection
   )
   // TODO show overlay for left area
@@ -615,9 +440,10 @@ export const focusIndex = async (state, index) => {
 
   const editor = state.editors[index]
   const x = state.x
-  const y = state.top + TAB_HEIGHT
+  const { tabHeight } = state
+  const y = state.top + tabHeight
   const width = state.width
-  const height = state.height - TAB_HEIGHT
+  const height = state.height - tabHeight
   const id = ViewletMap.getId(editor.uri)
 
   const oldEditor = state.editors[oldActiveIndex]
@@ -745,11 +571,11 @@ export const closeTabsLeft = async (state) => {
 }
 
 export const resize = (state, dimensions) => {
-  const { editors } = state
+  const { editors, tabHeight } = state
   const x = dimensions.x
-  const y = dimensions.y + TAB_HEIGHT
+  const y = dimensions.y + tabHeight
   const width = dimensions.width
-  const height = dimensions.height - TAB_HEIGHT
+  const height = dimensions.height - tabHeight
   const childDimensions = {
     x,
     y,

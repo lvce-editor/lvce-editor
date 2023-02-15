@@ -19,13 +19,16 @@ export const Commands = {
   focusPrevious: ViewletMain.focusPrevious,
   handleDragEnd: ViewletMain.handleDragEnd,
   handleDragOver: ViewletMain.handleDragOver,
-  handleDrop: ViewletMain.handleDrop,
-  handleDropFilePath: ViewletMain.handleDropFilePath,
   handleTabClick: ViewletMain.handleTabClick,
   handleTabContextMenu: ViewletMain.handleTabContextMenu,
   openBackgroundTab: ViewletMain.openBackgroundTab,
-  openUri: ViewletMain.openUri,
   save: ViewletMain.save,
+}
+
+export const LazyCommands = {
+  handleDrop: () => import('./ViewletMainHandleDrop.js'),
+  handleDropFilePath: () => import('./ViewletMainHandleDropFilePath.js'),
+  openUri: () => import('./ViewletMainOpenUri.js'),
 }
 
 export const Css = ['/css/parts/ViewletMain.css', '/css/parts/EditorTabs.css']
