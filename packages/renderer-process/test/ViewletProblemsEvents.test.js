@@ -35,25 +35,18 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(() => {}),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(() => {}),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
-
-const ViewletProblems = await import(
-  '../src/parts/ViewletProblems/ViewletProblems.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const ViewletProblems = await import('../src/parts/ViewletProblems/ViewletProblems.js')
 
 test('event - pointerdown', () => {
   const state = ViewletProblems.create()
+  ViewletProblems.attachEvents(state)
   const event = new MouseEvent('pointerdown', {
     bubbles: true,
     clientX: 15,

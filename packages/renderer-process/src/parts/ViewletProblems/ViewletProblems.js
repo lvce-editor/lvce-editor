@@ -5,10 +5,14 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Problems'
   $Viewlet.tabIndex = 0
-  $Viewlet.onpointerdown = ViewletProblemsEvents.handlePointerDown
   return {
     $Viewlet,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $Viewlet } = state
+  $Viewlet.onpointerdown = ViewletProblemsEvents.handlePointerDown
 }
 
 export const setFocusedIndex = (state, focusedIndex) => {

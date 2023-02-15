@@ -64,6 +64,7 @@ beforeEach(() => {
 
 test('event - input', () => {
   const state = ViewletExtensions.create()
+  ViewletExtensions.attachEvents(state)
   const { $InputBox } = state
   $InputBox.value = 'abc'
   $InputBox.dispatchEvent(
@@ -80,6 +81,7 @@ test('event - input', () => {
 // TODO
 test.skip('event - click on install', () => {
   const state = ViewletExtensions.create()
+  ViewletExtensions.attachEvents(state)
   ViewletExtensions.setExtensions(state, [
     {
       id: 'test-author.test=extension-1',
@@ -102,6 +104,7 @@ test.skip('event - click on install', () => {
 
 test.skip('user clicks while installing', () => {
   const state = ViewletExtensions.create()
+  ViewletExtensions.attachEvents(state)
   ViewletExtensions.setExtensions(state, [
     {
       id: 'test-author.test=extension-1',
@@ -123,6 +126,7 @@ test.skip('user clicks while installing', () => {
 
 test('event - click - on extension', () => {
   const state = ViewletExtensions.create()
+  ViewletExtensions.attachEvents(state)
   ViewletExtensions.setExtensions(state, [
     {
       id: 'test-author.test=extension-1',
@@ -145,6 +149,7 @@ test('event - click - on extension', () => {
 // TODO
 test.skip('user clicks uninstall', () => {
   const state = ViewletExtensions.create()
+  ViewletExtensions.attachEvents(state)
   ViewletExtensions.setExtensions(state, [
     {
       id: 'test-author.test-extension-1',
@@ -166,6 +171,7 @@ test.skip('user clicks uninstall', () => {
 
 test('icon - error', () => {
   const state = ViewletExtensions.create()
+  ViewletExtensions.attachEvents(state)
   ViewletExtensions.setExtensions(state, [
     {
       name: 'Test Extension 1',
@@ -185,6 +191,7 @@ test('icon - error', () => {
 
 test('icon - error - endless loop bug', () => {
   const state = ViewletExtensions.create()
+  ViewletExtensions.attachEvents(state)
   ViewletExtensions.setExtensions(state, [
     {
       name: 'Test Extension 1',
@@ -212,6 +219,7 @@ test('icon - error - endless loop bug', () => {
 
 test('event - touchstart', () => {
   const state = ViewletExtensions.create()
+  ViewletExtensions.attachEvents(state)
   const { $ListItems } = state
   const event = new TouchEvent('touchstart', {
     bubbles: true,
@@ -232,6 +240,7 @@ test('event - touchstart', () => {
 
 test('event - touchmove', () => {
   const state = ViewletExtensions.create()
+  ViewletExtensions.attachEvents(state)
   const { $ListItems } = state
   const event = new TouchEvent('touchmove', {
     bubbles: true,
@@ -252,6 +261,7 @@ test('event - touchmove', () => {
 
 test('event - touchend', () => {
   const state = ViewletExtensions.create()
+  ViewletExtensions.attachEvents(state)
   const { $ListItems } = state
   const event = new TouchEvent('touchend', {
     bubbles: true,
@@ -272,6 +282,7 @@ test('event - touchend', () => {
 
 test('event - pointerdown - on scroll bar thumb', () => {
   const state = ViewletExtensions.create()
+  ViewletExtensions.attachEvents(state)
   const { $ScrollBarThumb } = state
   const event = new PointerEvent('pointerdown', {
     bubbles: true,
@@ -287,6 +298,7 @@ test('event - pointerdown - on scroll bar thumb', () => {
 
 test('event - contextmenu - activated via keyboard', () => {
   const state = ViewletExtensions.create()
+  ViewletExtensions.attachEvents(state)
   const { $ListItems } = state
   $ListItems.dispatchEvent(
     new MouseEvent('contextmenu', {

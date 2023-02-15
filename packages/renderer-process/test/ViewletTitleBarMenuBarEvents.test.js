@@ -9,25 +9,19 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
-const ViewletTitleBarMenuBar = await import(
-  '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
-)
+const ViewletTitleBarMenuBar = await import('../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
 
 test('event - click on menu', () => {
   const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.attachEvents(state)
   ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
@@ -59,6 +53,7 @@ test('event - click on menu', () => {
 
 test('event - click on menu item', () => {
   const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.attachEvents(state)
   ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
@@ -86,14 +81,12 @@ test('event - click on menu item', () => {
   $TitleBarMenuBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'TitleBarMenuBar.toggleIndex',
-    1
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('TitleBarMenuBar.toggleIndex', 1)
 })
 
 test('event - richt click on menu item', () => {
   const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.attachEvents(state)
   ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
