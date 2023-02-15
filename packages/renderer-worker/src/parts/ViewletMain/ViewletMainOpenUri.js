@@ -42,7 +42,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     }
   }
 
-  const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, tabHeight, width, height - tabHeight)
+  const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, tabHeight, width, height)
   instance.uid = instanceUid
   instance.show = false
   const groupItem = {

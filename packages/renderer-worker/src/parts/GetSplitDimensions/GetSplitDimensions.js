@@ -1,5 +1,5 @@
 import * as EditorSplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
-import * as GetSplitDimensionsDown from '../GetSplitDimenionsDown/GetSplitDimensionsDown.js'
+import * as GetSplitDimensionsDown from '../GetSplitDimensionsDown/GetSplitDimensionsDown.js'
 import * as GetSplitDimensionsLeft from '../GetSplitDimensionsLeft/GetSplitDimensionsLeft.js'
 import * as GetSplitDimensionsRight from '../GetSplitDimensionsRight/GetSplitDimensionsRight.js'
 import * as GetSplitDimensionsUp from '../GetSplitDimensionsUp/GetSplitDimensionsUp.js'
