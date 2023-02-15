@@ -111,9 +111,9 @@ export const addSash = (state, sashId, sashOrientation, x, y, width, height) => 
   $Viewlet.append($Sash)
 }
 
-export const setSashX = (state, x, y) => {
+export const setSashPosition = (state, x, y) => {
   const { $Viewlet } = state
-  const $Sash = $Viewlet.querySelector('.Sash')
+  const $Sash = $Viewlet.querySelector('[class^="Sash"]')
   SetBounds.setXAndY($Sash, x, y)
 }
 

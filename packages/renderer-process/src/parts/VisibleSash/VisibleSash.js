@@ -1,23 +1,14 @@
 import * as SashOrientation from '../SashOrientation/SashOrientation.js'
+import * as VisibleSashHorizontal from '../VisibleSashHorizontal/VisibleSashHorizontal.js'
+import * as VisibleSashVertical from '../VisibleSashVertical/VisibleSashVertical.js'
 
-const getOrientationClassName = (orientation) => {
+export const create = (orientation) => {
   switch (orientation) {
-    case SashOrientation.Vertical:
-      return 'SashVertical'
     case SashOrientation.Horizontal:
-      return 'SashHorizontal'
+      return VisibleSashHorizontal.create()
+    case SashOrientation.Vertical:
+      return VisibleSashVertical.create()
     default:
       throw new Error('unexpected sash orientation')
   }
-}
-
-export const create = (orientation) => {
-  // TODO use aria role splitter once supported https://github.com/w3c/aria/issues/1348
-  const $Viewlet = document.createElement('div')
-  const orientationClassName = getOrientationClassName(orientation)
-  $Viewlet.className = `Sash ${orientationClassName} SashVisible`
-  const $SashContent = document.createElement('div')
-  $SashContent.className = 'SashContent'
-  $Viewlet.append($SashContent)
-  return $Viewlet
 }

@@ -20,7 +20,15 @@
   justify-content: center;
 }
 
-.SashContent {
+.SashVerticalContent,
+.SashHorizontalContent {
   background: #444444;
+}
+
+.SashVerticalContent {
   width: 1px;
+}
+
+.SashHorizontalContent {
+  height: 1px;
 }
