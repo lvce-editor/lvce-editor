@@ -16,7 +16,6 @@ export const mount = ($Parent, state) => {
 }
 
 export const create = (id, uid = id) => {
-  console.log({ id, uid })
   const module = state.modules[id]
   if (state.instances[id] && state.instances[id].state.$Viewlet.isConnected) {
     state.instances[id].state.$Viewlet.remove()
