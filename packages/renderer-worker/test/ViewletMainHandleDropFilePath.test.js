@@ -101,15 +101,15 @@ test('handleDropFilePath - split right', async () => {
   expect(await ViewletMainHandleDropFilePath.handleDropFilePath(state, eventX, eventY, filePath)).toBe(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.sendMultiple', [
-    ['Viewlet.setBounds', 61, 0, 35, 283, 574],
-    ['Viewlet.setBounds', 61, 0, 35, 283, 574],
-    ['Viewlet.setBounds', 60, 0, 0, 283, 35],
+    ['Viewlet.setBounds', 61, 0, 35, 282, 574],
+    ['Viewlet.setBounds', 61, 0, 35, 282, 574],
+    ['Viewlet.setBounds', 60, 0, 0, 282, 35],
     ['Viewlet.send', 'Main', 'stopHighlightDragOver'],
     ['Viewlet.send', 'Main', 'hideDragOverlay'],
     ['Viewlet.create', 'MainTabs', 62],
     ['Viewlet.send', 62, 'setTabs', [{ label: 'file-2.txt', title: '/test/file-2.txt' }]],
     ['Viewlet.setBounds', 62, 283, 0, 281, 35],
     ['Viewlet.appendCustom', 'Main', 'appendTabs', 62],
-    ['Viewlet.send', 'Main', 'addSash', '', 283, 0, 4, 574],
+    ['Viewlet.send', 'Main', 'addSash', '', 280, 0, 4, 574],
   ])
 })

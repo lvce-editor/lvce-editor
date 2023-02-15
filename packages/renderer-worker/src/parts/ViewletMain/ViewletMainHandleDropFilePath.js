@@ -11,6 +11,9 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { openUri } from './ViewletMainOpenUri.js'
 
+const sashSize = 4
+const sashVisibleSize = 1
+
 const getTabTitle = (uri) => {
   const homeDir = Workspace.getHomeDir()
   // TODO tree shake this out in web
@@ -22,7 +25,6 @@ const getTabTitle = (uri) => {
 
 export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
   const { x, y, width, height, tabHeight, grid } = state
-  console.log({ x, y, width, height, tabHeight, grid: [...grid], eventX, eventY })
   const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + tabHeight, width, height - tabHeight, eventX, eventY)
   if (splitDirection === EditorSplitDirectionType.None) {
     await openUri(state, filePath)
@@ -60,11 +62,11 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const firstGridItem = state.grid[1]
     // resize content
     const resizeCommands = Viewlet.resize(firstGridItem.uid, { x: 0, y: 0, width: width - overlayWidth, height })
-    allCommands.push(['Viewlet.setBounds', firstGridItem.uid, 0, tabHeight, width - overlayWidth, height])
+    allCommands.push(['Viewlet.setBounds', firstGridItem.uid, 0, tabHeight, width - overlayWidth - sashVisibleSize, height])
     allCommands.push(...resizeCommands)
-    allCommands.push(['Viewlet.setBounds', firstGridItem.uid, 0, tabHeight, width - overlayWidth, height])
+    allCommands.push(['Viewlet.setBounds', firstGridItem.uid, 0, tabHeight, width - overlayWidth - sashVisibleSize, height])
     // resize tabs
-    allCommands.push(['Viewlet.setBounds', firstGroupItem.uid, 0, 0, width - overlayWidth, tabHeight])
+    allCommands.push(['Viewlet.setBounds', firstGroupItem.uid, 0, 0, width - overlayWidth - sashVisibleSize, tabHeight])
     // TODO
     // allCommands.push(Viewlet.resize())
     allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver'])
@@ -82,7 +84,7 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
       /* id */ ViewletModuleId.Main,
       /* method */ 'addSash',
       /* id */ '',
-      /* x */ overlayX,
+      /* x */ overlayX - sashSize / 2 - sashVisibleSize,
       /* y */ overlayY - y - tabHeight,
       /* width */ 4,
       /* height */ overlayHeight + tabHeight,
