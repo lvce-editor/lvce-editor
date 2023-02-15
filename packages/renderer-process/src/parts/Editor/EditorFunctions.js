@@ -29,20 +29,20 @@ export const cut = () => {
   RendererWorker.send('Editor.cut')
 }
 
-export const moveRectangleSelectionPx = (x, y) => {
-  RendererWorker.send('Editor.moveRectangleSelectionPx', x, y)
+export const moveRectangleSelectionPx = (uid, x, y) => {
+  RendererWorker.send('Viewlet.executeViewletCommand', uid, 'uid', uid, 'moveRectangleSelectionPx', x, y)
 }
 
-export const moveSelectionPx = (x, y) => {
-  RendererWorker.send('Editor.moveSelectionPx', x, y)
+export const moveSelectionPx = (uid, x, y) => {
+  RendererWorker.send('Viewlet.executeViewletCommand', uid, 'uid', uid, 'moveSelectionPx', x, y)
 }
 
-export const handlePointerCaptureLost = () => {
-  RendererWorker.send('Editor.handlePointerCaptureLost')
+export const handlePointerCaptureLost = (uid) => {
+  RendererWorker.send('Viewlet.executeViewletCommand', uid, 'uid', uid, 'handlePointerCaptureLost')
 }
 
-export const handleMouseDown = (modifier, x, y, detail) => {
-  RendererWorker.send('Editor.handleMouseDown', modifier, x, y, detail)
+export const handleMouseDown = (uid, modifier, x, y, detail) => {
+  RendererWorker.send('Viewlet.executeViewletCommand', uid, 'uid', uid, 'handleMouseDown', modifier, x, y, detail)
 }
 
 export const setDeltaY = (deltaY) => {

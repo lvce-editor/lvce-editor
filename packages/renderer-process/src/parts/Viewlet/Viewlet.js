@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 
 export const state = {
   instances: Object.create(null),
@@ -20,8 +21,10 @@ export const create = (id, uid = id) => {
   if (state.instances[id] && state.instances[id].state.$Viewlet.isConnected) {
     state.instances[id].state.$Viewlet.remove()
   }
+  const instanceState = module.create()
+  ComponentUid.set(instanceState.$Viewlet, uid)
   state.instances[uid] = {
-    state: module.create(),
+    state: instanceState,
     factory: module,
   }
 }
