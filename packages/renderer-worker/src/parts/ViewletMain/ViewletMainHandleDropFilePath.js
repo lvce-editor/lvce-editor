@@ -65,11 +65,30 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const uri = filePath
     const id = ViewletMap.getId(uri)
     const instanceUid = Id.create()
-    const tabsId = Id.create()
+    const tabsUid = Id.create()
     const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, overlayX, overlayY, overlayWidth, overlayHeight)
     instance.show = false
     instance.uid = instanceUid
-    state.grid.push({ uri, uid: instanceUid })
+    state.grid.push(
+      {
+        x: overlayTabsX,
+        y: overlayTabsY,
+        width: overlayTabsWidth,
+        height: overlayTabsHeight,
+        uri,
+        uid: tabsUid,
+        childCount: 1,
+      },
+      {
+        x: overlayTabsX,
+        y: overlayY,
+        width: overlayWidth,
+        height: overlayHeight,
+        uri,
+        uid: instanceUid,
+        childCount: 0,
+      }
+    )
     state.activeIndex = state.grid.length - 1
     const tabLabel = Workspace.pathBaseName(uri)
     const tabTitle = getTabTitle(uri)
@@ -87,13 +106,13 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     // allCommands.push(Viewlet.resize())
     allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver'])
     allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay'])
-    allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsId])
-    allCommands.push(['Viewlet.send', tabsId, 'setTabs', [{ label: tabLabel, title: tabTitle }]])
-    allCommands.push(['Viewlet.setBounds', tabsId, overlayTabsX, overlayTabsY, overlayTabsWidth, overlayTabsHeight])
+    allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
+    allCommands.push(['Viewlet.send', tabsUid, 'setTabs', [{ label: tabLabel, title: tabTitle }]])
+    allCommands.push(['Viewlet.setBounds', tabsUid, overlayTabsX, overlayTabsY, overlayTabsWidth, overlayTabsHeight])
     // @ts-ignore
     const commands = await ViewletManager.load(instance, false)
     allCommands.push(...commands)
-    allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsId])
+    allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsUid])
     allCommands.push([
       /* Viewlet.append */ 'Viewlet.appendCustom',
       /* parentId */ ViewletModuleId.Main,

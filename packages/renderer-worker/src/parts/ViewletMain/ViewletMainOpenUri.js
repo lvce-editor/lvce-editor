@@ -47,7 +47,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   instance.show = false
   const groupItem = {
     x,
-    y,
+    y: state.y,
     width,
     height,
     childCount: 1,
@@ -57,9 +57,9 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   }
   const leafItem = {
     x,
-    y: y + tabHeight,
+    y: y,
     width,
-    height: height - tabHeight,
+    height: height,
     childCount: 0,
     uri,
     uid: instanceUid,
