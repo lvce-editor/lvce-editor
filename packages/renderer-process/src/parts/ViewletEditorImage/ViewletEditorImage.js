@@ -1,31 +1,38 @@
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletEditorImageEvents from './ViewletEditorImageEvents.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 
 export const create = () => {
   const $Image = document.createElement('img')
   $Image.className = 'ViewletImage'
   $Image.draggable = false
-  $Image.onerror = ViewletEditorImageEvents.handleError
 
   const $ImageWrapper = document.createElement('div')
   $ImageWrapper.className = 'ImageWrapper'
   $ImageWrapper.tabIndex = 0
-  $ImageWrapper.onfocus = ViewletEditorImageEvents.handleFocus
   $ImageWrapper.append($Image)
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet EditorImage'
   $Viewlet.append($ImageWrapper)
-  $Viewlet.onpointerdown = ViewletEditorImageEvents.handlePointerDown
-  $Viewlet.onpointerup = ViewletEditorImageEvents.handlePointerUp
-  $Viewlet.oncontextmenu = ViewletEditorImageEvents.handleContextMenu
-  $Viewlet.addEventListener(DomEventType.Wheel, ViewletEditorImageEvents.handleWheel, DomEventOptions.Passive)
+
   return {
     $Viewlet,
     $Image,
     $ImageWrapper,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $Image, $ImageWrapper, $Viewlet } = state
+  $Image.onerror = ViewletEditorImageEvents.handleError
+
+  $ImageWrapper.onfocus = ViewletEditorImageEvents.handleFocus
+
+  $Viewlet.onpointerdown = ViewletEditorImageEvents.handlePointerDown
+  $Viewlet.onpointerup = ViewletEditorImageEvents.handlePointerUp
+  $Viewlet.oncontextmenu = ViewletEditorImageEvents.handleContextMenu
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletEditorImageEvents.handleWheel, DomEventOptions.Passive)
 }
 
 export const setTransform = (state, transform) => {

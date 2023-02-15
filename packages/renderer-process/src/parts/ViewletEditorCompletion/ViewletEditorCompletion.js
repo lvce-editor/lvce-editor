@@ -32,13 +32,16 @@ export const create = () => {
   // @ts-ignore
   $Viewlet.role = AriaRoles.ListBox
   $Viewlet.ariaLabel = 'Suggest'
-  $Viewlet.onmousedown = ViewletEditorCompletionEvents.handleMousedown
-  $Viewlet.addEventListener(DomEventType.Wheel, ViewletEditorCompletionEvents.handleWheel, DomEventOptions.Passive)
   return {
     $Viewlet,
   }
 }
 
+export const attachEvents = (state) => {
+  const { $Viewlet } = state
+  $Viewlet.onmousedown = ViewletEditorCompletionEvents.handleMousedown
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletEditorCompletionEvents.handleWheel, DomEventOptions.Passive)
+}
 // TODO show should be passed active cursor position
 // this would make this function easier to test as it would avoid dependency on globals of other files
 

@@ -15,15 +15,11 @@ jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => 
 })
 
 const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
-
 const ViewletActivityBar = await import('../src/parts/ViewletActivityBar/ViewletActivityBar.js')
-
-const getTitle = ($Element) => {
-  return $Element.title
-}
 
 test('event - handleClick - top', () => {
   const state = ViewletActivityBar.create()
+  ViewletActivityBar.attachEvents(state)
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
@@ -61,6 +57,7 @@ test('event - handleClick - top', () => {
 
 test('event - handleClick - bottom', () => {
   const state = ViewletActivityBar.create()
+  ViewletActivityBar.attachEvents(state)
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
@@ -96,6 +93,7 @@ test('event - handleClick - bottom', () => {
 
 test('event - handleClick - no item is clicked', () => {
   const state = ViewletActivityBar.create()
+  ViewletActivityBar.attachEvents(state)
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
@@ -132,6 +130,7 @@ test('event - handleClick - no item is clicked', () => {
 
 test('event - handleContextMenu', () => {
   const state = ViewletActivityBar.create()
+  ViewletActivityBar.attachEvents(state)
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',

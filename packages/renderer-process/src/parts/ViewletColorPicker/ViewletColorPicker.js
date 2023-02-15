@@ -17,12 +17,10 @@ export const create = () => {
 
   const $ColorPickerSliderThumb = document.createElement('div')
   $ColorPickerSliderThumb.className = 'ColorPickerSliderThumb'
-  $ColorPickerSliderThumb.onpointerdown = ViewletColorPickerEvents.handleSliderPointerDown
 
   const $ColorPickerSlider = document.createElement('div')
   $ColorPickerSlider.className = 'ColorPickerSlider'
   $ColorPickerSlider.append($ColorPickerSliderThumb)
-  $ColorPickerSlider.onpointerdown = ViewletColorPickerEvents.handleSliderPointerDown
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet ColorPicker'
@@ -30,8 +28,15 @@ export const create = () => {
   return {
     $Viewlet,
     $BackgroundColor,
+    $ColorPickerSlider,
     $ColorPickerSliderThumb,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $ColorPickerSliderThumb, $ColorPickerSlider } = state
+  $ColorPickerSliderThumb.onpointerdown = ViewletColorPickerEvents.handleSliderPointerDown
+  $ColorPickerSlider.onpointerdown = ViewletColorPickerEvents.handleSliderPointerDown
 }
 
 export const setColor = (state, color) => {

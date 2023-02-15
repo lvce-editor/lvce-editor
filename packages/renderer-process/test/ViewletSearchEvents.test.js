@@ -17,11 +17,11 @@ jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => 
 })
 
 const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
-
 const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
 
 test('event - input', () => {
   const state = ViewletSearch.create()
+  ViewletSearch.attachEvents(state)
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const { $ViewletSearchInput } = state
@@ -36,6 +36,7 @@ test('event - input', () => {
 })
 test('event - click', () => {
   const state = ViewletSearch.create()
+  ViewletSearch.attachEvents(state)
   ViewletSearch.setResults(state, [
     {
       name: './test.txt',
@@ -56,6 +57,7 @@ test('event - click', () => {
 
 test('event - contextmenu - activated via keyboard', () => {
   const state = ViewletSearch.create()
+  ViewletSearch.attachEvents(state)
   ViewletSearch.setResults(state, [
     {
       name: './result-1.txt',
@@ -79,6 +81,7 @@ test('event - contextmenu - activated via keyboard', () => {
 
 test('event - contextmenu - activated via mouse', () => {
   const state = ViewletSearch.create()
+  ViewletSearch.attachEvents(state)
   ViewletSearch.setResults(state, [
     {
       name: './result-1.txt',

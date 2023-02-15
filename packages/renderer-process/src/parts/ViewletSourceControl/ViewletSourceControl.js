@@ -1,9 +1,9 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Logger from '../Logger/Logger.js'
-import * as IconButton from '../IconButton/IconButton.js'
 import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 
 const create$Item = (item) => {
@@ -26,17 +26,13 @@ const create$Item = (item) => {
 }
 
 const getPlaceHolderText = () => {
-  return `Message (${KeyBindings.lookupKeyBinding(
-    'scm.acceptInput'
-  )} to commit on 'master'`
+  return `Message (${KeyBindings.lookupKeyBinding('scm.acceptInput')} to commit on 'master'`
 }
 
 export const create = () => {
   const $ViewSourceControlInput = InputBox.create()
   $ViewSourceControlInput.placeholder = getPlaceHolderText()
   $ViewSourceControlInput.ariaLabel = 'Source Control Input'
-  $ViewSourceControlInput.onfocus = ViewletSourceControlEvents.handleFocus
-  $ViewSourceControlInput.oninput = ViewletSourceControlEvents.handleInput
 
   const $SourceControlHeader = document.createElement('div')
   $SourceControlHeader.className = 'SourceControlHeader'
@@ -44,9 +40,6 @@ export const create = () => {
 
   const $ViewletTree = document.createElement('div')
   $ViewletTree.className = 'SourceControlItems'
-  $ViewletTree.onclick = ViewletSourceControlEvents.handleClick
-  $ViewletTree.oncontextmenu = ViewletSourceControlEvents.handleContextMenu
-  $ViewletTree.onmouseover = ViewletSourceControlEvents.handleMouseOver
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet SourceControl'
@@ -57,6 +50,17 @@ export const create = () => {
     $ViewletTree,
     $ViewSourceControlInput,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $ViewletTree, $ViewSourceControlInput } = state
+
+  $ViewSourceControlInput.onfocus = ViewletSourceControlEvents.handleFocus
+  $ViewSourceControlInput.oninput = ViewletSourceControlEvents.handleInput
+
+  $ViewletTree.onclick = ViewletSourceControlEvents.handleClick
+  $ViewletTree.oncontextmenu = ViewletSourceControlEvents.handleContextMenu
+  $ViewletTree.onmouseover = ViewletSourceControlEvents.handleMouseOver
 }
 
 export const dispose = () => {}

@@ -23,7 +23,10 @@ export const create = (id, uid = id) => {
   }
   const instanceState = module.create()
   ComponentUid.set(instanceState.$Viewlet, uid)
-  state.instances[uid] = {
+  if (module.attachEvents) {
+    module.attachEvents(instanceState)
+  }
+  state.instances[id] = {
     state: instanceState,
     factory: module,
   }

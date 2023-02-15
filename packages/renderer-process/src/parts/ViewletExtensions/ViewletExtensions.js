@@ -41,7 +41,6 @@ export const create = () => {
   const $InputBox = InputBox.create()
   $InputBox.type = 'search'
   $InputBox.placeholder = 'Search Extensions in Marketplace'
-  $InputBox.oninput = ViewletExtensionsEvents.handleInput
 
   const $ExtensionHeader = document.createElement('div')
   $ExtensionHeader.className = 'ExtensionHeader'
@@ -54,25 +53,12 @@ export const create = () => {
   $ListItems.ariaLabel = 'Extensions'
   // @ts-ignore
   $ListItems.role = AriaRoles.List
-  $ListItems.oncontextmenu = ViewletExtensionsEvents.handleContextMenu
-  if (Platform.isMobile) {
-    $ListItems.onclick = ViewletExtensionsEvents.handlePointerDown
-  } else {
-    $ListItems.onpointerdown = ViewletExtensionsEvents.handlePointerDown
-  }
-  $ListItems.onfocus = ViewletExtensionsEvents.handleFocus
-  $ListItems.onscroll = ViewletExtensionsEvents.handleScroll
-  $ListItems.addEventListener(DomEventType.TouchStart, ViewletExtensionsEvents.handleTouchStart, DomEventOptions.Passive)
-  $ListItems.addEventListener(DomEventType.TouchMove, ViewletExtensionsEvents.handleTouchMove, DomEventOptions.Passive)
-  $ListItems.addEventListener(DomEventType.TouchEnd, ViewletExtensionsEvents.handleTouchEnd, DomEventOptions.Passive)
-  $ListItems.addEventListener(DomEventType.Wheel, ViewletExtensionsEvents.handleWheel, DomEventOptions.Passive)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
 
   const $ScrollBar = document.createElement('div')
   $ScrollBar.className = 'ScrollBarSmall'
-  $ScrollBar.onpointerdown = ViewletExtensionsEvents.handleScrollBarPointerDown
   $ScrollBar.append($ScrollBarThumb)
 
   const $List = document.createElement('div')
@@ -94,8 +80,29 @@ export const create = () => {
     $InputBox,
     $ExtensionSuggestions: undefined,
     $ScrollBarThumb,
+    $ScrollBar,
     $Message: undefined,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $InputBox, $ListItems, $ScrollBar } = state
+  $InputBox.oninput = ViewletExtensionsEvents.handleInput
+
+  $ListItems.oncontextmenu = ViewletExtensionsEvents.handleContextMenu
+  if (Platform.isMobile) {
+    $ListItems.onclick = ViewletExtensionsEvents.handlePointerDown
+  } else {
+    $ListItems.onpointerdown = ViewletExtensionsEvents.handlePointerDown
+  }
+  $ListItems.onfocus = ViewletExtensionsEvents.handleFocus
+  $ListItems.onscroll = ViewletExtensionsEvents.handleScroll
+  $ListItems.addEventListener(DomEventType.TouchStart, ViewletExtensionsEvents.handleTouchStart, DomEventOptions.Passive)
+  $ListItems.addEventListener(DomEventType.TouchMove, ViewletExtensionsEvents.handleTouchMove, DomEventOptions.Passive)
+  $ListItems.addEventListener(DomEventType.TouchEnd, ViewletExtensionsEvents.handleTouchEnd, DomEventOptions.Passive)
+  $ListItems.addEventListener(DomEventType.Wheel, ViewletExtensionsEvents.handleWheel, DomEventOptions.Passive)
+
+  $ScrollBar.onpointerdown = ViewletExtensionsEvents.handleScrollBarPointerDown
 }
 
 // TODO possibly use aria active descendant instead

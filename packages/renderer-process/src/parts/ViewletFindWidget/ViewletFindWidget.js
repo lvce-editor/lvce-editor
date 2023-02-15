@@ -18,9 +18,6 @@ const UiStrings = {
 export const create = () => {
   // TODO recycle nodes
   const $InputBox = InputBox.create()
-  $InputBox.oninput = ViewletFindWidgetEvents.handleInput
-  $InputBox.onblur = ViewletFindWidgetEvents.handleInputBlur
-  $InputBox.onfocus = ViewletFindWidgetEvents.handleFocus
   $InputBox.ariaLabel = UiStrings.Find
 
   const $MatchCountText = document.createTextNode('')
@@ -33,7 +30,6 @@ export const create = () => {
   const $ButtonClose = IconButton.create$Button(UiStrings.Close, Icon.Close)
 
   const $Viewlet = document.createElement('div')
-  $Viewlet.onclick = ViewletFindWidgetEvents.handleClick
   $Viewlet.className = 'Viewlet FindWidget'
   // @ts-ignore
   $Viewlet.role = AriaRoles.Group
@@ -47,6 +43,15 @@ export const create = () => {
     $ButtonFocusNext,
     $ButtonFocusPrevious,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $InputBox, $Viewlet } = state
+  $InputBox.oninput = ViewletFindWidgetEvents.handleInput
+  $InputBox.onblur = ViewletFindWidgetEvents.handleInputBlur
+  $InputBox.onfocus = ViewletFindWidgetEvents.handleFocus
+
+  $Viewlet.onclick = ViewletFindWidgetEvents.handleClick
 }
 
 export const focus = (state) => {

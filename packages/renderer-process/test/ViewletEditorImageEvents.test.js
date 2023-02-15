@@ -49,6 +49,7 @@ const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.
 
 test('event - pointerdown', () => {
   const state = ViewletEditorImage.create()
+  ViewletEditorImage.attachEvents(state)
   const { $Viewlet } = state
   const event = new PointerEvent('pointerdown', {
     bubbles: true,
@@ -84,6 +85,7 @@ test.skip('event - pointerdown - error - no active pointer with the given id is 
 
 test('event - pointermove after pointerdown', () => {
   const state = ViewletEditorImage.create()
+  ViewletEditorImage.attachEvents(state)
   const { $Viewlet } = state
   const pointerDownEvent = new PointerEvent('pointerdown', {
     bubbles: true,
@@ -108,6 +110,7 @@ test('event - pointermove after pointerdown', () => {
 
 test('event - pointerup after pointerdown', () => {
   const state = ViewletEditorImage.create()
+  ViewletEditorImage.attachEvents(state)
   const spy1 = jest.spyOn(HTMLElement.prototype, 'addEventListener')
   const spy2 = jest.spyOn(HTMLElement.prototype, 'removeEventListener')
   // @ts-ignore

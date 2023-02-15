@@ -14,11 +14,11 @@ jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => 
 })
 
 const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
-
 const ViewletSourceControl = await import('../src/parts/ViewletSourceControl/ViewletSourceControl.js')
 
 test('event - click', () => {
   const state = ViewletSourceControl.create()
+  ViewletSourceControl.attachEvents(state)
   ViewletSourceControl.setChangedFiles(state, [
     {
       file: '/test/file-1',
@@ -39,6 +39,7 @@ test('event - click', () => {
 
 test('event - mouseover', () => {
   const state = ViewletSourceControl.create()
+  ViewletSourceControl.attachEvents(state)
   ViewletSourceControl.setChangedFiles(state, [
     {
       file: '/test/file-1',
@@ -58,6 +59,7 @@ test('event - mouseover', () => {
 
 test('event - contextmenu', () => {
   const state = ViewletSourceControl.create()
+  ViewletSourceControl.attachEvents(state)
   ViewletSourceControl.setChangedFiles(state, [
     {
       file: '/test/file-1',
@@ -80,6 +82,7 @@ test('event - contextmenu', () => {
 
 test('event - input', () => {
   const state = ViewletSourceControl.create()
+  ViewletSourceControl.attachEvents(state)
   const { $ViewSourceControlInput } = state
   $ViewSourceControlInput.value = 'test'
   const event = new InputEvent('input', {
