@@ -1,5 +1,6 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const getAllResizeCommands = (grid, x, y, eventX, eventY, tabHeight) => {
   const allCommands = []
@@ -15,6 +16,7 @@ const getAllResizeCommands = (grid, x, y, eventX, eventY, tabHeight) => {
   allCommands.push(['Viewlet.setBounds', secondTabs.uid, eventX, secondTabs.y, secondTabs.width, tabHeight])
   const secondContent = grid[3]
   allCommands.push(['Viewlet.setBounds', secondContent.uid, eventX, secondContent.y, secondContent.width, secondContent.height])
+  allCommands.push(['Viewlet.send', ViewletModuleId.Main, 'setSashX', eventX - x, firstTabs.y - y])
   return allCommands
 }
 

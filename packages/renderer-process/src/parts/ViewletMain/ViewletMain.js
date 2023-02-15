@@ -18,7 +18,6 @@ export const create = () => {
     $Viewlet,
     $Main: $Viewlet,
     $DragOverlay: undefined,
-    $ContentMap: Object.create(null),
   }
 }
 
@@ -110,6 +109,12 @@ export const addSash = (state, sashId, x, y, width, height) => {
   $Sash.onpointerdown = ViewletMainEvents.handleSashPointerDown
   SetBounds.setBounds($Sash, x, y, width, height)
   $Viewlet.append($Sash)
+}
+
+export const setSashX = (state, x, y) => {
+  const { $Viewlet } = state
+  const $Sash = $Viewlet.querySelector('.Sash')
+  SetBounds.setXAndY($Sash, x, y)
 }
 
 export const appendContent = (state, $Child) => {
