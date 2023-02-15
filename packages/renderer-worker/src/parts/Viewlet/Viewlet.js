@@ -184,7 +184,7 @@ export const resize = (id, dimensions) => {
       // TODO handle promise rejection gracefully
       instance.factory.resizeEffect(newState)
     }
-    commands = ViewletManager.render(instance.factory, instance.state, newState)
+    commands = ViewletManager.render(instance.factory, instance.state, newState, id)
   } else {
     const result = instance.factory.resize(oldState, dimensions)
     newState = result.newState
