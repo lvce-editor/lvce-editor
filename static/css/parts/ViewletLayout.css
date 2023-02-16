@@ -27,8 +27,10 @@
 
 .SashVerticalContent {
   width: 1px;
+  height: 100%;
 }
 
 .SashHorizontalContent {
+  width: 100%;
   height: 1px;
 }
