@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as GetOpenDimensions from '../GetOpenDimensions/GetOpenDimensions.js'
 import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -42,24 +43,31 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     }
   }
 
+  const { originalX, originalY, originalWidth, originalHeight, tabsX, tabsY, tabsWidth, tabsHeight } = GetOpenDimensions.getOpenDimensions(
+    x,
+    y,
+    width,
+    height,
+    tabHeight
+  )
   const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, tabHeight, width, height)
   instance.uid = instanceUid
   instance.show = false
   const groupItem = {
-    x,
-    y: state.y,
-    width,
-    height,
+    x: tabsX,
+    y: tabsY,
+    width: tabsWidth,
+    height: tabsHeight,
     childCount: 1,
     uri,
     uid: tabsUid,
     id: instance.id,
   }
   const leafItem = {
-    x,
-    y: y,
-    width,
-    height: height,
+    x: originalX,
+    y: originalY,
+    width: originalWidth,
+    height: originalHeight,
     childCount: 0,
     uri,
     uid: instanceUid,

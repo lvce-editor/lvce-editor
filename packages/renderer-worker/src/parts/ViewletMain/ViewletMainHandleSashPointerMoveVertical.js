@@ -9,9 +9,9 @@ const getAllResizeCommands = (grid, width, x, y, eventX, eventY, tabHeight) => {
   //   i += grid.childCount.length
   // }
   const firstTabs = grid[0]
-  allCommands.push(['Viewlet.setBounds', firstTabs.uid, firstTabs.x, firstTabs.y - y, eventX, tabHeight])
+  allCommands.push(['Viewlet.setBounds', firstTabs.uid, firstTabs.x, firstTabs.y, eventX, tabHeight])
   const firstContent = grid[1]
-  allCommands.push(['Viewlet.setBounds', firstContent.uid, firstContent.x, firstContent.y - y, eventX, firstContent.height])
+  allCommands.push(['Viewlet.setBounds', firstContent.uid, firstContent.x, firstContent.y, eventX, firstContent.height])
   const sash = grid[2]
   allCommands.push(['Viewlet.setBounds', sash.uid, eventX - x, sash.y, sash.width, sash.height])
   const secondTabs = grid[3]
