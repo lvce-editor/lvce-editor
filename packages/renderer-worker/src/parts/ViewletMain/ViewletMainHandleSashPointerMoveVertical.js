@@ -12,15 +12,16 @@ const getAllResizeCommands = (grid, x, y, eventX, eventY, tabHeight) => {
   allCommands.push(['Viewlet.setBounds', firstTabs.uid, firstTabs.x, firstTabs.y - y, eventX, tabHeight])
   const firstContent = grid[1]
   allCommands.push(['Viewlet.setBounds', firstContent.uid, firstContent.x, firstContent.y - y, eventX, firstContent.height])
-  const secondTabs = grid[2]
+  const sash = grid[2]
+  allCommands.push(['Viewlet.setBounds', sash.uid, eventX - x, sash.y, sash.width, sash.height])
+  const secondTabs = grid[3]
   allCommands.push(['Viewlet.setBounds', secondTabs.uid, eventX, secondTabs.y, secondTabs.width, tabHeight])
-  const secondContent = grid[3]
+  const secondContent = grid[4]
   allCommands.push(['Viewlet.setBounds', secondContent.uid, eventX, secondContent.y, secondContent.width, secondContent.height])
-  allCommands.push(['Viewlet.send', ViewletModuleId.Main, 'setSashPosition', eventX - x, firstTabs.y - y])
   return allCommands
 }
 
-export const handleSashPointerMove = (state, eventX, eventY) => {
+export const handleSashPointerMoveVertical = (state, eventX, eventY) => {
   const { grid, tabHeight, x, y } = state
   const allCommands = getAllResizeCommands(grid, x, y, eventX, eventY, tabHeight)
   RendererProcess.invoke('Viewlet.sendMultiple', allCommands)

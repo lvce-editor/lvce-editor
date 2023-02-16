@@ -15,11 +15,3 @@ export const handleDropFilePath = (x, y, filePath) => {
 export const handleDragEnd = (x, y) => {
   RendererWorker.send('Main.handleDragEnd', x, y)
 }
-
-export const handleSashPointerDown = (x, y) => {
-  RendererWorker.send('Main.handleSashPointerDown', x, y)
-}
-
-export const handleSashPointerMove = (x, y) => {
-  RendererWorker.send('Main.handleSashPointerMove', x, y)
-}

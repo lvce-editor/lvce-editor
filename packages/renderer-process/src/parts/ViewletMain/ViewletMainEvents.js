@@ -1,6 +1,5 @@
 import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
 import * as DataTransfer from '../DataTransfer/DataTransfer.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
 import * as ViewletMainFunctions from './ViewletMainFunctions.js'
 
@@ -62,23 +61,4 @@ const getIndex = ($Target) => {
     default:
       return -1
   }
-}
-
-const handleSashPointerMove = (event) => {
-  const { clientX, clientY } = event
-  ViewletMainFunctions.handleSashPointerMove(clientX, clientY)
-}
-
-const handleSashPointerCaptureLost = (event) => {
-  const { target } = event
-  target.removeEventListener(DomEventType.PointerMove, handleSashPointerMove)
-  target.removeEventListener(DomEventType.LostPointerCapture, handleSashPointerCaptureLost)
-}
-
-export const handleSashPointerDown = (event) => {
-  const { clientX, clientY, target, pointerId } = event
-  target.setPointerCapture(pointerId)
-  target.addEventListener(DomEventType.PointerMove, handleSashPointerMove)
-  target.addEventListener(DomEventType.LostPointerCapture, handleSashPointerCaptureLost)
-  ViewletMainFunctions.handleSashPointerDown(clientX, clientY)
 }

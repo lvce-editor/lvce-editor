@@ -80,6 +80,10 @@ export const load = (moduleId) => {
       return import('../ViewletColorPicker/ViewletColorPicker.js')
     case ViewletModuleId.MainTabs:
       return import('../ViewletMainTabs/ViewletMainTabs.js')
+    case ViewletModuleId.VisibleSashHorizontal:
+      return import('../VisibleSashHorizontal/VisibleSashHorizontal.js')
+    case ViewletModuleId.VisibleSashVertical:
+      return import('../VisibleSashVertical/VisibleSashVertical.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }

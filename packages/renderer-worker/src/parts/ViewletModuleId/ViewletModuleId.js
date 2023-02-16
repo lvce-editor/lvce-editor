@@ -85,3 +85,7 @@ export const TodoList = 'TodoList'
 export const Video = 'Video'
 
 export const ColorPicker = 'ColorPicker'
+
+export const VisibleSashHorizontal = 'VisibleSashHorizontal'
+
+export const VisibleSashVertical = 'VisibleSashVertical'

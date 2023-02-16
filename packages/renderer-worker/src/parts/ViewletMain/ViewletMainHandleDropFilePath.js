@@ -25,6 +25,15 @@ const getTabTitle = (uri) => {
   return uri
 }
 
+const getSashModuleId = (orientation) => {
+  switch (orientation) {
+    case SashOrientation.Horizontal:
+      return ViewletModuleId.VisibleSashHorizontal
+    case SashOrientation.Vertical:
+      return ViewletModuleId.VisibleSashVertical
+  }
+}
+
 export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
   const { x, y, width, height, tabHeight, grid } = state
   const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + tabHeight, width, height - tabHeight, eventX, eventY)
@@ -68,10 +77,19 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const id = ViewletMap.getId(uri)
     const instanceUid = Id.create()
     const tabsUid = Id.create()
+    const sashUid = Id.create()
     const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, overlayX, overlayY, overlayWidth, overlayHeight)
     instance.show = false
     instance.uid = instanceUid
     state.grid.push(
+      {
+        x: sashX,
+        y: sashY,
+        width: sashWidth,
+        height: sashHeight,
+        uid: sashUid,
+        childCount: 0,
+      },
       {
         x: overlayTabsX,
         y: overlayTabsY,
@@ -123,17 +141,11 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     ])
     // const sashOrientation = splitDirection===
     // TODO sash could be horizontal or vertical
-    allCommands.push([
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'addSash',
-      /* id */ '',
-      /* orientation */ sashOrientation,
-      /* x */ sashX,
-      /* y */ sashY,
-      /* width */ sashWidth,
-      /* height */ sashHeight,
-    ])
+    const sashModuleId = getSashModuleId(sashOrientation)
+    await RendererProcess.invoke('Viewlet.loadModule', sashModuleId)
+    allCommands.push([/* Viewlet.create */ 'Viewlet.create', /* id */ sashModuleId, sashUid])
+    allCommands.push(['Viewlet.setBounds', sashUid, sashX, sashY, sashWidth, sashHeight])
+    allCommands.push(['Viewlet.append', ViewletModuleId.Main, sashUid])
     console.log({ allCommands })
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ allCommands)
   }

@@ -1,6 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
-import * as VisibleSash from '../VisibleSash/VisibleSash.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
 
 // TODO Main should not be bound to Editor -> Lazy load Editor
@@ -101,20 +100,6 @@ export const hideDragOverlay = (state) => {
   }
   state.$DragOverlay.remove()
   state.$DragOverlay = undefined
-}
-
-export const addSash = (state, sashId, sashOrientation, x, y, width, height) => {
-  const { $Viewlet } = state
-  const $Sash = VisibleSash.create(sashOrientation)
-  $Sash.onpointerdown = ViewletMainEvents.handleSashPointerDown
-  SetBounds.setBounds($Sash, x, y, width, height)
-  $Viewlet.append($Sash)
-}
-
-export const setSashPosition = (state, x, y) => {
-  const { $Viewlet } = state
-  const $Sash = $Viewlet.querySelector('[class^="Sash"]')
-  SetBounds.setXAndY($Sash, x, y)
 }
 
 export const appendContent = (state, $Child) => {

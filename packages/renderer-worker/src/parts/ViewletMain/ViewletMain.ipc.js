@@ -30,7 +30,8 @@ export const LazyCommands = {
   handleDropFilePath: () => import('./ViewletMainHandleDropFilePath.js'),
   openUri: () => import('./ViewletMainOpenUri.js'),
   handleSashPointerDown: () => import('./ViewletMainHandleSashPointerDown.js'),
-  handleSashPointerMove: () => import('./ViewletMainHandleSashPointerMove.js'),
+  handleSashPointerMoveHorizontal: () => import('./ViewletMainHandleSashPointerMoveHorizontal.js'),
+  handleSashPointerMoveVertical: () => import('./ViewletMainHandleSashPointerMoveVertical.js'),
 }
 
 export const Css = ['/css/parts/ViewletMain.css', '/css/parts/EditorTabs.css']
