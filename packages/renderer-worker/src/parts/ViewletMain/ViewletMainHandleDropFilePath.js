@@ -139,6 +139,7 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     // @ts-ignore
     const commands = await ViewletManager.load(instance, false)
     allCommands.push(...commands)
+    // TODO when dropping up/left, prepend instead if append
     allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsUid])
     allCommands.push([
       /* Viewlet.append */ 'Viewlet.appendCustom',
