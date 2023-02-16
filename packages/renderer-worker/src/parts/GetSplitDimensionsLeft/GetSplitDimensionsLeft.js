@@ -20,7 +20,7 @@ export const getSplitDimensionsLeft = (x, y, width, height, halfWidth, halfHeigh
     overlayTabsHeight: tabHeight,
     sashX: halfWidth,
     sashY: 0,
-    sashWidth: sashVisibleSize,
+    sashWidth: sashSize,
     sashHeight: height,
     sashOrientation: SashOrientation.Vertical,
   }
