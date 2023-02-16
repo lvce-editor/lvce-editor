@@ -392,6 +392,7 @@ const show = async (state, module, currentViewletId) => {
   }
   const resizeCommands = getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
+
   return {
     newState: {
       ...state,
@@ -558,6 +559,8 @@ const loadIfVisible = async (state, module) => {
       commands.push(['Viewlet.append', 'Layout', moduleId, referenceNodes])
     }
   }
+  console.log({ commands })
+
   return {
     newState: state,
     commands,

@@ -15,7 +15,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-
+import * as Id from '../Id/Id.js'
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
 // interface Editor {
@@ -46,26 +46,6 @@ const COLUMN_WIDTH = 9 // TODO compute this automatically once
 //   readonly src: string
 //   readonly type: 'video'
 // }
-
-const canBeRestored = (editor) => {
-  return typeof editor.uri === 'string' && FileSystem.canBeRestored(editor.uri)
-}
-
-const getMainEditors = (state) => {
-  if (!state) {
-    return []
-  }
-  const { editors, activeIndex } = state
-  if (!editors) {
-    return []
-  }
-  const restoredEditor = editors.filter(canBeRestored)[activeIndex]
-  if (!restoredEditor) {
-    return []
-  }
-  // TODO check that type is string (else runtime error occurs and page is blank)
-  return [restoredEditor]
-}
 
 const hydrateLazy = async () => {
   // TODO this should be in extension host
@@ -134,28 +114,28 @@ const findEditorWithUri = (editors, uri) => {
 }
 
 const getRestoredEditors = (savedState) => {
-  if (Workspace.isTest()) {
-    return []
+  if (!savedState || !savedState.grid || Workspace.isTest()) {
+    return { editors: [], grid: [] }
   }
-  const restoredEditors = getMainEditors(savedState)
-  return restoredEditors
+  return {
+    grid: savedState.grid,
+  }
 }
 
 export const saveState = (state) => {
-  const { editors, activeIndex } = state
-  return { editors, activeIndex }
+  const { editors, grid, activeIndex } = state
+  return { editors, grid, activeIndex }
 }
 
 export const loadContent = (state, savedState) => {
   // TODO get restored editors from saved state
-  const editors = getRestoredEditors(savedState)
+  const { grid } = getRestoredEditors(savedState)
   // @ts-ignore
   LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
-  const activeIndex = editors.length > 0 ? 0 : -1
   return {
     ...state,
-    editors,
-    activeIndex,
+    grid,
+    activeIndex: 0,
   }
 }
 
@@ -175,47 +155,59 @@ export const getChildren = (state) => {
 // TODO content loaded should return commands which
 // get picked up by viewletlayout and sent to renderer process
 export const contentLoaded = async (state) => {
-  if (state.grid.length === 0) {
+  const { grid } = state
+  if (grid.length === 0) {
     return []
   }
-  const { tabHeight } = state
-  const editor = Arrays.last(state.editors)
-  const x = state.x
-  const y = state.y + tabHeight
-  const width = state.width
-  const height = state.height - tabHeight
-  const id = ViewletMap.getId(editor.uri)
-  const tabLabel = Workspace.pathBaseName(editor.uri)
-  const tabTitle = getTabTitle(editor.uri)
-  const commands = [
-    [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
-  ]
+  const allCommands = []
+  await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
+  if (grid.length === 2) {
+    // TODO restore tabs and editor
+    const tabsGridItem = grid[0]
+    const instanceGridItem = grid[1]
+    const instanceUid = Id.create()
+    const tabsUid = Id.create()
+    instanceGridItem.uid = instanceUid
+    const tabTitle = getTabTitle(instanceGridItem.uri)
+    const tabLabel = Workspace.pathBaseName(instanceGridItem.uri)
+    allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
+    allCommands.push(['Viewlet.send', tabsUid, 'setTabs', [{ label: tabLabel, title: tabTitle }]])
+    allCommands.push(['Viewlet.setBounds', tabsUid, tabsGridItem.x, tabsGridItem.y, tabsGridItem.width, tabsGridItem.height])
+    const extraCommands = await ViewletManager.load(
+      {
+        getModule: ViewletModule.load,
+        id: instanceGridItem.id,
+        // @ts-ignore
+        parentId: ViewletModuleId.Main,
+        uri: instanceGridItem.uri,
+        x: instanceGridItem.x,
+        y: instanceGridItem.y,
+        width: instanceGridItem.width,
+        height: instanceGridItem.height,
+        show: false,
+        focus: false,
+        type: 0,
+        setBounds: false,
+        visible: true,
+        uid: instanceUid,
+      },
+      /* focus */ false,
+      /* restore */ true
+    )
+    allCommands.push(...extraCommands)
+    allCommands.push(['Viewlet.setBounds', instanceUid, instanceGridItem.x, instanceGridItem.y, instanceGridItem.width, instanceGridItem.height])
+    allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsUid])
+    allCommands.push([
+      /* Viewlet.append */ 'Viewlet.appendCustom',
+      /* parentId */ ViewletModuleId.Main,
+      /* method */ 'appendContent',
+      /* id  */ instanceUid,
+    ])
+  }
 
   // // TODO race condition: Viewlet may have been resized before it has loaded
   // // @ts-ignore
-  const extraCommands = await ViewletManager.load(
-    {
-      getModule: ViewletModule.load,
-      id,
-      // @ts-ignore
-      parentId: ViewletModuleId.Main,
-      uri: editor.uri,
-      x,
-      y,
-      width,
-      height,
-      show: false,
-      focus: false,
-      type: 0,
-      setBounds: false,
-      visible: true,
-    },
-    /* focus */ false,
-    /* restore */ true
-  )
-  commands.push(...extraCommands)
-  commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
-  return commands
+  return allCommands
 }
 
 export const openBackgroundTab = async (state, initialUri, props) => {

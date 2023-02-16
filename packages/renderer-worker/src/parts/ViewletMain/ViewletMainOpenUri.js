@@ -31,17 +31,17 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const tabsUid = Id.create()
   const instanceUid = Id.create()
 
-  for (const editor of state.grid) {
-    if (editor.uri === uri) {
-      console.log('found existing editor')
-      // TODO if the editor is already open, nothing needs to be done
-      const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
-      // @ts-ignore
+  // for (const editor of state.grid) {
+  //   if (editor.uri === uri) {
+  //     console.log('found existing editor')
+  //     // TODO if the editor is already open, nothing needs to be done
+  //     const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
+  //     // @ts-ignore
 
-      await ViewletManager.load(instance, focus, false, options)
-      return state
-    }
-  }
+  //     await ViewletManager.load(instance, focus, false, options)
+  //     return state
+  //   }
+  // }
 
   const { originalX, originalY, originalWidth, originalHeight, tabsX, tabsY, tabsWidth, tabsHeight } = GetOpenDimensions.getOpenDimensions(
     x,
