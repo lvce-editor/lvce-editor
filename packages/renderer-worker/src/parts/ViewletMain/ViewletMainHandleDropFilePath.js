@@ -12,6 +12,7 @@ import * as Workspace from '../Workspace/Workspace.js'
 import { openUri } from './ViewletMainOpenUri.js'
 import * as GetSplitDimensions from '../GetSplitDimensions/GetSplitDimensions.js'
 import * as SashOrientation from '../SashOrientation/SashOrientation.js'
+import * as SplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
 
 const sashSize = 4
 const sashVisibleSize = 1
@@ -81,40 +82,46 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, overlayX, overlayY, overlayWidth, overlayHeight)
     instance.show = false
     instance.uid = instanceUid
-    state.grid.push(
-      {
-        x: sashX,
-        y: sashY,
-        width: sashWidth,
-        height: sashHeight,
-        uid: sashUid,
-        childCount: 0,
-      },
-      {
-        x: overlayTabsX,
-        y: overlayTabsY,
-        width: overlayTabsWidth,
-        height: overlayTabsHeight,
-        uri,
-        uid: tabsUid,
-        childCount: 1,
-      },
-      {
-        x: overlayTabsX,
-        y: overlayY,
-        width: overlayWidth,
-        height: overlayHeight,
-        uri,
-        uid: instanceUid,
-        childCount: 0,
-      }
-    )
+    const sashGridItem = {
+      x: sashX,
+      y: sashY,
+      width: sashWidth,
+      height: sashHeight,
+      uid: sashUid,
+      childCount: 0,
+    }
+    const tabsGridItem = {
+      x: overlayTabsX,
+      y: overlayTabsY,
+      width: overlayTabsWidth,
+      height: overlayTabsHeight,
+      uri,
+      uid: tabsUid,
+      childCount: 1,
+    }
+    const instanceGridItem = {
+      x: overlayTabsX,
+      y: overlayY,
+      width: overlayWidth,
+      height: overlayHeight,
+      uri,
+      uid: instanceUid,
+      childCount: 0,
+    }
+    const firstGroupItem = state.grid[0]
+    const firstGridItem = state.grid[1]
+    if (splitDirection === SplitDirectionType.Down || splitDirection === SplitDirectionType.Right) {
+      state.grid.push(sashGridItem, tabsGridItem, instanceGridItem)
+    } else {
+      state.grid.unshift(tabsGridItem, instanceGridItem, sashGridItem)
+    }
+    console.log(state.grid)
+
     state.activeIndex = state.grid.length - 1
     const tabLabel = Workspace.pathBaseName(uri)
     const tabTitle = getTabTitle(uri)
     const allCommands = []
-    const firstGroupItem = state.grid[0]
-    const firstGridItem = state.grid[1]
+
     // resize content
     const resizeCommands = Viewlet.resize(firstGridItem.uid, { x: 0, y: 0, width: width - overlayWidth, height })
     console.log({ resizeCommands })
