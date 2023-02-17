@@ -461,7 +461,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       }
       const commands = []
       if (state < ViewletState.RendererProcessViewletLoaded) {
-        await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.uid)
+        await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.id)
       }
       commands.push([kCreate, viewlet.uid, viewlet.parentId])
       commands.push([kSetBounds, viewlet.uid, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
