@@ -70,9 +70,8 @@ export const prepare = (error) => {
       error = cause
     }
   }
-  const cleanedStack = CleanStack.cleanStack(error.stack)
-  const lines = SplitLines.splitLines(cleanedStack)
-  const file = lines[1]
+  const lines = CleanStack.cleanStack(error.stack)
+  const file = lines[0]
   let codeFrame = ''
   if (error.codeFrame) {
     codeFrame = error.codeFrame
@@ -95,7 +94,7 @@ export const prepare = (error) => {
       codeFrame = codeFrameColumns(rawLines, location)
     }
   }
-  const relevantStack = JoinLines.joinLines(lines.slice(1))
+  const relevantStack = JoinLines.joinLines(lines)
   return {
     message,
     stack: relevantStack,
