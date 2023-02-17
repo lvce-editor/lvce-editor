@@ -1,16 +1,15 @@
 import * as Callback from '../Callback/Callback.js'
 
 const getPort = () => {
-  return new Promise((resolve, reject) => {
-    const id = Callback.register(resolve, reject)
-    const message = {
-      jsonrpc: '2.0',
-      method: 'ElectronMessagePort.create',
-      params: [],
-      id,
-    }
-    postMessage(message)
-  })
+  const { id, promise } = Callback.registerPromise()
+  const message = {
+    jsonrpc: '2.0',
+    method: 'ElectronMessagePort.create',
+    params: [],
+    id,
+  }
+  postMessage(message)
+  return promise
 }
 
 export const create = async () => {

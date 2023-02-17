@@ -3,8 +3,8 @@ import { JsonRpcError } from '../Errors/JsonRpcError.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as Platform from '../Platform/Platform.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as Platform from '../Platform/Platform.js'
 
 export const state = {
   /**
@@ -115,15 +115,14 @@ class RendererWorkerError extends Error {
 }
 
 export const invoke = async (method, ...params) => {
-  const responseMessage = await new Promise((resolve, reject) => {
-    const callbackId = Callback.register(resolve, reject)
-    state.ipc.send({
-      jsonrpc: JsonRpcVersion.Two,
-      method,
-      params,
-      id: callbackId,
-    })
+  const { id, promise } = Callback.registerPromise()
+  state.ipc.send({
+    jsonrpc: JsonRpcVersion.Two,
+    method,
+    params,
+    id,
   })
+  const responseMessage = await promise
   if ('error' in responseMessage) {
     throw new RendererWorkerError(responseMessage.error)
   }
