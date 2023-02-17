@@ -1,9 +1,11 @@
 import exitHook from 'exit-hook'
-import { ChildProcess, fork } from 'node:child_process'
+import { ChildProcess } from 'node:child_process'
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
-import * as PtyHostPath from '../PtyHostPath/PtyHostPath.js'
+import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as PtyHostPath from '../PtyHostPath/PtyHostPath.js'
 
 export const state = {
   /**
@@ -47,7 +49,12 @@ const handleProcessExit = () => {
 const createPtyHost = async () => {
   exitHook(handleProcessExit)
   const ptyHostPath = await PtyHostPath.getPtyHostPath()
-  const ptyHost = fork(ptyHostPath, { stdio: 'inherit' })
+  const ptyHost = await IpcParent.create({
+    method: IpcParentType.NodeForkedProcess,
+    path: ptyHostPath,
+    argv: ['--ipc-type=node-forked-process'],
+    stdio: 'inherit',
+  })
   return ptyHost
 }
 
@@ -70,26 +77,25 @@ export const create = async (socket, id, cwd) => {
     case /* None */ 0: {
       state.ptyHostState = /* Creating */ 1
       const ptyHost = await createPtyHost()
-      const handleFirstMessage = () => {
-        Debug.debug('pty host ready')
-        state.ptyHostState = /* Ready */ 2
-        const handleMessage = (message) => {
-          const data = message.params[1]
-          socket.send({
-            jsonrpc: JsonRpcVersion.Two,
-            method: 'Viewlet.send',
-            params: ['Terminal', 'handleData', data],
-          })
-        }
-        ptyHost.on('message', handleMessage)
-        state.send = (message) => {
-          ptyHost.send(message)
-        }
-        while (state.pendingMessages.length > 0) {
-          state.send(state.pendingMessages.shift())
-        }
+
+      Debug.debug('pty host ready')
+      state.ptyHostState = /* Ready */ 2
+      const handleMessage = (message) => {
+        console.log({ message })
+        const data = message.params[1]
+        socket.send({
+          jsonrpc: JsonRpcVersion.Two,
+          method: 'Viewlet.send',
+          params: ['Terminal', 'handleData', data],
+        })
       }
-      ptyHost.once('message', handleFirstMessage)
+      ptyHost.on('message', handleMessage)
+      state.send = (message) => {
+        ptyHost.send(message)
+      }
+      while (state.pendingMessages.length > 0) {
+        state.send(state.pendingMessages.shift())
+      }
       state.ptyHost = ptyHost
       break
     }
