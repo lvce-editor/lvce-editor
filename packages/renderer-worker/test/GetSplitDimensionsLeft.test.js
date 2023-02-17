@@ -1,4 +1,5 @@
 import * as GetSplitDimensionsLeft from '../src/parts/GetSplitDimensionsLeft/GetSplitDimensionsLeft.js'
+import * as SashOrientation from '../src/parts/SashOrientation/SashOrientation.js'
 
 test('getSplitDimensionsLeft', () => {
   const x = 0
@@ -17,19 +18,20 @@ test('getSplitDimensionsLeft', () => {
     originalTabsY: 0,
     originalWidth: 50,
     originalX: 50,
-    originalY: 0,
-    orignalHeight: 100,
-    overlayHeight: 100,
+    originalY: 35,
+    orignalHeight: 65,
+    overlayHeight: 65,
     overlayTabsHeight: 35,
     overlayTabsWidth: 50,
     overlayTabsX: 0,
     overlayTabsY: 0,
     overlayWidth: 49,
     overlayX: 0,
-    overlayY: 0,
+    overlayY: 35,
     sashHeight: 100,
-    sashWidth: 1,
+    sashWidth: 4,
     sashX: 50,
     sashY: 0,
+    sashOrientation: SashOrientation.Vertical,
   })
 })

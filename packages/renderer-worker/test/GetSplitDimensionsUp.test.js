@@ -1,4 +1,5 @@
 import * as GetSplitDimensionsUp from '../src/parts/GetSplitDimensionsUp/GetSplitDimensionsUp.js'
+import * as SashOrientation from '../src/parts/SashOrientation/SashOrientation.js'
 
 test('getSplitDimensionsUp', () => {
   const x = 0
@@ -31,5 +32,6 @@ test('getSplitDimensionsUp', () => {
     sashWidth: 100,
     sashX: 0,
     sashY: 50,
+    sashOrientation: SashOrientation.Horizontal,
   })
 })

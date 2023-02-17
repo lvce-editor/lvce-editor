@@ -1,4 +1,5 @@
 import * as GetSplitDimensionsRight from '../src/parts/GetSplitDimensionsRight/GetSplitDimensionsRight.js'
+import * as SashOrientation from '../src/parts/SashOrientation/SashOrientation.js'
 
 test('getSplitDimensionsRight', () => {
   const x = 0
@@ -31,5 +32,8 @@ test('getSplitDimensionsRight', () => {
     sashWidth: 4,
     sashX: 48.5,
     sashY: 0,
+    sashOrientation: SashOrientation.Vertical,
+    branchSize: 100,
+    leafSize: 50,
   })
 })
