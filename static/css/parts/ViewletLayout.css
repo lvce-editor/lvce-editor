@@ -14,3 +14,23 @@
   width: 4px;
   cursor: col-resize;
 }
+
+.SashVisible {
+  display: flex;
+  justify-content: center;
+}
+
+.SashVerticalContent,
+.SashHorizontalContent {
+  background: #444444;
+}
+
+.SashVerticalContent {
+  width: 1px;
+  height: 100%;
+}
+
+.SashHorizontalContent {
+  width: 100%;
+  height: 1px;
+}
