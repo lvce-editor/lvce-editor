@@ -2,18 +2,26 @@ import * as Assert from '../Assert/Assert.js'
 import { fork } from 'node:child_process'
 import * as GetFirstNodeChildProcessEvent from '../GetFirstNodeChildProcessEvent/GetFirstNodeChildProcessEvent.js'
 import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
+import VError from 'verror'
 
 export const create = async ({ path, argv, env, execArgv }) => {
-  Assert.string(path)
-  const childProcess = fork(path, argv, {
-    env,
-    execArgv,
-  })
-  const { type, event } = await GetFirstNodeChildProcessEvent.getFirstNodeWorkerEvent(childProcess)
-  if (type !== FirstNodeWorkerEventType.Message) {
-    throw new Error(`failed to create child process ipc`)
+  try {
+    Assert.string(path)
+    const childProcess = fork(path, argv, {
+      env,
+      execArgv,
+    })
+    const { type, event } = await GetFirstNodeChildProcessEvent.getFirstNodeChildProcessEvent(childProcess)
+    if (type === FirstNodeWorkerEventType.Exit) {
+      throw new Error(`child process exited with code ${event}`)
+    }
+    if (type === FirstNodeWorkerEventType.Error) {
+      throw new Error(`child process had an error ${event}`)
+    }
+    return childProcess
+  } catch (error) {
+    throw new VError(error, `Failed to create child process`)
   }
-  return childProcess
 }
 
 export const wrap = (childProcess) => {

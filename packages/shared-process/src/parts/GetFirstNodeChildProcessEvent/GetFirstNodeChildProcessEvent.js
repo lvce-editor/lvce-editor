@@ -1,6 +1,6 @@
 import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
 
-export const getFirstNodeWorkerEvent = async (childProcess) => {
+export const getFirstNodeChildProcessEvent = async (childProcess) => {
   const { type, event } = await new Promise((resolve, reject) => {
     const cleanup = () => {
       childProcess.off('exit', handleExit)
