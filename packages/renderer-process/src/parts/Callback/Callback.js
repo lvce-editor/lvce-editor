@@ -1,14 +1,23 @@
 import * as Logger from '../Logger/Logger.js'
+import * as Id from '../Id/Id.js'
 
 const callbacks = Object.create(null)
 
-export const state = {
-  id: 0,
+/**
+ * @deprecated use registerPromise instead
+ */
+export const register = (resolve, reject) => {
+  const id = Id.create()
+  callbacks[id] = { resolve, reject }
+  return id
 }
 
-export const register = (resolve, reject) => {
-  callbacks[++state.id] = { resolve, reject }
-  return state.id
+export const registerPromise = () => {
+  const id = Id.create()
+  const promise = new Promise((resolve, reject) => {
+    callbacks[id] = { resolve, reject }
+  })
+  return { id, promise }
 }
 
 export const unregister = (id) => {

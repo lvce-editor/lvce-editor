@@ -1,8 +1,9 @@
 import { jest } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
+import * as Id from '../src/parts/Id/Id.js'
 
 beforeEach(() => {
-  Callback.state.id = 0
+  Id.state.id = 0
 })
 
 test('register / resolve', () => {
@@ -19,9 +20,7 @@ test('register / resolve', () => {
 test('register / resolve - nonexisting id', () => {
   console.warn = jest.fn()
   Callback.resolve(-1)
-  expect(console.warn).toHaveBeenCalledWith(
-    'callback -1 may already be disposed'
-  )
+  expect(console.warn).toHaveBeenCalledWith('callback -1 may already be disposed')
 })
 
 test('register / reject', () => {
@@ -36,7 +35,5 @@ test('register / reject', () => {
 test('register / reject - nonexisting id', () => {
   console.warn = jest.fn()
   Callback.reject(-1)
-  expect(console.warn).toHaveBeenCalledWith(
-    'callback -1 may already be disposed'
-  )
+  expect(console.warn).toHaveBeenCalledWith('callback -1 may already be disposed')
 })
