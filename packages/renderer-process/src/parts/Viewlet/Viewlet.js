@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 
 export const state = {
   instances: Object.create(null),
@@ -14,16 +15,17 @@ export const mount = ($Parent, state) => {
   $Parent.replaceChildren(state.$Viewlet)
 }
 
-export const create = (id) => {
+export const create = (id, uid = id) => {
   const module = state.modules[id]
   if (state.instances[id] && state.instances[id].state.$Viewlet.isConnected) {
     state.instances[id].state.$Viewlet.remove()
   }
   const instanceState = module.create()
+  ComponentUid.set(instanceState.$Viewlet, uid)
   if (module.attachEvents) {
     module.attachEvents(instanceState)
   }
-  state.instances[id] = {
+  state.instances[uid] = {
     state: instanceState,
     factory: module,
   }
@@ -120,12 +122,17 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.create': {
-        create(viewletId)
+        create(viewletId, method)
 
         break
       }
       case 'Viewlet.append': {
         append(viewletId, method, ...args)
+
+        break
+      }
+      case 'Viewlet.appendCustom': {
+        appendCustom(viewletId, method, ...args)
 
         break
       }
@@ -272,6 +279,16 @@ const append = (parentId, childId, referenceNodes) => {
   if (childInstance.factory.postAppend) {
     childInstance.factory.postAppend(childInstance.state)
   }
+}
+
+export const appendCustom = (parentId, method, childId) => {
+  const parentInstance = state.instances[parentId]
+  const childInstance = state.instances[childId]
+  if (!childInstance) {
+    throw new Error(`appendCustom: childInstance ${childId} must be defined`)
+  }
+  const $Child = childInstance.state.$Viewlet
+  parentInstance.factory[method](parentInstance.state, $Child)
 }
 
 const appendToBody = (childId) => {

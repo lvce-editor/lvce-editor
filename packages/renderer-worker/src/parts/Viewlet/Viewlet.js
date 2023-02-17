@@ -8,27 +8,35 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletElectron from './ViewletElectron.js'
 
-export const focus = async (id) => {
+export const getFocusCommands = (id, uid) => {
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
-    return
+    return []
   }
   const commands = []
   if (instance && instance.factory.focus) {
     const oldState = instance.state
     const newState = instance.factory.focus(oldState)
-    commands.push(...ViewletManager.render(instance.factory, oldState, newState))
+    commands.push(...ViewletManager.render(instance.factory, oldState, newState, uid))
   }
   const oldInstance = ViewletStates.getFocusedInstance()
   if (oldInstance) {
     if (oldInstance && oldInstance.factory.handleBlur) {
       const oldState = oldInstance.state
       const newState = oldInstance.factory.handleBlur(oldState)
-      commands.push(...ViewletManager.render(oldInstance.factory, oldState, newState))
+      commands.push(...ViewletManager.render(oldInstance.factory, oldState, newState, uid))
     }
   }
   ViewletStates.setFocusedInstance(instance)
-  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  return commands
+}
+
+export const focus = async (id, uid) => {
+  const focusCommands = getFocusCommands(id, uid)
+  if (focusCommands.length === 0) {
+    return
+  }
+  await RendererProcess.invoke('Viewlet.sendMultiple', focusCommands)
 }
 // export const createOrFocus = async id=>{
 //   const instance = state.instances[id] || await create(id)
@@ -176,7 +184,7 @@ export const resize = (id, dimensions) => {
       // TODO handle promise rejection gracefully
       instance.factory.resizeEffect(newState)
     }
-    commands = ViewletManager.render(instance.factory, instance.state, newState)
+    commands = ViewletManager.render(instance.factory, instance.state, newState, id)
   } else {
     const result = instance.factory.resize(oldState, dimensions)
     newState = result.newState
@@ -279,14 +287,15 @@ const getFn = async (module, fnName) => {
 export const executeViewletCommand = async (moduleId, uidKey, uidValue, fnName, ...args) => {
   const instances = ViewletStates.state.instances
   for (const instance of Object.values(instances)) {
-    if (instance.factory.name === moduleId && instance.state[uidKey] === uidValue) {
+    if ((instance.factory.name === moduleId || instance.state.uid === moduleId) && instance.state[uidKey] === uidValue) {
       const fn = await getFn(instance.factory, fnName)
       const oldState = instance.state
       const newState = await fn(oldState, ...args)
-      const commands = ViewletManager.render(instance.factory, oldState, newState)
+      const commands = ViewletManager.render(instance.factory, oldState, newState, newState.uid || instance.factory.name)
       ViewletStates.setState(moduleId, newState)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
       return
     }
   }
+  console.warn(`viewlet ${moduleId} not found`)
 }

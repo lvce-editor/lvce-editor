@@ -24,7 +24,7 @@ test('resize - increase height', () => {
     numberOfVisibleLines: 1,
     focused: true,
   }
-  const { newState, commands } = ViewletEditorText.resize(state, {
+  const newState = ViewletEditorText.resize(state, {
     x: 200,
     y: 200,
     width: 200,
@@ -39,22 +39,6 @@ test('resize - increase height', () => {
       finalDeltaY: 40,
     })
   )
-  expect(commands).toEqual([
-    [
-      'Viewlet.send',
-      'EditorText',
-      'renderTextAndCursorsAndSelections',
-      0,
-      0,
-      [
-        ['line 1', 'Token Text'],
-        ['line 2', 'Token Text'],
-        ['line 3', 'Token Text'],
-      ],
-      new Float32Array([0, 0]),
-      new Float32Array(),
-    ],
-  ])
 })
 
 test('resize - same height', () => {
@@ -66,7 +50,7 @@ test('resize - same height', () => {
     numberOfVisibleLines: 3,
     focused: true,
   }
-  const { newState, commands } = ViewletEditorText.resize(state, {
+  const newState = ViewletEditorText.resize(state, {
     x: 200,
     y: 200,
     width: 200,
@@ -81,22 +65,6 @@ test('resize - same height', () => {
       finalDeltaY: 40,
     })
   )
-  expect(commands).toEqual([
-    [
-      'Viewlet.send',
-      'EditorText',
-      'renderTextAndCursorsAndSelections',
-      0,
-      0,
-      [
-        ['line 1', 'Token Text'],
-        ['line 2', 'Token Text'],
-        ['line 3', 'Token Text'],
-      ],
-      new Float32Array([0, 0]),
-      new Float32Array(),
-    ],
-  ])
 })
 
 test('resize - reduce height', () => {
@@ -109,7 +77,7 @@ test('resize - reduce height', () => {
     height: 60,
     focused: true,
   }
-  const { newState, commands } = ViewletEditorText.resize(state, {
+  const newState = ViewletEditorText.resize(state, {
     x: 200,
     y: 200,
     width: 200,
@@ -124,16 +92,4 @@ test('resize - reduce height', () => {
       finalDeltaY: 80,
     })
   )
-  expect(commands).toEqual([
-    [
-      'Viewlet.send',
-      'EditorText',
-      'renderTextAndCursorsAndSelections',
-      0,
-      0,
-      [['line 1', 'Token Text']],
-      new Float32Array([0, 0]),
-      new Float32Array(),
-    ],
-  ])
 })

@@ -2,12 +2,13 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 import * as DomEventOptions from '../src/parts/DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../src/parts/DomEventType/DomEventType.js'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
+import * as ModifierKey from '../src/parts/ModifierKey/ModifierKey.js'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
-import * as ModifierKey from '../src/parts/ModifierKey/ModifierKey.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -76,6 +77,7 @@ const create$Token = (text, className) => {
 
 test('event - mousedown - left', () => {
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   const $Token = document.createElement('span')
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
@@ -89,7 +91,7 @@ test('event - mousedown - left', () => {
     }
   }
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 1, clientX: 8, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', ModifierKey.None, 8, 5, 1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 1, 'uid', 1, 'handleMouseDown', ModifierKey.None, 8, 5, 1)
 })
 
 test('event - mousedown - right', () => {
@@ -119,6 +121,7 @@ test('event - mousedown - right', () => {
 
 test('event - mousedown - left - out of viewport', () => {
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   const $Token = document.createElement('span')
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
@@ -136,11 +139,12 @@ test('event - mousedown - left - out of viewport', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', ModifierKey.None, -10, -10, 1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 1, 'uid', 1, 'handleMouseDown', ModifierKey.None, -10, -10, 1)
 })
 
 test('event - double click', () => {
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   const $Token = document.createElement('span')
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
@@ -156,7 +160,7 @@ test('event - double click', () => {
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 2, clientX: 8, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', ModifierKey.None, 8, 5, 2)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 1, 'uid', 1, 'handleMouseDown', ModifierKey.None, 8, 5, 2)
 })
 
 test.skip('event - double click and move mouse to create selection', () => {
@@ -187,6 +191,7 @@ test.skip('event - double click and move mouse to create selection', () => {
 
 test('event - triple click', () => {
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   const $Token = document.createElement('span')
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
@@ -200,7 +205,7 @@ test('event - triple click', () => {
     }
   }
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 3, clientX: 8, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', ModifierKey.None, 8, 5, 3)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 1, 'uid', 1, 'handleMouseDown', ModifierKey.None, 8, 5, 3)
 })
 
 test.skip('event - touchstart - single touch', () => {

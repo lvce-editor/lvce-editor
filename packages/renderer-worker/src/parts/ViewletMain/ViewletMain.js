@@ -16,6 +16,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Id from '../Id/Id.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -226,6 +227,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const width = state.width
   const height = state.height - TAB_HEIGHT
   const id = ViewletMap.getId(uri)
+  const componentUid = Id.create()
 
   for (const editor of state.editors) {
     if (editor.uri === uri) {
@@ -233,6 +235,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       // TODO if the editor is already open, nothing needs to be done
       const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
       // @ts-ignore
+      instance.uid = componentUid
 
       await ViewletManager.load(instance, focus, false, options)
       return state
@@ -240,6 +243,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   }
 
   const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
+  instance.uid = componentUid
   const oldActiveIndex = state.activeIndex
   const temporaryUri = `tmp://${Math.random()}`
   state.editors.push({ uri: temporaryUri })

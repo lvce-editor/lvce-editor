@@ -1,6 +1,7 @@
 // TODO so many things in this file
 
 import * as ClipBoardData from '../ClipBoardData/ClipBoardData.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
@@ -38,10 +39,11 @@ export const handleBlur = (event) => {
  */
 export const handleBeforeInput = (event) => {
   Event.preventDefault(event)
-  const { inputType, data } = event
+  const { inputType, data, target } = event
+  const uid = ComponentUid.get(target)
   switch (inputType) {
     case InputEventType.InsertText:
-      EditorFunctions.type(data)
+      EditorFunctions.type(uid, data)
       break
     default:
       break
@@ -83,12 +85,13 @@ const isRightClick = (event) => {
 }
 
 export const handleEditorPointerMove = (event) => {
-  const { clientX, clientY, altKey } = event
+  const { clientX, clientY, altKey, target } = event
+  const uid = ComponentUid.get(target)
   // TODO if/else should be in renderer worker
   if (altKey) {
-    EditorFunctions.moveRectangleSelectionPx(clientX, clientY)
+    EditorFunctions.moveRectangleSelectionPx(uid, clientX, clientY)
   } else {
-    EditorFunctions.moveSelectionPx(clientX, clientY)
+    EditorFunctions.moveSelectionPx(uid, clientX, clientY)
   }
 }
 
@@ -96,7 +99,8 @@ export const handleEditorLostPointerCapture = (event) => {
   const { target } = event
   target.removeEventListener(DomEventType.PointerMove, handleEditorPointerMove)
   target.removeEventListener(DomEventType.LostPointerCapture, handleEditorLostPointerCapture)
-  EditorFunctions.handlePointerCaptureLost()
+  const uid = ComponentUid.get(target)
+  EditorFunctions.handlePointerCaptureLost(uid)
 }
 
 export const handleEditorGotPointerCapture = () => {}
@@ -120,9 +124,10 @@ export const handleMouseDown = (event) => {
     return
   }
   Event.preventDefault(event)
-  const { clientX, clientY, detail } = event
+  const { clientX, clientY, detail, target } = event
+  const uid = ComponentUid.get(target)
   const modifier = GetModifierKey.getModifierKey(event)
-  EditorFunctions.handleMouseDown(modifier, clientX, clientY, detail)
+  EditorFunctions.handleMouseDown(uid, modifier, clientX, clientY, detail)
 }
 
 // TODO figure out whether it is possible to register hover provider without mousemove
@@ -133,9 +138,7 @@ export const handleMouseDown = (event) => {
  * @param {WheelEvent} event
  */
 export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
-  // event.preventDefault()
-  // const state = EditorHelper.getStateFromEvent(event)
+  const { deltaMode, deltaY, target } = event
   // TODO send editor id
   switch (deltaMode) {
     case WheelEventType.DomDeltaLine:

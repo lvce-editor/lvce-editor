@@ -15,6 +15,7 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Assert from '../Assert/Assert.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -41,7 +42,8 @@ export const handleTokenizeChange = () => {
 }
 
 // TODO uri?
-export const create = (id, uri, x, y, width, height) => {
+export const create = (id, uri, x, y, width, height, uid = 0) => {
+  Assert.number(uid)
   const instanceId = Id.create()
   const state = Editor.create(instanceId, uri, 'unknown', '')
   const newState = Editor.setBounds(state, x, y, height, COLUMN_WIDTH)
@@ -53,6 +55,7 @@ export const create = (id, uri, x, y, width, height) => {
     rowHeight: 20,
     languageId,
     width,
+    uid,
   }
 }
 
@@ -152,7 +155,14 @@ export const contentLoaded = async (state) => {
 const updateSemanticTokens = async (state) => {
   try {
     const newSemanticTokens = await ExtensionHostSemanticTokens.executeSemanticTokenProvider(state)
-    await Command.execute(/* Editor.setDecorations */ 'Editor.setDecorations', /* decorations */ newSemanticTokens)
+    await Command.execute(
+      /* Editor.setDecorations */ 'Viewlet.executeViewletCommand',
+      state.uid,
+      'uid',
+      state.uid,
+      'setDecorations',
+      /* decorations */ newSemanticTokens
+    )
     // TODO apply semantic tokens to editor and rerender
     // TODO possibly overlay semantic tokens as decorations
   } catch (error) {
@@ -181,7 +191,14 @@ export const contentLoadedEffects = async (state) => {
   // GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   // GlobalEventBus.addListener('editor.change', handleEditorChange)
   const newLanguageId = getLanguageId(state)
-  await Command.execute(/* Editor.setLanguageId */ 'Editor.setLanguageId', /* languageId */ newLanguageId)
+  await Command.execute(
+    'Viewlet.executeViewletCommand',
+    state.uid,
+    'uid',
+    state.uid,
+    /* Editor.setLanguageId */ 'setLanguageId',
+    /* languageId */ newLanguageId
+  )
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
@@ -196,11 +213,8 @@ export const handleLanguagesChanged = (state) => {
 
 export const resize = (state, dimensions) => {
   const newState = Editor.setBounds(state, dimensions.x, dimensions.y, dimensions.height, state.columnWidth)
-  const commands = [Editor.renderTextAndCursorAndSelectionsCommands(newState)]
-  return {
-    newState,
-    commands,
-  }
+  // const commands = [Editor.renderTextAndCursorAndSelectionsCommands(newState)]
+  return newState
 }
 
 export const dispose = (state) => {
@@ -208,6 +222,8 @@ export const dispose = (state) => {
 }
 
 export const hasFunctionalRender = true
+
+export const hasFunctionalResize = true
 
 export const render = Editor.render
 
