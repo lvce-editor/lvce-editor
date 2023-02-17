@@ -16,6 +16,14 @@ export const register = (resolve, reject) => {
   return id
 }
 
+export const registerPromise = () => {
+  const id = Id.create()
+  const promise = new Promise((resolve, reject) => {
+    state.callbacks[id] = { resolve, reject }
+  })
+  return { id, promise }
+}
+
 export const unregister = (id) => {
   delete state.callbacks[id]
 }
