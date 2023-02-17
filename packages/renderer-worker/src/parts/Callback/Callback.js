@@ -7,15 +7,6 @@ export const state = {
   onceListeners: new Set(),
 }
 
-export const register = (resolve, reject) => {
-  const id = Id.create()
-  state.callbacks[id] = {
-    resolve,
-    reject,
-  }
-  return id
-}
-
 export const registerPromise = () => {
   const id = Id.create()
   const promise = new Promise((resolve, reject) => {

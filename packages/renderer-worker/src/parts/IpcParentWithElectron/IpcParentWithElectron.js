@@ -7,20 +7,19 @@ import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 export const create = async (options) => {
   const type = options.type
   Assert.string(type)
-  const response = await new Promise((resolve, reject) => {
-    const id = Callback.register(resolve, reject)
-    RendererProcess.send({
-      jsonrpc: JsonRpcVersion.Two,
-      method: 'get-port',
-      _id: id,
-      params: [
-        {
-          method: RendererProcessIpcParentType.Electron,
-          type,
-        },
-      ],
-    })
+  const { id, promise } = Callback.registerPromise()
+  RendererProcess.send({
+    jsonrpc: JsonRpcVersion.Two,
+    method: 'get-port',
+    _id: id,
+    params: [
+      {
+        method: RendererProcessIpcParentType.Electron,
+        type,
+      },
+    ],
   })
+  const response = await promise
   const port = response.result
   return port
 }
