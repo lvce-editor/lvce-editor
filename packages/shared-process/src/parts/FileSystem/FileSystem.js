@@ -2,13 +2,13 @@
 import * as fs from 'node:fs/promises'
 import * as os from 'node:os'
 import VError from 'verror'
-import * as DirentType from '../DirentType/DirentType.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 import { FileNotFoundError } from '../Error/FileNotFoundError.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as GetDirentType from '../GetDirentType/GetDirentType.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Trash from '../Trash/Trash.js'
-import * as EncodingType from '../EncodingType/EncodingType.js'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -133,38 +133,12 @@ export const exists = async (path) => {
 }
 
 /**
- * @param {import('fs').Dirent|import('fs').StatsBase} dirent
- */
-const getType = (dirent) => {
-  if (dirent.isFile()) {
-    return DirentType.File
-  }
-  if (dirent.isDirectory()) {
-    return DirentType.Directory
-  }
-  if (dirent.isSymbolicLink()) {
-    return DirentType.Symlink
-  }
-  if (dirent.isSocket()) {
-    return DirentType.Socket
-  }
-  if (dirent.isBlockDevice()) {
-    return DirentType.BlockDevice
-  }
-  if (dirent.isCharacterDevice()) {
-    return DirentType.CharacterDevice
-  }
-  console.log({ dirent })
-  return DirentType.Unknown
-}
-
-/**
  * @param {import('fs').Dirent} dirent
  */
 const toPrettyDirent = (dirent) => {
   return {
     name: dirent.name,
-    type: getType(dirent),
+    type: GetDirentType.getDirentType(dirent),
   }
 }
 
@@ -264,7 +238,7 @@ export const getRealPath = async (path) => {
 // TODO handle error
 export const stat = async (path) => {
   const stats = await fs.stat(path)
-  const type = getType(stats)
+  const type = GetDirentType.getDirentType(stats)
   return type
 }
 
