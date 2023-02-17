@@ -21,9 +21,7 @@ const improveValidationError = (name, validationError) => {
   const camelCaseName = toCamelCase(name)
   const spacedOutName = spaceOut(name)
   const pre = `invalid ${spacedOutName} result`
-  const post = validationError
-    .replace('item', camelCaseName)
-    .replace('result', `${camelCaseName} item`)
+  const post = validationError.replace('item', camelCaseName).replace('result', `${camelCaseName} item`)
   return pre + ': ' + post
 }
 
@@ -46,8 +44,7 @@ const ensureError = (input) => {
 export const create = ({ name, resultShape, executeKey = '' }) => {
   const providers = Object.create(null)
   const multipleResults = resultShape.type === 'array'
-  const methodName =
-    executeKey || (multipleResults ? `provide${name}s` : `provide${name}`)
+  const methodName = executeKey || (multipleResults ? `provide${name}s` : `provide${name}`)
   return {
     [`register${name}Provider`](provider) {
       providers[provider.languageId] = provider
@@ -66,9 +63,7 @@ export const create = ({ name, resultShape, executeKey = '' }) => {
         const provider = providers[textDocument.languageId]
         if (!provider) {
           const spacedOutName = spaceOut(name)
-          throw new VError(
-            `No ${spacedOutName} provider found for ${textDocument.languageId}`
-          )
+          throw new VError(`No ${spacedOutName} provider found for ${textDocument.languageId}`)
         }
         const result = await provider[methodName](textDocument, ...params)
         const error = Validation.validate(result, resultShape)
@@ -81,19 +76,12 @@ export const create = ({ name, resultShape, executeKey = '' }) => {
         const actualError = ensureError(error)
         const spacedOutName = spaceOut(name)
         if (actualError && actualError.message) {
-          if (
-            actualError.message === 'provider[methodName] is not a function'
-          ) {
+          if (actualError.message === 'provider[methodName] is not a function') {
             const camelCaseName = toCamelCase(name)
 
-            throw new VError(
-              `Failed to execute ${spacedOutName} provider: VError: ${camelCaseName}Provider.${methodName} is not a function`
-            )
+            throw new VError(`Failed to execute ${spacedOutName} provider: VError: ${camelCaseName}Provider.${methodName} is not a function`)
           }
-          const message =
-            actualError.name === 'Error'
-              ? `${actualError.message}`
-              : `${actualError.name}: ${actualError.message}`
+          const message = actualError.name === 'Error' ? `${actualError.message}` : `${actualError.name}: ${actualError.message}`
           actualError.message = `Failed to execute ${spacedOutName} provider: ${message}`
         }
         throw actualError

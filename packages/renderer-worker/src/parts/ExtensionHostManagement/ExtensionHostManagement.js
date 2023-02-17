@@ -4,14 +4,15 @@ import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as TestState from '../TestState/TestState.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowser.js'
 import * as ExtensionHostManagementElectron from './ExtensionHostManagementElectron.js'
 import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
 import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
-import * as TestState from '../TestState/TestState.js'
 
 export const state = {
   /**
@@ -84,9 +85,11 @@ const startSynching = async (extensionHost) => {
   GlobalEventBus.addListener('preferences.changed', handlePreferencesChange)
 
   const instances = ViewletStates.getAllInstances()
-  const editorInstance = instances.EditorText
-  if (editorInstance) {
-    await handleEditorCreate(editorInstance.state)
+  const values = Object.values(instances)
+  for (const instance of values) {
+    if (instance.factory.name === ViewletModuleId.EditorText) {
+      await handleEditorCreate(instance.state)
+    }
   }
   await handleWorkspaceChange(Workspace.state.workspacePath, Workspace.isTest())
 }

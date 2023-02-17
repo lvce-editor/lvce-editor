@@ -4,8 +4,9 @@ import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js
 import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
 import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.js'
 import * as Height from '../Height/Height.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -30,7 +31,7 @@ export const create = (id, uri, x, y, width, height) => {
 }
 
 const getEditor = () => {
-  return Viewlet.getState('EditorText')
+  return ViewletStates.getAFocusedInstance(ViewletModuleId.EditorText).state
 }
 
 const getLabel = (item) => {

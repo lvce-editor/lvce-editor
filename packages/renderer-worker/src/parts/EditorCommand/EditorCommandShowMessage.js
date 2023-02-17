@@ -15,13 +15,7 @@ export const state = {
  * @param {boolean} isError
  * @returns
  */
-export const editorShowMessage = async (
-  editor,
-  rowIndex,
-  columnIndex,
-  message,
-  isError
-) => {
+export const editorShowMessage = async (editor, rowIndex, columnIndex, message, isError) => {
   Assert.object(editor)
   Assert.number(rowIndex)
   Assert.number(columnIndex)
@@ -31,7 +25,7 @@ export const editorShowMessage = async (
   const displayErrorMessage = message
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'EditorText',
+    /* id */ editor.uid,
     /* method */ 'showOverlayMessage',
     /* x */ x,
     /* y */ y,
@@ -59,22 +53,12 @@ export const editorShowMessage = async (
  * @returns
  */
 export const showErrorMessage = (editor, rowIndex, columnIndex, message) => {
-  return editorShowMessage(
-    editor,
-    rowIndex,
-    columnIndex,
-    message,
-    /* isError */ true
-  )
+  return editorShowMessage(editor, rowIndex, columnIndex, message, /* isError */ true)
 }
 
 export const editorHideMessage = async (editor) => {
   clearTimeout(state.timeout)
   state.timeout = -1
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'EditorText',
-    /* method */ 'hideOverlayMessage'
-  )
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ 'EditorText', /* method */ 'hideOverlayMessage')
   return editor
 }
