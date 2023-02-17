@@ -71,7 +71,7 @@ test('restoreJsonRpcError - empty set', async () => {
   expect(error.message).toBe(`JsonRpc Error: [object Set]`)
 })
 
-test('invoke - error - DOMException', () => {
+test('restoreJsonRpcError - DOMException', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     type: ErrorType.DomException,
     name: 'AbortError',
@@ -82,7 +82,7 @@ test('invoke - error - DOMException', () => {
   expect(error.message).toBe(`The user aborted a request.`)
 })
 
-test('invoke - error - with stack', () => {
+test('restoreJsonRpcError - with stack', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     message: 'Test failed: sample.tab-completion-provider: expected selector .Viewlet.Editor to have text "test3" but was "test"',
     stack: `Error: expected selector .Viewlet.Editor to have text "test3" but was "test"
@@ -99,7 +99,7 @@ test('invoke - error - with stack', () => {
   )
 })
 
-test('invoke - error - ExecError', () => {
+test('restoreJsonRpcError - ExecError', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     message: 'Failed to execute test-source-control: process exited with code 128',
     name: 'ExecError',
@@ -115,7 +115,7 @@ test('invoke - error - ExecError', () => {
   expect(error.name).toBe('ExecError')
 })
 
-test('invoke - error - VError', () => {
+test('restoreJsonRpcError - VError', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     message: 'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42',
     stack:
@@ -133,7 +133,7 @@ test('invoke - error - VError', () => {
   expect(error.name).toBe('Error')
 })
 
-test.skip('invoke - error - with only one line in stack', async () => {
+test.skip('restoreJsonRpcError - with only one line in stack', async () => {
   const ipc = {
     send: jest.fn((message) => {
       // @ts-ignore
@@ -171,4 +171,15 @@ test.skip('restoreJsonRpcError - method not found', async () => {
   })
   expect(error).toBeInstanceOf(JsonRpcError)
   expect(error.message).toBe('method not found')
+})
+
+test('restoreJsonRpcError - error without stack', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    code: -32001,
+    message: "FileNotFoundError: File not found '0.8510013488176322'",
+  })
+  expect(error).toBeInstanceOf(Error)
+  expect(error.message).toBe("FileNotFoundError: File not found '0.8510013488176322'")
+  expect(error.stack).toMatch(`FileNotFoundError: File not found '0.8510013488176322'`)
+  expect(error.name).toBe('Error')
 })
