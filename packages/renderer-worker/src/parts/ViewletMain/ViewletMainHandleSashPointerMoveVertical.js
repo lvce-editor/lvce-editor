@@ -8,16 +8,14 @@ const getAllResizeCommands = (grid, width, x, y, eventX, eventY, tabHeight) => {
   //   const item = grid[i]
   //   i += grid.childCount.length
   // }
-  const firstTabs = grid[0]
-  allCommands.push(['Viewlet.setBounds', firstTabs.uid, firstTabs.x, firstTabs.y, eventX, tabHeight])
-  const firstContent = grid[1]
-  allCommands.push(['Viewlet.setBounds', firstContent.uid, firstContent.x, firstContent.y, eventX, firstContent.height])
-  const sash = grid[2]
-  allCommands.push(['Viewlet.setBounds', sash.uid, eventX - x, sash.y, sash.width, sash.height])
-  const secondTabs = grid[3]
-  allCommands.push(['Viewlet.setBounds', secondTabs.uid, eventX, secondTabs.y, width - eventX, tabHeight])
-  const secondContent = grid[4]
-  allCommands.push(['Viewlet.setBounds', secondContent.uid, eventX, secondContent.y, width - eventX, secondContent.height])
+  const branch = grid[0]
+  const leafOne = grid[1]
+  const leafTwo = grid[2]
+  allCommands.push(['Viewlet.setBounds', leafOne.tabsUid, leafOne.x, leafOne.y - tabHeight, eventX, tabHeight])
+  allCommands.push(['Viewlet.setBounds', leafOne.uid, leafOne.x, leafOne.y + tabHeight, eventX, leafOne.height - tabHeight])
+  // allCommands.push(['Viewlet.setBounds', sash.uid, eventX - x, sash.y, sash.width, sash.height])
+  allCommands.push(['Viewlet.setBounds', leafTwo.tabsUid, eventX, leafTwo.y - tabHeight, width - eventX, tabHeight])
+  allCommands.push(['Viewlet.setBounds', leafTwo.uid, eventX, leafTwo.y, width - eventX, leafTwo.height - tabHeight])
   return allCommands
 }
 

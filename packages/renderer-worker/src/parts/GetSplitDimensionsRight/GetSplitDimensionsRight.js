@@ -23,5 +23,7 @@ export const getSplitDimensionsRight = (x, y, width, height, halfWidth, halfHeig
     sashWidth: sashSize,
     sashHeight: height,
     sashOrientation: SashOrientation.Vertical,
+    leafSize: halfWidth,
+    branchSize: width,
   }
 }

@@ -96,6 +96,9 @@ export const create = (id, uri, x, y, width, height) => {
 // TODO there is also openEditor function
 
 const getTabTitle = (uri) => {
+  if (!uri) {
+    return ''
+  }
   const homeDir = Workspace.getHomeDir()
   // TODO tree shake this out in web
   if (homeDir && uri.startsWith(homeDir)) {
@@ -161,49 +164,95 @@ export const contentLoaded = async (state) => {
   }
   const allCommands = []
   await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
-  if (grid.length === 2) {
-    // TODO restore tabs and editor
-    const tabsGridItem = grid[0]
-    const instanceGridItem = grid[1]
-    const instanceUid = Id.create()
-    const tabsUid = Id.create()
-    instanceGridItem.uid = instanceUid
-    const tabTitle = getTabTitle(instanceGridItem.uri)
-    const tabLabel = Workspace.pathBaseName(instanceGridItem.uri)
-    allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
-    allCommands.push(['Viewlet.send', tabsUid, 'setTabs', [{ label: tabLabel, title: tabTitle }]])
-    allCommands.push(['Viewlet.setBounds', tabsUid, tabsGridItem.x, tabsGridItem.y, tabsGridItem.width, tabsGridItem.height])
-    const extraCommands = await ViewletManager.load(
-      {
-        getModule: ViewletModule.load,
-        id: instanceGridItem.id,
-        // @ts-ignore
-        parentId: ViewletModuleId.Main,
-        uri: instanceGridItem.uri,
-        x: instanceGridItem.x,
-        y: instanceGridItem.y,
-        width: instanceGridItem.width,
-        height: instanceGridItem.height,
-        show: false,
-        focus: false,
-        type: 0,
-        setBounds: false,
-        visible: true,
-        uid: instanceUid,
-      },
-      /* focus */ false,
-      /* restore */ true
-    )
-    allCommands.push(...extraCommands)
-    allCommands.push(['Viewlet.setBounds', instanceUid, instanceGridItem.x, instanceGridItem.y, instanceGridItem.width, instanceGridItem.height])
-    allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsUid])
-    allCommands.push([
-      /* Viewlet.append */ 'Viewlet.appendCustom',
-      /* parentId */ ViewletModuleId.Main,
-      /* method */ 'appendContent',
-      /* id  */ instanceUid,
-    ])
-  }
+  await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.VisibleSashHorizontal)
+  await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.VisibleSashVertical)
+  // if (grid.length === 2) {
+  //   // TODO restore tabs and editor
+  //   const tabsGridItem = grid[0]
+  //   const instanceGridItem = grid[1]
+  //   const instanceUid = Id.create()
+  //   const tabsUid = Id.create()
+  //   instanceGridItem.uid = instanceUid
+  //   const tabTitle = getTabTitle(instanceGridItem.uri)
+  //   const tabLabel = Workspace.pathBaseName(instanceGridItem.uri)
+  //   allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
+  //   allCommands.push(['Viewlet.send', tabsUid, 'setTabs', [{ label: tabLabel, title: tabTitle }]])
+  //   allCommands.push(['Viewlet.setBounds', tabsUid, tabsGridItem.x, tabsGridItem.y, tabsGridItem.width, tabsGridItem.height])
+  //   const extraCommands = await ViewletManager.load(
+  //     {
+  //       getModule: ViewletModule.load,
+  //       id: instanceGridItem.id,
+  //       // @ts-ignore
+  //       parentId: ViewletModuleId.Main,
+  //       uri: instanceGridItem.uri,
+  //       x: instanceGridItem.x,
+  //       y: instanceGridItem.y,
+  //       width: instanceGridItem.width,
+  //       height: instanceGridItem.height,
+  //       show: false,
+  //       focus: false,
+  //       type: 0,
+  //       setBounds: false,
+  //       visible: true,
+  //       uid: instanceUid,
+  //     },
+  //     /* focus */ false,
+  //     /* restore */ true
+  //   )
+  //   allCommands.push(...extraCommands)
+  //   allCommands.push(['Viewlet.setBounds', instanceUid, instanceGridItem.x, instanceGridItem.y, instanceGridItem.width, instanceGridItem.height])
+  //   allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsUid])
+  //   allCommands.push([
+  //     /* Viewlet.append */ 'Viewlet.appendCustom',
+  //     /* parentId */ ViewletModuleId.Main,
+  //     /* method */ 'appendContent',
+  //     /* id  */ instanceUid,
+  //   ])
+  // } else if (grid.length === 5) {
+  //   // TODO restore tabs and editor
+  //   const tabsGridItem = grid[0]
+  //   const instanceGridItem = grid[1]
+  //   const instanceUid = Id.create()
+  //   const tabsUid = Id.create()
+  //   instanceGridItem.uid = instanceUid
+  //   const tabTitle = getTabTitle(instanceGridItem.uri)
+  //   const tabLabel = Workspace.pathBaseName(instanceGridItem.uri)
+  //   allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
+  //   allCommands.push(['Viewlet.send', tabsUid, 'setTabs', [{ label: tabLabel, title: tabTitle }]])
+  //   allCommands.push(['Viewlet.setBounds', tabsUid, tabsGridItem.x, tabsGridItem.y, tabsGridItem.width, tabsGridItem.height])
+  //   const extraCommands = await ViewletManager.load(
+  //     {
+  //       getModule: ViewletModule.load,
+  //       id: instanceGridItem.id,
+  //       // @ts-ignore
+  //       parentId: ViewletModuleId.Main,
+  //       uri: instanceGridItem.uri,
+  //       x: instanceGridItem.x,
+  //       y: instanceGridItem.y,
+  //       width: instanceGridItem.width,
+  //       height: instanceGridItem.height,
+  //       show: false,
+  //       focus: false,
+  //       type: 0,
+  //       setBounds: false,
+  //       visible: true,
+  //       uid: instanceUid,
+  //     },
+  //     /* focus */ false,
+  //     /* restore */ true
+  //   )
+  //   allCommands.push(...extraCommands)
+  //   allCommands.push(['Viewlet.setBounds', instanceUid, instanceGridItem.x, instanceGridItem.y, instanceGridItem.width, instanceGridItem.height])
+  //   allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsUid])
+  //   allCommands.push([
+  //     /* Viewlet.append */ 'Viewlet.appendCustom',
+  //     /* parentId */ ViewletModuleId.Main,
+  //     /* method */ 'appendContent',
+  //     /* id  */ instanceUid,
+  //   ])
+  // }
+  grid.length = 0
+  allCommands.length = 0
 
   // // TODO race condition: Viewlet may have been resized before it has loaded
   // // @ts-ignore

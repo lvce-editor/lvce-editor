@@ -53,27 +53,22 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, tabHeight, width, height)
   instance.uid = instanceUid
   instance.show = false
-  const groupItem = {
-    x: tabsX,
-    y: tabsY,
-    width: tabsWidth,
-    height: tabsHeight,
-    childCount: 1,
-    uri,
-    uid: tabsUid,
-    id: instance.id,
-  }
+  // const groupItem = {
+  //   x: tabsX,
+  //   y: tabsY,
+  //   width: tabsWidth,
+  //   height: tabsHeight,
+  //   type: 'branch',
+  //   childCount: 1,
+  // }
   const leafItem = {
-    x: originalX,
-    y: originalY,
-    width: originalWidth,
-    height: originalHeight,
-    childCount: 0,
-    uri,
-    uid: instanceUid,
-    id: instance.id,
+    type: 'leaf',
+    editors: [],
+    instanceUid,
+    instanceId: instance.id,
+    tabsUid,
   }
-  state.grid.push(groupItem, leafItem)
+  state.grid.push(leafItem)
   state.activeIndex = state.grid.length - 1
   const tabLabel = Workspace.pathBaseName(uri)
   const tabTitle = getTabTitle(uri)

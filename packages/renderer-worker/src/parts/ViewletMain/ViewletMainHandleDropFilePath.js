@@ -67,6 +67,8 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
       sashWidth,
       sashHeight,
       sashOrientation,
+      leafSize,
+      branchSize,
     } = GetSplitDimensions.getSplitDimensions(x, y, width, height, splitDirection, sashSize, sashVisibleSize, tabHeight)
     const tabs = [
       {
@@ -82,39 +84,41 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, overlayX, overlayY, overlayWidth, overlayHeight)
     instance.show = false
     instance.uid = instanceUid
-    const sashGridItem = {
-      x: sashX,
-      y: sashY,
-      width: sashWidth,
-      height: sashHeight,
-      uid: sashUid,
-      childCount: 0,
+    // const sashGridItem = {
+    //   x: sashX,
+    //   y: sashY,
+    //   width: sashWidth,
+    //   height: sashHeight,
+    //   uid: sashUid,
+    //   childCount: 0,
+    // }
+    // const tabsGridItem = {
+    //   x: overlayTabsX,
+    //   y: overlayTabsY,
+    //   width: overlayTabsWidth,
+    //   height: overlayTabsHeight,
+    //   uri,
+    //   uid: tabsUid,
+    //   childCount: 1,
+    // }
+    const branchItem = {
+      type: 'branch',
+      size: branchSize,
+      childCount: 2,
     }
-    const tabsGridItem = {
-      x: overlayTabsX,
-      y: overlayTabsY,
-      width: overlayTabsWidth,
-      height: overlayTabsHeight,
-      uri,
-      uid: tabsUid,
-      childCount: 1,
+    const leafItem = {
+      type: 'leaf',
+      size: leafSize,
+      instanceUid,
+      tabsUid,
+      editors: [],
     }
-    const instanceGridItem = {
-      x: overlayTabsX,
-      y: overlayY,
-      width: overlayWidth,
-      height: overlayHeight,
-      uri,
-      uid: instanceUid,
-      childCount: 0,
-    }
-    const firstGroupItem = state.grid[0]
-    const firstGridItem = state.grid[1]
     if (splitDirection === SplitDirectionType.Down || splitDirection === SplitDirectionType.Right) {
-      state.grid.push(sashGridItem, tabsGridItem, instanceGridItem)
+      state.grid.push(leafItem)
     } else {
-      state.grid.unshift(tabsGridItem, instanceGridItem, sashGridItem)
+      state.grid.unshift(leafItem)
     }
+    state.grid.unshift(branchItem)
     console.log(state.grid)
 
     state.activeIndex = state.grid.length - 1
@@ -122,13 +126,14 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const tabTitle = getTabTitle(uri)
     const allCommands = []
 
+    const firstItem = grid[1]
     // resize content
-    const resizeCommands = Viewlet.resize(firstGridItem.uid, { x: 0, y: 0, width: width - overlayWidth, height })
+    const resizeCommands = Viewlet.resize(firstItem.instanceUid, { x: 0, y: 0, width: width - overlayWidth, height })
     console.log({ resizeCommands })
     allCommands.push(...resizeCommands)
-    allCommands.push(['Viewlet.setBounds', firstGridItem.uid, originalX, originalY, originalWidth, originalHeight])
+    allCommands.push(['Viewlet.setBounds', firstItem.instanceUid, originalX, originalY, originalWidth, originalHeight])
     // resize tabs
-    allCommands.push(['Viewlet.setBounds', firstGroupItem.uid, originalTabsX, originalTabsY, originalTabsWidth, originalTabsHeight])
+    allCommands.push(['Viewlet.setBounds', firstItem.tabdUid, originalTabsX, originalTabsY, originalTabsWidth, originalTabsHeight])
     // TODO
     // allCommands.push(Viewlet.resize())
     allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver'])
