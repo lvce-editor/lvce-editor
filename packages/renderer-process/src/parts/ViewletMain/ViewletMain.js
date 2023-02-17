@@ -74,11 +74,6 @@ export const highlightDragOver = (state) => {
   // $MainTabs.classList.add('DragOver')
 }
 
-export const stopHighlightDragOver = (state) => {
-  // const { $MainTabs } = state
-  // $MainTabs.classList.remove('DragOver')
-}
-
 const create$DragOverlay = () => {
   const $Overlay = document.createElement('div')
   $Overlay.className = 'DragOverlay'

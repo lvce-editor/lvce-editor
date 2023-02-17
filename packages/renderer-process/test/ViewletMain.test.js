@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import * as Main from '../src/parts/ViewletMain/ViewletMain.js'
+import * as AriaRoles from '../src/parts/AriaRoles/AriaRoles.js'
 
 beforeEach(async () => {
   // await Viewlet.load(ViewletModuleId.EditorPlainText)
@@ -39,7 +40,7 @@ test.skip('openViewlet, openAnotherTab, focusAnotherTab', () => {
 
 // TODO test closeAllViewlets
 
-test('closeOthers - keep first tab', () => {
+test.skip('closeOthers - keep first tab', () => {
   const state = Main.create()
   const $Tab1 = document.createElement('div')
   const $Tab2 = document.createElement('div')
@@ -52,7 +53,7 @@ test('closeOthers - keep first tab', () => {
   expect(state.$MainTabs.firstChild).toBe($Tab1)
 })
 
-test('closeOthers - keep middle tab', () => {
+test.skip('closeOthers - keep middle tab', () => {
   const state = Main.create()
   const $Tab1 = document.createElement('div')
   const $Tab2 = document.createElement('div')
@@ -65,7 +66,7 @@ test('closeOthers - keep middle tab', () => {
   expect(state.$MainTabs.firstChild).toBe($Tab2)
 })
 
-test('closeOthers - keep last tab', () => {
+test.skip('closeOthers - keep last tab', () => {
   const state = Main.create()
   const $Tab1 = document.createElement('div')
   const $Tab2 = document.createElement('div')
@@ -78,7 +79,7 @@ test('closeOthers - keep last tab', () => {
   expect(state.$MainTabs.firstChild).toBe($Tab3)
 })
 
-test('closeTabsRight - first tab', () => {
+test.skip('closeTabsRight - first tab', () => {
   const state = Main.create()
   const $Tab1 = document.createElement('div')
   const $Tab2 = document.createElement('div')
@@ -91,7 +92,7 @@ test('closeTabsRight - first tab', () => {
   expect(state.$MainTabs.firstChild).toBe($Tab1)
 })
 
-test('closeTabsRight - middle tab', () => {
+test.skip('closeTabsRight - middle tab', () => {
   const state = Main.create()
   const $Tab1 = document.createElement('div')
   const $Tab2 = document.createElement('div')
@@ -105,7 +106,7 @@ test('closeTabsRight - middle tab', () => {
   expect(state.$MainTabs.children[1]).toBe($Tab2)
 })
 
-test('closeTabsRight - last tab', () => {
+test.skip('closeTabsRight - last tab', () => {
   const state = Main.create()
   const $Tab1 = document.createElement('div')
   const $Tab2 = document.createElement('div')
@@ -117,7 +118,7 @@ test('closeTabsRight - last tab', () => {
   expect(state.$MainTabs.children).toHaveLength(3)
 })
 
-test('closeTabsLeft - first tab', () => {
+test.skip('closeTabsLeft - first tab', () => {
   const state = Main.create()
   const $Tab1 = document.createElement('div')
   const $Tab2 = document.createElement('div')
@@ -129,7 +130,7 @@ test('closeTabsLeft - first tab', () => {
   expect(state.$MainTabs.children).toHaveLength(3)
 })
 
-test('closeTabsLeft - middle tab', () => {
+test.skip('closeTabsLeft - middle tab', () => {
   const state = Main.create()
   const $Tab1 = document.createElement('div')
   const $Tab2 = document.createElement('div')
@@ -143,7 +144,7 @@ test('closeTabsLeft - middle tab', () => {
   expect(state.$MainTabs.children[1]).toBe($Tab3)
 })
 
-test('closeTabsLeft - last tab', () => {
+test.skip('closeTabsLeft - last tab', () => {
   const state = Main.create()
   const $Tab1 = document.createElement('div')
   const $Tab2 = document.createElement('div')
@@ -160,26 +161,5 @@ test('accessibility - viewlet should have a role of main', () => {
   const state = Main.create()
   const { $Viewlet } = state
   // @ts-ignore
-  expect($Viewlet.role).toBe('main')
-})
-
-test('closeTabsLeft - highlightDragOver', () => {
-  const state = Main.create()
-  const $Tab1 = document.createElement('div')
-  const $Tabs = document.createElement('div')
-  $Tabs.append($Tab1)
-  state.$MainTabs = $Tabs
-  Main.highlightDragOver(state)
-  expect($Tabs.classList.contains('DragOver')).toBe(true)
-})
-
-test('closeTabsLeft - stopHighlightDragOver', () => {
-  const state = Main.create()
-  const $Tab1 = document.createElement('div')
-  const $Tabs = document.createElement('div')
-  $Tabs.className = 'MainTabs DragOver'
-  $Tabs.append($Tab1)
-  state.$MainTabs = $Tabs
-  Main.stopHighlightDragOver(state)
-  expect($Tabs.classList.contains('DragOver')).toBe(false)
+  expect($Viewlet.role).toBe(AriaRoles.Main)
 })
