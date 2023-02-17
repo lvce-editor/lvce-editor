@@ -4,14 +4,13 @@ import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.js'
-import { requiresSocket } from '../RequiresSocket/RequiresSocket.js'
+import * as RequiresSocket from '../RequiresSocket/RequiresSocket.js'
 
 export const getResponse = async (message, handle) => {
   try {
-    const result = requiresSocket(message.method)
+    const result = RequiresSocket.requiresSocket(message.method)
       ? await Command.execute(message.method, handle, ...message.params)
       : await Command.execute(message.method, ...message.params)
-
     return {
       jsonrpc: JsonRpcVersion.Two,
       id: message.id,

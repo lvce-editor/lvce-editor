@@ -143,6 +143,7 @@ const electronInitialize = (initializeMessage) => {
         const response = await GetResponse.getResponse(message, fakeSocket)
         port.postMessage(response)
       } else {
+        console.warn(`[shared process] sending messages without id is deprecated: ${message.method}`)
         Command.execute(message.method, fakeSocket, ...message.params)
       }
     } else {
