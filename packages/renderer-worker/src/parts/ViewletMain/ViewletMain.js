@@ -192,6 +192,7 @@ export const contentLoaded = async (state) => {
     [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
   ]
 
+  const instanceUid = Id.create()
   // // TODO race condition: Viewlet may have been resized before it has loaded
   // // @ts-ignore
   const extraCommands = await ViewletManager.load(
@@ -210,12 +211,13 @@ export const contentLoaded = async (state) => {
       type: 0,
       setBounds: false,
       visible: true,
+      uid: instanceUid,
     },
     /* focus */ false,
     /* restore */ true
   )
   commands.push(...extraCommands)
-  commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+  commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, instanceUid])
   return commands
 }
 

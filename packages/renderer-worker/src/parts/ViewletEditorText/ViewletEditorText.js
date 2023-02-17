@@ -42,7 +42,7 @@ export const handleTokenizeChange = () => {
 }
 
 // TODO uri?
-export const create = (id, uri, x, y, width, height, uid = 0) => {
+export const create = (id, uri, x, y, width, height, uid) => {
   Assert.number(uid)
   const instanceId = Id.create()
   const state = Editor.create(instanceId, uri, 'unknown', '')
