@@ -1,6 +1,7 @@
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as IsIgnoredError from '../IsIgnoredError/IsIgnoredError.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as Logger from '../Logger/Logger.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as Process from '../Process/Process.js'
 import * as Socket from '../Socket/Socket.js'
@@ -57,14 +58,14 @@ const firstErrorLine = (error) => {
 }
 
 export const handleUncaughtExceptionMonitor = (error, origin) => {
-  console.info(`[shared process] uncaught exception: ${firstErrorLine(error)}`)
+  Logger.info(`[shared process] uncaught exception: ${firstErrorLine(error)}`)
   if (IsIgnoredError.isIgnoredError(error)) {
     return
   }
   // console.log(error)
   const prettyError = PrettyError.prepare(error)
   // console.error(prettyError.message)
-  console.error(prettyError.codeFrame)
-  console.error(prettyError.stack)
-  Process.exit(ExitCode.Error)
+  Logger.error(prettyError.codeFrame)
+  Logger.error(prettyError.stack)
+  Process.setExitCode(ExitCode.Error)
 }
