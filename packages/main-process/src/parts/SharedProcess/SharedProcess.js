@@ -6,6 +6,7 @@ const Logger = require('../Logger/Logger.js')
 const GetResponse = require('../GetResponse/GetResponse.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
 const Process = require('../Process/Process.js')
+const RestoreError = require('../RestoreError/RestoreError.js')
 
 const state = (exports.state = {
   /**
@@ -16,8 +17,9 @@ const state = (exports.state = {
 })
 
 const handleChildError = (error) => {
-  Logger.info('[main] Child Error')
-  Logger.error(error.toString())
+  Logger.info('[main-process] Child Error')
+  const restoredError = RestoreError.restoreError(error)
+  Logger.error(restoredError.toString())
   Process.exit(ExitCode.Error)
 }
 
