@@ -6,6 +6,7 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'ExtensionHost.start',
   'ExtensionHost.send',
   'ExtensionHost.watchColorTheme',
+  'Terminal.create',
 ])
 
 export const requiresSocket = (method) => {

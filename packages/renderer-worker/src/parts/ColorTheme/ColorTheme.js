@@ -31,10 +31,7 @@ const getColorThemeJsonFromSharedProcess = async (colorThemeId) => {
   //     const absolutePath = `${extension.path}/${colorTheme.path}`
   //   }
   // }
-  return SharedProcess.invoke(
-    /* ExtensionHost.getColorThemeJson */ 'ExtensionHost.getColorThemeJson',
-    /* colorThemeId */ colorThemeId
-  )
+  return SharedProcess.invoke(/* ExtensionHost.getColorThemeJson */ 'ExtensionHost.getColorThemeJson', /* colorThemeId */ colorThemeId)
 }
 
 const getColorThemeUrlWeb = (colorThemeId) => {
@@ -74,11 +71,7 @@ export const getColorThemeCss = async (colorThemeId, colorThemeJson) => {
 }
 
 const getMetaThemeColor = (colorThemeJson) => {
-  return (
-    colorThemeJson &&
-    colorThemeJson.colors &&
-    colorThemeJson.colors.TitleBarBackground
-  )
+  return colorThemeJson && colorThemeJson.colors && colorThemeJson.colors.TitleBarBackground
 }
 const applyColorTheme = async (colorThemeId) => {
   try {
@@ -90,10 +83,7 @@ const applyColorTheme = async (colorThemeId) => {
       const themeColor = getMetaThemeColor(colorThemeJson) || ''
       await Meta.setThemeColor(themeColor)
     }
-    if (
-      Platform.platform !== PlatformType.Web &&
-      Preferences.get('development.watchColorTheme')
-    ) {
+    if (Platform.platform !== PlatformType.Web && Preferences.get('development.watchColorTheme')) {
       watch(colorThemeId)
     }
   } catch (error) {
@@ -107,12 +97,12 @@ export const setColorTheme = async (colorThemeId) => {
   await Preferences.set('workbench.colorTheme', colorThemeId)
 }
 
-export const watch = (id) => {
+export const watch = async (id) => {
   if (state.watchedTheme === id) {
     return
   }
   state.watchedTheme = id
-  SharedProcess.send('ExtensionHost.watchColorTheme', id)
+  await SharedProcess.invoke('ExtensionHost.watchColorTheme', id)
 }
 
 export const reload = async () => {
