@@ -1,5 +1,7 @@
-import * as PtyController from './parts/PtyController/PtyController.js'
 import * as Debug from './parts/Debug/Debug.js'
+import * as IpcChild from './parts/IpcChild/IpcChild.js'
+import * as IpcChildType from './parts/IpcChildType/IpcChildType.js'
+import * as PtyController from './parts/PtyController/PtyController.js'
 
 const handleMessage = (message) => {
   switch (message.method) {
@@ -17,10 +19,8 @@ const handleMessage = (message) => {
 }
 
 const main = async () => {
-  process.on('message', handleMessage)
-  if (process.send) {
-    process.send('ready')
-  }
+  const ipc = await IpcChild.listen({ method: IpcChildType.Auto() })
+  ipc.on('message', handleMessage)
 }
 
 main()
