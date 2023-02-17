@@ -63,6 +63,6 @@ export const handleUncaughtExceptionMonitor = (error, origin) => {
     return
   }
   const prettyError = PrettyError.prepare(error)
-  Logger.error(prettyError.codeFrame + '\n\n' + prettyError.stack)
+  Logger.error(prettyError.codeFrame + '\n' + prettyError.stack + '\n')
   Process.setExitCode(ExitCode.Error)
 }
