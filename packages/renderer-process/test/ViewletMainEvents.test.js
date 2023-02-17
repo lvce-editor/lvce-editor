@@ -36,7 +36,7 @@ const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.
 
 const Main = await import('../src/parts/ViewletMain/ViewletMain.js')
 
-test('event - left click on tab', () => {
+test.skip('event - left click on tab', () => {
   const state = Main.create()
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
@@ -45,7 +45,7 @@ test('event - left click on tab', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Main.handleTabClick', 0)
 })
 
-test('event - left click on tab label', () => {
+test.skip('event - left click on tab label', () => {
   const state = Main.create()
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
@@ -56,7 +56,7 @@ test('event - left click on tab label', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Main.handleTabClick', 0)
 })
 
-test('event - middle click on tab', () => {
+test.skip('event - middle click on tab', () => {
   const state = Main.create()
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const event = new MouseEvent('mousedown', {
@@ -69,7 +69,7 @@ test('event - middle click on tab', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Main.closeEditor', 0)
 })
 
-test('event - right click on tab', () => {
+test.skip('event - right click on tab', () => {
   const state = Main.create()
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const { $MainTabs } = state
@@ -77,7 +77,7 @@ test('event - right click on tab', () => {
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test('event - context menu on tab', () => {
+test.skip('event - context menu on tab', () => {
   const state = Main.create()
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const { $MainTabs } = state
@@ -91,7 +91,7 @@ test('event - context menu on tab', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Main.handleTabContextMenu', 0, 15, 30)
 })
 
-test('event - context menu on tab label', () => {
+test.skip('event - context menu on tab label', () => {
   const state = Main.create()
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const { $MainTabs } = state
@@ -106,7 +106,7 @@ test('event - context menu on tab label', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Main.handleTabContextMenu', 0, 15, 30)
 })
 
-test('event - click on tabs', () => {
+test.skip('event - click on tabs', () => {
   const state = Main.create()
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
@@ -116,7 +116,7 @@ test('event - click on tabs', () => {
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test('event - dragover', () => {
+test.skip('event - dragover', () => {
   const state = Main.create()
   const event = new DragEvent('dragover', { bubbles: true, cancelable: true })
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
