@@ -12,6 +12,6 @@ export const handleDropFilePath = (x, y, filePath) => {
   RendererWorker.send('Main.handleDropFilePath', x, y, filePath)
 }
 
-export const handleDragEnd = (x, y) => {
-  RendererWorker.send('Main.handleDragEnd', x, y)
+export const handleDragLeave = (x, y) => {
+  RendererWorker.send('Main.handleDragLeave', x, y)
 }

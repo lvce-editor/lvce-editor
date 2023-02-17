@@ -7,17 +7,20 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'Main'
   $Viewlet.className = 'Viewlet Main'
-  $Viewlet.ondrop = ViewletMainEvents.handleDrop
-  $Viewlet.ondragover = ViewletMainEvents.handleDragOver
-  $Viewlet.ondragend = ViewletMainEvents.handleDragEnd
   // @ts-ignore
   $Viewlet.role = AriaRoles.Main
-
   return {
     $Viewlet,
     $Main: $Viewlet,
     $DragOverlay: undefined,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $Viewlet } = state
+  $Viewlet.ondrop = ViewletMainEvents.handleDrop
+  $Viewlet.ondragover = ViewletMainEvents.handleDragOver
+  $Viewlet.ondragleave = ViewletMainEvents.handleDragLeave
 }
 
 export const dispose = (state) => {

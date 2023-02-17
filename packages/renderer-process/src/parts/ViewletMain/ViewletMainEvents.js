@@ -19,9 +19,9 @@ export const handleDragOver = (event) => {
   ViewletMainFunctions.handleDragOver(clientX, clientY)
 }
 
-export const handleDragEnd = (event) => {
+export const handleDragLeave = (event) => {
   const { clientX, clientY } = event
-  ViewletMainFunctions.handleDragEnd(clientX, clientY)
+  ViewletMainFunctions.handleDragLeave(clientX, clientY)
 }
 
 /**

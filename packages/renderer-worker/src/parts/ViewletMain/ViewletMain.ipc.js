@@ -17,7 +17,6 @@ export const Commands = {
   focusLast: ViewletMain.focusLast,
   focusNext: ViewletMain.focusNext,
   focusPrevious: ViewletMain.focusPrevious,
-  handleDragEnd: ViewletMain.handleDragEnd,
   handleDragOver: ViewletMain.handleDragOver,
   handleTabClick: ViewletMain.handleTabClick,
   handleTabContextMenu: ViewletMain.handleTabContextMenu,
@@ -32,6 +31,7 @@ export const LazyCommands = {
   handleSashPointerDown: () => import('./ViewletMainHandleSashPointerDown.js'),
   handleSashPointerMoveHorizontal: () => import('./ViewletMainHandleSashPointerMoveHorizontal.js'),
   handleSashPointerMoveVertical: () => import('./ViewletMainHandleSashPointerMoveVertical.js'),
+  handleDragLeave: () => import('./ViewletMainHandleDragLeave.js'),
 }
 
 export const Css = ['/css/parts/ViewletMain.css', '/css/parts/EditorTabs.css']

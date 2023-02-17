@@ -356,12 +356,6 @@ export const saveWithoutFormatting = async () => {
   console.warn('not implemented')
 }
 
-export const handleDragEnd = async (state, x, y) => {
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
-  return state
-}
-
 export const handleDragOver = async (state, eventX, eventY) => {
   const { x, y, width, height, tabHeight } = state
   const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + tabHeight, width, height - tabHeight, eventX, eventY)
