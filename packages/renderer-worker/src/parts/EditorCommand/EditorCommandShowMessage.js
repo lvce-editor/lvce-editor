@@ -59,6 +59,6 @@ export const showErrorMessage = (editor, rowIndex, columnIndex, message) => {
 export const editorHideMessage = async (editor) => {
   clearTimeout(state.timeout)
   state.timeout = -1
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ 'EditorText', /* method */ 'hideOverlayMessage')
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ editor.uid, /* method */ 'hideOverlayMessage')
   return editor
 }
