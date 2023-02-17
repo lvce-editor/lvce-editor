@@ -21,7 +21,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 })
 jest.unstable_mockModule('../src/parts/Callback/Callback.js', () => {
   return {
-    register: jest.fn(),
+    registerPromise: jest.fn(),
   }
 })
 
@@ -34,8 +34,13 @@ const IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug = await import(
 test('create', async () => {
   let _resolve
   // @ts-ignore
-  Callback.register.mockImplementation((resolve) => {
-    _resolve = resolve
+  Callback.registerPromise.mockImplementation(() => {
+    return {
+      id: 1,
+      promise: new Promise((resolve) => {
+        _resolve = resolve
+      }),
+    }
   })
   const port = {
     __isMessagePort: true,
