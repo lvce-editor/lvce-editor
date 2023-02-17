@@ -12,16 +12,14 @@ export const send = (transport, method, ...params) => {
 }
 
 export const invoke = async (ipc, method, ...params) => {
-  const responseMessage = await new Promise((resolve, reject) => {
-    // TODO use one map instead of two
-    const callbackId = Callback.register(resolve, reject)
-    ipc.send({
-      jsonrpc: JsonRpcVersion.Two,
-      method,
-      params,
-      id: callbackId,
-    })
+  const { id, promise } = Callback.registerPromise()
+  ipc.send({
+    jsonrpc: JsonRpcVersion.Two,
+    method,
+    params,
+    id,
   })
+  const responseMessage = await promise
   if ('error' in responseMessage) {
     const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
     throw restoredError
@@ -38,6 +36,5 @@ export const handleMessage = (message) => {
       throw new Error('not implemented')
     }
     Callback.resolve(message.id, message)
-
   }
 }

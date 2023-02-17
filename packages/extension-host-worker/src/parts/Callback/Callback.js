@@ -5,13 +5,15 @@ export const state = {
   callbacks: Object.create(null),
 }
 
-export const register = (resolve, reject) => {
+export const registerPromise = () => {
   const id = Id.create()
-  state.callbacks[id] = {
-    resolve,
-    reject,
-  }
-  return id
+  const promise = new Promise((resolve, reject) => {
+    state.callbacks[id] = {
+      resolve,
+      reject,
+    }
+  })
+  return { id, promise }
 }
 
 export const unregister = (id) => {
