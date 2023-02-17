@@ -172,7 +172,6 @@ exports.wrap = (worker) => {
     message: `exports is not defined in ES module scope
 This file is being treated as an ES module because it has a '.js' file extension and '/test/packages/shared-process/package.json' contains \"type\": \"module\". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.`,
     stack: `    at ${[prefix]}/test/packages/shared-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:5:1
-    at async Promise.all (index 0)
     at async Module.create (${[prefix]}/test/packages/shared-process/src/parts/IpcParent/IpcParent.js:4:18)
     at async createPtyHost (${[prefix]}/test/packages/shared-process/src/parts/Terminal/Terminal.js:52:19)
     at async Module.create (${[prefix]}/test/packages/shared-process/src/parts/Terminal/Terminal.js:79:23)'`,
