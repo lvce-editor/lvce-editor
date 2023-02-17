@@ -17,9 +17,6 @@ const state = (exports.state = {
 })
 
 const handleChildError = (error) => {
-  Logger.info('[main-process] Child Error')
-  const restoredError = RestoreError.restoreError(error)
-  Logger.error(restoredError.toString())
   Process.exit(ExitCode.Error)
 }
 
