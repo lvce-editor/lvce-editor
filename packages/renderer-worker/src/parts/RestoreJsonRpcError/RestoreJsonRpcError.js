@@ -37,7 +37,7 @@ export const restoreJsonRpcError = (error) => {
           restoredError.codeFrame = error.data.codeFrame
         }
       }
-    } else if (restoredError.stack) {
+    } else if (error.stack) {
       // TODO accessing stack might be slow
       const lowerStack = restoredError.stack
       // @ts-ignore
