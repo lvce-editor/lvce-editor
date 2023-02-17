@@ -54,6 +54,7 @@ const createPtyHost = async () => {
     path: ptyHostPath,
     argv: ['--ipc-type=node-forked-process'],
     stdio: 'inherit',
+    name: 'Terminal Process',
   })
   return ptyHost
 }

@@ -34,7 +34,7 @@ test('handleUncaughtExceptionMonitor', () => {
   PrettyError.prepare.mockImplementation(() => {
     return {
       message: 'oops',
-      stack: `at main (/test/packages/shared-process/src/sharedProcessMain.js:19:11)`,
+      stack: `    at main (/test/packages/shared-process/src/sharedProcessMain.js:19:11)`,
       codeFrame: `  17 |
   18 |   if (Math) {
 > 19 |     throw new Error('oops')
@@ -47,7 +47,7 @@ test('handleUncaughtExceptionMonitor', () => {
   ErrorHandling.handleUncaughtExceptionMonitor(error)
   expect(Logger.info).toHaveBeenCalledTimes(1)
   expect(Logger.info).toHaveBeenCalledWith('[shared process] uncaught exception: Error: oops')
-  expect(Logger.error).toHaveBeenCalledTimes(2)
+  expect(Logger.error).toHaveBeenCalledTimes(1)
   expect(Logger.error).toHaveBeenNthCalledWith(
     1,
     `  17 |
@@ -56,9 +56,10 @@ test('handleUncaughtExceptionMonitor', () => {
      |           ^
   20 |   }
   21 | }
-  22 |`
+  22 |
+
+    at main (/test/packages/shared-process/src/sharedProcessMain.js:19:11)`
   )
-  expect(Logger.error).toHaveBeenNthCalledWith(2, `at main (/test/packages/shared-process/src/sharedProcessMain.js:19:11)`)
   expect(Process.setExitCode).toHaveBeenCalledTimes(1)
   expect(Process.setExitCode).toHaveBeenCalledWith(1)
 })
