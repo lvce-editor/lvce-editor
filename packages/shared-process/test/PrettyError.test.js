@@ -120,15 +120,16 @@ export const execSync = (command) => {
 test('prepare - ReferenceError - exports is not defined in ES module scope', async () => {
   const error = new ReferenceError(`exports is not defined in ES module scope
 This file is being treated as an ES module because it has a '.js' file extension and '/test/packages/shared-process/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.`)
+  const prefix = process.platform === 'win32' ? 'file:///C:' : 'file://'
   error.stack = `ReferenceError: exports is not defined in ES module scope
 This file is being treated as an ES module because it has a '.js' file extension and '/test/packages/shared-process/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
-    at file:///test/packages/shared-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:5:1
+    at ${[prefix]}/test/packages/shared-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:5:1
     at ModuleJob.run (node:internal/modules/esm/module_job:193:25)
     at async Promise.all (index 0)
     at async ESMLoader.import (node:internal/modules/esm/loader:530:24)
-    at async Module.create (file:///test/packages/shared-process/src/parts/IpcParent/IpcParent.js:4:18)
-    at async createPtyHost (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:52:19)
-    at async Module.create (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:79:23)'`
+    at async Module.create (${[prefix]}/test/packages/shared-process/src/parts/IpcParent/IpcParent.js:4:18)
+    at async createPtyHost (${[prefix]}/test/packages/shared-process/src/parts/Terminal/Terminal.js:52:19)
+    at async Module.create (${[prefix]}/test/packages/shared-process/src/parts/Terminal/Terminal.js:79:23)'`
   // @ts-ignore
   fs.readFileSync.mockImplementation(() => {
     return `import * as Assert from '../Assert/Assert.js'
@@ -170,11 +171,11 @@ exports.wrap = (worker) => {
   expect(prettyError).toEqual({
     message: `exports is not defined in ES module scope
 This file is being treated as an ES module because it has a '.js' file extension and '/test/packages/shared-process/package.json' contains \"type\": \"module\". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.`,
-    stack: `    at file:///test/packages/shared-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:5:1
+    stack: `    at ${[prefix]}/test/packages/shared-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:5:1
     at async Promise.all (index 0)
-    at async Module.create (file:///test/packages/shared-process/src/parts/IpcParent/IpcParent.js:4:18)
-    at async createPtyHost (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:52:19)
-    at async Module.create (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:79:23)'`,
+    at async Module.create (${[prefix]}/test/packages/shared-process/src/parts/IpcParent/IpcParent.js:4:18)
+    at async createPtyHost (${[prefix]}/test/packages/shared-process/src/parts/Terminal/Terminal.js:52:19)
+    at async Module.create (${[prefix]}/test/packages/shared-process/src/parts/Terminal/Terminal.js:79:23)'`,
     codeFrame: `  3 | import * as GetFirstNodeWorkerEvent from '../GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js'
   4 |
 > 5 | exports.create = async ({ path, argv, env, execArgv }) => {
