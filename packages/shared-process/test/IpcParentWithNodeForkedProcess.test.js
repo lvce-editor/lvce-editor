@@ -30,7 +30,7 @@ test('create - error - child process exits with code 1', async () => {
     }
   })
   await expect(IpcParentWithNodeForkedProcess.create({ path: '/test/childProcess.js', argv: [], env: {}, execArgv: [] })).rejects.toThrowError(
-    new Error(`Failed to create child process ipc: child process exited with code 1`)
+    new Error(`Failed to create child process: child process exited with code 1`)
   )
 })
 
@@ -46,6 +46,6 @@ test('create', async () => {
       event: 'ready',
     }
   })
-  const childProcess = IpcParentWithNodeForkedProcess.create({ path: '/test/childProcess.js', argv: [], env: {}, execArgv: [] })
+  const childProcess = await IpcParentWithNodeForkedProcess.create({ path: '/test/childProcess.js', argv: [], env: {}, execArgv: [] })
   expect(childProcess).toBeDefined()
 })

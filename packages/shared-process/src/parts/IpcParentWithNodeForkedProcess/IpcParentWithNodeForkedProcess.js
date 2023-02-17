@@ -15,7 +15,7 @@ export const create = async ({ path, argv, env, execArgv }) => {
     if (type === FirstNodeWorkerEventType.Exit) {
       throw new Error(`child process exited with code ${event}`)
     }
-    if (type === FirstNodeWorkerEventType.Message) {
+    if (type === FirstNodeWorkerEventType.Error) {
       throw new Error(`child process had an error ${event}`)
     }
     return childProcess
