@@ -1,22 +1,19 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as IsEnoentErrorWindows from '../IsEnoentErrorWindows/IsEnoentErrorWindows.js'
 import * as LimitString from '../LimitString/LimitString.js'
-import * as RipGrep from '../RipGrep/RipGrep.js'
 import * as Logger from '../Logger/Logger.js'
+import * as RipGrep from '../RipGrep/RipGrep.js'
 
 const isEnoentErrorLinux = (error) => {
   return error.code === ErrorCodes.ENOENT
-}
-
-const isEnoentErrorWindows = (error) => {
-  return error.message.includes('The system cannot find the path specified.')
 }
 
 const isEnoentError = (error) => {
   if (!error) {
     return false
   }
-  return isEnoentErrorLinux(error) || isEnoentErrorWindows(error)
+  return isEnoentErrorLinux(error) || IsEnoentErrorWindows.isEnoentErrorWindows(error)
 }
 
 // TODO don't necessarily need ripgrep to list all the files,
@@ -37,9 +34,7 @@ export const searchFile = async (path, searchTerm, limit) => {
   } catch (error) {
     // @ts-ignore
     if (isEnoentError(error)) {
-      Logger.info(
-        `[shared-process] ripgrep could not be found at "${RipGrep.ripGrepPath}"`
-      )
+      Logger.info(`[shared-process] ripgrep could not be found at "${RipGrep.ripGrepPath}"`)
       return ``
     }
     // @ts-ignore
