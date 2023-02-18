@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
-import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
+import * as ElectronMessageBoxType from '../src/parts/ElectronMessageBoxType/ElectronMessageBoxType.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -69,7 +70,7 @@ test('showMessage - electron', async () => {
     options: [],
   })
   expect(ElectronDialog.showMessageBox).toHaveBeenCalledTimes(1)
-  expect(ElectronDialog.showMessageBox).toHaveBeenCalledWith('Error: Oops', [])
+  expect(ElectronDialog.showMessageBox).toHaveBeenCalledWith('Error: Oops', [], ElectronMessageBoxType.Error)
 })
 
 test.skip('close - web', async () => {
