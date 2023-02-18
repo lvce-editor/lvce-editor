@@ -263,7 +263,7 @@ export const setNegativeMargin = (state, negativeMargin) => {
 const create$ReplaceField = () => {
   const $Row = document.createElement('div')
   $Row.className = 'SearchField'
-  const $ButtonReplaceAllIcon = MaskIcon.create(Icon.ArrowDown)
+  const $ButtonReplaceAllIcon = MaskIcon.create(Icon.ReplaceAll)
   const $ButtonReplaceAll = document.createElement('button')
   $ButtonReplaceAll.title = UiStrings.ReplaceAll
   $ButtonReplaceAll.className = 'SearchFieldButton'

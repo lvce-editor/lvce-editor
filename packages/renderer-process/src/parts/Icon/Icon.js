@@ -26,3 +26,4 @@ export const ZoomOut = `${assetDir}/icons/zoom-out.svg`
 export const Regex = `${assetDir}/icons/regex.svg`
 export const WholeWord = `${assetDir}/icons/whole-word.svg`
 export const CaseSensitive = `${assetDir}/icons/case-sensitive.svg`
+export const ReplaceAll = `${assetDir}/icons/replace-all.svg`
