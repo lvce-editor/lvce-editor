@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
+import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'
 import * as IsAbortError from '../IsAbortError/IsAbortError.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
@@ -123,7 +124,7 @@ export const showMessage = async (message, options) => {
   }
 
   if (Platform.platform === 'electron') {
-    const index = await ElectronDialog.showMessageBox(/* message */ message.message, /* buttons */ options)
+    const index = await ElectronDialog.showMessageBox(/* message */ message.message, /* buttons */ options, ElectronMessageBoxType.Error)
 
     if (index === -1) {
       // TODO can this even happen?
