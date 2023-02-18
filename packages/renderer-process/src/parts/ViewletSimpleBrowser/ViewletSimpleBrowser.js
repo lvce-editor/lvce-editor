@@ -4,7 +4,7 @@ import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletSimpleBrowserEvents from './ViewletSimpleBrowserEvents.js'
-
+import * as InputType from '../InputType/InputType.js'
 /**
  * @enum {string}
  */
@@ -27,7 +27,7 @@ export const create = () => {
   $ButtonReload.onclick = ViewletSimpleBrowserEvents.handleClickReload
 
   const $InputBox = InputBox.create()
-  $InputBox.type = 'url'
+  $InputBox.type = InputType.Url
   $InputBox.enterKeyHint = EnterKeyHintType.Go
   $InputBox.oninput = ViewletSimpleBrowserEvents.handleInput
   $InputBox.onfocus = ViewletSimpleBrowserEvents.handleFocus
