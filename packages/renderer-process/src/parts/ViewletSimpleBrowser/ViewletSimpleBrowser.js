@@ -1,6 +1,7 @@
-import * as InputBox from '../InputBox/InputBox.js'
+import * as EnterKeyHintType from '../EnterKeyHintType/EnterKeyHintType.js'
 import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
+import * as InputBox from '../InputBox/InputBox.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletSimpleBrowserEvents from './ViewletSimpleBrowserEvents.js'
 
@@ -19,10 +20,7 @@ export const create = () => {
   const $ButtonBack = IconButton.create$Button(UiStrings.Back, Icon.ArrowLeft)
   $ButtonBack.onclick = ViewletSimpleBrowserEvents.handleClickBackward
 
-  const $ButtonForward = IconButton.create$Button(
-    UiStrings.Forward,
-    Icon.ArrowRight
-  )
+  const $ButtonForward = IconButton.create$Button(UiStrings.Forward, Icon.ArrowRight)
   $ButtonForward.onclick = ViewletSimpleBrowserEvents.handleClickForward
 
   const $ButtonReload = IconButton.create$Button(UiStrings.Reload, Icon.Refresh)
@@ -30,27 +28,17 @@ export const create = () => {
 
   const $InputBox = InputBox.create()
   $InputBox.type = 'url'
-  $InputBox.enterKeyHint = 'go'
+  $InputBox.enterKeyHint = EnterKeyHintType.Go
   $InputBox.oninput = ViewletSimpleBrowserEvents.handleInput
   $InputBox.onfocus = ViewletSimpleBrowserEvents.handleFocus
   $InputBox.onblur = ViewletSimpleBrowserEvents.handleBlur
 
-  const $ButtonOpenExternal = IconButton.create$Button(
-    UiStrings.OpenExternal,
-    Icon.LinkExternal
-  )
-  $ButtonOpenExternal.onclick =
-    ViewletSimpleBrowserEvents.handleClickOpenExternal
+  const $ButtonOpenExternal = IconButton.create$Button(UiStrings.OpenExternal, Icon.LinkExternal)
+  $ButtonOpenExternal.onclick = ViewletSimpleBrowserEvents.handleClickOpenExternal
 
   const $SimpleBrowserHeader = document.createElement('div')
   $SimpleBrowserHeader.className = 'SimpleBrowserHeader'
-  $SimpleBrowserHeader.append(
-    $ButtonBack,
-    $ButtonForward,
-    $ButtonReload,
-    $InputBox,
-    $ButtonOpenExternal
-  )
+  $SimpleBrowserHeader.append($ButtonBack, $ButtonForward, $ButtonReload, $InputBox, $ButtonOpenExternal)
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet SimpleBrowser'
