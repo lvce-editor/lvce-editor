@@ -1,5 +1,6 @@
 // TODO so many things in this file
 
+import * as AriaAutoCompleteType from '../AriaAutoCompleteType/AriaAutoCompleteType.js'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
@@ -12,7 +13,6 @@ import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
-
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
 // TODO tree shake out mobile support when targeting electron -> less code -> less event listeners -> less memory -> less cpu
@@ -25,7 +25,7 @@ import * as LayerText3 from './LayerText.js'
 export const create = () => {
   const $EditorInput = document.createElement('textarea')
   $EditorInput.className = 'EditorInput'
-  $EditorInput.ariaAutoComplete = 'list'
+  $EditorInput.ariaAutoComplete = AriaAutoCompleteType.List
   $EditorInput.ariaRoleDescription = 'editor'
   $EditorInput.ariaMultiLine = AriaBoolean.True
   $EditorInput.setAttribute('autocomplete', 'off')

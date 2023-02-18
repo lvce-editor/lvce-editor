@@ -11,6 +11,7 @@ import * as Label from '../Label/Label.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
+import * as InputType from '../InputType/InputType.js'
 
 /**
  * @enum {string}
@@ -48,7 +49,7 @@ export const create = () => {
   const $ViewletSearchInput = InputBox.create()
   $ViewletSearchInput.classList.add('SearchFieldInput')
   $ViewletSearchInput.placeholder = 'Search'
-  $ViewletSearchInput.type = 'search'
+  $ViewletSearchInput.type = InputType.Search
   $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
 
   const $ButtonMatchCase = create$SearchFieldButton(UiStrings.MatchCase, Icon.ArrowDown)
