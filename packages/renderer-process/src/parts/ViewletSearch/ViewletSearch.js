@@ -4,6 +4,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as EnterKeyHintType from '../EnterKeyHintType/EnterKeyHintType.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
@@ -13,7 +14,7 @@ export const create = () => {
   const $ViewletSearchInput = InputBox.create()
   $ViewletSearchInput.placeholder = 'Search'
   $ViewletSearchInput.type = 'search'
-  $ViewletSearchInput.enterKeyHint = 'search'
+  $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
 
   const $SearchStatus = document.createElement('div')
   // @ts-ignore

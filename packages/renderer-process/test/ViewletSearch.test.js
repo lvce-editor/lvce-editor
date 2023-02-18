@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import * as ViewletSearch from '../src/parts/ViewletSearch/ViewletSearch.js'
+import * as EnterKeyHintType from '../src/parts/EnterKeyHintType/EnterKeyHintType.js'
 
 test('create', () => {
   const state = ViewletSearch.create()
@@ -65,5 +66,5 @@ test('accessibility - input box should have type search', () => {
 test('accessibility - input box should have enterkeyhint search', () => {
   const state = ViewletSearch.create()
   const { $ViewletSearchInput } = state
-  expect($ViewletSearchInput.enterKeyHint).toBe('search')
+  expect($ViewletSearchInput.enterKeyHint).toBe(EnterKeyHintType.Search)
 })
