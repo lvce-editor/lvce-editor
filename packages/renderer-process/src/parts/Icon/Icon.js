@@ -23,3 +23,6 @@ export const TriangleDown = `${assetDir}/icons/triangle-down.svg`
 export const TriangleRight = `${assetDir}/icons/triangle-right.svg`
 export const ZoomIn = `${assetDir}/icons/zoom-in.svg`
 export const ZoomOut = `${assetDir}/icons/zoom-out.svg`
+export const Regex = `${assetDir}/icons/regex.svg`
+export const WholeWord = `${assetDir}/icons/whole-word.svg`
+export const CaseSensitive = `${assetDir}/icons/case-sensitive.svg`

@@ -52,9 +52,9 @@ export const create = () => {
   $ViewletSearchInput.type = InputType.Search
   $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
 
-  const $ButtonMatchCase = create$SearchFieldButton(UiStrings.MatchCase, Icon.ArrowDown)
-  const $ButtonMatchWholeWord = create$SearchFieldButton(UiStrings.MatchWholeWord, Icon.ArrowDown)
-  const $ButtonUseRegularExpression = create$SearchFieldButton(UiStrings.UseRegularExpression, Icon.ArrowDown)
+  const $ButtonMatchCase = create$SearchFieldButton(UiStrings.MatchCase, Icon.CaseSensitive)
+  const $ButtonMatchWholeWord = create$SearchFieldButton(UiStrings.MatchWholeWord, Icon.WholeWord)
+  const $ButtonUseRegularExpression = create$SearchFieldButton(UiStrings.UseRegularExpression, Icon.Regex)
 
   const $SearchField = document.createElement('div')
   $SearchField.className = 'SearchField'
