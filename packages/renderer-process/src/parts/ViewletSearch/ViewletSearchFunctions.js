@@ -31,3 +31,7 @@ export const handleScrollBarClick = (y) => {
 export const handleWheel = (deltaY) => {
   RendererWorker.send('Search.handleWheel', deltaY)
 }
+
+export const handleToggleButtonClick = () => {
+  RendererWorker.send('Search.handleToggleButtonClick')
+}

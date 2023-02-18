@@ -14,6 +14,7 @@ export const Commands = {
 export const LazyCommands = {
   handleContextMenuKeyboard: () => import('./ViewletSearchHandleContextMenuKeyBoard.js'),
   handleContextMenuMouseAt: () => import('./ViewletSearchHandleContextMenuMouseAt.js'),
+  handleToggleButtonClick: () => import('./ViewletSearchHandleToggleButtonClick.js'),
   ...VirtualList.LazyCommands,
 }
 

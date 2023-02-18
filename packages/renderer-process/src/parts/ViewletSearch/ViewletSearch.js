@@ -16,6 +16,10 @@ export const create = () => {
   $ViewletSearchInput.type = 'search'
   $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
 
+  const $ToggleButton = document.createElement('button')
+  $ToggleButton.className = 'SearchToggleButton'
+  $ToggleButton.textContent = 'T'
+
   const $SearchStatus = document.createElement('div')
   // @ts-ignore
   $SearchStatus.role = AriaRoles.Status
@@ -23,7 +27,7 @@ export const create = () => {
 
   const $SearchHeader = document.createElement('div')
   $SearchHeader.className = 'SearchHeader'
-  $SearchHeader.append($ViewletSearchInput, $SearchStatus)
+  $SearchHeader.append($ToggleButton, $ViewletSearchInput, $SearchStatus)
 
   const $ListItems = document.createElement('div')
   $ListItems.className = 'ListItems'
@@ -52,11 +56,14 @@ export const create = () => {
     $SearchStatus,
     $ScrollBar,
     $ScrollBarThumb,
+    $ToggleButton,
+    $SearchHeader,
+    $ViewletSearchReplaceInput: undefined,
   }
 }
 
 export const attachEvents = (state) => {
-  const { $ViewletSearchInput, $ListItems, $ScrollBar } = state
+  const { $ViewletSearchInput, $ListItems, $ScrollBar, $ToggleButton } = state
   $ViewletSearchInput.oninput = ViewletSearchEvents.handleInput
   $ViewletSearchInput.onfocus = ViewletSearchEvents.handleFocus
 
@@ -65,6 +72,8 @@ export const attachEvents = (state) => {
   $ListItems.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
 
   $ScrollBar.onpointerdown = ViewletSearchEvents.handleScrollBarPointerDown
+
+  $ToggleButton.onclick = ViewletSearchEvents.handleToggleButtonClick
 }
 
 export const refresh = (state, context) => {
@@ -200,6 +209,30 @@ export const setContentHeight = (state, height) => {
 export const setNegativeMargin = (state, negativeMargin) => {
   const { $ListItems } = state
   SetBounds.setTop($ListItems, negativeMargin)
+}
+
+const create$ReplaceInput = () => {
+  const $ViewletSearchReplaceInput = InputBox.create()
+  $ViewletSearchReplaceInput.placeholder = 'Replacement'
+  $ViewletSearchReplaceInput.type = 'text'
+  return $ViewletSearchReplaceInput
+}
+
+export const setReplaceExpanded = (state, replaceExpanded) => {
+  console.log('set expanded', replaceExpanded)
+  const { $ViewletSearchReplaceInput, $ToggleButton, $SearchHeader, $ViewletSearchInput } = state
+  if (replaceExpanded) {
+    $ToggleButton.ariaExpanded = true
+    const $ViewletSearchReplaceInput = create$ReplaceInput()
+    $ViewletSearchInput.after($ViewletSearchReplaceInput)
+    state.$ViewletSearchReplaceInput = $ViewletSearchReplaceInput
+    // TODO add it
+  } else {
+    $ToggleButton.ariaExpanded = false
+    $ViewletSearchReplaceInput.remove()
+    state.$ViewletSearchReplaceInput = undefined
+    // TODO remove it
+  }
 }
 
 export * from '../ViewletScrollable/ViewletScrollable.js'

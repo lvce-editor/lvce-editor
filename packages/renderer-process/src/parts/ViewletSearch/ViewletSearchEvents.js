@@ -78,6 +78,10 @@ export const handleScrollBarPointerDown = (event) => {
   ViewletSearchFunctions.handleScrollBarClick(clientY)
 }
 
+export const handleToggleButtonClick = (event) => {
+  ViewletSearchFunctions.handleToggleButtonClick()
+}
+
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
   switch (deltaMode) {
