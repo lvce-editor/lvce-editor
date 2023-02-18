@@ -9,11 +9,12 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
+import * as InputType from '../InputType/InputType.js'
 
 export const create = () => {
   const $ViewletSearchInput = InputBox.create()
   $ViewletSearchInput.placeholder = 'Search'
-  $ViewletSearchInput.type = 'search'
+  $ViewletSearchInput.type = InputType.Search
   $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
 
   const $SearchStatus = document.createElement('div')
