@@ -5,16 +5,63 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as EnterKeyHintType from '../EnterKeyHintType/EnterKeyHintType.js'
+import * as Icon from '../Icon/Icon.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  MatchCase: 'Match Case',
+  MatchWholeWord: 'Match Whole Word',
+  UseRegularExpression: 'Use Regular Expression',
+}
+
 export const create = () => {
+  // TODO vscode uses a textarea instead of an input
+  // which is better because it supports multiline input
+  // but it is difficult to implement because the vscode
+  // textarea has a flexible max height.
+  // The implementation uses a mirror dom element,
+  // on text area input the text copied to the
+  // mirror dom element, then the mirror dom element height
+  // is measured and in turn applied to the text area.
+  // This way the text area always has the smallest
+  // necessary height value.
   const $ViewletSearchInput = InputBox.create()
+  $ViewletSearchInput.classList.add('SearchFieldInput')
   $ViewletSearchInput.placeholder = 'Search'
   $ViewletSearchInput.type = 'search'
   $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
+
+  const $IconMatchCase = MaskIcon.create(Icon.ArrowDown)
+
+  const $ButtonMatchCase = document.createElement('button')
+  $ButtonMatchCase.className = 'SearchFieldButton'
+  $ButtonMatchCase.title = UiStrings.MatchCase
+  $ButtonMatchCase.append($IconMatchCase)
+
+  const $IconMatchWholeWord = MaskIcon.create(Icon.ArrowDown)
+
+  const $ButtonMatchWholeWord = document.createElement('button')
+  $ButtonMatchWholeWord.className = 'SearchFieldButton'
+  $ButtonMatchWholeWord.title = UiStrings.MatchWholeWord
+  $ButtonMatchWholeWord.append($IconMatchWholeWord)
+
+  const $IconUseRegularExpression = MaskIcon.create(Icon.ArrowDown)
+
+  const $ButtonUseRegularExpression = document.createElement('button')
+  $ButtonUseRegularExpression.className = 'SearchFieldButton'
+  $IconUseRegularExpression.title = UiStrings.UseRegularExpression
+  $ButtonUseRegularExpression.append($IconUseRegularExpression)
+
+  const $SearchField = document.createElement('div')
+  $SearchField.className = 'SearchField'
+  $SearchField.append($ViewletSearchInput, $ButtonMatchCase, $ButtonMatchWholeWord, $ButtonUseRegularExpression)
 
   const $ToggleButton = document.createElement('button')
   $ToggleButton.className = 'SearchToggleButton'
@@ -27,7 +74,7 @@ export const create = () => {
 
   const $SearchHeader = document.createElement('div')
   $SearchHeader.className = 'SearchHeader'
-  $SearchHeader.append($ToggleButton, $ViewletSearchInput, $SearchStatus)
+  $SearchHeader.append($ToggleButton, $SearchField, $SearchStatus)
 
   const $ListItems = document.createElement('div')
   $ListItems.className = 'ListItems'
@@ -59,6 +106,7 @@ export const create = () => {
     $ToggleButton,
     $SearchHeader,
     $ViewletSearchReplaceInput: undefined,
+    $SearchField,
   }
 }
 
@@ -211,20 +259,33 @@ export const setNegativeMargin = (state, negativeMargin) => {
   SetBounds.setTop($ListItems, negativeMargin)
 }
 
-const create$ReplaceInput = () => {
+const create$ReplaceField = () => {
+  const $Row = document.createElement('div')
+  $Row.className = 'SearchField'
+  const $ButtonReplaceAllIcon = MaskIcon.create(Icon.ArrowDown)
+  const $ButtonReplaceAll = document.createElement('button')
+  $ButtonReplaceAll.className = 'SearchFieldButton'
+  $ButtonReplaceAll.append($ButtonReplaceAllIcon)
+
   const $ViewletSearchReplaceInput = InputBox.create()
-  $ViewletSearchReplaceInput.placeholder = 'Replacement'
+  $ViewletSearchReplaceInput.placeholder = 'Replace'
   $ViewletSearchReplaceInput.type = 'text'
-  return $ViewletSearchReplaceInput
+
+  const $ButtonPreserveCase = document.createElement('button')
+  const $IconPreserveCase = MaskIcon.create(Icon.ArrowDown)
+  $ButtonPreserveCase.append($IconPreserveCase)
+
+  $Row.append($ViewletSearchReplaceInput, $ButtonReplaceAll)
+  return $Row
 }
 
 export const setReplaceExpanded = (state, replaceExpanded) => {
   console.log('set expanded', replaceExpanded)
-  const { $ViewletSearchReplaceInput, $ToggleButton, $SearchHeader, $ViewletSearchInput } = state
+  const { $ViewletSearchReplaceInput, $ToggleButton, $SearchField, $ViewletSearchInput } = state
   if (replaceExpanded) {
     $ToggleButton.ariaExpanded = true
-    const $ViewletSearchReplaceInput = create$ReplaceInput()
-    $ViewletSearchInput.after($ViewletSearchReplaceInput)
+    const $ViewletSearchReplaceInput = create$ReplaceField()
+    $SearchField.after($ViewletSearchReplaceInput)
     state.$ViewletSearchReplaceInput = $ViewletSearchReplaceInput
     // TODO add it
   } else {

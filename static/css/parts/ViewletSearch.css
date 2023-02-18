@@ -44,3 +44,33 @@
 .DropTarget {
   background: rgba(0, 0, 90, 0.5);
 }
+
+.SearchField {
+  display: flex;
+}
+
+/* .SearchField */
+
+.SearchFieldInput {
+  flex: 1;
+  resize: none;
+}
+
+.SearchFieldButton {
+  /* position: absolute; */
+  position: relative;
+  background: transparent;
+  border: none;
+  color: white;
+  contain: strict;
+  width: 20px;
+  height: 20px;
+}
+
+.SearchFieldButton:hover {
+  background: rgba(90, 93, 94, 0.31);
+}
+
+.SearchButtonReplaceAll {
+  position: relative;
+}
