@@ -32,6 +32,9 @@ export const create = (id, uri, x, y, width, height) => {
     }),
     threads: 0,
     replaceExpanded: false,
+    useRegularExpression: false,
+    matchCase: false,
+    matchWholeWord: false,
   }
 }
 
@@ -414,4 +417,26 @@ const renderReplaceExpanded = {
   },
 }
 
-export const render = [renderItems, renderMessage, renderValue, renderScrollBar, renderHeight, renderNegativeMargin, renderReplaceExpanded]
+const renderButtonsChecked = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.matchWholeWord === newState.matchWholeWord &&
+      oldState.useRegularExpression === newState.useRegularExpression &&
+      oldState.matchCase === newState.matchCase
+    )
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setButtonsChecked', newState.matchWholeWord, newState.useRegularExpression, newState.matchCase]
+  },
+}
+
+export const render = [
+  renderItems,
+  renderMessage,
+  renderValue,
+  renderScrollBar,
+  renderHeight,
+  renderNegativeMargin,
+  renderReplaceExpanded,
+  renderButtonsChecked,
+]

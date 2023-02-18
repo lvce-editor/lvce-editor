@@ -71,6 +71,10 @@
   background: rgba(90, 93, 94, 0.31);
 }
 
+.SearchFieldButton[aria-checked='true'] {
+  border: 1px solid #a03f9b;
+}
+
 .SearchButtonReplaceAll {
   position: relative;
 }

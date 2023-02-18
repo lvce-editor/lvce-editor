@@ -32,6 +32,22 @@ export const handleWheel = (deltaY) => {
   RendererWorker.send('Search.handleWheel', deltaY)
 }
 
-export const handleToggleButtonClick = () => {
+export const toggleReplace = () => {
   RendererWorker.send('Search.handleToggleButtonClick')
+}
+
+export const toggleMatchCase = () => {
+  RendererWorker.send('Search.toggleMatchCase')
+}
+
+export const toggleMatchWholeWord = () => {
+  RendererWorker.send('Search.toggleMatchWholeWord')
+}
+
+export const replaceAll = () => {
+  RendererWorker.send('Search.replaceAll')
+}
+
+export const toggleUseRegularExpression = () => {
+  RendererWorker.send('Search.toggleUseRegularExpression')
 }

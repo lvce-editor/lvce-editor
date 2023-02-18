@@ -79,7 +79,32 @@ export const handleScrollBarPointerDown = (event) => {
 }
 
 export const handleToggleButtonClick = (event) => {
-  ViewletSearchFunctions.handleToggleButtonClick()
+  ViewletSearchFunctions.toggleReplace()
+}
+
+export const handleHeaderClick = (event) => {
+  const { target } = event
+  const { title } = target
+  switch (title) {
+    case 'Toggle Replace':
+      ViewletSearchFunctions.toggleReplace()
+      break
+    case 'Match Case':
+      ViewletSearchFunctions.toggleMatchCase()
+      break
+    case 'Use Regular Expression':
+      ViewletSearchFunctions.toggleUseRegularExpression()
+      break
+    case 'Replace All':
+      ViewletSearchFunctions.replaceAll()
+      break
+    case 'Match Whole Word':
+      ViewletSearchFunctions.toggleMatchWholeWord()
+      break
+    default:
+      break
+  }
+  // TODO better way to determine which button was clicked
 }
 
 export const handleWheel = (event) => {

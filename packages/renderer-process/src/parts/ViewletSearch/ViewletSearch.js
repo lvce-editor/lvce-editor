@@ -19,6 +19,19 @@ const UiStrings = {
   MatchCase: 'Match Case',
   MatchWholeWord: 'Match Whole Word',
   UseRegularExpression: 'Use Regular Expression',
+  ToggleReplace: 'Toggle Replace',
+  PreserveCase: 'Preserve Case',
+  ReplaceAll: 'Replace All',
+}
+
+const create$SearchFieldButton = (title, icon) => {
+  const $Icon = MaskIcon.create(icon)
+  const $Button = document.createElement('div')
+  $Button.role = AriaRoles.CheckBox
+  $Button.className = 'SearchFieldButton'
+  $Button.title = title
+  $Button.append($Icon)
+  return $Button
 }
 
 export const create = () => {
@@ -38,26 +51,9 @@ export const create = () => {
   $ViewletSearchInput.type = 'search'
   $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
 
-  const $IconMatchCase = MaskIcon.create(Icon.ArrowDown)
-
-  const $ButtonMatchCase = document.createElement('button')
-  $ButtonMatchCase.className = 'SearchFieldButton'
-  $ButtonMatchCase.title = UiStrings.MatchCase
-  $ButtonMatchCase.append($IconMatchCase)
-
-  const $IconMatchWholeWord = MaskIcon.create(Icon.ArrowDown)
-
-  const $ButtonMatchWholeWord = document.createElement('button')
-  $ButtonMatchWholeWord.className = 'SearchFieldButton'
-  $ButtonMatchWholeWord.title = UiStrings.MatchWholeWord
-  $ButtonMatchWholeWord.append($IconMatchWholeWord)
-
-  const $IconUseRegularExpression = MaskIcon.create(Icon.ArrowDown)
-
-  const $ButtonUseRegularExpression = document.createElement('button')
-  $ButtonUseRegularExpression.className = 'SearchFieldButton'
-  $IconUseRegularExpression.title = UiStrings.UseRegularExpression
-  $ButtonUseRegularExpression.append($IconUseRegularExpression)
+  const $ButtonMatchCase = create$SearchFieldButton(UiStrings.MatchCase, Icon.ArrowDown)
+  const $ButtonMatchWholeWord = create$SearchFieldButton(UiStrings.MatchWholeWord, Icon.ArrowDown)
+  const $ButtonUseRegularExpression = create$SearchFieldButton(UiStrings.UseRegularExpression, Icon.ArrowDown)
 
   const $SearchField = document.createElement('div')
   $SearchField.className = 'SearchField'
@@ -66,6 +62,7 @@ export const create = () => {
   const $ToggleButton = document.createElement('button')
   $ToggleButton.className = 'SearchToggleButton'
   $ToggleButton.textContent = 'T'
+  $ToggleButton.title = UiStrings.ToggleReplace
 
   const $SearchStatus = document.createElement('div')
   // @ts-ignore
@@ -107,11 +104,14 @@ export const create = () => {
     $SearchHeader,
     $ViewletSearchReplaceInput: undefined,
     $SearchField,
+    $ButtonMatchCase,
+    $ButtonMatchWholeWord,
+    $ButtonUseRegularExpression,
   }
 }
 
 export const attachEvents = (state) => {
-  const { $ViewletSearchInput, $ListItems, $ScrollBar, $ToggleButton } = state
+  const { $ViewletSearchInput, $ListItems, $ScrollBar, $ToggleButton, $SearchHeader } = state
   $ViewletSearchInput.oninput = ViewletSearchEvents.handleInput
   $ViewletSearchInput.onfocus = ViewletSearchEvents.handleFocus
 
@@ -121,7 +121,7 @@ export const attachEvents = (state) => {
 
   $ScrollBar.onpointerdown = ViewletSearchEvents.handleScrollBarPointerDown
 
-  $ToggleButton.onclick = ViewletSearchEvents.handleToggleButtonClick
+  $SearchHeader.onclick = ViewletSearchEvents.handleHeaderClick
 }
 
 export const refresh = (state, context) => {
@@ -264,6 +264,7 @@ const create$ReplaceField = () => {
   $Row.className = 'SearchField'
   const $ButtonReplaceAllIcon = MaskIcon.create(Icon.ArrowDown)
   const $ButtonReplaceAll = document.createElement('button')
+  $ButtonReplaceAll.title = UiStrings.ReplaceAll
   $ButtonReplaceAll.className = 'SearchFieldButton'
   $ButtonReplaceAll.append($ButtonReplaceAllIcon)
 
@@ -272,6 +273,7 @@ const create$ReplaceField = () => {
   $ViewletSearchReplaceInput.type = 'text'
 
   const $ButtonPreserveCase = document.createElement('button')
+  $ButtonPreserveCase.title = UiStrings.PreserveCase
   const $IconPreserveCase = MaskIcon.create(Icon.ArrowDown)
   $ButtonPreserveCase.append($IconPreserveCase)
 
@@ -294,6 +296,14 @@ export const setReplaceExpanded = (state, replaceExpanded) => {
     state.$ViewletSearchReplaceInput = undefined
     // TODO remove it
   }
+}
+
+export const setButtonsChecked = (state, matchWholeWord, useRegularExpression, matchCase) => {
+  console.log({ matchWholeWord, useRegularExpression, matchCase })
+  const { $ButtonMatchWholeWord, $ButtonUseRegularExpression, $ButtonMatchCase } = state
+  $ButtonMatchWholeWord.ariaChecked = matchWholeWord
+  $ButtonUseRegularExpression.ariaChecked = useRegularExpression
+  $ButtonMatchCase.ariaChecked = matchCase
 }
 
 export * from '../ViewletScrollable/ViewletScrollable.js'
