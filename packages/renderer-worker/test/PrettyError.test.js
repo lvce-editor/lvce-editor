@@ -247,3 +247,62 @@ test('prepare - debugger eval code stack', async () => {
   expect(Ajax.getText).not.toHaveBeenCalled()
   expect(prettyError).toBe(error)
 })
+
+test('prepare - RangeError - Maximum call stack size exceeded', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    return `import * as Command from '../Command/Command.js'
+import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
+
+export const getBulkReplacementEdits = (matches) => {
+  const files = []
+  const ranges = []
+  let currentRanges = []
+  for (const match of matches) {
+    switch (match.type) {
+      case TextSearchResultType.File:
+        ranges.push(currentRanges.length, ...currentRanges)
+        files.push(match.title)
+        currentRanges = []
+        break
+      case TextSearchResultType.Match:
+        currentRanges.push(match.lineNumber - 1, match.matchStart, match.lineNumber - 1, match.matchStart + match.matchLength)
+        break
+      default:
+        break
+    }
+  }
+  ranges.push(currentRanges.length, ...currentRanges)
+  return {
+    files,
+    ranges: ranges.slice(1),
+  }
+}
+`
+  })
+  const error = new RangeError('Maximum call stack size exceeded')
+  error.stack = `RangeError: Maximum call stack size exceeded
+    at Module.getBulkReplacementEdits (test:///packages/renderer-worker/src/parts/GetBulkReplacementEdits/GetBulkReplacementEdits.js:22:10)
+    at actuallyReplaceAll (test:///packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchReplaceAll.js:5:53)
+    at replaceAll (test:///packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchReplaceAll.js:17:9)
+    at async Search/lazy/replaceAll (test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:107:24)
+    at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: 'Maximum call stack size exceeded',
+    codeFrame: `  20 |     }
+  21 |   }
+> 22 |   ranges.push(currentRanges.length, ...currentRanges)
+     |          ^
+  23 |   return {
+  24 |     files,
+  25 |     ranges: ranges.slice(1),`,
+    stack: `    at Module.getBulkReplacementEdits (test:///packages/renderer-worker/src/parts/GetBulkReplacementEdits/GetBulkReplacementEdits.js:22:10)
+    at actuallyReplaceAll (test:///packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchReplaceAll.js:5:53)
+    at replaceAll (test:///packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchReplaceAll.js:17:9)
+    at async Search/lazy/replaceAll (test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:107:24)
+    at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`,
+    type: 'RangeError',
+    _error: error,
+  })
+})

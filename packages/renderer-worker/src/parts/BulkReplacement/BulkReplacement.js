@@ -1,5 +1,5 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Assert from '../Assert/Assert.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const applyBulkReplacement = async (files, ranges, replacement) => {
   Assert.array(files)
