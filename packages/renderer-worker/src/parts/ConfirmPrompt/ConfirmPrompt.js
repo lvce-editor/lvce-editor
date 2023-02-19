@@ -2,6 +2,7 @@ import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 /**
  * @enum {string}
@@ -16,9 +17,9 @@ const promptElectron = async (message, confirmMessage) => {
   return result === 1
 }
 
-const promptWeb = (message, confirmMessage) => {
-  // TODO ask renderer process to show confirm dialog
-  throw new Error('not implemented')
+const promptWeb = async (message, confirmMessage) => {
+  const result = await RendererProcess.invoke('ConfirmPrompt.prompt', message)
+  return result
 }
 
 export const prompt = async (message, confirmMessage = UiStrings.Ok) => {
