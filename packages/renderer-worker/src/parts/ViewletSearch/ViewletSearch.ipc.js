@@ -14,6 +14,12 @@ export const Commands = {
 export const LazyCommands = {
   handleContextMenuKeyboard: () => import('./ViewletSearchHandleContextMenuKeyBoard.js'),
   handleContextMenuMouseAt: () => import('./ViewletSearchHandleContextMenuMouseAt.js'),
+  handleToggleButtonClick: () => import('./ViewletSearchHandleToggleButtonClick.js'),
+  toggleUseRegularExpression: () => import('./ViewletSearchToggleUseRegularExpression.js'),
+  toggleMatchWholeWord: () => import('./ViewletSearchToggleMatchWholeWord.js'),
+  toggleMatchCase: () => import('./ViewletSearchToggleMatchCase.js'),
+  replaceAll: () => import('./ViewletSearchReplaceAll.js'),
+  handleReplaceInput: () => import('./ViewletSearchHandleReplaceInput.js'),
   ...VirtualList.LazyCommands,
 }
 

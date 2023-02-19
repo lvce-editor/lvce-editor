@@ -31,6 +31,12 @@ export const create = (id, uri, x, y, width, height) => {
       headerHeight: 61, // TODO
     }),
     threads: 0,
+    replaceExpanded: false,
+    useRegularExpression: false,
+    matchCase: false,
+    matchWholeWord: false,
+    replacement: '',
+    matchCount: 0,
   }
 }
 
@@ -40,11 +46,18 @@ const getSavedValue = (savedState) => {
   }
   return ''
 }
+const getSavedReplaceExpanded = (savedState) => {
+  if (savedState && 'replaceExpanded' in savedState) {
+    return savedState.replaceExpanded
+  }
+  return false
+}
 
 export const saveState = (state) => {
-  const { value } = state
+  const { value, replaceExpanded } = state
   return {
     value,
+    replaceExpanded,
   }
 }
 
@@ -58,11 +71,12 @@ const getThreads = () => {
 
 export const loadContent = async (state, savedState) => {
   const savedValue = getSavedValue(savedState)
+  const savedReplaceExpanded = getSavedReplaceExpanded(savedState)
   const threads = getThreads()
   if (savedValue) {
-    return setValue(state, savedValue, threads)
+    return setValue(state, savedValue, threads, savedReplaceExpanded)
   }
-  return { ...state, threads }
+  return { ...state, threads, replaceExpanded: savedReplaceExpanded }
 }
 
 const getStatusMessage = (resultCount, fileResultCount) => {
@@ -96,7 +110,7 @@ const getResultCounts = (results) => {
   return { fileCount, resultCount }
 }
 
-export const setValue = async (state, value, threads = state.threads) => {
+export const setValue = async (state, value, threads = state.threads, replaceExpanded = false) => {
   try {
     if (value === '') {
       return {
@@ -110,6 +124,7 @@ export const setValue = async (state, value, threads = state.threads) => {
         matchCount: 0,
         message: '',
         threads,
+        replaceExpanded,
       }
     }
     const { height, itemHeight, minimumSliderSize, headerHeight } = state
@@ -139,6 +154,9 @@ export const setValue = async (state, value, threads = state.threads) => {
       scrollBarHeight,
       finalDeltaY,
       threads,
+      replaceExpanded,
+      fileCount,
+      matchCount: resultCount,
     }
   } catch (error) {
     ErrorHandling.logError(error)
@@ -147,6 +165,7 @@ export const setValue = async (state, value, threads = state.threads) => {
       message: `${error}`,
       value,
       threads,
+      replaceExpanded,
     }
   }
 }
@@ -393,4 +412,35 @@ const renderNegativeMargin = {
   },
 }
 
-export const render = [renderItems, renderMessage, renderValue, renderScrollBar, renderHeight, renderNegativeMargin]
+const renderReplaceExpanded = {
+  isEqual(oldState, newState) {
+    return oldState.replaceExpanded === newState.replaceExpanded
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setReplaceExpanded', newState.replaceExpanded]
+  },
+}
+
+const renderButtonsChecked = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.matchWholeWord === newState.matchWholeWord &&
+      oldState.useRegularExpression === newState.useRegularExpression &&
+      oldState.matchCase === newState.matchCase
+    )
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setButtonsChecked', newState.matchWholeWord, newState.useRegularExpression, newState.matchCase]
+  },
+}
+
+export const render = [
+  renderItems,
+  renderMessage,
+  renderValue,
+  renderScrollBar,
+  renderHeight,
+  renderNegativeMargin,
+  renderReplaceExpanded,
+  renderButtonsChecked,
+]
