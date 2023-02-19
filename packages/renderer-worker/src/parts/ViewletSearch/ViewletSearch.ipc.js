@@ -19,7 +19,7 @@ export const LazyCommands = {
   toggleMatchCase: () => import('./ViewletSearchToggleMatchCase.js'),
   replaceAll: () => import('./ViewletSearchReplaceAll.js'),
   handleReplaceInput: () => import('./ViewletSearchHandleReplaceInput.js'),
-  setValue: () => import('./ViewletSearchHandleUpdate.js'),
+  handleUpdate: () => import('./ViewletSearchHandleUpdate.js'),
   ...VirtualList.LazyCommands,
 }
 
