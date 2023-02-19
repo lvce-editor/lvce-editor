@@ -5,7 +5,6 @@ export const name = 'Search'
 
 // prettier-ignore
 export const Commands = {
-  handleClick: ViewletSearch.handleClick,
   handleInput: ViewletSearch.handleInput,
 }
 
@@ -20,7 +19,15 @@ export const LazyCommands = {
   replaceAll: () => import('./ViewletSearchReplaceAll.js'),
   handleReplaceInput: () => import('./ViewletSearchHandleReplaceInput.js'),
   handleUpdate: () => import('./ViewletSearchHandleUpdate.js'),
+  handleListFocus: () => import('./ViewletSearchHandleListFocus.js'),
+  handleListBlur: () => import('./ViewletSearchHandleListBlur.js'),
   ...VirtualList.LazyCommands,
+  focusFirst: () => import('./ViewletSearchFocusFirst.js'),
+  focusLast: () => import('./ViewletSearchFocusLast.js'),
+  focusNext: () => import('./ViewletSearchFocusNext.js'),
+  focusPrevious: () => import('./ViewletSearchFocusPrevious.js'),
+  handleClick: () => import('./ViewletSearchHandleClick.js'),
+  selectIndex: () => import('./ViewletSearchSelectIndex.js'),
 }
 
 export const Css = [

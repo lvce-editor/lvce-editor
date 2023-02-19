@@ -124,3 +124,11 @@ export const handleReplaceInput = (event) => {
   const { value } = target
   ViewletSearchFunctions.handleReplaceInput(value)
 }
+
+export const handleListFocus = (event) => {
+  ViewletSearchFunctions.handleListFocus()
+}
+
+export const handleListBlur = (event) => {
+  ViewletSearchFunctions.handleListBlur()
+}
