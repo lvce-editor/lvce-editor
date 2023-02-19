@@ -78,7 +78,7 @@ export const replacedManyOccurrencesInOneFile = (matchCount, replacement) => {
 }
 
 export const replacedManyOccurrencesInManyFiles = (matchCount, fileCount, replacement) => {
-  return I18nString.i18nString(UiStrings.ReplacedOneOccurrenceInOneFile, {
+  return I18nString.i18nString(UiStrings.ReplacedManyOccurrencesInManyFiles, {
     PH1: matchCount,
     PH2: fileCount,
     PH3: replacement,
