@@ -1,3 +1,4 @@
+import * as GetTextSearchRipGrepArgs from '../GetTextSearchRipGrepArgs/GetTextSearchRipGrepArgs.js'
 import * as RipGrep from '../RipGrep/RipGrep.js'
 import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
@@ -35,10 +36,14 @@ const toSearchResult = (parsedLine) => {
 // TODO update client
 // TODO not always run nice, maybe configure nice via flag/options
 
-export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 20_000 } = {}) => {
+export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 20_000, isCaseSensitive = false } = {}) => {
   // TODO reject promise when ripgrep search fails
   return new Promise((resolve, reject) => {
-    const ripGrepArgs = ['--smart-case', '--stats', '--json', '--threads', `${threads}`, '--fixed-strings', searchString, '.']
+    const ripGrepArgs = GetTextSearchRipGrepArgs.getRipGrepArgs({
+      threads,
+      isCaseSensitive,
+      searchString,
+    })
     const childProcess = RipGrep.spawn(ripGrepArgs, {
       cwd: searchDir,
     })
