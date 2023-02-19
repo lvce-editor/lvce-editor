@@ -78,7 +78,7 @@ test('setValue - error - results is not of type array', async () => {
       lineNumber: 0,
     }
   })
-  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+  expect(await ViewletSearch.handleInput(state, 'abc')).toMatchObject({
     message: 'Error: results must be of type array',
   })
   expect(ErrorHandling.logError).toHaveBeenCalledTimes(1)
@@ -106,7 +106,7 @@ test('setValue - one match in one file', async () => {
       },
     ]
   })
-  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+  expect(await ViewletSearch.handleInput(state, 'abc')).toMatchObject({
     value: 'abc',
     items: [
       {
@@ -154,7 +154,7 @@ test('setValue - two matches in one file', async () => {
       },
     ]
   })
-  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+  expect(await ViewletSearch.handleInput(state, 'abc')).toMatchObject({
     value: 'abc',
     items: [
       {
@@ -215,7 +215,7 @@ test('setValue - two matches in two files', async () => {
       },
     ]
   })
-  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+  expect(await ViewletSearch.handleInput(state, 'abc')).toMatchObject({
     value: 'abc',
     items: [
       {

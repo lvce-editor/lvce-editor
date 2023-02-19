@@ -7,7 +7,6 @@ export const name = 'Search'
 export const Commands = {
   handleClick: ViewletSearch.handleClick,
   handleInput: ViewletSearch.handleInput,
-  setValue: ViewletSearch.setValue,
 }
 
 // prettier-ignore
@@ -20,6 +19,7 @@ export const LazyCommands = {
   toggleMatchCase: () => import('./ViewletSearchToggleMatchCase.js'),
   replaceAll: () => import('./ViewletSearchReplaceAll.js'),
   handleReplaceInput: () => import('./ViewletSearchHandleReplaceInput.js'),
+  handleUpdate: () => import('./ViewletSearchHandleUpdate.js'),
   ...VirtualList.LazyCommands,
 }
 

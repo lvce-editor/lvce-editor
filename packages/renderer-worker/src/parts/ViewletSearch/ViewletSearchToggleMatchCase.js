@@ -1,7 +1,6 @@
+import * as ViewletSearchSetValue from './ViewletSearchHandleUpdate.js'
+
 export const toggleMatchCase = (state) => {
   const { matchCase } = state
-  return {
-    ...state,
-    matchCase: !matchCase,
-  }
+  return ViewletSearchSetValue.handleUpdate(state, { matchCase: !matchCase })
 }

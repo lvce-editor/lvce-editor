@@ -1,17 +1,14 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as Compare from '../Compare/Compare.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as Height from '../Height/Height.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
-import * as Workspace from '../Workspace/Workspace.js'
-import * as ViewletSearchStrings from './ViewletSearchStrings.js'
+import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -74,100 +71,9 @@ export const loadContent = async (state, savedState) => {
   const savedReplaceExpanded = getSavedReplaceExpanded(savedState)
   const threads = getThreads()
   if (savedValue) {
-    return setValue(state, savedValue, threads, savedReplaceExpanded)
+    return ViewletSearchHandleUpdate.handleUpdate(state, { value: savedValue, threads, replaceExpanded: savedReplaceExpanded })
   }
   return { ...state, threads, replaceExpanded: savedReplaceExpanded }
-}
-
-const getStatusMessage = (resultCount, fileResultCount) => {
-  if (resultCount === 0) {
-    return ViewletSearchStrings.noResults()
-  }
-  if (resultCount === 1) {
-    return ViewletSearchStrings.oneResult()
-  }
-  if (fileResultCount === 1) {
-    return ViewletSearchStrings.manyResultsInOneFile(resultCount)
-  }
-  return ViewletSearchStrings.manyResultsInManyFiles(resultCount, fileResultCount)
-}
-
-const getResultCounts = (results) => {
-  let resultCount = 0
-  let fileCount = 0
-  for (const result of results) {
-    switch (result.type) {
-      case TextSearchResultType.File:
-        fileCount++
-        break
-      case TextSearchResultType.Match:
-        resultCount++
-        break
-      default:
-        break
-    }
-  }
-  return { fileCount, resultCount }
-}
-
-export const setValue = async (state, value, threads = state.threads, replaceExpanded = false) => {
-  try {
-    if (value === '') {
-      return {
-        ...state,
-        value,
-        minLineY: 0,
-        maxLineY: 0,
-        deltaY: 0,
-        items: [],
-        matchIndex: 0,
-        matchCount: 0,
-        message: '',
-        threads,
-        replaceExpanded,
-      }
-    }
-    const { height, itemHeight, minimumSliderSize, headerHeight } = state
-    const root = Workspace.state.workspacePath
-    const results = await TextSearch.textSearch(root, value, {
-      threads,
-    })
-    if (!Array.isArray(results)) {
-      throw new Error(`results must be of type array`)
-    }
-    const { fileCount, resultCount } = getResultCounts(results)
-    const displayResults = toDisplayResults(results, itemHeight, resultCount, value)
-    const message = getStatusMessage(resultCount, fileCount)
-    const total = displayResults.length
-    const contentHeight = total * itemHeight
-    const listHeight = height - headerHeight
-    const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(height, contentHeight, minimumSliderSize)
-    const numberOfVisible = Math.ceil(listHeight / itemHeight)
-    const maxLineY = Math.min(numberOfVisible, total)
-    const finalDeltaY = Math.max(contentHeight - listHeight, 0)
-    return {
-      ...state,
-      value,
-      items: displayResults,
-      message,
-      maxLineY: maxLineY,
-      scrollBarHeight,
-      finalDeltaY,
-      threads,
-      replaceExpanded,
-      fileCount,
-      matchCount: resultCount,
-    }
-  } catch (error) {
-    ErrorHandling.logError(error)
-    return {
-      ...state,
-      message: `${error}`,
-      value,
-      threads,
-      replaceExpanded,
-    }
-  }
 }
 
 const updateIcon = (item) => {
@@ -216,52 +122,6 @@ const getMatchStart = (preview, searchTerm) => {
   return index
 }
 
-const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
-  // results.sort(compareResults)
-  const displayResults = []
-  let i = -1
-  const setSize = resultCount
-  let path = ''
-  for (const result of results) {
-    i++
-    switch (result.type) {
-      case TextSearchResultType.File:
-        path = result.text
-        const absolutePath = Workspace.getAbsolutePath(path)
-        const baseName = Workspace.pathBaseName(path)
-        displayResults.push({
-          title: absolutePath,
-          type: TextSearchResultType.File,
-          text: baseName,
-          icon: IconTheme.getFileIcon({ name: baseName }),
-          posInSet: i + 1,
-          setSize,
-          top: i * itemHeight,
-          lineNumber: result.lineNumber,
-          matchStart: 0,
-          matchLength: 0,
-        })
-        break
-      case TextSearchResultType.Match:
-        displayResults.push({
-          title: result.text,
-          type: TextSearchResultType.Match,
-          text: result.text,
-          icon: '',
-          posInSet: i + 1,
-          setSize,
-          top: i * itemHeight,
-          lineNumber: result.lineNumber,
-          matchStart: result.start,
-          matchLength: searchTerm.length,
-        })
-        break
-      default:
-        break
-    }
-  }
-  return displayResults
-}
 // TODO implement virtual list, only send visible items to renderer process
 
 // TODO maybe rename to result.items and result.stats
@@ -273,7 +133,7 @@ const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
 // TODO use virtual list because there might be many results
 
 export const handleInput = (state, value) => {
-  return setValue(state, value)
+  return ViewletSearchHandleUpdate.handleUpdate(state, { value })
 }
 
 const getFileIndex = (items, index) => {
