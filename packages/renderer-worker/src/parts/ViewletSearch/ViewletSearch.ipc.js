@@ -19,6 +19,7 @@ export const LazyCommands = {
   toggleMatchWholeWord: () => import('./ViewletSearchToggleMatchWholeWord.js'),
   toggleMatchCase: () => import('./ViewletSearchToggleMatchCase.js'),
   replaceAll: () => import('./ViewletSearchReplaceAll.js'),
+  handleReplaceInput: () => import('./ViewletSearchHandleReplaceInput.js'),
   ...VirtualList.LazyCommands,
 }
 

@@ -51,3 +51,7 @@ export const replaceAll = () => {
 export const toggleUseRegularExpression = () => {
   RendererWorker.send('Search.toggleUseRegularExpression')
 }
+
+export const handleReplaceInput = (value) => {
+  RendererWorker.send('Search.handleReplaceInput', value)
+}

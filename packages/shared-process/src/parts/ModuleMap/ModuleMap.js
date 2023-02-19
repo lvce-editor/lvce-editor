@@ -139,6 +139,8 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
+    case 'BulkReplacement.applyBulkReplacement':
+      return ModuleId.BulkReplacement
     default:
       throw new CommandNotFoundError(commandId)
   }

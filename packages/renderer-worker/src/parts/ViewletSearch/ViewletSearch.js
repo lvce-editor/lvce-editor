@@ -35,6 +35,7 @@ export const create = (id, uri, x, y, width, height) => {
     useRegularExpression: false,
     matchCase: false,
     matchWholeWord: false,
+    replacement: '',
   }
 }
 

@@ -272,6 +272,7 @@ const create$ReplaceField = () => {
   const $ViewletSearchReplaceInput = InputBox.create()
   $ViewletSearchReplaceInput.placeholder = 'Replace'
   $ViewletSearchReplaceInput.type = 'text'
+  $ViewletSearchReplaceInput.oninput = ViewletSearchEvents.handleReplaceInput
 
   const $ButtonPreserveCase = document.createElement('button')
   $ButtonPreserveCase.title = UiStrings.PreserveCase

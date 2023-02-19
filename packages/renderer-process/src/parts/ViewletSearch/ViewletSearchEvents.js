@@ -118,3 +118,9 @@ export const handleWheel = (event) => {
       break
   }
 }
+
+export const handleReplaceInput = (event) => {
+  const { target } = event
+  const { value } = target
+  ViewletSearchFunctions.handleReplaceInput(value)
+}
