@@ -2,16 +2,21 @@ import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as EnterKeyHintType from '../EnterKeyHintType/EnterKeyHintType.js'
+import * as Focus from '../Focus/Focus.js'
 import * as Icon from '../Icon/Icon.js'
 import * as InputBox from '../InputBox/InputBox.js'
+import * as InputType from '../InputType/InputType.js'
 import * as Label from '../Label/Label.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
-import * as InputType from '../InputType/InputType.js'
+
+const activeId = 'TreeItemActive'
+const focusClassName = 'FocusOutline'
 
 /**
  * @enum {string}
@@ -76,6 +81,7 @@ export const create = () => {
 
   const $ListItems = document.createElement('div')
   $ListItems.className = 'ListItems'
+  $ListItems.role = AriaRoles.None
   // TODO onclick vs onmousedown, should be consistent in whole application
 
   const $ScrollBarThumb = document.createElement('div')
@@ -87,6 +93,8 @@ export const create = () => {
 
   const $List = document.createElement('div')
   $List.className = 'Viewlet List'
+  $List.role = AriaRoles.Tree
+  $List.tabIndex = 0
   $List.append($ListItems, $ScrollBar)
 
   const $Viewlet = document.createElement('div')
@@ -112,17 +120,20 @@ export const create = () => {
 }
 
 export const attachEvents = (state) => {
-  const { $ViewletSearchInput, $ListItems, $ScrollBar, $ToggleButton, $SearchHeader } = state
+  const { $ViewletSearchInput, $ListItems, $ScrollBar, $ToggleButton, $SearchHeader, $List } = state
   $ViewletSearchInput.oninput = ViewletSearchEvents.handleInput
   $ViewletSearchInput.onfocus = ViewletSearchEvents.handleFocus
 
-  $ListItems.onmousedown = ViewletSearchEvents.handleClick
   $ListItems.oncontextmenu = ViewletSearchEvents.handleContextMenu
   $ListItems.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
 
   $ScrollBar.onpointerdown = ViewletSearchEvents.handleScrollBarPointerDown
 
   $SearchHeader.onclick = ViewletSearchEvents.handleHeaderClick
+
+  $List.onfocus = ViewletSearchEvents.handleListFocus
+  $List.onblur = ViewletSearchEvents.handleListBlur
+  $List.onmousedown = ViewletSearchEvents.handleClick
 }
 
 export const refresh = (state, context) => {
@@ -314,6 +325,53 @@ export const setButtonsChecked = (state, matchWholeWord, useRegularExpression, m
   $ButtonMatchWholeWord.ariaChecked = matchWholeWord
   $ButtonUseRegularExpression.ariaChecked = useRegularExpression
   $ButtonMatchCase.ariaChecked = matchCase
+}
+
+export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
+  const { $List, $ListItems } = state
+  switch (oldIndex) {
+    case -2:
+      break
+    case -1:
+      $List.classList.remove(focusClassName)
+      break
+    default:
+      const $Dirent = $ListItems.children[oldIndex]
+      if ($Dirent) {
+        $Dirent.classList.remove(focusClassName)
+        $Dirent.removeAttribute('id')
+      }
+      break
+  }
+  switch (newIndex) {
+    case -2:
+      $List.classList.remove(focusClassName)
+      $List.removeAttribute(DomAttributeType.AriaActiveDescendant)
+      break
+    case -1:
+      if (focused) {
+        $List.classList.add(focusClassName)
+        $List.removeAttribute(DomAttributeType.AriaActiveDescendant)
+      }
+      break
+    default:
+      if (newIndex >= 0) {
+        const $Dirent = $ListItems.children[newIndex]
+        if (!$Dirent) {
+          break
+        }
+        $Dirent.id = activeId
+        $List.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
+        if (focused) {
+          $Dirent.classList.add(focusClassName)
+        }
+      }
+      break
+  }
+  if (focused) {
+    $List.focus()
+    Focus.setFocus('SearchResults')
+  }
 }
 
 export * from '../ViewletScrollable/ViewletScrollable.js'

@@ -1,5 +1,3 @@
-import * as Assert from '../Assert/Assert.js'
-import * as Command from '../Command/Command.js'
 import * as Compare from '../Compare/Compare.js'
 import * as Height from '../Height/Height.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
@@ -34,6 +32,8 @@ export const create = (id, uri, x, y, width, height) => {
     matchWholeWord: false,
     replacement: '',
     matchCount: 0,
+    listFocused: false,
+    listFocusedIndex: -1,
   }
 }
 
@@ -134,63 +134,6 @@ const getMatchStart = (preview, searchTerm) => {
 
 export const handleInput = (state, value) => {
   return ViewletSearchHandleUpdate.handleUpdate(state, { value })
-}
-
-const getFileIndex = (items, index) => {
-  console.log({ items })
-  for (let i = index; i >= 0; i--) {
-    const item = items[i]
-    if (item.type === TextSearchResultType.File) {
-      return i
-    }
-  }
-  return -1
-}
-
-const selectIndexFile = async (state, searchResult, index) => {
-  const path = searchResult.title
-  Assert.string(path)
-  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path)
-  return state
-}
-
-const selectIndexPreview = async (state, searchResult, index) => {
-  const { items } = state
-  const fileIndex = getFileIndex(items, index)
-  if (fileIndex === -1) {
-    throw new Error('Search result is missing file')
-  }
-  const { lineNumber } = searchResult
-  // console.log({ searchResult })
-  const fileResult = items[fileIndex]
-  const path = fileResult.title
-  Assert.string(path)
-  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path, /* focus */ true, {
-    selections: new Uint32Array([lineNumber, 0, lineNumber, 0]),
-  })
-  return state
-}
-
-export const selectIndex = async (state, index) => {
-  if (index === -1) {
-    return state
-  }
-  const { items } = state
-  const searchResult = items[index]
-  switch (searchResult.type) {
-    case TextSearchResultType.File:
-      return selectIndexFile(state, searchResult, index)
-    case TextSearchResultType.Match:
-      return selectIndexPreview(state, searchResult, index)
-    default:
-      throw new Error(`unexpected search result type ${searchResult.type}`)
-  }
-}
-
-export const handleClick = async (state, index) => {
-  const { minLineY } = state
-  const actualIndex = index + minLineY
-  return selectIndex(state, actualIndex)
 }
 
 export const hasFunctionalResize = true
@@ -299,6 +242,21 @@ const renderButtonsChecked = {
   },
 }
 
+const renderFocusedIndex = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.listFocusedIndex === newState.listFocusedIndex &&
+      oldState.listFocused === newState.listFocused &&
+      oldState.minLineY === newState.minLineY
+    )
+  },
+  apply(oldState, newState) {
+    const oldFocusedIndex = oldState.listFocusedIndex - oldState.minLineY
+    const newFocusedIndex = newState.listFocusedIndex - newState.minLineY
+    return [/* method */ 'setFocusedIndex', /* oldindex */ oldFocusedIndex, /* newIndex */ newFocusedIndex, /* focused */ newState.listFocused]
+  },
+}
+
 export const render = [
   renderItems,
   renderMessage,
@@ -308,4 +266,5 @@ export const render = [
   renderNegativeMargin,
   renderReplaceExpanded,
   renderButtonsChecked,
+  renderFocusedIndex,
 ]

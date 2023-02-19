@@ -1,0 +1,8 @@
+import * as ViewletSearchFocusIndex from './ViewletSearchFocusIndex.js'
+import * as ListIndex from '../ListIndex/ListIndex.js'
+
+export const focusLast = (state) => {
+  const { items } = state
+  const lastIndex = ListIndex.last(items)
+  return ViewletSearchFocusIndex.focusIndex(state, lastIndex)
+}
