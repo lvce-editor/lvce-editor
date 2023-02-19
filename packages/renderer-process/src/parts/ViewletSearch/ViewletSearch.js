@@ -146,7 +146,7 @@ const create$Row = () => {
 }
 
 // TODO much duplication with explorer
-const render$Row = ($Row, rowInfo) => {
+const render$Row = ($Row, rowInfo, replacement) => {
   const { top, type, matchStart, matchLength, text, title, icon, setSize, posInSet, depth } = rowInfo
   const $Icon = $Row.childNodes[0]
   const $Label = $Row.childNodes[1]
@@ -157,10 +157,18 @@ const render$Row = ($Row, rowInfo) => {
     const after = text.slice(matchStart + matchLength)
     const $Before = document.createTextNode(before)
     const $Highlight = document.createElement('span')
-    $Highlight.className = 'Highlight'
     $Highlight.textContent = highlight
     const $After = document.createTextNode(after)
-    $Label.replaceChildren($Before, $Highlight, $After)
+    if (replacement) {
+      $Highlight.className = 'HighlightDeleted'
+      const $Replacement = document.createElement('ins')
+      $Replacement.className = 'HighlightInserted'
+      $Replacement.textContent = replacement
+      $Label.replaceChildren($Before, $Highlight, $Replacement, $After)
+    } else {
+      $Highlight.className = 'Highlight'
+      $Label.replaceChildren($Before, $Highlight, $After)
+    }
   } else {
     $Label.textContent = text
   }
@@ -187,28 +195,28 @@ const render$Row = ($Row, rowInfo) => {
   }
 }
 
-const render$RowsLess = ($Rows, rowInfos) => {
+const render$RowsLess = ($Rows, rowInfos, replacement) => {
   for (let i = 0; i < $Rows.children.length; i++) {
     render$Row($Rows.children[i], rowInfos[i])
   }
   const fragment = document.createDocumentFragment()
   for (let i = $Rows.children.length; i < rowInfos.length; i++) {
     const $Row = create$Row()
-    render$Row($Row, rowInfos[i])
+    render$Row($Row, rowInfos[i], replacement)
     fragment.append($Row)
   }
   $Rows.append(fragment)
 }
 
-const render$RowsEqual = ($Rows, rowInfos) => {
+const render$RowsEqual = ($Rows, rowInfos, replacement) => {
   for (let i = 0; i < rowInfos.length; i++) {
-    render$Row($Rows.children[i], rowInfos[i])
+    render$Row($Rows.children[i], rowInfos[i], replacement)
   }
 }
 
-const render$RowsMore = ($Rows, rowInfos) => {
+const render$RowsMore = ($Rows, rowInfos, replacement) => {
   for (let i = 0; i < rowInfos.length; i++) {
-    render$Row($Rows.children[i], rowInfos[i])
+    render$Row($Rows.children[i], rowInfos[i], replacement)
   }
   const diff = $Rows.children.length - rowInfos.length
   for (let i = 0; i < diff; i++) {
@@ -216,23 +224,23 @@ const render$RowsMore = ($Rows, rowInfos) => {
   }
 }
 
-const render$Rows = ($Rows, rowInfos) => {
+const render$Rows = ($Rows, rowInfos, replacment) => {
   if ($Rows.children.length < rowInfos.length) {
-    render$RowsLess($Rows, rowInfos)
+    render$RowsLess($Rows, rowInfos, replacment)
   } else if ($Rows.children.length === rowInfos.length) {
-    render$RowsEqual($Rows, rowInfos)
+    render$RowsEqual($Rows, rowInfos, replacment)
   } else {
-    render$RowsMore($Rows, rowInfos)
+    render$RowsMore($Rows, rowInfos, replacment)
   }
 }
 
-export const setResults = (state, results) => {
+export const setResults = (state, results, replacement) => {
   Assert.object(state)
   Assert.array(results)
   const { $ListItems } = state
   // TODO should recycle nodes when rendering only search results
   // maybe could also recycle node from noResults and vice versa
-  render$Rows($ListItems, results)
+  render$Rows($ListItems, results, replacement)
 }
 
 export const setMessage = (state, message) => {

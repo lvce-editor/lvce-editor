@@ -78,3 +78,17 @@
 .SearchButtonReplaceAll {
   position: relative;
 }
+
+.HighlightInserted {
+  background: rgba(156, 204, 44, 0.2);
+  text-decoration: none;
+  border: 1px solid rgba(155, 185, 85, 0.2);
+  contain: content;
+}
+
+.HighlightDeleted {
+  background: rgba(255, 0, 0, 0.2);
+  border: 1px solid rgba(255, 0, 0, 0.2);
+  contain: content;
+  text-decoration: line-through;
+}

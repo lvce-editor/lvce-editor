@@ -351,11 +351,16 @@ const getVisible = (state) => {
 
 const renderItems = {
   isEqual(oldState, newState) {
-    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
+    return (
+      oldState.items === newState.items &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY &&
+      oldState.replacement === newState.replacement
+    )
   },
   apply(oldState, newState) {
     const visible = getVisible(newState)
-    return [/* method */ 'setResults', /* results */ visible]
+    return [/* method */ 'setResults', /* results */ visible, /* replacement */ newState.replacement]
   },
 }
 
