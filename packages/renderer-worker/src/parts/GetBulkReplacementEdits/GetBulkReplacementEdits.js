@@ -1,4 +1,3 @@
-import * as Command from '../Command/Command.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 
 export const getBulkReplacementEdits = (matches) => {
