@@ -72,6 +72,10 @@ export const toSpliced = (array, index, deleteCount, ...inserted) => {
   return [...array.slice(0, index), ...inserted, ...array.slice(index + deleteCount)]
 }
 
+export const remove = (array, index, deleteCount) => {
+  return toSpliced(array, index, deleteCount)
+}
+
 export const toSorted = (array, compare) => {
   return [...array].sort(compare)
 }

@@ -792,6 +792,11 @@
     "when": "focus.SearchResults"
   },
   {
+    "key": "Delete",
+    "command": "Search.dismissItem",
+    "when": "focus.SearchResults"
+  },
+  {
     "key": "Home",
     "command": "Search.focusFirst",
     "when": "focus.SearchResults"
