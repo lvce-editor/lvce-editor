@@ -1,3 +1,4 @@
+import * as Arrays from '../Arrays/Arrays.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 
 export const getBulkReplacementEdits = (matches) => {
@@ -7,7 +8,8 @@ export const getBulkReplacementEdits = (matches) => {
   for (const match of matches) {
     switch (match.type) {
       case TextSearchResultType.File:
-        ranges.push(currentRanges.length, ...currentRanges)
+        ranges.push(currentRanges.length)
+        Arrays.push(ranges, currentRanges)
         files.push(match.title)
         currentRanges = []
         break
@@ -18,7 +20,8 @@ export const getBulkReplacementEdits = (matches) => {
         break
     }
   }
-  ranges.push(currentRanges.length, ...currentRanges)
+  ranges.push(currentRanges.length)
+  Arrays.push(ranges, currentRanges)
   return {
     files,
     ranges: ranges.slice(1),

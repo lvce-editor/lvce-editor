@@ -33,3 +33,4 @@ export const FileSystemHandle = 32
 export const SanitizeHtml = 33
 export const OffscreenCanvas = 34
 export const Transferrable = 35
+export const ConfirmPrompt = 36

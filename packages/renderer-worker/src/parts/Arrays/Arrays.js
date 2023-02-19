@@ -24,6 +24,10 @@ export const spliceLargeArray = (array, start, deleteCount, newItems) => {
   return result
 }
 
+export const push = (array, newItems) => {
+  insertInto(array, array.length, newItems)
+}
+
 export const last = (array) => {
   return array[array.length - 1]
 }
