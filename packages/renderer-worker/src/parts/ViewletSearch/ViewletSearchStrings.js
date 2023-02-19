@@ -14,6 +14,9 @@ const UiStrings = {
   ConfirmReplaceOneOccurrenceInOneFile: "Replace 1 occurrence across 1 file with '{PH1}'",
   ConfirmReplaceManyOccurrencesInOneFile: "Replace {PH1} occurrences across 1 file with '{PH2}'",
   ConfirmReplaceManyOccurrencesInManyFiles: "Replace {PH1} occurrences across {PH2} files with '{PH3}'",
+  ReplacedOneOccurrenceInOneFile: "Replaced 1 occurrence across 1 file with '{PH1}'",
+  ReplacedManyOccurrencesInOneFile: "Replaced {PH1} occurrences across 1 file with '{PH2}'",
+  ReplacedManyOccurrencesInManyFiles: "Replaced {PH1} occurrences across {PH2} files with '{PH3}'",
 }
 
 export const noResults = () => {
@@ -55,6 +58,27 @@ export const confirmReplaceManyOccurrencesInManyFiles = (matchCount, fileCount, 
   Assert.number(fileCount)
   Assert.string(replacement)
   return I18nString.i18nString(UiStrings.ConfirmReplaceManyOccurrencesInManyFiles, {
+    PH1: matchCount,
+    PH2: fileCount,
+    PH3: replacement,
+  })
+}
+
+export const replacedOneOccurrenceInOneFile = (replacement) => {
+  return I18nString.i18nString(UiStrings.ReplacedOneOccurrenceInOneFile, {
+    PH1: replacement,
+  })
+}
+
+export const replacedManyOccurrencesInOneFile = (matchCount, replacement) => {
+  return I18nString.i18nString(UiStrings.ReplacedOneOccurrenceInOneFile, {
+    PH1: matchCount,
+    PH2: replacement,
+  })
+}
+
+export const replacedManyOccurrencesInManyFiles = (matchCount, fileCount, replacement) => {
+  return I18nString.i18nString(UiStrings.ReplacedOneOccurrenceInOneFile, {
     PH1: matchCount,
     PH2: fileCount,
     PH3: replacement,
