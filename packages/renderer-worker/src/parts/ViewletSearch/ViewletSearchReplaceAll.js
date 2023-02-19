@@ -1,7 +1,19 @@
 import * as TextSearchReplaceAll from '../TextSearchReplaceAll/TextSearchReplaceAll.js'
+import * as ViewletSearchStrings from './ViewletSearchStrings.js'
+
+const getConfirmMessage = (matchCount, fileCount, replacement) => {
+  if (matchCount === 1) {
+    return ViewletSearchStrings.confirmReplaceOneOccurrenceInOneFile(replacement)
+  }
+  if (fileCount === 1) {
+    return ViewletSearchStrings.confirmReplaceManyOccurrencesInOneFile(matchCount, replacement)
+  }
+  return ViewletSearchStrings.confirmReplaceManyOccurrencesInManyFiles(matchCount, fileCount, replacement)
+}
 
 export const replaceAll = async (state) => {
-  const { items, replacement } = state
-  await TextSearchReplaceAll.replaceAll(items, replacement)
+  const { items, replacement, matchCount, fileCount } = state
+  const confirmMessage = getConfirmMessage(matchCount, fileCount, replacement)
+  await TextSearchReplaceAll.replaceAll(items, confirmMessage, replacement)
   return state
 }

@@ -36,6 +36,7 @@ export const create = (id, uri, x, y, width, height) => {
     matchCase: false,
     matchWholeWord: false,
     replacement: '',
+    matchCount: 0,
   }
 }
 
@@ -154,6 +155,8 @@ export const setValue = async (state, value, threads = state.threads, replaceExp
       finalDeltaY,
       threads,
       replaceExpanded,
+      fileCount,
+      matchCount: resultCount,
     }
   } catch (error) {
     ErrorHandling.logError(error)
