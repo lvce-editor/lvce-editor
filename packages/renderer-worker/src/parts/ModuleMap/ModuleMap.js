@@ -141,6 +141,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workspace
     case 'ConfirmPrompt':
       return ModuleId.ConfirmPrompt
+    case 'BulkReplacement':
+      return ModuleId.BulkReplacement
     default:
       throw new Error(`module ${prefix} not found`)
   }
