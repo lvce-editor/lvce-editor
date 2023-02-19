@@ -35,7 +35,7 @@ const toSearchResult = (parsedLine) => {
 // TODO update client
 // TODO not always run nice, maybe configure nice via flag/options
 
-export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 300 } = {}) => {
+export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 20_000 } = {}) => {
   // TODO reject promise when ripgrep search fails
   return new Promise((resolve, reject) => {
     const ripGrepArgs = ['--smart-case', '--stats', '--json', '--threads', `${threads}`, '--fixed-strings', searchString, '.']
