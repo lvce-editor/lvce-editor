@@ -49,7 +49,7 @@ const copyElectronResult = async ({ product }) => {
     `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`
   )
   await Replace.replace({
-    path: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/src/parts/RgPath/RgPath.js`,
+    path: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/src/parts/RipGrepPath/RipGrepPath.js`,
     occurrence: `export { rgPath } from 'vscode-ripgrep-with-github-api-error-fix'`,
     replacement: `export const rgPath = 'rg'`,
   })

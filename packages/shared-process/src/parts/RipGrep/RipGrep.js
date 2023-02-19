@@ -1,7 +1,7 @@
 import * as NodeChildProcess from 'node:child_process'
 import * as Assert from '../Assert/Assert.js'
 import * as Exec from '../Exec/Exec.js'
-import * as RgPath from '../RgPath/RgPath.js'
+import * as RgPath from '../RipGrepPath/RipGrepPath.js'
 
 export const ripGrepPath = process.env.RIP_GREP_PATH || RgPath.rgPath
 
