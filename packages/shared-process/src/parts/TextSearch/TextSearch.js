@@ -2,8 +2,6 @@ import * as RipGrep from '../RipGrep/RipGrep.js'
 import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 
-const MAX_SEARCH_RESULTS = 300
-
 const CHARS_BEFORE = 20
 const CHARS_AFTER = 50
 
@@ -37,19 +35,10 @@ const toSearchResult = (parsedLine) => {
 // TODO update client
 // TODO not always run nice, maybe configure nice via flag/options
 
-export const search = async (searchDir, searchString, { threads = 1 } = {}) => {
+export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 300 } = {}) => {
   // TODO reject promise when ripgrep search fails
   return new Promise((resolve, reject) => {
-    const ripGrepArgs = [
-      '--smart-case',
-      '--stats',
-      '--json',
-      '--threads',
-      `${threads}`,
-      '--fixed-strings',
-      searchString,
-      '.',
-    ]
+    const ripGrepArgs = ['--smart-case', '--stats', '--json', '--threads', `${threads}`, '--fixed-strings', searchString, '.']
     const childProcess = RipGrep.spawn(ripGrepArgs, {
       cwd: searchDir,
     })
@@ -76,9 +65,7 @@ export const search = async (searchDir, searchString, { threads = 1 } = {}) => {
           break
         case RipGrepParsedLineType.Match:
           numberOfResults++
-          allSearchResults[parsedLine.data.path.text].push(
-            ...toSearchResult(parsedLine)
-          )
+          allSearchResults[parsedLine.data.path.text].push(...toSearchResult(parsedLine))
           break
         case RipGrepParsedLineType.Summary:
           stats = parsedLine.data
@@ -107,7 +94,7 @@ export const search = async (searchDir, searchString, { threads = 1 } = {}) => {
       }
       buffer = dataString.slice(previousIndex)
 
-      if (numberOfResults > MAX_SEARCH_RESULTS) {
+      if (numberOfResults > maxSearchResults) {
         limitHit = true
         childProcess.kill()
       }
