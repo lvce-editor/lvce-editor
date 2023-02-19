@@ -10,6 +10,7 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
+  handleContextMenu: () => import('./ViewletSearchHandleContextMenu.js'),
   handleContextMenuKeyboard: () => import('./ViewletSearchHandleContextMenuKeyBoard.js'),
   handleContextMenuMouseAt: () => import('./ViewletSearchHandleContextMenuMouseAt.js'),
   handleToggleButtonClick: () => import('./ViewletSearchHandleToggleButtonClick.js'),
@@ -29,6 +30,7 @@ export const LazyCommands = {
   handleClick: () => import('./ViewletSearchHandleClick.js'),
   selectIndex: () => import('./ViewletSearchSelectIndex.js'),
   dismissItem: () => import('./ViewletSearchDismissItem.js'),
+  copy: () => import('./ViewletSearchCopy.js'),
 }
 
 export const Css = [

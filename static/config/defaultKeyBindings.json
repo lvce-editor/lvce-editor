@@ -805,5 +805,10 @@
     "key": "End",
     "command": "Search.focusLast",
     "when": "focus.SearchResults"
+  },
+  {
+    "key": "ctrl+c",
+    "command": "Search.copy",
+    "when": "focus.SearchResults"
   }
 ]
