@@ -10,6 +10,7 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
+  handleContextMenu: () => import('./ViewletSearchHandleContextMenu.js'),
   handleContextMenuKeyboard: () => import('./ViewletSearchHandleContextMenuKeyBoard.js'),
   handleContextMenuMouseAt: () => import('./ViewletSearchHandleContextMenuMouseAt.js'),
   handleToggleButtonClick: () => import('./ViewletSearchHandleToggleButtonClick.js'),
