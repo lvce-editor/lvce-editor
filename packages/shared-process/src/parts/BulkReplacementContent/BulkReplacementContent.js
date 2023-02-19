@@ -1,4 +1,7 @@
 export const getNewContent = (content, ranges, replacement) => {
+  if (ranges.length === 0) {
+    return content
+  }
   let rowIndex = 0
   let newLineIndex = -1
   let copiedContentIndex = 0
