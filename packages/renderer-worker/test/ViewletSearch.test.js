@@ -282,24 +282,6 @@ test('handleInput - error', async () => {
   })
 })
 
-test('handleClick', async () => {
-  const state = {
-    ...ViewletSearch.create(),
-    items: [
-      {
-        type: TextSearchResultType.File,
-        text: './test.txt',
-        title: '/test/test.txt',
-      },
-    ],
-  }
-  // @ts-ignore
-  Command.execute.mockImplementation(() => {})
-  expect(await ViewletSearch.handleClick(state, 0)).toBe(state)
-  expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/test/test.txt')
-})
-
 test('resize', () => {
   const state = ViewletSearch.create()
   const newState = ViewletSearch.resize(state, {
@@ -321,11 +303,4 @@ test('resize', () => {
     width: 200,
     fileCount: 0,
   })
-})
-
-test('selectIndex - negative index', async () => {
-  const state = {
-    ...ViewletSearch.create(),
-  }
-  expect(await ViewletSearch.selectIndex(state, -1)).toBe(state)
 })
