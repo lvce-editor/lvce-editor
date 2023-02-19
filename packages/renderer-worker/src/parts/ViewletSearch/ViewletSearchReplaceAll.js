@@ -11,9 +11,20 @@ const getConfirmMessage = (matchCount, fileCount, replacement) => {
   return ViewletSearchStrings.confirmReplaceManyOccurrencesInManyFiles(matchCount, fileCount, replacement)
 }
 
+const getReplacedAllMessage = () => {
+  return 'Replaced all items'
+}
+
 export const replaceAll = async (state) => {
   const { items, replacement, matchCount, fileCount } = state
   const confirmMessage = getConfirmMessage(matchCount, fileCount, replacement)
   await TextSearchReplaceAll.replaceAll(items, confirmMessage, replacement)
-  return state
+  const replacedAllMessage = getReplacedAllMessage()
+  return {
+    ...state,
+    fileCount: 0,
+    matchCount: 0,
+    items: [],
+    message: replacedAllMessage,
+  }
 }
