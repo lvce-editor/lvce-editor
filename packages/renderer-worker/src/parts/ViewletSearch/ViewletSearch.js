@@ -133,7 +133,7 @@ const getMatchStart = (preview, searchTerm) => {
 // TODO use virtual list because there might be many results
 
 export const handleInput = (state, value) => {
-  return ViewletSearchHandleUpdate.handleUpdate(state, value)
+  return ViewletSearchHandleUpdate.handleUpdate(state, { value })
 }
 
 const getFileIndex = (items, index) => {
