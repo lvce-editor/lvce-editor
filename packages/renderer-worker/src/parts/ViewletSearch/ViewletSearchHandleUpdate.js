@@ -4,7 +4,7 @@ import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as ViewletSearchStrings from './ViewletSearchStrings.js'
+import * as ViewletSearchStatusMessage from './ViewletSearchStatusMessage.js'
 
 const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
   // results.sort(compareResults)
@@ -53,19 +53,6 @@ const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
   return displayResults
 }
 
-const getStatusMessage = (resultCount, fileResultCount) => {
-  if (resultCount === 0) {
-    return ViewletSearchStrings.noResults()
-  }
-  if (resultCount === 1) {
-    return ViewletSearchStrings.oneResult()
-  }
-  if (fileResultCount === 1) {
-    return ViewletSearchStrings.manyResultsInOneFile(resultCount)
-  }
-  return ViewletSearchStrings.manyResultsInManyFiles(resultCount, fileResultCount)
-}
-
 const getResultCounts = (results) => {
   let resultCount = 0
   let fileCount = 0
@@ -110,7 +97,7 @@ export const handleUpdate = async (state, update) => {
     }
     const { fileCount, resultCount } = getResultCounts(results)
     const displayResults = toDisplayResults(results, itemHeight, resultCount, value)
-    const message = getStatusMessage(resultCount, fileCount)
+    const message = ViewletSearchStatusMessage.getStatusMessage(resultCount, fileCount)
     const total = displayResults.length
     const contentHeight = total * itemHeight
     const listHeight = height - headerHeight
