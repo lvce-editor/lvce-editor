@@ -90,7 +90,6 @@ export const prepare = (error) => {
           column: Number.parseInt(column),
         },
       }
-
       codeFrame = codeFrameColumns(rawLines, location)
     }
   }
