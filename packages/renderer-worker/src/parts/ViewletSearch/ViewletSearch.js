@@ -6,6 +6,7 @@ import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as Workspace from '../Workspace/Workspace.js'
 import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -145,12 +146,63 @@ export const resize = (state, dimensions) => {
   }
 }
 
-export const hasFunctionalRender = true
-
-const getVisible = (state) => {
-  const { minLineY, maxLineY, items } = state
-  return items.slice(minLineY, maxLineY)
+const toDisplayResults = (results, itemHeight, resultCount, searchTerm, minLineY, maxLineY) => {
+  // results.sort(compareResults)
+  const displayResults = []
+  const setSize = resultCount
+  let fileIndex = 0
+  for (let i = 0; i < minLineY; i++) {
+    const result = results[i]
+    switch (result.type) {
+      case TextSearchResultType.File:
+        fileIndex++
+        break
+      default:
+        break
+    }
+  }
+  for (let i = minLineY; i < maxLineY; i++) {
+    const result = results[i]
+    switch (result.type) {
+      case TextSearchResultType.File:
+        const path = result.text
+        const absolutePath = Workspace.getAbsolutePath(path)
+        const baseName = Workspace.pathBaseName(path)
+        displayResults.push({
+          title: absolutePath,
+          type: TextSearchResultType.File,
+          text: baseName,
+          icon: IconTheme.getFileIcon({ name: baseName }),
+          posInSet: i + 1,
+          setSize,
+          top: i * itemHeight,
+          lineNumber: result.lineNumber,
+          matchStart: 0,
+          matchLength: 0,
+        })
+        break
+      case TextSearchResultType.Match:
+        displayResults.push({
+          title: result.text,
+          type: TextSearchResultType.Match,
+          text: result.text,
+          icon: '',
+          posInSet: i + 1,
+          setSize,
+          top: i * itemHeight,
+          lineNumber: result.lineNumber,
+          matchStart: result.start,
+          matchLength: searchTerm.length,
+        })
+        break
+      default:
+        break
+    }
+  }
+  return displayResults
 }
+
+export const hasFunctionalRender = true
 
 const renderItems = {
   isEqual(oldState, newState) {
@@ -162,8 +214,15 @@ const renderItems = {
     )
   },
   apply(oldState, newState) {
-    const visible = getVisible(newState)
-    return [/* method */ 'setResults', /* results */ visible, /* replacement */ newState.replacement]
+    const displayResults = toDisplayResults(
+      newState.items,
+      newState.itemHeight,
+      newState.fileCount,
+      newState.value,
+      newState.minLineY,
+      newState.maxLineY
+    )
+    return [/* method */ 'setResults', /* results */ displayResults, /* replacement */ newState.replacement]
   },
 }
 
