@@ -42,8 +42,10 @@ const collectStdout = async (childProcess, maxSearchResults) => {
         ]
         break
       case RipGrepParsedLineType.Match:
-        numberOfResults++
-        allSearchResults[parsedLine.data.path.text].push(...ToTextSearchResult.toTextSearchResult(parsedLine))
+        const remaining = maxSearchResults - numberOfResults
+        const matches = ToTextSearchResult.toTextSearchResult(parsedLine, remaining)
+        numberOfResults += matches.length
+        allSearchResults[parsedLine.data.path.text].push(...matches)
         break
       case RipGrepParsedLineType.Summary:
         stats = parsedLine.data
