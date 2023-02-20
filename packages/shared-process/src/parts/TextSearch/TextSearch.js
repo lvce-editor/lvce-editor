@@ -18,15 +18,7 @@ import * as ToTextSearchResult from '../ToTextSearchResult/ToTextSearchResult.js
 // TODO update client
 // TODO not always run nice, maybe configure nice via flag/options
 
-export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 20_000, isCaseSensitive = false } = {}) => {
-  const ripGrepArgs = GetTextSearchRipGrepArgs.getRipGrepArgs({
-    threads,
-    isCaseSensitive,
-    searchString,
-  })
-  const childProcess = RipGrep.spawn(ripGrepArgs, {
-    cwd: searchDir,
-  })
+const collectStdout = async (childProcess, maxSearchResults) => {
   const allSearchResults = Object.create(null)
   let buffer = ''
   let stats = {}
@@ -61,7 +53,6 @@ export const search = async (searchDir, searchString, { threads = 1, maxSearchRe
     }
   }
 
-  let total = 0
   const handleData = (chunk) => {
     let newLineIndex = GetNewLineIndex.getNewLineIndex(chunk)
     const dataString = buffer + chunk
@@ -69,7 +60,6 @@ export const search = async (searchDir, searchString, { threads = 1, maxSearchRe
       buffer = dataString
       return
     }
-    total += chunk.length
     newLineIndex += buffer.length
     let previousIndex = 0
     while (newLineIndex >= 0) {
@@ -86,7 +76,7 @@ export const search = async (searchDir, searchString, { threads = 1, maxSearchRe
     }
   }
 
-  const pipeLinePromise = pipeline(
+  await pipeline(
     childProcess.stdout,
     new Writable({
       decodeStrings: false,
@@ -103,32 +93,38 @@ export const search = async (searchDir, searchString, { threads = 1, maxSearchRe
       },
     })
   )
+  const results = Object.values(allSearchResults).flat(1)
+  return {
+    results,
+    stats,
+    limitHit,
+  }
+}
 
-  // TODO reject promise when ripgrep search fails
+export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 20_000, isCaseSensitive = false } = {}) => {
+  const ripGrepArgs = GetTextSearchRipGrepArgs.getRipGrepArgs({
+    threads,
+    isCaseSensitive,
+    searchString,
+  })
+  const childProcess = RipGrep.spawn(ripGrepArgs, {
+    cwd: searchDir,
+  })
+  const pipeLinePromise = collectStdout(childProcess, maxSearchResults)
   const closePromise = new Promise((resolve, reject) => {
     // TODO use pipeline / transform stream maybe
-
     const handleClose = () => {
-      const results = Object.values(allSearchResults).flat(1)
-      resolve({
-        results,
-        stats,
-        limitHit,
-      })
+      resolve(undefined)
     }
     const handleError = (error) => {
       // TODO check type of error
       console.error(error)
-      resolve({
-        results: [],
-        stats,
-        limitHit,
-      })
+      resolve(undefined)
     }
 
     childProcess.once('close', handleClose)
     childProcess.once('error', handleError)
   })
   await Promise.all([pipeLinePromise, closePromise])
-  return await closePromise
+  return await pipeLinePromise
 }
