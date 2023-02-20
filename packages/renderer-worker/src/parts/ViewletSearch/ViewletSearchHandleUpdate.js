@@ -11,12 +11,11 @@ const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
   const displayResults = []
   let i = -1
   const setSize = resultCount
-  let path = ''
   for (const result of results) {
     i++
     switch (result.type) {
       case TextSearchResultType.File:
-        path = result.text
+        const path = result.text
         const absolutePath = Workspace.getAbsolutePath(path)
         const baseName = Workspace.pathBaseName(path)
         displayResults.push({
