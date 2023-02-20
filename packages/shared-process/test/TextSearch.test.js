@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import { EventEmitter } from 'node:events'
+import { Readable } from 'node:stream'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -32,6 +33,9 @@ test('search - no results', async () => {
   // @ts-ignore
   RipGrep.spawn.mockImplementation(() => {
     const emitter = new EventEmitter()
+    const stdout = new Readable({
+      read() {},
+    })
     const childProcess = {
       on(event, listener) {
         emitter.on(event, listener)
@@ -39,14 +43,13 @@ test('search - no results', async () => {
       once(event, listener) {
         emitter.once(event, listener)
       },
-      stdout: {
-        on(event, listener) {},
-        setEncoding() {},
-      },
+      stdout,
       stderr: {},
       kill() {},
     }
     setTimeout(() => {
+      stdout.emit('end')
+      stdout.emit('close')
       emitter.emit('close')
     })
     return childProcess
@@ -73,7 +76,9 @@ test('search - one result', async () => {
   }) // @ts-ignore
   RipGrep.spawn.mockImplementation(() => {
     const emitter = new EventEmitter()
-    const stdoutEmitter = new EventEmitter()
+    const stdout = new Readable({
+      read() {},
+    })
     const childProcess = {
       on(event, listener) {
         emitter.on(event, listener)
@@ -81,23 +86,19 @@ test('search - one result', async () => {
       once(event, listener) {
         emitter.once(event, listener)
       },
-      stdout: {
-        on(event, listener) {
-          stdoutEmitter.on(event, listener)
-        },
-        setEncoding() {},
-      },
+      stdout,
       stderr: {},
       kill() {},
     }
     setTimeout(() => {
-      stdoutEmitter.emit(
-        'data',
+      stdout.push(
         `{"type":"begin","data":{"path":{"text":"./index.html"}}}
 {"type":"match","data":{"path":{"text":"./index.html"},"lines":{"text":"<!DOCTYPE html>\\n"},"line_number":1,"absolute_offset":0,"submatches":[{"match":{"text":"DOC"},"start":2,"end":5}]}}
 `
       )
       setTimeout(() => {
+        stdout.emit('end')
+        stdout.emit('close')
         emitter.emit('close')
       })
     })
@@ -164,7 +165,9 @@ test('search - one result split across multiple chunks', async () => {
   // @ts-ignore
   RipGrep.spawn.mockImplementation(() => {
     const emitter = new EventEmitter()
-    const stdoutEmitter = new EventEmitter()
+    const stdout = new Readable({
+      read() {},
+    })
     const childProcess = {
       on(event, listener) {
         emitter.on(event, listener)
@@ -172,26 +175,21 @@ test('search - one result split across multiple chunks', async () => {
       once(event, listener) {
         emitter.once(event, listener)
       },
-      stdout: {
-        on(event, listener) {
-          stdoutEmitter.on(event, listener)
-        },
-        setEncoding() {},
-      },
+      stdout,
       stderr: {},
       kill() {},
     }
     setTimeout(() => {
-      stdoutEmitter.emit(
-        'data',
+      stdout.push(
         `{"type":"begin","data":{"path":{"text":"./index.html"}}}
 {"type":"match","data":{"path":{"text":"`
       )
-      stdoutEmitter.emit(
-        'data',
+      stdout.push(
         `./index.html"},"lines":{"text":"<!DOCTYPE html>\\n"},"line_number":1,"absolute_offset":0,"submatches":[{"match":{"text":"DOC"},"start":2,"end":5}]}}
 `
       )
+      stdout.emit('end')
+      stdout.emit('close')
       emitter.emit('close')
     })
     return childProcess
@@ -242,7 +240,7 @@ test('search - one result split across multiple chunks', async () => {
 })
 
 // TODO when parsing line fails, function should throw an error without crashsing the process
-test.skip('search - error with parsing line', async () => {
+test('search - error with parsing line', async () => {
   // @ts-ignore
   ToTextSearchResult.toTextSearchResult.mockImplementation(() => {
     throw new TypeError(`Cannot read properties of undefined (reading length)`)
@@ -250,7 +248,9 @@ test.skip('search - error with parsing line', async () => {
   // @ts-ignore
   RipGrep.spawn.mockImplementation(() => {
     const emitter = new EventEmitter()
-    const stdoutEmitter = new EventEmitter()
+    const stdout = new Readable({
+      read() {},
+    })
     const childProcess = {
       on(event, listener) {
         emitter.on(event, listener)
@@ -258,18 +258,12 @@ test.skip('search - error with parsing line', async () => {
       once(event, listener) {
         emitter.once(event, listener)
       },
-      stdout: {
-        on(event, listener) {
-          stdoutEmitter.on(event, listener)
-        },
-        setEncoding() {},
-      },
+      stdout,
       stderr: {},
       kill() {},
     }
     setTimeout(() => {
-      stdoutEmitter.emit(
-        'data',
+      stdout.push(
         `{"type":"begin","data":{"path":{"text":"./index.html"}}}
 {"type":"match","data":{"path":{"text":"./index.html"},"lines":{"text":"<!DOCTYPE html>\\n"},"line_number":1,"absolute_offset":0,"submatches":[{"match":{"text":"DOC"},"start":2,"end":5}]}}
 `
@@ -278,5 +272,5 @@ test.skip('search - error with parsing line', async () => {
     })
     return childProcess
   })
-  await expect(await TextSearch.search('/test', 'document')).rejects.toThrowError(new Error('abc'))
+  await expect(TextSearch.search('/test', 'document')).rejects.toThrowError(new TypeError('Cannot read properties of undefined (reading length)'))
 })
