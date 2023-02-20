@@ -1,58 +1,282 @@
-import { mkdtemp } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import { join, sep } from 'node:path'
-import { writeFile } from '../src/parts/FileSystem/FileSystem.js'
-import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
+import { jest } from '@jest/globals'
+import { EventEmitter } from 'node:events'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/RipGrep/RipGrep.js', () => {
+  return {
+    spawn: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    exec: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ToTextSearchResult/ToTextSearchResult.js', () => {
+  return {
+    toTextSearchResult: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 
 const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
+const RipGrep = await import('../src/parts/RipGrep/RipGrep.js')
+const ToTextSearchResult = await import('../src/parts/ToTextSearchResult/ToTextSearchResult.js')
 
-const getTmpDir = () => {
-  return mkdtemp(join(tmpdir(), 'foo-'))
-}
+test('search - no results', async () => {
+  // @ts-ignore
+  RipGrep.spawn.mockImplementation(() => {
+    const emitter = new EventEmitter()
+    const childProcess = {
+      on(event, listener) {
+        emitter.on(event, listener)
+      },
+      once(event, listener) {
+        emitter.once(event, listener)
+      },
+      stdout: {
+        on(event, listener) {},
+        setEncoding() {},
+      },
+      stderr: {},
+      kill() {},
+    }
+    setTimeout(() => {
+      emitter.emit('close')
+    })
+    return childProcess
+  })
+  expect(await TextSearch.search('/test', 'document')).toEqual({
+    results: [],
+    stats: expect.any(Object),
+    limitHit: false,
+  })
+})
 
-const fixPath = (path) => {
-  return path.replaceAll('/', sep)
-}
-
-const TIMEOUT_LONG = 15_000
-
-test(
-  'search',
-  async () => {
-    const tmpDir = await getTmpDir()
-    await writeFile(
-      join(tmpDir, 'index.html'),
-      `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body></body>
-</html>
-`
-    )
-    expect(await TextSearch.search(tmpDir, 'Document')).toEqual({
-      results: [
-        {
-          type: TextSearchResultType.File,
-          text: fixPath('./index.html'),
-          lineNumber: 0,
-          start: 0,
-          end: 0,
+test('search - one result', async () => {
+  // @ts-ignore
+  ToTextSearchResult.toTextSearchResult.mockImplementation(() => {
+    return [
+      {
+        end: 23,
+        lineNumber: 151,
+        start: 20,
+        text: 'elect Destination Location" wizard page\n',
+        type: 2,
+      },
+    ]
+  }) // @ts-ignore
+  RipGrep.spawn.mockImplementation(() => {
+    const emitter = new EventEmitter()
+    const stdoutEmitter = new EventEmitter()
+    const childProcess = {
+      on(event, listener) {
+        emitter.on(event, listener)
+      },
+      once(event, listener) {
+        emitter.once(event, listener)
+      },
+      stdout: {
+        on(event, listener) {
+          stdoutEmitter.on(event, listener)
         },
+        setEncoding() {},
+      },
+      stderr: {},
+      kill() {},
+    }
+    setTimeout(() => {
+      stdoutEmitter.emit(
+        'data',
+        `{"type":"begin","data":{"path":{"text":"./index.html"}}}
+{"type":"match","data":{"path":{"text":"./index.html"},"lines":{"text":"<!DOCTYPE html>\\n"},"line_number":1,"absolute_offset":0,"submatches":[{"match":{"text":"DOC"},"start":2,"end":5}]}}
+`
+      )
+      setTimeout(() => {
+        emitter.emit('close')
+      })
+    })
+    return childProcess
+  })
+  expect(await TextSearch.search('/test', 'document')).toEqual({
+    results: [
+      {
+        end: 0,
+        lineNumber: 0,
+        start: 0,
+        text: './index.html',
+        type: 1,
+      },
+      {
+        end: 23,
+        lineNumber: 151,
+        start: 20,
+        text: 'elect Destination Location" wizard page\n',
+        type: 2,
+      },
+    ],
+    stats: expect.any(Object),
+    limitHit: false,
+  })
+  expect(ToTextSearchResult.toTextSearchResult).toHaveBeenCalledTimes(1)
+  expect(ToTextSearchResult.toTextSearchResult).toHaveBeenCalledWith({
+    data: {
+      absolute_offset: 0,
+      line_number: 1,
+      lines: {
+        text: '<!DOCTYPE html>\n',
+      },
+      path: {
+        text: './index.html',
+      },
+      submatches: [
         {
-          type: TextSearchResultType.Match,
-          lineNumber: 6,
-          start: 11,
-          end: 19,
-          text: '    <title>Document</title>\n',
+          end: 5,
+          match: {
+            text: 'DOC',
+          },
+          start: 2,
         },
       ],
-      stats: expect.any(Object),
-      limitHit: false,
+    },
+    type: 'match',
+  })
+})
+
+test('search - one result split across multiple chunks', async () => {
+  // @ts-ignore
+  ToTextSearchResult.toTextSearchResult.mockImplementation(() => {
+    return [
+      {
+        end: 23,
+        lineNumber: 151,
+        start: 20,
+        text: 'elect Destination Location" wizard page\n',
+        type: 2,
+      },
+    ]
+  })
+  // @ts-ignore
+  RipGrep.spawn.mockImplementation(() => {
+    const emitter = new EventEmitter()
+    const stdoutEmitter = new EventEmitter()
+    const childProcess = {
+      on(event, listener) {
+        emitter.on(event, listener)
+      },
+      once(event, listener) {
+        emitter.once(event, listener)
+      },
+      stdout: {
+        on(event, listener) {
+          stdoutEmitter.on(event, listener)
+        },
+        setEncoding() {},
+      },
+      stderr: {},
+      kill() {},
+    }
+    setTimeout(() => {
+      stdoutEmitter.emit(
+        'data',
+        `{"type":"begin","data":{"path":{"text":"./index.html"}}}
+{"type":"match","data":{"path":{"text":"`
+      )
+      stdoutEmitter.emit(
+        'data',
+        `./index.html"},"lines":{"text":"<!DOCTYPE html>\\n"},"line_number":1,"absolute_offset":0,"submatches":[{"match":{"text":"DOC"},"start":2,"end":5}]}}
+`
+      )
+      emitter.emit('close')
     })
-  },
-  TIMEOUT_LONG
-)
+    return childProcess
+  })
+  expect(await TextSearch.search('/test', 'document')).toEqual({
+    results: [
+      {
+        end: 0,
+        lineNumber: 0,
+        start: 0,
+        text: './index.html',
+        type: 1,
+      },
+      {
+        end: 23,
+        lineNumber: 151,
+        start: 20,
+        text: 'elect Destination Location" wizard page\n',
+        type: 2,
+      },
+    ],
+    stats: expect.any(Object),
+    limitHit: false,
+  })
+  expect(ToTextSearchResult.toTextSearchResult).toHaveBeenCalledTimes(1)
+  expect(ToTextSearchResult.toTextSearchResult).toHaveBeenCalledWith({
+    data: {
+      absolute_offset: 0,
+      line_number: 1,
+      lines: {
+        text: '<!DOCTYPE html>\n',
+      },
+      path: {
+        text: './index.html',
+      },
+      submatches: [
+        {
+          end: 5,
+          match: {
+            text: 'DOC',
+          },
+          start: 2,
+        },
+      ],
+    },
+    type: 'match',
+  })
+})
+
+// TODO when parsing line fails, function should throw an error without crashsing the process
+test.skip('search - error with parsing line', async () => {
+  // @ts-ignore
+  ToTextSearchResult.toTextSearchResult.mockImplementation(() => {
+    throw new TypeError(`Cannot read properties of undefined (reading length)`)
+  })
+  // @ts-ignore
+  RipGrep.spawn.mockImplementation(() => {
+    const emitter = new EventEmitter()
+    const stdoutEmitter = new EventEmitter()
+    const childProcess = {
+      on(event, listener) {
+        emitter.on(event, listener)
+      },
+      once(event, listener) {
+        emitter.once(event, listener)
+      },
+      stdout: {
+        on(event, listener) {
+          stdoutEmitter.on(event, listener)
+        },
+        setEncoding() {},
+      },
+      stderr: {},
+      kill() {},
+    }
+    setTimeout(() => {
+      stdoutEmitter.emit(
+        'data',
+        `{"type":"begin","data":{"path":{"text":"./index.html"}}}
+{"type":"match","data":{"path":{"text":"./index.html"},"lines":{"text":"<!DOCTYPE html>\\n"},"line_number":1,"absolute_offset":0,"submatches":[{"match":{"text":"DOC"},"start":2,"end":5}]}}
+`
+      )
+      emitter.emit('close')
+    })
+    return childProcess
+  })
+  await expect(await TextSearch.search('/test', 'document')).rejects.toThrowError(new Error('abc'))
+})
