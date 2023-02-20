@@ -125,28 +125,31 @@ test('search - one result', async () => {
     limitHit: false,
   })
   expect(ToTextSearchResult.toTextSearchResult).toHaveBeenCalledTimes(1)
-  expect(ToTextSearchResult.toTextSearchResult).toHaveBeenCalledWith({
-    data: {
-      absolute_offset: 0,
-      line_number: 1,
-      lines: {
-        text: '<!DOCTYPE html>\n',
-      },
-      path: {
-        text: './index.html',
-      },
-      submatches: [
-        {
-          end: 5,
-          match: {
-            text: 'DOC',
-          },
-          start: 2,
+  expect(ToTextSearchResult.toTextSearchResult).toHaveBeenCalledWith(
+    {
+      data: {
+        absolute_offset: 0,
+        line_number: 1,
+        lines: {
+          text: '<!DOCTYPE html>\n',
         },
-      ],
+        path: {
+          text: './index.html',
+        },
+        submatches: [
+          {
+            end: 5,
+            match: {
+              text: 'DOC',
+            },
+            start: 2,
+          },
+        ],
+      },
+      type: 'match',
     },
-    type: 'match',
-  })
+    20_000
+  )
 })
 
 test('search - one result split across multiple chunks', async () => {
@@ -215,28 +218,31 @@ test('search - one result split across multiple chunks', async () => {
     limitHit: false,
   })
   expect(ToTextSearchResult.toTextSearchResult).toHaveBeenCalledTimes(1)
-  expect(ToTextSearchResult.toTextSearchResult).toHaveBeenCalledWith({
-    data: {
-      absolute_offset: 0,
-      line_number: 1,
-      lines: {
-        text: '<!DOCTYPE html>\n',
-      },
-      path: {
-        text: './index.html',
-      },
-      submatches: [
-        {
-          end: 5,
-          match: {
-            text: 'DOC',
-          },
-          start: 2,
+  expect(ToTextSearchResult.toTextSearchResult).toHaveBeenCalledWith(
+    {
+      data: {
+        absolute_offset: 0,
+        line_number: 1,
+        lines: {
+          text: '<!DOCTYPE html>\n',
         },
-      ],
+        path: {
+          text: './index.html',
+        },
+        submatches: [
+          {
+            end: 5,
+            match: {
+              text: 'DOC',
+            },
+            start: 2,
+          },
+        ],
+      },
+      type: 'match',
     },
-    type: 'match',
-  })
+    20_000
+  )
 })
 
 // TODO when parsing line fails, function should throw an error without crashsing the process
