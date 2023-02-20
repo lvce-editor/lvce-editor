@@ -13,12 +13,20 @@ const getLines = (parsedLineData) => {
   throw new Error(`unable to parse line data`)
 }
 
-export const toTextSearchResult = (parsedLine) => {
+const getRemainingSubMatches = (submatches, remaining) => {
+  if (submatches.length < remaining) {
+    return submatches
+  }
+  return submatches.slice(0, remaining)
+}
+
+export const toTextSearchResult = (parsedLine, remaining) => {
   const results = []
   const parsedLineData = parsedLine.data
   const lines = getLines(parsedLineData)
   const lineNumber = parsedLineData.line_number
-  for (const submatch of parsedLineData.submatches) {
+  const submatches = parsedLineData.submatches
+  for (const submatch of submatches) {
     const previewStart = Math.max(submatch.start - CHARS_BEFORE, 0)
     const previewEnd = Math.min(submatch.end + CHARS_AFTER, lines.length)
     const previewText = lines.slice(previewStart, previewEnd)
