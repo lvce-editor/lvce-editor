@@ -2,20 +2,33 @@ import * as Arrays from '../Arrays/Arrays.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as ViewletSearchStatusMessage from './ViewletSearchStatusMessage.js'
 
-const getRemoveIndicesFile = (item, index, fileCount, matchCount) => {
+const getSetSize = (items, index) => {
+  let setSize = 0
+  for (let i = index + 1; i < items.length; i++) {
+    if (items[i].type === TextSearchResultType.File) {
+      break
+    }
+    setSize++
+  }
+  return setSize
+}
+
+const getRemoveIndicesFile = (items, item, index, matchCount, fileCount) => {
+  const setSize = getSetSize(items, index)
   return {
     startIndex: index,
-    removeCount: item.setSize + 1,
-    newFocusedIndex: index - 1,
+    removeCount: setSize + 1,
+    newFocusedIndex: index + setSize + 1 < items.length ? index : index - 1,
     newFileCount: fileCount - 1,
-    newMatchCount: matchCount - item.setSize,
+    newMatchCount: matchCount - setSize,
   }
 }
 
 const getRemoveIndicesMatch = (items, index, matchCount, fileCount) => {
   for (let i = index; i >= 0; i--) {
     if (items[i].type === TextSearchResultType.File) {
-      if (items[i].setSize === 1) {
+      const setSize = getSetSize(items, i)
+      if (setSize === 1) {
         return {
           startIndex: i,
           removeCount: 2,
@@ -27,7 +40,7 @@ const getRemoveIndicesMatch = (items, index, matchCount, fileCount) => {
       return {
         startIndex: index,
         removeCount: 1,
-        newFocusedIndex: i - 1,
+        newFocusedIndex: index,
         newFileCount: fileCount,
         newMatchCount: matchCount - 1,
       }
@@ -40,7 +53,7 @@ const getRemoveIndices = (items, index, matchCount, fileCount) => {
   const item = items[index]
   switch (item.type) {
     case TextSearchResultType.File:
-      return getRemoveIndicesFile(item, index, matchCount, fileCount)
+      return getRemoveIndicesFile(items, item, index, matchCount, fileCount)
     case TextSearchResultType.Match:
       return getRemoveIndicesMatch(items, index, matchCount, fileCount)
     default:
@@ -54,13 +67,31 @@ const removeItemFromItems = (items, index, matchCount, fileCount) => {
   return { newItems, newFocusedIndex, newFileCount, newMatchCount }
 }
 
+const getNewMinMax = (newItemsLength, minLineY, maxLineY, deltaY, itemHeight) => {
+  if (maxLineY > newItemsLength) {
+    const diff = maxLineY - minLineY
+    const newMinLineY = Math.max(newItemsLength - diff, 0)
+    const newDeltaY = newMinLineY * itemHeight
+    return {
+      newDeltaY,
+      newMinLineY,
+      newMaxLineY: newItemsLength,
+    }
+  }
+  return {
+    newDeltaY: deltaY,
+    newMinLineY: minLineY,
+    newMaxLineY: maxLineY,
+  }
+}
 export const dismissItem = (state) => {
-  const { items, listFocusedIndex, fileCount, matchCount } = state
+  const { items, listFocusedIndex, fileCount, matchCount, minLineY, maxLineY, deltaY, itemHeight } = state
   if (listFocusedIndex === -1) {
     return state
   }
   const { newItems, newFocusedIndex, newMatchCount, newFileCount } = removeItemFromItems(items, listFocusedIndex, matchCount, fileCount)
   const message = ViewletSearchStatusMessage.getStatusMessage(newMatchCount, newFileCount)
+  const { newMinLineY, newMaxLineY, newDeltaY } = getNewMinMax(newItems.length, minLineY, maxLineY, deltaY, itemHeight)
   return {
     ...state,
     items: newItems,
@@ -68,5 +99,8 @@ export const dismissItem = (state) => {
     message,
     matchCount: newMatchCount,
     fileCount: newFileCount,
+    minLineY: newMinLineY,
+    maxLineY: newMaxLineY,
+    deltaY: newDeltaY,
   }
 }

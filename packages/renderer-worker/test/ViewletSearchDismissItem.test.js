@@ -19,7 +19,6 @@ test('dismissItem - remove one match', () => {
     items: [
       {
         type: TextSearchResultType.File,
-        setSize: 2,
       },
       {
         type: TextSearchResultType.Match,
@@ -36,13 +35,12 @@ test('dismissItem - remove one match', () => {
     items: [
       {
         type: TextSearchResultType.File,
-        setSize: 2,
       },
       {
         type: TextSearchResultType.Match,
       },
     ],
-    listFocusedIndex: -1,
+    listFocusedIndex: 2,
     matchCount: 1,
     fileCount: 1,
     message: 'Found 1 result in 1 file',
@@ -55,21 +53,19 @@ test('dismissItem - remove one file', () => {
     items: [
       {
         type: TextSearchResultType.File,
-        setSize: 1,
-        title: 'a.txt',
+        text: 'a.txt',
       },
       {
         type: TextSearchResultType.Match,
-        title: 'a',
+        text: 'a',
       },
       {
         type: TextSearchResultType.File,
-        setSize: 1,
-        title: 'b.txt',
+        text: 'b.txt',
       },
       {
         type: TextSearchResultType.Match,
-        title: 'b',
+        text: 'b',
       },
     ],
     listFocusedIndex: 2,
@@ -80,15 +76,57 @@ test('dismissItem - remove one file', () => {
     items: [
       {
         type: TextSearchResultType.File,
-        setSize: 1,
-        title: 'a.txt',
+        text: 'a.txt',
       },
       {
         type: TextSearchResultType.Match,
-        title: 'a',
+        text: 'a',
       },
     ],
     listFocusedIndex: 1,
+    matchCount: 1,
+    fileCount: 1,
+    message: 'Found 1 result in 1 file',
+  })
+})
+
+test('dismissItem - remove first file', () => {
+  const state = {
+    ...ViewletSearch.create(),
+    items: [
+      {
+        type: TextSearchResultType.File,
+        text: 'a.txt',
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'a',
+      },
+      {
+        type: TextSearchResultType.File,
+        text: 'b.txt',
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'b',
+      },
+    ],
+    listFocusedIndex: 0,
+    matchCount: 2,
+    fileCount: 2,
+  }
+  expect(ViewletSearchDismissItem.dismissItem(state)).toMatchObject({
+    items: [
+      {
+        type: TextSearchResultType.File,
+        text: 'b.txt',
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'b',
+      },
+    ],
+    listFocusedIndex: 0,
     matchCount: 1,
     fileCount: 1,
     message: 'Found 1 result in 1 file',
@@ -101,7 +139,6 @@ test('dismissItem - remove only match', () => {
     items: [
       {
         type: TextSearchResultType.File,
-        setSize: 1,
       },
       {
         type: TextSearchResultType.Match,
@@ -126,7 +163,6 @@ test('dismissItem - remove only file', () => {
     items: [
       {
         type: TextSearchResultType.File,
-        setSize: 1,
       },
       {
         type: TextSearchResultType.Match,
@@ -142,5 +178,64 @@ test('dismissItem - remove only file', () => {
     matchCount: 0,
     fileCount: 0,
     message: 'No results found',
+  })
+})
+
+test('dismissItem - remove one file in the middle', () => {
+  const state = {
+    ...ViewletSearch.create(),
+    items: [
+      {
+        type: TextSearchResultType.File,
+        text: 'a.txt',
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'a',
+      },
+      {
+        type: TextSearchResultType.File,
+        text: 'b.txt',
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'b',
+      },
+      {
+        type: TextSearchResultType.File,
+        text: 'c.txt',
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'c',
+      },
+    ],
+    listFocusedIndex: 2,
+    matchCount: 3,
+    fileCount: 3,
+  }
+  expect(ViewletSearchDismissItem.dismissItem(state)).toMatchObject({
+    items: [
+      {
+        type: TextSearchResultType.File,
+        text: 'a.txt',
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'a',
+      },
+      {
+        type: TextSearchResultType.File,
+        text: 'c.txt',
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'c',
+      },
+    ],
+    listFocusedIndex: 2,
+    matchCount: 2,
+    fileCount: 2,
+    message: 'Found 2 results in 2 files',
   })
 })
