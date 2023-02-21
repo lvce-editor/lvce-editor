@@ -285,9 +285,28 @@ test('handleInput - error', async () => {
   TextSearch.textSearch.mockImplementation(() => {
     throw new Error('could not load search results')
   })
-  const state = ViewletSearch.create()
+  const state = {
+    ...ViewletSearch.create(),
+    items: [
+      {
+        type: TextSearchResultType.File,
+        text: './file-1.txt',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'abc',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
+      },
+    ],
+  }
   expect(await ViewletSearch.handleInput(state, 'test search')).toMatchObject({
     message: `Error: could not load search results`,
+    items: [],
   })
 })
 
