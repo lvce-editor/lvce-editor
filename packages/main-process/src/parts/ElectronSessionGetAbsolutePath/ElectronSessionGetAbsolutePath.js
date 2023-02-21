@@ -34,6 +34,5 @@ exports.getAbsolutePath = (requestUrl) => {
     const processExplorerThemeCss = join(tmpdir(), 'process-explorer-theme.css')
     return processExplorerThemeCss
   }
-  console.log({ pathName })
   return Path.join(Root.root, 'static', pathName)
 }
