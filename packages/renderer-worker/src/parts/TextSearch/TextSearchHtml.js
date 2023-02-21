@@ -25,9 +25,7 @@ const textSearchInFile = async (all, handle, absolutePath, query) => {
 }
 
 const textSearchRecursively = async (all, parent, handle, query) => {
-  console.log('before get child handles')
   const childHandles = await FileSystemDirectoryHandle.getChildHandles(handle)
-  console.log('after get child handles')
   const promises = []
   for (const childHandle of childHandles) {
     const absolutePath = parent + '/' + childHandle.name
@@ -43,9 +41,7 @@ const textSearchRecursively = async (all, parent, handle, query) => {
 
 export const textSearch = async (scheme, root, query) => {
   const relativeRoot = root.slice('html://'.length)
-  console.log('before root')
   const handle = await getDirectoryHandle(relativeRoot)
-  console.log('after root')
   if (!handle) {
     throw new VError(`Folder not found ${relativeRoot}`)
   }
