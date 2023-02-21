@@ -1,9 +1,9 @@
 {
   "name": "@@NAME@@",
-  "productName": "@@PRODUCT_NAME@@",
+  "productName": "@@WINDOWS_EXECUTABLE_NAME@@",
   "main": "packages/main-process/dist/mainProcessMain.js",
   "author": "@@AUTHOR@@",
-  "description": "abc",
+  "description": "@@NAME_LONG@@",
   "version": "@@VERSION@@",
   "homepage": "@@HOMEPAGE@@",
   "build": {
