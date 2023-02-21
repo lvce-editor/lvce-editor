@@ -1,3 +1,5 @@
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
+
 export const getNewContent = (content, ranges, replacement) => {
   if (ranges.length === 0) {
     return content
@@ -10,7 +12,7 @@ export const getNewContent = (content, ranges, replacement) => {
   for (let i = 0; i < ranges.length; i += 4) {
     while (rowIndex < ranges[i]) {
       previousNewLineIndex = newLineIndex
-      newLineIndex = content.indexOf('\n', newLineIndex + 1)
+      newLineIndex = GetNewLineIndex.getNewLineIndex(content, newLineIndex + 1)
       rowIndex++
     }
     const startRowIndex = ranges[i]

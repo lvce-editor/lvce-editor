@@ -1,8 +1,10 @@
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
+
 export const limitString = (string, limit) => {
   let lines = 0
   let i = 0
   while (i !== -1 && lines < limit) {
-    i = string.indexOf('\n', i + 1)
+    i = GetNewLineIndex.getNewLineIndex(string, i + 1)
     if (i === -1) {
       break
     }
