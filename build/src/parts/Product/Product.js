@@ -2,15 +2,13 @@ export const nameShort = 'Lvce - OSS'
 
 export const nameLong = 'Lvce - OSS'
 
-export const comment =
-  'Web Based Text Editor That Aims To Have Low Memory Usage '
+export const comment = 'Web Based Text Editor That Aims To Have Low Memory Usage '
 
 export const applicationName = 'lvce-oss'
 
 export const licenseName = 'MIT'
 
-export const licenseUrl =
-  'https://github.com/lvce-editor/lvce-editor/blob/main/LICENSE'
+export const licenseUrl = 'https://github.com/lvce-editor/lvce-editor/blob/main/LICENSE'
 
 export const licenseFileName = 'LICENSE.txt'
 
