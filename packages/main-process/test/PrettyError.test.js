@@ -327,10 +327,10 @@ exports.load = async (moduleId) => {
   44 |       throw new Error(\`module \${moduleId} not found\`)
   45 |   }`,
     message: `Cannot find module '../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js/index.js.js'`,
-    stack: `    at exports.load (/test/packages/main-process/src/parts/Module/Module.js:42:14)
+    stack: `    at load (/test/packages/main-process/src/parts/Module/Module.js:42:14)
     at getOrLoadModule (/test/packages/main-process/src/parts/Command/Command.js:26:33)
     at loadCommand (/test/packages/main-process/src/parts/Command/Command.js:32:34)
-    at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:64:11)`,
+    at invoke (/test/packages/main-process/src/parts/Command/Command.js:64:11)`,
     type: 'Error',
   })
 })
@@ -1022,9 +1022,9 @@ exports.findById = (id) => {
   34 |         \`Failed to load window url \"\${url}\"\``,
     message: 'Failed to load window url "lvce-oss://-": ERR_INVALID_URL (-300) loading \'lvce-oss://-/',
     stack: `    at loadUrl (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:31:13)
-    at async exports.createAppWindow (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:85:3)
-    at async exports.handleReady (/test/packages/main-process/src/parts/ElectronAppListeners/ElectronAppListeners.js:30:3)
-    at async exports.hydrate (/test/packages/main-process/src/parts/App/App.js:102:3)
+    at async createAppWindow (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:85:3)
+    at async handleReady (/test/packages/main-process/src/parts/ElectronAppListeners/ElectronAppListeners.js:30:3)
+    at async hydrate (/test/packages/main-process/src/parts/App/App.js:102:3)
     at async main (/test/packages/main-process/src/mainProcessMain.js:15:3)`,
     type: 'Error',
   })
