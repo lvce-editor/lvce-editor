@@ -50,12 +50,15 @@ exports.open = async () => {
       return
     }
     const browserWindowPort = event.ports[0]
-    // TODO possible memory leak? browserWindowPort should be destroyed when Window is closed
-    browserWindowPort.on('message', async (event) => {
+
+    const handlePortMessage = async (event) => {
       const message = event.data
       const response = await GetResponse.getResponse(message)
       browserWindowPort.postMessage(response)
-    })
+    }
+
+    // TODO possible memory leak? browserWindowPort should be destroyed when Window is closed
+    browserWindowPort.on('message', handlePortMessage)
 
     browserWindowPort.start()
   }
