@@ -47,6 +47,7 @@ const copyElectronBuilderConfig = async ({ config, version, product }) => {
     '@@NAME_LONG@@': product.nameLong,
     '@@LICENSE@@': product.licenseName,
     '@@PRODUCT_NAME@@': product.nameLong,
+    '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
   })
 }
 
@@ -94,7 +95,7 @@ const getFinalFileName = ({ config, version, product }) => {
     case ElectronBuilderConfigType.Deb:
       return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.deb`
     case ElectronBuilderConfigType.WindowsExe:
-      return `build/.tmp/electron-builder/dist/${product.nameLong} Setup ${version}.exe`
+      return `build/.tmp/electron-builder/dist/${product.windowsExecutableName} Setup ${version}.exe`
     case ElectronBuilderConfigType.Snap:
       return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.snap`
     case ElectronBuilderConfigType.Mac:
@@ -113,7 +114,7 @@ const getReleaseFileName = ({ config, product }) => {
     case ElectronBuilderConfigType.Deb:
       return `${product.applicationName}-amd64.deb`
     case ElectronBuilderConfigType.WindowsExe:
-      return `${product.applicationName}.exe`
+      return `${product.windowsExecutableName}.exe`
     case ElectronBuilderConfigType.Snap:
       return `${product.applicationName}.snap`
     case ElectronBuilderConfigType.Mac:
