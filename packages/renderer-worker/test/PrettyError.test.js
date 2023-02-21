@@ -306,3 +306,41 @@ export const getBulkReplacementEdits = (matches) => {
     _error: error,
   })
 })
+
+test('prepare - error - not implemented', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    return `import * as FileSystemWeb from '../FileSystem/FileSystemWeb.js'
+
+export const textSearch = (scheme, root, query) => {
+  throw new Error('not implemented')
+}
+
+`
+  })
+  const error = new Error('not implemented')
+  error.stack = `Error: not implemented
+    at Module.textSearch (test:///packages/renderer-worker/src/parts/TextSearch/TextSearchHtml.js:4:9)
+    at Module.textSearch (test:///packages/renderer-worker/src/parts/TextSearch/TextSearch.js:24:34)
+    at async Module.handleUpdate (test:///packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchHandleUpdate.js:43:21)
+    at async handleInput (test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:51:24)
+    at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: 'not implemented',
+    codeFrame: `  2 |
+  3 | export const textSearch = (scheme, root, query) => {
+> 4 |   throw new Error('not implemented')
+    |         ^
+  5 | }
+  6 |
+  7 |`,
+    stack: `    at Module.textSearch (test:///packages/renderer-worker/src/parts/TextSearch/TextSearchHtml.js:4:9)
+    at Module.textSearch (test:///packages/renderer-worker/src/parts/TextSearch/TextSearch.js:24:34)
+    at async Module.handleUpdate (test:///packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchHandleUpdate.js:43:21)
+    at async handleInput (test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:51:24)
+    at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`,
+    type: 'Error',
+    _error: error,
+  })
+})
