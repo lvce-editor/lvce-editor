@@ -74,6 +74,11 @@ export const handleUpdate = async (state, update) => {
     return {
       ...partialNewState,
       message: `${error}`,
+      items: [],
+      matchCount: 0,
+      fileCount: 0,
+      minLineY: 0,
+      maxLineY: 0,
     }
   }
 }
