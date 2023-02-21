@@ -48,6 +48,10 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronApplicationMenu
     case 'About':
       return ModuleId.About
+    case 'ListProcessesWithMemoryUsage':
+      return ModuleId.ListProcessesWithMemoryUsage
+    case 'ProcessExplorerContextMenu':
+      return ModuleId.ProcessExplorerContextMenu
     default:
       throw new Error(`method not found ${commandId}`)
   }

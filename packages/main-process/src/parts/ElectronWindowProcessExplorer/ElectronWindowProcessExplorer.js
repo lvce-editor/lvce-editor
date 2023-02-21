@@ -2,14 +2,29 @@ const { ipcMain } = require('electron')
 const { writeFile } = require('node:fs/promises')
 const { BrowserWindow, Menu } = require('electron')
 const VError = require('verror')
-const ListProcessesWithMemoryUsage = require('../ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsage.js')
 const Platform = require('../Platform/Platform.js')
 const Session = require('../ElectronSession/ElectronSession.js')
 const ColorTheme = require('../ColorTheme/ColorTheme.js')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
-const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
-const Process = require('../Process/Process.js')
+const GetResponse = require('../GetResponse/GetResponse.js')
+const { join } = require('node:path')
+const { tmpdir } = require('node:os')
+
+/**
+ *
+ * @param {Electron.Event} event
+ * @param {Electron.Input} input
+ */
+const handleBeforeInput = (event, input) => {
+  if (input.control && input.key.toLowerCase() === 'i') {
+    event.preventDefault()
+    // console.log(event.sender)
+    // console.log(event.sender)
+    event.sender.openDevTools()
+    // event.sender.webContents.openDevTools()
+  }
+}
 
 exports.open = async () => {
   const colorThemeJson = await ColorTheme.getColorThemeJson()
@@ -35,43 +50,11 @@ exports.open = async () => {
       return
     }
     const browserWindowPort = event.ports[0]
-
-    const updateStats = async () => {
-      const processesWithMemoryUsage = await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(Process.pid)
-      browserWindowPort.postMessage({
-        jsonrpc: JsonRpcVersion.Two,
-        method: 'processWithMemoryUsage',
-        params: [processesWithMemoryUsage],
-      })
-    }
-
-    const showContextMenu = (processId) => {
-      const template = [
-        {
-          label: 'Kill Process',
-          click: () => {
-            const Process = require('../Process/Process.js')
-            Process.kill(processId, 'SIGTERM')
-          },
-        },
-      ]
-      const menu = Menu.buildFromTemplate(template)
-      menu.popup({
-        window: processExplorerWindow,
-      })
-    }
-
     // TODO possible memory leak? browserWindowPort should be destroyed when Window is closed
     browserWindowPort.on('message', async (event) => {
       const message = event.data
-      switch (message.method) {
-        case 'updateStats':
-          return updateStats()
-        case 'showContextMenu':
-          return showContextMenu(...message.params)
-        default:
-          break
-      }
+      const response = await GetResponse.getResponse(message)
+      browserWindowPort.postMessage(response)
     })
 
     browserWindowPort.start()
@@ -85,16 +68,15 @@ exports.open = async () => {
 
   processExplorerWindow.once('close', handleClose)
 
+  processExplorerWindow.webContents.on('before-input-event', handleBeforeInput)
   // TODO get actual process explorer theme css from somewhere
   const processExplorerThemeCss = ColorTheme.toCss(colorThemeJson)
-  await writeFile('/tmp/process-explorer-theme.css', processExplorerThemeCss)
+  const processExporerThemeCssPath = join(tmpdir(), 'process-explorer-theme.css')
+  await writeFile(processExporerThemeCssPath, processExplorerThemeCss)
   try {
     await processExplorerWindow.loadURL(`${Platform.scheme}://-/packages/main-process/pages/process-explorer/process-explorer.html`)
   } catch (error) {
-    throw new VError(
-      // @ts-ignore
-      error,
-      `Failed to load process explorer url `
-    )
+    // @ts-ignore
+    throw new VError(error, `Failed to load process explorer url `)
   }
 }
