@@ -1,5 +1,4 @@
 const Command = require('../Command/Command.js')
-const Logger = require('../Logger/Logger.js')
 const JsonRpc = require('../JsonRpc/JsonRpc.js')
 const PrettyError = require('../PrettyError/PrettyError.js')
 
@@ -14,12 +13,7 @@ exports.getResponse = async (message) => {
   } catch (error) {
     const prettyError = await PrettyError.prepare(error)
     PrettyError.print(prettyError)
-    if (
-      error &&
-      error instanceof Error &&
-      error.message &&
-      error.message.startsWith('method not found')
-    ) {
+    if (error && error instanceof Error && error.message && error.message.startsWith('method not found')) {
       return {
         jsonrpc: JsonRpc.Version,
         id: message.id,

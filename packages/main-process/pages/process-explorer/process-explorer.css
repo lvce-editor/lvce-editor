@@ -1,6 +1,6 @@
 body {
-  background: var(--MainBackground);
-  color: var(--TreeItemForeground);
+  background: var(--MainBackground, white);
+  color: var(--TreeItemForeground, black);
   margin: 0;
 }
 
