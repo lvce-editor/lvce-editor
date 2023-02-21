@@ -9,6 +9,8 @@ const getProvider = (scheme) => {
       return import('./TextSearchWeb.js')
     case 'fetch':
       return import('./TextSearchFetch.js')
+    case 'html':
+      return import('./TextSearchHtml.js')
     default:
       return import('./TextSearchExtension.js')
   }
