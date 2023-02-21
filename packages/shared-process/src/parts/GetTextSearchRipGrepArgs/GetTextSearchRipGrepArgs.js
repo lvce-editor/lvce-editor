@@ -7,6 +7,7 @@ export const getRipGrepArgs = ({ threads, isCaseSensitive, searchString }) => {
     ripGrepArgs.push('--ignore-case')
   }
   ripGrepArgs.push('--fixed-strings')
+  ripGrepArgs.push('--')
   ripGrepArgs.push(searchString)
   ripGrepArgs.push('.')
   return ripGrepArgs
