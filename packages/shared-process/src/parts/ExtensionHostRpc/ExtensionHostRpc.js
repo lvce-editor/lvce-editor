@@ -1,6 +1,7 @@
 import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Timeout from '../Timeout/Timeout.js'
+import * as Logger from '../Logger/Logger.js'
 
 // TODO maybe rename to extension host management for clarity
 
@@ -10,7 +11,7 @@ export const create = async (ipc, socket) => {
   Assert.object(socket)
 
   const handleChildProcessError = (error) => {
-    console.error(`[Extension Host] ${error}`)
+    Logger.error(`[Extension Host] ${error}`)
   }
 
   const handleChildProcessExit = (exitCode) => {

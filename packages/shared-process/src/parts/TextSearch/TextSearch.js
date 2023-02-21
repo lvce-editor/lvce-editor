@@ -7,6 +7,8 @@ import * as RipGrep from '../RipGrep/RipGrep.js'
 import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as ToTextSearchResult from '../ToTextSearchResult/ToTextSearchResult.js'
+import * as Logger from '../Logger/Logger.js'
+
 // TODO update vscode-ripgrep when https://github.com/mhinz/vim-grepper/issues/244, https://github.com/BurntSushi/ripgrep/issues/1892 is fixed
 
 // need to use '.' as last argument for ripgrep
@@ -120,7 +122,7 @@ export const search = async (searchDir, searchString, { threads = 1, maxSearchRe
     }
     const handleError = (error) => {
       // TODO check type of error
-      console.error(error)
+      Logger.error(error)
       resolve(undefined)
     }
 

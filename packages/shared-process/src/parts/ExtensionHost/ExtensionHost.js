@@ -5,6 +5,7 @@ import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as Logger from '../Logger/Logger.js'
 
 // TODO maybe rename to extension host management for clarity
 
@@ -33,7 +34,7 @@ export const start = async (socket) => {
       } else if ('error' in message) {
         Callback.reject(message.id, message.error)
       } else {
-        console.error('unsupported message type')
+        Logger.error('unsupported message type')
       }
     }
     const extensionHost = await createExtensionHost(socket)
