@@ -1,5 +1,6 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
+import { VError } from '../VError/VError.js'
 
 /**
  *
@@ -7,10 +8,14 @@ import * as Assert from '../Assert/Assert.js'
  * @returns {Promise<FileSystemHandle[]>}
  */
 export const getChildHandles = async (handle) => {
-  Assert.object(handle)
-  // @ts-ignore
-  const handles = await Arrays.fromAsync(handle.values())
-  return handles
+  try {
+    Assert.object(handle)
+    // @ts-ignore
+    const handles = await Arrays.fromAsync(handle.values())
+    return handles
+  } catch (error) {
+    throw new VError(error, `Failed to read directory`)
+  }
 }
 
 /**
