@@ -3,6 +3,7 @@ const Logger = require('../Logger/Logger.js')
 const Process = require('../Process/Process.js')
 const PrettyError = require('../PrettyError/PrettyError.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
+const GetNewLineIndex = require('../GetNewLineIndex/GetNewLineIndex.js')
 
 const getDisplayMessage = (error) => {
   if (!error || !error.stack) {
@@ -28,7 +29,7 @@ exports.handleError = (error) => {
 
 const firstErrorLine = (error) => {
   if (error.stack) {
-    return error.stack.slice(0, error.stack.indexOf('\n'))
+    return error.stack.slice(0, GetNewLineIndex.getNewLineIndex(error.stack))
   }
   if (error.message) {
     return error.message
