@@ -20,3 +20,4 @@ exports.ElectronAutoUpdater = 19
 exports.About = 20
 exports.ListProcessesWithMemoryUsage = 21
 exports.ProcessExplorerContextMenu = 22
+exports.Process = 23
