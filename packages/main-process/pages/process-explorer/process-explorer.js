@@ -512,6 +512,9 @@ const renderProcesses = (processes) => {
   state.processes = processes
   state.displayProcesses = displayProcesses
   const $Tbody = document.querySelector('tbody')
+  if (!$Tbody) {
+    return
+  }
   if ($Tbody.children.length < displayProcesses.length) {
     render$ProcessesLess($Tbody, displayProcesses)
   } else if ($Tbody.children.length === displayProcesses.length) {
@@ -604,6 +607,18 @@ const constructError = (message, type, name) => {
   return new ErrorConstructor(message)
 }
 
+const JsonRpcErrorCode = {
+  MethodNotFound: -32601,
+  Custom: -32001,
+}
+
+class JsonRpcError extends Error {
+  constructor(message) {
+    super(message)
+    this.name = 'JsonRpcError'
+  }
+}
+
 const RestoreJsonRpcError = {
   restoreJsonRpcError(error) {
     if (error && error instanceof Error) {
@@ -618,7 +633,7 @@ const RestoreJsonRpcError = {
       const restoredError = constructError(error.message, error.type, error.name)
       if (error.data) {
         if (error.data.stack) {
-          restoredError.stack = error.data.stack
+          restoredError.stack = error.message + '\n' + error.data.stack
 
           if (error.data.codeFrame) {
             // @ts-ignore

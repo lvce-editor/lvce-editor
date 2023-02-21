@@ -1,4 +1,5 @@
 const ModuleId = require('../ModuleId/ModuleId.js')
+const { ModuleNotFoundError } = require('../ModuleNotFoundError/ModuleNotFoundError.js')
 
 exports.load = async (moduleId) => {
   switch (moduleId) {
@@ -49,6 +50,6 @@ exports.load = async (moduleId) => {
     case ModuleId.Process:
       return require('../Process/Process.ipc.js')
     default:
-      throw new Error(`module ${moduleId} not found`)
+      throw new ModuleNotFoundError(moduleId)
   }
 }
