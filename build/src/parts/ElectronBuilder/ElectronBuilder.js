@@ -3,6 +3,7 @@ import { readdir } from 'node:fs/promises'
 import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Copy from '../Copy/Copy.js'
+import * as ElectronBuilderConfigType from '../ElectronBuilderConfigType/ElectronBuilderConfigType.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
@@ -11,7 +12,6 @@ import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
-import * as ElectronBuilderConfigType from '../ElectronBuilderConfigType/ElectronBuilderConfigType.js'
 
 // TODO don't need to include whole node-pty module
 // TODO maybe don't need to include nan module
@@ -46,6 +46,7 @@ const copyElectronBuilderConfig = async ({ config, version, product }) => {
     '@@ELECTRON_VERSION@@': electronVersion,
     '@@NAME_LONG@@': product.nameLong,
     '@@LICENSE@@': product.licenseName,
+    '@@PRODUCT_NAME@@': product.nameLong,
   })
 }
 
@@ -93,7 +94,7 @@ const getFinalFileName = ({ config, version, product }) => {
     case ElectronBuilderConfigType.Deb:
       return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.deb`
     case ElectronBuilderConfigType.WindowsExe:
-      return `build/.tmp/electron-builder/dist/${product.applicationName} Setup ${version}.exe`
+      return `build/.tmp/electron-builder/dist/${product.nameLong} Setup ${version}.exe`
     case ElectronBuilderConfigType.Snap:
       return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.snap`
     case ElectronBuilderConfigType.Mac:
