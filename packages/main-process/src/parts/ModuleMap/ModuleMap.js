@@ -1,3 +1,4 @@
+const { CommandNotFoundError } = require('../CommandNotFoundError/CommandNotFoundError.js')
 const ModuleId = require('../ModuleId/ModuleId.js')
 
 const getPrefix = (commandId) => {
@@ -55,6 +56,6 @@ exports.getModuleId = (commandId) => {
     case 'Process':
       return ModuleId.Process
     default:
-      throw new Error(`method not found ${commandId}`)
+      throw new CommandNotFoundError(commandId)
   }
 }
