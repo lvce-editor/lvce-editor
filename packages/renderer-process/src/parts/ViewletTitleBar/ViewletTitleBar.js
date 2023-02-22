@@ -14,3 +14,14 @@ export const create = () => {
     $Viewlet,
   }
 }
+
+const activeClassName = 'TitleBarActive'
+
+export const setFocused = (state, isFocused) => {
+  const { $Viewlet } = state
+  if (isFocused) {
+    $Viewlet.classList.add(activeClassName)
+  } else {
+    $Viewlet.classList.remove(activeClassName)
+  }
+}

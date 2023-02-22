@@ -689,6 +689,17 @@ const getResizeCommands = (oldPoints, newPoints) => {
   return commands
 }
 
+const getFocusChangeCommands = (isFocused) => {
+  const modules = [mMain, mActivityBar, mSideBar, mTitleBar, mStatusBar, mPanel]
+  const commands = []
+  for (const module of modules) {
+    const { moduleId } = module
+    const focusChangeCommands = Viewlet.handleFocusChange(moduleId, isFocused)
+    commands.push(...focusChangeCommands)
+  }
+  return commands
+}
+
 const showAsync = async (points, module) => {
   try {
     const { moduleId, kTop, kLeft, kWidth, kHeight } = module
@@ -776,6 +787,25 @@ export const handleResize = (state, windowWidth, windowHeight) => {
     },
     commands,
   }
+}
+
+const handleFocusChange = (state, isFocused) => {
+  const commands = getFocusChangeCommands(isFocused)
+  return {
+    newState: {
+      ...state,
+      focused: isFocused,
+    },
+    commands,
+  }
+}
+
+export const handleFocus = (state) => {
+  return handleFocusChange(state, true)
+}
+
+export const handleBlur = (state) => {
+  return handleFocusChange(state, false)
 }
 
 const handleSashDoubleClickPanel = (state) => {
