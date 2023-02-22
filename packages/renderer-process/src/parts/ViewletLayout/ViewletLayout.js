@@ -37,6 +37,8 @@ export const attachEvents = (state) => {
   $SashPanel.ondblclick = ViewletLayoutEvents.handleSashDoubleClick
 
   window.addEventListener(DomEventType.Resize, ViewletLayoutEvents.handleResize)
+  window.addEventListener(DomEventType.Focus, ViewletLayoutEvents.handleFocus)
+  window.addEventListener(DomEventType.Blur, ViewletLayoutEvents.handleBlur)
 }
 
 export const setSashes = (state, sashSideBar, sashPanel) => {

@@ -8,11 +8,19 @@ export const create = (id, uri, x, y, width, height) => {
     width,
     height,
     titleBarIconWidth: 30,
+    isFocused: false,
   }
 }
 
 export const loadContent = (state) => {
-  return state
+  return {
+    ...state,
+    isFocused: true,
+  }
+}
+
+export const handleFocusChange = (state, isFocused) => {
+  return { ...state, isFocused }
 }
 
 export const getChildren = (state) => {
@@ -43,7 +51,16 @@ export const getChildren = (state) => {
 
 export const hasFunctionalRender = true
 
-export const render = []
+const renderFocus = {
+  isEqual(oldState, newState) {
+    return oldState.isFocused === newState.isFocused
+  },
+  apply(oldState, newState) {
+    return ['setFocused', newState.isFocused]
+  },
+}
+
+export const render = [renderFocus]
 
 export const hasFunctionalResize = true
 

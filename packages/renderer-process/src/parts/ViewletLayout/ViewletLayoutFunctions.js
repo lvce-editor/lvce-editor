@@ -15,3 +15,11 @@ export const handleSashDoubleClick = (id) => {
 export const handleResize = (width, height) => {
   RendererWorker.send('Layout.handleResize', width, height)
 }
+
+export const handleFocus = () => {
+  RendererWorker.send('Layout.handleFocus')
+}
+
+export const handleBlur = () => {
+  RendererWorker.send('Layout.handleBlur')
+}

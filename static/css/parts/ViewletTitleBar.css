@@ -3,7 +3,11 @@
   z-index: 1;
   display: flex;
 
-  color: var(--TitleBarForeground, rgb(204, 204, 204));
+  color: var(--TitleBarForeground, rgba(204, 204, 204, 0.6));
   -webkit-app-region: drag;
   app-region: drag;
+}
+
+#TitleBar.TitleBarActive {
+  color: var(--TitleBarForegroundActive, rgb(204, 204, 204));
 }
