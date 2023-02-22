@@ -26,7 +26,7 @@ const actuallyLoadCssStyleSheet = async (css) => {
       /* text */ text
     )
   } catch (error) {
-    throw new VError(error, `Failed to load css ${css}`)
+    throw new VError(error, `Failed to load css "${css}"`)
   }
 }
 

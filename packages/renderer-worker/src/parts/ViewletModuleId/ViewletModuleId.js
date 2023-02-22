@@ -85,3 +85,5 @@ export const TodoList = 'TodoList'
 export const Video = 'Video'
 
 export const ColorPicker = 'ColorPicker'
+
+export const TitleBarIcon = 'TitleBarIcon'
