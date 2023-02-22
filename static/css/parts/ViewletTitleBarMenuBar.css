@@ -9,15 +9,22 @@
 
 .TitleBarTopLevelEntry {
   height: 100%;
-  line-height: 100%;
   display: flex;
   align-items: center;
-  padding: 0 5px;
+}
+
+.TitleBarTopLevelEntryLabel {
+  height: 22px;
+  contain: content;
+  border-radius: 5px;
+  padding: 0 8px;
+  background: var(--TitleBarTopLevelEntryLabel, inherit);
+  pointer-events: none;
 }
 
 #TitleBarEntryActive,
 .TitleBarTopLevelEntry:hover {
-  background: var(--TitleBarItemHoverForeground, rgba(255, 255, 255, 0.1));
+  --TitleBarTopLevelEntryLabel: var(--TitleBarItemHoverForeground, rgba(90, 93, 94, 0.31));
 }
 
 /* TODO maybe have extra focus outline border */

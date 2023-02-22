@@ -11,7 +11,7 @@ const getLabel = (titleBarEntry) => {
  * @param {boolean} shouldBeFocused
  */
 export const openMenuAtIndex = async (state, index, shouldBeFocused) => {
-  const { titleBarEntries, labelFontWeight, labelFontSize, labelFontFamily, labelPadding, titleBarHeight, labelLetterSpacing } = state
+  const { titleBarEntries, labelFontWeight, labelFontSize, labelFontFamily, labelPadding, titleBarHeight, labelLetterSpacing, x } = state
   // TODO race conditions
   // TODO send renderer process
   // 1. open menu, items to show
@@ -25,8 +25,8 @@ export const openMenuAtIndex = async (state, index, shouldBeFocused) => {
   const offset = textWidths + paddings
   // TODO race condition: another menu might already be open at this point
 
-  const x = offset
-  const y = titleBarHeight
+  const menuX = x + offset
+  const menuY = titleBarHeight
   const width = Menu.getMenuWidth()
   const height = Menu.getMenuHeight(items)
   const menuFocusedIndex = shouldBeFocused ? Menu.getIndexToFocusNextStartingAt(items, 0) : -1
@@ -35,8 +35,8 @@ export const openMenuAtIndex = async (state, index, shouldBeFocused) => {
     items,
     focusedIndex: menuFocusedIndex,
     level: 0,
-    x,
-    y,
+    x: menuX,
+    y: menuY,
     width,
     height,
   }

@@ -51,6 +51,7 @@ export const handleClick = (event) => {
   if (button !== MouseEventTypes.LeftClick) {
     return
   }
+  // TODO compute index in renderer worker based on x/y
   const index = getIndex(target)
   if (index === -1) {
     return
