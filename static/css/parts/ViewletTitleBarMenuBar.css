@@ -24,7 +24,7 @@
 
 #TitleBarEntryActive,
 .TitleBarTopLevelEntry:hover {
-  --TitleBarTopLevelEntryLabel: var(--TitleBarItemHoverForeground, rgba(255, 255, 255, 0.1));
+  --TitleBarTopLevelEntryLabel: var(--TitleBarItemHoverForeground, rgba(90, 93, 94, 0.31));
 }
 
 /* TODO maybe have extra focus outline border */
