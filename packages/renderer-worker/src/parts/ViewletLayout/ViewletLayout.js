@@ -343,7 +343,7 @@ export const loadContent = (state, savedState) => {
     newPoints[kTitleBarHeight] = 0
     newPoints[kTitleBarVisible] = 0
   } else {
-    newPoints[kTitleBarHeight] = 20
+    newPoints[kTitleBarHeight] = getDefaultTitleBarHeight()
     newPoints[kTitleBarVisible] = 1
   }
   newPoints[kWindowHeight] = windowHeight
