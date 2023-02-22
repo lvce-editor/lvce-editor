@@ -1,7 +1,7 @@
 export const name = 'TitleBarMenuBar'
 
 // prettier-ignore
-export const LazyCommands={
+export const LazyCommands = {
   closeMenu: () => import('./ViewletTitleBarMenuBarCloseMenu.js'),
   focus: () => import('./ViewletTitleBarMenuBarFocus.js'),
   focusFirst: () => import('./ViewletTitleBarMenuBarFocusFirst.js'),
@@ -23,6 +23,7 @@ export const LazyCommands={
   handleMouseOver: () => import('./ViewletTitleBarMenuBarHandleMouseOver.js'),
   toggleIndex: () => import('./ViewletTitleBarMenuBarToggleIndex.js'),
   toggleMenu: () => import('./ViewletTitleBarMenuBarToggleMenu.js'),
+  handleClick: () => import('./ViewletTitleBarMenuBarHandleClick.js'),
 }
 
 export const Css = '/css/parts/ViewletTitleBarMenuBar.css'
