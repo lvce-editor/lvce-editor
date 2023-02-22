@@ -1,6 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as BeforeInput from '../BeforeInput/BeforeInput.js'
-import * as FilterQuickPickItems from '../FilterQuickPickItems/FilterQuickPickItems.js'
 import * as Height from '../Height/Height.js'
 import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
@@ -8,6 +6,7 @@ import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnVa
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as ViewletQuickPickGetFilteredItems from './ViewletQuickPickGetFilteredItems.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -71,18 +70,6 @@ const getVisible = (provider, items, minLineY, maxLineY) => {
   return visibleItems
 }
 
-const getFilteredItems = (state, picks, filterValue, provider) => {
-  Assert.object(state)
-  Assert.array(picks)
-  Assert.string(filterValue)
-  const items = FilterQuickPickItems.getFilteredItems(state, picks, state.recentPickIds, filterValue, provider)
-  return items
-  // TODO avoid mutation
-  // state.items = items
-  // const slicedPicks = slicePicks(items)
-  // return toDisplayPicks(slicedPicks)
-}
-
 const getDefaultValue = (uri) => {
   switch (uri) {
     case 'quickPick://everything':
@@ -102,7 +89,7 @@ export const loadContent = async (state) => {
   console.log({ provider, newPicks })
   // @ts-ignore
   const filterValue = provider.getFilterValue(value)
-  const items = getFilteredItems(state, newPicks, filterValue, provider)
+  const items = ViewletQuickPickGetFilteredItems.getFilteredItems(state, newPicks, filterValue, provider)
   const placeholder = provider.getPlaceholder()
   // @ts-ignore
   const label = provider.getLabel()
@@ -191,34 +178,6 @@ export const selectIndex = async (state, index, button = /* left */ 0) => {
 
 export const selectCurrentIndex = (state) => {
   return selectIndex(state, state.focusedIndex)
-}
-
-// TODO when user types letters -> no need to query provider again -> just filter existing results
-export const handleInput = async (state, newValue, cursorOffset) => {
-  if (state.value === newValue) {
-    return state
-  }
-  const newPicks = await state.provider.getPicks(newValue)
-  const filterValue = state.provider.getFilterValue(newValue)
-  const items = getFilteredItems(state, newPicks, filterValue, state.provider)
-  const focusedIndex = items.length === 0 ? -1 : 0
-  return {
-    ...state,
-    value: newValue,
-    picks: newPicks,
-    items,
-    focusedIndex,
-    cursorOffset,
-  }
-}
-
-export const handleBeforeInput = (state, inputType, data, selectionStart, selectionEnd) => {
-  Assert.string(inputType)
-  Assert.number(selectionStart)
-  Assert.number(selectionEnd)
-  const { value } = state
-  const { newValue, cursorOffset } = BeforeInput.getNewValue(value, inputType, data, selectionStart, selectionEnd)
-  return handleInput(state, newValue, cursorOffset)
 }
 
 // TODO use reactive Programming
