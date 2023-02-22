@@ -20,6 +20,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Base64
     case 'Blob':
       return ModuleId.Blob
+    case 'BulkReplacement':
+      return ModuleId.BulkReplacement
     case 'CacheStorage':
       return ModuleId.CacheStorage
     case 'Callback':
@@ -36,6 +38,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ColorTheme
     case 'ColorThemeFromJson':
       return ModuleId.ColorThemeFromJson
+    case 'ConfirmPrompt':
+      return ModuleId.ConfirmPrompt
     case 'ContentTracing':
       return ModuleId.ContentTracing
     case 'ContextMenu':
@@ -139,11 +143,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workbench
     case 'Workspace':
       return ModuleId.Workspace
-    case 'ConfirmPrompt':
-      return ModuleId.ConfirmPrompt
-    case 'BulkReplacement':
-      return ModuleId.BulkReplacement
     default:
-      throw new Error(`module ${prefix} not found`)
+      throw new Error(`command ${commandId} not found`)
   }
 }

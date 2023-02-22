@@ -9,6 +9,8 @@ export const getModuleId = (commandId) => {
     case 'ClipBoard.writeImage':
     case 'ClipBoard.writeText':
       return ModuleId.ClipBoard
+    case 'ConfirmPrompt.prompt':
+      return ModuleId.ConfirmPrompt
     case 'Css.addCssStyleSheet':
     case 'Css.setInlineStyle':
       return ModuleId.Css
@@ -139,8 +141,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Window
     case 33111:
       return ModuleId.Workbench
-    case 'ConfirmPrompt.prompt':
-      return ModuleId.ConfirmPrompt
     default:
       throw new Error(`command ${commandId} not found`)
   }
