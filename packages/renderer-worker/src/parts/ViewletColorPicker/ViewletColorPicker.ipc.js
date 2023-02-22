@@ -5,8 +5,7 @@ export const name = 'ColorPicker'
 // prettier-ignore
 export const Commands = {
   handleSliderPointerDown: ViewletColorPicker.handleSliderPointerDown,
-  handleSliderPointerMove: ViewletColorPicker.handleSliderPointerMove
-
+  handleSliderPointerMove: ViewletColorPicker.handleSliderPointerMove,
 }
 
 // prettier-ignore
