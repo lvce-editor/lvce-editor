@@ -8,6 +8,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const state = {
@@ -418,6 +419,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         if (module.contentLoadedEffects) {
           module.contentLoadedEffects(newState)
         }
+        if (viewlet.append) {
+          const parentId = viewlet.parentId
+          allCommands.push([kAppend, parentId, viewlet.id])
+        }
         return allCommands
       }
       // console.log('else', viewlet.id, { commands })
@@ -441,6 +446,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       // TODO unload the module from renderer process
       return
     }
+
     return commands
   } catch (error) {
     if (error && error instanceof CancelationError) {
@@ -457,12 +463,17 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       if (state < ViewletState.RendererProcessViewletLoaded) {
         await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.id)
       }
-      commands.push([kCreate, viewlet.id, viewlet.parentId])
-      commands.push([kSetBounds, viewlet.id, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
-      commands.push([/* viewlet.handleError */ kHandleError, /* id */ viewlet.id, /* parentId */ viewlet.parentId, /* message */ `${error}`])
+      const parentId = viewlet.parentId
+      Assert.string(parentId)
+      await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
+      commands.push([kCreate, ViewletModuleId.Error, parentId])
+      commands.push([kSetBounds, ViewletModuleId.Error, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
+      commands.push(['Viewlet.send', /* id */ ViewletModuleId.Error, 'setMessage', /* message */ `${error}`])
+      commands.push([kAppend, parentId, ViewletModuleId.Error])
       return commands
     } catch (error) {
       console.error(error)
+      return []
       // this is really bad
       // probably can only show an alert at this point
     }
