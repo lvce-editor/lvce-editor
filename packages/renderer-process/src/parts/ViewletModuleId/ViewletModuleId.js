@@ -75,3 +75,5 @@ export const TitleBarMenuBar = 'TitleBarMenuBar'
 export const Video = 'Video'
 
 export const ColorPicker = 'ColorPicker'
+
+export const Error = 'Error'

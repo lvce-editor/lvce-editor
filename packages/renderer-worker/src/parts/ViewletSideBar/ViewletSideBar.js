@@ -88,10 +88,11 @@ export const openViewlet = async (state, id, focus = false) => {
     y: childDimensions.y,
     width: childDimensions.width,
     height: childDimensions.height,
+    parentId: ViewletModuleId.SideBar,
+    append: true,
   })
   if (commands) {
     commands.unshift(['Viewlet.dispose', currentViewletId])
-    commands.push(['Viewlet.append', ViewletModuleId.SideBar, id])
     const activityBar = ViewletStates.getInstance(ViewletModuleId.ActivityBar)
     if (activityBar) {
       const oldState = activityBar.state
