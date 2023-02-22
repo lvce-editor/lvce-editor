@@ -80,6 +80,8 @@ export const load = (moduleId) => {
       return import('../ViewletColorPicker/ViewletColorPicker.js')
     case ViewletModuleId.MainTabs:
       return import('../ViewletMainTabs/ViewletMainTabs.js')
+    case ViewletModuleId.TitleBarIcon:
+      return import('../ViewletTitleBarIcon/ViewletTitleBarIcon.js')
     case ViewletModuleId.Error:
       return import('../ViewletError/ViewletError.js')
     default:
