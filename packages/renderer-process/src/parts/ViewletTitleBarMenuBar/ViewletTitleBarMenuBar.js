@@ -85,6 +85,10 @@ export const focus = (state) => {
 // 0.19ms composite layers
 
 const create$TopLevelEntry = (item) => {
+  const $Label = document.createElement('div')
+  $Label.className = 'TitleBarTopLevelEntryLabel'
+  $Label.textContent = item.label
+
   const $TitleBarTopLevelEntry = document.createElement('div')
   $TitleBarTopLevelEntry.className = 'TitleBarTopLevelEntry'
   $TitleBarTopLevelEntry.ariaHasPopup = AriaBoolean.True
@@ -94,7 +98,7 @@ const create$TopLevelEntry = (item) => {
   if (item.keyboardShortCut) {
     $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
   }
-  $TitleBarTopLevelEntry.textContent = item.label
+  $TitleBarTopLevelEntry.append($Label)
   return $TitleBarTopLevelEntry
 }
 

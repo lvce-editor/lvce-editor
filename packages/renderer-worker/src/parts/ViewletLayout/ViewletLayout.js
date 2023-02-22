@@ -117,7 +117,7 @@ const mPanel = {
 const getDefaultTitleBarHeight = () => {
   switch (Platform.platform) {
     case PlatformType.Electron:
-      return 28
+      return 29
     default:
       return 20
   }

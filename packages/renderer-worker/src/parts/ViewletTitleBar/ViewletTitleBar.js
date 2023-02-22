@@ -7,6 +7,7 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
+    titleBarIconWidth: 30,
   }
 }
 
@@ -16,16 +17,18 @@ export const loadContent = (state) => {
 
 export const getChildren = (state) => {
   const children = []
-  const { x, y, width, height } = state
+  const { x, y, width, height, titleBarIconWidth } = state
+  let menuBarX = x
   if (true) {
     children.push({
       id: ViewletModuleId.TitleBarIcon,
     })
+    menuBarX += titleBarIconWidth
   }
   if (true) {
     children.push({
       id: ViewletModuleId.TitleBarMenuBar,
-      x,
+      x: menuBarX,
       y,
       height,
     })
