@@ -144,6 +144,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace':
       return ModuleId.Workspace
     default:
-      throw new Error(`command ${commandId} not found`)
+      throw new Error(`module ${prefix} not found`)
   }
 }
