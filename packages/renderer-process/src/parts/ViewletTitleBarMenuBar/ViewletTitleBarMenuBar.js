@@ -30,7 +30,7 @@ export const attachEvents = (state) => {
   $TitleBarMenuBar.onmousedown = ViewletTitleBarMenuBarEvents.handleClick
   $TitleBarMenuBar.addEventListener(DomEventType.FocusOut, ViewletTitleBarMenuBarEvents.handleFocusOut)
   $TitleBarMenuBar.addEventListener(DomEventType.FocusIn, ViewletTitleBarMenuBarEvents.handleFocus)
-  $TitleBarMenuBar.onmouseover = ViewletTitleBarMenuBarEvents.handleMouseOver
+  $TitleBarMenuBar.onpointerover = ViewletTitleBarMenuBarEvents.handlePointerOver
 }
 
 export const dispose = (state) => {}
@@ -140,7 +140,7 @@ export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocus
   Assert.number(height)
   const { $TitleBarMenuBar } = state
   // TODO this code is very unclean
-  $TitleBarMenuBar.addEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handleMouseOver, {
+  $TitleBarMenuBar.addEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handlePointerOver, {
     capture: true,
   })
   if (unFocusIndex !== -1) {
@@ -179,7 +179,7 @@ export const closeMenu = (state, unFocusIndex, index) => {
     $TitleBarMenuBar.children[index].focus()
   }
   Menu.hide(/* restoreFocus */ false)
-  $TitleBarMenuBar.removeEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handleMouseOver, {
+  $TitleBarMenuBar.removeEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handlePointerOver, {
     capture: true,
   })
 }

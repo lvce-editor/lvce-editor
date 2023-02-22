@@ -48,7 +48,8 @@ test('event - click on menu', () => {
   const { $TitleBarMenuBar } = state
   $TitleBarMenuBar.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('TitleBarMenuBar.handleClick', 0, -1)
 })
 
 test('event - click on menu item', () => {
@@ -81,10 +82,10 @@ test('event - click on menu item', () => {
   $TitleBarMenuBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('TitleBarMenuBar.toggleIndex', 1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('TitleBarMenuBar.handleClick', 0, 1)
 })
 
-test('event - richt click on menu item', () => {
+test('event - right click on menu item', () => {
   const state = ViewletTitleBarMenuBar.create()
   ViewletTitleBarMenuBar.attachEvents(state)
   ViewletTitleBarMenuBar.setEntries(state, [
@@ -114,7 +115,8 @@ test('event - richt click on menu item', () => {
   })
   $TitleBarMenuBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('TitleBarMenuBar.handleClick', 2, 1)
 })
 
 // TODO test pageup/pagedown
