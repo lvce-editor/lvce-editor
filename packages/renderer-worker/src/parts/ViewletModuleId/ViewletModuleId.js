@@ -87,3 +87,5 @@ export const Video = 'Video'
 export const ColorPicker = 'ColorPicker'
 
 export const TitleBarIcon = 'TitleBarIcon'
+
+export const Error = 'Error'

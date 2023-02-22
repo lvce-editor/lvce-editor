@@ -24,6 +24,6 @@ export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator,
   await SideBar.open('Source Control')
 
   // assert
-  const sourceControl = Locator('.SourceControl')
-  await expect(sourceControl).toHaveText('ExecError: Failed to execute test-source-control: process exited with code 128')
+  const sideBarContent = Locator('#SideBar .Error')
+  await expect(sideBarContent).toHaveText('ExecError: Failed to execute test-source-control: process exited with code 128')
 }
