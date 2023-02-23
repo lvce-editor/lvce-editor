@@ -49,6 +49,10 @@ exports.load = async (moduleId) => {
       return require('../Process/Process.ipc.js')
     case ModuleId.ProcessExplorerContextMenu:
       return require('../ProcessExplorerContextMenu/ProcessExplorerContextMenu.ipc.js')
+    case ModuleId.ElectronNet:
+      return require('../ElectronNet/ElectronNet.ipc.js')
+    case ModuleId.ElectronBrowserViewSuggestions:
+      return require('../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }

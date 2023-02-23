@@ -21,3 +21,5 @@ exports.About = 20
 exports.ListProcessesWithMemoryUsage = 21
 exports.ProcessExplorerContextMenu = 22
 exports.Process = 23
+exports.ElectronNet = 24
+exports.ElectronBrowserViewSuggestions = 25

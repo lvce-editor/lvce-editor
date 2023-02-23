@@ -1,10 +1,13 @@
 // based on vscode's simple browser by Microsoft (https://github.com/microsoft/vscode/blob/e8fe2d07d31f30698b9262dd5e1fcc59a85c6bb1/extensions/simple-browser/src/extension.ts, License MIT)
 
 import * as Assert from '../Assert/Assert.js'
+import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSearchSuggestions.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js'
+import * as ElectronBrowserViewSuggestions from '../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -23,6 +26,8 @@ export const create = (id, uri, x, y, width, height) => {
     canGoForward: true,
     canGoBack: true,
     isLoading: false,
+    hasSuggestionsOverlay: false,
+    suggestionsEnabled: false,
   }
 }
 
@@ -82,6 +87,8 @@ export const loadContent = async (state, savedState) => {
   const iframeSrc = getUrlFromSavedState(savedState)
   // TODO load keybindings in parallel with creating browserview
   const keyBindings = await KeyBindings.getKeyBindings()
+  const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
+  console.log({ suggestionsEnabled })
   if (id) {
     const actualId = await ElectronBrowserView.createBrowserView(id)
     await ElectronBrowserViewFunctions.setFallthroughKeyBindings(keyBindings)
@@ -94,6 +101,7 @@ export const loadContent = async (state, savedState) => {
       iframeSrc,
       title: 'Simple Browser',
       browserViewId: actualId,
+      suggestionsEnabled,
     }
   }
 
@@ -112,6 +120,7 @@ export const loadContent = async (state, savedState) => {
     canGoBack,
     canGoForward,
     uri: `simple-browser://${browserViewId}`,
+    suggestionsEnabled,
   }
 }
 
@@ -125,11 +134,29 @@ export const hide = async (state) => {
   await ElectronBrowserViewFunctions.hide(browserViewId)
 }
 
-export const handleInput = (state, value) => {
-  // TODO maybe show autocomplete for urls like browsers do
+export const handleInput = async (state, value) => {
+  const { x, y, width, height, hasSuggestionsOverlay, suggestionsEnabled } = state
+  if (suggestionsEnabled) {
+    if (value === '' && hasSuggestionsOverlay) {
+      await ElectronBrowserViewSuggestions.disposeBrowserView()
+      return {
+        ...state,
+        inputValue: value,
+        hasSuggestionsOverlay: false,
+      }
+    } else {
+      // TODO maybe show autocomplete for urls like browsers do
+      const suggestions = await BrowserSearchSuggestions.get(value)
+      if (!hasSuggestionsOverlay) {
+        await ElectronBrowserViewSuggestions.createBrowserView(x + 70, y + 20, 400, 400)
+      }
+      await ElectronBrowserViewSuggestions.setSuggestions(suggestions)
+    }
+  }
   return {
     ...state,
     inputValue: value,
+    hasSuggestionsOverlay: true,
   }
 }
 
