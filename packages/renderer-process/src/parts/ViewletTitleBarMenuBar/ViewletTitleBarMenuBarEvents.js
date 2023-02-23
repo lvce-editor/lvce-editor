@@ -20,6 +20,12 @@ export const handlePointerOver = (event) => {
   RendererWorker.send(/* TitleBarMenuBar.focusIndex */ 'TitleBarMenuBar.handleMouseOver', /* index */ index)
 }
 
+export const handlePointerOut = (event) => {
+  const { target } = event
+  const index = getIndex(target)
+  RendererWorker.send(/* TitleBarMenuBar.handleMouseOut */ 'TitleBarMenuBar.handleMouseOut', /* index */ index)
+}
+
 const getNodeIndex = ($Node) => {
   let index = 0
   while (($Node = $Node.previousElementSibling)) {

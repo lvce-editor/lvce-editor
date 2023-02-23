@@ -11,19 +11,22 @@
   height: 100%;
   display: flex;
   align-items: center;
+  padding: 0 8px;
+  contain: content;
 }
 
 .TitleBarTopLevelEntryLabel {
   height: 22px;
+  line-height: 22px;
   contain: content;
   border-radius: 5px;
-  padding: 0 8px;
   background: var(--TitleBarTopLevelEntryLabel, inherit);
   pointer-events: none;
+  padding: 0 8px;
 }
 
-#TitleBarEntryActive,
-.TitleBarTopLevelEntry:hover {
+#TitleBarEntryActive {
+  padding: 0;
   --TitleBarTopLevelEntryLabel: var(--TitleBarItemHoverForeground, rgba(90, 93, 94, 0.31));
 }
 

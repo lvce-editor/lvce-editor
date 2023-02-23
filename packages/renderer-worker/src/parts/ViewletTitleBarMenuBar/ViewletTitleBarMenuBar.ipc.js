@@ -21,6 +21,7 @@ export const LazyCommands = {
   handleMenuMouseDown: () => import('./ViewletTitleBarMenuBarHandleMenuMouseDown.js'),
   handleMenuMouseOver: () => import('./ViewletTitleBarMenuBarHandleMenuMouseOver.js'),
   handleMouseOver: () => import('./ViewletTitleBarMenuBarHandleMouseOver.js'),
+  handleMouseOut: ()=>import('./ViewletTitleBarMenuBarHandleMouseOut.js'),
   toggleIndex: () => import('./ViewletTitleBarMenuBarToggleIndex.js'),
   toggleMenu: () => import('./ViewletTitleBarMenuBarToggleMenu.js'),
   handleClick: () => import('./ViewletTitleBarMenuBarHandleClick.js'),

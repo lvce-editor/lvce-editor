@@ -31,6 +31,7 @@ export const attachEvents = (state) => {
   $TitleBarMenuBar.addEventListener(DomEventType.FocusOut, ViewletTitleBarMenuBarEvents.handleFocusOut)
   $TitleBarMenuBar.addEventListener(DomEventType.FocusIn, ViewletTitleBarMenuBarEvents.handleFocus)
   $TitleBarMenuBar.onpointerover = ViewletTitleBarMenuBarEvents.handlePointerOver
+  $TitleBarMenuBar.onpointerout = ViewletTitleBarMenuBarEvents.handlePointerOut
 }
 
 export const dispose = (state) => {}
@@ -85,9 +86,9 @@ export const focus = (state) => {
 // 0.19ms composite layers
 
 const create$TopLevelEntry = (item) => {
-  const $Label = document.createElement('div')
-  $Label.className = 'TitleBarTopLevelEntryLabel'
-  $Label.textContent = item.label
+  // const $Label = document.createElement('div')
+  // $Label.className = 'TitleBarTopLevelEntryLabel'
+  // $Label.textContent = item.label
 
   const $TitleBarTopLevelEntry = document.createElement('div')
   $TitleBarTopLevelEntry.className = 'TitleBarTopLevelEntry'
@@ -98,7 +99,7 @@ const create$TopLevelEntry = (item) => {
   if (item.keyboardShortCut) {
     $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
   }
-  $TitleBarTopLevelEntry.append($Label)
+  $TitleBarTopLevelEntry.textContent = item.label
   return $TitleBarTopLevelEntry
 }
 
@@ -112,10 +113,16 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, 
     $Child.ariaExpanded = AriaBoolean.False
     $Child.removeAttribute(DomAttributeType.AriaOwns)
     $Child.removeAttribute('id')
+    $Child.textContent = $Child.textContent
   }
   if (focusIndex !== -1) {
     const $Child = $TitleBarMenuBar.children[focusIndex]
     $Child.id = activeId
+    const $Label = document.createElement('div')
+    $Label.className = 'TitleBarTopLevelEntryLabel'
+    $Label.textContent = $Child.textContent
+    $Child.replaceChildren($Label)
+
     $TitleBarMenuBar.focus()
     $TitleBarMenuBar.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
     if (newIsMenuOpen) {
