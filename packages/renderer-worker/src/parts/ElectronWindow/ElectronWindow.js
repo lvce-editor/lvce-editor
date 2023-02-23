@@ -36,6 +36,10 @@ export const zoomOut = () => {
   return ElectronProcess.invoke('ElectronWindow.zoomOut')
 }
 
+export const zoomReset = () => {
+  return ElectronProcess.invoke('ElectronWindow.zoomReset')
+}
+
 export const focus = () => {
   return ElectronProcess.invoke('ElectronWindow.focus')
 }
