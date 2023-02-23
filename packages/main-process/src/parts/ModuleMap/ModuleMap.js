@@ -55,6 +55,10 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ProcessExplorerContextMenu
     case 'Process':
       return ModuleId.Process
+    case 'ElectronNet':
+      return ModuleId.ElectronNet
+    case 'ElectronBrowserViewSuggestions':
+      return ModuleId.ElectronBrowserViewSuggestions
     default:
       throw new CommandNotFoundError(commandId)
   }
