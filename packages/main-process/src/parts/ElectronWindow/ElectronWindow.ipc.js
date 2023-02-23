@@ -13,4 +13,5 @@ exports.Commands = {
   unmaximize: ElectronWindow.wrapWindowCommand(ElectronWindow.unmaximize),
   zoomIn: ElectronWindow.wrapWindowCommand(ElectronWindow.zoomIn),
   zoomOut: ElectronWindow.wrapWindowCommand(ElectronWindow.zoomOut),
+  zoomReset: ElectronWindow.wrapWindowCommand(ElectronWindow.zoomReset),
 }
