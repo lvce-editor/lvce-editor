@@ -1,12 +1,12 @@
 const { BrowserView, BrowserWindow } = require('electron')
 const { VError } = require('verror')
+const DisposeWebContents = require('../DisposeWebContents/DisposeWebContents.js')
 const ElectronSession = require('../ElectronSession/ElectronSession.js')
-const Platform = require('../Platform/Platform.js')
-const Root = require('../Root/Root.js')
+const Logger = require('../Logger/Logger.js')
 const Path = require('../Path/Path.js')
 const PendingPorts = require('../PendingPorts/PendingPorts.js')
-const Logger = require('../Logger/Logger.js')
-const DisposeWebContents = require('../DisposeWebContents/DisposeWebContents.js')
+const Platform = require('../Platform/Platform.js')
+const Root = require('../Root/Root.js')
 
 const state = (exports.state = {
   /**
@@ -21,12 +21,20 @@ exports.disposeBrowserView = () => {
   if (!browserWindow) {
     return
   }
+  if (!state.browserView) {
+    return
+  }
   DisposeWebContents.disposeWebContents(state.browserView)
   browserWindow.removeBrowserView(state.browserView)
+  state.browserView = undefined
+  state.port = undefined
 }
 
 exports.createBrowserView = async (x, y, width, height, openDevtools = false) => {
   try {
+    if (state.browserView) {
+      throw new Error('browser view already exists')
+    }
     const browserWindow = BrowserWindow.getFocusedWindow()
     if (!browserWindow) {
       return

@@ -138,7 +138,7 @@ export const hide = async (state) => {
 }
 
 export const handleInput = async (state, value) => {
-  const { x, y, width, height, hasSuggestionsOverlay, suggestionsEnabled } = state
+  const { x, y, width, height, hasSuggestionsOverlay, suggestionsEnabled, headerHeight } = state
   if (suggestionsEnabled) {
     if (value === '' && hasSuggestionsOverlay) {
       await ElectronBrowserViewSuggestions.disposeBrowserView()
@@ -151,7 +151,7 @@ export const handleInput = async (state, value) => {
       // TODO maybe show autocomplete for urls like browsers do
       const suggestions = await BrowserSearchSuggestions.get(value)
       if (!hasSuggestionsOverlay) {
-        await ElectronBrowserViewSuggestions.createBrowserView(x + 70, y + 20, 400, 400)
+        await ElectronBrowserViewSuggestions.createBrowserView(x + 70, y + headerHeight, 400, 400)
       }
       await ElectronBrowserViewSuggestions.setSuggestions(suggestions)
     }
@@ -164,11 +164,14 @@ export const handleInput = async (state, value) => {
 }
 
 export const go = (state) => {
-  const { inputValue, browserViewId } = state
+  const { inputValue, browserViewId, suggestionsEnabled, hasSuggestionsOverlay } = state
   const iframeSrc = IframeSrc.toIframeSrc(inputValue)
   // TODO await promises
   void ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
   void ElectronBrowserViewFunctions.focus(browserViewId)
+  if (suggestionsEnabled && hasSuggestionsOverlay) {
+    void ElectronBrowserViewSuggestions.disposeBrowserView()
+  }
   return {
     ...state,
     iframeSrc,
