@@ -1,5 +1,4 @@
 import exitHook from 'exit-hook'
-import { ChildProcess } from 'node:child_process'
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
@@ -9,7 +8,7 @@ import * as PtyHostPath from '../PtyHostPath/PtyHostPath.js'
 
 export const state = {
   /**
-   * @type {ChildProcess|undefined}
+   * @type {any}
    */
   ptyHost: undefined,
   ptyHostState: /* None */ 0,
@@ -115,8 +114,7 @@ export const create = async (socket, id, cwd) => {
   })
   const handleClose = () => {
     if (state.ptyHost) {
-      state.ptyHost.removeAllListeners()
-      state.ptyHost.kill()
+      state.ptyHost.dispose()
       state.ptyHost = undefined
       state.ptyHostState = /* None */ 0
       state.send = (message) => {
