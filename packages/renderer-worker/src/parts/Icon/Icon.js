@@ -4,7 +4,9 @@ const assetDir = Platform.getAssetDir()
 
 export const Add = `${assetDir}/icons/add.svg`
 export const Blank = `${assetDir}/icons/blank.svg`
+export const ClearAll = `${assetDir}/icons/clear-all.svg`
 export const Close = `${assetDir}/icons/icon-close.svg`
+export const CollapseAll = `${assetDir}/icons/collapse-all.svg`
 export const DebugAlt2 = `${assetDir}/icons/debug-alt-2.svg`
 export const DebugContinue = `${assetDir}/icons/debug-continue.svg`
 export const DebugPause = `${assetDir}/icons/debug-pause.svg`
@@ -19,6 +21,7 @@ export const Extensions = `${assetDir}/icons/extensions.svg`
 export const ExtensionTheme = `${assetDir}/icons/theme-icon.png`
 export const Files = `${assetDir}/icons/files.svg`
 export const GoToFile = `${assetDir}/icons/go-to-file.svg`
+export const ListFlat = `${assetDir}/icons/list-flat.svg`
 export const NextMatch = `${assetDir}/icons/arrow-down.svg`
 export const PreviousMatch = `${assetDir}/icons/arrow-up.svg`
 export const Search = `${assetDir}/icons/search.svg`
