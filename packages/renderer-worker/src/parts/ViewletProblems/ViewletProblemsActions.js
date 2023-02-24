@@ -1,3 +1,5 @@
+import * as Icon from '../Icon/Icon.js'
+
 export const getActions = () => {
   return [
     {
@@ -7,10 +9,12 @@ export const getActions = () => {
     {
       type: 'button',
       id: 'Collapse All',
+      icon: Icon.CollapseAll,
     },
     {
       type: 'button',
       id: 'View as table',
+      icon: Icon.ListFlat,
     },
   ]
 }

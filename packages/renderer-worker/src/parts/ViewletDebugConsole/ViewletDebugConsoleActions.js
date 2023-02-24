@@ -1,3 +1,5 @@
+import * as Icon from '../Icon/Icon.js'
+
 export const getActions = () => {
   return [
     {
@@ -7,6 +9,7 @@ export const getActions = () => {
     {
       type: 'button',
       id: 'Clear Console',
+      icon: Icon.ClearAll,
     },
   ]
 }

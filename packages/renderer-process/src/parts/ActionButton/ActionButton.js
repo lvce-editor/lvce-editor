@@ -1,6 +1,11 @@
+import * as IconButton from '../IconButton/IconButton.js'
+import * as Assert from '../Assert/Assert.js'
+
 export const create = (action) => {
-  const { id } = action
-  const $Button = document.createElement('div')
-  $Button.textContent = id
+  const { id, icon } = action
+  Assert.string(id)
+  Assert.string(icon)
+  console.log({ icon })
+  const $Button = IconButton.create$Button(id, icon)
   return $Button
 }
