@@ -17,12 +17,12 @@
 
 .TitleBarTopLevelEntryLabel {
   height: 22px;
-  line-height: 22px;
-  contain: content;
   border-radius: 5px;
   background: var(--TitleBarTopLevelEntryLabel, inherit);
   pointer-events: none;
   padding: 0 8px;
+  display: flex;
+  align-items: center;
 }
 
 #TitleBarEntryActive {
