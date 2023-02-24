@@ -1,19 +1,21 @@
+import * as ActionType from '../ActionType/ActionType.js'
+
 export const getActions = () => {
   return [
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'new File',
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'new Folder',
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'refresh',
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'Collapse all',
     },
   ]

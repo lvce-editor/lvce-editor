@@ -1,23 +1,25 @@
 import * as Icon from '../Icon/Icon.js'
 
+import * as ActionType from '../ActionType/ActionType.js'
+
 export const getActions = () => {
   return [
     {
-      type: 'select',
+      type: ActionType.Select,
       id: 'output',
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'clear output',
       icon: Icon.ClearAll,
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'Turn auto scrolling off',
       icon: Icon.Blank,
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'open output log file',
       icon: Icon.Blank,
     },

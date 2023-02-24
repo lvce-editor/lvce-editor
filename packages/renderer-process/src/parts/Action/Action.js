@@ -2,17 +2,19 @@ import * as ActionButton from '../ActionButton/ActionButton.js'
 import * as ActionDefault from '../ActionDefault/ActionDefault.js'
 import * as ActionFilter from '../ActionFilter/ActionFilter.js'
 import * as ActionSelect from '../ActionSelect/ActionSelect.js'
+import * as ActionType from '../ActionType/ActionType.js'
+import * as Logger from '../Logger/Logger.js'
 
 const getActionFunction = (type) => {
   switch (type) {
-    case 'button':
+    case ActionType.Button:
       return ActionButton.create
-    case 'filter':
+    case ActionType.Filter:
       return ActionFilter.create
-    case 'select':
+    case ActionType.Select:
       return ActionSelect.create
     default:
-      console.warn(`action type not implemented: ${type}`)
+      Logger.warn(`action type not implemented: ${type}`)
       return ActionDefault.create
   }
 }

@@ -1,19 +1,21 @@
+import * as ActionType from '../ActionType/ActionType.js'
+
 export const getActions = () => {
   return [
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'View as tree',
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'Create Pull request',
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'Commit and push',
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'refresh',
     },
   ]

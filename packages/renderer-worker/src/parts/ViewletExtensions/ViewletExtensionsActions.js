@@ -1,16 +1,27 @@
+import * as ActionType from '../ActionType/ActionType.js'
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  Filter: 'Filter',
+  Refresh: 'Refresh',
+  ClearExtensionSearchResults: 'Clear extension search results',
+}
+
 export const getActions = () => {
   return [
     {
-      type: 'button',
-      id: 'filter',
+      type: ActionType.Button,
+      id: UiStrings.Filter,
     },
     {
-      type: 'button',
-      id: 'refresh',
+      type: ActionType.Button,
+      id: UiStrings.Refresh,
     },
     {
-      type: 'button',
-      id: 'Clear extension search results',
+      type: ActionType.Button,
+      id: UiStrings.ClearExtensionSearchResults,
     },
   ]
 }

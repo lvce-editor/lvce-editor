@@ -1,13 +1,14 @@
 import * as Icon from '../Icon/Icon.js'
+import * as ActionType from '../ActionType/ActionType.js'
 
 export const getActions = () => {
   return [
     {
-      type: 'filter',
+      type: ActionType.Filter,
       id: '',
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'Clear Console',
       icon: Icon.ClearAll,
     },

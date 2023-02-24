@@ -1,23 +1,25 @@
+import * as ActionType from '../ActionType/ActionType.js'
+
 export const getActions = () => {
   return [
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'refresh',
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'Clear search results',
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'new search editor',
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'view as tree',
     },
     {
-      type: 'button',
+      type: ActionType.Button,
       id: 'collapse all',
     },
   ]
