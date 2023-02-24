@@ -1,11 +1,11 @@
+import * as Actions from '../Actions/Actions.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletPanelEvents from './ViewletPanelEvents.js'
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-
 /**
  * @enum {string}
  */
@@ -135,4 +135,15 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
     $PanelTab.ariaSelected = true
     $PanelTabs.setAttribute(DomAttributeType.AriaActiveDescendant, $PanelTab.id)
   }
+}
+
+export const setActions = (state, actions) => {
+  const { $PanelTabs, $Actions } = state
+  const $NewActions = Actions.create(actions)
+  if ($Actions) {
+    $Actions.replaceWith($NewActions)
+  } else {
+    $PanelTabs.after($NewActions)
+  }
+  state.$Actions = $NewActions
 }

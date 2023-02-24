@@ -51,3 +51,7 @@
 #PanelContent {
   contain: strict;
 }
+
+.Actions {
+  display: flex;
+}
