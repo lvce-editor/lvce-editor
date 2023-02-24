@@ -230,8 +230,11 @@ export const resizeEffect = async (state) => {
 }
 
 export const dispose = async (state) => {
-  const { browserViewId } = state
+  const { browserViewId, suggestionsEnabled, hasSuggestionsOverlay } = state
   await ElectronBrowserView.disposeBrowserView(browserViewId)
+  if (suggestionsEnabled && hasSuggestionsOverlay) {
+    await ElectronBrowserViewSuggestions.disposeBrowserView()
+  }
 }
 
 const renderIframeSrc = {
