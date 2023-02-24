@@ -88,11 +88,14 @@ export const loadContent = async (state, savedState) => {
   // TODO load keybindings in parallel with creating browserview
   const keyBindings = await KeyBindings.getKeyBindings()
   const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
-  console.log({ suggestionsEnabled })
+  const browserViewX = x
+  const browserViewY = y + headerHeight
+  const browserViewWidth = width
+  const browserViewHeight = height - headerHeight
   if (id) {
     const actualId = await ElectronBrowserView.createBrowserView(id)
     await ElectronBrowserViewFunctions.setFallthroughKeyBindings(keyBindings)
-    await ElectronBrowserViewFunctions.resizeBrowserView(actualId, y + headerHeight, x, width, height - headerHeight)
+    await ElectronBrowserViewFunctions.resizeBrowserView(actualId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
     if (id !== actualId) {
       await ElectronBrowserViewFunctions.setIframeSrc(actualId, iframeSrc)
     }
@@ -108,7 +111,7 @@ export const loadContent = async (state, savedState) => {
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(/* restoreId */ 0)
   await ElectronBrowserViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
-  await ElectronBrowserViewFunctions.resizeBrowserView(browserViewId, x, y + headerHeight, width, height - headerHeight)
+  await ElectronBrowserViewFunctions.resizeBrowserView(browserViewId, browserViewX, browserViewHeight, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
   await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
   const { title, canGoBack, canGoForward } = await ElectronBrowserViewFunctions.getStats(browserViewId)
