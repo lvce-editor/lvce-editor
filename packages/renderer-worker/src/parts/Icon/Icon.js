@@ -25,6 +25,7 @@ export const GoToFile = `${assetDir}/icons/go-to-file.svg`
 export const ListFlat = `${assetDir}/icons/list-flat.svg`
 export const NewFile = `${assetDir}/icons/new-file.svg`
 export const NewFolder = `${assetDir}/icons/new-folder.svg`
+export const NewLine = `${assetDir}/icons/newline.svg`
 export const NextMatch = `${assetDir}/icons/arrow-down.svg`
 export const PreviousMatch = `${assetDir}/icons/arrow-up.svg`
 export const Refresh = `${assetDir}/icons/refresh.svg`
