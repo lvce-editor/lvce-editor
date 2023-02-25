@@ -33,6 +33,14 @@ export const loadContent = (state, savedState) => {
   }
 }
 
+export const contentLoaded = async (state, savedState) => {
+  const { currentViewletId } = state
+  const commands = []
+  const actions = ViewletActions.getActions(currentViewletId)
+  commands.push(['Viewlet.send', ViewletModuleId.SideBar, 'setActions', actions])
+  return commands
+}
+
 // export const loadContentEffects = () => {
 //   LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
 //   GlobalEventBus.addListener('Layout.hideSideBar', handleSideBarClose)

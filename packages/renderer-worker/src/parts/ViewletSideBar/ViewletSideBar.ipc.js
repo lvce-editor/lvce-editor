@@ -9,6 +9,6 @@ export const Commands =  {
   show: ViewletSideBar.openViewlet,
 }
 
-export const Css = ['/css/parts/ViewletSideBar.css', '/css/parts/Actions.css']
+export const Css = ['/css/parts/ViewletSideBar.css', '/css/parts/Actions.css', '/css/parts/IconButton.css']
 
 export * from './ViewletSideBar.js'
