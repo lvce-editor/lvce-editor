@@ -27,3 +27,4 @@ export const Css = [
 ]
 
 export * from './ViewletSourceControl.js'
+export * from './ViewletSourceControlActions.js'

@@ -44,3 +44,4 @@ export const Css = [
 ]
 
 export * from './ViewletSearch.js'
+export * from './ViewletSearchActions.js'

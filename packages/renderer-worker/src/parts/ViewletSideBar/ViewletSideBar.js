@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletActions from '../ViewletActions/ViewletActions.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -101,6 +102,8 @@ export const openViewlet = async (state, id, focus = false) => {
       activityBar.state = newState
       commands.push(...extraCommands)
     }
+    const actions = ViewletActions.getActions(id)
+    commands.push(['Viewlet.send', ViewletModuleId.SideBar, 'setActions', actions])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 

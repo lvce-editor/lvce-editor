@@ -1,3 +1,4 @@
+import * as Actions from '../Actions/Actions.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 
@@ -30,6 +31,7 @@ export const create = () => {
     $SideBarTitleAreaButtons,
     $SideBarContent: undefined,
     $SideBarTitleAreaTitle,
+    $Actions: undefined,
   }
 }
 
@@ -58,6 +60,18 @@ export const setTitle = (state, name) => {
   const { $SideBarTitleAreaTitle } = state
   $SideBarTitleAreaTitle.title = name
   $SideBarTitleAreaTitle.textContent = name
+}
+
+export const setActions = (state, actions) => {
+  console.log({ actions })
+  const { $SideBarTitleArea, $Actions } = state
+  const $NewActions = Actions.create(actions)
+  if ($Actions) {
+    $Actions.replaceWith($NewActions)
+  } else {
+    $SideBarTitleArea.append($NewActions)
+  }
+  state.$Actions = $NewActions
 }
 
 export const focus = async () => {

@@ -5,7 +5,6 @@ export const create = (action) => {
   const { id, icon } = action
   Assert.string(id)
   Assert.string(icon)
-  console.log({ icon })
   const $Button = IconButton.create$Button(id, icon)
   return $Button
 }

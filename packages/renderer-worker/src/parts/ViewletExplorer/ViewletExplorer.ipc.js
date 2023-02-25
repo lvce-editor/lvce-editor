@@ -61,3 +61,4 @@ export const LazyCommands = {
 export const Css = ['/css/parts/ViewletExplorer.css', '/css/parts/Label.css', '/css/parts/TreeItem.css', '/css/parts/Drag.css']
 
 export * from './ViewletExplorer.js'
+export * from './ViewletExplorerActions.js'
