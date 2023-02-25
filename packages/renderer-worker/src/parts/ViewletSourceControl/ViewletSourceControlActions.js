@@ -21,7 +21,7 @@ export const getActions = () => {
     {
       type: ActionType.Button,
       id: 'refresh',
-      icon: Icon.Files,
+      icon: Icon.Refresh,
     },
   ]
 }

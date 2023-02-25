@@ -1,26 +1,36 @@
 import * as ActionType from '../ActionType/ActionType.js'
 import * as Icon from '../Icon/Icon.js'
 
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  NewFile: 'New File',
+  NewFolder: 'New Folder',
+  Refresh: 'Refresh',
+  CollapseAll: 'Collapse All',
+}
+
 export const getActions = () => {
   return [
     {
       type: ActionType.Button,
-      id: 'new File',
-      icon: Icon.Files,
+      id: UiStrings.NewFile,
+      icon: Icon.NewFile,
     },
     {
       type: ActionType.Button,
-      id: 'new Folder',
-      icon: Icon.Files,
+      id: UiStrings.NewFolder,
+      icon: Icon.NewFolder,
     },
     {
       type: ActionType.Button,
-      id: 'refresh',
-      icon: Icon.Files,
+      id: UiStrings.Refresh,
+      icon: Icon.Refresh,
     },
     {
       type: ActionType.Button,
-      id: 'Collapse all',
+      id: UiStrings.CollapseAll,
       icon: Icon.CollapseAll,
     },
   ]

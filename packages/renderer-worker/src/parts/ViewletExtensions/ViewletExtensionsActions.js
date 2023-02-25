@@ -15,12 +15,12 @@ export const getActions = () => {
     {
       type: ActionType.Button,
       id: UiStrings.Filter,
-      icon: Icon.Files,
+      icon: Icon.Filter,
     },
     {
       type: ActionType.Button,
       id: UiStrings.Refresh,
-      icon: Icon.Files,
+      icon: Icon.Refresh,
     },
     {
       type: ActionType.Button,
