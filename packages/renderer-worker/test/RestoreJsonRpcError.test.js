@@ -1,3 +1,4 @@
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 import * as ErrorType from '../src/parts/ErrorType/ErrorType.js'
 import * as RestoreJsonRpcError from '../src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js'
 
@@ -182,4 +183,20 @@ test('restoreJsonRpcError - error without stack', () => {
   expect(error.message).toBe("FileNotFoundError: File not found '0.8510013488176322'")
   expect(error.stack).toMatch(`FileNotFoundError: File not found '0.8510013488176322'`)
   expect(error.name).toBe('Error')
+})
+
+test('restoreJsonRpcError - error with code', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    code: -32001,
+    message: "FileNotFoundError: File not found '/test/settings.json'",
+    data: {
+      code: ErrorCodes.ENOENT,
+    },
+  })
+  expect(error).toBeInstanceOf(Error)
+  expect(error.message).toBe("FileNotFoundError: File not found '/test/settings.json'")
+  expect(error.stack).toMatch(`Error: FileNotFoundError: File not found '/test/settings.json'
+    at constructError`)
+  // @ts-ignore
+  expect(error.code).toBe(ErrorCodes.ENOENT)
 })

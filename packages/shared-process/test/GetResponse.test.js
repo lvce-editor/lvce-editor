@@ -57,6 +57,9 @@ test('getResponse - error - ENOENT', async () => {
     error: {
       code: -32001,
       message: 'Error: ENOENT',
+      data: {
+        code: ErrorCodes.ENOENT,
+      },
     },
     id: 1,
     jsonrpc: JsonRpcVersion.Two,
