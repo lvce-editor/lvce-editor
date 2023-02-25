@@ -97,6 +97,7 @@ export const openViewlet = async (state, id, focus = false) => {
     height: childDimensions.height,
     append: true,
   })
+  console.log({ commands })
   if (commands) {
     commands.unshift(['Viewlet.dispose', currentViewletId])
     const actions = ViewletActions.getActions(id)
