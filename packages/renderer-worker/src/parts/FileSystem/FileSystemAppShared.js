@@ -4,21 +4,21 @@ import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import { VError } from '../VError/VError.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as FileSystem from './FileSystem.js'
 
-export const readFileInternal = async (getPath, defaultContent = '') => {
-  const path = await getPath()
-  Assert.string(path)
-  if (Platform.platform === PlatformType.Web) {
-    const settingsJsonContent = await LocalStorage.getText(path)
-    if (settingsJsonContent) {
-      return settingsJsonContent
-    }
-    const assetDir = Platform.getAssetDir()
-    const url = `${assetDir}/config/defaultSettings.json`
-    return Command.execute(/* Ajax.getText */ 'Ajax.getText', /* url */ url)
+const readFileWeb = async (path, defaultContent) => {
+  const settingsJsonContent = await LocalStorage.getText(path)
+  if (settingsJsonContent) {
+    return settingsJsonContent
   }
+  const assetDir = Platform.getAssetDir()
+  const url = `${assetDir}/config/defaultSettings.json`
+  return Command.execute(/* Ajax.getText */ 'Ajax.getText', /* url */ url)
+}
+
+const readFileNode = async (path, defaultContent) => {
   // TODO handle enoent and other errors gracefully
   try {
     const userSettingsContent = await FileSystem.readFile(path)
@@ -26,26 +26,37 @@ export const readFileInternal = async (getPath, defaultContent = '') => {
   } catch (error) {
     // @ts-ignore
     if (error && error.code === ErrorCodes.ENOENT) {
-      const dirname = Workspace.pathDirName(path)
-      await FileSystem.mkdir(dirname)
-      await FileSystem.writeFile(path, defaultContent)
-      return defaultContent
+      try {
+        const dirname = Workspace.pathDirName(path)
+        await FileSystem.mkdir(dirname)
+        await FileSystem.writeFile(path, defaultContent)
+        return defaultContent
+      } catch (error) {
+        throw new VError(error, `Failed to read ${path} `)
+      }
     }
-    throw error
+    throw new VError(error, `Failed to read ${path}`)
   }
 }
 
-export const writeFileInternal = async (getPath, content) => {
+export const readFileInternal = async (getPath, defaultContent = '') => {
   const path = await getPath()
   Assert.string(path)
   if (Platform.platform === PlatformType.Web) {
-    await Command.execute(
-      /* LocalStorage.setText */ 'LocalStorage.setText',
-      /* key */ path,
-      /* value */ content
-    )
+    return readFileWeb(path, defaultContent)
+  }
+  // TODO handle enoent and other errors gracefully
+  return readFileNode(path, defaultContent)
+}
+
+const writeFileWeb = async (path, content) => {
+  if (Platform.platform === PlatformType.Web) {
+    await Command.execute(/* LocalStorage.setText */ 'LocalStorage.setText', /* key */ path, /* value */ content)
     return
   }
+}
+
+const writeFileNode = async (path, content) => {
   // TODO handle enoent and other errors gracefully
   try {
     await FileSystem.writeFile(path, content)
@@ -58,15 +69,20 @@ export const writeFileInternal = async (getPath, content) => {
         const dirname = Workspace.pathDirName(path)
         await FileSystem.mkdir(dirname)
         await FileSystem.writeFile(path, content)
+        return
       } catch (error) {
-        // @ts-ignore
-        error.message = `Failed to write ${path}: ${error.message}`
-        throw error
+        throw new VError(error, `Failed to write ${path}`)
       }
-    } else {
-      // @ts-ignore
-      error.message = `Failed to write ${path}: ${error.message}`
-      throw error
     }
+    throw new VError(error, `Failed to write ${path}`)
   }
+}
+
+export const writeFileInternal = async (getPath, content) => {
+  const path = await getPath()
+  Assert.string(path)
+  if (Platform.platform === PlatformType.Web) {
+    return writeFileWeb(path, content)
+  }
+  return writeFileNode(path, content)
 }

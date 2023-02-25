@@ -7,6 +7,13 @@ import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.js'
 import * as RequiresSocket from '../RequiresSocket/RequiresSocket.js'
 
+const shouldLogError = (error) => {
+  if (error && error.code === ErrorCodes.ENOENT) {
+    return false
+  }
+  return true
+}
+
 export const getResponse = async (message, handle) => {
   try {
     const result = RequiresSocket.requiresSocket(message.method)
@@ -29,14 +36,16 @@ export const getResponse = async (message, handle) => {
         },
       }
     }
-    // @ts-ignore
-    if (error && error instanceof Error && error.code === ErrorCodes.ENOENT) {
+    if (!shouldLogError(error)) {
       return {
         jsonrpc: JsonRpcVersion.Two,
         id: message.id,
         error: {
           code: JsonRpcErrorCode.Custom,
           message: `${error}`,
+          data: {
+            code: error.code,
+          },
         },
       }
     }
