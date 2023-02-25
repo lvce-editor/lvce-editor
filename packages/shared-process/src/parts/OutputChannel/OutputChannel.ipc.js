@@ -23,16 +23,16 @@ const open = (socket, id, path) => {
     console.log('send data', data)
     socket.send({
       jsonrpc: JsonRpcVersion.Two,
-      method: 2133,
-      params: ['Output', 'handleData', data],
+      method: 'Output.handleData',
+      params: [data],
     })
   }
   const onError = (error) => {
     console.info(`[shared process] output channel error: ${error}`)
     socket.send({
       jsonrpc: JsonRpcVersion.Two,
-      method: 2133,
-      params: ['Output', 'handleError', error],
+      method: 'Output.handleError',
+      params: [error],
     })
   }
   state.outputChannels[id] = OutputChannel.open(path, onData, onError)
