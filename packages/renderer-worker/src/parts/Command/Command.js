@@ -1,3 +1,4 @@
+import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
 import * as ModuleMap from '../ModuleMap/ModuleMap.js'
 import { VError } from '../VError/VError.js'
 
@@ -69,7 +70,7 @@ export const execute = (command, ...args) => {
             return
           }
           hasThrown.add(command)
-          throw new Error(`Command did not register "${command}"`)
+          throw new CommandNotFoundError(command)
         }
         return execute(command, ...args)
       })
