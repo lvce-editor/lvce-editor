@@ -38,6 +38,14 @@ export const loadContent = (state, savedState) => {
   }
 }
 
+export const contentLoaded = (state) => {
+  const { currentViewletId } = state
+  const commands = []
+  const actions = ViewletActions.getActions(currentViewletId)
+  commands.push(['Viewlet.send', ViewletModuleId.Panel, 'setActions', actions])
+  return commands
+}
+
 const getContentDimensions = (dimensions) => {
   return {
     x: dimensions.x,
