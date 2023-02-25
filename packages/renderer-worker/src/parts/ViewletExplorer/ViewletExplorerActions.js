@@ -17,21 +17,25 @@ export const getActions = () => {
       type: ActionType.Button,
       id: UiStrings.NewFile,
       icon: Icon.NewFile,
+      command: 'Explorer.newFile',
     },
     {
       type: ActionType.Button,
       id: UiStrings.NewFolder,
       icon: Icon.NewFolder,
+      command: 'Explorer.newFolder',
     },
     {
       type: ActionType.Button,
       id: UiStrings.Refresh,
       icon: Icon.Refresh,
+      command: 'Explorer.refresh',
     },
     {
       type: ActionType.Button,
       id: UiStrings.CollapseAll,
       icon: Icon.CollapseAll,
+      command: 'Explorer.collapseAll',
     },
   ]
 }

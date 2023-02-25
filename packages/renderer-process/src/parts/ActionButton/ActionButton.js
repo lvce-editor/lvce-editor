@@ -6,5 +6,6 @@ export const create = (action) => {
   Assert.string(id)
   Assert.string(icon)
   const $Button = IconButton.create$Button(id, icon)
+  $Button.dataset.command = action.command || ''
   return $Button
 }
