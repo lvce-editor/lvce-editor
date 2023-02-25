@@ -2,6 +2,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletActions from '../ViewletActions/ViewletActions.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -35,6 +36,14 @@ export const loadContent = (state, savedState) => {
     currentViewletId: savedViewletId,
     selectedIndex,
   }
+}
+
+export const contentLoaded = (state) => {
+  const { currentViewletId } = state
+  const commands = []
+  const actions = ViewletActions.getActions(currentViewletId)
+  commands.push(['Viewlet.send', ViewletModuleId.Panel, 'setActions', actions])
+  return commands
 }
 
 const getContentDimensions = (dimensions) => {
@@ -71,6 +80,7 @@ export const openViewlet = async (state, id, focus = false) => {
   const { currentViewletId } = state
   state.currentViewletId = id
   const childDimensions = getContentDimensions(state)
+  // TODO load actions
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
     id,
@@ -89,6 +99,8 @@ export const openViewlet = async (state, id, focus = false) => {
   })
   if (commands) {
     commands.unshift(['Viewlet.dispose', currentViewletId])
+    const actions = ViewletActions.getActions(id)
+    commands.push(['Viewlet.send', ViewletModuleId.Panel, 'setActions', actions])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     if (commands[commands.length - 1].includes(ViewletModuleId.Error)) {
       state.currentViewletId = ViewletModuleId.Error

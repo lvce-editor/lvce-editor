@@ -31,6 +31,8 @@ export const LazyCommands = {
   selectIndex: () => import('./ViewletSearchSelectIndex.js'),
   dismissItem: () => import('./ViewletSearchDismissItem.js'),
   copy: () => import('./ViewletSearchCopy.js'),
+  refresh: () => import('./ViewletSearchRefresh.js'),
+  clearSearchResults: () => import('./ViewletSearchClearSearchResults.js'),
 }
 
 export const Css = [
@@ -44,3 +46,4 @@ export const Css = [
 ]
 
 export * from './ViewletSearch.js'
+export * from './ViewletSearchActions.js'

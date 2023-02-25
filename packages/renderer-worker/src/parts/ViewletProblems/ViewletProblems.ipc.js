@@ -10,3 +10,4 @@ export const Commands = {
 export const Css = '/css/parts/ViewletProblems.css'
 
 export * from './ViewletProblems.js'
+export * from './ViewletProblemsActions.js'
