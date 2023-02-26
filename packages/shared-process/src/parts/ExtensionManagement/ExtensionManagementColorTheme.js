@@ -1,4 +1,5 @@
 import VError from 'verror'
+import * as Assert from '../Assert/Assert.js'
 import * as Error from '../Error/Error.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as FileSystemWatch from '../FileSystemWatch/FileSystemWatch.js'
@@ -28,6 +29,7 @@ const getColorThemePath = async (extensions, colorThemeId) => {
 }
 
 export const getColorThemeJson = async (colorThemeId) => {
+  Assert.string(colorThemeId)
   const extensions = await ExtensionManagement.getExtensions()
   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
   if (!colorThemePath) {
