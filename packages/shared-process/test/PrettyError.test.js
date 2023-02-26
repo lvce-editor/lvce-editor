@@ -114,6 +114,7 @@ export const execSync = (command) => {
      |   ^
   25 | }
   26 |`,
+    type: 'RangeError',
   })
 })
 
@@ -181,6 +182,7 @@ This file is being treated as an ES module because it has a '.js' file extension
   6 |   Assert.string(path)
   7 |   const worker = new Worker(path, {
   8 |     argv,`,
+    type: 'ReferenceError',
   })
 })
 
@@ -345,5 +347,6 @@ export const search = async (searchDir, searchString, { threads = 1, maxSearchRe
   89 |     childProcess.stdout,
   90 |     new Transform({
   91 |       decodeStrings: false,`,
+    type: 'TypeError',
   })
 })
