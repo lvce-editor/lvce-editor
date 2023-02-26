@@ -100,6 +100,39 @@ test('restoreJsonRpcError - with stack', () => {
   )
 })
 
+test('restoreJsonRpcError - with stack in data property', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    code: -32001,
+    message:
+      'Failed to get all preferences: failed to get user preferences: Failed to read file "/test/.config/app/settings.json": EACCES: permission denied, open \'/test/.config/app/settings.json\'',
+    data: {
+      stack: `Failed to get all preferences: failed to get user preferences: Failed to read file \"/test/.config/app/settings.json\": EACCES: permission denied, open '/test/.config/app/settings.json'
+    at getUserPreferences (file:///test/packages/shared-process/src/parts/Preferences/Preferences.js:23:11)
+    at async Object.getAll [as Preferences.getAll] (file:///test/packages/shared-process/src/parts/Preferences/Preferences.js:63:29)
+    at async Module.getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
+    at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
+      codeFrame: `  21 |   } catch (error) {
+  22 |     // @ts-ignore
+> 23 |     throw new VError(error, 'failed to get user preferences')
+     |           ^
+  24 |   }
+  25 | }
+  26 |`,
+    },
+  })
+  expect(error).toBeInstanceOf(Error)
+  expect(error.message).toBe(
+    `Failed to get all preferences: failed to get user preferences: Failed to read file \"/test/.config/app/settings.json\": EACCES: permission denied, open '/test/.config/app/settings.json'`
+  )
+  expect(error.stack).toMatch(
+    `Failed to get all preferences: failed to get user preferences: Failed to read file \"/test/.config/app/settings.json\": EACCES: permission denied, open '/test/.config/app/settings.json'
+    at getUserPreferences (file:///test/packages/shared-process/src/parts/Preferences/Preferences.js:23:11)
+    at async Object.getAll [as Preferences.getAll] (file:///test/packages/shared-process/src/parts/Preferences/Preferences.js:63:29)
+    at async Module.getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
+    at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`
+  )
+})
+
 test('restoreJsonRpcError - ExecError', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     message: 'Failed to execute test-source-control: process exited with code 128',

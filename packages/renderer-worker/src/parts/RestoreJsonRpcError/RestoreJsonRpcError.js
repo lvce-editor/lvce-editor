@@ -31,7 +31,6 @@ export const restoreJsonRpcError = (error) => {
     if (error.data) {
       if (error.data.stack) {
         restoredError.stack = error.data.stack
-
         if (error.data.codeFrame) {
           // @ts-ignore
           restoredError.codeFrame = error.data.codeFrame
