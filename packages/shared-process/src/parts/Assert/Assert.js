@@ -1,9 +1,4 @@
-class AssertionError extends Error {
-  constructor(message) {
-    super(message)
-    this.name = 'AssertionError'
-  }
-}
+import { AssertionError } from '../AssertionError/AssertionError.js'
 
 const getType = (value) => {
   switch (typeof value) {
