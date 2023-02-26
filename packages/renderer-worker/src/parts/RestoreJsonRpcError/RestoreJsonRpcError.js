@@ -1,4 +1,5 @@
 import * as GetErrorConstructor from '../GetErrorConstructor/GetErrorConstructor.js'
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 
@@ -44,7 +45,7 @@ export const restoreJsonRpcError = (error) => {
       // TODO accessing stack might be slow
       const lowerStack = restoredError.stack
       // @ts-ignore
-      const indexNewLine = lowerStack.indexOf('\n')
+      const indexNewLine = GetNewLineIndex.getNewLineIndex(lowerStack)
       // @ts-ignore
       restoredError.stack = error.stack + lowerStack.slice(indexNewLine)
     }
