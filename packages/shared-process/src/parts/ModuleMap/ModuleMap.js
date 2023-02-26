@@ -122,6 +122,9 @@ export const getModuleId = (commandId) => {
     case 'Platform.setEnvironmentVariables':
       return ModuleId.Platform
     case 'Preferences.getAll':
+    case 'Preferences.getUserPreferences':
+    case 'Preferences.getDefaultPreferences':
+    case 'Preferences.getOverrides':
       return ModuleId.Preferences
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened

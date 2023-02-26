@@ -30,7 +30,6 @@ export const getDefaultPreferences = async () => {
     const defaultSettingsPath = Platform.getDefaultSettingsPath()
     return await JsonFile.readJson(defaultSettingsPath)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, 'Failed to load default preferences')
   }
 }
@@ -38,7 +37,7 @@ export const getDefaultPreferences = async () => {
 // TODO efficiently load preferences -> first load cached preferences
 //                                   -> on idle check preferences
 
-const getOverrides = () => {
+export const getOverrides = () => {
   const argvSliced = Process.argv.slice(2)
   const overrides = {}
   for (const argv of argvSliced) {
@@ -48,39 +47,7 @@ const getOverrides = () => {
   }
   return overrides
 }
+
 // TODO compare with timestamp/hash that preferences are fresh
-export const getAll = async () => {
-  try {
-    // try {
-    //   const cachedPreferences = JSON.parse(
-    //     await readFile(CACHED_SETTINGS_PATH, 'utf-8')
-    //   )
-    //   return cachedPreferences
-    // } catch {
-    //   // ignore
-    // }
-    const defaultPreferences = await getDefaultPreferences()
-    const userPreferences = await getUserPreferences()
-    const overrides = getOverrides()
-    // TODO separate backend and frontend preferences, ui only needs frontend preferences
-    const preferences = {
-      ...defaultPreferences,
-      ...userPreferences,
-      ...overrides,
-    }
-    // try {
-    //   await mkdir(dirname(CACHED_SETTINGS_PATH), { recursive: true })
-    //   await writeFile(
-    //     CACHED_SETTINGS_PATH,
-    //     JSON.stringify(preferences, null, 2) + '\n'
-    //   )
-    // } catch {
-    //   // ignore
-    // }
-    return preferences
-  } catch (error) {
-    throw new VError(error, 'Failed to get all preferences')
-  }
-}
 
 // TODO when preferences cannot be loaded, ui should show useful error message

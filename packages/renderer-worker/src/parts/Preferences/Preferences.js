@@ -5,6 +5,7 @@ import * as Json from '../Json/Json.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 
 export const state = Object.create(null)
 
@@ -44,7 +45,7 @@ export const hydrate = async () => {
     const preferences = await getPreferences()
     Object.assign(state, preferences)
   } catch (error) {
-    console.error(error)
+    ErrorHandling.handleError(error)
   }
 }
 
