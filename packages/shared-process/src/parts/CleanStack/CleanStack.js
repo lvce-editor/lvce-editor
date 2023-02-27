@@ -25,6 +25,9 @@ const cleanLine = (line) => {
   if (line.startsWith('    at async Module.')) {
     return '    at async ' + line.slice('    at async Module.'.length)
   }
+  if (line.startsWith('    at Module.')) {
+    return '    at ' + line.slice('    at Module.'.length)
+  }
   return line
 }
 
