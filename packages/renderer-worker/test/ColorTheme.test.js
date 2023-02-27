@@ -1,21 +1,18 @@
 import { jest } from '@jest/globals'
-import * as Preferences from '../src/parts/Preferences/Preferences.js'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
+import * as Preferences from '../src/parts/Preferences/Preferences.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -23,24 +20,24 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
+  return {
+    handleError: jest.fn(() => {}),
+  }
+})
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 const ColorTheme = await import('../src/parts/ColorTheme/ColorTheme.js')
 const Command = await import('../src/parts/Command/Command.js')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 
 beforeAll(() => {
   Command.setLoad((moduleId) => {
     switch (moduleId) {
       case ModuleId.ColorThemeFromJson:
-        return import(
-          '../src/parts/ColorThemeFromJson/ColorThemeFromJson.ipc.js'
-        )
+        return import('../src/parts/ColorThemeFromJson/ColorThemeFromJson.ipc.js')
       default:
         throw new Error(`module not found ${moduleId}`)
     }
@@ -74,10 +71,7 @@ test('hydrate', async () => {
 
   await ColorTheme.hydrate()
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ExtensionHost.getColorThemeJson',
-    'slime'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionHost.getColorThemeJson', 'slime')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
     'Css.setInlineStyle',
@@ -103,9 +97,7 @@ test('hydrate - color theme fails to load from shared process', async () => {
         const colorThemeId = params[0]
         switch (colorThemeId) {
           case 'atom-one-dark':
-            throw new Error(
-              'Color theme "atom-one-dark" not found in extensions folder'
-            )
+            throw new Error('Color theme "atom-one-dark" not found in extensions folder')
           case 'slime':
             return {
               type: 'dark',
@@ -123,14 +115,11 @@ test('hydrate - color theme fails to load from shared process', async () => {
     }
   })
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  ErrorHandling.handleError.mockImplementation(() => {})
   await ColorTheme.hydrate()
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(
-    new Error(
-      'Failed to apply color theme "atom-one-dark": Color theme "atom-one-dark" not found in extensions folder'
-    )
+  expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(
+    new Error('Failed to apply color theme "atom-one-dark": Color theme "atom-one-dark" not found in extensions folder')
   )
 })
 
@@ -145,13 +134,9 @@ test('hydrate - color theme fails to load and fallback color theme also fails to
         const colorThemeId = params[0]
         switch (colorThemeId) {
           case 'atom-one-dark':
-            throw new Error(
-              'Color theme "atom-one-dark" not found in extensions folder'
-            )
+            throw new Error('Color theme "atom-one-dark" not found in extensions folder')
           case 'slime':
-            throw new Error(
-              'Color theme "slime" not found in extensions folder'
-            )
+            throw new Error('Color theme "slime" not found in extensions folder')
           default:
             throw new Error('unexpected message (1)')
         }
@@ -160,19 +145,14 @@ test('hydrate - color theme fails to load and fallback color theme also fails to
     }
   })
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  ErrorHandling.handleError.mockImplementation(() => {})
   await expect(ColorTheme.hydrate()).rejects.toThrowError(
-    new Error(
-      'Failed to apply color theme "slime": Color theme "slime" not found in extensions folder'
-    )
+    new Error('Failed to apply color theme "slime": Color theme "slime" not found in extensions folder')
   )
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenNthCalledWith(
+  expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.handleError).toHaveBeenNthCalledWith(
     1,
-    new Error(
-      'Failed to apply color theme "atom-one-dark": Color theme "atom-one-dark" not found in extensions folder'
-    )
+    new Error('Failed to apply color theme "atom-one-dark": Color theme "atom-one-dark" not found in extensions folder')
   )
 })
 
@@ -185,9 +165,7 @@ test('hydrate - color id is fallback color theme id and fails to load', async ()
         const colorThemeId = params[0]
         switch (colorThemeId) {
           case 'slime':
-            throw new Error(
-              'Color theme "slime" not found in extensions folder'
-            )
+            throw new Error('Color theme "slime" not found in extensions folder')
         }
       default:
         throw new Error('unexpected message (2)')
@@ -197,9 +175,7 @@ test('hydrate - color id is fallback color theme id and fails to load', async ()
   RendererProcess.invoke.mockImplementation(() => {})
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   await expect(ColorTheme.hydrate()).rejects.toThrowError(
-    new Error(
-      'Failed to apply color theme "slime": Color theme "slime" not found in extensions folder'
-    )
+    new Error('Failed to apply color theme "slime": Color theme "slime" not found in extensions folder')
   )
   expect(spy).not.toHaveBeenCalled()
 })
