@@ -30,7 +30,9 @@ export const restoreJsonRpcError = (error) => {
   if (error && error.message) {
     const restoredError = constructError(error.message, error.type, error.name)
     if (error.data) {
-      if (error.data.stack) {
+      if (error.data.stack && error.data.type && error.message) {
+        restoredError.stack = error.data.type + ':' + error.message + '\n' + error.data.stack
+      } else if (error.data.stack) {
         restoredError.stack = error.data.stack
         if (error.data.codeFrame) {
           // @ts-ignore
