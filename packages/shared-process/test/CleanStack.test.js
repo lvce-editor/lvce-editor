@@ -8,8 +8,8 @@ test('cleanStack - remove useless Promise.all', () => {
     at async Module.create (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:80:23)`
   expect(CleanStack.cleanStack(stack)).toEqual([
     `    at file:///test/packages/shared-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:5:1`,
-    `    at async Module.create (file:///test/packages/shared-process/src/parts/IpcParent/IpcParent.js:4:18)`,
+    `    at async create (file:///test/packages/shared-process/src/parts/IpcParent/IpcParent.js:4:18)`,
     `    at async createPtyHost (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:52:19)`,
-    `    at async Module.create (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:80:23)`,
+    `    at async create (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:80:23)`,
   ])
 })
