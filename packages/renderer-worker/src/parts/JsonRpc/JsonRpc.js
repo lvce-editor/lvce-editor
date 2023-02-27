@@ -21,7 +21,6 @@ export const invoke = async (ipc, method, ...params) => {
   const responseMessage = await promise
   if ('error' in responseMessage) {
     const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
-    console.log({ restoredError, responseMessage })
     throw restoredError
   }
   if ('result' in responseMessage) {
