@@ -34,10 +34,10 @@ export const restoreJsonRpcError = (error) => {
         restoredError.stack = error.data.type + ':' + error.message + '\n' + error.data.stack
       } else if (error.data.stack) {
         restoredError.stack = error.data.stack
-        if (error.data.codeFrame) {
-          // @ts-ignore
-          restoredError.codeFrame = error.data.codeFrame
-        }
+      }
+      if (error.data.codeFrame) {
+        // @ts-ignore
+        restoredError.codeFrame = error.data.codeFrame
       }
       if (error.data.code) {
         // @ts-ignore
