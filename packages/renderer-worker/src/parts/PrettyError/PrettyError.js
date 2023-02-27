@@ -2,6 +2,7 @@ import * as Ajax from '../Ajax/Ajax.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SourceMap from '../SourceMap/SourceMap.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
@@ -159,7 +160,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       _error: error,
     }
   } catch (otherError) {
-    console.warn(`ErrorHandling Error: ${otherError}`)
+    Logger.warn(`ErrorHandling Error: ${otherError}`)
     return error
   }
 }
@@ -179,33 +180,33 @@ export const print = (error) => {
     // Firefox does not support printing codeframe with error stack
     console.log({ error })
     if (error && error._error) {
-      console.error(error._error)
+      Logger.error(error._error)
       return
     }
-    console.error(error)
+    Logger.error(error)
     return
   }
   if (error && error.type && error.message && error.codeFrame) {
-    console.error(`${error.type}: ${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
+    Logger.error(`${error.type}: ${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
     return
   }
   if (error && error.message && error.codeFrame) {
-    console.error(`${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
+    Logger.error(`${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
     return
   }
   if (error && error.type && error.message) {
-    console.error(`${error.type}: ${error.message}\n${error.stack}`)
+    Logger.error(`${error.type}: ${error.message}\n${error.stack}`)
     return
   }
   if (error && error.stack) {
-    console.error(`${error.stack}`)
+    Logger.error(`${error.stack}`)
     return
   }
   if (error === null) {
-    console.error(null)
+    Logger.error(null)
     return
   }
-  console.error(error)
+  Logger.error(error)
 }
 
 export const getMessage = (error) => {
