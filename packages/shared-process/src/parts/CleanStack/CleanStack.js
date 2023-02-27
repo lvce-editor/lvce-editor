@@ -3,6 +3,9 @@ import * as SplitLines from '../SplitLines/SplitLines.js'
 const RE_AT = /^\s+at/
 const RE_AT_PROMISE_INDEX = /^\s*at async Promise.all \(index \d+\)$/
 const RE_OBJECT_AS = /^\s*at Object\.\w+ \[as ([\w\.]+)\]/
+const RE_GET_RESPONSE = /^\s*at async getResponse/
+const RE_WEBSOCKET_HANDLE_MESSAGE = /^\s*at async WebSocket.handleMessage/
+const RE_EXECUTE_COMMAND_ASYNC = /^\s*at executeCommandAsync/
 
 const isInternalLine = (line) => {
   return line.includes('node:') || RE_AT_PROMISE_INDEX.test(line)
@@ -10,6 +13,22 @@ const isInternalLine = (line) => {
 
 const isRelevantLine = (line) => {
   return !isInternalLine(line)
+}
+
+const isApplicationUsefulLine = (line, index) => {
+  if (index === 0) {
+    return true
+  }
+  if (RE_GET_RESPONSE.test(line)) {
+    return false
+  }
+  if (RE_WEBSOCKET_HANDLE_MESSAGE.test(line)) {
+    return false
+  }
+  if (RE_EXECUTE_COMMAND_ASYNC.test(line)) {
+    return false
+  }
+  return true
 }
 
 const isNormalStackLine = (line) => {
@@ -60,7 +79,7 @@ const mergeCustom = (custom, relevantStack) => {
 export const cleanStack = (stack) => {
   const lines = SplitLines.splitLines(stack)
   const { custom, actualStack } = getDetails(lines)
-  const relevantStack = actualStack.filter(isRelevantLine)
+  const relevantStack = actualStack.filter(isRelevantLine).filter(isApplicationUsefulLine)
   const merged = mergeCustom(custom, relevantStack)
   return merged
 }
