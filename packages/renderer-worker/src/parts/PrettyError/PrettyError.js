@@ -1,11 +1,11 @@
 import * as Ajax from '../Ajax/Ajax.js'
+import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SourceMap from '../SourceMap/SourceMap.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const getErrorMessage = (error) => {
   if (!error) {
@@ -30,7 +30,8 @@ const prepareErrorMessageWithCodeFrame = (error) => {
     }
   }
   const message = getErrorMessage(error)
-  const relevantStack = JoinLines.joinLines(SplitLines.splitLines(error.stack).slice(1))
+  const lines = CleanStack.cleanStack(error.stack)
+  const relevantStack = JoinLines.joinLines(lines)
   if (error.codeFrame) {
     return {
       message,
@@ -96,7 +97,7 @@ const getSourceMapMatch = (text) => {
 
 const prepareErrorMessageWithoutCodeFrame = async (error) => {
   try {
-    const lines = SplitLines.splitLines(error.stack)
+    const lines = CleanStack.cleanStack(error.stack)
     const file = getFile(lines)
     let match = file.match(RE_PATH_1)
     if (!match) {
@@ -117,7 +118,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     const parsedLine = parseInt(line)
     const parsedColumn = parseInt(column)
     const message = getErrorMessage(error)
-    const relevantStack = JoinLines.joinLines(lines.slice(1))
+    const relevantStack = JoinLines.joinLines(lines)
     if (sourceMapMatch) {
       const sourceMapUrl = sourceMapMatch[1]
       const sourceMapAbsolutePath = getSourceMapAbsolutePath(path, sourceMapUrl)
