@@ -465,5 +465,6 @@ export const watch = async (socket, colorThemeId) => {
   33 |   const extensions = await ExtensionManagement.getExtensions()
   34 |   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
   35 |   if (!colorThemePath) {`,
+    type: 'AssertionError',
   })
 })
