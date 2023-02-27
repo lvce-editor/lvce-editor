@@ -355,11 +355,11 @@ export const search = async (searchDir, searchString, { threads = 1, maxSearchRe
 test('prepare - AssertionError', async () => {
   const error = new AssertionError(`expected value to be of type string`)
   error.stack = `AssertionError: expected value to be of type string
-    at Module.string (file:///test/packages/shared-process/src/parts/Assert/Assert.js:50:11)
-    at Object.getColorThemeJson [as ExtensionHost.getColorThemeJson] (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
-    at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
-    at async Module.getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
-    at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`
+    at Module.string (test:///test/packages/shared-process/src/parts/Assert/Assert.js:50:11)
+    at Object.getColorThemeJson [as ExtensionHost.getColorThemeJson] (test:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
+    at executeCommandAsync (test:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
+    at async Module.getResponse (test:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
+    at async WebSocket.handleMessage (test:///test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`
   // @ts-ignore
   fs.readFileSync.mockImplementation(() => {
     return `import VError from 'verror'
@@ -454,10 +454,10 @@ export const watch = async (socket, colorThemeId) => {
   const prettyError = PrettyError.prepare(error)
   expect(prettyError).toEqual({
     message: 'expected value to be of type string',
-    stack: `    at Object.getColorThemeJson [as ExtensionHost.getColorThemeJson] (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
-    at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
-    at async Module.getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
-    at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
+    stack: `    at Object.getColorThemeJson [as ExtensionHost.getColorThemeJson] (test:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
+    at executeCommandAsync (test:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
+    at async Module.getResponse (test:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
+    at async WebSocket.handleMessage (test:///test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
     codeFrame: `  30 |
   31 | export const getColorThemeJson = async (colorThemeId) => {
 > 32 |   Assert.string(colorThemeId)
