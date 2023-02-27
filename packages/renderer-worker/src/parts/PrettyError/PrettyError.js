@@ -80,7 +80,7 @@ const toAbsoluteUrl = (file, relativePath) => {
 }
 
 const getSourceMapMatch = (text) => {
-  const index = GetNewLineIndex.getNewLineIndex(text, text.length - 2)
+  const index = text.lastIndexOf('\n', text.length - 2)
   const lastLine = text.slice(index + 1, -1)
   const lastLineMatch = lastLine.match(RE_SOURCE_MAP)
   if (lastLineMatch) {
