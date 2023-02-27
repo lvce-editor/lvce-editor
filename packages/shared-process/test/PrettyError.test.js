@@ -173,9 +173,9 @@ exports.wrap = (worker) => {
     message: `exports is not defined in ES module scope
 This file is being treated as an ES module because it has a '.js' file extension and '/test/packages/shared-process/package.json' contains \"type\": \"module\". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.`,
     stack: `    at test:///test/packages/shared-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:5:1
-    at async Module.create (test:///test/packages/shared-process/src/parts/IpcParent/IpcParent.js:4:18)
+    at async create (test:///test/packages/shared-process/src/parts/IpcParent/IpcParent.js:4:18)
     at async createPtyHost (test:///test/packages/shared-process/src/parts/Terminal/Terminal.js:52:19)
-    at async Module.create (test:///test/packages/shared-process/src/parts/Terminal/Terminal.js:79:23)'`,
+    at async create (test:///test/packages/shared-process/src/parts/Terminal/Terminal.js:79:23)'`,
     codeFrame: `  3 | import * as GetFirstNodeWorkerEvent from '../GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js'
   4 |
 > 5 | exports.create = async ({ path, argv, env, execArgv }) => {
@@ -339,7 +339,7 @@ export const search = async (searchDir, searchString, { threads = 1, maxSearchRe
     message: 'The "streams[stream.length - 1]" property must be of type function. Received an instance of Transform',
     stack: `    at Object.search [as TextSearch.search] (test:///packages/shared-process/src/parts/TextSearch/TextSearch.js:88:3)
     at executeCommandAsync (test:///packages/shared-process/src/parts/Command/Command.js:67:33)
-    at async Module.getResponse (test:///packages/shared-process/src/parts/GetResponse/GetResponse.js:13:9)
+    at async getResponse (test:///packages/shared-process/src/parts/GetResponse/GetResponse.js:13:9)
     at async WebSocket.handleMessage (test:///packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
     codeFrame: `  86 |   }
   87 |
@@ -456,7 +456,7 @@ export const watch = async (socket, colorThemeId) => {
     message: 'expected value to be of type string',
     stack: `    at Object.getColorThemeJson [as ExtensionHost.getColorThemeJson] (test:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
     at executeCommandAsync (test:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
-    at async Module.getResponse (test:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
+    at async getResponse (test:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
     at async WebSocket.handleMessage (test:///test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
     codeFrame: `  30 |
   31 | export const getColorThemeJson = async (colorThemeId) => {

@@ -15,11 +15,24 @@ const isNormalStackLine = (line) => {
   return RE_AT.test(line) && !RE_AT_PROMISE_INDEX.test(line)
 }
 
+const cleanLine = (line) => {
+  if (line.startsWith('    at exports.')) {
+    return '    at ' + line.slice('    at exports.'.length)
+  }
+  if (line.startsWith('    at async exports.')) {
+    return '    at async ' + line.slice('    at async exports.'.length)
+  }
+  if (line.startsWith('    at async Module.')) {
+    return '    at async ' + line.slice('    at async Module.'.length)
+  }
+  return line
+}
+
 const getDetails = (lines) => {
   const index = lines.findIndex(isNormalStackLine)
   return {
     custom: lines.slice(0, index),
-    actualStack: lines.slice(index),
+    actualStack: lines.slice(index).map(cleanLine),
   }
 }
 
