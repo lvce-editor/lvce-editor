@@ -6,6 +6,7 @@ const RE_OBJECT_AS = /^\s*at Object\.\w+ \[as ([\w\.]+)\]/
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
 const RE_PATH_3 = /@(.*):(\d+):(\d+)$/ // Firefox
+const RE_RESTORE_JSON_RPC_ERROR = /\s*at restoreJsonRpcError/
 
 const isInternalLine = (line) => {
   return RE_AT_PROMISE_INDEX.test(line)
@@ -17,6 +18,16 @@ const isRelevantLine = (line) => {
 
 const isNormalStackLine = (line) => {
   return (RE_AT.test(line) && !RE_AT_PROMISE_INDEX.test(line)) || RE_PATH_2.test(line) || RE_PATH_3.test(line)
+}
+
+const isApplicationUsefulLine = (line, index) => {
+  if (index === 0) {
+    return true
+  }
+  if (RE_RESTORE_JSON_RPC_ERROR.test(line)) {
+    return false
+  }
+  return true
 }
 
 const cleanLine = (line) => {
@@ -61,7 +72,7 @@ const mergeCustom = (custom, relevantStack) => {
 export const cleanStack = (stack) => {
   const lines = SplitLines.splitLines(stack)
   const { custom, actualStack } = getDetails(lines)
-  const relevantStack = actualStack.filter(isRelevantLine)
+  const relevantStack = actualStack.filter(isRelevantLine).filter(isApplicationUsefulLine)
   const merged = mergeCustom(custom, relevantStack)
   return merged
 }
