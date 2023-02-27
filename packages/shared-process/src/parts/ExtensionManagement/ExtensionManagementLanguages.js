@@ -1,7 +1,7 @@
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import VError from 'verror'
 import * as ReadJson from '../JsonFile/JsonFile.js'
+import { VError } from '../VError/VError.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
 
 const getExtensionLanguages = (extension) => {

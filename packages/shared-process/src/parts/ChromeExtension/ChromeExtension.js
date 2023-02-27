@@ -1,10 +1,10 @@
-import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Download from '../Download/Download.js'
 import * as ExtractZip from '../ExtractZip/ExtractZip.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
+import { VError } from '../VError/VError.js'
 
 const getExtensionPath = async (tmpDir) => {
   const dirents = await FileSystem.readDirWithFileTypes(tmpDir)
@@ -19,10 +19,7 @@ export const install = async (name, url) => {
     Assert.string(name)
     Assert.string(url)
     const cachedChromeExtensionsPath = Platform.getCachedExtensionsPath()
-    const tempFileCompressed = Path.join(
-      cachedChromeExtensionsPath,
-      `${name}.zip`
-    )
+    const tempFileCompressed = Path.join(cachedChromeExtensionsPath, `${name}.zip`)
     const tmpDir = Path.join(cachedChromeExtensionsPath, name)
     const chromeExtensionsPath = Platform.getChromeExtensionsPath()
     await Download.download(url, tempFileCompressed)

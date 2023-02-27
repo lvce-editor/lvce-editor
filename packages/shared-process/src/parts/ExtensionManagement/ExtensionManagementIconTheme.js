@@ -1,8 +1,8 @@
-import VError from 'verror'
 import * as Error from '../Error/Error.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
+import { VError } from '../VError/VError.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
 
 export const getIconTheme = async (iconThemeId) => {

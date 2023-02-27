@@ -1,10 +1,10 @@
-import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Callback from '../Callback/Callback.js'
 import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import { VError } from '../VError/VError.js'
 
 // TODO maybe rename to extension host management for clarity
 
@@ -41,7 +41,6 @@ export const start = async (socket) => {
     state.extensionHosts[id] = extensionHost
     return id
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, 'Failed to start extension host')
   }
 }

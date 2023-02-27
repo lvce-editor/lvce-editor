@@ -30,7 +30,7 @@ test('create - error - child process exits with code 1', async () => {
     }
   })
   await expect(IpcParentWithNodeForkedProcess.create({ path: '/test/childProcess.js', argv: [], env: {}, execArgv: [] })).rejects.toThrowError(
-    new Error(`Failed to launch child process: child process error`)
+    new Error(`Failed to launch child process: ChildProcessError: child process error`)
   )
 })
 
