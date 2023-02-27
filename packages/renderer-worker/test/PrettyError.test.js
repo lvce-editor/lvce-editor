@@ -381,7 +381,6 @@ test('prepare - VError with code frame', async () => {
     at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
     at async getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
     at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:27:22)
-    at invoke (http://localhost:3000/packages/renderer-worker/src/parts/JsonRpc/JsonRpc.js:23:47)
     at async invoke (http://localhost:3000/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js:81:18)
     at async applyColorTheme (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:82:28)
     at async hydrate (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:121:5)
