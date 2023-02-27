@@ -337,10 +337,7 @@ export const search = async (searchDir, searchString, { threads = 1, maxSearchRe
   const prettyError = PrettyError.prepare(error)
   expect(prettyError).toEqual({
     message: 'The "streams[stream.length - 1]" property must be of type function. Received an instance of Transform',
-    stack: `    at TextSearch.search (test:///packages/shared-process/src/parts/TextSearch/TextSearch.js:88:3)
-    at executeCommandAsync (test:///packages/shared-process/src/parts/Command/Command.js:67:33)
-    at async getResponse (test:///packages/shared-process/src/parts/GetResponse/GetResponse.js:13:9)
-    at async WebSocket.handleMessage (test:///packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
+    stack: `    at TextSearch.search (test:///packages/shared-process/src/parts/TextSearch/TextSearch.js:88:3)`,
     codeFrame: `  86 |   }
   87 |
 > 88 |   pipeline(
@@ -454,10 +451,7 @@ export const watch = async (socket, colorThemeId) => {
   const prettyError = PrettyError.prepare(error)
   expect(prettyError).toEqual({
     message: 'expected value to be of type string',
-    stack: `    at ExtensionHost.getColorThemeJson (test:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
-    at executeCommandAsync (test:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
-    at async getResponse (test:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
-    at async WebSocket.handleMessage (test:///test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
+    stack: `    at ExtensionHost.getColorThemeJson (test:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)`,
     codeFrame: `  30 |
   31 | export const getColorThemeJson = async (colorThemeId) => {
 > 32 |   Assert.string(colorThemeId)
