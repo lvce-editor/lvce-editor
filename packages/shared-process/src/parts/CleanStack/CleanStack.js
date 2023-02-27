@@ -2,7 +2,7 @@ import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const RE_AT = /^\s+at/
 const RE_AT_PROMISE_INDEX = /^\s*at async Promise.all \(index \d+\)$/
-const RE_OBJECT_AS = /^\s*at Object\.\w+ \[as ([\w\.]+)\]/
+const RE_OBJECT_AS = /^\s*at (async )?Object\.\w+ \[as ([\w\.]+)\]/
 const RE_GET_RESPONSE = /^\s*at async getResponse/
 const RE_WEBSOCKET_HANDLE_MESSAGE = /^\s*at async WebSocket.handleMessage/
 const RE_EXECUTE_COMMAND_ASYNC = /^\s*at executeCommandAsync/
@@ -50,7 +50,11 @@ const cleanLine = (line) => {
   }
   const objectMatch = line.match(RE_OBJECT_AS)
   if (objectMatch) {
-    return '    at ' + objectMatch[1] + line.slice(objectMatch[0].length)
+    const rest = line.slice(objectMatch[0].length)
+    if (objectMatch[1]) {
+      return '    at ' + objectMatch[1] + objectMatch[2] + rest
+    }
+    return '    at ' + objectMatch[2] + rest
   }
   return line
 }
