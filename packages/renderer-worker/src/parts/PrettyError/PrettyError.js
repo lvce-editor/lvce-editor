@@ -1,5 +1,6 @@
 import * as Ajax from '../Ajax/Ajax.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SourceMap from '../SourceMap/SourceMap.js'
@@ -67,11 +68,6 @@ const getFile = (lines) => {
   return ''
 }
 
-const getLastLine = (text) => {
-  const index = text.lastIndexOf('\n', text.length - 2)
-  return text.slice(index + 1, -1)
-}
-
 const getSourceMapAbsolutePath = (file, relativePath) => {
   const folder = file.slice(0, file.lastIndexOf('/'))
   const absolutePath = folder + '/' + relativePath
@@ -90,7 +86,7 @@ const getSourceMapMatch = (text) => {
   if (lastLineMatch) {
     return lastLineMatch
   }
-  const secondLastLineIndex = text.indexOf('\n', index - 1)
+  const secondLastLineIndex = GetNewLineIndex.getNewLineIndex(text, index - 1)
   const secondLastLine = text.slice(secondLastLineIndex, index)
   const secondLastLineMatch = secondLastLine.match(RE_SOURCE_MAP)
   return secondLastLineMatch
