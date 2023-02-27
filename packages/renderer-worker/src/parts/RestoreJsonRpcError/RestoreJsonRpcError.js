@@ -1,7 +1,9 @@
 import * as GetErrorConstructor from '../GetErrorConstructor/GetErrorConstructor.js'
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const constructError = (message, type, name) => {
   const ErrorConstructor = GetErrorConstructor.getErrorConstructor(message, type)
@@ -30,8 +32,9 @@ export const restoreJsonRpcError = (error) => {
   if (error && error.message) {
     const restoredError = constructError(error.message, error.type, error.name)
     if (error.data) {
+      const currentStack = JoinLines.joinLines(SplitLines.splitLines(new Error().stack).slice(1))
       if (error.data.stack && error.data.type && error.message) {
-        restoredError.stack = error.data.type + ':' + error.message + '\n' + error.data.stack
+        restoredError.stack = error.data.type + ': ' + error.message + '\n' + error.data.stack + '\n' + currentStack
       } else if (error.data.stack) {
         restoredError.stack = error.data.stack
       }

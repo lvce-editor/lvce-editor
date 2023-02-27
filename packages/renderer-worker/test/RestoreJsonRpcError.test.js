@@ -20,8 +20,9 @@ test('restoreJsonRpcError - TypeError', () => {
 test('restoreJsonRpcError - TypeError object', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     message: "Cannot set properties of undefined (setting 'id')",
-    stack:
-      "TypeError: Cannot set properties of undefined (setting 'id')\n    at Module.setFocusedIndex (/packages/renderer-process/src/parts/ViewletExplorer/ViewletExplorer.js:179:20)\n    at invoke",
+    stack: `TypeError: Cannot set properties of undefined (setting 'id')
+    at Module.setFocusedIndex (/packages/renderer-process/src/parts/ViewletExplorer/ViewletExplorer.js:179:20)
+    at invoke`,
     name: 'TypeError',
     type: 'TypeError',
   })
@@ -137,14 +138,23 @@ test('restoreJsonRpcError - ExecError', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     message: 'Failed to execute test-source-control: process exited with code 128',
     name: 'ExecError',
-    stack:
-      'ExecError: Failed to execute test-source-control: process exited with code 128\n    at Api.api.exec (test://packages/extension-host-worker/src/parts/ExtensionHostMockExec/ExtensionHostMockExec.js:13:15)\n    at async Object.getChangedFiles (test://packages/extension-host-worker-tests/fixtures/sample.source-control-provider-exec/main.js:7:5)\n    at async getChangedFiles (test://packages/extension-host-worker/src/parts/ExtensionHostSourceControl/ExtensionHostSourceControl.js:20:24)\n    at async Module.getResponse (test://packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:7:20)\n    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)',
+    stack: `ExecError: Failed to execute test-source-control: process exited with code 128
+    at Api.api.exec (test://packages/extension-host-worker/src/parts/ExtensionHostMockExec/ExtensionHostMockExec.js:13:15)
+    at async Object.getChangedFiles (test://packages/extension-host-worker-tests/fixtures/sample.source-control-provider-exec/main.js:7:5)
+    at async getChangedFiles (test://packages/extension-host-worker/src/parts/ExtensionHostSourceControl/ExtensionHostSourceControl.js:20:24)
+    at async Module.getResponse (test://packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:7:20)
+    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)`,
     type: 'ExecError',
   })
   expect(error).toBeInstanceOf(Error)
   expect(error.message).toBe(`Failed to execute test-source-control: process exited with code 128`)
   expect(error.stack).toMatch(
-    'ExecError: Failed to execute test-source-control: process exited with code 128\n    at Api.api.exec (test://packages/extension-host-worker/src/parts/ExtensionHostMockExec/ExtensionHostMockExec.js:13:15)\n    at async Object.getChangedFiles (test://packages/extension-host-worker-tests/fixtures/sample.source-control-provider-exec/main.js:7:5)\n    at async getChangedFiles (test://packages/extension-host-worker/src/parts/ExtensionHostSourceControl/ExtensionHostSourceControl.js:20:24)\n    at async Module.getResponse (test://packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:7:20)\n    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)'
+    `ExecError: Failed to execute test-source-control: process exited with code 128
+    at Api.api.exec (test://packages/extension-host-worker/src/parts/ExtensionHostMockExec/ExtensionHostMockExec.js:13:15)
+    at async Object.getChangedFiles (test://packages/extension-host-worker-tests/fixtures/sample.source-control-provider-exec/main.js:7:5)
+    at async getChangedFiles (test://packages/extension-host-worker/src/parts/ExtensionHostSourceControl/ExtensionHostSourceControl.js:20:24)
+    at async Module.getResponse (test://packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:7:20)
+    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)`
   )
   expect(error.name).toBe('ExecError')
 })
@@ -152,8 +162,10 @@ test('restoreJsonRpcError - ExecError', () => {
 test('restoreJsonRpcError - VError', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     message: 'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42',
-    stack:
-      'VError: invalid tab completion result: tabCompletion must be of type object but is 42\n    at executeTabCompletionProvider (test://packages/extension-host-worker/src/parts/Registry/Registry.js:77:17)\n    at async Module.getResponse (test://packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:7:20)\n    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)',
+    stack: `VError: invalid tab completion result: tabCompletion must be of type object but is 42
+    at executeTabCompletionProvider (test://packages/extension-host-worker/src/parts/Registry/Registry.js:77:17)
+    at async Module.getResponse (test://packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:7:20)
+    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)`,
     name: 'VError',
     type: 'VError',
   })
@@ -162,7 +174,10 @@ test('restoreJsonRpcError - VError', () => {
     'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42'
   )
   expect(error.stack).toMatch(
-    'VError: invalid tab completion result: tabCompletion must be of type object but is 42\n    at executeTabCompletionProvider (test://packages/extension-host-worker/src/parts/Registry/Registry.js:77:17)\n    at async Module.getResponse (test://packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:7:20)\n    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)'
+    `VError: invalid tab completion result: tabCompletion must be of type object but is 42
+    at executeTabCompletionProvider (test://packages/extension-host-worker/src/parts/Registry/Registry.js:77:17)
+    at async Module.getResponse (test://packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:7:20)
+    at async MessagePort.handleMessage (test://packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)`
   )
   expect(error.name).toBe('Error')
 })
@@ -232,4 +247,60 @@ test('restoreJsonRpcError - error with code', () => {
     at constructError`)
   // @ts-ignore
   expect(error.code).toBe(ErrorCodes.ENOENT)
+})
+
+test.skip('restoreJsonRpcError - object', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    jsonrpc: '2.0',
+    id: 7,
+    error: {
+      code: -32001,
+      message: 'expected value to be of type string',
+      data: {
+        stack: `    at Object.getColorThemeJson [as ExtensionHost.getColorThemeJson] (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
+    at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
+    at async getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
+    at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:27:22)`,
+        codeFrame: `  30 |
+  31 | export const getColorThemeJson = async (colorThemeId) => {
+> 32 |   Assert.string(colorThemeId)
+      |          ^
+  33 |   const extensions = await ExtensionManagement.getExtensions()
+  34 |   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
+  35 |   if (!colorThemePath) {`,
+        type: 'AssertionError',
+      },
+    },
+  })
+  expect(error).toBeInstanceOf(Error)
+  expect(error.message).toBe('JsonRpcError: [object Object]')
+})
+
+test('restoreJsonRpcError - AssertionError', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    code: -32001,
+    message: 'expected value to be of type string',
+    data: {
+      stack: `    at Object.getColorThemeJson [as ExtensionHost.getColorThemeJson] (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
+    at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
+    at async getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
+    at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:27:22)`,
+      codeFrame: `  30 |
+  31 | export const getColorThemeJson = async (colorThemeId) => {
+> 32 |   Assert.string(colorThemeId)
+      |          ^
+  33 |   const extensions = await ExtensionManagement.getExtensions()
+  34 |   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
+  35 |   if (!colorThemePath) {`,
+      type: 'AssertionError',
+    },
+  })
+  expect(error).toBeInstanceOf(Error)
+  expect(error.message).toBe('expected value to be of type string')
+  expect(error.stack).toMatch(`AssertionError: expected value to be of type string
+    at Object.getColorThemeJson [as ExtensionHost.getColorThemeJson] (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
+    at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
+    at async getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
+    at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:27:22)
+    at Module.restoreJsonRpcError `)
 })
