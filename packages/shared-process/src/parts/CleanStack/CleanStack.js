@@ -2,6 +2,7 @@ import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const RE_AT = /^\s+at/
 const RE_AT_PROMISE_INDEX = /^\s*at async Promise.all \(index \d+\)$/
+const RE_OBJECT_AS = /^\s*at Object\.\w+ \[as ([\w\.]+)\]/
 
 const isInternalLine = (line) => {
   return line.includes('node:') || RE_AT_PROMISE_INDEX.test(line)
@@ -27,6 +28,10 @@ const cleanLine = (line) => {
   }
   if (line.startsWith('    at Module.')) {
     return '    at ' + line.slice('    at Module.'.length)
+  }
+  const objectMatch = line.match(RE_OBJECT_AS)
+  if (objectMatch) {
+    return '    at ' + objectMatch[1] + line.slice(objectMatch[0].length)
   }
   return line
 }
