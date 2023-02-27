@@ -89,6 +89,7 @@ test('getResponse - error - search error', async () => {
   at Object.searchFile [as SearchFile.searchFile] (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:80:26)
   at async Module.getResponse (/test/packages/shared-process/src/parts/GetResponse/GetResponse.js:11:9)
   at async WebSocket.handleMessage (/test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
+      type: 'TypeError',
     }
   })
   expect(
@@ -116,6 +117,7 @@ test('getResponse - error - search error', async () => {
   at Object.searchFile [as SearchFile.searchFile] (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:80:26)
   at async Module.getResponse (/test/packages/shared-process/src/parts/GetResponse/GetResponse.js:11:9)
   at async WebSocket.handleMessage (/test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
+        type: 'TypeError',
       },
       message: 'files is not iterable',
     },
