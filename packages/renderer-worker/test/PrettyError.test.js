@@ -176,7 +176,7 @@ test('prepare - error without stack', async () => {
   expect(spy).not.toHaveBeenCalled()
 })
 
-test('prepare - error with firefox stacktrace', async () => {
+test('prepare - error - with firefox stacktrace', async () => {
   // @ts-ignore
   Ajax.getText.mockImplementation(() => {
     return `export const handleKeyArrowDownMenuOpen = (state) => {
@@ -299,7 +299,7 @@ export const getBulkReplacementEdits = (matches) => {
   23 |   return {
   24 |     files,
   25 |     ranges: ranges.slice(1),`,
-    stack: `    at Module.getBulkReplacementEdits (test:///packages/renderer-worker/src/parts/GetBulkReplacementEdits/GetBulkReplacementEdits.js:22:10)
+    stack: `    at getBulkReplacementEdits (test:///packages/renderer-worker/src/parts/GetBulkReplacementEdits/GetBulkReplacementEdits.js:22:10)
     at actuallyReplaceAll (test:///packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchReplaceAll.js:5:53)
     at replaceAll (test:///packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchReplaceAll.js:17:9)
     at async Search/lazy/replaceAll (test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:107:24)
@@ -337,9 +337,9 @@ export const textSearch = (scheme, root, query) => {
   5 | }
   6 |
   7 |`,
-    stack: `    at Module.textSearch (test:///packages/renderer-worker/src/parts/TextSearch/TextSearchHtml.js:4:9)
-    at Module.textSearch (test:///packages/renderer-worker/src/parts/TextSearch/TextSearch.js:24:34)
-    at async Module.handleUpdate (test:///packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchHandleUpdate.js:43:21)
+    stack: `    at textSearch (test:///packages/renderer-worker/src/parts/TextSearch/TextSearchHtml.js:4:9)
+    at textSearch (test:///packages/renderer-worker/src/parts/TextSearch/TextSearch.js:24:34)
+    at async handleUpdate (test:///packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchHandleUpdate.js:43:21)
     at async handleInput (test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:51:24)
     at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`,
     type: 'Error',
@@ -377,16 +377,16 @@ test('prepare - VError with code frame', async () => {
   const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toEqual({
     message: `Failed to apply color theme \"undefined\": expected value to be of type string`,
-    stack: `    at Object.getColorThemeJson [as ExtensionHost.getColorThemeJson] (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
+    stack: `    at ExtensionHost.getColorThemeJson (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
     at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
     at async getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
     at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:27:22)
-    at Module.restoreJsonRpcError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:35:70)
-    at Module.invoke (http://localhost:3000/packages/renderer-worker/src/parts/JsonRpc/JsonRpc.js:23:47)
-    at async Module.invoke (http://localhost:3000/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js:81:18)
+    at restoreJsonRpcError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:35:70)
+    at invoke (http://localhost:3000/packages/renderer-worker/src/parts/JsonRpc/JsonRpc.js:23:47)
+    at async invoke (http://localhost:3000/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js:81:18)
     at async applyColorTheme (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:82:28)
-    at async Module.hydrate (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:121:5)
-    at async Module.startup (http://localhost:3000/packages/renderer-worker/src/parts/Workbench/Workbench.js:73:3)
+    at async hydrate (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:121:5)
+    at async startup (http://localhost:3000/packages/renderer-worker/src/parts/Workbench/Workbench.js:73:3)
     at async main (http://localhost:3000/packages/renderer-worker/src/rendererWorkerMain.js:7:3)`,
     codeFrame: `  30 |
   31 | export const getColorThemeJson = async (colorThemeId) => {
