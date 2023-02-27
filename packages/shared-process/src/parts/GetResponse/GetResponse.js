@@ -60,6 +60,7 @@ export const getResponse = async (message, handle) => {
         data: {
           stack: prettyError.stack,
           codeFrame: prettyError.codeFrame,
+          type: prettyError.type,
         },
       },
     }
