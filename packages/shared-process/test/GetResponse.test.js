@@ -31,7 +31,6 @@ jest.unstable_mockModule('node:fs', () => ({
 const GetResponse = await import('../src/parts/GetResponse/GetResponse.js')
 const Command = await import('../src/parts/Command/Command.js')
 const PrettyError = await import('../src/parts/PrettyError/PrettyError.js')
-const NodeFs = await import('node:fs')
 
 class NodeError extends Error {
   constructor(code, message = code) {
@@ -83,12 +82,11 @@ test('getResponse - error - search error', async () => {
   60 |     const dir = dirname(file)
   61 |     if (!folders.includes(dir)) {
   62 |       folders.push(dir)`,
-      stack: `
-  at getFolders (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:59:22)
-  at getLastModified (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:69:19)
-  at Object.searchFile [as SearchFile.searchFile] (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:80:26)
-  at async Module.getResponse (/test/packages/shared-process/src/parts/GetResponse/GetResponse.js:11:9)
-  at async WebSocket.handleMessage (/test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
+      stack: `    at getFolders (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:59:22)
+    at getLastModified (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:69:19)
+    at Object.searchFile [as SearchFile.searchFile] (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:80:26)
+    at async Module.getResponse (/test/packages/shared-process/src/parts/GetResponse/GetResponse.js:11:9)
+    at async WebSocket.handleMessage (/test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
       type: 'TypeError',
     }
   })
@@ -111,12 +109,12 @@ test('getResponse - error - search error', async () => {
   60 |     const dir = dirname(file)
   61 |     if (!folders.includes(dir)) {
   62 |       folders.push(dir)`,
-        stack: `
-  at getFolders (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:59:22)
-  at getLastModified (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:69:19)
-  at Object.searchFile [as SearchFile.searchFile] (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:80:26)
-  at async Module.getResponse (/test/packages/shared-process/src/parts/GetResponse/GetResponse.js:11:9)
-  at async WebSocket.handleMessage (/test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
+        stack: `TypeError: files is not iterable
+    at getFolders (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:59:22)
+    at getLastModified (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:69:19)
+    at Object.searchFile [as SearchFile.searchFile] (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:80:26)
+    at async Module.getResponse (/test/packages/shared-process/src/parts/GetResponse/GetResponse.js:11:9)
+    at async WebSocket.handleMessage (/test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`,
         type: 'TypeError',
       },
       message: 'files is not iterable',

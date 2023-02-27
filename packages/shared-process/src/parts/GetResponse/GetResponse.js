@@ -51,6 +51,7 @@ export const getResponse = async (message, handle) => {
     }
     const prettyError = PrettyError.prepare(error)
     PrintPrettyError.printPrettyError(prettyError, `[shared-process] `)
+    const fullStack = prettyError.type + ': ' + prettyError.message + '\n' + prettyError.stack
     return {
       jsonrpc: JsonRpcVersion.Two,
       id: message.id,
@@ -58,7 +59,7 @@ export const getResponse = async (message, handle) => {
         code: JsonRpcErrorCode.Custom,
         message: prettyError.message,
         data: {
-          stack: prettyError.stack,
+          stack: fullStack,
           codeFrame: prettyError.codeFrame,
           type: prettyError.type,
         },
