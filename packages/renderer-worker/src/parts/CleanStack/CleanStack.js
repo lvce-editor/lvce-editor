@@ -6,7 +6,8 @@ const RE_OBJECT_AS = /^\s*at Object\.\w+ \[as ([\w\.]+)\]/
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
 const RE_PATH_3 = /@(.*):(\d+):(\d+)$/ // Firefox
-const RE_RESTORE_JSON_RPC_ERROR = /\s*at restoreJsonRpcError/
+const RE_RESTORE_JSON_RPC_ERROR = /^\s*at restoreJsonRpcError/
+const RE_JSON_RPC_INVOKE = /^\s*at invoke .*JsonRpc\.js/
 
 const isInternalLine = (line) => {
   return RE_AT_PROMISE_INDEX.test(line)
@@ -25,6 +26,9 @@ const isApplicationUsefulLine = (line, index) => {
     return true
   }
   if (RE_RESTORE_JSON_RPC_ERROR.test(line)) {
+    return false
+  }
+  if (RE_JSON_RPC_INVOKE.test(line)) {
     return false
   }
   return true
