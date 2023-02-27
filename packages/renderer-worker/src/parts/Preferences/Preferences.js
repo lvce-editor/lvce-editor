@@ -2,6 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Json from '../Json/Json.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -44,7 +45,7 @@ export const hydrate = async () => {
     const preferences = await getPreferences()
     Object.assign(state, preferences)
   } catch (error) {
-    console.error(error)
+    Logger.error(error)
   }
 }
 
