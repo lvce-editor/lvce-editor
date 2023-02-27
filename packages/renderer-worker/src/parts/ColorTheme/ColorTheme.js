@@ -1,10 +1,11 @@
 import * as Command from '../Command/Command.js'
 import * as Css from '../Css/Css.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Meta from '../Meta/Meta.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 import { VError } from '../VError/VError.js'
 // TODO by default color theme should come from local storage, session storage, cache storage, indexeddb or blob url -> fast initial load
 // actual color theme can be computed after workbench has loaded (most times will be the same and doesn't need to be computed)
@@ -120,7 +121,7 @@ export const hydrate = async () => {
     if (colorThemeId === FALLBACK_COLOR_THEME_ID) {
       throw error
     }
-    console.warn(error)
+    Logger.warn(error)
     await applyColorTheme(FALLBACK_COLOR_THEME_ID)
   }
 }
