@@ -30,10 +30,11 @@ const prepareErrorMessageWithCodeFrame = (error) => {
     }
   }
   const message = getErrorMessage(error)
+  const relevantStack = JoinLines.joinLines(SplitLines.splitLines(error.stack).slice(1))
   if (error.codeFrame) {
     return {
       message,
-      stack: error.stack,
+      stack: relevantStack,
       codeFrame: error.codeFrame,
       type: error.constructor.name,
       _error: error,
@@ -111,7 +112,6 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     if (path === '<anonymous>' || path === 'debugger eval code') {
       return error
     }
-    console.log({ path })
     const text = await Ajax.getText(path)
     const sourceMapMatch = getSourceMapMatch(text)
     const parsedLine = parseInt(line)
