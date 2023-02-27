@@ -30,10 +30,11 @@ const prepareErrorMessageWithCodeFrame = (error) => {
     }
   }
   const message = getErrorMessage(error)
+  const relevantStack = JoinLines.joinLines(SplitLines.splitLines(error.stack).slice(1))
   if (error.codeFrame) {
     return {
       message,
-      stack: error.stack,
+      stack: relevantStack,
       codeFrame: error.codeFrame,
       type: error.constructor.name,
       _error: error,

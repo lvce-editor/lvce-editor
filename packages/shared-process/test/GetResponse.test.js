@@ -112,8 +112,7 @@ test('getResponse - error - search error', async () => {
   60 |     const dir = dirname(file)
   61 |     if (!folders.includes(dir)) {
   62 |       folders.push(dir)`,
-        stack: `TypeError: files is not iterable
-    at getFolders (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:59:22)
+        stack: `    at getFolders (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:59:22)
     at getLastModified (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:69:19)
     at Object.searchFile [as SearchFile.searchFile] (/test/packages/shared-process/src/parts/SearchFile/SearchFile.js:80:26)
     at async Module.getResponse (/test/packages/shared-process/src/parts/GetResponse/GetResponse.js:11:9)

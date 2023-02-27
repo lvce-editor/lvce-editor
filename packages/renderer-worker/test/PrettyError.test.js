@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import { VError } from '../src/parts/VError/VError.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -14,6 +15,7 @@ jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/SourceMap/SourceMap.js', () => {
   return {
     getOriginalPosition: jest.fn(() => {
@@ -343,4 +345,58 @@ export const textSearch = (scheme, root, query) => {
     type: 'Error',
     _error: error,
   })
+})
+
+test('prepare - VError with code frame', async () => {
+  const cause = new Error(`expected value to be of type string`)
+  cause.stack = `AssertionError: expected value to be of type string
+    at Object.getColorThemeJson [as ExtensionHost.getColorThemeJson] (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
+    at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
+    at async getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
+    at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:27:22)
+    at Module.restoreJsonRpcError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:35:70)
+    at Module.invoke (http://localhost:3000/packages/renderer-worker/src/parts/JsonRpc/JsonRpc.js:23:47)
+    at async Module.invoke (http://localhost:3000/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js:81:18)
+    at async applyColorTheme (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:82:28)
+    at async Module.hydrate (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:121:5)
+    at async Module.startup (http://localhost:3000/packages/renderer-worker/src/parts/Workbench/Workbench.js:73:3)
+    at async main (http://localhost:3000/packages/renderer-worker/src/rendererWorkerMain.js:7:3)`
+  // @ts-ignore
+  cause.codeFrame = `  30 |
+  31 | export const getColorThemeJson = async (colorThemeId) => {
+> 32 |   Assert.string(colorThemeId)
+     |          ^
+  33 |   const extensions = await ExtensionManagement.getExtensions()
+  34 |   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
+  35 |   if (!colorThemePath) {`
+  const error = new VError(cause, `Failed to apply color theme \"undefined\"`)
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    throw new Error('not implemented')
+  })
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: `Failed to apply color theme \"undefined\": expected value to be of type string`,
+    stack: `    at Object.getColorThemeJson [as ExtensionHost.getColorThemeJson] (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)
+    at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
+    at async getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
+    at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:27:22)
+    at Module.restoreJsonRpcError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:35:70)
+    at Module.invoke (http://localhost:3000/packages/renderer-worker/src/parts/JsonRpc/JsonRpc.js:23:47)
+    at async Module.invoke (http://localhost:3000/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js:81:18)
+    at async applyColorTheme (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:82:28)
+    at async Module.hydrate (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:121:5)
+    at async Module.startup (http://localhost:3000/packages/renderer-worker/src/parts/Workbench/Workbench.js:73:3)
+    at async main (http://localhost:3000/packages/renderer-worker/src/rendererWorkerMain.js:7:3)`,
+    codeFrame: `  30 |
+  31 | export const getColorThemeJson = async (colorThemeId) => {
+> 32 |   Assert.string(colorThemeId)
+     |          ^
+  33 |   const extensions = await ExtensionManagement.getExtensions()
+  34 |   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
+  35 |   if (!colorThemePath) {`,
+    type: 'VError',
+    _error: error,
+  })
+  expect(Ajax.getText).not.toHaveBeenCalled()
 })
