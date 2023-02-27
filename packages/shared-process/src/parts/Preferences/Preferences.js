@@ -1,7 +1,7 @@
-import VError from 'verror'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
+import { VError } from '../VError/VError.js'
 
 // TODO need jsonc parser for settings with comments
 
@@ -19,7 +19,6 @@ export const getUserPreferences = async () => {
     }
     return json
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, 'failed to get user preferences')
   }
 }
@@ -30,7 +29,6 @@ export const getDefaultPreferences = async () => {
     const defaultSettingsPath = Platform.getDefaultSettingsPath()
     return await JsonFile.readJson(defaultSettingsPath)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, 'Failed to load default preferences')
   }
 }

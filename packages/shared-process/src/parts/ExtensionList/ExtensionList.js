@@ -1,9 +1,9 @@
 import { basename } from 'node:path'
-import VError from 'verror'
 import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.js'
 import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
+import { VError } from '../VError/VError.js'
 
 const getManifestVersion = (json) => {
   if (json && json.version && typeof json.version === 'string') {

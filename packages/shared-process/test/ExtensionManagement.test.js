@@ -1,13 +1,5 @@
 import { createReadStream, createWriteStream } from 'node:fs'
-import {
-  access,
-  mkdir,
-  mkdtemp,
-  readdir,
-  readFile,
-  rm,
-  writeFile,
-} from 'node:fs/promises'
+import { access, mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import http from 'node:http'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -16,9 +8,9 @@ import { constants, createBrotliCompress } from 'node:zlib'
 import getPort from 'get-port'
 import { jest } from '@jest/globals'
 import tar from 'tar-fs'
-import VError from 'verror'
 import { writeJson } from '../src/parts/JsonFile/JsonFile.js'
 import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.js'
+import { VError } from '../src/parts/VError/VError.js'
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   getExtensionsPath: jest.fn(() => {
@@ -44,9 +36,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   }),
 }))
 
-const ExtensionManagement = await import(
-  '../src/parts/ExtensionManagement/ExtensionManagement.js'
-)
+const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 const Platform = await import('../src/parts/Platform/Platform.js')
 
 const getTmpDir = () => {
@@ -132,12 +122,7 @@ test.skip('install', async () => {
     switch (request.url) {
       case '/download/test-author.test-extension':
         response.statusCode = 200
-        await pipeline(
-          createReadStream(
-            '/tmp/extension-test/test-author.test-extension.tar.br'
-          ),
-          response
-        )
+        await pipeline(createReadStream('/tmp/extension-test/test-author.test-extension.tar.br'), response)
         break
       default:
         response.statusCode = 404
@@ -149,12 +134,7 @@ test.skip('install', async () => {
   // @ts-ignore
   Platform.getExtensionsPath.mockImplementation(() => tmpDir)
   await ExtensionManagement.install('test-author.test-extension')
-  expect(
-    await readFile(
-      join(tmpDir, 'test-author.test-extension/extension.json'),
-      'utf-8'
-    )
-  ).toBe(`{
+  expect(await readFile(join(tmpDir, 'test-author.test-extension/extension.json'), 'utf-8')).toBe(`{
   "id": "test-author.test-extension",
   "name": "test-extension",
   "publisher": "test-author",
@@ -162,15 +142,10 @@ test.skip('install', async () => {
   "main": "main.js"
 }
 `)
-  expect(
-    await readFile(join(tmpDir, 'test-author.test-extension/main.js'), 'utf-8')
-  ).toBe('export const activate = () => { console.info("hello world") }')
-  expect(
-    await readFile(
-      join(tmpDir, 'test-author.test-extension/package.json'),
-      'utf-8'
-    )
-  ).toBe('{ "type" : "module" }')
+  expect(await readFile(join(tmpDir, 'test-author.test-extension/main.js'), 'utf-8')).toBe(
+    'export const activate = () => { console.info("hello world") }'
+  )
+  expect(await readFile(join(tmpDir, 'test-author.test-extension/package.json'), 'utf-8')).toBe('{ "type" : "module" }')
 })
 
 // TODO test is flaky https://github.com/lvce-editor/lvce-editor/actions/runs/3684799038/jobs/6234968296
@@ -189,9 +164,7 @@ test.skip('install should fail when the server sends a bad status code', async (
   Platform.getExtensionsPath.mockImplementation(() => tmpDir)
   // @ts-ignore
   Platform.getCachedExtensionsPath.mockImplementation(() => tmpDir2)
-  await expect(
-    ExtensionManagement.install('test-author.test-extension')
-  ).rejects.toThrowError(
+  await expect(ExtensionManagement.install('test-author.test-extension')).rejects.toThrowError(
     /Failed to install extension "test-author.test-extension": Failed to download "http:\/\/localhost:\d+\/download\/test-author.test-extension": Response code 404 \(Not Found\)/
   )
 })
@@ -227,9 +200,7 @@ test('install should fail when the server sends an invalid compressed object', a
   const tmpDir = await getTmpDir()
   // @ts-ignore
   Platform.getExtensionsPath.mockImplementation(() => tmpDir)
-  await expect(
-    ExtensionManagement.install('test-author.test-extension')
-  ).rejects.toThrowError(
+  await expect(ExtensionManagement.install('test-author.test-extension')).rejects.toThrowError(
     /^Failed to install extension "test-author.test-extension": Failed to extract .* unexpected end of file/
   )
 })
@@ -248,9 +219,7 @@ test("uninstall should fail when extension doesn't exist", async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   Platform.getExtensionsPath.mockImplementation(() => tmpDir)
-  await expect(
-    ExtensionManagement.uninstall('test-author.test-extension')
-  ).rejects.toThrowError(
+  await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrowError(
     /^Failed to uninstall extension "test-author.test-extension": ENOENT: no such file or directory/
   )
 })
@@ -319,9 +288,7 @@ test('getExtensions - invalid extension.json', async () => {
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       path: join(tmpDir1, 'test-extension'),
-      reason: new VError(
-        'Failed to load extension manifest for test-extension: Json Parsing Error'
-      ),
+      reason: new VError('Failed to load extension manifest for test-extension: Json Parsing Error'),
       status: ExtensionManifestStatus.Rejected,
     },
   ])
@@ -352,9 +319,7 @@ test('disable should fail if enabled extension path does not exist', async () =>
   Platform.getDisabledExtensionsPath.mockImplementation(() => tmpDir2)
   const nonExistentPath1 = join(tmpDir1, 'non-existent-extension')
   const nonExistentPath2 = join(tmpDir2, 'non-existent-extension')
-  await expect(
-    ExtensionManagement.disable('non-existent-extension')
-  ).rejects.toThrowError(
+  await expect(ExtensionManagement.disable('non-existent-extension')).rejects.toThrowError(
     `Failed to disable extension non-existent-extension: ENOENT: no such file or directory, rename '${nonExistentPath1}' -> '${nonExistentPath2}'`
   )
 })
@@ -413,9 +378,7 @@ test('getExtensions - error - invalid value - null', async () => {
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: ExtensionManifestStatus.Rejected,
-      reason: new VError(
-        'Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'
-      ),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
       path: join(tmpDir1, 'test-extension-1'),
     },
   ])
@@ -437,9 +400,7 @@ test('getExtensions - error - invalid value - string', async () => {
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: ExtensionManifestStatus.Rejected,
-      reason: new VError(
-        'Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'
-      ),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
       path: join(tmpDir1, 'test-extension-1'),
     },
   ])
@@ -461,9 +422,7 @@ test('getExtensions - error - invalid value - number', async () => {
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: ExtensionManifestStatus.Rejected,
-      reason: new VError(
-        'Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'
-      ),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
       path: join(tmpDir1, 'test-extension-1'),
     },
   ])
@@ -485,9 +444,7 @@ test('getExtensions - error - invalid value - boolean', async () => {
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: ExtensionManifestStatus.Rejected,
-      reason: new VError(
-        'Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'
-      ),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
       path: join(tmpDir1, 'test-extension-1'),
     },
   ])
@@ -509,9 +466,7 @@ test('getExtensions - error - invalid json', async () => {
   Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      reason: new VError(
-        'Failed to load extension manifest for test-extension-1: Json Parsing Error'
-      ),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Json Parsing Error'),
       status: ExtensionManifestStatus.Rejected,
       path: join(tmpDir1, 'test-extension-1'),
     },
@@ -534,9 +489,7 @@ test.skip('getExtensions - error - manifest not found', async () => {
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: ExtensionManifestStatus.Rejected,
-      reason: new VError(
-        `Failed to load extension "test-extension-1": Failed to load extension manifest: File not found '${manifestPath}'`
-      ),
+      reason: new VError(`Failed to load extension "test-extension-1": Failed to load extension manifest: File not found '${manifestPath}'`),
       path: join(tmpDir1, 'test-extension-1'),
     },
   ])

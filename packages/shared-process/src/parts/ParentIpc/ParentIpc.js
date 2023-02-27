@@ -1,5 +1,4 @@
 import { MessagePort, parentPort } from 'node:worker_threads'
-import VError from 'verror'
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import * as Debug from '../Debug/Debug.js'
@@ -9,6 +8,7 @@ import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as ProtocolType from '../ProtocolType/ProtocolType.js'
+import { VError } from '../VError/VError.js'
 // TODO add tests for this
 
 // TODO handle structure: one shared process multiple extension hosts

@@ -28,7 +28,5 @@ test('trash - error', async () => {
   trash.default.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(Trash.trash('/test')).rejects.toThrowError(
-    new Error('Failed to move item to trash: x is not a function')
-  )
+  await expect(Trash.trash('/test')).rejects.toThrowError(new Error('Failed to move item to trash: TypeError: x is not a function'))
 })

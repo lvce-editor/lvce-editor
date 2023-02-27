@@ -115,7 +115,7 @@ test('install - error - manifest contains null', async () => {
       repo: 'repo',
       branch: 'HEAD',
     })
-  ).rejects.toThrowError(new Error("Failed to install user/repo: Cannot destructure property 'id' of 'manifestJson' as it is null."))
+  ).rejects.toThrowError(new Error("Failed to install user/repo: TypeError: Cannot destructure property 'id' of 'manifestJson' as it is null."))
 })
 
 test('install', async () => {

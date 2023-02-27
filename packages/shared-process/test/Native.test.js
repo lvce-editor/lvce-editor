@@ -25,7 +25,5 @@ test('openFolder - error', async () => {
     throw new TypeError('x is not a function')
   })
   // TODO should say that is is a TypeError
-  await expect(Native.openFolder('/test')).rejects.toThrowError(
-    new Error('Failed to open /test: x is not a function')
-  )
+  await expect(Native.openFolder('/test')).rejects.toThrowError(new Error('Failed to open /test: TypeError: x is not a function'))
 })
