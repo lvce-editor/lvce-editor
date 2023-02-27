@@ -28,7 +28,6 @@ test('cleanStack - remove restoreJsonRpcError function from stack trace', () => 
     at async main (http://localhost:3000/packages/renderer-worker/src/rendererWorkerMain.js:7:3)`
   expect(CleanStack.cleanStack(stack)).toEqual([
     '    at ExtensionHost.getColorThemeJson (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)',
-    '    at invoke (http://localhost:3000/packages/renderer-worker/src/parts/JsonRpc/JsonRpc.js:23:47)',
     '    at async invoke (http://localhost:3000/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js:81:18)',
     '    at async applyColorTheme (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:82:28)',
     '    at async hydrate (http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js:121:5)',
