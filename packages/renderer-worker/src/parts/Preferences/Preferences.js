@@ -46,7 +46,7 @@ export const hydrate = async () => {
     const preferences = await getPreferences()
     Object.assign(state, preferences)
   } catch (error) {
-    ErrorHandling.handleError(error)
+    ErrorHandling.logError(error)
   }
 }
 
