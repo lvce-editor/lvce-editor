@@ -288,7 +288,7 @@ test('getExtensions - invalid extension.json', async () => {
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       path: join(tmpDir1, 'test-extension'),
-      reason: new VError('Failed to load extension manifest for test-extension: Json Parsing Error'),
+      reason: new VError('Failed to load extension manifest for test-extension: JsonParsingError: Json Parsing Error'),
       status: ExtensionManifestStatus.Rejected,
     },
   ])
@@ -466,7 +466,7 @@ test('getExtensions - error - invalid json', async () => {
   Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      reason: new VError('Failed to load extension manifest for test-extension-1: Json Parsing Error'),
+      reason: new VError('Failed to load extension manifest for test-extension-1: JsonParsingError: Json Parsing Error'),
       status: ExtensionManifestStatus.Rejected,
       path: join(tmpDir1, 'test-extension-1'),
     },

@@ -77,5 +77,7 @@ test('getIconTheme - invalid json', async () => {
   })
   const iconThemeJsonPath = join(tmpDir, 'icon-theme.json')
   await writeFile(iconThemeJsonPath, '{ 2 }')
-  await expect(ExtensionHostIconTheme.getIconTheme('test')).rejects.toThrowError('Failed to load icon theme "test": Json Parsing Error')
+  await expect(ExtensionHostIconTheme.getIconTheme('test')).rejects.toThrowError(
+    'Failed to load icon theme "test": JsonParsingError: Json Parsing Error'
+  )
 })
