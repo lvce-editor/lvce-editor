@@ -117,7 +117,7 @@ export const reload = async () => {
 // TODO test this, and also the error case
 // TODO have icon theme, color theme together (maybe)
 export const hydrate = async () => {
-  const colorThemeId = Preferences.get('workbench.colorTheme')
+  const colorThemeId = Preferences.get('workbench.colorTheme') || FALLBACK_COLOR_THEME_ID
   try {
     await applyColorTheme(colorThemeId)
   } catch (error) {
