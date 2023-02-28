@@ -1,0 +1,110 @@
+const RE_WHITESPACE = /^\s+/
+const RE_LINE_COMMENT = /^\/\/.*/
+const RE_CONTENT = /^.+/
+const RE_CURLY_OPEN = /^\{/
+const RE_CURLY_CLOSE = /^\}/
+const RE_SQUARE_OPEN = /^\[/
+const RE_SQUARE_CLOSE = /^\]/
+const RE_DOUBLE_QUOTE = /^\"/
+const RE_STRING_DOUBLE_QUOTE_CONTENT = /^[^"\\]+/
+const RE_NUMERIC = /^\d+/
+const RE_ANYTHING = /^.+/
+const RE_COLON = /^:/
+
+const State = {
+  TopLevelContent: 1,
+  InsideBlockComment: 2,
+  InsideDoubleQuoteString: 3,
+  InsideObject: 4,
+  AfterPropertyName: 5,
+  InsideArray: 6,
+}
+
+class UnexpectedTokenError extends Error {
+  constructor() {
+    super('unexpected token')
+  }
+}
+
+/**
+ *
+ * @param {string} content
+ * @param {string} filePath
+ * @returns
+ */
+export const parse = (content, filePath = '') => {
+  let state = State.TopLevelContent
+  let next
+  let index = 0
+  let contentIndex = 0
+  let jsonContent = ''
+  const stack = []
+  while (index < content.length) {
+    const part = content.slice(index)
+    switch (state) {
+      case State.TopLevelContent:
+        if ((next = part.match(RE_CURLY_OPEN))) {
+          state = State.InsideObject
+          stack.push(State.InsideObject)
+        } else if ((next = part.match(RE_WHITESPACE))) {
+          // ignore
+        } else if ((next = part.match(RE_NUMERIC))) {
+          // ignore
+        } else if ((next = part.match(RE_DOUBLE_QUOTE))) {
+          state = State.InsideDoubleQuoteString
+          stack.push(State.TopLevelContent)
+        } else if ((next = part.match(RE_CURLY_CLOSE))) {
+          state = stack.pop() || State.TopLevelContent
+        } else if ((next = part.match(RE_LINE_COMMENT))) {
+          // ignore
+        } else if ((next = part.match(RE_SQUARE_OPEN))) {
+          state = State.InsideArray
+          stack.push(State.TopLevelContent)
+        } else {
+          part
+          throw new UnexpectedTokenError()
+        }
+        break
+      case State.InsideObject:
+        if ((next = part.match(RE_WHITESPACE))) {
+          // ignore
+        } else if ((next = part.match(RE_DOUBLE_QUOTE))) {
+          state = State.InsideDoubleQuoteString
+          stack.push(State.AfterPropertyName)
+        } else if ((next = part.match(RE_CURLY_CLOSE))) {
+          // ignore
+        } else {
+          throw new UnexpectedTokenError()
+        }
+        break
+      case State.InsideDoubleQuoteString:
+        if ((next = part.match(RE_DOUBLE_QUOTE))) {
+          state = stack.pop() || State.TopLevelContent
+        } else if ((next = part.match(RE_STRING_DOUBLE_QUOTE_CONTENT))) {
+        } else {
+          throw new UnexpectedTokenError()
+        }
+        break
+      case State.AfterPropertyName:
+        if ((next = part.match(RE_COLON))) {
+          state = State.TopLevelContent
+        } else if ((next = part.match(RE_WHITESPACE))) {
+          // ignore
+        } else {
+          throw new UnexpectedTokenError()
+        }
+        break
+      case State.InsideArray:
+        throw new UnexpectedTokenError()
+        break
+      default:
+        state
+        throw new Error('unexpected state')
+    }
+    // @ts-ignore
+    index += next[0].length
+  }
+  jsonContent += content.slice(contentIndex)
+  const parsed = JSON.parse(jsonContent)
+  return parsed
+}
