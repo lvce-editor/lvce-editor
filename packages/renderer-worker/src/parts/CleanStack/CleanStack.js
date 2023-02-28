@@ -8,6 +8,7 @@ const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
 const RE_PATH_3 = /@(.*):(\d+):(\d+)$/ // Firefox
 const RE_RESTORE_JSON_RPC_ERROR = /^\s*at restoreJsonRpcError/
 const RE_JSON_RPC_INVOKE = /^\s*at invoke .*JsonRpc\.js/
+const RE_ASSERT = /^\s*at .*\/Assert\.js/
 
 const isInternalLine = (line) => {
   return RE_AT_PROMISE_INDEX.test(line)
@@ -23,6 +24,9 @@ const isNormalStackLine = (line) => {
 
 const isApplicationUsefulLine = (line, index) => {
   if (index === 0) {
+    if (RE_ASSERT.test(line)) {
+      return false
+    }
     return true
   }
   if (RE_RESTORE_JSON_RPC_ERROR.test(line)) {

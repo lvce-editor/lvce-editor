@@ -1,4 +1,5 @@
 import * as Ajax from '../Ajax/Ajax.js'
+import { AssertionError } from '../AssertionError/AssertionError.js'
 import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
@@ -82,6 +83,13 @@ const toAbsoluteUrl = (file, relativePath) => {
   return url.href
 }
 
+const getStackLinesToCut = (error) => {
+  if (error instanceof AssertionError) {
+    return 1
+  }
+  return 0
+}
+
 const getSourceMapMatch = (text) => {
   const index = text.lastIndexOf('\n', text.length - 2)
   const lastLine = text.slice(index + 1, -1)
@@ -97,7 +105,8 @@ const getSourceMapMatch = (text) => {
 
 const prepareErrorMessageWithoutCodeFrame = async (error) => {
   try {
-    const lines = CleanStack.cleanStack(error.stack)
+    const linesToCut = getStackLinesToCut(error)
+    const lines = CleanStack.cleanStack(error.stack).slice(linesToCut)
     const file = getFile(lines)
     let match = file.match(RE_PATH_1)
     if (!match) {

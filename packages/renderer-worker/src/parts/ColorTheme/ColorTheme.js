@@ -1,13 +1,13 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as Css from '../Css/Css.js'
-import * as Logger from '../Logger/Logger.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as Meta from '../Meta/Meta.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 
 // TODO by default color theme should come from local storage, session storage, cache storage, indexeddb or blob url -> fast initial load
 // actual color theme can be computed after workbench has loaded (most times will be the same and doesn't need to be computed)
@@ -78,6 +78,7 @@ const getMetaThemeColor = (colorThemeJson) => {
 }
 const applyColorTheme = async (colorThemeId) => {
   try {
+    Assert.string(colorThemeId)
     state.colorTheme = colorThemeId
     const colorThemeJson = await getColorThemeJson(colorThemeId)
     const colorThemeCss = await getColorThemeCss(colorThemeId, colorThemeJson)
