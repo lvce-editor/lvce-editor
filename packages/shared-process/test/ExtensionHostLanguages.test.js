@@ -222,6 +222,6 @@ test('getLanguageConfiguration - error - language configuration has invalid json
   })
   // TODO should display path as well
   await expect(ExtensionHostLanguages.getLanguageConfiguration('javascript')).rejects.toThrowError(
-    new Error('Failed to load language configuration for javascript: Json Parsing Error')
+    new Error('Failed to load language configuration for javascript: JsonParsingError: Json Parsing Error')
   )
 })

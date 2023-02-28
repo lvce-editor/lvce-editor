@@ -11,10 +11,10 @@ import * as JsonError from '../src/parts/JsonError/JsonError.js'
 // TODO test unexpected array
 // TODO test unexpected object
 
-test('getError - syntax error', async () => {
+test('getErrorProps - syntax error', async () => {
   expect(JsonError.getErrorProps('{ "x" 42 }', '/test/file.json')).toEqual({
     message: `Json Parsing Error`,
-    stack: `at /test/file.json`,
+    stack: `    at /test/file.json`,
     codeFrame: `
 > 1 | { "x" 42 }
     |       ^
@@ -22,10 +22,10 @@ test('getError - syntax error', async () => {
   })
 })
 
-test('getError - unexpected end of json', async () => {
+test('getErrorProps - unexpected end of json', async () => {
   expect(JsonError.getErrorProps('[', '/test/file.json')).toEqual({
     message: 'Json Parsing Error',
-    stack: 'at /test/file.json',
+    stack: '    at /test/file.json',
     codeFrame: `
 > 1 | [
     | ^
@@ -33,7 +33,7 @@ test('getError - unexpected end of json', async () => {
   })
 })
 
-test('getError - unexpected comma', async () => {
+test('getErrorProps - unexpected comma', async () => {
   expect(
     JsonError.getErrorProps(
       `{
@@ -53,7 +53,7 @@ test('getError - unexpected comma', async () => {
     )
   ).toEqual({
     message: 'Json Parsing Error',
-    stack: 'at /test/file.json',
+    stack: '    at /test/file.json',
     codeFrame: `
   4 |   "description": "Provides syntax highlighting and bracket matching in Go files.",
   5 |   "languages": [
@@ -68,7 +68,7 @@ test('getError - unexpected comma', async () => {
   })
 })
 
-test('getError - unterminated string', async () => {
+test('getErrorProps - unterminated string', async () => {
   expect(
     JsonError.getErrorProps(
       `[
@@ -79,7 +79,7 @@ test('getError - unterminated string', async () => {
     )
   ).toEqual({
     message: 'Json Parsing Error',
-    stack: 'at /test/file.json',
+    stack: '    at /test/file.json',
     codeFrame: `
   1 | [
 > 2 |   "id
@@ -92,7 +92,7 @@ test('getError - unterminated string', async () => {
   })
 })
 
-test.only('getError - unexpected quote', async () => {
+test('getErrorProps - unexpected quote', async () => {
   expect(
     JsonError.getErrorProps(
       `[
@@ -103,7 +103,7 @@ test.only('getError - unexpected quote', async () => {
     )
   ).toEqual({
     message: 'Json Parsing Error',
-    stack: 'at /test/file.json',
+    stack: '    at /test/file.json',
     codeFrame: `
   1 | [
 > 2 |   "id""
@@ -116,10 +116,10 @@ test.only('getError - unexpected quote', async () => {
   })
 })
 
-test('getError - empty string', async () => {
+test('getErrorProps - empty string', async () => {
   expect(JsonError.getErrorProps(``, '/test/file.json')).toEqual({
     message: 'Json Parsing Error: Cannot parse empty string',
-    stack: 'at /test/file.json',
+    stack: '    at /test/file.json',
     codeFrame: ``,
   })
 })
