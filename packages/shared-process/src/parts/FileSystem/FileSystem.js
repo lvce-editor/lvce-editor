@@ -1,7 +1,6 @@
 // TODO lazyload chokidar and trash (but doesn't work currently because of bug with jest)
 import * as fs from 'node:fs/promises'
 import * as os from 'node:os'
-import VError from 'verror'
 import * as EncodingType from '../EncodingType/EncodingType.js'
 import { FileNotFoundError } from '../Error/FileNotFoundError.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
@@ -9,6 +8,7 @@ import * as GetDirentType from '../GetDirentType/GetDirentType.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Trash from '../Trash/Trash.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   watcherMap: Object.create(null),

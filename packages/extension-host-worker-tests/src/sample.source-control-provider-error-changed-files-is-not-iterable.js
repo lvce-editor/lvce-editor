@@ -10,7 +10,7 @@ export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator,
   await SideBar.open('Source Control')
 
   // assert
-  const sourceControl = Locator('.SourceControl')
+  const sideBarContent = Locator('#SideBar .Error')
   // TODO error message could be improved: Failed to query changed files from test-source-control-provider: changedFiles must be of type array but was undefined
-  await expect(sourceControl).toHaveText('TypeError: changedFiles is not iterable (cannot read property undefined)')
+  await expect(sideBarContent).toHaveText('TypeError: changedFiles is not iterable (cannot read property undefined)')
 }

@@ -188,6 +188,20 @@ export const resize = (id, dimensions) => {
   return commands
 }
 
+export const handleFocusChange = (id, isFocused) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance || !instance.factory || !instance.factory.handleFocusChange) {
+    return []
+  }
+  const oldState = instance.state
+  const newState = instance.factory.handleFocusChange(oldState, isFocused)
+  const commands = ViewletManager.render(instance.factory, instance.state, newState)
+  Assert.object(newState)
+  Assert.array(commands)
+  ViewletStates.setState(id, newState)
+  return commands
+}
+
 export const getState = (id) => {
   const instance = ViewletStates.getInstance(id)
   return instance.state

@@ -50,6 +50,7 @@ const ViewletLayoutEvents = await import('../src/parts/ViewletLayout/ViewletLayo
 
 test('event - pointermove after pointerdown', () => {
   const state = ViewletLayout.create()
+  ViewletLayout.attachEvents(state)
   const { $SashSideBar } = state
   const pointerDownEvent = new PointerEvent('pointerdown', {
     bubbles: true,
@@ -74,6 +75,7 @@ test('event - pointermove after pointerdown', () => {
 
 test('event - pointerup after pointerdown', () => {
   const state = ViewletLayout.create()
+  ViewletLayout.attachEvents(state)
   const spy1 = jest.spyOn(HTMLElement.prototype, 'addEventListener')
   const spy2 = jest.spyOn(HTMLElement.prototype, 'removeEventListener')
   // @ts-ignore

@@ -1,8 +1,8 @@
-import VError from 'verror'
 import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Path from '../Path/Path.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import { VError } from '../VError/VError.js'
 
 const toAbsolutePaths = (path, dirents) => {
   const absolutePaths = []
@@ -19,9 +19,7 @@ export const getExtensionManifests = async (path) => {
     }
     const dirents = await FileSystem.readDir(path)
     const absolutePaths = toAbsolutePaths(path, dirents)
-    const manifests = await Promise.all(
-      absolutePaths.map(ExtensionManifest.get)
-    )
+    const manifests = await Promise.all(absolutePaths.map(ExtensionManifest.get))
     return manifests
   } catch (error) {
     // TODO how to make typescript happy?

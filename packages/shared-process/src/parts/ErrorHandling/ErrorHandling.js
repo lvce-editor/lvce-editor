@@ -5,6 +5,7 @@ import * as Logger from '../Logger/Logger.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as Process from '../Process/Process.js'
 import * as Socket from '../Socket/Socket.js'
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 
 export const state = {
   seenErrors: [],
@@ -49,7 +50,7 @@ export const handleError = (error) => {
 
 const firstErrorLine = (error) => {
   if (error.stack) {
-    return error.stack.slice(0, error.stack.indexOf('\n'))
+    return error.stack.slice(0, GetNewLineIndex.getNewLineIndex(error.stack))
   }
   if (error.message) {
     return error.message

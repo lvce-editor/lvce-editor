@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Json from '../Json/Json.js'
@@ -44,7 +45,7 @@ export const hydrate = async () => {
     const preferences = await getPreferences()
     Object.assign(state, preferences)
   } catch (error) {
-    console.error(error)
+    ErrorHandling.logError(error)
   }
 }
 

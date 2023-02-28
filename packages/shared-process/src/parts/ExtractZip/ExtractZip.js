@@ -1,6 +1,6 @@
 import { mkdir } from 'node:fs/promises'
 import extract from 'extract-zip'
-import VError from 'verror'
+import { VError } from '../VError/VError.js'
 
 export const extractZip = async ({ inFile, outDir }) => {
   try {

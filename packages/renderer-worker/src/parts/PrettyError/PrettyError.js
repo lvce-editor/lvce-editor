@@ -1,9 +1,12 @@
 import * as Ajax from '../Ajax/Ajax.js'
+import { AssertionError } from '../AssertionError/AssertionError.js'
+import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SourceMap from '../SourceMap/SourceMap.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const getErrorMessage = (error) => {
   if (!error) {
@@ -28,10 +31,12 @@ const prepareErrorMessageWithCodeFrame = (error) => {
     }
   }
   const message = getErrorMessage(error)
+  const lines = CleanStack.cleanStack(error.stack)
+  const relevantStack = JoinLines.joinLines(lines)
   if (error.codeFrame) {
     return {
       message,
-      stack: error.stack,
+      stack: relevantStack,
       codeFrame: error.codeFrame,
       type: error.constructor.name,
       _error: error,
@@ -67,11 +72,6 @@ const getFile = (lines) => {
   return ''
 }
 
-const getLastLine = (text) => {
-  const index = text.lastIndexOf('\n', text.length - 2)
-  return text.slice(index + 1, -1)
-}
-
 const getSourceMapAbsolutePath = (file, relativePath) => {
   const folder = file.slice(0, file.lastIndexOf('/'))
   const absolutePath = folder + '/' + relativePath
@@ -83,6 +83,13 @@ const toAbsoluteUrl = (file, relativePath) => {
   return url.href
 }
 
+const getStackLinesToCut = (error) => {
+  if (error instanceof AssertionError) {
+    return 1
+  }
+  return 0
+}
+
 const getSourceMapMatch = (text) => {
   const index = text.lastIndexOf('\n', text.length - 2)
   const lastLine = text.slice(index + 1, -1)
@@ -90,7 +97,7 @@ const getSourceMapMatch = (text) => {
   if (lastLineMatch) {
     return lastLineMatch
   }
-  const secondLastLineIndex = text.indexOf('\n', index - 1)
+  const secondLastLineIndex = GetNewLineIndex.getNewLineIndex(text, index - 1)
   const secondLastLine = text.slice(secondLastLineIndex, index)
   const secondLastLineMatch = secondLastLine.match(RE_SOURCE_MAP)
   return secondLastLineMatch
@@ -98,7 +105,8 @@ const getSourceMapMatch = (text) => {
 
 const prepareErrorMessageWithoutCodeFrame = async (error) => {
   try {
-    const lines = SplitLines.splitLines(error.stack)
+    const linesToCut = getStackLinesToCut(error)
+    const lines = CleanStack.cleanStack(error.stack).slice(linesToCut)
     const file = getFile(lines)
     let match = file.match(RE_PATH_1)
     if (!match) {
@@ -119,7 +127,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     const parsedLine = parseInt(line)
     const parsedColumn = parseInt(column)
     const message = getErrorMessage(error)
-    const relevantStack = JoinLines.joinLines(lines.slice(1))
+    const relevantStack = JoinLines.joinLines(lines)
     if (sourceMapMatch) {
       const sourceMapUrl = sourceMapMatch[1]
       const sourceMapAbsolutePath = getSourceMapAbsolutePath(path, sourceMapUrl)
@@ -163,7 +171,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       _error: error,
     }
   } catch (otherError) {
-    console.warn(`ErrorHandling Error: ${otherError}`)
+    Logger.warn(`ErrorHandling Error: ${otherError}`)
     return error
   }
 }
@@ -183,33 +191,33 @@ export const print = (error) => {
     // Firefox does not support printing codeframe with error stack
     console.log({ error })
     if (error && error._error) {
-      console.error(error._error)
+      Logger.error(error._error)
       return
     }
-    console.error(error)
+    Logger.error(error)
     return
   }
   if (error && error.type && error.message && error.codeFrame) {
-    console.error(`${error.type}: ${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
+    Logger.error(`${error.type}: ${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
     return
   }
   if (error && error.message && error.codeFrame) {
-    console.error(`${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
+    Logger.error(`${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
     return
   }
   if (error && error.type && error.message) {
-    console.error(`${error.type}: ${error.message}\n${error.stack}`)
+    Logger.error(`${error.type}: ${error.message}\n${error.stack}`)
     return
   }
   if (error && error.stack) {
-    console.error(`${error.stack}`)
+    Logger.error(`${error.stack}`)
     return
   }
   if (error === null) {
-    console.error(null)
+    Logger.error(null)
     return
   }
-  console.error(error)
+  Logger.error(error)
 }
 
 export const getMessage = (error) => {

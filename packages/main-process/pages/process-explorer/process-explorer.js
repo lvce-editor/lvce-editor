@@ -5,7 +5,7 @@ const state = {
   collapsed: [],
   processes: [],
   $Tbody: undefined,
-  port: undefined,
+  ipc: undefined,
 }
 
 const formatMemory = (memory) => {
@@ -143,8 +143,7 @@ const handleHomeRow = ($ActiveElement) => {
 const handleHomeCell = ($ActiveElement, control) => {
   if (control) {
     const index = getNodeIndex($ActiveElement)
-    const $FirstRow =
-      $ActiveElement.parentElement.parentElement.firstElementChild
+    const $FirstRow = $ActiveElement.parentElement.parentElement.firstElementChild
     const $TopCell = $FirstRow.children[index]
     $TopCell.focus()
     return
@@ -365,7 +364,11 @@ const handleMouseDown = (event) => {
   }
 }
 
-const handleContextMenu = (event) => {
+const processExplorerShowContextMenu = async (pid) => {
+  JsonRpc.invoke(state.ipc, 'ProcessExplorerContextMenu.showContextMenu', pid)
+}
+
+const handleContextMenu = async (event) => {
   event.preventDefault()
   const $Target = event.target
 
@@ -373,11 +376,7 @@ const handleContextMenu = (event) => {
   const index = getNodeIndex($Row)
 
   const displayProcess = state.displayProcesses[index]
-  state.port.postMessage({
-    jsonrpc: '2.0',
-    method: 'showContextMenu',
-    params: [displayProcess.pid],
-  })
+  await processExplorerShowContextMenu(displayProcess.pid)
 }
 
 /**
@@ -513,6 +512,9 @@ const renderProcesses = (processes) => {
   state.processes = processes
   state.displayProcesses = displayProcesses
   const $Tbody = document.querySelector('tbody')
+  if (!$Tbody) {
+    return
+  }
   if ($Tbody.children.length < displayProcesses.length) {
     render$ProcessesLess($Tbody, displayProcesses)
   } else if ($Tbody.children.length === displayProcesses.length) {
@@ -528,42 +530,243 @@ const renderProcesses = (processes) => {
   state.$Tbody = $Tbody
 }
 
-const handleMessage = (message) => {
-  const { method, params } = message
-  switch (method) {
-    case 'processWithMemoryUsage':
-      renderProcesses(...params)
-      break
-    default:
-      break
-  }
+const Id = {
+  id: 1,
+  create() {
+    return this.id++
+  },
 }
 
-const handleMessageFromPort = (event) => {
-  const message = event.data
-  handleMessage(message)
-}
+const callbacks = Object.create(null)
 
-const handleFirstMessage = (event) => {
-  const port = event.ports[0]
-  port.onmessage = handleMessageFromPort
-  state.port = port
-
-  const update = () => {
-    port.postMessage({
-      jsonrpc: '2.0',
-      method: 'updateStats',
-      params: [],
+const Callback = {
+  registerPromise() {
+    const id = Id.create()
+    const promise = new Promise((resolve, reject) => {
+      callbacks[id] = { resolve, reject }
     })
+    return { id, promise }
+  },
+  resolve(id, message) {
+    callbacks[id].resolve(message)
+  },
+}
+
+const JsonRpcVersion = {
+  Two: '2.0',
+}
+
+const ErrorType = {
+  DomException: 'DOMException',
+  ReferenceError: 'ReferenceError',
+  SyntaxError: 'SyntaxError',
+  TypeError: 'TypeError',
+}
+
+const GetErrorConstructor = {
+  getErrorConstructor(message, type) {
+    if (type) {
+      switch (type) {
+        case ErrorType.DomException:
+          return DOMException
+        case ErrorType.TypeError:
+          return TypeError
+        case ErrorType.SyntaxError:
+          return SyntaxError
+        case ErrorType.ReferenceError:
+          return ReferenceError
+        default:
+          return Error
+      }
+    }
+    if (message.startsWith('TypeError: ')) {
+      return TypeError
+    }
+    if (message.startsWith('SyntaxError: ')) {
+      return SyntaxError
+    }
+    if (message.startsWith('ReferenceError: ')) {
+      return ReferenceError
+    }
+    return Error
+  },
+}
+
+const constructError = (message, type, name) => {
+  const ErrorConstructor = GetErrorConstructor.getErrorConstructor(message, type)
+  if (ErrorConstructor === DOMException && name) {
+    return new ErrorConstructor(message, name)
   }
-  setInterval(update, 1000)
-  update()
+  if (ErrorConstructor === Error) {
+    const error = new Error(message)
+    if (name && name !== 'VError') {
+      error.name = name
+    }
+    return error
+  }
+  return new ErrorConstructor(message)
+}
+
+const JsonRpcErrorCode = {
+  MethodNotFound: -32601,
+  Custom: -32001,
+}
+
+class JsonRpcError extends Error {
+  constructor(message) {
+    super(message)
+    this.name = 'JsonRpcError'
+  }
+}
+
+const RestoreJsonRpcError = {
+  restoreJsonRpcError(error) {
+    if (error && error instanceof Error) {
+      return error
+    }
+    if (error && error.code && error.code === JsonRpcErrorCode.MethodNotFound) {
+      const restoredError = new JsonRpcError(error.message)
+      restoredError.stack = error.stack
+      return restoredError
+    }
+    if (error && error.message) {
+      const restoredError = constructError(error.message, error.type, error.name)
+      if (error.data) {
+        if (error.data.stack) {
+          restoredError.stack = error.message + '\n' + error.data.stack
+
+          if (error.data.codeFrame) {
+            // @ts-ignore
+            restoredError.codeFrame = error.data.codeFrame
+          }
+        }
+      } else if (error.stack) {
+        // TODO accessing stack might be slow
+        const lowerStack = restoredError.stack
+        // @ts-ignore
+        const indexNewLine = lowerStack.indexOf('\n')
+        // @ts-ignore
+        restoredError.stack = error.stack + lowerStack.slice(indexNewLine)
+      }
+      return restoredError
+    }
+    if (typeof error === 'string') {
+      return new Error(`JsonRpc Error: ${error}`)
+    }
+    return new Error(`JsonRpc Error: ${error}`)
+  },
+}
+
+const JsonRpc = {
+  async invoke(ipc, method, ...params) {
+    const { id, promise } = Callback.registerPromise()
+    ipc.send({
+      jsonrpc: JsonRpcVersion.Two,
+      method,
+      params,
+      id,
+    })
+    const responseMessage = await promise
+    if ('error' in responseMessage) {
+      const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
+      throw restoredError
+    }
+    if ('result' in responseMessage) {
+      return responseMessage.result
+    }
+
+    throw new Error('unexpected response message')
+  },
+}
+
+const listProcessesWithMemoryUsage = (rootPid) => {
+  return JsonRpc.invoke(state.ipc, 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage', rootPid)
+}
+
+const waitForFirstMessage = () => {
+  return new Promise((resolve) => {
+    window.addEventListener('message', resolve, { once: true })
+    // @ts-ignore
+    window.myApi.ipcConnect()
+  })
+}
+
+const IpcChildWithElectron = {
+  async listen() {
+    const firstMessage = await waitForFirstMessage()
+    const port = firstMessage.ports[0]
+    return {
+      port,
+      /**
+       * @type {any}
+       */
+      wrappedListener: null,
+      send(message) {
+        this.port.postMessage(message)
+      },
+      set onmessage(listener) {
+        this.wrappedListener = (event) => {
+          listener(event.data)
+        }
+        this.port.onmessage = this.wrappedListener
+      },
+      get onmessage() {
+        return this.wrappedListener
+      },
+    }
+  },
+}
+
+const IpcChild = {
+  listen() {
+    return IpcChildWithElectron.listen()
+  },
+}
+
+const handleError = (event) => {
+  console.error(event)
+  document.body.textContent = `${event}`
+}
+
+const handleUnhandledRejection = (event) => {
+  console.error(event.reason)
+  document.body.textContent = `${event.reason}`
+}
+
+const isResultMessage = (message) => {
+  return 'result' in message
+}
+
+const isErrorMessage = (message) => {
+  return 'error' in message
+}
+
+const handleMessage = (message) => {
+  if (message.id) {
+    if (isResultMessage(message) || isErrorMessage(message)) {
+      Callback.resolve(message.id, message)
+    }
+  }
+}
+
+const getPid = () => {
+  return JsonRpc.invoke(state.ipc, 'Process.getPid')
 }
 
 const main = async () => {
-  window.addEventListener('message', handleFirstMessage, { once: true })
-  // @ts-ignore
-  window.myApi.ipcConnect()
+  onerror = handleError
+  onunhandledrejection = handleUnhandledRejection
+  const ipc = await IpcChild.listen()
+  ipc.onmessage = handleMessage
+  state.ipc = ipc
+  const pid = await getPid()
+  while (true) {
+    const processesWithMemoryUsage = await listProcessesWithMemoryUsage(pid)
+    renderProcesses(processesWithMemoryUsage)
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000)
+    })
+  }
 }
 
 main()

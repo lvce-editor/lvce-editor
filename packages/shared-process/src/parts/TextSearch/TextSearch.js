@@ -1,29 +1,12 @@
+import { Writable } from 'node:stream'
+import { pipeline } from 'node:stream/promises'
+import * as EncodingType from '../EncodingType/EncodingType.js'
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
+import * as GetTextSearchRipGrepArgs from '../GetTextSearchRipGrepArgs/GetTextSearchRipGrepArgs.js'
 import * as RipGrep from '../RipGrep/RipGrep.js'
 import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
-
-const CHARS_BEFORE = 20
-const CHARS_AFTER = 50
-
-const toSearchResult = (parsedLine) => {
-  const results = []
-  const lines = parsedLine.data.lines.text
-  const lineNumber = parsedLine.data.line_number
-  for (const submatch of parsedLine.data.submatches) {
-    const previewStart = Math.max(submatch.start - CHARS_BEFORE, 0)
-    const previewEnd = Math.min(submatch.end + CHARS_AFTER, lines.length)
-    const previewText = lines.slice(previewStart, previewEnd)
-    results.push({
-      type: TextSearchResultType.Match,
-      start: submatch.start - previewStart,
-      end: submatch.end - previewStart,
-      lineNumber,
-      text: previewText,
-    })
-  }
-  return results
-}
-
+import * as ToTextSearchResult from '../ToTextSearchResult/ToTextSearchResult.js'
 // TODO update vscode-ripgrep when https://github.com/mhinz/vim-grepper/issues/244, https://github.com/BurntSushi/ripgrep/issues/1892 is fixed
 
 // need to use '.' as last argument for ripgrep
@@ -35,91 +18,115 @@ const toSearchResult = (parsedLine) => {
 // TODO update client
 // TODO not always run nice, maybe configure nice via flag/options
 
-export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 20_000 } = {}) => {
-  // TODO reject promise when ripgrep search fails
-  return new Promise((resolve, reject) => {
-    const ripGrepArgs = ['--smart-case', '--stats', '--json', '--threads', `${threads}`, '--fixed-strings', searchString, '.']
-    const childProcess = RipGrep.spawn(ripGrepArgs, {
-      cwd: searchDir,
+const collectStdout = async (childProcess, maxSearchResults) => {
+  const allSearchResults = Object.create(null)
+  let buffer = ''
+  let stats = {}
+  let limitHit = false
+  let numberOfResults = 0
+
+  childProcess.stdout.setEncoding(EncodingType.Utf8)
+
+  const handleLine = (line) => {
+    const parsedLine = JSON.parse(line)
+    switch (parsedLine.type) {
+      case RipGrepParsedLineType.Begin:
+        allSearchResults[parsedLine.data.path.text] = [
+          {
+            type: TextSearchResultType.File,
+            start: 0,
+            end: 0,
+            lineNumber: 0,
+            text: parsedLine.data.path.text,
+          },
+        ]
+        break
+      case RipGrepParsedLineType.Match:
+        const remaining = maxSearchResults - numberOfResults
+        const matches = ToTextSearchResult.toTextSearchResult(parsedLine, remaining)
+        numberOfResults += matches.length
+        allSearchResults[parsedLine.data.path.text].push(...matches)
+        break
+      case RipGrepParsedLineType.Summary:
+        stats = parsedLine.data
+        break
+      default:
+        break
+    }
+  }
+
+  const handleData = (chunk) => {
+    let newLineIndex = GetNewLineIndex.getNewLineIndex(chunk)
+    const dataString = buffer + chunk
+    if (newLineIndex === -1) {
+      buffer = dataString
+      return
+    }
+    newLineIndex += buffer.length
+    let previousIndex = 0
+    while (newLineIndex >= 0) {
+      const line = dataString.slice(previousIndex, newLineIndex)
+      handleLine(line)
+      previousIndex = newLineIndex + 1
+      newLineIndex = GetNewLineIndex.getNewLineIndex(dataString, previousIndex)
+    }
+    buffer = dataString.slice(previousIndex)
+
+    if (numberOfResults > maxSearchResults) {
+      limitHit = true
+      childProcess.kill()
+    }
+  }
+
+  await pipeline(
+    childProcess.stdout,
+    new Writable({
+      decodeStrings: false,
+      construct(callback) {
+        callback()
+      },
+      write(chunk, encoding, callback) {
+        try {
+          handleData(chunk)
+          callback()
+        } catch (error) {
+          callback(error)
+        }
+      },
     })
-    const allSearchResults = Object.create(null)
-    let buffer = ''
-    let stats = {}
-    let limitHit = false
-    let numberOfResults = 0
+  )
+  const results = Object.values(allSearchResults).flat(1)
+  return {
+    results,
+    stats,
+    limitHit,
+  }
+}
+
+export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 20_000, isCaseSensitive = false } = {}) => {
+  const ripGrepArgs = GetTextSearchRipGrepArgs.getRipGrepArgs({
+    threads,
+    isCaseSensitive,
+    searchString,
+  })
+  const childProcess = RipGrep.spawn(ripGrepArgs, {
+    cwd: searchDir,
+  })
+  const pipeLinePromise = collectStdout(childProcess, maxSearchResults)
+  const closePromise = new Promise((resolve, reject) => {
     // TODO use pipeline / transform stream maybe
-
-    const handleLine = (line) => {
-      const parsedLine = JSON.parse(line)
-      switch (parsedLine.type) {
-        case RipGrepParsedLineType.Begin:
-          allSearchResults[parsedLine.data.path.text] = [
-            {
-              type: TextSearchResultType.File,
-              start: 0,
-              end: 0,
-              lineNumber: 0,
-              text: parsedLine.data.path.text,
-            },
-          ]
-          break
-        case RipGrepParsedLineType.Match:
-          numberOfResults++
-          allSearchResults[parsedLine.data.path.text].push(...toSearchResult(parsedLine))
-          break
-        case RipGrepParsedLineType.Summary:
-          stats = parsedLine.data
-          break
-        default:
-          break
-      }
-    }
-
-    let total = 0
-    const handleData = (chunk) => {
-      let newLineIndex = chunk.indexOf('\n')
-      const dataString = buffer + chunk
-      if (newLineIndex === -1) {
-        buffer = dataString
-        return
-      }
-      total += chunk.length
-      newLineIndex += buffer.length
-      let previousIndex = 0
-      while (newLineIndex >= 0) {
-        const line = dataString.slice(previousIndex, newLineIndex)
-        handleLine(line)
-        previousIndex = newLineIndex + 1
-        newLineIndex = dataString.indexOf('\n', previousIndex)
-      }
-      buffer = dataString.slice(previousIndex)
-
-      if (numberOfResults > maxSearchResults) {
-        limitHit = true
-        childProcess.kill()
-      }
-    }
-
     const handleClose = () => {
-      const results = Object.values(allSearchResults).flat(1)
-      resolve({
-        results,
-        stats,
-        limitHit,
-      })
+      resolve(undefined)
     }
     const handleError = (error) => {
       // TODO check type of error
       console.error(error)
-      resolve({
-        results: [],
-        stats,
-        limitHit,
-      })
+      resolve(undefined)
     }
-    childProcess.stdout.setEncoding('utf8')
-    childProcess.stdout.on('data', handleData)
+
     childProcess.once('close', handleClose)
     childProcess.once('error', handleError)
   })
+  await Promise.all([pipeLinePromise, closePromise])
+  return await pipeLinePromise
 }

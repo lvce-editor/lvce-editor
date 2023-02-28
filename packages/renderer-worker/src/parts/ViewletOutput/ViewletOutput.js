@@ -32,11 +32,7 @@ export const loadContent = async (state) => {
   ]
   const selectedIndex = 0
   // TODO duplicate send here
-  await SharedProcess.invoke(
-    /* OutputChannel.open */ 'OutputChannel.open',
-    /* id */ 0,
-    /* path */ options[selectedIndex].file
-  )
+  await SharedProcess.invoke(/* OutputChannel.open */ 'OutputChannel.open', /* id */ 0, /* path */ options[selectedIndex].file)
   return {
     ...state,
     options,
@@ -59,37 +55,21 @@ export const contentLoaded = async (state) => {
 export const setOutputChannel = async (state, option) => {
   state.selectedOption = option
   // TODO race condition
-  await RendererProcess.invoke(
-    /* viewletSend */ 'Viewlet.send',
-    /* id */ 'Output',
-    /* method */ 'clear'
-  )
+  await RendererProcess.invoke(/* viewletSend */ 'Viewlet.send', /* id */ 'Output', /* method */ 'clear')
   // TODO race condition
   // TODO should use invoke
-  await SharedProcess.invoke(
-    /* OutputChannel.open */ 'OutputChannel.open',
-    /* id */ 'Output',
-    /* path */ state.selectedOption
-  )
+  await SharedProcess.invoke(/* OutputChannel.open */ 'OutputChannel.open', /* id */ 'Output', /* path */ state.selectedOption)
 }
 
 export const handleData = async (state, data) => {
   console.log({ handleData: data })
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'Output',
-    /* method */ 'append',
-    /* data */ data
-  )
+  await RendererProcess.invoke(/* Viewlet.invoke */ 'Viewlet.send', /* id */ 'Output', /* method */ 'append', /* data */ data)
 }
 
 export const dispose = async (state) => {
   state.disposed = true
   // TODO close output channel in shared process
-  await SharedProcess.invoke(
-    /* OutputChannel.close */ 'OutputChannel.close',
-    /* id */ 'Output'
-  )
+  await SharedProcess.invoke(/* OutputChannel.close */ 'OutputChannel.close', /* id */ 'Output')
 }
 
 export const openFindWidget = async (state) => {
@@ -99,8 +79,8 @@ export const openFindWidget = async (state) => {
 
 export const closeFindWidget = async (state) => {}
 
-export const handleError = (state, error) => {
-  console.error(error)
-}
+// export const handleError = (state, error) => {
+//   console.error(error)
+// }
 
 export const render = []

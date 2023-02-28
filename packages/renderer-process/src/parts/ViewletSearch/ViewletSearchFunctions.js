@@ -55,3 +55,11 @@ export const toggleUseRegularExpression = () => {
 export const handleReplaceInput = (value) => {
   RendererWorker.send('Search.handleReplaceInput', value)
 }
+
+export const handleListFocus = () => {
+  RendererWorker.send('Search.handleListFocus')
+}
+
+export const handleListBlur = () => {
+  RendererWorker.send('Search.handleListBlur')
+}

@@ -78,7 +78,7 @@ test('setValue - error - results is not of type array', async () => {
       lineNumber: 0,
     }
   })
-  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+  expect(await ViewletSearch.handleInput(state, 'abc')).toMatchObject({
     message: 'Error: results must be of type array',
   })
   expect(ErrorHandling.logError).toHaveBeenCalledTimes(1)
@@ -106,20 +106,22 @@ test('setValue - one match in one file', async () => {
       },
     ]
   })
-  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+  expect(await ViewletSearch.handleInput(state, 'abc')).toMatchObject({
     value: 'abc',
     items: [
       {
-        icon: '',
-        text: 'file-1.txt',
-        title: '/file-1.txt',
         type: TextSearchResultType.File,
+        text: './file-1.txt',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
       },
       {
-        icon: '',
-        text: 'abc',
-        title: 'abc',
         type: TextSearchResultType.Match,
+        text: 'abc',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
       },
     ],
     message: 'Found 1 result in 1 file',
@@ -154,26 +156,29 @@ test('setValue - two matches in one file', async () => {
       },
     ]
   })
-  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+  expect(await ViewletSearch.handleInput(state, 'abc')).toMatchObject({
     value: 'abc',
     items: [
       {
-        icon: '',
-        text: 'file-1.txt',
-        title: '/file-1.txt',
         type: TextSearchResultType.File,
+        text: './file-1.txt',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
       },
       {
-        icon: '',
-        text: 'abc',
-        title: 'abc',
         type: TextSearchResultType.Match,
+        text: 'abc',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
       },
       {
-        icon: '',
-        text: 'abc',
-        title: 'abc',
         type: TextSearchResultType.Match,
+        text: 'abc',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
       },
     ],
     message: 'Found 2 results in 1 file',
@@ -215,32 +220,36 @@ test('setValue - two matches in two files', async () => {
       },
     ]
   })
-  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+  expect(await ViewletSearch.handleInput(state, 'abc')).toMatchObject({
     value: 'abc',
     items: [
       {
-        icon: '',
-        text: 'file-1.txt',
-        title: '/file-1.txt',
         type: TextSearchResultType.File,
+        text: './file-1.txt',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
       },
       {
-        icon: '',
-        text: 'abc',
-        title: 'abc',
         type: TextSearchResultType.Match,
+        text: 'abc',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
       },
       {
-        icon: '',
-        text: 'file-2.txt',
-        title: '/file-2.txt',
         type: TextSearchResultType.File,
+        text: './file-2.txt',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
       },
       {
-        icon: '',
-        text: 'abc',
-        title: 'abc',
         type: TextSearchResultType.Match,
+        text: 'abc',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
       },
     ],
     message: 'Found 2 results in 2 files',
@@ -276,28 +285,29 @@ test('handleInput - error', async () => {
   TextSearch.textSearch.mockImplementation(() => {
     throw new Error('could not load search results')
   })
-  const state = ViewletSearch.create()
-  expect(await ViewletSearch.handleInput(state, 'test search')).toMatchObject({
-    message: `Error: could not load search results`,
-  })
-})
-
-test('handleClick', async () => {
   const state = {
     ...ViewletSearch.create(),
     items: [
       {
         type: TextSearchResultType.File,
-        text: './test.txt',
-        title: '/test/test.txt',
+        text: './file-1.txt',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
+      },
+      {
+        type: TextSearchResultType.Match,
+        text: 'abc',
+        start: 0,
+        end: 0,
+        lineNumber: 0,
       },
     ],
   }
-  // @ts-ignore
-  Command.execute.mockImplementation(() => {})
-  expect(await ViewletSearch.handleClick(state, 0)).toBe(state)
-  expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/test/test.txt')
+  expect(await ViewletSearch.handleInput(state, 'test search')).toMatchObject({
+    message: `Error: could not load search results`,
+    items: [],
+  })
 })
 
 test('resize', () => {
@@ -321,11 +331,4 @@ test('resize', () => {
     width: 200,
     fileCount: 0,
   })
-})
-
-test('selectIndex - negative index', async () => {
-  const state = {
-    ...ViewletSearch.create(),
-  }
-  expect(await ViewletSearch.selectIndex(state, -1)).toBe(state)
 })

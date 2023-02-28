@@ -1,3 +1,4 @@
+import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
 import * as ModuleMap from '../ModuleMap/ModuleMap.js'
 import { VError } from '../VError/VError.js'
 
@@ -62,7 +63,7 @@ const executeCommandAsync = async (command, ...args) => {
       return
     }
     hasThrown.add(command)
-    throw new Error(`Command did not register "${command}"`)
+    throw new CommandNotFoundError(command)
   }
   return state.commands[command](...args)
 }

@@ -10,5 +10,5 @@ test('OperationalError', () => {
     code: 'E_FAILED_TO_READ_FILE',
     message: 'Failed to read file',
   })
-  expect(operationalError.toString()).toBe('OperationalError: Failed to read file: enoent: no such file')
+  expect(operationalError.toString()).toBe('VError: Failed to read file: enoent: no such file')
 })

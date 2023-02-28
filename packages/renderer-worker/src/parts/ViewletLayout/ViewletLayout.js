@@ -117,7 +117,7 @@ const mPanel = {
 const getDefaultTitleBarHeight = () => {
   switch (Platform.platform) {
     case PlatformType.Electron:
-      return 28
+      return 29
     default:
       return 20
   }
@@ -343,7 +343,7 @@ export const loadContent = (state, savedState) => {
     newPoints[kTitleBarHeight] = 0
     newPoints[kTitleBarVisible] = 0
   } else {
-    newPoints[kTitleBarHeight] = 20
+    newPoints[kTitleBarHeight] = getDefaultTitleBarHeight()
     newPoints[kTitleBarVisible] = 1
   }
   newPoints[kWindowHeight] = windowHeight
@@ -689,6 +689,17 @@ const getResizeCommands = (oldPoints, newPoints) => {
   return commands
 }
 
+const getFocusChangeCommands = (isFocused) => {
+  const modules = [mMain, mActivityBar, mSideBar, mTitleBar, mStatusBar, mPanel]
+  const commands = []
+  for (const module of modules) {
+    const { moduleId } = module
+    const focusChangeCommands = Viewlet.handleFocusChange(moduleId, isFocused)
+    commands.push(...focusChangeCommands)
+  }
+  return commands
+}
+
 const showAsync = async (points, module) => {
   try {
     const { moduleId, kTop, kLeft, kWidth, kHeight } = module
@@ -776,6 +787,25 @@ export const handleResize = (state, windowWidth, windowHeight) => {
     },
     commands,
   }
+}
+
+const handleFocusChange = (state, isFocused) => {
+  const commands = getFocusChangeCommands(isFocused)
+  return {
+    newState: {
+      ...state,
+      focused: isFocused,
+    },
+    commands,
+  }
+}
+
+export const handleFocus = (state) => {
+  return handleFocusChange(state, true)
+}
+
+export const handleBlur = (state) => {
+  return handleFocusChange(state, false)
 }
 
 const handleSashDoubleClickPanel = (state) => {

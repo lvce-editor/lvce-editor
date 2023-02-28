@@ -1,7 +1,6 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
-import * as Focus from '../Focus/Focus.js'
 import * as FindIndex from '../../shared/findIndex.js'
+import * as Focus from '../Focus/Focus.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const isInsideTitleBarMenu = ($Element) => {
   return $Element.classList.contains('MenuItem') || $Element.classList.contains('Menu') || $Element.classList.contains('TitleBarTopLevelEntry')
@@ -15,18 +14,16 @@ export const handleFocusOut = (event) => {
   RendererWorker.send(/* TitleBarMenuBar.closeMenu */ 'TitleBarMenuBar.closeMenu', /* keepFocus */ false)
 }
 
-export const handleMouseOver = (event) => {
-  const { target, clientX, clientY } = event
+export const handlePointerOver = (event) => {
+  const { target } = event
   const index = getIndex(target)
-  if (index === -1) {
-    return
-  }
-  RendererWorker.send(
-    /* TitleBarMenuBar.focusIndex */ 'TitleBarMenuBar.handleMouseOver',
-    /* index */ index,
-    /* enterX */ clientX,
-    /* enterY */ clientY
-  )
+  RendererWorker.send(/* TitleBarMenuBar.focusIndex */ 'TitleBarMenuBar.handleMouseOver', /* index */ index)
+}
+
+export const handlePointerOut = (event) => {
+  const { target } = event
+  const index = getIndex(target)
+  RendererWorker.send(/* TitleBarMenuBar.handleMouseOut */ 'TitleBarMenuBar.handleMouseOut', /* index */ index)
 }
 
 const getNodeIndex = ($Node) => {
@@ -48,15 +45,8 @@ const getIndex = ($Target) => {
 
 export const handleClick = (event) => {
   const { button, target } = event
-  if (button !== MouseEventTypes.LeftClick) {
-    return
-  }
   const index = getIndex(target)
-  if (index === -1) {
-    return
-  }
-  // event.preventDefault()
-  RendererWorker.send(/* TitleBarMenuBar.toggleIndex */ 'TitleBarMenuBar.toggleIndex', /* index */ index)
+  RendererWorker.send('TitleBarMenuBar.handleClick', button, index)
 }
 
 const getLevelAndIndex = (event) => {

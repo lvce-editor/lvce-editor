@@ -1,6 +1,6 @@
-import VError from 'verror'
 import * as Command from '../Command/Command.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   /**
@@ -21,12 +21,7 @@ const handleMessage = async (event) => {
   const object = JSON.parse(event.data)
   if (object.id) {
     if (!object.params) {
-      console.warn(
-        '[shared-process] invalid message 1',
-        typeof object,
-        object.params,
-        object
-      )
+      console.warn('[shared-process] invalid message 1', typeof object, object.params, object)
       return
     }
     const response = await GetResponse.getResponse(object, state.socket)

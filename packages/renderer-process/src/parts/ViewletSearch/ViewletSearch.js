@@ -2,16 +2,21 @@ import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as EnterKeyHintType from '../EnterKeyHintType/EnterKeyHintType.js'
+import * as Focus from '../Focus/Focus.js'
 import * as Icon from '../Icon/Icon.js'
 import * as InputBox from '../InputBox/InputBox.js'
+import * as InputType from '../InputType/InputType.js'
 import * as Label from '../Label/Label.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
-import * as InputType from '../InputType/InputType.js'
+
+const activeId = 'TreeItemActive'
+const focusClassName = 'FocusOutline'
 
 /**
  * @enum {string}
@@ -76,6 +81,7 @@ export const create = () => {
 
   const $ListItems = document.createElement('div')
   $ListItems.className = 'ListItems'
+  $ListItems.role = AriaRoles.None
   // TODO onclick vs onmousedown, should be consistent in whole application
 
   const $ScrollBarThumb = document.createElement('div')
@@ -87,6 +93,8 @@ export const create = () => {
 
   const $List = document.createElement('div')
   $List.className = 'Viewlet List'
+  $List.role = AriaRoles.Tree
+  $List.tabIndex = 0
   $List.append($ListItems, $ScrollBar)
 
   const $Viewlet = document.createElement('div')
@@ -112,17 +120,20 @@ export const create = () => {
 }
 
 export const attachEvents = (state) => {
-  const { $ViewletSearchInput, $ListItems, $ScrollBar, $ToggleButton, $SearchHeader } = state
+  const { $ViewletSearchInput, $ListItems, $ScrollBar, $ToggleButton, $SearchHeader, $List } = state
   $ViewletSearchInput.oninput = ViewletSearchEvents.handleInput
   $ViewletSearchInput.onfocus = ViewletSearchEvents.handleFocus
 
-  $ListItems.onmousedown = ViewletSearchEvents.handleClick
   $ListItems.oncontextmenu = ViewletSearchEvents.handleContextMenu
   $ListItems.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
 
   $ScrollBar.onpointerdown = ViewletSearchEvents.handleScrollBarPointerDown
 
   $SearchHeader.onclick = ViewletSearchEvents.handleHeaderClick
+
+  $List.onfocus = ViewletSearchEvents.handleListFocus
+  $List.onblur = ViewletSearchEvents.handleListBlur
+  $List.onmousedown = ViewletSearchEvents.handleClick
 }
 
 export const refresh = (state, context) => {
@@ -146,7 +157,7 @@ const create$Row = () => {
 }
 
 // TODO much duplication with explorer
-const render$Row = ($Row, rowInfo) => {
+const render$Row = ($Row, rowInfo, replacement) => {
   const { top, type, matchStart, matchLength, text, title, icon, setSize, posInSet, depth } = rowInfo
   const $Icon = $Row.childNodes[0]
   const $Label = $Row.childNodes[1]
@@ -157,10 +168,18 @@ const render$Row = ($Row, rowInfo) => {
     const after = text.slice(matchStart + matchLength)
     const $Before = document.createTextNode(before)
     const $Highlight = document.createElement('span')
-    $Highlight.className = 'Highlight'
     $Highlight.textContent = highlight
     const $After = document.createTextNode(after)
-    $Label.replaceChildren($Before, $Highlight, $After)
+    if (replacement) {
+      $Highlight.className = 'HighlightDeleted'
+      const $Replacement = document.createElement('ins')
+      $Replacement.className = 'HighlightInserted'
+      $Replacement.textContent = replacement
+      $Label.replaceChildren($Before, $Highlight, $Replacement, $After)
+    } else {
+      $Highlight.className = 'Highlight'
+      $Label.replaceChildren($Before, $Highlight, $After)
+    }
   } else {
     $Label.textContent = text
   }
@@ -187,28 +206,28 @@ const render$Row = ($Row, rowInfo) => {
   }
 }
 
-const render$RowsLess = ($Rows, rowInfos) => {
+const render$RowsLess = ($Rows, rowInfos, replacement) => {
   for (let i = 0; i < $Rows.children.length; i++) {
     render$Row($Rows.children[i], rowInfos[i])
   }
   const fragment = document.createDocumentFragment()
   for (let i = $Rows.children.length; i < rowInfos.length; i++) {
     const $Row = create$Row()
-    render$Row($Row, rowInfos[i])
+    render$Row($Row, rowInfos[i], replacement)
     fragment.append($Row)
   }
   $Rows.append(fragment)
 }
 
-const render$RowsEqual = ($Rows, rowInfos) => {
+const render$RowsEqual = ($Rows, rowInfos, replacement) => {
   for (let i = 0; i < rowInfos.length; i++) {
-    render$Row($Rows.children[i], rowInfos[i])
+    render$Row($Rows.children[i], rowInfos[i], replacement)
   }
 }
 
-const render$RowsMore = ($Rows, rowInfos) => {
+const render$RowsMore = ($Rows, rowInfos, replacement) => {
   for (let i = 0; i < rowInfos.length; i++) {
-    render$Row($Rows.children[i], rowInfos[i])
+    render$Row($Rows.children[i], rowInfos[i], replacement)
   }
   const diff = $Rows.children.length - rowInfos.length
   for (let i = 0; i < diff; i++) {
@@ -216,23 +235,23 @@ const render$RowsMore = ($Rows, rowInfos) => {
   }
 }
 
-const render$Rows = ($Rows, rowInfos) => {
+const render$Rows = ($Rows, rowInfos, replacment) => {
   if ($Rows.children.length < rowInfos.length) {
-    render$RowsLess($Rows, rowInfos)
+    render$RowsLess($Rows, rowInfos, replacment)
   } else if ($Rows.children.length === rowInfos.length) {
-    render$RowsEqual($Rows, rowInfos)
+    render$RowsEqual($Rows, rowInfos, replacment)
   } else {
-    render$RowsMore($Rows, rowInfos)
+    render$RowsMore($Rows, rowInfos, replacment)
   }
 }
 
-export const setResults = (state, results) => {
+export const setResults = (state, results, replacement) => {
   Assert.object(state)
   Assert.array(results)
   const { $ListItems } = state
   // TODO should recycle nodes when rendering only search results
   // maybe could also recycle node from noResults and vice versa
-  render$Rows($ListItems, results)
+  render$Rows($ListItems, results, replacement)
 }
 
 export const setMessage = (state, message) => {
@@ -306,6 +325,53 @@ export const setButtonsChecked = (state, matchWholeWord, useRegularExpression, m
   $ButtonMatchWholeWord.ariaChecked = matchWholeWord
   $ButtonUseRegularExpression.ariaChecked = useRegularExpression
   $ButtonMatchCase.ariaChecked = matchCase
+}
+
+export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
+  const { $List, $ListItems } = state
+  switch (oldIndex) {
+    case -2:
+      break
+    case -1:
+      $List.classList.remove(focusClassName)
+      break
+    default:
+      const $Dirent = $ListItems.children[oldIndex]
+      if ($Dirent) {
+        $Dirent.classList.remove(focusClassName)
+        $Dirent.removeAttribute('id')
+      }
+      break
+  }
+  switch (newIndex) {
+    case -2:
+      $List.classList.remove(focusClassName)
+      $List.removeAttribute(DomAttributeType.AriaActiveDescendant)
+      break
+    case -1:
+      if (focused) {
+        $List.classList.add(focusClassName)
+        $List.removeAttribute(DomAttributeType.AriaActiveDescendant)
+      }
+      break
+    default:
+      if (newIndex >= 0) {
+        const $Dirent = $ListItems.children[newIndex]
+        if (!$Dirent) {
+          break
+        }
+        $Dirent.id = activeId
+        $List.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
+        if (focused) {
+          $Dirent.classList.add(focusClassName)
+        }
+      }
+      break
+  }
+  if (focused) {
+    $List.focus()
+    Focus.setFocus('SearchResults')
+  }
 }
 
 export * from '../ViewletScrollable/ViewletScrollable.js'

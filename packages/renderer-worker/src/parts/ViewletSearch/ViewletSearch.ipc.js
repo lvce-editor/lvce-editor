@@ -5,13 +5,12 @@ export const name = 'Search'
 
 // prettier-ignore
 export const Commands = {
-  handleClick: ViewletSearch.handleClick,
   handleInput: ViewletSearch.handleInput,
-  setValue: ViewletSearch.setValue,
 }
 
 // prettier-ignore
 export const LazyCommands = {
+  handleContextMenu: () => import('./ViewletSearchHandleContextMenu.js'),
   handleContextMenuKeyboard: () => import('./ViewletSearchHandleContextMenuKeyBoard.js'),
   handleContextMenuMouseAt: () => import('./ViewletSearchHandleContextMenuMouseAt.js'),
   handleToggleButtonClick: () => import('./ViewletSearchHandleToggleButtonClick.js'),
@@ -20,7 +19,20 @@ export const LazyCommands = {
   toggleMatchCase: () => import('./ViewletSearchToggleMatchCase.js'),
   replaceAll: () => import('./ViewletSearchReplaceAll.js'),
   handleReplaceInput: () => import('./ViewletSearchHandleReplaceInput.js'),
+  handleUpdate: () => import('./ViewletSearchHandleUpdate.js'),
+  handleListFocus: () => import('./ViewletSearchHandleListFocus.js'),
+  handleListBlur: () => import('./ViewletSearchHandleListBlur.js'),
   ...VirtualList.LazyCommands,
+  focusFirst: () => import('./ViewletSearchFocusFirst.js'),
+  focusLast: () => import('./ViewletSearchFocusLast.js'),
+  focusNext: () => import('./ViewletSearchFocusNext.js'),
+  focusPrevious: () => import('./ViewletSearchFocusPrevious.js'),
+  handleClick: () => import('./ViewletSearchHandleClick.js'),
+  selectIndex: () => import('./ViewletSearchSelectIndex.js'),
+  dismissItem: () => import('./ViewletSearchDismissItem.js'),
+  copy: () => import('./ViewletSearchCopy.js'),
+  refresh: () => import('./ViewletSearchRefresh.js'),
+  clearSearchResults: () => import('./ViewletSearchClearSearchResults.js'),
 }
 
 export const Css = [
@@ -34,3 +46,4 @@ export const Css = [
 ]
 
 export * from './ViewletSearch.js'
+export * from './ViewletSearchActions.js'

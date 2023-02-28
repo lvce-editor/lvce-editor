@@ -1,4 +1,5 @@
 // TODO treeshake out this whole module in production
+const { AssertionError } = require('../AssertionError.js')
 
 const getType = (value) => {
   switch (typeof value) {
@@ -26,34 +27,34 @@ const getType = (value) => {
 exports.object = (value) => {
   const type = getType(value)
   if (type !== 'object') {
-    throw new Error('expected value to be of type object')
+    throw new AssertionError('expected value to be of type object')
   }
 }
 
 exports.number = (value) => {
   const type = getType(value)
   if (type !== 'number') {
-    throw new Error('expected value to be of type number')
+    throw new AssertionError('expected value to be of type number')
   }
 }
 
 exports.array = (value) => {
   const type = getType(value)
   if (type !== 'array') {
-    throw new Error('expected value to be of type array')
+    throw new AssertionError('expected value to be of type array')
   }
 }
 
 exports.string = (value) => {
   const type = getType(value)
   if (type !== 'string') {
-    throw new Error('expected value to be of type string')
+    throw new AssertionError('expected value to be of type string')
   }
 }
 
 exports.boolean = (value) => {
   const type = getType(value)
   if (type !== 'boolean') {
-    throw new Error('expected value to be of type boolean')
+    throw new AssertionError('expected value to be of type boolean')
   }
 }

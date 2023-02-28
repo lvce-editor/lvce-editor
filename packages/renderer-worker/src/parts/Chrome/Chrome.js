@@ -73,3 +73,12 @@ export const zoomOut = () => {
       throw new Error('not implemented')
   }
 }
+
+export const zoomReset = () => {
+  switch (Platform.platform) {
+    case PlatformType.Electron:
+      return Command.execute('ElectronWindow.zoomReset')
+    default:
+      throw new Error('not implemented')
+  }
+}

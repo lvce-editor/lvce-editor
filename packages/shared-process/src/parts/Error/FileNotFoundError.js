@@ -1,5 +1,5 @@
-import VError from 'verror'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import { VError } from '../VError/VError.js'
 
 export class FileNotFoundError extends VError {
   constructor(path) {

@@ -1,3 +1,4 @@
+const { CommandNotFoundError } = require('../CommandNotFoundError/CommandNotFoundError.js')
 const ModuleMap = require('../ModuleMap/ModuleMap.js')
 
 const state = {
@@ -63,7 +64,7 @@ exports.invoke = async (command, ...args) => {
   if (!(command in state.commands)) {
     await loadCommand(command)
     if (!(command in state.commands)) {
-      throw new Error(`Unknown command "${command}"`)
+      throw new CommandNotFoundError(command)
     }
   }
   return state.commands[command](...args)

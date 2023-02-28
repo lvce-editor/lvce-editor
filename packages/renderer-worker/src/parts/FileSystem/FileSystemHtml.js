@@ -60,7 +60,7 @@ const getChildHandlesFallback = async (handle) => {
   }
 }
 
-const getChildHandles = async (handle) => {
+export const getChildHandles = async (handle) => {
   try {
     return await FileSystemDirectoryHandle.getChildHandles(handle)
   } catch (error) {

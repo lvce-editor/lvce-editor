@@ -1,11 +1,11 @@
 import { dirname } from 'node:path'
-import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
 import { FileNotFoundError } from '../Error/FileNotFoundError.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Json from '../Json/Json.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Platform from '../Platform/Platform.js'
+import { VError } from '../VError/VError.js'
 
 const isValid = (recentlyOpened) => {
   return recentlyOpened && Array.isArray(recentlyOpened)
@@ -16,11 +16,7 @@ const addToArrayUnique = (recentlyOpened, path) => {
   if (index === -1) {
     return [path, ...recentlyOpened]
   }
-  return [
-    path,
-    ...recentlyOpened.slice(0, index),
-    ...recentlyOpened.slice(index + 1),
-  ]
+  return [path, ...recentlyOpened.slice(0, index), ...recentlyOpened.slice(index + 1)]
 }
 
 const getRecentlyOpened = async (recentlyOpenedPath) => {

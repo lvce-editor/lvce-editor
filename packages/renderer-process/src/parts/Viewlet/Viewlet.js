@@ -36,7 +36,7 @@ export const loadModule = async (id) => {
 
 export const invoke = (viewletId, method, ...args) => {
   const instance = state.instances[viewletId]
-  if (!instance) {
+  if (!instance || !instance.factory) {
     Logger.warn(`viewlet instance ${viewletId} not found`)
     return
   }
@@ -220,7 +220,7 @@ export const appendViewlet = (parentId, childId, focus) => {
   const parentModule = parentInstanceState.factory
   const childInstance = state.instances[childId]
   if (!childInstance) {
-    throw new Error('child instance must be defined to be appended to parent')
+    throw new Error(`child instance ${childId} must be defined to be appended to parent ${parentId}`)
   }
   parentModule.appendViewlet(parentInstanceState.state, childInstance.factory.name, childInstance.state.$Viewlet)
   if (focus && childInstance.factory.focus) {

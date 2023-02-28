@@ -3,6 +3,8 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
+    case 'BulkReplacement.applyBulkReplacement':
+      return ModuleId.BulkReplacement
     case 'ChromeExtension.install':
     case 'ChromeExtension.uninstall':
       return ModuleId.ChromeExtension
@@ -139,8 +141,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
-    case 'BulkReplacement.applyBulkReplacement':
-      return ModuleId.BulkReplacement
     default:
       throw new CommandNotFoundError(commandId)
   }

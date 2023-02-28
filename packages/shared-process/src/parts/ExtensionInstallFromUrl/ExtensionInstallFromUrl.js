@@ -1,11 +1,11 @@
 import { rename, rm } from 'node:fs/promises'
 import { join } from 'node:path'
-import VError from 'verror'
 import * as Download from '../Download/Download.js'
 import * as Extract from '../Extract/Extract.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Platform from '../Platform/Platform.js'
 import * as TmpFile from '../TmpFile/TmpFile.js'
+import { VError } from '../VError/VError.js'
 
 export const install = async ({ url }) => {
   try {

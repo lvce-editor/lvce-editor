@@ -11,4 +11,5 @@ export const Commands = {
   unmaximize: ElectronWindow.unmaximize,
   zoomIn: ElectronWindow.zoomIn,
   zoomOut: ElectronWindow.zoomOut,
+  zoomReset: ElectronWindow.zoomReset,
 }

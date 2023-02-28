@@ -42,3 +42,15 @@ SyntaxError: Unexpected token 'export'
     `    at Object.<anonymous> (/test/packages/main-process/src/parts/CliForwardToSharedProcess/CliForwardToSharedProcess.js:4:33)`,
   ])
 })
+
+test('cleanStack - command not found error', () => {
+  const stack = `Error: Unknown command "ProcessExplorerContextMenu.showContextMenu"
+    at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:66:13)
+    at async exports.getResponse (/test/packages/main-process/src/parts/GetResponse/GetResponse.js:7:20)
+    at async MessagePortMain.handlePortMessage (/test/packages/main-process/src/parts/ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.js:56:24)`
+  expect(CleanStack.cleanStack(stack)).toEqual([
+    '    at invoke (/test/packages/main-process/src/parts/Command/Command.js:66:13)',
+    '    at async getResponse (/test/packages/main-process/src/parts/GetResponse/GetResponse.js:7:20)',
+    '    at async MessagePortMain.handlePortMessage (/test/packages/main-process/src/parts/ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.js:56:24)',
+  ])
+})
