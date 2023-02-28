@@ -9,6 +9,7 @@ jest.mock('node:fs', () => ({
 }))
 
 const fs = require('node:fs')
+const { VError } = require('verror')
 const PrettyError = require('../src/parts/PrettyError/PrettyError.js')
 
 test('prepare - unknown command error', async () => {
@@ -1243,5 +1244,114 @@ exports.get = () => {
     stack: `    at getAbsolutePath (C:\\test\\packages\\main-process\\src\\parts\\ElectronSession\\ElectronSession.js:138:14)
     at Function.handleRequest (C:\\test\\packages\\main-process\\src\\parts\\ElectronSession\\ElectronSession.js:152:16`,
     type: 'TypeError',
+  })
+})
+
+test('prepare - error - permission denied', async () => {
+  const cause = new Error("EACCES: permission denied, open '/test/settings.json'")
+  const error = new VError(cause, `Failed to read settings`)
+  error.stack = `VError: Failed to read settings: EACCES: permission denied, open '/test/settings.json'
+    at readSettings (/test/packages/main-process/src/parts/Preferences/Preferences.js:20:11)
+    at async getUserSettings (/test/packages/main-process/src/parts/Preferences/Preferences.js:47:29)
+    at async Object.load (/test/packages/main-process/src/parts/Preferences/Preferences.js:57:24)
+    at async exports.createAppWindow (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:42:23)
+    at async exports.handleReady (/test/packages/main-process/src/parts/ElectronAppListeners/ElectronAppListeners.js:30:3)
+    at async exports.hydrate (/test/packages/main-process/src/parts/App/App.js:103:3)
+    at async main (/test/packages/main-process/src/mainProcessMain.js:16:3)`
+  // @ts-ignore
+  fs.readFileSync.mockImplementation(() => {
+    return `const { VError } = require('verror')
+const Platform = require('../Platform/Platform.js')
+const JsonFile = require('../JsonFile/JsonFile.js')
+const ErrorCodes = require('../ErrorCodes/ErrorCodes.js')
+const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
+
+const get = (options, key) => {
+  return options[key]
+}
+
+const readSettings = async (path) => {
+  try {
+    return await JsonFile.readJson(path)
+  } catch (error) {
+    // @ts-ignore
+    if (error && error.code === ErrorCodes.ENOENT) {
+      return {}
+    }
+    // @ts-ignore
+    throw new VError(error, \`Failed to read settings\`)
+  }
+}
+
+const writeSettings = async (path, value) => {
+  try {
+    return await JsonFile.writeJson(path, value)
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, \`Failed to write settings\`)
+  }
+}
+
+const getDefaultSettings = async () => {
+  try {
+    const defaultSettingsPath = Platform.getDefaultSettingsPath()
+    const defaultSettings = await readSettings(defaultSettingsPath)
+    return defaultSettings
+  } catch (error) {
+    ErrorHandling.handleError(error)
+    return {}
+  }
+}
+
+const getUserSettings = async () => {
+  try {
+    const defaultSettingsPath = Platform.getUserSettingsPath()
+    const defaultSettings = await readSettings(defaultSettingsPath)
+    return defaultSettings
+  } catch (error) {
+    ErrorHandling.handleError(error)
+    return {}
+  }
+}
+
+const load = async () => {
+  const defaultSettings = await getDefaultSettings()
+  const userSettings = await getUserSettings()
+  const mergedSettings = { ...defaultSettings, ...userSettings }
+  return mergedSettings
+}
+
+const update = async (key, value) => {
+  const userSettingsPath = Platform.getUserSettingsPath()
+  const userSettings = await readSettings(userSettingsPath)
+  // TODO handle case when userSettings is of type null, number, array
+  // TODO handle ENOENT error
+  const newUserSettings = { ...userSettings, [key]: value }
+  await writeSettings(userSettingsPath, newUserSettings)
+}
+
+exports.get = get
+exports.load = load
+exports.update = update
+`
+  })
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    codeFrame: `  18 |     }
+  19 |     // @ts-ignore
+> 20 |     throw new VError(error, \`Failed to read settings\`)
+     |           ^
+  21 |   }
+  22 | }
+  23 |`,
+    message: "Failed to read settings: EACCES: permission denied, open '/test/settings.json'",
+    stack: `    at readSettings (/test/packages/main-process/src/parts/Preferences/Preferences.js:20:11)
+    at async getUserSettings (/test/packages/main-process/src/parts/Preferences/Preferences.js:47:29)
+    at async load (/test/packages/main-process/src/parts/Preferences/Preferences.js:57:24)
+    at async createAppWindow (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:42:23)
+    at async handleReady (/test/packages/main-process/src/parts/ElectronAppListeners/ElectronAppListeners.js:30:3)
+    at async hydrate (/test/packages/main-process/src/parts/App/App.js:103:3)
+    at async main (/test/packages/main-process/src/mainProcessMain.js:16:3)`,
+    type: 'VError',
   })
 })

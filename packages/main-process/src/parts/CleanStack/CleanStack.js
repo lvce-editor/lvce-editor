@@ -18,6 +18,9 @@ const cleanLine = (line) => {
   if (line.startsWith('    at exports.')) {
     return '    at ' + line.slice('    at exports.'.length)
   }
+  if (line.startsWith('    at async Object.')) {
+    return '    at async ' + line.slice('    at async Object.'.length)
+  }
   if (line.startsWith('    at async exports.')) {
     return '    at async ' + line.slice('    at async exports.'.length)
   }
