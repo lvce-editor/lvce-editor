@@ -214,7 +214,12 @@ export const contentLoaded = async (state) => {
     /* restore */ true
   )
   commands.push(...extraCommands)
-  commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+
+  if (extraCommands[0].includes(ViewletModuleId.Error)) {
+    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
+  } else {
+    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+  }
   return commands
 }
 
