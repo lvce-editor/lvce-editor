@@ -13,18 +13,9 @@ const getDisplayMessage = (error) => {
   return `${error.stack}`
 }
 
-const printError = (error) => {
-  Logger.error(`[main-process] ${error.stack}`)
-}
-
-const showError = (error) => {
-  const displayMessage = getDisplayMessage(error)
-  dialog.showErrorBox('Error', displayMessage)
-}
-
 exports.handleError = (error) => {
-  printError(error)
-  showError(error)
+  const prettyError = PrettyError.prepare(error)
+  Logger.error(`[main-process] ${prettyError.type}: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}\n`)
 }
 
 const firstErrorLine = (error) => {
@@ -48,7 +39,7 @@ exports.handleUncaughtExceptionMonitor = (error, origin) => {
 exports.handleUnhandledRejection = (reason, promise) => {
   const prettyError = PrettyError.prepare(reason)
   Logger.error(
-    `[main process] unhandled rejection: ${prettyError.type}: ${[prettyError.message]}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}\n`
+    `[main process] unhandled rejection: ${prettyError.type}: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}\n`
   )
   Process.exit(ExitCode.Error)
 }
