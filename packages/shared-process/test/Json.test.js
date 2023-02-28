@@ -30,8 +30,8 @@ test('parse - syntax error', async () => {
   expect(error.codeFrame).toBe(`> 1 | { \"x\" 42 }
     |       ^`)
   expect(error.toString()).toBe(`JsonParsingError: Json Parsing Error`)
-  expect(error.stack).toBe(`JsonParsingError: Json Parsing Error
-    at /test/file.json`)
+  expect(error.stack).toMatch(`JsonParsingError: Json Parsing Error
+    at /test/file.json:1:7`)
 })
 
 test('stringify', () => {

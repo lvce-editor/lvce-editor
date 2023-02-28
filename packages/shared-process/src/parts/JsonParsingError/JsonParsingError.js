@@ -1,4 +1,5 @@
-import * as MergeStacks from '../MergeStacks/MergeStacks.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 export class JsonParsingError extends Error {
   constructor(message, codeFrame, stack) {
@@ -9,9 +10,8 @@ export class JsonParsingError extends Error {
     }
 
     if (stack) {
-      const parent = this.stack
-      const child = this.message + '\n' + stack
-      this.stack = MergeStacks.mergeStacks(parent, child)
+      const parentStack = JoinLines.joinLines(SplitLines.splitLines(this.stack).slice(1))
+      this.stack = this.name + ': ' + this.message + '\n' + stack + '\n' + parentStack
     }
   }
 }

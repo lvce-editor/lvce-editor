@@ -1,8 +1,8 @@
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
 import { VError } from '../VError/VError.js'
-
 // TODO need jsonc parser for settings with comments
 
 export const getUserPreferences = async () => {
@@ -12,7 +12,7 @@ export const getUserPreferences = async () => {
     try {
       json = await JsonFile.readJson(userSettingsPath)
     } catch (error) {
-      if (error && error.message.includes('File not found')) {
+      if (error && error.code === ErrorCodes.ENOENT) {
         return {}
       }
       throw error
