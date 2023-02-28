@@ -14,7 +14,7 @@ import * as JsonError from '../src/parts/JsonError/JsonError.js'
 test('getErrorProps - syntax error', async () => {
   expect(JsonError.getErrorProps('{ "x" 42 }', '/test/file.json')).toEqual({
     message: `Json Parsing Error`,
-    stack: `    at /test/file.json`,
+    stack: `    at /test/file.json:1:7`,
     codeFrame: `
 > 1 | { "x" 42 }
     |       ^
@@ -53,7 +53,7 @@ test('getErrorProps - unexpected comma', async () => {
     )
   ).toEqual({
     message: 'Json Parsing Error',
-    stack: '    at /test/file.json',
+    stack: '    at /test/file.json:6:6',
     codeFrame: `
   4 |   "description": "Provides syntax highlighting and bracket matching in Go files.",
   5 |   "languages": [
@@ -79,7 +79,7 @@ test('getErrorProps - unterminated string', async () => {
     )
   ).toEqual({
     message: 'Json Parsing Error',
-    stack: '    at /test/file.json',
+    stack: '    at /test/file.json:2:6',
     codeFrame: `
   1 | [
 > 2 |   "id
@@ -103,7 +103,7 @@ test('getErrorProps - unexpected quote', async () => {
     )
   ).toEqual({
     message: 'Json Parsing Error',
-    stack: '    at /test/file.json',
+    stack: '    at /test/file.json:2:7',
     codeFrame: `
   1 | [
 > 2 |   "id""

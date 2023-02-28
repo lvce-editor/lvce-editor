@@ -16,11 +16,13 @@ export const getErrorPropsFromError = (error, string, filePath) => {
     const index = Number(indexMatch[1])
     const location = lines.locationForIndex(index)
     if (location) {
-      const codeFrame = codeFrameColumns(string, { start: { line: location.line + 1, column: location.column + 1 } }, { highlightCode: false })
+      const line = location.line + 1
+      const column = location.column + 1
+      const codeFrame = codeFrameColumns(string, { start: { line, column } }, { highlightCode: false })
       return {
         codeFrame,
         message: 'Json Parsing Error',
-        stack: `    at ${filePath}`,
+        stack: `    at ${filePath}:${line}:${column}`,
       }
     }
   }
