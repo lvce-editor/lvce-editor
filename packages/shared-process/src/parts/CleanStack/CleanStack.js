@@ -6,6 +6,7 @@ const RE_OBJECT_AS = /^\s*at (async )?Object\.\w+ \[as ([\w\.]+)\]/
 const RE_GET_RESPONSE = /^\s*at async getResponse/
 const RE_WEBSOCKET_HANDLE_MESSAGE = /^\s*at async WebSocket.handleMessage/
 const RE_EXECUTE_COMMAND_ASYNC = /^\s*at executeCommandAsync/
+const RE_HANDLE_OTHER_MESSAGES_FROM_MESSAGE_PORT = /^\s*at async MessagePort\.handleOtherMessagesFromMessagePort/
 
 const isInternalLine = (line) => {
   return line.includes('node:') || RE_AT_PROMISE_INDEX.test(line)
@@ -26,6 +27,9 @@ const isApplicationUsefulLine = (line, index) => {
     return false
   }
   if (RE_EXECUTE_COMMAND_ASYNC.test(line)) {
+    return false
+  }
+  if (RE_HANDLE_OTHER_MESSAGES_FROM_MESSAGE_PORT.test(line)) {
     return false
   }
   return true
