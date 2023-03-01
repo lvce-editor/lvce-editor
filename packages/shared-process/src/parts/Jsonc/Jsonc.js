@@ -16,6 +16,9 @@ const RE_BLOCK_COMMENT_END = /^\*\//
 const RE_COMMA = /^,/
 const RE_LANGUAGE_CONSTANT = /^(?:true|false|null)/
 
+/**
+ * @enum {number}
+ */
 const State = {
   TopLevelContent: 1,
   InsideBlockComment: 2,
@@ -88,11 +91,13 @@ export const parse = (content, filePath = '') => {
           stack.push(State.AfterPropertyName)
         } else if ((next = part.match(RE_CURLY_CLOSE))) {
           state = stack.pop() || State.TopLevelContent
+          state //?
         } else if ((next = part.match(RE_LINE_COMMENT))) {
           jsonContent += content.slice(contentIndex, index)
           contentIndex = index + next[0].length
         } else {
           stack
+          part.slice(0, 1) //?
           throw new UnexpectedTokenError()
         }
         break
@@ -142,10 +147,14 @@ export const parse = (content, filePath = '') => {
         } else if ((next = part.match(RE_CURLY_OPEN))) {
           stack.push(State.InsideArray)
           state = State.InsideObject
+          console.log('inside object')
+          stack
+          part
         } else if ((next = part.match(RE_NUMERIC))) {
           // ignore
         } else if ((next = part.match(RE_SQUARE_CLOSE))) {
           state = stack.pop() || State.TopLevelContent
+          state
         } else if ((next = part.match(RE_LINE_COMMENT))) {
           jsonContent += content.slice(contentIndex, index)
           contentIndex = index + next[0].length
@@ -157,6 +166,10 @@ export const parse = (content, filePath = '') => {
         } else if ((next = part.match(RE_DOUBLE_QUOTE))) {
           stack.push(State.InsideArray)
           state = State.InsideDoubleQuoteString
+        } else if ((next = part.match(RE_BLOCK_COMMENT_START))) {
+          state = State.InsideBlockComment
+          stack.push(State.InsideArray)
+          jsonContent += content.slice(contentIndex, index)
         } else {
           part
           throw new UnexpectedTokenError()
@@ -177,8 +190,11 @@ export const parse = (content, filePath = '') => {
           state = State.InsideObject
         } else if ((next = part.match(RE_CURLY_CLOSE))) {
           stack
-          // stack.pop()
+          if (stack.at(-1) === State.AfterPropertyValue) {
+            stack.pop()
+          }
           state = stack.pop() || State.TopLevelContent
+          state
         } else if ((next = part.match(RE_WHITESPACE))) {
           // ignore
         } else {

@@ -129,3 +129,11 @@ test('parse - object inside object', () => {
 }`)
   ).toEqual({ a: { b: {} } })
 })
+
+test('parse - block comment inside array', () => {
+  expect(
+    Jsonc.parse(`[
+  "test" /* comment */
+]`)
+  ).toEqual(['test'])
+})
