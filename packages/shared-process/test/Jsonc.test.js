@@ -137,3 +137,7 @@ test('parse - block comment inside array', () => {
 ]`)
   ).toEqual(['test'])
 })
+
+test('parse - floating point number', () => {
+  expect(Jsonc.parse(`0.5`)).toEqual(0.5)
+})

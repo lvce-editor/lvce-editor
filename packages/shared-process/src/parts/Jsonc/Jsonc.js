@@ -7,7 +7,7 @@ const RE_SQUARE_OPEN = /^\[/
 const RE_SQUARE_CLOSE = /^\]/
 const RE_DOUBLE_QUOTE = /^\"/
 const RE_STRING_DOUBLE_QUOTE_CONTENT = /^[^"\\]+/
-const RE_NUMERIC = /^\d+/
+const RE_NUMERIC = /^[\d\.]+/
 const RE_ANYTHING = /^.+/
 const RE_COLON = /^:/
 const RE_BLOCK_COMMENT_START = /^\/\*/
@@ -15,6 +15,7 @@ const RE_BLOCK_COMMENT_CONTENT = /^.+?(?=\*\/)/
 const RE_BLOCK_COMMENT_END = /^\*\//
 const RE_COMMA = /^,/
 const RE_LANGUAGE_CONSTANT = /^(?:true|false|null)/
+const RE_STRING_ESCAPE = /^\\.?/
 
 /**
  * @enum {number}
@@ -105,7 +106,9 @@ export const parse = (content, filePath = '') => {
         if ((next = part.match(RE_DOUBLE_QUOTE))) {
           state = stack.pop() || State.TopLevelContent
         } else if ((next = part.match(RE_STRING_DOUBLE_QUOTE_CONTENT))) {
+        } else if ((next = part.match(RE_STRING_ESCAPE))) {
         } else {
+          part
           throw new UnexpectedTokenError()
         }
         break
