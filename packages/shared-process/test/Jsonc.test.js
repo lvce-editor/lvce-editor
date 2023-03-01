@@ -119,3 +119,13 @@ test('parse - boolean property value', () => {
 }`)
   ).toEqual({ enabled: true })
 })
+
+test('parse - object inside object', () => {
+  expect(
+    Jsonc.parse(`{
+  "a": {
+    "b": {}
+  }
+}`)
+  ).toEqual({ a: { b: {} } })
+})

@@ -128,6 +128,9 @@ export const parse = (content, filePath = '') => {
           // stack.push(State.AfterPropertyValue)
         } else if ((next = part.match(RE_LANGUAGE_CONSTANT))) {
           state = State.AfterPropertyValue
+        } else if ((next = part.match(RE_CURLY_OPEN))) {
+          stack.push(State.AfterPropertyValue)
+          state = State.InsideObject
         } else {
           part
           throw new UnexpectedTokenError()
