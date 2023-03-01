@@ -18,7 +18,7 @@ test('parse - object', () => {
   expect(Jsonc.parse(`{}`)).toEqual({})
 })
 
-test('line comment inside object', () => {
+test('parse - line comment inside object', () => {
   expect(
     Jsonc.parse(`{
   // test
@@ -26,7 +26,7 @@ test('line comment inside object', () => {
   ).toEqual({})
 })
 
-test('line comment inside array', () => {
+test('parse - line comment inside array', () => {
   expect(
     Jsonc.parse(`[
   // test
@@ -44,4 +44,58 @@ test('parse - number', () => {
 
 test('parse - string', () => {
   expect(Jsonc.parse(`"test"`)).toBe('test')
+})
+
+test('parse - object inside array', () => {
+  expect(Jsonc.parse(`[{}]`)).toEqual([{}])
+})
+
+test('parse - array inside array', () => {
+  expect(Jsonc.parse(`[[]]`)).toEqual([[]])
+})
+
+test('parse - string inside array', () => {
+  expect(Jsonc.parse(`[""]`)).toEqual([''])
+})
+
+test('parse - multiple numbers inside array', () => {
+  expect(Jsonc.parse(`[1,2,3]`)).toEqual([1, 2, 3])
+})
+
+test('parse - object with multiple properties', () => {
+  expect(
+    Jsonc.parse(`{
+  "a": 1,
+  "b": 2
+}`)
+  ).toEqual({ a: 1, b: 2 })
+})
+
+test('parse - object with array and other property', () => {
+  expect(
+    Jsonc.parse(`{
+  "config": [
+    {
+      "name": "test"
+    }
+  ],
+  "key": "value"
+}`)
+  ).toEqual({
+    config: [
+      {
+        name: 'test',
+      },
+    ],
+    key: 'value',
+  })
+})
+
+test.skip('parse - object with multiple properties and trailing comma', () => {
+  expect(
+    Jsonc.parse(`{
+  "a": 1,
+  "b": 2,
+}`)
+  ).toEqual({ a: 1, b: 2 })
 })

@@ -13,6 +13,7 @@ const RE_COLON = /^:/
 const RE_BLOCK_COMMENT_START = /^\/\*/
 const RE_BLOCK_COMMENT_CONTENT = /^.+?(?=\*\/)/
 const RE_BLOCK_COMMENT_END = /^\*\//
+const RE_COMMA = /^,/
 
 const State = {
   TopLevelContent: 1,
@@ -21,6 +22,8 @@ const State = {
   InsideObject: 4,
   AfterPropertyName: 5,
   InsideArray: 6,
+  AfterPropertyNameAfterColon: 7,
+  AfterPropertyValue: 8,
 }
 
 class UnexpectedTokenError extends Error {
@@ -58,6 +61,7 @@ export const parse = (content, filePath = '') => {
           stack.push(State.TopLevelContent)
         } else if ((next = part.match(RE_CURLY_CLOSE))) {
           state = stack.pop() || State.TopLevelContent
+          console.log({ state })
         } else if ((next = part.match(RE_LINE_COMMENT))) {
           // ignore
           contentIndex = index + next[0].length
@@ -67,8 +71,11 @@ export const parse = (content, filePath = '') => {
         } else if ((next = part.match(RE_BLOCK_COMMENT_START))) {
           state = State.InsideBlockComment
           stack.push(State.TopLevelContent)
+        } else if ((next = part.match(RE_COMMA))) {
+          state = stack.pop() || State.TopLevelContent
         } else {
           part
+          console.log({ part })
           throw new UnexpectedTokenError()
         }
         break
@@ -79,11 +86,13 @@ export const parse = (content, filePath = '') => {
           state = State.InsideDoubleQuoteString
           stack.push(State.AfterPropertyName)
         } else if ((next = part.match(RE_CURLY_CLOSE))) {
-          // ignore
+          state = stack.pop() || State.TopLevelContent
         } else if ((next = part.match(RE_LINE_COMMENT))) {
           jsonContent += content.slice(contentIndex, index)
           contentIndex = index + next[0].length
         } else {
+          stack
+          console.log({ part })
           throw new UnexpectedTokenError()
         }
         break
@@ -97,23 +106,53 @@ export const parse = (content, filePath = '') => {
         break
       case State.AfterPropertyName:
         if ((next = part.match(RE_COLON))) {
-          state = State.TopLevelContent
+          state = State.AfterPropertyNameAfterColon
+          stack.push(State.AfterPropertyValue)
         } else if ((next = part.match(RE_WHITESPACE))) {
           // ignore
         } else {
           throw new UnexpectedTokenError()
         }
         break
-      case State.InsideArray:
+      case State.AfterPropertyNameAfterColon:
         if ((next = part.match(RE_WHITESPACE))) {
           // ignore
         } else if ((next = part.match(RE_NUMERIC))) {
           // ignore
+          state = State.AfterPropertyValue
+        } else if ((next = part.match(RE_SQUARE_OPEN))) {
+          state = State.InsideArray
+          // stack.push(State.AfterPropertyValue)
+        } else if ((next = part.match(RE_DOUBLE_QUOTE))) {
+          state = State.InsideDoubleQuoteString
+          // stack.push(State.AfterPropertyValue)
+        } else {
+          part
+          throw new UnexpectedTokenError()
+        }
+        break
+      case State.InsideArray:
+        if ((next = part.match(RE_WHITESPACE))) {
+          // ignore
+        } else if ((next = part.match(RE_CURLY_OPEN))) {
+          stack.push(State.InsideArray)
+          state = State.InsideObject
+        } else if ((next = part.match(RE_NUMERIC))) {
+          // ignore
         } else if ((next = part.match(RE_SQUARE_CLOSE))) {
           state = stack.pop() || State.TopLevelContent
+          console.log({ state })
         } else if ((next = part.match(RE_LINE_COMMENT))) {
           jsonContent += content.slice(contentIndex, index)
           contentIndex = index + next[0].length
+        } else if ((next = part.match(RE_SQUARE_OPEN))) {
+          stack.push(State.InsideArray)
+          state = State.InsideArray
+        } else if ((next = part.match(RE_COMMA))) {
+          // ignore
+        } else if ((next = part.match(RE_DOUBLE_QUOTE))) {
+          stack.push(State.InsideArray)
+          state = State.InsideDoubleQuoteString
         } else {
           part
           throw new UnexpectedTokenError()
@@ -126,6 +165,22 @@ export const parse = (content, filePath = '') => {
         } else if ((next = part.match(RE_BLOCK_COMMENT_CONTENT))) {
           state = State.InsideBlockComment
         } else {
+          throw new UnexpectedTokenError()
+        }
+        break
+      case State.AfterPropertyValue:
+        console.log({ part })
+        if ((next = part.match(RE_COMMA))) {
+          state = State.InsideObject
+        } else if ((next = part.match(RE_CURLY_CLOSE))) {
+          stack
+          // stack.pop()
+          state = stack.pop() || State.TopLevelContent
+        } else if ((next = part.match(RE_WHITESPACE))) {
+          // ignore
+        } else {
+          stack
+          part
           throw new UnexpectedTokenError()
         }
         break
