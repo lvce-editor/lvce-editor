@@ -91,6 +91,18 @@ test('parse - object with array and other property', () => {
   })
 })
 
+test('parse - boolean - true', () => {
+  expect(Jsonc.parse(`true`)).toEqual(true)
+})
+
+test('parse - boolean - false', () => {
+  expect(Jsonc.parse(`false`)).toEqual(false)
+})
+
+test('parse - null', () => {
+  expect(Jsonc.parse(`null`)).toEqual(null)
+})
+
 test.skip('parse - object with multiple properties and trailing comma', () => {
   expect(
     Jsonc.parse(`{
@@ -98,4 +110,12 @@ test.skip('parse - object with multiple properties and trailing comma', () => {
   "b": 2,
 }`)
   ).toEqual({ a: 1, b: 2 })
+})
+
+test('parse - boolean property value', () => {
+  expect(
+    Jsonc.parse(`{
+  "enabled": true
+}`)
+  ).toEqual({ enabled: true })
 })

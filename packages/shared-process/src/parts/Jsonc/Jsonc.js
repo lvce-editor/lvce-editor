@@ -14,6 +14,7 @@ const RE_BLOCK_COMMENT_START = /^\/\*/
 const RE_BLOCK_COMMENT_CONTENT = /^.+?(?=\*\/)/
 const RE_BLOCK_COMMENT_END = /^\*\//
 const RE_COMMA = /^,/
+const RE_LANGUAGE_CONSTANT = /^(?:true|false|null)/
 
 const State = {
   TopLevelContent: 1,
@@ -72,6 +73,8 @@ export const parse = (content, filePath = '') => {
           stack.push(State.TopLevelContent)
         } else if ((next = part.match(RE_COMMA))) {
           state = stack.pop() || State.TopLevelContent
+        } else if ((next = part.match(RE_LANGUAGE_CONSTANT))) {
+          // ignore
         } else {
           part
           throw new UnexpectedTokenError()
@@ -123,6 +126,8 @@ export const parse = (content, filePath = '') => {
         } else if ((next = part.match(RE_DOUBLE_QUOTE))) {
           state = State.InsideDoubleQuoteString
           // stack.push(State.AfterPropertyValue)
+        } else if ((next = part.match(RE_LANGUAGE_CONSTANT))) {
+          state = State.AfterPropertyValue
         } else {
           part
           throw new UnexpectedTokenError()
