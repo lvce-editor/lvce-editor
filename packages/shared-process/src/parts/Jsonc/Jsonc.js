@@ -61,7 +61,6 @@ export const parse = (content, filePath = '') => {
           stack.push(State.TopLevelContent)
         } else if ((next = part.match(RE_CURLY_CLOSE))) {
           state = stack.pop() || State.TopLevelContent
-          console.log({ state })
         } else if ((next = part.match(RE_LINE_COMMENT))) {
           // ignore
           contentIndex = index + next[0].length
@@ -75,7 +74,6 @@ export const parse = (content, filePath = '') => {
           state = stack.pop() || State.TopLevelContent
         } else {
           part
-          console.log({ part })
           throw new UnexpectedTokenError()
         }
         break
@@ -92,7 +90,6 @@ export const parse = (content, filePath = '') => {
           contentIndex = index + next[0].length
         } else {
           stack
-          console.log({ part })
           throw new UnexpectedTokenError()
         }
         break
@@ -141,7 +138,6 @@ export const parse = (content, filePath = '') => {
           // ignore
         } else if ((next = part.match(RE_SQUARE_CLOSE))) {
           state = stack.pop() || State.TopLevelContent
-          console.log({ state })
         } else if ((next = part.match(RE_LINE_COMMENT))) {
           jsonContent += content.slice(contentIndex, index)
           contentIndex = index + next[0].length
@@ -169,7 +165,6 @@ export const parse = (content, filePath = '') => {
         }
         break
       case State.AfterPropertyValue:
-        console.log({ part })
         if ((next = part.match(RE_COMMA))) {
           state = State.InsideObject
         } else if ((next = part.match(RE_CURLY_CLOSE))) {
