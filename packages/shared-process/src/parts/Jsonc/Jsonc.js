@@ -150,7 +150,6 @@ export const parse = (content, filePath = '') => {
         } else if ((next = part.match(RE_CURLY_OPEN))) {
           stack.push(State.InsideArray)
           state = State.InsideObject
-          console.log('inside object')
           stack
           part
         } else if ((next = part.match(RE_NUMERIC))) {
