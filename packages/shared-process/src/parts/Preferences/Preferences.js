@@ -1,5 +1,5 @@
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
-import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as JsoncFile from '../JsoncFile/JsoncFile.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
 import { VError } from '../VError/VError.js'
@@ -10,7 +10,7 @@ export const getUserPreferences = async () => {
     const userSettingsPath = Platform.getUserSettingsPath()
     let json
     try {
-      json = await JsonFile.readJson(userSettingsPath)
+      json = await JsoncFile.readJsonc(userSettingsPath)
     } catch (error) {
       if (error && error.code === ErrorCodes.ENOENT) {
         return {}
@@ -27,7 +27,7 @@ export const getUserPreferences = async () => {
 export const getDefaultPreferences = async () => {
   try {
     const defaultSettingsPath = Platform.getDefaultSettingsPath()
-    return await JsonFile.readJson(defaultSettingsPath)
+    return await JsoncFile.readJsonc(defaultSettingsPath)
   } catch (error) {
     throw new VError(error, 'Failed to load default preferences')
   }
