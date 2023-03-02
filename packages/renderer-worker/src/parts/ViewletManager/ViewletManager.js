@@ -330,28 +330,38 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     if (module.getChildren) {
       const children = module.getChildren(newState)
       for (const child of children) {
-        const childModule = await loadModule(viewlet.getModule, child.id)
-        // TODO get position of child module
-        const oldState = childModule.create('', '', child.x, child.y, child.width, child.height)
-        let instanceSavedState
-        if (restore) {
-          const stateToSave = await SaveState.getSavedState()
-          instanceSavedState = getInstanceSavedState(stateToSave, child.id)
-        } else if (restoreState) {
-          instanceSavedState = restoreState
-        }
-        const newState = await childModule.loadContent(oldState, instanceSavedState)
-        const childInstance = {
-          state: newState,
-          factory: childModule,
-        }
-        ViewletStates.set(childModule.name, childInstance)
-        const commands = getRenderCommands(childModule, oldState, newState)
-        extraCommands.push([kCreate, childModule.name])
-        extraCommands.push(...commands)
-        extraCommands.push([kAppend, viewlet.id, childModule.name])
-        if (childModule.contentLoadedEffects) {
-          await childModule.contentLoadedEffects(newState)
+        try {
+          const childModule = await loadModule(viewlet.getModule, child.id)
+          // TODO get position of child module
+          const oldState = childModule.create('', '', child.x, child.y, child.width, child.height)
+          let instanceSavedState
+          if (restore) {
+            const stateToSave = await SaveState.getSavedState()
+            instanceSavedState = getInstanceSavedState(stateToSave, child.id)
+          } else if (restoreState) {
+            instanceSavedState = restoreState
+          }
+          const newState = await childModule.loadContent(oldState, instanceSavedState)
+          const childInstance = {
+            state: newState,
+            factory: childModule,
+          }
+          ViewletStates.set(childModule.name, childInstance)
+          const childCommands = []
+          const commands = getRenderCommands(childModule, oldState, newState)
+          childCommands.push([kCreate, childModule.name])
+          childCommands.push(...commands)
+          childCommands.push([kAppend, viewlet.id, childModule.name])
+          if (childModule.contentLoadedEffects) {
+            await childModule.contentLoadedEffects(newState)
+          }
+          extraCommands.push(...childCommands)
+        } catch (error) {
+          await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
+          extraCommands.push([kCreate, ViewletModuleId.Error, viewlet.id])
+          extraCommands.push([kSetBounds, ViewletModuleId.Error, child.x, child.y, child.width, child.height])
+          extraCommands.push(['Viewlet.send', /* id */ ViewletModuleId.Error, 'setMessage', /* message */ `${error}`])
+          extraCommands.push([kAppend, viewlet.id, ViewletModuleId.Error])
         }
       }
     }
