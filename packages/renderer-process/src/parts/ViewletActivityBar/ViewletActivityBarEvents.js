@@ -25,7 +25,8 @@ const getNodeIndex = ($Node) => {
 }
 
 export const handleMousedown = (event) => {
-  if (event.button !== MouseEventTypes.LeftClick) {
+  const { button, clientX, clientY } = event
+  if (button !== MouseEventTypes.LeftClick) {
     return
   }
   const $Item = get$ItemFromEvent(event)
@@ -35,7 +36,6 @@ export const handleMousedown = (event) => {
   Event.preventDefault(event)
   Event.stopPropagation(event)
   const index = getNodeIndex($Item)
-  const { clientX, clientY } = event
   ViewletActivityBarFunctions.handleClick(index, clientX, clientY)
 }
 

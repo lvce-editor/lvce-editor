@@ -155,14 +155,13 @@ test('event - handleContextMenu', () => {
     },
   ])
   const { $ActivityBar } = state
-  const $ActivityBarItemsTop = $ActivityBar.children[1]
   const event = new MouseEvent('contextmenu', {
     bubbles: true,
     cancelable: true,
     clientX: 15,
     clientY: 30,
   })
-  $ActivityBarItemsTop.children[0].dispatchEvent(event)
+  $ActivityBar.children[0].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledWith('ActivityBar.handleContextMenu', 0, 15, 30)
 })
