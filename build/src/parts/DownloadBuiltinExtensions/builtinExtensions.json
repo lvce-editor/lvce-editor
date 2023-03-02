@@ -92,12 +92,12 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.22"
+    "version": "0.0.23"
   },
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.0.20"
+    "version": "0.0.21"
   },
   {
     "name": "builtin.language-basics-json5",
@@ -202,7 +202,7 @@
   {
     "name": "builtin.language-basics-vue",
     "repository": "github.com/lvce-editor/language-basics-vue",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-xml",
