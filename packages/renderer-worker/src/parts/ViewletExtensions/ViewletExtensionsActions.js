@@ -26,6 +26,7 @@ export const getActions = () => {
       type: ActionType.Button,
       id: UiStrings.ClearExtensionSearchResults,
       icon: Icon.ClearAll,
+      command: 'Extensions.clearSearchResults',
     },
   ]
 }
