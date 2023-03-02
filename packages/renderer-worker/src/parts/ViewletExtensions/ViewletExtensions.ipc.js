@@ -6,7 +6,6 @@ export const name = 'Extensions'
 // prettier-ignore
 export const Commands = {
   closeSuggest: ViewletExtensions.closeSuggest,
-  handleInput: ViewletExtensions.handleInput,
   handleInstall: ViewletExtensions.handleInstall,
   handleUninstall: ViewletExtensions.handleUninstall,
   openSuggest: ViewletExtensions.openSuggest,
@@ -19,6 +18,8 @@ export const LazyCommands = {
   handleClickCurrent: () => import('./ViewletExtensionsHandleClickCurrent.js'),
   handleClickCurrentButKeepFocus: () => import('./ViewletExtensionsHandleClickCurrentButKeepFocus.js'),
   handleContextMenu: () => import('./ViewletExtensionsHandleContextMenu.js'),
+  clearSearchResults: () => import('./ViewletExtensionsClearSearchResults.js'),
+  handleInput: () => import('./ViewletExtensionsHandleInput.js'),
   ...VirtualList.LazyCommands
 }
 
