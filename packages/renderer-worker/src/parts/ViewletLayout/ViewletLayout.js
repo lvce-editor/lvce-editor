@@ -380,6 +380,7 @@ const show = async (state, module, currentViewletId) => {
       y,
       width,
       height,
+      parentId: ViewletModuleId.Layout,
     },
     false,
     false,
