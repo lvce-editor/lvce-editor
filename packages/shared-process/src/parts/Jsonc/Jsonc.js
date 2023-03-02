@@ -1,219 +1,303 @@
-const RE_WHITESPACE = /^\s+/
-const RE_LINE_COMMENT = /^\/\/.*/
-const RE_CONTENT = /^.+/
-const RE_CURLY_OPEN = /^\{/
-const RE_CURLY_CLOSE = /^\}/
-const RE_SQUARE_OPEN = /^\[/
-const RE_SQUARE_CLOSE = /^\]/
-const RE_DOUBLE_QUOTE = /^\"/
-const RE_STRING_DOUBLE_QUOTE_CONTENT = /^[^"\\]+/
-const RE_NUMERIC = /^[\d\.]+/
-const RE_ANYTHING = /^.+/
-const RE_COLON = /^:/
-const RE_BLOCK_COMMENT_START = /^\/\*/
-const RE_BLOCK_COMMENT_CONTENT = /^.+?(?=\*\/)/
-const RE_BLOCK_COMMENT_END = /^\*\//
-const RE_COMMA = /^,/
-const RE_LANGUAGE_CONSTANT = /^(?:true|false|null)/
-const RE_STRING_ESCAPE = /^\\.?/
+import * as CharCode from '../JsoncCharCode/JsoncCharCode.js'
+import * as TokenType from '../JsoncTokenType/JsoncTokenType.js'
 
-/**
- * @enum {number}
- */
-const State = {
-  TopLevelContent: 1,
-  InsideBlockComment: 2,
-  InsideDoubleQuoteString: 3,
-  InsideObject: 4,
-  AfterPropertyName: 5,
-  InsideArray: 6,
-  AfterPropertyNameAfterColon: 7,
-  AfterPropertyValue: 8,
-}
+const createScanner = (text) => {
+  let offset = 0
+  const length = text.length
 
-class UnexpectedTokenError extends Error {
-  constructor() {
-    super('unexpected token')
+  const scanValue = () => {
+    while (offset < length) {
+      const code = text.charCodeAt(offset)
+      switch (code) {
+        case CharCode.CurlyOpen:
+          offset++
+          return TokenType.CurlyOpen
+        case CharCode.CurlyClose:
+          offset++
+          return TokenType.CurlyClose
+        case CharCode.SquareOpen:
+          offset++
+          return TokenType.SquareOpen
+        case CharCode.SquareClose:
+          offset++
+          return TokenType.SquareClose
+        case CharCode.DoubleQuote:
+          offset++
+          return TokenType.DoubleQuote
+        case CharCode.Comma:
+          text.slice(offset) //?
+          offset++
+          return TokenType.Comma
+        case CharCode.Zero:
+        case CharCode.One:
+        case CharCode.Two:
+        case CharCode.Three:
+        case CharCode.Four:
+        case CharCode.Five:
+        case CharCode.Six:
+        case CharCode.Seven:
+        case CharCode.Eight:
+        case CharCode.Nine:
+        case CharCode.Dot:
+          offset++
+          return TokenType.Numeric
+        case CharCode.CarriageReturn:
+        case CharCode.LineFeed:
+        case CharCode.Tab:
+        case CharCode.Space:
+          offset++
+          break
+        case CharCode.Slash:
+          return TokenType.Slash
+        default:
+          return TokenType.Literal
+      }
+    }
+    return TokenType.Eof
+  }
+
+  const scanString = () => {
+    while (offset < length) {
+      const code = text.charCodeAt(offset)
+      if (code === CharCode.DoubleQuote) {
+        break
+      }
+      offset++
+    }
+    offset++
+    const start = offset
+    while (offset < length) {
+      const code = text.charCodeAt(offset)
+      if (code === CharCode.DoubleQuote) {
+        break
+      }
+      offset++
+    }
+    const result = text.slice(start, offset)
+    offset++
+    return result
+  }
+
+  const scanPropertyName = () => {
+    return scanString()
+  }
+
+  const scanPropertyColon = () => {
+    const code = text.charCodeAt(offset)
+    offset++
+  }
+
+  const goBack = (delta) => {
+    offset -= delta
+  }
+
+  const scanNumber = () => {
+    const start = offset
+    outer: while (offset < length) {
+      const code = text.charCodeAt(offset)
+      switch (code) {
+        case CharCode.Zero:
+        case CharCode.One:
+        case CharCode.Two:
+        case CharCode.Three:
+        case CharCode.Four:
+        case CharCode.Five:
+        case CharCode.Six:
+        case CharCode.Seven:
+        case CharCode.Eight:
+        case CharCode.Nine:
+        case CharCode.Dot:
+          break
+        default:
+          break outer
+      }
+      offset++
+    }
+    const result = text.slice(start, offset)
+    result
+    return result
+  }
+
+  const scanLiteral = () => {
+    const start = offset
+    outer: while (offset < length) {
+      const code = text.charCodeAt(offset)
+      switch (code) {
+        case CharCode.LineFeed:
+        case CharCode.CarriageReturn:
+        case CharCode.Tab:
+        case CharCode.Space:
+          break outer
+        default:
+          break
+      }
+      offset++
+    }
+    const result = text.slice(start, offset)
+    return result
+  }
+
+  const scanBlockComment = () => {
+    while (offset < length) {
+      if (text.charCodeAt(offset) === CharCode.Star && text.charCodeAt(offset + 1) === CharCode.Slash) {
+        break
+      }
+      offset++
+    }
+  }
+
+  const scanLineComment = () => {
+    while (offset < length) {
+      const code = text.charCodeAt(offset)
+      if (code === CharCode.LineFeed) {
+        break
+      }
+      offset++
+    }
+  }
+
+  const scanComment = () => {
+    const code = text.charCodeAt(offset)
+    switch (code) {
+      case CharCode.Star:
+        return scanBlockComment()
+      case CharCode.Slash:
+        return scanLineComment()
+      default:
+        break
+    }
+  }
+
+  return {
+    scanValue,
+    scanPropertyName,
+    scanPropertyColon,
+    scanString,
+    scanNumber,
+    goBack,
+    scanLiteral,
+    scanComment,
+    getOffset() {
+      return offset
+    },
   }
 }
 
-/**
- *
- * @param {string} content
- * @param {string} filePath
- * @returns
- */
-export const parse = (content, filePath = '') => {
-  let state = State.TopLevelContent
-  let next
-  let index = 0
-  let contentIndex = 0
-  let jsonContent = ''
-  const stack = []
-  while (index < content.length) {
-    const part = content.slice(index)
-    switch (state) {
-      case State.TopLevelContent:
-        if ((next = part.match(RE_CURLY_OPEN))) {
-          state = State.InsideObject
-          stack.push(State.InsideObject)
-        } else if ((next = part.match(RE_WHITESPACE))) {
-          // ignore
-        } else if ((next = part.match(RE_NUMERIC))) {
-          // ignore
-        } else if ((next = part.match(RE_DOUBLE_QUOTE))) {
-          state = State.InsideDoubleQuoteString
-          stack.push(State.TopLevelContent)
-        } else if ((next = part.match(RE_CURLY_CLOSE))) {
-          state = stack.pop() || State.TopLevelContent
-        } else if ((next = part.match(RE_LINE_COMMENT))) {
-          // ignore
-          contentIndex = index + next[0].length
-        } else if ((next = part.match(RE_SQUARE_OPEN))) {
-          state = State.InsideArray
-          stack.push(State.TopLevelContent)
-        } else if ((next = part.match(RE_BLOCK_COMMENT_START))) {
-          state = State.InsideBlockComment
-          stack.push(State.TopLevelContent)
-        } else if ((next = part.match(RE_COMMA))) {
-          state = stack.pop() || State.TopLevelContent
-        } else if ((next = part.match(RE_LANGUAGE_CONSTANT))) {
-          // ignore
-        } else {
-          part
-          throw new UnexpectedTokenError()
-        }
+const parsePropertyName = (scanner) => {
+  const propertyName = scanner.scanPropertyName()
+  return propertyName
+}
+
+const parsePropertyColon = (scanner) => {
+  scanner.scanPropertyColon()
+}
+
+const parseNumber = (scanner) => {
+  scanner.goBack(1)
+  const rawValue = scanner.scanNumber()
+  const value = parseFloat(rawValue)
+  return value
+}
+
+const parseObject = (scanner) => {
+  const object = {}
+  outer: while (true) {
+    const token = scanner.scanValue()
+    switch (token) {
+      case TokenType.Eof:
+      case TokenType.None:
+      case TokenType.CurlyClose:
+        break outer
+      case TokenType.DoubleQuote:
+        scanner.goBack(1)
+        const propertyName = parsePropertyName(scanner)
+        parsePropertyColon(scanner)
+        const value = parseValue(scanner)
+        object[propertyName] = value
+      case TokenType.Comma:
         break
-      case State.InsideObject:
-        if ((next = part.match(RE_WHITESPACE))) {
-          // ignore
-        } else if ((next = part.match(RE_DOUBLE_QUOTE))) {
-          state = State.InsideDoubleQuoteString
-          stack.push(State.AfterPropertyName)
-        } else if ((next = part.match(RE_CURLY_CLOSE))) {
-          state = stack.pop() || State.TopLevelContent
-          state //?
-        } else if ((next = part.match(RE_LINE_COMMENT))) {
-          jsonContent += content.slice(contentIndex, index)
-          contentIndex = index + next[0].length
-        } else {
-          stack
-          part.slice(0, 1) //?
-          throw new UnexpectedTokenError()
-        }
-        break
-      case State.InsideDoubleQuoteString:
-        if ((next = part.match(RE_DOUBLE_QUOTE))) {
-          state = stack.pop() || State.TopLevelContent
-        } else if ((next = part.match(RE_STRING_DOUBLE_QUOTE_CONTENT))) {
-        } else if ((next = part.match(RE_STRING_ESCAPE))) {
-        } else {
-          part
-          throw new UnexpectedTokenError()
-        }
-        break
-      case State.AfterPropertyName:
-        if ((next = part.match(RE_COLON))) {
-          state = State.AfterPropertyNameAfterColon
-          stack.push(State.AfterPropertyValue)
-        } else if ((next = part.match(RE_WHITESPACE))) {
-          // ignore
-        } else {
-          throw new UnexpectedTokenError()
-        }
-        break
-      case State.AfterPropertyNameAfterColon:
-        if ((next = part.match(RE_WHITESPACE))) {
-          // ignore
-        } else if ((next = part.match(RE_NUMERIC))) {
-          // ignore
-          state = State.AfterPropertyValue
-        } else if ((next = part.match(RE_SQUARE_OPEN))) {
-          state = State.InsideArray
-          // stack.push(State.AfterPropertyValue)
-        } else if ((next = part.match(RE_DOUBLE_QUOTE))) {
-          state = State.InsideDoubleQuoteString
-          // stack.push(State.AfterPropertyValue)
-        } else if ((next = part.match(RE_LANGUAGE_CONSTANT))) {
-          state = State.AfterPropertyValue
-        } else if ((next = part.match(RE_CURLY_OPEN))) {
-          stack.push(State.AfterPropertyValue)
-          state = State.InsideObject
-        } else {
-          part
-          throw new UnexpectedTokenError()
-        }
-        break
-      case State.InsideArray:
-        if ((next = part.match(RE_WHITESPACE))) {
-          // ignore
-        } else if ((next = part.match(RE_CURLY_OPEN))) {
-          stack.push(State.InsideArray)
-          state = State.InsideObject
-          stack
-          part
-        } else if ((next = part.match(RE_NUMERIC))) {
-          // ignore
-        } else if ((next = part.match(RE_SQUARE_CLOSE))) {
-          state = stack.pop() || State.TopLevelContent
-          state
-        } else if ((next = part.match(RE_LINE_COMMENT))) {
-          jsonContent += content.slice(contentIndex, index)
-          contentIndex = index + next[0].length
-        } else if ((next = part.match(RE_SQUARE_OPEN))) {
-          stack.push(State.InsideArray)
-          state = State.InsideArray
-        } else if ((next = part.match(RE_COMMA))) {
-          // ignore
-        } else if ((next = part.match(RE_DOUBLE_QUOTE))) {
-          stack.push(State.InsideArray)
-          state = State.InsideDoubleQuoteString
-        } else if ((next = part.match(RE_BLOCK_COMMENT_START))) {
-          state = State.InsideBlockComment
-          stack.push(State.InsideArray)
-          jsonContent += content.slice(contentIndex, index)
-        } else {
-          part
-          throw new UnexpectedTokenError()
-        }
-        break
-      case State.InsideBlockComment:
-        if ((next = part.match(RE_BLOCK_COMMENT_END))) {
-          state = stack.pop() || State.TopLevelContent
-          contentIndex = index + next[0].length
-        } else if ((next = part.match(RE_BLOCK_COMMENT_CONTENT))) {
-          state = State.InsideBlockComment
-        } else {
-          throw new UnexpectedTokenError()
-        }
-        break
-      case State.AfterPropertyValue:
-        if ((next = part.match(RE_COMMA))) {
-          state = State.InsideObject
-        } else if ((next = part.match(RE_CURLY_CLOSE))) {
-          stack
-          if (stack.at(-1) === State.AfterPropertyValue) {
-            stack.pop()
-          }
-          state = stack.pop() || State.TopLevelContent
-          state
-        } else if ((next = part.match(RE_WHITESPACE))) {
-          // ignore
-        } else {
-          stack
-          part
-          throw new UnexpectedTokenError()
-        }
+      case TokenType.Slash:
+        parseComment(scanner)
         break
       default:
-        state
-        throw new Error('unexpected state')
+        break
     }
-    // @ts-ignore
-    index += next[0].length
   }
-  jsonContent += content.slice(contentIndex)
-  jsonContent
-  const parsed = JSON.parse(jsonContent)
-  return parsed
+  return object
+}
+
+const parseString = (scanner) => {
+  scanner.goBack(1)
+  const value = scanner.scanString()
+  return value
+}
+
+const parseArray = (scanner) => {
+  const array = []
+  outer: while (true) {
+    const token = scanner.scanValue()
+    switch (token) {
+      case TokenType.Eof:
+      case TokenType.None:
+      case TokenType.SquareClose:
+        break outer
+      case TokenType.Slash:
+        scanner.scanComment()
+        break
+      default:
+        scanner.goBack(1)
+        const value = parseValue(scanner)
+        array.push(value)
+        break
+      case TokenType.Comma:
+        break
+    }
+  }
+  return array
+}
+
+const parseLiteral = (scanner) => {
+  const rawValue = scanner.scanLiteral()
+  switch (rawValue) {
+    case 'true':
+      return true
+    case 'false':
+      return false
+    case 'null':
+      return null
+    default:
+      return undefined
+  }
+}
+
+const parseComment = (scanner) => {
+  scanner.scanComment()
+}
+
+const parseValue = (scanner) => {
+  const token = scanner.scanValue()
+  switch (token) {
+    case TokenType.CurlyOpen:
+      return parseObject(scanner)
+    case TokenType.DoubleQuote:
+      return parseString(scanner)
+    case TokenType.Numeric:
+      return parseNumber(scanner)
+    case TokenType.SquareOpen:
+      return parseArray(scanner)
+    case TokenType.Literal:
+      return parseLiteral(scanner)
+    case TokenType.Slash:
+      parseComment(scanner)
+      return parseValue(scanner)
+    default:
+      token
+      return undefined
+  }
+}
+
+export const parse = (text) => {
+  const scanner = createScanner(text)
+  const result = parseValue(scanner)
+  return result
 }
