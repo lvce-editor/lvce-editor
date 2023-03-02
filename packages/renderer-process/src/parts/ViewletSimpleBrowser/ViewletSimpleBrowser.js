@@ -2,9 +2,10 @@ import * as EnterKeyHintType from '../EnterKeyHintType/EnterKeyHintType.js'
 import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as MaskIcon from '../MaskIcon/MaskIcon.js'
-import * as ViewletSimpleBrowserEvents from './ViewletSimpleBrowserEvents.js'
 import * as InputType from '../InputType/InputType.js'
+import * as MaskImage from '../MaskImage/MaskImage.js'
+import * as ViewletSimpleBrowserEvents from './ViewletSimpleBrowserEvents.js'
+
 /**
  * @enum {string}
  */
@@ -71,10 +72,10 @@ export const setLoading = (state, loading) => {
   const $Icon = $ButtonReload.firstChild
   if (loading) {
     $ButtonReload.title = UiStrings.Cancel
-    MaskIcon.setIcon($Icon, Icon.Close)
+    MaskImage.setMaskImage($Icon, Icon.Close)
   } else {
     $ButtonReload.title = UiStrings.Reload
-    MaskIcon.setIcon($Icon, Icon.Refresh)
+    MaskImage.setMaskImage($Icon, Icon.Refresh)
   }
 }
 
