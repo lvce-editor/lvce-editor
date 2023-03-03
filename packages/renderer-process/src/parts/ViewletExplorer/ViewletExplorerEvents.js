@@ -164,6 +164,12 @@ export const handleWheel = (event) => {
   }
 }
 
+export const handlePointerDown = (event) => {
+  event.preventDefault()
+  const { button, clientX, clientY } = event
+  ViewletExplorerFunctions.handlePointerDown(button, clientX, clientY)
+}
+
 export const handleMouseEnter = (event) => {
   // const $Target = event.target
   // const index = findIndex($Target)

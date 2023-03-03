@@ -55,7 +55,8 @@ export const LazyCommands = {
   handleDragOver: () => import('./ViewletExplorerHandleDragOver.js'),
   handleDrop: () => import('./ViewletExplorerHandleDrop.js'),
   handlePaste: () => import('./ViewletExplorerHandlePaste.js'),
-  acceptEdit: () => import('./ViewletExplorerAcceptEdit.js')
+  acceptEdit: () => import('./ViewletExplorerAcceptEdit.js'),
+  handlePointerDown: () => import('./ViewletExplorerHandlePointerDown.js'),
 }
 
 export const Css = [

@@ -31,3 +31,7 @@ export const handleWheel = (deltaY) => {
 export const updateEditingValue = (value) => {
   RendererWorker.send('Explorer.updateEditingValue', value)
 }
+
+export const handlePointerDown = (button, x, y) => {
+  RendererWorker.send('Explorer.handlePointerDown', button, x, y)
+}

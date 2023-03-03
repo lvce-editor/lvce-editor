@@ -38,6 +38,7 @@ export const attachEvents = (state) => {
   $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart
   $Viewlet.ondrop = ViewletExplorerEvents.handleDrop
   $Viewlet.onfocus = ViewletExplorerEvents.handleFocus
+  $Viewlet.onpointerdown = ViewletExplorerEvents.handlePointerDown
 }
 
 const create$Row = () => {
