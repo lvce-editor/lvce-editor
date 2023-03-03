@@ -58,7 +58,13 @@ export const LazyCommands = {
   handlePaste: () => import('./ViewletExplorerHandlePaste.js'),
 }
 
-export const Css = ['/css/parts/ViewletExplorer.css', '/css/parts/Label.css', '/css/parts/TreeItem.css', '/css/parts/Drag.css']
+export const Css = [
+  '/css/parts/ViewletExplorer.css',
+  '/css/parts/Label.css',
+  '/css/parts/TreeItem.css',
+  '/css/parts/Drag.css',
+  '/css/parts/InputBox.css',
+]
 
 export * from './ViewletExplorer.js'
 export * from './ViewletExplorerActions.js'
