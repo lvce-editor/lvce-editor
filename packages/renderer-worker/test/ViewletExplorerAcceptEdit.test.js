@@ -159,5 +159,6 @@ test('acceptEdit - rename - nested file', async () => {
         type: DirentType.File,
       },
     ],
+    focusedIndex: 1,
   })
 })

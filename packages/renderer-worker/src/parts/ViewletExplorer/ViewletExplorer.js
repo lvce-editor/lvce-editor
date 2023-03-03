@@ -1148,12 +1148,11 @@ const renderEditingIndex = {
       }
       const dirent = newState.items[focusedIndex]
       return [/* method */ 'replaceEditBox', /* index */ oldState.editingIndex, /* dirent */ dirent]
-    } else {
-      if (oldState.editingType === ExplorerEditingType.CreateFile || oldState.editingType === ExplorerEditingType.CreateFolder) {
-        return [/* method */ 'insertEditBox', /* index */ oldState.editingIndex, /* value */ editingValue]
-      }
-      return [/* method */ 'replaceWithEditBox', /* index */ editingIndex, /* value */ editingValue]
     }
+    if (newState.editingType === ExplorerEditingType.CreateFile || newState.editingType === ExplorerEditingType.CreateFolder) {
+      return [/* method */ 'insertEditBox', /* index */ newState.editingIndex, /* value */ editingValue]
+    }
+    return [/* method */ 'replaceWithEditBox', /* index */ editingIndex, /* value */ editingValue]
   },
 }
 
