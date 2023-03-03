@@ -70,11 +70,20 @@ export const typeWithAutoClosing = async (editor, text) => {
   console.log({ text })
   if (text === '{') {
     const changes = editorReplaceSelections(editor, ['{}'], EditOrigin.EditorTypeWithAutoClosing)
-    console.log({ changes })
-    return {
-      ...Editor.scheduleDocumentAndCursorsSelections(editor, changes),
-      autoClosingRanges: [changes[0].start.rowIndex, changes[0].start.columnIndex + 1, changes[0].end.rowIndex, changes[0].end.columnIndex + 1],
-    }
+    const selectionChanges = new Uint32Array([
+      changes[0].start.rowIndex,
+      changes[0].start.columnIndex + 1,
+      changes[0].end.rowIndex,
+      changes[0].end.columnIndex + 1,
+    ])
+    console.log({ ranges: editor.autoClosingRanges })
+    const autoClosingRangesAdditions = [
+      changes[0].start.rowIndex,
+      changes[0].start.columnIndex + 1,
+      changes[0].end.rowIndex,
+      changes[0].end.columnIndex + 1,
+    ]
+    return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges, autoClosingRangesAdditions)
   }
   // if (isBrace(text)) {
   //   console.log('is brace')
@@ -84,23 +93,7 @@ export const typeWithAutoClosing = async (editor, text) => {
   //   return editorTypeWithSlashCompletion(editor, text)
   // }
   const changes = editorReplaceSelections(editor, [text], EditOrigin.EditorType)
-  const { autoClosingRanges } = editor
-  if (autoClosingRanges.length > 0) {
-    if (
-      // changes[0].start.rowIndex === autoClosingRanges[0] &&
-      // changes[0].start.columnIndex === autoClosingRanges[1] &&
-      changes[0].end.rowIndex === autoClosingRanges[2] &&
-      changes[0].end.columnIndex === autoClosingRanges[3]
-    ) {
-      autoClosingRanges[3] += text.length
-      console.log('is edit for change')
-      console.log(changes[0])
-    } else {
-      console.log('is not edit for change')
-      console.log({ changes, autoClosingRanges })
-      editor.autoClosingRanges = []
-    }
-  }
+
   // // TODO trigger characters should be monomorph -> then skip this check
   // if (
   //   editor.completionTriggerCharacters &&

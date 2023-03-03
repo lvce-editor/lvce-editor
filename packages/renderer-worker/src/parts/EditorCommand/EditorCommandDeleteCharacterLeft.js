@@ -1,19 +1,20 @@
+import * as IsAllAutoClosingPairDelete from '../IsAllAutoClosingPairDelete/IsAllAutoClosingPairDelete.js'
 import * as EditorDeleteHorizontalLeft from './EditorCommandDeleteHorizontalLeft.js'
 import * as EditorDelta from './EditorCommandDelta.js'
 
+const deleteCharacterLeftWithAutoClose = (editor) => {
+  const { selections } = editor
+  for (let i = 0; i < selections.length; i += 4) {
+    selections[i + 1]++
+    selections[i + 3]++
+  }
+  return EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, EditorDelta.twoCharactersLeft)
+}
+
 export const deleteCharacterLeft = (editor) => {
   const { autoClosingRanges = [], selections } = editor
-  if (autoClosingRanges.length > 0) {
-    if (
-      selections[0] === autoClosingRanges[0] &&
-      selections[1] === autoClosingRanges[1] &&
-      selections[2] === autoClosingRanges[2] &&
-      selections[3] === autoClosingRanges[3]
-    ) {
-      selections[1]++
-      selections[3]++
-    }
-    return EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, EditorDelta.twoCharactersLeft)
+  if (IsAllAutoClosingPairDelete.isAllAutoClosingPairDelete(autoClosingRanges, selections)) {
+    return deleteCharacterLeftWithAutoClose(editor)
   }
   return EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, EditorDelta.characterLeft)
 }

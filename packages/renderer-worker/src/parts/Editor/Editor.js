@@ -160,6 +160,46 @@ export const scheduleSelectionsAndScrollPosition = (editor, selectionEdits, delt
   // ])
 }
 
+const applyAutoClosingRangesEdit = (editor, changes, autoClosingRangesAdditions) => {
+  const { autoClosingRanges = [] } = editor
+  if (autoClosingRanges.length === 0 && !autoClosingRangesAdditions) {
+    return autoClosingRanges
+  }
+  console.log({ changes })
+  const change = changes[0]
+  const changeStartRowIndex = change.startRowIndex
+  const changeStartColumnIndex = change.startColumnIndex
+  const changeEndRowIndex = change.endRowIndex
+  const changeEndColumnIndex = change.endColumnIndex
+  for (let i = 0; i < autoClosingRanges.length; i += 4) {
+    if (
+      // changes[0].start.rowIndex === autoClosingRanges[0] &&
+      // changes[0].start.columnIndex === autoClosingRanges[1] &&
+      changeEndRowIndex === autoClosingRanges[i + 2] &&
+      changeEndColumnIndex === autoClosingRanges[i + 3]
+    ) {
+      const delta = change.inserted[0].length - change.deleted[0].length
+      autoClosingRanges[3] += delta
+      console.log('is edit for change')
+      console.log(changes[0])
+      console.log('delta', delta)
+    } else if (changeEndRowIndex === autoClosingRanges[i + 2] && changeStartColumnIndex < autoClosingRanges[i + 3]) {
+      const max = Math.min(changeEndColumnIndex, autoClosingRanges[i + 3])
+    } else {
+      console.log('is not edit for change')
+      console.log({ changes, autoClosingRanges })
+      return []
+    }
+  }
+
+  if (autoClosingRangesAdditions) {
+    autoClosingRanges.push(...autoClosingRangesAdditions)
+  }
+
+  console.log({ autoClosingRanges, autoClosingRangesAdditions })
+  return autoClosingRanges
+}
+
 /**
  *
  * @param {any} editor
@@ -167,7 +207,7 @@ export const scheduleSelectionsAndScrollPosition = (editor, selectionEdits, delt
  * @param {Uint32Array|undefined} selectionChanges
  * @returns
  */
-export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionChanges = undefined) => {
+export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionChanges = undefined, autoClosingRangesAdditions = undefined) => {
   Assert.object(editor)
   Assert.array(changes)
   if (changes.length === 0) {
@@ -187,6 +227,7 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionC
   // TODO maybe put undostack into indexeddb so that there is no memory leak in application
   // then clear old undostack from indexeddb after 3 days
   // TODO should push to undostack after rendering
+  const autoClosingRanges = applyAutoClosingRangesEdit(editor, changes, autoClosingRangesAdditions)
 
   const newEditor = {
     ...partialNewEditor,
@@ -194,6 +235,7 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionC
     selections: newSelections,
     undoStack: [...editor.undoStack, changes],
     invalidStartIndex,
+    autoClosingRanges,
   }
   GlobalEventBus.emitEvent('editor.change', newEditor, changes)
 
