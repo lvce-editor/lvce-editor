@@ -77,13 +77,7 @@ export const typeWithAutoClosing = async (editor, text) => {
       changes[0].end.columnIndex + 1,
     ])
     console.log({ ranges: editor.autoClosingRanges })
-    const autoClosingRangesAdditions = [
-      changes[0].start.rowIndex,
-      changes[0].start.columnIndex + 1,
-      changes[0].end.rowIndex,
-      changes[0].end.columnIndex + 1,
-    ]
-    return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges, autoClosingRangesAdditions)
+    return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
   }
   // if (isBrace(text)) {
   //   console.log('is brace')

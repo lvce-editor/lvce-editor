@@ -9,6 +9,7 @@ import * as EditorCursor from './EditorCursor.js'
 import * as EditorScrolling from './EditorScrolling.js'
 import * as EditorSelection from './EditorSelection.js'
 import * as EditorText from './EditorText.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 
 const MINIMUM_SLIDER_SIZE = 20
 
@@ -160,44 +161,42 @@ export const scheduleSelectionsAndScrollPosition = (editor, selectionEdits, delt
   // ])
 }
 
-const applyAutoClosingRangesEdit = (editor, changes, autoClosingRangesAdditions) => {
+const isAutoClosingChange = (change) => {
+  return change.origin === EditOrigin.EditorTypeWithAutoClosing
+}
+
+const applyAutoClosingRangesEdit = (editor, changes) => {
   const { autoClosingRanges = [] } = editor
-  if (autoClosingRanges.length === 0 && !autoClosingRangesAdditions) {
-    return autoClosingRanges
-  }
-  console.log({ changes })
+  const newAutoClosingRanges = []
   const change = changes[0]
-  const changeStartRowIndex = change.startRowIndex
-  const changeStartColumnIndex = change.startColumnIndex
-  const changeEndRowIndex = change.endRowIndex
-  const changeEndColumnIndex = change.endColumnIndex
+  const changeStartRowIndex = change.start.rowIndex
+  const changeStartColumnIndex = change.start.columnIndex
+  const changeEndRowIndex = change.end.rowIndex
+  const changeEndColumnIndex = change.end.columnIndex
   for (let i = 0; i < autoClosingRanges.length; i += 4) {
-    if (
-      // changes[0].start.rowIndex === autoClosingRanges[0] &&
-      // changes[0].start.columnIndex === autoClosingRanges[1] &&
-      changeEndRowIndex === autoClosingRanges[i + 2] &&
-      changeEndColumnIndex === autoClosingRanges[i + 3]
+    const autoStartRowIndex = autoClosingRanges[i]
+    const autoStartColumnIndex = autoClosingRanges[i + 1]
+    const autoEndRowIndex = autoClosingRanges[i + 2]
+    const autoEndColumnIndex = autoClosingRanges[i + 3]
+    if (changeEndRowIndex === autoEndRowIndex && changeEndColumnIndex === autoEndColumnIndex) {
+      const delta = change.inserted[0].length - change.deleted[0].length
+      newAutoClosingRanges.push(autoStartRowIndex, autoStartColumnIndex, autoEndRowIndex, autoEndColumnIndex + delta)
+    } else if (
+      changeStartRowIndex === autoStartRowIndex &&
+      changeStartColumnIndex >= autoStartColumnIndex &&
+      changeEndRowIndex === autoEndRowIndex &&
+      changeEndColumnIndex <= autoEndColumnIndex
     ) {
       const delta = change.inserted[0].length - change.deleted[0].length
-      autoClosingRanges[3] += delta
-      console.log('is edit for change')
-      console.log(changes[0])
-      console.log('delta', delta)
-    } else if (changeEndRowIndex === autoClosingRanges[i + 2] && changeStartColumnIndex < autoClosingRanges[i + 3]) {
-      const max = Math.min(changeEndColumnIndex, autoClosingRanges[i + 3])
+      newAutoClosingRanges.push(autoStartRowIndex, autoStartColumnIndex, autoEndRowIndex, autoEndColumnIndex + delta)
     } else {
-      console.log('is not edit for change')
-      console.log({ changes, autoClosingRanges })
-      return []
+      // ignore
     }
   }
-
-  if (autoClosingRangesAdditions) {
-    autoClosingRanges.push(...autoClosingRangesAdditions)
+  if (isAutoClosingChange(change)) {
+    newAutoClosingRanges.push(changeStartRowIndex, changeStartColumnIndex + 1, changeEndRowIndex, changeEndColumnIndex + 1)
   }
-
-  console.log({ autoClosingRanges, autoClosingRangesAdditions })
-  return autoClosingRanges
+  return newAutoClosingRanges
 }
 
 /**
@@ -207,7 +206,7 @@ const applyAutoClosingRangesEdit = (editor, changes, autoClosingRangesAdditions)
  * @param {Uint32Array|undefined} selectionChanges
  * @returns
  */
-export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionChanges = undefined, autoClosingRangesAdditions = undefined) => {
+export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionChanges = undefined) => {
   Assert.object(editor)
   Assert.array(changes)
   if (changes.length === 0) {
@@ -227,7 +226,7 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionC
   // TODO maybe put undostack into indexeddb so that there is no memory leak in application
   // then clear old undostack from indexeddb after 3 days
   // TODO should push to undostack after rendering
-  const autoClosingRanges = applyAutoClosingRangesEdit(editor, changes, autoClosingRangesAdditions)
+  const autoClosingRanges = applyAutoClosingRangesEdit(editor, changes)
 
   const newEditor = {
     ...partialNewEditor,
@@ -241,7 +240,6 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionC
 
   return newEditor
 }
-
 export const scheduleDocumentAndCursorsSelectionIsUndo = (editor, changes) => {
   Assert.object(editor)
   Assert.array(changes)
