@@ -1,0 +1,6 @@
+export const CurlyOpen = '{'
+export const CurlyClose = '}'
+export const RoundOpen = '('
+export const RoundClose = ')'
+export const SquareOpen = '['
+export const SquareClose = ']'
