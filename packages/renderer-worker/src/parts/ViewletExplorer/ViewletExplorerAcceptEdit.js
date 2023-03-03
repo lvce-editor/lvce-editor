@@ -24,8 +24,8 @@ const getParentFolder = (dirents, index, root) => {
   return dirents[index].path
 }
 
-const acceptCreate = async (state) => {
-  const { editingIndex, focusedIndex, editingValue, editingType } = state
+const acceptCreate = async (state, newDirentType, createFn) => {
+  const { focusedIndex, editingValue } = state
   const newFileName = editingValue
   if (!newFileName) {
     // TODO show error message that file name must not be empty
@@ -37,16 +37,7 @@ const acceptCreate = async (state) => {
   const absolutePath = [parentFolder, newFileName].join(state.pathSeparator)
   // TODO better handle error
   try {
-    switch (editingType) {
-      case ExplorerEditingType.CreateFile:
-        await FileSystem.createFile(absolutePath)
-        break
-      case ExplorerEditingType.CreateFolder:
-        await FileSystem.mkdir(absolutePath)
-        break
-      default:
-        break
-    }
+    await createFn(absolutePath)
   } catch (error) {
     await ErrorHandling.showErrorDialog(error)
     return state
@@ -65,7 +56,7 @@ const acceptCreate = async (state) => {
     setSize: 1,
     depth,
     name: newFileName,
-    type: editingType === ExplorerEditingType.CreateFile ? DirentType.File : DirentType.Directory,
+    type: newDirentType,
     icon: '',
   }
   newDirent.icon = IconTheme.getIcon(newDirent)
@@ -100,7 +91,7 @@ const acceptCreate = async (state) => {
     ...state,
     items: newDirents,
     editingIndex: -1,
-    focusedIndex: editingIndex,
+    focusedIndex: insertIndex + 1,
   }
 }
 
@@ -232,7 +223,9 @@ export const acceptEdit = (state) => {
   const { editingType } = state
   switch (editingType) {
     case ExplorerEditingType.CreateFile:
-      return acceptCreate(state)
+      return acceptCreate(state, DirentType.File, FileSystem.createFile)
+    case ExplorerEditingType.CreateFolder:
+      return acceptCreate(state, DirentType.Directory, FileSystem.mkdir)
     case ExplorerEditingType.Rename:
       return acceptRename(state)
     default:
