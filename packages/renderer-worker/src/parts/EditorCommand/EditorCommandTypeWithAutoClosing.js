@@ -4,9 +4,9 @@ import * as Editor from '../Editor/Editor.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostClosingTag from '../ExtensionHost/ExtensionHostClosingTagCompletion.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
-import * as Preferences from '../Preferences/Preferences.js'
 
 const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
 
