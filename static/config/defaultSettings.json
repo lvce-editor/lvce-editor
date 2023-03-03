@@ -11,6 +11,8 @@
   "editor.fontLigatures": true,
   "editor.links": true,
 
+  "editor.autoClosingBrackets": true,
+
   "extensions.autoUpdate": true,
 
   "files.exclude": {

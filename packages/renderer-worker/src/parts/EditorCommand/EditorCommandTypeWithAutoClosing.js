@@ -6,6 +6,7 @@ import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBra
 import * as ExtensionHostClosingTag from '../ExtensionHost/ExtensionHostClosingTagCompletion.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import * as Preferences from '../Preferences/Preferences.js'
 
 const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
 
@@ -66,9 +67,13 @@ const editorTypeWithSlashCompletion = async (editor, text) => {
 
 const getAutoClosingRangeChanges = []
 
+const isAutoClosingBracketsEnabled = () => {
+  return Boolean(Preferences.get('editor.autoClosingBrackets'))
+}
+
 // TODO implement typing command without brace completion -> brace completion should be independent module
 export const typeWithAutoClosing = async (editor, text) => {
-  if (text === Bracket.CurlyOpen) {
+  if (text === Bracket.CurlyOpen && isAutoClosingBracketsEnabled()) {
     const changes = editorReplaceSelections(editor, ['{}'], EditOrigin.EditorTypeWithAutoClosing)
     const selectionChanges = new Uint32Array([
       changes[0].start.rowIndex,
