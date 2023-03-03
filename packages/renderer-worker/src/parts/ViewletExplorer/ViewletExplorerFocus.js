@@ -1,5 +1,6 @@
-export const focus = (state) => {
-  if (state.focused) {
+export const focus = async (state) => {
+  const { focused } = state
+  if (focused) {
     return state
   }
   return {
