@@ -71,17 +71,26 @@ const isAutoClosingBracketsEnabled = () => {
   return Boolean(Preferences.get('editor.autoClosingBrackets'))
 }
 
+const typeWithAutoClosingBracket = (editor, text) => {
+  const changes = editorReplaceSelections(editor, ['{}'], EditOrigin.EditorTypeWithAutoClosing)
+  const selectionChanges = new Uint32Array([
+    changes[0].start.rowIndex,
+    changes[0].start.columnIndex + 1,
+    changes[0].end.rowIndex,
+    changes[0].end.columnIndex + 1,
+  ])
+  return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
+}
+
+const typeWithAutoClosingDisabled = (editor, text) => {
+  const changes = editorReplaceSelections(editor, [text], EditOrigin.EditorType)
+  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+}
+
 // TODO implement typing command without brace completion -> brace completion should be independent module
 export const typeWithAutoClosing = async (editor, text) => {
   if (text === Bracket.CurlyOpen && isAutoClosingBracketsEnabled()) {
-    const changes = editorReplaceSelections(editor, ['{}'], EditOrigin.EditorTypeWithAutoClosing)
-    const selectionChanges = new Uint32Array([
-      changes[0].start.rowIndex,
-      changes[0].start.columnIndex + 1,
-      changes[0].end.rowIndex,
-      changes[0].end.columnIndex + 1,
-    ])
-    return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
+    return typeWithAutoClosingBracket(editor, text)
   }
   // if (isBrace(text)) {
   //   console.log('is brace')
@@ -90,8 +99,6 @@ export const typeWithAutoClosing = async (editor, text) => {
   // if (isSlash(text)) {
   //   return editorTypeWithSlashCompletion(editor, text)
   // }
-  const changes = editorReplaceSelections(editor, [text], EditOrigin.EditorType)
-
   // // TODO trigger characters should be monomorph -> then skip this check
   // if (
   //   editor.completionTriggerCharacters &&
@@ -102,5 +109,5 @@ export const typeWithAutoClosing = async (editor, text) => {
 
   // TODO should editor type command know about editor completion? -> no
   // EditorCommandCompletion.openFromType(editor, text)
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+  return typeWithAutoClosingDisabled(editor, text)
 }
