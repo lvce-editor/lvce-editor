@@ -92,3 +92,31 @@ test('editorDeleteCharacterLeft - emoji - 👮🏽‍♀️', () => {
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
+
+test('editorDeleteCharacterLeft - delete auto closing bracket', () => {
+  const editor = {
+    lines: ['{}'],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 1, 0, 1),
+    undoStack: [],
+    autoClosingRanges: [0, 1, 0, 1],
+  }
+  expect(EditorDeleteCharacterLeft.deleteCharacterLeft(editor)).toMatchObject({
+    lines: [''],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
+  })
+})
+
+test('editorDeleteCharacterLeft - delete multiple auto closing bracket', () => {
+  const editor = {
+    lines: ['{}', '{}'],
+    primarySelectionIndex: 0,
+    selections: new Uint32Array([0, 1, 0, 1, 1, 1, 1, 1]),
+    undoStack: [],
+    autoClosingRanges: [0, 1, 0, 1, 1, 1, 1, 1],
+  }
+  expect(EditorDeleteCharacterLeft.deleteCharacterLeft(editor)).toMatchObject({
+    lines: ['', ''],
+    selections: new Uint32Array([0, 0, 0, 0, 1, 0, 1, 0]),
+  })
+})

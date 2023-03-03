@@ -13,6 +13,10 @@ export const type = (text) => {
   RendererWorker.send('Editor.type', text)
 }
 
+export const typeWithAutoClosing = (text) => {
+  RendererWorker.send('Editor.typeWithAutoClosing', text)
+}
+
 export const compositionStart = (data) => {
   RendererWorker.send('Editor.compositionStart', data)
 }
