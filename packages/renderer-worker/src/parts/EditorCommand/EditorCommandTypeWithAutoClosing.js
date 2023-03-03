@@ -72,7 +72,9 @@ const isAutoClosingBracketsEnabled = () => {
 }
 
 const typeWithAutoClosingBracket = (editor, text) => {
-  const changes = editorReplaceSelections(editor, ['{}'], EditOrigin.EditorTypeWithAutoClosing)
+  const closingBracket = getMatchingClosingBrace(text)
+  const newText = text + closingBracket
+  const changes = editorReplaceSelections(editor, [newText], EditOrigin.EditorTypeWithAutoClosing)
   const selectionChanges = new Uint32Array([
     changes[0].start.rowIndex,
     changes[0].start.columnIndex + 1,
@@ -89,9 +91,19 @@ const typeWithAutoClosingDisabled = (editor, text) => {
 
 // TODO implement typing command without brace completion -> brace completion should be independent module
 export const typeWithAutoClosing = async (editor, text) => {
-  if (text === Bracket.CurlyOpen && isAutoClosingBracketsEnabled()) {
-    return typeWithAutoClosingBracket(editor, text)
+  switch (text) {
+    case Bracket.CurlyOpen:
+    case Bracket.RoundOpen:
+    case Bracket.SquareOpen:
+      if (isAutoClosingBracketsEnabled()) {
+        return typeWithAutoClosingBracket(editor, text)
+      }
+      break
+    default:
+      break
   }
+  return typeWithAutoClosingDisabled(editor, text)
+
   // if (isBrace(text)) {
   //   console.log('is brace')
   //   return editorTypeWithBraceCompletion(editor, text)
@@ -109,5 +121,4 @@ export const typeWithAutoClosing = async (editor, text) => {
 
   // TODO should editor type command know about editor completion? -> no
   // EditorCommandCompletion.openFromType(editor, text)
-  return typeWithAutoClosingDisabled(editor, text)
 }
