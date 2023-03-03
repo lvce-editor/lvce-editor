@@ -12,6 +12,7 @@
   "editor.links": true,
 
   "editor.autoClosingBrackets": true,
+  "editor.autoClosingQuotes": true,
 
   "extensions.autoUpdate": true,
 

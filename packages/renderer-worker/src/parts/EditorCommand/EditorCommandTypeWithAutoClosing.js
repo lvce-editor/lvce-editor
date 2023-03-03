@@ -5,6 +5,7 @@ import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostClosingTag from '../ExtensionHost/ExtensionHostClosingTagCompletion.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as Quote from '../Quote/Quote.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 
@@ -71,9 +72,25 @@ const isAutoClosingBracketsEnabled = () => {
   return Boolean(Preferences.get('editor.autoClosingBrackets'))
 }
 
+const isAutoClosingQuotesEnabled = () => {
+  return Boolean(Preferences.get('editor.autoClosingQuotes'))
+}
+
 const typeWithAutoClosingBracket = (editor, text) => {
   const closingBracket = getMatchingClosingBrace(text)
   const newText = text + closingBracket
+  const changes = editorReplaceSelections(editor, [newText], EditOrigin.EditorTypeWithAutoClosing)
+  const selectionChanges = new Uint32Array([
+    changes[0].start.rowIndex,
+    changes[0].start.columnIndex + 1,
+    changes[0].end.rowIndex,
+    changes[0].end.columnIndex + 1,
+  ])
+  return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
+}
+
+const typeWithAutoClosingQuote = (editor, text) => {
+  const newText = text + text
   const changes = editorReplaceSelections(editor, [newText], EditOrigin.EditorTypeWithAutoClosing)
   const selectionChanges = new Uint32Array([
     changes[0].start.rowIndex,
@@ -99,11 +116,16 @@ export const typeWithAutoClosing = async (editor, text) => {
         return typeWithAutoClosingBracket(editor, text)
       }
       break
+    case Quote.DoubleQuote:
+    case Quote.SingleQuote:
+    case Quote.BackTick:
+      if (isAutoClosingQuotesEnabled()) {
+        return typeWithAutoClosingQuote(editor, text)
+      }
     default:
       break
   }
   return typeWithAutoClosingDisabled(editor, text)
-
   // if (isBrace(text)) {
   //   console.log('is brace')
   //   return editorTypeWithBraceCompletion(editor, text)
