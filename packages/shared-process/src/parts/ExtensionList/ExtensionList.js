@@ -19,12 +19,21 @@ const getManifestId = (json) => {
   return basename(json.path)
 }
 
+const getSymlink = (json) => {
+  if (json && json.symlink && typeof json.symlink === 'string') {
+    return json.symlink
+  }
+  return ''
+}
+
 const getManifestInfo = (json) => {
   const id = getManifestId(json)
   const version = getManifestVersion(json)
+  const symlink = getSymlink(json)
   return {
     id,
     version,
+    symlink,
   }
 }
 
@@ -41,7 +50,7 @@ export const list = async () => {
   try {
     const manifests = await ExtensionManifests.getAll([
       {
-        type: ExtensionManifestInputType.Folder,
+        type: ExtensionManifestInputType.LinkedExtensionsFolder,
         path: Platform.getLinkedExtensionsPath(),
       },
       {
