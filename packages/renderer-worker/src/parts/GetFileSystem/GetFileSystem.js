@@ -25,8 +25,12 @@ const loadFileSystem = (procotol) => {
       return import('../FileSystem/FileSystemMemory.js')
     case FileSystemProtocol.Web:
       return import('../FileSystem/FileSystemWeb.js')
-    default:
+    case FileSystemProtocol.Fetch:
+      return import('../FileSystem/FileSystemFetch.js')
+    case FileSystemProtocol.Disk:
       return import('../FileSystem/FileSystemDisk.js')
+    default:
+      throw new Error(`unknown file system protocol ${procotol}`)
   }
 }
 
