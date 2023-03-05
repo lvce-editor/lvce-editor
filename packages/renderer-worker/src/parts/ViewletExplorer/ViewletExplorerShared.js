@@ -121,6 +121,7 @@ const resolveSymbolicLinks = async (uri, rawDirents) => {
 
 export const getChildDirentsRaw = async (uri) => {
   const rawDirents = await FileSystem.readDirWithFileTypes(uri)
+  Assert.array(rawDirents)
   if (hasSymbolicLinks(rawDirents)) {
     return resolveSymbolicLinks(uri, rawDirents)
   }
