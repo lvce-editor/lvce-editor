@@ -1,4 +1,5 @@
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as Assert from '../Assert/Assert.js'
 
 const RE_AT = /^\s+at/
 const RE_AT_PROMISE_INDEX = /^\s*at async Promise.all \(index \d+\)$/
@@ -78,6 +79,7 @@ const mergeCustom = (custom, relevantStack) => {
 }
 
 export const cleanStack = (stack) => {
+  Assert.string(stack)
   const lines = SplitLines.splitLines(stack)
   const { custom, actualStack } = getDetails(lines)
   const relevantStack = actualStack.filter(isRelevantLine).filter(isApplicationUsefulLine)
