@@ -56,6 +56,7 @@ test.skip('list - error - manifest json is null', async () => {
     {
       id: 'extension-1',
       version: 'n/a',
+      symlink: '',
     },
   ])
 })
@@ -74,6 +75,7 @@ test('list - error - manifest json has no id', async () => {
     {
       id: 'extension-1',
       version: 'n/a',
+      symlink: '',
     },
   ])
 })
@@ -93,6 +95,7 @@ test('list - error - manifest version is of type array', async () => {
     {
       id: 'extension-1',
       version: 'n/a',
+      symlink: '',
     },
   ])
 })
@@ -115,6 +118,7 @@ test('list - error - manifest is a directory', async () => {
     {
       id: 'extension-2',
       version: 'n/a',
+      symlink: '',
     },
   ])
 })
@@ -136,6 +140,28 @@ test('list', async () => {
     {
       id: 'extension-1',
       version: '0.0.1',
+      symlink: '',
+    },
+  ])
+})
+
+test('list - with symlink', async () => {
+  // @ts-ignore
+  ExtensionManifests.getAll.mockImplementation(() => {
+    return [
+      {
+        id: 'extension-1',
+        version: '0.0.1',
+        status: ExtensionManifestStatus.Resolved,
+        symlink: '../../../Documents/extension-1',
+      },
+    ]
+  })
+  expect(await ExtensionList.list()).toEqual([
+    {
+      id: 'extension-1',
+      version: '0.0.1',
+      symlink: '../../../Documents/extension-1',
     },
   ])
 })
