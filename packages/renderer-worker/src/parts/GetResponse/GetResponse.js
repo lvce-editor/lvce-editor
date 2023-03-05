@@ -1,23 +1,12 @@
 import * as Command from '../Command/Command.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
-
-export const getErrorResponse = (message, error) => {
-  return {
-    jsonrpc: JsonRpcVersion.Two,
-    id: message.id,
-    error,
-  }
-}
+import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
+import * as GetSuccessResponse from '../GetSuccessResponse/GetSuccessResponse.js'
 
 export const getResponse = async (message) => {
   try {
     const result = await Command.execute(message.method, ...message.params)
-    return {
-      jsonrpc: JsonRpcVersion.Two,
-      id: message.id,
-      result,
-    }
+    return GetSuccessResponse.getSuccessResponse(message, result)
   } catch (error) {
-    return getErrorResponse(message, error)
+    return GetErrorResponse.getErrorResponse(message, error)
   }
 }
