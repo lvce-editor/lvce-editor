@@ -28,6 +28,15 @@ const getTokensViewportEmbedded = (lines, lineCache, linesWithEmbed) => {
           TokenMap: embeddedTokenizer.TokenMap,
           isFull,
         })
+      } else if (line.length === 0) {
+        embeddedResults.push({
+          result: {
+            tokens: [],
+            embeddedResultIndex: 0,
+          },
+          isFull: true,
+          TokenMap: [],
+        })
       } else {
         tokenizersToLoad.push(embeddedLanguage)
         embeddedResults.push({
@@ -38,6 +47,7 @@ const getTokensViewportEmbedded = (lines, lineCache, linesWithEmbed) => {
         topContext = undefined
       }
     } else {
+      console.log('else 2')
       topContext = undefined
     }
   }
