@@ -308,7 +308,6 @@ test('getTokensViewport - tokenize with embedded language and empty lines', () =
         TokenMap: [],
         isFull: true,
         result: {
-          embeddedResultIndex: 0,
           tokens: [],
         },
       },

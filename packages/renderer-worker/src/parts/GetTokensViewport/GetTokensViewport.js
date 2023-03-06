@@ -29,11 +29,12 @@ const getTokensViewportEmbedded = (lines, lineCache, linesWithEmbed) => {
           isFull,
         })
       } else if (line.length === 0) {
+        const embedResult = {
+          tokens: [],
+        }
+        result.embeddedResultIndex = embeddedResults.length
         embeddedResults.push({
-          result: {
-            tokens: [],
-            embeddedResultIndex: 0,
-          },
+          result: embedResult,
           isFull: true,
           TokenMap: [],
         })
