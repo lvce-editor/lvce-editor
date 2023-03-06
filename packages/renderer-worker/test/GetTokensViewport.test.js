@@ -169,6 +169,7 @@ test('getTokensViewport - tokenize with embedded language', () => {
           throw new Error(`unexpected line ${line}`)
       }
     },
+    hasArrayReturn: true,
   }
   const editor = {
     lines: ['A'],
@@ -225,7 +226,7 @@ test('getTokensViewport - tokenize with embedded language', () => {
         embeddedLanguageStart: 0,
         embeddedResultIndex: 0,
         state: 1,
-        tokens: [undefined, undefined, undefined, undefined],
+        tokens: [0, 1],
       },
     ],
   })
@@ -260,6 +261,7 @@ test('getTokensViewport - tokenize with embedded language and empty lines', () =
           throw new Error(`unexpected line ${line}`)
       }
     },
+    hasArrayReturn: true,
   }
   const editor = {
     lines: ['A', 'B', '', 'B', 'A'],
@@ -275,10 +277,20 @@ test('getTokensViewport - tokenize with embedded language and empty lines', () =
       0: 'B',
     },
     tokenizeLine: jest.fn((line) => {
-      return {
-        // @ts-ignore
-        tokens: [0, line.length],
-        state: 1,
+      switch (line) {
+        case 'B':
+          return {
+            // @ts-ignore
+            tokens: [0, line.length],
+            state: 1,
+          }
+        case '':
+          return {
+            tokens: [0],
+            state: 1,
+          }
+        default:
+          throw new Error('unexpected line')
       }
     }),
     initialLineState: {},
@@ -326,7 +338,7 @@ test('getTokensViewport - tokenize with embedded language and empty lines', () =
     tokens: [
       {
         state: 1,
-        tokens: [undefined, undefined, undefined, undefined],
+        tokens: [0, 1],
       },
       {
         embeddedLanguage: 'b',
@@ -334,7 +346,7 @@ test('getTokensViewport - tokenize with embedded language and empty lines', () =
         embeddedLanguageStart: 0,
         embeddedResultIndex: 0,
         state: 1,
-        tokens: [undefined, undefined, undefined, undefined],
+        tokens: [0, 1],
       },
       {
         embeddedLanguage: 'b',
@@ -342,7 +354,7 @@ test('getTokensViewport - tokenize with embedded language and empty lines', () =
         embeddedLanguageStart: 0,
         embeddedResultIndex: 1,
         state: 1,
-        tokens: [undefined, undefined, undefined, undefined],
+        tokens: [0, 0],
       },
       {
         embeddedLanguage: 'b',
@@ -350,7 +362,7 @@ test('getTokensViewport - tokenize with embedded language and empty lines', () =
         embeddedLanguageStart: 0,
         embeddedResultIndex: 2,
         state: 1,
-        tokens: [undefined, undefined, undefined, undefined],
+        tokens: [0, 1],
       },
     ],
   })
