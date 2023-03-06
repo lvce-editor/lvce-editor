@@ -169,6 +169,7 @@ test('getTokensViewport - tokenize with embedded language', () => {
           throw new Error(`unexpected line ${line}`)
       }
     },
+    hasArrayReturn: true,
   }
   const editor = {
     lines: ['A'],
@@ -225,10 +226,150 @@ test('getTokensViewport - tokenize with embedded language', () => {
         embeddedLanguageStart: 0,
         embeddedResultIndex: 0,
         state: 1,
-        tokens: [undefined, undefined, undefined, undefined],
+        tokens: [0, 1],
       },
     ],
   })
   expect(testTokenizer.tokenizeLine).toHaveBeenCalledTimes(1)
   expect(testTokenizer.tokenizeLine).toHaveBeenCalledWith('A', undefined)
+})
+
+test('getTokensViewport - tokenize with embedded language and empty lines', () => {
+  const defaultTokenizer = {
+    initialLineState: {},
+    TokenMap: {
+      0: 'A',
+      1: 'Embedded',
+    },
+    tokenizeLine(line) {
+      switch (line) {
+        case 'A':
+          return {
+            tokens: [0, line.length],
+            state: 1,
+          }
+        case 'B':
+        case '':
+          return {
+            tokens: [0, line.length],
+            embeddedLanguage: 'b',
+            state: 1,
+            embeddedLanguageStart: 0,
+            embeddedLanguageEnd: line.length,
+          }
+        default:
+          throw new Error(`unexpected line ${line}`)
+      }
+    },
+    hasArrayReturn: true,
+  }
+  const editor = {
+    lines: ['A', 'B', '', 'B', 'A'],
+    tokenizer: defaultTokenizer,
+    lineCache: [],
+    invalidStartIndex: 0,
+  }
+  const startLineIndex = 0
+  const endLineIndex = 4
+  const tokenizerB = {
+    hasArrayReturn: true,
+    TokenMap: {
+      0: 'B',
+    },
+    tokenizeLine: jest.fn((line) => {
+      switch (line) {
+        case 'B':
+          return {
+            // @ts-ignore
+            tokens: [0, line.length],
+            state: 1,
+          }
+        case '':
+          return {
+            tokens: [0],
+            state: 1,
+          }
+        default:
+          throw new Error('unexpected line')
+      }
+    }),
+    initialLineState: {},
+  }
+  // @ts-ignore
+  Tokenizer.getTokenizer.mockImplementation((languageId) => {
+    switch (languageId) {
+      case 'b':
+        return tokenizerB
+      default:
+        throw new Error('unexpected language id')
+    }
+  })
+  expect(GetTokensViewport.getTokensViewport(editor, startLineIndex, endLineIndex)).toEqual({
+    embeddedResults: [
+      {
+        TokenMap: {
+          0: 'B',
+        },
+        isFull: true,
+        result: {
+          state: 1,
+          tokens: [0, 1],
+        },
+      },
+      {
+        TokenMap: [],
+        isFull: true,
+        result: {
+          tokens: [],
+        },
+      },
+      {
+        TokenMap: {
+          0: 'B',
+        },
+        isFull: true,
+        result: {
+          state: 1,
+          tokens: [0, 1],
+        },
+      },
+    ],
+    tokenizersToLoad: [],
+    tokens: [
+      {
+        state: 1,
+        tokens: [0, 1],
+      },
+      {
+        embeddedLanguage: 'b',
+        embeddedLanguageEnd: 1,
+        embeddedLanguageStart: 0,
+        embeddedResultIndex: 0,
+        state: 1,
+        tokens: [0, 1],
+      },
+      {
+        embeddedLanguage: 'b',
+        embeddedLanguageEnd: 0,
+        embeddedLanguageStart: 0,
+        embeddedResultIndex: 1,
+        state: 1,
+        tokens: [0, 0],
+      },
+      {
+        embeddedLanguage: 'b',
+        embeddedLanguageEnd: 1,
+        embeddedLanguageStart: 0,
+        embeddedResultIndex: 2,
+        state: 1,
+        tokens: [0, 1],
+      },
+    ],
+  })
+  expect(tokenizerB.tokenizeLine).toHaveBeenCalledTimes(2)
+  expect(tokenizerB.tokenizeLine).toHaveBeenNthCalledWith(1, 'B', {})
+  expect(tokenizerB.tokenizeLine).toHaveBeenNthCalledWith(2, 'B', {
+    state: 1,
+    tokens: [0, 1],
+  })
 })
