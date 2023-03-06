@@ -49,14 +49,14 @@ test('getTokensViewport', () => {
   })
 })
 
-test.only('getTokensViewport - determine embedded languages', () => {
+test('getTokensViewport - determine embedded languages', () => {
   const defaultTokenizer = {
     initialLineState: {},
     TokenMap: {
       0: 'A',
       1: 'Embedded',
     },
-    hasReturn: true,
+    hasArrayReturn: true,
     tokenizeLine(line) {
       switch (line) {
         case 'A':
@@ -179,7 +179,7 @@ test('getTokensViewport - tokenize with embedded language', () => {
   const startLineIndex = 0
   const endLineIndex = 1
   const testTokenizer = {
-    hasReturn: true,
+    hasArrayReturn: true,
     TokenMap: {
       0: 'A',
     },
@@ -243,10 +243,15 @@ test('getTokensViewport - tokenize with embedded language and empty lines', () =
     tokenizeLine(line) {
       switch (line) {
         case 'A':
+          return {
+            tokens: [0, line.length],
+            state: 1,
+          }
+        case 'B':
         case '':
           return {
             tokens: [0, line.length],
-            embeddedLanguage: 'a',
+            embeddedLanguage: 'b',
             state: 1,
             embeddedLanguageStart: 0,
             embeddedLanguageEnd: line.length,
@@ -264,10 +269,10 @@ test('getTokensViewport - tokenize with embedded language and empty lines', () =
   }
   const startLineIndex = 0
   const endLineIndex = 4
-  const tokenizerA = {
-    hasReturn: true,
+  const tokenizerB = {
+    hasArrayReturn: true,
     TokenMap: {
-      0: 'A',
+      0: 'B',
     },
     tokenizeLine: jest.fn((line) => {
       return {
@@ -281,8 +286,8 @@ test('getTokensViewport - tokenize with embedded language and empty lines', () =
   // @ts-ignore
   Tokenizer.getTokenizer.mockImplementation((languageId) => {
     switch (languageId) {
-      case 'a':
-        return tokenizerA
+      case 'b':
+        return tokenizerB
       default:
         throw new Error('unexpected language id')
     }
@@ -291,7 +296,25 @@ test('getTokensViewport - tokenize with embedded language and empty lines', () =
     embeddedResults: [
       {
         TokenMap: {
-          0: 'A',
+          0: 'B',
+        },
+        isFull: true,
+        result: {
+          state: 1,
+          tokens: [0, 1],
+        },
+      },
+      {
+        TokenMap: [],
+        isFull: true,
+        result: {
+          embeddedResultIndex: 0,
+          tokens: [],
+        },
+      },
+      {
+        TokenMap: {
+          0: 'B',
         },
         isFull: true,
         result: {
@@ -301,8 +324,41 @@ test('getTokensViewport - tokenize with embedded language and empty lines', () =
       },
     ],
     tokenizersToLoad: [],
-    tokens: [],
+    tokens: [
+      {
+        state: 1,
+        tokens: [undefined, undefined, undefined, undefined],
+      },
+      {
+        embeddedLanguage: 'b',
+        embeddedLanguageEnd: 1,
+        embeddedLanguageStart: 0,
+        embeddedResultIndex: 0,
+        state: 1,
+        tokens: [undefined, undefined, undefined, undefined],
+      },
+      {
+        embeddedLanguage: 'b',
+        embeddedLanguageEnd: 0,
+        embeddedLanguageStart: 0,
+        embeddedResultIndex: 1,
+        state: 1,
+        tokens: [undefined, undefined, undefined, undefined],
+      },
+      {
+        embeddedLanguage: 'b',
+        embeddedLanguageEnd: 1,
+        embeddedLanguageStart: 0,
+        embeddedResultIndex: 2,
+        state: 1,
+        tokens: [undefined, undefined, undefined, undefined],
+      },
+    ],
   })
-  expect(tokenizerA.tokenizeLine).toHaveBeenCalledTimes(1)
-  expect(tokenizerA.tokenizeLine).toHaveBeenCalledWith('A', {})
+  expect(tokenizerB.tokenizeLine).toHaveBeenCalledTimes(2)
+  expect(tokenizerB.tokenizeLine).toHaveBeenNthCalledWith(1, 'B', {})
+  expect(tokenizerB.tokenizeLine).toHaveBeenNthCalledWith(2, 'B', {
+    state: 1,
+    tokens: [0, 1],
+  })
 })
