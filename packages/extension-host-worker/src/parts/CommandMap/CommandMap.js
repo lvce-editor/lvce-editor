@@ -1,5 +1,5 @@
-import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
+import * as ExtensionHostClosingTag from '../ExtensionHostClosingTag/ExtensionHostClosingTag.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
@@ -87,7 +87,8 @@ export const getFn = (method) => {
       return ExtensionHostDebug.getProperties
     case 'ExtensionHostDebug.evaluate':
       return ExtensionHostDebug.evaluate
+    case ExtensionHostCommandType.ClosingTagExecuteClosingTagProvider:
+      return ExtensionHostClosingTag.executeClosingTagProvider
     default:
-      throw new CommandNotFoundError(method)
   }
 }

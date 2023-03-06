@@ -1,4 +1,5 @@
 import * as ExtensionHostActivationEvent from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionHostEditor from './ExtensionHostEditor.js'
 
 const combineResults = (results) => {
@@ -9,7 +10,7 @@ export const executeClosingTagProvider = (editor, offset, openingBrace) => {
   return ExtensionHostEditor.execute({
     editor,
     event: ExtensionHostActivationEvent.OnClosingTag,
-    method: 'ExtensionHostClosingTag.executeClosingTagProvider',
+    method: ExtensionHostCommandType.ClosingTagExecuteClosingTagProvider,
     args: [offset, openingBrace],
     combineResults,
     noProviderFoundMessage: '',
