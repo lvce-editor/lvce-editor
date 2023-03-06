@@ -48,7 +48,6 @@ const getTokensViewportEmbedded = (lines, lineCache, linesWithEmbed) => {
         topContext = undefined
       }
     } else {
-      console.log('else 2')
       topContext = undefined
     }
   }
