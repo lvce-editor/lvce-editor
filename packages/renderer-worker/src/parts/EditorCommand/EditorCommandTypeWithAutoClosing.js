@@ -1,4 +1,5 @@
 // import * as EditorCompletion from '../EditorCompletion/EditorCompletion.js'
+import * as AutoClosing from '../AutoClosing/AutoClosing.js'
 import * as Bracket from '../Bracket/Bracket.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
@@ -106,8 +107,24 @@ const typeWithAutoClosingDisabled = (editor, text) => {
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
+const isAutoClosingTagsEnabled = () => {
+  return true
+}
+
+const typeWithAutoClosingTag = async (editor, text) => {
+  const offset = TextDocument.offsetAt(editor, editor.selections[0], editor.selections[1])
+  const result = await ExtensionHostClosingTag.executeClosingTagProvider(editor, offset, text)
+  if (result === undefined) {
+    const changes = editorReplaceSelections(editor, [text], EditOrigin.EditorType)
+    return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+  }
+  const changes = editorReplaceSelections(editor, [result.inserted], EditOrigin.EditorType)
+  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+}
+
 // TODO implement typing command without brace completion -> brace completion should be independent module
 export const typeWithAutoClosing = async (editor, text) => {
+  console.log({ text })
   switch (text) {
     case Bracket.CurlyOpen:
     case Bracket.RoundOpen:
@@ -122,6 +139,13 @@ export const typeWithAutoClosing = async (editor, text) => {
       if (isAutoClosingQuotesEnabled()) {
         return typeWithAutoClosingQuote(editor, text)
       }
+      break
+    // case AutoClosing.ClosingAngleBracket: // TODO support auto closing when typing closing angle bracket of start tag
+    case AutoClosing.Slash:
+      if (isAutoClosingTagsEnabled()) {
+        return typeWithAutoClosingTag(editor, text)
+      }
+      break
     default:
       break
   }
