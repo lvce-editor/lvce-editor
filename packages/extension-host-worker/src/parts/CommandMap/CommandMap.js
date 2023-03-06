@@ -1,3 +1,4 @@
+import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostClosingTag from '../ExtensionHostClosingTag/ExtensionHostClosingTag.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
@@ -90,5 +91,6 @@ export const getFn = (method) => {
     case ExtensionHostCommandType.ClosingTagExecuteClosingTagProvider:
       return ExtensionHostClosingTag.executeClosingTagProvider
     default:
+      throw new CommandNotFoundError(method)
   }
 }
