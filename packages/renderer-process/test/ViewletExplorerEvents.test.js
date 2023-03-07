@@ -201,7 +201,7 @@ test('event - click', () => {
   $GitKeep.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleClickAt', 50, 50)
-  expect(event.defaultPrevented).toBe(false)
+  expect(event.defaultPrevented).toBe(true)
 })
 
 test('event - click on wrapper div', () => {
