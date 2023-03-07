@@ -409,17 +409,7 @@ test('event - drop', () => {
   expect(event.defaultPrevented).toBe(true)
   expect(stopProgationSpy).toHaveBeenCalled()
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleDrop', 0, 0, [
-    {
-      lastModified: 0,
-      lastModifiedDate: modifiedDate,
-      name: 'file.json',
-      path: '/test/file.json',
-      size: 756705,
-      type: 'application/json',
-      webkitRelativePath: '',
-    },
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleDrop', 0, 0, ['/test/file.json'])
 })
 
 test('event - input on rename input box', () => {
