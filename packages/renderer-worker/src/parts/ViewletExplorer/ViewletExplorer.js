@@ -484,10 +484,9 @@ export const openContainingFolder = async (state) => {
 
 const newDirent = async (state, editingType) => {
   // TODO do it like vscode, select position between folders and files
-  const { focusedIndex } = state
-  const index = focusedIndex + 1
+  const { focusedIndex, items } = state
   if (focusedIndex >= 0) {
-    const dirent = state.items[state.focusedIndex]
+    const dirent = items[focusedIndex]
     if (dirent.type === DirentType.Directory) {
       // TODO handle error
       await handleClickDirectory(state, dirent, focusIndex)
@@ -495,7 +494,7 @@ const newDirent = async (state, editingType) => {
   }
   return {
     ...state,
-    editingIndex: index,
+    editingIndex: focusedIndex,
     editingType,
     editingValue: '',
   }
@@ -1138,19 +1137,18 @@ const renderDropTargets = {
 
 const renderEditingIndex = {
   isEqual(oldState, newState) {
-    return oldState.editingIndex === newState.editingIndex
+    return oldState.editingIndex === newState.editingIndex && oldState.editingType === newState.editingType
   },
   apply(oldState, newState) {
-    const { editingIndex, focusedIndex, editingType, editingValue } = newState
+    const { editingIndex, editingType, editingValue } = newState
     if (editingIndex === -1) {
       if (oldState.editingType === ExplorerEditingType.CreateFile || oldState.editingType === ExplorerEditingType.CreateFolder) {
         return [/* method */ 'hideEditBox', /* index */ oldState.editingIndex]
       }
-      const dirent = newState.items[focusedIndex]
-      return [/* method */ 'replaceEditBox', /* index */ oldState.editingIndex, /* dirent */ dirent]
+      return [/* method */ 'insertEditBox', /* index */ editingIndex, /* value */ editingValue]
     }
-    if (newState.editingType === ExplorerEditingType.CreateFile || newState.editingType === ExplorerEditingType.CreateFolder) {
-      return [/* method */ 'insertEditBox', /* index */ newState.editingIndex, /* value */ editingValue]
+    if (editingType === ExplorerEditingType.CreateFile || editingType === ExplorerEditingType.CreateFolder) {
+      return [/* method */ 'insertEditBox', /* index */ editingIndex, /* value */ editingValue]
     }
     return [/* method */ 'replaceWithEditBox', /* index */ editingIndex, /* value */ editingValue]
   },

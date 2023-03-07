@@ -92,6 +92,7 @@ const acceptCreate = async (state, newDirentType, createFn) => {
     items: newDirents,
     editingIndex: -1,
     focusedIndex: insertIndex + 1,
+    editingType: ExplorerEditingType.None,
   }
 }
 
