@@ -1,5 +1,7 @@
+import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
+
 export const deleteCharacterLeft = (value, cursorOffset) => {
-  if (value === '') {
+  if (IsEmptyString.isEmptyString(value)) {
     return {
       newValue: value,
       newCursorOffset: cursorOffset,

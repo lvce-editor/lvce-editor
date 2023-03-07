@@ -6,6 +6,7 @@ import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView
 import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js'
 import * as ElectronBrowserViewSuggestions from '../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
+import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -140,7 +141,7 @@ export const hide = async (state) => {
 export const handleInput = async (state, value) => {
   const { x, y, width, height, hasSuggestionsOverlay, suggestionsEnabled, headerHeight } = state
   if (suggestionsEnabled) {
-    if (value === '' && hasSuggestionsOverlay) {
+    if (IsEmptyString.isEmptyString(value) && hasSuggestionsOverlay) {
       await ElectronBrowserViewSuggestions.disposeBrowserView()
       return {
         ...state,
