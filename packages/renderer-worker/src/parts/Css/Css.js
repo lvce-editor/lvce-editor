@@ -11,6 +11,10 @@ export const setInlineStyle = async (id, css) => {
   await RendererProcess.invoke(/* Css.setInlineStyle */ 'Css.setInlineStyle', /* id */ id, /* css */ css)
 }
 
+const getId = (path) => {
+  return 'Css' + path.replace('/css/parts/', '').replaceAll('/', '-').replace('.css', '')
+}
+
 const actuallyLoadCssStyleSheet = async (css) => {
   try {
     const assetDir = Platform.getAssetDir()
@@ -20,11 +24,14 @@ const actuallyLoadCssStyleSheet = async (css) => {
       throw new Error(response.statusText)
     }
     const text = await Response.getText(response)
-    await RendererProcess.invoke(
-      /* Css.addCssStyleSheet */
-      'Css.addCssStyleSheet',
-      /* text */ text
-    )
+    if (Platform.isFirefox) {
+      const id = getId(css)
+      // workaround for broken firefox devtools when using
+      // constructed style sheets
+      await RendererProcess.invoke('Css.setInlineStyle', id, text)
+    } else {
+      await RendererProcess.invoke('Css.addCssStyleSheet', text)
+    }
   } catch (error) {
     throw new VError(error, `Failed to load css "${css}"`)
   }
