@@ -63,7 +63,6 @@ export const setTitle = (state, name) => {
 }
 
 export const setActions = (state, actions) => {
-  console.log({ actions })
   const { $SideBarTitleArea, $Actions } = state
   const $NewActions = Actions.create(actions)
   if ($Actions) {
