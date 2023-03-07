@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 const getFileIndex = (items, index) => {
   for (let i = index; i >= 0; i--) {
@@ -13,7 +14,7 @@ const getFileIndex = (items, index) => {
 }
 
 const selectIndexFile = async (state, searchResult, index) => {
-  const path = searchResult.title
+  const path = Workspace.getAbsolutePath(searchResult.text)
   Assert.string(path)
   await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path)
   return state
@@ -28,7 +29,7 @@ const selectIndexPreview = async (state, searchResult, index) => {
   const { lineNumber } = searchResult
   // console.log({ searchResult })
   const fileResult = items[fileIndex]
-  const path = fileResult.title
+  const path = Workspace.getAbsolutePath(fileResult.text)
   Assert.string(path)
   await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path, /* focus */ true, {
     selections: new Uint32Array([lineNumber, 0, lineNumber, 0]),
