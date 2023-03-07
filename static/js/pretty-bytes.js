@@ -58,11 +58,13 @@ function prettyBytes(number, options) {
   options = {
     bits: false,
     binary: false,
+    space: true,
     ...options
   };
   const UNITS = options.bits ? options.binary ? BIBIT_UNITS : BIT_UNITS : options.binary ? BIBYTE_UNITS : BYTE_UNITS;
+  const separator = options.space ? " " : "";
   if (options.signed && number === 0) {
-    return ` 0 ${UNITS[0]}`;
+    return ` 0${separator}${UNITS[0]}`;
   }
   const isNegative = number < 0;
   const prefix = isNegative ? "-" : options.signed ? "+" : "";
@@ -78,7 +80,7 @@ function prettyBytes(number, options) {
   }
   if (number < 1) {
     const numberString2 = toLocaleString(number, options.locale, localeOptions);
-    return prefix + numberString2 + " " + UNITS[0];
+    return prefix + numberString2 + separator + UNITS[0];
   }
   const exponent = Math.min(Math.floor(options.binary ? Math.log(number) / Math.log(1024) : Math.log10(number) / 3), UNITS.length - 1);
   number /= (options.binary ? 1024 : 1e3) ** exponent;
@@ -87,6 +89,6 @@ function prettyBytes(number, options) {
   }
   const numberString = toLocaleString(Number(number), options.locale, localeOptions);
   const unit = UNITS[exponent];
-  return prefix + numberString + " " + unit;
+  return prefix + numberString + separator + unit;
 }
 export default prettyBytes;
