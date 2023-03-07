@@ -32,6 +32,9 @@ const canBeDroppedInto = (dirent) => {
 const getNewDropTargets = (state, x, y) => {
   const { items } = state
   const index = getIndexFromPosition(state, x, y)
+  if (index === -1) {
+    return [-1]
+  }
   const item = items[index]
   if (!canBeDroppedInto(item)) {
     return []
