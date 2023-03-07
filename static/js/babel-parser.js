@@ -123,6 +123,7 @@ var lib = createCommonjsModule(function(module, exports) {
     AwaitBindingIdentifier: "Can not use 'await' as identifier inside an async function.",
     AwaitBindingIdentifierInStaticBlock: "Can not use 'await' as identifier inside a static block.",
     AwaitExpressionFormalParameter: "'await' is not allowed in async function parameters.",
+    AwaitInUsingBinding: "'await' is not allowed to be used as a name in 'using' declarations.",
     AwaitNotInAsyncContext: "'await' is only allowed within async functions and at the top levels of modules.",
     AwaitNotInAsyncFunction: "'await' is only allowed within async functions.",
     BadGetterArity: "A 'get' accessor must not have any formal parameters.",
@@ -137,9 +138,10 @@ var lib = createCommonjsModule(function(module, exports) {
       kind
     }) => `Missing initializer in ${kind} declaration.`,
     DecoratorArgumentsOutsideParentheses: "Decorator arguments must be moved inside parentheses: use '@(decorator(args))' instead of '@(decorator)(args)'.",
-    DecoratorBeforeExport: "Decorators must be placed *before* the 'export' keyword. You can set the 'decoratorsBeforeExport' option to false to use the 'export @decorator class {}' syntax.",
+    DecoratorBeforeExport: "Decorators must be placed *before* the 'export' keyword. Remove the 'decoratorsBeforeExport: true' option to use the 'export @decorator class {}' syntax.",
+    DecoratorsBeforeAfterExport: "Decorators can be placed *either* before or after the 'export' keyword, but not in both locations at the same time.",
     DecoratorConstructor: "Decorators can't be used with a constructor. Did you mean '@dec class { ... }'?",
-    DecoratorExportClass: "Using the export keyword between a decorator and a class is not allowed. Please use `export @dec class` instead.",
+    DecoratorExportClass: "Decorators must be placed *after* the 'export' keyword. Remove the 'decoratorsBeforeExport: false' option to use the '@decorator export class {}' syntax.",
     DecoratorSemicolon: "Decorators must not be followed by a semicolon.",
     DecoratorStaticBlock: "Decorators can't be used with a static block.",
     DeletePrivateField: "Deleting a private field is not allowed.",
@@ -269,7 +271,8 @@ var lib = createCommonjsModule(function(module, exports) {
     RecordExpressionHashIncorrectStartSyntaxType: "Record expressions starting with '#{' are only allowed when the 'syntaxType' option of the 'recordAndTuple' plugin is set to 'hash'.",
     RecordNoProto: "'__proto__' is not allowed in Record expressions.",
     RestTrailingComma: "Unexpected trailing comma after rest element.",
-    SloppyFunction: "In non-strict mode code, functions can only be declared at top level, inside a block, or as the body of an if statement.",
+    SloppyFunction: "In non-strict mode code, functions can only be declared at top level or inside a block.",
+    SloppyFunctionAnnexB: "In non-strict mode code, functions can only be declared at top level, inside a block, or as the body of an if statement.",
     StaticPrototype: "Classes may not have static property named prototype.",
     SuperNotAllowed: "`super()` is only valid inside a class constructor of a subclass. Maybe a typo in the method name ('constructor') or not extending another class?",
     SuperPrivateField: "Private fields can't be accessed on super.",
@@ -738,9 +741,6 @@ var lib = createCommonjsModule(function(module, exports) {
         node = node.expression;
       }
       return super.hasPropertyAsPrivateName(node);
-    }
-    isOptionalChain(node) {
-      return node.type === "ChainExpression";
     }
     isObjectProperty(node) {
       return node.type === "Property" && node.kind === "init" && !node.method;
@@ -1402,8 +1402,8 @@ var lib = createCommonjsModule(function(module, exports) {
     return reservedWordLikeSet.has(word);
   }
   const SCOPE_OTHER = 0, SCOPE_PROGRAM = 1, SCOPE_FUNCTION = 2, SCOPE_ARROW = 4, SCOPE_SIMPLE_CATCH = 8, SCOPE_SUPER = 16, SCOPE_DIRECT_SUPER = 32, SCOPE_CLASS = 64, SCOPE_STATIC_BLOCK = 128, SCOPE_TS_MODULE = 256, SCOPE_VAR = SCOPE_PROGRAM | SCOPE_FUNCTION | SCOPE_STATIC_BLOCK | SCOPE_TS_MODULE;
-  const BIND_KIND_VALUE = 1, BIND_KIND_TYPE = 2, BIND_SCOPE_VAR = 4, BIND_SCOPE_LEXICAL = 8, BIND_SCOPE_FUNCTION = 16, BIND_FLAGS_NONE = 64, BIND_FLAGS_CLASS = 128, BIND_FLAGS_TS_ENUM = 256, BIND_FLAGS_TS_CONST_ENUM = 512, BIND_FLAGS_TS_EXPORT_ONLY = 1024, BIND_FLAGS_FLOW_DECLARE_FN = 2048, BIND_FLAGS_TS_IMPORT = 4096;
-  const BIND_CLASS = BIND_KIND_VALUE | BIND_KIND_TYPE | BIND_SCOPE_LEXICAL | BIND_FLAGS_CLASS, BIND_LEXICAL = BIND_KIND_VALUE | 0 | BIND_SCOPE_LEXICAL | 0, BIND_VAR = BIND_KIND_VALUE | 0 | BIND_SCOPE_VAR | 0, BIND_FUNCTION = BIND_KIND_VALUE | 0 | BIND_SCOPE_FUNCTION | 0, BIND_TS_INTERFACE = 0 | BIND_KIND_TYPE | 0 | BIND_FLAGS_CLASS, BIND_TS_TYPE = 0 | BIND_KIND_TYPE | 0 | 0, BIND_TS_ENUM = BIND_KIND_VALUE | BIND_KIND_TYPE | BIND_SCOPE_LEXICAL | BIND_FLAGS_TS_ENUM, BIND_TS_AMBIENT = 0 | 0 | 0 | BIND_FLAGS_TS_EXPORT_ONLY, BIND_NONE = 0 | 0 | 0 | BIND_FLAGS_NONE, BIND_OUTSIDE = BIND_KIND_VALUE | 0 | 0 | BIND_FLAGS_NONE, BIND_TS_CONST_ENUM = BIND_TS_ENUM | BIND_FLAGS_TS_CONST_ENUM, BIND_TS_NAMESPACE = 0 | 0 | 0 | BIND_FLAGS_TS_EXPORT_ONLY, BIND_TS_TYPE_IMPORT = 0 | BIND_KIND_TYPE | 0 | BIND_FLAGS_TS_IMPORT, BIND_FLOW_DECLARE_FN = BIND_FLAGS_FLOW_DECLARE_FN;
+  const BIND_KIND_VALUE = 1, BIND_KIND_TYPE = 2, BIND_SCOPE_VAR = 4, BIND_SCOPE_LEXICAL = 8, BIND_SCOPE_FUNCTION = 16, BIND_FLAGS_NONE = 64, BIND_FLAGS_CLASS = 128, BIND_FLAGS_TS_ENUM = 256, BIND_FLAGS_TS_CONST_ENUM = 512, BIND_FLAGS_TS_EXPORT_ONLY = 1024, BIND_FLAGS_FLOW_DECLARE_FN = 2048, BIND_FLAGS_TS_IMPORT = 4096, BIND_FLAGS_NO_LET_IN_LEXICAL = 8192;
+  const BIND_CLASS = BIND_KIND_VALUE | BIND_KIND_TYPE | BIND_SCOPE_LEXICAL | BIND_FLAGS_CLASS | BIND_FLAGS_NO_LET_IN_LEXICAL, BIND_LEXICAL = BIND_KIND_VALUE | 0 | BIND_SCOPE_LEXICAL | BIND_FLAGS_NO_LET_IN_LEXICAL, BIND_CATCH_PARAM = BIND_KIND_VALUE | 0 | BIND_SCOPE_LEXICAL | 0, BIND_VAR = BIND_KIND_VALUE | 0 | BIND_SCOPE_VAR | 0, BIND_FUNCTION = BIND_KIND_VALUE | 0 | BIND_SCOPE_FUNCTION | 0, BIND_TS_INTERFACE = 0 | BIND_KIND_TYPE | 0 | BIND_FLAGS_CLASS, BIND_TS_TYPE = 0 | BIND_KIND_TYPE | 0 | 0, BIND_TS_ENUM = BIND_KIND_VALUE | BIND_KIND_TYPE | BIND_SCOPE_LEXICAL | BIND_FLAGS_TS_ENUM | BIND_FLAGS_NO_LET_IN_LEXICAL, BIND_TS_AMBIENT = 0 | 0 | 0 | BIND_FLAGS_TS_EXPORT_ONLY, BIND_NONE = 0 | 0 | 0 | BIND_FLAGS_NONE, BIND_OUTSIDE = BIND_KIND_VALUE | 0 | 0 | BIND_FLAGS_NONE, BIND_TS_CONST_ENUM = BIND_TS_ENUM | BIND_FLAGS_TS_CONST_ENUM, BIND_TS_NAMESPACE = 0 | 0 | 0 | BIND_FLAGS_TS_EXPORT_ONLY, BIND_TS_TYPE_IMPORT = 0 | BIND_KIND_TYPE | 0 | BIND_FLAGS_TS_IMPORT, BIND_FLOW_DECLARE_FN = BIND_FLAGS_FLOW_DECLARE_FN;
   const CLASS_ELEMENT_FLAG_STATIC = 4, CLASS_ELEMENT_KIND_GETTER = 2, CLASS_ELEMENT_KIND_SETTER = 1, CLASS_ELEMENT_KIND_ACCESSOR = CLASS_ELEMENT_KIND_GETTER | CLASS_ELEMENT_KIND_SETTER;
   const CLASS_ELEMENT_STATIC_GETTER = CLASS_ELEMENT_KIND_GETTER | CLASS_ELEMENT_FLAG_STATIC, CLASS_ELEMENT_STATIC_SETTER = CLASS_ELEMENT_KIND_SETTER | CLASS_ELEMENT_FLAG_STATIC, CLASS_ELEMENT_INSTANCE_GETTER = CLASS_ELEMENT_KIND_GETTER, CLASS_ELEMENT_INSTANCE_SETTER = CLASS_ELEMENT_KIND_SETTER, CLASS_ELEMENT_OTHER = 0;
   class Scope {
@@ -2448,7 +2448,7 @@ var lib = createCommonjsModule(function(module, exports) {
             default:
               if (isWhitespace(ch)) {
                 ++this.state.pos;
-              } else if (ch === 45 && !this.inModule) {
+              } else if (ch === 45 && !this.inModule && this.options.annexB) {
                 const pos = this.state.pos;
                 if (this.input.charCodeAt(pos + 1) === 45 && this.input.charCodeAt(pos + 2) === 62 && (spaceStart === 0 || this.state.lineStart > spaceStart)) {
                   const comment = this.skipLineComment(3);
@@ -2460,7 +2460,7 @@ var lib = createCommonjsModule(function(module, exports) {
                 } else {
                   break loop;
                 }
-              } else if (ch === 60 && !this.inModule) {
+              } else if (ch === 60 && !this.inModule && this.options.annexB) {
                 const pos = this.state.pos;
                 if (this.input.charCodeAt(pos + 1) === 33 && this.input.charCodeAt(pos + 2) === 45 && this.input.charCodeAt(pos + 3) === 45) {
                   const comment = this.skipLineComment(4);
@@ -3696,9 +3696,6 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     hasPropertyAsPrivateName(node) {
       return (node.type === "MemberExpression" || node.type === "OptionalMemberExpression") && this.isPrivateName(node.property);
-    }
-    isOptionalChain(node) {
-      return node.type === "OptionalMemberExpression" || node.type === "OptionalCallExpression";
     }
     isObjectProperty(node) {
       return node.type === "ObjectProperty";
@@ -5715,12 +5712,12 @@ var lib = createCommonjsModule(function(module, exports) {
           return super.parseBindingAtom();
       }
     }
-    parseFunctionParams(node, allowModifiers) {
+    parseFunctionParams(node, isConstructor) {
       const kind = node.kind;
       if (kind !== "get" && kind !== "set" && this.match(47)) {
         node.typeParameters = this.flowParseTypeParameterDeclaration();
       }
-      super.parseFunctionParams(node, allowModifiers);
+      super.parseFunctionParams(node, isConstructor);
     }
     parseVarId(decl, kind) {
       super.parseVarId(decl, kind);
@@ -5929,7 +5926,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseAsyncArrowWithTypeParameters(startLoc) {
       const node = this.startNodeAt(startLoc);
-      this.parseFunctionParams(node);
+      this.parseFunctionParams(node, false);
       if (!this.parseArrow(node))
         return;
       return super.parseArrowExpression(node, void 0, true);
@@ -7152,6 +7149,412 @@ var lib = createCommonjsModule(function(module, exports) {
     }
   }
   const getOwn$1 = (object, key) => Object.hasOwnProperty.call(object, key) && object[key];
+  const unwrapParenthesizedExpression = (node) => {
+    return node.type === "ParenthesizedExpression" ? unwrapParenthesizedExpression(node.expression) : node;
+  };
+  var ParseBindingListFlags = {
+    ALLOW_EMPTY: 1,
+    IS_FUNCTION_PARAMS: 2,
+    IS_CONSTRUCTOR_PARAMS: 4
+  };
+  class LValParser extends NodeUtils {
+    toAssignable(node, isLHS = false) {
+      var _node$extra, _node$extra3;
+      let parenthesized = void 0;
+      if (node.type === "ParenthesizedExpression" || (_node$extra = node.extra) != null && _node$extra.parenthesized) {
+        parenthesized = unwrapParenthesizedExpression(node);
+        if (isLHS) {
+          if (parenthesized.type === "Identifier") {
+            this.expressionScope.recordArrowParameterBindingError(Errors.InvalidParenthesizedAssignment, {
+              at: node
+            });
+          } else if (parenthesized.type !== "MemberExpression") {
+            this.raise(Errors.InvalidParenthesizedAssignment, {
+              at: node
+            });
+          }
+        } else {
+          this.raise(Errors.InvalidParenthesizedAssignment, {
+            at: node
+          });
+        }
+      }
+      switch (node.type) {
+        case "Identifier":
+        case "ObjectPattern":
+        case "ArrayPattern":
+        case "AssignmentPattern":
+        case "RestElement":
+          break;
+        case "ObjectExpression":
+          node.type = "ObjectPattern";
+          for (let i = 0, length = node.properties.length, last = length - 1; i < length; i++) {
+            var _node$extra2;
+            const prop = node.properties[i];
+            const isLast = i === last;
+            this.toAssignableObjectExpressionProp(prop, isLast, isLHS);
+            if (isLast && prop.type === "RestElement" && (_node$extra2 = node.extra) != null && _node$extra2.trailingCommaLoc) {
+              this.raise(Errors.RestTrailingComma, {
+                at: node.extra.trailingCommaLoc
+              });
+            }
+          }
+          break;
+        case "ObjectProperty": {
+          const {
+            key,
+            value
+          } = node;
+          if (this.isPrivateName(key)) {
+            this.classScope.usePrivateName(this.getPrivateNameSV(key), key.loc.start);
+          }
+          this.toAssignable(value, isLHS);
+          break;
+        }
+        case "SpreadElement": {
+          throw new Error("Internal @babel/parser error (this is a bug, please report it). SpreadElement should be converted by .toAssignable's caller.");
+        }
+        case "ArrayExpression":
+          node.type = "ArrayPattern";
+          this.toAssignableList(node.elements, (_node$extra3 = node.extra) == null ? void 0 : _node$extra3.trailingCommaLoc, isLHS);
+          break;
+        case "AssignmentExpression":
+          if (node.operator !== "=") {
+            this.raise(Errors.MissingEqInAssignment, {
+              at: node.left.loc.end
+            });
+          }
+          node.type = "AssignmentPattern";
+          delete node.operator;
+          this.toAssignable(node.left, isLHS);
+          break;
+        case "ParenthesizedExpression":
+          this.toAssignable(parenthesized, isLHS);
+          break;
+      }
+    }
+    toAssignableObjectExpressionProp(prop, isLast, isLHS) {
+      if (prop.type === "ObjectMethod") {
+        this.raise(prop.kind === "get" || prop.kind === "set" ? Errors.PatternHasAccessor : Errors.PatternHasMethod, {
+          at: prop.key
+        });
+      } else if (prop.type === "SpreadElement") {
+        prop.type = "RestElement";
+        const arg = prop.argument;
+        this.checkToRestConversion(arg, false);
+        this.toAssignable(arg, isLHS);
+        if (!isLast) {
+          this.raise(Errors.RestTrailingComma, {
+            at: prop
+          });
+        }
+      } else {
+        this.toAssignable(prop, isLHS);
+      }
+    }
+    toAssignableList(exprList, trailingCommaLoc, isLHS) {
+      const end = exprList.length - 1;
+      for (let i = 0; i <= end; i++) {
+        const elt = exprList[i];
+        if (!elt)
+          continue;
+        if (elt.type === "SpreadElement") {
+          elt.type = "RestElement";
+          const arg = elt.argument;
+          this.checkToRestConversion(arg, true);
+          this.toAssignable(arg, isLHS);
+        } else {
+          this.toAssignable(elt, isLHS);
+        }
+        if (elt.type === "RestElement") {
+          if (i < end) {
+            this.raise(Errors.RestTrailingComma, {
+              at: elt
+            });
+          } else if (trailingCommaLoc) {
+            this.raise(Errors.RestTrailingComma, {
+              at: trailingCommaLoc
+            });
+          }
+        }
+      }
+    }
+    isAssignable(node, isBinding) {
+      switch (node.type) {
+        case "Identifier":
+        case "ObjectPattern":
+        case "ArrayPattern":
+        case "AssignmentPattern":
+        case "RestElement":
+          return true;
+        case "ObjectExpression": {
+          const last = node.properties.length - 1;
+          return node.properties.every((prop, i) => {
+            return prop.type !== "ObjectMethod" && (i === last || prop.type !== "SpreadElement") && this.isAssignable(prop);
+          });
+        }
+        case "ObjectProperty":
+          return this.isAssignable(node.value);
+        case "SpreadElement":
+          return this.isAssignable(node.argument);
+        case "ArrayExpression":
+          return node.elements.every((element) => element === null || this.isAssignable(element));
+        case "AssignmentExpression":
+          return node.operator === "=";
+        case "ParenthesizedExpression":
+          return this.isAssignable(node.expression);
+        case "MemberExpression":
+        case "OptionalMemberExpression":
+          return !isBinding;
+        default:
+          return false;
+      }
+    }
+    toReferencedList(exprList, isParenthesizedExpr) {
+      return exprList;
+    }
+    toReferencedListDeep(exprList, isParenthesizedExpr) {
+      this.toReferencedList(exprList, isParenthesizedExpr);
+      for (const expr of exprList) {
+        if ((expr == null ? void 0 : expr.type) === "ArrayExpression") {
+          this.toReferencedListDeep(expr.elements);
+        }
+      }
+    }
+    parseSpread(refExpressionErrors) {
+      const node = this.startNode();
+      this.next();
+      node.argument = this.parseMaybeAssignAllowIn(refExpressionErrors, void 0);
+      return this.finishNode(node, "SpreadElement");
+    }
+    parseRestBinding() {
+      const node = this.startNode();
+      this.next();
+      node.argument = this.parseBindingAtom();
+      return this.finishNode(node, "RestElement");
+    }
+    parseBindingAtom() {
+      switch (this.state.type) {
+        case 0: {
+          const node = this.startNode();
+          this.next();
+          node.elements = this.parseBindingList(3, 93, ParseBindingListFlags.ALLOW_EMPTY);
+          return this.finishNode(node, "ArrayPattern");
+        }
+        case 5:
+          return this.parseObjectLike(8, true);
+      }
+      return this.parseIdentifier();
+    }
+    parseBindingList(close, closeCharCode, flags) {
+      const allowEmpty = flags & ParseBindingListFlags.ALLOW_EMPTY;
+      const elts = [];
+      let first = true;
+      while (!this.eat(close)) {
+        if (first) {
+          first = false;
+        } else {
+          this.expect(12);
+        }
+        if (allowEmpty && this.match(12)) {
+          elts.push(null);
+        } else if (this.eat(close)) {
+          break;
+        } else if (this.match(21)) {
+          elts.push(this.parseAssignableListItemTypes(this.parseRestBinding(), flags));
+          if (!this.checkCommaAfterRest(closeCharCode)) {
+            this.expect(close);
+            break;
+          }
+        } else {
+          const decorators = [];
+          if (this.match(26) && this.hasPlugin("decorators")) {
+            this.raise(Errors.UnsupportedParameterDecorator, {
+              at: this.state.startLoc
+            });
+          }
+          while (this.match(26)) {
+            decorators.push(this.parseDecorator());
+          }
+          elts.push(this.parseAssignableListItem(flags, decorators));
+        }
+      }
+      return elts;
+    }
+    parseBindingRestProperty(prop) {
+      this.next();
+      prop.argument = this.parseIdentifier();
+      this.checkCommaAfterRest(125);
+      return this.finishNode(prop, "RestElement");
+    }
+    parseBindingProperty() {
+      const prop = this.startNode();
+      const {
+        type,
+        startLoc
+      } = this.state;
+      if (type === 21) {
+        return this.parseBindingRestProperty(prop);
+      } else if (type === 136) {
+        this.expectPlugin("destructuringPrivate", startLoc);
+        this.classScope.usePrivateName(this.state.value, startLoc);
+        prop.key = this.parsePrivateName();
+      } else {
+        this.parsePropertyName(prop);
+      }
+      prop.method = false;
+      return this.parseObjPropValue(prop, startLoc, false, false, true, false);
+    }
+    parseAssignableListItem(flags, decorators) {
+      const left = this.parseMaybeDefault();
+      this.parseAssignableListItemTypes(left, flags);
+      const elt = this.parseMaybeDefault(left.loc.start, left);
+      if (decorators.length) {
+        left.decorators = decorators;
+      }
+      return elt;
+    }
+    parseAssignableListItemTypes(param, flags) {
+      return param;
+    }
+    parseMaybeDefault(startLoc, left) {
+      var _startLoc, _left;
+      (_startLoc = startLoc) != null ? _startLoc : startLoc = this.state.startLoc;
+      left = (_left = left) != null ? _left : this.parseBindingAtom();
+      if (!this.eat(29))
+        return left;
+      const node = this.startNodeAt(startLoc);
+      node.left = left;
+      node.right = this.parseMaybeAssignAllowIn();
+      return this.finishNode(node, "AssignmentPattern");
+    }
+    isValidLVal(type, isUnparenthesizedInAssign, binding) {
+      return getOwn$1({
+        AssignmentPattern: "left",
+        RestElement: "argument",
+        ObjectProperty: "value",
+        ParenthesizedExpression: "expression",
+        ArrayPattern: "elements",
+        ObjectPattern: "properties"
+      }, type);
+    }
+    checkLVal(expression, {
+      in: ancestor,
+      binding = BIND_NONE,
+      checkClashes = false,
+      strictModeChanged = false,
+      hasParenthesizedAncestor = false
+    }) {
+      var _expression$extra;
+      const type = expression.type;
+      if (this.isObjectMethod(expression))
+        return;
+      if (type === "MemberExpression") {
+        if (binding !== BIND_NONE) {
+          this.raise(Errors.InvalidPropertyBindingPattern, {
+            at: expression
+          });
+        }
+        return;
+      }
+      if (type === "Identifier") {
+        this.checkIdentifier(expression, binding, strictModeChanged);
+        const {
+          name
+        } = expression;
+        if (checkClashes) {
+          if (checkClashes.has(name)) {
+            this.raise(Errors.ParamDupe, {
+              at: expression
+            });
+          } else {
+            checkClashes.add(name);
+          }
+        }
+        return;
+      }
+      const validity = this.isValidLVal(type, !(hasParenthesizedAncestor || (_expression$extra = expression.extra) != null && _expression$extra.parenthesized) && ancestor.type === "AssignmentExpression", binding);
+      if (validity === true)
+        return;
+      if (validity === false) {
+        const ParseErrorClass = binding === BIND_NONE ? Errors.InvalidLhs : Errors.InvalidLhsBinding;
+        this.raise(ParseErrorClass, {
+          at: expression,
+          ancestor
+        });
+        return;
+      }
+      const [key, isParenthesizedExpression] = Array.isArray(validity) ? validity : [validity, type === "ParenthesizedExpression"];
+      const nextAncestor = type === "ArrayPattern" || type === "ObjectPattern" || type === "ParenthesizedExpression" ? {
+        type
+      } : ancestor;
+      for (const child of [].concat(expression[key])) {
+        if (child) {
+          this.checkLVal(child, {
+            in: nextAncestor,
+            binding,
+            checkClashes,
+            strictModeChanged,
+            hasParenthesizedAncestor: isParenthesizedExpression
+          });
+        }
+      }
+    }
+    checkIdentifier(at, bindingType, strictModeChanged = false) {
+      if (this.state.strict && (strictModeChanged ? isStrictBindReservedWord(at.name, this.inModule) : isStrictBindOnlyReservedWord(at.name))) {
+        if (bindingType === BIND_NONE) {
+          this.raise(Errors.StrictEvalArguments, {
+            at,
+            referenceName: at.name
+          });
+        } else {
+          this.raise(Errors.StrictEvalArgumentsBinding, {
+            at,
+            bindingName: at.name
+          });
+        }
+      }
+      if (bindingType & BIND_FLAGS_NO_LET_IN_LEXICAL && at.name === "let") {
+        this.raise(Errors.LetInLexicalBinding, {
+          at
+        });
+      }
+      if (!(bindingType & BIND_NONE)) {
+        this.declareNameFromIdentifier(at, bindingType);
+      }
+    }
+    declareNameFromIdentifier(identifier, binding) {
+      this.scope.declareName(identifier.name, binding, identifier.loc.start);
+    }
+    checkToRestConversion(node, allowPattern) {
+      switch (node.type) {
+        case "ParenthesizedExpression":
+          this.checkToRestConversion(node.expression, allowPattern);
+          break;
+        case "Identifier":
+        case "MemberExpression":
+          break;
+        case "ArrayExpression":
+        case "ObjectExpression":
+          if (allowPattern)
+            break;
+        default:
+          this.raise(Errors.InvalidRestAssignmentPattern, {
+            at: node
+          });
+      }
+    }
+    checkCommaAfterRest(close) {
+      if (!this.match(12)) {
+        return false;
+      }
+      this.raise(this.lookaheadCharCode() === close ? Errors.RestTrailingComma : Errors.ElementAfterRest, {
+        at: this.state.startLoc
+      });
+      return true;
+    }
+  }
+  const getOwn = (object, key) => Object.hasOwnProperty.call(object, key) && object[key];
   function nonNull(x) {
     if (x == null) {
       throw new Error(`Unexpected ${x} value.`);
@@ -7289,6 +7692,24 @@ var lib = createCommonjsModule(function(module, exports) {
     return modifier === "in" || modifier === "out";
   }
   var typescript = (superClass) => class TypeScriptParserMixin extends superClass {
+    constructor(...args) {
+      super(...args);
+      this.tsParseInOutModifiers = this.tsParseModifiers.bind(this, {
+        allowedModifiers: ["in", "out"],
+        disallowedModifiers: ["const", "public", "private", "protected", "readonly", "declare", "abstract", "override"],
+        errorTemplate: TSErrors.InvalidModifierOnTypeParameter
+      });
+      this.tsParseConstModifier = this.tsParseModifiers.bind(this, {
+        allowedModifiers: ["const"],
+        disallowedModifiers: ["in", "out"],
+        errorTemplate: TSErrors.InvalidModifierOnTypeParameterPositions
+      });
+      this.tsParseInOutConstModifiers = this.tsParseModifiers.bind(this, {
+        allowedModifiers: ["in", "out", "const"],
+        disallowedModifiers: ["public", "private", "protected", "readonly", "declare", "abstract", "override"],
+        errorTemplate: TSErrors.InvalidModifierOnTypeParameter
+      });
+    }
     getScopeHandler() {
       return TypeScriptScopeHandler;
     }
@@ -7303,7 +7724,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.tsTokenCanFollowModifier();
     }
     tsParseModifier(allowedModifiers, stopOnStartOfClassStaticBlock) {
-      if (!tokenIsIdentifier(this.state.type) && this.state.type !== 58) {
+      if (!tokenIsIdentifier(this.state.type) && this.state.type !== 58 && this.state.type !== 75) {
         return void 0;
       }
       const modifier = this.state.value;
@@ -7318,12 +7739,11 @@ var lib = createCommonjsModule(function(module, exports) {
       return void 0;
     }
     tsParseModifiers({
-      modified,
       allowedModifiers,
       disallowedModifiers,
       stopOnStartOfClassStaticBlock,
       errorTemplate = TSErrors.InvalidModifierOnTypeMember
-    }) {
+    }, modified) {
       const enforceOrder = (loc, modifier, before, after) => {
         if (modifier === before && modified[after]) {
           this.raise(TSErrors.InvalidModifiersOrder, {
@@ -7525,23 +7945,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       return this.finishNode(node, "TSTypeQuery");
     }
-    tsParseInOutModifiers(node) {
-      this.tsParseModifiers({
-        modified: node,
-        allowedModifiers: ["in", "out"],
-        disallowedModifiers: ["public", "private", "protected", "readonly", "declare", "abstract", "override"],
-        errorTemplate: TSErrors.InvalidModifierOnTypeParameter
-      });
-    }
-    tsParseNoneModifiers(node) {
-      this.tsParseModifiers({
-        modified: node,
-        allowedModifiers: [],
-        disallowedModifiers: ["in", "out"],
-        errorTemplate: TSErrors.InvalidModifierOnTypeParameterPositions
-      });
-    }
-    tsParseTypeParameter(parseModifiers = this.tsParseNoneModifiers.bind(this)) {
+    tsParseTypeParameter(parseModifiers) {
       const node = this.startNode();
       parseModifiers(node);
       node.name = this.tsParseTypeParameterName();
@@ -7579,7 +7983,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const returnTokenRequired = returnToken === 19;
       const paramsKey = "parameters";
       const returnTypeKey = "typeAnnotation";
-      signature.typeParameters = this.tsTryParseTypeParameters();
+      signature.typeParameters = this.tsTryParseTypeParameters(this.tsParseConstModifier);
       this.expect(10);
       signature[paramsKey] = this.tsParseBindingListForSignature();
       if (returnTokenRequired) {
@@ -7589,7 +7993,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
     tsParseBindingListForSignature() {
-      return super.parseBindingList(11, 41).map((pattern) => {
+      return super.parseBindingList(11, 41, ParseBindingListFlags.IS_FUNCTION_PARAMS).map((pattern) => {
         if (pattern.type !== "Identifier" && pattern.type !== "RestElement" && pattern.type !== "ObjectPattern" && pattern.type !== "ArrayPattern") {
           this.raise(TSErrors.UnsupportedSignatureParameterKind, {
             at: pattern,
@@ -7723,10 +8127,9 @@ var lib = createCommonjsModule(function(module, exports) {
         }
       }
       this.tsParseModifiers({
-        modified: node,
         allowedModifiers: ["readonly"],
         disallowedModifiers: ["declare", "abstract", "private", "protected", "public", "static", "override"]
-      });
+      }, node);
       const idx = this.tsTryParseIndexSignature(node);
       if (idx) {
         return idx;
@@ -8076,7 +8479,7 @@ var lib = createCommonjsModule(function(module, exports) {
         } = this.state;
         const previousErrorCount = errors.length;
         try {
-          super.parseBindingList(3, 93, true);
+          super.parseBindingList(3, 93, ParseBindingListFlags.ALLOW_EMPTY);
           return errors.length === previousErrorCount;
         } catch (_unused2) {
           return false;
@@ -8259,7 +8662,7 @@ var lib = createCommonjsModule(function(module, exports) {
           at: this.state.startLoc
         });
       }
-      node.typeParameters = this.tsTryParseTypeParameters(this.tsParseInOutModifiers.bind(this));
+      node.typeParameters = this.tsTryParseTypeParameters(this.tsParseInOutConstModifiers);
       if (this.eat(81)) {
         node.extends = this.tsParseHeritageClause("extends");
       }
@@ -8272,7 +8675,7 @@ var lib = createCommonjsModule(function(module, exports) {
       node.id = this.parseIdentifier();
       this.checkIdentifier(node.id, BIND_TS_TYPE);
       node.typeAnnotation = this.tsInType(() => {
-        node.typeParameters = this.tsTryParseTypeParameters(this.tsParseInOutModifiers.bind(this));
+        node.typeParameters = this.tsTryParseTypeParameters(this.tsParseInOutModifiers);
         this.expect(29);
         if (this.isContextual(112) && this.lookahead().type !== 16) {
           const node2 = this.startNode();
@@ -8583,7 +8986,7 @@ var lib = createCommonjsModule(function(module, exports) {
       this.state.maybeInArrowParameters = true;
       const res = this.tsTryParseAndCatch(() => {
         const node = this.startNodeAt(startLoc);
-        node.typeParameters = this.tsParseTypeParameters();
+        node.typeParameters = this.tsParseTypeParameters(this.tsParseConstModifier);
         super.parseFunctionParams(node);
         node.returnType = this.tsTryParseTypeOrTypePredicateAnnotation();
         this.expect(19);
@@ -8623,28 +9026,22 @@ var lib = createCommonjsModule(function(module, exports) {
         return false;
       return super.isExportDefaultSpecifier();
     }
-    parseAssignableListItem(allowModifiers, decorators) {
+    parseAssignableListItem(flags, decorators) {
       const startLoc = this.state.startLoc;
-      let accessibility;
-      let readonly = false;
-      let override = false;
-      if (allowModifiers !== void 0) {
-        const modified = {};
-        this.tsParseModifiers({
-          modified,
-          allowedModifiers: ["public", "private", "protected", "override", "readonly"]
+      const modified = {};
+      this.tsParseModifiers({
+        allowedModifiers: ["public", "private", "protected", "override", "readonly"]
+      }, modified);
+      const accessibility = modified.accessibility;
+      const override = modified.override;
+      const readonly = modified.readonly;
+      if (!(flags & ParseBindingListFlags.IS_CONSTRUCTOR_PARAMS) && (accessibility || readonly || override)) {
+        this.raise(TSErrors.UnexpectedParameterModifier, {
+          at: startLoc
         });
-        accessibility = modified.accessibility;
-        override = modified.override;
-        readonly = modified.readonly;
-        if (allowModifiers === false && (accessibility || readonly || override)) {
-          this.raise(TSErrors.UnexpectedParameterModifier, {
-            at: startLoc
-          });
-        }
       }
       const left = this.parseMaybeDefault();
-      this.parseAssignableListItemTypes(left);
+      this.parseAssignableListItemTypes(left, flags);
       const elt = this.parseMaybeDefault(left.loc.start, left);
       if (accessibility || readonly || override) {
         const pp = this.startNodeAt(startLoc);
@@ -8673,6 +9070,19 @@ var lib = createCommonjsModule(function(module, exports) {
     isSimpleParameter(node) {
       return node.type === "TSParameterProperty" && super.isSimpleParameter(node.parameter) || super.isSimpleParameter(node);
     }
+    tsDisallowOptionalPattern(node) {
+      for (const param of node.params) {
+        if (param.type !== "Identifier" && param.optional && !this.state.isAmbientContext) {
+          this.raise(TSErrors.PatternIsOptional, {
+            at: param
+          });
+        }
+      }
+    }
+    setArrowFunctionParameters(node, params, trailingCommaLoc) {
+      super.setArrowFunctionParameters(node, params, trailingCommaLoc);
+      this.tsDisallowOptionalPattern(node);
+    }
     parseFunctionBodyAndFinish(node, type, isMethod = false) {
       if (this.match(14)) {
         node.returnType = this.tsParseTypeOrTypePredicateAnnotation(14);
@@ -8689,6 +9099,7 @@ var lib = createCommonjsModule(function(module, exports) {
           return super.parseFunctionBodyAndFinish(node, bodilessType, isMethod);
         }
       }
+      this.tsDisallowOptionalPattern(node);
       return super.parseFunctionBodyAndFinish(node, type, isMethod);
     }
     registerFunctionStatementId(node) {
@@ -8883,11 +9294,13 @@ var lib = createCommonjsModule(function(module, exports) {
         this.semicolon();
         return this.finishNode(decl, "TSNamespaceExportDeclaration");
       } else {
-        if (this.isContextual(128) && this.lookahead().type === 5) {
-          this.next();
-          node.exportKind = "type";
-        } else {
-          node.exportKind = "value";
+        node.exportKind = "value";
+        if (this.isContextual(128)) {
+          const ch = this.lookaheadCharCode();
+          if (ch === 123 || ch === 42) {
+            this.next();
+            node.exportKind = "type";
+          }
         }
         return super.parseExport(node, decorators);
       }
@@ -8969,12 +9382,11 @@ var lib = createCommonjsModule(function(module, exports) {
     parseClassMember(classBody, member, state) {
       const modifiers = ["declare", "private", "public", "protected", "override", "abstract", "readonly", "static"];
       this.tsParseModifiers({
-        modified: member,
         allowedModifiers: modifiers,
         disallowedModifiers: ["in", "out"],
         stopOnStartOfClassStaticBlock: true,
         errorTemplate: TSErrors.InvalidModifierOnTypeParameterPositions
-      });
+      }, member);
       const callParseClassMemberWithIsStatic = () => {
         if (this.tsIsStartOfStaticBlocks()) {
           this.next();
@@ -9118,7 +9530,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return;
       }
       super.parseClassId(node, isStatement, optionalId, node.declare ? BIND_TS_AMBIENT : BIND_CLASS);
-      const typeParameters = this.tsTryParseTypeParameters(this.tsParseInOutModifiers.bind(this));
+      const typeParameters = this.tsTryParseTypeParameters(this.tsParseInOutConstModifiers);
       if (typeParameters)
         node.typeParameters = typeParameters;
     }
@@ -9177,7 +9589,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return super.parseClassAccessorProperty(node);
     }
     pushClassMethod(classBody, method, isGenerator, isAsync, isConstructor, allowsDirectSuper) {
-      const typeParameters = this.tsTryParseTypeParameters();
+      const typeParameters = this.tsTryParseTypeParameters(this.tsParseConstModifier);
       if (typeParameters && isConstructor) {
         this.raise(TSErrors.ConstructorHasTypeParameters, {
           at: typeParameters
@@ -9198,7 +9610,7 @@ var lib = createCommonjsModule(function(module, exports) {
       super.pushClassMethod(classBody, method, isGenerator, isAsync, isConstructor, allowsDirectSuper);
     }
     pushClassPrivateMethod(classBody, method, isGenerator, isAsync) {
-      const typeParameters = this.tsTryParseTypeParameters();
+      const typeParameters = this.tsTryParseTypeParameters(this.tsParseConstModifier);
       if (typeParameters)
         method.typeParameters = typeParameters;
       super.pushClassPrivateMethod(classBody, method, isGenerator, isAsync);
@@ -9220,16 +9632,16 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
     parseObjPropValue(prop, startLoc, isGenerator, isAsync, isPattern, isAccessor, refExpressionErrors) {
-      const typeParameters = this.tsTryParseTypeParameters();
+      const typeParameters = this.tsTryParseTypeParameters(this.tsParseConstModifier);
       if (typeParameters)
         prop.typeParameters = typeParameters;
       return super.parseObjPropValue(prop, startLoc, isGenerator, isAsync, isPattern, isAccessor, refExpressionErrors);
     }
-    parseFunctionParams(node, allowModifiers) {
-      const typeParameters = this.tsTryParseTypeParameters();
+    parseFunctionParams(node, isConstructor) {
+      const typeParameters = this.tsTryParseTypeParameters(this.tsParseConstModifier);
       if (typeParameters)
         node.typeParameters = typeParameters;
-      super.parseFunctionParams(node, allowModifiers);
+      super.parseFunctionParams(node, isConstructor);
     }
     parseVarId(decl, kind) {
       super.parseVarId(decl, kind);
@@ -9274,7 +9686,7 @@ var lib = createCommonjsModule(function(module, exports) {
       let typeParameters;
       const arrow = this.tryParse((abort) => {
         var _expr$extra, _typeParameters;
-        typeParameters = this.tsParseTypeParameters();
+        typeParameters = this.tsParseTypeParameters(this.tsParseConstModifier);
         const expr = super.parseMaybeAssign(refExpressionErrors, afterLeftParse);
         if (expr.type !== "ArrowFunctionExpression" || (_expr$extra = expr.extra) != null && _expr$extra.parenthesized) {
           abort();
@@ -9320,7 +9732,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     reportReservedArrowTypeParam(node) {
       var _node$extra;
-      if (node.params.length === 1 && !((_node$extra = node.extra) != null && _node$extra.trailingComma) && this.getPluginOption("typescript", "disallowAmbiguousJSXLike")) {
+      if (node.params.length === 1 && !node.params[0].constraint && !((_node$extra = node.extra) != null && _node$extra.trailingComma) && this.getPluginOption("typescript", "disallowAmbiguousJSXLike")) {
         this.raise(TSErrors.ReservedArrowTypeParam, {
           at: node
         });
@@ -9351,13 +9763,10 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       return super.parseArrow(node);
     }
-    parseAssignableListItemTypes(param) {
+    parseAssignableListItemTypes(param, flags) {
+      if (!(flags & ParseBindingListFlags.IS_FUNCTION_PARAMS))
+        return param;
       if (this.eat(17)) {
-        if (param.type !== "Identifier" && !this.state.isAmbientContext && !this.state.inType) {
-          this.raise(TSErrors.PatternIsOptional, {
-            at: param
-          });
-        }
         param.optional = true;
       }
       const type = this.tsTryParseTypeAnnotation();
@@ -9430,7 +9839,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
     isValidLVal(type, isUnparenthesizedInAssign, binding) {
-      return getOwn$1({
+      return getOwn({
         TSTypeCastExpression: true,
         TSParameterProperty: "parameter",
         TSNonNullExpression: "expression",
@@ -9857,7 +10266,7 @@ var lib = createCommonjsModule(function(module, exports) {
         const stmt = node;
         stmt.label = this.finishPlaceholder(expr, "Identifier");
         this.next();
-        stmt.body = super.parseStatementOrFunctionDeclaration(false);
+        stmt.body = super.parseStatementOrSloppyAnnexBFunctionDeclaration();
         return this.finishNode(stmt, "LabeledStatement");
       }
       this.semicolon();
@@ -10036,7 +10445,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       const decoratorsBeforeExport = getPluginOption(plugins, "decorators", "decoratorsBeforeExport");
       if (decoratorsBeforeExport != null && typeof decoratorsBeforeExport !== "boolean") {
-        throw new Error("'decoratorsBeforeExport' must be a boolean.");
+        throw new Error("'decoratorsBeforeExport' must be a boolean, if specified.");
       }
       const allowCallParenthesized = getPluginOption(plugins, "decorators", "allowCallParenthesized");
       if (allowCallParenthesized != null && typeof allowCallParenthesized !== "boolean") {
@@ -10113,6 +10522,7 @@ var lib = createCommonjsModule(function(module, exports) {
     startLine: 1,
     allowAwaitOutsideFunction: false,
     allowReturnOutsideFunction: false,
+    allowNewTargetOutsideFunction: false,
     allowImportExportEverywhere: false,
     allowSuperOutsideMethod: false,
     allowUndeclaredExports: false,
@@ -10122,419 +10532,18 @@ var lib = createCommonjsModule(function(module, exports) {
     tokens: false,
     createParenthesizedExpressions: false,
     errorRecovery: false,
-    attachComment: true
+    attachComment: true,
+    annexB: true
   };
   function getOptions(opts) {
+    if (opts && opts.annexB != null && opts.annexB !== false) {
+      throw new Error("The `annexB` option can only be set to `false`.");
+    }
     const options = {};
     for (const key of Object.keys(defaultOptions)) {
       options[key] = opts && opts[key] != null ? opts[key] : defaultOptions[key];
     }
     return options;
-  }
-  const getOwn = (object, key) => Object.hasOwnProperty.call(object, key) && object[key];
-  const unwrapParenthesizedExpression = (node) => {
-    return node.type === "ParenthesizedExpression" ? unwrapParenthesizedExpression(node.expression) : node;
-  };
-  class LValParser extends NodeUtils {
-    toAssignable(node, isLHS = false) {
-      var _node$extra, _node$extra3;
-      let parenthesized = void 0;
-      if (node.type === "ParenthesizedExpression" || (_node$extra = node.extra) != null && _node$extra.parenthesized) {
-        parenthesized = unwrapParenthesizedExpression(node);
-        if (isLHS) {
-          if (parenthesized.type === "Identifier") {
-            this.expressionScope.recordArrowParameterBindingError(Errors.InvalidParenthesizedAssignment, {
-              at: node
-            });
-          } else if (parenthesized.type !== "MemberExpression") {
-            this.raise(Errors.InvalidParenthesizedAssignment, {
-              at: node
-            });
-          }
-        } else {
-          this.raise(Errors.InvalidParenthesizedAssignment, {
-            at: node
-          });
-        }
-      }
-      switch (node.type) {
-        case "Identifier":
-        case "ObjectPattern":
-        case "ArrayPattern":
-        case "AssignmentPattern":
-        case "RestElement":
-          break;
-        case "ObjectExpression":
-          node.type = "ObjectPattern";
-          for (let i = 0, length = node.properties.length, last = length - 1; i < length; i++) {
-            var _node$extra2;
-            const prop = node.properties[i];
-            const isLast = i === last;
-            this.toAssignableObjectExpressionProp(prop, isLast, isLHS);
-            if (isLast && prop.type === "RestElement" && (_node$extra2 = node.extra) != null && _node$extra2.trailingCommaLoc) {
-              this.raise(Errors.RestTrailingComma, {
-                at: node.extra.trailingCommaLoc
-              });
-            }
-          }
-          break;
-        case "ObjectProperty": {
-          const {
-            key,
-            value
-          } = node;
-          if (this.isPrivateName(key)) {
-            this.classScope.usePrivateName(this.getPrivateNameSV(key), key.loc.start);
-          }
-          this.toAssignable(value, isLHS);
-          break;
-        }
-        case "SpreadElement": {
-          throw new Error("Internal @babel/parser error (this is a bug, please report it). SpreadElement should be converted by .toAssignable's caller.");
-        }
-        case "ArrayExpression":
-          node.type = "ArrayPattern";
-          this.toAssignableList(node.elements, (_node$extra3 = node.extra) == null ? void 0 : _node$extra3.trailingCommaLoc, isLHS);
-          break;
-        case "AssignmentExpression":
-          if (node.operator !== "=") {
-            this.raise(Errors.MissingEqInAssignment, {
-              at: node.left.loc.end
-            });
-          }
-          node.type = "AssignmentPattern";
-          delete node.operator;
-          this.toAssignable(node.left, isLHS);
-          break;
-        case "ParenthesizedExpression":
-          this.toAssignable(parenthesized, isLHS);
-          break;
-      }
-    }
-    toAssignableObjectExpressionProp(prop, isLast, isLHS) {
-      if (prop.type === "ObjectMethod") {
-        this.raise(prop.kind === "get" || prop.kind === "set" ? Errors.PatternHasAccessor : Errors.PatternHasMethod, {
-          at: prop.key
-        });
-      } else if (prop.type === "SpreadElement") {
-        prop.type = "RestElement";
-        const arg = prop.argument;
-        this.checkToRestConversion(arg, false);
-        this.toAssignable(arg, isLHS);
-        if (!isLast) {
-          this.raise(Errors.RestTrailingComma, {
-            at: prop
-          });
-        }
-      } else {
-        this.toAssignable(prop, isLHS);
-      }
-    }
-    toAssignableList(exprList, trailingCommaLoc, isLHS) {
-      const end = exprList.length - 1;
-      for (let i = 0; i <= end; i++) {
-        const elt = exprList[i];
-        if (!elt)
-          continue;
-        if (elt.type === "SpreadElement") {
-          elt.type = "RestElement";
-          const arg = elt.argument;
-          this.checkToRestConversion(arg, true);
-          this.toAssignable(arg, isLHS);
-        } else {
-          this.toAssignable(elt, isLHS);
-        }
-        if (elt.type === "RestElement") {
-          if (i < end) {
-            this.raise(Errors.RestTrailingComma, {
-              at: elt
-            });
-          } else if (trailingCommaLoc) {
-            this.raise(Errors.RestTrailingComma, {
-              at: trailingCommaLoc
-            });
-          }
-        }
-      }
-    }
-    isAssignable(node, isBinding) {
-      switch (node.type) {
-        case "Identifier":
-        case "ObjectPattern":
-        case "ArrayPattern":
-        case "AssignmentPattern":
-        case "RestElement":
-          return true;
-        case "ObjectExpression": {
-          const last = node.properties.length - 1;
-          return node.properties.every((prop, i) => {
-            return prop.type !== "ObjectMethod" && (i === last || prop.type !== "SpreadElement") && this.isAssignable(prop);
-          });
-        }
-        case "ObjectProperty":
-          return this.isAssignable(node.value);
-        case "SpreadElement":
-          return this.isAssignable(node.argument);
-        case "ArrayExpression":
-          return node.elements.every((element) => element === null || this.isAssignable(element));
-        case "AssignmentExpression":
-          return node.operator === "=";
-        case "ParenthesizedExpression":
-          return this.isAssignable(node.expression);
-        case "MemberExpression":
-        case "OptionalMemberExpression":
-          return !isBinding;
-        default:
-          return false;
-      }
-    }
-    toReferencedList(exprList, isParenthesizedExpr) {
-      return exprList;
-    }
-    toReferencedListDeep(exprList, isParenthesizedExpr) {
-      this.toReferencedList(exprList, isParenthesizedExpr);
-      for (const expr of exprList) {
-        if ((expr == null ? void 0 : expr.type) === "ArrayExpression") {
-          this.toReferencedListDeep(expr.elements);
-        }
-      }
-    }
-    parseSpread(refExpressionErrors) {
-      const node = this.startNode();
-      this.next();
-      node.argument = this.parseMaybeAssignAllowIn(refExpressionErrors, void 0);
-      return this.finishNode(node, "SpreadElement");
-    }
-    parseRestBinding() {
-      const node = this.startNode();
-      this.next();
-      node.argument = this.parseBindingAtom();
-      return this.finishNode(node, "RestElement");
-    }
-    parseBindingAtom() {
-      switch (this.state.type) {
-        case 0: {
-          const node = this.startNode();
-          this.next();
-          node.elements = this.parseBindingList(3, 93, true);
-          return this.finishNode(node, "ArrayPattern");
-        }
-        case 5:
-          return this.parseObjectLike(8, true);
-      }
-      return this.parseIdentifier();
-    }
-    parseBindingList(close, closeCharCode, allowEmpty, allowModifiers) {
-      const elts = [];
-      let first = true;
-      while (!this.eat(close)) {
-        if (first) {
-          first = false;
-        } else {
-          this.expect(12);
-        }
-        if (allowEmpty && this.match(12)) {
-          elts.push(null);
-        } else if (this.eat(close)) {
-          break;
-        } else if (this.match(21)) {
-          elts.push(this.parseAssignableListItemTypes(this.parseRestBinding()));
-          if (!this.checkCommaAfterRest(closeCharCode)) {
-            this.expect(close);
-            break;
-          }
-        } else {
-          const decorators = [];
-          if (this.match(26) && this.hasPlugin("decorators")) {
-            this.raise(Errors.UnsupportedParameterDecorator, {
-              at: this.state.startLoc
-            });
-          }
-          while (this.match(26)) {
-            decorators.push(this.parseDecorator());
-          }
-          elts.push(this.parseAssignableListItem(allowModifiers, decorators));
-        }
-      }
-      return elts;
-    }
-    parseBindingRestProperty(prop) {
-      this.next();
-      prop.argument = this.parseIdentifier();
-      this.checkCommaAfterRest(125);
-      return this.finishNode(prop, "RestElement");
-    }
-    parseBindingProperty() {
-      const prop = this.startNode();
-      const {
-        type,
-        startLoc
-      } = this.state;
-      if (type === 21) {
-        return this.parseBindingRestProperty(prop);
-      } else if (type === 136) {
-        this.expectPlugin("destructuringPrivate", startLoc);
-        this.classScope.usePrivateName(this.state.value, startLoc);
-        prop.key = this.parsePrivateName();
-      } else {
-        this.parsePropertyName(prop);
-      }
-      prop.method = false;
-      return this.parseObjPropValue(prop, startLoc, false, false, true, false);
-    }
-    parseAssignableListItem(allowModifiers, decorators) {
-      const left = this.parseMaybeDefault();
-      this.parseAssignableListItemTypes(left);
-      const elt = this.parseMaybeDefault(left.loc.start, left);
-      if (decorators.length) {
-        left.decorators = decorators;
-      }
-      return elt;
-    }
-    parseAssignableListItemTypes(param) {
-      return param;
-    }
-    parseMaybeDefault(startLoc, left) {
-      var _startLoc, _left;
-      (_startLoc = startLoc) != null ? _startLoc : startLoc = this.state.startLoc;
-      left = (_left = left) != null ? _left : this.parseBindingAtom();
-      if (!this.eat(29))
-        return left;
-      const node = this.startNodeAt(startLoc);
-      node.left = left;
-      node.right = this.parseMaybeAssignAllowIn();
-      return this.finishNode(node, "AssignmentPattern");
-    }
-    isValidLVal(type, isUnparenthesizedInAssign, binding) {
-      return getOwn({
-        AssignmentPattern: "left",
-        RestElement: "argument",
-        ObjectProperty: "value",
-        ParenthesizedExpression: "expression",
-        ArrayPattern: "elements",
-        ObjectPattern: "properties"
-      }, type);
-    }
-    checkLVal(expression, {
-      in: ancestor,
-      binding = BIND_NONE,
-      checkClashes = false,
-      strictModeChanged = false,
-      allowingSloppyLetBinding = !(binding & BIND_SCOPE_LEXICAL),
-      hasParenthesizedAncestor = false
-    }) {
-      var _expression$extra;
-      const type = expression.type;
-      if (this.isObjectMethod(expression))
-        return;
-      if (type === "MemberExpression") {
-        if (binding !== BIND_NONE) {
-          this.raise(Errors.InvalidPropertyBindingPattern, {
-            at: expression
-          });
-        }
-        return;
-      }
-      if (expression.type === "Identifier") {
-        this.checkIdentifier(expression, binding, strictModeChanged, allowingSloppyLetBinding);
-        const {
-          name
-        } = expression;
-        if (checkClashes) {
-          if (checkClashes.has(name)) {
-            this.raise(Errors.ParamDupe, {
-              at: expression
-            });
-          } else {
-            checkClashes.add(name);
-          }
-        }
-        return;
-      }
-      const validity = this.isValidLVal(expression.type, !(hasParenthesizedAncestor || (_expression$extra = expression.extra) != null && _expression$extra.parenthesized) && ancestor.type === "AssignmentExpression", binding);
-      if (validity === true)
-        return;
-      if (validity === false) {
-        const ParseErrorClass = binding === BIND_NONE ? Errors.InvalidLhs : Errors.InvalidLhsBinding;
-        this.raise(ParseErrorClass, {
-          at: expression,
-          ancestor: ancestor.type === "UpdateExpression" ? {
-            type: "UpdateExpression",
-            prefix: ancestor.prefix
-          } : {
-            type: ancestor.type
-          }
-        });
-        return;
-      }
-      const [key, isParenthesizedExpression] = Array.isArray(validity) ? validity : [validity, type === "ParenthesizedExpression"];
-      const nextAncestor = expression.type === "ArrayPattern" || expression.type === "ObjectPattern" || expression.type === "ParenthesizedExpression" ? expression : ancestor;
-      for (const child of [].concat(expression[key])) {
-        if (child) {
-          this.checkLVal(child, {
-            in: nextAncestor,
-            binding,
-            checkClashes,
-            allowingSloppyLetBinding,
-            strictModeChanged,
-            hasParenthesizedAncestor: isParenthesizedExpression
-          });
-        }
-      }
-    }
-    checkIdentifier(at, bindingType, strictModeChanged = false, allowLetBinding = !(bindingType & BIND_SCOPE_LEXICAL)) {
-      if (this.state.strict && (strictModeChanged ? isStrictBindReservedWord(at.name, this.inModule) : isStrictBindOnlyReservedWord(at.name))) {
-        if (bindingType === BIND_NONE) {
-          this.raise(Errors.StrictEvalArguments, {
-            at,
-            referenceName: at.name
-          });
-        } else {
-          this.raise(Errors.StrictEvalArgumentsBinding, {
-            at,
-            bindingName: at.name
-          });
-        }
-      }
-      if (!allowLetBinding && at.name === "let") {
-        this.raise(Errors.LetInLexicalBinding, {
-          at
-        });
-      }
-      if (!(bindingType & BIND_NONE)) {
-        this.declareNameFromIdentifier(at, bindingType);
-      }
-    }
-    declareNameFromIdentifier(identifier, binding) {
-      this.scope.declareName(identifier.name, binding, identifier.loc.start);
-    }
-    checkToRestConversion(node, allowPattern) {
-      switch (node.type) {
-        case "ParenthesizedExpression":
-          this.checkToRestConversion(node.expression, allowPattern);
-          break;
-        case "Identifier":
-        case "MemberExpression":
-          break;
-        case "ArrayExpression":
-        case "ObjectExpression":
-          if (allowPattern)
-            break;
-        default:
-          this.raise(Errors.InvalidRestAssignmentPattern, {
-            at: node
-          });
-      }
-    }
-    checkCommaAfterRest(close) {
-      if (!this.match(12)) {
-        return false;
-      }
-      this.raise(this.lookaheadCharCode() === close ? Errors.RestTrailingComma : Errors.ElementAfterRest, {
-        at: this.state.startLoc
-      });
-      return true;
-    }
   }
   class ExpressionParser extends LValParser {
     checkProto(prop, isRecord, protoRef, refExpressionErrors) {
@@ -10927,9 +10936,14 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       let optional = false;
       if (type === 18) {
-        if (noCalls && this.lookaheadCharCode() === 40) {
-          state.stop = true;
-          return base;
+        if (noCalls) {
+          this.raise(Errors.OptionalChainingNoNew, {
+            at: this.state.startLoc
+          });
+          if (this.lookaheadCharCode() === 40) {
+            state.stop = true;
+            return base;
+          }
         }
         state.optionalChainMember = optional = true;
         this.next();
@@ -11560,7 +11574,7 @@ var lib = createCommonjsModule(function(module, exports) {
         const meta = this.createIdentifier(this.startNodeAtNode(node), "new");
         this.next();
         const metaProp = this.parseMetaProperty(node, meta, "target");
-        if (!this.scope.inNonArrowFunction && !this.scope.inClass) {
+        if (!this.scope.inNonArrowFunction && !this.scope.inClass && !this.options.allowNewTargetOutsideFunction) {
           this.raise(Errors.UnexpectedNewTarget, {
             at: metaProp
           });
@@ -11585,14 +11599,6 @@ var lib = createCommonjsModule(function(module, exports) {
       if (node.callee.type === "Import") {
         this.raise(Errors.ImportCallNotNewExpression, {
           at: node.callee
-        });
-      } else if (this.isOptionalChain(node.callee)) {
-        this.raise(Errors.OptionalChainingNoNew, {
-          at: this.state.lastTokEndLoc
-        });
-      } else if (this.eat(18)) {
-        this.raise(Errors.OptionalChainingNoNew, {
-          at: this.state.startLoc
         });
       }
     }
@@ -11883,10 +11889,9 @@ var lib = createCommonjsModule(function(module, exports) {
     parseMethod(node, isGenerator, isAsync, isConstructor, allowDirectSuper, type, inClassScope = false) {
       this.initFunction(node, isAsync);
       node.generator = isGenerator;
-      const allowModifiers = isConstructor;
       this.scope.enter(SCOPE_FUNCTION | SCOPE_SUPER | (inClassScope ? SCOPE_CLASS : 0) | (allowDirectSuper ? SCOPE_DIRECT_SUPER : 0));
       this.prodParam.enter(functionFlags(isAsync, node.generator));
-      this.parseFunctionParams(node, allowModifiers);
+      this.parseFunctionParams(node, isConstructor);
       const finishedNode = this.parseFunctionBodyAndFinish(node, type, true);
       this.prodParam.exit();
       this.scope.exit();
@@ -12072,7 +12077,21 @@ var lib = createCommonjsModule(function(module, exports) {
       if (!canBeReservedWord(word)) {
         return;
       }
-      if (word === "yield") {
+      if (checkKeywords && isKeyword(word)) {
+        this.raise(Errors.UnexpectedKeyword, {
+          at: startLoc,
+          keyword: word
+        });
+        return;
+      }
+      const reservedTest = !this.state.strict ? isReservedWord : isBinding ? isStrictBindReservedWord : isStrictReservedWord;
+      if (reservedTest(word, this.inModule)) {
+        this.raise(Errors.UnexpectedReservedWord, {
+          at: startLoc,
+          reservedWord: word
+        });
+        return;
+      } else if (word === "yield") {
         if (this.prodParam.hasYield) {
           this.raise(Errors.YieldBindingIdentifier, {
             at: startLoc
@@ -12102,20 +12121,6 @@ var lib = createCommonjsModule(function(module, exports) {
           });
           return;
         }
-      }
-      if (checkKeywords && isKeyword(word)) {
-        this.raise(Errors.UnexpectedKeyword, {
-          at: startLoc,
-          keyword: word
-        });
-        return;
-      }
-      const reservedTest = !this.state.strict ? isReservedWord : isBinding ? isStrictBindReservedWord : isStrictReservedWord;
-      if (reservedTest(word, this.inModule)) {
-        this.raise(Errors.UnexpectedReservedWord, {
-          at: startLoc,
-          reservedWord: word
-        });
       }
     }
     isAwaitAllowed() {
@@ -12563,10 +12568,17 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.parseStatementLike(ParseStatementFlag.AllowImportExport | ParseStatementFlag.AllowDeclaration | ParseStatementFlag.AllowFunctionDeclaration | ParseStatementFlag.AllowLabeledFunction);
     }
     parseStatementListItem() {
-      return this.parseStatementLike(ParseStatementFlag.AllowDeclaration | ParseStatementFlag.AllowFunctionDeclaration | ParseStatementFlag.AllowLabeledFunction);
+      return this.parseStatementLike(ParseStatementFlag.AllowDeclaration | ParseStatementFlag.AllowFunctionDeclaration | (!this.options.annexB || this.state.strict ? 0 : ParseStatementFlag.AllowLabeledFunction));
     }
-    parseStatementOrFunctionDeclaration(disallowLabeledFunction) {
-      return this.parseStatementLike(ParseStatementFlag.AllowFunctionDeclaration | (disallowLabeledFunction ? 0 : ParseStatementFlag.AllowLabeledFunction));
+    parseStatementOrSloppyAnnexBFunctionDeclaration(allowLabeledFunction = false) {
+      let flags = ParseStatementFlag.StatementOnly;
+      if (this.options.annexB && !this.state.strict) {
+        flags |= ParseStatementFlag.AllowFunctionDeclaration;
+        if (allowLabeledFunction) {
+          flags |= ParseStatementFlag.AllowLabeledFunction;
+        }
+      }
+      return this.parseStatementLike(flags);
     }
     parseStatement() {
       return this.parseStatementLike(ParseStatementFlag.StatementOnly);
@@ -12598,16 +12610,10 @@ var lib = createCommonjsModule(function(module, exports) {
         case 68:
           if (this.lookaheadCharCode() === 46)
             break;
-          if (!allowDeclaration) {
-            if (this.state.strict) {
-              this.raise(Errors.StrictFunction, {
-                at: this.state.startLoc
-              });
-            } else if (!allowFunctionDeclaration) {
-              this.raise(Errors.SloppyFunction, {
-                at: this.state.startLoc
-              });
-            }
+          if (!allowFunctionDeclaration) {
+            this.raise(this.state.strict ? Errors.StrictFunction : this.options.annexB ? Errors.SloppyFunctionAnnexB : Errors.SloppyFunction, {
+              at: this.state.startLoc
+            });
           }
           return this.parseFunctionStatement(node, false, !allowDeclaration && allowFunctionDeclaration);
         case 80:
@@ -12730,11 +12736,20 @@ var lib = createCommonjsModule(function(module, exports) {
     decoratorsEnabledBeforeExport() {
       if (this.hasPlugin("decorators-legacy"))
         return true;
-      return this.hasPlugin("decorators") && !!this.getPluginOption("decorators", "decoratorsBeforeExport");
+      return this.hasPlugin("decorators") && this.getPluginOption("decorators", "decoratorsBeforeExport") !== false;
     }
     maybeTakeDecorators(maybeDecorators, classNode, exportNode) {
       if (maybeDecorators) {
-        classNode.decorators = maybeDecorators;
+        if (classNode.decorators && classNode.decorators.length > 0) {
+          if (typeof this.getPluginOption("decorators", "decoratorsBeforeExport") !== "boolean") {
+            this.raise(Errors.DecoratorsBeforeAfterExport, {
+              at: classNode.decorators[0]
+            });
+          }
+          classNode.decorators.unshift(...maybeDecorators);
+        } else {
+          classNode.decorators = maybeDecorators;
+        }
         this.resetStartLocationFromNode(classNode, maybeDecorators[0]);
         if (exportNode)
           this.resetStartLocationFromNode(exportNode, classNode);
@@ -12946,8 +12961,8 @@ var lib = createCommonjsModule(function(module, exports) {
     parseIfStatement(node) {
       this.next();
       node.test = this.parseHeaderExpression();
-      node.consequent = this.parseStatementOrFunctionDeclaration(true);
-      node.alternate = this.eat(66) ? this.parseStatementOrFunctionDeclaration(true) : null;
+      node.consequent = this.parseStatementOrSloppyAnnexBFunctionDeclaration();
+      node.alternate = this.eat(66) ? this.parseStatementOrSloppyAnnexBFunctionDeclaration() : null;
       return this.finishNode(node, "IfStatement");
     }
     parseReturnStatement(node) {
@@ -13021,14 +13036,12 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseCatchClauseParam() {
       const param = this.parseBindingAtom();
-      const simple = param.type === "Identifier";
-      this.scope.enter(simple ? SCOPE_SIMPLE_CATCH : 0);
+      this.scope.enter(this.options.annexB && param.type === "Identifier" ? SCOPE_SIMPLE_CATCH : 0);
       this.checkLVal(param, {
         in: {
           type: "CatchClause"
         },
-        binding: BIND_LEXICAL,
-        allowingSloppyLetBinding: true
+        binding: BIND_CATCH_PARAM
       });
       return param;
     }
@@ -13112,7 +13125,7 @@ var lib = createCommonjsModule(function(module, exports) {
         kind,
         statementStart: this.state.start
       });
-      node.body = flags & ParseStatementFlag.AllowLabeledFunction ? this.parseStatementOrFunctionDeclaration(false) : this.parseStatement();
+      node.body = flags & ParseStatementFlag.AllowLabeledFunction ? this.parseStatementOrSloppyAnnexBFunctionDeclaration(true) : this.parseStatement();
       this.state.labels.pop();
       node.label = expr;
       return this.finishNode(node, "LabeledStatement");
@@ -13195,7 +13208,7 @@ var lib = createCommonjsModule(function(module, exports) {
       } else {
         node.await = awaitAt !== null;
       }
-      if (init.type === "VariableDeclaration" && init.declarations[0].init != null && (!isForIn || this.state.strict || init.kind !== "var" || init.declarations[0].id.type !== "Identifier")) {
+      if (init.type === "VariableDeclaration" && init.declarations[0].init != null && (!isForIn || !this.options.annexB || this.state.strict || init.kind !== "var" || init.declarations[0].id.type !== "Identifier")) {
         this.raise(Errors.ForInOfLoopInitializer, {
           at: init,
           type: isForIn ? "ForInStatement" : "ForOfStatement"
@@ -13244,6 +13257,11 @@ var lib = createCommonjsModule(function(module, exports) {
       return node;
     }
     parseVarId(decl, kind) {
+      if (kind === "using" && !this.inModule && this.match(96)) {
+        this.raise(Errors.AwaitInUsingBinding, {
+          at: this.state.startLoc
+        });
+      }
       const id = this.parseBindingAtom();
       this.checkLVal(id, {
         in: {
@@ -13296,16 +13314,16 @@ var lib = createCommonjsModule(function(module, exports) {
     parseFunctionId(requireId) {
       return requireId || tokenIsIdentifier(this.state.type) ? this.parseIdentifier() : null;
     }
-    parseFunctionParams(node, allowModifiers) {
+    parseFunctionParams(node, isConstructor) {
       this.expect(10);
       this.expressionScope.enter(newParameterDeclarationScope());
-      node.params = this.parseBindingList(11, 41, false, allowModifiers);
+      node.params = this.parseBindingList(11, 41, ParseBindingListFlags.IS_FUNCTION_PARAMS | (isConstructor ? ParseBindingListFlags.IS_CONSTRUCTOR_PARAMS : 0));
       this.expressionScope.exit();
     }
     registerFunctionStatementId(node) {
       if (!node.id)
         return;
-      this.scope.declareName(node.id.name, this.state.strict || node.generator || node.async ? this.scope.treatFunctionsAsVar ? BIND_VAR : BIND_LEXICAL : BIND_FUNCTION, node.id.loc.start);
+      this.scope.declareName(node.id.name, !this.options.annexB || this.state.strict || node.generator || node.async ? this.scope.treatFunctionsAsVar ? BIND_VAR : BIND_LEXICAL : BIND_FUNCTION, node.id.loc.start);
     }
     parseClass(node, isStatement, optionalId) {
       this.next();
@@ -13664,8 +13682,11 @@ var lib = createCommonjsModule(function(module, exports) {
         return this.finishNode(node, "ExportAllDeclaration");
       }
       const hasSpecifiers = this.maybeParseExportNamedSpecifiers(node);
-      if (hasDefault && parseAfterDefault && !hasStar && !hasSpecifiers || hasNamespace && parseAfterNamespace && !hasSpecifiers) {
+      if (hasDefault && parseAfterDefault && !hasStar && !hasSpecifiers) {
         throw this.unexpected(null, 5);
+      }
+      if (hasNamespace && parseAfterNamespace) {
+        throw this.unexpected(null, 97);
       }
       let hasDeclaration;
       if (isFromRequired || hasSpecifiers) {
@@ -13780,7 +13801,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return this.parseClass(expr, true, true);
       }
       if (this.match(26)) {
-        if (this.hasPlugin("decorators") && this.getPluginOption("decorators", "decoratorsBeforeExport")) {
+        if (this.hasPlugin("decorators") && this.getPluginOption("decorators", "decoratorsBeforeExport") === true) {
           this.raise(Errors.DecoratorBeforeExport, {
             at: this.state.startLoc
           });
@@ -13855,8 +13876,8 @@ var lib = createCommonjsModule(function(module, exports) {
       if (type === 26) {
         this.expectOnePlugin(["decorators", "decorators-legacy"]);
         if (this.hasPlugin("decorators")) {
-          if (this.getPluginOption("decorators", "decoratorsBeforeExport")) {
-            throw this.raise(Errors.DecoratorBeforeExport, {
+          if (this.getPluginOption("decorators", "decoratorsBeforeExport") === true) {
+            this.raise(Errors.DecoratorBeforeExport, {
               at: this.state.startLoc
             });
           }
@@ -14112,7 +14133,9 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     finishImportSpecifier(specifier, type, bindingType = BIND_LEXICAL) {
       this.checkLVal(specifier.local, {
-        in: specifier,
+        in: {
+          type
+        },
         binding: bindingType
       });
       return this.finishNode(specifier, type);
