@@ -115,8 +115,8 @@ export const handleDragStart = (event) => {
 export const handleDrop = async (event) => {
   Event.preventDefault(event)
   Event.stopPropagation(event)
-  const { files, dropEffect, items } = event.dataTransfer
-  const { clientX, clientY } = event
+  const { clientX, clientY, dataTransfer } = event
+  const { files, items } = dataTransfer
   if (Platform.isElectron()) {
     ViewletExplorerFunctions.handleDrop(clientX, clientY, files)
   } else {
@@ -139,12 +139,13 @@ const getFocusedIndexFromFocusOutline = ($Viewlet) => {
 }
 
 export const handleContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   const { button, clientX, clientY } = event
   ViewletExplorerFunctions.handleContextMenu(button, clientX, clientY)
 }
 
 export const handleClick = (event) => {
+  Event.preventDefault(event)
   const { button, clientX, clientY } = event
   if (button !== MouseEventType.LeftClick) {
     return
@@ -165,7 +166,6 @@ export const handleWheel = (event) => {
 }
 
 export const handlePointerDown = (event) => {
-  event.preventDefault()
   const { button, clientX, clientY } = event
   ViewletExplorerFunctions.handlePointerDown(button, clientX, clientY)
 }
