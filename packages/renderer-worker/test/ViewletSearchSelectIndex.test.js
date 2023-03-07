@@ -27,6 +27,7 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
     logError: jest.fn(() => {}),
   }
 })
+
 jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
   return {
     getAbsolutePath: jest.fn(() => {
