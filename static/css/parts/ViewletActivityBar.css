@@ -34,12 +34,12 @@
   /* background: #878f8c; */
 }
 
-.ActivityBarItem[aria-selected='true'],
+.ActivityBarItemSelected,
 .ActivityBarItem:hover {
   color: var(--ActivityBarActiveForeground);
 }
 
-.ActivityBarItem[aria-selected='true'] {
+.ActivityBarItemSelected {
   background: var(--ActivityBarActiveBackground);
 }
 

@@ -10,6 +10,7 @@ import * as MaskImage from '../MaskImage/MaskImage.js'
 import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
 
 const activeId = 'ActivityBarItemActive'
+const selectedClassName = 'ActivityBarItemSelected'
 
 // TODO set aria-selected false when sidebar is collapsed
 
@@ -88,6 +89,7 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
       MaskImage.transfer($OldItem.firstChild, $OldItem)
       $OldItem.firstChild.remove()
     }
+    $OldItem.classList.remove(selectedClassName)
   }
   if (newIndex !== -1) {
     const $NewItem = $ActivityBar.children[newIndex]
@@ -95,6 +97,7 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
     const $Icon = create$ActivityBarItemIcon('')
     MaskImage.transfer($NewItem, $Icon)
     $NewItem.append($Icon)
+    $NewItem.classList.add(selectedClassName)
   }
 }
 
