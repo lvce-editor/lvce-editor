@@ -17,12 +17,8 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
 })
 
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
-const ViewletExplorerHandleDropIndex = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerHandleDropIndex.js'
-)
-const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
-)
+const ViewletExplorerHandleDropIndex = await import('../src/parts/ViewletExplorer/ViewletExplorerHandleDropIndex.js')
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
 
 test('handleDrop - single file - into folder', async () => {
   // @ts-ignore
@@ -64,7 +60,7 @@ test('handleDrop - single file - into folder', async () => {
         icon: '',
         name: 'a',
         path: '/test/a',
-        type: DirentType.Directory,
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -78,21 +74,7 @@ test('handleDrop - single file - into folder', async () => {
     ],
     pathSeparator: '/',
   }
-  const newState = await ViewletExplorerHandleDropIndex.handleDropIndex(
-    state,
-    0,
-    [
-      {
-        lastModified: 0,
-        lastModifiedDate: new Date(),
-        name: 'file-2.txt',
-        path: '/source/file-2.txt',
-        size: 4,
-        type: 'text/plain',
-        webkitRelativePath: '',
-      },
-    ]
-  )
+  const newState = await ViewletExplorerHandleDropIndex.handleDropIndex(state, 0, ['/source/file-2.txt'])
   expect(newState.items).toEqual([
     {
       depth: 1,
@@ -101,7 +83,7 @@ test('handleDrop - single file - into folder', async () => {
       name: 'a',
       icon: '',
       path: '/test/a',
-      type: DirentType.Directory,
+      type: DirentType.DirectoryExpanded,
     },
     {
       depth: 2,
@@ -123,8 +105,5 @@ test('handleDrop - single file - into folder', async () => {
     },
   ])
   expect(FileSystem.copy).toHaveBeenCalledTimes(1)
-  expect(FileSystem.copy).toHaveBeenCalledWith(
-    '/source/file-2.txt',
-    '/test/a/file-2.txt'
-  )
+  expect(FileSystem.copy).toHaveBeenCalledWith('/source/file-2.txt', '/test/a/file-2.txt')
 })

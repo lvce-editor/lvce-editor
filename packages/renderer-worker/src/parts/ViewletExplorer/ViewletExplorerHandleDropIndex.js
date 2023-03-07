@@ -1,23 +1,35 @@
-import { getChildDirents, getParentStartIndex } from './ViewletExplorerShared.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as Workspace from '../Workspace/Workspace.js'
 import { handleDropRoot } from './ViewletExplorerHandleDropRoot.js'
+import { getChildDirents, getParentStartIndex } from './ViewletExplorerShared.js'
+
+const getEndIndex = (items, index, dirent) => {
+  for (let i = index + 1; i < items.length; i++) {
+    if (items[i].depth === dirent.depth) {
+      return i
+    }
+  }
+  return items.length
+}
+
+const getMergedDirents = (items, index, dirent, childDirents) => {
+  const startIndex = index
+  const endIndex = getEndIndex(items, index, dirent)
+  const mergedDirents = [...items.slice(0, startIndex), { ...dirent, type: DirentType.DirectoryExpanded }, ...childDirents, ...items.slice(endIndex)]
+  return mergedDirents
+}
 
 const handleDropIntoFolder = async (state, dirent, index, files) => {
-  const { pathSeparator, root, items } = state
+  const { pathSeparator, items } = state
   for (const file of files) {
-    const from = file.path
-    const to = dirent.path + pathSeparator + file.name
-    await FileSystem.copy(from, to)
+    const baseName = Workspace.pathBaseName(file)
+    const to = dirent.path + pathSeparator + baseName
+    await FileSystem.copy(file, to)
   }
   const childDirents = await getChildDirents(pathSeparator, dirent)
-  // TODO merge with child dirents
-  const middleDirents = []
-  const startIndex = index + 1
-  const endIndex = index + 2
-  const mergedDirents = [...items.slice(0, startIndex), ...childDirents, ...items.slice(endIndex)]
-
-  // const mergedDirents = mergeDirents(dirents, childDirents)
+  const mergedDirents = getMergedDirents(items, index, dirent, childDirents)
+  // TODO update maxlineY
   return {
     ...state,
     items: mergedDirents,
