@@ -108,6 +108,19 @@ export const handleDragStart = (event) => {
   DataTransfer.setFilePath(dataTransfer, filePath, fileName)
 }
 
+const getPath = (file) => {
+  return file.path
+}
+
+const getFilePaths = (dataTransfer) => {
+  const { files } = dataTransfer
+  if (Platform.isElectron()) {
+    return files.map(getPath)
+  }
+  const filePaths = DataTransfer.getFilePaths(dataTransfer)
+  return filePaths
+}
+
 /**
  *
  * @param {DragEvent} event
@@ -116,15 +129,16 @@ export const handleDrop = async (event) => {
   Event.preventDefault(event)
   Event.stopPropagation(event)
   const { clientX, clientY, dataTransfer } = event
-  const { files, items } = dataTransfer
-  if (Platform.isElectron()) {
-    ViewletExplorerFunctions.handleDrop(clientX, clientY, files)
-  } else {
-    // unfortunately, DataTransferItem cannot be transferred to web worker
-    // therefore the file system handles are sent to the web worker
-    const handles = await GetFileHandlesFromDataTransferItems.getFileHandles(items)
-    ViewletExplorerFunctions.handleDrop(clientX, clientY, handles)
+  const { items } = dataTransfer
+  const filePaths = getFilePaths(dataTransfer)
+  if (filePaths.length > 0) {
+    ViewletExplorerFunctions.handleDrop(clientX, clientY, filePaths)
+    return
   }
+  // unfortunately, DataTransferItem cannot be transferred to web worker
+  // therefore the file system handles are sent to the web worker
+  const handles = await GetFileHandlesFromDataTransferItems.getFileHandles(items)
+  ViewletExplorerFunctions.handleDrop(clientX, clientY, handles)
 }
 
 // TODO maybe use aria active descendant instead

@@ -35,13 +35,21 @@ export const setFilePath = (dataTransfer, filePath, fileName) => {
   setTimeout(handleTimeOut, 0)
 }
 
-export const getFilePath = (dataTransfer) => {
+export const getFilePaths = (dataTransfer) => {
   const data = dataTransfer.getData(DataTransferType.ResourceUrls)
   if (data) {
     const parsed = JSON.parse(data)
     if (Array.isArray(parsed) && data.length > 0) {
-      return parsed[0]
+      return parsed
     }
   }
-  return ''
+  return []
+}
+
+export const getFilePath = (dataTransfer) => {
+  const filePaths = getFilePath(dataTransfer)
+  if (filePaths.length === 0) {
+    return ''
+  }
+  return filePaths[0]
 }

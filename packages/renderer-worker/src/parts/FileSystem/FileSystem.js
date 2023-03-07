@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as GetFileSystem from '../GetFileSystem/GetFileSystem.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
@@ -65,6 +66,8 @@ export const getBlobUrl = async (uri) => {
 }
 
 export const copy = async (sourceUri, targetUri) => {
+  Assert.string(sourceUri)
+  Assert.string(targetUri)
   // TODO what if it is not the same file system?
   const protocol = GetProtocol.getProtocol(sourceUri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
