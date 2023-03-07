@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import { VError } from '../VError/VError.js'
 import * as Vlq from '../Vlq/Vlq.js'
 
@@ -42,7 +43,7 @@ const getColumnMapping = (mappings, line, column) => {
       }
     } else {
       const lineMappings = mappings.slice(index + 1, newLineIndex)
-      if (lineMappings === '') {
+      if (IsEmptyString.isEmptyString(lineMappings)) {
         index = newLineIndex
         continue
       }

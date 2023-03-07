@@ -1,4 +1,5 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
@@ -27,7 +28,7 @@ export const handleUpdate = async (state, update) => {
   const partialNewState = { ...state, ...update }
   try {
     const { height, itemHeight, minimumSliderSize, headerHeight, matchCase, value, threads } = partialNewState
-    if (value === '') {
+    if (IsEmptyString.isEmptyString(value)) {
       return {
         ...partialNewState,
         minLineY: 0,
