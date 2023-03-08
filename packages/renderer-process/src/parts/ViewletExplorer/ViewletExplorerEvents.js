@@ -4,6 +4,7 @@ import * as DropEffectType from '../DropEffectType/DropEffectType.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as GetFileHandlesFromDataTransferItems from '../GetFileHandlesFromDataTransferItems/GetFileHandlesFromDataTransferItems.js'
+import * as IsHtmlElement from '../IsHtmlElement/IsHtmlElement.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
@@ -99,7 +100,7 @@ export const handleDragOver = (event) => {
  */
 export const handleDragStart = (event) => {
   const { target, dataTransfer } = event
-  if (!(target instanceof HTMLElement)) {
+  if (!IsHtmlElement.isHtmlElement(target)) {
     return
   }
   const filePath = target.title
