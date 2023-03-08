@@ -1,9 +1,9 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import { VError } from '../VError/VError.js'
+import * as ElectronShell from '../ElectronShell/ElectronShell.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as ElectronShell from '../ElectronShell/ElectronShell.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
+import { VError } from '../VError/VError.js'
 
 const openNativeFolderWeb = (absolutePath) => {
   throw new Error('not implemented')
@@ -11,10 +11,7 @@ const openNativeFolderWeb = (absolutePath) => {
 
 const openNativeFolderRemote = async (absolutePath) => {
   try {
-    await SharedProcess.invoke(
-      /* Native.openFolder */ 'Native.openFolder',
-      /* path */ absolutePath
-    )
+    await SharedProcess.invoke(SharedProcessCommandType.NativeOpenFolder, /* path */ absolutePath)
   } catch (error) {
     throw new VError(error, `Failed to open folder ${absolutePath}`)
   }
