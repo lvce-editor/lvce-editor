@@ -2,7 +2,7 @@
 import * as fs from 'node:fs/promises'
 import * as os from 'node:os'
 import * as EncodingType from '../EncodingType/EncodingType.js'
-import { FileNotFoundError } from '../Error/FileNotFoundError.js'
+import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as GetDirentType from '../GetDirentType/GetDirentType.js'
 import * as Path from '../Path/Path.js'

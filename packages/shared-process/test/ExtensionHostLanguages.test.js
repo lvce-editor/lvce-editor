@@ -196,7 +196,7 @@ test('getLanguageConfiguration - error - language configuration file not found',
   })
   const languageConfigurationPath = join(tmpDir, 'languageConfiguration.json')
   await expect(ExtensionHostLanguages.getLanguageConfiguration('javascript')).rejects.toThrowError(
-    new Error(`Failed to load language configuration for javascript: FileNotFoundError: File not found '${languageConfigurationPath}'`)
+    new Error(`Failed to load language configuration for javascript: FileNotFoundError: File not found: '${languageConfigurationPath}'`)
   )
 })
 

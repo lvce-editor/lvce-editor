@@ -137,7 +137,7 @@ test('writeFile - nonexistent file', async () => {
   fs.writeFile.mockImplementation(() => {
     throw new NodeError(ErrorCodes.ENOENT)
   })
-  await expect(FileSystem.writeFile('/test/non-existing-file.txt', 'Hello World')).rejects.toThrow(`File not found '/test/non-existing-file.txt'`)
+  await expect(FileSystem.writeFile('/test/non-existing-file.txt', 'Hello World')).rejects.toThrow(`File not found: '/test/non-existing-file.txt'`)
 })
 
 test.skip('writeFile - parallel write on different files works', async () => {
@@ -400,7 +400,7 @@ test('readFile - error - file not found', async () => {
   fs.readFile.mockImplementation(() => {
     throw new NodeError(ErrorCodes.ENOENT)
   })
-  await expect(FileSystem.readFile('/test/non-existing.txt')).rejects.toThrowError(new Error(`File not found '/test/non-existing.txt'`))
+  await expect(FileSystem.readFile('/test/non-existing.txt')).rejects.toThrowError(new Error(`File not found: '/test/non-existing.txt'`))
 })
 
 test('readFile - error - permission denied', async () => {

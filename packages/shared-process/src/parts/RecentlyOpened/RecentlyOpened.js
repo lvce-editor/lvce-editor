@@ -1,6 +1,6 @@
 import { dirname } from 'node:path'
 import * as Assert from '../Assert/Assert.js'
-import { FileNotFoundError } from '../Error/FileNotFoundError.js'
+import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Json from '../Json/Json.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'

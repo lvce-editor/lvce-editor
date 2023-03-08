@@ -128,7 +128,7 @@ test('getColorThemeJson - wrong/invalid path', async () => {
   })
   const colorThemePath = join(tmpDir, 'builtin.theme-test', 'color-theme.json')
   await expect(ExtensionHostColorTheme.getColorThemeJson('test-theme')).rejects.toThrowError(
-    `Failed to load color theme "test-theme": FileNotFoundError: File not found '${colorThemePath}'`
+    `Failed to load color theme "test-theme": FileNotFoundError: File not found: '${colorThemePath}'`
   )
 })
 
