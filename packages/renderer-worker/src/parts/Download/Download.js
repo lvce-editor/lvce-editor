@@ -4,6 +4,7 @@ import * as MimeType from '../MimeType/MimeType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 import * as Url from '../Url/Url.js'
 import { VError } from '../VError/VError.js'
 
@@ -16,7 +17,7 @@ export const downloadFile = async (fileName, url) => {
 export const downloadToDownloadsFolder = async (fileName, url) => {
   const downloadFolder = await Platform.getDownloadDir()
   const outFile = `${downloadFolder}/${fileName}`
-  await SharedProcess.invoke(/* Download.download */ 'Download.download', /* url */ url, /* outFile */ outFile)
+  await SharedProcess.invoke(SharedProcessCommandType.DownloadDownload, /* url */ url, /* outFile */ outFile)
 }
 
 export const downloadJson = async (json, fileName) => {

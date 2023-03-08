@@ -9,6 +9,7 @@ import * as Window from '../Window/Window.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 
 export const state = {
   workspacePath: '',
@@ -43,9 +44,7 @@ export const setUri = async (uri) => {
 }
 
 const getResolvedRootFromSharedProcess = async () => {
-  const resolvedRoot = await SharedProcess.invoke(
-    /* Workspace.resolveRoot */ 'Workspace.resolveRoot'
-  )
+  const resolvedRoot = await SharedProcess.invoke(/* Workspace.resolveRoot */ SharedProcessCommandType.WorkspaceResolveRoot)
   return resolvedRoot
 }
 
@@ -60,10 +59,7 @@ const isValid = (resolvedRoot) => {
 }
 
 const getResolveRootFromSessionStorage = async () => {
-  const resolvedRoot = await Command.execute(
-    /* SessionStorage.getJson */ 'SessionStorage.getJson',
-    /* key */ 'workspace'
-  )
+  const resolvedRoot = await Command.execute(/* SessionStorage.getJson */ 'SessionStorage.getJson', /* key */ 'workspace')
   if (!isValid(resolvedRoot)) {
     return undefined
   }
@@ -105,8 +101,7 @@ const getResolvedRootFromRendererProcess = async (href) => {
     }
     return resolvedRoot
   }
-  const resolvedRootFromSessionStorage =
-    await getResolveRootFromSessionStorage()
+  const resolvedRootFromSessionStorage = await getResolveRootFromSessionStorage()
   if (resolvedRootFromSessionStorage) {
     return resolvedRootFromSessionStorage
   }
@@ -115,8 +110,7 @@ const getResolvedRootFromRendererProcess = async (href) => {
 }
 
 const getResolvedRootRemote = async (href) => {
-  const resolvedRootFromRendererProcess =
-    await getResolvedRootFromRendererProcess(href)
+  const resolvedRootFromRendererProcess = await getResolvedRootFromRendererProcess(href)
   if (resolvedRootFromRendererProcess) {
     return resolvedRootFromRendererProcess
   }
