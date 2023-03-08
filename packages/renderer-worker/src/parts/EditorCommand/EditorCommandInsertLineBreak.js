@@ -1,7 +1,6 @@
 import * as Editor from '../Editor/Editor.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as Languages from '../Languages/Languages.js'
 
 const getChanges = (lines, selections) => {
   const changes = []
@@ -22,7 +21,10 @@ const getChanges = (lines, selections) => {
       start,
       end,
     }
-    if (selectionStartRow === selectionEndRow && selectionStartColumn === selectionEndColumn) {
+    if (
+      selectionStartRow === selectionEndRow &&
+      selectionStartColumn === selectionEndColumn
+    ) {
       const line = lines[selectionStartRow].slice(0, selectionStartColumn)
       const indent = TextDocument.getIndent(line)
       changes.push({
@@ -45,10 +47,9 @@ const getChanges = (lines, selections) => {
   return changes
 }
 
-export const insertLineBreak = async (editor) => {
-  const { lines, selections } = editor
-  const languageConfiguration = await Languages.getLanguageConfiguration(editor)
-  console.log({ languageConfiguration })
+export const insertLineBreak = (editor) => {
+  const lines = editor.lines
+  const selections = editor.selections
   const changes = getChanges(lines, selections)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
