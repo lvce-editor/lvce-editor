@@ -1145,6 +1145,10 @@ const renderEditingIndex = {
       if (oldState.editingType === ExplorerEditingType.CreateFile || oldState.editingType === ExplorerEditingType.CreateFolder) {
         return [/* method */ 'hideEditBox', /* index */ oldState.editingIndex]
       }
+      if (oldState.editingType === ExplorerEditingType.Rename) {
+        const dirent = newState.items[oldState.editingIndex]
+        return [/* method */ 'replaceEditBox', /* index */ oldState.editingIndex, /* dirent */ dirent]
+      }
       return [/* method */ 'insertEditBox', /* index */ editingIndex, /* value */ editingValue]
     }
     if (editingType === ExplorerEditingType.CreateFile || editingType === ExplorerEditingType.CreateFolder) {
