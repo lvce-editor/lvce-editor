@@ -127,6 +127,7 @@ const createScanner = (text) => {
         case CharCode.CarriageReturn:
         case CharCode.Tab:
         case CharCode.Space:
+        case CharCode.Comma:
           break outer
         default:
           break

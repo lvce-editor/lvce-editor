@@ -141,3 +141,21 @@ test('parse - block comment inside array', () => {
 test('parse - floating point number', () => {
   expect(Jsonc.parse(`0.5`)).toEqual(0.5)
 })
+
+test('parse - boolean property value', () => {
+  expect(
+    Jsonc.parse(`{
+  "enabled": true
+}`)
+  ).toEqual({ enabled: true })
+})
+
+test('parse - boolean property value and whitespace', () => {
+  expect(
+    Jsonc.parse(`{
+  "a": true,
+
+  "b": false
+}`)
+  ).toEqual({ a: true, b: false })
+})
