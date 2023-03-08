@@ -259,7 +259,6 @@ const parseArray = (scanner) => {
 
 const parseLiteral = (scanner) => {
   const rawValue = scanner.scanLiteral()
-  console.log({ rawValue })
   switch (rawValue) {
     case 'true':
       return true
