@@ -1,6 +1,7 @@
+// TODO rename file to languageConfiguration.js
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import * as ReadJson from '../JsonFile/JsonFile.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 import { VError } from '../VError/VError.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
 
@@ -70,7 +71,10 @@ export const getLanguageConfiguration = async (languageId) => {
   try {
     const extensions = await ExtensionManagement.getExtensions()
     const languageConfigurationPath = getLanguageConfigurationPathFromExtensions(extensions, languageId)
-    return await ReadJson.readJson(languageConfigurationPath)
+    if (!languageConfigurationPath) {
+      return {}
+    }
+    return await JsonFile.readJson(languageConfigurationPath)
   } catch (error) {
     throw new VError(error, `Failed to load language configuration for ${languageId}`)
   }
