@@ -564,3 +564,125 @@ export const hydrate = async () => {
   expect(Ajax.getText).toHaveBeenCalledTimes(1)
   expect(Ajax.getText).toHaveBeenCalledWith(`http://localhost:3000/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js`)
 })
+
+test('prepare - regex error', async () => {
+  const error = new TypeError(`increaseIndentRegex.text is not a function`)
+  error.stack = `TypeError: increaseIndentRegex.text is not a function
+    at shouldIncreaseIndent (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandInsertLineBreak.js:24:30)
+    at getChanges (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandInsertLineBreak.js:53:11)
+    at insertLineBreak (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandInsertLineBreak.js:86:19)
+    at async EditorText/lazy/insertLineBreak (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:108:24)
+    at async handleKeyBinding (http://localhost:3000/packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
+    at async handleMessageFromRendererProcess (http://localhost:3000/packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    return `import * as Editor from '../Editor/Editor.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as Languages from '../Languages/Languages.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+
+const getIncreaseIndentRegex = (languageConfiguration) => {
+  if (
+    languageConfiguration &&
+    languageConfiguration.indentationRules &&
+    languageConfiguration.indentationRules.increaseIndentPattern &&
+    typeof languageConfiguration.indentationRules.increaseIndentPattern === 'string'
+  ) {
+    const regex = new RegExp(languageConfiguration.indentationRules.increaseIndentPattern)
+    return regex
+  }
+  return undefined
+}
+
+const shouldIncreaseIndent = (before, increaseIndentRegex) => {
+  if (!increaseIndentRegex) {
+    return false
+  }
+  return increaseIndentRegex.text(before)
+}
+
+const getChanges = (lines, selections, languageConfiguration) => {
+  const changes = []
+  const increaseIndentRegex = getIncreaseIndentRegex(languageConfiguration)
+  for (let i = 0; i < selections.length; i += 4) {
+    const selectionStartRow = selections[i]
+    const selectionStartColumn = selections[i + 1]
+    const selectionEndRow = selections[i + 2]
+    const selectionEndColumn = selections[i + 3]
+    const start = {
+      rowIndex: selectionStartRow,
+      columnIndex: selectionStartColumn,
+    }
+    const end = {
+      rowIndex: selectionEndRow,
+      columnIndex: selectionEndColumn,
+    }
+    const range = {
+      start,
+      end,
+    }
+
+    if (EditorSelection.isEmpty(selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn)) {
+      const line = lines[selectionStartRow]
+      const before = line.slice(0, selectionStartColumn)
+      const after = line.slice(selectionStartColumn)
+      const indent = TextDocument.getIndent(before)
+      if (shouldIncreaseIndent(before, increaseIndentRegex)) {
+        changes.push({
+          start: start,
+          end: end,
+          inserted: ['', indent + '  ', ''],
+          deleted: TextDocument.getSelectionText({ lines }, range),
+          origin: EditOrigin.InsertLineBreak,
+        })
+      } else {
+        changes.push({
+          start: start,
+          end: end,
+          inserted: ['', indent],
+          deleted: TextDocument.getSelectionText({ lines }, range),
+          origin: EditOrigin.InsertLineBreak,
+        })
+      }
+    } else {
+      changes.push({
+        start: start,
+        end: end,
+        inserted: ['', ''],
+        deleted: TextDocument.getSelectionText({ lines }, range),
+        origin: EditOrigin.InsertLineBreak,
+      })
+    }
+  }
+  return changes
+}
+
+export const insertLineBreak = async (editor) => {
+  const { lines, selections } = editor
+  const languageConfiguration = await Languages.getLanguageConfiguration(editor)
+  const changes = getChanges(lines, selections, languageConfiguration)
+  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+}
+`
+  })
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: `increaseIndentRegex.text is not a function`,
+    stack: `    at shouldIncreaseIndent (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandInsertLineBreak.js:24:30)
+    at getChanges (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandInsertLineBreak.js:53:11)
+    at insertLineBreak (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandInsertLineBreak.js:86:19)
+    at async EditorText/lazy/insertLineBreak (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:108:24)
+    at async handleKeyBinding (http://localhost:3000/packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
+    at async handleMessageFromRendererProcess (http://localhost:3000/packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`,
+    codeFrame: `  22 |     return false
+  23 |   }
+> 24 |   return increaseIndentRegex.text(before)
+     |                              ^
+  25 | }
+  26 |
+  27 | const getChanges = (lines, selections, languageConfiguration) => {`,
+    type: 'TypeError',
+    _error: error,
+  })
+})
