@@ -21,10 +21,7 @@ const getChanges = (lines, selections) => {
       start,
       end,
     }
-    if (
-      selectionStartRow === selectionEndRow &&
-      selectionStartColumn === selectionEndColumn
-    ) {
+    if (selectionStartRow === selectionEndRow && selectionStartColumn === selectionEndColumn) {
       const line = lines[selectionStartRow].slice(0, selectionStartColumn)
       const indent = TextDocument.getIndent(line)
       changes.push({
