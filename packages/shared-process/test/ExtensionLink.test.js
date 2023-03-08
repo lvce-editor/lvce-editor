@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import { FileNotFoundError } from '../src/parts/Error/FileNotFoundError.js'
+import { FileNotFoundError } from '../src/parts/FileNotFoundError/FileNotFoundError.js'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {

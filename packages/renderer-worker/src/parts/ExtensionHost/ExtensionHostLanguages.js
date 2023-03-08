@@ -18,18 +18,10 @@ export const getLanguages = async () => {
 }
 
 export const getLanguageConfiguration = async (languageId) => {
-  try {
-    switch (Platform.platform) {
-      case PlatformType.Web:
-        return await ExtensionHostLanguagesWeb.getLanguageConfiguration(
-          languageId
-        )
-      default:
-        return await ExtensionHostLanguagesNode.getLanguageConfiguration(
-          languageId
-        )
-    }
-  } catch (error) {
-    throw new VError(error, `Failed to load language configuration`)
+  switch (Platform.platform) {
+    case PlatformType.Web:
+      return ExtensionHostLanguagesWeb.getLanguageConfiguration(languageId)
+    default:
+      return ExtensionHostLanguagesNode.getLanguageConfiguration(languageId)
   }
 }
