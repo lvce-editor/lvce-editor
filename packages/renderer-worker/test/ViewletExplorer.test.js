@@ -3400,7 +3400,7 @@ test('newFile - canceled', async () => {
   // @ts-ignore
   FileSystem.writeFile.mockImplementation(() => {})
   expect(await ViewletExplorer.newFile(state)).toMatchObject({
-    editingIndex: 0,
+    editingIndex: -1,
   })
 })
 
