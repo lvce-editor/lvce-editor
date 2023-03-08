@@ -173,7 +173,8 @@ test('getLanguageConfiguration', async () => {
     },
   })
 })
-test('getLanguageConfiguration - error - language configuration not found', async () => {
+
+test('getLanguageConfiguration - error - language configuration file not found', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   ExtensionManagement.getExtensions.mockImplementation(() => {
@@ -223,5 +224,39 @@ test('getLanguageConfiguration - error - language configuration has invalid json
   // TODO should display path as well
   await expect(ExtensionHostLanguages.getLanguageConfiguration('javascript')).rejects.toThrowError(
     new Error('Failed to load language configuration for javascript: JsonParsingError: Json Parsing Error')
+  )
+})
+
+test('getLanguageConfiguration - error - no language configuration', async () => {
+  const tmpDir = await getTmpDir()
+  // @ts-ignore
+  ExtensionManagement.getExtensions.mockImplementation(() => {
+    return [
+      {
+        status: ExtensionManifestStatus.Resolved,
+        id: 'builtin.test',
+        languages: [],
+        path: tmpDir,
+      },
+    ]
+  })
+  expect(await ExtensionHostLanguages.getLanguageConfiguration('test')).toEqual({})
+})
+
+test('getLanguageConfiguration - error - language is null', async () => {
+  const tmpDir = await getTmpDir()
+  // @ts-ignore
+  ExtensionManagement.getExtensions.mockImplementation(() => {
+    return [
+      {
+        status: ExtensionManifestStatus.Resolved,
+        id: 'builtin.javascript',
+        languages: [null],
+        path: tmpDir,
+      },
+    ]
+  })
+  await expect(ExtensionHostLanguages.getLanguageConfiguration('test')).rejects.toThrowError(
+    new Error("Failed to load language configuration for test: TypeError: Cannot read properties of null (reading 'id')")
   )
 })
