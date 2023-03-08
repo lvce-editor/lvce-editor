@@ -899,6 +899,7 @@ THE SOFTWARE.
 
 
 15) License Notice for build/src/parts/Template/template_windows_cli_bash.txt (based on https://github.com/microsoft/vscode/blob/main/resources/win32/bin/code.sh)
+                       packages/renderer-worker/src/parts/ValidateFileName/ValidateFileName (based on https://github.com/microsoft/vscode/blob/721fbe6f01f23270778cdeec39a993688952c9b3/src/vs/workbench/contrib/files/browser/fileActions.ts#L685)
 ---------------------------------------
 
 MIT License

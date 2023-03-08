@@ -506,13 +506,6 @@ export const newFile = (state) => {
   return newDirent(state, ExplorerEditingType.CreateFile)
 }
 
-export const updateEditingValue = (state, value) => {
-  return {
-    ...state,
-    editingValue: value,
-  }
-}
-
 export const newFolder = (state) => {
   return newDirent(state, ExplorerEditingType.CreateFolder)
 }
@@ -1156,4 +1149,14 @@ const renderEditingIndex = {
   },
 }
 
-export const render = [renderEditingIndex, renderItems, renderDropTargets, renderFocusedIndex]
+const renderEditingMessage = {
+  isEqual(oldState, newState) {
+    return oldState.editingMessage === newState.editingMessage && oldState.editingMessageSeverity === newState.editingMessageSeverity
+  },
+  apply(oldState, newState) {
+    const { editingMessage } = newState
+    return ['setEditingMessage', oldState.editingMessage, newState.editingMessage]
+  },
+}
+
+export const render = [renderEditingIndex, renderItems, renderDropTargets, renderFocusedIndex, renderEditingMessage]

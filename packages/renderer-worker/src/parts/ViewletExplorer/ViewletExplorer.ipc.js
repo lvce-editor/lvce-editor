@@ -36,7 +36,6 @@ export const Commands = {
   scrollDown:                     ViewletExplorer.scrollDown,
   scrollUp:                       ViewletExplorer.scrollUp,
   setDeltaY:                      ViewletExplorer.setDeltaY,
-  updateEditingValue:             ViewletExplorer.updateEditingValue,
 }
 
 // prettier-ignore
@@ -57,6 +56,7 @@ export const LazyCommands = {
   handlePaste: () => import('./ViewletExplorerHandlePaste.js'),
   acceptEdit: () => import('./ViewletExplorerAcceptEdit.js'),
   handlePointerDown: () => import('./ViewletExplorerHandlePointerDown.js'),
+  updateEditingValue: () => import('./ViewletExplorerUpdateEditingValue.js')
 }
 
 export const Css = [

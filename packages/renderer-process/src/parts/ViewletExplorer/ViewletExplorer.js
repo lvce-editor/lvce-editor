@@ -290,3 +290,13 @@ export const setDropTargets = (state, oldDropTargets, newDropTargets) => {
     }
   }
 }
+
+export const setEditingMessage = (state, oldEditingMessage, newEditingMessage) => {
+  // TODO
+  console.log({ editingMessage: oldEditingMessage })
+  const { $Viewlet } = state
+  const $Error = document.createElement('div')
+  $Error.className = 'InputBoxError'
+  $Error.textContent = newEditingMessage
+  $Viewlet.append($Error)
+}

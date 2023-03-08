@@ -20,3 +20,12 @@
 .InputBox::-webkit-search-results-decoration {
   display: none;
 }
+
+.InputBoxError {
+  background: red;
+  contain: content;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
