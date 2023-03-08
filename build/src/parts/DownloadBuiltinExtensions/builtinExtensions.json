@@ -82,7 +82,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "0.0.18"
+    "version": "0.0.19"
   },
   {
     "name": "builtin.language-basics-java",
@@ -92,7 +92,7 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.24"
+    "version": "0.0.25"
   },
   {
     "name": "builtin.language-basics-json",
