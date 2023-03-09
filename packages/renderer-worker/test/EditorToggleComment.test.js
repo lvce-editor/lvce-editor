@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import { editorShowMessage } from '../src/parts/EditorCommand/EditorCommandShowMessage.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -12,25 +11,28 @@ jest.unstable_mockModule('../src/parts/Languages/Languages.js', () => {
     }),
   }
 })
-jest.unstable_mockModule(
-  '../src/parts/EditorCommand/EditorCommandShowMessage.js',
-  () => {
-    return {
-      editorShowMessage: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
-  }
-)
 
-const EditorToggleComment = await import(
-  '../src/parts/EditorCommand/EditorCommandToggleComment.js'
-)
+jest.unstable_mockModule('../src/parts/EditorCommand/EditorCommandShowMessage.js', () => {
+  return {
+    editorShowMessage: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
+  return {
+    error: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const EditorToggleComment = await import('../src/parts/EditorCommand/EditorCommandToggleComment.js')
 
 const Languages = await import('../src/parts/Languages/Languages.js')
-const EditorShowMessage = await import(
-  '../src/parts/EditorCommand/EditorCommandShowMessage.js'
-)
+const Logger = await import('../src/parts/Logger/Logger.js')
+const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommandShowMessage.js')
 
 const LANGUAGE_CONFIGURATION_JAVASCRIPT = {
   comments: {
@@ -126,6 +128,8 @@ test.skip('comment line with block comment - error - block comment configuration
 })
 
 test('comment line - error - loading language configuration', async () => {
+  // @ts-ignore
+  Logger.error.mockImplementation(() => {})
   const editor = {
     lines: ['const x = 1'],
     languageId: 'javascript',
@@ -141,13 +145,9 @@ test('comment line - error - loading language configuration', async () => {
   })
   expect(await EditorToggleComment.toggleComment(editor)).toBe(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
-  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
-    editor,
-    0,
-    0,
-    'TypeError: x is not a function',
-    true
-  )
+  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, 'TypeError: x is not a function', true)
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(new TypeError('x is not a function'))
 })
 
 test.skip('comment line with block comment', async () => {
