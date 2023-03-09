@@ -6,14 +6,13 @@ import * as ViewletActivityBarFunctions from './ViewletActivityBarFunctions.js'
 
 const get$ItemFromEvent = (event) => {
   const $Target = event.target
-  switch ($Target.className) {
-    case 'ActivityBarItemIcon':
-      return $Target.parentNode
-    case 'ActivityBarItem':
-      return $Target
-    default:
-      return undefined
+  if ($Target.classList.contains('ActivityBarItem')) {
+    return $Target
   }
+  if ($Target.classList.contains('ActivityBarItemIcon')) {
+    return $Target.parentNode
+  }
+  return undefined
 }
 
 const getNodeIndex = ($Node) => {
