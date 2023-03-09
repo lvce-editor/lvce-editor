@@ -16,6 +16,6 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   await expect(rows.nth(0)).toHaveText('{')
   await expect(rows.nth(1)).toHaveText('  ')
   await expect(rows.nth(2)).toHaveText('}')
-
-  // TODO check that cursor position is correct
+  const cursor = Locator('.EditorCursor')
+  await expect(cursor).toHaveCSS('translate', /^(18|19|20).*?px$/)
 }
