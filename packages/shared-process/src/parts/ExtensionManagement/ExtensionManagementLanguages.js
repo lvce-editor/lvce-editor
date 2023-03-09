@@ -72,7 +72,7 @@ export const getLanguageConfiguration = async (languageId) => {
     const extensions = await ExtensionManagement.getExtensions()
     const languageConfigurationPath = getLanguageConfigurationPathFromExtensions(extensions, languageId)
     if (!languageConfigurationPath) {
-      return {}
+      return undefined
     }
     return await JsonFile.readJson(languageConfigurationPath)
   } catch (error) {
