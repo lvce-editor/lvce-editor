@@ -1,6 +1,8 @@
 import { jest } from '@jest/globals'
 import { AssertionError } from '../src/parts/AssertionError/AssertionError.js'
+import { CommandNotFoundError } from '../src/parts/CommandNotFoundError/CommandNotFoundError.js'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
+import { VError } from '../src/parts/VError/VError.js'
 
 jest.unstable_mockModule('node:fs', () => ({
   readFileSync: jest.fn(() => {
@@ -460,5 +462,191 @@ export const watch = async (socket, colorThemeId) => {
   34 |   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
   35 |   if (!colorThemePath) {`,
     type: 'AssertionError',
+  })
+})
+
+test('prepare - CommandNotFoundError', async () => {
+  const cause = new CommandNotFoundError(`Search.saerchFile`)
+  const error = new VError(cause, `Failed to load command Search.searchFile`)
+  error.stack = `VError: Failed to load command Search.searchFile: CommandNotFoundError: command Search.searchFile not found
+    at Module.getModuleId (test:///test/packages/shared-process/src/parts/ModuleMap/ModuleMap.js:147:13)
+    at loadCommand (test:///test/packages/shared-process/src/parts/Command/Command.js:46:35)
+    at executeCommandAsync (test:///test/packages/shared-process/src/parts/Command/Command.js:57:11)
+    at Module.execute (test:///test/packages/shared-process/src/parts/Command/Command.js:75:10)
+    at Module.getResponse (test:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:23)
+    at WebSocket.handleMessage (test:///test/packages/shared-process/src/parts/Socket/Socket.js:27:40)
+    at callListener (/test/packages/shared-process/node_modules/ws/lib/event-target.js:290:14)
+    at WebSocket.onMessage (/test/packages/shared-process/node_modules/ws/lib/event-target.js:209:9)
+    at WebSocket.emit (node:events:513:28)
+    at Receiver.receiverOnMessage (/test/packages/shared-process/node_modules/ws/lib/websocket.js:1180:20)`
+  // @ts-ignore
+  fs.readFileSync.mockImplementation(() => {
+    return `import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
+import * as ModuleId from '../ModuleId/ModuleId.js'
+
+export const getModuleId = (commandId) => {
+  switch (commandId) {
+    case 'BulkReplacement.applyBulkReplacement':
+      return ModuleId.BulkReplacement
+    case 'ChromeExtension.install':
+    case 'ChromeExtension.uninstall':
+      return ModuleId.ChromeExtension
+    case 'ClipBoard.readFiles':
+    case 'ClipBoard.writeFiles':
+      return ModuleId.ClipBoard
+    case 'Developer.allocateMemory':
+    case 'Developer.crashSharedProcess':
+    case 'Developer.createHeapSnapshot':
+    case 'Developer.createProfile':
+    case 'Developer.getNodeStartupTime':
+    case 'Developer.getNodeStartupTiming':
+    case 'Developer.sharedProcessMemoryUsage':
+    case 'Developer.sharedProcessStartupPerformance':
+      return ModuleId.Developer
+    case 'Download.download':
+      return ModuleId.Download
+    case 'ExtensionHost.dispose':
+    case 'ExtensionHost.enableExtension':
+    case 'ExtensionHost.executeCommand':
+    case 'ExtensionHost.executeTabCompletionProvider':
+    case 'ExtensionHost.format':
+    case 'ExtensionHost.getMemoryUsage':
+    case 'ExtensionHost.getSourceControlBadgeCount':
+    case 'ExtensionHost.getStatusBarItems':
+    case 'ExtensionHost.registerChangeListener':
+    case 'ExtensionHost.setWorkspacePath':
+    case 'ExtensionHost.sourceControlGetChangedFiles':
+    case 'ExtensionHost.start':
+    case 'ExtensionHostBraceCompletion.executeBraceCompletionProvider':
+    case 'ExtensionHostClosingTag.execute':
+    case 'ExtensionHostClosingTag.executeClosingTagProvider':
+    case 'ExtensionHostClosingTag.executeTypeDefinitionProvider':
+    case 'ExtensionHostCompletion.execute':
+    case 'ExtensionHostDefinition.executeDefinitionProvider':
+    case 'ExtensionHostDiagnostic.execute':
+    case 'ExtensionHostFileSystem.getPathSeparator':
+    case 'ExtensionHostFileSystem.readDirWithFileTypes':
+    case 'ExtensionHostFileSystem.readFile':
+    case 'ExtensionHostFileSystem.remove':
+    case 'ExtensionHostFileSystem.rename':
+    case 'ExtensionHostFileSystem.writeFile':
+    case 'ExtensionHostHover.execute':
+    case 'ExtensionHostImplementation.executeImplementationProvider':
+    case 'ExtensionHostKeyBindings.getKeyBindings':
+    case 'ExtensionHostLanguages.getLanguages':
+    case 'ExtensionHostManagement.activateAll':
+    case 'ExtensionHostManagement.enableExtensions':
+    case 'ExtensionHostOutput.getOutputChannels':
+    case 'ExtensionHostQuickPick.handleQuickPickResult':
+    case 'ExtensionHostReferences.executeReferenceProvider':
+    case 'EXtensionHostRename.executePrepareRename':
+    case 'ExtensionHostRename.executeRename':
+    case 'ExtensionHostSemanticTokens.executeSemanticTokenProvider':
+    case 'ExtensionHostSourceControl.acceptInput':
+    case 'ExtensionHostTextDocument.setLanguageId':
+    case 'ExtensionHostTextDocument.syncFull':
+    case 'ExtensionHostTextDocument.syncIncremental':
+    case 'ExtensionHostTextDocument.syncInitial':
+    case 'ExtensionHostTextDocument':
+    case 'ExtensionHostWorkspace.setWorkspacePath':
+      return ModuleId.ExtensionHost
+    case 'ExtensionHost.getColorThemeJson':
+    case 'ExtensionHost.getColorThemeNames':
+    case 'ExtensionHost.getColorThemes':
+    case 'ExtensionHost.getIconTheme':
+    case 'ExtensionHost.getIconThemeJson':
+    case 'ExtensionHost.getLanguageConfiguration':
+    case 'ExtensionHost.getLanguages':
+    case 'ExtensionHost.watchColorTheme':
+    case 'ExtensionManagement.disable':
+    case 'ExtensionManagement.enable':
+    case 'ExtensionManagement.getAllExtensions':
+    case 'ExtensionManagement.getExtensions':
+    case 'ExtensionManagement.install':
+    case 'ExtensionManagement.uninstall':
+      return ModuleId.ExtensionManagement
+    case 'FileSystem.chmod':
+    case 'FileSystem.copy':
+    case 'FileSystem.createFile':
+    case 'FileSystem.createFolder':
+    case 'FileSystem.ensureFile':
+    case 'FileSystem.getPathSeparator':
+    case 'FileSystem.mkdir':
+    case 'FileSystem.readDirWithFileTypes':
+    case 'FileSystem.readFile':
+    case 'FileSystem.remove':
+    case 'FileSystem.rename':
+    case 'FileSystem.writeFile':
+      return ModuleId.FileSystem
+    case 'GitLsFiles.gitLsFiles':
+    case 'GitLsFiles.gitLsFilesHash':
+    case 'GitLsFiles.resolveGit':
+      return ModuleId.GitLsFiles
+    case 'Native.openFolder':
+      return ModuleId.Native
+    case 'OutputChannel.close':
+    case 'OutputChannel.open':
+      return ModuleId.OutputChannel
+    case 'Platform.getAppDir':
+    case 'Platform.getBuiltinExtensionsPath':
+    case 'Platform.getCachedExtensionsPath':
+    case 'Platform.getCacheDir':
+    case 'Platform.getConfigDir':
+    case 'Platform.getDataDir':
+    case 'Platform.getDisabledExtensionsPath':
+    case 'Platform.getDownloadDir':
+    case 'Platform.getExtensionsPath':
+    case 'Platform.getHomeDir':
+    case 'Platform.getLogsDir':
+    case 'Platform.getMarketplaceUrl':
+    case 'Platform.getRecentlyOpenedPath':
+    case 'Platform.getTestPath':
+    case 'Platform.getUserSettingsPath':
+    case 'Platform.setEnvironmentVariables':
+      return ModuleId.Platform
+    case 'Preferences.getAll':
+      return ModuleId.Preferences
+    case 'RecentlyOpened.addPath':
+      return ModuleId.RecentlyOpened
+    case 'TextSearch.search':
+      return ModuleId.Search
+    case 'SearchFile.searchFile':
+      return ModuleId.SearchFile
+    case 'Terminal.create':
+    case 'Terminal.dispose':
+    case 'Terminal.resize':
+    case 'Terminal.write':
+      return ModuleId.Terminal
+    case 4820:
+      return ModuleId.TextDocument
+    case 'WebSocketServer.handleUpgrade':
+      return ModuleId.WebSocketServer
+    case 'Workspace.getHomeDir':
+    case 'Workspace.resolveRoot':
+      return ModuleId.Workspace
+    case 'InstallExtension.installExtension':
+      return ModuleId.InstallExtension
+    default:
+      throw new CommandNotFoundError(commandId)
+  }
+}
+`
+  })
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: 'Failed to load command Search.searchFile: CommandNotFoundError: command Search.saerchFile not found',
+    stack: `    at getModuleId (test:///test/packages/shared-process/src/parts/ModuleMap/ModuleMap.js:147:13)
+    at loadCommand (test:///test/packages/shared-process/src/parts/Command/Command.js:46:35)
+    at execute (test:///test/packages/shared-process/src/parts/Command/Command.js:75:10)
+    at getResponse (test:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:23)
+    at WebSocket.handleMessage (test:///test/packages/shared-process/src/parts/Socket/Socket.js:27:40)`,
+    codeFrame: `  145 |       return ModuleId.InstallExtension
+  146 |     default:
+> 147 |       throw new CommandNotFoundError(commandId)
+      |             ^
+  148 |   }
+  149 | }
+  150 |`,
+    type: 'VError',
   })
 })

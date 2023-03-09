@@ -9,7 +9,7 @@ const RE_EXECUTE_COMMAND_ASYNC = /^\s*at executeCommandAsync/
 const RE_HANDLE_OTHER_MESSAGES_FROM_MESSAGE_PORT = /^\s*at async MessagePort\.handleOtherMessagesFromMessagePort/
 
 const isInternalLine = (line) => {
-  return line.includes('node:') || RE_AT_PROMISE_INDEX.test(line)
+  return line.includes('node:') || RE_AT_PROMISE_INDEX.test(line) || line.includes('node_modules/ws')
 }
 
 const isRelevantLine = (line) => {
