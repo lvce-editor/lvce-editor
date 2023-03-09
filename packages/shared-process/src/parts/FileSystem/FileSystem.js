@@ -155,6 +155,7 @@ export const readDirWithFileTypes = async (path) => {
 export const readDir = async (path) => {
   try {
     const dirents = await fs.readdir(path)
+    console.log({ path, dirents })
     return dirents
   } catch (error) {
     if (error && error.code === ErrorCodes.ENOENT) {

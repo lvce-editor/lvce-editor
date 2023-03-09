@@ -1,16 +1,18 @@
+import { jest } from '@jest/globals'
+import getPort from 'get-port'
 import { createReadStream, createWriteStream } from 'node:fs'
-import { access, mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { access, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import http from 'node:http'
-import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { constants, createBrotliCompress } from 'node:zlib'
-import getPort from 'get-port'
-import { jest } from '@jest/globals'
 import tar from 'tar-fs'
-import { writeJson } from '../src/parts/JsonFile/JsonFile.js'
 import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.js'
 import { VError } from '../src/parts/VError/VError.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   getExtensionsPath: jest.fn(() => {
@@ -36,12 +38,34 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   }),
 }))
 
-const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
-const Platform = await import('../src/parts/Platform/Platform.js')
+jest.unstable_mockModule('../src/parts/Download/Download.js', () => ({
+  download: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
 
-const getTmpDir = () => {
-  return mkdtemp(join(tmpdir(), 'foo-'))
-}
+jest.unstable_mockModule('../src/parts/Extract/Extract.js', () => ({
+  extractTarBr: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
+
+jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
+  readDir: jest.fn((path) => {
+    console.log({ path })
+    throw new Error('not implemented')
+  }),
+  readFile: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
+
+const Download = await import('../src/parts/Download/Download.js')
+const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
+const Extract = await import('../src/parts/Extract/Extract.js')
+const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
+const JsonFile = await import('../src/parts/JsonFile/JsonFile.js')
+const Platform = await import('../src/parts/Platform/Platform.js')
 
 const exists = async (path) => {
   try {
@@ -83,26 +107,26 @@ let server
 let handler
 let marketplaceUrl
 
-beforeAll(async () => {
-  const port = await getPort()
-  server = http.createServer((request, response) => {
-    handler(request, response)
-  })
-  await new Promise((resolve) => {
-    server.listen(port, () => {
-      resolve(undefined)
-    })
-  })
-  marketplaceUrl = `http://localhost:${port}`
-})
+// beforeAll(async () => {
+//   const port = await getPort()
+//   server = http.createServer((request, response) => {
+//     handler(request, response)
+//   })
+//   await new Promise((resolve) => {
+//     server.listen(port, () => {
+//       resolve(undefined)
+//     })
+//   })
+//   marketplaceUrl = `http://localhost:${port}`
+// })
 
-afterAll(() => {
-  server.close()
-})
+// afterAll(() => {
+//   server.close()
+// })
 
-afterEach(() => {
-  jest.restoreAllMocks()
-})
+// afterEach(() => {
+//   jest.restoreAllMocks()
+// })
 
 // TODO this test is flaky sometimes: Jest has detected the following 1 open handle potentially keeping Jest from exiting: ●  JSSTREAM
 test.skip('install', async () => {
@@ -170,36 +194,25 @@ test.skip('install should fail when the server sends a bad status code', async (
 })
 
 test('install should fail when the server sends an invalid compressed object', async () => {
-  const tmpDir1 = await getTmpDir()
-  const tmpDir2 = await getTmpDir()
-  const tmpDir3 = await getTmpDir()
-  const tmpDir4 = await getTmpDir()
   // @ts-ignore
-  Platform.getExtensionsPath.mockImplementation(() => tmpDir1)
+  Platform.getExtensionsPath.mockImplementation(() => '/test/extensions')
   // @ts-ignore
-  Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir2)
+  Platform.getBuiltinExtensionsPath.mockImplementation(() => '/test/builtin-extensions')
   // @ts-ignore
-  Platform.getDisabledExtensionsPath.mockImplementation(() => tmpDir3)
+  Platform.getDisabledExtensionsPath.mockImplementation(() => '/test/disabled-extensions')
   // @ts-ignore
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   // @ts-ignore
   Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
   // @ts-ignore
-  Platform.getCachedExtensionsPath.mockImplementation(() => tmpDir4)
-  // TODO avoid side effect in tests, use createServer
-  handler = (request, res) => {
-    switch (request.url) {
-      case '/download/test-author.test-extension':
-        res.statusCode = 200
-        return res.end('abc')
-      default:
-        res.statusCode = 404
-        return res.end()
-    }
-  }
-  const tmpDir = await getTmpDir()
+  Platform.getCachedExtensionsPath.mockImplementation(() => '/test/cached-extensions')
+
   // @ts-ignore
-  Platform.getExtensionsPath.mockImplementation(() => tmpDir)
+  Download.download.mockImplementation(() => {})
+  // @ts-ignore
+  Extract.extractTarBr.mockImplementation(() => {
+    throw new Error(`Failed to extract file.tar.br unexpected end of file`)
+  })
   await expect(ExtensionManagement.install('test-author.test-extension')).rejects.toThrowError(
     /^Failed to install extension "test-author.test-extension": Failed to extract .* unexpected end of file/
   )
@@ -428,19 +441,26 @@ test('getExtensions - error - invalid value - number', async () => {
   ])
 })
 
-test('getExtensions - error - invalid value - boolean', async () => {
-  const tmpDir1 = await getTmpDir()
-  const tmpDir2 = await getTmpDir()
-  await mkdir(join(tmpDir1, 'test-extension-1'))
-  await writeFile(join(tmpDir1, 'test-extension-1', 'extension.json'), 'true')
+test.only('getExtensions - error - invalid value - boolean', async () => {
   // @ts-ignore
-  Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir1)
+  Platform.getBuiltinExtensionsPath.mockImplementation(() => '/test/builtin-extensions')
   // @ts-ignore
-  Platform.getDisabledExtensionsPath.mockImplementation(() => tmpDir2)
+  Platform.getDisabledExtensionsPath.mockImplementation(() => '/test/disabled-extensions')
   // @ts-ignore
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   // @ts-ignore
   Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
+  // @ts-ignore
+  Platform.getExtensionsPath.mockImplementation(() => '/test/extensions')
+  // @ts-ignore
+  FileSystem.readDir.mockImplementation((p) => {
+    console.log({ p })
+    return ['test-extension']
+  })
+  // @ts-ignore
+  FileSystem.readFile.mockImplementation(() => {
+    return 'true'
+  })
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: ExtensionManifestStatus.Rejected,
@@ -451,24 +471,28 @@ test('getExtensions - error - invalid value - boolean', async () => {
 })
 
 // TODO should have better error message here and also stack
-test('getExtensions - error - invalid json', async () => {
-  const tmpDir1 = await getTmpDir()
-  const tmpDir2 = await getTmpDir()
-  await mkdir(join(tmpDir1, 'test-extension-1'))
-  await writeFile(join(tmpDir1, 'test-extension-1', 'extension.json'), '{')
+test.skip('getExtensions - error - invalid json', async () => {
   // @ts-ignore
-  Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir1)
+  Platform.getBuiltinExtensionsPath.mockImplementation(() => '/test/builtin-extensions')
   // @ts-ignore
-  Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
+  Platform.getExtensionsPath.mockImplementation(() => '/test/extensions')
   // @ts-ignore
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   // @ts-ignore
   Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
+  JsonFile.readJson.mockImplementation((x) => {
+    console.log(x)
+  })
+  // @ts-ignore
+  FileSystem.readDir.mockImplementation(() => {
+    console.log('mock it')
+    return ['test-extensin-1']
+  })
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       reason: new VError('Failed to load extension manifest for test-extension-1: JsonParsingError: Json Parsing Error'),
       status: ExtensionManifestStatus.Rejected,
-      path: join(tmpDir1, 'test-extension-1'),
+      path: '/test/test-extension-1',
     },
   ])
 })

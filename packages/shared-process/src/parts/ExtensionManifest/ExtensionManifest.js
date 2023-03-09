@@ -1,7 +1,7 @@
 import isObject from 'is-object'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
-import * as ReadJson from '../JsonFile/JsonFile.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import { VError } from '../VError/VError.js'
 
@@ -19,7 +19,7 @@ const inferExtensionId = (absolutePath) => {
 export const get = async (path) => {
   try {
     const absolutePath = Path.join(path, 'extension.json')
-    const json = await ReadJson.readJson(absolutePath)
+    const json = await JsonFile.readJson(absolutePath)
     if (!isObject(json)) {
       // TODO should include stack of extension json file here
       throw new VError('Invalid manifest file: Not an JSON object.')
@@ -35,7 +35,7 @@ export const get = async (path) => {
     if (error.code === ErrorCodes.ENOENT) {
       try {
         const monoRepoPath = Path.join(path, `packages`, 'extension', 'extension.json')
-        const json = await ReadJson.readJson(monoRepoPath)
+        const json = await JsonFile.readJson(monoRepoPath)
         if (!isObject(json)) {
           // TODO should include stack of extension json file here
           throw new VError('Invalid manifest file: Not an JSON object.')
