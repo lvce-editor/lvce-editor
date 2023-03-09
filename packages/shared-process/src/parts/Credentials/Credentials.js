@@ -20,11 +20,7 @@ export const findCredentials = async (service) => {
   try {
     return keytar.findCredentials(service)
   } catch (error) {
-    throw new VError(
-      // @ts-ignore
-      error,
-      `Failed to find credentials from service ${service}`
-    )
+    throw new VError(error, `Failed to find credentials from service ${service}`)
   }
 }
 
