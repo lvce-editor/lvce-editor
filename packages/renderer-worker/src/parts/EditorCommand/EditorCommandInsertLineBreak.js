@@ -54,7 +54,7 @@ const getChanges = (lines, selections, languageConfiguration) => {
         changes.push({
           start: start,
           end: end,
-          inserted: ['', indent + '  ', ''],
+          inserted: ['', indent + '  ', indent],
           deleted: TextDocument.getSelectionText({ lines }, range),
           origin: EditOrigin.InsertLineBreak,
         })

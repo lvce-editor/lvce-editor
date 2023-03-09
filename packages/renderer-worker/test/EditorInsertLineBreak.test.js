@@ -54,6 +54,27 @@ test('editorInsertLineBreak - with indent', async () => {
   })
 })
 
+test('editorInsertLineBreak - with indent and keep previous indent', async () => {
+  // @ts-ignore
+  Languages.getLanguageConfiguration.mockImplementation(() => {
+    return {
+      indentationRules: {
+        increaseIndentPattern: '{$',
+      },
+    }
+  })
+  const editor = {
+    lines: ['  {}'],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 3, 0, 3),
+    undoStack: [],
+  }
+  expect(await EditorInsertLineBreak.insertLineBreak(editor)).toMatchObject({
+    lines: ['  {', '    ', '  }'],
+    selections: EditorSelection.fromRange(1, 4, 1, 4),
+  })
+})
+
 test('editorInsertLineBreak - in middle', async () => {
   // @ts-ignore
   Languages.getLanguageConfiguration.mockImplementation(() => {
