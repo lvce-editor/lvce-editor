@@ -42,6 +42,8 @@ export const load = (moduleId) => {
       return import('../WebSocketServer/WebSocketServer.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
+    case ModuleId.InstallExtension:
+      return import('../InstallExtension/InstallExtension.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

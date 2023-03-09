@@ -14,6 +14,8 @@ export const FileSystemRename = 'FileSystem.rename'
 export const FileSystemStat = 'FileSystem.stat'
 export const FileSystemWriteFile = 'FileSystem.writeFile'
 
+export const InstallExtensionInstallExtension = 'InstallExtension.installExtension'
+
 export const NativeOpenFolder = 'Native.openFolder'
 
 export const PreferencesGetAll = 'Preferences.getAll'
