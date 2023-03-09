@@ -13,6 +13,5 @@ export const Auto = () => {
   if (argv.includes('--ipc-type=worker')) {
     return Worker
   }
-
   throw new Error('[extension-host] unknown ipc type')
 }
