@@ -50,7 +50,7 @@ test('editorInsertLineBreak - with indent', async () => {
   }
   expect(await EditorInsertLineBreak.insertLineBreak(editor)).toMatchObject({
     lines: ['{', '  ', '}'],
-    selections: EditorSelection.fromRange(2, 0, 2, 0), // TODO
+    selections: EditorSelection.fromRange(1, 2, 1, 2),
   })
 })
 
