@@ -22,7 +22,7 @@ export const PreferencesGetAll = 'Preferences.getAll'
 
 export const RecentlyOpenedAddPath = 'RecentlyOpened.addPath'
 
-export const SearchSearchFile = 'Search.searchFile'
+export const SearchFileSearchFile = 'SearchFile.searchFile'
 
 export const TextSearchSearch = 'TextSearch.search'
 
