@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import { VError } from '../VError/VError.js'
@@ -18,6 +19,7 @@ export const getLanguages = async () => {
 }
 
 export const getLanguageConfiguration = async (languageId) => {
+  Assert.string(languageId)
   switch (Platform.platform) {
     case PlatformType.Web:
       return ExtensionHostLanguagesWeb.getLanguageConfiguration(languageId)
