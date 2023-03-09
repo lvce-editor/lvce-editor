@@ -240,7 +240,7 @@ test('getLanguageConfiguration - error - no language configuration', async () =>
       },
     ]
   })
-  expect(await ExtensionHostLanguages.getLanguageConfiguration('test')).toEqual({})
+  expect(await ExtensionHostLanguages.getLanguageConfiguration('test')).toBeUndefined()
 })
 
 test('getLanguageConfiguration - error - language is null', async () => {
