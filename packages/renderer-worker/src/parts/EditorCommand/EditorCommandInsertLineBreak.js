@@ -26,6 +26,7 @@ const shouldIncreaseIndent = (before, increaseIndentRegex) => {
 
 const getChanges = (lines, selections, languageConfiguration) => {
   const changes = []
+  const selectionChanges = []
   const increaseIndentRegex = getIncreaseIndentRegex(languageConfiguration)
   for (let i = 0; i < selections.length; i += 4) {
     const selectionStartRow = selections[i]
@@ -57,6 +58,7 @@ const getChanges = (lines, selections, languageConfiguration) => {
           deleted: TextDocument.getSelectionText({ lines }, range),
           origin: EditOrigin.InsertLineBreak,
         })
+        selectionChanges.push(selectionStartRow + 1, indent.length + 2, selectionStartRow + 1, indent.length + 2)
       } else {
         changes.push({
           start: start,
@@ -65,6 +67,7 @@ const getChanges = (lines, selections, languageConfiguration) => {
           deleted: TextDocument.getSelectionText({ lines }, range),
           origin: EditOrigin.InsertLineBreak,
         })
+        selectionChanges.push(selectionStartRow + 1, indent.length, selectionStartRow + 1, indent.length)
       }
     } else {
       changes.push({
@@ -74,14 +77,15 @@ const getChanges = (lines, selections, languageConfiguration) => {
         deleted: TextDocument.getSelectionText({ lines }, range),
         origin: EditOrigin.InsertLineBreak,
       })
+      selectionChanges.push(selectionStartRow + 1, 0, selectionStartRow + 1, 0)
     }
   }
-  return changes
+  return { changes, selectionChanges: new Uint32Array(selectionChanges) }
 }
 
 export const insertLineBreak = async (editor) => {
   const { lines, selections } = editor
   const languageConfiguration = await Languages.getLanguageConfiguration(editor)
-  const changes = getChanges(lines, selections, languageConfiguration)
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+  const { changes, selectionChanges } = getChanges(lines, selections, languageConfiguration)
+  return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
 }
