@@ -141,6 +141,8 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
+    case 'InstallExtension.installExtension':
+      return ModuleId.InstallExtension
     default:
       throw new CommandNotFoundError(commandId)
   }

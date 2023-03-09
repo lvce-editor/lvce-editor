@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as SharedProcessCommandType from '../src/parts/SharedProcessCommandType/SharedProcessCommandType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -20,18 +21,14 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   }
 })
 
-const ExtensionManagement = await import(
-  '../src/parts/ExtensionManagement/ExtensionManagement.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 test('install', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
-      case 'ExtensionManagement.install':
+      case SharedProcessCommandType.InstallExtensionInstallExtension:
         return null
       default:
         throw new Error('unexpected message')
@@ -39,25 +36,20 @@ test('install', async () => {
   })
   await ExtensionManagement.install('test-author.test-extension')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ExtensionManagement.install',
-    'test-author.test-extension'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(SharedProcessCommandType.InstallExtensionInstallExtension, 'test-author.test-extension')
 })
 
 test('install - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...params) => {
     switch (method) {
-      case 'ExtensionManagement.install':
+      case SharedProcessCommandType.InstallExtensionInstallExtension:
         throw new TypeError('x is not a function')
       default:
         throw new Error('unexpected message')
     }
   })
-  await expect(
-    ExtensionManagement.install('test-author.test-extension')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionManagement.install('test-author.test-extension')).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('uninstall', async () => {
@@ -72,10 +64,7 @@ test('uninstall', async () => {
   })
   await ExtensionManagement.uninstall('test-author.test-extension')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ExtensionManagement.uninstall',
-    'test-author.test-extension'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.uninstall', 'test-author.test-extension')
 })
 
 test('uninstall - error', async () => {
@@ -88,9 +77,7 @@ test('uninstall - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(
-    ExtensionManagement.uninstall('test-author.test-extension')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('disable', async () => {
@@ -105,10 +92,7 @@ test('disable', async () => {
   })
   await ExtensionManagement.disable('test-author.test-extension')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ExtensionManagement.disable',
-    'test-author.test-extension'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.disable', 'test-author.test-extension')
 })
 
 test('disable - error', async () => {
@@ -121,9 +105,7 @@ test('disable - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(
-    ExtensionManagement.disable('test-author.test-extension')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionManagement.disable('test-author.test-extension')).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('enable', async () => {
@@ -138,10 +120,7 @@ test('enable', async () => {
   })
   await ExtensionManagement.enable('test-author.test-extension')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ExtensionManagement.enable',
-    'test-author.test-extension'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.enable', 'test-author.test-extension')
 })
 
 test('enable - error', async () => {
@@ -154,9 +133,7 @@ test('enable - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(
-    ExtensionManagement.enable('test-author.test-extension')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionManagement.enable('test-author.test-extension')).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('getAllExtensions', async () => {
@@ -169,8 +146,7 @@ test('getAllExtensions', async () => {
             {
               id: 'builtin.language-basics-html',
               name: 'Language Basics HTML',
-              description:
-                'Provides syntax highlighting and bracket matching in HTML files.',
+              description: 'Provides syntax highlighting and bracket matching in HTML files.',
               languages: [
                 {
                   id: 'html',
@@ -203,8 +179,7 @@ test('getAllExtensions', async () => {
       {
         id: 'builtin.language-basics-html',
         name: 'Language Basics HTML',
-        description:
-          'Provides syntax highlighting and bracket matching in HTML files.',
+        description: 'Provides syntax highlighting and bracket matching in HTML files.',
         languages: [
           {
             id: 'html',
@@ -240,7 +215,5 @@ test('getAllExtensions - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(ExtensionManagement.getAllExtensions()).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(ExtensionManagement.getAllExtensions()).rejects.toThrowError(new TypeError('x is not a function'))
 })

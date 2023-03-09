@@ -18,3 +18,4 @@ export const ChromeExtension = 17
 export const Download = 18
 export const GitLsFiles = 19
 export const BulkReplacement = 20
+export const InstallExtension = 21
