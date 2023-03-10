@@ -1,5 +1,6 @@
 import * as GetDecorationClassName from '../GetDecorationClassName/GetDecorationClassName.js'
 import * as GetTokensViewport from '../GetTokensViewport/GetTokensViewport.js'
+import * as NormalizeText from '../NormalizeText/NormalizeText.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 
@@ -120,22 +121,11 @@ const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line, normalize,
     end += tokenLength
     const className = `Token ${extraClassName || embeddedTokenMap[tokenType] || 'Unknown'}`
     const text = line.slice(start, end)
-    const normalizedText = normalizeText(text, normalize, tabSize)
+    const normalizedText = NormalizeText.normalizeText(text, normalize, tabSize)
     lineInfo.push(normalizedText, className)
     start = end
   }
   return lineInfo
-}
-
-const normalizeText = (text, normalize, tabSize) => {
-  if (normalize) {
-    return text.replaceAll('\t', ' '.repeat(tabSize))
-  }
-  return text
-}
-
-const shouldNormalizeLine = (line) => {
-  return line.includes('\t')
 }
 
 const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize) => {
@@ -172,7 +162,7 @@ const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, To
     end += tokenLength
     const text = line.slice(start, end)
     const className = `Token ${extraClassName || TokenMap[tokenType] || 'Unknown'}`
-    const normalizedText = normalizeText(text, normalize, tabSize)
+    const normalizedText = NormalizeText.normalizeText(text, normalize, tabSize)
     lineInfo.push(normalizedText, className)
     start = end
   }
@@ -198,7 +188,7 @@ const getLineInfosViewport = (editor, tokens, embeddedResults, minLineY, maxLine
   const tabSize = 2
   for (let i = minLineY; i < maxLineY; i++) {
     const line = lines[i]
-    const normalize = shouldNormalizeLine(line)
+    const normalize = NormalizeText.shouldNormalizeText(line)
     result.push(getLineInfo(line, tokens[i - minLineY], embeddedResults, decorations, TokenMap, offset, normalize, tabSize))
     offset += line.length + 1
   }
