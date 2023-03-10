@@ -3,6 +3,7 @@ import { VError } from '../VError/VError.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
 const RE_UPPERCASE_LETTER = /[A-Z]/g
+const RE_PROPERTY = /item\..*must be of type/
 
 const spaceOut = (camelCaseWord) => {
   return camelCaseWord.replaceAll(RE_UPPERCASE_LETTER, (character, index) => {
@@ -17,13 +18,24 @@ const toCamelCase = (string) => {
   return string[0].toLowerCase() + string.slice(1)
 }
 
+const improveValidationErrorPostMessage = (validationError, camelCaseName) => {
+  if (validationError.startsWith('item must be of type')) {
+    return validationError.replace('item', camelCaseName)
+  }
+  if (validationError.startsWith('expected result to be')) {
+    return validationError.replace('result', `${camelCaseName} item`)
+  }
+  if (RE_PROPERTY.test(validationError)) {
+    return validationError.replace('item', camelCaseName)
+  }
+  return validationError
+}
+
 const improveValidationError = (name, validationError) => {
   const camelCaseName = toCamelCase(name)
   const spacedOutName = spaceOut(name)
   const pre = `invalid ${spacedOutName} result`
-  const post = validationError
-    .replace('item', camelCaseName)
-    .replace('result', `${camelCaseName} item`)
+  const post = improveValidationErrorPostMessage(validationError, camelCaseName)
   return pre + ': ' + post
 }
 
@@ -46,8 +58,7 @@ const ensureError = (input) => {
 export const create = ({ name, resultShape, executeKey = '' }) => {
   const providers = Object.create(null)
   const multipleResults = resultShape.type === 'array'
-  const methodName =
-    executeKey || (multipleResults ? `provide${name}s` : `provide${name}`)
+  const methodName = executeKey || (multipleResults ? `provide${name}s` : `provide${name}`)
   return {
     [`register${name}Provider`](provider) {
       providers[provider.languageId] = provider
@@ -66,9 +77,7 @@ export const create = ({ name, resultShape, executeKey = '' }) => {
         const provider = providers[textDocument.languageId]
         if (!provider) {
           const spacedOutName = spaceOut(name)
-          throw new VError(
-            `No ${spacedOutName} provider found for ${textDocument.languageId}`
-          )
+          throw new VError(`No ${spacedOutName} provider found for ${textDocument.languageId}`)
         }
         const result = await provider[methodName](textDocument, ...params)
         const error = Validation.validate(result, resultShape)
@@ -81,19 +90,12 @@ export const create = ({ name, resultShape, executeKey = '' }) => {
         const actualError = ensureError(error)
         const spacedOutName = spaceOut(name)
         if (actualError && actualError.message) {
-          if (
-            actualError.message === 'provider[methodName] is not a function'
-          ) {
+          if (actualError.message === 'provider[methodName] is not a function') {
             const camelCaseName = toCamelCase(name)
 
-            throw new VError(
-              `Failed to execute ${spacedOutName} provider: VError: ${camelCaseName}Provider.${methodName} is not a function`
-            )
+            throw new VError(`Failed to execute ${spacedOutName} provider: VError: ${camelCaseName}Provider.${methodName} is not a function`)
           }
-          const message =
-            actualError.name === 'Error'
-              ? `${actualError.message}`
-              : `${actualError.name}: ${actualError.message}`
+          const message = actualError.name === 'Error' ? `${actualError.message}` : `${actualError.name}: ${actualError.message}`
           actualError.message = `Failed to execute ${spacedOutName} provider: ${message}`
         }
         throw actualError
