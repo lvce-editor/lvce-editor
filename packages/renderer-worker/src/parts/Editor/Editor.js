@@ -60,6 +60,7 @@ export const create = (id, uri, languageId, content) => {
     itemHeight: 20,
     fontFamily: '',
     fontWeight: 400,
+    tabSize: 2,
     cursorWidth: 2,
   }
 }
