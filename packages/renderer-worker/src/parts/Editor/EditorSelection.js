@@ -58,6 +58,8 @@ const isInRange = (rowIndex, min, max) => {
 }
 
 const getX = (line, column, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, halfCursorWidth) => {
+  Assert.number(tabSize)
+  Assert.number(halfCursorWidth)
   if (column === 0) {
     return 0
   }
@@ -113,7 +115,7 @@ export const getVisible = (editor) => {
       for (let i = iMin; i < iMax; i++) {
         const currentLine = lines[i]
         const currentLineY = getY(i, minLineY, rowHeight)
-        const width = getX(currentLine, currentLine.length, fontWeight, fontSize, fontFamily, letterSpacing, halfCursorWidth)
+        const width = getX(currentLine, currentLine.length, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, halfCursorWidth)
         visibleSelections.push(0, currentLineY, width, rowHeight)
       }
       if (selectionEndRow <= maxLineY) {
