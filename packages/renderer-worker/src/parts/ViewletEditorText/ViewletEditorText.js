@@ -244,6 +244,10 @@ export const getDynamicCss = (preferences) => {
   if (fontLigatures) {
     styles.push(`  --EditorFontFeatureSettings: "liga" 1, "calt" 1;`)
   }
+  const tabSize = preferences['editor.tabSize']
+  if (tabSize) {
+    styles.push(` --EditorTabSize: ${tabSize}`)
+  }
   const css = `:root {
 ${JoinLines.joinLines(styles)}
 }`
