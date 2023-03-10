@@ -111,6 +111,70 @@ test('getVisible', () => {
   ])
 })
 
+test('getVisible - normalize tabs', () => {
+  const editor = {
+    uri: '',
+    languageId: 'html',
+    lines: ['\ttest'],
+    cursor: {
+      rowIndex: 0,
+      columnIndex: 0,
+    },
+    completionTriggerCharacters: [],
+    selections: [],
+    decorations: [],
+    id: 1,
+    tokenizer: {
+      StateMap: {},
+      TokenMap: {
+        228: 'Text',
+      },
+      TokenType: {
+        None: 99999999,
+        Numeric: 30,
+        String: 50,
+        Whitespace: 0,
+        Comment: 60,
+        Text: 117,
+        PunctuationTag: 228,
+        TagName: 118,
+        AttributeName: 119,
+        Punctuation: 10,
+        Error: 141,
+        PunctuationString: 11,
+        NewLine: 891,
+      },
+      initialLineState: {
+        state: 1,
+      },
+    },
+    deltaY: 0,
+    minLineY: 0,
+    maxLineY: 1,
+    numberOfVisibleLines: 20,
+    finalY: 0,
+    finalDeltaY: 0,
+    height: 400,
+    x: 0,
+    y: 20,
+    columnWidth: 9.735,
+    rowHeight: 20,
+    scrollBarHeight: 40,
+    undoStack: [],
+    lineCache: [
+      // TODO why is null here?
+      null,
+      {
+        state: 1,
+        tokens: [/* type */ 228, /* length */ 5],
+      },
+    ],
+    validLines: [],
+    invalidStartIndex: 1,
+  }
+  expect(EditorText.getVisible(editor)).toEqual([['  test', 'Token Text']])
+})
+
 test('getVisible - with semantic tokens decorations', () => {
   const editor = {
     uri: '/test/add.js',
