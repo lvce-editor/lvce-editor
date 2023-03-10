@@ -8,6 +8,6 @@ test('editorSelectAll', () => {
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
   expect(EditorSelectAll.selectAll(editor)).toMatchObject({
-    selections: EditorSelection.fromRange(0, 0, 3, 0),
+    selections: EditorSelection.fromRange(0, 0, 2, 0),
   })
 })
