@@ -13,7 +13,7 @@ export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator,
   await expect(viewletTree).toBeVisible()
 
   const treeItem1 = Locator('.TreeItem').nth(0)
-  await expect(treeItem1).toHaveText('file-1.txt /test')
+  await expect(treeItem1).toHaveText('file-1.txt/test')
   const treeItem2 = Locator('.TreeItem').nth(1)
-  await expect(treeItem2).toHaveText('file-2.txt /test')
+  await expect(treeItem2).toHaveText('file-2.txt/test')
 }
