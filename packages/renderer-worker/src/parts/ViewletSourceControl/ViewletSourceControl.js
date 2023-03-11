@@ -97,11 +97,8 @@ const getDisplayItems = (workingTree) => {
 export const loadContent = async (state) => {
   const root = Workspace.state.workspacePath
   const scheme = GetProtocol.getProtocol(root)
-  console.log('loading content')
   const enabledProviderIds = await SourceControl.getEnabledProviderIds(scheme, root)
-  console.log({ enabledProviderIds })
   const changedFiles = await getChangedFiles(enabledProviderIds)
-  console.log({ changedFiles })
   const displayItems = getDisplayItems(changedFiles.workingTree)
   return {
     ...state,
