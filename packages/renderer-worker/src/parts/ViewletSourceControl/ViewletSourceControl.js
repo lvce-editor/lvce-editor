@@ -89,6 +89,8 @@ const getDisplayItems = (workingTree) => {
       posInSet: i + 1,
       setSize,
       icon: IconTheme.getFileIcon({ name: item.file }),
+      decorationIcon: item.icon,
+      decorationIconTitle: item.iconTitle,
     })
   }
   return displayItems

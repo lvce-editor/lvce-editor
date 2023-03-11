@@ -7,8 +7,8 @@ import * as Logger from '../Logger/Logger.js'
 import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 
 const create$Item = (item) => {
-  const $Icon = document.createElement('div')
-  $Icon.className = `FileIcon${item.icon}`
+  const $FileIcon = document.createElement('div')
+  $FileIcon.className = `FileIcon${item.icon}`
 
   const $LabelDetail = document.createElement('span')
   $LabelDetail.className = 'LabelDetail'
@@ -25,7 +25,16 @@ const create$Item = (item) => {
   $Item.ariaPosInSet = item.posInSet
   $Item.ariaSetSize = item.setSize
   $Item.title = item.file
-  $Item.append($Icon, $Label)
+  $Item.append($FileIcon, $Label)
+
+  if (item.decorationIcon) {
+    const $DecorationIcon = document.createElement('img')
+    $DecorationIcon.className = 'DecorationIcon'
+    $DecorationIcon.src = item.decorationIcon
+    $DecorationIcon.title = item.decorationIconTitle
+    $Item.append($DecorationIcon)
+  }
+
   // TODO use same virtual list as for explorer
   return $Item
 }
