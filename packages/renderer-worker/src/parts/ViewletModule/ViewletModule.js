@@ -1,3 +1,4 @@
+import { VError } from '../VError/VError.js'
 import * as ViewletModuleInternal from '../ViewletModuleInternal/ViewletModuleInternal.js'
 
 export const load = async (moduleId) => {
@@ -8,7 +9,7 @@ export const load = async (moduleId) => {
     if (IsImportError.isImportError(error)) {
       const TryToGetActualImportErrorMessage = await import('../TryToGetActualImportErrorMessage/TryToGetActualImportErrorMessage.js')
       const actualErrorMessage = await TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage('', error)
-      throw new Error(actualErrorMessage)
+      throw new VError(actualErrorMessage, `Failed to load ${moduleId} module`)
     }
     throw error
   }

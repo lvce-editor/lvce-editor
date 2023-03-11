@@ -20,7 +20,7 @@ export const tryToGetActualImportErrorMessage = async (url, error) => {
     url = getUrl(error)
   }
   if (!url) {
-    return `Failed to import script`
+    return `Failed to import script: ${error}`
   }
   let response
   try {

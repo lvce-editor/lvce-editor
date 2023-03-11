@@ -45,3 +45,17 @@ test('load - import error', async () => {
   })
   await expect(ViewletModule.load(123)).rejects.toThrowError(new TypeError('x is not a function'))
 })
+
+test('load - syntax error', async () => {
+  // @ts-ignore
+  ViewletModuleInternal.load.mockImplementation(() => {
+    throw new SyntaxError("Failed to import script: SyntaxError: Unexpected token '<<'")
+  })
+  // @ts-ignore
+  TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage.mockImplementation(() => {
+    return `Failed to import script: SyntaxError: Unexpected token '<<'"`
+  })
+  await expect(ViewletModule.load(123)).rejects.toThrowError(
+    "Failed to load 123 module: Failed to import script: SyntaxError: Unexpected token '<<'\""
+  )
+})
