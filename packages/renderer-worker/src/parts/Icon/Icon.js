@@ -6,6 +6,7 @@ export const Add = `${assetDir}/icons/add.svg`
 export const Blank = `${assetDir}/icons/blank.svg`
 export const ClearAll = `${assetDir}/icons/clear-all.svg`
 export const Close = `${assetDir}/icons/icon-close.svg`
+export const Check = `${assetDir}/icons/check.svg`
 export const CollapseAll = `${assetDir}/icons/collapse-all.svg`
 export const DebugAlt2 = `${assetDir}/icons/debug-alt-2.svg`
 export const DebugContinue = `${assetDir}/icons/debug-continue.svg`

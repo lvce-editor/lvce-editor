@@ -21,12 +21,12 @@ export const getActions = () => {
     {
       type: ActionType.Button,
       id: UiStrings.CreatePullRequest,
-      icon: Icon.Files,
+      icon: Icon.Blank,
     },
     {
       type: ActionType.Button,
       id: UiStrings.CommitAndPush,
-      icon: Icon.Files,
+      icon: Icon.Check,
     },
     {
       type: ActionType.Button,
