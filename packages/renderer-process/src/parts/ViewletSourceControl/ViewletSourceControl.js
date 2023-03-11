@@ -10,7 +10,7 @@ const create$Item = (item) => {
   const $Icon = document.createElement('div')
   $Icon.className = `FileIcon${item.icon}`
 
-  const $LabelDetail = document.createElement('div')
+  const $LabelDetail = document.createElement('span')
   $LabelDetail.className = 'LabelDetail'
   $LabelDetail.textContent = item.detail
 
@@ -122,3 +122,5 @@ export const setItemButtons = (state, index, buttons) => {
   // TODO handle icon loading error?
   $Item.append(...buttons.map(create$Button))
 }
+
+//

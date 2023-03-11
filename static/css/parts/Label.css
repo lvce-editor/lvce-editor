@@ -1,20 +1,16 @@
 .Label {
-  display: flex;
+  /* display: flex; */
   white-space: nowrap;
   contain: content;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
   flex: 1;
-  gap: 4px;
 }
 
 .LabelDetail {
-  /* white-space: nowrap; */
   font-size: 0.9em;
   opacity: 0.7;
   contain: content;
-  /* min-width: 0; */
+  margin-left: 4px;
 }
-
-/*  */
