@@ -1,12 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Callback from '../Callback/Callback.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
-export const create = async (options) => {
-  const type = options.type
-  Assert.string(type)
+const getPort = async (type) => {
   const { id, promise } = Callback.registerPromise()
   RendererProcess.send({
     jsonrpc: JsonRpcVersion.Two,
@@ -21,6 +19,13 @@ export const create = async (options) => {
   })
   const response = await promise
   const port = response.result
+  return port
+}
+
+export const create = async (options) => {
+  const type = options.type
+  Assert.string(type)
+  const port = await getPort(type)
   return port
 }
 

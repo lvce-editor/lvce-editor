@@ -29,6 +29,9 @@ export const wrap = (port) => {
       send(message, transfer) {
         port.postMessage(message, transfer)
       },
+      postMessage(message, transfer) {
+        port.postMessage(message, transfer)
+      },
     },
   }
   return {

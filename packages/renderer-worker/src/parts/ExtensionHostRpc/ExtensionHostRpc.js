@@ -1,9 +1,11 @@
 import * as Callback from '../Callback/Callback.js'
-import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 const isResultMessage = (message) => {
   return 'result' in message
@@ -15,8 +17,8 @@ const isErrorMessage = (message) => {
 
 const handleMessageMethod = async (message, event) => {
   if (message.method === 'ElectronMessagePort.create') {
-    const IpcParentWithElectron = await import('../IpcParentWithElectron/IpcParentWithElectron.js')
-    const ipc = await IpcParentWithElectron.create({
+    const ipc = await IpcParent.create({
+      method: IpcParentType.ElectronMessagePort,
       type: 'extension-host-helper-process',
     })
     event.target.postMessage(
@@ -31,10 +33,8 @@ const handleMessageMethod = async (message, event) => {
     const response = await GetResponse.getResponse(message)
     event.target.send(response)
   } else if (message.method === 'get-port') {
-    const IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug = await import(
-      '../IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js'
-    )
-    const port = await IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.create({
+    const ipc = await IpcParent.create({
+      method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
       url: message.params[0],
       name: message.params[1],
     })
@@ -42,9 +42,9 @@ const handleMessageMethod = async (message, event) => {
       {
         jsonrpc: JsonRpcVersion.Two,
         id: message.id,
-        result: port,
+        result: ipc._port,
       },
-      [port]
+      [ipc._port]
     )
   } else {
     await GlobalEventBus.emitEvent(message.method, ...message.params)
