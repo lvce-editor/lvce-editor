@@ -122,5 +122,3 @@ export const setItemButtons = (state, index, buttons) => {
   // TODO handle icon loading error?
   $Item.append(...buttons.map(create$Button))
 }
-
-//
