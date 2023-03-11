@@ -1,5 +1,4 @@
 .Label {
-  /* display: flex; */
   white-space: nowrap;
   contain: content;
   overflow: hidden;
