@@ -22,7 +22,6 @@
   line-height: 22px;
   contain: strict;
   width: 100%;
-  display: flex;
 }
 
 /* .TreeItem:focus {

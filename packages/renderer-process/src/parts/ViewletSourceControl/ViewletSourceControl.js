@@ -10,9 +10,14 @@ const create$Item = (item) => {
   const $Icon = document.createElement('div')
   $Icon.className = `FileIcon${item.icon}`
 
+  const $LabelDetail = document.createElement('span')
+  $LabelDetail.className = 'LabelDetail'
+  $LabelDetail.textContent = item.detail
+
   const $Label = document.createElement('div')
   $Label.className = 'Label'
   $Label.textContent = item.label
+  $Label.append($LabelDetail)
 
   const $Item = document.createElement('div')
   $Item.className = 'TreeItem'
