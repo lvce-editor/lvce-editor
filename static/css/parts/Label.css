@@ -1,13 +1,20 @@
 .Label {
-  display: inline-block;
+  display: flex;
   white-space: nowrap;
   contain: content;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
+  gap: 4px;
 }
 
 .LabelDetail {
-  display: inline-block;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   font-size: 0.9em;
   opacity: 0.7;
   contain: content;
+  /* min-width: 0; */
 }
+
+/*  */

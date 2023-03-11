@@ -10,13 +10,14 @@ const create$Item = (item) => {
   const $Icon = document.createElement('div')
   $Icon.className = `FileIcon${item.icon}`
 
-  const $Label = document.createElement('div')
-  $Label.className = 'Label'
-  $Label.textContent = item.label
-
   const $LabelDetail = document.createElement('div')
   $LabelDetail.className = 'LabelDetail'
   $LabelDetail.textContent = item.detail
+
+  const $Label = document.createElement('div')
+  $Label.className = 'Label'
+  $Label.textContent = item.label
+  $Label.append($LabelDetail)
 
   const $Item = document.createElement('div')
   $Item.className = 'TreeItem'
@@ -24,7 +25,7 @@ const create$Item = (item) => {
   $Item.ariaPosInSet = item.posInSet
   $Item.ariaSetSize = item.setSize
   $Item.title = item.file
-  $Item.append($Icon, $Label, $LabelDetail)
+  $Item.append($Icon, $Label)
   // TODO use same virtual list as for explorer
   return $Item
 }

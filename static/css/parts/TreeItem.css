@@ -21,12 +21,8 @@
   line-height: 22px;
   contain: strict;
   width: 100%;
-  display: flex;
-  flex-shrink: 0;
   align-items: center;
-  text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden;
 }
 
 /* .TreeItem:focus {
