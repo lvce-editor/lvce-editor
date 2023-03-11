@@ -47,9 +47,8 @@ export const discard = (providerId, path) => {
 }
 
 export const getEnabledProviderIds = (scheme, root) => {
-  console.log({ scheme })
   return ExtensionHostShared.executeProvider({
-    event: `onSourceControl`,
+    event: `onSourceControl:${scheme}`,
     method: ExtensionHostCommandType.SourceControlGetEnabledProviderIds,
     params: [scheme, root],
     noProviderFoundMessage: 'No source control provider found',
