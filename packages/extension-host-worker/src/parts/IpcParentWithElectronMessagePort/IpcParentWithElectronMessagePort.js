@@ -1,6 +1,7 @@
 import * as Callback from '../Callback/Callback.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
-const getPort = () => {
+const getPort = async () => {
   const { id, promise } = Callback.registerPromise()
   const message = {
     jsonrpc: '2.0',
@@ -8,12 +9,18 @@ const getPort = () => {
     params: [],
     id,
   }
-  postMessage(message)
-  return promise
+  Rpc.state.ipc.send(message)
+  const response = await promise
+  const port = response.result
+  return port
 }
 
 export const create = async () => {
   const port = await getPort()
+  return port
+}
+
+export const wrap = (port) => {
   let handleMessage
   return {
     get onmessage() {

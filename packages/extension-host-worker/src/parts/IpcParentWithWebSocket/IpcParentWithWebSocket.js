@@ -1,28 +1,23 @@
 import * as Json from '../Json/Json.js'
 import * as WebSocketProtocol from '../WebSocketProtocol/WebSocketProtocol.js'
+import * as WaitForWebSocketToBeOpen from '../WaitForWebSocketToBeOpen/WaitForWebSocketToBeOpen.js'
 
 const getWsUrl = () => {
   const wsProtocol = WebSocketProtocol.getWebSocketProtocol()
   return `${wsProtocol}//${location.host}`
 }
 
-export const create = ({ protocol }) => {
+export const create = async ({ protocol }) => {
   // TODO replace this during build
   const wsUrl = getWsUrl()
   const webSocket = new WebSocket(wsUrl, [protocol])
-  const pendingMessages = []
-  webSocket.onopen = () => {
-    ipc.send = (message) => {
-      const stringifiedMessage = Json.stringifyCompact(message)
-      webSocket.send(stringifiedMessage)
-    }
-    for (const message of pendingMessages) {
-      ipc.send(message)
-    }
-    pendingMessages.length = 0
-  }
+  await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
+  return webSocket
+}
+
+export const wrap = (webSocket) => {
   let handleMessage
-  const ipc = {
+  return {
     get onmessage() {
       return handleMessage
     },
@@ -43,8 +38,8 @@ export const create = ({ protocol }) => {
       webSocket.onmessage = handleMessage
     },
     send(message) {
-      pendingMessages.push(message)
+      const stringifiedMessage = Json.stringifyCompact(message)
+      webSocket.send(stringifiedMessage)
     },
   }
-  return ipc
 }
