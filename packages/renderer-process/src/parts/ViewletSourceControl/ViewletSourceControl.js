@@ -14,13 +14,17 @@ const create$Item = (item) => {
   $Label.className = 'Label'
   $Label.textContent = item.label
 
+  const $LabelDetail = document.createElement('div')
+  $LabelDetail.className = 'LabelDetail'
+  $LabelDetail.textContent = item.detail
+
   const $Item = document.createElement('div')
   $Item.className = 'TreeItem'
   $Item.role = AriaRoles.TreeItem
   $Item.ariaPosInSet = item.posInSet
   $Item.ariaSetSize = item.setSize
   $Item.title = item.file
-  $Item.append($Icon, $Label)
+  $Item.append($Icon, $Label, $LabelDetail)
   // TODO use same virtual list as for explorer
   return $Item
 }

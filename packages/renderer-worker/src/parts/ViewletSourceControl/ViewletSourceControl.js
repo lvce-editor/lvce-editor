@@ -80,9 +80,12 @@ const getDisplayItems = (workingTree) => {
   const setSize = workingTree.length
   for (let i = 0; i < workingTree.length; i++) {
     const item = workingTree[i]
+    const baseName = Workspace.pathBaseName(item.file)
+    const folderName = item.file.slice(0, -baseName.length - 1)
     displayItems.push({
       file: item.file,
-      label: item.file,
+      label: baseName,
+      detail: folderName,
       posInSet: i + 1,
       setSize,
       icon: IconTheme.getFileIcon({ name: item.file }),
@@ -94,8 +97,11 @@ const getDisplayItems = (workingTree) => {
 export const loadContent = async (state) => {
   const root = Workspace.state.workspacePath
   const scheme = GetProtocol.getProtocol(root)
+  console.log('loading content')
   const enabledProviderIds = await SourceControl.getEnabledProviderIds(scheme, root)
+  console.log({ enabledProviderIds })
   const changedFiles = await getChangedFiles(enabledProviderIds)
+  console.log({ changedFiles })
   const displayItems = getDisplayItems(changedFiles.workingTree)
   return {
     ...state,

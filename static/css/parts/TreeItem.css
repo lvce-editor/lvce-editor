@@ -9,7 +9,6 @@
   height: 22px;
   display: inline-block;
   flex-shrink: 0;
-  align-items: center;
 }
 
 .TreeItem {
@@ -23,6 +22,11 @@
   contain: strict;
   width: 100%;
   display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /* .TreeItem:focus {

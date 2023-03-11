@@ -94,6 +94,7 @@ const startSynching = async (extensionHost) => {
 const actuallyActivateByEvent = async (event) => {
   // TODO should not query extensions multiple times
   const extensions = await ExtensionMeta.getExtensions()
+  console.log({ extensions })
   const { resolved, rejected } = ExtensionMeta.organizeExtensions(extensions)
   // TODO if many (more than two?) extensions cannot be loaded,
   // it shouldn't should that many error messages
@@ -106,6 +107,7 @@ const actuallyActivateByEvent = async (event) => {
   const extensionHostManagerTypes = getExtensionHostManagementTypes()
   const extensionHostsWithExtensions = getManagersWithExtensionsToActivate(extensionHostManagerTypes, extensionsToActivate)
   const extensionHosts = []
+  console.log({ extensionsToActivate })
   for (const managerWithExtensions of extensionHostsWithExtensions) {
     const extensionHost = await ExtensionHostManagementShared.startExtensionHost(
       managerWithExtensions.manager.name,
@@ -116,7 +118,9 @@ const actuallyActivateByEvent = async (event) => {
     Assert.object(extensionHost)
     for (const extension of managerWithExtensions.toActivate) {
       // TODO tell extension host to activate extension
+      console.log('before activate')
       await extensionHost.ipc.invoke(ExtensionHostCommandType.ExtensionActivate, extension)
+      console.log('after activate')
     }
     extensionHosts.push(extensionHost)
   }
@@ -130,6 +134,7 @@ const actuallyActivateByEvent = async (event) => {
 
 // TODO add tests for this
 export const activateByEvent = async (event) => {
+  console.log({ event })
   Assert.string(event)
   if (event === 'none') {
     const all = await Promise.all(Object.values(state.cachedActivationEvents))

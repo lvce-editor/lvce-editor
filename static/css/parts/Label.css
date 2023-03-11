@@ -1,7 +1,13 @@
 .Label {
-  text-overflow: ellipsis;
-  overflow: hidden;
   display: inline-block;
   white-space: nowrap;
-  flex: 1;
+  contain: content;
+}
+
+.LabelDetail {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 0.9em;
+  opacity: 0.7;
+  contain: content;
 }
