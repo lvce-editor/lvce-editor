@@ -15,6 +15,7 @@ const UiStrings = {
   Add: 'Add',
   Restore: 'Restore',
   OpenFile: 'Open File',
+  Changes: 'Changes',
 }
 
 export const create = () => {
@@ -28,6 +29,7 @@ export const create = () => {
     displayItems: [],
     buttonIndex: -1,
     enabledProviderIds: [],
+    isExpanded: true,
   }
 }
 
@@ -75,24 +77,41 @@ const getChangedFiles = async (enabledProviderIds) => {
   }
 }
 
-const getDisplayItems = (workingTree) => {
+const getDisplayItems = (workingTree, isExpanded) => {
   const displayItems = []
   const setSize = workingTree.length
-  for (let i = 0; i < workingTree.length; i++) {
-    const item = workingTree[i]
-    const baseName = Workspace.pathBaseName(item.file)
-    const folderName = item.file.slice(0, -baseName.length - 1)
-    displayItems.push({
-      file: item.file,
-      label: baseName,
-      detail: folderName,
-      posInSet: i + 1,
-      setSize,
-      icon: IconTheme.getFileIcon({ name: item.file }),
-      decorationIcon: item.icon,
-      decorationIconTitle: item.iconTitle,
-      decorationStrikeThrough: item.strikeThrough,
-    })
+  const type = isExpanded ? 'directory-expanded' : 'directory'
+  const icon = isExpanded ? Icon.ChevronDown : Icon.ChevronRight
+  displayItems.push({
+    file: '',
+    label: UiStrings.Changes,
+    detail: '',
+    posInSet: 1,
+    setSize: 1,
+    icon,
+    decorationIcon: '',
+    decorationIconTitle: '',
+    decorationStrikeThrough: false,
+    type,
+  })
+  if (isExpanded) {
+    for (let i = 0; i < workingTree.length; i++) {
+      const item = workingTree[i]
+      const baseName = Workspace.pathBaseName(item.file)
+      const folderName = item.file.slice(0, -baseName.length - 1)
+      displayItems.push({
+        file: item.file,
+        label: baseName,
+        detail: folderName,
+        posInSet: i + 1,
+        setSize,
+        icon: IconTheme.getFileIcon({ name: item.file }),
+        decorationIcon: item.icon,
+        decorationIconTitle: item.iconTitle,
+        decorationStrikeThrough: item.strikeThrough,
+        type: 'file',
+      })
+    }
   }
   return displayItems
 }
@@ -102,7 +121,8 @@ export const loadContent = async (state) => {
   const scheme = GetProtocol.getProtocol(root)
   const enabledProviderIds = await SourceControl.getEnabledProviderIds(scheme, root)
   const changedFiles = await getChangedFiles(enabledProviderIds)
-  const displayItems = getDisplayItems(changedFiles.workingTree)
+  const isExpanded = true
+  const displayItems = getDisplayItems(changedFiles.workingTree, isExpanded)
   return {
     ...state,
     index: changedFiles.index,
@@ -112,14 +132,18 @@ export const loadContent = async (state) => {
     gitRoot: changedFiles.gitRoot,
     displayItems,
     enabledProviderIds,
+    isExpanded,
   }
 }
 
 const updateIcon = (displayItem) => {
-  return {
-    ...displayItem,
-    icon: IconTheme.getFileIcon({ name: displayItem.file }),
+  if (displayItem.type === 'file') {
+    return {
+      ...displayItem,
+      icon: IconTheme.getFileIcon({ name: displayItem.file }),
+    }
   }
+  return displayItem
 }
 
 export const updateIcons = (state) => {
@@ -135,18 +159,61 @@ export const handleIconThemeChange = (state) => {
   return updateIcons(state)
 }
 
-export const handleClick = async (state, index) => {
-  const item = state.workingTree[index]
+const handleClickFile = async (state, item) => {
   const absolutePath = `${state.gitRoot}/${item.file}`
   // TODO handle error
   const [fileBefore, fileNow] = await Promise.all([SourceControl.getFileBefore(item.file), FileSystem.readFile(absolutePath)])
   const content = `before:\n${fileBefore}\n\n\nnow:\n${fileNow}`
-  // const content
-  // await Main.openRawText(`diff://${absolutePath}`, content, 'plaintext')
-  // await Main.openAbsolutePath(absolutePath)
+  return state
+}
+
+const handleClickDirectory = (state, item) => {
+  const { workingTree } = state
+  const isExpanded = true
+  const displayItems = getDisplayItems(workingTree, isExpanded)
+  return {
+    ...state,
+    displayItems,
+    isExpanded,
+  }
+}
+const handleClickDirectoryExpanded = (state, item) => {
+  const { workingTree } = state
+  const isExpanded = false
+  const displayItems = getDisplayItems(workingTree, isExpanded)
+  return {
+    ...state,
+    displayItems,
+    isExpanded,
+  }
+}
+
+export const handleClick = async (state, index) => {
+  const { displayItems } = state
+  const item = displayItems[index]
+  console.log('type', item.type)
+  switch (item.type) {
+    case 'directory':
+      return handleClickDirectory(state)
+    case 'directory-expanded':
+      return handleClickDirectoryExpanded(state)
+    case 'file':
+      return handleClickFile(state, item)
+    default:
+      console.warn(`unknown item type: ${item.type}`)
+      return state
+  }
 }
 
 export const handleMouseOver = (state, index) => {
+  const { displayItems } = state
+  const item = displayItems[index]
+  if (!item) {
+    return state
+  }
+  if (item.type === 'directory' || item.type === 'directory-expanded') {
+    return state
+  }
   return {
     ...state,
     buttonIndex: index,

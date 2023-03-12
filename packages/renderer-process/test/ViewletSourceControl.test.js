@@ -27,6 +27,7 @@ test('setChangedFiles', () => {
       icon: '',
       posInSet: 1,
       setSize: 2,
+      type: 'file',
     },
     {
       label: 'file-2',
@@ -34,6 +35,7 @@ test('setChangedFiles', () => {
       icon: '',
       posInSet: 1,
       setSize: 2,
+      type: 'file',
     },
   ])
   expect(getSimpleList(state)).toEqual(['file-1', 'file-2'])
@@ -62,6 +64,7 @@ test('setButtons', () => {
       icon: '',
       posInSet: 1,
       setSize: 2,
+      type: 'file',
     },
   ])
   ViewletSourceControl.setItemButtons(state, 0, [
