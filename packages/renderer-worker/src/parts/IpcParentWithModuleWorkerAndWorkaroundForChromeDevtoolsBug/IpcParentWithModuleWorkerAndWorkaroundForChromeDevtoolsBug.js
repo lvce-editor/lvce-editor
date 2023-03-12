@@ -35,6 +35,7 @@ export const wrap = (port) => {
     },
   }
   return {
+    _port: port,
     get onmessage() {
       return port.onmessage
     },
