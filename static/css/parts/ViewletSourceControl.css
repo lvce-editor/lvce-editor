@@ -52,3 +52,9 @@
 .SourceControlButton:hover {
   background-color: hsla(0, 0%, 100%, 0.1);
 }
+
+.DecorationIcon {
+  width: 16px;
+  height: 16px;
+  contain: strict;
+}
