@@ -38,13 +38,17 @@ const handleMessageMethod = async (message, event) => {
       url: message.params[0],
       name: message.params[1],
     })
+    const port = ipc._port
+    if (!port) {
+      throw new Error('failed to create message port')
+    }
     event.target.send(
       {
         jsonrpc: JsonRpcVersion.Two,
         id: message.id,
-        result: ipc._port,
+        result: port,
       },
-      [ipc._port]
+      [port]
     )
   } else {
     await GlobalEventBus.emitEvent(message.method, ...message.params)
