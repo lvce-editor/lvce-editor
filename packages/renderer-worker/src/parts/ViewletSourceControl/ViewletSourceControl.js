@@ -91,6 +91,7 @@ const getDisplayItems = (workingTree) => {
       icon: IconTheme.getFileIcon({ name: item.file }),
       decorationIcon: item.icon,
       decorationIconTitle: item.iconTitle,
+      decorationStrikeThrough: item.strikeThrough,
     })
   }
   return displayItems

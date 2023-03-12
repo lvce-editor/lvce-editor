@@ -34,6 +34,9 @@ const create$Item = (item) => {
     $DecorationIcon.title = item.decorationIconTitle
     $Item.append($DecorationIcon)
   }
+  if (item.decorationStrikeThrough) {
+    $Label.classList.add('StrikeThrough')
+  }
 
   // TODO use same virtual list as for explorer
   return $Item

@@ -13,3 +13,7 @@
   contain: content;
   margin-left: 4px;
 }
+
+.StrikeThrough {
+  text-decoration: strike-through;
+}
