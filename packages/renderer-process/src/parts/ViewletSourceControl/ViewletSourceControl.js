@@ -62,16 +62,6 @@ const create$ItemDirectory = (item) => {
   $Item.ariaSetSize = item.setSize
   $Item.append($Icon, $Label)
 
-  // if (item.decorationIcon) {
-  //   const $DecorationIcon = document.createElement('img')
-  //   $DecorationIcon.className = 'DecorationIcon'
-  //   $DecorationIcon.src = item.decorationIcon
-  //   $DecorationIcon.title = item.decorationIconTitle
-  //   $Item.append($DecorationIcon)
-  // }
-  // if (item.decorationStrikeThrough) {
-  //   $Label.classList.add('StrikeThrough')
-  // }
   return $Item
 }
 
