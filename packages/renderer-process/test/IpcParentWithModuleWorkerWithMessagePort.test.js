@@ -123,7 +123,7 @@ test('create - error - not found', async () => {
     })
   ).rejects.toThrowError(
     new Error(
-      "Failed to start extension host worker: Error: Cannot find module 'https://example.com/not-found.js' from 'src/parts/IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.js'"
+      "Failed to start extension host worker: Error: Cannot find module 'https://example.com/not-found.js' from 'src/parts/TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js'"
     )
   )
 })
