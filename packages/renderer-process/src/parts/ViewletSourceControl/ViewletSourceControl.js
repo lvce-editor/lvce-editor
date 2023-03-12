@@ -1,12 +1,14 @@
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Logger from '../Logger/Logger.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 
-const create$Item = (item) => {
+const create$ItemFile = (item) => {
   const $FileIcon = document.createElement('div')
   $FileIcon.className = `FileIcon${item.icon}`
 
@@ -40,6 +42,49 @@ const create$Item = (item) => {
 
   // TODO use same virtual list as for explorer
   return $Item
+}
+
+const create$ItemDirectory = (item) => {
+  console.log({ item })
+  const $Icon = document.createElement('div')
+  $Icon.className = 'Chevron'
+  $Icon.append(MaskIcon.create(item.icon))
+
+  const $Label = document.createElement('div')
+  $Label.className = 'Label'
+  $Label.textContent = item.label
+
+  const $Item = document.createElement('div')
+  $Item.className = 'TreeItem'
+  $Item.role = AriaRoles.TreeItem
+  $Item.ariaExpanded = item.type === 'directory-expanded' ? AriaBoolean.True : AriaBoolean.False
+  $Item.ariaPosInSet = item.posInSet
+  $Item.ariaSetSize = item.setSize
+  $Item.append($Icon, $Label)
+
+  // if (item.decorationIcon) {
+  //   const $DecorationIcon = document.createElement('img')
+  //   $DecorationIcon.className = 'DecorationIcon'
+  //   $DecorationIcon.src = item.decorationIcon
+  //   $DecorationIcon.title = item.decorationIconTitle
+  //   $Item.append($DecorationIcon)
+  // }
+  // if (item.decorationStrikeThrough) {
+  //   $Label.classList.add('StrikeThrough')
+  // }
+  return $Item
+}
+
+const create$Item = (item) => {
+  switch (item.type) {
+    case 'file':
+      return create$ItemFile(item)
+    case 'directory':
+    case 'directory-expanded':
+      return create$ItemDirectory(item)
+    default:
+      return undefined
+  }
 }
 
 const getPlaceHolderText = () => {

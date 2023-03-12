@@ -58,3 +58,10 @@
   height: 16px;
   contain: strict;
 }
+
+.Chevron {
+  width: 16px;
+  height: 16px;
+  contain: strict;
+  position: relative;
+}
