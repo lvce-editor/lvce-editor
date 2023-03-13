@@ -1,7 +1,13 @@
+const includesWord = (completionItem, word) => {
+  return completionItem.label.includes(word)
+}
+
 export const filterCompletionItems = (completionItems, word) => {
-  const includesWord = (completionItem) => {
-    return completionItem.label.includes(word)
+  const filteredCompletions = []
+  for (const completionItem of completionItems) {
+    if (includesWord(completionItem, word)) {
+      filteredCompletions.push(completionItem)
+    }
   }
-  const filteredCompletions = completionItems.filter(includesWord)
   return filteredCompletions
 }
