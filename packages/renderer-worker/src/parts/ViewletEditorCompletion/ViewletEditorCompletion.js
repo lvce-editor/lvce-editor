@@ -2,11 +2,11 @@ import * as Completions from '../Completions/Completions.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
 import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.js'
 import * as Height from '../Height/Height.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -81,13 +81,20 @@ export const handleEditorType = (state, editor, text) => {
   }
 }
 
-export const deleteCharacterLeft = (state, editor) => {
+export const handleEditorDeleteCharacterLeft = (state, editor) => {
   const { unfilteredItems } = state
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
   const x = EditorPosition.x(editor, rowIndex, columnIndex)
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const wordAtOffset = getWordAtOffset(editor)
+  if (!wordAtOffset) {
+    editor.completionState = EditorCompletionState.None
+    return {
+      ...state,
+      disposed: true,
+    }
+  }
   const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, wordAtOffset)
   const newMaxLineY = Math.min(items.length, 8)
   return {
@@ -95,7 +102,7 @@ export const deleteCharacterLeft = (state, editor) => {
     items,
     x,
     y,
-    maxlineY: newMaxLineY,
+    maxLineY: newMaxLineY,
   }
 }
 

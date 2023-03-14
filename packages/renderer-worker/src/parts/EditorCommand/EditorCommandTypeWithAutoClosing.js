@@ -14,6 +14,7 @@ import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
+const RE_WHITESPACE = /^\s+$/
 
 export const state = {
   listeners: [],
@@ -125,8 +126,13 @@ const typeWithAutoClosingTag = async (editor, text) => {
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
-const openCompletion = async (editor) => {
+const openCompletion = async (editor, text) => {
+  if (RE_WHITESPACE.test(text)) {
+    return
+  }
   editor.completionState = EditorCompletionState.Loading
+  editor.widgets = editor.widgets || []
+  editor.widgets.push('EditorCompletion')
   await CommandOpenCompletion.openCompletion(editor)
   editor.completionState = EditorCompletionState.Visible
 }
@@ -161,7 +167,7 @@ export const typeWithAutoClosing = async (editor, text) => {
   const newEditor = typeWithAutoClosingDisabled(editor, text)
   switch (newEditor.completionState) {
     case EditorCompletionState.None:
-      openCompletion(editor)
+      openCompletion(newEditor, text)
       break
     case EditorCompletionState.Visible:
       RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorType', text)
