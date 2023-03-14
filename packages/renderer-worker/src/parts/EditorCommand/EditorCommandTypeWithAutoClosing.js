@@ -12,6 +12,8 @@ import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
+import * as CommandOpenCompletion from './EditorCommandCompletion.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 
 const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
 
@@ -125,6 +127,12 @@ const typeWithAutoClosingTag = async (editor, text) => {
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
+const openCompletion = async (editor) => {
+  editor.completionState = EditorCompletionState.Loading
+  await CommandOpenCompletion.openCompletion(editor)
+  editor.completionState = EditorCompletionState.Visible
+}
+
 // TODO implement typing command without brace completion -> brace completion should be independent module
 export const typeWithAutoClosing = async (editor, text) => {
   switch (text) {
@@ -153,7 +161,16 @@ export const typeWithAutoClosing = async (editor, text) => {
   }
 
   const newEditor = typeWithAutoClosingDisabled(editor, text)
-  RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorType', text)
+  switch (newEditor.completionState) {
+    case EditorCompletionState.None:
+      openCompletion(editor)
+      break
+    case EditorCompletionState.Visible:
+      RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorType', text)
+      break
+    default:
+      break
+  }
   return newEditor
   // if (isBrace(text)) {
   //   console.log('is brace')
