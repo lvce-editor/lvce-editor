@@ -9,8 +9,11 @@ import { VError } from '../VError/VError.js'
 
 const activationTimeout = 10_000
 
-const rejectAfterTimeout = async (timeout) => {
+const rejectAfterTimeout = async (timeout, token) => {
   await Timeout.sleep(timeout)
+  if (token.finished) {
+    return
+  }
   throw new Error(`activation timeout of ${timeout}ms exceeded`)
 }
 
@@ -21,8 +24,11 @@ export const activate = async (extension) => {
     const absolutePath = GetExtensionAbsolutePath.getExtensionAbsolutePath(extension.isWeb, extension.path, extension.browser, location.origin)
     const module = await ImportScript.importScript(absolutePath)
     try {
-      await Promise.race([module.activate(), rejectAfterTimeout(activationTimeout)])
-      await module.activate()
+      const token = {
+        finished: false,
+      }
+      await Promise.race([module.activate(), rejectAfterTimeout(activationTimeout, token)])
+      token.finished = true
     } catch (error) {
       if (IsImportError.isImportError(error)) {
         const actualErrorMessage = await TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage(absolutePath, error)
