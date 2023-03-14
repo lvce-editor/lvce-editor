@@ -9,6 +9,7 @@ export const Commands = {
   dispose:  ViewletEditorCompletion.dispose,
   handleEditorType: ViewletEditorCompletion.handleEditorType,
   deleteCharacterLeft: ViewletEditorCompletion.deleteCharacterLeft,
+  handleEditorClick: ViewletEditorCompletion.handleEditorClick
 }
 
 // prettier-ignore

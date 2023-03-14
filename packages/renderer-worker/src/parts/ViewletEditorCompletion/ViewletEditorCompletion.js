@@ -99,6 +99,14 @@ export const deleteCharacterLeft = (state, editor) => {
   }
 }
 
+export const handleEditorClick = (state, editor) => {
+  console.log('dispose completion')
+  return {
+    ...state,
+    disposed: true,
+  }
+}
+
 export const loadContent = async (state) => {
   const editor = getEditor()
   const unfilteredItems = await Completions.getCompletions(editor)

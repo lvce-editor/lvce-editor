@@ -2,18 +2,16 @@
 import * as AutoClosing from '../AutoClosing/AutoClosing.js'
 import * as Bracket from '../Bracket/Bracket.js'
 import * as Editor from '../Editor/Editor.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostClosingTag from '../ExtensionHost/ExtensionHostClosingTagCompletion.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Quote from '../Quote/Quote.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 import * as CommandOpenCompletion from './EditorCommandCompletion.js'
-import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
 

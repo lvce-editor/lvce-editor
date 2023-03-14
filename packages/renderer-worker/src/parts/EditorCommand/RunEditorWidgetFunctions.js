@@ -6,11 +6,16 @@ export const runEditorWidgetFunctions = async (editor, fnName, ...args) => {
   if (editor.widgets) {
     for (const widget of editor.widgets) {
       const instance = ViewletStates.getInstance(widget)
+      if (!instance) {
+        return
+      }
       const { state, factory } = instance
       const newState = factory[fnName](state, editor, ...args)
-      console.log({ newState })
-      await Viewlet.setState(widget, newState)
+      if (newState.disposed) {
+        await Viewlet.dispose(widget)
+      } else {
+        await Viewlet.setState(widget, newState)
+      }
     }
-    console.log('update completion list')
   }
 }
