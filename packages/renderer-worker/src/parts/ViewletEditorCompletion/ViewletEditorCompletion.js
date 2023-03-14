@@ -99,13 +99,16 @@ export const deleteCharacterLeft = (state, editor) => {
   }
 }
 
-export const handleEditorClick = (state, editor) => {
-  console.log('dispose completion')
+export const dispose = (state) => {
   return {
     ...state,
     disposed: true,
   }
 }
+
+export const handleEditorClick = dispose
+
+export const handleEditorBlur = dispose
 
 export const loadContent = async (state) => {
   const editor = getEditor()
@@ -158,13 +161,6 @@ export const advance = (state, word) => {
   return {
     ...state,
     filteredItems,
-  }
-}
-
-export const dispose = (state) => {
-  return {
-    ...state,
-    disposed: true,
   }
 }
 

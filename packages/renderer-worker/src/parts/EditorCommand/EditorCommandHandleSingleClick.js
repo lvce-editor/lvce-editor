@@ -74,7 +74,6 @@ export const handleSingleClick = async (editor, modifier, x, y) => {
   const position = EditorPosition.at(editor, x, y)
   const fn = getFn(modifier)
   const newEditor = await fn(editor, position)
-  console.log('completionState', newEditor.completionState)
   switch (newEditor.completionState) {
     case EditorCompletionState.None:
     case EditorCompletionState.Visible:

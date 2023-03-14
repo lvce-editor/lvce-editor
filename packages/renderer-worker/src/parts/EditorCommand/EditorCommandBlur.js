@@ -1,3 +1,5 @@
+import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
+
 export const state = {
   blurListeners: [],
 }
@@ -8,10 +10,12 @@ export const blur = (editor) => {
   // }
   // TODO save on blur
   // Command.execute(/* Main.save */ 89)
-  return {
+  const newEditor = {
     ...editor,
     focused: false,
   }
+  RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorBlur')
+  return newEditor
 }
 
 export const registerListener = (fn) => {
