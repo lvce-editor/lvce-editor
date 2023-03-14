@@ -20,6 +20,8 @@ const select = async (state, completionItem) => {
 }
 
 export const selectIndex = (state, index) => {
-  const completionItem = state.filteredItems[index]
+  const { items } = state
+  console.log({ state })
+  const completionItem = items[index]
   return select(state, completionItem)
 }

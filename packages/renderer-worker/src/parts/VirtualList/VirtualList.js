@@ -1,10 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 
-export const create = ({
-  itemHeight,
-  headerHeight = 0,
-  minimumSliderSize = 20,
-}) => {
+export const create = ({ itemHeight, headerHeight = 0, minimumSliderSize = 20 }) => {
   return {
     deltaY: 0,
     minLineY: 0,
@@ -55,7 +51,7 @@ export const setDeltaY = (state, deltaY) => {
   }
 }
 
-export const handleWheel = (state, deltaY) => {
+export const handleWheel = (state, deltaY, deltaMode) => {
   Assert.object(state)
   Assert.number(deltaY)
   return setDeltaY(state, state.deltaY + deltaY)

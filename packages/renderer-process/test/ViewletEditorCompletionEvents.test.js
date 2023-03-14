@@ -76,5 +76,5 @@ test('event - wheel', () => {
   const { $Viewlet } = state
   $Viewlet.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('EditorCompletion.handleWheel', 53)
+  expect(RendererWorker.send).toHaveBeenCalledWith('EditorCompletion.handleWheel', 53, WheelEventType.DomDeltaLine)
 })

@@ -6,9 +6,11 @@ import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletio
 import * as Height from '../Height/Height.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    id,
     isOpened: false,
     openingReason: 0,
     editor: undefined,
@@ -46,6 +48,49 @@ const getDisplayErrorMessage = (error) => {
   return message
 }
 
+const RE_WORD = /[\w\-]+$/
+
+const getWordAtOffset = (editor) => {
+  const { lines, selections } = editor
+  const rowIndex = selections[0]
+  const columnIndex = selections[1]
+  const line = lines[rowIndex]
+  const part = line.slice(0, columnIndex)
+  const wordMatch = part.match(RE_WORD)
+  if (wordMatch) {
+    return wordMatch[0]
+  }
+  return ''
+}
+
+export const handleEditorType = (state, editor, text) => {
+  const { unfilteredItems } = state
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  const y = EditorPosition.y(editor, rowIndex, columnIndex)
+  const wordAtOffset = getWordAtOffset(editor)
+  const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, wordAtOffset)
+  return {
+    ...state,
+    items,
+    x,
+    y,
+  }
+}
+
+export const deleteCharacterLeft = (state, editor) => {
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  const y = EditorPosition.y(editor, rowIndex, columnIndex)
+  return {
+    ...state,
+    x,
+    y,
+  }
+}
+
 export const loadContent = async (state) => {
   const editor = getEditor()
   const unfilteredItems = await Completions.getCompletions(editor)
@@ -55,6 +100,9 @@ export const loadContent = async (state) => {
   const x = EditorPosition.x(editor, rowIndex, columnIndex)
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const newMaxLineY = Math.min(items.length, 8)
+  // editor.hasCompletion = true
+  editor.widgets = editor.widgets || []
+  editor.widgets.push('EditorCompletion')
   return {
     ...state,
     unfilteredItems,
@@ -106,15 +154,6 @@ export const dispose = (state) => {
 
 export const hasFunctionalRender = true
 
-const renderPosition = {
-  isEqual(oldState, newState) {
-    return oldState.x === newState.x && oldState.y === newState.y
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setPosition', /* x */ newState.x, /* y */ newState.y]
-  },
-}
-
 const getVisibleItems = (filteredItems, minLineY, maxLineY) => {
   const visibleItems = []
   for (let i = minLineY; i < maxLineY; i++) {
@@ -139,7 +178,13 @@ const renderItems = {
 
 const renderBounds = {
   isEqual(oldState, newState) {
-    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
+    return (
+      oldState.items === newState.items &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY &&
+      oldState.x === newState.x &&
+      oldState.y === newState.y
+    )
   },
   apply(oldState, newState) {
     const { x, y, width, height } = newState
@@ -156,6 +201,6 @@ const renderFocusedIndex = {
   },
 }
 
-export const render = [renderItems, renderPosition, renderBounds, renderFocusedIndex]
+export const render = [renderItems, renderBounds, renderFocusedIndex]
 
 export * from '../VirtualList/VirtualList.js'

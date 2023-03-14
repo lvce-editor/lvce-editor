@@ -1,5 +1,4 @@
 import * as Event from '../Event/Event.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as ViewletEditorCompletionFunctions from './ViewletEditorCompletionFunctions.js'
 
 const getNodeIndex = ($Node) => {
@@ -19,22 +18,11 @@ const getIndex = ($Target) => {
 
 export const handleMousedown = (event) => {
   Event.preventDefault(event)
-  const $Target = event.target
-  const index = getIndex($Target)
-  if (index === -1) {
-    return
-  }
-  ViewletEditorCompletionFunctions.selectIndex(index)
+  const { clientX, clientY } = event
+  ViewletEditorCompletionFunctions.handleClickAt(clientX, clientY)
 }
 
 export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
-  switch (deltaMode) {
-    case WheelEventType.DomDeltaLine:
-    case WheelEventType.DomDeltaPixel:
-      ViewletEditorCompletionFunctions.handleWheel(deltaY)
-      break
-    default:
-      break
-  }
+  const { deltaY, deltaMode } = event
+  ViewletEditorCompletionFunctions.handleWheel(deltaY, deltaMode)
 }

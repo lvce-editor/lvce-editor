@@ -9,6 +9,9 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as Quote from '../Quote/Quote.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
 
@@ -148,7 +151,10 @@ export const typeWithAutoClosing = async (editor, text) => {
     default:
       break
   }
-  return typeWithAutoClosingDisabled(editor, text)
+
+  const newEditor = typeWithAutoClosingDisabled(editor, text)
+  RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorType', text)
+  return newEditor
   // if (isBrace(text)) {
   //   console.log('is brace')
   //   return editorTypeWithBraceCompletion(editor, text)
