@@ -30,23 +30,16 @@ const downloadExtension = async (extension) => {
     Assert.string(extension.name)
     Assert.string(extension.version)
     if (!extension.repository.startsWith('github.com/')) {
-      throw new VError(
-        'currenly only extensions from github releases are supported'
-      )
+      throw new VError('currenly only extensions from github releases are supported')
     }
     const baseName = Path.baseName(extension.repository)
     const cacheName = baseName + '-' + extension.version + '.tar.br'
-    const cachedPath = Path.absolute(
-      Path.join('build', '.tmp', `cachedExtensions`, cacheName)
-    )
+    const cachedPath = Path.absolute(Path.join('build', '.tmp', `cachedExtensions`, cacheName))
     const outPath = Path.absolute(Path.join(`extensions`, extension.name))
     if (existsSync(cachedPath)) {
       if (!existsSync(outPath)) {
         // TODO check version of unpackaged extension and when it is different, unpack the new extension
-        await extract(
-          cachedPath,
-          Path.absolute(Path.join(`extensions`, extension.name))
-        )
+        await extract(cachedPath, Path.absolute(Path.join(`extensions`, extension.name)))
       }
       return
     }
@@ -62,11 +55,7 @@ const downloadExtension = async (extension) => {
 export const extract = async (inFile, outDir) => {
   try {
     await mkdir(outDir, { recursive: true })
-    await pipeline(
-      createReadStream(inFile),
-      createBrotliDecompress(),
-      tar.extract(outDir)
-    )
+    await pipeline(createReadStream(inFile), createBrotliDecompress(), tar.extract(outDir))
   } catch (error) {
     // @ts-ignore
     throw new VError(error, `Failed to extract ${inFile}`)
@@ -95,11 +84,9 @@ const printError = (error) => {
         console.error(subError)
       }
     }
-  } else if (
-    error &&
-    error instanceof Error &&
-    error.message.includes('Response code ')
-  ) {
+  } else if (error && error instanceof Error && error.message.includes('Response code ')) {
+    console.error(error.message)
+  } else if (error && error instanceof Error && error.message.includes(`connect ETIMEDOUT`)) {
     console.error(error.message)
   } else {
     console.error(error)

@@ -10,6 +10,8 @@ export const load = (moduleId) => {
       return import('../ViewletAudio/ViewletAudio.js')
     case ViewletModuleId.Clock:
       return import('../ViewletClock/ViewletClock.js')
+    case ViewletModuleId.ColorPicker:
+      return import('../ViewletColorPicker/ViewletColorPicker.js')
     case ViewletModuleId.DebugConsole:
       return import('../ViewletDebugConsole/ViewletDebugConsole.js')
     case ViewletModuleId.Dialog:
@@ -26,6 +28,8 @@ export const load = (moduleId) => {
       return import('../ViewletEditorText/ViewletEditorText.js')
     case ViewletModuleId.Empty:
       return import('../ViewletEmpty/ViewletEmpty.js')
+    case ViewletModuleId.Error:
+      return import('../ViewletError/ViewletError.js')
     case ViewletModuleId.Explorer:
       return import('../ViewletExplorer/ViewletExplorer.js')
     case ViewletModuleId.ExtensionDetail:
@@ -42,6 +46,8 @@ export const load = (moduleId) => {
       return import('../ViewletLayout/ViewletLayout.js')
     case ViewletModuleId.Main:
       return import('../ViewletMain/ViewletMain.js')
+    case ViewletModuleId.MainTabs:
+      return import('../ViewletMainTabs/ViewletMainTabs.js')
     case ViewletModuleId.Output:
       return import('../ViewletOutput/ViewletOutput.js')
     case ViewletModuleId.Panel:
@@ -72,14 +78,12 @@ export const load = (moduleId) => {
       return import('../ViewletTitleBar/ViewletTitleBar.js')
     case ViewletModuleId.TitleBarButtons:
       return import('../ViewletTitleBarButtons/ViewletTitleBarButtons.js')
+    case ViewletModuleId.TitleBarIcon:
+      return import('../ViewletTitleBarIcon/ViewletTitleBarIcon.js')
     case ViewletModuleId.TitleBarMenuBar:
       return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
     case ViewletModuleId.Video:
       return import('../ViewletVideo/ViewletVideo.js')
-    case ViewletModuleId.ColorPicker:
-      return import('../ViewletColorPicker/ViewletColorPicker.js')
-    case ViewletModuleId.MainTabs:
-      return import('../ViewletMainTabs/ViewletMainTabs.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }

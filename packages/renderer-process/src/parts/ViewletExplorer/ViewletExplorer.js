@@ -12,6 +12,7 @@ import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
+const defaultIndent = 1
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
@@ -38,6 +39,7 @@ export const attachEvents = (state) => {
   $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart
   $Viewlet.ondrop = ViewletExplorerEvents.handleDrop
   $Viewlet.onfocus = ViewletExplorerEvents.handleFocus
+  $Viewlet.onpointerdown = ViewletExplorerEvents.handlePointerDown
 }
 
 const create$Row = () => {
@@ -64,6 +66,7 @@ const render$Row = ($Row, rowInfo) => {
   // windows narrator reads heading level 1
   $Row.ariaLevel = `${rowInfo.depth}`
   $Row.ariaPosInSet = `${rowInfo.posInSet}`
+  $Row.style.paddingLeft = `${rowInfo.depth * defaultIndent}rem`
   $Row.ariaLabel = rowInfo.name
   $Row.ariaDescription = ''
   switch (rowInfo.type) {

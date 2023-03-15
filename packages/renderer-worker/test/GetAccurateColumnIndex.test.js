@@ -21,6 +21,7 @@ test('getAccurateColumnIndex - at start of line', () => {
   const fontSize = 15
   const fontFamily = 'Test'
   const letterSpacing = 0.5
+  const tabSize = 2
   const eventX = 0
   // @ts-ignore
   MeasureTextWidth.measureTextWidth.mockImplementation((text) => {
@@ -31,7 +32,7 @@ test('getAccurateColumnIndex - at start of line', () => {
         return 0
     }
   })
-  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, eventX)).toBe(0)
+  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, eventX)).toBe(0)
 })
 
 test('getAccurateColumnIndex - match exactly after first letter', () => {
@@ -40,6 +41,7 @@ test('getAccurateColumnIndex - match exactly after first letter', () => {
   const fontSize = 15
   const fontFamily = 'Test'
   const letterSpacing = 0.5
+  const tabSize = 2
   const eventX = 0
   // @ts-ignore
   MeasureTextWidth.measureTextWidth.mockImplementation((text) => {
@@ -52,7 +54,7 @@ test('getAccurateColumnIndex - match exactly after first letter', () => {
         return 0
     }
   })
-  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, eventX)).toBe(0)
+  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, eventX)).toBe(0)
 })
 
 test('getAccurateColumnIndex - before first letter', () => {
@@ -61,6 +63,7 @@ test('getAccurateColumnIndex - before first letter', () => {
   const fontSize = 15
   const fontFamily = 'Test'
   const letterSpacing = 0.5
+  const tabSize = 2
   const eventX = 3
   // @ts-ignore
   MeasureTextWidth.measureTextWidth.mockImplementation((text) => {
@@ -73,7 +76,7 @@ test('getAccurateColumnIndex - before first letter', () => {
         return 0
     }
   })
-  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, eventX)).toBe(0)
+  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, eventX)).toBe(0)
 })
 
 test('getAccurateColumnIndex - almost at first letter', () => {
@@ -82,6 +85,7 @@ test('getAccurateColumnIndex - almost at first letter', () => {
   const fontSize = 15
   const fontFamily = 'Test'
   const letterSpacing = 0.5
+  const tabSize = 2
   const eventX = 7
   // @ts-ignore
   MeasureTextWidth.measureTextWidth.mockImplementation((text) => {
@@ -94,7 +98,7 @@ test('getAccurateColumnIndex - almost at first letter', () => {
         return 0
     }
   })
-  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, eventX)).toBe(1)
+  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, eventX)).toBe(1)
 })
 
 test('getAccurateColumnIndex - almost at second letter', () => {
@@ -103,6 +107,7 @@ test('getAccurateColumnIndex - almost at second letter', () => {
   const fontSize = 15
   const fontFamily = 'Test'
   const letterSpacing = 0.5
+  const tabSize = 2
   const eventX = 16
   // @ts-ignore
   MeasureTextWidth.measureTextWidth.mockImplementation((text) => {
@@ -119,7 +124,7 @@ test('getAccurateColumnIndex - almost at second letter', () => {
         return 0
     }
   })
-  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, eventX)).toBe(2)
+  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, eventX)).toBe(2)
 })
 
 test('getAccurateColumnIndex - at second letter', () => {
@@ -128,6 +133,7 @@ test('getAccurateColumnIndex - at second letter', () => {
   const fontSize = 15
   const fontFamily = 'Test'
   const letterSpacing = 0.5
+  const tabSize = 2
   const eventX = 18
   // @ts-ignore
   MeasureTextWidth.measureTextWidth.mockImplementation((text) => {
@@ -142,7 +148,7 @@ test('getAccurateColumnIndex - at second letter', () => {
         return 0
     }
   })
-  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, eventX)).toBe(2)
+  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, eventX)).toBe(2)
 })
 
 test('getAccurateColumnIndex - emoji', () => {
@@ -151,6 +157,7 @@ test('getAccurateColumnIndex - emoji', () => {
   const fontSize = 15
   const fontFamily = 'Test'
   const letterSpacing = 0.5
+  const tabSize = 2
   const eventX = 80
   // @ts-ignore
   MeasureTextWidth.measureTextWidth.mockImplementation((text) => {
@@ -173,5 +180,30 @@ test('getAccurateColumnIndex - emoji', () => {
         return 0
     }
   })
-  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, eventX)).toBe('👮🏽‍♀️'.length * 4)
+  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, eventX)).toBe('👮🏽‍♀️'.length * 4)
+})
+
+test('getAccurateColumnIndex - normalize tab', () => {
+  const line = '\ttest'
+  const fontWeight = 400
+  const fontSize = 15
+  const fontFamily = 'Test'
+  const letterSpacing = 0.5
+  const tabSize = 2
+  const eventX = 45
+  // @ts-ignore
+  MeasureTextWidth.measureTextWidth.mockImplementation((text) => {
+    switch (text) {
+      case 'a':
+        return 9
+      case '  tes':
+        return 45
+      default:
+        return 0
+    }
+  })
+  expect(GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, eventX)).toBe(5)
+  expect(MeasureTextWidth.measureTextWidth).toHaveBeenCalledTimes(2)
+  expect(MeasureTextWidth.measureTextWidth).toHaveBeenNthCalledWith(1, 'a', 400, 15, 'Test', 0.5)
+  expect(MeasureTextWidth.measureTextWidth).toHaveBeenNthCalledWith(2, '  tes', 400, 15, 'Test', 0.5)
 })

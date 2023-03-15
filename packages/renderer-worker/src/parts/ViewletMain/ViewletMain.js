@@ -217,7 +217,11 @@ export const contentLoaded = async (state) => {
     /* restore */ true
   )
   commands.push(...extraCommands)
-  commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, instanceUid])
+  if (extraCommands[0].includes(ViewletModuleId.Error)) {
+    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
+  } else {
+    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+  }
   return commands
 }
 
@@ -431,15 +435,14 @@ const getId = (editor) => {
 }
 
 export const closeAllEditors = async (state) => {
-  RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'dispose')
   const ids = state.editors.map(getId)
+  const commands = [['Viewlet.send', ViewletModuleId.Main, 'dispose'], ...ids.flatMap(Viewlet.disposeFunctional)]
+  // RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'dispose')
   state.editors = []
   state.focusedIndex = -1
   state.selectedIndex = -1
   // TODO should call dispose method, but only in renderer-worker
-  for (const id of ids) {
-    await ViewletStates.dispose(id)
-  }
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   return state
 }
 

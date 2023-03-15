@@ -1,4 +1,5 @@
 const ModuleId = require('../ModuleId/ModuleId.js')
+const { ModuleNotFoundError } = require('../ModuleNotFoundError/ModuleNotFoundError.js')
 
 exports.load = async (moduleId) => {
   switch (moduleId) {
@@ -42,7 +43,17 @@ exports.load = async (moduleId) => {
       return require('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ElectronWindowProcessExplorer:
       return require('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
+    case ModuleId.ListProcessesWithMemoryUsage:
+      return require('../ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsage.ipc.js')
+    case ModuleId.Process:
+      return require('../Process/Process.ipc.js')
+    case ModuleId.ProcessExplorerContextMenu:
+      return require('../ProcessExplorerContextMenu/ProcessExplorerContextMenu.ipc.js')
+    case ModuleId.ElectronNet:
+      return require('../ElectronNet/ElectronNet.ipc.js')
+    case ModuleId.ElectronBrowserViewSuggestions:
+      return require('../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.ipc.js')
     default:
-      throw new Error(`module ${moduleId} not found`)
+      throw new ModuleNotFoundError(moduleId)
   }
 }

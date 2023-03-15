@@ -122,6 +122,9 @@ export const dispose = async (id) => {
     }
     instance.factory.dispose(instance.state)
     await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id)
+    if (instance.factory.getKeyBindings) {
+      await RendererProcess.invoke('Viewlet.removeKeyBindings', id)
+    }
   } catch (error) {
     console.error(error)
     // TODO use Error.cause once proper stack traces are supported by chrome
@@ -151,9 +154,20 @@ export const disposeFunctional = (id) => {
     if (instance.factory.dispose) {
       instance.factory.dispose(instance.state)
     }
+    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id]]
+
+    if (instance.factory.getKeyBindings) {
+      commands.push(['Viewlet.removeKeyBindings', id])
+    }
+    if (instance.factory.getChildren) {
+      const children = instance.factory.getChildren(instance.state)
+      for (const child of children) {
+        commands.push(...disposeFunctional(child.id))
+      }
+    }
     instance.status = 'disposed'
     ViewletStates.remove(id)
-    return [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id]]
+    return commands
   } catch (error) {
     console.error(error)
     // TODO use Error.cause once proper stack traces are supported by chrome
@@ -190,6 +204,20 @@ export const resize = (id, dimensions) => {
     newState = result.newState
     commands = result.commands
   }
+  Assert.object(newState)
+  Assert.array(commands)
+  ViewletStates.setState(id, newState)
+  return commands
+}
+
+export const handleFocusChange = (id, isFocused) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance || !instance.factory || !instance.factory.handleFocusChange) {
+    return []
+  }
+  const oldState = instance.state
+  const newState = instance.factory.handleFocusChange(oldState, isFocused)
+  const commands = ViewletManager.render(instance.factory, instance.state, newState)
   Assert.object(newState)
   Assert.array(commands)
   ViewletStates.setState(id, newState)

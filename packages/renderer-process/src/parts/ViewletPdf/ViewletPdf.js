@@ -1,7 +1,8 @@
-import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
-import * as InputBox from '../InputBox/InputBox.js'
-import * as IconButton from '../IconButton/IconButton.js'
 import * as Icon from '../Icon/Icon.js'
+import * as IconButton from '../IconButton/IconButton.js'
+import * as InputBox from '../InputBox/InputBox.js'
+import * as InputType from '../InputType/InputType.js'
+import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as ViewletPdfEvents from './ViewletPdfEvents.js'
 
 /**
@@ -19,20 +20,14 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Pdf'
 
-  const $ButtonPreviousPage = IconButton.create$Button(
-    UiStrings.Previous,
-    Icon.ChevronUp
-  )
+  const $ButtonPreviousPage = IconButton.create$Button(UiStrings.Previous, Icon.ChevronUp)
   $ButtonPreviousPage.onclick = ViewletPdfEvents.handleClickPrevious
 
-  const $ButtonNextPage = IconButton.create$Button(
-    UiStrings.Next,
-    Icon.ChevronDown
-  )
+  const $ButtonNextPage = IconButton.create$Button(UiStrings.Next, Icon.ChevronDown)
   $ButtonNextPage.onclick = ViewletPdfEvents.handleClickNext
 
   const $PageNumber = InputBox.create()
-  $PageNumber.type = 'number'
+  $PageNumber.type = InputType.Number
   $PageNumber.classList.add('PdfPageNumber')
   $PageNumber.min = '1'
   $PageNumber.autocomplete = 'off'
@@ -44,10 +39,7 @@ export const create = () => {
   const $ButtonZoomIn = IconButton.create$Button(UiStrings.ZoomIn, Icon.ZoomIn)
   $ButtonZoomIn.onclick = ViewletPdfEvents.handleClickZoomIn
 
-  const $ButtonZoomOut = IconButton.create$Button(
-    UiStrings.ZoomOut,
-    Icon.ZoomOut
-  )
+  const $ButtonZoomOut = IconButton.create$Button(UiStrings.ZoomOut, Icon.ZoomOut)
   $ButtonZoomOut.onclick = ViewletPdfEvents.handleClickZoomOut
 
   const $ButtonPrint = document.createElement('button')
@@ -56,15 +48,7 @@ export const create = () => {
 
   const $PdfToolBar = document.createElement('div')
   $PdfToolBar.className = 'PdfToolBar'
-  $PdfToolBar.append(
-    $ButtonPreviousPage,
-    $ButtonNextPage,
-    $PageNumber,
-    $NumberOfPages,
-    $ButtonZoomIn,
-    $ButtonZoomOut,
-    $ButtonPrint
-  )
+  $PdfToolBar.append($ButtonPreviousPage, $ButtonNextPage, $PageNumber, $NumberOfPages, $ButtonZoomIn, $ButtonZoomOut, $ButtonPrint)
 
   const $PdfContent = document.createElement('div')
   $PdfContent.className = 'PdfContent'

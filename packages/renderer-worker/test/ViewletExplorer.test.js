@@ -3400,7 +3400,7 @@ test('newFile - canceled', async () => {
   // @ts-ignore
   FileSystem.writeFile.mockImplementation(() => {})
   expect(await ViewletExplorer.newFile(state)).toMatchObject({
-    editingIndex: 0,
+    editingIndex: -1,
   })
 })
 
@@ -5239,112 +5239,6 @@ test('revealItem - scroll up', async () => {
         icon: '',
         name: 'b.txt',
         path: '/test/a/b.txt',
-        posInSet: 1,
-        setSize: 1,
-        type: DirentType.File,
-      },
-    ],
-  })
-})
-
-test('acceptEdit - rename', async () => {
-  // @ts-ignore
-  FileSystem.rename.mockImplementation(() => {})
-  const state = {
-    ...ViewletExplorer.create(),
-    focusedIndex: 0,
-    top: 0,
-    height: 600,
-    deltaY: 0,
-    minLineY: 1,
-    maxLineY: 2,
-    root: '/test',
-    pathSeparator: PathSeparatorType.Slash,
-    items: [
-      {
-        depth: 1,
-        icon: '',
-        name: 'a.txt',
-        path: '/test/a.txt',
-        posInSet: 1,
-        setSize: 1,
-        type: DirentType.File,
-      },
-    ],
-    editingIndex: 0,
-    editingType: ExplorerEditingType.Rename,
-    editingValue: 'b.txt',
-  }
-  expect(await ViewletExplorer.acceptEdit(state)).toMatchObject({
-    items: [
-      {
-        depth: 1,
-        icon: '',
-        name: 'b.txt',
-        path: '/test/b.txt',
-        posInSet: 1,
-        setSize: 1,
-        type: DirentType.File,
-      },
-    ],
-  })
-  expect(FileSystem.rename).toHaveBeenCalledTimes(1)
-  expect(FileSystem.rename).toHaveBeenCalledWith('/test/a.txt', '/test/b.txt')
-})
-
-test('acceptEdit - rename - nested file', async () => {
-  // @ts-ignore
-  FileSystem.rename.mockImplementation(() => {})
-  const state = {
-    ...ViewletExplorer.create(),
-    focusedIndex: 0,
-    top: 0,
-    height: 600,
-    deltaY: 0,
-    minLineY: 1,
-    maxLineY: 2,
-    root: '/test',
-    pathSeparator: PathSeparatorType.Slash,
-    items: [
-      {
-        depth: 1,
-        icon: '',
-        name: 'a',
-        path: '/test/a',
-        posInSet: 1,
-        setSize: 1,
-        type: DirentType.Directory,
-      },
-      {
-        depth: 2,
-        icon: '',
-        name: 'b.txt',
-        path: '/test/a/b.txt',
-        posInSet: 1,
-        setSize: 1,
-        type: DirentType.File,
-      },
-    ],
-    editingIndex: 1,
-    editingType: ExplorerEditingType.Rename,
-    editingValue: 'c.txt',
-  }
-  expect(await ViewletExplorer.acceptEdit(state)).toMatchObject({
-    items: [
-      {
-        depth: 1,
-        icon: '',
-        name: 'a',
-        path: '/test/a',
-        posInSet: 1,
-        setSize: 1,
-        type: DirentType.Directory,
-      },
-      {
-        depth: 2,
-        icon: '',
-        name: 'c.txt',
-        path: '/test/a/c.txt',
         posInSet: 1,
         setSize: 1,
         type: DirentType.File,

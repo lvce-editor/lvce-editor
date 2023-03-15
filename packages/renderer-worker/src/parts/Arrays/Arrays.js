@@ -24,6 +24,10 @@ export const spliceLargeArray = (array, start, deleteCount, newItems) => {
   return result
 }
 
+export const push = (array, newItems) => {
+  insertInto(array, array.length, newItems)
+}
+
 export const last = (array) => {
   return array[array.length - 1]
 }
@@ -66,6 +70,10 @@ export const isLastIndex = (array, index) => {
 
 export const toSpliced = (array, index, deleteCount, ...inserted) => {
   return [...array.slice(0, index), ...inserted, ...array.slice(index + deleteCount)]
+}
+
+export const remove = (array, index, deleteCount) => {
+  return toSpliced(array, index, deleteCount)
 }
 
 export const toSorted = (array, compare) => {

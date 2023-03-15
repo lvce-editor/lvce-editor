@@ -1,8 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 
 export const state = {
   instances: Object.create(null),
@@ -31,6 +32,14 @@ export const create = (id, uid = id) => {
   }
 }
 
+export const addKeyBindings = (id, keyBindings) => {
+  KeyBindings.addKeyBindings(id, keyBindings)
+}
+
+export const removeKeyBindings = (id) => {
+  KeyBindings.removeKeyBindings(id)
+}
+
 export const loadModule = async (id) => {
   const module = await ViewletModule.load(id)
   state.modules[id] = module
@@ -38,7 +47,7 @@ export const loadModule = async (id) => {
 
 export const invoke = (viewletId, method, ...args) => {
   const instance = state.instances[viewletId]
-  if (!instance) {
+  if (!instance || !instance.factory) {
     Logger.warn(`viewlet instance ${viewletId} not found`)
     return
   }
@@ -161,6 +170,12 @@ export const sendMultiple = (commands) => {
 
         break
       }
+      case 'Viewlet.addKeyBindings':
+        addKeyBindings(viewletId, method)
+        break
+      case 'Viewlet.removeKeyBindings':
+        removeKeyBindings(viewletId)
+        break
       default: {
         invoke(viewletId, method, ...args)
       }
@@ -171,7 +186,8 @@ export const sendMultiple = (commands) => {
 export const dispose = (id) => {
   try {
     Assert.string(id)
-    const instance = state.instances[id]
+    const { instances } = state
+    const instance = instances[id]
     if (!instance) {
       Logger.warn(`viewlet instance ${id} not found and cannot be disposed`)
       return
@@ -182,7 +198,7 @@ export const dispose = (id) => {
     if (instance.state.$Viewlet && instance.state.$Viewlet.isConnected) {
       instance.state.$Viewlet.remove()
     }
-    delete state.instances[id]
+    delete instances[id]
   } catch {
     throw new Error(`Failed to dispose ${id}`)
   }
@@ -227,7 +243,7 @@ export const appendViewlet = (parentId, childId, focus) => {
   const parentModule = parentInstanceState.factory
   const childInstance = state.instances[childId]
   if (!childInstance) {
-    throw new Error('child instance must be defined to be appended to parent')
+    throw new Error(`child instance ${childId} must be defined to be appended to parent ${parentId}`)
   }
   parentModule.appendViewlet(parentInstanceState.state, childInstance.factory.name, childInstance.state.$Viewlet)
   if (focus && childInstance.factory.focus) {
@@ -322,6 +338,8 @@ const getFn = (command) => {
       return focus
     case 'Viewlet.appendViewlet':
       return appendViewlet
+    case 'Viewlet.addKeyBindings':
+      return addKeyBindings
     default:
       throw new Error(`unknown command ${command}`)
   }

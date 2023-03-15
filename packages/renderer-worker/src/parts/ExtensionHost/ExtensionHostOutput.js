@@ -6,7 +6,8 @@ export const getOutputChannels = () => {
   if (Platform.platform === PlatformType.Web) {
     return []
   }
-  return ExtensionHost.invoke(
-    /* ExtensionHostOutput.getOutputChannels */ 'ExtensionHostOutput.getOutputChannels'
-  )
+  return []
+  // return ExtensionHost.invoke(
+  // /* ExtensionHostOutput.getOutputChannels */ 'ExtensionHostOutput.getOutputChannels'
+  // )
 }

@@ -106,6 +106,7 @@ const kFontSize = 'editor.fontSize'
 const kFontFamily = 'editor.fontFamily'
 const kLetterSpacing = 'editor.letterSpacing'
 const kLinks = 'editor.links'
+const kTabSize = 'editor.tabSize'
 
 const unquoteString = (string) => {
   if (string.startsWith(`'`) && string.endsWith(`'`)) {
@@ -120,6 +121,7 @@ export const loadContent = async (state, savedState) => {
   const fontSize = Preferences.get(kFontSize) || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
   const fontFamily = Preferences.get(kFontFamily) || 'Fira Code'
   const letterSpacing = Preferences.get(kLetterSpacing) || 0.5
+  const tabSize = Preferences.get(kTabSize) || 2
   const links = Preferences.get(kLinks) || false
   const content = await getContent(uri)
   const newState1 = Editor.setText(state, content)
@@ -143,6 +145,7 @@ export const loadContent = async (state, savedState) => {
     deltaY: savedDeltaY,
     fontFamily,
     links,
+    tabSize,
     // selections,
   }
 }
@@ -259,6 +262,10 @@ export const getDynamicCss = (preferences) => {
   const fontLigatures = preferences['editor.fontLigatures']
   if (fontLigatures) {
     styles.push(`  --EditorFontFeatureSettings: "liga" 1, "calt" 1;`)
+  }
+  const tabSize = preferences['editor.tabSize']
+  if (tabSize) {
+    styles.push(` --EditorTabSize: ${tabSize}`)
   }
   const css = `:root {
 ${JoinLines.joinLines(styles)}

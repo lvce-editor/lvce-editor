@@ -2,7 +2,9 @@ import { codeFrameColumns } from '@babel/code-frame'
 import { LinesAndColumns } from 'lines-and-columns'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import { AssertionError } from '../AssertionError/AssertionError.js'
 import * as CleanStack from '../CleanStack/CleanStack.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Json from '../Json/Json.js'
@@ -29,7 +31,7 @@ const prepareModuleNotFoundError = (error) => {
   }
   const notFoundModule = match[1]
   const importedFrom = match[2]
-  const rawLines = readFileSync(importedFrom, 'utf-8')
+  const rawLines = readFileSync(importedFrom, EncodingType.Utf8)
   let line = 0
   let column = 0
   const splittedLines = SplitLines.splitLines(rawLines)
@@ -59,6 +61,13 @@ const prepareModuleNotFoundError = (error) => {
   }
 }
 
+const getStackLinesToCut = (error) => {
+  if (error instanceof AssertionError) {
+    return 1
+  }
+  return 0
+}
+
 export const prepare = (error) => {
   if (error && error.code === ErrorCodes.ERR_MODULE_NOT_FOUND) {
     return prepareModuleNotFoundError(error)
@@ -70,9 +79,9 @@ export const prepare = (error) => {
       error = cause
     }
   }
-  const cleanedStack = CleanStack.cleanStack(error.stack)
-  const lines = SplitLines.splitLines(cleanedStack)
-  const file = lines[1]
+  const linesToCut = getStackLinesToCut(error)
+  const lines = CleanStack.cleanStack(error.stack).slice(linesToCut)
+  const file = lines[0]
   let codeFrame = ''
   if (error.codeFrame) {
     codeFrame = error.codeFrame
@@ -84,22 +93,22 @@ export const prepare = (error) => {
     if (match) {
       const [_, path, line, column] = match
       const actualPath = getActualPath(path)
-      const rawLines = readFileSync(actualPath, 'utf-8')
+      const rawLines = readFileSync(actualPath, EncodingType.Utf8)
       const location = {
         start: {
           line: Number.parseInt(line),
           column: Number.parseInt(column),
         },
       }
-
       codeFrame = codeFrameColumns(rawLines, location)
     }
   }
-  const relevantStack = JoinLines.joinLines(lines.slice(1))
+  const relevantStack = JoinLines.joinLines(lines)
   return {
     message,
     stack: relevantStack,
     codeFrame,
+    type: error.constructor.name,
   }
 }
 

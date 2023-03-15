@@ -3,6 +3,9 @@ import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Logger from '../Logger/Logger.js'
 
 const getOutputLine = (extension) => {
+  if (extension.symlink) {
+    return `${extension.id} -> ${extension.symlink}`
+  }
   return `${extension.id}: ${extension.version}`
 }
 

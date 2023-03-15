@@ -4,6 +4,8 @@ export const Audio = 'Audio'
 
 export const Clock = 'Clock'
 
+export const ColorPicker = 'ColorPicker'
+
 export const DebugConsole = 'Debug Console'
 
 export const Dialog = 'Dialog'
@@ -19,6 +21,8 @@ export const EditorPlainText = 'EditorPlainText'
 export const EditorText = 'EditorText'
 
 export const Empty = 'Empty'
+
+export const Error = 'Error'
 
 export const Explorer = 'Explorer'
 
@@ -70,8 +74,8 @@ export const TitleBar = 'TitleBar'
 
 export const TitleBarButtons = 'TitleBarButtons'
 
+export const TitleBarIcon = 'TitleBarIcon'
+
 export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const Video = 'Video'
-
-export const ColorPicker = 'ColorPicker'

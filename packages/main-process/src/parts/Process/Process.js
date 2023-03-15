@@ -35,6 +35,10 @@ exports.cwd = () => {
   return process.cwd()
 }
 
+exports.getPid = () => {
+  return process.pid
+}
+
 exports.pid = process.pid
 
 exports.execPath = process.execPath

@@ -8,6 +8,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const state = {
@@ -328,31 +329,50 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
     const extraCommands = []
 
+    if (module.getKeyBindings) {
+      const keyBindings = module.getKeyBindings()
+      extraCommands.push(['Viewlet.addKeyBindings', module.name, keyBindings])
+    }
+
     if (module.getChildren) {
       const children = module.getChildren(newState)
       for (const child of children) {
-        const childModule = await loadModule(viewlet.getModule, child.id)
-        // TODO get position of child module
-        const oldState = childModule.create('', '', child.x, child.y, child.width, child.height)
-        let instanceSavedState
-        if (restore) {
-          const stateToSave = await SaveState.getSavedState()
-          instanceSavedState = getInstanceSavedState(stateToSave, child.id)
-        } else if (restoreState) {
-          instanceSavedState = restoreState
-        }
-        const newState = await childModule.loadContent(oldState, instanceSavedState)
-        const childInstance = {
-          state: newState,
-          factory: childModule,
-        }
-        ViewletStates.set(childModule.name, childInstance)
-        const commands = getRenderCommands(childModule, oldState, newState)
-        extraCommands.push([kCreate, childModule.name])
-        extraCommands.push(...commands)
-        extraCommands.push([kAppend, viewlet.id, childModule.name])
-        if (childModule.contentLoadedEffects) {
-          await childModule.contentLoadedEffects(newState)
+        try {
+          const childModule = await loadModule(viewlet.getModule, child.id)
+          // TODO get position of child module
+          const oldState = childModule.create('', '', child.x, child.y, child.width, child.height)
+          let instanceSavedState
+          if (restore) {
+            const stateToSave = await SaveState.getSavedState()
+            instanceSavedState = getInstanceSavedState(stateToSave, child.id)
+          } else if (restoreState) {
+            instanceSavedState = restoreState
+          }
+          const newState = await childModule.loadContent(oldState, instanceSavedState)
+          const childInstance = {
+            state: newState,
+            factory: childModule,
+          }
+          ViewletStates.set(childModule.name, childInstance)
+          const childCommands = []
+          const commands = getRenderCommands(childModule, oldState, newState)
+          childCommands.push([kCreate, childModule.name])
+          childCommands.push(...commands)
+          childCommands.push([kAppend, viewlet.id, childModule.name])
+          if (childModule.contentLoadedEffects) {
+            await childModule.contentLoadedEffects(newState)
+          }
+          extraCommands.push(...childCommands)
+          if (childModule.getKeyBindings) {
+            const keyBindings = childModule.getKeyBindings()
+            extraCommands.push(['Viewlet.addKeyBindings', childModule.name, keyBindings])
+          }
+        } catch (error) {
+          await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
+          extraCommands.push([kCreate, ViewletModuleId.Error, viewlet.id])
+          extraCommands.push([kSetBounds, ViewletModuleId.Error, child.x, child.y, child.width, child.height])
+          extraCommands.push(['Viewlet.send', /* id */ ViewletModuleId.Error, 'setMessage', /* message */ `${error}`])
+          extraCommands.push([kAppend, viewlet.id, ViewletModuleId.Error])
         }
       }
     }
@@ -424,6 +444,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         if (module.contentLoadedEffects) {
           module.contentLoadedEffects(newState)
         }
+        if (viewlet.append) {
+          const parentId = viewlet.parentId
+          allCommands.push([kAppend, parentId, viewlet.id])
+        }
         return allCommands
       }
       // console.log('else', viewlet.id, { commands })
@@ -447,6 +471,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       // TODO unload the module from renderer process
       return
     }
+
     return commands
   } catch (error) {
     if (error && error instanceof CancelationError) {
@@ -463,12 +488,17 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       if (state < ViewletState.RendererProcessViewletLoaded) {
         await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.id)
       }
-      commands.push([kCreate, viewlet.id, viewlet.uid])
-      commands.push([kSetBounds, viewlet.uid, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
-      commands.push([/* viewlet.handleError */ kHandleError, /* id */ viewlet.uid, /* parentId */ viewlet.parentId, /* message */ `${error}`])
+      const parentId = viewlet.parentId
+      Assert.string(parentId)
+      await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
+      commands.push([kCreate, ViewletModuleId.Error, parentId])
+      commands.push([kSetBounds, ViewletModuleId.Error, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
+      commands.push(['Viewlet.send', /* id */ ViewletModuleId.Error, 'setMessage', /* message */ `${error}`])
+      commands.push([kAppend, parentId, ViewletModuleId.Error])
       return commands
     } catch (error) {
       console.error(error)
+      return []
       // this is really bad
       // probably can only show an alert at this point
     }

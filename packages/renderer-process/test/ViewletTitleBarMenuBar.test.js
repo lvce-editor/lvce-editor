@@ -8,7 +8,7 @@ import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
 
 const getTextContent = (node) => {
-  return node.innerHTML
+  return node.textContent
 }
 
 const getSimpleList = ($ViewletTitleBarMenuBar) => {

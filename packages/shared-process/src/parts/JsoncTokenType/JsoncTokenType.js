@@ -1,0 +1,11 @@
+export const None = 0
+export const CurlyOpen = 1
+export const CurlyClose = 2
+export const Eof = 3
+export const SquareOpen = 4
+export const SquareClose = 5
+export const DoubleQuote = 6
+export const Comma = 7
+export const Numeric = 8
+export const Slash = 9
+export const Literal = 10

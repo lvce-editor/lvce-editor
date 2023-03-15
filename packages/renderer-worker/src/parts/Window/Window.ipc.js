@@ -13,4 +13,5 @@ export const Commands = {
   unmaximize: Chrome.unmaximize,
   zoomIn: Chrome.zoomIn,
   zoomOut: Chrome.zoomOut,
+  zoomReset: Chrome.zoomReset,
 }

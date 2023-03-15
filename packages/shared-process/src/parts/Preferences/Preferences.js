@@ -1,8 +1,8 @@
-import VError from 'verror'
-import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as JsoncFile from '../JsoncFile/JsoncFile.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
-
+import { VError } from '../VError/VError.js'
 // TODO need jsonc parser for settings with comments
 
 export const getUserPreferences = async () => {
@@ -10,16 +10,15 @@ export const getUserPreferences = async () => {
     const userSettingsPath = Platform.getUserSettingsPath()
     let json
     try {
-      json = await JsonFile.readJson(userSettingsPath)
+      json = await JsoncFile.readJsonc(userSettingsPath)
     } catch (error) {
-      if (error && error.message.includes('File not found')) {
+      if (error && error.code === ErrorCodes.ENOENT) {
         return {}
       }
       throw error
     }
     return json
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, 'failed to get user preferences')
   }
 }
@@ -28,9 +27,8 @@ export const getUserPreferences = async () => {
 export const getDefaultPreferences = async () => {
   try {
     const defaultSettingsPath = Platform.getDefaultSettingsPath()
-    return await JsonFile.readJson(defaultSettingsPath)
+    return await JsoncFile.readJsonc(defaultSettingsPath)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, 'Failed to load default preferences')
   }
 }

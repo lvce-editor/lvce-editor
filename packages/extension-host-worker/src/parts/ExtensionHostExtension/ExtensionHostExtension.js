@@ -3,8 +3,19 @@ import * as GetExtensionAbsolutePath from '../GetExtensionAbsolutePath/GetExtens
 import * as GetExtensionId from '../GetExtensionId/GetExtensionId.js'
 import * as ImportScript from '../ImportScript/ImportScript.js'
 import * as IsImportError from '../IsImportError/IsImportError.js'
+import * as Timeout from '../Timeout/Timeout.js'
 import * as TryToGetActualImportErrorMessage from '../TryToGetActualImportErrorMessage/TryToGetActualImportErrorMessage.js'
 import { VError } from '../VError/VError.js'
+
+const activationTimeout = 10_000
+
+const rejectAfterTimeout = async (timeout, token) => {
+  await Timeout.sleep(timeout)
+  if (token.finished) {
+    return
+  }
+  throw new Error(`activation timeout of ${timeout}ms exceeded`)
+}
 
 export const activate = async (extension) => {
   try {
@@ -13,7 +24,11 @@ export const activate = async (extension) => {
     const absolutePath = GetExtensionAbsolutePath.getExtensionAbsolutePath(extension.isWeb, extension.path, extension.browser, location.origin)
     const module = await ImportScript.importScript(absolutePath)
     try {
-      await module.activate()
+      const token = {
+        finished: false,
+      }
+      await Promise.race([module.activate(), rejectAfterTimeout(activationTimeout, token)])
+      token.finished = true
     } catch (error) {
       if (IsImportError.isImportError(error)) {
         const actualErrorMessage = await TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage(absolutePath, error)

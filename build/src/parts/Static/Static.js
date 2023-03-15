@@ -358,8 +358,8 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
   const languageBasics = await getLanguageBasicsNames()
   for (const languageBasic of languageBasics) {
     await Copy.copy({
-      from: `extensions/${languageBasic}/src`,
-      to: `build/.tmp/dist/${commitHash}/extensions/${languageBasic}/src/`,
+      from: `extensions/${languageBasic}`,
+      to: `build/.tmp/dist/${commitHash}/extensions/${languageBasic}`,
     })
   }
 }

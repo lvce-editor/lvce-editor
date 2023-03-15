@@ -20,6 +20,7 @@ jest.mock('electron', () => {
 jest.mock('../src/parts/Platform/Platform.js', () => {
   return {
     applicationName: 'test-app',
+    ProductName: 'Test App',
   }
 })
 
@@ -43,7 +44,7 @@ test('showMessageBox', async () => {
       detail: 'test detail',
       message: 'test',
       noLink: true,
-      title: 'test-app',
+      title: 'Test App',
       type: 'info',
     }
   )

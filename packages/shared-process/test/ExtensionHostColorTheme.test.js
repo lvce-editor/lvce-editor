@@ -93,7 +93,7 @@ test('getColorThemeJson - invalid json', async () => {
   const colorThemePath = join(tmpDir, 'builtin.theme-test', 'color-theme.json')
   await writeFile(colorThemePath, '{ 1 }')
   await expect(ExtensionHostColorTheme.getColorThemeJson('test-theme')).rejects.toThrowError(
-    'Failed to load color theme "test-theme": Json Parsing Error'
+    'Failed to load color theme "test-theme": JsonParsingError: Json Parsing Error'
   )
 })
 
@@ -128,7 +128,7 @@ test('getColorThemeJson - wrong/invalid path', async () => {
   })
   const colorThemePath = join(tmpDir, 'builtin.theme-test', 'color-theme.json')
   await expect(ExtensionHostColorTheme.getColorThemeJson('test-theme')).rejects.toThrowError(
-    `Failed to load color theme "test-theme": File not found '${colorThemePath}'`
+    `Failed to load color theme "test-theme": FileNotFoundError: File not found: '${colorThemePath}'`
   )
 })
 

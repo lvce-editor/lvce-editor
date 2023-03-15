@@ -1,11 +1,12 @@
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 import * as NormalizeErrorLine from '../NormalizeErrorLine/NormalizeErrorLine.js'
 
 export const mergeStacks = (parent, child) => {
   if (!child) {
     return parent
   }
-  const parentNewLineIndex = parent.indexOf('\n')
-  const childNewLineIndex = child.indexOf('\n')
+  const parentNewLineIndex = GetNewLineIndex.getNewLineIndex(parent)
+  const childNewLineIndex = GetNewLineIndex.getNewLineIndex(child)
   if (childNewLineIndex === -1) {
     return parent
   }

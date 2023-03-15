@@ -1,11 +1,14 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as Css from '../Css/Css.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as Meta from '../Meta/Meta.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 import { VError } from '../VError/VError.js'
+
 // TODO by default color theme should come from local storage, session storage, cache storage, indexeddb or blob url -> fast initial load
 // actual color theme can be computed after workbench has loaded (most times will be the same and doesn't need to be computed)
 
@@ -31,10 +34,7 @@ const getColorThemeJsonFromSharedProcess = async (colorThemeId) => {
   //     const absolutePath = `${extension.path}/${colorTheme.path}`
   //   }
   // }
-  return SharedProcess.invoke(
-    /* ExtensionHost.getColorThemeJson */ 'ExtensionHost.getColorThemeJson',
-    /* colorThemeId */ colorThemeId
-  )
+  return SharedProcess.invoke(/* ExtensionHost.getColorThemeJson */ 'ExtensionHost.getColorThemeJson', /* colorThemeId */ colorThemeId)
 }
 
 const getColorThemeUrlWeb = (colorThemeId) => {
@@ -74,14 +74,11 @@ export const getColorThemeCss = async (colorThemeId, colorThemeJson) => {
 }
 
 const getMetaThemeColor = (colorThemeJson) => {
-  return (
-    colorThemeJson &&
-    colorThemeJson.colors &&
-    colorThemeJson.colors.TitleBarBackground
-  )
+  return colorThemeJson && colorThemeJson.colors && colorThemeJson.colors.TitleBarBackground
 }
 const applyColorTheme = async (colorThemeId) => {
   try {
+    Assert.string(colorThemeId)
     state.colorTheme = colorThemeId
     const colorThemeJson = await getColorThemeJson(colorThemeId)
     const colorThemeCss = await getColorThemeCss(colorThemeId, colorThemeJson)
@@ -90,10 +87,7 @@ const applyColorTheme = async (colorThemeId) => {
       const themeColor = getMetaThemeColor(colorThemeJson) || ''
       await Meta.setThemeColor(themeColor)
     }
-    if (
-      Platform.platform !== PlatformType.Web &&
-      Preferences.get('development.watchColorTheme')
-    ) {
+    if (Platform.platform !== PlatformType.Web && Preferences.get('development.watchColorTheme')) {
       watch(colorThemeId)
     }
   } catch (error) {
@@ -107,12 +101,12 @@ export const setColorTheme = async (colorThemeId) => {
   await Preferences.set('workbench.colorTheme', colorThemeId)
 }
 
-export const watch = (id) => {
+export const watch = async (id) => {
   if (state.watchedTheme === id) {
     return
   }
   state.watchedTheme = id
-  SharedProcess.send('ExtensionHost.watchColorTheme', id)
+  await SharedProcess.invoke('ExtensionHost.watchColorTheme', id)
 }
 
 export const reload = async () => {
@@ -123,14 +117,14 @@ export const reload = async () => {
 // TODO test this, and also the error case
 // TODO have icon theme, color theme together (maybe)
 export const hydrate = async () => {
-  const colorThemeId = Preferences.get('workbench.colorTheme')
+  const colorThemeId = Preferences.get('workbench.colorTheme') || FALLBACK_COLOR_THEME_ID
   try {
     await applyColorTheme(colorThemeId)
   } catch (error) {
     if (colorThemeId === FALLBACK_COLOR_THEME_ID) {
       throw error
     }
-    console.warn(error)
+    ErrorHandling.handleError(error)
     await applyColorTheme(FALLBACK_COLOR_THEME_ID)
   }
 }

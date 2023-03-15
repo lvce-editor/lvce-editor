@@ -10,7 +10,7 @@ test('editorDeleteWordRight', () => {
     lineCache: [],
     undoStack: [],
   }
-  expect(EditorDeleteWordRight.editorDeleteWordRight(editor)).toMatchObject({
+  expect(EditorDeleteWordRight.deleteWordRight(editor)).toMatchObject({
     lines: ['sample '],
     selections: EditorSelection.fromRange(0, 7, 0, 7),
   })
@@ -23,7 +23,7 @@ test.skip('editorDeleteWordRight - when there is not word right', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorDeleteWordRight.editorDeleteWordRight(editor)).toMatchObject({
+  expect(EditorDeleteWordRight.deleteWordRight(editor)).toMatchObject({
     lines: ['sample  '],
     selections: EditorSelection.fromRange(0, 7, 0, 7),
   })

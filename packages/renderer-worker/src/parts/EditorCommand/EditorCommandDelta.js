@@ -9,6 +9,10 @@ export const characterLeft = (line, columnIndex) => {
   return columnIndex - last.index
 }
 
+export const twoCharactersLeft = () => {
+  return 2
+}
+
 export const characterRight = (line, columnIndex) => {
   if (!TextSegmenter.supported()) {
     return 1
@@ -53,13 +57,7 @@ const RE_WORD_LEFT_2 = /[\u00C0-\u017F\w\-]+>?\s*$/
 const RE_WORD_LEFT_3 = /[a-zA-Z]+[^a-zA-Z\d]+\s*$/
 const RE_WORD_LEFT_4 = /\s+$/
 const RE_WORD_LEFT_5 = /[^a-zA-Z\d]+\s*$/
-const RE_WORD_LEFT = [
-  RE_WORD_LEFT_1,
-  RE_WORD_LEFT_2,
-  RE_WORD_LEFT_3,
-  RE_WORD_LEFT_4,
-  RE_WORD_LEFT_5,
-]
+const RE_WORD_LEFT = [RE_WORD_LEFT_1, RE_WORD_LEFT_2, RE_WORD_LEFT_3, RE_WORD_LEFT_4, RE_WORD_LEFT_5]
 
 export const wordLeft = (line, columnIndex) => {
   const partialLine = line.slice(0, columnIndex)

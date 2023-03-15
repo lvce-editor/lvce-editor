@@ -4,6 +4,7 @@ import * as Json from '../Json/Json.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 
 // TODO maybe put this together with workspace
 
@@ -48,11 +49,7 @@ const getNewRecentlyOpened = (recentlyOpened, path) => {
   if (index === -1) {
     return [path, ...recentlyOpened]
   }
-  return [
-    path,
-    ...recentlyOpened.slice(0, index),
-    ...recentlyOpened.slice(index + 1),
-  ]
+  return [path, ...recentlyOpened.slice(0, index), ...recentlyOpened.slice(index + 1)]
 }
 
 const addToRecentlyOpenedWeb = async (path) => {
@@ -62,7 +59,7 @@ const addToRecentlyOpenedWeb = async (path) => {
 }
 
 const addToRecentlyOpenedRemote = async (path) => {
-  await SharedProcess.invoke('RecentlyOpened.addPath', path)
+  await SharedProcess.invoke(SharedProcessCommandType.RecentlyOpenedAddPath, path)
 }
 
 export const addToRecentlyOpened = async (path) => {
@@ -93,8 +90,5 @@ const addWorkspacePathToRecentlyOpened = async () => {
 // TODO if it is somehow possible to make this more efficient
 export const hydrate = async () => {
   await addWorkspacePathToRecentlyOpened()
-  GlobalEventBus.addListener(
-    'workspace.change',
-    addWorkspacePathToRecentlyOpened
-  )
+  GlobalEventBus.addListener('workspace.change', addWorkspacePathToRecentlyOpened)
 }

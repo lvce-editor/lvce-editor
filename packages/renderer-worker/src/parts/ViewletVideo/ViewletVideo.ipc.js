@@ -6,6 +6,5 @@ export const Commands = {
   handleVideoError: ViewletVideo.handleVideoError,
 }
 
-export const Css = ['/css/parts/ViewletVideo.css']
-
+export * from './ViewletVideoCss.js'
 export * from './ViewletVideo.js'

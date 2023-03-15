@@ -1,8 +1,11 @@
 import * as EditorCompletionType from '../EditorCompletionType/EditorCompletionType.js'
+import * as ExtensionHostAjax from '../ExtensionHostAjax/ExtensionHostAjax.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
+import * as ExtensionHostClosingTag from '../ExtensionHostClosingTag/ExtensionHostClosingTag.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.js'
+import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
 import * as ExtensionHostEnv from '../ExtensionHostEnv/ExtensionHostEnv.js'
 import * as ExtensionHostExec from '../ExtensionHostExec/ExtensionHostExec.js'
@@ -15,11 +18,9 @@ import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/Exten
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
+import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
-import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.js'
-import * as ExtensionHostAjax from '../ExtensionHostAjax/ExtensionHostAjax.js'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import { VError } from '../VError/VError.js'
 
 class FormattingError extends Error {
@@ -38,6 +39,10 @@ export const api = {
   // Brace Completion
   registerBraceCompletionProvider: ExtensionHostBraceCompletion.registerBraceCompletionProvider,
   executeBraceCompletionProvider: ExtensionHostBraceCompletion.executeBraceCompletionProvider,
+
+  // Closing Tag
+  registerClosingTagProvider: ExtensionHostClosingTag.registerClosingTagProvider,
+  executeClosingTagProvider: ExtensionHostClosingTag.executeClosingTagProvider,
 
   // Command
   registerCommand: ExtensionHostCommand.registerCommand,

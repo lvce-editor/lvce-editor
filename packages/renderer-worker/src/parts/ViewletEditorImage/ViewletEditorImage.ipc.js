@@ -22,6 +22,5 @@ export const LazyCommands = {
   handleContextMenu: () => import('./ViewletEditorImageHandleContextMenu.js')
 }
 
-export const Css = '/css/parts/ViewletEditorImage.css'
-
+export * from './ViewletEditorImageCss.js'
 export * from './ViewletEditorImage.js'

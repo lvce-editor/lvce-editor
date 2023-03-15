@@ -1,6 +1,6 @@
-import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Timeout from '../Timeout/Timeout.js'
+import { VError } from '../VError/VError.js'
 
 // TODO maybe rename to extension host management for clarity
 

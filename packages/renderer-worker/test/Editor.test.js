@@ -248,3 +248,174 @@ test('scheduleDocumentAndCursorsSelections - delete one character', () => {
   //   [],
   // ])
 })
+
+test('scheduleDocumentAndCursorsSelections - add auto closing bracket', () => {
+  const editor = {
+    lines: [''],
+    minLineY: 0,
+    maxLineY: 2,
+    numberOfVisibleLines: 2,
+    tokenizer: TokenizePlainText,
+    lineCache: [],
+    selections: [],
+    id: 1,
+    deltaY: 0,
+    finalDeltaY: 122,
+    height: 400,
+    scrollBarHeight: 28,
+    top: 0,
+    left: 0,
+    columnWidth: 8,
+    rowHeight: 8,
+    invalidStartIndex: 0,
+    undoStack: [],
+  }
+  const changes = [
+    {
+      start: {
+        rowIndex: 0,
+        columnIndex: 0,
+      },
+      end: {
+        rowIndex: 0,
+        columnIndex: 0,
+      },
+      inserted: ['{}'],
+      deleted: [''],
+      origin: EditOrigin.EditorTypeWithAutoClosing,
+    },
+  ]
+  expect(Editor.scheduleDocumentAndCursorsSelections(editor, changes)).toMatchObject({
+    lines: ['{}'],
+    autoClosingRanges: [0, 1, 0, 1],
+  })
+})
+
+test('scheduleDocumentAndCursorsSelections - add nested auto closing bracket', () => {
+  const editor = {
+    lines: ['{}'],
+    minLineY: 0,
+    maxLineY: 2,
+    numberOfVisibleLines: 2,
+    tokenizer: TokenizePlainText,
+    lineCache: [],
+    id: 1,
+    deltaY: 0,
+    finalDeltaY: 122,
+    height: 400,
+    scrollBarHeight: 28,
+    top: 0,
+    left: 0,
+    columnWidth: 8,
+    rowHeight: 8,
+    invalidStartIndex: 0,
+    undoStack: [],
+    selections: new Uint32Array([0, 1, 0, 1]),
+    autoClosingRanges: [0, 1, 0, 1],
+  }
+  const changes = [
+    {
+      start: {
+        rowIndex: 0,
+        columnIndex: 1,
+      },
+      end: {
+        rowIndex: 0,
+        columnIndex: 1,
+      },
+      inserted: ['{}'],
+      deleted: [''],
+      origin: EditOrigin.EditorTypeWithAutoClosing,
+    },
+  ]
+  expect(Editor.scheduleDocumentAndCursorsSelections(editor, changes)).toMatchObject({
+    lines: ['{{}}'],
+    autoClosingRanges: [0, 1, 0, 3, 0, 2, 0, 2],
+  })
+})
+
+test('scheduleDocumentAndCursorsSelections - insert character, moving auto closing ranges right', () => {
+  const editor = {
+    lines: ['{}'],
+    minLineY: 0,
+    maxLineY: 2,
+    numberOfVisibleLines: 2,
+    tokenizer: TokenizePlainText,
+    lineCache: [],
+    id: 1,
+    deltaY: 0,
+    finalDeltaY: 122,
+    height: 400,
+    scrollBarHeight: 28,
+    top: 0,
+    left: 0,
+    columnWidth: 8,
+    rowHeight: 8,
+    invalidStartIndex: 0,
+    undoStack: [],
+    selections: new Uint32Array([0, 1, 0, 1]),
+    autoClosingRanges: [0, 1, 0, 1],
+  }
+  const changes = [
+    {
+      start: {
+        rowIndex: 0,
+        columnIndex: 1,
+      },
+      end: {
+        rowIndex: 0,
+        columnIndex: 1,
+      },
+      inserted: ['a'],
+      deleted: [''],
+      origin: EditOrigin.EditorType,
+    },
+  ]
+  expect(Editor.scheduleDocumentAndCursorsSelections(editor, changes)).toMatchObject({
+    lines: ['{a}'],
+    autoClosingRanges: [0, 1, 0, 2],
+  })
+})
+
+test('scheduleDocumentAndCursorsSelections - delete character, moving auto closing ranges left', () => {
+  const editor = {
+    lines: ['{a}'],
+    minLineY: 0,
+    maxLineY: 2,
+    numberOfVisibleLines: 2,
+    tokenizer: TokenizePlainText,
+    lineCache: [],
+    id: 1,
+    deltaY: 0,
+    finalDeltaY: 122,
+    height: 400,
+    scrollBarHeight: 28,
+    top: 0,
+    left: 0,
+    columnWidth: 8,
+    rowHeight: 8,
+    invalidStartIndex: 0,
+    undoStack: [],
+    selections: new Uint32Array([0, 2, 0, 2]),
+    autoClosingRanges: [0, 1, 0, 2],
+  }
+  const changes = [
+    {
+      start: {
+        rowIndex: 0,
+        columnIndex: 1,
+      },
+      end: {
+        rowIndex: 0,
+        columnIndex: 2,
+      },
+      inserted: [''],
+      deleted: ['a'],
+      origin: EditOrigin.Delete,
+    },
+  ]
+  expect(Editor.scheduleDocumentAndCursorsSelections(editor, changes)).toMatchObject({
+    lines: ['{}'],
+    autoClosingRanges: [0, 1, 0, 1],
+  })
+})

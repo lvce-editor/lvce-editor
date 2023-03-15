@@ -22,9 +22,11 @@ test('event - click', () => {
   ViewletSourceControl.setChangedFiles(state, [
     {
       file: '/test/file-1',
+      type: 'file',
     },
     {
       file: '/test/file-2',
+      type: 'file',
     },
   ])
   const { $ViewletTree } = state
@@ -43,9 +45,11 @@ test('event - mouseover', () => {
   ViewletSourceControl.setChangedFiles(state, [
     {
       file: '/test/file-1',
+      type: 'file',
     },
     {
       file: '/test/file-2',
+      type: 'file',
     },
   ])
   const { $ViewletTree } = state
@@ -63,9 +67,11 @@ test('event - contextmenu', () => {
   ViewletSourceControl.setChangedFiles(state, [
     {
       file: '/test/file-1',
+      type: 'file',
     },
     {
       file: '/test/file-2',
+      type: 'file',
     },
   ])
   const { $ViewletTree } = state

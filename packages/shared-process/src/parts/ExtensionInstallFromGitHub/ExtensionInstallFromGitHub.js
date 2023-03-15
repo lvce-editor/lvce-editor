@@ -1,9 +1,9 @@
-import VError from 'verror'
 import * as DownloadAndExtract from '../DownloadAndExtract/DownloadAndExtract.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
+import { VError } from '../VError/VError.js'
 
 export const install = async ({ user, repo, branch }) => {
   try {

@@ -1,5 +1,5 @@
 import open from 'open'
-import VError from 'verror'
+import { VError } from '../VError/VError.js'
 
 export const openFolder = async (path) => {
   try {

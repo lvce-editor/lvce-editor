@@ -1,14 +1,3 @@
-// TODO file system providers should be lazy loaded (maybe)
-
-import * as FileSystemExtensionHost from '../ExtensionHost/ExtensionHostFileSystem.js'
-import * as FileSystemApp from '../FileSystem/FileSystemApp.js'
-import * as FileSystemData from '../FileSystem/FileSystemData.js'
-import * as FileSystemDisk from '../FileSystem/FileSystemDisk.js'
-import * as FileSystemFetch from '../FileSystem/FileSystemFetch.js'
-import * as FileSystemGitHub from '../FileSystem/FileSystemGitHub.js'
-import * as FileSystemHtml from '../FileSystem/FileSystemHtml.js'
-import * as FileSystemMemory from '../FileSystem/FileSystemMemory.js'
-import * as FileSystemWeb from '../FileSystem/FileSystemWeb.js'
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 
 // TODO when it rejects, it should throw a custom error,
@@ -21,15 +10,35 @@ export const state = {
 }
 
 // TODO extension host should be able to register arbitrary protocols (except app, http, https, file, )
-state.fileSystems[FileSystemProtocol.ExtensionHost] = FileSystemExtensionHost
-state.fileSystems[FileSystemProtocol.App] = FileSystemApp
-state.fileSystems[FileSystemProtocol.GitHub] = FileSystemGitHub
-state.fileSystems[FileSystemProtocol.Web] = FileSystemWeb
-state.fileSystems[FileSystemProtocol.Data] = FileSystemData
-state.fileSystems[FileSystemProtocol.Memfs] = FileSystemMemory
-state.fileSystems[FileSystemProtocol.Html] = FileSystemHtml
-state.fileSystems[FileSystemProtocol.Fetch] = FileSystemFetch
+
+const loadFileSystem = (procotol) => {
+  switch (procotol) {
+    case FileSystemProtocol.ExtensionHost:
+      return import('../ExtensionHost/ExtensionHostFileSystem.js')
+    case FileSystemProtocol.App:
+      return import('../FileSystem/FileSystemApp.js')
+    case FileSystemProtocol.GitHub:
+      return import('../FileSystem/FileSystemGitHub.js')
+    case FileSystemProtocol.Data:
+      return import('../FileSystem/FileSystemData.js')
+    case FileSystemProtocol.Memfs:
+      return import('../FileSystem/FileSystemMemory.js')
+    case FileSystemProtocol.Web:
+      return import('../FileSystem/FileSystemWeb.js')
+    case FileSystemProtocol.Fetch:
+      return import('../FileSystem/FileSystemFetch.js')
+    case FileSystemProtocol.Disk:
+      return import('../FileSystem/FileSystemDisk.js')
+    case FileSystemProtocol.Html:
+      return import('../FileSystem/FileSystemHtml.js')
+    default:
+      throw new Error(`unknown file system protocol ${procotol}`)
+  }
+}
 
 export const getFileSystem = (protocol) => {
-  return state.fileSystems[protocol] || FileSystemDisk
+  if (!(protocol in state.fileSystems)) {
+    state.fileSystems[protocol] = loadFileSystem(protocol)
+  }
+  return state.fileSystems[protocol]
 }

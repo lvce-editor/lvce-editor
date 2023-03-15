@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import { FileNotFoundError } from '../src/parts/Error/FileNotFoundError.js'
+import { FileNotFoundError } from '../src/parts/FileNotFoundError/FileNotFoundError.js'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {
@@ -111,7 +111,7 @@ test('link - error - no manifest file found', async () => {
   })
   await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrowError(
     new Error(
-      "Failed to link extension: Failed to load extension manifest for my-extension: FileNotFoundError: File not found '/test/my-extension/extension.json'"
+      "Failed to link extension: Failed to load extension manifest for my-extension: FileNotFoundError: File not found: '/test/my-extension/extension.json'"
     )
   )
 })

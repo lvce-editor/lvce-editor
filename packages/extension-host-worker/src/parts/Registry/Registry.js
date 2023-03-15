@@ -3,6 +3,7 @@ import { VError } from '../VError/VError.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
 const RE_UPPERCASE_LETTER = /[A-Z]/g
+const RE_PROPERTY = /item\..*must be of type/
 
 const spaceOut = (camelCaseWord) => {
   return camelCaseWord.replaceAll(RE_UPPERCASE_LETTER, (character, index) => {
@@ -17,11 +18,24 @@ const toCamelCase = (string) => {
   return string[0].toLowerCase() + string.slice(1)
 }
 
+const improveValidationErrorPostMessage = (validationError, camelCaseName) => {
+  if (validationError.startsWith('item must be of type')) {
+    return validationError.replace('item', camelCaseName)
+  }
+  if (validationError.startsWith('expected result to be')) {
+    return validationError.replace('result', `${camelCaseName} item`)
+  }
+  if (RE_PROPERTY.test(validationError)) {
+    return validationError.replace('item', camelCaseName)
+  }
+  return validationError
+}
+
 const improveValidationError = (name, validationError) => {
   const camelCaseName = toCamelCase(name)
   const spacedOutName = spaceOut(name)
   const pre = `invalid ${spacedOutName} result`
-  const post = validationError.replace('item', camelCaseName).replace('result', `${camelCaseName} item`)
+  const post = improveValidationErrorPostMessage(validationError, camelCaseName)
   return pre + ': ' + post
 }
 

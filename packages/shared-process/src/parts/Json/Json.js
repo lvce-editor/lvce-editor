@@ -1,16 +1,14 @@
 // parsing error handling based on https://github.com/sindresorhus/parse-json/blob/main/index.js
 
+import { JsonParsingError } from '../JsonParsingError/JsonParsingError.js'
+
 export const parse = async (string, filePath) => {
   try {
     return JSON.parse(string)
   } catch (error) {
     const JsonError = await import('../JsonError/JsonError.js')
     const errorProps = JsonError.getErrorPropsFromError(error, string, filePath)
-    const jsonError = new Error(errorProps.message)
-    jsonError.stack = errorProps.stack
-    // @ts-ignore
-    jsonError.codeFrame = errorProps.codeFrame
-    throw jsonError
+    throw new JsonParsingError(errorProps.message, errorProps.codeFrame, errorProps.stack)
   }
 }
 

@@ -1,7 +1,8 @@
 const { VError } = require('verror')
-const Platform = require('../Platform/Platform.js')
-const JsonFile = require('../JsonFile/JsonFile.js')
 const ErrorCodes = require('../ErrorCodes/ErrorCodes.js')
+const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
+const JsonFile = require('../JsonFile/JsonFile.js')
+const Platform = require('../Platform/Platform.js')
 
 const get = (options, key) => {
   return options[key]
@@ -29,11 +30,31 @@ const writeSettings = async (path, value) => {
   }
 }
 
+const getDefaultSettings = async () => {
+  try {
+    const defaultSettingsPath = Platform.getDefaultSettingsPath()
+    const defaultSettings = await readSettings(defaultSettingsPath)
+    return defaultSettings
+  } catch (error) {
+    ErrorHandling.handleError(error)
+    return {}
+  }
+}
+
+const getUserSettings = async () => {
+  try {
+    const defaultSettingsPath = Platform.getUserSettingsPath()
+    const defaultSettings = await readSettings(defaultSettingsPath)
+    return defaultSettings
+  } catch (error) {
+    ErrorHandling.handleError(error)
+    return {}
+  }
+}
+
 const load = async () => {
-  const defaultSettingsPath = Platform.getDefaultSettingsPath()
-  const userSettingsPath = Platform.getUserSettingsPath()
-  const defaultSettings = await readSettings(defaultSettingsPath)
-  const userSettings = await readSettings(userSettingsPath)
+  const defaultSettings = await getDefaultSettings()
+  const userSettings = await getUserSettings()
   const mergedSettings = { ...defaultSettings, ...userSettings }
   return mergedSettings
 }

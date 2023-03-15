@@ -40,16 +40,33 @@ test('blobToBinaryString - error - progress event', async () => {
     Object.defineProperty(error, 'target', {
       value: {
         // @ts-ignore
-        error: new Error(
-          'A requested file or directory could not be found at the time an operation was processed.'
-        ),
+        error: new Error('A requested file or directory could not be found at the time an operation was processed.'),
       },
     })
     throw error
   })
   await expect(Blob.blobToBinaryString('YWJj')).rejects.toThrowError(
+    new Error('Failed to convert blob to binary string: A requested file or directory could not be found at the time an operation was processed.')
+  )
+})
+
+test('blobToBinaryString - error - file could not be read', async () => {
+  // @ts-ignore
+  BlobUtil.blobToBinaryString.mockImplementation(() => {
+    const error = new ProgressEvent('error', {})
+    Object.defineProperty(error, 'target', {
+      value: {
+        // @ts-ignore
+        error: new Error('A requested file or directory could not be found at the time an operation was processed.'),
+      },
+    })
+    throw new DOMException(
+      'The requested file could not be read, typically due to permission problems that have occurred after a reference to a file was acquired.'
+    )
+  })
+  await expect(Blob.blobToBinaryString()).rejects.toThrowError(
     new Error(
-      'Failed to convert blob to binary string: A requested file or directory could not be found at the time an operation was processed.'
+      'Failed to convert blob to binary string: DOMException: The requested file could not be read, typically due to permission problems that have occurred after a reference to a file was acquired.'
     )
   )
 })

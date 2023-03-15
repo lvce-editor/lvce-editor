@@ -30,6 +30,7 @@ test('getVisible', () => {
     letterSpacing: 0,
     fontSize: 15,
     cursorWidth: 0,
+    tabSize: 2,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([/*x */ 48, /* y */ 40, /* x */ 24, /* y */ 80]))
@@ -59,6 +60,7 @@ test('getVisible - bug with two lines', () => {
     letterSpacing: 0,
     fontSize: 15,
     cursorWidth: 0,
+    tabSize: 2,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([/*x */ 32, /* y */ 20]))
@@ -86,6 +88,7 @@ test('getVisible - cursors should be treated separately', () => {
     letterSpacing: 0,
     fontSize: 15,
     cursorWidth: 0,
+    tabSize: 2,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([/*x */ 32, /* y */ 0]))
@@ -107,6 +110,7 @@ test('getVisible - bug with multiple lines', () => {
     letterSpacing: 0,
     fontSize: 15,
     cursorWidth: 0,
+    tabSize: 2,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([/* x */ 24, /* y */ 40]))
@@ -234,6 +238,7 @@ test('getVisible - only start of selection visible', () => {
     letterSpacing: 0,
     fontSize: 15,
     cursorWidth: 0,
+    tabSize: 2,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([]))

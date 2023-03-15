@@ -105,11 +105,9 @@ const getTmpDir = () => {
 test('getAll - error', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
-  Platform.getDefaultSettingsPath.mockImplementation(() =>
-    join(tmpDir, 'static', 'config', 'defaultSettings.json')
-  )
+  Platform.getDefaultSettingsPath.mockImplementation(() => join(tmpDir, 'static', 'config', 'defaultSettings.json'))
   await expect(Preferences.getAll()).rejects.toThrowError(
-    /^Failed to get all preferences: Failed to load default preferences: File not found/
+    /^Failed to get all preferences: Failed to load default preferences: FileNotFoundError: File not found/
   )
 })
 

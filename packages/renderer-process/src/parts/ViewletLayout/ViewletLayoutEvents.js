@@ -41,3 +41,11 @@ export const handleResize = () => {
   const { innerWidth, innerHeight } = window
   ViewletLayoutFunctions.handleResize(innerWidth, innerHeight)
 }
+
+export const handleFocus = () => {
+  ViewletLayoutFunctions.handleFocus()
+}
+
+export const handleBlur = () => {
+  ViewletLayoutFunctions.handleBlur()
+}

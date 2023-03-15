@@ -12,6 +12,8 @@ export const load = (moduleId) => {
       return import('../Base64/Base64.ipc.js')
     case ModuleId.Blob:
       return import('../Blob/Blob.ipc.js')
+    case ModuleId.BulkReplacement:
+      return import('../BulkReplacement/BulkReplacement.ipc.js')
     case ModuleId.CacheStorage:
       return import('../CacheStorage/CacheStorage.ipc.js')
     case ModuleId.Callback:
@@ -28,6 +30,8 @@ export const load = (moduleId) => {
       return import('../ColorTheme/ColorTheme.ipc.js')
     case ModuleId.ColorThemeFromJson:
       return import('../ColorThemeFromJson/ColorThemeFromJson.ipc.js')
+    case ModuleId.ConfirmPrompt:
+      return import('../ConfirmPrompt/ConfirmPrompt.ipc.js')
     case ModuleId.ContentTracing:
       return import('../ContentTracing/ContentTracing.ipc.js')
     case ModuleId.ContextMenu:

@@ -1,24 +1,31 @@
 import * as Command from '../Command/Command.js'
+import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.js'
-import { requiresSocket } from '../RequiresSocket/RequiresSocket.js'
+import * as RequiresSocket from '../RequiresSocket/RequiresSocket.js'
+
+const shouldLogError = (error) => {
+  if (error && error.code === ErrorCodes.ENOENT) {
+    return false
+  }
+  return true
+}
 
 export const getResponse = async (message, handle) => {
   try {
-    const result = requiresSocket(message.method)
+    const result = RequiresSocket.requiresSocket(message.method)
       ? await Command.execute(message.method, handle, ...message.params)
       : await Command.execute(message.method, ...message.params)
-
     return {
       jsonrpc: JsonRpcVersion.Two,
       id: message.id,
       result: result ?? null,
     }
   } catch (error) {
-    if (error && error instanceof Error && error.message && error.message.startsWith('method not found')) {
+    if (error && error instanceof CommandNotFoundError) {
       return {
         jsonrpc: JsonRpcVersion.Two,
         id: message.id,
@@ -29,14 +36,16 @@ export const getResponse = async (message, handle) => {
         },
       }
     }
-    // @ts-ignore
-    if (error && error instanceof Error && error.code === ErrorCodes.ENOENT) {
+    if (!shouldLogError(error)) {
       return {
         jsonrpc: JsonRpcVersion.Two,
         id: message.id,
         error: {
           code: JsonRpcErrorCode.Custom,
           message: `${error}`,
+          data: {
+            code: error.code,
+          },
         },
       }
     }
@@ -51,6 +60,7 @@ export const getResponse = async (message, handle) => {
         data: {
           stack: prettyError.stack,
           codeFrame: prettyError.codeFrame,
+          type: prettyError.type,
         },
       },
     }

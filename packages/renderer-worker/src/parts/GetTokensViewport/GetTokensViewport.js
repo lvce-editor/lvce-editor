@@ -28,6 +28,16 @@ const getTokensViewportEmbedded = (lines, lineCache, linesWithEmbed) => {
           TokenMap: embeddedTokenizer.TokenMap,
           isFull,
         })
+      } else if (line.length === 0) {
+        const embedResult = {
+          tokens: [],
+        }
+        result.embeddedResultIndex = embeddedResults.length
+        embeddedResults.push({
+          result: embedResult,
+          isFull: true,
+          TokenMap: [],
+        })
       } else {
         tokenizersToLoad.push(embeddedLanguage)
         embeddedResults.push({

@@ -22,10 +22,7 @@ const getId = (path) => {
 const getWebExtensionManifest = async (path) => {
   try {
     const manifestPath = `${path}/extension.json`
-    const manifest = await Command.execute(
-      /* Ajax.getJson */ 'Ajax.getJson',
-      /* url */ manifestPath
-    )
+    const manifest = await Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ manifestPath)
     return {
       ...manifest,
       path,
@@ -55,9 +52,7 @@ export const addWebExtension = async (path) => {
 }
 
 const getSharedProcessExtensions = () => {
-  return SharedProcess.invoke(
-    /* ExtensionManagement.getExtensions */ 'ExtensionManagement.getExtensions'
-  )
+  return SharedProcess.invoke(/* ExtensionManagement.getExtensions */ 'ExtensionManagement.getExtensions')
 }
 
 const getStaticWebExtensions = () => {
@@ -77,13 +72,8 @@ const isWebExtension = (extension) => {
 const getWebExtensionsDefault = async () => {
   const staticWebExtensions = await getStaticWebExtensions()
   const sharedProcessExtensions = await getSharedProcessExtensions()
-  const sharedProcessWebExtensions =
-    sharedProcessExtensions.filter(isWebExtension)
-  return [
-    ...staticWebExtensions,
-    sharedProcessWebExtensions,
-    ...state.webExtensions,
-  ]
+  const sharedProcessWebExtensions = sharedProcessExtensions.filter(isWebExtension)
+  return [...staticWebExtensions, sharedProcessWebExtensions, ...state.webExtensions]
 }
 
 const getWebExtensions = async () => {
@@ -155,10 +145,7 @@ const handleRejectedExtension = async (extension) => {
   }
   const codeFrame = getCodeFrameFromError(reason)
   const stack = getOriginalStackFromError(reason)
-  await Command.execute(
-    /* Dialog.showMessage */ 'Dialog.showMessage',
-    /* error */ { message, codeFrame, stack }
-  )
+  await Command.execute(/* Dialog.showMessage */ 'Dialog.showMessage', /* error */ { message, codeFrame, stack })
 }
 
 export const handleRejectedExtensions = async (extensions) => {

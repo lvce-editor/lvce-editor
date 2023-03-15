@@ -6,6 +6,8 @@ export const load = (moduleId) => {
       return import('../Audio/Audio.ipc.js')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.js')
+    case ModuleId.ConfirmPrompt:
+      return import('../ConfirmPrompt/ConfirmPrompt.ipc.js')
     case ModuleId.Css:
       return import('../Css/Css.ipc.js')
     case ModuleId.Developer:
