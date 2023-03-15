@@ -160,7 +160,7 @@ export const removeKeyBindings = (id) => {
   state.keyBindings = Object.values(keyBindingSets).flat(1)
 }
 
-export const hydrate = async (keyBindings) => {
+export const hydrate = (keyBindings) => {
   // TODO is this the right place for browser context ?
   // maybe in env file / env service
   const browser = Platform.getBrowser()
