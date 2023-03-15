@@ -134,6 +134,7 @@ export const loadContent = async (state) => {
   const newMaxLineY = Math.min(items.length, 8)
   editor.widgets = editor.widgets || []
   editor.widgets.push('EditorCompletion')
+  const newFocusedIndex = items.length === 0 ? -1 : 0
   return {
     ...state,
     unfilteredItems,
@@ -141,7 +142,7 @@ export const loadContent = async (state) => {
     x,
     y,
     maxLineY: newMaxLineY,
-    focusedIndex: 0,
+    focusedIndex: newFocusedIndex,
   }
 }
 
