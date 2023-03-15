@@ -5,11 +5,11 @@ export const getModule = (method) => {
   Assert.number(method)
   switch (method) {
     case IpcChildType.WebSocket:
-      return import('../IpcChild/IpcChildWithWebSocket.js')
+      return import('../IpcChildWithWebSocket/IpcChildWithWebSocket.js')
     case IpcChildType.Worker:
-      return import('../IpcChild/IpcChildWithWorker.js')
+      return import('../IpcChildWithWorker/IpcChildWithWorker.js')
     case IpcChildType.ChildProcess:
-      return import('../IpcChild/IpcChildWithChildProcess.js')
+      return import('../IpcChildWithChildProcess/IpcChildWithChildProcess.js')
     default:
       throw new Error(`unexpected ipc type ${method}`)
   }

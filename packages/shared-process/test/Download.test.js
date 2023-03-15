@@ -44,12 +44,8 @@ test('download - error - EISDIR', async () => {
   fsPromises.mkdir.mockImplementation((path) => {
     throw new Error(`EISDIR: illegal operation on a directory, open '${path}'`)
   })
-  await expect(
-    Download.download('https://example/file.txt', '/test/folder')
-  ).rejects.toThrowError(
-    new Error(
-      `Failed to download "https://example/file.txt": EISDIR: illegal operation on a directory, open '/test'`
-    )
+  await expect(Download.download('https://example/file.txt', '/test/folder')).rejects.toThrowError(
+    new Error(`Failed to download "https://example/file.txt": EISDIR: illegal operation on a directory, open '/test'`)
   )
 })
 
@@ -59,10 +55,8 @@ test('download - error - socket hang up', async () => {
     // @ts-ignore
     throw new RequestError(`socket hang up`, {}, {})
   })
-  await expect(
-    Download.download('https://example/file.txt', '/test/folder')
-  ).rejects.toThrowError(
-    new Error(`Failed to download "https://example/file.txt": socket hang up`)
+  await expect(Download.download('https://example/file.txt', '/test/folder')).rejects.toThrowError(
+    new Error(`Failed to download "https://example/file.txt": RequestError: socket hang up`)
   )
 })
 

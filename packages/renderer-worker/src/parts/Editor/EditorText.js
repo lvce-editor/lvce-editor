@@ -1,5 +1,6 @@
 import * as GetDecorationClassName from '../GetDecorationClassName/GetDecorationClassName.js'
 import * as GetTokensViewport from '../GetTokensViewport/GetTokensViewport.js'
+import * as NormalizeText from '../NormalizeText/NormalizeText.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 
@@ -106,7 +107,7 @@ const applyChangesToSyntaxHighlighting = (editor, changes) => {
 //   return result
 // }
 
-const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line) => {
+const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line, normalize, tabSize) => {
   let start = 0
   let end = 0
   const lineInfo = []
@@ -118,15 +119,16 @@ const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line) => {
     const tokenLength = embeddedTokens[i + 1]
     let extraClassName = ''
     end += tokenLength
-    const text = line.slice(start, end)
     const className = `Token ${extraClassName || embeddedTokenMap[tokenType] || 'Unknown'}`
-    lineInfo.push(text, className)
+    const text = line.slice(start, end)
+    const normalizedText = NormalizeText.normalizeText(text, normalize, tabSize)
+    lineInfo.push(normalizedText, className)
     start = end
   }
   return lineInfo
 }
 
-const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset) => {
+const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize) => {
   let start = 0
   let end = 0
   const lineInfo = []
@@ -159,22 +161,22 @@ const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, To
 
     end += tokenLength
     const text = line.slice(start, end)
-
     const className = `Token ${extraClassName || TokenMap[tokenType] || 'Unknown'}`
-    lineInfo.push(text, className)
+    const normalizedText = NormalizeText.normalizeText(text, normalize, tabSize)
+    lineInfo.push(normalizedText, className)
     start = end
   }
   return lineInfo
 }
 
-const getLineInfo = (line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset) => {
+const getLineInfo = (line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize) => {
   if (embeddedResults.length > 0 && tokenResults.embeddedResultIndex !== undefined) {
     const embeddedResult = embeddedResults[tokenResults.embeddedResultIndex]
     if (embeddedResult && embeddedResult.isFull) {
-      return getLineInfoEmbeddedFull(embeddedResults, tokenResults, line)
+      return getLineInfoEmbeddedFull(embeddedResults, tokenResults, line, normalize, tabSize)
     }
   }
-  return getLineInfoDefault(line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset)
+  return getLineInfoDefault(line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize)
 }
 
 // TODO need lots of tests for this
@@ -183,9 +185,11 @@ const getLineInfosViewport = (editor, tokens, embeddedResults, minLineY, maxLine
   const { lines, tokenizer, decorations } = editor
   const { TokenMap } = tokenizer
   let offset = minLineOffset
+  const tabSize = 2
   for (let i = minLineY; i < maxLineY; i++) {
     const line = lines[i]
-    result.push(getLineInfo(line, tokens[i - minLineY], embeddedResults, decorations, TokenMap, offset))
+    const normalize = NormalizeText.shouldNormalizeText(line)
+    result.push(getLineInfo(line, tokens[i - minLineY], embeddedResults, decorations, TokenMap, offset, normalize, tabSize))
     offset += line.length + 1
   }
   return result

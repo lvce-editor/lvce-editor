@@ -108,6 +108,13 @@ const textMimeType = {
   '.webp': 'image/webp',
 }
 
+const ErrorCodes = {
+  ERR_STREAM_PREMATURE_CLOSE: 'ERR_STREAM_PREMATURE_CLOSE',
+  EISDIR: 'EISDIR',
+  ECONNRESET: 'ECONNRESET',
+  ENOENT: 'ENOENT',
+  EADDRINUSE: 'EADDRINUSE',
+}
 const getPath = (url) => {
   return url.split(/[?#]/)[0]
 }
@@ -159,11 +166,11 @@ const serveStatic = (root, skip = '') =>
       await pipeline(createReadStream(filePath), res)
     } catch (error) {
       // @ts-ignore
-      if (error && error.code === 'ERR_STREAM_PREMATURE_CLOSE') {
+      if (error && error.code === ErrorCodes.ERR_STREAM_PREMATURE_CLOSE) {
         return
       }
       // @ts-ignore
-      if (error && error.code === 'EISDIR') {
+      if (error && error.code === ErrorCodes.EISDIR) {
         res.writeHead(404)
         res.end()
         return
@@ -192,7 +199,7 @@ const createApp = () => {
   const server = createServer((req, res) => {
     req.on('error', (error) => {
       // @ts-ignore
-      if (error && error.code === 'ECONNRESET') {
+      if (error && error.code === ErrorCodes.ECONNRESET) {
         return
       }
       console.info('[info: request error]', error)
@@ -292,7 +299,11 @@ const serveTests = async (req, res, next) => {
       await pipeline(createReadStream(join(ROOT, 'static', 'index.html')), res)
     } catch (error) {
       // @ts-ignore
-      if (error && error.code === 'EISDIR') {
+      if (error && error.code === ErrorCodes.ERR_STREAM_PREMATURE_CLOSE) {
+        return
+      }
+      // @ts-ignore
+      if (error && error.code === ErrorCodes.EISDIR) {
         res.statusCode = 404
         res.end()
         return
@@ -315,7 +326,7 @@ const serveTests = async (req, res, next) => {
       res.end(testOverview)
     } catch (error) {
       // @ts-ignore
-      if (error && error.code === 'ENOENT') {
+      if (error && error.code === ErrorCodes.ENOENT) {
         res.statusCode = 404
         // TODO escape path for html
         res.end(`No test files found at ${testPathSrc}`)
@@ -373,7 +384,11 @@ const sendFile = async (path, res) => {
     await pipeline(createReadStream(path), res)
   } catch (error) {
     // @ts-ignore
-    if (error && error.code === 'EISDIR') {
+    if (error && error.code === ErrorCodes.ERR_STREAM_PREMATURE_CLOSE) {
+      return
+    }
+    // @ts-ignore
+    if (error && error.code === ErrorCodes.EISDIR) {
       res.statusCode = 404
       res.end()
       return
@@ -552,7 +567,7 @@ app.on('upgrade', handleUpgrade)
 
 app.on('error', (error) => {
   // @ts-ignore
-  if (error && error.code === 'EADDRINUSE') {
+  if (error && error.code === ErrorCodes.EADDRINUSE) {
     console.error(`[server] Error: port ${PORT} is already taken (possible solution: Run \`killall node\` to free up the port)`)
   } else {
     console.error('[info: server error]', error)

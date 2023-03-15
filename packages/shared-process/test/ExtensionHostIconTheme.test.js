@@ -8,23 +8,16 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionManagement/ExtensionManagement.js',
-  () => {
-    return {
-      getExtensions: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.js', () => {
+  return {
+    getExtensions: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ExtensionHostIconTheme = await import(
-  '../src/parts/ExtensionManagement/ExtensionManagementIconTheme.js'
-)
-const ExtensionManagement = await import(
-  '../src/parts/ExtensionManagement/ExtensionManagement.js'
-)
+const ExtensionHostIconTheme = await import('../src/parts/ExtensionManagement/ExtensionManagementIconTheme.js')
+const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -35,11 +28,7 @@ test('getIconTheme - not found', async () => {
   ExtensionManagement.getExtensions.mockImplementation(async () => {
     return []
   })
-  await expect(
-    ExtensionHostIconTheme.getIconTheme('test-theme')
-  ).rejects.toThrowError(
-    'Icon theme "test-theme" not found in extensions folder'
-  )
+  await expect(ExtensionHostIconTheme.getIconTheme('test-theme')).rejects.toThrowError('Icon theme "test-theme" not found in extensions folder')
 })
 
 test('getIconTheme - wrong/invalid path', async () => {
@@ -62,10 +51,8 @@ test('getIconTheme - wrong/invalid path', async () => {
     ]
   })
   const iconThemeJsonPath = join(tmpDir, 'icon-theme.json')
-  await expect(
-    ExtensionHostIconTheme.getIconTheme('test')
-  ).rejects.toThrowError(
-    `Failed to load icon theme "test": File not found '${iconThemeJsonPath}'`
+  await expect(ExtensionHostIconTheme.getIconTheme('test')).rejects.toThrowError(
+    `Failed to load icon theme "test": FileNotFoundError: File not found: '${iconThemeJsonPath}'`
   )
 })
 
@@ -90,7 +77,7 @@ test('getIconTheme - invalid json', async () => {
   })
   const iconThemeJsonPath = join(tmpDir, 'icon-theme.json')
   await writeFile(iconThemeJsonPath, '{ 2 }')
-  await expect(
-    ExtensionHostIconTheme.getIconTheme('test')
-  ).rejects.toThrowError('Failed to load icon theme "test": Json Parsing Error')
+  await expect(ExtensionHostIconTheme.getIconTheme('test')).rejects.toThrowError(
+    'Failed to load icon theme "test": JsonParsingError: Json Parsing Error'
+  )
 })

@@ -75,3 +75,17 @@ test('editorDeleteWordLeft - at start of file', () => {
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
+
+test('editorDeleteWordLeft - delete auto closing bracket', () => {
+  const editor = {
+    lines: ['{}'],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 1, 0, 1),
+    undoStack: [],
+    autoClosingRanges: [0, 1, 0, 1],
+  }
+  expect(EditorDeleteWordLeft.deleteWordLeft(editor)).toMatchObject({
+    lines: [''],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
+  })
+})

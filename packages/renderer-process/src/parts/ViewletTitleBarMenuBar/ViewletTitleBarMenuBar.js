@@ -30,7 +30,8 @@ export const attachEvents = (state) => {
   $TitleBarMenuBar.onmousedown = ViewletTitleBarMenuBarEvents.handleClick
   $TitleBarMenuBar.addEventListener(DomEventType.FocusOut, ViewletTitleBarMenuBarEvents.handleFocusOut)
   $TitleBarMenuBar.addEventListener(DomEventType.FocusIn, ViewletTitleBarMenuBarEvents.handleFocus)
-  $TitleBarMenuBar.onmouseover = ViewletTitleBarMenuBarEvents.handleMouseOver
+  $TitleBarMenuBar.onpointerover = ViewletTitleBarMenuBarEvents.handlePointerOver
+  $TitleBarMenuBar.onpointerout = ViewletTitleBarMenuBarEvents.handlePointerOut
 }
 
 export const dispose = (state) => {}
@@ -85,6 +86,10 @@ export const focus = (state) => {
 // 0.19ms composite layers
 
 const create$TopLevelEntry = (item) => {
+  // const $Label = document.createElement('div')
+  // $Label.className = 'TitleBarTopLevelEntryLabel'
+  // $Label.textContent = item.label
+
   const $TitleBarTopLevelEntry = document.createElement('div')
   $TitleBarTopLevelEntry.className = 'TitleBarTopLevelEntry'
   $TitleBarTopLevelEntry.ariaHasPopup = AriaBoolean.True
@@ -108,10 +113,16 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, 
     $Child.ariaExpanded = AriaBoolean.False
     $Child.removeAttribute(DomAttributeType.AriaOwns)
     $Child.removeAttribute('id')
+    $Child.textContent = $Child.textContent
   }
   if (focusIndex !== -1) {
     const $Child = $TitleBarMenuBar.children[focusIndex]
     $Child.id = activeId
+    const $Label = document.createElement('div')
+    $Label.className = 'TitleBarTopLevelEntryLabel'
+    $Label.textContent = $Child.textContent
+    $Child.replaceChildren($Label)
+
     $TitleBarMenuBar.focus()
     $TitleBarMenuBar.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
     if (newIsMenuOpen) {
@@ -136,7 +147,7 @@ export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocus
   Assert.number(height)
   const { $TitleBarMenuBar } = state
   // TODO this code is very unclean
-  $TitleBarMenuBar.addEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handleMouseOver, {
+  $TitleBarMenuBar.addEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handlePointerOver, {
     capture: true,
   })
   if (unFocusIndex !== -1) {
@@ -175,7 +186,7 @@ export const closeMenu = (state, unFocusIndex, index) => {
     $TitleBarMenuBar.children[index].focus()
   }
   Menu.hide(/* restoreFocus */ false)
-  $TitleBarMenuBar.removeEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handleMouseOver, {
+  $TitleBarMenuBar.removeEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handlePointerOver, {
     capture: true,
   })
 }

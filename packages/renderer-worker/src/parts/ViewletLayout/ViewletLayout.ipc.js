@@ -38,6 +38,9 @@ export const CommandsWithSideEffects = {
   moveSideBarLeft: ViewletLayout.moveSideBarLeft,
   moveSideBarRight: ViewletLayout.moveSideBarRight,
   toggleSideBarPosition: ViewletLayout.toggleSideBarPosition,
+  handleBlur: ViewletLayout.handleBlur,
+  handleFocus: ViewletLayout.handleFocus,
 }
 
+export * from './ViewletLayoutKeyBindings.js'
 export * from './ViewletLayout.js'

@@ -13,3 +13,5 @@ export const Html = 'html'
 export const ExtensionHost = 'extension-host'
 
 export const Fetch = 'fetch'
+
+export const Disk = ''

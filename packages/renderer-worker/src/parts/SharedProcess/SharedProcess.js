@@ -73,14 +73,6 @@ export const listen = async () => {
   state.ipc = ipc
 }
 
-export const send = (method, ...params) => {
-  if (platform === 'web') {
-    console.warn('SharedProcess is not available on web')
-    return
-  }
-  JsonRpc.send(state.ipc, method, ...params)
-}
-
 export const invoke = async (method, ...params) => {
   if (platform === 'web') {
     console.warn('SharedProcess is not available on web')

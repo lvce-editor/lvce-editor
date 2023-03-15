@@ -7,6 +7,6 @@ export const Commands = {
   focusIndex: ViewletProblems.focusIndex,
 }
 
-export const Css = '/css/parts/ViewletProblems.css'
-
+export * from './ViewletProblemsCss.js'
 export * from './ViewletProblems.js'
+export * from './ViewletProblemsActions.js'

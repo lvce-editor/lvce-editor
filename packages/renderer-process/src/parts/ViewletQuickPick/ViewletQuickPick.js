@@ -1,6 +1,7 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
 import * as AriaAlert from '../AriaAlert/AriaAlert.js'
+import * as AriaAutoCompleteType from '../AriaAutoCompleteType/AriaAutoCompleteType.js'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
@@ -8,8 +9,8 @@ import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
-import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -212,7 +213,7 @@ export const create = () => {
   // @ts-ignore
   $QuickPickInput.role = Roles.ComboBox
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
-  $QuickPickInput.ariaAutoComplete = 'list'
+  $QuickPickInput.ariaAutoComplete = AriaAutoCompleteType.List
   $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
   $QuickPickInput.addEventListener(DomEventType.BeforeInput, ViewletQuickPickEvents.handleBeforeInput)
   $QuickPickInput.ariaExpanded = AriaBoolean.True

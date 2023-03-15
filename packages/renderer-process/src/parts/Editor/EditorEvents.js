@@ -43,7 +43,7 @@ export const handleBeforeInput = (event) => {
   const uid = ComponentUid.get(target)
   switch (inputType) {
     case InputEventType.InsertText:
-      EditorFunctions.type(uid, data)
+      EditorFunctions.typeWithAutoClosing(uid, data)
       break
     default:
       break

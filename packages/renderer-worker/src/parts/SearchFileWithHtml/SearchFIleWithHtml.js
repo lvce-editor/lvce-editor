@@ -21,11 +21,15 @@ const searchFilesRecursively = async (all, parent, handle) => {
   const promises = []
   for (const childHandle of childHandles) {
     const absolutePath = parent + '/' + childHandle.name
-    if (childHandle.kind === FileHandleType.Directory) {
-      promises.push(searchFilesRecursively(all, absolutePath, childHandle))
-    }
-    if (childHandle.kind === FileHandleType.File) {
-      all.push(absolutePath)
+    switch (childHandle.kind) {
+      case FileHandleType.Directory:
+        promises.push(searchFilesRecursively(all, absolutePath, childHandle))
+        break
+      case FileHandleType.File:
+        all.push(absolutePath)
+        break
+      default:
+        break
     }
   }
   await Promise.all(promises)

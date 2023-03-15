@@ -21,12 +21,7 @@ export const executeProviders = async ({
   return combinedResult
 }
 
-export const executeProvider = async ({
-  event,
-  method,
-  params,
-  noProviderFoundMessage,
-}) => {
+export const executeProvider = async ({ event, method, params, noProviderFoundMessage }) => {
   const extensionHosts = await ExtensionHostManagement.activateByEvent(event)
   if (extensionHosts.length === 0) {
     throw new Error(noProviderFoundMessage)

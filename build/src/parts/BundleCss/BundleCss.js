@@ -13,11 +13,7 @@ const getParts = (appCss) => {
   const parts = []
   for (const line of lines) {
     if (line.startsWith(`@import './parts/`)) {
-      const importPath = line
-        .slice(`@import './parts/`.length)
-        .replaceAll("'", '')
-        .replaceAll(';', '')
-        .trim()
+      const importPath = line.slice(`@import './parts/`.length).replaceAll("'", '').replaceAll(';', '').trim()
       parts.push(importPath)
     }
   }
@@ -28,19 +24,9 @@ const toSorted = (array) => {
   return [...array].sort().reverse()
 }
 
-export const bundleCss = async ({
-  outDir,
-  additionalCss = '',
-  assetDir = '',
-  pathPrefix = '',
-}) => {
+export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pathPrefix = '' }) => {
   let css = ``
-  const cssLibNormalize = join(
-    Root.root,
-    'static',
-    'lib-css',
-    'modern-normalize.css'
-  )
+  const cssLibNormalize = join(Root.root, 'static', 'lib-css', 'modern-normalize.css')
   if (additionalCss) {
     css += additionalCss
     css += '\n\n'
@@ -50,10 +36,7 @@ export const bundleCss = async ({
   css += '\n'
   css += await readFile(cssLibTermTerm, EncodingType.Utf8)
   css += '\n'
-  const appCss = await readFile(
-    join(Root.root, 'static', 'css', 'App.css'),
-    EncodingType.Utf8
-  )
+  const appCss = await readFile(join(Root.root, 'static', 'css', 'App.css'), EncodingType.Utf8)
   const parts = getParts(appCss)
   const cwd = join(Root.root, 'static', 'css', 'parts')
   const dirents = await readdir(cwd)
@@ -97,6 +80,11 @@ export const bundleCss = async ({
   })
   await Replace.replace({
     path: Path.join(outDir, 'parts', 'EditorTabs.css'),
+    occurrence: `url(/icons/`,
+    replacement: `url(${assetDir}/icons/`,
+  })
+  await Replace.replace({
+    path: Path.join(outDir, 'parts', 'ViewletTitleBarIcon.css'),
     occurrence: `url(/icons/`,
     replacement: `url(${assetDir}/icons/`,
   })

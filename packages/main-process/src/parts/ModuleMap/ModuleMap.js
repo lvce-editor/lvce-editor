@@ -1,3 +1,4 @@
+const { CommandNotFoundError } = require('../CommandNotFoundError/CommandNotFoundError.js')
 const ModuleId = require('../ModuleId/ModuleId.js')
 
 const getPrefix = (commandId) => {
@@ -48,7 +49,17 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronApplicationMenu
     case 'About':
       return ModuleId.About
+    case 'ListProcessesWithMemoryUsage':
+      return ModuleId.ListProcessesWithMemoryUsage
+    case 'ProcessExplorerContextMenu':
+      return ModuleId.ProcessExplorerContextMenu
+    case 'Process':
+      return ModuleId.Process
+    case 'ElectronNet':
+      return ModuleId.ElectronNet
+    case 'ElectronBrowserViewSuggestions':
+      return ModuleId.ElectronBrowserViewSuggestions
     default:
-      throw new Error(`method not found ${commandId}`)
+      throw new CommandNotFoundError(commandId)
   }
 }

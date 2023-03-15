@@ -47,3 +47,9 @@ test('toSpliced - delete item at end', () => {
   const newArray = Arrays.toSpliced(array, 2, 1)
   expect(newArray).toEqual([1, 2])
 })
+
+test('push - add one item', () => {
+  const array = []
+  Arrays.push(array, [1])
+  expect(array).toEqual([1])
+})

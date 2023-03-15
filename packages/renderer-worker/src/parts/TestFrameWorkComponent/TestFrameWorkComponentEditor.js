@@ -79,3 +79,7 @@ export const setDeltaY = async (deltaY) => {
 export const format = async () => {
   await Command.execute('Editor.format')
 }
+
+export const insertLineBreak = async () => {
+  await Command.execute('Editor.insertLineBreak')
+}

@@ -31,3 +31,35 @@ export const handleScrollBarClick = (y) => {
 export const handleWheel = (deltaY) => {
   RendererWorker.send('Search.handleWheel', deltaY)
 }
+
+export const toggleReplace = () => {
+  RendererWorker.send('Search.handleToggleButtonClick')
+}
+
+export const toggleMatchCase = () => {
+  RendererWorker.send('Search.toggleMatchCase')
+}
+
+export const toggleMatchWholeWord = () => {
+  RendererWorker.send('Search.toggleMatchWholeWord')
+}
+
+export const replaceAll = () => {
+  RendererWorker.send('Search.replaceAll')
+}
+
+export const toggleUseRegularExpression = () => {
+  RendererWorker.send('Search.toggleUseRegularExpression')
+}
+
+export const handleReplaceInput = (value) => {
+  RendererWorker.send('Search.handleReplaceInput', value)
+}
+
+export const handleListFocus = () => {
+  RendererWorker.send('Search.handleListFocus')
+}
+
+export const handleListBlur = () => {
+  RendererWorker.send('Search.handleListBlur')
+}

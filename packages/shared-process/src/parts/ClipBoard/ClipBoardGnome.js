@@ -2,10 +2,10 @@
 // see also http://manpages.ubuntu.com/manpages/bionic/man1/xclip.1.html
 // on gnome, get current selection targets with `xclip -selection clipboard -t TARGETS -o`
 
-import VError from 'verror'
 import * as Exec from '../Exec/Exec.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import { VError } from '../VError/VError.js'
 
 const removePrefix = (file) => {
   if (file.startsWith('file://')) {
@@ -57,7 +57,6 @@ export const writeFiles = async (type, files) => {
       input: plainContent,
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, 'Failed to copy files to clipboard')
   }
 }

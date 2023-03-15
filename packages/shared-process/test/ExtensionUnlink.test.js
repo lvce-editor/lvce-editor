@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import { FileNotFoundError } from '../src/parts/Error/FileNotFoundError.js'
+import { FileNotFoundError } from '../src/parts/FileNotFoundError/FileNotFoundError.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -36,9 +36,7 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
 })
 
 const SymLink = await import('../src/parts/SymLink/SymLink.js')
-const ExtensionUnlink = await import(
-  '../src/parts/ExtensionUnlink/ExtensionUnlink.js'
-)
+const ExtensionUnlink = await import('../src/parts/ExtensionUnlink/ExtensionUnlink.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 class NodeError extends Error {
@@ -57,9 +55,7 @@ test('unlink', async () => {
   FileSystem.remove.mockImplementation(() => {})
   await ExtensionUnlink.unlink('/test/documents/my-extension')
   expect(FileSystem.remove).toHaveBeenCalledTimes(1)
-  expect(FileSystem.remove).toHaveBeenCalledWith(
-    '/test/linked-extensions/my-extension'
-  )
+  expect(FileSystem.remove).toHaveBeenCalledWith('/test/linked-extensions/my-extension')
 })
 
 test('link - error - no manifest file found', async () => {
@@ -67,11 +63,9 @@ test('link - error - no manifest file found', async () => {
   FileSystem.readFile.mockImplementation((uri) => {
     throw new FileNotFoundError(uri)
   })
-  await expect(
-    ExtensionUnlink.unlink('/test/documents/my-extension')
-  ).rejects.toThrowError(
+  await expect(ExtensionUnlink.unlink('/test/documents/my-extension')).rejects.toThrowError(
     new Error(
-      "Failed to unlink extension: Failed to load extension manifest for my-extension: FileNotFoundError: File not found '/test/documents/my-extension/extension.json'"
+      "Failed to unlink extension: Failed to load extension manifest for my-extension: FileNotFoundError: File not found: '/test/documents/my-extension/extension.json'"
     )
   )
 })

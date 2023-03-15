@@ -7,20 +7,36 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
+    titleBarIconWidth: 30,
+    isFocused: false,
   }
 }
 
 export const loadContent = (state) => {
-  return state
+  return {
+    ...state,
+    isFocused: true,
+  }
+}
+
+export const handleFocusChange = (state, isFocused) => {
+  return { ...state, isFocused }
 }
 
 export const getChildren = (state) => {
   const children = []
-  const { x, y, width, height } = state
+  const { x, y, width, height, titleBarIconWidth } = state
+  let menuBarX = x
+  if (true) {
+    children.push({
+      id: ViewletModuleId.TitleBarIcon,
+    })
+    menuBarX += titleBarIconWidth
+  }
   if (true) {
     children.push({
       id: ViewletModuleId.TitleBarMenuBar,
-      x,
+      x: menuBarX,
       y,
       height,
     })
@@ -35,7 +51,16 @@ export const getChildren = (state) => {
 
 export const hasFunctionalRender = true
 
-export const render = []
+const renderFocus = {
+  isEqual(oldState, newState) {
+    return oldState.isFocused === newState.isFocused
+  },
+  apply(oldState, newState) {
+    return ['setFocused', newState.isFocused]
+  },
+}
+
+export const render = [renderFocus]
 
 export const hasFunctionalResize = true
 

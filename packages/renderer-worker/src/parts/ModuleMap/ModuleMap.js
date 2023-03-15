@@ -10,7 +10,6 @@ const getPrefix = (commandId) => {
 export const getModuleId = (commandId) => {
   const prefix = getPrefix(commandId)
   switch (prefix) {
-    // TODO this should be in layout module
     case 'About':
       return ModuleId.About
     case 'Ajax':
@@ -21,6 +20,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Base64
     case 'Blob':
       return ModuleId.Blob
+    case 'BulkReplacement':
+      return ModuleId.BulkReplacement
     case 'CacheStorage':
       return ModuleId.CacheStorage
     case 'Callback':
@@ -37,6 +38,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ColorTheme
     case 'ColorThemeFromJson':
       return ModuleId.ColorThemeFromJson
+    case 'ConfirmPrompt':
+      return ModuleId.ConfirmPrompt
     case 'ContentTracing':
       return ModuleId.ContentTracing
     case 'ContextMenu':
@@ -141,6 +144,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace':
       return ModuleId.Workspace
     default:
-      throw new Error(`command ${commandId} not found`)
+      throw new Error(`module ${prefix} not found`)
   }
 }

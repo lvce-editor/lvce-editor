@@ -40,6 +40,7 @@ export const LazyCommands = {
   deleteWordPartRight: () => import('../EditorCommand/EditorCommandDeleteWordPartRight.js'),
   deleteWordRight: () => import('../EditorCommand/EditorCommandDeleteWordRight.js'),
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
+  closeCompletion: () => import('../EditorCommand/EditorCommandCloseCompletion.js'),
   compositionStart: () => import('../EditorCommand/EditorCommandComposition.js'),
   compositionUpdate: () => import('../EditorCommand/EditorCommandComposition.js'),
   compositionEnd: () => import('../EditorCommand/EditorCommandComposition.js'),
@@ -95,6 +96,7 @@ export const LazyCommands = {
   toggleBlockComment: () => import('../EditorCommand/EditorCommandToggleBlockComment.js'),
   toggleComment: () => import('../EditorCommand/EditorCommandToggleComment.js'),
   type: () => import('../EditorCommand/EditorCommandType.js'),
+  typeWithAutoClosing: () => import('../EditorCommand/EditorCommandTypeWithAutoClosing.js'),
   undo: () => import('../EditorCommand/EditorCommandUndo.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   handlePointerCaptureLost: () => import('../EditorCommand/EditorCommandHandlePointerCaptureLost.js'),
@@ -108,6 +110,6 @@ export const Events = {
   // 'tokenizer.changed': ViewletEditorText.handleTokenizeChange,
 }
 
-export const Css = ['/css/parts/ViewletEditor.css', '/css/parts/ScrollBar.css']
-
 export * from './ViewletEditorText.js'
+export * from './ViewletEditorTextCss.js'
+export * from './ViewletEditorTextKeyBindings.js'

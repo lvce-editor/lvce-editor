@@ -11,9 +11,7 @@ jest.unstable_mockModule('ws', () => {
   }
 })
 
-const IpcChildWithWebSocket = await import(
-  '../src/parts/IpcChild/IpcChildWithWebSocket.js'
-)
+const IpcChildWithWebSocket = await import('../src/parts/IpcChildWithWebSocket/IpcChildWithWebSocket.js')
 const ws = await import('ws')
 
 const createFakeIpc = () => {

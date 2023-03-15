@@ -1,5 +1,6 @@
 // TODO so many things in this file
 
+import * as AriaAutoCompleteType from '../AriaAutoCompleteType/AriaAutoCompleteType.js'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
@@ -24,7 +25,7 @@ import * as LayerText3 from './LayerText.js'
 export const create = () => {
   const $EditorInput = document.createElement('textarea')
   $EditorInput.className = 'EditorInput'
-  $EditorInput.ariaAutoComplete = 'list'
+  $EditorInput.ariaAutoComplete = AriaAutoCompleteType.List
   $EditorInput.ariaRoleDescription = 'editor'
   $EditorInput.ariaMultiLine = AriaBoolean.True
   $EditorInput.setAttribute('autocomplete', 'off')

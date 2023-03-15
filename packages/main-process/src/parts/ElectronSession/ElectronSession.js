@@ -5,13 +5,11 @@ const CrossOriginOpenerPolicy = require('../CrossOriginOpenerPolicy/CrossOriginO
 const Electron = require('electron')
 const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
 const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.js')
-const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
-const Root = require('../Root/Root.js')
 const { existsSync } = require('node:fs')
 const { join } = require('node:path')
 const HttpStatusCode = require('../HttpStatusCode/HttpStatusCode.js')
-const { fileURLToPath } = require('node:url')
+const ElectronSessionGetAbsolutePath = require('../ElectronSessionGetAbsolutePath/ElectronSessionGetAbsolutePath.js')
 
 const state = {
   /**
@@ -114,33 +112,6 @@ const handlePermissionCheck = (webContents, permission, origin, details) => {
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
-const getAbsolutePath = (requestUrl) => {
-  const decoded = decodeURI(requestUrl)
-  const { scheme } = Platform
-  const pathName = decoded.slice(`${scheme}://-`.length)
-  // TODO remove if/else in prod (use replacement)
-  if (pathName === `/` || pathName.startsWith(`/?`)) {
-    return Path.join(Root.root, 'static', 'index.html')
-  }
-  if (pathName.startsWith(`/packages`)) {
-    return Path.join(Root.root, pathName)
-  }
-  if (pathName.startsWith(`/static`)) {
-    return Path.join(Root.root, pathName)
-  }
-  if (pathName.startsWith(`/extensions`)) {
-    return Path.join(Root.root, pathName)
-  }
-  // TODO maybe have a separate protocol for remote, e.g. vscode has vscode-remote
-  if (pathName.startsWith(`/remote`)) {
-    const uri = pathName.slice('/remote'.length)
-    if (Platform.isWindows) {
-      return fileURLToPath(`file://` + uri)
-    }
-    return uri
-  }
-  return Path.join(Root.root, 'static', pathName)
-}
 /**
  *
  * @param {globalThis.Electron.ProtocolRequest} request
@@ -149,7 +120,7 @@ const getAbsolutePath = (requestUrl) => {
 
 const handleRequest = (request, callback) => {
   // const path = join(__dirname, request.url.slice(6))
-  const path = getAbsolutePath(request.url)
+  const path = ElectronSessionGetAbsolutePath.getAbsolutePath(request.url)
   if (!existsSync(path)) {
     // TODO doing this for every request is really slow
     // but without this, fetch would not received a response for 404 requests

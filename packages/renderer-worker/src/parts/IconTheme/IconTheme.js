@@ -14,6 +14,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 
 export const state = {
   seenFiles: [],
@@ -52,7 +53,7 @@ const getIconThemeJson = async (iconThemeId) => {
       }
     }
   }
-  return SharedProcess.invoke(/* ExtensionHost.getIconThemeJson */ 'ExtensionHost.getIconThemeJson', /* iconThemeId */ iconThemeId)
+  return SharedProcess.invoke(SharedProcessCommandType.ExtensionHostGetIconThemeJson, /* iconThemeId */ iconThemeId)
 }
 
 const getExtension = (file) => {

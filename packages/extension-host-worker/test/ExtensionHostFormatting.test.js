@@ -6,47 +6,33 @@ beforeEach(() => {
 })
 
 test('executeFormattingProvider - error - result value is of type string', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: 'a' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: 'a' }])
   ExtensionHostFormatting.registerFormattingProvider({
     languageId: 'javascript',
     format() {
       return `b`
     },
   })
-  await expect(
-    ExtensionHostFormatting.executeFormattingProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is b'
-    )
+  await expect(ExtensionHostFormatting.executeFormattingProvider(1, 0)).rejects.toThrowError(
+    new Error('Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is "b"')
   )
 })
 
 test('executeFormattingProvider - error - result value is of type object', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: 'a' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: 'a' }])
   ExtensionHostFormatting.registerFormattingProvider({
     languageId: 'javascript',
     format() {
       return {}
     },
   })
-  await expect(
-    ExtensionHostFormatting.executeFormattingProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is object'
-    )
+  await expect(ExtensionHostFormatting.executeFormattingProvider(1, 0)).rejects.toThrowError(
+    new Error('Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is object')
   )
 })
 
 test('executeFormattingProvider', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: 'a' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: 'a' }])
   ExtensionHostFormatting.registerFormattingProvider({
     languageId: 'javascript',
     format() {
@@ -59,7 +45,5 @@ test('executeFormattingProvider', async () => {
       ]
     },
   })
-  expect(await ExtensionHostFormatting.executeFormattingProvider(1, 0)).toEqual(
-    [{ endOffset: 1, inserted: 'b', startOffset: 0 }]
-  )
+  expect(await ExtensionHostFormatting.executeFormattingProvider(1, 0)).toEqual([{ endOffset: 1, inserted: 'b', startOffset: 0 }])
 })

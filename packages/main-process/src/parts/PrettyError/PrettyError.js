@@ -4,8 +4,8 @@ const { LinesAndColumns } = require('lines-and-columns')
 const { readFileSync } = require('node:fs')
 const CleanStack = require('../CleanStack/CleanStack.js')
 const Json = require('../Json/Json.js')
-const VError = require('verror')
 const JoinLines = require('../JoinLines/JoinLines.js')
+const GetNewLineIndex = require('../GetNewLineIndex/GetNewLineIndex.js')
 
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
@@ -34,7 +34,7 @@ const getFile = (lines) => {
 
 const prepareMessage = (message) => {
   if (message.startsWith('Cannot find module ') && message.includes('\n')) {
-    return message.slice(0, message.indexOf('\n'))
+    return message.slice(0, GetNewLineIndex.getNewLineIndex(message))
   }
   return message
 }
@@ -126,7 +126,7 @@ exports.print = (prettyError) => {
 
 exports.firstErrorLine = (error) => {
   if (error.stack) {
-    return error.stack.slice(0, error.stack.indexOf('\n'))
+    return error.stack.slice(0, GetNewLineIndex.getNewLineIndex(error.stack))
   }
   if (error.message) {
     return error.message

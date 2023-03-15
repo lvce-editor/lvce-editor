@@ -9,7 +9,6 @@ export const Events = {
 
 // prettier-ignore
 export const Commands = {
-  acceptEdit:                     ViewletExplorer.acceptEdit,
   cancelEdit:                     ViewletExplorer.cancelEdit,
   collapseAll:                    ViewletExplorer.collapseAll,
   copyPath:                       ViewletExplorer.copyPath,
@@ -56,8 +55,11 @@ export const LazyCommands = {
   handleDragOver: () => import('./ViewletExplorerHandleDragOver.js'),
   handleDrop: () => import('./ViewletExplorerHandleDrop.js'),
   handlePaste: () => import('./ViewletExplorerHandlePaste.js'),
+  acceptEdit: () => import('./ViewletExplorerAcceptEdit.js'),
+  handlePointerDown: () => import('./ViewletExplorerHandlePointerDown.js'),
 }
 
-export const Css = ['/css/parts/ViewletExplorer.css', '/css/parts/Label.css', '/css/parts/TreeItem.css', '/css/parts/Drag.css']
-
+export * from './ViewletExplorerCss.js'
 export * from './ViewletExplorer.js'
+export * from './ViewletExplorerActions.js'
+export * from './ViewletExplorerKeyBindings.js'

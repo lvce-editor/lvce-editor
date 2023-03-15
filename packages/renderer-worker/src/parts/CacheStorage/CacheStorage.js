@@ -1,10 +1,10 @@
 import * as Logger from '../Logger/Logger.js'
+import * as MimeType from '../MimeType/MimeType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Response from '../Response/Response.js'
 import * as ShouldIgnoreCacheStorageError from '../ShouldIgnoreCacheStorageError/ShouldIgnoreCacheStorageError.js'
 import { VError } from '../VError/VError.js'
-
 // TODO when caches is not defined -> should return undefined
 
 const getCache = async () => {
@@ -98,7 +98,7 @@ export const setText = async (key, value, contentType) => {
 
 export const setJson = async (key, value) => {
   try {
-    await setResponse(key, JSON.stringify(value), 'application/json')
+    await setResponse(key, JSON.stringify(value), MimeType.ApplicationJson)
   } catch (error) {
     if (ShouldIgnoreCacheStorageError.shouldIgnoreCacheStorageError(error)) {
       return

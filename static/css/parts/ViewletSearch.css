@@ -5,12 +5,31 @@
 
 .SearchHeader {
   display: grid;
-  padding: 5px 12px 6px 16px;
+  /* padding: 5px 12px 6px 16px; */
+  /* display: flex; */
+  /* flex-wrap: wrap; */
+  grid-template-columns: 20px 1fr;
+}
+
+.SearchToggleButton {
+  grid-row: 1/2;
+  background: transparent;
+  border: none;
+}
+
+.SearchToggleButton:hover {
+  background: lightgray;
+}
+
+.SearchToggleButton[aria-expanded='true'] {
+  /* background: red; */
+  grid-row: 1/3;
 }
 
 .ViewletSearchMessage {
   color: rgba(156, 162, 160, 0.65);
   padding-bottom: 8px;
+  grid-column: 2/2;
 }
 
 .SearchResults {
@@ -24,4 +43,52 @@
 
 .DropTarget {
   background: rgba(0, 0, 90, 0.5);
+}
+
+.SearchField {
+  display: flex;
+}
+
+/* .SearchField */
+
+.SearchFieldInput {
+  flex: 1;
+  resize: none;
+}
+
+.SearchFieldButton {
+  /* position: absolute; */
+  position: relative;
+  background: transparent;
+  border: none;
+  color: white;
+  contain: strict;
+  width: 20px;
+  height: 20px;
+}
+
+.SearchFieldButton:hover {
+  background: rgba(90, 93, 94, 0.31);
+}
+
+.SearchFieldButton[aria-checked='true'] {
+  border: 1px solid #a03f9b;
+}
+
+.SearchButtonReplaceAll {
+  position: relative;
+}
+
+.HighlightInserted {
+  background: rgba(156, 204, 44, 0.2);
+  text-decoration: none;
+  border: 1px solid rgba(155, 185, 85, 0.2);
+  contain: content;
+}
+
+.HighlightDeleted {
+  background: rgba(255, 0, 0, 0.2);
+  border: 1px solid rgba(255, 0, 0, 0.2);
+  contain: content;
+  text-decoration: line-through;
 }

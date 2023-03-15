@@ -7,6 +7,5 @@ export const Commands = {
   handleClick: ViewletDialog.handleClick,
 }
 
-export const Css = ['/css/parts/ViewletDialog.css', '/css/parts/IconButton.css']
-
+export * from './ViewletDialogCss.js'
 export * from './ViewletDialog.js'

@@ -1,3 +1,5 @@
-import { noop } from './ViewletTitleBarMenuBarNoop.js'
+import { focusIndex } from './ViewletTitleBarMenuBarFocusIndex.js'
 
-export const handleMouseOverMenuClosed = noop
+export const handleMouseOverMenuClosed = (state, index) => {
+  return focusIndex(state, index)
+}

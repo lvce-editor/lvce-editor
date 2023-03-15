@@ -47,7 +47,7 @@ test('loadCssStyleSheet - error - 404', async () => {
     // @ts-ignore
     return new Response({ ok: false, statusText: 'Not Found' })
   }
-  await expect(Css.loadCssStyleSheet('/test/Component.css')).rejects.toThrowError(new Error('Failed to load css /test/Component.css: Not Found'))
+  await expect(Css.loadCssStyleSheet('/test/Component.css')).rejects.toThrowError(new Error('Failed to load css "/test/Component.css": Not Found'))
 })
 
 test('loadCssStyleSheet', async () => {

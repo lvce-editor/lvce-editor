@@ -10,6 +10,6 @@ export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator,
   await SideBar.open('Run And Debug')
 
   // assert
-  const runAndDebug = Locator('.RunAndDebug')
-  await expect(runAndDebug).toHaveText('Error: Failed to execute debug provider: no debug provider "test-debug" found')
+  const sideBarContent = Locator('#SideBar .Error')
+  await expect(sideBarContent).toHaveText('Error: Failed to execute debug provider: no debug provider "test-debug" found')
 }

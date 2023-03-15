@@ -1,7 +1,11 @@
+:root {
+  --DropTargetBackground: #062f4a;
+}
+
 .ListItems {
   user-select: none;
 }
 
-.ListItems.DropTarget {
-  background: darkblue;
+.DropTarget {
+  background: var(--DropTargetBackground);
 }

@@ -2,6 +2,9 @@ import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
 
 /**
+ * Do not use directly, use FileSystemHtml.getChildHandles
+ * instead which prompts for the required permission to
+ * retrieve the child handles
  *
  * @param {FileSystemDirectoryHandle} handle
  * @returns {Promise<FileSystemHandle[]>}

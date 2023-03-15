@@ -10,11 +10,6 @@
     "version": "0.0.4"
   },
   {
-    "name": "builtin.language-basics-jsx",
-    "repository": "github.com/lvce-editor/language-basics-jsx",
-    "version": "0.0.6"
-  },
-  {
     "name": "builtin.language-basics-coffeescript",
     "repository": "github.com/lvce-editor/language-basics-coffeescript",
     "version": "0.0.4"
@@ -27,7 +22,7 @@
   {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
-    "version": "0.0.15"
+    "version": "0.0.18"
   },
   {
     "name": "builtin.language-basics-dart",
@@ -47,7 +42,7 @@
   {
     "name": "builtin.language-basics-dotenv",
     "repository": "github.com/lvce-editor/language-basics-dotenv",
-    "version": "0.0.6"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.language-basics-editorconfig",
@@ -87,7 +82,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "0.0.13"
+    "version": "0.0.20"
   },
   {
     "name": "builtin.language-basics-java",
@@ -97,17 +92,22 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.22"
+    "version": "0.0.25"
   },
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.0.20"
+    "version": "0.0.21"
   },
   {
     "name": "builtin.language-basics-json5",
     "repository": "github.com/lvce-editor/language-basics-json5",
     "version": "0.0.3"
+  },
+  {
+    "name": "builtin.language-basics-jsx",
+    "repository": "github.com/lvce-editor/language-basics-jsx",
+    "version": "0.0.7"
   },
   {
     "name": "builtin.language-basics-julia",
@@ -202,12 +202,12 @@
   {
     "name": "builtin.language-basics-vue",
     "repository": "github.com/lvce-editor/language-basics-vue",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-xml",
     "repository": "github.com/lvce-editor/language-basics-xml",
-    "version": "0.0.7"
+    "version": "0.0.8"
   },
   {
     "name": "builtin.language-basics-yaml",
@@ -217,12 +217,12 @@
   {
     "name": "builtin.language-features-css",
     "repository": "github.com/lvce-editor/language-features-css",
-    "version": "0.0.6"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.language-features-html",
     "repository": "github.com/lvce-editor/language-features-html",
-    "version": "0.0.4"
+    "version": "0.0.9"
   },
   {
     "name": "builtin.language-features-typescript",
@@ -232,7 +232,7 @@
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "0.0.7"
+    "version": "0.0.8"
   },
   {
     "name": "builtin.theme-atom-one-dark",

@@ -1,7 +1,5 @@
-import * as Arrays from '../Arrays/Arrays.js'
 import * as BackgroundTabs from '../BackgroundTabs/BackgroundTabs.js'
 import * as Command from '../Command/Command.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
 import * as GetSplitOverlayDimensions from '../GetSplitOverlayDimensions/GetSplitOverlayDimensions.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
@@ -15,7 +13,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Id from '../Id/Id.js'
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
 // interface Editor {
@@ -393,15 +390,14 @@ const getId = (editor) => {
 }
 
 export const closeAllEditors = async (state) => {
-  RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'dispose')
   const ids = state.editors.map(getId)
+  const commands = [['Viewlet.send', ViewletModuleId.Main, 'dispose'], ...ids.flatMap(Viewlet.disposeFunctional)]
+  // RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'dispose')
   state.editors = []
   state.focusedIndex = -1
   state.selectedIndex = -1
   // TODO should call dispose method, but only in renderer-worker
-  for (const id of ids) {
-    await ViewletStates.dispose(id)
-  }
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   return state
 }
 

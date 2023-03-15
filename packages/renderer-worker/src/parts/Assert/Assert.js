@@ -86,3 +86,9 @@ export const uint32array = (value) => {
     throw new AssertionError('expected value to be of type uint32array')
   }
 }
+
+export const greaterZero = (value) => {
+  if (value <= 0) {
+    throw new Error('value must be greater than zero')
+  }
+}

@@ -10,6 +10,11 @@
   "editor.letterSpacing": 0.5,
   "editor.fontLigatures": true,
   "editor.links": true,
+  "editor.tabSize": 2,
+
+  "editor.autoClosingBrackets": true,
+  "editor.autoClosingQuotes": true,
+  "editor.quickSuggestions": false,
 
   "extensions.autoUpdate": true,
 
@@ -28,6 +33,8 @@
   "sessionReplay.enabled": false,
 
   "serviceWorker.enabled": false,
+
+  "simpleBrowser.suggestions": false,
 
   "window.titleBarStyle": "native",
   "window.zoomLevel": 0.5,

@@ -4,6 +4,7 @@ import * as DropEffectType from '../DropEffectType/DropEffectType.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as GetFileHandlesFromDataTransferItems from '../GetFileHandlesFromDataTransferItems/GetFileHandlesFromDataTransferItems.js'
+import * as IsHtmlElement from '../IsHtmlElement/IsHtmlElement.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
@@ -99,13 +100,26 @@ export const handleDragOver = (event) => {
  */
 export const handleDragStart = (event) => {
   const { target, dataTransfer } = event
-  if (!(target instanceof HTMLElement)) {
+  if (!IsHtmlElement.isHtmlElement(target)) {
     return
   }
   const filePath = target.title
   const fileName = target.textContent
   DataTransfer.setEffectAllowed(dataTransfer, AllowedDragEffectType.CopyMove)
   DataTransfer.setFilePath(dataTransfer, filePath, fileName)
+}
+
+const getPath = (file) => {
+  return file.path
+}
+
+const getFilePaths = (dataTransfer) => {
+  const { files } = dataTransfer
+  if (Platform.isElectron()) {
+    return files.map(getPath)
+  }
+  const filePaths = DataTransfer.getFilePaths(dataTransfer)
+  return filePaths
 }
 
 /**
@@ -115,16 +129,17 @@ export const handleDragStart = (event) => {
 export const handleDrop = async (event) => {
   Event.preventDefault(event)
   Event.stopPropagation(event)
-  const { files, dropEffect, items } = event.dataTransfer
-  const { clientX, clientY } = event
-  if (Platform.isElectron()) {
-    ViewletExplorerFunctions.handleDrop(clientX, clientY, files)
-  } else {
-    // unfortunately, DataTransferItem cannot be transferred to web worker
-    // therefore the file system handles are sent to the web worker
-    const handles = await GetFileHandlesFromDataTransferItems.getFileHandles(items)
-    ViewletExplorerFunctions.handleDrop(clientX, clientY, handles)
+  const { clientX, clientY, dataTransfer } = event
+  const { items } = dataTransfer
+  const filePaths = getFilePaths(dataTransfer)
+  if (filePaths.length > 0) {
+    ViewletExplorerFunctions.handleDrop(clientX, clientY, filePaths)
+    return
   }
+  // unfortunately, DataTransferItem cannot be transferred to web worker
+  // therefore the file system handles are sent to the web worker
+  const handles = await GetFileHandlesFromDataTransferItems.getFileHandles(items)
+  ViewletExplorerFunctions.handleDrop(clientX, clientY, handles)
 }
 
 // TODO maybe use aria active descendant instead
@@ -139,12 +154,13 @@ const getFocusedIndexFromFocusOutline = ($Viewlet) => {
 }
 
 export const handleContextMenu = (event) => {
-  event.preventDefault()
+  Event.preventDefault(event)
   const { button, clientX, clientY } = event
   ViewletExplorerFunctions.handleContextMenu(button, clientX, clientY)
 }
 
 export const handleClick = (event) => {
+  Event.preventDefault(event)
   const { button, clientX, clientY } = event
   if (button !== MouseEventType.LeftClick) {
     return
@@ -162,6 +178,11 @@ export const handleWheel = (event) => {
     default:
       break
   }
+}
+
+export const handlePointerDown = (event) => {
+  const { button, clientX, clientY } = event
+  ViewletExplorerFunctions.handlePointerDown(button, clientX, clientY)
 }
 
 export const handleMouseEnter = (event) => {

@@ -33,8 +33,8 @@ test('getResponse - error - method not found', async () => {
     id: 1,
     error: {
       code: -32601,
-      data: expect.stringMatching('CommandNotFoundError: command test.not-found not found'),
-      message: 'command test.not-found not found',
+      data: expect.stringMatching('CommandNotFoundError: Command test.not-found not found'),
+      message: 'Command test.not-found not found',
     },
   })
 })

@@ -59,6 +59,10 @@ const getPreviewArray = (item) => {
   return 'array'
 }
 
+const getPreviewString = (item) => {
+  return `"${item}"`
+}
+
 const getPreview = (item) => {
   const type = getType(item)
   switch (type) {
@@ -66,6 +70,8 @@ const getPreview = (item) => {
       return getPreviewObject(item)
     case 'array':
       return getPreviewArray(item)
+    case 'string':
+      return getPreviewString(item)
     default:
       return `${item}`
   }
