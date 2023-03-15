@@ -113,9 +113,14 @@ export const dispose = (state) => {
   }
 }
 
-export const handleEditorClick = dispose
+const disposeWithEditor = (state, editor) => {
+  editor.completionState = EditorCompletionState.None
+  return dispose(state)
+}
 
-export const handleEditorBlur = dispose
+export const handleEditorClick = disposeWithEditor
+
+export const handleEditorBlur = disposeWithEditor
 
 export const loadContent = async (state) => {
   const editor = getEditor()
