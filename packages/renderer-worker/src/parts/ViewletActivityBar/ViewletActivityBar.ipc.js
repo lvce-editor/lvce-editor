@@ -34,3 +34,4 @@ export const Events = {
 export const Css = ['/css/parts/ViewletActivityBar.css', '/css/parts/MaskIcon.css']
 
 export * from './ViewletActivityBar.js'
+export * from './ViewletActivityBarKeyBindings.js'

@@ -4,18 +4,21 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
 
 export const getKeyBindings = async () => {
-  return Command.execute(
-    /* KeyBindingsInitial.getKeyBindings */ 'KeyBindingsInitial.getKeyBindings'
-  )
+  return Command.execute(/* KeyBindingsInitial.getKeyBindings */ 'KeyBindingsInitial.getKeyBindings')
+}
+
+export const addKeyBindings = (id, keyBindings) => {
+  // TODO
+}
+
+export const removeKeyBindings = (id) => {
+  // TOOD
 }
 
 export const hydrate = async () => {
   try {
     const keyBindings = await getKeyBindings()
-    await RendererProcess.invoke(
-      /* KeyBindings.hydrate */ 'KeyBindings.hydrate',
-      /* keyBindings */ keyBindings
-    )
+    await RendererProcess.invoke(/* KeyBindings.hydrate */ 'KeyBindings.hydrate', /* keyBindings */ keyBindings)
   } catch (error) {
     ErrorHandling.handleError(new VError(error, 'Failed to load KeyBindings'))
   }

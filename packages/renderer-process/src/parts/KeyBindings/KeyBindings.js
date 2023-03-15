@@ -1,8 +1,9 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Context from '../Context/Context.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Platform from '../Platform/Platform.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
+import * as Platform from '../Platform/Platform.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const RE_ASCII = /[\p{ASCII}]+/u
 
@@ -10,6 +11,7 @@ export const state = {
   keyBindings: [],
   modifier: '',
   modifierTimeout: -1,
+  keyBindingSets: Object.create(null),
 }
 
 const isAscii = (key) => {
@@ -133,6 +135,26 @@ const handleKeyUp = (event) => {
   state.modifier = modifier
   // @ts-ignore
   state.modifierTimeout = setTimeout(clearModifier, 300)
+}
+
+export const addKeyBindings = (id, keyBindings) => {
+  Assert.string(id)
+  Assert.array(keyBindings)
+  if (id in state.keyBindingSets) {
+    throw new Error(`cannot add keybindings multiple times`)
+  }
+  state.keyBindingSets[id] = keyBindings
+  state.keyBindings.push(...keyBindings)
+}
+
+export const removeKeyBindings = (id) => {
+  Assert.string(id)
+  if (!(id in state.keyBindingSets)) {
+    throw new Error(`cannot remove keybindings that are not registered`)
+  }
+  const keybindingSet = state.keyBindingSets[id]
+  console.log({ keybindingSet })
+  // TODO
 }
 
 export const hydrate = async (keyBindings) => {

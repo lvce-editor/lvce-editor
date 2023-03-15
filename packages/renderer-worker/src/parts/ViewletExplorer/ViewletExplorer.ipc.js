@@ -69,3 +69,4 @@ export const Css = [
 
 export * from './ViewletExplorer.js'
 export * from './ViewletExplorerActions.js'
+export * from './ViewletExplorerKeyBindings.js'

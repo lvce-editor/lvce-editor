@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 
 export const state = {
   instances: Object.create(null),
@@ -27,6 +28,12 @@ export const create = (id) => {
     state: instanceState,
     factory: module,
   }
+}
+
+export const addKeyBindings = (id, keyBindings) => {
+  // TODO
+  console.log({ keyBindings })
+  KeyBindings.addKeyBindings(id, keyBindings)
 }
 
 export const loadModule = async (id) => {
@@ -154,6 +161,9 @@ export const sendMultiple = (commands) => {
 
         break
       }
+      case 'Viewlet.addKeyBindings':
+        addKeyBindings(viewletId, method)
+        break
       default: {
         invoke(viewletId, method, ...args)
       }
