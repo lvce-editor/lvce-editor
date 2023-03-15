@@ -13,8 +13,8 @@ export const type = (uid, text) => {
   RendererWorker.send('Viewlet.executeViewletCommand', uid, 'uid', uid, 'type', text)
 }
 
-export const typeWithAutoClosing = (text) => {
-  RendererWorker.send('Editor.typeWithAutoClosing', text)
+export const typeWithAutoClosing = (uid, text) => {
+  RendererWorker.send('Viewlet.executeViewletCommand', uid, text)
 }
 
 export const compositionStart = (data) => {
