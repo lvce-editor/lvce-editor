@@ -109,6 +109,5 @@ export const Events = {
   // 'tokenizer.changed': ViewletEditorText.handleTokenizeChange,
 }
 
-export const Css = ['/css/parts/ViewletEditor.css', '/css/parts/ScrollBar.css']
-
+export * from './ViewletEditorTextCss.js'
 export * from './ViewletEditorText.js'

@@ -27,6 +27,5 @@ export const LazyCommands = {
   handleClick: () => import('./ViewletTitleBarMenuBarHandleClick.js'),
 }
 
-export const Css = '/css/parts/ViewletTitleBarMenuBar.css'
-
+export * from './ViewletTitleBarMenuBarCss.js'
 export * from './ViewletTitleBarMenuBar.js'
