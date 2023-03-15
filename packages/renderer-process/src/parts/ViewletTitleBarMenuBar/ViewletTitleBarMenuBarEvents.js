@@ -1,6 +1,6 @@
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Focus from '../Focus/Focus.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ViewletTitleBarMenuBarFunctions from './ViewletTitleBarMenuBarFunctions.js'
 
 const isInsideTitleBarMenu = ($Element) => {
   return $Element.classList.contains('MenuItem') || $Element.classList.contains('Menu') || $Element.classList.contains('TitleBarTopLevelEntry')
@@ -11,19 +11,19 @@ export const handleFocusOut = (event) => {
   if ($ActiveElement && isInsideTitleBarMenu($ActiveElement)) {
     return
   }
-  RendererWorker.send(/* TitleBarMenuBar.closeMenu */ 'TitleBarMenuBar.closeMenu', /* keepFocus */ false)
+  ViewletTitleBarMenuBarFunctions.closeMenu()
 }
 
 export const handlePointerOver = (event) => {
   const { target } = event
   const index = getIndex(target)
-  RendererWorker.send(/* TitleBarMenuBar.focusIndex */ 'TitleBarMenuBar.handleMouseOver', /* index */ index)
+  ViewletTitleBarMenuBarFunctions.handleMenuMouseOver(index)
 }
 
 export const handlePointerOut = (event) => {
   const { target } = event
   const index = getIndex(target)
-  RendererWorker.send(/* TitleBarMenuBar.handleMouseOut */ 'TitleBarMenuBar.handleMouseOut', /* index */ index)
+  ViewletTitleBarMenuBarFunctions.handleMouseOut(index)
 }
 
 const getNodeIndex = ($Node) => {
@@ -46,7 +46,7 @@ const getIndex = ($Target) => {
 export const handleClick = (event) => {
   const { button, target } = event
   const index = getIndex(target)
-  RendererWorker.send('TitleBarMenuBar.handleClick', button, index)
+  ViewletTitleBarMenuBarFunctions.handleClick(button, index)
 }
 
 const getLevelAndIndex = (event) => {
@@ -64,12 +64,12 @@ const getLevelAndIndex = (event) => {
 export const handleMenuMouseOver = (event) => {
   // TODO just send pixel coordinates instead
   const { level, index } = getLevelAndIndex(event)
-  RendererWorker.send(/* TitleBarMenuBar.handleMenuMouseOver */ 'TitleBarMenuBar.handleMenuMouseOver', /* level */ level, /* index */ index)
+  ViewletTitleBarMenuBarFunctions.handleMenuMouseOver(level, index)
 }
 
 export const handleMenuMouseDown = (event) => {
   const { level, index } = getLevelAndIndex(event)
-  RendererWorker.send(/* TitleBarMenuBar.handleMenuMouseDown */ 'TitleBarMenuBar.handleMenuMouseDown', /* level */ level, /* index */ index)
+  ViewletTitleBarMenuBarFunctions.handleMenuMouseDown(level, index)
 }
 
 export const handleFocus = () => {

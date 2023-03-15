@@ -1,22 +1,15 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Context from '../Context/Context.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-
-const RE_ASCII = /[\p{ASCII}]+/u
 
 export const state = {
   keyBindings: [],
   modifier: '',
   modifierTimeout: -1,
   keyBindingSets: Object.create(null),
-}
-
-const isAscii = (key) => {
-  return RE_ASCII.test(key)
 }
 
 const normalizeKey = (key) => {
@@ -107,7 +100,7 @@ const handleMatchingKeyBinding = (matchingKeyBinding) => {
   RendererWorker.send(/* KeyBindings.handleKeyBinding */ 'KeyBindings.handleKeyBinding', /* keyBinding */ matchingKeyBinding)
 }
 
-const handleKeyDown = (event) => {
+export const handleKeyDown = (event) => {
   const identifier = getIdentifier(event)
   const matchingKeyBinding = getMatchingKeyBinding(identifier)
   if (!matchingKeyBinding) {
@@ -117,7 +110,7 @@ const handleKeyDown = (event) => {
   handleMatchingKeyBinding(matchingKeyBinding)
 }
 
-const handleKeyUp = (event) => {
+export const handleKeyUp = (event) => {
   const modifier = getModifier(event)
   if (!modifier) {
     clearModifier()
@@ -166,9 +159,6 @@ export const hydrate = (keyBindings) => {
   const browser = Platform.getBrowser()
   Context.set(`browser.${browser}`, true)
   addKeyBindings('initial', keyBindings)
-  window.addEventListener(DomEventType.KeyDown, handleKeyDown)
-  // TODO only need keyup listener if keybindings include double modifier key (e.g "shift shift")
-  window.addEventListener(DomEventType.KeyUp, handleKeyUp)
 }
 
 // TODO should be in renderer worker
