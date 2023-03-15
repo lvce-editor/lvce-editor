@@ -28,7 +28,6 @@ const select = async (state, completionItem) => {
 }
 
 export const selectIndex = (state, index) => {
-  console.log({ index })
   const { items } = state
   if (index === -1) {
     return state
