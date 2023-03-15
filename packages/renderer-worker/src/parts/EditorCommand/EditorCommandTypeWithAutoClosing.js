@@ -81,6 +81,10 @@ const isAutoClosingQuotesEnabled = () => {
   return Boolean(Preferences.get('editor.autoClosingQuotes'))
 }
 
+const isQuickSuggestionsEnabled = () => {
+  return Boolean(Preferences.get('editor.quickSuggestions'))
+}
+
 const typeWithAutoClosingBracket = (editor, text) => {
   const closingBracket = getMatchingClosingBrace(text)
   const newText = text + closingBracket
@@ -165,15 +169,17 @@ export const typeWithAutoClosing = async (editor, text) => {
   }
 
   const newEditor = typeWithAutoClosingDisabled(editor, text)
-  switch (newEditor.completionState) {
-    case EditorCompletionState.None:
-      openCompletion(newEditor, text)
-      break
-    case EditorCompletionState.Visible:
-      RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorType', text)
-      break
-    default:
-      break
+  if (isQuickSuggestionsEnabled()) {
+    switch (newEditor.completionState) {
+      case EditorCompletionState.None:
+        openCompletion(newEditor, text)
+        break
+      case EditorCompletionState.Visible:
+        RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorType', text)
+        break
+      default:
+        break
+    }
   }
   return newEditor
   // if (isBrace(text)) {
