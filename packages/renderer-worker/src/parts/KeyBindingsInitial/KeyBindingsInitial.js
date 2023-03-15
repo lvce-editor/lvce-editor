@@ -1,15 +1,26 @@
-import * as Command from '../Command/Command.js'
-import * as Platform from '../Platform/Platform.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 // TODO extension key bindings
 
+const getViewletKeyBindings = (module) => {
+  if (module.getKeyBindings) {
+    return module.getKeyBindings()
+  }
+  return []
+}
+
+const maybeLoad = async (id) => {
+  try {
+    return await ViewletModule.load(id)
+  } catch {
+    return {}
+  }
+}
+
 export const getKeyBindings = async () => {
-  const assetDir = Platform.getAssetDir()
-  const defaultKeyBindings = await Command.execute(
-    /* Ajax.getJson */ 'Ajax.getJson',
-    /* url */ `${assetDir}/config/defaultKeyBindings.json`
-  )
-  const actualKeyBindings = defaultKeyBindings
-  const keyBindings = actualKeyBindings
+  const ids = Object.keys(ViewletModuleId)
+  const modules = await Promise.all(ids.map(maybeLoad))
+  const keyBindings = modules.flatMap(getViewletKeyBindings)
   return keyBindings
 }
