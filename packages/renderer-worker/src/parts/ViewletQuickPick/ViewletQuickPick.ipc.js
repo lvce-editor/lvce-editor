@@ -23,5 +23,6 @@ export const LazyCommands = {
   handleBeforeInput: () => import('./ViewletQuickPickHandleBeforeInput.js'),
 }
 
-export * from './ViewletQuickPickCss.js'
 export * from './ViewletQuickPick.js'
+export * from './ViewletQuickPickCss.js'
+export * from './ViewletQuickPickKeyBindings.js'
