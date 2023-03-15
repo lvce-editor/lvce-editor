@@ -1,3 +1,5 @@
+import * as Menu from '../Menu/Menu.js'
+
 export const handleKeyArrowDownMenuOpen = (state) => {
   const { menus } = state
   const menu = menus.at(-1)
