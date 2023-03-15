@@ -33,3 +33,4 @@ export const Events = {
 
 export * from './ViewletActivityBarCss.js'
 export * from './ViewletActivityBar.js'
+export * from './ViewletActivityBarKeyBindings.js'

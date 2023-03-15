@@ -62,3 +62,4 @@ export const LazyCommands = {
 export * from './ViewletExplorerCss.js'
 export * from './ViewletExplorer.js'
 export * from './ViewletExplorerActions.js'
+export * from './ViewletExplorerKeyBindings.js'

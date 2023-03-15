@@ -42,4 +42,5 @@ export const CommandsWithSideEffects = {
   handleFocus: ViewletLayout.handleFocus,
 }
 
+export * from './ViewletLayoutKeyBindings.js'
 export * from './ViewletLayout.js'

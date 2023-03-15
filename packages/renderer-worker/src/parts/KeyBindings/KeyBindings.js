@@ -1,25 +1,4 @@
 import * as Command from '../Command/Command.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import { VError } from '../VError/VError.js'
-
-export const getKeyBindings = async () => {
-  return Command.execute(
-    /* KeyBindingsInitial.getKeyBindings */ 'KeyBindingsInitial.getKeyBindings'
-  )
-}
-
-export const hydrate = async () => {
-  try {
-    const keyBindings = await getKeyBindings()
-    await RendererProcess.invoke(
-      /* KeyBindings.hydrate */ 'KeyBindings.hydrate',
-      /* keyBindings */ keyBindings
-    )
-  } catch (error) {
-    ErrorHandling.handleError(new VError(error, 'Failed to load KeyBindings'))
-  }
-}
 
 // TODO where to store keybindings? need them here and in renderer process
 // how to avoid duplicate loading / where to store them and keep them in sync?

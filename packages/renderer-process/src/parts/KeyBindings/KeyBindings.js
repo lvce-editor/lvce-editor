@@ -1,8 +1,10 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Context from '../Context/Context.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Platform from '../Platform/Platform.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
+import * as Logger from '../Logger/Logger.js'
+import * as Platform from '../Platform/Platform.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const RE_ASCII = /[\p{ASCII}]+/u
 
@@ -10,6 +12,7 @@ export const state = {
   keyBindings: [],
   modifier: '',
   modifierTimeout: -1,
+  keyBindingSets: Object.create(null),
 }
 
 const isAscii = (key) => {
@@ -135,12 +138,34 @@ const handleKeyUp = (event) => {
   state.modifierTimeout = setTimeout(clearModifier, 300)
 }
 
-export const hydrate = async (keyBindings) => {
+export const addKeyBindings = (id, keyBindings) => {
+  Assert.string(id)
+  Assert.array(keyBindings)
+  if (id in state.keyBindingSets) {
+    Logger.warn(`cannot add keybindings multiple times: ${id}`)
+    return
+  }
+  state.keyBindingSets[id] = keyBindings
+  state.keyBindings.push(...keyBindings)
+}
+
+export const removeKeyBindings = (id) => {
+  Assert.string(id)
+  const { keyBindingSets } = state
+  if (!(id in keyBindingSets)) {
+    Logger.warn(`cannot remove keybindings that are not registered: ${id}`)
+    return
+  }
+  delete keyBindingSets[id]
+  state.keyBindings = Object.values(keyBindingSets).flat(1)
+}
+
+export const hydrate = (keyBindings) => {
   // TODO is this the right place for browser context ?
   // maybe in env file / env service
   const browser = Platform.getBrowser()
   Context.set(`browser.${browser}`, true)
-  state.keyBindings = keyBindings
+  addKeyBindings('initial', keyBindings)
   window.addEventListener(DomEventType.KeyDown, handleKeyDown)
   // TODO only need keyup listener if keybindings include double modifier key (e.g "shift shift")
   window.addEventListener(DomEventType.KeyUp, handleKeyUp)

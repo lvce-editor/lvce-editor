@@ -109,5 +109,6 @@ export const Events = {
   // 'tokenizer.changed': ViewletEditorText.handleTokenizeChange,
 }
 
-export * from './ViewletEditorTextCss.js'
 export * from './ViewletEditorText.js'
+export * from './ViewletEditorTextCss.js'
+export * from './ViewletEditorTextKeyBindings.js'
