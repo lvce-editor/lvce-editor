@@ -125,13 +125,13 @@ export const handleEditorBlur = disposeWithEditor
 export const loadContent = async (state) => {
   const editor = getEditor()
   const unfilteredItems = await Completions.getCompletions(editor)
-  const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, '')
+  const wordAtOffset = getWordAtOffset(editor)
+  const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, wordAtOffset)
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
   const x = EditorPosition.x(editor, rowIndex, columnIndex)
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const newMaxLineY = Math.min(items.length, 8)
-  // editor.hasCompletion = true
   editor.widgets = editor.widgets || []
   editor.widgets.push('EditorCompletion')
   return {
@@ -141,6 +141,7 @@ export const loadContent = async (state) => {
     x,
     y,
     maxLineY: newMaxLineY,
+    focusedIndex: 0,
   }
 }
 
