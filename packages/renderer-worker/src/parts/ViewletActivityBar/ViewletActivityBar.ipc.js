@@ -31,6 +31,6 @@ export const Events = {
   'SideBar.viewletChange': ViewletActivityBar.handleSideBarViewletChange,
 }
 
-export * from './ViewletActivityBarCss.js'
 export * from './ViewletActivityBar.js'
+export * from './ViewletActivityBarCss.js'
 export * from './ViewletActivityBarKeyBindings.js'
