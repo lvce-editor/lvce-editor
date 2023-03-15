@@ -321,6 +321,8 @@ const getFn = (command) => {
       return focus
     case 'Viewlet.appendViewlet':
       return appendViewlet
+    case 'Viewlet.addKeyBindings':
+      return addKeyBindings
     default:
       throw new Error(`unknown command ${command}`)
   }
