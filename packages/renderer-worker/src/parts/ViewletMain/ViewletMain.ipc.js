@@ -28,6 +28,5 @@ export const Commands = {
   save: ViewletMain.save,
 }
 
-export const Css = ['/css/parts/ViewletMain.css', '/css/parts/EditorTabs.css']
-
 export * from './ViewletMain.js'
+export * from './ViewletMainCss.js'
