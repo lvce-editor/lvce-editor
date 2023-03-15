@@ -114,6 +114,9 @@ export const dispose = async (id) => {
     }
     instance.factory.dispose(instance.state)
     await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id)
+    if (instance.factory.getKeyBindings) {
+      await RendererProcess.invoke('Viewlet.removeKeyBindings', id)
+    }
   } catch (error) {
     console.error(error)
     // TODO use Error.cause once proper stack traces are supported by chrome
@@ -143,9 +146,20 @@ export const disposeFunctional = (id) => {
     if (instance.factory.dispose) {
       instance.factory.dispose(instance.state)
     }
+    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id]]
+
+    if (instance.factory.getKeyBindings) {
+      commands.push(['Viewlet.removeKeyBindings', id])
+    }
+    if (instance.factory.getChildren) {
+      const children = instance.factory.getChildren(instance.state)
+      for (const child of children) {
+        commands.push(...disposeFunctional(child.id))
+      }
+    }
     instance.status = 'disposed'
     ViewletStates.remove(id)
-    return [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id]]
+    return commands
   } catch (error) {
     console.error(error)
     // TODO use Error.cause once proper stack traces are supported by chrome

@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Context from '../Context/Context.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
@@ -141,7 +142,8 @@ export const addKeyBindings = (id, keyBindings) => {
   Assert.string(id)
   Assert.array(keyBindings)
   if (id in state.keyBindingSets) {
-    throw new Error(`cannot add keybindings multiple times`)
+    Logger.warn(`cannot add keybindings multiple times: ${id}`)
+    return
   }
   state.keyBindingSets[id] = keyBindings
   state.keyBindings.push(...keyBindings)
@@ -149,12 +151,13 @@ export const addKeyBindings = (id, keyBindings) => {
 
 export const removeKeyBindings = (id) => {
   Assert.string(id)
-  if (!(id in state.keyBindingSets)) {
-    throw new Error(`cannot remove keybindings that are not registered`)
+  const { keyBindingSets } = state
+  if (!(id in keyBindingSets)) {
+    Logger.warn(`cannot remove keybindings that are not registered: ${id}`)
+    return
   }
-  const keybindingSet = state.keyBindingSets[id]
-  console.log({ keybindingSet })
-  // TODO
+  delete keyBindingSets[id]
+  state.keyBindings = Object.values(keyBindingSets).flat(1)
 }
 
 export const hydrate = async (keyBindings) => {
@@ -162,7 +165,7 @@ export const hydrate = async (keyBindings) => {
   // maybe in env file / env service
   const browser = Platform.getBrowser()
   Context.set(`browser.${browser}`, true)
-  state.keyBindings = keyBindings
+  addKeyBindings('initial', keyBindings)
   window.addEventListener(DomEventType.KeyDown, handleKeyDown)
   // TODO only need keyup listener if keybindings include double modifier key (e.g "shift shift")
   window.addEventListener(DomEventType.KeyUp, handleKeyUp)

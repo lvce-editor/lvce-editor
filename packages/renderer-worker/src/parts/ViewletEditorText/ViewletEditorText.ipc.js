@@ -111,4 +111,5 @@ export const Events = {
 
 export const Css = ['/css/parts/ViewletEditor.css', '/css/parts/ScrollBar.css']
 
+export * from './ViewletEditorTextKeyBindings.js'
 export * from './ViewletEditorText.js'
