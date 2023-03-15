@@ -2,6 +2,5 @@ export const name = 'References'
 
 export const Commands = {}
 
-export const Css = ['/css/parts/ViewletReferences.css']
-
+export * from './ViewletReferencesCss.js'
 export * from './ViewletReferences.js'

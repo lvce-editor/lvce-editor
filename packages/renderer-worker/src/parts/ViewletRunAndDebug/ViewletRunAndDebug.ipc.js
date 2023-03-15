@@ -25,6 +25,5 @@ export const Events = {
   'Debug.scriptParsed': ViewletRunAndDebug.handleScriptParsed,
 }
 
-export const Css = ['/css/parts/MaskIcon.css', '/css/parts/IconButton.css', '/css/parts/ViewletRunAndDebug.css']
-
+export * from './ViewletRunAndDebugCss.js'
 export * from './ViewletRunAndDebug.js'
