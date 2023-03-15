@@ -31,6 +31,5 @@ export const Events = {
   'SideBar.viewletChange': ViewletActivityBar.handleSideBarViewletChange,
 }
 
-export const Css = ['/css/parts/ViewletActivityBar.css', '/css/parts/MaskIcon.css']
-
+export * from './ViewletActivityBarCss.js'
 export * from './ViewletActivityBar.js'

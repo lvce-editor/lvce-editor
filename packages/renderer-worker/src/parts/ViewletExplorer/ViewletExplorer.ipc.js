@@ -59,13 +59,6 @@ export const LazyCommands = {
   handlePointerDown: () => import('./ViewletExplorerHandlePointerDown.js'),
 }
 
-export const Css = [
-  '/css/parts/ViewletExplorer.css',
-  '/css/parts/Label.css',
-  '/css/parts/TreeItem.css',
-  '/css/parts/Drag.css',
-  '/css/parts/InputBox.css',
-]
-
+export * from './ViewletExplorerCss.js'
 export * from './ViewletExplorer.js'
 export * from './ViewletExplorerActions.js'

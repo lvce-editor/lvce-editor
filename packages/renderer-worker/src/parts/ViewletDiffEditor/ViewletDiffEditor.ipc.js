@@ -12,9 +12,5 @@ export const LazyCommands = {
   handleWheel: () => import('../VirtualList/VirtualListHandleWheel.js'),
 }
 
-export const Css = [
-  '/css/parts/ViewletDiffEditor.css',
-  '/css/parts/ViewletEditor.css',
-]
-
+export * from './ViewletDiffEditorCss.js'
 export * from './ViewletDiffEditor.js'
