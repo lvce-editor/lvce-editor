@@ -170,3 +170,21 @@ test.skip('event - wheel', () => {
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith('EditorImage.handleWheel', 10, 20, 30, 40)
 })
+
+test('event - contextmenu', () => {
+  const state = ViewletEditorImage.create()
+  ViewletEditorImage.attachEvents(state)
+  const { $Viewlet } = state
+  const event = new MouseEvent('contextmenu', {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    button: MouseEventType.RightClick,
+    cancelable: true,
+  })
+  // @ts-ignore
+  $Viewlet.dispatchEvent(event)
+  expect(event.defaultPrevented).toBe(true)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('EditorImage.handleContextMenu', 2, 10, 20)
+})
