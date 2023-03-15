@@ -1,4 +1,6 @@
 import * as Command from '../Command/Command.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 
 const getInsertSnippet = (word, leadingWord) => {
   if (word.startsWith(leadingWord)) {
@@ -7,19 +9,29 @@ const getInsertSnippet = (word, leadingWord) => {
   return word
 }
 
+const getEditor = () => {
+  return Viewlet.getState('EditorText')
+}
+
 const select = async (state, completionItem) => {
   const { leadingWord } = state
   const word = completionItem.label
   const snippet = getInsertSnippet(word, leadingWord)
   // TODO type and dispose commands should be sent to renderer process at the same time
-  await Command.execute(/* Editor.type */ 'Editor.type', /* text */ snippet)
-  return {
-    ...state,
-    disposed: true,
+  const editor = getEditor()
+  if (editor) {
+    editor.completionState = EditorCompletionState.None
   }
+  await Command.execute(/* Editor.type */ 'Editor.type', /* text */ snippet)
+  await Viewlet.dispose('EditorCompletion')
+  return state
 }
 
 export const selectIndex = (state, index) => {
-  const completionItem = state.filteredItems[index]
+  const { items } = state
+  if (index === -1) {
+    return state
+  }
+  const completionItem = items[index]
   return select(state, completionItem)
 }

@@ -40,6 +40,7 @@ export const LazyCommands = {
   deleteWordPartRight: () => import('../EditorCommand/EditorCommandDeleteWordPartRight.js'),
   deleteWordRight: () => import('../EditorCommand/EditorCommandDeleteWordRight.js'),
   openCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
+  closeCompletion: () => import('../EditorCommand/EditorCommandCloseCompletion.js'),
   compositionStart: () => import('../EditorCommand/EditorCommandComposition.js'),
   compositionUpdate: () => import('../EditorCommand/EditorCommandComposition.js'),
   compositionEnd: () => import('../EditorCommand/EditorCommandComposition.js'),

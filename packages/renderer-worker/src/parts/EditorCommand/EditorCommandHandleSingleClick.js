@@ -4,6 +4,8 @@ import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorSta
 import * as ModifierKey from '../ModifierKey/ModifierKey.js'
 import * as EditorGoToDefinition from './EditorCommandGoToDefinition.js'
 import * as EditorPosition from './EditorCommandPosition.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 const handleSingleClickWithAlt = async (editor, position) => {
   // TODO rectangular selection with alt click,
@@ -64,12 +66,22 @@ const getFn = (modifier) => {
   }
 }
 
-export const handleSingleClick = (editor, modifier, x, y) => {
+export const handleSingleClick = async (editor, modifier, x, y) => {
   Assert.object(editor)
   Assert.number(modifier)
   Assert.number(x)
   Assert.number(y)
   const position = EditorPosition.at(editor, x, y)
   const fn = getFn(modifier)
-  return fn(editor, position)
+  const newEditor = await fn(editor, position)
+  switch (newEditor.completionState) {
+    case EditorCompletionState.None:
+    case EditorCompletionState.Visible:
+    case EditorCompletionState.Loading:
+      RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorClick')
+      break
+    default:
+      break
+  }
+  return newEditor
 }

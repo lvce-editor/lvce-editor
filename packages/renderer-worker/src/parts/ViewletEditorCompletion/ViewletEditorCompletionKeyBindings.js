@@ -17,7 +17,7 @@ export const getKeyBindings = () => {
     },
     {
       key: 'Escape',
-      command: 'EditorCompletion.close',
+      command: 'Editor.closeCompletion',
       when: 'focus.editorCompletions',
     },
   ]
