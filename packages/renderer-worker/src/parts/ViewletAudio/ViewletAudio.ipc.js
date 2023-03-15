@@ -6,6 +6,5 @@ export const Commands = {
   handleAudioError: ViewletAudio.handleAudioError,
 }
 
-export const Css = ['/css/parts/ViewletAudio.css']
-
+export * from './ViewletAudioCss.js'
 export * from './ViewletAudio.js'

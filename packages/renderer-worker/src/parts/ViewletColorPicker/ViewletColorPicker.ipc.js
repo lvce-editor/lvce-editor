@@ -13,6 +13,5 @@ export const LazyCommands = {
 
 }
 
-export const Css = ['/css/parts/ViewletColorPicker.css']
-
+export * from './ViewletColorPickerCss.js'
 export * from './ViewletColorPicker.js'

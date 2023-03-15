@@ -2,7 +2,6 @@ export const name = 'Output'
 
 export const Commands = {}
 
-export const Css = '/css/parts/ViewletOutput.css'
-
+export * from './ViewletOutputCss.js'
 export * from './ViewletOutput.js'
 export * from './ViewletOutputActions.js'
