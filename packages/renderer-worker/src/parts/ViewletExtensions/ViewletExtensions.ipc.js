@@ -23,7 +23,6 @@ export const LazyCommands = {
   ...VirtualList.LazyCommands
 }
 
-export const Css = ['/css/parts/ViewletExtensions.css', '/css/parts/ViewletList.css', '/css/parts/InputBox.css', '/css/parts/ScrollBar.css']
-
+export * from './ViewletExtensionsCss.js'
 export * from './ViewletExtensions.js'
 export * from './ViewletExtensionsActions.js'

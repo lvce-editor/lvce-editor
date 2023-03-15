@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 
 export const state = {
   instances: Object.create(null),
@@ -27,6 +28,14 @@ export const create = (id) => {
     state: instanceState,
     factory: module,
   }
+}
+
+export const addKeyBindings = (id, keyBindings) => {
+  KeyBindings.addKeyBindings(id, keyBindings)
+}
+
+export const removeKeyBindings = (id) => {
+  KeyBindings.removeKeyBindings(id)
 }
 
 export const loadModule = async (id) => {
@@ -154,6 +163,12 @@ export const sendMultiple = (commands) => {
 
         break
       }
+      case 'Viewlet.addKeyBindings':
+        addKeyBindings(viewletId, method)
+        break
+      case 'Viewlet.removeKeyBindings':
+        removeKeyBindings(viewletId)
+        break
       default: {
         invoke(viewletId, method, ...args)
       }
@@ -164,7 +179,8 @@ export const sendMultiple = (commands) => {
 export const dispose = (id) => {
   try {
     Assert.string(id)
-    const instance = state.instances[id]
+    const { instances } = state
+    const instance = instances[id]
     if (!instance) {
       Logger.warn(`viewlet instance ${id} not found and cannot be disposed`)
       return
@@ -175,7 +191,7 @@ export const dispose = (id) => {
     if (instance.state.$Viewlet && instance.state.$Viewlet.isConnected) {
       instance.state.$Viewlet.remove()
     }
-    delete state.instances[id]
+    delete instances[id]
   } catch {
     throw new Error(`Failed to dispose ${id}`)
   }
@@ -305,6 +321,8 @@ const getFn = (command) => {
       return focus
     case 'Viewlet.appendViewlet':
       return appendViewlet
+    case 'Viewlet.addKeyBindings':
+      return addKeyBindings
     default:
       throw new Error(`unknown command ${command}`)
   }

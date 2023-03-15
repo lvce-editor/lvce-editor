@@ -11,9 +11,5 @@ export const Commands = {
   handleWheel: ViewletKeyBindings.handleWheel,
 }
 
-export const Css = [
-  '/css/parts/ViewletKeyBindings.css',
-  '/css/parts/InputBox.css',
-]
-
+export * from './ViewletKeyBindingsCss.js'
 export * from './ViewletKeyBindings.js'

@@ -3,7 +3,6 @@ import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as InitData from '../InitData/InitData.js'
-import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
@@ -111,10 +110,6 @@ export const startup = async (config) => {
 
   LifeCycle.mark(LifeCyclePhase.Six)
 
-  Performance.mark('code/willLoadKeyBindings')
-  await KeyBindings.hydrate()
-  Performance.mark('code/didLoadKeyBindings')
-
   LifeCycle.mark(LifeCyclePhase.Seven)
 
   Performance.mark('code/willLoadSideBar')
@@ -192,7 +187,6 @@ export const startup = async (config) => {
   await Location.hydrate()
   Performance.mark('code/didLoadLocation')
 
-  Performance.measure('code/loadKeyBindings', 'code/willLoadKeyBindings', 'code/didLoadKeyBindings')
   Performance.measure('code/openWorkspace', 'code/willOpenWorkspace', 'code/didOpenWorkspace')
   Performance.measure('code/loadMain', 'code/willLoadMain', 'code/didLoadMain')
   Performance.measure('code/loadSideBar', 'code/willLoadSideBar', 'code/didLoadSideBar')

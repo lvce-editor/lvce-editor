@@ -19,6 +19,5 @@ export const LazyCommands = {
   ...VirtualList.LazyCommands
 }
 
-export const Css = '/css/parts/ViewletEditorCompletion.css'
-
+export * from './ViewletEditorCompletionCss.js'
 export * from './ViewletEditorCompletion.js'

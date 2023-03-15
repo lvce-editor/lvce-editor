@@ -35,15 +35,6 @@ export const LazyCommands = {
   clearSearchResults: () => import('./ViewletSearchClearSearchResults.js'),
 }
 
-export const Css = [
-  '/css/parts/Highlight.css',
-  '/css/parts/InputBox.css',
-  '/css/parts/Label.css',
-  '/css/parts/ViewletList.css',
-  '/css/parts/ViewletSearch.css',
-  '/css/parts/TreeItem.css',
-  '/css/parts/ScrollBar.css',
-]
-
+export * from './ViewletSearchCss.js'
 export * from './ViewletSearch.js'
 export * from './ViewletSearchActions.js'

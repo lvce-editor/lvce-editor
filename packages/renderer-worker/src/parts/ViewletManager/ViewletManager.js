@@ -327,6 +327,11 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
     const extraCommands = []
 
+    if (module.getKeyBindings) {
+      const keyBindings = module.getKeyBindings()
+      extraCommands.push(['Viewlet.addKeyBindings', module.name, keyBindings])
+    }
+
     if (module.getChildren) {
       const children = module.getChildren(newState)
       for (const child of children) {
@@ -356,6 +361,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
             await childModule.contentLoadedEffects(newState)
           }
           extraCommands.push(...childCommands)
+          if (childModule.getKeyBindings) {
+            const keyBindings = childModule.getKeyBindings()
+            extraCommands.push(['Viewlet.addKeyBindings', childModule.name, keyBindings])
+          }
         } catch (error) {
           await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
           extraCommands.push([kCreate, ViewletModuleId.Error, viewlet.id])
