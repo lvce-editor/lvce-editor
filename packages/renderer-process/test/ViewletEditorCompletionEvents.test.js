@@ -34,13 +34,15 @@ test('event - mousedown', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   state.$Viewlet.children[0].dispatchEvent(
-    new Event('mousedown', {
+    new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
+      clientX: 0,
+      clientY: 0,
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('EditorCompletion.selectIndex', 0)
+  expect(RendererWorker.send).toHaveBeenCalledWith('EditorCompletion.handleClickAt', 0, 0)
 })
 
 test('event - click outside', () => {
@@ -58,12 +60,15 @@ test('event - click outside', () => {
     },
   ])
   state.$Viewlet.dispatchEvent(
-    new Event('mousedown', {
+    new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
+      clientX: 0,
+      clientY: 0,
     })
   )
-  expect(RendererWorker.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('EditorCompletion.handleClickAt', 0, 0)
 })
 
 test('event - wheel', () => {
@@ -76,5 +81,5 @@ test('event - wheel', () => {
   const { $Viewlet } = state
   $Viewlet.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('EditorCompletion.handleWheel', 53)
+  expect(RendererWorker.send).toHaveBeenCalledWith('EditorCompletion.handleWheel', 53, WheelEventType.DomDeltaLine)
 })

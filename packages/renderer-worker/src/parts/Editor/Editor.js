@@ -10,6 +10,7 @@ import * as EditorScrolling from './EditorScrolling.js'
 import * as EditorSelection from './EditorSelection.js'
 import * as EditorText from './EditorText.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 
 const MINIMUM_SLIDER_SIZE = 20
 
@@ -62,6 +63,7 @@ export const create = (id, uri, languageId, content) => {
     fontWeight: 400,
     tabSize: 2,
     cursorWidth: 2,
+    completionState: EditorCompletionState.None,
   }
 }
 

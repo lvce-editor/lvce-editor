@@ -2,6 +2,7 @@ import * as Completions from '../Completions/Completions.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
 import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.js'
 import * as Height from '../Height/Height.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -9,6 +10,7 @@ import * as VirtualList from '../VirtualList/VirtualList.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    id,
     isOpened: false,
     openingReason: 0,
     editor: undefined,
@@ -46,15 +48,92 @@ const getDisplayErrorMessage = (error) => {
   return message
 }
 
+const RE_WORD = /[\w\-]+$/
+
+const getWordAtOffset = (editor) => {
+  const { lines, selections } = editor
+  const rowIndex = selections[0]
+  const columnIndex = selections[1]
+  const line = lines[rowIndex]
+  const part = line.slice(0, columnIndex)
+  const wordMatch = part.match(RE_WORD)
+  if (wordMatch) {
+    return wordMatch[0]
+  }
+  return ''
+}
+
+export const handleEditorType = (state, editor, text) => {
+  const { unfilteredItems } = state
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  const y = EditorPosition.y(editor, rowIndex, columnIndex)
+  const wordAtOffset = getWordAtOffset(editor)
+  const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, wordAtOffset)
+  const newMaxLineY = Math.min(items.length, 8)
+  return {
+    ...state,
+    items,
+    x,
+    y,
+    maxLineY: newMaxLineY,
+  }
+}
+
+export const handleEditorDeleteCharacterLeft = (state, editor) => {
+  const { unfilteredItems } = state
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  const y = EditorPosition.y(editor, rowIndex, columnIndex)
+  const wordAtOffset = getWordAtOffset(editor)
+  if (!wordAtOffset) {
+    editor.completionState = EditorCompletionState.None
+    return {
+      ...state,
+      disposed: true,
+    }
+  }
+  const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, wordAtOffset)
+  const newMaxLineY = Math.min(items.length, 8)
+  return {
+    ...state,
+    items,
+    x,
+    y,
+    maxLineY: newMaxLineY,
+  }
+}
+
+export const dispose = (state) => {
+  return {
+    ...state,
+    disposed: true,
+  }
+}
+
+const disposeWithEditor = (state, editor) => {
+  editor.completionState = EditorCompletionState.None
+  return dispose(state)
+}
+
+export const handleEditorClick = disposeWithEditor
+
+export const handleEditorBlur = disposeWithEditor
+
 export const loadContent = async (state) => {
   const editor = getEditor()
   const unfilteredItems = await Completions.getCompletions(editor)
-  const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, '')
+  const wordAtOffset = getWordAtOffset(editor)
+  const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, wordAtOffset)
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
   const x = EditorPosition.x(editor, rowIndex, columnIndex)
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const newMaxLineY = Math.min(items.length, 8)
+  editor.widgets = editor.widgets || []
+  editor.widgets.push('EditorCompletion')
   return {
     ...state,
     unfilteredItems,
@@ -62,6 +141,7 @@ export const loadContent = async (state) => {
     x,
     y,
     maxLineY: newMaxLineY,
+    focusedIndex: 0,
   }
 }
 
@@ -97,23 +177,7 @@ export const advance = (state, word) => {
   }
 }
 
-export const dispose = (state) => {
-  return {
-    ...state,
-    disposed: true,
-  }
-}
-
 export const hasFunctionalRender = true
-
-const renderPosition = {
-  isEqual(oldState, newState) {
-    return oldState.x === newState.x && oldState.y === newState.y
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setPosition', /* x */ newState.x, /* y */ newState.y]
-  },
-}
 
 const getVisibleItems = (filteredItems, minLineY, maxLineY) => {
   const visibleItems = []
@@ -139,7 +203,13 @@ const renderItems = {
 
 const renderBounds = {
   isEqual(oldState, newState) {
-    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
+    return (
+      oldState.items === newState.items &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY &&
+      oldState.x === newState.x &&
+      oldState.y === newState.y
+    )
   },
   apply(oldState, newState) {
     const { x, y, width, height } = newState
@@ -156,6 +226,6 @@ const renderFocusedIndex = {
   },
 }
 
-export const render = [renderItems, renderPosition, renderBounds, renderFocusedIndex]
+export const render = [renderItems, renderBounds, renderFocusedIndex]
 
 export * from '../VirtualList/VirtualList.js'

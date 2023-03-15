@@ -1,8 +1,11 @@
 import * as EditorDeleteHorizontalLeft from './EditorCommandDeleteHorizontalLeft.js'
 import * as EditorDelta from './EditorCommandDelta.js'
+import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 export const deleteCharacterLeft = (editor) => {
-  return EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, EditorDelta.characterLeft)
+  const newEditor = EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, EditorDelta.characterLeft)
+  RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorDeleteCharacterLeft')
+  return newEditor
 }
 
 export const deleteLeft = deleteCharacterLeft

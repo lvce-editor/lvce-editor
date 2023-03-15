@@ -25,7 +25,7 @@ const EditorSelection = await import('../src/parts/EditorSelection/EditorSelecti
 const EditorHandleSingleClick = await import('../src/parts/EditorCommand/EditorCommandHandleSingleClick.js')
 const EditorPosition = await import('../src/parts/EditorCommand/EditorCommandPosition.js')
 
-test('editorHandleClick', () => {
+test('editorHandleClick', async () => {
   // @ts-ignore
   EditorPosition.at.mockImplementation(() => {
     return {
@@ -42,7 +42,7 @@ test('editorHandleClick', () => {
     columnWidth: 8,
     deltaY: 0,
   }
-  expect(EditorHandleSingleClick.handleSingleClick(editor, ModifierKey.None, 21, 11)).toMatchObject({
+  expect(await EditorHandleSingleClick.handleSingleClick(editor, ModifierKey.None, 21, 11)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })

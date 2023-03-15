@@ -2,15 +2,19 @@
 import * as AutoClosing from '../AutoClosing/AutoClosing.js'
 import * as Bracket from '../Bracket/Bracket.js'
 import * as Editor from '../Editor/Editor.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostClosingTag from '../ExtensionHost/ExtensionHostClosingTagCompletion.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Quote from '../Quote/Quote.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as CommandOpenCompletion from './EditorCommandCompletion.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
+const RE_WHITESPACE = /^\s+$/
 
 export const state = {
   listeners: [],
@@ -122,6 +126,17 @@ const typeWithAutoClosingTag = async (editor, text) => {
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
+const openCompletion = async (editor, text) => {
+  if (RE_WHITESPACE.test(text)) {
+    return
+  }
+  editor.completionState = EditorCompletionState.Loading
+  editor.widgets = editor.widgets || []
+  editor.widgets.push('EditorCompletion')
+  await CommandOpenCompletion.openCompletion(editor)
+  editor.completionState = EditorCompletionState.Visible
+}
+
 // TODO implement typing command without brace completion -> brace completion should be independent module
 export const typeWithAutoClosing = async (editor, text) => {
   switch (text) {
@@ -148,7 +163,19 @@ export const typeWithAutoClosing = async (editor, text) => {
     default:
       break
   }
-  return typeWithAutoClosingDisabled(editor, text)
+
+  const newEditor = typeWithAutoClosingDisabled(editor, text)
+  switch (newEditor.completionState) {
+    case EditorCompletionState.None:
+      openCompletion(newEditor, text)
+      break
+    case EditorCompletionState.Visible:
+      RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorType', text)
+      break
+    default:
+      break
+  }
+  return newEditor
   // if (isBrace(text)) {
   //   console.log('is brace')
   //   return editorTypeWithBraceCompletion(editor, text)
