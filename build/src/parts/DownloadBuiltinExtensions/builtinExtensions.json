@@ -22,7 +22,7 @@
   {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
-    "version": "0.0.18"
+    "version": "0.0.19"
   },
   {
     "name": "builtin.language-basics-dart",
@@ -82,7 +82,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "0.0.20"
+    "version": "0.0.21"
   },
   {
     "name": "builtin.language-basics-java",
@@ -222,7 +222,7 @@
   {
     "name": "builtin.language-features-html",
     "repository": "github.com/lvce-editor/language-features-html",
-    "version": "0.0.9"
+    "version": "0.0.10"
   },
   {
     "name": "builtin.language-features-typescript",
