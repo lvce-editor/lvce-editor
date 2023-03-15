@@ -39,6 +39,8 @@ export const attachEvents = (state) => {
   window.addEventListener(DomEventType.Resize, ViewletLayoutEvents.handleResize)
   window.addEventListener(DomEventType.Focus, ViewletLayoutEvents.handleFocus)
   window.addEventListener(DomEventType.Blur, ViewletLayoutEvents.handleBlur)
+  window.addEventListener(DomEventType.KeyDown, ViewletLayoutEvents.handleKeyDown)
+  window.addEventListener(DomEventType.KeyUp, ViewletLayoutEvents.handleKeyUp)
 }
 
 export const setSashes = (state, sashSideBar, sashPanel) => {
