@@ -28,6 +28,12 @@ const getStateToSave = () => {
   }
 }
 
+export const saveViewletState = async (id) => {
+  const instance = ViewletStates.getInstance(id)
+  const savedState = serializeInstance(instance)
+  await LocalStorage.setJson(id, savedState)
+}
+
 export const handleVisibilityChange = async (visibilityState) => {
   if (Workspace.isTest()) {
     return
