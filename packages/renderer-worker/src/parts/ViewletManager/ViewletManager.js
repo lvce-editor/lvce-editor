@@ -335,7 +335,8 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       const children = module.getChildren(newState)
       for (const child of children) {
         try {
-          const childModule = await loadModule(viewlet.getModule, child.id)
+          const childId = child.id
+          const childModule = await loadModule(viewlet.getModule, childId)
           // TODO get position of child module
           const oldState = childModule.create('', '', child.x, child.y, child.width, child.height)
           let instanceSavedState
@@ -349,19 +350,19 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
             state: newState,
             factory: childModule,
           }
-          ViewletStates.set(childModule.name, childInstance)
+          ViewletStates.set(childId, childInstance)
           const childCommands = []
           const commands = getRenderCommands(childModule, oldState, newState)
-          childCommands.push([kCreate, childModule.name])
+          childCommands.push([kCreate, childId])
           childCommands.push(...commands)
-          childCommands.push([kAppend, viewlet.id, childModule.name])
+          childCommands.push([kAppend, viewlet.id, childId])
           if (childModule.contentLoadedEffects) {
             await childModule.contentLoadedEffects(newState)
           }
           extraCommands.push(...childCommands)
           if (childModule.getKeyBindings) {
             const keyBindings = childModule.getKeyBindings()
-            extraCommands.push(['Viewlet.addKeyBindings', childModule.name, keyBindings])
+            extraCommands.push(['Viewlet.addKeyBindings', childId, keyBindings])
           }
         } catch (error) {
           await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
