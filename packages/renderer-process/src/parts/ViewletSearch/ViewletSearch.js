@@ -120,12 +120,9 @@ export const create = () => {
 }
 
 export const attachEvents = (state) => {
-  const { $ViewletSearchInput, $ListItems, $ScrollBar, $ToggleButton, $SearchHeader, $List } = state
+  const { $ViewletSearchInput, $ScrollBar, $SearchHeader, $List } = state
   $ViewletSearchInput.oninput = ViewletSearchEvents.handleInput
   $ViewletSearchInput.onfocus = ViewletSearchEvents.handleFocus
-
-  $ListItems.oncontextmenu = ViewletSearchEvents.handleContextMenu
-  $ListItems.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
 
   $ScrollBar.onpointerdown = ViewletSearchEvents.handleScrollBarPointerDown
 
@@ -134,6 +131,8 @@ export const attachEvents = (state) => {
   $List.onfocus = ViewletSearchEvents.handleListFocus
   $List.onblur = ViewletSearchEvents.handleListBlur
   $List.onmousedown = ViewletSearchEvents.handleClick
+  $List.oncontextmenu = ViewletSearchEvents.handleContextMenu
+  $List.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
 }
 
 export const refresh = (state, context) => {
