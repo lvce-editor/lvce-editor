@@ -19,6 +19,7 @@
 
 #TitleBarButtonClose:hover {
   background-color: rgba(232, 17, 35, 0.9);
+  color: var(--TitleBarButtonCloseHoverForeground, currentColor);
 }
 
 .MaskIcon.Minimize {
