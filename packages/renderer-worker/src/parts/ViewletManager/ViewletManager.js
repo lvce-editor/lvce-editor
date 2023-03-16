@@ -315,8 +315,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     const oldVersion = viewletState.version === undefined ? undefined : ++viewletState.version
     let instanceSavedState
     if (restore) {
-      const stateToSave = await SaveState.getSavedState()
-      instanceSavedState = getInstanceSavedState(stateToSave, viewlet.id)
+      instanceSavedState = await SaveState.getSavedViewletState(viewlet.id)
     } else if (restoreState) {
       instanceSavedState = restoreState
     }
@@ -341,8 +340,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           const oldState = childModule.create('', '', child.x, child.y, child.width, child.height)
           let instanceSavedState
           if (restore) {
-            const stateToSave = await SaveState.getSavedState()
-            instanceSavedState = getInstanceSavedState(stateToSave, child.id)
+            instanceSavedState = await SaveState.getSavedViewletState(child.id)
           } else if (restoreState) {
             instanceSavedState = restoreState
           }

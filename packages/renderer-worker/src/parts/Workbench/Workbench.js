@@ -23,7 +23,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async (config) => {
   onunhandledrejection = ErrorHandling.handleUnhandledRejection
@@ -76,6 +75,7 @@ export const startup = async (config) => {
 
   Performance.mark('code/willShowLayout')
   const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.Layout, '', '', 0, 0, 0, 0)
+  const layoutState = await SaveState.getSavedViewletState(ViewletModuleId.Layout)
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
@@ -87,7 +87,7 @@ export const startup = async (config) => {
     },
     false,
     false,
-    initData
+    { ...initData, ...layoutState }
   )
   commands.splice(1, 1)
   const layoutModule = ViewletStates.getInstance(ViewletModuleId.Layout)

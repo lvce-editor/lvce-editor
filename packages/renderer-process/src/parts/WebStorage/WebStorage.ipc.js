@@ -6,4 +6,5 @@ export const Commands = {
   clear: WebStorage.clear,
   getItem: WebStorage.getItem,
   setItem: WebStorage.setItem,
+  setJsonObjects: WebStorage.setJsonObjects,
 }

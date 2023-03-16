@@ -21,6 +21,13 @@ export const setItem = (storageType, key, value) => {
   storage.setItem(key, value)
 }
 
+export const setJsonObjects = (storageType, objects) => {
+  const storage = getStorage(storageType)
+  for (const [key, value] of Object.entries(objects)) {
+    storage.setItem(key, value)
+  }
+}
+
 export const clear = (storageType) => {
   const storage = getStorage(storageType)
   storage.clear()
