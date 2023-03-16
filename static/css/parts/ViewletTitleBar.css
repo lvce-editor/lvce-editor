@@ -10,4 +10,5 @@
 
 #TitleBar.TitleBarActive {
   color: var(--TitleBarForegroundActive, rgb(204, 204, 204));
+  background: var(--TitleBarActiveBackground, var(--TitleBarBackground));
 }
