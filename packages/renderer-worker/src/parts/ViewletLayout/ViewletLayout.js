@@ -302,20 +302,10 @@ const getSideBarLocationType = () => {
 }
 
 const getSavedPoints = (savedState) => {
-  if (savedState.LocalStorage && savedState.LocalStorage.savedState) {
-    let parsed
-    try {
-      parsed = JSON.parse(savedState.LocalStorage.savedState)
-    } catch {}
-    if (
-      parsed &&
-      parsed.instances &&
-      parsed.instances.Layout &&
-      parsed.instances.Layout.points &&
-      Array.isArray(parsed.instances.Layout.points) &&
-      parsed.instances.Layout.points.length === kTotal
-    ) {
-      return new Uint16Array(parsed.instances.Layout.points)
+  if (savedState && savedState.points) {
+    const { points } = savedState
+    if (Array.isArray(points) && points.length === kTotal) {
+      return new Uint16Array(points)
     }
   }
   return new Uint16Array(kTotal)

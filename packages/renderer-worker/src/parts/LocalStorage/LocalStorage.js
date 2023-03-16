@@ -20,3 +20,7 @@ export const setText = (key, value) => {
 export const setJson = (key, value) => {
   return WebStorage.setJson(WebStorageType.LocalStorage, key, value)
 }
+
+export const setJsonObjects = (objects) => {
+  return WebStorage.setJsonObjects(WebStorageType.LocalStorage, objects)
+}

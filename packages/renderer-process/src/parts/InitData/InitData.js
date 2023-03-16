@@ -9,9 +9,6 @@ export const getInitData = () => {
     Layout: {
       bounds: Layout.getBounds(),
     },
-    LocalStorage: {
-      savedState: localStorage.getItem('stateToSave'),
-    },
   }
   return initData
 }
