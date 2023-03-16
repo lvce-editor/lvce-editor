@@ -58,7 +58,7 @@ const wrapViewletCommand = (id, key, fn) => {
       if (oldState === newState) {
         return
       }
-      const commands = render(activeInstance.factory, oldState, newState)
+      const commands = render(activeInstance.factory, oldState, newState, id)
       ViewletStates.setState(id, newState)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     } else {
