@@ -6,6 +6,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SashDirectionType from '../SashDirectionType/SashDirectionType.js'
 import * as SashType from '../SashType/SashType.js'
+import * as SaveState from '../SaveState/SaveState.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -376,10 +377,8 @@ const show = async (state, module, currentViewletId) => {
       parentId: ViewletModuleId.Layout,
     },
     false,
-    false,
-    {
-      currentViewletId,
-    }
+    true,
+    undefined
   )
   if (commands) {
     commands.push(['Viewlet.append', 'Layout', moduleId])
@@ -395,12 +394,14 @@ const show = async (state, module, currentViewletId) => {
   }
 }
 
-const hide = (state, module) => {
+const hide = async (state, module) => {
   const { points } = state
   const { kVisible, moduleId } = module
   const newPoints = new Uint16Array(points)
   newPoints[kVisible] = 0
   getPoints(newPoints, newPoints)
+  // TODO save state to local storage after rending (in background)
+  await SaveState.saveViewletState(moduleId)
   // TODO also resize other viewlets if necessary
   const commands = Viewlet.disposeFunctional(moduleId)
   const resizeCommands = getResizeCommands(points, newPoints)
@@ -697,19 +698,23 @@ const getFocusChangeCommands = (isFocused) => {
 const showAsync = async (points, module) => {
   try {
     const { moduleId, kTop, kLeft, kWidth, kHeight } = module
-    const commands = await ViewletManager.load({
-      getModule: ViewletModule.load,
-      id: moduleId,
-      type: 0,
-      // @ts-ignore
-      uri: '',
-      show: false,
-      focus: false,
-      x: points[kLeft],
-      y: points[kTop],
-      width: points[kWidth],
-      height: points[kHeight],
-    })
+    const commands = await ViewletManager.load(
+      {
+        getModule: ViewletModule.load,
+        id: moduleId,
+        type: 0,
+        // @ts-ignore
+        uri: '',
+        show: false,
+        focus: false,
+        x: points[kLeft],
+        y: points[kTop],
+        width: points[kWidth],
+        height: points[kHeight],
+      },
+      false,
+      true
+    )
     if (commands) {
       commands.push(['Viewlet.append', 'Layout', moduleId])
     }
@@ -736,7 +741,7 @@ const showPlaceholder = (points, module) => {
   ]
 }
 
-export const handleSashPointerMove = (state, x, y) => {
+export const handleSashPointerMove = async (state, x, y) => {
   const { points, sashId } = state
   const newPoints = getNewStatePointerMove(sashId, points, x, y)
   getPoints(newPoints, newPoints)
@@ -755,6 +760,7 @@ export const handleSashPointerMove = (state, x, y) => {
         const commands = showPlaceholder(newPoints, module)
         allCommands.push(commands)
       } else {
+        await SaveState.saveViewletState(moduleId)
         const commands = Viewlet.disposeFunctional(moduleId)
         allCommands.push(...commands)
       }
