@@ -65,7 +65,7 @@ const wrapViewletCommand = (id, key, fn) => {
       return fn(activeInstance.state, ...args)
     }
   }
-  NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, fn.name)
+  NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, `${id}/${key}`)
   return wrappedViewletCommand
 }
 
@@ -114,7 +114,7 @@ const wrapViewletCommandLazy = (id, key, importFn) => {
       if (oldState === newState) {
         return
       }
-      const commands = render(activeInstance.factory, oldState, newState)
+      const commands = render(activeInstance.factory, oldState, newState, id)
       ViewletStates.setState(id, newState)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     } else {
