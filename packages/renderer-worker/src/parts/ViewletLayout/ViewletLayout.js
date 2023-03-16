@@ -311,6 +311,9 @@ const getSavedPoints = (savedState) => {
   return new Uint16Array(kTotal)
 }
 
+const isNativeTitleBarStyle = () => {
+  return Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native'
+}
 export const loadContent = (state, savedState) => {
   const { Layout } = savedState
   const { bounds } = Layout
@@ -329,7 +332,7 @@ export const loadContent = (state, savedState) => {
   newPoints[kSideBarWidth] ||= 240
   newPoints[kStatusBarHeight] = 20
   newPoints[kStatusBarVisible] = 1
-  if (Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native') {
+  if (isNativeTitleBarStyle()) {
     newPoints[kTitleBarHeight] = 0
     newPoints[kTitleBarVisible] = 0
   } else {
