@@ -6,6 +6,12 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
+jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
+  return {
+    warn: jest.fn(() => {}),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
   return {
     getText: jest.fn(() => {
@@ -28,6 +34,7 @@ jest.unstable_mockModule('../src/parts/SourceMap/SourceMap.js', () => {
 const PrettyError = await import('../src/parts/PrettyError/PrettyError.js')
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 const SourceMap = await import('../src/parts/SourceMap/SourceMap.js')
+const Logger = await import('../src/parts/Logger/Logger.js')
 
 test('prepare - fetch codeFrame', async () => {
   // @ts-ignore
@@ -156,11 +163,10 @@ test('prepare - fetch codeFrame - error', async () => {
   at TitleBarMenuBar/lazy/handleKeyArrowDown [as TitleBarMenuBar.handleKeyArrowDown] (test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:115:30)
   at async Object.handleKeyBinding [as KeyBindings.handleKeyBinding] (test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
   at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toBe(error)
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenNthCalledWith(1, 'ErrorHandling Error: TypeError: x is not a function')
+  expect(Logger.warn).toHaveBeenCalledTimes(1)
+  expect(Logger.warn).toHaveBeenNthCalledWith(1, 'ErrorHandling Error: TypeError: x is not a function')
 })
 
 test('prepare - error without stack', async () => {
@@ -1188,4 +1194,20 @@ export const setBounds = (id, left, top, width, height) => {
     type: 'TypeError',
     _error: error,
   })
+})
+
+test('prepare - bad stack trace', async () => {
+  const error = new TypeError(`importFn is not a function`)
+  error.stack = `TypeError: importFn is not a function
+    at Explorer/lazy/() => import('./ViewletExplorerHandlePointerDown.js') (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:96:26)
+    at Module.execute (http://localhost:3000/packages/renderer-worker/src/parts/Command/Command.js:62:12)
+    at handleMessageFromRendererProcess (http://localhost:3000/packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:17)`
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    throw new Error('not found')
+  })
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toBe(error)
+  expect(Logger.warn).not.toHaveBeenCalled()
+  expect(Ajax.getText).not.toHaveBeenCalled()
 })
