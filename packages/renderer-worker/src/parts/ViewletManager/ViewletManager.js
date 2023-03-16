@@ -37,14 +37,14 @@ const kDispose = 'Viewlet.dispose'
 // TODO maybe wrapViewletCommand should accept module instead of id string
 // then check if instance.factory matches module -> only compare reference (int) instead of string
 // should be faster
-const wrapViewletCommand = (id, fn) => {
+const wrapViewletCommand = (id, key, fn) => {
   Assert.string(id)
   Assert.fn(fn)
   const wrappedViewletCommand = async (...args) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
     if (!activeInstance) {
-      console.info(`cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`)
+      console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
       return
     }
     if (activeInstance.factory && activeInstance.factory.hasFunctionalRender) {
@@ -58,23 +58,23 @@ const wrapViewletCommand = (id, fn) => {
       if (oldState === newState) {
         return
       }
-      const commands = render(activeInstance.factory, oldState, newState)
+      const commands = render(activeInstance.factory, oldState, newState, id)
       ViewletStates.setState(id, newState)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     } else {
       return fn(activeInstance.state, ...args)
     }
   }
-  NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, fn.name)
+  NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, `${id}/${key}`)
   return wrappedViewletCommand
 }
 
-const wrapViewletCommandWithSideEffect = (id, fn) => {
+const wrapViewletCommandWithSideEffect = (id, key, fn) => {
   const wrappedViewletCommand = async (...args) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
     if (!activeInstance) {
-      console.info(`cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`)
+      console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
       return
     }
     const oldState = activeInstance.state
@@ -87,7 +87,7 @@ const wrapViewletCommandWithSideEffect = (id, fn) => {
     }
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
   }
-  NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, fn.name)
+  NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, key)
   return wrappedViewletCommand
 }
 
@@ -100,7 +100,7 @@ const wrapViewletCommandLazy = (id, key, importFn) => {
     }
     const activeInstance = ViewletStates.getInstance(id)
     if (!activeInstance) {
-      console.info(`cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`)
+      console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
       return
     }
     if (activeInstance.factory && activeInstance.factory.hasFunctionalRender) {
@@ -114,7 +114,7 @@ const wrapViewletCommandLazy = (id, key, importFn) => {
       if (oldState === newState) {
         return
       }
-      const commands = render(activeInstance.factory, oldState, newState)
+      const commands = render(activeInstance.factory, oldState, newState, id)
       ViewletStates.setState(id, newState)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     } else {
@@ -192,24 +192,22 @@ const registerWrappedCommand = (moduleName, key, wrappedCommand) => {
   }
 }
 
-const maybeRegisterWrappedCommands = (module) => {
+const registerWrappedCommands = (object, id, wrapFn) => {
+  for (const [key, value] of Object.entries(object)) {
+    const wrappedCommand = wrapFn(id, key, value)
+    registerWrappedCommand(id, key, wrappedCommand)
+  }
+}
+
+const maybeRegisterWrappedCommands = (id, module) => {
   if (module.Commands) {
-    for (const [key, value] of Object.entries(module.Commands)) {
-      const wrappedCommand = wrapViewletCommand(module.name, value)
-      registerWrappedCommand(module.name, key, wrappedCommand)
-    }
+    registerWrappedCommands(module.Commands, id, wrapViewletCommand)
   }
   if (module.CommandsWithSideEffects) {
-    for (const [key, value] of Object.entries(module.CommandsWithSideEffects)) {
-      const wrappedCommand = wrapViewletCommandWithSideEffect(module.name, value)
-      registerWrappedCommand(module.name, key, wrappedCommand)
-    }
+    registerWrappedCommands(module.CommandsWithSideEffects, id, wrapViewletCommandWithSideEffect)
   }
   if (module.LazyCommands) {
-    for (const [key, value] of Object.entries(module.LazyCommands)) {
-      const wrappedCommand = wrapViewletCommandLazy(module.name, key, value)
-      registerWrappedCommand(module.name, key, wrappedCommand)
-    }
+    registerWrappedCommands(module.LazyCommands, id, wrapViewletCommandLazy)
   }
 }
 
@@ -249,9 +247,9 @@ const actuallyLoadModule = async (getModule, id) => {
     }
   }
   if (module.getDynamicCss) {
-    await Css.addDynamicCss(module.id, module.getDynamicCss, Preferences.state)
+    await Css.addDynamicCss(id, module.getDynamicCss, Preferences.state)
   }
-  maybeRegisterWrappedCommands(module)
+  maybeRegisterWrappedCommands(id, module)
   maybeRegisterEvents(module)
   return module
 }
@@ -352,7 +350,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           }
           ViewletStates.set(childId, childInstance)
           const childCommands = []
-          const commands = getRenderCommands(childModule, oldState, newState)
+          const commands = getRenderCommands(childModule, oldState, newState, childId)
           childCommands.push([kCreate, childId])
           childCommands.push(...commands)
           childCommands.push([kAppend, viewlet.id, childId])
@@ -423,7 +421,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
 
     if (module.hasFunctionalRender) {
-      const renderCommands = getRenderCommands(module, viewletState, newState)
+      const renderCommands = getRenderCommands(module, viewletState, newState, viewlet.id)
       commands.push(...renderCommands)
       if (viewlet.show === false) {
         const allCommands = [
