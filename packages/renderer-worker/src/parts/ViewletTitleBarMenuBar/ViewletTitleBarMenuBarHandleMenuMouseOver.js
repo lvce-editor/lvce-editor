@@ -1,8 +1,12 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Menu from '../Menu/Menu.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const handleMenuMouseOver = async (state, level, index) => {
+  Assert.object(state)
+  Assert.number(level)
+  Assert.number(index)
   const { menus } = state
   const menu = menus[level]
   const { items, focusedIndex, y, x } = menu
