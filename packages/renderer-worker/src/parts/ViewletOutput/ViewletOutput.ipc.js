@@ -1,7 +1,6 @@
 export const name = 'Output'
 
-export const Commands = {}
-
-export * from './ViewletOutputCss.js'
 export * from './ViewletOutput.js'
 export * from './ViewletOutputActions.js'
+export * from './ViewletOutputCommands.js'
+export * from './ViewletOutputCss.js'
