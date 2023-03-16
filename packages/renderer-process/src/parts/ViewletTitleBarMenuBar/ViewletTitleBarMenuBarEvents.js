@@ -17,7 +17,7 @@ export const handleFocusOut = (event) => {
 export const handlePointerOver = (event) => {
   const { target } = event
   const index = getIndex(target)
-  ViewletTitleBarMenuBarFunctions.handleMenuMouseOver(index)
+  ViewletTitleBarMenuBarFunctions.handleMouseOver(index)
 }
 
 export const handlePointerOut = (event) => {
