@@ -1,26 +1,29 @@
-import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 export const closeMenu = () => {
-  RendererWorker.send(/* TitleBarMenuBar.closeMenu */ 'TitleBarMenuBar.closeMenu', /* keepFocus */ false)
+  RendererWorker.send('TitleBarMenuBar.closeMenu', false)
 }
 
 export const handlePointerOver = (index) => {
-  RendererWorker.send(/* TitleBarMenuBar.focusIndex */ 'TitleBarMenuBar.handleMouseOver', /* index */ index)
+  RendererWorker.send('TitleBarMenuBar.handleMouseOver', index)
 }
 
 export const handleMouseOut = (index) => {
-  RendererWorker.send(/* TitleBarMenuBar.handleMouseOut */ 'TitleBarMenuBar.handleMouseOut', /* index */ index)
+  RendererWorker.send('TitleBarMenuBar.handleMouseOut', index)
 }
 
 export const handleClick = (button, index) => {
   RendererWorker.send('TitleBarMenuBar.handleClick', button, index)
 }
 
+export const handleMouseOver = (index) => {
+  RendererWorker.send('TitleBarMenuBar.handleMouseOver', index)
+}
+
 export const handleMenuMouseOver = (level, index) => {
-  RendererWorker.send(/* TitleBarMenuBar.handleMenuMouseOver */ 'TitleBarMenuBar.handleMenuMouseOver', /* level */ level, /* index */ index)
+  RendererWorker.send('TitleBarMenuBar.handleMenuMouseOver', level, index)
 }
 
 export const handleMenuMouseDown = (level, index) => {
-  RendererWorker.send(/* TitleBarMenuBar.handleMenuMouseDown */ 'TitleBarMenuBar.handleMenuMouseDown', /* level */ level, /* index */ index)
+  RendererWorker.send('TitleBarMenuBar.handleMenuMouseDown', level, index)
 }
