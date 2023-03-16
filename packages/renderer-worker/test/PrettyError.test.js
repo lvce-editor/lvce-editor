@@ -686,3 +686,110 @@ export const insertLineBreak = async (editor) => {
     _error: error,
   })
 })
+
+test('prepare - AssertionError', async () => {
+  const error = new AssertionError(`expected value to be of type number`)
+  error.stack = `AssertionError: expected value to be of type number
+    at Module.number (http://localhost:3000/packages/renderer-worker/src/parts/Assert/Assert.js:41:11)
+    at handleMenuMouseOver (http://localhost:3000/packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleMenuMouseOver.js:9:10)
+    at TitleBarMenuBar/lazy/handleMenuMouseOver (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:108:30)
+    at async handleMessageFromRendererProcess (http://localhost:3000/packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    return `import * as Assert from '../Assert/Assert.js'
+import * as Menu from '../Menu/Menu.js'
+import * as MenuEntries from '../MenuEntries/MenuEntries.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+
+export const handleMenuMouseOver = async (state, level, index) => {
+  Assert.object(state)
+  Assert.number(level)
+  Assert.number(index)
+  const { menus } = state
+  const menu = menus[level]
+  const { items, focusedIndex, y, x } = menu
+  const item = items[index]
+  if (focusedIndex === index) {
+    if (index === -1) {
+      return state
+    }
+    if (item.flags === MenuItemFlags.SubMenu && level === menus.length - 2) {
+      const subMenu = menus[level + 1]
+      if (subMenu.focusedIndex !== -1) {
+        const newSubMenu = {
+          ...subMenu,
+          focusedIndex: -1,
+        }
+        const newMenus = [...menus.slice(0, -1), newSubMenu]
+        return {
+          ...state,
+          menus: newMenus,
+        }
+      }
+    }
+    return state
+  }
+  if (index === -1) {
+    const newMenus = [
+      ...menus.slice(0, level),
+      {
+        ...menu,
+        focusedIndex: -1,
+      },
+    ]
+    return {
+      ...state,
+      menus: newMenus,
+    }
+  }
+  if (item.flags === MenuItemFlags.SubMenu) {
+    const item = items[index]
+    const subMenuEntries = await MenuEntries.getMenuEntries(item.id)
+    const subMenu = {
+      level: menus.length,
+      items: subMenuEntries,
+      focusedIndex: -1,
+      y: y + index * 25,
+      x: x + Menu.MENU_WIDTH,
+    }
+    const newParentMenu = {
+      ...menu,
+      focusedIndex: index,
+    }
+    const newMenus = [...menus.slice(0, level - 1), newParentMenu, subMenu]
+    return {
+      ...state,
+      menus: newMenus,
+    }
+  }
+  const newMenus = [
+    ...menus.slice(0, level),
+    {
+      ...menu,
+      focusedIndex: index,
+    },
+  ]
+  return {
+    ...state,
+    menus: newMenus,
+  }
+}
+`
+  })
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: `expected value to be of type number`,
+    stack: `    at handleMenuMouseOver (http://localhost:3000/packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleMenuMouseOver.js:9:10)
+    at TitleBarMenuBar/lazy/handleMenuMouseOver (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:108:30)
+    at async handleMessageFromRendererProcess (http://localhost:3000/packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`,
+    codeFrame: `   7 |   Assert.object(state)
+   8 |   Assert.number(level)
+>  9 |   Assert.number(index)
+     |          ^
+  10 |   const { menus } = state
+  11 |   const menu = menus[level]
+  12 |   const { items, focusedIndex, y, x } = menu`,
+    type: 'AssertionError',
+    _error: error,
+  })
+})

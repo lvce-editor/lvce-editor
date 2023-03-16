@@ -83,13 +83,6 @@ const toAbsoluteUrl = (file, relativePath) => {
   return url.href
 }
 
-const getStackLinesToCut = (error) => {
-  if (error instanceof AssertionError) {
-    return 1
-  }
-  return 0
-}
-
 const getSourceMapMatch = (text) => {
   const index = text.lastIndexOf('\n', text.length - 2)
   const lastLine = text.slice(index + 1, -1)
@@ -105,8 +98,7 @@ const getSourceMapMatch = (text) => {
 
 const prepareErrorMessageWithoutCodeFrame = async (error) => {
   try {
-    const linesToCut = getStackLinesToCut(error)
-    const lines = CleanStack.cleanStack(error.stack).slice(linesToCut)
+    const lines = CleanStack.cleanStack(error.stack)
     const file = getFile(lines)
     let match = file.match(RE_PATH_1)
     if (!match) {
