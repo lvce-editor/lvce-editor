@@ -45,6 +45,7 @@ const create$ItemFile = (item) => {
 }
 
 const create$ItemDirectory = (item) => {
+  console.log('is directory')
   console.log({ item })
   const $Icon = document.createElement('div')
   $Icon.className = 'Chevron'
@@ -54,13 +55,17 @@ const create$ItemDirectory = (item) => {
   $Label.className = 'Label'
   $Label.textContent = item.label
 
+  const $Badge = document.createElement('div')
+  $Badge.className = 'SourceControlBadge'
+  $Badge.textContent = item.badgeCount
+
   const $Item = document.createElement('div')
   $Item.className = 'TreeItem'
   $Item.role = AriaRoles.TreeItem
   $Item.ariaExpanded = item.type === 'directory-expanded' ? AriaBoolean.True : AriaBoolean.False
   $Item.ariaPosInSet = item.posInSet
   $Item.ariaSetSize = item.setSize
-  $Item.append($Icon, $Label)
+  $Item.append($Icon, $Label, $Badge)
 
   return $Item
 }

@@ -82,6 +82,7 @@ const getDisplayItems = (workingTree, isExpanded) => {
   const setSize = workingTree.length
   const type = isExpanded ? 'directory-expanded' : 'directory'
   const icon = isExpanded ? Icon.ChevronDown : Icon.ChevronRight
+  const length = workingTree.length
   displayItems.push({
     file: '',
     label: UiStrings.Changes,
@@ -93,9 +94,10 @@ const getDisplayItems = (workingTree, isExpanded) => {
     decorationIconTitle: '',
     decorationStrikeThrough: false,
     type,
+    badgeCount: length,
   })
   if (isExpanded) {
-    for (let i = 0; i < workingTree.length; i++) {
+    for (let i = 0; i < length; i++) {
       const item = workingTree[i]
       const baseName = Workspace.pathBaseName(item.file)
       const folderName = item.file.slice(0, -baseName.length - 1)
@@ -110,6 +112,7 @@ const getDisplayItems = (workingTree, isExpanded) => {
         decorationIconTitle: item.iconTitle,
         decorationStrikeThrough: item.strikeThrough,
         type: 'file',
+        badgeCount: 0,
       })
     }
   }
