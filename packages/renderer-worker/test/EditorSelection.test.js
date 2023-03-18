@@ -256,3 +256,28 @@ test('getVisible - only start of selection visible', () => {
     ])
   )
 })
+
+test('getVisible - selection out of range', () => {
+  const editor = {
+    x: 20,
+    y: 10,
+    rowHeight: 20,
+    columnWidth: 8,
+    minLineY: 0,
+    maxLineY: 8,
+    lines: ['line 1'],
+    selections: new Uint32Array([0, 0, 0, 0, 7, 7, 7, 7]),
+    fontWeight: 400,
+    fontFamily: 'Test',
+    letterSpacing: 0,
+    fontSize: 15,
+    cursorWidth: 0,
+    tabSize: 2,
+  }
+  const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
+  expect(cursorInfos).toEqual(new Float32Array([0, 0, 0, 140]))
+  expect(selectionInfos).toEqual(
+    // prettier-ignore
+    new Float32Array([])
+  )
+})
