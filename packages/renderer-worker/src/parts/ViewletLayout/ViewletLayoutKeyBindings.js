@@ -225,6 +225,10 @@ export const getKeyBindings = () => {
       command: 'Window.zoomIn',
     },
     {
+      key: 'ctrl++',
+      command: 'Window.zoomIn',
+    },
+    {
       key: 'ctrl+-',
       command: 'Window.zoomOut',
     },
