@@ -58,6 +58,9 @@ const isInRange = (rowIndex, min, max) => {
 }
 
 const getX = (line, column, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, halfCursorWidth) => {
+  if (!line) {
+    return 0
+  }
   Assert.string(line)
   Assert.number(tabSize)
   Assert.number(halfCursorWidth)
