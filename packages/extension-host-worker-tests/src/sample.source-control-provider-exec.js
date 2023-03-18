@@ -26,7 +26,7 @@ export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator,
   // assert
   const treeItems = Locator('.TreeItem')
   await expect(treeItems).toHaveCount(3)
-  await expect(treeItems.nth(0)).toHaveText('Changes')
+  await expect(treeItems.nth(0)).toHaveText('Changes2')
   await expect(treeItems.nth(1)).toHaveText('file-1.txt')
   await expect(treeItems.nth(2)).toHaveText('file-2.txt')
 }
