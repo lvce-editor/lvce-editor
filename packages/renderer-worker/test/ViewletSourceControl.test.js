@@ -94,7 +94,7 @@ test('render - inputValue changed', () => {
   expect(render(oldState, newState)).toEqual([['Viewlet.send', 'Source Control', 'setInputValue', 'abc']])
 })
 
-test('handleMouseOver', () => {
+test('handleMouseOver', async () => {
   const state = { ...ViewletSourceControl.create(), displayItems: [] }
-  expect(ViewletSourceControl.handleMouseOver(state, 0)).toBe(state)
+  expect(await ViewletSourceControl.handleMouseOver(state, 0)).toBe(state)
 })
