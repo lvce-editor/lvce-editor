@@ -62,43 +62,42 @@ export const acceptInput = async (state) => {
   }
 }
 
-const getChangedFiles = async (enabledProviderIds) => {
-  const allChangedFiles = []
+const getGroups = async (enabledProviderIds) => {
+  const allGroups = []
   for (const providerId of enabledProviderIds) {
-    const changedFiles = await SourceControl.getChangedFiles(providerId)
-    allChangedFiles.push(...changedFiles)
+    const groups = await SourceControl.getGroups(providerId)
+    allGroups.push(...groups)
   }
   return {
-    index: [],
-    merge: [],
-    untracked: [],
-    workingTree: allChangedFiles,
+    allGroups,
     gitRoot: '',
   }
 }
 
-const getDisplayItems = (workingTree, isExpanded) => {
+const getDisplayItemsGroup = (group, isExpanded) => {
   const displayItems = []
-  const setSize = workingTree.length
+  const { id, label, items } = group
+  const length = items.length
   const type = isExpanded ? 'directory-expanded' : 'directory'
   const icon = isExpanded ? Icon.ChevronDown : Icon.ChevronRight
-  const length = workingTree.length
-  displayItems.push({
-    file: '',
-    label: UiStrings.Changes,
-    detail: '',
-    posInSet: 1,
-    setSize: 1,
-    icon,
-    decorationIcon: '',
-    decorationIconTitle: '',
-    decorationStrikeThrough: false,
-    type,
-    badgeCount: length,
-  })
+  if (length > 0) {
+    displayItems.push({
+      file: '',
+      label: label,
+      detail: '',
+      posInSet: 1,
+      setSize: 1,
+      icon,
+      decorationIcon: '',
+      decorationIconTitle: '',
+      decorationStrikeThrough: false,
+      type,
+      badgeCount: length,
+    })
+  }
   if (isExpanded) {
     for (let i = 0; i < length; i++) {
-      const item = workingTree[i]
+      const item = items[i]
       const baseName = Workspace.pathBaseName(item.file)
       const folderName = item.file.slice(0, -baseName.length - 1)
       displayItems.push({
@@ -106,7 +105,7 @@ const getDisplayItems = (workingTree, isExpanded) => {
         label: baseName,
         detail: folderName,
         posInSet: i + 1,
-        setSize,
+        setSize: length,
         icon: IconTheme.getFileIcon({ name: item.file }),
         decorationIcon: item.icon,
         decorationIconTitle: item.iconTitle,
@@ -119,20 +118,27 @@ const getDisplayItems = (workingTree, isExpanded) => {
   return displayItems
 }
 
+const getDisplayItems = (allGroups, isExpanded) => {
+  console.log({ allGroups })
+  const displayItems = []
+  for (const group of allGroups) {
+    const groupDisplayItems = getDisplayItemsGroup(group, isExpanded)
+    displayItems.push(...groupDisplayItems)
+  }
+  return displayItems
+}
+
 export const loadContent = async (state) => {
   const root = Workspace.state.workspacePath
   const scheme = GetProtocol.getProtocol(root)
   const enabledProviderIds = await SourceControl.getEnabledProviderIds(scheme, root)
-  const changedFiles = await getChangedFiles(enabledProviderIds)
+  const { allGroups, gitRoot } = await getGroups(enabledProviderIds)
   const isExpanded = true
-  const displayItems = getDisplayItems(changedFiles.workingTree, isExpanded)
+  const displayItems = getDisplayItems(allGroups, isExpanded)
   return {
     ...state,
-    index: changedFiles.index,
-    merge: changedFiles.merge,
-    untracked: changedFiles.untracked,
-    workingTree: changedFiles.workingTree,
-    gitRoot: changedFiles.gitRoot,
+    allGroups,
+    gitRoot,
     displayItems,
     enabledProviderIds,
     isExpanded,
@@ -171,9 +177,9 @@ const handleClickFile = async (state, item) => {
 }
 
 const handleClickDirectory = (state, item) => {
-  const { workingTree } = state
+  const { allGroups } = state
   const isExpanded = true
-  const displayItems = getDisplayItems(workingTree, isExpanded)
+  const displayItems = getDisplayItems(allGroups, isExpanded)
   return {
     ...state,
     displayItems,
@@ -181,9 +187,9 @@ const handleClickDirectory = (state, item) => {
   }
 }
 const handleClickDirectoryExpanded = (state, item) => {
-  const { workingTree } = state
+  const { allGroups } = state
   const isExpanded = false
-  const displayItems = getDisplayItems(workingTree, isExpanded)
+  const displayItems = getDisplayItems(allGroups, isExpanded)
   return {
     ...state,
     displayItems,

@@ -68,6 +68,8 @@ export const getFn = (method) => {
       return ExtensionHostSourceControl.discard
     case ExtensionHostCommandType.SourceControlGetEnabledProviderIds:
       return ExtensionHostSourceControl.getEnabledProviderIds
+    case ExtensionHostCommandType.SourceControlGetGroups:
+      return ExtensionHostSourceControl.getGroups
     case 'ExtensionHostDebug.listProcesses':
       return ExtensionHostDebug.listProcesses
     case 'ExtensionHostDebug.pause':

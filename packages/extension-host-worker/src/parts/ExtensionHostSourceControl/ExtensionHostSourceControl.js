@@ -22,6 +22,33 @@ export const getChangedFiles = async (providerId) => {
   return flattenedChangedFiles
 }
 
+const getGroupsFromProvider = async (provider, cwd) => {
+  if (provider.getGroups) {
+    return provider.getGroups(cwd)
+  }
+  if (provider.getChangedFiles) {
+    const files = await provider.getChangedFiles()
+    const groups = [
+      {
+        id: 'changes',
+        label: 'Changes',
+        items: files,
+      },
+    ]
+    return groups
+  }
+  throw new Error('source control provider is missing required function getGroups')
+}
+
+export const getGroups = async (providerId, cwd) => {
+  const provider = state.providers[providerId]
+  if (!provider) {
+    throw new Error('no source control provider found')
+  }
+  const groups = await getGroupsFromProvider(provider, cwd)
+  return groups
+}
+
 export const acceptInput = async (providerId, value) => {
   const provider = state.providers[providerId]
   if (!provider) {

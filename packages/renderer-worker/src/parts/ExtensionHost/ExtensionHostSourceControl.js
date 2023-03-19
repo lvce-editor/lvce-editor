@@ -28,6 +28,15 @@ export const getFileBefore = (providerId, path) => {
   })
 }
 
+export const getGroups = (providerId, path) => {
+  return ExtensionHostShared.executeProvider({
+    event: 'none',
+    method: ExtensionHostCommandType.SourceControlGetGroups,
+    params: [providerId, path],
+    noProviderFoundMessage: 'No source control provider found',
+  })
+}
+
 export const add = (providerId, path) => {
   return ExtensionHostShared.executeProvider({
     event: 'none',

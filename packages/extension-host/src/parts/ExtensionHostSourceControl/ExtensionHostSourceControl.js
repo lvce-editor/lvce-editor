@@ -35,20 +35,14 @@ const sum = (values) => {
 
 export const getBadgeCount = async (cwd) => {
   const getBadgeCountInCwd = (provider) => provider.getBadgeCount(cwd)
-  const individualCounts = await Promise.all(
-    state.sourceControlProviders.map(getBadgeCountInCwd)
-  )
+  const individualCounts = await Promise.all(state.sourceControlProviders.map(getBadgeCountInCwd))
   const total = sum(individualCounts)
   return total
 }
 
 export const sourceControlGetModifiedFiles = async () => {
   // TODO maybe use Promise.allsettled so that when one provider fails, it still shows some results
-  const result = await Promise.all(
-    Object.values(state.sourceControlProviders).map((provider) =>
-      provider.getChangedFiles()
-    )
-  )
+  const result = await Promise.all(Object.values(state.sourceControlProviders).map((provider) => provider.getChangedFiles()))
   const flatResult = result.flat(1)
   return flatResult
 }
@@ -66,11 +60,7 @@ const acceptInputInternal = async (text) => {
       const resolvedError = command.resolveError(error)
       if (resolvedError) {
         console.log({ resolvedError })
-        const selectedOption = await Notification.showNotificationWithOptions(
-          'error',
-          resolvedError.message,
-          resolvedError.options
-        )
+        const selectedOption = await Notification.showNotificationWithOptions('error', resolvedError.message, resolvedError.options)
         return
       }
     }
@@ -85,4 +75,8 @@ export const acceptInput = async (text) => {
   } catch (error) {
     throw new VError(error, 'Failed to accept input')
   }
+}
+
+export const getGroups = () => {
+  return {}
 }

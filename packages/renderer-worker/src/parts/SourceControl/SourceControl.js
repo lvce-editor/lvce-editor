@@ -37,3 +37,7 @@ export const getEnabledProviderIds = (scheme, root) => {
   Assert.string(root)
   return ExtensionHostSourceControl.getEnabledProviderIds(scheme, root)
 }
+
+export const getGroups = (providerId, root) => {
+  return ExtensionHostSourceControl.getGroups(providerId, root)
+}
