@@ -5,7 +5,9 @@ import * as Icon from '../Icon/Icon.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Logger from '../Logger/Logger.js'
 import * as SourceControl from '../SourceControl/SourceControl.js'
+import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
 import * as Workspace from '../Workspace/Workspace.js'
+
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
 /**
@@ -96,6 +98,7 @@ const getDisplayItemsGroup = (group, isExpanded) => {
       decorationStrikeThrough: false,
       type,
       badgeCount: length,
+      groupId: id,
     })
   }
   if (isExpanded) {
@@ -115,6 +118,7 @@ const getDisplayItemsGroup = (group, isExpanded) => {
         decorationStrikeThrough: item.strikeThrough,
         type: 'file',
         badgeCount: 0,
+        groupId: id,
       })
     }
   }
@@ -216,32 +220,20 @@ export const handleClick = async (state, index) => {
   }
 }
 
-export const handleMouseOver = (state, index) => {
-  const { displayItems } = state
+export const handleMouseOver = async (state, index) => {
+  const { displayItems, providerId } = state
   const item = displayItems[index]
   if (!item) {
     return state
   }
+  const actions = await SourceControlActions.getSourceControlActions(providerId, item.groupId, item.type)
   if (item.type === 'directory' || item.type === 'directory-expanded') {
     return state
   }
   return {
     ...state,
     buttonIndex: index,
-    buttons: [
-      {
-        label: UiStrings.OpenFile,
-        icon: Icon.GoToFile,
-      },
-      {
-        label: UiStrings.Restore,
-        icon: Icon.Discard,
-      },
-      {
-        label: UiStrings.Add,
-        icon: Icon.Add,
-      },
-    ],
+    buttons: actions,
   }
 }
 

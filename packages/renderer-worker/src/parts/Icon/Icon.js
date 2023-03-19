@@ -34,6 +34,7 @@ export const NewLine = `${assetDir}/icons/newline.svg`
 export const NextMatch = `${assetDir}/icons/arrow-down.svg`
 export const PreviousMatch = `${assetDir}/icons/arrow-up.svg`
 export const Refresh = `${assetDir}/icons/refresh.svg`
+export const Remove = `${assetDir}/icons/remove.svg`
 export const Search = `${assetDir}/icons/search.svg`
 export const SettingsGear = `${assetDir}/icons/settings-gear.svg`
 export const SourceControl = `${assetDir}/icons/source-control.svg`
