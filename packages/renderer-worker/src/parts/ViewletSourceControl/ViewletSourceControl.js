@@ -122,7 +122,6 @@ const getDisplayItemsGroup = (group, isExpanded) => {
 }
 
 const getDisplayItems = (allGroups, isExpanded) => {
-  console.log({ allGroups })
   const displayItems = []
   for (const group of allGroups) {
     const groupDisplayItems = getDisplayItemsGroup(group, isExpanded)

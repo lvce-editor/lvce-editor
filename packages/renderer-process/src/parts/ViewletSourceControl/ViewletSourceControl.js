@@ -45,8 +45,6 @@ const create$ItemFile = (item) => {
 }
 
 const create$ItemDirectory = (item) => {
-  console.log('is directory')
-  console.log({ item })
   const $Icon = document.createElement('div')
   $Icon.className = 'Chevron'
   $Icon.append(MaskIcon.create(item.icon))

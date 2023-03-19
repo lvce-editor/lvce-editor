@@ -87,7 +87,6 @@ export const getEnabledProviderIds = async (scheme, root) => {
       enabledIds.push(provider.id)
     }
   }
-  console.log({ enabledIds })
   return enabledIds
 }
 
