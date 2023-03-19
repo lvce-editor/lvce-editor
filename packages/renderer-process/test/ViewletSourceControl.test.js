@@ -67,7 +67,7 @@ test('setButtons', () => {
       type: 'file',
     },
   ])
-  ViewletSourceControl.setItemButtons(state, 0, [
+  ViewletSourceControl.setItemButtons(state, -1, 0, [
     {
       icon: '/icons/reset.svg',
       label: 'Reset',

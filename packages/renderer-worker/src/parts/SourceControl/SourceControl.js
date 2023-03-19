@@ -41,3 +41,8 @@ export const getEnabledProviderIds = (scheme, root) => {
 export const getGroups = (providerId, root) => {
   return ExtensionHostSourceControl.getGroups(providerId, root)
 }
+
+export const getSourceControlActions = (providerId) => {
+  // TODO get extension.source-control-actions
+  return []
+}

@@ -11,6 +11,7 @@ export const Commands = {
   handleClickRestore: ViewletSourceControl.handleClickRestore,
   handleInput: ViewletSourceControl.handleInput,
   handleMouseOver: ViewletSourceControl.handleMouseOver,
+  handleMouseOut: ViewletSourceControl.handleMouseOut,
 }
 
 export const LazyCommands = {

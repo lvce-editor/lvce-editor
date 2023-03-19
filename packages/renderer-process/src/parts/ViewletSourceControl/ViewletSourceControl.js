@@ -45,8 +45,6 @@ const create$ItemFile = (item) => {
 }
 
 const create$ItemDirectory = (item) => {
-  console.log('is directory')
-  console.log({ item })
   const $Icon = document.createElement('div')
   $Icon.className = 'Chevron'
   $Icon.append(MaskIcon.create(item.icon))
@@ -118,6 +116,7 @@ export const attachEvents = (state) => {
   $ViewletTree.onclick = ViewletSourceControlEvents.handleClick
   $ViewletTree.oncontextmenu = ViewletSourceControlEvents.handleContextMenu
   $ViewletTree.onmouseover = ViewletSourceControlEvents.handleMouseOver
+  $ViewletTree.onmouseout = ViewletSourceControlEvents.handleMouseOut
 }
 
 export const dispose = () => {}
@@ -156,21 +155,58 @@ const create$Button = (button) => {
   return $Button
 }
 
-export const setItemButtons = (state, index, buttons) => {
+const isLabel = ($Element) => {
+  return $Element.className === 'Label'
+}
+
+const findLabel = ($Children) => {
+  for (const $Child of $Children) {
+    if (isLabel($Child)) {
+      return $Child
+    }
+  }
+  return undefined
+}
+
+const isSourceControlButton = ($Element) => {
+  return $Element.className === 'SourceControlButton'
+}
+
+const removeItemButtons = ($Label) => {
+  let $Node = $Label
+  while ($Node) {
+    const $Next = $Node.nextElementSibling
+    if (isSourceControlButton($Node)) {
+      $Node.remove()
+    }
+    $Node = $Next
+  }
+}
+
+export const setItemButtons = (state, oldIndex, index, buttons) => {
   Assert.number(index)
   Assert.array(buttons)
   const { $ViewletTree } = state
+  if (oldIndex !== -1) {
+    const $OldItem = $ViewletTree.children[oldIndex]
+    if ($OldItem) {
+      const $OldLabel = findLabel($OldItem.children)
+      removeItemButtons($OldLabel)
+    }
+  }
   if (index === -1) {
     return
   }
   const $Item = $ViewletTree.children[index]
-  if ($Item.children[2]) {
-    return
-  }
   if (!$Item) {
     Logger.warn(`no source control item found at index ${index}`)
     return
   }
+  const $Label = findLabel($Item.children)
+  if (!$Label) {
+    return
+  }
+  removeItemButtons($Label)
   // TODO handle icon loading error?
-  $Item.append(...buttons.map(create$Button))
+  $Label.after(...buttons.map(create$Button))
 }
