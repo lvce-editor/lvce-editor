@@ -191,8 +191,8 @@ export const setItemButtons = (state, oldIndex, index, buttons) => {
   const { $ViewletTree } = state
   if (oldIndex !== -1) {
     const $OldItem = $ViewletTree.children[oldIndex]
-    const $OldLabel = findLabel($OldItem.children)
     if ($OldItem) {
+      const $OldLabel = findLabel($OldItem.children)
       removeItemButtons($OldLabel)
     }
   }
