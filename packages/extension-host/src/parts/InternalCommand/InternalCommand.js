@@ -104,6 +104,8 @@ const getFn = (id) => {
     case 'getSourceControlChangedFiles':
     case 'ExtensionHost.sourceControlGetChangedFiles':
       return ExtensionHostSourceControl.sourceControlGetModifiedFiles
+    case 'ExtensionHostSourceControl.getGroups':
+      return ExtensionHostSourceControl.getGroups
     case 412:
     case 'SourceControl.acceptInput':
       return ExtensionHostSourceControl.acceptInput
