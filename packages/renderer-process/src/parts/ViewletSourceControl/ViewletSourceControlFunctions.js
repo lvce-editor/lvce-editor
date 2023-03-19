@@ -17,6 +17,13 @@ export const handleMouseOver = (index) => {
 /**
  * @param {number} index
  */
+export const handleMouseOut = (index) => {
+  RendererWorker.send('Source Control.handleMouseOut', index)
+}
+
+/**
+ * @param {number} index
+ */
 export const handleClick = (index) => {
   RendererWorker.send('Source Control.handleClick', index)
 }

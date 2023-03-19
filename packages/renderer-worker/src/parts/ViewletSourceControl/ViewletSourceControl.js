@@ -246,6 +246,17 @@ export const handleMouseOver = (state, index) => {
   }
 }
 
+export const handleMouseOut = (state, index) => {
+  if (index === -1) {
+    return {
+      ...state,
+      buttonIndex: -1,
+      buttons: [],
+    }
+  }
+  return state
+}
+
 export const handleClickAdd = async (state, index) => {
   const { displayItems } = state
   const item = displayItems[index]
@@ -296,7 +307,7 @@ const renderButtons = {
     return oldState.buttonIndex === newState.buttonIndex && oldState.buttons === newState.buttons
   },
   apply(oldState, newState) {
-    return [/* method */ 'setItemButtons', /* index */ newState.buttonIndex, /* buttons */ newState.buttons]
+    return [/* method */ 'setItemButtons', /* oldIndex */ oldState.buttonIndex, /* index */ newState.buttonIndex, /* buttons */ newState.buttons]
   },
 }
 

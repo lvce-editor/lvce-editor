@@ -42,6 +42,17 @@ export const handleMouseOver = (event) => {
   ViewletSourceControlFunctions.handleMouseOver(index)
 }
 
+export const handleMouseOut = (event) => {
+  const { target, relatedTarget } = event
+  const $Parent = relatedTarget.closest('.SourceControlItems')
+  if (!$Parent) {
+    ViewletSourceControlFunctions.handleMouseOut(-1)
+    return
+  }
+  const index = findIndex($Parent, target)
+  ViewletSourceControlFunctions.handleMouseOut(index)
+}
+
 export const handleContextMenu = (event) => {
   Event.preventDefault(event)
   const { button, clientX, clientY } = event
