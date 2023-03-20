@@ -378,17 +378,24 @@ export const saveWithoutFormatting = async () => {
 }
 
 export const handleDrop = async (state, files) => {
+  const allCommands = []
+  let newState = state
   for (const file of files) {
     if (file.path) {
-      await openUri(state, file.path)
+      const result = await openUri(state, file.path)
+      allCommands.push(...result.commands)
+      newState = result.newState
     } else {
       // TODO
     }
     console.log(file)
   }
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
-  return state
+  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver'])
+  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay'])
+  return {
+    newState,
+    commands: allCommands,
+  }
 }
 
 export const handleDropFilePath = async (state, filePath) => {
