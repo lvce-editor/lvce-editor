@@ -14,6 +14,7 @@ const UiStrings = {
   Unstage: 'Unstage',
   UnstageAll: 'Unstage All Changes',
   Discard: 'Discard Changes',
+  DiscardAll: 'Discard All Changes',
 }
 
 /**
@@ -26,6 +27,7 @@ const Commands = {
   UnstageAll: 'git.unstageAll',
   Unstage: 'git.unstage',
   Discard: 'git.discard',
+  DiscardAll: 'git.cleanAll',
 }
 
 /**
@@ -47,6 +49,11 @@ const getContextId = (groupId, type) => {
 
 const getSourceControlActionsWorkingTree = () => {
   return [
+    {
+      command: Commands.DiscardAll,
+      label: UiStrings.DiscardAll,
+      icon: Icon.Discard,
+    },
     {
       command: Commands.StageAll,
       label: UiStrings.StageAll,
