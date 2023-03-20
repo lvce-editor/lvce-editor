@@ -4,25 +4,10 @@ import * as Assert from '../Assert/Assert.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as ExtensionHostLanguages from '../ExtensionHost/ExtensionHostLanguages.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-
-export const state = {
-  loadState: false,
-  isHydrating: false,
-  fileNameMap: Object.create(null),
-  extensionMap: Object.create(null),
-  tokenizerMap: Object.create(null),
-  /**
-   * @type {any[]}
-   */
-  firstLines: [],
-  /**
-   * @type {string[]}
-   */
-  hasWarned: [],
-}
 
 export const getLanguageId = (fileName) => {
   Assert.string(fileName)
@@ -30,24 +15,24 @@ export const getLanguageId = (fileName) => {
   const extensionIndex = fileName.lastIndexOf('.')
   const extension = fileName.slice(extensionIndex)
   const extensionLower = extension.toLowerCase()
-  const { extensionMap, fileNameMap } = state
-  if (extensionMap[extensionLower]) {
-    return extensionMap[extensionLower]
+  if (LanguagesState.hasLanguageByExtension(extensionLower)) {
+    return LanguagesState.getLanguageByExtension(extensionLower)
   }
   const fileNameLower = fileName.toLowerCase()
   const secondExtensionIndex = fileName.lastIndexOf('.', extensionIndex - 1)
   const secondExtension = fileName.slice(secondExtensionIndex)
-  if (secondExtensionIndex !== -1 && extensionMap[secondExtension]) {
-    return extensionMap[secondExtension]
+  if (secondExtensionIndex !== -1 && LanguagesState.hasLanguageByExtension(secondExtension)) {
+    return LanguagesState.getLanguageByExtension(secondExtension)
   }
-  if (fileNameMap[fileNameLower]) {
-    return fileNameMap[fileNameLower]
+  if (LanguagesState.hasLanguageByFileName(fileNameLower)) {
+    return LanguagesState.getLanguageByFileName(fileNameLower)
   }
   return 'unknown'
 }
 
 export const getLanguageIdByFirstLine = (firstLine) => {
-  for (const { regex, languageId } of state.firstLines) {
+  const firstLines = LanguagesState.getFirstLines()
+  for (const { regex, languageId } of firstLines) {
     const actualRegex = new RegExp(regex)
     if (actualRegex.test(firstLine)) {
       return languageId
@@ -58,11 +43,11 @@ export const getLanguageIdByFirstLine = (firstLine) => {
 
 export const getTokenizeFunctionPath = (languageId) => {
   // TODO what if language.tokenize is not of type string? -> handle error gracefully
-  return state.tokenizerMap[languageId] || ''
+  return LanguagesState.getTokenizeFunctionPath(languageId)
 }
 
 export const hydrate = async () => {
-  state.isHydrating = true
+  LanguagesState.setHydrating(true)
   // TODO handle error
   // TODO main parts should have nothing todo with shared process -> only sub components
   const languages = await ExtensionHostLanguages.getLanguages()
@@ -70,9 +55,9 @@ export const hydrate = async () => {
   await addLanguages(languages)
   const useJsx = Preferences.get('languages.jsFilesAsJsx')
   if (useJsx) {
-    state.extensionMap['.js'] = 'jsx'
+    LanguagesState.addExtension('.js', 'jsx')
   }
-  state.loaded = true
+  LanguagesState.setLoaded(true)
 }
 
 // TODO make contribution points not rely on globals and side effects
@@ -92,12 +77,11 @@ const contributionPointFileNames = {
       for (const fileName of value) {
         if (typeof fileName === 'string') {
           const fileNameLower = fileName.toLowerCase()
-          state.fileNameMap[fileNameLower] = languageId
+          LanguagesState.addFileName(fileNameLower, languageId)
         } else {
           Logger.warn(`[renderer-worker] language.fileNames for ${languageId} should be an array of strings but includes ${typeof fileName}`)
         }
       }
-      state.fileNameMap
     }
   },
 }
@@ -105,15 +89,15 @@ const contributionPointFileNames = {
 const contributionPointFirstLine = {
   key: 'firstLine',
   handle(value, languageId) {
-    state.firstLines.push({ regex: value, languageId })
+    LanguagesState.addFirstLine(value, languageId)
   },
 }
 
 const warnFileNames = (languageId, language) => {
-  if (state.hasWarned.includes(languageId)) {
+  if (LanguagesState.hasWarned(languageId)) {
     return
   }
-  state.hasWarned.push(languageId)
+  LanguagesState.addWarned(languageId)
   const code = JSON.stringify(language, null, 2)
   const lines = SplitLines.splitLines(code)
   let rowIndex = 0
@@ -158,7 +142,7 @@ const contributionPointExtensions = {
     if (value && Array.isArray(value)) {
       for (const extension of value) {
         if (typeof extension === 'string') {
-          state.extensionMap[extension] = languageId
+          LanguagesState.addExtension(extension, languageId)
         } else {
           Logger.warn(`[renderer-worker] language.extensions for ${languageId} should be an array of strings but includes ${typeof extension}`)
         }
@@ -171,7 +155,7 @@ const contributionPointTokenize = {
   key: 'tokenize',
   handle(value, languageId) {
     if (value) {
-      state.tokenizerMap[languageId] = value
+      LanguagesState.addTokenizer(languageId, value)
     }
   },
 }
@@ -209,7 +193,7 @@ export const addLanguages = async (languages) => {
 }
 
 export const hasLoaded = () => {
-  return state.loaded
+  return LanguagesState.hasLoaded()
 }
 
 export const waitForLoad = async () => {
