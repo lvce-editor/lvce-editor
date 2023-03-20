@@ -21,14 +21,7 @@ jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostSourceControl.
 
 const ViewletSourceControl = await import('../src/parts/ViewletSourceControl/ViewletSourceControl.js')
 const ViewletSourceControlAcceptInput = await import('../src/parts/ViewletSourceControl/ViewletSourceControlAcceptInput.js')
-
 const ExtensionHostSourceControl = await import('../src/parts/ExtensionHost/ExtensionHostSourceControl.js')
-
-const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
-
-const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletSourceControl, oldState, newState, ViewletModuleId.SourceControl)
-}
 
 test('acceptInput', async () => {
   // @ts-ignore
