@@ -19,6 +19,10 @@ export const state = {
    */
   extensionHosts: [],
   cachedActivationEvents: Object.create(null),
+  /**
+   * @type {any}
+   */
+  activatedExtensions: [],
 }
 
 const getExtensionHostManagementTypes = () => {
@@ -115,6 +119,10 @@ const actuallyActivateByEvent = async (event) => {
     await startSynching(extensionHost)
     Assert.object(extensionHost)
     for (const extension of managerWithExtensions.toActivate) {
+      if (state.activatedExtensions.includes(extension.id)) {
+        return
+      }
+      state.activatedExtensions.push(extension.id)
       // TODO tell extension host to activate extension
       await extensionHost.ipc.invoke(ExtensionHostCommandType.ExtensionActivate, extension)
     }
