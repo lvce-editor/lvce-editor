@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Command from '../Command/Command.js'
+import * as ExtensionHostCommand from '../ExtensionHost/ExtensionHostCommands.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as Icon from '../Icon/Icon.js'
@@ -259,24 +259,9 @@ export const handleButtonClick = async (state, clickedIndex) => {
   if (!button) {
     return
   }
-  await Command.execute(button.command, item.file)
-  return state
-}
-
-export const handleClickAdd = async (state, index) => {
-  const { displayItems } = state
-  const item = displayItems[index]
-  const { file } = item
-  await SourceControl.add(file)
-  return state
-}
-
-export const handleClickRestore = (state, index) => {
-  return state
-}
-
-export const handleClickDiscard = (state, index) => {
-  return state
+  await ExtensionHostCommand.executeCommand(button.command, item.file)
+  const newState = await loadContent(state)
+  return newState
 }
 
 export const hasFunctionalResize = true

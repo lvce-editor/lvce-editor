@@ -22,11 +22,11 @@ export const getCommands = async () => {
 // TODO add test for this
 // TODO add test for when this errors
 
-export const executeCommand = (id) => {
+export const executeCommand = (id, ...args) => {
   return ExtensionHostShared.executeProvider({
     event: `onCommand:${id}`,
     method: ExtensionHostCommandType.CommandExecute,
-    params: [id],
+    params: [id, ...args],
     noProviderFoundMessage: 'No command provider found',
   })
 }
