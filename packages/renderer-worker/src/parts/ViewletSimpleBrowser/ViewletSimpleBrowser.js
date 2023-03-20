@@ -112,7 +112,7 @@ export const loadContent = async (state, savedState) => {
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(/* restoreId */ 0)
   await ElectronBrowserViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
-  await ElectronBrowserViewFunctions.resizeBrowserView(browserViewId, browserViewX, browserViewHeight, browserViewWidth, browserViewHeight)
+  await ElectronBrowserViewFunctions.resizeBrowserView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
   await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
   const { title, canGoBack, canGoForward } = await ElectronBrowserViewFunctions.getStats(browserViewId)
