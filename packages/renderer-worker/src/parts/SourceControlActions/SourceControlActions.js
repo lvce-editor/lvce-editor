@@ -12,7 +12,7 @@ const UiStrings = {
   StageAll: 'Stage All',
   Stage: 'Stage',
   Unstage: 'Unstage',
-  UnstageAll: 'Unstage All',
+  UnstageAll: 'Unstage All Changes',
   Discard: 'Discard Changes',
 }
 
@@ -80,7 +80,7 @@ const getSourceControlActionsIndex = () => {
     {
       command: Commands.UnstageAll,
       label: UiStrings.UnstageAll,
-      icon: Icon.Discard,
+      icon: Icon.Remove,
     },
   ]
 }
