@@ -2022,8 +2022,8 @@ test('handleDrop - one file', async () => {
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', 'EditorText')
   expect(commands).toEqual([
     ['Viewlet.create', 'EditorText'],
-    ['Viewlet.setBounds', 'EditorText', 0, 35, 100, 65],
     ['Viewlet.addKeyBindings', 'EditorText', expect.anything()],
+    ['Viewlet.appendViewlet', 'Main', 'EditorText'],
     ['Viewlet.send', 'Main', 'stopHighlightDragOver'],
     ['Viewlet.send', 'Main', 'hideDragOverlay'],
   ])
