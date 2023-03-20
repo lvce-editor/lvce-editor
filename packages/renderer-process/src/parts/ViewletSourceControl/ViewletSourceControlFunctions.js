@@ -31,6 +31,13 @@ export const handleClick = (index) => {
 /**
  * @param {number} index
  */
+export const handleButtonClick = (index) => {
+  RendererWorker.send('Source Control.handleButtonClick', index)
+}
+
+/**
+ * @param {number} index
+ */
 export const handleClickAdd = (index) => {
   RendererWorker.send('Source Control.handleClickAdd', index)
 }

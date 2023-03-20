@@ -7,29 +7,28 @@ export const handleFocus = () => {
   Focus.setFocus('sourceControlInput')
 }
 
-const getButtonFunctionName = (title) => {
-  switch (title) {
-    case 'Add':
-      return ViewletSourceControlFunctions.handleClickAdd
-    case 'Restore':
-      return ViewletSourceControlFunctions.handleClickRestore
-    case 'Open File':
-      return ViewletSourceControlFunctions.handleClickOpenFile
-    default:
-      throw new Error(`unsupported button ${title}`)
+const getButtonIndex = ($Node) => {
+  let index = -1
+  while ($Node) {
+    if ($Node.className !== 'SourceControlButton') {
+      break
+    }
+    $Node = $Node.previousElementSibling
+    index++
   }
+  return index
 }
 
 export const handleClick = (event) => {
   const { target } = event
+  if (target.className === 'SourceControlButton') {
+    const index = getButtonIndex(target)
+    ViewletSourceControlFunctions.handleButtonClick(index)
+    return
+  }
   const $Parent = target.closest('.SourceControlItems')
   const index = findIndex($Parent, target)
   if (index === -1) {
-    return
-  }
-  if (target.className === 'SourceControlButton') {
-    const fn = getButtonFunctionName(target.title)
-    fn(index)
     return
   }
   ViewletSourceControlFunctions.handleClick(index)

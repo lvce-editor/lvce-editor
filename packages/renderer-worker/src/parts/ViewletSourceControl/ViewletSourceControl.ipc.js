@@ -6,9 +6,7 @@ export const name = 'Source Control'
 export const Commands = {
   acceptInput: ViewletSourceControl.acceptInput,
   handleClick: ViewletSourceControl.handleClick,
-  handleClickAdd: ViewletSourceControl.handleClickAdd,
-  handleClickDiscard: ViewletSourceControl.handleClickDiscard,
-  handleClickRestore: ViewletSourceControl.handleClickRestore,
+  handleButtonClick: ViewletSourceControl.handleButtonClick,
   handleInput: ViewletSourceControl.handleInput,
   handleMouseOver: ViewletSourceControl.handleMouseOver,
   handleMouseOut: ViewletSourceControl.handleMouseOut,
