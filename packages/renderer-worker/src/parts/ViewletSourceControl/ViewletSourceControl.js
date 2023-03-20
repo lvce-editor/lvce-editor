@@ -1,25 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
-import * as ExtensionHostCommand from '../ExtensionHost/ExtensionHostCommands.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as GetProtocol from '../GetProtocol/GetProtocol.js'
-import * as Icon from '../Icon/Icon.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Logger from '../Logger/Logger.js'
 import * as SourceControl from '../SourceControl/SourceControl.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
-import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  Add: 'Add',
-  Restore: 'Restore',
-  OpenFile: 'Open File',
-  Changes: 'Changes',
-}
 
 export const create = () => {
   return {
@@ -66,93 +51,6 @@ export const acceptInput = async (state) => {
   }
 }
 
-const getGroups = async (enabledProviderIds) => {
-  const allGroups = []
-  for (const providerId of enabledProviderIds) {
-    const groups = await SourceControl.getGroups(providerId)
-    allGroups.push(...groups)
-  }
-  return {
-    allGroups,
-    gitRoot: '',
-  }
-}
-
-const getDisplayItemsGroup = (group, isExpanded) => {
-  const displayItems = []
-  const { id, label, items } = group
-  if (!items) {
-    throw new Error(`Source control group is missing an items property`)
-  }
-  const length = items.length
-  const type = isExpanded ? 'directory-expanded' : 'directory'
-  const icon = isExpanded ? Icon.ChevronDown : Icon.ChevronRight
-  if (length > 0) {
-    displayItems.push({
-      file: '',
-      label: label,
-      detail: '',
-      posInSet: 1,
-      setSize: 1,
-      icon,
-      decorationIcon: '',
-      decorationIconTitle: '',
-      decorationStrikeThrough: false,
-      type,
-      badgeCount: length,
-      groupId: id,
-    })
-  }
-  if (isExpanded) {
-    for (let i = 0; i < length; i++) {
-      const item = items[i]
-      const baseName = Workspace.pathBaseName(item.file)
-      const folderName = item.file.slice(0, -baseName.length - 1)
-      displayItems.push({
-        file: item.file,
-        label: baseName,
-        detail: folderName,
-        posInSet: i + 1,
-        setSize: length,
-        icon: IconTheme.getFileIcon({ name: item.file }),
-        decorationIcon: item.icon,
-        decorationIconTitle: item.iconTitle,
-        decorationStrikeThrough: item.strikeThrough,
-        type: 'file',
-        badgeCount: 0,
-        groupId: id,
-      })
-    }
-  }
-  return displayItems
-}
-
-const getDisplayItems = (allGroups, isExpanded) => {
-  const displayItems = []
-  for (const group of allGroups) {
-    const groupDisplayItems = getDisplayItemsGroup(group, isExpanded)
-    displayItems.push(...groupDisplayItems)
-  }
-  return displayItems
-}
-
-export const loadContent = async (state) => {
-  const root = Workspace.state.workspacePath
-  const scheme = GetProtocol.getProtocol(root)
-  const enabledProviderIds = await SourceControl.getEnabledProviderIds(scheme, root)
-  const { allGroups, gitRoot } = await getGroups(enabledProviderIds)
-  const isExpanded = true
-  const displayItems = getDisplayItems(allGroups, isExpanded)
-  return {
-    ...state,
-    allGroups,
-    gitRoot,
-    displayItems,
-    enabledProviderIds,
-    isExpanded,
-  }
-}
-
 const updateIcon = (displayItem) => {
   if (displayItem.type === 'file') {
     return {
@@ -174,52 +72,6 @@ export const updateIcons = (state) => {
 
 export const handleIconThemeChange = (state) => {
   return updateIcons(state)
-}
-
-const handleClickFile = async (state, item) => {
-  const absolutePath = `${state.gitRoot}/${item.file}`
-  // TODO handle error
-  const [fileBefore, fileNow] = await Promise.all([SourceControl.getFileBefore(item.file), FileSystem.readFile(absolutePath)])
-  const content = `before:\n${fileBefore}\n\n\nnow:\n${fileNow}`
-  return state
-}
-
-const handleClickDirectory = (state, item) => {
-  const { allGroups } = state
-  const isExpanded = true
-  const displayItems = getDisplayItems(allGroups, isExpanded)
-  return {
-    ...state,
-    displayItems,
-    isExpanded,
-  }
-}
-const handleClickDirectoryExpanded = (state, item) => {
-  const { allGroups } = state
-  const isExpanded = false
-  const displayItems = getDisplayItems(allGroups, isExpanded)
-  return {
-    ...state,
-    displayItems,
-    isExpanded,
-  }
-}
-
-export const handleClick = async (state, index) => {
-  const { displayItems } = state
-  const item = displayItems[index]
-  console.log('type', item.type)
-  switch (item.type) {
-    case 'directory':
-      return handleClickDirectory(state)
-    case 'directory-expanded':
-      return handleClickDirectoryExpanded(state)
-    case 'file':
-      return handleClickFile(state, item)
-    default:
-      console.warn(`unknown item type: ${item.type}`)
-      return state
-  }
 }
 
 export const handleMouseOver = async (state, index) => {
@@ -248,18 +100,6 @@ export const handleMouseOut = (state, index) => {
     }
   }
   return state
-}
-
-export const handleButtonClick = async (state, clickedIndex) => {
-  const { buttonIndex, buttons, displayItems } = state
-  const button = buttons[clickedIndex]
-  const item = displayItems[buttonIndex]
-  if (!button) {
-    return
-  }
-  await ExtensionHostCommand.executeCommand(button.command, item.file)
-  const newState = await loadContent(state)
-  return newState
 }
 
 export const hasFunctionalResize = true
