@@ -1,7 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
-import * as Logger from '../Logger/Logger.js'
-import * as SourceControl from '../SourceControl/SourceControl.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
@@ -34,20 +32,6 @@ export const handleInput = (state, text) => {
   return {
     ...state,
     inputValue: text,
-  }
-}
-
-export const acceptInput = async (state) => {
-  const { inputValue, enabledProviderIds } = state
-  if (enabledProviderIds.length === 0) {
-    Logger.info(`[ViewletSourceControl] no source control provider found`)
-    return state
-  }
-  const providerId = enabledProviderIds[0]
-  await SourceControl.acceptInput(providerId, inputValue)
-  return {
-    ...state,
-    inputValue: '',
   }
 }
 
