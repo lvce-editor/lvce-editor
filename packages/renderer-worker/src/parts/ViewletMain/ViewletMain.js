@@ -238,6 +238,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       // TODO if the editor is already open, nothing needs to be done
       const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
       instance.show = false
+      instance.setBounds = false
       // @ts-ignore
       const commands = await ViewletManager.load(instance, focus, false, options)
       if (commands[0].includes(ViewletModuleId.Error)) {
@@ -269,6 +270,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   )
   // @ts-ignore
   instance.show = false
+  instance.setBounds = false
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
   if (commands[0].includes(ViewletModuleId.Error)) {
