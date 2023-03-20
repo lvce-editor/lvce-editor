@@ -33,6 +33,7 @@ export const create = () => {
     buttonIndex: -1,
     enabledProviderIds: [],
     isExpanded: true,
+    buttons: [],
   }
 }
 
@@ -292,7 +293,7 @@ const renderChangedFiles = {
 
 const renderButtons = {
   isEqual(oldState, newState) {
-    return oldState.buttonIndex === newState.buttonIndex && oldState.buttons === newState.buttons
+    return oldState.displayItems === newState.displayItems && oldState.buttonIndex === newState.buttonIndex && oldState.buttons === newState.buttons
   },
   apply(oldState, newState) {
     return [/* method */ 'setItemButtons', /* oldIndex */ oldState.buttonIndex, /* index */ newState.buttonIndex, /* buttons */ newState.buttons]
