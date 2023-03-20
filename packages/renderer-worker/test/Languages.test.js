@@ -13,20 +13,19 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 })
 
 const Languages = await import('../src/parts/Languages/Languages.js')
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const LanguagesState = await import('../src/parts/LanguagesState/LanguagesState.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 beforeEach(() => {
-  Languages.state.loaded = false
-  Languages.state.fileNameMap = Object.create(null)
-  Languages.state.extensionMap = Object.create(null)
-  Languages.state.tokenizerMap = Object.create(null)
-  Languages.state.firstLines = []
+  LanguagesState.state.loaded = false
+  LanguagesState.state.fileNameMap = Object.create(null)
+  LanguagesState.state.extensionMap = Object.create(null)
+  LanguagesState.state.tokenizerMap = Object.create(null)
+  LanguagesState.state.firstLines = []
 })
 
 test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {
-  Languages.state.loaded = true
+  LanguagesState.setLoaded(true)
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
@@ -67,9 +66,7 @@ test('getLanguageConfiguration - error - languages must be loaded before request
     }
   })
   await expect(Languages.getLanguageConfiguration('html')).rejects.toThrowError(
-    new Error(
-      'languages must be loaded before requesting language configuration'
-    )
+    new Error('languages must be loaded before requesting language configuration')
   )
 })
 
@@ -90,9 +87,7 @@ test.skip('hydrate', async () => {
   })
   await Languages.hydrate()
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ExtensionHost.getLanguages'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionHost.getLanguages')
 })
 
 test('getLanguageId - by extension', async () => {
@@ -145,7 +140,7 @@ test("addLanguage - don't override tokenize path", async () => {
       id: 'html',
     },
   ])
-  expect(Languages.state.tokenizerMap['html']).toBe('src/tokenizeHtml.js')
+  expect(LanguagesState.getTokenizeFunctionPath('html')).toBe('src/tokenizeHtml.js')
 })
 
 // TODO this could be even more accurate with exact line numbers
@@ -168,17 +163,12 @@ test('addLanguage - error - lower case filename property', () => {
   6 | }
 `
   )
-  expect(Languages.state.fileNameMap).toEqual({ test: 'test' })
+  expect(LanguagesState.state.fileNameMap).toEqual({ test: 'test' })
 })
 
 test('getLanguageByFirstLine', () => {
-  Languages.state.firstLines = [
-    {
-      regex: '^#!.*\\bnode',
-      languageId: 'javascript',
-    },
-  ]
-  expect(Languages.getLanguageIdByFirstLine('#!/usr/bin/env node')).toBe(
-    'javascript'
-  )
+  const regex = '^#!.*\\bnode'
+  const languageId = 'javascript'
+  LanguagesState.addFirstLine(regex, languageId)
+  expect(Languages.getLanguageIdByFirstLine('#!/usr/bin/env node')).toBe('javascript')
 })
