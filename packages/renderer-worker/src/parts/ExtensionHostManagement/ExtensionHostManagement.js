@@ -95,6 +95,15 @@ const startSynching = async (extensionHost) => {
   await handleWorkspaceChange(Workspace.state.workspacePath, Workspace.isTest())
 }
 
+const actuallyActivateExtension = async (extensionHost, extension) => {
+  if (state.activatedExtensions.includes(extension.id)) {
+    return
+  }
+  state.activatedExtensions.push(extension.id)
+  // TODO tell extension host to activate extension
+  await extensionHost.ipc.invoke(ExtensionHostCommandType.ExtensionActivate, extension)
+}
+
 const actuallyActivateByEvent = async (event) => {
   // TODO should not query extensions multiple times
   const extensions = await ExtensionMeta.getExtensions()
@@ -119,12 +128,7 @@ const actuallyActivateByEvent = async (event) => {
     await startSynching(extensionHost)
     Assert.object(extensionHost)
     for (const extension of managerWithExtensions.toActivate) {
-      if (state.activatedExtensions.includes(extension.id)) {
-        return
-      }
-      state.activatedExtensions.push(extension.id)
-      // TODO tell extension host to activate extension
-      await extensionHost.ipc.invoke(ExtensionHostCommandType.ExtensionActivate, extension)
+      await actuallyActivateExtension(extensionHost, extension)
     }
     extensionHosts.push(extensionHost)
   }
