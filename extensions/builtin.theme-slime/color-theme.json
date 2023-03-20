@@ -6,8 +6,8 @@
     "ActivityBarActiveBackground": "#1f2727",
     "ActivityBarActiveForeground": "rgb(135, 143, 140)",
 
-    "BadgeBackground": "purple",
-    "BadgeForeground": "#fff",
+    "BadgeBackground": "#90599b",
+    "BadgeForeground": "#eeeeee",
 
     "EditorBackGround": "#1e2324",
     "EditorScrollBarBackground": "rgba(57, 71, 71, 0.6)",
