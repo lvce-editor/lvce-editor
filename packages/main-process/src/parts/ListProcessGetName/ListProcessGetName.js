@@ -68,5 +68,8 @@ exports.getName = (pid, cmd, rootPid) => {
   if (cmd.includes('typescript/lib/tsserver.js')) {
     return 'tsserver.js'
   }
+  if (cmd.includes('extensionHostHelperProcessMain.js')) {
+    return 'extension-host-helper-process'
+  }
   return `<unknown> ${cmd}`
 }
