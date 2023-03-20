@@ -231,9 +231,6 @@ export const handleMouseOver = async (state, index) => {
     return state
   }
   const actions = await SourceControlActions.getSourceControlActions(providerId, item.groupId, item.type)
-  if (item.type === 'directory' || item.type === 'directory-expanded') {
-    return state
-  }
   return {
     ...state,
     buttonIndex: index,
