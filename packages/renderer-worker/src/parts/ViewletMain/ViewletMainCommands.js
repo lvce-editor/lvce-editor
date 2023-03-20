@@ -22,6 +22,9 @@ export const Commands = {
   handleTabClick: ViewletMain.handleTabClick,
   handleTabContextMenu: ViewletMain.handleTabContextMenu,
   openBackgroundTab: ViewletMain.openBackgroundTab,
-  openUri: ViewletMain.openUri,
   save: ViewletMain.save,
+}
+
+export const CommandsWithSideEffects = {
+  openUri: ViewletMain.openUri,
 }

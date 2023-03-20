@@ -237,10 +237,13 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       console.log('found existing editor')
       // TODO if the editor is already open, nothing needs to be done
       const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
+      instance.show = false
       // @ts-ignore
-
-      await ViewletManager.load(instance, focus, false, options)
-      return state
+      const commands = await ViewletManager.load(instance, focus, false, options)
+      return {
+        newState: state,
+        commands,
+      }
     }
   }
 
@@ -260,14 +263,22 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     /* oldActiveIndex */ oldActiveIndex
   )
   // @ts-ignore
-  await ViewletManager.load(instance, focus)
+  instance.show = false
+  // @ts-ignore
+  const commands = await ViewletManager.load(instance, focus)
   if (!ViewletStates.hasInstance(id)) {
-    return state
+    return {
+      newState: state,
+      commands,
+    }
   }
   const actualUri = ViewletStates.getState(id).uri
   const index = state.editors.findIndex((editor) => editor.uri === temporaryUri)
   state.editors[index].uri = actualUri
-  return state
+  return {
+    newState: state,
+    commands,
+  }
 }
 
 export const openBackgroundTab = async (state, initialUri, props) => {
