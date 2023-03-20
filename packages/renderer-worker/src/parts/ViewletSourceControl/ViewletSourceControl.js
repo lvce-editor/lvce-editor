@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as Icon from '../Icon/Icon.js'
@@ -221,7 +222,10 @@ export const handleClick = async (state, index) => {
 }
 
 export const handleMouseOver = async (state, index) => {
-  const { displayItems, providerId } = state
+  const { displayItems, providerId, buttonIndex } = state
+  if (index === buttonIndex) {
+    return state
+  }
   const item = displayItems[index]
   if (!item) {
     return state
@@ -245,6 +249,17 @@ export const handleMouseOut = (state, index) => {
       buttons: [],
     }
   }
+  return state
+}
+
+export const handleButtonClick = async (state, clickedIndex) => {
+  const { buttonIndex, buttons, displayItems } = state
+  const button = buttons[clickedIndex]
+  const item = displayItems[buttonIndex]
+  if (!button) {
+    return
+  }
+  await Command.execute(button.command, item.file)
   return state
 }
 
