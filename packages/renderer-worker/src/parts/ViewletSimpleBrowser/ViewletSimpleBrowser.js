@@ -7,7 +7,7 @@ import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/E
 import * as ElectronBrowserViewSuggestions from '../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
-import * as KeyBindings from '../KeyBindings/KeyBindings.js'
+import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
@@ -60,7 +60,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   const iframeSrc = getUrlFromSavedState(savedState)
   // TODO since browser view is not visible at this point
   // it is not necessary to load keybindings for it
-  const keyBindings = await KeyBindings.getKeyBindings()
+  const keyBindings = await KeyBindingsInitial.getKeyBindings()
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(0)
   await ElectronBrowserViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
@@ -87,7 +87,7 @@ export const loadContent = async (state, savedState) => {
   const id = getId(idPart)
   const iframeSrc = getUrlFromSavedState(savedState)
   // TODO load keybindings in parallel with creating browserview
-  const keyBindings = await KeyBindings.getKeyBindings()
+  const keyBindings = await KeyBindingsInitial.getKeyBindings()
   const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
   const browserViewX = x
   const browserViewY = y + headerHeight
