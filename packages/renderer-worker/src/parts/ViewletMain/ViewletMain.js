@@ -240,6 +240,11 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       instance.show = false
       // @ts-ignore
       const commands = await ViewletManager.load(instance, focus, false, options)
+      if (commands[0].includes(ViewletModuleId.Error)) {
+        commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
+      } else {
+        commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+      }
       return {
         newState: state,
         commands,
@@ -266,6 +271,11 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   instance.show = false
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
+  if (commands[0].includes(ViewletModuleId.Error)) {
+    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
+  } else {
+    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+  }
   if (!ViewletStates.hasInstance(id)) {
     return {
       newState: state,
@@ -384,6 +394,7 @@ export const handleDrop = async (state, files) => {
     if (file.path) {
       const result = await openUri(state, file.path)
       allCommands.push(...result.commands)
+
       newState = result.newState
     } else {
       // TODO
