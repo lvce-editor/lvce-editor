@@ -3,8 +3,10 @@ import * as ExtensionHostCommandType from '../src/parts/ExtensionHostCommandType
 
 beforeEach(() => {
   jest.resetModules()
+  jest.resetAllMocks()
   ExtensionHostManagement.state.extensionHosts = []
   ExtensionHostManagement.state.cachedActivationEvents = Object.create(null)
+  ExtensionHostManagement.state.activatedExtensions = []
 })
 
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
@@ -153,7 +155,51 @@ test('activateByEvent - twice - should activate extension only once', async () =
   })
   await ExtensionHostManagement.activateByEvent('onLanguage:test')
   await ExtensionHostManagement.activateByEvent('onLanguage:test')
-  expect(ExtensionHostManagementShared.startExtensionHost).toHaveBeenCalledTimes(2)
+  expect(ExtensionHostManagementShared.startExtensionHost).toHaveBeenCalledTimes(1)
+  expect(ipc.invoke).toHaveBeenCalledTimes(2)
+  expect(ipc.invoke).toHaveBeenNthCalledWith(1, 'Workspace.setWorkspacePath', '')
+  expect(ipc.invoke).toHaveBeenNthCalledWith(2, ExtensionHostCommandType.ExtensionActivate, { main: './main.js' })
+})
+
+test('activateByEvent - should activate extension only once - race condition', async () => {
+  // @ts-ignore
+  Languages.hasLoaded.mockImplementation(() => {
+    return true
+  })
+  // @ts-ignore
+  ExtensionMeta.getExtensions.mockImplementation(() => {})
+  // @ts-ignore
+  ExtensionMeta.organizeExtensions.mockImplementation(() => {
+    return {
+      resolved: [],
+      rejected: [],
+    }
+  })
+  // @ts-ignore
+  ExtensionMeta.handleRejectedExtensions.mockImplementation(() => {})
+  // @ts-ignore
+  ExtensionMeta.filterByMatchingEvent.mockImplementation(() => {
+    return [
+      {
+        main: './main.js',
+      },
+    ]
+  })
+  // @ts-ignore
+  ExtensionHostManagementNode.canActivate.mockImplementation(() => {
+    return true
+  })
+  const ipc = {
+    invoke: jest.fn(),
+  }
+  // @ts-ignore
+  ExtensionHostManagementShared.startExtensionHost.mockImplementation(() => {
+    return {
+      ipc,
+    }
+  })
+  await Promise.all([ExtensionHostManagement.activateByEvent('onLanguage:test'), ExtensionHostManagement.activateByEvent('onLanguage:test')])
+  expect(ExtensionHostManagementShared.startExtensionHost).toHaveBeenCalledTimes(1)
   expect(ipc.invoke).toHaveBeenCalledTimes(2)
   expect(ipc.invoke).toHaveBeenNthCalledWith(1, 'Workspace.setWorkspacePath', '')
   expect(ipc.invoke).toHaveBeenNthCalledWith(2, ExtensionHostCommandType.ExtensionActivate, { main: './main.js' })
