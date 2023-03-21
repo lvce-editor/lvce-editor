@@ -383,7 +383,7 @@ test('event - wheel', () => {
   // TODO mock platform module instead
   Platform.state.isMobileOrTablet = () => false
   const state = Editor.create()
-  state.$ScrollBarThumb.dispatchEvent(
+  state.$ScrollBarThumbVertical.dispatchEvent(
     new WheelEvent('wheel', {
       deltaX: 1,
       deltaY: 42,
@@ -398,7 +398,7 @@ test('event - wheel', () => {
 
 test('event - pointerdown - on scroll bar thumb', () => {
   const state = Editor.create()
-  const { $ScrollBarThumb } = state
+  const { $ScrollBarThumbVertical } = state
   const event = new PointerEvent('pointerdown', {
     bubbles: true,
     clientX: 10,
@@ -406,14 +406,14 @@ test('event - pointerdown - on scroll bar thumb', () => {
     pointerId: 0,
     button: MouseEventType.LeftClick,
   })
-  $ScrollBarThumb.dispatchEvent(event)
+  $ScrollBarThumbVertical.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleScrollBarPointerDown', 20)
 })
 
 test('event - pointermove after pointerdown - on scroll bar thumb', () => {
   const state = Editor.create()
-  const { $ScrollBarThumb } = state
+  const { $ScrollBarThumbVertical } = state
   const pointerDownEvent = new PointerEvent('pointerdown', {
     bubbles: true,
     clientX: 10,
@@ -421,7 +421,7 @@ test('event - pointermove after pointerdown - on scroll bar thumb', () => {
     pointerId: 0,
     button: MouseEventType.LeftClick,
   })
-  $ScrollBarThumb.dispatchEvent(pointerDownEvent)
+  $ScrollBarThumbVertical.dispatchEvent(pointerDownEvent)
   const pointerMoveEvent = new PointerEvent('pointermove', {
     bubbles: true,
     clientX: 30,
@@ -429,7 +429,7 @@ test('event - pointermove after pointerdown - on scroll bar thumb', () => {
     pointerId: 0,
     button: MouseEventType.LeftClick,
   })
-  $ScrollBarThumb.dispatchEvent(pointerMoveEvent)
+  $ScrollBarThumbVertical.dispatchEvent(pointerMoveEvent)
   expect(RendererWorker.send).toHaveBeenCalledTimes(2)
   expect(RendererWorker.send).toHaveBeenNthCalledWith(1, 'Editor.handleScrollBarPointerDown', 20)
   expect(RendererWorker.send).toHaveBeenNthCalledWith(2, 'Editor.handleScrollBarMove', 40)
@@ -443,7 +443,7 @@ test('event - pointerup after pointerdown - on scroll bar thumb', () => {
   const spy3 = jest.spyOn(HTMLElement.prototype, 'setPointerCapture')
   // @ts-ignore
   const spy4 = jest.spyOn(HTMLElement.prototype, 'releasePointerCapture')
-  const { $ScrollBarThumb } = state
+  const { $ScrollBarThumbVertical } = state
   const pointerDownEvent = new PointerEvent('pointerdown', {
     bubbles: true,
     clientX: 10,
@@ -451,7 +451,7 @@ test('event - pointerup after pointerdown - on scroll bar thumb', () => {
     pointerId: 0,
     button: MouseEventType.LeftClick,
   })
-  $ScrollBarThumb.dispatchEvent(pointerDownEvent)
+  $ScrollBarThumbVertical.dispatchEvent(pointerDownEvent)
   expect(spy1).toHaveBeenCalledTimes(2)
   expect(spy1).toHaveBeenNthCalledWith(1, 'pointermove', EditorEvents.handleScrollBarThumbPointerMove, DomEventOptions.Active)
   expect(spy1).toHaveBeenNthCalledWith(2, 'pointerup', EditorEvents.handleScrollBarPointerUp)
@@ -464,7 +464,7 @@ test('event - pointerup after pointerdown - on scroll bar thumb', () => {
     pointerId: 0,
     button: MouseEventType.LeftClick,
   })
-  $ScrollBarThumb.dispatchEvent(pointerUpEvent)
+  $ScrollBarThumbVertical.dispatchEvent(pointerUpEvent)
   expect(spy4).toHaveBeenCalledTimes(1)
   expect(spy4).toHaveBeenCalledWith(0)
   expect(spy2).toHaveBeenCalledTimes(2)
@@ -474,7 +474,7 @@ test('event - pointerup after pointerdown - on scroll bar thumb', () => {
 
 test('event - context menu - on scroll bar', () => {
   const state = Editor.create()
-  const { $ScrollBarThumb } = state
+  const { $ScrollBarThumbVertical } = state
   const event = new MouseEvent('contextmenu', {
     bubbles: true,
     cancelable: true,
@@ -482,7 +482,7 @@ test('event - context menu - on scroll bar', () => {
     clientY: 20,
     button: MouseEventType.LeftClick,
   })
-  $ScrollBarThumb.dispatchEvent(event)
+  $ScrollBarThumbVertical.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })

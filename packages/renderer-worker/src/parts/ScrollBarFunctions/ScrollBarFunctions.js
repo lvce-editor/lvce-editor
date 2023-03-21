@@ -5,11 +5,7 @@
  * @param {number} minimumSliderSize
  * @returns
  */
-export const getScrollBarHeight = (
-  height,
-  contentHeight,
-  minimumSliderSize
-) => {
+export const getScrollBarHeight = (height, contentHeight, minimumSliderSize) => {
   if (height > contentHeight) {
     return 0
   }
@@ -19,6 +15,13 @@ export const getScrollBarHeight = (
 export const getScrollBarY = (deltaY, finalDeltaY, height, scrollBarHeight) => {
   const scrollBarY = (deltaY / finalDeltaY) * (height - scrollBarHeight)
   return scrollBarY
+}
+
+export const getScrollBarWidth = (width, longestLineWidth) => {
+  if (width > longestLineWidth) {
+    return 0
+  }
+  return width ** 2 / longestLineWidth
 }
 
 export const getNewDeltaPercent = (height, scrollBarHeight, relativeY) => {

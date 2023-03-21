@@ -181,7 +181,7 @@ export const handleScrollBarPointerUp = (event) => {
  *
  * @param {PointerEvent} event
  */
-export const handleScrollBarPointerDown = (event) => {
+export const handleScrollBarVerticalPointerDown = (event) => {
   const { target, pointerId, clientY } = event
   // @ts-ignore
   target.setPointerCapture(pointerId)

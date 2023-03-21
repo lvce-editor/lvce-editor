@@ -1,4 +1,6 @@
-.ScrollBarThumb {
+.ScrollBarThumb,
+.ScrollBarThumbVertical,
+.ScrollBarThumbHorizontal {
   width: 100%;
   /* height: 40px; */
   position: absolute;
@@ -6,7 +8,14 @@
   background: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6));
 }
 
+.ScrollBarThumbHorizontal {
+  height: 100%;
+  width: auto;
+}
+
 .ScrollBar,
+.ScrollBarVertical,
+.ScrollBarHorizontal,
 .ScrollBarSmall {
   position: absolute;
   right: 0;
@@ -15,6 +24,13 @@
   bottom: 0;
   contain: strict;
   cursor: default;
+}
+
+.ScrollBarHorizontal {
+  left: 0;
+  top: auto;
+  height: 14px;
+  width: auto;
 }
 
 .ScrollBarSmall {

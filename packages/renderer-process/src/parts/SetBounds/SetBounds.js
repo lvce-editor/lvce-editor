@@ -10,6 +10,10 @@ export const setYAndHeight = ($Element, y, height) => {
   $Element.style.height = `${height}px`
 }
 
+export const setWidth = ($Element, width) => {
+  $Element.style.width = `${width}px`
+}
+
 export const setTop = ($Element, top) => {
   $Element.style.top = `${top}px`
 }
