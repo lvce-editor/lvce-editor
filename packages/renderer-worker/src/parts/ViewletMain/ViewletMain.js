@@ -237,10 +237,19 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       console.log('found existing editor')
       // TODO if the editor is already open, nothing needs to be done
       const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
+      instance.show = false
+      instance.setBounds = false
       // @ts-ignore
-
-      await ViewletManager.load(instance, focus, false, options)
-      return state
+      const commands = await ViewletManager.load(instance, focus, false, options)
+      if (commands[0].includes(ViewletModuleId.Error)) {
+        commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
+      } else {
+        commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+      }
+      return {
+        newState: state,
+        commands,
+      }
     }
   }
 
@@ -260,14 +269,31 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     /* oldActiveIndex */ oldActiveIndex
   )
   // @ts-ignore
-  await ViewletManager.load(instance, focus)
+  instance.show = false
+  instance.setBounds = false
+  // @ts-ignore
+  const commands = await ViewletManager.load(instance, focus)
+  if (commands[0].includes(ViewletModuleId.Error)) {
+    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
+  } else {
+    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+    if (focus) {
+      commands.push(['Viewlet.send', ViewletModuleId.EditorText, 'focus'])
+    }
+  }
   if (!ViewletStates.hasInstance(id)) {
-    return state
+    return {
+      newState: state,
+      commands,
+    }
   }
   const actualUri = ViewletStates.getState(id).uri
   const index = state.editors.findIndex((editor) => editor.uri === temporaryUri)
   state.editors[index].uri = actualUri
-  return state
+  return {
+    newState: state,
+    commands,
+  }
 }
 
 export const openBackgroundTab = async (state, initialUri, props) => {
@@ -367,17 +393,25 @@ export const saveWithoutFormatting = async () => {
 }
 
 export const handleDrop = async (state, files) => {
+  const allCommands = []
+  let newState = state
   for (const file of files) {
     if (file.path) {
-      await openUri(state, file.path)
+      const result = await openUri(state, file.path)
+      allCommands.push(...result.commands)
+
+      newState = result.newState
     } else {
       // TODO
     }
     console.log(file)
   }
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
-  return state
+  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver'])
+  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay'])
+  return {
+    newState,
+    commands: allCommands,
+  }
 }
 
 export const handleDropFilePath = async (state, filePath) => {

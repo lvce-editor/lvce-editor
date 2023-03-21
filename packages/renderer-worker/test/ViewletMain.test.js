@@ -2008,7 +2008,7 @@ test('handleDrop - one file', async () => {
       path: '/test/dropped-file.txt',
     },
   ]
-  await ViewletMain.handleDrop(state, fileList)
+  const { commands } = await ViewletMain.handleDrop(state, fileList)
   expect(state.editors).toEqual([
     {
       uri: '/test/file-1.txt',
@@ -2017,12 +2017,15 @@ test('handleDrop - one file', async () => {
       uri: undefined,
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(7)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', 'Main', 'openViewlet', 'dropped-file.txt', '/test/dropped-file.txt', 0)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', 'EditorText')
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, 'Viewlet.loadModule', 'EditorText')
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(4, 'Viewlet.sendMultiple', [['Viewlet.create', 'EditorText'], expect.anything()])
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(5, 'Viewlet.appendViewlet', 'Main', 'EditorText', true)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(6, 'Viewlet.send', 'Main', 'stopHighlightDragOver')
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(7, 'Viewlet.send', 'Main', 'hideDragOverlay')
+  expect(commands).toEqual([
+    ['Viewlet.create', 'EditorText'],
+    ['Viewlet.addKeyBindings', 'EditorText', expect.anything()],
+    ['Viewlet.appendViewlet', 'Main', 'EditorText'],
+    ['Viewlet.send', 'EditorText', 'focus'],
+    ['Viewlet.send', 'Main', 'stopHighlightDragOver'],
+    ['Viewlet.send', 'Main', 'hideDragOverlay'],
+  ])
 })

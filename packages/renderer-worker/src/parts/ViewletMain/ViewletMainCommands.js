@@ -17,11 +17,14 @@ export const Commands = {
   focusPrevious: ViewletMain.focusPrevious,
   handleDragEnd: ViewletMain.handleDragEnd,
   handleDragOver: ViewletMain.handleDragOver,
-  handleDrop: ViewletMain.handleDrop,
   handleDropFilePath: ViewletMain.handleDropFilePath,
   handleTabClick: ViewletMain.handleTabClick,
   handleTabContextMenu: ViewletMain.handleTabContextMenu,
   openBackgroundTab: ViewletMain.openBackgroundTab,
-  openUri: ViewletMain.openUri,
   save: ViewletMain.save,
+}
+
+export const CommandsWithSideEffects = {
+  openUri: ViewletMain.openUri,
+  handleDrop: ViewletMain.handleDrop,
 }

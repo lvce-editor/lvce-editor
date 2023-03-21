@@ -365,7 +365,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         } catch (error) {
           await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
           extraCommands.push([kCreate, ViewletModuleId.Error, viewlet.id])
-          extraCommands.push([kSetBounds, ViewletModuleId.Error, child.x, child.y, child.width, child.height])
+          // @ts-ignore
+          if (viewlet.setBounds !== false) {
+            extraCommands.push([kSetBounds, ViewletModuleId.Error, child.x, child.y, child.width, child.height])
+          }
           extraCommands.push(['Viewlet.send', /* id */ ViewletModuleId.Error, 'setMessage', /* message */ `${error}`])
           extraCommands.push([kAppend, viewlet.id, ViewletModuleId.Error])
         }
@@ -483,7 +486,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       Assert.string(parentId)
       await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
       commands.push([kCreate, ViewletModuleId.Error, parentId])
-      commands.push([kSetBounds, ViewletModuleId.Error, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
+      // @ts-ignore
+      if (viewlet.setBounds !== false) {
+        commands.push([kSetBounds, ViewletModuleId.Error, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
+      }
       commands.push(['Viewlet.send', /* id */ ViewletModuleId.Error, 'setMessage', /* message */ `${error}`])
       commands.push([kAppend, parentId, ViewletModuleId.Error])
       return commands
