@@ -5,6 +5,10 @@ export const setBounds = ($Element, x, y, width, height) => {
   $Element.style.height = `${height}px`
 }
 
+export const setX = ($Element, x) => {
+  $Element.style.translate = `${x}px 0`
+}
+
 export const setYAndHeight = ($Element, y, height) => {
   $Element.style.translate = `0 ${y}px`
   $Element.style.height = `${height}px`

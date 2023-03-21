@@ -1,15 +1,15 @@
 /**
  *
- * @param {number} height
- * @param {number} contentHeight
+ * @param {number} size
+ * @param {number} contentSize
  * @param {number} minimumSliderSize
  * @returns
  */
-export const getScrollBarHeight = (height, contentHeight, minimumSliderSize) => {
-  if (height > contentHeight) {
+export const getScrollBarSize = (size, contentSize, minimumSliderSize) => {
+  if (size > contentSize) {
     return 0
   }
-  return Math.max(Math.round(height ** 2 / contentHeight), minimumSliderSize)
+  return Math.max(Math.round(size ** 2 / contentSize), minimumSliderSize)
 }
 
 export const getScrollBarOffset = (delta, finalDelta, size, scrollBarSize) => {

@@ -34,7 +34,7 @@ export const loadContent = async (state) => {
   const total = Math.max(linesLeft.length, linesRight.length)
   const contentHeight = total * itemHeight
 
-  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(height, contentHeight, minimumSliderSize)
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(height, contentHeight, minimumSliderSize)
 
   const numberOfVisible = Math.ceil(height / itemHeight)
   const maxLineY = Math.min(numberOfVisible, total)
