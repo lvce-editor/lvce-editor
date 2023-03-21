@@ -16,10 +16,10 @@ afterEach(() => {
 
 test('setPosition', () => {
   const state = {
-    $ScrollBarThumb: document.createElement('div'),
+    $ScrollBarThumbVertical: document.createElement('div'),
   }
   LayerScrollBar.setPosition(state, 50)
-  expect(state.$ScrollBarThumb.style.translate).toBe('0 50px')
+  expect(state.$ScrollBarThumbVertical.style.translate).toBe('0 50px')
 })
 
 test('setDiagnostics - renderScrollBarDiagnosticsLess', () => {
