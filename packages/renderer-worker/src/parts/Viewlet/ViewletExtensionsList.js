@@ -49,7 +49,7 @@ export const loadContent = async (state) => {
 
   const listHeight = state.height
   const contentHeight = viewObjects.length * ITEM_HEIGHT
-  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(state.height, contentHeight, MINIMUM_SLIDER_SIZE)
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(state.height, contentHeight, MINIMUM_SLIDER_SIZE)
 
   return {
     ...state,

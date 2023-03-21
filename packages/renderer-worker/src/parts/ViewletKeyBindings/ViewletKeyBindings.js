@@ -64,7 +64,7 @@ export const loadContent = async (state, savedState) => {
   const filteredKeyBindings = FilterKeyBindings.getFilteredKeyBindings(parsedKeyBindings, savedValue)
   const listHeight = height - searchHeaderHeight - tableHeaderHeight
   const contentHeight = 2121
-  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(listHeight, contentHeight, 10)
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(listHeight, contentHeight, 10)
   const maxLineY = Math.min(filteredKeyBindings.length, maxVisibleItems)
   const finalDeltaY = Math.max(contentHeight - listHeight, 0)
   const contentWidth = width - contentPadding

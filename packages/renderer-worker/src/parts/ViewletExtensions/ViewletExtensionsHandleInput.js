@@ -28,7 +28,7 @@ export const handleInput = async (state, value) => {
     const listHeight = getListHeight(state)
     const total = items.length
     const contentHeight = total * itemHeight
-    const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(height, contentHeight, minimumSliderSize)
+    const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(height, contentHeight, minimumSliderSize)
     const numberOfVisible = Math.ceil(listHeight / itemHeight)
     const maxLineY = Math.min(numberOfVisible, total)
     const finalDeltaY = Math.max(contentHeight - listHeight, 0)

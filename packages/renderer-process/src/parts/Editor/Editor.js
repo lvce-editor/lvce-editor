@@ -137,9 +137,7 @@ export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
   LayerScrollBar.setPosition(state, scrollBarY, scrollBarHeight)
 }
 
-export const setScrollBarHorizontal = (state, scrollBarX, scrollBarWidth) => {
-  LayerScrollBar.setScrollBarHorizontal(state, scrollBarX, scrollBarWidth)
-}
+export const setScrollBarHorizontal = LayerScrollBar.setScrollBarHorizontal
 
 export const renderCursors = (state, cursorInfos) => {
   LayerCursor.setCursors(state, cursorInfos)

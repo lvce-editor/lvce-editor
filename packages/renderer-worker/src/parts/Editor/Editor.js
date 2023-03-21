@@ -348,7 +348,7 @@ export const setText = (editor, text) => {
   const finalY = Math.max(total - numberOfVisibleLines, 0)
   const finalDeltaY = finalY * itemHeight
   const contentHeight = lines.length * editor.rowHeight
-  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(editor.height, contentHeight, MINIMUM_SLIDER_SIZE)
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(editor.height, contentHeight, MINIMUM_SLIDER_SIZE)
   return {
     ...editor,
     lines,
