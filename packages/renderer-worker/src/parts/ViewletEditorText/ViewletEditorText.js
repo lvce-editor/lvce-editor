@@ -140,7 +140,6 @@ export const loadContent = async (state, savedState) => {
     newState2.fontFamily,
     newState2.letterSpacing
   )
-  console.log({ longestLineWidth })
   return {
     ...newState2,
     rowHeight,

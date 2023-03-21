@@ -33,6 +33,7 @@ export const create = (id, uri, languageId, content) => {
     selections: new Uint32Array([0, 0, 0, 0]),
     id,
     tokenizer,
+    deltaX: 0,
     deltaY: 0,
     minLineY: 0,
     maxLineY: 0,
@@ -46,6 +47,7 @@ export const create = (id, uri, languageId, content) => {
     rowHeight: 0,
     fontSize: 15, // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
     letterSpacing: 0,
+    scrollBarWidth: 0,
     scrollBarHeight: 0,
     undoStack: [],
     // TODO maybe put these into separate tokenization module
@@ -55,9 +57,14 @@ export const create = (id, uri, languageId, content) => {
     decorations: [],
     focused: false,
     /**
-     * Offset at which scrollbar thumb has been clicked
+     * Offset at which the vertical scrollbar thumb has been clicked
+     * TODO: rename this to handleOffsetY
      */
     handleOffset: 0,
+    /**
+     * Offset at which the horizontal scrollbar thumb has been clicked
+     */
+    handleOffsetX: 0,
     itemHeight: 20,
     fontFamily: '',
     fontWeight: 400,
@@ -390,11 +397,11 @@ const renderScrollBarY = {
 
 const renderScrollBarX = {
   isEqual(oldState, newState) {
-    return oldState.longestLineWidth === newState.longestLineWidth
+    return oldState.longestLineWidth === newState.longestLineWidth && oldState.deltaX === newState.deltaX
   },
   apply(oldState, newState) {
     const scrollBarWidth = ScrollBarFunctions.getScrollBarWidth(newState.width, newState.longestLineWidth)
-    return [/* method */ 'setScrollBarHorizontal', /* scrollBarWidth */ scrollBarWidth]
+    return [/* method */ 'setScrollBarHorizontal', /* scrollBarX */ newState.deltaX, /* scrollBarWidth */ scrollBarWidth]
   },
 }
 
