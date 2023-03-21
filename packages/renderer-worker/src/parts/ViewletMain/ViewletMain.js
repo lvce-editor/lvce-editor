@@ -277,6 +277,9 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
   } else {
     commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+    if (focus) {
+      commands.push(['Viewlet.send', ViewletModuleId.EditorText, 'focus'])
+    }
   }
   if (!ViewletStates.hasInstance(id)) {
     return {
