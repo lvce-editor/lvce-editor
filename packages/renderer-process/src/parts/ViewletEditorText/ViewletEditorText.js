@@ -15,6 +15,8 @@ export const handleError = (state, error) => {
 
 export const setScrollBar = Editor.setScrollBar
 
+export const setScrollBarHorizontal = Editor.setScrollBarHorizontal
+
 export const highlightAsLink = (state, relativeY, tokenIndex) => {
   const $Row = state.$LayerText.children[relativeY]
   if (!$Row) {

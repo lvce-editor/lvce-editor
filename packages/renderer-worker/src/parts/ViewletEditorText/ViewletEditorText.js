@@ -9,6 +9,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Languages from '../Languages/Languages.js'
+import * as MeasureLongestLineWidth from '../MeasureLongestLineWidth/MeasureLongestLineWidth.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
@@ -132,6 +133,14 @@ export const loadContent = async (state, savedState) => {
     const fontName = unquoteString(fontFamily)
     await Font.load(fontName, `url('${assetDir}/fonts/FiraCode-VariableFont.ttf')`)
   }
+  const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(
+    newState2.lines,
+    newState2.fontWeight,
+    newState2.fontSize,
+    newState2.fontFamily,
+    newState2.letterSpacing
+  )
+  console.log({ longestLineWidth })
   return {
     ...newState2,
     rowHeight,
@@ -143,7 +152,7 @@ export const loadContent = async (state, savedState) => {
     fontFamily,
     links,
     tabSize,
-    // selections,
+    longestLineWidth,
   }
 }
 

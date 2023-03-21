@@ -54,18 +54,25 @@ export const create = () => {
   $LayerText.addEventListener(DomEventType.MouseDown, EditorEvents.handleMouseDown)
   $LayerText.addEventListener(DomEventType.PointerDown, EditorEvents.handleEditorPointerDown)
 
-  const $ScrollBarThumb = document.createElement('div')
-  $ScrollBarThumb.className = 'ScrollBarThumb'
+  const $ScrollBarThumbVertical = document.createElement('div')
+  $ScrollBarThumbVertical.className = 'ScrollBarThumbVertical'
 
   // TODO only create $ScrollBarDiagnostics lazily when there are actually diagnostics
   const $ScrollBarDiagnostics = document.createElement('div')
   $ScrollBarDiagnostics.className = 'EditorScrollBarDiagnostics'
 
-  const $ScrollBar = document.createElement('div')
-  $ScrollBar.className = 'ScrollBar'
-  $ScrollBar.onpointerdown = EditorEvents.handleScrollBarPointerDown
-  $ScrollBar.oncontextmenu = EditorEvents.handleScrollBarContextMenu
-  $ScrollBar.append($ScrollBarThumb)
+  const $ScrollBarVertical = document.createElement('div')
+  $ScrollBarVertical.className = 'ScrollBarVertical'
+  $ScrollBarVertical.onpointerdown = EditorEvents.handleScrollBarVerticalPointerDown
+  $ScrollBarVertical.oncontextmenu = EditorEvents.handleScrollBarContextMenu
+  $ScrollBarVertical.append($ScrollBarThumbVertical)
+
+  const $ScrollBarThumbHorizontal = document.createElement('div')
+  $ScrollBarThumbHorizontal.className = 'ScrollBarThumbHorizontal'
+
+  const $ScrollBarHorizontal = document.createElement('div')
+  $ScrollBarHorizontal.className = 'ScrollBarHorizontal'
+  $ScrollBarHorizontal.append($ScrollBarThumbHorizontal)
 
   // $EditorRows.addEventListener('mousemove', handleMouseMove, { passive: true })
 
@@ -92,7 +99,7 @@ export const create = () => {
   $Editor.className = 'Viewlet Editor'
   // @ts-ignore
   $Editor.role = AriaRoles.Code
-  $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
+  $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBarVertical, $ScrollBarHorizontal)
   $Editor.addEventListener(DomEventType.ContextMenu, EditorEvents.handleContextMenu)
   $Editor.addEventListener(DomEventType.Wheel, EditorEvents.handleWheel, DomEventOptions.Passive)
   $Editor.addEventListener(DomEventType.MouseMove, EditorEvents.handlePointerMove, DomEventOptions.Passive)
@@ -103,7 +110,8 @@ export const create = () => {
     $EditorLayers,
     $Editor,
     $EditorInput,
-    $ScrollBarThumb,
+    $ScrollBarThumbVertical,
+    $ScrollBarThumbHorizontal,
     $LayerDiagnostics,
     $ScrollBarDiagnostics,
     shouldIgnoreSelectionChange: false,
@@ -126,6 +134,10 @@ export const setSettings = (state, fontSize, lineHeight, letterSpacing) => {
 
 export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
   LayerScrollBar.setPosition(state, scrollBarY, scrollBarHeight)
+}
+
+export const setScrollBarHorizontal = (state, scrollBarWidth) => {
+  LayerScrollBar.setScrollBarHorizontal(state, scrollBarWidth)
 }
 
 export const renderCursors = (state, cursorInfos) => {

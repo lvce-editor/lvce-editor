@@ -64,6 +64,7 @@ export const create = (id, uri, languageId, content) => {
     tabSize: 2,
     cursorWidth: 2,
     completionState: EditorCompletionState.None,
+    longestLineWidth: 0,
   }
 }
 
@@ -377,13 +378,23 @@ const renderSelections = {
   },
 }
 
-const renderScrollBar = {
+const renderScrollBarY = {
   isEqual(oldState, newState) {
     return oldState.deltaY === newState.deltaY && oldState.scrollBarHeight === newState.scrollBarHeight
   },
   apply(oldState, newState) {
     const scrollBarY = ScrollBarFunctions.getScrollBarY(newState.deltaY, newState.finalDeltaY, newState.height, newState.scrollBarHeight)
     return [/* method */ 'setScrollBar', /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
+  },
+}
+
+const renderScrollBarX = {
+  isEqual(oldState, newState) {
+    return oldState.longestLineWidth === newState.longestLineWidth
+  },
+  apply(oldState, newState) {
+    const scrollBarWidth = ScrollBarFunctions.getScrollBarWidth(newState.width, newState.longestLineWidth)
+    return [/* method */ 'setScrollBarHorizontal', /* scrollBarWidth */ scrollBarWidth]
   },
 }
 
@@ -399,4 +410,4 @@ const renderFocus = {
   },
 }
 
-export const render = [renderLines, renderSelections, renderScrollBar, renderFocus]
+export const render = [renderLines, renderSelections, renderScrollBarX, renderScrollBarY, renderFocus]
