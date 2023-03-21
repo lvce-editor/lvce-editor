@@ -57,12 +57,20 @@ export const paste = (text) => {
   RendererWorker.send('Editor.paste', text)
 }
 
-export const handleScrollBarMove = (y) => {
+export const handleScrollBarVerticalMove = (y) => {
   RendererWorker.send('Editor.handleScrollBarMove', y)
 }
 
-export const handleScrollBarPointerDown = (y) => {
+export const handleScrollBarVerticalPointerDown = (y) => {
   RendererWorker.send('Editor.handleScrollBarPointerDown', y)
+}
+
+export const handleScrollBarHorizontalMove = (x) => {
+  RendererWorker.send('Editor.handleScrollBarHorizontalMove', x)
+}
+
+export const handleScrollBarHorizontalPointerDown = (x) => {
+  RendererWorker.send('Editor.handleScrollBarHorizontalPointerDown', x)
 }
 
 export const handleTouchStart = (touchEvent) => {

@@ -379,7 +379,7 @@ test.skip('event - beforeinput on contenteditable on mobile - no selection', () 
   expect(spy).toHaveBeenCalledWith('[Editor] cannot handle input event without selection')
 })
 
-test('event - wheel', () => {
+test('event - wheel - on vertical scroll bar', () => {
   // TODO mock platform module instead
   Platform.state.isMobileOrTablet = () => false
   const state = Editor.create()
@@ -396,7 +396,7 @@ test('event - wheel', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Editor.setDeltaY', 42)
 })
 
-test('event - pointerdown - on scroll bar thumb', () => {
+test('event - pointerdown - on vertical scroll bar thumb', () => {
   const state = Editor.create()
   const { $ScrollBarThumbVertical } = state
   const event = new PointerEvent('pointerdown', {
@@ -411,7 +411,7 @@ test('event - pointerdown - on scroll bar thumb', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleScrollBarPointerDown', 20)
 })
 
-test('event - pointermove after pointerdown - on scroll bar thumb', () => {
+test('event - pointermove after pointerdown - on vertical scroll bar thumb', () => {
   const state = Editor.create()
   const { $ScrollBarThumbVertical } = state
   const pointerDownEvent = new PointerEvent('pointerdown', {
@@ -435,7 +435,7 @@ test('event - pointermove after pointerdown - on scroll bar thumb', () => {
   expect(RendererWorker.send).toHaveBeenNthCalledWith(2, 'Editor.handleScrollBarMove', 40)
 })
 
-test('event - pointerup after pointerdown - on scroll bar thumb', () => {
+test('event - pointerup after pointerdown - on vertical scroll bar thumb', () => {
   const state = Editor.create()
   const spy1 = jest.spyOn(HTMLElement.prototype, 'addEventListener')
   const spy2 = jest.spyOn(HTMLElement.prototype, 'removeEventListener')
@@ -453,8 +453,8 @@ test('event - pointerup after pointerdown - on scroll bar thumb', () => {
   })
   $ScrollBarThumbVertical.dispatchEvent(pointerDownEvent)
   expect(spy1).toHaveBeenCalledTimes(2)
-  expect(spy1).toHaveBeenNthCalledWith(1, 'pointermove', EditorEvents.handleScrollBarThumbPointerMove, DomEventOptions.Active)
-  expect(spy1).toHaveBeenNthCalledWith(2, 'pointerup', EditorEvents.handleScrollBarPointerUp)
+  expect(spy1).toHaveBeenNthCalledWith(1, 'pointermove', EditorEvents.handleScrollBarThumbVerticalPointerMove, DomEventOptions.Active)
+  expect(spy1).toHaveBeenNthCalledWith(2, 'pointerup', EditorEvents.handleScrollBarVerticalPointerUp)
   expect(spy3).toHaveBeenCalledTimes(1)
   expect(spy3).toHaveBeenCalledWith(0)
   const pointerUpEvent = new PointerEvent('pointerup', {
@@ -468,11 +468,48 @@ test('event - pointerup after pointerdown - on scroll bar thumb', () => {
   expect(spy4).toHaveBeenCalledTimes(1)
   expect(spy4).toHaveBeenCalledWith(0)
   expect(spy2).toHaveBeenCalledTimes(2)
-  expect(spy2).toHaveBeenNthCalledWith(1, 'pointermove', EditorEvents.handleScrollBarThumbPointerMove)
-  expect(spy2).toHaveBeenNthCalledWith(2, 'pointerup', EditorEvents.handleScrollBarPointerUp)
+  expect(spy2).toHaveBeenNthCalledWith(1, 'pointermove', EditorEvents.handleScrollBarThumbVerticalPointerMove)
+  expect(spy2).toHaveBeenNthCalledWith(2, 'pointerup', EditorEvents.handleScrollBarVerticalPointerUp)
 })
 
-test('event - context menu - on scroll bar', () => {
+test('event - pointerup after pointerdown - on horizontal scroll bar thumb', () => {
+  const state = Editor.create()
+  const spy1 = jest.spyOn(HTMLElement.prototype, 'addEventListener')
+  const spy2 = jest.spyOn(HTMLElement.prototype, 'removeEventListener')
+  // @ts-ignore
+  const spy3 = jest.spyOn(HTMLElement.prototype, 'setPointerCapture')
+  // @ts-ignore
+  const spy4 = jest.spyOn(HTMLElement.prototype, 'releasePointerCapture')
+  const { $ScrollBarThumbHorizontal } = state
+  const pointerDownEvent = new PointerEvent('pointerdown', {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    pointerId: 0,
+    button: MouseEventType.LeftClick,
+  })
+  $ScrollBarThumbHorizontal.dispatchEvent(pointerDownEvent)
+  expect(spy1).toHaveBeenCalledTimes(2)
+  expect(spy1).toHaveBeenNthCalledWith(1, 'pointermove', EditorEvents.handleScrollBarThumbHorizontalPointerMove, DomEventOptions.Active)
+  expect(spy1).toHaveBeenNthCalledWith(2, 'pointerup', EditorEvents.handleScrollBarHorizontalPointerUp)
+  expect(spy3).toHaveBeenCalledTimes(1)
+  expect(spy3).toHaveBeenCalledWith(0)
+  const pointerUpEvent = new PointerEvent('pointerup', {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    pointerId: 0,
+    button: MouseEventType.LeftClick,
+  })
+  $ScrollBarThumbHorizontal.dispatchEvent(pointerUpEvent)
+  expect(spy4).toHaveBeenCalledTimes(1)
+  expect(spy4).toHaveBeenCalledWith(0)
+  expect(spy2).toHaveBeenCalledTimes(2)
+  expect(spy2).toHaveBeenNthCalledWith(1, 'pointermove', EditorEvents.handleScrollBarThumbHorizontalPointerMove)
+  expect(spy2).toHaveBeenNthCalledWith(2, 'pointerup', EditorEvents.handleScrollBarHorizontalPointerUp)
+})
+
+test('event - context menu - on vertical scroll bar', () => {
   const state = Editor.create()
   const { $ScrollBarThumbVertical } = state
   const event = new MouseEvent('contextmenu', {

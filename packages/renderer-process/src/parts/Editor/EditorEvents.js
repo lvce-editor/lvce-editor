@@ -158,23 +158,23 @@ export const handlePaste = (event) => {
  *
  * @param {PointerEvent} event
  */
-export const handleScrollBarThumbPointerMove = (event) => {
+export const handleScrollBarThumbVerticalPointerMove = (event) => {
   const { clientY } = event
-  EditorFunctions.handleScrollBarMove(clientY)
+  EditorFunctions.handleScrollBarVerticalMove(clientY)
 }
 
 /**
  *
  * @param {PointerEvent} event
  */
-export const handleScrollBarPointerUp = (event) => {
+export const handleScrollBarVerticalPointerUp = (event) => {
   const { target, pointerId } = event
   // @ts-ignore
   target.releasePointerCapture(pointerId)
   // @ts-ignore
-  target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove)
+  target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbVerticalPointerMove)
   // @ts-ignore
-  target.removeEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
+  target.removeEventListener(DomEventType.PointerUp, handleScrollBarVerticalPointerUp)
 }
 
 /**
@@ -186,11 +186,50 @@ export const handleScrollBarVerticalPointerDown = (event) => {
   // @ts-ignore
   target.setPointerCapture(pointerId)
   // @ts-ignore
-  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, DomEventOptions.Active)
+  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbVerticalPointerMove, DomEventOptions.Active)
   // TODO use pointerlost event instead
   // @ts-ignore
-  target.addEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
-  EditorFunctions.handleScrollBarPointerDown(clientY)
+  target.addEventListener(DomEventType.PointerUp, handleScrollBarVerticalPointerUp)
+  EditorFunctions.handleScrollBarVerticalPointerDown(clientY)
+}
+
+/**
+ *
+ * @param {PointerEvent} event
+ */
+export const handleScrollBarThumbHorizontalPointerMove = (event) => {
+  const { clientX } = event
+  EditorFunctions.handleScrollBarHorizontalMove(clientX)
+}
+
+/**
+ *
+ * @param {PointerEvent} event
+ */
+export const handleScrollBarHorizontalPointerUp = (event) => {
+  const { target, pointerId } = event
+  // @ts-ignore
+  target.releasePointerCapture(pointerId)
+  // @ts-ignore
+  target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbHorizontalPointerMove)
+  // @ts-ignore
+  target.removeEventListener(DomEventType.PointerUp, handleScrollBarHorizontalPointerUp)
+}
+
+/**
+ *
+ * @param {PointerEvent} event
+ */
+export const handleScrollBarHorizontalPointerDown = (event) => {
+  const { target, pointerId, clientX } = event
+  // @ts-ignore
+  target.setPointerCapture(pointerId)
+  // @ts-ignore
+  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbHorizontalPointerMove, DomEventOptions.Active)
+  // TODO use pointerlost event instead
+  // @ts-ignore
+  target.addEventListener(DomEventType.PointerUp, handleScrollBarHorizontalPointerUp)
+  EditorFunctions.handleScrollBarHorizontalPointerDown(clientX)
 }
 
 export const handleScrollBarContextMenu = (event) => {
