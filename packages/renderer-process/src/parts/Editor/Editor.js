@@ -73,6 +73,7 @@ export const create = () => {
   const $ScrollBarHorizontal = document.createElement('div')
   $ScrollBarHorizontal.className = 'ScrollBarHorizontal'
   $ScrollBarHorizontal.append($ScrollBarThumbHorizontal)
+  $ScrollBarHorizontal.onpointerdown = EditorEvents.handleScrollBarHorizontalPointerDown
 
   // $EditorRows.addEventListener('mousemove', handleMouseMove, { passive: true })
 
