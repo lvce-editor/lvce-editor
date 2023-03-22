@@ -146,8 +146,9 @@ const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, To
   const minOffset = Math.ceil(deltaX / charWidth)
   const maxOffset = minOffset + Math.ceil(width / charWidth)
   let startIndex = 0
+  const tokensLength = tokens.length
 
-  for (let i = 0; i < tokens.length; i += 2) {
+  for (let i = 0; i < tokensLength; i += 2) {
     if (start >= minOffset) {
       startIndex = i
       break
@@ -157,7 +158,7 @@ const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, To
     start = end
   }
 
-  for (let i = startIndex; i < tokens.length; i += 2) {
+  for (let i = startIndex; i < tokensLength; i += 2) {
     const tokenType = tokens[i]
     const tokenLength = tokens[i + 1]
     const decorationOffset = decorations[decorationIndex]
