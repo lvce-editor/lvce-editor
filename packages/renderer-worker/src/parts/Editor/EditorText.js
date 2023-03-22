@@ -148,13 +148,13 @@ const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, To
   let startIndex = 0
 
   for (let i = 0; i < tokens.length; i += 2) {
-    const tokenLength = tokens[i + 1]
-    end += tokenLength
-    start = end
     if (start >= minOffset) {
       startIndex = i
       break
     }
+    const tokenLength = tokens[i + 1]
+    end += tokenLength
+    start = end
   }
 
   for (let i = startIndex; i < tokens.length; i += 2) {
@@ -176,6 +176,7 @@ const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, To
     }
 
     end += tokenLength
+    console.log({ start, end })
     const text = line.slice(start, end)
     const className = `Token ${extraClassName || TokenMap[tokenType] || 'Unknown'}`
     const normalizedText = NormalizeText.normalizeText(text, normalize, tabSize)
