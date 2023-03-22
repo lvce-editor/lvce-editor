@@ -64,7 +64,7 @@ const render$LineMore = ($Line, lineInfo) => {
   }
 }
 
-const render$Line = ($Line, lineInfo) => {
+const render$Line = ($Line, lineInfo, difference) => {
   if ($Line.children.length < lineInfo.length / 2) {
     render$LineLess($Line, lineInfo)
   } else if ($Line.children.length === lineInfo.length / 2) {
@@ -72,30 +72,31 @@ const render$Line = ($Line, lineInfo) => {
   } else {
     render$LineMore($Line, lineInfo)
   }
+  $Line.style.marginLeft = `${difference}px`
 }
 
-const render$LinesLess = ($Lines, lineInfos) => {
+const render$LinesLess = ($Lines, lineInfos, differences) => {
   for (let i = 0; i < $Lines.children.length; i++) {
-    render$Line($Lines.children[i], lineInfos[i])
+    render$Line($Lines.children[i], lineInfos[i], differences[i])
   }
   const fragment = document.createDocumentFragment()
   for (let i = $Lines.children.length; i < lineInfos.length; i++) {
     const $Line = create$Row()
-    render$Line($Line, lineInfos[i])
+    render$Line($Line, lineInfos[i], differences[i])
     fragment.append($Line)
   }
   $Lines.append(fragment)
 }
 
-const render$LinesEqual = ($Lines, lineInfos) => {
+const render$LinesEqual = ($Lines, lineInfos, differences) => {
   for (let i = 0; i < lineInfos.length; i++) {
-    render$Line($Lines.children[i], lineInfos[i])
+    render$Line($Lines.children[i], lineInfos[i], differences[i])
   }
 }
 
-const render$LinesMore = ($Lines, lineInfos) => {
+const render$LinesMore = ($Lines, lineInfos, differences) => {
   for (let i = 0; i < lineInfos.length; i++) {
-    render$Line($Lines.children[i], lineInfos[i])
+    render$Line($Lines.children[i], lineInfos[i], differences[i])
   }
   const diff = $Lines.children.length - lineInfos.length
   for (let i = lineInfos.length; i < lineInfos.length + diff; i++) {
@@ -103,18 +104,18 @@ const render$LinesMore = ($Lines, lineInfos) => {
   }
 }
 
-const render$Lines = ($Lines, lineInfos) => {
+const render$Lines = ($Lines, lineInfos, differences) => {
   Assert.object($Lines)
   Assert.array(lineInfos)
   if ($Lines.children.length < lineInfos.length) {
-    render$LinesLess($Lines, lineInfos)
+    render$LinesLess($Lines, lineInfos, differences)
   } else if ($Lines.children.length === lineInfos.length) {
-    render$LinesEqual($Lines, lineInfos)
+    render$LinesEqual($Lines, lineInfos, differences)
   } else {
-    render$LinesMore($Lines, lineInfos)
+    render$LinesMore($Lines, lineInfos, differences)
   }
 }
 
-export const setLineInfos = (state, lineInfos) => {
-  render$Lines(state.$LayerText, lineInfos)
+export const setLineInfos = (state, lineInfos, differences) => {
+  render$Lines(state.$LayerText, lineInfos, differences)
 }

@@ -32,7 +32,6 @@ export const handleScrollBarHorizontalMove = (state, eventX) => {
   const newPercent = getNewPercent(width, scrollBarWidth, relativeX)
   const diff = relativeX - currentScrollBarX
   const newDeltaX = newPercent * finalDeltaX
-  console.log({ normalizedEventX, deltaX, newDeltaX })
   return {
     ...state,
     deltaX: newDeltaX,

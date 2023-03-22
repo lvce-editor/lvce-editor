@@ -370,8 +370,8 @@ const renderLines = {
     )
   },
   apply(oldState, newState) {
-    const textInfos = EditorText.getVisible(newState)
-    return [/* method */ 'setText', /* textInfos */ textInfos]
+    const { textInfos, differences } = EditorText.getVisible(newState)
+    return [/* method */ 'setText', /* textInfos */ textInfos, /* differences */ differences]
   },
 }
 
