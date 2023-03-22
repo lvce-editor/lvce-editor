@@ -177,7 +177,6 @@ const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, To
     }
 
     end += tokenLength
-    console.log({ start, end })
     const text = line.slice(start, end)
     const className = `Token ${extraClassName || TokenMap[tokenType] || 'Unknown'}`
     const normalizedText = NormalizeText.normalizeText(text, normalize, tabSize)
