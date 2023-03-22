@@ -49,8 +49,8 @@ export const handleMouseDown = (modifier, x, y, detail) => {
   RendererWorker.send('Editor.handleMouseDown', modifier, x, y, detail)
 }
 
-export const setDeltaY = (deltaY) => {
-  RendererWorker.send('Editor.setDeltaY', deltaY)
+export const setDelta = (deltaMode, deltaX, deltaY) => {
+  RendererWorker.send('Editor.setDelta', deltaMode, deltaX, deltaY)
 }
 
 export const paste = (text) => {

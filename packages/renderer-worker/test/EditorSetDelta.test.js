@@ -1,4 +1,4 @@
-import * as EditorSetDeltaY from '../src/parts/EditorCommand/EditorCommandSetDeltaY.js'
+import * as EditorSetDelta from '../src/parts/EditorCommand/EditorCommandSetDelta.js'
 
 test('setDeltaYFixedValue', () => {
   const editor = {
@@ -12,7 +12,7 @@ test('setDeltaYFixedValue', () => {
     maxLineY: 11,
     itemHeight: 20,
   }
-  expect(EditorSetDeltaY.setDeltaYFixedValue(editor, 20)).toMatchObject({
+  expect(EditorSetDelta.setDeltaYFixedValue(editor, 20)).toMatchObject({
     deltaY: 20,
     minLineY: 1,
     maxLineY: 11,
