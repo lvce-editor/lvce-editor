@@ -133,18 +133,11 @@ export const handleMouseDown = (event) => {
  * @param {WheelEvent} event
  */
 export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
+  const { deltaMode, deltaX, deltaY } = event
   // event.preventDefault()
   // const state = EditorHelper.getStateFromEvent(event)
   // TODO send editor id
-  switch (deltaMode) {
-    case WheelEventType.DomDeltaLine:
-    case WheelEventType.DomDeltaPixel:
-      EditorFunctions.setDeltaY(deltaY)
-      break
-    default:
-      break
-  }
+  EditorFunctions.setDelta(deltaMode, deltaX, deltaY)
 }
 
 export const handlePaste = (event) => {
