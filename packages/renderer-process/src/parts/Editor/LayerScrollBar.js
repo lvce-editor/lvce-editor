@@ -9,7 +9,7 @@ export const setScrollBarHorizontal = (state, scrollBarX, scrollBarWidth, deltaX
   const { $ScrollBarThumbHorizontal, $EditorLayers } = state
   SetBounds.setXAndWidth($ScrollBarThumbHorizontal, scrollBarX, scrollBarWidth)
   console.log({ deltaX })
-  SetBounds.setX($EditorLayers, -deltaX)
+  // SetBounds.setX($EditorLayers, -deltaX)
 }
 
 // TODO scrollbar decorations should be own layer maybe

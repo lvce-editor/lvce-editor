@@ -401,12 +401,8 @@ const renderScrollBarX = {
   },
   apply(oldState, newState) {
     const scrollBarWidth = ScrollBarFunctions.getScrollBarSize(newState.width, newState.longestLineWidth, newState.minimumSliderSize)
-    return [
-      /* method */ 'setScrollBarHorizontal',
-      /* scrollBarX */ newState.deltaX,
-      /* scrollBarWidth */ scrollBarWidth,
-      /* deltaX */ newState.deltaX,
-    ]
+    const scrollBarX = (newState.deltaX / newState.longestLineWidth) * newState.width
+    return [/* method */ 'setScrollBarHorizontal', /* scrollBarX */ scrollBarX, /* scrollBarWidth */ scrollBarWidth, /* deltaX */ newState.deltaX]
   },
 }
 
