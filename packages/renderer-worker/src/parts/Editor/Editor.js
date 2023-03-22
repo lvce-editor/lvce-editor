@@ -146,6 +146,9 @@ export const scheduleSelections = (editor, selectionEdits) => {
 }
 
 export const scheduleSelectionsAndScrollPosition = (editor, selectionEdits, deltaY) => {
+  Assert.object(editor)
+  Assert.uint32array(selectionEdits)
+  Assert.number(deltaY)
   const newEditor1 = EditorSelection.setSelections(editor, selectionEdits)
   const newEditor2 = EditorScrolling.setDeltaY(newEditor1, deltaY)
   return newEditor2
