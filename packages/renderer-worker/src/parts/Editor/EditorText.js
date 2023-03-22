@@ -128,7 +128,7 @@ const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line, normalize,
   return lineInfo
 }
 
-const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize) => {
+const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize, width) => {
   let start = 0
   let end = 0
   const lineInfo = []
@@ -140,6 +140,10 @@ const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, To
     }
   }
   const tokens = tokenResults.tokens
+  // TODO accurately measure char widths using offscreen canvas
+  // and use fast measurements for monospace ascii text
+  const charWidth = 10
+  const maxOffset = Math.ceil(width / charWidth)
   // console.log({ tokens, decorations })
   for (let i = 0; i < tokens.length; i += 2) {
     const tokenType = tokens[i]
@@ -165,22 +169,25 @@ const getLineInfoDefault = (line, tokenResults, embeddedResults, decorations, To
     const normalizedText = NormalizeText.normalizeText(text, normalize, tabSize)
     lineInfo.push(normalizedText, className)
     start = end
+    if (end >= maxOffset) {
+      break
+    }
   }
   return lineInfo
 }
 
-const getLineInfo = (line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize) => {
+const getLineInfo = (line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize, width) => {
   if (embeddedResults.length > 0 && tokenResults.embeddedResultIndex !== undefined) {
     const embeddedResult = embeddedResults[tokenResults.embeddedResultIndex]
     if (embeddedResult && embeddedResult.isFull) {
       return getLineInfoEmbeddedFull(embeddedResults, tokenResults, line, normalize, tabSize)
     }
   }
-  return getLineInfoDefault(line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize)
+  return getLineInfoDefault(line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize, width)
 }
 
 // TODO need lots of tests for this
-const getLineInfosViewport = (editor, tokens, embeddedResults, minLineY, maxLineY, minLineOffset) => {
+const getLineInfosViewport = (editor, tokens, embeddedResults, minLineY, maxLineY, minLineOffset, width) => {
   const result = []
   const { lines, tokenizer, decorations } = editor
   const { TokenMap } = tokenizer
@@ -189,7 +196,7 @@ const getLineInfosViewport = (editor, tokens, embeddedResults, minLineY, maxLine
   for (let i = minLineY; i < maxLineY; i++) {
     const line = lines[i]
     const normalize = NormalizeText.shouldNormalizeText(line)
-    result.push(getLineInfo(line, tokens[i - minLineY], embeddedResults, decorations, TokenMap, offset, normalize, tabSize))
+    result.push(getLineInfo(line, tokens[i - minLineY], embeddedResults, decorations, TokenMap, offset, normalize, tabSize, width))
     offset += line.length + 1
   }
   return result
@@ -201,11 +208,11 @@ export const getVisible = (editor) => {
   // currently hard to test because need to mock editor height, top, left,
   // invalidStartIndex, lineCache, etc. just for testing editorType
   // editor.invalidStartIndex = changes[0].start.rowIndex
-  const { minLineY, numberOfVisibleLines, lines } = editor
+  const { minLineY, numberOfVisibleLines, lines, width } = editor
   const maxLineY = Math.min(minLineY + numberOfVisibleLines, lines.length)
   const { tokens, tokenizersToLoad, embeddedResults } = GetTokensViewport.getTokensViewport(editor, minLineY, maxLineY)
   const minLineOffset = TextDocument.offsetAt(editor, minLineY, 0)
-  const textInfos = getLineInfosViewport(editor, tokens, embeddedResults, minLineY, maxLineY, minLineOffset)
+  const textInfos = getLineInfosViewport(editor, tokens, embeddedResults, minLineY, maxLineY, minLineOffset, width)
   if (tokenizersToLoad.length > 0) {
     loadTokenizers(tokenizersToLoad)
   }

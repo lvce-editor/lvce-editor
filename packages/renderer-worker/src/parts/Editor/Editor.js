@@ -366,7 +366,8 @@ const renderLines = {
       oldState.tokenizer === newState.tokenizer &&
       oldState.minLineY === newState.minLineY &&
       oldState.decorations === newState.decorations &&
-      oldState.embeds === newState.embeds
+      oldState.embeds === newState.embeds &&
+      oldState.deltaX === newState.deltaX
     )
   },
   apply(oldState, newState) {
@@ -400,8 +401,13 @@ const renderScrollBarX = {
     return oldState.longestLineWidth === newState.longestLineWidth && oldState.deltaX === newState.deltaX
   },
   apply(oldState, newState) {
-    const scrollBarWidth = ScrollBarFunctions.getScrollBarWidth(newState.width, newState.longestLineWidth)
-    return [/* method */ 'setScrollBarHorizontal', /* scrollBarX */ newState.deltaX, /* scrollBarWidth */ scrollBarWidth]
+    const scrollBarWidth = ScrollBarFunctions.getScrollBarSize(newState.width, newState.longestLineWidth, MINIMUM_SLIDER_SIZE)
+    return [
+      /* method */ 'setScrollBarHorizontal',
+      /* scrollBarX */ newState.deltaX,
+      /* scrollBarWidth */ scrollBarWidth,
+      /* deltaX */ newState.deltaX,
+    ]
   },
 }
 
