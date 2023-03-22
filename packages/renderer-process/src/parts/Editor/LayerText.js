@@ -117,5 +117,8 @@ const render$Lines = ($Lines, lineInfos, differences) => {
 }
 
 export const setLineInfos = (state, lineInfos, differences) => {
+  Assert.object(state)
+  Assert.array(lineInfos)
+  Assert.array(differences)
   render$Lines(state.$LayerText, lineInfos, differences)
 }
