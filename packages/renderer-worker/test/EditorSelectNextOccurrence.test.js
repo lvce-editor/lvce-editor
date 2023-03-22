@@ -23,6 +23,11 @@ test('editorSelectNextOccurrence - no selection and cursor position at start of 
     lines: ['line 1', 'line 2', ''],
     cursor,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
+    finalDeltaY: 1000,
+    width: 1000,
+    rowHeight: 20,
+    minLineY: 0,
+    maxLineY: 1000,
   }
   const newEditor = EditorSelectNextOccurrence.selectNextOccurrence(editor)
   expect(newEditor.selections).toEqual(EditorSelection.fromRange(0, 0, 0, 4))
@@ -37,6 +42,11 @@ test('editorSelectNextOccurrence - no selection and cursor position at end of wo
     lines: ['line 1', 'line 2', ''],
     cursor,
     selections: EditorSelection.fromRange(0, 4, 0, 4),
+    finalDeltaY: 1000,
+    width: 1000,
+    rowHeight: 20,
+    minLineY: 0,
+    maxLineY: 1000,
   }
   const newEditor = EditorSelectNextOccurrence.selectNextOccurrence(editor)
   expect(newEditor.selections).toEqual(EditorSelection.fromRange(0, 0, 0, 4))
@@ -47,11 +57,14 @@ test('editorSelectNextOccurrence - one selection and more selections possible af
     lines: ['line 1', 'line 2', ''],
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 4),
+    finalDeltaY: 1000,
+    width: 1000,
+    rowHeight: 20,
+    minLineY: 0,
+    maxLineY: 1000,
   }
   const newEditor = EditorSelectNextOccurrence.selectNextOccurrence(editor)
-  expect(newEditor.selections).toEqual(
-    EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4])
-  )
+  expect(newEditor.selections).toEqual(EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4]))
 })
 
 test('editorSelectNextOccurrence - one selection and more selections possible before', () => {
@@ -59,47 +72,49 @@ test('editorSelectNextOccurrence - one selection and more selections possible be
     lines: ['line 1', 'line 2', ''],
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(1, 0, 1, 4),
+    finalDeltaY: 1000,
+    width: 1000,
+    rowHeight: 20,
+    minLineY: 0,
+    maxLineY: 1000,
   }
   const newEditor = EditorSelectNextOccurrence.selectNextOccurrence(editor)
-  expect(newEditor.selections).toEqual(
-    EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4])
-  )
+  expect(newEditor.selections).toEqual(EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4]))
 })
 
 test('editorSelectNextOccurrence - one selection and more selections possible in middle', () => {
   const editor = {
     lines: ['line 1', 'line 2', 'line 3'],
     selections: EditorSelection.fromRanges([0, 0, 0, 4], [2, 0, 2, 4]),
+    finalDeltaY: 1000,
+    width: 1000,
+    rowHeight: 20,
+    minLineY: 0,
+    maxLineY: 1000,
   }
   const newEditor = EditorSelectNextOccurrence.selectNextOccurrence(editor)
   // expect(newEditor.cursor).toEqual({
   //   rowIndex: 1,
   //   columnIndex: 4,
   // })
-  expect(newEditor.selections).toEqual(
-    EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4], [2, 0, 2, 4])
-  )
+  expect(newEditor.selections).toEqual(EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4], [2, 0, 2, 4]))
 })
 
 test('editorSelectNextOccurrence - one selection and more selections possible in middle in first line', () => {
   const editor = {
     lines: ['line 1 line 2 line 3', 'line 4', 'line 5'],
     primarySelectionIndex: 0,
-    selections: EditorSelection.fromRanges(
-      [0, 0, 0, 4],
-      [0, 7, 0, 11],
-      [2, 0, 2, 4]
-    ),
+    selections: EditorSelection.fromRanges([0, 0, 0, 4], [0, 7, 0, 11], [2, 0, 2, 4]),
+    deltaX: 0,
+    deltaY: 0,
+    finalDeltaY: 1000,
+    width: 1000,
+    rowHeight: 20,
+    minLineY: 0,
+    maxLineY: 1000,
   }
   const newEditor = EditorSelectNextOccurrence.selectNextOccurrence(editor)
-  expect(newEditor.selections).toEqual(
-    EditorSelection.fromRanges(
-      [0, 0, 0, 4],
-      [0, 7, 0, 11],
-      [0, 14, 0, 18],
-      [2, 0, 2, 4]
-    )
-  )
+  expect(newEditor.selections).toEqual(EditorSelection.fromRanges([0, 0, 0, 4], [0, 7, 0, 11], [0, 14, 0, 18], [2, 0, 2, 4]))
 })
 
 test.skip('editorSelectNextOccurrence - one selection and more selections possible before in same line', () => {
@@ -110,9 +125,7 @@ test.skip('editorSelectNextOccurrence - one selection and more selections possib
   }
   const newEditor = EditorSelectNextOccurrence.selectNextOccurrence(editor)
 
-  expect(newEditor.selections).toEqual(
-    EditorSelection.fromRanges([0, 0, 0, 4], [0, 7, 0, 11])
-  )
+  expect(newEditor.selections).toEqual(EditorSelection.fromRanges([0, 0, 0, 4], [0, 7, 0, 11]))
 })
 
 test('editorSelectNextOccurrence - one selection and no more selections possible', () => {
@@ -133,9 +146,7 @@ test('editorSelectNextOccurrence - multiple selections and no more selections po
     selections: EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4]),
   }
   const newEditor = EditorSelectNextOccurrence.selectNextOccurrence(editor)
-  expect(newEditor.selections).toEqual(
-    EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4])
-  )
+  expect(newEditor.selections).toEqual(EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4]))
 })
 
 test('editorSelectNextOccurrence - multiple selections in same line and no more selections possible', () => {
@@ -145,9 +156,7 @@ test('editorSelectNextOccurrence - multiple selections in same line and no more 
     selections: EditorSelection.fromRanges([0, 0, 0, 4], [0, 7, 0, 11]),
   }
   const newEditor = EditorSelectNextOccurrence.selectNextOccurrence(editor)
-  expect(newEditor.selections).toEqual(
-    EditorSelection.fromRanges([0, 0, 0, 4], [0, 7, 0, 11])
-  )
+  expect(newEditor.selections).toEqual(EditorSelection.fromRanges([0, 0, 0, 4], [0, 7, 0, 11]))
 })
 // TODO add tests when there is selection
 
@@ -189,8 +198,6 @@ test.skip('editorSelectNextOccurrence - new word out of viewport', () => {
     finalDeltaY: 200,
   }
   const newEditor = EditorSelectNextOccurrence.selectNextOccurrence(editor)
-  expect(editor.selections).toEqual(
-    EditorSelection.fromRanges([0, 0, 0, 11], [12, 0, 12, 11])
-  )
+  expect(editor.selections).toEqual(EditorSelection.fromRanges([0, 0, 0, 11], [12, 0, 12, 11]))
   expect(newEditor.deltaY).toBe(140) // scroll down by 7 lines
 })

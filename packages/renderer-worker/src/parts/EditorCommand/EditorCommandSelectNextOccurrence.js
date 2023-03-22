@@ -1,5 +1,4 @@
 import * as Editor from '../Editor/Editor.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 // TODO handle virtual space
 
@@ -31,10 +30,7 @@ const getSelectionEditsSingleLineWord = (lines, selections) => {
   const lastSelectionStartColumnIndex = selections[lastSelectionIndex + 1]
   const lastSelectionEndColumnIndex = selections[lastSelectionIndex + 3]
   const line = lines[rowIndex]
-  const word = line.slice(
-    lastSelectionStartColumnIndex,
-    lastSelectionEndColumnIndex
-  )
+  const word = line.slice(lastSelectionStartColumnIndex, lastSelectionEndColumnIndex)
   const columnIndexAfter = line.indexOf(word, lastSelectionEndColumnIndex)
   if (columnIndexAfter !== -1) {
     const columnIndexAfterEnd = columnIndexAfter + word.length
@@ -48,13 +44,7 @@ const getSelectionEditsSingleLineWord = (lines, selections) => {
         columnIndex: columnIndexAfterEnd,
       },
     }
-    const newSelections = EditorSelection.push(
-      selections,
-      rowIndex,
-      columnIndexAfter,
-      rowIndex,
-      columnIndexAfterEnd
-    )
+    const newSelections = EditorSelection.push(selections, rowIndex, columnIndexAfter, rowIndex, columnIndexAfterEnd)
     return {
       revealRange: newSelections.length - 4,
       selectionEdits: newSelections,
@@ -83,9 +73,7 @@ const getSelectionEditsSingleLineWord = (lines, selections) => {
   for (let i = 0; i <= rowIndex; i++) {
     const line = lines[i]
     let columnIndex = -word.length
-    while (
-      (columnIndex = line.indexOf(word, columnIndex + word.length)) !== -1
-    ) {
+    while ((columnIndex = line.indexOf(word, columnIndex + word.length)) !== -1) {
       let startRowIndex = selections[selectionIndex]
       while (startRowIndex < i && selectionIndex < selections.length) {
         selectionIndex += 4
@@ -93,10 +81,7 @@ const getSelectionEditsSingleLineWord = (lines, selections) => {
       }
       if (startRowIndex === i) {
         let endColumnIndex = selections[selectionIndex + 3]
-        while (
-          endColumnIndex < columnIndex &&
-          selectionIndex < selections.length
-        ) {
+        while (endColumnIndex < columnIndex && selectionIndex < selections.length) {
           selectionIndex += 4
           endColumnIndex = selections[endColumnIndex + 3]
         }
@@ -104,11 +89,7 @@ const getSelectionEditsSingleLineWord = (lines, selections) => {
       startRowIndex = selections[selectionIndex]
       let startColumnIndex = selections[selectionIndex + 1]
       let endColumnIndex = selections[selectionIndex + 3]
-      if (
-        startRowIndex === i &&
-        startColumnIndex <= columnIndex &&
-        columnIndex <= endColumnIndex
-      ) {
+      if (startRowIndex === i && startColumnIndex <= columnIndex && columnIndex <= endColumnIndex) {
         continue
       }
       if (startRowIndex > i) {
@@ -134,7 +115,7 @@ const getSelectionEditsSingleLineWord = (lines, selections) => {
       newSelections[selectionIndex + 3] = columnEndIndex
       newSelections.set(selections.subarray(selectionIndex), selectionIndex + 4)
       return {
-        revealRange,
+        revealRange: newSelections.length - 4,
         selectionEdits: newSelections,
       }
     }
@@ -190,11 +171,7 @@ const getSelectNextOccurrenceResult = (editor) => {
       const endRowIndex = selections[i + 2]
       const endColumnIndex = selections[i + 3]
 
-      const wordMatch = getWordMatchAtPosition(
-        lines,
-        startRowIndex,
-        startColumnIndex
-      )
+      const wordMatch = getWordMatchAtPosition(lines, startRowIndex, startColumnIndex)
       wordMatch //?
       if (wordMatch.start === wordMatch.end) {
         newSelections[i] = startRowIndex
@@ -235,21 +212,10 @@ export const selectNextOccurrence = (editor) => {
   const selectionEdits = result.selectionEdits
   const revealRangeStartRowIndex = selectionEdits[revealRange]
   const revealRangeEndRowIndex = selectionEdits[revealRange + 2]
-  if (
-    isRangeInViewPort(
-      editor.minLineY,
-      editor.maxLineY,
-      revealRangeStartRowIndex,
-      revealRangeEndRowIndex
-    )
-  ) {
+  if (isRangeInViewPort(editor.minLineY, editor.maxLineY, revealRangeStartRowIndex, revealRangeEndRowIndex)) {
     return Editor.scheduleSelections(editor, selectionEdits)
   }
   // TODO what is this magic number 5?
   const deltaY = (revealRangeStartRowIndex - 5) * editor.rowHeight
-  return Editor.scheduleSelectionsAndScrollPosition(
-    editor,
-    selectionEdits,
-    deltaY
-  )
+  return Editor.scheduleSelectionsAndScrollPosition(editor, selectionEdits, deltaY)
 }
