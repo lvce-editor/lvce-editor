@@ -1,18 +1,16 @@
 import * as Assert from '../Assert/Assert.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Height from '../Height/Height.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
-import * as EditorCursor from './EditorCursor.js'
 import * as EditorScrolling from './EditorScrolling.js'
 import * as EditorSelection from './EditorSelection.js'
 import * as EditorText from './EditorText.js'
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
-
-const MINIMUM_SLIDER_SIZE = 20
 
 // TODO
 export const create = (id, uri, languageId, content) => {
@@ -72,6 +70,7 @@ export const create = (id, uri, languageId, content) => {
     cursorWidth: 2,
     completionState: EditorCompletionState.None,
     longestLineWidth: 0,
+    minimumSliderSize: Height.MinimumSliderSize,
   }
 }
 
@@ -342,13 +341,13 @@ export const setBounds = (editor, x, y, height, columnWidth) => {
 
 export const setText = (editor, text) => {
   const lines = SplitLines.splitLines(text)
-  const { itemHeight, numberOfVisibleLines } = editor
+  const { itemHeight, numberOfVisibleLines, minimumSliderSize } = editor
   const total = lines.length
   const maxLineY = Math.min(numberOfVisibleLines, total)
   const finalY = Math.max(total - numberOfVisibleLines, 0)
   const finalDeltaY = finalY * itemHeight
   const contentHeight = lines.length * editor.rowHeight
-  const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(editor.height, contentHeight, MINIMUM_SLIDER_SIZE)
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(editor.height, contentHeight, minimumSliderSize)
   return {
     ...editor,
     lines,
