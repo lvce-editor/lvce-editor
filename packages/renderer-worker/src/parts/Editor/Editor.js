@@ -96,7 +96,7 @@ export const renderText = (editor) => {
 
 export const renderTextAndCursorAndSelectionsCommands = (editor) => {
   Assert.object(editor)
-  const textInfos = EditorText.getVisible(editor)
+  const { textInfos, differences } = EditorText.getVisible(editor)
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   const scrollBarHeight = editor.scrollBarHeight
   const scrollBarY = (editor.deltaY / editor.finalDeltaY) * (editor.height - editor.scrollBarHeight)
@@ -107,6 +107,7 @@ export const renderTextAndCursorAndSelectionsCommands = (editor) => {
     /* scrollBarY */ scrollBarY,
     /* scrollBarHeight */ scrollBarHeight,
     /* textInfos */ textInfos,
+    /* differences */ differences,
     /* cursorInfos */ cursorInfos,
     /* selectionInfos */ selectionInfos,
   ]
@@ -146,6 +147,9 @@ export const scheduleSelections = (editor, selectionEdits) => {
 }
 
 export const scheduleSelectionsAndScrollPosition = (editor, selectionEdits, deltaY) => {
+  Assert.object(editor)
+  Assert.uint32array(selectionEdits)
+  Assert.number(deltaY)
   const newEditor1 = EditorSelection.setSelections(editor, selectionEdits)
   const newEditor2 = EditorScrolling.setDeltaY(newEditor1, deltaY)
   return newEditor2
