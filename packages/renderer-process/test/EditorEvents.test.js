@@ -393,7 +393,7 @@ test('event - wheel - on vertical scroll bar', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.setDeltaY', 42)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.setDelta', WheelEventType.DomDeltaPixel, 1, 42)
 })
 
 test('event - pointerdown - on vertical scroll bar thumb', () => {
