@@ -1,5 +1,17 @@
 import { jest } from '@jest/globals'
-import * as EditorText from '../src/parts/Editor/EditorText.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', () => ({
+  measureTextWidth: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
+
+const EditorText = await import('../src/parts/Editor/EditorText.js')
+const MeasureTextWidth = await import('../src/parts/MeasureTextWidth/MeasureTextWidth.js')
 
 test('getVisible', () => {
   const editor = {
@@ -88,8 +100,10 @@ test('getVisible', () => {
     ],
     validLines: [],
     invalidStartIndex: 1,
+    deltaX: 0,
   }
-  expect(EditorText.getVisible(editor)).toEqual([
+  const { textInfos } = EditorText.getVisible(editor)
+  expect(textInfos).toEqual([
     [
       '<',
       'Token PunctuationTag',
@@ -171,8 +185,10 @@ test('getVisible - normalize tabs', () => {
     ],
     validLines: [],
     invalidStartIndex: 1,
+    deltaX: 0,
   }
-  expect(EditorText.getVisible(editor)).toEqual([['  test', 'Token Text']])
+  const { textInfos } = EditorText.getVisible(editor)
+  expect(textInfos).toEqual([['  test', 'Token Text']])
 })
 
 test('getVisible - with semantic tokens decorations', () => {
@@ -335,8 +351,10 @@ test('getVisible - with semantic tokens decorations', () => {
       1, /* length */
       1792, /*  (1792 >> 8) - 1 = 6 = parameter, 1792 & 255 = 0 = none */
     ],
+    deltaX: 0,
   }
-  expect(EditorText.getVisible(editor)).toEqual([
+  const { textInfos } = EditorText.getVisible(editor)
+  expect(textInfos).toEqual([
     [
       'const',
       'Token Keyword',
@@ -538,6 +556,7 @@ test('getVisible - with multi-line semantic tokens decorations', () => {
     ],
     validLines: [],
     invalidStartIndex: 4,
+    deltaX: 0,
     // prettier-ignore
     decorations: [
       6 /* offset */,
@@ -565,7 +584,8 @@ test('getVisible - with multi-line semantic tokens decorations', () => {
       2824, /* (2824 >> 8) -1 = 10 = function, 2824 & 255 = 8 = 2^3 = readonly  */
     ],
   }
-  expect(EditorText.getVisible(editor)).toEqual([
+  const { textInfos } = EditorText.getVisible(editor)
+  expect(textInfos).toEqual([
     [
       'const',
       'Token Keyword',
@@ -790,8 +810,10 @@ test('getVisible - empty line cache and tokens below', () => {
     focused: true,
     width: 635,
     scrollBarY: 242.1898519128561,
+    deltaX: 0,
   }
-  expect(EditorText.getVisible(editor)).toEqual([
+  const { textInfos } = EditorText.getVisible(editor)
+  expect(textInfos).toEqual([
     ['line 57', 'Token Text'],
     ['line 58', 'Token Text'],
     ['line 59', 'Token Text'],
@@ -869,8 +891,10 @@ test("getVisible - don't tokenize lines that have been tokenized already", () =>
     focused: true,
     width: 635,
     scrollBarY: 242.1898519128561,
+    deltaX: 0,
   }
-  expect(EditorText.getVisible(editor)).toEqual([
+  const { textInfos } = EditorText.getVisible(editor)
+  expect(textInfos).toEqual([
     ['line 3', 'Token Text'],
     ['line 4', 'Token Text'],
   ])
