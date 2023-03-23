@@ -36,10 +36,6 @@ const getDocumentEdits = (line, rowIndex, columnIndex, indent) => {
 
 // TODO handle multiple cursors
 
-const isWhitespace = (character) => {
-  return character === ' ' || character === '\t'
-}
-
 export const getIndent = (line) => {
   const whitespaceMatch = line.match(RE_WHITESPACE)
   if (!whitespaceMatch) {

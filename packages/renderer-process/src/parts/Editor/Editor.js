@@ -172,20 +172,6 @@ export const renderTextAndCursorsAndSelections = (state, scrollBarY, scrollBarHe
   LayerSelections.setSelections(state, selectionInfos)
 }
 
-// TODO this should be in editor
-const getColumnWidth = () => {
-  const testSpan = document.createElement('span')
-  testSpan.textContent = 'a'
-  testSpan.style.fontSize = '15px'
-  testSpan.style.letterSpacing = '0.5px'
-  testSpan.style.position = 'fixed'
-  testSpan.style.fontFamily = "'Fira Code'"
-  document.body.append(testSpan)
-  const result = Number.parseFloat(getComputedStyle(testSpan).width) / 1
-  testSpan.remove()
-  return result
-}
-
 export const mount = (state, $Parent) => {
   $Parent.append(state.$Editor)
 }
