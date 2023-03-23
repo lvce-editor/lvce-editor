@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const create$Row = () => {
   const $Row = document.createElement('div')
@@ -72,7 +73,7 @@ const render$Line = ($Line, lineInfo, difference) => {
   } else {
     render$LineMore($Line, lineInfo)
   }
-  $Line.style.marginLeft = `${difference}px`
+  SetBounds.setX($Line, difference)
 }
 
 const render$LinesLess = ($Lines, lineInfos, differences) => {
