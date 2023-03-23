@@ -1,3 +1,4 @@
+import * as Character from '../Character/Character.js'
 import * as TextSegmenter from '../TextSegmenter/TextSegmenter.js'
 
 export const characterLeft = (line, columnIndex) => {
@@ -23,7 +24,7 @@ export const characterRight = (line, columnIndex) => {
 }
 
 const isWhitespace = (char) => {
-  return char === ' ' || char === '\t'
+  return char === Character.Space || char === Character.Tab
 }
 
 export const lineCharacterStart = (line, columnIndex) => {

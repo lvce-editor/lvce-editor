@@ -1,8 +1,9 @@
+import * as Assert from '../Assert/Assert.js'
+import * as Character from '../Character/Character.js'
 import * as IsAscii from '../IsAscii/IsAscii.js'
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
-import * as TextSegmenter from '../TextSegmenter/TextSegmenter.js'
 import * as NormalizeText from '../NormalizeText/NormalizeText.js'
-import * as Assert from '../Assert/Assert.js'
+import * as TextSegmenter from '../TextSegmenter/TextSegmenter.js'
 
 const getAccurateColumnIndexAscii = (line, guess, averageCharWidth, eventX, fontWeight, fontSize, fontFamily, letterSpacing) => {
   for (let i = guess; i < line.length; i++) {
@@ -34,7 +35,7 @@ const guessOffset = (eventX, averageCharWidth) => {
 const normalizeGuess = (line, guess, tabSize) => {
   let normalizedGuess = guess
   for (let i = 0; i < guess; i++) {
-    if (line[i] === '\t') {
+    if (line[i] === Character.Tab) {
       normalizedGuess -= tabSize - 1
     }
   }
