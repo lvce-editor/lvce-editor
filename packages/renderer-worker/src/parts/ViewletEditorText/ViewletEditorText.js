@@ -248,7 +248,7 @@ export const getDynamicCss = (preferences) => {
     styles.push(`  --EditorLineHeight: ${lineHeight}px;`)
   }
   const letterSpacing = preferences['editor.letterSpacing']
-  if (letterSpacing) {
+  if (typeof letterSpacing === 'number') {
     styles.push(`  --EditorLetterSpacing: ${letterSpacing}px;`)
   }
   const fontLigatures = preferences['editor.fontLigatures']
