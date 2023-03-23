@@ -133,13 +133,7 @@ export const loadContent = async (state, savedState) => {
     const fontName = unquoteString(fontFamily)
     await Font.load(fontName, `url('${assetDir}/fonts/FiraCode-VariableFont.ttf')`)
   }
-  const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(
-    newState2.lines,
-    newState2.fontWeight,
-    newState2.fontSize,
-    newState2.fontFamily,
-    newState2.letterSpacing
-  )
+  const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(newState2.lines, newState2.fontWeight, fontSize, fontFamily, letterSpacing)
   return {
     ...newState2,
     rowHeight,
