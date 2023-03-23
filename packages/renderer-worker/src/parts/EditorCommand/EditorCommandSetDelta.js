@@ -1,6 +1,6 @@
-import * as Editor from '../Editor/Editor.js'
-import * as Clamp from '../Clamp/Clamp.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Clamp from '../Clamp/Clamp.js'
+import * as Editor from '../Editor/Editor.js'
 
 export const setDeltaY = (editor, deltaY) => {
   return Editor.setDeltaY(editor, deltaY)

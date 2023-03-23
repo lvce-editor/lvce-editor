@@ -1,5 +1,5 @@
 import * as EditorHandleTouchStart from './EditorCommandHandleTouchStart.js'
-import * as EditorSetDeltaY from './EditorCommandSetDelta.js'
+import * as EditorSetDelta from './EditorCommandSetDelta.js'
 
 export const handleTouchMove = (editor, touchEvent) => {
   if (touchEvent.touches.length === 0) {
@@ -7,5 +7,5 @@ export const handleTouchMove = (editor, touchEvent) => {
   }
   const firstTouch = touchEvent.touches[0]
   const offsetY = EditorHandleTouchStart.state.deltaY + (EditorHandleTouchStart.state.touchOffsetY - firstTouch.y)
-  EditorSetDeltaY.setDeltaYFixedValue(editor, offsetY)
+  EditorSetDelta.setDeltaYFixedValue(editor, offsetY)
 }
