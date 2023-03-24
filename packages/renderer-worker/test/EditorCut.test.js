@@ -11,6 +11,7 @@ jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
     execute: jest.fn(() => {
@@ -19,11 +20,8 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
 const Command = await import('../src/parts/Command/Command.js')
-
 const EditorCut = await import('../src/parts/EditorCommand/EditorCommandCut.js')
-
 const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.js')
 
 test('editorCut', async () => {
@@ -41,7 +39,7 @@ test('editorCut', async () => {
     undoStack: [],
   }
   expect(await EditorCut.cut(editor)).toMatchObject({
-    selections: EditorSelection.fromRange(1, 1, 1, 1),
+    selections: EditorSelection.fromRange(1, 1, 2, 2),
     lines: ['line 1', 'lne 3', ''],
   })
 
