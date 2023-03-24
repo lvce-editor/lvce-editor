@@ -2,6 +2,9 @@ import * as Assert from '../Assert/Assert.js'
 import * as Logger from '../Logger/Logger.js'
 
 export const state = {
+  /**
+   * @type {any}
+   */
   warned: [],
 }
 
@@ -14,12 +17,12 @@ const flattenTokensArray = (tokens) => {
   return flattened
 }
 
-const warnDeprecatedArrayReturn = (fn) => {
+const warnDeprecatedArrayReturn = (languageId, fn) => {
   if (state.warned.includes(fn)) {
     return
   }
   state.warned.push(fn)
-  Logger.warn(`tokenizers without hasArrayReturn=false are deprecated`)
+  Logger.warn(`tokenizers without hasArrayReturn=false are deprecated (language ${languageId})`)
 }
 /**
  *
@@ -29,20 +32,20 @@ const warnDeprecatedArrayReturn = (fn) => {
  * @param {boolean} hasArrayReturn
  * @returns
  */
-export const safeTokenizeLine = (tokenizeLine, line, lineStateAtStart, hasArrayReturn) => {
+export const safeTokenizeLine = (languageId, tokenizeLine, line, lineStateAtStart, hasArrayReturn) => {
   try {
     const lineState = tokenizeLine(line, lineStateAtStart)
     if (!lineState || !lineState.tokens || !lineState.state) {
       throw new Error('invalid tokenization result')
     }
     if (!hasArrayReturn) {
-      warnDeprecatedArrayReturn(tokenizeLine)
+      warnDeprecatedArrayReturn(languageId, tokenizeLine)
       // workaround for old tokenizers
       lineState.tokens = flattenTokensArray(lineState.tokens)
     }
     return lineState
   } catch (error) {
-    console.error(error)
+    Logger.error(error)
     return {
       tokens: [/* type */ 0, /* length */ line.length],
       lineState: lineStateAtStart,
