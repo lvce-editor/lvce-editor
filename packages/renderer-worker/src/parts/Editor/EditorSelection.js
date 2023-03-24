@@ -53,10 +53,6 @@ export const applyEdit = (editor, changes) => {
 // TODO visible selections could also be uint16array
 // [top1, left1, width1, height1, top2, left2, width2, height2...]
 
-const isInRange = (rowIndex, min, max) => {
-  return rowIndex >= min && rowIndex <= max
-}
-
 const getX = (line, column, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, halfCursorWidth, width, averageCharWidth) => {
   if (!line) {
     return 0
@@ -93,6 +89,7 @@ export const getVisible = (editor) => {
   // // TODO binary search
 
   const { selections, minLineY, maxLineY, rowHeight, lines, fontSize, fontFamily, fontWeight, letterSpacing, cursorWidth, tabSize, width } = editor
+  console.log({ width })
   const averageCharWidth = getAverageCharWidthOrDefault(fontWeight, fontSize, fontFamily, letterSpacing)
   const halfCursorWidth = cursorWidth / 2
   for (let i = 0; i < selections.length; i += 4) {
