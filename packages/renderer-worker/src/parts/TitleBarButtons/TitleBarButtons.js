@@ -2,6 +2,15 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  Minimize: 'Minimize',
+  Maximize: 'Maximize',
+  Close: 'Close',
+}
+
 const getTitleBarButtonsWeb = () => {
   return []
 }
@@ -11,14 +20,11 @@ const getTitleBarButtonsRemote = () => {
 }
 
 const getTitleBarButtonsElectron = () => {
-  if (
-    Preferences.get('window.titleBarStyle') === 'custom' &&
-    !Preferences.get('window.controlsOverlay.enabled')
-  ) {
+  if (Preferences.get('window.titleBarStyle') === 'custom' && !Preferences.get('window.controlsOverlay.enabled')) {
     return [
-      { label: 'Minimize', icon: 'Minimize', id: 'Minimize' },
-      { label: 'Maximize', icon: 'Maximize', id: 'ToggleMaximize' },
-      { label: 'Close', icon: 'Close', id: 'Close' },
+      { label: UiStrings.Minimize, icon: 'Minimize', id: 'Minimize' },
+      { label: UiStrings.Maximize, icon: 'Maximize', id: 'ToggleMaximize' },
+      { label: UiStrings.Close, icon: 'Close', id: 'Close' },
     ]
   }
   return []
