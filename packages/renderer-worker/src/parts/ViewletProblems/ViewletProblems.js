@@ -1,6 +1,5 @@
 import * as Diagnostics from '../Diagnostics/Diagnostics.js'
 import * as I18NString from '../I18NString/I18NString.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 /**
  * @enum {string}
@@ -55,37 +54,3 @@ export const dispose = (state) => {
     disposed: true,
   }
 }
-
-export const hasFunctionalRender = true
-
-const renderProblems = {
-  isEqual(oldState, newState) {
-    return oldState.problems === newState.problems
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setProblems', /* problems */ newState.problems]
-  },
-}
-
-const renderFocusedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex
-  },
-  apply(oldState, newState) {
-    return [
-      /* method */ 'setFocusedIndex',
-      /* focusedIndex */ newState.focusedIndex,
-    ]
-  },
-}
-
-const renderMessage = {
-  isEqual(oldState, newState) {
-    return oldState.message === newState.message
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setMessage', /* focusedIndex */ newState.message]
-  },
-}
-
-export const render = [renderProblems, renderFocusedIndex, renderMessage]
