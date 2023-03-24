@@ -1,7 +1,10 @@
-import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as Clamp from '../Clamp/Clamp.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 const getNewPercent = (size, scrollBarSize, relativeX) => {
+  if (relativeX <= 0) {
+    return 0
+  }
   // if (relativeY <= editor.scrollBarHeight / 2) {
   //   console.log('clicked at top')
   //   // clicked at top
@@ -28,9 +31,7 @@ export const handleScrollBarHorizontalMove = (state, eventX) => {
   const relativeX = normalizedEventX - x - handleOffsetX
   const scrollBarWidth = ScrollBarFunctions.getScrollBarWidth(width, longestLineWidth)
   const finalDeltaX = longestLineWidth - (width - scrollBarWidth)
-  const currentScrollBarX = ScrollBarFunctions.getScrollBarOffset(deltaX, finalDeltaX, width, scrollBarWidth)
   const newPercent = getNewPercent(width, scrollBarWidth, relativeX)
-  const diff = relativeX - currentScrollBarX
   const newDeltaX = newPercent * finalDeltaX
   return {
     ...state,
