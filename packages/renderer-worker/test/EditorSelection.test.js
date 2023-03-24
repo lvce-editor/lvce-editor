@@ -31,6 +31,8 @@ test('getVisible', () => {
     fontSize: 15,
     cursorWidth: 0,
     tabSize: 2,
+    width: 800,
+    differences: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([/*x */ 48, /* y */ 40, /* x */ 24, /* y */ 80]))
@@ -61,6 +63,8 @@ test('getVisible - bug with two lines', () => {
     fontSize: 15,
     cursorWidth: 0,
     tabSize: 2,
+    width: 800,
+    differences: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([/*x */ 32, /* y */ 20]))
@@ -89,6 +93,8 @@ test('getVisible - cursors should be treated separately', () => {
     fontSize: 15,
     cursorWidth: 0,
     tabSize: 2,
+    width: 800,
+    differences: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([/*x */ 32, /* y */ 0]))
@@ -111,6 +117,8 @@ test('getVisible - bug with multiple lines', () => {
     fontSize: 15,
     cursorWidth: 0,
     tabSize: 2,
+    width: 800,
+    differences: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([/* x */ 24, /* y */ 40]))
@@ -239,6 +247,8 @@ test('getVisible - only start of selection visible', () => {
     fontSize: 15,
     cursorWidth: 0,
     tabSize: 2,
+    width: 800,
+    differences: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([]))
@@ -273,11 +283,10 @@ test('getVisible - selection out of range', () => {
     fontSize: 15,
     cursorWidth: 0,
     tabSize: 2,
+    width: 800,
+    differences: [0, 0, 0, 0, 0, 0, 0, 0],
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([0, 0, 0, 140]))
-  expect(selectionInfos).toEqual(
-    // prettier-ignore
-    new Float32Array([])
-  )
+  expect(selectionInfos).toEqual(new Float32Array([0, 0, 0, 20, 0, 140, 0, 20]))
 })

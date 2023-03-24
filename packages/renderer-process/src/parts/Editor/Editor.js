@@ -120,8 +120,8 @@ export const create = () => {
   }
 }
 
-export const setText = (state, textInfos) => {
-  LayerText3.setLineInfos(state, textInfos)
+export const setText = (state, textInfos, differences) => {
+  LayerText3.setLineInfos(state, textInfos, differences)
 }
 
 export const setSettings = (state, fontSize, lineHeight, letterSpacing) => {

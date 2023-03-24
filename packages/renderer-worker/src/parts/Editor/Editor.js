@@ -71,6 +71,7 @@ export const create = (id, uri, languageId, content) => {
     completionState: EditorCompletionState.None,
     longestLineWidth: 0,
     minimumSliderSize: Height.MinimumSliderSize,
+    differences: [],
   }
 }
 
@@ -96,7 +97,7 @@ export const renderText = (editor) => {
 
 export const renderTextAndCursorAndSelectionsCommands = (editor) => {
   Assert.object(editor)
-  const textInfos = EditorText.getVisible(editor)
+  const { textInfos, differences } = EditorText.getVisible(editor)
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   const scrollBarHeight = editor.scrollBarHeight
   const scrollBarY = (editor.deltaY / editor.finalDeltaY) * (editor.height - editor.scrollBarHeight)
@@ -107,6 +108,7 @@ export const renderTextAndCursorAndSelectionsCommands = (editor) => {
     /* scrollBarY */ scrollBarY,
     /* scrollBarHeight */ scrollBarHeight,
     /* textInfos */ textInfos,
+    /* differences */ differences,
     /* cursorInfos */ cursorInfos,
     /* selectionInfos */ selectionInfos,
   ]
@@ -368,18 +370,25 @@ const renderLines = {
       oldState.tokenizer === newState.tokenizer &&
       oldState.minLineY === newState.minLineY &&
       oldState.decorations === newState.decorations &&
-      oldState.embeds === newState.embeds
+      oldState.embeds === newState.embeds &&
+      oldState.deltaX === newState.deltaX
     )
   },
   apply(oldState, newState) {
-    const textInfos = EditorText.getVisible(newState)
-    return [/* method */ 'setText', /* textInfos */ textInfos]
+    const { textInfos, differences } = EditorText.getVisible(newState)
+    newState.differences = differences
+    return [/* method */ 'setText', /* textInfos */ textInfos, /* differences */ differences]
   },
 }
 
 const renderSelections = {
   isEqual(oldState, newState) {
-    return oldState.selections === newState.selections && oldState.focused === newState.focused && oldState.minLineY === newState.minLineY
+    return (
+      oldState.selections === newState.selections &&
+      oldState.focused === newState.focused &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.deltaX === newState.deltaX
+    )
   },
   apply(oldState, newState) {
     const { cursorInfos, selectionInfos } = EditorSelection.getVisible(newState)
@@ -402,8 +411,9 @@ const renderScrollBarX = {
     return oldState.longestLineWidth === newState.longestLineWidth && oldState.deltaX === newState.deltaX
   },
   apply(oldState, newState) {
-    const scrollBarWidth = ScrollBarFunctions.getScrollBarWidth(newState.width, newState.longestLineWidth)
-    return [/* method */ 'setScrollBarHorizontal', /* scrollBarX */ newState.deltaX, /* scrollBarWidth */ scrollBarWidth]
+    const scrollBarWidth = ScrollBarFunctions.getScrollBarSize(newState.width, newState.longestLineWidth, newState.minimumSliderSize)
+    const scrollBarX = (newState.deltaX / newState.longestLineWidth) * newState.width
+    return [/* method */ 'setScrollBarHorizontal', /* scrollBarX */ scrollBarX, /* scrollBarWidth */ scrollBarWidth, /* deltaX */ newState.deltaX]
   },
 }
 

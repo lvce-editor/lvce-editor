@@ -64,6 +64,7 @@ test('at - longer than editor content', () => {
     minLineY: 0,
     maxLineY: 1,
     deltaY: 0,
+    differences: [],
   }
   expect(EditorPosition.at(editor, 0, 40)).toEqual({
     rowIndex: 0,
