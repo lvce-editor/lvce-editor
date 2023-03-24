@@ -9,9 +9,7 @@ export const handleScrollBarHorizontalPointerDown = (state, eventX) => {
   const finalDeltaX = width - scrollBarWidth
   const currentScrollBarX = ScrollBarFunctions.getScrollBarOffset(deltaX, finalDeltaX, width, scrollBarWidth)
   const diff = relativeX - currentScrollBarX
-  // console.log({ diff })
   if (diff >= 0 && diff < scrollBarWidth) {
-    // console.log('inside')
     return {
       ...state,
       handleOffsetX: diff,
@@ -19,7 +17,6 @@ export const handleScrollBarHorizontalPointerDown = (state, eventX) => {
   }
   const { percent, handleOffset } = ScrollBarFunctions.getNewDeltaPercent(width, scrollBarWidth, relativeX)
   const newDeltaX = percent * finalDeltaX
-  // console.log({ eventX })
   return {
     ...state,
     handleOffsetX: handleOffset,
