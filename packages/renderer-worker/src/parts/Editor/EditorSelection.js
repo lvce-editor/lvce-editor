@@ -152,7 +152,7 @@ export const getVisible = (editor) => {
         averageCharWidth,
         startLineDifference
       )
-      if (endLineEndX > 0) {
+      if (endLineEndX >= 0) {
         visibleCursors.push(endLineEndX, endLineY)
       }
       const selectionWidth = endLineEndX - startX
