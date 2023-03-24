@@ -2,7 +2,6 @@ import * as ViewletActivityBar from './ViewletActivityBar.js'
 
 // prettier-ignore
 export const Commands = {
-  getHiddenItems: ViewletActivityBar.getHiddenItems,
   handleBlur:  ViewletActivityBar.handleBlur,
   handleSideBarHidden: ViewletActivityBar.handleSideBarHidden,
   handleSideBarViewletChange: ViewletActivityBar.handleSideBarViewletChange,
@@ -20,5 +19,6 @@ export const LazyCommands={
   focusPrevious: () => import('./ViewletActivityBarFocusPrevious.js'),
   selectCurrent: () => import('./ViewletActivityBarSelectCurrent.js'),
   handleClick: () => import('./ViewletActivityBarHandleClick.js'),
-  handleContextMenu: () => import('./ViewletActivityBarHandleContextMenu.js')
+  handleContextMenu: () => import('./ViewletActivityBarHandleContextMenu.js'),
+  getHiddenItems: () => import('./ViewletActivityBarGetHiddenItems.js')
 }
