@@ -52,24 +52,6 @@ export const create = (id, uri, x, y, width, height) => {
 
 // TODO naming for provider.getNoResults is a bit weird
 
-const getVisible = (provider, items, minLineY, maxLineY) => {
-  const visibleItems = []
-  const setSize = items.length
-  const max = Math.min(items.length, maxLineY)
-  for (let i = minLineY; i < max; i++) {
-    const item = items[i]
-    const label = provider.getPickLabel(item)
-    const icon = provider.getPickIcon(item)
-    visibleItems.push({
-      label,
-      icon,
-      posInSet: i + 1,
-      setSize,
-    })
-  }
-  return visibleItems
-}
-
 const getDefaultValue = (uri) => {
   switch (uri) {
     case 'quickPick://everything':
@@ -200,87 +182,5 @@ export const handleClickAt = (state, x, y) => {
   const index = Math.floor(relativeY / itemHeight)
   return selectIndex(state, index)
 }
-
-export const hasFunctionalRender = true
-
-const renderValue = {
-  isEqual(oldState, newState) {
-    return oldState.value === newState.value
-  },
-  apply(oldState, newState) {
-    return [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.QuickPick, /* method */ 'setValue', /* value */ newState.value]
-  },
-}
-
-const renderCursorOffset = {
-  isEqual(oldState, newState) {
-    oldState.cursorOffset === newState.cursorOffset || newState.cursorOffset === newState.value.length
-  },
-  apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.QuickPick,
-      /* method */ 'setCursorOffset',
-      /* cursorOffset */ newState.cursorOffset,
-    ]
-  },
-}
-
-const getItemDomChanges = (oldState, newState) => {
-  const oldItems = oldState.items
-  const newItems = newState.items
-  const length = oldItems.length
-  const domChanges = []
-  for (let i = 0; i < length; i++) {
-    const oldItem = oldItems[i]
-    const newItem = newItems[i]
-    if (oldItem.icon && !newItem.icon) {
-      domChanges.push({
-        command: 'addIcon',
-        icon: newItem.icon,
-        index: i,
-      })
-    }
-  }
-  return domChanges
-}
-
-const renderItems = {
-  isEqual(oldState, newState) {
-    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
-  },
-  apply(oldState, newState) {
-    if (newState.items.length === 0) {
-      return [/* method */ 'showNoResults']
-    }
-    const visibleItems = getVisible(newState.provider, newState.items, newState.minLineY, newState.maxLineY)
-    return [/* method */ 'setVisiblePicks', /* visiblePicks */ visibleItems]
-  },
-}
-
-const renderFocusedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex
-  },
-  apply(oldState, newState) {
-    const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
-    const newFocusedIndex = newState.focusedIndex - newState.minLineY
-    return [/* method */ 'setFocusedIndex', /* oldFocusedIndex */ oldFocusedIndex, /* newFocusedIndex */ newFocusedIndex]
-  },
-}
-
-const renderHeight = {
-  isEqual(oldState, newState) {
-    return oldState.items.length === newState.items.length
-  },
-  apply(oldState, newState) {
-    const maxLineY = Math.min(newState.maxLineY, newState.items.length)
-    const itemCount = maxLineY - newState.minLineY
-    const height = itemCount * newState.itemHeight
-    return [/* method */ 'setItemsHeight', /* height */ height]
-  },
-}
-
-export const render = [renderItems, renderValue, renderCursorOffset, renderFocusedIndex, renderHeight]
 
 export * from '../VirtualList/VirtualList.js'
