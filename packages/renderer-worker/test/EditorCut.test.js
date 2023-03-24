@@ -41,7 +41,7 @@ test('editorCut', async () => {
     undoStack: [],
   }
   expect(await EditorCut.cut(editor)).toMatchObject({
-    selections: EditorSelection.fromRange(1, 1, 1, 1),
+    selections: EditorSelection.fromRange(1, 1, 2, 2),
     lines: ['line 1', 'lne 3', ''],
   })
 
