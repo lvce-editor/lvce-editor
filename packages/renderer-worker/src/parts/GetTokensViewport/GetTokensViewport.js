@@ -58,13 +58,16 @@ const getTokensViewportEmbedded = (langageId, lines, lineCache, linesWithEmbed) 
   }
 }
 
+const getTokenizeEndIndex = (invalidStartIndex, endLineIndex, tokenizeStartIndex) => {
+  return invalidStartIndex < endLineIndex ? endLineIndex : tokenizeStartIndex
+}
+
 // TODO only send changed lines to renderer process instead of all lines in viewport
 export const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
-  const { invalidStartIndex, lineCache } = editor
-  const { tokenizer, lines, languageId } = editor
+  const { invalidStartIndex, lineCache, tokenizer, lines, languageId } = editor
   const { hasArrayReturn, tokenizeLine, initialLineState } = tokenizer
   const tokenizeStartIndex = invalidStartIndex
-  const tokenizeEndIndex = invalidStartIndex < endLineIndex ? endLineIndex : tokenizeStartIndex
+  const tokenizeEndIndex = getTokenizeEndIndex(invalidStartIndex, endLineIndex, tokenizeStartIndex)
   const tokenizersToLoad = []
   const embeddedResults = []
   const linesWithEmbed = []
@@ -81,7 +84,7 @@ export const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   }
   const visibleLines = lineCache.slice(startLineIndex + 1, endLineIndex + 1)
   if (linesWithEmbed.length > 0) {
-    const { tokenizersToLoad, embeddedResults } = getTokensViewportEmbedded(lines, lineCache, linesWithEmbed)
+    const { tokenizersToLoad, embeddedResults } = getTokensViewportEmbedded(languageId, lines, lineCache, linesWithEmbed)
     // TODO support lineCache with embedded content
     editor.invalidStartIndex = 0
     return {
