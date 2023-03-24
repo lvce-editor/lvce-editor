@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
+import * as RendererWorkerCommandType from '../RendererWorkerCommandType/RendererWorkerCommandType.js'
 
 export const copyPath = async (state) => {
-  await Command.execute('ClipBoard.writeText', state.uri)
+  await Command.execute(RendererWorkerCommandType.ClipBoardWriteText, state.uri)
   return state
 }

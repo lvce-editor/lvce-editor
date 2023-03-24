@@ -1,19 +1,12 @@
-import * as Command from '../Command/Command.js'
-import * as Editor from '../Editor/Editor.js'
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditorCommandCutLine from './EditorCommandCutLine.js'
+import * as EditorCommandCutSelectedText from './EditorCommandCutSelectedText.js'
 
-export const cut = async (editor) => {
-  const selection = editor.selections[0]
-  if (selection.start === selection.end) {
-    // TODO cut line where cursor is
-  } else {
-    // cut selection
+export const cut = (editor) => {
+  const { selections } = editor
+  const [startRowIndex, startColumnIndex, endRowIndex, endColumnIndex] = selections
+  if (EditorSelection.isEmpty(startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)) {
+    return EditorCommandCutLine.cutLine(editor)
   }
-  const changes = editorReplaceSelections(editor, [''], EditOrigin.EditorCut)
-  const text = JoinLines.joinLines(changes[0].deleted)
-  // TODO remove selected text from document
-  await Command.execute(/* ClipBoard.writeText */ 'ClipBoard.writeText', /* text */ text)
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+  return EditorCommandCutSelectedText.cutSelectedText(editor)
 }
