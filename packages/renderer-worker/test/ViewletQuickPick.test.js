@@ -12,7 +12,7 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   }
 })
 
-const ViewletQuickPick = await import('../src/parts/ViewletQuickPick/ViewletQuickPick.js')
+const ViewletQuickPick = await import('../src/parts/ViewletQuickPick/ViewletQuickPick.ipc.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 
 const render = (oldState, newState) => {
