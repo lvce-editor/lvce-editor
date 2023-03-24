@@ -195,8 +195,8 @@ export const getVisible = (editor) => {
       for (let i = iMin; i < iMax; i++) {
         const currentLine = lines[i]
         const currentLineY = getY(i, minLineY, rowHeight)
-        const relativeLine = (i = minLineY)
-        const diffference = differences[relativeLine]
+        const relativeLine = i - minLineY
+        const difference = differences[relativeLine]
         const selectionWidth = getX(
           currentLine,
           currentLine.length,
@@ -208,7 +208,7 @@ export const getVisible = (editor) => {
           halfCursorWidth,
           width,
           averageCharWidth,
-          differences
+          difference
         )
         visibleSelections.push(0, currentLineY, selectionWidth, rowHeight)
       }
