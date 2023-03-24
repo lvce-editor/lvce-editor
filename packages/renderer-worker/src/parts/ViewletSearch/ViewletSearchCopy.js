@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as RendererWorkerCommandType from '../RendererWorkerCommandType/RendererWorkerCommandType.js'
 
 export const copy = async (state) => {
   const { items, listFocusedIndex } = state
@@ -6,6 +7,6 @@ export const copy = async (state) => {
     return state
   }
   const item = items[listFocusedIndex]
-  await Command.execute('ClipBoard.writeText', item.text)
+  await Command.execute(RendererWorkerCommandType.ClipBoardWriteText, item.text)
   return state
 }
