@@ -2,7 +2,7 @@ import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
 import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 
-const getTokensViewportEmbedded = (lines, lineCache, linesWithEmbed) => {
+const getTokensViewportEmbedded = (langageId, lines, lineCache, linesWithEmbed) => {
   const tokenizersToLoad = []
   const embeddedResults = []
   let topContext = undefined
@@ -16,6 +16,7 @@ const getTokensViewportEmbedded = (lines, lineCache, linesWithEmbed) => {
         const isFull = embeddedLanguageStart === 0 && embeddedLanguageEnd === line.length
         const partialLine = line.slice(embeddedLanguageStart, embeddedLanguageEnd)
         const embedResult = SafeTokenizeLine.safeTokenizeLine(
+          langageId,
           embeddedTokenizer.tokenizeLine,
           partialLine,
           topContext || embeddedTokenizer.initialLineState,
@@ -60,7 +61,7 @@ const getTokensViewportEmbedded = (lines, lineCache, linesWithEmbed) => {
 // TODO only send changed lines to renderer process instead of all lines in viewport
 export const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   const { invalidStartIndex, lineCache } = editor
-  const { tokenizer, lines } = editor
+  const { tokenizer, lines, languageId } = editor
   const { hasArrayReturn, tokenizeLine, initialLineState } = tokenizer
   const tokenizeStartIndex = invalidStartIndex
   const tokenizeEndIndex = invalidStartIndex < endLineIndex ? endLineIndex : tokenizeStartIndex
@@ -70,7 +71,7 @@ export const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   for (let i = tokenizeStartIndex; i < tokenizeEndIndex; i++) {
     const lineState = i === 0 ? initialLineState : lineCache[i]
     const line = lines[i]
-    const result = SafeTokenizeLine.safeTokenizeLine(tokenizeLine, line, lineState, hasArrayReturn)
+    const result = SafeTokenizeLine.safeTokenizeLine(languageId, tokenizeLine, line, lineState, hasArrayReturn)
     // TODO if lineCacheEnd matches the one before, skip tokenizing lines after
     lineCache[i + 1] = result
     if (result.embeddedLanguage) {

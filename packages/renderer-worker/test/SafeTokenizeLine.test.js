@@ -1,21 +1,27 @@
-import * as SafeTokenizeLine from '../src/parts/SafeTokenizeLine/SafeTokenizeLine.js'
 import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
+jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
+  return {
+    warn: jest.fn(),
+    error: jest.fn(),
+  }
+})
+
+const SafeTokenizeLine = await import('../src/parts/SafeTokenizeLine/SafeTokenizeLine.js')
+const Logger = await import('../src/parts/Logger/Logger.js')
+
 test('safeTokenizeLine - error - missing lineState in return value', () => {
   const tokenizeLine = () => {}
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  expect(
-    SafeTokenizeLine.safeTokenizeLine(tokenizeLine, 'test', {}, false)
-  ).toEqual({
+  expect(SafeTokenizeLine.safeTokenizeLine('', tokenizeLine, 'test', {}, false)).toEqual({
     tokens: [0, 4],
     lineState: {},
   })
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(new Error('invalid tokenization result'))
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(new Error('invalid tokenization result'))
 })
 
 test('safeTokenizeLine - error - missing tokens in return value', () => {
@@ -24,15 +30,12 @@ test('safeTokenizeLine - error - missing tokens in return value', () => {
       lineState: {},
     }
   }
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  expect(
-    SafeTokenizeLine.safeTokenizeLine(tokenizeLine, 'test', {}, false)
-  ).toEqual({
+  expect(SafeTokenizeLine.safeTokenizeLine('', tokenizeLine, 'test', {}, false)).toEqual({
     tokens: [0, 4],
     lineState: {},
   })
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(new Error('invalid tokenization result'))
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(new Error('invalid tokenization result'))
 })
 
 test('safeTokenizeLine - error - missing state in return value', () => {
@@ -42,15 +45,12 @@ test('safeTokenizeLine - error - missing state in return value', () => {
       tokens: [],
     }
   }
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  expect(
-    SafeTokenizeLine.safeTokenizeLine(tokenizeLine, 'test', {}, false)
-  ).toEqual({
+  expect(SafeTokenizeLine.safeTokenizeLine('', tokenizeLine, 'test', {}, false)).toEqual({
     tokens: [0, 4],
     lineState: {},
   })
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(new Error('invalid tokenization result'))
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(new Error('invalid tokenization result'))
 })
 
 test('safeTokenizeLine', () => {
@@ -66,32 +66,28 @@ test('safeTokenizeLine', () => {
       state: 1,
     }
   }
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  expect(
-    SafeTokenizeLine.safeTokenizeLine(tokenizeLine, 'test', {}, false)
-  ).toEqual({
+  expect(SafeTokenizeLine.safeTokenizeLine('', tokenizeLine, 'test', {}, false)).toEqual({
     tokens: [1, 4],
     lineState: {},
     state: 1,
   })
-  expect(spy).not.toHaveBeenCalled()
+  expect(Logger.error).not.toHaveBeenCalled()
 })
 
 test('safeTokenizeLine - with array return', () => {
   const tokenizeLine = () => {
     return {
       lineState: {},
-      tokens: [1, 4],
+      tokens: [{ type: 1, length: 4 }],
       state: 1,
     }
   }
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  expect(
-    SafeTokenizeLine.safeTokenizeLine(tokenizeLine, 'test', {}, true)
-  ).toEqual({
+  expect(SafeTokenizeLine.safeTokenizeLine('test', tokenizeLine, 'test', {}, false)).toEqual({
+    state: 1,
     tokens: [1, 4],
     lineState: {},
-    state: 1,
   })
-  expect(spy).not.toHaveBeenCalled()
+  expect(Logger.error).not.toHaveBeenCalled()
+  expect(Logger.warn).toHaveBeenCalledTimes(1)
+  expect(Logger.warn).toHaveBeenLastCalledWith('tokenizers without hasArrayReturn=false are deprecated (language test)')
 })
