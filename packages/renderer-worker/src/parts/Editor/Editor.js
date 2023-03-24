@@ -71,6 +71,7 @@ export const create = (id, uri, languageId, content) => {
     completionState: EditorCompletionState.None,
     longestLineWidth: 0,
     minimumSliderSize: Height.MinimumSliderSize,
+    differences: [],
   }
 }
 
@@ -375,13 +376,19 @@ const renderLines = {
   },
   apply(oldState, newState) {
     const { textInfos, differences } = EditorText.getVisible(newState)
+    newState.differences = differences
     return [/* method */ 'setText', /* textInfos */ textInfos, /* differences */ differences]
   },
 }
 
 const renderSelections = {
   isEqual(oldState, newState) {
-    return oldState.selections === newState.selections && oldState.focused === newState.focused && oldState.minLineY === newState.minLineY
+    return (
+      oldState.selections === newState.selections &&
+      oldState.focused === newState.focused &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.deltaX === newState.deltaX
+    )
   },
   apply(oldState, newState) {
     const { cursorInfos, selectionInfos } = EditorSelection.getVisible(newState)

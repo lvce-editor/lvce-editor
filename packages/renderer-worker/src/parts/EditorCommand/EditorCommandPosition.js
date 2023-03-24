@@ -6,7 +6,7 @@ export const at = (editor, eventX, eventY) => {
   Assert.object(editor)
   Assert.number(eventX)
   Assert.number(eventY)
-  const { y, deltaY, rowHeight, fontSize, fontWeight, fontFamily, letterSpacing, lines, tabSize } = editor
+  const { y, deltaY, rowHeight, fontSize, fontWeight, fontFamily, letterSpacing, lines, tabSize, differences } = editor
   const rowIndex = Math.floor((eventY - y + deltaY) / rowHeight)
   if (rowIndex < 0) {
     return {
@@ -14,6 +14,7 @@ export const at = (editor, eventX, eventY) => {
       columnIndex: 0,
     }
   }
+  const difference = differences[rowIndex]
   const clampedRowIndex = Clamp.clamp(rowIndex, 0, lines.length - 1)
   const line = lines[clampedRowIndex]
   const columnIndex = GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, eventX)

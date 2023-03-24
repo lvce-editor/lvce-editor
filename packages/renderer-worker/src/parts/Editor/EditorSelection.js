@@ -53,7 +53,7 @@ export const applyEdit = (editor, changes) => {
 // TODO visible selections could also be uint16array
 // [top1, left1, width1, height1, top2, left2, width2, height2...]
 
-const getX = (line, column, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, halfCursorWidth, width, averageCharWidth) => {
+const getX = (line, column, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, halfCursorWidth, width, averageCharWidth, difference) => {
   if (!line) {
     return 0
   }
@@ -62,6 +62,7 @@ const getX = (line, column, fontWeight, fontSize, fontFamily, letterSpacing, tab
   Assert.number(halfCursorWidth)
   Assert.number(width)
   Assert.number(averageCharWidth)
+  Assert.number(difference)
   if (column === 0) {
     return 0
   }
@@ -72,7 +73,7 @@ const getX = (line, column, fontWeight, fontSize, fontFamily, letterSpacing, tab
   const normalize = NormalizeText.shouldNormalizeText(line)
   const normalizedLine = NormalizeText.normalizeText(line, normalize, tabSize)
   const partialText = normalizedLine.slice(0, column)
-  return MeasureTextWidth.measureTextWidth(partialText, fontWeight, fontSize, fontFamily, letterSpacing) - halfCursorWidth
+  return MeasureTextWidth.measureTextWidth(partialText, fontWeight, fontSize, fontFamily, letterSpacing) - halfCursorWidth + difference
 }
 
 const getY = (row, minLineY, rowHeight) => {
@@ -88,8 +89,21 @@ export const getVisible = (editor) => {
   const visibleSelections = []
   // // TODO binary search
 
-  const { selections, minLineY, maxLineY, rowHeight, lines, fontSize, fontFamily, fontWeight, letterSpacing, cursorWidth, tabSize, width } = editor
-  console.log({ width })
+  const {
+    selections,
+    minLineY,
+    maxLineY,
+    rowHeight,
+    lines,
+    fontSize,
+    fontFamily,
+    fontWeight,
+    letterSpacing,
+    cursorWidth,
+    tabSize,
+    width,
+    differences,
+  } = editor
   const averageCharWidth = getAverageCharWidthOrDefault(fontWeight, fontSize, fontFamily, letterSpacing)
   const halfCursorWidth = cursorWidth / 2
   for (let i = 0; i < selections.length; i += 4) {
@@ -100,6 +114,8 @@ export const getVisible = (editor) => {
     if (selectionEndRow < minLineY || selectionStartRow > maxLineY) {
       continue
     }
+    const relativeEndLineRow = selectionEndRow - minLineY
+    const endLineDifference = differences[relativeEndLineRow]
     const endLine = lines[selectionEndRow]
     const endLineEndX = getX(
       endLine,
@@ -111,14 +127,17 @@ export const getVisible = (editor) => {
       tabSize,
       halfCursorWidth,
       width,
-      averageCharWidth
+      averageCharWidth,
+      endLineDifference
     )
     const endLineY = getY(selectionEndRow, minLineY, rowHeight)
-    if (EditorSelection.isEmpty(selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn)) {
+    if (EditorSelection.isEmpty(selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) && endLineEndX > 0) {
       visibleCursors.push(endLineEndX, endLineY)
       continue
     }
     const startLineY = getY(selectionStartRow, minLineY, rowHeight)
+    const startLineYRelative = selectionStartRow - minLineY
+    const startLineDifference = differences[startLineYRelative]
     if (selectionStartRow === selectionEndRow) {
       const startX = getX(
         endLine,
@@ -130,9 +149,12 @@ export const getVisible = (editor) => {
         tabSize,
         halfCursorWidth,
         width,
-        averageCharWidth
+        averageCharWidth,
+        startLineDifference
       )
-      visibleCursors.push(endLineEndX, endLineY)
+      if (endLineEndX > 0) {
+        visibleCursors.push(endLineEndX, endLineY)
+      }
       const selectionWidth = endLineEndX - startX
       visibleSelections.push(startX, startLineY, selectionWidth, rowHeight)
     } else {
@@ -148,7 +170,8 @@ export const getVisible = (editor) => {
           tabSize,
           halfCursorWidth,
           width,
-          averageCharWidth
+          averageCharWidth,
+          startLineDifference
         )
         const startLineEndX = getX(
           startLine,
@@ -160,7 +183,8 @@ export const getVisible = (editor) => {
           tabSize,
           halfCursorWidth,
           width,
-          averageCharWidth
+          averageCharWidth,
+          startLineDifference
         )
         const startLineStartY = getY(selectionStartRow, minLineY, rowHeight)
         const selectionWidth = startLineEndX - startLineStartX
@@ -171,6 +195,8 @@ export const getVisible = (editor) => {
       for (let i = iMin; i < iMax; i++) {
         const currentLine = lines[i]
         const currentLineY = getY(i, minLineY, rowHeight)
+        const relativeLine = (i = minLineY)
+        const diffference = differences[relativeLine]
         const selectionWidth = getX(
           currentLine,
           currentLine.length,
@@ -181,7 +207,8 @@ export const getVisible = (editor) => {
           tabSize,
           halfCursorWidth,
           width,
-          averageCharWidth
+          averageCharWidth,
+          differences
         )
         visibleSelections.push(0, currentLineY, selectionWidth, rowHeight)
       }
