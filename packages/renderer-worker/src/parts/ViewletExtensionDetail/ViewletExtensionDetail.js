@@ -1,11 +1,9 @@
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetExtensionReadme from '../GetExtensionReadme/GetExtensionReadme.js'
 import * as GetViewletSize from '../GetViewletSize/GetViewletSize.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MarkDown from '../Markdown/Markdown.js'
-import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
@@ -22,35 +20,6 @@ export const create = (id, uri, x, y, width, height) => {
     height,
     size: ViewletSize.None,
   }
-}
-
-const loadReadmeContent = async (path) => {
-  try {
-    const readmeUrl = Path.join('/', path, 'README.md')
-    const readmeContent = await FileSystem.readFile(readmeUrl)
-    return readmeContent
-  } catch (error) {
-    // @ts-ignore
-    if (error && error.code === ErrorCodes.ENOENT) {
-      return ''
-    }
-    console.error(error)
-    return `${error}`
-  }
-}
-
-// TODO duplicate code with viewletExtensions
-const getIconSrc = (extension) => {
-  if (extension.icon) {
-    return ExtensionDisplay.getIcon(extension)
-  }
-  if (extension.name && extension.name.startsWith('Language Basics')) {
-    return Icon.ExtensionLanguageBasics
-  }
-  if (extension.name && extension.name.endsWith(' Theme')) {
-    return Icon.ExtensionTheme
-  }
-  return Icon.ExtensionDefaultIcon
 }
 
 const getBaseUrl = (extensionPath) => {
@@ -76,14 +45,14 @@ export const loadContent = async (state) => {
   const { uri, width } = state
   const id = uri.slice('extension-detail://'.length)
   const extension = await ExtensionManagement.getExtension(id)
-  const readmeContent = await loadReadmeContent(extension.path)
+  const readmeContent = await GetExtensionReadme.loadReadmeContent(extension.path)
   const baseUrl = getBaseUrl(extension.path)
   const readmeHtml = MarkDown.toHtml(readmeContent, {
     baseUrl,
   })
   const sanitizedReadmeHtml = await SanitizeHtml.sanitizeHtml(readmeHtml)
   const normalizedReadmeHtml = sanitizedReadmeHtml
-  const iconSrc = getIconSrc(extension)
+  const iconSrc = ExtensionDisplay.getIcon(extension)
   const description = ExtensionDisplay.getDescription(extension)
   const name = ExtensionDisplay.getName(extension)
   const size = GetViewletSize.getViewletSize(width)
