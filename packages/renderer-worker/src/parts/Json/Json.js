@@ -1,7 +1,8 @@
 import { VError } from '../VError/VError.js'
+import * as Character from '../Character/Character.js'
 
 export const stringify = (value) => {
-  return JSON.stringify(value, null, 2) + '\n'
+  return JSON.stringify(value, null, 2) + Character.NewLine
 }
 
 export const stringifyCompact = (value) => {

@@ -1,5 +1,5 @@
 import * as Ajax from '../Ajax/Ajax.js'
-import { AssertionError } from '../AssertionError/AssertionError.js'
+import * as Character from '../Character/Character.js'
 import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
@@ -84,7 +84,7 @@ const toAbsoluteUrl = (file, relativePath) => {
 }
 
 const getSourceMapMatch = (text) => {
-  const index = text.lastIndexOf('\n', text.length - 2)
+  const index = text.lastIndexOf(Character.NewLine, text.length - 2)
   const lastLine = text.slice(index + 1, -1)
   const lastLineMatch = lastLine.match(RE_SOURCE_MAP)
   if (lastLineMatch) {
