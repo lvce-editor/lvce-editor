@@ -7,6 +7,8 @@ import * as DebugState from '../DebugState/DebugState.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugValueType from '../DebugValueType/DebugValueType.js'
+import * as Character from '../Character/Character.js'
+
 /**
  * @enum {string}
  */
@@ -76,7 +78,7 @@ const toDisplayScopeChain = (params, thisObject, scopeChain, knownProperties) =>
     // if(params.reason)
     if (scope.type === DebugScopeType.Local) {
       if (params.reason === DebugPausedReason.Exception) {
-        const value = params.data.description.replaceAll('\n', ' ')
+        const value = params.data.description.replaceAll(Character.NewLine, Character.Space)
         elements.push({
           type: DebugScopeChainType.Exception,
           key: 'Exception',
