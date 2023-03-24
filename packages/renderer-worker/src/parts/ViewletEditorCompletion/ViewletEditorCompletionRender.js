@@ -1,3 +1,9 @@
+import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
+
+const getLabel = (item) => {
+  return item.label
+}
+
 export const hasFunctionalRender = true
 
 const getVisibleItems = (filteredItems, minLineY, maxLineY) => {

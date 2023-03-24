@@ -34,10 +34,6 @@ const getEditor = () => {
   return Viewlet.getState('EditorText')
 }
 
-const getLabel = (item) => {
-  return item.label
-}
-
 const getDisplayErrorMessage = (error) => {
   const message = `${error}`
   const errorPrefix = 'Error: '
