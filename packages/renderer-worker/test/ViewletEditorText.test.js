@@ -54,7 +54,7 @@ test('resize - increase height', () => {
         ['line 3', 'Token Text'],
       ],
       [0, 0, 0],
-      new Float32Array(),
+      new Float32Array([0, 0]),
       new Float32Array([0, 0, 0, 20]),
     ],
   ])
@@ -99,7 +99,7 @@ test('resize - same height', () => {
         ['line 3', 'Token Text'],
       ],
       [0, 0, 0],
-      new Float32Array(),
+      new Float32Array([0, 0]),
       new Float32Array([0, 0, 0, 20]),
     ],
   ])
@@ -141,7 +141,7 @@ test('resize - reduce height', () => {
       0,
       [['line 1', 'Token Text']],
       [0],
-      new Float32Array(),
+      new Float32Array([0, 0]),
       new Float32Array([0, 0, 0, 20]),
     ],
   ])
