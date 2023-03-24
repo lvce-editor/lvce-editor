@@ -14,39 +14,6 @@ import * as ViewletActivityBarStrings from './ViewletActivityBarStrings.js'
 // TODO this should be create
 // TODO unregister listeners when hidden
 
-const getNumberOfVisibleItems = (state) => {
-  const { height, itemHeight } = state
-  const numberOfVisibleItemsTop = Math.floor(height / itemHeight)
-  return numberOfVisibleItemsTop
-}
-
-export const getHiddenItems = (state) => {
-  const numberOfVisibleItems = getNumberOfVisibleItems(state)
-  const items = state.activityBarItems
-  if (numberOfVisibleItems >= items.length) {
-    return []
-  }
-  return state.activityBarItems.slice(numberOfVisibleItems - 2, -1)
-}
-
-const getVisibleActivityBarItems = (state) => {
-  const numberOfVisibleItems = getNumberOfVisibleItems(state)
-  const items = state.activityBarItems
-  if (numberOfVisibleItems >= items.length) {
-    return items
-  }
-  const showMoreItem = {
-    id: 'Additional Views',
-    title: ViewletActivityBarStrings.additionalViews(),
-    icon: Icon.Ellipsis,
-    enabled: true,
-    flags: ActivityBarItemFlags.Button,
-    keyShortCuts: '',
-  }
-  const visibleItems = [...items.slice(0, numberOfVisibleItems - 2), showMoreItem, items.at(-1)]
-  return visibleItems
-}
-
 export const create = (id, uri, x, y, width, height) => {
   return {
     // TODO declarative event api is good, but need to bind
@@ -207,49 +174,3 @@ export const focus = (state) => {
   const indexToFocus = focusedIndex === -1 ? 0 : focusedIndex
   return focusIndex(state, indexToFocus)
 }
-
-export const hasFunctionalResize = true
-
-export const resize = (state, dimensions) => {
-  return {
-    ...state,
-    ...dimensions,
-  }
-}
-
-const renderActivityBarItems = {
-  isEqual(oldState, newState) {
-    return oldState.activityBarItems === newState.activityBarItems && oldState.height === newState.height
-  },
-  apply(oldState, newState) {
-    const visibleItems = getVisibleActivityBarItems(newState)
-    return [/* method */ 'setItems', /* items */ visibleItems]
-  },
-}
-
-const renderFocusedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex && oldState.focused === newState.focused
-  },
-  apply(oldState, newState) {
-    return [
-      /* method */ 'setFocusedIndex',
-      /* unFocusIndex */ oldState.focusedIndex,
-      /* focusIndex */ newState.focusedIndex,
-      /* focused */ newState.focused,
-    ]
-  },
-}
-
-const renderSelectedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.selectedIndex === newState.selectedIndex
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setSelectedIndex', /* oldIndex */ oldState.selectedIndex, /* newIndex */ newState.selectedIndex]
-  },
-}
-
-export const render = [renderActivityBarItems, renderFocusedIndex, renderSelectedIndex]
-
-export const hasFunctionalRender = true
