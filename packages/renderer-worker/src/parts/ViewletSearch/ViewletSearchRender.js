@@ -1,3 +1,8 @@
+import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
+import * as Workspace from '../Workspace/Workspace.js'
+
 const toDisplayResults = (results, itemHeight, resultCount, searchTerm, minLineY, maxLineY) => {
   // results.sort(compareResults)
   const displayResults = []
