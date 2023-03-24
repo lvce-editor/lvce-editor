@@ -1,8 +1,7 @@
 export const name = 'TitleBar'
 
-// prettier-ignore
-export const Commands = {
-}
-
 export * from './ViewletTitleBarCss.js'
 export * from './ViewletTitleBar.js'
+export * from './ViewletTitleBarRender.js'
+export * from './ViewletTitleBarResize.js'
+export * from './ViewletTitleBarCommands.js'
