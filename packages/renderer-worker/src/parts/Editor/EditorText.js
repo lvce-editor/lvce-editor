@@ -107,14 +107,38 @@ const applyChangesToSyntaxHighlighting = (editor, changes) => {
 //   return result
 // }
 
-const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line, normalize, tabSize) => {
+const getStartDefaults = (tokens, minOffset) => {
   let start = 0
   let end = 0
+  let startIndex = 0
+  const tokensLength = tokens.length
+  for (let i = 0; i < tokensLength; i += 2) {
+    const tokenLength = tokens[i + 1]
+    end += tokenLength
+    start = end
+    if (start >= minOffset) {
+      start -= tokenLength
+      end -= tokenLength
+      startIndex = i
+      break
+    }
+  }
+  return {
+    start,
+    end,
+    startIndex,
+  }
+}
+
+const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line, normalize, tabSize, width, deltaX, averageCharWidth, minOffset, maxOffset) => {
   const lineInfo = []
   const embeddedResult = embeddedResults[tokenResults.embeddedResultIndex]
   const embeddedTokens = embeddedResult.result.tokens
   const embeddedTokenMap = embeddedResult.TokenMap
-  for (let i = 0; i < embeddedTokens.length; i += 2) {
+  const tokensLength = embeddedTokens.length
+  let { startIndex, start, end } = getStartDefaults(embeddedTokens, minOffset)
+  const difference = getDifference(start, averageCharWidth, deltaX)
+  for (let i = startIndex; i < tokensLength; i += 2) {
     const tokenType = embeddedTokens[i]
     const tokenLength = embeddedTokens[i + 1]
     let extraClassName = ''
@@ -124,10 +148,13 @@ const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line, normalize,
     const normalizedText = NormalizeText.normalizeText(text, normalize, tabSize)
     lineInfo.push(normalizedText, className)
     start = end
+    if (end >= maxOffset) {
+      break
+    }
   }
   return {
     lineInfo,
-    difference: 0,
+    difference,
   }
 }
 
@@ -148,6 +175,12 @@ const getOffsets = (deltaX, width, averageCharWidth) => {
   }
 }
 
+const getDifference = (start, averageCharWidth, deltaX) => {
+  const beforeWidth = start * averageCharWidth
+  const difference = beforeWidth - deltaX
+  return difference
+}
+
 const getLineInfoDefault = (
   line,
   tokenResults,
@@ -159,10 +192,10 @@ const getLineInfoDefault = (
   tabSize,
   width,
   deltaX,
-  averageCharWidth
+  averageCharWidth,
+  minOffset,
+  maxOffset
 ) => {
-  let start = 0
-  let end = 0
   const lineInfo = []
   let decorationIndex = 0
   for (; decorationIndex < decorations.length; decorationIndex += 3) {
@@ -172,29 +205,9 @@ const getLineInfoDefault = (
     }
   }
   const tokens = tokenResults.tokens
-
-  const { minOffset, maxOffset } = getOffsets(deltaX, width, averageCharWidth)
-  let startIndex = 0
+  let { startIndex, start, end } = getStartDefaults(tokens, minOffset)
+  const difference = getDifference(start, averageCharWidth, deltaX)
   const tokensLength = tokens.length
-
-  for (let i = 0; i < tokensLength; i += 2) {
-    const tokenLength = tokens[i + 1]
-    end += tokenLength
-    start = end
-    if (start >= minOffset) {
-      start -= tokenLength
-      end -= tokenLength
-      startIndex = i
-      break
-    }
-  }
-  const beforeWidth = start * averageCharWidth
-  // console.log({ beforeWidth, deltaX })
-  // if (deltaX > 0 && beforeWidth < deltaX) {
-  //   throw new Error(`beforeWidth must be greater than deltaX`)
-  // }
-  const difference = beforeWidth - deltaX
-
   for (let i = startIndex; i < tokensLength; i += 2) {
     const tokenType = tokens[i]
     const tokenLength = tokens[i + 1]
@@ -230,10 +243,11 @@ const getLineInfoDefault = (
 }
 
 const getLineInfo = (line, tokenResults, embeddedResults, decorations, TokenMap, lineOffset, normalize, tabSize, width, deltaX, averageCharWidth) => {
+  const { minOffset, maxOffset } = getOffsets(deltaX, width, averageCharWidth)
   if (embeddedResults.length > 0 && tokenResults.embeddedResultIndex !== undefined) {
     const embeddedResult = embeddedResults[tokenResults.embeddedResultIndex]
     if (embeddedResult && embeddedResult.isFull) {
-      return getLineInfoEmbeddedFull(embeddedResults, tokenResults, line, normalize, tabSize)
+      return getLineInfoEmbeddedFull(embeddedResults, tokenResults, line, normalize, tabSize, width, deltaX, averageCharWidth, minOffset, maxOffset)
     }
   }
   return getLineInfoDefault(
@@ -247,7 +261,9 @@ const getLineInfo = (line, tokenResults, embeddedResults, decorations, TokenMap,
     tabSize,
     width,
     deltaX,
-    averageCharWidth
+    averageCharWidth,
+    minOffset,
+    maxOffset
   )
 }
 
