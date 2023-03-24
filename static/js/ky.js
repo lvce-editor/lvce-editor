@@ -92,7 +92,8 @@ const supportsRequestStreams = (() => {
   let duplexAccessed = false;
   let hasContentType = false;
   const supportsReadableStream = typeof globalThis.ReadableStream === "function";
-  if (supportsReadableStream) {
+  const supportsRequest = typeof globalThis.Request === "function";
+  if (supportsReadableStream && supportsRequest) {
     hasContentType = new globalThis.Request("https://a.com", {
       body: new globalThis.ReadableStream(),
       method: "POST",

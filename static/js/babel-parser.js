@@ -14,7 +14,599 @@ function commonjsRequire() {
   throw new Error("Dynamic requires are not currently supported by @rollup/plugin-commonjs");
 }
 var lib = createCommonjsModule(function(module, exports) {
-  Object.defineProperty(exports, "__esModule", {value: true});
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  const defaultOptions = {
+    sourceType: "script",
+    sourceFilename: void 0,
+    startColumn: 0,
+    startLine: 1,
+    allowAwaitOutsideFunction: false,
+    allowReturnOutsideFunction: false,
+    allowNewTargetOutsideFunction: false,
+    allowImportExportEverywhere: false,
+    allowSuperOutsideMethod: false,
+    allowUndeclaredExports: false,
+    plugins: [],
+    strictMode: null,
+    ranges: false,
+    tokens: false,
+    createParenthesizedExpressions: false,
+    errorRecovery: false,
+    attachComment: true,
+    annexB: true
+  };
+  function getOptions(opts) {
+    if (opts && opts.annexB != null && opts.annexB !== false) {
+      throw new Error("The `annexB` option can only be set to `false`.");
+    }
+    const options = {};
+    for (const key of Object.keys(defaultOptions)) {
+      options[key] = opts && opts[key] != null ? opts[key] : defaultOptions[key];
+    }
+    return options;
+  }
+  class TokContext {
+    constructor(token, preserveSpace) {
+      this.token = void 0;
+      this.preserveSpace = void 0;
+      this.token = token;
+      this.preserveSpace = !!preserveSpace;
+    }
+  }
+  const types = {
+    brace: new TokContext("{"),
+    j_oTag: new TokContext("<tag"),
+    j_cTag: new TokContext("</tag"),
+    j_expr: new TokContext("<tag>...</tag>", true)
+  };
+  {
+    types.template = new TokContext("`", true);
+  }
+  const beforeExpr = true;
+  const startsExpr = true;
+  const isLoop = true;
+  const isAssign = true;
+  const prefix = true;
+  const postfix = true;
+  class ExportedTokenType {
+    constructor(label, conf = {}) {
+      this.label = void 0;
+      this.keyword = void 0;
+      this.beforeExpr = void 0;
+      this.startsExpr = void 0;
+      this.rightAssociative = void 0;
+      this.isLoop = void 0;
+      this.isAssign = void 0;
+      this.prefix = void 0;
+      this.postfix = void 0;
+      this.binop = void 0;
+      this.label = label;
+      this.keyword = conf.keyword;
+      this.beforeExpr = !!conf.beforeExpr;
+      this.startsExpr = !!conf.startsExpr;
+      this.rightAssociative = !!conf.rightAssociative;
+      this.isLoop = !!conf.isLoop;
+      this.isAssign = !!conf.isAssign;
+      this.prefix = !!conf.prefix;
+      this.postfix = !!conf.postfix;
+      this.binop = conf.binop != null ? conf.binop : null;
+      {
+        this.updateContext = null;
+      }
+    }
+  }
+  const keywords$1 = new Map();
+  function createKeyword(name, options = {}) {
+    options.keyword = name;
+    const token = createToken(name, options);
+    keywords$1.set(name, token);
+    return token;
+  }
+  function createBinop(name, binop) {
+    return createToken(name, {
+      beforeExpr,
+      binop
+    });
+  }
+  let tokenTypeCounter = -1;
+  const tokenTypes = [];
+  const tokenLabels = [];
+  const tokenBinops = [];
+  const tokenBeforeExprs = [];
+  const tokenStartsExprs = [];
+  const tokenPrefixes = [];
+  function createToken(name, options = {}) {
+    var _options$binop, _options$beforeExpr, _options$startsExpr, _options$prefix;
+    ++tokenTypeCounter;
+    tokenLabels.push(name);
+    tokenBinops.push((_options$binop = options.binop) != null ? _options$binop : -1);
+    tokenBeforeExprs.push((_options$beforeExpr = options.beforeExpr) != null ? _options$beforeExpr : false);
+    tokenStartsExprs.push((_options$startsExpr = options.startsExpr) != null ? _options$startsExpr : false);
+    tokenPrefixes.push((_options$prefix = options.prefix) != null ? _options$prefix : false);
+    tokenTypes.push(new ExportedTokenType(name, options));
+    return tokenTypeCounter;
+  }
+  function createKeywordLike(name, options = {}) {
+    var _options$binop2, _options$beforeExpr2, _options$startsExpr2, _options$prefix2;
+    ++tokenTypeCounter;
+    keywords$1.set(name, tokenTypeCounter);
+    tokenLabels.push(name);
+    tokenBinops.push((_options$binop2 = options.binop) != null ? _options$binop2 : -1);
+    tokenBeforeExprs.push((_options$beforeExpr2 = options.beforeExpr) != null ? _options$beforeExpr2 : false);
+    tokenStartsExprs.push((_options$startsExpr2 = options.startsExpr) != null ? _options$startsExpr2 : false);
+    tokenPrefixes.push((_options$prefix2 = options.prefix) != null ? _options$prefix2 : false);
+    tokenTypes.push(new ExportedTokenType("name", options));
+    return tokenTypeCounter;
+  }
+  const tt = {
+    bracketL: createToken("[", {
+      beforeExpr,
+      startsExpr
+    }),
+    bracketHashL: createToken("#[", {
+      beforeExpr,
+      startsExpr
+    }),
+    bracketBarL: createToken("[|", {
+      beforeExpr,
+      startsExpr
+    }),
+    bracketR: createToken("]"),
+    bracketBarR: createToken("|]"),
+    braceL: createToken("{", {
+      beforeExpr,
+      startsExpr
+    }),
+    braceBarL: createToken("{|", {
+      beforeExpr,
+      startsExpr
+    }),
+    braceHashL: createToken("#{", {
+      beforeExpr,
+      startsExpr
+    }),
+    braceR: createToken("}"),
+    braceBarR: createToken("|}"),
+    parenL: createToken("(", {
+      beforeExpr,
+      startsExpr
+    }),
+    parenR: createToken(")"),
+    comma: createToken(",", {
+      beforeExpr
+    }),
+    semi: createToken(";", {
+      beforeExpr
+    }),
+    colon: createToken(":", {
+      beforeExpr
+    }),
+    doubleColon: createToken("::", {
+      beforeExpr
+    }),
+    dot: createToken("."),
+    question: createToken("?", {
+      beforeExpr
+    }),
+    questionDot: createToken("?."),
+    arrow: createToken("=>", {
+      beforeExpr
+    }),
+    template: createToken("template"),
+    ellipsis: createToken("...", {
+      beforeExpr
+    }),
+    backQuote: createToken("`", {
+      startsExpr
+    }),
+    dollarBraceL: createToken("${", {
+      beforeExpr,
+      startsExpr
+    }),
+    templateTail: createToken("...`", {
+      startsExpr
+    }),
+    templateNonTail: createToken("...${", {
+      beforeExpr,
+      startsExpr
+    }),
+    at: createToken("@"),
+    hash: createToken("#", {
+      startsExpr
+    }),
+    interpreterDirective: createToken("#!..."),
+    eq: createToken("=", {
+      beforeExpr,
+      isAssign
+    }),
+    assign: createToken("_=", {
+      beforeExpr,
+      isAssign
+    }),
+    slashAssign: createToken("_=", {
+      beforeExpr,
+      isAssign
+    }),
+    xorAssign: createToken("_=", {
+      beforeExpr,
+      isAssign
+    }),
+    moduloAssign: createToken("_=", {
+      beforeExpr,
+      isAssign
+    }),
+    incDec: createToken("++/--", {
+      prefix,
+      postfix,
+      startsExpr
+    }),
+    bang: createToken("!", {
+      beforeExpr,
+      prefix,
+      startsExpr
+    }),
+    tilde: createToken("~", {
+      beforeExpr,
+      prefix,
+      startsExpr
+    }),
+    doubleCaret: createToken("^^", {
+      startsExpr
+    }),
+    doubleAt: createToken("@@", {
+      startsExpr
+    }),
+    pipeline: createBinop("|>", 0),
+    nullishCoalescing: createBinop("??", 1),
+    logicalOR: createBinop("||", 1),
+    logicalAND: createBinop("&&", 2),
+    bitwiseOR: createBinop("|", 3),
+    bitwiseXOR: createBinop("^", 4),
+    bitwiseAND: createBinop("&", 5),
+    equality: createBinop("==/!=/===/!==", 6),
+    lt: createBinop("</>/<=/>=", 7),
+    gt: createBinop("</>/<=/>=", 7),
+    relational: createBinop("</>/<=/>=", 7),
+    bitShift: createBinop("<</>>/>>>", 8),
+    bitShiftL: createBinop("<</>>/>>>", 8),
+    bitShiftR: createBinop("<</>>/>>>", 8),
+    plusMin: createToken("+/-", {
+      beforeExpr,
+      binop: 9,
+      prefix,
+      startsExpr
+    }),
+    modulo: createToken("%", {
+      binop: 10,
+      startsExpr
+    }),
+    star: createToken("*", {
+      binop: 10
+    }),
+    slash: createBinop("/", 10),
+    exponent: createToken("**", {
+      beforeExpr,
+      binop: 11,
+      rightAssociative: true
+    }),
+    _in: createKeyword("in", {
+      beforeExpr,
+      binop: 7
+    }),
+    _instanceof: createKeyword("instanceof", {
+      beforeExpr,
+      binop: 7
+    }),
+    _break: createKeyword("break"),
+    _case: createKeyword("case", {
+      beforeExpr
+    }),
+    _catch: createKeyword("catch"),
+    _continue: createKeyword("continue"),
+    _debugger: createKeyword("debugger"),
+    _default: createKeyword("default", {
+      beforeExpr
+    }),
+    _else: createKeyword("else", {
+      beforeExpr
+    }),
+    _finally: createKeyword("finally"),
+    _function: createKeyword("function", {
+      startsExpr
+    }),
+    _if: createKeyword("if"),
+    _return: createKeyword("return", {
+      beforeExpr
+    }),
+    _switch: createKeyword("switch"),
+    _throw: createKeyword("throw", {
+      beforeExpr,
+      prefix,
+      startsExpr
+    }),
+    _try: createKeyword("try"),
+    _var: createKeyword("var"),
+    _const: createKeyword("const"),
+    _with: createKeyword("with"),
+    _new: createKeyword("new", {
+      beforeExpr,
+      startsExpr
+    }),
+    _this: createKeyword("this", {
+      startsExpr
+    }),
+    _super: createKeyword("super", {
+      startsExpr
+    }),
+    _class: createKeyword("class", {
+      startsExpr
+    }),
+    _extends: createKeyword("extends", {
+      beforeExpr
+    }),
+    _export: createKeyword("export"),
+    _import: createKeyword("import", {
+      startsExpr
+    }),
+    _null: createKeyword("null", {
+      startsExpr
+    }),
+    _true: createKeyword("true", {
+      startsExpr
+    }),
+    _false: createKeyword("false", {
+      startsExpr
+    }),
+    _typeof: createKeyword("typeof", {
+      beforeExpr,
+      prefix,
+      startsExpr
+    }),
+    _void: createKeyword("void", {
+      beforeExpr,
+      prefix,
+      startsExpr
+    }),
+    _delete: createKeyword("delete", {
+      beforeExpr,
+      prefix,
+      startsExpr
+    }),
+    _do: createKeyword("do", {
+      isLoop,
+      beforeExpr
+    }),
+    _for: createKeyword("for", {
+      isLoop
+    }),
+    _while: createKeyword("while", {
+      isLoop
+    }),
+    _as: createKeywordLike("as", {
+      startsExpr
+    }),
+    _assert: createKeywordLike("assert", {
+      startsExpr
+    }),
+    _async: createKeywordLike("async", {
+      startsExpr
+    }),
+    _await: createKeywordLike("await", {
+      startsExpr
+    }),
+    _from: createKeywordLike("from", {
+      startsExpr
+    }),
+    _get: createKeywordLike("get", {
+      startsExpr
+    }),
+    _let: createKeywordLike("let", {
+      startsExpr
+    }),
+    _meta: createKeywordLike("meta", {
+      startsExpr
+    }),
+    _of: createKeywordLike("of", {
+      startsExpr
+    }),
+    _sent: createKeywordLike("sent", {
+      startsExpr
+    }),
+    _set: createKeywordLike("set", {
+      startsExpr
+    }),
+    _static: createKeywordLike("static", {
+      startsExpr
+    }),
+    _using: createKeywordLike("using", {
+      startsExpr
+    }),
+    _yield: createKeywordLike("yield", {
+      startsExpr
+    }),
+    _asserts: createKeywordLike("asserts", {
+      startsExpr
+    }),
+    _checks: createKeywordLike("checks", {
+      startsExpr
+    }),
+    _exports: createKeywordLike("exports", {
+      startsExpr
+    }),
+    _global: createKeywordLike("global", {
+      startsExpr
+    }),
+    _implements: createKeywordLike("implements", {
+      startsExpr
+    }),
+    _intrinsic: createKeywordLike("intrinsic", {
+      startsExpr
+    }),
+    _infer: createKeywordLike("infer", {
+      startsExpr
+    }),
+    _is: createKeywordLike("is", {
+      startsExpr
+    }),
+    _mixins: createKeywordLike("mixins", {
+      startsExpr
+    }),
+    _proto: createKeywordLike("proto", {
+      startsExpr
+    }),
+    _require: createKeywordLike("require", {
+      startsExpr
+    }),
+    _satisfies: createKeywordLike("satisfies", {
+      startsExpr
+    }),
+    _keyof: createKeywordLike("keyof", {
+      startsExpr
+    }),
+    _readonly: createKeywordLike("readonly", {
+      startsExpr
+    }),
+    _unique: createKeywordLike("unique", {
+      startsExpr
+    }),
+    _abstract: createKeywordLike("abstract", {
+      startsExpr
+    }),
+    _declare: createKeywordLike("declare", {
+      startsExpr
+    }),
+    _enum: createKeywordLike("enum", {
+      startsExpr
+    }),
+    _module: createKeywordLike("module", {
+      startsExpr
+    }),
+    _namespace: createKeywordLike("namespace", {
+      startsExpr
+    }),
+    _interface: createKeywordLike("interface", {
+      startsExpr
+    }),
+    _type: createKeywordLike("type", {
+      startsExpr
+    }),
+    _opaque: createKeywordLike("opaque", {
+      startsExpr
+    }),
+    name: createToken("name", {
+      startsExpr
+    }),
+    string: createToken("string", {
+      startsExpr
+    }),
+    num: createToken("num", {
+      startsExpr
+    }),
+    bigint: createToken("bigint", {
+      startsExpr
+    }),
+    decimal: createToken("decimal", {
+      startsExpr
+    }),
+    regexp: createToken("regexp", {
+      startsExpr
+    }),
+    privateName: createToken("#name", {
+      startsExpr
+    }),
+    eof: createToken("eof"),
+    jsxName: createToken("jsxName"),
+    jsxText: createToken("jsxText", {
+      beforeExpr: true
+    }),
+    jsxTagStart: createToken("jsxTagStart", {
+      startsExpr: true
+    }),
+    jsxTagEnd: createToken("jsxTagEnd"),
+    placeholder: createToken("%%", {
+      startsExpr: true
+    })
+  };
+  function tokenIsIdentifier(token) {
+    return token >= 93 && token <= 130;
+  }
+  function tokenKeywordOrIdentifierIsKeyword(token) {
+    return token <= 92;
+  }
+  function tokenIsKeywordOrIdentifier(token) {
+    return token >= 58 && token <= 130;
+  }
+  function tokenIsLiteralPropertyName(token) {
+    return token >= 58 && token <= 134;
+  }
+  function tokenComesBeforeExpression(token) {
+    return tokenBeforeExprs[token];
+  }
+  function tokenCanStartExpression(token) {
+    return tokenStartsExprs[token];
+  }
+  function tokenIsAssignment(token) {
+    return token >= 29 && token <= 33;
+  }
+  function tokenIsFlowInterfaceOrTypeOrOpaque(token) {
+    return token >= 127 && token <= 129;
+  }
+  function tokenIsLoop(token) {
+    return token >= 90 && token <= 92;
+  }
+  function tokenIsKeyword(token) {
+    return token >= 58 && token <= 92;
+  }
+  function tokenIsOperator(token) {
+    return token >= 39 && token <= 59;
+  }
+  function tokenIsPostfix(token) {
+    return token === 34;
+  }
+  function tokenIsPrefix(token) {
+    return tokenPrefixes[token];
+  }
+  function tokenIsTSTypeOperator(token) {
+    return token >= 119 && token <= 121;
+  }
+  function tokenIsTSDeclarationStart(token) {
+    return token >= 122 && token <= 128;
+  }
+  function tokenLabelName(token) {
+    return tokenLabels[token];
+  }
+  function tokenOperatorPrecedence(token) {
+    return tokenBinops[token];
+  }
+  function tokenIsRightAssociative(token) {
+    return token === 57;
+  }
+  function tokenIsTemplate(token) {
+    return token >= 24 && token <= 25;
+  }
+  function getExportedToken(token) {
+    return tokenTypes[token];
+  }
+  {
+    tokenTypes[8].updateContext = (context) => {
+      context.pop();
+    };
+    tokenTypes[5].updateContext = tokenTypes[7].updateContext = tokenTypes[23].updateContext = (context) => {
+      context.push(types.brace);
+    };
+    tokenTypes[22].updateContext = (context) => {
+      if (context[context.length - 1] === types.template) {
+        context.pop();
+      } else {
+        context.push(types.template);
+      }
+    };
+    tokenTypes[140].updateContext = (context) => {
+      context.push(types.j_expr, types.j_oTag);
+    };
+  }
   function _objectWithoutPropertiesLoose(source, excluded) {
     if (source == null)
       return {};
@@ -760,566 +1352,6 @@ var lib = createCommonjsModule(function(module, exports) {
       toESTreeLocation(node);
     }
   };
-  class TokContext {
-    constructor(token, preserveSpace) {
-      this.token = void 0;
-      this.preserveSpace = void 0;
-      this.token = token;
-      this.preserveSpace = !!preserveSpace;
-    }
-  }
-  const types = {
-    brace: new TokContext("{"),
-    j_oTag: new TokContext("<tag"),
-    j_cTag: new TokContext("</tag"),
-    j_expr: new TokContext("<tag>...</tag>", true)
-  };
-  {
-    types.template = new TokContext("`", true);
-  }
-  const beforeExpr = true;
-  const startsExpr = true;
-  const isLoop = true;
-  const isAssign = true;
-  const prefix = true;
-  const postfix = true;
-  class ExportedTokenType {
-    constructor(label, conf = {}) {
-      this.label = void 0;
-      this.keyword = void 0;
-      this.beforeExpr = void 0;
-      this.startsExpr = void 0;
-      this.rightAssociative = void 0;
-      this.isLoop = void 0;
-      this.isAssign = void 0;
-      this.prefix = void 0;
-      this.postfix = void 0;
-      this.binop = void 0;
-      this.label = label;
-      this.keyword = conf.keyword;
-      this.beforeExpr = !!conf.beforeExpr;
-      this.startsExpr = !!conf.startsExpr;
-      this.rightAssociative = !!conf.rightAssociative;
-      this.isLoop = !!conf.isLoop;
-      this.isAssign = !!conf.isAssign;
-      this.prefix = !!conf.prefix;
-      this.postfix = !!conf.postfix;
-      this.binop = conf.binop != null ? conf.binop : null;
-      {
-        this.updateContext = null;
-      }
-    }
-  }
-  const keywords$1 = new Map();
-  function createKeyword(name, options = {}) {
-    options.keyword = name;
-    const token = createToken(name, options);
-    keywords$1.set(name, token);
-    return token;
-  }
-  function createBinop(name, binop) {
-    return createToken(name, {
-      beforeExpr,
-      binop
-    });
-  }
-  let tokenTypeCounter = -1;
-  const tokenTypes = [];
-  const tokenLabels = [];
-  const tokenBinops = [];
-  const tokenBeforeExprs = [];
-  const tokenStartsExprs = [];
-  const tokenPrefixes = [];
-  function createToken(name, options = {}) {
-    var _options$binop, _options$beforeExpr, _options$startsExpr, _options$prefix;
-    ++tokenTypeCounter;
-    tokenLabels.push(name);
-    tokenBinops.push((_options$binop = options.binop) != null ? _options$binop : -1);
-    tokenBeforeExprs.push((_options$beforeExpr = options.beforeExpr) != null ? _options$beforeExpr : false);
-    tokenStartsExprs.push((_options$startsExpr = options.startsExpr) != null ? _options$startsExpr : false);
-    tokenPrefixes.push((_options$prefix = options.prefix) != null ? _options$prefix : false);
-    tokenTypes.push(new ExportedTokenType(name, options));
-    return tokenTypeCounter;
-  }
-  function createKeywordLike(name, options = {}) {
-    var _options$binop2, _options$beforeExpr2, _options$startsExpr2, _options$prefix2;
-    ++tokenTypeCounter;
-    keywords$1.set(name, tokenTypeCounter);
-    tokenLabels.push(name);
-    tokenBinops.push((_options$binop2 = options.binop) != null ? _options$binop2 : -1);
-    tokenBeforeExprs.push((_options$beforeExpr2 = options.beforeExpr) != null ? _options$beforeExpr2 : false);
-    tokenStartsExprs.push((_options$startsExpr2 = options.startsExpr) != null ? _options$startsExpr2 : false);
-    tokenPrefixes.push((_options$prefix2 = options.prefix) != null ? _options$prefix2 : false);
-    tokenTypes.push(new ExportedTokenType("name", options));
-    return tokenTypeCounter;
-  }
-  const tt = {
-    bracketL: createToken("[", {
-      beforeExpr,
-      startsExpr
-    }),
-    bracketHashL: createToken("#[", {
-      beforeExpr,
-      startsExpr
-    }),
-    bracketBarL: createToken("[|", {
-      beforeExpr,
-      startsExpr
-    }),
-    bracketR: createToken("]"),
-    bracketBarR: createToken("|]"),
-    braceL: createToken("{", {
-      beforeExpr,
-      startsExpr
-    }),
-    braceBarL: createToken("{|", {
-      beforeExpr,
-      startsExpr
-    }),
-    braceHashL: createToken("#{", {
-      beforeExpr,
-      startsExpr
-    }),
-    braceR: createToken("}"),
-    braceBarR: createToken("|}"),
-    parenL: createToken("(", {
-      beforeExpr,
-      startsExpr
-    }),
-    parenR: createToken(")"),
-    comma: createToken(",", {
-      beforeExpr
-    }),
-    semi: createToken(";", {
-      beforeExpr
-    }),
-    colon: createToken(":", {
-      beforeExpr
-    }),
-    doubleColon: createToken("::", {
-      beforeExpr
-    }),
-    dot: createToken("."),
-    question: createToken("?", {
-      beforeExpr
-    }),
-    questionDot: createToken("?."),
-    arrow: createToken("=>", {
-      beforeExpr
-    }),
-    template: createToken("template"),
-    ellipsis: createToken("...", {
-      beforeExpr
-    }),
-    backQuote: createToken("`", {
-      startsExpr
-    }),
-    dollarBraceL: createToken("${", {
-      beforeExpr,
-      startsExpr
-    }),
-    templateTail: createToken("...`", {
-      startsExpr
-    }),
-    templateNonTail: createToken("...${", {
-      beforeExpr,
-      startsExpr
-    }),
-    at: createToken("@"),
-    hash: createToken("#", {
-      startsExpr
-    }),
-    interpreterDirective: createToken("#!..."),
-    eq: createToken("=", {
-      beforeExpr,
-      isAssign
-    }),
-    assign: createToken("_=", {
-      beforeExpr,
-      isAssign
-    }),
-    slashAssign: createToken("_=", {
-      beforeExpr,
-      isAssign
-    }),
-    xorAssign: createToken("_=", {
-      beforeExpr,
-      isAssign
-    }),
-    moduloAssign: createToken("_=", {
-      beforeExpr,
-      isAssign
-    }),
-    incDec: createToken("++/--", {
-      prefix,
-      postfix,
-      startsExpr
-    }),
-    bang: createToken("!", {
-      beforeExpr,
-      prefix,
-      startsExpr
-    }),
-    tilde: createToken("~", {
-      beforeExpr,
-      prefix,
-      startsExpr
-    }),
-    doubleCaret: createToken("^^", {
-      startsExpr
-    }),
-    doubleAt: createToken("@@", {
-      startsExpr
-    }),
-    pipeline: createBinop("|>", 0),
-    nullishCoalescing: createBinop("??", 1),
-    logicalOR: createBinop("||", 1),
-    logicalAND: createBinop("&&", 2),
-    bitwiseOR: createBinop("|", 3),
-    bitwiseXOR: createBinop("^", 4),
-    bitwiseAND: createBinop("&", 5),
-    equality: createBinop("==/!=/===/!==", 6),
-    lt: createBinop("</>/<=/>=", 7),
-    gt: createBinop("</>/<=/>=", 7),
-    relational: createBinop("</>/<=/>=", 7),
-    bitShift: createBinop("<</>>/>>>", 8),
-    bitShiftL: createBinop("<</>>/>>>", 8),
-    bitShiftR: createBinop("<</>>/>>>", 8),
-    plusMin: createToken("+/-", {
-      beforeExpr,
-      binop: 9,
-      prefix,
-      startsExpr
-    }),
-    modulo: createToken("%", {
-      binop: 10,
-      startsExpr
-    }),
-    star: createToken("*", {
-      binop: 10
-    }),
-    slash: createBinop("/", 10),
-    exponent: createToken("**", {
-      beforeExpr,
-      binop: 11,
-      rightAssociative: true
-    }),
-    _in: createKeyword("in", {
-      beforeExpr,
-      binop: 7
-    }),
-    _instanceof: createKeyword("instanceof", {
-      beforeExpr,
-      binop: 7
-    }),
-    _break: createKeyword("break"),
-    _case: createKeyword("case", {
-      beforeExpr
-    }),
-    _catch: createKeyword("catch"),
-    _continue: createKeyword("continue"),
-    _debugger: createKeyword("debugger"),
-    _default: createKeyword("default", {
-      beforeExpr
-    }),
-    _else: createKeyword("else", {
-      beforeExpr
-    }),
-    _finally: createKeyword("finally"),
-    _function: createKeyword("function", {
-      startsExpr
-    }),
-    _if: createKeyword("if"),
-    _return: createKeyword("return", {
-      beforeExpr
-    }),
-    _switch: createKeyword("switch"),
-    _throw: createKeyword("throw", {
-      beforeExpr,
-      prefix,
-      startsExpr
-    }),
-    _try: createKeyword("try"),
-    _var: createKeyword("var"),
-    _const: createKeyword("const"),
-    _with: createKeyword("with"),
-    _new: createKeyword("new", {
-      beforeExpr,
-      startsExpr
-    }),
-    _this: createKeyword("this", {
-      startsExpr
-    }),
-    _super: createKeyword("super", {
-      startsExpr
-    }),
-    _class: createKeyword("class", {
-      startsExpr
-    }),
-    _extends: createKeyword("extends", {
-      beforeExpr
-    }),
-    _export: createKeyword("export"),
-    _import: createKeyword("import", {
-      startsExpr
-    }),
-    _null: createKeyword("null", {
-      startsExpr
-    }),
-    _true: createKeyword("true", {
-      startsExpr
-    }),
-    _false: createKeyword("false", {
-      startsExpr
-    }),
-    _typeof: createKeyword("typeof", {
-      beforeExpr,
-      prefix,
-      startsExpr
-    }),
-    _void: createKeyword("void", {
-      beforeExpr,
-      prefix,
-      startsExpr
-    }),
-    _delete: createKeyword("delete", {
-      beforeExpr,
-      prefix,
-      startsExpr
-    }),
-    _do: createKeyword("do", {
-      isLoop,
-      beforeExpr
-    }),
-    _for: createKeyword("for", {
-      isLoop
-    }),
-    _while: createKeyword("while", {
-      isLoop
-    }),
-    _as: createKeywordLike("as", {
-      startsExpr
-    }),
-    _assert: createKeywordLike("assert", {
-      startsExpr
-    }),
-    _async: createKeywordLike("async", {
-      startsExpr
-    }),
-    _await: createKeywordLike("await", {
-      startsExpr
-    }),
-    _from: createKeywordLike("from", {
-      startsExpr
-    }),
-    _get: createKeywordLike("get", {
-      startsExpr
-    }),
-    _let: createKeywordLike("let", {
-      startsExpr
-    }),
-    _meta: createKeywordLike("meta", {
-      startsExpr
-    }),
-    _of: createKeywordLike("of", {
-      startsExpr
-    }),
-    _sent: createKeywordLike("sent", {
-      startsExpr
-    }),
-    _set: createKeywordLike("set", {
-      startsExpr
-    }),
-    _static: createKeywordLike("static", {
-      startsExpr
-    }),
-    _using: createKeywordLike("using", {
-      startsExpr
-    }),
-    _yield: createKeywordLike("yield", {
-      startsExpr
-    }),
-    _asserts: createKeywordLike("asserts", {
-      startsExpr
-    }),
-    _checks: createKeywordLike("checks", {
-      startsExpr
-    }),
-    _exports: createKeywordLike("exports", {
-      startsExpr
-    }),
-    _global: createKeywordLike("global", {
-      startsExpr
-    }),
-    _implements: createKeywordLike("implements", {
-      startsExpr
-    }),
-    _intrinsic: createKeywordLike("intrinsic", {
-      startsExpr
-    }),
-    _infer: createKeywordLike("infer", {
-      startsExpr
-    }),
-    _is: createKeywordLike("is", {
-      startsExpr
-    }),
-    _mixins: createKeywordLike("mixins", {
-      startsExpr
-    }),
-    _proto: createKeywordLike("proto", {
-      startsExpr
-    }),
-    _require: createKeywordLike("require", {
-      startsExpr
-    }),
-    _satisfies: createKeywordLike("satisfies", {
-      startsExpr
-    }),
-    _keyof: createKeywordLike("keyof", {
-      startsExpr
-    }),
-    _readonly: createKeywordLike("readonly", {
-      startsExpr
-    }),
-    _unique: createKeywordLike("unique", {
-      startsExpr
-    }),
-    _abstract: createKeywordLike("abstract", {
-      startsExpr
-    }),
-    _declare: createKeywordLike("declare", {
-      startsExpr
-    }),
-    _enum: createKeywordLike("enum", {
-      startsExpr
-    }),
-    _module: createKeywordLike("module", {
-      startsExpr
-    }),
-    _namespace: createKeywordLike("namespace", {
-      startsExpr
-    }),
-    _interface: createKeywordLike("interface", {
-      startsExpr
-    }),
-    _type: createKeywordLike("type", {
-      startsExpr
-    }),
-    _opaque: createKeywordLike("opaque", {
-      startsExpr
-    }),
-    name: createToken("name", {
-      startsExpr
-    }),
-    string: createToken("string", {
-      startsExpr
-    }),
-    num: createToken("num", {
-      startsExpr
-    }),
-    bigint: createToken("bigint", {
-      startsExpr
-    }),
-    decimal: createToken("decimal", {
-      startsExpr
-    }),
-    regexp: createToken("regexp", {
-      startsExpr
-    }),
-    privateName: createToken("#name", {
-      startsExpr
-    }),
-    eof: createToken("eof"),
-    jsxName: createToken("jsxName"),
-    jsxText: createToken("jsxText", {
-      beforeExpr: true
-    }),
-    jsxTagStart: createToken("jsxTagStart", {
-      startsExpr: true
-    }),
-    jsxTagEnd: createToken("jsxTagEnd"),
-    placeholder: createToken("%%", {
-      startsExpr: true
-    })
-  };
-  function tokenIsIdentifier(token) {
-    return token >= 93 && token <= 130;
-  }
-  function tokenKeywordOrIdentifierIsKeyword(token) {
-    return token <= 92;
-  }
-  function tokenIsKeywordOrIdentifier(token) {
-    return token >= 58 && token <= 130;
-  }
-  function tokenIsLiteralPropertyName(token) {
-    return token >= 58 && token <= 134;
-  }
-  function tokenComesBeforeExpression(token) {
-    return tokenBeforeExprs[token];
-  }
-  function tokenCanStartExpression(token) {
-    return tokenStartsExprs[token];
-  }
-  function tokenIsAssignment(token) {
-    return token >= 29 && token <= 33;
-  }
-  function tokenIsFlowInterfaceOrTypeOrOpaque(token) {
-    return token >= 127 && token <= 129;
-  }
-  function tokenIsLoop(token) {
-    return token >= 90 && token <= 92;
-  }
-  function tokenIsKeyword(token) {
-    return token >= 58 && token <= 92;
-  }
-  function tokenIsOperator(token) {
-    return token >= 39 && token <= 59;
-  }
-  function tokenIsPostfix(token) {
-    return token === 34;
-  }
-  function tokenIsPrefix(token) {
-    return tokenPrefixes[token];
-  }
-  function tokenIsTSTypeOperator(token) {
-    return token >= 119 && token <= 121;
-  }
-  function tokenIsTSDeclarationStart(token) {
-    return token >= 122 && token <= 128;
-  }
-  function tokenLabelName(token) {
-    return tokenLabels[token];
-  }
-  function tokenOperatorPrecedence(token) {
-    return tokenBinops[token];
-  }
-  function tokenIsRightAssociative(token) {
-    return token === 57;
-  }
-  function tokenIsTemplate(token) {
-    return token >= 24 && token <= 25;
-  }
-  function getExportedToken(token) {
-    return tokenTypes[token];
-  }
-  {
-    tokenTypes[8].updateContext = (context) => {
-      context.pop();
-    };
-    tokenTypes[5].updateContext = tokenTypes[7].updateContext = tokenTypes[23].updateContext = (context) => {
-      context.push(types.brace);
-    };
-    tokenTypes[22].updateContext = (context) => {
-      if (context[context.length - 1] === types.template) {
-        context.pop();
-      } else {
-        context.push(types.template);
-      }
-    };
-    tokenTypes[140].updateContext = (context) => {
-      context.push(types.j_expr, types.j_oTag);
-    };
-  }
   let nonASCIIidentifierStartChars = "\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0560-\u0588\u05D0-\u05EA\u05EF-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u0860-\u086A\u0870-\u0887\u0889-\u088E\u08A0-\u08C9\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u09FC\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C5D\u0C60\u0C61\u0C80\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D04-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D54-\u0D56\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E86-\u0E8A\u0E8C-\u0EA3\u0EA5\u0EA7-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16EE-\u16F8\u1700-\u1711\u171F-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1878\u1880-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4C\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1C80-\u1C88\u1C90-\u1CBA\u1CBD-\u1CBF\u1CE9-\u1CEC\u1CEE-\u1CF3\u1CF5\u1CF6\u1CFA\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2118-\u211D\u2124\u2126\u2128\u212A-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2160-\u2188\u2C00-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u3005-\u3007\u3021-\u3029\u3031-\u3035\u3038-\u303C\u3041-\u3096\u309B-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312F\u3131-\u318E\u31A0-\u31BF\u31F0-\u31FF\u3400-\u4DBF\u4E00-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6EF\uA717-\uA71F\uA722-\uA788\uA78B-\uA7CA\uA7D0\uA7D1\uA7D3\uA7D5-\uA7D9\uA7F2-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA8FE\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB69\uAB70-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC";
   let nonASCIIidentifierChars = "\u200C\u200D\xB7\u0300-\u036F\u0387\u0483-\u0487\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u0610-\u061A\u064B-\u0669\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED\u06F0-\u06F9\u0711\u0730-\u074A\u07A6-\u07B0\u07C0-\u07C9\u07EB-\u07F3\u07FD\u0816-\u0819\u081B-\u0823\u0825-\u0827\u0829-\u082D\u0859-\u085B\u0898-\u089F\u08CA-\u08E1\u08E3-\u0903\u093A-\u093C\u093E-\u094F\u0951-\u0957\u0962\u0963\u0966-\u096F\u0981-\u0983\u09BC\u09BE-\u09C4\u09C7\u09C8\u09CB-\u09CD\u09D7\u09E2\u09E3\u09E6-\u09EF\u09FE\u0A01-\u0A03\u0A3C\u0A3E-\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A66-\u0A71\u0A75\u0A81-\u0A83\u0ABC\u0ABE-\u0AC5\u0AC7-\u0AC9\u0ACB-\u0ACD\u0AE2\u0AE3\u0AE6-\u0AEF\u0AFA-\u0AFF\u0B01-\u0B03\u0B3C\u0B3E-\u0B44\u0B47\u0B48\u0B4B-\u0B4D\u0B55-\u0B57\u0B62\u0B63\u0B66-\u0B6F\u0B82\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCD\u0BD7\u0BE6-\u0BEF\u0C00-\u0C04\u0C3C\u0C3E-\u0C44\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C62\u0C63\u0C66-\u0C6F\u0C81-\u0C83\u0CBC\u0CBE-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCD\u0CD5\u0CD6\u0CE2\u0CE3\u0CE6-\u0CEF\u0CF3\u0D00-\u0D03\u0D3B\u0D3C\u0D3E-\u0D44\u0D46-\u0D48\u0D4A-\u0D4D\u0D57\u0D62\u0D63\u0D66-\u0D6F\u0D81-\u0D83\u0DCA\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DE6-\u0DEF\u0DF2\u0DF3\u0E31\u0E34-\u0E3A\u0E47-\u0E4E\u0E50-\u0E59\u0EB1\u0EB4-\u0EBC\u0EC8-\u0ECE\u0ED0-\u0ED9\u0F18\u0F19\u0F20-\u0F29\u0F35\u0F37\u0F39\u0F3E\u0F3F\u0F71-\u0F84\u0F86\u0F87\u0F8D-\u0F97\u0F99-\u0FBC\u0FC6\u102B-\u103E\u1040-\u1049\u1056-\u1059\u105E-\u1060\u1062-\u1064\u1067-\u106D\u1071-\u1074\u1082-\u108D\u108F-\u109D\u135D-\u135F\u1369-\u1371\u1712-\u1715\u1732-\u1734\u1752\u1753\u1772\u1773\u17B4-\u17D3\u17DD\u17E0-\u17E9\u180B-\u180D\u180F-\u1819\u18A9\u1920-\u192B\u1930-\u193B\u1946-\u194F\u19D0-\u19DA\u1A17-\u1A1B\u1A55-\u1A5E\u1A60-\u1A7C\u1A7F-\u1A89\u1A90-\u1A99\u1AB0-\u1ABD\u1ABF-\u1ACE\u1B00-\u1B04\u1B34-\u1B44\u1B50-\u1B59\u1B6B-\u1B73\u1B80-\u1B82\u1BA1-\u1BAD\u1BB0-\u1BB9\u1BE6-\u1BF3\u1C24-\u1C37\u1C40-\u1C49\u1C50-\u1C59\u1CD0-\u1CD2\u1CD4-\u1CE8\u1CED\u1CF4\u1CF7-\u1CF9\u1DC0-\u1DFF\u203F\u2040\u2054\u20D0-\u20DC\u20E1\u20E5-\u20F0\u2CEF-\u2CF1\u2D7F\u2DE0-\u2DFF\u302A-\u302F\u3099\u309A\uA620-\uA629\uA66F\uA674-\uA67D\uA69E\uA69F\uA6F0\uA6F1\uA802\uA806\uA80B\uA823-\uA827\uA82C\uA880\uA881\uA8B4-\uA8C5\uA8D0-\uA8D9\uA8E0-\uA8F1\uA8FF-\uA909\uA926-\uA92D\uA947-\uA953\uA980-\uA983\uA9B3-\uA9C0\uA9D0-\uA9D9\uA9E5\uA9F0-\uA9F9\uAA29-\uAA36\uAA43\uAA4C\uAA4D\uAA50-\uAA59\uAA7B-\uAA7D\uAAB0\uAAB2-\uAAB4\uAAB7\uAAB8\uAABE\uAABF\uAAC1\uAAEB-\uAAEF\uAAF5\uAAF6\uABE3-\uABEA\uABEC\uABED\uABF0-\uABF9\uFB1E\uFE00-\uFE0F\uFE20-\uFE2F\uFE33\uFE34\uFE4D-\uFE4F\uFF10-\uFF19\uFF3F";
   const nonASCIIidentifierStart = new RegExp("[" + nonASCIIidentifierStartChars + "]");
@@ -2643,7 +2675,7 @@ var lib = createCommonjsModule(function(module, exports) {
         this.finishOp(37, 2);
         const lookaheadCh = this.input.codePointAt(this.state.pos);
         if (lookaheadCh === 94) {
-          throw this.unexpected();
+          this.unexpected();
         }
       } else {
         this.finishOp(44, 1);
@@ -3575,7 +3607,7 @@ var lib = createCommonjsModule(function(module, exports) {
             at: this.state.startLoc
           });
         }
-        throw this.unexpected(null, token);
+        this.unexpected(null, token);
       }
     }
     canInsertSemicolon() {
@@ -4009,7 +4041,7 @@ var lib = createCommonjsModule(function(module, exports) {
           this.flowPragma = null;
         }
       }
-      return super.finishToken(type, val);
+      super.finishToken(type, val);
     }
     addComment(comment) {
       if (this.flowPragma === void 0) {
@@ -4024,7 +4056,7 @@ var lib = createCommonjsModule(function(module, exports) {
           throw new Error("Unexpected flow pragma");
         }
       }
-      return super.addComment(comment);
+      super.addComment(comment);
     }
     flowParseTypeInitialiser(tok) {
       const oldInType = this.state.inType;
@@ -4126,7 +4158,7 @@ var lib = createCommonjsModule(function(module, exports) {
       } else if (this.match(82)) {
         return this.flowParseDeclareExportDeclaration(node, insideModule);
       } else {
-        throw this.unexpected();
+        this.unexpected();
       }
     }
     flowParseDeclareVariable(node) {
@@ -4228,7 +4260,7 @@ var lib = createCommonjsModule(function(module, exports) {
           return node;
         }
       }
-      throw this.unexpected();
+      this.unexpected();
     }
     flowParseDeclareModuleExports(node) {
       this.next();
@@ -4251,10 +4283,10 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     flowParseDeclareInterface(node) {
       this.next();
-      this.flowParseInterfaceish(node);
+      this.flowParseInterfaceish(node, false);
       return this.finishNode(node, "DeclareInterface");
     }
-    flowParseInterfaceish(node, isClass = false) {
+    flowParseInterfaceish(node, isClass) {
       node.id = this.flowParseRestrictedIdentifier(!isClass, true);
       this.scope.declareName(node.id.name, isClass ? BIND_FUNCTION : BIND_LEXICAL, node.id.loc.start);
       if (this.match(47)) {
@@ -4270,17 +4302,17 @@ var lib = createCommonjsModule(function(module, exports) {
           node.extends.push(this.flowParseInterfaceExtends());
         } while (!isClass && this.eat(12));
       }
-      if (this.isContextual(115)) {
-        this.next();
-        do {
-          node.mixins.push(this.flowParseInterfaceExtends());
-        } while (this.eat(12));
-      }
-      if (this.isContextual(111)) {
-        this.next();
-        do {
-          node.implements.push(this.flowParseInterfaceExtends());
-        } while (this.eat(12));
+      if (isClass) {
+        if (this.eatContextual(115)) {
+          do {
+            node.mixins.push(this.flowParseInterfaceExtends());
+          } while (this.eat(12));
+        }
+        if (this.eatContextual(111)) {
+          do {
+            node.implements.push(this.flowParseInterfaceExtends());
+          } while (this.eat(12));
+        }
       }
       node.body = this.flowParseObjectType({
         allowStatic: isClass,
@@ -4301,7 +4333,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, "InterfaceExtends");
     }
     flowParseInterface(node) {
-      this.flowParseInterfaceish(node);
+      this.flowParseInterfaceish(node, false);
       return this.finishNode(node, "InterfaceDeclaration");
     }
     checkNotUnderscore(word) {
@@ -4938,7 +4970,8 @@ var lib = createCommonjsModule(function(module, exports) {
               at: this.state.startLoc
             });
           }
-          throw this.unexpected();
+          this.unexpected();
+          return;
         case 132:
           return this.parseLiteral(this.state.value, "NumberLiteralTypeAnnotation");
         case 133:
@@ -4969,7 +5002,7 @@ var lib = createCommonjsModule(function(module, exports) {
             return this.flowIdentToTypeAnnotation(startLoc, node, this.parseIdentifier());
           }
       }
-      throw this.unexpected();
+      this.unexpected();
     }
     flowParsePostfixType() {
       const startLoc = this.state.startLoc;
@@ -5090,9 +5123,10 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseFunctionBody(node, allowExpressionBody, isMethod = false) {
       if (allowExpressionBody) {
-        return this.forwardNoArrowParamsConversionAt(node, () => super.parseFunctionBody(node, true, isMethod));
+        this.forwardNoArrowParamsConversionAt(node, () => super.parseFunctionBody(node, true, isMethod));
+        return;
       }
-      return super.parseFunctionBody(node, false, isMethod);
+      super.parseFunctionBody(node, false, isMethod);
     }
     parseFunctionBodyAndFinish(node, type, isMethod = false) {
       if (this.match(14)) {
@@ -5397,19 +5431,20 @@ var lib = createCommonjsModule(function(module, exports) {
     getTokenFromCode(code) {
       const next = this.input.charCodeAt(this.state.pos + 1);
       if (code === 123 && next === 124) {
-        return this.finishOp(6, 2);
+        this.finishOp(6, 2);
       } else if (this.state.inType && (code === 62 || code === 60)) {
-        return this.finishOp(code === 62 ? 48 : 47, 1);
+        this.finishOp(code === 62 ? 48 : 47, 1);
       } else if (this.state.inType && code === 63) {
         if (next === 46) {
-          return this.finishOp(18, 2);
+          this.finishOp(18, 2);
+        } else {
+          this.finishOp(17, 1);
         }
-        return this.finishOp(17, 1);
       } else if (isIteratorStart(code, next, this.input.charCodeAt(this.state.pos + 2))) {
         this.state.pos += 2;
-        return this.readIterator();
+        this.readIterator();
       } else {
-        return super.getTokenFromCode(code);
+        super.getTokenFromCode(code);
       }
     }
     isAssignable(node, isBinding) {
@@ -5849,7 +5884,7 @@ var lib = createCommonjsModule(function(module, exports) {
           });
         }
       }
-      return super.checkParams(node, allowDuplicates, isArrowFunction, strictModeChanged);
+      super.checkParams(node, allowDuplicates, isArrowFunction, strictModeChanged);
     }
     parseParenAndDistinguishExpression(canBeArrow) {
       return super.parseParenAndDistinguishExpression(canBeArrow && this.state.noArrowAt.indexOf(this.state.start) === -1);
@@ -6660,12 +6695,15 @@ var lib = createCommonjsModule(function(module, exports) {
             if (this.state.pos === this.state.start) {
               if (ch === 60 && this.state.canStartJSXElement) {
                 ++this.state.pos;
-                return this.finishToken(140);
+                this.finishToken(140);
+              } else {
+                super.getTokenFromCode(ch);
               }
-              return super.getTokenFromCode(ch);
+              return;
             }
             out += this.input.slice(chunkStart, this.state.pos);
-            return this.finishToken(139, out);
+            this.finishToken(139, out);
+            return;
           case 38:
             out += this.input.slice(chunkStart, this.state.pos);
             out += this.jsxReadEntity();
@@ -6723,7 +6761,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
       }
       out += this.input.slice(chunkStart, this.state.pos++);
-      return this.finishToken(131, out);
+      this.finishToken(131, out);
     }
     jsxReadEntity() {
       const startPos = ++this.state.pos;
@@ -6763,7 +6801,7 @@ var lib = createCommonjsModule(function(module, exports) {
       do {
         ch = this.input.charCodeAt(++this.state.pos);
       } while (isIdentifierChar(ch) || ch === 45);
-      return this.finishToken(138, this.input.slice(start, this.state.pos));
+      this.finishToken(138, this.input.slice(start, this.state.pos));
     }
     jsxParseIdentifier() {
       const node = this.startNode();
@@ -6924,7 +6962,7 @@ var lib = createCommonjsModule(function(module, exports) {
                 break;
               }
               default:
-                throw this.unexpected();
+                this.unexpected();
             }
           }
         if (isFragment(openingElement) && !isFragment(closingElement) && closingElement !== null) {
@@ -6991,25 +7029,30 @@ var lib = createCommonjsModule(function(module, exports) {
     getTokenFromCode(code) {
       const context = this.curContext();
       if (context === types.j_expr) {
-        return this.jsxReadToken();
+        this.jsxReadToken();
+        return;
       }
       if (context === types.j_oTag || context === types.j_cTag) {
         if (isIdentifierStart(code)) {
-          return this.jsxReadWord();
+          this.jsxReadWord();
+          return;
         }
         if (code === 62) {
           ++this.state.pos;
-          return this.finishToken(141);
+          this.finishToken(141);
+          return;
         }
         if ((code === 34 || code === 39) && context === types.j_oTag) {
-          return this.jsxReadString(code);
+          this.jsxReadString(code);
+          return;
         }
       }
       if (code === 60 && this.state.canStartJSXElement && this.input.charCodeAt(this.state.pos + 1) !== 33) {
         ++this.state.pos;
-        return this.finishToken(140);
+        this.finishToken(140);
+        return;
       }
-      return super.getTokenFromCode(code);
+      super.getTokenFromCode(code);
     }
     updateContext(prevType) {
       const {
@@ -7151,11 +7194,6 @@ var lib = createCommonjsModule(function(module, exports) {
   const getOwn$1 = (object, key) => Object.hasOwnProperty.call(object, key) && object[key];
   const unwrapParenthesizedExpression = (node) => {
     return node.type === "ParenthesizedExpression" ? unwrapParenthesizedExpression(node.expression) : node;
-  };
-  var ParseBindingListFlags = {
-    ALLOW_EMPTY: 1,
-    IS_FUNCTION_PARAMS: 2,
-    IS_CONSTRUCTOR_PARAMS: 4
   };
   class LValParser extends NodeUtils {
     toAssignable(node, isLHS = false) {
@@ -7338,7 +7376,7 @@ var lib = createCommonjsModule(function(module, exports) {
         case 0: {
           const node = this.startNode();
           this.next();
-          node.elements = this.parseBindingList(3, 93, ParseBindingListFlags.ALLOW_EMPTY);
+          node.elements = this.parseBindingList(3, 93, 1);
           return this.finishNode(node, "ArrayPattern");
         }
         case 5:
@@ -7347,7 +7385,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.parseIdentifier();
     }
     parseBindingList(close, closeCharCode, flags) {
-      const allowEmpty = flags & ParseBindingListFlags.ALLOW_EMPTY;
+      const allowEmpty = flags & 1;
       const elts = [];
       let first = true;
       while (!this.eat(close)) {
@@ -7645,6 +7683,7 @@ var lib = createCommonjsModule(function(module, exports) {
       typeParameterName
     }) => `Single type parameter ${typeParameterName} should have a trailing comma. Example usage: <${typeParameterName},>.`,
     StaticBlockCannotHaveModifier: "Static class blocks cannot have any modifier.",
+    TupleOptionalAfterType: "A labeled tuple optional element must be declared using a question mark after the name and before the colon (`name?: type`), rather than after the type (`name: type?`).",
     TypeAnnotationAfterAssign: "Type annotations must come before default assignments, e.g. instead of `age = 25: number` use `age: number = 25`.",
     TypeImportCannotSpecifyDefaultAndNamed: "A type-only import can specify a default import or named bindings, but not both.",
     TypeModifierIsUsedInTypeExports: "The 'type' modifier cannot be used on a named export when 'export type' is used on its export statement.",
@@ -7824,7 +7863,6 @@ var lib = createCommonjsModule(function(module, exports) {
         case "TypeParametersOrArguments":
           return this.match(48);
       }
-      throw new Error("Unreachable");
     }
     tsParseList(kind, parseElement) {
       const result = [];
@@ -7993,7 +8031,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
     tsParseBindingListForSignature() {
-      return super.parseBindingList(11, 41, ParseBindingListFlags.IS_FUNCTION_PARAMS).map((pattern) => {
+      return super.parseBindingList(11, 41, 2).map((pattern) => {
         if (pattern.type !== "Identifier" && pattern.type !== "RestElement" && pattern.type !== "ObjectPattern" && pattern.type !== "ArrayPattern") {
           this.raise(TSErrors.UnsupportedSignatureParameterKind, {
             at: pattern,
@@ -8238,21 +8276,61 @@ var lib = createCommonjsModule(function(module, exports) {
         startLoc
       } = this.state;
       const rest = this.eat(21);
-      let type = this.tsParseType();
-      const optional = this.eat(17);
-      const labeled = this.eat(14);
-      if (labeled) {
-        const labeledNode = this.startNodeAtNode(type);
-        labeledNode.optional = optional;
-        if (type.type === "TSTypeReference" && !type.typeParameters && type.typeName.type === "Identifier") {
-          labeledNode.label = type.typeName;
+      let labeled;
+      let label;
+      let optional;
+      let type;
+      const isWord = tokenIsKeywordOrIdentifier(this.state.type);
+      const chAfterWord = isWord ? this.lookaheadCharCode() : null;
+      if (chAfterWord === 58) {
+        labeled = true;
+        optional = false;
+        label = this.parseIdentifier(true);
+        this.expect(14);
+        type = this.tsParseType();
+      } else if (chAfterWord === 63) {
+        optional = true;
+        const startLoc2 = this.state.startLoc;
+        const wordName = this.state.value;
+        const typeOrLabel = this.tsParseNonArrayType();
+        if (this.lookaheadCharCode() === 58) {
+          labeled = true;
+          label = this.createIdentifier(this.startNodeAt(startLoc2), wordName);
+          this.expect(17);
+          this.expect(14);
+          type = this.tsParseType();
         } else {
+          labeled = false;
+          type = typeOrLabel;
+          this.expect(17);
+        }
+      } else {
+        type = this.tsParseType();
+        optional = this.eat(17);
+        labeled = this.eat(14);
+      }
+      if (labeled) {
+        let labeledNode;
+        if (label) {
+          labeledNode = this.startNodeAtNode(label);
+          labeledNode.optional = optional;
+          labeledNode.label = label;
+          labeledNode.elementType = type;
+          if (this.eat(17)) {
+            labeledNode.optional = true;
+            this.raise(TSErrors.TupleOptionalAfterType, {
+              at: this.state.lastTokStartLoc
+            });
+          }
+        } else {
+          labeledNode = this.startNodeAtNode(type);
+          labeledNode.optional = optional;
           this.raise(TSErrors.InvalidTupleMemberLabel, {
             at: type
           });
           labeledNode.label = type;
+          labeledNode.elementType = this.tsParseType();
         }
-        labeledNode.elementType = this.tsParseType();
         type = this.finishNode(labeledNode, "TSNamedTupleMember");
       } else if (optional) {
         const optionalTypeNode = this.startNodeAtNode(type);
@@ -8295,7 +8373,7 @@ var lib = createCommonjsModule(function(module, exports) {
           case 86:
             return super.parseExprAtom();
           default:
-            throw this.unexpected();
+            this.unexpected();
         }
       })();
       return this.finishNode(node, "TSLiteralType");
@@ -8331,7 +8409,7 @@ var lib = createCommonjsModule(function(module, exports) {
             const node = this.startNode();
             const nextToken = this.lookahead();
             if (nextToken.type !== 132 && nextToken.type !== 133) {
-              throw this.unexpected();
+              this.unexpected();
             }
             node.literal = this.parseMaybeUnary();
             return this.finishNode(node, "TSLiteralType");
@@ -8367,7 +8445,7 @@ var lib = createCommonjsModule(function(module, exports) {
           }
         }
       }
-      throw this.unexpected();
+      this.unexpected();
     }
     tsParseArrayTypeOrHigher() {
       let type = this.tsParseNonArrayType();
@@ -8479,7 +8557,7 @@ var lib = createCommonjsModule(function(module, exports) {
         } = this.state;
         const previousErrorCount = errors.length;
         try {
-          super.parseBindingList(3, 93, ParseBindingListFlags.ALLOW_EMPTY);
+          super.parseBindingList(3, 93, 1);
           return errors.length === previousErrorCount;
         } catch (_unused2) {
           return false;
@@ -8831,7 +8909,7 @@ var lib = createCommonjsModule(function(module, exports) {
       this.expectContextual(117);
       this.expect(10);
       if (!this.match(131)) {
-        throw this.unexpected();
+        this.unexpected();
       }
       node.expression = super.parseExprAtom();
       this.expect(11);
@@ -9035,7 +9113,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const accessibility = modified.accessibility;
       const override = modified.override;
       const readonly = modified.readonly;
-      if (!(flags & ParseBindingListFlags.IS_CONSTRUCTOR_PARAMS) && (accessibility || readonly || override)) {
+      if (!(flags & 4) && (accessibility || readonly || override)) {
         this.raise(TSErrors.UnexpectedParameterModifier, {
           at: startLoc
         });
@@ -9764,7 +9842,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return super.parseArrow(node);
     }
     parseAssignableListItemTypes(param, flags) {
-      if (!(flags & ParseBindingListFlags.IS_FUNCTION_PARAMS))
+      if (!(flags & 2))
         return param;
       if (this.eat(17)) {
         param.optional = true;
@@ -9894,13 +9972,15 @@ var lib = createCommonjsModule(function(module, exports) {
     getTokenFromCode(code) {
       if (this.state.inType) {
         if (code === 62) {
-          return this.finishOp(48, 1);
+          this.finishOp(48, 1);
+          return;
         }
         if (code === 60) {
-          return this.finishOp(47, 1);
+          this.finishOp(47, 1);
+          return;
         }
       }
-      return super.getTokenFromCode(code);
+      super.getTokenFromCode(code);
     }
     reScan_lt_gt() {
       const {
@@ -10215,9 +10295,10 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     getTokenFromCode(code) {
       if (code === 37 && this.input.charCodeAt(this.state.pos + 1) === 37) {
-        return this.finishOp(142, 2);
+        this.finishOp(142, 2);
+      } else {
+        super.getTokenFromCode(code);
       }
-      return super.getTokenFromCode(code);
     }
     parseExprAtom(refExpressionErrors) {
       return this.parsePlaceholder("Expression") || super.parseExprAtom(refExpressionErrors);
@@ -10515,36 +10596,6 @@ var lib = createCommonjsModule(function(module, exports) {
     placeholders
   };
   const mixinPluginNames = Object.keys(mixinPlugins);
-  const defaultOptions = {
-    sourceType: "script",
-    sourceFilename: void 0,
-    startColumn: 0,
-    startLine: 1,
-    allowAwaitOutsideFunction: false,
-    allowReturnOutsideFunction: false,
-    allowNewTargetOutsideFunction: false,
-    allowImportExportEverywhere: false,
-    allowSuperOutsideMethod: false,
-    allowUndeclaredExports: false,
-    plugins: [],
-    strictMode: null,
-    ranges: false,
-    tokens: false,
-    createParenthesizedExpressions: false,
-    errorRecovery: false,
-    attachComment: true,
-    annexB: true
-  };
-  function getOptions(opts) {
-    if (opts && opts.annexB != null && opts.annexB !== false) {
-      throw new Error("The `annexB` option can only be set to `false`.");
-    }
-    const options = {};
-    for (const key of Object.keys(defaultOptions)) {
-      options[key] = opts && opts[key] != null ? opts[key] : defaultOptions[key];
-    }
-    return options;
-  }
   class ExpressionParser extends LValParser {
     checkProto(prop, isRecord, protoRef, refExpressionErrors) {
       if (prop.type === "SpreadElement" || this.isObjectMethod(prop) || prop.computed || prop.shorthand) {
@@ -11236,18 +11287,18 @@ var lib = createCommonjsModule(function(module, exports) {
           const pipeProposal = this.getPluginOption("pipelineOperator", "proposal");
           if (pipeProposal) {
             return this.parseTopicReference(pipeProposal);
-          } else {
-            throw this.unexpected();
           }
+          this.unexpected();
+          break;
         }
         case 47: {
           const lookaheadCh = this.input.codePointAt(this.nextTokenStart());
           if (isIdentifierStart(lookaheadCh) || lookaheadCh === 62) {
             this.expectOnePlugin(["jsx", "flow", "typescript"]);
-            break;
           } else {
-            throw this.unexpected();
+            this.unexpected();
           }
+          break;
         }
         default:
           if (tokenIsIdentifier(type)) {
@@ -11282,7 +11333,7 @@ var lib = createCommonjsModule(function(module, exports) {
             }
             return id;
           } else {
-            throw this.unexpected();
+            this.unexpected();
           }
       }
     }
@@ -11296,7 +11347,7 @@ var lib = createCommonjsModule(function(module, exports) {
         this.state.endLoc = createPositionWithColumnOffset(this.state.endLoc, -1);
         return this.parseTopicReference(pipeProposal);
       } else {
-        throw this.unexpected();
+        this.unexpected();
       }
     }
     parseTopicReference(pipeProposal) {
@@ -11871,7 +11922,7 @@ var lib = createCommonjsModule(function(module, exports) {
               break;
             }
             default:
-              throw this.unexpected();
+              this.unexpected();
           }
         }
         prop.key = key;
@@ -12057,7 +12108,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (tokenIsKeywordOrIdentifier(type)) {
         name = this.state.value;
       } else {
-        throw this.unexpected();
+        this.unexpected();
       }
       const tokenIsKeyword2 = tokenKeywordOrIdentifierIsKeyword(type);
       if (liberal) {
@@ -12344,20 +12395,6 @@ var lib = createCommonjsModule(function(module, exports) {
   }, switchLabel = {
     kind: "switch"
   };
-  var ParseFunctionFlag = {
-    Expression: 0,
-    Declaration: 1,
-    HangingDeclaration: 2,
-    NullableId: 4,
-    Async: 8
-  };
-  var ParseStatementFlag = {
-    StatementOnly: 0,
-    AllowImportExport: 1,
-    AllowDeclaration: 2,
-    AllowFunctionDeclaration: 4,
-    AllowLabeledFunction: 8
-  };
   const loneSurrogate = /[\uD800-\uDFFF]/u;
   const keywordRelationalOperator = /in(?:stanceof)?/y;
   function babel7CompatTokens(tokens, input) {
@@ -12565,23 +12602,23 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
     parseModuleItem() {
-      return this.parseStatementLike(ParseStatementFlag.AllowImportExport | ParseStatementFlag.AllowDeclaration | ParseStatementFlag.AllowFunctionDeclaration | ParseStatementFlag.AllowLabeledFunction);
+      return this.parseStatementLike(1 | 2 | 4 | 8);
     }
     parseStatementListItem() {
-      return this.parseStatementLike(ParseStatementFlag.AllowDeclaration | ParseStatementFlag.AllowFunctionDeclaration | (!this.options.annexB || this.state.strict ? 0 : ParseStatementFlag.AllowLabeledFunction));
+      return this.parseStatementLike(2 | 4 | (!this.options.annexB || this.state.strict ? 0 : 8));
     }
     parseStatementOrSloppyAnnexBFunctionDeclaration(allowLabeledFunction = false) {
-      let flags = ParseStatementFlag.StatementOnly;
+      let flags = 0;
       if (this.options.annexB && !this.state.strict) {
-        flags |= ParseStatementFlag.AllowFunctionDeclaration;
+        flags |= 4;
         if (allowLabeledFunction) {
-          flags |= ParseStatementFlag.AllowLabeledFunction;
+          flags |= 8;
         }
       }
       return this.parseStatementLike(flags);
     }
     parseStatement() {
-      return this.parseStatementLike(ParseStatementFlag.StatementOnly);
+      return this.parseStatementLike(0);
     }
     parseStatementLike(flags) {
       let decorators = null;
@@ -12593,9 +12630,9 @@ var lib = createCommonjsModule(function(module, exports) {
     parseStatementContent(flags, decorators) {
       const starttype = this.state.type;
       const node = this.startNode();
-      const allowDeclaration = !!(flags & ParseStatementFlag.AllowDeclaration);
-      const allowFunctionDeclaration = !!(flags & ParseStatementFlag.AllowFunctionDeclaration);
-      const topLevel = flags & ParseStatementFlag.AllowImportExport;
+      const allowDeclaration = !!(flags & 2);
+      const allowFunctionDeclaration = !!(flags & 4);
+      const topLevel = flags & 1;
       switch (starttype) {
         case 60:
           return this.parseBreakContinueStatement(node, true);
@@ -12956,7 +12993,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseFunctionStatement(node, isAsync, isHangingDeclaration) {
       this.next();
-      return this.parseFunction(node, ParseFunctionFlag.Declaration | (isHangingDeclaration ? ParseFunctionFlag.HangingDeclaration : 0) | (isAsync ? ParseFunctionFlag.Async : 0));
+      return this.parseFunction(node, 1 | (isHangingDeclaration ? 2 : 0) | (isAsync ? 8 : 0));
     }
     parseIfStatement(node) {
       this.next();
@@ -13125,7 +13162,7 @@ var lib = createCommonjsModule(function(module, exports) {
         kind,
         statementStart: this.state.start
       });
-      node.body = flags & ParseStatementFlag.AllowLabeledFunction ? this.parseStatementOrSloppyAnnexBFunctionDeclaration(true) : this.parseStatement();
+      node.body = flags & 8 ? this.parseStatementOrSloppyAnnexBFunctionDeclaration(true) : this.parseStatement();
       this.state.labels.pop();
       node.label = expr;
       return this.finishNode(node, "LabeledStatement");
@@ -13272,13 +13309,13 @@ var lib = createCommonjsModule(function(module, exports) {
       decl.id = id;
     }
     parseAsyncFunctionExpression(node) {
-      return this.parseFunction(node, ParseFunctionFlag.Async);
+      return this.parseFunction(node, 8);
     }
-    parseFunction(node, flags = ParseFunctionFlag.Expression) {
-      const hangingDeclaration = flags & ParseFunctionFlag.HangingDeclaration;
-      const isDeclaration = !!(flags & ParseFunctionFlag.Declaration);
-      const requireId = isDeclaration && !(flags & ParseFunctionFlag.NullableId);
-      const isAsync = !!(flags & ParseFunctionFlag.Async);
+    parseFunction(node, flags = 0) {
+      const hangingDeclaration = flags & 2;
+      const isDeclaration = !!(flags & 1);
+      const requireId = isDeclaration && !(flags & 4);
+      const isAsync = !!(flags & 8);
       this.initFunction(node, isAsync);
       if (this.match(55)) {
         if (hangingDeclaration) {
@@ -13317,7 +13354,7 @@ var lib = createCommonjsModule(function(module, exports) {
     parseFunctionParams(node, isConstructor) {
       this.expect(10);
       this.expressionScope.enter(newParameterDeclarationScope());
-      node.params = this.parseBindingList(11, 41, ParseBindingListFlags.IS_FUNCTION_PARAMS | (isConstructor ? ParseBindingListFlags.IS_CONSTRUCTOR_PARAMS : 0));
+      node.params = this.parseBindingList(11, 41, 2 | (isConstructor ? 4 : 0));
       this.expressionScope.exit();
     }
     registerFunctionStatementId(node) {
@@ -13683,10 +13720,10 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       const hasSpecifiers = this.maybeParseExportNamedSpecifiers(node);
       if (hasDefault && parseAfterDefault && !hasStar && !hasSpecifiers) {
-        throw this.unexpected(null, 5);
+        this.unexpected(null, 5);
       }
       if (hasNamespace && parseAfterNamespace) {
-        throw this.unexpected(null, 97);
+        this.unexpected(null, 97);
       }
       let hasDeclaration;
       if (isFromRequired || hasSpecifiers) {
@@ -13727,7 +13764,7 @@ var lib = createCommonjsModule(function(module, exports) {
         this.checkExport(node2, true, true);
         return this.finishNode(node2, "ExportDefaultDeclaration");
       }
-      throw this.unexpected(null, 5);
+      this.unexpected(null, 5);
     }
     eatExportStar(node) {
       return this.eat(55);
@@ -13791,11 +13828,11 @@ var lib = createCommonjsModule(function(module, exports) {
       const expr = this.startNode();
       if (this.match(68)) {
         this.next();
-        return this.parseFunction(expr, ParseFunctionFlag.Declaration | ParseFunctionFlag.NullableId);
+        return this.parseFunction(expr, 1 | 4);
       } else if (this.isAsyncFunction()) {
         this.next();
         this.next();
-        return this.parseFunction(expr, ParseFunctionFlag.Declaration | ParseFunctionFlag.NullableId | ParseFunctionFlag.Async);
+        return this.parseFunction(expr, 1 | 4 | 8);
       }
       if (this.match(80)) {
         return this.parseClass(expr, true, true);
