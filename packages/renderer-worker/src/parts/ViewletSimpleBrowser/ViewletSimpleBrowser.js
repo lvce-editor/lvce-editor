@@ -9,7 +9,6 @@ import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as Preferences from '../Preferences/Preferences.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -180,8 +179,6 @@ export const go = (state) => {
   }
 }
 
-export const hasFunctionalRender = true
-
 export const handleWillNavigate = (state, url, canGoBack, canGoForward) => {
   return {
     ...state,
@@ -216,20 +213,6 @@ export const handleTitleUpdated = (state, title) => {
   }
 }
 
-export const hasFunctionalResize = true
-
-export const resize = (state, dimensions) => {
-  return {
-    ...state,
-    ...dimensions,
-  }
-}
-
-export const resizeEffect = async (state) => {
-  const { headerHeight, browserViewId, x, y, width, height } = state
-  await ElectronBrowserViewFunctions.resizeBrowserView(browserViewId, x, y + headerHeight, width, height - headerHeight)
-}
-
 export const dispose = async (state) => {
   const { browserViewId, suggestionsEnabled, hasSuggestionsOverlay } = state
   await ElectronBrowserView.disposeBrowserView(browserViewId)
@@ -237,42 +220,3 @@ export const dispose = async (state) => {
     await ElectronBrowserViewSuggestions.disposeBrowserView()
   }
 }
-
-const renderIframeSrc = {
-  isEqual(oldState, newState) {
-    return oldState.iframeSrc === newState.iframeSrc
-  },
-  apply(oldState, newState) {
-    return ['setIframeSrc', newState.iframeSrc]
-  },
-}
-
-// TODO this component shouldn't depend on Main
-const renderTitle = {
-  isEqual(oldState, newState) {
-    return oldState.title === newState.title
-  },
-  apply(oldState, newState) {
-    return ['Viewlet.send', ViewletModuleId.Main, 'updateTab', 0, newState.title]
-  },
-}
-
-const renderButtonsEnabled = {
-  isEqual(oldState, newState) {
-    return oldState.canGoBack === newState.canGoBack && oldState.canGoForward === newState.canGoForward
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setButtonsEnabled', /* canGoBack */ newState.canGoBack, /* canGoFoward */ newState.canGoForward]
-  },
-}
-
-const renderLoading = {
-  isEqual(oldState, newState) {
-    return oldState.isLoading === newState.isLoading
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setLoading', /* isLoading */ newState.isLoading]
-  },
-}
-
-export const render = [renderIframeSrc, renderTitle, renderButtonsEnabled, renderLoading]
