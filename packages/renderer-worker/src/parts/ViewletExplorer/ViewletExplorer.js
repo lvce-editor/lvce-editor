@@ -9,6 +9,7 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
+import * as RendererWorkerCommandType from '../RendererWorkerCommandType/RendererWorkerCommandType.js'
 import * as SortExplorerItems from '../SortExplorerItems/SortExplorerItems.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
@@ -451,7 +452,7 @@ export const copyRelativePath = async (state) => {
   const dirent = getFocusedDirent(state)
   const relativePath = dirent.path.slice(1)
   // TODO handle error
-  await Command.execute(/* ClipBoard.writeText */ 'ClipBoard.writeText', /* text */ relativePath)
+  await Command.execute(RendererWorkerCommandType.ClipBoardWriteText, /* text */ relativePath)
   return state
 }
 
@@ -460,7 +461,7 @@ export const copyPath = async (state) => {
   // TODO windows paths
   // TODO handle error
   const path = dirent.path
-  await Command.execute(/* ClipBoard.writeText */ 'ClipBoard.writeText', /* text */ path)
+  await Command.execute(RendererWorkerCommandType.ClipBoardWriteText, /* text */ path)
   return state
 }
 

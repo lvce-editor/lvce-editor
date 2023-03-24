@@ -1,7 +1,8 @@
 import * as Command from '../Command/Command.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Editor from '../Editor/Editor.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as RendererWorkerCommandType from '../RendererWorkerCommandType/RendererWorkerCommandType.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
 
 // TODO add test
 export const copy = async (editor) => {
@@ -25,6 +26,6 @@ export const copy = async (editor) => {
   }
   const selectedLines = TextDocument.getSelectionText(editor, range)
   const text = JoinLines.joinLines(selectedLines)
-  await Command.execute(/* ClipBoard.writeText */ 'ClipBoard.writeText', /* text */ text)
+  await Command.execute(RendererWorkerCommandType.ClipBoardWriteText, /* text */ text)
   return editor
 }
