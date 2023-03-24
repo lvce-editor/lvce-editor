@@ -1,8 +1,8 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as ViewletActions from '../ViewletActions/ViewletActions.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as ViewletActions from '../ViewletActions/ViewletActions.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -116,32 +116,4 @@ export const selectIndex = async (state, index) => {
     ...state,
     selectedIndex: index,
   }
-}
-
-export const hasFunctionalRender = true
-
-const renderTabs = {
-  isEqual(oldState, newState) {
-    return oldState.views === newState.views
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setTabs', /* tabs */ newState.views]
-  },
-}
-
-const renderSelectedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.selectedIndex === newState.selectedIndex
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setSelectedIndex', /* unFocusIndex */ oldState.selectedIndex, /* focusIndex */ newState.selectedIndex]
-  },
-}
-
-export const render = [renderTabs, renderSelectedIndex]
-
-export const hasFunctionalResize = true
-
-export const resize = (state, dimensions) => {
-  return state
 }

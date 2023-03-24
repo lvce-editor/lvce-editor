@@ -1,7 +1,6 @@
 import * as Completions from '../Completions/Completions.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
-import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.js'
 import * as Height from '../Height/Height.js'
@@ -33,10 +32,6 @@ export const create = (id, uri, x, y, width, height) => {
 
 const getEditor = () => {
   return Viewlet.getState('EditorText')
-}
-
-const getLabel = (item) => {
-  return item.label
 }
 
 const getDisplayErrorMessage = (error) => {
@@ -177,56 +172,4 @@ export const advance = (state, word) => {
     filteredItems,
   }
 }
-
-export const hasFunctionalRender = true
-
-const getVisibleItems = (filteredItems, minLineY, maxLineY) => {
-  const visibleItems = []
-  for (let i = minLineY; i < maxLineY; i++) {
-    const filteredItem = filteredItems[i]
-    visibleItems.push({
-      label: getLabel(filteredItem),
-      icon: EditorCompletionMap.getIcon(filteredItem),
-    })
-  }
-  return visibleItems
-}
-
-const renderItems = {
-  isEqual(oldState, newState) {
-    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
-  },
-  apply(oldState, newState) {
-    const visibleItems = getVisibleItems(newState.items, newState.minLineY, newState.maxLineY)
-    return [/* method */ 'setItems', /* items */ visibleItems, /* reason */ 1]
-  },
-}
-
-const renderBounds = {
-  isEqual(oldState, newState) {
-    return (
-      oldState.items === newState.items &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY &&
-      oldState.x === newState.x &&
-      oldState.y === newState.y
-    )
-  },
-  apply(oldState, newState) {
-    const { x, y, width, height } = newState
-    return [/* method */ 'setBounds', /* x */ x, /* y */ y, /* width */ width, /* height */ height]
-  },
-}
-
-const renderFocusedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setFocusedIndex', /* oldFocusedIndex */ oldState.focusedIndex, /* newFocusedIndex */ newState.focusedIndex]
-  },
-}
-
-export const render = [renderItems, renderBounds, renderFocusedIndex]
-
 export * from '../VirtualList/VirtualList.js'

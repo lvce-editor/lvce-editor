@@ -8,16 +8,13 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
     execute: jest.fn(() => {
@@ -26,26 +23,12 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
-const ViewletActivityBar = await import(
-  '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
-)
-
-const ViewletManager = await import(
-  '../src/parts/ViewletManager/ViewletManager.js'
-)
-
-const ACTIVITY_BAR_ITEM_HEIGHT = 48
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const ViewletActivityBar = await import('../src/parts/ViewletActivityBar/ViewletActivityBar.ipc.js')
+const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(
-    ViewletActivityBar,
-    oldState,
-    newState,
-    ViewletModuleId.ActivityBar
-  )
+  return ViewletManager.render(ViewletActivityBar, oldState, newState, ViewletModuleId.ActivityBar)
 }
 
 test('loadContent', async () => {
@@ -531,134 +514,3 @@ test.skip('handleContextMenu', async () => {
 })
 
 // TODO test when height is too low to show any activity bar items, e.g. height=10px
-
-test('resize', () => {
-  const state = {
-    ...ViewletActivityBar.create(),
-    focusedIndex: -1,
-    height: ACTIVITY_BAR_ITEM_HEIGHT * 8,
-    activityBarItems: [
-      // Top
-      {
-        id: ViewletModuleId.Explorer,
-        title: 'Explorer',
-        icon: Icon.Files,
-        enabled: true,
-        flags: ActivityBarItemFlags.Tab,
-        keyShortcuts: 'Control+Shift+E',
-      },
-      {
-        id: ViewletModuleId.Search,
-        title: 'Search',
-        icon: Icon.Search,
-        enabled: true,
-        flags: ActivityBarItemFlags.Tab,
-        keyShortcuts: 'Control+Shift+F',
-      },
-      {
-        id: ViewletModuleId.SourceControl,
-        title: 'Source Control',
-        icon: Icon.SourceControl,
-        enabled: true,
-        flags: ActivityBarItemFlags.Tab,
-        keyShortcuts: 'Control+Shift+G',
-      },
-      {
-        id: ViewletModuleId.RunAndDebug,
-        title: 'Run and Debug',
-        icon: Icon.DebugAlt2,
-        enabled: true,
-        flags: ActivityBarItemFlags.Tab,
-        keyShortcuts: 'Control+Shift+D',
-      },
-      {
-        id: ViewletModuleId.Extensions,
-        title: 'Extensions',
-        icon: Icon.Extensions,
-        enabled: true,
-        flags: ActivityBarItemFlags.Tab,
-        keyShortcuts: 'Control+Shift+X',
-      },
-      // Bottom
-      {
-        id: 'Settings',
-        title: 'Settings',
-        icon: Icon.SettingsGear,
-        enabled: true,
-        flags: ActivityBarItemFlags.Button,
-        keyShortcuts: '',
-      },
-    ],
-  }
-  const newState = ViewletActivityBar.resize(state, {
-    x: 150,
-    y: 150,
-    width: 150,
-    height: 150,
-  })
-  expect(newState).toEqual({
-    itemHeight: 48,
-    activityBarItems: [
-      {
-        enabled: true,
-        flags: ActivityBarItemFlags.Tab,
-        icon: Icon.Files,
-        id: ViewletModuleId.Explorer,
-        title: 'Explorer',
-        keyShortcuts: 'Control+Shift+E',
-      },
-      {
-        enabled: true,
-        flags: ActivityBarItemFlags.Tab,
-        icon: Icon.Search,
-        id: ViewletModuleId.Search,
-        title: 'Search',
-        keyShortcuts: 'Control+Shift+F',
-      },
-      {
-        enabled: true,
-        flags: ActivityBarItemFlags.Tab,
-        icon: Icon.SourceControl,
-        id: ViewletModuleId.SourceControl,
-        title: 'Source Control',
-        keyShortcuts: 'Control+Shift+G',
-      },
-      {
-        enabled: true,
-        flags: ActivityBarItemFlags.Tab,
-        icon: Icon.DebugAlt2,
-        id: ViewletModuleId.RunAndDebug,
-        title: 'Run and Debug',
-        keyShortcuts: 'Control+Shift+D',
-      },
-      {
-        enabled: true,
-        flags: ActivityBarItemFlags.Tab,
-        icon: Icon.Extensions,
-        id: ViewletModuleId.Extensions,
-        title: 'Extensions',
-        keyShortcuts: 'Control+Shift+X',
-      },
-      {
-        enabled: true,
-        flags: ActivityBarItemFlags.Button,
-        icon: Icon.SettingsGear,
-        id: 'Settings',
-        title: 'Settings',
-        keyShortcuts: '',
-      },
-    ],
-    events: {
-      'Layout.hideSideBar': 8014,
-      'SideBar.viewletChange': 8013,
-      'SourceControl.changeBadgeCount': 8012,
-    },
-    focusedIndex: -1,
-    height: 150,
-    x: 150,
-    selectedIndex: -1,
-    y: 150,
-    width: 150,
-    focused: false,
-  })
-})

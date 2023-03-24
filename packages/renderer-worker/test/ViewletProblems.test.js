@@ -13,22 +13,12 @@ jest.unstable_mockModule('../src/parts/Diagnostics/Diagnostics.js', () => {
   }
 })
 
-const ViewletProblems = await import(
-  '../src/parts/ViewletProblems/ViewletProblems.js'
-)
-
-const ViewletManager = await import(
-  '../src/parts/ViewletManager/ViewletManager.js'
-)
+const ViewletProblems = await import('../src/parts/ViewletProblems/ViewletProblems.ipc.js')
+const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const Diagnostics = await import('../src/parts/Diagnostics/Diagnostics.js')
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(
-    ViewletProblems,
-    oldState,
-    newState,
-    ViewletModuleId.Problems
-  )
+  return ViewletManager.render(ViewletProblems, oldState, newState, ViewletModuleId.Problems)
 }
 
 test('create', () => {
@@ -63,9 +53,7 @@ test('render', () => {
     ...oldState,
     problems: [],
   }
-  expect(render(oldState, newState)).toEqual([
-    ['Viewlet.send', 'Problems', 'setProblems', []],
-  ])
+  expect(render(oldState, newState)).toEqual([['Viewlet.send', 'Problems', 'setProblems', []]])
 })
 
 test('setFocusedIndex', () => {

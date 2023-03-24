@@ -27,8 +27,7 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
   }
 })
 
-const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
-
+const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.ipc.js')
 const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
 const Command = await import('../src/parts/Command/Command.js')
 const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
