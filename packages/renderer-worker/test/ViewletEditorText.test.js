@@ -23,6 +23,8 @@ test('resize - increase height', () => {
     maxLineY: 1,
     numberOfVisibleLines: 1,
     focused: true,
+    width: 800,
+    differences: [0, 0, 0, 0],
   }
   const { newState, commands } = ViewletEditorText.resize(state, {
     x: 200,
@@ -52,8 +54,8 @@ test('resize - increase height', () => {
         ['line 3', 'Token Text'],
       ],
       [0, 0, 0],
-      new Float32Array([0, 0]),
       new Float32Array(),
+      new Float32Array([0, 0, 0, 20]),
     ],
   ])
 })
@@ -66,6 +68,8 @@ test('resize - same height', () => {
     maxLineY: 3,
     numberOfVisibleLines: 3,
     focused: true,
+    width: 800,
+    differences: [0, 0, 0, 0],
   }
   const { newState, commands } = ViewletEditorText.resize(state, {
     x: 200,
@@ -95,8 +99,8 @@ test('resize - same height', () => {
         ['line 3', 'Token Text'],
       ],
       [0, 0, 0],
-      new Float32Array([0, 0]),
       new Float32Array(),
+      new Float32Array([0, 0, 0, 20]),
     ],
   ])
 })
@@ -110,6 +114,8 @@ test('resize - reduce height', () => {
     numberOfVisibleLines: 3,
     height: 60,
     focused: true,
+    width: 800,
+    differences: [0, 0, 0, 0],
   }
   const { newState, commands } = ViewletEditorText.resize(state, {
     x: 200,
@@ -135,8 +141,8 @@ test('resize - reduce height', () => {
       0,
       [['line 1', 'Token Text']],
       [0],
-      new Float32Array([0, 0]),
       new Float32Array(),
+      new Float32Array([0, 0, 0, 20]),
     ],
   ])
 })
