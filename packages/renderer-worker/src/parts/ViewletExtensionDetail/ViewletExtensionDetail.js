@@ -2,6 +2,7 @@ import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetViewletSize from '../GetViewletSize/GetViewletSize.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MarkDown from '../Markdown/Markdown.js'
 import * as Path from '../Path/Path.js'
@@ -62,16 +63,6 @@ const getBaseUrl = (extensionPath) => {
   }
 }
 
-const getSize = (width) => {
-  if (width < 180) {
-    return ViewletSize.Small
-  }
-  if (width < 768) {
-    return ViewletSize.Normal
-  }
-  return ViewletSize.Large
-}
-
 // first heading is usually extension name, since it is alreay present
 // at the top, remove this heading
 // const removeFirstHeading = (readme) => {
@@ -95,7 +86,7 @@ export const loadContent = async (state) => {
   const iconSrc = getIconSrc(extension)
   const description = ExtensionDisplay.getDescription(extension)
   const name = ExtensionDisplay.getName(extension)
-  const size = getSize(width)
+  const size = GetViewletSize.getViewletSize(width)
   return {
     ...state,
     sanitizedReadmeHtml: normalizedReadmeHtml,
@@ -120,7 +111,7 @@ export const handleIconError = (state) => {
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
-  const size = getSize(dimensions.width)
+  const size = GetViewletSize.getViewletSize(dimensions.width)
   return {
     ...state,
     ...dimensions,
