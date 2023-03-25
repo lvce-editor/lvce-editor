@@ -148,6 +148,11 @@ const copyMainProcessSources = async ({ arch, commitHash, product }) => {
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
+    occurrence: `exports.productName = 'Lvce-OSS'`,
+    replacement: `exports.productName = '${product.nameShort}'`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
     occurrence: `exports.isLinux = process.platform === 'linux'`,
     replacement: `exports.isLinux = ${Platform.isLinux()}`,
   })

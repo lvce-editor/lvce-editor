@@ -40,7 +40,7 @@ exports.commit = 'unknown commit'
 
 exports.scheme = 'lvce-oss'
 
-exports.ProductName = 'Lvce-OSS'
+exports.productName = 'Lvce-OSS'
 
 exports.getSessionId = () => {
   return process.env.SESSION_ID || `persist:${exports.scheme}`

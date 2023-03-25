@@ -3,7 +3,7 @@ const ElectronApp = require('../ElectronApp/ElectronApp.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
 
 const getHelpString = () => {
-  return `${Platform.ProductName} v${Platform.version}
+  return `${Platform.productName} v${Platform.version}
 
 Usage:
   ${Platform.applicationName} [path]
