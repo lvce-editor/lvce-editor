@@ -11,7 +11,7 @@ const getName = (object) => {
 const getVersions = () => {
   return [
     {
-      name: Platform.ProductName,
+      name: Platform.productName,
       version: Platform.version,
     },
     {
