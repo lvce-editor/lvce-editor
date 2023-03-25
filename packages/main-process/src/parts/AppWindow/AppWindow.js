@@ -38,8 +38,7 @@ const loadUrl = async (browserWindow, url) => {
 const defaultUrl = `${Platform.scheme}://-`
 
 // TODO avoid mixing BrowserWindow, childprocess and various lifecycle methods in one file -> separate concerns
-exports.createAppWindow = async (parsedArgs, workingDirectory, url = defaultUrl) => {
-  const preferences = await Preferences.load()
+exports.createAppWindow = async (preferences, parsedArgs, workingDirectory, url = defaultUrl) => {
   const titleBarPreference = Preferences.get(preferences, 'window.titleBarStyle')
   const frame = titleBarPreference !== 'custom'
   const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
@@ -82,8 +81,9 @@ exports.createAppWindow = async (parsedArgs, workingDirectory, url = defaultUrl)
   await loadUrl(window, url)
 }
 
-exports.openNew = (url) => {
-  return exports.createAppWindow([], '', url)
+exports.openNew = async (url) => {
+  const preferences = await Preferences.load()
+  return exports.createAppWindow(preferences, [], '', url)
 }
 
 exports.findById = (id) => {

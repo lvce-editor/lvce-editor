@@ -1,9 +1,12 @@
 const AppWindow = require('../AppWindow/AppWindow.js')
 const Cli = require('../Cli/Cli.js')
+const Command = require('../Command/Command.js')
 const Debug = require('../Debug/Debug.js')
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
+const IsAutoUpdateSupported = require('../IsAutoUpdateSupported/IsAutoUpdateSupported.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
 const Platform = require('../Platform/Platform.js')
+const Preferences = require('../Preferences/Preferences.js')
 
 exports.handleWindowAllClosed = () => {
   Debug.debug('[info] all windows closed')
@@ -27,7 +30,12 @@ exports.handleBeforeQuit = () => {
 // const windowConfigMap = new Map()
 
 exports.handleReady = async (parsedArgs, workingDirectory) => {
-  await AppWindow.createAppWindow(parsedArgs, workingDirectory)
+  const preferences = await Preferences.load()
+  const autoUpdateSetting = Preferences.get('update.mode')
+  if (IsAutoUpdateSupported.isAutoUpdateSupported() && autoUpdateSetting === 'manual') {
+    await Command.execute('AutoUpdater.hydrate')
+  }
+  await AppWindow.createAppWindow(preferences, parsedArgs, workingDirectory)
 }
 
 exports.handleSecondInstance = async (

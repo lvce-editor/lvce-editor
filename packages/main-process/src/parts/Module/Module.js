@@ -53,6 +53,10 @@ exports.load = async (moduleId) => {
       return require('../ElectronNet/ElectronNet.ipc.js')
     case ModuleId.ElectronBrowserViewSuggestions:
       return require('../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.ipc.js')
+    case ModuleId.IsAutoUpdateSupported:
+      return require('../IsAutoUpdateSupported/IsAutoUpdateSupported.ipc.js')
+    case ModuleId.AutoUpdater:
+      return require('../AutoUpdater/AutoUpdater.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }

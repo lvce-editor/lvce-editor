@@ -67,3 +67,4 @@ export const ElectronApplicationMenu = 65
 export const About = 66
 export const ConfirmPrompt = 67
 export const BulkReplacement = 68
+export const AutoUpdater = 69
