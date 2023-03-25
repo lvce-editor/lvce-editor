@@ -17,13 +17,13 @@ import * as Template from '../Template/Template.js'
 // TODO maybe don't need to include nan module
 // TODO don't need to include whole vscode-ripgrep-with-github-api-error-fix module (only path)
 
-const bundleElectronMaybe = async ({ product }) => {
+const bundleElectronMaybe = async ({ product, version }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
   //   Logger.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product })
+  await build({ product, version })
 }
 
 const getElectronVersion = async () => {
@@ -33,8 +33,7 @@ const getElectronVersion = async () => {
   return parsedVersion
 }
 
-const copyElectronBuilderConfig = async ({ config, version, product }) => {
-  const electronVersion = await getElectronVersion()
+const copyElectronBuilderConfig = async ({ config, version, product, electronVersion }) => {
   // if (config === 'electron_builder_arch_linux') {
   //   version = version.replaceAll('-', '_') // https://wiki.archlinux.org/title/creating_packages#pkgver()
   // }
@@ -55,6 +54,9 @@ const runElectronBuilder = async ({ config }) => {
   try {
     const debArch = 'amd64'
 
+    /**
+     * @type {ElectronBuilder.CliOptions}
+     */
     const options = {
       projectDir: Path.absolute('build/.tmp/electron-builder'),
       prepackaged: Path.absolute(`build/.tmp/linux/snap/${debArch}/app`),
@@ -149,7 +151,7 @@ const addRootPackageJson = async ({ cachePath, version, product }) => {
 }
 
 const copyElectronResult = async ({ config, version, product }) => {
-  await bundleElectronMaybe({ product })
+  await bundleElectronMaybe({ product, version })
   const debArch = 'amd64'
   await Copy.copy({
     from: `build/.tmp/electron-bundle/x64`,
@@ -196,13 +198,14 @@ export const build = async ({ config, product }) => {
   // @ts-ignore
   process.env.USE_HARD_LINKS = false
   const version = await Tag.getSemverVersion()
+  const electronVersion = await getElectronVersion()
 
   console.time('copyElectronResult')
   await copyElectronResult({ version, config, product })
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')
-  await copyElectronBuilderConfig({ config, version, product })
+  await copyElectronBuilderConfig({ config, version, product, electronVersion })
   console.timeEnd('copyElectronBuilderConfig')
 
   console.time('copyBuildResources')

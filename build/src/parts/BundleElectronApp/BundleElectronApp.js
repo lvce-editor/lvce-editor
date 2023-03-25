@@ -1,4 +1,5 @@
 import { existsSync } from 'node:fs'
+import * as Assert from '../Assert/Assert.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
@@ -7,6 +8,7 @@ import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
@@ -14,9 +16,7 @@ import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
-import * as Tag from '../Tag/Tag.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-import * as Logger from '../Logger/Logger.js'
 
 const getDependencyCacheHash = async ({ electronVersion, arch }) => {
   const files = [
@@ -127,7 +127,7 @@ const copyPlaygroundFiles = async ({ arch }) => {
   })
 }
 
-const copyMainProcessSources = async ({ arch, commitHash, product }) => {
+const copyMainProcessSources = async ({ arch, commitHash, product, version }) => {
   await Copy.copy({
     from: 'packages/main-process/src',
     to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src`,
@@ -176,7 +176,6 @@ const copyMainProcessSources = async ({ arch, commitHash, product }) => {
     occurrence: `exports.commit = 'unknown commit'`,
     replacement: `exports.commit = '${commitHash}'`,
   })
-  const version = await Tag.getGitTag()
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
     occurrence: `exports.version = '0.0.0-dev'`,
@@ -263,7 +262,9 @@ const copyCss = async ({ arch }) => {
   })
 }
 
-export const build = async ({ product }) => {
+export const build = async ({ product, version = '0.0.0-dev' }) => {
+  Assert.object(product)
+  Assert.string(version)
   const arch = process.arch
   const { electronVersion, isInstalled } = await GetElectronVersion.getElectronVersion()
   const dependencyCacheHash = await getDependencyCacheHash({
@@ -324,7 +325,7 @@ export const build = async ({ product }) => {
   console.timeEnd('copyPtyHostSources')
 
   console.time('copyMainProcessSources')
-  await copyMainProcessSources({ arch, commitHash, product })
+  await copyMainProcessSources({ arch, commitHash, product, version })
   console.timeEnd('copyMainProcessSources')
 
   console.time('copySharedProcessSources')
