@@ -2,11 +2,17 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.mock('windows-process-tree', () => {
-  return {
-    getProcessList: jest.fn(),
+jest.mock(
+  'windows-process-tree',
+  () => {
+    return {
+      getProcessList: jest.fn(),
+    }
+  },
+  {
+    virtual: true,
   }
-})
+)
 
 const WindowsProcessTree = require('../src/parts/WindowsProcessTree/WindowsProcessTree.js')
 const WindowsProcessTreeModule = require('windows-process-tree')
