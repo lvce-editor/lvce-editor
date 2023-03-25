@@ -14,13 +14,13 @@ import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
 
-const bundleElectronMaybe = async ({ product }) => {
+const bundleElectronMaybe = async ({ product, version }) => {
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product })
+  await build({ product, version })
 }
 
-const copyElectronResult = async ({ product }) => {
-  await bundleElectronMaybe({ product })
+const copyElectronResult = async ({ product, version }) => {
+  await bundleElectronMaybe({ product, version })
   await Copy.copy({
     from: `build/.tmp/electron-bundle/x64/resources/app`,
     to: `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}`,
@@ -155,8 +155,11 @@ export const build = async ({ product }) => {
     await Exec.exec('fakeroot', Process.argv, { stdio: 'inherit' })
     return
   }
+
+  const version = await Tag.getGitTag()
+
   console.time('copyElectronResult')
-  await copyElectronResult({ product })
+  await copyElectronResult({ product, version })
   console.timeEnd('copyElectronResult')
 
   console.time('copyMetaFiles')

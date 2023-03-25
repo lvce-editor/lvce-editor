@@ -29,17 +29,17 @@ const getDebPackageArch = (arch) => {
   }
 }
 
-const bundleElectronMaybe = async ({ product }) => {
+const bundleElectronMaybe = async ({ product, version }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
   //   console.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product })
+  await build({ product, version })
 }
 
-const copyElectronResult = async ({ product }) => {
-  await bundleElectronMaybe({ product })
+const copyElectronResult = async ({ product, version }) => {
+  await bundleElectronMaybe({ product, version })
   const debArch = 'amd64'
   await Copy.copy({
     from: `build/.tmp/electron-bundle/x64`,
@@ -210,8 +210,10 @@ export const build = async ({ product }) => {
     await Exec.exec('fakeroot', Process.argv, { stdio: 'inherit' })
     return
   }
+  const version = await Tag.getGitTag()
+
   console.time('copyElectronResult')
-  await copyElectronResult({ product })
+  await copyElectronResult({ product, version })
   console.timeEnd('copyElectronResult')
 
   console.time('copyMetaFiles')
