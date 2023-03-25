@@ -3,6 +3,7 @@ import { readdir } from 'node:fs/promises'
 import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Copy from '../Copy/Copy.js'
+import * as CreatePlaceholderElectronApp from '../CreatePlaceholderElectronApp/CreatePlaceholderElectronApp.js'
 import * as ElectronBuilderConfigType from '../ElectronBuilderConfigType/ElectronBuilderConfigType.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Logger from '../Logger/Logger.js'
@@ -150,7 +151,7 @@ const addRootPackageJson = async ({ cachePath, version, product }) => {
   })
 }
 
-const copyElectronResult = async ({ config, version, product }) => {
+const copyElectronResult = async ({ config, version, product, electronVersion }) => {
   await bundleElectronMaybe({ product, version })
   const debArch = 'amd64'
   await Copy.copy({
@@ -177,6 +178,11 @@ const copyElectronResult = async ({ config, version, product }) => {
     await Template.write('windows_cli_bash', `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}`, {
       '@@NAME@@': product.applicationName,
     })
+    await CreatePlaceholderElectronApp.createPlaceholderElectronApp({ product, version, config, electronVersion })
+    await Copy.copyFile({
+      from: `build/.tmp/electron-builder-placeholder-app/dist/${product.windowsExecutableName} Setup ${version}.exe`,
+      to: `build/.tmp/electron-builder/dist/${product.windowsExecutableName} Setup ${version}.exe`,
+    })
   }
 }
 
@@ -201,7 +207,7 @@ export const build = async ({ config, product }) => {
   const electronVersion = await getElectronVersion()
 
   console.time('copyElectronResult')
-  await copyElectronResult({ version, config, product })
+  await copyElectronResult({ version, config, product, electronVersion })
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')
