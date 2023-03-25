@@ -23,3 +23,5 @@ exports.ProcessExplorerContextMenu = 22
 exports.Process = 23
 exports.ElectronNet = 24
 exports.ElectronBrowserViewSuggestions = 25
+exports.AutoUpdater = 26
+exports.IsAutoUpdateSupported = 27

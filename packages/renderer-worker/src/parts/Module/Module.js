@@ -8,6 +8,8 @@ export const load = (moduleId) => {
       return import('../Ajax/Ajax.ipc.js')
     case ModuleId.Audio:
       return import('../Audio/Audio.ipc.js')
+    case ModuleId.AutoUpdater:
+      return import('../AutoUpdater/AutoUpdater.ipc.js')
     case ModuleId.Base64:
       return import('../Base64/Base64.ipc.js')
     case ModuleId.Blob:
