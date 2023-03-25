@@ -197,7 +197,7 @@ const copyElectronResult = async ({ config, version, product, electronVersion })
     })
     // workaround for https://github.com/electron-userland/electron-builder/issues/2761
     const { owner, repoName } = getRepositoryInfo(product.repoUrl)
-    await Template.write('electron_builder_app_update_yaml', {
+    await Template.write('electron_builder_app_update_yaml', `build/.tmp/linux/snap/${debArch}/app/resources/app-update.yml`, {
       '@@OWNER@@': owner,
       '@@REPO_NAME@@': repoName,
     })
