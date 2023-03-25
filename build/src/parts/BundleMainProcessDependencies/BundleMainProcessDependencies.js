@@ -3,12 +3,11 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
+import * as Platform from '../Platform/Platform.js'
 
-export const bundleMainProcessDependencies = async ({ to }) => {
+export const bundleMainProcessDependencies = async ({ to, arch, electronVersion }) => {
   const mainProcessPath = Path.absolute('packages/main-process')
-  const packageJson = await JsonFile.readJson(
-    'packages/main-process/package.json'
-  )
+  const packageJson = await JsonFile.readJson('packages/main-process/package.json')
   await JsonFile.writeJson({
     to: `${to}/package.json`,
     value: {
@@ -17,15 +16,21 @@ export const bundleMainProcessDependencies = async ({ to }) => {
       dependencies: packageJson.dependencies,
     },
   })
-  const dependencies = await NpmDependencies.getNpmDependencies(
-    'packages/main-process'
-  )
+  const dependencies = await NpmDependencies.getNpmDependencies('packages/main-process')
   for (const dependency of dependencies) {
     const dependencyTo = to + dependency.slice(mainProcessPath.length)
     await Copy.copy({
       from: dependency,
       to: dependencyTo,
       ignore: NodeModulesIgnoredFiles.getNodeModulesIgnoredFiles(),
+    })
+  }
+  if (Platform.isWindows()) {
+    const Rebuild = await import('../Rebuild/Rebuild.js')
+    await Rebuild.rebuild({
+      arch,
+      buildPath: Path.absolute(to),
+      electronVersion,
     })
   }
 }
