@@ -72,7 +72,7 @@
   {
     "name": "builtin.language-basics-go",
     "repository": "github.com/lvce-editor/language-basics-go",
-    "version": "0.0.2"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-graphql",
@@ -87,7 +87,7 @@
   {
     "name": "builtin.language-basics-java",
     "repository": "github.com/lvce-editor/language-basics-java",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-javascript",
@@ -197,7 +197,7 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "0.0.10"
+    "version": "0.0.11"
   },
   {
     "name": "builtin.language-basics-vue",
@@ -237,17 +237,17 @@
   {
     "name": "builtin.theme-atom-one-dark",
     "repository": "github.com/lvce-editor/theme-atom-one-dark",
-    "version": "0.0.12"
+    "version": "0.0.13"
   },
   {
     "name": "builtin.theme-ayu",
     "repository": "github.com/lvce-editor/theme-ayu",
-    "version": "0.0.7"
+    "version": "0.0.8"
   },
   {
     "name": "builtin.theme-cobalt2",
     "repository": "github.com/lvce-editor/theme-cobalt2",
-    "version": "0.0.8"
+    "version": "0.0.9"
   },
   {
     "name": "builtin.theme-gruvbox",
