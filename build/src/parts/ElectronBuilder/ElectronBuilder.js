@@ -151,6 +151,18 @@ const addRootPackageJson = async ({ cachePath, version, product }) => {
   })
 }
 
+const getRepositoryInfo = (url) => {
+  const RE_URL = /github\.com\/(.*)\/(.*)/
+  const match = url.match(RE_URL)
+  if (!match) {
+    throw new Error(`failed to parse repository info`)
+  }
+  return {
+    owner: match[1],
+    repoName: match[2],
+  }
+}
+
 const copyElectronResult = async ({ config, version, product, electronVersion }) => {
   await bundleElectronMaybe({ product, version })
   const debArch = 'amd64'
@@ -182,6 +194,12 @@ const copyElectronResult = async ({ config, version, product, electronVersion })
     await Copy.copyFile({
       from: `build/.tmp/electron-builder-placeholder-app/dist/${product.windowsExecutableName} Setup ${version}.exe`,
       to: `build/.tmp/electron-builder/dist/${product.windowsExecutableName} Setup ${version}.exe`,
+    })
+    // workaround for https://github.com/electron-userland/electron-builder/issues/2761
+    const { owner, repoName } = getRepositoryInfo(product.repoUrl)
+    await Template.write('electron_builder_app_update_yaml', `build/.tmp/linux/snap/${debArch}/app/resources/app-update.yml`, {
+      '@@OWNER@@': owner,
+      '@@REPO_NAME@@': repoName,
     })
   }
 }

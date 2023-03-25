@@ -1,0 +1,4 @@
+owner: @@OWNER@@
+repo: @@REPO_NAME@@
+provider: github
+updaterCacheDirName: @@REPO_NAME@@-updater
