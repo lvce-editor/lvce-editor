@@ -1,3 +1,20 @@
+const VError = require('verror')
+const ErrorCodes = require('../ErrorCodes/ErrorCodes.js')
+
+const loadWindowProcessTree = () => {
+  try {
+    return require('windows-process-tree')
+  } catch (error) {
+    if (error && error instanceof Error && 'code' in error && error.code === ErrorCodes.ERR_DLOPEN_FAILED) {
+      throw new VError(
+        `Failed to load windows process tree: The native module "windows-process-tree" is not compatible with this node version and must be compiled against a matching electron version using electron-rebuild`
+      )
+    }
+    // @ts-ignore
+    throw new VError(error, `Failed to load windows process tree`)
+  }
+}
+
 /**
  *
  * @param {number} rootPid
@@ -5,7 +22,7 @@
  * @returns {Promise<WindowsProcessTree.IProcessInfo[] | undefined>}
  */
 exports.getProcessList = (rootPid, flags) => {
-  const WindowsProcessTree = require('windows-process-tree')
+  const WindowsProcessTree = loadWindowProcessTree()
   return new Promise((resolve, reject) => {
     WindowsProcessTree.getProcessList(rootPid, resolve, flags)
   })
@@ -17,7 +34,7 @@ exports.getProcessList = (rootPid, flags) => {
  * @returns Promise< WindowsProcessTree.IProcessCpuInfo[]>
  */
 exports.addCpuUsage = (processList) => {
-  const WindowsProcessTree = require('windows-process-tree')
+  const WindowsProcessTree = loadWindowProcessTree()
   return new Promise((resolve) => {
     WindowsProcessTree.getProcessCpuUsage(processList, resolve)
   })
