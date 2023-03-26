@@ -1,3 +1,5 @@
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+
 const getVisible = (provider, items, minLineY, maxLineY) => {
   const visibleItems = []
   const setSize = items.length
@@ -23,7 +25,7 @@ const renderValue = {
     return oldState.value === newState.value
   },
   apply(oldState, newState) {
-    return [/* method */ 'setValue', /* value */ newState.value]
+    return [/* method */ RenderMethod.SetValue, /* value */ newState.value]
   },
 }
 
@@ -32,7 +34,7 @@ const renderCursorOffset = {
     oldState.cursorOffset === newState.cursorOffset || newState.cursorOffset === newState.value.length
   },
   apply(oldState, newState) {
-    return [/* method */ 'setCursorOffset', /* cursorOffset */ newState.cursorOffset]
+    return [/* method */ RenderMethod.SetCursorOffset, /* cursorOffset */ newState.cursorOffset]
   },
 }
 
@@ -45,7 +47,7 @@ const renderItems = {
       return [/* method */ 'showNoResults']
     }
     const visibleItems = getVisible(newState.provider, newState.items, newState.minLineY, newState.maxLineY)
-    return [/* method */ 'setVisiblePicks', /* visiblePicks */ visibleItems]
+    return [/* method */ RenderMethod.SetVisiblePicks, /* visiblePicks */ visibleItems]
   },
 }
 
@@ -56,7 +58,7 @@ const renderFocusedIndex = {
   apply(oldState, newState) {
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
-    return [/* method */ 'setFocusedIndex', /* oldFocusedIndex */ oldFocusedIndex, /* newFocusedIndex */ newFocusedIndex]
+    return [/* method */ RenderMethod.SetFocusedIndex, /* oldFocusedIndex */ oldFocusedIndex, /* newFocusedIndex */ newFocusedIndex]
   },
 }
 
@@ -68,7 +70,7 @@ const renderHeight = {
     const maxLineY = Math.min(newState.maxLineY, newState.items.length)
     const itemCount = maxLineY - newState.minLineY
     const height = itemCount * newState.itemHeight
-    return [/* method */ 'setItemsHeight', /* height */ height]
+    return [/* method */ RenderMethod.SetItemsHeight, /* height */ height]
   },
 }
 

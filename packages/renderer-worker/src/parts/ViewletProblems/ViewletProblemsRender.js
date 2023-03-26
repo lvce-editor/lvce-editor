@@ -1,3 +1,5 @@
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+
 export const hasFunctionalRender = true
 
 const renderProblems = {
@@ -5,7 +7,7 @@ const renderProblems = {
     return oldState.problems === newState.problems
   },
   apply(oldState, newState) {
-    return [/* method */ 'setProblems', /* problems */ newState.problems]
+    return [/* method */ RenderMethod.SetProblems, /* problems */ newState.problems]
   },
 }
 
@@ -14,7 +16,7 @@ const renderFocusedIndex = {
     return oldState.focusedIndex === newState.focusedIndex
   },
   apply(oldState, newState) {
-    return [/* method */ 'setFocusedIndex', /* focusedIndex */ newState.focusedIndex]
+    return [/* method */ RenderMethod.SetFocusedIndex, /* focusedIndex */ newState.focusedIndex]
   },
 }
 
@@ -23,7 +25,7 @@ const renderMessage = {
     return oldState.message === newState.message
   },
   apply(oldState, newState) {
-    return [/* method */ 'setMessage', /* focusedIndex */ newState.message]
+    return [/* method */ RenderMethod.SetMessage, /* focusedIndex */ newState.message]
   },
 }
 

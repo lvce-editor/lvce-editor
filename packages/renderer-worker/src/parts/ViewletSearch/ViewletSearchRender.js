@@ -1,4 +1,5 @@
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as Workspace from '../Workspace/Workspace.js'
@@ -79,7 +80,7 @@ const renderItems = {
       newState.minLineY,
       newState.maxLineY
     )
-    return [/* method */ 'setResults', /* results */ displayResults, /* replacement */ newState.replacement]
+    return [/* method */ RenderMethod.SetResults, /* results */ displayResults, /* replacement */ newState.replacement]
   },
 }
 
@@ -94,7 +95,7 @@ const renderScrollBar = {
       newState.height - newState.headerHeight,
       newState.scrollBarHeight
     )
-    return [/* method */ 'setScrollBar', /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
+    return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
   },
 }
 
@@ -105,7 +106,7 @@ const renderHeight = {
   apply(oldState, newState) {
     const { itemHeight } = newState
     const contentHeight = newState.items.length * itemHeight
-    return [/* method */ 'setContentHeight', /* contentHeight */ contentHeight]
+    return [/* method */ RenderMethod.SetContentHeight, /* contentHeight */ contentHeight]
   },
 }
 
@@ -114,7 +115,7 @@ const renderMessage = {
     return oldState.message === newState.message
   },
   apply(oldState, newState) {
-    return [/* method */ 'setMessage', /* message */ newState.message]
+    return [/* method */ RenderMethod.SetMessage, /* message */ newState.message]
   },
 }
 
@@ -123,7 +124,7 @@ const renderValue = {
     return oldState.value === newState.value
   },
   apply(oldState, newState) {
-    return [/* method */ 'setValue', /* value */ newState.value]
+    return [/* method */ RenderMethod.SetValue, /* value */ newState.value]
   },
 }
 
@@ -132,7 +133,7 @@ const renderNegativeMargin = {
     return oldState.deltaY === newState.deltaY
   },
   apply(oldState, newState) {
-    return [/* method */ 'setNegativeMargin', /* negativeMargin */ -newState.deltaY]
+    return [/* method */ RenderMethod.SetNegativeMargin, /* negativeMargin */ -newState.deltaY]
   },
 }
 
@@ -141,7 +142,7 @@ const renderReplaceExpanded = {
     return oldState.replaceExpanded === newState.replaceExpanded
   },
   apply(oldState, newState) {
-    return [/* method */ 'setReplaceExpanded', newState.replaceExpanded]
+    return [/* method */ RenderMethod.SetReplaceExpanded, newState.replaceExpanded]
   },
 }
 
@@ -154,7 +155,7 @@ const renderButtonsChecked = {
     )
   },
   apply(oldState, newState) {
-    return [/* method */ 'setButtonsChecked', newState.matchWholeWord, newState.useRegularExpression, newState.matchCase]
+    return [/* method */ RenderMethod.SetButtonsChecked, newState.matchWholeWord, newState.useRegularExpression, newState.matchCase]
   },
 }
 
@@ -169,7 +170,12 @@ const renderFocusedIndex = {
   apply(oldState, newState) {
     const oldFocusedIndex = oldState.listFocusedIndex - oldState.minLineY
     const newFocusedIndex = newState.listFocusedIndex - newState.minLineY
-    return [/* method */ 'setFocusedIndex', /* oldindex */ oldFocusedIndex, /* newIndex */ newFocusedIndex, /* focused */ newState.listFocused]
+    return [
+      /* method */ RenderMethod.SetFocusedIndex,
+      /* oldindex */ oldFocusedIndex,
+      /* newIndex */ newFocusedIndex,
+      /* focused */ newState.listFocused,
+    ]
   },
 }
 

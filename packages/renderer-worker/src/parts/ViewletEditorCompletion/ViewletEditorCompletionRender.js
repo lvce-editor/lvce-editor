@@ -1,4 +1,5 @@
 import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 const getLabel = (item) => {
   return item.label
@@ -24,7 +25,7 @@ const renderItems = {
   },
   apply(oldState, newState) {
     const visibleItems = getVisibleItems(newState.items, newState.minLineY, newState.maxLineY)
-    return [/* method */ 'setItems', /* items */ visibleItems, /* reason */ 1]
+    return [/* method */ RenderMethod.SetItems, /* items */ visibleItems, /* reason */ 1]
   },
 }
 
@@ -40,7 +41,7 @@ const renderBounds = {
   },
   apply(oldState, newState) {
     const { x, y, width, height } = newState
-    return [/* method */ 'setBounds', /* x */ x, /* y */ y, /* width */ width, /* height */ height]
+    return [/* method */ RenderMethod.SetBounds, /* x */ x, /* y */ y, /* width */ width, /* height */ height]
   },
 }
 
@@ -49,7 +50,7 @@ const renderFocusedIndex = {
     return oldState.focusedIndex === newState.focusedIndex
   },
   apply(oldState, newState) {
-    return [/* method */ 'setFocusedIndex', /* oldFocusedIndex */ oldState.focusedIndex, /* newFocusedIndex */ newState.focusedIndex]
+    return [/* method */ RenderMethod.SetFocusedIndex, /* oldFocusedIndex */ oldState.focusedIndex, /* newFocusedIndex */ newState.focusedIndex]
   },
 }
 
