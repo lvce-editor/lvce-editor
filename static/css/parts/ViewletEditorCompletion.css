@@ -1,4 +1,4 @@
-#Completions {
+.EditorCompletion {
   background: var(--CompletionListBackground, #282e2f);
   color: var(--CompletionListForeground, white);
   user-select: none;
