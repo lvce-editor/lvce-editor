@@ -24,15 +24,19 @@ const create$CompletionItem = (item) => {
 }
 
 export const create = () => {
+  const $ListItems = document.createElement('div')
+  $ListItems.className = 'ListItems'
+  $ListItems.role = AriaRoles.ListBox
+  $ListItems.ariaLabel = 'Suggest'
+
   // TODO recycle nodes
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet EditorCompletion'
   $Viewlet.id = 'Completions'
-  // @ts-ignore
-  $Viewlet.role = AriaRoles.ListBox
-  $Viewlet.ariaLabel = 'Suggest'
+  $Viewlet.append($ListItems)
   return {
     $Viewlet,
+    $ListItems,
   }
 }
 
@@ -45,7 +49,7 @@ export const attachEvents = (state) => {
 // this would make this function easier to test as it would avoid dependency on globals of other files
 
 export const setItems = (state, items, reason, focusedIndex) => {
-  const { $Viewlet } = state
+  const { $Viewlet, $ListItems } = state
   Focus.setAdditionalFocus('editorCompletions')
   if (items.length === 0) {
     if (reason === /* automatically */ 0) {
@@ -56,7 +60,7 @@ export const setItems = (state, items, reason, focusedIndex) => {
     return
   }
   // TODO recycle nodes
-  $Viewlet.replaceChildren(...items.map(create$CompletionItem))
+  $ListItems.replaceChildren(...items.map(create$CompletionItem))
   Widget.append($Viewlet)
   setFocusedIndex(state, 0, 0)
   // TODO set right aria attributes on $EditorInput
@@ -71,13 +75,13 @@ export const dispose = (state) => {
 // TODO should pass maybe oldIndex to be removed
 // but keeping $ActiveItem in state also works
 export const setFocusedIndex = (state, oldIndex, newIndex) => {
-  const { $Viewlet } = state
+  const { $ListItems } = state
   if (oldIndex !== -1) {
-    const $OldItem = $Viewlet.children[oldIndex]
+    const $OldItem = $ListItems.children[oldIndex]
     $OldItem.classList.remove('Focused')
   }
   if (newIndex !== -1) {
-    const $NewItem = $Viewlet.children[newIndex]
+    const $NewItem = $ListItems.children[newIndex]
     $NewItem.classList.add('Focused')
   }
   Focus.setAdditionalFocus('editorCompletions')
@@ -107,3 +111,5 @@ export const setBounds = (state, x, y, width, height) => {
   const { $Viewlet } = state
   SetBounds.setBounds($Viewlet, x, y, width, height)
 }
+
+export * from '../ViewletList/ViewletList.js'

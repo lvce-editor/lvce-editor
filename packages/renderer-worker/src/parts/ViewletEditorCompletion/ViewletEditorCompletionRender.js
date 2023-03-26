@@ -55,4 +55,25 @@ const renderFocusedIndex = {
   },
 }
 
-export const render = [renderItems, renderBounds, renderFocusedIndex]
+const renderHeight = {
+  isEqual(oldState, newState) {
+    return oldState.items.length === newState.items.length
+  },
+  apply(oldState, newState) {
+    const { itemHeight } = newState
+    const contentHeight = newState.items.length * itemHeight
+    return [/* method */ RenderMethod.SetContentHeight, /* contentHeight */ contentHeight]
+  },
+}
+
+const renderNegativeMargin = {
+  isEqual(oldState, newState) {
+    console.log({ deltaY: newState.deltaY })
+    return oldState.deltaY === newState.deltaY
+  },
+  apply(oldState, newState) {
+    return [/* method */ RenderMethod.SetNegativeMargin, /* negativeMargin */ -newState.deltaY]
+  },
+}
+
+export const render = [renderItems, renderBounds, renderFocusedIndex, renderHeight, renderNegativeMargin]
