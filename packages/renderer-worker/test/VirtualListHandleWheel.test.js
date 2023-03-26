@@ -1,5 +1,6 @@
 import * as VirtualList from '../src/parts/VirtualList/VirtualList.js'
 import * as VirtualListHandleWheel from '../src/parts/VirtualList/VirtualListHandleWheel.js'
+import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
 test('handleWheel - scroll down', () => {
   const state = {
@@ -11,7 +12,7 @@ test('handleWheel - scroll down', () => {
     deltaY: 0,
     finalDeltaY: 3 * 62 - 124,
   }
-  expect(VirtualListHandleWheel.handleWheel(state, 62)).toMatchObject({
+  expect(VirtualListHandleWheel.handleWheel(state, WheelEventType.DomDeltaPixel, 62)).toMatchObject({
     minLineY: 1,
     deltaY: 62,
   })
@@ -24,7 +25,7 @@ test('handleWheel - scroll up', () => {
     height: 124,
     deltaY: 62,
   }
-  expect(VirtualListHandleWheel.handleWheel(state, -62)).toMatchObject({
+  expect(VirtualListHandleWheel.handleWheel(state, WheelEventType.DomDeltaPixel, -62)).toMatchObject({
     deltaY: 0,
     minLineY: 0,
   })
