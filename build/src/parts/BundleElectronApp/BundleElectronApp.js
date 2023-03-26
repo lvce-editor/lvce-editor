@@ -71,7 +71,7 @@ const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion
   if (Platform.isWindows()) {
     await Rename.rename({
       from: `build/.tmp/electron-bundle/${arch}/electron.exe`,
-      to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}.exe`,
+      to: `build/.tmp/electron-bundle/${arch}/${product.windowsExecutableName}.exe`,
     })
   } else if (Platform.isMacos()) {
     await Rename.rename({

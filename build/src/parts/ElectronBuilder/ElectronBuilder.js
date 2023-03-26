@@ -193,7 +193,7 @@ const copyElectronResult = async ({ config, version, product, electronVersion })
     await CreatePlaceholderElectronApp.createPlaceholderElectronApp({ product, version, config, electronVersion })
     await Copy.copyFile({
       from: `build/.tmp/electron-builder-placeholder-app/dist/win-unpacked/${product.windowsExecutableName}.exe`,
-      to: `build/.tmp/linux/snap/${debArch}/app/${product.windowsExecutbaleName}.exe`,
+      to: `build/.tmp/linux/snap/${debArch}/app/${product.windowsExecutableName}.exe`,
     })
     // workaround for https://github.com/electron-userland/electron-builder/issues/2761
     const { owner, repoName } = getRepositoryInfo(product.repoUrl)
