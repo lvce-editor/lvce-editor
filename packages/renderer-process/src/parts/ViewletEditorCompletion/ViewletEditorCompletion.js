@@ -13,7 +13,7 @@ const create$CompletionItem = (item) => {
   const $CompletionItemText = Label.create(item.label)
 
   const $Icon = document.createElement('div')
-  $Icon.className = 'ColoredMaskIcon'
+  $Icon.className = `ColoredMaskIcon ${item.symbolName}`
   MaskImage.setMaskImage($Icon, item.icon)
 
   const $CompletionItem = document.createElement('div')
