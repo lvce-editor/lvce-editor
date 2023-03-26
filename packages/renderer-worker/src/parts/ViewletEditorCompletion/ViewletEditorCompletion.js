@@ -5,6 +5,7 @@ import * as EditorCompletionState from '../EditorCompletionState/EditorCompletio
 import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.js'
 import * as Height from '../Height/Height.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -31,7 +32,7 @@ export const create = (id, uri, x, y, width, height) => {
 }
 
 const getEditor = () => {
-  return Viewlet.getState('EditorText')
+  return Viewlet.getState(ViewletModuleId.EditorText)
 }
 
 const getDisplayErrorMessage = (error) => {
@@ -128,7 +129,7 @@ export const loadContent = async (state) => {
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const newMaxLineY = Math.min(items.length, 8)
   editor.widgets = editor.widgets || []
-  editor.widgets.push('EditorCompletion')
+  editor.widgets.push(ViewletModuleId.EditorCompletion)
   const newFocusedIndex = items.length === 0 ? -1 : 0
   return {
     ...state,
@@ -159,7 +160,7 @@ export const loadingContent = () => {
   const columnIndex = editor.selections[1]
   const x = EditorPosition.x(editor, rowIndex, columnIndex)
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
-  const changes = [/* Viewlet.send */ 'Viewlet.send', /* id */ 'EditorCompletion', /* method */ 'showLoading', /* x */ x, /* y */ y]
+  const changes = [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.EditorCompletion, /* method */ 'showLoading', /* x */ x, /* y */ y]
   return changes
 }
 
