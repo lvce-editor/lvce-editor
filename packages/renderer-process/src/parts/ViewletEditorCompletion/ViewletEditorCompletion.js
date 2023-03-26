@@ -4,6 +4,7 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Label from '../Label/Label.js'
+import * as MaskImage from '../MaskImage/MaskImage.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
@@ -13,7 +14,7 @@ const create$CompletionItem = (item, index) => {
 
   const $Icon = document.createElement('div')
   $Icon.className = 'ColoredMaskIcon'
-  $Icon.style.webkitMaskImage = `url('${item.icon}')`
+  MaskImage.setMaskImage($Icon, item.icon)
 
   const $CompletionItem = document.createElement('div')
   // @ts-ignore
