@@ -109,14 +109,7 @@ export const handleHeaderClick = (event) => {
 
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
-  switch (deltaMode) {
-    case WheelEventType.DomDeltaLine:
-    case WheelEventType.DomDeltaPixel:
-      ViewletSearchFunctions.handleWheel(deltaY)
-      break
-    default:
-      break
-  }
+  ViewletSearchFunctions.handleWheel(deltaMode, deltaY)
 }
 
 export const handleReplaceInput = (event) => {

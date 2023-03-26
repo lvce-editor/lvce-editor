@@ -18,8 +18,8 @@ export const handleClick = (index) => {
  *
  * @param {number} deltaY
  */
-export const handleWheel = (deltaY) => {
-  RendererWorker.send('Extensions.handleWheel', deltaY)
+export const handleWheel = (deltaMode, deltaY) => {
+  RendererWorker.send('Extensions.handleWheel', deltaMode, deltaY)
 }
 
 /**

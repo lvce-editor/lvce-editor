@@ -83,14 +83,7 @@ export const handleContextMenu = (event) => {
 
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
-  switch (deltaMode) {
-    case WheelEventType.DomDeltaLine:
-    case WheelEventType.DomDeltaPixel:
-      ViewletExtensionsFunctions.handleWheel(deltaY)
-      break
-    default:
-      break
-  }
+  ViewletExtensionsFunctions.handleWheel(deltaMode, deltaY)
 }
 
 export const handleInput = (event) => {
