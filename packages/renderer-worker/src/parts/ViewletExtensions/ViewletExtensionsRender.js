@@ -1,4 +1,5 @@
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 const getVisible = (state) => {
   const { minLineY, maxLineY, items, itemHeight } = state
@@ -20,7 +21,7 @@ const renderExtensions = {
   apply(oldState, newState) {
     // TODO render extensions incrementally when scrolling
     const visibleExtensions = getVisible(newState)
-    return [/* method */ 'setExtensions', /* visibleExtensions */ visibleExtensions]
+    return [/* method */ RenderMethod.SetExtensions, /* visibleExtensions */ visibleExtensions]
   },
 }
 
@@ -31,7 +32,7 @@ const renderHeight = {
   apply(oldState, newState) {
     const { itemHeight } = newState
     const contentHeight = newState.items.length * itemHeight
-    return [/* method */ 'setContentHeight', /* contentHeight */ contentHeight]
+    return [/* method */ RenderMethod.SetContentHeight, /* contentHeight */ contentHeight]
   },
 }
 
@@ -40,7 +41,7 @@ const renderNegativeMargin = {
     return oldState.deltaY === newState.deltaY
   },
   apply(oldState, newState) {
-    return [/* method */ 'setNegativeMargin', /* negativeMargin */ -newState.deltaY]
+    return [/* method */ RenderMethod.SetNegativeMargin, /* negativeMargin */ -newState.deltaY]
   },
 }
 
@@ -52,7 +53,7 @@ const renderFocusedIndex = {
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
-      /* method */ 'setFocusedIndex',
+      /* method */ RenderMethod.SetFocusedIndex,
       /* oldFocusedIndex */ oldFocusedIndex,
       /* newFocusedIndex */ newFocusedIndex,
       /* focused */ newState.focused,
@@ -76,7 +77,7 @@ const renderScrollBar = {
       newState.height - newState.headerHeight,
       newState.scrollBarHeight
     )
-    return [/* method */ 'setScrollBar', /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
+    return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
   },
 }
 
@@ -85,7 +86,7 @@ const renderMessage = {
     return oldState.message === newState.message
   },
   apply(oldState, newState) {
-    return [/* method */ 'setMessage', /* message */ newState.message]
+    return [/* method */ RenderMethod.SetMessage, /* message */ newState.message]
   },
 }
 
@@ -94,7 +95,7 @@ const renderSize = {
     return oldState.size === newState.size
   },
   apply(oldState, newState) {
-    return [/* method */ 'setSize', /* oldSize */ oldState.size, /* newSize */ newState.size]
+    return [/* method */ RenderMethod.SetSize, /* oldSize */ oldState.size, /* newSize */ newState.size]
   },
 }
 
@@ -103,7 +104,7 @@ const renderSearchValue = {
     return oldState.searchValue === newState.searchValue
   },
   apply(oldState, newState) {
-    return [/* method */ 'setSearchValue', oldState.searchValue, newState.searchValue]
+    return [/* method */ RenderMethod.SetSearchValue, oldState.searchValue, newState.searchValue]
   },
 }
 

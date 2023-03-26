@@ -2,6 +2,7 @@ import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFl
 import * as Icon from '../Icon/Icon.js'
 import { getNumberOfVisibleItems } from './ViewletActivityBarGetHiddenItems.js'
 import * as ViewletActivityBarStrings from './ViewletActivityBarStrings.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 const getVisibleActivityBarItems = (state) => {
   const numberOfVisibleItems = getNumberOfVisibleItems(state)
@@ -27,7 +28,7 @@ const renderActivityBarItems = {
   },
   apply(oldState, newState) {
     const visibleItems = getVisibleActivityBarItems(newState)
-    return [/* method */ 'setItems', /* items */ visibleItems]
+    return [/* method */ RenderMethod.SetItems, /* items */ visibleItems]
   },
 }
 
@@ -37,7 +38,7 @@ const renderFocusedIndex = {
   },
   apply(oldState, newState) {
     return [
-      /* method */ 'setFocusedIndex',
+      /* method */ RenderMethod.SetFocusedIndex,
       /* unFocusIndex */ oldState.focusedIndex,
       /* focusIndex */ newState.focusedIndex,
       /* focused */ newState.focused,
@@ -50,7 +51,7 @@ const renderSelectedIndex = {
     return oldState.selectedIndex === newState.selectedIndex
   },
   apply(oldState, newState) {
-    return [/* method */ 'setSelectedIndex', /* oldIndex */ oldState.selectedIndex, /* newIndex */ newState.selectedIndex]
+    return [/* method */ RenderMethod.SetSelectedIndex, /* oldIndex */ oldState.selectedIndex, /* newIndex */ newState.selectedIndex]
   },
 }
 
