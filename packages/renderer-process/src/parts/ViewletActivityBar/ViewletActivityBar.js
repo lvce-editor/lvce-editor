@@ -8,6 +8,7 @@ import * as Logger from '../Logger/Logger.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as MaskImage from '../MaskImage/MaskImage.js'
 import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
+import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 
 const activeId = 'ActivityBarItemActive'
 const selectedClassName = 'ActivityBarItemSelected'
@@ -54,7 +55,7 @@ export const create = () => {
   $Viewlet.className = 'Viewlet ActivityBar'
   // @ts-ignore
   $Viewlet.role = AriaRoles.ToolBar
-  $Viewlet.ariaRoleDescription = 'Activity Bar'
+  $Viewlet.ariaRoleDescription = AriaRoleDescriptionType.ActivityBar
   $Viewlet.ariaOrientation = AriaOrientationType.Vertical
   $Viewlet.tabIndex = 0
   return {

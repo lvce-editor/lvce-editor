@@ -1,0 +1,6 @@
+export const Extension = 'Extension'
+export const Editor = 'editor'
+export const ActivityBar = 'Activity Bar'
+export const QuickInput = 'Quick Input'
+export const SideBar = 'Side Bar'
+export const StatusBar = 'Status Bar'
