@@ -2,6 +2,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Logger from '../Logger/Logger.js'
+import * as MaskImage from '../MaskImage/MaskImage.js'
 
 const getIconClassName = (icon) => {
   switch (icon) {
@@ -46,9 +47,7 @@ const create$StatusBarItem = (item) => {
   if (item.icon) {
     const $StatusBarItemIcon = document.createElement('span')
     $StatusBarItemIcon.className = getIconClassName(item.icon)
-    // @ts-ignore
-    $StatusBarItemIcon.style.maskImage = getMaskImageUrl(item.icon)
-    $StatusBarItemIcon.style.webkitMaskImage = getMaskImageUrl(item.icon)
+    MaskImage.setMaskImage($StatusBarItemIcon, item.icon)
     $StatusBarItem.prepend($StatusBarItemIcon)
   }
   return $StatusBarItem
