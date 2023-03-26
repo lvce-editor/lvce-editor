@@ -9,7 +9,7 @@ import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
 
-const create$CompletionItem = (item, index) => {
+const create$CompletionItem = (item) => {
   const $CompletionItemText = Label.create(item.label)
 
   const $Icon = document.createElement('div')
@@ -17,9 +17,7 @@ const create$CompletionItem = (item, index) => {
   MaskImage.setMaskImage($Icon, item.icon)
 
   const $CompletionItem = document.createElement('div')
-  // @ts-ignore
   $CompletionItem.role = AriaRoles.Option
-  $CompletionItem.id = `CompletionItem-${index}`
   $CompletionItem.className = 'EditorCompletionItem'
   $CompletionItem.append($Icon, $CompletionItemText)
   return $CompletionItem
