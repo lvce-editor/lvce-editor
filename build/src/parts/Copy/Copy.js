@@ -11,9 +11,11 @@ export const copy = async ({ from, to, ignore = [] }) => {
   try {
     const absoluteFrom = Path.absolute(from)
     const absoluteTo = Path.absolute(to)
-    const absoluteIgnore = new Set(ignore.map((dirent) => {
-      return join(absoluteFrom, dirent)
-    }))
+    const absoluteIgnore = new Set(
+      ignore.map((dirent) => {
+        return join(absoluteFrom, dirent)
+      })
+    )
     await fsExtra.copy(absoluteFrom, absoluteTo, {
       recursive: true,
       overwrite: true,
@@ -31,6 +33,9 @@ export const copy = async ({ from, to, ignore = [] }) => {
 export const copyFile = async ({ from, to }) => {
   try {
     const absoluteFrom = Path.absolute(from)
+    if (!fsExtra.existsSync(absoluteFrom)) {
+      throw new Error(`file not found ${absoluteFrom}`)
+    }
     const absoluteTo = Path.absolute(to)
     await fs.mkdir(Path.dirname(absoluteTo), { recursive: true })
     await fs.copyFile(absoluteFrom, absoluteTo)
