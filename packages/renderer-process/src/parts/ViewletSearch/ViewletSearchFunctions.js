@@ -28,8 +28,8 @@ export const handleScrollBarClick = (y) => {
   RendererWorker.send('Search.handleScrollBarClick', y)
 }
 
-export const handleWheel = (deltaY) => {
-  RendererWorker.send('Search.handleWheel', deltaY)
+export const handleWheel = (deltaMode, deltaY) => {
+  RendererWorker.send('Search.handleWheel', deltaMode, deltaY)
 }
 
 export const toggleReplace = () => {
