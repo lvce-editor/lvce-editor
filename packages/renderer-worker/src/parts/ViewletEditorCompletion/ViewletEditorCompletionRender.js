@@ -13,6 +13,7 @@ const getVisibleItems = (filteredItems, minLineY, maxLineY) => {
     visibleItems.push({
       label: getLabel(filteredItem),
       icon: EditorCompletionMap.getIcon(filteredItem),
+      symbolName: EditorCompletionMap.getSymbolName(filteredItem),
     })
   }
   return visibleItems

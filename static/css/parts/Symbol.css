@@ -1,0 +1,12 @@
+:root {
+  --SymbolValueForeground: #ee9d28;
+  --SymbolPropertyForeground: #aaaaaa;
+}
+
+.SymbolValue {
+  color: var(--SymbolValueForeground);
+}
+
+.SymbolProperty {
+  color: var(--SymbolPropertyForeground);
+}
