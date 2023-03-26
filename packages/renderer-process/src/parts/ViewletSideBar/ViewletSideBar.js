@@ -1,4 +1,5 @@
 import * as Actions from '../Actions/Actions.js'
+import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 
@@ -21,7 +22,7 @@ export const create = () => {
   $Viewlet.className = 'Viewlet SideBar'
   // @ts-ignore
   $Viewlet.role = AriaRoles.Complementary
-  $Viewlet.ariaRoleDescription = 'Side Bar'
+  $Viewlet.ariaRoleDescription = AriaRoleDescriptionType.SideBar
   $Viewlet.append($SideBarTitleArea)
 
   return {

@@ -3,6 +3,7 @@
 import * as AriaAlert from '../AriaAlert/AriaAlert.js'
 import * as AriaAutoCompleteType from '../AriaAutoCompleteType/AriaAutoCompleteType.js'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
+import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
@@ -231,7 +232,7 @@ export const create = () => {
 
   // TODO this works well with nvda but not with windows narrator
   // probably a bug with windows narrator that doesn't support ariaRoleDescription
-  $QuickPickItems.ariaRoleDescription = 'Quick Input'
+  $QuickPickItems.ariaRoleDescription = AriaRoleDescriptionType.QuickInput
 
   const $QuickPick = document.createElement('div')
   $QuickPick.id = Ids.QuickPick

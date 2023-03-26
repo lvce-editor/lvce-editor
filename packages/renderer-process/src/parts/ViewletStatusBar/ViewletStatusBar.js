@@ -1,8 +1,9 @@
+import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Logger from '../Logger/Logger.js'
 import * as MaskImage from '../MaskImage/MaskImage.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const getIconClassName = (icon) => {
   switch (icon) {
@@ -88,7 +89,7 @@ export const create = (statusBarItemsLeft, statusBarItemsRight) => {
   $Viewlet.tabIndex = 0
   // @ts-ignore
   $Viewlet.role = AriaRoles.Status
-  $Viewlet.ariaRoleDescription = 'Status Bar'
+  $Viewlet.ariaRoleDescription = AriaRoleDescriptionType.StatusBar
   $Viewlet.ariaLive = 'off' // see https://github.com/microsoft/vscode/issues/94677
   $Viewlet.append($StatusBarItemsLeft, $StatusBarItemsRight)
 

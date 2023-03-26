@@ -13,6 +13,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
+import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 
 const activeId = 'ExtensionActive'
 
@@ -237,7 +238,7 @@ const create$Extension = () => {
   const $ExtensionListItem = document.createElement('div')
   // @ts-ignore
   $ExtensionListItem.role = AriaRoles.Article
-  $ExtensionListItem.ariaRoleDescription = 'Extension'
+  $ExtensionListItem.ariaRoleDescription = AriaRoleDescriptionType.Extension
   $ExtensionListItem.className = 'ExtensionListItem'
   // @ts-ignore
   $ExtensionListItem.role = AriaRoles.ListItem
