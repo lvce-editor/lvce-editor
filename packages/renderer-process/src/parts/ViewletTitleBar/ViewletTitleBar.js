@@ -1,4 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ViewletTitleBarEvents from './ViewletTitleBarEvents.js'
 
 export const create = () => {
   // TODO set aria label for title bar menu
@@ -13,6 +14,11 @@ export const create = () => {
     $TitleBar: $Viewlet,
     $Viewlet,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $Viewlet } = state
+  $Viewlet.oncontextmenu = ViewletTitleBarEvents.handleContextMenu
 }
 
 const activeClassName = 'TitleBarActive'
