@@ -11,7 +11,7 @@ export const handleScrollBarThumbPointerMove = (event) => {
   ViewletExtensionsFunctions.handleScrollBarThumbPointerMove(clientY)
 }
 
-const handlePointerCaptureLost = (event) => {
+const handleScrollBarPointerCaptureLost = (event) => {
   const { target } = event
   target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove)
 }
@@ -20,7 +20,7 @@ export const handleScrollBarPointerDown = (event) => {
   const { target, pointerId, clientY } = event
   target.setPointerCapture(pointerId)
   target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, DomEventOptions.Active)
-  target.addEventListener(DomEventType.LostPointerCapture, handlePointerCaptureLost)
+  target.addEventListener(DomEventType.LostPointerCapture, handleScrollBarPointerCaptureLost)
   ViewletExtensionsFunctions.handleScrollBarClick(clientY)
 }
 
