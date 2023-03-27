@@ -19,6 +19,7 @@
   contain: strict;
   gap: 5px;
   padding-left: 1px;
+  position: absolute;
 }
 
 .EditorCompletionItem:hover {

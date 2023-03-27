@@ -281,14 +281,6 @@ const render$Extensions = ($ExtensionList, extensions) => {
   }
 }
 
-export const setNegativeMargin = (state, negativeMargin) => {
-  const { $ListItems } = state
-  SetBounds.setTop($ListItems, negativeMargin)
-  // Assert.number(negativeMargin)
-  // const { $NegativeMargin } = state
-  // $NegativeMargin.style.marginTop = `${negativeMargin}px`
-}
-
 // TODO a more efficient approach would be
 export const setExtensions = (state, extensions) => {
   Assert.object(state)

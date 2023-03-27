@@ -4,15 +4,20 @@ const getLabel = (item) => {
   return item.label
 }
 
-export const getVisibleItems = (filteredItems, minLineY, maxLineY) => {
+const getVisibleIem = (item, itemHeight, i) => {
+  return {
+    label: getLabel(item),
+    icon: EditorCompletionMap.getIcon(item),
+    symbolName: EditorCompletionMap.getSymbolName(item),
+    top: i * itemHeight,
+  }
+}
+
+export const getVisibleItems = (filteredItems, itemHeight, minLineY, maxLineY) => {
   const visibleItems = []
   for (let i = minLineY; i < maxLineY; i++) {
     const filteredItem = filteredItems[i]
-    visibleItems.push({
-      label: getLabel(filteredItem),
-      icon: EditorCompletionMap.getIcon(filteredItem),
-      symbolName: EditorCompletionMap.getSymbolName(filteredItem),
-    })
+    visibleItems.push(getVisibleIem(filteredItem, itemHeight, i))
   }
   return visibleItems
 }
