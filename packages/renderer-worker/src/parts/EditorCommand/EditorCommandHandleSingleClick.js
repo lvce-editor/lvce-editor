@@ -1,10 +1,11 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Editor from '../Editor/Editor.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
 import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.js'
 import * as ModifierKey from '../ModifierKey/ModifierKey.js'
 import * as EditorGoToDefinition from './EditorCommandGoToDefinition.js'
 import * as EditorPosition from './EditorCommandPosition.js'
-import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 const handleSingleClickWithAlt = async (editor, position) => {
@@ -78,7 +79,7 @@ export const handleSingleClick = async (editor, modifier, x, y) => {
     case EditorCompletionState.None:
     case EditorCompletionState.Visible:
     case EditorCompletionState.Loading:
-      RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorClick')
+      RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorClick)
       break
     default:
       break
