@@ -18,13 +18,14 @@
   white-space: nowrap;
   contain: strict;
   gap: 5px;
+  padding-left: 1px;
 }
 
 .EditorCompletionItem:hover {
   background: var(--CompletionListItemHoverBackground, rgba(64, 92, 80, 0.2));
 }
 
-[class^='ColoredMaskIcon'] {
+.ColoredMaskIcon {
   width: 20px;
   height: 20px;
   contain: strict;
