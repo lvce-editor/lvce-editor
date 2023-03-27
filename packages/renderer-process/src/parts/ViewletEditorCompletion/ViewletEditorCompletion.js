@@ -20,6 +20,7 @@ const create$CompletionItem = (item) => {
   $CompletionItem.role = AriaRoles.Option
   $CompletionItem.className = 'EditorCompletionItem'
   $CompletionItem.append($Icon, $CompletionItemText)
+  SetBounds.setTop($CompletionItem, item.top)
   return $CompletionItem
 }
 
@@ -51,9 +52,10 @@ export const create = () => {
 }
 
 export const attachEvents = (state) => {
-  const { $Viewlet } = state
-  $Viewlet.onmousedown = ViewletEditorCompletionEvents.handleMousedown
+  const { $Viewlet, $ListItems } = state
   $Viewlet.addEventListener(DomEventType.Wheel, ViewletEditorCompletionEvents.handleWheel, DomEventOptions.Passive)
+
+  $ListItems.onmousedown = ViewletEditorCompletionEvents.handleMousedown
 }
 // TODO show should be passed active cursor position
 // this would make this function easier to test as it would avoid dependency on globals of other files
