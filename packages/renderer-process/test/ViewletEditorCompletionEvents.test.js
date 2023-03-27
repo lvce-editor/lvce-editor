@@ -23,12 +23,15 @@ test('event - mousedown', () => {
   ViewletEditorCompletion.setItems(state, [
     {
       label: 'item 1',
+      highlights: [],
     },
     {
       label: 'item 2',
+      highlights: [],
     },
     {
       label: 'item 3',
+      highlights: [],
     },
   ])
   // @ts-ignore
@@ -51,12 +54,15 @@ test('event - click outside', () => {
   ViewletEditorCompletion.setItems(state, [
     {
       label: 'item 1',
+      highlights: [],
     },
     {
       label: 'item 2',
+      highlights: [],
     },
     {
       label: 'item 3',
+      highlights: [],
     },
   ])
   state.$ListItems.dispatchEvent(
