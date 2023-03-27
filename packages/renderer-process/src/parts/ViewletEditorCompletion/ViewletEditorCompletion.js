@@ -9,12 +9,32 @@ import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
 
-const createLabel = (item) => {
-  if (item.highlights.length === 0) {
-    return Label.create(item.label)
-  }
-  // TODO support multiple highlights
+const create$CompletionItem = () => {
   const $CompletionItemText = Label.create('')
+
+  const $Icon = document.createElement('div')
+
+  const $CompletionItem = document.createElement('div')
+  $CompletionItem.role = AriaRoles.Option
+  $CompletionItem.className = 'EditorCompletionItem'
+  $CompletionItem.append($Icon, $CompletionItemText)
+  return $CompletionItem
+}
+
+const render$CompletionItem = ($Item, item) => {
+  SetBounds.setTop($Item, item.top)
+  const $Icon = $Item.children[0]
+  const $Label = $Item.children[1]
+  $Icon.className = `ColoredMaskIcon ${item.symbolName}`
+  MaskImage.setMaskImage($Icon, item.icon)
+
+  if (item.highlights.length === 0) {
+    $Label.textContent = item.label
+    return
+  }
+  // TODO recycle text nodes and highlight nodes
+  $Label.textContent = ''
+  // TODO support multiple highlights
   const highlightStart = item.highlights[0]
   const highlightEnd = highlightStart + item.highlights[1]
   const highlightText = item.label.slice(highlightStart, highlightEnd)
@@ -24,30 +44,14 @@ const createLabel = (item) => {
   if (highlightStart !== 0) {
     const beforeText = item.label.slice(0, highlightStart)
     const $BeforeText = document.createTextNode(beforeText)
-    $CompletionItemText.append($BeforeText)
+    $Label.append($BeforeText)
   }
-  $CompletionItemText.append($Highlight)
+  $Label.append($Highlight)
   if (highlightEnd !== item.label.length) {
     const afterText = item.label.slice(highlightEnd)
     const $AfterText = document.createTextNode(afterText)
-    $CompletionItemText.append($AfterText)
+    $Label.append($AfterText)
   }
-  return $CompletionItemText
-}
-
-const create$CompletionItem = (item) => {
-  const $CompletionItemText = createLabel(item)
-
-  const $Icon = document.createElement('div')
-  $Icon.className = `ColoredMaskIcon ${item.symbolName}`
-  MaskImage.setMaskImage($Icon, item.icon)
-
-  const $CompletionItem = document.createElement('div')
-  $CompletionItem.role = AriaRoles.Option
-  $CompletionItem.className = 'EditorCompletionItem'
-  $CompletionItem.append($Icon, $CompletionItemText)
-  SetBounds.setTop($CompletionItem, item.top)
-  return $CompletionItem
 }
 
 export const create = () => {
@@ -88,6 +92,45 @@ export const attachEvents = (state) => {
 // TODO show should be passed active cursor position
 // this would make this function easier to test as it would avoid dependency on globals of other files
 
+const render$ExtensionsLess = ($ListItems, items) => {
+  for (let i = 0; i < $ListItems.children.length; i++) {
+    render$CompletionItem($ListItems.children[i], items[i])
+  }
+  const fragment = document.createDocumentFragment()
+  for (let i = $ListItems.children.length; i < items.length; i++) {
+    const $Extension = create$CompletionItem()
+    render$CompletionItem($Extension, items[i])
+    fragment.append($Extension)
+  }
+  $ListItems.append(fragment)
+}
+
+const render$ExtensionsEqual = ($ListItems, items) => {
+  for (let i = 0; i < items.length; i++) {
+    render$CompletionItem($ListItems.children[i], items[i])
+  }
+}
+
+const render$ExtensionsMore = ($ListItems, items) => {
+  for (let i = 0; i < items.length; i++) {
+    render$CompletionItem($ListItems.children[i], items[i])
+  }
+  const diff = $ListItems.children.length - items.length
+  for (let i = 0; i < diff; i++) {
+    $ListItems.lastChild.remove()
+  }
+}
+
+const render$Items = ($ListItems, items) => {
+  if ($ListItems.children.length < items.length) {
+    render$ExtensionsLess($ListItems, items)
+  } else if ($ListItems.children.length === items.length) {
+    render$ExtensionsEqual($ListItems, items)
+  } else {
+    render$ExtensionsMore($ListItems, items)
+  }
+}
+
 export const setItems = (state, items, reason, focusedIndex) => {
   const { $Viewlet, $ListItems } = state
   Focus.setAdditionalFocus('editorCompletions')
@@ -99,10 +142,11 @@ export const setItems = (state, items, reason, focusedIndex) => {
     Widget.append($Viewlet)
     return
   }
+  render$Items($ListItems, items)
   // TODO recycle nodes
-  $ListItems.replaceChildren(...items.map(create$CompletionItem))
+  // $ListItems.replaceChildren(...items.map(create$CompletionItem))
+  // TODO
   Widget.append($Viewlet)
-  setFocusedIndex(state, 0, 0)
   // TODO set right aria attributes on $EditorInput
 }
 
@@ -112,9 +156,10 @@ export const dispose = (state) => {
   Focus.removeAdditionalFocus('editorCompletions')
 }
 
-// TODO should pass maybe oldIndex to be removed
-// but keeping $ActiveItem in state also works
 export const setFocusedIndex = (state, oldIndex, newIndex) => {
+  if (oldIndex === newIndex) {
+    debugger
+  }
   const { $ListItems } = state
   if (oldIndex !== -1) {
     const $OldItem = $ListItems.children[oldIndex]
