@@ -8,6 +8,6 @@ export const handleClickAt = (x, y) => {
   RendererWorker.send('EditorCompletion.handleClickAt', x, y)
 }
 
-export const handleWheel = (deltaY, deltaMode) => {
-  RendererWorker.send('EditorCompletion.handleWheel', deltaY, deltaMode)
+export const handleWheel = (deltaMode, deltaY) => {
+  RendererWorker.send('EditorCompletion.handleWheel', deltaMode, deltaY)
 }

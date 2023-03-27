@@ -9,5 +9,5 @@ export const handleMousedown = (event) => {
 
 export const handleWheel = (event) => {
   const { deltaY, deltaMode } = event
-  ViewletEditorCompletionFunctions.handleWheel(deltaY, deltaMode)
+  ViewletEditorCompletionFunctions.handleWheel(deltaMode, deltaY)
 }
