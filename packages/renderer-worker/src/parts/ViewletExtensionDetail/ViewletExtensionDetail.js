@@ -6,8 +6,8 @@ import * as Icon from '../Icon/Icon.js'
 import * as MarkDown from '../Markdown/Markdown.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -95,7 +95,7 @@ const renderName = {
     return oldState.name === newState.name
   },
   apply(oldState, newState) {
-    return [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.ExtensionDetail, /* method */ 'setName', /* name */ newState.name]
+    return [/* method */ RenderMethod.SetName, /* name */ newState.name]
   },
 }
 
@@ -104,7 +104,7 @@ const renderDescription = {
     return oldState.description === newState.description
   },
   apply(oldState, newState) {
-    return [/* method */ 'setDescription', /* description */ newState.description]
+    return [/* method */ RenderMethod.SetDescription, /* description */ newState.description]
   },
 }
 
@@ -113,7 +113,7 @@ const renderReadme = {
     return oldState.sanitizedReadmeHtml === newState.sanitizedReadmeHtml
   },
   apply(oldState, newState) {
-    return [/* method */ 'setReadmeHtml', /* sanizedHtml */ newState.sanitizedReadmeHtml]
+    return [/* method */ RenderMethod.SetReadmeHtml, /* sanizedHtml */ newState.sanitizedReadmeHtml]
   },
 }
 
@@ -122,7 +122,7 @@ const renderIcon = {
     return oldState.iconSrc === newState.iconSrc
   },
   apply(oldState, newState) {
-    return [/* method */ 'setIconSrc', /* src */ newState.iconSrc]
+    return [/* method */ RenderMethod.SetIconSrc, /* src */ newState.iconSrc]
   },
 }
 
@@ -131,7 +131,7 @@ const renderSize = {
     return oldState.size === newState.size
   },
   apply(oldState, newState) {
-    return [/* method */ 'setSize', /* oldSize */ oldState.size, /* newSize */ newState.size]
+    return [/* method */ RenderMethod.SetSize, /* oldSize */ oldState.size, /* newSize */ newState.size]
   },
 }
 

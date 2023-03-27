@@ -1,4 +1,4 @@
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const create = () => {
   return {
@@ -35,7 +35,7 @@ const renderCount = {
     return oldState.count === newState.count
   },
   apply(oldState, newState) {
-    return [/* method */ 'setCount', /* newCount */ newState.count]
+    return [/* method */ RenderMethod.SetCount, /* newCount */ newState.count]
   },
 }
 

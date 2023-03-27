@@ -1,3 +1,5 @@
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+
 export const hasFunctionalRender = true
 
 const renderColor = {
@@ -5,7 +7,7 @@ const renderColor = {
     return oldState.color === newState.color
   },
   apply(oldState, newState) {
-    return [/* method */ 'setColor', /* color */ newState.color]
+    return [/* method */ RenderMethod.SetColor, /* color */ newState.color]
   },
 }
 
@@ -14,7 +16,7 @@ const renderOffsetX = {
     return oldState.offsetX === newState.offsetX
   },
   apply(oldState, newState) {
-    return [/* method */ 'setOffsetX', /* offsetX */ newState.offsetX]
+    return [/* method */ RenderMethod.SetOffsetX, /* offsetX */ newState.offsetX]
   },
 }
 
