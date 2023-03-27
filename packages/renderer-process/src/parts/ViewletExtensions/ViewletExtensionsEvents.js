@@ -4,13 +4,11 @@ import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as ViewletExtensionsFunctions from './ViewletExtensionsFunctions.js'
 
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
-  RendererWorker.send(/* Extensions.handleScrollBarMouseMove */ 'Extensions.handleScrollBarMove', /* y */ clientY)
+  ViewletExtensionsFunctions.handleScrollBarThumbPointerMove(clientY)
 }
 
 const handlePointerCaptureLost = (event) => {
