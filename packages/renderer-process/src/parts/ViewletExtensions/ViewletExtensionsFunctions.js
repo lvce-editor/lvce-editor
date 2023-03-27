@@ -60,3 +60,7 @@ export const handleTouchEnd = (changedTouchesArray) => {
 export const handleContextMenu = (button, clientX, clientY) => {
   RendererWorker.send('Extensions.handleContextMenu', button, clientX, clientY)
 }
+
+export const handleScrollBarThumbPointerMove = (y) => {
+  RendererWorker.send(/* Extensions.handleScrollBarMouseMove */ 'Extensions.handleScrollBarMove', /* y */ y)
+}
