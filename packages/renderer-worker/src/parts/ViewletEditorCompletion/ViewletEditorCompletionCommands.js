@@ -6,7 +6,7 @@ export const Commands = {
   // 'EditorCompletion.selectCurrent': Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.selectCurrent),
   dispose:  ViewletEditorCompletion.dispose,
   handleEditorType: ViewletEditorCompletion.handleEditorType,
-  handleEditorDeleteCharacterLeft: ViewletEditorCompletion.handleEditorDeleteCharacterLeft,
+  handleEditorDeleteLeft: ViewletEditorCompletion.handleEditorDeleteLeft,
   handleEditorClick: ViewletEditorCompletion.handleEditorClick
 }
 
