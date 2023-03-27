@@ -3,6 +3,7 @@ import * as AutoClosing from '../AutoClosing/AutoClosing.js'
 import * as Bracket from '../Bracket/Bracket.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostClosingTag from '../ExtensionHost/ExtensionHostClosingTagCompletion.js'
@@ -175,7 +176,7 @@ export const typeWithAutoClosing = async (editor, text) => {
         openCompletion(newEditor, text)
         break
       case EditorCompletionState.Visible:
-        RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorType', text)
+        RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorType, text)
         break
       default:
         break
