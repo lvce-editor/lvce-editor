@@ -347,10 +347,6 @@ const renderOutput = {
   },
 }
 
-import * as ViewletRunAndDebugRender from './ViewletRunAndDebugRender.js'
-
-export const render = ViewletRunAndDebugRender.render
-
 export const resize = (state, dimensions) => {
   return { ...state, ...dimensions }
 }
