@@ -75,6 +75,7 @@ export const handleEditorType = (state, editor, text) => {
     x,
     y,
     maxLineY: newMaxLineY,
+    leadingWord: wordAtOffset,
   }
 }
 
@@ -100,6 +101,7 @@ export const handleEditorDeleteCharacterLeft = (state, editor) => {
     x,
     y,
     maxLineY: newMaxLineY,
+    leadingWord: wordAtOffset,
   }
 }
 
@@ -145,6 +147,7 @@ export const loadContent = async (state) => {
     maxLineY: newMaxLineY,
     focusedIndex: newFocusedIndex,
     finalDeltaY,
+    leadingWord: wordAtOffset,
   }
 }
 

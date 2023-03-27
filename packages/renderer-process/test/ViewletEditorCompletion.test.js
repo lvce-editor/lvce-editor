@@ -21,12 +21,15 @@ test('show', () => {
   ViewletEditorCompletion.setItems(state, [
     {
       label: 'item 1',
+      highlights: [],
     },
     {
       label: 'item 2',
+      highlights: [],
     },
     {
       label: 'item 3',
+      highlights: [],
     },
   ])
   expect(getSimpleList(state.$ListItems)).toEqual(['item 1', 'item 2', 'item 3'])
@@ -50,6 +53,7 @@ test('dispose', () => {
   ViewletEditorCompletion.setItems(state, [
     {
       label: 'item 1',
+      highlights: [],
     },
   ])
   ViewletEditorCompletion.dispose(state)
