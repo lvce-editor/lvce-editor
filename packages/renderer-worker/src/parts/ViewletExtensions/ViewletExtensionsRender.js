@@ -1,6 +1,7 @@
 import * as GetVisibleExtensions from '../GetVisibleExtensions/GetVisibleExtensions.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import { getListHeight } from './ViewletExtensionsShared.js'
 
 export const hasFunctionalRender = true
 
@@ -57,17 +58,22 @@ const renderScrollBar = {
       oldState.negativeMargin === newState.negativeMargin &&
       oldState.deltaY === newState.deltaY &&
       oldState.height === newState.height &&
-      oldState.finalDeltaY === newState.finalDeltaY
+      oldState.finalDeltaY === newState.finalDeltaY &&
+      oldState.items.length === newState.items.length
     )
   },
   apply(oldState, newState) {
+    const listHeight = getListHeight(newState)
+    const total = newState.items.length
+    const contentHeight = total * newState.itemHeight
+    const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(listHeight, contentHeight, newState.minimumSliderSize)
     const scrollBarY = ScrollBarFunctions.getScrollBarY(
       newState.deltaY,
       newState.finalDeltaY,
       newState.height - newState.headerHeight,
-      newState.scrollBarHeight
+      scrollBarHeight
     )
-    return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
+    return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ scrollBarHeight]
   },
 }
 
