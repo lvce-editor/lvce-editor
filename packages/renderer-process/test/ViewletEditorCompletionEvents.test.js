@@ -59,7 +59,7 @@ test('event - click outside', () => {
       label: 'item 3',
     },
   ])
-  state.$Viewlet.dispatchEvent(
+  state.$ListItems.dispatchEvent(
     new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
