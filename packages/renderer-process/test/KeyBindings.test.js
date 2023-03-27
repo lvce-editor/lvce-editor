@@ -15,16 +15,18 @@ jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => 
 
 const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
+const KeyBindingsEvents = await import('../src/parts/KeyBindingsEvents/KeyBindingsEvents.js')
+const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindingsState.js')
 const Context = await import('../src/parts/Context/Context.js')
 
 beforeEach(() => {
-  if (KeyBindings.state.modifierTimeout !== -1) {
-    clearTimeout(KeyBindings.state.modifierTimeout)
-    KeyBindings.state.modifierTimeout = -1
+  if (KeyBindingsState.state.modifierTimeout !== -1) {
+    clearTimeout(KeyBindingsState.state.modifierTimeout)
+    KeyBindingsState.state.modifierTimeout = -1
   }
-  KeyBindings.state.modifier = ''
-  KeyBindings.state.keyBindingSets = Object.create(null)
-  KeyBindings.state.keyBindings = []
+  KeyBindingsState.state.modifier = ''
+  KeyBindingsState.state.keyBindingSets = Object.create(null)
+  KeyBindingsState.state.keyBindings = []
   Context.state.contexts = Object.create(null)
 })
 
@@ -35,7 +37,7 @@ test('hydrate', () => {
       command: 14,
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'a',
     })
@@ -53,7 +55,7 @@ test('hydrate - dispatch event with no matching keyBinding', () => {
       command: 14,
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'b',
     })
@@ -69,7 +71,7 @@ test('hydrate - dispatch Event with context not matching', () => {
       when: 'testContext',
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'a',
     })
@@ -86,7 +88,7 @@ test('hydrate - dispatch Event with context matching', () => {
     },
   ])
   Context.set('testContext', true)
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'a',
     })
@@ -105,7 +107,7 @@ test('hydrate - dispatch Event with Arrow Key', () => {
       command: 14,
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'ArrowLeft',
     })
@@ -123,7 +125,7 @@ test('hydrate - dispatch event with ctrl modifier', () => {
       command: 14,
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'a',
       ctrlKey: true,
@@ -142,7 +144,7 @@ test('hydrate - dispatch event with shift modifier', () => {
       command: 14,
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'a',
       shiftKey: true,
@@ -161,7 +163,7 @@ test('hydrate - dispatch event with alt modifier', () => {
       command: 14,
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'a',
       altKey: true,
@@ -180,7 +182,7 @@ test('hydrate - dispatch event with space key', () => {
       command: 14,
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: ' ',
     })
@@ -198,26 +200,26 @@ test('hydrate - dispatch event with double shift key', () => {
       command: 14,
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Shift',
       shiftKey: true,
     })
   )
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Shift',
       shiftKey: true,
     })
   )
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Shift',
       shiftKey: true,
     })
   )
   expect(RendererWorker.send).not.toHaveBeenCalled()
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Shift',
       shiftKey: true,
@@ -236,26 +238,26 @@ test('hydrate - dispatch event with double alt key', () => {
       command: 14,
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Alt',
       altKey: true,
     })
   )
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Alt',
       altKey: true,
     })
   )
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Alt',
       altKey: true,
     })
   )
   expect(RendererWorker.send).not.toBeCalled()
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Alt',
       altKey: true,
@@ -274,26 +276,26 @@ test('hydrate - dispatch event with double ctrl key', () => {
       command: 14,
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Control',
       ctrlKey: true,
     })
   )
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Control',
       ctrlKey: true,
     })
   )
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Control',
       ctrlKey: true,
     })
   )
   expect(RendererWorker.send).not.toHaveBeenCalled()
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Control',
       ctrlKey: true,
@@ -312,37 +314,37 @@ test('hydrate - dispatch event with ctrl alt ctrl key should not trigger ctrl ct
       command: 14,
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Control',
       ctrlKey: true,
     })
   )
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Control',
       ctrlKey: true,
     })
   )
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Alt',
       altKey: true,
     })
   )
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Alt',
       altKey: true,
     })
   )
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Control',
       ctrlKey: true,
     })
   )
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Control',
       ctrlKey: true,
@@ -358,49 +360,49 @@ test('hydrate - dispatch event with ctrl alt shift shift key should trigger shif
       command: 14,
     },
   ])
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Control',
       ctrlKey: true,
     })
   )
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Control',
       ctrlKey: true,
     })
   )
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Alt',
       altKey: true,
     })
   )
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Alt',
       altKey: true,
     })
   )
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Shift',
       shiftKey: true,
     })
   )
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Shift',
       shiftKey: true,
     })
   )
-  KeyBindings.handleKeyDown(
+  KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Shift',
       shiftKey: true,
     })
   )
-  KeyBindings.handleKeyUp(
+  KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Shift',
       shiftKey: true,

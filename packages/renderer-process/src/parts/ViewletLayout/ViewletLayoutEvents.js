@@ -1,6 +1,6 @@
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletLayoutFunctions from './ViewletLayoutFunctions.js'
-import * as KeyBindings from '../KeyBindings/KeyBindings.js'
+import * as KeyBindingsEvents from '../KeyBindingsEvents/KeyBindingsEvents.js'
 
 const getSashId = ($Target) => {
   if ($Target.id === 'SashPanel') {
@@ -51,6 +51,6 @@ export const handleBlur = () => {
   ViewletLayoutFunctions.handleBlur()
 }
 
-export const handleKeyDown = KeyBindings.handleKeyDown
+export const handleKeyDown = KeyBindingsEvents.handleKeyDown
 
-export const handleKeyUp = KeyBindings.handleKeyUp
+export const handleKeyUp = KeyBindingsEvents.handleKeyUp
