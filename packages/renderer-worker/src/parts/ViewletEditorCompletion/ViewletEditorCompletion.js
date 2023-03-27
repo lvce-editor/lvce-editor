@@ -79,7 +79,7 @@ export const handleEditorType = (state, editor, text) => {
   }
 }
 
-export const handleEditorDeleteCharacterLeft = (state, editor) => {
+export const handleEditorDeleteLeft = (state, editor) => {
   const { unfilteredItems } = state
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]

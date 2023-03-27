@@ -5,7 +5,7 @@ import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 export const deleteCharacterLeft = (editor) => {
   const newEditor = EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, EditorDelta.characterLeft)
-  RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorDeleteCharacterLeft)
+  RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorDeleteLeft)
   return newEditor
 }
 
