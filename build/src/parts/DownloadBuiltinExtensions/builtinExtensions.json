@@ -222,7 +222,7 @@
   {
     "name": "builtin.language-features-html",
     "repository": "github.com/lvce-editor/language-features-html",
-    "version": "0.0.10"
+    "version": "0.0.11"
   },
   {
     "name": "builtin.language-features-typescript",
@@ -237,7 +237,7 @@
   {
     "name": "builtin.theme-atom-one-dark",
     "repository": "github.com/lvce-editor/theme-atom-one-dark",
-    "version": "0.0.13"
+    "version": "0.0.14"
   },
   {
     "name": "builtin.theme-ayu",
@@ -247,7 +247,7 @@
   {
     "name": "builtin.theme-cobalt2",
     "repository": "github.com/lvce-editor/theme-cobalt2",
-    "version": "0.0.9"
+    "version": "0.0.10"
   },
   {
     "name": "builtin.theme-gruvbox",
