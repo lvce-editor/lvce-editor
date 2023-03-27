@@ -1,31 +1,14 @@
-import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
+import * as GetVisibleCompletionItems from '../GetVisibleCompletionItems/GetVisibleCompletionItems.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
-const getLabel = (item) => {
-  return item.label
-}
-
 export const hasFunctionalRender = true
-
-const getVisibleItems = (filteredItems, minLineY, maxLineY) => {
-  const visibleItems = []
-  for (let i = minLineY; i < maxLineY; i++) {
-    const filteredItem = filteredItems[i]
-    visibleItems.push({
-      label: getLabel(filteredItem),
-      icon: EditorCompletionMap.getIcon(filteredItem),
-      symbolName: EditorCompletionMap.getSymbolName(filteredItem),
-    })
-  }
-  return visibleItems
-}
 
 const renderItems = {
   isEqual(oldState, newState) {
     return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
-    const visibleItems = getVisibleItems(newState.items, newState.minLineY, newState.maxLineY)
+    const visibleItems = GetVisibleCompletionItems.getVisibleItems(newState.items, newState.minLineY, newState.maxLineY)
     return [/* method */ RenderMethod.SetItems, /* items */ visibleItems, /* reason */ 1]
   },
 }
