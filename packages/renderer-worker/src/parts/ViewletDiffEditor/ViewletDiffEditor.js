@@ -1,5 +1,6 @@
 import * as Diff from '../Diff/Diff.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
@@ -81,7 +82,7 @@ const renderLeft = {
   },
   apply(oldState, newState) {
     const visible = getVisible(newState.linesLeft, newState.minLineY, newState.maxLineY)
-    return [/* method */ 'setContentLeft', /* linesLeft */ visible]
+    return [/* method */ RenderMethod.SetContentLeft, /* linesLeft */ visible]
   },
 }
 
@@ -91,7 +92,7 @@ const renderRight = {
   },
   apply(oldState, newState) {
     const visible = getVisible(newState.linesRight, newState.minLineY, newState.maxLineY)
-    return [/* method */ 'setContentRight', /* linesRight */ visible]
+    return [/* method */ RenderMethod.SetContentRight, /* linesRight */ visible]
   },
 }
 
@@ -100,7 +101,7 @@ const renderChanges = {
     return oldState.changes === newState.changes
   },
   apply(oldState, newState) {
-    return [/* method */ 'setChanges', /* changes */ newState.changes]
+    return [/* method */ RenderMethod.SetChanges, /* changes */ newState.changes]
   },
 }
 
@@ -115,7 +116,7 @@ const renderScrollBar = {
       newState.height - newState.headerHeight,
       newState.scrollBarHeight
     )
-    return [/* method */ 'setScrollBar', /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
+    return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
   },
 }
 
