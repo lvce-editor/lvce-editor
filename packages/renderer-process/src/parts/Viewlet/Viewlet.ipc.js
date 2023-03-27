@@ -15,4 +15,6 @@ export const Commands = {
   sendMultiple: Viewlet.sendMultiple,
   setBounds: Viewlet.setBounds,
   show: Viewlet.show,
+  addKeyBindings: Viewlet.addKeyBindings,
+  removeKeyBindings: Viewlet.removeKeyBindings,
 }
