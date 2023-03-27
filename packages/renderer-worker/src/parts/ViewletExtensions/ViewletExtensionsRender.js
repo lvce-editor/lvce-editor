@@ -1,16 +1,6 @@
-import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as GetVisibleExtensions from '../GetVisibleExtensions/GetVisibleExtensions.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
-
-const getVisible = (state) => {
-  const { minLineY, maxLineY, items, itemHeight } = state
-  const setSize = items.length
-  const visible = []
-  for (let i = minLineY; i < maxLineY; i++) {
-    const item = items[i]
-    visible.push({ ...item, setSize, posInSet: i + 1, top: i * itemHeight })
-  }
-  return visible
-}
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 export const hasFunctionalRender = true
 
@@ -20,7 +10,7 @@ const renderExtensions = {
   },
   apply(oldState, newState) {
     // TODO render extensions incrementally when scrolling
-    const visibleExtensions = getVisible(newState)
+    const visibleExtensions = GetVisibleExtensions.getVisible(newState)
     return [/* method */ RenderMethod.SetExtensions, /* visibleExtensions */ visibleExtensions]
   },
 }
