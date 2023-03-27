@@ -41,6 +41,7 @@ const renderFocusedIndex = {
     return oldState.focusedIndex === newState.focusedIndex
   },
   apply(oldState, newState) {
+    console.log('render focused index', oldState.focusedIndex, newState.focusedIndex)
     return [/* method */ RenderMethod.SetFocusedIndex, /* oldFocusedIndex */ oldState.focusedIndex, /* newFocusedIndex */ newState.focusedIndex]
   },
 }
