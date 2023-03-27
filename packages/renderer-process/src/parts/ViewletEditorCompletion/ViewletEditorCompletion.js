@@ -29,14 +29,24 @@ export const create = () => {
   $ListItems.role = AriaRoles.ListBox
   $ListItems.ariaLabel = 'Suggest'
 
+  const $ScrollBarThumb = document.createElement('div')
+  $ScrollBarThumb.className = 'ScrollBarThumb'
+
+  const $ScrollBar = document.createElement('div')
+  $ScrollBar.className = 'ScrollBarSmall'
+  $ScrollBar.append($ScrollBarThumb)
+
+  // TODO only create scrollbar when necessary
   // TODO recycle nodes
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet EditorCompletion'
   $Viewlet.id = 'Completions'
-  $Viewlet.append($ListItems)
+  $Viewlet.append($ListItems, $ScrollBar)
   return {
     $Viewlet,
     $ListItems,
+    $ScrollBar,
+    $ScrollBarThumb,
   }
 }
 
