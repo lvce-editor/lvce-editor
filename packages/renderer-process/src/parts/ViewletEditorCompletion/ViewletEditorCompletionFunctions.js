@@ -11,3 +11,14 @@ export const handleClickAt = (x, y) => {
 export const handleWheel = (deltaMode, deltaY) => {
   RendererWorker.send('EditorCompletion.handleWheel', deltaMode, deltaY)
 }
+
+/**
+ * @param {number} y
+ */
+export const handleScrollBarClick = (y) => {
+  RendererWorker.send('EditorCompletion.handleScrollBarClick', y)
+}
+
+export const handleScrollBarThumbPointerMove = (y) => {
+  RendererWorker.send('EditorCompletion.handleScrollBarMove', y)
+}

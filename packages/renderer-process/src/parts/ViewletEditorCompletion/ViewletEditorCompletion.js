@@ -51,9 +51,11 @@ export const create = () => {
 }
 
 export const attachEvents = (state) => {
-  const { $Viewlet } = state
-  $Viewlet.onmousedown = ViewletEditorCompletionEvents.handleMousedown
-  $Viewlet.addEventListener(DomEventType.Wheel, ViewletEditorCompletionEvents.handleWheel, DomEventOptions.Passive)
+  const { $ListItems, $ScrollBar } = state
+  $ListItems.onmousedown = ViewletEditorCompletionEvents.handleMousedown
+  $ListItems.addEventListener(DomEventType.Wheel, ViewletEditorCompletionEvents.handleWheel, DomEventOptions.Passive)
+
+  $ScrollBar.onpointerdown = ViewletEditorCompletionEvents.handleScrollBarPointerDown
 }
 // TODO show should be passed active cursor position
 // this would make this function easier to test as it would avoid dependency on globals of other files
