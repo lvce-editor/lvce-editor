@@ -62,5 +62,5 @@ export const handleContextMenu = (button, clientX, clientY) => {
 }
 
 export const handleScrollBarThumbPointerMove = (y) => {
-  RendererWorker.send(/* Extensions.handleScrollBarMouseMove */ 'Extensions.handleScrollBarMove', /* y */ y)
+  RendererWorker.send('Extensions.handleScrollBarMove', y)
 }

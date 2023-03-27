@@ -9,7 +9,7 @@ const renderItems = {
     return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
-    const visibleItems = GetVisibleCompletionItems.getVisibleItems(newState.items, newState.minLineY, newState.maxLineY)
+    const visibleItems = GetVisibleCompletionItems.getVisibleItems(newState.items, newState.itemHeight, newState.minLineY, newState.maxLineY)
     return [/* method */ RenderMethod.SetItems, /* items */ visibleItems, /* reason */ 1]
   },
 }

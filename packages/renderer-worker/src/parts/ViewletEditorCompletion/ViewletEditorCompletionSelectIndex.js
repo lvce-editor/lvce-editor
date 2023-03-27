@@ -28,10 +28,11 @@ const select = async (state, completionItem) => {
 }
 
 export const selectIndex = (state, index) => {
-  const { items } = state
+  const { items, minLineY } = state
   if (index === -1) {
     return state
   }
-  const completionItem = items[index]
+  const actualIndex = index + minLineY
+  const completionItem = items[actualIndex]
   return select(state, completionItem)
 }

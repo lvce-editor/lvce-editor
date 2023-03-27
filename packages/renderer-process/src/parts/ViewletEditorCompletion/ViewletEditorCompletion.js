@@ -20,6 +20,7 @@ const create$CompletionItem = (item) => {
   $CompletionItem.role = AriaRoles.Option
   $CompletionItem.className = 'EditorCompletionItem'
   $CompletionItem.append($Icon, $CompletionItemText)
+  SetBounds.setTop($CompletionItem, item.top)
   return $CompletionItem
 }
 

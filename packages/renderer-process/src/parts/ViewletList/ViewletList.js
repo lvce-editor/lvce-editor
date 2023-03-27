@@ -5,5 +5,10 @@ export const setContentHeight = (state, height) => {
   SetBounds.setHeight($ListItems, height)
 }
 
+export const setNegativeMargin = (state, negativeMargin) => {
+  const { $ListItems } = state
+  SetBounds.setTop($ListItems, negativeMargin)
+}
+
 export * from '../ViewletScrollable/ViewletScrollable.js'
 export * from '../ViewletSizable/ViewletSizable.js'
