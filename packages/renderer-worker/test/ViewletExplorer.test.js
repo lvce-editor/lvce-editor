@@ -54,11 +54,8 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
 })
 
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
-
-const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
-
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.ipc.js')
 const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
-
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const Command = await import('../src/parts/Command/Command.js')
