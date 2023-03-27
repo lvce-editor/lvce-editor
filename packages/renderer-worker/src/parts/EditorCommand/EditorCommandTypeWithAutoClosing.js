@@ -169,17 +169,9 @@ export const typeWithAutoClosing = async (editor, text) => {
   }
 
   const newEditor = typeWithAutoClosingDisabled(editor, text)
-  if (isQuickSuggestionsEnabled()) {
-    switch (newEditor.completionState) {
-      case EditorCompletionState.None:
-        openCompletion(newEditor, text)
-        break
-      case EditorCompletionState.Visible:
-        RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorType', text)
-        break
-      default:
-        break
-    }
+  RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorType', text)
+  if (isQuickSuggestionsEnabled() && newEditor.completionState === EditorCompletionState.None) {
+    openCompletion(newEditor, text)
   }
   return newEditor
   // if (isBrace(text)) {
