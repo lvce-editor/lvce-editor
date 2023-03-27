@@ -32,7 +32,7 @@ export const setSrc = (state, src) => {
   $Video.src = src
 }
 
-export const setAudioErrorMessage = (state, videoErrorMessage) => {
+export const setVideoErrorMessage = (state, videoErrorMessage) => {
   if (!state.$VideoErrorMessage) {
     state.$VideoErrorMessage = document.createElement('div')
     state.$VideoErrorMessage.className = 'VideoErrorMessage'

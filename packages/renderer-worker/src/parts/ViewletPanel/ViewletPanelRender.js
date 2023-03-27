@@ -1,3 +1,5 @@
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+
 export const hasFunctionalRender = true
 
 const renderTabs = {
@@ -5,7 +7,7 @@ const renderTabs = {
     return oldState.views === newState.views
   },
   apply(oldState, newState) {
-    return [/* method */ 'setTabs', /* tabs */ newState.views]
+    return [/* method */ RenderMethod.SetTabs, /* tabs */ newState.views]
   },
 }
 
@@ -14,7 +16,7 @@ const renderSelectedIndex = {
     return oldState.selectedIndex === newState.selectedIndex
   },
   apply(oldState, newState) {
-    return [/* method */ 'setSelectedIndex', /* unFocusIndex */ oldState.selectedIndex, /* focusIndex */ newState.selectedIndex]
+    return [/* method */ RenderMethod.SetSelectedIndex, /* unFocusIndex */ oldState.selectedIndex, /* focusIndex */ newState.selectedIndex]
   },
 }
 

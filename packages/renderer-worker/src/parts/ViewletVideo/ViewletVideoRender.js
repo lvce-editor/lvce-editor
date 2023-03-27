@@ -1,3 +1,5 @@
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+
 export const hasFunctionalRender = true
 
 export const renderSrc = {
@@ -5,7 +7,7 @@ export const renderSrc = {
     return oldState.src === newState.src
   },
   apply(oldState, newState) {
-    return [/* method */ 'setSrc', /* src */ newState.src]
+    return [/* method */ RenderMethod.SetSrc, /* src */ newState.src]
   },
 }
 
@@ -14,7 +16,7 @@ const renderVideoErrorMessage = {
     return oldState.videoErrorMessage === newState.videoErrorMessage
   },
   apply(oldState, newState) {
-    return [/* method */ 'setAudioErrorMessage', /* src */ newState.videoErrorMessage]
+    return [/* method */ RenderMethod.SetVideoErrorMessage, /* src */ newState.videoErrorMessage]
   },
 }
 

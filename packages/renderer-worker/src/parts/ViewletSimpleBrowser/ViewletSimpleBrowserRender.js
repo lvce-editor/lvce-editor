@@ -1,4 +1,5 @@
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
@@ -7,7 +8,7 @@ const renderIframeSrc = {
     return oldState.iframeSrc === newState.iframeSrc
   },
   apply(oldState, newState) {
-    return ['setIframeSrc', newState.iframeSrc]
+    return [RenderMethod.SetIframeSrc, newState.iframeSrc]
   },
 }
 
@@ -26,7 +27,7 @@ const renderButtonsEnabled = {
     return oldState.canGoBack === newState.canGoBack && oldState.canGoForward === newState.canGoForward
   },
   apply(oldState, newState) {
-    return [/* method */ 'setButtonsEnabled', /* canGoBack */ newState.canGoBack, /* canGoFoward */ newState.canGoForward]
+    return [/* method */ RenderMethod.SetButtonsEnabled, /* canGoBack */ newState.canGoBack, /* canGoFoward */ newState.canGoForward]
   },
 }
 
@@ -35,7 +36,7 @@ const renderLoading = {
     return oldState.isLoading === newState.isLoading
   },
   apply(oldState, newState) {
-    return [/* method */ 'setLoading', /* isLoading */ newState.isLoading]
+    return [/* method */ RenderMethod.SetLoading, /* isLoading */ newState.isLoading]
   },
 }
 
