@@ -51,9 +51,10 @@ export const create = () => {
 }
 
 export const attachEvents = (state) => {
-  const { $ListItems, $ScrollBar } = state
+  const { $Viewlet, $ListItems, $ScrollBar } = state
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletEditorCompletionEvents.handleWheel, DomEventOptions.Passive)
+
   $ListItems.onmousedown = ViewletEditorCompletionEvents.handleMousedown
-  $ListItems.addEventListener(DomEventType.Wheel, ViewletEditorCompletionEvents.handleWheel, DomEventOptions.Passive)
 
   $ScrollBar.onpointerdown = ViewletEditorCompletionEvents.handleScrollBarPointerDown
 }
