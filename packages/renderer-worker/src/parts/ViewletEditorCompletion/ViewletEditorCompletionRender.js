@@ -1,5 +1,6 @@
 import * as GetVisibleCompletionItems from '../GetVisibleCompletionItems/GetVisibleCompletionItems.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 export const hasFunctionalRender = true
 
@@ -58,4 +59,28 @@ const renderNegativeMargin = {
   },
 }
 
-export const render = [renderItems, renderBounds, renderFocusedIndex, renderHeight, renderNegativeMargin]
+const renderScrollBar = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.negativeMargin === newState.negativeMargin &&
+      oldState.deltaY === newState.deltaY &&
+      oldState.height === newState.height &&
+      oldState.finalDeltaY === newState.finalDeltaY &&
+      oldState.items.length === newState.items.length
+    )
+  },
+  apply(oldState, newState) {
+    const total = newState.items.length
+    const contentHeight = total * newState.itemHeight
+    const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(newState.height, contentHeight, newState.minimumSliderSize)
+    const scrollBarY = ScrollBarFunctions.getScrollBarY(
+      newState.deltaY,
+      newState.finalDeltaY,
+      newState.height - newState.headerHeight,
+      scrollBarHeight
+    )
+    return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ scrollBarHeight]
+  },
+}
+
+export const render = [renderItems, renderBounds, renderFocusedIndex, renderHeight, renderNegativeMargin, renderScrollBar]
