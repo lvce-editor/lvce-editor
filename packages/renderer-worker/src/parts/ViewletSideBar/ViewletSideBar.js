@@ -186,16 +186,3 @@ export const focus = async (state) => {
   return state
   // console.log({ currentViewletId })
 }
-
-export const hasFunctionalRender = true
-
-const renderTitle = {
-  isEqual(oldState, newState) {
-    return false
-  },
-  apply(oldState, newState) {
-    return [/* Viewlet.send */ 'Viewlet.send', /* id */ 'SideBar', /* method */ 'setTitle', /* name */ newState.currentViewletId]
-  },
-}
-
-export const render = [renderTitle]
