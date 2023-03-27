@@ -34,7 +34,6 @@ test('setOptions', () => {
 test('accessibility - should have role log', () => {
   const state = ViewletOutput.create()
   const { $Content } = state
-  // @ts-ignore
   expect($Content.role).toBe('log')
 })
 
@@ -67,6 +66,5 @@ test('handleError', () => {
 
 test('accessibility - ViewletOutputContent should have role log', () => {
   const state = ViewletOutput.create()
-  // @ts-ignore
   expect(state.$Content.role).toBe('log')
 })

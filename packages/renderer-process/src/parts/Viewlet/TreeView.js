@@ -205,7 +205,6 @@ export const create = (props) => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'ListItems Viewlet'
   $Viewlet.tabIndex = 0
-  // @ts-ignore
   $Viewlet.role = AriaRoles.Tree
   $Viewlet.ariaLabel = 'Files Explorer'
   $Viewlet.addEventListener('keydown', handleKeyDown)

@@ -5,7 +5,6 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 export const create = () => {
   const $MainTabs = document.createElement('div')
   $MainTabs.className = 'Viewlet MainTabs'
-  // @ts-ignore
   $MainTabs.role = AriaRoles.TabList
   $MainTabs.onmousedown = ViewletMainTabEvents.handleTabsMouseDown
   $MainTabs.oncontextmenu = ViewletMainTabEvents.handleTabsContextMenu

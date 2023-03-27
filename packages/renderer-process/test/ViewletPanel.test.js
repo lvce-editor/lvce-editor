@@ -67,7 +67,6 @@ test('event - mousedown - no tab clicked', () => {
 test('accessibility - PanelTabs should have role tablist', () => {
   const state = ViewletPanel.create()
   ViewletPanel.setTabs(state, ['Problems', 'Output', 'Debug Console', 'Terminal'])
-  // @ts-ignore
   expect(state.$PanelTabs.role).toBe(AriaRoles.TabList)
 })
 
@@ -75,7 +74,6 @@ test('accessibility - PanelTab should have role tab', () => {
   const state = ViewletPanel.create()
   ViewletPanel.setTabs(state, ['Problems', 'Output', 'Debug Console', 'Terminal'])
   const $PanelTabProblems = state.$PanelTabs.children[0]
-  // @ts-ignore
   expect($PanelTabProblems.role).toBe(AriaRoles.Tab)
 })
 

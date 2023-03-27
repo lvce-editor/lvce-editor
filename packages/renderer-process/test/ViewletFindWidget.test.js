@@ -30,7 +30,6 @@ test('accessibility - buttons should have title', () => {
 test('accessibility - viewlet should have a role of group', () => {
   const state = ViewletFindWidget.create()
   const { $Viewlet } = state
-  // @ts-ignore
   expect($Viewlet.role).toBe('group')
 })
 

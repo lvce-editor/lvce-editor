@@ -16,7 +16,6 @@ const UiStrings = {
 const create$PanelTab = (label, index) => {
   const $PanelTab = document.createElement('div')
   $PanelTab.className = 'PanelTab'
-  // @ts-ignore
   $PanelTab.role = AriaRoles.Tab
   $PanelTab.textContent = label
   $PanelTab.id = `PanelTab-${index + 1}`
@@ -47,7 +46,6 @@ const panelTabsHandleClick = (event) => {
 export const create = () => {
   const $PanelTabs = document.createElement('div')
   $PanelTabs.className = 'PanelTabs'
-  // @ts-ignore
   $PanelTabs.role = AriaRoles.TabList
   $PanelTabs.onmousedown = panelTabsHandleClick
   $PanelTabs.tabIndex = -1
@@ -57,7 +55,6 @@ export const create = () => {
 
   const $PanelToolBar = document.createElement('div')
   $PanelToolBar.className = 'PanelToolBar'
-  // @ts-ignore
   $PanelToolBar.role = AriaRoles.ToolBar
   $PanelToolBar.append($ButtonClose)
 

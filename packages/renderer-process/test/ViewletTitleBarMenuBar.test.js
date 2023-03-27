@@ -50,7 +50,6 @@ test('setEntries', () => {
 test('accessibility - ViewletTitleBarMenuBar should have role menubar', () => {
   const state = ViewletTitleBarMenuBar.create()
   const { $TitleBarMenuBar } = state
-  // @ts-ignore
   expect($TitleBarMenuBar.role).toBe('menubar')
 })
 

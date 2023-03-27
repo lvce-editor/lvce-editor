@@ -18,19 +18,16 @@ export const create$MenuItem = (item) => {
     case MenuItemFlags.RestoreFocus:
     case MenuItemFlags.Ignore:
       $MenuItem.className = 'MenuItem'
-      // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
       break
     case MenuItemFlags.Separator:
       $MenuItem.className = 'MenuItemSeparator'
-      // @ts-ignore
       $MenuItem.role = AriaRoles.Separator
       break
     case MenuItemFlags.Checked:
       $MenuItem.className = 'MenuItem'
-      // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItemCheckBox
       $MenuItem.ariaChecked = AriaBoolean.True
       $MenuItem.textContent = getLabel(item)
@@ -38,7 +35,6 @@ export const create$MenuItem = (item) => {
       break
     case MenuItemFlags.Unchecked:
       $MenuItem.className = 'MenuItem'
-      // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItemCheckBox
       $MenuItem.ariaChecked = AriaBoolean.False
       $MenuItem.textContent = getLabel(item)
@@ -46,7 +42,6 @@ export const create$MenuItem = (item) => {
       break
     case MenuItemFlags.SubMenu:
       $MenuItem.className = 'MenuItem'
-      // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
@@ -55,7 +50,6 @@ export const create$MenuItem = (item) => {
       break
     case MenuItemFlags.Disabled:
       $MenuItem.className = 'MenuItem'
-      // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
@@ -63,7 +57,6 @@ export const create$MenuItem = (item) => {
       break
     default:
       $MenuItem.className = 'MenuItem'
-      // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1

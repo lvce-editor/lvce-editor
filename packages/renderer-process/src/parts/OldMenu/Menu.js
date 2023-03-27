@@ -138,7 +138,6 @@ const create$Menu = () => {
   // TODO set aria label on menu (e.g. File, Edit, Selection)
   const $Menu = document.createElement('ul')
   $Menu.className = 'Menu'
-  // @ts-ignore
   $Menu.role = AriaRoles.Menu
   $Menu.tabIndex = -1
   // $ContextMenu.onmousedown = contextMenuHandleMouseDown

@@ -146,7 +146,6 @@ export const focus = (state) => {
 
 const create$Row = () => {
   const $Row = document.createElement('div')
-  // @ts-ignore
   $Row.role = AriaRoles.TreeItem
   $Row.className = 'TreeItem'
   const $Label = Label.create('')

@@ -7,7 +7,6 @@ import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 const create$AriaAlert = () => {
   const $AriaAlert = document.createElement('div')
   $AriaAlert.className = 'AriaAlert'
-  // @ts-ignore
   $AriaAlert.role = AriaRoles.Alert
   $AriaAlert.ariaAtomic = AriaBoolean.True
   return $AriaAlert

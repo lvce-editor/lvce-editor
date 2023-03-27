@@ -159,7 +159,6 @@ test('closeTabsLeft - last tab', () => {
 test('accessibility - viewlet should have a role of main', () => {
   const state = Main.create()
   const { $Viewlet } = state
-  // @ts-ignore
   expect($Viewlet.role).toBe('main')
 })
 

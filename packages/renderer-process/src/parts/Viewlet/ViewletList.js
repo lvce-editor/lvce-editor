@@ -81,7 +81,6 @@ export const create = ({ create$ListItem, render$ListItem, handleClick }) => {
   $List.className = 'ExtensionList'
   $List.tabIndex = 0
   $List.ariaLabel = 'Extensions'
-  // @ts-ignore
   $List.role = AriaRoles.List
   $List.oncontextmenu = handleContextMenu
   $List.onclick = handleClick

@@ -7,7 +7,6 @@ import * as ViewletMainEvents from './ViewletMainEvents.js'
 const create$MainTabs = () => {
   const $MainTabs = document.createElement('div')
   $MainTabs.className = 'MainTabs'
-  // @ts-ignore
   $MainTabs.role = AriaRoles.TabList
   $MainTabs.onmousedown = ViewletMainEvents.handleTabsMouseDown
   $MainTabs.oncontextmenu = ViewletMainEvents.handleTabsContextMenu
@@ -24,7 +23,6 @@ export const create = () => {
   $Viewlet.ondrop = ViewletMainEvents.handleDrop
   $Viewlet.ondragover = ViewletMainEvents.handleDragOver
   $Viewlet.ondragend = ViewletMainEvents.handleDragEnd
-  // @ts-ignore
   $Viewlet.role = AriaRoles.Main
 
   // const $MainContent = document.createElement('div')

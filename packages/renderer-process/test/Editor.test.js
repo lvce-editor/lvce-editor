@@ -109,7 +109,6 @@ line 20`)
 
 test('accessibility - Editor should have role code', async () => {
   const state = Editor.create()
-  // @ts-ignore
   expect(state.$Editor.role).toBe('code')
 })
 
@@ -135,18 +134,7 @@ test.skip('renderTextAndCursorsAndSelections - beforeinput on contenteditable on
     state,
     0,
     0,
-    [
-      [
-        '  ',
-        'Whitespace',
-        'back ground',
-        'CssPropertyName',
-        ':',
-        'Punctuation',
-        ' ',
-        'Whitespace',
-      ],
-    ],
+    [['  ', 'Whitespace', 'back ground', 'CssPropertyName', ':', 'Punctuation', ' ', 'Whitespace']],
     [{ rowIndex: 0, columnIndex: 7 }],
     []
   )
@@ -179,18 +167,7 @@ test.skip('renderTextAndCursorsAndSelections - native selection - word in middle
     state,
     0,
     0,
-    [
-      [
-        '  ',
-        'Whitespace',
-        'a',
-        'CssPropertyName',
-        ':',
-        'Punctuation',
-        ' ',
-        'Whitespace',
-      ],
-    ],
+    [['  ', 'Whitespace', 'a', 'CssPropertyName', ':', 'Punctuation', ' ', 'Whitespace']],
     [
       {
         rowIndex: 0,
@@ -229,18 +206,7 @@ test.skip('renderTextAndCursorsAndSelections - bug with multiple tokens', () => 
     state,
     0,
     0,
-    [
-      [
-        '  ',
-        'Whitespace',
-        'background',
-        'CssPropertyName',
-        ' ',
-        'Whitespace',
-        'a: ',
-        'Unknown',
-      ],
-    ],
+    [['  ', 'Whitespace', 'background', 'CssPropertyName', ' ', 'Whitespace', 'a: ', 'Unknown']],
     [
       {
         rowIndex: 0,

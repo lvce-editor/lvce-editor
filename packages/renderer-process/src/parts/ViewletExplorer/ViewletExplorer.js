@@ -18,7 +18,6 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Explorer'
   $Viewlet.tabIndex = 0
-  // @ts-ignore
   $Viewlet.role = AriaRoles.Tree
   $Viewlet.ariaLabel = 'Files Explorer'
   return {
@@ -44,7 +43,6 @@ export const attachEvents = (state) => {
 
 const create$Row = () => {
   const $Row = document.createElement('div')
-  // @ts-ignore
   $Row.role = AriaRoles.TreeItem
   $Row.className = 'TreeItem'
   $Row.draggable = true

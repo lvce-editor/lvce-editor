@@ -16,7 +16,6 @@ export const create = (label, title, background) => {
   if (!background) {
     $Tab.ariaSelected = AriaBoolean.True
   }
-  // @ts-ignore
   $Tab.role = AriaRoles.Tab
   $Tab.className = 'MainTab'
   $Tab.append($TabLabel, $TabCloseButton)

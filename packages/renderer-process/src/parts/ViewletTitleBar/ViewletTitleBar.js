@@ -7,7 +7,6 @@ export const create = () => {
   $Viewlet.id = 'TitleBar'
   $Viewlet.className = 'Viewlet TitleBar'
   $Viewlet.ariaLabel = 'Title Bar'
-  // @ts-ignore
   $Viewlet.role = AriaRoles.ContentInfo
   return {
     $TitleBar: $Viewlet,

@@ -460,7 +460,6 @@ test('setFocusedIndex - no focus', () => {
 
 test('accessibility - viewlet should have role tree', () => {
   const state = ViewletExplorer.create()
-  // @ts-ignore
   expect(state.$Viewlet.role).toBe('tree')
 })
 
