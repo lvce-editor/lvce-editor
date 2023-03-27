@@ -3,6 +3,7 @@ import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.js'
+import * as GetFinalDeltaY from '../GetFinalDeltaY/GetFinalDeltaY.js'
 import * as Height from '../Height/Height.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -119,6 +120,7 @@ export const handleEditorClick = disposeWithEditor
 export const handleEditorBlur = disposeWithEditor
 
 export const loadContent = async (state) => {
+  const { height, itemHeight } = state
   const editor = getEditor()
   const unfilteredItems = await Completions.getCompletions(editor)
   const wordAtOffset = getWordAtOffset(editor)
@@ -130,7 +132,10 @@ export const loadContent = async (state) => {
   const newMaxLineY = Math.min(items.length, 8)
   editor.widgets = editor.widgets || []
   editor.widgets.push(ViewletModuleId.EditorCompletion)
-  const newFocusedIndex = items.length === 0 ? -1 : 0
+  const itemsLength = items.length
+  const newFocusedIndex = itemsLength === 0 ? -1 : 0
+  const total = items.length
+  const finalDeltaY = GetFinalDeltaY.getFinalDeltaY(height, itemHeight, total)
   return {
     ...state,
     unfilteredItems,
@@ -139,6 +144,7 @@ export const loadContent = async (state) => {
     y,
     maxLineY: newMaxLineY,
     focusedIndex: newFocusedIndex,
+    finalDeltaY,
   }
 }
 

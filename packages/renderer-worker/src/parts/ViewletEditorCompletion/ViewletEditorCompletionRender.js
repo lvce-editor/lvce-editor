@@ -51,7 +51,6 @@ const renderHeight = {
 
 const renderNegativeMargin = {
   isEqual(oldState, newState) {
-    console.log({ deltaY: newState.deltaY })
     return oldState.deltaY === newState.deltaY
   },
   apply(oldState, newState) {
