@@ -31,7 +31,6 @@ export const create = () => {
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet FindWidget'
-  // @ts-ignore
   $Viewlet.role = AriaRoles.Group
   $Viewlet.append($InputBox, $MatchCount, $ButtonFocusPrevious, $ButtonFocusNext, $ButtonClose)
   return {

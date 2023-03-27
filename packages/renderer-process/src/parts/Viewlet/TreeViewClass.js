@@ -6,14 +6,10 @@ class TreeView {
     this.$Viewlet = document.createElement('div')
     this.$Viewlet.className = 'ListItems Viewlet'
     this.$Viewlet.tabIndex = 0
-    // @ts-ignore
     this.$Viewlet.role = AriaRoles.Tree
     this.$Viewlet.addEventListener('keydown', this.handleKeyDown.bind(this))
     this.$Viewlet.addEventListener('mousedown', this.handleMouseDown.bind(this))
-    this.$Viewlet.addEventListener(
-      'contextmenu',
-      this.handleContextMenu.bind(this)
-    )
+    this.$Viewlet.addEventListener('contextmenu', this.handleContextMenu.bind(this))
   }
 
   handleKeyDown() {}

@@ -29,11 +29,9 @@ export const create = () => {
   const $Message = document.createElement('div')
   $Message.className = 'LocationsMessage'
   $Message.id = 'LocationsMessage'
-  // @ts-ignore
   $Message.role = AriaRoles.Status
   const $Locations = document.createElement('div')
   $Locations.className = 'LocationList'
-  // @ts-ignore
   $Locations.role = AriaRoles.Tree
   $Locations.ariaLabel = 'Locations'
   $Locations.tabIndex = 0
@@ -53,7 +51,6 @@ const create$Location = () => {
   // TODO reuse logic from tree view
   const $Location = document.createElement('div')
   $Location.className = 'TreeItem'
-  // @ts-ignore
   $Location.role = AriaRoles.TreeItem
   return $Location
 }

@@ -32,12 +32,10 @@ const create$ActivityBarItem = (item) => {
   }
   switch (item.flags) {
     case ActivityBarItemFlags.Tab:
-      // @ts-ignore
       $ActivityBarItem.role = AriaRoles.Tab
       $ActivityBarItem.ariaSelected = AriaBoolean.False
       break
     case ActivityBarItemFlags.Button:
-      // @ts-ignore
       $ActivityBarItem.role = AriaRoles.Button
       $ActivityBarItem.ariaHasPopup = AriaBoolean.True
       break

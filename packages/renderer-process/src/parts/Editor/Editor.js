@@ -35,7 +35,6 @@ export const create = () => {
   $EditorInput.setAttribute('autocorrect', 'off')
   $EditorInput.setAttribute('wrap', 'off')
   $EditorInput.setAttribute('spellcheck', AriaBoolean.False)
-  // @ts-ignore
   $EditorInput.role = AriaRoles.TextBox
   $EditorInput.onpaste = EditorEvents.handlePaste
   // TODO where to best put listeners (side effects)
@@ -100,7 +99,6 @@ export const create = () => {
 
   const $Editor = document.createElement('div')
   $Editor.className = 'Viewlet Editor'
-  // @ts-ignore
   $Editor.role = AriaRoles.Code
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBarVertical, $ScrollBarHorizontal)
   $Editor.addEventListener(DomEventType.ContextMenu, EditorEvents.handleContextMenu)

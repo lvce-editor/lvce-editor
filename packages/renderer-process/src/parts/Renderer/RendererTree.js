@@ -7,7 +7,6 @@ export const renderTemplate = () => {
   label.className = 'TreeItemLabel'
   const root = document.createElement('div')
   root.className = 'ListItem TreeItem'
-  // @ts-ignore
   root.role = AriaRoles.TreeItem
   root.append(label)
   return {

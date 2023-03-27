@@ -20,7 +20,6 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'SideBar'
   $Viewlet.className = 'Viewlet SideBar'
-  // @ts-ignore
   $Viewlet.role = AriaRoles.Complementary
   $Viewlet.ariaRoleDescription = AriaRoleDescriptionType.SideBar
   $Viewlet.append($SideBarTitleArea)

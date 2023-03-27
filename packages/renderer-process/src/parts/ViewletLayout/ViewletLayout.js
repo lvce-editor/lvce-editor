@@ -17,7 +17,6 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'Workbench'
   $Viewlet.className = 'Viewlet Layout'
-  // @ts-ignore
   $Viewlet.role = AriaRoles.Application
   $Viewlet.append($SashSideBar, $SashPanel)
 

@@ -17,7 +17,6 @@ export const create = () => {
   $ViewletOutputSelect.ariaLabel = 'Select a log'
   const $ViewletOutputContent = document.createElement('div')
   $ViewletOutputContent.className = 'OutputContent'
-  // @ts-ignore
   $ViewletOutputContent.role = AriaRoles.Log
   $ViewletOutputContent.tabIndex = 0
   const $ViewletOutputWidgets = document.createElement('div')
@@ -26,11 +25,7 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Output'
   $Viewlet.tabIndex = 0
-  $Viewlet.append(
-    $ViewletOutputSelect,
-    $ViewletOutputContent,
-    $ViewletOutputWidgets
-  )
+  $Viewlet.append($ViewletOutputSelect, $ViewletOutputContent, $ViewletOutputWidgets)
   return {
     $Viewlet,
     select: $ViewletOutputSelect,

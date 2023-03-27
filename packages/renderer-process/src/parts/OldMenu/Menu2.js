@@ -15,19 +15,16 @@ const create$MenuItem = (item) => {
   const $MenuItem = document.createElement('li')
   switch (item.flags) {
     case MenuItemFlags.None:
-      $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       break
     case MenuItemFlags.Separator:
-      $MenuItem.className = 'MenuItemSeparator'
       // @ts-ignore
       $MenuItem.role = AriaRoles.Separator
       break
     case MenuItemFlags.Checked:
-      $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItemCheckBox
       $MenuItem.ariaChecked = AriaBoolean.True
@@ -35,7 +32,6 @@ const create$MenuItem = (item) => {
       $MenuItem.tabIndex = -1
       break
     case MenuItemFlags.Unchecked:
-      $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItemCheckBox
       $MenuItem.ariaChecked = AriaBoolean.False
@@ -43,7 +39,6 @@ const create$MenuItem = (item) => {
       $MenuItem.tabIndex = -1
       break
     case MenuItemFlags.SubMenu:
-      $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
@@ -52,7 +47,6 @@ const create$MenuItem = (item) => {
       $MenuItem.ariaExpanded = AriaBoolean.False
       break
     case MenuItemFlags.Disabled:
-      $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
@@ -60,7 +54,6 @@ const create$MenuItem = (item) => {
       $MenuItem.setAttribute('disabled', AriaBoolean.True)
       break
     default:
-      $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label

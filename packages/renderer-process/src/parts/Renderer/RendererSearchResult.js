@@ -5,7 +5,6 @@ export const renderTemplate = () => {
   label.className = 'Label'
   const root = document.createElement('div')
   root.className = 'ListItem SearchResults'
-  // @ts-ignore
   root.role = AriaRoles.Option
   root.append(label)
   return {

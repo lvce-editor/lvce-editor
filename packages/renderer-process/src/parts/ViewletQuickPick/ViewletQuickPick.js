@@ -73,7 +73,6 @@ const create$QuickPickItem = () => {
   $QuickPickItemIcon.className = ClassNames.Icon
   const $QuickPickItem = document.createElement('div') // TODO ul/li would be better for structure but might be slower
   $QuickPickItem.className = ClassNames.QuickPickItem
-  // @ts-ignore
   $QuickPickItem.role = Roles.Option
   $QuickPickItem.append($QuickPickItemIcon, $QuickPickItemLabel)
   return $QuickPickItem
@@ -211,7 +210,6 @@ export const focus = (state) => {
 export const create = () => {
   const $QuickPickInput = InputBox.create()
   $QuickPickInput.setAttribute(DomAttributeType.AriaControls, Ids.QuickPickItems) // TODO use idl once supported
-  // @ts-ignore
   $QuickPickInput.role = Roles.ComboBox
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   $QuickPickInput.ariaAutoComplete = AriaAutoCompleteType.List
@@ -225,7 +223,6 @@ export const create = () => {
 
   const $QuickPickItems = document.createElement('div')
   $QuickPickItems.id = Ids.QuickPickItems
-  // @ts-ignore
   $QuickPickItems.role = Roles.ListBox
   $QuickPickItems.onpointerdown = ViewletQuickPickEvents.handlePointerDown
   $QuickPickItems.addEventListener(DomEventType.Wheel, ViewletQuickPickEvents.handleWheel, DomEventOptions.Passive)

@@ -36,7 +36,6 @@ const getMaskImageUrl = (icon) => {
 const create$StatusBarItem = (item) => {
   const $StatusBarItem = document.createElement('li')
   $StatusBarItem.className = 'StatusBarItem'
-  // @ts-ignore
   $StatusBarItem.role = AriaRoles.Button
   $StatusBarItem.dataset.name = item.name
   $StatusBarItem.tabIndex = -1
@@ -87,7 +86,6 @@ export const create = (statusBarItemsLeft, statusBarItemsRight) => {
   $Viewlet.className = 'Viewlet StatusBar'
   $Viewlet.onclick = handleClick
   $Viewlet.tabIndex = 0
-  // @ts-ignore
   $Viewlet.role = AriaRoles.Status
   $Viewlet.ariaRoleDescription = AriaRoleDescriptionType.StatusBar
   $Viewlet.ariaLive = 'off' // see https://github.com/microsoft/vscode/issues/94677

@@ -6,7 +6,6 @@ export const create = () => {
 
   const $ReadmeHtml = document.createElement('div')
   $ReadmeHtml.className = 'Markdown'
-  // @ts-ignore
   $ReadmeHtml.role = AriaRoles.Document
 
   const $ExtensionDetailIcon = document.createElement('img')

@@ -14,10 +14,8 @@ const activeId = 'TitleBarEntryActive'
 export const create = () => {
   const $TitleBarMenuBar = document.createElement('div')
   $TitleBarMenuBar.id = 'TitleBarMenuBar'
-  // @ts-ignore
   $TitleBarMenuBar.role = AriaRoles.MenuBar
   $TitleBarMenuBar.tabIndex = 0
-
   return {
     $Viewlet: $TitleBarMenuBar,
     $TitleBarMenuBar,
@@ -94,7 +92,6 @@ const create$TopLevelEntry = (item) => {
   $TitleBarTopLevelEntry.className = 'TitleBarTopLevelEntry'
   $TitleBarTopLevelEntry.ariaHasPopup = AriaBoolean.True
   $TitleBarTopLevelEntry.ariaExpanded = AriaBoolean.False
-  // @ts-ignore
   $TitleBarTopLevelEntry.role = AriaRoles.MenuItem
   if (item.keyboardShortCut) {
     $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
@@ -199,7 +196,6 @@ export const setEntries = (state, titleBarEntries) => {
 const create$Menu = () => {
   const $Menu = document.createElement('div')
   $Menu.className = 'Menu'
-  // @ts-ignore
   $Menu.role = AriaRoles.Menu
   $Menu.tabIndex = -1
   // $ContextMenu.onmousedown = contextMenuHandleMouseDown

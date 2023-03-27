@@ -52,7 +52,6 @@ export const create = () => {
   $ListItems.className = 'ListItems'
   $ListItems.tabIndex = 0
   $ListItems.ariaLabel = 'Extensions'
-  // @ts-ignore
   $ListItems.role = AriaRoles.List
 
   const $ScrollBarThumb = document.createElement('div')
@@ -70,7 +69,6 @@ export const create = () => {
   $Viewlet.className = 'Viewlet Extensions'
   $Viewlet.ariaLive = AriaLiveType.Polite
   $Viewlet.ariaBusy = AriaBoolean.True
-  // @ts-ignore
   $Viewlet.role = AriaRoles.None
   $Viewlet.append($ExtensionHeader, $List)
 
@@ -236,11 +234,9 @@ const create$Extension = () => {
   $ExtensionDetail.className = 'ExtensionListItemDetail'
   $ExtensionDetail.append($ExtensionDetailName, $ExtensionDetailDescription, $ExtensionFooter)
   const $ExtensionListItem = document.createElement('div')
-  // @ts-ignore
   $ExtensionListItem.role = AriaRoles.Article
   $ExtensionListItem.ariaRoleDescription = AriaRoleDescriptionType.Extension
   $ExtensionListItem.className = 'ExtensionListItem'
-  // @ts-ignore
   $ExtensionListItem.role = AriaRoles.ListItem
   $ExtensionListItem.append(icon, $ExtensionDetail)
   return $ExtensionListItem

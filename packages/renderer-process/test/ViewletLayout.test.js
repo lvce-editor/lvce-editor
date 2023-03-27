@@ -11,6 +11,5 @@ test('create', () => {
 test('accessibility - viewlet should have a role of application', () => {
   const state = ViewletLayout.create()
   const { $Viewlet } = state
-  // @ts-ignore
   expect($Viewlet.role).toBe('application')
 })
