@@ -1,5 +1,4 @@
 import * as ExtensionHostStatusBarItems from '../ExtensionHost/ExtensionHostStatusBarItems.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = () => {
   return {
@@ -26,8 +25,7 @@ const toUiStatusBarItems = (statusBarItems) => {
 }
 
 export const loadContent = async (state) => {
-  const extensionStatusBarItems =
-    await ExtensionHostStatusBarItems.getStatusBarItems()
+  const extensionStatusBarItems = await ExtensionHostStatusBarItems.getStatusBarItems()
 
   const uiStatusBarItems = toUiStatusBarItems(extensionStatusBarItems)
   return {
@@ -125,25 +123,3 @@ export const resize = (state, dimensions) => {
     ...dimensions,
   }
 }
-
-export const hasFunctionalRender = true
-
-const renderItems = {
-  isEqual(oldState, newState) {
-    return (
-      oldState.statusBarItemsLeft === newState.statusBarItemsLeft &&
-      oldState.statusBarItemsRight === newState.statusBarItemsRight
-    )
-  },
-  apply(oldState, newState) {
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.StatusBar,
-      /* method */ 'setItems',
-      /* statusBarItemsLeft */ newState.statusBarItemsLeft,
-      /* statusBarItemsRight */ newState.statusBarItemsRight,
-    ]
-  },
-}
-
-export const render = [renderItems]
