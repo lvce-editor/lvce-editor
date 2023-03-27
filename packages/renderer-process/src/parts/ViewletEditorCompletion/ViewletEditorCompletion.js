@@ -9,8 +9,34 @@ import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
 
+const createLabel = (item) => {
+  if (item.highlights.length === 0) {
+    return Label.create(item.label)
+  }
+  // TODO support multiple highlights
+  const $CompletionItemText = Label.create('')
+  const highlightStart = item.highlights[0]
+  const highlightEnd = highlightStart + item.highlights[1]
+  const highlightText = item.label.slice(highlightStart, highlightEnd)
+  const $Highlight = document.createElement('span')
+  $Highlight.className = 'CompletionHighlight'
+  $Highlight.textContent = highlightText
+  if (highlightStart !== 0) {
+    const beforeText = item.label.slice(0, highlightStart)
+    const $BeforeText = document.createTextNode(beforeText)
+    $CompletionItemText.append($BeforeText)
+  }
+  $CompletionItemText.append($Highlight)
+  if (highlightEnd !== item.label.length) {
+    const afterText = item.label.slice(highlightEnd)
+    const $AfterText = document.createTextNode(afterText)
+    $CompletionItemText.append($AfterText)
+  }
+  return $CompletionItemText
+}
+
 const create$CompletionItem = (item) => {
-  const $CompletionItemText = Label.create(item.label)
+  const $CompletionItemText = createLabel(item)
 
   const $Icon = document.createElement('div')
   $Icon.className = `ColoredMaskIcon ${item.symbolName}`

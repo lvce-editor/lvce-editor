@@ -4,20 +4,30 @@ const getLabel = (item) => {
   return item.label
 }
 
-const getVisibleIem = (item, itemHeight, i) => {
+const getHighlights = (item, leadingWord) => {
+  const label = item.label
+  const index = label.indexOf(leadingWord)
+  if (index === -1) {
+    return []
+  }
+  return [index, leadingWord.length]
+}
+
+const getVisibleIem = (item, itemHeight, leadingWord, i) => {
   return {
     label: getLabel(item),
     icon: EditorCompletionMap.getIcon(item),
     symbolName: EditorCompletionMap.getSymbolName(item),
     top: i * itemHeight,
+    highlights: getHighlights(item, leadingWord),
   }
 }
 
-export const getVisibleItems = (filteredItems, itemHeight, minLineY, maxLineY) => {
+export const getVisibleItems = (filteredItems, itemHeight, leadingWord, minLineY, maxLineY) => {
   const visibleItems = []
   for (let i = minLineY; i < maxLineY; i++) {
     const filteredItem = filteredItems[i]
-    visibleItems.push(getVisibleIem(filteredItem, itemHeight, i))
+    visibleItems.push(getVisibleIem(filteredItem, itemHeight, leadingWord, i))
   }
   return visibleItems
 }

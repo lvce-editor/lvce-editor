@@ -22,6 +22,12 @@
   position: absolute;
 }
 
+/* TODO reuse same highlight css for quickpick */
+.CompletionHighlight {
+  color: var(--CompletionHighlightForeground, #e1b974);
+  font-weight: 700;
+}
+
 .EditorCompletionItem:hover {
   background: var(--CompletionListItemHoverBackground, rgba(64, 92, 80, 0.2));
 }
