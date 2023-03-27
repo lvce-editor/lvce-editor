@@ -1,22 +1,5 @@
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
-
-const getVisible = (provider, items, minLineY, maxLineY) => {
-  const visibleItems = []
-  const setSize = items.length
-  const max = Math.min(items.length, maxLineY)
-  for (let i = minLineY; i < max; i++) {
-    const item = items[i]
-    const label = provider.getPickLabel(item)
-    const icon = provider.getPickIcon(item)
-    visibleItems.push({
-      label,
-      icon,
-      posInSet: i + 1,
-      setSize,
-    })
-  }
-  return visibleItems
-}
+import * as GetVisibleQuickPickItems from '../GetVisibleQuickPickItems/GetVisibleQuickPickItems.js'
 
 export const hasFunctionalRender = true
 
@@ -46,7 +29,7 @@ const renderItems = {
     if (newState.items.length === 0) {
       return [/* method */ 'showNoResults']
     }
-    const visibleItems = getVisible(newState.provider, newState.items, newState.minLineY, newState.maxLineY)
+    const visibleItems = GetVisibleQuickPickItems.getVisible(newState.provider, newState.items, newState.minLineY, newState.maxLineY)
     return [/* method */ RenderMethod.SetVisiblePicks, /* visiblePicks */ visibleItems]
   },
 }
