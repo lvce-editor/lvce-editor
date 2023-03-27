@@ -29,7 +29,7 @@ test('show', () => {
       label: 'item 3',
     },
   ])
-  expect(getSimpleList(state.$Viewlet)).toEqual(['item 1', 'item 2', 'item 3'])
+  expect(getSimpleList(state.$ListItems)).toEqual(['item 1', 'item 2', 'item 3'])
 
   // TODO
   //  expect(
@@ -69,8 +69,8 @@ test('focusIndex', () => {
   const $CompletionItemOne = document.createElement('li')
   $CompletionItemOne.className = 'CompletionItem Focused'
   const $CompletionItemTwo = document.createElement('li')
-  state.$Viewlet.append($CompletionItemOne)
-  state.$Viewlet.append($CompletionItemTwo)
+  state.$ListItems.append($CompletionItemOne)
+  state.$ListItems.append($CompletionItemTwo)
   ViewletEditorCompletion.setFocusedIndex(state, 0, 1)
   expect($CompletionItemOne.classList.contains('Focused')).toBe(false)
   expect($CompletionItemTwo.classList.contains('Focused')).toBe(true)
@@ -80,8 +80,8 @@ test('focusIndex - oldIndex is negative', () => {
   const state = ViewletEditorCompletion.create()
   const $CompletionItemOne = document.createElement('li')
   const $CompletionItemTwo = document.createElement('li')
-  state.$Viewlet.append($CompletionItemOne)
-  state.$Viewlet.append($CompletionItemTwo)
+  state.$ListItems.append($CompletionItemOne)
+  state.$ListItems.append($CompletionItemTwo)
   ViewletEditorCompletion.setFocusedIndex(state, -1, 1)
   expect($CompletionItemOne.classList.contains('Focused')).toBe(false)
   expect($CompletionItemTwo.classList.contains('Focused')).toBe(true)
@@ -92,8 +92,8 @@ test('focusIndex - newIndex is negative', () => {
   const $CompletionItemOne = document.createElement('li')
   $CompletionItemOne.className = 'CompletionItem Focused'
   const $CompletionItemTwo = document.createElement('li')
-  state.$Viewlet.append($CompletionItemOne)
-  state.$Viewlet.append($CompletionItemTwo)
+  state.$ListItems.append($CompletionItemOne)
+  state.$ListItems.append($CompletionItemTwo)
   ViewletEditorCompletion.setFocusedIndex(state, 0, -1)
   expect($CompletionItemOne.classList.contains('Focused')).toBe(false)
   expect($CompletionItemTwo.classList.contains('Focused')).toBe(false)

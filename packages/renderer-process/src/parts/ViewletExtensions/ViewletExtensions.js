@@ -325,11 +325,6 @@ export const closeSuggest = (state) => {
   state.$ExtensionSuggestions.remove()
 }
 
-export const setContentHeight = (state, height) => {
-  const { $ListItems } = state
-  SetBounds.setHeight($ListItems, height)
-}
-
 export const handleError = (state, message) => {
   Assert.object(state)
   Assert.string(message)
@@ -342,5 +337,4 @@ export const setSearchValue = (state, oldValue, newValue) => {
   $InputBox.value = newValue
 }
 
-export * from '../ViewletScrollable/ViewletScrollable.js'
-export * from '../ViewletSizable/ViewletSizable.js'
+export * from '../ViewletList/ViewletList.js'
