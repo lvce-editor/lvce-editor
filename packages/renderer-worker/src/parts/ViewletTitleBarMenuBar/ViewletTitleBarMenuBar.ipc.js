@@ -30,3 +30,4 @@ export const LazyCommands = {
 export * from './ViewletTitleBarMenuBar.js'
 export * from './ViewletTitleBarMenuBarCss.js'
 export * from './ViewletTitleBarMenuBarKeyBindings.js'
+export * from './ViewletTitleBarMenuBarRender.js'
