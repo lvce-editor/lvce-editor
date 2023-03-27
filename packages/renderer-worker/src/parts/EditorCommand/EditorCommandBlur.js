@@ -1,3 +1,4 @@
+import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
 import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 export const state = {
@@ -14,7 +15,7 @@ export const blur = (editor) => {
     ...editor,
     focused: false,
   }
-  RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, 'handleEditorBlur')
+  RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorBlur)
   return newEditor
 }
 
