@@ -12,6 +12,8 @@ export const runEditorWidgetFunctions = async (editor, fnName, ...args) => {
       const { state, factory } = instance
       const newState = factory[fnName](state, editor, ...args)
       if (newState.disposed) {
+        const index = editor.widgets.indexOf(widget)
+        editor.widgets.splice(index, 1)
         await Viewlet.dispose(widget)
       } else {
         await Viewlet.setState(widget, newState)
