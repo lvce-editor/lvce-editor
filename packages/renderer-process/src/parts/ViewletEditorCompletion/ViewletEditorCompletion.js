@@ -34,21 +34,28 @@ const render$CompletionItem = ($Item, item) => {
   }
   // TODO recycle text nodes and highlight nodes
   $Label.textContent = ''
-  // TODO support multiple highlights
-  const highlightStart = item.highlights[0]
-  const highlightEnd = highlightStart + item.highlights[1]
-  const highlightText = item.label.slice(highlightStart, highlightEnd)
-  const $Highlight = document.createElement('span')
-  $Highlight.className = 'CompletionHighlight'
-  $Highlight.textContent = highlightText
-  if (highlightStart !== 0) {
-    const beforeText = item.label.slice(0, highlightStart)
-    const $BeforeText = document.createTextNode(beforeText)
-    $Label.append($BeforeText)
+  const highlights = item.highlights
+  const label = item.label
+  let position = 0
+  console.log({ highlights })
+  for (let i = 0; i < highlights.length; i += 2) {
+    const highlightStart = highlights[i]
+    const highlightEnd = highlights[i + 1]
+    if (position < highlightStart) {
+      const beforeText = label.slice(position, highlightStart)
+      const $BeforeText = document.createTextNode(beforeText)
+      $Label.append($BeforeText)
+    }
+    const highlightText = label.slice(highlightStart, highlightEnd)
+    const $Highlight = document.createElement('span')
+    $Highlight.className = 'CompletionHighlight'
+    $Highlight.textContent = highlightText
+    $Label.append($Highlight)
+    position = highlightEnd
   }
-  $Label.append($Highlight)
-  if (highlightEnd !== item.label.length) {
-    const afterText = item.label.slice(highlightEnd)
+  // TODO support multiple highlights
+  if (position < label.length) {
+    const afterText = item.label.slice(position)
     const $AfterText = document.createTextNode(afterText)
     $Label.append($AfterText)
   }
