@@ -6,11 +6,8 @@ const getLabel = (item) => {
 
 const getHighlights = (item, leadingWord) => {
   const label = item.label
-  const index = label.indexOf(leadingWord)
-  if (index === -1) {
-    return []
-  }
-  return [index, leadingWord.length]
+  const matches = item.matches
+  return matches.slice(1)
 }
 
 const getVisibleIem = (item, itemHeight, leadingWord, i) => {
