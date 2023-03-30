@@ -167,11 +167,11 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
     debugger
   }
   const { $ListItems } = state
-  if (oldIndex !== -1) {
+  if (oldIndex >= 0) {
     const $OldItem = $ListItems.children[oldIndex]
     $OldItem.classList.remove('Focused')
   }
-  if (newIndex !== -1) {
+  if (newIndex >= 0) {
     const $NewItem = $ListItems.children[newIndex]
     $NewItem.classList.add('Focused')
   }
