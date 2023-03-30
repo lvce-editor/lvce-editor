@@ -47,12 +47,24 @@ test('filterCompletionItem - font-variant-position', () => {
 })
 
 test('filterCompletionItem - background-size', () => {
-  expect(FilterCompletionItem.filterCompletionItem('size', 'background-size')).toEqual([-4])
+  expect(FilterCompletionItem.filterCompletionItem('size', 'background-size')).toEqual([-4, 11, 15])
 })
 
 test('filterCompletionItem - controller_core', () => {
-  // TODO should prefix continous match at end
-  expect(FilterCompletionItem.filterCompletionItem('core', 'controller_core')).toEqual([-4, 0, 1, 5, 6, 9, 11])
+  expect(FilterCompletionItem.filterCompletionItem('core', 'controller_core')).toEqual([-4, 11, 15])
+})
+
+test('filterCompletionItem - font-size', () => {
+  expect(FilterCompletionItem.filterCompletionItem('font', 'font-size')).toEqual([-4, 0, 4])
+})
+
+test('filterCompletionItem - font-language-override', () => {
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('font', 'font-language-override')).toEqual([-4, 0, 1, 14, 17])
+})
+
+test('filterCompletionItem - same text', () => {
+  expect(FilterCompletionItem.filterCompletionItem('font', 'font')).toEqual([-3, 0, 4])
 })
 
 test('filterCompletionItem - no match', () => {
