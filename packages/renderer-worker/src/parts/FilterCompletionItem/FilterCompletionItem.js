@@ -10,10 +10,7 @@ const gridSize = 128
 const createTable = (size) => {
   const table = []
   for (let i = 0; i < size; i++) {
-    const row = []
-    for (let j = 0; j < size; j++) {
-      row.push(0)
-    }
+    const row = new Uint8Array(size)
     table.push(row)
   }
   return table
