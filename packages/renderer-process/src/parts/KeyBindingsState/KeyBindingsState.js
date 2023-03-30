@@ -16,7 +16,7 @@ export const addKeyBindings = (id, keyBindings) => {
     return
   }
   state.keyBindingSets[id] = keyBindings
-  state.keyBindings.push(...keyBindings)
+  state.keyBindings.unshift(...keyBindings)
 }
 
 export const removeKeyBindings = (id) => {
