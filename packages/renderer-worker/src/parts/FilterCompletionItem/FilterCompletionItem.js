@@ -115,7 +115,6 @@ export const filterCompletionItem = (pattern, word) => {
   }
   for (let row = 1; row < patternLength + 1; row++) {
     const rowChar = pattern[row - 1]
-    let diagMatch = false
     for (let column = 1; column < wordLength + 1; column++) {
       const columnChar = word[column - 1]
       const score = getScore(rowChar, columnChar)
@@ -123,15 +122,13 @@ export const filterCompletionItem = (pattern, word) => {
       if (arrows[row - 1][column - 1] === Arrow.Diagonal) {
         diagonalScore++
       }
-      let leftScore = diagMatch ? table[row][column - 1] + -5 : table[row][column - 1]
-      diagMatch = false
+      let leftScore = table[row][column - 1]
       if (leftScore > diagonalScore) {
         table[row][column] = leftScore
         arrows[row][column] = Arrow.Left
       } else {
         table[row][column] = diagonalScore
         arrows[row][column] = Arrow.Diagonal
-        diagMatch = true
       }
     }
   }
