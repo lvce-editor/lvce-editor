@@ -73,3 +73,7 @@ test('filterCompletionItem - same text', () => {
 test('filterCompletionItem - no match', () => {
   expect(FilterCompletionItem.filterCompletionItem('fd', 'height')).toEqual([])
 })
+
+test('filterCompletionItem - odd match', () => {
+  expect(FilterCompletionItem.filterCompletionItem('font', 'justify-content')).toEqual([expect.any(Number), 5, 6, 9, 12])
+})
