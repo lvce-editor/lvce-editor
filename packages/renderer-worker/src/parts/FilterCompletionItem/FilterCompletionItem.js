@@ -23,8 +23,12 @@ const table = createTable(gridSize)
 const arrows = createTable(gridSize)
 const diag = createTable()
 
-const getScore = (rowChar, columnChar) => {
-  return rowChar === columnChar ? 7 : -1
+const getScore = (rowChar, columnChar, column, wordLength) => {
+  const baseScore = rowChar === columnChar ? 7 : -1
+  if (column === wordLength && baseScore === 7) {
+    return 5
+  }
+  return baseScore
 }
 
 const isPatternInWord = (patternLow, patternPos, patternLen, wordLow, wordPos, wordLen) => {
@@ -117,7 +121,7 @@ export const filterCompletionItem = (pattern, word) => {
     const rowChar = pattern[row - 1]
     for (let column = 1; column < wordLength + 1; column++) {
       const columnChar = word[column - 1]
-      const score = getScore(rowChar, columnChar)
+      const score = getScore(rowChar, columnChar, column, wordLength)
       let diagonalScore = score + table[row - 1][column - 1]
       if (arrows[row - 1][column - 1] === Arrow.Diagonal) {
         diagonalScore++

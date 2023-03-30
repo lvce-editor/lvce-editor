@@ -78,10 +78,9 @@ test('filterCompletionItem - odd match', () => {
 })
 
 test('filterCompletionItem - match by three word starts', () => {
-  // TODO
-  expect(FilterCompletionItem.filterCompletionItem('ffs', 'font-feature-settings')).toEqual([expect.any(Number), 0, 1, 5, 6, 20, 21])
+  expect(FilterCompletionItem.filterCompletionItem('ffs', 'font-feature-settings')).toEqual([expect.any(Number), 0, 1, 5, 6, 13, 14])
 })
 
 test('filterCompletionItem - match by first word and two word starts', () => {
-  expect(FilterCompletionItem.filterCompletionItem('font-fs', 'font-feature-settings')).toEqual([expect.any(Number), 0, 6, 20, 21])
+  expect(FilterCompletionItem.filterCompletionItem('font-fs', 'font-feature-settings')).toEqual([expect.any(Number), 0, 6, 13, 14])
 })
