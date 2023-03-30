@@ -1,3 +1,5 @@
+// based on tests from https://github.com/jeancroy/fuzz-aldrin-plus/blob/84eac1d73bacbbd11978e6960f4aa89f8396c540/spec/match-spec.coffee by jeancroy (License MIT)
+
 import * as FilterCompletionItem from '../src/parts/FilterCompletionItem/FilterCompletionItem.js'
 
 test('filterCompletionItem - match by word starts', () => {
@@ -22,6 +24,67 @@ test('filterCompletionItem - match by word starts - two characters in first matc
 
 test('filterCompletionItem - match by word starts - two partial matches', () => {
   expect(FilterCompletionItem.filterCompletionItem('iem', 'items')).toEqual([expect.any(Number), 0, 1, 2, 4])
+})
+
+test('filterCompletionItem - two empty strings', () => {
+  expect(FilterCompletionItem.filterCompletionItem('', '')).toEqual([])
+})
+
+test('filterCompletionItem - word start 2', () => {
+  expect(FilterCompletionItem.filterCompletionItem('he', 'Hello World')).toEqual([expect.any(Number), 1, 2])
+})
+
+test('filterCompletionItem - last character', () => {
+  expect(FilterCompletionItem.filterCompletionItem('d', 'Hello World')).toEqual([expect.any(Number), 10, 11])
+})
+
+test('prefer whole word to scattered letters 1', () => {
+  expect(FilterCompletionItem.filterCompletionItem('file', 'fiddle gruntfile file')).toEqual([expect.any(Number), 12, 16])
+})
+
+test('prefer whole word to scattered letters 2', () => {
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('file', 'fiddle file')).toEqual([expect.any(Number), 0, 2, 4, 6])
+})
+
+test('prefer whole word to scattered letters 3', () => {
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('file', 'find le file')).toEqual([expect.any(Number), 0, 2, 5, 7])
+})
+
+test('prefer whole word to scattered letters, even without exact matches 1', () => {
+  expect(FilterCompletionItem.filterCompletionItem('filex', 'fiddle gruntfile xfiller')).toEqual([expect.any(Number), 12, 16, 17, 18])
+})
+
+test('prefer whole word to scattered letters, even without exact matches 2', () => {
+  expect(FilterCompletionItem.filterCompletionItem('filex', 'fiddle file xfiller')).toEqual([expect.any(Number), 7, 11, 12, 13])
+})
+
+test('prefer whole word to scattered letters, even without exact matches 3', () => {
+  expect(FilterCompletionItem.filterCompletionItem('filex', 'fine le file xfiller')).toEqual([expect.any(Number), 8, 12, 13, 14])
+})
+
+test('prefer exact match', () => {
+  expect(FilterCompletionItem.filterCompletionItem('file', 'filter gruntfile filler')).toEqual([expect.any(Number), 12, 16])
+})
+
+test('prefer camelCase to scattered letters', () => {
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('itc', 'ImportanceTableCtrl')).toEqual([expect.any(Number), 5, 6, 8, 9])
+})
+
+test('prefer acronym to scattered letters 1', () => {
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('acon', 'action_config')).toEqual([expect.any(Number), 0, 2, 8, 10])
+})
+
+test('prefer acronym to scattered letters 2', () => {
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('acon', 'application_control')).toEqual([expect.any(Number), 6, 7, 12, 15])
+})
+
+test('filterCompletionItem - middle', () => {
+  expect(FilterCompletionItem.filterCompletionItem('elwor', 'Hello World')).toEqual([expect.any(Number), 1, 5, 8, 9])
 })
 
 test('filterCompletionItem - three partial matches', () => {
