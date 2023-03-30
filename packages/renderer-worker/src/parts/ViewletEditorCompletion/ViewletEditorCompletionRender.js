@@ -38,11 +38,12 @@ const renderBounds = {
 
 const renderFocusedIndex = {
   isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex
+    return oldState.focusedIndex === newState.focusedIndex && oldState.minLineY === newState.minLineY
   },
   apply(oldState, newState) {
-    console.log('render focused index', oldState.focusedIndex, newState.focusedIndex)
-    return [/* method */ RenderMethod.SetFocusedIndex, /* oldFocusedIndex */ oldState.focusedIndex, /* newFocusedIndex */ newState.focusedIndex]
+    const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
+    const newFocusedIndex = newState.focusedIndex - newState.minLineY
+    return [/* method */ RenderMethod.SetFocusedIndex, /* oldFocusedIndex */ oldFocusedIndex, /* newFocusedIndex */ newFocusedIndex]
   },
 }
 
