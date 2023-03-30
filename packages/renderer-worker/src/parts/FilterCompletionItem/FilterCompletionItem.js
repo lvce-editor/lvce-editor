@@ -84,12 +84,12 @@ export const filterCompletionItem = (pattern, word) => {
       const columnChar = word[column - 1]
       const score = getScore(rowChar, columnChar)
       const diagonalScore = score + table[row - 1][column - 1]
-      const leftScore = table[row][column - 1] + 1
+      const leftScore = table[row][column - 1] + 0
       if (leftScore > diagonalScore) {
-        table[row][column] = diagonalScore
+        table[row][column] = leftScore
         arrows[row][column] = Arrow.Left
       } else {
-        table[row][column] = leftScore
+        table[row][column] = diagonalScore
         arrows[row][column] = Arrow.Diagonal
       }
     }
