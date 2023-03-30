@@ -37,6 +37,41 @@ const isPatternInWord = (patternLow, patternPos, patternLen, wordLow, wordPos, w
   return patternPos === patternLen // pattern must be exhausted
 }
 
+function printTable(table, pattern, patternLen, word, wordLen) {
+  function pad(s, n, pad = ' ') {
+    while (s.length < n) {
+      s = pad + s
+    }
+    return s
+  }
+  let ret = ` |   |${word
+    .split('')
+    .map((c) => pad(c, 3))
+    .join('|')}\n`
+
+  for (let i = 0; i <= patternLen; i++) {
+    if (i === 0) {
+      ret += ' |'
+    } else {
+      ret += `${pattern[i - 1]}|`
+    }
+    ret +=
+      table[i]
+        .slice(0, wordLen + 1)
+        .map((n) => pad(n.toString(), 3))
+        .join('|') + '\n'
+  }
+  return ret
+}
+
+const printTables = (pattern, patternStart, word, wordStart) => {
+  pattern = pattern.substr(patternStart)
+  word = word.substr(wordStart)
+  console.log(printTable(table, pattern, pattern.length, word, word.length))
+  console.log(printTable(arrows, pattern, pattern.length, word, word.length))
+  // console.log(printTable(_diag, pattern, pattern.length, word, word.length));
+}
+
 const traceHighlights = (table, arrows, patternLength, wordLength) => {
   let row = patternLength
   let column = wordLength
@@ -80,20 +115,27 @@ export const filterCompletionItem = (pattern, word) => {
   }
   for (let row = 1; row < patternLength + 1; row++) {
     const rowChar = pattern[row - 1]
+    let diagMatch = false
     for (let column = 1; column < wordLength + 1; column++) {
       const columnChar = word[column - 1]
       const score = getScore(rowChar, columnChar)
-      const diagonalScore = score + table[row - 1][column - 1]
-      const leftScore = table[row][column - 1] + 0
+      let diagonalScore = score + table[row - 1][column - 1]
+      if (arrows[row - 1][column - 1] === Arrow.Diagonal) {
+        diagonalScore++
+      }
+      let leftScore = diagMatch ? table[row][column - 1] + -5 : table[row][column - 1]
+      diagMatch = false
       if (leftScore > diagonalScore) {
         table[row][column] = leftScore
         arrows[row][column] = Arrow.Left
       } else {
         table[row][column] = diagonalScore
         arrows[row][column] = Arrow.Diagonal
+        diagMatch = true
       }
     }
   }
+  // printTables(pattern, 0, word, 0)
   const highlights = traceHighlights(table, arrows, patternLength, wordLength)
   return highlights
 }
