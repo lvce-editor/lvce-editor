@@ -39,7 +39,7 @@ const isPatternInWord = (patternLow, patternPos, patternLen, wordLow, wordPos, w
 
 const traceHighlights = (table, arrows, patternLength, wordLength) => {
   let row = patternLength
-  let column = wordLength - 1
+  let column = wordLength
   const matches = []
   while (row >= 1 && column >= 1) {
     const arrow = arrows[row][column]
@@ -80,7 +80,7 @@ export const filterCompletionItem = (pattern, word) => {
   }
   for (let row = 1; row < patternLength + 1; row++) {
     const rowChar = pattern[row - 1]
-    for (let column = 1; column < wordLength; column++) {
+    for (let column = 1; column < wordLength + 1; column++) {
       const columnChar = word[column - 1]
       const score = getScore(rowChar, columnChar)
       const diagonalScore = score + table[row - 1][column - 1]

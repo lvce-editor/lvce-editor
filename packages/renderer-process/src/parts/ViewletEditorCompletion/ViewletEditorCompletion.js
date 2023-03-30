@@ -37,7 +37,6 @@ const render$CompletionItem = ($Item, item) => {
   const highlights = item.highlights
   const label = item.label
   let position = 0
-  console.log({ highlights })
   for (let i = 0; i < highlights.length; i += 2) {
     const highlightStart = highlights[i]
     const highlightEnd = highlights[i + 1]
