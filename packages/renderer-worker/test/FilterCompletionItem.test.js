@@ -42,8 +42,7 @@ test('filterCompletionItem - three characters match at start', () => {
 })
 
 test('filterCompletionItem - font-variant-position', () => {
-  // TODO could be improved
-  expect(FilterCompletionItem.filterCompletionItem('font-posit', 'font-variant-position')).toEqual([expect.any(Number), 0, 2, 10, 18])
+  expect(FilterCompletionItem.filterCompletionItem('font-posit', 'font-variant-position')).toEqual([expect.any(Number), 0, 5, 13, 18])
 })
 
 test('filterCompletionItem - background-size', () => {
@@ -64,8 +63,7 @@ test('filterCompletionItem - font-language-override', () => {
 })
 
 test('filterCompletionItem - font-feature-settings', () => {
-  // TODO
-  expect(FilterCompletionItem.filterCompletionItem('font', 'font-feature-settings')).toEqual([expect.any(Number), 0, 3, 16, 17])
+  expect(FilterCompletionItem.filterCompletionItem('font', 'font-feature-settings')).toEqual([expect.any(Number), 0, 4])
 })
 
 test('filterCompletionItem - same text', () => {
@@ -74,4 +72,8 @@ test('filterCompletionItem - same text', () => {
 
 test('filterCompletionItem - no match', () => {
   expect(FilterCompletionItem.filterCompletionItem('fd', 'height')).toEqual([])
+})
+
+test('filterCompletionItem - odd match', () => {
+  expect(FilterCompletionItem.filterCompletionItem('font', 'justify-content')).toEqual([expect.any(Number), 5, 6, 9, 12])
 })
