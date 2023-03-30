@@ -58,7 +58,6 @@ test('filterCompletionItem - font-size', () => {
 })
 
 test('filterCompletionItem - font-language-override', () => {
-  // TODO
   expect(FilterCompletionItem.filterCompletionItem('font', 'font-language-override')).toEqual([expect.any(Number), 0, 4])
 })
 
@@ -76,4 +75,13 @@ test('filterCompletionItem - no match', () => {
 
 test('filterCompletionItem - odd match', () => {
   expect(FilterCompletionItem.filterCompletionItem('font', 'justify-content')).toEqual([expect.any(Number), 5, 6, 9, 12])
+})
+
+test('filterCompletionItem - match by three word starts', () => {
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('ffs', 'font-feature-settings')).toEqual([expect.any(Number), 0, 1, 5, 6, 20, 21])
+})
+
+test('filterCompletionItem - match by first word and two word starts', () => {
+  expect(FilterCompletionItem.filterCompletionItem('font-fs', 'font-feature-settings')).toEqual([expect.any(Number), 0, 6, 20, 21])
 })
