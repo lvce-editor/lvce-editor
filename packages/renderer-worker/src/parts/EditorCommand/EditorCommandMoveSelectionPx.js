@@ -5,6 +5,7 @@ import * as RequestAnimationFrame from '../RequestAnimationFrame/RequestAnimatio
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 import * as EditorPosition from './EditorCommandPosition.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const getNewEditor = (editor, position) => {
   const { minLineY, maxLineY, rowHeight } = editor
@@ -54,7 +55,7 @@ const continueScrollingAndMovingSelection = async () => {
   if (editor === newEditor) {
     return
   }
-  await Viewlet.setState('EditorText', newEditor)
+  await Viewlet.setState(ViewletModuleId.EditorText, newEditor)
   EditorSelectionAutoMoveState.setEditor(newEditor)
   const delta = position.rowIndex < editor.minLineY ? -1 : 1
   EditorSelectionAutoMoveState.setPosition({ rowIndex: position.rowIndex + delta, columnIndex: position.columnIndex })

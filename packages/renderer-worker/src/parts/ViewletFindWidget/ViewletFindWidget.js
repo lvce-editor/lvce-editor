@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as TextDocumentSearch from '../TextDocumentSearch/TextDocumentSearch.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = () => {
   return {
@@ -13,7 +14,7 @@ export const create = () => {
 }
 
 export const getPosition = () => {
-  const editor = ViewletStates.getState('EditorText')
+  const editor = ViewletStates.getState(ViewletModuleId.EditorText)
   if (!editor) {
     return {
       x: 0,
@@ -41,7 +42,7 @@ const getMatchCount = (matches) => {
 }
 
 export const loadContent = (state) => {
-  const editor = ViewletStates.getState('EditorText')
+  const editor = ViewletStates.getState(ViewletModuleId.EditorText)
   if (!editor) {
     return state
   }
@@ -66,7 +67,7 @@ export const loadContent = (state) => {
 export const handleInput = (state, value) => {
   // TODO get focused editor
   // highlight locations that match value
-  const editor = ViewletStates.getState('EditorText')
+  const editor = ViewletStates.getState(ViewletModuleId.EditorText)
   const { lines } = editor
   const matches = TextDocumentSearch.findMatches(lines, value)
   const matchCount = getMatchCount(matches)

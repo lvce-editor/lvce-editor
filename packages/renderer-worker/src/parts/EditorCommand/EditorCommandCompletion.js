@@ -9,6 +9,7 @@ import * as EditorPosition from './EditorCommandPosition.js'
 import * as ViewletState from '../ViewletStates/ViewletStates.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as Character from '../Character/Character.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const handleBlur = () => {
   close()
@@ -201,7 +202,7 @@ export const openFromType = async (editor, text) => {
   // } else if (state.isOpened) {
   //   await close()
   // }
-  return ViewletState.getState('EditorText')
+  return ViewletState.getState(ViewletModuleId.EditorText)
 }
 
 export const close = async (editor) => {
