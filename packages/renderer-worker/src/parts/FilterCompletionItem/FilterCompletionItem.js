@@ -1,9 +1,5 @@
 // based on https://github.com/microsoft/vscode/blob/3059063b805ed0ac10a6d9539e213386bfcfb852/src/vs/base/common/filters.ts by Microsoft (License MIT)
-
-const Arrow = {
-  Diagonal: 1,
-  Left: 2,
-}
+import * as Arrow from '../Arrow/Arrow.js'
 
 const gridSize = 128
 
