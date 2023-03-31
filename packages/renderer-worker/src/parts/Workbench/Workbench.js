@@ -9,6 +9,7 @@ import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
 import * as Module from '../Module/Module.js'
 import * as Performance from '../Performance/Performance.js'
+import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -23,6 +24,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async (config) => {
   onunhandledrejection = ErrorHandling.handleUnhandledRejection
@@ -31,7 +33,7 @@ export const startup = async (config) => {
   Command.setLoad(Module.load)
   LifeCycle.mark(LifeCyclePhase.Zero)
 
-  Performance.mark('willStartupWorkbench')
+  Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
   await RendererProcess.listen()
   if (Platform.platform !== PlatformType.Web) {
     await SharedProcess.listen()
@@ -48,32 +50,32 @@ export const startup = async (config) => {
     return
   }
 
-  Performance.mark('code/willLoadPreferences')
+  Performance.mark(PerformanceMarkerType.WillLoadPreferences)
   await Preferences.hydrate()
-  Performance.mark('code/didLoadPreferences')
+  Performance.mark(PerformanceMarkerType.DidLoadPreferences)
 
   // TODO only load this if session replay is enabled in preferences
   if (Preferences.get('sessionReplay.enabled')) {
-    Performance.mark('code/willLoadSessionReplay')
+    Performance.mark(PerformanceMarkerType.WillLoadSessionReplay)
     await SessionReplay.startRecording()
-    Performance.mark('code/didLoadSessionReplay')
+    Performance.mark(PerformanceMarkerType.DidLoadSessionReplay)
   }
 
   LifeCycle.mark(LifeCyclePhase.Twelve)
 
-  Performance.mark('code/willOpenWorkspace')
+  Performance.mark(PerformanceMarkerType.WillOpenWorkspace)
   await Workspace.hydrate(initData.Location)
-  Performance.mark('code/didOpenWorkspace')
+  Performance.mark(PerformanceMarkerType.DidOpenWorkspace)
 
   LifeCycle.mark(LifeCyclePhase.Three)
 
-  Performance.mark('code/willLoadColorTheme')
+  Performance.mark(PerformanceMarkerType.WillLoadColorTheme)
   await ColorTheme.hydrate()
-  Performance.mark('code/didLoadColorTheme')
+  Performance.mark(PerformanceMarkerType.DidLoadColorTheme)
 
   LifeCycle.mark(LifeCyclePhase.Four)
 
-  Performance.mark('code/willShowLayout')
+  Performance.mark(PerformanceMarkerType.WillShowLayout)
   const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.Layout, '', '', 0, 0, 0, 0)
   const layoutState = await SaveState.getSavedViewletState(ViewletModuleId.Layout)
   const commands = await ViewletManager.load(
@@ -81,6 +83,7 @@ export const startup = async (config) => {
       getModule: ViewletModule.load,
       id: ViewletModuleId.Layout,
       type: 0,
+      // @ts-ignore
       uri: '',
       show: false,
       focus: false,
@@ -96,37 +99,37 @@ export const startup = async (config) => {
   commands.push(['Viewlet.appendToBody', ViewletModuleId.Layout])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // await Layout.hydrate(initData)
-  Performance.mark('code/didShowLayout')
+  Performance.mark(PerformanceMarkerType.DidShowLayout)
 
-  Performance.mark('code/willLoadLanguages')
+  Performance.mark(PerformanceMarkerType.WillLoadLanguages)
   await Languages.hydrate()
-  Performance.mark('code/didLoadLanguages')
+  Performance.mark(PerformanceMarkerType.DidLoadLanguages)
 
   LifeCycle.mark(LifeCyclePhase.Five)
 
-  Performance.mark('code/willLoadMain')
+  Performance.mark(PerformanceMarkerType.WillLoadMain)
   await Command.execute('Layout.loadMainIfVisible')
-  Performance.mark('code/didLoadMain')
+  Performance.mark(PerformanceMarkerType.DidLoadMain)
 
   LifeCycle.mark(LifeCyclePhase.Six)
 
   LifeCycle.mark(LifeCyclePhase.Seven)
 
-  Performance.mark('code/willLoadSideBar')
+  Performance.mark(PerformanceMarkerType.WillLoadSideBar)
   await Command.execute('Layout.loadSideBarIfVisible')
-  Performance.mark('code/didLoadSideBar')
+  Performance.mark(PerformanceMarkerType.DidLoadSideBar)
 
   LifeCycle.mark(LifeCyclePhase.Eight)
 
-  Performance.mark('code/willLoadPanel')
+  Performance.mark(PerformanceMarkerType.WillLoadPanel)
   await Command.execute('Layout.loadPanelIfVisible')
-  Performance.mark('code/didLoadPanel')
+  Performance.mark(PerformanceMarkerType.DidLoadPanel)
 
   LifeCycle.mark(LifeCyclePhase.Nine)
 
-  Performance.mark('code/willLoadActivityBar')
+  Performance.mark(PerformanceMarkerType.WillLoadActivityBar)
   await Command.execute('Layout.loadActivityBarIfVisible')
-  Performance.mark('code/didLoadActivityBar')
+  Performance.mark(PerformanceMarkerType.DidLoadActivityBar)
 
   LifeCycle.mark(LifeCyclePhase.Ten)
 
