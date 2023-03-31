@@ -1,23 +1,15 @@
 // based on https://github.com/microsoft/vscode/blob/3059063b805ed0ac10a6d9539e213386bfcfb852/src/vs/base/common/filters.ts by Microsoft (License MIT)
 import * as Arrow from '../Arrow/Arrow.js'
+import * as CreateTable from '../CreateTable/CreateTable.js'
 import * as IsGap from '../IsGap/IsGap.js'
 import * as PrintTable from '../PrintTable/PrintTable.js'
 import * as TraceHighlights from '../TraceHighlights/TraceHighlights.js'
 
 const gridSize = 128
 
-const createTable = (size) => {
-  const table = []
-  for (let i = 0; i < size; i++) {
-    const row = new Uint8Array(size)
-    table.push(row)
-  }
-  return table
-}
-
-const table = createTable(gridSize)
-const arrows = createTable(gridSize)
-const diag = createTable()
+const table = CreateTable.createTable(gridSize)
+const arrows = CreateTable.createTable(gridSize)
+const diag = CreateTable.createTable(gridSize)
 
 const getScore = (rowCharLow, rowChar, columnCharBefore, columnCharLow, columnChar, column, wordLength, isDiagonalMatch) => {
   if (rowCharLow !== columnCharLow) {
