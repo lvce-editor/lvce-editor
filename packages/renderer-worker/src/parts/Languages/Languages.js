@@ -8,18 +8,19 @@ import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as Character from '../Character/Character.js'
 
 export const getLanguageId = (fileName) => {
   Assert.string(fileName)
   // TODO this is inefficient for icon theme, as file extension is computed twice
-  const extensionIndex = fileName.lastIndexOf('.')
+  const extensionIndex = fileName.lastIndexOf(Character.Dot)
   const extension = fileName.slice(extensionIndex)
   const extensionLower = extension.toLowerCase()
   if (LanguagesState.hasLanguageByExtension(extensionLower)) {
     return LanguagesState.getLanguageByExtension(extensionLower)
   }
   const fileNameLower = fileName.toLowerCase()
-  const secondExtensionIndex = fileName.lastIndexOf('.', extensionIndex - 1)
+  const secondExtensionIndex = fileName.lastIndexOf(Character.Dot, extensionIndex - 1)
   const secondExtension = fileName.slice(secondExtensionIndex)
   if (secondExtensionIndex !== -1 && LanguagesState.hasLanguageByExtension(secondExtension)) {
     return LanguagesState.getLanguageByExtension(secondExtension)

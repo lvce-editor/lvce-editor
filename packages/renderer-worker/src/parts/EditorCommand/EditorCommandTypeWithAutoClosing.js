@@ -13,6 +13,7 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as CommandOpenCompletion from './EditorCommandCompletion.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
+import * as Character from '../Character/Character.js'
 
 const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
 const RE_WHITESPACE = /^\s+$/
@@ -49,7 +50,7 @@ const isBrace = (text) => {
 }
 
 const isSlash = (text) => {
-  return text === '/'
+  return text === Character.Slash
 }
 
 const editorTypeWithBraceCompletion = async (editor, text) => {

@@ -2,6 +2,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Response from '../Response/Response.js'
 import { VError } from '../VError/VError.js'
+import * as Character from '../Character/Character.js'
 
 export const state = {
   pending: Object.create(null),
@@ -12,7 +13,7 @@ export const setInlineStyle = async (id, css) => {
 }
 
 const getId = (path) => {
-  return 'Css' + path.replace('/css/parts/', '').replaceAll('/', '-').replace('.css', '')
+  return 'Css' + path.replace('/css/parts/', '').replaceAll(Character.Slash, Character.Dash).replace('.css', Character.EmptyString)
 }
 
 const actuallyLoadCssStyleSheet = async (css) => {
