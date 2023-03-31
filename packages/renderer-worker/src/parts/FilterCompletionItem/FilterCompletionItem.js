@@ -1,4 +1,5 @@
 // based on https://github.com/microsoft/vscode/blob/3059063b805ed0ac10a6d9539e213386bfcfb852/src/vs/base/common/filters.ts by Microsoft (License MIT)
+import * as PrintTable from '../PrintTable/PrintTable.js'
 import * as Arrow from '../Arrow/Arrow.js'
 
 const gridSize = 128
@@ -64,8 +65,8 @@ function printTable(table, pattern, patternLen, word, wordLen) {
 const printTables = (pattern, patternStart, word, wordStart) => {
   pattern = pattern.substr(patternStart)
   word = word.substr(wordStart)
-  console.log(printTable(table, pattern, pattern.length, word, word.length))
-  console.log(printTable(arrows, pattern, pattern.length, word, word.length))
+  console.log(PrintTable.printTable(table, pattern, pattern.length, word, word.length))
+  console.log(PrintTable.printTable(arrows, pattern, pattern.length, word, word.length))
   // console.log(printTable(_diag, pattern, pattern.length, word, word.length));
 }
 
