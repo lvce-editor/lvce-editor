@@ -26,6 +26,8 @@ const isGap = (columnCharBefore, columnChar) => {
     case '-':
     case '_':
     case '':
+    case 't':
+    case ' ':
       return true
     default:
       break
@@ -36,7 +38,10 @@ const isGap = (columnCharBefore, columnChar) => {
   return false
 }
 
-const getScore = (rowChar, columnCharBefore, columnChar, column, wordLength, isDiagonalMatch) => {
+const getScore = (rowCharLow, rowChar, columnCharBefore, columnCharLow, columnChar, column, wordLength, isDiagonalMatch) => {
+  if (rowCharLow !== columnCharLow) {
+    return -1
+  }
   const isMatch = rowChar === columnChar
   if (isMatch) {
     if (isDiagonalMatch) {
@@ -47,7 +52,10 @@ const getScore = (rowChar, columnCharBefore, columnChar, column, wordLength, isD
     }
     return 7
   }
-  return -1
+  if (isGap(columnCharBefore, columnChar)) {
+    return 8
+  }
+  return 5
 }
 
 const isPatternInWord = (patternLow, patternPos, patternLen, wordLow, wordPos, wordLen) => {
@@ -80,18 +88,17 @@ export const filterCompletionItem = (pattern, word) => {
   }
   for (let row = 1; row < patternLength + 1; row++) {
     const rowChar = pattern[row - 1]
+    const rowCharLow = patternLower[row - 1]
     for (let column = 1; column < wordLength + 1; column++) {
       const columnChar = word[column - 1]
+      const columnCharLow = wordLower[column - 1]
       const columnCharBefore = word[column - 2] || ''
       const isDiagonalMatch = arrows[row - 1][column - 1] === Arrow.Diagonal
-      const score = getScore(rowChar, columnCharBefore, columnChar, column, wordLength, isDiagonalMatch)
+      const score = getScore(rowCharLow, rowChar, columnCharBefore, columnCharLow, columnChar, column, wordLength, isDiagonalMatch)
       let diagonalScore = score + table[row - 1][column - 1]
       if (isDiagonalMatch && score !== -1) {
         diagonalScore += 2
       }
-      // if (isGap(columnCharBefore, columnChar) && score !== -1) {
-      //   diagonalScore += 2
-      // }
       let leftScore = table[row][column - 1]
       if (leftScore > diagonalScore) {
         table[row][column] = leftScore
@@ -102,12 +109,7 @@ export const filterCompletionItem = (pattern, word) => {
       }
     }
   }
-  printTables(pattern, 0, word, 0)
+  // printTables(pattern, 0, word, 0)
   const highlights = TraceHighlights.traceHighlights(table, arrows, patternLength, wordLength)
   return highlights
 }
-
-// filterCompletionItem('font-fs', 'font-feature-settings') //?
-// filterCompletionItem('acon', 'application_control') //?
-// filterCompletionItem('file', 'filter gruntfile filler') //?
-filterCompletionItem('itc', 'ImportanceTableCtrl') //?

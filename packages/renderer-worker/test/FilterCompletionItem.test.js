@@ -31,7 +31,7 @@ test('filterCompletionItem - two empty strings', () => {
 })
 
 test('filterCompletionItem - word start 2', () => {
-  expect(FilterCompletionItem.filterCompletionItem('he', 'Hello World')).toEqual([expect.any(Number), 1, 2])
+  expect(FilterCompletionItem.filterCompletionItem('he', 'Hello World')).toEqual([expect.any(Number), 0, 2])
 })
 
 test('filterCompletionItem - last character', () => {
@@ -67,7 +67,7 @@ test('prefer exact match', () => {
 })
 
 test('prefer camelCase to scattered letters', () => {
-  expect(FilterCompletionItem.filterCompletionItem('itc', 'ImportanceTableCtrl')).toEqual([expect.any(Number), 0, 1, 5, 6, 8, 9])
+  expect(FilterCompletionItem.filterCompletionItem('itc', 'ImportanceTableCtrl')).toEqual([expect.any(Number), 0, 1, 10, 11, 15, 16])
 })
 
 test('prefer acronym to scattered letters 1', () => {
@@ -92,8 +92,7 @@ test('filterCompletionItem - three partial matches #2', () => {
 })
 
 test('filterCompletionItem - three camel case matches', () => {
-  // TODO highlights are not good
-  expect(FilterCompletionItem.filterCompletionItem('tololo', 'toLocalLowerCase')).toEqual([expect.any(Number), 0, 4, 6, 7, 8, 9])
+  expect(FilterCompletionItem.filterCompletionItem('tololo', 'toLocalLowerCase')).toEqual([expect.any(Number), 0, 4, 7, 9])
 })
 
 test('filterCompletionItem - three characters match at start', () => {
@@ -136,7 +135,7 @@ test('filterCompletionItem - odd match', () => {
   expect(FilterCompletionItem.filterCompletionItem('font', 'justify-content')).toEqual([expect.any(Number), 5, 6, 9, 12])
 })
 
-test.skip('filterCompletionItem - match by three word starts', () => {
+test('filterCompletionItem - match by three word starts', () => {
   expect(FilterCompletionItem.filterCompletionItem('ffs', 'font-feature-settings')).toEqual([expect.any(Number), 0, 1, 5, 6, 13, 14])
 })
 
