@@ -1,78 +1,24 @@
 // import * as EditorCompletion from '../EditorCompletion/EditorCompletion.js'
 import * as AutoClosing from '../AutoClosing/AutoClosing.js'
 import * as Bracket from '../Bracket/Bracket.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
-import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.js'
-import * as ExtensionHostClosingTag from '../ExtensionHost/ExtensionHostClosingTagCompletion.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Quote from '../Quote/Quote.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as CommandOpenCompletion from './EditorCommandCompletion.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import * as EditorTypeWithAutoClosingBracket from './EditorCommandTypeWithAutoClosingBracket.js'
+import * as EditorTypeWithAutoClosingQuote from './EditorCommandTypeWithAutoClosingQuote.js'
+import * as EditorTypeWithAutoClosingTag from './EditorCommandTypeWithAutoClosingTag.js'
 import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
-const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
 const RE_WHITESPACE = /^\s+$/
 
 export const state = {
   listeners: [],
 }
-
-const getMatchingClosingBrace = (brace) => {
-  switch (brace) {
-    case Bracket.CurlyOpen:
-      return Bracket.CurlyClose
-    case Bracket.RoundOpen:
-      return Bracket.RoundClose
-    case Bracket.SquareOpen:
-      return Bracket.SquareClose
-    default:
-      return '???'
-  }
-}
-
-const isBrace = (text) => {
-  if (text.length !== 1) {
-    return false
-  }
-  switch (text) {
-    case Bracket.CurlyOpen:
-    case Bracket.RoundOpen:
-    case Bracket.SquareClose:
-      return true
-    default:
-      return false
-  }
-}
-
-const isSlash = (text) => {
-  return text === '/'
-}
-
-const editorTypeWithBraceCompletion = async (editor, text) => {
-  const offset = TextDocument.offsetAt(editor, editor.cursor)
-  const result = await ExtensionHostBraceCompletion.executeBraceCompletionProvider(editor, offset, text)
-  if (result) {
-    const closingBrace = getMatchingClosingBrace(text)
-    const insertText = text + closingBrace
-    const changes = editorReplaceSelections(editor, [insertText], EditOrigin.EditorType)
-    return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-  }
-  const changes = editorReplaceSelections(editor, [text], EditOrigin.EditorType)
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-}
-
-const editorTypeWithSlashCompletion = async (editor, text) => {
-  const offset = TextDocument.offsetAt(editor, editor.cursor)
-  const result = await ExtensionHostClosingTag.executeClosingTagProvider(editor, offset, text)
-  const changes = editorReplaceSelections(editor, [text], EditOrigin.EditorType)
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-}
-
-const getAutoClosingRangeChanges = []
 
 const isAutoClosingBracketsEnabled = () => {
   return Boolean(Preferences.get('editor.autoClosingBrackets'))
@@ -86,31 +32,6 @@ const isQuickSuggestionsEnabled = () => {
   return Boolean(Preferences.get('editor.quickSuggestions'))
 }
 
-const typeWithAutoClosingBracket = (editor, text) => {
-  const closingBracket = getMatchingClosingBrace(text)
-  const newText = text + closingBracket
-  const changes = editorReplaceSelections(editor, [newText], EditOrigin.EditorTypeWithAutoClosing)
-  const selectionChanges = new Uint32Array([
-    changes[0].start.rowIndex,
-    changes[0].start.columnIndex + 1,
-    changes[0].end.rowIndex,
-    changes[0].end.columnIndex + 1,
-  ])
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
-}
-
-const typeWithAutoClosingQuote = (editor, text) => {
-  const newText = text + text
-  const changes = editorReplaceSelections(editor, [newText], EditOrigin.EditorTypeWithAutoClosing)
-  const selectionChanges = new Uint32Array([
-    changes[0].start.rowIndex,
-    changes[0].start.columnIndex + 1,
-    changes[0].end.rowIndex,
-    changes[0].end.columnIndex + 1,
-  ])
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes, selectionChanges)
-}
-
 const typeWithAutoClosingDisabled = (editor, text) => {
   const changes = editorReplaceSelections(editor, [text], EditOrigin.EditorType)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
@@ -118,17 +39,6 @@ const typeWithAutoClosingDisabled = (editor, text) => {
 
 const isAutoClosingTagsEnabled = () => {
   return true
-}
-
-const typeWithAutoClosingTag = async (editor, text) => {
-  const offset = TextDocument.offsetAt(editor, editor.selections[0], editor.selections[1])
-  const result = await ExtensionHostClosingTag.executeClosingTagProvider(editor, offset, text)
-  if (result === undefined) {
-    const changes = editorReplaceSelections(editor, [text], EditOrigin.EditorType)
-    return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-  }
-  const changes = editorReplaceSelections(editor, [result.inserted], EditOrigin.EditorType)
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
 const openCompletion = async (editor, text) => {
@@ -149,20 +59,20 @@ export const typeWithAutoClosing = async (editor, text) => {
     case Bracket.RoundOpen:
     case Bracket.SquareOpen:
       if (isAutoClosingBracketsEnabled()) {
-        return typeWithAutoClosingBracket(editor, text)
+        return EditorTypeWithAutoClosingBracket.typeWithAutoClosingBracket(editor, text)
       }
       break
     case Quote.DoubleQuote:
     case Quote.SingleQuote:
     case Quote.BackTick:
       if (isAutoClosingQuotesEnabled()) {
-        return typeWithAutoClosingQuote(editor, text)
+        return EditorTypeWithAutoClosingQuote.typeWithAutoClosingQuote(editor, text)
       }
       break
     // case AutoClosing.ClosingAngleBracket: // TODO support auto closing when typing closing angle bracket of start tag
     case AutoClosing.Slash:
       if (isAutoClosingTagsEnabled()) {
-        return typeWithAutoClosingTag(editor, text)
+        return EditorTypeWithAutoClosingTag.typeWithAutoClosingTag(editor, text)
       }
       break
     default:
