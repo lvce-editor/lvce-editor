@@ -1,9 +1,7 @@
-import * as Character from '../Character/Character.js'
+import * as GetFileExtension from '../GetFileExtension/GetFileExtension.js'
 
 export const fileExtension = (uri) => {
-  const extensionIndex = uri.lastIndexOf(Character.Dot)
-  const extension = uri.slice(extensionIndex)
-  return extension
+  return GetFileExtension.getFileExtension(uri)
 }
 
 export const join = (pathSeparator, ...parts) => {

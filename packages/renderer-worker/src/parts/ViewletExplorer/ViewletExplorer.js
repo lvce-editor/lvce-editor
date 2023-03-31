@@ -4,6 +4,7 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetFileExtension from '../GetFileExtension/GetFileExtension.js'
 import * as Height from '../Height/Height.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
@@ -15,7 +16,6 @@ import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewl
 import * as Workspace from '../Workspace/Workspace.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEndIndex, getParentStartIndex } from './ViewletExplorerShared.js'
-
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -753,17 +753,13 @@ export const dispose = (state) => {
 
 const IMAGE_EXTENSIONS = new Set(['.png', '.jpeg', '.jpg', '.gif', '.svg', '.ico'])
 
-const getFileExtension = (file) => {
-  return file.slice(file.lastIndexOf('.'))
-}
-
 const isImage = (dirent) => {
   // TODO explorer state must be updated when changing folder
   // This is just a workaround
   if (!dirent) {
     return false
   }
-  const fileExtension = getFileExtension(dirent.path)
+  const fileExtension = GetFileExtension.getFileExtension(dirent.path)
   return IMAGE_EXTENSIONS.has(fileExtension)
 }
 
