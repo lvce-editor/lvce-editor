@@ -13,7 +13,6 @@ const getHighlights = (item, leadingWord) => {
 const getVisibleIem = (item, itemHeight, leadingWord, i) => {
   return {
     label: getLabel(item),
-    icon: EditorCompletionMap.getIcon(item),
     symbolName: EditorCompletionMap.getSymbolName(item),
     top: i * itemHeight,
     highlights: getHighlights(item, leadingWord),
