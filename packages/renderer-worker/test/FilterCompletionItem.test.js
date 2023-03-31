@@ -35,7 +35,7 @@ test('filterCompletionItem - word start 2', () => {
 })
 
 test('filterCompletionItem - last character', () => {
-  expect(FilterCompletionItem.filterCompletionItem('d', 'Hello World')).toEqual([expect.any(Number), 10, 11])
+  expect(FilterCompletionItem.filterCompletionItem('d', 'Hello World')).toEqual([])
 })
 
 test('prefer whole word to scattered letters 1', () => {
@@ -80,7 +80,7 @@ test('prefer acronym to scattered letters 2', () => {
 })
 
 test('filterCompletionItem - middle', () => {
-  expect(FilterCompletionItem.filterCompletionItem('elwor', 'Hello World')).toEqual([expect.any(Number), 1, 3, 6, 9])
+  expect(FilterCompletionItem.filterCompletionItem('elwor', 'Hello World')).toEqual([])
 })
 
 test('filterCompletionItem - three partial matches', () => {
@@ -132,7 +132,7 @@ test('filterCompletionItem - no match', () => {
 })
 
 test('filterCompletionItem - odd match', () => {
-  expect(FilterCompletionItem.filterCompletionItem('font', 'justify-content')).toEqual([expect.any(Number), 5, 6, 9, 12])
+  expect(FilterCompletionItem.filterCompletionItem('font', 'justify-content')).toEqual([])
 })
 
 test('filterCompletionItem - match by three word starts', () => {
@@ -228,4 +228,8 @@ test('vscode - fuzzyScore - form - editor.formatOnSave', () => {
 
 test('vscode - fuzzyScore - is - ImportStatement', () => {
   expect(FilterCompletionItem.filterCompletionItem('is', 'ImportStatement')).toEqual([expect.any(Number), 0, 1, 6, 7])
+})
+
+test('filterCompletionItem - filter out weak match', () => {
+  expect(FilterCompletionItem.filterCompletionItem('cla', 'oncanplay')).toEqual([])
 })
