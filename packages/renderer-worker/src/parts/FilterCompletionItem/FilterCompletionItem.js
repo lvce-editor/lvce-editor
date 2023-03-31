@@ -1,5 +1,7 @@
 // based on https://github.com/microsoft/vscode/blob/3059063b805ed0ac10a6d9539e213386bfcfb852/src/vs/base/common/filters.ts by Microsoft (License MIT)
 import * as Arrow from '../Arrow/Arrow.js'
+import * as IsLowerCase from '../IsLowerCase/IsLowerCase.js'
+import * as IsUpperCase from '../IsUpperCase/IsUpperCase.js'
 import * as PrintTable from '../PrintTable/PrintTable.js'
 import * as TraceHighlights from '../TraceHighlights/TraceHighlights.js'
 
@@ -18,12 +20,34 @@ const table = createTable(gridSize)
 const arrows = createTable(gridSize)
 const diag = createTable()
 
-const getScore = (rowChar, columnChar, column, wordLength) => {
-  const baseScore = rowChar === columnChar ? 7 : -1
-  if (column === wordLength && baseScore === 7) {
-    return 5
+const isGap = (columnCharBefore, columnChar) => {
+  switch (columnCharBefore) {
+    // TODO use char enum
+    case '-':
+    case '_':
+    case '':
+      return true
+    default:
+      break
   }
-  return baseScore
+  if (IsLowerCase.isLowerCase(columnCharBefore) && IsUpperCase.isUpperCase(columnChar)) {
+    return true
+  }
+  return false
+}
+
+const getScore = (rowChar, columnCharBefore, columnChar, column, wordLength, isDiagonalMatch) => {
+  const isMatch = rowChar === columnChar
+  if (isMatch) {
+    if (isDiagonalMatch) {
+      return 8
+    }
+    if (isGap(columnCharBefore, columnChar)) {
+      return 8
+    }
+    return 7
+  }
+  return -1
 }
 
 const isPatternInWord = (patternLow, patternPos, patternLen, wordLow, wordPos, wordLen) => {
@@ -58,11 +82,16 @@ export const filterCompletionItem = (pattern, word) => {
     const rowChar = pattern[row - 1]
     for (let column = 1; column < wordLength + 1; column++) {
       const columnChar = word[column - 1]
-      const score = getScore(rowChar, columnChar, column, wordLength)
+      const columnCharBefore = word[column - 2] || ''
+      const isDiagonalMatch = arrows[row - 1][column - 1] === Arrow.Diagonal
+      const score = getScore(rowChar, columnCharBefore, columnChar, column, wordLength, isDiagonalMatch)
       let diagonalScore = score + table[row - 1][column - 1]
-      if (arrows[row - 1][column - 1] === Arrow.Diagonal) {
-        diagonalScore++
+      if (isDiagonalMatch && score !== -1) {
+        diagonalScore += 2
       }
+      // if (isGap(columnCharBefore, columnChar) && score !== -1) {
+      //   diagonalScore += 2
+      // }
       let leftScore = table[row][column - 1]
       if (leftScore > diagonalScore) {
         table[row][column] = leftScore
@@ -77,3 +106,7 @@ export const filterCompletionItem = (pattern, word) => {
   const highlights = TraceHighlights.traceHighlights(table, arrows, patternLength, wordLength)
   return highlights
 }
+
+// filterCompletionItem('font-fs', 'font-feature-settings') //?
+// filterCompletionItem('acon', 'application_control') //?
+// filterCompletionItem('file', 'filter gruntfile filler') //?
