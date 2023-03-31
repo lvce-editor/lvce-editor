@@ -5,6 +5,7 @@ import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
+import * as IsWhitespace from '../IsWhitespace/IsWhitespace.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Quote from '../Quote/Quote.js'
 import * as CommandOpenCompletion from './EditorCommandCompletion.js'
@@ -13,7 +14,6 @@ import * as EditorTypeWithAutoClosingBracket from './EditorCommandTypeWithAutoCl
 import * as EditorTypeWithAutoClosingQuote from './EditorCommandTypeWithAutoClosingQuote.js'
 import * as EditorTypeWithAutoClosingTag from './EditorCommandTypeWithAutoClosingTag.js'
 import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
-import * as IsWhitespace from '../IsWhitespace/IsWhitespace.js'
 
 export const state = {
   listeners: [],
