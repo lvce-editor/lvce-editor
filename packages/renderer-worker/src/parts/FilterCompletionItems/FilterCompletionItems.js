@@ -1,6 +1,16 @@
 import * as FilterCompletionItem from '../FilterCompletionItem/FilterCompletionItem.js'
 
+const addEmptyMatch = (item) => {
+  return {
+    ...item,
+    matches: [],
+  }
+}
+
 export const filterCompletionItems = (completionItems, word) => {
+  if (word === '') {
+    return completionItems.map(addEmptyMatch)
+  }
   const filteredCompletions = []
   for (const completionItem of completionItems) {
     const { label } = completionItem
