@@ -3,7 +3,8 @@
   --SymbolPropertyForeground: #aaaaaa;
 }
 
-.SymbolValue {
+.SymbolValue,
+.SymbolDefault {
   color: var(--SymbolValueForeground);
   -webkit-mask-image: url(/icons/symbol-enum.svg);
   mask-image: url(/icons/symbol-enum.svg);
