@@ -1,4 +1,3 @@
-// import * as EditorCompletion from '../EditorCompletion/EditorCompletion.js'
 import * as AutoClosing from '../AutoClosing/AutoClosing.js'
 import * as Bracket from '../Bracket/Bracket.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
@@ -9,6 +8,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as Quote from '../Quote/Quote.js'
 import * as CommandOpenCompletion from './EditorCommandCompletion.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import * as EditorType from './EditorCommandType.js'
 import * as EditorTypeWithAutoClosingBracket from './EditorCommandTypeWithAutoClosingBracket.js'
 import * as EditorTypeWithAutoClosingQuote from './EditorCommandTypeWithAutoClosingQuote.js'
 import * as EditorTypeWithAutoClosingTag from './EditorCommandTypeWithAutoClosingTag.js'
@@ -79,7 +79,7 @@ export const typeWithAutoClosing = async (editor, text) => {
       break
   }
 
-  const newEditor = typeWithAutoClosingDisabled(editor, text)
+  const newEditor = EditorType.type(editor, text)
   RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorType, text)
   if (isQuickSuggestionsEnabled() && newEditor.completionState === EditorCompletionState.None) {
     openCompletion(newEditor, text)
