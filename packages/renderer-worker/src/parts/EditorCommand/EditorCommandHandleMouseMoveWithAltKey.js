@@ -3,6 +3,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as ExtensionHostDefinition from '../ExtensionHost/ExtensionHostDefinition.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const getTokenIndex = (tokens, offset) => {
   let currentOffset = 0
@@ -53,7 +54,7 @@ export const handleMouseMoveWithAltKey = async (editor, x, y) => {
     // .tokens
     await RendererProcess.invoke(
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'EditorText',
+      /* id */ ViewletModuleId.EditorText,
       /* method */ 'highlightAsLink',
       /* relativeY */ definitionRelativeY,
       /* tokenIndex */ tokenIndex

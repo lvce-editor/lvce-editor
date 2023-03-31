@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const getInsertSnippet = (word, leadingWord) => {
   if (word.startsWith(leadingWord)) {
@@ -10,7 +11,7 @@ const getInsertSnippet = (word, leadingWord) => {
 }
 
 const getEditor = () => {
-  return Viewlet.getState('EditorText')
+  return Viewlet.getState(ViewletModuleId.EditorText)
 }
 
 const select = async (state, completionItem) => {
@@ -23,7 +24,7 @@ const select = async (state, completionItem) => {
     editor.completionState = EditorCompletionState.None
   }
   await Command.execute(/* Editor.type */ 'Editor.type', /* text */ snippet)
-  await Viewlet.dispose('EditorCompletion')
+  await Viewlet.dispose(ViewletModuleId.EditorCompletion)
   return state
 }
 
