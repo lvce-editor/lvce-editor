@@ -1,4 +1,5 @@
 // based on https://github.com/babel/babel/blob/6be6e04f396f03feace4431f709564a8d842163a/packages/babel-code-frame/src/index.ts (License MIT)
+import * as Character from '../Character/Character.js'
 
 /**
  * RegExp to test for newlines in terminal.
@@ -91,34 +92,21 @@ export const create = (rawLines, loc, opts = {}) => {
       if (hasMarker) {
         let markerLine = ''
         if (Array.isArray(hasMarker)) {
-          const markerSpacing = line
-            .slice(0, Math.max(hasMarker[0] - 1, 0))
-            .replace(/[^\t]/g, ' ')
+          const markerSpacing = line.slice(0, Math.max(hasMarker[0] - 1, 0)).replace(/[^\t]/g, ' ')
           const numberOfMarkers = hasMarker[1] || 1
 
-          markerLine = [
-            '\n ',
-            gutter.replace(/\d/g, ' '),
-            ' ',
-            markerSpacing,
-            '^'.repeat(numberOfMarkers),
-          ].join('')
+          markerLine = ['\n ', gutter.replace(/\d/g, ' '), ' ', markerSpacing, '^'.repeat(numberOfMarkers)].join('')
 
           if (lastMarkerLine && opts.message) {
             markerLine += ' ' + opts.message
           }
         }
-        return [
-          '>',
-          gutter,
-          line.length > 0 ? ` ${line}` : '',
-          markerLine,
-        ].join('')
+        return ['>', gutter, line.length > 0 ? ` ${line}` : '', markerLine].join('')
       } else {
         return ` ${gutter}${line.length > 0 ? ` ${line}` : ''}`
       }
     })
-    .join('\n')
+    .join(Character.NewLine)
 
   if (opts.message && !hasColumns) {
     frame = `${' '.repeat(numberMaxWidth + 1)}${opts.message}\n${frame}`
