@@ -1,5 +1,8 @@
 FROM gitpod/workspace-full-vnc:latest
 
+# install updates
+RUN sudo DEBIAN_FRONTEND=noninteractive apt-get update
+
 # Install Electron dependencies
 RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
         libgtk-3-0 \
