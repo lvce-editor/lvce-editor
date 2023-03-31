@@ -144,8 +144,7 @@ test('filterCompletionItem - match by first word and two word starts', () => {
 })
 
 test('vscode - Unexpected suggestion scoring, #28791', () => {
-  // TODO
-  expect(FilterCompletionItem.filterCompletionItem('_lines', '_lineStarts')).toEqual([expect.any(Number), 0, 5, 10, 11])
+  expect(FilterCompletionItem.filterCompletionItem('_lines', '_lineStarts')).toEqual([expect.any(Number), 0, 6])
 })
 
 test('vscode - fuzzyScore - ab - abA', () => {
@@ -169,8 +168,7 @@ test('vscode - fuzzyScore - cmcm - camelCase', () => {
 })
 
 test('vscode - fuzzyScore - BK - the_black_knight', () => {
-  // TODO
-  expect(FilterCompletionItem.filterCompletionItem('BK', 'the_black_knight')).toEqual([expect.any(Number)])
+  expect(FilterCompletionItem.filterCompletionItem('BK', 'the_black_knight')).toEqual([expect.any(Number), 4, 5, 10, 11])
 })
 
 test('vscode - fuzzyScore - KeyboardLayout= - KeyboardLayout', () => {
@@ -187,7 +185,7 @@ test.skip('vscode - fuzzyScore - LLLL - SVilLoLosLi', () => {
 })
 
 test('vscode - fuzzyScore - LLLL - SVisualLoggerLogsList', () => {
-  expect(FilterCompletionItem.filterCompletionItem('LLLL', 'SVisualLoggerLogsList')).toEqual([expect.any(Number), 7, 8, 13, 14, 17, 19])
+  expect(FilterCompletionItem.filterCompletionItem('LLLL', 'SVisualLoggerLogsList')).toEqual([expect.any(Number), 6, 8, 13, 14, 17, 18])
 })
 
 test('vscode - fuzzyScore - TEdit - TextEdit', () => {
@@ -200,11 +198,12 @@ test('vscode - fuzzyScore - TEdit - TextEditor', () => {
 
 test('vscode - fuzzyScore - TEdit - Textedit', () => {
   // TODO
-  expect(FilterCompletionItem.filterCompletionItem('TEdit', 'Textedit')).toEqual([expect.any(Number), 0, 2, 5, 8])
+  expect(FilterCompletionItem.filterCompletionItem('TEdit', 'Textedit')).toEqual([expect.any(Number), 0, 1, 4, 8])
 })
 
 test('vscode - fuzzyScore - TEdit - text_edit', () => {
-  expect(FilterCompletionItem.filterCompletionItem('TEdit', 'text_edit')).toEqual([expect.any(Number), 6, 9])
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('TEdit', 'text_edit')).toEqual([expect.any(Number), 0, 2, 6, 9])
 })
 
 test('vscode - fuzzyScore - bkn - the_black_knight', () => {
@@ -216,7 +215,7 @@ test('vscode - fuzzyScore - bt - the_black_knight', () => {
 })
 
 test('vscode - fuzzyScore - fdm - findModel', () => {
-  expect(FilterCompletionItem.filterCompletionItem('fdm', 'findModel')).toEqual([expect.any(Number), 0, 1, 6, 8])
+  expect(FilterCompletionItem.filterCompletionItem('fdm', 'findModel')).toEqual([expect.any(Number), 0, 1, 3, 5])
 })
 
 test('vscode - fuzzyScore - fob - foobar', () => {
@@ -228,6 +227,5 @@ test('vscode - fuzzyScore - form - editor.formatOnSave', () => {
 })
 
 test('vscode - fuzzyScore - is - ImportStatement', () => {
-  // TODO
-  expect(FilterCompletionItem.filterCompletionItem('is', 'ImportStatement')).toEqual([expect.any(Number)])
+  expect(FilterCompletionItem.filterCompletionItem('is', 'ImportStatement')).toEqual([expect.any(Number), 0, 1, 6, 7])
 })
