@@ -4,6 +4,7 @@ import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
+import * as IsWhitespace from '../IsWhitespace/IsWhitespace.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Quote from '../Quote/Quote.js'
 import * as CommandOpenCompletion from './EditorCommandCompletion.js'
@@ -13,8 +14,6 @@ import * as EditorTypeWithAutoClosingBracket from './EditorCommandTypeWithAutoCl
 import * as EditorTypeWithAutoClosingQuote from './EditorCommandTypeWithAutoClosingQuote.js'
 import * as EditorTypeWithAutoClosingTag from './EditorCommandTypeWithAutoClosingTag.js'
 import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
-
-const RE_WHITESPACE = /^\s+$/
 
 export const state = {
   listeners: [],
@@ -42,7 +41,7 @@ const isAutoClosingTagsEnabled = () => {
 }
 
 const openCompletion = async (editor, text) => {
-  if (RE_WHITESPACE.test(text)) {
+  if (IsWhitespace.isWhitespace(text)) {
     return
   }
   editor.completionState = EditorCompletionState.Loading
