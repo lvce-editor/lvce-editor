@@ -89,6 +89,11 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
     replacement: `url(${assetDir}/icons/`,
   })
   await Replace.replace({
+    path: Path.join(outDir, 'parts', 'ViewletEditorCompletion.css'),
+    occurrence: `url(/icons/`,
+    replacement: `url(${assetDir}/icons/`,
+  })
+  await Replace.replace({
     path: appCssPath,
     occurrence: `url(/fonts/`,
     replacement: `url(${assetDir}/fonts/`,

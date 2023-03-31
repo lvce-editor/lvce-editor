@@ -4,7 +4,6 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Label from '../Label/Label.js'
-import * as MaskImage from '../MaskImage/MaskImage.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
@@ -26,7 +25,6 @@ const render$CompletionItem = ($Item, item) => {
   const $Icon = $Item.children[0]
   const $Label = $Item.children[1]
   $Icon.className = `ColoredMaskIcon ${item.symbolName}`
-  MaskImage.setMaskImage($Icon, item.icon)
 
   if (item.highlights.length === 0) {
     $Label.textContent = item.label
