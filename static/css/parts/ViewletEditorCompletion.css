@@ -26,6 +26,7 @@
 .CompletionHighlight {
   color: var(--CompletionHighlightForeground, #e1b974);
   font-weight: 700;
+  contain: content;
 }
 
 .EditorCompletionItem:hover {
