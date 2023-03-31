@@ -2,6 +2,7 @@
 import * as Arrow from '../Arrow/Arrow.js'
 import * as CreateTable from '../CreateTable/CreateTable.js'
 import * as IsGap from '../IsGap/IsGap.js'
+import * as IsPatternInWord from '../IsPatternInWord/IsPatternInWord.js'
 import * as PrintTable from '../PrintTable/PrintTable.js'
 import * as TraceHighlights from '../TraceHighlights/TraceHighlights.js'
 
@@ -31,16 +32,6 @@ const getScore = (rowCharLow, rowChar, columnCharBefore, columnCharLow, columnCh
   return 5
 }
 
-const isPatternInWord = (patternLow, patternPos, patternLen, wordLow, wordPos, wordLen) => {
-  while (patternPos < patternLen && wordPos < wordLen) {
-    if (patternLow[patternPos] === wordLow[wordPos]) {
-      patternPos += 1
-    }
-    wordPos += 1
-  }
-  return patternPos === patternLen // pattern must be exhausted
-}
-
 const printTables = (pattern, patternStart, word, wordStart) => {
   pattern = pattern.substr(patternStart)
   word = word.substr(wordStart)
@@ -56,7 +47,7 @@ export const filterCompletionItem = (pattern, word) => {
   const wordLength = word.length
   const patternLower = pattern.toLowerCase()
   const wordLower = word.toLowerCase()
-  if (!isPatternInWord(patternLower, 0, patternLength, wordLower, 0, wordLength)) {
+  if (!IsPatternInWord.isPatternInWord(patternLower, 0, patternLength, wordLower, 0, wordLength)) {
     return Empty
   }
   let strongMatch = false
