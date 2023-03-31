@@ -28,6 +28,7 @@ const isGap = (columnCharBefore, columnChar) => {
     case '':
     case 't':
     case ' ':
+    case '.':
       return true
     default:
       break
@@ -50,7 +51,7 @@ const getScore = (rowCharLow, rowChar, columnCharBefore, columnCharLow, columnCh
     if (isGap(columnCharBefore, columnChar)) {
       return 8
     }
-    return 7
+    return 5
   }
   if (isGap(columnCharBefore, columnChar)) {
     return 8
@@ -86,6 +87,7 @@ export const filterCompletionItem = (pattern, word) => {
   if (!isPatternInWord(patternLower, 0, patternLength, wordLower, 0, wordLength)) {
     return Empty
   }
+  let strongMatch = false
   for (let row = 1; row < patternLength + 1; row++) {
     const rowChar = pattern[row - 1]
     const rowCharLow = patternLower[row - 1]
@@ -95,6 +97,12 @@ export const filterCompletionItem = (pattern, word) => {
       const columnCharBefore = word[column - 2] || ''
       const isDiagonalMatch = arrows[row - 1][column - 1] === Arrow.Diagonal
       const score = getScore(rowCharLow, rowChar, columnCharBefore, columnCharLow, columnChar, column, wordLength, isDiagonalMatch)
+      if (row === 1 && score > 5) {
+        score
+        column
+        pattern
+        strongMatch = true
+      }
       let diagonalScore = score + table[row - 1][column - 1]
       if (isDiagonalMatch && score !== -1) {
         diagonalScore += 2
@@ -108,6 +116,9 @@ export const filterCompletionItem = (pattern, word) => {
         arrows[row][column] = Arrow.Diagonal
       }
     }
+  }
+  if (!strongMatch) {
+    return Empty
   }
   // printTables(pattern, 0, word, 0)
   const highlights = TraceHighlights.traceHighlights(table, arrows, patternLength, wordLength)
