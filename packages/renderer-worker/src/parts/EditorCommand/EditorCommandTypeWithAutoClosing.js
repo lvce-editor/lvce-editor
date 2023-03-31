@@ -13,8 +13,7 @@ import * as EditorTypeWithAutoClosingBracket from './EditorCommandTypeWithAutoCl
 import * as EditorTypeWithAutoClosingQuote from './EditorCommandTypeWithAutoClosingQuote.js'
 import * as EditorTypeWithAutoClosingTag from './EditorCommandTypeWithAutoClosingTag.js'
 import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
-
-const RE_WHITESPACE = /^\s+$/
+import * as IsWhitespace from '../IsWhitespace/IsWhitespace.js'
 
 export const state = {
   listeners: [],
@@ -42,7 +41,7 @@ const isAutoClosingTagsEnabled = () => {
 }
 
 const openCompletion = async (editor, text) => {
-  if (RE_WHITESPACE.test(text)) {
+  if (IsWhitespace.isWhitespace(text)) {
     return
   }
   editor.completionState = EditorCompletionState.Loading
