@@ -102,7 +102,7 @@ export const filterCompletionItem = (pattern, word) => {
       }
     }
   }
-  // printTables(pattern, 0, word, 0)
+  printTables(pattern, 0, word, 0)
   const highlights = TraceHighlights.traceHighlights(table, arrows, patternLength, wordLength)
   return highlights
 }
@@ -110,3 +110,4 @@ export const filterCompletionItem = (pattern, word) => {
 // filterCompletionItem('font-fs', 'font-feature-settings') //?
 // filterCompletionItem('acon', 'application_control') //?
 // filterCompletionItem('file', 'filter gruntfile filler') //?
+filterCompletionItem('itc', 'ImportanceTableCtrl') //?
