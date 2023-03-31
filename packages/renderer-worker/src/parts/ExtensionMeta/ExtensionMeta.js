@@ -6,6 +6,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
+import * as Character from '../Character/Character.js'
 
 export const state = {
   /**
@@ -15,7 +16,7 @@ export const state = {
 }
 
 const getId = (path) => {
-  const slashIndex = path.lastIndexOf('/')
+  const slashIndex = path.lastIndexOf(Character.Slash)
   return path.slice(slashIndex + 1)
 }
 
@@ -39,7 +40,7 @@ export const addWebExtension = async (path) => {
   if (manifest.languages) {
     for (const language of manifest.languages) {
       if (language.tokenize) {
-        language.tokenize = manifest.path + '/' + language.tokenize
+        language.tokenize = manifest.path + Character.Slash + language.tokenize
       }
     }
   }

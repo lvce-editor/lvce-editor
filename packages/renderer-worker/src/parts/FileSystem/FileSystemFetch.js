@@ -42,8 +42,8 @@ export const readDirWithFileTypes = async (uri) => {
   for (const fileUri of fileList) {
     if (fileUri.startsWith(uri)) {
       const rest = fileUri.slice(uri.length + 1)
-      if (rest.includes('/')) {
-        const name = rest.slice(0, rest.indexOf('/'))
+      if (rest.includes(PathSeparatorType.Slash)) {
+        const name = rest.slice(0, rest.indexOf(PathSeparatorType.Slash))
         if (dirents.some((dirent) => dirent.name === name)) {
           continue
         }

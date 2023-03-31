@@ -1,3 +1,5 @@
+import * as Character from '../Character/Character.js'
+
 const isValidHttpUrl = (string) => {
   if (!string.startsWith('http:') && !string.startsWith('https:')) {
     return false
@@ -32,7 +34,7 @@ const isValidFileUrl = (input) => {
 }
 
 const isValidFilePath = (input) => {
-  return input.startsWith('/')
+  return input.startsWith(Character.Slash)
 }
 
 const isLocalHostUrlWithOutHttp = (input) => {
@@ -49,7 +51,7 @@ export const toIframeSrc = (input) => {
   if (isValidFilePath(input)) {
     return 'file://' + input
   }
-  const dotIndex = input.indexOf('.')
+  const dotIndex = input.indexOf(Character.Dot)
   if (dotIndex !== -1 && dotIndex !== input.length - 1) {
     return 'https://' + input
   }

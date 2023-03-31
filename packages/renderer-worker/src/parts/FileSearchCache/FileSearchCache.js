@@ -1,8 +1,9 @@
 import * as CacheStorage from '../CacheStorage/CacheStorage.js'
+import * as Character from '../Character/Character.js'
 import { VError } from '../VError/VError.js'
 
 const normalizeCacheKey = (cacheKey) => {
-  if (cacheKey.startsWith('/')) {
+  if (cacheKey.startsWith(Character.Slash)) {
     return cacheKey
   }
   return `/${cacheKey}`

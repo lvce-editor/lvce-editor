@@ -15,6 +15,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
+import * as Character from '../Character/Character.js'
 
 export const state = {
   seenFiles: [],
@@ -57,7 +58,7 @@ const getIconThemeJson = async (iconThemeId) => {
 }
 
 const getExtension = (file) => {
-  return file.slice(file.indexOf('.') + 1).toLowerCase()
+  return file.slice(file.indexOf(Character.Dot) + 1).toLowerCase()
 }
 
 export const getFileIcon = (file) => {
@@ -74,7 +75,7 @@ export const getFileIcon = (file) => {
   }
   if (iconTheme.fileExtensions) {
     let index = -1
-    while ((index = fileNameLower.indexOf('.', index + 1)) !== -1) {
+    while ((index = fileNameLower.indexOf(Character.Dot, index + 1)) !== -1) {
       const shorterExtension = fileNameLower.slice(index + 1)
       const extensionIcon = iconTheme.fileExtensions[shorterExtension]
       if (extensionIcon) {

@@ -1,5 +1,7 @@
+import * as Character from '../Character/Character.js'
+
 export const fileExtension = (uri) => {
-  const extensionIndex = uri.lastIndexOf('.')
+  const extensionIndex = uri.lastIndexOf(Character.Dot)
   const extension = uri.slice(extensionIndex)
   return extension
 }

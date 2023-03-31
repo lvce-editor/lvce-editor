@@ -8,6 +8,7 @@ import * as EditorBlur from './EditorCommandBlur.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 import * as ViewletState from '../ViewletStates/ViewletStates.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as Character from '../Character/Character.js'
 
 const handleBlur = () => {
   close()
@@ -34,10 +35,7 @@ const getLeadingWord = (line, columnIndex) => {
 
 const filterCompletionItems = (completionItems, leadingWord) => {
   const filterCompletionItem = (completionItem) => {
-    const labelMatch = FuzzySearch.fuzzySearch(
-      leadingWord,
-      completionItem.label
-    )
+    const labelMatch = FuzzySearch.fuzzySearch(leadingWord, completionItem.label)
     return labelMatch
   }
   console.log({ completionItems, leadingWord })
@@ -64,10 +62,7 @@ const handleSelectionChange = (editor, selectionChanges) => {
 
   // TODO this doesn't work for variable width characters (unicode/emoji)
 
-  const filteredCompletionItems = filterCompletionItems(
-    state.completionItems,
-    leadingWord
-  )
+  const filteredCompletionItems = filterCompletionItems(state.completionItems, leadingWord)
   state.filteredCompletionItems = filteredCompletionItems
   state.leadingWord = leadingWord
   console.log({ leadingWord })
@@ -93,16 +88,7 @@ const handleCursorChange = (anyEditor, cursorChange) => {
 
 export const openCompletion = async (editor, openingReason = 1) => {
   console.log('open editor completion')
-  const viewlet = ViewletManager.create(
-    ViewletModule.load,
-    'EditorCompletion',
-    'Widget',
-    'builtin://',
-    0,
-    0,
-    0,
-    0
-  )
+  const viewlet = ViewletManager.create(ViewletModule.load, 'EditorCompletion', 'Widget', 'builtin://', 0, 0, 0, 0)
 
   await ViewletManager.load(viewlet)
   return editor
@@ -190,11 +176,7 @@ export const advance = (word) => {
     return completionItem.includes(word)
   }
   const filteredCompletions = state.completionItems.filter(includesWord)
-  RendererProcess.invoke(
-    /* EditorCompletion.open */ 836,
-    /* items */ filteredCompletions,
-    /* reason */ state.openingReason
-  )
+  RendererProcess.invoke(/* EditorCompletion.open */ 836, /* items */ filteredCompletions, /* reason */ state.openingReason)
 }
 
 // export const onDidType = () => {}
@@ -210,7 +192,7 @@ const isCharacter = (text) => {
 
 // TODO trigger characters should be specific per language id
 const isTriggerCharacter = (text) => {
-  return text === '<' || text === '.'
+  return text === Character.OpenAngleBracket || text === Character.Dot
 }
 
 export const openFromType = async (editor, text) => {

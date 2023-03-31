@@ -5,6 +5,8 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Response from '../Response/Response.js'
 import * as ShouldIgnoreCacheStorageError from '../ShouldIgnoreCacheStorageError/ShouldIgnoreCacheStorageError.js'
 import { VError } from '../VError/VError.js'
+import * as Character from '../Character/Character.js'
+
 // TODO when caches is not defined -> should return undefined
 
 const getCache = async () => {
@@ -16,7 +18,7 @@ const getResponse = async (key) => {
   if (typeof caches === 'undefined') {
     return undefined
   }
-  if (Platform.platform === PlatformType.Electron && key.startsWith('/')) {
+  if (Platform.platform === PlatformType.Electron && key.startsWith(Character.Slash)) {
     // workaround for custom protocol not working with cache storage
     key = 'https://example.com' + key
   }
@@ -64,7 +66,7 @@ const setResponse = async (key, value, contentType) => {
   // TODO cache the cache (maybe)
   if (
     Platform.platform === 'electron' && // workaround for custom protocol not working with cache storage
-    key.startsWith('/')
+    key.startsWith(Character.Slash)
   ) {
     key = 'https://example.com' + key
   }

@@ -1,10 +1,11 @@
 import * as ModuleId from '../ModuleId/ModuleId.js'
+import * as Character from '../Character/Character.js'
 
 const getPrefix = (commandId) => {
   if (!commandId || typeof commandId !== 'string') {
     return commandId
   }
-  return commandId.slice(0, commandId.indexOf('.'))
+  return commandId.slice(0, commandId.indexOf(Character.Dot))
 }
 
 export const getModuleId = (commandId) => {
