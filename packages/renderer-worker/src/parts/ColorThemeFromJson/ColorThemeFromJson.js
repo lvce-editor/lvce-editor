@@ -1,3 +1,4 @@
+import * as Character from '../Character/Character.js'
 import * as Logger from '../Logger/Logger.js'
 
 const rgba = (r, g, b, a) => {
@@ -76,7 +77,9 @@ export const createColorThemeFromJson = (colorThemeId, colorThemeJson) => {
 }`
     )
   }
-  const colorThemeCss = `:root {\n${colorRules.join('\n')}\n}\n\n${tokenColorRules.join('\n')}\n\n${extraRules.join('\n')}`
+  const colorThemeCss = `:root {\n${colorRules.join(Character.NewLine)}\n}\n\n${tokenColorRules.join(Character.NewLine)}\n\n${extraRules.join(
+    Character.NewLine
+  )}`
   return colorThemeCss
 }
 
