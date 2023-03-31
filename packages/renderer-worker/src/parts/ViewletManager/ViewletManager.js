@@ -57,6 +57,24 @@ const runFn = async (instance, id, key, fn, args) => {
     return fn(instance.state, ...args)
   }
 }
+
+const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
+  if (!instance) {
+    console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
+    return
+  }
+  const oldState = instance.state
+  const result = await fn(oldState, ...args)
+  const { newState, commands } = result
+  Assert.object(newState)
+  // console.log({ fn, newState })
+  if (oldState !== newState) {
+    commands.push(...render(instance.factory, oldState, newState))
+    ViewletStates.setState(id, newState)
+  }
+  await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+}
+
 // TODO maybe wrapViewletCommand should accept module instead of id string
 // then check if instance.factory matches module -> only compare reference (int) instead of string
 // should be faster
@@ -76,19 +94,7 @@ const wrapViewletCommandWithSideEffect = (id, key, fn) => {
   const wrappedViewletCommand = async (...args) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
-    if (!activeInstance) {
-      console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
-      return
-    }
-    const oldState = activeInstance.state
-    const { newState, commands } = await fn(oldState, ...args)
-    Assert.object(newState)
-    // console.log({ fn, newState })
-    if (oldState !== newState) {
-      commands.push(...render(activeInstance.factory, oldState, newState))
-      ViewletStates.setState(id, newState)
-    }
-    await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+    await runFnWithSideEffect(activeInstance, id, key, fn, ...args)
   }
   NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, key)
   return wrappedViewletCommand
@@ -108,6 +114,19 @@ const wrapViewletCommandLazy = (id, key, importFn) => {
   return lazyCommand
 }
 
+const wrapViewletCommandWithSideEffectLazy = (id, key, importFn) => {
+  const lazyCommand = async (...args) => {
+    const module = await importFn()
+    const fn = module[key]
+    if (typeof fn !== 'function') {
+      throw new Error(`${id}.${key} is not a function`)
+    }
+    const activeInstance = ViewletStates.getInstance(id)
+    await runFnWithSideEffect(activeInstance, id, key, fn, ...args)
+  }
+  NameAnonymousFunction.nameAnonymousFunction(lazyCommand, `${id}/lazy/${key}`)
+  return lazyCommand
+}
 /**
  *
  * @param {()=>any} getModule
@@ -188,6 +207,9 @@ const maybeRegisterWrappedCommands = (id, module) => {
   }
   if (module.CommandsWithSideEffects) {
     registerWrappedCommands(module.CommandsWithSideEffects, id, wrapViewletCommandWithSideEffect)
+  }
+  if (module.CommandsWithSideEffectsLazy) {
+    registerWrappedCommands(module.CommandsWithSideEffectsLazy, id, wrapViewletCommandWithSideEffectLazy)
   }
   if (module.LazyCommands) {
     registerWrappedCommands(module.LazyCommands, id, wrapViewletCommandLazy)

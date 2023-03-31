@@ -58,20 +58,29 @@ export const typeWithAutoClosing = async (editor, text) => {
     case Bracket.RoundOpen:
     case Bracket.SquareOpen:
       if (isAutoClosingBracketsEnabled()) {
-        return EditorTypeWithAutoClosingBracket.typeWithAutoClosingBracket(editor, text)
+        return {
+          newState: EditorTypeWithAutoClosingBracket.typeWithAutoClosingBracket(editor, text),
+          commands: [],
+        }
       }
       break
     case Quote.DoubleQuote:
     case Quote.SingleQuote:
     case Quote.BackTick:
       if (isAutoClosingQuotesEnabled()) {
-        return EditorTypeWithAutoClosingQuote.typeWithAutoClosingQuote(editor, text)
+        return {
+          newState: EditorTypeWithAutoClosingQuote.typeWithAutoClosingQuote(editor, text),
+          commands: [],
+        }
       }
       break
     // case AutoClosing.ClosingAngleBracket: // TODO support auto closing when typing closing angle bracket of start tag
     case AutoClosing.Slash:
       if (isAutoClosingTagsEnabled()) {
-        return EditorTypeWithAutoClosingTag.typeWithAutoClosingTag(editor, text)
+        return {
+          newState: await EditorTypeWithAutoClosingTag.typeWithAutoClosingTag(editor, text),
+          commands: [],
+        }
       }
       break
     default:
@@ -79,11 +88,15 @@ export const typeWithAutoClosing = async (editor, text) => {
   }
 
   const newEditor = EditorType.type(editor, text)
-  RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorType, text)
+  const extraCommands = RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorType, text)
   if (isQuickSuggestionsEnabled() && newEditor.completionState === EditorCompletionState.None) {
     openCompletion(newEditor, text)
   }
-  return newEditor
+
+  return {
+    newState: newEditor,
+    commands: extraCommands,
+  }
   // if (isBrace(text)) {
   //   console.log('is brace')
   //   return editorTypeWithBraceCompletion(editor, text)

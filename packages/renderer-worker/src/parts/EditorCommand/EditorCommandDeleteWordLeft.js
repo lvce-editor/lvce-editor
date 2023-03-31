@@ -5,6 +5,8 @@ import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 export const deleteWordLeft = (editor) => {
   const newEditor = EditorDeleteHorizontalLeft.editorDeleteHorizontalLeft(editor, EditorDelta.wordLeft)
-  RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorDeleteLeft)
-  return newEditor
+  return {
+    newState: newEditor,
+    commands: RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorDeleteLeft),
+  }
 }
