@@ -6,5 +6,8 @@ export const handleTripleClick = (editor, modifier, x, y) => {
   Assert.object(editor)
   Assert.number(x)
   Assert.number(y)
-  return EditorSelectLine.selectLine(editor)
+  return {
+    newState: EditorSelectLine.selectLine(editor),
+    commands: [],
+  }
 }

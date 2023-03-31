@@ -15,8 +15,10 @@ export const blur = (editor) => {
     ...editor,
     focused: false,
   }
-  RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorBlur)
-  return newEditor
+  return {
+    newState: newEditor,
+    commands: RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorBlur),
+  }
 }
 
 export const registerListener = (fn) => {

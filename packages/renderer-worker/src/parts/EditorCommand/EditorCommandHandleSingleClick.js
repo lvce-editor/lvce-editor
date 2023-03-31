@@ -79,10 +79,15 @@ export const handleSingleClick = async (editor, modifier, x, y) => {
     case EditorCompletionState.None:
     case EditorCompletionState.Visible:
     case EditorCompletionState.Loading:
-      RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorClick)
-      break
+      return {
+        newState: newEditor,
+        commands: RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleEditorClick),
+      }
     default:
       break
   }
-  return newEditor
+  return {
+    newState: newEditor,
+    commands: [],
+  }
 }

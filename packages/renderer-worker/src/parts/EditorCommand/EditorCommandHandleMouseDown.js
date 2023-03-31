@@ -12,6 +12,6 @@ export const handleMouseDown = (state, modifier, x, y, detail) => {
     case ClickDetailType.Triple:
       return EditorHandleTripleClick.handleTripleClick(state, modifier, x, y)
     default:
-      return state
+      return { newState: state, commands: [] }
   }
 }

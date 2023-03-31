@@ -221,12 +221,20 @@ export const getState = (id) => {
   return instance.state
 }
 
-export const setState = async (id, newState) => {
+export const setStateFunctional = (id, newState) => {
   const instance = ViewletStates.getInstance(id)
   if (instance && instance.factory && instance.factory.hasFunctionalRender) {
     const oldState = instance.state
     const commands = ViewletManager.render(instance.factory, oldState, newState)
     instance.state = newState
+    return commands
+  }
+  return []
+}
+
+export const setState = async (id, newState) => {
+  const commands = setStateFunctional(id, newState)
+  if (commands.length > 0) {
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
   }
 }

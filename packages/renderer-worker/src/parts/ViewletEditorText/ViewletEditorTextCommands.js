@@ -6,7 +6,6 @@ export const Commands = {
 // prettier-ignore
 export const LazyCommands = {
   applyEdit: () => import('../EditorCommand/EditorCommandApplyEdit.js'),
-  blur: () => import('../EditorCommand/EditorCommandBlur.js'),
   braceCompletion: () => import('../EditorCommand/EditorCommandBraceCompletion.js'),
   cancelSelection: () => import('../EditorCommand/EditorCommandCancelSelection.js'),
   closeCompletion: () => import('../EditorCommand/EditorCommandCloseCompletion.js'),
@@ -33,10 +32,8 @@ export const LazyCommands = {
   cut: () => import('../EditorCommand/EditorCommandCut.js'),
   deleteAllLeft: () => import('../EditorCommand/EditorCommandDeleteAllLeft.js'),
   deleteAllRight: () => import('../EditorCommand/EditorCommandDeleteAllRight.js'),
-  deleteLeft: () => import('../EditorCommand/EditorCommandDeleteCharacterLeft.js'),
   deleteRight: () => import('../EditorCommand/EditorCommandDeleteCharacterRight.js'),
-  deleteWordLeft: () => import('../EditorCommand/EditorCommandDeleteWordLeft.js'),
-  deleteWordPartLeft: () => import('../EditorCommand/EditorCommandDeleteWordPartLeft.js'),
+
   deleteWordPartRight: () => import('../EditorCommand/EditorCommandDeleteWordPartRight.js'),
   deleteWordRight: () => import('../EditorCommand/EditorCommandDeleteWordRight.js'),
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
@@ -44,8 +41,7 @@ export const LazyCommands = {
   goToTypeDefinition: () => import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
   handleBeforeInputFromContentEditable: () => import('../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'),
   handleContextMenu: () => import('../EditorCommand/EditorCommandHandleContextMenu.js'),
-  handleDoubleClick: () => import('../EditorCommand/EditorCommandHandleDoubleClick.js'),
-  handleMouseDown: () => import('../EditorCommand/EditorCommandHandleMouseDown.js'),
+
   handleMouseMove: () => import('../EditorCommand/EditorCommandHandleMouseMove.js'),
   handleMouseMoveWithAltKey: () => import('../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.js'),
   handleNativeSelectionChange: () => import('../EditorCommand/EditorCommandHandleNativeSelectionChange.js'),
@@ -55,12 +51,10 @@ export const LazyCommands = {
   handleScrollBarHorizontalPointerDown: ()=>import('../EditorCommand/EditorCommandHandleScrollBarHorizontalPointerDown.js'),
   handleScrollBarMove: () => import('../EditorCommand/EditorCommandHandleScrollBarMove.js'),
   handleScrollBarPointerDown: () => import('../EditorCommand/EditorCommandHandleScrollBarPointerDown.js'),
-  handleSingleClick: () => import('../EditorCommand/EditorCommandHandleSingleClick.js'),
   handleTab: () => import('../EditorCommand/EditorCommandHandleTab.js'),
   handleTouchEnd: () => import('../EditorCommand/EditorCommandHandleTouchEnd.js'),
   handleTouchMove: () => import('../EditorCommand/EditorCommandHandleTouchMove.js'),
   handleTouchStart: () => import('../EditorCommand/EditorCommandHandleTouchStart.js'),
-  handleTripleClick: () => import('../EditorCommand/EditorCommandHandleTripleClick.js'),
   indentLess: () => import('../EditorCommand/EditorCommandIndentLess.js'),
   indentMore: () => import('../EditorCommand/EditorCommandIndentMore.js'),
   insertLineBreak: () => import('../EditorCommand/EditorCommandInsertLineBreak.js'),
@@ -97,7 +91,18 @@ export const LazyCommands = {
   toggleBlockComment: () => import('../EditorCommand/EditorCommandToggleBlockComment.js'),
   toggleComment: () => import('../EditorCommand/EditorCommandToggleComment.js'),
   type: () => import('../EditorCommand/EditorCommandType.js'),
-  typeWithAutoClosing: () => import('../EditorCommand/EditorCommandTypeWithAutoClosing.js'),
   undo: () => import('../EditorCommand/EditorCommandUndo.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
+}
+
+export const CommandsWithSideEffectsLazy = {
+  typeWithAutoClosing: () => import('../EditorCommand/EditorCommandTypeWithAutoClosing.js'),
+  handleSingleClick: () => import('../EditorCommand/EditorCommandHandleSingleClick.js'),
+  deleteWordLeft: () => import('../EditorCommand/EditorCommandDeleteWordLeft.js'),
+  deleteWordPartLeft: () => import('../EditorCommand/EditorCommandDeleteWordPartLeft.js'),
+  blur: () => import('../EditorCommand/EditorCommandBlur.js'),
+  deleteLeft: () => import('../EditorCommand/EditorCommandDeleteCharacterLeft.js'),
+  handleDoubleClick: () => import('../EditorCommand/EditorCommandHandleDoubleClick.js'),
+  handleMouseDown: () => import('../EditorCommand/EditorCommandHandleMouseDown.js'),
+  handleTripleClick: () => import('../EditorCommand/EditorCommandHandleTripleClick.js'),
 }

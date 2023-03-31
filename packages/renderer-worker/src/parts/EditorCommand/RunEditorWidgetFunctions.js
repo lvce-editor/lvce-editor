@@ -2,22 +2,24 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-export const runEditorWidgetFunctions = async (editor, fnName, ...args) => {
+export const runEditorWidgetFunctions = (editor, fnName, ...args) => {
+  const allCommands = []
   if (editor.widgets) {
     for (const widget of editor.widgets) {
       const instance = ViewletStates.getInstance(widget)
       if (!instance) {
-        return
+        return []
       }
       const { state, factory } = instance
       const newState = factory[fnName](state, editor, ...args)
       if (newState.disposed) {
         const index = editor.widgets.indexOf(widget)
         editor.widgets.splice(index, 1)
-        await Viewlet.dispose(widget)
+        allCommands.push(Viewlet.disposeFunctional(widget))
       } else {
-        await Viewlet.setState(widget, newState)
+        allCommands.push(...Viewlet.setStateFunctional(widget, newState))
       }
     }
   }
+  return allCommands
 }
