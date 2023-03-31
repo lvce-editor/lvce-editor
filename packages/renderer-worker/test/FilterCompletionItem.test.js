@@ -142,3 +142,92 @@ test('filterCompletionItem - match by three word starts', () => {
 test('filterCompletionItem - match by first word and two word starts', () => {
   expect(FilterCompletionItem.filterCompletionItem('font-fs', 'font-feature-settings')).toEqual([expect.any(Number), 0, 6, 13, 14])
 })
+
+test('vscode - Unexpected suggestion scoring, #28791', () => {
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('_lines', '_lineStarts')).toEqual([expect.any(Number), 0, 5, 10, 11])
+})
+
+test('vscode - fuzzyScore - ab - abA', () => {
+  expect(FilterCompletionItem.filterCompletionItem('ab', 'abA')).toEqual([expect.any(Number), 0, 2])
+})
+
+test('vscode - fuzzyScore - ccm - cacmelCase', () => {
+  expect(FilterCompletionItem.filterCompletionItem('ccm', 'cacmelCase')).toEqual([expect.any(Number), 0, 1, 2, 4])
+})
+
+test('vscode - fuzzyScore - bti - the_black_knight', () => {
+  expect(FilterCompletionItem.filterCompletionItem('bti', 'the_black_knight')).toEqual([])
+})
+
+test('vscode - fuzzyScore - ccm - camelCase', () => {
+  expect(FilterCompletionItem.filterCompletionItem('ccm', 'camelCase')).toEqual([])
+})
+
+test('vscode - fuzzyScore - cmcm - camelCase', () => {
+  expect(FilterCompletionItem.filterCompletionItem('cmcm', 'camelCase')).toEqual([])
+})
+
+test('vscode - fuzzyScore - BK - the_black_knight', () => {
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('BK', 'the_black_knight')).toEqual([expect.any(Number)])
+})
+
+test('vscode - fuzzyScore - KeyboardLayout= - KeyboardLayout', () => {
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('KeyboardLayout=', 'KeyboardLayout')).toEqual([])
+})
+
+test('vscode - fuzzyScore - LLL - SVisualLoggerLogsList', () => {
+  expect(FilterCompletionItem.filterCompletionItem('LLL', 'SVisualLoggerLogsList')).toEqual([expect.any(Number), 7, 8, 13, 14, 17, 18])
+})
+
+test.skip('vscode - fuzzyScore - LLLL - SVilLoLosLi', () => {
+  expect(FilterCompletionItem.filterCompletionItem('LLLL', 'SVilLoLosLi')).toEqual([])
+})
+
+test('vscode - fuzzyScore - LLLL - SVisualLoggerLogsList', () => {
+  expect(FilterCompletionItem.filterCompletionItem('LLLL', 'SVisualLoggerLogsList')).toEqual([expect.any(Number), 7, 8, 13, 14, 17, 19])
+})
+
+test('vscode - fuzzyScore - TEdit - TextEdit', () => {
+  expect(FilterCompletionItem.filterCompletionItem('TEdit', 'TextEdit')).toEqual([expect.any(Number), 0, 1, 4, 8])
+})
+
+test('vscode - fuzzyScore - TEdit - TextEditor', () => {
+  expect(FilterCompletionItem.filterCompletionItem('TEdit', 'TextEditor')).toEqual([expect.any(Number), 0, 1, 4, 8])
+})
+
+test('vscode - fuzzyScore - TEdit - Textedit', () => {
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('TEdit', 'Textedit')).toEqual([expect.any(Number), 0, 2, 5, 8])
+})
+
+test('vscode - fuzzyScore - TEdit - text_edit', () => {
+  expect(FilterCompletionItem.filterCompletionItem('TEdit', 'text_edit')).toEqual([expect.any(Number), 6, 9])
+})
+
+test('vscode - fuzzyScore - bkn - the_black_knight', () => {
+  expect(FilterCompletionItem.filterCompletionItem('bkn', 'the_black_knight')).toEqual([expect.any(Number), 4, 5, 10, 12])
+})
+
+test('vscode - fuzzyScore - bt - the_black_knight', () => {
+  expect(FilterCompletionItem.filterCompletionItem('bt', 'the_black_knight')).toEqual([expect.any(Number), 4, 5, 15, 16])
+})
+
+test('vscode - fuzzyScore - fdm - findModel', () => {
+  expect(FilterCompletionItem.filterCompletionItem('fdm', 'findModel')).toEqual([expect.any(Number), 0, 1, 6, 8])
+})
+
+test('vscode - fuzzyScore - fob - foobar', () => {
+  expect(FilterCompletionItem.filterCompletionItem('fob', 'foobar')).toEqual([expect.any(Number), 0, 2, 3, 4])
+})
+
+test('vscode - fuzzyScore - form - editor.formatOnSave', () => {
+  expect(FilterCompletionItem.filterCompletionItem('form', 'editor.formatOnSave')).toEqual([expect.any(Number), 7, 11])
+})
+
+test('vscode - fuzzyScore - is - ImportStatement', () => {
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('is', 'ImportStatement')).toEqual([expect.any(Number)])
+})
