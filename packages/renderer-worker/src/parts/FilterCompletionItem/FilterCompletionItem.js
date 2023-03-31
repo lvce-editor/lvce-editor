@@ -1,8 +1,7 @@
 // based on https://github.com/microsoft/vscode/blob/3059063b805ed0ac10a6d9539e213386bfcfb852/src/vs/base/common/filters.ts by Microsoft (License MIT)
 import * as Arrow from '../Arrow/Arrow.js'
 import * as CreateTable from '../CreateTable/CreateTable.js'
-import * as IsLowerCase from '../IsLowerCase/IsLowerCase.js'
-import * as IsUpperCase from '../IsUpperCase/IsUpperCase.js'
+import * as IsGap from '../IsGap/IsGap.js'
 import * as PrintTable from '../PrintTable/PrintTable.js'
 import * as TraceHighlights from '../TraceHighlights/TraceHighlights.js'
 
@@ -11,25 +10,6 @@ const gridSize = 128
 const table = CreateTable.createTable(gridSize)
 const arrows = CreateTable.createTable(gridSize)
 const diag = CreateTable.createTable(gridSize)
-
-const isGap = (columnCharBefore, columnChar) => {
-  switch (columnCharBefore) {
-    // TODO use char enum
-    case '-':
-    case '_':
-    case '':
-    case 't':
-    case ' ':
-    case '.':
-      return true
-    default:
-      break
-  }
-  if (IsLowerCase.isLowerCase(columnCharBefore) && IsUpperCase.isUpperCase(columnChar)) {
-    return true
-  }
-  return false
-}
 
 const getScore = (rowCharLow, rowChar, columnCharBefore, columnCharLow, columnChar, column, wordLength, isDiagonalMatch) => {
   if (rowCharLow !== columnCharLow) {
@@ -40,12 +20,12 @@ const getScore = (rowCharLow, rowChar, columnCharBefore, columnCharLow, columnCh
     if (isDiagonalMatch) {
       return 8
     }
-    if (isGap(columnCharBefore, columnChar)) {
+    if (IsGap.isGap(columnCharBefore, columnChar)) {
       return 8
     }
     return 5
   }
-  if (isGap(columnCharBefore, columnChar)) {
+  if (IsGap.isGap(columnCharBefore, columnChar)) {
     return 8
   }
   return 5
