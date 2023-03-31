@@ -34,6 +34,29 @@ const kAppendViewlet = 'Viewlet.appendViewlet'
 const kHandleError = 'Viewlet.handleError'
 const kDispose = 'Viewlet.dispose'
 
+const runFn = async (instance, id, key, fn, args) => {
+  if (!instance) {
+    console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
+    return
+  }
+  if (instance.factory && instance.factory.hasFunctionalRender) {
+    const oldState = instance.state
+    const newState = await fn(oldState, ...args)
+    if (!newState) {
+      console.log({ fn })
+    }
+    Assert.object(newState)
+    // console.log({ fn, newState })
+    if (oldState === newState) {
+      return
+    }
+    const commands = render(instance.factory, oldState, newState, id)
+    ViewletStates.setState(id, newState)
+    await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+  } else {
+    return fn(instance.state, ...args)
+  }
+}
 // TODO maybe wrapViewletCommand should accept module instead of id string
 // then check if instance.factory matches module -> only compare reference (int) instead of string
 // should be faster
@@ -43,27 +66,7 @@ const wrapViewletCommand = (id, key, fn) => {
   const wrappedViewletCommand = async (...args) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
-    if (!activeInstance) {
-      console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
-      return
-    }
-    if (activeInstance.factory && activeInstance.factory.hasFunctionalRender) {
-      const oldState = activeInstance.state
-      const newState = await fn(oldState, ...args)
-      if (!newState) {
-        console.log({ fn })
-      }
-      Assert.object(newState)
-      // console.log({ fn, newState })
-      if (oldState === newState) {
-        return
-      }
-      const commands = render(activeInstance.factory, oldState, newState, id)
-      ViewletStates.setState(id, newState)
-      await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
-    } else {
-      return fn(activeInstance.state, ...args)
-    }
+    await runFn(activeInstance, id, key, fn, args)
   }
   NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, `${id}/${key}`)
   return wrappedViewletCommand
@@ -99,27 +102,7 @@ const wrapViewletCommandLazy = (id, key, importFn) => {
       throw new Error(`${id}.${key} is not a function`)
     }
     const activeInstance = ViewletStates.getInstance(id)
-    if (!activeInstance) {
-      console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
-      return
-    }
-    if (activeInstance.factory && activeInstance.factory.hasFunctionalRender) {
-      const oldState = activeInstance.state
-      const newState = await fn(oldState, ...args)
-      if (!newState) {
-        console.log({ fn })
-      }
-      Assert.object(newState)
-      // console.log({ fn, newState })
-      if (oldState === newState) {
-        return
-      }
-      const commands = render(activeInstance.factory, oldState, newState, id)
-      ViewletStates.setState(id, newState)
-      await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
-    } else {
-      return fn(activeInstance.state, ...args)
-    }
+    await runFn(activeInstance, id, key, fn, args)
   }
   NameAnonymousFunction.nameAnonymousFunction(lazyCommand, `${id}/lazy/${key}`)
   return lazyCommand
