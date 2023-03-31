@@ -31,7 +31,7 @@ test('filterCompletionItem - two empty strings', () => {
 })
 
 test('filterCompletionItem - word start 2', () => {
-  expect(FilterCompletionItem.filterCompletionItem('he', 'Hello World')).toEqual([expect.any(Number), 1, 2])
+  expect(FilterCompletionItem.filterCompletionItem('he', 'Hello World')).toEqual([expect.any(Number), 0, 2])
 })
 
 test('filterCompletionItem - last character', () => {
@@ -39,17 +39,15 @@ test('filterCompletionItem - last character', () => {
 })
 
 test('prefer whole word to scattered letters 1', () => {
-  expect(FilterCompletionItem.filterCompletionItem('file', 'fiddle gruntfile file')).toEqual([expect.any(Number), 12, 16])
+  expect(FilterCompletionItem.filterCompletionItem('file', 'fiddle gruntfile file')).toEqual([expect.any(Number), 17, 21])
 })
 
 test('prefer whole word to scattered letters 2', () => {
-  // TODO
-  expect(FilterCompletionItem.filterCompletionItem('file', 'fiddle file')).toEqual([expect.any(Number), 0, 2, 4, 6])
+  expect(FilterCompletionItem.filterCompletionItem('file', 'fiddle file')).toEqual([expect.any(Number), 7, 11])
 })
 
 test('prefer whole word to scattered letters 3', () => {
-  // TODO
-  expect(FilterCompletionItem.filterCompletionItem('file', 'find le file')).toEqual([expect.any(Number), 0, 2, 5, 7])
+  expect(FilterCompletionItem.filterCompletionItem('file', 'find le file')).toEqual([expect.any(Number), 8, 12])
 })
 
 test('prefer whole word to scattered letters, even without exact matches 1', () => {
@@ -69,8 +67,7 @@ test('prefer exact match', () => {
 })
 
 test('prefer camelCase to scattered letters', () => {
-  // TODO
-  expect(FilterCompletionItem.filterCompletionItem('itc', 'ImportanceTableCtrl')).toEqual([expect.any(Number), 5, 6, 8, 9])
+  expect(FilterCompletionItem.filterCompletionItem('itc', 'ImportanceTableCtrl')).toEqual([expect.any(Number), 0, 1, 10, 11, 15, 16])
 })
 
 test('prefer acronym to scattered letters 1', () => {
@@ -79,12 +76,11 @@ test('prefer acronym to scattered letters 1', () => {
 })
 
 test('prefer acronym to scattered letters 2', () => {
-  // TODO
-  expect(FilterCompletionItem.filterCompletionItem('acon', 'application_control')).toEqual([expect.any(Number), 6, 7, 12, 15])
+  expect(FilterCompletionItem.filterCompletionItem('acon', 'application_control')).toEqual([expect.any(Number), 0, 1, 12, 15])
 })
 
 test('filterCompletionItem - middle', () => {
-  expect(FilterCompletionItem.filterCompletionItem('elwor', 'Hello World')).toEqual([expect.any(Number), 1, 5, 8, 9])
+  expect(FilterCompletionItem.filterCompletionItem('elwor', 'Hello World')).toEqual([expect.any(Number), 1, 3, 6, 9])
 })
 
 test('filterCompletionItem - three partial matches', () => {
@@ -96,8 +92,7 @@ test('filterCompletionItem - three partial matches #2', () => {
 })
 
 test('filterCompletionItem - three camel case matches', () => {
-  // TODO highlights are not good
-  expect(FilterCompletionItem.filterCompletionItem('tololo', 'toLocalLowerCase')).toEqual([expect.any(Number), 0, 4, 6, 7, 8, 9])
+  expect(FilterCompletionItem.filterCompletionItem('tololo', 'toLocalLowerCase')).toEqual([expect.any(Number), 0, 4, 7, 9])
 })
 
 test('filterCompletionItem - three characters match at start', () => {
@@ -149,8 +144,7 @@ test('filterCompletionItem - match by first word and two word starts', () => {
 })
 
 test('vscode - Unexpected suggestion scoring, #28791', () => {
-  // TODO
-  expect(FilterCompletionItem.filterCompletionItem('_lines', '_lineStarts')).toEqual([expect.any(Number), 0, 5, 10, 11])
+  expect(FilterCompletionItem.filterCompletionItem('_lines', '_lineStarts')).toEqual([expect.any(Number), 0, 6])
 })
 
 test('vscode - fuzzyScore - ab - abA', () => {
@@ -174,8 +168,7 @@ test('vscode - fuzzyScore - cmcm - camelCase', () => {
 })
 
 test('vscode - fuzzyScore - BK - the_black_knight', () => {
-  // TODO
-  expect(FilterCompletionItem.filterCompletionItem('BK', 'the_black_knight')).toEqual([expect.any(Number)])
+  expect(FilterCompletionItem.filterCompletionItem('BK', 'the_black_knight')).toEqual([expect.any(Number), 4, 5, 10, 11])
 })
 
 test('vscode - fuzzyScore - KeyboardLayout= - KeyboardLayout', () => {
@@ -192,7 +185,7 @@ test.skip('vscode - fuzzyScore - LLLL - SVilLoLosLi', () => {
 })
 
 test('vscode - fuzzyScore - LLLL - SVisualLoggerLogsList', () => {
-  expect(FilterCompletionItem.filterCompletionItem('LLLL', 'SVisualLoggerLogsList')).toEqual([expect.any(Number), 7, 8, 13, 14, 17, 19])
+  expect(FilterCompletionItem.filterCompletionItem('LLLL', 'SVisualLoggerLogsList')).toEqual([expect.any(Number), 6, 8, 13, 14, 17, 18])
 })
 
 test('vscode - fuzzyScore - TEdit - TextEdit', () => {
@@ -205,11 +198,12 @@ test('vscode - fuzzyScore - TEdit - TextEditor', () => {
 
 test('vscode - fuzzyScore - TEdit - Textedit', () => {
   // TODO
-  expect(FilterCompletionItem.filterCompletionItem('TEdit', 'Textedit')).toEqual([expect.any(Number), 0, 2, 5, 8])
+  expect(FilterCompletionItem.filterCompletionItem('TEdit', 'Textedit')).toEqual([expect.any(Number), 0, 1, 4, 8])
 })
 
 test('vscode - fuzzyScore - TEdit - text_edit', () => {
-  expect(FilterCompletionItem.filterCompletionItem('TEdit', 'text_edit')).toEqual([expect.any(Number), 6, 9])
+  // TODO
+  expect(FilterCompletionItem.filterCompletionItem('TEdit', 'text_edit')).toEqual([expect.any(Number), 0, 2, 6, 9])
 })
 
 test('vscode - fuzzyScore - bkn - the_black_knight', () => {
@@ -221,7 +215,7 @@ test('vscode - fuzzyScore - bt - the_black_knight', () => {
 })
 
 test('vscode - fuzzyScore - fdm - findModel', () => {
-  expect(FilterCompletionItem.filterCompletionItem('fdm', 'findModel')).toEqual([expect.any(Number), 0, 1, 6, 8])
+  expect(FilterCompletionItem.filterCompletionItem('fdm', 'findModel')).toEqual([expect.any(Number), 0, 1, 3, 5])
 })
 
 test('vscode - fuzzyScore - fob - foobar', () => {
@@ -233,6 +227,5 @@ test('vscode - fuzzyScore - form - editor.formatOnSave', () => {
 })
 
 test('vscode - fuzzyScore - is - ImportStatement', () => {
-  // TODO
-  expect(FilterCompletionItem.filterCompletionItem('is', 'ImportStatement')).toEqual([expect.any(Number)])
+  expect(FilterCompletionItem.filterCompletionItem('is', 'ImportStatement')).toEqual([expect.any(Number), 0, 1, 6, 7])
 })
