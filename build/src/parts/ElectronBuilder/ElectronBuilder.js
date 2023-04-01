@@ -175,6 +175,20 @@ const copyElectronResult = async ({ config, version, product, electronVersion })
     version,
     product,
   })
+  if (product.supportsAutoUpdate && (config === ElectronBuilderConfigType.AppImage || config === ElectronBuilderConfigType.WindowsExe)) {
+    await Replace.replace({
+      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/IsAutoUpdateSupported/IsAutoUpdateSupported.js`,
+      occurrence: ` return Platform.isWindows || Platform.isMacOs`,
+      replacement: `return true`,
+    })
+  } else {
+    // TODO also remove electron-updater dependency and its dependencies
+    await Replace.replace({
+      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/IsAutoUpdateSupported/IsAutoUpdateSupported.js`,
+      occurrence: ` return Platform.isWindows || Platform.isMacOs`,
+      replacement: `return false`,
+    })
+  }
   if (config === ElectronBuilderConfigType.ArchLinux) {
     await Replace.replace({
       path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.js`,

@@ -31,3 +31,5 @@ export const repoUrl = 'https://github.com/lvce-editor/lvce-editor'
 export const homePage = 'https://github.com/lvce-editor/lvce-editor'
 
 export const linuxMaintainer = 'Le Vivilet <levivilet@pm.me>'
+
+export const supportsAutoUpdate = true
