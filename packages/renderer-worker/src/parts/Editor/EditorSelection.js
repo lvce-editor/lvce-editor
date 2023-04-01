@@ -86,6 +86,17 @@ const getAverageCharWidthOrDefault = (fontWeight, fontSize, fontFamily, letterSp
 
 const emptyCursors = new Float32Array()
 
+const getPairs = (selections, i) => {
+  const first = selections[i]
+  const second = selections[i + 1]
+  const third = selections[i + 2]
+  const fourth = selections[i + 3]
+  if (first > third || (first === third && second >= fourth)) {
+    return [third, fourth, first, second, 1]
+  }
+  return [first, second, third, fourth, 0]
+}
+
 export const getVisible = (editor) => {
   const visibleCursors = []
   const visibleSelections = []
@@ -110,10 +121,7 @@ export const getVisible = (editor) => {
   const averageCharWidth = getAverageCharWidthOrDefault(fontWeight, fontSize, fontFamily, letterSpacing)
   const halfCursorWidth = cursorWidth / 2
   for (let i = 0; i < selections.length; i += 4) {
-    const selectionStartRow = selections[i]
-    const selectionStartColumn = selections[i + 1]
-    const selectionEndRow = selections[i + 2]
-    const selectionEndColumn = selections[i + 3]
+    const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn, reversed] = getPairs(selections, i)
     if (selectionEndRow < minLineY || selectionStartRow > maxLineY) {
       continue
     }
@@ -191,6 +199,9 @@ export const getVisible = (editor) => {
         )
         const startLineStartY = getY(selectionStartRow, minLineY, rowHeight)
         const selectionWidth = startLineEndX - startLineStartX
+        if (reversed) {
+          visibleCursors.push(startLineStartX, startLineStartY)
+        }
         visibleSelections.push(startLineStartX, startLineStartY, selectionWidth, rowHeight)
       }
       const iMin = Math.max(selectionStartRow + 1, minLineY)
@@ -218,7 +229,9 @@ export const getVisible = (editor) => {
       if (selectionEndRow <= maxLineY) {
         const selectionWidth = endLineEndX
         visibleSelections.push(0, endLineY, selectionWidth, rowHeight)
-        visibleCursors.push(endLineEndX, endLineY)
+        if (!reversed) {
+          visibleCursors.push(selectionWidth, endLineY)
+        }
       }
     }
   }

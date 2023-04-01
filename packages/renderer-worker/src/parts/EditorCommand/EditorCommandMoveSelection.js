@@ -19,7 +19,7 @@ const compare = (positionA, positionB) => {
 }
 
 const editorMoveSelectionBackwards = (anchor, position) => {
-  return new Uint32Array([position.rowIndex, position.columnIndex, anchor.rowIndex, anchor.columnIndex])
+  return new Uint32Array([anchor.rowIndex, anchor.columnIndex, position.rowIndex, position.columnIndex])
 }
 
 const editorMoveSelectionEqual = (anchor, position) => {
