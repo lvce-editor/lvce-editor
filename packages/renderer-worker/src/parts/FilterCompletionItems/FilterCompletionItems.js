@@ -3,7 +3,7 @@ import * as FilterCompletionItem from '../FilterCompletionItem/FilterCompletionI
 const addEmptyMatch = (item) => {
   return {
     ...item,
-    matches: [],
+    matches: FilterCompletionItem.Empty,
   }
 }
 
