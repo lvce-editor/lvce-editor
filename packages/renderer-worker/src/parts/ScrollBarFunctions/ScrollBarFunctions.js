@@ -6,7 +6,7 @@
  * @returns
  */
 export const getScrollBarSize = (size, contentSize, minimumSliderSize) => {
-  if (size > contentSize) {
+  if (size >= contentSize) {
     return 0
   }
   return Math.max(Math.round(size ** 2 / contentSize), minimumSliderSize)
