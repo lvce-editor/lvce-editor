@@ -181,6 +181,12 @@ const copyElectronResult = async ({ config, version, product, electronVersion })
       occurrence: `return Platform.isWindows || Platform.isMacOs`,
       replacement: `return true`,
     })
+    // workaround for https://github.com/electron-userland/electron-builder/issues/2761
+    const { owner, repoName } = getRepositoryInfo(product.repoUrl)
+    await Template.write('electron_builder_app_update_yaml', `build/.tmp/linux/snap/${debArch}/app/resources/app-update.yml`, {
+      '@@OWNER@@': owner,
+      '@@REPO_NAME@@': repoName,
+    })
   } else {
     // TODO also remove electron-updater dependency and its dependencies
     await Replace.replace({
@@ -208,12 +214,6 @@ const copyElectronResult = async ({ config, version, product, electronVersion })
     await Copy.copyFile({
       from: `build/.tmp/electron-builder-placeholder-app/dist/win-unpacked/${product.windowsExecutableName}.exe`,
       to: `build/.tmp/linux/snap/${debArch}/app/${product.windowsExecutableName}.exe`,
-    })
-    // workaround for https://github.com/electron-userland/electron-builder/issues/2761
-    const { owner, repoName } = getRepositoryInfo(product.repoUrl)
-    await Template.write('electron_builder_app_update_yaml', `build/.tmp/linux/snap/${debArch}/app/resources/app-update.yml`, {
-      '@@OWNER@@': owner,
-      '@@REPO_NAME@@': repoName,
     })
   }
 }
