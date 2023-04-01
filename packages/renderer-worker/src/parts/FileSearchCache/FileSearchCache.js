@@ -1,5 +1,6 @@
 import * as CacheStorage from '../CacheStorage/CacheStorage.js'
 import * as Character from '../Character/Character.js'
+import * as MimeType from '../MimeType/MimeType.js'
 import { VError } from '../VError/VError.js'
 
 const normalizeCacheKey = (cacheKey) => {
@@ -24,7 +25,7 @@ export const get = async (cacheKey) => {
 export const set = async (cacheKey, value) => {
   try {
     const normalizedCacheKey = normalizeCacheKey(cacheKey)
-    await CacheStorage.setText(normalizedCacheKey, value, 'text/plain')
+    await CacheStorage.setText(normalizedCacheKey, value, MimeType.TextPlain)
   } catch (error) {
     throw new VError(error, `Failed to put value into file search cache`)
   }
