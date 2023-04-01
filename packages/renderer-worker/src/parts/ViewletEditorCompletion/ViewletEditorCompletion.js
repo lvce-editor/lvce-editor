@@ -160,6 +160,8 @@ export const loadContent = async (state) => {
     finalDeltaY,
     leadingWord: wordAtOffset,
     height,
+    rowIndex,
+    columnIndex,
   }
 }
 

@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as ReplaceRange from '../EditorCommand/EditorCommandReplaceRange.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -22,8 +23,14 @@ const select = async (state, completionItem) => {
   const editor = getEditor()
   if (editor) {
     editor.completionState = EditorCompletionState.None
+    // TODO remove editor completion from editor widgets
   }
-  await Command.execute(/* Editor.type */ 'Editor.type', /* text */ snippet)
+  const { selections } = editor
+  const [startRowIndex, startColumnIndex] = selections
+  const leadingWordLength = leadingWord.length
+  const replaceRange = new Uint32Array([startRowIndex, startColumnIndex - leadingWordLength, startRowIndex, startColumnIndex])
+  const changes = ReplaceRange.replaceRange(editor, replaceRange, [word], '')
+  await Command.execute(`Editor.applyEdit`, changes)
   await Viewlet.dispose(ViewletModuleId.EditorCompletion)
   return state
 }
