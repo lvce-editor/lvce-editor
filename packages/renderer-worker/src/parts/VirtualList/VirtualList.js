@@ -31,10 +31,11 @@ export const setDeltaY = (state, deltaY) => {
   const { itemHeight, items, height, headerHeight } = state
   const listHeight = getListHeight(height, headerHeight)
   const itemsLength = items.length
+  const finalDeltaY = itemsLength * itemHeight - listHeight
   if (deltaY < 0) {
     deltaY = 0
-  } else if (deltaY > itemsLength * itemHeight - listHeight) {
-    deltaY = Math.max(itemsLength * itemHeight - listHeight, 0)
+  } else if (deltaY > finalDeltaY) {
+    deltaY = Math.max(finalDeltaY, 0)
   }
   if (state.deltaY === deltaY) {
     return state
@@ -54,5 +55,7 @@ export const setDeltaY = (state, deltaY) => {
 export const handleWheel = (state, deltaY, deltaMode) => {
   Assert.object(state)
   Assert.number(deltaY)
+  console.log('handle wheek')
+  console.log({ deltaY })
   return setDeltaY(state, state.deltaY + deltaY)
 }

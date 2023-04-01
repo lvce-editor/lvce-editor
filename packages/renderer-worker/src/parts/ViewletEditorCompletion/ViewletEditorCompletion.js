@@ -70,16 +70,20 @@ export const handleEditorType = (state, editor, text) => {
   const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const wordAtOffset = getWordAtOffset(editor)
   const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, wordAtOffset)
+  const newMinLineY = 0
   const newMaxLineY = Math.min(items.length, 8)
   const height = GetListHeight.getListHeight(items.length, itemHeight, maxHeight)
+  const finalDeltaY = items.length * itemHeight - height
   return {
     ...state,
     items,
     x,
     y,
+    minLineY: newMinLineY,
     maxLineY: newMaxLineY,
     leadingWord: wordAtOffset,
     height,
+    finalDeltaY,
   }
 }
 
