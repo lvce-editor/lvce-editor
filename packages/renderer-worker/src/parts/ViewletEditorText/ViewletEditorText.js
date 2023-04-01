@@ -45,7 +45,7 @@ export const handleTokenizeChange = () => {
 export const create = (id, uri, x, y, width, height) => {
   const instanceId = Id.create()
   const state = Editor.create(instanceId, uri, 'unknown', '')
-  const newState = Editor.setBounds(state, x, y, height, COLUMN_WIDTH)
+  const newState = Editor.setBounds(state, x, y, width, height, COLUMN_WIDTH)
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
   return {
@@ -58,11 +58,12 @@ export const create = (id, uri, x, y, width, height) => {
 }
 
 export const saveState = (state) => {
-  const { selections, focused, deltaY, minLineY } = state
+  const { selections, focused, deltaY, minLineY, differences } = state
   return {
     selections: [...Array.from(selections)],
     focused,
     deltaY,
+    differences: [...Array.from(differences)],
   }
 }
 
@@ -199,13 +200,11 @@ export const handleLanguagesChanged = (state) => {
   return EditorCommandSetLanguageId.setLanguageId(state, newLanguageId)
 }
 
+export const hasFunctionalResize = true
+
 export const resize = (state, dimensions) => {
-  const newState = Editor.setBounds(state, dimensions.x, dimensions.y, dimensions.height, state.columnWidth)
-  const commands = [Editor.renderTextAndCursorAndSelectionsCommands(newState)]
-  return {
-    newState,
-    commands,
-  }
+  const newState = Editor.setBounds(state, dimensions.x, dimensions.y, dimensions.width, dimensions.height, state.columnWidth)
+  return newState
 }
 
 export const dispose = (state) => {
