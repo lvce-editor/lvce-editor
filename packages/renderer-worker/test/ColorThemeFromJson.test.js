@@ -69,6 +69,7 @@ test('createColorThemeFromJson - colors', () => {
   --TitleBarColor: #cccccc;
   --TitleBarColorInactive: rgba(204, 204, 204, 0.6);
   --ActivityBarInactiveForeground: #878f8c;
+  --CssVariableName: undefined;
 }
 
 
@@ -89,6 +90,7 @@ test('createColorThemeFromJson - colors with contrast border', () => {
   --ActivityBarBackground: rgb(40, 46, 47);
   --ContrastBorder: rgb(78,78,78);
   --ActivityBarInactiveForeground: undefined;
+  --CssVariableName: undefined;
 }
 
 
@@ -112,33 +114,21 @@ test('createColorThemeFromJson - colors with contrast border', () => {
 
 test('createColorThemeFromJson - invalid argument null', () => {
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
-  expect(
-    ColorThemeFromJson.createColorThemeFromJson('test-theme', null)
-  ).toEqual('')
+  expect(ColorThemeFromJson.createColorThemeFromJson('test-theme', null)).toEqual('')
   expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(
-    'color theme json for "test-theme" is empty: "null"'
-  )
+  expect(spy).toHaveBeenCalledWith('color theme json for "test-theme" is empty: "null"')
 })
 
 test('createColorThemeFromJson - invalid argument number', () => {
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
-  expect(ColorThemeFromJson.createColorThemeFromJson('test-theme', 78)).toEqual(
-    ''
-  )
+  expect(ColorThemeFromJson.createColorThemeFromJson('test-theme', 78)).toEqual('')
   expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(
-    'color theme json for "test-theme" cannot be converted to css: "78"'
-  )
+  expect(spy).toHaveBeenCalledWith('color theme json for "test-theme" cannot be converted to css: "78"')
 })
 
 test('createColorThemeFromJson - invalid argument array', () => {
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
-  expect(ColorThemeFromJson.createColorThemeFromJson('test-theme', [])).toEqual(
-    ''
-  )
+  expect(ColorThemeFromJson.createColorThemeFromJson('test-theme', [])).toEqual('')
   expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(
-    'color theme json for "test-theme" cannot be converted to css, it must be of type object but was of type array'
-  )
+  expect(spy).toHaveBeenCalledWith('color theme json for "test-theme" cannot be converted to css, it must be of type object but was of type array')
 })
