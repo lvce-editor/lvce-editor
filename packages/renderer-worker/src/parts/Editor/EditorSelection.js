@@ -53,7 +53,7 @@ export const applyEdit = (editor, changes) => {
 // TODO visible selections could also be uint16array
 // [top1, left1, width1, height1, top2, left2, width2, height2...]
 
-const getX = (line, column, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, halfCursorWidth, width, averageCharWidth, difference) => {
+const getX = (line, column, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, halfCursorWidth, width, averageCharWidth, difference = 0) => {
   if (!line) {
     return 0
   }

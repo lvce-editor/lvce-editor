@@ -72,6 +72,7 @@ export const create = (id, uri, languageId, content) => {
     longestLineWidth: 0,
     minimumSliderSize: Height.MinimumSliderSize,
     differences: [],
+    width: 0,
   }
 }
 
@@ -324,7 +325,7 @@ export const hasSelection = (editor) => {
   return editor.selections && editor.selections.length > 0
 }
 
-export const setBounds = (editor, x, y, height, columnWidth) => {
+export const setBounds = (editor, x, y, width, height, columnWidth) => {
   const { itemHeight } = editor
   const numberOfVisibleLines = Math.floor(height / itemHeight)
   const total = editor.lines.length
@@ -335,6 +336,7 @@ export const setBounds = (editor, x, y, height, columnWidth) => {
     ...editor,
     x,
     y,
+    width,
     height,
     columnWidth,
     numberOfVisibleLines,
@@ -371,7 +373,8 @@ const renderLines = {
       oldState.minLineY === newState.minLineY &&
       oldState.decorations === newState.decorations &&
       oldState.embeds === newState.embeds &&
-      oldState.deltaX === newState.deltaX
+      oldState.deltaX === newState.deltaX &&
+      oldState.width === newState.width
     )
   },
   apply(oldState, newState) {
