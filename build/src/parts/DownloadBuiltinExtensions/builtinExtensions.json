@@ -12,7 +12,7 @@
   {
     "name": "builtin.language-basics-coffeescript",
     "repository": "github.com/lvce-editor/language-basics-coffeescript",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-cpp",
@@ -87,7 +87,7 @@
   {
     "name": "builtin.language-basics-java",
     "repository": "github.com/lvce-editor/language-basics-java",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-javascript",
@@ -167,7 +167,7 @@
   {
     "name": "builtin.language-basics-ruby",
     "repository": "github.com/lvce-editor/language-basics-ruby",
-    "version": "0.0.5"
+    "version": "0.0.6"
   },
   {
     "name": "builtin.language-basics-rust",
