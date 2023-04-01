@@ -1,11 +1,16 @@
 const { autoUpdater } = require('electron-updater')
-const Logger = require('../Logger/Logger.js')
 const AutoUpdaterListeners = require('../AutoUpdaterListeners/AutoUpdaterListeners.js')
+const IsAutoUpdateSupported = require('../IsAutoUpdateSupported/IsAutoUpdateSupported.js')
+const Logger = require('../Logger/Logger.js')
 const VError = require('verror')
 
 exports.checkForUpdatesAndNotify = async () => {
   try {
-    return await autoUpdater.checkForUpdatesAndNotify()
+    if (IsAutoUpdateSupported.useElectronBuilderAutoUpdate()) {
+      return await autoUpdater.checkForUpdatesAndNotify()
+    }
+    const AutoUpdaterAppImage = require('../AutoUpdaterAppImage/AutoUpdaterAppImage.js')
+    return await AutoUpdaterAppImage.checkForUpdatesAndNotify()
   } catch (error) {
     // @ts-ignore
     throw new VError(error, `Failed to check for updates`)
@@ -14,6 +19,32 @@ exports.checkForUpdatesAndNotify = async () => {
 
 exports.on = (event, listener) => {
   autoUpdater.on(event, listener)
+}
+
+exports.downloadUpdate = async (version) => {
+  try {
+    if (IsAutoUpdateSupported.useElectronBuilderAutoUpdate()) {
+      return
+    }
+    const AutoUpdaterAppImage = require('../AutoUpdaterAppImage/AutoUpdaterAppImage.js')
+    return await AutoUpdaterAppImage.downloadUpdate(version)
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, `Failed to download update`)
+  }
+}
+
+exports.installAndRestart = async (downloadPath) => {
+  try {
+    if (IsAutoUpdateSupported.useElectronBuilderAutoUpdate()) {
+      return
+    }
+    const AutoUpdaterAppImage = require('../AutoUpdaterAppImage/AutoUpdaterAppImage.js')
+    return await AutoUpdaterAppImage.installAndRestart(downloadPath)
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, `Failed to download update`)
+  }
 }
 
 exports.quitAndInstall = () => {
