@@ -11,6 +11,7 @@ const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const PendingPorts = require('../PendingPorts/PendingPorts.js')
 const Logger = require('../Logger/Logger.js')
 const GetResponse = require('../GetResponse/GetResponse.js')
+const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
@@ -134,14 +135,14 @@ const handlePortForSharedProcess = async (event) => {
   }
   const browserWindowPort = event.ports[0]
   const folder = getFolder(config.parsedArgs)
-  Performance.mark('code/willStartSharedProcess')
+  Performance.mark(PerformanceMarkerType.WillStartSharedProcess)
   const sharedProcess = await SharedProcess.hydrate({
     FOLDER: folder,
   })
   const messageChannel = new MessageChannel()
   const { port1 } = messageChannel
   const { port2 } = messageChannel
-  Performance.mark('code/didStartSharedProcess')
+  Performance.mark(PerformanceMarkerType.DidStartSharedProcess)
   browserWindowPort.on('message', (event) => {
     // console.log('got message from browser window', event.data)
     port2.postMessage(event.data)
