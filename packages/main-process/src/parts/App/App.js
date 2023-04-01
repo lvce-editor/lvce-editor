@@ -12,6 +12,7 @@ const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronAppl
 const ElectronAppListeners = require('../ElectronAppListeners/ElectronAppListeners.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
 const Process = require('../Process/Process.js')
+const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
 // const handleAppReady = async () => {
@@ -98,7 +99,7 @@ exports.hydrate = async () => {
   // Electron.app.on('ready', handleAppReady)
   ElectronApp.on('second-instance', ElectronAppListeners.handleSecondInstance)
   await ElectronApp.whenReady()
-  Performance.mark('code/appReady')
+  Performance.mark(PerformanceMarkerType.AppReady)
 
   await ElectronAppListeners.handleReady(parsedCliArgs, Process.cwd())
   Debug.debug('[info] app window created')

@@ -10,6 +10,7 @@ const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Logger = require('../Logger/Logger.js')
 const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
 const { WindowLoadError } = require('../WindowLoadError/WindowLoadError.js')
+const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
 
 // TODO impossible to test these methods
 // and ensure that there is no memory leak
@@ -22,7 +23,7 @@ const handleWindowClose = (event) => {
 }
 
 const loadUrl = async (browserWindow, url) => {
-  Performance.mark('code/willLoadUrl')
+  Performance.mark(PerformanceMarkerType.WillLoadUrl)
   try {
     await browserWindow.loadURL(url)
   } catch (error) {
@@ -32,7 +33,7 @@ const loadUrl = async (browserWindow, url) => {
       throw new WindowLoadError(error, url)
     }
   }
-  Performance.mark('code/didLoadUrl')
+  Performance.mark(PerformanceMarkerType.DidLoadUrl)
 }
 
 const defaultUrl = `${Platform.scheme}://-`
