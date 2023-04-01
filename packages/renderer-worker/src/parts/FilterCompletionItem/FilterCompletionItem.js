@@ -1,7 +1,7 @@
 // based on https://github.com/microsoft/vscode/blob/3059063b805ed0ac10a6d9539e213386bfcfb852/src/vs/base/common/filters.ts by Microsoft (License MIT)
 import * as Arrow from '../Arrow/Arrow.js'
 import * as CreateTable from '../CreateTable/CreateTable.js'
-import * as IsGap from '../IsGap/IsGap.js'
+import * as GetCompletionItemScore from '../GetCompletionItemScore/GetCompletionItemScore.js'
 import * as IsPatternInWord from '../IsPatternInWord/IsPatternInWord.js'
 import * as PrintTable from '../PrintTable/PrintTable.js'
 import * as TraceHighlights from '../TraceHighlights/TraceHighlights.js'
@@ -11,26 +11,6 @@ const gridSize = 128
 const table = CreateTable.createTable(gridSize)
 const arrows = CreateTable.createTable(gridSize)
 const diag = CreateTable.createTable(gridSize)
-
-const getScore = (rowCharLow, rowChar, columnCharBefore, columnCharLow, columnChar, column, wordLength, isDiagonalMatch) => {
-  if (rowCharLow !== columnCharLow) {
-    return -1
-  }
-  const isMatch = rowChar === columnChar
-  if (isMatch) {
-    if (isDiagonalMatch) {
-      return 8
-    }
-    if (IsGap.isGap(columnCharBefore, columnChar)) {
-      return 8
-    }
-    return 5
-  }
-  if (IsGap.isGap(columnCharBefore, columnChar)) {
-    return 8
-  }
-  return 5
-}
 
 const printTables = (pattern, patternStart, word, wordStart) => {
   pattern = pattern.substr(patternStart)
@@ -59,7 +39,16 @@ export const filterCompletionItem = (pattern, word) => {
       const columnCharLow = wordLower[column - 1]
       const columnCharBefore = word[column - 2] || ''
       const isDiagonalMatch = arrows[row - 1][column - 1] === Arrow.Diagonal
-      const score = getScore(rowCharLow, rowChar, columnCharBefore, columnCharLow, columnChar, column, wordLength, isDiagonalMatch)
+      const score = GetCompletionItemScore.getScore(
+        rowCharLow,
+        rowChar,
+        columnCharBefore,
+        columnCharLow,
+        columnChar,
+        column,
+        wordLength,
+        isDiagonalMatch
+      )
       if (row === 1 && score > 5) {
         score
         column
