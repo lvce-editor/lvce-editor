@@ -84,6 +84,8 @@ const getAverageCharWidthOrDefault = (fontWeight, fontSize, fontFamily, letterSp
   return MeasureTextWidth.measureTextWidth('a', fontWeight, fontSize, fontFamily, letterSpacing)
 }
 
+const emptyCursors = new Float32Array()
+
 export const getVisible = (editor) => {
   const visibleCursors = []
   const visibleSelections = []
@@ -103,6 +105,7 @@ export const getVisible = (editor) => {
     tabSize,
     width,
     differences,
+    focused,
   } = editor
   const averageCharWidth = getAverageCharWidthOrDefault(fontWeight, fontSize, fontFamily, letterSpacing)
   const halfCursorWidth = cursorWidth / 2
@@ -221,7 +224,7 @@ export const getVisible = (editor) => {
   }
   // TODO maybe use Uint32array or Float64Array?
   return {
-    cursorInfos: new Float32Array(visibleCursors),
+    cursorInfos: focused ? new Float32Array(visibleCursors) : emptyCursors,
     selectionInfos: new Float32Array(visibleSelections),
   }
 }
