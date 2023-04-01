@@ -15,7 +15,7 @@ export const runEditorWidgetFunctions = (editor, fnName, ...args) => {
       if (newState.disposed) {
         const index = editor.widgets.indexOf(widget)
         editor.widgets.splice(index, 1)
-        allCommands.push(Viewlet.disposeFunctional(widget))
+        allCommands.push(...Viewlet.disposeFunctional(widget))
       } else {
         allCommands.push(...Viewlet.setStateFunctional(widget, newState))
       }
