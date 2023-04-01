@@ -33,6 +33,18 @@ const toTokenColorRule = (tokenColor) => {
   return `.Token.${tokenColor.name} { color: ${tokenColor.foreground} }`
 }
 
+const addFallbackColors = (colors) => {
+  const newColors = { ...colors }
+  if (!newColors.ActivityBarInactiveForeground) {
+    // TODO don't assign, avoid mutation
+    newColors.ActivityBarInactiveForeground = transparent(newColors.ActivityBarForeground, 0.4)
+  }
+  if (!newColors.CssVariableName) {
+    newColors.CssVariableName = colors.VariableName
+  }
+  return newColors
+}
+
 export const createColorThemeFromJson = (colorThemeId, colorThemeJson) => {
   if (!colorThemeJson) {
     Logger.warn(`color theme json for "${colorThemeId}" is empty: "${colorThemeJson}"`)
@@ -50,11 +62,8 @@ export const createColorThemeFromJson = (colorThemeId, colorThemeJson) => {
   if (!colors) {
     return ''
   }
-  if (!colors.ActivityBarInactiveForeground) {
-    // TODO don't assign, avoid mutation
-    colors.ActivityBarInactiveForeground = transparent(colors.ActivityBarForeground, 0.4)
-  }
-  const colorRules = Object.entries(colors).map(toColorRule)
+  const newColors = addFallbackColors(colors)
+  const colorRules = Object.entries(newColors).map(toColorRule)
   const tokenColors = colorThemeJson.tokenColors || []
   const tokenColorRules = tokenColors.map(toTokenColorRule)
   const extraRules = []
