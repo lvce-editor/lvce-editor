@@ -6,7 +6,6 @@ import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 // TODO tab doesn't work well with configurable keybindings
 export const handleTab = async (editor) => {
   if (EditorSelection.isEverySelectionEmpty(editor.selections)) {
-    console.log('call tab completion')
     const applied = await EditorTabCompletion.tabCompletion(editor)
     if (applied !== editor) {
       return applied
