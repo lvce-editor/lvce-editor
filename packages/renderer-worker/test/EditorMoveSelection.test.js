@@ -35,7 +35,7 @@ test('editorMoveSelection - to the left', () => {
       columnIndex: 0,
     })
   ).toMatchObject({
-    selections: EditorSelection.fromRange(0, 0, 0, 1),
+    selections: EditorSelection.fromRange(0, 1, 0, 0),
   })
 })
 
