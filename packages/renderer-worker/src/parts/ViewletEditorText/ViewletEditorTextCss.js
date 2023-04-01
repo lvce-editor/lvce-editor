@@ -1,3 +1,5 @@
+import * as JoinLines from '../JoinLines/JoinLines.js'
+
 export const Css = ['/css/parts/ViewletEditor.css', '/css/parts/ScrollBar.css']
 
 export const getDynamicCss = (preferences) => {
