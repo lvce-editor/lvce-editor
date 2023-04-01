@@ -4,6 +4,7 @@ exports.name = 'AutoUpdater'
 
 exports.Commands = {
   checkForUpdatesAndNotify: AutoUpdater.checkForUpdatesAndNotify,
-  quitAndInstall: AutoUpdater.quitAndInstall,
+  downloadUpdate: AutoUpdater.downloadUpdate,
   hydrate: AutoUpdater.hydrate,
+  quitAndInstall: AutoUpdater.quitAndInstall,
 }
