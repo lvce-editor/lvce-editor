@@ -80,6 +80,7 @@ test('hydrate', async () => {
   --ActivityBarBackground: rgb(41, 48, 48);
   --ActivityBarForeground: rgba(135, 143, 140, 0.4);
   --ActivityBarInactiveForeground: rgba(135, 143, 140, 0.4);
+  --CssVariableName: undefined;
 }
 
 
