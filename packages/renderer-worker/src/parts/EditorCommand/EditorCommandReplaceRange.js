@@ -1,6 +1,6 @@
 import * as TextDocument from '../TextDocument/TextDocument.js'
 
-export const editorReplaceRange = (editor, ranges, replacement, origin) => {
+export const replaceRange = (editor, ranges, replacement, origin) => {
   const changes = []
   const rangesLength = ranges.length
   for (let i = 0; i < rangesLength; i += 4) {
