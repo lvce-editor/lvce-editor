@@ -1,5 +1,5 @@
 const { join } = require('node:path')
-const { rename } = require('node:fs/promises')
+const { rename, chmod } = require('node:fs/promises')
 const { spawn } = require('node:child_process')
 const { tmpdir } = require('node:os')
 const Assert = require('../Assert/Assert.js')
@@ -65,12 +65,17 @@ const restart = (downloadPath) => {
   spawn(downloadPath, { stdio: 'inherit' })
 }
 
+const makeExecutable = async (file) => {
+  await chmod(file, 0o755)
+}
+
 exports.installAndRestart = async (downloadPath) => {
   try {
     const appImageFile = getAppImagePath()
     if (!appImageFile) {
       throw new Error(`App image path not found`)
     }
+    await makeExecutable(downloadPath)
     await installNewAppImage(appImageFile, downloadPath)
     await restart(downloadPath)
   } catch (error) {
