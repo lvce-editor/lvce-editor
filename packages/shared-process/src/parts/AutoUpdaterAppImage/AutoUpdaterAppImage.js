@@ -8,6 +8,7 @@ import * as Download from '../Download/Download.js'
 import * as GetLatestReleaseVersion from '../GetLatestReleaseVersion/GetLatestReleaseVersion.js'
 import * as Platform from '../Platform/Platform.js'
 import { VError } from '../VError/VError.js'
+import * as MakeExecutable from '../MakeExecutable/MakeExecutable.js'
 
 const getDownloadUrl = (repository, version, appImageName) => {
   Assert.string(version)
@@ -28,6 +29,7 @@ export const downloadUpdate = async (version) => {
     const downLoadUrl = getDownloadUrl(repository, version, appImageName)
     const outFile = getOutfilePath(version)
     await Download.download(downLoadUrl, outFile)
+    return outFile
   } catch (error) {
     // @ts-ignore
     throw new VError(error, `Failed to download new version ${version}`)
@@ -65,17 +67,14 @@ const restart = (downloadPath) => {
   spawn(downloadPath, { stdio: 'inherit' })
 }
 
-const makeExecutable = async (file) => {
-  await chmod(file, 0o755)
-}
-
 export const installAndRestart = async (downloadPath) => {
   try {
+    Assert.string(downloadPath)
     const appImageFile = getAppImagePath()
     if (!appImageFile) {
       throw new Error(`AppImage path not found`)
     }
-    await makeExecutable(downloadPath)
+    await MakeExecutable.makeExecutable(downloadPath)
     await installNewAppImage(appImageFile, downloadPath)
     await restart(downloadPath)
   } catch (error) {

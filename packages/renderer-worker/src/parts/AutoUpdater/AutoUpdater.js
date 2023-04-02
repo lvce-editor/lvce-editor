@@ -17,13 +17,13 @@ export const checkForUpdates = async () => {
     if (!shouldUpdate) {
       return
     }
-    await SharedProcess.invoke('AutoUpdater.downloadUpdate', info.version)
+    const downloadPath = await SharedProcess.invoke('AutoUpdater.downloadUpdate', info.version)
     const messageRestart = getPromptRestart()
     const shouldRestart = await Command.execute('ConfirmPrompt.prompt', messageRestart)
     if (!shouldRestart) {
       return
     }
-    await SharedProcess.invoke('AutoUpdater.installAndRestart')
+    await SharedProcess.invoke('AutoUpdater.installAndRestart', downloadPath)
   }
   console.log({ info })
 }
