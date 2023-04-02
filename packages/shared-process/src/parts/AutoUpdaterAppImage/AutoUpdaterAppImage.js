@@ -1,4 +1,3 @@
-import { spawn } from 'node:child_process'
 import { rename } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -10,6 +9,7 @@ import * as GetAppImagePath from '../GetAppImagePath/GetAppImagePath.js'
 import * as GetLatestReleaseVersion from '../GetLatestReleaseVersion/GetLatestReleaseVersion.js'
 import * as MakeExecutable from '../MakeExecutable/MakeExecutable.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Restart from '../Restart/Restart.js'
 import { VError } from '../VError/VError.js'
 
 const getOutfilePath = (version) => {
@@ -56,11 +56,6 @@ const installNewAppImage = async (currentAppImageFile, downloadPath) => {
   }
 }
 
-const restart = (downloadPath) => {
-  // TODO handle errors
-  spawn(downloadPath, { stdio: 'inherit' })
-}
-
 export const installAndRestart = async (downloadPath) => {
   try {
     Assert.string(downloadPath)
@@ -70,7 +65,7 @@ export const installAndRestart = async (downloadPath) => {
     }
     await MakeExecutable.makeExecutable(downloadPath)
     const installedPath = await installNewAppImage(currentAppImageFile, downloadPath)
-    await restart(installedPath)
+    await Restart.restart(installedPath)
   } catch (error) {
     // @ts-ignore
     throw new VError(error, `Failed to install AppImage update`)
