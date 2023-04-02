@@ -6,17 +6,6 @@ import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as WalkDependencies from '../WalkDependencies/WalkDependencies.js'
 
-const isElectronUpdaterDependency = (dependency) => {
-  switch (dependency) {
-    case 'electron-updater':
-    case 'typed-emitter':
-    case 'rxjs':
-      return true
-    default:
-      return false
-  }
-}
-
 const getNpmDependencies = (rawDependencies, supportsAutoUpdate) => {
   const dependencyPaths = []
   const handleDependency = (dependency) => {
@@ -26,7 +15,7 @@ const getNpmDependencies = (rawDependencies, supportsAutoUpdate) => {
     if (!dependency.name) {
       return false
     }
-    if (isElectronUpdaterDependency(dependency.name) && !supportsAutoUpdate) {
+    if (dependency.name === 'electron-updater' && !supportsAutoUpdate) {
       return false
     }
     if (dependency.name.includes('@types')) {
