@@ -1,4 +1,5 @@
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import { selectIndexFocusBody } from './ViewletTitleBarMenuBarSelectIndexFocusBody.js'
 import { selectIndexIgnore } from './ViewletTitleBarMenuBarSelectIndexIgnore.js'
 import { selectIndexNone } from './ViewletTitleBarMenuBarSelectIndexNone.js'
 import { selectIndexRestoreFocus } from './ViewletTitleBarMenuBarSelectIndexRestoreFocus.js'
@@ -16,7 +17,9 @@ export const handleMenuMouseDown = (state, level, index) => {
     case MenuItemFlags.RestoreFocus:
       return selectIndexRestoreFocus(state, item)
     case MenuItemFlags.Ignore:
-      selectIndexIgnore(state, item)
+      return selectIndexIgnore(state, item)
+    case MenuItemFlags.FocusBody:
+      return selectIndexFocusBody(state, item)
     default:
       return state
   }

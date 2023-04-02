@@ -13,3 +13,5 @@ export const Disabled = 5
 export const RestoreFocus = 6
 
 export const Ignore = 7
+
+export const FocusBody = 8

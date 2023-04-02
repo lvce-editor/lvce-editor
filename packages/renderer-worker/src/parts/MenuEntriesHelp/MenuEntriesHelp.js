@@ -21,13 +21,13 @@ export const getMenuEntries = async () => {
     {
       id: 'toggleDeveloperTools',
       label: I18nString.i18nString(UiStrings.ToggleDeveloperTools),
-      flags: MenuItemFlags.None,
+      flags: MenuItemFlags.FocusBody,
       command: 'Developer.toggleDeveloperTools',
     },
     {
       id: 'openProcessExplorer',
       label: I18nString.i18nString(UiStrings.OpenProcessExplorer),
-      flags: MenuItemFlags.RestoreFocus,
+      flags: MenuItemFlags.FocusBody,
       command: 'Developer.openProcessExplorer',
     }
   )
@@ -42,7 +42,7 @@ export const getMenuEntries = async () => {
       {
         id: 'checkForUpdates',
         label: I18nString.i18nString(UiStrings.CheckForUpdates),
-        flags: MenuItemFlags.RestoreFocus,
+        flags: MenuItemFlags.FocusBody,
         command: 'AutoUpdater.checkForUpdates',
       },
       {
@@ -56,7 +56,7 @@ export const getMenuEntries = async () => {
   entries.push({
     id: 'about',
     label: I18nString.i18nString(UiStrings.About),
-    flags: MenuItemFlags.RestoreFocus,
+    flags: MenuItemFlags.FocusBody,
     command: 'About.showAbout',
   })
   return entries

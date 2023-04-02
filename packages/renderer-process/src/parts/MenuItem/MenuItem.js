@@ -17,6 +17,7 @@ export const create$MenuItem = (item) => {
     case MenuItemFlags.None:
     case MenuItemFlags.RestoreFocus:
     case MenuItemFlags.Ignore:
+    case MenuItemFlags.FocusBody:
       $MenuItem.className = 'MenuItem'
       $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = getLabel(item)
