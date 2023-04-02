@@ -5,15 +5,11 @@ import { basename, dirname, join } from 'node:path'
 import * as Assert from '../Assert/Assert.js'
 import * as CompareVersion from '../CompareVersion/CompareVersion.js'
 import * as Download from '../Download/Download.js'
+import * as GetAppImageDownloadUrl from '../GetAppImageDownloadUrl/GetAppImageDownloadUrl.js'
 import * as GetLatestReleaseVersion from '../GetLatestReleaseVersion/GetLatestReleaseVersion.js'
 import * as MakeExecutable from '../MakeExecutable/MakeExecutable.js'
 import * as Platform from '../Platform/Platform.js'
 import { VError } from '../VError/VError.js'
-
-const getDownloadUrl = (repository, version, appImageName) => {
-  Assert.string(version)
-  return `https://github.com/${repository}/releases/download/v${version}/${appImageName}-v${version}.AppImage`
-}
 
 const getOutfilePath = (version) => {
   Assert.string(version)
@@ -26,7 +22,7 @@ export const downloadUpdate = async (version) => {
     Assert.string(version)
     const repository = Platform.getRepository()
     const appImageName = Platform.getAppImageName()
-    const downLoadUrl = getDownloadUrl(repository, version, appImageName)
+    const downLoadUrl = GetAppImageDownloadUrl.getDownloadUrl(repository, version, appImageName)
     const outFile = getOutfilePath(version)
     await Download.download(downLoadUrl, outFile)
     return outFile
