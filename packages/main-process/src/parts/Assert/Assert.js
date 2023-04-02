@@ -1,5 +1,5 @@
 // TODO treeshake out this whole module in production
-const { AssertionError } = require('../AssertionError.js')
+const { AssertionError } = require('../AssertionError/AssertionError.js')
 
 const getType = (value) => {
   switch (typeof value) {
