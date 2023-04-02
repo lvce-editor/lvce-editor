@@ -99,9 +99,12 @@ const copyMetaFiles = async ({ product }) => {
     '@@COPYRIGHT@@': product.copyrightShort,
     '@@LICENSE@@': product.licenseName,
   })
+  await Remove.remove(`build/.tmp/linux/deb/${debArch}/app/usr/bin`)
   await Mkdir.mkdir(`build/.tmp/linux/deb/${debArch}/app/usr/bin`)
-  await Remove.remove(`build/.tmp/linux/deb/amd64/app/usr/bin/lvce-oss`)
-  await symlink(`../lib/lvce-oss/lvce-oss`, Path.absolute(`build/.tmp/linux/deb/amd64/app/usr/bin/lvce-oss`))
+  await symlink(
+    `../lib/${product.applicationName}/${product.applicationName}`,
+    Path.absolute(`build/.tmp/linux/deb/amd64/app/usr/bin/${product.applicationName}`)
+  )
 }
 
 const compressData = async () => {
