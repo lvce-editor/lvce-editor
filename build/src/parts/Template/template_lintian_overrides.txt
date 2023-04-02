@@ -38,6 +38,8 @@
 @@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/symlink-dir/dist/cli.js]
 @@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/uuid/dist/bin/uuid]
 @@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/which/bin/node-which]
+@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/is-inside-container/cli.js]
+@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/is-wsl/node_modules/is-docker/cli.js]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/@types/http-cache-semantics/package.json]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/nan/tools/1to2.js]
@@ -54,6 +56,8 @@
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/trash/lib/macos-trash]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/uuid/dist/bin/uuid]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/which/bin/node-which]
+@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/is-inside-container/cli.js]
+@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/is-wsl/node_modules/is-docker/cli.js]
 @@NAME@@: script-not-executable [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/node-addon-api/tools/clang-format.js]
 @@NAME@@: script-not-executable [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/node-addon-api/tools/eslint-format.js]
 @@NAME@@: script-not-executable [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/symlink-dir/dist/cli.d.ts]
@@ -67,7 +71,6 @@
 
 # extensions
 @@NAME@@: package-contains-vcs-control-file [usr/lib/@@NAME@@/resources/app/extensions/builtin.language-features-typescript/node_modules/extsprintf/.gitmodules]
-@@NAME@@: package-contains-vcs-control-file [usr/lib/@@NAME@@/resources/app/extensions/builtin.prettier/node_modules/extsprintf/.gitmodules]
 
 # other
 @@NAME@@: extended-description-is-empty
