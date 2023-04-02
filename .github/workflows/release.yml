@@ -89,7 +89,7 @@ jobs:
           key: ${{ runner.os }}-electron-builder-${{ hashFiles('build/package-lock.json') }}
       - name: Build Electron App (deb, x64)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --target=electron-deb
+        run: node build/bin/build.js --product=lvce --target=electron-deb
       - name: Rename Electron App (deb, x64)
         if: matrix.os == 'ubuntu-22.04'
         shell: bash
