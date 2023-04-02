@@ -89,7 +89,7 @@ jobs:
           key: ${{ runner.os }}-electron-builder-${{ hashFiles('build/package-lock.json') }}
       - name: Build Electron App (deb, x64)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --target=electron-deb
+        run: node build/bin/build.js --product=lvce --target=electron-deb
       - name: Rename Electron App (deb, x64)
         if: matrix.os == 'ubuntu-22.04'
         shell: bash
@@ -99,7 +99,7 @@ jobs:
           echo "ASSET_Deb_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (deb, x64)
         uses: actions/upload-release-asset@v1.0.1
-        if: matrix.os == 'windows-2022'
+        if: matrix.os == 'ubuntu-22.04'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
