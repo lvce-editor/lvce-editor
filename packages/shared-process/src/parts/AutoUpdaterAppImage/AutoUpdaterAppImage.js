@@ -1,14 +1,14 @@
 import { spawn } from 'node:child_process'
-import { chmod, rename } from 'node:fs/promises'
+import { rename } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import * as Assert from '../Assert/Assert.js'
 import * as CompareVersion from '../CompareVersion/CompareVersion.js'
 import * as Download from '../Download/Download.js'
 import * as GetLatestReleaseVersion from '../GetLatestReleaseVersion/GetLatestReleaseVersion.js'
+import * as MakeExecutable from '../MakeExecutable/MakeExecutable.js'
 import * as Platform from '../Platform/Platform.js'
 import { VError } from '../VError/VError.js'
-import * as MakeExecutable from '../MakeExecutable/MakeExecutable.js'
 
 const getDownloadUrl = (repository, version, appImageName) => {
   Assert.string(version)
