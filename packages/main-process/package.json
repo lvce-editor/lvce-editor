@@ -29,7 +29,6 @@
     "clean-stack": "^5.0.1",
     "debug": "^4.3.4",
     "electron-unhandled": "^4.0.1",
-    "got": "^12.6.0",
     "lines-and-columns": "^2.0.3",
     "minimist": "^1.2.8",
     "verror": "^1.10.1"
