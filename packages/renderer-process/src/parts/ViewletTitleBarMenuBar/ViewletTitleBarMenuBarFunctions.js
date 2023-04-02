@@ -24,6 +24,6 @@ export const handleMenuMouseOver = (level, index) => {
   RendererWorker.send('TitleBarMenuBar.handleMenuMouseOver', level, index)
 }
 
-export const handleMenuMouseDown = (level, index) => {
-  RendererWorker.send('TitleBarMenuBar.handleMenuMouseDown', level, index)
+export const handleMenuClick = (level, index) => {
+  RendererWorker.send('TitleBarMenuBar.handleMenuClick', level, index)
 }

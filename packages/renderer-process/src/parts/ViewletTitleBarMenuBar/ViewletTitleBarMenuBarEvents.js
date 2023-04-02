@@ -67,9 +67,9 @@ export const handleMenuMouseOver = (event) => {
   ViewletTitleBarMenuBarFunctions.handleMenuMouseOver(level, index)
 }
 
-export const handleMenuMouseDown = (event) => {
+export const handleMenuClick = (event) => {
   const { level, index } = getLevelAndIndex(event)
-  ViewletTitleBarMenuBarFunctions.handleMenuMouseDown(level, index)
+  ViewletTitleBarMenuBarFunctions.handleMenuClick(level, index)
 }
 
 export const handleFocus = () => {
