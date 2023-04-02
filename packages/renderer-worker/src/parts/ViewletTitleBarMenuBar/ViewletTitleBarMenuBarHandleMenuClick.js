@@ -4,7 +4,7 @@ import { selectIndexNone } from './ViewletTitleBarMenuBarSelectIndexNone.js'
 import { selectIndexRestoreFocus } from './ViewletTitleBarMenuBarSelectIndexRestoreFocus.js'
 import { selectIndexSubMenu } from './ViewletTitleBarMenuBarSelectIndexSubMenu.js'
 
-export const handleMenuMouseDown = (state, level, index) => {
+export const handleMenuClick = (state, level, index) => {
   const { menus } = state
   const menu = menus[level]
   const item = menu.items[index]

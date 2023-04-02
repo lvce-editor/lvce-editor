@@ -1,16 +1,8 @@
-const Electron = require('electron')
-const Window = require('../ElectronWindow/ElectronWindow.js')
 const Assert = require('../Assert/Assert.js')
-const Platform = require('../Platform/Platform.js')
-const Timeout = require('../Timeout/Timeout.js')
+const Electron = require('electron')
 const ElectronMessageBoxType = require('../ElectronMessageBoxType/ElectronMessageBoxType.js')
-
-/**
- * artificial timeout to work around electron bug https://github.com/electron/electron/issues/31449
- */
-const enableElectronFreezeDesktopWorkaround = async () => {
-  await Timeout.wait(140)
-}
+const Platform = require('../Platform/Platform.js')
+const Window = require('../ElectronWindow/ElectronWindow.js')
 
 exports.showOpenDialog = async (title, properties) => {
   Assert.string(title)
@@ -19,7 +11,6 @@ exports.showOpenDialog = async (title, properties) => {
   if (!focusedWindow) {
     return
   }
-  await enableElectronFreezeDesktopWorkaround()
   const result = await Electron.dialog.showOpenDialog(focusedWindow, {
     properties,
     title,
@@ -41,7 +32,6 @@ exports.showOpenDialog = async (title, properties) => {
 exports.showMessageBox = async (message, buttons, type = ElectronMessageBoxType.Error, detail) => {
   Assert.string(message)
   Assert.array(buttons)
-  await enableElectronFreezeDesktopWorkaround()
   const focusedWindow = Window.getFocusedWindow()
   if (!focusedWindow) {
     return
