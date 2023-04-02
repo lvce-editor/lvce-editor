@@ -87,6 +87,26 @@ jobs:
         with:
           path: '~\AppData\Local\electron-builder'
           key: ${{ runner.os }}-electron-builder-${{ hashFiles('build/package-lock.json') }}
+      - name: Build Electron App (deb, x64)
+        if: matrix.os == 'ubuntu-22.04'
+        run: node build/bin/build.js --target=electron-deb
+      - name: Rename Electron App (deb, x64)
+        if: matrix.os == 'ubuntu-22.04'
+        shell: bash
+        run: |
+          staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.deb"
+          mv "build/.tmp/releases/lvce-amd64.deb" "$staging"
+          echo "ASSET_Deb_X64=$staging" >> $GITHUB_ENV
+      - name: Release Electron App (deb, x64)
+        uses: actions/upload-release-asset@v1.0.1
+        if: matrix.os == 'windows-2022'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.ASSET_Deb_X64 }}
+          asset_name: ${{ env.ASSET_Deb_X64 }}
+          asset_content_type: application/octet-stream
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2022'
         run: node build/bin/build.js --product=lvce --target=electron-builder-windows-exe
