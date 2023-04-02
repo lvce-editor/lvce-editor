@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process'
 import { rename } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { basename, dirname, join } from 'node:path'
 import * as Assert from '../Assert/Assert.js'
 import * as CompareVersion from '../CompareVersion/CompareVersion.js'
 import * as Download from '../Download/Download.js'
@@ -53,9 +53,18 @@ const getAppImagePath = () => {
   return process.env.APPIMAGE
 }
 
-const installNewAppImage = async (appImageFile, downloadPath) => {
+const installNewAppImage = async (currentAppImageFile, downloadPath) => {
   try {
-    await rename(downloadPath, appImageFile)
+    const currentFileName = basename(currentAppImageFile)
+    const newFileName = basename(downloadPath)
+    if (currentFileName === newFileName) {
+      await rename(downloadPath, currentAppImageFile)
+      return currentAppImageFile
+    }
+    const destinationFolder = dirname(currentAppImageFile)
+    const destinationPath = join(destinationFolder, newFileName)
+    await rename(downloadPath, destinationPath)
+    return destinationPath
   } catch (error) {
     // @ts-ignore
     throw new VError(error, `Failed to rename AppImage file`)
@@ -70,13 +79,13 @@ const restart = (downloadPath) => {
 export const installAndRestart = async (downloadPath) => {
   try {
     Assert.string(downloadPath)
-    const appImageFile = getAppImagePath()
-    if (!appImageFile) {
+    const currentAppImageFile = getAppImagePath()
+    if (!currentAppImageFile) {
       throw new Error(`AppImage path not found`)
     }
     await MakeExecutable.makeExecutable(downloadPath)
-    await installNewAppImage(appImageFile, downloadPath)
-    await restart(downloadPath)
+    const installedPath = await installNewAppImage(currentAppImageFile, downloadPath)
+    await restart(installedPath)
   } catch (error) {
     // @ts-ignore
     throw new VError(error, `Failed to install AppImage update`)
