@@ -11,8 +11,6 @@ exports.load = async (moduleId) => {
       return require('../AppWindow/AppWindow.ipc.js')
     case ModuleId.ElectronApplicationMenu:
       return require('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js')
-    case ModuleId.ElectronAutoUpdater:
-      return require('../ElectronAutoUpdater/ElectronAutoUpdater.ipc.js')
     case ModuleId.Beep:
       return require('../ElectronBeep/ElectronBeep.js')
     case ModuleId.ElectronBrowserView:
@@ -53,10 +51,6 @@ exports.load = async (moduleId) => {
       return require('../ElectronNet/ElectronNet.ipc.js')
     case ModuleId.ElectronBrowserViewSuggestions:
       return require('../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.ipc.js')
-    case ModuleId.IsAutoUpdateSupported:
-      return require('../IsAutoUpdateSupported/IsAutoUpdateSupported.ipc.js')
-    case ModuleId.AutoUpdater:
-      return require('../AutoUpdater/AutoUpdater.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }

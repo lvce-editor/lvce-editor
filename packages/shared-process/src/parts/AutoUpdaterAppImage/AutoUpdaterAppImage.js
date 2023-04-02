@@ -1,13 +1,13 @@
-const { join } = require('node:path')
-const { rename, chmod } = require('node:fs/promises')
-const { spawn } = require('node:child_process')
-const { tmpdir } = require('node:os')
-const Assert = require('../Assert/Assert.js')
-const CompareVersion = require('../CompareVersion/CompareVersion.js')
-const Download = require('../Download/Download.js')
-const GetLatestReleaseVersion = require('../GetLatestReleaseVersion/GetLatestReleaseVersion.js')
-const Platform = require('../Platform/Platform.js')
-const VError = require('verror')
+import { spawn } from 'node:child_process'
+import { chmod, rename } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import * as Assert from '../Assert/Assert.js'
+import * as CompareVersion from '../CompareVersion/CompareVersion.js'
+import * as Download from '../Download/Download.js'
+import * as GetLatestReleaseVersion from '../GetLatestReleaseVersion/GetLatestReleaseVersion.js'
+import * as Platform from '../Platform/Platform.js'
+import { VError } from '../VError/VError.js'
 
 const getDownloadUrl = (repository, version, appImageName) => {
   Assert.string(version)
@@ -20,7 +20,7 @@ const getOutfilePath = (version) => {
   return outFile
 }
 
-exports.downloadUpdate = async (version) => {
+export const downloadUpdate = async (version) => {
   try {
     Assert.string(version)
     const repository = Platform.getRepository()
@@ -34,7 +34,7 @@ exports.downloadUpdate = async (version) => {
   }
 }
 
-exports.checkForUpdatesAndNotify = async () => {
+export const checkForUpdatesAndNotify = async () => {
   const repository = Platform.getRepository()
   const version = await GetLatestReleaseVersion.getLatestReleaseVersion(repository)
   const currentVersion = Platform.version
@@ -69,17 +69,17 @@ const makeExecutable = async (file) => {
   await chmod(file, 0o755)
 }
 
-exports.installAndRestart = async (downloadPath) => {
+export const installAndRestart = async (downloadPath) => {
   try {
     const appImageFile = getAppImagePath()
     if (!appImageFile) {
-      throw new Error(`App image path not found`)
+      throw new Error(`AppImage path not found`)
     }
     await makeExecutable(downloadPath)
     await installNewAppImage(appImageFile, downloadPath)
     await restart(downloadPath)
   } catch (error) {
     // @ts-ignore
-    throw new VError(error, `Failed to install app image update`)
+    throw new VError(error, `Failed to install AppImage update`)
   }
 }
