@@ -3,6 +3,10 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
+    case 'AutoUpdater.checkForUpdatesAndNotify':
+    case 'AutoUpdater.downloadUpdate':
+    case 'AutoUpdater.installAndRestart':
+      return ModuleId.AutoUpdater
     case 'BulkReplacement.applyBulkReplacement':
       return ModuleId.BulkReplacement
     case 'ChromeExtension.install':
@@ -99,6 +103,8 @@ export const getModuleId = (commandId) => {
     case 'GitLsFiles.gitLsFilesHash':
     case 'GitLsFiles.resolveGit':
       return ModuleId.GitLsFiles
+    case 'IsAutoUpdateSupported.isAutoUpdateSupported':
+      return ModuleId.IsAutoUpdateSupported
     case 'Native.openFolder':
       return ModuleId.Native
     case 'OutputChannel.close':

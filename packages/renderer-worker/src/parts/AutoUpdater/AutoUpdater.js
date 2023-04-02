@@ -1,5 +1,5 @@
 import * as Command from '../Command/Command.js'
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 const getPromptMessage = (version) => {
   return `Do you want to update to version ${version}?`
@@ -10,20 +10,20 @@ const getPromptRestart = () => {
 }
 
 export const checkForUpdates = async () => {
-  const info = await ElectronProcess.invoke('AutoUpdater.checkForUpdatesAndNotify')
+  const info = await SharedProcess.invoke('AutoUpdater.checkForUpdatesAndNotify')
   if (info && info.version) {
     const message = getPromptMessage(info.version)
     const shouldUpdate = await Command.execute('ConfirmPrompt.prompt', message)
     if (!shouldUpdate) {
       return
     }
-    await ElectronProcess.invoke('AutoUpdater.downloadUpdate', info.version)
+    await SharedProcess.invoke('AutoUpdater.downloadUpdate', info.version)
     const messageRestart = getPromptRestart()
     const shouldRestart = await Command.execute('ConfirmPrompt.prompt', messageRestart)
     if (!shouldRestart) {
       return
     }
-    await ElectronProcess.invoke('AutoUpdater.installAndRestart')
+    await SharedProcess.invoke('AutoUpdater.installAndRestart')
   }
   console.log({ info })
 }

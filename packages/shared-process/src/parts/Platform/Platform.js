@@ -141,3 +141,13 @@ export const getDownloadDir = () => {
   const { XDG_DOWNLOAD_DIR } = env
   return XDG_DOWNLOAD_DIR || join(homeDir, 'Downloads')
 }
+
+export const getRepository = () => {
+  return `lvce-editor/lvce-editor`
+}
+
+export const getAppImageName = () => {
+  return 'Lvce'
+}
+
+export const version = '0.0.0-dev'

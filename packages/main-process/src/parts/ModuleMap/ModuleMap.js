@@ -8,10 +8,6 @@ const getPrefix = (commandId) => {
 exports.getModuleId = (commandId) => {
   const prefix = getPrefix(commandId)
   switch (prefix) {
-    case 'IsAutoUpdateSupported':
-      return ModuleId.IsAutoUpdateSupported
-    case 'AutoUpdater':
-      return ModuleId.AutoUpdater
     case 'ElectronApp':
     case 'App':
       return ModuleId.App
@@ -47,8 +43,6 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronContextMenu
     case 'ElectronClipBoard':
       return ModuleId.ElectronClipBoard
-    case 'ElectronAutoUpdater':
-      return ModuleId.ElectronAutoUpdater
     case 'ElectronApplicationMenu':
       return ModuleId.ElectronApplicationMenu
     case 'About':

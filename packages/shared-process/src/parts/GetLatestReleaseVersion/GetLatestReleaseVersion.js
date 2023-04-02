@@ -1,5 +1,5 @@
-const { default: got, HTTPError } = require('got')
-const VError = require('verror')
+import got, { HTTPError } from 'got'
+import { VError } from '../VError/VError.js'
 
 /**
  *
@@ -43,7 +43,7 @@ const parseVersionFromUrl = (url, repository) => {
   return version
 }
 
-exports.getLatestReleaseVersion = async (repository) => {
+export const getLatestReleaseVersion = async (repository) => {
   try {
     const json = await got.head(`https://github.com/${repository}/releases/latest`)
     const finalUrl = json.url

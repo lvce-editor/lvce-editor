@@ -72,11 +72,3 @@ exports.getChromeExtensionsPath = () => {
 exports.getExtensionHostHelperProcessPath = () => {
   return join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
 }
-
-exports.getRepository = () => {
-  return `lvce-editor/lvce-editor`
-}
-
-exports.getAppImageName = () => {
-  return 'Lvce'
-}
