@@ -14,7 +14,7 @@ export const licenseUrl = 'https://github.com/lvce-editor/lvce-editor/blob/main/
 
 export const licenseFileName = 'LICENSE'
 
-export const copyrightShort = `2022, Le Vivilet`
+export const copyrightShort = `2023, Lvce Editor`
 
 // TODO
 export const linuxSummary = 'Code Editor'
@@ -30,6 +30,6 @@ export const repoUrl = 'https://github.com/lvce-editor/lvce-editor'
 // TODO need actual home page
 export const homePage = 'https://github.com/lvce-editor/lvce-editor'
 
-export const linuxMaintainer = 'Le Vivilet <levivilet@pm.me>'
+export const linuxMaintainer = 'Lvce Editor <lvce-editor@pm.me>'
 
 export const supportsAutoUpdate = true
