@@ -3,36 +3,9 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
-
-const walkDependencies = (object, fn) => {
-  const shouldContinue = fn(object)
-  if (!shouldContinue) {
-    return
-  }
-  if (!object.dependencies) {
-    if (!object._dependencies) {
-      return
-    }
-    const hiddenDependencies = Object.keys(object._dependencies)
-    for (const hiddenDependency of hiddenDependencies) {
-      walkDependencies(
-        {
-          path: object.path.slice(0, -object.name.length) + hiddenDependency,
-          name: hiddenDependency,
-        },
-        fn
-      )
-    }
-    return
-  }
-  const visibleDependencies = Object.values(object.dependencies)
-  for (const value of visibleDependencies) {
-    walkDependencies(value, fn)
-  }
-}
+import * as WalkDependencies from '../WalkDependencies/WalkDependencies.js'
 
 const getNpmDependencies = (rawDependencies) => {
-  rawDependencies
   const dependencyPaths = []
   const handleDependency = (dependency) => {
     if (!dependency.path) {
@@ -60,7 +33,7 @@ const getNpmDependencies = (rawDependencies) => {
     dependencyPaths.push(dependency.path)
     return true
   }
-  walkDependencies(rawDependencies, handleDependency)
+  WalkDependencies.walkDependencies(rawDependencies, handleDependency)
   return dependencyPaths.slice(1)
 }
 
