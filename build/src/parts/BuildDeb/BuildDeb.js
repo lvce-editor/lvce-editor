@@ -207,6 +207,12 @@ const fixPermissions = async () => {
   }
 }
 
+const cleanup = async () => {
+  const debArch = 'amd64'
+  const cwd = Path.absolute(`build/.tmp/linux/deb/${debArch}`)
+  await Remove.remove(cwd)
+}
+
 export const build = async ({ product }) => {
   if (!isFakeRoot()) {
     Logger.info('[info] enabling fakeroot')
@@ -214,6 +220,10 @@ export const build = async ({ product }) => {
     return
   }
   const version = await Tag.getGitTag()
+
+  console.time('cleanup')
+  await cleanup()
+  console.timeEnd('cleanup')
 
   console.time('copyElectronResult')
   await copyElectronResult({ product, version })
