@@ -71,7 +71,9 @@ const copyMetaFiles = async ({ product }) => {
   await Template.write('bash_completion', `build/.tmp/linux/deb/${debArch}/app/usr/share/bash-completion/completions/${product.applicationName}`, {
     '@@APPNAME@@': product.applicationName,
   })
-  await Template.write('lintian_overrides', `build/.tmp/linux/deb/${debArch}/app/usr/share/lintian/overrides/${product.applicationName}`, {})
+  await Template.write('lintian_overrides', `build/.tmp/linux/deb/${debArch}/app/usr/share/lintian/overrides/${product.applicationName}`, {
+    '@@NAME@@': product.applicationName,
+  })
   await Copy.copyFile({
     from: 'build/files/icon.png',
     to: `build/.tmp/linux/deb/${debArch}/app/usr/share/pixmaps/${product.applicationName}.png`,
