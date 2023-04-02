@@ -34,6 +34,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.js',
     'build/src/parts/NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js',
     'build/src/parts/NpmDependencies/NpmDependencies.js',
+    'build/src/parts/WalkDependencies/WalkDependencies.js',
     'build/src/parts/Rebuild/Rebuild.js',
   ]
   const absolutePaths = files.map(Path.absolute)
