@@ -18,13 +18,13 @@ import * as Template from '../Template/Template.js'
 // TODO maybe don't need to include nan module
 // TODO don't need to include whole vscode-ripgrep-with-github-api-error-fix module (only path)
 
-const bundleElectronMaybe = async ({ product, version }) => {
+const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
   //   Logger.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product, version })
+  await build({ product, version, supportsAutoUpdate })
 }
 
 const getElectronVersion = async () => {
@@ -163,8 +163,8 @@ const getRepositoryInfo = (url) => {
   }
 }
 
-const copyElectronResult = async ({ config, version, product, electronVersion }) => {
-  await bundleElectronMaybe({ product, version })
+const copyElectronResult = async ({ config, version, product, electronVersion, supportsAutoUpdate }) => {
+  await bundleElectronMaybe({ product, version, supportsAutoUpdate })
   const debArch = 'amd64'
   await Copy.copy({
     from: `build/.tmp/electron-bundle/x64`,
@@ -175,7 +175,7 @@ const copyElectronResult = async ({ config, version, product, electronVersion })
     version,
     product,
   })
-  if (product.supportsAutoUpdate && (config === ElectronBuilderConfigType.AppImage || config === ElectronBuilderConfigType.WindowsExe)) {
+  if (supportsAutoUpdate) {
     await Replace.replace({
       path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/shared-process/src/parts/IsAutoUpdateSupported/IsAutoUpdateSupported.js`,
       occurrence: `return Platform.isWindows || Platform.isMacOs`,
@@ -238,8 +238,11 @@ export const build = async ({ config, product }) => {
   const version = await Tag.getSemverVersion()
   const electronVersion = await getElectronVersion()
 
+  const supportsAutoUpdate =
+    product.supportsAutoUpdate && (config === ElectronBuilderConfigType.AppImage || config === ElectronBuilderConfigType.WindowsExe)
+
   console.time('copyElectronResult')
-  await copyElectronResult({ version, config, product, electronVersion })
+  await copyElectronResult({ version, config, product, electronVersion, supportsAutoUpdate })
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')

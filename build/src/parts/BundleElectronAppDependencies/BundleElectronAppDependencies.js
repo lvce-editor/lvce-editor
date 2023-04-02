@@ -40,11 +40,12 @@ const copySharedProcessFiles = async ({ cachePath }) => {
   })
 }
 
-const copyMainProcessFiles = async ({ arch, electronVersion, cachePath }) => {
+const copyMainProcessFiles = async ({ arch, electronVersion, cachePath, supportsAutoUpdate }) => {
   await BundleMainProcessDependencies.bundleMainProcessDependencies({
     electronVersion,
     arch,
     to: `${cachePath}/packages/main-process`,
+    supportsAutoUpdate,
   })
 }
 
@@ -131,7 +132,7 @@ const addRootPackageJson = async ({ cachePath, electronVersion, product }) => {
   })
 }
 
-export const bundleElectronAppDependencies = async ({ cachePath, arch, electronVersion, product }) => {
+export const bundleElectronAppDependencies = async ({ cachePath, arch, electronVersion, product, supportsAutoUpdate }) => {
   console.time('copyPtyHostFiles')
   await copyPtyHostFiles({
     arch,
@@ -163,6 +164,7 @@ export const bundleElectronAppDependencies = async ({ cachePath, arch, electronV
     arch,
     electronVersion,
     cachePath,
+    supportsAutoUpdate,
   })
   console.timeEnd('copyMainProcessFiles')
 

@@ -4,8 +4,31 @@ import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModules
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
+import * as WalkDependencies from '../WalkDependencies/WalkDependencies.js'
 
-export const bundleMainProcessDependencies = async ({ to, arch, electronVersion }) => {
+const getNpmDependencies = (rawDependencies, supportsAutoUpdate) => {
+  const dependencyPaths = []
+  const handleDependency = (dependency) => {
+    if (!dependency.path) {
+      return false
+    }
+    if (!dependency.name) {
+      return false
+    }
+    if (dependency.name === 'electron-updater' && !supportsAutoUpdate) {
+      return false
+    }
+    if (dependency.name.includes('@types')) {
+      return false
+    }
+    dependencyPaths.push(dependency.path)
+    return true
+  }
+  WalkDependencies.walkDependencies(rawDependencies, handleDependency)
+  return dependencyPaths.slice(1)
+}
+
+export const bundleMainProcessDependencies = async ({ to, arch, electronVersion, supportsAutoUpdate }) => {
   const mainProcessPath = Path.absolute('packages/main-process')
   const packageJson = await JsonFile.readJson('packages/main-process/package.json')
   await JsonFile.writeJson({
@@ -16,8 +39,9 @@ export const bundleMainProcessDependencies = async ({ to, arch, electronVersion 
       dependencies: packageJson.dependencies,
     },
   })
-  const dependencies = await NpmDependencies.getNpmDependencies('packages/main-process')
-  for (const dependency of dependencies) {
+  const npmDependenciesRaw = await NpmDependencies.getNpmDependenciesRawJson('packages/main-process')
+  const npmDependencies = getNpmDependencies(npmDependenciesRaw, supportsAutoUpdate)
+  for (const dependency of npmDependencies) {
     const dependencyTo = to + dependency.slice(mainProcessPath.length)
     await Copy.copy({
       from: dependency,

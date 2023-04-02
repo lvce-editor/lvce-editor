@@ -18,7 +18,7 @@ import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
-const getDependencyCacheHash = async ({ electronVersion, arch }) => {
+const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate }) => {
   const files = [
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
@@ -38,7 +38,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch }) => {
   ]
   const absolutePaths = files.map(Path.absolute)
   const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
-  const hash = Hash.computeHash(contents + electronVersion + arch)
+  const hash = Hash.computeHash(contents + electronVersion + arch + String(supportsAutoUpdate))
   return hash
 }
 
@@ -262,7 +262,7 @@ const copyCss = async ({ arch }) => {
   })
 }
 
-export const build = async ({ product, version = '0.0.0-dev' }) => {
+export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate = false }) => {
   Assert.object(product)
   Assert.string(version)
   const arch = process.arch
@@ -270,6 +270,7 @@ export const build = async ({ product, version = '0.0.0-dev' }) => {
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
     arch,
+    supportsAutoUpdate,
   })
   const dependencyCachePath = Path.join(Path.absolute('build/.tmp/cachedDependencies'), dependencyCacheHash)
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
@@ -296,6 +297,7 @@ export const build = async ({ product, version = '0.0.0-dev' }) => {
       arch,
       electronVersion,
       product,
+      supportsAutoUpdate,
     })
     console.timeEnd('bundleElectronAppDependencies')
   }
