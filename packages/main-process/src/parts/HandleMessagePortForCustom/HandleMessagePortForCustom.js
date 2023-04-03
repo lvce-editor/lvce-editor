@@ -1,5 +1,6 @@
-const { utilityProcess } = require('electron')
 const Assert = require('../Assert/Assert.js')
+const IpcParent = require('../IpcParent/IpcParent.js')
+const IpcParentType = require('../IpcParentType/IpcParentType.js')
 
 const getPath = (data) => {
   Assert.string(data)
@@ -17,14 +18,11 @@ exports.handlePort = async (event, data) => {
     throw new Error(`browserWindowPort must be passed`)
   }
   const path = getPath(data)
-  const p = utilityProcess.fork(path, [], { stdio: 'pipe' })
-  // p.postMessage('hello')
-  p.postMessage({}, [browserWindowPort])
-  p.on('spawn', () => {
-    console.log('process spawned')
+  const childProcess = await IpcParent.create({
+    method: IpcParentType.ElectronUtilityProcess,
+    path,
+    argv: [],
   })
-  // @ts-ignore
-  p.stdout.pipe(process.stdout)
-  // @ts-ignore
-  p.stderr.pipe(process.stderr)
+  console.log('created utility process')
+  childProcess.postMessage({}, [browserWindowPort])
 }
