@@ -3,6 +3,7 @@ import * as Character from '../Character/Character.js'
 import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
+import * as IsActualSourceFile from '../IsActualSourceFile/IsActualSourceFile.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
@@ -111,7 +112,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       return error
     }
     const [_, path, line, column] = match
-    if (path === '<anonymous>' || path === 'debugger eval code' || path.startsWith('"') || path.startsWith(`'`) || path.startsWith(')')) {
+    if (!IsActualSourceFile.isActualSourceFile(path)) {
       return error
     }
     const text = await Ajax.getText(path)
