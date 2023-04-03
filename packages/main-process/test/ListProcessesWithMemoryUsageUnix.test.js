@@ -1,7 +1,7 @@
 const childProcess = require('node:child_process')
 const fsPromises = require('node:fs/promises')
 const electron = require('electron')
-const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsageUnix.js')
+const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsageUnix/ListProcessesWithMemoryUsageUnix.js')
 const ErrorCodes = require('../src/parts/ErrorCodes/ErrorCodes.js')
 
 beforeEach(() => {
@@ -63,9 +63,7 @@ test('listProcessesWithMemoryUsage', async () => {
   electron.BrowserWindow.getAllWindows.mockImplementation(() => {
     return []
   })
-  expect(
-    await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(1442)
-  ).toEqual([
+  expect(await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(1442)).toEqual([
     {
       cmd: '/usr/libexec/gsd-keyboard',
       depth: 1,
@@ -139,9 +137,7 @@ test('listProcessesWithMemoryUsage - bug with parsing this specific line', async
   electron.BrowserWindow.getAllWindows.mockImplementation(() => {
     return []
   })
-  expect(
-    await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)
-  ).toEqual([
+  expect(await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)).toEqual([
     {
       cmd: '/snap/code/97/usr/share/code/code --ms-enable-electron-run-as-node --max-old-space-size=3072 /snap/code/97/usr/share/code/resources/app/extensions/node_modules/typescript/lib/tsserver.js --useInferredProjectPerProjectRoot --disableAutomaticTypingAcquisition --enableTelemetry --cancellationPipeName /tmp/vscode-typescript1000/25df66cb1c287c2f519c/tscancellation-9462d6e60479e4eb5d2f.tmp* --locale en --noGetErrOnBackgroundUpdate --validateDefaultNpmLocation --useNodeIpc',
       depth: 1,
@@ -158,9 +154,7 @@ test('listProcessesWithMemoryUsage - error - line could not be parsed', async ()
   childProcess.execFile.mockImplementation((command, args, callback) => {
     callback(null, { stdout: 'abc' })
   })
-  await expect(
-    ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(1)
-  ).rejects.toThrowError(new Error('line could not be parsed: abc'))
+  await expect(ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(1)).rejects.toThrowError(new Error('line could not be parsed: abc'))
 })
 
 test('listProcessesWithMemoryUsage - detect chrome devtools', async () => {
@@ -177,9 +171,7 @@ test('listProcessesWithMemoryUsage - detect chrome devtools', async () => {
   electron.BrowserWindow.getAllWindows.mockImplementation(() => {
     return []
   })
-  expect(
-    await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)
-  ).toEqual([
+  expect(await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)).toEqual([
     {
       cmd: '/snap/code/97/usr/share/code/code --ms-enable-electron-run-as-node --max-old-space-size=3072 /snap/code/97/usr/share/code/resources/app/extensions/node_modules/typescript/lib/tsserver.js --useInferredProjectPerProjectRoot --disableAutomaticTypingAcquisition --enableTelemetry --cancellationPipeName /tmp/vscode-typescript1000/25df66cb1c287c2f519c/tscancellation-9462d6e60479e4eb5d2f.tmp* --locale en --noGetErrOnBackgroundUpdate --validateDefaultNpmLocation --useNodeIpc',
       depth: 1,
@@ -214,9 +206,7 @@ test('listProcessesWithMemoryUsage - error - ESRCH', async () => {
   electron.BrowserWindow.getAllWindows.mockImplementation(() => {
     return []
   })
-  expect(
-    await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(1442)
-  ).toEqual([
+  expect(await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(1442)).toEqual([
     {
       cmd: '/usr/libexec/gsd-media-keys',
       depth: 1,

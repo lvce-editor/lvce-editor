@@ -2,7 +2,7 @@ const electron = require('electron')
 // @ts-ignore
 const WindowsProcessTree = require('windows-process-tree')
 const { VError } = require('verror')
-const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsageWindows.js')
+const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsageWindows/ListProcessesWithMemoryUsageWindows.js')
 
 jest.mock(
   'windows-process-tree',
@@ -42,8 +42,7 @@ test('listProcessesWithMemoryUsage - error - rootPid not found', async () => {
         pid: 9176,
         ppid: 9256,
         memory: 95653888,
-        commandLine:
-          'C:\\Users\\test-user\\Documents\\app\\packages\\main-process\\node_modules\\electron\\dist\\electron.exe .',
+        commandLine: 'C:\\Users\\test-user\\Documents\\app\\packages\\main-process\\node_modules\\electron\\dist\\electron.exe .',
         cpu: 0.19305019305019305,
       },
       {
@@ -101,8 +100,7 @@ test('listProcessesWithMemoryUsage - error - rootPid not found', async () => {
         pid: 9176,
         ppid: 9256,
         memory: 95653888,
-        commandLine:
-          'C:\\Users\\test-user\\Documents\\app\\packages\\main-process\\node_modules\\electron\\dist\\electron.exe .',
+        commandLine: 'C:\\Users\\test-user\\Documents\\app\\packages\\main-process\\node_modules\\electron\\dist\\electron.exe .',
         cpu: 0.19305019305019305,
       },
       {
@@ -152,9 +150,7 @@ test('listProcessesWithMemoryUsage - error - rootPid not found', async () => {
       },
     ])
   })
-  expect(
-    await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)
-  ).toEqual([
+  expect(await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)).toEqual([
     {
       cmd: 'C:\\Users\\test-user\\Documents\\app\\packages\\main-process\\node_modules\\electron\\dist\\electron.exe .',
       memory: 95653888,
@@ -208,7 +204,5 @@ test('listProcessesWithMemoryUsage - error - rootPid not found', async () => {
   await expect(
     ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)
     // @ts-ignore
-  ).rejects.toThrowError(
-    new VError('Failed to list processes: Root process 25666 not found')
-  )
+  ).rejects.toThrowError(new VError('Failed to list processes: Root process 25666 not found'))
 })
