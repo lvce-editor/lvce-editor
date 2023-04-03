@@ -9,6 +9,7 @@ import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHo
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostHover from '../ExtensionHostHover/ExtensionHostHover.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
+import * as ExtensionHostNodeIpc from '../../../../extension-host-worker/src/parts/ExtensionHostNodeIpc/ExtensionHostNodeIpc.js'
 import * as ExtensionHostNotification from '../ExtensionHostNotification/ExtensionHostNotification.js'
 import * as ExtensionHostOutputChannel from '../ExtensionHostOutputChannel/ExtensionHostOutputChannel.js'
 import * as ExtensionHostQuickPick from '../ExtensionHostQuickPick/ExtensionHostQuickPick.js'
@@ -21,7 +22,6 @@ import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/Exten
 import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
-import * as Registry from '../Registry/Registry.js'
 
 const noop = () => {}
 
@@ -88,6 +88,9 @@ export const vscode = {
   // Implementation
   registerImplementationProvider: ExtensionHostImplementation.registerImplementationProvider,
   executeImplementationProvider: ExtensionHostImplementation.executeImplementationProvider,
+
+  // Node Ipc
+  createNodeIpc: ExtensionHostNodeIpc.createNodeIpc,
 
   // Notification
   showNotification: ExtensionHostNotification.showNotification,

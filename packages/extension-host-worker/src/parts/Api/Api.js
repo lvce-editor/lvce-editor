@@ -12,6 +12,7 @@ import * as ExtensionHostExec from '../ExtensionHostExec/ExtensionHostExec.js'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
+import * as ExtensionHostNodeIpc from '../ExtensionHostNodeIpc/ExtensionHostNodeIpc.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
 import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
@@ -79,6 +80,9 @@ export const api = {
   // Formatting
   registerFormattingProvider: ExtensionHostFormatting.registerFormattingProvider,
   executeFormattingProvider: ExtensionHostFormatting.executeFormattingProvider,
+
+  // Node Ipc
+  createNodeIpc: ExtensionHostNodeIpc.createNodeIpc,
 
   // Implementation
   registerImplementationProvider: ExtensionHostImplementation.registerImplementationProvider,
