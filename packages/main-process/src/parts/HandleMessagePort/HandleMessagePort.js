@@ -13,6 +13,9 @@ const getModule = (type) => {
     case 'extension-host-helper-process':
       return require('../HandleMessagePortForExtensionHostHelperProcess/HandleMessagePortForExtensionHostHelperProcess.js')
     default:
+      if (type.startsWith('custom:')) {
+        return require('../HandleMessagePortForCustom/HandleMessagePortForCustom.js')
+      }
       return undefined
   }
 }
@@ -26,5 +29,5 @@ exports.handlePort = async (event, data) => {
     Logger.error(`[main-process] unexpected port type ${data}`)
     return
   }
-  await module.handlePort(event)
+  await module.handlePort(event, data)
 }
