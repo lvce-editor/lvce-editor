@@ -29,5 +29,6 @@ exports.handlePort = async (event, data) => {
     Logger.error(`[main-process] unexpected port type ${data}`)
     return
   }
-  await module.handlePort(event, data)
+  const port = event.ports[0]
+  await module.handlePort(event, port, data)
 }

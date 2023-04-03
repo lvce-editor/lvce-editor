@@ -12,8 +12,7 @@ const getPath = (data) => {
  * @param {import('electron').IpcMainEvent} event
  * @returns
  */
-exports.handlePort = async (event, data) => {
-  const browserWindowPort = event.ports[0]
+exports.handlePort = async (event, browserWindowPort, data) => {
   if (!browserWindowPort) {
     throw new Error(`browserWindowPort must be passed`)
   }
