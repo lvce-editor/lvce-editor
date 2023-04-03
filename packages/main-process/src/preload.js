@@ -1,33 +1,35 @@
 const { ipcRenderer, contextBridge } = require('electron')
 
-const ipcConnect = (type) => {
-  if (typeof type !== 'string') {
-    throw new TypeError('[preload] type must be of type string')
+const ipcConnect = (message) => {
+  if (typeof message !== 'object') {
+    throw new TypeError('[preload] message must be of type object')
   }
-  // renderer.js ///////////////////////////////////////////////////////////////
-  // MessagePorts are created in pairs. A connected pair of message ports is
-  // called a channel.
-  // @ts-ignore
-  const channel = new MessageChannel()
-
-  // The only difference between port1 and port2 is in how you use them. Messages
-  // sent to port1 will be received by port2 and vice-versa.
-  const { port1, port2 } = channel
-
-  // Here we send the other end of the channel, port1, to the main process. It's
-  // also possible to send MessagePorts to other frames, or to Web Workers, etc.
-  ipcRenderer.postMessage('port', type, [port1])
-
-  // @ts-ignore
-  window.postMessage('abc', '*', [port2])
+  ipcRenderer.postMessage('port', message)
 }
 
-// const handleQuickPickMessage = (...args) => {
-// console.log({ args })
-// }
+const combineMessage = (event, data) => {
+  if (event.ports.length === 1) {
+    return {
+      ...data,
+      result: event.ports[0],
+    }
+  }
+  return data
+}
+
+const handlePort = (event, message) => {
+  if (event.ports.length === 1) {
+    const port = event.ports[0]
+    // @ts-ignore
+    window.postMessage({ ...message, result: port }, '*', [port])
+  } else {
+    // @ts-ignore
+    window.postMessage(message, '*')
+  }
+}
 
 const main = () => {
-  // ipcRenderer.on('quickpick-message', handleQuickPickMessage)
+  ipcRenderer.on('port', handlePort)
 
   contextBridge.exposeInMainWorld('myApi', {
     ipcConnect,
