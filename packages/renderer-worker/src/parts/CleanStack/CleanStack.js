@@ -4,6 +4,7 @@ import * as Assert from '../Assert/Assert.js'
 const RE_AT = /^\s+at/
 const RE_AT_PROMISE_INDEX = /^\s*at async Promise.all \(index \d+\)$/
 const RE_OBJECT_AS = /^\s*at Object\.\w+ \[as ([\w\.]+)\]/
+const RE_OBJECT = /^\s*at Object\.(\w+)/
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
 const RE_PATH_3 = /@(.*):(\d+):(\d+)$/ // Firefox
@@ -50,7 +51,11 @@ const cleanLine = (line) => {
   if (line.startsWith('    at Module.')) {
     return '    at ' + line.slice('    at Module.'.length)
   }
-  const objectMatch = line.match(RE_OBJECT_AS)
+  const objectAsMatch = line.match(RE_OBJECT_AS)
+  if (objectAsMatch) {
+    return '    at ' + objectAsMatch[1] + line.slice(objectAsMatch[0].length)
+  }
+  const objectMatch = line.match(RE_OBJECT)
   if (objectMatch) {
     return '    at ' + objectMatch[1] + line.slice(objectMatch[0].length)
   }

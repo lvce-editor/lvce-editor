@@ -14,10 +14,12 @@ export const logError = async (error) => {
   return prettyError
 }
 
-export const handleError = async (error) => {
+export const handleError = async (error, notify = true) => {
   try {
     const prettyError = await logError(error)
-    await Command.execute(/* Notification.create */ 'Notification.create', /* type */ 'error', /* text */ PrettyError.getMessage(prettyError))
+    if (notify) {
+      await Command.execute(/* Notification.create */ 'Notification.create', /* type */ 'error', /* text */ PrettyError.getMessage(prettyError))
+    }
   } catch (otherError) {
     console.warn(`ErrorHandling error`)
     console.warn(otherError)
