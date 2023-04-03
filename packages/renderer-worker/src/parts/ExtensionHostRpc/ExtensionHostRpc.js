@@ -19,7 +19,7 @@ const handleMessageMethod = async (message, event) => {
   if (message.method === 'ElectronMessagePort.create') {
     const ipc = await IpcParent.create({
       method: IpcParentType.ElectronMessagePort,
-      type: 'extension-host-helper-process',
+      type: message.params[0],
     })
     event.target.postMessage(
       {
