@@ -232,7 +232,7 @@
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "0.0.8"
+    "version": "0.0.9"
   },
   {
     "name": "builtin.theme-atom-one-dark",
