@@ -1,13 +1,14 @@
-const Command = require('../Command/Command.js')
 const { CommandNotFoundError } = require('../CommandNotFoundError/CommandNotFoundError.js')
+const Command = require('../Command/Command.js')
 const JsonRpc = require('../JsonRpc/JsonRpc.js')
+const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
 const PrettyError = require('../PrettyError/PrettyError.js')
 
 exports.getResponse = async (message) => {
   try {
     const result = await Command.invoke(message.method, ...message.params)
     return {
-      jsonrpc: JsonRpc.Version,
+      jsonrpc: JsonRpcVersion.Two,
       result,
       id: message.id,
     }
@@ -16,7 +17,7 @@ exports.getResponse = async (message) => {
     PrettyError.print(prettyError)
     if (error && error instanceof CommandNotFoundError) {
       return {
-        jsonrpc: JsonRpc.Version,
+        jsonrpc: JsonRpcVersion.Two,
         id: message.id,
         error: {
           code: JsonRpc.ErrorMethodNotFound,
@@ -26,7 +27,7 @@ exports.getResponse = async (message) => {
       }
     }
     return {
-      jsonrpc: JsonRpc.Version,
+      jsonrpc: JsonRpcVersion.Two,
       id: message.id,
       error: {
         // TODO actually check that error.message and error.stack exist
