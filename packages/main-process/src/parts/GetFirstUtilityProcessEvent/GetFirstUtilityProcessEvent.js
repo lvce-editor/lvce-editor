@@ -7,17 +7,16 @@ const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeW
  */
 exports.getFirstUtilityProcessEvent = async (utilityProcess) => {
   const { type, event } = await new Promise((resolve, reject) => {
-    const cleanup = () => {
+    const cleanup = (value) => {
       utilityProcess.off('exit', handleExit)
       utilityProcess.off('mesage', handleMessage)
+      resolve(value)
     }
     const handleExit = (event) => {
-      cleanup()
-      resolve({ type: FirstNodeWorkerEventType.Exit, event })
+      cleanup({ type: FirstNodeWorkerEventType.Exit, event })
     }
     const handleMessage = (event) => {
-      cleanup()
-      resolve({ type: FirstNodeWorkerEventType.Message, event })
+      cleanup({ type: FirstNodeWorkerEventType.Message, event })
     }
     utilityProcess.on('exit', handleExit)
     utilityProcess.on('message', handleMessage)
