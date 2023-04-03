@@ -3,22 +3,21 @@ const { utilityProcess } = require('electron')
 const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js')
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 
-exports.create = async ({ path, argv, env, execArgv }) => {
+exports.create = async ({ path, argv, execArgv = [] }) => {
   Assert.string(path)
-  const process = utilityProcess.fork(path, argv, {
-    env,
+  const childProcess = utilityProcess.fork(path, argv, {
     execArgv,
     stdio: 'pipe',
   })
   // @ts-ignore
-  process.stdout.pipe(childProcess.stdout)
+  childProcess.stdout.pipe(process.stdout)
   // @ts-ignore
-  process.stderr.pipe(childProcess.stderr)
-  const { type, event } = await GetFirstUtilityProcessEvent.getFirstUtilityProcessEvent(process)
+  childProcess.stderr.pipe(process.stderr)
+  const { type, event } = await GetFirstUtilityProcessEvent.getFirstUtilityProcessEvent(childProcess)
   if (type === FirstNodeWorkerEventType.Exit) {
     throw new Error(`utility process exited before ipc connection was established`)
   }
-  return process
+  return childProcess
 }
 
 exports.wrap = (process) => {
