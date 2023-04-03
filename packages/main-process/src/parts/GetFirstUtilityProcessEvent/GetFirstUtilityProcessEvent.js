@@ -9,7 +9,7 @@ exports.getFirstUtilityProcessEvent = async (utilityProcess) => {
   const { type, event } = await new Promise((resolve, reject) => {
     const cleanup = (value) => {
       utilityProcess.off('exit', handleExit)
-      utilityProcess.off('mesage', handleMessage)
+      utilityProcess.off('message', handleMessage)
       resolve(value)
     }
     const handleExit = (event) => {

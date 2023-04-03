@@ -7,7 +7,12 @@ exports.create = async ({ path, argv, env, execArgv }) => {
   const process = utilityProcess.fork(path, argv, {
     env,
     execArgv,
+    stdio: 'pipe',
   })
+  // @ts-ignore
+  process.stdout.pipe(childProcess.stdout)
+  // @ts-ignore
+  process.stderr.pipe(childProcess.stderr)
   const { type, event } = await GetFirstUtilityProcessEvent.getFirstUtilityProcessEvent(process)
   return process
 }
