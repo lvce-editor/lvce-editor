@@ -1,32 +1,7 @@
 import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
-
-class NonError extends Error {
-  name = 'NonError'
-
-  constructor(message) {
-    super(message)
-  }
-}
-
-// ensureError based on https://github.com/sindresorhus/ensure-error/blob/main/index.js (License MIT)
-const ensureError = (input) => {
-  if (!(input instanceof Error)) {
-    return new NonError(input)
-  }
-  return input
-}
-
-const serializeError = (error) => {
-  error = ensureError(error)
-  return {
-    stack: error.stack,
-    message: error.message,
-    name: error.name,
-    type: error.constructor.name,
-  }
-}
+import * as SerializeError from '../SerializeError/SerializeError.js'
 
 export const getErrorResponse = (message, error) => {
   if (error && error instanceof CommandNotFoundError) {
@@ -40,7 +15,7 @@ export const getErrorResponse = (message, error) => {
       },
     }
   }
-  const serializedError = serializeError(error)
+  const serializedError = SerializeError.serializeError(error)
   return {
     jsonrpc: JsonRpcVersion.Two,
     id: message.id,
