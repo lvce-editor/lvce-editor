@@ -1,6 +1,6 @@
 const Command = require('../Command/Command.js')
-const GetSuccessResponse = require('../GetSuccessResponse/GetSuccessResponse.js')
 const GetErrorResponse = require('../GetErrorResponse/GetErrorResponse.js')
+const GetSuccessResponse = require('../GetSuccessResponse/GetSuccessResponse.js')
 
 exports.getResponse = async (message) => {
   try {
