@@ -2,17 +2,16 @@ import * as FirstWorkerEventType from '../FirstWorkerEventType/FirstWorkerEventT
 
 export const getFirstWorkerEvent = async (worker) => {
   const { type, event } = await new Promise((resolve, reject) => {
-    const cleanup = () => {
+    const cleanup = (value) => {
       worker.onmessage = null
       worker.onerror = null
+      resolve(value)
     }
     const handleFirstMessage = (event) => {
-      cleanup()
-      resolve({ type: FirstWorkerEventType.Message, event })
+      cleanup({ type: FirstWorkerEventType.Message, event })
     }
     const handleFirstError = (event) => {
-      cleanup()
-      resolve({ type: FirstWorkerEventType.Error, event })
+      cleanup({ type: FirstWorkerEventType.Error, event })
     }
     worker.onmessage = handleFirstMessage
     worker.onerror = handleFirstError
