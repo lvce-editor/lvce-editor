@@ -25,13 +25,12 @@ const getFolder = (args) => {
  * @param {import('electron').IpcMainEvent} event
  * @returns
  */
-exports.handlePort = async (event) => {
+exports.handlePort = async (event, browserWindowPort) => {
   const config = AppWindow.findById(event.sender.id)
   if (!config) {
     Logger.warn('port event - config expected')
     return
   }
-  const browserWindowPort = event.ports[0]
   const folder = getFolder(config.parsedArgs)
   Performance.mark(PerformanceMarkerType.WillStartSharedProcess)
   const sharedProcess = await SharedProcess.hydrate({
