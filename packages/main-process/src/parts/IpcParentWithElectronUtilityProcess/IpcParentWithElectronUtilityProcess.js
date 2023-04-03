@@ -1,6 +1,7 @@
 const Assert = require('../Assert/Assert.js')
 const { utilityProcess } = require('electron')
 const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js')
+const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 
 exports.create = async ({ path, argv, env, execArgv }) => {
   Assert.string(path)
@@ -9,6 +10,9 @@ exports.create = async ({ path, argv, env, execArgv }) => {
     execArgv,
   })
   const { type, event } = await GetFirstUtilityProcessEvent.getFirstUtilityProcessEvent(process)
+  if (type === FirstNodeWorkerEventType.Exit) {
+    throw new Error(`utility process exited before ipc connection was established`)
+  }
   return process
 }
 
