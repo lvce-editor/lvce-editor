@@ -4,12 +4,13 @@ export const getFirstNodeChildProcessEvent = async (childProcess) => {
   const { type, event, stdout, stderr } = await new Promise((resolve, reject) => {
     let stderr = ''
     let stdout = ''
-    const cleanup = () => {
+    const cleanup = (value) => {
       childProcess.stderr.off('data', handleStdErrData)
       childProcess.stdout.off('data', handleStdoutData)
       childProcess.off('message', handleMessage)
       childProcess.off('exit', handleExit)
       childProcess.off('error', handleError)
+      resolve(value)
     }
     const handleStdErrData = (data) => {
       stderr += data
@@ -18,16 +19,13 @@ export const getFirstNodeChildProcessEvent = async (childProcess) => {
       stdout += data
     }
     const handleMessage = (event) => {
-      cleanup()
-      resolve({ type: FirstNodeWorkerEventType.Message, event, stdout, stderr })
+      cleanup({ type: FirstNodeWorkerEventType.Message, event, stdout, stderr })
     }
     const handleExit = (event) => {
-      cleanup()
-      resolve({ type: FirstNodeWorkerEventType.Exit, event, stdout, stderr })
+      cleanup({ type: FirstNodeWorkerEventType.Exit, event, stdout, stderr })
     }
     const handleError = (event) => {
-      cleanup()
-      resolve({ type: FirstNodeWorkerEventType.Error, event, stdout, stderr })
+      cleanup({ type: FirstNodeWorkerEventType.Error, event, stdout, stderr })
     }
     childProcess.stderr.on('data', handleStdErrData)
     childProcess.stdout.on('data', handleStdoutData)
