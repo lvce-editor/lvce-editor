@@ -35,3 +35,11 @@ test('cleanStack - remove restoreJsonRpcError function from stack trace', () => 
     '    at async main (http://localhost:3000/packages/renderer-worker/src/rendererWorkerMain.js:7:3)',
   ])
 })
+
+test('cleanStack - clean Object prefix from stack trace', () => {
+  const stack = `Error: Failed to activate extension builtin.language-features-typescript: NotImplementedError: not implemented
+    at Object.createNodeIpc (http://localhost:3000/packages/extension-host-worker/src/parts/ExtensionHostNodeIpc/ExtensionHostNodeIpc.js:4:9)`
+  expect(CleanStack.cleanStack(stack)).toEqual([
+    '    at createNodeIpc (http://localhost:3000/packages/extension-host-worker/src/parts/ExtensionHostNodeIpc/ExtensionHostNodeIpc.js:4:9)',
+  ])
+})
