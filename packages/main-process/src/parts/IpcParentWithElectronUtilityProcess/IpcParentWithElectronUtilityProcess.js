@@ -15,9 +15,7 @@ exports.create = async ({ path, argv, execArgv = [] }) => {
     execArgv,
     stdio: 'pipe',
   })
-
   const { type, event, stdout, stderr } = await GetFirstUtilityProcessEvent.getFirstUtilityProcessEvent(childProcess)
-
   if (type === FirstNodeWorkerEventType.Exit) {
     throw new IpcError(`Utility process exited before ipc connection was established`, stdout, stderr)
   }

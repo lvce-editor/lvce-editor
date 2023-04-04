@@ -22,9 +22,43 @@ SyntaxError: Cannot use import statement outside a module
 Node.js v18.12.1`
   const error = GetHelpfulChildProcessError.getHelpfulChildProcessError('', '', stderr)
   expect(error).toBeInstanceOf(SyntaxError)
-  expect(error.message).toBe(`ES Modules are not supported in electron`)
-  expect(error.stack).toBe(`ES Modules are not supported in electron
+  expect(error.message).toBe(`SyntaxError: Cannot use import statement outside a module`)
+  expect(error.stack).toBe(`SyntaxError: Cannot use import statement outside a module
     at /test/language-features-typescript/packages/node/src/typeScriptClient.js:1
+    at Object.compileFunction (node:vm:360:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1095:15)
+    at Module._compile (node:internal/modules/cjs/loader:1130:27)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1229:10)
+    at Module.load (node:internal/modules/cjs/loader:1044:32)
+    at Module._load (node:internal/modules/cjs/loader:885:12)
+    at f._load (node:electron/js2c/asar_bundle:2:13330)
+    at node:electron/js2c/utility_init:2:5946
+    at node:electron/js2c/utility_init:2:5961
+    at node:electron/js2c/utility_init:2:5965`)
+})
+
+test('getHelpfulChildProcessError - top-level await error', () => {
+  const stderr = `/test/file.js:1
+await import("/home/simon/Documents/levivilet/language-features-typescript/packages/node/src/typeScriptClient.js")
+^^^^^
+SyntaxError: await is only valid in async functions and the top level bodies of modules
+    at Object.compileFunction (node:vm:360:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1095:15)
+    at Module._compile (node:internal/modules/cjs/loader:1130:27)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1229:10)
+    at Module.load (node:internal/modules/cjs/loader:1044:32)
+    at Module._load (node:internal/modules/cjs/loader:885:12)
+    at f._load (node:electron/js2c/asar_bundle:2:13330)
+    at node:electron/js2c/utility_init:2:5946
+    at node:electron/js2c/utility_init:2:5961
+    at node:electron/js2c/utility_init:2:5965
+
+Node.js v18.12.1`
+  const error = GetHelpfulChildProcessError.getHelpfulChildProcessError('', '', stderr)
+  expect(error).toBeInstanceOf(SyntaxError)
+  expect(error.message).toBe(`SyntaxError: await is only valid in async functions and the top level bodies of modules`)
+  expect(error.stack).toBe(`SyntaxError: await is only valid in async functions and the top level bodies of modules
+    at /test/file.js:1
     at Object.compileFunction (node:vm:360:18)
     at wrapSafe (node:internal/modules/cjs/loader:1095:15)
     at Module._compile (node:internal/modules/cjs/loader:1130:27)
