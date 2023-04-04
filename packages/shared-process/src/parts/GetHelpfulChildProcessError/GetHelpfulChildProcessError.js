@@ -32,9 +32,23 @@ const getNativeModuleErrorMessage = (stderr) => {
   return `incompatible native node module: ${message}`
 }
 
+const isModulesSyntaxError = (stderr) => {
+  if (!stderr) {
+    return false
+  }
+  return stderr.includes('SyntaxError: Cannot use import statement outside a module')
+}
+
+const getModuleSyntaxError = (stderr) => {
+  return `ES Modules are not supported in electron`
+}
+
 export const getHelpfulChildProcessError = (stdout, stderr) => {
   if (isUnhelpfulNativeModuleError(stderr)) {
     return getNativeModuleErrorMessage(stderr)
+  }
+  if (isModulesSyntaxError(stderr)) {
+    return getModuleSyntaxError(stderr)
   }
   return 'child process error'
 }
