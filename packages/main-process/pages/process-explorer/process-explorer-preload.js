@@ -1,22 +1,29 @@
 const { ipcRenderer, contextBridge } = require('electron')
 
-const ipcConnect = () => {
-  // renderer.js ///////////////////////////////////////////////////////////////
-  // MessagePorts are created in pairs. A connected pair of message ports is
-  // called a channel.
-  const channel = new MessageChannel()
-
-  // The only difference between port1 and port2 is in how you use them. Messages
-  // sent to port1 will be received by port2 and vice-versa.
-  const { port1, port2 } = channel
-
-  // Here we send the other end of the channel, port1, to the main process. It's
-  // also possible to send MessagePorts to other frames, or to Web Workers, etc.
-  ipcRenderer.postMessage('port', null, [port1])
-
-  window.postMessage('abc', '*', [port2])
+const ipcConnect = (message) => {
+  if (typeof message !== 'object') {
+    throw new TypeError('[preload] message must be of type object')
+  }
+  ipcRenderer.postMessage('port', message)
 }
 
-contextBridge.exposeInMainWorld('myApi', {
-  ipcConnect,
-})
+const handlePort = (event, message) => {
+  if (event.ports.length === 1) {
+    const port = event.ports[0]
+    // @ts-ignore
+    window.postMessage({ ...message, result: port }, '*', [port])
+  } else {
+    // @ts-ignore
+    window.postMessage(message, '*')
+  }
+}
+
+const main = () => {
+  ipcRenderer.on('port', handlePort)
+
+  contextBridge.exposeInMainWorld('myApi', {
+    ipcConnect,
+  })
+}
+
+main()

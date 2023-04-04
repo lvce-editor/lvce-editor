@@ -683,18 +683,42 @@ const listProcessesWithMemoryUsage = (rootPid) => {
   return JsonRpc.invoke(state.ipc, 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage', rootPid)
 }
 
-const waitForFirstMessage = () => {
-  return new Promise((resolve) => {
-    window.addEventListener('message', resolve, { once: true })
-    // @ts-ignore
-    window.myApi.ipcConnect()
-  })
+const handleMessageFromWindow = (event) => {
+  const { data } = event
+  Callback.resolve(data.id, data)
+}
+
+const getPort = async (type) => {
+  // @ts-ignore
+  window.addEventListener('message', handleMessageFromWindow, { once: true })
+
+  const { id, promise } = Callback.registerPromise()
+  const message = {
+    jsonrpc: JsonRpcVersion.Two,
+    id,
+    method: 'CreateMessagePort.createMessagePort',
+    params: [type],
+  }
+  // @ts-ignore
+  if (typeof window.myApi === 'undefined') {
+    throw new Error('Electron api was requested but is not available')
+  }
+  // @ts-ignore
+  window.myApi.ipcConnect(message)
+  const responseMessage = await promise
+  if ('error' in responseMessage) {
+    const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
+    throw restoredError
+  }
+  if ('result' in responseMessage) {
+    return responseMessage.result
+  }
+  return responseMessage
 }
 
 const IpcChildWithElectron = {
   async listen() {
-    const firstMessage = await waitForFirstMessage()
-    const port = firstMessage.ports[0]
+    const port = await getPort('electron-process')
     return {
       port,
       /**

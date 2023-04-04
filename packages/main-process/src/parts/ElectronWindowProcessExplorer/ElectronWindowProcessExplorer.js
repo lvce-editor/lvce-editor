@@ -42,35 +42,6 @@ exports.open = async () => {
   })
   processExplorerWindow.setMenuBarVisibility(false)
 
-  /**
-   * @param {import('electron').IpcMainEvent} event
-   */
-  const handlePort = async (event) => {
-    if (event.sender !== processExplorerWindow.webContents) {
-      return
-    }
-    const browserWindowPort = event.ports[0]
-
-    const handlePortMessage = async (event) => {
-      const message = event.data
-      const response = await GetResponse.getResponse(message)
-      browserWindowPort.postMessage(response)
-    }
-
-    // TODO possible memory leak? browserWindowPort should be destroyed when Window is closed
-    browserWindowPort.on('message', handlePortMessage)
-
-    browserWindowPort.start()
-  }
-
-  ipcMain.on('port', handlePort)
-
-  const handleClose = () => {
-    ipcMain.off('port', handlePort)
-  }
-
-  processExplorerWindow.once('close', handleClose)
-
   processExplorerWindow.webContents.on('before-input-event', handleBeforeInput)
   // TODO get actual process explorer theme css from somewhere
   const processExplorerThemeCss = ColorTheme.toCss(colorThemeJson)
@@ -79,7 +50,8 @@ exports.open = async () => {
   try {
     await processExplorerWindow.loadURL(`${Platform.scheme}://-/packages/main-process/pages/process-explorer/process-explorer.html`)
   } catch (error) {
+    console.error(error)
     // @ts-ignore
-    throw new VError(error, `Failed to load process explorer url `)
+    // throw new VError(error, `Failed to load process explorer url `)
   }
 }
