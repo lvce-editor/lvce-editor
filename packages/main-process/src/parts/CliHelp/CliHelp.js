@@ -1,17 +1,9 @@
-const Platform = require('../Platform/Platform.js')
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
-
-const getHelpString = () => {
-  return `${Platform.productName} v${Platform.version}
-
-Usage:
-  ${Platform.applicationName} [path]
-`
-}
+const GetHelpString = require('../GetHelpString/GetHelpString.js')
 
 const handleCliArgs = (parsedArgs) => {
-  const helpString = getHelpString()
+  const helpString = GetHelpString.getHelpString()
   console.info(helpString)
   ElectronApp.exit(ExitCode.Sucess)
   return true
