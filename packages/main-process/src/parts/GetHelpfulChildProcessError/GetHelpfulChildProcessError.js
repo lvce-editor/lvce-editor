@@ -105,5 +105,5 @@ exports.getHelpfulChildProcessError = (message, stdout, stderr) => {
   if (isModulesSyntaxError(stderr)) {
     return getModuleSyntaxError(stderr)
   }
-  return new Error(message)
+  return undefined
 }
