@@ -26,7 +26,7 @@ export const activate = async (extension) => {
     const module = await ImportScript.importScript(absolutePath)
     const token = CancelToken.create()
     try {
-      await Promise.race([module.activate(), rejectAfterTimeout(activationTimeout, token)])
+      await Promise.race([module.activate(extension), rejectAfterTimeout(activationTimeout, token)])
     } catch (error) {
       if (IsImportError.isImportError(error)) {
         const actualErrorMessage = await TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage(absolutePath, error)
