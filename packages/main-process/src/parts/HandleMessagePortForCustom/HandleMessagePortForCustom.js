@@ -20,8 +20,8 @@ exports.handlePort = async (event, browserWindowPort, data) => {
   const childProcess = await IpcParent.create({
     method: IpcParentType.ElectronUtilityProcess,
     path,
-    argv: [],
+    argv: ['--ipc-type=electron-utility-process-message-port'],
   })
   console.log('created utility process')
-  childProcess.postMessage({}, [browserWindowPort])
+  childProcess.sendAndTransfer({}, [browserWindowPort])
 }

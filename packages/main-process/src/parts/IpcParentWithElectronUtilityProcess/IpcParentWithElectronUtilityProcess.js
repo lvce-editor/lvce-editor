@@ -29,12 +29,12 @@ exports.create = async ({ path, argv, execArgv = [] }) => {
     execArgv,
     stdio: 'pipe',
   })
+  // @ts-ignore
+  childProcess.stdout.pipe(process.stdout)
   const { type, event, stdout, stderr } = await GetFirstUtilityProcessEvent.getFirstUtilityProcessEvent(childProcess)
   if (type === FirstNodeWorkerEventType.Exit) {
     throw new IpcError(`Utility process exited before ipc connection was established`, stdout, stderr)
   }
-  // @ts-ignore
-  childProcess.stdout.pipe(process.stdout)
   // @ts-ignore
   childProcess.stderr.pipe(process.stderr)
   return childProcess
