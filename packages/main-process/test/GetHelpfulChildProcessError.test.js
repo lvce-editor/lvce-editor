@@ -21,7 +21,7 @@ SyntaxError: Cannot use import statement outside a module
 
 Node.js v18.12.1`
   const error = GetHelpfulChildProcessError.getHelpfulChildProcessError('', '', stderr)
-  expect(error).toBeInstanceOf(SyntaxError)
+  expect(error).toBeInstanceOf(Error)
   expect(error.message).toBe(`SyntaxError: Cannot use import statement outside a module`)
   expect(error.stack).toBe(`SyntaxError: Cannot use import statement outside a module
     at /test/language-features-typescript/packages/node/src/typeScriptClient.js:1
@@ -55,7 +55,7 @@ SyntaxError: await is only valid in async functions and the top level bodies of 
 
 Node.js v18.12.1`
   const error = GetHelpfulChildProcessError.getHelpfulChildProcessError('', '', stderr)
-  expect(error).toBeInstanceOf(SyntaxError)
+  expect(error).toBeInstanceOf(Error)
   expect(error.message).toBe(`SyntaxError: await is only valid in async functions and the top level bodies of modules`)
   expect(error.stack).toBe(`SyntaxError: await is only valid in async functions and the top level bodies of modules
     at /test/file.js:1

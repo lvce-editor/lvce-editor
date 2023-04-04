@@ -97,7 +97,7 @@ const getErrorMessage = (firstLine) => {
 const getOtherError = (stderr) => {
   const stackLines = getModulesErrorStack(stderr)
   const firstLine = getErrorMessage(stackLines[0])
-  const error = new SyntaxError(firstLine)
+  const error = new Error(firstLine)
   error.stack = stackLines.join('\n')
   return error
 }

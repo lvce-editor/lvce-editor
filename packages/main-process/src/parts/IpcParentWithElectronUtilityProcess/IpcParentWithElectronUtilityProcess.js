@@ -7,10 +7,24 @@ const { join } = require('path')
 const { tmpdir } = require('os')
 const { writeFile } = require('fs/promises')
 
+const createCode = (path) => {
+  return `const main = async () => {
+  await import("${path}")
+}
+
+main()`
+}
+
+const createTmpFile = async (content) => {
+  const temporaryFile = join(tmpdir(), 'file.js')
+  await writeFile(temporaryFile, content)
+  return temporaryFile
+}
+
 exports.create = async ({ path, argv, execArgv = [] }) => {
   Assert.string(path)
-  const temporaryFile = join(tmpdir(), 'file.js')
-  await writeFile(temporaryFile, `await import("${path}")`)
+  const code = createCode(path)
+  const temporaryFile = await createTmpFile(code)
   const childProcess = utilityProcess.fork(temporaryFile, argv, {
     execArgv,
     stdio: 'pipe',
