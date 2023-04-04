@@ -1,6 +1,6 @@
 export const nameShort = 'Lvce'
 
-export const nameLong = 'Lvce'
+export const nameLong = 'Lvce Editor'
 
 export const windowsExecutableName = 'Lvce'
 
