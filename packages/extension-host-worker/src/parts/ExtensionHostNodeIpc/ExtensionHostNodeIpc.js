@@ -1,15 +1,12 @@
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as Assert from '../Assert/Assert.js'
 
-const getTsPath = () => {
-  return ``
-}
-
-export const createNodeIpc = async () => {
-  const tsPath = getTsPath()
+export const createNodeIpc = async ({ path }) => {
+  Assert.string(path)
   const ipc = await IpcParent.create({
     method: IpcParentType.ElectronMessagePort,
-    type: `custom:${tsPath}`,
+    type: `custom:${path}`,
   })
   console.log({ ipc })
   return ipc
