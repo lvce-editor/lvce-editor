@@ -1,7 +1,8 @@
-const Assert = require('../Assert/Assert.js')
+const { IpcError } = require('../IpcError/IpcError.js')
 const { utilityProcess } = require('electron')
-const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js')
+const Assert = require('../Assert/Assert.js')
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
+const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js')
 
 exports.create = async ({ path, argv, execArgv = [] }) => {
   Assert.string(path)
@@ -15,7 +16,7 @@ exports.create = async ({ path, argv, execArgv = [] }) => {
   childProcess.stderr.pipe(process.stderr)
   const { type, event } = await GetFirstUtilityProcessEvent.getFirstUtilityProcessEvent(childProcess)
   if (type === FirstNodeWorkerEventType.Exit) {
-    throw new Error(`utility process exited before ipc connection was established`)
+    throw new IpcError(`Utility process exited before ipc connection was established`)
   }
   return childProcess
 }

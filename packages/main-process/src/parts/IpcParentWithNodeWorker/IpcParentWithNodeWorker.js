@@ -1,7 +1,8 @@
-const Assert = require('../Assert/Assert.js')
+const { IpcError } = require('../IpcError/IpcError.js')
 const { Worker } = require('node:worker_threads')
-const GetFirstNodeWorkerEvent = require('../GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js')
+const Assert = require('../Assert/Assert.js')
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
+const GetFirstNodeWorkerEvent = require('../GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js')
 
 exports.create = async ({ path, argv, env, execArgv }) => {
   Assert.string(path)
@@ -12,7 +13,7 @@ exports.create = async ({ path, argv, env, execArgv }) => {
   })
   const { type, event } = await GetFirstNodeWorkerEvent.getFirstNodeWorkerEvent(worker)
   if (type === FirstNodeWorkerEventType.Exit) {
-    throw new Error(`worker exited before ipc connection was established`)
+    throw new IpcError(`Worker exited before ipc connection was established`)
   }
   return worker
 }
