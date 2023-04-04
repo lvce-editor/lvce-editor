@@ -2,6 +2,9 @@ const GetNewLineIndex = require('../GetNewLineIndex/GetNewLineIndex.js')
 const NormalizeErrorLine = require('../NormalizeErrorLine/NormalizeErrorLine.js')
 
 exports.mergeStacks = (parent, child) => {
+  if (!parent) {
+    throw new Error(`parent stack cannot be empty`)
+  }
   if (!child) {
     return parent
   }
