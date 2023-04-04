@@ -38,7 +38,7 @@ test('cleanStack - remove Object prefix', () => {
 })
 
 test('cleanStack - remove async Object prefix', () => {
-  const stack = `VError: Failed to get all preferences: failed to get user preferences: Failed to read file "/home/simon/.config/lvce-oss/settings.json": EACCES: permission denied, open '/home/simon/.config/lvce-oss/settings.js
+  const stack = `VError: Failed to get all preferences: failed to get user preferences: Failed to read file "/test/settings.json": EACCES: permission denied, open '/test/settings.js
     at Module.readFile (file:///test/packages/shared-process/src/parts/FileSystem/FileSystem.js:50:11)
     at async Module.readJson (file:///test/packages/shared-process/src/parts/JsonFile/JsonFile.js:6:19)
     at async getUserPreferences (file:///test/packages/shared-process/src/parts/Preferences/Preferences.js:13:14)
@@ -54,7 +54,7 @@ test('cleanStack - remove async Object prefix', () => {
 })
 
 test('cleanStack - remove async MessagePort.handleOtherMessagesFromMessagePort', () => {
-  const stack = `VError: Failed to get all preferences: failed to get user preferences: Failed to read file "/home/simon/.config/lvce-oss/settings.json": EACCES: permission denied, open '/home/simon/.config/lvce-oss/settings.js'
+  const stack = `VError: Failed to get all preferences: failed to get user preferences: Failed to read file "/test/settings.json": EACCES: permission denied, open '/test/settings.js'
     at Module.readFile (file:///test/packages/shared-process/src/parts/FileSystem/FileSystem.js:50:11)
     at async Module.readJson (file:///test/packages/shared-process/src/parts/JsonFile/JsonFile.js:6:19)
     at async getUserPreferences (file:///test/packages/shared-process/src/parts/Preferences/Preferences.js:13:14)

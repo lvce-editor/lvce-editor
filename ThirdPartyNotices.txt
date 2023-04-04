@@ -925,7 +925,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-16) License Notice for /home/simon/Documents/levivilet/lvce-editor/packages/renderer-worker/test/FilterCompletionItem.test.js (based on https://github.com/jeancroy/fuzz-aldrin-plus/blob/84eac1d73bacbbd11978e6960f4aa89f8396c540/spec/match-spec.coffee)
+16) License Notice for packages/renderer-worker/test/FilterCompletionItem.test.js (based on https://github.com/jeancroy/fuzz-aldrin-plus/blob/84eac1d73bacbbd11978e6960f4aa89f8396c540/spec/match-spec.coffee)
 ---------------------------------------
 
 Copyright (c) 2015 Jean Christophe Roy

@@ -110,7 +110,7 @@ test('hydrate - error - permission denied', async () => {
     switch (method) {
       case 'Preferences.getAll':
         throw new Error(
-          `Failed to get all preferences: failed to get user preferences: Failed to read file "/home/simon/.config/lvce-oss/settings.json": EACCES: permission denied, open '/home/simon/.config/lvce-oss/settings.json'`
+          `Failed to get all preferences: failed to get user preferences: Failed to read file "/test/.config/lvce-oss/settings.json": EACCES: permission denied, open '/test/.config/lvce-oss/settings.json'`
         )
       default:
         throw new Error('unexpected message')
@@ -122,7 +122,7 @@ test('hydrate - error - permission denied', async () => {
   expect(ErrorHandling.logError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.logError).toHaveBeenCalledWith(
     new Error(
-      `Failed to get all preferences: failed to get user preferences: Failed to read file "/home/simon/.config/lvce-oss/settings.json": EACCES: permission denied, open '/home/simon/.config/lvce-oss/settings.json'`
+      `Failed to get all preferences: failed to get user preferences: Failed to read file "/test/.config/lvce-oss/settings.json": EACCES: permission denied, open '/test/.config/lvce-oss/settings.json'`
     )
   )
 })
