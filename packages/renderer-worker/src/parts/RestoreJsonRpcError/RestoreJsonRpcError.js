@@ -27,7 +27,7 @@ export const restoreJsonRpcError = (error) => {
   }
   if (error && error.code && error.code === JsonRpcErrorCode.MethodNotFound) {
     const restoredError = new JsonRpcError(error.message)
-    restoredError.stack = error.stack
+    restoredError.stack = error.stack || error.data || ''
     return restoredError
   }
   if (error && error.message) {
