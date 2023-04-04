@@ -22,7 +22,7 @@ export const state = {
   /**
    * @type {any}
    */
-  activatedExtensions: [],
+  activatedExtensions: Object.create(null),
 }
 
 const getExtensionHostManagementTypes = () => {
@@ -92,16 +92,15 @@ const startSynching = async (extensionHost) => {
   if (editorInstance) {
     await handleEditorCreate(editorInstance.state)
   }
+  // @ts-ignore
   await handleWorkspaceChange(Workspace.state.workspacePath, Workspace.isTest())
 }
 
 const actuallyActivateExtension = async (extensionHost, extension) => {
-  if (state.activatedExtensions.includes(extension.id)) {
-    return
+  if (!(extension.id in state.activatedExtensions)) {
+    state.activatedExtensions[extension.id] = extensionHost.ipc.invoke(ExtensionHostCommandType.ExtensionActivate, extension)
   }
-  state.activatedExtensions.push(extension.id)
-  // TODO tell extension host to activate extension
-  await extensionHost.ipc.invoke(ExtensionHostCommandType.ExtensionActivate, extension)
+  return state.activatedExtensions[extension.id]
 }
 
 const actuallyActivateByEvent = async (event) => {

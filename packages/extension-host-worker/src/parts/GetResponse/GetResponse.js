@@ -7,7 +7,6 @@ export const getResponse = async (message) => {
     const result = await Command.execute(message.method, ...message.params)
     return GetSuccessResponse.getSuccessResponse(message, result)
   } catch (error) {
-    console.log({ error })
     return GetErrorResponse.getErrorResponse(message, error)
   }
 }
