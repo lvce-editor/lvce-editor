@@ -15,7 +15,6 @@ export const UiStrings = {
 
 export const getMenuEntries = async () => {
   const autoUpdateSupported = await IsAutoUpdateSupported.isAutoUpdateSupported()
-  console.log({ autoUpdateSupported })
   const entries = []
   entries.push(
     {
