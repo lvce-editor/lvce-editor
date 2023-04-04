@@ -1,24 +1,12 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Callback from '../Callback/Callback.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
 const getPort = async (type) => {
-  const { id, promise } = Callback.registerPromise()
-  RendererProcess.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method: 'get-port',
-    _id: id,
-    params: [
-      {
-        method: RendererProcessIpcParentType.Electron,
-        type,
-      },
-    ],
+  const port = await RendererProcess.invoke('IpcParent.create', {
+    method: RendererProcessIpcParentType.Electron,
+    type,
   })
-  const response = await promise
-  const port = response.result
   return port
 }
 

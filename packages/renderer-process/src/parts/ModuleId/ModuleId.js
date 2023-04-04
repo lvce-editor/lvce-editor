@@ -34,3 +34,4 @@ export const SanitizeHtml = 33
 export const OffscreenCanvas = 34
 export const Transferrable = 35
 export const ConfirmPrompt = 36
+export const IpcParent = 37

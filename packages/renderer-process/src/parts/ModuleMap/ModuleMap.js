@@ -141,6 +141,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Window
     case 33111:
       return ModuleId.Workbench
+    case 'IpcParent.create':
+      return ModuleId.IpcParent
     default:
       throw new Error(`command ${commandId} not found`)
   }

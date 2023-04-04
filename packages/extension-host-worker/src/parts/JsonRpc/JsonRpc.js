@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Callback from '../Callback/Callback.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
@@ -12,6 +13,8 @@ export const send = (transport, method, ...params) => {
 }
 
 export const invoke = async (ipc, method, ...params) => {
+  Assert.object(ipc)
+  Assert.string(method)
   const { id, promise } = Callback.registerPromise()
   ipc.send({
     jsonrpc: JsonRpcVersion.Two,

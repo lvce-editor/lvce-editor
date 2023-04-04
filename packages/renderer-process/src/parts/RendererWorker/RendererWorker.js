@@ -1,5 +1,6 @@
 import * as Callback from '../Callback/Callback.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
+import * as HasTransferableResult from '../HasTransferableResult/HasTransferableResult.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
@@ -18,22 +19,14 @@ const handleMessageFromRendererWorker = async (event) => {
   if ('id' in message) {
     if ('method' in message) {
       const response = await GetResponse.getResponse(message)
-      state.ipc.send(response)
+      if (HasTransferableResult.hasTransferrableResult(message.method) && 'result' in response) {
+        state.ipc.sendAndTransfer(response, [response.result])
+      } else {
+        state.ipc.send(response)
+      }
       return
     }
     Callback.resolve(message.id, message)
-    return
-  }
-  if (message.method === 'get-port') {
-    const port = await getPort(...message.params)
-    state.ipc.sendAndTransfer(
-      {
-        jsonrpc: JsonRpcVersion.Two,
-        id: message._id,
-        result: port,
-      },
-      [port]
-    )
     return
   }
   throw new JsonRpcError('unexpected message from renderer worker')
