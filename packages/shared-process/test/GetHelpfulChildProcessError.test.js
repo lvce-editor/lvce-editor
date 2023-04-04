@@ -1,6 +1,6 @@
 import * as GetHelpfulChildProcessError from '../src/parts/GetHelpfulChildProcessError/GetHelpfulChildProcessError.js'
 
-test('getHelpfulChildProcessError', () => {
+test('getHelpfulChildProcessError - incompatible native module', () => {
   const stderr = `innerError Error: Cannot find module '../build/Debug/pty.node'
 Require stack:
 - /test/packages/pty-host/node_modules/node-pty/lib/unixTerminal.js
@@ -49,4 +49,25 @@ Node.js v18.12.1
   expect(error).toBe(
     `incompatible native node module: The module '/test/packages/pty-host/node_modules/node-pty/build/Release/pty.node' was compiled against a different Node.js version using NODE_MODULE_VERSION 108. This version of Node.js requires NODE_MODULE_VERSION 113. Please try re-compiling or re-installing the module (for instance, using \`npm rebuild\` or \`npm install\`).`
   )
+})
+
+test('getHelpfulChildProcessError - modules not supported in electron', () => {
+  const stderr = `import * as IpcChild from './parts/IpcChild/IpcChild.js'
+^^^^^^
+
+SyntaxError: Cannot use import statement outside a module
+    at Object.compileFunction (node:vm:360:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1095:15)
+    at Module._compile (node:internal/modules/cjs/loader:1130:27)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1229:10)
+    at Module.load (node:internal/modules/cjs/loader:1044:32)
+    at Module._load (node:internal/modules/cjs/loader:885:12)
+    at f._load (node:electron/js2c/asar_bundle:2:13330)
+    at node:electron/js2c/utility_init:2:5946
+    at node:electron/js2c/utility_init:2:5961
+    at node:electron/js2c/utility_init:2:5965
+
+Node.js v18.12.1`
+  const error = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
+  expect(error).toBe(`ES Modules are not supported in electron`)
 })
