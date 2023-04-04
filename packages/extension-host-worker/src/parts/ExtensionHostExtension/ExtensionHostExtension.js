@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as CancelToken from '../CancelToken/CancelToken.js'
 import * as GetExtensionAbsolutePath from '../GetExtensionAbsolutePath/GetExtensionAbsolutePath.js'
 import * as GetExtensionId from '../GetExtensionId/GetExtensionId.js'
 import * as ImportScript from '../ImportScript/ImportScript.js'
@@ -11,7 +12,7 @@ const activationTimeout = 10_000
 
 const rejectAfterTimeout = async (timeout, token) => {
   await Timeout.sleep(timeout)
-  if (token.finished) {
+  if (CancelToken.isCanceled(token)) {
     return
   }
   throw new Error(`activation timeout of ${timeout}ms exceeded`)
@@ -23,18 +24,17 @@ export const activate = async (extension) => {
     Assert.string(extension.browser)
     const absolutePath = GetExtensionAbsolutePath.getExtensionAbsolutePath(extension.isWeb, extension.path, extension.browser, location.origin)
     const module = await ImportScript.importScript(absolutePath)
+    const token = CancelToken.create()
     try {
-      const token = {
-        finished: false,
-      }
       await Promise.race([module.activate(), rejectAfterTimeout(activationTimeout, token)])
-      token.finished = true
     } catch (error) {
       if (IsImportError.isImportError(error)) {
         const actualErrorMessage = await TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage(absolutePath, error)
         throw new Error(actualErrorMessage)
       }
       throw error
+    } finally {
+      CancelToken.cancel(token)
     }
   } catch (error) {
     const id = GetExtensionId.getExtensionId(extension)
