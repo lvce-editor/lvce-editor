@@ -6,20 +6,36 @@ const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeW
  * @returns
  */
 exports.getFirstUtilityProcessEvent = async (utilityProcess) => {
-  const { type, event } = await new Promise((resolve, reject) => {
+  const { type, event, stdout, stderr } = await new Promise((resolve, reject) => {
+    let stdout = ''
+    let stderr = ''
     const cleanup = (value) => {
-      utilityProcess.off('exit', handleExit)
+      // @ts-ignore
+      utilityProcess.stderr.off('data', handleStdErrData)
+      // @ts-ignore
+      utilityProcess.stdout.off('data', handleStdoutData)
       utilityProcess.off('message', handleMessage)
+      utilityProcess.off('exit', handleExit)
       resolve(value)
     }
-    const handleExit = (event) => {
-      cleanup({ type: FirstNodeWorkerEventType.Exit, event })
+    const handleStdErrData = (data) => {
+      stderr += data
+    }
+    const handleStdoutData = (data) => {
+      stdout += data
     }
     const handleMessage = (event) => {
-      cleanup({ type: FirstNodeWorkerEventType.Message, event })
+      cleanup({ type: FirstNodeWorkerEventType.Message, event, stdout, stderr })
     }
-    utilityProcess.on('exit', handleExit)
+    const handleExit = (event) => {
+      cleanup({ type: FirstNodeWorkerEventType.Exit, event, stdout, stderr })
+    }
+    // @ts-ignore
+    utilityProcess.stderr.on('data', handleStdErrData)
+    // @ts-ignore
+    utilityProcess.stdout.on('data', handleStdoutData)
     utilityProcess.on('message', handleMessage)
+    utilityProcess.on('exit', handleExit)
   })
-  return { type, event }
+  return { type, event, stdout, stderr }
 }
