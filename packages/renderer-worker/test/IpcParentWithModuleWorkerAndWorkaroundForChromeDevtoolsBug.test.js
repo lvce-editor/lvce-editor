@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as RendererProcessIpcParentType from '../src/parts/RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -28,4 +29,11 @@ test('create', async () => {
     name: 'test worker',
   })
   expect(ipc).toBe(port)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('IpcParent.create', {
+    method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
+    name: 'test worker',
+    raw: true,
+    url: 'https://example.com/worker.js',
+  })
 })
