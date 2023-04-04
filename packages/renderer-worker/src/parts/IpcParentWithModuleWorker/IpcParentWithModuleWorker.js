@@ -1,5 +1,6 @@
 import * as FirstWorkerEventType from '../FirstWorkerEventType/FirstWorkerEventType.js'
 import * as GetFirstWorkerEvent from '../GetFirstWorkerEvent/GetFirstWorkerEvent.js'
+import { IpcError } from '../IpcError/IpcError.js'
 import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerError.js'
 import { ModuleWorkersAreNotSupportedInFirefoxError } from '../ModuleWorkersAreNotSupportedInFirefoxError/ModuleWorkersAreNotSupportedInFirefoxError.js'
 import * as TryToGetActualWorkerErrorMessage from '../TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js'
@@ -15,7 +16,7 @@ export const create = async ({ url, name }) => {
     switch (type) {
       case FirstWorkerEventType.Message:
         if (event.data !== 'ready') {
-          throw new Error('unexpected first message from worker')
+          throw new IpcError('unexpected first message from worker')
         }
         break
       case FirstWorkerEventType.Error:
