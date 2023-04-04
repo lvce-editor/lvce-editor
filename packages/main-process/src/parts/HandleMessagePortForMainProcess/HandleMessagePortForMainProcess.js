@@ -5,8 +5,7 @@ const GetResponse = require('../GetResponse/GetResponse.js')
  *
  * @param {import('electron').IpcMainEvent} event
  */
-exports.handlePort = (event) => {
-  const browserWindowPort = event.ports[0]
+exports.handlePort = (event, browserWindowPort) => {
   const { id } = event.sender
   const state = AppWindowStates.findById(id)
   state.port = browserWindowPort

@@ -17,8 +17,7 @@ const getQuickPickViewFromArray = (views) => {
   return undefined
 }
 
-exports.handlePort = (event) => {
-  const browserWindowPort = event.ports[0]
+exports.handlePort = (event, browserWindowPort) => {
   const browserWindow = Electron.BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
     return

@@ -1,8 +1,8 @@
 import * as Callback from '../Callback/Callback.js'
-import { JsonRpcError } from '../Errors/JsonRpcError.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as Platform from '../Platform/Platform.js'
 
