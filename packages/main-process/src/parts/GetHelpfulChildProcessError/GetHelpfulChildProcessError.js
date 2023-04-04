@@ -73,7 +73,7 @@ const getModulesErrorStack = (stderr) => {
     }
   }
   if (startIndex === -1) {
-    return ''
+    return []
   }
   let endIndex = -1
   for (let i = startIndex + 1; i < lines.length; i++) {
@@ -87,14 +87,18 @@ const getModulesErrorStack = (stderr) => {
     endIndex = lines.length - 1
   }
   const stackLines = lines.slice(startIndex, endIndex)
-  return [...extraLines, ...stackLines].join('\n')
+  return [lines[startIndex - 1], ...extraLines, ...stackLines]
 }
 
-const getModuleSyntaxError = (stderr) => {
-  const message = `ES Modules are not supported in electron`
-  const stack = getModulesErrorStack(stderr)
-  const error = new SyntaxError(message)
-  error.stack = message + '\n' + stack
+const getErrorMessage = (firstLine) => {
+  return firstLine
+}
+
+const getOtherError = (stderr) => {
+  const stackLines = getModulesErrorStack(stderr)
+  const firstLine = getErrorMessage(stackLines[0])
+  const error = new SyntaxError(firstLine)
+  error.stack = stackLines.join('\n')
   return error
 }
 
@@ -102,8 +106,5 @@ exports.getHelpfulChildProcessError = (message, stdout, stderr) => {
   if (isUnhelpfulNativeModuleError(stderr)) {
     return getNativeModuleErrorMessage(stderr)
   }
-  if (isModulesSyntaxError(stderr)) {
-    return getModuleSyntaxError(stderr)
-  }
-  return undefined
+  return getOtherError(stderr)
 }
