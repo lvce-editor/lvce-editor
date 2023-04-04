@@ -1,5 +1,8 @@
 const SplitLines = require('../SplitLines/SplitLines.js')
 
+const RE_AT = /^\s+at/
+const RE_ASSERT = /^\s*at .*\/Assert\.js/
+
 const isInternalLine = (line) => {
   return line.includes('node:')
 }
@@ -8,10 +11,18 @@ const isRelevantLine = (line) => {
   return !isInternalLine(line)
 }
 
-const RE_AT = /^\s+at/
-
 const isNormalStackLine = (line) => {
   return RE_AT.test(line)
+}
+
+const isApplicationUsefulLine = (line, index) => {
+  if (index === 0) {
+    if (RE_ASSERT.test(line)) {
+      return false
+    }
+    return true
+  }
+  return true
 }
 
 const cleanLine = (line) => {
@@ -51,7 +62,7 @@ const mergeCustom = (custom, relevantStack) => {
 const cleanStack = (stack) => {
   const lines = SplitLines.splitLines(stack)
   const { custom, actualStack } = getDetails(lines)
-  const relevantStack = actualStack.filter(isRelevantLine)
+  const relevantStack = actualStack.filter(isRelevantLine).filter(isApplicationUsefulLine)
   const merged = mergeCustom(custom, relevantStack)
   return merged
 }
