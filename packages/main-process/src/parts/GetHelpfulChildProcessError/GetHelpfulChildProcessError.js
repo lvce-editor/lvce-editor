@@ -7,6 +7,7 @@ const RE_MASSAGE_CODE_BLOCK_START = /^Error: The module '.*'$/
 const RE_MASSAGE_CODE_BLOCK_END = /^\s* at/
 const RE_AT = /^    at /
 const RE_JUST_PATH = /^(?:\/|\\).*\:\d+$/
+const RE_IMPORTED_FROM_ERROR = /Cannot find module .* imported from (.*)/
 
 const isUnhelpfulNativeModuleError = (stderr) => {
   return RE_NATIVE_MODULE_ERROR.test(stderr) && RE_NATIVE_MODULE_ERROR_2.test(stderr)
@@ -94,9 +95,21 @@ const getErrorMessage = (firstLine) => {
   return firstLine
 }
 
+const getImportPath = (firstLine) => {
+  const match = firstLine.match(RE_IMPORTED_FROM_ERROR)
+  if (!match) {
+    return ''
+  }
+  return match[1]
+}
+
 const getOtherError = (stderr) => {
   const stackLines = getModulesErrorStack(stderr)
   const firstLine = getErrorMessage(stackLines[0])
+  const importPath = getImportPath(firstLine)
+  if (importPath) {
+    stackLines.splice(1, 0, `    at ${importPath}`)
+  }
   const error = new Error(firstLine)
   error.stack = stackLines.join('\n')
   return error
