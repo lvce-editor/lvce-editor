@@ -1,10 +1,9 @@
 import { IpcError } from '../IpcError/IpcError.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as RendererWorkerIpcParentType from '../RendererWorkerIpcParentType/RendererWorkerIpcParentType.js'
 import * as Rpc from '../Rpc/Rpc.js'
 
 const getPort = async (type) => {
-  const port = await JsonRpc.invoke(Rpc.state.ipc, 'IpcParent.create', {
+  const port = await Rpc.invoke('IpcParent.create', {
     method: RendererWorkerIpcParentType.ElectronMessagePort,
     type,
     raw: true,
