@@ -1,6 +1,7 @@
-import * as Validation from '../Validation/Validation.js'
-import { VError } from '../VError/VError.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import { NoProviderFoundError } from '../NoProviderFoundError/NoProviderFoundError.js'
+import { VError } from '../VError/VError.js'
+import * as Validation from '../Validation/Validation.js'
 
 const RE_UPPERCASE_LETTER = /[A-Z]/g
 const RE_PROPERTY = /item\..*must be of type/
@@ -77,7 +78,7 @@ export const create = ({ name, resultShape, executeKey = '' }) => {
         const provider = providers[textDocument.languageId]
         if (!provider) {
           const spacedOutName = spaceOut(name)
-          throw new VError(`No ${spacedOutName} provider found for ${textDocument.languageId}`)
+          throw new NoProviderFoundError(`No ${spacedOutName} provider found for ${textDocument.languageId}`)
         }
         const result = await provider[methodName](textDocument, ...params)
         const error = Validation.validate(result, resultShape)
