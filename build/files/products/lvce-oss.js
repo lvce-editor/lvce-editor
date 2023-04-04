@@ -1,6 +1,6 @@
 export const nameShort = 'Lvce - OSS'
 
-export const nameLong = 'Lvce - OSS'
+export const nameLong = 'Lvce Editor - OSS'
 
 export const windowsExecutableName = 'LvceOSS'
 
