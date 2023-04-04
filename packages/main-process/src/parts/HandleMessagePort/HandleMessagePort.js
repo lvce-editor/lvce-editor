@@ -46,7 +46,7 @@ exports.handlePort = async (event, message) => {
     sender.postMessage('port', response, [port2])
   } catch (error) {
     await ErrorHandling.handleError(error)
-    const response = GetErrorResponse.getErrorResponse(message, error)
+    const response = await GetErrorResponse.getErrorResponse(message, error)
     sender.postMessage('port', response)
   }
 }

@@ -17,10 +17,10 @@ exports.VError = class extends Error {
     if (error instanceof Error) {
       this.stack = MergeStacks.mergeStacks(this.stack, error.stack)
     }
-    if (error.codeFrame) {
+    if (error && error.codeFrame) {
       this.codeFrame = error.codeFrame
     }
-    if (error.code) {
+    if (error && error.code) {
       this.code = error.code
     }
   }
