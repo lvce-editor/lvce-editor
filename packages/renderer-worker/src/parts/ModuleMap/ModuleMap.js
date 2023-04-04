@@ -1,15 +1,23 @@
 import * as ModuleId from '../ModuleId/ModuleId.js'
 import * as Character from '../Character/Character.js'
+import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
 
 const getPrefix = (commandId) => {
   if (!commandId || typeof commandId !== 'string') {
     return commandId
   }
-  return commandId.slice(0, commandId.indexOf(Character.Dot))
+  const dotIndex = commandId.indexOf(Character.Dot)
+  if (dotIndex === -1) {
+    return ''
+  }
+  return commandId.slice(0, dotIndex)
 }
 
 export const getModuleId = (commandId) => {
   const prefix = getPrefix(commandId)
+  if (!prefix) {
+    throw new CommandNotFoundError(commandId)
+  }
   switch (prefix) {
     case 'About':
       return ModuleId.About
@@ -93,6 +101,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ImagePreview
     case 'IndexedDb':
       return ModuleId.IndexedDb
+    case 'IpcParent':
+      return ModuleId.IpcParent
     case 'KeyBindings':
       return ModuleId.KeyBindings
     case 'KeyBindingsInitial':

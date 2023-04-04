@@ -1,11 +1,9 @@
 import * as Callback from '../Callback/Callback.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as IpcParent from '../IpcParent/IpcParent.js'
-import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as HasTransferableResult from '../HasTransferableResult/HasTransferableResult.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 const isResultMessage = (message) => {
   return 'result' in message
@@ -16,43 +14,20 @@ const isErrorMessage = (message) => {
 }
 
 const handleMessageMethod = async (message, event) => {
-  if (message.method === 'ElectronMessagePort.create') {
-    const ipc = await IpcParent.create({
-      method: IpcParentType.ElectronMessagePort,
-      type: message.params[0],
-    })
-    event.target.postMessage(
-      {
-        jsonrpc: JsonRpcVersion.Two,
-        id: message.id,
-        result: ipc._port,
-      },
-      [ipc._port]
-    )
-  } else if (message.method === 'Test.executeMockExecFunction') {
-    const response = await GetResponse.getResponse(message)
-    event.target.send(response)
-  } else if (message.method === 'get-port') {
-    const ipc = await IpcParent.create({
-      method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
-      url: message.params[0],
-      name: message.params[1],
-    })
-    const port = ipc._port
-    if (!port) {
-      throw new Error('failed to create message port')
+  if ('id' in message) {
+    if ('method' in message) {
+      const response = await GetResponse.getResponse(message)
+      if (HasTransferableResult.hasTransferrableResult(message.method) && 'result' in response) {
+        event.target.send(response, [response.result])
+      } else {
+        event.target.send(response)
+      }
+      return
     }
-    event.target.send(
-      {
-        jsonrpc: JsonRpcVersion.Two,
-        id: message.id,
-        result: port,
-      },
-      [port]
-    )
-  } else {
-    await GlobalEventBus.emitEvent(message.method, ...message.params)
+    Callback.resolve(message.id, message)
+    return
   }
+  throw new JsonRpcError('unexpected message from extension host')
 }
 
 const handleMessage = async (message, event) => {

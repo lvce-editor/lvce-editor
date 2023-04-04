@@ -1,24 +1,13 @@
-import * as Callback from '../Callback/Callback.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const create = async ({ url, name }) => {
-  const { id, promise } = Callback.registerPromise()
-  RendererProcess.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method: 'get-port',
-    _id: id,
-    params: [
-      {
-        method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
-        url,
-        name,
-      },
-    ],
+  const port = await RendererProcess.invoke('IpcParent.create', {
+    method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
+    url,
+    name,
+    raw: true,
   })
-  const response = await promise
-  const port = response.result
   return port
 }
 
