@@ -20,9 +20,7 @@ test('executeReferenceProvider - no results', async () => {
       return []
     },
   })
-  expect(await ExtensionHostReference.executeReferenceProvider(1, 0)).toEqual(
-    []
-  )
+  expect(await ExtensionHostReference.executeReferenceProvider(1, 0)).toEqual([])
 })
 
 test('executeReferenceProvider - single result', async () => {
@@ -72,12 +70,8 @@ test('executeReferenceProvider - error - reference provider throws error', async
       throw new TypeError('x is not a function')
     },
   })
-  await expect(
-    ExtensionHostReference.executeReferenceProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute reference provider: TypeError: x is not a function'
-    )
+  await expect(ExtensionHostReference.executeReferenceProvider(1, 0)).rejects.toThrowError(
+    new Error('Failed to execute reference provider: TypeError: x is not a function')
   )
 })
 
@@ -94,12 +88,8 @@ test('executeReferenceProvider - error - referenceProvider has wrong shape', asy
     languageId: 'javascript',
     abc() {},
   })
-  await expect(
-    ExtensionHostReference.executeReferenceProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute reference provider: VError: referenceProvider.provideReferences is not a function'
-    )
+  await expect(ExtensionHostReference.executeReferenceProvider(1, 0)).rejects.toThrowError(
+    new Error('Failed to execute reference provider: VError: referenceProvider.provideReferences is not a function')
   )
 })
 
@@ -112,11 +102,7 @@ test('executeReferenceProvider - error - no reference provider found', async () 
       content: '',
     },
   ])
-  await expect(
-    ExtensionHostReference.executeReferenceProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute reference provider: VError: No reference provider found for javascript'
-    )
+  await expect(ExtensionHostReference.executeReferenceProvider(1, 0)).rejects.toThrowError(
+    new Error('Failed to execute reference provider: No reference provider found for javascript')
   )
 })
