@@ -32,6 +32,7 @@ const handleMessageFromRendererWorker = async (event) => {
       return
     }
     Callback.resolve(message.id, message)
+    return
   }
   throw new JsonRpcError('unexpected message from renderer worker')
 }
