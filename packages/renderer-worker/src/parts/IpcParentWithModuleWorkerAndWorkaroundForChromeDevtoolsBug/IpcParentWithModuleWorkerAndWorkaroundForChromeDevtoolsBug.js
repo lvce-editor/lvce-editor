@@ -1,3 +1,5 @@
+import { IpcError } from '../IpcError/IpcError.js'
+import * as IsMessagePort from '../IsMessagePort/IsMessagePort.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
@@ -8,6 +10,12 @@ export const create = async ({ url, name }) => {
     name,
     raw: true,
   })
+  if (!port) {
+    throw new IpcError('port must be defined')
+  }
+  if (!IsMessagePort.isMessagePort(port)) {
+    throw new IpcError('port must be of type MessagePort')
+  }
   return port
 }
 
