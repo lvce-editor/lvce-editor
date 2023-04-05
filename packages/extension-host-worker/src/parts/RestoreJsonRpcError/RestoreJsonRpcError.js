@@ -20,6 +20,13 @@ const constructError = (message, type, name) => {
   return new ErrorConstructor(message)
 }
 
+const recreateStack = (message, stack) => {
+  if (message && !stack.includes(message)) {
+    return message + Character.NewLine + stack
+  }
+  return stack
+}
+
 export const restoreJsonRpcError = (error) => {
   if (error && error instanceof Error) {
     return error
@@ -36,7 +43,7 @@ export const restoreJsonRpcError = (error) => {
       if (error.data.stack && error.data.type && error.message) {
         restoredError.stack = error.data.type + ': ' + error.message + Character.NewLine + error.data.stack + Character.NewLine + currentStack
       } else if (error.data.stack) {
-        restoredError.stack = error.data.stack
+        restoredError.stack = recreateStack(error.message, error.data.stack) + Character.NewLine + currentStack
       }
       if (error.data.codeFrame) {
         // @ts-ignore
@@ -48,7 +55,7 @@ export const restoreJsonRpcError = (error) => {
       }
     } else if (error.stack) {
       // @ts-ignore
-      restoredError.stack = error.stack + Character.NewLine + currentStack
+      restoredError.stack = recreateStack(error.message, error.stack) + Character.NewLine + currentStack
     }
     return restoredError
   }
