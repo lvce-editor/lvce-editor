@@ -1,48 +1,44 @@
-import { IpcError } from '../IpcError/IpcError.js'
-import * as RendererWorkerIpcParentType from '../RendererWorkerIpcParentType/RendererWorkerIpcParentType.js'
-import * as Rpc from '../Rpc/Rpc.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
-const getPort = async (type) => {
-  const port = await Rpc.invoke('IpcParent.create', {
-    method: RendererWorkerIpcParentType.Node,
-    type,
-    raw: true,
-    protocol: 'lvce.extension-host-helper-process',
-  })
-  console.log({ port })
-  if (!port) {
-    throw new IpcError(`port must be defined`)
+const getPlatform = () => {
+  // @ts-ignore
+  if (typeof PLATFORM !== 'undefined') {
+    // @ts-ignore
+    return PLATFORM
   }
-  if (!(port instanceof MessagePort)) {
-    throw new IpcError('port must be of type MessagePort')
+  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
+    return 'test'
   }
-  return port
+  // TODO find a better way to pass runtime environment
+  if (typeof name !== 'undefined' && name.endsWith('(Electron)')) {
+    return PlatformType.Electron
+  }
+  return PlatformType.Remote
 }
 
-export const create = async ({ type }) => {
-  const port = await getPort(type)
-  return port
+const platform = getPlatform() // TODO tree-shake this out in production
+
+const getModule = async () => {
+  switch (platform) {
+    case PlatformType.Remote:
+      return import('../IpcParentWithWebSocket/IpcParentWithWebSocket.js')
+    default:
+      return import('../IpcParentWithElectronMessagePort/IpcParentWithElectronMessagePort.js')
+  }
 }
 
-export const wrap = (port) => {
-  let handleMessage
+export const create = async ({ type, raw, protocol }) => {
+  const module = await getModule()
+  const rawIpc = await module.create({ type, protocol })
+  if (raw) {
+    return rawIpc
+  }
   return {
-    get onmessage() {
-      return handleMessage
-    },
-    set onmessage(listener) {
-      let handleMessage
-      if (listener) {
-        handleMessage = (event) => {
-          listener(event.data)
-        }
-      } else {
-        handleMessage = null
-      }
-      port.onmessage = handleMessage
-    },
-    send(message) {
-      port.postMessage(message)
-    },
+    module,
+    rawIpc,
   }
+}
+
+export const wrap = ({ module, rawIpc }) => {
+  return module.wrap(rawIpc)
 }
