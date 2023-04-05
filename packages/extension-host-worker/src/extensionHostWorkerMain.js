@@ -6,8 +6,10 @@ import * as HandleContentSecurityPolicyViolation from './parts/HandleContentSecu
 import * as IpcChild from './parts/IpcChild/IpcChild.js'
 import * as IpcChildType from './parts/IpcChildType/IpcChildType.js'
 import * as Rpc from './parts/Rpc/Rpc.js'
+import * as SetStackTraceLimit from './parts/SetStackTraceLimit/SetStackTraceLimit.js'
 
 const main = async () => {
+  SetStackTraceLimit.setStackTraceLimit(20)
   onerror ||= ErrorHandling.handleUnhandledError
   onunhandledrejection ||= ErrorHandling.handleUnhandledRejection
   if ('SecurityPolicyViolationEvent' in self) {
