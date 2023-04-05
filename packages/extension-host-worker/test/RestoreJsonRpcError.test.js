@@ -84,6 +84,23 @@ test('restoreJsonRpcError - DOMException', () => {
   expect(error.message).toBe(`The user aborted a request.`)
 })
 
+test('restoreJsonRpcError - DOMException - DataCloneError', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    type: ErrorType.DomException,
+    name: 'DataCloneError',
+    message: "Failed to execute 'postMessage' on 'MessagePort': Value at index 0 does not have a transferable type.",
+    stack: `Error: Failed to execute 'postMessage' on 'MessagePort': Value at index 0 does not have a transferable type.
+    at Object.send (http://localhost:3000/packages/renderer-worker/src/parts/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js:19:14)
+    at handleMessageMethod (http://localhost:3000/packages/renderer-worker/src/parts/ExtensionHostRpc/ExtensionHostRpc.js:24:24)`,
+  })
+  expect(error).toBeInstanceOf(DOMException)
+  expect(error.name).toBe('DataCloneError')
+  expect(error.message).toBe("Failed to execute 'postMessage' on 'MessagePort': Value at index 0 does not have a transferable type.")
+  expect(error.stack).toMatch(`Error: Failed to execute 'postMessage' on 'MessagePort': Value at index 0 does not have a transferable type.
+    at Object.send (http://localhost:3000/packages/renderer-worker/src/parts/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js:19:14)
+    at handleMessageMethod (http://localhost:3000/packages/renderer-worker/src/parts/ExtensionHostRpc/ExtensionHostRpc.js:24:24)`)
+})
+
 test('restoreJsonRpcError - with stack', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     message: 'Test failed: sample.tab-completion-provider: expected selector .Viewlet.Editor to have text "test3" but was "test"',
