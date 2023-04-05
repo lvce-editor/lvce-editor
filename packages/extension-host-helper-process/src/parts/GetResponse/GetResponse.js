@@ -1,10 +1,9 @@
-import * as Command from '../Command/Command.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 
-export const getResponse = async (message) => {
+export const getResponse = async (message, execute) => {
   try {
-    const result = await Command.invoke(message.method, ...message.params)
+    const result = await execute(message.method, ...message.params)
     return {
       jsonrpc: JsonRpc.Version,
       id: message.id,

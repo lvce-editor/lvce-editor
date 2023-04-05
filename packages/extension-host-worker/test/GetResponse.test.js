@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import { CommandNotFoundError } from '../src/parts/CommandNotFoundError/CommandNotFoundError.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -13,23 +14,25 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const Command = await import('../src/parts/Command/Command.js')
 const GetResponse = await import('../src/parts/GetResponse/GetResponse.js')
 
 test('getResponse - error - method not found', async () => {
   // @ts-ignore
-  Command.execute.mockImplementation((id) => {
+  const fn = (id) => {
     throw new CommandNotFoundError(id)
-  })
+  }
   expect(
-    await GetResponse.getResponse({
-      jsonrpc: '2.0',
-      method: 'test.not-found',
-      params: [],
-      id: 1,
-    })
+    await GetResponse.getResponse(
+      {
+        jsonrpc: JsonRpcVersion.Two,
+        method: 'test.not-found',
+        params: [],
+        id: 1,
+      },
+      fn
+    )
   ).toEqual({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     id: 1,
     error: {
       code: -32601,
