@@ -9,3 +9,8 @@ export const listen = async () => {
   // return {
   // }
 }
+
+export const wrap = () => {
+  // TODO
+  return {}
+}
