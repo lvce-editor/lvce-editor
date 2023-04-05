@@ -64,6 +64,15 @@ const handleWebSocketExtensionHostHelperProcess = async (message, handle) => {
   ipc._process.send(message, handle)
 }
 
+const handleWebSocketUnknown = (message, handle, protocol) => {
+  Logger.warn(`[shared-process] unsupported sec-websocket-procotol ${protocol}`)
+  try {
+    handle.destroy()
+  } catch {
+    // ignore
+  }
+}
+
 const handleWebSocket = (message, handle) => {
   const headers = message.headers
   if (!headers) {
@@ -81,7 +90,7 @@ const handleWebSocket = (message, handle) => {
     case ProtocolType.ExtensionHostHelperProcess:
       return handleWebSocketExtensionHostHelperProcess(message, handle)
     default:
-      Logger.warn(`[shared-process] unsupported sec-websocket-procotol ${protocol}`)
+      return handleWebSocketUnknown(message, handle, protocol)
   }
 }
 
