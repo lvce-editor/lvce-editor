@@ -8,7 +8,4 @@ export const listen = (ipc, execute) => {
     }
   }
   ipc.on('message', handleMessage)
-  if (process.send) {
-    process.send('ready')
-  }
 }

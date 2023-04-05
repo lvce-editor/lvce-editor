@@ -36,7 +36,17 @@ export const wrap = (port) => {
   return {
     port,
     on(event, listener) {
-      this.port.on(event, listener)
+      switch (event) {
+        case 'message':
+          const wrappedListener = (event) => {
+            listener(event.data)
+          }
+          this.port.on(event, wrappedListener)
+          break
+        default:
+          this.port.on(event, listener)
+          break
+      }
     },
     off(event, listener) {
       this.port.off(event, listener)

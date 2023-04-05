@@ -81,8 +81,8 @@ export const api = {
   registerFormattingProvider: ExtensionHostFormatting.registerFormattingProvider,
   executeFormattingProvider: ExtensionHostFormatting.executeFormattingProvider,
 
-  // Node Ipc
-  createNodeIpc: ExtensionHostNodeIpc.createNodeIpc,
+  // Node Rpc
+  createNodeRpc: ExtensionHostNodeIpc.createNodeRpc,
 
   // Implementation
   registerImplementationProvider: ExtensionHostImplementation.registerImplementationProvider,
