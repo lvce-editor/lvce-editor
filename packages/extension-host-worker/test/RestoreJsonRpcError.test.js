@@ -280,5 +280,41 @@ test('restoreJsonRpcError - AssertionError', () => {
     at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
     at async getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
     at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:27:22)
-    at Module.restoreJsonRpcError `)
+    at Module.restoreJsonRpcError`)
+})
+
+test('restoreJsonRpcError - Command not found error', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    code: -32001,
+    message: 'command Completion.getCompletion not found',
+    data: {
+      stack: `    at Module.getModuleId (/test/packages/extension-host-helper-process/src/parts/ModuleMap/ModuleMap.js:18:13)
+    at loadCommand (/test/packages/extension-host-helper-process/src/parts/Command/Command.js:34:60)
+    at invoke (/test/packages/extension-host-helper-process/src/parts/Command/Command.js:42:11)
+    at Module.getResponse (/test/packages/extension-host-helper-process/src/parts/GetResponse/GetResponse.js:6:26)
+    at handleMessage (/test/packages/extension-host-helper-process/src/parts/Rpc/Rpc.js:6:42)
+    at WebSocket.wrappedListener (/test/packages/extension-host-helper-process/src/parts/IpcChildWithWebSocket/IpcChildWithWebSocket.js:23:13)
+    at Receiver.receiverOnMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/websocket.js:1180:20)
+    at Receiver.dataMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/receiver.js:541:14)`,
+      codeFrame: `  16 |       return ModuleId.Ajax
+  17 |     default:
+> 18 |       throw new Error(\`command \${commandId} not found\`)
+     |             ^
+  19 |   }
+  20 | }
+  21 |`,
+    },
+  })
+  expect(error).toBeInstanceOf(Error)
+  expect(error.message).toBe('command Completion.getCompletion not found')
+  expect(error.stack).toMatch(`command Completion.getCompletion not found
+    at Module.getModuleId (/test/packages/extension-host-helper-process/src/parts/ModuleMap/ModuleMap.js:18:13)
+    at loadCommand (/test/packages/extension-host-helper-process/src/parts/Command/Command.js:34:60)
+    at invoke (/test/packages/extension-host-helper-process/src/parts/Command/Command.js:42:11)
+    at Module.getResponse (/test/packages/extension-host-helper-process/src/parts/GetResponse/GetResponse.js:6:26)
+    at handleMessage (/test/packages/extension-host-helper-process/src/parts/Rpc/Rpc.js:6:42)
+    at WebSocket.wrappedListener (/test/packages/extension-host-helper-process/src/parts/IpcChildWithWebSocket/IpcChildWithWebSocket.js:23:13)
+    at Receiver.receiverOnMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/websocket.js:1180:20)
+    at Receiver.dataMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/receiver.js:541:14)
+    at Module.restoreJsonRpcError`)
 })
