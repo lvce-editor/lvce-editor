@@ -98,7 +98,8 @@ test('restoreJsonRpcError - DOMException - DataCloneError', () => {
   expect(error.message).toBe("Failed to execute 'postMessage' on 'MessagePort': Value at index 0 does not have a transferable type.")
   expect(error.stack).toMatch(`Error: Failed to execute 'postMessage' on 'MessagePort': Value at index 0 does not have a transferable type.
     at Object.send (http://localhost:3000/packages/renderer-worker/src/parts/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js:19:14)
-    at handleMessageMethod (http://localhost:3000/packages/renderer-worker/src/parts/ExtensionHostRpc/ExtensionHostRpc.js:24:24)`)
+    at handleMessageMethod (http://localhost:3000/packages/renderer-worker/src/parts/ExtensionHostRpc/ExtensionHostRpc.js:24:24)
+    at Module.restoreJsonRpcError`)
 })
 
 test('restoreJsonRpcError - with stack', () => {
@@ -114,7 +115,7 @@ test('restoreJsonRpcError - with stack', () => {
     `Error: expected selector .Viewlet.Editor to have text \"test3\" but was \"test\"
     at Object.checkSingleElementCondition [as TestFrameWork.checkSingleElementCondition] (http://localhost/packages/renderer-process/src/parts/TestFrameWork/TestFrameWork.js:122:9)
     at async Worker.handleMessageFromRendererWorker (http://localhost/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js:46:24)
-    at constructError`
+    at Module.restoreJsonRpcError`
   )
 })
 

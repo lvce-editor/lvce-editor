@@ -1,10 +1,9 @@
+import * as Character from '../Character/Character.js'
 import * as GetErrorConstructor from '../GetErrorConstructor/GetErrorConstructor.js'
-import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as Character from '../Character/Character.js'
 
 const constructError = (message, type, name) => {
   const ErrorConstructor = GetErrorConstructor.getErrorConstructor(message, type)
@@ -32,8 +31,8 @@ export const restoreJsonRpcError = (error) => {
   }
   if (error && error.message) {
     const restoredError = constructError(error.message, error.type, error.name)
+    const currentStack = JoinLines.joinLines(SplitLines.splitLines(new Error().stack).slice(1))
     if (error.data) {
-      const currentStack = JoinLines.joinLines(SplitLines.splitLines(new Error().stack).slice(1))
       if (error.data.stack && error.data.type && error.message) {
         restoredError.stack = error.data.type + ': ' + error.message + Character.NewLine + error.data.stack + Character.NewLine + currentStack
       } else if (error.data.stack) {
@@ -48,12 +47,8 @@ export const restoreJsonRpcError = (error) => {
         restoredError.code = error.data.code
       }
     } else if (error.stack) {
-      // TODO accessing stack might be slow
-      const lowerStack = restoredError.stack || ''
       // @ts-ignore
-      const indexNewLine = GetNewLineIndex.getNewLineIndex(lowerStack)
-      // @ts-ignore
-      restoredError.stack = error.stack + lowerStack.slice(indexNewLine)
+      restoredError.stack = error.stack + Character.NewLine + currentStack
     }
     return restoredError
   }
