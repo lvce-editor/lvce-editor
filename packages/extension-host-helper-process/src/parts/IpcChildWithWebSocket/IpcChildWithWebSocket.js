@@ -11,6 +11,10 @@ export const listen = async () => {
 export const wrap = (webSocket) => {
   return {
     webSocket,
+    /**
+     * @type {any}
+     */
+    wrappedListener: undefined,
     send(message) {
       const stringifiedMessage = Json.stringify(message)
       this.webSocket.send(stringifiedMessage)
@@ -18,11 +22,20 @@ export const wrap = (webSocket) => {
     on(event, listener) {
       switch (event) {
         case 'message':
-          const wrappedListener = (message) => {
+          this.wrappedListener = (message) => {
             const parsed = Json.parse(message.toString())
             listener(parsed)
           }
-          this.webSocket.on('message', wrappedListener)
+          this.webSocket.on('message', this.wrappedListener)
+          break
+        default:
+          throw new Error('unknown event listener type')
+      }
+    },
+    off(event, listener) {
+      switch (event) {
+        case 'message':
+          this.webSocket.off('message', this.wrappedListener)
           break
         default:
           throw new Error('unknown event listener type')
