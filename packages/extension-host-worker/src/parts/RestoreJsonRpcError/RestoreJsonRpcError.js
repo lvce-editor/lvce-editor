@@ -14,7 +14,6 @@ const constructError = (message, type, name) => {
 }
 
 export const restoreJsonRpcError = (error) => {
-  console.log({ error })
   if (error && error instanceof Error) {
     return error
   }
