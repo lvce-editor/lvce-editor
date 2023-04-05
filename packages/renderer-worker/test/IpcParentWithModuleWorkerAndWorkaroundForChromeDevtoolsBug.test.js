@@ -1,6 +1,11 @@
 import { jest } from '@jest/globals'
 import * as RendererProcessIpcParentType from '../src/parts/RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
+beforeAll(() => {
+  // @ts-ignore
+  globalThis.MessagePort = class {}
+})
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
@@ -17,9 +22,7 @@ const IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug = await import(
 )
 
 test('create', async () => {
-  const port = {
-    __isMessagePort: true,
-  }
+  const port = new MessagePort()
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {
     return port
