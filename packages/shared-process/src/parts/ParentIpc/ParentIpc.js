@@ -7,6 +7,7 @@ import * as ExtensionHostHelperProcessIpc from '../ExtensionHostHelperProcessIpc
 import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
+import * as Logger from '../Logger/Logger.js'
 import * as ProtocolType from '../ProtocolType/ProtocolType.js'
 import { VError } from '../VError/VError.js'
 // TODO add tests for this
@@ -80,7 +81,7 @@ const handleWebSocket = (message, handle) => {
     case ProtocolType.ExtensionHostHelperProcess:
       return handleWebSocketExtensionHostHelperProcess(message, handle)
     default:
-      console.warn(`unsupported sec-websocket-procotol ${protocol}`)
+      Logger.warn(`[shared-process] unsupported sec-websocket-procotol ${protocol}`)
   }
 }
 
