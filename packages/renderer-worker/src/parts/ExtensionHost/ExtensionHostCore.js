@@ -1,8 +1,7 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as Workspace from '../Workspace/Workspace.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
-import * as WorkerType from '../WorkerType/WorkerType.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export const STATUS_OFF = 0
 export const STATUS_LOADING = 1
@@ -46,29 +45,12 @@ export const startNodeExtensionHost = async () => {
   }
   state.readyCallbacks = []
   // TODO handle error
-  await SharedProcess.invoke(
-    /* ExtensionHost.setWorkspaceRoot */ 'ExtensionHost.setWorkspaceRoot',
-    /* root */ Workspace.getWorkspacePath()
-  )
-}
-
-export const startWebExtensionHost = async () => {
-  const worker = new Worker(
-    '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
-    {
-      type: WorkerType.Module,
-      name: 'Extension Host',
-    }
-  )
-  state.extensionHostWorker = worker
+  await SharedProcess.invoke(/* ExtensionHost.setWorkspaceRoot */ 'ExtensionHost.setWorkspaceRoot', /* root */ Workspace.getWorkspacePath())
 }
 
 const getWebExtensionManifest = async (path) => {
   const manifestPath = `${path}/extension.json`
-  const manifest = await Command.execute(
-    /* Ajax.getJson */ 'Ajax.getJson',
-    /* url */ manifestPath
-  )
+  const manifest = await Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ manifestPath)
   return {
     ...manifest,
     path,
