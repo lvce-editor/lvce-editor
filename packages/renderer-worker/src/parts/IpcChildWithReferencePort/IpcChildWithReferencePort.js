@@ -5,12 +5,17 @@ export const listen = () => {
   }
   // TODO get rid of extra data wrapper
   globalThis.acceptReferencePort(referencePort)
+  return referencePort
+}
+
+export const wrap = (referencePort) => {
   return {
+    referencePort,
     send(message) {
-      referencePort.onmessage({ data: message })
+      this.referencePort.onmessage({ data: message })
     },
     sendAndTransfer({ data: message }, transferables) {
-      referencePort.onmessage(message, transferables)
+      this.referencePort.onmessage(message, transferables)
     },
     get onmessage() {
       // TODO

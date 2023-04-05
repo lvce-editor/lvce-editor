@@ -2,20 +2,24 @@ export const listen = () => {
   if (typeof WorkerGlobalScope === 'undefined') {
     throw new Error('module is not in web worker scope')
   }
-  const postMessageFn = globalThis.postMessage
-  postMessageFn('ready')
+  globalThis.postMessage('ready')
+  return globalThis
+}
+
+export const wrap = (global) => {
   return {
+    global,
     send(message) {
-      postMessageFn(message)
+      this.global.postMessage(message)
     },
     sendAndTransfer(message, transferables) {
-      postMessageFn(message, transferables)
+      this.global.postMessage(message, transferables)
     },
     get onmessage() {
-      return onmessage
+      return this.global.onmessage
     },
     set onmessage(listener) {
-      onmessage = listener
+      this.global.onmessage = listener
     },
   }
 }
