@@ -1,4 +1,5 @@
 import * as Callback from '../Callback/Callback.js'
+import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
@@ -21,7 +22,7 @@ const handleMessageFromRendererWorker = async (event) => {
   const message = event.data
   if ('id' in message) {
     if ('method' in message) {
-      const response = await GetResponse.getResponse(message)
+      const response = await GetResponse.getResponse(message, Command.execute)
       try {
         state.ipc.send(response)
       } catch (error) {

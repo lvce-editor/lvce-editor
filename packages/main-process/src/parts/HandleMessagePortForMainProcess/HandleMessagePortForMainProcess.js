@@ -1,6 +1,7 @@
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Assert = require('../Assert/Assert.js')
 const GetResponse = require('../GetResponse/GetResponse.js')
+const Command = require('../Command/Command.js')
 
 /**
  *
@@ -16,7 +17,7 @@ exports.handlePort = (event, browserWindowPort) => {
   }
   const handleMessage = async (event) => {
     const message = event.data
-    const response = await GetResponse.getResponse(message)
+    const response = await GetResponse.getResponse(message, Command.execute)
     browserWindowPort.postMessage(response)
   }
   browserWindowPort.on('message', handleMessage)

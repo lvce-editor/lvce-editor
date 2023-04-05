@@ -1,5 +1,6 @@
 import { setTimeout } from 'node:timers/promises'
 import { jest } from '@jest/globals'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -28,7 +29,7 @@ test('send - error - promise could not be cloned', async () => {
   // @ts-ignore
   GetResponse.getResponse.mockImplementation((message) => {
     return {
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       id: message,
       result: mockResult,
     }
@@ -36,7 +37,7 @@ test('send - error - promise could not be cloned', async () => {
   // @ts-ignore
   GetErrorResponse.getErrorResponse.mockImplementation((message, error) => {
     return {
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       id: message.id,
       error: {
         message: `${error}`,
@@ -54,7 +55,7 @@ test('send - error - promise could not be cloned', async () => {
     },
     send: jest.fn(() => {
       if (i++ === 0) {
-        throw new DOMException('Failed to execute \'postMessage\' on \'DedicatedWorkerGlobalScope\': #<Promise> could not be cloned.')
+        throw new DOMException("Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.")
       }
     }),
   }
@@ -62,7 +63,7 @@ test('send - error - promise could not be cloned', async () => {
   // @ts-ignore
   ipc._onmessage({
     data: {
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method: 'test',
       params: [],
       id: 1,
@@ -73,23 +74,23 @@ test('send - error - promise could not be cloned', async () => {
   expect(ipc.send).toHaveBeenNthCalledWith(1, {
     id: {
       id: 1,
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method: 'test',
       params: [],
     },
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     result: mockResult,
   })
   expect(ipc.send).toHaveBeenNthCalledWith(2, {
     error: {
-      message: 'Error: Failed to execute \'postMessage\' on \'DedicatedWorkerGlobalScope\': #<Promise> could not be cloned.',
+      message: "Error: Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.",
     },
     id: 1,
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
   })
   expect(ErrorHandling.logError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.logError).toHaveBeenCalledWith(
-    new DOMException('Failed to execute \'postMessage\' on \'DedicatedWorkerGlobalScope\': #<Promise> could not be cloned.')
+    new DOMException("Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope': #<Promise> could not be cloned.")
   )
 })
 
@@ -97,7 +98,7 @@ test('send', async () => {
   // @ts-ignore
   GetResponse.getResponse.mockImplementation((message) => {
     return {
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       id: message.id,
       result: 42,
     }
@@ -117,7 +118,7 @@ test('send', async () => {
   // @ts-ignore
   ipc._onmessage({
     data: {
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method: 'test',
       params: [],
       id: 1,
@@ -126,7 +127,7 @@ test('send', async () => {
   await setTimeout(0)
   expect(ipc.send).toHaveBeenCalledTimes(1)
   expect(ipc.send).toHaveBeenNthCalledWith(1, {
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     id: 1,
     result: 42,
   })
