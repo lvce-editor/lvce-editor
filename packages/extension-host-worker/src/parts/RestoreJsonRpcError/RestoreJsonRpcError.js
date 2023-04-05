@@ -49,7 +49,7 @@ export const restoreJsonRpcError = (error) => {
       }
     } else if (error.stack) {
       // TODO accessing stack might be slow
-      const lowerStack = restoredError.stack
+      const lowerStack = restoredError.stack || ''
       // @ts-ignore
       const indexNewLine = GetNewLineIndex.getNewLineIndex(lowerStack)
       // @ts-ignore
