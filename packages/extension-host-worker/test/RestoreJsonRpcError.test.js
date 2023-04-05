@@ -134,7 +134,7 @@ test('restoreJsonRpcError - with stack in data property', () => {
   )
 })
 
-test.skip('restoreJsonRpcError - ExecError', () => {
+test('restoreJsonRpcError - ExecError', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     message: 'Failed to execute test-source-control: process exited with code 128',
     name: 'ExecError',
@@ -182,7 +182,7 @@ test('restoreJsonRpcError - VError', () => {
   expect(error.name).toBe('Error')
 })
 
-test.skip('restoreJsonRpcError - error without stack', () => {
+test('restoreJsonRpcError - error without stack', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     code: -32001,
     message: "FileNotFoundError: File not found '0.8510013488176322'",
@@ -193,7 +193,7 @@ test.skip('restoreJsonRpcError - error without stack', () => {
   expect(error.name).toBe('Error')
 })
 
-test.skip('restoreJsonRpcError - error with code', () => {
+test('restoreJsonRpcError - error with code', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     code: -32001,
     message: "FileNotFoundError: File not found '/test/settings.json'",
@@ -209,7 +209,7 @@ test.skip('restoreJsonRpcError - error with code', () => {
   expect(error.code).toBe(ErrorCodes.ENOENT)
 })
 
-test.skip('restoreJsonRpcError - object', () => {
+test('restoreJsonRpcError - object', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     jsonrpc: '2.0',
     id: 7,
@@ -233,10 +233,10 @@ test.skip('restoreJsonRpcError - object', () => {
     },
   })
   expect(error).toBeInstanceOf(Error)
-  expect(error.message).toBe('JsonRpcError: [object Object]')
+  expect(error.message).toBe('JsonRpc Error: [object Object]')
 })
 
-test.skip('restoreJsonRpcError - AssertionError', () => {
+test('restoreJsonRpcError - AssertionError', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({
     code: -32001,
     message: 'expected value to be of type string',
