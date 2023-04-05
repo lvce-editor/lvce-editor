@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Json from '../Json/Json.js'
 import * as WaitForWebSocketToBeOpen from '../WaitForWebSocketToBeOpen/WaitForWebSocketToBeOpen.js'
 import * as WebSocketProtocol from '../WebSocketProtocol/WebSocketProtocol.js'
@@ -8,6 +9,7 @@ const getWsUrl = () => {
 }
 
 export const create = async ({ protocol }) => {
+  Assert.string(protocol)
   // TODO replace this during build
   const wsUrl = getWsUrl()
   const webSocket = new WebSocket(wsUrl, [protocol])
