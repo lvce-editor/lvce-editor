@@ -82,6 +82,7 @@ const handleWebSocket = (message, handle) => {
       return handleWebSocketExtensionHostHelperProcess(message, handle)
     default:
       Logger.warn(`[shared-process] unsupported sec-websocket-procotol ${protocol}`)
+      handle.destroy()
   }
 }
 
