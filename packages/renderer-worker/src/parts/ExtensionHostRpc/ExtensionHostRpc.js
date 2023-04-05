@@ -1,4 +1,5 @@
 import * as Callback from '../Callback/Callback.js'
+import * as Command from '../Command/Command.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as HasTransferableResult from '../HasTransferableResult/HasTransferableResult.js'
@@ -16,7 +17,7 @@ const isErrorMessage = (message) => {
 const handleMessageMethod = async (message, event) => {
   if ('id' in message) {
     if ('method' in message) {
-      const response = await GetResponse.getResponse(message)
+      const response = await GetResponse.getResponse(message, Command.execute)
       if (HasTransferableResult.hasTransferrableResult(message.method) && 'result' in response) {
         event.target.send(response, [response.result])
       } else {

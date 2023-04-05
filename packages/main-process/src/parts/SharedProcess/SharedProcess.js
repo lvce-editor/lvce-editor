@@ -49,7 +49,7 @@ const handleChildMessage = async (message) => {
       state.onMessage(message)
       return
     }
-    const response = await GetResponse.getResponse(message)
+    const response = await GetResponse.getResponse(message, Command.execute)
     if (state.sharedProcess) {
       state.sharedProcess.postMessage(response)
     }
