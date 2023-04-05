@@ -40,6 +40,9 @@ const getModule = () => {
 export const create = async (options) => {
   const module = await getModule()
   const rawIpc = await module.create(options)
+  if (options.raw) {
+    return rawIpc
+  }
   return {
     rawIpc,
     module,
