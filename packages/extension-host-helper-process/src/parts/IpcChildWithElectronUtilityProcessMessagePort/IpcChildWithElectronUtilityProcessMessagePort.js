@@ -1,4 +1,5 @@
 import * as IpcChildWithElectronUtilityProcess from '../IpcChildWithElectronUtilityProcess/IpcChildWithElectronUtilityProcess.js'
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 
 const waitForFirstMessage = async (parentPort) => {
   const { type, event } = await new Promise((resolve) => {
@@ -34,6 +35,7 @@ export const listen = async () => {
 
 export const wrap = (port) => {
   return {
+    type: IpcChildType.ElectronUtilityProcessMessagePort,
     port,
     on(event, listener) {
       switch (event) {
