@@ -1,21 +1,6 @@
-import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-
-const getModule = (method) => {
-  switch (method) {
-    case IpcChildType.MessagePort:
-      return import('./IpcChildWithMessagePort.js')
-    case IpcChildType.WebSocket:
-      return import('./IpcChildWithWebSocket.js')
-    case IpcChildType.Parent:
-      return import('./IpcChildWithParent.js')
-    case IpcChildType.ElectronMessagePort:
-      return import('./IpcChildWithElectronMessagePort.js')
-    default:
-      throw new Error('unexpected ipc type')
-  }
-}
+import * as IpcChildModule from '../IpcChildModule/IpcChildModule.js'
 
 export const listen = async ({ method }) => {
-  const module = await getModule(method)
+  const module = await IpcChildModule.getModule(method)
   return module.listen()
 }
