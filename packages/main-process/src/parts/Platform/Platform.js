@@ -72,3 +72,7 @@ exports.getChromeExtensionsPath = () => {
 exports.getExtensionHostHelperProcessPath = () => {
   return join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
 }
+
+exports.getExtensionHostHelperProcessPathCjs = () => {
+  return join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.cjs')
+}

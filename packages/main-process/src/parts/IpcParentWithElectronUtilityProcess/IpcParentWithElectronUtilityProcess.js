@@ -3,29 +3,12 @@ const { utilityProcess } = require('electron')
 const Assert = require('../Assert/Assert.js')
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js')
-const { join } = require('path')
-const { tmpdir } = require('os')
-const { writeFile } = require('fs/promises')
-
-const createCode = (path) => {
-  return `const main = async () => {
-  await import("${path}")
-}
-
-main()`
-}
-
-const createTmpFile = async (content) => {
-  const temporaryFile = join(tmpdir(), 'file.js')
-  await writeFile(temporaryFile, content)
-  return temporaryFile
-}
+const Platform = require('../Platform/Platform.js')
 
 exports.create = async ({ path, argv, execArgv = [] }) => {
   Assert.string(path)
-  const code = createCode(path)
-  const temporaryFile = await createTmpFile(code)
-  const childProcess = utilityProcess.fork(temporaryFile, argv, {
+  const filePath = Platform.getExtensionHostHelperProcessPathCjs()
+  const childProcess = utilityProcess.fork(filePath, argv, {
     execArgv,
     stdio: 'pipe',
   })

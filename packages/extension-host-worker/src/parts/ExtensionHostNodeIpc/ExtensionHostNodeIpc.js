@@ -1,13 +1,18 @@
+import * as Assert from '../Assert/Assert.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as Assert from '../Assert/Assert.js'
+import * as RpcParent from '../RpcParent/RpcParent.js'
+import * as RpcParentType from '../RpcParentType/RpcParentType.js'
 
-export const createNodeIpc = async ({ path }) => {
+export const createNodeRpc = async ({ path }) => {
   Assert.string(path)
   const ipc = await IpcParent.create({
     method: IpcParentType.ElectronMessagePort,
     type: `custom:${path}`,
   })
-  console.log({ ipc })
-  return ipc
+  const rpc = RpcParent.create({
+    ipc,
+    method: RpcParentType.JsonRpc,
+  })
+  return rpc
 }
