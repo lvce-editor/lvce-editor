@@ -122,9 +122,9 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
 }`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IpcParentWithNode/IpcParentWithNode.js`,
     occurrence: `const platform = getPlatform() `,
-    replacement: "const platform = 'web'",
+    replacement: 'const platform = PlaformType.Web',
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IconTheme/IconTheme.js`,
