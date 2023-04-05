@@ -4,12 +4,17 @@ import * as Rpc from '../Rpc/Rpc.js'
 
 const getPort = async (type) => {
   const port = await Rpc.invoke('IpcParent.create', {
-    method: RendererWorkerIpcParentType.ElectronMessagePort,
+    method: RendererWorkerIpcParentType.Node,
     type,
     raw: true,
+    protocol: 'lvce.extension-host-helper-process',
   })
+  console.log({ port })
   if (!port) {
     throw new IpcError(`port must be defined`)
+  }
+  if (!(port instanceof MessagePort)) {
+    throw new IpcError('port must be of type MessagePort')
   }
   return port
 }

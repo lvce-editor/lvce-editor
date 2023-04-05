@@ -5,7 +5,7 @@ export const getModule = (method) => {
     case IpcParentType.WebSocket:
       return import('../IpcParentWithWebSocket/IpcParentWithWebSocket.js')
     case IpcParentType.ElectronMessagePort:
-      return import('../IpcParentWithElectronMessagePort/IpcParentWithElectronMessagePort.js')
+      return import('../IpcParentWithNode/IpcParentWithNode.js')
     case IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug:
       return import('../IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js')
     default:
