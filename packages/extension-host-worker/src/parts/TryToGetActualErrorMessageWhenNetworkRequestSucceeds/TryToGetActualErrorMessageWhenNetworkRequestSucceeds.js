@@ -8,9 +8,22 @@ import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as IsBabelParseError from '../IsBabelParseError/IsBabelParseError.js'
 import * as Url from '../Url/Url.js'
 
+const isExternal = (url) => {
+  if (url.startsWith('/')) {
+    return false
+  }
+  if (url.startsWith(location.protocol)) {
+    return false
+  }
+  return true
+}
+
 const getErrorInDependencies = async (url, dependencies) => {
   for (const dependency of dependencies) {
     const dependencyUrl = Url.getAbsoluteUrl(dependency.relativePath, url)
+    if (isExternal(dependencyUrl)) {
+      continue
+    }
     // let dependencyResponse
     // try {
     const dependencyResponse = await fetch(dependencyUrl)
