@@ -1,7 +1,7 @@
 import * as GetLineAndColumn from '../GetLineAndColumn/GetLineAndColumn.js'
 
 const getErrorMessage = (dependencyRelativePath) => {
-  return `module not found "${dependencyRelativePath}"`
+  return `Module not found "${dependencyRelativePath}"`
 }
 
 const getErrorStack = (message, sourceUrl, line, column) => {

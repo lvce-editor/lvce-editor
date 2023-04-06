@@ -11,7 +11,7 @@ export const test = async ({ Extension, QuickPick, Locator, expect }) => {
 
   // assert
   const dialog = Locator('#Dialog')
-  // TODO error message should say module not found "./add.js"
+  // TODO error message should say Module not found "./add.js"
   const errorMessage = dialog.locator('#DialogBodyErrorMessage')
   await expect(errorMessage).toHaveText(`Error: Failed to activate extension sample.error-dynamic-import-not-found: Module not found "./add.js"`)
 
