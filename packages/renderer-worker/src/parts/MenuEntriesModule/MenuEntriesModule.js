@@ -48,6 +48,6 @@ export const load = (id) => {
       case MenuEntryId.SourceControl:
         return import('../MenuEntriesSourceControl/MenuEntriesSourceControl.js')
     default:
-      throw new Error(`module not found "${id}"`)
+      throw new Error(`Module not found "${id}"`)
   }
 }
