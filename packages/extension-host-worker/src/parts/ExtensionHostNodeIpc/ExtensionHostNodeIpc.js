@@ -10,9 +10,12 @@ export const createNodeRpc = async ({ path }) => {
     method: IpcParentType.ElectronMessagePort,
     type: `custom:${path}`,
   })
-  const rpc = RpcParent.create({
+  const rpc = await RpcParent.create({
     ipc,
     method: RpcParentType.JsonRpc,
   })
+  await rpc.invoke('LoadFile.loadFile', path)
+  console.log({ path })
+
   return rpc
 }

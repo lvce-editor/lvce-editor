@@ -7,9 +7,13 @@ const getPort = async (type) => {
     method: RendererWorkerIpcParentType.ElectronMessagePort,
     type,
     raw: true,
+    protocol: 'lvce.extension-host-helper-process',
   })
   if (!port) {
     throw new IpcError(`port must be defined`)
+  }
+  if (!(port instanceof MessagePort)) {
+    throw new IpcError('port must be of type MessagePort')
   }
   return port
 }

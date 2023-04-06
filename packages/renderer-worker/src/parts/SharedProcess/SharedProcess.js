@@ -4,33 +4,7 @@ import * as Command from '../Command/Command.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcessIpc from '../SharedProcessIpc/SharedProcessIpc.js'
-
-// TODO duplicate code with platform module
-/**
- * @returns {'electron'|'remote'|'web'|'test'}
- */
-const getPlatform = () => {
-  // @ts-ignore
-  if (typeof PLATFORM !== 'undefined') {
-    // @ts-ignore
-    return PLATFORM
-  }
-  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
-    return 'test'
-  }
-  if (typeof location !== 'undefined' && location.search === '?web') {
-    return PlatformType.Web
-  }
-  // TODO find a better way to pass runtime environment
-  if (typeof name !== 'undefined' && name.endsWith('(Electron)')) {
-    return PlatformType.Electron
-  }
-  return PlatformType.Remote
-}
-
-const platform = getPlatform() // TODO tree-shake this out in production
 
 export const state = {
   /**
@@ -54,30 +28,17 @@ export const handleMessageFromSharedProcess = async (message) => {
   }
 }
 
-const getIpcMethod = () => {
-  switch (platform) {
-    case 'web':
-    case 'remote':
-      return IpcParentType.WebSocket
-    case 'electron':
-      return IpcParentType.ElectronMessagePort
-    default:
-      throw new Error('unsupported platform')
-  }
-}
-
 export const listen = async () => {
-  const ipcMethod = await getIpcMethod()
-  const ipc = await SharedProcessIpc.listen(ipcMethod)
+  const ipc = await SharedProcessIpc.listen(IpcParentType.Node)
   ipc.onmessage = handleMessageFromSharedProcess
   state.ipc = ipc
 }
 
 export const invoke = async (method, ...params) => {
-  if (platform === 'web') {
-    console.warn('SharedProcess is not available on web')
-    return
-  }
+  // if (platform === 'web') {
+  //   console.warn('SharedProcess is not available on web')
+  //   return
+  // }
   const result = await JsonRpc.invoke(state.ipc, method, ...params)
   return result
 }

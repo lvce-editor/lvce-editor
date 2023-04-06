@@ -14,6 +14,8 @@ export const getModule = (method) => {
       return import('../IpcParentWithWebSocket/IpcParentWithWebSocket.js')
     case IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug:
       return import('../IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js')
+    case IpcParentType.Node:
+      return import('../IpcParentWithNode/IpcParentWithNode.js')
     default:
       throw new Error('unexpected ipc type')
   }

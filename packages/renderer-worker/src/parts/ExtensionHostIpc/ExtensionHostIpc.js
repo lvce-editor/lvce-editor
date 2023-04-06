@@ -1,11 +1,19 @@
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
+
+const getName = () => {
+  if (Platform.platform === PlatformType.Electron) {
+    return 'Extension Host (Electron)'
+  }
+  return 'Extension Host'
+}
 
 export const listen = (method) => {
   return IpcParent.create({
     method,
     type: 'extension-host',
-    name: 'Extension Host',
+    name: getName(),
     url: Platform.getExtensionHostWorkerUrl(),
   })
 }

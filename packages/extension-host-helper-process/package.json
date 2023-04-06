@@ -66,6 +66,7 @@
     "got": "^12.5.3",
     "lines-and-columns": "^2.0.3",
     "minimist": "^1.2.8",
+    "verror": "^1.10.1",
     "ws": "^8.11.0"
   },
   "devDependencies": {
