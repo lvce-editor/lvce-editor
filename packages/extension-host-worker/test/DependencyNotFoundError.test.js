@@ -8,7 +8,7 @@ test('DependencyNotFoundError', () => {
   const dependencyUrl = '/test/packages/extension-host-worker-tests/fixtures/sample.error-dependency-module-not-found/not-found.js'
   const sourceUrl = '/test/packages/extension-host-worker-tests/fixtures/sample.error-dependency-module-not-found/add.js'
   const error = new DependencyNotFoundError(code, start, end, dependencyRelativePath, dependencyUrl, sourceUrl)
-  expect(error.message).toBe('module not found "./not-found.js"')
-  expect(error.stack).toBe(`module not found "./not-found.js"
+  expect(error.message).toBe('Module not found "./not-found.js"')
+  expect(error.stack).toBe(`Module not found "./not-found.js"
     at Module (/test/packages/extension-host-worker-tests/fixtures/sample.error-dependency-module-not-found/add.js:1:0)`)
 })
