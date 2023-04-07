@@ -1,4 +1,4 @@
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 
@@ -8,7 +8,7 @@ export const getErrorResponse = (message, error) => {
       jsonrpc: JsonRpcVersion.Two,
       id: message.id,
       error: {
-        code: JsonRpc.ErrorMethodNotFound,
+        code: JsonRpcErrorCode.MethodNotFound,
         message: error.message,
         data: error.stack,
       },
@@ -19,12 +19,12 @@ export const getErrorResponse = (message, error) => {
     jsonrpc: JsonRpcVersion.Two,
     id: message.id,
     error: {
-      code: -32001,
+      code: JsonRpcErrorCode.Custom,
       message: prettyError.message,
       data: {
         stack: prettyError.stack,
         codeFrame: prettyError.codeFrame,
-        code: prettyError.code,
+        type: prettyError.type,
       },
     },
   }
