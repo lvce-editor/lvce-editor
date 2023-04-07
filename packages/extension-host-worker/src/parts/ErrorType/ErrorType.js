@@ -1,4 +1,5 @@
 export const DomException = 'DOMException'
+export const RangeError = 'RangeError'
 export const ReferenceError = 'ReferenceError'
 export const SyntaxError = 'SyntaxError'
 export const TypeError = 'TypeError'
