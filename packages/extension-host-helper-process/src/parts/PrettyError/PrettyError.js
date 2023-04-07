@@ -50,5 +50,6 @@ export const prepare = (error) => {
     stack: relevantStack,
     codeFrame,
     code: error.code,
+    type: error.constructor.name,
   }
 }

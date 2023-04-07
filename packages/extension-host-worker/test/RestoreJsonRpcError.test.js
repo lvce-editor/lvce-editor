@@ -318,3 +318,40 @@ test('restoreJsonRpcError - Command not found error', () => {
     at Receiver.dataMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/receiver.js:541:14)
     at Module.restoreJsonRpcError`)
 })
+
+test('restoreJsonRpcError - ReferenceError', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    code: -32001,
+    message: 'vscode is not defined',
+    data: {
+      stack: `    at Module.getTsPosition (/test/language-features-typescript/packages/node/src/parts/Position/Position.js:4:20)
+    at getCompletion (/test/language-features-typescript/packages/node/src/parts/Completion/Completion.js:61:31)
+    at execute (/test/language-features-typescript/packages/node/src/parts/Command/Command.js:7:10)
+    at Module.getResponse (/test/lvce-editor/packages/extension-host-helper-process/src/parts/GetResponse/GetResponse.js:6:26)
+    at handleMessage (/test/lvce-editor/packages/extension-host-helper-process/src/parts/Rpc/Rpc.js:6:42)
+    at WebSocket.wrappedListener (/test/lvce-editor/packages/extension-host-helper-process/src/parts/IpcChildWithWebSocket/IpcChildWithWebSocket.js:27:13)
+    at Receiver.receiverOnMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/websocket.js:1180:20)
+    at Receiver.dataMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/receiver.js:541:14)`,
+      codeFrame: `  2 |
+  3 | export const getTsPosition = (textDocument, offset) => {
+> 4 |   const position = vscode.getPosition(textDocument, offset)
+    |                    ^
+  5 |   return {
+  6 |     line: position.rowIndex + 1,
+  7 |     offset: position.columnIndex + 1,`,
+      type: 'ReferenceError',
+    },
+  })
+  expect(error).toBeInstanceOf(ReferenceError)
+  expect(error.message).toBe('vscode is not defined')
+  expect(error.stack).toMatch(`ReferenceError: vscode is not defined
+    at Module.getTsPosition (/test/language-features-typescript/packages/node/src/parts/Position/Position.js:4:20)
+    at getCompletion (/test/language-features-typescript/packages/node/src/parts/Completion/Completion.js:61:31)
+    at execute (/test/language-features-typescript/packages/node/src/parts/Command/Command.js:7:10)
+    at Module.getResponse (/test/lvce-editor/packages/extension-host-helper-process/src/parts/GetResponse/GetResponse.js:6:26)
+    at handleMessage (/test/lvce-editor/packages/extension-host-helper-process/src/parts/Rpc/Rpc.js:6:42)
+    at WebSocket.wrappedListener (/test/lvce-editor/packages/extension-host-helper-process/src/parts/IpcChildWithWebSocket/IpcChildWithWebSocket.js:27:13)
+    at Receiver.receiverOnMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/websocket.js:1180:20)
+    at Receiver.dataMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/receiver.js:541:14)`)
+  expect(error.name).toBe('ReferenceError')
+})
