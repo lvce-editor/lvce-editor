@@ -13,6 +13,8 @@ export const getErrorConstructor = (message, type) => {
         return ReferenceError
       case ErrorType.RangeError:
         return RangeError
+      case ErrorType.UriError:
+        return URIError
       default:
         return Error
     }

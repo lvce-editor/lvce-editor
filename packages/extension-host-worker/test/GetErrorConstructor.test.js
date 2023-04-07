@@ -21,6 +21,10 @@ test('getErrorConstructor - RangeError', () => {
   expect(GetErrorConstructor.getErrorConstructor('', ErrorType.RangeError)).toBe(RangeError)
 })
 
+test('getErrorConstructor - UriError', () => {
+  expect(GetErrorConstructor.getErrorConstructor('', ErrorType.UriError)).toBe(URIError)
+})
+
 test('getErrorConstructor - unknown', () => {
   expect(GetErrorConstructor.getErrorConstructor('', '')).toBe(Error)
 })
