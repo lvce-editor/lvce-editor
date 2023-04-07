@@ -11,6 +11,8 @@ export const getErrorConstructor = (message, type) => {
         return SyntaxError
       case ErrorType.ReferenceError:
         return ReferenceError
+      case ErrorType.RangeError:
+        return RangeError
       default:
         return Error
     }
