@@ -21,5 +21,5 @@ const getError = async (fn) => {
 test('getFn', async () => {
   const error = await getError(() => CommandMap.getFn('test.not-found'))
   expect(error).toBeInstanceOf(CommandNotFoundError)
-  expect(error.message).toBe('Command test.not-found not found')
+  expect(error.message).toBe('Command "test.not-found" not found')
 })
