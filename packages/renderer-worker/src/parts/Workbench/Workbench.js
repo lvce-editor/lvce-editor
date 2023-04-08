@@ -133,16 +133,16 @@ export const startup = async (config) => {
 
   LifeCycle.mark(LifeCyclePhase.Ten)
 
-  Performance.mark('code/willLoadStatusBar')
+  Performance.mark(PerformanceMarkerType.WillLoadStatusBar)
   await Command.execute('Layout.loadStatusBarIfVisible')
-  Performance.mark('code/didLoadStatusBar')
+  Performance.mark(PerformanceMarkerType.DidLoadStatusBar)
 
   LifeCycle.mark(LifeCyclePhase.Eleven)
 
-  Performance.mark('code/willLoadIconTheme')
+  Performance.mark(PerformanceMarkerType.WillLoadIconTheme)
   // TODO check preferences if icon theme is enabled
   await IconTheme.hydrate()
-  Performance.mark('code/didLoadIconTheme')
+  Performance.mark(PerformanceMarkerType.DidLoadIconTheme)
 
   LifeCycle.mark(LifeCyclePhase.Twelve)
 
@@ -153,9 +153,9 @@ export const startup = async (config) => {
   if (Platform.platform === PlatformType.Electron && Preferences.get('window.titleBarStyle') === 'native') {
     await Command.execute('ElectronApplicationMenu.hydrate')
   } else {
-    Performance.mark('code/willLoadTitleBar')
+    Performance.mark(PerformanceMarkerType.WillLoadTitleBar)
     await Command.execute('Layout.loadTitleBarIfVisible')
-    Performance.mark('code/didLoadTitleBar')
+    Performance.mark(PerformanceMarkerType.DidLoadTitleBar)
   }
 
   LifeCycle.mark(LifeCyclePhase.Fifteen)
@@ -169,35 +169,35 @@ export const startup = async (config) => {
     await Command.execute('Test.execute', jsPath)
     return
   } else {
-    Performance.mark('code/willLoadSaveState')
+    Performance.mark(PerformanceMarkerType.WillLoadSaveState)
     await SaveState.hydrate()
-    Performance.mark('code/didLoadSaveState')
+    Performance.mark(PerformanceMarkerType.DidLoadSaveState)
   }
 
   LifeCycle.mark(LifeCyclePhase.Sixteen)
 
-  Performance.mark('code/willLoadRecentlyOpened')
+  Performance.mark(PerformanceMarkerType.WillLoadRecentlyOpened)
   await RecentlyOpened.hydrate()
-  Performance.mark('code/didLoadRecentlyOpened')
+  Performance.mark(PerformanceMarkerType.DidLoadRecentlyOpened)
 
   // TODO tree shake out service worker in electron build
 
-  Performance.mark('code/willLoadServiceWorker')
+  Performance.mark(PerformanceMarkerType.WillLoadServiceWorker)
   await ServiceWorker.hydrate()
-  Performance.mark('code/didLoadServiceWorker')
+  Performance.mark(PerformanceMarkerType.DidLoadServiceWorker)
 
-  Performance.mark('code/willLoadLocation')
+  Performance.mark(PerformanceMarkerType.WillLoadLocation)
   await Location.hydrate()
-  Performance.mark('code/didLoadLocation')
+  Performance.mark(PerformanceMarkerType.DidLoadLocation)
 
-  Performance.measure('code/openWorkspace', 'code/willOpenWorkspace', 'code/didOpenWorkspace')
-  Performance.measure('code/loadMain', 'code/willLoadMain', 'code/didLoadMain')
-  Performance.measure('code/loadSideBar', 'code/willLoadSideBar', 'code/didLoadSideBar')
-  Performance.measure('code/showLayout', 'code/willShowLayout', 'code/didShowLayout')
-  Performance.measure('code/loadPanel', 'code/willLoadPanel', 'code/didLoadPanel')
-  Performance.measure('code/loadActivityBar', 'code/willLoadActivityBar', 'code/didLoadActivityBar')
-  Performance.measure('code/loadStatusBar', 'code/willLoadStatusBar', 'code/didLoadStatusBar')
-  Performance.measure('code/loadPreferences', 'code/willLoadPreferences', 'code/didLoadPreferences')
-  Performance.measure('code/loadColorTheme', 'code/willLoadColorTheme', 'code/didLoadColorTheme')
-  Performance.measure('code/loadIconTheme', 'code/willLoadIconTheme', 'code/didLoadIconTheme')
+  Performance.measure('code/openWorkspace', PerformanceMarkerType.WillOpenWorkspace, PerformanceMarkerType.DidOpenWorkspace)
+  Performance.measure('code/loadMain', PerformanceMarkerType.WillLoadMain, PerformanceMarkerType.DidLoadMain)
+  Performance.measure('code/loadSideBar', PerformanceMarkerType.WillLoadSideBar, PerformanceMarkerType.DidLoadSideBar)
+  Performance.measure('code/showLayout', PerformanceMarkerType.WillShowLayout, PerformanceMarkerType.DidShowLayout)
+  Performance.measure('code/loadPanel', PerformanceMarkerType.WillLoadPanel, PerformanceMarkerType.DidLoadPanel)
+  Performance.measure('code/loadActivityBar', PerformanceMarkerType.WillLoadActivityBar, PerformanceMarkerType.DidLoadActivityBar)
+  Performance.measure('code/loadStatusBar', PerformanceMarkerType.WillLoadStatusBar, PerformanceMarkerType.DidLoadStatusBar)
+  Performance.measure('code/loadPreferences', PerformanceMarkerType.WillLoadPreferences, PerformanceMarkerType.DidLoadPreferences)
+  Performance.measure('code/loadColorTheme', PerformanceMarkerType.WillLoadColorTheme, PerformanceMarkerType.DidLoadColorTheme)
+  Performance.measure('code/loadIconTheme', PerformanceMarkerType.WillLoadIconTheme, PerformanceMarkerType.DidLoadIconTheme)
 }
