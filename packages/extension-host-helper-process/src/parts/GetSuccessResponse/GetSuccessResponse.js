@@ -4,6 +4,6 @@ export const getSuccessResponse = (message, result) => {
   return {
     jsonrpc: JsonRpcVersion.Two,
     id: message.id,
-    result,
+    result: result ?? null,
   }
 }
