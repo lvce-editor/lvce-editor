@@ -25,15 +25,15 @@ export const restoreJsonRpcError = (error) => {
   if (error && error instanceof Error) {
     return error
   }
+  const currentStack = JoinLines.joinLines(SplitLines.splitLines(new Error().stack).slice(1))
   if (error && error.code && error.code === JsonRpcErrorCode.MethodNotFound) {
     const restoredError = new JsonRpcError(error.message)
-    restoredError.stack = error.stack || error.data || ''
+    restoredError.stack = (error.stack || error.data || '') + Character.NewLine + currentStack
     return restoredError
   }
   if (error && error.message) {
     const restoredError = constructError(error.message, error.type, error.name)
     if (error.data) {
-      const currentStack = JoinLines.joinLines(SplitLines.splitLines(new Error().stack).slice(1))
       if (error.data.stack && error.data.type && error.message) {
         restoredError.stack = error.data.type + ': ' + error.message + Character.NewLine + error.data.stack + Character.NewLine + currentStack
       } else if (error.data.stack) {
