@@ -7,5 +7,6 @@ export const serializeError = (error) => {
     message: error.message,
     name: error.name,
     type: error.constructor.name,
+    codeFrame: error.codeFrame || '',
   }
 }

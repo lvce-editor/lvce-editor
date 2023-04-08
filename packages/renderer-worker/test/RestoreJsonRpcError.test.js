@@ -304,3 +304,65 @@ test('restoreJsonRpcError - AssertionError', () => {
     at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:27:22)
     at Module.restoreJsonRpcError `)
 })
+
+test('restoreJsonRpcError - ReferenceError with codeFrame', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    message: 'Failed to execute completion provider: ReferenceError: vscode is not defined',
+    stack: `    at getTsPosition (/test/language-features-typescript/packages/node/src/parts/Position/Position.js:4:20)
+    at getCompletion (/test/language-features-typescript/packages/node/src/parts/Completion/Completion.js:61:31)
+    at execute (/test/language-features-typescript/packages/node/src/parts/Command/Command.js:7:10)
+    at getResponse (/test/lvce-editor/packages/extension-host-helper-process/src/parts/GetResponse/GetResponse.js:6:26)
+    at handleMessage (/test/lvce-editor/packages/extension-host-helper-process/src/parts/Rpc/Rpc.js:6:42)
+    at WebSocket.wrappedListener (/test/lvce-editor/packages/extension-host-helper-process/src/parts/IpcChildWithWebSocket/IpcChildWithWebSocket.js:27:13)
+    at Receiver.receiverOnMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/websocket.js:1180:20)
+    at Receiver.dataMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/receiver.js:541:14)
+    at async invoke (http://localhost:3000/remote/test/builtin.language-features-typescript/packages/extension/src/parts/Rpc/Rpc.js:26:3)
+    at async provideCompletions (http://localhost:3000/remote/test/builtin.language-features-typescript/packages/extension/src/parts/ExtensionHost/ExtensionHostCompletionProviderTypeScript.js:60:17)
+    at async executeCompletionProvider (http://localhost:3000/packages/extension-host-worker/src/parts/Registry/Registry.js:83:24)
+    at async getResponse (http://localhost:3000/packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:6:20)
+    at async MessagePort.handleMessageFromRendererWorker (http://localhost:3000/packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)
+    at async executeProviders (http://localhost:3000/packages/renderer-worker/src/parts/ExtensionHost/ExtensionHostShared.js:19:19)
+    at async getCompletions (http://localhost:3000/packages/renderer-worker/src/parts/Completions/Completions.js:10:23)
+    at async loadContent (http://localhost:3000/packages/renderer-worker/src/parts/ViewletEditorCompletion/ViewletEditorCompletion.js:137:27)
+    at async load (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:326:20)
+    at async openCompletion (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandCompletion.js:93:3)
+    at async runFn (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:44:22)`,
+    codeFrame: `  2 |
+  3 | export const getTsPosition = (textDocument, offset) => {
+> 4 |   const position = vscode.getPosition(textDocument, offset)
+    |                    ^
+  5 |   return {
+  6 |     line: position.rowIndex + 1,
+  7 |     offset: position.columnIndex + 1,`,
+    type: ErrorType.ReferenceError,
+  })
+  expect(error).toBeInstanceOf(ReferenceError)
+  expect(error.message).toBe('Failed to execute completion provider: ReferenceError: vscode is not defined')
+  // @ts-ignore
+  expect(error.codeFrame).toBe(`  2 |
+  3 | export const getTsPosition = (textDocument, offset) => {
+> 4 |   const position = vscode.getPosition(textDocument, offset)
+    |                    ^
+  5 |   return {
+  6 |     line: position.rowIndex + 1,
+  7 |     offset: position.columnIndex + 1,`)
+  expect(error.stack).toMatch(`    at getTsPosition (/test/language-features-typescript/packages/node/src/parts/Position/Position.js:4:20)
+    at getCompletion (/test/language-features-typescript/packages/node/src/parts/Completion/Completion.js:61:31)
+    at execute (/test/language-features-typescript/packages/node/src/parts/Command/Command.js:7:10)
+    at getResponse (/test/lvce-editor/packages/extension-host-helper-process/src/parts/GetResponse/GetResponse.js:6:26)
+    at handleMessage (/test/lvce-editor/packages/extension-host-helper-process/src/parts/Rpc/Rpc.js:6:42)
+    at WebSocket.wrappedListener (/test/lvce-editor/packages/extension-host-helper-process/src/parts/IpcChildWithWebSocket/IpcChildWithWebSocket.js:27:13)
+    at Receiver.receiverOnMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/websocket.js:1180:20)
+    at Receiver.dataMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/receiver.js:541:14)
+    at async invoke (http://localhost:3000/remote/test/builtin.language-features-typescript/packages/extension/src/parts/Rpc/Rpc.js:26:3)
+    at async provideCompletions (http://localhost:3000/remote/test/builtin.language-features-typescript/packages/extension/src/parts/ExtensionHost/ExtensionHostCompletionProviderTypeScript.js:60:17)
+    at async executeCompletionProvider (http://localhost:3000/packages/extension-host-worker/src/parts/Registry/Registry.js:83:24)
+    at async getResponse (http://localhost:3000/packages/extension-host-worker/src/parts/GetResponse/GetResponse.js:6:20)
+    at async MessagePort.handleMessageFromRendererWorker (http://localhost:3000/packages/extension-host-worker/src/parts/Rpc/Rpc.js:25:24)
+    at async executeProviders (http://localhost:3000/packages/renderer-worker/src/parts/ExtensionHost/ExtensionHostShared.js:19:19)
+    at async getCompletions (http://localhost:3000/packages/renderer-worker/src/parts/Completions/Completions.js:10:23)
+    at async loadContent (http://localhost:3000/packages/renderer-worker/src/parts/ViewletEditorCompletion/ViewletEditorCompletion.js:137:27)
+    at async load (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:326:20)
+    at async openCompletion (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandCompletion.js:93:3)
+    at async runFn (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:44:22)`)
+})

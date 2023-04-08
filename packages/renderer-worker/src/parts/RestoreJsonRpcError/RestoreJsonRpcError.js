@@ -47,13 +47,19 @@ export const restoreJsonRpcError = (error) => {
         // @ts-ignore
         restoredError.code = error.data.code
       }
-    } else if (error.stack) {
-      // TODO accessing stack might be slow
-      const lowerStack = restoredError.stack || ''
-      // @ts-ignore
-      const indexNewLine = GetNewLineIndex.getNewLineIndex(lowerStack)
-      // @ts-ignore
-      restoredError.stack = error.stack + lowerStack.slice(indexNewLine)
+    } else {
+      if (error.stack) {
+        // TODO accessing stack might be slow
+        const lowerStack = restoredError.stack || ''
+        // @ts-ignore
+        const indexNewLine = GetNewLineIndex.getNewLineIndex(lowerStack)
+        // @ts-ignore
+        restoredError.stack = error.stack + lowerStack.slice(indexNewLine)
+      }
+      if (error.codeFrame) {
+        // @ts-ignore
+        restoredError.codeFrame = error.codeFrame
+      }
     }
     return restoredError
   }

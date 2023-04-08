@@ -20,6 +20,7 @@ export const getErrorResponse = (message, error) => {
     jsonrpc: JsonRpcVersion.Two,
     id: message.id,
     error: {
+      codeFrame: serializedError.codeFrame,
       message: serializedError.message,
       stack: serializedError.stack,
       name: serializedError.name,
