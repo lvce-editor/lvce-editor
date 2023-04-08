@@ -29,7 +29,7 @@
     "lerna": "^6.6.1",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.7",
-    "typescript": "^5.0.3",
+    "typescript": "^5.0.4",
     "wait-for-expect": "^3.0.2"
   },
   "prettier": {
