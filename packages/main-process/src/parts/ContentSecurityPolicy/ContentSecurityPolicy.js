@@ -12,7 +12,6 @@ exports.value = [
   `img-src 'self' https: data:`,
   `script-src 'self'`,
   `media-src 'self'`,
-  `prefetch-src 'self'`,
   `manifest-src 'self'`,
   `style-src 'self' 'unsafe-inline'`, // TODO remove unsafe-inline
 ]
