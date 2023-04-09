@@ -62,23 +62,8 @@ const copyStaticFiles = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: `build/.tmp/server/server/static/index.html`,
-    occurrence: '/packages/renderer-process/src/rendererProcessMain.js',
-    replacement: `/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/index.html`,
-    occurrence: '/icons',
-    replacement: `/${commitHash}/icons`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/index.html`,
-    occurrence: '/css',
-    replacement: `/${commitHash}/css`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/index.html`,
-    occurrence: '/fonts',
-    replacement: `/${commitHash}/fonts`,
+    occurrence: '"/',
+    replacement: `"/${commitHash}/`,
   })
   await BundleCss.bundleCss({
     outDir: `build/.tmp/server/server/static/${commitHash}/css`,
