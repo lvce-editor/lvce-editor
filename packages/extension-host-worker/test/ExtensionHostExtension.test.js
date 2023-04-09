@@ -83,5 +83,5 @@ test('activate - timeout exceeded', async () => {
       browser: 'extension.js',
       id: 'test',
     })
-  ).rejects.toThrowError(new Error('Failed to activate extension test: activation timeout of 10000ms exceeded'))
+  ).rejects.toThrowError(new Error('Failed to activate extension test: Activation timeout of 10000ms exceeded'))
 })
