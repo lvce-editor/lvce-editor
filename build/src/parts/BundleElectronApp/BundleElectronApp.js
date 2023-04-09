@@ -232,11 +232,6 @@ const copyStaticFiles = async ({ arch }) => {
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
-    occurrence: 'packages/renderer-worker/src/rendererWorkerMain.js',
-    replacement: `packages/renderer-worker/dist/rendererWorkerMain.js`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
     occurrence: '\n    <link rel="manifest" href="/manifest.json" />',
     replacement: ``,
   })
