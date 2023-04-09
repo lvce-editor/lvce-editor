@@ -15,7 +15,7 @@ const rejectAfterTimeout = async (timeout, token) => {
   if (CancelToken.isCanceled(token)) {
     return
   }
-  throw new Error(`activation timeout of ${timeout}ms exceeded`)
+  throw new Error(`Activation timeout of ${timeout}ms exceeded`)
 }
 
 export const activate = async (extension) => {
