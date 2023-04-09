@@ -26,6 +26,10 @@ jest.unstable_mockModule('node:fs', () => ({
   }),
 }))
 
+jest.unstable_mockModule('../src/parts/Logger/Logger', () => ({
+  error: jest.fn(() => {}),
+}))
+
 const GetResponse = await import('../src/parts/GetResponse/GetResponse.js')
 const Command = await import('../src/parts/Command/Command.js')
 const PrettyError = await import('../src/parts/PrettyError/PrettyError.js')
