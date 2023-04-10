@@ -1,9 +1,10 @@
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as EditorShowMessage from './EditorCommandShowMessage.js'
-import * as EditorGetWordAt from './EditorCommandGetWordAt.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as Logger from '../Logger/Logger.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as EditorGetWordAt from './EditorCommandGetWordAt.js'
+import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
 export const goTo = async ({ editor, getLocation, getNoLocationFoundMessage, getErrorMessage, isNoProviderFoundError }) => {
   const rowIndex = editor.selections[0]
@@ -46,7 +47,7 @@ export const goTo = async ({ editor, getLocation, getNoLocationFoundMessage, get
       await EditorShowMessage.editorShowMessage(editor, rowIndex, columnIndex, displayErrorMessage, false)
       return editor
     }
-    console.error(error)
+    ErrorHandling.handleError(error, false)
     const displayErrorMessage = getErrorMessage(error)
     await EditorShowMessage.editorShowMessage(editor, rowIndex, columnIndex, displayErrorMessage, true)
     return editor

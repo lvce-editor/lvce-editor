@@ -17,10 +17,13 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
     throw new Error('not implemented')
   }),
 }))
+jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => ({
+  handleError: jest.fn(),
+}))
 
 const ExtensionHostDefinition = await import('../src/parts/ExtensionHost/ExtensionHostDefinition.js')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 const EditorGoToDefinition = await import('../src/parts/EditorCommand/EditorCommandGoToDefinition.js')
-
 const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommandShowMessage.js')
 
 beforeEach(() => {
@@ -99,12 +102,11 @@ test('editorGoToDefinition - error', async () => {
   })
   // @ts-ignore
   EditorShowMessage.editorShowMessage.mockImplementation(() => {})
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, 'TypeError: x is not a function', true)
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(new TypeError('x is not a function'))
+  expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(new TypeError('x is not a function'), false)
 })
 
 // TODO test no definition provider registered
