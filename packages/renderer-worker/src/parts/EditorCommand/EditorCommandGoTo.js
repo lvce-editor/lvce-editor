@@ -27,12 +27,7 @@ export const goTo = async ({ editor, getLocation, getNoLocationFoundMessage, get
     if (uri === editor.uri) {
       // TODO set cursor to the definition position
       const position = TextDocument.positionAt(editor, definition.startOffset)
-      const selectionEdits = [
-        {
-          start: position,
-          end: position,
-        },
-      ]
+      const selectionEdits = new Uint32Array([position.rowIndex, position.columnIndex, position.rowIndex, position.columnIndex])
       return Editor.scheduleSelections(editor, selectionEdits)
     }
     // TODO if definition.file is not of type string, show a popup that definition.file must be of type string
