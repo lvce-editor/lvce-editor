@@ -11,6 +11,7 @@ import * as ExtensionHostEnv from '../ExtensionHostEnv/ExtensionHostEnv.js'
 import * as ExtensionHostExec from '../ExtensionHostExec/ExtensionHostExec.js'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
+import * as ExtensionHostGetOffset from '../ExtensionHostGetOffset/ExtensionHostGetOffset.js'
 import * as ExtensionHostGetPosition from '../ExtensionHostGetPosition/ExtensionHostGetPosition.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
 import * as ExtensionHostNodeIpc from '../ExtensionHostNodeIpc/ExtensionHostNodeIpc.js'
@@ -81,6 +82,9 @@ export const api = {
   // Formatting
   registerFormattingProvider: ExtensionHostFormatting.registerFormattingProvider,
   executeFormattingProvider: ExtensionHostFormatting.executeFormattingProvider,
+
+  // Get Offset
+  getOffset: ExtensionHostGetOffset.getOffset,
 
   // Get Position
   getPosition: ExtensionHostGetPosition.getPosition,
