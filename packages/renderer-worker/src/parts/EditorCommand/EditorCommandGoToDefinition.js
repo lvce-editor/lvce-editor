@@ -1,4 +1,4 @@
-import * as ExtensionHostDefinition from '../ExtensionHost/ExtensionHostDefinition.js'
+import * as Definition from '../Definition/Definition.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorGoTo from './EditorCommandGoTo.js'
@@ -24,10 +24,7 @@ const UiStrings = {
 
 const getLocation = async (editor, rowIndex, columnIndex) => {
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
-  const definition = await ExtensionHostDefinition.executeDefinitionProvider(
-    editor,
-    offset
-  )
+  const definition = await Definition.getDefinition(editor, offset)
   return definition
 }
 
@@ -57,9 +54,7 @@ const isNoProviderFoundError = (error) => {
     // @ts-ignore
     error.message &&
     // @ts-ignore
-    error.message.startsWith(
-      'Failed to execute definition provider: No definition provider found'
-    )
+    error.message.startsWith('Failed to execute definition provider: No definition provider found')
   )
 }
 
