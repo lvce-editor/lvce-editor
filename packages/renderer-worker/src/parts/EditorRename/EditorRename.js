@@ -1,11 +1,11 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
-import * as ExtensionHostRename from '../ExtensionHost/ExtensionHostRename.js'
+import * as Rename from '../Rename/Rename.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as Assert from '../Assert/Assert.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
 
 // TODO memory leak
 export const state = {
@@ -14,12 +14,12 @@ export const state = {
 
 const prepareRename = async (editor, rowIndex, columnIndex) => {
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
-  return ExtensionHostRename.executePrepareRenameProvider(editor, offset)
+  return Rename.prepareRename(editor, offset)
 }
 
 const rename = (editor, rowIndex, columnIndex, newName) => {
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
-  return ExtensionHostRename.executeRenameProvider(editor, offset)
+  return Rename.rename(editor, offset, newName)
 }
 
 export const open = async (editor) => {
@@ -38,11 +38,7 @@ export const open = async (editor) => {
     const y = EditorPosition.y(editor, rowIndex, columnIndex)
     // const prepareRenameResult = await prepareRename(editor)
     // console.log({ prepareRenameResult })
-    await RendererProcess.invoke(
-      /* EditorRename.openWidget */ 4512,
-      /* x */ x,
-      /* y */ y
-    )
+    await RendererProcess.invoke(/* EditorRename.openWidget */ 4512, /* x */ x, /* y */ y)
   } else {
     // TODO also show error when promise rejects
     await Command.execute(
@@ -59,10 +55,7 @@ const toPositionBasedEdits = (textDocument, edits) => {
   const positionBasedEdits = []
   for (const edit of edits) {
     const start = TextDocument.positionAt(textDocument, edit.offset)
-    const end = TextDocument.positionAt(
-      textDocument,
-      edit.offset + edit.inserted.length - edit.deleted
-    )
+    const end = TextDocument.positionAt(textDocument, edit.offset + edit.inserted.length - edit.deleted)
     positionBasedEdits.push({
       start,
       end,
@@ -80,10 +73,7 @@ const applyWorkspaceEdits = async (editor, workspaceEdits) => {
     return
   }
   const workspaceEdit = workspaceEdits[0]
-  const positionBasedEdits = toPositionBasedEdits(
-    editor.textDocument,
-    workspaceEdit.edits
-  )
+  const positionBasedEdits = toPositionBasedEdits(editor.textDocument, workspaceEdit.edits)
   Editor.scheduleDocumentAndCursorsSelections(editor, positionBasedEdits)
 }
 
