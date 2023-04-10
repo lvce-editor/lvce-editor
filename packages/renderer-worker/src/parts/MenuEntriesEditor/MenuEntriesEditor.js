@@ -5,7 +5,8 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
  * @enum {string}
  */
 export const UiStrings = {
-  GoToTypeDefinition: 'Go To Type Definition',
+  GoToTypeDefinition: 'Go to Type Definition',
+  GoToDefinition: 'Go to Definition',
   FindAllReferences: 'Find All References',
   FindAllImplementations: 'Find All Implementations',
   Cut: 'Cut',
@@ -15,6 +16,12 @@ export const UiStrings = {
 
 export const getMenuEntries = () => {
   return [
+    {
+      id: 'go-to-definition',
+      label: I18nString.i18nString(UiStrings.GoToDefinition),
+      flags: MenuItemFlags.None,
+      command: 'Editor.goToDefinition',
+    },
     {
       id: 'go-to-type-definition',
       label: I18nString.i18nString(UiStrings.GoToTypeDefinition),
