@@ -1,19 +1,13 @@
-import * as ExtensionHostImplementation from '../ExtensionHost/ExtensionHostImplementation.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as Implementation from '../Implementation/Implementation.js'
 import * as ViewletLocations from '../ViewletLocations/ViewletLocations.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 // TODO speed up this function by 130% by not running activation event (onReferences) again and again
 // e.g. (21ms activation event, 11ms getReferences) => (11ms getReferences)
-const getImplementations = async () => {
+const getImplementations = () => {
   const editor = ViewletStates.getState(ViewletModuleId.EditorText)
-  const rowIndex = editor.selections[0]
-  const columnIndex = editor.selections[1]
-  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
-  const implementations = await ExtensionHostImplementation.executeImplementationProvider(editor, offset)
-  console.log({ implementations })
-  return implementations
+  return Implementation.getImplementations(editor)
 }
 
 export const create = ViewletLocations.create
