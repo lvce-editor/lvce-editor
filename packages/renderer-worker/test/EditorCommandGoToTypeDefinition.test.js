@@ -23,9 +23,8 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => ({
 
 const ExtensionHostTypeDefinition = await import('../src/parts/ExtensionHost/ExtensionHostTypeDefinition.js')
 const EditorGoToTypeDefinition = await import('../src/parts/EditorCommand/EditorCommandGoToTypeDefinition.js')
-
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommandShowMessage.js')
-
 const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.js')
 
 beforeEach(() => {
@@ -104,12 +103,11 @@ test('editorGoToTypeDefinition - error', async () => {
   })
   // @ts-ignore
   EditorShowMessage.editorShowMessage.mockImplementation(() => {})
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   await EditorGoToTypeDefinition.goToTypeDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(editor, 0, 0, 'TypeError: x is not a function', true)
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(new TypeError('x is not a function'))
+  expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(new TypeError('x is not a function'), false)
 })
 
 test('editorGoToTypeDefinition - error - no type definition provider found', async () => {
