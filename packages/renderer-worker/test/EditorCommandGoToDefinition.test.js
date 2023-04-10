@@ -17,6 +17,9 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
     throw new Error('not implemented')
   }),
 }))
+jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => ({
+  handleError: jest.fn(),
+}))
 
 const ExtensionHostDefinition = await import('../src/parts/ExtensionHost/ExtensionHostDefinition.js')
 const EditorGoToDefinition = await import('../src/parts/EditorCommand/EditorCommandGoToDefinition.js')
