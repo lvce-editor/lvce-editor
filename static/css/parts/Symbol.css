@@ -1,6 +1,9 @@
 :root {
   --SymbolValueForeground: #ee9d28;
   --SymbolPropertyForeground: #aaaaaa;
+  --SymbolVariableForeground: #75beff;
+  --SymbolFunctionForeground: #b180d7;
+  --SymbolKeywordForeground: #9ca2a0;
 }
 
 .SymbolValue,
