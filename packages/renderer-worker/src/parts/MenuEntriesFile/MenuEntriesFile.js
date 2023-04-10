@@ -13,6 +13,8 @@ export const UiStrings = {
   OpenFolder: 'Open Folder',
   OpenRecent: 'Open Recent',
   Exit: 'Exit',
+  Save: 'Save',
+  SaveAll: 'Save All',
 }
 
 export const getMenuEntries = () => {
@@ -52,6 +54,24 @@ export const getMenuEntries = () => {
       label: I18nString.i18nString(UiStrings.OpenRecent),
       flags: MenuItemFlags.SubMenu,
       command: '',
+    },
+    {
+      id: 'separator',
+      label: I18nString.i18nString(UiStrings.Separator),
+      flags: MenuItemFlags.Separator,
+      command: '',
+    },
+    {
+      id: 'save',
+      label: I18nString.i18nString(UiStrings.Save),
+      flags: MenuItemFlags.None,
+      command: 'Main.save',
+    },
+    {
+      id: 'saveAll',
+      label: I18nString.i18nString(UiStrings.SaveAll),
+      flags: MenuItemFlags.None,
+      command: 'Main.saveAll',
     },
     {
       id: 'separator',
