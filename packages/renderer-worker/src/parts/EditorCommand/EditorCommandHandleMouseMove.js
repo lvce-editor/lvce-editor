@@ -1,11 +1,11 @@
-import * as ExtensionHostHover from '../ExtensionHost/ExtensionHostHover.js'
+import * as Hover from '../Hover/Hover.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 
 const getHover = async (editor, rowIndex, columnIndex) => {
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
-  const hover = await ExtensionHostHover.executeHoverProvider(editor, offset)
+  const hover = await Hover.getHover(editor, offset)
   return hover
 }
 
