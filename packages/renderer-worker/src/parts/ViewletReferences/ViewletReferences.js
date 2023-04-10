@@ -1,16 +1,11 @@
-import * as ExtensionHostReferences from '../ExtensionHost/ExtensionHostReference.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as References from '../References/References.js'
 import * as ViewletLocations from '../ViewletLocations/ViewletLocations.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const getReferences = async () => {
   const editor = ViewletStates.getState(ViewletModuleId.EditorText)
-  const rowIndex = editor.selections[0]
-  const columnIndex = editor.selections[1]
-  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
-  const references = await ExtensionHostReferences.executeReferenceProvider(editor, offset)
-  return references
+  return References.getReferences(editor)
 }
 
 export const create = ViewletLocations.create
