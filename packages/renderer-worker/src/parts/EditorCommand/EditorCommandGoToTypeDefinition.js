@@ -1,6 +1,6 @@
-import * as ExtensionHostTypeDefinition from '../ExtensionHost/ExtensionHostTypeDefinition.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as TypeDefinition from '../TypeDefinition/TypeDefinition.js'
 import * as EditorGoTo from './EditorCommandGoTo.js'
 
 // TODO duplicate code with editorCommandGoToDefinition
@@ -26,11 +26,7 @@ const getTypeDefinitionErrorMessage = (error) => {
 
 const getLocation = async (editor, rowIndex, columnIndex) => {
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
-  const definition =
-    await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(
-      editor,
-      offset
-    )
+  const definition = await TypeDefinition.getTypeDefinition(editor, offset)
   return definition
 }
 
@@ -63,9 +59,7 @@ const isNoProviderFoundError = (error) => {
     // @ts-ignore
     error.message &&
     // @ts-ignore
-    error.message.startsWith(
-      'Failed to execute type definition provider: No type definition provider found'
-    )
+    error.message.startsWith('Failed to execute type definition provider: No type definition provider found')
   )
 }
 

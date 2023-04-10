@@ -2,8 +2,8 @@ import { jest } from '@jest/globals'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
-jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostTypeDefinition.js', () => ({
-  executeTypeDefinitionProvider: jest.fn().mockImplementation(() => {
+jest.unstable_mockModule('../src/parts/TypeDefinition/TypeDefinition.js', () => ({
+  getTypeDefinition: jest.fn().mockImplementation(() => {
     throw new Error('not implemented')
   }),
 }))
@@ -21,11 +21,11 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => ({
   handleError: jest.fn(),
 }))
 
-const ExtensionHostTypeDefinition = await import('../src/parts/ExtensionHost/ExtensionHostTypeDefinition.js')
 const EditorGoToTypeDefinition = await import('../src/parts/EditorCommand/EditorCommandGoToTypeDefinition.js')
-const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
-const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommandShowMessage.js')
 const EditorSelection = await import('../src/parts/EditorSelection/EditorSelection.js')
+const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommandShowMessage.js')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
+const TypeDefinition = await import('../src/parts/TypeDefinition/TypeDefinition.js')
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -39,7 +39,7 @@ test('editorGoToTypeDefinition', async () => {
     tokenizer: TokenizePlainText,
   }
   // @ts-ignore
-  ExtensionHostTypeDefinition.executeTypeDefinitionProvider.mockImplementation(() => {
+  TypeDefinition.getTypeDefinition.mockImplementation(() => {
     return {
       uri: '/test/add.ts',
       startOffset: 1,
@@ -67,7 +67,7 @@ test('editorGoToTypeDefinition - startOffset is 0', async () => {
     tokenizer: TokenizePlainText,
   }
   // @ts-ignore
-  ExtensionHostTypeDefinition.executeTypeDefinitionProvider.mockImplementation(() => {
+  TypeDefinition.getTypeDefinition.mockImplementation(() => {
     return {
       uri: '/test/add.ts',
       startOffset: 0,
@@ -98,7 +98,7 @@ test('editorGoToTypeDefinition - error', async () => {
     uri: '/tmp/index.ts',
   }
   // @ts-ignore
-  ExtensionHostTypeDefinition.executeTypeDefinitionProvider.mockImplementation(() => {
+  TypeDefinition.getTypeDefinition.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
   // @ts-ignore
@@ -121,7 +121,7 @@ test('editorGoToTypeDefinition - error - no type definition provider found', asy
     uri: '/tmp/index.ts',
   }
   // @ts-ignore
-  ExtensionHostTypeDefinition.executeTypeDefinitionProvider.mockImplementation(() => {
+  TypeDefinition.getTypeDefinition.mockImplementation(() => {
     throw new Error('Failed to execute type definition provider: No type definition provider found')
   })
   // @ts-ignore
@@ -150,7 +150,7 @@ test('editorGoToTypeDefinition - no type definition found', async () => {
     uri: '/test/index.ts',
   }
   // @ts-ignore
-  ExtensionHostTypeDefinition.executeTypeDefinitionProvider.mockImplementation(() => {
+  TypeDefinition.getTypeDefinition.mockImplementation(() => {
     return undefined
   })
   // @ts-ignore
