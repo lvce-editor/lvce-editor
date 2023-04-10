@@ -1,9 +1,9 @@
-import * as EditorPosition from './EditorCommandPosition.js'
 import * as Assert from '../Assert/Assert.js'
-import * as ExtensionHostDefinition from '../ExtensionHost/ExtensionHostDefinition.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as Definition from '../Definition/Definition.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as EditorPosition from './EditorCommandPosition.js'
 
 const getTokenIndex = (tokens, offset) => {
   let currentOffset = 0
@@ -24,7 +24,7 @@ export const handleMouseMoveWithAltKey = async (editor, x, y) => {
   const position = EditorPosition.at(editor, x, y)
   const documentOffset = TextDocument.offsetAt(editor, position.rowIndex, position.columnIndex)
   try {
-    const definition = await ExtensionHostDefinition.executeDefinitionProvider(editor, documentOffset)
+    const definition = await Definition.getDefinition(editor, documentOffset)
     if (!definition) {
       return editor
     }

@@ -2,8 +2,8 @@ import { jest } from '@jest/globals'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/TokenizePlainText/TokenizePlainText.js'
 
-jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostDefinition.js', () => ({
-  executeDefinitionProvider: jest.fn().mockImplementation(() => {
+jest.unstable_mockModule('../src/parts/Definition/Definition.js', () => ({
+  getDefinition: jest.fn().mockImplementation(() => {
     throw new Error('not implemented')
   }),
 }))
@@ -21,7 +21,7 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => ({
   handleError: jest.fn(),
 }))
 
-const ExtensionHostDefinition = await import('../src/parts/ExtensionHost/ExtensionHostDefinition.js')
+const Definition = await import('../src/parts/Definition/Definition.js')
 const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 const EditorGoToDefinition = await import('../src/parts/EditorCommand/EditorCommandGoToDefinition.js')
 const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommandShowMessage.js')
@@ -38,7 +38,7 @@ test('editorGoToDefinition', async () => {
     tokenizer: TokenizePlainText,
   }
   // @ts-ignore
-  ExtensionHostDefinition.executeDefinitionProvider.mockImplementation(() => {
+  Definition.getDefinition.mockImplementation(() => {
     return {
       uri: '/test/add.ts',
       startOffset: 1,
@@ -66,7 +66,7 @@ test('editorGoToDefinition - start offset is 0', async () => {
     tokenizer: TokenizePlainText,
   }
   // @ts-ignore
-  ExtensionHostDefinition.executeDefinitionProvider.mockImplementation(() => {
+  Definition.getDefinition.mockImplementation(() => {
     return {
       uri: '/test/add.ts',
       startOffset: 0,
@@ -97,7 +97,7 @@ test('editorGoToDefinition - error', async () => {
     uri: '/tmp/index.ts',
   }
   // @ts-ignore
-  ExtensionHostDefinition.executeDefinitionProvider.mockImplementation(() => {
+  Definition.getDefinition.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
   // @ts-ignore
@@ -122,7 +122,7 @@ test('editorGoToDefinition - error - no definition provider found', async () => 
     selections: new Uint32Array([0, 0, 0, 0]),
   }
   // @ts-ignore
-  ExtensionHostDefinition.executeDefinitionProvider.mockImplementation(() => {
+  Definition.getDefinition.mockImplementation(() => {
     throw new Error('Failed to execute definition provider: No definition provider found')
   })
   // @ts-ignore
@@ -151,7 +151,7 @@ test('editorGoToDefinition - no definition found', async () => {
     selections: new Uint32Array([0, 0, 0, 0]),
   }
   // @ts-ignore
-  ExtensionHostDefinition.executeDefinitionProvider.mockImplementation(() => {
+  Definition.getDefinition.mockImplementation(() => {
     return undefined
   })
   // @ts-ignore
@@ -172,7 +172,7 @@ test('editorGoToDefinition - no definition found and no word at position', async
     selections: new Uint32Array([0, 0]),
   }
   // @ts-ignore
-  ExtensionHostDefinition.executeDefinitionProvider.mockImplementation(() => {
+  Definition.getDefinition.mockImplementation(() => {
     return undefined
   })
   // @ts-ignore
