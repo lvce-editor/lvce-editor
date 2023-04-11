@@ -15,6 +15,7 @@ export const getErrorResponse = (message, error) => {
       },
     }
   }
+  console.log({ error, code: error.code })
   const prettyError = PrettyError.prepare(error)
   PrintPrettyError.printPrettyError(prettyError, `[extension-host-helper-process] `)
   return {
