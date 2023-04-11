@@ -11,6 +11,7 @@ import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as TouchEvent from '../TouchEvent/TouchEvent.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as EditorFunctions from './EditorFunctions.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -38,10 +39,11 @@ export const handleBlur = (event) => {
  */
 export const handleBeforeInput = (event) => {
   Event.preventDefault(event)
+  const uid = ComponentUid.fromEvent(event)
   const { inputType, data } = event
   switch (inputType) {
     case InputEventType.InsertText:
-      EditorFunctions.typeWithAutoClosing(data)
+      EditorFunctions.typeWithAutoClosing(uid, data)
       break
     default:
       break
@@ -83,20 +85,22 @@ const isRightClick = (event) => {
 }
 
 export const handleEditorPointerMove = (event) => {
+  const uid = ComponentUid.fromEvent(event)
   const { clientX, clientY, altKey } = event
   // TODO if/else should be in renderer worker
   if (altKey) {
-    EditorFunctions.moveRectangleSelectionPx(clientX, clientY)
+    EditorFunctions.moveRectangleSelectionPx(uid, clientX, clientY)
   } else {
-    EditorFunctions.moveSelectionPx(clientX, clientY)
+    EditorFunctions.moveSelectionPx(uid, clientX, clientY)
   }
 }
 
 export const handleEditorLostPointerCapture = (event) => {
+  const uid = ComponentUid.fromEvent(event)
   const { target } = event
   target.removeEventListener(DomEventType.PointerMove, handleEditorPointerMove)
   target.removeEventListener(DomEventType.LostPointerCapture, handleEditorLostPointerCapture)
-  EditorFunctions.handlePointerCaptureLost()
+  EditorFunctions.handlePointerCaptureLost(uid)
 }
 
 export const handleEditorGotPointerCapture = () => {}
@@ -119,10 +123,11 @@ export const handleMouseDown = (event) => {
   if (isRightClick(event)) {
     return
   }
+  const uid = ComponentUid.fromEvent(event)
   Event.preventDefault(event)
   const { clientX, clientY, detail } = event
   const modifier = GetModifierKey.getModifierKey(event)
-  EditorFunctions.handleMouseDown(modifier, clientX, clientY, detail)
+  EditorFunctions.handleMouseDown(uid, modifier, clientX, clientY, detail)
 }
 
 // TODO figure out whether it is possible to register hover provider without mousemove
