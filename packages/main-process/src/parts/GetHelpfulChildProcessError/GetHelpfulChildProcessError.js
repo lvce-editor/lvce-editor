@@ -1,12 +1,12 @@
 const SplitLines = require('../SplitLines/SplitLines.js')
+const GetModulesErrorStack = require('../GetModulesErrorStack/GetModulesErrorStack.js')
 
 const RE_NATIVE_MODULE_ERROR = /^innerError Error: Cannot find module '.*.node'/
 const RE_NATIVE_MODULE_ERROR_2 = /was compiled against a different Node.js version/
 
 const RE_MASSAGE_CODE_BLOCK_START = /^Error: The module '.*'$/
 const RE_MASSAGE_CODE_BLOCK_END = /^\s* at/
-const RE_AT = /^    at /
-const RE_JUST_PATH = /^(?:\/|\\).*\:\d+$/
+
 const RE_IMPORTED_FROM_ERROR = /Cannot find module .* imported from (.*)/
 
 const isUnhelpfulNativeModuleError = (stderr) => {
@@ -43,54 +43,6 @@ const isModulesSyntaxError = (stderr) => {
   return stderr.includes('SyntaxError: Cannot use import statement outside a module')
 }
 
-const isStackLine = (line) => {
-  return RE_AT.test(line)
-}
-
-const isNotStackLine = (line) => {
-  return !isStackLine(line)
-}
-
-const isJustPath = (line) => {
-  return RE_JUST_PATH.test(line)
-}
-
-const getModulesErrorStack = (stderr) => {
-  const lines = SplitLines.splitLines(stderr)
-  let startIndex = -1
-  const extraLines = []
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-    if (isJustPath(line)) {
-      extraLines.push(`    at ${line}`)
-      break
-    }
-  }
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-    if (isStackLine(line)) {
-      startIndex = i
-      break
-    }
-  }
-  if (startIndex === -1) {
-    return []
-  }
-  let endIndex = -1
-  for (let i = startIndex + 1; i < lines.length; i++) {
-    const line = lines[i]
-    if (!isStackLine(line)) {
-      endIndex = i
-      break
-    }
-  }
-  if (endIndex === -1) {
-    endIndex = lines.length - 1
-  }
-  const stackLines = lines.slice(startIndex, endIndex)
-  return [lines[startIndex - 1], ...extraLines, ...stackLines]
-}
-
 const getErrorMessage = (firstLine) => {
   return firstLine
 }
@@ -104,7 +56,7 @@ const getImportPath = (firstLine) => {
 }
 
 const getOtherError = (stderr) => {
-  const stackLines = getModulesErrorStack(stderr)
+  const stackLines = GetModulesErrorStack.getModulesErrorStack(stderr)
   const firstLine = getErrorMessage(stackLines[0])
   const importPath = getImportPath(firstLine)
   if (importPath) {
