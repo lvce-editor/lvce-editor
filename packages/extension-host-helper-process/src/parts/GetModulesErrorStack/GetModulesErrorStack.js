@@ -45,6 +45,5 @@ export const getModulesErrorStack = (stderr) => {
   }
   const stackLines = lines.slice(startIndex, endIndex)
   const stack = [lines[startIndex - 1], ...extraLines, ...stackLines]
-  console.log({ extraLines, stackLines, stack })
   return stack
 }

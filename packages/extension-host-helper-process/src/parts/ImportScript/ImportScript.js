@@ -7,7 +7,6 @@ export const importScript = async (path) => {
     return module
   } catch (error) {
     const cleanError = CleanImportError.cleanImportError(error)
-    console.log({ cleanError })
     throw new VError(cleanError, `Failed to load ${path}`)
   }
 }

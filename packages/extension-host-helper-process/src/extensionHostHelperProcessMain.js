@@ -33,7 +33,6 @@ const main = async () => {
     ipc.send(response)
   } catch (error) {
     const response = await GetErrorResponse.getErrorResponse(firstMessage, error)
-    console.log({ error, response, data: response.error.data })
     ipc.send(response)
     return
   }
