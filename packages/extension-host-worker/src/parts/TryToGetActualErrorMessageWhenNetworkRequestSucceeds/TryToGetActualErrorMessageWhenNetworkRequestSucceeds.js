@@ -49,7 +49,7 @@ const getErrorInDependencies = async (seenUrls, url, dependencies) => {
  * @param {Response} response
  * @returns
  */
-export const tryToGetActualErrorMessage = async (error, url, response, seenUrls = [url]) => {
+export const tryToGetActualErrorMessage = async (error, url, response, seenUrls = []) => {
   let text
   try {
     text = await response.text()
