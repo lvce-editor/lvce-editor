@@ -213,6 +213,8 @@ export const dispose = (state) => {
 
 export const hasFunctionalRender = true
 
+export const supportsUid = true
+
 export const render = Editor.render
 
 export const focus = (state) => {

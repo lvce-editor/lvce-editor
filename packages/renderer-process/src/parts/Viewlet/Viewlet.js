@@ -3,6 +3,7 @@ import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 
 export const state = {
   instances: Object.create(null),
@@ -15,19 +16,20 @@ export const mount = ($Parent, state) => {
   $Parent.replaceChildren(state.$Viewlet)
 }
 
-export const create = (id) => {
+export const create = (id, uid = id) => {
   const module = state.modules[id]
   if (!module) {
     throw new Error(`module not found: ${id}`)
   }
-  if (state.instances[id] && state.instances[id].state.$Viewlet.isConnected) {
-    state.instances[id].state.$Viewlet.remove()
+  if (state.instances[uid] && state.instances[uid].state.$Viewlet.isConnected) {
+    state.instances[uid].state.$Viewlet.remove()
   }
   const instanceState = module.create()
+  ComponentUid.set(instanceState.$Viewlet, uid)
   if (module.attachEvents) {
     module.attachEvents(instanceState)
   }
-  state.instances[id] = {
+  state.instances[uid] = {
     state: instanceState,
     factory: module,
   }
@@ -132,7 +134,7 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.create': {
-        create(viewletId)
+        create(viewletId, method)
 
         break
       }

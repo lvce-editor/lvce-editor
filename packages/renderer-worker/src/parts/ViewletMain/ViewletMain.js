@@ -16,6 +16,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Id from '../Id/Id.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -192,11 +193,14 @@ export const contentLoaded = async (state) => {
   ]
 
   // // TODO race condition: Viewlet may have been resized before it has loaded
+  const uid = Id.create()
   // // @ts-ignore
   const extraCommands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
       id,
+      // @ts-ignore
+      uid,
       // @ts-ignore
       parentId: ViewletModuleId.Main,
       uri: editor.uri,
@@ -218,7 +222,7 @@ export const contentLoaded = async (state) => {
   if (extraCommands[0].includes(ViewletModuleId.Error)) {
     commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
   } else {
-    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, uid])
   }
   return commands
 }

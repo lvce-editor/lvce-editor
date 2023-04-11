@@ -300,7 +300,7 @@ const getFn = async (module, fnName) => {
   if (fn) {
     return fn
   }
-  const lazyImport = module.LazyCommands[fnName]
+  const lazyImport = module.LazyCommands[fnName] || module.CommandsWithSideEffectsLazy[fnName]
   if (!lazyImport) {
     throw new Error(`Command not found ${module.name}.${fnName}`)
   }
@@ -312,17 +312,17 @@ const getFn = async (module, fnName) => {
   return lazyFn
 }
 
-export const executeViewletCommand = async (moduleId, uidKey, uidValue, fnName, ...args) => {
-  const instances = ViewletStates.state.instances
-  for (const instance of Object.values(instances)) {
-    if (instance.factory.name === moduleId && instance.state[uidKey] === uidValue) {
-      const fn = await getFn(instance.factory, fnName)
-      const oldState = instance.state
-      const newState = await fn(oldState, ...args)
-      const commands = ViewletManager.render(instance.factory, oldState, newState)
-      ViewletStates.setState(moduleId, newState)
-      await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
-      return
-    }
+export const executeViewletCommand = async (uid, fnName, ...args) => {
+  const instance = ViewletStates.getInstance(uid)
+  console.log({ instance })
+  if (!instance) {
+    return
   }
+  const fn = await getFn(instance.factory, fnName)
+  const oldState = instance.state
+  const newState = await fn(oldState, ...args)
+  const actualNewState = 'newState' in newState ? newState.newState : newState
+  const commands = ViewletManager.render(instance.factory, oldState, actualNewState)
+  ViewletStates.setState(uid, actualNewState)
+  await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
 }

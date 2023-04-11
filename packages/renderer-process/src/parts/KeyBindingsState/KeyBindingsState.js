@@ -9,7 +9,6 @@ export const state = {
 }
 
 export const addKeyBindings = (id, keyBindings) => {
-  Assert.string(id)
   Assert.array(keyBindings)
   if (id in state.keyBindingSets) {
     Logger.warn(`cannot add keybindings multiple times: ${id}`)

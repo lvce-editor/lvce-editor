@@ -18,7 +18,7 @@ export const EditorImage = 'EditorImage'
 
 export const EditorPlainText = 'EditorPlainText'
 
-export const EditorText = 'EditorText'
+export const EditorText = 'Editor'
 
 export const Empty = 'Empty'
 
