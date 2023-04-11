@@ -1,12 +1,6 @@
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
+import { NotFoundError } from '../NotFoundError/NotFoundError.js'
 import * as TryToGetActualErrorMessageWhenNetworkRequestSucceeds from '../TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js'
-
-class NotFoundError extends Error {
-  constructor(url) {
-    super(`Failed to import ${url}: Not found (404)`)
-    this.name = 'NotFoundError'
-  }
-}
 
 const getUrl = (error) => {
   if (error.message.startsWith('Failed to fetch dynamically imported module:')) {
