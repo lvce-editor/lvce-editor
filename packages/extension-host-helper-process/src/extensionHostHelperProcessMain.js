@@ -1,10 +1,10 @@
-import * as Command from './parts/Command/Command.js'
+import * as GetErrorResponse from './parts/GetErrorResponse/GetErrorResponse.js'
+import * as GetSuccessResponse from './parts/GetSuccessResponse/GetSuccessResponse.js'
+import * as ImportScript from './parts/ImportScript/ImportScript.js'
 import * as IpcChild from './parts/IpcChild/IpcChild.js'
 import * as IpcChildType from './parts/IpcChildType/IpcChildType.js'
 import * as Rpc from './parts/Rpc/Rpc.js'
-import * as LoadFile from './parts/LoadFile/LoadFile.js'
-import * as GetErrorResponse from './parts/GetErrorResponse/GetErrorResponse.js'
-import * as GetSuccessResponse from './parts/GetSuccessResponse/GetSuccessResponse.js'
+import * as GetResponse from './parts/GetResponse/GetResponse.js'
 
 const waitForFirstMessage = async (ipc) => {
   const { message } = await new Promise((resolve) => {
@@ -25,7 +25,7 @@ const main = async () => {
   const firstMessage = await waitForFirstMessage(ipc)
   let module
   try {
-    module = await LoadFile.loadFile(firstMessage.params[0])
+    module = await ImportScript.importScript(firstMessage.params[0])
     if (!module || !module.execute) {
       throw new Error(`missing export const execute function`)
     }
@@ -33,6 +33,7 @@ const main = async () => {
     ipc.send(response)
   } catch (error) {
     const response = await GetErrorResponse.getErrorResponse(firstMessage, error)
+    console.log({ error, response, data: response.error.data })
     ipc.send(response)
     return
   }
