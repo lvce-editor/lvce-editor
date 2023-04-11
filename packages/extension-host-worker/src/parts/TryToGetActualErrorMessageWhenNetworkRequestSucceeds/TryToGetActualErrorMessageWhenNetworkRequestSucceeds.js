@@ -18,18 +18,19 @@ const isExternal = (url) => {
   return true
 }
 
-const getErrorInDependencies = async (url, dependencies) => {
+const getErrorInDependencies = async (seenUrls, url, dependencies) => {
   for (const dependency of dependencies) {
     const dependencyUrl = Url.getAbsoluteUrl(dependency.relativePath, url)
-    if (isExternal(dependencyUrl)) {
+    if (isExternal(dependencyUrl) || seenUrls.includes(url)) {
       continue
     }
+    seenUrls.push(url)
     // let dependencyResponse
     // try {
     const dependencyResponse = await fetch(dependencyUrl)
     // } catch (error) {}
     if (dependencyResponse.ok) {
-      await tryToGetActualErrorMessage(null, dependencyUrl, dependencyResponse)
+      await tryToGetActualErrorMessage(null, dependencyUrl, dependencyResponse, seenUrls)
     } else {
       switch (dependencyResponse.status) {
         case HttpStatusCode.NotFound:
@@ -48,7 +49,7 @@ const getErrorInDependencies = async (url, dependencies) => {
  * @param {Response} response
  * @returns
  */
-export const tryToGetActualErrorMessage = async (error, url, response) => {
+export const tryToGetActualErrorMessage = async (error, url, response, seenUrls = [url]) => {
   let text
   try {
     text = await response.text()
@@ -67,7 +68,7 @@ export const tryToGetActualErrorMessage = async (error, url, response) => {
     throw error
   }
   const dependencies = GetBabelAstDependencies.getBabelAstDependencies(text, ast)
-  await getErrorInDependencies(url, dependencies)
+  await getErrorInDependencies(seenUrls, url, dependencies)
   if (ContentSecurityPolicyErrorState.hasRecentErrors()) {
     const recentError = ContentSecurityPolicyErrorState.getRecentError()
     throw new ContentSecurityPolicyError(recentError.violatedDirective, recentError.sourceFile, recentError.lineNumber, recentError.columnNumber)
