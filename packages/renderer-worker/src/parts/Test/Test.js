@@ -1,10 +1,9 @@
 import * as ExecuteTest from '../ExecuteTest/ExecuteTest.js'
 import * as ExposeGlobals from '../ExposeGlobals/ExposeGlobals.js'
-import * as ImportScript from '../ImportScript/ImportScript.js'
+import * as ImportTest from '../ImportTest/ImportTest.js'
 import * as TestFrameWork from '../TestFrameWork/TestFrameWork.js'
 import * as TestFrameWorkComponent from '../TestFrameWorkComponent/TestFrameWorkComponent.js'
 import * as TestState from '../TestState/TestState.js'
-import * as Workspace from '../Workspace/Workspace.js'
 
 export const state = {
   tests: [],
@@ -21,7 +20,7 @@ export const execute = async (href) => {
   // 1. get script to import from renderer process (url or from html)
   const scriptUrl = href
   // 2. import that script
-  const module = await ImportScript.importScript(scriptUrl)
+  const module = await ImportTest.importTest(scriptUrl)
   if (module.mockExec) {
     TestState.setMockExec(module.mockExec)
   }
