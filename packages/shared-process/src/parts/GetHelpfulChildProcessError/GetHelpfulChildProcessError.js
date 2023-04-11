@@ -3,19 +3,19 @@ import * as SplitLines from '../SplitLines/SplitLines.js'
 const RE_NATIVE_MODULE_ERROR = /^innerError Error: Cannot find module '.*.node'/
 const RE_NATIVE_MODULE_ERROR_2 = /was compiled against a different Node.js version/
 
-const RE_MASSAGE_CODE_BLOCK_START = /^Error: The module '.*'$/
-const RE_MASSAGE_CODE_BLOCK_END = /^\s* at/
+const RE_MESSAGE_CODE_BLOCK_START = /^Error: The module '.*'$/
+const RE_MESSAGE_CODE_BLOCK_END = /^\s* at/
 
 const isUnhelpfulNativeModuleError = (stderr) => {
   return RE_NATIVE_MODULE_ERROR.test(stderr) && RE_NATIVE_MODULE_ERROR_2.test(stderr)
 }
 
 const isMessageCodeBlockStartIndex = (line) => {
-  return RE_MASSAGE_CODE_BLOCK_START.test(line)
+  return RE_MESSAGE_CODE_BLOCK_START.test(line)
 }
 
 const isMessageCodeBlockEndIndex = (line) => {
-  return RE_MASSAGE_CODE_BLOCK_END.test(line)
+  return RE_MESSAGE_CODE_BLOCK_END.test(line)
 }
 
 const getMessageCodeBlock = (stderr) => {
