@@ -73,6 +73,9 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
     commands.push(...render(instance.factory, oldState, newState))
     ViewletStates.setState(id, newState)
   }
+  if (commands.length === 0) {
+    return
+  }
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
 }
 

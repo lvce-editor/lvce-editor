@@ -324,5 +324,8 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   const actualNewState = 'newState' in newState ? newState.newState : newState
   const commands = ViewletManager.render(instance.factory, oldState, actualNewState)
   ViewletStates.setState(uid, actualNewState)
+  if (commands.length === 0) {
+    return
+  }
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
 }
