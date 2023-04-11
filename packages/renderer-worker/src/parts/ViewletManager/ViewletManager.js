@@ -368,6 +368,8 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
             extraCommands.push(['Viewlet.addKeyBindings', childId, keyBindings])
           }
         } catch (error) {
+          const prettyError = await PrettyError.prepare(error)
+          PrettyError.print(prettyError)
           await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
           extraCommands.push([kCreate, ViewletModuleId.Error, viewlet.id])
           // @ts-ignore
