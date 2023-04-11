@@ -8,7 +8,6 @@ import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependen
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
-import * as Tag from '../Tag/Tag.js'
 
 const isLanguageBasics = (name) => {
   return name.startsWith('builtin.language-basics')
@@ -118,20 +117,6 @@ const copyResults = async () => {
   }
 }
 
-const addRootPackageJson = async ({ cachePath, electronVersion, product }) => {
-  const tag = await Tag.getGitTag()
-  await JsonFile.writeJson({
-    to: `${cachePath}/package.json`,
-    value: {
-      name: product.applicationName,
-      productName: product.nameLong,
-      version: tag,
-      electronVersion,
-      main: 'packages/main-process/src/mainProcessMain.js',
-    },
-  })
-}
-
 export const bundleElectronAppDependencies = async ({ cachePath, arch, electronVersion, product, supportsAutoUpdate }) => {
   console.time('copyPtyHostFiles')
   await copyPtyHostFiles({
@@ -167,8 +152,4 @@ export const bundleElectronAppDependencies = async ({ cachePath, arch, electronV
     supportsAutoUpdate,
   })
   console.timeEnd('copyMainProcessFiles')
-
-  console.time('addRootPackageJson')
-  await addRootPackageJson({ cachePath, electronVersion, product })
-  console.timeEnd('addRootPackageJson')
 }

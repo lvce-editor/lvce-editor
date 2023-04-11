@@ -8,6 +8,7 @@ import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
@@ -16,6 +17,7 @@ import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
+import * as Tag from '../Tag/Tag.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate }) => {
@@ -258,6 +260,20 @@ const copyCss = async ({ arch }) => {
   })
 }
 
+const addRootPackageJson = async ({ cachePath, electronVersion, product }) => {
+  const tag = await Tag.getGitTag()
+  await JsonFile.writeJson({
+    to: `${cachePath}/package.json`,
+    value: {
+      name: product.applicationName,
+      productName: product.nameLong,
+      version: tag,
+      electronVersion,
+      main: 'packages/main-process/src/mainProcessMain.js',
+    },
+  })
+}
+
 export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate = false }) => {
   Assert.object(product)
   Assert.string(version)
@@ -394,6 +410,14 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ arch })
   console.timeEnd('copyPlaygroundFiles')
+
+  console.time('addRootPackageJson')
+  await addRootPackageJson({
+    electronVersion,
+    product,
+    cachePath: Path.absolute(`build/.tmp/electron-bundle/${arch}/resources/app`),
+  })
+  console.timeEnd('addRootPackageJson')
 
   await WriteFile.writeFile({
     to: dependencyCachePathFinished,
