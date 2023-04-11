@@ -18,13 +18,13 @@ const isExternal = (url) => {
   return true
 }
 
-const getErrorInDependencies = async (seenUrls, url, dependencies) => {
+const getErrorInDependencies = async (url, dependencies, seenUrls) => {
   for (const dependency of dependencies) {
     const dependencyUrl = Url.getAbsoluteUrl(dependency.relativePath, url)
-    if (isExternal(dependencyUrl) || seenUrls.includes(url)) {
+    if (isExternal(dependencyUrl) || seenUrls.includes(dependencyUrl)) {
       continue
     }
-    seenUrls.push(url)
+    seenUrls.push(dependencyUrl)
     // let dependencyResponse
     // try {
     const dependencyResponse = await fetch(dependencyUrl)
@@ -68,7 +68,7 @@ export const tryToGetActualErrorMessage = async (error, url, response, seenUrls 
     throw error
   }
   const dependencies = GetBabelAstDependencies.getBabelAstDependencies(text, ast)
-  await getErrorInDependencies(seenUrls, url, dependencies)
+  await getErrorInDependencies(url, dependencies, seenUrls)
   if (ContentSecurityPolicyErrorState.hasRecentErrors()) {
     const recentError = ContentSecurityPolicyErrorState.getRecentError()
     throw new ContentSecurityPolicyError(recentError.violatedDirective, recentError.sourceFile, recentError.lineNumber, recentError.columnNumber)
