@@ -16,6 +16,7 @@ import * as ViewletActivityBarStrings from './ViewletActivityBarStrings.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     // TODO declarative event api is good, but need to bind
     // listeners to state somehow
     // also the use of global event bus is not good

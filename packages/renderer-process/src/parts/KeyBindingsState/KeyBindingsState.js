@@ -19,7 +19,6 @@ export const addKeyBindings = (id, keyBindings) => {
 }
 
 export const removeKeyBindings = (id) => {
-  Assert.string(id)
   const { keyBindingSets } = state
   if (!(id in keyBindingSets)) {
     Logger.warn(`cannot remove keybindings that are not registered: ${id}`)

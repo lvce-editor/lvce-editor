@@ -146,10 +146,11 @@ export const disposeFunctional = (id) => {
     if (instance.factory.dispose) {
       instance.factory.dispose(instance.state)
     }
-    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id]]
+    const uid = instance.state.uid
+    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
 
     if (instance.factory.getKeyBindings) {
-      commands.push(['Viewlet.removeKeyBindings', id])
+      commands.push(['Viewlet.removeKeyBindings', uid])
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
@@ -159,6 +160,7 @@ export const disposeFunctional = (id) => {
     }
     instance.status = 'disposed'
     ViewletStates.remove(id)
+    ViewletStates.remove(uid)
     return commands
   } catch (error) {
     console.error(error)

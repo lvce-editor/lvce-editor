@@ -65,9 +65,6 @@ export const send = (message) => {
 }
 
 export const invoke = async (method, ...params) => {
-  if (method === 'Viewlet.sendMultiple') {
-    console.log(...params)
-  }
   return JsonRpc.invoke(state.ipc, method, ...params)
 }
 

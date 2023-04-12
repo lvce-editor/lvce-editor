@@ -26,6 +26,7 @@ import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEnd
 // TODO instead of root string, there should be a root dirent
 
 export const create = (id, uri, x, y, width, height) => {
+  Assert.number(id)
   return {
     uid: id,
     root: '',

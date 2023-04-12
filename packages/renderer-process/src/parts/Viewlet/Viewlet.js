@@ -183,7 +183,7 @@ export const sendMultiple = (commands) => {
 
 export const dispose = (id) => {
   try {
-    Assert.string(id)
+    Assert.number(id)
     const { instances } = state
     const instance = instances[id]
     if (!instance) {

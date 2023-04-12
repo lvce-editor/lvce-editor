@@ -6,6 +6,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -84,7 +85,7 @@ export const openViewlet = async (state, id, focus = false) => {
   state.currentViewletId = id
 
   const childDimensions = getContentDimensions(state, titleAreaHeight)
-
+  const uid = state.uid
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
     id,
@@ -98,21 +99,24 @@ export const openViewlet = async (state, id, focus = false) => {
     y: childDimensions.y,
     width: childDimensions.width,
     height: childDimensions.height,
-    parentId: ViewletModuleId.SideBar,
+    parentId: uid,
     append: true,
   })
   if (commands) {
-    commands.unshift(['Viewlet.dispose', currentViewletId])
+    const currentViewletState = ViewletStates.getState(currentViewletId)
+    const currentViewletUid = currentViewletState.uid
+    Assert.number(currentViewletUid)
+    commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
     const activityBar = ViewletStates.getInstance(ViewletModuleId.ActivityBar)
     if (activityBar) {
       const oldState = activityBar.state
       const newState = activityBar.factory.handleSideBarViewletChange(oldState, id)
-      const extraCommands = ViewletManager.render(activityBar.factory, oldState, newState)
+      const extraCommands = ViewletManager.render(activityBar.factory, oldState, newState, newState.uid)
       activityBar.state = newState
       commands.push(...extraCommands)
     }
     const actions = ViewletActions.getActions(id)
-    commands.push(['Viewlet.send', ViewletModuleId.SideBar, 'setActions', actions])
+    commands.push(['Viewlet.send', uid, 'setActions', actions])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
