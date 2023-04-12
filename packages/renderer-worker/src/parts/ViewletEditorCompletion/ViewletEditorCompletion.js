@@ -12,6 +12,7 @@ import * as VirtualList from '../VirtualList/VirtualList.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     id,
     isOpened: false,
     openingReason: 0,

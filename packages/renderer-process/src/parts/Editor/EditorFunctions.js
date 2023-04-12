@@ -21,4 +21,4 @@ export const moveSelectionPx = ForwardViewletCommand.forwardViewletCommand('move
 export const paste = ForwardViewletCommand.forwardViewletCommand('patse')
 export const setDelta = ForwardViewletCommand.forwardViewletCommand('setDelta')
 export const type = ForwardViewletCommand.forwardViewletCommand('type')
-export const typeWithAutoClosing = ForwardViewletCommand.forwardViewletCommand('typeWithAutoclosing')
+export const typeWithAutoClosing = ForwardViewletCommand.forwardViewletCommand('typeWithAutoClosing')

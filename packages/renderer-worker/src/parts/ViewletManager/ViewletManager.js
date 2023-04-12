@@ -319,7 +319,9 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     // @ts-ignore
     const viewletUid = viewlet.uid || Id.create()
     const viewletState = module.create(viewletUid, viewlet.uri, x, y, width, height)
-
+    if (!viewletState.uid) {
+      viewletState.uid = viewletUid
+    }
     const oldVersion = viewletState.version === undefined ? undefined : ++viewletState.version
     let instanceSavedState
     if (restore) {

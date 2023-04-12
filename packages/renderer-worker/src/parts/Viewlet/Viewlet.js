@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
@@ -259,6 +260,7 @@ export const openWidget = async (id, ...args) => {
     }
     return ViewletElectron.openElectronQuickPick(...args)
   }
+  const childUid = Id.create()
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
     id,
@@ -268,6 +270,7 @@ export const openWidget = async (id, ...args) => {
     show: false,
     focus: true,
     args,
+    uid: childUid,
   })
   if (!commands) {
     throw new Error('expected commands to be of type array')
@@ -276,8 +279,9 @@ export const openWidget = async (id, ...args) => {
   if (hasInstance) {
     commands.unshift(['Viewlet.dispose', id])
   }
-  commands.push(['Viewlet.append', 'Layout', id])
-  commands.push(['Viewlet.focus', id])
+  const layout = ViewletStates.getState(ViewletModuleId.Layout)
+  commands.push(['Viewlet.append', layout.uid, childUid])
+  commands.push(['Viewlet.focus', childUid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // TODO commands should be like this
   // viewlet.create quickpick
@@ -292,8 +296,10 @@ export const closeWidget = async (id) => {
   if (ElectronBrowserView.isOpen() && id === ViewletElectron.isQuickPickOpen()) {
     return ViewletElectron.closeWidgetElectronQuickPick()
   }
-  ViewletStates.remove(id)
-  await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id)
+  const child = ViewletStates.getState(id)
+  const childUid = child.uid
+  ViewletStates.remove(childUid)
+  await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ childUid)
   // TODO restore focus
 }
 
