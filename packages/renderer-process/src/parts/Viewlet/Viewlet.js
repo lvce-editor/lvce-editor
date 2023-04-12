@@ -290,7 +290,7 @@ const append = (parentId, childId, referenceNodes) => {
   } else {
     $Parent.append($Child)
   }
-  if (childInstance.factory.postAppend) {
+  if (childInstance.factory && childInstance.factory.postAppend) {
     childInstance.factory.postAppend(childInstance.state)
   }
 }

@@ -28,6 +28,7 @@ const QuickPickState = {
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     state: QuickPickState.Default,
     picks: [],
     recentPicks: [],
