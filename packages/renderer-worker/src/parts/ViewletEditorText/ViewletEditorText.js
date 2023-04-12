@@ -16,6 +16,7 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -54,6 +55,7 @@ export const create = (id, uri, x, y, width, height) => {
     rowHeight: 20,
     languageId,
     width,
+    moduleId: ViewletModuleId.EditorText,
   }
 }
 
@@ -212,8 +214,6 @@ export const dispose = (state) => {
 }
 
 export const hasFunctionalRender = true
-
-export const supportsUid = true
 
 export const render = Editor.render
 

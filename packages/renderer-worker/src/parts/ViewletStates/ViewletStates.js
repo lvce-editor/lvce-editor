@@ -16,7 +16,22 @@ export const set = (key, value) => {
 }
 
 export const getInstance = (key) => {
-  return state.instances[key]
+  const fast = state.instances[key]
+  if (fast) {
+    return fast
+  }
+  if (key === 'Editor') {
+    key = 'EditorText'
+  }
+  if (key === 'EditorText') {
+    key = 'Editor'
+  }
+  for (const value of Object.values(state.instances)) {
+    if (value.moduleId === key) {
+      return value
+    }
+  }
+  return undefined
 }
 
 export const hasInstance = (key) => {

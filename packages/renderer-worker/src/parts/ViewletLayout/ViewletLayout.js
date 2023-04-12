@@ -13,6 +13,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as Id from '../Id/Id.js'
 
 const kWindowWidth = 0
 const kWindowHeight = 1
@@ -275,12 +276,14 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
   }
 }
 
-export const create = () => {
+export const create = (id) => {
+  Assert.number(id)
   return {
     points: new Uint16Array(kTotal),
     sideBarViewletId: '',
     [kSashId]: SashType.None,
     sideBarLocation: SideBarLocationType.Right,
+    uid: id,
   }
 }
 
@@ -361,6 +364,7 @@ const show = async (state, module, currentViewletId) => {
   const y = newPoints[kLeft]
   const width = newPoints[kWidth]
   const height = newPoints[kHeight]
+  const uid = state.uid
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
@@ -381,7 +385,7 @@ const show = async (state, module, currentViewletId) => {
     undefined
   )
   if (commands) {
-    commands.push(['Viewlet.append', 'Layout', moduleId])
+    commands.push(['Viewlet.append', uid, moduleId])
   }
   const resizeCommands = getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
@@ -530,7 +534,9 @@ const loadIfVisible = async (state, module) => {
   const width = points[kWidth]
   const height = points[kHeight]
   let commands = []
+  const parentUid = state.uid
   if (visible) {
+    const childUid = Id.create()
     commands = await ViewletManager.load(
       {
         getModule: ViewletModule.load,
@@ -544,13 +550,14 @@ const loadIfVisible = async (state, module) => {
         y,
         width,
         height,
+        uid: childUid,
       },
       false,
       true
     )
     if (commands) {
       const referenceNodes = getReferenceNodes(sideBarLocation)
-      commands.push(['Viewlet.append', 'Layout', moduleId, referenceNodes])
+      commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
     }
   }
   return {
@@ -728,12 +735,13 @@ const showAsync = async (points, module) => {
   }
 }
 
-const showPlaceholder = (points, module) => {
+const showPlaceholder = (uid, points, module) => {
+  Assert.number(uid)
   const { moduleId, kTop, kLeft, kWidth, kHeight } = module
   return [
     'Viewlet.createPlaceholder',
     /* id */ moduleId,
-    /* parentId */ 'Layout',
+    /* parentId */ uid,
     /* top */ points[kTop],
     /* left */ points[kLeft],
     /* width */ points[kWidth],
@@ -751,13 +759,14 @@ export const handleSashPointerMove = async (state, x, y) => {
     ...state,
     points: newPoints,
   }
+  const uid = state.uid
   const modules = [mPanel, mSideBar]
   for (const module of modules) {
     const { kVisible, moduleId } = module
     if (points[kVisible] !== newPoints[kVisible]) {
       if (newPoints[kVisible]) {
         showAsync(newPoints, module) // TODO avoid side effect
-        const commands = showPlaceholder(newPoints, module)
+        const commands = showPlaceholder(uid, newPoints, module)
         allCommands.push(commands)
       } else {
         await SaveState.saveViewletState(moduleId)
@@ -903,11 +912,12 @@ export const isSideBarVisible = (state) => {
 export const getInitialPlaceholderCommands = (state) => {
   const { points } = state
   const commands = []
+  const uid = state.uid
   const modules = [mTitleBar, mMain, mSideBar, mActivityBar, mPanel, mStatusBar]
   for (const module of modules) {
     const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
     if (points[kVisible]) {
-      commands.push(['Viewlet.createPlaceholder', moduleId, ViewletModuleId.Layout, points[kTop], points[kLeft], points[kWidth], points[kHeight]])
+      commands.push(['Viewlet.createPlaceholder', moduleId, uid, points[kTop], points[kLeft], points[kWidth], points[kHeight]])
     }
   }
   return commands
@@ -928,8 +938,6 @@ const renderSashes = {
     const panelLeft = points[kPanelLeft]
     const panelWidth = points[kPanelWidth]
     return [
-      'Viewlet.send',
-      ViewletModuleId.Layout,
       'setSashes',
       {
         id: 'SashSideBar',

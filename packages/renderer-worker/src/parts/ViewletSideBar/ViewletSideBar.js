@@ -9,6 +9,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     currentViewletId: '',
     x,
     y,
@@ -34,10 +35,10 @@ export const loadContent = (state, savedState) => {
 }
 
 export const contentLoaded = async (state, savedState) => {
-  const { currentViewletId } = state
+  const { currentViewletId, uid } = state
   const commands = []
   const actions = ViewletActions.getActions(currentViewletId)
-  commands.push(['Viewlet.send', ViewletModuleId.SideBar, 'setActions', actions])
+  commands.push(['Viewlet.send', uid, 'setActions', actions])
   return commands
 }
 

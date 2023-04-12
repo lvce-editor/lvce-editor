@@ -83,6 +83,8 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
+    uid: id,
+    moduleId: ViewletModuleId.Main,
   }
 }
 
@@ -189,18 +191,18 @@ export const contentLoaded = async (state) => {
   const tabLabel = Workspace.pathBaseName(editor.uri)
   const tabTitle = getTabTitle(editor.uri)
   const commands = [
-    [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
+    [/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
   ]
 
   // // TODO race condition: Viewlet may have been resized before it has loaded
-  const uid = Id.create()
+  const childUid = Id.create()
   // // @ts-ignore
   const extraCommands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
       id,
       // @ts-ignore
-      uid,
+      uid: childUid,
       // @ts-ignore
       parentId: ViewletModuleId.Main,
       uri: editor.uri,
@@ -220,9 +222,9 @@ export const contentLoaded = async (state) => {
   commands.push(...extraCommands)
 
   if (extraCommands[0].includes(ViewletModuleId.Error)) {
-    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
+    commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
   } else {
-    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, uid])
+    commands.push(['Viewlet.appendViewlet', state.uid, childUid])
   }
   return commands
 }
@@ -246,9 +248,9 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       // @ts-ignore
       const commands = await ViewletManager.load(instance, focus, false, options)
       if (commands[0].includes(ViewletModuleId.Error)) {
-        commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
+        commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
       } else {
-        commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+        commands.push(['Viewlet.appendViewlet', state.uid, instance.uid || id])
       }
       return {
         newState: state,
@@ -257,7 +259,9 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     }
   }
 
+  const instanceUid = Id.create()
   const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
+  instance.uid = instanceUid
   const oldActiveIndex = state.activeIndex
   const temporaryUri = `tmp://${Math.random()}`
   state.editors.push({ uri: temporaryUri })
@@ -266,7 +270,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const tabTitle = getTabTitle(uri)
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ ViewletModuleId.Main,
+    /* id */ state.uid,
     /* method */ 'openViewlet',
     /* tabLabel */ tabLabel,
     /* tabTitle */ tabTitle,
@@ -278,11 +282,11 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
   if (commands[0].includes(ViewletModuleId.Error)) {
-    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
+    commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
   } else {
-    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+    commands.push(['Viewlet.appendViewlet', state.uid, instanceUid || id])
     if (focus) {
-      commands.push(['Viewlet.send', ViewletModuleId.EditorText, 'focus'])
+      commands.push(['Viewlet.send', instanceUid || id, 'focus'])
     }
   }
   if (!ViewletStates.hasInstance(id)) {

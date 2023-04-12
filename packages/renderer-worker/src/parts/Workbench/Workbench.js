@@ -24,6 +24,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Id from '../Id/Id.js'
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async (config) => {
@@ -77,6 +78,7 @@ export const startup = async (config) => {
 
   Performance.mark(PerformanceMarkerType.WillShowLayout)
   const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.Layout, '', '', 0, 0, 0, 0)
+  layout.uid = Id.create()
   const layoutState = await SaveState.getSavedViewletState(ViewletModuleId.Layout)
   const commands = await ViewletManager.load(
     {
@@ -87,6 +89,7 @@ export const startup = async (config) => {
       uri: '',
       show: false,
       focus: false,
+      uid: layout.uid,
     },
     false,
     false,
@@ -96,7 +99,7 @@ export const startup = async (config) => {
   const layoutModule = ViewletStates.getInstance(ViewletModuleId.Layout)
   const placeholderCommands = layoutModule.factory.getInitialPlaceholderCommands(layoutModule.state)
   commands.push(...placeholderCommands)
-  commands.push(['Viewlet.appendToBody', ViewletModuleId.Layout])
+  commands.push(['Viewlet.appendToBody', layout.uid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // await Layout.hydrate(initData)
   Performance.mark(PerformanceMarkerType.DidShowLayout)

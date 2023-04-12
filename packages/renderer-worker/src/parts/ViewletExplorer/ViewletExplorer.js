@@ -27,6 +27,7 @@ import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEnd
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     root: '',
     items: [],
     focusedIndex: -1,

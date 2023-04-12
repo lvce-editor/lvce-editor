@@ -51,7 +51,7 @@ const runFn = async (instance, id, key, fn, args) => {
     if (oldState === newState) {
       return
     }
-    const commands = render(instance.factory, oldState, newState, id)
+    const commands = render(instance.factory, oldState, newState, newState.uid || id)
     ViewletStates.setState(id, newState)
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
   } else {
@@ -317,7 +317,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       height = position.height
     }
     // @ts-ignore
-    const viewletUid = module.supportsUid ? viewlet.uid || Id.create() : viewlet.id
+    const viewletUid = viewlet.uid || Id.create()
     const viewletState = module.create(viewletUid, viewlet.uri, x, y, width, height)
 
     const oldVersion = viewletState.version === undefined ? undefined : ++viewletState.version
@@ -346,7 +346,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           const childId = child.id
           const childModule = await loadModule(viewlet.getModule, childId)
           // TODO get position of child module
-          const childUid = childModule.supportsUid ? Id.create() : childId
+          const childUid = Id.create()
           const oldState = childModule.create(childUid, '', child.x, child.y, child.width, child.height)
           let instanceSavedState
           if (restore) {
@@ -358,6 +358,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           const childInstance = {
             state: newState,
             factory: childModule,
+            moduleId: child.moduleId || child.id,
           }
           ViewletStates.set(childUid, childInstance)
           const childCommands = []
@@ -417,6 +418,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           ViewletStates.set(viewletUid, {
             state: newState,
             factory: module,
+            moduleId: viewlet.moduleId || viewlet.id || '',
           })
           break outer
         }
@@ -427,6 +429,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       ViewletStates.set(viewletUid, {
         state: newState,
         factory: module,
+        moduleId: viewlet.moduleId || viewlet.id || '',
       })
     }
     const commands = [[kCreate, viewlet.id, viewletUid]]
