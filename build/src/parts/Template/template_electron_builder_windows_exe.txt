@@ -14,7 +14,8 @@
       "warningsAsErrors": false
     },
     "win": {
-      "target": [{ "target": "nsis" }]
+      "target": "nsis",
+      "icon": "build/icon.ico"
     }
   }
 }

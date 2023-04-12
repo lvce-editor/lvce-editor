@@ -88,6 +88,10 @@ const copyBuildResources = async ({ config }) => {
       from: `build/files/windows/EnvVarUpdate.nsh`,
       to: `build/.tmp/electron-builder/build/EnvVarUpdate.nsh`,
     })
+    await Copy.copyFile({
+      from: `build/files/icon.ico`,
+      to: 'build/.tmp/electron-builder/build/icon.ico',
+    })
   }
 }
 
