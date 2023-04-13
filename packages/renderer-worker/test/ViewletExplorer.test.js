@@ -149,7 +149,7 @@ test('loadContent', async () => {
 })
 
 test('loadContent - root', async () => {
-  const state = { ...ViewletExplorer.create(), root: '/'1 }
+  const state = { ...ViewletExplorer.create(1), root: '/' }
   Workspace.state.workspacePath = '/'
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
@@ -220,7 +220,7 @@ test('loadContent - root', async () => {
 })
 
 test('loadContent - restore from saved state - root', async () => {
-  const state = { ...ViewletExplorer.create(), root: '/'1 }
+  const state = { ...ViewletExplorer.create(1), root: '/' }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     return [
@@ -294,7 +294,7 @@ test('loadContent - restore from saved state - root', async () => {
 })
 
 test('loadContent - restore from saved state - root and symlinked open folder', async () => {
-  const state = { ...ViewletExplorer.create(), root: '/'1 }
+  const state = { ...ViewletExplorer.create(1), root: '/' }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
     switch (uri) {
