@@ -7,6 +7,8 @@
 
 .SelectWrapper {
   contain: content;
+  position: relative;
+  height: 21px;
 }
 
 .Select {
@@ -18,4 +20,24 @@
   background: var(--DropDownBackground, #3c3c3c);
   color: var(--DropDownForeground, #f0f0f0);
   border: var(--DropDownBorder);
+  height: 100%;
+}
+
+.SelectIcon {
+  position: absolute;
+  inset: 0 6px 0 auto;
+  background: currentColor;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-size: var(--MaskIconSize);
+  -webkit-mask-size: var(--MaskIconSize);
+  mask-position: 50% 50%;
+  -webkit-mask-position: 50% 50%;
+  mask-image: url(/icons/chevron-down.svg);
+  -webkit-mask-image: url(/icons/chevron-down.svg);
+  pointer-events: none;
+  width: 16px;
+  height: 16px;
+  contain: strict;
+  margin: auto 0;
 }
