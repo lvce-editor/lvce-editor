@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@electron/get": "^2.0.2",
-    "@electron/rebuild": "^3.2.10",
+    "@electron/rebuild": "^3.2.12",
     "@types/bytes": "^3.1.1",
     "@types/fs-extra": "^11.0.1",
     "@types/tar-fs": "^2.0.1",

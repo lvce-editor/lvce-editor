@@ -19,10 +19,10 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "@electron/rebuild": "^3.2.10",
+    "@electron/rebuild": "^3.2.12",
     "@types/debug": "^4.1.7",
     "@types/verror": "^1.10.6",
-    "electron": "^24.0.0"
+    "electron": "^24.1.1"
   },
   "dependencies": {
     "@babel/code-frame": "^7.21.4",
