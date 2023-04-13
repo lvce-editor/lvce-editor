@@ -21,8 +21,8 @@ export const create = (id, uid = id) => {
   if (!module) {
     throw new Error(`module not found: ${id}`)
   }
-  if (state.instances[uid] && state.instances[uid].state.$Viewlet.isConnected) {
-    state.instances[uid].state.$Viewlet.remove()
+  if (state.instances[id] && state.instances[id].state.$Viewlet.isConnected) {
+    state.instances[id].state.$Viewlet.remove()
   }
   const instanceState = module.create()
   ComponentUid.set(instanceState.$Viewlet, uid)
