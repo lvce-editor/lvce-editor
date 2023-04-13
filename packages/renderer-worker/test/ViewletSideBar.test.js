@@ -37,7 +37,7 @@ test.skip('showOrHideViewlet - show explorer, then search, then explorer again',
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletSideBar.create()
+  const state = ViewletSideBar.create(1)
   await ViewletSideBar.showOrHideViewlet(state, 'Explorer')
   await ViewletSideBar.showOrHideViewlet(state, 'Search')
   await ViewletSideBar.showOrHideViewlet(state, 'Explorer')
@@ -46,7 +46,7 @@ test.skip('showOrHideViewlet - show explorer, then search, then explorer again',
 })
 
 test('resize', () => {
-  const state = ViewletSideBar.create()
+  const state = ViewletSideBar.create(1)
   const { newState } = ViewletSideBar.resize(state, {
     x: 200,
     y: 200,
@@ -64,7 +64,7 @@ test('resize', () => {
 })
 
 test('loadContent - get viewlet id from savedState', async () => {
-  const state = ViewletSideBar.create()
+  const state = ViewletSideBar.create(1)
   const newState = await ViewletSideBar.loadContent(state, {
     currentViewletId: 'Test',
   })

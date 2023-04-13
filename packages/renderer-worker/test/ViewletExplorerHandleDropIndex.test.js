@@ -49,7 +49,7 @@ test('handleDrop - single file - into folder', async () => {
     }
   })
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     root: '/test',
     focusedIndex: 1,
     items: [

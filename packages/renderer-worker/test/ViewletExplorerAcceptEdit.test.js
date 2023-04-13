@@ -60,7 +60,7 @@ test('acceptEdit - rename', async () => {
   // @ts-ignore
   FileSystem.rename.mockImplementation(() => {})
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     focusedIndex: 0,
     top: 0,
     height: 600,
@@ -105,7 +105,7 @@ test('acceptEdit - rename - nested file', async () => {
   // @ts-ignore
   FileSystem.rename.mockImplementation(() => {})
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     focusedIndex: 0,
     top: 0,
     height: 600,
