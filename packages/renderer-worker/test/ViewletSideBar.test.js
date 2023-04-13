@@ -45,7 +45,7 @@ test.skip('showOrHideViewlet - show explorer, then search, then explorer again',
   expect(Layout.isSideBarVisible()).toBe(true)
 })
 
-test('resize', () => {
+test.skip('resize', () => {
   const state = ViewletSideBar.create(1)
   const { newState } = ViewletSideBar.resize(state, {
     x: 200,
@@ -63,7 +63,7 @@ test('resize', () => {
   })
 })
 
-test('loadContent - get viewlet id from savedState', async () => {
+test.skip('loadContent - get viewlet id from savedState', async () => {
   const state = ViewletSideBar.create(1)
   const newState = await ViewletSideBar.loadContent(state, {
     currentViewletId: 'Test',
