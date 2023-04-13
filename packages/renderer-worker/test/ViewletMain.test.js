@@ -50,13 +50,13 @@ const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js'
 const ViewletMain = await import('../src/parts/ViewletMain/ViewletMain.js')
 
 test('create', () => {
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   expect(state).toBeDefined()
 })
 
 test('loadContent - no restored editors', async () => {
-  const state = ViewletMain.create()
-  expect(await ViewletMain.loadContent(state, {})).toEqual({
+  const state = ViewletMain.create(1)
+  expect(await ViewletMain.loadContent(state, {})).toMatchObject({
     activeIndex: -1,
     editors: [],
     focusedIndex: -1,
@@ -64,7 +64,7 @@ test('loadContent - no restored editors', async () => {
 })
 
 test('loadContent - one restored editor', async () => {
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   expect(
     await ViewletMain.loadContent(state, {
       editors: [
@@ -74,7 +74,7 @@ test('loadContent - one restored editor', async () => {
       ],
       activeIndex: 0,
     })
-  ).toEqual({
+  ).toMatchObject({
     activeIndex: 0,
     editors: [
       {
@@ -100,7 +100,7 @@ test.skip('openUri - no editors exist', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     x: 0,
     y: 0,
     width: 0,
@@ -108,7 +108,7 @@ test.skip('openUri - no editors exist', async () => {
   }
   await ViewletMain.openUri(state, '/tmp/file-1.txt') // TODO Viewlet Main should not know about ViewletEditorText
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', 'Main', 'openViewlet', 'file-1.txt', '/tmp/file-1.txt', -1)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', 1, 'openViewlet', 'file-1.txt', '/tmp/file-1.txt', -1)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, 'Viewlet.loadModule', 'EditorText')
   // expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [
   //   'Viewlet.send',
@@ -138,7 +138,7 @@ test.skip('openUri - different editor exists', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: ['/test/file-1.txt'],
     activeIndex: 0,
     x: 0,
@@ -148,7 +148,7 @@ test.skip('openUri - different editor exists', async () => {
   }
   await ViewletMain.openUri(state, '/tmp/file-2.txt')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', 'Main', 'openViewlet', 'file-2.txt', '/tmp/file-2.txt', 0)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', 1, 'openViewlet', 'file-2.txt', '/tmp/file-2.txt', 0)
   expect(state.activeIndex).toBe(1)
 })
 
@@ -175,7 +175,7 @@ test.skip('openUri - race condition', async () => {
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await Promise.all([
     ViewletMain.openUri(state, '/tmp/file-1.txt'),
     ViewletMain.openUri(state, '/tmp/file-2.txt'),
@@ -184,7 +184,7 @@ test.skip('openUri - race condition', async () => {
   console.log('opened all files')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.send', 'EditorText', 'renderText', [], 15, 20, 0.5)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, 'Viewlet.send', 'Main', 'openViewlet', 'EditorText', 'file-1.txt', '/tmp/file-1.txt')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, 'Viewlet.send', 1, 'openViewlet', 'EditorText', 'file-1.txt', '/tmp/file-1.txt')
 })
 
 test.skip('openUri - editor with same uri exists', async () => {
@@ -201,7 +201,7 @@ test.skip('openUri - editor with same uri exists', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -223,7 +223,7 @@ test.skip('openUri - editor with different uri exists', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -252,12 +252,12 @@ test.skip('openUri - error reading file', async () => {
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await expect(ViewletMain.openUri(state, '/tmp/file-1.txt')).rejects.toThrowError(new Error('TypeError: x is not a function'))
 })
 
 test.skip('openUri - should reuse same viewlet if it exists', async () => {
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/some-file.txt')
 })
 
@@ -275,7 +275,7 @@ test.skip('event - handleTabClick on active tab', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -297,7 +297,7 @@ test.skip('openUri, then opening a different uri, then open the first uri again'
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   await ViewletMain.openUri(state, '/tmp/file-2.txt')
   // @ts-ignore
@@ -322,7 +322,7 @@ test.skip('event - handleTabClick on another tab', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   await ViewletMain.openUri(state, '/tmp/file-2.txt')
   // @ts-ignore
@@ -347,7 +347,7 @@ test.skip('focusFirst', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   await ViewletMain.openUri(state, '/tmp/file-2.txt')
   // @ts-ignore
@@ -372,7 +372,7 @@ test.skip('focusLast', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   await ViewletMain.openUri(state, '/tmp/file-2.txt')
   await ViewletMain.openUri(state, '/tmp/file-3.txt')
@@ -398,7 +398,7 @@ test.skip('focusNext - in middle', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   await ViewletMain.openUri(state, '/tmp/file-2.txt')
   await ViewletMain.openUri(state, '/tmp/file-3.txt')
@@ -424,7 +424,7 @@ test.skip('focusNext - at end', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   await ViewletMain.openUri(state, '/tmp/file-2.txt')
   await ViewletMain.openUri(state, '/tmp/file-3.txt')
@@ -450,7 +450,7 @@ test.skip('focusPrevious - in middle', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   await ViewletMain.openUri(state, '/tmp/file-2.txt')
   await ViewletMain.openUri(state, '/tmp/file-3.txt')
@@ -476,7 +476,7 @@ test.skip('focusPrevious - at start', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   await ViewletMain.openUri(state, '/tmp/file-2.txt')
   await ViewletMain.openUri(state, '/tmp/file-3.txt')
@@ -502,7 +502,7 @@ test.skip('closeAllEditors', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -527,7 +527,7 @@ test.skip('closeEditor - single editor', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -542,7 +542,7 @@ test.skip('closeEditor - 0 0 - first tab is focused and first tab is selected', 
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -581,7 +581,7 @@ test('closeEditor - 0 1 - first is focused and second tab is selected', async ()
   RendererProcess.invoke.mockImplementation(() => {})
   // TODO make this test setup more functional
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
 
     editors: [
       {
@@ -615,14 +615,14 @@ test('closeEditor - 0 1 - first is focused and second tab is selected', async ()
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOneTabOnly', 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOneTabOnly', 0)
 })
 
 test.skip('closeEditor - 0 2 - first tab is focused and last tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -662,7 +662,7 @@ test('closeEditor - 1 0 - middle tab is focused and first tab is selected', asyn
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -688,14 +688,14 @@ test('closeEditor - 1 0 - middle tab is focused and first tab is selected', asyn
   ])
   expect(state.activeIndex).toBe(0)
   expect(state.focusedIndex).toBe(0)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOneTabOnly', 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOneTabOnly', 1)
 })
 
 test.skip('closeEditor - 1 1 - middle tab is focused and middle tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -728,7 +728,7 @@ test('closeEditor - 1 2 - middle tab is focused and last tab is selected', async
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -754,14 +754,14 @@ test('closeEditor - 1 2 - middle tab is focused and last tab is selected', async
   ])
   expect(state.activeIndex).toBe(1)
   expect(state.focusedIndex).toBe(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOneTabOnly', 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOneTabOnly', 1)
 })
 
 test('closeEditor - 2 0 - last tab is focused and first tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -787,14 +787,14 @@ test('closeEditor - 2 0 - last tab is focused and first tab is selected', async 
   ])
   expect(state.activeIndex).toBe(0)
   expect(state.focusedIndex).toBe(0)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOneTabOnly', 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOneTabOnly', 2)
 })
 
 test('closeEditor - 2 1 - last tab is focused and middle tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
 
     editors: [
       {
@@ -821,14 +821,14 @@ test('closeEditor - 2 1 - last tab is focused and middle tab is selected', async
   ])
   expect(state.activeIndex).toBe(1)
   expect(state.focusedIndex).toBe(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOneTabOnly', 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOneTabOnly', 2)
 })
 
 test.skip('closeEditor - 2 2 - last tab is focused and last tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -871,7 +871,7 @@ test.skip('closeEditor - should then show editor to the left', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   await ViewletMain.openUri(state, '/tmp/file-2.txt')
   // @ts-ignore
@@ -899,7 +899,7 @@ test.skip('closeFocusedTab - single editor', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -925,7 +925,7 @@ test.skip('handleTabContextMenu', async () => {
         throw new Error('unexpected message')
     }
   })
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -964,7 +964,7 @@ test('closeOthers - 0 0 - first tab is selected and first tab is focused', async
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -992,14 +992,14 @@ test('closeOthers - 0 0 - first tab is selected and first tab is focused', async
       uri: '/test/file-1.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOthers', 0, 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOthers', 0, 0)
 })
 
 test('closeOthers - 0 1 - first tab is focused and second tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1027,14 +1027,14 @@ test('closeOthers - 0 1 - first tab is focused and second tab is selected', asyn
       uri: '/test/file-1.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOthers', 0, 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOthers', 0, 0)
 })
 
 test('closeOthers - 0 2 - first tab is focused and third tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1062,14 +1062,14 @@ test('closeOthers - 0 2 - first tab is focused and third tab is selected', async
       uri: '/test/file-1.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOthers', 0, 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOthers', 0, 0)
 })
 
 test('closeOthers - 1 0 - second tab is focused and first tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1097,14 +1097,14 @@ test('closeOthers - 1 0 - second tab is focused and first tab is selected', asyn
       uri: '/test/file-2.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOthers', 1, 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOthers', 1, 1)
 })
 
 test('closeOthers - 1 1 - second tab is focused and second tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1132,14 +1132,14 @@ test('closeOthers - 1 1 - second tab is focused and second tab is selected', asy
       uri: '/test/file-2.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOthers', 1, 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOthers', 1, 1)
 })
 
 test('closeOthers - 1 2 - second tab is focused and third tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1167,14 +1167,14 @@ test('closeOthers - 1 2 - second tab is focused and third tab is selected', asyn
       uri: '/test/file-2.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOthers', 1, 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOthers', 1, 1)
 })
 
 test('closeOthers - 2 0 - third tab is focused and first tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1202,14 +1202,14 @@ test('closeOthers - 2 0 - third tab is focused and first tab is selected', async
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOthers', 2, 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOthers', 2, 2)
 })
 
 test('closeOthers - 2 1 - third tab is focused and second tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1237,14 +1237,14 @@ test('closeOthers - 2 1 - third tab is focused and second tab is selected', asyn
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOthers', 2, 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOthers', 2, 2)
 })
 
 test('closeOthers - 2 2 - third tab is focused and third tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1272,14 +1272,14 @@ test('closeOthers - 2 2 - third tab is focused and third tab is selected', async
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeOthers', 2, 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOthers', 2, 2)
 })
 
 test('closeTabsRight - 0 0 - first tab is focused and first tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1307,14 +1307,14 @@ test('closeTabsRight - 0 0 - first tab is focused and first tab is selected', as
       uri: '/test/file-1.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsRight', 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsRight', 0)
 })
 
 test('closeTabsRight - 0 1 - first tab is focused and second tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1342,14 +1342,14 @@ test('closeTabsRight - 0 1 - first tab is focused and second tab is selected', a
       uri: '/test/file-1.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsRight', 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsRight', 0)
 })
 
 test('closeTabsRight - 0 2 - first tab is focused and third tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1377,14 +1377,14 @@ test('closeTabsRight - 0 2 - first tab is focused and third tab is selected', as
       uri: '/test/file-1.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsRight', 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsRight', 0)
 })
 
 test('closeTabsRight - 1 0 - second tab is focused and first tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1415,14 +1415,14 @@ test('closeTabsRight - 1 0 - second tab is focused and first tab is selected', a
       uri: '/test/file-2.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsRight', 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsRight', 1)
 })
 
 test('closeTabsRight - 1 1 - second tab is focused and second tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1453,14 +1453,14 @@ test('closeTabsRight - 1 1 - second tab is focused and second tab is selected', 
       uri: '/test/file-2.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsRight', 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsRight', 1)
 })
 
 test('closeTabsRight - 1 2 - second tab is focused and third tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1491,14 +1491,14 @@ test('closeTabsRight - 1 2 - second tab is focused and third tab is selected', a
       uri: '/test/file-2.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsRight', 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsRight', 1)
 })
 
 test('closeTabsRight - 2 0 - third tab is focused and first tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1532,14 +1532,14 @@ test('closeTabsRight - 2 0 - third tab is focused and first tab is selected', as
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsRight', 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsRight', 2)
 })
 
 test('closeTabsRight - 2 1 - third tab is focused and second tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1573,14 +1573,14 @@ test('closeTabsRight - 2 1 - third tab is focused and second tab is selected', a
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsRight', 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsRight', 2)
 })
 
 test('closeTabsRight - 2 2 - third tab is focused and third tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1614,14 +1614,14 @@ test('closeTabsRight - 2 2 - third tab is focused and third tab is selected', as
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsRight', 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsRight', 2)
 })
 
 test('closeTabsLeft - 0 0 - first tab is focused and first tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1655,14 +1655,14 @@ test('closeTabsLeft - 0 0 - first tab is focused and first tab is selected', asy
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsLeft', 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 0)
 })
 
 test('closeTabsLeft - 0 1 - first tab is focused and second tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1696,14 +1696,14 @@ test('closeTabsLeft - 0 1 - first tab is focused and second tab is selected', as
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsLeft', 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 0)
 })
 
 test('closeTabsLeft - 0 2 - first tab is focused and third tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1737,14 +1737,14 @@ test('closeTabsLeft - 0 2 - first tab is focused and third tab is selected', asy
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsLeft', 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 0)
 })
 
 test('closeTabsLeft - 1 0 - second tab is focused and first tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1775,14 +1775,14 @@ test('closeTabsLeft - 1 0 - second tab is focused and first tab is selected', as
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsLeft', 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 1)
 })
 
 test('closeTabsLeft - 1 1 - second tab is focused and second tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1813,14 +1813,14 @@ test('closeTabsLeft - 1 1 - second tab is focused and second tab is selected', a
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsLeft', 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 1)
 })
 
 test('closeTabsLeft - 1 2 - second tab is focused and third tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1851,14 +1851,14 @@ test('closeTabsLeft - 1 2 - second tab is focused and third tab is selected', as
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsLeft', 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 1)
 })
 
 test('closeTabsLeft - 2 0 - third tab is focused and first tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1886,14 +1886,14 @@ test('closeTabsLeft - 2 0 - third tab is focused and first tab is selected', asy
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsLeft', 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 2)
 })
 
 test('closeTabsLeft - 2 1 - third tab is focused and second tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1921,14 +1921,14 @@ test('closeTabsLeft - 2 1 - third tab is focused and second tab is selected', as
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsLeft', 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 2)
 })
 
 test('closeTabsLeft - 2 2 - third tab is focused and third tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
@@ -1956,11 +1956,11 @@ test('closeTabsLeft - 2 2 - third tab is focused and third tab is selected', asy
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Main', 'closeTabsLeft', 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 2)
 })
 
 test.skip('resize', () => {
-  const state = ViewletMain.create()
+  const state = ViewletMain.create(1)
   const { newState } = ViewletMain.resize(state, {
     x: 200,
     y: 200,
@@ -1983,10 +1983,11 @@ test('handleDrop - one file', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
-    ...ViewletMain.create(),
+    ...ViewletMain.create(1),
     editors: [
       {
         uri: '/test/file-1.txt',
+        uid: 1,
       },
     ],
     activeIndex: 0,
@@ -2012,20 +2013,22 @@ test('handleDrop - one file', async () => {
   expect(state.editors).toEqual([
     {
       uri: '/test/file-1.txt',
+      uid: 1,
     },
     {
-      uri: undefined,
+      uri: expect.any(String),
+      uid: 1,
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', 'Main', 'openViewlet', 'dropped-file.txt', '/test/dropped-file.txt', 0)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', 'EditorText')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', 1, 'openViewlet', 'dropped-file.txt', '/test/dropped-file.txt', 0)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', 'Editor')
   expect(commands).toEqual([
-    ['Viewlet.create', 'EditorText'],
-    ['Viewlet.addKeyBindings', 'EditorText', expect.anything()],
-    ['Viewlet.appendViewlet', 'Main', 'EditorText'],
-    ['Viewlet.send', 'EditorText', 'focus'],
-    ['Viewlet.send', 'Main', 'stopHighlightDragOver'],
-    ['Viewlet.send', 'Main', 'hideDragOverlay'],
+    ['Viewlet.create', 'Editor', 1],
+    ['Viewlet.addKeyBindings', 1, expect.anything()],
+    ['Viewlet.appendViewlet', 1, 1],
+    ['Viewlet.send', 1, 'focus'],
+    ['Viewlet.send', 1, 'stopHighlightDragOver'],
+    ['Viewlet.send', 1, 'hideDragOverlay'],
   ])
 })

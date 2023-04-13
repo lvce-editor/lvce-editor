@@ -8,16 +8,13 @@ beforeEach(() => {
   GlobalEventBus.state.listenerMap = Object.create(null)
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   return {
@@ -62,25 +59,19 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
   }
 })
 
-const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
-)
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
 
-const GlobalEventBus = await import(
-  '../src/parts/GlobalEventBus/GlobalEventBus.js'
-)
+const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
 
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
-const ViewletExplorerUpdateRoot = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerUpdateRoot.js'
-)
+const ViewletExplorerUpdateRoot = await import('../src/parts/ViewletExplorer/ViewletExplorerUpdateRoot.js')
 
 test('updateRoot - already disposed', async () => {
   const state1 = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     disposed: true,
   }
   // @ts-ignore
@@ -93,7 +84,7 @@ test('updateRoot - already disposed', async () => {
 
 test('updateRoot - disposed after reading files', async () => {
   const state1 = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
   }
   const state2 = {
     ...state1,
@@ -116,7 +107,7 @@ test('updateRoot - disposed after reading files', async () => {
 
 test('updateRoot - root changes while reading directories', async () => {
   const state1 = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     root: '/test-1',
   }
   const state2 = {
@@ -149,7 +140,7 @@ test('updateRoot - root changes while reading directories', async () => {
 
 test('updateRoot - new folder', async () => {
   const state1 = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     root: '/test',
   }
   const state2 = {

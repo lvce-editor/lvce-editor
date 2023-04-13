@@ -414,8 +414,8 @@ export const handleDrop = async (state, files) => {
     }
     console.log(file)
   }
-  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver'])
-  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay'])
+  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'stopHighlightDragOver'])
+  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'hideDragOverlay'])
   return {
     newState,
     commands: allCommands,
@@ -623,7 +623,7 @@ export const closeOthers = async (state) => {
     // view is kept the same, only tabs are closed
     await RendererProcess.invoke(
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
+      /* id */ state.uid,
       /* method */ 'closeOthers',
       /* keepIndex */ state.focusedIndex,
       /* focusIndex */ state.focusedIndex
@@ -632,7 +632,7 @@ export const closeOthers = async (state) => {
     // view needs to be switched to focused index
     await RendererProcess.invoke(
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
+      /* id */ state.uid,
       /* method */ 'closeOthers',
       /* keepIndex */ state.focusedIndex,
       /* focusIndex */ state.focusedIndex
@@ -646,20 +646,10 @@ export const closeOthers = async (state) => {
 export const closeTabsRight = async (state) => {
   if (state.focusedIndex >= state.activeIndex) {
     // view is kept the same, only tabs are closed
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'closeTabsRight',
-      /* index */ state.focusedIndex
-    )
+    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeTabsRight', /* index */ state.focusedIndex)
   } else {
     // view needs to be switched to focused index
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'closeTabsRight',
-      /* index */ state.focusedIndex
-    )
+    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeTabsRight', /* index */ state.focusedIndex)
   }
   state.editors = state.editors.slice(0, state.focusedIndex + 1)
   state.activeIndex = state.focusedIndex
@@ -668,20 +658,10 @@ export const closeTabsRight = async (state) => {
 export const closeTabsLeft = async (state) => {
   if (state.focusedIndex <= state.activeIndex) {
     // view is kept the same, only tabs are closed
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'closeTabsLeft',
-      /* index */ state.focusedIndex
-    )
+    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeTabsLeft', /* index */ state.focusedIndex)
   } else {
     // view needs to be switched to focused index
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'closeTabsLeft',
-      /* index */ state.focusedIndex
-    )
+    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeTabsLeft', /* index */ state.focusedIndex)
   }
   state.editors = state.editors.slice(state.focusedIndex)
   state.activeIndex = state.focusedIndex
