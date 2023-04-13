@@ -13,4 +13,6 @@
   appearance: none;
   background: transparent;
   contain: content;
+  color: inherit;
+  padding: 2px 23px 2px 8px;
 }
