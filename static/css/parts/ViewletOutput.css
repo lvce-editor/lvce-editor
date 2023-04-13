@@ -13,3 +13,10 @@
   content: '(empty file)';
   opacity: 0.3;
 }
+
+.OutputContent {
+  white-space: pre;
+  user-select: text;
+  cursor: text;
+  overflow-y: auto;
+}
