@@ -1,6 +1,6 @@
+import * as OutputChannel from '../OutputChannel/OutputChannel.js'
 import * as OutputChannels from '../OutputChannels/OutputChannels.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const create = () => {
   return {
@@ -16,7 +16,9 @@ export const loadContent = async (state) => {
   const options = await OutputChannels.getOptions()
   const selectedIndex = 0
   // TODO duplicate send here
-  await SharedProcess.invoke(/* OutputChannel.open */ 'OutputChannel.open', /* id */ 0, /* path */ options[selectedIndex].file)
+  const id = 0
+  const file = options[selectedIndex].file
+  await OutputChannel.open(id, file)
   return {
     ...state,
     options,
@@ -42,7 +44,7 @@ export const setOutputChannel = async (state, option) => {
   await RendererProcess.invoke(/* viewletSend */ 'Viewlet.send', /* id */ 'Output', /* method */ 'clear')
   // TODO race condition
   // TODO should use invoke
-  await SharedProcess.invoke(/* OutputChannel.open */ 'OutputChannel.open', /* id */ 'Output', /* path */ state.selectedOption)
+  await OutputChannel.open('Output', state.selectedOption)
 }
 
 export const handleData = async (state, data) => {
@@ -66,7 +68,7 @@ export const handleError = async (state, data) => {
 export const dispose = async (state) => {
   state.disposed = true
   // TODO close output channel in shared process
-  await SharedProcess.invoke(/* OutputChannel.close */ 'OutputChannel.close', /* id */ 'Output')
+  await OutputChannel.close('Output')
 }
 
 export const openFindWidget = async (state) => {

@@ -1,17 +1,9 @@
-export const connect = () => {
-  const target = new EventTarget()
-  setInterval(() => {
-    const event = new Event('data', {
-      value: '',
-    })
-    target.dispatchEvent(event)
-  }, 1000)
-  return {
-    on(event, listener) {
-      target.addEventListener(event, listener)
-    },
-    off(event, listener) {
-      target.removeEventListener(event, listener)
-    },
-  }
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+
+export const open = async (id, file) => {
+  await SharedProcess.invoke(/* OutputChannel.open */ 'OutputChannel.open', id, /* path */ file)
+}
+
+export const close = async (id) => {
+  await SharedProcess.invoke(/* OutputChannel.close */ 'OutputChannel.close', /* id */ id)
 }
