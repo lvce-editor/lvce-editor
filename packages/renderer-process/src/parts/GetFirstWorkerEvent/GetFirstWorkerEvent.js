@@ -11,6 +11,7 @@ export const getFirstWorkerEvent = async (worker) => {
       cleanup({ type: FirstWorkerEventType.Message, event })
     }
     const handleFirstError = (event) => {
+      event.preventDefault()
       cleanup({ type: FirstWorkerEventType.Error, event })
     }
     worker.onmessage = handleFirstMessage
