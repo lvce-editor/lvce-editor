@@ -5,7 +5,7 @@ import * as ViewletOutput from '../src/parts/ViewletOutput/ViewletOutput.js'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 
 const getSimpleList = (state) => {
-  return Array.from(state.content.children).map((node) => node.textContent)
+  return state.content.textContent
 }
 
 test('create', () => {
@@ -37,18 +37,18 @@ test('accessibility - should have role log', () => {
   expect($Content.role).toBe('log')
 })
 
-test('append', () => {
+test('setText', () => {
   const state = ViewletOutput.create()
-  ViewletOutput.append(state, 'line 1')
-  expect(getSimpleList(state)).toEqual(['line 1'])
-  ViewletOutput.append(state, 'line 2')
-  expect(getSimpleList(state)).toEqual(['line 1', 'line 2'])
+  ViewletOutput.setText(state, 'line 1')
+  expect(getSimpleList(state)).toBe('line 1')
+  ViewletOutput.setText(state, 'line 1\nline 2')
+  expect(getSimpleList(state)).toBe('line 1\nline 2')
 })
 
 test('clear', () => {
   const state = ViewletOutput.create()
   ViewletOutput.clear(state)
-  expect(getSimpleList(state)).toEqual([])
+  expect(getSimpleList(state)).toBe('')
 })
 
 test('focus', () => {
