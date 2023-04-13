@@ -88,12 +88,18 @@
   inset: 0;
   background: var(--TabActiveForeground);
   -webkit-mask-image: url(/icons/icon-close.svg);
+  mask-image: url(/icons/icon-close.svg);
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
   -webkit-mask-size: 50%;
   mask-size: 50%;
+}
+
+.MainTab.Dirty .EditorTabCloseButton:before {
+  -webkit-mask-image: url(/icons/circle-filled.svg);
+  mask-image: url(/icons/circle-filled.svg);
 }
 
 .EditorTabCloseButton:hover {
