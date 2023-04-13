@@ -256,6 +256,9 @@ const ariaAnnounce = async (message) => {
 
 const append = (parentId, childId, referenceNodes) => {
   const parentInstance = state.instances[parentId]
+  if (!parentInstance) {
+    throw new Error(`instance ${parentId} not found`)
+  }
   const $Parent = parentInstance.state.$Viewlet
   const childInstance = state.instances[childId]
   if (!childInstance) {

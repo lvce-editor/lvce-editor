@@ -366,6 +366,7 @@ const show = async (state, module, currentViewletId) => {
   const width = newPoints[kWidth]
   const height = newPoints[kHeight]
   const uid = state.uid
+  const childUid = Id.create()
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
@@ -379,14 +380,15 @@ const show = async (state, module, currentViewletId) => {
       y,
       width,
       height,
-      parentId: ViewletModuleId.Layout,
+      parentId: uid,
+      uid: childUid,
     },
     false,
     true,
     undefined
   )
   if (commands) {
-    commands.push(['Viewlet.append', uid, moduleId])
+    commands.push(['Viewlet.append', uid, childUid])
   }
   const resizeCommands = getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
@@ -708,7 +710,7 @@ const getFocusChangeCommands = (isFocused) => {
   return commands
 }
 
-const showAsync = async (points, module) => {
+const showAsync = async (uid, points, module) => {
   try {
     const { moduleId, kTop, kLeft, kWidth, kHeight } = module
     const commands = await ViewletManager.load(
@@ -729,7 +731,7 @@ const showAsync = async (points, module) => {
       true
     )
     if (commands) {
-      commands.push(['Viewlet.append', 'Layout', moduleId])
+      commands.push(['Viewlet.append', uid, moduleId])
     }
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     // TODO
@@ -771,7 +773,7 @@ export const handleSashPointerMove = async (state, x, y) => {
     const { kVisible, moduleId } = module
     if (points[kVisible] !== newPoints[kVisible]) {
       if (newPoints[kVisible]) {
-        showAsync(newPoints, module) // TODO avoid side effect
+        showAsync(uid, newPoints, module) // TODO avoid side effect
         const commands = showPlaceholder(uid, newPoints, module)
         allCommands.push(commands)
       } else {
