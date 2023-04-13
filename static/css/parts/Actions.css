@@ -15,4 +15,7 @@
   contain: content;
   color: inherit;
   padding: 2px 23px 2px 8px;
+  background: var(--DropDownBackground, #3c3c3c);
+  color: var(--DropDownForeground, #f0f0f0);
+  border: var(--DropDownBorder);
 }
