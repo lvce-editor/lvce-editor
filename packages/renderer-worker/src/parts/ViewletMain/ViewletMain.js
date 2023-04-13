@@ -473,7 +473,8 @@ const getId = (editor) => {
 
 export const closeAllEditors = async (state) => {
   const ids = state.editors.map(getId)
-  const commands = [['Viewlet.send', ViewletModuleId.Main, 'dispose'], ...ids.flatMap(Viewlet.disposeFunctional)]
+  const uid = state.uid
+  const commands = [['Viewlet.send', uid, 'dispose'], ...ids.flatMap(Viewlet.disposeFunctional)]
   // RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'dispose')
   state.editors = []
   state.focusedIndex = -1
@@ -486,6 +487,9 @@ export const closeAllEditors = async (state) => {
 export const dispose = () => {}
 
 export const closeEditor = async (state, index) => {
+  if (state.editors.length === 0) {
+    return state
+  }
   if (state.editors.length === 1) {
     return closeAllEditors(state)
   }
@@ -514,22 +518,23 @@ export const closeEditor = async (state, index) => {
     //   height: instance.state.height,
     //   columnWidth: COLUMN_WIDTH,
     // })
-    await RendererProcess.invoke(/* Main.closeOneTab */ 'Main.closeOneTab', /* closeIndex */ oldActiveIndex, /* focusIndex */ newActiveIndex)
+    await RendererProcess.invoke(
+      'Viewlet.send',
+      state.uid,
+      /* Main.closeOneTab */ 'closeOneTab',
+      /* closeIndex */ oldActiveIndex,
+      /* focusIndex */ newActiveIndex
+    )
     return state
   }
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ ViewletModuleId.Main,
-    /* method */ 'closeOneTabOnly',
-    /* closeIndex */ index
-  )
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeOneTabOnly', /* closeIndex */ index)
   state.editors.splice(index, 1)
   if (index < state.activeIndex) {
     state.activeIndex--
   }
   state.focusedIndex = state.activeIndex
-
   // TODO just close the tab
+  return state
 }
 
 export const closeFocusedTab = (state) => {

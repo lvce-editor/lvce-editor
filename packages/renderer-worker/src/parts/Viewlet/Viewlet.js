@@ -107,6 +107,7 @@ export const dispose = async (id) => {
     console.info('instance may already be disposed')
     return
   }
+  const instanceUid = instance.state.uid
   // TODO status should have enum
   instance.status = 'disposing'
   try {
@@ -114,9 +115,9 @@ export const dispose = async (id) => {
       throw new Error(`${id} is missing a factory function`)
     }
     instance.factory.dispose(instance.state)
-    await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id)
+    await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
     if (instance.factory.getKeyBindings) {
-      await RendererProcess.invoke('Viewlet.removeKeyBindings', id)
+      await RendererProcess.invoke('Viewlet.removeKeyBindings', instanceUid)
     }
   } catch (error) {
     console.error(error)
