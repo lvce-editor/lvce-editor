@@ -452,7 +452,7 @@ test('loadContent - restore from saved state - error root not found', async () =
 
 test('loadContent - restore from saved state - sort dirents', async () => {
   Workspace.state.workspacePath = '/test'
-  const state = { ...ViewletExplorer.create(), root: '/test'1 }
+  const state = { ...ViewletExplorer.create(1), root: '/test' }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
     switch (uri) {
@@ -576,7 +576,7 @@ test('loadContent - restore from saved state - no saved state exists', async () 
 })
 
 test('loadContent - restore from saved state - error - ENOENT for child folder', async () => {
-  const state = { ...ViewletExplorer.create(), root: '/test'1 }
+  const state = { ...ViewletExplorer.create(1), root: '/test' }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(async (uri) => {
     switch (uri) {
