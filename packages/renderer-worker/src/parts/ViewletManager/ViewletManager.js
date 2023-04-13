@@ -293,6 +293,8 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     throw new Error('viewlet must be empty')
   }
   let state = ViewletState.Default
+  // @ts-ignore
+  const viewletUid = viewlet.uid || Id.create()
   let module
   try {
     viewlet.type = 1
@@ -316,8 +318,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       width = position.width
       height = position.height
     }
-    // @ts-ignore
-    const viewletUid = viewlet.uid || Id.create()
+
     const viewletState = module.create(viewletUid, viewlet.uri, x, y, width, height)
     if (!viewletState.uid) {
       viewletState.uid = viewletUid
@@ -344,11 +345,11 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     if (module.getChildren) {
       const children = module.getChildren(newState)
       for (const child of children) {
+        const childUid = Id.create()
+        const childId = child.id
         try {
-          const childId = child.id
           const childModule = await loadModule(viewlet.getModule, childId)
           // TODO get position of child module
-          const childUid = Id.create()
           const oldState = childModule.create(childUid, '', child.x, child.y, child.width, child.height)
           let instanceSavedState
           if (restore) {
@@ -374,19 +375,19 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           extraCommands.push(...childCommands)
           if (childModule.getKeyBindings) {
             const keyBindings = childModule.getKeyBindings()
-            extraCommands.push(['Viewlet.addKeyBindings', childId, keyBindings])
+            extraCommands.push(['Viewlet.addKeyBindings', childUid, keyBindings])
           }
         } catch (error) {
           const prettyError = await PrettyError.prepare(error)
           PrettyError.print(prettyError)
           await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
-          extraCommands.push([kCreate, ViewletModuleId.Error, viewlet.id])
+          extraCommands.push([kCreate, ViewletModuleId.Error, childUid])
           // @ts-ignore
           if (viewlet.setBounds !== false) {
-            extraCommands.push([kSetBounds, ViewletModuleId.Error, child.x, child.y, child.width, child.height])
+            extraCommands.push([kSetBounds, childUid, child.x, child.y, child.width, child.height])
           }
-          extraCommands.push(['Viewlet.send', /* id */ ViewletModuleId.Error, 'setMessage', /* message */ `${error}`])
-          extraCommands.push([kAppend, viewletUid, ViewletModuleId.Error])
+          extraCommands.push(['Viewlet.send', /* id */ childUid, 'setMessage', /* message */ `${error}`])
+          extraCommands.push([kAppend, viewletUid, childUid])
         }
       }
     }
@@ -503,13 +504,13 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       const parentId = viewlet.parentId
       Assert.string(parentId)
       await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
-      commands.push([kCreate, ViewletModuleId.Error, parentId])
+      commands.push([kCreate, ViewletModuleId.Error, viewletUid])
       // @ts-ignore
       if (viewlet.setBounds !== false) {
-        commands.push([kSetBounds, ViewletModuleId.Error, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
+        commands.push([kSetBounds, viewletUid, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
       }
-      commands.push(['Viewlet.send', /* id */ ViewletModuleId.Error, 'setMessage', /* message */ `${error}`])
-      commands.push([kAppend, parentId, ViewletModuleId.Error])
+      commands.push(['Viewlet.send', /* id */ viewletUid, 'setMessage', /* message */ `${error}`])
+      commands.push([kAppend, parentId, viewletUid])
       return commands
     } catch (error) {
       console.error(error)

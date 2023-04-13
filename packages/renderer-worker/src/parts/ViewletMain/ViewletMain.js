@@ -221,11 +221,11 @@ export const contentLoaded = async (state) => {
   )
   commands.push(...extraCommands)
 
-  if (extraCommands[0].includes(ViewletModuleId.Error)) {
-    commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
-  } else {
-    commands.push(['Viewlet.appendViewlet', state.uid, childUid])
-  }
+  // if (extraCommands[0].includes(ViewletModuleId.Error)) {
+  // commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
+  // } else {
+  commands.push(['Viewlet.appendViewlet', state.uid, childUid])
+  // }
   return commands
 }
 
@@ -281,14 +281,14 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   instance.setBounds = false
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
-  if (commands[0].includes(ViewletModuleId.Error)) {
-    commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
-  } else {
-    commands.push(['Viewlet.appendViewlet', state.uid, instanceUid || id])
-    if (focus) {
-      commands.push(['Viewlet.send', instanceUid || id, 'focus'])
-    }
+  // if (commands[0].includes(ViewletModuleId.Error)) {
+  //   commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
+  // } else {
+  commands.push(['Viewlet.appendViewlet', state.uid, instanceUid || id])
+  if (focus) {
+    commands.push(['Viewlet.send', instanceUid || id, 'focus'])
   }
+  // }
   if (!ViewletStates.hasInstance(id)) {
     return {
       newState: state,

@@ -258,6 +258,9 @@ const append = (parentId, childId, referenceNodes) => {
   const parentInstance = state.instances[parentId]
   const $Parent = parentInstance.state.$Viewlet
   const childInstance = state.instances[childId]
+  if (!childInstance) {
+    throw new Error(`child instance not found ${childId}`)
+  }
   const $Child = childInstance.state.$Viewlet
   if (referenceNodes) {
     // TODO this might be too inefficient
