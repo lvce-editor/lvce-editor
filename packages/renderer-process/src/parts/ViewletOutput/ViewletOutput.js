@@ -1,7 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
-import * as ViewletOutputEvents from './ViewletOutputEvents.js'
 
 const create$Option = (option) => {
   const $Option = document.createElement('option')
@@ -11,10 +10,6 @@ const create$Option = (option) => {
 }
 
 export const create = () => {
-  const $ViewletOutputSelect = document.createElement('select')
-  $ViewletOutputSelect.className = 'ViewletOutputSelect'
-  $ViewletOutputSelect.onchange = ViewletOutputEvents.handleChange
-  $ViewletOutputSelect.ariaLabel = 'Select a log'
   const $ViewletOutputContent = document.createElement('div')
   $ViewletOutputContent.className = 'OutputContent'
   $ViewletOutputContent.role = AriaRoles.Log
@@ -25,19 +20,13 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Output'
   $Viewlet.tabIndex = 0
-  $Viewlet.append($ViewletOutputSelect, $ViewletOutputContent, $ViewletOutputWidgets)
+  $Viewlet.append($ViewletOutputContent, $ViewletOutputWidgets)
   return {
     $Viewlet,
-    select: $ViewletOutputSelect,
-    $Select: $ViewletOutputSelect,
     content: $ViewletOutputContent,
     $Content: $ViewletOutputContent,
     $ViewletOutputContent,
   }
-}
-
-export const setOptions = (state, options) => {
-  state.$Select.append(...options.map(create$Option))
 }
 
 export const setText = (state, text) => {

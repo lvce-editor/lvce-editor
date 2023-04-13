@@ -15,6 +15,10 @@ export const getOptions = async () => {
       name: 'Main',
       file: '/tmp/log-main-process.txt',
     },
+    {
+      name: 'Shared Process',
+      file: '/tmp/log-shared-process.txt',
+    },
     ...channels.map(toExtensionHostOption),
   ]
   return options

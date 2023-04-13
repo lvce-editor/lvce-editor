@@ -13,24 +13,6 @@ test('create', () => {
   expect(state).toBeDefined()
 })
 
-test('setOptions', () => {
-  const state = ViewletOutput.create()
-  ViewletOutput.setOptions(state, [
-    {
-      name: 'Shared Process',
-      file: '/test/log-shared-process.txt',
-    },
-    {
-      name: 'Extension Host',
-      file: '/test/log-extension-host.txt',
-    },
-  ])
-  const { $Select } = state
-  expect($Select.children).toHaveLength(2)
-  expect($Select.children[0].textContent).toBe('Shared Process')
-  expect($Select.children[1].textContent).toBe('Extension Host')
-})
-
 test('accessibility - should have role log', () => {
   const state = ViewletOutput.create()
   const { $Content } = state
