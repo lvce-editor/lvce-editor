@@ -40,12 +40,10 @@ export const setOptions = (state, options) => {
   state.$Select.append(...options.map(create$Option))
 }
 
-export const append = (state, text) => {
+export const setText = (state, text) => {
   Assert.object(state)
   Assert.string(text)
-  const $Line = document.createElement('div')
-  $Line.textContent = text
-  state.content.append($Line)
+  state.content.textContent = text
 }
 
 export const clear = (state) => {

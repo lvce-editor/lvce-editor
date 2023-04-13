@@ -8,6 +8,7 @@ export const create = () => {
     // TODO get list of outputChannels from extension host
     options: [],
     disposed: false,
+    text: '',
   }
 }
 
@@ -45,13 +46,21 @@ export const setOutputChannel = async (state, option) => {
 }
 
 export const handleData = async (state, data) => {
-  console.log({ handleData: data })
-  await RendererProcess.invoke(/* Viewlet.invoke */ 'Viewlet.send', /* id */ 'Output', /* method */ 'append', /* data */ data)
+  const { text } = state
+  const newText = text + data
+  return {
+    ...state,
+    text: newText,
+  }
 }
 
 export const handleError = async (state, data) => {
-  console.log({ handleData: data })
-  await RendererProcess.invoke(/* Viewlet.invoke */ 'Viewlet.send', /* id */ 'Output', /* method */ 'append', /* data */ data)
+  const { text } = state
+  const newText = text + data
+  return {
+    ...state,
+    text: newText,
+  }
 }
 
 export const dispose = async (state) => {
@@ -71,4 +80,15 @@ export const closeFindWidget = async (state) => {}
 //   console.error(error)
 // }
 
-export const render = []
+const renderText = {
+  isEqual(oldState, newState) {
+    return oldState.text === newState.text
+  },
+  apply(oldState, newState) {
+    return ['setText', newState.text]
+  },
+}
+
+export const hasFunctionalRender = true
+
+export const render = [renderText]
