@@ -1,7 +1,6 @@
+import * as OutputChannels from '../OutputChannels/OutputChannels.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as ExtensionHostOutputChannel from '../ExtensionHost/ExtensionHostOutput.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = () => {
   return {
@@ -12,24 +11,8 @@ export const create = () => {
   }
 }
 
-const toExtensionHostOption = (outputChannel) => {
-  return {
-    name: outputChannel.id,
-    file: outputChannel.path,
-  }
-}
-
 export const loadContent = async (state) => {
-  // TODO get list of outputChannels from extension host
-
-  const channels = await ExtensionHostOutputChannel.getOutputChannels()
-  const options = [
-    {
-      name: 'Main',
-      file: '/tmp/log-main.txt',
-    },
-    ...channels.map(toExtensionHostOption),
-  ]
+  const options = await OutputChannels.getOptions()
   const selectedIndex = 0
   // TODO duplicate send here
   await SharedProcess.invoke(/* OutputChannel.open */ 'OutputChannel.open', /* id */ 0, /* path */ options[selectedIndex].file)
@@ -62,6 +45,11 @@ export const setOutputChannel = async (state, option) => {
 }
 
 export const handleData = async (state, data) => {
+  console.log({ handleData: data })
+  await RendererProcess.invoke(/* Viewlet.invoke */ 'Viewlet.send', /* id */ 'Output', /* method */ 'append', /* data */ data)
+}
+
+export const handleError = async (state, data) => {
   console.log({ handleData: data })
   await RendererProcess.invoke(/* Viewlet.invoke */ 'Viewlet.send', /* id */ 'Output', /* method */ 'append', /* data */ data)
 }
