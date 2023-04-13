@@ -29,10 +29,6 @@ export const create = () => {
   }
 }
 
-export const setOptions = (state, options) => {
-  state.$Select.append(...options.map(create$Option))
-}
-
 export const setText = (state, text) => {
   Assert.object(state)
   Assert.string(text)
