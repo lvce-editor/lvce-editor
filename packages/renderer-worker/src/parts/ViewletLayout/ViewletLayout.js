@@ -14,6 +14,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Id from '../Id/Id.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const kWindowWidth = 0
 const kWindowHeight = 1
@@ -669,6 +670,11 @@ const getResizeCommands = (oldPoints, newPoints) => {
   const commands = []
   for (const module of modules) {
     const { kTop, kLeft, kWidth, kHeight, moduleId } = module
+    const instance = ViewletStates.getInstance(moduleId)
+    if (!instance) {
+      continue
+    }
+    const instanceUid = instance.state.uid
     if (!isEqual(oldPoints, newPoints, kTop, kLeft, kWidth, kHeight)) {
       const newTop = newPoints[kTop]
       const newLeft = newPoints[kLeft]
@@ -678,14 +684,14 @@ const getResizeCommands = (oldPoints, newPoints) => {
       Assert.number(newLeft)
       Assert.number(newWidth)
       Assert.number(newHeight)
-      const resizeCommands = Viewlet.resize(moduleId, {
+      const resizeCommands = Viewlet.resize(instanceUid, {
         x: newLeft,
         y: newTop,
         width: newWidth,
         height: newHeight,
       })
       commands.push(...resizeCommands)
-      commands.push(['Viewlet.setBounds', moduleId, newLeft, newTop, newWidth, newHeight])
+      commands.push(['Viewlet.setBounds', instanceUid, newLeft, newTop, newWidth, newHeight])
     }
   }
   return commands

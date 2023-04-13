@@ -264,7 +264,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   instance.uid = instanceUid
   const oldActiveIndex = state.activeIndex
   const temporaryUri = `tmp://${Math.random()}`
-  state.editors.push({ uri: temporaryUri })
+  state.editors.push({ uri: temporaryUri, uid: instanceUid })
   state.activeIndex = state.editors.length - 1
   const tabLabel = Workspace.pathBaseName(uri)
   const tabTitle = getTabTitle(uri)
@@ -702,8 +702,9 @@ export const resize = (state, dimensions) => {
   const editor = editors[0]
   let commands = []
   if (editor) {
-    const id = ViewletMap.getId(editor.uri)
-    commands = Viewlet.resize(id, childDimensions)
+    const editorUid = editor.uid
+    Assert.number(editorUid)
+    commands = Viewlet.resize(editorUid, childDimensions)
   }
   return {
     newState: {

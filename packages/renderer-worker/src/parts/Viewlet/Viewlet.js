@@ -177,6 +177,8 @@ export const disposeFunctional = (id) => {
 export const replace = () => {}
 
 export const resize = (id, dimensions) => {
+  Assert.number(id)
+  Assert.object(dimensions)
   const instance = ViewletStates.getInstance(id)
   if (!instance || !instance.factory || !instance.factory.resize) {
     console.warn('cannot resize', id)
