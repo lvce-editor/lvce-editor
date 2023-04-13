@@ -146,6 +146,15 @@ export const closeOneTab = (state, closeIndex, focusIndex) => {
   $MainTabs.children[focusIndex].ariaSelected = AriaBoolean.True
 }
 
+export const setDirty = (state, index, dirty) => {
+  const { $MainTabs } = state
+  if (dirty) {
+    $MainTabs.children[index].classList.add('Dirty')
+  } else {
+    $MainTabs.children[index].classList.remove('Dirty')
+  }
+}
+
 export const closeOneTabOnly = (state, closeIndex) => {
   const { $MainTabs } = state
   $MainTabs.children[closeIndex].remove()

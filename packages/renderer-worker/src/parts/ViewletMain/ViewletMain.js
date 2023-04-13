@@ -5,6 +5,7 @@ import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
 import * as GetSplitOverlayDimensions from '../GetSplitOverlayDimensions/GetSplitOverlayDimensions.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
@@ -147,12 +148,21 @@ export const saveState = (state) => {
   return { editors, activeIndex }
 }
 
+const handleEditorChange = async (editor) => {
+  const state = ViewletStates.getState(ViewletModuleId.Main)
+  const index = state.activeIndex
+  const command = ['Viewlet.send', ViewletModuleId.Main, 'setDirty', index, true]
+  await RendererProcess.invoke(...command)
+}
+
 export const loadContent = (state, savedState) => {
   // TODO get restored editors from saved state
   const editors = getRestoredEditors(savedState)
   // @ts-ignore
   LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
   const activeIndex = editors.length > 0 ? 0 : -1
+  GlobalEventBus.addListener('editor.change', handleEditorChange)
+
   return {
     ...state,
     editors,
@@ -354,6 +364,8 @@ export const save = async (state) => {
   await saveEditor(editor)
   // TODO handle different types of editors / custom editors / webviews
   // Command.execute(/* EditorSave.editorSave */ 'Editor.save')
+  const command = ['Viewlet.send', ViewletModuleId.Main, 'setDirty', activeIndex, false]
+  await RendererProcess.invoke(...command)
   return state
 }
 
