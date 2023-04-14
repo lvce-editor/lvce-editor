@@ -1,11 +1,10 @@
 import { jest } from '@jest/globals'
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostSourceControl.js', () => {
+jest.unstable_mockModule('../src/parts/SourceControl/SourceControl.js', () => {
   return {
     acceptInput: jest.fn(() => {
       throw new Error('not implemented')
@@ -16,18 +15,24 @@ jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostSourceControl.
     getFileBefore: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    getEnabledProviderIds() {
+      return ['test']
+    },
+    getGroups() {
+      return []
+    },
   }
 })
 
 const ViewletSourceControl = await import('../src/parts/ViewletSourceControl/ViewletSourceControl.js')
 const ViewletSourceControlAcceptInput = await import('../src/parts/ViewletSourceControl/ViewletSourceControlAcceptInput.js')
-const ExtensionHostSourceControl = await import('../src/parts/ExtensionHost/ExtensionHostSourceControl.js')
+const SourceControl = await import('../src/parts/SourceControl/SourceControl.js')
 
 test('acceptInput', async () => {
   // @ts-ignore
-  ExtensionHostSourceControl.acceptInput.mockImplementation(() => {})
-  const state = ViewletSourceControl.create()
-  expect(await ViewletSourceControlAcceptInput.acceptInput(state, 'abc')).toMatchObject({
+  SourceControl.acceptInput.mockImplementation(() => {})
+  const state = { ...ViewletSourceControl.create(), enabledProviderIds: ['test'] }
+  expect(await ViewletSourceControlAcceptInput.acceptInput(state)).toMatchObject({
     inputValue: '',
   })
 })
