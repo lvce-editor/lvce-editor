@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Timeout from '../Timeout/Timeout.js'
 import { VError } from '../VError/VError.js'
-
+import * as Logger from '../Logger/Logger.js'
 // TODO maybe rename to extension host management for clarity
 
 const CONNECTION_TIMEOUT = 3000
@@ -10,15 +10,15 @@ export const create = async (ipc, socket) => {
   Assert.object(socket)
 
   const handleChildProcessError = (error) => {
-    console.error(`[Extension Host] ${error}`)
+    Logger.error(`[Extension Host] ${error}`)
   }
 
   const handleChildProcessExit = (exitCode) => {
-    console.info(`[SharedProcess] Extension Host exited with code ${exitCode}`)
+    Logger.info(`[SharedProcess] Extension Host exited with code ${exitCode}`)
   }
 
   const handleSocketClose = () => {
-    console.info('[shared process] disposing extension host')
+    Logger.info('[shared process] disposing extension host')
     ipc.dispose()
   }
 
