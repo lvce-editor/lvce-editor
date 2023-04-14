@@ -1,4 +1,4 @@
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const create = (id) => {
   return {
@@ -29,7 +29,7 @@ const renderSrc = {
     return oldState.src === newState.src
   },
   apply(oldState, newState) {
-    return [/* method */ 'setSrc', /* src */ newState.src]
+    return [/* method */ RenderMethod.SetSrc, /* src */ newState.src]
   },
 }
 

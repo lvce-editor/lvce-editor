@@ -1,6 +1,7 @@
 import * as OutputChannel from '../OutputChannel/OutputChannel.js'
 import * as OutputChannels from '../OutputChannels/OutputChannels.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const create = () => {
   return {
@@ -87,7 +88,7 @@ const renderText = {
     return oldState.text === newState.text
   },
   apply(oldState, newState) {
-    return ['setText', newState.text]
+    return [RenderMethod.SetText, newState.text]
   },
 }
 
