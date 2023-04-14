@@ -52,6 +52,9 @@ const getIsFirefox = () => {
   return navigator.userAgent.toLowerCase().indexOf('firefox') > -1
 }
 
+/**
+ * @type {boolean}
+ */
 export const isFirefox = getIsFirefox()
 
 export const getExtensionsPath = () => {
