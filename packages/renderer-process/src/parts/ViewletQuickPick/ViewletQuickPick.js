@@ -105,7 +105,6 @@ const render$QuickPickItemIcon = ($QuickPickItem, quickPickItem) => {
 const render$QuickPickItemDescription = ($QuickPickItem, quickPickItem) => {
   const $Label = $QuickPickItem.children[1]
   const $Description = $Label.nextElementSibling
-  console.log({ quickPickItem })
   if (quickPickItem.description) {
     if ($Description) {
       $Description.textContent = quickPickItem.description
