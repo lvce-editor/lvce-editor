@@ -48,3 +48,5 @@ export const TriangleDown = `${assetDir}/icons/triangle-down.svg`
 export const TriangleLeft = `${assetDir}/icons/triangle-left.svg`
 export const TriangleRight = `${assetDir}/icons/triangle-right.svg`
 export const TriangleUp = `${assetDir}/icons/triangle-up.svg`
+export const Trash = `${assetDir}/icons/trash.svg`
+export const SplitHorizontal = `${assetDir}/icons/split-horizontal.svg`
