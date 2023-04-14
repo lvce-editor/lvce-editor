@@ -4,6 +4,7 @@ import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as NormalizeText from '../NormalizeText/NormalizeText.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
+
 // const getTokens = (editor) => {
 //   const tokens = []
 //   const lines = editor.lines
