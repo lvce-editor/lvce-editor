@@ -11,6 +11,7 @@ import * as ViewletPanelEvents from './ViewletPanelEvents.js'
  */
 const UiStrings = {
   Close: 'Close',
+  Maximize: 'Maximize',
 }
 
 const create$PanelTab = (label, index) => {
@@ -52,11 +53,14 @@ export const create = () => {
 
   const $ButtonClose = IconButton.create$Button(UiStrings.Close, Icon.Close)
   $ButtonClose.onclick = ViewletPanelEvents.handleClickClose
+  const $ButtonMaximize = IconButton.create$Button(UiStrings.Maximize, Icon.ChevronUp)
+  // TODO use event delegation
+  $ButtonMaximize.onclick = ViewletPanelEvents.handleClickMaximize
 
   const $PanelToolBar = document.createElement('div')
   $PanelToolBar.className = 'PanelToolBar'
   $PanelToolBar.role = AriaRoles.ToolBar
-  $PanelToolBar.append($ButtonClose)
+  $PanelToolBar.append($ButtonMaximize, $ButtonClose)
 
   const $PanelHeader = document.createElement('div')
   $PanelHeader.className = 'PanelHeader'
