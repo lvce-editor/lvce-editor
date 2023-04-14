@@ -1,7 +1,6 @@
+import * as OutputChannel from '../OutputChannel/OutputChannel.js'
+import * as OutputChannels from '../OutputChannels/OutputChannels.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as ExtensionHostOutputChannel from '../ExtensionHost/ExtensionHostOutput.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = () => {
   return {
@@ -9,30 +8,17 @@ export const create = () => {
     // TODO get list of outputChannels from extension host
     options: [],
     disposed: false,
-  }
-}
-
-const toExtensionHostOption = (outputChannel) => {
-  return {
-    name: outputChannel.id,
-    file: outputChannel.path,
+    text: '',
   }
 }
 
 export const loadContent = async (state) => {
-  // TODO get list of outputChannels from extension host
-
-  const channels = await ExtensionHostOutputChannel.getOutputChannels()
-  const options = [
-    {
-      name: 'Main',
-      file: '/tmp/log-main.txt',
-    },
-    ...channels.map(toExtensionHostOption),
-  ]
+  const options = await OutputChannels.getOptions()
   const selectedIndex = 0
   // TODO duplicate send here
-  await SharedProcess.invoke(/* OutputChannel.open */ 'OutputChannel.open', /* id */ 0, /* path */ options[selectedIndex].file)
+  const id = 0
+  const file = options[selectedIndex].file
+  await OutputChannel.open(id, file)
   return {
     ...state,
     options,
@@ -58,18 +44,31 @@ export const setOutputChannel = async (state, option) => {
   await RendererProcess.invoke(/* viewletSend */ 'Viewlet.send', /* id */ 'Output', /* method */ 'clear')
   // TODO race condition
   // TODO should use invoke
-  await SharedProcess.invoke(/* OutputChannel.open */ 'OutputChannel.open', /* id */ 'Output', /* path */ state.selectedOption)
+  await OutputChannel.open('Output', state.selectedOption)
 }
 
 export const handleData = async (state, data) => {
-  console.log({ handleData: data })
-  await RendererProcess.invoke(/* Viewlet.invoke */ 'Viewlet.send', /* id */ 'Output', /* method */ 'append', /* data */ data)
+  const { text } = state
+  const newText = text + data
+  return {
+    ...state,
+    text: newText,
+  }
+}
+
+export const handleError = async (state, data) => {
+  const { text } = state
+  const newText = text + data
+  return {
+    ...state,
+    text: newText,
+  }
 }
 
 export const dispose = async (state) => {
   state.disposed = true
   // TODO close output channel in shared process
-  await SharedProcess.invoke(/* OutputChannel.close */ 'OutputChannel.close', /* id */ 'Output')
+  await OutputChannel.close('Output')
 }
 
 export const openFindWidget = async (state) => {
@@ -83,4 +82,15 @@ export const closeFindWidget = async (state) => {}
 //   console.error(error)
 // }
 
-export const render = []
+const renderText = {
+  isEqual(oldState, newState) {
+    return oldState.text === newState.text
+  },
+  apply(oldState, newState) {
+    return ['setText', newState.text]
+  },
+}
+
+export const hasFunctionalRender = true
+
+export const render = [renderText]

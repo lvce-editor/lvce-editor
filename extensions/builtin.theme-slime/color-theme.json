@@ -9,6 +9,9 @@
     "BadgeBackground": "#90599b",
     "BadgeForeground": "#eeeeee",
 
+    "DropDownBackground": "#3c3c3c",
+    "DropDownForeground": "#f0f0f0",
+
     "EditorBackGround": "#1e2324",
     "EditorScrollBarBackground": "rgba(57, 71, 71, 0.6)",
     "EditorCursorBackground": "#a8df5a",
