@@ -240,11 +240,12 @@ export const create = () => {
   $QuickPickInput.ariaExpanded = AriaBoolean.True
 
   const $QuickPickHeader = document.createElement('div')
-  $QuickPickHeader.id = Ids.QuickPickHeader
+  $QuickPickHeader.className = 'QuickPickHeader'
   $QuickPickHeader.append($QuickPickInput)
 
   const $QuickPickItems = document.createElement('div')
   $QuickPickItems.id = Ids.QuickPickItems
+  $QuickPickItems.className = 'QuickPickItems'
   $QuickPickItems.role = Roles.ListBox
   $QuickPickItems.onpointerdown = ViewletQuickPickEvents.handlePointerDown
   $QuickPickItems.addEventListener(DomEventType.Wheel, ViewletQuickPickEvents.handleWheel, DomEventOptions.Passive)
@@ -255,6 +256,7 @@ export const create = () => {
 
   const $QuickPick = document.createElement('div')
   $QuickPick.id = Ids.QuickPick
+  $QuickPick.className = 'Viewlet QuickPick'
   // $QuickPick.role= 'dialog'
   $QuickPick.append($QuickPickHeader, $QuickPickItems)
   // $QuickPick.setAttribute('aria-modal', 'false') // TODO why is this
