@@ -1,3 +1,5 @@
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+
 export const hasFunctionalRender = true
 
 const renderTitleBarButtons = {
@@ -5,7 +7,7 @@ const renderTitleBarButtons = {
     return oldState.titleBarButtons === newState.titleBarButtons
   },
   apply(oldState, newState) {
-    return [/* method */ 'setButtons', /* titleBarEntries */ newState.titleBarButtons]
+    return [/* method */ RenderMethod.SetButtons, /* titleBarEntries */ newState.titleBarButtons]
   },
 }
 

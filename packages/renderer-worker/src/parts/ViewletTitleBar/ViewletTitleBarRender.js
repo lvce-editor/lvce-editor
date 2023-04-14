@@ -1,3 +1,5 @@
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+
 export const hasFunctionalRender = true
 
 const renderFocus = {
@@ -5,7 +7,7 @@ const renderFocus = {
     return oldState.isFocused === newState.isFocused
   },
   apply(oldState, newState) {
-    return ['setFocused', newState.isFocused]
+    return [RenderMethod.SetFocused, newState.isFocused]
   },
 }
 

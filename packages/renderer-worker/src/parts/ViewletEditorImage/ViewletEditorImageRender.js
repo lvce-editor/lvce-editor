@@ -1,4 +1,5 @@
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
@@ -7,7 +8,7 @@ const renderSrc = {
     return oldState.src === newState.src
   },
   apply(oldState, newState) {
-    return [/* method */ 'setSrc', /* src */ newState.src]
+    return [/* method */ RenderMethod.SetSrc, /* src */ newState.src]
   },
 }
 
@@ -17,7 +18,7 @@ const renderTransform = {
   },
   apply(oldState, newState) {
     const transform = DomMatrix.toString(newState.domMatrix)
-    return [/* method */ 'setTransform', /* transform */ transform]
+    return [/* method */ RenderMethod.SetTransform, /* transform */ transform]
   },
 }
 
@@ -27,7 +28,7 @@ const renderCursor = {
   },
   apply(oldState, newState) {
     const isDragging = newState.eventCache.length > 0
-    return [/* method */ 'setDragging', /* isDragging */ isDragging]
+    return [/* method */ RenderMethod.SetDragging, /* isDragging */ isDragging]
   },
 }
 const renderErrorMessage = {
@@ -35,7 +36,7 @@ const renderErrorMessage = {
     return oldState.errorMessage === newState.errorMessage
   },
   apply(oldState, newState) {
-    return [/* method */ 'setError', /* errorMessage */ newState.errorMessage]
+    return [/* method */ RenderMethod.SetError, /* errorMessage */ newState.errorMessage]
   },
 }
 
