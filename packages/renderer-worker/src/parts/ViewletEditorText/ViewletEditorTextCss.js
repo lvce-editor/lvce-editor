@@ -1,4 +1,5 @@
 import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
 
 export const Css = ['/css/parts/ViewletEditor.css', '/css/parts/ScrollBar.css']
 
@@ -18,7 +19,11 @@ export const getDynamicCss = (preferences) => {
   }
   const letterSpacing = preferences['editor.letterSpacing']
   if (typeof letterSpacing === 'number') {
-    styles.push(`  --EditorLetterSpacing: ${letterSpacing}px;`)
+    if (SupportsLetterSpacing.supportsLetterSpacing()) {
+      styles.push(`  --EditorLetterSpacing: ${letterSpacing}px;`)
+    } else {
+      styles.push(`  --EditorLetterSpacing: 0px;`)
+    }
   }
   const fontLigatures = preferences['editor.fontLigatures']
   if (fontLigatures) {

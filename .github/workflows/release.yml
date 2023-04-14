@@ -104,8 +104,28 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ${{ env.ASSET_Deb_X64 }}
-          asset_name: ${{ env.ASSET_Deb_X64 }}
+          asset_path: ${{ env.ASSET_DMG_X64 }}
+          asset_name: ${{ env.ASSET_DMG_X64 }}
+          asset_content_type: application/octet-stream
+      - name: Build Electron App (Macos dmg, x64)
+        if: matrix.os == 'macos-12'
+        run: node build/bin/build.js --product=lvce --target=electron-builder-mac
+      - name: Rename Electron App (Macos dmg, x64)
+        if: matrix.os == 'macos-12'
+        shell: bash
+        run: |
+          staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.dmg"
+          mv "build/.tmp/releases/lvce-amd64.dmg" "$staging"
+          echo "ASSET_DMG_X64=$staging" >> $GITHUB_ENV
+      - name: Release Electron App (Macos dmg, x64)
+        uses: actions/upload-release-asset@v1.0.1
+        if: matrix.os == 'macos-12'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.ASSET_DMG_X64 }}
+          asset_name: ${{ env.ASSET_DMG_X64 }}
           asset_content_type: application/octet-stream
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2022'

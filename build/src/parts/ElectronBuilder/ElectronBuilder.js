@@ -106,7 +106,7 @@ const getFinalFileName = ({ config, version, product }) => {
     case ElectronBuilderConfigType.Snap:
       return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.snap`
     case ElectronBuilderConfigType.Mac:
-      return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.dmg`
+      return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.dmg`
     case ElectronBuilderConfigType.AppImage:
       return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.AppImage`
     default:
