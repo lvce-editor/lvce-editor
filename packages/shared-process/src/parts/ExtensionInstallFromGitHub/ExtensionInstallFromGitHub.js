@@ -24,6 +24,7 @@ export const install = async ({ user, repo, branch }) => {
     }
     const outDir = Path.join(extensionsPath, id)
     await FileSystem.remove(outDir)
+    await FileSystem.mkdir(extensionsPath)
     await FileSystem.rename(cachedExtensionPath, outDir)
   } catch (error) {
     throw new VError(error, `Failed to install ${user}/${repo}`)
