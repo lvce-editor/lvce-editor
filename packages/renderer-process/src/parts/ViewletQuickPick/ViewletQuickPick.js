@@ -36,7 +36,7 @@ const activeId = 'QuickPickItemActive'
  * @enum {string}
  */
 const ClassNames = {
-  Label: 'Label',
+  Label: 'QuickPickLabel',
   QuickPickItem: 'QuickPickItem',
   Icon: 'Icon',
   QuickPickItemDescription: 'QuickPickItemDescription',
@@ -102,9 +102,31 @@ const render$QuickPickItemIcon = ($QuickPickItem, quickPickItem) => {
   $QuickPickItem.children[0].className = `FileIcon${quickPickItem.icon}`
 }
 
+const render$QuickPickItemDescription = ($QuickPickItem, quickPickItem) => {
+  const $Label = $QuickPickItem.children[1]
+  const $Description = $Label.nextElementSibling
+  if (quickPickItem.description) {
+    if ($Description) {
+      $Description.textContent = quickPickItem.description
+    } else {
+      const $Description = document.createElement('div')
+      $Description.className = ClassNames.QuickPickItemDescription
+      $Description.textContent = quickPickItem.description
+      $Label.after($Description)
+    }
+  } else {
+    if ($Description) {
+      $Description.remove()
+    }
+  }
+
+  $QuickPickItem.children[0].className = `FileIcon${quickPickItem.icon}`
+}
+
 const render$QuickPickItemEqual = ($QuickPickItem, quickPickItem) => {
   render$QuickPickItemLabel($QuickPickItem, quickPickItem)
   render$QuickPickItemIcon($QuickPickItem, quickPickItem)
+  render$QuickPickItemDescription($QuickPickItem, quickPickItem)
 }
 
 const render$QuickPickItemMore = ($QuickPickItem, quickPickItem) => {

@@ -112,3 +112,11 @@
 .Iconundefined {
   display: none;
 }
+
+.QuickPickLabel {
+  white-space: nowrap;
+  contain: content;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
