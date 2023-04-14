@@ -70,6 +70,7 @@ test('loadContent - one restored editor', async () => {
       editors: [
         {
           uri: '/test/some-file.txt',
+          uid: 1,
         },
       ],
       activeIndex: 0,
@@ -79,6 +80,7 @@ test('loadContent - one restored editor', async () => {
     editors: [
       {
         uri: '/test/some-file.txt',
+        uid: 1,
       },
     ],
     focusedIndex: -1,
