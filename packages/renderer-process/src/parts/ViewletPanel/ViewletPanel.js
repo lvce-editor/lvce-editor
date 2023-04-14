@@ -87,20 +87,6 @@ export const setTabs = (state, tabs) => {
   $PanelTabs.append(...tabs.map(create$PanelTab))
 }
 
-export const appendViewlet = (state, name, $Viewlet) => {
-  Assert.object(state)
-  Assert.string(name)
-  Assert.object($Viewlet)
-  // TODO is it a problem that the id is duplicated for a short amount of time here?
-  $Viewlet.id = 'PanelContent'
-  if (state.$PanelContent) {
-    state.$PanelContent.replaceWith($Viewlet)
-  } else {
-    state.$Panel.append($Viewlet)
-  }
-  state.$PanelContent = $Viewlet
-}
-
 // TODO add test for focus method
 export const focus = (state) => {
   Assert.object(state)
