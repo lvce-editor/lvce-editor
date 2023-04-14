@@ -127,6 +127,7 @@
   width: 42px;
   height: 42px;
   flex-shrink: 0;
+  pointer-events: none;
 }
 
 .ExtensionListItemName {
