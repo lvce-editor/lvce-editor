@@ -1,15 +1,17 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Workspace from '../Workspace/Workspace.js'
+import * as Assert from '../Assert/Assert.js'
 import * as Id from '../Id/Id.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO implement a functional terminal component, maybe using offscreencanvas
 
-export const create = () => {
+export const create = (id) => {
+  Assert.number(id)
   return {
     disposed: false,
     id: 0,
+    uid: id,
   }
 }
 
@@ -26,9 +28,10 @@ export const contentLoadedEffects = async (state) => {
 }
 
 export const handleData = async (state, data) => {
+  const uid = state.uid
   // Terminal.handleData(state, data)
   const parsedData = new Uint8Array(data.data)
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ 'Terminal', /* method */ 'write', /* data */ parsedData)
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ uid, /* method */ 'write', /* data */ parsedData)
 }
 
 export const write = async (state, input) => {
