@@ -23,3 +23,11 @@ test('colon', () => {
 test('semicolon', () => {
   expect(IsAscii.isAscii(';')).toBe(true)
 })
+
+test('underscore', () => {
+  expect(IsAscii.isAscii('_')).toBe(true)
+})
+
+test('empty string', () => {
+  expect(IsAscii.isAscii('')).toBe(true)
+})
