@@ -6,7 +6,6 @@ import * as Icon from '../Icon/Icon.js'
 import * as MarkDown from '../Markdown/Markdown.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 
@@ -87,52 +86,3 @@ export const resize = (state, dimensions) => {
     size,
   }
 }
-
-export const hasFunctionalRender = true
-
-const renderName = {
-  isEqual(oldState, newState) {
-    return oldState.name === newState.name
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetName, /* name */ newState.name]
-  },
-}
-
-const renderDescription = {
-  isEqual(oldState, newState) {
-    return oldState.description === newState.description
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetDescription, /* description */ newState.description]
-  },
-}
-
-const renderReadme = {
-  isEqual(oldState, newState) {
-    return oldState.sanitizedReadmeHtml === newState.sanitizedReadmeHtml
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetReadmeHtml, /* sanizedHtml */ newState.sanitizedReadmeHtml]
-  },
-}
-
-const renderIcon = {
-  isEqual(oldState, newState) {
-    return oldState.iconSrc === newState.iconSrc
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetIconSrc, /* src */ newState.iconSrc]
-  },
-}
-
-const renderSize = {
-  isEqual(oldState, newState) {
-    return oldState.size === newState.size
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetSize, /* oldSize */ oldState.size, /* newSize */ newState.size]
-  },
-}
-
-export const render = [renderName, renderReadme, renderDescription, renderIcon, renderSize]
