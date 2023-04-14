@@ -10,6 +10,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
+import * as Character from '../Character/Character.js'
 
 export const state = {
   workspacePath: '',
@@ -200,7 +201,11 @@ export const pathBaseName = (path) => {
 // TODO this should be in FileSystem module
 export const pathDirName = (path) => {
   const pathSeparator = state.pathSeparator
-  return path.slice(0, path.lastIndexOf(pathSeparator))
+  const index = path.lastIndexOf(pathSeparator)
+  if (index === -1) {
+    return Character.EmptyString
+  }
+  return path.slice(0, index)
 }
 
 export const getAbsolutePath = (relativePath) => {
