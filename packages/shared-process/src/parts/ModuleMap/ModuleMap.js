@@ -106,7 +106,8 @@ export const getModuleId = (commandId) => {
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':
       return ModuleId.IsAutoUpdateSupported
     case 'Native.openFolder':
-      return ModuleId.Native
+    case 'OpenNativeFolder.openFolder':
+      return ModuleId.OpenNativeFolder
     case 'OutputChannel.close':
     case 'OutputChannel.open':
       return ModuleId.OutputChannel
