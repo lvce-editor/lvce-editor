@@ -84,7 +84,7 @@ test('setPicks - with icons', () => {
   ])
   const { $QuickPickItems } = state
   expect($QuickPickItems.children).toHaveLength(2)
-  expect($QuickPickItems.children[0].innerHTML).toBe('<i class="FileIcon_file"></i><div class="QuickPickLabel">file-1.txt</div>')
+  expect($QuickPickItems.children[0].innerHTML).toBe('<i class="FileIcon FileIcon_file"></i><div class="QuickPickLabel">file-1.txt</div>')
 })
 
 test('accessibility - QuickPick should have aria label', () => {
