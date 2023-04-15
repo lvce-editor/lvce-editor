@@ -14,7 +14,7 @@ const UiStrings = {
 
 exports.showAbout = async () => {
   const detail = GetAboutDetailString.getDetailString()
-  const result = await ElectronDialog.showMessageBox(Platform.productName, [UiStrings.Copy, UiStrings.Ok], ElectronMessageBoxType.Info, detail)
+  const result = await ElectronDialog.showMessageBox(Platform.productNameLong, [UiStrings.Copy, UiStrings.Ok], ElectronMessageBoxType.Info, detail)
   switch (result) {
     case 0:
       ElectronClipBoard.writeText(detail)

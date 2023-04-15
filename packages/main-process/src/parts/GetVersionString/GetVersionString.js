@@ -9,7 +9,7 @@ const getName = (object) => {
 const getVersions = () => {
   return [
     {
-      name: Platform.productName,
+      name: Platform.productNameLong,
       version: Platform.version,
     },
     {

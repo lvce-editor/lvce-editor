@@ -39,7 +39,7 @@ exports.showMessageBox = async (message, buttons, type = ElectronMessageBoxType.
   if (message.message) {
     message = message.message
   }
-  const productName = Platform.productName
+  const productName = Platform.productNameLong
   const result = await Electron.dialog.showMessageBox(focusedWindow, {
     type,
     message,
