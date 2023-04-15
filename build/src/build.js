@@ -1,6 +1,7 @@
 import minimist from 'minimist'
-import * as Process from './parts/Process/Process.js'
+import * as ExitCode from './parts/ExitCode/ExitCode.js'
 import * as Logger from './parts/Logger/Logger.js'
+import * as Process from './parts/Process/Process.js'
 
 const getProduct = (productName) => {
   switch (productName) {
@@ -51,7 +52,7 @@ const getBuildModule = (target) => {
       return import('./parts/ElectronBuilderAppImage/ElectronBuilderAppImage.js')
     default:
       Logger.info(`unknown target "${target}"`)
-      Process.exit(1)
+      Process.exit(ExitCode.Error)
   }
 }
 
@@ -63,7 +64,7 @@ const main = async () => {
   if (!target) {
     console.error('Error: target not specified')
     console.error(`Hint: Try using "node build.js --target=static"`)
-    Process.exit(1)
+    Process.exit(ExitCode.Error)
   }
   const product = await getProduct(argv.product)
   const module = await getBuildModule(target)
@@ -72,7 +73,7 @@ const main = async () => {
   } catch (error) {
     console.error(`Build failed:`)
     console.error(error)
-    Process.exit(1)
+    Process.exit(ExitCode.Error)
   }
 }
 

@@ -7,8 +7,9 @@ import pMap from 'p-map'
 import tar from 'tar-fs'
 import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
-import * as Process from '../Process/Process.js'
+import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Path from '../Path/Path.js'
+import * as Process from '../Process/Process.js'
 import extensions from './builtinExtensions.json' assert { type: 'json' }
 
 const downloadUrl = async (url, outFile) => {
@@ -98,7 +99,7 @@ const main = async () => {
     await downloadExtensions(extensions)
   } catch (error) {
     printError(error)
-    Process.exit(1)
+    Process.exit(ExitCode.Error)
   }
 }
 

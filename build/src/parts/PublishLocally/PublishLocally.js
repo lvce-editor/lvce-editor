@@ -1,5 +1,6 @@
 import * as os from 'node:os'
 import * as Exec from '../Exec/Exec.js'
+import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
@@ -78,7 +79,7 @@ const main = async () => {
   Logger.info('published packages successfully')
 
   if (!Process.argv.includes('--wait')) {
-    Process.exit(0)
+    Process.exit(ExitCode.Success)
   }
 }
 
