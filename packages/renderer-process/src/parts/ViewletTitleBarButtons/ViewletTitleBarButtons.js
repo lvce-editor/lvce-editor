@@ -5,7 +5,7 @@ const create$TitleBarButton = (id, icon, label) => {
   $Icon.className = `MaskIcon ${icon}`
 
   const $TitleBarButton = document.createElement('button')
-  $TitleBarButton.className = 'TitleBarButton'
+  $TitleBarButton.className = `TitleBarButton TitleBarButton${id}`
   $TitleBarButton.id = `TitleBarButton${id}`
   $TitleBarButton.ariaLabel = label
   $TitleBarButton.append($Icon)
@@ -13,22 +13,13 @@ const create$TitleBarButton = (id, icon, label) => {
 }
 
 export const create = () => {
-  const $ButtonMinimize = create$TitleBarButton(
-    'Minimize',
-    'Minimize',
-    'Minimize'
-  )
-  const $ButtonToggleMaximize = create$TitleBarButton(
-    'ToggleMaximize',
-    'ToggleMaximize',
-    'Toggle Maximize'
-  )
+  const $ButtonMinimize = create$TitleBarButton('Minimize', 'Minimize', 'Minimize')
+  const $ButtonToggleMaximize = create$TitleBarButton('ToggleMaximize', 'ToggleMaximize', 'Toggle Maximize')
   const $ButtonClose = create$TitleBarButton('Close', 'Close', 'Close')
 
   const $TitleBarButtons = document.createElement('div')
-  $TitleBarButtons.id = 'TitleBarButtons'
-  $TitleBarButtons.onmousedown =
-    ViewletTitleBarButtonEvents.handleTitleBarButtonsClick
+  $TitleBarButtons.className = 'TitleBarButtons'
+  $TitleBarButtons.onmousedown = ViewletTitleBarButtonEvents.handleTitleBarButtonsClick
   $TitleBarButtons.append($ButtonMinimize, $ButtonToggleMaximize, $ButtonClose)
   return {
     $TitleBarButtons,
