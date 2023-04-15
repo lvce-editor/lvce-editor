@@ -1,5 +1,6 @@
 import { basename, join } from 'node:path'
 import * as rollup from 'rollup'
+import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Process from '../Process/Process.js'
 
 /**
@@ -28,7 +29,7 @@ export const bundleJs = async ({ cwd, from, platform, exclude, minify = false, c
         } else {
           console.error(`RollupError: Cyclic dependency detected`)
           console.error(message.message)
-          Process.exit(1)
+          Process.exit(ExitCode.Error)
         }
       } else {
         console.error(message.message)
