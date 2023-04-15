@@ -1,9 +1,8 @@
+const ElectronClipBoard = require('../ElectronClipBoard/ElectronClipBoard.js')
 const ElectronDialog = require('../ElectronDialog/ElectronDialog.js')
 const ElectronMessageBoxType = require('../ElectronMessageBoxType/ElectronMessageBoxType.js')
-const Process = require('../Process/Process.js')
+const GetAboutDetailString = require('../GetAboutDetailString/GetAboutDetailString.js')
 const Platform = require('../Platform/Platform.js')
-const ElectronClipBoard = require('../ElectronClipBoard/ElectronClipBoard.js')
-const JoinLines = require('../JoinLines/JoinLines.js')
 
 /**
  * @enum {string}
@@ -13,26 +12,8 @@ const UiStrings = {
   Copy: 'Copy',
 }
 
-const getDetailString = () => {
-  const electronVersion = Process.getElectronVersion()
-  const nodeVersion = Process.getNodeVersion()
-  const chromeVersion = Process.getChromeVersion()
-  const { version, commit } = Platform
-  const v8Version = Process.getV8Version()
-
-  const lines = [
-    `Version: ${version}`,
-    `Commit: ${commit}`,
-    `Electron: ${electronVersion}`,
-    `Chromium: ${chromeVersion}`,
-    `Node: ${nodeVersion}`,
-    `V8: ${v8Version}`,
-  ]
-  return JoinLines.joinLines(lines)
-}
-
 exports.showAbout = async () => {
-  const detail = getDetailString()
+  const detail = GetAboutDetailString.getDetailString()
   const result = await ElectronDialog.showMessageBox(Platform.productName, [UiStrings.Copy, UiStrings.Ok], ElectronMessageBoxType.Info, detail)
   switch (result) {
     case 0:
