@@ -1,4 +1,5 @@
 import { Tail } from 'tail'
+import { VError } from '../VError/VError.js'
 
 // TODO
 // option 1: use tail child process
@@ -31,7 +32,11 @@ export const open = (path, onData, onError) => {
 }
 
 export const dispose = (state) => {
-  if (state.tail) {
-    state.tail.unwatch()
+  try {
+    if (state.tail) {
+      state.tail.unwatch()
+    }
+  } catch (error) {
+    throw new VError(error, `Failed to dispose output channel`)
   }
 }
