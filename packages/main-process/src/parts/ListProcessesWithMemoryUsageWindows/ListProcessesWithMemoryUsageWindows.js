@@ -3,6 +3,7 @@
 const { VError } = require('verror')
 const ListProcessGetName = require('../ListProcessGetName/ListProcessGetName.js')
 const WindowsProcessTree = require('../WindowsProcessTree/WindowsProcessTree.js')
+const WindowsProcessTreeDataFlag = require('../WindowsProcessTreeDataFlag/WindowsProcessTreeDataFlag.js')
 
 /**
  * @param {import('windows-process-tree').IProcessCpuInfo} item
@@ -33,17 +34,11 @@ const toResult = (completeProcessList, rootPid) => {
 
 exports.listProcessesWithMemoryUsage = async (rootPid) => {
   try {
-    const processList = await WindowsProcessTree.getProcessList(
-      rootPid,
-      WindowsProcessTree.ProcessDataFlag.CommandLine |
-        WindowsProcessTree.ProcessDataFlag.Memory
-    )
+    const processList = await WindowsProcessTree.getProcessList(rootPid, WindowsProcessTreeDataFlag.CommandLine | WindowsProcessTreeDataFlag.Memory)
     if (!processList) {
       throw new VError(`Root process ${rootPid} not found`)
     }
-    const completeProcessList = await WindowsProcessTree.addCpuUsage(
-      processList
-    )
+    const completeProcessList = await WindowsProcessTree.addCpuUsage(processList)
     const result = toResult(completeProcessList, rootPid)
     return result
   } catch (error) {
