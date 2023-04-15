@@ -114,6 +114,18 @@ const ErrorCodes = {
   ENOENT: 'ENOENT',
   EADDRINUSE: 'EADDRINUSE',
 }
+
+/**
+ * @enum {number}
+ */
+const StatusCode = {
+  NotFound: 404,
+  ServerError: 500,
+  Ok: 200,
+  MultipleChoices: 300,
+  NotModified: 304,
+}
+
 const getPath = (url) => {
   return url.split(/[?#]/)[0]
 }
@@ -140,7 +152,7 @@ const serveStatic = (root, skip = '') =>
     }
     const etag = `W/"${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}"`
     if (req.headers['if-none-match'] === etag) {
-      res.writeHead(304)
+      res.writeHead(StatusCode.NotModified)
       return res.end()
     }
     const cachingHeader = isImmutable && root === STATIC ? 'public, max-age=31536000, immutable' : ''
@@ -160,7 +172,7 @@ const serveStatic = (root, skip = '') =>
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
     }
-    res.writeHead(200, headers)
+    res.writeHead(StatusCode.Ok, headers)
     try {
       await pipeline(createReadStream(filePath), res)
     } catch (error) {
@@ -170,7 +182,7 @@ const serveStatic = (root, skip = '') =>
       }
       // @ts-ignore
       if (error && error.code === ErrorCodes.EISDIR) {
-        res.writeHead(404)
+        res.writeHead(StatusCode.NotFound)
         res.end()
         return
       }
@@ -189,7 +201,7 @@ const serve404 = () =>
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
     }
-    res.writeHead(404, headers)
+    res.writeHead(StatusCode.NotFound, headers)
     return res.end('Not found')
   }
 
@@ -288,7 +300,7 @@ const serveTests = async (req, res, next) => {
   const parsedUrl = parseUrl(req.url || '')
   const pathName = parsedUrl.pathname || ''
   if (pathName.endsWith('.html')) {
-    res.writeHead(200, {
+    res.writeHead(StatusCode.Ok, {
       'Content-Type': 'text/html',
       [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
       [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
@@ -303,12 +315,12 @@ const serveTests = async (req, res, next) => {
       }
       // @ts-ignore
       if (error && error.code === ErrorCodes.EISDIR) {
-        res.statusCode = 404
+        res.statusCode = StatusCode.NotFound
         res.end()
         return
       }
       console.info('failed to send request', error)
-      res.statusCode = 500
+      res.statusCode = StatusCode.ServerError
       // TODO escape error html
       res.end(`${error}`)
     }
@@ -321,17 +333,17 @@ const serveTests = async (req, res, next) => {
     try {
       const testOverview = await createTestOverview(testPathSrc)
       res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate')
-      res.statusCode = 300
+      res.statusCode = StatusCode.MultipleChoices
       res.end(testOverview)
     } catch (error) {
       // @ts-ignore
       if (error && error.code === ErrorCodes.ENOENT) {
-        res.statusCode = 404
+        res.statusCode = StatusCode.NotFound
         // TODO escape path for html
         res.end(`No test files found at ${testPathSrc}`)
         return
       }
-      res.statusCode = 500
+      res.statusCode = StatusCode.ServerError
       // TODO escape error html
       res.end(`${error}`)
     }
@@ -388,12 +400,12 @@ const sendFile = async (path, res) => {
     }
     // @ts-ignore
     if (error && error.code === ErrorCodes.EISDIR) {
-      res.statusCode = 404
+      res.statusCode = StatusCode.NotFound
       res.end()
       return
     }
     console.info('failed to send request', error)
-    res.statusCode = 500
+    res.statusCode = StatusCode.ServerError
     // TODO escape error html
     res.end(`${error}`)
   }
@@ -405,7 +417,7 @@ const serveConfig = async (req, res, next) => {
   const pathName = parsedUrl.pathname || ''
   if (pathName === '/config/languages.json') {
     const languagesJson = await getLanguagesJson()
-    res.statusCode = 200
+    res.statusCode = StatusCode.Ok
     res.end(JSON.stringify(languagesJson, null, 2))
     return
   }
