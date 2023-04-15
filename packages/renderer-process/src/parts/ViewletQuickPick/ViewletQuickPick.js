@@ -91,7 +91,7 @@ const render$QuickPickItemLabel = ($QuickPickItem, quickPickItem) => {
 }
 
 const render$QuickPickItemIcon = ($QuickPickItem, quickPickItem) => {
-  $QuickPickItem.children[0].className = `FileIcon${quickPickItem.icon}`
+  $QuickPickItem.children[0].className = `FileIcon FileIcon${quickPickItem.icon}`
 }
 
 const render$QuickPickItemDescription = ($QuickPickItem, quickPickItem) => {
@@ -111,8 +111,6 @@ const render$QuickPickItemDescription = ($QuickPickItem, quickPickItem) => {
       $Description.remove()
     }
   }
-
-  $QuickPickItem.children[0].className = `FileIcon${quickPickItem.icon}`
 }
 
 const render$QuickPickItemEqual = ($QuickPickItem, quickPickItem) => {
