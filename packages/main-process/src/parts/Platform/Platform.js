@@ -2,19 +2,19 @@ const { join } = require('node:path')
 const { tmpdir, homedir } = require('node:os')
 const Root = require('../Root/Root.js')
 
-exports.isLinux = process.platform === 'linux'
+const { env, platform } = process
 
-exports.isMacOs = process.platform === 'darwin'
+exports.isLinux = platform === 'linux'
 
-exports.isWindows = process.platform === 'win32'
+exports.isMacOs = platform === 'darwin'
+
+exports.isWindows = platform === 'win32'
 
 exports.isProduction = false
 
 exports.isArchLinux = false
 
 const homeDirectory = homedir()
-
-const { env } = process
 
 exports.applicationName = 'lvce-oss'
 
@@ -65,6 +65,7 @@ exports.getUserSettingsPath = () => {
 exports.getPreloadUrl = () => {
   return join(Root.root, 'packages', 'main-process', 'src', 'preload.js')
 }
+
 exports.getChromeExtensionsPath = () => {
   return join(dataDir, 'electron-browser-view-chrome-extensions')
 }
