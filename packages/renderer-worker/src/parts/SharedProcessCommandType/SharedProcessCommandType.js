@@ -16,7 +16,7 @@ export const FileSystemWriteFile = 'FileSystem.writeFile'
 
 export const InstallExtensionInstallExtension = 'InstallExtension.installExtension'
 
-export const NativeOpenFolder = 'Native.openFolder'
+export const OpenNativeFolder = 'OpenNativeFolder.openFolder'
 
 export const PreferencesGetAll = 'Preferences.getAll'
 

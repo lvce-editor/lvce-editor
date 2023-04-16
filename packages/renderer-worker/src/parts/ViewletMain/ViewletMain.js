@@ -9,6 +9,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -154,6 +155,7 @@ export const saveState = (state) => {
 const handleEditorChange = async (editor) => {
   const state = ViewletStates.getState(ViewletModuleId.Main)
   const index = state.activeIndex
+  Assert.number(index)
   const command = ['Viewlet.send', ViewletModuleId.Main, 'setDirty', index, true]
   await RendererProcess.invoke(...command)
 }
@@ -628,6 +630,16 @@ export const focusNext = (state) => {
 
 export const handleTabClick = (state, index) => {
   return focusIndex(state, index)
+}
+
+export const handleFocusChange = (state, isFocused) => {
+  if (!isFocused) {
+    const autoSavePreference = Preferences.get('files.autoSave')
+    if (autoSavePreference === 'onFocusChange') {
+      return save(state)
+    }
+  }
+  return state
 }
 
 export const closeOthers = async (state) => {

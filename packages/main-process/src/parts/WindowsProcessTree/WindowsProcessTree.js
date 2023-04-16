@@ -39,9 +39,3 @@ exports.addCpuUsage = (processList) => {
     WindowsProcessTree.getProcessCpuUsage(processList, resolve)
   })
 }
-
-exports.ProcessDataFlag = {
-  None: 0,
-  Memory: 1,
-  CommandLine: 2,
-}

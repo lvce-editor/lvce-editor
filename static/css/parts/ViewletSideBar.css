@@ -1,11 +1,11 @@
-#SideBar {
+.SideBar {
   color: var(--SideBarForeground, white);
   display: flex;
   flex-direction: column;
   position: absolute;
 }
 
-#SideBarTitleArea {
+.SideBarTitleArea {
   contain: strict;
   padding: 0 8px;
   line-height: 35px;
@@ -14,7 +14,7 @@
   grid-template-columns: auto 1fr;
 }
 
-#SideBarTitleAreaTitle {
+.SideBarTitleAreaTitle {
   font-size: 11px;
   cursor: default;
   font-weight: 400;
@@ -27,11 +27,11 @@
 }
 
 /* TODO */
-#SideBarTitleAreaButtons {
+.SideBarTitleAreaButtons {
   display: none;
 }
 
-#SideBarContent {
+.SideBarContent {
   contain: strict;
   /* padding: 10px; */
   /* height: 100%; */

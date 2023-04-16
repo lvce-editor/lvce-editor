@@ -1,18 +1,19 @@
 const { spawn } = require('node:child_process')
-const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
-const Platform = require('../Platform/Platform.js')
-const Debug = require('../Debug/Debug.js')
-const Performance = require('../Performance/Performance.js')
 const Cli = require('../Cli/Cli.js')
-const HandleMessagePort = require('../HandleMessagePort/HandleMessagePort.js')
+const Debug = require('../Debug/Debug.js')
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
-const ElectronProtocol = require('../ElectronProtocol/ElectronProtocol.js')
-const ElectronIpcMain = require('../ElectronIpcMain/ElectronIpcMain.js')
+const ElectronAppEventType = require('../ElectronAppEventType/ElectronAppEventType.js')
 const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
 const ElectronAppListeners = require('../ElectronAppListeners/ElectronAppListeners.js')
+const ElectronIpcMain = require('../ElectronIpcMain/ElectronIpcMain.js')
+const ElectronProtocol = require('../ElectronProtocol/ElectronProtocol.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
-const Process = require('../Process/Process.js')
+const HandleMessagePort = require('../HandleMessagePort/HandleMessagePort.js')
+const Performance = require('../Performance/Performance.js')
 const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
+const Platform = require('../Platform/Platform.js')
+const Process = require('../Process/Process.js')
+const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
 // const handleAppReady = async () => {
@@ -94,10 +95,11 @@ exports.hydrate = async () => {
   ElectronIpcMain.on('port', HandleMessagePort.handlePort)
 
   // app
-  ElectronApp.on('window-all-closed', ElectronAppListeners.handleWindowAllClosed)
-  ElectronApp.on('before-quit', ElectronAppListeners.handleBeforeQuit)
+  ElectronApp.on(ElectronAppEventType.WindowAllClosed, ElectronAppListeners.handleWindowAllClosed)
+  ElectronApp.on(ElectronAppEventType.BeforeQuit, ElectronAppListeners.handleBeforeQuit)
+  ElectronApp.on(ElectronAppEventType.WebContentsCreated, ElectronAppListeners.handleWebContentsCreated)
   // Electron.app.on('ready', handleAppReady)
-  ElectronApp.on('second-instance', ElectronAppListeners.handleSecondInstance)
+  ElectronApp.on(ElectronAppEventType.SecondInstance, ElectronAppListeners.handleSecondInstance)
   await ElectronApp.whenReady()
   Performance.mark(PerformanceMarkerType.AppReady)
 

@@ -10,6 +10,9 @@ export const create = (id, uri, x, y, width, height) => {
     height,
     titleBarIconWidth: 30,
     isFocused: false,
+    titleBarIconEnabled: true,
+    titleBarMenuBarEnabled: true,
+    titleBarButtonsEnabled: true,
   }
 }
 
@@ -26,15 +29,15 @@ export const handleFocusChange = (state, isFocused) => {
 
 export const getChildren = (state) => {
   const children = []
-  const { x, y, width, height, titleBarIconWidth } = state
+  const { x, y, width, height, titleBarIconWidth, titleBarIconEnabled, titleBarMenuBarEnabled, titleBarButtonsEnabled } = state
   let menuBarX = x
-  if (true) {
+  if (titleBarIconEnabled) {
     children.push({
       id: ViewletModuleId.TitleBarIcon,
     })
     menuBarX += titleBarIconWidth
   }
-  if (true) {
+  if (titleBarMenuBarEnabled) {
     children.push({
       id: ViewletModuleId.TitleBarMenuBar,
       x: menuBarX,
@@ -42,7 +45,7 @@ export const getChildren = (state) => {
       height,
     })
   }
-  if (true) {
+  if (titleBarButtonsEnabled) {
     children.push({
       id: ViewletModuleId.TitleBarButtons,
     })

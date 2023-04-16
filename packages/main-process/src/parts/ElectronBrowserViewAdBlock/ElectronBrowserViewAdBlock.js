@@ -2,6 +2,7 @@ const Electron = require('electron')
 const { readFileSync } = require('node:fs')
 const { join } = require('node:path')
 const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.js')
+const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
 const HttpMethod = require('../HttpMethod/HttpMethod.js')
 
 const getBeforeRequestResponseMainFrame = (method, url) => {
@@ -125,5 +126,5 @@ const handleDidNavigate = (event) => {
  * @param {Electron.WebContents} webContents
  */
 exports.enableForWebContents = (webContents) => {
-  webContents.on('did-navigate', handleDidNavigate)
+  webContents.on(ElectronWebContentsEventType.DidNavigate, handleDidNavigate)
 }

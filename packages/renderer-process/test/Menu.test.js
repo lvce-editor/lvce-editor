@@ -360,7 +360,7 @@ test('event - right click outside', () => {
   )
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  const $BackDrop = document.getElementById('BackDrop')
+  const $BackDrop = document.querySelector('.BackDrop')
   $BackDrop.dispatchEvent(
     new MouseEvent('mousedown', {
       bubbles: true,
@@ -472,7 +472,7 @@ test('event - context menu - outside', () => {
     bubbles: true,
     cancelable: true,
   })
-  const $BackDrop = document.querySelector('#BackDrop')
+  const $BackDrop = document.querySelector('.BackDrop')
   $BackDrop.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).not.toHaveBeenCalled()

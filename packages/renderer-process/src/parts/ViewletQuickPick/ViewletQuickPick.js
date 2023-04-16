@@ -4,6 +4,7 @@ import * as AriaAlert from '../AriaAlert/AriaAlert.js'
 import * as AriaAutoCompleteType from '../AriaAutoCompleteType/AriaAutoCompleteType.js'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
@@ -36,7 +37,7 @@ const activeId = 'QuickPickItemActive'
  * @enum {string}
  */
 const ClassNames = {
-  Label: 'Label',
+  Label: 'QuickPickLabel',
   QuickPickItem: 'QuickPickItem',
   Icon: 'Icon',
   QuickPickItemDescription: 'QuickPickItemDescription',
@@ -52,15 +53,6 @@ const Ids = {
   QuickPick: 'QuickPick',
 }
 
-/**
- * @enum {string}
- */
-const Roles = {
-  ListBox: 'listbox',
-  ComboBox: 'combobox',
-  Option: 'option',
-}
-
 const create$QuickPickItem = () => {
   // TODO many quickPick items may not have description -> avoid creating description dom nodes if there is no description
   const $QuickPickItemLabelText = document.createTextNode('')
@@ -73,7 +65,7 @@ const create$QuickPickItem = () => {
   $QuickPickItemIcon.className = ClassNames.Icon
   const $QuickPickItem = document.createElement('div') // TODO ul/li would be better for structure but might be slower
   $QuickPickItem.className = ClassNames.QuickPickItem
-  $QuickPickItem.role = Roles.Option
+  $QuickPickItem.role = AriaRoles.Option
   $QuickPickItem.append($QuickPickItemIcon, $QuickPickItemLabel)
   return $QuickPickItem
 }
@@ -99,12 +91,32 @@ const render$QuickPickItemLabel = ($QuickPickItem, quickPickItem) => {
 }
 
 const render$QuickPickItemIcon = ($QuickPickItem, quickPickItem) => {
-  $QuickPickItem.children[0].className = `FileIcon${quickPickItem.icon}`
+  $QuickPickItem.children[0].className = `FileIcon FileIcon${quickPickItem.icon}`
+}
+
+const render$QuickPickItemDescription = ($QuickPickItem, quickPickItem) => {
+  const $Label = $QuickPickItem.children[1]
+  const $Description = $Label.nextElementSibling
+  if (quickPickItem.description) {
+    if ($Description) {
+      $Description.textContent = quickPickItem.description
+    } else {
+      const $Description = document.createElement('div')
+      $Description.className = ClassNames.QuickPickItemDescription
+      $Description.textContent = quickPickItem.description
+      $Label.after($Description)
+    }
+  } else {
+    if ($Description) {
+      $Description.remove()
+    }
+  }
 }
 
 const render$QuickPickItemEqual = ($QuickPickItem, quickPickItem) => {
   render$QuickPickItemLabel($QuickPickItem, quickPickItem)
   render$QuickPickItemIcon($QuickPickItem, quickPickItem)
+  render$QuickPickItemDescription($QuickPickItem, quickPickItem)
 }
 
 const render$QuickPickItemMore = ($QuickPickItem, quickPickItem) => {
@@ -210,7 +222,7 @@ export const focus = (state) => {
 export const create = () => {
   const $QuickPickInput = InputBox.create()
   $QuickPickInput.setAttribute(DomAttributeType.AriaControls, Ids.QuickPickItems) // TODO use idl once supported
-  $QuickPickInput.role = Roles.ComboBox
+  $QuickPickInput.role = AriaRoles.ComboBox
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   $QuickPickInput.ariaAutoComplete = AriaAutoCompleteType.List
   $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
@@ -218,12 +230,13 @@ export const create = () => {
   $QuickPickInput.ariaExpanded = AriaBoolean.True
 
   const $QuickPickHeader = document.createElement('div')
-  $QuickPickHeader.id = Ids.QuickPickHeader
+  $QuickPickHeader.className = 'QuickPickHeader'
   $QuickPickHeader.append($QuickPickInput)
 
   const $QuickPickItems = document.createElement('div')
   $QuickPickItems.id = Ids.QuickPickItems
-  $QuickPickItems.role = Roles.ListBox
+  $QuickPickItems.className = 'QuickPickItems'
+  $QuickPickItems.role = AriaRoles.ListBox
   $QuickPickItems.onpointerdown = ViewletQuickPickEvents.handlePointerDown
   $QuickPickItems.addEventListener(DomEventType.Wheel, ViewletQuickPickEvents.handleWheel, DomEventOptions.Passive)
 
@@ -233,6 +246,7 @@ export const create = () => {
 
   const $QuickPick = document.createElement('div')
   $QuickPick.id = Ids.QuickPick
+  $QuickPick.className = 'Viewlet QuickPick'
   // $QuickPick.role= 'dialog'
   $QuickPick.append($QuickPickHeader, $QuickPickItems)
   // $QuickPick.setAttribute('aria-modal', 'false') // TODO why is this

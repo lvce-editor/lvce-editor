@@ -1,15 +1,13 @@
-const { ipcMain } = require('electron')
-const { writeFile } = require('node:fs/promises')
-const { BrowserWindow, Menu } = require('electron')
-const VError = require('verror')
-const Platform = require('../Platform/Platform.js')
-const Session = require('../ElectronSession/ElectronSession.js')
-const ColorTheme = require('../ColorTheme/ColorTheme.js')
-const Path = require('../Path/Path.js')
-const Root = require('../Root/Root.js')
-const GetResponse = require('../GetResponse/GetResponse.js')
+const { BrowserWindow } = require('electron')
 const { join } = require('node:path')
 const { tmpdir } = require('node:os')
+const { writeFile } = require('node:fs/promises')
+const ColorTheme = require('../ColorTheme/ColorTheme.js')
+const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
+const Path = require('../Path/Path.js')
+const Platform = require('../Platform/Platform.js')
+const Root = require('../Root/Root.js')
+const Session = require('../ElectronSession/ElectronSession.js')
 
 /**
  *
@@ -42,7 +40,7 @@ exports.open = async () => {
   })
   processExplorerWindow.setMenuBarVisibility(false)
 
-  processExplorerWindow.webContents.on('before-input-event', handleBeforeInput)
+  processExplorerWindow.webContents.on(ElectronWebContentsEventType.BeforeInputEvent, handleBeforeInput)
   // TODO get actual process explorer theme css from somewhere
   const processExplorerThemeCss = ColorTheme.toCss(colorThemeJson)
   const processExporerThemeCssPath = join(tmpdir(), 'process-explorer-theme.css')
