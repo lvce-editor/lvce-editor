@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -35,17 +36,19 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
   return {
-    send: jest.fn(() => {}),
+    executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletProblems = await import('../src/parts/ViewletProblems/ViewletProblems.js')
 
 test('event - pointerdown', () => {
   const state = ViewletProblems.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletProblems.attachEvents(state)
   const event = new MouseEvent('pointerdown', {
     bubbles: true,
@@ -53,9 +56,8 @@ test('event - pointerdown', () => {
     clientY: 30,
     cancelable: true,
   })
-  const { $Viewlet } = state
   $Viewlet.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Problems.focusIndex', -1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'focusIndex', -1)
   expect(event.defaultPrevented).toBe(true)
 })
