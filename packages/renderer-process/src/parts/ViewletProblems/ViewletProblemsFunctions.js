@@ -1,5 +1,3 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const focusIndex = (index) => {
-  RendererWorker.send('Problems.focusIndex', -1)
-}
+export const focusIndex = ForwardViewletCommand.forwardViewletCommand('focusIndex')
