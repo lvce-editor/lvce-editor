@@ -3,8 +3,9 @@ import * as OutputChannels from '../OutputChannels/OutputChannels.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
-export const create = () => {
+export const create = (uid) => {
   return {
+    uid,
     selectedIndex: -1,
     // TODO get list of outputChannels from extension host
     options: [],

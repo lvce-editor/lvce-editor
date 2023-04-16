@@ -410,7 +410,9 @@ const hide = async (state, module) => {
   // TODO save state to local storage after rending (in background)
   await SaveState.saveViewletState(moduleId)
   // TODO also resize other viewlets if necessary
-  const commands = Viewlet.disposeFunctional(moduleId)
+  const instanceState = ViewletStates.getState(moduleId)
+  const commands = Viewlet.disposeFunctional(instanceState.uid)
+  console.log({ commands, uid: instanceState.uid })
   const resizeCommands = getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
   return {

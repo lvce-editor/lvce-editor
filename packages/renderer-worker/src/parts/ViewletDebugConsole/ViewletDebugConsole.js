@@ -1,8 +1,9 @@
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const create = () => {
+export const create = (uid) => {
   return {
     disposed: false,
+    uid,
   }
 }
 

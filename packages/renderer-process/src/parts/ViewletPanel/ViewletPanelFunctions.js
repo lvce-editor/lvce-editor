@@ -1,9 +1,4 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const hidePanel = () => {
-  RendererWorker.send('Layout.hidePanel')
-}
-
-export const toggleMaximize = () => {
-  RendererWorker.send('Layout.maximizePanel')
-}
+export const hidePanel = ForwardViewletCommand.forwardViewletCommand('hidePanel')
+export const toggleMaximize = ForwardViewletCommand.forwardViewletCommand('toggleMaximize')
