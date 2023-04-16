@@ -1,6 +1,7 @@
 const JoinLines = require('../JoinLines/JoinLines.js')
 const Platform = require('../Platform/Platform.js')
 const Process = require('../Process/Process.js')
+const Assert = require('../Assert/Assert.js')
 
 const getName = (object) => {
   return object.name
@@ -28,6 +29,7 @@ const getVersions = () => {
 }
 
 const getLength = (string) => {
+  Assert.string(string)
   return string.length
 }
 

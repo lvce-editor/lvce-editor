@@ -12,7 +12,7 @@ jest.mock('electron', () => {
 
 jest.mock('../src/parts/Platform/Platform.js', () => {
   return {
-    productName: 'Test',
+    productNameLong: 'Test',
     version: '0.0.0-dev',
   }
 })
