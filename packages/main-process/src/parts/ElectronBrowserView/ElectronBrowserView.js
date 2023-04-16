@@ -5,6 +5,7 @@ const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/Electr
 const ElectronBrowserViewEventListeners = require('../ElectronBrowserViewEventListeners/ElectronBrowserViewEventListeners.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 const ElectronSessionForBrowserView = require('../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js')
+const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
 
 /**
  *
@@ -44,12 +45,12 @@ exports.createBrowserView = async (restoreId) => {
   const handleWindowOpen = ({ url, disposition, features, frameName, referrer, postBody, ...rest }) => {
     return ElectronBrowserViewEventListeners.handleWindowOpen(webContents, { url, disposition, features, frameName, referrer, postBody })
   }
-  webContents.on('context-menu', ElectronBrowserViewEventListeners.handleContextMenu)
-  webContents.on('will-navigate', ElectronBrowserViewEventListeners.handleWillNavigate)
-  webContents.on('did-navigate', ElectronBrowserViewEventListeners.handleDidNavigate)
-  webContents.on('page-title-updated', ElectronBrowserViewEventListeners.handlePageTitleUpdated)
-  webContents.on('destroyed', ElectronBrowserViewEventListeners.handleDestroyed)
-  webContents.on('before-input-event', ElectronBrowserViewEventListeners.handleBeforeInput)
+  webContents.on(ElectronWebContentsEventType.ContextMenu, ElectronBrowserViewEventListeners.handleContextMenu)
+  webContents.on(ElectronWebContentsEventType.WillNavigate, ElectronBrowserViewEventListeners.handleWillNavigate)
+  webContents.on(ElectronWebContentsEventType.DidNavigate, ElectronBrowserViewEventListeners.handleDidNavigate)
+  webContents.on(ElectronWebContentsEventType.PageTitleUpdated, ElectronBrowserViewEventListeners.handlePageTitleUpdated)
+  webContents.on(ElectronWebContentsEventType.Destroyed, ElectronBrowserViewEventListeners.handleDestroyed)
+  webContents.on(ElectronWebContentsEventType.BeforeInputEvent, ElectronBrowserViewEventListeners.handleBeforeInput)
   webContents.setWindowOpenHandler(handleWindowOpen)
   ElectronBrowserViewAdBlock.enableForWebContents(webContents)
   return id
