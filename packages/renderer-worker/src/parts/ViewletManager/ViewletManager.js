@@ -502,7 +502,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.id)
       }
       const parentId = viewlet.parentId
-      Assert.string(parentId)
+      // Assert.string(parentId)
       await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
       commands.push([kCreate, ViewletModuleId.Error, viewletUid])
       // @ts-ignore
