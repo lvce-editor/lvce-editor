@@ -3,6 +3,7 @@ import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import { VError } from '../VError/VError.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -296,14 +297,18 @@ export const openWidget = async (id, ...args) => {
 }
 
 export const closeWidget = async (id) => {
-  if (ElectronBrowserView.isOpen() && id === ViewletElectron.isQuickPickOpen()) {
-    return ViewletElectron.closeWidgetElectronQuickPick()
+  try {
+    if (ElectronBrowserView.isOpen() && id === ViewletElectron.isQuickPickOpen()) {
+      return ViewletElectron.closeWidgetElectronQuickPick()
+    }
+    const child = ViewletStates.getState(id)
+    const childUid = child.uid
+    const commands = disposeFunctional(childUid)
+    await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
+    // TODO restore focus
+  } catch (error) {
+    throw new VError(error, `Failed to close widget ${id}`)
   }
-  const child = ViewletStates.getState(id)
-  const childUid = child.uid
-  ViewletStates.remove(childUid)
-  await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ childUid)
-  // TODO restore focus
 }
 
 const getFn = async (module, fnName) => {
