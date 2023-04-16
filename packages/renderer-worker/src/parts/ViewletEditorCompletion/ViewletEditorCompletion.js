@@ -169,6 +169,7 @@ export const loadContent = async (state) => {
 export const handleError = async (error) => {
   const displayErrorMessage = getDisplayErrorMessage(error)
   const editor = getEditor()
+  console.log('handle error', editor, displayErrorMessage)
   await EditorShowMessage.editorShowMessage(
     /* editor */ editor,
     /* rowIndex */ 0,
