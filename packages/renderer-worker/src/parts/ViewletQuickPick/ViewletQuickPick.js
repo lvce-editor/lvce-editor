@@ -142,7 +142,7 @@ export const selectIndex = async (state, index, button = /* left */ 0) => {
   const { command } = selectPickResult
   switch (command) {
     case QuickPickReturnValue.Hide:
-      await Viewlet.closeWidget(ViewletModuleId.QuickPick)
+      await Viewlet.closeWidget(state.uid)
       return state
     default:
       return state
