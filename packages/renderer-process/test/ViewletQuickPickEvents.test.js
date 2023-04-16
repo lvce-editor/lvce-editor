@@ -32,22 +32,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(),
-    }
+jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+  return {
+    send: jest.fn(),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
-const ViewletQuickPick = await import(
-  '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
-)
+const ViewletQuickPick = await import('../src/parts/ViewletQuickPick/ViewletQuickPick.js')
 
 test.skip('event - mousedown', () => {
   const state = ViewletQuickPick.create()
@@ -76,6 +69,7 @@ test.skip('event - mousedown', () => {
 
 test('event - pointerdown - on focused item', () => {
   const state = ViewletQuickPick.create()
+  ViewletQuickPick.attachEvents(state)
   ViewletQuickPick.setPicks(state, [
     {
       posInSet: 1,
@@ -92,15 +86,12 @@ test('event - pointerdown - on focused item', () => {
   })
   $QuickPickItemOne.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'QuickPick.handleClickAt',
-    0,
-    0
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('QuickPick.handleClickAt', 0, 0)
 })
 
 test.skip('event - beforeinput', () => {
   const state = ViewletQuickPick.create()
+  ViewletQuickPick.attachEvents(state)
   ViewletQuickPick.setPicks(state, [
     {
       posInSet: 1,
@@ -121,14 +112,12 @@ test.skip('event - beforeinput', () => {
       data: 'a',
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    'QuickPick.handleInput',
-    '>a',
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith(['QuickPick.handleInput', '>a'])
 })
 
 test('event - wheel', () => {
   const state = ViewletQuickPick.create()
+  ViewletQuickPick.attachEvents(state)
   const event = new WheelEvent('wheel', {
     deltaY: 53,
     deltaMode: WheelEventType.DomDeltaLine,
