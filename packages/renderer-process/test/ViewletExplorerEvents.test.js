@@ -200,7 +200,7 @@ test('event - click', () => {
   })
   $GitKeep.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleClickAt', 50, 50)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleClickAt', 0, 50, 50)
   expect(event.defaultPrevented).toBe(true)
 })
 
@@ -229,7 +229,7 @@ test('event - click on wrapper div', () => {
   })
   state.$Viewlet.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleClickAt', 50, 50)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleClickAt', 0, 50, 50)
 })
 
 test('event - right click', () => {
