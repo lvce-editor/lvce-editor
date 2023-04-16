@@ -97,7 +97,7 @@ export const dispose = (state) => {
 }
 
 export const handleBlur = async (state) => {
-  await Viewlet.closeWidget('QuickPick')
+  await Viewlet.closeWidget(state.uid)
   return state
 }
 
