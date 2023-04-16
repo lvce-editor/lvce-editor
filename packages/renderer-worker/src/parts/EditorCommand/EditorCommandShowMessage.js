@@ -1,7 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as EditorPosition from './EditorCommandPosition.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const state = {
   timeout: -1,
@@ -26,7 +25,7 @@ export const editorShowMessage = async (editor, rowIndex, columnIndex, message, 
   const displayErrorMessage = message
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ ViewletModuleId.EditorText,
+    /* id */ editor.uid,
     /* method */ 'showOverlayMessage',
     /* x */ x,
     /* y */ y,
@@ -60,6 +59,6 @@ export const showErrorMessage = (editor, rowIndex, columnIndex, message) => {
 export const editorHideMessage = async (editor) => {
   clearTimeout(state.timeout)
   state.timeout = -1
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.EditorText, /* method */ 'hideOverlayMessage')
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ editor.uid, /* method */ 'hideOverlayMessage')
   return editor
 }

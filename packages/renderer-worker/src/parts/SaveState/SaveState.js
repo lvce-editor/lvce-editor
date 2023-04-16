@@ -13,9 +13,17 @@ const serializeInstance = (instance) => {
   return instance.state
 }
 
+const serializeInstances = (instances) => {
+  const serialized = Object.create(null)
+  for (const value of Object.values(instances)) {
+    serialized[value.moduleId] = serializeInstance(value)
+  }
+  return serialized
+}
+
 const getStateToSave = () => {
   const instances = ViewletStates.getAllInstances()
-  const savedInstances = MapObject.mapObject(instances, serializeInstance)
+  const savedInstances = serializeInstances(instances)
   return {
     instances: savedInstances,
     mainEditors: [],

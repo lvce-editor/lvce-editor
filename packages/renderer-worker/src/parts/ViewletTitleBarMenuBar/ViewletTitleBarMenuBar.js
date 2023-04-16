@@ -2,6 +2,7 @@ import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuB
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     titleBarEntries: [],
     focusedIndex: -1,
     isMenuOpen: false,

@@ -22,3 +22,5 @@ export const handleScrollBarMove = (state, eventY) => {
   const newDeltaY = newPercent * finalDeltaY
   return Editor.setDeltaYFixedValue(state, newDeltaY)
 }
+
+export const handleScrollBarVerticalPointerMove = handleScrollBarMove

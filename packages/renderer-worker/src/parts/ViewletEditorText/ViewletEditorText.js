@@ -16,6 +16,7 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -43,8 +44,7 @@ export const handleTokenizeChange = () => {
 
 // TODO uri?
 export const create = (id, uri, x, y, width, height) => {
-  const instanceId = Id.create()
-  const state = Editor.create(instanceId, uri, 'unknown', '')
+  const state = Editor.create(id, uri, 'unknown', '')
   const newState = Editor.setBounds(state, x, y, width, height, COLUMN_WIDTH)
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
@@ -54,6 +54,7 @@ export const create = (id, uri, x, y, width, height) => {
     rowHeight: 20,
     languageId,
     width,
+    moduleId: ViewletModuleId.EditorText,
   }
 }
 

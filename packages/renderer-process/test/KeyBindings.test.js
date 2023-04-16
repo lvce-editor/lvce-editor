@@ -80,7 +80,7 @@ test('hydrate - dispatch Event with context not matching', () => {
 })
 
 test('hydrate - dispatch Event with context matching', () => {
-  KeyBindings.addKeyBindings('', [
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'a',
       command: 14,
@@ -101,7 +101,7 @@ test('hydrate - dispatch Event with context matching', () => {
 })
 
 test('hydrate - dispatch Event with Arrow Key', () => {
-  KeyBindings.addKeyBindings('', [
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'ArrowLeft',
       command: 14,
@@ -119,7 +119,7 @@ test('hydrate - dispatch Event with Arrow Key', () => {
 })
 
 test('hydrate - dispatch event with ctrl modifier', () => {
-  KeyBindings.addKeyBindings('', [
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'ctrl+a',
       command: 14,
@@ -138,7 +138,7 @@ test('hydrate - dispatch event with ctrl modifier', () => {
 })
 
 test('hydrate - dispatch event with shift modifier', () => {
-  KeyBindings.addKeyBindings('', [
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'shift+a',
       command: 14,
@@ -157,7 +157,7 @@ test('hydrate - dispatch event with shift modifier', () => {
 })
 
 test('hydrate - dispatch event with alt modifier', () => {
-  KeyBindings.addKeyBindings('', [
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'alt+a',
       command: 14,
@@ -176,7 +176,7 @@ test('hydrate - dispatch event with alt modifier', () => {
 })
 
 test('hydrate - dispatch event with space key', () => {
-  KeyBindings.addKeyBindings('', [
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'Space',
       command: 14,
@@ -194,7 +194,7 @@ test('hydrate - dispatch event with space key', () => {
 })
 
 test('hydrate - dispatch event with double shift key', () => {
-  KeyBindings.addKeyBindings('', [
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'shift shift',
       command: 14,
@@ -232,7 +232,7 @@ test('hydrate - dispatch event with double shift key', () => {
 })
 
 test('hydrate - dispatch event with double alt key', () => {
-  KeyBindings.addKeyBindings('', [
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'alt alt',
       command: 14,
@@ -270,7 +270,7 @@ test('hydrate - dispatch event with double alt key', () => {
 })
 
 test('hydrate - dispatch event with double ctrl key', () => {
-  KeyBindings.addKeyBindings('', [
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'ctrl ctrl',
       command: 14,
@@ -354,7 +354,7 @@ test('hydrate - dispatch event with ctrl alt ctrl key should not trigger ctrl ct
 })
 
 test('hydrate - dispatch event with ctrl alt shift shift key should trigger shift shift', () => {
-  KeyBindings.addKeyBindings('', [
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'shift shift',
       command: 14,

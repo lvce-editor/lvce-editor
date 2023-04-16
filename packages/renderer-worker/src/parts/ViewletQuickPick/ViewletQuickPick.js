@@ -28,6 +28,7 @@ const QuickPickState = {
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     state: QuickPickState.Default,
     picks: [],
     recentPicks: [],
@@ -96,7 +97,7 @@ export const dispose = (state) => {
 }
 
 export const handleBlur = async (state) => {
-  await Viewlet.closeWidget('QuickPick')
+  await Viewlet.closeWidget(state.uid)
   return state
 }
 
@@ -141,7 +142,7 @@ export const selectIndex = async (state, index, button = /* left */ 0) => {
   const { command } = selectPickResult
   switch (command) {
     case QuickPickReturnValue.Hide:
-      await Viewlet.closeWidget(ViewletModuleId.QuickPick)
+      await Viewlet.closeWidget(state.uid)
       return state
     default:
       return state

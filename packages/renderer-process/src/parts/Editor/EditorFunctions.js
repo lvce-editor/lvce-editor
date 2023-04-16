@@ -1,90 +1,24 @@
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const handleContextMenu = (button, x, y) => {
-  RendererWorker.send('Editor.handleContextMenu', button, x, y, MenuEntryId.Editor)
-}
-
-export const handleBlur = () => {
-  RendererWorker.send('Editor.blur')
-}
-
-export const type = (text) => {
-  RendererWorker.send('Editor.type', text)
-}
-
-export const typeWithAutoClosing = (text) => {
-  RendererWorker.send('Editor.typeWithAutoClosing', text)
-}
-
-export const compositionStart = (data) => {
-  RendererWorker.send('Editor.compositionStart', data)
-}
-
-export const compositionUpdate = (data) => {
-  RendererWorker.send('Editor.compositionUpdate', data)
-}
-
-export const compositionEnd = (data) => {
-  RendererWorker.send('Editor.compositionEnd', data)
-}
-
-export const cut = () => {
-  RendererWorker.send('Editor.cut')
-}
-
-export const moveRectangleSelectionPx = (x, y) => {
-  RendererWorker.send('Editor.moveRectangleSelectionPx', x, y)
-}
-
-export const moveSelectionPx = (x, y) => {
-  RendererWorker.send('Editor.moveSelectionPx', x, y)
-}
-
-export const handlePointerCaptureLost = () => {
-  RendererWorker.send('Editor.handlePointerCaptureLost')
-}
-
-export const handleMouseDown = (modifier, x, y, detail) => {
-  RendererWorker.send('Editor.handleMouseDown', modifier, x, y, detail)
-}
-
-export const setDelta = (deltaMode, deltaX, deltaY) => {
-  RendererWorker.send('Editor.setDelta', deltaMode, deltaX, deltaY)
-}
-
-export const paste = (text) => {
-  RendererWorker.send('Editor.paste', text)
-}
-
-export const handleScrollBarVerticalMove = (y) => {
-  RendererWorker.send('Editor.handleScrollBarMove', y)
-}
-
-export const handleScrollBarVerticalPointerDown = (y) => {
-  RendererWorker.send('Editor.handleScrollBarPointerDown', y)
-}
-
-export const handleScrollBarHorizontalMove = (x) => {
-  RendererWorker.send('Editor.handleScrollBarHorizontalMove', x)
-}
-
-export const handleScrollBarHorizontalPointerDown = (x) => {
-  RendererWorker.send('Editor.handleScrollBarHorizontalPointerDown', x)
-}
-
-export const handleTouchStart = (touchEvent) => {
-  RendererWorker.send('Editor.handleTouchStart', touchEvent)
-}
-
-export const handleTouchMove = (touchEvent) => {
-  RendererWorker.send('Editor.handleTouchMove', touchEvent)
-}
-
-export const handleTouchEnd = (touchEvent) => {
-  RendererWorker.send('Editor.handleTouchEnd', touchEvent)
-}
-
-export const handleBeforeInputFromContentEditable = (data, range) => {
-  RendererWorker.send('Editor.handleBeforeInputFromContentEditable', data, range)
-}
+export const compositionEnd = ForwardViewletCommand.forwardViewletCommand('compositionEnd')
+export const compositionStart = ForwardViewletCommand.forwardViewletCommand('compositionStart')
+export const compositionUpdate = ForwardViewletCommand.forwardViewletCommand('compositionUpdate')
+export const cut = ForwardViewletCommand.forwardViewletCommand('cut')
+export const handleBeforeInputFromContentEditable = ForwardViewletCommand.forwardViewletCommand('handleBeforeInputFromContentEditable')
+export const handleBlur = ForwardViewletCommand.forwardViewletCommand('blur')
+export const handleContextMenu = ForwardViewletCommand.forwardViewletCommand('handleContextMenu')
+export const handleMouseDown = ForwardViewletCommand.forwardViewletCommand('handleMouseDown')
+export const handlePointerCaptureLost = ForwardViewletCommand.forwardViewletCommand('handlePointerCaptureLost')
+export const handleScrollBarHorizontalMove = ForwardViewletCommand.forwardViewletCommand('handleScrollBarHorizontalMove')
+export const handleScrollBarHorizontalPointerDown = ForwardViewletCommand.forwardViewletCommand('handleScrollBarHorizontalPointerDown')
+export const handleScrollBarVerticalMove = ForwardViewletCommand.forwardViewletCommand('handleScrollBarMove')
+export const handleScrollBarVerticalPointerDown = ForwardViewletCommand.forwardViewletCommand('handleScrollBarVerticalPointerDown')
+export const handleTouchEnd = ForwardViewletCommand.forwardViewletCommand('handleTouchEnd')
+export const handleTouchMove = ForwardViewletCommand.forwardViewletCommand('handleTouchMove')
+export const handleTouchStart = ForwardViewletCommand.forwardViewletCommand('handleTouchStart')
+export const moveRectangleSelectionPx = ForwardViewletCommand.forwardViewletCommand('moveRectangleSelectionPx')
+export const moveSelectionPx = ForwardViewletCommand.forwardViewletCommand('moveSelectionPx')
+export const paste = ForwardViewletCommand.forwardViewletCommand('patse')
+export const setDelta = ForwardViewletCommand.forwardViewletCommand('setDelta')
+export const type = ForwardViewletCommand.forwardViewletCommand('type')
+export const typeWithAutoClosing = ForwardViewletCommand.forwardViewletCommand('typeWithAutoClosing')

@@ -30,6 +30,7 @@ export const create = (id, uri, languageId, content) => {
     primarySelectionIndex: 0,
     selections: new Uint32Array([0, 0, 0, 0]),
     id,
+    uid: id,
     tokenizer,
     deltaX: 0,
     deltaY: 0,

@@ -1,10 +1,11 @@
 import { jest } from '@jest/globals'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeAll(() => {
   ViewletStates.reset()
-  ViewletStates.set('EditorText', {
+  ViewletStates.set(ViewletModuleId.EditorText, {
     state: {
       uri: '',
       lines: [],
@@ -18,36 +19,23 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostImplementation.js',
-  () => ({
-    executeImplementationProvider: jest.fn().mockImplementation(() => {
-      throw new Error('not implemented')
-    }),
-  })
-)
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostImplementation.js', () => ({
+  executeImplementationProvider: jest.fn().mockImplementation(() => {
+    throw new Error('not implemented')
+  }),
+}))
 
-const ExtensionHostImplementations = await import(
-  '../src/parts/ExtensionHost/ExtensionHostImplementation.js'
-)
+const ExtensionHostImplementations = await import('../src/parts/ExtensionHost/ExtensionHostImplementation.js')
 
-const ViewletImplementations = await import(
-  '../src/parts/ViewletImplementations/ViewletImplementations.js'
-)
+const ViewletImplementations = await import('../src/parts/ViewletImplementations/ViewletImplementations.js')
 
 test('loadContent - error - reference provider throws error', async () => {
   const state = ViewletImplementations.create()
   // @ts-ignore
-  ExtensionHostImplementations.executeImplementationProvider.mockImplementation(
-    () => {
-      throw new Error(
-        'Failed to execute reference provider: TypeError: x is not a function'
-      )
-    }
-  )
+  ExtensionHostImplementations.executeImplementationProvider.mockImplementation(() => {
+    throw new Error('Failed to execute reference provider: TypeError: x is not a function')
+  })
   await expect(ViewletImplementations.loadContent(state)).rejects.toThrowError(
-    new Error(
-      'Failed to execute reference provider: TypeError: x is not a function'
-    )
+    new Error('Failed to execute reference provider: TypeError: x is not a function')
   )
 })

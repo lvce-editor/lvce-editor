@@ -1,8 +1,11 @@
+import * as Assert from '../Assert/Assert.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletActions from '../ViewletActions/ViewletActions.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -39,10 +42,10 @@ export const loadContent = (state, savedState) => {
 }
 
 export const contentLoaded = (state) => {
-  const { currentViewletId } = state
+  const { currentViewletId, uid } = state
   const commands = []
   const actions = ViewletActions.getActions(currentViewletId)
-  commands.push(['Viewlet.send', ViewletModuleId.Panel, 'setActions', actions])
+  commands.push(['Viewlet.send', uid, 'setActions', actions])
   return commands
 }
 
@@ -97,11 +100,15 @@ export const openViewlet = async (state, id, focus = false) => {
     height: childDimensions.height,
     append: true,
   })
+  const uid = state.uid
   console.log({ commands })
   if (commands) {
-    commands.unshift(['Viewlet.dispose', currentViewletId])
+    const currentViewletState = ViewletStates.getState(currentViewletId)
+    const currentViewletUid = currentViewletState.uid
+    Assert.number(currentViewletUid)
+    commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
     const actions = ViewletActions.getActions(id)
-    commands.push(['Viewlet.send', ViewletModuleId.Panel, 'setActions', actions])
+    commands.push(['Viewlet.send', uid, 'setActions', actions])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     if (commands[commands.length - 1].includes(ViewletModuleId.Error)) {
       state.currentViewletId = ViewletModuleId.Error

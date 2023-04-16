@@ -16,7 +16,22 @@ export const set = (key, value) => {
 }
 
 export const getInstance = (key) => {
-  return state.instances[key]
+  const fast = state.instances[key]
+  if (fast) {
+    return fast
+  }
+  if (key === 'Editor') {
+    key = 'EditorText'
+  }
+  if (key === 'EditorText') {
+    key = 'Editor'
+  }
+  for (const value of Object.values(state.instances)) {
+    if (value.moduleId === key) {
+      return value
+    }
+  }
+  return undefined
 }
 
 export const hasInstance = (key) => {
@@ -48,7 +63,9 @@ export const getState = (key) => {
 }
 
 export const setState = (key, newState) => {
-  Assert.string(key)
+  if (typeof key !== 'string' && typeof key !== 'number') {
+    throw new Error('key must be defined')
+  }
   Assert.object(newState)
   const instance = getInstance(key)
   instance.state = newState

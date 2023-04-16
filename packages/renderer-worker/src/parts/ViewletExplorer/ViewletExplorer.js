@@ -28,7 +28,9 @@ import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 // TODO instead of root string, there should be a root dirent
 
 export const create = (id, uri, x, y, width, height) => {
+  Assert.number(id)
   return {
+    uid: id,
     root: '',
     items: [],
     focusedIndex: -1,

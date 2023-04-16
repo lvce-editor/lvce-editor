@@ -11,6 +11,7 @@ import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as TouchEvent from '../TouchEvent/TouchEvent.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as EditorFunctions from './EditorFunctions.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -18,8 +19,9 @@ import * as EditorFunctions from './EditorFunctions.js'
 
 export const handleContextMenu = (event) => {
   Event.preventDefault(event)
+  const uid = ComponentUid.fromEvent(event)
   const { button, clientX, clientY } = event
-  EditorFunctions.handleContextMenu(button, clientX, clientY)
+  EditorFunctions.handleContextMenu(uid, button, clientX, clientY)
 }
 
 export const handleFocus = (event) => {
@@ -38,10 +40,11 @@ export const handleBlur = (event) => {
  */
 export const handleBeforeInput = (event) => {
   Event.preventDefault(event)
+  const uid = ComponentUid.fromEvent(event)
   const { inputType, data } = event
   switch (inputType) {
     case InputEventType.InsertText:
-      EditorFunctions.typeWithAutoClosing(data)
+      EditorFunctions.typeWithAutoClosing(uid, data)
       break
     default:
       break
@@ -59,18 +62,21 @@ export const handleBeforeInput = (event) => {
 // - vscode does not draw a line, but displays characters during composition
 
 export const handleCompositionStart = (event) => {
+  const uid = ComponentUid.fromEvent(event)
   const { data } = event
-  EditorFunctions.compositionStart(data)
+  EditorFunctions.compositionStart(uid, data)
 }
 
 export const handleCompositionUpdate = (event) => {
+  const uid = ComponentUid.fromEvent(event)
   const { data } = event
-  EditorFunctions.compositionUpdate(data)
+  EditorFunctions.compositionUpdate(uid, data)
 }
 
 export const handleCompositionEnd = (event) => {
+  const uid = ComponentUid.fromEvent(event)
   const { data } = event
-  EditorFunctions.compositionEnd(data)
+  EditorFunctions.compositionEnd(uid, data)
 }
 
 export const handleCut = (event) => {
@@ -83,20 +89,22 @@ const isRightClick = (event) => {
 }
 
 export const handleEditorPointerMove = (event) => {
+  const uid = ComponentUid.fromEvent(event)
   const { clientX, clientY, altKey } = event
   // TODO if/else should be in renderer worker
   if (altKey) {
-    EditorFunctions.moveRectangleSelectionPx(clientX, clientY)
+    EditorFunctions.moveRectangleSelectionPx(uid, clientX, clientY)
   } else {
-    EditorFunctions.moveSelectionPx(clientX, clientY)
+    EditorFunctions.moveSelectionPx(uid, clientX, clientY)
   }
 }
 
 export const handleEditorLostPointerCapture = (event) => {
+  const uid = ComponentUid.fromEvent(event)
   const { target } = event
   target.removeEventListener(DomEventType.PointerMove, handleEditorPointerMove)
   target.removeEventListener(DomEventType.LostPointerCapture, handleEditorLostPointerCapture)
-  EditorFunctions.handlePointerCaptureLost()
+  EditorFunctions.handlePointerCaptureLost(uid)
 }
 
 export const handleEditorGotPointerCapture = () => {}
@@ -119,10 +127,11 @@ export const handleMouseDown = (event) => {
   if (isRightClick(event)) {
     return
   }
+  const uid = ComponentUid.fromEvent(event)
   Event.preventDefault(event)
   const { clientX, clientY, detail } = event
   const modifier = GetModifierKey.getModifierKey(event)
-  EditorFunctions.handleMouseDown(modifier, clientX, clientY, detail)
+  EditorFunctions.handleMouseDown(uid, modifier, clientX, clientY, detail)
 }
 
 // TODO figure out whether it is possible to register hover provider without mousemove
@@ -133,18 +142,20 @@ export const handleMouseDown = (event) => {
  * @param {WheelEvent} event
  */
 export const handleWheel = (event) => {
+  const uid = ComponentUid.fromEvent(event)
   const { deltaMode, deltaX, deltaY } = event
   // event.preventDefault()
   // const state = EditorHelper.getStateFromEvent(event)
   // TODO send editor id
-  EditorFunctions.setDelta(deltaMode, deltaX, deltaY)
+  EditorFunctions.setDelta(uid, deltaMode, deltaX, deltaY)
 }
 
 export const handlePaste = (event) => {
   Event.preventDefault(event)
+  const uid = ComponentUid.fromEvent(event)
   const { clipboardData } = event
   const text = ClipBoardData.getText(clipboardData)
-  EditorFunctions.paste(text)
+  EditorFunctions.paste(uid, text)
 }
 
 /**
@@ -152,8 +163,9 @@ export const handlePaste = (event) => {
  * @param {PointerEvent} event
  */
 export const handleScrollBarThumbVerticalPointerMove = (event) => {
+  const uid = ComponentUid.fromEvent(event)
   const { clientY } = event
-  EditorFunctions.handleScrollBarVerticalMove(clientY)
+  EditorFunctions.handleScrollBarVerticalMove(uid, clientY)
 }
 
 /**
@@ -175,6 +187,7 @@ export const handleScrollBarVerticalPointerUp = (event) => {
  * @param {PointerEvent} event
  */
 export const handleScrollBarVerticalPointerDown = (event) => {
+  const uid = ComponentUid.fromEvent(event)
   const { target, pointerId, clientY } = event
   // @ts-ignore
   target.setPointerCapture(pointerId)
@@ -183,7 +196,7 @@ export const handleScrollBarVerticalPointerDown = (event) => {
   // TODO use pointerlost event instead
   // @ts-ignore
   target.addEventListener(DomEventType.PointerUp, handleScrollBarVerticalPointerUp)
-  EditorFunctions.handleScrollBarVerticalPointerDown(clientY)
+  EditorFunctions.handleScrollBarVerticalPointerDown(uid, clientY)
 }
 
 /**

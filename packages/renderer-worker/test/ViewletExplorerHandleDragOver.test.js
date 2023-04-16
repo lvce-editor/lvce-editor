@@ -9,7 +9,7 @@ const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplor
 
 test('handleDragOver - outer', () => {
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     root: '/test',
     focusedIndex: -1,
     items: [],
@@ -25,7 +25,7 @@ test('handleDragOver - outer', () => {
 
 test.skip('handleDragOver - first index', () => {
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     root: '/test',
     focusedIndex: 1,
     items: [],
@@ -42,7 +42,7 @@ test.skip('handleDragOver - first index', () => {
 
 test('handleDragOver - should return same state if drop targets are equal', () => {
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     root: '/test',
     focusedIndex: 1,
     items: [],

@@ -46,33 +46,33 @@ const kTitleBarHeight = 35
 const kTotal = 36
 
 test('create', () => {
-  const state = ViewletLayout.create()
+  const state = ViewletLayout.create(1)
   expect(state).toBeDefined()
 })
 
 test.skip('showSideBar', async () => {
-  const state = { ...ViewletLayout.create(), sideBarVisible: false }
+  const state = { ...ViewletLayout.create(1), sideBarVisible: false }
   expect(await ViewletLayout.showSideBar(state)).toMatchObject({
     sideBarVisible: true,
   })
 })
 
 test.skip('hideSideBar', async () => {
-  const state = { ...ViewletLayout.create(), sideBarVisible: true }
+  const state = { ...ViewletLayout.create(1), sideBarVisible: true }
   expect(await ViewletLayout.hideSideBar(state)).toMatchObject({
     sideBarVisible: false,
   })
 })
 
 test.skip('toggleSideBar - show', async () => {
-  const state = { ...ViewletLayout.create(), sideBarVisible: false }
+  const state = { ...ViewletLayout.create(1), sideBarVisible: false }
   expect(await ViewletLayout.toggleSideBar(state)).toMatchObject({
     sideBarVisible: true,
   })
 })
 
 test.skip('toggleSideBar - hide', async () => {
-  const state = { ...ViewletLayout.create(), sideBarVisible: true }
+  const state = { ...ViewletLayout.create(1), sideBarVisible: true }
   expect(await ViewletLayout.toggleSideBar(state)).toMatchObject({
     sideBarVisible: false,
   })
@@ -80,7 +80,7 @@ test.skip('toggleSideBar - hide', async () => {
 
 test.skip('handleSashPointerMove - side bar', () => {
   const state = {
-    ...ViewletLayout.create(),
+    ...ViewletLayout.create(1),
     mainWidth: 992,
     sideBarLeft: 992,
     sideBarVisible: true,
@@ -98,7 +98,7 @@ test.skip('handleSashPointerMove - side bar', () => {
 
 test.skip('handleSashPointerMove - side bar should stay at min width when dragging makes width a bit smaller than min width', async () => {
   const state = {
-    ...ViewletLayout.create(),
+    ...ViewletLayout.create(1),
     mainWidth: 992,
     sideBarLeft: 992,
     sideBarVisible: true,
@@ -116,7 +116,7 @@ test.skip('handleSashPointerMove - side bar should stay at min width when draggi
 
 test.skip('handleSashPointerMove - side bar should collapse dragging makes width is much smaller than min width', async () => {
   const state = {
-    ...ViewletLayout.create(),
+    ...ViewletLayout.create(1),
     mainWidth: 992,
     sideBarLeft: 992,
     sideBarVisible: true,
@@ -145,11 +145,11 @@ test('getInitialPlaceholderCommands', () => {
   points[kSideBarWidth] = 800
   points[kStatusBarHeight] = 20
   const state = {
-    ...ViewletLayout.create(),
+    ...ViewletLayout.create(1),
     points,
   }
   expect(ViewletLayout.getInitialPlaceholderCommands(state)).toEqual([
-    ['Viewlet.createPlaceholder', 'SideBar', 'Layout', 0, 600, 800, 200],
-    ['Viewlet.createPlaceholder', 'StatusBar', 'Layout', 200, 0, 0, 20],
+    ['Viewlet.createPlaceholder', 'SideBar', 1, 0, 600, 800, 200],
+    ['Viewlet.createPlaceholder', 'StatusBar', 1, 200, 0, 0, 20],
   ])
 })

@@ -4,14 +4,15 @@ import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as TestState from '../TestState/TestState.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowser.js'
 import * as ExtensionHostManagementElectron from './ExtensionHostManagementElectron.js'
 import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
 import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
-import * as TestState from '../TestState/TestState.js'
 
 export const state = {
   /**
@@ -58,17 +59,17 @@ const getManagersWithExtensionsToActivate = (extensionHostManagers, extensions) 
 const startSynching = async (extensionHost) => {
   const handleEditorCreate = (editor) => {
     const text = TextDocument.getText(editor)
-    return extensionHost.ipc.invoke('ExtensionHostTextDocument.syncFull', editor.uri, editor.id, editor.languageId, text)
+    return extensionHost.ipc.invoke('ExtensionHostTextDocument.syncFull', editor.uri, editor.uid, editor.languageId, text)
   }
   GlobalEventBus.addListener('editor.create', handleEditorCreate)
 
   const handleEditorChange = (editor, changes) => {
-    return extensionHost.ipc.invoke('ExtensionHostTextDocument.syncIncremental', editor.id, changes)
+    return extensionHost.ipc.invoke('ExtensionHostTextDocument.syncIncremental', editor.uid, changes)
   }
   GlobalEventBus.addListener('editor.change', handleEditorChange)
 
   const handleEditorLanguageChange = (editor) => {
-    return extensionHost.ipc.invoke('ExtensionHostTextDocument.setLanguageId', editor.id, editor.languageId)
+    return extensionHost.ipc.invoke('ExtensionHostTextDocument.setLanguageId', editor.uid, editor.languageId)
   }
 
   GlobalEventBus.addListener('editor.languageChange', handleEditorLanguageChange)
@@ -88,7 +89,7 @@ const startSynching = async (extensionHost) => {
   GlobalEventBus.addListener('preferences.changed', handlePreferencesChange)
 
   const instances = ViewletStates.getAllInstances()
-  const editorInstance = instances.EditorText
+  const editorInstance = ViewletStates.getInstance(ViewletModuleId.EditorText)
   if (editorInstance) {
     await handleEditorCreate(editorInstance.state)
   }

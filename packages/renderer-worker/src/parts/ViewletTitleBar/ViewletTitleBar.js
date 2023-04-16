@@ -2,6 +2,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     disposed: false,
     x,
     y,

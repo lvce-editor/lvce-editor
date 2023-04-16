@@ -18,6 +18,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Id from '../Id/Id.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -51,7 +52,7 @@ const COLUMN_WIDTH = 9 // TODO compute this automatically once
 // }
 
 const canBeRestored = (editor) => {
-  return typeof editor.uri === 'string' && FileSystem.canBeRestored(editor.uri)
+  return typeof editor.uri === 'string' && typeof editor.uid === 'number' && FileSystem.canBeRestored(editor.uri)
 }
 
 const getMainEditors = (state) => {
@@ -84,6 +85,8 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
+    uid: id,
+    moduleId: ViewletModuleId.Main,
   }
 }
 
@@ -200,15 +203,18 @@ export const contentLoaded = async (state) => {
   const tabLabel = Workspace.pathBaseName(editor.uri)
   const tabTitle = getTabTitle(editor.uri)
   const commands = [
-    [/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
+    [/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
   ]
 
   // // TODO race condition: Viewlet may have been resized before it has loaded
+  const childUid = Id.create()
   // // @ts-ignore
   const extraCommands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
       id,
+      // @ts-ignore
+      uid: childUid,
       // @ts-ignore
       parentId: ViewletModuleId.Main,
       uri: editor.uri,
@@ -227,11 +233,11 @@ export const contentLoaded = async (state) => {
   )
   commands.push(...extraCommands)
 
-  if (extraCommands[0].includes(ViewletModuleId.Error)) {
-    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
-  } else {
-    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
-  }
+  // if (extraCommands[0].includes(ViewletModuleId.Error)) {
+  // commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
+  // } else {
+  commands.push(['Viewlet.appendViewlet', state.uid, childUid])
+  // }
   return commands
 }
 
@@ -254,9 +260,9 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       // @ts-ignore
       const commands = await ViewletManager.load(instance, focus, false, options)
       if (commands[0].includes(ViewletModuleId.Error)) {
-        commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
+        commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
       } else {
-        commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+        commands.push(['Viewlet.appendViewlet', state.uid, instance.uid || id])
       }
       return {
         newState: state,
@@ -265,16 +271,18 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     }
   }
 
+  const instanceUid = Id.create()
   const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
+  instance.uid = instanceUid
   const oldActiveIndex = state.activeIndex
   const temporaryUri = `tmp://${Math.random()}`
-  state.editors.push({ uri: temporaryUri })
+  state.editors.push({ uri: temporaryUri, uid: instanceUid })
   state.activeIndex = state.editors.length - 1
   const tabLabel = Workspace.pathBaseName(uri)
   const tabTitle = getTabTitle(uri)
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ ViewletModuleId.Main,
+    /* id */ state.uid,
     /* method */ 'openViewlet',
     /* tabLabel */ tabLabel,
     /* tabTitle */ tabTitle,
@@ -285,14 +293,14 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   instance.setBounds = false
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
-  if (commands[0].includes(ViewletModuleId.Error)) {
-    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, ViewletModuleId.Error])
-  } else {
-    commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
-    if (focus) {
-      commands.push(['Viewlet.send', ViewletModuleId.EditorText, 'focus'])
-    }
+  // if (commands[0].includes(ViewletModuleId.Error)) {
+  //   commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
+  // } else {
+  commands.push(['Viewlet.appendViewlet', state.uid, instanceUid || id])
+  if (focus) {
+    commands.push(['Viewlet.send', instanceUid || id, 'focus'])
   }
+  // }
   if (!ViewletStates.hasInstance(id)) {
     return {
       newState: state,
@@ -420,8 +428,8 @@ export const handleDrop = async (state, files) => {
     }
     console.log(file)
   }
-  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver'])
-  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay'])
+  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'stopHighlightDragOver'])
+  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'hideDragOverlay'])
   return {
     newState,
     commands: allCommands,
@@ -479,7 +487,8 @@ const getId = (editor) => {
 
 export const closeAllEditors = async (state) => {
   const ids = state.editors.map(getId)
-  const commands = [['Viewlet.send', ViewletModuleId.Main, 'dispose'], ...ids.flatMap(Viewlet.disposeFunctional)]
+  const uid = state.uid
+  const commands = [['Viewlet.send', uid, 'dispose'], ...ids.flatMap(Viewlet.disposeFunctional)]
   // RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'dispose')
   state.editors = []
   state.focusedIndex = -1
@@ -492,6 +501,9 @@ export const closeAllEditors = async (state) => {
 export const dispose = () => {}
 
 export const closeEditor = async (state, index) => {
+  if (state.editors.length === 0) {
+    return state
+  }
   if (state.editors.length === 1) {
     return closeAllEditors(state)
   }
@@ -520,22 +532,23 @@ export const closeEditor = async (state, index) => {
     //   height: instance.state.height,
     //   columnWidth: COLUMN_WIDTH,
     // })
-    await RendererProcess.invoke(/* Main.closeOneTab */ 'Main.closeOneTab', /* closeIndex */ oldActiveIndex, /* focusIndex */ newActiveIndex)
+    await RendererProcess.invoke(
+      'Viewlet.send',
+      state.uid,
+      /* Main.closeOneTab */ 'closeOneTab',
+      /* closeIndex */ oldActiveIndex,
+      /* focusIndex */ newActiveIndex
+    )
     return state
   }
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ ViewletModuleId.Main,
-    /* method */ 'closeOneTabOnly',
-    /* closeIndex */ index
-  )
+  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeOneTabOnly', /* closeIndex */ index)
   state.editors.splice(index, 1)
   if (index < state.activeIndex) {
     state.activeIndex--
   }
   state.focusedIndex = state.activeIndex
-
   // TODO just close the tab
+  return state
 }
 
 export const closeFocusedTab = (state) => {
@@ -634,7 +647,7 @@ export const closeOthers = async (state) => {
     // view is kept the same, only tabs are closed
     await RendererProcess.invoke(
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
+      /* id */ state.uid,
       /* method */ 'closeOthers',
       /* keepIndex */ state.focusedIndex,
       /* focusIndex */ state.focusedIndex
@@ -643,7 +656,7 @@ export const closeOthers = async (state) => {
     // view needs to be switched to focused index
     await RendererProcess.invoke(
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
+      /* id */ state.uid,
       /* method */ 'closeOthers',
       /* keepIndex */ state.focusedIndex,
       /* focusIndex */ state.focusedIndex
@@ -657,20 +670,10 @@ export const closeOthers = async (state) => {
 export const closeTabsRight = async (state) => {
   if (state.focusedIndex >= state.activeIndex) {
     // view is kept the same, only tabs are closed
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'closeTabsRight',
-      /* index */ state.focusedIndex
-    )
+    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeTabsRight', /* index */ state.focusedIndex)
   } else {
     // view needs to be switched to focused index
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'closeTabsRight',
-      /* index */ state.focusedIndex
-    )
+    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeTabsRight', /* index */ state.focusedIndex)
   }
   state.editors = state.editors.slice(0, state.focusedIndex + 1)
   state.activeIndex = state.focusedIndex
@@ -679,20 +682,10 @@ export const closeTabsRight = async (state) => {
 export const closeTabsLeft = async (state) => {
   if (state.focusedIndex <= state.activeIndex) {
     // view is kept the same, only tabs are closed
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'closeTabsLeft',
-      /* index */ state.focusedIndex
-    )
+    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeTabsLeft', /* index */ state.focusedIndex)
   } else {
     // view needs to be switched to focused index
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'closeTabsLeft',
-      /* index */ state.focusedIndex
-    )
+    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeTabsLeft', /* index */ state.focusedIndex)
   }
   state.editors = state.editors.slice(state.focusedIndex)
   state.activeIndex = state.focusedIndex
@@ -713,8 +706,9 @@ export const resize = (state, dimensions) => {
   const editor = editors[0]
   let commands = []
   if (editor) {
-    const id = ViewletMap.getId(editor.uri)
-    commands = Viewlet.resize(id, childDimensions)
+    const editorUid = editor.uid
+    Assert.number(editorUid)
+    commands = Viewlet.resize(editorUid, childDimensions)
   }
   return {
     newState: {

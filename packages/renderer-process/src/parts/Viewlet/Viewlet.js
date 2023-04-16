@@ -3,6 +3,7 @@ import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 
 export const state = {
   instances: Object.create(null),
@@ -15,7 +16,7 @@ export const mount = ($Parent, state) => {
   $Parent.replaceChildren(state.$Viewlet)
 }
 
-export const create = (id) => {
+export const create = (id, uid = id) => {
   const module = state.modules[id]
   if (!module) {
     throw new Error(`module not found: ${id}`)
@@ -24,10 +25,11 @@ export const create = (id) => {
     state.instances[id].state.$Viewlet.remove()
   }
   const instanceState = module.create()
+  ComponentUid.set(instanceState.$Viewlet, uid)
   if (module.attachEvents) {
     module.attachEvents(instanceState)
   }
-  state.instances[id] = {
+  state.instances[uid] = {
     state: instanceState,
     factory: module,
   }
@@ -132,7 +134,7 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.create': {
-        create(viewletId)
+        create(viewletId, method)
 
         break
       }
@@ -181,7 +183,7 @@ export const sendMultiple = (commands) => {
 
 export const dispose = (id) => {
   try {
-    Assert.string(id)
+    Assert.number(id)
     const { instances } = state
     const instance = instances[id]
     if (!instance) {
@@ -254,8 +256,14 @@ const ariaAnnounce = async (message) => {
 
 const append = (parentId, childId, referenceNodes) => {
   const parentInstance = state.instances[parentId]
+  if (!parentInstance) {
+    throw new Error(`instance ${parentId} not found`)
+  }
   const $Parent = parentInstance.state.$Viewlet
   const childInstance = state.instances[childId]
+  if (!childInstance) {
+    throw new Error(`child instance not found ${childId}`)
+  }
   const $Child = childInstance.state.$Viewlet
   if (referenceNodes) {
     // TODO this might be too inefficient
@@ -288,7 +296,7 @@ const append = (parentId, childId, referenceNodes) => {
   } else {
     $Parent.append($Child)
   }
-  if (childInstance.factory.postAppend) {
+  if (childInstance.factory && childInstance.factory.postAppend) {
     childInstance.factory.postAppend(childInstance.state)
   }
 }

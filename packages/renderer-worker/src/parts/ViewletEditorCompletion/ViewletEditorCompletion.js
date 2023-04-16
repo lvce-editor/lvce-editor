@@ -12,6 +12,7 @@ import * as VirtualList from '../VirtualList/VirtualList.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     id,
     isOpened: false,
     openingReason: 0,
@@ -168,6 +169,7 @@ export const loadContent = async (state) => {
 export const handleError = async (error) => {
   const displayErrorMessage = getDisplayErrorMessage(error)
   const editor = getEditor()
+  console.log('handle error', editor, displayErrorMessage)
   await EditorShowMessage.editorShowMessage(
     /* editor */ editor,
     /* rowIndex */ 0,

@@ -21,6 +21,7 @@ export const saveState = (state) => {
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     searchValue: '',
     suggestionState: /* Closed */ 0,
     disposed: false,

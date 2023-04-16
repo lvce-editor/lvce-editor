@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -9,6 +10,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     currentViewletId: '',
     x,
     y,
@@ -34,10 +36,10 @@ export const loadContent = (state, savedState) => {
 }
 
 export const contentLoaded = async (state, savedState) => {
-  const { currentViewletId } = state
+  const { currentViewletId, uid } = state
   const commands = []
   const actions = ViewletActions.getActions(currentViewletId)
-  commands.push(['Viewlet.send', ViewletModuleId.SideBar, 'setActions', actions])
+  commands.push(['Viewlet.send', uid, 'setActions', actions])
   return commands
 }
 
@@ -83,7 +85,7 @@ export const openViewlet = async (state, id, focus = false) => {
   state.currentViewletId = id
 
   const childDimensions = getContentDimensions(state, titleAreaHeight)
-
+  const uid = state.uid
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
     id,
@@ -97,21 +99,24 @@ export const openViewlet = async (state, id, focus = false) => {
     y: childDimensions.y,
     width: childDimensions.width,
     height: childDimensions.height,
-    parentId: ViewletModuleId.SideBar,
+    parentId: uid,
     append: true,
   })
   if (commands) {
-    commands.unshift(['Viewlet.dispose', currentViewletId])
+    const currentViewletState = ViewletStates.getState(currentViewletId)
+    const currentViewletUid = currentViewletState.uid
+    Assert.number(currentViewletUid)
+    commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
     const activityBar = ViewletStates.getInstance(ViewletModuleId.ActivityBar)
     if (activityBar) {
       const oldState = activityBar.state
       const newState = activityBar.factory.handleSideBarViewletChange(oldState, id)
-      const extraCommands = ViewletManager.render(activityBar.factory, oldState, newState)
+      const extraCommands = ViewletManager.render(activityBar.factory, oldState, newState, newState.uid)
       activityBar.state = newState
       commands.push(...extraCommands)
     }
     const actions = ViewletActions.getActions(id)
-    commands.push(['Viewlet.send', ViewletModuleId.SideBar, 'setActions', actions])
+    commands.push(['Viewlet.send', uid, 'setActions', actions])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
@@ -156,7 +161,9 @@ export const close = (state) => {
 export const resize = (state, dimensions) => {
   const { titleAreaHeight } = state
   const childDimensions = getContentDimensions(dimensions, titleAreaHeight)
-  const commands = Viewlet.resize(state.currentViewletId, childDimensions)
+  const currentViewletInstance = ViewletStates.getInstance(state.currentViewletId)
+  const currentViewletUid = currentViewletInstance.state.uid
+  const commands = Viewlet.resize(currentViewletUid, childDimensions)
   return {
     newState: {
       ...state,

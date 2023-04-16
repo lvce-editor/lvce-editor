@@ -12,3 +12,8 @@ export const get = ($Element) => {
     $Element = $Element.parentNode
   }
 }
+
+export const fromEvent = (event) => {
+  const { target } = event
+  return get(target)
+}

@@ -51,7 +51,7 @@ const Command = await import('../src/parts/Command/Command.js')
 
 test('handleDrop - single folder', async () => {
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     root: '/test',
     focusedIndex: 1,
     items: [],
@@ -94,7 +94,7 @@ test('handleDrop - single file', async () => {
     return 'file 1 content'
   })
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     root: '/test',
     focusedIndex: 1,
     items: [],
