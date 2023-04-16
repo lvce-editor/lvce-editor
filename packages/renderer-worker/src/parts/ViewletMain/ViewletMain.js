@@ -199,7 +199,7 @@ export const contentLoaded = async (state) => {
   const y = state.y + TAB_HEIGHT
   const width = state.width
   const height = state.height - TAB_HEIGHT
-  const id = ViewletMap.getId(editor.uri)
+  const id = ViewletMap.getModuleId(editor.uri)
   const tabLabel = Workspace.pathBaseName(editor.uri)
   const tabTitle = getTabTitle(editor.uri)
   const commands = [
@@ -248,13 +248,13 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const y = state.y + TAB_HEIGHT
   const width = state.width
   const height = state.height - TAB_HEIGHT
-  const id = ViewletMap.getId(uri)
+  const moduleId = ViewletMap.getModuleId(uri)
 
   for (const editor of state.editors) {
     if (editor.uri === uri) {
       console.log('found existing editor')
       // TODO if the editor is already open, nothing needs to be done
-      const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
+      const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)
       instance.show = false
       instance.setBounds = false
       // @ts-ignore
@@ -262,7 +262,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       if (commands[0].includes(ViewletModuleId.Error)) {
         commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
       } else {
-        commands.push(['Viewlet.appendViewlet', state.uid, instance.uid || id])
+        commands.push(['Viewlet.appendViewlet', state.uid, instance.uid || moduleId])
       }
       return {
         newState: state,
@@ -272,11 +272,10 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   }
 
   const instanceUid = Id.create()
-  const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, x, y, width, height)
+  const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)
   instance.uid = instanceUid
   const oldActiveIndex = state.activeIndex
-  const temporaryUri = `tmp://${Math.random()}`
-  state.editors.push({ uri: temporaryUri, uid: instanceUid })
+  state.editors.push({ uri, uid: instanceUid })
   state.activeIndex = state.editors.length - 1
   const tabLabel = Workspace.pathBaseName(uri)
   const tabTitle = getTabTitle(uri)
@@ -296,19 +295,19 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   // if (commands[0].includes(ViewletModuleId.Error)) {
   //   commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
   // } else {
-  commands.push(['Viewlet.appendViewlet', state.uid, instanceUid || id])
+  commands.push(['Viewlet.appendViewlet', state.uid, instanceUid || moduleId])
   if (focus) {
-    commands.push(['Viewlet.send', instanceUid || id, 'focus'])
+    commands.push(['Viewlet.send', instanceUid || moduleId, 'focus'])
   }
   // }
-  if (!ViewletStates.hasInstance(id)) {
+  if (!ViewletStates.hasInstance(moduleId)) {
     return {
       newState: state,
       commands,
     }
   }
-  const actualUri = ViewletStates.getState(id).uri
-  const index = state.editors.findIndex((editor) => editor.uri === temporaryUri)
+  const actualUri = ViewletStates.getState(moduleId).uri
+  const index = state.editors.findIndex((editor) => editor.uid === instanceUid)
   state.editors[index].uri = actualUri
   return {
     newState: state,
@@ -317,7 +316,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
 }
 
 export const openBackgroundTab = async (state, initialUri, props) => {
-  const id = ViewletMap.getId(initialUri)
+  const id = ViewletMap.getModuleId(initialUri)
   const tabLabel = 'Loading'
   const tabTitle = 'Loading'
   await RendererProcess.invoke(
@@ -482,7 +481,7 @@ export const closeActiveEditor = (state) => {
 }
 
 const getId = (editor) => {
-  return ViewletMap.getId(editor.uri)
+  return ViewletMap.getModuleId(editor.uri)
 }
 
 export const closeAllEditors = async (state) => {
@@ -516,7 +515,7 @@ export const closeEditor = async (state, index) => {
     const oldEditor = state.editors[index]
     state.editors.splice(index, 1)
     const newActiveIndex = index === 0 ? index : index - 1
-    const id = ViewletMap.getId(oldEditor.uri)
+    const id = ViewletMap.getModuleId(oldEditor.uri)
     Viewlet.dispose(id)
     state.activeIndex = newActiveIndex
     state.focusedIndex = newActiveIndex
@@ -575,10 +574,10 @@ export const focusIndex = async (state, index) => {
   const y = state.top + TAB_HEIGHT
   const width = state.width
   const height = state.height - TAB_HEIGHT
-  const id = ViewletMap.getId(editor.uri)
+  const id = ViewletMap.getModuleId(editor.uri)
 
   const oldEditor = state.editors[oldActiveIndex]
-  const oldId = ViewletMap.getId(oldEditor.uri)
+  const oldId = ViewletMap.getModuleId(oldEditor.uri)
   const oldInstance = ViewletStates.getInstance(oldId)
 
   const viewlet = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, editor.uri, x, y, width, height)
