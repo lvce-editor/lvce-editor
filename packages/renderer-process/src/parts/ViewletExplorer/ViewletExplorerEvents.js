@@ -8,6 +8,7 @@ import * as IsHtmlElement from '../IsHtmlElement/IsHtmlElement.js'
 import * as Platform from '../Platform/Platform.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as ViewletExplorerFunctions from './ViewletExplorerFunctions.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 
 // TODO put drop into separate module and use executeCommand to call it
 
@@ -75,7 +76,8 @@ export const handleFocus = (event) => {
   if (!isTrusted || target.className === 'InputBox') {
     return
   }
-  ViewletExplorerFunctions.focus()
+  const uid = ComponentUid.fromEvent(event)
+  ViewletExplorerFunctions.focus(uid)
 }
 
 export const handleBlur = (event) => {
@@ -88,10 +90,11 @@ export const handleBlur = (event) => {
  */
 export const handleDragOver = (event) => {
   Event.preventDefault(event)
+  const uid = ComponentUid.fromEvent(event)
   const { dataTransfer, clientX, clientY } = event
   DataTransfer.setEffectAllowed(dataTransfer, AllowedDragEffectType.CopyMove)
   DataTransfer.setDropEffect(dataTransfer, DropEffectType.Copy)
-  ViewletExplorerFunctions.handleDragOver(clientX, clientY)
+  ViewletExplorerFunctions.handleDragOver(uid, clientX, clientY)
 }
 
 /**
@@ -128,17 +131,18 @@ const getFilePaths = (dataTransfer) => {
 export const handleDrop = async (event) => {
   Event.preventDefault(event)
   Event.stopPropagation(event)
+  const uid = ComponentUid.fromEvent(event)
   const { clientX, clientY, dataTransfer } = event
   const { items } = dataTransfer
   const filePaths = getFilePaths(dataTransfer)
   if (filePaths.length > 0) {
-    ViewletExplorerFunctions.handleDrop(clientX, clientY, filePaths)
+    ViewletExplorerFunctions.handleDrop(uid, clientX, clientY, filePaths)
     return
   }
   // unfortunately, DataTransferItem cannot be transferred to web worker
   // therefore the file system handles are sent to the web worker
   const handles = await GetFileHandlesFromDataTransferItems.getFileHandles(items)
-  ViewletExplorerFunctions.handleDrop(clientX, clientY, handles)
+  ViewletExplorerFunctions.handleDrop(uid, clientX, clientY, handles)
 }
 
 // TODO maybe use aria active descendant instead
@@ -154,22 +158,25 @@ const getFocusedIndexFromFocusOutline = ($Viewlet) => {
 
 export const handleContextMenu = (event) => {
   Event.preventDefault(event)
+  const uid = ComponentUid.fromEvent(event)
   const { button, clientX, clientY } = event
-  ViewletExplorerFunctions.handleContextMenu(button, clientX, clientY)
+  ViewletExplorerFunctions.handleContextMenu(uid, button, clientX, clientY)
 }
 
 export const handleClick = (event) => {
   Event.preventDefault(event)
   const { button, clientX, clientY } = event
-  ViewletExplorerFunctions.handleClickAt(button, clientX, clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletExplorerFunctions.handleClickAt(uid, button, clientX, clientY)
 }
 
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
+  const uid = ComponentUid.fromEvent(event)
   switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
     case WheelEventType.DomDeltaPixel:
-      ViewletExplorerFunctions.handleWheel(deltaY)
+      ViewletExplorerFunctions.handleWheel(uid, deltaY)
       break
     default:
       break
@@ -178,7 +185,8 @@ export const handleWheel = (event) => {
 
 export const handlePointerDown = (event) => {
   const { button, clientX, clientY } = event
-  ViewletExplorerFunctions.handlePointerDown(button, clientX, clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletExplorerFunctions.handlePointerDown(uid, button, clientX, clientY)
 }
 
 export const handleMouseEnter = (event) => {
@@ -208,5 +216,6 @@ export const handleMouseLeave = (event) => {
 export const handleEditingInput = (event) => {
   const { target } = event
   const { value } = target
-  ViewletExplorerFunctions.updateEditingValue(value)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletExplorerFunctions.updateEditingValue(uid, value)
 }

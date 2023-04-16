@@ -333,7 +333,6 @@ const getFn = async (module, fnName) => {
 
 export const executeViewletCommand = async (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
-  console.log({ instance })
   if (!instance) {
     return
   }
