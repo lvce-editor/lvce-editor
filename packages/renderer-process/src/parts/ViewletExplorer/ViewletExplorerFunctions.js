@@ -20,8 +20,8 @@ export const handleContextMenu = (button, x, y) => {
   RendererWorker.send('Explorer.handleContextMenu', button, x, y)
 }
 
-export const handleClickAt = (x, y) => {
-  RendererWorker.send('Explorer.handleClickAt', x, y)
+export const handleClickAt = (button, x, y) => {
+  RendererWorker.send('Explorer.handleClickAt', button, x, y)
 }
 
 export const handleWheel = (deltaY) => {
