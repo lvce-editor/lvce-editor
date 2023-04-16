@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -19,19 +18,14 @@ const EditorShowMessage = await import('../src/parts/EditorCommand/EditorCommand
 jest.useFakeTimers()
 
 test('showMessage - should dispose after 3 seconds', async () => {
-  const editor = {}
+  const editor = {
+    uid: 1,
+  }
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await EditorShowMessage.editorShowMessage(editor, /* rowIndex */ 0, /* columnIndex */ 0, /* message */ 'test', /* isError */ false)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    ViewletModuleId.EditorText,
-    'showOverlayMessage',
-    Number.NaN,
-    Number.NaN,
-    'test'
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'showOverlayMessage', Number.NaN, Number.NaN, 'test')
 
   // TODO use jest fake timers
 
@@ -39,7 +33,7 @@ test('showMessage - should dispose after 3 seconds', async () => {
   jest.runOnlyPendingTimers()
   // TODO assert that message has been hidden now
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.send', ViewletModuleId.EditorText, 'hideOverlayMessage')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.send', 1, 'hideOverlayMessage')
 })
 
 // TODO when multiple messages are shown concurrently, only show the last one
