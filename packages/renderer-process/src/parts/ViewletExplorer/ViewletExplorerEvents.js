@@ -5,7 +5,6 @@ import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as GetFileHandlesFromDataTransferItems from '../GetFileHandlesFromDataTransferItems/GetFileHandlesFromDataTransferItems.js'
 import * as IsHtmlElement from '../IsHtmlElement/IsHtmlElement.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as ViewletExplorerFunctions from './ViewletExplorerFunctions.js'
@@ -162,10 +161,7 @@ export const handleContextMenu = (event) => {
 export const handleClick = (event) => {
   Event.preventDefault(event)
   const { button, clientX, clientY } = event
-  if (button !== MouseEventType.LeftClick) {
-    return
-  }
-  ViewletExplorerFunctions.handleClickAt(clientX, clientY)
+  ViewletExplorerFunctions.handleClickAt(button, clientX, clientY)
 }
 
 export const handleWheel = (event) => {

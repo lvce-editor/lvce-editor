@@ -16,6 +16,8 @@ import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewl
 import * as Workspace from '../Workspace/Workspace.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEndIndex, getParentStartIndex } from './ViewletExplorerShared.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -635,7 +637,10 @@ export const handleClick = (state, index, keepFocus = false) => {
   return clickFn(state, dirent, actualIndex, keepFocus)
 }
 
-export const handleClickAt = (state, x, y) => {
+export const handleClickAt = (state, button, x, y) => {
+  if (button !== MouseEventType.LeftClick) {
+    return state
+  }
   const index = getIndexFromPosition(state, x, y)
   return handleClick(state, index)
 }
