@@ -1,7 +1,7 @@
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletActivityBarFunctions from './ViewletActivityBarFunctions.js'
 
 const get$ItemFromEvent = (event) => {
@@ -32,24 +32,27 @@ export const handleMousedown = (event) => {
   if (!$Item) {
     return
   }
+  const uid = ComponentUid.fromEvent(event)
   Event.preventDefault(event)
   Event.stopPropagation(event)
   const index = getNodeIndex($Item)
-  ViewletActivityBarFunctions.handleClick(index, clientX, clientY)
+  ViewletActivityBarFunctions.handleClick(uid, index, clientX, clientY)
 }
 
 export const handleContextMenu = (event) => {
   const { button, clientX, clientY } = event
   Event.preventDefault(event)
-  ViewletActivityBarFunctions.handleContextMenu(button, clientX, clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletActivityBarFunctions.handleContextMenu(uid, button, clientX, clientY)
 }
 
-export const handleBlur = () => {
-  RendererWorker.send('ActivityBar.handleBlur')
-  ViewletActivityBarFunctions.handleBlur()
+export const handleBlur = (event) => {
+  const uid = ComponentUid.fromEvent(event)
+  ViewletActivityBarFunctions.handleBlur(uid)
 }
 
 export const handleFocus = (event) => {
   Focus.setFocus('activityBar')
-  ViewletActivityBarFunctions.handleFocus()
+  const uid = ComponentUid.fromEvent(event)
+  ViewletActivityBarFunctions.handleFocus(uid)
 }

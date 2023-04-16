@@ -3,22 +3,25 @@
  */
 import { jest } from '@jest/globals'
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
   return {
-    send: jest.fn(),
+    executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletActivityBar = await import('../src/parts/ViewletActivityBar/ViewletActivityBar.js')
 
 test('event - handleClick - top', () => {
   const state = ViewletActivityBar.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletActivityBar.attachEvents(state)
   ViewletActivityBar.setItems(state, [
     {
@@ -52,11 +55,14 @@ test('event - handleClick - top', () => {
   })
   state.$ActivityBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).toHaveBeenCalledWith('ActivityBar.handleClick', 1, 15, 30)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 1, 15, 30)
 })
 
 test('event - handleClick - bottom', () => {
   const state = ViewletActivityBar.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletActivityBar.attachEvents(state)
   ViewletActivityBar.setItems(state, [
     {
@@ -88,11 +94,14 @@ test('event - handleClick - bottom', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith('ActivityBar.handleClick', 2, 15, 30)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 2, 15, 30)
 })
 
 test('event - handleClick - no item is clicked', () => {
   const state = ViewletActivityBar.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletActivityBar.attachEvents(state)
   ViewletActivityBar.setItems(state, [
     {
@@ -125,11 +134,13 @@ test('event - handleClick - no item is clicked', () => {
   })
   state.$ActivityBar.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.send).not.toHaveBeenCalled()
+  expect(ExecuteViewletCommand.executeViewletCommand).not.toHaveBeenCalled()
 })
 
 test('event - handleContextMenu', () => {
   const state = ViewletActivityBar.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletActivityBar.attachEvents(state)
   ViewletActivityBar.setItems(state, [
     {
@@ -163,5 +174,6 @@ test('event - handleContextMenu', () => {
   })
   $ActivityBar.children[0].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).toHaveBeenCalledWith('ActivityBar.handleContextMenu', 0, 15, 30)
+  expect(ExecuteViewletCommand.executeViewletCommand).toBeCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleContextMenu', 0, 15, 30)
 })
