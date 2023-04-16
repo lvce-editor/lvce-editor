@@ -1,15 +1,16 @@
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as ViewletSearchFunctions from './ViewletSearchFunctions.js'
 
 export const handleInput = (event) => {
   const { target } = event
   const { value } = target
-  ViewletSearchFunctions.handleInput(value)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletSearchFunctions.handleInput(uid, value)
 }
 
 export const handleFocus = (event) => {
@@ -48,19 +49,22 @@ export const handleClick = (event) => {
   if (button === MouseEventType.RightClick) {
     return
   }
+  const uid = ComponentUid.fromEvent(event)
   const index = getIndex(target)
-  ViewletSearchFunctions.handleClick(index)
+  ViewletSearchFunctions.handleClick(uid, index)
 }
 
 export const handleContextMenu = (event) => {
   Event.preventDefault(event)
+  const uid = ComponentUid.fromEvent(event)
   const { button, clientX, clientY } = event
-  ViewletSearchFunctions.handleContextMenu(button, clientX, clientY)
+  ViewletSearchFunctions.handleContextMenu(uid, button, clientX, clientY)
 }
 
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
-  ViewletSearchFunctions.handleScrollBarMove(clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletSearchFunctions.handleScrollBarMove(uid, clientY)
 }
 
 export const handleScrollBarPointerUp = (event) => {
@@ -75,31 +79,34 @@ export const handleScrollBarPointerDown = (event) => {
   target.setPointerCapture(pointerId)
   target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, DomEventOptions.Active)
   target.addEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
-  ViewletSearchFunctions.handleScrollBarClick(clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletSearchFunctions.handleScrollBarClick(uid, clientY)
 }
 
 export const handleToggleButtonClick = (event) => {
-  ViewletSearchFunctions.toggleReplace()
+  const uid = ComponentUid.fromEvent(event)
+  ViewletSearchFunctions.toggleReplace(uid)
 }
 
 export const handleHeaderClick = (event) => {
   const { target } = event
   const { title } = target
+  const uid = ComponentUid.fromEvent(event)
   switch (title) {
     case 'Toggle Replace':
-      ViewletSearchFunctions.toggleReplace()
+      ViewletSearchFunctions.toggleReplace(uid)
       break
     case 'Match Case':
-      ViewletSearchFunctions.toggleMatchCase()
+      ViewletSearchFunctions.toggleMatchCase(uid)
       break
     case 'Use Regular Expression':
-      ViewletSearchFunctions.toggleUseRegularExpression()
+      ViewletSearchFunctions.toggleUseRegularExpression(uid)
       break
     case 'Replace All':
-      ViewletSearchFunctions.replaceAll()
+      ViewletSearchFunctions.replaceAll(uid)
       break
     case 'Match Whole Word':
-      ViewletSearchFunctions.toggleMatchWholeWord()
+      ViewletSearchFunctions.toggleMatchWholeWord(uid)
       break
     default:
       break
@@ -109,19 +116,23 @@ export const handleHeaderClick = (event) => {
 
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
-  ViewletSearchFunctions.handleWheel(deltaMode, deltaY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletSearchFunctions.handleWheel(uid, deltaMode, deltaY)
 }
 
 export const handleReplaceInput = (event) => {
   const { target } = event
   const { value } = target
-  ViewletSearchFunctions.handleReplaceInput(value)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletSearchFunctions.handleReplaceInput(uid, value)
 }
 
 export const handleListFocus = (event) => {
-  ViewletSearchFunctions.handleListFocus()
+  const uid = ComponentUid.fromEvent(event)
+  ViewletSearchFunctions.handleListFocus(uid)
 }
 
 export const handleListBlur = (event) => {
-  ViewletSearchFunctions.handleListBlur()
+  const uid = ComponentUid.fromEvent(event)
+  ViewletSearchFunctions.handleListBlur(uid)
 }
