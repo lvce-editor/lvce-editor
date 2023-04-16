@@ -1,13 +1,5 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const handleClickMinmize = () => {
-  RendererWorker.send('TitleBarButtons.handleClickMinimize')
-}
-
-export const handleClickToggleMaximize = () => {
-  RendererWorker.send('TitleBarButtons.handleClickToggleMaximize')
-}
-
-export const handleClickClose = () => {
-  RendererWorker.send('TitleBarButtons.handleClickClose')
-}
+export const handleClickMinimize = ForwardViewletCommand.forwardViewletCommand('handleClickMinimize')
+export const handleClickToggleMaximize = ForwardViewletCommand.forwardViewletCommand('handleClickToggleMaximize')
+export const handleClickClose = ForwardViewletCommand.forwardViewletCommand('handleClickClose')

@@ -314,12 +314,22 @@ export const closeWidget = async (id) => {
   }
 }
 
+const getLazyImport = (module, fnName) => {
+  if (module.LazyCommands && module.LazyCommands[fnName]) {
+    return module.LazyCommands[fnName]
+  }
+  if (module.CommandsWithSideEffectsLazy && module.CommandsWithSideEffectsLazy[fnName]) {
+    return module.CommandsWithSideEffectsLazy[fnName]
+  }
+  return undefined
+}
+
 const getFn = async (module, fnName) => {
   const fn = module.Commands[fnName]
   if (fn) {
     return fn
   }
-  const lazyImport = module.LazyCommands[fnName] || module.CommandsWithSideEffectsLazy[fnName]
+  const lazyImport = getLazyImport(module, fnName)
   if (!lazyImport) {
     throw new Error(`Command not found ${module.name}.${fnName}`)
   }
