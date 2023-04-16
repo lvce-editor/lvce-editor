@@ -19,7 +19,7 @@ const mapExtToEditorType = {
   '.opus': ViewletModuleId.Audio,
 }
 
-export const getId = (uri) => {
+export const getModuleId = (uri) => {
   const fileExtension = Path.fileExtension(uri)
   const type = mapExtToEditorType[fileExtension]
   if (type) {
