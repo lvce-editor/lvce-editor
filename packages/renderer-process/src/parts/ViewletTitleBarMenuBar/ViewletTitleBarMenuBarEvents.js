@@ -1,4 +1,5 @@
 import * as FindIndex from '../../shared/findIndex.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Focus from '../Focus/Focus.js'
 import * as ViewletTitleBarMenuBarFunctions from './ViewletTitleBarMenuBarFunctions.js'
 
@@ -11,19 +12,22 @@ export const handleFocusOut = (event) => {
   if ($ActiveElement && isInsideTitleBarMenu($ActiveElement)) {
     return
   }
-  ViewletTitleBarMenuBarFunctions.closeMenu()
+  const uid = ComponentUid.fromEvent(event)
+  ViewletTitleBarMenuBarFunctions.closeMenu(uid)
 }
 
 export const handlePointerOver = (event) => {
   const { target } = event
   const index = getIndex(target)
-  ViewletTitleBarMenuBarFunctions.handleMouseOver(index)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletTitleBarMenuBarFunctions.handleMouseOver(uid, index)
 }
 
 export const handlePointerOut = (event) => {
   const { target } = event
   const index = getIndex(target)
-  ViewletTitleBarMenuBarFunctions.handleMouseOut(index)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletTitleBarMenuBarFunctions.handleMouseOut(uid, index)
 }
 
 const getNodeIndex = ($Node) => {
@@ -46,7 +50,8 @@ const getIndex = ($Target) => {
 export const handleClick = (event) => {
   const { button, target } = event
   const index = getIndex(target)
-  ViewletTitleBarMenuBarFunctions.handleClick(button, index)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletTitleBarMenuBarFunctions.handleClick(uid, button, index)
 }
 
 const getLevelAndIndex = (event) => {
@@ -64,12 +69,14 @@ const getLevelAndIndex = (event) => {
 export const handleMenuMouseOver = (event) => {
   // TODO just send pixel coordinates instead
   const { level, index } = getLevelAndIndex(event)
-  ViewletTitleBarMenuBarFunctions.handleMenuMouseOver(level, index)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletTitleBarMenuBarFunctions.handleMenuMouseOver(uid, level, index)
 }
 
 export const handleMenuClick = (event) => {
   const { level, index } = getLevelAndIndex(event)
-  ViewletTitleBarMenuBarFunctions.handleMenuClick(level, index)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletTitleBarMenuBarFunctions.handleMenuClick(uid, level, index)
 }
 
 export const handleFocus = () => {

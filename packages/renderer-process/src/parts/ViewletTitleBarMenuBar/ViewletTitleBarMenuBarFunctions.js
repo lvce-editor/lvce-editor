@@ -1,29 +1,9 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const closeMenu = () => {
-  RendererWorker.send('TitleBarMenuBar.closeMenu', false)
-}
-
-export const handlePointerOver = (index) => {
-  RendererWorker.send('TitleBarMenuBar.handleMouseOver', index)
-}
-
-export const handleMouseOut = (index) => {
-  RendererWorker.send('TitleBarMenuBar.handleMouseOut', index)
-}
-
-export const handleClick = (button, index) => {
-  RendererWorker.send('TitleBarMenuBar.handleClick', button, index)
-}
-
-export const handleMouseOver = (index) => {
-  RendererWorker.send('TitleBarMenuBar.handleMouseOver', index)
-}
-
-export const handleMenuMouseOver = (level, index) => {
-  RendererWorker.send('TitleBarMenuBar.handleMenuMouseOver', level, index)
-}
-
-export const handleMenuClick = (level, index) => {
-  RendererWorker.send('TitleBarMenuBar.handleMenuClick', level, index)
-}
+export const closeMenu = ForwardViewletCommand.forwardViewletCommand('closeMenu')
+export const handlePointerOver = ForwardViewletCommand.forwardViewletCommand('handlePointerOver')
+export const handleMouseOut = ForwardViewletCommand.forwardViewletCommand('handleMouseOut')
+export const handleClick = ForwardViewletCommand.forwardViewletCommand('handleClick')
+export const handleMouseOver = ForwardViewletCommand.forwardViewletCommand('handleMouseOver')
+export const handleMenuMouseOver = ForwardViewletCommand.forwardViewletCommand('handleMenuMouseOver')
+export const handleMenuClick = ForwardViewletCommand.forwardViewletCommand('handleMenuClick')
