@@ -225,8 +225,6 @@ export const create = () => {
   $QuickPickInput.role = AriaRoles.ComboBox
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   $QuickPickInput.ariaAutoComplete = AriaAutoCompleteType.List
-  $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
-  $QuickPickInput.addEventListener(DomEventType.BeforeInput, ViewletQuickPickEvents.handleBeforeInput)
   $QuickPickInput.ariaExpanded = AriaBoolean.True
 
   const $QuickPickHeader = document.createElement('div')
@@ -237,8 +235,6 @@ export const create = () => {
   $QuickPickItems.id = Ids.QuickPickItems
   $QuickPickItems.className = 'QuickPickItems'
   $QuickPickItems.role = AriaRoles.ListBox
-  $QuickPickItems.onpointerdown = ViewletQuickPickEvents.handlePointerDown
-  $QuickPickItems.addEventListener(DomEventType.Wheel, ViewletQuickPickEvents.handleWheel, DomEventOptions.Passive)
 
   // TODO this works well with nvda but not with windows narrator
   // probably a bug with windows narrator that doesn't support ariaRoleDescription
@@ -259,6 +255,15 @@ export const create = () => {
     $QuickPickItems,
     $QuickPickStatus: undefined,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $QuickPickItems, $QuickPickInput } = state
+  $QuickPickItems.onpointerdown = ViewletQuickPickEvents.handlePointerDown
+  $QuickPickItems.addEventListener(DomEventType.Wheel, ViewletQuickPickEvents.handleWheel, DomEventOptions.Passive)
+
+  $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
+  $QuickPickInput.addEventListener(DomEventType.BeforeInput, ViewletQuickPickEvents.handleBeforeInput)
 }
 
 export const setPicks = (state, visiblePicks) => {
@@ -297,7 +302,8 @@ export const showNoResults = (state, noResults, unfocusIndex) => {
 
 // TODO have common widgets container for all widgets (this, notifications, context menu)
 export const dispose = (state) => {
-  state.$QuickPickInput.onblur = null
+  const { $QuickPickInput } = state
+  $QuickPickInput.onblur = null
 }
 
 export const setValue = (state, value) => {
