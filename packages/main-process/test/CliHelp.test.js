@@ -15,7 +15,7 @@ const CliHelp = require('../src/parts/CliHelp/CliHelp.js')
 test('handleCliArgs', async () => {
   const spy = jest.spyOn(console, 'info').mockImplementation()
   expect(CliHelp.handleCliArgs({})).toBe(true)
-  expect(spy).toHaveBeenCalledWith(`Lvce-OSS v0.0.0-dev
+  expect(spy).toHaveBeenCalledWith(`lvce-oss v0.0.0-dev
 
 Usage:
   lvce-oss [path]

@@ -20,7 +20,7 @@ jest.mock('electron', () => {
 jest.mock('../src/parts/Platform/Platform.js', () => {
   return {
     applicationName: 'test-app',
-    productName: 'Test App',
+    productNameLong: 'Test App',
   }
 })
 
