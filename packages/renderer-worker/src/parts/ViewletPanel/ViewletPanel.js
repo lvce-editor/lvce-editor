@@ -6,6 +6,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Command from '../Command/Command.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -115,6 +116,11 @@ export const openViewlet = async (state, id, focus = false) => {
     }
   }
   return { ...state }
+}
+
+export const hidePanel = async (state) => {
+  await Command.execute('Layout.hidePanel')
+  return state
 }
 
 export const selectIndex = async (state, index) => {

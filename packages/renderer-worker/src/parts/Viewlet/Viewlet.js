@@ -150,6 +150,7 @@ export const disposeFunctional = (id) => {
       instance.factory.dispose(instance.state)
     }
     const uid = instance.state.uid
+    Assert.number(uid)
     const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
 
     if (instance.factory.getKeyBindings) {
@@ -158,7 +159,9 @@ export const disposeFunctional = (id) => {
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
       for (const child of children) {
-        commands.push(...disposeFunctional(child.id))
+        if (child.id) {
+          commands.push(...disposeFunctional(child.id))
+        }
       }
     }
     instance.status = 'disposed'
@@ -349,6 +352,9 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   const fn = await getFn(instance.factory, fnName)
   const oldState = instance.state
   const newState = await fn(oldState, ...args)
+  if (oldState === newState) {
+    return
+  }
   const actualNewState = 'newState' in newState ? newState.newState : newState
   const commands = ViewletManager.render(instance.factory, oldState, actualNewState)
   ViewletStates.setState(uid, actualNewState)

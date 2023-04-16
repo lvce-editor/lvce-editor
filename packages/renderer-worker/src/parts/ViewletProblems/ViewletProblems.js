@@ -9,8 +9,9 @@ const UiStrings = {
   ProblemsDetected: 'Some problems have been detected in the workspace.',
 }
 
-export const create = () => {
+export const create = (uid) => {
   return {
+    uid,
     problems: [],
     disposed: false,
     focusedIndex: -2,
