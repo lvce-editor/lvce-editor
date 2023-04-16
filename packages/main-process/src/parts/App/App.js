@@ -97,6 +97,7 @@ exports.hydrate = async () => {
   // app
   ElectronApp.on(ElectronAppEventType.WindowAllClosed, ElectronAppListeners.handleWindowAllClosed)
   ElectronApp.on(ElectronAppEventType.BeforeQuit, ElectronAppListeners.handleBeforeQuit)
+  ElectronApp.on(ElectronAppEventType.WebContentsCreated, ElectronAppListeners.handleWebContentsCreated)
   // Electron.app.on('ready', handleAppReady)
   ElectronApp.on(ElectronAppEventType.SecondInstance, ElectronAppListeners.handleSecondInstance)
   await ElectronApp.whenReady()

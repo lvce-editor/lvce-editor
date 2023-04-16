@@ -1,8 +1,9 @@
 const AppWindow = require('../AppWindow/AppWindow.js')
 const Cli = require('../Cli/Cli.js')
-const Command = require('../Command/Command.js')
 const Debug = require('../Debug/Debug.js')
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
+const ElectronShell = require('../ElectronShell/ElectronShell.js')
+const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
 const Platform = require('../Platform/Platform.js')
 const Preferences = require('../Preferences/Preferences.js')
@@ -47,4 +48,20 @@ exports.handleSecondInstance = async (
     return
   }
   await this.handleReady(parsedArgs, workingDirectory)
+}
+
+const handleWebContentsNavigate = (event) => {
+  event.preventDefault()
+}
+
+const handleWebContentsWindowOpen = ({ url }) => {
+  ElectronShell.openExternal(url)
+  return {
+    action: ElectronWindowOpenActionType.Deny,
+  }
+}
+
+exports.handleWebContentsCreated = (event, webContents) => {
+  webContents.on('will-navigate', handleWebContentsNavigate)
+  webContents.setWindowOpenHandler(handleWebContentsWindowOpen)
 }
