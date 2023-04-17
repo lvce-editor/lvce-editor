@@ -3,6 +3,7 @@
  */
 import { jest } from '@jest/globals'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -32,20 +33,6 @@ beforeAll(() => {
   })
 })
 
-beforeEach(() => {
-  jest.resetAllMocks()
-})
-
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
-  return {
-    send: jest.fn(),
-  }
-})
-
-const ViewletExtensions = await import('../src/parts/ViewletExtensions/ViewletExtensions.js')
-
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
-
 beforeAll(() => {
   // workaround for jsdom not supporting Touch constructor
   // @ts-ignore
@@ -59,11 +46,22 @@ beforeAll(() => {
 })
 
 beforeEach(() => {
-  jest.restoreAllMocks()
+  jest.resetAllMocks()
 })
+
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
+  return {
+    executeViewletCommand: jest.fn(() => {}),
+  }
+})
+
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
+const ViewletExtensions = await import('../src/parts/ViewletExtensions/ViewletExtensions.js')
 
 test('event - input', () => {
   const state = ViewletExtensions.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletExtensions.attachEvents(state)
   const { $InputBox } = state
   $InputBox.value = 'abc'
@@ -73,14 +71,16 @@ test('event - input', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleInput', 'abc')
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleInput', 'abc')
   ViewletExtensions.setExtensions(state, [])
 })
 
 // TODO
 test.skip('event - click on install', () => {
   const state = ViewletExtensions.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletExtensions.attachEvents(state)
   ViewletExtensions.setExtensions(state, [
     {
@@ -99,11 +99,13 @@ test.skip('event - click on install', () => {
         cancelable: true,
       })
     )
-  expect(RendererWorker.send).toHaveBeenCalledWith([1, 2133, 'Extensions', 'handleInstall', 'test-author.test=extension-1'])
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith([1, 2133, 'Extensions', 'handleInstall', 'test-author.test=extension-1'])
 })
 
 test.skip('user clicks while installing', () => {
   const state = ViewletExtensions.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletExtensions.attachEvents(state)
   ViewletExtensions.setExtensions(state, [
     {
@@ -121,11 +123,13 @@ test.skip('user clicks while installing', () => {
         cancelable: true,
       })
     )
-  expect(RendererWorker.send).not.toHaveBeenCalled()
+  expect(ExecuteViewletCommand.executeViewletCommand).not.toHaveBeenCalled()
 })
 
 test('event - click - on extension', () => {
   const state = ViewletExtensions.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletExtensions.attachEvents(state)
   ViewletExtensions.setExtensions(state, [
     {
@@ -142,13 +146,15 @@ test('event - click - on extension', () => {
       button: MouseEventType.LeftClick,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleClick', 0)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 0)
 })
 
 // TODO
 test.skip('user clicks uninstall', () => {
   const state = ViewletExtensions.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletExtensions.attachEvents(state)
   ViewletExtensions.setExtensions(state, [
     {
@@ -166,11 +172,13 @@ test.skip('user clicks uninstall', () => {
         cancelable: true,
       })
     )
-  expect(RendererWorker.send).toHaveBeenCalledWith([1, 2133, 'Extensions', 'handleUninstall', 'test-author.test-extension-1'])
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith([1, 2133, 'Extensions', 'handleUninstall', 'test-author.test-extension-1'])
 })
 
 test('icon - error', () => {
   const state = ViewletExtensions.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletExtensions.attachEvents(state)
   ViewletExtensions.setExtensions(state, [
     {
@@ -191,6 +199,8 @@ test('icon - error', () => {
 
 test('icon - error - endless loop bug', () => {
   const state = ViewletExtensions.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletExtensions.attachEvents(state)
   ViewletExtensions.setExtensions(state, [
     {
@@ -219,6 +229,8 @@ test('icon - error - endless loop bug', () => {
 
 test('event - touchstart', () => {
   const state = ViewletExtensions.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletExtensions.attachEvents(state)
   const { $ListItems } = state
   const event = new TouchEvent('touchstart', {
@@ -234,12 +246,16 @@ test('event - touchstart', () => {
     ],
   })
   $ListItems.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleTouchStart', expect.any(Number), [{ clientX: 10, clientY: 10, identifier: 0 }])
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTouchStart', expect.any(Number), [
+    { clientX: 10, clientY: 10, identifier: 0 },
+  ])
 })
 
 test('event - touchmove', () => {
   const state = ViewletExtensions.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletExtensions.attachEvents(state)
   const { $ListItems } = state
   const event = new TouchEvent('touchmove', {
@@ -255,12 +271,16 @@ test('event - touchmove', () => {
     ],
   })
   $ListItems.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleTouchMove', expect.any(Number), [{ clientX: 10, clientY: 10, identifier: 0 }])
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTouchMove', expect.any(Number), [
+    { clientX: 10, clientY: 10, identifier: 0 },
+  ])
 })
 
 test('event - touchend', () => {
   const state = ViewletExtensions.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletExtensions.attachEvents(state)
   const { $ListItems } = state
   const event = new TouchEvent('touchend', {
@@ -276,12 +296,14 @@ test('event - touchend', () => {
     ],
   })
   $ListItems.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleTouchEnd', [{ clientX: 10, clientY: 10, identifier: 0 }])
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTouchEnd', [{ clientX: 10, clientY: 10, identifier: 0 }])
 })
 
 test('event - pointerdown - on scroll bar thumb', () => {
   const state = ViewletExtensions.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletExtensions.attachEvents(state)
   const { $ScrollBarThumb } = state
   const event = new PointerEvent('pointerdown', {
@@ -292,12 +314,14 @@ test('event - pointerdown - on scroll bar thumb', () => {
     button: MouseEventType.LeftClick,
   })
   $ScrollBarThumb.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleScrollBarClick', 20)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleScrollBarClick', 20)
 })
 
 test('event - contextmenu - activated via keyboard', () => {
   const state = ViewletExtensions.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletExtensions.attachEvents(state)
   const { $ListItems } = state
   $ListItems.dispatchEvent(
@@ -308,6 +332,6 @@ test('event - contextmenu - activated via keyboard', () => {
       button: -1,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleContextMenu', -1, 50, 50)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleContextMenu', -1, 50, 50)
 })
