@@ -1,9 +1,4 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const handleReadmeContextMenu = (x, y, props) => {
-  RendererWorker.send('ExtensionDetail.handleReadmeContextMenu', x, y, props)
-}
-
-export const handleIconError = () => {
-  RendererWorker.send('ExtensionDetail.handleIconError')
-}
+export const handleReadmeContextMenu = ForwardViewletCommand.forwardViewletCommand('handleReadmeContextMenu')
+export const handleIconError = ForwardViewletCommand.forwardViewletCommand('handleIconError')

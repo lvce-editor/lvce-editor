@@ -1,9 +1,10 @@
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletExtensionDetailFunctions from './ViewletExtensionDetailFunctions.js'
 
 export const handleIconError = (event) => {
-  ViewletExtensionDetailFunctions.handleIconError()
+  const uid = ComponentUid.fromEvent(event)
+  ViewletExtensionDetailFunctions.handleIconError(uid)
 }
 
 const isLink = ($Element) => {
@@ -17,6 +18,7 @@ const isImage = ($Element) => {
 export const handleReadmeContextMenu = (event) => {
   Event.preventDefault(event)
   const { clientX, clientY, target } = event
+  const uid = ComponentUid.fromEvent(event)
   const props = Object.create(null)
   if (isLink(target)) {
     props.isLink = true
@@ -25,5 +27,5 @@ export const handleReadmeContextMenu = (event) => {
     props.isImage = true
     props.url = target.src
   }
-  ViewletExtensionDetailFunctions.handleReadmeContextMenu(clientX, clientY, props)
+  ViewletExtensionDetailFunctions.handleReadmeContextMenu(uid, clientX, clientY, props)
 }
