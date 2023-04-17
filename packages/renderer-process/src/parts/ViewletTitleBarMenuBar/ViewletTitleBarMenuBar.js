@@ -1,6 +1,7 @@
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as MenuItem from '../MenuItem/MenuItem.js'
@@ -220,7 +221,9 @@ const create$Menu = () => {
 }
 
 // TODO recycle menus
-export const setMenus = (state, changes) => {
+export const setMenus = (state, changes, uid) => {
+  Assert.array(changes)
+  Assert.number(uid)
   const { $$Menus } = state
   for (const change of changes) {
     const type = change[0]
@@ -228,6 +231,7 @@ export const setMenus = (state, changes) => {
       case 'addMenu': {
         const menu = change[1]
         const $Menu = create$Menu()
+        ComponentUid.set($Menu, uid)
         $Menu.onmouseover = ViewletTitleBarMenuBarEvents.handleMenuMouseOver
         $Menu.onclick = ViewletTitleBarMenuBarEvents.handleMenuClick
         const { x, y, width, height, level, focusedIndex } = menu

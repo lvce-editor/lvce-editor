@@ -48,7 +48,7 @@ const renderMenus = {
     } else if (difference < 0) {
       changes.push(['closeMenus', newLength])
     }
-    return [/* method */ 'setMenus', /* changes */ changes]
+    return [/* method */ 'setMenus', /* changes */ changes, newState.uid]
   },
 }
 
