@@ -2,8 +2,9 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 import * as DomEventOptions from '../src/parts/DomEventOptions/DomEventOptions.js'
+import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -37,20 +38,25 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
   return {
-    send: jest.fn(() => {}),
+    executeViewletCommand: jest.fn(() => {}),
   }
 })
 
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletEditorImage = await import('../src/parts/ViewletEditorImage/ViewletEditorImage.js')
 const ViewletEditorImageEvents = await import('../src/parts/ViewletEditorImage/ViewletEditorImageEvents.js')
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 
 test('event - pointerdown', () => {
   const state = ViewletEditorImage.create()
-  ViewletEditorImage.attachEvents(state)
   const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
+  ViewletEditorImage.attachEvents(state)
   const event = new PointerEvent('pointerdown', {
     bubbles: true,
     clientX: 10,
@@ -59,8 +65,8 @@ test('event - pointerdown', () => {
     button: MouseEventType.LeftClick,
   })
   $Viewlet.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('EditorImage.handlePointerDown', 0, 10, 20)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handlePointerDown', 0, 10, 20)
 })
 
 test.skip('event - pointerdown - error - no active pointer with the given id is found', () => {
@@ -72,6 +78,7 @@ test.skip('event - pointerdown - error - no active pointer with the given id is 
     })
   const state = ViewletEditorImage.create()
   const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   const event = new PointerEvent('pointerdown', {
     bubbles: true,
     clientX: 10,
@@ -79,14 +86,15 @@ test.skip('event - pointerdown - error - no active pointer with the given id is 
     pointerId: 0,
   })
   $Viewlet.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('EditorImage.handlePointerDown', 0, 10, 20)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handlePointerDown', 0, 10, 20)
 })
 
 test('event - pointermove after pointerdown', () => {
   const state = ViewletEditorImage.create()
-  ViewletEditorImage.attachEvents(state)
   const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
+  ViewletEditorImage.attachEvents(state)
   const pointerDownEvent = new PointerEvent('pointerdown', {
     bubbles: true,
     clientX: 10,
@@ -103,13 +111,15 @@ test('event - pointermove after pointerdown', () => {
     button: MouseEventType.LeftClick,
   })
   $Viewlet.dispatchEvent(pointerMoveEvent)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(1, 'EditorImage.handlePointerDown', 0, 10, 20)
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(2, 'EditorImage.handlePointerMove', 0, 30, 40)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(2)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenNthCalledWith(1, 1, 'handlePointerDown', 0, 10, 20)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenNthCalledWith(2, 1, 'handlePointerMove', 0, 30, 40)
 })
 
 test('event - pointerup after pointerdown', () => {
   const state = ViewletEditorImage.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletEditorImage.attachEvents(state)
   const spy1 = jest.spyOn(HTMLElement.prototype, 'addEventListener')
   const spy2 = jest.spyOn(HTMLElement.prototype, 'removeEventListener')
@@ -117,7 +127,6 @@ test('event - pointerup after pointerdown', () => {
   const spy3 = jest.spyOn(HTMLElement.prototype, 'setPointerCapture')
   // @ts-ignore
   const spy4 = jest.spyOn(HTMLElement.prototype, 'releasePointerCapture')
-  const { $Viewlet } = state
   const pointerDownEvent = new PointerEvent('pointerdown', {
     bubbles: true,
     clientX: 10,
@@ -158,6 +167,8 @@ test('event - pointerup after pointerdown', () => {
 // TODO some other test causes this test to fail
 test.skip('event - wheel', () => {
   const state = ViewletEditorImage.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   const { $Image } = state
   const event = new WheelEvent('wheel', {
     bubbles: true,
@@ -167,14 +178,15 @@ test.skip('event - wheel', () => {
     deltaY: 40,
   })
   $Image.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('EditorImage.handleWheel', 10, 20, 30, 40)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleWheel', 10, 20, 30, 40)
 })
 
 test('event - contextmenu', () => {
   const state = ViewletEditorImage.create()
-  ViewletEditorImage.attachEvents(state)
   const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
+  ViewletEditorImage.attachEvents(state)
   const event = new MouseEvent('contextmenu', {
     bubbles: true,
     clientX: 10,
@@ -185,6 +197,6 @@ test('event - contextmenu', () => {
   // @ts-ignore
   $Viewlet.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('EditorImage.handleContextMenu', 2, 10, 20)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleContextMenu', 2, 10, 20)
 })

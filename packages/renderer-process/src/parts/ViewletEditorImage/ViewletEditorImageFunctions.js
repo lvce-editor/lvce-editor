@@ -1,25 +1,8 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const handlePointerMove = (pointerId, x, y) => {
-  RendererWorker.send('EditorImage.handlePointerMove', pointerId, x, y)
-}
-
-export const handlePointerUp = (pointerId, x, y) => {
-  RendererWorker.send('EditorImage.handlePointerUp', pointerId, x, y)
-}
-
-export const handlePointerDown = (pointerId, x, y) => {
-  RendererWorker.send('EditorImage.handlePointerDown', pointerId, x, y)
-}
-
-export const handleWheel = (clientX, clientY, deltaX, deltaY) => {
-  RendererWorker.send('EditorImage.handleWheel', clientX, clientY, deltaX, deltaY)
-}
-
-export const handleImageError = () => {
-  RendererWorker.send('EditorImage.handleImageError')
-}
-
-export const handleContextMenu = (button, x, y) => {
-  RendererWorker.send('EditorImage.handleContextMenu', button, x, y)
-}
+export const handlePointerMove = ForwardViewletCommand.forwardViewletCommand('handlePointerMove')
+export const handlePointerUp = ForwardViewletCommand.forwardViewletCommand('handlePointerUp')
+export const handlePointerDown = ForwardViewletCommand.forwardViewletCommand('handlePointerDown')
+export const handleWheel = ForwardViewletCommand.forwardViewletCommand('handleWheel')
+export const handleImageError = ForwardViewletCommand.forwardViewletCommand('handleImageError')
+export const handleContextMenu = ForwardViewletCommand.forwardViewletCommand('handleContextMenu')
