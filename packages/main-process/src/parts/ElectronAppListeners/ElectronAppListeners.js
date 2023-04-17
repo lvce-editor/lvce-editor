@@ -2,9 +2,12 @@ const AppWindow = require('../AppWindow/AppWindow.js')
 const Cli = require('../Cli/Cli.js')
 const Debug = require('../Debug/Debug.js')
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
+const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 const ElectronShell = require('../ElectronShell/ElectronShell.js')
+const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
 const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
+const Logger = require('../Logger/Logger.js')
 const Platform = require('../Platform/Platform.js')
 const Preferences = require('../Preferences/Preferences.js')
 
@@ -51,6 +54,10 @@ exports.handleSecondInstance = async (
 }
 
 const handleWebContentsNavigate = (event) => {
+  if (ElectronBrowserViewState.hasWebContents(event.sender.id)) {
+    return
+  }
+  Logger.error('[main-process] Prevented webcontent navigation')
   event.preventDefault()
 }
 
@@ -61,7 +68,12 @@ const handleWebContentsWindowOpen = ({ url }) => {
   }
 }
 
+/**
+ *
+ * @param {*} event
+ * @param {Electron.WebContents} webContents
+ */
 exports.handleWebContentsCreated = (event, webContents) => {
-  webContents.on('will-navigate', handleWebContentsNavigate)
+  webContents.on(ElectronWebContentsEventType.WillNavigate, handleWebContentsNavigate)
   webContents.setWindowOpenHandler(handleWebContentsWindowOpen)
 }
