@@ -178,12 +178,14 @@ export const mount = (state, $Parent) => {
 
 export const dispose = (state) => {}
 
-export const focus = (state) => {
+export const setFocused = (state, isFocused) => {
   const { $EditorInput } = state
   if (!$EditorInput.isConnected) {
     Logger.warn('unmounted editor cannot be focused')
   }
-  $EditorInput.focus()
+  if (isFocused) {
+    $EditorInput.focus()
+  }
 }
 
 export const setLanguageId = async (state, languageId) => {

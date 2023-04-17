@@ -426,10 +426,7 @@ const renderFocus = {
     return oldState.focused === newState.focused
   },
   apply(oldState, newState) {
-    if (!newState.focused) {
-      return []
-    }
-    return [/* method */ 'focus']
+    return [/* method */ 'setFocused', newState.focused]
   },
 }
 

@@ -243,6 +243,9 @@ export const appendViewlet = (parentId, childId, focus) => {
   if (!childInstance) {
     throw new Error(`child instance ${childId} must be defined to be appended to parent ${parentId}`)
   }
+  if (!parentModule) {
+    throw new Error(`parent module ${parentId} must be defined to append child components`)
+  }
   parentModule.appendViewlet(parentInstanceState.state, childInstance.factory.name, childInstance.state.$Viewlet)
   if (focus && childInstance.factory.focus) {
     childInstance.factory.focus(childInstance.state)

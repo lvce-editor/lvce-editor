@@ -54,6 +54,10 @@ export const getAllInstances = () => {
   return state.instances
 }
 
+export const getValues = () => {
+  return Object.values(state.instances)
+}
+
 export const getState = (key) => {
   const instance = getInstance(key)
   if (!instance) {
