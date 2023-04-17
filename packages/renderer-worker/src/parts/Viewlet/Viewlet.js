@@ -343,4 +343,22 @@ const getFn = async (module, fnName) => {
   return lazyFn
 }
 
-export const executeViewletCommand = async (uid, fnName, ...args) => {}
+export const executeViewletCommand = async (uid, fnName, ...args) => {
+  const instance = ViewletStates.getInstance(uid)
+  if (!instance) {
+    return
+  }
+  const fn = await getFn(instance.factory, fnName)
+  const oldState = instance.state
+  const newState = await fn(oldState, ...args)
+  if (oldState === newState) {
+    return
+  }
+  const actualNewState = 'newState' in newState ? newState.newState : newState
+  const commands = ViewletManager.render(instance.factory, oldState, actualNewState)
+  ViewletStates.setState(uid, actualNewState)
+  if (commands.length === 0) {
+    return
+  }
+  await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
+}
