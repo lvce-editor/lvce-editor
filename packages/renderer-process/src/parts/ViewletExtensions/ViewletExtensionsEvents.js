@@ -5,6 +5,7 @@ import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as TouchEvent from '../TouchEvent/TouchEvent.js'
 import * as ViewletExtensionsFunctions from './ViewletExtensionsFunctions.js'
 
 export const handleScrollBarThumbPointerMove = (event) => {
@@ -112,48 +113,30 @@ export const handleIconError = (event) => {
 export const handleScroll = (event) => {}
 
 /**
- *
- * @param {TouchList} touchList
- */
-const toArray = (touchList) => {
-  const touchArray = []
-  // @ts-ignore
-  for (const item of touchList) {
-    touchArray.push({
-      clientX: item.clientX,
-      clientY: item.clientY,
-      identifier: item.identifier,
-    })
-  }
-  return touchArray
-}
-
-/**
  * @param {TouchEvent} event
  */
 export const handleTouchMove = (event) => {
-  const { changedTouches, timeStamp } = event
-  const changedTouchesArray = toArray(changedTouches)
+  const { timeStamp } = event
+  const { changedTouches } = TouchEvent.toSimpleTouchEvent(event)
   const uid = ComponentUid.fromEvent(event)
-  ViewletExtensionsFunctions.handleTouchMove(uid, timeStamp, changedTouchesArray)
+  ViewletExtensionsFunctions.handleTouchMove(uid, timeStamp, changedTouches)
 }
 
 /**
  * @param {TouchEvent} event
  */
 export const handleTouchStart = (event) => {
-  const { changedTouches, timeStamp } = event
-  const changedTouchesArray = toArray(changedTouches)
+  const { timeStamp } = event
+  const { changedTouches } = TouchEvent.toSimpleTouchEvent(event)
   const uid = ComponentUid.fromEvent(event)
-  ViewletExtensionsFunctions.handleTouchStart(uid, timeStamp, changedTouchesArray)
+  ViewletExtensionsFunctions.handleTouchStart(uid, timeStamp, changedTouches)
 }
 
 /**
  * @param {TouchEvent} event
  */
 export const handleTouchEnd = (event) => {
-  const { changedTouches } = event
-  const changedTouchesArray = toArray(changedTouches)
+  const { changedTouches } = TouchEvent.toSimpleTouchEvent(event)
   const uid = ComponentUid.fromEvent(event)
-  ViewletExtensionsFunctions.handleTouchEnd(uid, changedTouchesArray)
+  ViewletExtensionsFunctions.handleTouchEnd(uid, changedTouches)
 }
