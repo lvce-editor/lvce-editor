@@ -248,7 +248,7 @@ test('event - touchstart', () => {
   $ListItems.dispatchEvent(event)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTouchStart', expect.any(Number), [
-    { clientX: 10, clientY: 10, identifier: 0 },
+    { x: 10, y: 10, identifier: 0 },
   ])
 })
 
@@ -273,7 +273,7 @@ test('event - touchmove', () => {
   $ListItems.dispatchEvent(event)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTouchMove', expect.any(Number), [
-    { clientX: 10, clientY: 10, identifier: 0 },
+    { x: 10, y: 10, identifier: 0 },
   ])
 })
 
@@ -297,7 +297,7 @@ test('event - touchend', () => {
   })
   $ListItems.dispatchEvent(event)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTouchEnd', [{ clientX: 10, clientY: 10, identifier: 0 }])
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTouchEnd', [{ x: 10, y: 10, identifier: 0 }])
 })
 
 test('event - pointerdown - on scroll bar thumb', () => {
