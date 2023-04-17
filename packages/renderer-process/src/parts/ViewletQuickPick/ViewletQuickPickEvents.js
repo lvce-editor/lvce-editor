@@ -1,5 +1,6 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
 import * as Platform from '../Platform/Platform.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
@@ -40,10 +41,11 @@ const getTargetIndex = ($Target) => {
 
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
+  const uid = ComponentUid.fromEvent(event)
   switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
     case WheelEventType.DomDeltaPixel:
-      ViewletQuickPickFunctions.handleWheel(deltaY)
+      ViewletQuickPickFunctions.handleWheel(uid, deltaY)
       break
     default:
       break
@@ -60,7 +62,8 @@ export const handlePointerDown = (event) => {
   }
   Event.preventDefault(event)
   const { clientX, clientY } = event
-  ViewletQuickPickFunctions.handleClickAt(clientX, clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletQuickPickFunctions.handleClickAt(uid, clientX, clientY)
 }
 
 // TODO beforeinput event should prevent input event maybe
@@ -78,11 +81,13 @@ export const handlePointerDown = (event) => {
 export const handleInput = (event) => {
   const $Target = event.target
   const { value } = $Target
-  ViewletQuickPickFunctions.handleInput(value)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletQuickPickFunctions.handleInput(uid, value)
 }
 
 export const handleBlur = (event) => {
-  ViewletQuickPickFunctions.handleBlur()
+  const uid = ComponentUid.fromEvent(event)
+  ViewletQuickPickFunctions.handleBlur(uid)
 }
 
 // TODO
@@ -93,5 +98,6 @@ export const handleBeforeInput = (event) => {
   Event.preventDefault(event)
   const { target, inputType, data } = event
   const { selectionStart, selectionEnd } = target
-  ViewletQuickPickFunctions.handleBeforeInput(inputType, data, selectionStart, selectionEnd)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletQuickPickFunctions.handleBeforeInput(uid, inputType, data, selectionStart, selectionEnd)
 }
