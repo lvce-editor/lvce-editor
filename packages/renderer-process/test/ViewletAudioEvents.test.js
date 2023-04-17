@@ -2,23 +2,25 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
   return {
-    send: jest.fn(),
+    executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
-
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletAudio = await import('../src/parts/ViewletAudio/ViewletAudio.js')
 
 test('event - error', () => {
   const state = ViewletAudio.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletAudio.attachEvents(state)
   const { $Audio } = state
   // @ts-ignore
@@ -28,6 +30,11 @@ test('event - error', () => {
   }
   const event = new Event('error')
   $Audio.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Audio.handleAudioError', 4, 'MEDIA_ELEMENT_ERROR: Media load rejected by URL safety check')
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(
+    1,
+    'handleAudioError',
+    4,
+    'MEDIA_ELEMENT_ERROR: Media load rejected by URL safety check'
+  )
 })
