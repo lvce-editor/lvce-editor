@@ -87,7 +87,7 @@ export const getModule = (method) => {
   })
   await InlineDynamicImportsFile.inlineDynamicModules({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Module/Module.js`,
-    eagerlyLoadedModules: ['Css', 'InitData', 'KeyBindings', 'Layout', 'Location', 'Meta', 'Viewlet', 'WebStorage', 'Window'],
+    eagerlyLoadedModules: ['Css', 'InitData', 'Layout', 'Location', 'Meta', 'Viewlet', 'WebStorage', 'Window'],
     ipcPostFix: true,
   })
   await InlineDynamicImportsFile.inlineDynamicModules({

@@ -9,7 +9,6 @@ export const EditorHover = 8
 export const EditorRename = 9
 export const ImagePreview = 10
 export const InitData = 11
-export const KeyBindings = 12
 export const Layout = 13
 export const Location = 14
 export const Main = 15

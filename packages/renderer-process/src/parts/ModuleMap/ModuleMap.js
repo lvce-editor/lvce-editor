@@ -57,8 +57,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.ImagePreview
     case 'InitData.getInitData':
       return ModuleId.InitData
-    case 'KeyBindings.hydrate':
-      return ModuleId.KeyBindings
     case 'Layout.getBounds':
     case 'Layout.hide':
     case 'Layout.hydrate':
