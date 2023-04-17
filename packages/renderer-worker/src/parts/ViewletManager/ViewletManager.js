@@ -171,6 +171,9 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
     for (const item of module.render) {
       if (!item.isEqual(oldState, newState)) {
         const command = item.apply(oldState, newState)
+        if (command.length === 0) {
+          throw new Error('command must have length one or more')
+        }
         if (command[0] !== 'Viewlet.send' && command[0] !== 'Viewlet.ariaAnnounce') {
           command.unshift('Viewlet.send', uid)
         }

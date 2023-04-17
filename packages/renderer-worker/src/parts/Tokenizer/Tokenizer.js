@@ -4,6 +4,7 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as TokenizerState from '../TokenizerState/TokenizerState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const getTokenizePath = (languageId) => {
   const tokenizePath = Languages.getTokenizeFunctionPath(languageId)
@@ -11,22 +12,23 @@ const getTokenizePath = (languageId) => {
 }
 
 export const handleTokenizeChange = async () => {
-  const instances = ViewletStates.getAllInstances()
-  const instance = instances.EditorText
-  if (!instance) {
-    return
+  const instances = ViewletStates.getValues()
+  for (const instance of instances) {
+    if (instance.state.moduleId === ViewletModuleId.EditorText) {
+      const state = instance.state
+      if (!TokenizerState.isConnectedEditor(state.id)) {
+        return
+      }
+      const tokenizer = Tokenizer.getTokenizer(state.languageId)
+      const newState = {
+        ...instance.state,
+        tokenizer,
+        embeds: [], // force rendering
+      }
+      console.log({ tokenizer, newState, languageId: state.languageId })
+      await Viewlet.setState(newState.uid, newState)
+    }
   }
-  const state = instance.state
-  if (!TokenizerState.isConnectedEditor(state.id)) {
-    return
-  }
-  const tokenizer = Tokenizer.getTokenizer(state.languageId)
-  const newState = {
-    ...instance.state,
-    tokenizer,
-    embeds: [], // force rendering
-  }
-  await Viewlet.setState('EditorText', newState)
 }
 
 // TODO loadTokenizer should be invoked from renderer worker

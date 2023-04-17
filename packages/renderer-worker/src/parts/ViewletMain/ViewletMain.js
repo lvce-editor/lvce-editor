@@ -253,17 +253,15 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   for (const editor of state.editors) {
     if (editor.uri === uri) {
       console.log('found existing editor')
+      const childUid = Id.create()
       // TODO if the editor is already open, nothing needs to be done
       const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)
       instance.show = false
       instance.setBounds = false
+      instance.uid = childUid
       // @ts-ignore
       const commands = await ViewletManager.load(instance, focus, false, options)
-      if (commands[0].includes(ViewletModuleId.Error)) {
-        commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
-      } else {
-        commands.push(['Viewlet.appendViewlet', state.uid, instance.uid || moduleId])
-      }
+      commands.push(['Viewlet.appendViewlet', state.uid, childUid])
       return {
         newState: state,
         commands,
@@ -297,7 +295,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   // } else {
   commands.push(['Viewlet.appendViewlet', state.uid, instanceUid || moduleId])
   if (focus) {
-    commands.push(['Viewlet.send', instanceUid || moduleId, 'focus'])
+    commands.push(['Viewlet.focus', instanceUid])
   }
   // }
   if (!ViewletStates.hasInstance(moduleId)) {
@@ -351,6 +349,7 @@ export const openBackgroundTab = async (state, initialUri, props) => {
 
 const executeEditorCommand = async (editor, commandId) => {
   const id = getId(editor)
+  console.log({ editor })
   const actualId = id === 'EditorText' ? 'Editor' : id
   const fullCommandId = `${actualId}.${commandId}`
   await Command.execute(fullCommandId)
@@ -571,7 +570,7 @@ export const focusIndex = async (state, index) => {
 
   const editor = state.editors[index]
   const x = state.x
-  const y = state.top + TAB_HEIGHT
+  const y = state.y + TAB_HEIGHT
   const width = state.width
   const height = state.height - TAB_HEIGHT
   const id = ViewletMap.getModuleId(editor.uri)
@@ -580,12 +579,16 @@ export const focusIndex = async (state, index) => {
   const oldId = ViewletMap.getModuleId(oldEditor.uri)
   const oldInstance = ViewletStates.getInstance(oldId)
 
-  const viewlet = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, editor.uri, x, y, width, height)
+  const instanceUid = Id.create()
+  const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, editor.uri, x, y, width, height)
+  instance.show = false
+  instance.setBounds = false
+  instance.uid = instanceUid
 
   // TODO race condition
   RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ ViewletModuleId.Main,
+    /* id */ state.uid,
     /* method */ 'focusAnotherTab',
     /* unFocusIndex */ oldActiveIndex,
     /* focusIndex */ state.activeIndex
@@ -595,11 +598,16 @@ export const focusIndex = async (state, index) => {
     console.log('has background true')
     const props = BackgroundTabs.get(editor.uri)
     // @ts-ignore
-    await ViewletManager.load(viewlet, false, false, props)
+    const commands = await ViewletManager.load(instance, false, false, props)
+    commands.push(['Viewlet.appendViewlet', state.uid, instanceUid])
+    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   } else {
     console.log('has background false')
     // @ts-ignore
-    await ViewletManager.load(viewlet)
+    const commands = await ViewletManager.load(instance)
+    commands.push(['Viewlet.appendViewlet', state.uid, instanceUid])
+    console.log({ commands })
+    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
   if (oldInstance && oldInstance.factory.hide) {

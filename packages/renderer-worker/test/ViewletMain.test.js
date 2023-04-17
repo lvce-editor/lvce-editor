@@ -2029,7 +2029,7 @@ test('handleDrop - one file', async () => {
     ['Viewlet.create', 'Editor', 1],
     ['Viewlet.addKeyBindings', 1, expect.anything()],
     ['Viewlet.appendViewlet', 1, 1],
-    ['Viewlet.send', 1, 'focus'],
+    ['Viewlet.focus', 1],
     ['Viewlet.send', 1, 'stopHighlightDragOver'],
     ['Viewlet.send', 1, 'hideDragOverlay'],
   ])

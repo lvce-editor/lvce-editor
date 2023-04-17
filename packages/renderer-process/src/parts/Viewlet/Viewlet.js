@@ -63,7 +63,9 @@ export const invoke = (viewletId, method, ...args) => {
 
 export const focus = (viewletId) => {
   const instance = state.instances[viewletId]
-  if (instance && instance.factory && instance.factory.focus) {
+  if (instance.factory && instance.factory.setFocused) {
+    instance.factory.setFocused(instance.state, true)
+  } else if (instance && instance.factory && instance.factory.focus) {
     instance.factory.focus(instance.state)
   } else {
     // TODO push focusContext
@@ -242,6 +244,9 @@ export const appendViewlet = (parentId, childId, focus) => {
   const childInstance = state.instances[childId]
   if (!childInstance) {
     throw new Error(`child instance ${childId} must be defined to be appended to parent ${parentId}`)
+  }
+  if (!parentModule) {
+    throw new Error(`parent module ${parentId} must be defined to append child components`)
   }
   parentModule.appendViewlet(parentInstanceState.state, childInstance.factory.name, childInstance.state.$Viewlet)
   if (focus && childInstance.factory.focus) {

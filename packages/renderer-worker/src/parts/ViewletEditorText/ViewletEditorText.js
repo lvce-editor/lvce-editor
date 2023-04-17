@@ -44,10 +44,10 @@ export const handleTokenizeChange = () => {
 
 // TODO uri?
 export const create = (id, uri, x, y, width, height) => {
-  const state = Editor.create(id, uri, 'unknown', '')
-  const newState = Editor.setBounds(state, x, y, width, height, COLUMN_WIDTH)
-  const fileName = Workspace.pathBaseName(state.uri)
+  const fileName = Workspace.pathBaseName(uri)
   const languageId = Languages.getLanguageId(fileName)
+  const state = Editor.create(id, uri, languageId, '')
+  const newState = Editor.setBounds(state, x, y, width, height, COLUMN_WIDTH)
   return {
     ...newState,
     uri,
@@ -188,12 +188,12 @@ export const contentLoadedEffects = async (state) => {
   // GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   // GlobalEventBus.addListener('editor.change', handleEditorChange)
   const newLanguageId = getLanguageId(state)
-  await Command.execute(/* Editor.setLanguageId */ 'Editor.setLanguageId', /* languageId */ newLanguageId)
+  await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId)
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
   GlobalEventBus.emitEvent('editor.create', state)
-  Tokenizer.addConnectedEditor(state.id)
+  Tokenizer.addConnectedEditor(state.uid)
 }
 
 export const handleLanguagesChanged = (state) => {
