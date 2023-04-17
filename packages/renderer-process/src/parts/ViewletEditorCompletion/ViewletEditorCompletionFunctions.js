@@ -1,24 +1,7 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const selectIndex = (index) => {
-  RendererWorker.send('EditorCompletion.selectIndex', index)
-}
-
-export const handleClickAt = (x, y) => {
-  RendererWorker.send('EditorCompletion.handleClickAt', x, y)
-}
-
-export const handleWheel = (deltaMode, deltaY) => {
-  RendererWorker.send('EditorCompletion.handleWheel', deltaMode, deltaY)
-}
-
-/**
- * @param {number} y
- */
-export const handleScrollBarClick = (y) => {
-  RendererWorker.send('EditorCompletion.handleScrollBarClick', y)
-}
-
-export const handleScrollBarThumbPointerMove = (y) => {
-  RendererWorker.send('EditorCompletion.handleScrollBarMove', y)
-}
+export const selectIndex = ForwardViewletCommand.forwardViewletCommand('selectIndex')
+export const handleClickAt = ForwardViewletCommand.forwardViewletCommand('handleClickAt')
+export const handleWheel = ForwardViewletCommand.forwardViewletCommand('handleWheel')
+export const handleScrollBarClick = ForwardViewletCommand.forwardViewletCommand('handleScrollBarClick')
+export const handleScrollBarThumbPointerMove = ForwardViewletCommand.forwardViewletCommand('handleScrollBarThumbPointerMove')
