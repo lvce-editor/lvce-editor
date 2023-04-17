@@ -1,61 +1,11 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-/**
- * @param {string} value
- */
-export const handleInput = (value) => {
-  RendererWorker.send('Source Control.handleInput', value)
-}
-
-/**
- * @param {number} index
- */
-export const handleMouseOver = (index) => {
-  RendererWorker.send('Source Control.handleMouseOver', index)
-}
-
-/**
- * @param {number} index
- */
-export const handleMouseOut = (index) => {
-  RendererWorker.send('Source Control.handleMouseOut', index)
-}
-
-/**
- * @param {number} index
- */
-export const handleClick = (index) => {
-  RendererWorker.send('Source Control.handleClick', index)
-}
-
-/**
- * @param {number} index
- */
-export const handleButtonClick = (index) => {
-  RendererWorker.send('Source Control.handleButtonClick', index)
-}
-
-/**
- * @param {number} index
- */
-export const handleClickAdd = (index) => {
-  RendererWorker.send('Source Control.handleClickAdd', index)
-}
-
-/**
- * @param {number} index
- */
-export const handleClickRestore = (index) => {
-  RendererWorker.send('Source Control.handleClickRestore', index)
-}
-
-/**
- * @param {number} index
- */
-export const handleClickOpenFile = (index) => {
-  RendererWorker.send('Source Control.handleClickOpenFile', index)
-}
-
-export const handleContextMenu = (button, x, y) => {
-  RendererWorker.send('Source Control.handleContextMenu', button, x, y)
-}
+export const handleInput = ForwardViewletCommand.forwardViewletCommand('handleInput')
+export const handleMouseOver = ForwardViewletCommand.forwardViewletCommand('handleMouseOver')
+export const handleMouseOut = ForwardViewletCommand.forwardViewletCommand('handleMouseOut')
+export const handleClick = ForwardViewletCommand.forwardViewletCommand('handleClick')
+export const handleButtonClick = ForwardViewletCommand.forwardViewletCommand('handleButtonClick')
+export const handleClickAdd = ForwardViewletCommand.forwardViewletCommand('handleClickAdd')
+export const handleClickRestore = ForwardViewletCommand.forwardViewletCommand('handleClickRestore')
+export const handleClickOpenFile = ForwardViewletCommand.forwardViewletCommand('handleClickOpenFile')
+export const handleContextMenu = ForwardViewletCommand.forwardViewletCommand('handleContextMenu')

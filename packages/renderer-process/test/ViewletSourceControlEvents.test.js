@@ -2,22 +2,25 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
   return {
-    send: jest.fn(),
+    executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletSourceControl = await import('../src/parts/ViewletSourceControl/ViewletSourceControl.js')
 
 test('event - click', () => {
   const state = ViewletSourceControl.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletSourceControl.attachEvents(state)
   ViewletSourceControl.setChangedFiles(state, [
     {
@@ -36,11 +39,14 @@ test('event - click', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith('Source Control.handleClick', 0)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 0)
 })
 
 test('event - mouseover', () => {
   const state = ViewletSourceControl.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletSourceControl.attachEvents(state)
   ViewletSourceControl.setChangedFiles(state, [
     {
@@ -58,11 +64,14 @@ test('event - mouseover', () => {
     cancelable: true,
   })
   $ViewletTree.children[0].dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Source Control.handleMouseOver', 0)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleMouseOver', 0)
 })
 
 test('event - contextmenu', () => {
   const state = ViewletSourceControl.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletSourceControl.attachEvents(state)
   ViewletSourceControl.setChangedFiles(state, [
     {
@@ -83,11 +92,14 @@ test('event - contextmenu', () => {
   })
   $ViewletTree.children[0].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Source Control.handleContextMenu', 0, 10, 20)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleContextMenu', 0, 10, 20)
 })
 
 test('event - input', () => {
   const state = ViewletSourceControl.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletSourceControl.attachEvents(state)
   const { $ViewSourceControlInput } = state
   $ViewSourceControlInput.value = 'test'
@@ -96,5 +108,6 @@ test('event - input', () => {
     cancelable: true,
   })
   $ViewSourceControlInput.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Source Control.handleInput', 'test')
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleInput', 'test')
 })

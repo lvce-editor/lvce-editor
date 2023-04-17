@@ -1,4 +1,5 @@
 import { findIndex } from '../../shared/findIndex.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as ViewletSourceControlFunctions from './ViewletSourceControlFunctions.js'
@@ -21,9 +22,10 @@ const getButtonIndex = ($Node) => {
 
 export const handleClick = (event) => {
   const { target } = event
+  const uid = ComponentUid.fromEvent(event)
   if (target.className === 'SourceControlButton') {
     const index = getButtonIndex(target)
-    ViewletSourceControlFunctions.handleButtonClick(index)
+    ViewletSourceControlFunctions.handleButtonClick(uid, index)
     return
   }
   const $Parent = target.closest('.SourceControlItems')
@@ -31,35 +33,39 @@ export const handleClick = (event) => {
   if (index === -1) {
     return
   }
-  ViewletSourceControlFunctions.handleClick(index)
+  ViewletSourceControlFunctions.handleClick(uid, index)
 }
 
 export const handleMouseOver = (event) => {
   const { target } = event
   const $Parent = target.closest('.SourceControlItems')
   const index = findIndex($Parent, target)
-  ViewletSourceControlFunctions.handleMouseOver(index)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletSourceControlFunctions.handleMouseOver(uid, index)
 }
 
 export const handleMouseOut = (event) => {
   const { target, relatedTarget } = event
   const $Parent = relatedTarget.closest('.SourceControlItems')
+  const uid = ComponentUid.fromEvent(event)
   if (!$Parent) {
-    ViewletSourceControlFunctions.handleMouseOut(-1)
+    ViewletSourceControlFunctions.handleMouseOut(uid, -1)
     return
   }
   const index = findIndex($Parent, target)
-  ViewletSourceControlFunctions.handleMouseOut(index)
+  ViewletSourceControlFunctions.handleMouseOut(uid, index)
 }
 
 export const handleContextMenu = (event) => {
   Event.preventDefault(event)
   const { button, clientX, clientY } = event
-  ViewletSourceControlFunctions.handleContextMenu(button, clientX, clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletSourceControlFunctions.handleContextMenu(uid, button, clientX, clientY)
 }
 
 export const handleInput = (event) => {
   const { target } = event
   const { value } = target
-  ViewletSourceControlFunctions.handleInput(value)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletSourceControlFunctions.handleInput(uid, value)
 }
