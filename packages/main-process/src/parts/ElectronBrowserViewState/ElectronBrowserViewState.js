@@ -1,3 +1,5 @@
+const Assert = require('../Assert/Assert.js')
+
 const state = {
   browserViews: Object.create(null),
   fallThroughKeyBindings: [],
@@ -9,6 +11,10 @@ exports.add = (id, browserWindow, view) => {
   state.browserViews[id] = { browserWindow, view }
 }
 
+exports.hasWebContents = (id) => {
+  Assert.number(id)
+  return id in state.browserViews
+}
 /**
  *
  * @param {number} id
