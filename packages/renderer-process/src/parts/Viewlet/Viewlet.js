@@ -63,7 +63,9 @@ export const invoke = (viewletId, method, ...args) => {
 
 export const focus = (viewletId) => {
   const instance = state.instances[viewletId]
-  if (instance && instance.factory && instance.factory.focus) {
+  if (instance.factory && instance.factory.setFocused) {
+    instance.factory.setFocused(instance.state, true)
+  } else if (instance && instance.factory && instance.factory.focus) {
     instance.factory.focus(instance.state)
   } else {
     // TODO push focusContext
