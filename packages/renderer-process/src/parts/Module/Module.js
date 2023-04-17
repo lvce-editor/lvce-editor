@@ -30,8 +30,6 @@ export const load = (moduleId) => {
       return import('../ImagePreview/ImagePreview.ipc.js')
     case ModuleId.InitData:
       return import('../InitData/InitData.ipc.js')
-    case ModuleId.KeyBindings:
-      return import('../KeyBindings/KeyBindings.ipc.js')
     case ModuleId.Layout:
       return import('../Layout/Layout.ipc.js')
     case ModuleId.Location:
