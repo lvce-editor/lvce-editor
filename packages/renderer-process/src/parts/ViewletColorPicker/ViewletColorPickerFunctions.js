@@ -1,18 +1,4 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-/**
- * @param {number} x
- * @param {number} y
- */
-export const handleSliderPointerMove = (x, y) => {
-  RendererWorker.send('ColorPicker.handleSliderPointerMove', x, y)
-}
-
-/**
- *
- * @param {number} x
- * @param {number} y
- */
-export const handleSliderPointerDown = (x, y) => {
-  RendererWorker.send('ColorPicker.handleSliderPointerDown', x, y)
-}
+export const handleSliderPointerMove = ForwardViewletCommand.forwardViewletCommand('handleSliderPointerMove')
+export const handleSliderPointerDown = ForwardViewletCommand.forwardViewletCommand('handleSliderPointerDown')
