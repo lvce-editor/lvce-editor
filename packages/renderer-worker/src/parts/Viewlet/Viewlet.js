@@ -328,9 +328,8 @@ const getLazyImport = (module, fnName) => {
 }
 
 const getFn = async (module, fnName) => {
-  const fn = module.Commands[fnName]
-  if (fn) {
-    return fn
+  if (module.Commands && module.Commands[fnName]) {
+    return module.Commands[fnName]
   }
   const lazyImport = getLazyImport(module, fnName)
   if (!lazyImport) {
