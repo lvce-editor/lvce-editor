@@ -9,8 +9,9 @@ export const handleTouchMove = (state, timeStamp, touches) => {
   }
   const { touchOffsetY, deltaY, touchTimeStamp } = state
   const touch = touches[0]
-  const { clientY } = touch
-  const newTouchOffsetY = clientY
+  const { y } = touch
+  Assert.number(y)
+  const newTouchOffsetY = y
   const touchDifference = newTouchOffsetY - touchOffsetY
   const newDeltaY = deltaY - touchDifference
   const timeDifference = timeStamp - touchTimeStamp
