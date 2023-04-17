@@ -31,7 +31,7 @@ beforeEach(() => {
 })
 
 test('addKeyBindings', () => {
-  KeyBindings.addKeyBindings([
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'a',
       command: 14,
@@ -49,7 +49,7 @@ test('addKeyBindings', () => {
 })
 
 test('addKeyBindings - dispatch event with no matching keyBinding', () => {
-  KeyBindings.addKeyBindings([
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'a',
       command: 14,
@@ -64,7 +64,7 @@ test('addKeyBindings - dispatch event with no matching keyBinding', () => {
 })
 
 test('addKeyBindings - dispatch Event with context not matching', () => {
-  KeyBindings.addKeyBindings([
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'a',
       command: 14,
@@ -308,7 +308,7 @@ test('addKeyBindings - dispatch event with double ctrl key', () => {
 })
 
 test('addKeyBindings - dispatch event with ctrl alt ctrl key should not trigger ctrl ctrl', () => {
-  KeyBindings.addKeyBindings([
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'ctrl ctrl',
       command: 14,
