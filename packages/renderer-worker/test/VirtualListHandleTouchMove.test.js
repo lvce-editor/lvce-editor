@@ -23,9 +23,7 @@ test('handleTouchMove - scroll up', () => {
     finalDeltaY: 62 * 2 - 62,
     touchOffsetY: 0,
   }
-  const newState = VirtualListHandleTouchMove.handleTouchMove(state, 0, [
-    { clientX: 10, clientY: -10, identifier: 0 },
-  ])
+  const newState = VirtualListHandleTouchMove.handleTouchMove(state, 0, [{ x: 10, y: -10, identifier: 0 }])
   expect(newState.touchOffsetY).toBe(-10)
   expect(newState.deltaY).toBe(20)
 })
