@@ -79,18 +79,7 @@ export const handleTabCloseButtonMouseDown = (event, index) => {
 export const handleTabMouseDown = (event, index) => {
   const { button } = event
   const uid = ComponentUid.fromEvent(event)
-  switch (button) {
-    case MouseEventType.LeftClick:
-      ViewletMainFunctions.handleTabClick(uid, index)
-      break
-    case MouseEventType.MiddleClick:
-      ViewletMainFunctions.closeEditor(uid, index)
-      break
-    case MouseEventType.RightClick:
-      break
-    default:
-      break
-  }
+  ViewletMainFunctions.handleTabClick(uid, button, index)
 }
 
 export const handleTabsMouseDown = (event) => {
