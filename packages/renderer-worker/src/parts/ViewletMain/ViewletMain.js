@@ -11,6 +11,7 @@ import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -121,15 +122,6 @@ export const create = (id, uri, x, y, width, height) => {
 
 // TODO there is also openEditor function
 
-const getTabTitle = (uri) => {
-  const homeDir = Workspace.getHomeDir()
-  // TODO tree shake this out in web
-  if (homeDir && uri.startsWith(homeDir)) {
-    return `~${uri.slice(homeDir.length)}`
-  }
-  return uri
-}
-
 const findEditorWithUri = (editors, uri) => {
   for (const [i, editor] of editors.entries()) {
     if (editor.uri === uri) {
@@ -200,8 +192,8 @@ export const contentLoaded = async (state) => {
   const width = state.width
   const height = state.height - state.tabHeight
   const id = ViewletMap.getModuleId(editor.uri)
-  const tabLabel = Workspace.pathBaseName(editor.uri)
-  const tabTitle = getTabTitle(editor.uri)
+  const tabLabel = PathDisplay.getLabel(editor.uri)
+  const tabTitle = PathDisplay.getTitle(editor.uri)
   const commands = [
     [/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
   ]
@@ -275,8 +267,8 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const oldActiveIndex = state.activeIndex
   state.editors.push({ uri, uid: instanceUid })
   state.activeIndex = state.editors.length - 1
-  const tabLabel = Workspace.pathBaseName(uri)
-  const tabTitle = getTabTitle(uri)
+  const tabLabel = PathDisplay.getLabel(uri)
+  const tabTitle = PathDisplay.getTitle(uri)
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ state.uid,
