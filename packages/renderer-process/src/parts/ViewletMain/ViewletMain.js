@@ -21,9 +21,6 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'Main'
   $Viewlet.className = 'Viewlet Main'
-  $Viewlet.ondrop = ViewletMainEvents.handleDrop
-  $Viewlet.ondragover = ViewletMainEvents.handleDragOver
-  $Viewlet.ondragend = ViewletMainEvents.handleDragEnd
   $Viewlet.role = AriaRoles.Main
 
   // const $MainContent = document.createElement('div')
@@ -43,6 +40,13 @@ export const create = () => {
     $MainTabs: undefined,
     $DragOverlay: undefined,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $Viewlet } = state
+  $Viewlet.ondrop = ViewletMainEvents.handleDrop
+  $Viewlet.ondragover = ViewletMainEvents.handleDragOver
+  $Viewlet.ondragend = ViewletMainEvents.handleDragEnd
 }
 
 export const dispose = (state) => {
