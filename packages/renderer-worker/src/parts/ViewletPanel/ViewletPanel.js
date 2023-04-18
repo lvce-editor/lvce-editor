@@ -1,4 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Command from '../Command/Command.js'
+import * as GetPanelViews from '../GetPanelViews/GetPanelViews.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletActions from '../ViewletActions/ViewletActions.js'
@@ -6,7 +8,6 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as Command from '../Command/Command.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -32,7 +33,7 @@ const getSavedViewletId = (savedState) => {
 
 export const loadContent = (state, savedState) => {
   const savedViewletId = getSavedViewletId(savedState)
-  const views = [ViewletModuleId.Problems, ViewletModuleId.Output, ViewletModuleId.DebugConsole, ViewletModuleId.Terminal]
+  const views = GetPanelViews.getPanelViews()
   const selectedIndex = views.indexOf(savedViewletId)
   return {
     ...state,
