@@ -352,19 +352,25 @@ export const handleDrop = async (state, files) => {
 
 export const handleDropFilePath = async (state, filePath) => {
   await openUri(state, filePath)
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
+  const commands = [
+    ['Viewlet.send', state.uid, 'stopHighlightDragOver'],
+    ['Viewlet.send', state.uid, 'hideDragOverlay'],
+  ]
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   return state
 }
 
 export const handleDragEnd = async (state, x, y) => {
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
+  const commands = [
+    ['Viewlet.send', state.uid, 'stopHighlightDragOver'],
+    ['Viewlet.send', state.uid, 'hideDragOverlay'],
+  ]
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   return state
 }
 
 export const handleDragOver = async (state, eventX, eventY) => {
-  const { x, y, width, height } = state
+  const { x, y, width, height, uid } = state
   const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(
     x,
     y + state.tabHeight,
@@ -381,16 +387,11 @@ export const handleDragOver = async (state, eventX, eventY) => {
     splitDirection
   )
   // TODO show overlay for left area
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ ViewletModuleId.Main,
-    /* method */ 'showDragOverlay',
-    overlayX,
-    overlayY,
-    overlayWidth,
-    overlayHeight
-  )
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'highlightDragOver')
+  const commands = [
+    ['Viewlet.send', uid, 'showDragOverlay', overlayX, overlayY, overlayWidth, overlayHeight],
+    ['Viewlet.send', uid, 'highlightDragOver'],
+  ]
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   return state
 }
 
