@@ -232,11 +232,11 @@ const create$DragOverlay = () => {
 export const setDragOverlay = (state, visible, x, y, width, height) => {
   const hasOverlay = state.$DragOverlay
   if (!visible) {
-    if (!hasOverlay) {
-      return
+    if (hasOverlay) {
+      state.$DragOverlay.remove()
+      state.$DragOverlay = undefined
     }
-    state.$DragOverlay.remove()
-    state.$DragOverlay = undefined
+    return
   }
   if (!hasOverlay) {
     state.$DragOverlay = create$DragOverlay()
