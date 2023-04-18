@@ -39,6 +39,7 @@ test('event - left click on tab', () => {
   const state = Main.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
+  Main.attachEvents(state)
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
   state.$MainTabs.children[0].dispatchEvent(event)
@@ -51,6 +52,7 @@ test('event - left click on tab label', () => {
   const state = Main.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
+  Main.attachEvents(state)
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
   const { $MainTabs } = state
@@ -65,6 +67,7 @@ test('event - middle click on tab', () => {
   const state = Main.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
+  Main.attachEvents(state)
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const event = new MouseEvent('mousedown', {
     bubbles: true,
@@ -81,6 +84,7 @@ test('event - right click on tab', () => {
   const state = Main.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
+  Main.attachEvents(state)
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const { $MainTabs } = state
   $MainTabs.children[0].dispatchEvent(new MouseEvent('mousedown', { bubbles: true, button: 2, cancelable: true }))
@@ -91,6 +95,7 @@ test('event - context menu on tab', () => {
   const state = Main.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
+  Main.attachEvents(state)
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const { $MainTabs } = state
   $MainTabs.children[0].dispatchEvent(
@@ -108,6 +113,7 @@ test('event - context menu on tab label', () => {
   const state = Main.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
+  Main.attachEvents(state)
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const { $MainTabs } = state
   const $Label = $MainTabs.children[0].children[0]
@@ -126,6 +132,7 @@ test('event - click on tabs', () => {
   const state = Main.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
+  Main.attachEvents(state)
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
   const { $MainTabs } = state
@@ -138,6 +145,7 @@ test('event - dragover', () => {
   const state = Main.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
+  Main.attachEvents(state)
   const event = new DragEvent('dragover', { bubbles: true, cancelable: true })
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const { $MainTabs } = state
