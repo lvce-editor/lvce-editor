@@ -6,9 +6,11 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
 import * as GetSplitOverlayDimensions from '../GetSplitOverlayDimensions/GetSplitOverlayDimensions.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Id from '../Id/Id.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -18,7 +20,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Id from '../Id/Id.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -635,8 +636,15 @@ export const focusNext = (state) => {
   return focusIndex(state, nextIndex)
 }
 
-export const handleTabClick = (state, index) => {
-  return focusIndex(state, index)
+export const handleTabClick = (state, button, index) => {
+  switch (button) {
+    case MouseEventType.LeftClick:
+      return focusIndex(state, index)
+    case MouseEventType.MiddleClick:
+      return closeEditor(state, index)
+    default:
+      return state
+  }
 }
 
 export const handleFocusChange = (state, isFocused) => {

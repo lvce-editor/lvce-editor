@@ -44,7 +44,7 @@ test('event - left click on tab', () => {
   state.$MainTabs.children[0].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTabClick', 0)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTabClick', 0, 0)
 })
 
 test('event - left click on tab label', () => {
@@ -58,7 +58,7 @@ test('event - left click on tab label', () => {
   $Label.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTabClick', 0)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTabClick', 0, 0)
 })
 
 test('event - middle click on tab', () => {
@@ -74,7 +74,7 @@ test('event - middle click on tab', () => {
   const { $MainTabs } = state
   $MainTabs.children[0].dispatchEvent(event)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'closeEditor', 0)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTabClick', 1, 0)
 })
 
 test('event - right click on tab', () => {
@@ -84,7 +84,8 @@ test('event - right click on tab', () => {
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   const { $MainTabs } = state
   $MainTabs.children[0].dispatchEvent(new MouseEvent('mousedown', { bubbles: true, button: 2, cancelable: true }))
-  expect(ExecuteViewletCommand.executeViewletCommand).not.toHaveBeenCalled()
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleTabClick', 2, 0)
 })
 
 test('event - context menu on tab', () => {
