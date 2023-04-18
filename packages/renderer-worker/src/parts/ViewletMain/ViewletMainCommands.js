@@ -1,7 +1,6 @@
 import * as ViewletMain from './ViewletMain.js'
 import * as ViewletMainOpenUri from './ViewletMainOpenUri.js'
 
-// prettier-ignore
 export const Commands = {
   // 'Main.hydrate': ViewletMain.hydrate,
   closeActiveEditor: ViewletMain.closeActiveEditor,
@@ -23,6 +22,7 @@ export const Commands = {
   handleTabContextMenu: ViewletMain.handleTabContextMenu,
   openBackgroundTab: ViewletMain.openBackgroundTab,
   save: ViewletMain.save,
+  handleClickClose: ViewletMain.handleClickClose,
 }
 
 export const CommandsWithSideEffects = {

@@ -69,8 +69,9 @@ const getIndex = ($Target) => {
 }
 
 export const handleTabCloseButtonMouseDown = (event, index) => {
+  const { button } = event
   const uid = ComponentUid.fromEvent(event)
-  ViewletMainFunctions.closeEditor(uid, index)
+  ViewletMainFunctions.handleClickClose(uid, button, index)
 }
 
 export const handleTabMouseDown = (event, index) => {

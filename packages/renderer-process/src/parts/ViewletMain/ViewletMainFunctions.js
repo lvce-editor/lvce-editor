@@ -5,5 +5,6 @@ export const handleDropFiles = ForwardViewletCommand.forwardViewletCommand('hand
 export const handleDropFilePath = ForwardViewletCommand.forwardViewletCommand('handleDropFilePath')
 export const handleDragEnd = ForwardViewletCommand.forwardViewletCommand('handleDragEnd')
 export const closeEditor = ForwardViewletCommand.forwardViewletCommand('closeEditor')
+export const handleClickClose = ForwardViewletCommand.forwardViewletCommand('handleClickClose')
 export const handleTabClick = ForwardViewletCommand.forwardViewletCommand('handleTabClick')
 export const handleTabContextMenu = ForwardViewletCommand.forwardViewletCommand('handleTabContextMenu')
