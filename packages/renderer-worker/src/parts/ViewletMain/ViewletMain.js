@@ -10,6 +10,7 @@ import * as Id from '../Id/Id.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -564,8 +565,15 @@ export const focusNext = (state) => {
   return focusIndex(state, nextIndex)
 }
 
-export const handleTabClick = (state, index) => {
-  return focusIndex(state, index)
+export const handleTabClick = (state, button, index) => {
+  switch (button) {
+    case MouseEventType.LeftClick:
+      return focusIndex(state, index)
+    case MouseEventType.MiddleClick:
+      return closeEditor(state, index)
+    default:
+      return state
+  }
 }
 
 export const handleFocusChange = (state, isFocused) => {

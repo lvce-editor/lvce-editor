@@ -2,7 +2,6 @@ import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffe
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as Event from '../Event/Event.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletMainFunctions from './ViewletMainFunctions.js'
 
 const ClassNames = {
@@ -79,18 +78,7 @@ export const handleTabCloseButtonMouseDown = (event, index) => {
 export const handleTabMouseDown = (event, index) => {
   const { button } = event
   const uid = ComponentUid.fromEvent(event)
-  switch (button) {
-    case MouseEventType.LeftClick:
-      ViewletMainFunctions.handleTabClick(uid, index)
-      break
-    case MouseEventType.MiddleClick:
-      ViewletMainFunctions.closeEditor(uid, index)
-      break
-    case MouseEventType.RightClick:
-      break
-    default:
-      break
-  }
+  ViewletMainFunctions.handleTabClick(uid, button, index)
 }
 
 export const handleTabsMouseDown = (event) => {
