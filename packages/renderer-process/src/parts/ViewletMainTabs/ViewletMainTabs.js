@@ -9,6 +9,7 @@ export const create = () => {
   // TODO race condition: what if tab has already been closed?
   return {
     $Viewlet: $MainTabs,
+    $MainTabs,
   }
 }
 
@@ -21,8 +22,16 @@ export const attachEvents = (state) => {
 
 export const setTabs = (state, tabs) => {
   const { $Viewlet } = state
+  const $$Tabs = []
   for (const tab of tabs) {
-    const $Tab = Tab.create(tab.label, tab.title, false)
-    $Viewlet.append($Tab)
+    const $Tab = Tab.create(tab.label, tab.title, true)
+    $$Tabs.push($Tab)
   }
+  $Viewlet.replaceChildren(...$$Tabs)
+}
+
+export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
+  const { $Viewlet } = state
+  $Viewlet.children[oldFocusedIndex].ariaSelected = false
+  $Viewlet.children[newFocusedIndex].ariaSelected = true
 }

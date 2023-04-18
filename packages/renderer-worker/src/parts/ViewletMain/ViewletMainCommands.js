@@ -1,5 +1,6 @@
 import * as ViewletMain from './ViewletMain.js'
 import * as ViewletMainOpenUri from './ViewletMainOpenUri.js'
+import * as ViewletMainHandleDropFilePath from './ViewletMainHandleDropFilePath.js'
 
 export const Commands = {
   // 'Main.hydrate': ViewletMain.hydrate,
@@ -27,5 +28,5 @@ export const Commands = {
 export const CommandsWithSideEffects = {
   openUri: ViewletMainOpenUri.openUri,
   handleDrop: ViewletMain.handleDrop,
-  handleDropFilePath: ViewletMain.handleDropFilePath,
+  handleDropFilePath: ViewletMainHandleDropFilePath.handleDropFilePath,
 }

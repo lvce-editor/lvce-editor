@@ -82,6 +82,7 @@ const hydrateLazy = async () => {
 export const create = (id, uri, x, y, width, height) => {
   return {
     editors: [],
+    grid: [],
     activeIndex: -1,
     focusedIndex: -1,
     x,
@@ -192,6 +193,7 @@ export const contentLoaded = async (state) => {
   if (state.editors.length === 0) {
     return []
   }
+  await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
   const editor = Arrays.last(state.editors)
   const x = state.x
   const y = state.y + state.tabHeight
@@ -200,9 +202,7 @@ export const contentLoaded = async (state) => {
   const id = ViewletMap.getModuleId(editor.uri)
   const tabLabel = PathDisplay.getLabel(editor.uri)
   const tabTitle = PathDisplay.getTitle(editor.uri)
-  const commands = [
-    [/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
-  ]
+  const commands = []
 
   // // TODO race condition: Viewlet may have been resized before it has loaded
   const childUid = Id.create()
@@ -217,9 +217,9 @@ export const contentLoaded = async (state) => {
       parentId: ViewletModuleId.Main,
       uri: editor.uri,
       x,
-      y,
+      y: y + state.tabHeight,
       width,
-      height,
+      height: height - state.tabHeight,
       show: false,
       focus: false,
       type: 0,
@@ -229,8 +229,41 @@ export const contentLoaded = async (state) => {
     /* focus */ false,
     /* restore */ true
   )
+  // const resizeCommands = Viewlet.resize(childUid)
   commands.push(...extraCommands)
-  commands.push(['Viewlet.appendViewlet', state.uid, childUid])
+  commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, state.height - state.tabHeight])
+  const tabsUid = Id.create()
+  commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
+  commands.push([
+    'Viewlet.send',
+    tabsUid,
+    'setTabs',
+    [
+      {
+        label: tabLabel,
+        title: tabTitle,
+      },
+    ],
+  ])
+  commands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
+  commands.push(['Viewlet.append', state.uid, tabsUid])
+  commands.push(['Viewlet.append', state.uid, childUid])
+  const leafItem = {
+    type: 'leaf',
+    size: 0,
+    instanceUid: childUid,
+    tabsUid,
+    editors: [
+      {
+        uri: editor.uri,
+        label: tabLabel,
+        title: tabTitle,
+      },
+    ],
+    childCount: 0,
+    focusedIndex: 0,
+  }
+  state.grid = [leafItem]
   return commands
 }
 
@@ -363,14 +396,6 @@ export const handleDrop = async (state, files) => {
 export const handleDropFilePath = async (state, filePath) => {
   const { newState, commands } = await openUri(state, filePath)
   return {
-    newState: {
-      ...newState,
-      dragOverlayX: 0,
-      dragOverlayY: 0,
-      dragOverlayWidth: 0,
-      dragOverlayHeight: 0,
-      dragOverlayVisible: false,
-    },
     commands,
   }
 }
