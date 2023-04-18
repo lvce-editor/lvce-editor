@@ -384,7 +384,7 @@ export const handleDragEnd = async (state, x, y) => {
 }
 
 export const handleDragOver = async (state, eventX, eventY) => {
-  const { x, y, width, height } = state
+  const { x, y, width, height, uid } = state
   const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(
     x,
     y + state.tabHeight,
