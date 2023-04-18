@@ -14,6 +14,6 @@ export const get = ($Element) => {
 }
 
 export const fromEvent = (event) => {
-  const { target } = event
-  return get(target)
+  const { target, currentTarget } = event
+  return get(currentTarget || target)
 }
