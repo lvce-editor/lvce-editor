@@ -2,7 +2,6 @@ import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffe
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as Event from '../Event/Event.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletMainFunctions from './ViewletMainFunctions.js'
 
 const ClassNames = {
