@@ -30,7 +30,6 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
 
   for (const editor of state.editors) {
     if (editor.uri === uri) {
-      console.log('found existing editor')
       const childUid = Id.create()
       // TODO if the editor is already open, nothing needs to be done
       const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)

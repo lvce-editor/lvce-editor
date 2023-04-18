@@ -35,9 +35,7 @@ export const handleDrop = (event) => {
   Event.preventDefault(event)
   const { dataTransfer } = event
   const { files } = dataTransfer
-  console.log(dataTransfer.items.length)
   const item = dataTransfer.items[0]
-  console.log({ item, kind: item.kind, type: item.type })
   const uid = ComponentUid.fromEvent(event)
   if (files.length > 0) {
     ViewletMainFunctions.handleDropFiles(uid, files)

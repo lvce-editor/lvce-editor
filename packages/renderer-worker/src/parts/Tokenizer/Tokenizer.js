@@ -25,7 +25,6 @@ export const handleTokenizeChange = async () => {
         tokenizer,
         embeds: [], // force rendering
       }
-      console.log({ tokenizer, newState, languageId: state.languageId })
       await Viewlet.setState(newState.uid, newState)
     }
   }
