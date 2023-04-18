@@ -84,15 +84,20 @@ export const closeViewletAndTab = (state, index) => {
 
 export const focus = () => {}
 
-export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex, background = false) => {
-  const $Tab = Tab.create(tabLabel, tabTitle, background)
-
-  if (oldActiveIndex !== -1 && state.$MainTabs) {
-    const $OldTab = state.$MainTabs.children[oldActiveIndex]
-    if ($OldTab) {
-      $OldTab.ariaSelected = AriaBoolean.False
-    }
+export const setTabs = (state, tabs) => {
+  console.log('set tabs', tabs)
+  const $$Tabs = []
+  for (const tab of tabs) {
+    const $Tab = Tab.create(tab.label, tab.title, false)
+    $$Tabs.push($Tab)
   }
+
+  // if (oldActiveIndex !== -1 && state.$MainTabs) {
+  //   const $OldTab = state.$MainTabs.children[oldActiveIndex]
+  //   if ($OldTab) {
+  //     $OldTab.ariaSelected = AriaBoolean.False
+  //   }
+  // }
 
   if (!state.$MainTabs) {
     state.$MainTabs = create$MainTabs()
@@ -100,7 +105,7 @@ export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex, backgroun
   }
 
   const { $MainTabs } = state
-  $MainTabs.append($Tab)
+  $MainTabs.replaceChildren(...$$Tabs)
 
   // await Viewlet.load(id)
   // const instance = Viewlet.state.instances[id]

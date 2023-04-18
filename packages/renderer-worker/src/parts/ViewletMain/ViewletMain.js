@@ -70,6 +70,8 @@ const getMainEditors = (state) => {
   if (!restoredEditor) {
     return []
   }
+  restoredEditor.label = PathDisplay.getLabel(restoredEditor.uri)
+  restoredEditor.title = PathDisplay.getTitle(restoredEditor.uri)
   // TODO check that type is string (else runtime error occurs and page is blank)
   return [restoredEditor]
 }
@@ -198,11 +200,8 @@ export const contentLoaded = async (state) => {
   const width = state.width
   const height = state.height - state.tabHeight
   const id = ViewletMap.getModuleId(editor.uri)
-  const tabLabel = PathDisplay.getLabel(editor.uri)
-  const tabTitle = PathDisplay.getTitle(editor.uri)
-  const commands = [
-    [/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
-  ]
+
+  const commands = []
 
   // // TODO race condition: Viewlet may have been resized before it has loaded
   const childUid = Id.create()
@@ -707,4 +706,14 @@ const renderDragOverlay = {
   },
 }
 
-export const render = [renderDragOverlay]
+const renderTabs = {
+  isEqual(oldState, newState) {
+    return oldState.editors === newState.editors
+  },
+  apply(oldState, newState) {
+    console.log({ editors: newState.editors })
+    return ['setTabs', newState.editors]
+  },
+}
+
+export const render = [renderDragOverlay, renderTabs]

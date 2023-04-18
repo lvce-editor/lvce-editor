@@ -38,16 +38,16 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)
   instance.uid = instanceUid
   const oldActiveIndex = state.activeIndex
-  state.editors.push({ uri, uid: instanceUid })
+  const label = PathDisplay.getLabel(uri)
+  const title = PathDisplay.getTitle(uri)
+  state.editors.push({ uri, uid: instanceUid, label, title })
   state.activeIndex = state.editors.length - 1
-  const tabLabel = PathDisplay.getLabel(uri)
-  const tabTitle = PathDisplay.getTitle(uri)
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ state.uid,
     /* method */ 'openViewlet',
-    /* tabLabel */ tabLabel,
-    /* tabTitle */ tabTitle,
+    /* tabLabel */ label,
+    /* tabTitle */ title,
     /* oldActiveIndex */ oldActiveIndex
   )
   // @ts-ignore
@@ -73,7 +73,10 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const index = state.editors.findIndex((editor) => editor.uid === instanceUid)
   state.editors[index].uri = actualUri
   return {
-    newState: state,
+    newState: {
+      ...state,
+      editors: [...state.editors],
+    },
     commands,
   }
 }
