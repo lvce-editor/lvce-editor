@@ -331,6 +331,9 @@ const getFn = async (module, fnName) => {
   if (module.Commands && module.Commands[fnName]) {
     return module.Commands[fnName]
   }
+  if (module.CommandsWithSideEffects && module.CommandsWithSideEffects[fnName]) {
+    return module.CommandsWithSideEffects[fnName]
+  }
   const lazyImport = getLazyImport(module, fnName)
   if (!lazyImport) {
     throw new Error(`Command not found ${module.name}.${fnName}`)
@@ -351,11 +354,14 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   const fn = await getFn(instance.factory, fnName)
   const oldState = instance.state
   const newState = await fn(oldState, ...args)
-  if (oldState === newState) {
+  const actualNewState = 'newState' in newState ? newState.newState : newState
+  if (oldState === actualNewState) {
     return
   }
-  const actualNewState = 'newState' in newState ? newState.newState : newState
   const commands = ViewletManager.render(instance.factory, oldState, actualNewState)
+  if ('newState' in newState) {
+    commands.push(...newState.commands)
+  }
   ViewletStates.setState(uid, actualNewState)
   if (commands.length === 0) {
     return
