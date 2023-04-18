@@ -26,14 +26,6 @@ export const removeKeyBindings = (id) => {
   KeyBindingsState.removeKeyBindings(id)
 }
 
-export const hydrate = (keyBindings) => {
-  // TODO is this the right place for browser context ?
-  // maybe in env file / env service
-  const browser = Platform.getBrowser()
-  Context.set(`browser.${browser}`, true)
-  addKeyBindings('initial', keyBindings)
-}
-
 // TODO should be in renderer worker
 export const lookupKeyBinding = (commandId) => {
   switch (commandId) {
