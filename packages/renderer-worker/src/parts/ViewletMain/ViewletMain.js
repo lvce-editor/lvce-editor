@@ -6,6 +6,7 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
 import * as GetSplitOverlayDimensions from '../GetSplitOverlayDimensions/GetSplitOverlayDimensions.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Id from '../Id/Id.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
@@ -18,7 +19,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Id from '../Id/Id.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -87,6 +87,7 @@ export const create = (id, uri, x, y, width, height) => {
     height,
     uid: id,
     moduleId: ViewletModuleId.Main,
+    tabHeight: 35,
   }
 }
 
@@ -136,8 +137,6 @@ const findEditorWithUri = (editors, uri) => {
   }
   return -1
 }
-
-const TAB_HEIGHT = 35
 
 const getRestoredEditors = (savedState) => {
   if (Workspace.isTest()) {
@@ -196,9 +195,9 @@ export const contentLoaded = async (state) => {
   }
   const editor = Arrays.last(state.editors)
   const x = state.x
-  const y = state.y + TAB_HEIGHT
+  const y = state.y + state.tabHeight
   const width = state.width
-  const height = state.height - TAB_HEIGHT
+  const height = state.height - state.tabHeight
   const id = ViewletMap.getModuleId(editor.uri)
   const tabLabel = Workspace.pathBaseName(editor.uri)
   const tabTitle = getTabTitle(editor.uri)
@@ -245,9 +244,9 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   Assert.object(state)
   Assert.string(uri)
   const x = state.x
-  const y = state.y + TAB_HEIGHT
+  const y = state.y + state.tabHeight
   const width = state.width
-  const height = state.height - TAB_HEIGHT
+  const height = state.height - state.tabHeight
   const moduleId = ViewletMap.getModuleId(uri)
 
   for (const editor of state.editors) {
@@ -326,10 +325,10 @@ export const openBackgroundTab = async (state, initialUri, props) => {
     /* oldActiveIndex */ -1,
     /* background */ true
   )
-  const y = state.y + TAB_HEIGHT
+  const y = state.y + state.tabHeight
   const x = state.x
   const width = state.width
-  const height = state.height - TAB_HEIGHT
+  const height = state.height - state.tabHeight
   const { title, uri } = await ViewletManager.backgroundLoad({
     getModule: ViewletModule.load,
     id,
@@ -449,12 +448,19 @@ export const handleDragEnd = async (state, x, y) => {
 
 export const handleDragOver = async (state, eventX, eventY) => {
   const { x, y, width, height } = state
-  const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + TAB_HEIGHT, width, height - TAB_HEIGHT, eventX, eventY)
+  const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(
+    x,
+    y + state.tabHeight,
+    width,
+    height - state.tabHeight,
+    eventX,
+    eventY
+  )
   const { overlayX, overlayY, overlayWidth, overlayHeight } = GetSplitOverlayDimensions.getSplitOverlayDimensions(
     x,
-    y + TAB_HEIGHT,
+    y + state.tabHeight,
     width,
-    height - TAB_HEIGHT,
+    height - state.tabHeight,
     splitDirection
   )
   // TODO show overlay for left area
@@ -570,9 +576,9 @@ export const focusIndex = async (state, index) => {
 
   const editor = state.editors[index]
   const x = state.x
-  const y = state.y + TAB_HEIGHT
+  const y = state.y + state.tabHeight
   const width = state.width
-  const height = state.height - TAB_HEIGHT
+  const height = state.height - state.tabHeight
   const id = ViewletMap.getModuleId(editor.uri)
 
   const oldEditor = state.editors[oldActiveIndex]
@@ -701,9 +707,9 @@ export const closeTabsLeft = async (state) => {
 export const resize = (state, dimensions) => {
   const { editors } = state
   const x = dimensions.x
-  const y = dimensions.y + TAB_HEIGHT
+  const y = dimensions.y + state.tabHeight
   const width = dimensions.width
-  const height = dimensions.height - TAB_HEIGHT
+  const height = dimensions.height - state.tabHeight
   const childDimensions = {
     x,
     y,
