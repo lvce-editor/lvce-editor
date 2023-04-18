@@ -1,4 +1,5 @@
 import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as Event from '../Event/Event.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
@@ -17,12 +18,14 @@ export const handleDragStart = (event) => {
 export const handleDragOver = (event) => {
   Event.preventDefault(event)
   const { clientX, clientY } = event
-  ViewletMainFunctions.handleDragOver(clientX, clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletMainFunctions.handleDragOver(uid, clientX, clientY)
 }
 
 export const handleDragEnd = (event) => {
   const { clientX, clientY } = event
-  ViewletMainFunctions.handleDragEnd(clientX, clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletMainFunctions.handleDragEnd(uid, clientX, clientY)
 }
 
 /**
@@ -36,13 +39,14 @@ export const handleDrop = (event) => {
   console.log(dataTransfer.items.length)
   const item = dataTransfer.items[0]
   console.log({ item, kind: item.kind, type: item.type })
+  const uid = ComponentUid.fromEvent(event)
   if (files.length > 0) {
-    ViewletMainFunctions.handleDropFiles(files)
+    ViewletMainFunctions.handleDropFiles(uid, files)
     return
   }
   const filePath = DataTransfer.getFilePath(dataTransfer)
   if (filePath) {
-    ViewletMainFunctions.handleDropFilePath(filePath)
+    ViewletMainFunctions.handleDropFilePath(uid, filePath)
     return
   }
 }
@@ -68,17 +72,19 @@ const getIndex = ($Target) => {
 }
 
 export const handleTabCloseButtonMouseDown = (event, index) => {
-  ViewletMainFunctions.closeEditor(index)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletMainFunctions.closeEditor(uid, index)
 }
 
 export const handleTabMouseDown = (event, index) => {
   const { button } = event
+  const uid = ComponentUid.fromEvent(event)
   switch (button) {
     case MouseEventType.LeftClick:
-      ViewletMainFunctions.handleTabClick(index)
+      ViewletMainFunctions.handleTabClick(uid, index)
       break
     case MouseEventType.MiddleClick:
-      ViewletMainFunctions.closeEditor(index)
+      ViewletMainFunctions.closeEditor(uid, index)
       break
     case MouseEventType.RightClick:
       break
@@ -109,9 +115,10 @@ export const handleTabsMouseDown = (event) => {
 export const handleTabsContextMenu = (event) => {
   const { clientX, clientY, target } = event
   const index = getIndex(target)
+  const uid = ComponentUid.fromEvent(event)
   if (index === -1) {
     return
   }
   Event.preventDefault(event)
-  ViewletMainFunctions.handleTabContextMenu(index, clientX, clientY)
+  ViewletMainFunctions.handleTabContextMenu(uid, index, clientX, clientY)
 }
