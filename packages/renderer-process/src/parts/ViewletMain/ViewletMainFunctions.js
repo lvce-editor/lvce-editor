@@ -1,29 +1,9 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const handleDragOver = (x, y) => {
-  RendererWorker.send('Main.handleDragOver', x, y)
-}
-
-export const handleDropFiles = (files) => {
-  RendererWorker.send('Main.handleDrop', files)
-}
-
-export const handleDropFilePath = (filePath) => {
-  RendererWorker.send('Main.handleDropFilePath', filePath)
-}
-
-export const handleDragEnd = (x, y) => {
-  RendererWorker.send('Main.handleDragEnd', x, y)
-}
-
-export const closeEditor = (index) => {
-  RendererWorker.send('Main.closeEditor', index)
-}
-
-export const handleTabClick = (index) => {
-  RendererWorker.send('Main.handleTabClick', index)
-}
-
-export const handleTabContextMenu = (index, x, y) => {
-  RendererWorker.send('Main.handleTabContextMenu', index, x, y)
-}
+export const handleDragOver = ForwardViewletCommand.forwardViewletCommand('handleDragOver')
+export const handleDropFiles = ForwardViewletCommand.forwardViewletCommand('handleDrop')
+export const handleDropFilePath = ForwardViewletCommand.forwardViewletCommand('handleDropFilePath')
+export const handleDragEnd = ForwardViewletCommand.forwardViewletCommand('handleDragEnd')
+export const closeEditor = ForwardViewletCommand.forwardViewletCommand('closeEditor')
+export const handleTabClick = ForwardViewletCommand.forwardViewletCommand('handleTabClick')
+export const handleTabContextMenu = ForwardViewletCommand.forwardViewletCommand('handleTabContextMenu')
