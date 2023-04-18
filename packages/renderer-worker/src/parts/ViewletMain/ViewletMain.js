@@ -361,14 +361,17 @@ export const handleDrop = async (state, files) => {
 }
 
 export const handleDropFilePath = async (state, filePath) => {
-  await openUri(state, filePath)
+  const { newState, commands } = await openUri(state, filePath)
   return {
-    ...state,
-    dragOverlayX: 0,
-    dragOverlayY: 0,
-    dragOverlayWidth: 0,
-    dragOverlayHeight: 0,
-    dragOverlayVisible: false,
+    newState: {
+      ...newState,
+      dragOverlayX: 0,
+      dragOverlayY: 0,
+      dragOverlayWidth: 0,
+      dragOverlayHeight: 0,
+      dragOverlayVisible: false,
+    },
+    commands,
   }
 }
 
