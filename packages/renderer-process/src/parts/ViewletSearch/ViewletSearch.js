@@ -159,7 +159,7 @@ const render$Row = ($Row, rowInfo, replacement) => {
   const { top, type, matchStart, matchLength, text, title, icon, setSize, posInSet, depth } = rowInfo
   const $Icon = $Row.childNodes[0]
   const $Label = $Row.childNodes[1]
-  $Icon.className = `FileIcon${icon}`
+  $Icon.className = `FileIcon FileIcon${icon}`
   if (matchLength) {
     const before = text.slice(0, matchStart)
     const highlight = text.slice(matchStart, matchStart + matchLength)
