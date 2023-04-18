@@ -492,6 +492,13 @@ export const closeEditor = async (state, index) => {
   return state
 }
 
+export const handleClickClose = (state, button, index) => {
+  if (button !== MouseEventType.LeftClick) {
+    return state
+  }
+  return closeEditor(state, index)
+}
+
 export const closeFocusedTab = (state) => {
   return closeEditor(state.focusedIndex)
 }
