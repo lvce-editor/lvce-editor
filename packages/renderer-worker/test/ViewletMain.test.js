@@ -2009,7 +2009,7 @@ test('handleDrop - one file', async () => {
       path: '/test/dropped-file.txt',
     },
   ]
-  const { commands } = await ViewletMain.handleDrop(state, fileList)
+  const { commands, newState } = await ViewletMain.handleDrop(state, fileList)
   expect(state.editors).toEqual([
     {
       uri: '/test/file-1.txt',
@@ -2028,7 +2028,8 @@ test('handleDrop - one file', async () => {
     ['Viewlet.addKeyBindings', 1, expect.anything()],
     ['Viewlet.appendViewlet', 1, 1],
     ['Viewlet.focus', 1],
-    ['Viewlet.send', 1, 'stopHighlightDragOver'],
-    ['Viewlet.send', 1, 'hideDragOverlay'],
   ])
+  expect(newState).toMatchObject({
+    dragOverlayVisible: false,
+  })
 })

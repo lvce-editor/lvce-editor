@@ -91,6 +91,11 @@ export const create = (id, uri, x, y, width, height) => {
     uid: id,
     moduleId: ViewletModuleId.Main,
     tabHeight: 35,
+    dragOverlayX: 0,
+    dragOverlayY: 0,
+    dragOverlayWidth: 0,
+    dragOverlayHeight: 0,
+    dragOverlayVisible: false,
   }
 }
 
@@ -342,31 +347,40 @@ export const handleDrop = async (state, files) => {
     }
     console.log(file)
   }
-  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'stopHighlightDragOver'])
-  allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'hideDragOverlay'])
   return {
-    newState,
+    newState: {
+      ...newState,
+      dragOverlayX: 0,
+      dragOverlayY: 0,
+      dragOverlayWidth: 0,
+      dragOverlayHeight: 0,
+      dragOverlayVisible: false,
+    },
     commands: allCommands,
   }
 }
 
 export const handleDropFilePath = async (state, filePath) => {
   await openUri(state, filePath)
-  const commands = [
-    ['Viewlet.send', state.uid, 'stopHighlightDragOver'],
-    ['Viewlet.send', state.uid, 'hideDragOverlay'],
-  ]
-  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
-  return state
+  return {
+    ...state,
+    dragOverlayX: 0,
+    dragOverlayY: 0,
+    dragOverlayWidth: 0,
+    dragOverlayHeight: 0,
+    dragOverlayVisible: false,
+  }
 }
 
 export const handleDragEnd = async (state, x, y) => {
-  const commands = [
-    ['Viewlet.send', state.uid, 'stopHighlightDragOver'],
-    ['Viewlet.send', state.uid, 'hideDragOverlay'],
-  ]
-  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
-  return state
+  return {
+    ...state,
+    dragOverlayX: 0,
+    dragOverlayY: 0,
+    dragOverlayWidth: 0,
+    dragOverlayHeight: 0,
+    dragOverlayVisible: false,
+  }
 }
 
 export const handleDragOver = async (state, eventX, eventY) => {
@@ -387,12 +401,14 @@ export const handleDragOver = async (state, eventX, eventY) => {
     splitDirection
   )
   // TODO show overlay for left area
-  const commands = [
-    ['Viewlet.send', uid, 'showDragOverlay', overlayX, overlayY, overlayWidth, overlayHeight],
-    ['Viewlet.send', uid, 'highlightDragOver'],
-  ]
-  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
-  return state
+  return {
+    ...state,
+    dragOverlayX: overlayX,
+    dragOverlayY: overlayY,
+    dragOverlayWidth: overlayWidth,
+    dragOverlayHeight: overlayHeight,
+    dragOverlayVisible: true,
+  }
 }
 
 export const closeActiveEditor = (state) => {
@@ -659,4 +675,26 @@ export const resize = (state, dimensions) => {
 
 export const hasFunctionalRender = true
 
-export const render = []
+const renderDragOverlay = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.dragOverlayVisible === newState.dragOverlayVisible &&
+      oldState.dragOverlayX === newState.dragOverlayX &&
+      oldState.dragOverlayY === newState.dragOverlayY &&
+      oldState.dragOverlayWidth === newState.dragOverlayWidth &&
+      oldState.dragOverlayHeight === newState.dragOverlayHeight
+    )
+  },
+  apply(oldState, newState) {
+    return [
+      'setDragOverlay',
+      newState.dragOverlayVisible,
+      newState.dragOverlayX,
+      newState.dragOverlayY,
+      newState.dragOverlayWidth,
+      newState.dragOverlayHeight,
+    ]
+  },
+}
+
+export const render = [renderDragOverlay]
