@@ -47,7 +47,7 @@ export const getFilePaths = (dataTransfer) => {
 }
 
 export const getFilePath = (dataTransfer) => {
-  const filePaths = getFilePath(dataTransfer)
+  const filePaths = getFilePaths(dataTransfer)
   if (filePaths.length === 0) {
     return ''
   }
