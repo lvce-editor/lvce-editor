@@ -1,4 +1,5 @@
 import * as ViewletMain from './ViewletMain.js'
+import * as ViewletMainOpenUri from './ViewletMainOpenUri.js'
 
 // prettier-ignore
 export const Commands = {
@@ -25,6 +26,6 @@ export const Commands = {
 }
 
 export const CommandsWithSideEffects = {
-  openUri: ViewletMain.openUri,
+  openUri: ViewletMainOpenUri.openUri,
   handleDrop: ViewletMain.handleDrop,
 }
