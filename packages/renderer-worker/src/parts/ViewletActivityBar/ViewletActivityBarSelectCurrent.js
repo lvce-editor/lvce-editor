@@ -1,4 +1,5 @@
 import { handleClick } from './ViewletActivityBarHandleClick.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 const getPosition = (state, index) => {
   const { activityBarItems, x, y, height, itemHeight } = state
@@ -21,5 +22,5 @@ export const selectCurrent = (state) => {
     return
   }
   const position = getPosition(state, state.focusedIndex)
-  return handleClick(state, state.focusedIndex, position.x, position.y)
+  return handleClick(state, MouseEventType.LeftClick, state.focusedIndex, position.x, position.y)
 }
