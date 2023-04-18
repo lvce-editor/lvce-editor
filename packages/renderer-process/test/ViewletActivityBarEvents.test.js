@@ -56,7 +56,7 @@ test('event - handleClick - top', () => {
   state.$ActivityBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 1, 15, 30)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 0, 1, 15, 30)
 })
 
 test('event - handleClick - bottom', () => {
@@ -95,7 +95,7 @@ test('event - handleClick - bottom', () => {
     })
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 2, 15, 30)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 0, 2, 15, 30)
 })
 
 test('event - handleClick - no item is clicked', () => {

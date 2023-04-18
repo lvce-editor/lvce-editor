@@ -1,7 +1,8 @@
 import * as Command from '../Command/Command.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const handleClickSettings = async (state, x, y, viewletId) => {
   await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.Settings)
@@ -30,9 +31,13 @@ const handleClickOther = async (state, x, y, viewletId) => {
   return state
 }
 
-export const handleClick = async (state, index, x, y) => {
+export const handleClick = async (state, button, index, x, y) => {
+  if (button !== MouseEventType.LeftClick) {
+    return state
+  }
   const { activityBarItems } = state
-  const viewletId = activityBarItems[index].id
+  const item = activityBarItems[index]
+  const viewletId = item.id
   switch (viewletId) {
     case 'Settings':
       return handleClickSettings(state, x, y, viewletId)
