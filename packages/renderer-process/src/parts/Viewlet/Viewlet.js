@@ -51,7 +51,7 @@ export const loadModule = async (id) => {
 export const invoke = (viewletId, method, ...args) => {
   const instance = state.instances[viewletId]
   if (!instance || !instance.factory) {
-    Logger.warn(`viewlet instance ${viewletId} not found`)
+    Logger.warn(`cannot execute ${method} viewlet instance ${viewletId} not found`)
     return
   }
   if (typeof instance.factory[method] !== 'function') {
