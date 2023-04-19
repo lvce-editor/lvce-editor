@@ -615,7 +615,11 @@ test('closeEditor - 0 1 - first is focused and second tab is selected', async ()
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOneTabOnly', 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', undefined, 'setTabs', [
+    { uri: '/test/file-2.txt' },
+    { uri: '/test/file-3.txt' },
+  ])
 })
 
 test.skip('closeEditor - 0 2 - first tab is focused and last tab is selected', async () => {
@@ -688,7 +692,11 @@ test('closeEditor - 1 0 - middle tab is focused and first tab is selected', asyn
   ])
   expect(state.activeIndex).toBe(0)
   expect(state.focusedIndex).toBe(0)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOneTabOnly', 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', undefined, 'setTabs', [
+    { uri: '/test/file-1.txt' },
+    { uri: '/test/file-3.txt' },
+  ])
 })
 
 test.skip('closeEditor - 1 1 - middle tab is focused and middle tab is selected', async () => {
@@ -754,7 +762,11 @@ test('closeEditor - 1 2 - middle tab is focused and last tab is selected', async
   ])
   expect(state.activeIndex).toBe(1)
   expect(state.focusedIndex).toBe(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOneTabOnly', 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', undefined, 'setTabs', [
+    { uri: '/test/file-1.txt' },
+    { uri: '/test/file-3.txt' },
+  ])
 })
 
 test('closeEditor - 2 0 - last tab is focused and first tab is selected', async () => {
@@ -787,7 +799,11 @@ test('closeEditor - 2 0 - last tab is focused and first tab is selected', async 
   ])
   expect(state.activeIndex).toBe(0)
   expect(state.focusedIndex).toBe(0)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOneTabOnly', 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', undefined, 'setTabs', [
+    { uri: '/test/file-1.txt' },
+    { uri: '/test/file-2.txt' },
+  ])
 })
 
 test('closeEditor - 2 1 - last tab is focused and middle tab is selected', async () => {
@@ -821,7 +837,11 @@ test('closeEditor - 2 1 - last tab is focused and middle tab is selected', async
   ])
   expect(state.activeIndex).toBe(1)
   expect(state.focusedIndex).toBe(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeOneTabOnly', 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', undefined, 'setTabs', [
+    { uri: '/test/file-1.txt' },
+    { uri: '/test/file-2.txt' },
+  ])
 })
 
 test.skip('closeEditor - 2 2 - last tab is focused and last tab is selected', async () => {
@@ -1996,6 +2016,7 @@ test('handleDrop - one file', async () => {
     y: 0,
     width: 100,
     height: 100,
+    tabsId: 3,
   }
   ViewletStates.set('EditorText', {
     factory: {
@@ -2016,16 +2037,36 @@ test('handleDrop - one file', async () => {
       uid: 1,
     },
     {
+      label: 'dropped-file.txt',
+      title: '/test/dropped-file.txt',
       uri: expect.any(String),
       uid: 2,
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', 1, 'openViewlet', 'dropped-file.txt', '/test/dropped-file.txt', 0)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', 'Editor')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.loadModule', 'Editor')
   expect(commands).toEqual([
     ['Viewlet.create', 'Editor', 2],
     ['Viewlet.addKeyBindings', 2, expect.anything()],
+    ['Viewlet.setBounds', 2, 0, 35, 100, 30],
+    [
+      'Viewlet.send',
+      undefined,
+      'setTabs',
+      [
+        {
+          uid: 1,
+          uri: '/test/file-1.txt',
+        },
+        {
+          label: 'dropped-file.txt',
+          title: '/test/dropped-file.txt',
+          uid: 2,
+          uri: '/test/dropped-file.txt',
+        },
+      ],
+    ],
+    ['Viewlet.send', undefined, 'setFocusedIndex', 0, 1],
     ['Viewlet.append', 1, 2],
     ['Viewlet.focus', 2],
   ])
