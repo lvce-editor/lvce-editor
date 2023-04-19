@@ -17,9 +17,20 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const width = state.width
   const height = state.height - state.tabHeight
   const moduleId = ViewletMap.getModuleId(uri)
-
+  const previousEditor = state.editors[state.activeIndex]
+  let disposeCommands
+  if (previousEditor) {
+    const previousUid = previousEditor.uid
+    disposeCommands = Viewlet.disposeFunctional(previousUid)
+  }
   for (const editor of state.editors) {
     if (editor.uri === uri) {
+      if (editor === previousEditor) {
+        return {
+          newState: state,
+          commands: [],
+        }
+      }
       const childUid = Id.create()
       // TODO if the editor is already open, nothing needs to be done
       const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)
@@ -28,19 +39,21 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       instance.uid = childUid
       // @ts-ignore
       const commands = await ViewletManager.load(instance, focus, false, options)
+      if (disposeCommands) {
+        commands.unshift(...disposeCommands)
+      }
       commands.push(['Viewlet.append', state.uid, childUid])
+      const newActiveIndex = state.editors.indexOf(editor)
+      commands.push(['Viewlet.send', state.uid, 'focusAnotherTab', state.activeIndex, newActiveIndex])
+      state.activeIndex = newActiveIndex
+      editor.uid = childUid
       return {
         newState: state,
         commands,
       }
     }
   }
-  const previousEditor = state.editors[state.activeIndex]
-  let disposeCommands
-  if (previousEditor) {
-    const previousUid = previousEditor.uid
-    disposeCommands = Viewlet.disposeFunctional(previousUid)
-  }
+
   const instanceUid = Id.create()
   const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)
   instance.uid = instanceUid
