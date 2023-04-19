@@ -81,10 +81,9 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   let tabsUid = state.tabsUid
   if (tabsUid === -1) {
     tabsUid = Id.create()
-    state.tabsUid = tabsUid
     commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
     commands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
-    commands.push(['Viewlet.append', state.uid, state.tabsUid])
+    commands.push(['Viewlet.append', state.uid, tabsUid])
   }
   commands.push(['Viewlet.send', tabsUid, 'setTabs', state.editors])
   commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', oldActiveIndex, state.activeIndex])
@@ -113,7 +112,10 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     }
   }
   return {
-    newState: state,
+    newState: {
+      ...state,
+      tabsUid,
+    },
     commands,
   }
 }
