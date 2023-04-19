@@ -81,7 +81,8 @@ export const handleFocus = (event) => {
 }
 
 export const handleBlur = (event) => {
-  ViewletExplorerFunctions.handleBlur()
+  const uid = ComponentUid.fromEvent(event)
+  ViewletExplorerFunctions.handleBlur(uid)
 }
 
 /**

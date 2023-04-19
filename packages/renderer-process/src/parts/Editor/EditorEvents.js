@@ -31,7 +31,8 @@ export const handleFocus = (event) => {
 export const handleBlur = (event) => {
   // needed for save on blur
   // also needed to close completions on blur
-  EditorFunctions.handleBlur()
+  const uid = ComponentUid.fromEvent(event)
+  EditorFunctions.handleBlur(uid)
 }
 
 /**
