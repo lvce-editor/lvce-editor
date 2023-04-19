@@ -139,7 +139,7 @@ export const disposeFunctional = (id) => {
     }
     const instance = ViewletStates.getInstance(id)
     if (!instance) {
-      Logger.warn(`instance ${id} may already be disposed`)
+      Logger.warn(`cannot dispose instance ${id} because it may already be disposed`)
       return []
     }
     // TODO status should have enum
@@ -350,7 +350,7 @@ const getFn = async (module, fnName) => {
 export const executeViewletCommand = async (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (!instance) {
-    Logger.warn(`instance not found ${uid}`)
+    Logger.warn(`cannot execute ${fnName} instance not found ${uid}`)
     return
   }
   const fn = await getFn(instance.factory, fnName)
