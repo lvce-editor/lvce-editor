@@ -8,8 +8,6 @@ export const Commands = {
   closeEditor: ViewletMain.closeEditor,
   closeFocusedTab: ViewletMain.closeFocusedTab,
   closeOthers: ViewletMain.closeOthers,
-  closeTabsLeft: ViewletMain.closeTabsLeft,
-  closeTabsRight: ViewletMain.closeTabsRight,
   focus: ViewletMain.focus,
   focusFirst: ViewletMain.focusFirst,
   focusLast: ViewletMain.focusLast,
@@ -22,6 +20,11 @@ export const Commands = {
   openBackgroundTab: ViewletMain.openBackgroundTab,
   save: ViewletMain.save,
   handleClickClose: ViewletMain.handleClickClose,
+}
+
+export const LazyCommands = {
+  closeTabsLeft: () => import('./ViewletMainCloseTabsLeft.js'),
+  closeTabsRight: () => import('./ViewletMainCloseTabsRight.js'),
 }
 
 export const CommandsWithSideEffects = {
