@@ -5,17 +5,6 @@ import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as Tab from '../Tab/Tab.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
 
-const create$MainTabs = () => {
-  const $MainTabs = document.createElement('div')
-  $MainTabs.className = 'MainTabs'
-  $MainTabs.role = AriaRoles.TabList
-  $MainTabs.onmousedown = ViewletMainEvents.handleTabsMouseDown
-  $MainTabs.oncontextmenu = ViewletMainEvents.handleTabsContextMenu
-  $MainTabs.ondragstart = ViewletMainEvents.handleDragStart
-  // TODO race condition: what if tab has already been closed?
-  return $MainTabs
-}
-
 // TODO Main should not be bound to Editor -> Lazy load Editor
 export const create = () => {
   const $Viewlet = document.createElement('div')
@@ -76,47 +65,6 @@ export const closeViewletAndTab = (state, index) => {
 
 export const focus = () => {}
 
-export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex, background = false) => {
-  const $Tab = Tab.create(tabLabel, tabTitle, background)
-
-  if (oldActiveIndex !== -1 && state.$MainTabs) {
-    const $OldTab = state.$MainTabs.children[oldActiveIndex]
-    if ($OldTab) {
-      $OldTab.ariaSelected = AriaBoolean.False
-    }
-  }
-
-  if (!state.$MainTabs) {
-    state.$MainTabs = create$MainTabs()
-    state.$Main.append(state.$MainTabs)
-  }
-
-  const { $MainTabs } = state
-  $MainTabs.append($Tab)
-
-  // await Viewlet.load(id)
-  // const instance = Viewlet.state.instances[id]
-  // // TODO race condition: what if tab has already been closed?
-  // Viewlet.mount(state.$MainContent, instance.state)
-  // Viewlet.focus(id)
-  // Layout.state.$Main.append(state.$MainTabs, state.$MainContent)
-}
-
-// TODO when there is not enough space available, only show tab close button
-// for focused tab (that's how chrome and firefox do it)
-export const openAnotherTab = async (state, tabLabel, tabTitle, unFocusIndex) => {
-  const $Tab = Tab.create(tabLabel, tabTitle, false)
-  const { $MainTabs } = state
-  $MainTabs.children[unFocusIndex].ariaSelected = AriaBoolean.False
-  $MainTabs.append($Tab)
-}
-
-export const closeOneTab = (state, closeIndex, focusIndex) => {
-  const { $MainTabs } = state
-  $MainTabs.children[closeIndex].remove()
-  $MainTabs.children[focusIndex].ariaSelected = AriaBoolean.True
-}
-
 export const setDirty = (state, index, dirty) => {
   Assert.number(index)
   Assert.boolean(dirty)
@@ -126,57 +74,6 @@ export const setDirty = (state, index, dirty) => {
   } else {
     $MainTabs.children[index].classList.remove('Dirty')
   }
-}
-
-export const closeOneTabOnly = (state, closeIndex) => {
-  const { $MainTabs } = state
-  $MainTabs.children[closeIndex].remove()
-}
-
-export const focusAnotherTab = (state, unFocusIndex, focusIndex) => {
-  const { $MainTabs } = state
-  $MainTabs.children[unFocusIndex].ariaSelected = AriaBoolean.False
-  $MainTabs.children[focusIndex].ariaSelected = AriaBoolean.True
-}
-
-export const closeOthers = (state, keepIndex, focusIndex) => {
-  for (let i = state.$MainTabs.children.length - 1; i >= 0; i--) {
-    const $Tab = state.$MainTabs.children[i]
-    if (i === keepIndex) {
-      $Tab.ariaSelected = AriaBoolean.True
-      $Tab.tabIndex = 0
-    } else {
-      $Tab.remove()
-    }
-  }
-}
-
-export const closeTabsRight = (state, index) => {
-  for (let i = state.$MainTabs.children.length - 1; i > index; i--) {
-    const $Tab = state.$MainTabs.children[i]
-    $Tab.remove()
-  }
-  const $Tab = state.$MainTabs.children[index]
-  $Tab.ariaSelected = AriaBoolean.True
-  $Tab.tabIndex = 0
-}
-
-export const closeTabsLeft = (state, index) => {
-  for (let i = index - 1; i >= 0; i--) {
-    const $Tab = state.$MainTabs.children[i]
-    $Tab.remove()
-  }
-  const $Tab = state.$MainTabs.children[0]
-  $Tab.ariaSelected = AriaBoolean.True
-  $Tab.tabIndex = 0
-}
-
-export const updateTab = (state, index, text) => {
-  const { $MainTabs } = state
-  const $Tab = $MainTabs.children[index]
-  const $TabLabel = $Tab.firstChild
-  $Tab.title = text
-  $TabLabel.textContent = text
 }
 
 export const highlightDragOver = (state) => {

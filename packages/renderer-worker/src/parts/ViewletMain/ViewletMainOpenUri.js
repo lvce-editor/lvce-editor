@@ -44,7 +44,8 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       }
       commands.push(['Viewlet.append', state.uid, childUid])
       const newActiveIndex = state.editors.indexOf(editor)
-      commands.push(['Viewlet.send', state.uid, 'focusAnotherTab', state.activeIndex, newActiveIndex])
+      commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, height - state.tabHeight])
+      commands.push(['Viewlet.send', state.tabsUid, 'setFocusedIndex', state.activeIndex, newActiveIndex])
       state.activeIndex = newActiveIndex
       editor.uid = childUid
       return {
@@ -58,23 +59,29 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)
   instance.uid = instanceUid
   const oldActiveIndex = state.activeIndex
-  state.editors.push({ uri, uid: instanceUid })
-  state.activeIndex = state.editors.length - 1
   const tabLabel = PathDisplay.getLabel(uri)
   const tabTitle = PathDisplay.getTitle(uri)
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ state.uid,
-    /* method */ 'openViewlet',
-    /* tabLabel */ tabLabel,
-    /* tabTitle */ tabTitle,
-    /* oldActiveIndex */ oldActiveIndex
-  )
+  state.editors.push({ uri, uid: instanceUid, label: tabLabel, title: tabTitle })
+  state.activeIndex = state.editors.length - 1
+  const tabsUid = state.tabsUid
+
+  // await RendererProcess.invoke(
+  //   /* Viewlet.send */ 'Viewlet.send',
+  //   /* id */ state.uid,
+  //   /* method */ 'openViewlet',
+  //   /* tabLabel */ tabLabel,
+  //   /* tabTitle */ tabTitle,
+  //   /* oldActiveIndex */ oldActiveIndex
+  // )
   // @ts-ignore
   instance.show = false
   instance.setBounds = false
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
+  commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, height - state.tabHeight])
+  commands.push(['Viewlet.send', tabsUid, 'setTabs', state.editors])
+  commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', oldActiveIndex, state.activeIndex])
+
   // if (commands[0].includes(ViewletModuleId.Error)) {
   //   commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
   // } else {

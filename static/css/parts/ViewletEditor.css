@@ -16,6 +16,7 @@
   font-display: block;
   cursor: text;
   font-weight: 400;
+  position: absolute;
 }
 
 .EditorLayers {

@@ -13,6 +13,11 @@ export const handleDragStart = (event) => {
   event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
 }
 
+// TODO
+const getUid = () => {
+  return ComponentUid.get(document.getElementById('Main'))
+}
+
 const getNodeIndex = ($Node) => {
   let index = 0
   while (($Node = $Node.previousElementSibling)) {
@@ -34,13 +39,13 @@ const getIndex = ($Target) => {
 }
 
 export const handleTabCloseButtonMouseDown = (event, index) => {
-  const uid = ComponentUid.fromEvent(event)
+  const uid = getUid()
   ViewletMainTabsFunctions.closeEditor(uid, index)
 }
 
 export const handleTabMouseDown = (event, index) => {
   const { button } = event
-  const uid = ComponentUid.fromEvent(event)
+  const uid = getUid()
   ViewletMainTabsFunctions.handleTabClick(uid, button, index)
 }
 
@@ -70,5 +75,6 @@ export const handleTabsContextMenu = (event) => {
     return
   }
   Event.preventDefault(event)
-  ViewletMainTabsFunctions.handleTabContextMenu(index, clientX, clientY)
+  const uid = getUid()
+  ViewletMainTabsFunctions.handleTabContextMenu(uid, index, clientX, clientY)
 }

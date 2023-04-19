@@ -159,14 +159,14 @@ const handleEditorChange = async (editor) => {
   await RendererProcess.invoke(...command)
 }
 
-export const loadContent = (state, savedState) => {
+export const loadContent = async (state, savedState) => {
   // TODO get restored editors from saved state
   const editors = getRestoredEditors(savedState)
   // @ts-ignore
   LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
   const activeIndex = editors.length > 0 ? 0 : -1
   GlobalEventBus.addListener('editor.change', handleEditorChange)
-
+  await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
   return {
     ...state,
     editors,
@@ -201,12 +201,19 @@ export const contentLoaded = async (state) => {
   const id = ViewletMap.getModuleId(editor.uri)
   const tabLabel = PathDisplay.getLabel(editor.uri)
   const tabTitle = PathDisplay.getTitle(editor.uri)
+  editor.label = tabLabel
+  editor.title = tabTitle
   const commands = [
     [/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
   ]
-
-  // // TODO race condition: Viewlet may have been resized before it has loaded
   const childUid = editor.uid
+  commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, state.height - state.tabHeight])
+  const tabsUid = Id.create()
+  state.tabsUid = tabsUid
+  commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
+  commands.push(['Viewlet.send', tabsUid, 'setTabs', state.editors])
+  commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, 0])
+  commands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
   // // @ts-ignore
   const extraCommands = await ViewletManager.load(
     {
@@ -231,6 +238,8 @@ export const contentLoaded = async (state) => {
     /* restore */ true
   )
   commands.push(...extraCommands)
+  commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, height - state.tabHeight])
+  commands.push(['Viewlet.append', state.uid, tabsUid])
   commands.push(['Viewlet.append', state.uid, childUid])
   return commands
 }
@@ -474,21 +483,17 @@ export const closeEditor = async (state, index) => {
     //   height: instance.state.height,
     //   columnWidth: COLUMN_WIDTH,
     // })
-    await RendererProcess.invoke(
-      'Viewlet.send',
-      state.uid,
-      /* Main.closeOneTab */ 'closeOneTab',
-      /* closeIndex */ oldActiveIndex,
-      /* focusIndex */ newActiveIndex
-    )
+    await RendererProcess.invoke('Viewlet.send', state.tabsUid, 'setTabs', state.editors)
     return state
   }
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeOneTabOnly', /* closeIndex */ index)
   state.editors.splice(index, 1)
+  await RendererProcess.invoke('Viewlet.send', state.tabsUid, 'setTabs', state.editors)
   if (index < state.activeIndex) {
     state.activeIndex--
   }
   state.focusedIndex = state.activeIndex
+  await RendererProcess.invoke('Viewlet.send', state.tabsUid, 'setFocusedIndex', -1, state.activeIndex)
+
   // TODO just close the tab
   return state
 }
@@ -538,14 +543,12 @@ export const focusIndex = async (state, index) => {
   editor.uid = instanceUid
 
   // TODO race condition
-  RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ state.uid,
-    /* method */ 'focusAnotherTab',
-    /* unFocusIndex */ oldActiveIndex,
-    /* focusIndex */ state.activeIndex
-  )
+  // RendererProcess.invoke(
 
+  // )
+
+  const tabFocusCommand = ['Viewlet.send', state.tabsUid, 'setFocusedIndex', oldActiveIndex, state.activeIndex]
+  const resizeCommands = ['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, height - state.tabHeight]
   const previousUid = oldEditor.uid
   Assert.number(previousUid)
   const disposeCommands = Viewlet.disposeFunctional(previousUid)
@@ -553,13 +556,15 @@ export const focusIndex = async (state, index) => {
     const props = BackgroundTabs.get(editor.uri)
     // @ts-ignore
     const commands = await ViewletManager.load(instance, false, false, props)
-    commands.push(...disposeCommands)
+    commands.push(...disposeCommands, tabFocusCommand)
+    commands.push(resizeCommands)
     commands.push(['Viewlet.append', state.uid, instanceUid])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   } else {
     // @ts-ignore
     const commands = await ViewletManager.load(instance)
-    commands.unshift(...disposeCommands)
+    commands.unshift(...disposeCommands, tabFocusCommand)
+    commands.push(resizeCommands)
     commands.push(['Viewlet.append', state.uid, instanceUid])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
