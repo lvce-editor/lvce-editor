@@ -531,7 +531,7 @@ export const focusIndex = async (state, index) => {
   const x = state.x
   const y = state.y + state.tabHeight
   const width = state.width
-  const height = state.height - state.tabHeight
+  const contentHeight = state.height - state.tabHeight
   const id = ViewletMap.getModuleId(editor.uri)
 
   const oldEditor = state.editors[oldActiveIndex]
@@ -539,7 +539,7 @@ export const focusIndex = async (state, index) => {
   const oldInstance = ViewletStates.getInstance(oldId)
 
   const instanceUid = Id.create()
-  const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, editor.uri, x, y, width, height)
+  const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, editor.uri, x, y, width, contentHeight)
   instance.show = false
   instance.setBounds = false
   instance.uid = instanceUid
@@ -551,7 +551,7 @@ export const focusIndex = async (state, index) => {
   // )
 
   const tabFocusCommand = ['Viewlet.send', state.tabsUid, 'setFocusedIndex', oldActiveIndex, state.activeIndex]
-  const resizeCommands = ['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, height - state.tabHeight]
+  const resizeCommands = ['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, contentHeight]
   const previousUid = oldEditor.uid
   Assert.number(previousUid)
   const disposeCommands = Viewlet.disposeFunctional(previousUid)
