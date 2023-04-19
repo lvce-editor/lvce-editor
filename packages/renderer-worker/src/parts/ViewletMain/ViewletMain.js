@@ -353,7 +353,6 @@ export const handleDrop = async (state, files) => {
     } else {
       // TODO
     }
-    console.log(file)
   }
   return {
     newState: {

@@ -80,7 +80,6 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, contentHeight])
   let tabsUid = state.tabsUid
   if (tabsUid === -1) {
-    console.log('create tabs')
     tabsUid = Id.create()
     state.tabsUid = tabsUid
     commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
