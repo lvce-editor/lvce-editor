@@ -13,7 +13,8 @@ const fileSystemProvider = {
       if (callbacks.length === 3) {
         for (let i = callbacks.length - 1; i >= 0; i--) {
           const callback = callbacks[i]
-          callback.resolve(contents[uri])
+          const content = contents[uri]
+          callback.resolve(content)
         }
       }
     })
