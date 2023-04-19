@@ -32,7 +32,7 @@ export const addConnectedEditor = (id) => {
 export const removeConnectedEditor = (id) => {
   const index = state.connectedEditors.indexOf(id)
   if (index === -1) {
-    throw new Error('unexepcted index')
+    throw new Error('unexpected index')
   }
   state.connectedEditors.splice(index, 1)
 }

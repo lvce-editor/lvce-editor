@@ -23,9 +23,6 @@ export const create = () => {
   $Viewlet.className = 'Viewlet Main'
   $Viewlet.role = AriaRoles.Main
 
-  // const $MainContent = document.createElement('div')
-  // $MainContent.id = 'MainContent'
-
   // const $MainTabs = document.createElement('div')
   // $MainTabs.className = 'MainTabs'
   // $MainTabs.onmousedown = handleTabsMouseDown
@@ -50,8 +47,6 @@ export const attachEvents = (state) => {
 }
 
 export const dispose = (state) => {
-  state.$MainContent.remove()
-  state.$MainContent = undefined
   state.$MainTabs.remove()
   state.$MainTabs = undefined
 }
@@ -71,13 +66,10 @@ export const closeAllViewlets = (state) => {
   while ($Main.firstChild) {
     $Main.firstChild.remove()
   }
-  state.$MainContent = undefined
   state.$MainTabs = undefined
 }
 
 export const closeViewletAndTab = (state, index) => {
-  state.$MainContent.remove()
-  state.$MainContent = undefined
   state.$MainTabs.remove()
   state.$MainTabs = undefined
 }
@@ -101,32 +93,6 @@ export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex, backgroun
 
   const { $MainTabs } = state
   $MainTabs.append($Tab)
-
-  // await Viewlet.load(id)
-  // const instance = Viewlet.state.instances[id]
-  // // TODO race condition: what if tab has already been closed?
-  // Viewlet.mount(state.$MainContent, instance.state)
-  // Viewlet.focus(id)
-  // Layout.state.$Main.append(state.$MainTabs, state.$MainContent)
-}
-
-const create$MainContent = () => {
-  const $MainContent = document.createElement('div')
-  $MainContent.id = 'MainContent'
-  return $MainContent
-}
-
-export const appendViewlet = (state, childName, $Child) => {
-  if (!state.$MainContent) {
-    state.$MainContent = create$MainContent()
-    state.$Main.append(state.$MainContent)
-  }
-  const { $MainContent } = state
-  // TODO should bring back old optimization of reusing existing editor dom nodes if possible
-  while ($MainContent.firstChild) {
-    $MainContent.firstChild.remove()
-  }
-  $MainContent.append($Child)
 
   // await Viewlet.load(id)
   // const instance = Viewlet.state.instances[id]

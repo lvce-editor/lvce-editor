@@ -7,6 +7,7 @@ import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const openUri = async (state, uri, focus = true, options = {}) => {
   Assert.object(state)
@@ -26,18 +27,19 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       instance.uid = childUid
       // @ts-ignore
       const commands = await ViewletManager.load(instance, focus, false, options)
-      commands.push(['Viewlet.appendViewlet', state.uid, childUid])
+      commands.push(['Viewlet.append', state.uid, childUid])
       return {
         newState: state,
         commands,
       }
     }
   }
-
+  const previousEditor = state.editors[state.activeIndex]
   const instanceUid = Id.create()
   const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)
   instance.uid = instanceUid
   const oldActiveIndex = state.activeIndex
+  console.log({ editors: [...state.editors] })
   state.editors.push({ uri, uid: instanceUid })
   state.activeIndex = state.editors.length - 1
   const tabLabel = PathDisplay.getLabel(uri)
@@ -55,10 +57,16 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   instance.setBounds = false
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
+  console.log({ previousEditor })
   // if (commands[0].includes(ViewletModuleId.Error)) {
   //   commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
   // } else {
-  commands.push(['Viewlet.appendViewlet', state.uid, instanceUid || moduleId])
+  if (previousEditor) {
+    const previousUid = previousEditor.uid
+    const disposeCommands = Viewlet.disposeFunctional(previousUid)
+    commands.push(...disposeCommands)
+  }
+  commands.push(['Viewlet.append', state.uid, instanceUid])
   if (focus) {
     commands.push(['Viewlet.focus', instanceUid])
   }
