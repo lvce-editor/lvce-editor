@@ -1,4 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as Assert from '../Assert/Assert.js'
 import * as Tab from '../Tab/Tab.js'
 import * as ViewletMainTabEvents from './ViewletMainTabEvents.js'
 
@@ -28,6 +29,17 @@ export const setTabs = (state, tabs) => {
     $$Tabs.push($Tab)
   }
   $Viewlet.replaceChildren(...$$Tabs)
+}
+
+export const setDirty = (state, index, dirty) => {
+  Assert.number(index)
+  Assert.boolean(dirty)
+  const { $MainTabs } = state
+  if (dirty) {
+    $MainTabs.children[index].classList.add('Dirty')
+  } else {
+    $MainTabs.children[index].classList.remove('Dirty')
+  }
 }
 
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {

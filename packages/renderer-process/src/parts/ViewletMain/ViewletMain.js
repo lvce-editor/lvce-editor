@@ -1,8 +1,5 @@
-import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as Assert from '../Assert/Assert.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
-import * as Tab from '../Tab/Tab.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
 
 // TODO Main should not be bound to Editor -> Lazy load Editor
@@ -61,17 +58,6 @@ export const closeViewletAndTab = (state, index) => {
 }
 
 export const focus = () => {}
-
-export const setDirty = (state, index, dirty) => {
-  Assert.number(index)
-  Assert.boolean(dirty)
-  const { $MainTabs } = state
-  if (dirty) {
-    $MainTabs.children[index].classList.add('Dirty')
-  } else {
-    $MainTabs.children[index].classList.remove('Dirty')
-  }
-}
 
 export const highlightDragOver = (state) => {
   const { $MainTabs } = state
