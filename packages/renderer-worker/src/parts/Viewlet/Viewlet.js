@@ -139,7 +139,7 @@ export const disposeFunctional = (id) => {
     }
     const instance = ViewletStates.getInstance(id)
     if (!instance) {
-      console.info('instance may already be disposed')
+      Logger.warn(`instance ${id} may already be disposed`)
       return []
     }
     // TODO status should have enum

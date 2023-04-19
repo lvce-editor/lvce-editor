@@ -2017,17 +2017,17 @@ test('handleDrop - one file', async () => {
     },
     {
       uri: expect.any(String),
-      uid: 1,
+      uid: 2,
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', 1, 'openViewlet', 'dropped-file.txt', '/test/dropped-file.txt', 0)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', 'Editor')
   expect(commands).toEqual([
-    ['Viewlet.create', 'Editor', 1],
-    ['Viewlet.addKeyBindings', 1, expect.anything()],
-    ['Viewlet.appendViewlet', 1, 1],
-    ['Viewlet.focus', 1],
+    ['Viewlet.create', 'Editor', 2],
+    ['Viewlet.addKeyBindings', 2, expect.anything()],
+    ['Viewlet.append', 1, 2],
+    ['Viewlet.focus', 2],
   ])
   expect(newState).toMatchObject({
     dragOverlayVisible: false,

@@ -70,6 +70,7 @@ const getMainEditors = (state) => {
   if (!restoredEditor) {
     return []
   }
+  restoredEditor.uid = Id.create()
   // TODO check that type is string (else runtime error occurs and page is blank)
   return [restoredEditor]
 }
@@ -205,7 +206,7 @@ export const contentLoaded = async (state) => {
   ]
 
   // // TODO race condition: Viewlet may have been resized before it has loaded
-  const childUid = Id.create()
+  const childUid = editor.uid
   // // @ts-ignore
   const extraCommands = await ViewletManager.load(
     {
@@ -230,7 +231,7 @@ export const contentLoaded = async (state) => {
     /* restore */ true
   )
   commands.push(...extraCommands)
-  commands.push(['Viewlet.appendViewlet', state.uid, childUid])
+  commands.push(['Viewlet.append', state.uid, childUid])
   return commands
 }
 
@@ -534,6 +535,7 @@ export const focusIndex = async (state, index) => {
   instance.show = false
   instance.setBounds = false
   instance.uid = instanceUid
+  editor.uid = instanceUid
 
   // TODO race condition
   RendererProcess.invoke(
@@ -544,19 +546,21 @@ export const focusIndex = async (state, index) => {
     /* focusIndex */ state.activeIndex
   )
 
+  const previousUid = oldEditor.uid
+  Assert.number(previousUid)
+  const disposeCommands = Viewlet.disposeFunctional(previousUid)
   if (BackgroundTabs.has(editor.uri)) {
-    console.log('has background true')
     const props = BackgroundTabs.get(editor.uri)
     // @ts-ignore
     const commands = await ViewletManager.load(instance, false, false, props)
-    commands.push(['Viewlet.appendViewlet', state.uid, instanceUid])
+    commands.push(...disposeCommands)
+    commands.push(['Viewlet.append', state.uid, instanceUid])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   } else {
-    console.log('has background false')
     // @ts-ignore
     const commands = await ViewletManager.load(instance)
-    commands.push(['Viewlet.appendViewlet', state.uid, instanceUid])
-    console.log({ commands })
+    commands.unshift(...disposeCommands)
+    commands.push(['Viewlet.append', state.uid, instanceUid])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
