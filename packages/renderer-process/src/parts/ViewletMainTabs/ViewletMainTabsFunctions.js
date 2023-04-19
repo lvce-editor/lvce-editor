@@ -1,13 +1,5 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const closeEditor = (index) => {
-  RendererWorker.send('Main.closeEditor', index)
-}
-
-export const handleTabClick = (index) => {
-  RendererWorker.send('Main.handleTabClick', index)
-}
-
-export const handleTabContextMenu = (index, x, y) => {
-  RendererWorker.send('Main.handleTabContextMenu', index, x, y)
-}
+export const closeEditor = ForwardViewletCommand.forwardViewletCommand('closeEditor')
+export const handleTabClick = ForwardViewletCommand.forwardViewletCommand('handleTabClick')
+export const handleTabContextMenu = ForwardViewletCommand.forwardViewletCommand('handleTabContextMenu')
