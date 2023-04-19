@@ -198,7 +198,7 @@ export const contentLoaded = async (state) => {
   const x = state.x
   const y = state.y + state.tabHeight
   const width = state.width
-  const height = state.height - state.tabHeight
+  const contentHeight = state.height - state.tabHeight
   const id = ViewletMap.getModuleId(editor.uri)
   const tabLabel = PathDisplay.getLabel(editor.uri)
   const tabTitle = PathDisplay.getTitle(editor.uri)
@@ -208,7 +208,7 @@ export const contentLoaded = async (state) => {
     [/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
   ]
   const childUid = editor.uid
-  commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, state.height - state.tabHeight])
+  commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
   const tabsUid = Id.create()
   state.tabsUid = tabsUid
   commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
@@ -228,7 +228,7 @@ export const contentLoaded = async (state) => {
       x,
       y,
       width,
-      height,
+      height: contentHeight,
       show: false,
       focus: false,
       type: 0,
@@ -239,7 +239,7 @@ export const contentLoaded = async (state) => {
     /* restore */ true
   )
   commands.push(...extraCommands)
-  commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, height - state.tabHeight])
+  commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
   commands.push(['Viewlet.append', state.uid, tabsUid])
   commands.push(['Viewlet.append', state.uid, childUid])
   return commands

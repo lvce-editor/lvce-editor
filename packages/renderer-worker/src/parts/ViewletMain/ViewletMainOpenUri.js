@@ -15,7 +15,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const x = state.x
   const y = state.y + state.tabHeight
   const width = state.width
-  const height = state.height - state.tabHeight
+  const contentHeight = state.height - state.tabHeight
   const moduleId = ViewletMap.getModuleId(uri)
   const previousEditor = state.editors[state.activeIndex]
   let disposeCommands
@@ -33,7 +33,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       }
       const childUid = Id.create()
       // TODO if the editor is already open, nothing needs to be done
-      const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)
+      const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, contentHeight)
       instance.show = false
       instance.setBounds = false
       instance.uid = childUid
@@ -44,7 +44,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       }
       commands.push(['Viewlet.append', state.uid, childUid])
       const newActiveIndex = state.editors.indexOf(editor)
-      commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, height - state.tabHeight])
+      commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
       commands.push(['Viewlet.send', state.tabsUid, 'setFocusedIndex', state.activeIndex, newActiveIndex])
       state.activeIndex = newActiveIndex
       editor.uid = childUid
@@ -56,7 +56,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   }
 
   const instanceUid = Id.create()
-  const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)
+  const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, contentHeight)
   instance.uid = instanceUid
   const oldActiveIndex = state.activeIndex
   const tabLabel = PathDisplay.getLabel(uri)
@@ -77,7 +77,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   instance.setBounds = false
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
-  commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, height - state.tabHeight])
+  commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, contentHeight])
   let tabsUid = state.tabsUid
   if (tabsUid === -1) {
     console.log('create tabs')
