@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
+import * as Logger from '../Logger/Logger.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -349,6 +350,7 @@ const getFn = async (module, fnName) => {
 export const executeViewletCommand = async (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (!instance) {
+    Logger.warn(`instance not found ${uid}`)
     return
   }
   const fn = await getFn(instance.factory, fnName)
