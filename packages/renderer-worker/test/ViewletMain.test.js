@@ -615,8 +615,11 @@ test('closeEditor - 0 1 - first is focused and second tab is selected', async ()
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-2.txt' }, { uri: '/test/file-3.txt' }])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-2.txt' }, { uri: '/test/file-3.txt' }]],
+    ['Viewlet.send', -1, 'setFocusedIndex', -1, 0],
+  ])
 })
 
 test.skip('closeEditor - 0 2 - first tab is focused and last tab is selected', async () => {
@@ -689,8 +692,11 @@ test('closeEditor - 1 0 - middle tab is focused and first tab is selected', asyn
   ])
   expect(state.activeIndex).toBe(0)
   expect(state.focusedIndex).toBe(0)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-1.txt' }, { uri: '/test/file-3.txt' }])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-1.txt' }, { uri: '/test/file-3.txt' }]],
+    ['Viewlet.send', -1, 'setFocusedIndex', -1, 0],
+  ])
 })
 
 test.skip('closeEditor - 1 1 - middle tab is focused and middle tab is selected', async () => {
@@ -756,8 +762,11 @@ test('closeEditor - 1 2 - middle tab is focused and last tab is selected', async
   ])
   expect(state.activeIndex).toBe(1)
   expect(state.focusedIndex).toBe(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-1.txt' }, { uri: '/test/file-3.txt' }])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.sendMultiple', [
+    ['Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-1.txt' }, { uri: '/test/file-3.txt' }]],
+    ['Viewlet.send', -1, 'setFocusedIndex', -1, 1],
+  ])
 })
 
 test('closeEditor - 2 0 - last tab is focused and first tab is selected', async () => {
@@ -790,8 +799,11 @@ test('closeEditor - 2 0 - last tab is focused and first tab is selected', async 
   ])
   expect(state.activeIndex).toBe(0)
   expect(state.focusedIndex).toBe(0)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-1.txt' }, { uri: '/test/file-2.txt' }])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.sendMultiple', [
+    ['Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-1.txt' }, { uri: '/test/file-2.txt' }]],
+    ['Viewlet.send', -1, 'setFocusedIndex', -1, 0],
+  ])
 })
 
 test('closeEditor - 2 1 - last tab is focused and middle tab is selected', async () => {
@@ -825,8 +837,11 @@ test('closeEditor - 2 1 - last tab is focused and middle tab is selected', async
   ])
   expect(state.activeIndex).toBe(1)
   expect(state.focusedIndex).toBe(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-1.txt' }, { uri: '/test/file-2.txt' }])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.sendMultiple', [
+    ['Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-1.txt' }, { uri: '/test/file-2.txt' }]],
+    ['Viewlet.send', -1, 'setFocusedIndex', -1, 1],
+  ])
 })
 
 test.skip('closeEditor - 2 2 - last tab is focused and last tab is selected', async () => {
