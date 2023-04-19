@@ -1,6 +1,7 @@
 import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
 import * as Event from '../Event/Event.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as ViewletMainTabsFunctions from './ViewletMainTabsFunctions.js'
 
 const ClassNames = {
@@ -34,23 +35,14 @@ const getIndex = ($Target) => {
 }
 
 export const handleTabCloseButtonMouseDown = (event, index) => {
-  ViewletMainTabsFunctions.closeEditor(index)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletMainTabsFunctions.closeEditor(uid, index)
 }
 
 export const handleTabMouseDown = (event, index) => {
   const { button } = event
-  switch (button) {
-    case MouseEventType.LeftClick:
-      ViewletMainTabsFunctions.handleTabClick(index)
-      break
-    case MouseEventType.MiddleClick:
-      ViewletMainTabsFunctions.closeEditor(index)
-      break
-    case MouseEventType.RightClick:
-      break
-    default:
-      break
-  }
+  const uid = ComponentUid.fromEvent(event)
+  ViewletMainTabsFunctions.handleTabClick(uid, button, index)
 }
 
 export const handleTabsMouseDown = (event) => {

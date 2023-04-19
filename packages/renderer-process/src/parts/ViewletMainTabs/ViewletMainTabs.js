@@ -32,6 +32,8 @@ export const setTabs = (state, tabs) => {
 
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   const { $Viewlet } = state
-  $Viewlet.children[oldFocusedIndex].ariaSelected = false
+  if (oldFocusedIndex !== -1) {
+    $Viewlet.children[oldFocusedIndex].ariaSelected = false
+  }
   $Viewlet.children[newFocusedIndex].ariaSelected = true
 }

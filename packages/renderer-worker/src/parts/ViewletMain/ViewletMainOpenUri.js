@@ -49,6 +49,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     console.log({ previousEditors })
     allCommands.push(['Viewlet.send', previousItem.tabsUid, 'setTabs', leafItem.editors])
     allCommands.push(['Viewlet.send', previousItem.tabsUid, 'setFocusedIndex', leafItem.focusedIndex, previousEditors.length])
+    console.log('focus', previousEditors.length)
     const disposeCommands = Viewlet.disposeFunctional(previousItem.instanceUid)
     allCommands.push(...disposeCommands)
     allCommands.push(['Viewlet.append', state.uid, instanceUid || moduleId])
@@ -85,29 +86,26 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     size: 0,
     instanceUid,
     tabsUid,
-    editors: [],
+    editors: [
+      {
+        label: tabLabel,
+        title: tabTitle,
+        uri,
+      },
+    ],
     childCount: 0,
     instanceId: moduleId,
   }
   state.grid.push(leafItem)
 
   const oldActiveIndex = state.activeIndex
-  state.editors.push({ uri, uid: instanceUid })
-  state.activeIndex = state.editors.length - 1
+  // state.editors.push({ uri, uid: instanceUid })
+  // state.activeIndex = state.editors.length - 1
 
   await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
   allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
-  allCommands.push([
-    'Viewlet.send',
-    tabsUid,
-    'setTabs',
-    [
-      {
-        label: tabLabel,
-        title: tabTitle,
-      },
-    ],
-  ])
+  allCommands.push(['Viewlet.send', tabsUid, 'setTabs', leafItem.editors])
+  allCommands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, 0])
   allCommands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
   // if (commands[0].includes(ViewletModuleId.Error)) {
   //   commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
@@ -124,10 +122,6 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       commands: allCommands,
     }
   }
-  const actualUri = ViewletStates.getState(instanceUid).uri
-  const index = state.editors.findIndex((editor) => editor.uid === instanceUid)
-  state.editors[index].uri = actualUri
-  console.log({ allCommands })
   return {
     newState: state,
     commands: allCommands,

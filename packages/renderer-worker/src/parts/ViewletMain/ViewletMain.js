@@ -190,7 +190,8 @@ export const getChildren = (state) => {
 // TODO content loaded should return commands which
 // get picked up by viewletlayout and sent to renderer process
 export const contentLoaded = async (state) => {
-  if (state.editors.length === 0) {
+  const { grid } = state
+  if (grid.length === 0) {
     return []
   }
   await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
@@ -245,6 +246,7 @@ export const contentLoaded = async (state) => {
       },
     ],
   ])
+  commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, 0])
   commands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
   commands.push(['Viewlet.append', state.uid, tabsUid])
   commands.push(['Viewlet.append', state.uid, childUid])
@@ -537,20 +539,24 @@ export const handleTabContextMenu = async (state, index, x, y) => {
 }
 
 export const focusIndex = async (state, index) => {
-  if (index === state.activeIndex) {
-    return state
-  }
-  const oldActiveIndex = state.activeIndex
-  state.activeIndex = index
-
-  const editor = state.editors[index]
+  console.log({ index })
+  Assert.number(index)
+  const { grid } = state
+  const leafItem = grid[0]
+  const oldActiveIndex = leafItem.focusedIndex
+  leafItem.focusedIndex = index
+  const { editors } = leafItem
+  Assert.array(editors)
+  console.log({ editors, index })
+  const editor = editors[index]
+  Assert.object(editor)
   const x = state.x
   const y = state.y + state.tabHeight
   const width = state.width
   const height = state.height - state.tabHeight
   const id = ViewletMap.getModuleId(editor.uri)
 
-  const oldEditor = state.editors[oldActiveIndex]
+  const oldEditor = leafItem.editors[oldActiveIndex]
   const oldId = ViewletMap.getModuleId(oldEditor.uri)
   const oldInstance = ViewletStates.getInstance(oldId)
 
@@ -559,32 +565,26 @@ export const focusIndex = async (state, index) => {
   instance.show = false
   instance.setBounds = false
   instance.uid = instanceUid
+  console.log('focus now', index)
 
+  const allCommands = ['Viewlet.send', leafItem.tabsUid, 'setFocusedIndex', leafItem.focusedIndex, index]
   // TODO race condition
-  RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ state.uid,
-    /* method */ 'focusAnotherTab',
-    /* unFocusIndex */ oldActiveIndex,
-    /* focusIndex */ state.activeIndex
-  )
-
   if (BackgroundTabs.has(editor.uri)) {
     console.log('has background true')
     const props = BackgroundTabs.get(editor.uri)
     // @ts-ignore
     const commands = await ViewletManager.load(instance, false, false, props)
-    commands.push(['Viewlet.appendViewlet', state.uid, instanceUid])
-    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    allCommands.push(...commands)
+    allCommands.push(['Viewlet.appendViewlet', state.uid, instanceUid])
   } else {
     console.log('has background false')
     // @ts-ignore
     const commands = await ViewletManager.load(instance)
-    commands.push(['Viewlet.appendViewlet', state.uid, instanceUid])
-    console.log({ commands })
-    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    allCommands.push(...commands)
+    allCommands.push(['Viewlet.appendViewlet', state.uid, instanceUid])
   }
 
+  await RendererProcess.invoke('Viewlet.sendMultiple', allCommands)
   if (oldInstance && oldInstance.factory.hide) {
     await oldInstance.factory.hide(oldInstance.state)
     BackgroundTabs.add(oldInstance.state.uri, oldInstance.state)
@@ -611,6 +611,8 @@ export const focusNext = (state) => {
 }
 
 export const handleTabClick = (state, button, index) => {
+  Assert.number(button)
+  Assert.number(index)
   switch (button) {
     case MouseEventType.LeftClick:
       return focusIndex(state, index)
