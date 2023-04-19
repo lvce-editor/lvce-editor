@@ -156,7 +156,8 @@ const handleEditorChange = async (editor) => {
   const state = ViewletStates.getState(ViewletModuleId.Main)
   const index = state.activeIndex
   Assert.number(index)
-  const command = ['Viewlet.send', state.uid, 'setDirty', index, true]
+  const tabsUid = state.tabsUid
+  const command = ['Viewlet.send', tabsUid, 'setDirty', index, true]
   await RendererProcess.invoke(...command)
 }
 
