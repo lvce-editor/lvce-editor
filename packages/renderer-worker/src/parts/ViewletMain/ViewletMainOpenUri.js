@@ -63,7 +63,6 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const tabTitle = PathDisplay.getTitle(uri)
   state.editors.push({ uri, uid: instanceUid, label: tabLabel, title: tabTitle })
   state.activeIndex = state.editors.length - 1
-  const tabsUid = state.tabsUid
 
   // await RendererProcess.invoke(
   //   /* Viewlet.send */ 'Viewlet.send',
@@ -79,6 +78,14 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
   commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, height - state.tabHeight])
+  let tabsUid = state.tabsUid
+  if (tabsUid === -1) {
+    tabsUid = Id.create()
+    state.tabsUid = tabsUid
+    commands.push(['create', ViewletModuleId.MainTabs, tabsUid])
+    commands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
+    commands.push(['Viewlet.append', state.uid, state.tabsUid])
+  }
   commands.push(['Viewlet.send', tabsUid, 'setTabs', state.editors])
   commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', oldActiveIndex, state.activeIndex])
 
@@ -94,6 +101,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   }
   const latestEditor = state.editors[state.activeIndex]
   if (latestEditor.uid !== instanceUid) {
+    console.log('return now')
     return {
       newState: state,
       commands: [],

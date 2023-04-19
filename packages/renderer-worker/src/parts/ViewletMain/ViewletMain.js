@@ -97,6 +97,7 @@ export const create = (id, uri, x, y, width, height) => {
     dragOverlayWidth: 0,
     dragOverlayHeight: 0,
     dragOverlayVisible: false,
+    tabsUid: -1,
   }
 }
 
