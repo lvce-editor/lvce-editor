@@ -280,11 +280,8 @@ export const openBackgroundTab = async (state, initialUri, props) => {
 }
 
 const executeEditorCommand = async (editor, commandId) => {
-  const id = getId(editor)
-  console.log({ editor })
-  const actualId = id === 'EditorText' ? 'Editor' : id
-  const fullCommandId = `${actualId}.${commandId}`
-  await Command.execute(fullCommandId)
+  const uid = getUid(editor)
+  await Viewlet.executeViewletCommand(uid, commandId)
 }
 
 const saveEditor = (editor) => {
@@ -433,12 +430,16 @@ export const closeActiveEditor = (state) => {
   return closeEditor(state, activeIndex)
 }
 
-const getId = (editor) => {
-  return ViewletMap.getModuleId(editor.uri)
+const getUid = (editor) => {
+  return editor.uid
+}
+
+const getUids = (editors) => {
+  return editors.map(getUid)
 }
 
 export const closeAllEditors = async (state) => {
-  const ids = state.editors.map(getId)
+  const ids = getUids(state.editors)
   const uid = state.uid
   const tabsUid = state.tabsUid
   const commands = [['Viewlet.send', uid, 'dispose'], ['Viewlet.dispose', tabsUid], ...ids.flatMap(Viewlet.disposeFunctional)]
