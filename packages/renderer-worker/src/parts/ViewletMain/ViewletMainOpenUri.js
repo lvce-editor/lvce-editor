@@ -15,7 +15,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const x = state.x
   const y = state.y + state.tabHeight
   const width = state.width
-  const height = state.height - state.tabHeight
+  const contentHeight = state.height - state.tabHeight
   const moduleId = ViewletMap.getModuleId(uri)
   const previousEditor = state.editors[state.activeIndex]
   let disposeCommands
@@ -33,7 +33,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       }
       const childUid = Id.create()
       // TODO if the editor is already open, nothing needs to be done
-      const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)
+      const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, contentHeight)
       instance.show = false
       instance.setBounds = false
       instance.uid = childUid
@@ -44,7 +44,8 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       }
       commands.push(['Viewlet.append', state.uid, childUid])
       const newActiveIndex = state.editors.indexOf(editor)
-      commands.push(['Viewlet.send', state.uid, 'focusAnotherTab', state.activeIndex, newActiveIndex])
+      commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
+      commands.push(['Viewlet.send', state.tabsUid, 'setFocusedIndex', state.activeIndex, newActiveIndex])
       state.activeIndex = newActiveIndex
       editor.uid = childUid
       return {
@@ -55,26 +56,38 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   }
 
   const instanceUid = Id.create()
-  const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, height)
+  const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, contentHeight)
   instance.uid = instanceUid
   const oldActiveIndex = state.activeIndex
-  state.editors.push({ uri, uid: instanceUid })
-  state.activeIndex = state.editors.length - 1
   const tabLabel = PathDisplay.getLabel(uri)
   const tabTitle = PathDisplay.getTitle(uri)
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ state.uid,
-    /* method */ 'openViewlet',
-    /* tabLabel */ tabLabel,
-    /* tabTitle */ tabTitle,
-    /* oldActiveIndex */ oldActiveIndex
-  )
+  state.editors.push({ uri, uid: instanceUid, label: tabLabel, title: tabTitle })
+  state.activeIndex = state.editors.length - 1
+
+  // await RendererProcess.invoke(
+  //   /* Viewlet.send */ 'Viewlet.send',
+  //   /* id */ state.uid,
+  //   /* method */ 'openViewlet',
+  //   /* tabLabel */ tabLabel,
+  //   /* tabTitle */ tabTitle,
+  //   /* oldActiveIndex */ oldActiveIndex
+  // )
   // @ts-ignore
   instance.show = false
   instance.setBounds = false
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
+  commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, contentHeight])
+  let tabsUid = state.tabsUid
+  if (tabsUid === -1) {
+    tabsUid = Id.create()
+    commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
+    commands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
+    commands.push(['Viewlet.append', state.uid, tabsUid])
+  }
+  commands.push(['Viewlet.send', tabsUid, 'setTabs', state.editors])
+  commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', oldActiveIndex, state.activeIndex])
+
   // if (commands[0].includes(ViewletModuleId.Error)) {
   //   commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
   // } else {
@@ -99,7 +112,10 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     }
   }
   return {
-    newState: state,
+    newState: {
+      ...state,
+      tabsUid,
+    },
     commands,
   }
 }

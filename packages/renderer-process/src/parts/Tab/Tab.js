@@ -13,9 +13,7 @@ export const create = (label, title, background) => {
   const $Tab = document.createElement('div')
   $Tab.title = title
   $Tab.draggable = true
-  if (!background) {
-    $Tab.ariaSelected = AriaBoolean.True
-  }
+  $Tab.ariaSelected = background ? AriaBoolean.False : AriaBoolean.True
   $Tab.role = AriaRoles.Tab
   $Tab.className = 'MainTab'
   $Tab.append($TabLabel, $TabCloseButton)
