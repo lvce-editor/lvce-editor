@@ -470,8 +470,8 @@ export const closeEditor = async (state, index) => {
     const oldEditor = state.editors[index]
     state.editors.splice(index, 1)
     const newActiveIndex = index === 0 ? index : index - 1
-    const id = ViewletMap.getModuleId(oldEditor.uri)
-    Viewlet.dispose(id)
+    const uid = oldEditor.uid
+    const commands = [...Viewlet.disposeFunctional(uid)]
     state.activeIndex = newActiveIndex
     state.focusedIndex = newActiveIndex
     // const instance = Viewlet.create(id, 'uri', left, top, width, height)
@@ -486,17 +486,17 @@ export const closeEditor = async (state, index) => {
     //   height: instance.state.height,
     //   columnWidth: COLUMN_WIDTH,
     // })
-    await RendererProcess.invoke('Viewlet.send', state.tabsUid, 'setTabs', state.editors)
+    commands.push(['Viewlet.send', state.tabsUid, 'setTabs', state.editors])
     return state
   }
   state.editors.splice(index, 1)
-  await RendererProcess.invoke('Viewlet.send', state.tabsUid, 'setTabs', state.editors)
+  const commands = [['Viewlet.send', state.tabsUid, 'setTabs', state.editors]]
   if (index < state.activeIndex) {
     state.activeIndex--
   }
   state.focusedIndex = state.activeIndex
-  await RendererProcess.invoke('Viewlet.send', state.tabsUid, 'setFocusedIndex', -1, state.activeIndex)
-
+  commands.push(['Viewlet.send', state.tabsUid, 'setFocusedIndex', -1, state.activeIndex])
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   // TODO just close the tab
   return state
 }
