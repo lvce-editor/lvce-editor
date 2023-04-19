@@ -95,6 +95,10 @@
       "foreground": "#BEB558"
     },
     {
+      "name": "CssSelectorClass",
+      "foreground": "#B8CA9C"
+    },
+    {
       "name": "CssSelectorId",
       "foreground": "#BE7C81"
     },
