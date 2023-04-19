@@ -35,10 +35,7 @@ export const attachEvents = (state) => {
   $Viewlet.ondragend = ViewletMainEvents.handleDragEnd
 }
 
-export const dispose = (state) => {
-  state.$MainTabs.remove()
-  state.$MainTabs = undefined
-}
+export const dispose = (state) => {}
 
 export const replaceEditor = (state, id, uri, languageId) => {}
 

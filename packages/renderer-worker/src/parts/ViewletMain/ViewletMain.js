@@ -440,11 +440,13 @@ const getId = (editor) => {
 export const closeAllEditors = async (state) => {
   const ids = state.editors.map(getId)
   const uid = state.uid
-  const commands = [['Viewlet.send', uid, 'dispose'], ...ids.flatMap(Viewlet.disposeFunctional)]
+  const tabsUid = state.tabsUid
+  const commands = [['Viewlet.send', uid, 'dispose'], ['Viewlet.dispose', tabsUid], ...ids.flatMap(Viewlet.disposeFunctional)]
   // RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'dispose')
   state.editors = []
   state.focusedIndex = -1
   state.selectedIndex = -1
+  state.tabsUid = -1
   // TODO should call dispose method, but only in renderer-worker
   await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   return state
