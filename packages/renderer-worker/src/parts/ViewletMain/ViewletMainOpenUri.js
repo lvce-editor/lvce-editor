@@ -101,9 +101,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     commands.push(['Viewlet.focus', instanceUid])
   }
   const latestEditor = state.editors[state.activeIndex]
-  console.log({ commands })
   if (latestEditor.uid !== instanceUid) {
-    console.log('return now')
     return {
       newState: state,
       commands: [],
