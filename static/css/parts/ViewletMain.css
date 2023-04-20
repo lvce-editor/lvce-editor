@@ -33,3 +33,8 @@
   transition: all 100ms;
   contain: strict;
 }
+
+/* TODO make all error viewlets position absolute? */
+.Main .Error {
+  position: absolute;
+}
