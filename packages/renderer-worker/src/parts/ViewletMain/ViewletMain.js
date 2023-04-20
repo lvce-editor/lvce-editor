@@ -66,13 +66,12 @@ const getMainEditors = (state) => {
   if (!editors) {
     return []
   }
-  const restoredEditor = editors.filter(canBeRestored)[activeIndex]
-  if (!restoredEditor) {
-    return []
+  const restoredEditors = editors.filter(canBeRestored)
+  for (const editor of restoredEditors) {
+    editor.uid = Id.create()
   }
-  restoredEditor.uid = Id.create()
   // TODO check that type is string (else runtime error occurs and page is blank)
-  return [restoredEditor]
+  return restoredEditors
 }
 
 const hydrateLazy = async () => {
@@ -141,10 +140,17 @@ const findEditorWithUri = (editors, uri) => {
 
 const getRestoredEditors = (savedState) => {
   if (Workspace.isTest()) {
-    return []
+    return { editors: [], activeIndex: -1 }
   }
   const restoredEditors = getMainEditors(savedState)
-  return restoredEditors
+  const savedActiveIndex = savedState.activeIndex
+  if (typeof savedActiveIndex !== 'number' || savedActiveIndex < 0 || savedActiveIndex > restoredEditors.length) {
+    return { editors: [], activeIndex: -1 }
+  }
+  return {
+    editors: restoredEditors,
+    activeIndex: savedActiveIndex,
+  }
 }
 
 export const saveState = (state) => {
@@ -163,10 +169,9 @@ const handleEditorChange = async (editor) => {
 
 export const loadContent = async (state, savedState) => {
   // TODO get restored editors from saved state
-  const editors = getRestoredEditors(savedState)
+  const { activeIndex, editors } = getRestoredEditors(savedState)
   // @ts-ignore
   LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
-  const activeIndex = editors.length > 0 ? 0 : -1
   GlobalEventBus.addListener('editor.change', handleEditorChange)
   await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
   return {
@@ -214,7 +219,7 @@ export const contentLoaded = async (state) => {
   state.tabsUid = tabsUid
   commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
   commands.push(['Viewlet.send', tabsUid, 'setTabs', state.editors])
-  commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, 0])
+  commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, state.activeIndex])
   commands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
   // // @ts-ignore
   const extraCommands = await ViewletManager.load(
