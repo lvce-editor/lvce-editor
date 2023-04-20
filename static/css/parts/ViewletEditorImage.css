@@ -1,6 +1,7 @@
 .EditorImage {
   cursor: grab;
   touch-action: none;
+  max-width: 100%;
 }
 
 .ViewletImage {
