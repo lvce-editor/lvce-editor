@@ -43,7 +43,7 @@ export const getMenuEntries = () => {
       id: 'tabCloseAll',
       label: I18nString.i18nString(UiStrings.CloseAll),
       flags: MenuItemFlags.None,
-      command: /* TODO */ -1,
+      command: 'Main.closeAllEditors',
     },
     {
       id: 'revealInExplorer',
