@@ -3,6 +3,14 @@ import * as Assert from '../Assert/Assert.js'
 import * as Tab from '../Tab/Tab.js'
 import * as ViewletMainTabEvents from './ViewletMainTabEvents.js'
 
+/**
+ * @enum {string}
+ */
+const ClassNames = {
+  MainTabSelected: 'MainTabSelected',
+  Dirty: 'Dirty',
+}
+
 export const create = () => {
   const $MainTabs = document.createElement('div')
   $MainTabs.className = 'Viewlet MainTabs'
@@ -36,16 +44,20 @@ export const setDirty = (state, index, dirty) => {
   Assert.boolean(dirty)
   const { $MainTabs } = state
   if (dirty) {
-    $MainTabs.children[index].classList.add('Dirty')
+    $MainTabs.children[index].classList.add(ClassNames.Dirty)
   } else {
-    $MainTabs.children[index].classList.remove('Dirty')
+    $MainTabs.children[index].classList.remove(ClassNames.Dirty)
   }
 }
 
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   const { $Viewlet } = state
   if (oldFocusedIndex !== -1) {
-    $Viewlet.children[oldFocusedIndex].ariaSelected = false
+    const $OldItem = $Viewlet.children[oldFocusedIndex]
+    $OldItem.ariaSelected = false
+    $OldItem.classList.remove(ClassNames.MainTabSelected)
   }
-  $Viewlet.children[newFocusedIndex].ariaSelected = true
+  const $NewItem = $Viewlet.children[newFocusedIndex]
+  $NewItem.ariaSelected = true
+  $NewItem.classList.add(ClassNames.MainTabSelected)
 }

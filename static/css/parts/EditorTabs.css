@@ -23,7 +23,7 @@
   max-width: 200px;
 }
 
-.MainTab[aria-selected='true'] {
+.MainTabSelected {
   border-right: 1px solid rgb(34, 34, 34);
   background: var(--TabActiveBackground);
   color: var(--TabActiveForeground);
