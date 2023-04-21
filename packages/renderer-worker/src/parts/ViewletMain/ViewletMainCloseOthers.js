@@ -41,7 +41,6 @@ export const closeOthers = async (state) => {
     commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, contentHeight])
     commands.push(['Viewlet.append', state.uid, instanceUid])
   }
-  console.log({ commands })
   await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   return state
 }
