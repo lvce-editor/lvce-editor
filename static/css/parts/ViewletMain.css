@@ -5,13 +5,6 @@
   position: absolute;
 }
 
-.MainContent,
-#MainContent {
-  contain: strict;
-  flex: 1;
-  display: flex;
-}
-
 .EditorText {
   color: white;
   white-space: pre;
