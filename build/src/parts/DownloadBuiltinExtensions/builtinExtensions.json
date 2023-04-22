@@ -27,7 +27,7 @@
   {
     "name": "builtin.language-basics-dart",
     "repository": "github.com/lvce-editor/language-basics-dart",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   {
     "name": "builtin.language-basics-desktop",
@@ -42,7 +42,7 @@
   {
     "name": "builtin.language-basics-dotenv",
     "repository": "github.com/lvce-editor/language-basics-dotenv",
-    "version": "0.0.7"
+    "version": "0.0.8"
   },
   {
     "name": "builtin.language-basics-editorconfig",
@@ -112,12 +112,12 @@
   {
     "name": "builtin.language-basics-julia",
     "repository": "github.com/lvce-editor/language-basics-julia",
-    "version": "0.0.2"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-kotlin",
     "repository": "github.com/lvce-editor/language-basics-kotlin",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-less",
