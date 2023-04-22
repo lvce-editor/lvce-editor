@@ -27,18 +27,6 @@ const getNodeIndex = ($Node) => {
   return index
 }
 
-const getTargetIndex = ($Target) => {
-  switch ($Target.className) {
-    case 'QuickPickItem':
-    case 'QuickPickItem Focused':
-      return getNodeIndex($Target)
-    case 'QuickPickItemLabel':
-      return getNodeIndex($Target.parentNode)
-    default:
-      return -1
-  }
-}
-
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
   const uid = ComponentUid.fromEvent(event)
@@ -66,18 +54,6 @@ export const handlePointerDown = (event) => {
   ViewletQuickPickFunctions.handleClickAt(uid, clientX, clientY)
 }
 
-// TODO beforeinput event should prevent input event maybe
-// const handleBeforeInput = (event) => {
-//   if (!event.data) {
-//     return
-//   }
-//   const value = event.target.value + event.data
-//   RendererWorker.send(
-//     /* quickPickHandleInput */ 'QuickPick.handleInput',
-//     /* value */ value,
-//   )
-// }
-
 export const handleInput = (event) => {
   const $Target = event.target
   const { value } = $Target
@@ -95,7 +71,6 @@ export const handleBlur = (event) => {
 // - for nvda ariaRoleDescription works better
 
 export const handleBeforeInput = (event) => {
-  Event.preventDefault(event)
   const { target, inputType, data } = event
   const { selectionStart, selectionEnd } = target
   const uid = ComponentUid.fromEvent(event)
