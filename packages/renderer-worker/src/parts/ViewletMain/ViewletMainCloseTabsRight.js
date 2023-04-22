@@ -1,13 +1,52 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletManager from '../ViewletManager/ViewletManager.js'
+import * as ViewletMap from '../ViewletMap/ViewletMap.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const closeTabsRight = async (state) => {
-  if (state.focusedIndex >= state.activeIndex) {
+  const { editors, activeIndex, focusedIndex } = state
+  const commands = []
+  const newEditors = editors.slice(0, focusedIndex + 1)
+  commands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ state.tabsUid, /* method */ 'setTabs', /* index */ newEditors])
+  commands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ state.tabsUid, /* method */ 'setFocusedIndex', -1, focusedIndex])
+  if (focusedIndex >= activeIndex) {
     // view is kept the same, only tabs are closed
-    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeTabsRight', /* index */ state.focusedIndex)
   } else {
     // view needs to be switched to focused index
-    await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'closeTabsRight', /* index */ state.focusedIndex)
+    const previousEditor = editors[activeIndex]
+    let disposeCommands = []
+    if (previousEditor) {
+      const previousUid = previousEditor.uid
+      disposeCommands = Viewlet.disposeFunctional(previousUid)
+    }
+    commands.push(...disposeCommands)
+    const newActiveEditor = newEditors[focusedIndex]
+    const x = state.x
+    const y = state.y + state.tabHeight
+    const width = state.width
+    const contentHeight = state.height - state.tabHeight
+    const uri = newActiveEditor.uri
+    const moduleId = ViewletMap.getModuleId(uri)
+    const uid = newActiveEditor.uid
+    const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, contentHeight)
+    // @ts-ignore
+    instance.show = false
+    instance.setBounds = false
+    instance.uid = uid
+    const focus = true
+    // @ts-ignore
+    const instanceCommands = await ViewletManager.load(instance, focus, false, {})
+    commands.push(...instanceCommands)
+    commands.push(['Viewlet.setBounds', uid, x, state.tabHeight, width, contentHeight])
+    commands.push(['Viewlet.append', state.uid, uid])
   }
-  state.editors = state.editors.slice(0, state.focusedIndex + 1)
-  state.activeIndex = state.focusedIndex
+  return {
+    newState: {
+      ...state,
+      editors: newEditors,
+      activeIndex: focusedIndex,
+    },
+    commands,
+  }
 }

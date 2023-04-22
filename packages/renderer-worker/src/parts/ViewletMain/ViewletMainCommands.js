@@ -21,14 +21,14 @@ export const Commands = {
   handleClickClose: ViewletMain.handleClickClose,
 }
 
-export const LazyCommands = {
-  closeTabsLeft: () => import('./ViewletMainCloseTabsLeft.js'),
-  closeTabsRight: () => import('./ViewletMainCloseTabsRight.js'),
-  closeOthers: () => import('./ViewletMainCloseOthers.js'),
-}
-
 export const CommandsWithSideEffects = {
   openUri: ViewletMainOpenUri.openUri,
   handleDrop: ViewletMain.handleDrop,
   handleDropFilePath: ViewletMain.handleDropFilePath,
+}
+
+export const CommandsWithSideEffectsLazy = {
+  closeTabsLeft: () => import('./ViewletMainCloseTabsLeft.js'),
+  closeTabsRight: () => import('./ViewletMainCloseTabsRight.js'),
+  closeOthers: () => import('./ViewletMainCloseOthers.js'),
 }
