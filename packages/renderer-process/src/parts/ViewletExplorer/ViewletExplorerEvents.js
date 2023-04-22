@@ -1,4 +1,5 @@
 import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as DropEffectType from '../DropEffectType/DropEffectType.js'
 import * as Event from '../Event/Event.js'
@@ -6,9 +7,7 @@ import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at star
 import * as GetFileHandlesFromDataTransferItems from '../GetFileHandlesFromDataTransferItems/GetFileHandlesFromDataTransferItems.js'
 import * as IsHtmlElement from '../IsHtmlElement/IsHtmlElement.js'
 import * as Platform from '../Platform/Platform.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as ViewletExplorerFunctions from './ViewletExplorerFunctions.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 
 // TODO put drop into separate module and use executeCommand to call it
 
@@ -174,14 +173,7 @@ export const handleClick = (event) => {
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
   const uid = ComponentUid.fromEvent(event)
-  switch (deltaMode) {
-    case WheelEventType.DomDeltaLine:
-    case WheelEventType.DomDeltaPixel:
-      ViewletExplorerFunctions.handleWheel(uid, deltaY)
-      break
-    default:
-      break
-  }
+  ViewletExplorerFunctions.handleWheel(uid, deltaMode, deltaY)
 }
 
 export const handlePointerDown = (event) => {
