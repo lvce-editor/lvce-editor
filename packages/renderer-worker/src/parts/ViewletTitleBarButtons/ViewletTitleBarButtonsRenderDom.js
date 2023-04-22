@@ -1,4 +1,4 @@
-import { button } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import { button, i } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
  * @enum {string}
@@ -7,6 +7,15 @@ const ClassNames = {
   Minimize: 'TitleBarButton TitleBarButtonMinimize',
   ToggleMaximize: 'TitleBarButton TitleBarButtonToggleMaximize',
   Close: 'TitleBarButton TitleBarButtonClose',
+}
+
+/**
+ * @enum {string}
+ */
+const Icon = {
+  Minimize: 'Minimize',
+  ToggleMaximize: 'ToggleMaximize',
+  Close: 'Close',
 }
 
 /**
@@ -24,7 +33,8 @@ const Ids = {
 const UiStrings = {
   Minimize: 'Minimize',
 }
-const titleBarButton = (className, id, label) => {
+
+const titleBarButton = (className, icon, id, label) => {
   return [
     button(
       {
@@ -34,14 +44,20 @@ const titleBarButton = (className, id, label) => {
       },
       1
     ),
+    i(
+      {
+        className: `MaskIcon ${icon}`,
+      },
+      0
+    ),
   ]
 }
 
 const getVirtualDom = (state) => {
   return [
-    ...titleBarButton(ClassNames.Minimize, Ids.Minimize, UiStrings.Minimize),
-    ...titleBarButton(ClassNames.ToggleMaximize, Ids.ToggleMaximize, UiStrings.Minimize),
-    ...titleBarButton(ClassNames.Close, Ids.Close, UiStrings.Minimize),
+    ...titleBarButton(ClassNames.Minimize, Icon.Minimize, Ids.Minimize, UiStrings.Minimize),
+    ...titleBarButton(ClassNames.ToggleMaximize, Icon.ToggleMaximize, Ids.ToggleMaximize, UiStrings.Minimize),
+    ...titleBarButton(ClassNames.Close, Icon.Close, Ids.Close, UiStrings.Minimize),
   ]
 }
 
