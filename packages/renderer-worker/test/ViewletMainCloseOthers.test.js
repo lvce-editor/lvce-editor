@@ -376,14 +376,14 @@ test('closeOthers - 2 2 - third tab is focused and third tab is selected', async
     },
     state: {},
   })
-  await ViewletMainCloseOthers.closeOthers(state)
-  expect(state.editors).toEqual([
+  const { newState, commands } = await ViewletMainCloseOthers.closeOthers(state)
+  expect(newState.editors).toEqual([
     {
       uid: 3,
       uri: '/test/file-3.txt',
     },
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+  expect(commands).toEqual([
     ['Viewlet.send', -1, 'setTabs', [{ uid: 3, uri: '/test/file-3.txt' }]],
     ['Viewlet.send', -1, 'setFocusedIndex', -1, 0],
     ['Viewlet.create', 'Editor', 1],
