@@ -1,33 +1,12 @@
-import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as Icon from '../Icon/Icon.js'
-import { getNumberOfVisibleItems } from './ViewletActivityBarGetHiddenItems.js'
-import * as ViewletActivityBarStrings from './ViewletActivityBarStrings.js'
+import * as GetVisibleActivityBarItems from '../GetVisibleActivityBarItems/GetVisibleActivityBarItems.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
-
-const getVisibleActivityBarItems = (state) => {
-  const numberOfVisibleItems = getNumberOfVisibleItems(state)
-  const items = state.activityBarItems
-  if (numberOfVisibleItems >= items.length) {
-    return items
-  }
-  const showMoreItem = {
-    id: 'Additional Views',
-    title: ViewletActivityBarStrings.additionalViews(),
-    icon: Icon.Ellipsis,
-    enabled: true,
-    flags: ActivityBarItemFlags.Button,
-    keyShortCuts: '',
-  }
-  const visibleItems = [...items.slice(0, numberOfVisibleItems - 2), showMoreItem, items.at(-1)]
-  return visibleItems
-}
 
 const renderActivityBarItems = {
   isEqual(oldState, newState) {
     return oldState.activityBarItems === newState.activityBarItems && oldState.height === newState.height
   },
   apply(oldState, newState) {
-    const visibleItems = getVisibleActivityBarItems(newState)
+    const visibleItems = GetVisibleActivityBarItems.getVisibleActivityBarItems(newState)
     return [/* method */ RenderMethod.SetItems, /* items */ visibleItems]
   },
 }
