@@ -18,7 +18,7 @@ export const create = () => {
   const $ButtonClose = create$TitleBarButton('Close', 'Close', 'Close')
 
   const $TitleBarButtons = document.createElement('div')
-  $TitleBarButtons.className = 'TitleBarButtons'
+  $TitleBarButtons.className = 'Viewlet TitleBarButtons'
   $TitleBarButtons.onmousedown = ViewletTitleBarButtonEvents.handleTitleBarButtonsClick
   $TitleBarButtons.append($ButtonMinimize, $ButtonToggleMaximize, $ButtonClose)
   return {
