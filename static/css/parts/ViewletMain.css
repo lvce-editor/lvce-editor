@@ -1,17 +1,6 @@
-#Main {
+.Main {
   background: var(--MainBackground);
-  display: flex;
-  flex-direction: column;
   position: absolute;
-}
-
-.EditorText {
-  color: white;
-  white-space: pre;
-}
-
-.Clock {
-  color: white;
 }
 
 .DragOverlay {
