@@ -2,6 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 
 /**
  * @enum {string}
@@ -15,8 +16,9 @@ export const UiStrings = {
 const MAX_MENU_RECENT_ENTRIES = 10
 
 const toMenuItem = (folder) => {
+  const label = PathDisplay.getTitle(folder)
   return {
-    label: folder,
+    label,
     flags: MenuItemFlags.None,
     command: 'Workspace.setPath',
     args: [folder],
@@ -24,9 +26,7 @@ const toMenuItem = (folder) => {
 }
 
 const getRecentlyOpened = () => {
-  return Command.execute(
-    /* RecentlyOpened.getRecentlyOpened */ 'RecentlyOpened.getRecentlyOpened'
-  )
+  return Command.execute(/* RecentlyOpened.getRecentlyOpened */ 'RecentlyOpened.getRecentlyOpened')
 }
 
 export const getMenuEntries = async () => {
