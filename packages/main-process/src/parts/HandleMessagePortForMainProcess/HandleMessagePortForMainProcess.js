@@ -20,6 +20,12 @@ exports.handlePort = (event, browserWindowPort) => {
     const response = await GetResponse.getResponse(message, Command.execute)
     browserWindowPort.postMessage(response)
   }
+  const handleClose = () => {
+    browserWindowPort.off('close', handleClose)
+    browserWindowPort.off('message', handleMessage)
+    state.port = undefined
+  }
+  browserWindowPort.on('close', handleClose)
   browserWindowPort.on('message', handleMessage)
   browserWindowPort.start()
 }
