@@ -69,3 +69,7 @@ export const button = (props, childCount) => {
 export const span = (props, childCount) => {
   return h(VirtualDomElements.Span, props, childCount)
 }
+
+export const i = (props, childCount) => {
+  return h(VirtualDomElements.I, props, childCount)
+}
