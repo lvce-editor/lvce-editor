@@ -3,7 +3,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
 import * as Platform from '../Platform/Platform.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as ViewletQuickPickFunctions from './ViewletQuickPickFunctions.js'
 
 // TODO use another virtual list that just appends elements and
@@ -42,14 +41,7 @@ const getTargetIndex = ($Target) => {
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
   const uid = ComponentUid.fromEvent(event)
-  switch (deltaMode) {
-    case WheelEventType.DomDeltaLine:
-    case WheelEventType.DomDeltaPixel:
-      ViewletQuickPickFunctions.handleWheel(uid, deltaY)
-      break
-    default:
-      break
-  }
+  ViewletQuickPickFunctions.handleWheel(uid, deltaMode, deltaY)
 }
 
 export const handlePointerDown = (event) => {

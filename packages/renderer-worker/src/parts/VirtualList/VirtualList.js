@@ -52,10 +52,9 @@ export const setDeltaY = (state, deltaY) => {
   }
 }
 
-export const handleWheel = (state, deltaY, deltaMode) => {
+export const handleWheel = (state, deltaMode, deltaY) => {
   Assert.object(state)
+  Assert.number(deltaMode)
   Assert.number(deltaY)
-  console.log('handle wheek')
-  console.log({ deltaY })
   return setDeltaY(state, state.deltaY + deltaY)
 }
