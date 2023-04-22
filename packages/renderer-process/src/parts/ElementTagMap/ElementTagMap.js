@@ -31,6 +31,8 @@ export const getElementTag = (type) => {
       return ElementTag.Button
     case VirtualDomElements.Span:
       return ElementTag.Span
+    case VirtualDomElements.I:
+      return ElementTag.I
     default:
       throw new Error(`element tag not found ${type}`)
   }
