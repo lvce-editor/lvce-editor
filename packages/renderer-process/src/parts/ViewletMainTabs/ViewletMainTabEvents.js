@@ -27,15 +27,11 @@ const getNodeIndex = ($Node) => {
 }
 
 const getIndex = ($Target) => {
-  switch ($Target.className) {
-    case ClassNames.EditorTabCloseButton:
-    case ClassNames.Label:
-      return getNodeIndex($Target.parentNode)
-    case ClassNames.MainTab:
-      return getNodeIndex($Target)
-    default:
-      return -1
+  const $Tab = $Target.closest(`.MainTab`)
+  if (!$Tab) {
+    return undefined
   }
+  return getNodeIndex($Tab)
 }
 
 export const handleTabCloseButtonMouseDown = (event, index) => {
