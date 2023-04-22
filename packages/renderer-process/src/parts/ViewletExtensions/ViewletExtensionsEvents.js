@@ -3,6 +3,7 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as TouchEvent from '../TouchEvent/TouchEvent.js'
@@ -32,26 +33,18 @@ export const handleFocus = (event) => {
   Focus.setFocus('Extensions')
 }
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
 const handlePointerDownExtension = (uid, $Target) => {
-  const index = getNodeIndex($Target)
+  const index = GetNodeIndex.getNodeIndex($Target)
   ViewletExtensionsFunctions.handleClick(uid, index)
 }
 
 const handlePointerDownExtensionDetail = (uid, $Target) => {
-  const index = getNodeIndex($Target.parentNode.parentNode)
+  const index = GetNodeIndex.getNodeIndex($Target.parentNode.parentNode)
   ViewletExtensionsFunctions.handleClick(index)
 }
 
 const handlePointerDownExtensionAuthorName = (uid, $Target) => {
-  const index = getNodeIndex($Target.parentNode.parentNode.parentNode)
+  const index = GetNodeIndex.getNodeIndex($Target.parentNode.parentNode.parentNode)
   ViewletExtensionsFunctions.handleClick(uid, index)
 }
 

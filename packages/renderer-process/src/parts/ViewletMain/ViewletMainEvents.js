@@ -2,6 +2,7 @@ import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffe
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as Event from '../Event/Event.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletMainFunctions from './ViewletMainFunctions.js'
 
 const ClassNames = {
@@ -48,21 +49,13 @@ export const handleDrop = (event) => {
   }
 }
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
 const getIndex = ($Target) => {
   switch ($Target.className) {
     case ClassNames.EditorTabCloseButton:
     case ClassNames.Label:
-      return getNodeIndex($Target.parentNode)
+      return GetNodeIndex.getNodeIndex($Target.parentNode)
     case ClassNames.MainTab:
-      return getNodeIndex($Target)
+      return GetNodeIndex.getNodeIndex($Target)
     default:
       return -1
   }

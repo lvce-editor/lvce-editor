@@ -1,6 +1,7 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletActivityBarFunctions from './ViewletActivityBarFunctions.js'
 
 const get$ItemFromEvent = (event) => {
@@ -14,14 +15,6 @@ const get$ItemFromEvent = (event) => {
   return undefined
 }
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
 export const handleMousedown = (event) => {
   const { button, clientX, clientY } = event
   const $Item = get$ItemFromEvent(event)
@@ -31,7 +24,7 @@ export const handleMousedown = (event) => {
   const uid = ComponentUid.fromEvent(event)
   Event.preventDefault(event)
   Event.stopPropagation(event)
-  const index = getNodeIndex($Item)
+  const index = GetNodeIndex.getNodeIndex($Item)
   ViewletActivityBarFunctions.handleClick(uid, button, index, clientX, clientY)
 }
 
