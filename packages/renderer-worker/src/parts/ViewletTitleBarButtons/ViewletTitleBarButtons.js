@@ -7,6 +7,8 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
+    isMaximized: false,
+    uid: id,
   }
 }
 
@@ -15,6 +17,24 @@ export const loadContent = async (state) => {
   return {
     ...state,
     buttons,
+  }
+}
+
+export const handleWindowDidMinimize = (state) => {
+  return state
+}
+
+export const handleWindowDidUnmaximize = (state) => {
+  return {
+    ...state,
+    isMaximized: false,
+  }
+}
+
+export const handleWindowDidMaximize = (state) => {
+  return {
+    ...state,
+    isMaximized: true,
   }
 }
 

@@ -42,3 +42,18 @@ export const setButtons = (state, buttons) => {
     $TitleBarButtons.append($TitleBarButton)
   }
 }
+const getIcon = (isMaximized) => {
+  if (isMaximized) {
+    return 'Restore'
+  }
+  return 'ToggleMaximize'
+}
+
+export const setMaximized = (state, isMaximized) => {
+  const { $TitleBarButtons } = state
+  const oldIcon = getIcon(!isMaximized)
+  const icon = getIcon(isMaximized)
+  const $Icon = $TitleBarButtons.children[1].children[0]
+  $Icon.classList.remove(oldIcon)
+  $Icon.classList.add(icon)
+}

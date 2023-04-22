@@ -237,7 +237,9 @@ const maybeRegisterEvents = (module) => {
           console.log('[viewlet manager] return', newState)
           return
         }
-        const commands = render(instance.factory, instance.state, newState)
+        const uid = instance.uid || instance.state.uid
+        Assert.number(uid)
+        const commands = render(instance.factory, instance.state, newState, uid)
         instance.state = newState
         await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
       }

@@ -11,4 +11,13 @@ const renderTitleBarButtons = {
   },
 }
 
-export const render = [renderTitleBarButtons]
+const renderMaximized = {
+  isEqual(oldState, newState) {
+    return oldState.isMaximized === newState.isMaximized
+  },
+  apply(oldState, newState) {
+    return [/* method */ RenderMethod.SetMaximized, /* titleBarEntries */ newState.isMaximized]
+  },
+}
+
+export const render = [renderTitleBarButtons, renderMaximized]
