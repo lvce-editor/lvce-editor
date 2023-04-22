@@ -37,7 +37,7 @@ export const getMenuEntries = () => {
       id: 'tabCloseToTheRight',
       label: I18nString.i18nString(UiStrings.CloseToTheRight),
       flags: MenuItemFlags.None,
-      command: 'Main.closeTabsToTheRight',
+      command: 'Main.closeTabsRight',
     },
     {
       id: 'tabCloseAll',

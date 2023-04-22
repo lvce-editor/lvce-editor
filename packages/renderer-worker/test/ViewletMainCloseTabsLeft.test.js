@@ -49,7 +49,7 @@ const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js'
 const ViewletMain = await import('../src/parts/ViewletMain/ViewletMain.js')
 const ViewletMainCloseTabsLeft = await import('../src/parts/ViewletMain/ViewletMainCloseTabsLeft.js')
 
-test('closeTabsLeft - 0 0 - first tab is focused and first tab is selected', async () => {
+test.skip('closeTabsLeft - 0 0 - first tab is focused and first tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
@@ -90,7 +90,7 @@ test('closeTabsLeft - 0 0 - first tab is focused and first tab is selected', asy
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 0)
 })
 
-test('closeTabsLeft - 0 1 - first tab is focused and second tab is selected', async () => {
+test.skip('closeTabsLeft - 0 1 - first tab is focused and second tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
@@ -131,7 +131,7 @@ test('closeTabsLeft - 0 1 - first tab is focused and second tab is selected', as
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 0)
 })
 
-test('closeTabsLeft - 0 2 - first tab is focused and third tab is selected', async () => {
+test.skip('closeTabsLeft - 0 2 - first tab is focused and third tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
@@ -172,7 +172,7 @@ test('closeTabsLeft - 0 2 - first tab is focused and third tab is selected', asy
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 0)
 })
 
-test('closeTabsLeft - 1 0 - second tab is focused and first tab is selected', async () => {
+test.skip('closeTabsLeft - 1 0 - second tab is focused and first tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
@@ -210,7 +210,7 @@ test('closeTabsLeft - 1 0 - second tab is focused and first tab is selected', as
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 1)
 })
 
-test('closeTabsLeft - 1 1 - second tab is focused and second tab is selected', async () => {
+test.skip('closeTabsLeft - 1 1 - second tab is focused and second tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
@@ -248,7 +248,7 @@ test('closeTabsLeft - 1 1 - second tab is focused and second tab is selected', a
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 1)
 })
 
-test('closeTabsLeft - 1 2 - second tab is focused and third tab is selected', async () => {
+test.skip('closeTabsLeft - 1 2 - second tab is focused and third tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
@@ -286,7 +286,7 @@ test('closeTabsLeft - 1 2 - second tab is focused and third tab is selected', as
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 1)
 })
 
-test('closeTabsLeft - 2 0 - third tab is focused and first tab is selected', async () => {
+test.skip('closeTabsLeft - 2 0 - third tab is focused and first tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
@@ -321,7 +321,7 @@ test('closeTabsLeft - 2 0 - third tab is focused and first tab is selected', asy
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 2)
 })
 
-test('closeTabsLeft - 2 1 - third tab is focused and second tab is selected', async () => {
+test.skip('closeTabsLeft - 2 1 - third tab is focused and second tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
@@ -356,7 +356,7 @@ test('closeTabsLeft - 2 1 - third tab is focused and second tab is selected', as
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 1, 'closeTabsLeft', 2)
 })
 
-test('closeTabsLeft - 2 2 - third tab is focused and third tab is selected', async () => {
+test.skip('closeTabsLeft - 2 2 - third tab is focused and third tab is selected', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {

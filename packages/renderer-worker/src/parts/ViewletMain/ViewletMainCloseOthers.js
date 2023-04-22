@@ -1,5 +1,4 @@
 import * as Id from '../Id/Id.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
@@ -41,6 +40,10 @@ export const closeOthers = async (state) => {
     commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, contentHeight])
     commands.push(['Viewlet.append', state.uid, instanceUid])
   }
-  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
-  return state
+  return {
+    newState: {
+      ...state,
+    },
+    commands,
+  }
 }
