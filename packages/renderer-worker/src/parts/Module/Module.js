@@ -96,7 +96,7 @@ export const load = (moduleId) => {
       return import('../Menu/Menu.ipc.js')
     case ModuleId.Mime:
       return import('../Mime/Mime.ipc.js')
-    case ModuleId.Navigatiom:
+    case ModuleId.Navigation:
       return import('../Navigation/Navigation.ipc.js')
     case ModuleId.Notification:
       return import('../Notification/Notification.ipc.js')
@@ -138,6 +138,8 @@ export const load = (moduleId) => {
       return import('../Workspace/Workspace.ipc.js')
     case ModuleId.IpcParent:
       return import('../IpcParent/IpcParent.ipc.js')
+    case ModuleId.NativeHost:
+      return import('../NativeHost/NativeHost.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

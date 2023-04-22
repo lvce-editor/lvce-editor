@@ -27,10 +27,17 @@
   -webkit-mask-image: url(/icons/chrome-minimize.svg);
   mask-image: url(/icons/chrome-minimize.svg);
 }
+
 .MaskIcon.ToggleMaximize {
   -webkit-mask-image: url(/icons/chrome-maximize.svg);
   mask-image: url(/icons/chrome-maximize.svg);
 }
+
+.MaskIcon.Restore {
+  -webkit-mask-image: url(/icons/chrome-restore.svg);
+  mask-image: url(/icons/chrome-restore.svg);
+}
+
 .MaskIcon.Close {
   -webkit-mask-image: url(/icons/chrome-close.svg);
   mask-image: url(/icons/chrome-close.svg);
