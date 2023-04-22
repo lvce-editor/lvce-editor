@@ -1,6 +1,7 @@
 import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletMainTabsFunctions from './ViewletMainTabsFunctions.js'
 
 const ClassNames = {
@@ -18,20 +19,12 @@ const getUid = () => {
   return ComponentUid.get(document.getElementById('Main'))
 }
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
 const getIndex = ($Target) => {
   const $Tab = $Target.closest(`.MainTab`)
   if (!$Tab) {
     return undefined
   }
-  return getNodeIndex($Tab)
+  return GetNodeIndex.getNodeIndex($Tab)
 }
 
 export const handleTabCloseButtonMouseDown = (event, index) => {

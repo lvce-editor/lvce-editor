@@ -2,10 +2,12 @@ import * as Actions from '../Actions/Actions.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletPanelEvents from './ViewletPanelEvents.js'
+
 /**
  * @enum {string}
  */
@@ -23,19 +25,11 @@ const create$PanelTab = (label, index) => {
   return $PanelTab
 }
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
 const panelTabsHandleClick = (event) => {
   const $Target = event.target
   switch ($Target.className) {
     case 'PanelTab': {
-      const index = getNodeIndex($Target)
+      const index = GetNodeIndex.getNodeIndex($Target)
       RendererWorker.send(/* Panel.selectIndex */ 'Panel.selectIndex', /* index */ index)
       break
     }

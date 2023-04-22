@@ -38,14 +38,6 @@ const handleContextMenu = (event) => {
   // )
 }
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
 const handleFocus = (event) => {
   const $Target = event.target
   $Target.classList.add('FocusOutline')

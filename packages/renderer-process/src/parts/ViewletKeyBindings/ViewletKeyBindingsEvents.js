@@ -1,5 +1,6 @@
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as ViewletKeyBindingsFunctions from './ViewletKeyBindingsFunctions.js'
 
@@ -9,19 +10,11 @@ export const handleInput = (event) => {
   ViewletKeyBindingsFunctions.handleInput(value)
 }
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
 const getTableRowIndex = ($Target) => {
   const { className } = $Target
   switch (className) {
     case 'KeyBindingsTableCell':
-      return getNodeIndex($Target.parentNode)
+      return GetNodeIndex.getNodeIndex($Target.parentNode)
     default:
       return -1
   }

@@ -1,6 +1,7 @@
 import * as FindIndex from '../../shared/findIndex.js'
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Focus from '../Focus/Focus.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletTitleBarMenuBarFunctions from './ViewletTitleBarMenuBarFunctions.js'
 
 const isInsideTitleBarMenu = ($Element) => {
@@ -30,18 +31,10 @@ export const handlePointerOut = (event) => {
   ViewletTitleBarMenuBarFunctions.handleMouseOut(uid, index)
 }
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
 const getIndex = ($Target) => {
   switch ($Target.className) {
     case 'TitleBarTopLevelEntry':
-      return getNodeIndex($Target)
+      return GetNodeIndex.getNodeIndex($Target)
     default:
       return -1
   }

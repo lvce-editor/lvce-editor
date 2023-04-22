@@ -3,6 +3,7 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletSearchFunctions from './ViewletSearchFunctions.js'
 
@@ -17,20 +18,12 @@ export const handleFocus = (event) => {
   Focus.setFocus('SearchInput')
 }
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
 const getIndexTreeItem = ($Target) => {
-  return getNodeIndex($Target)
+  return GetNodeIndex.getNodeIndex($Target)
 }
 
 const getIndexLabel = ($Target) => {
-  return getNodeIndex($Target.parentNode)
+  return GetNodeIndex.getNodeIndex($Target.parentNode)
 }
 
 const getIndex = ($Target) => {
