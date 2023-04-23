@@ -2,11 +2,9 @@ import { rename } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import * as Assert from '../Assert/Assert.js'
-import * as CompareVersion from '../CompareVersion/CompareVersion.js'
 import * as Download from '../Download/Download.js'
 import * as GetAppImageDownloadUrl from '../GetAppImageDownloadUrl/GetAppImageDownloadUrl.js'
 import * as GetAppImagePath from '../GetAppImagePath/GetAppImagePath.js'
-import * as GetLatestReleaseVersion from '../GetLatestReleaseVersion/GetLatestReleaseVersion.js'
 import * as MakeExecutable from '../MakeExecutable/MakeExecutable.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Restart from '../Restart/Restart.js'
@@ -30,19 +28,6 @@ export const downloadUpdate = async (version) => {
   } catch (error) {
     // @ts-ignore
     throw new VError(error, `Failed to download new version ${version}`)
-  }
-}
-
-export const checkForUpdatesAndNotify = async () => {
-  const repository = Platform.getRepository()
-  const version = await GetLatestReleaseVersion.getLatestReleaseVersion(repository)
-  const currentVersion = Platform.version
-  if (CompareVersion.isGreater(version, currentVersion)) {
-    return {
-      version,
-    }
-  } else {
-    console.log('not update is available')
   }
 }
 

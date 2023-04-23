@@ -21,3 +21,5 @@ export const BulkReplacement = 20
 export const InstallExtension = 21
 export const AutoUpdater = 22
 export const IsAutoUpdateSupported = 23
+export const AutoUpdaterAppImage = 24
+export const AutoUpdaterWindowsNsis = 25
