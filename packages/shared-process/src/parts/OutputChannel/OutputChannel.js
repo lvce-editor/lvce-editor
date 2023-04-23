@@ -33,7 +33,7 @@ export const open = (path, onData, onError) => {
 
 export const dispose = (state) => {
   try {
-    if (state.tail) {
+    if (state && state.tail) {
       state.tail.unwatch()
     }
   } catch (error) {
