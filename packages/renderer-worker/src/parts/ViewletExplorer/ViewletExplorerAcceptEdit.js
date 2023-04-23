@@ -65,15 +65,18 @@ const acceptCreate = async (state, newDirentType, createFn) => {
   let posInSet = 1
   let setSize = 1
   let i = Math.max(state.focusedIndex, -1) + 1
-  for (; i < state.items.length; i++) {
-    const dirent = state.items[i]
+  const { items } = state
+  // TODO update posinset and setsize of all affected dirents
+  for (; i < items.length; i++) {
+    const dirent = items[i]
     if (dirent.depth !== depth) {
       break
     }
     const compareResult = SortExplorerItems.compareDirent(dirent, newDirent)
     if (compareResult === 1) {
-      insertIndex = i
-      deltaPosInSet = 1
+      insertIndex = i - 1
+      deltaPosInSet = 1 - 1
+      break
     } else {
       posInSet = dirent.posInSet + 1
       setSize = dirent.setSize + 1
@@ -84,15 +87,16 @@ const acceptCreate = async (state, newDirentType, createFn) => {
   }
   newDirent.setSize = setSize
   newDirent.posInSet = posInSet
-  state.items.splice(insertIndex + 1, 0, newDirent)
-
-  const newDirents = [...state.items]
+  items.splice(insertIndex + 1, 0, newDirent)
+  const newDirents = [...items]
+  const newMaxlineY = Math.max(state.maxLineY, newDirents.length)
   return {
     ...state,
     items: newDirents,
     editingIndex: -1,
     focusedIndex: insertIndex + 1,
     editingType: ExplorerEditingType.None,
+    maxLineY: newMaxlineY,
   }
 }
 
