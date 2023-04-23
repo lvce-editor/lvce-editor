@@ -1,8 +1,8 @@
+const { BrowserWindow } = require('electron')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Assert = require('../Assert/Assert.js')
-const GetResponse = require('../GetResponse/GetResponse.js')
 const Command = require('../Command/Command.js')
-const { BrowserWindow } = require('electron')
+const GetResponse = require('../GetResponse/GetResponse.js')
 
 /**
  *
@@ -52,7 +52,9 @@ exports.handlePort = (event, browserWindowPort) => {
     browserWindow.off('maximize', handleMaximize)
     browserWindowPort.off('message', handleMessage)
     browserWindowPort.off('close', handleClose)
-    state.port = undefined
+    if (state) {
+      state.port = undefined
+    }
   }
   browserWindow.on('minimize', handleMinimize)
   browserWindow.on('unmaximize', handleUnmaximize)
