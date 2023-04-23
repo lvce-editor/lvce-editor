@@ -4,6 +4,6 @@ export const name = 'NativeHost'
 
 export const Commands = {
   handleMaximized: NativeHost.handleMaximized,
-  handleUnmaximized: NativeHost.handleUnmaximized,
   handleMinimized: NativeHost.handleMinimized,
+  handleUnmaximized: NativeHost.handleUnmaximized,
 }

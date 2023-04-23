@@ -57,6 +57,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ImagePreview
     case 'InitData.getInitData':
       return ModuleId.InitData
+    case 'IpcParent.create':
+      return ModuleId.IpcParent
     case 'Layout.getBounds':
     case 'Layout.hide':
     case 'Layout.hydrate':
@@ -139,8 +141,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Window
     case 33111:
       return ModuleId.Workbench
-    case 'IpcParent.create':
-      return ModuleId.IpcParent
     default:
       throw new Error(`command ${commandId} not found`)
   }

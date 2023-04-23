@@ -2,6 +2,8 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const load = (moduleId) => {
   switch (moduleId) {
+    case ModuleId.AutoUpdater:
+      return import('../AutoUpdater/AutoUpdater.ipc.js')
     case ModuleId.BulkReplacement:
       return import('../BulkReplacement/BulkReplacement.ipc.js')
     case ModuleId.ChromeExtension:
@@ -20,6 +22,10 @@ export const load = (moduleId) => {
       return import('../FileSystem/FileSystem.ipc.js')
     case ModuleId.GitLsFiles:
       return import('../GitLsFiles/GitLsFiles.ipc.js')
+    case ModuleId.InstallExtension:
+      return import('../InstallExtension/InstallExtension.ipc.js')
+    case ModuleId.IsAutoUpdateSupported:
+      return import('../IsAutoUpdateSupported/IsAutoUpdateSupported.ipc.js')
     case ModuleId.OpenNativeFolder:
       return import('../OpenNativeFolder/OpenNativeFolder.ipc.js')
     case ModuleId.OutputChannel:
@@ -42,12 +48,6 @@ export const load = (moduleId) => {
       return import('../WebSocketServer/WebSocketServer.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.InstallExtension:
-      return import('../InstallExtension/InstallExtension.ipc.js')
-    case ModuleId.AutoUpdater:
-      return import('../AutoUpdater/AutoUpdater.ipc.js')
-    case ModuleId.IsAutoUpdateSupported:
-      return import('../IsAutoUpdateSupported/IsAutoUpdateSupported.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

@@ -84,6 +84,8 @@ export const load = (moduleId) => {
       return import('../ImagePreview/ImagePreview.ipc.js')
     case ModuleId.IndexedDb:
       return import('../IndexedDb/IndexedDb.ipc.js')
+    case ModuleId.IpcParent:
+      return import('../IpcParent/IpcParent.ipc.js')
     case ModuleId.KeyBindings:
       return import('../KeyBindings/KeyBindings.ipc.js')
     case ModuleId.KeyBindingsInitial:
@@ -96,6 +98,8 @@ export const load = (moduleId) => {
       return import('../Menu/Menu.ipc.js')
     case ModuleId.Mime:
       return import('../Mime/Mime.ipc.js')
+    case ModuleId.NativeHost:
+      return import('../NativeHost/NativeHost.ipc.js')
     case ModuleId.Navigation:
       return import('../Navigation/Navigation.ipc.js')
     case ModuleId.Notification:
@@ -136,10 +140,6 @@ export const load = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.IpcParent:
-      return import('../IpcParent/IpcParent.ipc.js')
-    case ModuleId.NativeHost:
-      return import('../NativeHost/NativeHost.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

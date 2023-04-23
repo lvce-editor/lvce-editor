@@ -69,7 +69,7 @@ const formatModuleFile = async (absolutePath) => {
     newLines.push(`      return ${key}`)
   }
   newLines.push(`    default:`)
-  newLines.push(`      throw new Error(\`module \${moduleId} not found\`)`)
+  newLines.push(`      throw new ModuleNotFoundError(moduleId)`)
   newLines.push(`  }`)
   newLines.push(`}`)
   newLines.push(``)
