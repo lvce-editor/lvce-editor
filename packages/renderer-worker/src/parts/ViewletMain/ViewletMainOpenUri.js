@@ -7,6 +7,7 @@ import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
 
 export const openUri = async (state, uri, focus = true, options = {}) => {
   Assert.object(state)
@@ -60,7 +61,8 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const oldActiveIndex = state.activeIndex
   const tabLabel = PathDisplay.getLabel(uri)
   const tabTitle = PathDisplay.getTitle(uri)
-  state.editors.push({ uri, uid: instanceUid, label: tabLabel, title: tabTitle })
+  const icon = IconTheme.getFileNameIcon(uri)
+  state.editors.push({ uri, uid: instanceUid, label: tabLabel, title: tabTitle, icon })
   state.activeIndex = state.editors.length - 1
 
   // await RendererProcess.invoke(

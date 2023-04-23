@@ -1,8 +1,11 @@
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as FileIcon from '../FileIcon/FileIcon.js'
 import * as Label from '../Label/Label.js'
 
-export const create = (label, title, background) => {
+export const create = (label, title, icon, background) => {
+  const $TabIcon = FileIcon.create(icon)
+
   const $TabLabel = Label.create(label)
 
   const $TabCloseButton = document.createElement('button')
@@ -16,6 +19,6 @@ export const create = (label, title, background) => {
   $Tab.ariaSelected = background ? AriaBoolean.False : AriaBoolean.True
   $Tab.role = AriaRoles.Tab
   $Tab.className = 'MainTab'
-  $Tab.append($TabLabel, $TabCloseButton)
+  $Tab.append($TabIcon, $TabLabel, $TabCloseButton)
   return $Tab
 }
