@@ -133,5 +133,5 @@ test('event - wheel', () => {
   const { $QuickPickItems } = state
   $QuickPickItems.dispatchEvent(event)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleWheel', 53)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleWheel', 1, 53)
 })
