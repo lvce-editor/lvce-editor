@@ -4,6 +4,7 @@ import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 import * as ExplorerEditingType from '../src/parts/ExplorerEditingType/ExplorerEditingType.js'
 import * as PathSeparatorType from '../src/parts/PathSeparatorType/PathSeparatorType.js'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
+import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -2934,7 +2935,7 @@ test('handleWheel - up', () => {
       },
     ],
   }
-  const newState = ViewletExplorer.handleWheel(state, -22)
+  const newState = ViewletExplorer.handleWheel(state, WheelEventType.DomDeltaPixel, -22)
   expect(render(state, newState)).toEqual([
     [
       'Viewlet.send',
@@ -2985,7 +2986,7 @@ test('handleWheel - up - already at top', () => {
       },
     ],
   }
-  expect(ViewletExplorer.handleWheel(state, -10)).toBe(state)
+  expect(ViewletExplorer.handleWheel(state, WheelEventType.DomDeltaPixel, -10)).toBe(state)
 })
 
 test.skip('handleWheel - down', () => {
@@ -3019,7 +3020,7 @@ test.skip('handleWheel - down', () => {
       },
     ],
   }
-  const newState = ViewletExplorer.handleWheel(state, 22)
+  const newState = ViewletExplorer.handleWheel(state, WheelEventType.DomDeltaPixel, 22)
   console.log({ newState })
   expect(render(state, newState)).toEqual([
     [
@@ -3089,7 +3090,7 @@ test('handleWheel - down - already at bottom', () => {
       },
     ],
   }
-  expect(ViewletExplorer.handleWheel(state, 10)).toBe(state)
+  expect(ViewletExplorer.handleWheel(state, WheelEventType.DomDeltaPixel, 10)).toBe(state)
 })
 
 test('handleWheel - down - already at bottom but viewlet is larger than items can fit', () => {
@@ -3123,7 +3124,7 @@ test('handleWheel - down - already at bottom but viewlet is larger than items ca
       },
     ],
   }
-  expect(ViewletExplorer.handleWheel(state, 100)).toBe(state)
+  expect(ViewletExplorer.handleWheel(state, WheelEventType.DomDeltaPixel, 100)).toBe(state)
 })
 
 test.skip('event - workspace change', async () => {
