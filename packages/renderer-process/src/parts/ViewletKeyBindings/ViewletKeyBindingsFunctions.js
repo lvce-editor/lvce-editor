@@ -1,21 +1,7 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const handleInput = (value) => {
-  RendererWorker.send('KeyBindings.handleInput', value)
-}
-
-export const handleClick = (index) => {
-  RendererWorker.send('KeyBindings.handleClick', index)
-}
-
-export const handleWheel = (deltaY) => {
-  RendererWorker.send('KeyBindings.handleWheel', deltaY)
-}
-
-export const handleResizerMove = (x) => {
-  RendererWorker.send('KeyBindings.handleResizerMove', x)
-}
-
-export const handlResizerClick = (id, x) => {
-  RendererWorker.send('KeyBindings.handleResizerClick', id, x)
-}
+export const handleInput = ForwardViewletCommand.forwardViewletCommand('handleInput')
+export const handleClick = ForwardViewletCommand.forwardViewletCommand('handleClick')
+export const handleWheel = ForwardViewletCommand.forwardViewletCommand('handleWheel')
+export const handleResizerMove = ForwardViewletCommand.forwardViewletCommand('handleResizerMove')
+export const handleResizerClick = ForwardViewletCommand.forwardViewletCommand('handleResizerClick')
