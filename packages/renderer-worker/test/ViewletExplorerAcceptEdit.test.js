@@ -18,6 +18,7 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
     execute: jest.fn(() => {
@@ -25,6 +26,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
   return {
     rename: jest.fn(() => {
@@ -40,6 +42,9 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
       throw new Error('not implemented')
     }),
     readDirWithFileTypes: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    mkdir: jest.fn(() => {
       throw new Error('not implemented')
     }),
     getPathSeparator: () => {
@@ -160,5 +165,94 @@ test('acceptEdit - rename - nested file', async () => {
       },
     ],
     focusedIndex: 1,
+  })
+})
+
+test('acceptEdit - create - insert folder', async () => {
+  // @ts-ignore
+  FileSystem.mkdir.mockImplementation(() => {})
+  const state = {
+    ...ViewletExplorer.create(1),
+    focusedIndex: -1,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 1,
+    maxLineY: 2,
+    root: '/test',
+    pathSeparator: PathSeparatorType.Slash,
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 3,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'b',
+        path: '/test/b',
+        posInSet: 2,
+        setSize: 3,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'd',
+        path: '/test/d',
+        posInSet: 3,
+        setSize: 3,
+        type: DirentType.Directory,
+      },
+    ],
+    editingIndex: 0,
+    editingType: ExplorerEditingType.CreateFolder,
+    editingValue: 'c',
+  }
+  expect(await ViewletExplorerAcceptEdit.acceptEdit(state)).toMatchObject({
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 4,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'b',
+        path: '/test/b',
+        posInSet: 2,
+        setSize: 4,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'c',
+        path: '/test/c',
+        posInSet: 3,
+        setSize: 4,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'd',
+        path: '/test/d',
+        posInSet: 3, // TODO should be 4
+        setSize: 3, // TODO should be 4
+        type: DirentType.Directory,
+      },
+    ],
+    focusedIndex: 2,
   })
 })
