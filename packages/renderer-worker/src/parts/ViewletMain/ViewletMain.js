@@ -307,7 +307,7 @@ export const save = async (state) => {
   await saveEditor(editor)
   // TODO handle different types of editors / custom editors / webviews
   // Command.execute(/* EditorSave.editorSave */ 'Editor.save')
-  const command = ['Viewlet.send', ViewletModuleId.Main, 'setDirty', activeIndex, false]
+  const command = ['Viewlet.send', state.tabsUid, 'setDirty', activeIndex, false]
   await RendererProcess.invoke(...command)
   return state
 }
