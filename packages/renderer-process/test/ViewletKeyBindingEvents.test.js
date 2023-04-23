@@ -2,31 +2,26 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(),
-    }
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
+  return {
+    executeViewletCommand: jest.fn(() => {}),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
-
-const ViewletKeyBindings = await import(
-  '../src/parts/ViewletKeyBindings/ViewletKeyBindings.js'
-)
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
+const ViewletKeyBindings = await import('../src/parts/ViewletKeyBindings/ViewletKeyBindings.js')
 
 test('event - input', () => {
   const state = ViewletKeyBindings.create()
-  const { $InputBox } = state
+  const { $InputBox, $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
+
   $InputBox.value = 'abc'
   $InputBox.dispatchEvent(
     new InputEvent('input', {
@@ -34,9 +29,6 @@ test('event - input', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'KeyBindings.handleInput',
-    'abc'
-  )
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleInput', 'abc')
 })
