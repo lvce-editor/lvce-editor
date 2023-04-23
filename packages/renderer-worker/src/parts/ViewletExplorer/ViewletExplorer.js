@@ -196,10 +196,7 @@ export const loadContent = async (state, savedState) => {
   if (savedState && typeof savedState.deltaY === 'number') {
     deltaY = savedState.deltaY
   }
-  let maxLineY = Math.round(height / itemHeight)
-  if (savedState && typeof savedState.maxLineY === 'number') {
-    maxLineY = savedState.maxLineY
-  }
+  let maxLineY = minLineY + Math.round(height / itemHeight)
   return {
     ...state,
     root,
