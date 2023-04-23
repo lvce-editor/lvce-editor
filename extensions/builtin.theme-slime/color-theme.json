@@ -195,6 +195,14 @@
       "foreground": "#AB9B67"
     },
     {
+      "name": "KeywordAsync",
+      "foreground": "#AB9B67"
+    },
+    {
+      "name": "KeywordAwait",
+      "foreground": "#C5A46F"
+    },
+    {
       "name": "Class",
       "foreground": "#E6CE64"
     },
