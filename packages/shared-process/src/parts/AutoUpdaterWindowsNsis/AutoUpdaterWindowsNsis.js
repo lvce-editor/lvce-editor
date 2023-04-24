@@ -23,6 +23,7 @@ export const downloadUpdate = async (version) => {
     const outFile = getOutfilePath(version)
     Logger.info(`[shared-process] downloading nsis update: ${downLoadUrl} -> ${outFile}`)
     await Download.download(downLoadUrl, outFile)
+    Logger.info(`[shared-process] downloaded nsis update: ${outFile}`)
     return outFile
   } catch (error) {
     throw new VError(error, `Failed to download new version ${version}`)
