@@ -229,7 +229,7 @@ export const contentLoaded = async (state) => {
       // @ts-ignore
       uid: childUid,
       // @ts-ignore
-      parentId: ViewletModuleId.Main,
+      parentUid: state.uid,
       uri: editor.uri,
       x,
       y,
@@ -546,7 +546,7 @@ export const focusIndex = async (state, index) => {
   const oldInstance = ViewletStates.getInstance(oldId)
 
   const instanceUid = Id.create()
-  const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, editor.uri, x, y, width, contentHeight)
+  const instance = ViewletManager.create(ViewletModule.load, id, state.uid, editor.uri, x, y, width, contentHeight)
   instance.show = false
   instance.setBounds = false
   instance.uid = instanceUid

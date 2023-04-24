@@ -30,7 +30,7 @@ export const closeOthers = async (state) => {
     const y = state.y + state.tabHeight
     const width = state.width
     const contentHeight = state.height - state.tabHeight
-    const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, activeEditor.uri, x, y, width, contentHeight)
+    const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, activeEditor.uri, x, y, width, contentHeight)
     instance.uid = instanceUid
     instance.show = false
     instance.setBounds = false

@@ -77,7 +77,7 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const instanceUid = Id.create()
     const tabsUid = Id.create()
     const sashUid = Id.create()
-    const instance = ViewletManager.create(ViewletModule.load, id, ViewletModuleId.Main, uri, overlayX, overlayY, overlayWidth, overlayHeight)
+    const instance = ViewletManager.create(ViewletModule.load, id, state.uid, uri, overlayX, overlayY, overlayWidth, overlayHeight)
     instance.show = false
     instance.uid = instanceUid
     // const sashGridItem = {

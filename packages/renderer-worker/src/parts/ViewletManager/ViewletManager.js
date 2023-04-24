@@ -136,10 +136,10 @@ const wrapViewletCommandWithSideEffectLazy = (id, key, importFn) => {
  * @param {()=>any} getModule
  * @returns
  */
-export const create = (getModule, id, parentId, uri, x, y, width, height) => {
+export const create = (getModule, id, parentUid, uri, x, y, width, height) => {
   Assert.fn(getModule)
   Assert.string(id)
-  Assert.string(parentId)
+  Assert.number(parentUid)
   Assert.string(uri)
   Assert.number(x)
   Assert.number(y)
@@ -149,7 +149,7 @@ export const create = (getModule, id, parentId, uri, x, y, width, height) => {
     type: 0,
     getModule,
     id,
-    parentId,
+    parentUid,
     uri,
     x,
     y,
@@ -463,8 +463,8 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           module.contentLoadedEffects(newState)
         }
         if (viewlet.append) {
-          const parentId = viewlet.parentId
-          allCommands.push([kAppend, parentId, viewletUid])
+          const parentUid = viewlet.parentUid
+          allCommands.push([kAppend, parentUid, viewletUid])
         }
         return allCommands
       }
@@ -480,8 +480,8 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       return
     }
     state = ViewletState.ContentRendered
-    if (viewlet.parentId && viewlet.show !== false) {
-      await RendererProcess.invoke(/* Viewlet.append */ kAppendViewlet, /* parentId */ viewlet.parentId, /* id */ viewletUid, /* focus */ focus)
+    if (viewlet.parentUid && viewlet.show !== false) {
+      await RendererProcess.invoke(/* Viewlet.append */ kAppendViewlet, /* parentUid */ viewlet.parentUid, /* id */ viewletUid, /* focus */ focus)
     }
     state = ViewletState.Appended
 
@@ -506,8 +506,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       if (state < ViewletState.RendererProcessViewletLoaded) {
         await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.id)
       }
-      const parentId = viewlet.parentId
-      // Assert.string(parentId)
+      const parentUid = viewlet.parentUid
       await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
       commands.push([kCreate, ViewletModuleId.Error, viewletUid])
       // @ts-ignore
@@ -515,7 +514,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         commands.push([kSetBounds, viewletUid, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
       }
       commands.push(['Viewlet.send', /* id */ viewletUid, 'setMessage', /* message */ `${error}`])
-      commands.push([kAppend, parentId, viewletUid])
+      commands.push([kAppend, parentUid, viewletUid])
       return commands
     } catch (error) {
       console.error(error)

@@ -380,7 +380,7 @@ const show = async (state, module, currentViewletId) => {
       y,
       width,
       height,
-      parentId: uid,
+      parentUid: uid,
       uid: childUid,
     },
     false,

@@ -98,7 +98,7 @@ export const openViewlet = async (state, id, focus = false) => {
     x: childDimensions.x,
     y: childDimensions.y,
     width: childDimensions.width,
-    parentId: ViewletModuleId.Panel,
+    parentUid: state.uid,
     height: childDimensions.height,
     append: true,
   })
