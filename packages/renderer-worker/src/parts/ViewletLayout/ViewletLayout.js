@@ -531,43 +531,47 @@ const getReferenceNodes = (sideBarLocation) => {
 }
 
 const loadIfVisible = async (state, module) => {
-  const { points, sideBarLocation } = state
-  const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
-  const visible = points[kVisible]
-  const x = points[kLeft]
-  const y = points[kTop]
-  const width = points[kWidth]
-  const height = points[kHeight]
-  let commands = []
-  const parentUid = state.uid
-  if (visible) {
-    const childUid = Id.create()
-    commands = await ViewletManager.load(
-      {
-        getModule: ViewletModule.load,
-        id: moduleId,
-        type: 0,
-        // @ts-ignore
-        uri: '',
-        show: false,
-        focus: false,
-        x,
-        y,
-        width,
-        height,
-        uid: childUid,
-      },
-      false,
-      true
-    )
-    if (commands) {
-      const referenceNodes = getReferenceNodes(sideBarLocation)
-      commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
+  try {
+    const { points, sideBarLocation } = state
+    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
+    const visible = points[kVisible]
+    const x = points[kLeft]
+    const y = points[kTop]
+    const width = points[kWidth]
+    const height = points[kHeight]
+    let commands = []
+    const parentUid = state.uid
+    if (visible) {
+      const childUid = Id.create()
+      commands = await ViewletManager.load(
+        {
+          getModule: ViewletModule.load,
+          id: moduleId,
+          type: 0,
+          // @ts-ignore
+          uri: '',
+          show: false,
+          focus: false,
+          x,
+          y,
+          width,
+          height,
+          uid: childUid,
+        },
+        false,
+        true
+      )
+      if (commands) {
+        const referenceNodes = getReferenceNodes(sideBarLocation)
+        commands.push(['Viewlet.append', parentUid, childUid, referenceNodes])
+      }
     }
-  }
-  return {
-    newState: state,
-    commands,
+    return {
+      newState: state,
+      commands,
+    }
+  } catch (error) {
+    throw new VError(error, `Failed to load ${module.moduleId}`)
   }
 }
 
