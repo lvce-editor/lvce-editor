@@ -17,7 +17,7 @@
   {
     "name": "builtin.language-basics-cpp",
     "repository": "github.com/lvce-editor/language-basics-cpp",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-css",
@@ -52,7 +52,7 @@
   {
     "name": "builtin.language-basics-elixir",
     "repository": "github.com/lvce-editor/language-basics-elixir",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   {
     "name": "builtin.language-basics-elm",
@@ -87,12 +87,12 @@
   {
     "name": "builtin.language-basics-java",
     "repository": "github.com/lvce-editor/language-basics-java",
-    "version": "0.0.6"
+    "version": "0.0.8"
   },
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.25"
+    "version": "0.0.27"
   },
   {
     "name": "builtin.language-basics-json",
@@ -242,12 +242,12 @@
   {
     "name": "builtin.theme-ayu",
     "repository": "github.com/lvce-editor/theme-ayu",
-    "version": "0.0.8"
+    "version": "0.0.9"
   },
   {
     "name": "builtin.theme-cobalt2",
     "repository": "github.com/lvce-editor/theme-cobalt2",
-    "version": "0.0.10"
+    "version": "0.0.11"
   },
   {
     "name": "builtin.theme-gruvbox",
