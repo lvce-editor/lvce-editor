@@ -48,6 +48,16 @@ export const load = (moduleId) => {
       return import('../WebSocketServer/WebSocketServer.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
+    case ModuleId.InstallExtension:
+      return import('../InstallExtension/InstallExtension.ipc.js')
+    case ModuleId.AutoUpdater:
+      return import('../AutoUpdater/AutoUpdater.ipc.js')
+    case ModuleId.IsAutoUpdateSupported:
+      return import('../IsAutoUpdateSupported/IsAutoUpdateSupported.ipc.js')
+    case ModuleId.AutoUpdaterAppImage:
+      return import('../AutoUpdaterAppImage/AutoUpdaterAppImage.ipc.js')
+    case ModuleId.AutoUpdaterWindowsNsis:
+      return import('../AutoUpdaterWindowsNsis/AutoUpdaterWindowsNsis.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

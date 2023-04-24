@@ -3,10 +3,15 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
-    case 'AutoUpdater.checkForUpdatesAndNotify':
-    case 'AutoUpdater.downloadUpdate':
-    case 'AutoUpdater.installAndRestart':
+    case 'AutoUpdater.getAutoUpdateType':
+    case 'AutoUpdater.getLatestVersion':
       return ModuleId.AutoUpdater
+    case 'AutoUpdaterAppImage.downloadUpdate':
+    case 'AutoUpdaterAppImage.installAndRestart':
+      return ModuleId.AutoUpdaterAppImage
+    case 'AutoUpdaterWindowsNsis.downloadUpdate':
+    case 'AutoUpdaterWindowsNsis.installAndRestart':
+      return ModuleId.AutoUpdaterWindowsNsis
     case 'BulkReplacement.applyBulkReplacement':
       return ModuleId.BulkReplacement
     case 'ChromeExtension.install':

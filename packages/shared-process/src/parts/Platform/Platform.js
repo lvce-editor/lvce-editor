@@ -24,6 +24,10 @@ export const homeDir = isWindows ? '' : homedir()
 
 export const appDir = Root.root
 
+export const isAppImage = () => {
+  return Boolean(env.APPIMAGE)
+}
+
 export const getExtensionsPath = () => {
   return Path.join(dataDir, 'extensions')
 }
@@ -148,6 +152,10 @@ export const getRepository = () => {
 
 export const getAppImageName = () => {
   return 'Lvce'
+}
+
+export const getSetupName = () => {
+  return 'Lvce-Setup'
 }
 
 export const version = '0.0.0-dev'
