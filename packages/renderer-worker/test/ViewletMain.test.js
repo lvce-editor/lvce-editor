@@ -1038,6 +1038,7 @@ test('handleDrop - one file', async () => {
       uid: 1,
     },
     {
+      icon: '',
       label: 'dropped-file.txt',
       title: '/test/dropped-file.txt',
       uri: expect.any(String),
@@ -1063,6 +1064,7 @@ test('handleDrop - one file', async () => {
           uri: '/test/file-1.txt',
         },
         {
+          icon: '',
           label: 'dropped-file.txt',
           title: '/test/dropped-file.txt',
           uid: 2,

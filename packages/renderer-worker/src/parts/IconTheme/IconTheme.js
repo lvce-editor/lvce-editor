@@ -57,9 +57,9 @@ const getIconThemeJson = async (iconThemeId) => {
   return SharedProcess.invoke(SharedProcessCommandType.ExtensionHostGetIconThemeJson, /* iconThemeId */ iconThemeId)
 }
 
-export const getFileIcon = (file) => {
+export const getFileNameIcon = (file) => {
   const { iconTheme } = state
-  const fileNameLower = file.name.toLowerCase()
+  const fileNameLower = file.toLowerCase()
   if (!iconTheme) {
     return ''
   }
@@ -93,6 +93,10 @@ export const getFileIcon = (file) => {
     }
   }
   return DefaultIcon.File
+}
+
+export const getFileIcon = (file) => {
+  return getFileNameIcon(file.name)
 }
 
 export const getFolderIcon = (folder) => {

@@ -17,6 +17,7 @@
   padding-left: 5px;
   padding-right: 5px;
   display: flex;
+  gap: 4px;
   align-items: center;
   font-size: 13px;
   white-space: nowrap;
@@ -27,39 +28,6 @@
   border-right: 1px solid rgb(34, 34, 34);
   background: var(--TabActiveBackground);
   color: var(--TabActiveForeground);
-}
-
-/* should be kept in sync with explorer */
-.MainTab::before {
-  content: ' ';
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-  padding-right: 4px;
-  background-repeat: no-repeat;
-  line-height: inherit;
-  margin-top: -3px; /* TODO why this? */
-}
-
-.MainTab::before {
-  content: ' ';
-  contain: strict;
-  width: 22px;
-  height: 22px;
-  background-size: 16px;
-  background-position: 0;
-  background-repeat: no-repeat;
-  padding-right: 6px;
-  width: 16px;
-  height: 22px;
-  line-height: inherit !important;
-  display: inline-block;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  flex-shrink: 0;
-  background-size: cover;
-  background-size: 16px;
-  background-position: 0;
 }
 
 .ManiTabLabel {
