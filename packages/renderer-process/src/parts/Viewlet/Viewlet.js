@@ -260,6 +260,8 @@ const ariaAnnounce = async (message) => {
 }
 
 const append = (parentId, childId, referenceNodes) => {
+  Assert.number(parentId)
+  Assert.number(childId)
   const parentInstance = state.instances[parentId]
   if (!parentInstance) {
     throw new Error(`cannot append child: instance ${parentId} not found`)
