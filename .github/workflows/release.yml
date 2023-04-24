@@ -33,9 +33,10 @@ jobs:
     name: build-release
     needs: ['create-release']
     strategy:
-      fail-fast: false
+      fail-fast: true
+      max-parallel: 1
       matrix:
-        os: [ubuntu-22.04, macos-12, windows-2022]
+        os: [windows-2022, macos-12, ubuntu-22.04]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 40
     steps:
@@ -135,7 +136,7 @@ jobs:
         shell: bash
         run: |
           staging="Lvce-Setup-${{ needs.create-release.outputs.rg_version }}.exe"
-          mv "build/.tmp/releases/lvce.exe" "$staging"
+          mv "build/.tmp/releases/Lvce Editor.exe" "$staging"
           echo "ASSET_WINDOWS_EXE_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (exe)
         uses: actions/upload-release-asset@v1.0.1
