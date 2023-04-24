@@ -515,7 +515,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         commands.push([kSetBounds, viewletUid, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
       }
       commands.push(['Viewlet.send', /* id */ viewletUid, 'setMessage', /* message */ `${error}`])
-      commands.push([kAppend, parentId, viewletUid])
+      // @ts-ignore
+      if (viewlet.append) {
+        commands.push([kAppend, parentId, viewletUid])
+      }
       return commands
     } catch (error) {
       console.error(error)
