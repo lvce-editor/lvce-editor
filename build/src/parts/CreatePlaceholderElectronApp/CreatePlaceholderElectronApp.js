@@ -1,5 +1,6 @@
 import * as ElectronBuilder from 'electron-builder'
 import VError from 'verror'
+import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Template from '../Template/Template.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
@@ -42,6 +43,11 @@ export const createPlaceholderElectronApp = async ({ config, product, version, e
   await WriteFile.writeFile({
     to: 'build/.tmp/electron-builder-placeholder-app/packages/main-process/dist/mainProcessMain.js',
     content: '',
+  })
+
+  await Copy.copy({
+    from: `build/files/icon.ico`,
+    to: 'build/.tmp/electron-builder-placeholder-app/build/icon.ico',
   })
 
   await runElectronBuilder({})
