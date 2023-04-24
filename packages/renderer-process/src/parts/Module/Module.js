@@ -30,6 +30,8 @@ export const load = (moduleId) => {
       return import('../ImagePreview/ImagePreview.ipc.js')
     case ModuleId.InitData:
       return import('../InitData/InitData.ipc.js')
+    case ModuleId.IpcParent:
+      return import('../IpcParent/IpcParent.ipc.js')
     case ModuleId.Layout:
       return import('../Layout/Layout.ipc.js')
     case ModuleId.Location:
@@ -60,8 +62,6 @@ export const load = (moduleId) => {
       return import('../WebStorage/WebStorage.ipc.js')
     case ModuleId.Window:
       return import('../Window/Window.ipc.js')
-    case ModuleId.IpcParent:
-      return import('../IpcParent/IpcParent.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

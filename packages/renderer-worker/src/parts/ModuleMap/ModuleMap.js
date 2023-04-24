@@ -115,10 +115,10 @@ export const getModuleId = (commandId) => {
       return ModuleId.Menu
     case 'Mime':
       return ModuleId.Mime
-    case 'Navigation':
-      return ModuleId.Navigation
     case 'NativeHost':
       return ModuleId.NativeHost
+    case 'Navigation':
+      return ModuleId.Navigation
     case 'Notification':
       return ModuleId.Notification
     case 'Open':

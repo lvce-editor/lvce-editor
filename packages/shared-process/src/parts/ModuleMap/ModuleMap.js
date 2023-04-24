@@ -108,6 +108,8 @@ export const getModuleId = (commandId) => {
     case 'GitLsFiles.gitLsFilesHash':
     case 'GitLsFiles.resolveGit':
       return ModuleId.GitLsFiles
+    case 'InstallExtension.installExtension':
+      return ModuleId.InstallExtension
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':
       return ModuleId.IsAutoUpdateSupported
     case 'Native.openFolder':
@@ -153,8 +155,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
-    case 'InstallExtension.installExtension':
-      return ModuleId.InstallExtension
     default:
       throw new CommandNotFoundError(commandId)
   }
