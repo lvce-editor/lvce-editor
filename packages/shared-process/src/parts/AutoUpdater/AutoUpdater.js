@@ -9,7 +9,7 @@ export const getAutoUpdateType = async () => {
     if (Platform.isWindows) {
       return AutoUpdateType.WindowsNsis
     }
-    if (Platform.isAppImage) {
+    if (Platform.isAppImage()) {
       return AutoUpdateType.AppImage
     }
     return AutoUpdateType.None

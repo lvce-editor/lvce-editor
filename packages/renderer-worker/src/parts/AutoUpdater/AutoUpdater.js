@@ -53,10 +53,18 @@ const installAndRestart = (info, downloadPath) => {
   }
 }
 
+const getLatestVersion = () => {
+  return SharedProcess.invoke('AutoUpdater.getLatestVersion')
+}
+
+const getAutoUpdateType = () => {
+  return SharedProcess.invoke('AutoUpdater.getAutoUpdateType')
+}
+
 export const checkForUpdates = async () => {
-  const info = await SharedProcess.invoke('AutoUpdater.getLatestVersion')
+  const info = await getLatestVersion()
   if (info && info.version) {
-    const type = await SharedProcess.invoke('AutoUpdater.getUpdateType')
+    const type = await getAutoUpdateType()
     const message = getPromptMessage(info.version)
     const shouldUpdate = await Command.execute('ConfirmPrompt.prompt', message)
     if (!shouldUpdate) {
