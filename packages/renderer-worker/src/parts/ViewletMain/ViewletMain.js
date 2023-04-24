@@ -154,7 +154,7 @@ const getRestoredEditors = (savedState) => {
     return { editors: [], activeIndex: -1 }
   }
   const restoredEditors = getMainEditors(savedState)
-  const savedActiveIndex = getSavedActiveIndex(savedState)
+  const savedActiveIndex = getSavedActiveIndex(savedState, restoredEditors)
   if (savedActiveIndex === -1) {
     return { editors: [], activeIndex: -1 }
   }
