@@ -1,5 +1,6 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as TestType from '../TestType/TestType.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
 
 const printError = (error) => {
@@ -8,6 +9,16 @@ const printError = (error) => {
   } else {
     console.error(error)
   }
+}
+
+const stringifyError = (error) => {
+  if (!error) {
+    return `${error}`
+  }
+  if (error && error.message && error.constructor.name && error.constructor.name !== 'Error' && error.constructor.name !== 'VError') {
+    return `${error}`
+  }
+  return `${error.message}`
 }
 
 export const executeTest = async (name, fn, globals = {}) => {
@@ -31,22 +42,20 @@ export const executeTest = async (name, fn, globals = {}) => {
       return
     }
     // @ts-ignore
-    _error = error.message
-    // @ts-ignore
-    error.message = `Test failed: ${name}: ${error.message}`
+    _error = stringifyError(error)
     printError(error)
   }
   let state
   let background
   let text
   if (_error) {
-    state = 'fail'
+    state = TestType.Fail
     background = 'red'
     text = `test failed: ${_error}`
   } else {
     background = 'green'
     text = `test passed in ${_duration}`
-    state = 'pass'
+    state = TestType.Pass
   }
   await RendererProcess.invoke('TestFrameWork.showOverlay', state, background, text)
 }
