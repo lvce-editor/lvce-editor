@@ -499,7 +499,8 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     PrettyError.print(prettyError)
     try {
       if (module && module.handleError) {
-        return await module.handleError(error)
+        await module.handleError(error)
+        return []
       }
       const commands = []
       if (state < ViewletState.RendererProcessViewletLoaded) {
