@@ -43,6 +43,8 @@ export const executeTest = async (name, fn, globals = {}) => {
     }
     // @ts-ignore
     _error = stringifyError(error)
+    // @ts-ignore
+    error.message = `Test failed: ${name}: ${error.message}`
     printError(error)
   }
   let state
