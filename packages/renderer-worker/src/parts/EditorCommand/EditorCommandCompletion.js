@@ -9,7 +9,9 @@ import * as EditorPosition from './EditorCommandPosition.js'
 import * as ViewletState from '../ViewletStates/ViewletStates.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as Character from '../Character/Character.js'
+import * as Id from '../Id/Id.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 const handleBlur = () => {
   close()
@@ -88,9 +90,19 @@ const handleCursorChange = (anyEditor, cursorChange) => {
 // - when open is called twice, previous dom nodes can either be reused or the previous dom nodes must be disposed
 
 export const openCompletion = async (editor, openingReason = 1) => {
-  const viewlet = ViewletManager.create(ViewletModule.load, 'EditorCompletion', 'Widget', 'builtin://', 0, 0, 0, 0)
-
-  await ViewletManager.load(viewlet)
+  console.trace('open compl')
+  const completionUid = Id.create()
+  editor.completionUid = completionUid
+  const widgetId = Id.create()
+  const viewlet = ViewletManager.create(ViewletModule.load, 'EditorCompletion', widgetId, 'builtin://', 0, 0, 0, 0)
+  viewlet.show = false
+  // @ts-ignore
+  const commands = await ViewletManager.load(viewlet)
+  if (editor.completionUid !== completionUid) {
+    return editor
+  }
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  // console.log({ commands })
   return editor
 
   // if (state.isOpened) {
