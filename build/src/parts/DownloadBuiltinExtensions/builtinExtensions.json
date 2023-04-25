@@ -157,7 +157,7 @@
   {
     "name": "builtin.language-basics-python",
     "repository": "github.com/lvce-editor/language-basics-python",
-    "version": "0.0.9"
+    "version": "0.0.10"
   },
   {
     "name": "builtin.language-basics-r",
@@ -182,7 +182,7 @@
   {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "0.0.19"
+    "version": "0.0.20"
   },
   {
     "name": "builtin.language-basics-svelte",
@@ -237,7 +237,7 @@
   {
     "name": "builtin.theme-atom-one-dark",
     "repository": "github.com/lvce-editor/theme-atom-one-dark",
-    "version": "0.0.14"
+    "version": "0.0.15"
   },
   {
     "name": "builtin.theme-ayu",
