@@ -103,7 +103,6 @@ export const openViewlet = async (state, id, focus = false) => {
     append: true,
   })
   const uid = state.uid
-  console.log({ commands })
   if (commands) {
     const currentViewletState = ViewletStates.getState(currentViewletId)
     const currentViewletUid = currentViewletState.uid

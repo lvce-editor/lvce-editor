@@ -468,7 +468,6 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         }
         return allCommands
       }
-      // console.log('else', viewlet.id, { commands })
       commands.push(...extraCommands)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     }
