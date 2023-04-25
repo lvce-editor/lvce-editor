@@ -99,7 +99,7 @@ export const openViewlet = async (state, id, focus = false) => {
     y: childDimensions.y,
     width: childDimensions.width,
     height: childDimensions.height,
-    parentId: uid,
+    parentUid: uid,
     append: true,
   })
   if (commands) {

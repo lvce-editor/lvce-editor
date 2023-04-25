@@ -54,7 +54,7 @@ test.skip('load', async () => {
   const getModule = async () => {
     return mockModule
   }
-  const state = ViewletManager.create(getModule, 'test', '', '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, 'test', 0, '', 0, 0, 0, 0)
   await ViewletManager.load(state)
   expect(mockModule.create).toHaveBeenCalledTimes(1)
   expect(mockModule.loadContent).toHaveBeenCalledTimes(1)
@@ -88,7 +88,7 @@ test('load - race condition', async () => {
   const getModule = async () => {
     return mockModule
   }
-  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
   // @ts-ignore
   const promise = ViewletManager.load(state)
   state.version++
@@ -105,7 +105,7 @@ test('load - error - no create method', async () => {
   const getModule = async () => {
     return {}
   }
-  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
   expect(await ViewletManager.load(state)).toEqual([
     ['Viewlet.create', 'Error', 1],
     ['Viewlet.setBounds', 1, 0, 0, 0, 0],
@@ -125,7 +125,7 @@ test('load - error - create method throws error', async () => {
       },
     }
   }
-  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
   expect(await ViewletManager.load(state)).toEqual([
     ['Viewlet.create', 'Error', 1],
     ['Viewlet.setBounds', 1, 0, 0, 0, 0],
@@ -145,7 +145,7 @@ test('load - error - no loadContent method', async () => {
       },
     }
   }
-  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
   expect(await ViewletManager.load(state)).toEqual([
     ['Viewlet.create', 'Error', 1],
     ['Viewlet.setBounds', 1, 0, 0, 0, 0],
@@ -170,7 +170,7 @@ test('load - error - loadContent method throws error', async () => {
       },
     }
   }
-  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
   expect(await ViewletManager.load(state)).toEqual([
     ['Viewlet.create', 'Error', 1],
     ['Viewlet.setBounds', 1, 0, 0, 0, 0],
@@ -196,7 +196,7 @@ test('load - error - contentLoaded is not of type function', async () => {
       contentLoaded: 1,
     }
   }
-  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
   expect(await ViewletManager.load(state)).toEqual([
     ['Viewlet.create', 'Error', 1],
     ['Viewlet.setBounds', 1, 0, 0, 0, 0],
@@ -224,7 +224,7 @@ test('load - error - contentLoaded method throws error', async () => {
       },
     }
   }
-  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
   expect(await ViewletManager.load(state)).toEqual([
     ['Viewlet.create', 'Error', 1],
     ['Viewlet.setBounds', 1, 0, 0, 0, 0],
@@ -254,7 +254,7 @@ test('load - canceled', async () => {
   const getModule = async () => {
     return mockModule
   }
-  const state = ViewletManager.create(getModule, 'test', '', '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, 'test', 0, '', 0, 0, 0, 0)
   await ViewletManager.load(state)
   expect(mockModule.create).toHaveBeenCalledTimes(1)
   expect(mockModule.loadContent).toHaveBeenCalledTimes(1)
@@ -287,7 +287,7 @@ test.skip('load - shouldApplyNewState returns false', async () => {
   const getModule = async () => {
     return mockModule
   }
-  const state = ViewletManager.create(getModule, 'test', '', '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, 'test', 0, '', 0, 0, 0, 0)
   await ViewletManager.load(state)
   expect(mockModule.create).toHaveBeenCalledTimes(1)
   expect(mockModule.loadContent).toHaveBeenCalledTimes(1)

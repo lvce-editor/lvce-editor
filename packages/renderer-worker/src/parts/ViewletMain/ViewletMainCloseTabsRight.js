@@ -29,7 +29,7 @@ export const closeTabsRight = async (state) => {
     const uri = newActiveEditor.uri
     const moduleId = ViewletMap.getModuleId(uri)
     const uid = newActiveEditor.uid
-    const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, contentHeight)
+    const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, uri, x, y, width, contentHeight)
     // @ts-ignore
     instance.show = false
     instance.setBounds = false

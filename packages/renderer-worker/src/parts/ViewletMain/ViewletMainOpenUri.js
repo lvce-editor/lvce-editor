@@ -33,7 +33,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       }
       const childUid = Id.create()
       // TODO if the editor is already open, nothing needs to be done
-      const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, contentHeight)
+      const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, uri, x, y, width, contentHeight)
       instance.show = false
       instance.setBounds = false
       instance.uid = childUid
@@ -56,7 +56,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   }
 
   const instanceUid = Id.create()
-  const instance = ViewletManager.create(ViewletModule.load, moduleId, ViewletModuleId.Main, uri, x, y, width, contentHeight)
+  const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, uri, x, y, width, contentHeight)
   instance.uid = instanceUid
   const oldActiveIndex = state.activeIndex
   const tabLabel = PathDisplay.getLabel(uri)
@@ -100,7 +100,6 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     commands.push(['Viewlet.focus', instanceUid])
   }
   const latestEditor = state.editors[state.activeIndex]
-  console.log({ commands, editors: state.editors })
   if (latestEditor.uid !== instanceUid) {
     return {
       newState: state,

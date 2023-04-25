@@ -77,7 +77,7 @@ export const startup = async (config) => {
   LifeCycle.mark(LifeCyclePhase.Four)
 
   Performance.mark(PerformanceMarkerType.WillShowLayout)
-  const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.Layout, '', '', 0, 0, 0, 0)
+  const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.Layout, 0, '', 0, 0, 0, 0)
   layout.uid = Id.create()
   const layoutState = await SaveState.getSavedViewletState(ViewletModuleId.Layout)
   const commands = await ViewletManager.load(

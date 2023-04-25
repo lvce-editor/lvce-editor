@@ -98,12 +98,11 @@ export const openViewlet = async (state, id, focus = false) => {
     x: childDimensions.x,
     y: childDimensions.y,
     width: childDimensions.width,
-    parentId: ViewletModuleId.Panel,
+    parentUid: state.uid,
     height: childDimensions.height,
     append: true,
   })
   const uid = state.uid
-  console.log({ commands })
   if (commands) {
     const currentViewletState = ViewletStates.getState(currentViewletId)
     const currentViewletUid = currentViewletState.uid

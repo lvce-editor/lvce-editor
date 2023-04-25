@@ -74,6 +74,7 @@ export const create = (id, uri, languageId, content) => {
     minimumSliderSize: Height.MinimumSliderSize,
     differences: [],
     width: 0,
+    completionUid: 0,
   }
 }
 

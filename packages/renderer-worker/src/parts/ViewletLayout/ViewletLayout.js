@@ -380,7 +380,7 @@ const show = async (state, module, currentViewletId) => {
       y,
       width,
       height,
-      parentId: uid,
+      parentUid: uid,
       uid: childUid,
     },
     false,
@@ -412,7 +412,6 @@ const hide = async (state, module) => {
   // TODO also resize other viewlets if necessary
   const instanceState = ViewletStates.getState(moduleId)
   const commands = Viewlet.disposeFunctional(instanceState.uid)
-  console.log({ commands, uid: instanceState.uid })
   const resizeCommands = getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
   return {
