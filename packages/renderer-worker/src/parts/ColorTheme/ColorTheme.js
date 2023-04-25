@@ -109,15 +109,21 @@ export const watch = async (id) => {
   await SharedProcess.invoke('ExtensionHost.watchColorTheme', id)
 }
 
+const getPreferredColorTheme = () => {
+  const preferredColorTheme = Preferences.get('workbench.colorTheme')
+  return preferredColorTheme
+}
+
 export const reload = async () => {
-  const colorThemeId = Preferences.get('workbench.colorTheme')
+  const colorThemeId = getPreferredColorTheme()
   await applyColorTheme(colorThemeId)
 }
 
 // TODO test this, and also the error case
 // TODO have icon theme, color theme together (maybe)
 export const hydrate = async () => {
-  const colorThemeId = Preferences.get('workbench.colorTheme') || FALLBACK_COLOR_THEME_ID
+  const preferredColorTheme = getPreferredColorTheme()
+  const colorThemeId = preferredColorTheme || FALLBACK_COLOR_THEME_ID
   try {
     await applyColorTheme(colorThemeId)
   } catch (error) {

@@ -138,13 +138,24 @@ const findEditorWithUri = (editors, uri) => {
   return -1
 }
 
+const getSavedActiveIndex = (savedState, restoredEditors) => {
+  if (!savedState) {
+    return -1
+  }
+  const savedActiveIndex = savedState.activeIndex
+  if (typeof savedActiveIndex !== 'number' || savedActiveIndex < 0 || savedActiveIndex > restoredEditors.length) {
+    return -1
+  }
+  return savedActiveIndex
+}
+
 const getRestoredEditors = (savedState) => {
   if (Workspace.isTest()) {
     return { editors: [], activeIndex: -1 }
   }
   const restoredEditors = getMainEditors(savedState)
-  const savedActiveIndex = savedState.activeIndex
-  if (typeof savedActiveIndex !== 'number' || savedActiveIndex < 0 || savedActiveIndex > restoredEditors.length) {
+  const savedActiveIndex = getSavedActiveIndex(savedState, restoredEditors)
+  if (savedActiveIndex === -1) {
     return { editors: [], activeIndex: -1 }
   }
   return {

@@ -110,7 +110,6 @@ test('load - error - no create method', async () => {
     ['Viewlet.create', 'Error', 1],
     ['Viewlet.setBounds', 1, 0, 0, 0, 0],
     ['Viewlet.send', 1, 'setMessage', 'TypeError: module.create is not a function'],
-    ['Viewlet.append', '', 1],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
@@ -131,7 +130,6 @@ test('load - error - create method throws error', async () => {
     ['Viewlet.create', 'Error', 1],
     ['Viewlet.setBounds', 1, 0, 0, 0, 0],
     ['Viewlet.send', 1, 'setMessage', 'TypeError: x is not a function'],
-    ['Viewlet.append', '', 1],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
@@ -152,7 +150,6 @@ test('load - error - no loadContent method', async () => {
     ['Viewlet.create', 'Error', 1],
     ['Viewlet.setBounds', 1, 0, 0, 0, 0],
     ['Viewlet.send', 1, 'setMessage', 'TypeError: module.loadContent is not a function'],
-    ['Viewlet.append', '', 1],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
@@ -178,7 +175,6 @@ test('load - error - loadContent method throws error', async () => {
     ['Viewlet.create', 'Error', 1],
     ['Viewlet.setBounds', 1, 0, 0, 0, 0],
     ['Viewlet.send', 1, 'setMessage', 'TypeError: x is not a function'],
-    ['Viewlet.append', '', 1],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
@@ -205,7 +201,6 @@ test('load - error - contentLoaded is not of type function', async () => {
     ['Viewlet.create', 'Error', 1],
     ['Viewlet.setBounds', 1, 0, 0, 0, 0],
     ['Viewlet.send', 1, 'setMessage', 'TypeError: module.contentLoaded is not a function'],
-    ['Viewlet.append', '', 1],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
@@ -234,7 +229,6 @@ test('load - error - contentLoaded method throws error', async () => {
     ['Viewlet.create', 'Error', 1],
     ['Viewlet.setBounds', 1, 0, 0, 0, 0],
     ['Viewlet.send', 1, 'setMessage', 'TypeError: x is not a function'],
-    ['Viewlet.append', '', 1],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
