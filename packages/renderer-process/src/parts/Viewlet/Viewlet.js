@@ -4,6 +4,7 @@ import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   instances: Object.create(null),
@@ -44,8 +45,12 @@ export const removeKeyBindings = (id) => {
 }
 
 export const loadModule = async (id) => {
-  const module = await ViewletModule.load(id)
-  state.modules[id] = module
+  try {
+    const module = await ViewletModule.load(id)
+    state.modules[id] = module
+  } catch (error) {
+    throw new VError(error, `Failed to load ${id}`)
+  }
 }
 
 export const invoke = (viewletId, method, ...args) => {
