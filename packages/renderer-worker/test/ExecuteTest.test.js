@@ -39,5 +39,5 @@ test('executeTest - error', async () => {
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   await ExecuteTest.executeTest('test', fn)
   expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(new TypeError('x is not a function'))
+  expect(spy).toHaveBeenCalledWith(new TypeError('Test failed: test: x is not a function'))
 })
