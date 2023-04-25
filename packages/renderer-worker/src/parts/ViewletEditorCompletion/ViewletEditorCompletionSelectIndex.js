@@ -16,22 +16,24 @@ const getEditor = () => {
 }
 
 const select = async (state, completionItem) => {
-  const { leadingWord } = state
+  const { leadingWord, uid } = state
   const word = completionItem.label
   const snippet = getInsertSnippet(word, leadingWord)
   // TODO type and dispose commands should be sent to renderer process at the same time
   const editor = getEditor()
-  if (editor) {
-    editor.completionState = EditorCompletionState.None
-    // TODO remove editor completion from editor widgets
-  }
   const { selections } = editor
   const [startRowIndex, startColumnIndex] = selections
   const leadingWordLength = leadingWord.length
   const replaceRange = new Uint32Array([startRowIndex, startColumnIndex - leadingWordLength, startRowIndex, startColumnIndex])
   const changes = ReplaceRange.replaceRange(editor, replaceRange, [word], '')
+  const index = editor.widgets.indexOf(ViewletModuleId.EditorCompletion)
+  if (index !== -1) {
+    editor.widgets.splice(index, 1)
+    editor.completionState = EditorCompletionState.None
+    editor.completionUid = 0
+  }
   await Command.execute(`Editor.applyEdit`, changes)
-  await Viewlet.dispose(ViewletModuleId.EditorCompletion)
+  await Viewlet.dispose(uid)
   return state
 }
 
