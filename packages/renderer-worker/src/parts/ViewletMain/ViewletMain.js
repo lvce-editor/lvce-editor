@@ -221,17 +221,15 @@ export const contentLoaded = async (state) => {
   const tabTitle = PathDisplay.getTitle(editor.uri)
   editor.label = tabLabel
   editor.title = tabTitle
-  const commands = [
-    [/* Viewlet.send */ 'Viewlet.send', /* id */ state.uid, /* method */ 'openViewlet', /* tabLabel */ tabLabel, /* tabTitle */ tabTitle],
-  ]
+  const commands = []
   const childUid = editor.uid
   commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
   const tabsUid = Id.create()
   state.tabsUid = tabsUid
-  commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
-  commands.push(['Viewlet.send', tabsUid, 'setTabs', state.editors])
-  commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, state.activeIndex])
-  commands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
+  // commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
+  // commands.push(['Viewlet.send', tabsUid, 'setTabs', state.editors])
+  // commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, state.activeIndex])
+  // commands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
   // // @ts-ignore
   const extraCommands = await ViewletManager.load(
     {
@@ -255,9 +253,10 @@ export const contentLoaded = async (state) => {
     /* focus */ false,
     /* restore */ true
   )
+  // @ts-ignore
   commands.push(...extraCommands)
   commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
-  commands.push(['Viewlet.append', state.uid, tabsUid])
+  // commands.push(['Viewlet.append', state.uid, tabsUid])
   commands.push(['Viewlet.append', state.uid, childUid])
   return commands
 }
@@ -457,23 +456,31 @@ const getUids = (editors) => {
 export const closeAllEditors = async (state) => {
   const ids = getUids(state.editors)
   const uid = state.uid
-  const tabsUid = state.tabsUid
-  const commands = [['Viewlet.send', uid, 'dispose'], ['Viewlet.dispose', tabsUid], ...ids.flatMap(Viewlet.disposeFunctional)]
-  // RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'dispose')
-  state.editors = []
-  state.focusedIndex = -1
-  state.selectedIndex = -1
-  state.tabsUid = -1
-  // TODO should call dispose method, but only in renderer-worker
-  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
-  return state
+  const commands = [['Viewlet.send', uid, 'dispose'], ...ids.flatMap(Viewlet.disposeFunctional)]
+  const newEditors = []
+  const newFocusedIndex = -1
+  const newSelectedIndex = -1
+  const newTabsUid = -1
+  return {
+    newState: {
+      ...state,
+      editors: newEditors,
+      focusedIndex: newFocusedIndex,
+      selectedIndex: newSelectedIndex,
+      tabsUid: newTabsUid,
+    },
+    commands,
+  }
 }
 
 export const dispose = () => {}
 
 export const closeEditor = async (state, index) => {
   if (state.editors.length === 0) {
-    return state
+    return {
+      newState: state,
+      commands: [],
+    }
   }
   if (state.editors.length === 1) {
     return closeAllEditors(state)
@@ -483,14 +490,12 @@ export const closeEditor = async (state, index) => {
   const width = state.width
   const height = state.height
   if (index === state.activeIndex) {
-    const oldActiveIndex = state.activeIndex
     const oldEditor = state.editors[index]
-    state.editors.splice(index, 1)
+    const editors = state.editors
+    const newEditors = [...editors.slice(0, index), ...editors.slice(index + 1)]
     const newActiveIndex = index === 0 ? index : index - 1
     const uid = oldEditor.uid
     const commands = [...Viewlet.disposeFunctional(uid)]
-    state.activeIndex = newActiveIndex
-    state.focusedIndex = newActiveIndex
     // const instance = Viewlet.create(id, 'uri', left, top, width, height)
     // TODO ideally content would load synchronously and there would be one layout and one paint for opening the new tab
     // except in the case where the content takes long (>100ms) to load, then it should show the tab
@@ -503,19 +508,33 @@ export const closeEditor = async (state, index) => {
     //   height: instance.state.height,
     //   columnWidth: COLUMN_WIDTH,
     // })
-    commands.push(['Viewlet.send', state.tabsUid, 'setTabs', state.editors])
-    return state
+    return {
+      newState: {
+        ...state,
+        activeIndex: newActiveIndex,
+        focusedIndex: newActiveIndex,
+        editors: newEditors,
+      },
+      commands,
+    }
   }
-  state.editors.splice(index, 1)
-  const commands = [['Viewlet.send', state.tabsUid, 'setTabs', state.editors]]
-  if (index < state.activeIndex) {
-    state.activeIndex--
+  const editors = state.editors
+  const newEditors = [...editors.slice(0, index), ...editors.slice(index + 1)]
+  let newActiveIndex = state.activeIndex
+  if (index < newActiveIndex) {
+    newActiveIndex--
   }
-  state.focusedIndex = state.activeIndex
-  commands.push(['Viewlet.send', state.tabsUid, 'setFocusedIndex', -1, state.activeIndex])
-  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  const newFocusedIndex = newActiveIndex
   // TODO just close the tab
-  return state
+  return {
+    newState: {
+      ...state,
+      editors: newEditors,
+      focusedIndex: newFocusedIndex,
+      activeIndex: newActiveIndex,
+    },
+    commands: [],
+  }
 }
 
 export const handleClickClose = (state, button, index) => {

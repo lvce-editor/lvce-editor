@@ -3,10 +3,7 @@ import * as ViewletMainOpenUri from './ViewletMainOpenUri.js'
 
 export const Commands = {
   // 'Main.hydrate': ViewletMain.hydrate,
-  closeActiveEditor: ViewletMain.closeActiveEditor,
-  closeAllEditors: ViewletMain.closeAllEditors,
-  closeEditor: ViewletMain.closeEditor,
-  closeFocusedTab: ViewletMain.closeFocusedTab,
+
   focus: ViewletMain.focus,
   focusFirst: ViewletMain.focusFirst,
   focusLast: ViewletMain.focusLast,
@@ -25,6 +22,10 @@ export const CommandsWithSideEffects = {
   openUri: ViewletMainOpenUri.openUri,
   handleDrop: ViewletMain.handleDrop,
   handleDropFilePath: ViewletMain.handleDropFilePath,
+  closeAllEditors: ViewletMain.closeAllEditors,
+  closeActiveEditor: ViewletMain.closeActiveEditor,
+  closeEditor: ViewletMain.closeEditor,
+  closeFocusedTab: ViewletMain.closeFocusedTab,
 }
 
 export const CommandsWithSideEffectsLazy = {

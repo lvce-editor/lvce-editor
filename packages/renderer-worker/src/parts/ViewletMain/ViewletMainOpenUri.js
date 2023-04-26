@@ -1,13 +1,12 @@
 import * as Assert from '../Assert/Assert.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as IconTheme from '../IconTheme/IconTheme.js'
 
 export const openUri = async (state, uri, focus = true, options = {}) => {
   Assert.object(state)
@@ -58,21 +57,12 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const instanceUid = Id.create()
   const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, uri, x, y, width, contentHeight)
   instance.uid = instanceUid
-  const oldActiveIndex = state.activeIndex
+  // const oldActiveIndex = state.activeIndex
   const tabLabel = PathDisplay.getLabel(uri)
   const tabTitle = PathDisplay.getTitle(uri)
   const icon = IconTheme.getFileNameIcon(uri)
-  state.editors.push({ uri, uid: instanceUid, label: tabLabel, title: tabTitle, icon })
-  state.activeIndex = state.editors.length - 1
-
-  // await RendererProcess.invoke(
-  //   /* Viewlet.send */ 'Viewlet.send',
-  //   /* id */ state.uid,
-  //   /* method */ 'openViewlet',
-  //   /* tabLabel */ tabLabel,
-  //   /* tabTitle */ tabTitle,
-  //   /* oldActiveIndex */ oldActiveIndex
-  // )
+  const newEditors = [...state.editors, { uri, uid: instanceUid, label: tabLabel, title: tabTitle, icon }]
+  const newActiveIndex = newEditors.length - 1
   // @ts-ignore
   instance.show = false
   instance.setBounds = false
@@ -82,16 +72,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   let tabsUid = state.tabsUid
   if (tabsUid === -1) {
     tabsUid = Id.create()
-    commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
-    commands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
-    commands.push(['Viewlet.append', state.uid, tabsUid])
   }
-  commands.push(['Viewlet.send', tabsUid, 'setTabs', state.editors])
-  commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', oldActiveIndex, state.activeIndex])
-
-  // if (commands[0].includes(ViewletModuleId.Error)) {
-  //   commands.push(['Viewlet.appendViewlet', state.uid, ViewletModuleId.Error])
-  // } else {
   if (disposeCommands) {
     commands.push(...disposeCommands)
   }
@@ -99,7 +80,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   if (focus) {
     commands.push(['Viewlet.focus', instanceUid])
   }
-  const latestEditor = state.editors[state.activeIndex]
+  const latestEditor = newEditors[newActiveIndex]
   if (latestEditor.uid !== instanceUid) {
     return {
       newState: state,
@@ -116,6 +97,8 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     newState: {
       ...state,
       tabsUid,
+      editors: newEditors,
+      activeIndex: newActiveIndex,
     },
     commands,
   }

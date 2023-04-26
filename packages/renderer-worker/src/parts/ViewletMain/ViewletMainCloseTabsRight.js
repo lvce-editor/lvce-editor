@@ -2,14 +2,11 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const closeTabsRight = async (state) => {
   const { editors, activeIndex, focusedIndex } = state
   const commands = []
   const newEditors = editors.slice(0, focusedIndex + 1)
-  commands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ state.tabsUid, /* method */ 'setTabs', /* index */ newEditors])
-  commands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ state.tabsUid, /* method */ 'setFocusedIndex', -1, focusedIndex])
   if (focusedIndex >= activeIndex) {
     // view is kept the same, only tabs are closed
   } else {

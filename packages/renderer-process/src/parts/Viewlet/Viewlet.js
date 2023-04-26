@@ -54,6 +54,7 @@ export const loadModule = async (id) => {
 }
 
 export const invoke = (viewletId, method, ...args) => {
+  Assert.string(method)
   const instance = state.instances[viewletId]
   if (!instance || !instance.factory) {
     Logger.warn(`cannot execute ${method} viewlet instance ${viewletId} not found`)
@@ -180,6 +181,9 @@ export const sendMultiple = (commands) => {
         break
       case 'Viewlet.removeKeyBindings':
         removeKeyBindings(viewletId)
+        break
+      case 'Viewlet.send':
+        invoke(viewletId, method, ...args)
         break
       default: {
         invoke(viewletId, method, ...args)

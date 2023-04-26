@@ -606,19 +606,14 @@ test('closeEditor - 0 1 - first is focused and second tab is selected', async ()
     },
     state: {},
   })
-  await ViewletMain.closeEditor(state, 0)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMain.closeEditor(state, 0)
+  expect(newState.editors).toEqual([
     {
       uri: '/test/file-2.txt',
     },
     {
       uri: '/test/file-3.txt',
     },
-  ])
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
-    ['Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-2.txt' }, { uri: '/test/file-3.txt' }]],
-    ['Viewlet.send', -1, 'setFocusedIndex', -1, 0],
   ])
 })
 
@@ -681,8 +676,8 @@ test('closeEditor - 1 0 - middle tab is focused and first tab is selected', asyn
     activeIndex: 0,
     focusedIndex: 1,
   }
-  await ViewletMain.closeEditor(state, 1)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMain.closeEditor(state, 1)
+  expect(newState.editors).toEqual([
     {
       uri: '/test/file-1.txt',
     },
@@ -690,13 +685,8 @@ test('closeEditor - 1 0 - middle tab is focused and first tab is selected', asyn
       uri: '/test/file-3.txt',
     },
   ])
-  expect(state.activeIndex).toBe(0)
-  expect(state.focusedIndex).toBe(0)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
-    ['Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-1.txt' }, { uri: '/test/file-3.txt' }]],
-    ['Viewlet.send', -1, 'setFocusedIndex', -1, 0],
-  ])
+  expect(newState.activeIndex).toBe(0)
+  expect(newState.focusedIndex).toBe(0)
 })
 
 test.skip('closeEditor - 1 1 - middle tab is focused and middle tab is selected', async () => {
@@ -751,8 +741,8 @@ test('closeEditor - 1 2 - middle tab is focused and last tab is selected', async
     activeIndex: 2,
     focusedIndex: 1,
   }
-  await ViewletMain.closeEditor(state, 1)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMain.closeEditor(state, 1)
+  expect(newState.editors).toEqual([
     {
       uri: '/test/file-1.txt',
     },
@@ -760,13 +750,8 @@ test('closeEditor - 1 2 - middle tab is focused and last tab is selected', async
       uri: '/test/file-3.txt',
     },
   ])
-  expect(state.activeIndex).toBe(1)
-  expect(state.focusedIndex).toBe(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.sendMultiple', [
-    ['Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-1.txt' }, { uri: '/test/file-3.txt' }]],
-    ['Viewlet.send', -1, 'setFocusedIndex', -1, 1],
-  ])
+  expect(newState.activeIndex).toBe(1)
+  expect(newState.focusedIndex).toBe(1)
 })
 
 test('closeEditor - 2 0 - last tab is focused and first tab is selected', async () => {
@@ -788,8 +773,8 @@ test('closeEditor - 2 0 - last tab is focused and first tab is selected', async 
     activeIndex: 0,
     focusedIndex: 2,
   }
-  await ViewletMain.closeEditor(state, 2)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMain.closeEditor(state, 2)
+  expect(newState.editors).toEqual([
     {
       uri: '/test/file-1.txt',
     },
@@ -797,13 +782,8 @@ test('closeEditor - 2 0 - last tab is focused and first tab is selected', async 
       uri: '/test/file-2.txt',
     },
   ])
-  expect(state.activeIndex).toBe(0)
-  expect(state.focusedIndex).toBe(0)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.sendMultiple', [
-    ['Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-1.txt' }, { uri: '/test/file-2.txt' }]],
-    ['Viewlet.send', -1, 'setFocusedIndex', -1, 0],
-  ])
+  expect(newState.activeIndex).toBe(0)
+  expect(newState.focusedIndex).toBe(0)
 })
 
 test('closeEditor - 2 1 - last tab is focused and middle tab is selected', async () => {
@@ -826,8 +806,8 @@ test('closeEditor - 2 1 - last tab is focused and middle tab is selected', async
     activeIndex: 1,
     focusedIndex: 2,
   }
-  await ViewletMain.closeEditor(state, 2)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMain.closeEditor(state, 2)
+  expect(newState.editors).toEqual([
     {
       uri: '/test/file-1.txt',
     },
@@ -835,13 +815,8 @@ test('closeEditor - 2 1 - last tab is focused and middle tab is selected', async
       uri: '/test/file-2.txt',
     },
   ])
-  expect(state.activeIndex).toBe(1)
-  expect(state.focusedIndex).toBe(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.sendMultiple', [
-    ['Viewlet.send', -1, 'setTabs', [{ uri: '/test/file-1.txt' }, { uri: '/test/file-2.txt' }]],
-    ['Viewlet.send', -1, 'setFocusedIndex', -1, 1],
-  ])
+  expect(newState.activeIndex).toBe(1)
+  expect(newState.focusedIndex).toBe(1)
 })
 
 test.skip('closeEditor - 2 2 - last tab is focused and last tab is selected', async () => {
@@ -1032,7 +1007,7 @@ test('handleDrop - one file', async () => {
     },
   ]
   const { commands, newState } = await ViewletMain.handleDrop(state, fileList)
-  expect(state.editors).toEqual([
+  expect(newState.editors).toEqual([
     {
       uri: '/test/file-1.txt',
       uid: 1,
@@ -1051,28 +1026,6 @@ test('handleDrop - one file', async () => {
     ['Viewlet.create', 'Editor', 2],
     ['Viewlet.addKeyBindings', 2, expect.anything()],
     ['Viewlet.setBounds', 2, 0, 35, 100, 65],
-    ['Viewlet.create', 'MainTabs', 3],
-    ['Viewlet.setBounds', 3, 0, 0, 100, 35],
-    ['Viewlet.append', 1, 3],
-    [
-      'Viewlet.send',
-      3,
-      'setTabs',
-      [
-        {
-          uid: 1,
-          uri: '/test/file-1.txt',
-        },
-        {
-          icon: '',
-          label: 'dropped-file.txt',
-          title: '/test/dropped-file.txt',
-          uid: 2,
-          uri: '/test/dropped-file.txt',
-        },
-      ],
-    ],
-    ['Viewlet.send', 3, 'setFocusedIndex', 0, 1],
     ['Viewlet.append', 1, 2],
     ['Viewlet.focus', 2],
   ])
