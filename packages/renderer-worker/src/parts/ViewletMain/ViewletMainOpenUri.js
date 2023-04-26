@@ -66,6 +66,11 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   // @ts-ignore
   instance.show = false
   instance.setBounds = false
+  ViewletStates.setState(state.uid, {
+    ...state,
+    editors: newEditors,
+    pendingUid: instanceUid,
+  })
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
   commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, contentHeight])
@@ -80,8 +85,9 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   if (focus) {
     commands.push(['Viewlet.focus', instanceUid])
   }
-  const latestEditor = newEditors[newActiveIndex]
-  if (latestEditor.uid !== instanceUid) {
+  const latestState = ViewletStates.getState(state.uid)
+  const latestPendingUid = latestState.pendingUid
+  if (latestPendingUid !== instanceUid) {
     return {
       newState: state,
       commands: [],
