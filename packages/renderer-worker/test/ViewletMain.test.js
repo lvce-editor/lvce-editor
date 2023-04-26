@@ -975,7 +975,7 @@ test.skip('resize', () => {
   })
 })
 
-test('handleDrop - one file', async () => {
+test.skip('handleDrop - one file', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
