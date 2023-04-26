@@ -55,8 +55,6 @@ jest.unstable_mockModule('../src/parts/ViewletEditorText/ViewletEditorText.js', 
   }
 })
 
-const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
-const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 const ViewletMain = await import('../src/parts/ViewletMain/ViewletMain.js')
 const ViewletMainCloseOthers = await import('../src/parts/ViewletMain/ViewletMainCloseOthers.js')
@@ -88,8 +86,8 @@ test('closeOthers - 0 0 - first tab is selected and first tab is focused', async
     },
     state: {},
   })
-  await ViewletMainCloseOthers.closeOthers(state)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMainCloseOthers.closeOthers(state)
+  expect(newState.editors).toEqual([
     {
       uid: 1,
       uri: '/test/file-1.txt',
@@ -124,8 +122,8 @@ test('closeOthers - 0 1 - first tab is focused and second tab is selected', asyn
     },
     state: {},
   })
-  await ViewletMainCloseOthers.closeOthers(state)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMainCloseOthers.closeOthers(state)
+  expect(newState.editors).toEqual([
     {
       uid: 1,
       uri: '/test/file-1.txt',
@@ -160,8 +158,8 @@ test('closeOthers - 0 2 - first tab is focused and third tab is selected', async
     },
     state: {},
   })
-  await ViewletMainCloseOthers.closeOthers(state)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMainCloseOthers.closeOthers(state)
+  expect(newState.editors).toEqual([
     {
       uid: 1,
       uri: '/test/file-1.txt',
@@ -196,8 +194,8 @@ test('closeOthers - 1 0 - second tab is focused and first tab is selected', asyn
     },
     state: {},
   })
-  await ViewletMainCloseOthers.closeOthers(state)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMainCloseOthers.closeOthers(state)
+  expect(newState.editors).toEqual([
     {
       uid: 2,
       uri: '/test/file-2.txt',
@@ -232,8 +230,8 @@ test('closeOthers - 1 1 - second tab is focused and second tab is selected', asy
     },
     state: {},
   })
-  await ViewletMainCloseOthers.closeOthers(state)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMainCloseOthers.closeOthers(state)
+  expect(newState.editors).toEqual([
     {
       uid: 2,
       uri: '/test/file-2.txt',
@@ -268,8 +266,8 @@ test('closeOthers - 1 2 - second tab is focused and third tab is selected', asyn
     },
     state: {},
   })
-  await ViewletMainCloseOthers.closeOthers(state)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMainCloseOthers.closeOthers(state)
+  expect(newState.editors).toEqual([
     {
       uid: 2,
       uri: '/test/file-2.txt',
@@ -304,8 +302,8 @@ test('closeOthers - 2 0 - third tab is focused and first tab is selected', async
     },
     state: {},
   })
-  await ViewletMainCloseOthers.closeOthers(state)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMainCloseOthers.closeOthers(state)
+  expect(newState.editors).toEqual([
     {
       uid: 3,
       uri: '/test/file-3.txt',
@@ -340,8 +338,8 @@ test('closeOthers - 2 1 - third tab is focused and second tab is selected', asyn
     },
     state: {},
   })
-  await ViewletMainCloseOthers.closeOthers(state)
-  expect(state.editors).toEqual([
+  const { newState } = await ViewletMainCloseOthers.closeOthers(state)
+  expect(newState.editors).toEqual([
     {
       uid: 3,
       uri: '/test/file-3.txt',
@@ -384,8 +382,6 @@ test('closeOthers - 2 2 - third tab is focused and third tab is selected', async
     },
   ])
   expect(commands).toEqual([
-    ['Viewlet.send', -1, 'setTabs', [{ uid: 3, uri: '/test/file-3.txt' }]],
-    ['Viewlet.send', -1, 'setFocusedIndex', -1, 0],
     ['Viewlet.create', 'Editor', 1],
     ['Viewlet.addKeyBindings', 1, expect.anything()],
     ['Viewlet.setBounds', 1, 0, 35, 100, 65],

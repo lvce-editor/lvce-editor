@@ -413,26 +413,4 @@ test('closeTabsRight - 2 2 - third tab is focused and third tab is selected', as
       uid: 3,
     },
   ])
-  expect(commands).toEqual([
-    [
-      'Viewlet.send',
-      -1,
-      'setTabs',
-      [
-        {
-          uri: '/test/file-1.txt',
-          uid: 1,
-        },
-        {
-          uri: '/test/file-2.txt',
-          uid: 2,
-        },
-        {
-          uri: '/test/file-3.txt',
-          uid: 3,
-        },
-      ],
-    ],
-    ['Viewlet.send', -1, 'setFocusedIndex', -1, 2],
-  ])
 })

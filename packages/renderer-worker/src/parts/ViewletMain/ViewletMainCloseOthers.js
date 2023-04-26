@@ -3,25 +3,24 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const closeOthers = async (state) => {
   const commands = []
-  if (state.focusedIndex === state.activeIndex) {
+  const { editors, focusedIndex, activeIndex } = state
+  let newEditors = editors
+  let newFocusedIndex = focusedIndex
+  let newActiveIndex = activeIndex
+  if (focusedIndex === activeIndex) {
     // view is kept the same, only tabs are closed
-    state.editors = [state.editors[state.focusedIndex]]
-    state.focusedIndex = 0
-    state.activeIndex = 0
-    commands.push(['Viewlet.send', state.tabsUid, 'setTabs', state.editors])
-    commands.push(['Viewlet.send', state.tabsUid, 'setFocusedIndex', -1, 0])
+    newEditors = [editors[focusedIndex]]
+    newFocusedIndex = 0
+    newActiveIndex = 0
   } else {
     // view needs to be switched to focused index
-    const activeEditor = state.editors[state.activeIndex]
-    state.editors = [state.editors[state.focusedIndex]]
-    state.focusedIndex = 0
-    state.activeIndex = 0
-    commands.push(['Viewlet.send', state.tabsUid, 'setTabs', state.editors])
-    commands.push(['Viewlet.send', state.tabsUid, 'setFocusedIndex', -1, 0])
+    const activeEditor = editors[activeIndex]
+    newEditors = [editors[focusedIndex]]
+    newFocusedIndex = 0
+    newActiveIndex = 0
     const disposeCommands = Viewlet.disposeFunctional(activeEditor.uid)
     commands.push(...disposeCommands)
     const instanceUid = Id.create()
@@ -43,6 +42,9 @@ export const closeOthers = async (state) => {
   return {
     newState: {
       ...state,
+      editors: newEditors,
+      focusedIndex: newFocusedIndex,
+      activeIndex: newActiveIndex,
     },
     commands,
   }

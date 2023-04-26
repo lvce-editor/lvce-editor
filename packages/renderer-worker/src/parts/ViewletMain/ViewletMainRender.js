@@ -1,3 +1,5 @@
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+
 export const hasFunctionalRender = true
 
 const renderDragOverlay = {
@@ -22,4 +24,35 @@ const renderDragOverlay = {
   },
 }
 
-export const render = [renderDragOverlay]
+const renderTabs = {
+  isEqual(oldState, newState) {
+    return oldState.editors === newState.editors && oldState.tabsUid === newState.tabsUid
+  },
+  apply(oldState, newState) {
+    const commands = []
+    if (oldState.tabsUid === -1) {
+      commands.push(['Viewlet.create', ViewletModuleId.MainTabs, newState.tabsUid])
+      commands.push(['Viewlet.setBounds', newState.tabsUid, newState.x, 0, newState.width, newState.tabHeight])
+      commands.push(['Viewlet.append', newState.uid, newState.tabsUid])
+    }
+    if (newState.tabsUid === -1) {
+      commands.push(['Viewlet.dispose', oldState.tabsUid])
+    }
+    commands.push(['Viewlet.send', newState.tabsUid, 'setTabs', newState.editors])
+    return commands
+  },
+  multiple: true,
+}
+
+const renderTabsActiveIndex = {
+  isEqual(oldState, newState) {
+    return oldState.editors === newState.editors && oldState.activeIndex === newState.activeIndex
+  },
+  apply(oldState, newState) {
+    const unFocusIndex = oldState.activeIndex < newState.editors.length ? oldState.activeIndex : -1
+    return [['Viewlet.send', newState.tabsUid, 'setFocusedIndex', unFocusIndex, newState.activeIndex]]
+  },
+  multiple: true,
+}
+
+export const render = [renderDragOverlay, renderTabs, renderTabsActiveIndex]
