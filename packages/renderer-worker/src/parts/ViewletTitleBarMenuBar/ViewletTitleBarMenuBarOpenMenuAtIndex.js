@@ -3,6 +3,10 @@ import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 
 const getTotalTextWidth = (entries) => {
   let total = 0
+  for (const entry of entries) {
+    total += entry.width
+  }
+  return total
 }
 
 /**
