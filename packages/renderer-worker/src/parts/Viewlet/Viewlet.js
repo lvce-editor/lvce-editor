@@ -354,7 +354,7 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
     return
   }
   const fn = await getFn(instance.factory, fnName)
-  const oldState = instance.state
+  const oldState = instance.renderedState
   const newState = await fn(oldState, ...args)
   const actualNewState = 'newState' in newState ? newState.newState : newState
   if (oldState === actualNewState) {
@@ -364,7 +364,7 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   if ('newState' in newState) {
     commands.push(...newState.commands)
   }
-  ViewletStates.setState(uid, actualNewState)
+  ViewletStates.setRenderedState(uid, actualNewState)
   if (commands.length === 0) {
     return
   }

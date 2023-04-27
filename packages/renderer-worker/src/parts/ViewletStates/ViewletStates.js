@@ -12,6 +12,7 @@ export const set = (key, value) => {
   Assert.object(value)
   Assert.object(value.factory)
   Assert.object(value.state)
+  Assert.object(value.renderedState)
   state.instances[key] = value
 }
 
@@ -72,6 +73,16 @@ export const setState = (key, newState) => {
   }
   Assert.object(newState)
   const instance = getInstance(key)
+  instance.state = newState
+}
+
+export const setRenderedState = (key, newState) => {
+  if (typeof key !== 'string' && typeof key !== 'number') {
+    throw new Error('key must be defined')
+  }
+  Assert.object(newState)
+  const instance = getInstance(key)
+  instance.renderedState = newState
   instance.state = newState
 }
 
