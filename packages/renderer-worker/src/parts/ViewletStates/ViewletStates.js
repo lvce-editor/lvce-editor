@@ -9,6 +9,7 @@ export const state = {
 }
 
 export const set = (key, value) => {
+  // TODO separate factories from state
   Assert.object(value)
   Assert.object(value.factory)
   Assert.object(value.state)

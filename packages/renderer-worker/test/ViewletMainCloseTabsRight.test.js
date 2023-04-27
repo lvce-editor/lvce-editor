@@ -81,6 +81,7 @@ test('closeTabsRight - 0 0 - first tab is focused and first tab is selected', as
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
   expect(newState.editors).toEqual([
@@ -117,6 +118,7 @@ test('closeTabsRight - 0 1 - first tab is focused and second tab is selected', a
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
   expect(newState.editors).toEqual([
@@ -153,6 +155,7 @@ test('closeTabsRight - 0 2 - first tab is focused and third tab is selected', as
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
   expect(newState.editors).toEqual([
@@ -189,6 +192,7 @@ test('closeTabsRight - 1 0 - second tab is focused and first tab is selected', a
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
   expect(newState.editors).toEqual([
@@ -229,6 +233,7 @@ test('closeTabsRight - 1 1 - second tab is focused and second tab is selected', 
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
   expect(newState.editors).toEqual([
@@ -269,6 +274,7 @@ test('closeTabsRight - 1 2 - second tab is focused and third tab is selected', a
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
   expect(newState.editors).toEqual([
@@ -309,6 +315,7 @@ test('closeTabsRight - 2 0 - third tab is focused and first tab is selected', as
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
   expect(newState.editors).toEqual([
@@ -353,6 +360,7 @@ test('closeTabsRight - 2 1 - third tab is focused and second tab is selected', a
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
   expect(newState.editors).toEqual([
@@ -397,6 +405,7 @@ test('closeTabsRight - 2 2 - third tab is focused and third tab is selected', as
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
   expect(newState.editors).toEqual([

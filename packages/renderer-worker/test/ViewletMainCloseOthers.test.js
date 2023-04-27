@@ -85,6 +85,7 @@ test('closeOthers - 0 0 - first tab is selected and first tab is focused', async
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState } = await ViewletMainCloseOthers.closeOthers(state)
   expect(newState.editors).toEqual([
@@ -121,6 +122,7 @@ test('closeOthers - 0 1 - first tab is focused and second tab is selected', asyn
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState } = await ViewletMainCloseOthers.closeOthers(state)
   expect(newState.editors).toEqual([
@@ -157,6 +159,7 @@ test('closeOthers - 0 2 - first tab is focused and third tab is selected', async
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState } = await ViewletMainCloseOthers.closeOthers(state)
   expect(newState.editors).toEqual([
@@ -193,6 +196,7 @@ test('closeOthers - 1 0 - second tab is focused and first tab is selected', asyn
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState } = await ViewletMainCloseOthers.closeOthers(state)
   expect(newState.editors).toEqual([
@@ -229,6 +233,7 @@ test('closeOthers - 1 1 - second tab is focused and second tab is selected', asy
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState } = await ViewletMainCloseOthers.closeOthers(state)
   expect(newState.editors).toEqual([
@@ -265,6 +270,7 @@ test('closeOthers - 1 2 - second tab is focused and third tab is selected', asyn
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState } = await ViewletMainCloseOthers.closeOthers(state)
   expect(newState.editors).toEqual([
@@ -301,6 +307,7 @@ test('closeOthers - 2 0 - third tab is focused and first tab is selected', async
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState } = await ViewletMainCloseOthers.closeOthers(state)
   expect(newState.editors).toEqual([
@@ -337,6 +344,7 @@ test('closeOthers - 2 1 - third tab is focused and second tab is selected', asyn
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState } = await ViewletMainCloseOthers.closeOthers(state)
   expect(newState.editors).toEqual([
@@ -373,6 +381,7 @@ test('closeOthers - 2 2 - third tab is focused and third tab is selected', async
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseOthers.closeOthers(state)
   expect(newState.editors).toEqual([
