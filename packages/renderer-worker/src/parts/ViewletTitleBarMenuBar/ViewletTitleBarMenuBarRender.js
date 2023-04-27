@@ -8,7 +8,6 @@ const renderTitleBarEntries = {
   },
   apply(oldState, newState) {
     const visibleEntries = GetVisibleTitleBarEntries.getVisibleTitleBarEntries(newState.titleBarEntries, newState.width)
-    console.log({ visibleEntries })
     return [/* method */ 'setEntries', /* titleBarEntries */ visibleEntries]
   },
 }

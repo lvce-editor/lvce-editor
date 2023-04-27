@@ -129,7 +129,6 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, 
     $Child.id = activeId
     const $Label = document.createElement('div')
     $Label.className = 'TitleBarTopLevelEntryLabel'
-    console.log({ $Node })
     $Label.append($Node)
     $Child.replaceChildren($Label)
 
@@ -203,7 +202,7 @@ export const closeMenu = (state, unFocusIndex, index) => {
 
 export const setEntries = (state, titleBarEntries) => {
   const { $TitleBarMenuBar } = state
-  $TitleBarMenuBar.append(...titleBarEntries.map(create$TopLevelEntry))
+  $TitleBarMenuBar.replaceChildren(...titleBarEntries.map(create$TopLevelEntry))
 }
 
 const create$Menu = () => {

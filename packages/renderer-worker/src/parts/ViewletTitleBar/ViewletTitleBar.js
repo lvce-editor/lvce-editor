@@ -28,6 +28,11 @@ export const handleFocusChange = (state, isFocused) => {
   return { ...state, isFocused }
 }
 
+const getTitleBarMenuBarWidth = (width, menuBarX, titleBarButtonsWidth) => {
+  const remainingWidth = width - menuBarX - titleBarButtonsWidth
+  return remainingWidth
+}
+
 export const getChildren = (state) => {
   const children = []
   const { x, y, width, height, titleBarIconWidth, titleBarIconEnabled, titleBarMenuBarEnabled, titleBarButtonsEnabled, titleBarButtonsWidth } = state
@@ -40,7 +45,7 @@ export const getChildren = (state) => {
     menuBarX += titleBarIconWidth
   }
   if (titleBarMenuBarEnabled) {
-    const remainingWidth = width - menuBarX - titleBarButtonsWidth
+    const remainingWidth = getTitleBarMenuBarWidth(width, menuBarX, titleBarButtonsWidth)
     children.push({
       id: ViewletModuleId.TitleBarMenuBar,
       x: menuBarX,

@@ -1,9 +1,7 @@
-import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
-import * as GetVisibleTitleBarEntries from '../GetVisibleTitleBarEntries/GetVisibleTitleBarEntries.js'
+import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
 
 export const create = (id, uri, x, y, width, height) => {
-  console.log({ width, height })
   return {
     uid: id,
     titleBarEntries: [],
