@@ -95,6 +95,7 @@ const create$TopLevelEntry = (item) => {
   $TitleBarTopLevelEntry.ariaHasPopup = AriaBoolean.True
   $TitleBarTopLevelEntry.ariaExpanded = AriaBoolean.False
   $TitleBarTopLevelEntry.role = AriaRoles.MenuItem
+  $TitleBarTopLevelEntry.style.width = `${item.width}px`
   if (item.keyboardShortCut) {
     $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
   }

@@ -1,4 +1,5 @@
 import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
+import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -20,10 +21,22 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
+const addWidths = (entries, labelPadding, fontWeight, fontSize, fontFamily, letterSpacing) => {
+  const withWidths = []
+  for (const entry of entries) {
+    const textWidth = MeasureTextWidth.measureTextWidth(entry.label, fontWeight, fontSize, fontFamily, letterSpacing)
+    const width = textWidth + labelPadding * 2
+    withWidths.push({ ...entry, width })
+  }
+  return withWidths
+}
+
 export const loadContent = async (state) => {
+  const { labelFontFamily, labelFontSize, labelFontWeight, labelLetterSpacing, labelPadding } = state
   const titleBarEntries = await TitleBarMenuBarEntries.getEntries()
+  const withWidths = addWidths(titleBarEntries, labelPadding, labelFontWeight, labelFontSize, labelFontFamily, labelLetterSpacing)
   return {
     ...state,
-    titleBarEntries,
+    titleBarEntries: withWidths,
   }
 }
