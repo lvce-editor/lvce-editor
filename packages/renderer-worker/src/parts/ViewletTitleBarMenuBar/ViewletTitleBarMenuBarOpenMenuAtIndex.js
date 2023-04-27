@@ -1,16 +1,8 @@
 import * as Menu from '../Menu/Menu.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 
-const getLabel = (titleBarEntry) => {
-  return titleBarEntry.label
-}
-
 const getTotalTextWidth = (entries) => {
   let total = 0
-  for (const entry of entries) {
-    total += entry.width
-  }
-  return total
 }
 
 /**
