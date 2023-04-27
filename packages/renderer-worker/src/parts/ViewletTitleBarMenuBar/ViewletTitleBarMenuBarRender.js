@@ -1,11 +1,15 @@
+import * as GetVisibleTitleBarEntries from '../GetVisibleTitleBarEntries/GetVisibleTitleBarEntries.js'
+
 export const hasFunctionalRender = true
 
 const renderTitleBarEntries = {
   isEqual(oldState, newState) {
-    return oldState.titleBarEntries === newState.titleBarEntries
+    return oldState.titleBarEntries === newState.titleBarEntries && oldState.width === newState.width
   },
   apply(oldState, newState) {
-    return [/* method */ 'setEntries', /* titleBarEntries */ newState.titleBarEntries]
+    const visibleEntries = GetVisibleTitleBarEntries.getVisibleTitleBarEntries(newState.titleBarEntries, newState.width)
+    console.log({ visibleEntries })
+    return [/* method */ 'setEntries', /* titleBarEntries */ visibleEntries]
   },
 }
 

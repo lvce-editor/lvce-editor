@@ -1,7 +1,9 @@
 import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
+import * as GetVisibleTitleBarEntries from '../GetVisibleTitleBarEntries/GetVisibleTitleBarEntries.js'
 
 export const create = (id, uri, x, y, width, height) => {
+  console.log({ width, height })
   return {
     uid: id,
     titleBarEntries: [],
@@ -32,9 +34,11 @@ const addWidths = (entries, labelPadding, fontWeight, fontSize, fontFamily, lett
 }
 
 export const loadContent = async (state) => {
-  const { labelFontFamily, labelFontSize, labelFontWeight, labelLetterSpacing, labelPadding } = state
+  const { labelFontFamily, labelFontSize, labelFontWeight, labelLetterSpacing, labelPadding, width } = state
   const titleBarEntries = await TitleBarMenuBarEntries.getEntries()
   const withWidths = addWidths(titleBarEntries, labelPadding, labelFontWeight, labelFontSize, labelFontFamily, labelLetterSpacing)
+  // const visible = GetVisibleTitleBarEntries.getVisibleTitleBarEntries(withWidths, width)
+  // console.log({ visible })
   return {
     ...state,
     titleBarEntries: withWidths,

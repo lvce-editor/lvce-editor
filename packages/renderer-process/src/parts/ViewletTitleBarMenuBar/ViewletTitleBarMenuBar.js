@@ -7,6 +7,7 @@ import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as Menu from '../OldMenu/Menu.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 
@@ -99,7 +100,12 @@ const create$TopLevelEntry = (item) => {
   if (item.keyboardShortCut) {
     $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
   }
-  $TitleBarTopLevelEntry.textContent = item.label
+  if (item.label) {
+    $TitleBarTopLevelEntry.textContent = item.label
+  } else {
+    const $Icon = MaskIcon.create(item.icon)
+    $TitleBarTopLevelEntry.append($Icon)
+  }
   return $TitleBarTopLevelEntry
 }
 
@@ -113,14 +119,18 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, 
     $Child.ariaExpanded = AriaBoolean.False
     $Child.removeAttribute(DomAttributeType.AriaOwns)
     $Child.removeAttribute('id')
-    $Child.textContent = $Child.textContent
+    const $Wrapper = $Child.firstChild
+    $Wrapper.remove()
+    $Child.append($Wrapper.firstChild)
   }
   if (focusIndex !== -1) {
     const $Child = $TitleBarMenuBar.children[focusIndex]
+    const $Node = $Child.firstChild
     $Child.id = activeId
     const $Label = document.createElement('div')
     $Label.className = 'TitleBarTopLevelEntryLabel'
-    $Label.textContent = $Child.textContent
+    console.log({ $Node })
+    $Label.append($Node)
     $Child.replaceChildren($Label)
 
     $TitleBarMenuBar.focus()
