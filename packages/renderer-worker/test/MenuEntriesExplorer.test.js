@@ -9,6 +9,7 @@ test('getMenuEntries - no focused dirent', () => {
       focusedIndex: -1,
       items: [],
     },
+    renderedState: {},
     factory: {},
   })
   const menuEntries = MenuEntriesExplorer.getMenuEntries()
@@ -40,6 +41,7 @@ test('getMenuEntries - focused folder', () => {
         },
       ],
     },
+    renderedState: {},
     factory: {},
   })
   const menuEntries = MenuEntriesExplorer.getMenuEntries()
@@ -65,6 +67,7 @@ test('getMenuEntries - focused file', () => {
         },
       ],
     },
+    renderedState: {},
     factory: {},
   })
   const menuEntries = MenuEntriesExplorer.getMenuEntries()
@@ -95,6 +98,7 @@ test('getMenuEntries - focused symlink', () => {
         },
       ],
     },
+    renderedState: {},
     factory: {},
   })
   const menuEntries = MenuEntriesExplorer.getMenuEntries()
@@ -119,6 +123,7 @@ test('getMenuEntries - root', () => {
         },
       ],
     },
+    renderedState: {},
     factory: {},
   })
   const menuEntries = MenuEntriesExplorer.getMenuEntries()

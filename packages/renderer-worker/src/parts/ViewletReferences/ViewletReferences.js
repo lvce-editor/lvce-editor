@@ -21,6 +21,7 @@ export const contentLoaded = (state) => {
   ViewletStates.set('Locations', {
     factory: ViewletLocations,
     state,
+    renderedState: state,
   })
   return []
 }

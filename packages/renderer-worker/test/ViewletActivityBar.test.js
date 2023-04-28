@@ -38,6 +38,10 @@ test('loadContent', async () => {
       currentViewletId: 'Search',
       title: 'Search',
     },
+    renderedState: {
+      currentViewletId: 'Search',
+      title: 'Search',
+    },
     factory: {},
   })
   expect(await ViewletActivityBar.loadContent(state)).toMatchObject({

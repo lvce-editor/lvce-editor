@@ -4,7 +4,14 @@ import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 beforeEach(() => {
   jest.resetAllMocks()
   ViewletStates.reset()
-  ViewletStates.set(1, { state: { uid: 1 }, moduleId: 'Layout', factory: {} })
+  ViewletStates.set(1, {
+    state: { uid: 1 },
+    renderedState: {
+      uid: 1,
+    },
+    moduleId: 'Layout',
+    factory: {},
+  })
 })
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
@@ -73,7 +80,7 @@ test('openWidget - once', async () => {
 test('openWidget - should not open again when already open', async () => {
   // @ts-ignore
   ViewletManager.load.mockImplementation(({ id }) => {
-    ViewletStates.set(id, { factory: {}, state: {} })
+    ViewletStates.set(id, { factory: {}, state: {}, renderedState: {} })
     return []
   })
   // @ts-ignore
