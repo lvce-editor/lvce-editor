@@ -1,8 +1,8 @@
 .TitleBarButtons {
   margin-left: auto;
-  contain: content;
   app-region: no-drag;
   flex: initial;
+  width: 138px;
 }
 
 .TitleBarButton {
