@@ -52,7 +52,7 @@ const runFn = async (instance, id, key, fn, args) => {
       return
     }
     const commands = render(instance.factory, oldState, newState, newState.uid || id)
-    ViewletStates.setState(id, newState)
+    ViewletStates.setRenderedState(id, newState)
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
   } else {
     return fn(instance.state, ...args)
@@ -71,7 +71,7 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
   // console.log({ fn, newState })
   if (oldState !== newState) {
     commands.push(...render(instance.factory, oldState, newState))
-    ViewletStates.setState(id, newState)
+    ViewletStates.setRenderedState(id, newState)
   }
   if (commands.length === 0) {
     return
@@ -245,6 +245,7 @@ const maybeRegisterEvents = (module) => {
         Assert.number(uid)
         const commands = render(instance.factory, instance.state, newState, uid)
         instance.state = newState
+        instance.renderedState = newState
         await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
       }
       GlobalEventBus.addListener(key, handleUpdate)
@@ -369,6 +370,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           const newState = await childModule.loadContent(oldState, instanceSavedState)
           const childInstance = {
             state: newState,
+            renderedState: newState,
             factory: childModule,
             moduleId: child.moduleId || child.id,
           }
@@ -429,6 +431,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         if (module.shouldApplyNewState(newState)) {
           ViewletStates.set(viewletUid, {
             state: newState,
+            renderedState: newState,
             factory: module,
             moduleId: viewlet.moduleId || viewlet.id || '',
           })
@@ -440,6 +443,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     } else {
       ViewletStates.set(viewletUid, {
         state: newState,
+        renderedState: newState,
         factory: module,
         moduleId: viewlet.moduleId || viewlet.id || '',
       })

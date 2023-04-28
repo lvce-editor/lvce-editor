@@ -605,6 +605,7 @@ test('closeEditor - 0 1 - first is focused and second tab is selected', async ()
       refresh() {},
     },
     state: {},
+    renderedState: {},
   })
   const { newState } = await ViewletMain.closeEditor(state, 0)
   expect(newState.editors).toEqual([

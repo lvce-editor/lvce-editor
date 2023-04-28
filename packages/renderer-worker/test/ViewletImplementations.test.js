@@ -11,6 +11,11 @@ beforeAll(() => {
       lines: [],
       selections: EditorSelection.fromRange(0, 0, 0, 0),
     },
+    renderedState: {
+      uri: '',
+      lines: [],
+      selections: EditorSelection.fromRange(0, 0, 0, 0),
+    },
     factory: {},
   })
 })
