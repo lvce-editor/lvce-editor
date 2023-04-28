@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
+import * as MeasureTabWidth from '../MeasureTabWidth/MeasureTabWidth.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -11,6 +12,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 export const openUri = async (state, uri, focus = true, options = {}) => {
   Assert.object(state)
   Assert.string(uri)
+  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing } = state
   const x = state.x
   const y = state.y + state.tabHeight
   const width = state.width
@@ -59,9 +61,11 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   instance.uid = instanceUid
   // const oldActiveIndex = state.activeIndex
   const tabLabel = PathDisplay.getLabel(uri)
+  const tabWidth = MeasureTabWidth.measureTabWidth(tabLabel, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
   const tabTitle = PathDisplay.getTitle(uri)
   const icon = IconTheme.getFileNameIcon(uri)
-  const newEditors = [...state.editors, { uri, uid: instanceUid, label: tabLabel, title: tabTitle, icon }]
+  const newEditor = { uri, uid: instanceUid, label: tabLabel, title: tabTitle, icon, tabWidth }
+  const newEditors = [...state.editors, newEditor]
   const newActiveIndex = newEditors.length - 1
   // @ts-ignore
   instance.show = false

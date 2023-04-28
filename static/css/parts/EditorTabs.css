@@ -14,14 +14,15 @@
   border-right: 1px solid rgb(34, 34, 34);
   background: var(--TabBackground);
   color: var(--TabForeground);
-  padding-left: 5px;
-  padding-right: 5px;
+  /* padding-left: 5px; */
+  /* padding-right: 5px; */
   display: flex;
   gap: 4px;
   align-items: center;
   font-size: 13px;
   white-space: nowrap;
   max-width: 200px;
+  contain: strict;
 }
 
 .MainTabSelected {

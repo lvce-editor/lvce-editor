@@ -13,6 +13,14 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
   }
 })
 
+jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', () => {
+  return {
+    measureTextWidth() {
+      return 20
+    },
+  }
+})
+
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
