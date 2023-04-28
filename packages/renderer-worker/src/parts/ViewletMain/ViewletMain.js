@@ -9,6 +9,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
+import * as MeasureTabWidth from '../MeasureTabWidth/MeasureTabWidth.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
@@ -58,17 +59,21 @@ const canBeRestored = (editor) => {
   return typeof editor.uri === 'string' && typeof editor.uid === 'number' && FileSystem.canBeRestored(editor.uri)
 }
 
-const getMainEditors = (state) => {
-  if (!state) {
+const getMainEditors = (savedState, state) => {
+  if (!savedState) {
     return []
   }
-  const { editors, activeIndex } = state
+  const { editors, activeIndex } = savedState
+  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing } = state
   if (!editors) {
     return []
   }
   const restoredEditors = editors.filter(canBeRestored)
   for (const editor of restoredEditors) {
     editor.uid = Id.create()
+    const label = editor.label
+    console.log({ label })
+    editor.tabWidth = MeasureTabWidth.measureTabWidth(label, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
   }
   // TODO check that type is string (else runtime error occurs and page is blank)
   return restoredEditors
@@ -98,6 +103,10 @@ export const create = (id, uri, x, y, width, height) => {
     dragOverlayVisible: false,
     tabsUid: -1,
     pendingUid: 0,
+    tabFontFamily: 'system-ui, Ubuntu, Droid Sans, sans-serif',
+    tabFontSize: 13,
+    tabLetterSpacing: 0,
+    tabFontWeight: 400,
   }
 }
 
@@ -150,11 +159,11 @@ const getSavedActiveIndex = (savedState, restoredEditors) => {
   return savedActiveIndex
 }
 
-const getRestoredEditors = (savedState) => {
+const getRestoredEditors = (savedState, state) => {
   if (Workspace.isTest()) {
     return { editors: [], activeIndex: -1 }
   }
-  const restoredEditors = getMainEditors(savedState)
+  const restoredEditors = getMainEditors(savedState, state)
   const savedActiveIndex = getSavedActiveIndex(savedState, restoredEditors)
   if (savedActiveIndex === -1) {
     return { editors: [], activeIndex: -1 }
@@ -181,7 +190,7 @@ const handleEditorChange = async (editor) => {
 
 export const loadContent = async (state, savedState) => {
   // TODO get restored editors from saved state
-  const { activeIndex, editors } = getRestoredEditors(savedState)
+  const { activeIndex, editors } = getRestoredEditors(savedState, state)
   // @ts-ignore
   LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
   GlobalEventBus.addListener('editor.change', handleEditorChange)
