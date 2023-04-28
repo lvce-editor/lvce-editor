@@ -18,7 +18,8 @@ export const closeOthers = async (state) => {
   } else {
     // view needs to be switched to focused index
     const activeEditor = editors[activeIndex]
-    newEditors = [editors[focusedIndex]]
+    const focusedEditor = editors[focusedIndex]
+    newEditors = [focusedEditor]
     newFocusedIndex = 0
     newActiveIndex = 0
     const disposeCommands = Viewlet.disposeFunctional(activeEditor.uid)
@@ -29,7 +30,7 @@ export const closeOthers = async (state) => {
     const y = state.y + state.tabHeight
     const width = state.width
     const contentHeight = state.height - state.tabHeight
-    const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, activeEditor.uri, x, y, width, contentHeight)
+    const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, focusedEditor.uri, x, y, width, contentHeight)
     instance.uid = instanceUid
     instance.show = false
     instance.setBounds = false
