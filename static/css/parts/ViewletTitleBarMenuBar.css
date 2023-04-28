@@ -25,8 +25,11 @@
   padding: 0 8px;
   display: flex;
   align-items: center;
+  contain: strict;
+  width: 100%;
 }
 
+/* TODO use class name instead */
 #TitleBarEntryActive {
   padding: 0;
   --TitleBarTopLevelEntryLabel: var(--TitleBarItemHoverForeground, rgba(90, 93, 94, 0.31));
