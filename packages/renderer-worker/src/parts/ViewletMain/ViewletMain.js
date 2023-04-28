@@ -72,7 +72,6 @@ const getMainEditors = (savedState, state) => {
   for (const editor of restoredEditors) {
     editor.uid = Id.create()
     const label = editor.label
-    console.log({ label })
     editor.tabWidth = MeasureTabWidth.measureTabWidth(label, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
   }
   // TODO check that type is string (else runtime error occurs and page is blank)

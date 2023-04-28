@@ -19,7 +19,6 @@ export const create = (label, title, icon, tabWidth, background) => {
   $Tab.ariaSelected = background ? AriaBoolean.False : AriaBoolean.True
   $Tab.role = AriaRoles.Tab
   $Tab.className = 'MainTab'
-  console.log({ tabWidth })
   $Tab.style.width = `${tabWidth}px`
   $Tab.append($TabIcon, $TabLabel, $TabCloseButton)
   return $Tab
