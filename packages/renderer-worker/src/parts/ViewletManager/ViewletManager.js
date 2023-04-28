@@ -245,6 +245,7 @@ const maybeRegisterEvents = (module) => {
         Assert.number(uid)
         const commands = render(instance.factory, instance.state, newState, uid)
         instance.state = newState
+        instance.renderedState = newState
         await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
       }
       GlobalEventBus.addListener(key, handleUpdate)
