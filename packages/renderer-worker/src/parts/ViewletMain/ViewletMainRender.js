@@ -1,4 +1,5 @@
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 export const hasFunctionalRender = true
 
@@ -24,6 +25,14 @@ const renderDragOverlay = {
   },
 }
 
+const getTotalTabWidth = (editors) => {
+  let total = 0
+  for (const editor of editors) {
+    total += editor.tabWidth
+  }
+  return total
+}
+
 const renderTabs = {
   isEqual(oldState, newState) {
     return oldState.editors === newState.editors && oldState.tabsUid === newState.tabsUid
@@ -35,12 +44,21 @@ const renderTabs = {
       commands.push(['Viewlet.setBounds', newState.tabsUid, newState.x, 0, newState.width, newState.tabHeight])
       commands.push(['Viewlet.append', newState.uid, newState.tabsUid])
     }
+
     if (newState.tabsUid === -1) {
       if (oldState.tabsUid !== -1) {
         commands.push(['Viewlet.dispose', oldState.tabsUid])
       }
     } else {
       commands.push(['Viewlet.send', newState.tabsUid, 'setTabs', newState.editors])
+    }
+    const totalTabWidth = getTotalTabWidth(newState.editors)
+    if (totalTabWidth > newState.width) {
+      console.log('render scrollbar')
+      // const scrollBarPercentage =  totalTabWidth
+      const scrollBarWidth = ScrollBarFunctions.getScrollBarSize(newState.width, totalTabWidth, 20)
+      commands.push(['Viewlet.send', newState.tabsUid, 'setScrollBar', scrollBarWidth])
+      // TODO render scrollbar
     }
     return commands
   },

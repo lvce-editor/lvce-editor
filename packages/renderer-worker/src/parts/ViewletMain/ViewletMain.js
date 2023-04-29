@@ -106,6 +106,7 @@ export const create = (id, uri, x, y, width, height) => {
     tabFontSize: 13,
     tabLetterSpacing: 0,
     tabFontWeight: 400,
+    tabScrollBarVisible: false,
   }
 }
 
