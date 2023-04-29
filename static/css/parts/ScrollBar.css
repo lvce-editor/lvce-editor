@@ -16,6 +16,7 @@
 .ScrollBar,
 .ScrollBarVertical,
 .ScrollBarHorizontal,
+.ScrollBarHorizontalSmall,
 .ScrollBarSmall {
   position: absolute;
   right: 0;
@@ -26,11 +27,16 @@
   cursor: default;
 }
 
-.ScrollBarHorizontal {
+.ScrollBarHorizontal,
+.ScrollBarHorizontalSmall {
   left: 0;
   top: auto;
   height: 14px;
   width: auto;
+}
+
+.ScrollBarHorizontalSmall {
+  height: 3px;
 }
 
 .ScrollBarSmall {
