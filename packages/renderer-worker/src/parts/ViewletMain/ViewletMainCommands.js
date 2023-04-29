@@ -2,8 +2,6 @@ import * as ViewletMain from './ViewletMain.js'
 import * as ViewletMainOpenUri from './ViewletMainOpenUri.js'
 
 export const Commands = {
-  // 'Main.hydrate': ViewletMain.hydrate,
-
   focus: ViewletMain.focus,
   focusFirst: ViewletMain.focusFirst,
   focusLast: ViewletMain.focusLast,
