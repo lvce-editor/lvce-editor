@@ -462,11 +462,12 @@ export const closeFocusedTab = (state) => {
 }
 
 export const handleTabContextMenu = async (state, index, x, y) => {
-  state.focusedIndex = index
+  const { groups, activeGroupIndex } = state
+  const group = groups[activeGroupIndex]
+  group.focusedIndex = index
   await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.Tab)
   return {
     ...state,
-    focusedIndex: index,
   }
 }
 

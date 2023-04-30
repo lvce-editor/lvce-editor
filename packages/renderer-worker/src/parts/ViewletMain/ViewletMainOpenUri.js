@@ -24,6 +24,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       uid: Id.create(),
       editors: [],
       activeIndex: -1,
+      focusedIndex: -1,
       tabsUid: Id.create(),
       x,
       y: 0,

@@ -6,7 +6,9 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 
 export const closeOthers = async (state) => {
   const commands = []
-  const { editors, focusedIndex, activeIndex } = state
+  const { groups, activeGroupIndex } = state
+  const group = groups[activeGroupIndex]
+  const { editors, focusedIndex, activeIndex } = group
   let newEditors = editors
   let newFocusedIndex = focusedIndex
   let newActiveIndex = activeIndex
@@ -40,12 +42,17 @@ export const closeOthers = async (state) => {
     commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, contentHeight])
     commands.push(['Viewlet.append', state.uid, instanceUid])
   }
+  const newGroup = {
+    ...group,
+    editors: newEditors,
+    focusedIndex: newFocusedIndex,
+    activeIndex: newActiveIndex,
+  }
+  const newGroups = [...groups.slice(0, activeGroupIndex), newGroup, ...groups.slice(activeGroupIndex + 1)]
   return {
     newState: {
       ...state,
-      editors: newEditors,
-      focusedIndex: newFocusedIndex,
-      activeIndex: newActiveIndex,
+      groups: newGroups,
     },
     commands,
   }

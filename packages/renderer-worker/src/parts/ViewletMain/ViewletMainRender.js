@@ -64,7 +64,8 @@ const renderGroupTabs = {
         const oldGroup = oldGroups[index]
         const { tabsUid, editors, x, y, width, height, activeIndex } = newGroup
         commands.push(['Viewlet.send', tabsUid, 'setTabs', editors])
-        commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', oldGroup.activeIndex, activeIndex])
+        const unFocusIndex = oldGroup.activeIndex < editors.length ? oldGroup.activeIndex : -1
+        commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', unFocusIndex, activeIndex])
       }
     }
     for (const insertedGroup of insertedGroups) {
