@@ -3,13 +3,8 @@ import * as ViewletMainOpenUri from './ViewletMainOpenUri.js'
 
 export const Commands = {
   focus: ViewletMain.focus,
-  focusFirst: ViewletMain.focusFirst,
-  focusLast: ViewletMain.focusLast,
-  focusNext: ViewletMain.focusNext,
-  focusPrevious: ViewletMain.focusPrevious,
   handleDragEnd: ViewletMain.handleDragEnd,
   handleDragOver: ViewletMain.handleDragOver,
-  handleTabClick: ViewletMain.handleTabClick,
   handleTabContextMenu: ViewletMain.handleTabContextMenu,
   openBackgroundTab: ViewletMain.openBackgroundTab,
   save: ViewletMain.save,
@@ -30,4 +25,12 @@ export const CommandsWithSideEffectsLazy = {
   closeAllEditors: () => import('./ViewletMainCloseAllEditors.js'),
   closeActiveEditor: () => import('./ViewletMainCloseActiveEditor.js'),
   closeEditor: () => import('./ViewletMainCloseEditor.js'),
+}
+
+export const LazyCommands = {
+  focusFirst: () => import('./ViewletMainFocusIndex.js'),
+  focusLast: () => import('./ViewletMainFocusIndex.js'),
+  focusNext: () => import('./ViewletMainFocusIndex.js'),
+  focusPrevious: () => import('./ViewletMainFocusIndex.js'),
+  handleTabClick: () => import('./ViewletMainFocusIndex.js'),
 }
