@@ -419,24 +419,16 @@ export const handleDragEnd = async (state, x, y) => {
   }
 }
 
-export const handleDragOver = async (state, eventX, eventY) => {
-  const { x, y, width, height, uid } = state
-  const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(
-    x,
-    y + state.tabHeight,
-    width,
-    height - state.tabHeight,
-    eventX,
-    eventY
-  )
+export const handleDragOver = (state, eventX, eventY) => {
+  const { x, y, width, height, tabHeight } = state
+  const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + tabHeight, width, height - tabHeight, eventX, eventY)
   const { overlayX, overlayY, overlayWidth, overlayHeight } = GetSplitOverlayDimensions.getSplitOverlayDimensions(
     x,
-    y + state.tabHeight,
+    y + tabHeight,
     width,
-    height - state.tabHeight,
+    height - tabHeight,
     splitDirection
   )
-  // TODO show overlay for left area
   return {
     ...state,
     dragOverlayX: overlayX,
