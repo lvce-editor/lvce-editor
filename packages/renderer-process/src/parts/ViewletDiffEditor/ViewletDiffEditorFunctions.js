@@ -1,3 +1,3 @@
-export const handleWheel = (deltaY) => {
-  RendererWorker.send(/* DiffEditor.handleWheel */ 'DiffEditor.handleWheel', /* value */ deltaY)
-}
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
+
+export const handleWheel = ForwardViewletCommand.forwardViewletCommand('handleWheel')

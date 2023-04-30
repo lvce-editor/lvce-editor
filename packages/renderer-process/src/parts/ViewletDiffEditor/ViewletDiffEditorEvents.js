@@ -1,4 +1,4 @@
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as ViewletDiffEditorFunctions from './ViewletDiffEditorFunctions.js'
 
 /**
@@ -6,16 +6,8 @@ import * as ViewletDiffEditorFunctions from './ViewletDiffEditorFunctions.js'
  */
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
-  // event.preventDefault()
-  // const state = EditorHelper.getStateFromEvent(event)
-  // TODO send editor id
-  switch (deltaMode) {
-    case WheelEventType.DomDeltaLine:
-      ViewletDiffEditorFunctions.handleWheel(deltaY)
-      break
-    default:
-      break
-  }
+  const uid = ComponentUid.fromEvent(event)
+  ViewletDiffEditorFunctions.handleWheel(uid, deltaMode, deltaY)
 }
 
 export const handleScrollBarPointerDown = (event) => {
