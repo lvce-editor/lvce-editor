@@ -67,7 +67,6 @@ const renderGroupTabs = {
         commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', oldGroup.activeIndex, activeIndex])
       }
     }
-    console.log({ insertedGroups })
     for (const insertedGroup of insertedGroups) {
       const { tabsUid, editors, x, y, width, height, activeIndex } = insertedGroup
       commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
