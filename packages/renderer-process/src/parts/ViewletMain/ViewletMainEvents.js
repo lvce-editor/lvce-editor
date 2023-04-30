@@ -2,17 +2,11 @@ import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffe
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as Event from '../Event/Event.js'
-import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletMainFunctions from './ViewletMainFunctions.js'
 
-const ClassNames = {
-  Label: 'Label',
-  EditorTabCloseButton: 'EditorTabCloseButton',
-  MainTab: 'MainTab',
-}
-
 export const handleDragStart = (event) => {
-  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
+  const { dataTransfer } = event
+  DataTransfer.setEffectAllowed(dataTransfer, AllowedDragEffectType.CopyMove)
 }
 
 export const handleDragOver = (event) => {
@@ -47,58 +41,4 @@ export const handleDrop = (event) => {
     ViewletMainFunctions.handleDropFilePath(uid, filePath)
     return
   }
-}
-
-const getIndex = ($Target) => {
-  switch ($Target.className) {
-    case ClassNames.EditorTabCloseButton:
-    case ClassNames.Label:
-      return GetNodeIndex.getNodeIndex($Target.parentNode)
-    case ClassNames.MainTab:
-      return GetNodeIndex.getNodeIndex($Target)
-    default:
-      return -1
-  }
-}
-
-export const handleTabCloseButtonMouseDown = (event, index) => {
-  const { button } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletMainFunctions.handleClickClose(uid, button, index)
-}
-
-export const handleTabMouseDown = (event, index) => {
-  const { button } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletMainFunctions.handleTabClick(uid, button, index)
-}
-
-export const handleTabsMouseDown = (event) => {
-  const { target } = event
-  const index = getIndex(target)
-  if (index === -1) {
-    return
-  }
-  switch (target.className) {
-    case ClassNames.EditorTabCloseButton:
-      handleTabCloseButtonMouseDown(event, index)
-      break
-    case ClassNames.MainTab:
-    case ClassNames.Label:
-      handleTabMouseDown(event, index)
-      break
-    default:
-      break
-  }
-}
-
-export const handleTabsContextMenu = (event) => {
-  const { clientX, clientY, target } = event
-  const index = getIndex(target)
-  const uid = ComponentUid.fromEvent(event)
-  if (index === -1) {
-    return
-  }
-  Event.preventDefault(event)
-  ViewletMainFunctions.handleTabContextMenu(uid, index, clientX, clientY)
 }
