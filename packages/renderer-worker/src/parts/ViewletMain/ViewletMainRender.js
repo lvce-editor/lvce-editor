@@ -33,33 +33,35 @@ const getTotalTabWidth = (editors) => {
   return total
 }
 
-const renderTabs = {
+const renderGroupTabs = {
   isEqual(oldState, newState) {
-    return oldState.editors === newState.editors && oldState.tabsUid === newState.tabsUid
+    return oldState.groups === newState.groups
   },
   apply(oldState, newState) {
     const commands = []
-    if (oldState.tabsUid === -1 && newState.tabsUid !== -1) {
-      commands.push(['Viewlet.create', ViewletModuleId.MainTabs, newState.tabsUid])
-      commands.push(['Viewlet.setBounds', newState.tabsUid, newState.x, 0, newState.width, newState.tabHeight])
-      commands.push(['Viewlet.append', newState.uid, newState.tabsUid])
+    for (const group of newState.groups) {
+      commands.push(['Viewlet.create', ViewletModuleId.MainTabs, group.tabsUid])
+      commands.push(['Viewlet.setBounds', group.tabsUid, group.x, group.y, group.width, newState.tabHeight])
+      commands.push(['Viewlet.append', newState.uid, group.tabsUid])
     }
+    // if (oldState.tabsUid === -1 && newState.tabsUid !== -1) {
+    // }
 
-    if (newState.tabsUid === -1) {
-      if (oldState.tabsUid !== -1) {
-        commands.push(['Viewlet.dispose', oldState.tabsUid])
-      }
-    } else {
-      commands.push(['Viewlet.send', newState.tabsUid, 'setTabs', newState.editors])
-    }
-    const totalTabWidth = getTotalTabWidth(newState.editors)
-    if (totalTabWidth > newState.width) {
-      console.log('render scrollbar')
-      // const scrollBarPercentage =  totalTabWidth
-      const scrollBarWidth = ScrollBarFunctions.getScrollBarSize(newState.width, totalTabWidth, 20)
-      commands.push(['Viewlet.send', newState.tabsUid, 'setScrollBar', scrollBarWidth])
-      // TODO render scrollbar
-    }
+    // if (newState.tabsUid === -1) {
+    //   if (oldState.tabsUid !== -1) {
+    //     commands.push(['Viewlet.dispose', oldState.tabsUid])
+    //   }
+    // } else {
+    //   commands.push(['Viewlet.send', newState.tabsUid, 'setTabs', newState.editors])
+    // }
+    // const totalTabWidth = getTotalTabWidth(newState.editors)
+    // if (totalTabWidth > newState.width) {
+    //   console.log('render scrollbar')
+    //   // const scrollBarPercentage =  totalTabWidth
+    //   const scrollBarWidth = ScrollBarFunctions.getScrollBarSize(newState.width, totalTabWidth, 20)
+    //   commands.push(['Viewlet.send', newState.tabsUid, 'setScrollBar', scrollBarWidth])
+    //   // TODO render scrollbar
+    // }
     return commands
   },
   multiple: true,
@@ -79,4 +81,4 @@ const renderTabsActiveIndex = {
   multiple: true,
 }
 
-export const render = [renderDragOverlay, renderTabs, renderTabsActiveIndex]
+export const render = [renderDragOverlay, renderGroupTabs, renderTabsActiveIndex]

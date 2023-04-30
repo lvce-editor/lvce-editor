@@ -60,23 +60,29 @@ const canBeRestored = (editor) => {
   return typeof editor.uri === 'string' && typeof editor.uid === 'number' && FileSystem.canBeRestored(editor.uri)
 }
 
-const getMainEditors = (savedState, state) => {
+const getMainGroups = (savedState, state) => {
   if (!savedState) {
     return []
   }
-  const { editors, activeIndex } = savedState
+  const { groups, activeGroupIndex } = savedState
   const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing } = state
-  if (!editors) {
+  if (!groups || !Array.isArray(groups)) {
     return []
   }
-  const restoredEditors = editors.filter(canBeRestored)
-  for (const editor of restoredEditors) {
-    editor.uid = Id.create()
-    const label = editor.label
-    editor.tabWidth = MeasureTabWidth.measureTabWidth(label, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
+  const restoredGroups = []
+  for (const group of groups) {
+    if (!group || !group.editors) {
+      continue
+    }
+    const restoredEditors = group.editors.filter(canBeRestored)
+    for (const editor of restoredEditors) {
+      editor.uid = Id.create()
+      const label = editor.label
+      editor.tabWidth = MeasureTabWidth.measureTabWidth(label, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
+    }
   }
   // TODO check that type is string (else runtime error occurs and page is blank)
-  return restoredEditors
+  return restoredGroups
 }
 
 const hydrateLazy = async () => {
@@ -86,9 +92,8 @@ const hydrateLazy = async () => {
 
 export const create = (id, uri, x, y, width, height) => {
   return {
-    editors: [],
-    activeIndex: -1,
-    focusedIndex: -1,
+    groups: [],
+    activeGroupIndex: -1,
     x,
     y,
     width,
@@ -160,24 +165,24 @@ const getSavedActiveIndex = (savedState, restoredEditors) => {
   return savedActiveIndex
 }
 
-const getRestoredEditors = (savedState, state) => {
+const getRestoredGroups = (savedState, state) => {
   if (Workspace.isTest()) {
-    return { editors: [], activeIndex: -1 }
+    return { groups: [], activeGroupIndex: -1 }
   }
-  const restoredEditors = getMainEditors(savedState, state)
-  const savedActiveIndex = getSavedActiveIndex(savedState, restoredEditors)
+  const restoredGroups = getMainGroups(savedState, state)
+  const savedActiveIndex = getSavedActiveIndex(savedState, restoredGroups)
   if (savedActiveIndex === -1) {
-    return { editors: [], activeIndex: -1 }
+    return { groups: [], activeGroupIndex: -1 }
   }
   return {
-    editors: restoredEditors,
-    activeIndex: savedActiveIndex,
+    groups: restoredGroups,
+    activeGroupIndex: savedActiveIndex,
   }
 }
 
 export const saveState = (state) => {
-  const { editors, activeIndex } = state
-  return { editors, activeIndex }
+  const { groups, activeGroupIndex } = state
+  return { groups, activeGroupIndex }
 }
 
 const handleEditorChange = async (editor) => {
@@ -191,24 +196,24 @@ const handleEditorChange = async (editor) => {
 
 export const loadContent = async (state, savedState) => {
   // TODO get restored editors from saved state
-  const { activeIndex, editors } = getRestoredEditors(savedState, state)
+  const { activeIndex, groups } = getRestoredGroups(savedState, state)
   // @ts-ignore
   LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
   GlobalEventBus.addListener('editor.change', handleEditorChange)
   await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
   return {
     ...state,
-    editors,
+    groups,
     activeIndex,
   }
 }
 
 export const getChildren = (state) => {
-  const { editors } = state
-  if (editors.length === 0) {
+  const { groups } = state
+  if (groups.length === 0) {
     return []
   }
-  const editor = editors[0]
+  const editor = groups[0]
   return [
     // {
     //   id: ViewletModuleId.MainTabs,
@@ -219,56 +224,58 @@ export const getChildren = (state) => {
 // TODO content loaded should return commands which
 // get picked up by viewletlayout and sent to renderer process
 export const contentLoaded = async (state) => {
-  if (state.editors.length === 0) {
+  if (state.groups.length === 0) {
     return []
   }
-  const editor = Arrays.last(state.editors)
-  const x = state.x
-  const y = state.y + state.tabHeight
-  const width = state.width
-  const contentHeight = state.height - state.tabHeight
-  const id = ViewletMap.getModuleId(editor.uri)
-  const tabLabel = PathDisplay.getLabel(editor.uri)
-  const tabTitle = PathDisplay.getTitle(editor.uri)
-  editor.label = tabLabel
-  editor.title = tabTitle
   const commands = []
-  const childUid = editor.uid
-  commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
-  const tabsUid = Id.create()
-  state.tabsUid = tabsUid
-  // commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
-  // commands.push(['Viewlet.send', tabsUid, 'setTabs', state.editors])
-  // commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, state.activeIndex])
-  // commands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
-  // // @ts-ignore
-  const extraCommands = await ViewletManager.load(
-    {
-      getModule: ViewletModule.load,
-      id,
-      // @ts-ignore
-      uid: childUid,
-      // @ts-ignore
-      parentUid: state.uid,
-      uri: editor.uri,
-      x,
-      y,
-      width,
-      height: contentHeight,
-      show: false,
-      focus: false,
-      type: 0,
-      setBounds: false,
-      visible: true,
-    },
-    /* focus */ false,
-    /* restore */ true
-  )
-  // @ts-ignore
-  commands.push(...extraCommands)
-  commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
-  // commands.push(['Viewlet.append', state.uid, tabsUid])
-  commands.push(['Viewlet.append', state.uid, childUid])
+  for (const group of state.groups) {
+    const editor = Arrays.last(group.editors)
+    const x = state.x
+    const y = state.y + state.tabHeight
+    const width = state.width
+    const contentHeight = state.height - state.tabHeight
+    const id = ViewletMap.getModuleId(editor.uri)
+    const tabLabel = PathDisplay.getLabel(editor.uri)
+    const tabTitle = PathDisplay.getTitle(editor.uri)
+    editor.label = tabLabel
+    editor.title = tabTitle
+    const childUid = editor.uid
+    commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
+    const tabsUid = Id.create()
+    state.tabsUid = tabsUid
+    // commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
+    // commands.push(['Viewlet.send', tabsUid, 'setTabs', state.editors])
+    // commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, state.activeIndex])
+    // commands.push(['Viewlet.setBounds', tabsUid, x, 0, width, state.tabHeight])
+    // // @ts-ignore
+    const extraCommands = await ViewletManager.load(
+      {
+        getModule: ViewletModule.load,
+        id,
+        // @ts-ignore
+        uid: childUid,
+        // @ts-ignore
+        parentUid: state.uid,
+        uri: editor.uri,
+        x,
+        y,
+        width,
+        height: contentHeight,
+        show: false,
+        focus: false,
+        type: 0,
+        setBounds: false,
+        visible: true,
+      },
+      /* focus */ false,
+      /* restore */ true
+    )
+    // @ts-ignore
+    commands.push(...extraCommands)
+    commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
+    // commands.push(['Viewlet.append', state.uid, tabsUid])
+    commands.push(['Viewlet.append', state.uid, childUid])
+  }
   return commands
 }
 
