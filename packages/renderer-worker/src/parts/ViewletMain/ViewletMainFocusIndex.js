@@ -8,7 +8,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import { closeEditor } from './ViewletMain.js'
+import { closeEditor } from './ViewletMainCloseEditor.js'
 
 export const focusIndex = async (state, index) => {
   if (index === state.activeIndex) {
