@@ -80,6 +80,7 @@ const getMainGroups = (savedState, state) => {
       const label = editor.label
       editor.tabWidth = MeasureTabWidth.measureTabWidth(label, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
     }
+    restoredGroups.push(group)
   }
   // TODO check that type is string (else runtime error occurs and page is blank)
   return restoredGroups
@@ -154,12 +155,12 @@ const findEditorWithUri = (editors, uri) => {
   return -1
 }
 
-const getSavedActiveIndex = (savedState, restoredEditors) => {
+const getSavedActiveIndex = (savedState, restoredGroups) => {
   if (!savedState) {
     return -1
   }
-  const savedActiveIndex = savedState.activeIndex
-  if (typeof savedActiveIndex !== 'number' || savedActiveIndex < 0 || savedActiveIndex > restoredEditors.length) {
+  const savedActiveIndex = savedState.activeGroupIndex
+  if (typeof savedActiveIndex !== 'number' || savedActiveIndex < 0 || savedActiveIndex > restoredGroups.length) {
     return -1
   }
   return savedActiveIndex
@@ -196,7 +197,7 @@ const handleEditorChange = async (editor) => {
 
 export const loadContent = async (state, savedState) => {
   // TODO get restored editors from saved state
-  const { activeIndex, groups } = getRestoredGroups(savedState, state)
+  const { activeGroupIndex, groups } = getRestoredGroups(savedState, state)
   // @ts-ignore
   LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
   GlobalEventBus.addListener('editor.change', handleEditorChange)
@@ -204,7 +205,7 @@ export const loadContent = async (state, savedState) => {
   return {
     ...state,
     groups,
-    activeIndex,
+    activeGroupIndex,
   }
 }
 
