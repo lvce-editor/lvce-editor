@@ -22,6 +22,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import { closeEditor } from './ViewletMainCloseEditor.js'
 import { openUri } from './ViewletMainOpenUri.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
@@ -306,7 +307,7 @@ export const openBackgroundTab = async (state, initialUri, props) => {
 }
 
 const executeEditorCommand = async (editor, commandId) => {
-  const uid = getUid(editor)
+  const uid = editor.uid
   await Viewlet.executeViewletCommand(uid, commandId)
 }
 
@@ -439,105 +440,7 @@ export const handleDragOver = (state, eventX, eventY) => {
   }
 }
 
-export const closeActiveEditor = (state) => {
-  const { editors, activeIndex } = state
-  if (activeIndex === -1) {
-    return state
-  }
-  return closeEditor(state, activeIndex)
-}
-
-const getUid = (editor) => {
-  return editor.uid
-}
-
-const getUids = (editors) => {
-  return editors.map(getUid)
-}
-
-export const closeAllEditors = async (state) => {
-  const ids = getUids(state.editors)
-  const uid = state.uid
-  const commands = [['Viewlet.send', uid, 'dispose'], ...ids.flatMap(Viewlet.disposeFunctional)]
-  const newEditors = []
-  const newFocusedIndex = -1
-  const newSelectedIndex = -1
-  const newTabsUid = -1
-  return {
-    newState: {
-      ...state,
-      editors: newEditors,
-      focusedIndex: newFocusedIndex,
-      selectedIndex: newSelectedIndex,
-      tabsUid: newTabsUid,
-    },
-    commands,
-  }
-}
-
 export const dispose = () => {}
-
-export const closeEditor = async (state, index) => {
-  if (state.editors.length === 0) {
-    return {
-      newState: state,
-      commands: [],
-    }
-  }
-  if (state.editors.length === 1) {
-    return closeAllEditors(state)
-  }
-  const y = state.y
-  const x = state.x
-  const width = state.width
-  const height = state.height
-  if (index === state.activeIndex) {
-    const oldEditor = state.editors[index]
-    const editors = state.editors
-    const newEditors = [...editors.slice(0, index), ...editors.slice(index + 1)]
-    const newActiveIndex = index === 0 ? index : index - 1
-    const uid = oldEditor.uid
-    const commands = [...Viewlet.disposeFunctional(uid)]
-    // const instance = Viewlet.create(id, 'uri', left, top, width, height)
-    // TODO ideally content would load synchronously and there would be one layout and one paint for opening the new tab
-    // except in the case where the content takes long (>100ms) to load, then it should show the tab
-    // and for the content a loading spinner or (preferred) a progress bar
-    // that it replaced with the actual content once it has been loaded
-    // await instance.factory.refresh(instance.state, {
-    //   uri: previousEditor.uri,
-    //   top: instance.state.top,
-    //   left: instance.state.left,
-    //   height: instance.state.height,
-    //   columnWidth: COLUMN_WIDTH,
-    // })
-    return {
-      newState: {
-        ...state,
-        activeIndex: newActiveIndex,
-        focusedIndex: newActiveIndex,
-        editors: newEditors,
-      },
-      commands,
-    }
-  }
-  const editors = state.editors
-  const newEditors = [...editors.slice(0, index), ...editors.slice(index + 1)]
-  let newActiveIndex = state.activeIndex
-  if (index < newActiveIndex) {
-    newActiveIndex--
-  }
-  const newFocusedIndex = newActiveIndex
-  // TODO just close the tab
-  return {
-    newState: {
-      ...state,
-      editors: newEditors,
-      focusedIndex: newFocusedIndex,
-      activeIndex: newActiveIndex,
-    },
-    commands: [],
-  }
-}
 
 export const handleClickClose = (state, button, index) => {
   if (button !== MouseEventType.LeftClick) {

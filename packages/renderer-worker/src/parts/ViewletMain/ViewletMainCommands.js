@@ -20,9 +20,6 @@ export const CommandsWithSideEffects = {
   openUri: ViewletMainOpenUri.openUri,
   handleDrop: ViewletMain.handleDrop,
   handleDropFilePath: ViewletMain.handleDropFilePath,
-  closeAllEditors: ViewletMain.closeAllEditors,
-  closeActiveEditor: ViewletMain.closeActiveEditor,
-  closeEditor: ViewletMain.closeEditor,
   closeFocusedTab: ViewletMain.closeFocusedTab,
 }
 
@@ -30,4 +27,7 @@ export const CommandsWithSideEffectsLazy = {
   closeTabsLeft: () => import('./ViewletMainCloseTabsLeft.js'),
   closeTabsRight: () => import('./ViewletMainCloseTabsRight.js'),
   closeOthers: () => import('./ViewletMainCloseOthers.js'),
+  closeAllEditors: () => import('./ViewletMainCloseAllEditors.js'),
+  closeActiveEditor: () => import('./ViewletMainCloseActiveEditor.js'),
+  closeEditor: () => import('./ViewletMainCloseEditor.js'),
 }
