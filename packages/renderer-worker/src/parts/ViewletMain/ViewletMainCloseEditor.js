@@ -36,7 +36,7 @@ export const closeEditor = (state, index) => {
     //   height: instance.state.height,
     //   columnWidth: COLUMN_WIDTH,
     // })
-    const newGroup = { ...group, editors: newEditors, activeIndex: newActiveIndex }
+    const newGroup = { ...group, editors: newEditors, activeIndex: newActiveIndex, focusedIndex: newActiveIndex }
     const newGroups = [...groups.slice(0, activeGroupIndex), newGroup, ...groups.slice(activeGroupIndex + 1)]
     return {
       newState: {
@@ -52,7 +52,7 @@ export const closeEditor = (state, index) => {
   if (index < newActiveIndex) {
     newActiveIndex--
   }
-  const newGroup = { ...group, editors: newEditors, activeIndex: newActiveIndex }
+  const newGroup = { ...group, editors: newEditors, activeIndex: newActiveIndex, focusedIndex: newActiveIndex }
   const newGroups = [...groups.slice(0, activeGroupIndex), newGroup, ...groups.slice(activeGroupIndex + 1)]
   return {
     newState: {
