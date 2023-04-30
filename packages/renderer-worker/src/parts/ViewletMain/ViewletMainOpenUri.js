@@ -21,9 +21,14 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   let activeGroup = groups[activeGroupIndex]
   if (!activeGroup) {
     activeGroup = {
+      uid: Id.create(),
       editors: [],
       activeIndex: -1,
-      tabsUid: -1,
+      tabsUid: Id.create(),
+      x,
+      y: 0,
+      width,
+      height: state.height,
     }
   }
   const previousEditor = activeGroup.editors[activeGroup.activeIndex]
@@ -118,6 +123,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       ...state,
       tabsUid,
       groups: newGroups,
+      activeGroupIndex: newGroups.length - 1,
     },
     commands,
   }

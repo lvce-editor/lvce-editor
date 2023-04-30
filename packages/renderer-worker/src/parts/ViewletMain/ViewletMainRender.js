@@ -39,29 +39,46 @@ const renderGroupTabs = {
   },
   apply(oldState, newState) {
     const commands = []
-    for (const group of newState.groups) {
-      commands.push(['Viewlet.create', ViewletModuleId.MainTabs, group.tabsUid])
-      commands.push(['Viewlet.setBounds', group.tabsUid, group.x, group.y, group.width, newState.tabHeight])
-      commands.push(['Viewlet.append', newState.uid, group.tabsUid])
+    const oldGroups = oldState.groups
+    const newGroups = newState.groups
+    const insertedGroups = []
+    const deletedGroups = []
+    const oldUids = []
+    const newUids = []
+    for (const oldGroup of oldGroups) {
+      oldUids.push(oldGroup.uid)
     }
-    // if (oldState.tabsUid === -1 && newState.tabsUid !== -1) {
-    // }
-
-    // if (newState.tabsUid === -1) {
-    //   if (oldState.tabsUid !== -1) {
-    //     commands.push(['Viewlet.dispose', oldState.tabsUid])
-    //   }
-    // } else {
-    //   commands.push(['Viewlet.send', newState.tabsUid, 'setTabs', newState.editors])
-    // }
-    // const totalTabWidth = getTotalTabWidth(newState.editors)
-    // if (totalTabWidth > newState.width) {
-    //   console.log('render scrollbar')
-    //   // const scrollBarPercentage =  totalTabWidth
-    //   const scrollBarWidth = ScrollBarFunctions.getScrollBarSize(newState.width, totalTabWidth, 20)
-    //   commands.push(['Viewlet.send', newState.tabsUid, 'setScrollBar', scrollBarWidth])
-    //   // TODO render scrollbar
-    // }
+    for (const newGroup of newGroups) {
+      newUids.push(newGroup.uid)
+    }
+    for (const oldGroup of oldGroups) {
+      if (!newUids.includes(oldGroup.uid)) {
+        deletedGroups.push(oldGroup)
+      }
+    }
+    for (const newGroup of newGroups) {
+      const index = oldUids.indexOf(newGroup.uid)
+      if (index === -1) {
+        insertedGroups.push(newGroup)
+      } else {
+        const oldGroup = oldGroups[index]
+        const { tabsUid, editors, x, y, width, height, activeIndex } = newGroup
+        commands.push(['Viewlet.send', tabsUid, 'setTabs', editors])
+        commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', oldGroup.activeIndex, activeIndex])
+      }
+    }
+    console.log({ insertedGroups })
+    for (const insertedGroup of insertedGroups) {
+      const { tabsUid, editors, x, y, width, height, activeIndex } = insertedGroup
+      commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
+      commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
+      commands.push(['Viewlet.send', tabsUid, 'setTabs', editors])
+      commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, activeIndex])
+      commands.push(['Viewlet.append', newState.uid, tabsUid])
+    }
+    for (const group of deletedGroups) {
+      commands.push(['Viewlet.dispose', group.tabsUid])
+    }
     return commands
   },
   multiple: true,

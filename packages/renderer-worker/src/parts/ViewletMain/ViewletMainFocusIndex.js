@@ -11,25 +11,27 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { closeEditor } from './ViewletMainCloseEditor.js'
 
 export const focusIndex = async (state, index) => {
-  if (index === state.activeIndex) {
+  const { groups, tabHeight, uid } = state
+  const group = groups[state.activeGroupIndex]
+  if (index === group.activeIndex) {
     return state
   }
-  const oldActiveIndex = state.activeIndex
-  state.activeIndex = index
+  const oldActiveIndex = group.activeIndex
+  group.activeIndex = index
 
-  const editor = state.editors[index]
-  const x = state.x
-  const y = state.y + state.tabHeight
-  const width = state.width
-  const contentHeight = state.height - state.tabHeight
+  const editor = group.editors[index]
+  const x = group.x
+  const y = group.y + tabHeight
+  const width = group.width
+  const contentHeight = group.height - tabHeight
   const id = ViewletMap.getModuleId(editor.uri)
 
-  const oldEditor = state.editors[oldActiveIndex]
+  const oldEditor = group.editors[oldActiveIndex]
   const oldId = ViewletMap.getModuleId(oldEditor.uri)
   const oldInstance = ViewletStates.getInstance(oldId)
 
   const instanceUid = Id.create()
-  const instance = ViewletManager.create(ViewletModule.load, id, state.uid, editor.uri, x, y, width, contentHeight)
+  const instance = ViewletManager.create(ViewletModule.load, id, uid, editor.uri, x, y, width, contentHeight)
   instance.show = false
   instance.setBounds = false
   instance.uid = instanceUid
@@ -40,8 +42,8 @@ export const focusIndex = async (state, index) => {
 
   // )
 
-  const tabFocusCommand = ['Viewlet.send', state.tabsUid, 'setFocusedIndex', oldActiveIndex, state.activeIndex]
-  const resizeCommands = ['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, contentHeight]
+  const tabFocusCommand = ['Viewlet.send', group.tabsUid, 'setFocusedIndex', oldActiveIndex, group.activeIndex]
+  const resizeCommands = ['Viewlet.setBounds', instanceUid, x, tabHeight, width, contentHeight]
   const previousUid = oldEditor.uid
   Assert.number(previousUid)
   const disposeCommands = Viewlet.disposeFunctional(previousUid)
@@ -51,14 +53,14 @@ export const focusIndex = async (state, index) => {
     const commands = await ViewletManager.load(instance, false, false, props)
     commands.push(...disposeCommands, tabFocusCommand)
     commands.push(resizeCommands)
-    commands.push(['Viewlet.append', state.uid, instanceUid])
+    commands.push(['Viewlet.append', uid, instanceUid])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   } else {
     // @ts-ignore
     const commands = await ViewletManager.load(instance)
     commands.unshift(...disposeCommands, tabFocusCommand)
     commands.push(resizeCommands)
-    commands.push(['Viewlet.append', state.uid, instanceUid])
+    commands.push(['Viewlet.append', uid, instanceUid])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
