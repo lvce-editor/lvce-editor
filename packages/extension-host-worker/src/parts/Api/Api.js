@@ -25,6 +25,7 @@ import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import { VError } from '../VError/VError.js'
+import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 
 class FormattingError extends Error {
   constructor(message, codeFrame) {
@@ -89,7 +90,8 @@ export const api = {
   // Get Position
   getPosition: ExtensionHostGetPosition.getPosition,
 
-  // Node Rpc
+  // Rpc
+  createRpc: ExtensionHostRpc.createRpc,
   createNodeRpc: ExtensionHostNodeIpc.createNodeRpc,
 
   // Implementation
