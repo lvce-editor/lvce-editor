@@ -443,7 +443,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     } else {
       ViewletStates.set(viewletUid, {
         state: newState,
-        renderedState: newState,
+        renderedState: viewletState,
         factory: module,
         moduleId: viewlet.moduleId || viewlet.id || '',
       })
