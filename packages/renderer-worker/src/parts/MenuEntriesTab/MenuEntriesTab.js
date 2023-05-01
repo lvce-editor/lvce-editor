@@ -2,6 +2,7 @@ import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as Assert from '../Assert/Assert.js'
 
 /**
  * @enum {string}
@@ -17,8 +18,12 @@ const UiStrings = {
 // TODO should pass tab uri as argument or tab index
 export const getMenuEntries = () => {
   const mainState = ViewletStates.getState(ViewletModuleId.Main)
-  const editors = mainState.editors
-  const editor = editors[mainState.focusedIndex]
+  const activeGroupIndex = mainState.activeGroupIndex
+  const groups = mainState.groups
+  const group = groups[activeGroupIndex]
+  const editors = group.editors
+  const editor = editors[group.focusedIndex]
+  Assert.object(editor)
   const uri = editor.uri
   return [
     {

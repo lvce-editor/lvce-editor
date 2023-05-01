@@ -12,19 +12,33 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 export const openUri = async (state, uri, focus = true, options = {}) => {
   Assert.object(state)
   Assert.string(uri)
-  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing } = state
+  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex } = state
   const x = state.x
   const y = state.y + state.tabHeight
   const width = state.width
   const contentHeight = state.height - state.tabHeight
   const moduleId = ViewletMap.getModuleId(uri)
-  const previousEditor = state.editors[state.activeIndex]
+  let activeGroup = groups[activeGroupIndex]
+  if (!activeGroup) {
+    activeGroup = {
+      uid: Id.create(),
+      editors: [],
+      activeIndex: -1,
+      focusedIndex: -1,
+      tabsUid: Id.create(),
+      x,
+      y: 0,
+      width,
+      height: state.height,
+    }
+  }
+  const previousEditor = activeGroup.editors[activeGroup.activeIndex]
   let disposeCommands
   if (previousEditor) {
     const previousUid = previousEditor.uid
     disposeCommands = Viewlet.disposeFunctional(previousUid)
   }
-  for (const editor of state.editors) {
+  for (const editor of activeGroup.editors) {
     if (editor.uri === uri) {
       if (editor === previousEditor) {
         return {
@@ -65,14 +79,17 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const tabTitle = PathDisplay.getTitle(uri)
   const icon = IconTheme.getFileNameIcon(uri)
   const newEditor = { uri, uid: instanceUid, label: tabLabel, title: tabTitle, icon, tabWidth }
-  const newEditors = [...state.editors, newEditor]
+  const newEditors = [...activeGroup.editors, newEditor]
   const newActiveIndex = newEditors.length - 1
+  const newGroup = { ...activeGroup, editors: newEditors, activeIndex: newActiveIndex }
+  const newGroups = [...groups.slice(0, activeGroupIndex), newGroup, ...groups.slice(activeGroupIndex + 1)]
   // @ts-ignore
   instance.show = false
   instance.setBounds = false
   ViewletStates.setState(state.uid, {
     ...state,
-    editors: newEditors,
+    activeGroupIndex: 0,
+    groups: newGroups,
     pendingUid: instanceUid,
   })
   // @ts-ignore
@@ -107,8 +124,8 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     newState: {
       ...state,
       tabsUid,
-      editors: newEditors,
-      activeIndex: newActiveIndex,
+      groups: newGroups,
+      activeGroupIndex: 0,
     },
     commands,
   }

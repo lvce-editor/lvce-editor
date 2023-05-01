@@ -2,22 +2,24 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import { closeAllEditors } from './ViewletMainCloseAllEditors.js'
 
 export const closeEditor = (state, index) => {
-  if (state.editors.length === 0) {
+  const { groups, activeGroupIndex } = state
+  if (groups.length === 0) {
     return {
       newState: state,
       commands: [],
     }
   }
-  if (state.editors.length === 1) {
+  const group = groups[activeGroupIndex]
+  if (group.editors.length === 1) {
     return closeAllEditors(state)
   }
-  const y = state.y
-  const x = state.x
-  const width = state.width
-  const height = state.height
-  if (index === state.activeIndex) {
-    const oldEditor = state.editors[index]
-    const editors = state.editors
+  const y = group.y
+  const x = group.x
+  const width = group.width
+  const height = group.height
+  if (index === group.activeIndex) {
+    const oldEditor = group.editors[index]
+    const editors = group.editors
     const newEditors = [...editors.slice(0, index), ...editors.slice(index + 1)]
     const newActiveIndex = index === 0 ? index : index - 1
     const uid = oldEditor.uid
@@ -34,30 +36,28 @@ export const closeEditor = (state, index) => {
     //   height: instance.state.height,
     //   columnWidth: COLUMN_WIDTH,
     // })
+    const newGroup = { ...group, editors: newEditors, activeIndex: newActiveIndex, focusedIndex: newActiveIndex }
+    const newGroups = [...groups.slice(0, activeGroupIndex), newGroup, ...groups.slice(activeGroupIndex + 1)]
     return {
       newState: {
         ...state,
-        activeIndex: newActiveIndex,
-        focusedIndex: newActiveIndex,
-        editors: newEditors,
+        groups: newGroups,
       },
       commands,
     }
   }
-  const editors = state.editors
+  const editors = group.editors
   const newEditors = [...editors.slice(0, index), ...editors.slice(index + 1)]
-  let newActiveIndex = state.activeIndex
+  let newActiveIndex = group.activeIndex
   if (index < newActiveIndex) {
     newActiveIndex--
   }
-  const newFocusedIndex = newActiveIndex
-  // TODO just close the tab
+  const newGroup = { ...group, editors: newEditors, activeIndex: newActiveIndex, focusedIndex: newActiveIndex }
+  const newGroups = [...groups.slice(0, activeGroupIndex), newGroup, ...groups.slice(activeGroupIndex + 1)]
   return {
     newState: {
       ...state,
-      editors: newEditors,
-      focusedIndex: newFocusedIndex,
-      activeIndex: newActiveIndex,
+      groups: newGroups,
     },
     commands: [],
   }
