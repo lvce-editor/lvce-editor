@@ -68,9 +68,9 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
   const result = await fn(oldState, ...args)
   const { newState, commands } = result
   Assert.object(newState)
-  // console.log({ fn, newState })
+  const renderedState = instance.renderedState
   if (oldState !== newState) {
-    commands.push(...render(instance.factory, oldState, newState))
+    commands.push(...render(instance.factory, renderedState, newState))
     ViewletStates.setRenderedState(id, newState)
   }
   if (commands.length === 0) {
@@ -243,7 +243,7 @@ const maybeRegisterEvents = (module) => {
         }
         const uid = instance.uid || instance.state.uid
         Assert.number(uid)
-        const commands = render(instance.factory, instance.state, newState, uid)
+        const commands = render(instance.factory, instance.renderedState, newState, uid)
         instance.state = newState
         instance.renderedState = newState
         await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
@@ -329,7 +329,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       height = position.height
     }
 
-    const viewletState = module.create(viewletUid, viewlet.uri, x, y, width, height)
+    let viewletState = module.create(viewletUid, viewlet.uri, x, y, width, height)
     if (!viewletState.uid) {
       viewletState.uid = viewletUid
     }
@@ -455,6 +455,8 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       commands.push(...additionalExtraCommands)
     }
 
+    const instanceNow = ViewletStates.getInstance(viewletUid)
+    viewletState = instanceNow.renderedState
     if (module.hasFunctionalRender) {
       const renderCommands = getRenderCommands(module, viewletState, newState, viewletUid)
       commands.push(...renderCommands)

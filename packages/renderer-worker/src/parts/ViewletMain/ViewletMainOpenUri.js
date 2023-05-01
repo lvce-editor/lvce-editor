@@ -88,6 +88,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   instance.setBounds = false
   ViewletStates.setState(state.uid, {
     ...state,
+    activeGroupIndex: 0,
     groups: newGroups,
     pendingUid: instanceUid,
   })
@@ -124,7 +125,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       ...state,
       tabsUid,
       groups: newGroups,
-      activeGroupIndex: newGroups.length - 1,
+      activeGroupIndex: 0,
     },
     commands,
   }
