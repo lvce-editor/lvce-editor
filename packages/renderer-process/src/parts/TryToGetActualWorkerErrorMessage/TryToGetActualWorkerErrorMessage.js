@@ -1,26 +1,29 @@
 import * as GetWorkerDisplayName from '../GetWorkerDisplayName/GetWorkerDisplayName.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
+import * as TryToGetActualErrorMessageWhenNetworkRequestSucceeds from '../TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js'
+
+class NotFoundError extends Error {
+  constructor(displayName) {
+    super(`Failed to start ${displayName}: Not found (404)`)
+    this.name = 'NotFoundError'
+  }
+}
 
 export const tryToGetActualErrorMessage = async ({ url, name }) => {
   const displayName = GetWorkerDisplayName.getWorkerDisplayName(name)
+  let response
   try {
-    globalThis.DONT_EXECUTE = 1
-    await import(url)
-    return `Failed to start ${displayName}: Unknown Error`
+    response = await fetch(url)
   } catch (error) {
-    if (error && error instanceof Error && error.message.startsWith('Failed to fetch dynamically imported module')) {
-      try {
-        const response = await fetch(url)
-        switch (response.status) {
-          case HttpStatusCode.NotFound:
-            return `Failed to start ${displayName}: Not found (404)`
-          default:
-            return `Failed to start ${displayName}: Unknown Network Error`
-        }
-      } catch {
-        return `Failed to start ${displayName}: Unknown Network Error`
-      }
-    }
     return `Failed to start ${displayName}: ${error}`
+  }
+  if (response.ok) {
+    return await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage(null, url, response)
+  }
+  switch (response.status) {
+    case HttpStatusCode.NotFound:
+      throw new NotFoundError(url)
+    default:
+      return `Failed to start ${displayName}: Unknown Network Error`
   }
 }
