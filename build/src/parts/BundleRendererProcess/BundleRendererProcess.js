@@ -13,6 +13,11 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
     to: Path.join(cachePath, 'static', 'js'),
   })
   await Replace.replace({
+    path: `${cachePath}/src/parts/BabelParser/BabelParser.js`,
+    occurrence: `../../../../../static/`,
+    replacement: `../../../static/`,
+  })
+  await Replace.replace({
     path: `${cachePath}/src/parts/Terminal/Terminal.js`,
     occurrence: `../../../../../static/js/termterm.js`,
     replacement: `../../../static/js/termterm.js`,
