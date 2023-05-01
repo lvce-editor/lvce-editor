@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -81,7 +82,7 @@ test('create - error - not found', async () => {
       this.onerror = null
 
       setTimeout(() => {
-        const errorEvent = new Event('error', {})
+        const errorEvent = new ErrorEvent('error', {})
         this._onerror(errorEvent)
       }, 0)
     }
@@ -105,7 +106,7 @@ test('create - error - not found', async () => {
   // @ts-ignore
   globalThis.fetch = () => {
     return {
-      status: 404,
+      status: HttpStatusCode.NotFound,
     }
   }
   // @ts-ignore
@@ -117,11 +118,7 @@ test('create - error - not found', async () => {
       url: 'https://example.com/not-found.js',
       name: 'Renderer Worker',
     })
-  ).rejects.toThrowError(
-    new Error(
-      "Failed to start renderer worker: Error: Cannot find module 'https://example.com/not-found.js' from 'src/parts/TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js'"
-    )
-  )
+  ).rejects.toThrowError(new Error('Failed to start renderer worker: Not found (404)'))
 })
 
 test('create', async () => {

@@ -1,4 +1,6 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+export const getOrigin = () => {
+  return location.origin
+}
 
 export const getPathName = () => {
   return location.pathname
