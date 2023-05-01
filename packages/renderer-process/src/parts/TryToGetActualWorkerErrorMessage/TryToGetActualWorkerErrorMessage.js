@@ -22,7 +22,7 @@ export const tryToGetActualErrorMessage = async ({ url, name }) => {
   }
   switch (response.status) {
     case HttpStatusCode.NotFound:
-      throw new NotFoundError(url)
+      throw new NotFoundError(displayName)
     default:
       return `Failed to start ${displayName}: Unknown Network Error`
   }
