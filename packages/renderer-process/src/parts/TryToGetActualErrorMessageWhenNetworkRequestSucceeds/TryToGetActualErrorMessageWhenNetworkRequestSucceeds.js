@@ -18,8 +18,15 @@ const isExternal = (url) => {
   return true
 }
 
+const isNpmDependency = (relativePath) => {
+  return relativePath.startsWith('@') && relativePath.includes('/')
+}
+
 const getErrorInDependencies = async (url, dependencies, seenUrls) => {
   for (const dependency of dependencies) {
+    if (isNpmDependency(dependency.relativePath)) {
+      throw new DependencyNotFoundError(dependency.code, dependency.start, dependency.end, dependency.relativePath, '', url)
+    }
     const dependencyUrl = Url.getAbsoluteUrl(dependency.relativePath, url)
     if (isExternal(dependencyUrl) || seenUrls.includes(dependencyUrl)) {
       continue
