@@ -188,10 +188,10 @@ export const saveState = (state) => {
 
 const handleEditorChange = async (editor) => {
   const state = ViewletStates.getState(ViewletModuleId.Main)
-  const index = state.activeIndex
-  Assert.number(index)
-  const tabsUid = state.tabsUid
-  const command = ['Viewlet.send', tabsUid, 'setDirty', index, true]
+  const { activeGroupIndex, groups } = state
+  const group = groups[activeGroupIndex]
+  Assert.object(group)
+  const command = ['Viewlet.send', group.tabsUid, 'setDirty', group.activeIndex, true]
   await RendererProcess.invoke(...command)
 }
 
