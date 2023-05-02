@@ -1,10 +1,8 @@
-import * as GetErrorResponse from './parts/GetErrorResponse/GetErrorResponse.js'
 import * as GetSuccessResponse from './parts/GetSuccessResponse/GetSuccessResponse.js'
 import * as ImportScript from './parts/ImportScript/ImportScript.js'
 import * as IpcChild from './parts/IpcChild/IpcChild.js'
 import * as IpcChildType from './parts/IpcChildType/IpcChildType.js'
 import * as Rpc from './parts/Rpc/Rpc.js'
-import * as GetResponse from './parts/GetResponse/GetResponse.js'
 
 const waitForFirstMessage = async (ipc) => {
   const { message } = await new Promise((resolve) => {
@@ -21,7 +19,8 @@ const waitForFirstMessage = async (ipc) => {
 }
 
 const main = async () => {
-  const ipc = await IpcChild.listen({ method: IpcChildType.Auto() })
+  const ipcChildType = await IpcChildType.Auto()
+  const ipc = await IpcChild.listen({ method: ipcChildType })
   const firstMessage = await waitForFirstMessage(ipc)
   let module
   try {
@@ -32,6 +31,7 @@ const main = async () => {
     const response = GetSuccessResponse.getSuccessResponse(firstMessage, null)
     ipc.send(response)
   } catch (error) {
+    const GetErrorResponse = await import('./parts/GetErrorResponse/GetErrorResponse.js')
     const response = await GetErrorResponse.getErrorResponse(firstMessage, error)
     ipc.send(response)
     return
