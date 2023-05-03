@@ -402,20 +402,21 @@ export const handleDrop = async (state, files) => {
   }
 }
 
-export const handleDropFilePath = async (state, filePath) => {
-  const { newState, commands } = await openUri(state, filePath)
-  return {
-    newState: {
-      ...newState,
-      dragOverlayX: 0,
-      dragOverlayY: 0,
-      dragOverlayWidth: 0,
-      dragOverlayHeight: 0,
-      dragOverlayVisible: false,
-    },
-    commands,
-  }
-}
+// export const handleDropFilePath = async (state, filePath) => {
+//   console.log('drop file path')
+//   const { newState, commands } = await openUri(state, filePath)
+//   return {
+//     newState: {
+//       ...newState,
+//       dragOverlayX: 0,
+//       dragOverlayY: 0,
+//       dragOverlayWidth: 0,
+//       dragOverlayHeight: 0,
+//       dragOverlayVisible: false,
+//     },
+//     commands,
+//   }
+// }
 
 export const handleDragEnd = async (state, x, y) => {
   return {

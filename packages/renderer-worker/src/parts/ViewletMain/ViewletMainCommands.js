@@ -25,6 +25,7 @@ export const CommandsWithSideEffectsLazy = {
   closeAllEditors: () => import('./ViewletMainCloseAllEditors.js'),
   closeActiveEditor: () => import('./ViewletMainCloseActiveEditor.js'),
   closeEditor: () => import('./ViewletMainCloseEditor.js'),
+  handleDropFilePath: () => import('./ViewletMainHandleDropFilePath.js'),
 }
 
 export const LazyCommands = {

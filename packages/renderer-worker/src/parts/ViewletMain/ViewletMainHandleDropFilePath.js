@@ -10,17 +10,9 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as Workspace from '../Workspace/Workspace.js'
+import * as Assert from '../Assert/Assert.js'
 import { openUri } from './ViewletMainOpenUri.js'
-
-const getTabTitle = (uri) => {
-  const homeDir = Workspace.getHomeDir()
-  // TODO tree shake this out in web
-  if (homeDir && uri.startsWith(homeDir)) {
-    return `~${uri.slice(homeDir.length)}`
-  }
-  return uri
-}
+import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 
 const getSashModuleId = (orientation) => {
   switch (orientation) {
@@ -32,9 +24,16 @@ const getSashModuleId = (orientation) => {
 }
 
 export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
-  const { x, y, width, height, tabHeight, grid } = state
+  Assert.object(state)
+  Assert.number(eventX)
+  Assert.number(eventY)
+  Assert.string(filePath)
+  const { x, y, width, height, tabHeight, groups, activeGroupIndex } = state
   const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + tabHeight, width, height - tabHeight, eventX, eventY)
+  const allCommands = []
+  let newState = state
   if (splitDirection === EditorSplitDirectionType.None) {
+    console.log('no split')
     await openUri(state, filePath)
     await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver')
     await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay')
@@ -68,12 +67,12 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     } = GetSplitDimensions.getSplitDimensions(x, y, width, height, splitDirection, sashSize, sashVisibleSize, tabHeight)
     const tabs = [
       {
-        label: Workspace.pathBaseName(filePath),
+        label: PathDisplay.getLabel(filePath),
         title: filePath,
       },
     ]
     const uri = filePath
-    const id = ViewletMap.getId(uri)
+    const id = ViewletMap.getModuleId(uri)
     const instanceUid = Id.create()
     const tabsUid = Id.create()
     const sashUid = Id.create()
@@ -109,31 +108,26 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
       tabsUid,
       editors: [],
     }
+    let newGroups = groups
     if (splitDirection === SplitDirectionType.Down || splitDirection === SplitDirectionType.Right) {
-      state.grid.push(leafItem)
+      newGroups = [branchItem, ...groups, leafItem]
     } else {
-      state.grid.unshift(leafItem)
+      newGroups = [branchItem, leafItem, ...groups]
     }
-    state.grid.unshift(branchItem)
-    console.log(state.grid)
+    const newActiveGroupIndex = newGroups.length - 1
+    const tabLabel = PathDisplay.getLabel(uri)
+    const tabTitle = PathDisplay.getTitle(uri)
 
-    state.activeIndex = state.grid.length - 1
-    const tabLabel = Workspace.pathBaseName(uri)
-    const tabTitle = getTabTitle(uri)
-    const allCommands = []
-
-    const firstItem = grid[1]
+    const firstItem = newGroups[1]
     // resize content
-    const resizeCommands = Viewlet.resize(firstItem.instanceUid, { x: 0, y: 0, width: width - overlayWidth, height })
+    const resizeCommands = Viewlet.resize(firstItem.uid, { x: 0, y: 0, width: width - overlayWidth, height })
     console.log({ resizeCommands })
     allCommands.push(...resizeCommands)
-    allCommands.push(['Viewlet.setBounds', firstItem.instanceUid, originalX, originalY, originalWidth, originalHeight])
+    allCommands.push(['Viewlet.setBounds', firstItem.uid, originalX, originalY, originalWidth, originalHeight])
     // resize tabs
-    allCommands.push(['Viewlet.setBounds', firstItem.tabdUid, originalTabsX, originalTabsY, originalTabsWidth, originalTabsHeight])
+    allCommands.push(['Viewlet.setBounds', firstItem.tabsUid, originalTabsX, originalTabsY, originalTabsWidth, originalTabsHeight])
     // TODO
     // allCommands.push(Viewlet.resize())
-    allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'stopHighlightDragOver'])
-    allCommands.push([/* Viewlet.send */ 'Viewlet.send', /* id */ ViewletModuleId.Main, /* method */ 'hideDragOverlay'])
     allCommands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
     allCommands.push(['Viewlet.send', tabsUid, 'setTabs', [{ label: tabLabel, title: tabTitle }]])
     allCommands.push(['Viewlet.setBounds', tabsUid, overlayTabsX, overlayTabsY, overlayTabsWidth, overlayTabsHeight])
@@ -141,7 +135,6 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     const commands = await ViewletManager.load(instance, false)
     allCommands.push(...commands)
     // TODO when dropping up/left, prepend instead if append
-    allCommands.push([/* Viewlet.append */ 'Viewlet.appendCustom', /* parentId */ ViewletModuleId.Main, /* method */ 'appendTabs', /* id  */ tabsUid])
     allCommands.push([
       /* Viewlet.append */ 'Viewlet.appendCustom',
       /* parentId */ ViewletModuleId.Main,
@@ -150,13 +143,21 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     ])
     // const sashOrientation = splitDirection===
     // TODO sash could be horizontal or vertical
-    const sashModuleId = getSashModuleId(sashOrientation)
-    await RendererProcess.invoke('Viewlet.loadModule', sashModuleId)
-    allCommands.push([/* Viewlet.create */ 'Viewlet.create', /* id */ sashModuleId, sashUid])
-    allCommands.push(['Viewlet.setBounds', sashUid, sashX, sashY, sashWidth, sashHeight])
-    allCommands.push(['Viewlet.append', ViewletModuleId.Main, sashUid])
+    // const sashModuleId = getSashModuleId(sashOrientation)
+    // await RendererProcess.invoke('Viewlet.loadModule', sashModuleId)
+    // allCommands.push([/* Viewlet.create */ 'Viewlet.create', /* id */ sashModuleId, sashUid])
+    // allCommands.push(['Viewlet.setBounds', sashUid, sashX, sashY, sashWidth, sashHeight])
+    // allCommands.push(['Viewlet.append', ViewletModuleId.Main, sashUid])
     console.log({ allCommands })
-    await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ allCommands)
+    // await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ allCommands)
+    newState = {
+      ...state,
+      groups: newGroups,
+      activeIndex: newActiveGroupIndex,
+    }
   }
-  return state
+  return {
+    newState: state,
+    commands: allCommands,
+  }
 }

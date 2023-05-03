@@ -28,7 +28,7 @@ export const handleDragEnd = (event) => {
  */
 export const handleDrop = (event) => {
   Event.preventDefault(event)
-  const { dataTransfer } = event
+  const { dataTransfer, clientX, clientY } = event
   const { files } = dataTransfer
   const item = dataTransfer.items[0]
   const uid = ComponentUid.fromEvent(event)
@@ -38,7 +38,7 @@ export const handleDrop = (event) => {
   }
   const filePath = DataTransfer.getFilePath(dataTransfer)
   if (filePath) {
-    ViewletMainFunctions.handleDropFilePath(uid, filePath)
+    ViewletMainFunctions.handleDropFilePath(uid, clientX, clientY, filePath)
     return
   }
 }
