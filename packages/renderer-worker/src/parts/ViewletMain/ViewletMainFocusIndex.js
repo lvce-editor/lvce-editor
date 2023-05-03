@@ -11,8 +11,8 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { closeEditor } from './ViewletMainCloseEditor.js'
 
 export const focusIndex = async (state, index) => {
-  const { groups, tabHeight, uid } = state
-  const group = groups[state.activeGroupIndex]
+  const { groups, tabHeight, uid, activeGroupIndex } = state
+  const group = groups[activeGroupIndex]
   if (index === group.activeIndex) {
     return state
   }
