@@ -24,6 +24,7 @@ const main = async () => {
   const firstMessage = await waitForFirstMessage(ipc)
   let module
   try {
+    console.log({ firstMessage })
     module = await ImportScript.importScript(firstMessage.params[0])
     if (!module || !module.execute) {
       throw new Error(`missing export const execute function`)
@@ -31,6 +32,7 @@ const main = async () => {
     const response = GetSuccessResponse.getSuccessResponse(firstMessage, null)
     ipc.send(response)
   } catch (error) {
+    console.log({ error })
     const GetErrorResponse = await import('./parts/GetErrorResponse/GetErrorResponse.js')
     const response = await GetErrorResponse.getErrorResponse(firstMessage, error)
     ipc.send(response)

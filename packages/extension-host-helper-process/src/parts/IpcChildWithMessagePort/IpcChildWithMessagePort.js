@@ -1,9 +1,24 @@
 export const listen = () => {
-  // TODO wait for electron message port to be passed in
-  return {}
+  const messageChannel = new MessageChannel()
+  const { port1, port2 } = messageChannel
+  globalThis.acceptPort(port2)
+  return port1
 }
 
-export const wrap = () => {
-  // TODO
-  return {}
+export const wrap = (port) => {
+  return {
+    port,
+    send(message) {
+      this.port.postMessage(message)
+    },
+    sendAndTransfer(message, transferables) {
+      this.port.postMessage(message, transferables)
+    },
+    get onmessage() {
+      return this.port.onmessage
+    },
+    set onmessage(listener) {
+      this.port.onmessage = listener
+    },
+  }
 }
