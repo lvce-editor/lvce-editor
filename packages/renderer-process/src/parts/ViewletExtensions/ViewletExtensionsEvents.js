@@ -12,7 +12,7 @@ import * as ViewletExtensionsFunctions from './ViewletExtensionsFunctions.js'
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
   const uid = ComponentUid.fromEvent(event)
-  ViewletExtensionsFunctions.handleScrollBarThumbPointerMove(uid, clientY)
+  ViewletExtensionsFunctions.handleScrollBarMove(uid, clientY)
 }
 
 const handleScrollBarPointerCaptureLost = (event) => {
