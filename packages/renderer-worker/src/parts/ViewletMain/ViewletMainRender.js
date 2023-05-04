@@ -64,38 +64,43 @@ const renderGroupTabs = {
         const oldGroup = oldGroups[index]
         const { tabsUid, editors, x, y, width, height, activeIndex } = newGroup
         commands.push(['Viewlet.send', tabsUid, 'setTabs', editors])
-        const unFocusIndex = oldGroup.activeIndex < editors.length ? oldGroup.activeIndex : -1
+        const oldActiveIndex = oldGroup.activeIndex
+        const unFocusIndex = oldActiveIndex < editors.length ? oldActiveIndex : -1
+        console.log({ oldGroup })
         commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', unFocusIndex, activeIndex])
       }
     }
     for (const insertedGroup of insertedGroups) {
       const { tabsUid, editors, x, y, width, height, activeIndex } = insertedGroup
+      console.log({ insertedGroup })
       commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
       commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
       commands.push(['Viewlet.send', tabsUid, 'setTabs', editors])
       commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, activeIndex])
       commands.push(['Viewlet.append', newState.uid, tabsUid])
     }
+    console.log({ insertedGroups, deletedGroups, oldGroups })
     for (const group of deletedGroups) {
       commands.push(['Viewlet.dispose', group.tabsUid])
     }
+    console.log({ commands })
     return commands
   },
   multiple: true,
 }
 
-const renderTabsActiveIndex = {
-  isEqual(oldState, newState) {
-    return oldState.editors === newState.editors && oldState.activeIndex === newState.activeIndex
-  },
-  apply(oldState, newState) {
-    const unFocusIndex = oldState.activeIndex < newState.editors.length ? oldState.activeIndex : -1
-    if (newState.activeIndex === -1) {
-      return []
-    }
-    return [['Viewlet.send', newState.tabsUid, 'setFocusedIndex', unFocusIndex, newState.activeIndex]]
-  },
-  multiple: true,
-}
+// const renderTabsActiveIndex = {
+//   isEqual(oldState, newState) {
+//     return oldState.editors === newState.editors && oldState.activeIndex === newState.activeIndex
+//   },
+//   apply(oldState, newState) {
+//     const unFocusIndex = oldState.activeIndex < newState.editors.length ? oldState.activeIndex : -1
+//     if (newState.activeIndex === -1) {
+//       return []
+//     }
+//     return [['Viewlet.send', newState.tabsUid, 'setFocusedIndex', unFocusIndex, newState.activeIndex]]
+//   },
+//   multiple: true,
+// }
 
-export const render = [renderDragOverlay, renderGroupTabs, renderTabsActiveIndex]
+export const render = [renderDragOverlay, renderGroupTabs]

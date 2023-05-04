@@ -68,6 +68,8 @@ export const setDirty = (state, index, dirty) => {
 }
 
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
+  Assert.number(oldFocusedIndex)
+  Assert.number(newFocusedIndex)
   const { $Viewlet } = state
   if (oldFocusedIndex !== -1) {
     const $OldItem = $Viewlet.children[oldFocusedIndex]

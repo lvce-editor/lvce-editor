@@ -171,13 +171,17 @@ const getRestoredGroups = (savedState, state) => {
     return { groups: [], activeGroupIndex: -1 }
   }
   const restoredGroups = getMainGroups(savedState, state)
+  if (restoredGroups.length === 0) {
+    return { groups: [], activeGroupIndex: -1 }
+  }
   const savedActiveIndex = getSavedActiveIndex(savedState, restoredGroups)
   if (savedActiveIndex === -1) {
     return { groups: [], activeGroupIndex: -1 }
   }
+  // TODO support restoring multiple groups
   return {
-    groups: restoredGroups,
-    activeGroupIndex: savedActiveIndex,
+    groups: [restoredGroups[0]],
+    activeGroupIndex: 0,
   }
 }
 
