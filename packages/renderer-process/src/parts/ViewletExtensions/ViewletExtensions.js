@@ -49,11 +49,6 @@ export const create = () => {
   $ExtensionHeader.append($InputBox)
 
   // TODO handle error
-  const $ListItems = document.createElement('div')
-  $ListItems.className = 'ListItems'
-  $ListItems.tabIndex = 0
-  $ListItems.ariaLabel = 'Extensions'
-  $ListItems.role = AriaRoles.List
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -64,7 +59,7 @@ export const create = () => {
 
   const $List = document.createElement('div')
   $List.className = 'Viewlet List'
-  $List.append($ListItems, $ScrollBar)
+  $List.append($ScrollBar)
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Extensions'
@@ -76,7 +71,6 @@ export const create = () => {
   return {
     $Viewlet,
     $List,
-    $ListItems,
     $InputBox,
     $ExtensionSuggestions: undefined,
     $ScrollBarThumb,
@@ -86,21 +80,21 @@ export const create = () => {
 }
 
 export const attachEvents = (state) => {
-  const { $InputBox, $ListItems, $ScrollBar } = state
+  const { $InputBox, $List, $ScrollBar } = state
   $InputBox.oninput = ViewletExtensionsEvents.handleInput
 
-  $ListItems.oncontextmenu = ViewletExtensionsEvents.handleContextMenu
+  $List.oncontextmenu = ViewletExtensionsEvents.handleContextMenu
   if (Platform.isMobile) {
-    $ListItems.onclick = ViewletExtensionsEvents.handlePointerDown
+    $List.onclick = ViewletExtensionsEvents.handlePointerDown
   } else {
-    $ListItems.onpointerdown = ViewletExtensionsEvents.handlePointerDown
+    $List.onpointerdown = ViewletExtensionsEvents.handlePointerDown
   }
-  $ListItems.onfocus = ViewletExtensionsEvents.handleFocus
-  $ListItems.onscroll = ViewletExtensionsEvents.handleScroll
-  $ListItems.addEventListener(DomEventType.TouchStart, ViewletExtensionsEvents.handleTouchStart, DomEventOptions.Passive)
-  $ListItems.addEventListener(DomEventType.TouchMove, ViewletExtensionsEvents.handleTouchMove, DomEventOptions.Passive)
-  $ListItems.addEventListener(DomEventType.TouchEnd, ViewletExtensionsEvents.handleTouchEnd, DomEventOptions.Passive)
-  $ListItems.addEventListener(DomEventType.Wheel, ViewletExtensionsEvents.handleWheel, DomEventOptions.Passive)
+  $List.onfocus = ViewletExtensionsEvents.handleFocus
+  $List.onscroll = ViewletExtensionsEvents.handleScroll
+  $List.addEventListener(DomEventType.TouchStart, ViewletExtensionsEvents.handleTouchStart, DomEventOptions.Passive)
+  $List.addEventListener(DomEventType.TouchMove, ViewletExtensionsEvents.handleTouchMove, DomEventOptions.Passive)
+  $List.addEventListener(DomEventType.TouchEnd, ViewletExtensionsEvents.handleTouchEnd, DomEventOptions.Passive)
+  $List.addEventListener(DomEventType.Wheel, ViewletExtensionsEvents.handleWheel, DomEventOptions.Passive)
 
   $ScrollBar.onpointerdown = ViewletExtensionsEvents.handleScrollBarPointerDown
 }
