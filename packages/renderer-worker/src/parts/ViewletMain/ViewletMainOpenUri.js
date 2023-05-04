@@ -12,11 +12,11 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 export const openUri = async (state, uri, focus = true, options = {}) => {
   Assert.object(state)
   Assert.string(uri)
-  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex } = state
+  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex, uid, tabHeight } = state
   const x = state.x
-  const y = state.y + state.tabHeight
+  const y = state.y + tabHeight
   const width = state.width
-  const contentHeight = state.height - state.tabHeight
+  const contentHeight = state.height - tabHeight
   const moduleId = ViewletMap.getModuleId(uri)
   let activeGroup = groups[activeGroupIndex]
   if (!activeGroup) {
@@ -32,7 +32,9 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       height: state.height,
     }
   }
-  const previousEditor = activeGroup.editors[activeGroup.activeIndex]
+  const { editors, activeIndex } = activeGroup
+
+  const previousEditor = editors[activeIndex]
   let disposeCommands
   if (previousEditor) {
     const previousUid = previousEditor.uid
@@ -57,11 +59,11 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       if (disposeCommands) {
         commands.unshift(...disposeCommands)
       }
-      commands.push(['Viewlet.append', state.uid, childUid])
-      const newActiveIndex = state.editors.indexOf(editor)
-      commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
-      commands.push(['Viewlet.send', state.tabsUid, 'setFocusedIndex', state.activeIndex, newActiveIndex])
-      state.activeIndex = newActiveIndex
+      commands.push(['Viewlet.append', uid, childUid])
+      const newActiveIndex = editors.indexOf(editor)
+      commands.push(['Viewlet.setBounds', childUid, x, tabHeight, width, contentHeight])
+      commands.push(['Viewlet.send', activeGroup.tabsUid, 'setFocusedIndex', activeIndex, newActiveIndex])
+      activeGroup.activeIndex = newActiveIndex
       editor.uid = childUid
       return {
         newState: state,
