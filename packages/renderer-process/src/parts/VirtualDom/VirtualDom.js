@@ -6,12 +6,12 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
  * @param {any[]} elements
  * @returns
  */
-export const renderInternal = ($Parent, elements) => {
+export const renderInternal = ($Parent, elements, events) => {
   const max = elements.length - 1
   let stack = []
   for (let i = max; i >= 0; i--) {
     const element = elements[i]
-    const $Element = VirtualDomElement.render(element)
+    const $Element = VirtualDomElement.render(element, events)
     if (element.childCount > 0) {
       // @ts-ignore
       $Element.append(...stack.slice(0, element.childCount))
@@ -30,9 +30,9 @@ const isEqualNodeName = ($Node, node) => {
   return false
 }
 
-export const renderInto = ($Parent, dom) => {
+export const renderInto = ($Parent, dom, events = {}) => {
   $Parent.textContent = ''
-  renderInternal($Parent, dom)
+  renderInternal($Parent, dom, events)
 }
 
 export const renderIncremental = ($Parent, dom) => {

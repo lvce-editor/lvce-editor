@@ -80,21 +80,8 @@ export const create = () => {
 }
 
 export const attachEvents = (state) => {
-  const { $InputBox, $List, $ScrollBar } = state
+  const { $InputBox, $ScrollBar } = state
   $InputBox.oninput = ViewletExtensionsEvents.handleInput
-
-  $List.oncontextmenu = ViewletExtensionsEvents.handleContextMenu
-  if (Platform.isMobile) {
-    $List.onclick = ViewletExtensionsEvents.handlePointerDown
-  } else {
-    $List.onpointerdown = ViewletExtensionsEvents.handlePointerDown
-  }
-  $List.onfocus = ViewletExtensionsEvents.handleFocus
-  $List.onscroll = ViewletExtensionsEvents.handleScroll
-  $List.addEventListener(DomEventType.TouchStart, ViewletExtensionsEvents.handleTouchStart, DomEventOptions.Passive)
-  $List.addEventListener(DomEventType.TouchMove, ViewletExtensionsEvents.handleTouchMove, DomEventOptions.Passive)
-  $List.addEventListener(DomEventType.TouchEnd, ViewletExtensionsEvents.handleTouchEnd, DomEventOptions.Passive)
-  $List.addEventListener(DomEventType.Wheel, ViewletExtensionsEvents.handleWheel, DomEventOptions.Passive)
 
   $ScrollBar.onpointerdown = ViewletExtensionsEvents.handleScrollBarPointerDown
 }
@@ -322,7 +309,7 @@ export const setSearchValue = (state, oldValue, newValue) => {
 
 export const setDom = (state, dom) => {
   const { $List } = state
-  VirtualDom.renderInto($List, dom)
+  VirtualDom.renderInto($List, dom, ViewletExtensionsEvents)
 }
 
 export * from '../ViewletList/ViewletList.js'

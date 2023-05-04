@@ -1,4 +1,4 @@
-export const setProp = ($Element, key, value) => {
+export const setProp = ($Element, key, value, events) => {
   switch (key) {
     case 'maskImage':
       $Element.style.maskImage = `url('${value}')`
@@ -12,13 +12,24 @@ export const setProp = ($Element, key, value) => {
       break
     case 'style':
       throw new Error('style property is not supported')
+    case 'onwheelpassive':
+      $Element.addEventListener('wheel', events[value], { passive: true })
+      break
+    case 'oncontextmenu':
+    case 'onpointerdown':
+    case 'ontouchstart':
+    case 'ontouchmove':
+    case 'ontouchend':
+      const eventName = key.slice(2)
+      $Element.addEventListener(eventName, events[value])
+      break
     default:
       $Element[key] = value
   }
 }
 
-export const setProps = ($Element, props) => {
+export const setProps = ($Element, props, events) => {
   for (const key in props) {
-    setProp($Element, key, props[key])
+    setProp($Element, key, props[key], events)
   }
 }

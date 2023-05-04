@@ -71,6 +71,10 @@ export const getExtensionsVirtualDom = (visibleExtensions, height, top) => {
         role: 'list',
         height,
         top,
+        onwheelpassive: 'handleWheel',
+        oncontextmenu: 'handleContextMenu',
+        onpointerdown: 'handlePointerDown',
+        ontouchstart: 'handleTouchStart',
       },
       visibleExtensions.length
     )
