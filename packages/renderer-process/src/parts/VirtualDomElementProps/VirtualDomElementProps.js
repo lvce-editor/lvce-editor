@@ -7,6 +7,7 @@ export const setProp = ($Element, key, value) => {
     case 'paddingLeft':
     case 'top':
     case 'width':
+    case 'height':
       $Element.style[key] = `${value}px`
       break
     case 'style':

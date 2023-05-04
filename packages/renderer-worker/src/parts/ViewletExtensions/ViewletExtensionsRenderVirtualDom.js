@@ -10,7 +10,9 @@ const renderExtensions = {
   apply(oldState, newState) {
     // TODO render extensions incrementally when scrolling
     const visibleExtensions = GetVisibleExtensions.getVisible(newState)
-    const dom = GetExtensionsVirtualDom.getExtensionsVirtualDom(visibleExtensions)
+    const { itemHeight } = newState
+    const contentHeight = newState.items.length * itemHeight
+    const dom = GetExtensionsVirtualDom.getExtensionsVirtualDom(visibleExtensions, contentHeight, -newState.deltaY)
     return ['setDom', dom]
   },
 }
