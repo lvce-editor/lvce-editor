@@ -2,6 +2,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Tab from '../Tab/Tab.js'
 import * as ViewletMainTabEvents from './ViewletMainTabEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 
 /**
  * @enum {string}
@@ -37,6 +38,11 @@ export const setTabs = (state, tabs) => {
     $$Tabs.push($Tab)
   }
   $Viewlet.replaceChildren(...$$Tabs)
+}
+
+export const setTabsDom = (state, dom) => {
+  const { $Viewlet } = state
+  VirtualDom.renderInto($Viewlet, dom)
 }
 
 export const setScrollBar = (state, scrollBarWidth) => {

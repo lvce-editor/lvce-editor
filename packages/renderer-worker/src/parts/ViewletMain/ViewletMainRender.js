@@ -1,5 +1,6 @@
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as GetTabsVirtualDom from '../GetTabsVirtualDom/GetTabsVirtualDom.js'
 
 export const hasFunctionalRender = true
 
@@ -72,8 +73,9 @@ const renderGroupTabs = {
       const { tabsUid, editors, x, y, width, height, activeIndex } = insertedGroup
       commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
       commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
-      commands.push(['Viewlet.send', tabsUid, 'setTabs', editors])
-      commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, activeIndex])
+      const tabsDom = GetTabsVirtualDom.getTabsDom(editors, activeIndex)
+      commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
+      // commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, activeIndex])
       commands.push(['Viewlet.append', newState.uid, tabsUid])
     }
     for (const group of deletedGroups) {
