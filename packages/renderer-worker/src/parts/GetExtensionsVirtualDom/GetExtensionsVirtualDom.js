@@ -60,7 +60,7 @@ const getExtensionVirtualDom = (extension) => {
   ]
 }
 
-export const getExtensionsVirtualDom = (visibleExtensions, height, top) => {
+export const getExtensionsVirtualDom = (visibleExtensions, height, top, scrollBarY, scrollBarHeight) => {
   const dom = []
   dom.push(
     div(
@@ -81,6 +81,25 @@ export const getExtensionsVirtualDom = (visibleExtensions, height, top) => {
   )
   for (const extension of visibleExtensions) {
     dom.push(...getExtensionVirtualDom(extension))
+  }
+  if (scrollBarHeight > 0) {
+    dom[0].childCount++
+    dom.push(
+      div(
+        {
+          className: 'ScrollBarSmall',
+        },
+        1
+      ),
+      div(
+        {
+          className: 'ScrollBarThumb',
+          translateY: scrollBarY,
+          height: scrollBarHeight,
+        },
+        0
+      )
+    )
   }
   return dom
 }
