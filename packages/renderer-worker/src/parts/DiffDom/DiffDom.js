@@ -54,11 +54,13 @@ export const diffDom = (oldDom, newDom) => {
     j++
   }
   while (i < lengthA) {
+    const a = oldDom[i]
     patches.push({
       type: DiffDomType.Remove,
       nodes: [i],
     })
     i++
+    i += a.childCount
   }
   return patches
 }
