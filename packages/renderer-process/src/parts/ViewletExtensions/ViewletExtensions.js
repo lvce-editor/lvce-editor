@@ -3,6 +3,7 @@
 import * as FindIndex from '../../shared/findIndex.js'
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaLiveType from '../AriaLiveType/AriaLiveType.js'
+import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
@@ -12,8 +13,8 @@ import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
-import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 
 const activeId = 'ExtensionActive'
 
@@ -323,6 +324,11 @@ export const handleError = (state, message) => {
 export const setSearchValue = (state, oldValue, newValue) => {
   const { $InputBox } = state
   $InputBox.value = newValue
+}
+
+export const setDom = (state, dom) => {
+  const { $List } = state
+  VirtualDom.renderInto($List, dom)
 }
 
 export * from '../ViewletList/ViewletList.js'
