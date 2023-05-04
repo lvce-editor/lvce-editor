@@ -1,3 +1,5 @@
+import * as DiffDomType from '../DiffDomType/DiffDomType.js'
+
 const isEqualElement = (oldDom, i, newDom, j) => {
   const oldElement = oldDom[i]
   const newElement = newDom[j]
@@ -31,18 +33,32 @@ export const diffDom = (oldDom, newDom) => {
         for (const propA in aProps) {
           if (propA in bProps) {
             if (aProps[propA] !== bProps[propA]) {
-              patches.push({ type: 'updateProp', key: propA, value: bProps[propA], index: i })
+              patches.push({ type: DiffDomType.UpdateProp, key: propA, value: bProps[propA], index: i })
             }
           }
         }
       } else {
         // insert b
-        patches.push({ type: 'insert', nodes: newDom.slice(j, j + b.childCount + 1), index: i })
+        patches.push({ type: DiffDomType.Insert, nodes: newDom.slice(j, j + b.childCount + 1), index: i })
         j += b.childCount
       }
     }
     i++
     j++
+  }
+  while (j < lengthB) {
+    patches.push({
+      type: DiffDomType.Insert,
+      nodes: [newDom[j]],
+    })
+    j++
+  }
+  while (i < lengthA) {
+    patches.push({
+      type: DiffDomType.Remove,
+      nodes: [i],
+    })
+    i++
   }
   return patches
 }
