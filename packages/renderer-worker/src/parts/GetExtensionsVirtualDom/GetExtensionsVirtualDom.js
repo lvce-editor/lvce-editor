@@ -83,11 +83,11 @@ export const getExtensionsVirtualDom = (visibleExtensions, height, top, scrollBa
     dom.push(...getExtensionVirtualDom(extension))
   }
   if (scrollBarHeight > 0) {
-    dom[0].childCount++
     dom.push(
       div(
         {
           className: 'ScrollBarSmall',
+          onpointerdown: 'handleScrollBarPointerDown',
         },
         1
       ),

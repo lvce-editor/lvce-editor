@@ -50,16 +50,8 @@ export const create = () => {
 
   // TODO handle error
 
-  const $ScrollBarThumb = document.createElement('div')
-  $ScrollBarThumb.className = 'ScrollBarThumb'
-
-  const $ScrollBar = document.createElement('div')
-  $ScrollBar.className = 'ScrollBarSmall'
-  $ScrollBar.append($ScrollBarThumb)
-
   const $List = document.createElement('div')
   $List.className = 'Viewlet List'
-  $List.append($ScrollBar)
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Extensions'
@@ -73,17 +65,13 @@ export const create = () => {
     $List,
     $InputBox,
     $ExtensionSuggestions: undefined,
-    $ScrollBarThumb,
-    $ScrollBar,
     $Message: undefined,
   }
 }
 
 export const attachEvents = (state) => {
-  const { $InputBox, $ScrollBar } = state
+  const { $InputBox } = state
   $InputBox.oninput = ViewletExtensionsEvents.handleInput
-
-  $ScrollBar.onpointerdown = ViewletExtensionsEvents.handleScrollBarPointerDown
 }
 
 // TODO possibly use aria active descendant instead

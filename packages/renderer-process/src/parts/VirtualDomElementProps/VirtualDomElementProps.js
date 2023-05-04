@@ -8,8 +8,10 @@ export const setProp = ($Element, key, value, events) => {
     case 'top':
     case 'width':
     case 'height':
-    case 'translateY':
       $Element.style[key] = `${value}px`
+      break
+    case 'translateY':
+      $Element.style.translate = `0 ${value}px`
       break
     case 'style':
       throw new Error('style property is not supported')
