@@ -21,23 +21,28 @@ const getExtraProps = (flags) => {
         ariaHasPopup: true,
       }
     default:
-      Logger.warn(`unknown activity bar item flags ${item.flags}`)
+      Logger.warn(`unknown activity bar item flags ${flags}`)
       return {}
   }
 }
 
-const createActivityBarItem = (item, isSelected) => {
-  const isTab = item.flags === ActivityBarItemFlags.Tab
+const createActivityBarItem = (item, isSelected, isFocused) => {
+  const { flags, title, icon } = item
+  const isTab = flags === ActivityBarItemFlags.Tab
   const role = isTab ? 'tab' : 'button'
   const ariaSelected = isTab ? isSelected : undefined
-
+  let className = 'ActivityBarItem'
+  if (isFocused) {
+    className += ' FocusOutline'
+  }
   if (isSelected) {
+    className += ' ActivityBarItemSelected'
     return [
       div(
         {
-          className: 'ActivityBarItem ActivityBarItemSelected',
+          className,
           ariaLabel: '',
-          title: item.title,
+          title,
           role,
           ariaSelected,
         },
@@ -46,17 +51,17 @@ const createActivityBarItem = (item, isSelected) => {
       div({
         className: 'MaskIcon',
         role: 'none',
-        maskImage: item.icon,
+        maskImage: icon,
       }),
     ]
   }
   return [
     div(
       {
-        className: 'ActivityBarItem',
+        className,
         ariaLabel: '',
-        title: item.title,
-        maskImage: item.icon,
+        title,
+        maskImage: icon,
         role,
         ariaSelected,
       },
@@ -65,12 +70,13 @@ const createActivityBarItem = (item, isSelected) => {
   ]
 }
 
-export const getVirtualDom = (visibleItems, selectedIndex) => {
+export const getVirtualDom = (visibleItems, selectedIndex, focusedIndex) => {
   const dom = []
   for (let i = 0; i < visibleItems.length; i++) {
     const isSelected = i === selectedIndex
+    const isFocused = i === focusedIndex
     const item = visibleItems[i]
-    dom.push(...createActivityBarItem(item, isSelected))
+    dom.push(...createActivityBarItem(item, isSelected, isFocused))
   }
   return dom
 }

@@ -13,12 +13,13 @@ const renderItems = {
     return (
       oldState.activityBarItems === newState.activityBarItems &&
       oldState.height === newState.height &&
-      oldState.selectedIndex === newState.selectedIndex
+      oldState.selectedIndex === newState.selectedIndex &&
+      oldState.focusedIndex === newState.focusedIndex
     )
   },
   apply(oldState, newState) {
     const visibleItems = GetVisibleActivityBarItems.getVisibleActivityBarItems(newState)
-    const dom = GetActivityBarItemsVirtualDom.getVirtualDom(visibleItems, newState.selectedIndex)
+    const dom = GetActivityBarItemsVirtualDom.getVirtualDom(visibleItems, newState.selectedIndex, newState.focusedIndex)
     return ['setDom', dom]
   },
 }
