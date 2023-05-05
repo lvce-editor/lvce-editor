@@ -1,6 +1,7 @@
 import * as GetKeyBindingsVirtualDom from '../GetKeyBindingsVirtualDom/GetKeyBindingsVirtualDom.js'
 import * as GetVisibleKeyBindings from '../GetVisibleKeyBindings/GetVisibleKeyBindings.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as DiffDom from '../DiffDom/DiffDom.js'
 
 const renderKeyBindings = {
   isEqual(oldState, newState) {
@@ -23,7 +24,11 @@ const renderKeyBindings = {
     const tableDom = GetKeyBindingsVirtualDom.getTableDom(filteredKeyBindings, displayKeyBindings, columnWidth1, columnWidth2, columnWidth3)
     // console.timeEnd('tableDom')
     // console.log({ tableDom })
-    return [/* method */ 'setTableDom', /* tableDom */ tableDom]
+    newState._tableDom = tableDom
+    const oldDom = oldState._tableDom || []
+    const diff = DiffDom.diffDom(oldDom, tableDom)
+    console.log({ diff })
+    return [/* method */ 'setDiff', /* tableDom */ diff]
   },
 }
 

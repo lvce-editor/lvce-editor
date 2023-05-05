@@ -72,6 +72,11 @@ export const setTableDom = (state, dom) => {
   }
 }
 
+export const setDiff = (state, diff) => {
+  const { $KeyBindingsTableWrapper } = state
+  const $Root = VirtualDom.renderDiff($KeyBindingsTableWrapper, diff)
+}
+
 export const setValue = (state, value) => {
   const { $InputBox } = state
   $InputBox.value = value
