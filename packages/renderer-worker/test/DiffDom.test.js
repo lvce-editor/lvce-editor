@@ -86,22 +86,40 @@ test('diffDom - sub node removed at start', () => {
     },
     {
       type: DiffDomType.Remove,
-      nodes: [2],
-    },
-    {
-      type: DiffDomType.Remove,
-      nodes: [3],
+      nodes: [2, 3],
     },
   ])
 })
 
-test('diffDom - multiple nodes inserted', () => {
+test('diffDom - nested nodes inserted', () => {
   const oldDom = []
   const newDom = [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
       type: DiffDomType.Insert,
       nodes: [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)],
+    },
+  ])
+})
+
+test('diffDom - multiple nodes inserted', () => {
+  const oldDom = []
+  const newDom = [div({ className: 'a' }, 0), div({ className: 'b' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      type: DiffDomType.Insert,
+      nodes: [div({ className: 'a' }, 0), div({ className: 'b' }, 0)],
+    },
+  ])
+})
+
+test('diffDom - multiple nodes removed', () => {
+  const oldDom = [div({ className: 'a' }, 0), div({ className: 'b' }, 0)]
+  const newDom = []
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      type: DiffDomType.Remove,
+      nodes: [0, 1],
     },
   ])
 })
