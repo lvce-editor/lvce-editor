@@ -43,3 +43,8 @@ export const setDom = (state, dom) => {
   const { $Viewlet } = state
   VirtualDom.renderInto($Viewlet, dom)
 }
+
+export const setDiff = (state, diff) => {
+  const { $Viewlet } = state
+  VirtualDom.renderDiff($Viewlet, diff)
+}
