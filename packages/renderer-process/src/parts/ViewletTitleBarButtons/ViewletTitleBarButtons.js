@@ -19,7 +19,6 @@ export const create = () => {
 
   const $TitleBarButtons = document.createElement('div')
   $TitleBarButtons.className = 'Viewlet TitleBarButtons'
-  $TitleBarButtons.onmousedown = ViewletTitleBarButtonEvents.handleTitleBarButtonsClick
   $TitleBarButtons.append($ButtonMinimize, $ButtonToggleMaximize, $ButtonClose)
   return {
     $TitleBarButtons,
@@ -27,7 +26,10 @@ export const create = () => {
   }
 }
 
-export const dispose = (state) => {}
+export const attachEvents = (state) => {
+  const { $Viewlet } = state
+  $Viewlet.onmousedown = ViewletTitleBarButtonEvents.handleTitleBarButtonsClick
+}
 
 export const setButtons = (state, buttons) => {
   const { $TitleBarButtons } = state

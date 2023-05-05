@@ -19,6 +19,7 @@ const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/E
 
 test('event - click - minimize', () => {
   const state = ViewletTitleBarButtons.create()
+  ViewletTitleBarButtons.attachEvents(state)
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
   const { $TitleBarButtons } = state
@@ -33,6 +34,7 @@ test('event - click - minimize', () => {
 
 test('event - click - toggleMaximize', () => {
   const state = ViewletTitleBarButtons.create()
+  ViewletTitleBarButtons.attachEvents(state)
   const { $TitleBarButtons } = state
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
@@ -47,6 +49,7 @@ test('event - click - toggleMaximize', () => {
 
 test('event - click - close', () => {
   const state = ViewletTitleBarButtons.create()
+  ViewletTitleBarButtons.attachEvents(state)
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
   const { $TitleBarButtons } = state
