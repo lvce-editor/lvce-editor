@@ -94,3 +94,14 @@ test('diffDom - sub node removed at start', () => {
     },
   ])
 })
+
+test('diffDom - multiple nodes inserted', () => {
+  const oldDom = []
+  const newDom = [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      type: DiffDomType.Insert,
+      nodes: [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)],
+    },
+  ])
+})
