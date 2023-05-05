@@ -47,11 +47,12 @@ export const diffDom = (oldDom, newDom) => {
     j++
   }
   while (j < lengthB) {
+    const end = j + newDom[j].childCount + 1
     patches.push({
       type: DiffDomType.Insert,
-      nodes: [newDom[j]],
+      nodes: newDom.slice(j, end),
     })
-    j++
+    j = end
   }
   while (i < lengthA) {
     const a = oldDom[i]
