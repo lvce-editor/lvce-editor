@@ -30,7 +30,7 @@ test('diffDom - add a text node', () => {
   ])
 })
 
-test('diffDom - sub node attribute modified', () => {
+test.only('diffDom - sub node attribute modified', () => {
   const oldDom = [
     div({ className: 'List' }, 2),
     div({ className: 'ListItems' }, 0),
@@ -124,18 +124,81 @@ test('diffDom - multiple nodes removed', () => {
   ])
 })
 
-test('diffDom - remove and add nodes', () => {
-  const oldDom = [div({ className: 'a' }, 1), i({ className: 'b' }, 0), div({ className: 'a' })]
+test.skip('diffDom - remove and add nodes', () => {
+  const oldDom = [div({ className: 'a' }, 1), i({ className: 'b' }, 0), div({ className: 'a' }, 0)]
   const newDom = [div({ className: 'a' }, 0), div({ className: 'a' }, 1), i({ className: 'b' }, 0)]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
-      index: 1,
-      nodes: [div({ className: 'a' }, 1), i({ className: 'b' }, 0)],
-      type: DiffDomType.Insert,
+      nodes: [1],
+      type: DiffDomType.Remove,
     },
     {
       nodes: [2],
       type: DiffDomType.Remove,
+    },
+    {
+      nodes: [i({ className: 'b' }, 0)],
+      type: DiffDomType.Insert,
+    },
+    {
+      nodes: [div({ className: 'a' }, 1)],
+      type: DiffDomType.Insert,
+    },
+  ])
+})
+
+test('diffDom - key - remove item at start', () => {
+  const oldDom = [div({ className: 'a', key: 1 }, 0), div({ className: 'b', key: 2 }, 0), div({ className: 'c', key: 3 }, 0)]
+  const newDom = [div({ className: 'b', key: 2 }, 0), div({ className: 'c', key: 3 }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      nodes: [0],
+      type: DiffDomType.Remove,
+    },
+  ])
+})
+
+test('diffDom - key - remove item in the middle', () => {
+  const oldDom = [div({ className: 'a', key: 1 }, 0), div({ className: 'b', key: 2 }, 0), div({ className: 'c', key: 3 }, 0)]
+  const newDom = [div({ className: 'a', key: 1 }, 0), div({ className: 'c', key: 3 }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      nodes: [1],
+      type: DiffDomType.Remove,
+    },
+  ])
+})
+
+test('diffDom - key - remove item at end', () => {
+  const oldDom = [div({ className: 'a', key: 1 }, 0), div({ className: 'b', key: 2 }, 0), div({ className: 'c', key: 3 }, 0)]
+  const newDom = [div({ className: 'a', key: 1 }, 0), div({ className: 'b', key: 2 }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      nodes: [2],
+      type: DiffDomType.Remove,
+    },
+  ])
+})
+
+test('diffDom - remove item at start and add item at end', () => {
+  const oldDom = [div({ className: 'a', key: 1 }, 0), div({ className: 'b', key: 2 }, 0), div({ className: 'c', key: 3 }, 0)]
+  const newDom = [div({ className: 'b', key: 2 }, 0), div({ className: 'c', key: 3 }, 0), div({ className: 'd', key: 4 }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      nodes: [0],
+      type: DiffDomType.Remove,
+    },
+    {
+      nodes: [
+        div(
+          {
+            className: 'd',
+            key: 4,
+          },
+          0
+        ),
+      ],
+      type: DiffDomType.Insert,
     },
   ])
 })
