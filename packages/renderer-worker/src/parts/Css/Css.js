@@ -3,6 +3,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Response from '../Response/Response.js'
 import { VError } from '../VError/VError.js'
 import * as Character from '../Character/Character.js'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 
 export const state = {
   pending: Object.create(null),
@@ -22,6 +23,9 @@ const actuallyLoadCssStyleSheet = async (css) => {
     const url = `${assetDir}${css}`
     const response = await fetch(url)
     if (!response.ok) {
+      if (response.status === HttpStatusCode.NotFound) {
+        throw new Error(`file not found ${url}`)
+      }
       throw new Error(response.statusText)
     }
     const text = await Response.getText(response)
