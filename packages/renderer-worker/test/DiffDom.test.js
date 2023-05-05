@@ -1,6 +1,6 @@
 import * as DiffDom from '../src/parts/DiffDom/DiffDom.js'
 import * as DiffDomType from '../src/parts/DiffDomType/DiffDomType.js'
-import { div, text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
+import { div, i, text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
 
 test('diffDom - empty', () => {
   const oldDom = []
@@ -120,6 +120,22 @@ test('diffDom - multiple nodes removed', () => {
     {
       type: DiffDomType.Remove,
       nodes: [0, 1],
+    },
+  ])
+})
+
+test('diffDom - remove and add nodes', () => {
+  const oldDom = [div({ className: 'a' }, 1), i({ className: 'b' }, 0), div({ className: 'a' })]
+  const newDom = [div({ className: 'a' }, 0), div({ className: 'a' }, 1), i({ className: 'b' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 1,
+      nodes: [div({ className: 'a' }, 1), i({ className: 'b' }, 0)],
+      type: DiffDomType.Insert,
+    },
+    {
+      nodes: [2],
+      type: DiffDomType.Remove,
     },
   ])
 })
