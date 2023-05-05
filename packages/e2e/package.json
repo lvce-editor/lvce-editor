@@ -13,7 +13,7 @@
     "e2e:headless": "node src/_all.js --headless"
   },
   "dependencies": {
-    "@playwright/test": "^1.32.3",
+    "@playwright/test": "^1.33.0",
     "get-port": "^6.1.2"
   },
   "devDependencies": {

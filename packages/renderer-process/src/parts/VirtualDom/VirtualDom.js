@@ -1,4 +1,5 @@
 import * as VirtualDomElement from '../VirtualDomElement/VirtualDomElement.js'
+import * as VirtualDomElementProps from '../VirtualDomElementProps/VirtualDomElementProps.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 /**
@@ -90,10 +91,9 @@ export const renderDiff = ($Root, diff) => {
       $Node = iter.nextNode()
       i++
     }
-    console.log({ diffItem })
     switch (diffItem.type) {
       case 'updateProp':
-        // VirtualDomElementProps.setProp(node, diffItem.key, diffItem.value)
+        VirtualDomElementProps.setProp($Node, diffItem.key, diffItem.value)
         break
       case 'insert':
         insert($Node, diffItem)
