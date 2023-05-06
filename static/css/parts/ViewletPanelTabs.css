@@ -15,7 +15,7 @@
   color: var(--PanelTabForeground);
 }
 
-.PanelTab[aria-selected] {
+.PanelTabSelected {
   /* color: rgb(231, 231, 231); */
   color: var(--PanelTabActiveForeground);
   border-bottom-color: rgb(231, 231, 231);

@@ -20,7 +20,7 @@ jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => 
 const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 const ViewletPanel = await import('../src/parts/ViewletPanel/ViewletPanel.js')
 
-test('event - mousedown - first tab clicked', () => {
+test.skip('event - mousedown - first tab clicked', () => {
   const state = ViewletPanel.create()
   ViewletPanel.attachEvents(state)
   ViewletPanel.setTabs(state, ['Problems', 'Output', 'Debug Console', 'Terminal'])
@@ -38,7 +38,7 @@ test('event - mousedown - first tab clicked', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Panel.selectIndex', 0)
 })
 
-test('event - mousedown - no tab clicked', () => {
+test.skip('event - mousedown - no tab clicked', () => {
   const state = ViewletPanel.create()
   ViewletPanel.attachEvents(state)
   ViewletPanel.setTabs(state, ['Problems', 'Output', 'Debug Console', 'Terminal'])

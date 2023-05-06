@@ -1,7 +1,7 @@
 import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-const createPanelTab = (tab) => {
-  const { isSelected, label } = tab
+const createPanelTab = (tab, isSelected) => {
+  const label = tab
   let className = 'PanelTab'
   if (isSelected) {
     className += ' PanelTabSelected'
@@ -11,6 +11,7 @@ const createPanelTab = (tab) => {
       {
         className,
         role: 'tab',
+        ariaSelected: isSelected,
       },
       1
     ),
@@ -18,7 +19,12 @@ const createPanelTab = (tab) => {
   ]
 }
 
-export const getPanelTabsVirtualDom = (tabs) => {
-  const dom = tabs.flatMap(createPanelTab)
+export const getPanelTabsVirtualDom = (tabs, selectedIndex) => {
+  const dom = []
+  for (let i = 0; i < tabs.length; i++) {
+    const isSelected = i === selectedIndex
+    const tab = tabs[i]
+    dom.push(...createPanelTab(tab, isSelected))
+  }
   return dom
 }
