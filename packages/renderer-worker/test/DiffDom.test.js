@@ -1,6 +1,6 @@
 import * as DiffDom from '../src/parts/DiffDom/DiffDom.js'
 import * as DiffDomType from '../src/parts/DiffDomType/DiffDomType.js'
-import { div, text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
+import { div, i, text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
 
 test('diffDom - empty', () => {
   const oldDom = []
@@ -86,22 +86,56 @@ test('diffDom - sub node removed at start', () => {
     },
     {
       type: DiffDomType.Remove,
-      nodes: [2],
-    },
-    {
-      type: DiffDomType.Remove,
-      nodes: [3],
+      nodes: [2, 3],
     },
   ])
 })
 
-test('diffDom - multiple nodes inserted', () => {
+test('diffDom - nested nodes inserted', () => {
   const oldDom = []
   const newDom = [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
       type: DiffDomType.Insert,
       nodes: [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)],
+    },
+  ])
+})
+
+test('diffDom - multiple nodes inserted', () => {
+  const oldDom = []
+  const newDom = [div({ className: 'a' }, 0), div({ className: 'b' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      type: DiffDomType.Insert,
+      nodes: [div({ className: 'a' }, 0), div({ className: 'b' }, 0)],
+    },
+  ])
+})
+
+test('diffDom - multiple nodes removed', () => {
+  const oldDom = [div({ className: 'a' }, 0), div({ className: 'b' }, 0)]
+  const newDom = []
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      type: DiffDomType.Remove,
+      nodes: [0, 1],
+    },
+  ])
+})
+
+test('diffDom - remove and add nodes', () => {
+  const oldDom = [div({ className: 'a' }, 1), i({ className: 'b' }, 0), div({ className: 'a' })]
+  const newDom = [div({ className: 'a' }, 0), div({ className: 'a' }, 1), i({ className: 'b' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 1,
+      nodes: [div({ className: 'a' }, 1), i({ className: 'b' }, 0)],
+      type: DiffDomType.Insert,
+    },
+    {
+      nodes: [2],
+      type: DiffDomType.Remove,
     },
   ])
 })

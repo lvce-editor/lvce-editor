@@ -32,17 +32,21 @@ const kbdDom = kbd(
   1
 )
 
+const textCtrl = text('Ctrl')
+const textShift = text('Shift')
+const textPlus = text('+')
+
 // TODO needing childCount variable everywhere can be error prone
 const getKeyBindingCellChildren = (keyBinding) => {
   const children = []
   let childCount = 0
   if (keyBinding.isCtrl) {
     childCount += 2
-    children.push(kbdDom, text('Ctrl'), text('+'))
+    children.push(kbdDom, textCtrl, textPlus)
   }
   if (keyBinding.isShift) {
     childCount += 2
-    children.push(kbdDom, text('Shift'), text('+'))
+    children.push(kbdDom, textShift, textPlus)
   }
   childCount++
   children.push(kbdDom, text(keyBinding.key))
@@ -78,6 +82,7 @@ const getTableRowDom = (keyBinding) => {
       {
         ariaRowIndex: keyBinding.rowIndex,
         className,
+        key: keyBinding.rowIndex,
       },
       3
     ),
