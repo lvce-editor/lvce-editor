@@ -34,39 +34,32 @@ let j = 0
 let h = 0
 
 const diffDomInternal = (oldDom, newDom, patches, lengthA, lengthB) => {
-  if (lengthA === 0 && lengthB === 0) {
+  if (lengthA <= 0 && lengthB <= 0) {
     return []
   }
   if (h++ > 10) {
     throw new Error('endless loop')
   }
-  console.log({ oldDom, newDom, i, lengthA, j, lengthB })
   let endA = i + lengthA - 1
   let endB = j + lengthB - 1
-  // if()
-  // i++
-  // j++
+  console.log({ oldDom, newDom, i, lengthA, j, lengthB, endA, endB })
 
-  const min = Math.min(lengthA, lengthB)
   // 1. sync from start
   while (i <= endA && j <= endB) {
-    // i++
-    // j++
     console.log('sync start')
     const a = oldDom[i]
     const b = newDom[j]
     if (isSameTypeAndKey(a, b)) {
+      console.log('same')
       patchProps(patches, a, b, i)
       i++
       j++
-      diffDomInternal(oldDom, newDom, patches, a.childCount, b.childCount)
+      diffDomInternal(oldDom, newDom, patches, a.childCount - 1, b.childCount - 1)
       continue
     } else {
+      console.log('break', i, j)
       break
     }
-    i++
-    j++
-    console.log({ i, j })
   }
   // 2. sync from end
   while (i <= endA && j <= endB) {
@@ -74,6 +67,11 @@ const diffDomInternal = (oldDom, newDom, patches, lengthA, lengthB) => {
     const b = newDom[endB]
     if (isSameTypeAndKey(a, b)) {
       patchProps(patches, a, b, i)
+      i++
+      j++
+      diffDomInternal(oldDom, newDom, patches, a.childCount - 1, b.childCount - 1)
+      i--
+      j--
     } else {
       break
     }
@@ -108,6 +106,7 @@ const diffDomInternal = (oldDom, newDom, patches, lengthA, lengthB) => {
 
   // 5. unknown sequence
   else {
+    console.log('UNKNOWN SEQN', i, j, endA, endB, lengthA, lengthB)
     const startA = i
     const startB = j
     // 5.1 build key:index map for newChildren
