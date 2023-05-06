@@ -30,7 +30,7 @@ test('diffDom - add a text node', () => {
   ])
 })
 
-test.only('diffDom - sub node attribute modified', () => {
+test('diffDom - sub node attribute modified', () => {
   const oldDom = [
     div({ className: 'List' }, 2),
     div({ className: 'ListItems' }, 0),
@@ -53,7 +53,7 @@ test.only('diffDom - sub node attribute modified', () => {
   ])
 })
 
-test('diffDom - sub node removed at end', () => {
+test.only('diffDom - sub node removed at end', () => {
   const oldDom = [
     div({ className: 'List' }, 2),
     div({ className: 'ListItems' }, 0),
@@ -133,15 +133,7 @@ test.skip('diffDom - remove and add nodes', () => {
       type: DiffDomType.Remove,
     },
     {
-      nodes: [2],
-      type: DiffDomType.Remove,
-    },
-    {
       nodes: [i({ className: 'b' }, 0)],
-      type: DiffDomType.Insert,
-    },
-    {
-      nodes: [div({ className: 'a' }, 1)],
       type: DiffDomType.Insert,
     },
   ])

@@ -29,41 +29,43 @@ const patchProps = (patches, a, b, i) => {
   }
 }
 
+let i = 0
+let j = 0
 let h = 0
 
-const diffDomInternal = (oldDom, newDom, patches, i, lengthA, j, lengthB) => {
+const diffDomInternal = (oldDom, newDom, patches, lengthA, lengthB) => {
+  if (lengthA === 0 && lengthB === 0) {
+    return []
+  }
   if (h++ > 10) {
     throw new Error('endless loop')
   }
   console.log({ oldDom, newDom, i, lengthA, j, lengthB })
   let endA = i + lengthA - 1
   let endB = j + lengthB - 1
+  // if()
+  // i++
+  // j++
+
   const min = Math.min(lengthA, lengthB)
   // 1. sync from start
   while (i <= endA && j <= endB) {
+    // i++
+    // j++
     console.log('sync start')
     const a = oldDom[i]
     const b = newDom[j]
-    const newIndex = newDom.indexOf(a)
-    if (a === b) {
-      // console.log('same', a)
+    if (isSameTypeAndKey(a, b)) {
+      patchProps(patches, a, b, i)
+      i++
+      j++
+      diffDomInternal(oldDom, newDom, patches, a.childCount, b.childCount)
+      continue
     } else {
-      if (isSameTypeAndKey(a, b)) {
-        patchProps(patches, a, b, i)
-        if (a.childCount && b.childCount) {
-          diffDomInternal(oldDom, newDom, patches, i + 1, a.childCount, j + 1, b.childCount)
-        }
-      } else {
-        break
-        // insert b
-        // patches.push({ type: DiffDomType.Insert, nodes: newDom.slice(j, j + b.childCount + 1), index: i })
-        // j += b.childCount
-      }
+      break
     }
     i++
-    i += a.childCount
     j++
-    j += b.childCount
     console.log({ i, j })
   }
   // 2. sync from end
@@ -170,5 +172,8 @@ const diffDomInternal = (oldDom, newDom, patches, i, lengthA, j, lengthB) => {
 }
 
 export const diffDom = (oldDom, newDom) => {
-  return diffDomInternal(oldDom, newDom, [], 0, oldDom.length, 0, newDom.length)
+  i = 0
+  j = 0
+  h = 0
+  return diffDomInternal(oldDom, newDom, [], oldDom.length, newDom.length)
 }
