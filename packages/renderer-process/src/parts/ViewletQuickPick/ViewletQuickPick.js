@@ -12,6 +12,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 
 // TODO use another virtual list that just appends elements and
@@ -192,6 +193,11 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
       $QuickPickInput.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
     }
   }
+}
+
+export const setItemsDom = (state, dom) => {
+  const { $QuickPickItems } = state
+  VirtualDom.renderInto($QuickPickItems, dom)
 }
 
 const focusElement = ($Element) => {

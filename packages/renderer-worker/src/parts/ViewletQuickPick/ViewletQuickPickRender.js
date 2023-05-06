@@ -1,5 +1,6 @@
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as GetVisibleQuickPickItems from '../GetVisibleQuickPickItems/GetVisibleQuickPickItems.js'
+import * as GetQuickPickItemsVirtualDom from '../GetQuickPickItemsVirtualDom/GetQuickPickItemsVirtualDom.js'
 
 export const hasFunctionalRender = true
 
@@ -26,11 +27,9 @@ const renderItems = {
     return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
-    if (newState.items.length === 0) {
-      return [/* method */ 'showNoResults']
-    }
     const visibleItems = GetVisibleQuickPickItems.getVisible(newState.provider, newState.items, newState.minLineY, newState.maxLineY)
-    return [/* method */ RenderMethod.SetVisiblePicks, /* visiblePicks */ visibleItems]
+    const dom = GetQuickPickItemsVirtualDom.getQuickPickItemsVirtualDom(visibleItems)
+    return ['setItemsDom', dom]
   },
 }
 
