@@ -27,7 +27,6 @@ const main = async () => {
     ipc.send(response)
     return
   }
-  console.log({ module })
   Rpc.listen(ipc, Command.execute)
 }
 

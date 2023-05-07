@@ -60,10 +60,11 @@ export const setDirty = (state, index, dirty) => {
   Assert.number(index)
   Assert.boolean(dirty)
   const { $MainTabs } = state
+  const $Child = $MainTabs.children[index]
   if (dirty) {
-    $MainTabs.children[index].classList.add(ClassNames.Dirty)
+    $Child.classList.add(ClassNames.Dirty)
   } else {
-    $MainTabs.children[index].classList.remove(ClassNames.Dirty)
+    $Child.classList.remove(ClassNames.Dirty)
   }
 }
 
