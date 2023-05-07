@@ -12,28 +12,22 @@ export const bundleExtensionHostSubWorker = async ({ cachePath, commitHash, plat
     from: 'static/js',
     to: Path.join(cachePath, 'static', 'js'),
   })
-  // TODO
-  // await Replace.replace({
-  //   path: `${cachePath}/src/parts/Ajax/Ajax.js`,
-  //   occurrence: `../../../../../static/`,
-  //   replacement: `../../../static/`,
-  // })
-  // await Replace.replace({
-  //   path: `${cachePath}/src/parts/BabelParser/BabelParser.js`,
-  //   occurrence: `../../../../../static/`,
-  //   replacement: `../../../static/`,
-  // })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Ajax/Ajax.js`,
+    occurrence: `../../../../../static/`,
+    replacement: `../../../static/`,
+  })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/BabelParser/BabelParser.js`,
+    occurrence: `../../../../../static/`,
+    replacement: `../../../static/`,
+  })
   await BundleJs.bundleJs({
     cwd: cachePath,
     from: `./src/extensionHostSubWorkerMain.js`,
     platform: 'webworker',
     allowCyclicDependencies: false,
   })
-  // await Replace.replace({
-  //   path: `${cachePath}/src/parts/Ajax/Ajax.js`,
-  //   occurrence: `../../../static/`,
-  //   replacement: `../../../../../static/`,
-  // })
   // workaround for firefox bug
   await Replace.replace({
     path: `${cachePath}/dist/extensionHostSubWorkerMain.js`,
