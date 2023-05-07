@@ -240,6 +240,20 @@ const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
   })
 }
 
+const copyExtensionHostSubWorkerFiles = async ({ commitHash }) => {
+  await Copy.copy({
+    from: 'packages/extension-host-sub-worker/src',
+    to: `build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker/src`,
+  })
+  // TODO
+  // await Replace.replace({
+  //   path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/Platform/Platform.js`,
+  //   occurrence: `/src/extensionHostWorkerMain.js`,
+  //   replacement: '/dist/extensionHostWorkerMain.js',
+  // })
+  // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
+}
+
 const copyPdfWorkerFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/pdf-worker/src',
@@ -588,6 +602,12 @@ const bundleJs = async ({ commitHash }) => {
     platform: 'webworker',
     codeSplitting: false,
   })
+  await BundleJs.bundleJs({
+    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker`),
+    from: 'src/placeholder.js', // TODO
+    platform: 'webworker',
+    codeSplitting: false,
+  })
 }
 
 const generateTestOverviewHtml = (dirents) => {
@@ -695,6 +715,10 @@ export const build = async () => {
   Console.time('copyExtensionHostWorkerFiles')
   await copyExtensionHostWorkerFiles({ commitHash })
   Console.timeEnd('copyExtensionHostWorkerFiles')
+
+  Console.time('copyExtensionHostSubWorkerFiles')
+  await copyExtensionHostSubWorkerFiles({ commitHash })
+  Console.timeEnd('copyExtensionHostSubWorkerFiles')
 
   Console.time('copyPdfWorkerFiles')
   await copyPdfWorkerFiles({ commitHash })
