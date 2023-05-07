@@ -3,13 +3,14 @@ export const getVisibleKeyBindings = (filteredKeyBindings, minLineY, maxLineY, s
   const slicedKeyBindings = filteredKeyBindings.slice(minLineY, maxLineY)
   for (let i = 0; i < slicedKeyBindings.length; i++) {
     const slicedKeyBinding = slicedKeyBindings[i]
+    const { isCtrl, isShift, key, when, command } = slicedKeyBinding
     visibleKeyBindings.push({
       rowIndex: minLineY + i + 2,
-      isCtrl: slicedKeyBinding.isCtrl,
-      isShift: slicedKeyBinding.isShift,
-      key: slicedKeyBinding.key,
-      when: slicedKeyBinding.when,
-      command: slicedKeyBinding.command,
+      isCtrl,
+      isShift,
+      key,
+      when,
+      command,
       selected: i === selectedIndex,
     })
   }
