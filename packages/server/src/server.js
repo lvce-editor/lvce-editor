@@ -168,7 +168,7 @@ const serveStatic = (root, skip = '') =>
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[CrossOriginOpenerPolicy.key] = CrossOriginOpenerPolicy.value
     }
-    if (filePath.endsWith('WorkerMain.js') || filePath.endsWith('extensionHostHelperProcessMain.js')) {
+    if (filePath.endsWith('WorkerMain.js')) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
     }
