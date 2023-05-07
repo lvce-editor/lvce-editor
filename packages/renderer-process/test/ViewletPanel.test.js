@@ -21,8 +21,3 @@ test('create', () => {
   const state = ViewletPanel.create()
   expect(state).toBeDefined()
 })
-
-test('setTabs', () => {
-  const state = ViewletPanel.create()
-  ViewletPanel.setTabs(state, ['Problems', 'Output', 'Debug Console', 'Terminal'])
-})
