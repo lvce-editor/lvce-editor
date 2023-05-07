@@ -6,9 +6,11 @@ export const create = async ({ url, name }) => {
     url,
     name,
   })
+  console.log({ worker })
   if (worker instanceof Worker) {
     const channel = new MessageChannel()
     const { port1, port2 } = channel
+    console.log('post init')
     worker.postMessage(
       {
         jsonrpc: JsonRpcVersion.Two,
