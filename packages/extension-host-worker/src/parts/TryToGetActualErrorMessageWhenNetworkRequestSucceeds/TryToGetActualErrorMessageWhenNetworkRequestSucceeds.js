@@ -58,7 +58,7 @@ export const tryToGetActualErrorMessage = async (error, url, response, seenUrls 
   }
   let ast
   try {
-    ast = BabelParser.parse(text, {
+    ast = await BabelParser.parse(text, {
       sourceType: 'module',
     })
   } catch (error) {

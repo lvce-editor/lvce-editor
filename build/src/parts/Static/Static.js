@@ -601,6 +601,7 @@ const bundleJs = async ({ commitHash }) => {
     from: 'src/extensionHostWorkerMain.js',
     platform: 'webworker',
     codeSplitting: false,
+    babelExternal: true,
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker`),
