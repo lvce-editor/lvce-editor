@@ -16,7 +16,7 @@ const main = async () => {
   try {
     module = await ImportScript.importScript(firstMessage.params[0])
     if (!module || !module.commandMap) {
-      throw new Error(`missing export const commandMap`)
+      throw new Error(`Missing export const commandMap`)
     }
     const commandMap = module.commandMap
     CommandState.registerCommands(commandMap)

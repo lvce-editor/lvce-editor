@@ -3,7 +3,7 @@ import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.js'
 
-export const getErrorResponse = (message, error) => {
+export const getErrorResponse = async (message, error) => {
   if (error && error instanceof Error && error.message && error.message.startsWith('method not found')) {
     return {
       jsonrpc: JsonRpcVersion.Two,
@@ -15,7 +15,7 @@ export const getErrorResponse = (message, error) => {
       },
     }
   }
-  const prettyError = PrettyError.prepare(error)
+  const prettyError = await PrettyError.prepare(error)
   PrintPrettyError.printPrettyError(prettyError, `[extension-host-helper-process] `)
   return {
     jsonrpc: JsonRpcVersion.Two,
