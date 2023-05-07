@@ -1,3 +1,7 @@
+import { Console } from 'node:console'
+import { createWriteStream } from 'node:fs'
+import { tmpdir } from 'node:os'
+
 // TODO mock this module when used in unit tests
 
 const state = {
@@ -7,46 +11,40 @@ const state = {
   console: undefined,
 }
 
-const createConsole = async () => {
-  if (typeof process !== 'undefined') {
-    const { Console } = await import('node:console')
-    const { createWriteStream } = await import('node:fs')
-    const { tmpdir } = await import('node:os')
-    const logFile = `${tmpdir()}/log-extension-host-helper-process.txt`
-    const writeStream = createWriteStream(logFile)
-    const logger = new Console(writeStream)
-    return logger
-  }
-  return console
+const createConsole = () => {
+  const logFile = `${tmpdir()}/log-extension-host-helper-process.txt`
+  const writeStream = createWriteStream(logFile)
+  const logger = new Console(writeStream)
+  return logger
 }
 
-const getOrCreateLogger = async () => {
+const getOrCreateLogger = () => {
   if (!state.console) {
-    state.console = await createConsole()
+    state.console = createConsole()
   }
   return state.console
 }
 
-export const log = async (...args) => {
-  const logger = await getOrCreateLogger()
+export const log = (...args) => {
+  const logger = getOrCreateLogger()
   logger.log(...args)
   console.log(...args)
 }
 
-export const info = async (...args) => {
-  const logger = await getOrCreateLogger()
+export const info = (...args) => {
+  const logger = getOrCreateLogger()
   logger.info(...args)
   console.info(...args)
 }
 
-export const warn = async (...args) => {
-  const logger = await getOrCreateLogger()
+export const warn = (...args) => {
+  const logger = getOrCreateLogger()
   logger.warn(...args)
   console.warn(...args)
 }
 
-export const error = async (...args) => {
-  const logger = await getOrCreateLogger()
+export const error = (...args) => {
+  const logger = getOrCreateLogger()
   logger.error(...args)
   console.error(...args)
 }
