@@ -1,30 +1,5 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as Logger from '../Logger/Logger.js'
 import { div } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-
-/**
- * @enum {string}
- */
-const ClassNames = {
-  KeyBindingsTableRow: 'KeyBindingsTableRow',
-}
-
-const getExtraProps = (flags) => {
-  switch (flags) {
-    case ActivityBarItemFlags.Tab:
-      return {
-        role: 'tab',
-      }
-    case ActivityBarItemFlags.Button:
-      return {
-        role: 'button',
-        ariaHasPopup: true,
-      }
-    default:
-      Logger.warn(`unknown activity bar item flags ${flags}`)
-      return {}
-  }
-}
 
 const createActivityBarItem = (item, isSelected, isFocused) => {
   const { flags, title, icon } = item
