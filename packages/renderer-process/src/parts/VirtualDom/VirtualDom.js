@@ -31,8 +31,12 @@ const isEqualNodeName = ($Node, node) => {
   return false
 }
 
+const clearNode = ($Node) => {
+  $Node.textContent = ''
+}
+
 export const renderInto = ($Parent, dom) => {
-  $Parent.textContent = ''
+  clearNode($Parent)
   renderInternal($Parent, dom)
 }
 
