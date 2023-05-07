@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import * as Assert from '../Assert/Assert.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
+import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
@@ -26,6 +27,8 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/shared-process/package-lock.json',
     'packages/pty-host/package-lock.json',
     'packages/extension-host/package-lock.json',
+    'packages/extension-host-worker/package-lock.json',
+    'packages/extension-host-sub-worker/package-lock.json',
     'packages/extension-host-helper-process/package-lock.json',
     'build/src/parts/BundleElectronApp/BundleElectronApp.js',
     'build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.js',
@@ -406,6 +409,20 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
     ignore: ['static'],
   })
   console.timeEnd('copyExtensionHostWorkerFiles')
+
+  const extensionHostSubWorkerCachePath = await BundleExtensionHostSubWorkerCached.bundleExtensionHostSubWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyExtensionHostSubWorkerFiles')
+  await Copy.copy({
+    from: extensionHostSubWorkerCachePath,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host-sub-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyExtensionHostSubWorkerFiles')
 
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ arch })
