@@ -1,16 +1,9 @@
-const getFirstMessage = () => {
-  return new Promise((resolve) => {
-    globalThis.onmessage = (event) => {
-      globalThis.onmessage = null
-      resolve(event.data)
-    }
-  })
-}
+import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.js'
 
 export const listen = async () => {
   const postMessageFn = globalThis.postMessage
   postMessageFn('ready')
-  const firstMessage = await getFirstMessage()
+  const firstMessage = await WaitForFirstMessage.waitForFirstMessage(globalThis)
   if (firstMessage.method !== 'initialize') {
     throw new Error('unexpected first message')
   }
