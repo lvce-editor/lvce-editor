@@ -49,13 +49,13 @@ const getTotalChildCount = (elements) => {
 
 const diffDomInternal = (oldDom, newDom, patches, lengthA, lengthB) => {
   console.log({ lengthA, lengthB })
-  if (lengthA <= 0 && lengthB <= 0) {
-    if (lengthA === 0) {
-      i++
-    }
-    console.log({ lengthA, lengthB })
-    return []
-  }
+  // if (lengthA <= 0 && lengthB <= 0) {
+  //   if (lengthA === 0) {
+  //     i++
+  //   }
+  //   console.log({ lengthA, lengthB, i, j })
+  //   return []
+  // }
   if (h++ > 10) {
     throw new Error('endless loop')
   }
@@ -101,11 +101,21 @@ const diffDomInternal = (oldDom, newDom, patches, lengthA, lengthB) => {
   // 3. common sub sequence + mount
   if (i > endA) {
     if (j <= endB) {
-      const totalInserted = GetTotalInserted.getTotalInserted(newDom, j)
-      console.log({ totalInserted })
+      const start = j
+      // const all=[]
+      // while(j < endB){
+
+      while (j <= endB) {
+        console.log({ j, endB })
+        const totalInserted = GetTotalInserted.getTotalInserted(newDom, j)
+        j += totalInserted
+        endB += totalInserted - 1
+        console.log({ totalInserted, j, newDom, endB })
+      }
+      // }
       patches.push({
         type: DiffDomType.Insert,
-        nodes: newDom.slice(j, totalInserted),
+        nodes: newDom.slice(start, j),
       })
     }
   }

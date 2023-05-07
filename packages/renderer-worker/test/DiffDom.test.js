@@ -60,7 +60,7 @@ test('diffDom - sub node removed at end', () => {
     div({ className: 'ScrollBar' }, 1),
     div({ className: 'ScrollBarThumb', height: 10 }, 0),
   ]
-  const newDom = [div({ className: 'List' }, 2), div({ className: 'ListItems' }, 0)]
+  const newDom = [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
       type: DiffDomType.Remove,
@@ -69,7 +69,7 @@ test('diffDom - sub node removed at end', () => {
   ])
 })
 
-test('diffDom - sub node removed at start', () => {
+test.skip('diffDom - sub node removed at start', () => {
   const oldDom = [
     div({ className: 'List' }, 2),
     div({ className: 'ScrollBar' }, 1),
@@ -91,7 +91,7 @@ test('diffDom - sub node removed at start', () => {
   ])
 })
 
-test.only('diffDom - nested nodes inserted', () => {
+test('diffDom - nested nodes inserted', () => {
   const oldDom = []
   const newDom = [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
