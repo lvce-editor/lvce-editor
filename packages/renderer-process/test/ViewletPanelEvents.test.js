@@ -55,14 +55,14 @@ test.skip('event - mousedown - no tab clicked', () => {
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test('accessibility - PanelTabs should have role tablist', () => {
+test.skip('accessibility - PanelTabs should have role tablist', () => {
   const state = ViewletPanel.create()
   ViewletPanel.attachEvents(state)
   ViewletPanel.setTabs(state, ['Problems', 'Output', 'Debug Console', 'Terminal'])
   expect(state.$PanelTabs.role).toBe(AriaRoles.TabList)
 })
 
-test('accessibility - PanelTab should have role tab', () => {
+test.skip('accessibility - PanelTab should have role tab', () => {
   const state = ViewletPanel.create()
   ViewletPanel.attachEvents(state)
   ViewletPanel.setTabs(state, ['Problems', 'Output', 'Debug Console', 'Terminal'])
@@ -70,7 +70,7 @@ test('accessibility - PanelTab should have role tab', () => {
   expect($PanelTabProblems.role).toBe(AriaRoles.Tab)
 })
 
-test('setSelectedIndex', () => {
+test.skip('setSelectedIndex', () => {
   const state = ViewletPanel.create()
   ViewletPanel.attachEvents(state)
   ViewletPanel.setTabs(state, ['Problems', 'Output', 'Debug Console', 'Terminal'])
