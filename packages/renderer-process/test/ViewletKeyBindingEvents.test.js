@@ -19,6 +19,7 @@ const ViewletKeyBindings = await import('../src/parts/ViewletKeyBindings/Viewlet
 
 test('event - input', () => {
   const state = ViewletKeyBindings.create()
+  ViewletKeyBindings.attachEvents(state)
   const { $InputBox, $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
 

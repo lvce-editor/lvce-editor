@@ -14,3 +14,5 @@ export const Th = 13
 export const THead = 14
 export const Tr = 15
 export const I = 16
+export const Img = 17
+export const Root = 0

@@ -459,6 +459,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     viewletState = instanceNow.renderedState
     if (module.hasFunctionalRender) {
       const renderCommands = getRenderCommands(module, viewletState, newState, viewletUid)
+      ViewletStates.setRenderedState(viewletUid, newState)
       commands.push(...renderCommands)
       if (viewlet.show === false) {
         const allCommands = [
