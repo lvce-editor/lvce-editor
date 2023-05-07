@@ -1,9 +1,19 @@
+import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.js'
+import * as IpcChildWithModuleWorker from '../IpcChildWithModuleWorker/IpcChildWithModuleWorker.js'
+
 export const listen = async () => {
-  // @ts-ignore
-  if (typeof WorkerGlobalScope === 'undefined') {
-    throw new Error('module is not in web worker scope')
+  const parentIpcRaw = await IpcChildWithModuleWorker.listen()
+  const parentIpc = IpcChildWithModuleWorker.wrap(parentIpcRaw)
+  const firstMessage = await WaitForFirstMessage.waitForFirstMessage(parentIpc)
+  console.log({ firstMessage })
+  if (firstMessage.method !== 'initialize') {
+    throw new Error('unexpected first message')
   }
-  globalThis.postMessage('ready')
+  const type = firstMessage.params[0]
+  if (type === 'message-port') {
+    const port = firstMessage.params[1]
+    return port
+  }
   return globalThis
 }
 

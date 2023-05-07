@@ -11,7 +11,6 @@ export const createRpc = async ({ url, name }) => {
     Assert.string(url)
     Assert.string(name)
     const helperProcessUrl = GetExtensionHostHelperProcessUrl.getExtensionHostHelperProcessUrl()
-    console.log({ helperProcessUrl })
     const ipc = await IpcParent.create({
       method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
       url: helperProcessUrl,
@@ -21,8 +20,9 @@ export const createRpc = async ({ url, name }) => {
       ipc,
       method: RpcParentType.JsonRpc,
     })
+    await rpc.invoke('setUrl', url)
     return rpc
   } catch (error) {
-    throw new VError(error, `Failed to create node rpc`)
+    throw new VError(error, `Failed to create rpc`)
   }
 }

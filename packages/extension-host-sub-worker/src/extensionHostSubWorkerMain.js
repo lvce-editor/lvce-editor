@@ -1,47 +1,34 @@
+import * as Command from './parts/Command/Command.js'
+import * as CommandState from './parts/CommandState/CommandState.js'
 import * as GetErrorResponse from './parts/GetErrorResponse/GetErrorResponse.js'
 import * as GetSuccessResponse from './parts/GetSuccessResponse/GetSuccessResponse.js'
 import * as ImportScript from './parts/ImportScript/ImportScript.js'
 import * as IpcChild from './parts/IpcChild/IpcChild.js'
 import * as IpcChildType from './parts/IpcChildType/IpcChildType.js'
 import * as Rpc from './parts/Rpc/Rpc.js'
-
-const waitForFirstMessage = async (ipc) => {
-  const { message } = await new Promise((resolve) => {
-    const cleanup = (value) => {
-      ipc.onmessage = null
-      resolve(value)
-    }
-    const handleMessage = (message) => {
-      cleanup({ message })
-    }
-    ipc.onmessage = handleMessage
-  })
-  return message
-}
+import * as WaitForFirstMessage from './parts/WaitForFirstMessage/WaitForFirstMessage.js'
 
 const main = async () => {
   const method = IpcChildType.Auto()
   const ipc = await IpcChild.listen({ method })
-  console.log('before wait')
-  const firstMessage = await waitForFirstMessage(ipc)
-  console.log('after wait')
+  const firstMessage = await WaitForFirstMessage.waitForFirstMessage(ipc)
   let module
   try {
     module = await ImportScript.importScript(firstMessage.params[0])
-    if (!module || !module.execute) {
-      throw new Error(`missing export const execute function`)
+    if (!module || !module.commandMap) {
+      throw new Error(`missing export const commandMap`)
     }
+    const commandMap = module.commandMap
+    CommandState.registerCommands(commandMap)
     const response = GetSuccessResponse.getSuccessResponse(firstMessage, null)
-    console.log({ response })
     ipc.send(response)
   } catch (error) {
-    console.log({ error })
     const response = await GetErrorResponse.getErrorResponse(firstMessage, error)
     ipc.send(response)
     return
   }
   console.log({ module })
-  Rpc.listen(ipc, module.execute)
+  Rpc.listen(ipc, Command.execute)
 }
 
 main()

@@ -1,6 +1,9 @@
 import * as GetResponse from '../GetResponse/GetResponse.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const listen = (ipc, execute) => {
+  Assert.object(ipc)
+  Assert.fn(execute)
   const handleMessage = async (message) => {
     if ('method' in message) {
       const response = await GetResponse.getResponse(message, execute)
@@ -9,5 +12,5 @@ export const listen = (ipc, execute) => {
       console.log({ message })
     }
   }
-  ipc.on('message', handleMessage)
+  ipc.onmessage = handleMessage
 }

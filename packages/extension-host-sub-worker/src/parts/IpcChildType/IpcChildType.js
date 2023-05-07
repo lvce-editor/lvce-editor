@@ -5,6 +5,7 @@ export const ElectronMessagePort = 4
 export const ElectronUtilityProcess = 5
 export const ElectronUtilityProcessMessagePort = 6
 export const ModuleWorker = 7
+export const ModuleWorkerAndMessagePort = 8
 
 export const Auto = () => {
   if (globalThis.acceptPort) {
@@ -13,5 +14,5 @@ export const Auto = () => {
   if (globalThis.acceptReferencePort) {
     return 0
   }
-  return ModuleWorker
+  return ModuleWorkerAndMessagePort
 }
