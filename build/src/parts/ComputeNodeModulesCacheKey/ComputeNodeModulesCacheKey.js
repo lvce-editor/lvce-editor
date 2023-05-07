@@ -8,6 +8,8 @@ const locations = [
   'packages/extension-host/package-lock.json',
   'packages/extension-host-helper-process/package-lock.json',
   'packages/extension-host-worker-tests/package-lock.json',
+  'packages/extension-host-worker/package-lock.json',
+  'packages/extension-host-sub-worker/package-lock.json',
   'packages/pty-host/package-lock.json',
   'packages/main-process/package-lock.json',
   'packages/renderer-process/package-lock.json',
