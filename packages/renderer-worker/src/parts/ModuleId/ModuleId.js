@@ -58,7 +58,6 @@ export const PersistentFileHandle = 56
 export const IndexedDb = 57
 export const Chrome = 58
 export const ElectronBrowserView = 59
-export const ChromeExtension = 60
 export const ElectronApp = 61
 export const ElectronContextMenu = 62
 export const ElectronClipBoard = 63
