@@ -1,5 +1,5 @@
 import * as DiffDomType from '../DiffDomType/DiffDomType.js'
-import { div } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as GetTotalInserted from '../GetTotalInserted/GetTotalInserted.js'
 
 const isEqualElement = (oldDom, i, newDom, j) => {
   const oldElement = oldDom[i]
@@ -47,26 +47,8 @@ const getTotalChildCount = (elements) => {
   return count
 }
 
-const getTotalInserted = (dom, start) => {
-  const node = dom[start]
-  const childCount = node.childCount
-  let current = 0
-  let total = 0
-  for (let i = start; i < dom.length; i++) {
-    childCount //?
-    const element = dom[i]
-    total += element.childCount
-    current -= element.childCount
-    console.log({ current })
-    if (current === 0) {
-      break
-    }
-    current++
-  }
-  return total
-}
-
 const diffDomInternal = (oldDom, newDom, patches, lengthA, lengthB) => {
+  console.log({ lengthA, lengthB })
   if (lengthA <= 0 && lengthB <= 0) {
     if (lengthA === 0) {
       i++
@@ -119,7 +101,8 @@ const diffDomInternal = (oldDom, newDom, patches, lengthA, lengthB) => {
   // 3. common sub sequence + mount
   if (i > endA) {
     if (j <= endB) {
-      const totalInserted=getTotalInserted(newDom, j)
+      const totalInserted = GetTotalInserted.getTotalInserted(newDom, j)
+      console.log({ totalInserted })
       patches.push({
         type: DiffDomType.Insert,
         nodes: newDom.slice(j, totalInserted),
