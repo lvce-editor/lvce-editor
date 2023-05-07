@@ -16,6 +16,7 @@ import * as ExtensionHostGetPosition from '../ExtensionHostGetPosition/Extension
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
 import * as ExtensionHostNodeIpc from '../ExtensionHostNodeIpc/ExtensionHostNodeIpc.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
+import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
@@ -89,7 +90,8 @@ export const api = {
   // Get Position
   getPosition: ExtensionHostGetPosition.getPosition,
 
-  // Node Rpc
+  // Rpc
+  createRpc: ExtensionHostRpc.createRpc,
   createNodeRpc: ExtensionHostNodeIpc.createNodeRpc,
 
   // Implementation
