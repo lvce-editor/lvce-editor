@@ -588,6 +588,7 @@ const bundleJs = async ({ commitHash }) => {
     platform: 'web',
     codeSplitting: true,
     minify: true,
+    babelExternal: true,
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/renderer-worker`),
@@ -595,6 +596,7 @@ const bundleJs = async ({ commitHash }) => {
     platform: 'webworker',
     codeSplitting: true,
     allowCyclicDependencies: true, // TODO
+    babelExternal: true,
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-worker`),
