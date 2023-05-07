@@ -4,6 +4,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletPanelEvents from './ViewletPanelEvents.js'
 
 /**
@@ -12,15 +13,6 @@ import * as ViewletPanelEvents from './ViewletPanelEvents.js'
 const UiStrings = {
   Close: 'Close',
   Maximize: 'Maximize',
-}
-
-const create$PanelTab = (label, index) => {
-  const $PanelTab = document.createElement('div')
-  $PanelTab.className = 'PanelTab'
-  $PanelTab.role = AriaRoles.Tab
-  $PanelTab.textContent = label
-  $PanelTab.id = `PanelTab-${index + 1}`
-  return $PanelTab
 }
 
 export const create = () => {
@@ -67,9 +59,9 @@ export const attachEvents = (state) => {
   $ButtonClose.onclick = ViewletPanelEvents.handleClickClose
 }
 
-export const setTabs = (state, tabs) => {
+export const setTabsDom = (state, dom) => {
   const { $PanelTabs } = state
-  $PanelTabs.append(...tabs.map(create$PanelTab))
+  VirtualDom.renderInto($PanelTabs, dom)
 }
 
 // TODO add test for focus method
