@@ -1,4 +1,5 @@
 import * as DiffDomType from '../DiffDomType/DiffDomType.js'
+import { div } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const isEqualElement = (oldDom, i, newDom, j) => {
   const oldElement = oldDom[i]
@@ -33,8 +34,44 @@ let i = 0
 let j = 0
 let h = 0
 
+const getTotalChildCount = (elements) => {
+  const max = elements.length - 1
+  let count = 0
+  for (let i = max; i >= 0; i--) {
+    const element = elements[i]
+    if (element.childCount > 0) {
+      count -= element.childCount
+    }
+    count++
+  }
+  return count
+}
+
+const getTotalInserted = (dom, start) => {
+  const node = dom[start]
+  const childCount = node.childCount
+  let current = 0
+  let total = 0
+  for (let i = start; i < dom.length; i++) {
+    childCount //?
+    const element = dom[i]
+    total += element.childCount
+    current -= element.childCount
+    console.log({ current })
+    if (current === 0) {
+      break
+    }
+    current++
+  }
+  return total
+}
+
 const diffDomInternal = (oldDom, newDom, patches, lengthA, lengthB) => {
   if (lengthA <= 0 && lengthB <= 0) {
+    if (lengthA === 0) {
+      i++
+    }
+    console.log({ lengthA, lengthB })
     return []
   }
   if (h++ > 10) {
@@ -50,11 +87,11 @@ const diffDomInternal = (oldDom, newDom, patches, lengthA, lengthB) => {
     const a = oldDom[i]
     const b = newDom[j]
     if (isSameTypeAndKey(a, b)) {
-      console.log('same')
+      console.log('-> same, recurse')
       patchProps(patches, a, b, i)
       i++
       j++
-      diffDomInternal(oldDom, newDom, patches, a.childCount - 1, b.childCount - 1)
+      diffDomInternal(oldDom, newDom, patches, a.childCount, b.childCount)
       continue
     } else {
       console.log('break', i, j)
@@ -82,9 +119,10 @@ const diffDomInternal = (oldDom, newDom, patches, lengthA, lengthB) => {
   // 3. common sub sequence + mount
   if (i > endA) {
     if (j <= endB) {
+      const totalInserted=getTotalInserted(newDom, j)
       patches.push({
         type: DiffDomType.Insert,
-        nodes: newDom.slice(j, endB + 1),
+        nodes: newDom.slice(j, totalInserted),
       })
     }
   }
@@ -174,5 +212,5 @@ export const diffDom = (oldDom, newDom) => {
   i = 0
   j = 0
   h = 0
-  return diffDomInternal(oldDom, newDom, [], oldDom.length, newDom.length)
+  return diffDomInternal(oldDom, newDom, [], getTotalChildCount(oldDom), getTotalChildCount(newDom))
 }
