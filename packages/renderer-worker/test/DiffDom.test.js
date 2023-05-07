@@ -69,14 +69,14 @@ test('diffDom - sub node removed at end', () => {
   ])
 })
 
-test.skip('diffDom - sub node removed at start', () => {
+test('diffDom - sub node removed at start', () => {
   const oldDom = [
     div({ className: 'List' }, 2),
     div({ className: 'ScrollBar' }, 1),
     div({ className: 'ScrollBarThumb', height: 10 }, 0),
     div({ className: 'ListItems' }, 0),
   ]
-  const newDom = [div({ className: 'List' }, 2), div({ className: 'ListItems' }, 0)]
+  const newDom = [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
       index: 1,
@@ -86,7 +86,7 @@ test.skip('diffDom - sub node removed at start', () => {
     },
     {
       type: DiffDomType.Remove,
-      nodes: [2, 3],
+      nodes: [2],
     },
   ])
 })
