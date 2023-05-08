@@ -2,13 +2,6 @@ import * as GetWorkerDisplayName from '../GetWorkerDisplayName/GetWorkerDisplayN
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as TryToGetActualErrorMessageWhenNetworkRequestSucceeds from '../TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js'
 
-class NotFoundError extends Error {
-  constructor(displayName) {
-    super(`Failed to start ${displayName}: Not found (404)`)
-    this.name = 'NotFoundError'
-  }
-}
-
 export const tryToGetActualErrorMessage = async ({ url, name }) => {
   const displayName = GetWorkerDisplayName.getWorkerDisplayName(name)
   let response
@@ -22,7 +15,7 @@ export const tryToGetActualErrorMessage = async ({ url, name }) => {
   }
   switch (response.status) {
     case HttpStatusCode.NotFound:
-      throw new NotFoundError(displayName)
+      throw new Error(`Failed to start ${displayName}: Not found (404)`)
     default:
       return `Failed to start ${displayName}: Unknown Network Error`
   }
