@@ -1,7 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as Icon from '../Icon/Icon.js'
@@ -71,13 +70,6 @@ export const handlePointerDown = (event) => {
   }
 }
 
-export const handleContextMenu = (event) => {
-  Event.preventDefault(event)
-  const { button, clientX, clientY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletExtensionsFunctions.handleContextMenu(uid, button, clientX, clientY)
-}
-
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
   const uid = ComponentUid.fromEvent(event)
@@ -133,3 +125,5 @@ export const handleTouchEnd = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletExtensionsFunctions.handleTouchEnd(uid, changedTouches)
 }
+
+export * from '../ContextMenuEvents/ContextMenuEvents.js'
