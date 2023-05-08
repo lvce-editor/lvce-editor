@@ -11,14 +11,15 @@ const GetResponse = require('../GetResponse/GetResponse.js')
 exports.handlePort = (event, browserWindowPort) => {
   Assert.object(event)
   Assert.object(browserWindowPort)
-  const { id } = event.sender
+  const { sender } = event
+  const { id } = sender
   const state = AppWindowStates.findById(id)
   if (state) {
     state.port = browserWindowPort
   }
   const browserWindow = BrowserWindow.fromId(id)
   if (!browserWindow) {
-    throw new Error('no matching browser window found')
+    throw new Error(`no matching browser window found for id ${id}`)
   }
   const handleMinimize = (event) => {
     browserWindowPort.postMessage({
