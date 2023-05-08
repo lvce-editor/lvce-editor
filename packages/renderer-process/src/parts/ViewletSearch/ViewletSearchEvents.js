@@ -1,6 +1,4 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
@@ -54,28 +52,6 @@ export const handleContextMenu = (event) => {
   ViewletSearchFunctions.handleContextMenu(uid, button, clientX, clientY)
 }
 
-export const handleScrollBarThumbPointerMove = (event) => {
-  const { clientY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleScrollBarMove(uid, clientY)
-}
-
-export const handleScrollBarPointerUp = (event) => {
-  const { target, pointerId } = event
-  target.releasePointerCapture(pointerId)
-  target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove)
-  target.removeEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
-}
-
-export const handleScrollBarPointerDown = (event) => {
-  const { target, pointerId, clientY } = event
-  target.setPointerCapture(pointerId)
-  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, DomEventOptions.Active)
-  target.addEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleScrollBarClick(uid, clientY)
-}
-
 export const handleToggleButtonClick = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletSearchFunctions.toggleReplace(uid)
@@ -107,12 +83,6 @@ export const handleHeaderClick = (event) => {
   // TODO better way to determine which button was clicked
 }
 
-export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleWheel(uid, deltaMode, deltaY)
-}
-
 export const handleReplaceInput = (event) => {
   const { target } = event
   const { value } = target
@@ -129,3 +99,5 @@ export const handleListBlur = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletSearchFunctions.handleListBlur(uid)
 }
+
+export * from '../VirtualListEvents/VirtualListEvents.js'

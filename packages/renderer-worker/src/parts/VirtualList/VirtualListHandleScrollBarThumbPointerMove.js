@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.js'
 import { setDeltaY } from './VirtualListSetDeltaY.js'
 
 const getNewPercent = (state, relativeY) => {
@@ -9,7 +10,8 @@ const getNewPercent = (state, relativeY) => {
   return 1
 }
 
-export const handleScrollBarMove = (state, eventY) => {
+export const handleScrollBarThumbPointerMove = (state, eventY) => {
+  Assert.number(eventY)
   const { y, headerHeight, handleOffset, finalDeltaY } = state
   const relativeY = eventY - y - headerHeight - handleOffset
   const newPercent = getNewPercent(state, relativeY)

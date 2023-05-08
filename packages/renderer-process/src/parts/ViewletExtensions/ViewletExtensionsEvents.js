@@ -1,6 +1,4 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
@@ -8,26 +6,6 @@ import * as Icon from '../Icon/Icon.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as TouchEvent from '../TouchEvent/TouchEvent.js'
 import * as ViewletExtensionsFunctions from './ViewletExtensionsFunctions.js'
-
-export const handleScrollBarThumbPointerMove = (event) => {
-  const { clientY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletExtensionsFunctions.handleScrollBarThumbPointerMove(uid, clientY)
-}
-
-const handleScrollBarPointerCaptureLost = (event) => {
-  const { target } = event
-  target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove)
-}
-
-export const handleScrollBarPointerDown = (event) => {
-  const { target, pointerId, clientY } = event
-  target.setPointerCapture(pointerId)
-  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, DomEventOptions.Active)
-  target.addEventListener(DomEventType.LostPointerCapture, handleScrollBarPointerCaptureLost)
-  const uid = ComponentUid.fromEvent(event)
-  ViewletExtensionsFunctions.handleScrollBarClick(uid, clientY)
-}
 
 export const handleFocus = (event) => {
   Focus.setFocus('Extensions')
@@ -76,12 +54,6 @@ export const handleContextMenu = (event) => {
   const { button, clientX, clientY } = event
   const uid = ComponentUid.fromEvent(event)
   ViewletExtensionsFunctions.handleContextMenu(uid, button, clientX, clientY)
-}
-
-export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletExtensionsFunctions.handleWheel(uid, deltaMode, deltaY)
 }
 
 export const handleInput = (event) => {
@@ -133,3 +105,5 @@ export const handleTouchEnd = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletExtensionsFunctions.handleTouchEnd(uid, changedTouches)
 }
+
+export * from '../VirtualListEvents/VirtualListEvents.js'

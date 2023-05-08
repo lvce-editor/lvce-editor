@@ -15,7 +15,7 @@ const getNewDeltaPercent = (state, relativeY) => {
   return 1
 }
 
-export const handleScrollBarClick = (state, eventY) => {
+export const handleScrollBarPointerDown = (state, eventY) => {
   const { y, headerHeight, finalDeltaY, scrollBarHeight } = state
   const relativeY = eventY - y - headerHeight
   const newPercent = getNewDeltaPercent(state, relativeY)

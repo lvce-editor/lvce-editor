@@ -6,6 +6,5 @@ export const handleDragOver = ForwardViewletCommand.forwardViewletCommand('handl
 export const handleDrop = ForwardViewletCommand.forwardViewletCommand('handleDrop')
 export const handleContextMenu = ForwardViewletCommand.forwardViewletCommand('handleContextMenu')
 export const handleClickAt = ForwardViewletCommand.forwardViewletCommand('handleClickAt')
-export const handleWheel = ForwardViewletCommand.forwardViewletCommand('handleWheel')
 export const updateEditingValue = ForwardViewletCommand.forwardViewletCommand('updateEditingValue')
 export const handlePointerDown = ForwardViewletCommand.forwardViewletCommand('handlePointerDown')
