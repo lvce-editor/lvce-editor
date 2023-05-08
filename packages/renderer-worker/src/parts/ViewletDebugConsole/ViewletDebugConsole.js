@@ -1,23 +1,13 @@
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-
 export const create = (uid) => {
   return {
-    disposed: false,
     uid,
+    text: '',
   }
 }
 
 export const loadContent = async (state) => {
-  return state
-}
-
-export const dispose = (state) => {
   return {
     ...state,
-    disposed: true,
+    text: 'Debug Console (not implemented)',
   }
 }
-
-export const hasFunctionalRender = true
-
-export const render = []
