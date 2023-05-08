@@ -102,7 +102,7 @@
   {
     "name": "builtin.language-basics-json5",
     "repository": "github.com/lvce-editor/language-basics-json5",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-jsx",
@@ -157,7 +157,7 @@
   {
     "name": "builtin.language-basics-python",
     "repository": "github.com/lvce-editor/language-basics-python",
-    "version": "0.0.10"
+    "version": "0.0.11"
   },
   {
     "name": "builtin.language-basics-r",
@@ -207,22 +207,22 @@
   {
     "name": "builtin.language-basics-xml",
     "repository": "github.com/lvce-editor/language-basics-xml",
-    "version": "0.0.8"
+    "version": "0.0.10"
   },
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.26"
+    "version": "0.0.27"
   },
   {
     "name": "builtin.language-features-css",
     "repository": "github.com/lvce-editor/language-features-css",
-    "version": "0.0.8"
+    "version": "0.0.9"
   },
   {
     "name": "builtin.language-features-html",
     "repository": "github.com/lvce-editor/language-features-html",
-    "version": "0.0.11"
+    "version": "0.0.12"
   },
   {
     "name": "builtin.language-features-typescript",
@@ -232,17 +232,17 @@
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "0.0.9"
+    "version": "0.0.10"
   },
   {
     "name": "builtin.theme-atom-one-dark",
     "repository": "github.com/lvce-editor/theme-atom-one-dark",
-    "version": "0.0.15"
+    "version": "0.0.16"
   },
   {
     "name": "builtin.theme-ayu",
     "repository": "github.com/lvce-editor/theme-ayu",
-    "version": "0.0.9"
+    "version": "0.0.10"
   },
   {
     "name": "builtin.theme-cobalt2",
