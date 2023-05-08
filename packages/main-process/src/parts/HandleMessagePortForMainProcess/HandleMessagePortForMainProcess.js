@@ -17,9 +17,9 @@ exports.handlePort = (event, browserWindowPort) => {
   if (state) {
     state.port = browserWindowPort
   }
-  const browserWindow = BrowserWindow.fromId(id)
+  const browserWindow = BrowserWindow.fromWebContents(sender)
   if (!browserWindow) {
-    throw new Error(`no matching browser window found for id ${id}`)
+    throw new Error(`no matching browser window found for web contents`)
   }
   const handleMinimize = (event) => {
     browserWindowPort.postMessage({
