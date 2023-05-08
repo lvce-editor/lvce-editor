@@ -4,9 +4,11 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetExplorerMaxLineY from '../GetExplorerMaxLineY/GetExplorerMaxLineY.js'
 import * as GetFileExtension from '../GetFileExtension/GetFileExtension.js'
 import * as Height from '../Height/Height.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
@@ -16,7 +18,6 @@ import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewl
 import * as Workspace from '../Workspace/Workspace.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEndIndex, getParentStartIndex } from './ViewletExplorerShared.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
@@ -543,7 +544,7 @@ const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   dirent.icon = IconTheme.getIcon(dirent)
   const { height, itemHeight, minLineY } = state2
   // TODO when focused index has changed while expanding, don't update it
-  const maxLineY = minLineY + Math.min(Math.ceil(height / itemHeight), newDirents.length)
+  const maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, newDirents.length)
   return {
     ...state,
     items: newDirents,
