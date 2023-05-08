@@ -11,12 +11,6 @@ export const handleMousedown = (event) => {
   ViewletEditorCompletionFunctions.handleClickAt(uid, clientX, clientY)
 }
 
-export const handleWheel = (event) => {
-  const { deltaY, deltaMode } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletEditorCompletionFunctions.handleWheel(uid, deltaMode, deltaY)
-}
-
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
   const uid = ComponentUid.fromEvent(event)
@@ -37,3 +31,5 @@ export const handleScrollBarPointerDown = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletEditorCompletionFunctions.handleScrollBarClick(uid, clientY)
 }
+
+export * from '../VirtualListEvents/VirtualListEvents.js'

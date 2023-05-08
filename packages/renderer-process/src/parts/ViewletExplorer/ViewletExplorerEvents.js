@@ -163,12 +163,6 @@ export const handleClick = (event) => {
   ViewletExplorerFunctions.handleClickAt(uid, button, clientX, clientY)
 }
 
-export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletExplorerFunctions.handleWheel(uid, deltaMode, deltaY)
-}
-
 export const handlePointerDown = (event) => {
   const { button, clientX, clientY } = event
   const uid = ComponentUid.fromEvent(event)
@@ -206,4 +200,5 @@ export const handleEditingInput = (event) => {
   ViewletExplorerFunctions.updateEditingValue(uid, value)
 }
 
+export * from '../VirtualListEvents/VirtualListEvents.js'
 export * from '../ContextMenuEvents/ContextMenuEvents.js'

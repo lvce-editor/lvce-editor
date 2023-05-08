@@ -4,7 +4,6 @@ export const handleInput = ForwardViewletCommand.forwardViewletCommand('handleIn
 export const handleClick = ForwardViewletCommand.forwardViewletCommand('handleClick')
 export const handleScrollBarMove = ForwardViewletCommand.forwardViewletCommand('handleScrollBarMove')
 export const handleScrollBarClick = ForwardViewletCommand.forwardViewletCommand('handleScrollBarClick')
-export const handleWheel = ForwardViewletCommand.forwardViewletCommand('handleWheel')
 export const toggleReplace = ForwardViewletCommand.forwardViewletCommand('toggleReplace')
 export const toggleMatchCase = ForwardViewletCommand.forwardViewletCommand('toggleMatchCase')
 export const toggleMatchWholeWord = ForwardViewletCommand.forwardViewletCommand('toggleMatchWholeWord')

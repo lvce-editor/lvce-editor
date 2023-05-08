@@ -99,12 +99,6 @@ export const handleHeaderClick = (event) => {
   // TODO better way to determine which button was clicked
 }
 
-export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleWheel(uid, deltaMode, deltaY)
-}
-
 export const handleReplaceInput = (event) => {
   const { target } = event
   const { value } = target
@@ -122,4 +116,5 @@ export const handleListBlur = (event) => {
   ViewletSearchFunctions.handleListBlur(uid)
 }
 
+export * from '../VirtualListEvents/VirtualListEvents.js'
 export * from '../ContextMenuEvents/ContextMenuEvents.js'

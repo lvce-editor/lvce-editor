@@ -70,12 +70,6 @@ export const handlePointerDown = (event) => {
   }
 }
 
-export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletExtensionsFunctions.handleWheel(uid, deltaMode, deltaY)
-}
-
 export const handleInput = (event) => {
   const $Target = event.target
   const value = $Target.value
@@ -126,4 +120,5 @@ export const handleTouchEnd = (event) => {
   ViewletExtensionsFunctions.handleTouchEnd(uid, changedTouches)
 }
 
+export * from '../VirtualListEvents/VirtualListEvents.js'
 export * from '../ContextMenuEvents/ContextMenuEvents.js'
