@@ -9,11 +9,6 @@ test('create', () => {
   expect(state).toBeDefined()
 })
 
-test('dispose', () => {
-  const state = ViewletDebugConsole.create()
-  ViewletDebugConsole.dispose(state)
-})
-
 test('mount', () => {
   const state = ViewletDebugConsole.create()
   const $Parent = document.createElement('div')
@@ -27,10 +22,4 @@ test('focus', () => {
   Viewlet.mount(document.body, state)
   ViewletDebugConsole.focus(state)
   expect(document.activeElement).toBe(state.$Input)
-})
-
-test('dispose', () => {
-  const state = ViewletDebugConsole.create()
-  ViewletDebugConsole.dispose(state)
-  // TODO what to test?
 })

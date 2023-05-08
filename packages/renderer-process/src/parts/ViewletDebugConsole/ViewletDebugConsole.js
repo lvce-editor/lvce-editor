@@ -29,5 +29,3 @@ export const setText = (state, text) => {
   const { $DebugConsoleTop } = state
   $DebugConsoleTop.textContent = text
 }
-
-export const dispose = (state) => {}
