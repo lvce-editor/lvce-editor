@@ -39,7 +39,7 @@ const handlePointerDownExtension = (uid, $Target) => {
 
 const handlePointerDownExtensionDetail = (uid, $Target) => {
   const index = GetNodeIndex.getNodeIndex($Target.parentNode.parentNode)
-  ViewletExtensionsFunctions.handleClick(index)
+  ViewletExtensionsFunctions.handleClick(uid, index)
 }
 
 const handlePointerDownExtensionAuthorName = (uid, $Target) => {
