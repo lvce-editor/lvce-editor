@@ -53,15 +53,6 @@ export const handlePointerDown = (event) => {
 }
 
 /**
- * @param {WheelEvent} event
- */
-export const handleWheel = (event) => {
-  const { clientX, clientY, deltaX, deltaY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletEditorImageFunctions.handleWheel(uid, clientX, clientY, deltaX, deltaY)
-}
-
-/**
  *
  * @param {MouseEvent} event
  */
@@ -80,3 +71,5 @@ export const handleError = (event) => {
 export const handleFocus = () => {
   Focus.setFocus('EditorImage')
 }
+
+export * from '../VirtualListEvents/VirtualListEvents.js'

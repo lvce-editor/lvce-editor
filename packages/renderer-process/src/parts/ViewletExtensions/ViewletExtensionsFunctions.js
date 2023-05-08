@@ -2,7 +2,6 @@ import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletC
 
 export const handleScrollBarClick = ForwardViewletCommand.forwardViewletCommand('handleScrollBarClick')
 export const handleClick = ForwardViewletCommand.forwardViewletCommand('handleClick')
-export const handleWheel = ForwardViewletCommand.forwardViewletCommand('handleWheel')
 export const handleInput = ForwardViewletCommand.forwardViewletCommand('handleInput')
 export const handleTouchMove = ForwardViewletCommand.forwardViewletCommand('handleTouchMove')
 export const handleTouchStart = ForwardViewletCommand.forwardViewletCommand('handleTouchStart')
