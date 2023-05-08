@@ -25,6 +25,6 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, Loc
   // const origin = location.origin
   const mainUrl = new URL('../fixtures/sample.reference-provider-error-main-not-found/not-found.js', import.meta.url).toString()
   await expect(sideBarContent).toHaveText(
-    `Error: Failed to activate extension sample.reference-provider-error-main-not-found: NotFoundError: Failed to import ${mainUrl}: Not found (404)`
+    `Error: Failed to activate extension sample.reference-provider-error-main-not-found: Failed to import ${mainUrl}: Not found (404)`
   )
 }
