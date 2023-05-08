@@ -669,31 +669,33 @@ const handleClickSymLink = async (state, dirent, index) => {
 }
 
 const handleArrowRightDirectoryExpanded = (state, dirent) => {
-  if (state.focusedIndex === state.items.length - 1) {
+  const { items, focusedIndex } = state
+  if (focusedIndex === items.length - 1) {
     return state
   }
-  const nextDirent = state.items[state.focusedIndex + 1]
+  const nextDirent = items[focusedIndex + 1]
   if (nextDirent.depth === dirent.depth + 1) {
-    return focusIndex(state, state.focusedIndex + 1)
+    return focusIndex(state, focusedIndex + 1)
   }
 }
 
 export const handleArrowRight = async (state) => {
-  if (state.focusedIndex === -1) {
+  const { items, focusedIndex } = state
+  if (focusedIndex === -1) {
     return state
   }
-  const dirent = state.items[state.focusedIndex]
+  const dirent = items[focusedIndex]
   switch (dirent.type) {
     case DirentType.File:
     case DirentType.SymLinkFile:
       return state
     case DirentType.Directory:
     case DirentType.SymLinkFolder:
-      return handleClickDirectory(state, dirent, state.focusedIndex)
+      return handleClickDirectory(state, dirent, focusedIndex)
     case DirentType.DirectoryExpanded:
       return handleArrowRightDirectoryExpanded(state, dirent)
     case DirentType.Symlink:
-      return handleClickSymLink(state, dirent, state.focusedIndex)
+      return handleClickSymLink(state, dirent, focusedIndex)
     default:
       throw new Error(`unsupported file type ${dirent.type}`)
   }
@@ -708,17 +710,18 @@ const focusParentFolder = (state) => {
 }
 
 export const handleArrowLeft = (state) => {
-  if (state.focusedIndex === -1) {
+  const { items, focusedIndex } = state
+  if (focusedIndex === -1) {
     return state
   }
-  const dirent = state.items[state.focusedIndex]
+  const dirent = items[focusedIndex]
   switch (dirent.type) {
     case DirentType.Directory:
     case DirentType.File:
     case DirentType.SymLinkFile:
       return focusParentFolder(state)
     case DirentType.DirectoryExpanded:
-      return handleClickDirectoryExpanded(state, dirent, state.focusedIndex)
+      return handleClickDirectoryExpanded(state, dirent, focusedIndex)
     default:
       // TODO handle expanding directory and cancel file system call to read child dirents
       return state
@@ -726,6 +729,7 @@ export const handleArrowLeft = (state) => {
 }
 
 export const handleUpload = async (state, dirents) => {
+  const { root, pathSeparator } = state
   for (const dirent of dirents) {
     // TODO switch
     // TODO symlink might not be possible to be copied
@@ -734,7 +738,7 @@ export const handleUpload = async (state, dirents) => {
       // TODO reading text might be inefficient for binary files
       // but not sure how else to send them via jsonrpc
       const content = await dirent.file.text()
-      const absolutePath = [state.root, dirent.file.name].join(state.pathSeparator)
+      const absolutePath = [root, dirent.file.name].join(pathSeparator)
       await FileSystem.writeFile(absolutePath, content)
     }
   }
@@ -768,7 +772,8 @@ const isImage = (dirent) => {
 }
 
 export const handleMouseEnter = async (state, index) => {
-  const dirent = state.items[index]
+  const { items } = state
+  const dirent = items[index]
   if (!isImage(dirent)) {
     // TODO preload content maybe when it is a long hover
     return state
@@ -786,17 +791,6 @@ export const handleMouseEnter = async (state, index) => {
 export const handleMouseLeave = async (state) => {
   // await Command.execute(/* ImagePreview.hide */ 9082)
   return state
-}
-
-// TODO on windows this would be different
-const RE_PATH = /^\/[a-z]+/
-
-const isProbablyPath = (line) => {
-  return RE_PATH.test(line)
-}
-
-const getBaseName = (path, pathSeparator) => {
-  return path.slice(path.lastIndexOf(pathSeparator) + 1)
 }
 
 export const handleCopy = async (state) => {
@@ -826,7 +820,7 @@ export const resize = (state, dimensions) => {
 }
 
 export const expandAll = async (state) => {
-  const { items, focusedIndex } = state
+  const { items, focusedIndex, pathSeparator } = state
   if (focusedIndex === -1) {
     return state
   }
@@ -841,7 +835,7 @@ export const expandAll = async (state) => {
       dirent.type = DirentType.DirectoryExpanding
       // TODO handle error
       // TODO race condition
-      const childDirents = await getChildDirents(state.pathSeparator, dirent)
+      const childDirents = await getChildDirents(pathSeparator, dirent)
       const newIndex = newDirents.indexOf(dirent)
       if (newIndex === -1) {
         continue
