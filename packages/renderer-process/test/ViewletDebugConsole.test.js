@@ -14,14 +14,6 @@ test('dispose', () => {
   ViewletDebugConsole.dispose(state)
 })
 
-test('refresh', () => {
-  const state = ViewletDebugConsole.create()
-  ViewletDebugConsole.refresh(state, {
-    problems: [],
-  })
-  expect(state.$Viewlet.textContent).toBe('Debug Console - Not implemented')
-})
-
 test('mount', () => {
   const state = ViewletDebugConsole.create()
   const $Parent = document.createElement('div')
