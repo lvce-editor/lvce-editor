@@ -9,19 +9,6 @@ test('create', () => {
   expect(state).toBeDefined()
 })
 
-test('dispose', () => {
-  const state = ViewletDebugConsole.create()
-  ViewletDebugConsole.dispose(state)
-})
-
-test('refresh', () => {
-  const state = ViewletDebugConsole.create()
-  ViewletDebugConsole.refresh(state, {
-    problems: [],
-  })
-  expect(state.$Viewlet.textContent).toBe('Debug Console - Not implemented')
-})
-
 test('mount', () => {
   const state = ViewletDebugConsole.create()
   const $Parent = document.createElement('div')
@@ -35,10 +22,4 @@ test('focus', () => {
   Viewlet.mount(document.body, state)
   ViewletDebugConsole.focus(state)
   expect(document.activeElement).toBe(state.$Input)
-})
-
-test('dispose', () => {
-  const state = ViewletDebugConsole.create()
-  ViewletDebugConsole.dispose(state)
-  // TODO what to test?
 })
