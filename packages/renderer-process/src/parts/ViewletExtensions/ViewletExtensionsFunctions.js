@@ -6,5 +6,4 @@ export const handleInput = ForwardViewletCommand.forwardViewletCommand('handleIn
 export const handleTouchMove = ForwardViewletCommand.forwardViewletCommand('handleTouchMove')
 export const handleTouchStart = ForwardViewletCommand.forwardViewletCommand('handleTouchStart')
 export const handleTouchEnd = ForwardViewletCommand.forwardViewletCommand('handleTouchEnd')
-export const handleContextMenu = ForwardViewletCommand.forwardViewletCommand('handleContextMenu')
 export const handleScrollBarThumbPointerMove = ForwardViewletCommand.forwardViewletCommand('handleScrollBarThumbPointerMove')

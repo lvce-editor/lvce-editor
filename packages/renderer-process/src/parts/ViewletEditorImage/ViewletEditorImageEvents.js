@@ -52,17 +52,6 @@ export const handlePointerDown = (event) => {
   ViewletEditorImageFunctions.handlePointerDown(uid, pointerId, clientX, clientY)
 }
 
-/**
- *
- * @param {MouseEvent} event
- */
-export const handleContextMenu = (event) => {
-  Event.preventDefault(event)
-  const { button, clientX, clientY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletEditorImageFunctions.handleContextMenu(uid, button, clientX, clientY)
-}
-
 export const handleError = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletEditorImageFunctions.handleImageError(uid)
@@ -73,3 +62,4 @@ export const handleFocus = () => {
 }
 
 export * from '../VirtualListEvents/VirtualListEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.js'

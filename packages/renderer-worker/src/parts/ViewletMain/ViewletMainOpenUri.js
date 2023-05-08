@@ -8,6 +8,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletMainFocusIndex from './ViewletMainFocusIndex.js'
 
 export const openUri = async (state, uri, focus = true, options = {}) => {
   Assert.object(state)
@@ -37,41 +38,23 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const previousEditor = editors[activeIndex]
   let disposeCommands
   if (previousEditor) {
-    const previousUid = previousEditor.uid
-    disposeCommands = Viewlet.disposeFunctional(previousUid)
-  }
-  for (const editor of activeGroup.editors) {
-    if (editor.uri === uri) {
-      if (editor === previousEditor) {
-        return {
-          newState: state,
-          commands: [],
-        }
-      }
-      const childUid = Id.create()
-      // TODO if the editor is already open, nothing needs to be done
-      const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, uri, x, y, width, contentHeight)
-      instance.show = false
-      instance.setBounds = false
-      instance.uid = childUid
-      // @ts-ignore
-      const commands = await ViewletManager.load(instance, focus, false, options)
-      if (disposeCommands) {
-        commands.unshift(...disposeCommands)
-      }
-      commands.push(['Viewlet.append', uid, childUid])
-      const newActiveIndex = editors.indexOf(editor)
-      commands.push(['Viewlet.setBounds', childUid, x, tabHeight, width, contentHeight])
-      commands.push(['Viewlet.send', activeGroup.tabsUid, 'setFocusedIndex', activeIndex, newActiveIndex])
-      activeGroup.activeIndex = newActiveIndex
-      editor.uid = childUid
+    if (previousEditor.uri === uri) {
       return {
         newState: state,
-        commands,
+        commands: [],
       }
     }
   }
-
+  for (let i = 0; i < editors.length; i++) {
+    const editor = editors[i]
+    if (editor.uri === uri) {
+      return ViewletMainFocusIndex.focusIndex(state, i)
+    }
+  }
+  if (previousEditor) {
+    const previousUid = previousEditor.uid
+    disposeCommands = Viewlet.disposeFunctional(previousUid)
+  }
   const instanceUid = Id.create()
   const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, uri, x, y, width, contentHeight)
   instance.uid = instanceUid

@@ -156,13 +156,6 @@ const getFocusedIndexFromFocusOutline = ($Viewlet) => {
   return -1
 }
 
-export const handleContextMenu = (event) => {
-  Event.preventDefault(event)
-  const uid = ComponentUid.fromEvent(event)
-  const { button, clientX, clientY } = event
-  ViewletExplorerFunctions.handleContextMenu(uid, button, clientX, clientY)
-}
-
 export const handleClick = (event) => {
   Event.preventDefault(event)
   const { button, clientX, clientY } = event
@@ -208,3 +201,4 @@ export const handleEditingInput = (event) => {
 }
 
 export * from '../VirtualListEvents/VirtualListEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.js'
