@@ -27,7 +27,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
-export const startup = async (config) => {
+export const startup = async () => {
   onunhandledrejection = ErrorHandling.handleUnhandledRejection
   onerror = ErrorHandling.handleUnhandledError
 
