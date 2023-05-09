@@ -34,7 +34,12 @@ test('showMessageBox', async () => {
       response: 1,
     }
   })
-  await ElectronDialog.showMessageBox('test', ['copy', 'ok'], ElectronMessageBoxType.Info, 'test detail')
+  await ElectronDialog.showMessageBox({
+    message: 'test',
+    buttons: ['copy', 'ok'],
+    type: ElectronMessageBoxType.Info,
+    detail: 'test detail',
+  })
   expect(Electron.dialog.showMessageBox).toHaveBeenCalledTimes(1)
   expect(Electron.dialog.showMessageBox).toHaveBeenCalledWith(
     {},

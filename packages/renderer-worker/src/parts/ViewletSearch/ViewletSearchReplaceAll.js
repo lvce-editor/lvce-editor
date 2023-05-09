@@ -1,7 +1,8 @@
 import * as TextSearchReplaceAll from '../TextSearchReplaceAll/TextSearchReplaceAll.js'
 import * as ViewletSearchStrings from './ViewletSearchStrings.js'
+import * as Command from '../Command/Command.js'
 
-const getConfirmMessage = (matchCount, fileCount, replacement) => {
+const getConfirmText = (matchCount, fileCount, replacement) => {
   if (matchCount === 1) {
     return ViewletSearchStrings.confirmReplaceOneOccurrenceInOneFile(replacement)
   }
@@ -23,8 +24,15 @@ const getReplacedAllMessage = (matchCount, fileCount, replacement) => {
 
 export const replaceAll = async (state) => {
   const { items, replacement, matchCount, fileCount } = state
-  const confirmMessage = getConfirmMessage(matchCount, fileCount, replacement)
-  await TextSearchReplaceAll.replaceAll(items, confirmMessage, replacement)
+  const confirmTitle = ViewletSearchStrings.replaceAll()
+  const confirmAccept = ViewletSearchStrings.replace()
+  const confirmText = getConfirmText(matchCount, fileCount, replacement)
+  const shouldReplace = await Command.execute('ConfirmPrompt.prompt', confirmText, { title: confirmTitle, confirmMessage: confirmAccept })
+  if (!shouldReplace) {
+    return state
+  }
+  console.log({ shouldReplace })
+  await TextSearchReplaceAll.replaceAll(items, replacement)
   const replacedAllMessage = getReplacedAllMessage()
   return {
     ...state,

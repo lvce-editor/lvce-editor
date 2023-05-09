@@ -25,12 +25,10 @@ exports.showOpenDialog = async (title, properties) => {
 
 /**
  *
- * @param {any} message
- * @param {string[]} buttons
- * @param {string} type
+ * @param {{message:string, buttons:string[], type:string, detail?:string, title?:string}} options
  * @returns
  */
-exports.showMessageBox = async (message, buttons, type = ElectronMessageBoxType.Error, detail) => {
+exports.showMessageBox = async ({ message, buttons, type = ElectronMessageBoxType.Error, detail, title }) => {
   Assert.string(message)
   Assert.array(buttons)
   const focusedWindow = Window.getFocusedWindow()
@@ -45,7 +43,7 @@ exports.showMessageBox = async (message, buttons, type = ElectronMessageBoxType.
   const result = await Electron.dialog.showMessageBox(focusedWindow, {
     type,
     message,
-    title: productName,
+    title: title || productName,
     buttons,
     cancelId: 1,
     detail,
