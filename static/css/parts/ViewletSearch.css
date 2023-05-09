@@ -17,13 +17,14 @@
   border: none;
 }
 
-.SearchToggleButton:hover {
-  background: lightgray;
+.SearchToggleButtonExpanded {
+  grid-row: 1/3;
+  width: auto;
+  height: auto;
 }
 
-.SearchToggleButton[aria-expanded='true'] {
-  /* background: red; */
-  grid-row: 1/3;
+.SearchToggleButton:hover {
+  background: lightgray;
 }
 
 .ViewletSearchMessage {
