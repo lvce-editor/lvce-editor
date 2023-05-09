@@ -9,6 +9,7 @@ export const ArrowUp = `${assetDir}/icons/arrow-up.svg`
 export const CaseSensitive = `${assetDir}/icons/case-sensitive.svg`
 export const ChevronDown = `${assetDir}/icons/chevron-down.svg`
 export const ChevronUp = `${assetDir}/icons/chevron-up.svg`
+export const ChevronRight = `${assetDir}/icons/chevron-right.svg`
 export const Close = `${assetDir}/icons/close.svg`
 export const DebugContinue = `${assetDir}/icons/debug-continue.svg`
 export const DebugPause = `${assetDir}/icons/debug-pause.svg`

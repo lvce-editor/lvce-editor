@@ -1,4 +1,4 @@
-export const handleToggleButtonClick = (state) => {
+export const toggleReplace = (state) => {
   const { replaceExpanded } = state
   return {
     ...state,
