@@ -197,6 +197,7 @@ export const loadContent = async (state, savedState) => {
     deltaY = savedState.deltaY
   }
   let maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, restoredDirents.length)
+  console.log({ minLineY, maxLineY, restoredDirents })
   return {
     ...state,
     root,
@@ -820,7 +821,7 @@ export const resize = (state, dimensions) => {
 }
 
 export const expandAll = async (state) => {
-  const { items, focusedIndex, pathSeparator } = state
+  const { items, focusedIndex, pathSeparator, minLineY, height, itemHeight } = state
   if (focusedIndex === -1) {
     return state
   }
@@ -846,9 +847,11 @@ export const expandAll = async (state) => {
       // await expand(state, dirent.index)
     }
   }
+  const maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, newDirents.length)
   return {
     ...state,
     items: newDirents,
+    maxLineY,
   }
 }
 
