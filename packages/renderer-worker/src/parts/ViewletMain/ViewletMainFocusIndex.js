@@ -1,8 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
-import * as BackgroundTabs from '../BackgroundTabs/BackgroundTabs.js'
 import * as Id from '../Id/Id.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
@@ -13,20 +11,28 @@ import { closeEditor } from './ViewletMainCloseEditor.js'
 export const focusIndex = async (state, index) => {
   const { groups, tabHeight, uid, activeGroupIndex } = state
   const group = groups[activeGroupIndex]
-  if (index === group.activeIndex) {
-    return state
-  }
+  const editors = group.editors
   const oldActiveIndex = group.activeIndex
-  group.activeIndex = index
-
-  const editor = group.editors[index]
+  if (index === oldActiveIndex) {
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
+  const newGroup = { ...group, activeIndex: index }
+  const newGroups = [...groups.slice(0, activeGroupIndex), newGroup, ...groups.slice(activeGroupIndex + 1)]
+  const newState = {
+    ...state,
+    groups: newGroups,
+  }
+  const editor = editors[index]
   const x = group.x
   const y = group.y + tabHeight
   const width = group.width
   const contentHeight = group.height - tabHeight
   const id = ViewletMap.getModuleId(editor.uri)
 
-  const oldEditor = group.editors[oldActiveIndex]
+  const oldEditor = editors[oldActiveIndex]
   const oldId = ViewletMap.getModuleId(oldEditor.uri)
   const oldInstance = ViewletStates.getInstance(oldId)
 
@@ -37,38 +43,22 @@ export const focusIndex = async (state, index) => {
   instance.uid = instanceUid
   editor.uid = instanceUid
 
-  // TODO race condition
-  // RendererProcess.invoke(
-
-  // )
-
-  const tabFocusCommand = ['Viewlet.send', group.tabsUid, 'setFocusedIndex', oldActiveIndex, group.activeIndex]
   const resizeCommands = ['Viewlet.setBounds', instanceUid, x, tabHeight, width, contentHeight]
   const previousUid = oldEditor.uid
   Assert.number(previousUid)
   const disposeCommands = Viewlet.disposeFunctional(previousUid)
-  if (BackgroundTabs.has(editor.uri)) {
-    const props = BackgroundTabs.get(editor.uri)
-    // @ts-ignore
-    const commands = await ViewletManager.load(instance, false, false, props)
-    commands.push(...disposeCommands, tabFocusCommand)
-    commands.push(resizeCommands)
-    commands.push(['Viewlet.append', uid, instanceUid])
-    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
-  } else {
-    // @ts-ignore
-    const commands = await ViewletManager.load(instance)
-    commands.unshift(...disposeCommands, tabFocusCommand)
-    commands.push(resizeCommands)
-    commands.push(['Viewlet.append', uid, instanceUid])
-    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  // @ts-ignore
+  const commands = await ViewletManager.load(instance)
+  // @ts-ignore
+  commands.unshift(...disposeCommands)
+  // @ts-ignore
+  commands.push(resizeCommands)
+  // @ts-ignore
+  commands.push(['Viewlet.append', uid, instanceUid])
+  return {
+    newState,
+    commands,
   }
-
-  if (oldInstance && oldInstance.factory.hide) {
-    await oldInstance.factory.hide(oldInstance.state)
-    BackgroundTabs.add(oldInstance.state.uri, oldInstance.state)
-  }
-  return state
 }
 
 export const focusFirst = (state) => {
