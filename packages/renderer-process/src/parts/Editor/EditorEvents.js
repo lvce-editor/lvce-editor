@@ -198,7 +198,8 @@ export const handleScrollBarVerticalPointerDown = (event) => {
  */
 export const handleScrollBarThumbHorizontalPointerMove = (event) => {
   const { clientX } = event
-  EditorFunctions.handleScrollBarHorizontalMove(clientX)
+  const uid = ComponentUid.fromEvent(event)
+  EditorFunctions.handleScrollBarHorizontalMove(uid, clientX)
 }
 
 /**
