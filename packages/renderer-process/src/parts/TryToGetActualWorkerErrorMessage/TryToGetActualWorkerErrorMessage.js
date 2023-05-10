@@ -11,7 +11,11 @@ export const tryToGetActualErrorMessage = async ({ url, name }) => {
     return `Failed to start ${displayName}: ${error}`
   }
   if (response.ok) {
-    return await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage(null, url, response)
+    return await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage({
+      url,
+      response,
+      workerName: displayName,
+    })
   }
   switch (response.status) {
     case HttpStatusCode.NotFound:
