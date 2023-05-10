@@ -58,6 +58,7 @@ export const create = () => {
   $ViewletSearchInput.placeholder = 'Search'
   $ViewletSearchInput.type = InputType.Search
   $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
+  $ViewletSearchInput.name = 'search-value'
 
   const $ButtonMatchCase = create$SearchFieldButton(UiStrings.MatchCase, Icon.CaseSensitive)
   const $ButtonMatchWholeWord = create$SearchFieldButton(UiStrings.MatchWholeWord, Icon.WholeWord)
@@ -291,6 +292,7 @@ const create$ReplaceField = () => {
   const $ViewletSearchReplaceInput = InputBox.create()
   $ViewletSearchReplaceInput.placeholder = 'Replace'
   $ViewletSearchReplaceInput.type = 'text'
+  $ViewletSearchReplaceInput.name = 'search-replace-value'
   $ViewletSearchReplaceInput.oninput = ViewletSearchEvents.handleReplaceInput
 
   const $ButtonPreserveCase = document.createElement('button')
@@ -303,7 +305,6 @@ const create$ReplaceField = () => {
 }
 
 export const setReplaceExpanded = (state, replaceExpanded) => {
-  console.log('set expanded', replaceExpanded)
   const { $ViewletSearchReplaceInput, $ToggleButton, $SearchField, $ToggleButtonIcon } = state
   if (replaceExpanded) {
     $ToggleButton.ariaExpanded = true
