@@ -11,6 +11,7 @@ export const LazyCommands = {
   handleTouchStart: () => import('./VirtualListHandleTouchStart.js'),
   handleWheel: () => import('./VirtualListHandleWheel.js'),
   handleScrollBarMove: () => import('./VirtualListHandleScrollBarMove.js'),
+  handleScrollBarThumbPointerMove: () => import('./VirtualListHandleScrollBarMove.js'),
   handleScrollBarClick: () => import('./VirtualListHandleScrollBarClick.js'),
   handleClickAt: () => import('./VirtualListHandleClickAt.js'),
 }
