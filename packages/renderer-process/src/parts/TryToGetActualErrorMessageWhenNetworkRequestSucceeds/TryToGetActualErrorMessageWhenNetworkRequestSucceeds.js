@@ -22,7 +22,7 @@ const isNpmDependency = (relativePath) => {
   return relativePath.startsWith('@') && relativePath.includes('/')
 }
 
-const getErrorInDependencies = async (url, dependencies, seenUrls) => {
+const getErrorInDependencies = async ({ url, dependencies, workerName, seenUrls }) => {
   for (const dependency of dependencies) {
     if (isNpmDependency(dependency.relativePath)) {
       throw new DependencyNotFoundError(dependency.code, dependency.start, dependency.end, dependency.relativePath, '', url)
@@ -37,7 +37,7 @@ const getErrorInDependencies = async (url, dependencies, seenUrls) => {
     const dependencyResponse = await fetch(dependencyUrl)
     // } catch (error) {}
     if (dependencyResponse.ok) {
-      await tryToGetActualErrorMessage(null, dependencyUrl, dependencyResponse, seenUrls)
+      await tryToGetActualErrorMessage({ url: dependencyUrl, response: dependencyResponse, seenUrls, workerName })
     } else {
       switch (dependencyResponse.status) {
         case HttpStatusCode.NotFound:
@@ -52,16 +52,18 @@ const getErrorInDependencies = async (url, dependencies, seenUrls) => {
 
 /**
  *
- * @param {string} url
- * @param {Response} response
+ * @param {{error?:any, url:string, response?:Response, workerName?:string, seenUrls?:[]}} options
  * @returns
  */
-export const tryToGetActualErrorMessage = async (error, url, response, seenUrls = []) => {
+export const tryToGetActualErrorMessage = async ({ error, url, response, workerName, seenUrls = [] }) => {
   let text
   try {
     text = await response.text()
   } catch (error) {
-    return `Failed to import ${url}: Unknown Network Error`
+    if (workerName) {
+      return `Failed to start ${workerName}: Unknown Network Error (${response.status})`
+    }
+    return `Failed to import ${url}: Unknown Network Error (${response.status})`
   }
   let ast
   try {
@@ -75,10 +77,13 @@ export const tryToGetActualErrorMessage = async (error, url, response, seenUrls 
     throw error
   }
   const dependencies = GetBabelAstDependencies.getBabelAstDependencies(text, ast)
-  await getErrorInDependencies(url, dependencies, seenUrls)
+  await getErrorInDependencies({ url, dependencies, seenUrls, workerName })
   if (ContentSecurityPolicyErrorState.hasRecentErrors()) {
     const recentError = ContentSecurityPolicyErrorState.getRecentError()
     throw new ContentSecurityPolicyError(recentError.violatedDirective, recentError.sourceFile, recentError.lineNumber, recentError.columnNumber)
   }
-  return `Failed to import ${url}: Unknown Network Error`
+  if (workerName) {
+    return `Failed to start ${workerName}: Unknown Network Error (${response.status})`
+  }
+  return `Failed to import ${url}: Unknown Network Error (${response.status})`
 }
