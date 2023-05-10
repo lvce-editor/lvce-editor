@@ -18,7 +18,6 @@ import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewl
 import * as Workspace from '../Workspace/Workspace.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEndIndex, getParentStartIndex } from './ViewletExplorerShared.js'
-
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -197,7 +196,8 @@ export const loadContent = async (state, savedState) => {
   if (savedState && typeof savedState.deltaY === 'number') {
     deltaY = savedState.deltaY
   }
-  let maxLineY = minLineY + Math.round(height / itemHeight)
+  let maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, restoredDirents.length)
+  console.log({ minLineY, maxLineY, restoredDirents })
   return {
     ...state,
     root,
@@ -821,7 +821,7 @@ export const resize = (state, dimensions) => {
 }
 
 export const expandAll = async (state) => {
-  const { items, focusedIndex, pathSeparator } = state
+  const { items, focusedIndex, pathSeparator, minLineY, height, itemHeight } = state
   if (focusedIndex === -1) {
     return state
   }
@@ -847,9 +847,11 @@ export const expandAll = async (state) => {
       // await expand(state, dirent.index)
     }
   }
+  const maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, newDirents.length)
   return {
     ...state,
     items: newDirents,
+    maxLineY,
   }
 }
 
