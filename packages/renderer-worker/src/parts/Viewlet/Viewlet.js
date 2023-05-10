@@ -360,6 +360,9 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   if (oldState === actualNewState) {
     return
   }
+  if (!ViewletStates.hasInstance(uid)) {
+    return
+  }
   const commands = ViewletManager.render(instance.factory, instance.renderedState, actualNewState)
   if ('newState' in newState) {
     commands.push(...newState.commands)
