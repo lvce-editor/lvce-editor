@@ -1,5 +1,6 @@
 import { BabelParseError } from '../BabelParseError/BabelParseError.js'
 import * as BabelParser from '../BabelParser/BabelParser.js'
+import * as BabelSourceType from '../BabelSourceType/BabelSourceType.js'
 import { ContentSecurityPolicyError } from '../ContentSecurityPolicyError/ContentSecurityPolicyError.js'
 import * as ContentSecurityPolicyErrorState from '../ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.js'
 import { DependencyNotFoundError } from '../DependencyNotFoundError/DependencyNotFoundError.js'
@@ -59,7 +60,7 @@ export const tryToGetActualErrorMessage = async (error, url, response, seenUrls 
   let ast
   try {
     ast = await BabelParser.parse(text, {
-      sourceType: 'module',
+      sourceType: BabelSourceType.Module,
     })
   } catch (error) {
     if (IsBabelParseError.isBabelError(error)) {
