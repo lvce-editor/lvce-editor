@@ -1,6 +1,7 @@
 // TODO so many things in this file
 
 import * as ClipBoardData from '../ClipBoardData/ClipBoardData.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
@@ -9,20 +10,11 @@ import * as GetModifierKey from '../GetModifierKey/GetModifierKey.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as TouchEvent from '../TouchEvent/TouchEvent.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as EditorFunctions from './EditorFunctions.js'
-import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
 // TODO tree shake out mobile support when targeting electron -> less code -> less event listeners -> less memory -> less cpu
-
-export const handleContextMenu = (event) => {
-  Event.preventDefault(event)
-  const uid = ComponentUid.fromEvent(event)
-  const { button, clientX, clientY } = event
-  EditorFunctions.handleContextMenu(uid, button, clientX, clientY)
-}
 
 export const handleFocus = (event) => {
   Focus.setFocus('EditorText')
@@ -338,3 +330,5 @@ export const handleNativeSelectionChange = (event) => {
   //   /* range */ range
   // )
 }
+
+export * from '../ContextMenuEvents/ContextMenuEvents.js'
