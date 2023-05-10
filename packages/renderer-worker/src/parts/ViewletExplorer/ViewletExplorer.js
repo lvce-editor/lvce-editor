@@ -18,7 +18,6 @@ import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewl
 import * as Workspace from '../Workspace/Workspace.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEndIndex, getParentStartIndex } from './ViewletExplorerShared.js'
-
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -197,7 +196,7 @@ export const loadContent = async (state, savedState) => {
   if (savedState && typeof savedState.deltaY === 'number') {
     deltaY = savedState.deltaY
   }
-  let maxLineY = minLineY + Math.round(height / itemHeight)
+  let maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight)
   return {
     ...state,
     root,
