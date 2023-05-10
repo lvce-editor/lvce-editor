@@ -1,22 +1,20 @@
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
-// import * as ExtensionHostTextDocument from '../ExtensionHost/ExtensionHostTextDocument.js'
 import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Font from '../Font/Font.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
 import * as MeasureLongestLineWidth from '../MeasureLongestLineWidth/MeasureLongestLineWidth.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -64,7 +62,6 @@ export const saveState = (state) => {
     selections: [...Array.from(selections)],
     focused,
     deltaY,
-    differences: [...Array.from(differences)],
   }
 }
 
@@ -221,8 +218,4 @@ export const focus = (state) => {
     ...state,
     focused: true,
   }
-}
-
-export const shouldApplyNewState = (newState) => {
-  return true
 }
