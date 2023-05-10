@@ -24,16 +24,9 @@ import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHo
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
+import { FormattingError } from '../FormattingError/FormattingError.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import { VError } from '../VError/VError.js'
-
-class FormattingError extends Error {
-  constructor(message, codeFrame) {
-    super(message)
-    this.codeFrame = codeFrame
-    this.name = 'FormattingError'
-  }
-}
 
 // prettier-ignore
 export const api = {
