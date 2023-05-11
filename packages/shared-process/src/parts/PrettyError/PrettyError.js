@@ -109,6 +109,7 @@ export const prepare = (error) => {
     stack: relevantStack,
     codeFrame,
     type: error.constructor.name,
+    code: error.code,
   }
 }
 

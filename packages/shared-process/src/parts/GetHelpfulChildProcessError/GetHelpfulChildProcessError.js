@@ -29,7 +29,10 @@ const getMessageCodeBlock = (stderr) => {
 
 const getNativeModuleErrorMessage = (stderr) => {
   const message = getMessageCodeBlock(stderr)
-  return `incompatible native node module: ${message}`
+  return {
+    message: `incompatible native node module: ${message}`,
+    code: 'E_INCOMPATIBLE_NATIVE_MODULE',
+  }
 }
 
 const isModulesSyntaxError = (stderr) => {
@@ -40,7 +43,10 @@ const isModulesSyntaxError = (stderr) => {
 }
 
 const getModuleSyntaxError = (stderr) => {
-  return `ES Modules are not supported in electron`
+  return {
+    message: `ES Modules are not supported in electron`,
+    code: 'E_MODULES_NOT_SUPPORTED_IN_ELECTRON',
+  }
 }
 
 export const getHelpfulChildProcessError = (stdout, stderr) => {
@@ -50,5 +56,8 @@ export const getHelpfulChildProcessError = (stdout, stderr) => {
   if (isModulesSyntaxError(stderr)) {
     return getModuleSyntaxError(stderr)
   }
-  return 'child process error'
+  return {
+    message: 'child process error',
+    code: '',
+  }
 }

@@ -49,6 +49,7 @@ export const getErrorResponse = (message, error) => {
         stack: prettyError.stack,
         codeFrame: prettyError.codeFrame,
         type: prettyError.type,
+        code: prettyError.code,
       },
     },
   }
