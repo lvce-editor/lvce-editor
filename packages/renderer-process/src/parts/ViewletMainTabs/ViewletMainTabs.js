@@ -27,6 +27,8 @@ export const attachEvents = (state) => {
   $MainTabs.onmousedown = ViewletMainTabEvents.handleTabsMouseDown
   $MainTabs.oncontextmenu = ViewletMainTabEvents.handleTabsContextMenu
   $MainTabs.ondragstart = ViewletMainTabEvents.handleDragStart
+  $MainTabs.onpointerover = ViewletMainTabEvents.handlePointerOver
+  $MainTabs.onpointerout = ViewletMainTabEvents.handlePointerOut
 }
 
 export const setTabs = (state, tabs) => {

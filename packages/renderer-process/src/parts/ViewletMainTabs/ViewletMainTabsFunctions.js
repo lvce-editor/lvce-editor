@@ -3,3 +3,5 @@ import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletC
 export const closeEditor = ForwardViewletCommand.forwardViewletCommand('closeEditor')
 export const handleTabClick = ForwardViewletCommand.forwardViewletCommand('handleTabClick')
 export const handleTabContextMenu = ForwardViewletCommand.forwardViewletCommand('handleTabContextMenu')
+export const handleTabsPointerOver = ForwardViewletCommand.forwardViewletCommand('handleTabsPointerOver')
+export const handleTabsPointerOut = ForwardViewletCommand.forwardViewletCommand('handleTabsPointerOut')
