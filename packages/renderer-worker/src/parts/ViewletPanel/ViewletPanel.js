@@ -24,6 +24,13 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
+export const saveState = (state) => {
+  const { currentViewletId } = state
+  return {
+    currentViewletId,
+  }
+}
+
 const getSavedViewletId = (savedState) => {
   if (savedState && savedState.currentViewletId) {
     return savedState.currentViewletId
