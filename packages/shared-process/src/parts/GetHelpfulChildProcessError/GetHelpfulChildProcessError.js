@@ -1,4 +1,5 @@
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 
 const RE_NATIVE_MODULE_ERROR = /^innerError Error: Cannot find module '.*.node'/
 const RE_NATIVE_MODULE_ERROR_2 = /was compiled against a different Node.js version/
@@ -29,7 +30,10 @@ const getMessageCodeBlock = (stderr) => {
 
 const getNativeModuleErrorMessage = (stderr) => {
   const message = getMessageCodeBlock(stderr)
-  return `incompatible native node module: ${message}`
+  return {
+    message: `incompatible native node module: ${message}`,
+    code: ErrorCodes.E_INCOMPATIBLE_NATIVE_MODULE,
+  }
 }
 
 const isModulesSyntaxError = (stderr) => {
@@ -40,7 +44,10 @@ const isModulesSyntaxError = (stderr) => {
 }
 
 const getModuleSyntaxError = (stderr) => {
-  return `ES Modules are not supported in electron`
+  return {
+    message: `ES Modules are not supported in electron`,
+    code: ErrorCodes.E_MODULES_NOT_SUPPORTED_IN_ELECTRON,
+  }
 }
 
 export const getHelpfulChildProcessError = (stdout, stderr) => {
@@ -50,5 +57,8 @@ export const getHelpfulChildProcessError = (stdout, stderr) => {
   if (isModulesSyntaxError(stderr)) {
     return getModuleSyntaxError(stderr)
   }
-  return 'child process error'
+  return {
+    message: 'child process error',
+    code: '',
+  }
 }
