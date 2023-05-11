@@ -427,28 +427,12 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     // TODO race condition: viewlet state may have been updated again in the mean time
     state = ViewletState.RendererProcessViewletLoaded
 
-    outer: if (module.shouldApplyNewState) {
-      for (let i = 0; i < 2; i++) {
-        if (module.shouldApplyNewState(newState)) {
-          ViewletStates.set(viewletUid, {
-            state: newState,
-            renderedState: newState,
-            factory: module,
-            moduleId: viewlet.moduleId || viewlet.id || '',
-          })
-          break outer
-        }
-        newState = await module.loadContent(viewletState)
-      }
-      throw new Error('viewlet could not be updated')
-    } else {
-      ViewletStates.set(viewletUid, {
-        state: newState,
-        renderedState: viewletState,
-        factory: module,
-        moduleId: viewlet.moduleId || viewlet.id || '',
-      })
-    }
+    ViewletStates.set(viewletUid, {
+      state: newState,
+      renderedState: viewletState,
+      factory: module,
+      moduleId: viewlet.moduleId || viewlet.id || '',
+    })
     const commands = [[kCreate, viewlet.id, viewletUid]]
     if (viewletState !== newState && module.contentLoaded) {
       const additionalExtraCommands = await module.contentLoaded(newState)

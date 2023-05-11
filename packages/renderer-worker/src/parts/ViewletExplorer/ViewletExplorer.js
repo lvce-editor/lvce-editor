@@ -1087,11 +1087,3 @@ export const revealItem = async (state, uri) => {
   }
   return revealItemVisible(state, index)
 }
-
-export const shouldApplyNewState = (newState, fn) => {
-  if (newState.root !== Workspace.state.workspacePath) {
-    console.log('root does not match', `${newState.root} !== ${Workspace.state.workspacePath}`)
-    return false
-  }
-  return true
-}
