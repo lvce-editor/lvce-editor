@@ -45,6 +45,7 @@ export const create = () => {
   $EditorInput.onfocus = EditorEvents.handleFocus
   $EditorInput.onblur = EditorEvents.handleBlur
   $EditorInput.oncut = EditorEvents.handleCut
+  $EditorInput.name = 'editor'
 
   const $LayerCursor = document.createElement('div')
   $LayerCursor.className = 'LayerCursor'
