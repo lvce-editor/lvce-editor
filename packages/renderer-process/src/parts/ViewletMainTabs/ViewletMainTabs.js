@@ -33,7 +33,7 @@ export const setTabs = (state, tabs) => {
   const { $Viewlet } = state
   const $$Tabs = []
   for (const tab of tabs) {
-    const $Tab = Tab.create(tab.label, tab.title, tab.icon, tab.tabWidth, true)
+    const $Tab = Tab.create(tab.label, tab.title, tab.icon, tab.tabWidth, tab.preview, true)
     $$Tabs.push($Tab)
   }
   $Viewlet.replaceChildren(...$$Tabs)

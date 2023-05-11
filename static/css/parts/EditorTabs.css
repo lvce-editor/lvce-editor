@@ -25,6 +25,10 @@
   contain: strict;
 }
 
+.MainTabPreview {
+  font-style: italic;
+}
+
 .MainTabSelected {
   border-right: 1px solid rgb(34, 34, 34);
   background: var(--TabActiveBackground);
