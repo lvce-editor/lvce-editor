@@ -332,7 +332,12 @@ const focusEditor = (editor) => {
 }
 
 export const save = async (state) => {
-  const { editors, activeIndex } = state
+  const { groups, activeGroupIndex } = state
+  if (activeGroupIndex === -1) {
+    return state
+  }
+  const group = groups[activeGroupIndex]
+  const { editors, activeIndex, tabsUid } = group
   if (activeIndex === -1) {
     return state
   }
@@ -340,7 +345,7 @@ export const save = async (state) => {
   await saveEditor(editor)
   // TODO handle different types of editors / custom editors / webviews
   // Command.execute(/* EditorSave.editorSave */ 'Editor.save')
-  const command = ['Viewlet.send', state.tabsUid, 'setDirty', activeIndex, false]
+  const command = ['Viewlet.send', tabsUid, 'setDirty', activeIndex, false]
   await RendererProcess.invoke(...command)
   return state
 }

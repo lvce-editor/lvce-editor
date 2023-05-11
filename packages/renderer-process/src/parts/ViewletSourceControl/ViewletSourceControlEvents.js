@@ -1,6 +1,5 @@
 import { findIndex } from '../../shared/findIndex.js'
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as ViewletSourceControlFunctions from './ViewletSourceControlFunctions.js'
 
@@ -56,16 +55,11 @@ export const handleMouseOut = (event) => {
   ViewletSourceControlFunctions.handleMouseOut(uid, index)
 }
 
-export const handleContextMenu = (event) => {
-  Event.preventDefault(event)
-  const { button, clientX, clientY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSourceControlFunctions.handleContextMenu(uid, button, clientX, clientY)
-}
-
 export const handleInput = (event) => {
   const { target } = event
   const { value } = target
   const uid = ComponentUid.fromEvent(event)
   ViewletSourceControlFunctions.handleInput(uid, value)
 }
+
+export * from '../ContextMenuEvents/ContextMenuEvents.js'

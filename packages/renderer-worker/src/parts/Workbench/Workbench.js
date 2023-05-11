@@ -2,6 +2,7 @@ import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as Id from '../Id/Id.js'
 import * as InitData from '../InitData/InitData.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
@@ -24,10 +25,9 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Id from '../Id/Id.js'
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
-export const startup = async (config) => {
+export const startup = async () => {
   onunhandledrejection = ErrorHandling.handleUnhandledRejection
   onerror = ErrorHandling.handleUnhandledError
 
@@ -193,14 +193,14 @@ export const startup = async (config) => {
   await Location.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadLocation)
 
-  Performance.measure('code/openWorkspace', PerformanceMarkerType.WillOpenWorkspace, PerformanceMarkerType.DidOpenWorkspace)
-  Performance.measure('code/loadMain', PerformanceMarkerType.WillLoadMain, PerformanceMarkerType.DidLoadMain)
-  Performance.measure('code/loadSideBar', PerformanceMarkerType.WillLoadSideBar, PerformanceMarkerType.DidLoadSideBar)
-  Performance.measure('code/showLayout', PerformanceMarkerType.WillShowLayout, PerformanceMarkerType.DidShowLayout)
-  Performance.measure('code/loadPanel', PerformanceMarkerType.WillLoadPanel, PerformanceMarkerType.DidLoadPanel)
-  Performance.measure('code/loadActivityBar', PerformanceMarkerType.WillLoadActivityBar, PerformanceMarkerType.DidLoadActivityBar)
-  Performance.measure('code/loadStatusBar', PerformanceMarkerType.WillLoadStatusBar, PerformanceMarkerType.DidLoadStatusBar)
-  Performance.measure('code/loadPreferences', PerformanceMarkerType.WillLoadPreferences, PerformanceMarkerType.DidLoadPreferences)
-  Performance.measure('code/loadColorTheme', PerformanceMarkerType.WillLoadColorTheme, PerformanceMarkerType.DidLoadColorTheme)
-  Performance.measure('code/loadIconTheme', PerformanceMarkerType.WillLoadIconTheme, PerformanceMarkerType.DidLoadIconTheme)
+  Performance.measure(PerformanceMarkerType.OpenWorkspace, PerformanceMarkerType.WillOpenWorkspace, PerformanceMarkerType.DidOpenWorkspace)
+  Performance.measure(PerformanceMarkerType.LoadMain, PerformanceMarkerType.WillLoadMain, PerformanceMarkerType.DidLoadMain)
+  Performance.measure(PerformanceMarkerType.LoadSideBar, PerformanceMarkerType.WillLoadSideBar, PerformanceMarkerType.DidLoadSideBar)
+  Performance.measure(PerformanceMarkerType.ShowLayout, PerformanceMarkerType.WillShowLayout, PerformanceMarkerType.DidShowLayout)
+  Performance.measure(PerformanceMarkerType.LoadPanel, PerformanceMarkerType.WillLoadPanel, PerformanceMarkerType.DidLoadPanel)
+  Performance.measure(PerformanceMarkerType.LoadActivityBar, PerformanceMarkerType.WillLoadActivityBar, PerformanceMarkerType.DidLoadActivityBar)
+  Performance.measure(PerformanceMarkerType.LoadStatusBar, PerformanceMarkerType.WillLoadStatusBar, PerformanceMarkerType.DidLoadStatusBar)
+  Performance.measure(PerformanceMarkerType.LoadPreferences, PerformanceMarkerType.WillLoadPreferences, PerformanceMarkerType.DidLoadPreferences)
+  Performance.measure(PerformanceMarkerType.LoadColorTheme, PerformanceMarkerType.WillLoadColorTheme, PerformanceMarkerType.DidLoadColorTheme)
+  Performance.measure(PerformanceMarkerType.LoadIconTheme, PerformanceMarkerType.WillLoadIconTheme, PerformanceMarkerType.DidLoadIconTheme)
 }

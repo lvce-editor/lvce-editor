@@ -715,7 +715,6 @@ var lib = createCommonjsModule(function(module, exports) {
     AwaitBindingIdentifier: "Can not use 'await' as identifier inside an async function.",
     AwaitBindingIdentifierInStaticBlock: "Can not use 'await' as identifier inside a static block.",
     AwaitExpressionFormalParameter: "'await' is not allowed in async function parameters.",
-    AwaitInUsingBinding: "'await' is not allowed to be used as a name in 'using' declarations.",
     AwaitNotInAsyncContext: "'await' is only allowed within async functions and at the top levels of modules.",
     AwaitNotInAsyncFunction: "'await' is only allowed within async functions.",
     BadGetterArity: "A 'get' accessor must not have any formal parameters.",
@@ -1832,7 +1831,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
   }
   const skipWhiteSpace = /(?:\s|\/\/.*|\/\*[^]*?\*\/)*/g;
-  const skipWhiteSpaceInLine = /(?:[^\S\n\r\u2028\u2029]|\/\/.*|\/\*.*?\*\/)*/y;
+  const skipWhiteSpaceInLine = /(?:[^\S\n\r\u2028\u2029]|\/\/.*|\/\*.*?\*\/)*/g;
   const skipWhiteSpaceToLineBreak = new RegExp("(?=(" + skipWhiteSpaceInLine.source + "))\\1" + /(?=[\n\r\u2028\u2029]|\/\*(?!.*?\*\/)|$)/.source, "y");
   function isWhitespace(code) {
     switch (code) {
@@ -2340,6 +2339,16 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     lookaheadCharCode() {
       return this.input.charCodeAt(this.nextTokenStart());
+    }
+    nextTokenInLineStart() {
+      return this.nextTokenInLineStartSince(this.state.pos);
+    }
+    nextTokenInLineStartSince(pos) {
+      skipWhiteSpaceInLine.lastIndex = pos;
+      return skipWhiteSpaceInLine.test(this.input) ? skipWhiteSpaceInLine.lastIndex : pos;
+    }
+    lookaheadInLineCharCode() {
+      return this.input.charCodeAt(this.nextTokenInLineStart());
     }
     codePointAtPos(pos) {
       let cp = this.input.charCodeAt(pos);
@@ -4295,14 +4304,14 @@ var lib = createCommonjsModule(function(module, exports) {
         node.typeParameters = null;
       }
       node.extends = [];
-      node.implements = [];
-      node.mixins = [];
       if (this.eat(81)) {
         do {
           node.extends.push(this.flowParseInterfaceExtends());
         } while (!isClass && this.eat(12));
       }
       if (isClass) {
+        node.implements = [];
+        node.mixins = [];
         if (this.eatContextual(115)) {
           do {
             node.mixins.push(this.flowParseInterfaceExtends());
@@ -8031,15 +8040,19 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
     tsParseBindingListForSignature() {
-      return super.parseBindingList(11, 41, 2).map((pattern) => {
-        if (pattern.type !== "Identifier" && pattern.type !== "RestElement" && pattern.type !== "ObjectPattern" && pattern.type !== "ArrayPattern") {
+      const list = super.parseBindingList(11, 41, 2);
+      for (const pattern of list) {
+        const {
+          type
+        } = pattern;
+        if (type === "AssignmentPattern" || type === "TSParameterProperty") {
           this.raise(TSErrors.UnsupportedSignatureParameterKind, {
             at: pattern,
-            type: pattern.type
+            type
           });
         }
-        return pattern;
-      });
+      }
+      return list;
     }
     tsParseTypeMemberSemicolon() {
       if (!this.eat(12) && !this.isLineTerminator()) {
@@ -8061,7 +8074,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     tsTryParseIndexSignature(node) {
       if (!(this.match(0) && this.tsLookAhead(this.tsIsUnambiguouslyIndexSignature.bind(this)))) {
-        return void 0;
+        return;
       }
       this.expect(0);
       const id = this.parseIdentifier();
@@ -8364,18 +8377,17 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     tsParseLiteralTypeNode() {
       const node = this.startNode();
-      node.literal = (() => {
-        switch (this.state.type) {
-          case 132:
-          case 133:
-          case 131:
-          case 85:
-          case 86:
-            return super.parseExprAtom();
-          default:
-            this.unexpected();
-        }
-      })();
+      switch (this.state.type) {
+        case 132:
+        case 133:
+        case 131:
+        case 85:
+        case 86:
+          node.literal = super.parseExprAtom();
+          break;
+        default:
+          this.unexpected();
+      }
       return this.finishNode(node, "TSLiteralType");
     }
     tsParseTemplateLiteralType() {
@@ -8623,10 +8635,14 @@ var lib = createCommonjsModule(function(module, exports) {
       });
     }
     tsTryParseTypeOrTypePredicateAnnotation() {
-      return this.match(14) ? this.tsParseTypeOrTypePredicateAnnotation(14) : void 0;
+      if (this.match(14)) {
+        return this.tsParseTypeOrTypePredicateAnnotation(14);
+      }
     }
     tsTryParseTypeAnnotation() {
-      return this.match(14) ? this.tsParseTypeAnnotation() : void 0;
+      if (this.match(14)) {
+        return this.tsParseTypeAnnotation();
+      }
     }
     tsTryParseType() {
       return this.tsEatThenParseType(14);
@@ -8802,17 +8818,19 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
     tsEatThenParseType(token) {
-      return !this.match(token) ? void 0 : this.tsNextThenParseType();
+      if (this.match(token)) {
+        return this.tsNextThenParseType();
+      }
     }
     tsExpectThenParseType(token) {
-      return this.tsDoThenParseType(() => this.expect(token));
+      return this.tsInType(() => {
+        this.expect(token);
+        return this.tsParseType();
+      });
     }
     tsNextThenParseType() {
-      return this.tsDoThenParseType(() => this.next());
-    }
-    tsDoThenParseType(cb) {
       return this.tsInType(() => {
-        cb();
+        this.next();
         return this.tsParseType();
       });
     }
@@ -8924,7 +8942,7 @@ var lib = createCommonjsModule(function(module, exports) {
     tsTryParseAndCatch(f) {
       const result = this.tryParse((abort) => f() || abort());
       if (result.aborted || !result.node)
-        return void 0;
+        return;
       if (result.error)
         this.state = result.failState;
       return result.node;
@@ -8934,58 +8952,55 @@ var lib = createCommonjsModule(function(module, exports) {
       const result = f();
       if (result !== void 0 && result !== false) {
         return result;
-      } else {
-        this.state = state;
-        return void 0;
       }
+      this.state = state;
     }
     tsTryParseDeclare(nany) {
       if (this.isLineTerminator()) {
         return;
       }
-      let starttype = this.state.type;
+      let startType = this.state.type;
       let kind;
       if (this.isContextual(99)) {
-        starttype = 74;
+        startType = 74;
         kind = "let";
       }
       return this.tsInAmbientContext(() => {
-        if (starttype === 68) {
-          nany.declare = true;
-          return super.parseFunctionStatement(nany, false, false);
-        }
-        if (starttype === 80) {
-          nany.declare = true;
-          return this.parseClass(nany, true, false);
-        }
-        if (starttype === 124) {
-          return this.tsParseEnumDeclaration(nany, {
-            declare: true
-          });
-        }
-        if (starttype === 110) {
-          return this.tsParseAmbientExternalModuleDeclaration(nany);
-        }
-        if (starttype === 75 || starttype === 74) {
-          if (!this.match(75) || !this.isLookaheadContextual("enum")) {
+        switch (startType) {
+          case 68:
             nany.declare = true;
-            return this.parseVarStatement(nany, kind || this.state.value, true);
+            return super.parseFunctionStatement(nany, false, false);
+          case 80:
+            nany.declare = true;
+            return this.parseClass(nany, true, false);
+          case 124:
+            return this.tsParseEnumDeclaration(nany, {
+              declare: true
+            });
+          case 110:
+            return this.tsParseAmbientExternalModuleDeclaration(nany);
+          case 75:
+          case 74:
+            if (!this.match(75) || !this.isLookaheadContextual("enum")) {
+              nany.declare = true;
+              return this.parseVarStatement(nany, kind || this.state.value, true);
+            }
+            this.expect(75);
+            return this.tsParseEnumDeclaration(nany, {
+              const: true,
+              declare: true
+            });
+          case 127: {
+            const result = this.tsParseInterfaceDeclaration(nany, {
+              declare: true
+            });
+            if (result)
+              return result;
           }
-          this.expect(75);
-          return this.tsParseEnumDeclaration(nany, {
-            const: true,
-            declare: true
-          });
-        }
-        if (starttype === 127) {
-          const result = this.tsParseInterfaceDeclaration(nany, {
-            declare: true
-          });
-          if (result)
-            return result;
-        }
-        if (tokenIsIdentifier(starttype)) {
-          return this.tsParseDeclaration(nany, this.state.value, true, null);
+          default:
+            if (tokenIsIdentifier(startType)) {
+              return this.tsParseDeclaration(nany, this.state.value, true, null);
+            }
         }
       });
     }
@@ -8998,9 +9013,8 @@ var lib = createCommonjsModule(function(module, exports) {
           const declaration = this.tsTryParseDeclare(node);
           if (declaration) {
             declaration.declare = true;
-            return declaration;
           }
-          break;
+          return declaration;
         }
         case "global":
           if (this.match(5)) {
@@ -9057,9 +9071,8 @@ var lib = createCommonjsModule(function(module, exports) {
       return !this.isLineTerminator();
     }
     tsTryParseGenericAsyncArrowFunction(startLoc) {
-      if (!this.match(47)) {
-        return void 0;
-      }
+      if (!this.match(47))
+        return;
       const oldMaybeInArrowParameters = this.state.maybeInArrowParameters;
       this.state.maybeInArrowParameters = true;
       const res = this.tsTryParseAndCatch(() => {
@@ -9071,15 +9084,13 @@ var lib = createCommonjsModule(function(module, exports) {
         return node;
       });
       this.state.maybeInArrowParameters = oldMaybeInArrowParameters;
-      if (!res) {
-        return void 0;
-      }
+      if (!res)
+        return;
       return super.parseArrowExpression(res, null, true);
     }
     tsParseTypeArgumentsInExpression() {
-      if (this.reScan_lt() !== 47) {
-        return void 0;
-      }
+      if (this.reScan_lt() !== 47)
+        return;
       return this.tsParseTypeArguments();
     }
     tsParseTypeArguments() {
@@ -9739,7 +9750,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return super.parseAsyncArrowFromCallExpression(node, call);
     }
     parseMaybeAssign(refExpressionErrors, afterLeftParse) {
-      var _jsx, _jsx2, _typeCast, _jsx3, _typeCast2, _jsx4, _typeCast3;
+      var _jsx, _jsx2, _typeCast, _jsx3, _typeCast2;
       let state;
       let jsx2;
       let typeCast;
@@ -9800,13 +9811,7 @@ var lib = createCommonjsModule(function(module, exports) {
         this.state = typeCast.failState;
         return typeCast.node;
       }
-      if ((_jsx3 = jsx2) != null && _jsx3.thrown)
-        throw jsx2.error;
-      if (arrow.thrown)
-        throw arrow.error;
-      if ((_typeCast2 = typeCast) != null && _typeCast2.thrown)
-        throw typeCast.error;
-      throw ((_jsx4 = jsx2) == null ? void 0 : _jsx4.error) || arrow.error || ((_typeCast3 = typeCast) == null ? void 0 : _typeCast3.error);
+      throw ((_jsx3 = jsx2) == null ? void 0 : _jsx3.error) || arrow.error || ((_typeCast2 = typeCast) == null ? void 0 : _typeCast2.error);
     }
     reportReservedArrowTypeParam(node) {
       var _node$extra;
@@ -9819,9 +9824,8 @@ var lib = createCommonjsModule(function(module, exports) {
     parseMaybeUnary(refExpressionErrors, sawUnary) {
       if (!this.hasPlugin("jsx") && this.match(47)) {
         return this.tsParseTypeAssertion();
-      } else {
-        return super.parseMaybeUnary(refExpressionErrors, sawUnary);
       }
+      return super.parseMaybeUnary(refExpressionErrors, sawUnary);
     }
     parseArrow(node) {
       if (this.match(14)) {
@@ -9927,12 +9931,10 @@ var lib = createCommonjsModule(function(module, exports) {
       }, type) || super.isValidLVal(type, isUnparenthesizedInAssign, binding);
     }
     parseBindingAtom() {
-      switch (this.state.type) {
-        case 78:
-          return this.parseIdentifier(true);
-        default:
-          return super.parseBindingAtom();
+      if (this.state.type === 78) {
+        return this.parseIdentifier(true);
       }
+      return super.parseBindingAtom();
     }
     parseMaybeDecoratorArguments(expr) {
       if (this.match(47) || this.match(51)) {
@@ -9950,9 +9952,8 @@ var lib = createCommonjsModule(function(module, exports) {
       if (this.state.isAmbientContext && this.match(12) && this.lookaheadCharCode() === close) {
         this.next();
         return false;
-      } else {
-        return super.checkCommaAfterRest(close);
       }
+      return super.checkCommaAfterRest(close);
     }
     isClassMethod() {
       return this.match(47) || super.isClassMethod();
@@ -10247,9 +10248,8 @@ var lib = createCommonjsModule(function(module, exports) {
   function isNumber(expression, estree2) {
     if (estree2) {
       return expression.type === "Literal" && (typeof expression.value === "number" || "bigint" in expression);
-    } else {
-      return expression.type === "NumericLiteral" || expression.type === "BigIntLiteral";
     }
+    return expression.type === "NumericLiteral" || expression.type === "BigIntLiteral";
   }
   function isNegativeNumber(expression, estree2) {
     if (expression.type === "UnaryExpression") {
@@ -10266,10 +10266,9 @@ var lib = createCommonjsModule(function(module, exports) {
   function isUncomputedMemberExpressionChain(expression) {
     if (expression.type === "Identifier")
       return true;
-    if (expression.type !== "MemberExpression")
+    if (expression.type !== "MemberExpression" || expression.computed) {
       return false;
-    if (expression.computed)
-      return false;
+    }
     return isUncomputedMemberExpressionChain(expression.object);
   }
   const PlaceholderErrors = ParseErrorEnum`placeholders`({
@@ -11302,7 +11301,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         default:
           if (tokenIsIdentifier(type)) {
-            if (this.isContextual(125) && this.lookaheadCharCode() === 123 && !this.hasFollowingLineBreak()) {
+            if (this.isContextual(125) && this.lookaheadInLineCharCode() === 123) {
               return this.parseModuleExpression();
             }
             const canBeArrow = this.state.potentialArrowAt === this.state.start;
@@ -12587,16 +12586,19 @@ var lib = createCommonjsModule(function(module, exports) {
       const nextCh = this.codePointAtPos(next);
       return this.chStartsBindingPattern(nextCh) || this.chStartsBindingIdentifier(nextCh, next);
     }
-    hasFollowingBindingIdentifier() {
-      const next = this.nextTokenStart();
+    hasInLineFollowingBindingIdentifier() {
+      const next = this.nextTokenInLineStart();
       const nextCh = this.codePointAtPos(next);
       return this.chStartsBindingIdentifier(nextCh, next);
     }
     startsUsingForOf() {
-      const lookahead = this.lookahead();
-      if (lookahead.type === 101 && !lookahead.containsEsc) {
+      const {
+        type,
+        containsEsc
+      } = this.lookahead();
+      if (type === 101 && !containsEsc) {
         return false;
-      } else {
+      } else if (tokenIsIdentifier(type) && !this.hasFollowingLineBreak()) {
         this.expectPlugin("explicitResourceManagement");
         return true;
       }
@@ -12668,7 +12670,7 @@ var lib = createCommonjsModule(function(module, exports) {
         case 73:
           return this.parseTryStatement(node);
         case 105:
-          if (this.hasFollowingLineBreak() || this.state.containsEsc || !this.hasFollowingBindingIdentifier()) {
+          if (this.state.containsEsc || !this.hasInLineFollowingBindingIdentifier()) {
             break;
           }
           this.expectPlugin("explicitResourceManagement");
@@ -12935,8 +12937,8 @@ var lib = createCommonjsModule(function(module, exports) {
         return this.parseFor(node, null);
       }
       const startsWithLet = this.isContextual(99);
-      const startsWithUsing = this.isContextual(105) && !this.hasFollowingLineBreak();
-      const isLetOrUsing = startsWithLet && this.hasFollowingBindingAtom() || startsWithUsing && this.hasFollowingBindingIdentifier() && this.startsUsingForOf();
+      const startsWithUsing = this.isContextual(105);
+      const isLetOrUsing = startsWithLet && this.hasFollowingBindingAtom() || startsWithUsing && this.startsUsingForOf();
       if (this.match(74) || this.match(75) || isLetOrUsing) {
         const initNode = this.startNode();
         const kind = this.state.value;
@@ -13294,11 +13296,6 @@ var lib = createCommonjsModule(function(module, exports) {
       return node;
     }
     parseVarId(decl, kind) {
-      if (kind === "using" && !this.inModule && this.match(96)) {
-        this.raise(Errors.AwaitInUsingBinding, {
-          at: this.state.startLoc
-        });
-      }
       const id = this.parseBindingAtom();
       this.checkLVal(id, {
         in: {

@@ -17,13 +17,14 @@
   border: none;
 }
 
-.SearchToggleButton:hover {
-  background: lightgray;
+.SearchToggleButtonExpanded {
+  grid-row: 1/3;
+  width: auto;
+  height: auto;
 }
 
-.SearchToggleButton[aria-expanded='true'] {
-  /* background: red; */
-  grid-row: 1/3;
+.SearchToggleButton:hover {
+  background: lightgray;
 }
 
 .ViewletSearchMessage {
@@ -77,18 +78,4 @@
 
 .SearchButtonReplaceAll {
   position: relative;
-}
-
-.HighlightInserted {
-  background: rgba(156, 204, 44, 0.2);
-  text-decoration: none;
-  border: 1px solid rgba(155, 185, 85, 0.2);
-  contain: content;
-}
-
-.HighlightDeleted {
-  background: rgba(255, 0, 0, 0.2);
-  border: 1px solid rgba(255, 0, 0, 0.2);
-  contain: content;
-  text-decoration: line-through;
 }

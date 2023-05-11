@@ -1,7 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
@@ -45,13 +44,6 @@ export const handleClick = (event) => {
   const uid = ComponentUid.fromEvent(event)
   const index = getIndex(target)
   ViewletSearchFunctions.handleClick(uid, index)
-}
-
-export const handleContextMenu = (event) => {
-  Event.preventDefault(event)
-  const uid = ComponentUid.fromEvent(event)
-  const { button, clientX, clientY } = event
-  ViewletSearchFunctions.handleContextMenu(uid, button, clientX, clientY)
 }
 
 export const handleScrollBarThumbPointerMove = (event) => {
@@ -107,12 +99,6 @@ export const handleHeaderClick = (event) => {
   // TODO better way to determine which button was clicked
 }
 
-export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleWheel(uid, deltaMode, deltaY)
-}
-
 export const handleReplaceInput = (event) => {
   const { target } = event
   const { value } = target
@@ -129,3 +115,6 @@ export const handleListBlur = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletSearchFunctions.handleListBlur(uid)
 }
+
+export * from '../VirtualListEvents/VirtualListEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.js'

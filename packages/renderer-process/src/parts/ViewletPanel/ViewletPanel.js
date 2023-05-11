@@ -2,10 +2,9 @@ import * as Actions from '../Actions/Actions.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletPanelEvents from './ViewletPanelEvents.js'
 
 /**
@@ -16,40 +15,15 @@ const UiStrings = {
   Maximize: 'Maximize',
 }
 
-const create$PanelTab = (label, index) => {
-  const $PanelTab = document.createElement('div')
-  $PanelTab.className = 'PanelTab'
-  $PanelTab.role = AriaRoles.Tab
-  $PanelTab.textContent = label
-  $PanelTab.id = `PanelTab-${index + 1}`
-  return $PanelTab
-}
-
-const panelTabsHandleClick = (event) => {
-  const $Target = event.target
-  switch ($Target.className) {
-    case 'PanelTab': {
-      const index = GetNodeIndex.getNodeIndex($Target)
-      RendererWorker.send(/* Panel.selectIndex */ 'Panel.selectIndex', /* index */ index)
-      break
-    }
-    default:
-      break
-  }
-}
-
 export const create = () => {
   const $PanelTabs = document.createElement('div')
   $PanelTabs.className = 'PanelTabs'
   $PanelTabs.role = AriaRoles.TabList
-  $PanelTabs.onmousedown = panelTabsHandleClick
   $PanelTabs.tabIndex = -1
 
   const $ButtonClose = IconButton.create$Button(UiStrings.Close, Icon.Close)
-  $ButtonClose.onclick = ViewletPanelEvents.handleClickClose
   const $ButtonMaximize = IconButton.create$Button(UiStrings.Maximize, Icon.ChevronUp)
   // TODO use event delegation
-  $ButtonMaximize.onclick = ViewletPanelEvents.handleClickMaximize
 
   const $PanelToolBar = document.createElement('div')
   $PanelToolBar.className = 'PanelToolBar'
@@ -72,13 +46,22 @@ export const create = () => {
     $PanelTabs,
     $PanelHeader,
     $PanelContent: undefined,
+    $ButtonClose,
+    $ButtonMaximize,
   }
   // await openViewlet('Terminal')
 }
 
-export const setTabs = (state, tabs) => {
+export const attachEvents = (state) => {
+  const { $PanelTabs, $ButtonMaximize, $ButtonClose } = state
+  $PanelTabs.onmousedown = ViewletPanelEvents.panelTabsHandleClick
+  $ButtonMaximize.onclick = ViewletPanelEvents.handleClickMaximize
+  $ButtonClose.onclick = ViewletPanelEvents.handleClickClose
+}
+
+export const setTabsDom = (state, dom) => {
   const { $PanelTabs } = state
-  $PanelTabs.append(...tabs.map(create$PanelTab))
+  VirtualDom.renderInto($PanelTabs, dom)
 }
 
 // TODO add test for focus method

@@ -25,12 +25,12 @@ export const CommandsWithSideEffectsLazy = {
   closeAllEditors: () => import('./ViewletMainCloseAllEditors.js'),
   closeActiveEditor: () => import('./ViewletMainCloseActiveEditor.js'),
   closeEditor: () => import('./ViewletMainCloseEditor.js'),
-}
-
-export const LazyCommands = {
   focusFirst: () => import('./ViewletMainFocusIndex.js'),
   focusLast: () => import('./ViewletMainFocusIndex.js'),
   focusNext: () => import('./ViewletMainFocusIndex.js'),
   focusPrevious: () => import('./ViewletMainFocusIndex.js'),
+}
+
+export const LazyCommands = {
   handleTabClick: () => import('./ViewletMainFocusIndex.js'),
 }

@@ -1,13 +1,6 @@
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as TryToGetActualErrorMessageWhenNetworkRequestSucceeds from '../TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js'
 
-class NotFoundError extends Error {
-  constructor(url) {
-    super(`Failed to import ${url}: Not found (404)`)
-    this.name = 'NotFoundError'
-  }
-}
-
 export const tryToGetActualImportErrorMessage = async (url, error) => {
   let response
   try {
@@ -20,7 +13,7 @@ export const tryToGetActualImportErrorMessage = async (url, error) => {
   }
   switch (response.status) {
     case HttpStatusCode.NotFound:
-      throw new NotFoundError(url)
+      throw new Error(`Failed to import ${url}: Not found (404)`)
     default:
       return `Failed to import ${url}: ${error}`
   }

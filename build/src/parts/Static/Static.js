@@ -232,12 +232,31 @@ const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
     occurrence: `/src/extensionHostWorkerMain.js`,
     replacement: '/dist/extensionHostWorkerMain.js',
   })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/GetExtensionHostHelperProcessUrl/GetExtensionHostHelperProcessUrl.js`,
+    occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
+    replacement: `'/${commitHash}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
+  })
   // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/extensionHostWorkerMain.js`,
     occurrence: `main()`,
     replacement: `main()\n\nexport const x = 42`,
   })
+}
+
+const copyExtensionHostSubWorkerFiles = async ({ commitHash }) => {
+  await Copy.copy({
+    from: 'packages/extension-host-sub-worker/src',
+    to: `build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker/src`,
+  })
+  // TODO
+  // await Replace.replace({
+  //   path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/Platform/Platform.js`,
+  //   occurrence: `/src/extensionHostWorkerMain.js`,
+  //   replacement: '/dist/extensionHostWorkerMain.js',
+  // })
+  // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
 }
 
 const copyPdfWorkerFiles = async ({ commitHash }) => {
@@ -574,6 +593,7 @@ const bundleJs = async ({ commitHash }) => {
     platform: 'web',
     codeSplitting: true,
     minify: true,
+    babelExternal: true,
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/renderer-worker`),
@@ -581,10 +601,18 @@ const bundleJs = async ({ commitHash }) => {
     platform: 'webworker',
     codeSplitting: true,
     allowCyclicDependencies: true, // TODO
+    babelExternal: true,
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-worker`),
     from: 'src/extensionHostWorkerMain.js',
+    platform: 'webworker',
+    codeSplitting: false,
+    babelExternal: true,
+  })
+  await BundleJs.bundleJs({
+    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-sub-worker`),
+    from: 'src/extensionHostSubWorkerMain.js',
     platform: 'webworker',
     codeSplitting: false,
   })
@@ -695,6 +723,10 @@ export const build = async () => {
   Console.time('copyExtensionHostWorkerFiles')
   await copyExtensionHostWorkerFiles({ commitHash })
   Console.timeEnd('copyExtensionHostWorkerFiles')
+
+  Console.time('copyExtensionHostSubWorkerFiles')
+  await copyExtensionHostSubWorkerFiles({ commitHash })
+  Console.timeEnd('copyExtensionHostSubWorkerFiles')
 
   Console.time('copyPdfWorkerFiles')
   await copyPdfWorkerFiles({ commitHash })

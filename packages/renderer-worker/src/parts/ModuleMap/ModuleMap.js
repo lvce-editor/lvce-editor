@@ -1,6 +1,6 @@
-import * as ModuleId from '../ModuleId/ModuleId.js'
 import * as Character from '../Character/Character.js'
 import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
+import * as ModuleId from '../ModuleId/ModuleId.js'
 
 const getPrefix = (commandId) => {
   if (!commandId || typeof commandId !== 'string') {
@@ -39,8 +39,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Callback
     case 'Chrome':
       return ModuleId.Chrome
-    case 'ChromeExtension':
-      return ModuleId.ChromeExtension
     case 'ClipBoard':
       return ModuleId.ClipBoard
     case 'ColorPicker':

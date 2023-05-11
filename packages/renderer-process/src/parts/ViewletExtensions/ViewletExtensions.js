@@ -42,6 +42,7 @@ export const create = () => {
   const $InputBox = InputBox.create()
   $InputBox.type = 'search'
   $InputBox.placeholder = 'Search Extensions in Marketplace'
+  $InputBox.name = 'extensions-search-value'
 
   const $ExtensionHeader = document.createElement('div')
   $ExtensionHeader.className = 'ExtensionHeader'

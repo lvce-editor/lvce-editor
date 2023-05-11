@@ -1,5 +1,6 @@
 import * as DirentType from '../DirentType/DirentType.js'
 import { getChildDirents, getParentEndIndex } from './ViewletExplorerShared.js'
+import * as GetExplorerMaxLineY from '../GetExplorerMaxLineY/GetExplorerMaxLineY.js'
 
 const makeExpanded = (dirent) => {
   if (dirent.type === DirentType.Directory) {
@@ -51,11 +52,18 @@ export const expandRecursively = async (state) => {
   if (focusedIndex >= 0) {
     const endIndex = getParentEndIndex(items, focusedIndex)
     const newDirents = [...items.slice(0, startIndex), ...childDirents, ...items.slice(endIndex)]
-    const maxLineY = minLineY + Math.min(Math.ceil(height / itemHeight), newDirents.length)
-    return { ...state, items: newDirents, maxLineY }
+    const maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, newDirents.length)
+    return {
+      ...state,
+      items: newDirents,
+      maxLineY,
+    }
   }
+  const newDirents = childDirents.slice(1)
+  const maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, newDirents.length)
   return {
     ...state,
-    items: childDirents.slice(1),
+    items: newDirents,
+    maxLineY,
   }
 }

@@ -1,18 +1,21 @@
 import { setDeltaY } from './VirtualListSetDeltaY.js'
 
-const getNewPercent = (state, relativeY) => {
-  if (relativeY <= state.height - state.scrollBarHeight / 2) {
+const getNewPercent = (contentHeight, scrollBarHeight, relativeY) => {
+  if (relativeY <= contentHeight - scrollBarHeight / 2) {
     // clicked in middle
-    return relativeY / (state.height - state.scrollBarHeight)
+    return relativeY / (contentHeight - scrollBarHeight)
   }
   // clicked at bottom
   return 1
 }
 
 export const handleScrollBarMove = (state, eventY) => {
-  const { y, headerHeight, handleOffset, finalDeltaY } = state
+  const { y, headerHeight, handleOffset, finalDeltaY, height, scrollBarHeight } = state
   const relativeY = eventY - y - headerHeight - handleOffset
-  const newPercent = getNewPercent(state, relativeY)
+  const contentHeight = height - headerHeight
+  const newPercent = getNewPercent(contentHeight, scrollBarHeight, relativeY)
   const newDeltaY = newPercent * finalDeltaY
   return setDeltaY(state, newDeltaY)
 }
+
+export const handleScrollBarThumbPointerMove = handleScrollBarMove

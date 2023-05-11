@@ -8,10 +8,12 @@ import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as EnterKeyHintType from '../EnterKeyHintType/EnterKeyHintType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Icon from '../Icon/Icon.js'
+import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as InputType from '../InputType/InputType.js'
 import * as Label from '../Label/Label.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
+import * as MaskImage from '../MaskImage/MaskImage.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 
@@ -56,6 +58,7 @@ export const create = () => {
   $ViewletSearchInput.placeholder = 'Search'
   $ViewletSearchInput.type = InputType.Search
   $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
+  $ViewletSearchInput.name = 'search-value'
 
   const $ButtonMatchCase = create$SearchFieldButton(UiStrings.MatchCase, Icon.CaseSensitive)
   const $ButtonMatchWholeWord = create$SearchFieldButton(UiStrings.MatchWholeWord, Icon.WholeWord)
@@ -65,10 +68,9 @@ export const create = () => {
   $SearchField.className = 'SearchField'
   $SearchField.append($ViewletSearchInput, $ButtonMatchCase, $ButtonMatchWholeWord, $ButtonUseRegularExpression)
 
-  const $ToggleButton = document.createElement('button')
-  $ToggleButton.className = 'SearchToggleButton'
-  $ToggleButton.textContent = 'T'
-  $ToggleButton.title = UiStrings.ToggleReplace
+  const $ToggleButton = IconButton.create$Button(UiStrings.ToggleReplace, Icon.ChevronRight)
+  $ToggleButton.classList.add('SearchToggleButton')
+  const $ToggleButtonIcon = $ToggleButton.firstChild
 
   const $SearchStatus = document.createElement('div')
   // @ts-ignore
@@ -116,6 +118,7 @@ export const create = () => {
     $ButtonMatchCase,
     $ButtonMatchWholeWord,
     $ButtonUseRegularExpression,
+    $ToggleButtonIcon,
   }
 }
 
@@ -289,6 +292,7 @@ const create$ReplaceField = () => {
   const $ViewletSearchReplaceInput = InputBox.create()
   $ViewletSearchReplaceInput.placeholder = 'Replace'
   $ViewletSearchReplaceInput.type = 'text'
+  $ViewletSearchReplaceInput.name = 'search-replace-value'
   $ViewletSearchReplaceInput.oninput = ViewletSearchEvents.handleReplaceInput
 
   const $ButtonPreserveCase = document.createElement('button')
@@ -301,19 +305,20 @@ const create$ReplaceField = () => {
 }
 
 export const setReplaceExpanded = (state, replaceExpanded) => {
-  console.log('set expanded', replaceExpanded)
-  const { $ViewletSearchReplaceInput, $ToggleButton, $SearchField, $ViewletSearchInput } = state
+  const { $ViewletSearchReplaceInput, $ToggleButton, $SearchField, $ToggleButtonIcon } = state
   if (replaceExpanded) {
     $ToggleButton.ariaExpanded = true
     const $ViewletSearchReplaceInput = create$ReplaceField()
     $SearchField.after($ViewletSearchReplaceInput)
     state.$ViewletSearchReplaceInput = $ViewletSearchReplaceInput
-    // TODO add it
+    $ToggleButton.classList.add('SearchToggleButtonExpanded')
+    MaskImage.setMaskImage($ToggleButtonIcon, Icon.ChevronDown)
   } else {
     $ToggleButton.ariaExpanded = false
     $ViewletSearchReplaceInput.remove()
     state.$ViewletSearchReplaceInput = undefined
-    // TODO remove it
+    $ToggleButton.classList.remove('SearchToggleButtonExpanded')
+    MaskImage.setMaskImage($ToggleButtonIcon, Icon.ChevronRight)
   }
 }
 

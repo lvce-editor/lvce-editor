@@ -14,11 +14,11 @@
 }
 
 .InputBox:focus {
-  border-color: var(--FocusOutline);
+  border-color: var(--FocusOutline, lightgray);
 }
 
 .FocusOutline {
-  outline: var(--FocusOutline);
+  outline-color: var(--FocusOutline, lightgray);
   outline-offset: -1px;
   outline-style: solid;
   outline-width: 1px;
