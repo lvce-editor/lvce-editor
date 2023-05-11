@@ -64,16 +64,15 @@ const renderGroupTabs = {
       } else {
         const oldGroup = oldGroups[index]
         const { tabsUid, editors, x, y, width, height, activeIndex } = newGroup
-        commands.push(['Viewlet.send', tabsUid, 'setTabs', editors])
-        const unFocusIndex = oldGroup.activeIndex < editors.length ? oldGroup.activeIndex : -1
-        commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', unFocusIndex, activeIndex])
+        const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex)
+        commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
       }
     }
     for (const insertedGroup of insertedGroups) {
       const { tabsUid, editors, x, y, width, height, activeIndex } = insertedGroup
       commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
       commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
-      const tabsDom = GetTabsVirtualDom.getTabsDom(editors, activeIndex)
+      const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex)
       commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
       // commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, activeIndex])
       commands.push(['Viewlet.append', newState.uid, tabsUid])

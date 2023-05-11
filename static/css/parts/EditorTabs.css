@@ -23,6 +23,8 @@
   white-space: nowrap;
   max-width: 200px;
   contain: strict;
+  height: 100%;
+  flex-shrink: 0;
 }
 
 .MainTab .EditorTabCloseButton {
