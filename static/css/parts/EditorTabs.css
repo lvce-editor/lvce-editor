@@ -93,3 +93,11 @@
 .DragOver {
   background-color: rgba(83, 89, 93, 0.5);
 }
+
+.TabLabel {
+  white-space: nowrap;
+  contain: content;
+  overflow: hidden;
+  min-width: 0;
+  flex: 1;
+}
