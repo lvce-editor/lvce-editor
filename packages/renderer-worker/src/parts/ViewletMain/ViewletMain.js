@@ -24,6 +24,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { closeEditor } from './ViewletMainCloseEditor.js'
 import { openUri } from './ViewletMainOpenUri.js'
+import * as SerializeEditorGroups from '../SerializeEditorGroups/SerializeEditorGroups.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -187,7 +188,10 @@ const getRestoredGroups = (savedState, state) => {
 
 export const saveState = (state) => {
   const { groups, activeGroupIndex } = state
-  return { groups, activeGroupIndex }
+  return {
+    groups: SerializeEditorGroups.serializeEditorGroups(groups),
+    activeGroupIndex,
+  }
 }
 
 const handleEditorChange = async (editor) => {
