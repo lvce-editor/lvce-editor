@@ -1,9 +1,8 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Terminal from '../Terminal/Terminal.js'
 import * as Workspace from '../Workspace/Workspace.js'
-
 // TODO implement a functional terminal component, maybe using offscreencanvas
 
 export const create = (id) => {
@@ -24,7 +23,7 @@ export const loadContent = async (state) => {
 }
 
 export const contentLoadedEffects = async (state) => {
-  await SharedProcess.invoke(/* Terminal.create */ 'Terminal.create', /* id */ state.id, /* cwd */ Workspace.state.workspacePath)
+  await Terminal.create(state.id, Workspace.state.workspacePath)
 }
 
 export const handleData = async (state, data) => {
@@ -35,7 +34,7 @@ export const handleData = async (state, data) => {
 }
 
 export const write = async (state, input) => {
-  await SharedProcess.invoke(/* Terminal.write */ 'Terminal.write', /* id */ state.id, /* input */ input)
+  await Terminal.write(state.id, input)
 }
 
 export const dispose = (state) => {
@@ -52,7 +51,7 @@ export const resize = async (state, width, height) => {
   // const columns = Math.round(width / columnWidth)
   const columns = 7
   const rows = Math.round(height / rowHeight)
-  await SharedProcess.invoke(/* Terminal.resize */ 'Terminal.resize', /* id */ state.id, /* columns */ columns, /* rows */ rows)
+  await Terminal.resize(state.id, columns, rows)
 
   // Terminal.resize(state, width, height)
 }
