@@ -1,4 +1,5 @@
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 
 const RE_NATIVE_MODULE_ERROR = /^innerError Error: Cannot find module '.*.node'/
 const RE_NATIVE_MODULE_ERROR_2 = /was compiled against a different Node.js version/
@@ -31,7 +32,7 @@ const getNativeModuleErrorMessage = (stderr) => {
   const message = getMessageCodeBlock(stderr)
   return {
     message: `incompatible native node module: ${message}`,
-    code: 'E_INCOMPATIBLE_NATIVE_MODULE',
+    code: ErrorCodes.E_INCOMPATIBLE_NATIVE_MODULE,
   }
 }
 
@@ -45,7 +46,7 @@ const isModulesSyntaxError = (stderr) => {
 const getModuleSyntaxError = (stderr) => {
   return {
     message: `ES Modules are not supported in electron`,
-    code: 'E_MODULES_NOT_SUPPORTED_IN_ELECTRON',
+    code: ErrorCodes.E_MODULES_NOT_SUPPORTED_IN_ELECTRON,
   }
 }
 
