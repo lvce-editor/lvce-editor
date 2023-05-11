@@ -170,6 +170,10 @@ export const handleBlur = (state) => {
   }
 }
 
+export const saveState = (state) => {
+  return {}
+}
+
 export const focus = (state) => {
   const { focusedIndex } = state
   const indexToFocus = focusedIndex === -1 ? 0 : focusedIndex
