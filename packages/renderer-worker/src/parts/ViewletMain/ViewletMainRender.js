@@ -74,7 +74,6 @@ const renderGroupTabs = {
       }
     }
     for (const insertedGroup of insertedGroups) {
-      console.log({ insertedGroup })
       const { tabsUid, editors, x, y, width, height, activeIndex, tabsDeltaX } = insertedGroup
       commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
       commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])

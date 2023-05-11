@@ -28,14 +28,6 @@
   flex-shrink: 0;
 }
 
-.MainTab .EditorTabCloseButton {
-  display: none;
-}
-
-.MainTab:hover .EditorTabCloseButton {
-  display: block;
-}
-
 .MainTabPreview {
   font-style: italic;
 }

@@ -13,17 +13,19 @@ const getTabDom = (tab, isActive, fixedWidth) => {
   const tabClassName = isActive ? 'MainTab MainTabSelected' : ClassNames.MainTab
   const fileIconClassName = `FileIcon FileIcon${tab.icon}`
   const tabWidth = fixedWidth || tab.tabWidth
-  return [
-    div(
-      {
-        className: tabClassName,
-        role: 'tab',
-        draggable: true,
-        width: tabWidth,
-        ariaSelected: isActive,
-      },
-      3
-    ),
+  const hovered = tab.hovered
+  const tabElement = div(
+    {
+      className: tabClassName,
+      role: 'tab',
+      draggable: true,
+      width: tabWidth,
+      ariaSelected: isActive,
+    },
+    2
+  )
+  const dom = [
+    tabElement,
     div(
       {
         className: fileIconClassName,
@@ -37,14 +39,20 @@ const getTabDom = (tab, isActive, fixedWidth) => {
       1
     ),
     text(tab.label),
-    button(
-      {
-        className: 'EditorTabCloseButton',
-        title: 'Close',
-      },
-      0
-    ),
   ]
+  if (hovered) {
+    tabElement.childCount++
+    dom.push(
+      button(
+        {
+          className: 'EditorTabCloseButton',
+          title: 'Close',
+        },
+        0
+      )
+    )
+  }
+  return dom
 }
 
 const getTotalTabWidth = (tabs) => {

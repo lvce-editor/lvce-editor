@@ -28,7 +28,7 @@ export const handleDragStart = (event) => {
 const getIndex = ($Target) => {
   const $Tab = $Target.closest(`.MainTab`)
   if (!$Tab) {
-    return undefined
+    return -1
   }
   return GetNodeIndex.getNodeIndex($Tab)
 }
@@ -79,8 +79,9 @@ export const handlePointerOver = (event) => {
 }
 
 export const handlePointerOut = (event) => {
-  const { target } = event
-  const index = getIndex(target)
+  const { target, relatedTarget } = event
+  const oldIndex = getIndex(target)
+  const newIndex = getIndex(relatedTarget)
   const uid = getUid()
-  ViewletMainTabsFunctions.handleTabsPointerOut(uid, index)
+  ViewletMainTabsFunctions.handleTabsPointerOut(uid, oldIndex, newIndex)
 }

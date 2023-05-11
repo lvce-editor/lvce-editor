@@ -4,13 +4,16 @@ export const handleTabsPointerOver = (state, index) => {
   Assert.number(index)
   const { groups, activeGroupIndex } = state
   const group = groups[activeGroupIndex]
-  const { activeIndex, editors } = group
+  const { editors } = group
   const editor = editors[index]
+  if (editor.hovered) {
+    return state
+  }
   const newEditor = {
     ...editor,
     hovered: true,
   }
-  const newEditors = [...editors.slice(0, activeIndex), newEditor, ...editors.slice(activeIndex + 1)]
+  const newEditors = [...editors.slice(0, index), newEditor, ...editors.slice(index + 1)]
   const newGroup = {
     ...group,
     editors: newEditors,
