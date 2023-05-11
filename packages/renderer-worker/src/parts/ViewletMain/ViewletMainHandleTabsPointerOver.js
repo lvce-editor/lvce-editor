@@ -2,6 +2,9 @@ import * as Assert from '../Assert/Assert.js'
 
 export const handleTabsPointerOver = (state, index) => {
   Assert.number(index)
+  if (index === -1) {
+    return state
+  }
   const { groups, activeGroupIndex } = state
   const group = groups[activeGroupIndex]
   const { editors } = group
