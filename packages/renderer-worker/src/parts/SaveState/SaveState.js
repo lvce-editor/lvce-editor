@@ -1,5 +1,4 @@
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
-import * as MapObject from '../MapObject/MapObject.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SessionStorage from '../SessionStorage/SessionStorage.js'
@@ -10,13 +9,16 @@ const serializeInstance = (instance) => {
   if (instance && instance.factory && instance.factory.saveState) {
     return instance.factory.saveState(instance.state)
   }
-  return instance.state
+  return undefined
 }
 
 const serializeInstances = (instances) => {
   const serialized = Object.create(null)
   for (const value of Object.values(instances)) {
-    serialized[value.moduleId] = serializeInstance(value)
+    const serializedInstance = serializeInstance(value)
+    if (serializedInstance) {
+      serialized[value.moduleId] = serializedInstance
+    }
   }
   return serialized
 }
