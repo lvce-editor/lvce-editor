@@ -197,7 +197,6 @@ export const loadContent = async (state, savedState) => {
     deltaY = savedState.deltaY
   }
   let maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, restoredDirents.length)
-  console.log({ minLineY, maxLineY, restoredDirents })
   return {
     ...state,
     root,
