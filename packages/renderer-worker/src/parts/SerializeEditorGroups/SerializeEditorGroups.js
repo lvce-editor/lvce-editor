@@ -1,10 +1,11 @@
 const serializeEditor = (editor) => {
-  const { preview, tabWidth, uri, uid } = editor
+  const { preview, tabWidth, uri, uid, label } = editor
   return {
     preview,
     tabWidth,
     uri,
     uid,
+    label,
   }
 }
 
