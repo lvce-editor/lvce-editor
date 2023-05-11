@@ -155,6 +155,8 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
+    case 'RebuildNodePty.rebuildNodePty':
+      return ModuleId.RebuildNodePty
     default:
       throw new CommandNotFoundError(commandId)
   }
