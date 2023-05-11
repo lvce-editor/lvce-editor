@@ -10,7 +10,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletMainFocusIndex from './ViewletMainFocusIndex.js'
 
-export const openUri = async (state, uri, focus = true, options = {}) => {
+export const openUri = async (state, uri, focus = true, { preview = false } = {}) => {
   Assert.object(state)
   Assert.string(uri)
   const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex, uid, tabHeight } = state
@@ -63,7 +63,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const tabWidth = MeasureTabWidth.measureTabWidth(tabLabel, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
   const tabTitle = PathDisplay.getTitle(uri)
   const icon = IconTheme.getFileNameIcon(uri)
-  const newEditor = { uri, uid: instanceUid, label: tabLabel, title: tabTitle, icon, tabWidth }
+  const newEditor = { uri, uid: instanceUid, label: tabLabel, title: tabTitle, icon, tabWidth, preview }
   const newEditors = [...activeGroup.editors, newEditor]
   const newActiveIndex = newEditors.length - 1
   const newGroup = { ...activeGroup, editors: newEditors, activeIndex: newActiveIndex }

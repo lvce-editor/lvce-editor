@@ -48,11 +48,8 @@ export const handleTabsMouseDown = (event) => {
     case ClassNames.EditorTabCloseButton:
       handleTabCloseButtonMouseDown(event, index)
       break
-    case ClassNames.MainTab:
-    case ClassNames.TabLabel:
-      handleTabMouseDown(event, index)
-      break
     default:
+      handleTabMouseDown(event, index)
       break
   }
 }
