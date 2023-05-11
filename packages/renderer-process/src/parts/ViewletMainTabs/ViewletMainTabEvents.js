@@ -54,11 +54,8 @@ export const handleTabsMouseDown = (event) => {
     case ClassNames.EditorTabCloseButton:
       handleTabCloseButtonMouseDown(event, index)
       break
-    case ClassNames.MainTab:
-    case ClassNames.TabLabel:
-      handleTabMouseDown(event, index)
-      break
     default:
+      handleTabMouseDown(event, index)
       break
   }
 }
@@ -72,4 +69,18 @@ export const handleTabsContextMenu = (event) => {
   Event.preventDefault(event)
   const uid = getUid()
   ViewletMainTabsFunctions.handleTabContextMenu(uid, index, clientX, clientY)
+}
+
+export const handlePointerOver = (event) => {
+  const { target } = event
+  const index = getIndex(target)
+  const uid = getUid()
+  ViewletMainTabsFunctions.handleTabsPointerOver(uid, index)
+}
+
+export const handlePointerOut = (event) => {
+  const { target } = event
+  const index = getIndex(target)
+  const uid = getUid()
+  ViewletMainTabsFunctions.handleTabsPointerOut(uid, index)
 }

@@ -4,3 +4,5 @@ export const closeEditor = ForwardViewletCommand.forwardViewletCommand('closeEdi
 export const handleTabClick = ForwardViewletCommand.forwardViewletCommand('handleTabClick')
 export const handleTabsWheel = ForwardViewletCommand.forwardViewletCommand('handleTabsWheel')
 export const handleTabContextMenu = ForwardViewletCommand.forwardViewletCommand('handleTabContextMenu')
+export const handleTabsPointerOver = ForwardViewletCommand.forwardViewletCommand('handleTabsPointerOver')
+export const handleTabsPointerOut = ForwardViewletCommand.forwardViewletCommand('handleTabsPointerOut')
