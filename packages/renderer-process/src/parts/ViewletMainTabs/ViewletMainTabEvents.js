@@ -10,19 +10,25 @@ const ClassNames = {
   MainTab: 'MainTab',
 }
 
-export const handleDragStart = (event) => {
-  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
-}
-
 // TODO
 const getUid = () => {
   return ComponentUid.get(document.getElementById('Main'))
 }
 
+export const handleTabsWheel = (event) => {
+  const uid = getUid()
+  const { deltaX, deltaY } = event
+  ViewletMainTabsFunctions.handleTabsWheel(uid, deltaX, deltaY)
+}
+
+export const handleDragStart = (event) => {
+  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
+}
+
 const getIndex = ($Target) => {
   const $Tab = $Target.closest(`.MainTab`)
   if (!$Tab) {
-    return undefined
+    return -1
   }
   return GetNodeIndex.getNodeIndex($Tab)
 }
@@ -73,8 +79,9 @@ export const handlePointerOver = (event) => {
 }
 
 export const handlePointerOut = (event) => {
-  const { target } = event
-  const index = getIndex(target)
+  const { target, relatedTarget } = event
+  const oldIndex = getIndex(target)
+  const newIndex = getIndex(relatedTarget)
   const uid = getUid()
-  ViewletMainTabsFunctions.handleTabsPointerOut(uid, index)
+  ViewletMainTabsFunctions.handleTabsPointerOut(uid, oldIndex, newIndex)
 }

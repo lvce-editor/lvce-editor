@@ -1,16 +1,23 @@
 import * as Assert from '../Assert/Assert.js'
 
-export const handleTabsPointerOut = (state, index) => {
-  Assert.number(index)
+export const handleTabsPointerOut = (state, oldIndex, newIndex) => {
+  Assert.number(oldIndex)
+  Assert.number(newIndex)
+  if (oldIndex === newIndex) {
+    return state
+  }
   const { groups, activeGroupIndex } = state
   const group = groups[activeGroupIndex]
-  const { activeIndex, editors } = group
-  const editor = editors[index]
+  const { editors } = group
+  const editor = editors[oldIndex]
+  if (!editor.hovered) {
+    return state
+  }
   const newEditor = {
     ...editor,
     hovered: false,
   }
-  const newEditors = [...editors.slice(0, activeIndex), newEditor, ...editors.slice(activeIndex + 1)]
+  const newEditors = [...editors.slice(0, oldIndex), newEditor, ...editors.slice(oldIndex + 1)]
   const newGroup = {
     ...group,
     editors: newEditors,

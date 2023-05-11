@@ -1,5 +1,6 @@
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as GetTabsVirtualDom from '../GetTabsVirtualDom/GetTabsVirtualDom.js'
 
 export const hasFunctionalRender = true
 
@@ -62,18 +63,24 @@ const renderGroupTabs = {
         insertedGroups.push(newGroup)
       } else {
         const oldGroup = oldGroups[index]
-        const { tabsUid, editors, x, y, width, height, activeIndex } = newGroup
-        commands.push(['Viewlet.send', tabsUid, 'setTabs', editors])
-        const unFocusIndex = oldGroup.activeIndex < editors.length ? oldGroup.activeIndex : -1
-        commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', unFocusIndex, activeIndex])
+        const { tabsUid, editors, x, y, width, height, activeIndex, tabsDeltaX } = newGroup
+        if (editors !== oldGroup.editors || activeIndex !== oldGroup.activeIndex) {
+          const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex)
+          commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
+        }
+        if (tabsDeltaX !== oldGroup.tabsDeltaX) {
+          commands.push(['Viewlet.send', tabsUid, 'setScrollLeft', tabsDeltaX])
+        }
       }
     }
     for (const insertedGroup of insertedGroups) {
-      const { tabsUid, editors, x, y, width, height, activeIndex } = insertedGroup
+      const { tabsUid, editors, x, y, width, height, activeIndex, tabsDeltaX } = insertedGroup
       commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
       commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
-      commands.push(['Viewlet.send', tabsUid, 'setTabs', editors])
-      commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, activeIndex])
+      const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex, newState.tabsDeltax)
+      commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
+      commands.push(['Viewlet.send', tabsUid, 'setScrollLeft', tabsDeltaX])
+      // commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, activeIndex])
       commands.push(['Viewlet.append', newState.uid, tabsUid])
     }
     for (const group of deletedGroups) {
