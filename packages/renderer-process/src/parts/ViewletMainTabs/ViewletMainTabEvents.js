@@ -5,7 +5,7 @@ import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletMainTabsFunctions from './ViewletMainTabsFunctions.js'
 
 const ClassNames = {
-  Label: 'Label',
+  TabLabel: 'TabLabel',
   EditorTabCloseButton: 'EditorTabCloseButton',
   MainTab: 'MainTab',
 }
@@ -49,7 +49,7 @@ export const handleTabsMouseDown = (event) => {
       handleTabCloseButtonMouseDown(event, index)
       break
     case ClassNames.MainTab:
-    case ClassNames.Label:
+    case ClassNames.TabLabel:
       handleTabMouseDown(event, index)
       break
     default:
