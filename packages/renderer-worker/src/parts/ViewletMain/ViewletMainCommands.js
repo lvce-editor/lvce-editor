@@ -32,5 +32,6 @@ export const CommandsWithSideEffectsLazy = {
 }
 
 export const LazyCommands = {
+  handleTabsWheel: () => import('./ViewletMainHandleTabsWheel.js'),
   handleTabClick: () => import('./ViewletMainFocusIndex.js'),
 }

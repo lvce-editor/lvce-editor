@@ -10,13 +10,19 @@ const ClassNames = {
   MainTab: 'MainTab',
 }
 
-export const handleDragStart = (event) => {
-  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
-}
-
 // TODO
 const getUid = () => {
   return ComponentUid.get(document.getElementById('Main'))
+}
+
+export const handleTabsWheel = (event) => {
+  const uid = getUid()
+  const { deltaX, deltaY } = event
+  ViewletMainTabsFunctions.handleTabsWheel(uid, deltaX, deltaY)
+}
+
+export const handleDragStart = (event) => {
+  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
 }
 
 const getIndex = ($Target) => {

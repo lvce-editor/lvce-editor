@@ -62,7 +62,7 @@ const getFixedWidth = (width, tabsLength, hasOverflow) => {
   return Math.max(width / tabsLength, 80)
 }
 
-export const getTabsDom = (tabs, width, activeIndex) => {
+export const getTabsDom = (tabs, width, activeIndex, deltaX) => {
   const tabsDom = []
   const totalTabWidth = getTotalTabWidth(tabs)
   const hasOverflow = totalTabWidth > width

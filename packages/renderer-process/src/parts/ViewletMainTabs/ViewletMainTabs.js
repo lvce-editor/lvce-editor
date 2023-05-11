@@ -1,8 +1,10 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Tab from '../Tab/Tab.js'
-import * as ViewletMainTabEvents from './ViewletMainTabEvents.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as ViewletMainTabEvents from './ViewletMainTabEvents.js'
 
 /**
  * @enum {string}
@@ -28,6 +30,7 @@ export const attachEvents = (state) => {
   $MainTabs.onmousedown = ViewletMainTabEvents.handleTabsMouseDown
   $MainTabs.oncontextmenu = ViewletMainTabEvents.handleTabsContextMenu
   $MainTabs.ondragstart = ViewletMainTabEvents.handleDragStart
+  $MainTabs.addEventListener(DomEventType.Wheel, ViewletMainTabEvents.handleTabsWheel, DomEventOptions.Passive)
 }
 
 export const setTabs = (state, tabs) => {
@@ -43,6 +46,11 @@ export const setTabs = (state, tabs) => {
 export const setTabsDom = (state, dom) => {
   const { $Viewlet } = state
   VirtualDom.renderInto($Viewlet, dom)
+}
+
+export const setScrollLeft = (state, scrollLeft) => {
+  const { $Viewlet } = state
+  $Viewlet.scrollLeft = scrollLeft
 }
 
 export const setScrollBar = (state, scrollBarWidth) => {
