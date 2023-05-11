@@ -348,6 +348,7 @@ export const search = async (searchDir, searchString, { threads = 1, maxSearchRe
   90 |     new Transform({
   91 |       decodeStrings: false,`,
     type: 'TypeError',
+    code: 'ERR_INVALID_ARG_TYPE',
   })
 })
 
@@ -648,5 +649,6 @@ export const getModuleId = (commandId) => {
   149 | }
   150 |`,
     type: 'VError',
+    code: 'E_COMMAND_NOT_FOUND',
   })
 })
