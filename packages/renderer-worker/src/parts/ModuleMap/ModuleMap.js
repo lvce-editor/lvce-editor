@@ -127,6 +127,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.PersistentFileHandle
     case 'Preferences':
       return ModuleId.Preferences
+    case 'RebuildNodePty':
+      return ModuleId.RebuildNodePty
     case 'RecentlyOpened':
       return ModuleId.RecentlyOpened
     case 'SaveFileAs':

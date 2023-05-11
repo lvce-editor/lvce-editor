@@ -227,6 +227,10 @@
     "label": "Developer: Toggle Developer Tools"
   },
   {
+    "id": "RebuildNodePty.rebuildNodePty",
+    "label": "Developer: Rebuild Node Pty"
+  },
+  {
     "id": "Window.reload",
     "label": "Window: Reload",
     "aliases": ["Reload Window"]

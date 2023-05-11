@@ -69,3 +69,4 @@ export const BulkReplacement = 68
 export const AutoUpdater = 69
 export const IpcParent = 70
 export const NativeHost = 71
+export const RebuildNodePty = 72
