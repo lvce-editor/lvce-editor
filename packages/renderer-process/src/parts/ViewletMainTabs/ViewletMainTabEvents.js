@@ -26,6 +26,9 @@ export const handleDragStart = (event) => {
 }
 
 const getIndex = ($Target) => {
+  if (!$Target) {
+    return -1
+  }
   const $Tab = $Target.closest(`.MainTab`)
   if (!$Tab) {
     return -1
