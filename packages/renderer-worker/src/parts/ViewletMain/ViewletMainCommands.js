@@ -33,4 +33,6 @@ export const CommandsWithSideEffectsLazy = {
 
 export const LazyCommands = {
   handleTabClick: () => import('./ViewletMainFocusIndex.js'),
+  handleTabsPointerOver: () => import('./ViewletMainHandleTabsPointerOver.js'),
+  handleTabsPointerOut: () => import('./ViewletMainHandleTabsPointerOut.js'),
 }

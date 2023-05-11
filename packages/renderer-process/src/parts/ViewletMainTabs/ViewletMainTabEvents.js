@@ -67,3 +67,17 @@ export const handleTabsContextMenu = (event) => {
   const uid = getUid()
   ViewletMainTabsFunctions.handleTabContextMenu(uid, index, clientX, clientY)
 }
+
+export const handlePointerOver = (event) => {
+  const { target } = event
+  const index = getIndex(target)
+  const uid = getUid()
+  ViewletMainTabsFunctions.handleTabsPointerOver(uid, index)
+}
+
+export const handlePointerOut = (event) => {
+  const { target } = event
+  const index = getIndex(target)
+  const uid = getUid()
+  ViewletMainTabsFunctions.handleTabsPointerOut(uid, index)
+}
