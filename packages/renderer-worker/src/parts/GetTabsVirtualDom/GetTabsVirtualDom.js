@@ -6,7 +6,7 @@ import { button, div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 const ClassNames = {
   MainTab: 'MainTab',
   FileIcon: 'FileIcon',
-  Label: 'Label',
+  TabLabel: 'TabLabel',
 }
 
 const getTabDom = (tab, isActive) => {
@@ -31,7 +31,7 @@ const getTabDom = (tab, isActive) => {
     ),
     div(
       {
-        className: ClassNames.Label,
+        className: ClassNames.TabLabel,
       },
       1
     ),
