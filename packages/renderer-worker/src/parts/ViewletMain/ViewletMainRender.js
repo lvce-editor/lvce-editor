@@ -64,12 +64,17 @@ const renderGroupTabs = {
       } else {
         const oldGroup = oldGroups[index]
         const { tabsUid, editors, x, y, width, height, activeIndex, tabsDeltaX } = newGroup
-        const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex)
-        commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
-        commands.push(['Viewlet.send', tabsUid, 'setScrollLeft', tabsDeltaX])
+        if (editors !== oldGroup.editors || activeIndex !== oldGroup.activeIndex) {
+          const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex)
+          commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
+        }
+        if (tabsDeltaX !== oldGroup.tabsDeltaX) {
+          commands.push(['Viewlet.send', tabsUid, 'setScrollLeft', tabsDeltaX])
+        }
       }
     }
     for (const insertedGroup of insertedGroups) {
+      console.log({ insertedGroup })
       const { tabsUid, editors, x, y, width, height, activeIndex, tabsDeltaX } = insertedGroup
       commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
       commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
