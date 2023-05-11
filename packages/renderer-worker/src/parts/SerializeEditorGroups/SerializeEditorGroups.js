@@ -1,11 +1,12 @@
 const serializeEditor = (editor) => {
-  const { preview, tabWidth, uri, uid, label } = editor
+  const { preview, tabWidth, uri, uid, label, icon } = editor
   return {
     preview,
     tabWidth,
     uri,
     uid,
     label,
+    icon,
   }
 }
 
@@ -14,11 +15,15 @@ const serializeEditors = (editors) => {
 }
 
 const serializeEditorGroup = (group) => {
-  const { editors, activeIndex, tabsDeltaX } = group
+  const { editors, activeIndex, tabsDeltaX, x, y, width, height } = group
   return {
     editors: serializeEditors(editors),
     activeIndex,
     tabsDeltaX,
+    x,
+    y,
+    width,
+    height,
   }
 }
 
