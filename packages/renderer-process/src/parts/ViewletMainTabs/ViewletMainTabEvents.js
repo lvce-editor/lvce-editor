@@ -5,7 +5,7 @@ import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletMainTabsFunctions from './ViewletMainTabsFunctions.js'
 
 const ClassNames = {
-  Label: 'Label',
+  TabLabel: 'TabLabel',
   EditorTabCloseButton: 'EditorTabCloseButton',
   MainTab: 'MainTab',
 }
