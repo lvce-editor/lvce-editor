@@ -81,7 +81,11 @@ const getMainGroups = (savedState, state) => {
       const label = editor.label
       editor.tabWidth = MeasureTabWidth.measureTabWidth(label, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
     }
-    restoredGroups.push(group)
+    const restoredGroup = {
+      ...group,
+      tabsUid: Id.create(),
+    }
+    restoredGroups.push(restoredGroup)
   }
   // TODO check that type is string (else runtime error occurs and page is blank)
   return restoredGroups
