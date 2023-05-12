@@ -37,7 +37,7 @@ const main = async () => {
   process.on('SIGTERM', handleSigTerm)
 
   process.on('uncaughtExceptionMonitor', ErrorHandling.handleUncaughtExceptionMonitor)
-  ParentIpc.listen()
+  await ParentIpc.listen()
 
   // ExtensionHost.start() // TODO start on demand, e.g. not when extensions should be disabled
 }

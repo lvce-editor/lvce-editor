@@ -457,7 +457,6 @@ const state = {
 
 const handleMessage = (message) => {
   if (!process.send) {
-    console.log('send not available (2)')
     return
   }
   process.send(message)
@@ -497,17 +496,14 @@ const handleDisconnect = () => {
 
 const launchSharedProcess = () => {
   state.sharedProcessState = /* launching */ 1
-  delete process.env.ELECTRON_RUN_AS_NODE
-
   const sharedProcess = fork(
     sharedProcessPath,
     // execArgv: ['--trace-deopt'],
-    ['--enable-source-maps', ...argvSliced],
+    ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced],
     {
       stdio: 'inherit',
       env: {
         ...process.env,
-        ELECTRON_RUN_AS_NODE: '1', // TODO only needed when server is run inside electron app
       },
     }
   )
@@ -549,7 +545,16 @@ const handleUpgrade = (request, socket) => {
       state.onSharedProcessReady.push(() => {
         // @ts-ignore
         state.sharedProcess.send(
-          { headers: request.headers, method: request.method },
+          {
+            jsonrpc: '2.0',
+            method: 'HandleWebSocket.handleWebSocket',
+            params: [
+              {
+                headers: request.headers,
+                method: request.method,
+              },
+            ],
+          },
           // @ts-ignore
           socket
         )
@@ -564,7 +569,16 @@ const handleUpgrade = (request, socket) => {
     case /* on */ 2:
       // @ts-ignore
       state.sharedProcess.send(
-        { headers: request.headers, method: request.method },
+        {
+          jsonrpc: '2.0',
+          method: 'HandleWebSocket.handleWebSocket',
+          params: [
+            {
+              headers: request.headers,
+              method: request.method,
+            },
+          ],
+        },
         // @ts-ignore
         socket
       )

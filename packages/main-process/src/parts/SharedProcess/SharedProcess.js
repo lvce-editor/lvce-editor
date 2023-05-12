@@ -7,6 +7,7 @@ const GetResponse = require('../GetResponse/GetResponse.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
 const Process = require('../Process/Process.js')
 const RestoreError = require('../RestoreError/RestoreError.js')
+const Callback = require('../Callback/Callback.js')
 
 const state = (exports.state = {
   /**
@@ -46,6 +47,7 @@ const handleChildMessage = async (message) => {
   }
   if (message.id) {
     if ('result' in message) {
+      Callback.resolve(message.id, message)
       state.onMessage(message)
       return
     }
@@ -132,6 +134,7 @@ exports.hydrate = async (env = {}) => {
       ELECTRON_RUN_AS_NODE: '1', // TODO
       ...env,
     },
+    argv: ['--ipc-type=node-worker'],
     execArgv: ['--enable-source-maps'],
   })
   // TODO handle all possible errors from web server process
