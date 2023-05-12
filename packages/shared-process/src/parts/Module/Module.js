@@ -20,6 +20,8 @@ export const load = (moduleId) => {
       return import('../Download/Download.ipc.js')
     case ModuleId.ExtensionHost:
       return import('../ExtensionHost/ExtensionHost.ipc.js')
+    case ModuleId.ElectronInitialize:
+      return import('../ElectronInitialize/ElectronInitialize.ipc.js')
     case ModuleId.ExtensionManagement:
       return import('../ExtensionManagement/ExtensionManagement.ipc.js')
     case ModuleId.FileSystem:
