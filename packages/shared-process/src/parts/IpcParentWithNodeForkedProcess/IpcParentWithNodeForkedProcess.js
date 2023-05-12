@@ -39,8 +39,8 @@ export const wrap = (childProcess) => {
     send(message) {
       this.childProcess.send(message)
     },
-    sendAndTransfer(message, transfer) {
-      throw new Error('transfer is not supported')
+    sendAndTransfer(message, handle) {
+      this.childProcess.send(message, handle)
     },
     dispose() {
       this.childProcess.kill()
