@@ -10,6 +10,8 @@ import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as Logger from '../Logger/Logger.js'
 import * as ProtocolType from '../ProtocolType/ProtocolType.js'
 import { VError } from '../VError/VError.js'
+import * as PtyHost from '../PtyHost/PtyHost.js'
+
 // TODO add tests for this
 
 // TODO handle structure: one shared process multiple extension hosts
@@ -73,6 +75,18 @@ const handleWebSocketUnknown = (message, handle, protocol) => {
   }
 }
 
+const handleWebSocketTerminalProcess = async (message, handle) => {
+  console.log({ handle })
+  // const ipc = await PtyHost.getOrCreate()
+  // console.info('[sharedprocess] creating extension ipc')
+  // const rpc = await ExtensionHostRpc.create(ipc, handle)
+  // console.info('[sharedprocess] created extension host rpc')
+  // ipc._process.send(message, handle)
+  // rpc.send(message)
+  // console.log('spawned extension host')
+  // console.log(rpc)
+}
+
 const handleWebSocket = (message, handle) => {
   const headers = message.headers
   if (!headers) {
@@ -89,6 +103,8 @@ const handleWebSocket = (message, handle) => {
       return handleWebSocketExtensionHost(message, handle)
     case ProtocolType.ExtensionHostHelperProcess:
       return handleWebSocketExtensionHostHelperProcess(message, handle)
+    case ProtocolType.TerminalProcess:
+      return handleWebSocketTerminalProcess(message, handle)
     default:
       return handleWebSocketUnknown(message, handle, protocol)
   }

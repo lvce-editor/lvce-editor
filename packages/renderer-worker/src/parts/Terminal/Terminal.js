@@ -1,15 +1,16 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as TerminalProcess from '../TerminalProcess/TerminalProcess.js'
 
 export const create = async (id, cwd) => {
-  await SharedProcess.invoke(/* Terminal.create */ 'Terminal.create', /* id */ id, /* cwd */ cwd)
+  await TerminalProcess.listen()
+  await TerminalProcess.invoke('Terminal.create', id, cwd)
 }
 
 export const write = async (id, input) => {
-  await SharedProcess.invoke(/* Terminal.write */ 'Terminal.write', /* id */ id, /* input */ input)
+  await TerminalProcess.invoke('Terminal.write', id, input)
 }
 
 export const resize = async (id, columns, rows) => {
-  await SharedProcess.invoke(/* Terminal.resize */ 'Terminal.resize', /* id */ id, /* columns */ columns, /* rows */ rows)
+  await TerminalProcess.invoke('Terminal.resize', id, columns, rows)
 }
 
 export const clear = async (id) => {

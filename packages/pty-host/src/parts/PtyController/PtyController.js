@@ -10,6 +10,7 @@ export const create = (id, cwd) => {
   Debug.debug(`create ${id} ${cwd}`)
   const pty = Pty.create({ cwd })
   const handleData = (data) => {
+    console.log({ data })
     if (process.send) {
       process.send({
         jsonrpc: '2.0',
