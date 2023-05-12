@@ -76,6 +76,8 @@ export const handleWebSocket = (handle, message) => {
       return handleWebSocketExtensionHost(message, handle)
     case ProtocolType.ExtensionHostHelperProcess:
       return handleWebSocketExtensionHostHelperProcess(message, handle)
+    case ProtocolType.TerminalProcess:
+      return handleWebSocketTerminalProcess(message, handle)
     default:
       return handleWebSocketUnknown(message, handle, protocol)
   }
