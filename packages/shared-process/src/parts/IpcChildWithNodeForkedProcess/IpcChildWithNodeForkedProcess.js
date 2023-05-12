@@ -1,4 +1,8 @@
 export const listen = async () => {
+  if (!process.send) {
+    throw new Error('process.send must be defined')
+  }
+  process.send('ready')
   return process
 }
 
