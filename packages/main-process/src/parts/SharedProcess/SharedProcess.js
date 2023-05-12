@@ -1,17 +1,17 @@
-const { Worker } = require('node:worker_threads')
+const Callback = require('../Callback/Callback.js')
 const Command = require('../Command/Command.js')
 const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
-const Platform = require('../Platform/Platform.js')
-const Logger = require('../Logger/Logger.js')
-const GetResponse = require('../GetResponse/GetResponse.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
+const GetResponse = require('../GetResponse/GetResponse.js')
+const IpcParent = require('../IpcParent/IpcParent.js')
+const IpcParentType = require('../IpcParentType/IpcParentType.js')
+const Logger = require('../Logger/Logger.js')
+const Platform = require('../Platform/Platform.js')
 const Process = require('../Process/Process.js')
-const RestoreError = require('../RestoreError/RestoreError.js')
-const Callback = require('../Callback/Callback.js')
 
 const state = (exports.state = {
   /**
-   * @type{Worker|undefined}
+   * @type{any|undefined}
    */
   sharedProcess: undefined,
   onMessage(message) {},
@@ -69,7 +69,9 @@ const handleProcessExit = async () => {
     // await state.sharedProcess.terminate()
     // state.sharedProcess.postMessage('terminate')
     Logger.info('[main-process] terminating shared process')
-    await state.sharedProcess.terminate()
+    state.sharedProcess.dispose()
+    state.sharedProcess = undefined
+
     // state.sharedProcess.
   }
 }
@@ -121,14 +123,15 @@ exports.hydrate = async (env = {}) => {
     // @ts-ignore
     state.sharedProcess.off('exit', handleChildExit)
     // @ts-ignore
-    state.sharedProcess.terminate()
+    state.sharedProcess.dispose()
     state.sharedProcess = undefined
   }
   // console.log('env', process.env.ELECTRON_RUN_AS_NODE)
   // console.log(process.env)
   // TODO inherit stdout but listen to ready event
   const sharedProcessPath = Platform.getSharedProcessPath()
-  const sharedProcess = new Worker(sharedProcessPath, {
+  const sharedProcess = await IpcParent.create({
+    method: IpcParentType.NodeWorker,
     env: {
       ...process.env,
       ELECTRON_RUN_AS_NODE: '1', // TODO
@@ -136,13 +139,14 @@ exports.hydrate = async (env = {}) => {
     },
     argv: ['--ipc-type=node-worker'],
     execArgv: ['--enable-source-maps'],
+    path: sharedProcessPath,
   })
   // TODO handle all possible errors from web server process
   sharedProcess.on('error', handleChildError)
   sharedProcess.on('message', handleChildMessage)
   sharedProcess.on('exit', handleChildExit)
   sharedProcess.on('disconnect', handleChildDisconnect)
-  process.on('exit', handleProcessExit)
+  process.on('exit', handleProcessExit) // TODO
   state.sharedProcess = sharedProcess
   return sharedProcess
 }
