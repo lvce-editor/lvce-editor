@@ -31,6 +31,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Developer
     case 'Download.download':
       return ModuleId.Download
+    case 'ElectronInitialize.electronInitialize':
+      return ModuleId.ElectronInitialize
     case 'ExtensionHost.dispose':
     case 'ExtensionHost.enableExtension':
     case 'ExtensionHost.executeCommand':
