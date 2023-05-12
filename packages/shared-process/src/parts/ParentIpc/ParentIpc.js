@@ -10,6 +10,9 @@ import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as Logger from '../Logger/Logger.js'
 import * as ProtocolType from '../ProtocolType/ProtocolType.js'
 import { VError } from '../VError/VError.js'
+import * as IpcChild from '../IpcChild/IpcChild.js'
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
+
 // TODO add tests for this
 
 // TODO handle structure: one shared process multiple extension hosts
@@ -104,7 +107,7 @@ const handleJsonRpcMessage = async (message, handle) => {
     electronSend(response)
   } else {
     // TODO handle error
-    Command.execute(message.method, null, ...message.params)
+    Command.execute(message.method, ...message.params)
   }
 }
 
@@ -121,80 +124,14 @@ const handleMessageFromParentProcess = async (message, handle) => {
   console.warn('unknown message', message)
 }
 
-/**
- *
- * @param {{initialize:{port: MessagePort, folder:string}}} initializeMessage
- */
-const electronInitialize = (initializeMessage) => {
-  const port = initializeMessage.initialize.port
-  // TODO handle error
-  const fakeSocket = {
-    send: port.postMessage.bind(port),
-    on(event, listener) {
-      switch (event) {
-        case 'close':
-          port.on('close', listener)
-          break
-        case 'message':
-          port.on('message', listener)
-          break
-        default:
-          console.warn('socket event not implemented', event, listener)
-          break
-      }
-    },
-  }
-  const handleOtherMessagesFromMessagePort = async (message) => {
-    // console.log('got port message', message)
-    if (message.result) {
-      Callback.resolve(message.id, message.result)
-    } else if (message.method) {
-      if (message.id) {
-        const response = await GetResponse.getResponse(message, fakeSocket)
-        port.postMessage(response)
-      } else {
-        console.warn(`[shared process] sending messages without id is deprecated: ${message.method}`)
-        Command.execute(message.method, fakeSocket, ...message.params)
-      }
-    } else {
-      console.warn('unknown message', message)
-    }
-  }
-  port.on('message', handleOtherMessagesFromMessagePort)
-}
-
-const handleMessageFromParentProcessElectron = async (message) => {
-  if (message.initialize) {
-    electronInitialize(message)
-    return
-  }
-  if ('result' in message) {
-    Callback.resolve(message.id, message.result)
-    return
-  }
-
-  console.log('unknown message from electron', message)
-  console.log({ message })
-}
-
 // TODO maybe rename to hydrate
-export const listen = () => {
+export const listen = async () => {
+  const method = IpcChildType.Auto()
+  const ipc = await IpcChild.listen({
+    method,
+  })
+  console.log('ipc is finished')
+  ipc.on('message', handleMessageFromParentProcess)
   // TODO tree-shake out if-else
   // console.log({ ...process.env })
-  if (process.env.ELECTRON_RUN_AS_NODE && parentPort) {
-    // electron process listens to main process ipc
-    Debug.debug('is electron')
-    // @ts-ignore
-    parentPort.on('message', handleMessageFromParentProcessElectron)
-    electronSend('ready')
-  } else {
-    Debug.debug('is not electron')
-    // otherwise listen to web process ipc
-    // and when a socket is transferred,
-    // listen to socket messages also
-    process.on('message', handleMessageFromParentProcess)
-    if (process.send) {
-      process.send('ready')
-    }
-  }
 }
