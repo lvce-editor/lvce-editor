@@ -3,6 +3,7 @@ const SharedProcess = require('../SharedProcess/SharedProcess.js')
 const Performance = require('../Performance/Performance.js')
 const AppWindow = require('../AppWindow/AppWindow.js')
 const Logger = require('../Logger/Logger.js')
+const Callback = require('../Callback/Callback.js')
 const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
 
 // TODO maybe handle critical (first render) request via ipcMain
@@ -48,22 +49,17 @@ exports.handlePort = async (event, browserWindowPort) => {
     // console.log('send message to browser window', message)
     browserWindowPort.postMessage(message)
   })
-  // TODO use invoke
+  const { id, promise } = Callback.registerPromise()
+  // TODO use jsonrpc.invoke
   sharedProcess.postMessage(
     {
       jsonrpc: '2.0',
       method: 'ElectronInitialize.electronInitialize',
+      id,
       params: [port1, folder],
     },
     [port1]
   )
-  // SharedProcess.sendPort(port1)
-  // SharedProcess.send({ command: 'setFolder', folder })
-
-  // windowConfigMap.set(event.sender, port1)
-
-  // SharedProcess.setOnMessage((message) => {
-  //   browserWindowPort.postMessage(message)
-  // })
+  await promise
   browserWindowPort.start()
 }

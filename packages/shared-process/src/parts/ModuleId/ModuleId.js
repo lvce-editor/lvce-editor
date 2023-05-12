@@ -25,3 +25,4 @@ export const AutoUpdaterAppImage = 24
 export const AutoUpdaterWindowsNsis = 25
 export const RebuildNodePty = 26
 export const ElectronInitialize = 27
+export const HandleWebSocket = 28
