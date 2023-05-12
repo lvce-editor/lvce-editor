@@ -130,8 +130,5 @@ export const listen = async () => {
   const ipc = await IpcChild.listen({
     method,
   })
-  console.log('ipc is finished')
   ipc.on('message', handleMessageFromParentProcess)
-  // TODO tree-shake out if-else
-  // console.log({ ...process.env })
 }
