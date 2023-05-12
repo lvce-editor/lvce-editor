@@ -3,7 +3,6 @@ import * as Command from '../Command/Command.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
 
 export const electronInitialize = (port, folder) => {
-  console.log({ port, folder })
   // TODO handle error
   const fakeSocket = {
     send: port.postMessage.bind(port),

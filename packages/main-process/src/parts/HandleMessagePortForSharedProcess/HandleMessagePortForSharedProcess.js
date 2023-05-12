@@ -48,12 +48,12 @@ exports.handlePort = async (event, browserWindowPort) => {
     // console.log('send message to browser window', message)
     browserWindowPort.postMessage(message)
   })
+  // TODO use invoke
   sharedProcess.postMessage(
     {
-      initialize: {
-        port: port1,
-        folder,
-      },
+      jsonrpc: '2.0',
+      method: 'ElectronInitialize.electronInitialize',
+      params: [port1, folder],
     },
     [port1]
   )
