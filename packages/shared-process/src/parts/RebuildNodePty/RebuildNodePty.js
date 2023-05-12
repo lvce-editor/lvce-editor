@@ -1,7 +1,7 @@
 import { VError } from '../VError/VError.js'
 import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
-import { spawn } from 'child_process'
+import { spawn } from 'node:child_process'
 
 const getElectronRebuildPath = () => {
   return Path.join(Root.root, 'packages', 'main-process', 'node_modules', '.bin', 'electron-rebuild')
@@ -12,24 +12,39 @@ const getPtyHostPath = () => {
 }
 
 /**
- *
- * @param {string} electronRebuildPath
- * @param {string[]} args
- * @param {import('child_process').SpawnOptions} options
+ * @param {string} cwd
  */
-const runElectronRebuild = async (electronRebuildPath, args, options) => {
-  const childProcess = spawn(electronRebuildPath, args, options)
+const rebuildNodePtyElectron = async (cwd) => {
+  const electronRebuildPath = getElectronRebuildPath()
+  const childProcess = spawn(electronRebuildPath, [], {
+    cwd,
+    stdio: 'inherit',
+  })
   // TODO wait for child process to be finished
+}
+
+/**
+ * @param {string} cwd
+ */
+const rebuildNodePtyNode = async (cwd) => {
+  const childProcess = spawn('npm', ['rebuild'], {
+    cwd,
+    stdio: 'inherit',
+  })
+}
+
+const isElectron = () => {
+  return Boolean(process.version['elctron'])
 }
 
 export const rebuildNodePty = async () => {
   try {
-    const electronRebuildPath = getElectronRebuildPath()
     const ptyHostPath = getPtyHostPath()
-    await runElectronRebuild(electronRebuildPath, [], {
-      cwd: ptyHostPath,
-      stdio: 'inherit',
-    })
+    if (isElectron()) {
+      await rebuildNodePtyElectron(ptyHostPath)
+    } else {
+      await rebuildNodePtyNode(ptyHostPath)
+    }
   } catch (error) {
     throw new VError(error, `Failed to rebuild node-pty`)
   }
