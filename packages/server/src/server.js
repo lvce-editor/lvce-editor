@@ -569,7 +569,16 @@ const handleUpgrade = (request, socket) => {
     case /* on */ 2:
       // @ts-ignore
       state.sharedProcess.send(
-        { headers: request.headers, method: request.method },
+        {
+          jsonrpc: '2.0',
+          method: 'HandleWebSocket.handleWebSocket',
+          params: [
+            {
+              headers: request.headers,
+              method: request.method,
+            },
+          ],
+        },
         // @ts-ignore
         socket
       )
