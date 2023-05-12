@@ -1,7 +1,8 @@
-import { VError } from '../VError/VError.js'
+import { spawn } from 'node:child_process'
+import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
-import { spawn } from 'node:child_process'
+import { VError } from '../VError/VError.js'
 
 const getElectronRebuildPath = () => {
   return Path.join(Root.root, 'packages', 'main-process', 'node_modules', '.bin', 'electron-rebuild')
@@ -33,14 +34,10 @@ const rebuildNodePtyNode = async (cwd) => {
   })
 }
 
-const isElectron = () => {
-  return Boolean(process.version['elctron'])
-}
-
 export const rebuildNodePty = async () => {
   try {
     const ptyHostPath = getPtyHostPath()
-    if (isElectron()) {
+    if (IsElectron.isElectron()) {
       await rebuildNodePtyElectron(ptyHostPath)
     } else {
       await rebuildNodePtyNode(ptyHostPath)
