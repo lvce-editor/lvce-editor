@@ -1,5 +1,6 @@
 const { MessageChannelMain } = require('electron')
 const Assert = require('../Assert/Assert.js')
+const ElectronPreloadChannelType = require('../ElectronPreloadChannelType/ElectronPreloadChannelType.js')
 const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
 const GetErrorResponse = require('../GetErrorResponse/GetErrorResponse.js')
 const GetSuccessResponse = require('../GetSuccessResponse/GetSuccessResponse.js')
@@ -43,10 +44,10 @@ exports.handlePort = async (event, message) => {
     const { port1, port2 } = channel
     await module.handlePort(event, port1, data)
     const response = GetSuccessResponse.getSuccessResponse(message, null)
-    sender.postMessage('port', response, [port2])
+    sender.postMessage(ElectronPreloadChannelType.Port, response, [port2])
   } catch (error) {
     await ErrorHandling.handleError(error)
     const response = await GetErrorResponse.getErrorResponse(message, error)
-    sender.postMessage('port', response)
+    sender.postMessage(ElectronPreloadChannelType.Port, response)
   }
 }

@@ -1,5 +1,6 @@
 export const NodeWorker = 1
 export const NodeForkedProcess = 2
+export const ElectronUtilityProcess = 3
 
 export const Auto = () => {
   const { argv } = process
@@ -8,6 +9,9 @@ export const Auto = () => {
   }
   if (argv.includes('--ipc-type=node-forked-process')) {
     return NodeForkedProcess
+  }
+  if (argv.includes('--ipc-type=electron-utility-process')) {
+    return ElectronUtilityProcess
   }
   throw new Error(`[shared-process] unknown ipc type`)
 }
