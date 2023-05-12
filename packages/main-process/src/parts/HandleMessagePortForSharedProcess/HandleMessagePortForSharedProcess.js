@@ -21,6 +21,10 @@ const getFolder = (args) => {
   return args._[0]
 }
 
+// TODO when shared process is a utility process
+// can just send browserWindowPort to shared process
+// else need proxy events through this process
+
 /**
  *
  * @param {import('electron').IpcMainEvent} event
@@ -51,7 +55,7 @@ exports.handlePort = async (event, browserWindowPort) => {
   })
   const { id, promise } = Callback.registerPromise()
   // TODO use jsonrpc.invoke
-  sharedProcess.postMessage(
+  sharedProcess.sendAndTransfer(
     {
       jsonrpc: '2.0',
       method: 'ElectronInitialize.electronInitialize',
