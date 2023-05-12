@@ -110,6 +110,8 @@ export const getModuleId = (commandId) => {
     case 'GitLsFiles.gitLsFilesHash':
     case 'GitLsFiles.resolveGit':
       return ModuleId.GitLsFiles
+    case 'HandleWebSocket.handleWebSocket':
+      return ModuleId.HandleWebSocket
     case 'InstallExtension.installExtension':
       return ModuleId.InstallExtension
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':

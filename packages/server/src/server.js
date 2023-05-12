@@ -457,7 +457,6 @@ const state = {
 
 const handleMessage = (message) => {
   if (!process.send) {
-    console.log('send not available (2)')
     return
   }
   process.send(message)
@@ -546,7 +545,16 @@ const handleUpgrade = (request, socket) => {
       state.onSharedProcessReady.push(() => {
         // @ts-ignore
         state.sharedProcess.send(
-          { headers: request.headers, method: request.method },
+          {
+            jsonrpc: '2.0',
+            method: 'HandleWebSocket.handleWebSocket',
+            params: [
+              {
+                headers: request.headers,
+                method: request.method,
+              },
+            ],
+          },
           // @ts-ignore
           socket
         )

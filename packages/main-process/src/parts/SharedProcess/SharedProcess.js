@@ -7,6 +7,7 @@ const GetResponse = require('../GetResponse/GetResponse.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
 const Process = require('../Process/Process.js')
 const RestoreError = require('../RestoreError/RestoreError.js')
+const Callback = require('../Callback/Callback.js')
 
 const state = (exports.state = {
   /**
@@ -46,6 +47,7 @@ const handleChildMessage = async (message) => {
   }
   if (message.id) {
     if ('result' in message) {
+      Callback.resolve(message.id, message)
       state.onMessage(message)
       return
     }
