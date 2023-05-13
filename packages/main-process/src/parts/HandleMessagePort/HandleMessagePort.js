@@ -37,8 +37,7 @@ exports.handlePort = async (event, message) => {
   try {
     const module = getModule(data)
     if (!module) {
-      Logger.error(`[main-process] unexpected port type ${data}`)
-      return
+      throw new Error(`Unexpected port type ${data}`)
     }
     const channel = new MessageChannelMain()
     const { port1, port2 } = channel
@@ -46,7 +45,6 @@ exports.handlePort = async (event, message) => {
     const response = GetSuccessResponse.getSuccessResponse(message, null)
     sender.postMessage(ElectronPreloadChannelType.Port, response, [port2])
   } catch (error) {
-    await ErrorHandling.handleError(error)
     const response = await GetErrorResponse.getErrorResponse(message, error)
     sender.postMessage(ElectronPreloadChannelType.Port, response)
   }
