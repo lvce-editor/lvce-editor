@@ -4,7 +4,7 @@ const IpcParent = require('../IpcParent/IpcParent.js')
 const IpcParentType = require('../IpcParentType/IpcParentType.js')
 
 const getTerminalProcessPath = () => {
-  return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.js')
+  return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.cjs')
 }
 /**
  *
