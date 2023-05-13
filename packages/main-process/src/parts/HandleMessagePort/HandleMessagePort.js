@@ -18,6 +18,8 @@ const getModule = (type) => {
       return require('../HandleMessagePortForQuickPick/HandleMessagePortForQuickPick.js')
     case 'extension-host-helper-process':
       return require('../HandleMessagePortForExtensionHostHelperProcess/HandleMessagePortForExtensionHostHelperProcess.js')
+    case 'terminal-process':
+      return require('../HandleMessagePortForTerminalProcess/HandleMessagePortForTerminalProcess.js')
     default:
       if (type.startsWith('custom:')) {
         return require('../HandleMessagePortForCustom/HandleMessagePortForCustom.js')
