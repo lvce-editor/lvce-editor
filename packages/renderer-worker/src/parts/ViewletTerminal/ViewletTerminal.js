@@ -8,27 +8,27 @@ import * as Workspace from '../Workspace/Workspace.js'
 
 export const create = (id) => {
   Assert.number(id)
+  const separateConnection = Preferences.get('terminal.separateConnection')
   return {
     disposed: false,
     id: 0,
     uid: id,
-    seperateConnection: false,
+    separateConnection,
   }
 }
 
 export const loadContent = async (state) => {
   // TODO this should be async and open a pty
-  const separateConnection = Preferences.get('terminal.separateConnection')
   return {
     ...state,
     id: Id.create(),
-    separateConnection,
   }
 }
 
 export const contentLoadedEffects = async (state) => {
-  const { uid, seperateConnection } = state
-  await Terminal.create(seperateConnection, uid, Workspace.state.workspacePath)
+  const { uid, separateConnection } = state
+  console.log({ separateConnection })
+  await Terminal.create(separateConnection, uid, Workspace.state.workspacePath)
 }
 
 export const handleData = async (state, data) => {
