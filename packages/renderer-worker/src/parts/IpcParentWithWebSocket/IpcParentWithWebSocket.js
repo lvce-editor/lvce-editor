@@ -1,4 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
+import * as FirstWebSocketEventType from '../FirstWebSocketEventType/FirstWebSocketEventType.js'
+import { IpcError } from '../IpcError/IpcError.js'
 import * as Json from '../Json/Json.js'
 import * as WaitForWebSocketToBeOpen from '../WaitForWebSocketToBeOpen/WaitForWebSocketToBeOpen.js'
 import * as WebSocketProtocol from '../WebSocketProtocol/WebSocketProtocol.js'
@@ -13,7 +15,10 @@ export const create = async ({ protocol }) => {
   // TODO replace this during build
   const wsUrl = getWsUrl()
   const webSocket = new WebSocket(wsUrl, [protocol])
-  await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
+  const { type, event } = await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
+  if (type === FirstWebSocketEventType.Close) {
+    throw new IpcError(`Failed to create websocket connection: Websocket connection was closed`)
+  }
   return webSocket
 }
 
