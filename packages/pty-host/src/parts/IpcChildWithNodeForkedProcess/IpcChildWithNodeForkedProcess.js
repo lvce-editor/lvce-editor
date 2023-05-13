@@ -20,7 +20,6 @@ export const wrap = (process) => {
   return {
     process,
     on(event, listener) {
-      console.trace('add event listenr')
       this.process.on(event, listener)
     },
     off(event, listener) {
