@@ -8,7 +8,7 @@ export const main = async () => {
   CommandState.registerCommands(CommandMap.commandMap)
   const ipc = await IpcChild.listen({ method: IpcChildType.Auto() })
   const handleMessage = async (message, handle) => {
-    const response = await GetResponse.getResponse(message, handle)
+    const response = await GetResponse.getResponse(message, handle || ipc)
     ipc.send(response)
   }
   ipc.on('message', handleMessage)

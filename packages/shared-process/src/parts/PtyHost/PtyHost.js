@@ -35,7 +35,6 @@ const handleProcessExit = () => {
 
 const createPtyHost = async () => {
   exitHook(handleProcessExit)
-  console.log('create pty host')
   const ptyHostPath = await PtyHostPath.getPtyHostPath()
   const ptyHost = await IpcParent.create({
     method: IpcParentType.NodeForkedProcess,

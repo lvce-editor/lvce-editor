@@ -6,32 +6,17 @@ export const state = {
   socketMap: Object.create(null),
 }
 
-const handleMessage = (message) => {
-  console.log({ message })
-  const id = message.params[0]
-  const data = message.params[1]
-  console.log('isbuffer', data instanceof Buffer)
-  console.log({ data })
-  // const socket = state.socketMap[id]
-  // const actualMessage = message.params[0]
-  // console.log({ actualMessage })/
-  // const id
-  // socket.send({
-  //   jsonrpc: JsonRpcVersion.Two,
-  //   method: 'Viewlet.send',
-  //   params: [id, 'handleData', data],
-  // })
-}
-
 export const create = async (socket, id, cwd) => {
   Assert.object(socket)
   Assert.number(id)
   Assert.string(cwd)
-  console.log('create pty host')
   // TODO dispose entry
   state.socketMap[id] = socket
   const ptyHost = await PtyHost.getOrCreate()
 
+  const handleMessage = (message) => {
+    socket.send(message)
+  }
   const handleClose = () => {
     // socket.off('close', handleClose)
     ptyHost.off('message', handleMessage)
