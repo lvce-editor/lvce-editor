@@ -36,6 +36,9 @@ export const wrap = (childProcess) => {
     on(event, listener) {
       this.childProcess.on(event, listener)
     },
+    off(event, listener) {
+      this.childProcess.off(event, listener)
+    },
     send(message) {
       this.childProcess.send(message)
     },
