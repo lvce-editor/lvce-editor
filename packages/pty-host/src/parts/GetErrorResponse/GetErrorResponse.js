@@ -3,6 +3,7 @@ import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
+import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.js'
 
 const shouldLogError = (error) => {
   if (error && error.code === ErrorCodes.ENOENT) {
@@ -37,6 +38,7 @@ export const getErrorResponse = (message, error) => {
     }
   }
   const prettyError = PrettyError.prepare(error)
+  PrintPrettyError.printPrettyError(prettyError, `[shared-process] `)
   return {
     jsonrpc: JsonRpcVersion.Two,
     id: message.id,

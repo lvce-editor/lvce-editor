@@ -18,7 +18,6 @@ const getSpawnOptions = () => {
 
 export const create = ({ env = {}, cwd } = {}) => {
   try {
-    console.log({ cwd })
     Assert.string(cwd)
     const spawnOptions = getSpawnOptions()
     const pty = spawn(spawnOptions.command, spawnOptions.args, {

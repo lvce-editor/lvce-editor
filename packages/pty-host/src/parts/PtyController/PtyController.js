@@ -14,13 +14,11 @@ export const create = (id, cwd, ipc) => {
   Debug.debug(`create ${id} ${cwd}`)
   const pty = Pty.create({ cwd })
   const handleData = (data) => {
-    if (process.send) {
-      process.send({
-        jsonrpc: '2.0',
-        method: 'Terminal.handleData',
-        params: [id, data],
-      })
-    }
+    ipc.send({
+      jsonrpc: '2.0',
+      method: 'Viewlet.send',
+      params: [id, 'handleData', data],
+    })
   }
   Pty.onData(pty, handleData)
   state.ptyMap[id] = pty
