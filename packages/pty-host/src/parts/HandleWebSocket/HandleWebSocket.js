@@ -6,7 +6,8 @@ export const handleWebSocket = async (request, handle) => {
   Assert.object(handle)
   // console.log({ request, handle })
   // console.log('upgrade ws now')
-  await WebSocketServer.handleUpgrade(request, handle)
+  const webSocket = await WebSocketServer.handleUpgrade(request, handle)
+  console.log({ webSocket })
   // TODO
   // console.log({ args })
 }
