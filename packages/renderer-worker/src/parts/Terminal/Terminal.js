@@ -6,7 +6,6 @@ let _separateConnection = false
 export const create = async (separateConnection, id, cwd) => {
   _separateConnection = separateConnection
   if (separateConnection) {
-    console.log('create terminal now')
     await TerminalProcess.listen()
     await TerminalProcess.invoke('Terminal.create', id, cwd)
   } else {
