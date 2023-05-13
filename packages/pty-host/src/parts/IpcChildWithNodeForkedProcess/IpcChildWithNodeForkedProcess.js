@@ -1,18 +1,8 @@
-let called = false
 export const listen = async () => {
-  console.trace('listen')
   if (!process.send) {
     throw new Error('process ipc is not available')
   }
   process.send('ready')
-  console.count('pty ready')
-  if (called) {
-    throw new Error('relady called')
-  }
-  called = true
-  process.on('message', (x) => {
-    console.log('pty host msg now')
-  })
   return process
 }
 
