@@ -28,14 +28,15 @@ export const contentLoadedEffects = async (state) => {
 }
 
 export const handleData = async (state, data) => {
-  const uid = state.uid
+  const { uid } = state
   // Terminal.handleData(state, data)
   const parsedData = new Uint8Array(data.data)
   await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ uid, /* method */ 'write', /* data */ parsedData)
 }
 
 export const write = async (state, input) => {
-  await Terminal.write(state.id, input)
+  const { uid } = state
+  await Terminal.write(uid, input)
 }
 
 export const dispose = (state) => {

@@ -1,6 +1,7 @@
 import { spawn } from 'node-pty'
 import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
+import VError from 'verror'
 
 const getSpawnOptions = () => {
   if (Platform.isWindows) {
@@ -16,14 +17,21 @@ const getSpawnOptions = () => {
 }
 
 export const create = ({ env = {}, cwd } = {}) => {
-  const spawnOptions = getSpawnOptions()
-  const pty = spawn(spawnOptions.command, spawnOptions.args, {
-    encoding: null,
-    cwd,
-    // cols: 10,
-    // rows: 10,
-  })
-  return pty
+  try {
+    console.log({ cwd })
+    Assert.string(cwd)
+    const spawnOptions = getSpawnOptions()
+    const pty = spawn(spawnOptions.command, spawnOptions.args, {
+      encoding: null,
+      cwd,
+      // cols: 10,
+      // rows: 10,
+    })
+    return pty
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, `Failed to create terminal`)
+  }
 }
 
 export const onData = (pty, fn) => {
@@ -32,8 +40,13 @@ export const onData = (pty, fn) => {
 }
 
 export const write = (pty, data) => {
-  Assert.object(pty)
-  pty.write(data)
+  try {
+    Assert.object(pty)
+    pty.write(data)
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, `Failed to write data to terminal`)
+  }
 }
 
 export const resize = (pty, columns, rows) => {

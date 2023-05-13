@@ -5,5 +5,5 @@ test('ChildProcessError', () => {
   const error = new ChildProcessError(stderr)
   expect(error).toBeInstanceOf(Error)
   expect(error.name).toBe('ChildProcessError')
-  expect(error.message).toBe(`child process error`)
+  expect(error.message).toBe(`child process error: `)
 })

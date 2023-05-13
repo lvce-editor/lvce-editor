@@ -1,11 +1,8 @@
-import * as WebSocketServer from '../WebSocketServer/WebSocketServer.js'
 import * as Assert from '../Assert/Assert.js'
+import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-
-const handleMessage = (message) => {
-  console.log('got message', message)
-}
+import * as WebSocketServer from '../WebSocketServer/WebSocketServer.js'
 
 export const handleWebSocket = async (request, handle) => {
   Assert.object(request)
@@ -16,6 +13,11 @@ export const handleWebSocket = async (request, handle) => {
     method: IpcChildType.WebSocket,
     webSocket,
   })
+  const handleMessage = async (message) => {
+    const response = await GetResponse.getResponse(message, ipc)
+    ipc.send(response)
+  }
+
   ipc.on('message', handleMessage)
   webSocket.resume()
 }
