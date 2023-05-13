@@ -43,6 +43,12 @@ const createPtyHost = async () => {
     stdio: 'inherit',
     name: 'Terminal Process',
   })
+  const handleClose = () => {
+    ptyHost.off('close', handleClose)
+    state.ptyHost = undefined
+    state.ptyHostPromise = undefined
+  }
+  ptyHost.on('close', handleClose)
   state.ptyHost = ptyHost
   return ptyHost
 }

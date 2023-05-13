@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Id from '../Id/Id.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Terminal from '../Terminal/Terminal.js'
 import * as Workspace from '../Workspace/Workspace.js'
@@ -11,20 +12,23 @@ export const create = (id) => {
     disposed: false,
     id: 0,
     uid: id,
+    seperateConnection: false,
   }
 }
 
 export const loadContent = async (state) => {
   // TODO this should be async and open a pty
+  const separateConnection = Preferences.get('terminal.separateConnection')
   return {
     ...state,
     id: Id.create(),
+    separateConnection,
   }
 }
 
 export const contentLoadedEffects = async (state) => {
-  const { uid } = state
-  await Terminal.create(uid, Workspace.state.workspacePath)
+  const { uid, seperateConnection } = state
+  await Terminal.create(seperateConnection, uid, Workspace.state.workspacePath)
 }
 
 export const handleData = async (state, data) => {
