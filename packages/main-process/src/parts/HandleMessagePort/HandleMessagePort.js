@@ -1,10 +1,8 @@
 const { MessageChannelMain } = require('electron')
 const Assert = require('../Assert/Assert.js')
 const ElectronPreloadChannelType = require('../ElectronPreloadChannelType/ElectronPreloadChannelType.js')
-const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
 const GetErrorResponse = require('../GetErrorResponse/GetErrorResponse.js')
 const GetSuccessResponse = require('../GetSuccessResponse/GetSuccessResponse.js')
-const Logger = require('../Logger/Logger.js')
 
 const getModule = (type) => {
   switch (type) {
