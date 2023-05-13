@@ -2,6 +2,7 @@ const SplitLines = require('../SplitLines/SplitLines.js')
 
 const RE_AT = /^    at /
 const RE_JUST_PATH = /^(?:\/|\\).*\:\d+$/
+const RE_JUST_MESSAGE = /^\w+/
 
 const isStackLine = (line) => {
   return RE_AT.test(line)
@@ -9,6 +10,10 @@ const isStackLine = (line) => {
 
 const isJustPath = (line) => {
   return RE_JUST_PATH.test(line)
+}
+
+const isPartOfMessage = (line) => {
+  return RE_JUST_MESSAGE.test(line)
 }
 
 exports.getModulesErrorStack = (stderr) => {
@@ -29,6 +34,14 @@ exports.getModulesErrorStack = (stderr) => {
       break
     }
   }
+  let messageStartIndex = startIndex - 1
+  for (let i = messageStartIndex; i >= 0; i--) {
+    const line = lines[i]
+    if (!isPartOfMessage(line)) {
+      break
+    }
+    messageStartIndex = i
+  }
   if (startIndex === -1) {
     return []
   }
@@ -44,5 +57,6 @@ exports.getModulesErrorStack = (stderr) => {
     endIndex = lines.length - 1
   }
   const stackLines = lines.slice(startIndex, endIndex)
-  return [lines[startIndex - 1], ...extraLines, ...stackLines]
+  const message = lines.slice(messageStartIndex, startIndex).join(' ')
+  return [message, ...extraLines, ...stackLines]
 }
