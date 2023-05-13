@@ -23,7 +23,8 @@ export const loadContent = async (state) => {
 }
 
 export const contentLoadedEffects = async (state) => {
-  await Terminal.create(state.id, Workspace.state.workspacePath)
+  const { uid } = state
+  await Terminal.create(uid, Workspace.state.workspacePath)
 }
 
 export const handleData = async (state, data) => {
