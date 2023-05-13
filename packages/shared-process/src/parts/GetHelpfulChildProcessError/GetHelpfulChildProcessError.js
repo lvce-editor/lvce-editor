@@ -31,7 +31,7 @@ const getMessageCodeBlock = (stderr) => {
 const getNativeModuleErrorMessage = (stderr) => {
   const message = getMessageCodeBlock(stderr)
   return {
-    message: `incompatible native node module: ${message}`,
+    message: `Incompatible native node module: ${message}`,
     code: ErrorCodes.E_INCOMPATIBLE_NATIVE_MODULE,
   }
 }
