@@ -6,5 +6,3 @@ export const main = async () => {
   const ipc = await IpcChild.listen({ method: IpcChildType.Auto() })
   ipc.on('message', HandleMessage.handleMessage)
 }
-
-main()
