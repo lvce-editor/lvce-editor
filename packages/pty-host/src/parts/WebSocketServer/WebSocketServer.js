@@ -14,15 +14,11 @@ const webSocketServer = new WebSocketServer({
   // perMessageDeflate: true
 })
 
-const handleSocket = (socket) => {
-  console.log({ socket })
-}
-
-// webSocketServer.on('connection', handleSocket)
-
 export const handleUpgrade = (request, socket) => {
-  const upgradeCallback = (ws) => {
-    //   webSocketServer.emit('connection', ws, request)
-  }
-  webSocketServer.handleUpgrade(request, socket, Buffer.alloc(0), upgradeCallback)
+  return new Promise((resolve, reject) => {
+    const upgradeCallback = (ws) => {
+      resolve(ws)
+    }
+    webSocketServer.handleUpgrade(request, socket, Buffer.alloc(0), upgradeCallback)
+  })
 }
