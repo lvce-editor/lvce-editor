@@ -27,7 +27,6 @@ export const loadContent = async (state) => {
 
 export const contentLoadedEffects = async (state) => {
   const { uid, separateConnection } = state
-  console.log({ separateConnection })
   await Terminal.create(separateConnection, uid, Workspace.state.workspacePath)
 }
 
