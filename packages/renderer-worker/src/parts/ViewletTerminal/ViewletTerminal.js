@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Id from '../Id/Id.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Terminal from '../Terminal/Terminal.js'
 import * as Workspace from '../Workspace/Workspace.js'
@@ -7,10 +8,12 @@ import * as Workspace from '../Workspace/Workspace.js'
 
 export const create = (id) => {
   Assert.number(id)
+  const separateConnection = Preferences.get('terminal.separateConnection')
   return {
     disposed: false,
     id: 0,
     uid: id,
+    separateConnection,
   }
 }
 
@@ -23,8 +26,8 @@ export const loadContent = async (state) => {
 }
 
 export const contentLoadedEffects = async (state) => {
-  const { uid } = state
-  await Terminal.create(uid, Workspace.state.workspacePath)
+  const { uid, separateConnection } = state
+  await Terminal.create(separateConnection, uid, Workspace.state.workspacePath)
 }
 
 export const handleData = async (state, data) => {

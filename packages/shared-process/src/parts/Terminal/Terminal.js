@@ -1,36 +1,41 @@
 import * as Assert from '../Assert/Assert.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as PtyHost from '../PtyHost/PtyHost.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   socketMap: Object.create(null),
 }
 
 export const create = async (socket, id, cwd) => {
-  Assert.object(socket)
-  Assert.number(id)
-  Assert.string(cwd)
-  // TODO dispose entry
-  state.socketMap[id] = socket
-  const ptyHost = await PtyHost.getOrCreate()
+  try {
+    Assert.object(socket)
+    Assert.number(id)
+    Assert.string(cwd)
+    // TODO dispose entry
+    state.socketMap[id] = socket
+    const ptyHost = await PtyHost.getOrCreate()
 
-  const handleMessage = (message) => {
-    socket.send(message)
-  }
-  const handleClose = () => {
-    // socket.off('close', handleClose)
-    ptyHost.off('message', handleMessage)
-    ptyHost.dispose()
-  }
-  ptyHost.on('message', handleMessage)
-  socket.on('close', handleClose)
+    const handleMessage = (message) => {
+      socket.send(message)
+    }
+    const handleClose = () => {
+      // socket.off('close', handleClose)
+      ptyHost.off('message', handleMessage)
+      ptyHost.dispose()
+    }
+    ptyHost.on('message', handleMessage)
+    socket.on('close', handleClose)
 
-  // TODO use invoke
-  ptyHost.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method: 'Terminal.create',
-    params: [id, cwd],
-  })
+    // TODO use invoke
+    ptyHost.send({
+      jsonrpc: JsonRpcVersion.Two,
+      method: 'Terminal.create',
+      params: [id, cwd],
+    })
+  } catch (error) {
+    throw new VError(error, `Failed to create terminal`)
+  }
 }
 
 export const write = (id, data) => {
