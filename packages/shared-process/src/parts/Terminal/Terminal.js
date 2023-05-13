@@ -81,6 +81,7 @@ export const create = async (socket, id, cwd) => {
       Debug.debug('pty host ready')
       state.ptyHostState = /* Ready */ 2
       const handleMessage = (message) => {
+        console.log({ message })
         const data = message.params[1]
         socket.send({
           jsonrpc: JsonRpcVersion.Two,

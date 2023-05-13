@@ -1,13 +1,16 @@
-import * as Command from '../Command/Command.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as Socket from '../Socket/Socket.js'
+import * as WebSocketServer from '../WebSocketServer/WebSocketServer.js'
 
-export const handleWebSocket = (message, handle) => {
-  // TODO when it is an extension host websocket, spawn extension host
-  handle.on('error', (error) => {
-    if (error && error.code === ErrorCodes.ECONNRESET) {
-      return
-    }
-    console.info('[info shared process: handle error]', error)
-  })
-  Command.execute(/* WebSocketServer.handleUpgrade */ 'WebSocketServer.handleUpgrade', /* message */ message, /* handle */ handle)
+const handleSocketError = (error) => {
+  if (error && error.code === ErrorCodes.ECONNRESET) {
+    return
+  }
+  console.info('[info shared process: handle error]', error)
+}
+
+export const handleWebSocket = async (message, handle) => {
+  handle.on('error', handleSocketError)
+  const webSocket = await WebSocketServer.handleUpgrade(message, handle)
+  Socket.set(webSocket)
 }
