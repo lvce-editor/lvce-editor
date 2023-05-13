@@ -11,6 +11,10 @@ export const state = {
    * @type {any}
    */
   ipc: undefined,
+  /**
+   * @type {any}
+   */
+  ipcPromise: undefined,
 }
 
 export const handleMessageFromTerminalProcess = async (message) => {
@@ -28,11 +32,18 @@ export const handleMessageFromTerminalProcess = async (message) => {
   }
 }
 
-export const listen = async () => {
+const actuallyListen = async () => {
   // TODO only listen at most once
   const ipc = await TerminalProcessIpc.listen(IpcParentType.Node)
   ipc.onmessage = handleMessageFromTerminalProcess
   state.ipc = ipc
+}
+
+export const listen = async () => {
+  if (!state.ipcPromise) {
+    state.ipcPromise = actuallyListen()
+  }
+  return state.ipcPromise
 }
 
 export const invoke = (method, ...params) => {

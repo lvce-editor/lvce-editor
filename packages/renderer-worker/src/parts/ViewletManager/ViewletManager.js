@@ -466,10 +466,23 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       }
       commands.push(...extraCommands)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+    } else {
+      const allCommands = [
+        ...commands,
+        ...extraCommands,
+        // ['Viewlet.show', viewlet.id],
+      ]
+      if (viewlet.append) {
+        const parentUid = viewlet.parentUid
+        allCommands.push([kCreate, viewlet.id, viewletUid])
+        allCommands.push([kAppend, parentUid, viewletUid])
+      }
+      if (module.contentLoadedEffects) {
+        await module.contentLoadedEffects(newState)
+      }
+      return allCommands
     }
-    if (module.contentLoadedEffects) {
-      module.contentLoadedEffects(newState)
-    }
+
     if (viewlet.disposed) {
       // TODO unload the module from renderer process
       return
