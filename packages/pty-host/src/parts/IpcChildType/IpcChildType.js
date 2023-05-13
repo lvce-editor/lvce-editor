@@ -1,5 +1,6 @@
 export const NodeWorker = 1
 export const NodeForkedProcess = 2
+export const WebSocket = 3
 
 export const Auto = () => {
   const { argv } = process
