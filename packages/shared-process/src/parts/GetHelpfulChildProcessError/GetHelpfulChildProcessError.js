@@ -58,7 +58,7 @@ export const getHelpfulChildProcessError = (stdout, stderr) => {
     return getModuleSyntaxError(stderr)
   }
   return {
-    message: 'child process error',
+    message: `child process error: ${stderr}`,
     code: '',
   }
 }
