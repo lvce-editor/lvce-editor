@@ -41,7 +41,8 @@ export const wrap = (webSocket) => {
       this.webSocket.off(event, listener)
     },
     send(message) {
-      this.webSocket.postMessage(message)
+      const stringifiedMessage = JSON.stringify(message)
+      this.webSocket.send(stringifiedMessage)
     },
     dispose() {
       this.webSocket.close()

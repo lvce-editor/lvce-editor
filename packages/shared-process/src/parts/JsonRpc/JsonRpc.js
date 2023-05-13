@@ -21,3 +21,19 @@ export const invoke = (ipc, method, ...params) => {
     })
   })
 }
+
+export const invokeAndTransfer = (ipc, handle, method, ...params) => {
+  return new Promise((resolve, reject) => {
+    // TODO use one map instead of two
+    const callbackId = Callback.register(resolve, reject)
+    ipc.sendAndTransfer(
+      {
+        jsonrpc: JsonRpcVersion.Two,
+        method,
+        params,
+        id: callbackId,
+      },
+      handle
+    )
+  })
+}
