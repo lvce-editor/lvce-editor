@@ -6,8 +6,9 @@ const GetFirstNodeWorkerEvent = require('../GetFirstNodeWorkerEvent/GetFirstNode
 
 exports.create = async ({ path, argv, env, execArgv }) => {
   Assert.string(path)
+  const actualArgv = ['--ipc-type=node-worker', ...argv]
   const worker = new Worker(path, {
-    argv,
+    argv: actualArgv,
     env,
     execArgv,
   })

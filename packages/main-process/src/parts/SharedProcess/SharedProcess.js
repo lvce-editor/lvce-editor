@@ -137,7 +137,7 @@ exports.hydrate = async (env = {}) => {
       ELECTRON_RUN_AS_NODE: '1', // TODO
       ...env,
     },
-    argv: ['--ipc-type=node-worker'],
+    argv: [],
     execArgv: ['--enable-source-maps'],
     path: sharedProcessPath,
   })

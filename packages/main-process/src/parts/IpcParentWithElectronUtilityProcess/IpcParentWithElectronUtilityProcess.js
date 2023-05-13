@@ -3,12 +3,11 @@ const { utilityProcess } = require('electron')
 const Assert = require('../Assert/Assert.js')
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js')
-const Platform = require('../Platform/Platform.js')
 
 exports.create = async ({ path, argv, execArgv = [] }) => {
   Assert.string(path)
-  const filePath = Platform.getExtensionHostHelperProcessPathCjs()
-  const childProcess = utilityProcess.fork(filePath, argv, {
+  const actualArgv = ['--ipc-type=electron-utility-process', ...argv]
+  const childProcess = utilityProcess.fork(path, actualArgv, {
     execArgv,
     stdio: 'pipe',
   })
