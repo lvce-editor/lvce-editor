@@ -15,7 +15,7 @@ export const handleWebSocket = async (request, handle) => {
   })
   const handleMessage = async (message) => {
     const response = await GetResponse.getResponse(message, ipc)
-    console.log({ response, message })
+    console.log( message })
     ipc.send(response)
   }
 
