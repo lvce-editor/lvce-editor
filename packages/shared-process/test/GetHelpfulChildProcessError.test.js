@@ -47,7 +47,7 @@ Node.js v18.12.1
 `
   const { message } = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
   expect(message).toBe(
-    `incompatible native node module: The module '/test/packages/pty-host/node_modules/node-pty/build/Release/pty.node' was compiled against a different Node.js version using NODE_MODULE_VERSION 108. This version of Node.js requires NODE_MODULE_VERSION 113. Please try re-compiling or re-installing the module (for instance, using \`npm rebuild\` or \`npm install\`).`
+    `Incompatible native node module: The module '/test/packages/pty-host/node_modules/node-pty/build/Release/pty.node' was compiled against a different Node.js version using NODE_MODULE_VERSION 108. This version of Node.js requires NODE_MODULE_VERSION 113. Please try re-compiling or re-installing the module (for instance, using \`npm rebuild\` or \`npm install\`).`
   )
 })
 
