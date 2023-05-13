@@ -64,7 +64,7 @@ test('write', async () => {
   const state = ViewletTerminal.create(1)
   await ViewletTerminal.write(state, 'abc')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Terminal.write', 0, 'abc')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Terminal.write', 1, 'abc')
 })
 
 test('clear', async () => {
