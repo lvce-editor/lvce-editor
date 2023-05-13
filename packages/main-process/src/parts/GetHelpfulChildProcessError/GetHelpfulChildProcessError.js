@@ -36,13 +36,6 @@ const getNativeModuleErrorMessage = (stderr) => {
   return new Error(`incompatible native node module: ${message}`)
 }
 
-const isModulesSyntaxError = (stderr) => {
-  if (!stderr) {
-    return false
-  }
-  return stderr.includes('SyntaxError: Cannot use import statement outside a module')
-}
-
 const getErrorMessage = (firstLine) => {
   return firstLine
 }
