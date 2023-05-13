@@ -40,7 +40,6 @@ export const wrap = (childProcess) => {
       this.childProcess.off(event, listener)
     },
     send(message) {
-      console.log('send', message)
       this.childProcess.send(message)
     },
     sendAndTransfer(message, handle) {
