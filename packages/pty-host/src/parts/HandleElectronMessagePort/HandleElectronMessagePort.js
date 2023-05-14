@@ -10,5 +10,5 @@ export const handleElectronMessagePort = async (messagePort) => {
     messagePort,
   })
   HandleIpc.handleIpc(ipc)
-  console.log({ ipc })
+  messagePort.start()
 }

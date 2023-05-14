@@ -25,5 +25,4 @@ exports.handlePort = async (event, browserWindowPort) => {
     },
     [browserWindowPort]
   )
-  console.log({ ipc })
 }

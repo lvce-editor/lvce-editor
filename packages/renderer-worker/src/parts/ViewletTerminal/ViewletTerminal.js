@@ -3,6 +3,7 @@ import * as Id from '../Id/Id.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Terminal from '../Terminal/Terminal.js'
+import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
 import * as Workspace from '../Workspace/Workspace.js'
 // TODO implement a functional terminal component, maybe using offscreencanvas
 
@@ -32,8 +33,7 @@ export const contentLoadedEffects = async (state) => {
 
 export const handleData = async (state, data) => {
   const { uid } = state
-  // Terminal.handleData(state, data)
-  const parsedData = new Uint8Array(data.data)
+  const parsedData = ToUint8Array.toUint8Array(data)
   await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ uid, /* method */ 'write', /* data */ parsedData)
 }
 
