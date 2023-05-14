@@ -12,7 +12,14 @@ export const wrap = (parentPort) => {
   return {
     parentPort,
     on(event, listener) {
-      this.parentPort.on(event, listener)
+      if (event === 'message') {
+        const wrappedListener = (event) => {
+          listener(event.data)
+        }
+        this.parentPort.on(event, wrappedListener)
+      } else {
+        throw new Error('unsupported event type')
+      }
     },
     off(event, listener) {
       this.parentPort.off(event, listener)
