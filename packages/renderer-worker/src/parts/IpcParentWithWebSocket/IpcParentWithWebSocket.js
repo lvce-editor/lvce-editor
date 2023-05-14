@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as FirstWebSocketEventType from '../FirstWebSocketEventType/FirstWebSocketEventType.js'
-import { IpcError } from '../IpcError/IpcError.js'
 import * as GetWsUrl from '../GetWsUrl/GetWsUrl.js'
+import { IpcError } from '../IpcError/IpcError.js'
 import * as Json from '../Json/Json.js'
 import * as WaitForWebSocketToBeOpen from '../WaitForWebSocketToBeOpen/WaitForWebSocketToBeOpen.js'
 
