@@ -13,6 +13,13 @@ export const handleWebSocket = async (handle, message) => {
   if (!protocol) {
     throw new VError('missing sec websocket protocol header')
   }
-  const module = await HandleWebSocketModule.load(protocol)
-  return module.handleWebSocket(message, handle, protocol)
+  try {
+    const module = await HandleWebSocketModule.load(protocol)
+    await module.handleWebSocket(message, handle, protocol)
+  } catch (error) {
+    try {
+      handle.destroy()
+    } catch {}
+    throw new VError(error, `Failed to connect to websocket`)
+  }
 }

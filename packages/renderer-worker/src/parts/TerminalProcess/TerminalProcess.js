@@ -5,6 +5,7 @@ import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as TerminalProcessIpc from '../TerminalProcessIpc/TerminalProcessIpc.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   /**
@@ -33,10 +34,13 @@ export const handleMessageFromTerminalProcess = async (message) => {
 }
 
 const actuallyListen = async () => {
-  // TODO only listen at most once
-  const ipc = await TerminalProcessIpc.listen(IpcParentType.Node)
-  ipc.onmessage = handleMessageFromTerminalProcess
-  state.ipc = ipc
+  try {
+    const ipc = await TerminalProcessIpc.listen(IpcParentType.Node)
+    ipc.onmessage = handleMessageFromTerminalProcess
+    state.ipc = ipc
+  } catch (error) {
+    throw new VError(error, `Failed to create terminal connection`)
+  }
 }
 
 export const listen = async () => {

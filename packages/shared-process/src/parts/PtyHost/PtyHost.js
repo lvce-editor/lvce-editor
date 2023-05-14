@@ -39,7 +39,7 @@ const createPtyHost = async () => {
   const ptyHost = await IpcParent.create({
     method: IpcParentType.NodeForkedProcess,
     path: ptyHostPath,
-    argv: ['--ipc-type=node-forked-process'],
+    argv: [],
     stdio: 'inherit',
     name: 'Terminal Process',
   })

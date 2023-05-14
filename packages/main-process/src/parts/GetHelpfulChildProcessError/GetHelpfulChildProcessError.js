@@ -33,7 +33,7 @@ const getMessageCodeBlock = (stderr) => {
 const getNativeModuleErrorMessage = (stderr) => {
   const message = getMessageCodeBlock(stderr)
   // TODO extract stack from stderr
-  return new Error(`incompatible native node module: ${message}`)
+  return new Error(`Incompatible native node module: ${message}`)
 }
 
 const getErrorMessage = (firstLine) => {

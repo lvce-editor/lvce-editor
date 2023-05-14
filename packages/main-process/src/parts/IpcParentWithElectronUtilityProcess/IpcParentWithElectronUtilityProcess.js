@@ -6,7 +6,8 @@ const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetF
 
 exports.create = async ({ path, argv, execArgv = [] }) => {
   Assert.string(path)
-  const childProcess = utilityProcess.fork(path, argv, {
+  const actualArgv = ['--ipc-type=electron-utility-process', ...argv]
+  const childProcess = utilityProcess.fork(path, actualArgv, {
     execArgv,
     stdio: 'pipe',
   })
