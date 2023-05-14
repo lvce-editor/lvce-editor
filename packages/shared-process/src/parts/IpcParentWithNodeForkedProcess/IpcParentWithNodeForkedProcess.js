@@ -8,7 +8,8 @@ import { VError } from '../VError/VError.js'
 export const create = async ({ path, argv = [], env, execArgv = [], stdio = 'inherit', name = 'child process' }) => {
   try {
     Assert.string(path)
-    const childProcess = fork(path, argv, {
+    const actualArgv = ['--ipc-type=node-forked-process', ...argv]
+    const childProcess = fork(path, actualArgv, {
       env,
       execArgv,
       stdio: 'pipe',

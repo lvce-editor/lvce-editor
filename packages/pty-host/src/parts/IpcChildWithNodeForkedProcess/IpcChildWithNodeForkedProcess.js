@@ -6,11 +6,27 @@ export const listen = async () => {
   return process
 }
 
+const getActualData = (message, handle) => {
+  if (handle) {
+    return {
+      ...message,
+      params: [...message.params, handle],
+    }
+  }
+  return message
+}
+
 export const wrap = (process) => {
   return {
     process,
     on(event, listener) {
-      this.process.on(event, listener)
+      if (event === 'message') {
+        const wrappedListener = (message, handle) => {
+          const actualData = getActualData(message, handle)
+          listener(actualData)
+        }
+        this.process.on(event, wrappedListener)
+      }
     },
     off(event, listener) {
       this.process.off(event, listener)
