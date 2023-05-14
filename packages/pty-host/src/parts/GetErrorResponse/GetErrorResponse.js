@@ -38,7 +38,7 @@ export const getErrorResponse = (message, error) => {
     }
   }
   const prettyError = PrettyError.prepare(error)
-  PrintPrettyError.printPrettyError(prettyError, `[shared-process] `)
+  PrintPrettyError.printPrettyError(prettyError, `[terminal-process] `)
   return {
     jsonrpc: JsonRpcVersion.Two,
     id: message.id,
