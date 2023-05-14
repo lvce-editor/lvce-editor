@@ -7,6 +7,5 @@ export const handleIpc = async (ipc) => {
     const response = await GetResponse.getResponse(message, ipc)
     ipc.send(response)
   }
-
   ipc.on('message', handleMessage)
 }
