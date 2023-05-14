@@ -4,7 +4,7 @@ const Assert = require('../Assert/Assert.js')
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js')
 
-exports.create = async ({ path, argv, execArgv = [] }) => {
+exports.create = async ({ path, argv = [], execArgv = [] }) => {
   Assert.string(path)
   const actualArgv = ['--ipc-type=electron-utility-process', ...argv]
   const childProcess = utilityProcess.fork(path, actualArgv, {
@@ -32,6 +32,7 @@ exports.wrap = (process) => {
       this.process.postMessage(message)
     },
     sendAndTransfer(message, transfer) {
+      Assert.array(transfer)
       this.process.postMessage(message, transfer)
     },
     dispose() {

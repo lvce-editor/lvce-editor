@@ -17,5 +17,13 @@ exports.handlePort = async (event, browserWindowPort) => {
     method: IpcParentType.ElectronUtilityProcess,
     path: ptyHostPath,
   })
+  ipc.sendAndTransfer(
+    {
+      jsonrpc: '2.0',
+      method: 'HandleElectronMessagePort.handleElectronMessagePort',
+      params: [],
+    },
+    [browserWindowPort]
+  )
   console.log({ ipc })
 }
