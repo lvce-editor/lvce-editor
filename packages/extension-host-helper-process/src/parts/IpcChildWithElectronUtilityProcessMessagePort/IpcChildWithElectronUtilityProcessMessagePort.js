@@ -1,27 +1,12 @@
-import * as IpcChildWithElectronUtilityProcess from '../IpcChildWithElectronUtilityProcess/IpcChildWithElectronUtilityProcess.js'
+import * as FirstUtilityProcessEventType from '../FirstUtilityProcessEventType/FirstUtilityProcessEventType.js'
+import * as getFirstUtilityProcessEvent from '../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-
-const waitForFirstMessage = async (parentPort) => {
-  const { type, event } = await new Promise((resolve) => {
-    const cleanup = (value) => {
-      parentPort.off('message', handleMessage)
-      resolve(value)
-    }
-    const handleMessage = (event) => {
-      cleanup({ type: 'message', event })
-    }
-    parentPort.on('message', handleMessage)
-  })
-  return {
-    type,
-    event,
-  }
-}
+import * as IpcChildWithElectronUtilityProcess from '../IpcChildWithElectronUtilityProcess/IpcChildWithElectronUtilityProcess.js'
 
 export const listen = async () => {
   const parentPort = IpcChildWithElectronUtilityProcess.listen()
-  const { type, event } = await waitForFirstMessage(parentPort)
-  if (type !== 'message') {
+  const { type, event } = await getFirstUtilityProcessEvent.getFirstUtilityProcessEvent(parentPort)
+  if (type !== FirstUtilityProcessEventType.Message) {
     throw new Error('expected message event')
   }
   const { ports } = event
