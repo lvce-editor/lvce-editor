@@ -24,7 +24,8 @@ export const state = {
 
 const cleanUpAll = () => {
   if (state.ptyHost) {
-    state.ptyHost.kill()
+    state.ptyHost.dispose()
+    state.ptyHost = undefined
   }
 }
 
@@ -68,8 +69,10 @@ export const getCurrentInstance = () => {
 export const disposeAll = () => {
   if (state.ptyHost) {
     state.ptyHost.removeAllListeners()
-    state.ptyHost.kill()
-    state.ptyHost = undefined
+    if (state.ptyHost) {
+      state.ptyHost.dispose()
+      state.ptyHost = undefined
+    }
     state.ptyHostState = /* None */ 0
     state.send = (message) => {
       state.pendingMessages.push(message)
