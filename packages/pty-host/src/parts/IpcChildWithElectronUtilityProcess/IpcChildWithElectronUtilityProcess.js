@@ -8,13 +8,25 @@ export const listen = () => {
   return parentPort
 }
 
+const getActualData = (event) => {
+  const { data, ports } = event
+  if (ports.length === 0) {
+    return data
+  }
+  return {
+    ...data,
+    params: [...data.params, ...ports],
+  }
+}
+
 export const wrap = (parentPort) => {
   return {
     parentPort,
     on(event, listener) {
       if (event === 'message') {
         const wrappedListener = (event) => {
-          listener(event.data)
+          const actualData = getActualData(event)
+          listener(actualData)
         }
         this.parentPort.on(event, wrappedListener)
       } else {
