@@ -1,7 +1,7 @@
 const SplitLines = require('../SplitLines/SplitLines.js')
 
 const RE_AT = /^    at /
-const RE_JUST_PATH = /^(?:\/|\\).*\:\d+$/
+const RE_JUST_PATH = /^(?:file:\/\/|\/|\\).*\:\d+$/
 const RE_JUST_MESSAGE = /^\w+/
 
 const isStackLine = (line) => {
@@ -57,6 +57,16 @@ exports.getModulesErrorStack = (stderr) => {
     endIndex = lines.length - 1
   }
   const stackLines = lines.slice(startIndex, endIndex)
-  const message = lines.slice(messageStartIndex, startIndex).join(' ')
+  let message = lines.slice(messageStartIndex, startIndex).join(' ')
+  if (message === '') {
+    for (let i = 0; i < startIndex; i++) {
+      const line = lines[i]
+      if (line.startsWith('SyntaxError: Named export')) {
+        messageStartIndex = i
+        break
+      }
+    }
+    message = lines.slice(messageStartIndex, startIndex).join(' ').trim()
+  }
   return [message, ...extraLines, ...stackLines]
 }
