@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
+import { VError } from '../src/parts/VError/VError.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -14,15 +15,22 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 })
 jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
   return {
-    getText() {
-      return ''
-    },
+    getText: jest.fn(),
   }
 })
 
-const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
-const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
+jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
+  return {
+    error: jest.fn(),
+    warn: jest.fn(),
+  }
+})
+
+const Ajax = await import('../src/parts/Ajax/Ajax.js')
 const Command = await import('../src/parts/Command/Command.js')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
+const Logger = await import('../src/parts/Logger/Logger.js')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 beforeAll(() => {
   Command.setLoad((moduleId) => {
@@ -37,22 +45,22 @@ beforeAll(() => {
 
 test('handleError - normal error', async () => {
   const mockError = new Error('oops')
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ErrorHandling.handleError(mockError)
-  expect(spy).toHaveBeenCalledWith(expect.stringMatching(/^Error: oops/))
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(expect.stringMatching(/^Error: oops/))
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(/* Notification.create */ 'Notification.create', 'error', 'Error: oops')
 })
 
 test('handleError - null', async () => {
   const mockError = null
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ErrorHandling.handleError(mockError)
-  expect(spy).toHaveBeenCalledWith(mockError)
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith('null')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(/* Notification.create */ 'Notification.create', 'error', 'Error: null')
 })
@@ -67,11 +75,15 @@ test('handleError - multiple causes', async () => {
   const mockError3 = new Error('Failed to load keybindings', {
     cause: mockError2,
   })
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    return ''
+  })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ErrorHandling.handleError(mockError3)
-  expect(spy).toHaveBeenCalledWith(
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(
     expect.stringMatching(
       'Error: Failed to load keybindings: Error: Failed to load url /keyBindings.json: Error: SyntaxError: Unexpected token , in JSON at position 7743'
     )
@@ -100,12 +112,11 @@ test('handleError - with code frame, error stack includes message', async () => 
   65 |     }
   66 |   }
   67 |   return commands[command](...args)`
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ErrorHandling.handleError(mockError)
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(`Error: Failed to open about window: Error: Unknown command "ElectronWindowAbout.open"
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(`Error: Failed to open about window: Error: Unknown command "ElectronWindowAbout.open"
 
   62 |     await loadCommand(command)
   63 |     if (!(command in commands)) {
@@ -117,4 +128,66 @@ test('handleError - with code frame, error stack includes message', async () => 
 
   at async exports.getResponse (/test/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
   at async MessagePortMain.handleMessage (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`)
+})
+
+test('handleUnhandledError - five parameters', async () => {
+  const message = `Uncaught VError: failed to parse json: SyntaxError: Unexpected token 'o', "[object Blob]" is not valid JSON`
+  const filename = '/test/packages/renderer-worker/src/parts/Json/Json.js'
+  const lineno = 17
+  const colno = 11
+  const error = new VError(`VError: failed to parse json: SyntaxError: Unexpected token 'o', "[object Blob]" is not valid JSON`)
+  error.stack = `VError: failed to parse json: SyntaxError: Unexpected token 'o', "[object Blob]" is not valid JSON
+    at JSON.parse (<anonymous>)
+    at Module.parse (/test/packages/renderer-worker/src/parts/Json/Json.js:15:17)
+    at WebSocket.handleMessage (/test/packages/renderer-worker/src/parts/IpcParentWithWebSocket/IpcParentWithWebSocket.js:31:34)`
+  let _resolve
+  const promise = new Promise((r) => {
+    _resolve = r
+  })
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    setTimeout(() => {
+      _resolve(undefined)
+    }, 0)
+    return `import { VError } from '../VError/VError.js'
+import * as Character from '../Character/Character.js'
+
+export const stringify = (value) => {
+  return JSON.stringify(value, null, 2) + Character.NewLine
+}
+
+export const stringifyCompact = (value) => {
+  return JSON.stringify(value)
+}
+
+export const parse = (content) => {
+  // TODO use better json parse to throw more helpful error messages if json is invalid
+  try {
+    return JSON.parse(content)
+  } catch (error) {
+    throw new VError(error, 'failed to parse json')
+  }
+}
+`
+  })
+  const returnValue = ErrorHandling.handleUnhandledError(message, filename, lineno, colno, error)
+  expect(returnValue).toBe(true)
+  await promise
+  // await promise
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(
+    `[renderer-worker] Unhandled Error: VError: failed to parse json: SyntaxError: Unexpected token 'o', \"[object Blob]\" is not valid JSON
+
+  13 |   // TODO use better json parse to throw more helpful error messages if json is invalid
+  14 |   try {
+> 15 |     return JSON.parse(content)
+     |                 ^
+  16 |   } catch (error) {
+  17 |     throw new VError(error, 'failed to parse json')
+  18 |   }
+
+    at JSON.parse (<anonymous>)
+    at parse (/test/packages/renderer-worker/src/parts/Json/Json.js:15:17)
+    at WebSocket.handleMessage (/test/packages/renderer-worker/src/parts/IpcParentWithWebSocket/IpcParentWithWebSocket.js:31:34)`
+  )
 })
