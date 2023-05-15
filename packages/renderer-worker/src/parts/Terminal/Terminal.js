@@ -15,7 +15,7 @@ export const create = async (separateConnection, id, cwd) => {
 
 export const write = async (id, input) => {
   if (_separateConnection) {
-    await TerminalProcess.invoke('Terminal.write', id, input)
+    await TerminalProcess.send('Terminal.write', id, input)
   } else {
     await SharedProcess.invoke('Terminal.write', id, input)
   }
