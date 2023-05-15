@@ -85,7 +85,7 @@ export const refresh = async (id) => {
  * @deprecated
  */
 export const send = (id, method, ...args) => {
-  console.trace(`viewlet.send is deprecated`)
+  // console.trace(`viewlet.send is deprecated`)
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
     console.info('instance disposed', { id, method, args })
