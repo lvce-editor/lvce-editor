@@ -1211,3 +1211,53 @@ test('prepare - bad stack trace', async () => {
   expect(Logger.warn).not.toHaveBeenCalled()
   expect(Ajax.getText).not.toHaveBeenCalled()
 })
+
+test('prepare - first file is anonymous', async () => {
+  const error = new Error(`VError: failed to parse json: SyntaxError: Unexpected token 'o', "[object Blob]" is not valid JSON`)
+  error.stack = `VError: failed to parse json: SyntaxError: Unexpected token 'o', "[object Blob]" is not valid JSON
+    at JSON.parse (<anonymous>)
+    at Module.parse (/test/packages/renderer-worker/src/parts/Json/Json.js:15:17)
+    at WebSocket.handleMessage (/test/packages/renderer-worker/src/parts/IpcParentWithWebSocket/IpcParentWithWebSocket.js:31:34)`
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    return `import { VError } from '../VError/VError.js'
+import * as Character from '../Character/Character.js'
+
+export const stringify = (value) => {
+  return JSON.stringify(value, null, 2) + Character.NewLine
+}
+
+export const stringifyCompact = (value) => {
+  return JSON.stringify(value)
+}
+
+export const parse = (content) => {
+  // TODO use better json parse to throw more helpful error messages if json is invalid
+  try {
+    return JSON.parse(content)
+  } catch (error) {
+    throw new VError(error, 'failed to parse json')
+  }
+}
+`
+  })
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    _error: error,
+    codeFrame: `  13 |   // TODO use better json parse to throw more helpful error messages if json is invalid
+  14 |   try {
+> 15 |     return JSON.parse(content)
+     |                 ^
+  16 |   } catch (error) {
+  17 |     throw new VError(error, 'failed to parse json')
+  18 |   }`,
+    message: 'VError: failed to parse json: SyntaxError: Unexpected token \'o\', "[object Blob]" is not valid JSON',
+    stack: `    at JSON.parse (<anonymous>)
+    at parse (/test/packages/renderer-worker/src/parts/Json/Json.js:15:17)
+    at WebSocket.handleMessage (/test/packages/renderer-worker/src/parts/IpcParentWithWebSocket/IpcParentWithWebSocket.js:31:34)`,
+    type: 'Error',
+  })
+  expect(Logger.warn).not.toHaveBeenCalled()
+  expect(Ajax.getText).toHaveBeenCalledTimes(1)
+  expect(Ajax.getText).toHaveBeenCalledWith('/test/packages/renderer-worker/src/parts/Json/Json.js')
+})
