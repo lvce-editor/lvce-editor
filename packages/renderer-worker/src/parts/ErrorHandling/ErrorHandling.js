@@ -8,15 +8,15 @@ export const state = {
   seenWarnings: [],
 }
 
-export const logError = async (error) => {
+export const logError = async (error, prefix = '') => {
   const prettyError = await PrettyError.prepare(error)
-  PrettyError.print(prettyError)
+  PrettyError.print(prettyError, prefix)
   return prettyError
 }
 
-export const handleError = async (error, notify = true) => {
+export const handleError = async (error, notify = true, prefix = '') => {
   try {
-    const prettyError = await logError(error)
+    const prettyError = await logError(error, prefix)
     if (notify) {
       await Command.execute(/* Notification.create */ 'Notification.create', /* type */ 'error', /* text */ PrettyError.getMessage(prettyError))
     }
@@ -48,23 +48,15 @@ export const warn = (...args) => {
 /**
  * @param {PromiseRejectionEvent} event
  */
-export const handleUnhandledRejection = async (event) => {
-  try {
-    event.preventDefault()
-    await handleError(event.reason)
-  } catch {
-    console.error(event.reason)
-  }
+export const handleUnhandledRejection = (event) => {
+  handleError(event.reason, false, '[renderer-worker] Unhandled Rejection: ')
+  return true
 }
 
 /**
- * @param {ErrorEvent} event
+ * @param {Error} error
  */
-export const handleUnhandledError = async (event) => {
-  try {
-    event.preventDefault()
-    await handleError(event.error)
-  } catch {
-    console.error(event.error)
-  }
+export const handleUnhandledError = (message, filename, lineno, colno, error) => {
+  handleError(error, false, '[renderer-worker] Unhandled Error: ')
+  return true
 }

@@ -1,4 +1,5 @@
 import * as Ajax from '../Ajax/Ajax.js'
+import * as Assert from '../Assert/Assert.js'
 import * as Character from '../Character/Character.js'
 import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
@@ -85,6 +86,7 @@ const toAbsoluteUrl = (file, relativePath) => {
 }
 
 const getSourceMapMatch = (text) => {
+  Assert.string(text)
   const index = text.lastIndexOf(Character.NewLine, text.length - 2)
   const lastLine = text.slice(index + 1, -1)
   const lastLineMatch = lastLine.match(RE_SOURCE_MAP)
@@ -179,38 +181,37 @@ export const prepare = async (error) => {
   return error
 }
 
-export const print = (error) => {
+export const print = (error, prefix) => {
   if (Platform.isFirefox) {
     // Firefox does not support printing codeframe with error stack
-    console.log({ error })
     if (error && error._error) {
-      Logger.error(error._error)
+      Logger.error(`${prefix}${error._error}`)
       return
     }
-    Logger.error(error)
+    Logger.error(`${prefix}${error}`)
     return
   }
   if (error && error.type && error.message && error.codeFrame) {
-    Logger.error(`${error.type}: ${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
+    Logger.error(`${prefix}${error.type}: ${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
     return
   }
   if (error && error.message && error.codeFrame) {
-    Logger.error(`${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
+    Logger.error(`${prefix}${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
     return
   }
   if (error && error.type && error.message) {
-    Logger.error(`${error.type}: ${error.message}\n${error.stack}`)
+    Logger.error(`${prefix}${error.type}: ${error.message}\n${error.stack}`)
     return
   }
   if (error && error.stack) {
-    Logger.error(`${error.stack}`)
+    Logger.error(`${prefix}${error.stack}`)
     return
   }
   if (error === null) {
-    Logger.error(null)
+    Logger.error(`${prefix}null`)
     return
   }
-  Logger.error(error)
+  Logger.error(`${prefix}${error}`)
 }
 
 export const getMessage = (error) => {
