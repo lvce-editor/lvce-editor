@@ -1,7 +1,7 @@
 import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as Assert from '../Assert/Assert.js'
 
-export const listen = (ipc, execute) => {
+export const handleIpc = (ipc, execute) => {
   Assert.object(ipc)
   Assert.fn(execute)
   const handleMessage = async (message) => {
