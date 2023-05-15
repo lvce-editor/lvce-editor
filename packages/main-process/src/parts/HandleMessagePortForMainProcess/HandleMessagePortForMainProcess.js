@@ -3,12 +3,14 @@ const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Assert = require('../Assert/Assert.js')
 const Command = require('../Command/Command.js')
 const GetResponse = require('../GetResponse/GetResponse.js')
+const IpcChild = require('../IpcChild/IpcChild.js')
+const IpcChildType = require('../IpcChildType/IpcChildType.js')
 
 /**
  *
  * @param {import('electron').IpcMainEvent} event
  */
-exports.handlePort = (event, browserWindowPort) => {
+exports.handlePort = async (event, browserWindowPort) => {
   Assert.object(event)
   Assert.object(browserWindowPort)
   const { sender } = event
@@ -21,22 +23,26 @@ exports.handlePort = (event, browserWindowPort) => {
   if (!browserWindow) {
     throw new Error(`no matching browser window found for web contents`)
   }
+  const ipc = await IpcChild.listen({
+    method: IpcChildType.ElectronMessagePort,
+    messagePort: browserWindowPort,
+  })
   const handleMinimize = (event) => {
-    browserWindowPort.postMessage({
+    ipc.send({
       jsonpc: '2.0',
       method: 'NativeHost.handleMinimized',
       params: [],
     })
   }
   const handleMaximize = (event) => {
-    browserWindowPort.postMessage({
+    ipc.send({
       jsonpc: '2.0',
       method: 'NativeHost.handleMaximized',
       params: [],
     })
   }
   const handleUnmaximize = (event) => {
-    browserWindowPort.postMessage({
+    ipc.send({
       jsonpc: '2.0',
       method: 'NativeHost.handleUnmaximized',
       params: [],
@@ -45,7 +51,7 @@ exports.handlePort = (event, browserWindowPort) => {
   const handleMessage = async (event) => {
     const message = event.data
     const response = await GetResponse.getResponse(message, Command.execute)
-    browserWindowPort.postMessage(response)
+    ipc.send(response)
   }
   const handleClose = () => {
     browserWindow.off('minimize', handleMinimize)
