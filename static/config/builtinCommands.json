@@ -231,6 +231,10 @@
     "label": "Developer: Rebuild Node Pty"
   },
   {
+    "id": "DebugSharedProcess.debugSharedProcess",
+    "label": "Developer: Debug Shared Process"
+  },
+  {
     "id": "Window.reload",
     "label": "Window: Reload",
     "aliases": ["Reload Window"]

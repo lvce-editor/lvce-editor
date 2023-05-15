@@ -36,6 +36,8 @@ export const load = (moduleId) => {
       return import('../ContentTracing/ContentTracing.ipc.js')
     case ModuleId.ContextMenu:
       return import('../ContextMenu/ContextMenu.ipc.js')
+    case ModuleId.DebugSharedProcess:
+      return import('../DebugSharedProcess/DebugSharedProcess.ipc.js')
     case ModuleId.Developer:
       return import('../Developer/Developer.ipc.js')
     case ModuleId.Dialog:
