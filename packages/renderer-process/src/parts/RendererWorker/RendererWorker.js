@@ -1,7 +1,5 @@
 import * as Callback from '../Callback/Callback.js'
-import * as Command from '../Command/Command.js'
-import * as GetResponse from '../GetResponse/GetResponse.js'
-import * as HasTransferableResult from '../HasTransferableResult/HasTransferableResult.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
@@ -13,24 +11,6 @@ export const state = {
    * @type {any}
    */
   ipc: undefined,
-}
-
-const handleMessageFromRendererWorker = async (event) => {
-  const message = event.data
-  if ('id' in message) {
-    if ('method' in message) {
-      const response = await GetResponse.getResponse(message, Command.execute)
-      if (HasTransferableResult.hasTransferrableResult(message.method) && 'result' in response) {
-        state.ipc.sendAndTransfer(response, [response.result])
-      } else {
-        state.ipc.send(response)
-      }
-      return
-    }
-    Callback.resolve(message.id, message)
-    return
-  }
-  throw new JsonRpcError('unexpected message from renderer worker')
 }
 
 const getIpc = async () => {
@@ -63,7 +43,7 @@ const getPort = (options) => {
 
 export const hydrate = async (config) => {
   const ipc = await getIpc()
-  ipc.onmessage = handleMessageFromRendererWorker
+  HandleIpc.handleIpc(ipc)
   state.ipc = ipc
 }
 
