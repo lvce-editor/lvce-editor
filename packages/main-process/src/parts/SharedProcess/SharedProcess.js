@@ -46,7 +46,7 @@ const handleChildMessage = async (message) => {
     return
   }
   if (message.id) {
-    if ('result' in message) {
+    if ('result' in message || 'error' in message) {
       Callback.resolve(message.id, message)
       state.onMessage(message)
       return
