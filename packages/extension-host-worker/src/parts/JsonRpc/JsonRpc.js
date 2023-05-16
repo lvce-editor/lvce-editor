@@ -1,8 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Callback from '../Callback/Callback.js'
-import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
-import * as RestoreJsonRpcError from '../RestoreJsonRpcError/RestoreJsonRpcError.js'
+import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
 export const send = (transport, method, ...params) => {
   transport.send({
@@ -23,14 +22,8 @@ export const invoke = async (ipc, method, ...params) => {
     id,
   })
   const responseMessage = await promise
-  if ('error' in responseMessage) {
-    const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
-    throw restoredError
-  }
-  if ('result' in responseMessage) {
-    return responseMessage.result
-  }
-  throw new JsonRpcError('unexpected response message')
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
+  return result
 }
 
 export const handleMessage = (message) => {
