@@ -366,3 +366,35 @@ test('restoreJsonRpcError - ReferenceError with codeFrame', () => {
     at async openCompletion (http://localhost:3000/packages/renderer-worker/src/parts/EditorCommand/EditorCommandCompletion.js:93:3)
     at async runFn (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:44:22)`)
 })
+
+test('restoreJsonRpcError - command not found error', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    message: 'command HandleNodeMessagePort.handleNodeMessagePort not found',
+    stack: `    at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:66:11)
+    at async Module.getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:10:9)
+    at async handleJsonRpcMessage (file:///test/packages/shared-process/src/parts/HandleIpc/HandleIpc.js:12:24)
+    at restoreJsonRpcError (/test/packages/main-process/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:28:66)
+    at unwrapResult (/test/packages/main-process/src/parts/UnwrapJsonRpcResult/UnwrapJsonRpcResult.js:5:47)
+    at invokeAndTransfer (/test/packages/main-process/src/parts/JsonRpc/JsonRpc.js:39:38)
+    at async connectToIpcNodeWorker (/test/packages/main-process/src/parts/ConnectIpc/ConnectIpc.js:20:3)
+    at async handlePort (/test/packages/main-process/src/parts/HandleMessagePortForSharedProcess/HandleMessagePortForSharedProcess.js:48:3)
+    at async handlePort (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:44:5)`,
+    name: 'Error',
+    type: 'Error',
+  })
+  expect(error).toBeInstanceOf(Error)
+  expect(error.message).toBe('command HandleNodeMessagePort.handleNodeMessagePort not found')
+  // @ts-ignore
+  expect(error.codeFrame).toBeUndefined()
+  expect(error.stack).toMatch(`command HandleNodeMessagePort.handleNodeMessagePort not found
+    at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:66:11)
+    at async Module.getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:10:9)
+    at async handleJsonRpcMessage (file:///test/packages/shared-process/src/parts/HandleIpc/HandleIpc.js:12:24)
+    at restoreJsonRpcError (/test/packages/main-process/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:28:66)
+    at unwrapResult (/test/packages/main-process/src/parts/UnwrapJsonRpcResult/UnwrapJsonRpcResult.js:5:47)
+    at invokeAndTransfer (/test/packages/main-process/src/parts/JsonRpc/JsonRpc.js:39:38)
+    at async connectToIpcNodeWorker (/test/packages/main-process/src/parts/ConnectIpc/ConnectIpc.js:20:3)
+    at async handlePort (/test/packages/main-process/src/parts/HandleMessagePortForSharedProcess/HandleMessagePortForSharedProcess.js:48:3)
+    at async handlePort (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:44:5)
+    at constructError`)
+})
