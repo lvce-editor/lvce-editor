@@ -35,6 +35,7 @@ exports.wrap = (worker) => {
       this.worker.postMessage(message)
     },
     sendAndTransfer(message, transfer) {
+      Assert.array(transfer)
       this.worker.postMessage(message, transfer)
     },
     dispose() {

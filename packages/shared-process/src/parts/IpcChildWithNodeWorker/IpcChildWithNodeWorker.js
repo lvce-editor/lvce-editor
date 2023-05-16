@@ -8,11 +8,29 @@ export const listen = async () => {
   return parentPort
 }
 
+const getActualData = (message, handle) => {
+  if (handle) {
+    return {
+      ...message,
+      params: [handle, ...message.params],
+    }
+  }
+  return message
+}
+
 export const wrap = (parentPort) => {
   return {
     parentPort,
     on(event, listener) {
-      this.parentPort.on(event, listener)
+      if (event === 'message') {
+        const wrappedListener = (event) => {
+          const actualData = getActualData(event)
+          listener(actualData)
+        }
+        this.parentPort.on(event, wrappedListener)
+      } else {
+        throw new Error('unsupported event type')
+      }
     },
     off(event, listener) {
       this.parentPort.off(event, listener)

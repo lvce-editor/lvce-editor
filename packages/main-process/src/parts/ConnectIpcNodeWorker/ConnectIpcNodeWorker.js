@@ -1,7 +1,7 @@
 const { MessageChannel } = require('node:worker_threads')
-const Callback = require('../Callback/Callback.js')
 const Performance = require('../Performance/Performance.js')
 const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
+const JsonRpc = require('../JsonRpc/JsonRpc.js')
 
 exports.connectIpc = async (sharedProcess, browserWindowPort, folder = '') => {
   const messageChannel = new MessageChannel()
@@ -16,17 +16,6 @@ exports.connectIpc = async (sharedProcess, browserWindowPort, folder = '') => {
     // console.log('send message to browser window', message)
     browserWindowPort.postMessage(message)
   })
-  const { id, promise } = Callback.registerPromise()
-  // TODO use jsonrpc.invoke
-  sharedProcess.sendAndTransfer(
-    {
-      jsonrpc: '2.0',
-      method: 'ElectronInitialize.electronInitialize',
-      id,
-      params: [port1, folder],
-    },
-    [port1]
-  )
-  await promise
+  await JsonRpc.invokeAndTransfer(sharedProcess, [port1], 'HandleNodeMessagePort.handleNodeMessagePort', port1, folder)
   browserWindowPort.start()
 }
