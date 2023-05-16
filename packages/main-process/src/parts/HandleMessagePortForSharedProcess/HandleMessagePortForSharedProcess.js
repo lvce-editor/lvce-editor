@@ -38,7 +38,7 @@ exports.handlePort = async (event, browserWindowPort) => {
   }
   const folder = getFolder(config.parsedArgs)
   Performance.mark(PerformanceMarkerType.WillStartSharedProcess)
-  const method = IpcParentType.ElectronUtilityProcess
+  const method = IpcParentType.NodeWorker
   const sharedProcess = await SharedProcess.hydrate({
     method,
     env: {

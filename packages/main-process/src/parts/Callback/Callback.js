@@ -16,27 +16,14 @@ exports.registerPromise = () => {
   return { id, promise }
 }
 
-exports.unregister = (id) => {
-  delete state.callbacks[id]
-}
-
 exports.resolve = (id, args) => {
   Assert.number(id)
+  const { callbacks } = state
   if (!(id in state.callbacks)) {
     console.log(args)
     console.warn(`callback ${id} may already be disposed`)
     return
   }
-  state.callbacks[id].resolve(args)
-  delete state.callbacks[id]
-}
-
-exports.reject = (id, error) => {
-  Assert.number(id)
-  if (!(id in state.callbacks)) {
-    console.warn(`callback ${id} may already be disposed`)
-    return
-  }
-  state.callbacks[id].reject(error)
-  delete state.callbacks[id]
+  callbacks[id].resolve(args)
+  delete callbacks[id]
 }
