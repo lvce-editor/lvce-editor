@@ -33,8 +33,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Developer
     case 'Download.download':
       return ModuleId.Download
-    case 'ElectronInitialize.electronInitialize':
-      return ModuleId.ElectronInitialize
     case 'ExtensionHost.dispose':
     case 'ExtensionHost.enableExtension':
     case 'ExtensionHost.executeCommand':
@@ -114,6 +112,10 @@ export const getModuleId = (commandId) => {
       return ModuleId.GitLsFiles
     case 'HandleWebSocket.handleWebSocket':
       return ModuleId.HandleWebSocket
+    case 'HandleElectronMessagePort.handleElectronMessagePort':
+      return ModuleId.HandleElectronMessagePort
+    case 'HandleNodeMessagePort.handleNodeMessagePort':
+      return ModuleId.HandleNodeMessagePort
     case 'InstallExtension.installExtension':
       return ModuleId.InstallExtension
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':

@@ -22,8 +22,6 @@ export const load = (moduleId) => {
       return import('../Download/Download.ipc.js')
     case ModuleId.ExtensionHost:
       return import('../ExtensionHost/ExtensionHost.ipc.js')
-    case ModuleId.ElectronInitialize:
-      return import('../ElectronInitialize/ElectronInitialize.ipc.js')
     case ModuleId.ExtensionManagement:
       return import('../ExtensionManagement/ExtensionManagement.ipc.js')
     case ModuleId.FileSystem:
@@ -62,6 +60,10 @@ export const load = (moduleId) => {
       return import('../RebuildNodePty/RebuildNodePty.ipc.js')
     case ModuleId.HandleWebSocket:
       return import('../HandleWebSocket/HandleWebSocket.ipc.js')
+    case ModuleId.HandleElectronMessagePort:
+      return import('../HandleElectronMessagePort/HandleElectronMessagePort.ipc.js')
+    case ModuleId.HandleNodeMessagePort:
+      return import('../HandleNodeMessagePort/HandleNodeMessagePort.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

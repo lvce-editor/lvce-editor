@@ -22,7 +22,7 @@ const connectToIpcNodeWorker = async (sharedProcess, browserWindowPort, folder =
   sharedProcess.sendAndTransfer(
     {
       jsonrpc: '2.0',
-      method: 'ElectronInitialize.electronInitialize',
+      method: 'HandleNodeMessagePort.handleNodeMessagePort',
       id,
       params: [port1, folder],
     },
@@ -37,7 +37,7 @@ const connectToIpcElectronUtilityProcess = async (sharedProcess, browserWindowPo
   sharedProcess.sendAndTransfer(
     {
       jsonrpc: '2.0',
-      method: 'ElectronInitialize.electronInitialize',
+      method: 'HandleElectronMessagePort.handleElectronMessagePort',
       params: [],
       id,
     },
