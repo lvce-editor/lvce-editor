@@ -169,6 +169,10 @@ export const getModuleId = (commandId) => {
       return ModuleId.RebuildNodePty
     case 'Process.getPid':
       return ModuleId.Process
+    case 'HandleNodeMessagePort.handleNodeMessagePort':
+      return ModuleId.HandleNodeMessagePort
+    case 'HandleElectronMessagePort.handleElectronMessagePort':
+      return ModuleId.HandleElectronMessagePort
     default:
       throw new CommandNotFoundError(commandId)
   }
