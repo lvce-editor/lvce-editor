@@ -13,6 +13,10 @@ const shouldLogError = (error) => {
 }
 
 export const getErrorResponse = (message, error) => {
+  const prettyError = PrettyError.prepare(error)
+  if (shouldLogError(error)) {
+    PrintPrettyError.printPrettyError(prettyError, `[shared-process] `)
+  }
   if (error && error instanceof CommandNotFoundError) {
     return {
       jsonrpc: JsonRpcVersion.Two,
@@ -37,8 +41,6 @@ export const getErrorResponse = (message, error) => {
       },
     }
   }
-  const prettyError = PrettyError.prepare(error)
-  PrintPrettyError.printPrettyError(prettyError, `[shared-process] `)
   return {
     jsonrpc: JsonRpcVersion.Two,
     id: message.id,
