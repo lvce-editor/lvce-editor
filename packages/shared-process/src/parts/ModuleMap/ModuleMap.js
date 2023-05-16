@@ -114,6 +114,10 @@ export const getModuleId = (commandId) => {
       return ModuleId.GitLsFiles
     case 'HandleWebSocket.handleWebSocket':
       return ModuleId.HandleWebSocket
+    case 'HandleElectronMessagePort.handleElectronMessagePort':
+      return ModuleId.HandleElectronMessagePort
+    case 'HandleNodeMessagePort.handleNodeMessagePort':
+      return ModuleId.HandleNodeMessagePort
     case 'InstallExtension.installExtension':
       return ModuleId.InstallExtension
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':
