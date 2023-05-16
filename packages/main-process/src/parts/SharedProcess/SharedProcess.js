@@ -105,7 +105,7 @@ exports.setOnMessage = (fn) => {
 //   state.sharedProcess.send('here-is-the-port', port)
 // }
 
-exports.hydrate = async (env = {}) => {
+exports.hydrate = async ({ method, env = {} }) => {
   if (state.sharedProcess) {
     return state.sharedProcess
   }
@@ -131,7 +131,7 @@ exports.hydrate = async (env = {}) => {
   // TODO inherit stdout but listen to ready event
   const sharedProcessPath = Platform.getSharedProcessPath()
   const sharedProcess = await IpcParent.create({
-    method: IpcParentType.NodeWorker,
+    method,
     env: {
       ...process.env,
       ELECTRON_RUN_AS_NODE: '1', // TODO

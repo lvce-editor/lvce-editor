@@ -4,7 +4,7 @@ const IpcParent = require('../IpcParent/IpcParent.js')
 const IpcParentType = require('../IpcParentType/IpcParentType.js')
 
 const getTerminalProcessPath = () => {
-  return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.cjs')
+  return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.js')
 }
 /**
  *
@@ -17,6 +17,7 @@ exports.handlePort = async (event, browserWindowPort) => {
     method: IpcParentType.ElectronUtilityProcess,
     path: ptyHostPath,
   })
+  // TODO use connectIpc for better error handling
   ipc.sendAndTransfer(
     {
       jsonrpc: '2.0',
