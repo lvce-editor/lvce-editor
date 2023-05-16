@@ -24,6 +24,16 @@ export const resolve = (id, args) => {
   delete callbacks[id]
 }
 
+export const reject = (id, error) => {
+  const { callbacks } = state
+  if (!(id in callbacks)) {
+    console.warn(`callback (rejected) ${id} may already be disposed`)
+    return
+  }
+  callbacks[id].reject(error)
+  delete callbacks[id]
+}
+
 export const isAllEmpty = () => {
   return Object.keys(state.callbacks).length === 0 && state.onceListeners.size === 0
 }

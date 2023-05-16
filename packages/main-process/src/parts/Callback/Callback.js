@@ -19,7 +19,7 @@ exports.registerPromise = () => {
 exports.resolve = (id, args) => {
   Assert.number(id)
   const { callbacks } = state
-  if (!(id in state.callbacks)) {
+  if (!(id in callbacks)) {
     console.log(args)
     console.warn(`callback ${id} may already be disposed`)
     return
