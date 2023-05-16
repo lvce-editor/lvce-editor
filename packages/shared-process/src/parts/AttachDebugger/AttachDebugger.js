@@ -1,5 +1,6 @@
 import * as Process from '../Process/Process.js'
+import * as Signal from '../Signal/Signal.js'
 
 export const attachDebugger = (pid) => {
-  Process.kill(pid, 'SIGUSR1')
+  Process.kill(pid, Signal.SIGUSR1)
 }

@@ -1,4 +1,5 @@
 const { BrowserWindow, Menu } = require('electron')
+const Signal = require('../Signal/Signal.js')
 
 exports.showContextMenu = (processId) => {
   const template = [
@@ -6,7 +7,7 @@ exports.showContextMenu = (processId) => {
       label: 'Kill Process',
       click: () => {
         const Process = require('../Process/Process.js')
-        Process.kill(processId, 'SIGTERM')
+        Process.kill(processId, Signal.SIGTERM)
       },
     },
   ]
