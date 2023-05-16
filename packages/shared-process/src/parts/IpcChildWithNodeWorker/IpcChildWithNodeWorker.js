@@ -8,13 +8,7 @@ export const listen = async () => {
   return parentPort
 }
 
-const getActualData = (message, handle) => {
-  if (handle) {
-    return {
-      ...message,
-      params: [handle, ...message.params],
-    }
-  }
+const getActualData = (message) => {
   return message
 }
 
