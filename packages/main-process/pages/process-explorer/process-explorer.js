@@ -549,6 +549,7 @@ const Callback = {
   },
   resolve(id, message) {
     callbacks[id].resolve(message)
+    delete callbacks[id]
   },
 }
 
