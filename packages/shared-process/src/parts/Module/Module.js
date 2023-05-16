@@ -62,6 +62,10 @@ export const load = (moduleId) => {
       return import('../RebuildNodePty/RebuildNodePty.ipc.js')
     case ModuleId.HandleWebSocket:
       return import('../HandleWebSocket/HandleWebSocket.ipc.js')
+    case ModuleId.HandleElectronMessagePort:
+      return import('../HandleElectronMessagePort/HandleElectronMessagePort.ipc.js')
+    case ModuleId.HandleNodeMessagePort:
+      return import('../HandleNodeMessagePort/HandleNodeMessagePort.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
