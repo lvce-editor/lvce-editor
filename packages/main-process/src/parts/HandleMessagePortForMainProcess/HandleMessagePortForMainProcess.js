@@ -1,8 +1,7 @@
 const { BrowserWindow } = require('electron')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Assert = require('../Assert/Assert.js')
-const Command = require('../Command/Command.js')
-const GetResponse = require('../GetResponse/GetResponse.js')
+const HandleIpc = require('../HandleIpc/HandleIpc.js')
 const IpcChild = require('../IpcChild/IpcChild.js')
 const IpcChildType = require('../IpcChildType/IpcChildType.js')
 
@@ -48,16 +47,10 @@ exports.handlePort = async (event, browserWindowPort) => {
       params: [],
     })
   }
-  const handleMessage = async (event) => {
-    const message = event.data
-    const response = await GetResponse.getResponse(message, Command.execute)
-    ipc.send(response)
-  }
   const handleClose = () => {
     browserWindow.off('minimize', handleMinimize)
     browserWindow.off('unmaximize', handleUnmaximize)
     browserWindow.off('maximize', handleMaximize)
-    browserWindowPort.off('message', handleMessage)
     browserWindowPort.off('close', handleClose)
     if (state) {
       state.port = undefined
@@ -66,7 +59,7 @@ exports.handlePort = async (event, browserWindowPort) => {
   browserWindow.on('minimize', handleMinimize)
   browserWindow.on('unmaximize', handleUnmaximize)
   browserWindow.on('maximize', handleMaximize)
-  browserWindowPort.on('message', handleMessage)
   browserWindowPort.on('close', handleClose)
+  HandleIpc.handleIpc(ipc)
   browserWindowPort.start()
 }
