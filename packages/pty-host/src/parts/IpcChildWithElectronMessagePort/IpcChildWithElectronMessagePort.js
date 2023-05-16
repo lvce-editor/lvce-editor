@@ -1,8 +1,8 @@
 import { IpcError } from '../IpcError/IpcError.js'
-import * as IsElectronMessagePort from '../IsElectronMessagePort/IsElectronMessagePort.js'
+import * as IsMessagePortMain from '../IsMessagePortMain/IsMessagePortMain.js'
 
 export const listen = ({ messagePort }) => {
-  if (!IsElectronMessagePort.isMessagePort(messagePort)) {
+  if (!IsMessagePortMain.isMessagePortMain(messagePort)) {
     throw new IpcError('port must be of type MessagePortMain')
   }
   return messagePort
