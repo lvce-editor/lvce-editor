@@ -21,6 +21,14 @@ const constructError = (message, type, name) => {
   return new ErrorConstructor(message)
 }
 
+const getParentStack = (error) => {
+  let parentStack = error.stack || error.data || ''
+  if (parentStack.startsWith('    at')) {
+    parentStack = error.message + Character.NewLine + parentStack
+  }
+  return parentStack
+}
+
 export const restoreJsonRpcError = (error) => {
   if (error && error instanceof Error) {
     return error
@@ -28,7 +36,8 @@ export const restoreJsonRpcError = (error) => {
   const currentStack = JoinLines.joinLines(SplitLines.splitLines(new Error().stack).slice(1))
   if (error && error.code && error.code === JsonRpcErrorCode.MethodNotFound) {
     const restoredError = new JsonRpcError(error.message)
-    restoredError.stack = (error.stack || error.data || '') + Character.NewLine + currentStack
+    const parentStack = getParentStack(error)
+    restoredError.stack = parentStack + Character.NewLine + currentStack
     return restoredError
   }
   if (error && error.message) {
@@ -53,8 +62,9 @@ export const restoreJsonRpcError = (error) => {
         const lowerStack = restoredError.stack || ''
         // @ts-ignore
         const indexNewLine = GetNewLineIndex.getNewLineIndex(lowerStack)
+        const parentStack = getParentStack(error)
         // @ts-ignore
-        restoredError.stack = error.stack + lowerStack.slice(indexNewLine)
+        restoredError.stack = parentStack + lowerStack.slice(indexNewLine)
       }
       if (error.codeFrame) {
         // @ts-ignore
