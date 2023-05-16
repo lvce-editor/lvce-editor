@@ -47,6 +47,10 @@ const getPsOutput = async () => {
     return stdout.trim()
   } catch (error) {
     // @ts-ignore
+    if (error && error.signal === 'SIGINT') {
+      return ''
+    }
+    // @ts-ignore
     throw new VError(error, `Failed to execute ps`)
   }
 }
