@@ -10,30 +10,26 @@ export const send = (transport, method, ...params) => {
 }
 
 export const invoke = (ipc, method, ...params) => {
-  return new Promise((resolve, reject) => {
-    // TODO use one map instead of two
-    const callbackId = Callback.register(resolve, reject)
-    ipc.send({
-      jsonrpc: JsonRpcVersion.Two,
-      method,
-      params,
-      id: callbackId,
-    })
+  const { id, promise } = Callback.registerPromise()
+  ipc.send({
+    jsonrpc: JsonRpcVersion.Two,
+    method,
+    params,
+    id,
   })
+  return promise
 }
 
 export const invokeAndTransfer = (ipc, handle, method, ...params) => {
-  return new Promise((resolve, reject) => {
-    // TODO use one map instead of two
-    const callbackId = Callback.register(resolve, reject)
-    ipc.sendAndTransfer(
-      {
-        jsonrpc: JsonRpcVersion.Two,
-        method,
-        params,
-        id: callbackId,
-      },
-      handle
-    )
-  })
+  const { id, promise } = Callback.registerPromise()
+  ipc.sendAndTransfer(
+    {
+      jsonrpc: JsonRpcVersion.Two,
+      method,
+      params,
+      id,
+    },
+    handle
+  )
+  return promise
 }
