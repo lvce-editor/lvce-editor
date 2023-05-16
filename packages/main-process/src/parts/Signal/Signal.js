@@ -1,1 +1,2 @@
-export const SIGTERM = 'SIGTERM'
+exports.SIGTERM = 'SIGTERM'
+exports.SIGINT = 'SIGINT'

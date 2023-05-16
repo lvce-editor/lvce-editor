@@ -6,6 +6,7 @@ const { VError } = require('verror')
 const Assert = require('../Assert/Assert.js')
 const ErrorCodes = require('../ErrorCodes/ErrorCodes.js')
 const ParsePsOutput = require('../ParsePsOutput/ParsePsOutput.js')
+const Signal = require('../Signal/Signal.js')
 
 const execFile = util.promisify(childProcess.execFile)
 
@@ -47,7 +48,7 @@ const getPsOutput = async () => {
     return stdout.trim()
   } catch (error) {
     // @ts-ignore
-    if (error && error.signal === 'SIGINT') {
+    if (error && error.signal === Signal.SIGINT) {
       return ''
     }
     // @ts-ignore
