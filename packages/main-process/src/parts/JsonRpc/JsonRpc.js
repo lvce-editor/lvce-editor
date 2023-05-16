@@ -35,6 +35,6 @@ exports.invokeAndTransfer = async (ipc, transfer, method, ...params) => {
     transfer
   )
   const responseMessage = await promise
-  const result = unwrapResult(responseMessage)
+  const result = UnwrapJsonRpcResult.unwrapResult(responseMessage)
   return result
 }

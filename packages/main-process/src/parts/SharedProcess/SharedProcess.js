@@ -35,16 +35,6 @@ const handleChildMessage = async (message) => {
     Logger.warn('invalid message', message)
     return
   }
-  if (message.result || message.error) {
-    state.onMessage(message)
-    return
-  }
-  if (!message.id && !message.params) {
-    // TODO need better way to send terminal data
-    const parsed = JSON.parse(message)
-    state.onMessage(parsed)
-    return
-  }
   if (message.id) {
     if ('result' in message || 'error' in message) {
       Callback.resolve(message.id, message)
