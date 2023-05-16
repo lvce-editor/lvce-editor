@@ -30,16 +30,17 @@ exports.parsePsOutput = (stdout, rootPid) => {
   depthMap[rootPid] = 1
   const parsedLines = lines.map(parsePsOutputLine)
   for (const parsedLine of parsedLines) {
-    const depth = parsedLine.pid === rootPid ? 1 : depthMap[parsedLine.ppid]
+    const { pid, ppid, cmd } = parsedLine
+    const depth = pid === rootPid ? 1 : depthMap[ppid]
     if (!depth) {
       continue
     }
     result.push({
       ...parsedLine,
       depth,
-      name: ListProcessGetName.getName(parsedLine.pid, parsedLine.cmd, rootPid),
+      name: ListProcessGetName.getName(pid, cmd, rootPid),
     })
-    depthMap[parsedLine.pid] = depth + 1
+    depthMap[pid] = depth + 1
   }
   return result
 }
