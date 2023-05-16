@@ -1,6 +1,6 @@
 import * as Callback from '../Callback/Callback.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
-import * as RestoreJsonRpcError from '../RestoreJsonRpcError/RestoreJsonRpcError.js'
+import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
 const handleMessageFromWindow = (event) => {
   const { data } = event
@@ -25,12 +25,6 @@ export const create = async ({ type }) => {
   // @ts-ignore
   window.myApi.ipcConnect(message)
   const responseMessage = await promise
-  if ('error' in responseMessage) {
-    const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
-    throw restoredError
-  }
-  if ('result' in responseMessage) {
-    return responseMessage.result
-  }
-  return responseMessage
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
+  return result
 }

@@ -2,9 +2,9 @@ import * as Callback from '../Callback/Callback.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as Platform from '../Platform/Platform.js'
+import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
 export const state = {
   /**
@@ -37,10 +37,6 @@ const getIpc = async () => {
   }
 }
 
-const getPort = (options) => {
-  return IpcParent.create(options)
-}
-
 export const hydrate = async (config) => {
   const ipc = await getIpc()
   HandleIpc.handleIpc(ipc)
@@ -62,32 +58,6 @@ export const send = (method, ...params) => {
   })
 }
 
-const deserializeError = (serializedError) => {
-  const error = new Error()
-  if (serializedError && serializedError.message) {
-    error.message = serializedError.message
-  }
-  if (serializedError && serializedError.stack) {
-    error.stack = serializedError.stack
-  }
-  return error
-}
-
-const combineStacks = (upperStack, lowerStack) => {
-  const indexNewLine = lowerStack.indexOf('\n')
-  return upperStack + lowerStack.slice(indexNewLine)
-}
-
-class RendererWorkerError extends Error {
-  constructor(serializedError) {
-    const deserializedError = deserializeError(serializedError)
-    super(deserializedError.message)
-    if (this.stack) {
-      this.stack = combineStacks(deserializedError.stack, this.stack)
-    }
-  }
-}
-
 export const invoke = async (method, ...params) => {
   const { id, promise } = Callback.registerPromise()
   state.ipc.send({
@@ -97,14 +67,8 @@ export const invoke = async (method, ...params) => {
     id,
   })
   const responseMessage = await promise
-  if ('error' in responseMessage) {
-    throw new RendererWorkerError(responseMessage.error)
-  }
-  if ('result' in responseMessage) {
-    return responseMessage.result
-  }
-
-  throw new JsonRpcError('unexpected message from renderer worker')
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
+  return result
 }
 
 export const sendAndTransfer = (message, transfer) => {
