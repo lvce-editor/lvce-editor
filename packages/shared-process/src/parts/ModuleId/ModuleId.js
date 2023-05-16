@@ -26,3 +26,5 @@ export const AutoUpdaterWindowsNsis = 25
 export const RebuildNodePty = 26
 export const ElectronInitialize = 27
 export const HandleWebSocket = 28
+export const Process = 29
+export const AttachDebugger = 30

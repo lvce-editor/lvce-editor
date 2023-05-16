@@ -3,6 +3,8 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
+    case 'AttachDebugger.attachDebugger':
+      return ModuleId.AttachDebugger
     case 'AutoUpdater.getAutoUpdateType':
     case 'AutoUpdater.getLatestVersion':
       return ModuleId.AutoUpdater
@@ -161,6 +163,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workspace
     case 'RebuildNodePty.rebuildNodePty':
       return ModuleId.RebuildNodePty
+    case 'Process.getPid':
+      return ModuleId.Process
     default:
       throw new CommandNotFoundError(commandId)
   }

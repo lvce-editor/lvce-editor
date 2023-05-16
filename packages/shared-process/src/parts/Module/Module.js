@@ -2,6 +2,8 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const load = (moduleId) => {
   switch (moduleId) {
+    case ModuleId.AttachDebugger:
+      return import('../AttachDebugger/AttachDebugger.ipc.js')
     case ModuleId.AutoUpdater:
       return import('../AutoUpdater/AutoUpdater.ipc.js')
     case ModuleId.AutoUpdaterAppImage:
@@ -40,6 +42,8 @@ export const load = (moduleId) => {
       return import('../Platform/Platform.ipc.js')
     case ModuleId.Preferences:
       return import('../Preferences/Preferences.ipc.js')
+    case ModuleId.Process:
+      return import('../Process/Process.ipc.js')
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.js')
     case ModuleId.SearchFile:
