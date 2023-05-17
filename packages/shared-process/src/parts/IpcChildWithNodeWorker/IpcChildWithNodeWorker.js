@@ -1,4 +1,5 @@
 import { parentPort } from 'node:worker_threads'
+import * as IsElectron from '../IsElectron/IsElectron.js'
 
 export const listen = async () => {
   if (!parentPort) {
@@ -14,6 +15,7 @@ const getActualData = (message) => {
 
 export const wrap = (parentPort) => {
   return {
+    shouldLogError: !IsElectron.isElectron(),
     parentPort,
     on(event, listener) {
       if (event === 'message') {
