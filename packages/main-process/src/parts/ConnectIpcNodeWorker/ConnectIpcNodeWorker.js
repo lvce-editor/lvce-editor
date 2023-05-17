@@ -1,7 +1,7 @@
 const { MessageChannel } = require('node:worker_threads')
 const Performance = require('../Performance/Performance.js')
 const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
-const JsonRpc = require('../JsonRpc/JsonRpc.js')
+const TransferMessagePort = require('../TransferMessagePort/TransferMessagePort.js')
 
 exports.connectIpc = async (sharedProcess, browserWindowPort, folder = '') => {
   const messageChannel = new MessageChannel()
@@ -16,6 +16,6 @@ exports.connectIpc = async (sharedProcess, browserWindowPort, folder = '') => {
     // console.log('send message to browser window', message)
     browserWindowPort.postMessage(message)
   })
-  await JsonRpc.invokeAndTransfer(sharedProcess, [port1], 'HandleNodeMessagePort.handleNodeMessagePort', port1, folder)
+  await TransferMessagePort.transferMessagePort(sharedProcess, port1, folder)
   browserWindowPort.start()
 }
