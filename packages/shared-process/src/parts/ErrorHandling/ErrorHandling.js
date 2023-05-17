@@ -1,11 +1,9 @@
 import * as ExitCode from '../ExitCode/ExitCode.js'
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 import * as IsIgnoredError from '../IsIgnoredError/IsIgnoredError.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as Logger from '../Logger/Logger.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as Process from '../Process/Process.js'
-import * as Socket from '../Socket/Socket.js'
-import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 
 export const state = {
   seenErrors: [],
@@ -30,17 +28,17 @@ export const handleError = (error) => {
   }
   state.seenErrors.push(error.message)
   const prettyError = preparePrettyError(error)
-  Socket.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method: /* Dialog.showErrorDialogWithOptions */ 'Dialog.showMessage',
-    params: [
-      {
-        message: prettyError.message,
-        codeFrame: prettyError.codeFrame,
-        stack: prettyError.stack,
-      },
-    ],
-  })
+  // Socket.send({
+  //   jsonrpc: JsonRpcVersion.Two,
+  //   method: /* Dialog.showErrorDialogWithOptions */ 'Dialog.showMessage',
+  //   params: [
+  //     {
+  //       message: prettyError.message,
+  //       codeFrame: prettyError.codeFrame,
+  //       stack: prettyError.stack,
+  //     },
+  //   ],
+  // })
   printPrettyError(prettyError)
 }
 
