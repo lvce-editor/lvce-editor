@@ -1,3 +1,5 @@
+import * as IsElectron from '../IsElectron/IsElectron.js'
+
 export const listen = () => {
   // @ts-ignore
   const parentPort = process.parentPort
@@ -21,6 +23,7 @@ const getActualData = (event) => {
 
 export const wrap = (parentPort) => {
   return {
+    shouldLogError: !IsElectron.isElectron(),
     parentPort,
     on(event, listener) {
       if (event === 'message') {
