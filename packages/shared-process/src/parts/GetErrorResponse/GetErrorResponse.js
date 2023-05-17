@@ -14,7 +14,7 @@ const shouldLogError = (error) => {
 
 export const getErrorResponse = (message, error, ipc) => {
   const prettyError = PrettyError.prepare(error)
-  if (shouldLogError(error) && ipc && ipc.shouldLogError !== false) {
+  if (shouldLogError(error) && (!ipc || ipc.shouldLogError !== false)) {
     PrintPrettyError.printPrettyError(prettyError, `[shared-process] `)
   }
   if (error && error instanceof CommandNotFoundError) {
