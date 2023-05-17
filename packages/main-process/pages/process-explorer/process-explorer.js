@@ -549,6 +549,7 @@ const Callback = {
   },
   resolve(id, message) {
     callbacks[id].resolve(message)
+    delete callbacks[id]
   },
 }
 
@@ -777,6 +778,12 @@ const getPid = () => {
   return JsonRpc.invoke(state.ipc, 'Process.getPid')
 }
 
+const sleep = (timeout) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeout)
+  })
+}
+
 const main = async () => {
   onerror = handleError
   onunhandledrejection = handleUnhandledRejection
@@ -784,12 +791,11 @@ const main = async () => {
   ipc.onmessage = handleMessage
   state.ipc = ipc
   const pid = await getPid()
+  const refreshInterval = 1000
   while (true) {
     const processesWithMemoryUsage = await listProcessesWithMemoryUsage(pid)
     renderProcesses(processesWithMemoryUsage)
-    await new Promise((resolve) => {
-      setTimeout(resolve, 1000)
-    })
+    await sleep(refreshInterval)
   }
 }
 

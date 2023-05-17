@@ -1,15 +1,5 @@
-const Callback = require('../Callback/Callback.js')
+const JsonRpc = require('../JsonRpc/JsonRpc.js')
 
-exports.connectIpc = async (sharedProcess, browserWindowPort, folder = '') => {
-  const { id, promise } = Callback.registerPromise()
-  sharedProcess.sendAndTransfer(
-    {
-      jsonrpc: '2.0',
-      method: 'ElectronInitialize.electronInitialize',
-      params: [],
-      id,
-    },
-    [browserWindowPort]
-  )
-  await promise
+exports.connectIpc = async (ipc, browserWindowPort, folder = '') => {
+  await JsonRpc.invokeAndTransfer(ipc, browserWindowPort, 'HandleElectronMessagePort.handleElectronMessagePort', folder)
 }

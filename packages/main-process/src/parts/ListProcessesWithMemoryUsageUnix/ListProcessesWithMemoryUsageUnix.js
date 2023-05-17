@@ -1,12 +1,13 @@
 const { join } = require('node:path')
-const childProcess = require('node:child_process')
 const { readFile } = require('node:fs/promises')
-const util = require('node:util')
 const { VError } = require('verror')
 const Assert = require('../Assert/Assert.js')
+const childProcess = require('node:child_process')
+const EncodingType = require('../EncodingType/EncodingType.js')
 const ErrorCodes = require('../ErrorCodes/ErrorCodes.js')
 const ParsePsOutput = require('../ParsePsOutput/ParsePsOutput.js')
 const Signal = require('../Signal/Signal.js')
+const util = require('node:util')
 
 const execFile = util.promisify(childProcess.execFile)
 
@@ -16,7 +17,7 @@ const getAccurateMemoryUsage = async (pid) => {
     const filePath = join('/proc', `${pid}`, 'statm')
     let content
     try {
-      content = await readFile(filePath, 'utf-8')
+      content = await readFile(filePath, EncodingType.Utf8)
     } catch (error) {
       if (
         error &&
