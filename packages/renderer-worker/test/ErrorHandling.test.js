@@ -26,6 +26,13 @@ jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
   }
 })
 
+class PromiseRejectionEvent extends Event {
+  constructor(type, options) {
+    super(type, options)
+    this.reason = options.reason
+  }
+}
+
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 const Command = await import('../src/parts/Command/Command.js')
 const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
@@ -189,5 +196,39 @@ export const parse = (content) => {
     at JSON.parse (<anonymous>)
     at parse (/test/packages/renderer-worker/src/parts/Json/Json.js:15:17)
     at WebSocket.handleMessage (/test/packages/renderer-worker/src/parts/IpcParentWithWebSocket/IpcParentWithWebSocket.js:31:34)`
+  )
+})
+
+test('handleUnhandledRejection - prevent default', async () => {
+  const error = new TypeError(`Cannot read properties of undefined (reading 'hovered')`)
+  error.stack = `TypeError: Cannot read properties of undefined (reading 'hovered')
+    at handleTabsPointerOut (/test/packages/renderer-worker/src/parts/ViewletMain/ViewletMainHandleTabsPointerOut.js:13:15)
+    at executeViewletCommand (/test/packages/renderer-worker/src/parts/Viewlet/Viewlet.js:358:26)
+    at async handleMessageFromRendererProcess (/test/packages/renderer-worker/src/parts/HandleIpc/HandleIpc.js:33:5)`
+  const event = new PromiseRejectionEvent('', {
+    reason: error,
+  })
+  let _resolve
+  const promise = new Promise((r) => {
+    _resolve = r
+  })
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    setTimeout(() => {
+      _resolve(undefined)
+    }, 0)
+    return ``
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  ErrorHandling.handleUnhandledRejection(event)
+  await promise
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(
+    `[renderer-worker] Unhandled Rejection: TypeError: Cannot read properties of undefined (reading 'hovered')
+    at handleTabsPointerOut (/test/packages/renderer-worker/src/parts/ViewletMain/ViewletMainHandleTabsPointerOut.js:13:15)
+    at executeViewletCommand (/test/packages/renderer-worker/src/parts/Viewlet/Viewlet.js:358:26)
+    at async handleMessageFromRendererProcess (/test/packages/renderer-worker/src/parts/HandleIpc/HandleIpc.js:33:5)`
   )
 })
