@@ -24,6 +24,9 @@ const parsePsOutputLine = (line) => {
 exports.parsePsOutput = (stdout, rootPid) => {
   Assert.string(stdout)
   Assert.number(rootPid)
+  if (stdout === '') {
+    return []
+  }
   const lines = SplitLines.splitLines(stdout)
   const result = []
   const depthMap = Object.create(null)
