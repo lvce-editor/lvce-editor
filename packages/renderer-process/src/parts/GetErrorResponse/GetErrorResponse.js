@@ -11,6 +11,7 @@ export const getErrorResponse = (message, error) => {
       stack: serializedError.stack,
       name: serializedError.name,
       type: serializedError.type,
+      codeFrame: serializedError.codeFrame,
     },
   }
 }
