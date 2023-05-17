@@ -49,8 +49,8 @@ export const warn = (...args) => {
  * @param {PromiseRejectionEvent} event
  */
 export const handleUnhandledRejection = (event) => {
+  event.preventDefault()
   handleError(event.reason, false, '[renderer-worker] Unhandled Rejection: ')
-  return true
 }
 
 /**
