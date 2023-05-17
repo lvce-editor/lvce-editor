@@ -1,5 +1,5 @@
-const JsonRpc = require('../JsonRpc/JsonRpc.js')
+const TransferMessagePortMain = require('../TransferMessagePortMain/TransferMessagePortMain.js')
 
 exports.connectIpc = async (ipc, browserWindowPort, folder = '') => {
-  await JsonRpc.invokeAndTransfer(ipc, browserWindowPort, 'HandleElectronMessagePort.handleElectronMessagePort', folder)
+  await TransferMessagePortMain.transferMessagePortMain(ipc, browserWindowPort, folder)
 }
