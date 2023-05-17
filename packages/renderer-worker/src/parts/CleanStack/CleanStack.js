@@ -9,6 +9,7 @@ const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
 const RE_PATH_3 = /@(.*):(\d+):(\d+)$/ // Firefox
 const RE_RESTORE_JSON_RPC_ERROR = /^\s*at restoreJsonRpcError/
+const RE_UNWRAP_JSON_RPC_RESULT = /^\s*at unwrapJsonRpcResult/
 const RE_JSON_RPC_INVOKE = /^\s*at invoke .*JsonRpc\.js/
 const RE_ASSERT = /^\s*at .*\/Assert\.js/
 const RE_CONSTRUCT_ERROR = /^\s*at constructError /
@@ -32,13 +33,12 @@ const isApplicationUsefulLine = (line, index) => {
     }
     return true
   }
-  if (RE_RESTORE_JSON_RPC_ERROR.test(line)) {
-    return false
-  }
-  if (RE_JSON_RPC_INVOKE.test(line)) {
-    return false
-  }
-  if (RE_CONSTRUCT_ERROR.test(line)) {
+  if (
+    RE_RESTORE_JSON_RPC_ERROR.test(line) ||
+    RE_JSON_RPC_INVOKE.test(line) ||
+    RE_UNWRAP_JSON_RPC_RESULT.test(line) ||
+    RE_CONSTRUCT_ERROR.test(line)
+  ) {
     return false
   }
   return true
