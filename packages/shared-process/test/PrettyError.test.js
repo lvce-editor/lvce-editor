@@ -652,3 +652,109 @@ export const getModuleId = (commandId) => {
     code: 'E_COMMAND_NOT_FOUND',
   })
 })
+
+test('prepare - terminal error', async () => {
+  const error = new VError(`Failed to create terminal: AssertionError: expected value to be of type object`)
+  error.stack = ` VError: Failed to create terminal: AssertionError: expected value to be of type object
+    at Module.object (file:///test/packages/shared-process/src/parts/Assert/Assert.js:29:11)
+    at Object.create [as Terminal.create] (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:13:12)
+    at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
+    at async Module.getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:9:9)
+    at async handleJsonRpcMessage (file:///test/packages/shared-process/src/parts/HandleIpc/HandleIpc.js:12:24)`
+  // @ts-ignore
+  fs.readFileSync.mockImplementation(() => {
+    return `import * as Assert from '../Assert/Assert.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as PtyHost from '../PtyHost/PtyHost.js'
+import { VError } from '../VError/VError.js'
+
+export const state = {
+  socketMap: Object.create(null),
+}
+
+export const create = async (socket, id, cwd) => {
+  try {
+    console.log({ socket, id, cwd })
+    Assert.object(socket)
+    Assert.number(id)
+    Assert.string(cwd)
+    // TODO dispose entry
+    state.socketMap[id] = socket
+    const ptyHost = await PtyHost.getOrCreate()
+
+    const handleMessage = (message) => {
+      socket.send(message)
+    }
+    const handleClose = () => {
+      // socket.off('close', handleClose)
+      ptyHost.off('message', handleMessage)
+      ptyHost.dispose()
+    }
+    ptyHost.on('message', handleMessage)
+    socket.on('close', handleClose)
+
+    // TODO use invoke
+    ptyHost.send({
+      jsonrpc: JsonRpcVersion.Two,
+      method: 'Terminal.create',
+      params: [id, cwd],
+    })
+  } catch (error) {
+    throw new VError(error, \`Failed to create terminal\`)
+  }
+}
+
+export const write = (id, data) => {
+  Assert.number(id)
+  Assert.string(data)
+  const ptyHost = PtyHost.getCurrentInstance()
+  if (!ptyHost) {
+    console.log('[shared-process] pty host not ready')
+    return
+  }
+  // TODO should use invoke
+  ptyHost.send({
+    jsonrpc: JsonRpcVersion.Two,
+    method: 'Terminal.write',
+    params: [id, data],
+  })
+}
+
+export const resize = (state, columns, rows) => {
+  // state.pty.resize(columns, rows)
+}
+
+export const dispose = async (id) => {
+  const ptyHost = await PtyHost.getOrCreate()
+  // TODO use invoke
+  ptyHost.send({
+    jsonrpc: JsonRpcVersion.Two,
+    method: 'Terminal.dispose',
+    params: [id],
+  })
+}
+
+export const disposeAll = () => {
+  PtyHost.disposeAll()
+}
+`
+  })
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: 'Failed to load command Search.searchFile: CommandNotFoundError: command Search.saerchFile not found in shared process',
+    stack: `    at getModuleId (test:///test/packages/shared-process/src/parts/ModuleMap/ModuleMap.js:147:13)
+    at loadCommand (test:///test/packages/shared-process/src/parts/Command/Command.js:46:35)
+    at execute (test:///test/packages/shared-process/src/parts/Command/Command.js:75:10)
+    at getResponse (test:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:23)
+    at WebSocket.handleMessage (test:///test/packages/shared-process/src/parts/Socket/Socket.js:27:40)`,
+    codeFrame: `  145 |       return ModuleId.InstallExtension
+  146 |     default:
+> 147 |       throw new CommandNotFoundError(commandId)
+      |             ^
+  148 |   }
+  149 | }
+  150 |`,
+    type: 'VError',
+    code: 'E_COMMAND_NOT_FOUND',
+  })
+})
