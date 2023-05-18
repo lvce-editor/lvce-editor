@@ -656,11 +656,11 @@ export const getModuleId = (commandId) => {
 test('prepare - terminal error', async () => {
   const error = new VError(`Failed to create terminal: AssertionError: expected value to be of type object`)
   error.stack = `VError: Failed to create terminal: AssertionError: expected value to be of type object
-    at Module.object (file:///test/packages/shared-process/src/parts/Assert/Assert.js:29:11)
-    at Object.create [as Terminal.create] (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:12:12)
-    at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
-    at async Module.getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:9:9)
-    at async handleJsonRpcMessage (file:///test/packages/shared-process/src/parts/HandleIpc/HandleIpc.js:12:24)`
+    at Module.object (test:///test/packages/shared-process/src/parts/Assert/Assert.js:29:11)
+    at Object.create [as Terminal.create] (test:///test/packages/shared-process/src/parts/Terminal/Terminal.js:12:12)
+    at executeCommandAsync (test:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
+    at async Module.getResponse (test:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:9:9)
+    at async handleJsonRpcMessage (test:///test/packages/shared-process/src/parts/HandleIpc/HandleIpc.js:12:24)`
   // @ts-ignore
   fs.readFileSync.mockImplementation(() => {
     return `import * as Assert from '../Assert/Assert.js'
@@ -741,8 +741,8 @@ export const disposeAll = () => {
   const prettyError = PrettyError.prepare(error)
   expect(prettyError).toEqual({
     message: 'Failed to create terminal: AssertionError: expected value to be of type object',
-    stack: `    at Terminal.create (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:12:12)
-    at async handleJsonRpcMessage (file:///test/packages/shared-process/src/parts/HandleIpc/HandleIpc.js:12:24)`,
+    stack: `    at Terminal.create (test:///test/packages/shared-process/src/parts/Terminal/Terminal.js:12:12)
+    at async handleJsonRpcMessage (test:///test/packages/shared-process/src/parts/HandleIpc/HandleIpc.js:12:24)`,
     codeFrame: `  10 | export const create = async (socket, id, cwd) => {
   11 |   try {
 > 12 |     Assert.object(socket)
