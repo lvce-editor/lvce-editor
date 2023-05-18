@@ -7,9 +7,9 @@ const handleJsonRpcResult = (message) => {
 }
 
 export const handleIpc = (ipc) => {
-  const handleJsonRpcMessage = async (message, handle) => {
+  const handleJsonRpcMessage = async (message) => {
     if (message.method) {
-      const response = await GetResponse.getResponse(message, handle)
+      const response = await GetResponse.getResponse(message, ipc)
       ipc.send(response)
     } else {
       // TODO handle error
@@ -17,12 +17,12 @@ export const handleIpc = (ipc) => {
     }
   }
 
-  const handleMessageFromParentProcess = async (message, handle) => {
+  const handleMessageFromParentProcess = async (message) => {
     if (message.result) {
       return handleJsonRpcResult(message)
     }
     if (message.method) {
-      return handleJsonRpcMessage(message, handle)
+      return handleJsonRpcMessage(message)
     }
     console.warn('unknown message', message)
   }
