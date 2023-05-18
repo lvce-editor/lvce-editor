@@ -2,7 +2,6 @@ import { codeFrameColumns } from '@babel/code-frame'
 import { LinesAndColumns } from 'lines-and-columns'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { AssertionError } from '../AssertionError/AssertionError.js'
 import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
@@ -61,13 +60,6 @@ const prepareModuleNotFoundError = (error) => {
   }
 }
 
-const getStackLinesToCut = (error) => {
-  if (error instanceof AssertionError) {
-    return 1
-  }
-  return 0
-}
-
 export const prepare = (error) => {
   if (error && error.code === ErrorCodes.ERR_MODULE_NOT_FOUND) {
     return prepareModuleNotFoundError(error)
@@ -79,8 +71,7 @@ export const prepare = (error) => {
       error = cause
     }
   }
-  const linesToCut = getStackLinesToCut(error)
-  const lines = CleanStack.cleanStack(error.stack).slice(linesToCut)
+  const lines = CleanStack.cleanStack(error.stack)
   const file = lines[0]
   let codeFrame = ''
   if (error.codeFrame) {

@@ -655,9 +655,9 @@ export const getModuleId = (commandId) => {
 
 test('prepare - terminal error', async () => {
   const error = new VError(`Failed to create terminal: AssertionError: expected value to be of type object`)
-  error.stack = ` VError: Failed to create terminal: AssertionError: expected value to be of type object
+  error.stack = `VError: Failed to create terminal: AssertionError: expected value to be of type object
     at Module.object (file:///test/packages/shared-process/src/parts/Assert/Assert.js:29:11)
-    at Object.create [as Terminal.create] (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:13:12)
+    at Object.create [as Terminal.create] (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:12:12)
     at executeCommandAsync (file:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
     at async Module.getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:9:9)
     at async handleJsonRpcMessage (file:///test/packages/shared-process/src/parts/HandleIpc/HandleIpc.js:12:24)`
@@ -674,7 +674,6 @@ export const state = {
 
 export const create = async (socket, id, cwd) => {
   try {
-    console.log({ socket, id, cwd })
     Assert.object(socket)
     Assert.number(id)
     Assert.string(cwd)
@@ -741,20 +740,16 @@ export const disposeAll = () => {
   })
   const prettyError = PrettyError.prepare(error)
   expect(prettyError).toEqual({
-    message: 'Failed to load command Search.searchFile: CommandNotFoundError: command Search.saerchFile not found in shared process',
-    stack: `    at getModuleId (test:///test/packages/shared-process/src/parts/ModuleMap/ModuleMap.js:147:13)
-    at loadCommand (test:///test/packages/shared-process/src/parts/Command/Command.js:46:35)
-    at execute (test:///test/packages/shared-process/src/parts/Command/Command.js:75:10)
-    at getResponse (test:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:23)
-    at WebSocket.handleMessage (test:///test/packages/shared-process/src/parts/Socket/Socket.js:27:40)`,
-    codeFrame: `  145 |       return ModuleId.InstallExtension
-  146 |     default:
-> 147 |       throw new CommandNotFoundError(commandId)
-      |             ^
-  148 |   }
-  149 | }
-  150 |`,
+    message: 'Failed to create terminal: AssertionError: expected value to be of type object',
+    stack: `    at Terminal.create (file:///test/packages/shared-process/src/parts/Terminal/Terminal.js:12:12)
+    at async handleJsonRpcMessage (file:///test/packages/shared-process/src/parts/HandleIpc/HandleIpc.js:12:24)`,
+    codeFrame: `  10 | export const create = async (socket, id, cwd) => {
+  11 |   try {
+> 12 |     Assert.object(socket)
+     |            ^
+  13 |     Assert.number(id)
+  14 |     Assert.string(cwd)
+  15 |     // TODO dispose entry`,
     type: 'VError',
-    code: 'E_COMMAND_NOT_FOUND',
   })
 })
