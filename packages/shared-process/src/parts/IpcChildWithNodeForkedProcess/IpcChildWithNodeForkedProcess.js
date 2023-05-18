@@ -26,6 +26,8 @@ export const wrap = (process) => {
           listener(actualData)
         }
         this.process.on(event, wrappedListener)
+      } else if (event === 'close') {
+        this.process.on('close', listener)
       } else {
         throw new Error('unsupported event type')
       }
