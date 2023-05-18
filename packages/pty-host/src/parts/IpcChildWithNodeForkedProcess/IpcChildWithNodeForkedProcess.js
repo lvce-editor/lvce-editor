@@ -1,6 +1,8 @@
+import { IpcError } from '../IpcError/IpcError.js'
+
 export const listen = async () => {
   if (!process.send) {
-    throw new Error('process ipc is not available')
+    throw new IpcError('process ipc is not available')
   }
   process.send('ready')
   return process
