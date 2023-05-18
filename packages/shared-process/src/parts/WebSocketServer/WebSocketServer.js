@@ -1,5 +1,6 @@
 import { Buffer } from 'node:buffer'
 import * as _ws from 'ws'
+import * as IsSocket from '../IsSocket/IsSocket.js'
 
 // workaround for jest or node bug
 const WebSocketServer = _ws.WebSocketServer
@@ -14,11 +15,15 @@ const webSocketServer = new WebSocketServer({
   // perMessageDeflate: true
 })
 
-export const handleUpgrade = (request, socket) => {
-  return new Promise((resolve, reject) => {
+export const handleUpgrade = async (request, socket) => {
+  if (!IsSocket.isSocket(socket)) {
+    throw new TypeError(`socket must be of type Socket`)
+  }
+  const webSocket = await new Promise((resolve, reject) => {
     const upgradeCallback = (ws) => {
       resolve(ws)
     }
     webSocketServer.handleUpgrade(request, socket, Buffer.alloc(0), upgradeCallback)
   })
+  return webSocket
 }
