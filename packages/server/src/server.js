@@ -610,7 +610,6 @@ const handleProcessExit = (code) => {
 
 const handleAppReady = () => {
   if (process.send) {
-    console.log('send ready')
     process.send('ready')
   } else {
     console.info(`[server] listening on http://localhost:${PORT}`)

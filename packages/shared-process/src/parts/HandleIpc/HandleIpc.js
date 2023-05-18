@@ -22,7 +22,7 @@ export const handleIpc = (ipc) => {
       return handleJsonRpcResult(message)
     }
     if (message.method) {
-      return handleJsonRpcMessage(message, ipc)
+      return handleJsonRpcMessage(message)
     }
     console.warn('unknown message', message)
   }
