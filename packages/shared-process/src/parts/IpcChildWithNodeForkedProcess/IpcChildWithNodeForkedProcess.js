@@ -6,11 +6,29 @@ export const listen = async () => {
   return process
 }
 
+const getActualData = (message, handle) => {
+  if (handle) {
+    return {
+      ...message,
+      params: [...message.params, handle],
+    }
+  }
+  return message
+}
+
 export const wrap = (process) => {
   return {
     process,
     on(event, listener) {
-      this.process.on(event, listener)
+      if (event === 'message') {
+        const wrappedListener = (event, handle) => {
+          const actualData = getActualData(event, handle)
+          listener(actualData)
+        }
+        this.process.on(event, wrappedListener)
+      } else {
+        throw new Error('unsupported event type')
+      }
     },
     off(event, listener) {
       this.process.off(event, listener)
