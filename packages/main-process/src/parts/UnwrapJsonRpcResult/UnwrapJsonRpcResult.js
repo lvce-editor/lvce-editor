@@ -1,6 +1,6 @@
 const RestoreJsonRpcError = require('../RestoreJsonRpcError/RestoreJsonRpcError.js')
 
-exports.unwrapResult = (responseMessage) => {
+exports.unwrapJsonRpcResult = (responseMessage) => {
   if ('error' in responseMessage) {
     const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
     throw restoredError
