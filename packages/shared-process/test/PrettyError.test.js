@@ -635,7 +635,7 @@ export const getModuleId = (commandId) => {
   })
   const prettyError = PrettyError.prepare(error)
   expect(prettyError).toEqual({
-    message: 'Failed to load command Search.searchFile: CommandNotFoundError: command Search.saerchFile not found',
+    message: 'Failed to load command Search.searchFile: CommandNotFoundError: command Search.saerchFile not found in shared process',
     stack: `    at getModuleId (test:///test/packages/shared-process/src/parts/ModuleMap/ModuleMap.js:147:13)
     at loadCommand (test:///test/packages/shared-process/src/parts/Command/Command.js:46:35)
     at execute (test:///test/packages/shared-process/src/parts/Command/Command.js:75:10)
