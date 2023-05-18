@@ -22,6 +22,8 @@ export const wrap = (messagePort) => {
           listener(actualData)
         }
         this.messagePort.on(event, wrappedListener)
+      } else if (event === 'close') {
+        this.messagePort.on('close', listener)
       } else {
         throw new Error('unsupported event type')
       }
