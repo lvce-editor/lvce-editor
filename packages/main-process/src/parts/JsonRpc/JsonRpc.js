@@ -19,7 +19,7 @@ exports.invoke = async (ipc, method, ...params) => {
     id,
   })
   const responseMessage = await promise
-  const result = UnwrapJsonRpcResult.unwrapResult(responseMessage)
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
   return result
 }
 
@@ -35,6 +35,6 @@ exports.invokeAndTransfer = async (ipc, transfer, method, ...params) => {
     transfer
   )
   const responseMessage = await promise
-  const result = UnwrapJsonRpcResult.unwrapResult(responseMessage)
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
   return result
 }
