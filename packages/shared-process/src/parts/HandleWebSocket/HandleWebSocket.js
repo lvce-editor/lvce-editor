@@ -3,19 +3,21 @@ import * as HandleWebSocketModule from '../HandleWebSocketModule/HandleWebSocket
 import { VError } from '../VError/VError.js'
 
 export const handleWebSocket = async (handle, message) => {
-  Assert.object(message)
-  Assert.object(handle)
-  const headers = message.headers
-  if (!headers) {
-    throw new VError('missing websocket headers')
-  }
-  const protocol = headers['sec-websocket-protocol']
-  if (!protocol) {
-    throw new VError('missing sec websocket protocol header')
-  }
   try {
+    Assert.object(message)
+    Assert.object(handle)
+    const headers = message.headers
+    if (!headers) {
+      throw new VError('missing websocket headers')
+    }
+    const protocol = headers['sec-websocket-protocol']
+    if (!protocol) {
+      throw new VError('missing sec websocket protocol header')
+    }
+    handle.pause()
     const module = await HandleWebSocketModule.load(protocol)
     await module.handleWebSocket(message, handle, protocol)
+    handle.resume()
   } catch (error) {
     try {
       handle.destroy()
