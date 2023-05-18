@@ -2,7 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as HandleWebSocketModule from '../HandleWebSocketModule/HandleWebSocketModule.js'
 import { VError } from '../VError/VError.js'
 
-export const handleWebSocket = async (handle, message) => {
+export const handleWebSocket = async (message, handle) => {
   Assert.object(message)
   Assert.object(handle)
   const headers = message.headers
