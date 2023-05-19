@@ -22,7 +22,6 @@ test('cleanStack - remove Module prefix', () => {
     at async Module.getResponse (file:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:21:9)
     at async WebSocket.handleMessage (file:///test/packages/shared-process/src/parts/Socket/Socket.js:32:22)`
   expect(CleanStack.cleanStack(stack)).toEqual([
-    '    at string (file:///test/packages/shared-process/src/parts/Assert/Assert.js:50:11)',
     '    at ExtensionHost.getColorThemeJson (file:///test/packages/shared-process/src/parts/ExtensionManagement/ExtensionManagementColorTheme.js:32:10)',
   ])
 })

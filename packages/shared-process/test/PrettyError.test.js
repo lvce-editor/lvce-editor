@@ -652,3 +652,104 @@ export const getModuleId = (commandId) => {
     code: 'E_COMMAND_NOT_FOUND',
   })
 })
+
+test('prepare - terminal error', async () => {
+  const error = new VError(`Failed to create terminal: AssertionError: expected value to be of type object`)
+  error.stack = `VError: Failed to create terminal: AssertionError: expected value to be of type object
+    at Module.object (test:///test/packages/shared-process/src/parts/Assert/Assert.js:29:11)
+    at Object.create [as Terminal.create] (test:///test/packages/shared-process/src/parts/Terminal/Terminal.js:12:12)
+    at executeCommandAsync (test:///test/packages/shared-process/src/parts/Command/Command.js:68:33)
+    at async Module.getResponse (test:///test/packages/shared-process/src/parts/GetResponse/GetResponse.js:9:9)
+    at async handleJsonRpcMessage (test:///test/packages/shared-process/src/parts/HandleIpc/HandleIpc.js:12:24)`
+  // @ts-ignore
+  fs.readFileSync.mockImplementation(() => {
+    return `import * as Assert from '../Assert/Assert.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as PtyHost from '../PtyHost/PtyHost.js'
+import { VError } from '../VError/VError.js'
+
+export const state = {
+  socketMap: Object.create(null),
+}
+
+export const create = async (socket, id, cwd) => {
+  try {
+    Assert.object(socket)
+    Assert.number(id)
+    Assert.string(cwd)
+    // TODO dispose entry
+    state.socketMap[id] = socket
+    const ptyHost = await PtyHost.getOrCreate()
+
+    const handleMessage = (message) => {
+      socket.send(message)
+    }
+    const handleClose = () => {
+      // socket.off('close', handleClose)
+      ptyHost.off('message', handleMessage)
+      ptyHost.dispose()
+    }
+    ptyHost.on('message', handleMessage)
+    socket.on('close', handleClose)
+
+    // TODO use invoke
+    ptyHost.send({
+      jsonrpc: JsonRpcVersion.Two,
+      method: 'Terminal.create',
+      params: [id, cwd],
+    })
+  } catch (error) {
+    throw new VError(error, \`Failed to create terminal\`)
+  }
+}
+
+export const write = (id, data) => {
+  Assert.number(id)
+  Assert.string(data)
+  const ptyHost = PtyHost.getCurrentInstance()
+  if (!ptyHost) {
+    console.log('[shared-process] pty host not ready')
+    return
+  }
+  // TODO should use invoke
+  ptyHost.send({
+    jsonrpc: JsonRpcVersion.Two,
+    method: 'Terminal.write',
+    params: [id, data],
+  })
+}
+
+export const resize = (state, columns, rows) => {
+  // state.pty.resize(columns, rows)
+}
+
+export const dispose = async (id) => {
+  const ptyHost = await PtyHost.getOrCreate()
+  // TODO use invoke
+  ptyHost.send({
+    jsonrpc: JsonRpcVersion.Two,
+    method: 'Terminal.dispose',
+    params: [id],
+  })
+}
+
+export const disposeAll = () => {
+  PtyHost.disposeAll()
+}
+`
+  })
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: 'Failed to create terminal: AssertionError: expected value to be of type object',
+    stack: `    at Terminal.create (test:///test/packages/shared-process/src/parts/Terminal/Terminal.js:12:12)
+    at async handleJsonRpcMessage (test:///test/packages/shared-process/src/parts/HandleIpc/HandleIpc.js:12:24)`,
+    codeFrame: `  10 | export const create = async (socket, id, cwd) => {
+  11 |   try {
+> 12 |     Assert.object(socket)
+     |            ^
+  13 |     Assert.number(id)
+  14 |     Assert.string(cwd)
+  15 |     // TODO dispose entry`,
+    type: 'VError',
+  })
+})

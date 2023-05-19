@@ -7,6 +7,7 @@ const RE_GET_RESPONSE = /^\s*at async getResponse/
 const RE_WEBSOCKET_HANDLE_MESSAGE = /^\s*at async WebSocket.handleMessage/
 const RE_EXECUTE_COMMAND_ASYNC = /^\s*at executeCommandAsync/
 const RE_HANDLE_OTHER_MESSAGES_FROM_MESSAGE_PORT = /^\s*at async MessagePort\.handleOtherMessagesFromMessagePort/
+const RE_ASSERT = /^\s*at .*\/Assert\.js/
 
 const isInternalLine = (line) => {
   return line.includes('node:') || RE_AT_PROMISE_INDEX.test(line) || line.includes('node_modules/ws')
@@ -18,6 +19,9 @@ const isRelevantLine = (line) => {
 
 const isApplicationUsefulLine = (line, index) => {
   if (index === 0) {
+    if (RE_ASSERT.test(line)) {
+      return false
+    }
     return true
   }
   if (RE_GET_RESPONSE.test(line)) {
