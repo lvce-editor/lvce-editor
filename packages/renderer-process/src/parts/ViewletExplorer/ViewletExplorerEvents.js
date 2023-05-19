@@ -165,6 +165,7 @@ export const handleClick = (event) => {
 
 export const handlePointerDown = (event) => {
   const { button, clientX, clientY } = event
+  Event.preventDefault(event)
   const uid = ComponentUid.fromEvent(event)
   ViewletExplorerFunctions.handlePointerDown(uid, button, clientX, clientY)
 }
