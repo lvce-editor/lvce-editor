@@ -9,4 +9,5 @@ export const commandMap = {
   'HandleWebSocket.handleWebSocket': HandleWebSocket.handleWebSocket,
   'Terminal.create': PtyController.create,
   'Terminal.write': PtyController.write,
+  'Terminal.dispose': PtyController.dispose,
 }

@@ -1,10 +1,31 @@
 import * as Assert from '../Assert/Assert.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as PtyHost from '../PtyHost/PtyHost.js'
+import * as TerminalState from '../TerminalState/TerminalState.js'
 import { VError } from '../VError/VError.js'
 
-export const state = {
-  socketMap: Object.create(null),
+const createTerminal = (ptyHost, socket) => {
+  const handleMessage = (message) => {
+    socket.send(message)
+  }
+  const handleClose = () => {
+    // socket.off('close', handleClose)
+    ptyHost.off('message', handleMessage)
+    ptyHost.dispose()
+  }
+  const dispose = () => {
+    ptyHost.off('message', handleMessage)
+    socket.off('close', handleClose)
+  }
+  ptyHost.on('message', handleMessage)
+  socket.on('close', handleClose)
+  return {
+    ptyHost,
+    socket,
+    handleMessage,
+    handleClose,
+    dispose,
+  }
 }
 
 export const create = async (socket, id, cwd) => {
@@ -12,21 +33,10 @@ export const create = async (socket, id, cwd) => {
     Assert.object(socket)
     Assert.number(id)
     Assert.string(cwd)
-    // TODO dispose entry
-    state.socketMap[id] = socket
+    // TODO race condition because of await
     const ptyHost = await PtyHost.getOrCreate()
-
-    const handleMessage = (message) => {
-      socket.send(message)
-    }
-    const handleClose = () => {
-      // socket.off('close', handleClose)
-      ptyHost.off('message', handleMessage)
-      ptyHost.dispose()
-    }
-    ptyHost.on('message', handleMessage)
-    socket.on('close', handleClose)
-
+    const terminal = createTerminal(ptyHost, socket)
+    TerminalState.add(id, terminal)
     // TODO use invoke
     ptyHost.send({
       jsonrpc: JsonRpcVersion.Two,
@@ -59,6 +69,9 @@ export const resize = (state, columns, rows) => {
 }
 
 export const dispose = async (id) => {
+  const terminal = TerminalState.get(id)
+  terminal.dispose()
+  TerminalState.remove(id)
   const ptyHost = await PtyHost.getOrCreate()
   // TODO use invoke
   ptyHost.send({

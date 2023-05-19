@@ -33,7 +33,8 @@ export const write = (id, data) => {
 }
 
 export const dispose = (id) => {
-  const pty = state.ptyMap[id]
+  const { ptyMap } = state
+  const pty = ptyMap[id]
   if (!pty) {
     throw new Error(`pty ${id} not found`)
   }
