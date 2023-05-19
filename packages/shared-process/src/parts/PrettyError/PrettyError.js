@@ -1,20 +1,13 @@
 import { codeFrameColumns } from '@babel/code-frame'
 import { LinesAndColumns } from 'lines-and-columns'
 import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as GetActualPath from '../GetActualPath/GetActualPath.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Json from '../Json/Json.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-
-const getActualPath = (fileUri) => {
-  if (fileUri.startsWith('file://')) {
-    return fileURLToPath(fileUri)
-  }
-  return fileUri
-}
 
 const RE_MODULE_NOT_FOUND_STACK = /Cannot find package '([^']+)' imported from (.+)$/
 
@@ -83,7 +76,7 @@ export const prepare = (error) => {
     }
     if (match) {
       const [_, path, line, column] = match
-      const actualPath = getActualPath(path)
+      const actualPath = GetActualPath.getActualPath(path)
       const rawLines = readFileSync(actualPath, EncodingType.Utf8)
       const location = {
         start: {

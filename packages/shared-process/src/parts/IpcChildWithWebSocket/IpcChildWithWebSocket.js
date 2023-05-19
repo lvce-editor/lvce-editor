@@ -30,6 +30,9 @@ export const wrap = (webSocket) => {
           }
           webSocket.on('message', wrappedListener)
           break
+        case 'close':
+          webSocket.on('close', listener)
+          break
         default:
           throw new Error('unknown event listener type')
       }

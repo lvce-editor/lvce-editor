@@ -12,7 +12,7 @@ export const create = async ({ protocol }) => {
   const webSocket = new WebSocket(wsUrl, [protocol])
   const { type, event } = await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
   if (type === FirstWebSocketEventType.Close) {
-    throw new IpcError(`Failed to create websocket connection: Websocket connection was closed`)
+    throw new IpcError(`Websocket connection was immediately closed`)
   }
   return webSocket
 }

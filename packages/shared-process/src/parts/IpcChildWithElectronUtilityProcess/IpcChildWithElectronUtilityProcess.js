@@ -32,6 +32,8 @@ export const wrap = (parentPort) => {
           listener(actualData)
         }
         this.parentPort.on(event, wrappedListener)
+      } else if (event === 'close') {
+        this.parentPort.on('close', listener)
       } else {
         throw new Error('unsupported event type')
       }
