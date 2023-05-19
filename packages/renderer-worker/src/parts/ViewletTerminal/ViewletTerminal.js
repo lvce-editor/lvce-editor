@@ -42,7 +42,9 @@ export const write = async (state, input) => {
   await Terminal.write(uid, input)
 }
 
-export const dispose = (state) => {
+export const dispose = async (state) => {
+  const { uid } = state
+  await Terminal.dispose(uid)
   return {
     ...state,
     disposed: true,
