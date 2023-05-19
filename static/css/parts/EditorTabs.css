@@ -26,6 +26,7 @@
   contain: strict;
   height: 100%;
   flex-shrink: 0;
+  padding-left: 5px;
 }
 
 .MainTabPreview {
