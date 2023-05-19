@@ -87,9 +87,9 @@ test('resize', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Terminal.resize', 0, 7, 1)
 })
 
-test('dispose', () => {
+test('dispose', async () => {
   const state = ViewletTerminal.create(1)
-  expect(ViewletTerminal.dispose(state)).toMatchObject({
+  expect(await ViewletTerminal.dispose(state)).toMatchObject({
     disposed: true,
   })
 })
