@@ -929,7 +929,6 @@ const getPathPartChildren = (pathPart) => {
 }
 
 const mergeVisibleWithHiddenItems = (visibleItems, hiddenItems) => {
-  const hiddenItemRoot = hiddenItems[0].path
   const merged = [...hiddenItems]
   const seen = Object.create(null)
   const unique = []
@@ -1045,6 +1044,9 @@ const scrollInto = (index, minLineY, maxLineY) => {
 const revealItemHidden = async (state, uri) => {
   const { root, pathSeparator, items, minLineY, maxLineY } = state
   const pathParts = getPathParts(root, uri, pathSeparator)
+  if (pathParts.length === 0) {
+    return state
+  }
   const pathPartsToReveal = getPathPartsToReveal(root, pathParts, items)
   const pathPartsChildren = await Promise.all(pathPartsToReveal.map(getPathPartChildren))
   const pathPartsChildrenFlat = pathPartsChildren.flat(1)
