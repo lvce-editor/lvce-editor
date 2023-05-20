@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Character from '../Character/Character.js'
 import * as DefaultIcon from '../DefaultIcon/DefaultIcon.js'
 import * as DirentType from '../DirentType/DirentType.js'
@@ -25,6 +26,7 @@ export const state = {
 }
 
 export const getFileNameIcon = (file) => {
+  Assert.string(file)
   const { iconTheme } = state
   const fileNameLower = file.toLowerCase()
   if (!iconTheme) {
