@@ -1,7 +1,10 @@
+import * as Assert from '../Assert/Assert.js'
+import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as DefaultIcon from '../DefaultIcon/DefaultIcon.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
@@ -9,13 +12,11 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
-import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
-import * as Character from '../Character/Character.js'
 
 export const state = {
   seenFiles: [],
@@ -58,6 +59,7 @@ const getIconThemeJson = async (iconThemeId) => {
 }
 
 export const getFileNameIcon = (file) => {
+  Assert.string(file)
   const { iconTheme } = state
   const fileNameLower = file.toLowerCase()
   if (!iconTheme) {
