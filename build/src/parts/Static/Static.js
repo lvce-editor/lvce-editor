@@ -112,14 +112,9 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
     to: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IconTheme/IconTheme.js`,
-    occurrence: `const getIconThemeUrl = (iconThemeId) => {
-  return \`/extensions/builtin.\${iconThemeId}/icon-theme.json\`
-}`,
-    replacement: `const getIconThemeUrl = (iconThemeId) => {
-  const assetDir = Platform.getAssetDir()
-  return \`\${assetDir}/icon-themes/\${iconThemeId}.json\`
-}`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetIconThemeJson/GetIconThemeJson.js`,
+    occurrence: `return \`\${assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
+    replacement: `return \`\${assetDir}/icon-themes/\${iconThemeId}.json\``,
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IpcParentWithNode/IpcParentWithNode.js`,
@@ -148,16 +143,9 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
   })
   // TODO enable loading themes from extension folder in production, just like language basics extensions
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js`,
-    occurrence: `const getColorThemeUrlWeb = (colorThemeId) => {
-  return \`/extensions/builtin.theme-\${colorThemeId}/color-theme.json\`
-}`,
-
-    replacement: `const getColorThemeUrlWeb = (colorThemeId) => {
-  const assetDir = Platform.getAssetDir()
-  return \`\${assetDir}/themes/\${colorThemeId}.json\`
-}
-`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetColorThemeJson/GetColorThemeJson.js`,
+    occurrence: `return \`\${assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
+    replacement: `return \`\${assetDir}/themes/\${colorThemeId}.json\``,
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,

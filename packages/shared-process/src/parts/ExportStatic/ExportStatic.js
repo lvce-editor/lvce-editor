@@ -119,13 +119,8 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
-    `getColorThemeUrlWeb = (colorThemeId) => {
-      return \`/extensions/builtin.theme-\${colorThemeId}/color-theme.json\`;
-    };`,
-    `const getColorThemeUrlWeb = (colorThemeId) => {
-      const assetDir = getAssetDir()
-      return \`\${assetDir}/themes/\${colorThemeId}.json\`
-    }`
+    `return \`\${assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
+    `return \`\${assetDir}/themes/\${colorThemeId}.json\``
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'extension-host-worker', 'dist', 'extensionHostWorkerMain.js'),
@@ -134,13 +129,8 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
-    `getIconThemeUrl = (iconThemeId) => {
-      return \`/extensions/builtin.\${iconThemeId}/icon-theme.json\`;
-    }`,
-    `getIconThemeUrl = (iconThemeId) => {
-      const assetDir = getAssetDir()
-      return \`\${assetDir}/icon-themes/\${iconThemeId}.json\`
-    }`
+    `return \`\${assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
+    `return \`\${assetDir}/icon-themes/\${iconThemeId}.json\``
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
