@@ -18,13 +18,13 @@ export const getActions = () => {
       type: ActionType.Button,
       id: UiStrings.Refresh,
       icon: Icon.Refresh,
-      command: 'Search.refresh',
+      command: 'refresh',
     },
     {
       type: ActionType.Button,
       id: UiStrings.ClearSearchResults,
       icon: Icon.ClearAll,
-      command: 'Search.clearSearchResults',
+      command: 'clearSearchResults',
     },
     {
       type: ActionType.Button,

@@ -45,3 +45,18 @@ export const loadContent = async (state) => {
     terminalTabsEnabled,
   }
 }
+
+export const addTerminal = (state) => {
+  const { tabs } = state
+  const newTab = {
+    label: `tab ${tabs.length + 1}`,
+    icon: Icon.TerminalBash,
+  }
+  const newTabs = [...tabs, newTab]
+  const newSelectedIndex = newTabs.length - 1
+  return {
+    ...state,
+    tabs: newTabs,
+    selectedIndex: newSelectedIndex,
+  }
+}

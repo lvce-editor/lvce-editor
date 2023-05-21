@@ -17,21 +17,25 @@ export const getActions = () => {
       type: ActionType.Button,
       id: UiStrings.ViewAsTree,
       icon: Icon.ListFlat,
+      command: '',
     },
     {
       type: ActionType.Button,
       id: UiStrings.CreatePullRequest,
       icon: Icon.Blank,
+      command: '',
     },
     {
       type: ActionType.Button,
       id: UiStrings.CommitAndPush,
       icon: Icon.Check,
+      command: '',
     },
     {
       type: ActionType.Button,
       id: UiStrings.Refresh,
       icon: Icon.Refresh,
+      command: '',
     },
   ]
 }

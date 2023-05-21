@@ -21,6 +21,7 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
+    actions: [],
   }
 }
 
@@ -62,6 +63,7 @@ export const contentLoaded = (state) => {
   const { currentViewletId, uid } = state
   const commands = []
   const actions = ViewletActions.getActions(currentViewletId)
+  state.actions = actions
   commands.push(['Viewlet.send', uid, 'setActions', actions])
   return commands
 }
@@ -145,3 +147,5 @@ export const selectIndex = async (state, index) => {
     selectedIndex: index,
   }
 }
+
+export * from '../HandleClickAction/HandleClickAction.js'
