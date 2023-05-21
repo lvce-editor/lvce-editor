@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as Icon from '../Icon/Icon.js'
 
 export const create = (id, uri, x, y, width, height) => {
   Assert.number(id)
@@ -37,6 +38,7 @@ export const loadContent = async (state) => {
     tabs: [
       {
         label: 'tab 1',
+        icon: Icon.TerminalBash,
       },
     ],
     selectedIndex: 0,

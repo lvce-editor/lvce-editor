@@ -2,10 +2,26 @@
   position: absolute;
   z-index: 1;
   background: var(--PanelBackground);
+  contain: strict;
 }
 
 .TerminalTab {
   padding: 0 10px;
+  contain: strict;
+  height: 20px;
+  display: flex;
+}
+
+.TerminalTabIcon {
+  contain: strict;
+  width: 20px;
+  height: 20px;
+  display: block;
+  background: currentcolor;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: var(--MaskIconSize);
+  -webkit-mask-position: 50% 50%;
+  pointer-events: none;
 }
 
 .TerminalTabSelected {

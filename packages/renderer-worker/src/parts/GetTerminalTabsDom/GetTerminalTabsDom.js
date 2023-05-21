@@ -10,14 +10,22 @@ const getTabClassName = (isSelected) => {
 }
 
 const createTabDom = (tab, isSelected) => {
-  const { label } = tab
+  const { label, icon } = tab
   const className = getTabClassName(isSelected)
   return [
     div(
       {
         className,
+        role: 'listitem',
       },
-      1
+      2
+    ),
+    div(
+      {
+        className: 'TerminalTabIcon',
+        maskImage: icon,
+      },
+      0
     ),
     text(label),
   ]
@@ -36,6 +44,8 @@ export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex) => 
         left: x,
         width,
         height,
+        role: 'list',
+        ariaLabel: 'Terminal tabs',
       },
       tabs.length
     ),
