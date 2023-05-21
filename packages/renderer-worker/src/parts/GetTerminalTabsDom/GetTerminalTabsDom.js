@@ -29,7 +29,6 @@ export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex) => 
   Assert.number(width)
   Assert.number(height)
   Assert.number(selectedIndex)
-  console.log({ x, y, width, height, selectedIndex })
   const dom = [
     div(
       {
