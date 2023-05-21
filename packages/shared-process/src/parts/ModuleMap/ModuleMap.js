@@ -173,6 +173,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleNodeMessagePort
     case 'HandleElectronMessagePort.handleElectronMessagePort':
       return ModuleId.HandleElectronMessagePort
+    case 'GetTerminalSpawnOptions.getTerminalSpawnOptions':
+      return ModuleId.GetTerminalSpawnOptions
     default:
       throw new CommandNotFoundError(commandId)
   }

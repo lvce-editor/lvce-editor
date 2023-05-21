@@ -66,6 +66,8 @@ export const load = (moduleId) => {
       return import('../HandleElectronMessagePort/HandleElectronMessagePort.ipc.js')
     case ModuleId.HandleNodeMessagePort:
       return import('../HandleNodeMessagePort/HandleNodeMessagePort.ipc.js')
+    case ModuleId.GetTerminalSpawnOptions:
+      return import('../GetTerminalSpawnOptions/GetTerminalSpawnOptions.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
