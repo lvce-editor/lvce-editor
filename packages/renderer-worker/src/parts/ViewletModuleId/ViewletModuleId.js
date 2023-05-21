@@ -89,3 +89,5 @@ export const TitleBarMenuBar = 'TitleBarMenuBar'
 export const TodoList = 'TodoList'
 
 export const Video = 'Video'
+
+export const Terminals = 'Terminals'

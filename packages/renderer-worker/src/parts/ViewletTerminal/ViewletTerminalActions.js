@@ -7,10 +7,16 @@ import * as Icon from '../Icon/Icon.js'
 const UiStrings = {
   SplitTerminal: 'Split Terminal',
   KillTerminal: 'Kill Terminal',
+  NewTerminal: 'New Terminal',
 }
 
 export const getActions = (state) => {
   return [
+    {
+      type: ActionType.Button,
+      id: UiStrings.NewTerminal,
+      icon: Icon.Add,
+    },
     {
       type: ActionType.Button,
       id: UiStrings.SplitTerminal,
