@@ -3,9 +3,10 @@ const { fileURLToPath } = require('node:url')
 const { LinesAndColumns } = require('lines-and-columns')
 const { readFileSync } = require('node:fs')
 const CleanStack = require('../CleanStack/CleanStack.js')
-const Json = require('../Json/Json.js')
-const JoinLines = require('../JoinLines/JoinLines.js')
+const EncodingType = require('../EncodingType/EncodingType.js')
 const GetNewLineIndex = require('../GetNewLineIndex/GetNewLineIndex.js')
+const JoinLines = require('../JoinLines/JoinLines.js')
+const Json = require('../Json/Json.js')
 
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
@@ -64,7 +65,7 @@ exports.prepare = (error) => {
     if (match) {
       const [_, path, line, column] = match
       const actualPath = getActualPath(path)
-      const rawLines = readFileSync(actualPath, 'utf-8') // TODO handle case when file cannot be found
+      const rawLines = readFileSync(actualPath, EncodingType.Utf8) // TODO handle case when file cannot be found
 
       const location = {
         start: {

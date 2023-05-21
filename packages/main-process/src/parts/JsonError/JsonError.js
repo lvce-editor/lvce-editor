@@ -1,5 +1,5 @@
-import { codeFrameColumns } from '@babel/code-frame'
-import { LinesAndColumns } from 'lines-and-columns'
+const { codeFrameColumns } = require('@babel/code-frame')
+const { LinesAndColumns } = require('lines-and-columns')
 
 // parsing error handling based on https://github.com/sindresorhus/parse-json/blob/main/index.js
 
@@ -11,7 +11,7 @@ const emptyError = {
 
 const RE_POSITION = /in JSON at position (\d+)/
 
-export const getErrorPropsFromError = (error, string, filePath) => {
+exports.getErrorPropsFromError = (error, string, filePath) => {
   const indexMatch = error.message.match(RE_POSITION)
   if (indexMatch && indexMatch.length > 0) {
     const lines = new LinesAndColumns(string)
@@ -23,7 +23,7 @@ export const getErrorPropsFromError = (error, string, filePath) => {
       const codeFrame = codeFrameColumns(string, { start: { line, column } }, { highlightCode: false })
       return {
         codeFrame,
-        message: 'Json Parsing Error',
+        message: `Json Parsing Error ${error.message}`,
         stack: `    at ${filePath}:${line}:${column}`,
       }
     }
@@ -56,11 +56,11 @@ export const getErrorPropsFromError = (error, string, filePath) => {
   }
 }
 
-export const getErrorProps = (string, filePath) => {
+exports.getErrorProps = (string, filePath) => {
   try {
     JSON.parse(string)
     return emptyError
   } catch (error) {
-    return getErrorPropsFromError(error, string, filePath)
+    return exports.getErrorPropsFromError(error, string, filePath)
   }
 }
