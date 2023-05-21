@@ -38,7 +38,7 @@ export const loadContent = async (state) => {
     tabs: [
       {
         label: 'tab 1',
-        icon: Icon.TerminalBash,
+        icon: Icon.Terminal,
       },
     ],
     selectedIndex: 0,

@@ -46,6 +46,7 @@ export const SymbolProperty = `${assetDir}/icons/symbol-property.svg`
 export const SymbolValue = `${assetDir}/icons/symbol-enum.svg`
 export const SymbolVariable = `${assetDir}/icons/symbol-variable.svg`
 export const TerminalBash = `${assetDir}/icons/terminal-bash.svg`
+export const Terminal = `${assetDir}/icons/terminal.svg`
 export const Trash = `${assetDir}/icons/trash.svg`
 export const TriangleDown = `${assetDir}/icons/triangle-down.svg`
 export const TriangleLeft = `${assetDir}/icons/triangle-left.svg`
