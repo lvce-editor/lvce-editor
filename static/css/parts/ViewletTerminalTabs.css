@@ -10,20 +10,25 @@
   contain: strict;
   height: 20px;
   display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .TerminalTabIcon {
   contain: strict;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   display: block;
   background: currentcolor;
   -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: var(--MaskIconSize);
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 16px;
+  mask-size: 16px;
   -webkit-mask-position: 50% 50%;
+  mask-position: 50% 50%;
   pointer-events: none;
 }
 
 .TerminalTabSelected {
-  background: var(--ListActiveSelectionBackground);
+  background: var(--ListInactiveSelectionBackground, rgba(59, 71, 66, 0.5));
 }
