@@ -3,13 +3,13 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 let _separateConnection = false
 
-export const create = async (separateConnection, id, cwd) => {
+export const create = async (separateConnection, id, cwd, command, args) => {
   _separateConnection = separateConnection
   if (separateConnection) {
     await TerminalProcess.listen()
-    await TerminalProcess.invoke('Terminal.create', id, cwd)
+    await TerminalProcess.invoke('Terminal.create', id, cwd, command, args)
   } else {
-    await SharedProcess.invoke('Terminal.create', id, cwd)
+    await SharedProcess.invoke('Terminal.create', id, cwd, command, args)
   }
 }
 

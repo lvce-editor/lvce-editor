@@ -20,6 +20,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -28,9 +29,19 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/GetTerminalSpawnOptions/GetTerminalSpawnOptions.js', () => {
+  return {
+    getTerminalSpawnOptions() {
+      return {
+        command: 'bash',
+        args: ['-i'],
+      }
+    },
+  }
+})
+
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
-
 const ViewletTerminal = await import('../src/parts/ViewletTerminal/ViewletTerminal.js')
 
 test('create', () => {

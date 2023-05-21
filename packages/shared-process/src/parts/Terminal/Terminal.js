@@ -28,7 +28,7 @@ const createTerminal = (ptyHost, socket) => {
   }
 }
 
-export const create = async (socket, id, cwd) => {
+export const create = async (socket, id, cwd, command, args) => {
   try {
     Assert.object(socket)
     Assert.number(id)
@@ -41,7 +41,7 @@ export const create = async (socket, id, cwd) => {
     ptyHost.send({
       jsonrpc: JsonRpcVersion.Two,
       method: 'Terminal.create',
-      params: [id, cwd],
+      params: [id, cwd, command, args],
     })
   } catch (error) {
     throw new VError(error, `Failed to create terminal`)
