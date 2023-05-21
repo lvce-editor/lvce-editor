@@ -371,6 +371,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           append: true,
           focus: false,
           parentId: viewletUid,
+          parentUid: viewletUid,
         }
         const childCommands = await load(childViewlet, false, true, undefined)
         // @ts-ignore
@@ -434,6 +435,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         }
         if (viewlet.append) {
           const parentUid = viewlet.parentUid
+          Assert.number(parentUid)
           allCommands.push([kAppend, parentUid, viewletUid])
         }
         return allCommands
