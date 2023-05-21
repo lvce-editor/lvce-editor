@@ -181,7 +181,7 @@ export const prepare = async (error) => {
   return error
 }
 
-export const print = (error, prefix) => {
+export const print = (error, prefix = '') => {
   if (Platform.isFirefox) {
     // Firefox does not support printing codeframe with error stack
     if (error && error._error) {

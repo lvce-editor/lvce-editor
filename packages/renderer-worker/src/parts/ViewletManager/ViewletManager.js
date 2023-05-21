@@ -391,7 +391,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           }
         } catch (error) {
           const prettyError = await PrettyError.prepare(error)
-          PrettyError.print(prettyError)
+          PrettyError.print(prettyError, '[renderer-worker]: ')
           await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
           extraCommands.push([kCreate, ViewletModuleId.Error, childUid])
           // @ts-ignore

@@ -87,6 +87,6 @@ export const load = (moduleId) => {
     case ViewletModuleId.Terminals:
       return import('../ViewletTerminals/ViewletTerminals.js')
     default:
-      throw new Error(`unknown module ${moduleId}`)
+      throw new Error(`${moduleId} module not found in renderer process`)
   }
 }
