@@ -1,0 +1,13 @@
+.TerminalTabs {
+  position: absolute;
+  z-index: 1;
+  background: var(--PanelBackground);
+}
+
+.TerminalTab {
+  padding: 0 10px;
+}
+
+.TerminalTabSelected {
+  background: var(--ListActiveSelectionBackground);
+}
