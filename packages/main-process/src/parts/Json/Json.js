@@ -8,7 +8,6 @@ exports.parse = async (string, filePath = '') => {
   } catch (error) {
     const JsonError = require('../JsonError/JsonError.js')
     const errorProps = JsonError.getErrorPropsFromError(error, string, filePath)
-    console.log({ errorProps })
     throw new JsonParsingError(errorProps.message, errorProps.codeFrame, errorProps.stack)
   }
 }
