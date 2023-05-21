@@ -85,6 +85,6 @@ export const load = (moduleId) => {
     case ViewletModuleId.Video:
       return import('../ViewletVideo/ViewletVideo.js')
     default:
-      throw new Error(`unknown module ${moduleId}`)
+      throw new Error(`${moduleId} module not found in renderer process`)
   }
 }
