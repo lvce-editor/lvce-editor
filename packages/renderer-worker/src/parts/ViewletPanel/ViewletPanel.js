@@ -38,10 +38,18 @@ const getSavedViewletId = (savedState) => {
   return ViewletModuleId.Problems
 }
 
+const getSelectedIndex = (views, savedViewletId) => {
+  const index = views.indexOf(savedViewletId)
+  if (index === -1) {
+    return 0
+  }
+  return index
+}
+
 export const loadContent = (state, savedState) => {
   const savedViewletId = getSavedViewletId(savedState)
   const views = GetPanelViews.getPanelViews()
-  const selectedIndex = views.indexOf(savedViewletId)
+  const selectedIndex = getSelectedIndex(views, savedViewletId)
   return {
     ...state,
     views,
