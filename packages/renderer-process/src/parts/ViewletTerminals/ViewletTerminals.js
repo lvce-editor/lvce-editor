@@ -5,6 +5,7 @@ export const create = () => {
   $Viewlet.className = 'Viewlet Terminals'
   return {
     $Viewlet,
+    $TerminalTabs: undefined,
   }
 }
 
@@ -12,5 +13,11 @@ export const setTabsDom = (state, dom) => {
   const { $Viewlet } = state
   const $Root = document.createElement('div')
   VirtualDom.renderInto($Root, dom)
-  $Viewlet.append($Root.firstChild)
+  const $TerminalTabs = $Root.firstChild
+  if (state.$TerminalTabs) {
+    state.$TerminalTabs.replaceWith($TerminalTabs)
+  } else {
+    $Viewlet.append($TerminalTabs)
+  }
+  state.$TerminalTabs = $TerminalTabs
 }

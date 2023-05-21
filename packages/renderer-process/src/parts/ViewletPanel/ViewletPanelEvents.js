@@ -12,15 +12,23 @@ export const handleClickMaximize = (event) => {
   ViewletPanelFunctions.toggleMaximize(uid)
 }
 
-export const panelTabsHandleClick = (event) => {
-  const $Target = event.target
+const handleClickTab = (target, uid) => {
+  const index = GetNodeIndex.getNodeIndex(target)
+  ViewletPanelFunctions.selectIndex(uid, index)
+}
+
+const handleClickAction = (target, uid) => {
+  const index = GetNodeIndex.getNodeIndex(target)
+  ViewletPanelFunctions.handleClickAction(uid, index)
+}
+
+export const handleHeaderClick = (event) => {
+  const { target } = event
   const uid = ComponentUid.fromEvent(event)
-  switch ($Target.className) {
-    case 'PanelTab':
-      const index = GetNodeIndex.getNodeIndex($Target)
-      ViewletPanelFunctions.selectIndex(uid, index)
-      break
-    default:
-      break
+  if (target.classList.contains('PanelTab')) {
+    return handleClickTab(target, uid)
+  }
+  if (target.classList.contains('IconButton')) {
+    return handleClickAction(target, uid)
   }
 }
