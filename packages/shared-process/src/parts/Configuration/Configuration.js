@@ -1,6 +1,6 @@
-import { readFile } from 'node:fs/promises'
+import * as Character from '../Character/Character.js'
 import { writeFile } from '../FileSystem/FileSystem.js'
-import * as ReadJson from '../JsonFile/JsonFile.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 
 let settings
 let settingsPromise
@@ -9,7 +9,7 @@ const readSettings = async () => {
   // TODO allow jsonc
   if (!settings) {
     if (!settingsPromise) {
-      settingsPromise = ReadJson.readJson('/tmp/settings.json')
+      settingsPromise = JsonFile.readJson('/tmp/settings.json')
     }
     await settingsPromise
   }
@@ -18,10 +18,7 @@ const readSettings = async () => {
 
 const writeSettings = async () => {
   // TODO jsonc
-  await writeFile(
-    '/tmp/settings.json',
-    JSON.stringify(settings, null, 2) + '\n'
-  )
+  await writeFile('/tmp/settings.json', JSON.stringify(settings, null, 2) + Character.NewLine)
 }
 
 export const get = async (key) => {
