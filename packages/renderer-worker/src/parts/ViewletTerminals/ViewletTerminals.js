@@ -6,6 +6,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const create = (id, uri, x, y, width, height) => {
   Assert.number(id)
@@ -23,7 +24,8 @@ export const create = (id, uri, x, y, width, height) => {
 }
 
 export const getChildren = (state) => {
-  const { x, y, width, height, tabsWidth } = state
+  const { x, y, width, height, tabsWidth, tabs } = state
+  const uid = tabs[0].uid
   return [
     {
       id: ViewletModuleId.Terminal,
@@ -31,18 +33,21 @@ export const getChildren = (state) => {
       y,
       width: width - tabsWidth,
       height,
+      uid,
     },
   ]
 }
 
 export const loadContent = async (state) => {
   const terminalTabsEnabled = Preferences.get('terminal.tabs.enabled')
+
   return {
     ...state,
     tabs: [
       {
         label: 'tab 1',
         icon: Icon.Terminal,
+        uid: Id.create(),
       },
     ],
     selectedIndex: 0,
@@ -51,14 +56,15 @@ export const loadContent = async (state) => {
 }
 
 export const addTerminal = async (state) => {
-  const { tabs, x, y, width, height, uid } = state
+  const { tabs, x, y, width, height, uid, selectedIndex } = state
+  const childUid = Id.create()
   const newTab = {
     label: `tab ${tabs.length + 1}`,
     icon: Icon.Terminal,
+    uid: childUid,
   }
   const newTabs = [...tabs, newTab]
   const newSelectedIndex = newTabs.length - 1
-  const childUid = Id.create()
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
     x,
@@ -74,6 +80,9 @@ export const addTerminal = async (state) => {
     parentId: uid,
   })
   commands.push(['Viewlet.append', uid, childUid])
+  const oldTab = tabs[selectedIndex]
+  const disposeCommands = Viewlet.disposeFunctional(oldTab.uid)
+  commands.push(...disposeCommands)
   await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   return {
     ...state,

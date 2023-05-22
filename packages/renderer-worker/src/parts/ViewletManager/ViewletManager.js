@@ -356,7 +356,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     if (module.getChildren) {
       const children = module.getChildren(newState)
       for (const child of children) {
-        const childUid = Id.create()
+        const childUid = child.uid || Id.create()
         const childId = child.id
         const childViewlet = {
           x: child.x,
