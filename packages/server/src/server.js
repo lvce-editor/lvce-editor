@@ -107,12 +107,24 @@ const textMimeType = {
   '.webp': 'image/webp',
 }
 
+/**
+ * @enum {string}
+ */
 const ErrorCodes = {
   ERR_STREAM_PREMATURE_CLOSE: 'ERR_STREAM_PREMATURE_CLOSE',
   EISDIR: 'EISDIR',
   ECONNRESET: 'ECONNRESET',
   ENOENT: 'ENOENT',
   EADDRINUSE: 'EADDRINUSE',
+}
+
+/**
+ * @enum {string}
+ */
+const CachingHeaders = {
+  Empty: '',
+  NoCache: 'public, max-age=0, must-revalidate',
+  OneYear: 'public, max-age=31536000, immutable',
 }
 
 /**
@@ -155,7 +167,13 @@ const serveStatic = (root, skip = '') =>
       res.writeHead(StatusCode.NotModified)
       return res.end()
     }
-    const cachingHeader = isImmutable && root === STATIC ? 'public, max-age=31536000, immutable' : ''
+    const isHtml = relativePath.endsWith('index.html')
+    let cachingHeader = CachingHeaders.NoCache
+    if (isHtml) {
+      cachingHeader = CachingHeaders.NoCache
+    } else if (isImmutable && root === STATIC) {
+      cachingHeader = CachingHeaders.OneYear
+    }
     const contentType = getContentType(filePath)
     const headers = {
       'Content-Type': contentType,
@@ -332,7 +350,7 @@ const serveTests = async (req, res, next) => {
 
     try {
       const testOverview = await createTestOverview(testPathSrc)
-      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate')
+      res.setHeader('Cache-Control', CachingHeaders.NoCache)
       res.statusCode = StatusCode.MultipleChoices
       res.end(testOverview)
     } catch (error) {
