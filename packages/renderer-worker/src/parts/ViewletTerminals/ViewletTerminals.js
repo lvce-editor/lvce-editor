@@ -90,3 +90,39 @@ export const addTerminal = async (state) => {
     selectedIndex: newSelectedIndex,
   }
 }
+
+export const focusIndex = async (state, index) => {
+  Assert.object(state)
+  Assert.number(index)
+  const { tabs, x, y, width, height, uid, selectedIndex } = state
+  const childUid = Id.create()
+  const newTab = tabs[index]
+  newTab.uid = childUid
+  const commands = await ViewletManager.load({
+    getModule: ViewletModule.load,
+    x,
+    y,
+    width,
+    height,
+    uid: childUid,
+    moduleId: ViewletModuleId.Terminal,
+    id: ViewletModuleId.Terminal,
+    show: false,
+    append: false,
+    type: 0,
+    parentId: uid,
+  })
+  commands.push(['Viewlet.append', uid, childUid])
+  const oldTab = tabs[selectedIndex]
+  const disposeCommands = Viewlet.disposeFunctional(oldTab.uid)
+  commands.push(...disposeCommands)
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  return {
+    ...state,
+    selectedIndex: index,
+  }
+}
+
+export const handleClickTab = (state, index) => {
+  return focusIndex(state, index)
+}
