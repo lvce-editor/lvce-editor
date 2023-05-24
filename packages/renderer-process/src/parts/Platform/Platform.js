@@ -85,9 +85,7 @@ export const getBrowser = () => {
   return 'chromium'
 }
 
-export const getAssetDir = () => {
-  return state.getAssetDir()
-}
+export const assetDir = state.getAssetDir()
 
 export const supportsHtml5Dialog = () => {
   return state.supportsHtml5Dialog()
@@ -98,7 +96,6 @@ export const isElectron = () => {
 }
 
 export const getRendererWorkerUrl = () => {
-  const assetDir = getAssetDir()
   const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js`
   return urlRendererWorker
 }

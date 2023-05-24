@@ -1,3 +1,3 @@
 import * as Platform from '../Platform/Platform.js'
 
-export const assetDir = Platform.state.getAssetDir()
+export const assetDir = Platform.assetDir
