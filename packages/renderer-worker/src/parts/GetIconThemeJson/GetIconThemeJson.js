@@ -1,3 +1,4 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as Platform from '../Platform/Platform.js'
@@ -6,18 +7,16 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 
 const getIconThemeUrl = (iconThemeId) => {
-  const assetDir = Platform.getAssetDir()
-  return `${assetDir}/extensions/builtin.${iconThemeId}/icon-theme.json`
+  return `${AssetDir.assetDir}/extensions/builtin.${iconThemeId}/icon-theme.json`
 }
 
 export const getIconThemeJson = async (iconThemeId) => {
   if (Platform.platform === PlatformType.Web) {
     const url = getIconThemeUrl(iconThemeId)
     const json = await Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
-    const assetDir = Platform.getAssetDir()
     return {
       json,
-      extensionPath: `${assetDir}/extensions/builtin.${iconThemeId}`,
+      extensionPath: `${AssetDir.assetDir}/extensions/builtin.${iconThemeId}`,
     }
   }
   for (const webExtension of ExtensionMeta.state.webExtensions) {

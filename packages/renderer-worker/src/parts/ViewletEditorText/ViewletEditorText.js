@@ -1,14 +1,14 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
-import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
 import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Font from '../Font/Font.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
 import * as MeasureLongestLineWidth from '../MeasureLongestLineWidth/MeasureLongestLineWidth.js'
-import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -128,9 +128,8 @@ export const loadContent = async (state, savedState) => {
   const savedDeltaY = getSavedDeltaY(savedState)
   const newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
   if ((fontFamily === 'Fira Code' || fontFamily === `'Fira Code'`) && !Font.has(fontFamily, fontSize)) {
-    const assetDir = Platform.getAssetDir()
     const fontName = unquoteString(fontFamily)
-    await Font.load(fontName, `url('${assetDir}/fonts/FiraCode-VariableFont.ttf')`)
+    await Font.load(fontName, `url('${AssetDir.assetDir}/fonts/FiraCode-VariableFont.ttf')`)
   }
   const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(newState2.lines, newState2.fontWeight, fontSize, fontFamily, letterSpacing)
   return {

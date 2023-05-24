@@ -1,7 +1,7 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
-import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
-import * as Platform from '../Platform/Platform.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 export const canBeRestored = true
 
@@ -12,8 +12,7 @@ export const state = {
 }
 
 export const readFile = async (uri) => {
-  const assetDir = Platform.getAssetDir()
-  const fetchUri = `${assetDir}${uri}`
+  const fetchUri = `${AssetDir.assetDir}${uri}`
   const text = await Command.execute('Ajax.getText', fetchUri)
   return text
 }
@@ -35,8 +34,7 @@ export const remove = (uri) => {
 }
 
 export const readDirWithFileTypes = async (uri) => {
-  const assetDir = Platform.getAssetDir()
-  const fetchUri = `${assetDir}/config/fileMap.json`
+  const fetchUri = `${AssetDir.assetDir}/config/fileMap.json`
   const fileList = await Command.execute('Ajax.getJson', fetchUri)
   const dirents = []
   for (const fileUri of fileList) {
