@@ -6,6 +6,7 @@
   flex-direction: column;
   gap: 10px;
   position: absolute;
+  background: var(--MainBackground);
 }
 
 .Large.ExtensionDetail {
