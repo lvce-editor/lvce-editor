@@ -1,7 +1,7 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
-import * as Platform from '../Platform/Platform.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 
 /**
@@ -40,8 +40,7 @@ export const getNoResults = () => {
 
 // TODO combine Ajax with cache (specify strategy: cacheFirst, networkFirst)
 const getBuiltinPicks = async () => {
-  const assetDir = Platform.getAssetDir()
-  const url = `${assetDir}/config/builtinCommands.json`
+  const url = `${AssetDir.assetDir}/config/builtinCommands.json`
   const builtinPicks = await Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
   return builtinPicks
 }

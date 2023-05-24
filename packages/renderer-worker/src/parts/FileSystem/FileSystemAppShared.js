@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
@@ -13,8 +14,7 @@ const readFileWeb = async (path, defaultContent) => {
   if (settingsJsonContent) {
     return settingsJsonContent
   }
-  const assetDir = Platform.getAssetDir()
-  const url = `${assetDir}/config/defaultSettings.json`
+  const url = `${AssetDir.assetDir}/config/defaultSettings.json`
   return Command.execute(/* Ajax.getText */ 'Ajax.getText', /* url */ url)
 }
 
