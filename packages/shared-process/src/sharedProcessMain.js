@@ -31,22 +31,11 @@ const main = async () => {
     await module.handleCliArgs(argv)
     return
   }
-
-  console.log('[shared process] started')
   // process.on('beforeExit', handleBeforeExit)
   process.on('disconnect', handleDisconnect)
   process.on(Signal.SIGTERM, handleSigTerm)
-
   process.on('uncaughtExceptionMonitor', ErrorHandling.handleUncaughtExceptionMonitor)
   await ParentIpc.listen()
-
-  // ExtensionHost.start() // TODO start on demand, e.g. not when extensions should be disabled
 }
 
 main()
-
-// TODO when browser reloads or opens in new tab how does the window know which folder to open?
-
-// setTimeout(() => {
-//   throw new Error('oops')
-// }, 210)
