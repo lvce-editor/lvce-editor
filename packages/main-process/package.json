@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@electron/rebuild": "^3.2.13",
-    "@types/debug": "^4.1.7",
+    "@types/debug": "^4.1.8",
     "@types/verror": "^1.10.6",
     "electron": "^24.3.1"
   },
