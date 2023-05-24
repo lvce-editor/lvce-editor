@@ -45,7 +45,7 @@
     "tail": "^2.2.6"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.7",
+    "@types/debug": "^4.1.8",
     "@types/is-object": "^1.0.2",
     "@types/tail": "^2.2.1",
     "@types/tar-fs": "^2.0.1",
