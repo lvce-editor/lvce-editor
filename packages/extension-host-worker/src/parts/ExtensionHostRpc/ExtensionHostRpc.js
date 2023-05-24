@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
-import * as GetExtensionHostHelperProcessUrl from '../GetExtensionHostHelperProcessUrl/GetExtensionHostHelperProcessUrl.js'
+import * as GetExtensionHostSubWorkerUrl from '../GetExtensionHostSubWorkerUrl/GetExtensionHostSubWorkerUrl.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as RpcParent from '../RpcParent/RpcParent.js'
@@ -10,7 +10,7 @@ export const createRpc = async ({ url, name }) => {
   try {
     Assert.string(url)
     Assert.string(name)
-    const helperProcessUrl = GetExtensionHostHelperProcessUrl.getExtensionHostHelperProcessUrl()
+    const helperProcessUrl = GetExtensionHostSubWorkerUrl.getExtensionHostSubWorkerUrl()
     const ipc = await IpcParent.create({
       method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
       url: helperProcessUrl,

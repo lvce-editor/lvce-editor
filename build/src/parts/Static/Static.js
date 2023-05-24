@@ -221,7 +221,7 @@ const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
     replacement: '/dist/extensionHostWorkerMain.js',
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/GetExtensionHostHelperProcessUrl/GetExtensionHostHelperProcessUrl.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/GetExtensionHostSubWorkerUrl/GetExtensionHostSubWorkerUrl.js`,
     occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
     replacement: `'/${commitHash}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
   })
