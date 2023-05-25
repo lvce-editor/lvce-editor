@@ -1,3 +1,1 @@
-import * as Platform from '../Platform/Platform.js'
-
-export const assetDir = Platform.assetDir
+export { assetDir } from '../Platform/Platform.js'

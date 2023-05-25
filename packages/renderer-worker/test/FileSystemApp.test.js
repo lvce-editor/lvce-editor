@@ -12,16 +12,13 @@ class NodeError extends Error {
   }
 }
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
   return {
     readFile: jest.fn(() => {
@@ -44,6 +41,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     getUserSettingsPath: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    assetDir: '',
   }
 })
 
@@ -80,27 +78,19 @@ test('readFile - settings - error', async () => {
   FileSystem.readFile.mockImplementation(() => {
     return '{}'
   })
-  await expect(FileSystemApp.readFile('settings.json')).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(FileSystemApp.readFile('settings.json')).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('rename - error', async () => {
-  await expect(
-    FileSystemApp.rename('settings.json', 'new-settings.json')
-  ).rejects.toThrowError(new Error('not allowed'))
+  await expect(FileSystemApp.rename('settings.json', 'new-settings.json')).rejects.toThrowError(new Error('not allowed'))
 })
 
 test('remove - error', async () => {
-  await expect(FileSystemApp.remove('settings.json')).rejects.toThrowError(
-    new Error('not allowed')
-  )
+  await expect(FileSystemApp.remove('settings.json')).rejects.toThrowError(new Error('not allowed'))
 })
 
 test('mkdir - error', async () => {
-  await expect(FileSystemApp.mkdir('my-folder')).rejects.toThrowError(
-    new Error('not allowed')
-  )
+  await expect(FileSystemApp.mkdir('my-folder')).rejects.toThrowError(new Error('not allowed'))
 })
 
 // TODO test writeFile and writeFile errors
@@ -127,15 +117,9 @@ test('readFile - settings - error - file does not exist', async () => {
   })
   expect(await FileSystemApp.readFile('settings.json')).toBe('{}')
   expect(FileSystem.writeFile).toHaveBeenCalledTimes(1)
-  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(
-    1,
-    '~/.config/app/settings.json',
-    '{}'
-  )
+  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(1, '~/.config/app/settings.json', '{}')
   expect(FileSystem.readFile).toHaveBeenCalledTimes(1)
-  expect(FileSystem.readFile).toHaveBeenCalledWith(
-    '~/.config/app/settings.json'
-  )
+  expect(FileSystem.readFile).toHaveBeenCalledWith('~/.config/app/settings.json')
 })
 
 test('writeFile - settings - error parent folder does not exist', async () => {
@@ -163,16 +147,8 @@ test('writeFile - settings - error parent folder does not exist', async () => {
   })
   await FileSystemApp.writeFile('settings.json', '')
   expect(FileSystem.writeFile).toHaveBeenCalledTimes(2)
-  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(
-    1,
-    '~/.config/app/settings.json',
-    ''
-  )
-  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(
-    2,
-    '~/.config/app/settings.json',
-    ''
-  )
+  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(1, '~/.config/app/settings.json', '')
+  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(2, '~/.config/app/settings.json', '')
   expect(FileSystem.mkdir).toHaveBeenCalledTimes(1)
   expect(FileSystem.mkdir).toHaveBeenCalledWith('~/.config/app')
 })
