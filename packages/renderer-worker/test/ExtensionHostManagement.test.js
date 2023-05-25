@@ -27,6 +27,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: 'remote',
+    assetDir: '',
   }
 })
 jest.unstable_mockModule('../src/parts/Languages/Languages.js', () => {
