@@ -145,10 +145,14 @@ const getContentType = (filePath) => {
   return textMimeType[extname(filePath)] || 'text/plain'
 }
 
+const getPathName = (request) => {
+  const { pathname } = new URL(request.url || '', `https://${request.headers.host}`)
+  return pathname
+}
+
 const serveStatic = (root, skip = '') =>
   async function serveStatic(req, res, next) {
-    const parsedUrl = new URL(req.url)
-    const pathName = parsedUrl.pathname || ''
+    const pathName = getPathName(req)
     let relativePath = getPath(pathName.slice(skip.length))
     if (relativePath.endsWith('/')) {
       relativePath += 'index.html'
@@ -314,8 +318,7 @@ const createTestOverview = async (testPathSrc) => {
  * @param {ServerResponse} res
  */
 const serveTests = async (req, res, next) => {
-  const parsedUrl = new URL(req.url || '')
-  const pathName = parsedUrl.pathname || ''
+  const pathName = getPathName(req)
   if (pathName.endsWith('.html')) {
     res.writeHead(StatusCode.Ok, {
       'Content-Type': 'text/html',
@@ -430,8 +433,7 @@ const sendFile = async (path, res) => {
 }
 
 const serveConfig = async (req, res, next) => {
-  const parsedUrl = new URL(req.url || '')
-  const pathName = parsedUrl.pathname || ''
+  const pathName = getPathName(req)
   if (pathName === '/config/languages.json') {
     const languagesJson = await getLanguagesJson()
     res.statusCode = StatusCode.Ok
