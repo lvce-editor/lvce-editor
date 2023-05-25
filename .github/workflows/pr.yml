@@ -87,6 +87,9 @@ jobs:
       - name: Build server
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --target=server
+      - name: Test Static Export
+        if: matrix.os == 'ubuntu-22.04'
+        run: node build/src/parts/TestStaticExport/TestStaticExport.js
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --target=electron-deb
