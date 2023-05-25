@@ -40,6 +40,7 @@ jest.unstable_mockModule('../src/parts/FileSystemFileHandle/FileSystemFileHandle
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: 'electron',
+    assetDir: '',
   }
 })
 
