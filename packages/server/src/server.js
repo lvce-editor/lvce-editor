@@ -2,13 +2,12 @@
 
 import { ChildProcess, fork } from 'node:child_process'
 import { createReadStream } from 'node:fs'
-import { readdir, readFile, stat } from 'node:fs/promises'
-import { createServer, IncomingMessage, ServerResponse } from 'node:http'
+import { readFile, readdir, stat } from 'node:fs/promises'
+import { IncomingMessage, ServerResponse, createServer } from 'node:http'
 import { dirname, extname, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
-import { fileURLToPath, parse as parseUrl } from 'node:url'
+import { fileURLToPath } from 'node:url'
 
-// @ts-ignore
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
 const STATIC = resolve(__dirname, '../../../static')
@@ -148,7 +147,7 @@ const getContentType = (filePath) => {
 
 const serveStatic = (root, skip = '') =>
   async function serveStatic(req, res, next) {
-    const parsedUrl = parseUrl(req.url)
+    const parsedUrl = new URL(req.url)
     const pathName = parsedUrl.pathname || ''
     let relativePath = getPath(pathName.slice(skip.length))
     if (relativePath.endsWith('/')) {
@@ -315,7 +314,7 @@ const createTestOverview = async (testPathSrc) => {
  * @param {ServerResponse} res
  */
 const serveTests = async (req, res, next) => {
-  const parsedUrl = parseUrl(req.url || '')
+  const parsedUrl = new URL(req.url || '')
   const pathName = parsedUrl.pathname || ''
   if (pathName.endsWith('.html')) {
     res.writeHead(StatusCode.Ok, {
@@ -431,7 +430,7 @@ const sendFile = async (path, res) => {
 }
 
 const serveConfig = async (req, res, next) => {
-  const parsedUrl = parseUrl(req.url || '')
+  const parsedUrl = new URL(req.url || '')
   const pathName = parsedUrl.pathname || ''
   if (pathName === '/config/languages.json') {
     const languagesJson = await getLanguagesJson()
