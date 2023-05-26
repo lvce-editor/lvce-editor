@@ -63,13 +63,11 @@ const getDefaultValue = (uri) => {
 }
 
 export const loadContent = async (state) => {
-  console.log('load')
   const uri = state.uri
   const value = getDefaultValue(uri)
   const provider = await QuickPickEntries.load(uri)
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
-  console.log({ provider, newPicks })
   // @ts-ignore
   const filterValue = provider.getFilterValue(value)
   const items = ViewletQuickPickGetFilteredItems.getFilteredItems(state, newPicks, filterValue, provider)
