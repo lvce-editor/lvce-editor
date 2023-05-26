@@ -214,7 +214,7 @@ const serveStatic = (root, skip = '') =>
 
 const serve404 = () =>
   function serve404(req, res, next) {
-    console.info(`[web] Failed to serve static file "${req.url}"`)
+    console.info(`[server] Failed to serve static file "${req.url}"`)
     const headers = {
       'Content-Type': 'text/plain',
     }
