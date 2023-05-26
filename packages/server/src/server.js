@@ -509,8 +509,8 @@ const handleExit = (code) => {
   process.exit(code)
 }
 
-const handleDisconnect = () => {
-  console.info('[web] shared process disconnected')
+const handleSharedProcessDisconnect = () => {
+  console.info('[server] shared process disconnected')
 }
 
 const launchSharedProcess = () => {
@@ -536,7 +536,7 @@ const launchSharedProcess = () => {
   }
   sharedProcess.once('message', handleFirstMessage)
   sharedProcess.on('exit', handleExit)
-  sharedProcess.on('disconnect', handleDisconnect)
+  sharedProcess.on('disconnect', handleSharedProcessDisconnect)
   state.sharedProcess = sharedProcess
 }
 
@@ -618,13 +618,17 @@ app.on('error', (error) => {
   }
 })
 
-const handleProcessExit = (code) => {
-  console.info(`[server] Process will exit with code ${code}`)
+const cleanup = () => {
   app.close()
   if (state.sharedProcess && !state.sharedProcess.killed) {
     state.sharedProcess.kill()
     state.sharedProcess = undefined
   }
+}
+
+const handleProcessExit = (code) => {
+  console.info(`[server] Process will exit with code ${code}`)
+  cleanup()
 }
 
 const handleAppReady = () => {
@@ -640,9 +644,15 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
   console.info(error)
 }
 
+const handleDisconnect = () => {
+  console.info(`[server] disconnected`)
+  cleanup()
+}
+
 const main = () => {
-  process.on('message', handleMessageFromParent)
+  process.on('disconnect', handleDisconnect)
   process.on('exit', handleProcessExit)
+  process.on('message', handleMessageFromParent)
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
   app.on('listening', handleAppReady)
   if (isPublic) {
