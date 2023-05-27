@@ -1,13 +1,13 @@
-import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.js'
 import * as IpcChildWithModuleWorker from '../IpcChildWithModuleWorker/IpcChildWithModuleWorker.js'
+import { IpcError } from '../IpcError/IpcError.js'
+import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.js'
 
 export const listen = async () => {
   const parentIpcRaw = await IpcChildWithModuleWorker.listen()
   const parentIpc = IpcChildWithModuleWorker.wrap(parentIpcRaw)
   const firstMessage = await WaitForFirstMessage.waitForFirstMessage(parentIpc)
-  console.log({ firstMessage })
   if (firstMessage.method !== 'initialize') {
-    throw new Error('unexpected first message')
+    throw new IpcError('unexpected first message')
   }
   const type = firstMessage.params[0]
   if (type === 'message-port') {
@@ -15,6 +15,10 @@ export const listen = async () => {
     return port
   }
   return globalThis
+}
+
+const getActualData = (event) => {
+  return event.data
 }
 
 export const wrap = (port) => {
@@ -36,8 +40,8 @@ export const wrap = (port) => {
     set onmessage(listener) {
       if (listener) {
         this.wrappedListener = (event) => {
-          console.log({ event })
-          listener(event.data)
+          const actualData = getActualData(event)
+          listener(actualData)
         }
       } else {
         this.wrappedListener = undefined
