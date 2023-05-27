@@ -1,5 +1,7 @@
 // TODO consider using an assertion library like https://github.com/alexreardon/tiny-invariant, https://github.com/tj/better-assert
 
+import { AssertionError } from '../AssertionError/AssertionError.js'
+
 export const getType = (value) => {
   switch (typeof value) {
     case 'number':
@@ -26,41 +28,41 @@ export const getType = (value) => {
 export const object = (value) => {
   const type = getType(value)
   if (type !== 'object') {
-    throw new Error('expected value to be of type object')
+    throw new AssertionError('expected value to be of type object')
   }
 }
 
 export const number = (value) => {
   const type = getType(value)
   if (type !== 'number') {
-    throw new Error('expected value to be of type number')
+    throw new AssertionError('expected value to be of type number')
   }
 }
 
 export const array = (value) => {
   const type = getType(value)
   if (type !== 'array') {
-    throw new Error('expected value to be of type array')
+    throw new AssertionError('expected value to be of type array')
   }
 }
 
 export const string = (value) => {
   const type = getType(value)
   if (type !== 'string') {
-    throw new Error('expected value to be of type string')
+    throw new AssertionError('expected value to be of type string')
   }
 }
 
 export const boolean = (value) => {
   const type = getType(value)
   if (type !== 'boolean') {
-    throw new Error('expected value to be of type boolean')
+    throw new AssertionError('expected value to be of type boolean')
   }
 }
 
 export const fn = (value) => {
   const type = getType(value)
   if (type !== 'function') {
-    throw new Error('expected value to be of type function')
+    throw new AssertionError('expected value to be of type function')
   }
 }
