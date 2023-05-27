@@ -1,10 +1,11 @@
+import * as Command from './parts/Command/Command.js'
+import * as CommandState from './parts/CommandState/CommandState.js'
 import * as GetErrorResponse from './parts/GetErrorResponse/GetErrorResponse.js'
 import * as GetSuccessResponse from './parts/GetSuccessResponse/GetSuccessResponse.js'
 import * as ImportScript from './parts/ImportScript/ImportScript.js'
 import * as IpcChild from './parts/IpcChild/IpcChild.js'
 import * as IpcChildType from './parts/IpcChildType/IpcChildType.js'
 import * as Rpc from './parts/Rpc/Rpc.js'
-import * as GetResponse from './parts/GetResponse/GetResponse.js'
 
 const waitForFirstMessage = async (ipc) => {
   const { message } = await new Promise((resolve) => {
@@ -24,9 +25,15 @@ const main = async () => {
   const ipc = await IpcChild.listen({ method: IpcChildType.Auto() })
   const firstMessage = await waitForFirstMessage(ipc)
   let module
+  let execute = Command.execute
   try {
     module = await ImportScript.importScript(firstMessage.params[0])
-    if (!module || !module.execute) {
+    if (module && module.commandMap) {
+      const commandMap = module.commandMap
+      CommandState.registerCommands(commandMap)
+    } else if (module && module.execute) {
+      execute = module.execute
+    } else {
       throw new Error(`missing export const execute function`)
     }
     const response = GetSuccessResponse.getSuccessResponse(firstMessage, null)
@@ -36,7 +43,7 @@ const main = async () => {
     ipc.send(response)
     return
   }
-  Rpc.listen(ipc, module.execute)
+  Rpc.listen(ipc, execute)
 }
 
 main()
