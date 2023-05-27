@@ -41,6 +41,9 @@ const getErrorMessage = (firstLine) => {
 }
 
 const getImportPath = (firstLine) => {
+  if (!firstLine) {
+    return ''
+  }
   const match = firstLine.match(RE_IMPORTED_FROM_ERROR)
   if (!match) {
     return ''
