@@ -3,14 +3,24 @@ const { utilityProcess } = require('electron')
 const Assert = require('../Assert/Assert.js')
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js')
+const Path = require('../Path/Path.js')
+const Root = require('../Root/Root.js')
 
 const RE_JS_FILE_EXTENSION = /\.js$/
 
 exports.create = async ({ path, argv = [], execArgv = [] }) => {
   Assert.string(path)
-  const actualPath = path.replace(RE_JS_FILE_EXTENSION, '.cjs')
-  const actualArgv = ['--ipc-type=electron-utility-process', ...argv]
-  const childProcess = utilityProcess.fork(actualPath, actualArgv, {
+  const utilityProcessEntryPoint = Path.join(
+    Root.root,
+    'packages',
+    'main-process',
+    'src',
+    'parts',
+    'UtilityProcessEntryPoint',
+    'UtilityProcessEntryPoint.js'
+  )
+  const actualArgv = [path, '--ipc-type=electron-utility-process', ...argv]
+  const childProcess = utilityProcess.fork(utilityProcessEntryPoint, actualArgv, {
     execArgv,
     stdio: 'pipe',
   })

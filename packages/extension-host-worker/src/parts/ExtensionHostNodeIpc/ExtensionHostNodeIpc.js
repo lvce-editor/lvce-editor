@@ -3,8 +3,10 @@ import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as RpcParent from '../RpcParent/RpcParent.js'
 import * as RpcParentType from '../RpcParentType/RpcParentType.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import { VError } from '../VError/VError.js'
 
+// TODO merge this with createRpc
 export const createNodeRpc = async ({ path }) => {
   try {
     Assert.string(path)
@@ -15,6 +17,7 @@ export const createNodeRpc = async ({ path }) => {
     const rpc = await RpcParent.create({
       ipc,
       method: RpcParentType.JsonRpc,
+      execute: JsonRpc.execute,
     })
     await rpc.invoke('LoadFile.loadFile', path)
     console.log({ path })

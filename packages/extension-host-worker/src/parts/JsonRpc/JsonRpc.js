@@ -34,3 +34,7 @@ export const handleMessage = (message) => {
     Callback.resolve(message.id, message)
   }
 }
+
+export const execute = () => {
+  throw new Error('not implemented')
+}

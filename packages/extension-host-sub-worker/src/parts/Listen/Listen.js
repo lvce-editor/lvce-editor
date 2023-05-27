@@ -20,6 +20,9 @@ export const listen = async () => {
     }
     const commandMap = module.commandMap
     CommandState.registerCommands(commandMap)
+    if (module.setIpc) {
+      module.setIpc(ipc)
+    }
     const response = GetSuccessResponse.getSuccessResponse(firstMessage, null)
     ipc.send(response)
   } catch (error) {

@@ -23,6 +23,7 @@ const waitForFirstMessage = async (ipc) => {
 const main = async () => {
   const ipc = await IpcChild.listen({ method: IpcChildType.Auto() })
   const firstMessage = await waitForFirstMessage(ipc)
+  console.log({ firstMessage })
   let module
   try {
     module = await ImportScript.importScript(firstMessage.params[0])
