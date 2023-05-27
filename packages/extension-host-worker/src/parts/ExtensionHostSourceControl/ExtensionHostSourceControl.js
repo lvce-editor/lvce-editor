@@ -13,6 +13,7 @@ const getFilesFromProvider = (provider) => {
 }
 
 export const getChangedFiles = async (providerId) => {
+  Assert.string(providerId)
   const provider = state.providers[providerId]
   if (!provider) {
     throw new Error('no source control provider found')
@@ -41,6 +42,8 @@ const getGroupsFromProvider = async (provider, cwd) => {
 }
 
 export const getGroups = async (providerId, cwd) => {
+  Assert.string(providerId)
+  Assert.string(cwd)
   const provider = state.providers[providerId]
   if (!provider) {
     throw new Error('no source control provider found')
@@ -50,6 +53,8 @@ export const getGroups = async (providerId, cwd) => {
 }
 
 export const acceptInput = async (providerId, value) => {
+  Assert.string(providerId)
+  Assert.string(value)
   const provider = state.providers[providerId]
   if (!provider) {
     throw new Error('no source control provider found')
@@ -58,6 +63,7 @@ export const acceptInput = async (providerId, value) => {
 }
 
 export const add = async (path) => {
+  Assert.string(path)
   const provider = Object.values(state.providers)[0]
   if (!provider) {
     return
@@ -66,6 +72,7 @@ export const add = async (path) => {
 }
 
 export const discard = async (path) => {
+  Assert.string(path)
   const provider = Object.values(state.providers)[0]
   if (!provider) {
     return
