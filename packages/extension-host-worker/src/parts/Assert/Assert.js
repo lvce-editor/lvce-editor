@@ -57,3 +57,10 @@ export const boolean = (value) => {
     throw new Error('expected value to be of type boolean')
   }
 }
+
+export const fn = (value) => {
+  const type = getType(value)
+  if (type !== 'function') {
+    throw new Error('expected value to be of type function')
+  }
+}
