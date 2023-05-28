@@ -2,10 +2,10 @@ import * as Command from './parts/Command/Command.js'
 import * as CommandState from './parts/CommandState/CommandState.js'
 import * as GetErrorResponse from './parts/GetErrorResponse/GetErrorResponse.js'
 import * as GetSuccessResponse from './parts/GetSuccessResponse/GetSuccessResponse.js'
+import * as HandleIpc from './parts/HandleIpc/HandleIpc.js'
 import * as ImportScript from './parts/ImportScript/ImportScript.js'
 import * as IpcChild from './parts/IpcChild/IpcChild.js'
 import * as IpcChildType from './parts/IpcChildType/IpcChildType.js'
-import * as Rpc from './parts/Rpc/Rpc.js'
 
 const waitForFirstMessage = async (ipc) => {
   const { message } = await new Promise((resolve) => {
@@ -43,7 +43,7 @@ const main = async () => {
     ipc.send(response)
     return
   }
-  Rpc.listen(ipc, execute)
+  HandleIpc.handleIpc(ipc)
 }
 
 main()
