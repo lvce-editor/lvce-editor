@@ -1,4 +1,4 @@
-import * as I18nString from '../I18NString/I18NString.js'
+import * as GoToTypeDefinitionStrings from '../GoToTypeDefinitionStrings/GoToTypeDefinitionStrings.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as TypeDefinition from '../TypeDefinition/TypeDefinition.js'
 import * as EditorGoTo from './EditorCommandGoTo.js'
@@ -15,11 +15,6 @@ import * as EditorGoTo from './EditorCommandGoTo.js'
 // TODO there are still race conditions in this function:
 // - when open is called twice, previous dom nodes can either be reused or the previous dom nodes must be disposed
 
-const UiStrings = {
-  NoTypeDefinitionFound: 'No type definition found',
-  NoTypeDefinitionFoundFor: `No type definition found for '{PH1}'`,
-}
-
 const getTypeDefinitionErrorMessage = (error) => {
   return `${error}`
 }
@@ -28,15 +23,6 @@ const getLocation = async (editor, rowIndex, columnIndex) => {
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const definition = await TypeDefinition.getTypeDefinition(editor, offset)
   return definition
-}
-
-const getNoLocationFoundMessage = (info) => {
-  if (info.word) {
-    return I18nString.i18nString(UiStrings.NoTypeDefinitionFoundFor, {
-      PH1: info.word,
-    })
-  }
-  return I18nString.i18nString(UiStrings.NoTypeDefinitionFound)
 }
 
 const getErrorMessage = (error) => {
@@ -67,7 +53,7 @@ export const goToTypeDefinition = (editor, explicit = true) => {
   return EditorGoTo.goTo({
     editor,
     getLocation,
-    getNoLocationFoundMessage,
+    getNoLocationFoundMessage: GoToTypeDefinitionStrings.getNoLocationFoundMessage,
     isNoProviderFoundError,
     getErrorMessage,
   })

@@ -1,3 +1,4 @@
+import * as Character from '../Character/Character.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 import * as IsIgnoredError from '../IsIgnoredError/IsIgnoredError.js'
@@ -62,6 +63,6 @@ export const handleUncaughtExceptionMonitor = (error, origin) => {
     return
   }
   const prettyError = PrettyError.prepare(error)
-  Logger.error(prettyError.codeFrame + '\n' + prettyError.stack + '\n')
+  Logger.error(prettyError.codeFrame + Character.NewLine + prettyError.stack + Character.NewLine)
   Process.setExitCode(ExitCode.Error)
 }

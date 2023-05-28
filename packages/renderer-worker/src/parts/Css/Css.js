@@ -1,9 +1,10 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as Character from '../Character/Character.js'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Response from '../Response/Response.js'
 import { VError } from '../VError/VError.js'
-import * as Character from '../Character/Character.js'
-import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 
 export const state = {
   pending: Object.create(null),
@@ -19,8 +20,7 @@ const getId = (path) => {
 
 const actuallyLoadCssStyleSheet = async (css) => {
   try {
-    const assetDir = Platform.getAssetDir()
-    const url = `${assetDir}${css}`
+    const url = `${AssetDir.assetDir}${css}`
     const response = await fetch(url)
     if (!response.ok) {
       if (response.status === HttpStatusCode.NotFound) {

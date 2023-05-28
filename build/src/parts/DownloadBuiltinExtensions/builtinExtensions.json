@@ -27,7 +27,7 @@
   {
     "name": "builtin.language-basics-dart",
     "repository": "github.com/lvce-editor/language-basics-dart",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-desktop",
@@ -82,7 +82,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "0.0.22"
+    "version": "0.0.23"
   },
   {
     "name": "builtin.language-basics-java",
@@ -92,7 +92,7 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.27"
+    "version": "0.0.28"
   },
   {
     "name": "builtin.language-basics-json",

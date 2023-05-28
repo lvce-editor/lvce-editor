@@ -18,12 +18,6 @@ export const state = {
 
 const FALLBACK_COLOR_THEME_ID = 'slime'
 
-const getFallbackColorTheme = async () => {
-  const assetDir = Platform.getAssetDir()
-  const url = `${assetDir}/themes/fallback_theme.json`
-  return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
-}
-
 // TODO json parsing should also happen in renderer worker
 // so that all validation is here (json parsing errors, invalid shape, ...)
 

@@ -1,4 +1,4 @@
-const { VError } = require('verror')
+const { VError } = require('../VError/VError.js')
 const ErrorCodes = require('../ErrorCodes/ErrorCodes.js')
 const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
 const JsonFile = require('../JsonFile/JsonFile.js')
@@ -16,7 +16,6 @@ const readSettings = async (path) => {
     if (error && error.code === ErrorCodes.ENOENT) {
       return {}
     }
-    // @ts-ignore
     throw new VError(error, `Failed to read settings`)
   }
 }
@@ -25,7 +24,6 @@ const writeSettings = async (path, value) => {
   try {
     return await JsonFile.writeJson(path, value)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to write settings`)
   }
 }

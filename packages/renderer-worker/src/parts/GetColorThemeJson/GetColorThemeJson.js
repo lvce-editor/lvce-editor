@@ -1,3 +1,4 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -8,8 +9,7 @@ const getColorThemeJsonFromSharedProcess = async (colorThemeId) => {
 }
 
 const getColorThemeUrlWeb = (colorThemeId) => {
-  const assetDir = Platform.getAssetDir()
-  return `${assetDir}/extensions/builtin.theme-${colorThemeId}/color-theme.json`
+  return `${AssetDir.assetDir}/extensions/builtin.theme-${colorThemeId}/color-theme.json`
 }
 
 const getColorThemeJsonFromStaticFolder = (colorThemeId) => {

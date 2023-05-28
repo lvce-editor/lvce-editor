@@ -570,7 +570,7 @@ exports.add = (config) => {
     type: 'TypeError',
   })
   expect(fs.readFileSync).toHaveBeenCalledTimes(1)
-  expect(fs.readFileSync).toHaveBeenCalledWith(`/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js`, 'utf-8')
+  expect(fs.readFileSync).toHaveBeenCalledWith(`/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js`, 'utf8')
 })
 
 test('prepare - module not found error from inside node_modules', async () => {

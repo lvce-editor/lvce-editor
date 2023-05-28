@@ -113,8 +113,8 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetIconThemeJson/GetIconThemeJson.js`,
-    occurrence: `return \`\${assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
-    replacement: `return \`\${assetDir}/icon-themes/\${iconThemeId}.json\``,
+    occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
+    replacement: `return \`\${AssetDir.assetDir}/icon-themes/\${iconThemeId}.json\``,
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IpcParentWithNode/IpcParentWithNode.js`,
@@ -144,8 +144,8 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
   // TODO enable loading themes from extension folder in production, just like language basics extensions
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetColorThemeJson/GetColorThemeJson.js`,
-    occurrence: `return \`\${assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
-    replacement: `return \`\${assetDir}/themes/\${colorThemeId}.json\``,
+    occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
+    replacement: `return \`\${AssetDir.assetDir}/themes/\${colorThemeId}.json\``,
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
@@ -221,7 +221,7 @@ const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
     replacement: '/dist/extensionHostWorkerMain.js',
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/GetExtensionHostHelperProcessUrl/GetExtensionHostHelperProcessUrl.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/GetExtensionHostSubWorkerUrl/GetExtensionHostSubWorkerUrl.js`,
     occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
     replacement: `'/${commitHash}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
   })

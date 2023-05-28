@@ -28,6 +28,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: 'electron',
+    assetDir: '',
   }
 })
 

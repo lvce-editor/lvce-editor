@@ -46,6 +46,10 @@ exports.handlePort = async (event, message) => {
     sender.postMessage(ElectronPreloadChannelType.Port, response, [port2])
   } catch (error) {
     const response = await GetErrorResponse.getErrorResponse(message, error)
+    const isDestroyed = sender.isDestroyed()
+    if (isDestroyed) {
+      return
+    }
     sender.postMessage(ElectronPreloadChannelType.Port, response)
   }
 }

@@ -17,6 +17,7 @@ export const create = (id, uri, x, y, width, height) => {
     width,
     height,
     titleAreaHeight: 35,
+    actions: [],
   }
 }
 
@@ -40,6 +41,7 @@ export const contentLoaded = async (state, savedState) => {
   const commands = []
   const actions = ViewletActions.getActions(currentViewletId)
   commands.push(['Viewlet.send', uid, 'setActions', actions])
+  state.actions = actions
   return commands
 }
 
@@ -118,6 +120,7 @@ export const openViewlet = async (state, id, focus = false) => {
     const actions = ViewletActions.getActions(id)
     commands.push(['Viewlet.send', uid, 'setActions', actions])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    state.actions = actions
   }
 
   // // TODO race condition (check if disposed after created)
@@ -193,3 +196,5 @@ export const focus = async (state) => {
   return state
   // console.log({ currentViewletId })
 }
+
+export * from '../HandleClickAction/HandleClickAction.js'

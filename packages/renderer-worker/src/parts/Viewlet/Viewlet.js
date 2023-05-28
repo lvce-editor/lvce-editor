@@ -337,7 +337,7 @@ const getFn = async (module, fnName) => {
   }
   const lazyImport = getLazyImport(module, fnName)
   if (!lazyImport) {
-    throw new Error(`Command not found ${module.name}.${fnName}`)
+    throw new Error(`Command ${module.name}.${fnName} not found in renderer worker`)
   }
   const importedModule = await lazyImport()
   const lazyFn = importedModule[fnName]

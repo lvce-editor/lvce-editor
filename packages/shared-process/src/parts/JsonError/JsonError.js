@@ -9,8 +9,10 @@ const emptyError = {
   codeFrame: '',
 }
 
+const RE_POSITION = /in JSON at position (\d+)/
+
 export const getErrorPropsFromError = (error, string, filePath) => {
-  const indexMatch = error.message.match(/in JSON at position (\d+)/)
+  const indexMatch = error.message.match(RE_POSITION)
   if (indexMatch && indexMatch.length > 0) {
     const lines = new LinesAndColumns(string)
     const index = Number(indexMatch[1])

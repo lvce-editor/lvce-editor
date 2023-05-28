@@ -21,6 +21,7 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
+    actions: [],
   }
 }
 
@@ -38,10 +39,18 @@ const getSavedViewletId = (savedState) => {
   return ViewletModuleId.Problems
 }
 
+const getSelectedIndex = (views, savedViewletId) => {
+  const index = views.indexOf(savedViewletId)
+  if (index === -1) {
+    return 0
+  }
+  return index
+}
+
 export const loadContent = (state, savedState) => {
   const savedViewletId = getSavedViewletId(savedState)
   const views = GetPanelViews.getPanelViews()
-  const selectedIndex = views.indexOf(savedViewletId)
+  const selectedIndex = getSelectedIndex(views, savedViewletId)
   return {
     ...state,
     views,
@@ -54,6 +63,7 @@ export const contentLoaded = (state) => {
   const { currentViewletId, uid } = state
   const commands = []
   const actions = ViewletActions.getActions(currentViewletId)
+  state.actions = actions
   commands.push(['Viewlet.send', uid, 'setActions', actions])
   return commands
 }
@@ -137,3 +147,5 @@ export const selectIndex = async (state, index) => {
     selectedIndex: index,
   }
 }
+
+export * from '../HandleClickAction/HandleClickAction.js'

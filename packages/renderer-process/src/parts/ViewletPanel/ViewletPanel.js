@@ -53,8 +53,8 @@ export const create = () => {
 }
 
 export const attachEvents = (state) => {
-  const { $PanelTabs, $ButtonMaximize, $ButtonClose } = state
-  $PanelTabs.onmousedown = ViewletPanelEvents.panelTabsHandleClick
+  const { $ButtonMaximize, $ButtonClose, $PanelHeader } = state
+  $PanelHeader.onclick = ViewletPanelEvents.handleHeaderClick
   $ButtonMaximize.onclick = ViewletPanelEvents.handleClickMaximize
   $ButtonClose.onclick = ViewletPanelEvents.handleClickClose
 }

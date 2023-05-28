@@ -3,3 +3,4 @@ import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletC
 export const hidePanel = ForwardViewletCommand.forwardViewletCommand('hidePanel')
 export const toggleMaximize = ForwardViewletCommand.forwardViewletCommand('toggleMaximize')
 export const selectIndex = ForwardViewletCommand.forwardViewletCommand('selectIndex')
+export const handleClickAction = ForwardViewletCommand.forwardViewletCommand('handleClickAction')

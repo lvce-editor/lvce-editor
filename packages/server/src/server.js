@@ -2,13 +2,12 @@
 
 import { ChildProcess, fork } from 'node:child_process'
 import { createReadStream } from 'node:fs'
-import { readdir, readFile, stat } from 'node:fs/promises'
-import { createServer, IncomingMessage, ServerResponse } from 'node:http'
+import { readFile, readdir, stat } from 'node:fs/promises'
+import { IncomingMessage, ServerResponse, createServer } from 'node:http'
 import { dirname, extname, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
-import { fileURLToPath, parse as parseUrl } from 'node:url'
+import { fileURLToPath } from 'node:url'
 
-// @ts-ignore
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
 const STATIC = resolve(__dirname, '../../../static')
@@ -107,12 +106,24 @@ const textMimeType = {
   '.webp': 'image/webp',
 }
 
+/**
+ * @enum {string}
+ */
 const ErrorCodes = {
   ERR_STREAM_PREMATURE_CLOSE: 'ERR_STREAM_PREMATURE_CLOSE',
   EISDIR: 'EISDIR',
   ECONNRESET: 'ECONNRESET',
   ENOENT: 'ENOENT',
   EADDRINUSE: 'EADDRINUSE',
+}
+
+/**
+ * @enum {string}
+ */
+const CachingHeaders = {
+  Empty: '',
+  NoCache: 'public, max-age=0, must-revalidate',
+  OneYear: 'public, max-age=31536000, immutable',
 }
 
 /**
@@ -134,10 +145,14 @@ const getContentType = (filePath) => {
   return textMimeType[extname(filePath)] || 'text/plain'
 }
 
+const getPathName = (request) => {
+  const { pathname } = new URL(request.url || '', `https://${request.headers.host}`)
+  return pathname
+}
+
 const serveStatic = (root, skip = '') =>
   async function serveStatic(req, res, next) {
-    const parsedUrl = parseUrl(req.url)
-    const pathName = parsedUrl.pathname || ''
+    const pathName = getPathName(req)
     let relativePath = getPath(pathName.slice(skip.length))
     if (relativePath.endsWith('/')) {
       relativePath += 'index.html'
@@ -155,7 +170,13 @@ const serveStatic = (root, skip = '') =>
       res.writeHead(StatusCode.NotModified)
       return res.end()
     }
-    const cachingHeader = isImmutable && root === STATIC ? 'public, max-age=31536000, immutable' : ''
+    const isHtml = relativePath.endsWith('index.html')
+    let cachingHeader = CachingHeaders.NoCache
+    if (isHtml) {
+      cachingHeader = CachingHeaders.NoCache
+    } else if (isImmutable && root === STATIC) {
+      cachingHeader = CachingHeaders.OneYear
+    }
     const contentType = getContentType(filePath)
     const headers = {
       'Content-Type': contentType,
@@ -193,7 +214,7 @@ const serveStatic = (root, skip = '') =>
 
 const serve404 = () =>
   function serve404(req, res, next) {
-    console.info(`[web] Failed to serve static file "${req.url}"`)
+    console.info(`[server] Failed to serve static file "${req.url}"`)
     const headers = {
       'Content-Type': 'text/plain',
     }
@@ -297,8 +318,7 @@ const createTestOverview = async (testPathSrc) => {
  * @param {ServerResponse} res
  */
 const serveTests = async (req, res, next) => {
-  const parsedUrl = parseUrl(req.url || '')
-  const pathName = parsedUrl.pathname || ''
+  const pathName = getPathName(req)
   if (pathName.endsWith('.html')) {
     res.writeHead(StatusCode.Ok, {
       'Content-Type': 'text/html',
@@ -332,7 +352,7 @@ const serveTests = async (req, res, next) => {
 
     try {
       const testOverview = await createTestOverview(testPathSrc)
-      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate')
+      res.setHeader('Cache-Control', CachingHeaders.NoCache)
       res.statusCode = StatusCode.MultipleChoices
       res.end(testOverview)
     } catch (error) {
@@ -413,8 +433,7 @@ const sendFile = async (path, res) => {
 }
 
 const serveConfig = async (req, res, next) => {
-  const parsedUrl = parseUrl(req.url || '')
-  const pathName = parsedUrl.pathname || ''
+  const pathName = getPathName(req)
   if (pathName === '/config/languages.json') {
     const languagesJson = await getLanguagesJson()
     res.statusCode = StatusCode.Ok
@@ -490,8 +509,8 @@ const handleExit = (code) => {
   process.exit(code)
 }
 
-const handleDisconnect = () => {
-  console.info('[web] shared process disconnected')
+const handleSharedProcessDisconnect = () => {
+  console.info('[server] shared process disconnected')
 }
 
 const launchSharedProcess = () => {
@@ -517,7 +536,7 @@ const launchSharedProcess = () => {
   }
   sharedProcess.once('message', handleFirstMessage)
   sharedProcess.on('exit', handleExit)
-  sharedProcess.on('disconnect', handleDisconnect)
+  sharedProcess.on('disconnect', handleSharedProcessDisconnect)
   state.sharedProcess = sharedProcess
 }
 
@@ -599,13 +618,17 @@ app.on('error', (error) => {
   }
 })
 
-const handleProcessExit = (code) => {
-  console.info(`[server] Process will exit with code ${code}`)
+const cleanup = () => {
   app.close()
   if (state.sharedProcess && !state.sharedProcess.killed) {
     state.sharedProcess.kill()
     state.sharedProcess = undefined
   }
+}
+
+const handleProcessExit = (code) => {
+  console.info(`[server] Process will exit with code ${code}`)
+  cleanup()
 }
 
 const handleAppReady = () => {
@@ -621,9 +644,15 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
   console.info(error)
 }
 
+const handleDisconnect = () => {
+  console.info(`[server] disconnected`)
+  cleanup()
+}
+
 const main = () => {
-  process.on('message', handleMessageFromParent)
+  process.on('disconnect', handleDisconnect)
   process.on('exit', handleProcessExit)
+  process.on('message', handleMessageFromParent)
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
   app.on('listening', handleAppReady)
   if (isPublic) {

@@ -1,5 +1,6 @@
 import * as Command from './parts/Command/Command.js'
 import * as ErrorHandling from './parts/ErrorHandling/ErrorHandling.js'
+import * as ExitCode from './parts/ExitCode/ExitCode.js'
 import * as Module from './parts/Module/Module.js'
 import * as ParentIpc from './parts/ParentIpc/ParentIpc.js'
 import * as Process from './parts/Process/Process.js'
@@ -10,6 +11,7 @@ import * as Signal from './parts/Signal/Signal.js'
 
 const handleDisconnect = () => {
   console.info('[shared process] disconnected')
+  Process.exit(ExitCode.Success)
 }
 
 // const handleBeforeExit = () => {
@@ -18,6 +20,7 @@ const handleDisconnect = () => {
 
 const handleSigTerm = () => {
   console.info('[shared-process] sigterm')
+  Process.exit(ExitCode.Success)
 }
 
 const knownCliArgs = ['install', 'list', 'link', 'unlink']
@@ -31,22 +34,11 @@ const main = async () => {
     await module.handleCliArgs(argv)
     return
   }
-
-  console.log('[shared process] started')
   // process.on('beforeExit', handleBeforeExit)
   process.on('disconnect', handleDisconnect)
   process.on(Signal.SIGTERM, handleSigTerm)
-
   process.on('uncaughtExceptionMonitor', ErrorHandling.handleUncaughtExceptionMonitor)
   await ParentIpc.listen()
-
-  // ExtensionHost.start() // TODO start on demand, e.g. not when extensions should be disabled
 }
 
 main()
-
-// TODO when browser reloads or opens in new tab how does the window know which folder to open?
-
-// setTimeout(() => {
-//   throw new Error('oops')
-// }, 210)

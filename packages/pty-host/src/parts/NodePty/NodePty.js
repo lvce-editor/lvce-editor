@@ -1,26 +1,13 @@
 import { spawn } from 'node-pty'
-import * as Platform from '../Platform/Platform.js'
-import * as Assert from '../Assert/Assert.js'
 import VError from 'verror'
+import * as Assert from '../Assert/Assert.js'
 
-const getSpawnOptions = () => {
-  if (Platform.isWindows) {
-    return {
-      command: 'powershell.exe',
-      args: [],
-    }
-  }
-  return {
-    command: 'bash',
-    args: ['-i'],
-  }
-}
-
-export const create = ({ env = {}, cwd } = {}) => {
+export const create = ({ env = {}, cwd, command, args } = {}) => {
   try {
     Assert.string(cwd)
-    const spawnOptions = getSpawnOptions()
-    const pty = spawn(spawnOptions.command, spawnOptions.args, {
+    Assert.string(command)
+    Assert.array(args)
+    const pty = spawn(command, args, {
       encoding: null,
       cwd,
       // cols: 10,

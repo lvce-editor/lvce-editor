@@ -30,3 +30,4 @@ export const Process = 29
 export const AttachDebugger = 30
 export const HandleElectronMessagePort = 31
 export const HandleNodeMessagePort = 32
+export const GetTerminalSpawnOptions = 33

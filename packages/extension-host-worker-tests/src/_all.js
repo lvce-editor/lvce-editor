@@ -27,7 +27,7 @@ const getPaths = async () => {
 }
 
 const testFile = async (page, name) => {
-  console.info(`[starting] ${name}`)
+  console.info(`[test starting] ${name}`)
   const relativePath = getRelativePath(name)
   const url = `http://localhost:3000${relativePath}`
   await page.goto(url)

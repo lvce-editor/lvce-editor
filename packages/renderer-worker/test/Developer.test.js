@@ -46,6 +46,7 @@ jest.unstable_mockModule('../src/parts/ElectronWindow/ElectronWindow.js', () => 
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: 'remote',
@@ -55,6 +56,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     getConfigPath: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    assetDir: '',
   }
 })
 jest.unstable_mockModule('../src/parts/ProcessExplorer/ProcessExplorer.js', () => {

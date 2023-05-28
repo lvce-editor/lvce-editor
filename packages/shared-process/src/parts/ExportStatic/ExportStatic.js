@@ -1,6 +1,8 @@
+import { isAbsolute, join } from 'path'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
+import { existsSync } from 'fs'
 
 // TODO
 // - implement this for syntax highlighting projects
@@ -80,7 +82,7 @@ const isCommitHash = (dirent) => {
  * @param {string} root
  */
 const clean = async (root) => {
-  await FileSystem.remove(Path.join(root, 'dist'))
+  await FileSystem.forceRemove(Path.join(root, 'dist'))
   await FileSystem.mkdir(Path.join(root, 'dist'))
 }
 
@@ -308,7 +310,7 @@ const addExtensionLanguages = async ({ root, extensionPath, extensionJson, commi
     return
   }
   const extensionId = extensionJson.id
-  await FileSystem.remove(Path.join(root, 'dist', commitHash, 'extensions', extensionId))
+  await FileSystem.forceRemove(Path.join(root, 'dist', commitHash, 'extensions', extensionId))
   await FileSystem.mkdir(Path.join(root, 'dist', commitHash, 'extensions', extensionId))
   await FileSystem.copyFile(Path.join(root, 'README.md'), Path.join(root, 'dist', commitHash, 'extensions', extensionId, 'README.md'))
   for (const file of ['src', 'data', 'extension.json']) {
@@ -330,7 +332,7 @@ const addExtensionLanguages = async ({ root, extensionPath, extensionJson, commi
   const mergedLanguages = mergeLanguages(builtinLanguages, extensionLanguages)
   await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'languages.json'), mergedLanguages)
   if (await FileSystem.exists(Path.join(extensionPath, 'test', 'cases'))) {
-    await FileSystem.remove(Path.join(root, 'dist', commitHash, 'playground'))
+    await FileSystem.forceRemove(Path.join(root, 'dist', commitHash, 'playground'))
     await FileSystem.copy(Path.join(extensionPath, 'test', 'cases'), Path.join(root, 'dist', commitHash, 'playground'))
     const testFiles = await FileSystem.readDir(Path.join(extensionPath, 'test', 'cases'))
     const fileMap = testFiles.map(toPlaygroundFile)
@@ -426,12 +428,12 @@ const getTestFiles = (testFilesRaw) => {
 }
 
 const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
-  await FileSystem.copy(`${root}/${testPath}/src`, `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`)
-  const testFilesRaw = await FileSystem.readDir(`${root}/${testPath}/src`)
+  const testRoot = isAbsolute(testPath) ? testPath : join(root, testPath)
+  await FileSystem.copy(`${testRoot}/src`, `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`)
+  const testFilesRaw = await FileSystem.readDir(`${testRoot}/src`)
   const testFiles = getTestFiles(testFilesRaw)
   await FileSystem.mkdir(`${root}/dist/${commitHash}/tests`)
   await FileSystem.mkdir(`${root}/dist/tests`)
-  console.log({ testFiles })
   for (const testFile of testFiles) {
     await FileSystem.copyFile(`${root}/dist/index.html`, `${root}/dist/tests/${testFile}.html`)
   }
@@ -444,6 +446,12 @@ const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
  * @param {{root:string, pathPrefix:string , extensionPath:string, testPath:string   }} param0
  */
 export const exportStatic = async ({ root, pathPrefix, extensionPath, testPath }) => {
+  if (!existsSync(root)) {
+    throw new Error(`root path does not exist: ${root}`)
+  }
+  if (!existsSync(extensionPath)) {
+    throw new Error(`extension path does not exist: ${extensionPath}`)
+  }
   if (pathPrefix === 'auto') {
     const extensionJson = await readExtensionManifest(Path.join(extensionPath, 'extension.json'))
     const { id } = extensionJson

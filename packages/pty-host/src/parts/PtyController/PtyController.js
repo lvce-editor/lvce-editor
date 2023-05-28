@@ -7,12 +7,14 @@ export const state = {
 }
 
 // TODO maybe merge pty and pty controller
-export const create = (id, cwd, ipc) => {
+export const create = (id, cwd, command, args, ipc) => {
   Assert.number(id)
   Assert.string(cwd)
+  Assert.string(command)
+  Assert.array(args)
   Assert.object(ipc)
   Debug.debug(`create ${id} ${cwd}`)
-  const pty = Pty.create({ cwd })
+  const pty = Pty.create({ cwd, command, args })
   const handleData = (data) => {
     ipc.send({
       jsonrpc: '2.0',

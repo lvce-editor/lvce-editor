@@ -22,7 +22,7 @@ const handleChildError = (error) => {
 }
 
 const handleStdError = (error) => {
-  Logger.info('[main] Child std error')
+  Logger.info('[main-process] Child std error')
   Logger.error(error.toString())
   Process.exit(ExitCode.Error)
 }
@@ -58,7 +58,7 @@ const handleProcessExit = async () => {
   if (state.sharedProcess) {
     // await state.sharedProcess.terminate()
     // state.sharedProcess.postMessage('terminate')
-    Logger.info('[main-process] terminating shared process')
+    Logger.info('[main process] terminating shared process')
     state.sharedProcess.dispose()
     state.sharedProcess = undefined
 
@@ -67,12 +67,12 @@ const handleProcessExit = async () => {
 }
 
 const handleChildExit = (code) => {
-  Logger.info(`[main] shared process exited with code ${code}`)
+  Logger.info(`[main process] shared process exited with code ${code}`)
   Process.exit(code)
 }
 
 const handleChildDisconnect = () => {
-  Logger.info('[main] shared process disconnected')
+  Logger.info('[main process] shared process disconnected')
 }
 
 exports.send = (message) => {
