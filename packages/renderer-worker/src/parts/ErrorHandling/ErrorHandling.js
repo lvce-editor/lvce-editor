@@ -44,19 +44,3 @@ export const warn = (...args) => {
   state.seenWarnings.push(stringified)
   console.warn(...args)
 }
-
-/**
- * @param {PromiseRejectionEvent} event
- */
-export const handleUnhandledRejection = (event) => {
-  event.preventDefault()
-  handleError(event.reason, false, '[renderer-worker] Unhandled Rejection: ')
-}
-
-/**
- * @param {Error} error
- */
-export const handleUnhandledError = (message, filename, lineno, colno, error) => {
-  handleError(error, false, '[renderer-worker] Unhandled Error: ')
-  return true
-}
