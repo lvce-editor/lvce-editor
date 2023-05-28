@@ -12,9 +12,9 @@ jest.unstable_mockModule('ws', () => {
   }
 })
 
-const GetWebSocket = await import('../src/parts/GetWebSocket/GetWebSocket.js')
+const WebSocketServer = await import('../src/parts/WebSocketServer/WebSocketServer.js')
 
 test('getWebSocket', async () => {
-  const webSocket = await GetWebSocket.getWebSocket()
+  const webSocket = await WebSocketServer.handleUpgrade()
   expect(webSocket).toEqual({ __isWebSocket: true })
 })
