@@ -1,6 +1,7 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
+import * as Logger from '../Logger/Logger.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 
 export const handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
@@ -16,6 +17,10 @@ export const handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
       return
     }
     resolve(message.id, message)
+    return
+  }
+  if ('method' in message) {
+    await GetResponse.getResponse(message, execute)
     return
   }
   throw new JsonRpcError('unexpected message')
