@@ -1179,7 +1179,6 @@ export const setBounds = (id, left, top, width, height) => {
     stack: `    at create (http://localhost:3000/packages/renderer-process/src/parts/Viewlet/Viewlet.js:23:32)
     at Viewlet.sendMultiple (http://localhost:3000/packages/renderer-process/src/parts/Viewlet/Viewlet.js:132:9)
     at execute (http://localhost:3000/packages/renderer-process/src/parts/Command/Command.js:78:35)
-    at getResponse (http://localhost:3000/packages/renderer-process/src/parts/GetResponse/GetResponse.js:32:34)
     at Worker.handleMessageFromRendererWorker (http://localhost:3000/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js:20:42)
     at async loadSideBarIfVisible (http://localhost:3000/packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:88:5)
     at async startup (http://localhost:3000/packages/renderer-worker/src/parts/Workbench/Workbench.js:116:3)

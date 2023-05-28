@@ -3,6 +3,7 @@ import * as Command from '../Command/Command.js'
 import * as Css from '../Css/Css.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Id from '../Id/Id.js'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
@@ -10,7 +11,6 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as Id from '../Id/Id.js'
 
 export const state = {
   pendingModules: Object.create(null),
