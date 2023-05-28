@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -9,6 +8,7 @@ beforeEach(() => {
 jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
   return {
     info: jest.fn(),
+    error: jest.fn(),
   }
 })
 
