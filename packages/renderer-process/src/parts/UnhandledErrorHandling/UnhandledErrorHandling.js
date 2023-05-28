@@ -1,21 +1,20 @@
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as IsChromeExtensionError from '../IsChromeExtensionError/IsChromeExtensionError.js'
 import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerError.js'
-import * as Logger from '../Logger/Logger.js'
 
 export const handleUnhandledRejection = (event) => {
-  Logger.info(`[renderer-process] Unhandled Rejection: ${event.reason}`)
-  alert(event.reason)
+  event.preventDefault()
+  ErrorHandling.handleError(event.reason, true, '[renderer process] Unhandled Rejection: ')
 }
 
-export const handleUnhandledError = (error) => {
-  if (IsChromeExtensionError.isChromeExtensionError(error)) {
+export const handleUnhandledError = (message, filename, lineno, colno, error) => {
+  if (IsChromeExtensionError.isChromeExtensionError(message)) {
     // ignore errors from chrome extensions
     return
   }
-  if (IsFirefoxWorkerError.isFirefoxWorkerError(error)) {
+  if (IsFirefoxWorkerError.isFirefoxWorkerError(message)) {
     // ignore firefox worker errors
     return
   }
-  Logger.error(`[renderer-process] Unhandled Error: ${error}`)
-  alert(error)
+  ErrorHandling.handleError(error, true, '[renderer-process] Unhandled Error: ')
 }
