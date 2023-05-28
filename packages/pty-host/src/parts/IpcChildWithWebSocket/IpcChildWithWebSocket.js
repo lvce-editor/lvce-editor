@@ -1,5 +1,6 @@
 import * as GetFirstWebSocketEvent from '../GetFirstWebSocketEvent/GetFirstWebSocketEvent.js'
 import * as IsWebSocketOpen from '../IsWebSocketOpen/IsWebSocketOpen.js'
+import * as WebSocketSerialization from '../WebSocketSerialization/WebSocketSerialization.js'
 
 export const listen = async ({ webSocket }) => {
   if (!IsWebSocketOpen.isWebSocketOpen(webSocket)) {
@@ -7,14 +8,6 @@ export const listen = async ({ webSocket }) => {
     console.log({ type, event })
   }
   return webSocket
-}
-
-class MessageEvent extends Event {
-  constructor(data, target) {
-    super('message')
-    this.data = data
-    this.target = target
-  }
 }
 
 export const wrap = (webSocket) => {
@@ -28,7 +21,7 @@ export const wrap = (webSocket) => {
       switch (event) {
         case 'message':
           const wrappedListener = (message) => {
-            const data = JSON.parse(message.toString())
+            const data = WebSocketSerialization.deserialize(message)
             listener(data)
           }
           webSocket.on('message', wrappedListener)
@@ -41,7 +34,7 @@ export const wrap = (webSocket) => {
       this.webSocket.off(event, listener)
     },
     send(message) {
-      const stringifiedMessage = JSON.stringify(message)
+      const stringifiedMessage = WebSocketSerialization.serialize(message)
       this.webSocket.send(stringifiedMessage)
     },
     dispose() {

@@ -3,6 +3,7 @@ import * as getFirstUtilityProcessEvent from '../GetFirstUtilityProcessEvent/Get
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 import * as IpcChildWithElectronUtilityProcess from '../IpcChildWithElectronUtilityProcess/IpcChildWithElectronUtilityProcess.js'
 
+// TODO remove this and use HandleElectronMessagePort function instead
 export const listen = async () => {
   const parentPort = IpcChildWithElectronUtilityProcess.listen()
   const { type, event } = await getFirstUtilityProcessEvent.getFirstUtilityProcessEvent(parentPort)
