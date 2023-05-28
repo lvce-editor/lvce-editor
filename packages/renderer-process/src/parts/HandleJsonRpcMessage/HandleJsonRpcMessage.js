@@ -3,8 +3,12 @@ import * as HasTransferableResult from '../HasTransferableResult/HasTransferable
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 
 export const handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
+  // TODO adjust ipc implementation so that message is always a message
   if (message && message.message) {
     message = message.message
+  }
+  if (message && message.data) {
+    message = message.data
   }
   if ('id' in message) {
     if ('method' in message) {
