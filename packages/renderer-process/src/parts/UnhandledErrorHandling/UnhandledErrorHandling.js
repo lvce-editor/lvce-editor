@@ -8,11 +8,11 @@ export const handleUnhandledRejection = (event) => {
 }
 
 export const handleUnhandledError = (message, filename, lineno, colno, error) => {
-  if (IsChromeExtensionError.isChromeExtensionError(error)) {
+  if (IsChromeExtensionError.isChromeExtensionError(message)) {
     // ignore errors from chrome extensions
     return
   }
-  if (IsFirefoxWorkerError.isFirefoxWorkerError(error)) {
+  if (IsFirefoxWorkerError.isFirefoxWorkerError(message)) {
     // ignore firefox worker errors
     return
   }
