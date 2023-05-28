@@ -6,7 +6,9 @@ const getPort = async (type) => {
   const port = await RendererProcess.invoke('IpcParent.create', {
     method: RendererProcessIpcParentType.Electron,
     type,
+    raw: true,
   })
+  console.log({ port })
   return port
 }
 

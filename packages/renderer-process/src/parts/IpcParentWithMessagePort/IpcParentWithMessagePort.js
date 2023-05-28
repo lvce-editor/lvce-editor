@@ -17,3 +17,32 @@ export const create = async ({ url }) => {
   }
   return port
 }
+
+const getActualData = (event) => {
+  return event.data
+}
+
+export const wrap = (port) => {
+  return {
+    port,
+    send(message) {
+      this.port.postMessage(message)
+    },
+    sendAndTransfer(message, transferables) {
+      this.port.postMessage(message, transferables)
+    },
+    set onmessage(listener) {
+      const wrappedListener = (event) => {
+        const data = getActualData(event)
+        listener(data)
+      }
+      this.port.onmessage = wrappedListener
+    },
+    get onmessage() {
+      return this.port.onmessage
+    },
+    dispose() {
+      this.port.close()
+    },
+  }
+}

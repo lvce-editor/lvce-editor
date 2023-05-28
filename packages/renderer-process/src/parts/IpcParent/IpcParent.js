@@ -1,7 +1,13 @@
 import * as IpcParentModule from '../IpcParentModule/IpcParentModule.js'
 
 export const create = async ({ method, ...options }) => {
+  console.log('create', method)
   const module = await IpcParentModule.getModule(method)
   // @ts-ignore
-  return module.create(options)
+  const rawIpc = await module.create(options)
+  if (options.raw) {
+    return rawIpc
+  }
+  const ipc = module.wrap(rawIpc)
+  return ipc
 }

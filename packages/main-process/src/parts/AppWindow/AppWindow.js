@@ -79,6 +79,7 @@ exports.createAppWindow = async (preferences, parsedArgs, workingDirectory, url 
     workingDirectory,
     id: window.webContents.id,
   })
+  window.webContents.openDevTools()
   await loadUrl(window, url)
 }
 

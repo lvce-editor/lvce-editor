@@ -16,25 +16,12 @@ export const state = {
 const getIpc = async () => {
   const isElectron = Platform.isElectron()
   const name = isElectron ? 'Renderer Worker (Electron)' : 'Renderer Worker'
-  const rendererWorker = await IpcParent.create({
+  const ipc = await IpcParent.create({
     method: IpcParentType.Auto,
     url: Platform.getRendererWorkerUrl(),
     name,
   })
-  return {
-    send(message) {
-      rendererWorker.postMessage(message)
-    },
-    sendAndTransfer(message, transferables) {
-      rendererWorker.postMessage(message, transferables)
-    },
-    get onmessage() {
-      return rendererWorker.onmessage
-    },
-    set onmessage(listener) {
-      rendererWorker.onmessage = listener
-    },
-  }
+  return ipc
 }
 
 export const hydrate = async (config) => {
