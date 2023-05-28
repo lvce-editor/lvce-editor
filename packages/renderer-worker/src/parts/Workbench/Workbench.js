@@ -1,6 +1,5 @@
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
 import * as InitData from '../InitData/InitData.js'
@@ -20,6 +19,7 @@ import * as SaveState from '../SaveState/SaveState.js'
 import * as ServiceWorker from '../ServiceWorker/ServiceWorker.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as UnhandledErrorHandling from '../UnhandledErrorHandling/UnhandledErrorHandling.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -28,16 +28,19 @@ import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async () => {
-  onunhandledrejection = ErrorHandling.handleUnhandledRejection
-  onerror = ErrorHandling.handleUnhandledError
+  onunhandledrejection = UnhandledErrorHandling.handleUnhandledRejection
+  // @ts-ignore
+  onerror = UnhandledErrorHandling.handleUnhandledError
 
   Command.setLoad(Module.load)
   LifeCycle.mark(LifeCyclePhase.Zero)
 
   Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
   await RendererProcess.listen()
+  console.log('listen renderer')
   if (Platform.platform !== PlatformType.Web) {
     await SharedProcess.listen()
+    console.log('listen shared')
   }
 
   LifeCycle.mark(LifeCyclePhase.One)
