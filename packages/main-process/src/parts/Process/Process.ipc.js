@@ -5,4 +5,5 @@ exports.name = 'Process'
 // prettier-ignore
 exports.Commands = {
   getPid: Process.getPid,
+  kill: Process.kill
 }

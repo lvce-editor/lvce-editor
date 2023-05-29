@@ -1,12 +1,13 @@
 const { Menu, BrowserWindow } = require('electron')
-const Assert = require('../Assert/Assert.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
+const Assert = require('../Assert/Assert.js')
+const GetElectronMenuItems = require('../GetElectronMenuItems/GetElectronMenuItems.js')
 const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
 
 const getPort = (browserWindow) => {
   const state = AppWindowStates.findById(browserWindow.webContents.id)
   if (!state) {
-    console.log('[main-process] menu message port not found')
+    console.log('[main-process] menu: message port not found')
     return undefined
   }
   return state.port
@@ -18,30 +19,22 @@ const click = (menuItem, browserWindow) => {
   if (!port) {
     return
   }
+  const customData = menuItem.menu.customData || undefined
   port.postMessage({
     jsonrpc: JsonRpcVersion.Two,
     method: 'ElectronContextMenu.handleSelect',
-    params: [label],
+    params: [label, customData],
   })
 }
 
-const toMenuItem = (menuItem) => {
-  return {
-    ...menuItem,
-    click,
-  }
-}
-
-const toTemplate = (menuItems) => {
-  return menuItems.map(toMenuItem)
-}
-
-exports.openContextMenu = (menuItems, x, y) => {
+exports.openContextMenu = (menuItems, x, y, customData) => {
   Assert.array(menuItems)
   Assert.number(x)
   Assert.number(y)
-  const template = toTemplate(menuItems)
+  const template = GetElectronMenuItems.getElectronMenuItems(menuItems, click)
   const menu = Menu.buildFromTemplate(template)
+  // @ts-ignore
+  menu.customData = customData
   const window = BrowserWindow.getFocusedWindow()
   if (!window) {
     return

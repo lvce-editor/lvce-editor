@@ -1,50 +1,16 @@
 const { BrowserWindow } = require('electron')
 const Assert = require('../Assert/Assert.js')
+const CreatePidMap = require('../CreatePidMap/CreatePidMap.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 const UtilityProcessState = require('../UtilityProcessState/UtilityProcessState.js')
-
-/**
- *
- * @param {import('electron').BrowserWindow[]} browserWindows
- */
-const createPidWindowMap = (browserWindows) => {
-  const pidWindowMap = Object.create(null)
-  for (const browserWindow of browserWindows) {
-    const { webContents } = browserWindow
-    const pid = webContents.getOSProcessId()
-    pidWindowMap[pid] = 'renderer'
-    const { devToolsWebContents } = webContents
-    if (devToolsWebContents) {
-      const pid = devToolsWebContents.getOSProcessId()
-      pidWindowMap[pid] = 'chrome-devtools'
-    }
-    const views = browserWindow.getBrowserViews()
-    for (const view of views) {
-      const viewWebContents = view.webContents
-      const pid = viewWebContents.getOSProcessId()
-      const displayName = `browser-view-${viewWebContents.id}`
-      pidWindowMap[pid] = displayName
-    }
-  }
-  for (const { view } of ElectronBrowserViewState.getAll()) {
-    const viewWebContents = view.webContents
-    const pid = viewWebContents.getOSProcessId()
-    if (pid in pidWindowMap) {
-      continue
-    }
-    pidWindowMap[pid] = `hidden-browser-view-${viewWebContents.id}`
-  }
-  for (const [pid, name] of UtilityProcessState.getAll()) {
-    pidWindowMap[pid] = name
-  }
-  return pidWindowMap
-}
 
 exports.getName = (pid, cmd, rootPid) => {
   Assert.object(process)
   Assert.number(rootPid)
   const browserWindows = BrowserWindow.getAllWindows()
-  const pidWindowMap = createPidWindowMap(browserWindows)
+  const browserViews = ElectronBrowserViewState.getAll()
+  const utilityProcesses = UtilityProcessState.getAll()
+  const pidMap = CreatePidMap.createPidMap(browserWindows, browserViews, utilityProcesses)
   if (pid === rootPid) {
     return 'main'
   }
@@ -64,8 +30,8 @@ exports.getName = (pid, cmd, rootPid) => {
   if (cmd.includes('--lvce-window-kind=process-explorer')) {
     return 'process-explorer'
   }
-  if (pid in pidWindowMap) {
-    return pidWindowMap[pid] || `<unknown>`
+  if (pid in pidMap) {
+    return pidMap[pid] || `<unknown>`
   }
   if (cmd.includes('--type=renderer')) {
     return `<unknown renderer>`

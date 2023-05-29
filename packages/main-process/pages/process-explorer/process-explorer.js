@@ -364,19 +364,28 @@ const handleMouseDown = (event) => {
   }
 }
 
-const processExplorerShowContextMenu = async (pid) => {
-  JsonRpc.invoke(state.ipc, 'ProcessExplorerContextMenu.showContextMenu', pid)
+const processExplorerShowContextMenu = async (pid, x, y) => {
+  const menuItems = [
+    {
+      label: 'Kill Process',
+    },
+  ]
+  const customData = {
+    pid,
+  }
+  await JsonRpc.invoke(state.ipc, 'ElectronContextMenu.openContextMenu', menuItems, x, y, customData)
 }
 
 const handleContextMenu = async (event) => {
   event.preventDefault()
+  const { clientX, clientY } = event
   const $Target = event.target
 
   const $Row = $Target.parentNode
   const index = getNodeIndex($Row)
 
   const displayProcess = state.displayProcesses[index]
-  await processExplorerShowContextMenu(displayProcess.pid)
+  await processExplorerShowContextMenu(displayProcess.pid, clientX, clientY)
 }
 
 /**
@@ -718,8 +727,11 @@ const getPort = async (type) => {
 }
 
 const IpcChildWithElectron = {
-  async listen() {
+  async create() {
     const port = await getPort('electron-process')
+    return port
+  },
+  async listen(port) {
     return {
       port,
       /**
@@ -743,8 +755,11 @@ const IpcChildWithElectron = {
 }
 
 const IpcChild = {
-  listen() {
-    return IpcChildWithElectron.listen()
+  async listen() {
+    const module = IpcChildWithElectron
+    const rawIpc = await module.create()
+    const ipc = module.listen(rawIpc)
+    return ipc
   },
 }
 
@@ -766,12 +781,60 @@ const isErrorMessage = (message) => {
   return 'error' in message
 }
 
+const Signal = {
+  SIGTERM: 'SIGTERM',
+}
+
+const Process = {
+  kill(pid) {
+    return JsonRpc.invoke(state.ipc, 'Process.kill', pid, Signal.SIGTERM)
+  },
+}
+
+const getContextMenuFn = (label) => {
+  switch (label) {
+    case 'Kill Process':
+      return Process.kill
+    default:
+      throw new Error(`context menu function not found ${label}`)
+  }
+}
+
+const ElectronContextMenu = {
+  handleSelect(label, customData) {
+    const pid = customData.pid
+    const fn = getContextMenuFn(label)
+    return fn(pid)
+  },
+}
+
+const CommandMap = {
+  commandMap: {
+    'ElectronContextMenu.handleSelect': ElectronContextMenu.handleSelect,
+  },
+}
+
+const Command = {
+  execute(method, ...params) {
+    const fn = CommandMap.commandMap[method]
+    if (!fn) {
+      return
+    }
+    return fn(...params)
+  },
+}
+
 const handleMessage = (message) => {
   if (message.id) {
     if (isResultMessage(message) || isErrorMessage(message)) {
       Callback.resolve(message.id, message)
+      return
     }
   }
+  if (message.method) {
+    return Command.execute(message.method, ...message.params)
+  }
+  console.log({ message })
 }
 
 const getPid = () => {
@@ -784,11 +847,17 @@ const sleep = (timeout) => {
   })
 }
 
+const HandleIpc = {
+  handleIpc(ipc) {
+    ipc.onmessage = handleMessage
+  },
+}
+
 const main = async () => {
   onerror = handleError
   onunhandledrejection = handleUnhandledRejection
   const ipc = await IpcChild.listen()
-  ipc.onmessage = handleMessage
+  HandleIpc.handleIpc(ipc)
   state.ipc = ipc
   const pid = await getPid()
   const refreshInterval = 1000
