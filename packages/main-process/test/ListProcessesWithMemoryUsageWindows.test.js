@@ -154,7 +154,7 @@ test('listProcessesWithMemoryUsage - error - rootPid not found', async () => {
     {
       cmd: 'C:\\Users\\test-user\\Documents\\app\\packages\\main-process\\node_modules\\electron\\dist\\electron.exe .',
       memory: 95653888,
-      name: '<unknown> C:\\Users\\test-user\\Documents\\app\\packages\\main-process\\node_modules\\electron\\dist\\electron.exe .',
+      name: 'C:\\Users\\test-user\\Documents\\app\\packages\\main-process\\node_modules\\electron\\dist\\electron.exe .',
       pid: 9176,
       ppid: 9256,
     },

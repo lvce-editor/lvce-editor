@@ -48,5 +48,5 @@ exports.getName = (pid, cmd, rootPid) => {
   if (cmd.startsWith('bash')) {
     return 'bash'
   }
-  return `<unknown> ${cmd}`
+  return `${cmd}`
 }
