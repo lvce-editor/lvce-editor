@@ -21,6 +21,11 @@ const handleBeforeInput = (event, input) => {
     // @ts-ignore
     event.sender.openDevTools()
   }
+  if (input.code && input.key.toLowerCase() === 'r') {
+    event.preventDefault()
+    // @ts-ignore
+    event.sender.reload()
+  }
 }
 
 /**
