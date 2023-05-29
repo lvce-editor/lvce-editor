@@ -26,6 +26,21 @@ const getModule = (type) => {
   }
 }
 
+const createWebContentsIpc = (webContents) => {
+  return {
+    webContents,
+    send(message) {
+      this.webContents.postMessage(ElectronPreloadChannelType.Port, message)
+    },
+    sendAndTransfer(message, transfer) {
+      this.webContents.postMessage(ElectronPreloadChannelType.Port, message, transfer)
+    },
+    isDisposed() {
+      return this.webContents.isDestroyed()
+    },
+  }
+}
+
 /**
  * @param {import('electron').IpcMainEvent} event
  */
@@ -34,6 +49,7 @@ exports.handlePort = async (event, message) => {
   Assert.object(message)
   const sender = event.sender
   const data = message.params[0]
+  const ipc = createWebContentsIpc(sender)
   try {
     const module = getModule(data)
     if (!module) {
@@ -43,13 +59,13 @@ exports.handlePort = async (event, message) => {
     const { port1, port2 } = channel
     await module.handlePort(event, port1, ...message.params)
     const response = GetSuccessResponse.getSuccessResponse(message, null)
-    sender.postMessage(ElectronPreloadChannelType.Port, response, [port2])
+    ipc.sendAndTransfer(response, [port2])
   } catch (error) {
     const response = await GetErrorResponse.getErrorResponse(message, error)
-    const isDestroyed = sender.isDestroyed()
+    const isDestroyed = ipc.isDisposed()
     if (isDestroyed) {
       return
     }
-    sender.postMessage(ElectronPreloadChannelType.Port, response)
+    ipc.send(response)
   }
 }
