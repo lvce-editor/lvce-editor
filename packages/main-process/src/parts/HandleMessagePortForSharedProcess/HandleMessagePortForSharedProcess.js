@@ -30,7 +30,7 @@ const getFolder = (args) => {
  * @param {import('electron').IpcMainEvent} event
  * @returns
  */
-exports.handlePort = async (event, browserWindowPort) => {
+exports.handlePort = async (event, browserWindowPort, type, name) => {
   const config = AppWindow.findById(event.sender.id)
   if (!config) {
     Logger.warn('port event - config expected')

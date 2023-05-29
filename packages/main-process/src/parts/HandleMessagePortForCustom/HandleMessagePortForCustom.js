@@ -12,10 +12,11 @@ const getPath = (data) => {
  * @param {import('electron').IpcMainEvent} event
  * @returns
  */
-exports.handlePort = async (event, browserWindowPort, data) => {
+exports.handlePort = async (event, browserWindowPort, ...params) => {
   if (!browserWindowPort) {
     throw new Error(`browserWindowPort must be passed`)
   }
+  const data = params[0]
   const path = getPath(data)
   const childProcess = await IpcParent.create({
     method: IpcParentType.ElectronUtilityProcess,

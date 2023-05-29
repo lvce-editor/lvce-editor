@@ -41,7 +41,7 @@ exports.handlePort = async (event, message) => {
     }
     const channel = new MessageChannelMain()
     const { port1, port2 } = channel
-    await module.handlePort(event, port1, data)
+    await module.handlePort(event, port1, ...message.params)
     const response = GetSuccessResponse.getSuccessResponse(message, null)
     sender.postMessage(ElectronPreloadChannelType.Port, response, [port2])
   } catch (error) {

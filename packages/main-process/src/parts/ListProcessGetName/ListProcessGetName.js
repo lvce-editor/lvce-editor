@@ -1,6 +1,7 @@
 const { BrowserWindow } = require('electron')
 const Assert = require('../Assert/Assert.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
+const UtilityProcessState = require('../UtilityProcessState/UtilityProcessState.js')
 
 /**
  *
@@ -33,6 +34,9 @@ const createPidWindowMap = (browserWindows) => {
     }
     pidWindowMap[pid] = `hidden-browser-view-${viewWebContents.id}`
   }
+  for (const [pid, name] of UtilityProcessState.getAll()) {
+    pidWindowMap[pid] = name
+  }
   return pidWindowMap
 }
 
@@ -50,9 +54,7 @@ exports.getName = (pid, cmd, rootPid) => {
   if (cmd.includes('--type=gpu-process')) {
     return 'gpu-process'
   }
-  if (cmd.includes('--type=utility')) {
-    return 'utility'
-  }
+
   if (cmd.includes('extensionHostMain.js')) {
     return 'extension-host'
   }
@@ -62,8 +64,14 @@ exports.getName = (pid, cmd, rootPid) => {
   if (cmd.includes('--lvce-window-kind=process-explorer')) {
     return 'process-explorer'
   }
+  if (pid in pidWindowMap) {
+    return pidWindowMap[pid] || `<unknown>`
+  }
   if (cmd.includes('--type=renderer')) {
-    return pidWindowMap[pid] || `<unknown renderer>`
+    return `<unknown renderer>`
+  }
+  if (cmd.includes('--type=utility')) {
+    return 'utility'
   }
   if (cmd.includes('typescript/lib/tsserver.js')) {
     return 'tsserver.js'
