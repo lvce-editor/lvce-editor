@@ -44,7 +44,7 @@ const getType = (error) => {
   if (!error) {
     return 'Error'
   }
-  return error.constructor.name || 'Error'
+  return error.name || error.constructor.name || 'Error'
 }
 
 exports.prepare = (error) => {
