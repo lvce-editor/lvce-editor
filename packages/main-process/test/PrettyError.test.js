@@ -11,6 +11,7 @@ jest.mock('node:fs', () => ({
 const fs = require('node:fs')
 const { VError } = require('verror')
 const PrettyError = require('../src/parts/PrettyError/PrettyError.js')
+const { IpcError } = require('../src/parts/IpcError/IpcError.js')
 
 test('prepare - unknown command error', async () => {
   const error = new Error()
@@ -1244,6 +1245,60 @@ exports.get = () => {
     stack: `    at getAbsolutePath (C:\\test\\packages\\main-process\\src\\parts\\ElectronSession\\ElectronSession.js:138:14)
     at Function.handleRequest (C:\\test\\packages\\main-process\\src\\parts\\ElectronSession\\ElectronSession.js:152:16`,
     type: 'TypeError',
+  })
+})
+
+test('prepare - ipc error', async () => {
+  const stdout = ''
+  const stderr = `node:internal/modules/cjs/loader:1057
+  throw err;
+  ^
+
+Error: Cannot find module '/test/linked-extensions/builtin.git/packages/extension/../node/src/gitClient.cjs'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1054:15)
+    at o._resolveFilename (node:electron/js2c/utility_init:2:3040)
+    at node:electron/js2c/utility_init:2:5916
+    at node:electron/js2c/utility_init:2:5961
+    at node:electron/js2c/utility_init:2:5965
+    at BuiltinModule.compileForInternalLoader (node:internal/bootstrap/loaders:334:7)
+    at BuiltinModule.compileForPublicLoader (node:internal/bootstrap/loaders:270:10)
+    at loadBuiltinModule (node:internal/modules/cjs/helpers:50:9)
+    at Module._load (node:internal/modules/cjs/loader:914:15)
+    at f._load (node:electron/js2c/asar_bundle:2:13330) {
+  code: 'MODULE_NOT_FOUND',\n" +
+  requireStack: []
+}
+
+Node.js v18.14.0
+`
+  const error = new IpcError('Utility process exited before ipc connection was established', stdout, stderr)
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    codeFrame: ``,
+    message: `Utility process exited before ipc connection was established: Error: Cannot find module '/test/linked-extensions/builtin.git/packages/extension/../node/src/gitClient.cjs'`,
+    stack: ``,
+    stderr: `node:internal/modules/cjs/loader:1057
+  throw err;
+  ^
+
+Error: Cannot find module '/test/linked-extensions/builtin.git/packages/extension/../node/src/gitClient.cjs'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1054:15)
+    at o._resolveFilename (node:electron/js2c/utility_init:2:3040)
+    at node:electron/js2c/utility_init:2:5916
+    at node:electron/js2c/utility_init:2:5961
+    at node:electron/js2c/utility_init:2:5965
+    at BuiltinModule.compileForInternalLoader (node:internal/bootstrap/loaders:334:7)
+    at BuiltinModule.compileForPublicLoader (node:internal/bootstrap/loaders:270:10)
+    at loadBuiltinModule (node:internal/modules/cjs/helpers:50:9)
+    at Module._load (node:internal/modules/cjs/loader:914:15)
+    at f._load (node:electron/js2c/asar_bundle:2:13330) {
+  code: 'MODULE_NOT_FOUND',\n" +
+  requireStack: []
+}
+
+Node.js v18.14.0
+`,
+    type: 'IpcError',
   })
 })
 
