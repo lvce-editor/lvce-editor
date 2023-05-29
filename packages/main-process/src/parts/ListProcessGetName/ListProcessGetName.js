@@ -1,6 +1,7 @@
 const { BrowserWindow } = require('electron')
 const Assert = require('../Assert/Assert.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
+const UtilityProcessState = require('../UtilityProcessState/UtilityProcessState.js')
 
 /**
  *
@@ -32,6 +33,9 @@ const createPidWindowMap = (browserWindows) => {
       continue
     }
     pidWindowMap[pid] = `hidden-browser-view-${viewWebContents.id}`
+  }
+  for (const [pid, name] of UtilityProcessState.getAll()) {
+    pidWindowMap[pid] = name
   }
   return pidWindowMap
 }
