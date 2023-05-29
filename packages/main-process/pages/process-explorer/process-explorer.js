@@ -718,8 +718,11 @@ const getPort = async (type) => {
 }
 
 const IpcChildWithElectron = {
-  async listen() {
-    const port = await getPort('electron-process')
+  async create() {
+    const port = await getPort('shared-process')
+    return port
+  },
+  async listen(port) {
     return {
       port,
       /**
@@ -743,8 +746,11 @@ const IpcChildWithElectron = {
 }
 
 const IpcChild = {
-  listen() {
-    return IpcChildWithElectron.listen()
+  async listen() {
+    const module = IpcChildWithElectron
+    const rawIpc = await module.create()
+    const ipc = module.listen(rawIpc)
+    return ipc
   },
 }
 
