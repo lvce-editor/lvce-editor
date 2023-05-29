@@ -65,13 +65,10 @@ exports.getName = (pid, cmd, rootPid) => {
     return 'process-explorer'
   }
   if (pid in pidWindowMap) {
-    if (cmd.includes('--type=renderer')) {
-      return pidWindowMap[pid] || `<unknown renderer>`
-    }
-    if (cmd.includes('--type=utility')) {
-      return pidWindowMap[pid] || `utility`
-    }
     return pidWindowMap[pid] || `<unknown>`
+  }
+  if (cmd.includes('--type=renderer')) {
+    return `<unknown renderer>`
   }
   if (cmd.includes('--type=utility')) {
     return 'utility'
