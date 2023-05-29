@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as CommandMap from '../CommandMap/CommandMap.js'
 import * as CommandState from '../CommandState/CommandState.js'
 import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
 import * as GetSuccessResponse from '../GetSuccessResponse/GetSuccessResponse.js'
@@ -24,6 +25,7 @@ const waitForFirstMessage = async (ipc) => {
 export const main = async () => {
   const ipc = await IpcChild.listen({ method: IpcChildType.Auto() })
   const firstMessage = await waitForFirstMessage(ipc)
+  CommandState.registerCommands(CommandMap.commandMap)
   let module
   let execute = Command.execute
   try {
