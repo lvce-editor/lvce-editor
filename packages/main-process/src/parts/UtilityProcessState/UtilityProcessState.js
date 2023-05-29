@@ -6,7 +6,7 @@ const state = (exports.state = {
 
 exports.add = (pid, name) => {
   Assert.number(pid)
-  Assert.string(pid)
+  Assert.string(name)
   state.all[pid] = name
 }
 

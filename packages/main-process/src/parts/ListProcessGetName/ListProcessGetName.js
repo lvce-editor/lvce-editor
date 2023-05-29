@@ -54,9 +54,7 @@ exports.getName = (pid, cmd, rootPid) => {
   if (cmd.includes('--type=gpu-process')) {
     return 'gpu-process'
   }
-  if (cmd.includes('--type=utility')) {
-    return 'utility'
-  }
+
   if (cmd.includes('extensionHostMain.js')) {
     return 'extension-host'
   }
@@ -66,8 +64,17 @@ exports.getName = (pid, cmd, rootPid) => {
   if (cmd.includes('--lvce-window-kind=process-explorer')) {
     return 'process-explorer'
   }
-  if (cmd.includes('--type=renderer')) {
-    return pidWindowMap[pid] || `<unknown renderer>`
+  if (pid in pidWindowMap) {
+    if (cmd.includes('--type=renderer')) {
+      return pidWindowMap[pid] || `<unknown renderer>`
+    }
+    if (cmd.includes('--type=utility')) {
+      return pidWindowMap[pid] || `utility`
+    }
+    return pidWindowMap[pid] || `<unknown>`
+  }
+  if (cmd.includes('--type=utility')) {
+    return 'utility'
   }
   if (cmd.includes('typescript/lib/tsserver.js')) {
     return 'tsserver.js'

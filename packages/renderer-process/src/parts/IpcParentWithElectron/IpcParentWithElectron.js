@@ -10,13 +10,13 @@ const handleMessageFromWindow = (event) => {
 // @ts-ignore
 window.addEventListener('message', handleMessageFromWindow)
 
-export const create = async ({ type }) => {
+export const create = async ({ type, name }) => {
   const { id, promise } = Callback.registerPromise()
   const message = {
     jsonrpc: JsonRpcVersion.Two,
     id,
     method: 'CreateMessagePort.createMessagePort',
-    params: [type],
+    params: [type, name],
   }
   // @ts-ignore
   if (typeof window.myApi === 'undefined') {

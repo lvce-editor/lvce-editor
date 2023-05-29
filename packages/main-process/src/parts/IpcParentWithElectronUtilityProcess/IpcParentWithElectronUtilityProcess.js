@@ -1,6 +1,7 @@
 const { IpcError } = require('../IpcError/IpcError.js')
 const { utilityProcess } = require('electron')
 const Assert = require('../Assert/Assert.js')
+const CamelCase = require('../CamelCase/CamelCase.js')
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js')
 const Path = require('../Path/Path.js')
@@ -24,14 +25,6 @@ exports.create = async ({ path, argv = [], execArgv = [], name = 'electron-utili
     stdio: 'pipe',
     serviceName: name,
   })
-  const cleanup = () => {
-    UtilityProcessState.remove(childProcess.pid)
-    childProcess.off('exit', handleExit)
-  }
-  const handleExit = () => {
-    cleanup()
-  }
-  childProcess.on('exit', handleExit)
   // @ts-ignore
   childProcess.stdout.pipe(process.stdout)
   const { type, event, stdout, stderr } = await GetFirstUtilityProcessEvent.getFirstUtilityProcessEvent(childProcess)
@@ -41,6 +34,22 @@ exports.create = async ({ path, argv = [], execArgv = [], name = 'electron-utili
   // @ts-ignore
   childProcess.stderr.pipe(process.stderr)
   return childProcess
+}
+
+exports.effects = ({ rawIpc, name = 'electron-utility-process' }) => {
+  if (!rawIpc.pid) {
+    return
+  }
+  const camelCaseName = CamelCase.camelCase(name)
+  UtilityProcessState.add(rawIpc.pid, camelCaseName)
+  const cleanup = () => {
+    UtilityProcessState.remove(rawIpc.pid)
+    rawIpc.off('exit', handleExit)
+  }
+  const handleExit = () => {
+    cleanup()
+  }
+  rawIpc.on('exit', handleExit)
 }
 
 exports.wrap = (process) => {
