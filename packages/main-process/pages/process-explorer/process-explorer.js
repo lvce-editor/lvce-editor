@@ -364,15 +364,29 @@ const handleMouseDown = (event) => {
   }
 }
 
-const processExplorerShowContextMenu = async (pid, x, y) => {
+const IsDebuggable = {
+  isDebuggable(command) {
+    return command.includes('node ') || command.includes('node.exe') || command.includes('node.mojom.NodeService')
+  },
+}
+
+const getMenuItems = (displayProcess) => {
   const menuItems = [
     {
       label: 'Kill Process',
     },
   ]
-  const customData = {
-    pid,
+  if (IsDebuggable.isDebuggable(displayProcess.cmd)) {
+    menuItems.push({
+      label: 'Debug Process',
+    })
   }
+  return menuItems
+}
+
+const processExplorerShowContextMenu = async (displayProcess, x, y) => {
+  const menuItems = getMenuItems(displayProcess)
+  const customData = displayProcess
   await JsonRpc.invoke(state.ipc, 'ElectronContextMenu.openContextMenu', menuItems, x, y, customData)
 }
 
@@ -385,7 +399,7 @@ const handleContextMenu = async (event) => {
   const index = getNodeIndex($Row)
 
   const displayProcess = state.displayProcesses[index]
-  await processExplorerShowContextMenu(displayProcess.pid, clientX, clientY)
+  await processExplorerShowContextMenu(displayProcess, clientX, clientY)
 }
 
 /**
@@ -789,12 +803,18 @@ const Process = {
   kill(pid) {
     return JsonRpc.invoke(state.ipc, 'Process.kill', pid, Signal.SIGTERM)
   },
+  debug(pid) {
+    // TODO
+    console.log({ pid })
+  },
 }
 
 const getContextMenuFn = (label) => {
   switch (label) {
     case 'Kill Process':
       return Process.kill
+    case 'Debug Process':
+      return Process.debug
     default:
       throw new Error(`context menu function not found ${label}`)
   }
