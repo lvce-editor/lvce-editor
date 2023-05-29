@@ -425,17 +425,35 @@ const handleKeyDown = (event) => {
   }
 }
 
+const ProcessFlag = {
+  None: 0,
+  Collapsed: 1,
+  Expanded: 2,
+}
+
+const getPaddingLeft = (process) => {
+  if (process.depth === 1) {
+    return '0'
+  }
+  const depthCh = (process.depth - 1) * 1.5
+  if (process.flags === ProcessFlag.None) {
+    return `calc(${depthCh}ch + 17px)`
+  }
+  return `${depthCh}ch`
+}
+
 const render$Process = ($Process, process) => {
   $Process.ariaLevel = process.depth
+  $Process.firstChild.style.paddingLeft = getPaddingLeft(process)
   $Process.title = process.cmd
   switch (process.flags) {
-    case /* none */ 0:
+    case ProcessFlag.None:
       $Process.removeAttribute('aria-expanded')
       break
-    case /* collapsed */ 1:
+    case ProcessFlag.Collapsed:
       $Process.ariaExpanded = false
       break
-    case /* expanded */ 2:
+    case ProcessFlag.Expanded:
       $Process.ariaExpanded = true
       break
     default:
