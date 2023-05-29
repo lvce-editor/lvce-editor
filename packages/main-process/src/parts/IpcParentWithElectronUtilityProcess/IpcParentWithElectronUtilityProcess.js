@@ -6,7 +6,7 @@ const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetF
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 
-exports.create = async ({ path, argv = [], execArgv = [] }) => {
+exports.create = async ({ path, argv = [], execArgv = [], name = 'electron-utility-process' }) => {
   Assert.string(path)
   const utilityProcessEntryPoint = Path.join(
     Root.root,
@@ -21,6 +21,7 @@ exports.create = async ({ path, argv = [], execArgv = [] }) => {
   const childProcess = utilityProcess.fork(utilityProcessEntryPoint, actualArgv, {
     execArgv,
     stdio: 'pipe',
+    serviceName: name,
   })
   // @ts-ignore
   childProcess.stdout.pipe(process.stdout)
