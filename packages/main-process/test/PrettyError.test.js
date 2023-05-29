@@ -1265,7 +1265,7 @@ Error: Cannot find module '/test/linked-extensions/builtin.git/packages/extensio
     at loadBuiltinModule (node:internal/modules/cjs/helpers:50:9)
     at Module._load (node:internal/modules/cjs/loader:914:15)
     at f._load (node:electron/js2c/asar_bundle:2:13330) {
-  code: 'MODULE_NOT_FOUND',\n" +
+  code: 'MODULE_NOT_FOUND',
   requireStack: []
 }
 
@@ -1292,7 +1292,7 @@ Error: Cannot find module '/test/linked-extensions/builtin.git/packages/extensio
     at loadBuiltinModule (node:internal/modules/cjs/helpers:50:9)
     at Module._load (node:internal/modules/cjs/loader:914:15)
     at f._load (node:electron/js2c/asar_bundle:2:13330) {
-  code: 'MODULE_NOT_FOUND',\n" +
+  code: 'MODULE_NOT_FOUND',
   requireStack: []
 }
 
@@ -1408,5 +1408,69 @@ exports.update = update
     at async hydrate (/test/packages/main-process/src/parts/App/App.js:103:3)
     at async main (/test/packages/main-process/src/mainProcessMain.js:16:3)`,
     type: 'VError',
+  })
+})
+
+test('prepare - error - unexpected token export', async () => {
+  const error = new SyntaxError("unexpected token 'export'")
+  error.stack = `/test/packages/main-process/src/parts/UtilityProcessState/UtilityProcessState.js:7
+export const add = (pid, name) => {
+^^^^^^
+
+SyntaxError: Unexpected token 'export'
+    at internalCompileFunction (node:internal/vm:73:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1156:20)
+    at Module._compile (node:internal/modules/cjs/loader:1197:27)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1296:10)
+    at Module.load (node:internal/modules/cjs/loader:1096:32)
+    at Module._load (node:internal/modules/cjs/loader:937:12)
+    at f._load (node:electron/js2c/asar_bundle:2:13330)
+    at Module.require (node:internal/modules/cjs/loader:1120:19)
+    at require (node:internal/modules/cjs/helpers:103:18)
+    at Object.<anonymous> (/test/packages/main-process/src/parts/IpcParentWithElectronUtilityProcess/IpcParentWithElectronUtilityProcess.js:8:29)
+    at Module._compile (node:internal/modules/cjs/loader:1241:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1296:10)
+    at Module.load (node:internal/modules/cjs/loader:1096:32)
+    at Module._load (node:internal/modules/cjs/loader:937:12)
+    at f._load (node:electron/js2c/asar_bundle:2:13330)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:169:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:194:25)',`
+  // @ts-ignore
+  fs.readFileSync.mockImplementation(() => {
+    return `const Assert = require('../Assert/Assert.js')
+
+const state = (exports.state = {
+  all: Object.create(null),
+})
+
+export const add = (pid, name) => {
+  Assert.number(pid)
+  Assert.string(pid)
+  state.all[pid] = name
+}
+
+export const remove = (pid) => {
+  Assert.number(pid)
+  delete state.all[pid]
+}
+
+export const getAll = () => {
+  return Object.entries(state.all)
+}
+`
+  })
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    codeFrame: `   5 | })
+   6 |
+>  7 | export const add = (pid, name) => {
+     | ^
+   8 |   Assert.number(pid)
+   9 |   Assert.string(pid)
+  10 |   state.all[pid] = name`,
+    message: "unexpected token 'export'",
+    stack: `    at /test/packages/main-process/src/parts/UtilityProcessState/UtilityProcessState.js:7
+    at Object.<anonymous> (/test/packages/main-process/src/parts/IpcParentWithElectronUtilityProcess/IpcParentWithElectronUtilityProcess.js:8:29)`,
+    type: 'SyntaxError',
   })
 })
