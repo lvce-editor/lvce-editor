@@ -49,8 +49,6 @@ exports.getModuleId = (commandId) => {
       return ModuleId.About
     case 'ListProcessesWithMemoryUsage':
       return ModuleId.ListProcessesWithMemoryUsage
-    case 'ProcessExplorerContextMenu':
-      return ModuleId.ProcessExplorerContextMenu
     case 'Process':
       return ModuleId.Process
     case 'ElectronNet':
