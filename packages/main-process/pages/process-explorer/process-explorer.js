@@ -719,7 +719,7 @@ const getPort = async (type) => {
 
 const IpcChildWithElectron = {
   async create() {
-    const port = await getPort('shared-process')
+    const port = await getPort('electron-process')
     return port
   },
   async listen(port) {
