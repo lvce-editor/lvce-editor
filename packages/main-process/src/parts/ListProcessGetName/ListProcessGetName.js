@@ -75,5 +75,8 @@ exports.getName = (pid, cmd, rootPid) => {
   if (cmd.includes('extensionHostHelperProcessMain.js')) {
     return 'extension-host-helper-process'
   }
+  if (cmd.startsWith('bash')) {
+    return 'bash'
+  }
   return `<unknown> ${cmd}`
 }
