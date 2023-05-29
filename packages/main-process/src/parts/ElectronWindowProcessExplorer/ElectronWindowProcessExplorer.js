@@ -7,6 +7,7 @@ const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/El
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const Root = require('../Root/Root.js')
+const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Session = require('../ElectronSession/ElectronSession.js')
 
 /**
@@ -17,11 +18,18 @@ const Session = require('../ElectronSession/ElectronSession.js')
 const handleBeforeInput = (event, input) => {
   if (input.control && input.key.toLowerCase() === 'i') {
     event.preventDefault()
-    // console.log(event.sender)
-    // console.log(event.sender)
+    // @ts-ignore
     event.sender.openDevTools()
-    // event.sender.webContents.openDevTools()
   }
+}
+
+/**
+ * @param {import('electron').Event} event
+ */
+const handleWindowClose = (event) => {
+  // @ts-ignore
+  const browserWindow = event.sender
+  AppWindowStates.remove(browserWindow.webContents.id)
 }
 
 exports.open = async () => {
@@ -38,9 +46,15 @@ exports.open = async () => {
       additionalArguments: ['--lvce-window-kind=process-explorer'],
     },
   })
+  AppWindowStates.add({
+    parsedArgs: [],
+    workingDirectort: '',
+    id: processExplorerWindow.webContents.id,
+  })
+  processExplorerWindow.on('close', handleWindowClose)
   processExplorerWindow.setMenuBarVisibility(false)
-
   processExplorerWindow.webContents.on(ElectronWebContentsEventType.BeforeInputEvent, handleBeforeInput)
+
   // TODO get actual process explorer theme css from somewhere
   const processExplorerThemeCss = ColorTheme.toCss(colorThemeJson)
   const processExporerThemeCssPath = join(tmpdir(), 'process-explorer-theme.css')

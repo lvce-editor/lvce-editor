@@ -18,6 +18,7 @@ const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarke
  * @param {import('electron').Event} event
  */
 const handleWindowClose = (event) => {
+  // @ts-ignore
   const browserWindow = event.sender
   AppWindowStates.remove(browserWindow.webContents.id)
 }

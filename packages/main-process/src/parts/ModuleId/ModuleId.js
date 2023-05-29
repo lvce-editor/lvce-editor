@@ -18,7 +18,6 @@ exports.ElectronClipBoard = 17
 exports.ElectronApplicationMenu = 18
 exports.About = 19
 exports.ListProcessesWithMemoryUsage = 20
-exports.ProcessExplorerContextMenu = 21
 exports.Process = 22
 exports.ElectronNet = 23
 exports.ElectronBrowserViewSuggestions = 24
