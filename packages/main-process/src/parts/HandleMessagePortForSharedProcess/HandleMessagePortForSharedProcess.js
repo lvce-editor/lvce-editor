@@ -32,11 +32,14 @@ const getFolder = (args) => {
  */
 exports.handlePort = async (event, browserWindowPort, type, name) => {
   const config = AppWindow.findById(event.sender.id)
-  if (!config) {
-    Logger.warn('port event - config expected')
-    return
+  // if (!config) {
+  //   Logger.warn('port event - config expected')
+  //   return
+  // }
+  let folder = ''
+  if (config && config.parsedArgs) {
+    folder = getFolder(config.parsedArgs)
   }
-  const folder = getFolder(config.parsedArgs)
   Performance.mark(PerformanceMarkerType.WillStartSharedProcess)
   const method = IpcParentType.NodeWorker
   const sharedProcess = await SharedProcess.hydrate({
