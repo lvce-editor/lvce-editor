@@ -165,13 +165,20 @@ export const resize = (state, dimensions) => {
   const { titleAreaHeight } = state
   const childDimensions = getContentDimensions(dimensions, titleAreaHeight)
   const currentViewletInstance = ViewletStates.getInstance(state.currentViewletId)
+  const newState = {
+    ...state,
+    ...dimensions,
+  }
+  if (!currentViewletInstance) {
+    return {
+      newState,
+      commands: [],
+    }
+  }
   const currentViewletUid = currentViewletInstance.state.uid
   const commands = Viewlet.resize(currentViewletUid, childDimensions)
   return {
-    newState: {
-      ...state,
-      ...dimensions,
-    },
+    newState,
     commands,
   }
 }

@@ -1,7 +1,7 @@
 import { once } from 'events'
 import { IpcError } from '../IpcError/IpcError.js'
 import * as IsSocket from '../IsSocket/IsSocket.js'
-import * as Json from '../Json/Json.js'
+import * as WebSocketSerialization from '../WebSocketSerialization/WebSocketSerialization.js'
 import * as WebSocketServer from '../WebSocketServer/WebSocketServer.js'
 
 export const listen = async () => {
@@ -21,14 +21,14 @@ export const wrap = (webSocket) => {
      */
     wrappedListener: undefined,
     send(message) {
-      const stringifiedMessage = Json.stringify(message)
+      const stringifiedMessage = WebSocketSerialization.serialize(message)
       this.webSocket.send(stringifiedMessage)
     },
     on(event, listener) {
       switch (event) {
         case 'message':
           this.wrappedListener = (message) => {
-            const parsed = Json.parse(message.toString())
+            const parsed = WebSocketSerialization.deserialize(message)
             listener(parsed)
           }
           this.webSocket.on('message', this.wrappedListener)
