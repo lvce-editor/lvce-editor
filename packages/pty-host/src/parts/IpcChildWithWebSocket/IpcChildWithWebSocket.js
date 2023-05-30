@@ -1,8 +1,16 @@
 import * as GetFirstWebSocketEvent from '../GetFirstWebSocketEvent/GetFirstWebSocketEvent.js'
+import { IpcError } from '../IpcError/IpcError.js'
+import * as IsWebSocket from '../IsWebSocket/IsWebSocket.js'
 import * as IsWebSocketOpen from '../IsWebSocketOpen/IsWebSocketOpen.js'
 import * as WebSocketSerialization from '../WebSocketSerialization/WebSocketSerialization.js'
 
 export const listen = async ({ webSocket }) => {
+  if (!webSocket) {
+    throw new IpcError('webSocket must be defined')
+  }
+  if (!IsWebSocket.isWebSocket(webSocket)) {
+    throw new IpcError(`webSocket must be of type WebSocket`)
+  }
   if (!IsWebSocketOpen.isWebSocketOpen(webSocket)) {
     const { type, event } = await GetFirstWebSocketEvent.getFirstWebSocketEvent(webSocket)
     console.log({ type, event })
