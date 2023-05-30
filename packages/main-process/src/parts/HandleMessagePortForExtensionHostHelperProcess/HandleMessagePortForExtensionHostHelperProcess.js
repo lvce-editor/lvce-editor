@@ -5,16 +5,15 @@ const Platform = require('../Platform/Platform.js')
 
 exports.handlePort = async (event, browserWindowPort) => {
   const extensionHostHelperProcessPath = Platform.getExtensionHostHelperProcessPath()
-  const start = Date.now()
+  const start = performance.now()
   const ipc = await IpcParent.create({
     method: IpcParentType.NodeForkedProcess,
     path: extensionHostHelperProcessPath,
   })
-  const end = Date.now()
+  const end = performance.now()
   const { pid } = ipc
   const forkTime = end - start
   Logger.info(`[main-process] Starting extension host helper with pid ${pid} (fork took ${forkTime} ms).`)
-  console.log('host is ready')
   browserWindowPort.on('message', (event) => {
     ipc.send(event.data)
   })
