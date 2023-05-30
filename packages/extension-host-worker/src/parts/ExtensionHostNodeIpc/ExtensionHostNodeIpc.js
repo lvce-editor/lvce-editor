@@ -15,7 +15,7 @@ export const createNodeRpc = async ({ path, execute = defaultExecute }) => {
     Assert.fn(execute)
     const ipc = await IpcParent.create({
       method: IpcParentType.ElectronMessagePort,
-      type: `custom:${path}`,
+      type: 'extension-host-helper-process',
     })
     const rpc = await RpcParent.create({
       ipc,
