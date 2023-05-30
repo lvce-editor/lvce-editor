@@ -16,11 +16,9 @@ exports.handlePort = async (event, browserWindowPort) => {
   Logger.info(`[main-process] Starting extension host helper with pid ${pid} (fork took ${forkTime} ms).`)
   console.log('host is ready')
   browserWindowPort.on('message', (event) => {
-    console.log({ event })
     ipc.send(event.data)
   })
   ipc.on('message', (event) => {
-    console.log({ event })
     browserWindowPort.postMessage(event)
   })
   browserWindowPort.start()
