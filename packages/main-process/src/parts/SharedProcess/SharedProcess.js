@@ -4,7 +4,6 @@ const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
 const GetResponse = require('../GetResponse/GetResponse.js')
 const IpcParent = require('../IpcParent/IpcParent.js')
-const IpcParentType = require('../IpcParentType/IpcParentType.js')
 const Logger = require('../Logger/Logger.js')
 const Platform = require('../Platform/Platform.js')
 const Process = require('../Process/Process.js')
@@ -18,12 +17,6 @@ const state = (exports.state = {
 })
 
 const handleChildError = (error) => {
-  Process.exit(ExitCode.Error)
-}
-
-const handleStdError = (error) => {
-  Logger.info('[main-process] Child std error')
-  Logger.error(error.toString())
   Process.exit(ExitCode.Error)
 }
 
@@ -75,21 +68,6 @@ const handleChildDisconnect = () => {
   Logger.info('[main process] shared process disconnected')
 }
 
-exports.send = (message) => {
-  // @ts-ignore
-  state.sharedProcess.postMessage(message)
-}
-
-exports.sendPort = (port) => {
-  console.log('send port to shared process')
-  // @ts-ignore
-  state.sharedProcess.postMessage(port, [port])
-}
-
-exports.setOnMessage = (fn) => {
-  state.onMessage = fn
-}
-
 // TODO not possible because  TypeError [ERR_INVALID_HANDLE_TYPE]: This handle type cannot be sent
 // exports.sendPort = (port) => {
 //   state.sharedProcess.send('here-is-the-port', port)
@@ -116,15 +94,12 @@ exports.hydrate = async ({ method, env = {} }) => {
     state.sharedProcess.dispose()
     state.sharedProcess = undefined
   }
-  // console.log('env', process.env.ELECTRON_RUN_AS_NODE)
-  // console.log(process.env)
   // TODO inherit stdout but listen to ready event
   const sharedProcessPath = Platform.getSharedProcessPath()
   const sharedProcess = await IpcParent.create({
     method,
     env: {
       ...process.env,
-      ELECTRON_RUN_AS_NODE: '1', // TODO
       ...env,
     },
     argv: [],
