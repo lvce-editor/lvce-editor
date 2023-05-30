@@ -8,6 +8,8 @@ export const getModule = (method) => {
       return import('../IpcChildWithWebSocket/IpcChildWithWebSocket.js')
     case IpcChildType.Parent:
       return import('../IpcChildWithParent/IpcChildWithParent.js')
+    case IpcChildType.NodeForkedProcess:
+      return import('../IpcChildWithNodeForkedProcess/IpcChildWithNodeForkedProcess.js')
     case IpcChildType.ElectronMessagePort:
       return import('../IpcChildWithElectronMessagePort/IpcChildWithElectronMessagePort.js')
     case IpcChildType.ElectronUtilityProcess:
