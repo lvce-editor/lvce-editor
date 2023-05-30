@@ -28,11 +28,9 @@ exports.handlePort = async (event, browserWindowPort) => {
     extensionHost.once('message', handleFirstMessage)
   })
   browserWindowPort.on('message', (event) => {
-    console.log({ event })
     extensionHost.send(event.data)
   })
   extensionHost.on('message', (event) => {
-    console.log({ event })
     browserWindowPort.postMessage(event)
   })
   browserWindowPort.start()
