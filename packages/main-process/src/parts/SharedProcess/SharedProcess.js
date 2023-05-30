@@ -130,6 +130,7 @@ exports.hydrate = async ({ method, env = {} }) => {
     argv: [],
     execArgv: ['--enable-source-maps'],
     path: sharedProcessPath,
+    name: 'shared-process',
   })
   // TODO handle all possible errors from web server process
   sharedProcess.on('error', handleChildError)
