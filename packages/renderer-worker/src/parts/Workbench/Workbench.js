@@ -37,10 +37,8 @@ export const startup = async () => {
 
   Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
   await RendererProcess.listen()
-  console.log('listen renderer')
   if (Platform.platform !== PlatformType.Web) {
     await SharedProcess.listen()
-    console.log('listen shared')
   }
 
   LifeCycle.mark(LifeCyclePhase.One)
