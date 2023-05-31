@@ -32,7 +32,7 @@ const readFileNode = async (path, defaultContent) => {
         await FileSystem.writeFile(path, defaultContent)
         return defaultContent
       } catch (error) {
-        throw new VError(error, `Failed to read ${path} `)
+        throw new VError(error, `Failed to write ${path} `)
       }
     }
     throw new VError(error, `Failed to read ${path}`)

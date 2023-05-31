@@ -21,17 +21,22 @@ const stringifyError = (error) => {
   return `${error.message}`
 }
 
+const formatDuration = (duration) => {
+  return duration.toFixed(2) + 'ms'
+}
 export const executeTest = async (name, fn, globals = {}) => {
   let _error
   let _start
   let _end
   let _duration
+  let _formattedDuration
   try {
     _start = Timestamp.now()
     await fn(globals)
     _end = Timestamp.now()
-    _duration = `${_end - _start}ms`
-    console.info(`[test passed] ${name} in ${_duration}`)
+    _duration = _end - _start
+    _formattedDuration = formatDuration(_duration)
+    console.info(`PASS ${name} in ${_formattedDuration}`)
   } catch (error) {
     if (
       error &&
@@ -56,7 +61,7 @@ export const executeTest = async (name, fn, globals = {}) => {
     text = `test failed: ${_error}`
   } else {
     background = 'green'
-    text = `test passed in ${_duration}`
+    text = `test passed in ${_formattedDuration}`
     state = TestType.Pass
   }
   await RendererProcess.invoke('TestFrameWork.showOverlay', state, background, text)
