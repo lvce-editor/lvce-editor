@@ -1,5 +1,6 @@
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
+import * as MeasureTitleBarEntryWidth from '../MeasureTitleBarEntryWidth/MeasureTitleBarEntryWidth.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -24,7 +25,7 @@ export const create = (id, uri, x, y, width, height) => {
 const addWidths = (entries, labelPadding, fontWeight, fontSize, fontFamily, letterSpacing) => {
   const withWidths = []
   for (const entry of entries) {
-    const textWidth = MeasureTextWidth.measureTextWidth(entry.label, fontWeight, fontSize, fontFamily, letterSpacing)
+    const textWidth = MeasureTitleBarEntryWidth.measureTitleBarEntryWidth(entry.label, fontWeight, fontSize, fontFamily, letterSpacing)
     const width = textWidth + labelPadding * 2
     withWidths.push({ ...entry, width })
   }

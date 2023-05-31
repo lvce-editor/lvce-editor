@@ -15,6 +15,10 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
+import * as CssVariable from '../CssVariable/CssVariable.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -112,12 +116,19 @@ const unquoteString = (string) => {
   return string
 }
 
+const getLetterSpacing = () => {
+  if (!SupportsLetterSpacing.supportsLetterSpacing()) {
+    return 0
+  }
+  return Preferences.get(kLetterSpacing) ?? 0.5
+}
+
 export const loadContent = async (state, savedState) => {
   const { uri } = state
   const rowHeight = Preferences.get(kLineHeight) || 20
   const fontSize = Preferences.get(kFontSize) || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
   const fontFamily = Preferences.get(kFontFamily) || 'Fira Code'
-  const letterSpacing = Preferences.get(kLetterSpacing) ?? 0.5
+  const letterSpacing = getLetterSpacing()
   const tabSize = Preferences.get(kTabSize) || 2
   const links = Preferences.get(kLinks) || false
   const content = await getContent(uri)
@@ -127,11 +138,23 @@ export const loadContent = async (state, savedState) => {
   const savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
   const newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
-  if ((fontFamily === 'Fira Code' || fontFamily === `'Fira Code'`) && !Font.has(fontFamily, fontSize)) {
+  const isFiraCode = fontFamily === 'Fira Code' || fontFamily === `'Fira Code'`
+  if (isFiraCode && !Font.has(fontFamily, fontSize)) {
     const fontName = unquoteString(fontFamily)
     await Font.load(fontName, `url('${AssetDir.assetDir}/fonts/FiraCode-VariableFont.ttf')`)
   }
-  const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(newState2.lines, newState2.fontWeight, fontSize, fontFamily, letterSpacing)
+  const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
+  const charWidth = MeasureTextWidth.measureTextWidth('a', newState2.fontWeight, fontSize, fontFamily, letterSpacing, false, 0)
+  console.log({ charWidth, letterSpacing })
+  const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(
+    newState2.lines,
+    newState2.fontWeight,
+    fontSize,
+    fontFamily,
+    letterSpacing,
+    isMonospaceFont,
+    charWidth
+  )
   return {
     ...newState2,
     rowHeight,
@@ -144,6 +167,8 @@ export const loadContent = async (state, savedState) => {
     links,
     tabSize,
     longestLineWidth,
+    charWidth,
+    isMonospaceFont,
   }
 }
 
