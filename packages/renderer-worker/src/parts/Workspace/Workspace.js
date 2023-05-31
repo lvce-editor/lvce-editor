@@ -200,7 +200,7 @@ export const pathBaseName = (path) => {
 
 // TODO this should be in FileSystem module
 export const pathDirName = (path) => {
-  const pathSeparator = state.pathSeparator
+  const pathSeparator = state.pathSeparator || '/'
   const index = path.lastIndexOf(pathSeparator)
   if (index === -1) {
     return Character.EmptyString
