@@ -1,18 +1,18 @@
 const { spawn } = require('node:child_process')
 const Cli = require('../Cli/Cli.js')
+const CommandLineSwitches = require('../CommandLineSwitches/CommandLineSwitches.js')
 const Debug = require('../Debug/Debug.js')
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
 const ElectronAppEventType = require('../ElectronAppEventType/ElectronAppEventType.js')
 const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
 const ElectronAppListeners = require('../ElectronAppListeners/ElectronAppListeners.js')
 const ElectronIpcMain = require('../ElectronIpcMain/ElectronIpcMain.js')
-const ElectronProtocol = require('../ElectronProtocol/ElectronProtocol.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
 const HandleMessagePort = require('../HandleMessagePort/HandleMessagePort.js')
 const Performance = require('../Performance/Performance.js')
 const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
-const Platform = require('../Platform/Platform.js')
 const Process = require('../Process/Process.js')
+const Protocol = require('../Protocol/Protocol.js')
 const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
@@ -69,27 +69,10 @@ exports.hydrate = async () => {
   }
 
   // command line switches
-  if (parsedCliArgs.sandbox) {
-    ElectronApp.enableSandbox()
-  } else {
-    // see https://github.com/microsoft/vscode/issues/151187#issuecomment-1221475319
-    if (Platform.isLinux) {
-      ElectronApp.appendCommandLineSwitch('--disable-gpu-sandbox')
-    }
-  }
+  CommandLineSwitches.enable(parsedCliArgs)
 
   // protocol
-  ElectronProtocol.registerSchemesAsPrivileged([
-    {
-      scheme: Platform.scheme,
-      privileges: {
-        standard: true,
-        secure: true,
-        supportFetchAPI: true,
-        stream: true,
-      },
-    },
-  ])
+  Protocol.enable()
 
   // ipcMain
   ElectronIpcMain.on('port', HandleMessagePort.handlePort)

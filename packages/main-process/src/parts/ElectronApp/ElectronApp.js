@@ -27,3 +27,7 @@ exports.appendCommandLineSwitch = (commandLineSwitch) => {
 exports.exit = (code) => {
   app.exit(code)
 }
+
+exports.setLocale = (locale) => {
+  app.commandLine.appendSwitch('lang', locale)
+}
