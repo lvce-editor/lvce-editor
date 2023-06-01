@@ -1,28 +1,47 @@
-const { existsSync } = require('node:fs')
-const { join } = require('node:path')
 const ElectronSessionGetAbsolutePath = require('../ElectronSessionGetAbsolutePath/ElectronSessionGetAbsolutePath.js')
-const HttpStatusCode = require('../HttpStatusCode/HttpStatusCode.js')
+const { net } = require('electron')
+const { extname } = require('node:path')
+const { pathToFileURL } = require('node:url')
+const { readFileSync } = require('original-fs')
 
+const getResponseFetch = (path) => {
+  const url = pathToFileURL(path)
+  const response = net.fetch(url)
+  return response
+}
+
+const getMime = (path) => {
+  const extension = extname(path)
+  switch (extension) {
+    case '.js':
+      return 'application/javascript'
+    case '.html':
+      return 'text/html'
+    case '.css':
+      return 'text/css'
+    default:
+      return ''
+  }
+}
+
+const getResponseReadFile = (path) => {
+  const content = readFileSync(path)
+  const mime = getMime(path)
+  // console.log({ path, mime, ext: extname(path) })
+  return new Response(content, { headers: { 'content-type': mime } })
+}
+
+const getResponse = getResponseFetch
 /**
  *
  * @param {globalThis.Electron.ProtocolRequest} request
  */
 
-exports.handleRequest = (request, callback) => {
-  // const path = join(__dirname, request.url.slice(6))
+exports.handleRequest = async (request) => {
+  // console.log('url', request.url)
   const path = ElectronSessionGetAbsolutePath.getAbsolutePath(request.url)
-  if (!existsSync(path)) {
-    // TODO doing this for every request is really slow
-    // but without this, fetch would not received a response for 404 requests
-    return callback({
-      statusCode: HttpStatusCode.NotFound,
-      path: join(__dirname, 'not-found.txt'),
-    })
-  }
-  callback({
-    path,
-    headers: {
-      'Cache-Control': 'public, max-age=31536000, immutable', // TODO caching is not working, see https://github.com/electron/electron/issues/27075 and https://github.com/electron/electron/issues/23482
-    },
-  })
+  // console.time(url.toString())
+  const response = await getResponse(path)
+  // console.timeEnd(url.toString())
+  return response
 }
