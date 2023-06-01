@@ -34,6 +34,8 @@ test('getVisible', () => {
     width: 800,
     differences: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     focused: true,
+    isMonospaceFont: false,
+    charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([/*x */ 48, /* y */ 40, /* x */ 24, /* y */ 80]))
@@ -67,6 +69,8 @@ test('getVisible - bug with two lines', () => {
     width: 800,
     differences: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     focused: true,
+    isMonospaceFont: false,
+    charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([/*x */ 32, /* y */ 20]))
@@ -98,6 +102,8 @@ test('getVisible - cursors should be treated separately', () => {
     width: 800,
     differences: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     focused: true,
+    isMonospaceFont: false,
+    charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([/*x */ 32, /* y */ 0]))
@@ -123,6 +129,8 @@ test('getVisible - bug with multiple lines', () => {
     width: 800,
     differences: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     focused: true,
+    isMonospaceFont: false,
+    charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([/* x */ 24, /* y */ 40]))
@@ -254,6 +262,8 @@ test('getVisible - only start of selection visible', () => {
     width: 800,
     differences: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     focused: true,
+    isMonospaceFont: false,
+    charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([]))
@@ -291,6 +301,8 @@ test('getVisible - selection out of range', () => {
     width: 800,
     differences: [0, 0, 0, 0, 0, 0, 0, 0],
     focused: true,
+    isMonospaceFont: false,
+    charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual(new Float32Array([0, 0, 0, 140]))
