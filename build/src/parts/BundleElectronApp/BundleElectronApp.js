@@ -1,8 +1,8 @@
 import { existsSync } from 'node:fs'
 import * as Assert from '../Assert/Assert.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
-import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
+import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
@@ -13,6 +13,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
+import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
@@ -89,6 +90,19 @@ const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion
       from: `build/.tmp/electron-bundle/${arch}/electron`,
       to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}`,
     })
+  }
+}
+
+const shouldLocaleBeRemoved = (locale) => {
+  return locale !== 'en-US.pak'
+}
+
+const removeUnusedLocales = async ({ arch }) => {
+  const localesPath = `build/.tmp/electron-bundle/${arch}/locales`
+  const dirents = await ReadDir.readDir(localesPath)
+  const toRemove = dirents.filter(shouldLocaleBeRemoved)
+  for (const dirent of toRemove) {
+    await Remove.remove(`build/.tmp/electron-bundle/${arch}/locales/${dirent}`)
   }
 }
 
@@ -277,7 +291,7 @@ const addRootPackageJson = async ({ cachePath, electronVersion, product }) => {
   })
 }
 
-export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate = false }) => {
+export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate = false, shouldRemoveUnusedLocales = false }) => {
   Assert.object(product)
   Assert.string(version)
   const arch = process.arch
@@ -325,6 +339,12 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
     product,
   })
   console.timeEnd('copyElectron')
+
+  if (shouldRemoveUnusedLocales) {
+    console.time('removeUnusedLocales')
+    await removeUnusedLocales({ arch })
+    console.timeEnd('removeUnusedLocales')
+  }
 
   console.time('copyDependencies')
   await copyDependencies({
