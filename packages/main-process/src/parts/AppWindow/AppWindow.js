@@ -1,16 +1,17 @@
-const VError = require('verror')
-const Screen = require('../ElectronScreen/ElectronScreen.js')
-const Window = require('../ElectronWindow/ElectronWindow.js')
-const Performance = require('../Performance/Performance.js')
+const { VError } = require('../VError/VError.js')
+const { WindowLoadError } = require('../WindowLoadError/WindowLoadError.js')
+const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
+const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
+const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
-const Session = require('../ElectronSession/ElectronSession.js')
+const Logger = require('../Logger/Logger.js')
+const Performance = require('../Performance/Performance.js')
+const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
 const Platform = require('../Platform/Platform.js')
 const Preferences = require('../Preferences/Preferences.js')
-const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
-const Logger = require('../Logger/Logger.js')
-const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
-const { WindowLoadError } = require('../WindowLoadError/WindowLoadError.js')
-const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
+const Screen = require('../ElectronScreen/ElectronScreen.js')
+const Session = require('../ElectronSession/ElectronSession.js')
+const Window = require('../ElectronWindow/ElectronWindow.js')
 
 // TODO impossible to test these methods
 // and ensure that there is no memory leak
@@ -18,9 +19,13 @@ const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarke
  * @param {import('electron').Event} event
  */
 const handleWindowClose = (event) => {
-  // @ts-ignore
-  const browserWindow = event.sender
-  AppWindowStates.remove(browserWindow.webContents.id)
+  try {
+    // @ts-ignore
+    const browserWindow = event.sender
+    AppWindowStates.remove(browserWindow.webContents.id)
+  } catch (error) {
+    ErrorHandling.handleError(new VError(error, `Failed to run window close listener`))
+  }
 }
 
 const loadUrl = async (browserWindow, url) => {
