@@ -1,155 +1,29 @@
-const ContentSecurityPolicy = require('../ContentSecurityPolicy/ContentSecurityPolicy.js')
-const ContentSecurityPolicyWorker = require('../ContentSecurityPolicyWorker/ContentSecurityPolicyWorker.js')
-const CrossOriginEmbedderPolicy = require('../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js')
-const CrossOriginOpenerPolicy = require('../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js')
 const Electron = require('electron')
-const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
-const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.js')
 const Platform = require('../Platform/Platform.js')
-const { existsSync } = require('node:fs')
-const { join } = require('node:path')
-const HttpStatusCode = require('../HttpStatusCode/HttpStatusCode.js')
-const ElectronSessionGetAbsolutePath = require('../ElectronSessionGetAbsolutePath/ElectronSessionGetAbsolutePath.js')
-
-const state = {
-  /**
-   * @type {import('electron').Session|undefined}
-   */
-  session: undefined,
-}
-
-const handleHeadersReceivedMainFrame = (responseHeaders) => {
-  return {
-    responseHeaders: {
-      ...responseHeaders,
-      [ContentSecurityPolicy.key]: ContentSecurityPolicy.value,
-      [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
-      [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-    },
-  }
-}
-
-const handleHeadersReceivedSubFrame = (responseHeaders) => {
-  return {
-    responseHeaders: {
-      ...responseHeaders,
-      [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
-      [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-    },
-  }
-}
-
-const handleHeadersReceivedDefault = (responseHeaders, url) => {
-  if (url.endsWith('WorkerMain.js')) {
-    return {
-      responseHeaders: {
-        ...responseHeaders,
-        [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-        [ContentSecurityPolicyWorker.key]: ContentSecurityPolicyWorker.value,
-      },
-    }
-  }
-  return {
-    responseHeaders,
-  }
-}
-
-const handleHeadersReceivedXhr = (responseHeaders, url) => {
-  // workaround for electron bug
-  // when using fetch, it doesn't return a response for 404
-  // console.log({ url, responseHeaders })
-  return {
-    responseHeaders: {
-      ...responseHeaders,
-    },
-  }
-}
-
-const getHeadersReceivedFunction = (resourceType) => {
-  // console.log({ resourceType })
-  switch (resourceType) {
-    case ElectronResourceType.MainFrame:
-      return handleHeadersReceivedMainFrame
-    case ElectronResourceType.SubFrame:
-      return handleHeadersReceivedSubFrame
-    case ElectronResourceType.Xhr:
-      return handleHeadersReceivedXhr
-    default:
-      return handleHeadersReceivedDefault
-  }
-}
-
-/**
- *
- * @param {import('electron').OnHeadersReceivedListenerDetails} details
- * @param {(headersReceivedResponse: import('electron').HeadersReceivedResponse)=>void} callback
- */
-const handleHeadersReceived = (details, callback) => {
-  const { responseHeaders, resourceType, url } = details
-  const fn = getHeadersReceivedFunction(resourceType)
-  callback(fn(responseHeaders, url))
-}
-
-const isAllowedPermission = (permission) => {
-  switch (permission) {
-    case ElectronPermissionType.ClipBoardRead:
-    case ElectronPermissionType.ClipBoardSanitizedWrite:
-    case ElectronPermissionType.FullScreen:
-    case ElectronPermissionType.WindowPlacement:
-      return true
-    default:
-      return false
-  }
-}
-
-const handlePermissionRequest = (webContents, permission, callback, details) => {
-  callback(isAllowedPermission(permission))
-}
-
-const handlePermissionCheck = (webContents, permission, origin, details) => {
-  return isAllowedPermission(permission)
-}
-
-// TODO use Platform.getScheme() instead of Product.getTheme()
-
-/**
- *
- * @param {globalThis.Electron.ProtocolRequest} request
- * @param {(response: string | globalThis.Electron.ProtocolResponse) => void} callback
- */
-
-const handleRequest = (request, callback) => {
-  // const path = join(__dirname, request.url.slice(6))
-  const path = ElectronSessionGetAbsolutePath.getAbsolutePath(request.url)
-  if (!existsSync(path)) {
-    // TODO doing this for every request is really slow
-    // but without this, fetch would not received a response for 404 requests
-    return callback({
-      statusCode: HttpStatusCode.NotFound,
-      path: join(__dirname, 'not-found.txt'),
-    })
-  }
-  callback({
-    path,
-    headers: {
-      'Cache-Control': 'public, max-age=31536000, immutable', // TODO caching is not working, see https://github.com/electron/electron/issues/27075 and https://github.com/electron/electron/issues/23482
-    },
-  })
-}
+const Protocol = require('../Protocol/Protocol.js')
+const ElectronProtocolType = require('../ElectronProtocolType/ElectronProtocolType.js')
+const HandleHeadersReceived = require('../HandleHeadersReceived/HandleHeadersReceived.js')
+const HandlePermission = require('../HandlePermission/HandlePermission.js')
+const HandleRequest = require('../HandleRequest/HandleRequest.js')
 
 const createSession = () => {
   const sessionId = Platform.getSessionId()
   const session = Electron.session.fromPartition(sessionId, {
     cache: Platform.isProduction,
   })
-  session.webRequest.onHeadersReceived(handleHeadersReceived)
-  session.setPermissionRequestHandler(handlePermissionRequest)
-  session.setPermissionCheckHandler(handlePermissionCheck)
-  session.protocol.registerFileProtocol(Platform.scheme, handleRequest)
+  session.webRequest.onHeadersReceived(HandleHeadersReceived.handleHeadersReceived)
+  session.setPermissionRequestHandler(HandlePermission.handlePermissionRequest)
+  session.setPermissionCheckHandler(HandlePermission.handlePermissionCheck)
+  Protocol.handle(session.protocol, Platform.scheme, ElectronProtocolType.File, HandleRequest.handleRequest)
   return session
 }
 
-exports.state = state
+const state = {
+  /**
+   * @type {any}
+   */
+  session: undefined,
+}
 
 exports.get = () => {
   if (!state.session) {
