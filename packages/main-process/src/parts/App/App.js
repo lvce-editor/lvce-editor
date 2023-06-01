@@ -2,6 +2,7 @@ const { spawn } = require('node:child_process')
 const Cli = require('../Cli/Cli.js')
 const CommandLineSwitches = require('../CommandLineSwitches/CommandLineSwitches.js')
 const Debug = require('../Debug/Debug.js')
+const Electron = require('electron')
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
 const ElectronAppEventType = require('../ElectronAppEventType/ElectronAppEventType.js')
 const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
@@ -72,7 +73,7 @@ exports.hydrate = async () => {
   CommandLineSwitches.enable(parsedCliArgs)
 
   // protocol
-  Protocol.enable()
+  Protocol.enable(Electron.protocol)
 
   // ipcMain
   ElectronIpcMain.on('port', HandleMessagePort.handlePort)
