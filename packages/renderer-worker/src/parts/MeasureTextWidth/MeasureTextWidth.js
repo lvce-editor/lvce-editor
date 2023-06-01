@@ -9,11 +9,16 @@ const getFontString = (fontWeight, fontSize, fontFamily) => {
   return `${fontWeight} ${fontSize}px ${fontFamily}`
 }
 
-export const measureTextWidth = (text, fontWeight, fontSize, fontFamily, letterSpacing) => {
+export const measureTextWidth = (text, fontWeight, fontSize, fontFamily, letterSpacing, isMonoSpaceFont, charWidth) => {
   Assert.string(text)
   Assert.number(fontWeight)
   Assert.number(fontSize)
   Assert.string(fontFamily)
+  Assert.boolean(isMonoSpaceFont)
+  Assert.number(charWidth)
+  if (isMonoSpaceFont) {
+    return text.length * charWidth
+  }
   if (typeof letterSpacing !== 'number') {
     throw new Error('letterSpacing must be of type number')
   }
