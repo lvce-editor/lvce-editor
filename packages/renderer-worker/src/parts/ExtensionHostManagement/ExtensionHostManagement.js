@@ -79,6 +79,10 @@ const startSynching = async (extensionHost) => {
     if (TestState.state.mockExec) {
       await extensionHost.ipc.invoke('ExtensionHostMockExec.mockExec')
     }
+    const names = Object.values(TestState.state.mockRpcs).map((value) => value.name)
+    if (names.length > 0) {
+      await extensionHost.ipc.invoke('ExtensionHostMockRpc.mockRpc', names)
+    }
   }
 
   const handlePreferencesChange = () => {

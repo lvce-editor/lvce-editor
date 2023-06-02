@@ -24,6 +24,9 @@ export const execute = async (href) => {
   if (module.mockExec) {
     TestState.setMockExec(module.mockExec)
   }
+  if (module.mockRpc) {
+    TestState.setMockRpc(module.mockRpc)
+  }
   if (module.test) {
     if (module.skip) {
       await TestFrameWork.test.skip(module.name, () => {})
@@ -50,6 +53,19 @@ export const executeMockExecFunction = async (...args) => {
     throw new Error(`mockExec does not exist`)
   }
   // @ts-ignore
+  const result = await fn(...args)
+  return result
+}
+
+export const executeMockRpcFunction = async (name, command, ...args) => {
+  const map = TestState.getMockRpc(name)
+  if (!map) {
+    throw new Error(`Mock rpc ${name} not found`)
+  }
+  const fn = map.commands[command]
+  if (!fn) {
+    throw new Error(`Command ${command} not found`)
+  }
   const result = await fn(...args)
   return result
 }
