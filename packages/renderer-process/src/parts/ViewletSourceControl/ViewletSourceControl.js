@@ -10,7 +10,7 @@ import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 
 const create$ItemFile = (item) => {
   const $FileIcon = document.createElement('div')
-  $FileIcon.className = `FileIcon${item.icon}`
+  $FileIcon.className = `FileIcon FileIcon${item.icon}`
 
   const $LabelDetail = document.createElement('span')
   $LabelDetail.className = 'LabelDetail'
