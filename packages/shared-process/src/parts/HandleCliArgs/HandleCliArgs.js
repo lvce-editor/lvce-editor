@@ -4,7 +4,7 @@ import { VError } from '../VError/VError.js'
 
 export const handleCliArgs = async (argv) => {
   try {
-    Assert.string(argv)
+    Assert.array(argv)
     await Cli.handleCliArgs(argv)
   } catch (error) {
     throw new VError(error, `Failed to execute cli command`)
