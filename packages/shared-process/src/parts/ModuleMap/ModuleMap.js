@@ -175,6 +175,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleElectronMessagePort
     case 'GetTerminalSpawnOptions.getTerminalSpawnOptions':
       return ModuleId.GetTerminalSpawnOptions
+    case 'HandleCliArgs.handleCliArgs':
+      return ModuleId.HandleCliArgs
     default:
       throw new CommandNotFoundError(commandId)
   }
