@@ -9,13 +9,14 @@ const defaultExecute = () => {
   throw new Error('not implemented')
 }
 
-export const createNodeRpc = async ({ path, execute = defaultExecute }) => {
+export const createNodeRpc = async ({ path, execute = defaultExecute, name = '' }) => {
   try {
     Assert.string(path)
     Assert.fn(execute)
     const ipc = await IpcParent.create({
       method: IpcParentType.ElectronMessagePort,
       type: 'extension-host-helper-process',
+      name,
     })
     const rpc = await RpcParent.create({
       ipc,
