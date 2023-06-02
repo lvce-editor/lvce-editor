@@ -1,5 +1,5 @@
 import { homedir, tmpdir } from 'node:os'
-import { join, resolve, sep } from 'node:path'
+import { isAbsolute, join, resolve, sep } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as Path from '../Path/Path.js'
@@ -99,7 +99,8 @@ export const setEnvironmentVariables = (variables) => {
 
 export const getTestPath = () => {
   if (env.TEST_PATH) {
-    const testPath = '/remote' + pathToFileURL(Path.join(process.cwd(), env.TEST_PATH)).toString().slice(7)
+    const absolutePath = isAbsolute(env.TEST_PATH) ? env.TEST_PATH : Path.join(process.cwd(), env.TEST_PATH)
+    const testPath = '/remote' + pathToFileURL(absolutePath).toString().slice(7)
     return testPath
   }
   return '/packages/extension-host-worker-tests'

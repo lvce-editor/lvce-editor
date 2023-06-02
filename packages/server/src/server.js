@@ -4,7 +4,7 @@ import { ChildProcess, fork } from 'node:child_process'
 import { createReadStream } from 'node:fs'
 import { readFile, readdir, stat } from 'node:fs/promises'
 import { IncomingMessage, ServerResponse, createServer } from 'node:http'
-import { dirname, extname, join, resolve } from 'node:path'
+import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { fileURLToPath } from 'node:url'
 
@@ -271,6 +271,9 @@ const serveGitHub = async (req, res) => {
 const getTestPath = () => {
   if (process.env.TEST_PATH) {
     const testPath = process.env.TEST_PATH
+    if (isAbsolute(testPath)) {
+      return testPath
+    }
     return join(process.cwd(), testPath)
   }
   return join(ROOT, 'packages', 'extension-host-worker-tests')
