@@ -1,3 +1,6 @@
+import * as Assert from '../Assert/Assert.js'
+import { VError } from '../VError/VError.js'
+
 export const state = {
   commands: Object.create(null),
   /**
@@ -7,7 +10,13 @@ export const state = {
 }
 
 export const registerCommand = (key, fn) => {
-  state.commands[key] = fn
+  try {
+    Assert.string(key)
+    Assert.fn(fn)
+    state.commands[key] = fn
+  } catch (error) {
+    throw new VError(error, `Failed to register command ${key}`)
+  }
 }
 
 export const registerCommands = (commandMap) => {
