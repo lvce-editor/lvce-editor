@@ -49,5 +49,7 @@ export const prepare = (error) => {
     codeFrame,
     code: error.code,
     type: error.constructor.name,
+    stderr: error.stderr,
+    stdout: error.stdout,
   }
 }

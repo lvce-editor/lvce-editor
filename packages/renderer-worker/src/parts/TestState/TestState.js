@@ -30,7 +30,7 @@ export const getMockExec = () => {
 export const setMockRpc = (mockRpc) => {
   Assert.object(mockRpc)
   Assert.string(mockRpc.name)
-  state.mockRpcs[name] = mockRpc
+  state.mockRpcs[mockRpc.name] = mockRpc
 }
 
 export const getMockRpc = (name) => {

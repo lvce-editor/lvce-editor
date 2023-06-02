@@ -17,6 +17,7 @@ export const FormattingExecuteFormmattingProvider = 'ExtensionHostFormatting.exe
 export const HoverExecute = 'ExtensionHostHover.execute'
 export const ImplementationExecuteImplementationProvider = 'ExtensionHostImplementation.executeImplementationProvider'
 export const MockExec = 'ExtensionHostMockExec.mockExec'
+export const MockRpc = 'ExtensionHostMockRpc.mockRpc'
 export const ReferenceExecuteReferenceProvider = 'ExtensionHostReference.executeReferenceProvider'
 export const RenameExecuteRename = 'ExtensionHostRename.executeRename'
 export const RenamePrepareRename = 'ExtensionHostRename.executePrepareRename'

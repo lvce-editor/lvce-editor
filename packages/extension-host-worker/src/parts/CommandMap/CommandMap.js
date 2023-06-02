@@ -11,6 +11,7 @@ import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHo
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
 import * as ExtensionHostMockExec from '../ExtensionHostMockExec/ExtensionHostMockExec.js'
+import * as ExtensionHostMockRpc from '../ExtensionHostMockRpc/ExtensionHostMockRpc.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
 import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
@@ -55,6 +56,8 @@ export const getFn = (method) => {
       return ExtensionHostFormatting.executeFormattingProvider
     case ExtensionHostCommandType.MockExec:
       return ExtensionHostMockExec.mockExec
+    case ExtensionHostCommandType.MockRpc:
+      return ExtensionHostMockRpc.mockRpc
     case ExtensionHostCommandType.FileSystemReadFile:
       return ExtensionHostFileSystem.readFile
     case ExtensionHostCommandType.FileSystemReadDirWithFileTypes:
