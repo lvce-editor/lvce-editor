@@ -1,8 +1,7 @@
 import { codeFrameColumns } from '@babel/code-frame'
-import cleanStack from 'clean-stack'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as CleanStack from '../CleanStack/CleanStack.js'
 
 const getActualPath = (fileUri) => {
   if (fileUri.startsWith('file://')) {
@@ -19,9 +18,8 @@ export const prepare = (error) => {
       error = cause
     }
   }
-  const cleanedStack = cleanStack(error.stack)
-  const lines = SplitLines.splitLines(cleanedStack)
-  const file = lines[1]
+  const lines = CleanStack.cleanStack(error.stack)
+  const file = lines[0]
   let codeFrame = ''
   if (error.codeFrame) {
     codeFrame = error.codeFrame
