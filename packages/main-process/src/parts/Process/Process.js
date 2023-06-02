@@ -6,6 +6,11 @@ exports.kill = (pid, signal) => {
   process.kill(pid)
 }
 
+exports.setExitCode = (code) => {
+  Assert.number(code)
+  process.exitCode = code
+}
+
 exports.exit = (code) => {
   Assert.number(code)
   process.exit(code)
