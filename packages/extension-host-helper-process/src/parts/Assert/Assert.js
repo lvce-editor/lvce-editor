@@ -62,3 +62,10 @@ export const boolean = (value) => {
     throw new AssertionError('expected value to be of type boolean')
   }
 }
+
+export const fn = (value) => {
+  const type = getType(value)
+  if (type !== 'function') {
+    throw new AssertionError('expected value to be of type function')
+  }
+}
