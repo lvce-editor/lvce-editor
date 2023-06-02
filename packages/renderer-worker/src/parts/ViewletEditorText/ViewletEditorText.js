@@ -145,7 +145,6 @@ export const loadContent = async (state, savedState) => {
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
   const charWidth = MeasureTextWidth.measureTextWidth('a', newState2.fontWeight, fontSize, fontFamily, letterSpacing, false, 0)
-  console.log({ charWidth, letterSpacing })
   const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(
     newState2.lines,
     newState2.fontWeight,
