@@ -23,17 +23,8 @@ const handleSigTerm = () => {
   Process.exit(ExitCode.Success)
 }
 
-const knownCliArgs = ['install', 'list', 'link', 'unlink']
-
 const main = async () => {
   Command.setLoad(Module.load)
-  const argv = Process.argv.slice(2)
-  const argv0 = argv[0]
-  if (knownCliArgs.includes(argv0)) {
-    const module = await import('./parts/Cli/Cli.js')
-    await module.handleCliArgs(argv)
-    return
-  }
   // process.on('beforeExit', handleBeforeExit)
   process.on('disconnect', handleDisconnect)
   process.on(Signal.SIGTERM, handleSigTerm)
