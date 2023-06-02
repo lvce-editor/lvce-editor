@@ -4,7 +4,7 @@ const Assert = require('../Assert/Assert.js')
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 const GetFirstNodeWorkerEvent = require('../GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js')
 
-exports.create = async ({ path, argv, env, execArgv }) => {
+exports.create = async ({ path, argv = [], env = process.env, execArgv = [] }) => {
   Assert.string(path)
   const actualArgv = ['--ipc-type=node-worker', ...argv]
   const worker = new Worker(path, {

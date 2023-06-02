@@ -1,7 +1,5 @@
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
-import * as Logger from '../Logger/Logger.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 
 export const handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
