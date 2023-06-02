@@ -27,10 +27,10 @@ export const getMockExec = () => {
   return state.mockExec
 }
 
-export const setMockRpc = (name, map) => {
-  Assert.string(name)
-  Assert.object(map)
-  state.mockRpcs[name] = map
+export const setMockRpc = (mockRpc) => {
+  Assert.object(mockRpc)
+  Assert.string(mockRpc.name)
+  state.mockRpcs[name] = mockRpc
 }
 
 export const getMockRpc = (name) => {
