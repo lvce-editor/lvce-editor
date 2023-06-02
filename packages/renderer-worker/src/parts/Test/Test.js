@@ -59,7 +59,6 @@ export const executeMockExecFunction = async (...args) => {
 
 export const executeMockRpcFunction = async (name, command, ...args) => {
   const map = TestState.getMockRpc(name)
-  console.log({ map, name, m: TestState.state.mockRpcs })
   if (!map) {
     throw new Error(`Mock rpc ${name} not found`)
   }
