@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as Character from '../Character/Character.js'
 
 /**
  * @enum {number}
@@ -65,7 +66,7 @@ const getText = (text) => {
 }
 
 export const parse = (string) => {
-  if (string === '') {
+  if (string === Character.EmptyString) {
     return []
   }
   string = string.trim()
