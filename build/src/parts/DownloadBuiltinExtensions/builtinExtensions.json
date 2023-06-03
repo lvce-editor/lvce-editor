@@ -217,7 +217,7 @@
   {
     "name": "builtin.language-features-css",
     "repository": "github.com/lvce-editor/language-features-css",
-    "version": "0.0.9"
+    "version": "0.0.10"
   },
   {
     "name": "builtin.language-features-html",
@@ -232,7 +232,7 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "0.4.3"
+    "version": "0.4.4"
   },
   {
     "name": "builtin.prettier",
