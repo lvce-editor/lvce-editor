@@ -24,7 +24,6 @@ export const createNodeRpc = async ({ path, execute = defaultExecute, name = '' 
       execute,
     })
     await rpc.invoke('LoadFile.loadFile', path)
-    console.log({ path })
     return rpc
   } catch (error) {
     throw new VError(error, `Failed to create node rpc`)
