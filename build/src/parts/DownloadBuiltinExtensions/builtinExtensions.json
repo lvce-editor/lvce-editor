@@ -222,12 +222,12 @@
   {
     "name": "builtin.language-features-html",
     "repository": "github.com/lvce-editor/language-features-html",
-    "version": "0.0.12"
+    "version": "0.0.13"
   },
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "0.0.4"
+    "version": "0.1.1"
   },
   {
     "name": "builtin.prettier",
