@@ -7,6 +7,7 @@ import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Logger from '../Logger/Logger.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 
 const create$ItemFile = (item) => {
   const $FileIcon = document.createElement('div')
@@ -120,6 +121,11 @@ export const attachEvents = (state) => {
 }
 
 export const dispose = () => {}
+
+export const setItemsDom = (state, dom) => {
+  const { $ViewletTree } = state
+  VirtualDom.renderInto($ViewletTree, dom)
+}
 
 export const setChangedFiles = (state, workingTree) => {
   Assert.object(state)

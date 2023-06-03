@@ -1,3 +1,5 @@
+import * as GetSourceControlItemsVirtualDom from '../GetSourceControlItemsVirtualDom/GetSourceControlItemsVirtualDom.js'
+
 export const hasFunctionalRender = true
 
 const renderValue = {
@@ -14,7 +16,8 @@ const renderChangedFiles = {
     return oldState.displayItems === newState.displayItems
   },
   apply(oldState, newState) {
-    return [/* method */ 'setChangedFiles', /* changedFiles */ newState.displayItems]
+    const dom = GetSourceControlItemsVirtualDom.getSourceControlItemsVirtualDom(newState.displayItems)
+    return [/* method */ 'setItemsDom', dom]
   },
 }
 
