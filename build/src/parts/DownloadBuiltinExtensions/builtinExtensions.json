@@ -230,6 +230,11 @@
     "version": "0.1.1"
   },
   {
+    "name": "builtin.git",
+    "repository": "github.com/lvce-editor/git",
+    "version": "0.4.3"
+  },
+  {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
     "version": "0.0.10"
