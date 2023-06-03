@@ -232,7 +232,7 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "0.4.2"
+    "version": "0.4.3"
   },
   {
     "name": "builtin.prettier",
