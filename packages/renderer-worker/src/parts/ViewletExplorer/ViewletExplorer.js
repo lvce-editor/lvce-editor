@@ -16,6 +16,7 @@ import * as RendererWorkerCommandType from '../RendererWorkerCommandType/Rendere
 import * as SortExplorerItems from '../SortExplorerItems/SortExplorerItems.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Character from '../Character/Character.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEndIndex, getParentStartIndex } from './ViewletExplorerShared.js'
 // TODO viewlet should only have create and refresh functions
@@ -142,7 +143,7 @@ const restoreExpandedState = async (savedState, root, pathSeparator, excluded) =
   // merge all dirents
   // restore scroll location
   const expandedPaths = getSavedExpandedPaths(savedState, root)
-  if (root === '') {
+  if (root === Character.EmptyString) {
     return []
   }
   const expandedDirentPaths = [root, ...expandedPaths]
