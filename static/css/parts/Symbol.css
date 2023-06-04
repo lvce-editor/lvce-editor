@@ -4,6 +4,7 @@
   --SymbolVariableForeground: #75beff;
   --SymbolFunctionForeground: #b180d7;
   --SymbolKeywordForeground: #9ca2a0;
+  --SymbolFieldForeground: #75beff;
 }
 
 .SymbolValue,
@@ -35,4 +36,10 @@
   color: var(--SymbolKeywordForeground);
   -webkit-mask-image: url(/icons/symbol-keyword.svg);
   mask-image: url(/icons/symbol-keyword.svg);
+}
+
+.SymbolField {
+  color: var(--SymbolFieldForeground);
+  -webkit-mask-image: url(/icons/symbol-field.svg);
+  mask-image: url(/icons/symbol-field.svg);
 }
