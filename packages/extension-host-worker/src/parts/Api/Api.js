@@ -13,6 +13,7 @@ import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHo
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostGetOffset from '../ExtensionHostGetOffset/ExtensionHostGetOffset.js'
 import * as ExtensionHostGetPosition from '../ExtensionHostGetPosition/ExtensionHostGetPosition.js'
+import * as ExtensionHostHover from '../ExtensionHostHover/ExtensionHostHover.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
 import * as ExtensionHostNodeIpc from '../ExtensionHostNodeRpc/ExtensionHostNodeRpc.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
@@ -82,6 +83,10 @@ export const api = {
 
   // Get Position
   getPosition: ExtensionHostGetPosition.getPosition,
+
+  // Hover
+  registerHoverProvider: ExtensionHostHover.registerHoverProvider,
+  executeHoverProvider: ExtensionHostHover.executeHoverProvider,
 
   // Rpc
   createRpc: ExtensionHostRpc.createRpc,
