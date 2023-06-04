@@ -9,6 +9,7 @@ import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHo
 import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
+import * as ExtensionHostHover from '../ExtensionHostHover/ExtensionHostHover.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
 import * as ExtensionHostMockExec from '../ExtensionHostMockExec/ExtensionHostMockExec.js'
 import * as ExtensionHostMockRpc from '../ExtensionHostMockRpc/ExtensionHostMockRpc.js'
@@ -98,6 +99,8 @@ export const getFn = (method) => {
       return ExtensionHostClosingTag.executeClosingTagProvider
     case ExtensionHostCommandType.ImplementationExecuteImplementationProvider:
       return ExtensionHostImplementation.executeImplementationProvider
+    case ExtensionHostCommandType.HoverExecute:
+      return ExtensionHostHover.executeHoverProvider
     default:
       throw new CommandNotFoundError(method)
   }
