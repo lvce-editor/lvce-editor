@@ -8,9 +8,13 @@
   border-color: var(--CompletionListBorder, #95a29d);
   font-family: var(--EditorFontFamily);
   position: absolute;
-  min-height: 100px;
-  min-width: 100px;
+  min-height: 200px;
+  min-width: 300px;
   contain: strict;
   display: grid;
   place-items: center;
+}
+
+.HoverDisplayString {
+  white-space: pre;
 }
