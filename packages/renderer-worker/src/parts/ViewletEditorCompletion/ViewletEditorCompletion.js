@@ -125,6 +125,7 @@ export const dispose = (state) => {
 
 const disposeWithEditor = (state, editor) => {
   editor.completionState = EditorCompletionState.None
+  editor.completionUid = 0
   return dispose(state)
 }
 
