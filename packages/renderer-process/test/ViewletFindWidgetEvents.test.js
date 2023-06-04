@@ -7,28 +7,33 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
   return {
-    send: jest.fn(() => {}),
+    executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
 const ViewletFindWidget = await import('../src/parts/ViewletFindWidget/ViewletFindWidget.js')
+const ComponentUid = await import('../src/parts/ComponentUid/ComponentUid.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 
 test('event - input', () => {
   const state = ViewletFindWidget.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletFindWidget.attachEvents(state)
   const { $InputBox } = state
   $InputBox.value = 'abc'
   const event = new InputEvent('input')
   $InputBox.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('FindWidget.handleInput', 'abc')
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleInput', 'abc')
 })
 
 test('event - click on focusPrevious', () => {
   const state = ViewletFindWidget.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletFindWidget.attachEvents(state)
   const { $ButtonFocusPrevious } = state
   const event = new MouseEvent('click', {
@@ -36,12 +41,14 @@ test('event - click on focusPrevious', () => {
     cancelable: true,
   })
   $ButtonFocusPrevious.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('FindWidget.focusPrevious')
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'focusPrevious')
 })
 
 test('event - click on focusNext', () => {
   const state = ViewletFindWidget.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletFindWidget.attachEvents(state)
   const { $ButtonFocusNext } = state
   const event = new MouseEvent('click', {
@@ -49,12 +56,14 @@ test('event - click on focusNext', () => {
     cancelable: true,
   })
   $ButtonFocusNext.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('FindWidget.focusNext')
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'focusNext')
 })
 
 test('event - click on close', () => {
   const state = ViewletFindWidget.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletFindWidget.attachEvents(state)
   const { $ButtonClose } = state
   const event = new MouseEvent('click', {
@@ -62,6 +71,6 @@ test('event - click on close', () => {
     cancelable: true,
   })
   $ButtonClose.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Viewlet.closeWidget', 'FindWidget')
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'close')
 })
