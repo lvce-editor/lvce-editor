@@ -1,3 +1,4 @@
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as ViewletFindWidgetFunctions from './ViewletFindWidgetFunctions.js'
@@ -5,36 +6,38 @@ import * as ViewletFindWidgetFunctions from './ViewletFindWidgetFunctions.js'
 export const handleInput = (event) => {
   const { target } = event
   const { value } = target
-  ViewletFindWidgetFunctions.handleInput(value)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletFindWidgetFunctions.handleInput(uid, value)
 }
 
-const handleClickClose = (event) => {
+const handleClickClose = (uid, event) => {
   Event.preventDefault(event)
-  ViewletFindWidgetFunctions.close()
+  ViewletFindWidgetFunctions.close(uid)
 }
 
-const handleClickPreviousMatch = (event) => {
+const handleClickPreviousMatch = (uid, event) => {
   event.preventDefault()
-  ViewletFindWidgetFunctions.focusPrevious()
+  ViewletFindWidgetFunctions.focusPrevious(uid)
 }
 
-const handleClickNextMatch = (event) => {
+const handleClickNextMatch = (uid, event) => {
   event.preventDefault()
-  ViewletFindWidgetFunctions.focusNext()
+  ViewletFindWidgetFunctions.focusNext(uid)
 }
 
 export const handleClick = (event) => {
   const { target } = event
   const { title } = target
+  const uid = ComponentUid.fromEvent(event)
   switch (title) {
     case 'Close':
-      handleClickClose(event)
+      handleClickClose(uid, event)
       break
     case 'Previous Match':
-      handleClickPreviousMatch(event)
+      handleClickPreviousMatch(uid, event)
       break
     case 'Next Match':
-      handleClickNextMatch(event)
+      handleClickNextMatch(uid, event)
       break
     default:
       break
