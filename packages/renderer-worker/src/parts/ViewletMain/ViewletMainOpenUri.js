@@ -10,7 +10,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletMainFocusIndex from './ViewletMainFocusIndex.js'
 
-export const openUri = async (state, uri, focus = true, { preview = false } = {}) => {
+export const openUri = async (state, uri, focus = true, { preview = false, ...context } = {}) => {
   Assert.object(state)
   Assert.string(uri)
   const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex, uid, tabHeight } = state
@@ -77,6 +77,9 @@ export const openUri = async (state, uri, focus = true, { preview = false } = {}
     groups: newGroups,
     pendingUid: instanceUid,
   })
+  if (context) {
+    instance.args = [context]
+  }
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
   commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, contentHeight])

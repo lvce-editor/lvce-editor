@@ -123,7 +123,7 @@ const getLetterSpacing = () => {
   return Preferences.get(kLetterSpacing) ?? 0.5
 }
 
-export const loadContent = async (state, savedState) => {
+export const loadContent = async (state, savedState, context) => {
   const { uri } = state
   const rowHeight = Preferences.get(kLineHeight) || 20
   const fontSize = Preferences.get(kFontSize) || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
@@ -135,9 +135,9 @@ export const loadContent = async (state, savedState) => {
   const newState1 = Editor.setText(state, content)
   const languageId = getLanguageId(newState1)
   const tokenizer = Tokenizer.getTokenizer(languageId)
-  const savedSelections = getSavedSelections(savedState)
+  let savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
-  const newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
+  let newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
   const isFiraCode = fontFamily === 'Fira Code' || fontFamily === `'Fira Code'`
   if (isFiraCode && !Font.has(fontFamily, fontSize)) {
     const fontName = unquoteString(fontFamily)
@@ -154,6 +154,14 @@ export const loadContent = async (state, savedState) => {
     isMonospaceFont,
     charWidth
   )
+  if (context && context.startRowIndex) {
+    const lines = newState2.lines.length
+    const rowIndex = context.startRowIndex
+    const finalDeltaY = lines * rowHeight - newState2.height
+    const deltaY = (rowIndex / lines) * finalDeltaY
+    newState2 = Editor.setDeltaYFixedValue(newState2, deltaY)
+    savedSelections = new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
+  }
   return {
     ...newState2,
     rowHeight,
@@ -161,7 +169,6 @@ export const loadContent = async (state, savedState) => {
     letterSpacing,
     tokenizer,
     selections: savedSelections,
-    deltaY: savedDeltaY,
     fontFamily,
     links,
     tabSize,
