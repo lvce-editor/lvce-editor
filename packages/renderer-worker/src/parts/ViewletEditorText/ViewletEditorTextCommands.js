@@ -96,6 +96,7 @@ export const LazyCommands = {
   undo: () => import('../EditorCommand/EditorCommandUndo.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
+  showHover: () => import('../EditorCommand/EditorCommandShowHover.js')
 }
 
 export const CommandsWithSideEffectsLazy = {

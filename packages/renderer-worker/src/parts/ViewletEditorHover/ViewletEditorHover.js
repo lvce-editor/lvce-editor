@@ -14,3 +14,7 @@ export const create = (id, uri, x, y, width, height) => {
 }
 
 // TODO request hover information from extensions
+
+export const loadContent = (state) => {
+  return state
+}

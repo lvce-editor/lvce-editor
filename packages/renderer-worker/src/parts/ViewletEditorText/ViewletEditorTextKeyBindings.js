@@ -186,6 +186,11 @@ export const getKeyBindings = () => {
       when: 'focus.EditorText',
     },
     {
+      key: 'ctrl+h',
+      command: 'Editor.showHover',
+      when: 'focus.EditorText',
+    },
+    {
       key: 'alt+ArrowLeft',
       command: 'Editor.cursorWordPartLeft',
       when: 'focus.EditorText',
