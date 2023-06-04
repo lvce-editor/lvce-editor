@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SaveState from '../SaveState/SaveState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletActions from '../ViewletActions/ViewletActions.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -91,26 +92,31 @@ export const openViewlet = async (state, id, focus = false) => {
   //   Viewlet.dispose(state.currentViewletId)
   // }
   const { currentViewletId, titleAreaHeight } = state
+  const savePromise = SaveState.saveViewletState(currentViewletId)
   state.currentViewletId = id
 
   const childDimensions = getContentDimensions(state, titleAreaHeight)
   const uid = state.uid
-  const commands = await ViewletManager.load({
-    getModule: ViewletModule.load,
-    id,
-    type: 0,
-    // @ts-ignore
-    uri: '',
-    show: false,
-    focus: false,
-    setBounds: false,
-    x: childDimensions.x,
-    y: childDimensions.y,
-    width: childDimensions.width,
-    height: childDimensions.height,
-    parentUid: uid,
-    append: true,
-  })
+  const commands = await ViewletManager.load(
+    {
+      getModule: ViewletModule.load,
+      id,
+      type: 0,
+      // @ts-ignore
+      uri: '',
+      show: false,
+      focus: false,
+      setBounds: false,
+      x: childDimensions.x,
+      y: childDimensions.y,
+      width: childDimensions.width,
+      height: childDimensions.height,
+      parentUid: uid,
+      append: true,
+    },
+    false,
+    true
+  )
   if (commands) {
     const currentViewletState = ViewletStates.getState(currentViewletId)
     const currentViewletUid = currentViewletState.uid
@@ -145,6 +151,7 @@ export const openViewlet = async (state, id, focus = false) => {
   // // TODO add keybinding to title
   // // @ts-ignore
   // await ViewletManager.load(viewlet, focus, /* restore */ true)
+  await savePromise
   return { ...state }
 }
 
