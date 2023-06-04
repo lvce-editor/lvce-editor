@@ -43,6 +43,7 @@ export const SymbolKeyword = `${AssetDir.assetDir}/icons/symbol-keyword.svg`
 export const SymbolProperty = `${AssetDir.assetDir}/icons/symbol-property.svg`
 export const SymbolValue = `${AssetDir.assetDir}/icons/symbol-enum.svg`
 export const SymbolVariable = `${AssetDir.assetDir}/icons/symbol-variable.svg`
+export const SymbolField = `${AssetDir.assetDir}/icons/symbol-field.svg`
 export const TerminalBash = `${AssetDir.assetDir}/icons/terminal-bash.svg`
 export const Terminal = `${AssetDir.assetDir}/icons/terminal.svg`
 export const Trash = `${AssetDir.assetDir}/icons/trash.svg`
