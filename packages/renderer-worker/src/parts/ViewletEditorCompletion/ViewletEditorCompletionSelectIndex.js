@@ -38,11 +38,14 @@ const select = async (state, completionItem) => {
 }
 
 export const selectIndex = (state, index) => {
-  const { items, minLineY } = state
+  const { items } = state
   if (index === -1) {
     return state
   }
-  const actualIndex = index + minLineY
+  if (index > items.length) {
+    throw new Error('index too large')
+  }
+  const actualIndex = index
   const completionItem = items[actualIndex]
   return select(state, completionItem)
 }
