@@ -1,3 +1,4 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as SetInnerHtml from '../SetInnerHtml/SetInnerHtml.js'
 
 export const create = () => {
@@ -14,8 +15,9 @@ export const attachEvents = (state) => {
 
 export const setHover = (state, sanitzedHtml, documentation) => {
   const { $Viewlet } = state
-  const $DisplayString = document.createElement('code')
+  const $DisplayString = document.createElement('div')
   $DisplayString.className = 'HoverDisplayString'
+  $DisplayString.role = AriaRoles.Code
   SetInnerHtml.setInnerHtml($DisplayString, sanitzedHtml)
   const $Documentation = document.createElement('div')
   $Documentation.className = 'HoverDocumentation'

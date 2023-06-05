@@ -28,4 +28,5 @@
 
 .HoverDisplayString {
   white-space: pre;
+  contain: content;
 }
