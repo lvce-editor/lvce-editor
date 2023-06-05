@@ -1,5 +1,7 @@
 import * as Hover from '../Hover/Hover.js'
+import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as TokenizeCodeBlock from '../TokenizeCodeBlock/TokenizeCodeBlock.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
@@ -12,7 +14,7 @@ export const create = (id, uri, x, y, width, height) => {
     width: 250,
     height: 150,
     maxHeight: 150,
-    displayString: '',
+    sanitzedHtml: '',
     documentation: '',
   }
 }
@@ -34,9 +36,12 @@ export const loadContent = async (state) => {
     return state
   }
   const { displayString, documentation } = hover
+  const languageId = 'typescript'
+  const html = TokenizeCodeBlock.tokenizeCodeBlock(displayString, languageId)
+  const sanitzedHtml = await SanitizeHtml.sanitizeHtml(html)
   return {
     ...state,
-    displayString,
+    sanitzedHtml,
     documentation,
   }
 }
