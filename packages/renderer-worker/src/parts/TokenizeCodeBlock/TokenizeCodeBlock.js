@@ -41,11 +41,13 @@ const getLineInfosHtml = (lineInfos) => {
 const getLineInfos = (lines, tokenizer, languageId) => {
   const lineInfos = []
   const { tokenizeLine, initialLineState, hasArrayReturn, TokenMap } = tokenizer
+  let currentLineState = initialLineState
   for (const line of lines) {
-    const result = SafeTokenizeLine.safeTokenizeLine(languageId, tokenizeLine, line, initialLineState, hasArrayReturn)
+    const result = SafeTokenizeLine.safeTokenizeLine(languageId, tokenizeLine, line, currentLineState, hasArrayReturn)
     const { tokens } = result
     const lineInfo = getLineInfo(line, tokens, TokenMap)
     lineInfos.push(lineInfo)
+    currentLineState = result
   }
   return lineInfos
 }
