@@ -1,3 +1,5 @@
+import * as SetInnerHtml from '../SetInnerHtml/SetInnerHtml.js'
+
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet EditorHover'
@@ -10,11 +12,11 @@ export const attachEvents = (state) => {
   const { $Viewlet } = state
 }
 
-export const setHover = (state, displayString, documentation) => {
+export const setHover = (state, sanitzedHtml, documentation) => {
   const { $Viewlet } = state
   const $DisplayString = document.createElement('code')
   $DisplayString.className = 'HoverDisplayString'
-  $DisplayString.textContent = displayString
+  SetInnerHtml.setInnerHtml($DisplayString, sanitzedHtml)
   const $Documentation = document.createElement('div')
   $Documentation.className = 'HoverDocumentation'
   $Documentation.textContent = documentation
