@@ -12,9 +12,9 @@
   min-width: 400px;
   contain: strict;
   display: grid;
-  place-items: center;
   top: 100px;
   user-select: text;
+  padding: 1rem;
 }
 
 .HoverDisplayString {
