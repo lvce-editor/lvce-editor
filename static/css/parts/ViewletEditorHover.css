@@ -8,13 +8,22 @@
   border-color: var(--CompletionListBorder, #95a29d);
   font-family: var(--EditorFontFamily);
   position: absolute;
-  min-height: 200px;
+  min-height: 20px;
   min-width: 400px;
-  contain: strict;
+  contain: content;
   display: grid;
   top: 100px;
   user-select: text;
-  padding: 1rem;
+  padding: 3px;
+  font-family: var(--EditorFontFamily);
+  font-size: var(--EditorFontSize);
+  letter-spacing: var(--EditorLetterSpacing);
+  font-feature-settings: var(--EditorFontFeatureSettings);
+  tab-size: var(--EditorTabSize);
+  font-display: block;
+  cursor: text;
+  font-weight: 400;
+  position: absolute;
 }
 
 .HoverDisplayString {
