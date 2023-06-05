@@ -15,18 +15,6 @@ const Window = require('../ElectronWindow/ElectronWindow.js')
 
 // TODO impossible to test these methods
 // and ensure that there is no memory leak
-/**
- * @param {import('electron').Event} event
- */
-const handleWindowClose = (event) => {
-  try {
-    // @ts-ignore
-    const browserWindow = event.sender
-    AppWindowStates.remove(browserWindow.webContents.id)
-  } catch (error) {
-    ErrorHandling.handleError(new VError(error, `Failed to run window close listener`))
-  }
-}
 
 const loadUrl = async (browserWindow, url) => {
   Performance.mark(PerformanceMarkerType.WillLoadUrl)
@@ -79,11 +67,20 @@ exports.createAppWindow = async (preferences, parsedArgs, workingDirectory, url 
   // window.setMenu(menu)
   window.setMenuBarVisibility(true)
   window.setAutoHideMenuBar(false)
+  const id = window.webContents.id
+  const handleWindowClose = () => {
+    try {
+      window.off('close', handleWindowClose)
+      AppWindowStates.remove(id)
+    } catch (error) {
+      ErrorHandling.handleError(new VError(error, `Failed to run window close listener`))
+    }
+  }
   window.on('close', handleWindowClose)
   AppWindowStates.add({
     parsedArgs,
     workingDirectory,
-    id: window.webContents.id,
+    id,
   })
   await loadUrl(window, url)
 }
