@@ -60,16 +60,16 @@
     ]
   },
   "dependencies": {
-    "@babel/code-frame": "^7.18.6",
+    "@babel/code-frame": "^7.21.4",
     "clean-stack": "^5.0.1",
-    "execa": "^6.1.0",
-    "got": "^12.5.3",
+    "execa": "^7.1.1",
+    "got": "^13.0.0",
     "lines-and-columns": "^2.0.3",
     "minimist": "^1.2.8",
     "verror": "^1.10.1",
-    "ws": "^8.11.0"
+    "ws": "^8.13.0"
   },
   "devDependencies": {
-    "@types/ws": "^8.5.3"
+    "@types/ws": "^8.5.4"
   }
 }
