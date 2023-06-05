@@ -10,33 +10,6 @@ const Root = require('../Root/Root.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Session = require('../ElectronSession/ElectronSession.js')
 
-/**
- *
- * @param {Electron.Event} event
- * @param {Electron.Input} input
- */
-const handleBeforeInput = (event, input) => {
-  if (input.control && input.key.toLowerCase() === 'i') {
-    event.preventDefault()
-    // @ts-ignore
-    event.sender.openDevTools()
-  }
-  if (input.code && input.key.toLowerCase() === 'r') {
-    event.preventDefault()
-    // @ts-ignore
-    event.sender.reload()
-  }
-}
-
-/**
- * @param {import('electron').Event} event
- */
-const handleWindowClose = (event) => {
-  // @ts-ignore
-  const browserWindow = event.sender
-  AppWindowStates.remove(browserWindow.webContents.id)
-}
-
 exports.open = async () => {
   const colorThemeJson = await ColorTheme.getColorThemeJson()
   const backgroundColor = colorThemeJson.MainBackground
@@ -51,11 +24,32 @@ exports.open = async () => {
       additionalArguments: ['--lvce-window-kind=process-explorer'],
     },
   })
+  const id = processExplorerWindow.webContents.id
   AppWindowStates.add({
     parsedArgs: [],
     workingDirectort: '',
-    id: processExplorerWindow.webContents.id,
+    id,
   })
+  const handleWindowClose = () => {
+    processExplorerWindow.off('close', handleWindowClose)
+    AppWindowStates.remove(id)
+  }
+  /**
+   *
+   * @param {Electron.Event} event
+   * @param {Electron.Input} input
+   */
+  const handleBeforeInput = (event, input) => {
+    if (input.control && input.key.toLowerCase() === 'i') {
+      event.preventDefault()
+      processExplorerWindow.webContents.openDevTools()
+    }
+    if (input.code && input.key.toLowerCase() === 'r') {
+      event.preventDefault()
+      processExplorerWindow.reload()
+    }
+  }
+
   processExplorerWindow.on('close', handleWindowClose)
   processExplorerWindow.setMenuBarVisibility(false)
   processExplorerWindow.webContents.on(ElectronWebContentsEventType.BeforeInputEvent, handleBeforeInput)
