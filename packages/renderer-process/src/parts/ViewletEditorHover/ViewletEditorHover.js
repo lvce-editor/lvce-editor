@@ -1,4 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as SetInnerHtml from '../SetInnerHtml/SetInnerHtml.js'
 
 export const create = () => {
@@ -24,4 +25,8 @@ export const setHover = (state, sanitzedHtml, documentation) => {
   $Documentation.textContent = documentation
   $Viewlet.append($DisplayString, $Documentation)
 }
-// TODO render dom
+
+export const setBounds = (state, x, y) => {
+  const { $Viewlet } = state
+  SetBounds.setXAndYTransform($Viewlet, x, -y)
+}

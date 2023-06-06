@@ -12,7 +12,6 @@
   min-width: 400px;
   contain: content;
   display: grid;
-  top: 100px;
   user-select: text;
   padding: 3px;
   font-family: var(--EditorFontFamily);
@@ -24,6 +23,7 @@
   cursor: text;
   font-weight: 400;
   position: absolute;
+  bottom: 0;
 }
 
 .HoverDisplayString {

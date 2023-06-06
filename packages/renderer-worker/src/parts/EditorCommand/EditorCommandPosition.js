@@ -48,7 +48,7 @@ export const x = (editor, rowIndex, columnIndex) => {
   return x
 }
 
-export const y = (editor, rowIndex, columnIndex) => {
+export const y = (editor, rowIndex) => {
   const y = (rowIndex + 1) * editor.rowHeight + editor.y
   return y
 }

@@ -1,3 +1,7 @@
+import * as GetVisibleCompletionItems from '../GetVisibleCompletionItems/GetVisibleCompletionItems.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+
 export const hasFunctionalRender = true
 
 const renderHover = {
@@ -11,4 +15,14 @@ const renderHover = {
   },
 }
 
-export const render = [renderHover]
+const renderBounds = {
+  isEqual(oldState, newState) {
+    return oldState.x === newState.x && oldState.y === newState.y
+  },
+  apply(oldState, newState) {
+    const { x, y, width, height } = newState
+    return [/* method */ RenderMethod.SetBounds, /* x */ x, /* y */ y]
+  },
+}
+
+export const render = [renderHover, renderBounds]
