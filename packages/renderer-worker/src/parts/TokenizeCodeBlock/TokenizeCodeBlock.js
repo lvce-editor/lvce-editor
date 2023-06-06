@@ -52,8 +52,9 @@ const getLineInfos = (lines, tokenizer, languageId) => {
   return lineInfos
 }
 
-export const tokenizeCodeBlock = (codeBlock, languageId) => {
+export const tokenizeCodeBlock = async (codeBlock, languageId) => {
   console.time('tokenize')
+  await Tokenizer.loadTokenizer(languageId)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const lines = SplitLines.splitLines(codeBlock)
   const lineInfos = getLineInfos(lines, tokenizer, languageId)
