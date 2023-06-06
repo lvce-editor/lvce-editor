@@ -56,7 +56,7 @@ const ensureError = (input) => {
   return input
 }
 
-export const create = ({ name, resultShape, executeKey = '' }) => {
+export const create = ({ name, resultShape, executeKey = '', returnUndefinedWhenNoProviderFound = false }) => {
   const providers = Object.create(null)
   const multipleResults = resultShape.type === 'array'
   const methodName = executeKey || (multipleResults ? `provide${name}s` : `provide${name}`)
@@ -77,6 +77,9 @@ export const create = ({ name, resultShape, executeKey = '' }) => {
         }
         const provider = providers[textDocument.languageId]
         if (!provider) {
+          if (returnUndefinedWhenNoProviderFound) {
+            return undefined
+          }
           const spacedOutName = spaceOut(name)
           throw new NoProviderFoundError(`No ${spacedOutName} provider found for ${textDocument.languageId}`)
         }
