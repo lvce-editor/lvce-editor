@@ -342,6 +342,10 @@
     "label": "Editor: Format Document"
   },
   {
+    "id": "Editor.showHover",
+    "label": "Editor: Show Hover"
+  },
+  {
     "id": "Editor.formatForced",
     "label": "Editor: Format Document (forced)"
   },
