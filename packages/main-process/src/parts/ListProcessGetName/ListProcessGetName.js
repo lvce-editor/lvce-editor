@@ -48,6 +48,9 @@ exports.getName = (pid, cmd, rootPid) => {
   if (cmd.includes('extensionHostHelperProcessMain.js')) {
     return 'extension-host-helper-process'
   }
+  if (cmd.includes('/bin/rg')) {
+    return 'ripgrep'
+  }
   if (cmd.startsWith('bash')) {
     return 'bash'
   }
