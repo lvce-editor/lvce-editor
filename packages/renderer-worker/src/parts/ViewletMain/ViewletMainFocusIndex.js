@@ -61,22 +61,44 @@ export const focusIndex = async (state, index) => {
   }
 }
 
+const focus = (state, getIndex) => {
+  const { groups, activeGroupIndex } = state
+  const group = groups[activeGroupIndex]
+  const { editors, activeIndex } = group
+  const index = getIndex(editors, activeIndex)
+  return focusIndex(state, index)
+}
+
+const getFirstindex = () => {
+  return 0
+}
+
 export const focusFirst = (state) => {
-  return focusIndex(state, 0)
+  return focus(state, getFirstindex)
+}
+
+const getLastIndex = (editors) => {
+  return editors.length - 1
 }
 
 export const focusLast = (state) => {
-  return focusIndex(state, state.editors.length - 1)
+  return focus(state, getLastIndex)
+}
+
+const getPreviousIndex = (editors, activeIndex) => {
+  return activeIndex === 0 ? editors.length - 1 : activeIndex - 1
 }
 
 export const focusPrevious = (state) => {
-  const previousIndex = state.activeIndex === 0 ? state.editors.length - 1 : state.activeIndex - 1
-  return focusIndex(state, previousIndex)
+  return focus(state, getPreviousIndex)
+}
+
+const getNextIndex = (editors, activeIndex) => {
+  return activeIndex === editors.length - 1 ? 0 : activeIndex + 1
 }
 
 export const focusNext = (state) => {
-  const nextIndex = state.activeIndex === state.editors.length - 1 ? 0 : state.activeIndex + 1
-  return focusIndex(state, nextIndex)
+  return focus(state, getNextIndex)
 }
 
 export const handleTabClick = (state, button, index) => {
