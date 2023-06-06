@@ -1,3 +1,5 @@
+import * as EditorCommandGetWordAt from '../EditorCommand/EditorCommandGetWordAt.js'
+import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as Hover from '../Hover/Hover.js'
 import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
@@ -27,7 +29,7 @@ const getEditor = () => {
 
 export const loadContent = async (state) => {
   const editor = getEditor()
-  const { selections } = editor
+  const { selections, height, lines } = editor
   const rowIndex = selections[0]
   const columnIndex = selections[1]
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
@@ -39,9 +41,15 @@ export const loadContent = async (state) => {
   const languageId = 'typescript'
   const html = TokenizeCodeBlock.tokenizeCodeBlock(displayString, languageId)
   const sanitzedHtml = await SanitizeHtml.sanitizeHtml(html)
+  const wordPart = EditorCommandGetWordAt.getWordBefore(editor, rowIndex, columnIndex)
+  const wordStart = columnIndex - wordPart.length
+  const x = EditorPosition.x(editor, rowIndex, wordStart)
+  const y = height - EditorPosition.y(editor, rowIndex) + editor.y + 40
   return {
     ...state,
     sanitzedHtml,
     documentation,
+    x,
+    y,
   }
 }
