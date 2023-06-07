@@ -44,11 +44,13 @@ export const at = (editor, eventX, eventY) => {
  * @returns
  */
 export const x = (editor, rowIndex, columnIndex) => {
-  const x = columnIndex * editor.columnWidth + editor.x
-  return x
+  const { columnWidth, x } = editor
+  const offsetX = columnIndex * columnWidth + x
+  return offsetX
 }
 
 export const y = (editor, rowIndex) => {
-  const y = (rowIndex + 1) * editor.rowHeight + editor.y
-  return y
+  const { rowHeight, y } = editor
+  const offsetY = (rowIndex + 1) * rowHeight + y
+  return offsetY
 }
