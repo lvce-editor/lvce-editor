@@ -1,27 +1,13 @@
-import * as Languages from '../Languages/Languages.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as Editor from '../Editor/Editor.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as Editor from '../Editor/Editor.js'
+import * as GetBlockComment from '../GetBlockComment/GetBlockComment.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
 
 const RE_WHITESPACE_AT_START = /^\s+/
 const RE_WHITESPACE_AT_END = /\s+$/
 
-// const blockComment = ['<!--', '-->']
-
-const getBlockComment = async (editor) => {
-  const languageConfiguration = await Languages.getLanguageConfiguration(editor)
-  if (
-    !languageConfiguration ||
-    !languageConfiguration.comments ||
-    !languageConfiguration.comments.blockComment
-  ) {
-    return undefined
-  }
-  return languageConfiguration.comments.blockComment
-}
-
 export const toggleBlockComment = async (editor) => {
-  const blockComment = await getBlockComment(editor)
+  const blockComment = await GetBlockComment.getBlockComment(editor)
   if (!blockComment) {
     return editor
   }
@@ -75,8 +61,7 @@ export const toggleBlockComment = async (editor) => {
         },
         end: {
           rowIndex,
-          columnIndex:
-            endColumnIndex - blockCommentStart.length + blockCommentEnd.length,
+          columnIndex: endColumnIndex - blockCommentStart.length + blockCommentEnd.length,
         },
         inserted: [],
         deleted: [blockCommentEnd],
