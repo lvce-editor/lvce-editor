@@ -10,17 +10,18 @@ const ClassNames = {
 }
 
 const getTabDom = (tab, isActive, fixedWidth) => {
+  const { icon, tabWidth, hovered, uri } = tab
   const tabClassName = isActive ? 'MainTab MainTabSelected' : ClassNames.MainTab
-  const fileIconClassName = `FileIcon FileIcon${tab.icon}`
-  const tabWidth = fixedWidth || tab.tabWidth
-  const hovered = tab.hovered
+  const fileIconClassName = `FileIcon FileIcon${icon}`
+  const actualTabWidth = fixedWidth || tabWidth
   const tabElement = div(
     {
       className: tabClassName,
       role: 'tab',
       draggable: true,
-      width: tabWidth,
+      width: actualTabWidth,
       ariaSelected: isActive,
+      title: uri,
     },
     2
   )
