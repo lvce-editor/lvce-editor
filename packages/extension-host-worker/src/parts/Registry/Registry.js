@@ -56,11 +56,50 @@ const ensureError = (input) => {
   return input
 }
 
-export const create = ({ name, resultShape, executeKey = '', returnUndefinedWhenNoProviderFound = false }) => {
-  const providers = Object.create(null)
+const registerMethod = ({ context, providers, returnUndefinedWhenNoProviderFound, name, methodName, resultShape }) => {
+  context[`execute${name}Provider`] = async function (textDocumentId, ...params) {
+    try {
+      const textDocument = TextDocument.get(textDocumentId)
+      if (!textDocument) {
+        throw new Error(`textDocument with id ${textDocumentId} not found`)
+      }
+      const provider = providers[textDocument.languageId]
+      if (!provider) {
+        if (returnUndefinedWhenNoProviderFound) {
+          return undefined
+        }
+        const spacedOutName = spaceOut(name)
+        throw new NoProviderFoundError(`No ${spacedOutName} provider found for ${textDocument.languageId}`)
+      }
+      const result = await provider[methodName](textDocument, ...params)
+      const error = Validation.validate(result, resultShape)
+      if (error) {
+        const improvedError = improveValidationError(name, error)
+        throw new VError(improvedError)
+      }
+      return result
+    } catch (error) {
+      const actualError = ensureError(error)
+      const spacedOutName = spaceOut(name)
+      if (actualError && actualError.message) {
+        if (actualError.message === 'provider[methodName] is not a function') {
+          const camelCaseName = toCamelCase(name)
+
+          throw new VError(`Failed to execute ${spacedOutName} provider: VError: ${camelCaseName}Provider.${methodName} is not a function`)
+        }
+        const message = actualError.name === 'Error' ? `${actualError.message}` : `${actualError.name}: ${actualError.message}`
+        actualError.message = `Failed to execute ${spacedOutName} provider: ${message}`
+      }
+      throw actualError
+    }
+  }
+}
+
+export const create = ({ name, resultShape, executeKey = '', returnUndefinedWhenNoProviderFound = false, additionalMethodNames = [] }) => {
   const multipleResults = resultShape.type === 'array'
   const methodName = executeKey || (multipleResults ? `provide${name}s` : `provide${name}`)
-  return {
+  const providers = Object.create(null)
+  const context = {
     [`register${name}Provider`](provider) {
       providers[provider.languageId] = provider
     },
@@ -69,41 +108,11 @@ export const create = ({ name, resultShape, executeKey = '', returnUndefinedWhen
         delete providers[key]
       }
     },
-    async [`execute${name}Provider`](textDocumentId, ...params) {
-      try {
-        const textDocument = TextDocument.get(textDocumentId)
-        if (!textDocument) {
-          throw new Error(`textDocument with id ${textDocumentId} not found`)
-        }
-        const provider = providers[textDocument.languageId]
-        if (!provider) {
-          if (returnUndefinedWhenNoProviderFound) {
-            return undefined
-          }
-          const spacedOutName = spaceOut(name)
-          throw new NoProviderFoundError(`No ${spacedOutName} provider found for ${textDocument.languageId}`)
-        }
-        const result = await provider[methodName](textDocument, ...params)
-        const error = Validation.validate(result, resultShape)
-        if (error) {
-          const improvedError = improveValidationError(name, error)
-          throw new VError(improvedError)
-        }
-        return result
-      } catch (error) {
-        const actualError = ensureError(error)
-        const spacedOutName = spaceOut(name)
-        if (actualError && actualError.message) {
-          if (actualError.message === 'provider[methodName] is not a function') {
-            const camelCaseName = toCamelCase(name)
-
-            throw new VError(`Failed to execute ${spacedOutName} provider: VError: ${camelCaseName}Provider.${methodName} is not a function`)
-          }
-          const message = actualError.name === 'Error' ? `${actualError.message}` : `${actualError.name}: ${actualError.message}`
-          actualError.message = `Failed to execute ${spacedOutName} provider: ${message}`
-        }
-        throw actualError
-      }
-    },
   }
+  registerMethod({ context, providers, name, methodName, returnUndefinedWhenNoProviderFound, resultShape })
+  for (const method of additionalMethodNames) {
+    registerMethod({ context, providers, ...method })
+  }
+  const finalContext = { ...context }
+  return finalContext
 }

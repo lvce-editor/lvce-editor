@@ -17,3 +17,15 @@ export const executeCompletionProvider = (editor, offset) => {
     combineResults,
   })
 }
+
+export const executeResolveCompletionItem = (editor, offset, completionItem) => {
+  return ExtensionHostEditor.execute({
+    editor,
+    event: ExtensionHostActivationEvent.OnCompletion,
+    method: ExtensionHostCommandType.CompletionResolveExecute,
+    args: [offset, completionItem],
+    noProviderFoundMessage: 'no completion provider found',
+    noProviderFoundResult: [],
+    combineResults,
+  })
+}
