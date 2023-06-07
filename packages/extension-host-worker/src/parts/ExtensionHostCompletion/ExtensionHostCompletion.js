@@ -1,7 +1,7 @@
 import * as Registry from '../Registry/Registry.js'
 import * as Types from '../Types/Types.js'
 
-const { registerCompletionProvider, executeCompletionProvider } = Registry.create({
+const { registerCompletionProvider, executeCompletionProvider, executeresolveCompletionItemProvider } = Registry.create({
   name: 'Completion',
   resultShape: {
     type: Types.Array,
@@ -9,6 +9,16 @@ const { registerCompletionProvider, executeCompletionProvider } = Registry.creat
       type: Types.Object,
     },
   },
+  additionalMethodNames: [
+    {
+      name: 'resolveCompletionItem',
+      methodName: 'resolveCompletionItem',
+      resultShape: {
+        type: Types.Object,
+        allowUndefined: true,
+      },
+    },
+  ],
 })
 
-export { registerCompletionProvider, executeCompletionProvider }
+export { registerCompletionProvider, executeCompletionProvider, executeresolveCompletionItemProvider }

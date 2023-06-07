@@ -29,6 +29,8 @@ export const getFn = (method) => {
       return ExtensionHostReference.executeReferenceProvider
     case ExtensionHostCommandType.CompletionExecute:
       return ExtensionHostCompletion.executeCompletionProvider
+    case ExtensionHostCommandType.CompletionResolveExecute:
+      return ExtensionHostCompletion.executeresolveCompletionItemProvider
     case ExtensionHostCommandType.TextDocumentSyncFull:
       return TextDocument.syncFull
     case ExtensionHostCommandType.TextDocumentSetLanguageId:
