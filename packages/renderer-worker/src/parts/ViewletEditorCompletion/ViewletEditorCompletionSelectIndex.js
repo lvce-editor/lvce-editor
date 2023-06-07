@@ -1,31 +1,32 @@
 import * as Command from '../Command/Command.js'
+import * as Completions from '../Completions/Completions.js'
 import * as ReplaceRange from '../EditorCommand/EditorCommandReplaceRange.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-const getInsertSnippet = (word, leadingWord) => {
-  if (word.startsWith(leadingWord)) {
-    return word.slice(leadingWord.length)
-  }
-  return word
-}
-
 const getEditor = () => {
   return Viewlet.getState(ViewletModuleId.EditorText)
 }
 
-const select = async (state, completionItem) => {
+const getEdits = async (state, editor, completionItem) => {
   const { leadingWord, uid } = state
   const word = completionItem.label
-  const snippet = getInsertSnippet(word, leadingWord)
+  const resolvedItem = await Completions.resolveCompletion(editor, word)
+  const inserted = resolvedItem ? resolvedItem.snippet : word
   // TODO type and dispose commands should be sent to renderer process at the same time
-  const editor = getEditor()
   const { selections } = editor
   const [startRowIndex, startColumnIndex] = selections
   const leadingWordLength = leadingWord.length
   const replaceRange = new Uint32Array([startRowIndex, startColumnIndex - leadingWordLength, startRowIndex, startColumnIndex])
-  const changes = ReplaceRange.replaceRange(editor, replaceRange, [word], '')
+  const changes = ReplaceRange.replaceRange(editor, replaceRange, [inserted], '')
+  return changes
+}
+
+const select = async (state, completionItem) => {
+  const { uid } = state
+  const editor = getEditor()
+  const changes = await getEdits(state, editor, completionItem)
   const index = editor.widgets.indexOf(ViewletModuleId.EditorCompletion)
   if (index !== -1) {
     editor.widgets.splice(index, 1)
