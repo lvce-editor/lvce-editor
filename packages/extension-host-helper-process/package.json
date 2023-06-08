@@ -60,7 +60,7 @@
     ]
   },
   "dependencies": {
-    "@babel/code-frame": "^7.21.4",
+    "@babel/code-frame": "^7.22.5",
     "clean-stack": "^5.0.1",
     "execa": "^7.1.1",
     "got": "^13.0.0",
@@ -70,6 +70,6 @@
     "ws": "^8.13.0"
   },
   "devDependencies": {
-    "@types/ws": "^8.5.4"
+    "@types/ws": "^8.5.5"
   }
 }

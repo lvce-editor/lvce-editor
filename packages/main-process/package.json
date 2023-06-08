@@ -22,10 +22,10 @@
     "@electron/rebuild": "^3.2.13",
     "@types/debug": "^4.1.8",
     "@types/verror": "^1.10.6",
-    "electron": "^25.0.1"
+    "electron": "^25.1.0"
   },
   "dependencies": {
-    "@babel/code-frame": "^7.21.4",
+    "@babel/code-frame": "^7.22.5",
     "clean-stack": "^5.2.0",
     "debug": "^4.3.4",
     "electron-unhandled": "^4.0.1",
