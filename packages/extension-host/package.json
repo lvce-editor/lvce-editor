@@ -24,10 +24,10 @@
     "@types/babel__code-frame": "^7.0.3",
     "@types/lodash": "^4.14.195",
     "@types/verror": "^1.10.6",
-    "@types/ws": "^8.5.4"
+    "@types/ws": "^8.5.5"
   },
   "dependencies": {
-    "@babel/code-frame": "^7.21.4",
+    "@babel/code-frame": "^7.22.5",
     "clean-stack": "^4.2.0",
     "debug": "^4.3.4",
     "exit-hook": "^3.2.0",
