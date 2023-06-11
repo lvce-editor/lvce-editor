@@ -843,7 +843,6 @@ const IpcChild = {
   async listen({ module }) {
     const rawIpc = await module.create()
     const ipc = module.wrap(rawIpc)
-    console.log({ ipc })
     HandleIpc.handleIpc(ipc)
     return ipc
   },
