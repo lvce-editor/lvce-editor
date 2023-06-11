@@ -1,16 +1,10 @@
-const { BrowserWindow } = require('electron')
 const Assert = require('../Assert/Assert.js')
 const CreatePidMap = require('../CreatePidMap/CreatePidMap.js')
-const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
-const UtilityProcessState = require('../UtilityProcessState/UtilityProcessState.js')
 
 exports.getName = (pid, cmd, rootPid) => {
   Assert.object(process)
   Assert.number(rootPid)
-  const browserWindows = BrowserWindow.getAllWindows()
-  const browserViews = ElectronBrowserViewState.getAll()
-  const utilityProcesses = UtilityProcessState.getAll()
-  const pidMap = CreatePidMap.createPidMap(browserWindows, browserViews, utilityProcesses)
+  const pidMap = CreatePidMap.createPidMap()
   if (pid === rootPid) {
     return 'main'
   }
