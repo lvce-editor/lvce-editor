@@ -70,6 +70,8 @@ export const load = (moduleId) => {
       return import('../GetTerminalSpawnOptions/GetTerminalSpawnOptions.ipc.js')
     case ModuleId.HandleCliArgs:
       return import('../HandleCliArgs/HandleCliArgs.ipc.js')
+    case ModuleId.ListProcessesWithMemoryUsage:
+      return import('../ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsage.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

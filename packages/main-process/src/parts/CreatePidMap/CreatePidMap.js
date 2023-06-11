@@ -1,8 +1,11 @@
-/**
- *
- * @param {import('electron').BrowserWindow[]} browserWindows
- */
-exports.createPidMap = (browserWindows, browserViews, utilityProcesses) => {
+const { BrowserWindow } = require('electron')
+const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
+const UtilityProcessState = require('../UtilityProcessState/UtilityProcessState.js')
+
+exports.createPidMap = () => {
+  const browserWindows = BrowserWindow.getAllWindows()
+  const browserViews = ElectronBrowserViewState.getAll()
+  const utilityProcesses = UtilityProcessState.getAll()
   const pidWindowMap = Object.create(null)
   for (const browserWindow of browserWindows) {
     const { webContents } = browserWindow

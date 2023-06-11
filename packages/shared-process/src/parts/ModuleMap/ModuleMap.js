@@ -177,6 +177,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.GetTerminalSpawnOptions
     case 'HandleCliArgs.handleCliArgs':
       return ModuleId.HandleCliArgs
+    case 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage':
+      return ModuleId.ListProcessesWithMemoryUsage
     default:
       throw new CommandNotFoundError(commandId)
   }
