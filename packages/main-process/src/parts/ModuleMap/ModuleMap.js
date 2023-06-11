@@ -47,8 +47,6 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronApplicationMenu
     case 'About':
       return ModuleId.About
-    case 'ListProcessesWithMemoryUsage':
-      return ModuleId.ListProcessesWithMemoryUsage
     case 'Process':
       return ModuleId.Process
     case 'ElectronNet':
