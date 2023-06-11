@@ -97,5 +97,13 @@
     "ignores": [
       "distmin"
     ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "windows-process-tree": "<rootDir>/mocks/windows-process-tree.js"
+    },
+    "testMatch": [
+      "**/test/**/*.js"
+    ]
   }
 }
