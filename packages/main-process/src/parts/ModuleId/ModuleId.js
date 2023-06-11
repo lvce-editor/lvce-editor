@@ -21,3 +21,4 @@ exports.ListProcessesWithMemoryUsage = 20
 exports.Process = 22
 exports.ElectronNet = 23
 exports.ElectronBrowserViewSuggestions = 24
+exports.CreatePidMap = 25
