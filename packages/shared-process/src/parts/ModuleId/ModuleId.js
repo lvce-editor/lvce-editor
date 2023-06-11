@@ -32,3 +32,4 @@ export const HandleElectronMessagePort = 31
 export const HandleNodeMessagePort = 32
 export const GetTerminalSpawnOptions = 33
 export const HandleCliArgs = 34
+export const ListProcessesWithMemoryUsage = 35
