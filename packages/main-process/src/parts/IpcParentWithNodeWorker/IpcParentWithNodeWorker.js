@@ -17,7 +17,7 @@ exports.create = async ({ path, argv = [], env = process.env, execArgv = [] }) =
     throw new IpcError(`Worker exited before ipc connection was established`)
   }
   if (type === FirstNodeWorkerEventType.Error) {
-    throw new IpcError(`Worker threw an error before ipc connection was established`)
+    throw new IpcError(`Worker threw an error before ipc connection was established: ${event}`)
   }
   if (event !== 'ready') {
     throw new IpcError('unexpected first message from worker')
