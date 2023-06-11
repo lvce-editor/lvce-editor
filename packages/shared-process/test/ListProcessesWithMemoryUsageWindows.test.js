@@ -12,7 +12,7 @@ jest.unstable_mockModule('../src/parts/CreatePidMap/CreatePidMap.js', () => ({
 }))
 
 jest.unstable_mockModule(
-  'windows-process-tree',
+  '@vscode/windows-process-tree',
   () => {
     return {
       getProcessList: jest.fn(),
@@ -28,8 +28,7 @@ jest.unstable_mockModule(
   }
 )
 
-// const WindowsProcessTree = await import('../src/parts/LoadWindowsProcessTree/LoadWindowsProcessTree.js')
-const WindowsProcessTree = await import('windows-process-tree')
+const WindowsProcessTree = await import('@vscode/windows-process-tree')
 const ListProcessesWithMemoryUsage = await import('../src/parts/ListProcessesWithMemoryUsageWindows/ListProcessesWithMemoryUsageWindows.js')
 
 test('listProcessesWithMemoryUsage', async () => {
