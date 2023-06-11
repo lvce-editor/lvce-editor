@@ -7,7 +7,7 @@ import * as WindowsProcessTreeDataFlag from '../WindowsProcessTreeDataFlag/Windo
 import * as CreatePidMap from '../CreatePidMap/CreatePidMap.js'
 
 /**
- * @param {import('windows-process-tree').IProcessCpuInfo} item
+ * @param {import('@vscode/windows-process-tree').IProcessCpuInfo} item
  * @param {number} rootPid
  * @param {object} pidMap
  */
@@ -23,7 +23,7 @@ const toResultItem = (item, rootPid, pidMap) => {
 
 /**
  *
- * @param {import('windows-process-tree').IProcessCpuInfo[]} completeProcessList
+ * @param {import('@vscode/windows-process-tree').IProcessCpuInfo[]} completeProcessList
  * @param {number} rootPid
  */
 const toResult = (completeProcessList, rootPid, pidMap) => {
