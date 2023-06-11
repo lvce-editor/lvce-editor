@@ -46,3 +46,11 @@ test('getName - detect extension host helper process', () => {
   const pidMap = {}
   expect(ListProcessGetName.getName(pid, cmd, rootPid, pidMap)).toBe('extension-host-helper-process')
 })
+
+test('getName - detect sublime', () => {
+  const pid = 123
+  const cmd = '/opt/sublime_text/sublime_text --fwdargv0 /usr/bin/subl'
+  const rootPid = 1
+  const pidMap = {}
+  expect(ListProcessGetName.getName(pid, cmd, rootPid, pidMap)).toBe('sublime-text')
+})
