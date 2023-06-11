@@ -4,7 +4,7 @@ import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 export const loadWindowProcessTree = async () => {
   try {
     // @ts-ignore
-    return await import('windows-process-tree')
+    return await import('@vscode/windows-process-tree')
   } catch (error) {
     if (error && error instanceof Error && 'code' in error && error.code === ErrorCodes.ERR_DLOPEN_FAILED) {
       throw new VError(

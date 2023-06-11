@@ -13,7 +13,7 @@ import * as CreatePidMap from '../CreatePidMap/CreatePidMap.js'
  */
 const toResultItem = (item, rootPid, pidMap) => {
   return {
-    name: ListProcessGetName.getName(item.pid, item.commandLine, rootPid),
+    name: ListProcessGetName.getName(item.pid, item.commandLine, rootPid, pidMap),
     pid: item.pid,
     ppid: item.ppid,
     memory: item.memory,
