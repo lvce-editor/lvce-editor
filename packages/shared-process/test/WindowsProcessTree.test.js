@@ -1,21 +1,15 @@
+import { jest } from '@jest/globals'
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.mock(
-  'windows-process-tree',
-  () => {
-    return {
-      getProcessList: jest.fn(),
-    }
-  },
-  {
-    virtual: true,
-  }
-)
+jest.unstable_mockModule('windows-process-tree', () => ({
+  getProcessList: jest.fn(),
+}))
 
-const WindowsProcessTree = require('../src/parts/WindowsProcessTree/WindowsProcessTree.js')
-const WindowsProcessTreeModule = require('windows-process-tree')
+const WindowsProcessTree = await import('../src/parts/WindowsProcessTree/WindowsProcessTree.js')
+const WindowsProcessTreeModule = await import('windows-process-tree')
 
 test('getProcessList', async () => {
   // @ts-ignore
