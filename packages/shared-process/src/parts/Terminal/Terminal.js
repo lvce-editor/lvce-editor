@@ -28,14 +28,14 @@ const createTerminal = (ptyHost, socket) => {
   }
 }
 
-export const create = async (socket, id, cwd, command, args) => {
+export const create = async (ipc, id, cwd, command, args) => {
   try {
-    Assert.object(socket)
+    Assert.object(ipc)
     Assert.number(id)
     Assert.string(cwd)
     // TODO race condition because of await
     const ptyHost = await PtyHost.getOrCreate()
-    const terminal = createTerminal(ptyHost, socket)
+    const terminal = createTerminal(ptyHost, ipc)
     TerminalState.add(id, terminal)
     // TODO use invoke
     ptyHost.send({
