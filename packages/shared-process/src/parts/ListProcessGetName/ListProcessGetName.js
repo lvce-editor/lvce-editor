@@ -14,7 +14,6 @@ export const getName = (pid, cmd, rootPid, pidMap) => {
   if (cmd.includes('--type=gpu-process')) {
     return 'gpu-process'
   }
-
   if (cmd.includes('extensionHostMain.js')) {
     return 'extension-host'
   }
@@ -47,6 +46,9 @@ export const getName = (pid, cmd, rootPid, pidMap) => {
   }
   if (cmd.startsWith('bash')) {
     return 'bash'
+  }
+  if (cmd.startsWith(`/opt/sublime_text/sublime_text `)) {
+    return 'sublime-text'
   }
   return `${cmd}`
 }
