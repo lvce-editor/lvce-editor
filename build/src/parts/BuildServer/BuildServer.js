@@ -795,8 +795,10 @@ const setVersionsAndDependencies = async () => {
     delete json['xo']
     delete json['scripts']
     delete json['devDependencies']
+    delete json['jest']
     if (json['optionalDependencies']) {
       delete json['optionalDependencies']['electron-clipboard-ex']
+      delete json['optionalDependencies']['@vscode/windows-process-tree']
     }
     if (file === 'build/.tmp/server/server/package.json') {
       json.dependencies['@lvce-editor/shared-process'] = gitTag
