@@ -28,7 +28,7 @@ export const getName = (pid, cmd, rootPid, pidMap) => {
     return pidMap[pid] || `<unknown>`
   }
   if (cmd.includes('--type=renderer')) {
-    return `<unknown renderer>`
+    return `renderer`
   }
   if (cmd.includes('--type=utility')) {
     return 'utility'
