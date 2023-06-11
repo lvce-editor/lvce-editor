@@ -1,5 +1,6 @@
 import * as Callback from '../Callback/Callback.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
 export const send = (transport, method, ...params) => {
   transport.send({
@@ -9,7 +10,7 @@ export const send = (transport, method, ...params) => {
   })
 }
 
-export const invoke = (ipc, method, ...params) => {
+export const invoke = async (ipc, method, ...params) => {
   const { id, promise } = Callback.registerPromise()
   ipc.send({
     jsonrpc: JsonRpcVersion.Two,
@@ -17,10 +18,12 @@ export const invoke = (ipc, method, ...params) => {
     params,
     id,
   })
-  return promise
+  const responseMessage = await promise
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
+  return result
 }
 
-export const invokeAndTransfer = (ipc, handle, method, ...params) => {
+export const invokeAndTransfer = async (ipc, handle, method, ...params) => {
   const { id, promise } = Callback.registerPromise()
   ipc.sendAndTransfer(
     {
@@ -31,5 +34,7 @@ export const invokeAndTransfer = (ipc, handle, method, ...params) => {
     },
     handle
   )
-  return promise
+  const responseMessage = await promise
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
+  return result
 }
