@@ -168,6 +168,7 @@ export const getModuleId = (commandId) => {
     case 'RebuildNodePty.rebuildNodePty':
       return ModuleId.RebuildNodePty
     case 'Process.getPid':
+    case 'Process.kill':
       return ModuleId.Process
     case 'HandleNodeMessagePort.handleNodeMessagePort':
       return ModuleId.HandleNodeMessagePort
