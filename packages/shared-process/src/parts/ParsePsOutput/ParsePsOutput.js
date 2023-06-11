@@ -42,7 +42,7 @@ export const parsePsOutput = (stdout, rootPid, pidMap) => {
     result.push({
       ...parsedLine,
       depth,
-      name: ListProcessGetName.getName(pid, cmd, rootPid),
+      name: ListProcessGetName.getName(pid, cmd, rootPid, pidMap),
     })
     depthMap[pid] = depth + 1
   }
