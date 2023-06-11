@@ -3,6 +3,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
+import * as Platform from '../Platform/Platform.js'
 import * as WalkDependencies from '../WalkDependencies/WalkDependencies.js'
 
 const getNpmDependencies = (rawDependencies) => {
@@ -37,7 +38,7 @@ const getNpmDependencies = (rawDependencies) => {
   return dependencyPaths.slice(1)
 }
 
-export const bundleSharedProcessDependencies = async ({ to }) => {
+export const bundleSharedProcessDependencies = async ({ to, arch, electronVersion }) => {
   const projectPath = Path.absolute('packages/shared-process')
   const npmDependenciesRaw = await NpmDependencies.getNpmDependenciesRawJson(projectPath)
   const npmDependencies = getNpmDependencies(npmDependenciesRaw)
@@ -57,6 +58,14 @@ export const bundleSharedProcessDependencies = async ({ to }) => {
       from: dependency,
       to: dependencyTo,
       ignore: NodeModulesIgnoredFiles.getNodeModulesIgnoredFiles(),
+    })
+  }
+  if (Platform.isWindows()) {
+    const Rebuild = await import('../Rebuild/Rebuild.js')
+    await Rebuild.rebuild({
+      arch,
+      buildPath: Path.absolute(to),
+      electronVersion,
     })
   }
 }
