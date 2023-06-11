@@ -7,9 +7,13 @@ const GetFirstNodeWorkerEvent = require('../GetFirstNodeWorkerEvent/GetFirstNode
 exports.create = async ({ path, argv = [], env = process.env, execArgv = [] }) => {
   Assert.string(path)
   const actualArgv = ['--ipc-type=node-worker', ...argv]
+  const actualEnv = {
+    ...env,
+    ELECTRON_RUN_AS_NODE: '1',
+  }
   const worker = new Worker(path, {
     argv: actualArgv,
-    env,
+    env: actualEnv,
     execArgv,
   })
   const { type, event } = await GetFirstNodeWorkerEvent.getFirstNodeWorkerEvent(worker)
