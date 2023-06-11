@@ -8,7 +8,7 @@ export const loadWindowProcessTree = async () => {
   } catch (error) {
     if (error && error instanceof Error && 'code' in error && error.code === ErrorCodes.ERR_DLOPEN_FAILED) {
       throw new VError(
-        `Failed to load windows process tree: The native module "windows-process-tree" is not compatible with this node version and must be compiled against a matching electron version using electron-rebuild`
+        `Failed to load windows process tree: The native module "@vscode/windows-process-tree" is not compatible with this node version and must be compiled against a matching electron version using electron-rebuild`
       )
     }
     throw new VError(error, `Failed to load windows process tree`)
