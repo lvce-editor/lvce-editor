@@ -31,14 +31,18 @@ const rebuildNodePtyNode = async (cwd) => {
   })
 }
 
+const getFn = () => {
+  if (IsElectron.isElectron()) {
+    return rebuildNodePtyElectron
+  }
+  return rebuildNodePtyNode
+}
+
 export const rebuildNodePty = async () => {
   try {
     const ptyHostPath = getPtyHostPath()
-    if (IsElectron.isElectron()) {
-      await rebuildNodePtyElectron(ptyHostPath)
-    } else {
-      await rebuildNodePtyNode(ptyHostPath)
-    }
+    const rebuild = getFn()
+    await rebuild(ptyHostPath)
   } catch (error) {
     throw new VError(error, `Failed to rebuild node-pty`)
   }
