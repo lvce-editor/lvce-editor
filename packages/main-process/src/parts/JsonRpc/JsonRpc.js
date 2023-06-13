@@ -1,39 +1,23 @@
-const Callback = require('../Callback/Callback.js')
-const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
 const UnwrapJsonRpcResult = require('../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js')
+const JsonRpcEvent = require('../JsonRpcEvent/JsonRpcEvent.js')
+const JsonRpcRequest = require('../JsonRpcRequest/JsonRpcRequest.js')
 
 exports.send = (transport, method, ...params) => {
-  transport.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method,
-    params,
-  })
+  const message = JsonRpcEvent.create(method, params)
+  transport.send(message)
 }
 
 exports.invoke = async (ipc, method, ...params) => {
-  const { id, promise } = Callback.registerPromise()
-  ipc.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method,
-    params,
-    id,
-  })
+  const { message, promise } = JsonRpcRequest.create(method, params)
+  ipc.send(message)
   const responseMessage = await promise
   const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
   return result
 }
 
 exports.invokeAndTransfer = async (ipc, transfer, method, ...params) => {
-  const { id, promise } = Callback.registerPromise()
-  ipc.sendAndTransfer(
-    {
-      jsonrpc: JsonRpcVersion.Two,
-      method,
-      params,
-      id,
-    },
-    transfer
-  )
+  const { message, promise } = JsonRpcRequest.create(method, params)
+  ipc.sendAndTransfer(message, transfer)
   const responseMessage = await promise
   const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
   return result
