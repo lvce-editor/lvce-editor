@@ -22,7 +22,7 @@ const constructError = (message, type, name) => {
 }
 
 const getParentStack = (error) => {
-  let parentStack = error.stack || error.data || ''
+  let parentStack = error.stack || error.data || error.message || ''
   if (parentStack.startsWith('    at')) {
     parentStack = error.message + Character.NewLine + parentStack
   }

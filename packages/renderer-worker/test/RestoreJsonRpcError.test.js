@@ -398,3 +398,13 @@ test('restoreJsonRpcError - command not found error', () => {
     at async handlePort (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:44:5)
     at constructError`)
 })
+
+test('restoreJsonRpcError - message string', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    code: -32601,
+    message: "'Location.reload' wasn't found",
+  })
+  expect(error.message).toBe("'Location.reload' wasn't found")
+  expect(error.stack).toMatch(`'Location.reload' wasn't found
+    at Module.restoreJsonRpcError`)
+})
