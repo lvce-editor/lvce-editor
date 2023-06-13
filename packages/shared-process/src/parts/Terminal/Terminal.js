@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
 import * as PtyHost from '../PtyHost/PtyHost.js'
 import * as TerminalState from '../TerminalState/TerminalState.js'
 import { VError } from '../VError/VError.js'
@@ -38,11 +38,8 @@ export const create = async (ipc, id, cwd, command, args) => {
     const terminal = createTerminal(ptyHost, ipc)
     TerminalState.add(id, terminal)
     // TODO use invoke
-    ptyHost.send({
-      jsonrpc: JsonRpcVersion.Two,
-      method: 'Terminal.create',
-      params: [id, cwd, command, args],
-    })
+    const message = JsonRpcEvent.create('Terminal.create', [id, cwd, command, args])
+    ptyHost.send(message)
   } catch (error) {
     throw new VError(error, `Failed to create terminal`)
   }
@@ -57,11 +54,8 @@ export const write = (id, data) => {
     return
   }
   // TODO should use invoke
-  ptyHost.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method: 'Terminal.write',
-    params: [id, data],
-  })
+  const message = JsonRpcEvent.create('Terminal.write', [id, data])
+  ptyHost.send(message)
 }
 
 export const resize = (state, columns, rows) => {
@@ -73,12 +67,9 @@ export const dispose = async (id) => {
   terminal.dispose()
   TerminalState.remove(id)
   const ptyHost = await PtyHost.getOrCreate()
+  const message = JsonRpcEvent.create('Terminal.dispose', [id])
   // TODO use invoke
-  ptyHost.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method: 'Terminal.dispose',
-    params: [id],
-  })
+  ptyHost.send(message)
 }
 
 export const disposeAll = () => {

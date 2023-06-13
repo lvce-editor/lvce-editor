@@ -1,8 +1,8 @@
-import * as Callback from '../Callback/Callback.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
+import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.js'
 import * as Platform from '../Platform/Platform.js'
 import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
@@ -51,21 +51,13 @@ export const dispose = () => {
 }
 
 export const send = (method, ...params) => {
-  state.ipc.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method,
-    params,
-  })
+  const message = JsonRpcEvent.create(method, params)
+  state.ipc.send(message)
 }
 
 export const invoke = async (method, ...params) => {
-  const { id, promise } = Callback.registerPromise()
-  state.ipc.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method,
-    params,
-    id,
-  })
+  const { message, promise } = JsonRpcRequest.create(method, params)
+  state.ipc.send(message)
   const responseMessage = await promise
   const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
   return result
