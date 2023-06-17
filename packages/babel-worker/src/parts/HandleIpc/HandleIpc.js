@@ -5,7 +5,7 @@ import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMess
 
 export const handleIpc = (ipc) => {
   Assert.object(ipc)
-  const handleMessage = async (message) => {
+  const handleMessage = (message) => {
     return HandleJsonRpcMessage.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve)
   }
   ipc.on('message', handleMessage)
