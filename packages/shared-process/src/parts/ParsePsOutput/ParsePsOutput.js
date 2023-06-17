@@ -1,6 +1,7 @@
 // parse ps output based on vscode https://github.com/microsoft/vscode/blob/c0769274fa136b45799edeccc0d0a2f645b75caf/src/vs/base/node/ps.ts (License MIT)
 
 import * as Assert from '../Assert/Assert.js'
+import * as Character from '../Character/Character.js'
 import * as ListProcessGetName from '../ListProcessGetName/ListProcessGetName.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
@@ -25,7 +26,7 @@ export const parsePsOutput = (stdout, rootPid, pidMap) => {
   Assert.string(stdout)
   Assert.number(rootPid)
   Assert.object(pidMap)
-  if (stdout === '') {
+  if (stdout === Character.EmptyString) {
     return []
   }
   const lines = SplitLines.splitLines(stdout)
