@@ -7,6 +7,7 @@ import { IncomingMessage, ServerResponse, createServer } from 'node:http'
 import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { fileURLToPath } from 'node:url'
+import { Worker } from 'node:worker_threads'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
@@ -92,6 +93,7 @@ const CrossOriginEmbedderPolicy = {
 const textMimeType = {
   '.html': 'text/html',
   '.js': 'text/javascript',
+  '.ts': 'text/javascript',
   '.mjs': 'text/javascript',
   '.json': 'application/json',
   '.css': 'text/css',
@@ -150,6 +152,14 @@ const getPathName = (request) => {
   return pathname
 }
 
+const isWorkerUrl = (url) => {
+  return url.endsWith('WorkerMain.js') || url.endsWith('WorkerMain.ts')
+}
+
+const getEtag = (fileStat) => {
+  return `W/"${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}"`
+}
+
 const serveStatic = (root, skip = '') =>
   async function serveStatic(req, res, next) {
     const pathName = getPathName(req)
@@ -157,6 +167,8 @@ const serveStatic = (root, skip = '') =>
     if (relativePath.endsWith('/')) {
       relativePath += 'index.html'
     }
+    const isTypeScript = relativePath.endsWith('.ts')
+
     // TODO on linux this could be more optimized because it is already encoded correctly (no backslashes)
     const filePath = fileURLToPath(`file://${root}${relativePath}`)
     let fileStat
@@ -165,7 +177,7 @@ const serveStatic = (root, skip = '') =>
     } catch {
       return next()
     }
-    const etag = `W/"${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}"`
+    const etag = getEtag(fileStat)
     if (req.headers['if-none-match'] === etag) {
       res.writeHead(StatusCode.NotModified)
       return res.end()
@@ -189,9 +201,37 @@ const serveStatic = (root, skip = '') =>
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[CrossOriginOpenerPolicy.key] = CrossOriginOpenerPolicy.value
     }
-    if (filePath.endsWith('WorkerMain.js')) {
+    if (isWorkerUrl(filePath)) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
+    }
+    if (isTypeScript) {
+      const babelWorkerPath = join(root, 'packages', 'babel-worker', 'src', 'babelWorkerMain.js')
+      const worker = new Worker(babelWorkerPath, {
+        resourceLimits: {
+          maxOldGenerationSizeMb: 20,
+        },
+        argv: ['--ipc-type=node-worker'],
+      })
+      const ipc = {
+        send(message) {
+          worker.postMessage(message)
+        },
+        set onmessage(listener) {
+          worker.on('message', listener)
+        },
+      }
+      const inputPath = filePath
+      const outputPath = join(root, '.cache', `${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}.js`)
+      // TODO use invoke
+      ipc.send({
+        jsonrpc: '2.0',
+        method: 'TranspileFile.transpileFile',
+        params: [inputPath, outputPath],
+      })
+      res.writeHead(StatusCode.Ok, headers)
+      res.end('TODO')
+      return
     }
     res.writeHead(StatusCode.Ok, headers)
     try {
@@ -218,7 +258,7 @@ const serve404 = () =>
     const headers = {
       'Content-Type': 'text/plain',
     }
-    if (req.url.endsWith('WorkerMain.js')) {
+    if (isWorkerUrl(req.url)) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
     }
