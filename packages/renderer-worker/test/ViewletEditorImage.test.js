@@ -92,6 +92,7 @@ test('create', () => {
 test('loadContent', async () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     uri: '/test/image.png',
   }
   expect(await ViewletEditorImage.loadContent(state)).toMatchObject({
@@ -102,6 +103,7 @@ test('loadContent', async () => {
 test('dispose', async () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     uri: '/test/image.png',
   }
   expect(await ViewletEditorImage.dispose(state)).toMatchObject({
@@ -121,6 +123,7 @@ test('render', () => {
 test('handlePointerMove - move left', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     eventCache: [
       {
         pointerId: 5,
@@ -143,6 +146,7 @@ test('handlePointerMove - move left', () => {
 test('handlePointerMove - move right', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     eventCache: [
       {
         pointerId: 5,
@@ -158,6 +162,7 @@ test('handlePointerMove - move right', () => {
 test('handlePointerMove - move up', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     eventCache: [
       {
         pointerId: 5,
@@ -173,6 +178,7 @@ test('handlePointerMove - move up', () => {
 test('handlePointerMove - move down', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     eventCache: [
       {
         pointerId: 5,
@@ -188,6 +194,7 @@ test('handlePointerMove - move down', () => {
 test('handlePointerMove - move right after zoom', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     domMatrix: new DOMMatrix([2, 0, 0, 2, 0, 0]),
     eventCache: [
       {
@@ -218,6 +225,7 @@ test('handleWheel - no zoom', () => {
 test('handleWheel - zoom in', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     x: 0,
     y: 0,
   }
@@ -233,6 +241,7 @@ test('handleWheel - zoom in', () => {
 test('handleWheel - zoom in twice', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     x: 0,
     y: 0,
     domMatrix: new DOMMatrix([1.13, 0, 0, 1.13, 0, 0]),
@@ -249,6 +258,7 @@ test('handleWheel - zoom in twice', () => {
 test('handleWheel - zoom in at top left - should move image to bottom right', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     x: 0,
     y: 0,
   }
@@ -264,6 +274,7 @@ test('handleWheel - zoom in at top left - should move image to bottom right', ()
 test('handleWheel - zoom in at bottom right - should move image to top left', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     x: 0,
     y: 0,
     width: 100,
@@ -281,6 +292,7 @@ test('handleWheel - zoom in at bottom right - should move image to top left', ()
 test('handleWheel - zoom into the middle', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     x: 0,
     y: 0,
     width: 100,
@@ -310,6 +322,7 @@ test.skip('handleWheel - zoom out', () => {
 test('copyImage', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     x: 0,
     y: 0,
     width: 100,
@@ -328,6 +341,7 @@ test('copyImage', () => {
 test('handlePointerUp', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     x: 0,
     y: 0,
     width: 100,
@@ -347,6 +361,7 @@ test('handlePointerUp', () => {
 test('moveLeft', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     x: 0,
     y: 0,
     width: 100,
@@ -360,6 +375,7 @@ test('moveLeft', () => {
 test('moveRight', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     x: 0,
     y: 0,
     width: 100,
@@ -373,6 +389,7 @@ test('moveRight', () => {
 test('moveUp', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     x: 0,
     y: 0,
     width: 100,
@@ -386,6 +403,7 @@ test('moveUp', () => {
 test('moveDown', () => {
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     x: 0,
     y: 0,
     width: 100,
@@ -406,6 +424,7 @@ test('handleImageError - not found', async () => {
   }
   const state = {
     ...ViewletEditorImage.create(),
+    zoomFactor: 200,
     x: 0,
     y: 0,
     width: 100,
