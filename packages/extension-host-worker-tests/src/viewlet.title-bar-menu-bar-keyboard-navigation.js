@@ -100,6 +100,8 @@ export const test = async ({ TitleBarMenuBar, Locator, expect }) => {
 
   // act
   await TitleBarMenuBar.handleKeyArrowUp()
+  await TitleBarMenuBar.handleKeyArrowUp()
+  await TitleBarMenuBar.handleKeyArrowUp()
 
   // assert
   const menuItemOpenRecent = Locator('.MenuItem', {
