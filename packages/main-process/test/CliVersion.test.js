@@ -32,11 +32,5 @@ test('handleCliArgs', async () => {
   }
   expect(CliVersion.handleCliArgs({})).toBe(true)
   expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(
-    `
-Test    : 0.0.0-dev
-Electron: 0.0.0-dev
-Chrome  : 0.0.0-dev
-Node    : 0.0.0-dev`.trim()
-  )
+  expect(spy).toHaveBeenCalledWith(`0.0.0-dev`.trim())
 })
