@@ -1,3 +1,3 @@
-import * as Workbench from './Workbench.js'
+import * as Workbench from './Workbench.s'
 
 export const Commands = {}

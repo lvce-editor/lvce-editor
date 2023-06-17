@@ -96,7 +96,7 @@ export const isElectron = () => {
 }
 
 export const getRendererWorkerUrl = () => {
-  const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js`
+  const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.ts`
   return urlRendererWorker
 }
 
