@@ -111,20 +111,14 @@ exports.filter = {
 
 /**
  *
- * @param {Electron.Event} event
- */
-const handleDidNavigate = (event) => {
-  const webContents = event.sender
-  const blockJs = readFileSync(join(__dirname, './block.js'), 'utf8')
-  webContents.executeJavaScript(blockJs)
-  const blockCss = readFileSync(join(__dirname, './block.css'), 'utf8')
-  webContents.insertCSS(blockCss)
-}
-
-/**
- *
  * @param {Electron.WebContents} webContents
  */
 exports.enableForWebContents = (webContents) => {
+  const handleDidNavigate = () => {
+    const blockJs = readFileSync(join(__dirname, './block.js'), 'utf8')
+    webContents.executeJavaScript(blockJs)
+    const blockCss = readFileSync(join(__dirname, './block.css'), 'utf8')
+    webContents.insertCSS(blockCss)
+  }
   webContents.on(ElectronWebContentsEventType.DidNavigate, handleDidNavigate)
 }
