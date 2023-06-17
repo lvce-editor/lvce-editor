@@ -11,6 +11,10 @@ export const tryToGetActualErrorMessage = async ({ url, name }) => {
     return `Failed to start ${displayName}: ${error}`
   }
   if (response.ok) {
+    const contentType = response.headers.get('Content-Type')
+    if (contentType !== 'application/javascript') {
+      return `Failed to start ${displayName}: Content type for worker must be application/javascript`
+    }
     return await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage({
       url,
       response,
