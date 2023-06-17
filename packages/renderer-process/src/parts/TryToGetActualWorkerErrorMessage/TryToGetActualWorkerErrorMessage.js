@@ -15,6 +15,10 @@ export const tryToGetActualErrorMessage = async ({ url, name }) => {
     if (contentType !== 'application/javascript') {
       return `Failed to start ${displayName}: Content type for worker must be application/javascript`
     }
+    const crossOriginEmbedderPolicy = response.headers.get('Cross-Origin-Embedder-Policy')
+    if (!crossOriginEmbedderPolicy) {
+      return `Failed to start ${displayName}: Cross Origin Embedder Policy header is missing`
+    }
     return await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage({
       url,
       response,
