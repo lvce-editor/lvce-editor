@@ -1,4 +1,4 @@
-const { dialog } = require('electron')
+const { dialog, BrowserWindow } = require('electron')
 const Logger = require('../Logger/Logger.js')
 const Process = require('../Process/Process.js')
 const PrettyError = require('../PrettyError/PrettyError.js')
@@ -33,7 +33,9 @@ exports.handleUncaughtExceptionMonitor = (error, origin) => {
   const prettyError = PrettyError.prepare(error)
   Logger.error(prettyError.codeFrame)
   Logger.error(prettyError.stack)
-  Process.exit(ExitCode.Error)
+  if (BrowserWindow.getAllWindows().length === 0) {
+    Process.exit(ExitCode.Error)
+  }
 }
 
 exports.handleUnhandledRejection = (reason, promise) => {
@@ -41,5 +43,7 @@ exports.handleUnhandledRejection = (reason, promise) => {
   Logger.error(
     `[main process] unhandled rejection: ${prettyError.type}: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}\n`
   )
-  Process.exit(ExitCode.Error)
+  if (BrowserWindow.getAllWindows().length === 0) {
+    Process.exit(ExitCode.Error)
+  }
 }
