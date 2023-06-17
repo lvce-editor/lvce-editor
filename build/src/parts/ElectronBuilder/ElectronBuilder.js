@@ -75,9 +75,9 @@ const copyBuildResources = async ({ config }) => {
     from: `build/files/icon.png`,
     to: 'build/.tmp/electron-builder/build/icon.png',
   })
-  await Copy.copyFile({
-    from: `build/files/icon.png`,
-    to: 'build/.tmp/electron-builder/build/icons/512x512.png',
+  await Copy.copy({
+    from: 'build/files/icons',
+    to: 'build/.tmp/electron-builder/build/icons',
   })
   if (config === ElectronBuilderConfigType.WindowsExe) {
     await Copy.copyFile({
