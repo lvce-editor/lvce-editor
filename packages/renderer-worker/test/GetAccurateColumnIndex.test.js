@@ -234,8 +234,35 @@ test('getAccurateColumnIndex - normalize tab', () => {
   })
   expect(
     GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX)
-  ).toBe(5)
+  ).toBe(4)
   expect(MeasureTextWidth.measureTextWidth).toHaveBeenCalledTimes(1)
-  // expect(MeasureTextWidth.measureTextWidth).toHaveBeenNthCalledWith(1, 'a', 400, 15, 'Test', 0.5)
   expect(MeasureTextWidth.measureTextWidth).toHaveBeenNthCalledWith(1, '  tes', 400, 15, 'Test', 0.5, false, 9)
+})
+
+test('getAccurateColumnIndex - line starting with tab', () => {
+  const line = '\ttry'
+  const fontWeight = 400
+  const fontSize = 15
+  const fontFamily = 'Test'
+  const letterSpacing = 0.5
+  const isMonospaceFont = false
+  const charWidth = 9.73080444
+  const tabSize = 2
+  const eventX = 50
+  // @ts-ignore
+  MeasureTextWidth.measureTextWidth.mockImplementation((text) => {
+    switch (text) {
+      case '  try {':
+        return 9
+      case '  tes':
+        return 45
+      default:
+        return 0
+    }
+  })
+  expect(
+    GetAccurateColumnIndex.getAccurateColumnIndex(line, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth, tabSize, eventX)
+  ).toBe(4)
+  expect(MeasureTextWidth.measureTextWidth).toHaveBeenCalledTimes(1)
+  expect(MeasureTextWidth.measureTextWidth).toHaveBeenNthCalledWith(1, '  try', 400, 15, 'Test', 0.5, false, 9.73080444)
 })

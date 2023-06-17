@@ -52,6 +52,15 @@ export const applyEdit = (editor, changes) => {
 
 // TODO visible selections could also be uint16array
 // [top1, left1, width1, height1, top2, left2, width2, height2...]
+const getTabCount = (string) => {
+  let count = 0
+  for (let i = 0; i < string.length; i++) {
+    if (string[i] === '\t') {
+      count++
+    }
+  }
+  return count
+}
 
 const getX = (
   line,
@@ -86,7 +95,8 @@ const getX = (
   }
   const normalize = NormalizeText.shouldNormalizeText(line)
   const normalizedLine = NormalizeText.normalizeText(line, normalize, tabSize)
-  const partialText = normalizedLine.slice(0, column)
+  const tabCount = getTabCount(line.slice(0, column))
+  const partialText = normalizedLine.slice(0, column + tabCount)
   return (
     MeasureTextWidth.measureTextWidth(partialText, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, averageCharWidth) -
     halfCursorWidth +
