@@ -8,7 +8,6 @@ export const transpileTypeScript = (code) => {
     presets: [preset],
     filename: 'script.ts',
   })
-  console.log({ result, code })
   if (!result) {
     return ''
   }

@@ -160,6 +160,104 @@ const getEtag = (fileStat) => {
   return `W/"${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}"`
 }
 
+const FirstNodeWorkerEventType = {
+  Exit: 1,
+  Error: 2,
+  Message: 3,
+}
+
+const getFirstWorkerEvent = async (worker) => {
+  const { type, event } = await new Promise((resolve, reject) => {
+    const cleanup = (value) => {
+      worker.off('exit', handleExit)
+      worker.off('error', handleError)
+      worker.off('message', handleMessage)
+      resolve(value)
+    }
+    const handleExit = (event) => {
+      cleanup({ type: FirstNodeWorkerEventType.Exit, event })
+    }
+    const handleError = (event) => {
+      cleanup({ type: FirstNodeWorkerEventType.Error, event })
+    }
+    const handleMessage = (event) => {
+      cleanup({ type: FirstNodeWorkerEventType.Message, event })
+    }
+    worker.on('exit', handleExit)
+    worker.on('error', handleError)
+    worker.on('message', handleMessage)
+  })
+  return { type, event }
+}
+
+const createBabelWorkerIpc = async () => {
+  const babelWorkerPath = join(ROOT, 'packages', 'babel-worker', 'src', 'babelWorkerMain.js')
+  const worker = new Worker(babelWorkerPath, {
+    resourceLimits: {
+      maxOldGenerationSizeMb: 20,
+    },
+    argv: ['--ipc-type=node-worker'],
+  })
+  const { type, event } = await getFirstWorkerEvent(worker)
+  if (type !== FirstNodeWorkerEventType.Message || event !== 'ready') {
+    throw new Error(`Failed to start worker`)
+  }
+  return {
+    worker,
+    send(message) {
+      this.worker.postMessage(message)
+    },
+    set onmessage(listener) {
+      this.worker.on('message', listener)
+    },
+  }
+}
+
+const Id = {
+  id: 1,
+  create() {
+    return this.id++
+  },
+}
+
+const Callback = {
+  callbacks: Object.create(null),
+  registerPromise() {
+    const id = Id.create()
+    const promise = new Promise((resolve) => {
+      this.callbacks[id] = resolve
+    })
+    return { id, promise }
+  },
+  resolve(id, message) {
+    console.log(message)
+    this.callbacks[id](message)
+    delete this.callbacks[id]
+  },
+}
+
+const createRpc = (ipc) => {
+  const handleMessage = (message) => {
+    console.log({ message })
+    Callback.resolve(message.id, message)
+  }
+  ipc.onmessage = handleMessage
+  return {
+    ipc,
+    invoke(method, ...params) {
+      const { id, promise } = Callback.registerPromise()
+      const message = {
+        jsonrpc: '2.0',
+        id,
+        method,
+        params,
+      }
+      this.ipc.send(message)
+      return promise
+    },
+  }
+}
+
 const serveStatic = (root, skip = '') =>
   async function serveStatic(req, res, next) {
     const pathName = getPathName(req)
@@ -206,31 +304,13 @@ const serveStatic = (root, skip = '') =>
       headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
     }
     if (isTypeScript) {
-      const babelWorkerPath = join(root, 'packages', 'babel-worker', 'src', 'babelWorkerMain.js')
-      const worker = new Worker(babelWorkerPath, {
-        resourceLimits: {
-          maxOldGenerationSizeMb: 20,
-        },
-        argv: ['--ipc-type=node-worker'],
-      })
-      const ipc = {
-        send(message) {
-          worker.postMessage(message)
-        },
-        set onmessage(listener) {
-          worker.on('message', listener)
-        },
-      }
+      const ipc = await createBabelWorkerIpc()
+      const rpc = createRpc(ipc)
       const inputPath = filePath
       const outputPath = join(root, '.cache', `${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}.js`)
-      // TODO use invoke
-      ipc.send({
-        jsonrpc: '2.0',
-        method: 'TranspileFile.transpileFile',
-        params: [inputPath, outputPath],
-      })
+      await rpc.invoke('TranspileFile.transpileFile', inputPath, outputPath)
       res.writeHead(StatusCode.Ok, headers)
-      res.end('TODO')
+      await pipeline(createReadStream(outputPath), res)
       return
     }
     res.writeHead(StatusCode.Ok, headers)
