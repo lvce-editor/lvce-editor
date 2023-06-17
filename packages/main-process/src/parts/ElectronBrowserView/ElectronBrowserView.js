@@ -222,7 +222,6 @@ exports.createBrowserView = async (restoreId) => {
   }
 
   const handleDestroyed = (event) => {
-    const webContents = event.sender
     Debug.debug(`[main process] browser view ${webContents.id} destroyed`)
     ElectronBrowserViewState.remove(webContents.id)
   }
