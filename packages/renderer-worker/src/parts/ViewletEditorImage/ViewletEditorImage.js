@@ -20,7 +20,7 @@ export const create = (id, uri, x, y, width, height) => {
     pointerOffsetY: 0,
     minZoom: 0.1,
     maxZoom: 2 ** 15, // max value that doesn't result in degradation
-    zoomFactor: 200,
+    zoomFactor: 300,
     touchZoomFactor: 1.015,
     eventCache: [],
     previousDiff: 0,
