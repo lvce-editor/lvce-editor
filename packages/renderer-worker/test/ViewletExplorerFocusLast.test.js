@@ -37,7 +37,7 @@ test('focusLast', () => {
 
 test('focusLast - no dirents', () => {
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     root: '/home/test-user/test-path',
     focusedIndex: -1,
     items: [],

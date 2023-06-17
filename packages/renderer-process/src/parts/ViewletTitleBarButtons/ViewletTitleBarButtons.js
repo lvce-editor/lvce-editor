@@ -5,7 +5,7 @@ const create$TitleBarButton = (id, icon, label) => {
   $Icon.className = `MaskIcon ${icon}`
 
   const $TitleBarButton = document.createElement('button')
-  $TitleBarButton.className = 'TitleBarButton'
+  $TitleBarButton.className = `TitleBarButton TitleBarButton${id}`
   $TitleBarButton.id = `TitleBarButton${id}`
   $TitleBarButton.ariaLabel = label
   $TitleBarButton.append($Icon)
@@ -13,22 +13,12 @@ const create$TitleBarButton = (id, icon, label) => {
 }
 
 export const create = () => {
-  const $ButtonMinimize = create$TitleBarButton(
-    'Minimize',
-    'Minimize',
-    'Minimize'
-  )
-  const $ButtonToggleMaximize = create$TitleBarButton(
-    'ToggleMaximize',
-    'ToggleMaximize',
-    'Toggle Maximize'
-  )
+  const $ButtonMinimize = create$TitleBarButton('Minimize', 'Minimize', 'Minimize')
+  const $ButtonToggleMaximize = create$TitleBarButton('ToggleMaximize', 'ToggleMaximize', 'Toggle Maximize')
   const $ButtonClose = create$TitleBarButton('Close', 'Close', 'Close')
 
   const $TitleBarButtons = document.createElement('div')
-  $TitleBarButtons.id = 'TitleBarButtons'
-  $TitleBarButtons.onmousedown =
-    ViewletTitleBarButtonEvents.handleTitleBarButtonsClick
+  $TitleBarButtons.className = 'Viewlet TitleBarButtons'
   $TitleBarButtons.append($ButtonMinimize, $ButtonToggleMaximize, $ButtonClose)
   return {
     $TitleBarButtons,
@@ -36,7 +26,10 @@ export const create = () => {
   }
 }
 
-export const dispose = (state) => {}
+export const attachEvents = (state) => {
+  const { $Viewlet } = state
+  $Viewlet.onmousedown = ViewletTitleBarButtonEvents.handleTitleBarButtonsClick
+}
 
 export const setButtons = (state, buttons) => {
   const { $TitleBarButtons } = state
@@ -50,4 +43,19 @@ export const setButtons = (state, buttons) => {
     $TitleBarButton.append($Icon)
     $TitleBarButtons.append($TitleBarButton)
   }
+}
+const getIcon = (isMaximized) => {
+  if (isMaximized) {
+    return 'Restore'
+  }
+  return 'ToggleMaximize'
+}
+
+export const setMaximized = (state, isMaximized) => {
+  const { $TitleBarButtons } = state
+  const oldIcon = getIcon(!isMaximized)
+  const icon = getIcon(isMaximized)
+  const $Icon = $TitleBarButtons.children[1].children[0]
+  $Icon.classList.remove(oldIcon)
+  $Icon.classList.add(icon)
 }

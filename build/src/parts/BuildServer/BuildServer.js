@@ -3,6 +3,7 @@ import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
+import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
@@ -794,8 +795,10 @@ const setVersionsAndDependencies = async () => {
     delete json['xo']
     delete json['scripts']
     delete json['devDependencies']
+    delete json['jest']
     if (json['optionalDependencies']) {
       delete json['optionalDependencies']['electron-clipboard-ex']
+      delete json['optionalDependencies']['@vscode/windows-process-tree']
     }
     if (file === 'build/.tmp/server/server/package.json') {
       json.dependencies['@lvce-editor/shared-process'] = gitTag
@@ -872,6 +875,19 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash }) => {
     ignore: ['static'],
   })
   console.timeEnd('copyExtensionHostWorkerFiles')
+
+  const extensionHostSubWorkerCachePath = await BundleExtensionHostSubWorkerCached.bundleExtensionHostSubWorkerCached({
+    commitHash,
+    platform: 'remote',
+    assetDir: `/${commitHash}`,
+  })
+  console.time('copyExtensionHostSubWorkerFiles')
+  await Copy.copy({
+    from: extensionHostSubWorkerCachePath,
+    to: `build/.tmp/server/server/static/${commitHash}/packages/extension-host-sub-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyExtensionHostSubWorkerFiles')
 }
 
 const copyPlaygroundFiles = async ({ commitHash }) => {

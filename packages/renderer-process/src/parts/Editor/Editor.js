@@ -45,6 +45,7 @@ export const create = () => {
   $EditorInput.onfocus = EditorEvents.handleFocus
   $EditorInput.onblur = EditorEvents.handleBlur
   $EditorInput.oncut = EditorEvents.handleCut
+  $EditorInput.name = 'editor'
 
   const $LayerCursor = document.createElement('div')
   $LayerCursor.className = 'LayerCursor'
@@ -178,12 +179,14 @@ export const mount = (state, $Parent) => {
 
 export const dispose = (state) => {}
 
-export const focus = (state) => {
+export const setFocused = (state, isFocused) => {
   const { $EditorInput } = state
   if (!$EditorInput.isConnected) {
     Logger.warn('unmounted editor cannot be focused')
   }
-  $EditorInput.focus()
+  if (isFocused) {
+    $EditorInput.focus()
+  }
 }
 
 export const setLanguageId = async (state, languageId) => {

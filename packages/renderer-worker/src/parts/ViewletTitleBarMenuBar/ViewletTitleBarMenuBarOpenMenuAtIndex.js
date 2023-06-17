@@ -1,9 +1,12 @@
-import * as MeasureTotalTextWidth from '../MeasureTotalTextWidth/MeasureTotalTextWIdth.js'
 import * as Menu from '../Menu/Menu.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 
-const getLabel = (titleBarEntry) => {
-  return titleBarEntry.label
+const getTotalWidth = (entries) => {
+  let total = 0
+  for (const entry of entries) {
+    total += entry.width
+  }
+  return total
 }
 
 /**
@@ -11,7 +14,7 @@ const getLabel = (titleBarEntry) => {
  * @param {boolean} shouldBeFocused
  */
 export const openMenuAtIndex = async (state, index, shouldBeFocused) => {
-  const { titleBarEntries, labelFontWeight, labelFontSize, labelFontFamily, labelPadding, titleBarHeight, labelLetterSpacing, x } = state
+  const { titleBarEntries, titleBarHeight, x } = state
   // TODO race conditions
   // TODO send renderer process
   // 1. open menu, items to show
@@ -19,10 +22,9 @@ export const openMenuAtIndex = async (state, index, shouldBeFocused) => {
   const titleBarEntry = titleBarEntries[index]
   const { id } = titleBarEntry
   const items = await MenuEntries.getMenuEntries(id)
-  const labels = titleBarEntries.slice(0, index).map(getLabel)
-  const textWidths = MeasureTotalTextWidth.measureTotalTextWidth(labels, labelFontWeight, labelFontSize, labelFontFamily, labelLetterSpacing)
-  const paddings = index * labelPadding * 2
-  const offset = textWidths + paddings
+  const relevantEntries = titleBarEntries.slice(0, index)
+  const totalWidths = getTotalWidth(relevantEntries)
+  const offset = totalWidths
   // TODO race condition: another menu might already be open at this point
 
   const menuX = x + offset

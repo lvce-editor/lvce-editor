@@ -3,10 +3,17 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
-    case 'AutoUpdater.checkForUpdatesAndNotify':
-    case 'AutoUpdater.downloadUpdate':
-    case 'AutoUpdater.installAndRestart':
+    case 'AttachDebugger.attachDebugger':
+      return ModuleId.AttachDebugger
+    case 'AutoUpdater.getAutoUpdateType':
+    case 'AutoUpdater.getLatestVersion':
       return ModuleId.AutoUpdater
+    case 'AutoUpdaterAppImage.downloadUpdate':
+    case 'AutoUpdaterAppImage.installAndRestart':
+      return ModuleId.AutoUpdaterAppImage
+    case 'AutoUpdaterWindowsNsis.downloadUpdate':
+    case 'AutoUpdaterWindowsNsis.installAndRestart':
+      return ModuleId.AutoUpdaterWindowsNsis
     case 'BulkReplacement.applyBulkReplacement':
       return ModuleId.BulkReplacement
     case 'ChromeExtension.install':
@@ -26,6 +33,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Developer
     case 'Download.download':
       return ModuleId.Download
+    case 'ElectronInitialize.electronInitialize':
+      return ModuleId.ElectronInitialize
     case 'ExtensionHost.dispose':
     case 'ExtensionHost.enableExtension':
     case 'ExtensionHost.executeCommand':
@@ -103,10 +112,19 @@ export const getModuleId = (commandId) => {
     case 'GitLsFiles.gitLsFilesHash':
     case 'GitLsFiles.resolveGit':
       return ModuleId.GitLsFiles
+    case 'HandleWebSocket.handleWebSocket':
+      return ModuleId.HandleWebSocket
+    case 'HandleElectronMessagePort.handleElectronMessagePort':
+      return ModuleId.HandleElectronMessagePort
+    case 'HandleNodeMessagePort.handleNodeMessagePort':
+      return ModuleId.HandleNodeMessagePort
+    case 'InstallExtension.installExtension':
+      return ModuleId.InstallExtension
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':
       return ModuleId.IsAutoUpdateSupported
     case 'Native.openFolder':
-      return ModuleId.Native
+    case 'OpenNativeFolder.openFolder':
+      return ModuleId.OpenNativeFolder
     case 'OutputChannel.close':
     case 'OutputChannel.open':
       return ModuleId.OutputChannel
@@ -147,8 +165,21 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
-    case 'InstallExtension.installExtension':
-      return ModuleId.InstallExtension
+    case 'RebuildNodePty.rebuildNodePty':
+      return ModuleId.RebuildNodePty
+    case 'Process.getPid':
+    case 'Process.kill':
+      return ModuleId.Process
+    case 'HandleNodeMessagePort.handleNodeMessagePort':
+      return ModuleId.HandleNodeMessagePort
+    case 'HandleElectronMessagePort.handleElectronMessagePort':
+      return ModuleId.HandleElectronMessagePort
+    case 'GetTerminalSpawnOptions.getTerminalSpawnOptions':
+      return ModuleId.GetTerminalSpawnOptions
+    case 'HandleCliArgs.handleCliArgs':
+      return ModuleId.HandleCliArgs
+    case 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage':
+      return ModuleId.ListProcessesWithMemoryUsage
     default:
       throw new CommandNotFoundError(commandId)
   }

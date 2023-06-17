@@ -30,6 +30,7 @@ export const create = (id, uri, languageId, content) => {
     primarySelectionIndex: 0,
     selections: new Uint32Array([0, 0, 0, 0]),
     id,
+    uid: id,
     tokenizer,
     deltaX: 0,
     deltaY: 0,
@@ -73,6 +74,7 @@ export const create = (id, uri, languageId, content) => {
     minimumSliderSize: Height.MinimumSliderSize,
     differences: [],
     width: 0,
+    completionUid: 0,
   }
 }
 
@@ -425,10 +427,7 @@ const renderFocus = {
     return oldState.focused === newState.focused
   },
   apply(oldState, newState) {
-    if (!newState.focused) {
-      return []
-    }
-    return [/* method */ 'focus']
+    return [/* method */ 'setFocused', newState.focused]
   },
 }
 

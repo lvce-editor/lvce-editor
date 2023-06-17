@@ -3,6 +3,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 export const name = 'Viewlet'
 
 export const Commands = {
+  addKeyBindings: Viewlet.addKeyBindings,
   appendViewlet: Viewlet.appendViewlet,
   dispose: Viewlet.dispose,
   executeCommands: Viewlet.executeCommands,
@@ -11,10 +12,9 @@ export const Commands = {
   invoke: Viewlet.invoke,
   loadModule: Viewlet.loadModule,
   refresh: Viewlet.refresh,
+  removeKeyBindings: Viewlet.removeKeyBindings,
   send: Viewlet.invoke,
   sendMultiple: Viewlet.sendMultiple,
   setBounds: Viewlet.setBounds,
   show: Viewlet.show,
-  addKeyBindings: Viewlet.addKeyBindings,
-  removeKeyBindings: Viewlet.removeKeyBindings,
 }

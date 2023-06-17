@@ -47,7 +47,7 @@ const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 test('expandRecursively', async () => {
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     focusedIndex: 0,
     top: 0,
     height: 600,
@@ -142,7 +142,7 @@ test('expandRecursively', async () => {
 
 test('expandRecursively - should work when folder is already expanded', async () => {
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     focusedIndex: 0,
     top: 0,
     height: 600,
@@ -246,7 +246,7 @@ test('expandRecursively - should work when folder is already expanded', async ()
 
 test('expandRecursively - merge with current items', async () => {
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     focusedIndex: 1,
     top: 0,
     height: 600,
@@ -364,7 +364,7 @@ test('expandRecursively - merge with current items', async () => {
 
 test('expandRecursively - no dirent focused', async () => {
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     focusedIndex: -1,
     top: 0,
     height: 600,
@@ -466,7 +466,7 @@ test('expandRecursively - no dirent focused', async () => {
 
 test('expandRecursively - adjust maxLineY', async () => {
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     focusedIndex: 0,
     top: 0,
     height: 800,

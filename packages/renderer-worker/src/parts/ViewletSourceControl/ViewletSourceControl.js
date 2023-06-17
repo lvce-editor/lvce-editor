@@ -4,8 +4,9 @@ import * as SourceControlActions from '../SourceControlActions/SourceControlActi
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
-export const create = () => {
+export const create = (id) => {
   return {
+    uid: id,
     merge: [],
     index: [],
     untracked: [],

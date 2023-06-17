@@ -2,23 +2,26 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
   return {
-    send: jest.fn(() => {}),
+    executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletEditorCompletion = await import('../src/parts/ViewletEditorCompletion/ViewletEditorCompletion.js')
 
 test('event - mousedown', () => {
   const state = ViewletEditorCompletion.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletEditorCompletion.attachEvents(state)
   ViewletEditorCompletion.setItems(state, [
     {
@@ -34,9 +37,7 @@ test('event - mousedown', () => {
       highlights: [],
     },
   ])
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
-  state.$Viewlet.children[0].dispatchEvent(
+  $Viewlet.children[0].dispatchEvent(
     new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
@@ -44,12 +45,14 @@ test('event - mousedown', () => {
       clientY: 0,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('EditorCompletion.handleClickAt', 0, 0)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClickAt', 0, 0)
 })
 
 test('event - click outside', () => {
   const state = ViewletEditorCompletion.create()
+  const { $Viewlet, $ListItems } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletEditorCompletion.attachEvents(state)
   ViewletEditorCompletion.setItems(state, [
     {
@@ -65,7 +68,7 @@ test('event - click outside', () => {
       highlights: [],
     },
   ])
-  state.$ListItems.dispatchEvent(
+  $ListItems.dispatchEvent(
     new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
@@ -73,19 +76,20 @@ test('event - click outside', () => {
       clientY: 0,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('EditorCompletion.handleClickAt', 0, 0)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClickAt', 0, 0)
 })
 
 test('event - wheel', () => {
   const state = ViewletEditorCompletion.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletEditorCompletion.attachEvents(state)
   const event = new WheelEvent('wheel', {
     deltaY: 53,
     deltaMode: WheelEventType.DomDeltaLine,
   })
-  const { $Viewlet } = state
   $Viewlet.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('EditorCompletion.handleWheel', WheelEventType.DomDeltaLine, 53)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleWheel', WheelEventType.DomDeltaLine, 53)
 })

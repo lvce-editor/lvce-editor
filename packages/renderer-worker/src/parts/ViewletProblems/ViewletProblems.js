@@ -1,16 +1,9 @@
-import * as Diagnostics from '../Diagnostics/Diagnostics.js'
-import * as I18NString from '../I18NString/I18NString.js'
+import * as GetProblems from '../GetProblems/GetProblems.js'
+import * as ViewletProblemsStrings from './ViewletProblemsStrings.js'
 
-/**
- * @enum {string}
- */
-const UiStrings = {
-  NoProblemsDetected: 'No problems have been detected in the workspace.',
-  ProblemsDetected: 'Some problems have been detected in the workspace.',
-}
-
-export const create = () => {
+export const create = (uid) => {
   return {
+    uid,
     problems: [],
     disposed: false,
     focusedIndex: -2,
@@ -18,22 +11,9 @@ export const create = () => {
   }
 }
 
-const toProblem = (diagnostic) => {
-  const { message } = diagnostic
-  return message
-}
-
-const getMessage = (problems) => {
-  if (problems.length === 0) {
-    return I18NString.i18nString(UiStrings.NoProblemsDetected)
-  }
-  return I18NString.i18nString(UiStrings.ProblemsDetected)
-}
-
 export const loadContent = async (state) => {
-  const diagnostics = await Diagnostics.getDiagnostics()
-  const problems = diagnostics.map(toProblem)
-  const message = getMessage(problems)
+  const problems = await GetProblems.getProblems()
+  const message = ViewletProblemsStrings.getMessage(problems)
   return {
     ...state,
     problems,

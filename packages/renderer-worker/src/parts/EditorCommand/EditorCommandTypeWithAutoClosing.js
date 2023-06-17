@@ -11,6 +11,7 @@ import * as CommandOpenCompletion from './EditorCommandCompletion.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 import * as EditorType from './EditorCommandType.js'
 import * as EditorTypeWithAutoClosingBracket from './EditorCommandTypeWithAutoClosingBracket.js'
+import * as EditorTypeWithAutoClosingEndBracket from './EditorCommandTypeWithAutoClosingEndBracket.js'
 import * as EditorTypeWithAutoClosingQuote from './EditorCommandTypeWithAutoClosingQuote.js'
 import * as EditorTypeWithAutoClosingTag from './EditorCommandTypeWithAutoClosingTag.js'
 import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
@@ -60,6 +61,16 @@ export const typeWithAutoClosing = async (editor, text) => {
       if (isAutoClosingBracketsEnabled()) {
         return {
           newState: EditorTypeWithAutoClosingBracket.typeWithAutoClosingBracket(editor, text),
+          commands: [],
+        }
+      }
+      break
+    case Bracket.CurlyClose:
+    case Bracket.RoundClose:
+    case Bracket.SquareClose:
+      if (isAutoClosingBracketsEnabled()) {
+        return {
+          newState: EditorTypeWithAutoClosingEndBracket.typeWithAutoClosingEndBracket(editor, text),
           commands: [],
         }
       }

@@ -30,8 +30,8 @@ beforeEach(() => {
   Context.state.contexts = Object.create(null)
 })
 
-test('hydrate', () => {
-  KeyBindings.hydrate([
+test('addKeyBindings', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'a',
       command: 14,
@@ -48,8 +48,8 @@ test('hydrate', () => {
   })
 })
 
-test('hydrate - dispatch event with no matching keyBinding', () => {
-  KeyBindings.hydrate([
+test('addKeyBindings - dispatch event with no matching keyBinding', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'a',
       command: 14,
@@ -63,8 +63,8 @@ test('hydrate - dispatch event with no matching keyBinding', () => {
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test('hydrate - dispatch Event with context not matching', () => {
-  KeyBindings.hydrate([
+test('addKeyBindings - dispatch Event with context not matching', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'a',
       command: 14,
@@ -79,8 +79,8 @@ test('hydrate - dispatch Event with context not matching', () => {
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test('hydrate - dispatch Event with context matching', () => {
-  KeyBindings.addKeyBindings('', [
+test('addKeyBindings - dispatch Event with context matching', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'a',
       command: 14,
@@ -100,8 +100,8 @@ test('hydrate - dispatch Event with context matching', () => {
   })
 })
 
-test('hydrate - dispatch Event with Arrow Key', () => {
-  KeyBindings.addKeyBindings('', [
+test('addKeyBindings - dispatch Event with Arrow Key', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'ArrowLeft',
       command: 14,
@@ -118,8 +118,8 @@ test('hydrate - dispatch Event with Arrow Key', () => {
   })
 })
 
-test('hydrate - dispatch event with ctrl modifier', () => {
-  KeyBindings.addKeyBindings('', [
+test('addKeyBindings - dispatch event with ctrl modifier', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'ctrl+a',
       command: 14,
@@ -137,8 +137,8 @@ test('hydrate - dispatch event with ctrl modifier', () => {
   })
 })
 
-test('hydrate - dispatch event with shift modifier', () => {
-  KeyBindings.addKeyBindings('', [
+test('addKeyBindings - dispatch event with shift modifier', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'shift+a',
       command: 14,
@@ -156,8 +156,8 @@ test('hydrate - dispatch event with shift modifier', () => {
   })
 })
 
-test('hydrate - dispatch event with alt modifier', () => {
-  KeyBindings.addKeyBindings('', [
+test('addKeyBindings - dispatch event with alt modifier', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'alt+a',
       command: 14,
@@ -175,8 +175,8 @@ test('hydrate - dispatch event with alt modifier', () => {
   })
 })
 
-test('hydrate - dispatch event with space key', () => {
-  KeyBindings.addKeyBindings('', [
+test('addKeyBindings - dispatch event with space key', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'Space',
       command: 14,
@@ -193,8 +193,8 @@ test('hydrate - dispatch event with space key', () => {
   })
 })
 
-test('hydrate - dispatch event with double shift key', () => {
-  KeyBindings.addKeyBindings('', [
+test('addKeyBindings - dispatch event with double shift key', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'shift shift',
       command: 14,
@@ -231,8 +231,8 @@ test('hydrate - dispatch event with double shift key', () => {
   })
 })
 
-test('hydrate - dispatch event with double alt key', () => {
-  KeyBindings.addKeyBindings('', [
+test('addKeyBindings - dispatch event with double alt key', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'alt alt',
       command: 14,
@@ -269,8 +269,8 @@ test('hydrate - dispatch event with double alt key', () => {
   })
 })
 
-test('hydrate - dispatch event with double ctrl key', () => {
-  KeyBindings.addKeyBindings('', [
+test('addKeyBindings - dispatch event with double ctrl key', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'ctrl ctrl',
       command: 14,
@@ -307,8 +307,8 @@ test('hydrate - dispatch event with double ctrl key', () => {
   })
 })
 
-test('hydrate - dispatch event with ctrl alt ctrl key should not trigger ctrl ctrl', () => {
-  KeyBindings.hydrate([
+test('addKeyBindings - dispatch event with ctrl alt ctrl key should not trigger ctrl ctrl', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'ctrl ctrl',
       command: 14,
@@ -353,8 +353,8 @@ test('hydrate - dispatch event with ctrl alt ctrl key should not trigger ctrl ct
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test('hydrate - dispatch event with ctrl alt shift shift key should trigger shift shift', () => {
-  KeyBindings.addKeyBindings('', [
+test('addKeyBindings - dispatch event with ctrl alt shift shift key should trigger shift shift', () => {
+  KeyBindings.addKeyBindings(1, [
     {
       key: 'shift shift',
       command: 14,

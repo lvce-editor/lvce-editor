@@ -20,7 +20,7 @@ export const EditorImage = 'EditorImage'
 
 export const EditorPlainText = 'EditorPlainText'
 
-export const EditorText = 'EditorText'
+export const EditorText = 'Editor'
 
 export const Error = 'Error'
 
@@ -89,3 +89,7 @@ export const TitleBarMenuBar = 'TitleBarMenuBar'
 export const TodoList = 'TodoList'
 
 export const Video = 'Video'
+
+export const Terminals = 'Terminals'
+
+export const EditorHover = 'EditorHover'

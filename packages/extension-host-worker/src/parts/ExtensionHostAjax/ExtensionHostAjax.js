@@ -1,6 +1,5 @@
-import * as ExtensionHostHelperProcess from '../ExtensionHostHelperProcess/ExtensionHostHelperProcess.js'
+import { DepecratedError } from '../DepecratedError/DeprecatedError.js'
 
 export const getJson = async (url) => {
-  const json = await ExtensionHostHelperProcess.invoke('Ajax.getJson', url)
-  return json
+  throw new DepecratedError(`vscode.getJson is deprecated, use createNodeRpc instead`)
 }

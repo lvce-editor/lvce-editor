@@ -1,5 +1,5 @@
 import { homedir, tmpdir } from 'node:os'
-import { join, resolve, sep } from 'node:path'
+import { isAbsolute, join, resolve, sep } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as Path from '../Path/Path.js'
@@ -23,6 +23,10 @@ export const cacheDir = Path.join(xdgCache || tmpdir(), applicationName)
 export const homeDir = isWindows ? '' : homedir()
 
 export const appDir = Root.root
+
+export const isAppImage = () => {
+  return Boolean(env.APPIMAGE)
+}
 
 export const getExtensionsPath = () => {
   return Path.join(dataDir, 'extensions')
@@ -95,7 +99,8 @@ export const setEnvironmentVariables = (variables) => {
 
 export const getTestPath = () => {
   if (env.TEST_PATH) {
-    const testPath = '/remote' + pathToFileURL(Path.join(process.cwd(), env.TEST_PATH)).toString().slice(7)
+    const absolutePath = isAbsolute(env.TEST_PATH) ? env.TEST_PATH : Path.join(process.cwd(), env.TEST_PATH)
+    const testPath = '/remote' + pathToFileURL(absolutePath).toString().slice(7)
     return testPath
   }
   return '/packages/extension-host-worker-tests'
@@ -148,6 +153,10 @@ export const getRepository = () => {
 
 export const getAppImageName = () => {
   return 'Lvce'
+}
+
+export const getSetupName = () => {
+  return 'Lvce-Setup'
 }
 
 export const version = '0.0.0-dev'

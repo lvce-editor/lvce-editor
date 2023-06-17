@@ -1,3 +1,4 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
@@ -26,8 +27,7 @@ const getPreferencesJson = async () => {
     if (cachedPreferences) {
       return cachedPreferences
     }
-    const assetDir = Platform.getAssetDir()
-    const url = `${assetDir}/config/defaultSettings.json`
+    const url = `${AssetDir.assetDir}/config/defaultSettings.json`
     return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
   }
   return SharedProcess.invoke(SharedProcessCommandType.PreferencesGetAll)

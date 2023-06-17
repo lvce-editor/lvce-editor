@@ -7,6 +7,7 @@ const Path = require('../Path/Path.js')
 const PendingPorts = require('../PendingPorts/PendingPorts.js')
 const Platform = require('../Platform/Platform.js')
 const Root = require('../Root/Root.js')
+const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
 
 const state = (exports.state = {
   /**
@@ -54,7 +55,7 @@ exports.createBrowserView = async (x, y, width, height, openDevtools = false) =>
       view.webContents.closeDevTools()
       browserWindow.removeBrowserView(view)
     }
-    browserWindow.webContents.on('did-finish-load', handleNavigate)
+    browserWindow.webContents.on(ElectronWebContentsEventType.DidNavigate, handleNavigate)
     if (openDevtools) {
       view.webContents.openDevTools({ mode: 'detach' })
     }

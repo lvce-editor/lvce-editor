@@ -28,4 +28,12 @@ export const isConnected = () => {
   return process.connected
 }
 
+export const kill = (pid, signal) => {
+  process.kill(pid, signal)
+}
+
+export const getPid = () => {
+  return process.pid
+}
+
 export const { platform } = process

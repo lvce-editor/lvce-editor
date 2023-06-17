@@ -9,6 +9,7 @@ import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     searchResults: [],
     stats: {},
     searchId: -1,

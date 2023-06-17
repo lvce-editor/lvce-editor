@@ -22,10 +22,19 @@ beforeAll(() => {
         columnIndex: 0,
       },
     },
+    renderedState: {
+      uri: '',
+      lines: [],
+      cursor: {
+        rowIndex: 0,
+        columnIndex: 0,
+      },
+    },
     factory: {},
   })
   ViewletStates.set('Main', {
     state: {},
+    renderedState: {},
     factory: {},
   })
 })

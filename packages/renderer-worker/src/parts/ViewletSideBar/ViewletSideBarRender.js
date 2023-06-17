@@ -1,3 +1,5 @@
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+
 export const hasFunctionalRender = true
 
 const renderTitle = {
@@ -5,7 +7,7 @@ const renderTitle = {
     return false
   },
   apply(oldState, newState) {
-    return [/* method */ 'setTitle', /* name */ newState.currentViewletId]
+    return [/* method */ RenderMethod.SetTitle, /* name */ newState.currentViewletId]
   },
 }
 

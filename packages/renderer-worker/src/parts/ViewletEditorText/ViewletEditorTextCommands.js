@@ -50,7 +50,9 @@ export const LazyCommands = {
   handleScrollBarHorizontalMove: ()=>import('../EditorCommand/EditorCommandHandleScrollBarHorizontalMove.js'),
   handleScrollBarHorizontalPointerDown: ()=>import('../EditorCommand/EditorCommandHandleScrollBarHorizontalPointerDown.js'),
   handleScrollBarMove: () => import('../EditorCommand/EditorCommandHandleScrollBarMove.js'),
+  handleScrollBarVerticalPointerMove: () => import('../EditorCommand/EditorCommandHandleScrollBarMove.js'),
   handleScrollBarPointerDown: () => import('../EditorCommand/EditorCommandHandleScrollBarPointerDown.js'),
+  handleScrollBarVerticalPointerDown: () => import('../EditorCommand/EditorCommandHandleScrollBarPointerDown.js'),
   handleTab: () => import('../EditorCommand/EditorCommandHandleTab.js'),
   handleTouchEnd: () => import('../EditorCommand/EditorCommandHandleTouchEnd.js'),
   handleTouchMove: () => import('../EditorCommand/EditorCommandHandleTouchMove.js'),
@@ -94,6 +96,7 @@ export const LazyCommands = {
   undo: () => import('../EditorCommand/EditorCommandUndo.js'),
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
+  showHover: () => import('../EditorCommand/EditorCommandShowHover.js')
 }
 
 export const CommandsWithSideEffectsLazy = {

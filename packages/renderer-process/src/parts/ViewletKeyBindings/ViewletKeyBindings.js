@@ -1,9 +1,9 @@
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as InputBox from '../InputBox/InputBox.js'
+import * as InputType from '../InputType/InputType.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletkeyBindingsEvents from './ViewletKeyBindingsEvents.js'
-import * as InputType from '../InputType/InputType.js'
 
 /**
  * @enum {string}
@@ -45,9 +45,6 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet KeyBindings'
   $Viewlet.append($KeyBindingsHeader, $KeyBindingsTableWrapper, $ScrollBar)
-  $Viewlet.onpointerdown = ViewletkeyBindingsEvents.handlePointerDown
-  $Viewlet.addEventListener(DomEventType.Input, ViewletkeyBindingsEvents.handleInput, { capture: true })
-  $Viewlet.addEventListener(DomEventType.Wheel, ViewletkeyBindingsEvents.handleWheel, DomEventOptions.Passive)
 
   return {
     $Viewlet,
@@ -59,6 +56,13 @@ export const create = () => {
     $Resizer1,
     $Resizer2,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $Viewlet } = state
+  $Viewlet.onpointerdown = ViewletkeyBindingsEvents.handlePointerDown
+  $Viewlet.addEventListener(DomEventType.Input, ViewletkeyBindingsEvents.handleInput, { capture: true })
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletkeyBindingsEvents.handleWheel, DomEventOptions.Passive)
 }
 
 export const setTableDom = (state, dom) => {

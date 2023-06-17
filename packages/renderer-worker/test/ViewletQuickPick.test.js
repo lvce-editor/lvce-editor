@@ -124,6 +124,7 @@ test('render - set correct height', () => {
       'setVisiblePicks',
       [
         {
+          description: '',
           icon: '',
           label: 'index.css',
           posInSet: 1,

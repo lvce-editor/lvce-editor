@@ -1,56 +1,50 @@
 import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletMainTabsFunctions from './ViewletMainTabsFunctions.js'
 
 const ClassNames = {
-  Label: 'Label',
+  TabLabel: 'TabLabel',
   EditorTabCloseButton: 'EditorTabCloseButton',
   MainTab: 'MainTab',
+}
+
+// TODO
+const getUid = () => {
+  return ComponentUid.get(document.getElementById('Main'))
+}
+
+export const handleTabsWheel = (event) => {
+  const uid = getUid()
+  const { deltaX, deltaY } = event
+  ViewletMainTabsFunctions.handleTabsWheel(uid, deltaX, deltaY)
 }
 
 export const handleDragStart = (event) => {
   event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
 }
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
 const getIndex = ($Target) => {
-  switch ($Target.className) {
-    case ClassNames.EditorTabCloseButton:
-    case ClassNames.Label:
-      return getNodeIndex($Target.parentNode)
-    case ClassNames.MainTab:
-      return getNodeIndex($Target)
-    default:
-      return -1
+  if (!$Target) {
+    return -1
   }
+  const $Tab = $Target.closest(`.MainTab`)
+  if (!$Tab) {
+    return -1
+  }
+  return GetNodeIndex.getNodeIndex($Tab)
 }
 
 export const handleTabCloseButtonMouseDown = (event, index) => {
-  ViewletMainTabsFunctions.closeEditor(index)
+  const uid = getUid()
+  ViewletMainTabsFunctions.closeEditor(uid, index)
 }
 
 export const handleTabMouseDown = (event, index) => {
   const { button } = event
-  switch (button) {
-    case MouseEventType.LeftClick:
-      ViewletMainTabsFunctions.handleTabClick(index)
-      break
-    case MouseEventType.MiddleClick:
-      ViewletMainTabsFunctions.closeEditor(index)
-      break
-    case MouseEventType.RightClick:
-      break
-    default:
-      break
-  }
+  const uid = getUid()
+  ViewletMainTabsFunctions.handleTabClick(uid, button, index)
 }
 
 export const handleTabsMouseDown = (event) => {
@@ -63,11 +57,8 @@ export const handleTabsMouseDown = (event) => {
     case ClassNames.EditorTabCloseButton:
       handleTabCloseButtonMouseDown(event, index)
       break
-    case ClassNames.MainTab:
-    case ClassNames.Label:
-      handleTabMouseDown(event, index)
-      break
     default:
+      handleTabMouseDown(event, index)
       break
   }
 }
@@ -79,5 +70,21 @@ export const handleTabsContextMenu = (event) => {
     return
   }
   Event.preventDefault(event)
-  ViewletMainTabsFunctions.handleTabContextMenu(index, clientX, clientY)
+  const uid = getUid()
+  ViewletMainTabsFunctions.handleTabContextMenu(uid, index, clientX, clientY)
+}
+
+export const handlePointerOver = (event) => {
+  const { target } = event
+  const index = getIndex(target)
+  const uid = getUid()
+  ViewletMainTabsFunctions.handleTabsPointerOver(uid, index)
+}
+
+export const handlePointerOut = (event) => {
+  const { target, relatedTarget } = event
+  const oldIndex = getIndex(target)
+  const newIndex = getIndex(relatedTarget)
+  const uid = getUid()
+  ViewletMainTabsFunctions.handleTabsPointerOut(uid, oldIndex, newIndex)
 }

@@ -1,10 +1,12 @@
-#TitleBarMenuBar {
+.TitleBarMenuBar {
   display: flex;
   margin: 0;
   padding: 0;
   height: 100%;
   -webkit-app-region: no-drag;
   app-region: no-drag;
+  contain: content;
+  flex-grow: 0;
 }
 
 .TitleBarTopLevelEntry {
@@ -12,7 +14,7 @@
   display: flex;
   align-items: center;
   padding: 0 8px;
-  contain: content;
+  contain: strict;
 }
 
 .TitleBarTopLevelEntryLabel {
@@ -23,8 +25,11 @@
   padding: 0 8px;
   display: flex;
   align-items: center;
+  contain: strict;
+  width: 100%;
 }
 
+/* TODO use class name instead */
 #TitleBarEntryActive {
   padding: 0;
   --TitleBarTopLevelEntryLabel: var(--TitleBarItemHoverForeground, rgba(90, 93, 94, 0.31));

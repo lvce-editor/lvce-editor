@@ -18,13 +18,13 @@ import * as Template from '../Template/Template.js'
 // TODO maybe don't need to include nan module
 // TODO don't need to include whole vscode-ripgrep-with-github-api-error-fix module (only path)
 
-const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate }) => {
+const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
   //   Logger.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product, version, supportsAutoUpdate })
+  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales })
 }
 
 const getElectronVersion = async () => {
@@ -88,6 +88,10 @@ const copyBuildResources = async ({ config }) => {
       from: `build/files/windows/EnvVarUpdate.nsh`,
       to: `build/.tmp/electron-builder/build/EnvVarUpdate.nsh`,
     })
+    await Copy.copyFile({
+      from: `build/files/icon.ico`,
+      to: 'build/.tmp/electron-builder/build/icon.ico',
+    })
   }
 }
 
@@ -102,7 +106,7 @@ const getFinalFileName = ({ config, version, product }) => {
     case ElectronBuilderConfigType.Snap:
       return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.snap`
     case ElectronBuilderConfigType.Mac:
-      return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.dmg`
+      return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.dmg`
     case ElectronBuilderConfigType.AppImage:
       return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.AppImage`
     default:
@@ -163,8 +167,8 @@ const getRepositoryInfo = (url) => {
   }
 }
 
-const copyElectronResult = async ({ config, version, product, electronVersion, supportsAutoUpdate }) => {
-  await bundleElectronMaybe({ product, version, supportsAutoUpdate })
+const copyElectronResult = async ({ config, version, product, electronVersion, supportsAutoUpdate, shouldRemoveUnusedLocales }) => {
+  await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales })
   const debArch = 'amd64'
   await Copy.copy({
     from: `build/.tmp/electron-bundle/x64`,
@@ -229,7 +233,7 @@ const renameReleaseFile = async ({ config, version, product }) => {
   return releaseFilePath
 }
 
-export const build = async ({ config, product }) => {
+export const build = async ({ config, product, shouldRemoveUnusedLocales = false }) => {
   Assert.string(config)
   Assert.object(product)
   // workaround for https://github.com/electron-userland/electron-builder/issues/4594
@@ -242,7 +246,7 @@ export const build = async ({ config, product }) => {
     product.supportsAutoUpdate && (config === ElectronBuilderConfigType.AppImage || config === ElectronBuilderConfigType.WindowsExe)
 
   console.time('copyElectronResult')
-  await copyElectronResult({ version, config, product, electronVersion, supportsAutoUpdate })
+  await copyElectronResult({ version, config, product, electronVersion, supportsAutoUpdate, shouldRemoveUnusedLocales })
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')

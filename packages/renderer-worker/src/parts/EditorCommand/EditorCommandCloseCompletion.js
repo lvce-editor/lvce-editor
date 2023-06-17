@@ -3,11 +3,13 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const closeCompletion = async (editor) => {
+  const completionUid = editor.completionUid
+  const instance = ViewletStates.getInstance(completionUid)
   editor.completionState = EditorCompletionState.None
-  const instance = ViewletStates.getInstance('EditorCompletion')
+  editor.completionUid = 0
   if (!instance) {
-    return
+    return editor
   }
-  await Viewlet.dispose('EditorCompletion')
+  await Viewlet.dispose(completionUid)
   return editor
 }

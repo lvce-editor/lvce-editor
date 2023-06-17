@@ -1,0 +1,7 @@
+exports.ContextMenu = 'context-menu'
+exports.WillNavigate = 'will-navigate'
+exports.DidNavigate = 'did-navigate'
+exports.PageTitleUpdated = 'page-title-updated'
+exports.Destroyed = 'destroyed'
+exports.BeforeInputEvent = 'before-input-event'
+exports.DidFinishLoad = 'did-finish-load'

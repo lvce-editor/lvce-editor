@@ -7,8 +7,9 @@ import pMap from 'p-map'
 import tar from 'tar-fs'
 import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
-import * as Process from '../Process/Process.js'
+import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Path from '../Path/Path.js'
+import * as Process from '../Process/Process.js'
 import extensions from './builtinExtensions.json' assert { type: 'json' }
 
 const downloadUrl = async (url, outFile) => {
@@ -64,7 +65,9 @@ export const extract = async (inFile, outDir) => {
 
 const downloadExtensionAndLog = async (extension) => {
   console.time(`[download] ${extension.name}`)
-  await downloadExtension(extension)
+  try {
+    await downloadExtension(extension)
+  } catch (error) {}
   console.timeEnd(`[download] ${extension.name}`)
 }
 
@@ -75,18 +78,26 @@ const downloadExtensions = async (extensions) => {
   })
 }
 
+const isHttpError = (error) => {
+  if (!error) {
+    return false
+  }
+  if (!error.message) {
+    return false
+  }
+  return error.message.includes('Response code') || error.message.includes(`connect ETIMEDOUT`)
+}
+
 const printError = (error) => {
   if (error && error.constructor.name === 'AggregateError') {
     for (const subError of error.errors) {
-      if (subError.message.includes('Response code')) {
+      if (isHttpError(subError)) {
         console.error(subError.message)
       } else {
         console.error(subError)
       }
     }
-  } else if (error && error instanceof Error && error.message.includes('Response code ')) {
-    console.error(error.message)
-  } else if (error && error instanceof Error && error.message.includes(`connect ETIMEDOUT`)) {
+  } else if (error && error instanceof Error && isHttpError(error)) {
     console.error(error.message)
   } else {
     console.error(error)
@@ -98,7 +109,7 @@ const main = async () => {
     await downloadExtensions(extensions)
   } catch (error) {
     printError(error)
-    Process.exit(1)
+    Process.exit(ExitCode.Error)
   }
 }
 

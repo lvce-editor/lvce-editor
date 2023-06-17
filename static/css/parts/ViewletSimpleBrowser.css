@@ -1,3 +1,7 @@
+.SimpleBrowser {
+  position: absolute;
+}
+
 .SimpleBrowserHeader {
   height: 30px;
   width: 100%;

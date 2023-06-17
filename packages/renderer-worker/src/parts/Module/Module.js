@@ -22,8 +22,6 @@ export const load = (moduleId) => {
       return import('../Callback/Callback.ipc.js')
     case ModuleId.Chrome:
       return import('../Chrome/Chrome.ipc.js')
-    case ModuleId.ChromeExtension:
-      return import('../ChromeExtension/ChromeExtension.ipc.js')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.js')
     case ModuleId.ColorPicker:
@@ -38,6 +36,8 @@ export const load = (moduleId) => {
       return import('../ContentTracing/ContentTracing.ipc.js')
     case ModuleId.ContextMenu:
       return import('../ContextMenu/ContextMenu.ipc.js')
+    case ModuleId.DebugSharedProcess:
+      return import('../DebugSharedProcess/DebugSharedProcess.ipc.js')
     case ModuleId.Developer:
       return import('../Developer/Developer.ipc.js')
     case ModuleId.Dialog:
@@ -84,6 +84,8 @@ export const load = (moduleId) => {
       return import('../ImagePreview/ImagePreview.ipc.js')
     case ModuleId.IndexedDb:
       return import('../IndexedDb/IndexedDb.ipc.js')
+    case ModuleId.IpcParent:
+      return import('../IpcParent/IpcParent.ipc.js')
     case ModuleId.KeyBindings:
       return import('../KeyBindings/KeyBindings.ipc.js')
     case ModuleId.KeyBindingsInitial:
@@ -96,7 +98,9 @@ export const load = (moduleId) => {
       return import('../Menu/Menu.ipc.js')
     case ModuleId.Mime:
       return import('../Mime/Mime.ipc.js')
-    case ModuleId.Navigatiom:
+    case ModuleId.NativeHost:
+      return import('../NativeHost/NativeHost.ipc.js')
+    case ModuleId.Navigation:
       return import('../Navigation/Navigation.ipc.js')
     case ModuleId.Notification:
       return import('../Notification/Notification.ipc.js')
@@ -136,8 +140,8 @@ export const load = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.IpcParent:
-      return import('../IpcParent/IpcParent.ipc.js')
+    case ModuleId.RebuildNodePty:
+      return import('../RebuildNodePty/RebuildNodePty.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

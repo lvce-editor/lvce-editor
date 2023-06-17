@@ -4,9 +4,10 @@ import { join } from 'node:path'
 import { performance } from 'node:perf_hooks'
 import VError from 'verror'
 import builtinExtensions from '../DownloadBuiltinExtensions/builtinExtensions.json' assert { type: 'json' }
-import * as Root from '../Root/Root.js'
-import * as Process from '../Process/Process.js'
+import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Logger from '../Logger/Logger.js'
+import * as Process from '../Process/Process.js'
+import * as Root from '../Root/Root.js'
 
 const getRepository = (name) => {
   if (name.startsWith('builtin.')) {
@@ -134,7 +135,7 @@ const main = async () => {
     } else {
       console.error(error)
     }
-    Process.exit(1)
+    Process.exit(ExitCode.Error)
   }
 }
 

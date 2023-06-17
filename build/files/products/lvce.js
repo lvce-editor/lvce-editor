@@ -2,7 +2,7 @@ export const nameShort = 'Lvce'
 
 export const nameLong = 'Lvce Editor'
 
-export const windowsExecutableName = 'Lvce'
+export const windowsExecutableName = 'Lvce Editor'
 
 export const comment = 'Web Based Text Editor That Aims To Have Low Memory Usage '
 

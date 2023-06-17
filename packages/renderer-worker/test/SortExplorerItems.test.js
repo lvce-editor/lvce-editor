@@ -1,7 +1,7 @@
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as SortExplorerItems from '../src/parts/SortExplorerItems/SortExplorerItems.js'
 
-test('compare dirent - symlink to file and file should be ordered next to each other', async () => {
+test('compare dirent - symlink to file and file should be ordered next to each other', () => {
   expect(
     SortExplorerItems.compareDirent(
       {
@@ -16,7 +16,7 @@ test('compare dirent - symlink to file and file should be ordered next to each o
   ).toBe(0)
 })
 
-test('compare dirent - numeric order', async () => {
+test('compare dirent - numeric order', () => {
   expect(
     SortExplorerItems.compareDirent(
       {
@@ -31,7 +31,7 @@ test('compare dirent - numeric order', async () => {
   ).toBe(-1)
 })
 
-test('compare dirent - symlink to directory and directory should be ordered next to each other', async () => {
+test('compare dirent - symlink to directory and directory should be ordered next to each other', () => {
   expect(
     SortExplorerItems.compareDirent(
       {
@@ -44,4 +44,19 @@ test('compare dirent - symlink to directory and directory should be ordered next
       }
     )
   ).toBe(0)
+})
+
+test.only('compare dirent - folder', () => {
+  expect(
+    SortExplorerItems.compareDirent(
+      {
+        name: 'test',
+        type: DirentType.Directory,
+      },
+      {
+        name: 'f',
+        type: DirentType.Directory,
+      }
+    )
+  ).toBe(1)
 })

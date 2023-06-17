@@ -33,13 +33,17 @@ beforeAll(() => {
 })
 
 test('measureTextWidth', () => {
-  expect(MeasureTextWidth.measureTextWidth('test', 400, 15, "'Test Font'", 0.5)).toBe(40)
+  const isMonospaceFont = false
+  const charWidth = 9
+  expect(MeasureTextWidth.measureTextWidth('test', 400, 15, "'Test Font'", 0.5, isMonospaceFont, charWidth)).toBe(40)
   // @ts-ignore
   expect(MeasureTextWidthState.state.ctx._font).toBe("400 15px 'Test Font'")
 })
 
 test('measureTextWidth - letter-spacing string', () => {
-  expect(() => MeasureTextWidth.measureTextWidth('test', 400, 15, "'Test Font'", 'normal')).toThrowError(
+  const isMonospaceFont = false
+  const charWidth = 9
+  expect(() => MeasureTextWidth.measureTextWidth('test', 400, 15, "'Test Font'", 'normal', isMonospaceFont, charWidth)).toThrowError(
     new Error(`letterSpacing must be of type number`)
   )
 })

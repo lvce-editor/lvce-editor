@@ -1,0 +1,13 @@
+.FileIcon {
+  content: ' ';
+  contain: strict;
+  pointer-events: none;
+  background-size: 16px;
+  background-position: 0;
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 22px;
+  display: inline-block;
+  flex-shrink: 0;
+  align-items: center;
+}

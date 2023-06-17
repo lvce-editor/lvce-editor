@@ -1,9 +1,10 @@
 import * as CommitHash from '../CommitHash/CommitHash.js'
-import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
-import * as ReadJson from '../JsonFile/JsonFile.js'
-import * as Stat from '../Stat/Stat.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as ExitCode from '../ExitCode/ExitCode.js'
+import * as ReadJson from '../JsonFile/JsonFile.js'
+import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
 import * as Process from '../Process/Process.js'
+import * as Stat from '../Stat/Stat.js'
 
 const computeResults = async (budget) => {
   const commitHash = await CommitHash.getCommitHash()
@@ -11,14 +12,11 @@ const computeResults = async (budget) => {
   const warnings = []
   const errors = []
   for (const group in budget) {
-    const packageName =
-      group === 'rendererProcess' ? 'renderer-process' : 'renderer-worker'
+    const packageName = group === 'rendererProcess' ? 'renderer-process' : 'renderer-worker'
     actual[group] = Object.create(null)
     for (const key of Object.keys(budget[group])) {
       try {
-        actual[group][key] = await Stat.getGzipFileSize(
-          `build/.tmp/dist/${commitHash}/packages/${packageName}/dist/${key}.js`
-        )
+        actual[group][key] = await Stat.getGzipFileSize(`build/.tmp/dist/${commitHash}/packages/${packageName}/dist/${key}.js`)
       } catch (error) {
         // @ts-ignore
         if (error && error.code === ErrorCodes.ENOENT) {
@@ -33,10 +31,7 @@ const computeResults = async (budget) => {
 
   for (const group in budget) {
     for (const key of Object.keys(actual[group])) {
-      if (
-        PrettyBytes.parse(actual[group][key]) >
-        PrettyBytes.parse(budget[group][key])
-      ) {
+      if (PrettyBytes.parse(actual[group][key]) > PrettyBytes.parse(budget[group][key])) {
         errors.push({
           fileName: key,
           actualSize: actual[group][key],
@@ -55,21 +50,14 @@ const checkBundleSize = async () => {
   const budget = await ReadJson.readJson('build/files/bundlesize.config.json')
   const results = await computeResults(budget)
   if (results.errors.length > 0) {
-    console.error(
-      `Bundle Size Error: ${results.errors.length} size assertions failed:`
-    )
+    console.error(`Bundle Size Error: ${results.errors.length} size assertions failed:`)
     console.error(results.errors)
-    Process.exit(1)
+    Process.exit(ExitCode.Error)
   }
   if (results.warnings.length > 0) {
     console.log(results.warnings)
   }
-  console.log(
-    `Success: ${
-      Object.keys(budget.rendererProcess).length +
-      Object.keys(budget.rendererWorker).length
-    } Size assertions passed`
-  )
+  console.log(`Success: ${Object.keys(budget.rendererProcess).length + Object.keys(budget.rendererWorker).length} Size assertions passed`)
 }
 
 const main = async () => {

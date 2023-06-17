@@ -31,7 +31,7 @@ test.skip('focus', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
-  Editor.focus(state)
+  Editor.setFocused(state)
   expect(state.$EditorInput).toBe(document.activeElement)
 })
 

@@ -104,10 +104,12 @@ test('openMenu - when focusedIndex', async () => {
       {
         id: MenuEntryId.File,
         name: 'File',
+        width: 40,
       },
       {
         id: MenuEntryId.Edit,
         name: 'Edit',
+        width: 40,
       },
     ],
     titleBarHeight: 20,

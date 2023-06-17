@@ -1,23 +1,24 @@
-import * as Callback from '../Callback/Callback.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
+import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.js'
+import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
 export const send = (transport, method, ...params) => {
-  transport.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method,
-    params,
-  })
+  const message = JsonRpcEvent.create(method, params)
+  transport.send(message)
 }
 
-export const invoke = (ipc, method, ...params) => {
-  return new Promise((resolve, reject) => {
-    // TODO use one map instead of two
-    const callbackId = Callback.register(resolve, reject)
-    ipc.send({
-      jsonrpc: JsonRpcVersion.Two,
-      method,
-      params,
-      id: callbackId,
-    })
-  })
+export const invoke = async (ipc, method, ...params) => {
+  const { message, promise } = JsonRpcRequest.create(method, params)
+  ipc.send(message)
+  const responseMessage = await promise
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
+  return result
+}
+
+export const invokeAndTransfer = async (ipc, handle, method, ...params) => {
+  const { message, promise } = JsonRpcRequest.create(method, params)
+  ipc.sendAndTransfer(message, handle)
+  const responseMessage = await promise
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
+  return result
 }

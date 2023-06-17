@@ -64,6 +64,10 @@ export const findAllReferences = async () => {
   await Command.execute('SideBar.show', 'References', /* focus */ true)
 }
 
+export const findAllImplementations = async () => {
+  await Command.execute('SideBar.show', 'Implementations', /* focus */ true)
+}
+
 export const setSelections = async (selections) => {
   await Command.execute('Editor.setSelections', selections)
 }

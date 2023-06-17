@@ -2,6 +2,7 @@ export const BraceCompletionExecuteBraceCompletionProvider = 'ExtensionHostBrace
 export const ClosingTagExecuteClosingTagProvider = 'ExtensionHostClosingTag.executeClosingTagProvider'
 export const CommandExecute = 'ExtensionHostCommand.executeCommand'
 export const CompletionExecute = 'ExtensionHostCompletion.execute'
+export const CompletionResolveExecute = 'ExtensionHostCompletion.executeResolve'
 export const DefinitionExecuteDefinitionProvider = 'ExtensionHostDefinition.executeDefinitionProvider'
 export const ExtensionActivate = 'ExtensionHostExtension.activate'
 export const FileSystemCreateFile = 'ExtensionHostFileSystem.createFile'

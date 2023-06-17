@@ -10,6 +10,7 @@ const UiStrings = {
   ManyResultsInOneFile: `Found {PH1} results in 1 file`,
   ManyResultsInManyFiles: `Found {PH1} results in {PH2} files`,
   ReplaceAll: 'Replace All',
+  Replace: 'Replace',
   ConfirmReplaceAll: 'Replace All?',
   ConfirmReplaceOneOccurrenceInOneFile: "Replace 1 occurrence across 1 file with '{PH1}'",
   ConfirmReplaceManyOccurrencesInOneFile: "Replace {PH1} occurrences across 1 file with '{PH2}'",
@@ -83,4 +84,12 @@ export const replacedManyOccurrencesInManyFiles = (matchCount, fileCount, replac
     PH2: fileCount,
     PH3: replacement,
   })
+}
+
+export const replaceAll = () => {
+  return I18nString.i18nString(UiStrings.ReplaceAll)
+}
+
+export const replace = () => {
+  return I18nString.i18nString(UiStrings.Replace)
 }

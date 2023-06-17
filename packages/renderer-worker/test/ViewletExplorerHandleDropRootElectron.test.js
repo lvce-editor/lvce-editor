@@ -28,16 +28,13 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: 'electron',
+    assetDir: '',
   }
 })
 
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
-const ViewletExplorerHandleDropRootElectron = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerHandleDropRootElectron.js'
-)
-const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
-)
+const ViewletExplorerHandleDropRootElectron = await import('../src/parts/ViewletExplorer/ViewletExplorerHandleDropRootElectron.js')
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
 
 test('handleDrop - single file', async () => {
   // @ts-ignore
@@ -57,7 +54,7 @@ test('handleDrop - single file', async () => {
     }
   })
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     root: '/test',
     focusedIndex: 1,
     items: [],
@@ -83,10 +80,7 @@ test('handleDrop - single file', async () => {
     ],
   })
   expect(FileSystem.copy).toHaveBeenCalledTimes(1)
-  expect(FileSystem.copy).toHaveBeenCalledWith(
-    '/source/file.txt',
-    '/test/file.txt'
-  )
+  expect(FileSystem.copy).toHaveBeenCalledWith('/source/file.txt', '/test/file.txt')
 })
 
 test('handleDrop - single file - merge with existing files', async () => {
@@ -115,7 +109,7 @@ test('handleDrop - single file - merge with existing files', async () => {
     }
   })
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     root: '/test',
     focusedIndex: 1,
     items: [
@@ -179,10 +173,7 @@ test('handleDrop - single file - merge with existing files', async () => {
     ],
   })
   expect(FileSystem.copy).toHaveBeenCalledTimes(1)
-  expect(FileSystem.copy).toHaveBeenCalledWith(
-    '/source/file-2.txt',
-    '/test/file-2.txt'
-  )
+  expect(FileSystem.copy).toHaveBeenCalledWith('/source/file-2.txt', '/test/file-2.txt')
 })
 
 test('handleDrop - error', async () => {

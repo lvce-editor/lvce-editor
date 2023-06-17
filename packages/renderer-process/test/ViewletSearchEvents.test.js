@@ -3,27 +3,25 @@
  */
 import { jest } from '@jest/globals'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
   return {
-    send: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
+    executeViewletCommand: jest.fn(() => {}),
   }
 })
-
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
 
 test('event - input', () => {
   const state = ViewletSearch.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletSearch.attachEvents(state)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const { $ViewletSearchInput } = state
   $ViewletSearchInput.value = 'test search'
   const event = new Event('input', {
@@ -31,11 +29,14 @@ test('event - input', () => {
     cancelable: true,
   })
   $ViewletSearchInput.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Search.handleInput', 'test search')
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleInput', 'test search')
 })
+
 test('event - click', () => {
   const state = ViewletSearch.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletSearch.attachEvents(state)
   ViewletSearch.setResults(state, [
     {
@@ -43,28 +44,26 @@ test('event - click', () => {
       path: '/test/test.txt',
     },
   ])
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const { $ListItems } = state
   const event = new Event('mousedown', {
     bubbles: true,
     cancelable: true,
   })
   $ListItems.children[0].dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Search.handleClick', 0)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 0)
 })
 
 test('event - contextmenu - activated via keyboard', () => {
   const state = ViewletSearch.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletSearch.attachEvents(state)
   ViewletSearch.setResults(state, [
     {
       name: './result-1.txt',
     },
   ])
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('contextmenu', {
     clientX: 50,
     clientY: 50,
@@ -75,20 +74,20 @@ test('event - contextmenu - activated via keyboard', () => {
   const { $ListItems } = state
   $ListItems.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Search.handleContextMenu', -1, 50, 50)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleContextMenu', -1, 50, 50)
 })
 
 test('event - contextmenu - activated via mouse', () => {
   const state = ViewletSearch.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletSearch.attachEvents(state)
   ViewletSearch.setResults(state, [
     {
       name: './result-1.txt',
     },
   ])
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('contextmenu', {
     clientX: 50,
     clientY: 50,
@@ -99,6 +98,6 @@ test('event - contextmenu - activated via mouse', () => {
   const { $ListItems } = state
   $ListItems.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Search.handleContextMenu', 0, 50, 50)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleContextMenu', 0, 50, 50)
 })

@@ -2,14 +2,16 @@ import * as Command from '../Command/Command.js'
 import * as TextDocumentSearch from '../TextDocumentSearch/TextDocumentSearch.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
-export const create = () => {
+export const create = (uid) => {
   return {
     value: '',
     ariaAnnouncement: '',
     matches: new Uint32Array(),
     matchIndex: 0,
     matchCount: 0,
+    uid,
   }
 }
 
@@ -122,4 +124,13 @@ export const focusPrevious = (state) => {
     return focusLast(state)
   }
   return focusIndex(state, matchIndex - 1)
+}
+
+export const close = async (state) => {
+  const { uid } = state
+  await Viewlet.closeWidget(uid)
+  return {
+    ...state,
+    disposed: true,
+  }
 }

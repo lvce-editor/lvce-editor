@@ -46,6 +46,7 @@ test('showMessage - electron', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
       platform: 'electron',
+      assetDir: '',
     }
   })
   jest.unstable_mockModule('../src/parts/ElectronDialog/ElectronDialog.js', () => {
@@ -77,6 +78,7 @@ test.skip('close - web', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
       platform: PlatformType.Web,
+      assetDir: '',
     }
   })
   jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
@@ -105,6 +107,7 @@ test('openFile - electron', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
       platform: 'electron',
+      assetDir: '',
     }
   })
   jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {

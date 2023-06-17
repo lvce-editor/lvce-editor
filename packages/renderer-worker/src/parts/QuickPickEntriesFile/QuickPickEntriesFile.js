@@ -74,7 +74,13 @@ export const getPickFilterValue = (pick) => {
 }
 
 export const getPickLabel = (pick) => {
-  return pick
+  const baseName = Workspace.pathBaseName(pick)
+  return baseName
+}
+
+export const getPickDescription = (pick) => {
+  const dirName = Workspace.pathDirName(pick)
+  return dirName
 }
 
 export const getPickIcon = (pick) => {

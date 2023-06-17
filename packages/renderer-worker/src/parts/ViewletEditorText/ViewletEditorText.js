@@ -1,21 +1,24 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
-import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
-// import * as ExtensionHostTextDocument from '../ExtensionHost/ExtensionHostTextDocument.js'
 import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Font from '../Font/Font.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
 import * as MeasureLongestLineWidth from '../MeasureLongestLineWidth/MeasureLongestLineWidth.js'
-import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
+import * as CssVariable from '../CssVariable/CssVariable.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -43,17 +46,17 @@ export const handleTokenizeChange = () => {
 
 // TODO uri?
 export const create = (id, uri, x, y, width, height) => {
-  const instanceId = Id.create()
-  const state = Editor.create(instanceId, uri, 'unknown', '')
-  const newState = Editor.setBounds(state, x, y, width, height, COLUMN_WIDTH)
-  const fileName = Workspace.pathBaseName(state.uri)
+  const fileName = Workspace.pathBaseName(uri)
   const languageId = Languages.getLanguageId(fileName)
+  const state = Editor.create(id, uri, languageId, '')
+  const newState = Editor.setBounds(state, x, y, width, height, COLUMN_WIDTH)
   return {
     ...newState,
     uri,
     rowHeight: 20,
     languageId,
     width,
+    moduleId: ViewletModuleId.EditorText,
   }
 }
 
@@ -63,7 +66,6 @@ export const saveState = (state) => {
     selections: [...Array.from(selections)],
     focused,
     deltaY,
-    differences: [...Array.from(differences)],
   }
 }
 
@@ -114,27 +116,52 @@ const unquoteString = (string) => {
   return string
 }
 
-export const loadContent = async (state, savedState) => {
+const getLetterSpacing = () => {
+  if (!SupportsLetterSpacing.supportsLetterSpacing()) {
+    return 0
+  }
+  return Preferences.get(kLetterSpacing) ?? 0.5
+}
+
+export const loadContent = async (state, savedState, context) => {
   const { uri } = state
   const rowHeight = Preferences.get(kLineHeight) || 20
   const fontSize = Preferences.get(kFontSize) || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
   const fontFamily = Preferences.get(kFontFamily) || 'Fira Code'
-  const letterSpacing = Preferences.get(kLetterSpacing) ?? 0.5
+  const letterSpacing = getLetterSpacing()
   const tabSize = Preferences.get(kTabSize) || 2
   const links = Preferences.get(kLinks) || false
   const content = await getContent(uri)
   const newState1 = Editor.setText(state, content)
   const languageId = getLanguageId(newState1)
   const tokenizer = Tokenizer.getTokenizer(languageId)
-  const savedSelections = getSavedSelections(savedState)
+  let savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
-  const newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
-  if ((fontFamily === 'Fira Code' || fontFamily === `'Fira Code'`) && !Font.has(fontFamily, fontSize)) {
-    const assetDir = Platform.getAssetDir()
+  let newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
+  const isFiraCode = fontFamily === 'Fira Code' || fontFamily === `'Fira Code'`
+  if (isFiraCode && !Font.has(fontFamily, fontSize)) {
     const fontName = unquoteString(fontFamily)
-    await Font.load(fontName, `url('${assetDir}/fonts/FiraCode-VariableFont.ttf')`)
+    await Font.load(fontName, `url('${AssetDir.assetDir}/fonts/FiraCode-VariableFont.ttf')`)
   }
-  const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(newState2.lines, newState2.fontWeight, fontSize, fontFamily, letterSpacing)
+  const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
+  const charWidth = MeasureTextWidth.measureTextWidth('a', newState2.fontWeight, fontSize, fontFamily, letterSpacing, false, 0)
+  const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(
+    newState2.lines,
+    newState2.fontWeight,
+    fontSize,
+    fontFamily,
+    letterSpacing,
+    isMonospaceFont,
+    charWidth
+  )
+  if (context && context.startRowIndex) {
+    const lines = newState2.lines.length
+    const rowIndex = context.startRowIndex
+    const finalDeltaY = lines * rowHeight - newState2.height
+    const deltaY = (rowIndex / lines) * finalDeltaY
+    newState2 = Editor.setDeltaYFixedValue(newState2, deltaY)
+    savedSelections = new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
+  }
   return {
     ...newState2,
     rowHeight,
@@ -142,11 +169,12 @@ export const loadContent = async (state, savedState) => {
     letterSpacing,
     tokenizer,
     selections: savedSelections,
-    deltaY: savedDeltaY,
     fontFamily,
     links,
     tabSize,
     longestLineWidth,
+    charWidth,
+    isMonospaceFont,
   }
 }
 
@@ -187,12 +215,12 @@ export const contentLoadedEffects = async (state) => {
   // GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   // GlobalEventBus.addListener('editor.change', handleEditorChange)
   const newLanguageId = getLanguageId(state)
-  await Command.execute(/* Editor.setLanguageId */ 'Editor.setLanguageId', /* languageId */ newLanguageId)
+  await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId)
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
   GlobalEventBus.emitEvent('editor.create', state)
-  Tokenizer.addConnectedEditor(state.id)
+  Tokenizer.addConnectedEditor(state.uid)
 }
 
 export const handleLanguagesChanged = (state) => {
@@ -220,8 +248,4 @@ export const focus = (state) => {
     ...state,
     focused: true,
   }
-}
-
-export const shouldApplyNewState = (newState) => {
-  return true
 }

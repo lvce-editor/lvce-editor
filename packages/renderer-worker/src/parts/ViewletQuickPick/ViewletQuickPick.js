@@ -28,6 +28,7 @@ const QuickPickState = {
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     state: QuickPickState.Default,
     picks: [],
     recentPicks: [],
@@ -62,13 +63,11 @@ const getDefaultValue = (uri) => {
 }
 
 export const loadContent = async (state) => {
-  console.log('load')
   const uri = state.uri
   const value = getDefaultValue(uri)
   const provider = await QuickPickEntries.load(uri)
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
-  console.log({ provider, newPicks })
   // @ts-ignore
   const filterValue = provider.getFilterValue(value)
   const items = ViewletQuickPickGetFilteredItems.getFilteredItems(state, newPicks, filterValue, provider)
@@ -96,7 +95,7 @@ export const dispose = (state) => {
 }
 
 export const handleBlur = async (state) => {
-  await Viewlet.closeWidget('QuickPick')
+  await Viewlet.closeWidget(state.uid)
   return state
 }
 
@@ -141,7 +140,7 @@ export const selectIndex = async (state, index, button = /* left */ 0) => {
   const { command } = selectPickResult
   switch (command) {
     case QuickPickReturnValue.Hide:
-      await Viewlet.closeWidget(ViewletModuleId.QuickPick)
+      await Viewlet.closeWidget(state.uid)
       return state
     default:
       return state
@@ -176,6 +175,7 @@ export const selectCurrentIndex = (state) => {
 //
 // })
 
+// TODO merge this with virtual list
 export const handleClickAt = (state, x, y) => {
   const { top, headerHeight, itemHeight } = state
   const relativeY = y - top - headerHeight

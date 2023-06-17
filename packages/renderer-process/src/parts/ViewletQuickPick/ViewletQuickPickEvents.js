@@ -1,8 +1,8 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
 import * as Platform from '../Platform/Platform.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as ViewletQuickPickFunctions from './ViewletQuickPickFunctions.js'
 
 // TODO use another virtual list that just appends elements and
@@ -26,30 +26,6 @@ const getNodeIndex = ($Node) => {
   return index
 }
 
-const getTargetIndex = ($Target) => {
-  switch ($Target.className) {
-    case 'QuickPickItem':
-    case 'QuickPickItem Focused':
-      return getNodeIndex($Target)
-    case 'QuickPickItemLabel':
-      return getNodeIndex($Target.parentNode)
-    default:
-      return -1
-  }
-}
-
-export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
-  switch (deltaMode) {
-    case WheelEventType.DomDeltaLine:
-    case WheelEventType.DomDeltaPixel:
-      ViewletQuickPickFunctions.handleWheel(deltaY)
-      break
-    default:
-      break
-  }
-}
-
 export const handlePointerDown = (event) => {
   if (Platform.isMobile) {
     // workaround to disable virtual keyboard automatically opening on android
@@ -60,29 +36,20 @@ export const handlePointerDown = (event) => {
   }
   Event.preventDefault(event)
   const { clientX, clientY } = event
-  ViewletQuickPickFunctions.handleClickAt(clientX, clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletQuickPickFunctions.handleClickAt(uid, clientX, clientY)
 }
-
-// TODO beforeinput event should prevent input event maybe
-// const handleBeforeInput = (event) => {
-//   if (!event.data) {
-//     return
-//   }
-//   const value = event.target.value + event.data
-//   RendererWorker.send(
-//     /* quickPickHandleInput */ 'QuickPick.handleInput',
-//     /* value */ value,
-//   )
-// }
 
 export const handleInput = (event) => {
   const $Target = event.target
   const { value } = $Target
-  ViewletQuickPickFunctions.handleInput(value)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletQuickPickFunctions.handleInput(uid, value)
 }
 
 export const handleBlur = (event) => {
-  ViewletQuickPickFunctions.handleBlur()
+  const uid = ComponentUid.fromEvent(event)
+  ViewletQuickPickFunctions.handleBlur(uid)
 }
 
 // TODO
@@ -90,8 +57,10 @@ export const handleBlur = (event) => {
 // - for nvda ariaRoleDescription works better
 
 export const handleBeforeInput = (event) => {
-  Event.preventDefault(event)
   const { target, inputType, data } = event
   const { selectionStart, selectionEnd } = target
-  ViewletQuickPickFunctions.handleBeforeInput(inputType, data, selectionStart, selectionEnd)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletQuickPickFunctions.handleBeforeInput(uid, inputType, data, selectionStart, selectionEnd)
 }
+
+export * from '../VirtualListEvents/VirtualListEvents.js'

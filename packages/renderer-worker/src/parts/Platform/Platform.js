@@ -52,6 +52,9 @@ const getIsFirefox = () => {
   return navigator.userAgent.toLowerCase().indexOf('firefox') > -1
 }
 
+/**
+ * @type {boolean}
+ */
 export const isFirefox = getIsFirefox()
 
 export const getExtensionsPath = () => {
@@ -115,7 +118,7 @@ const getPlatform = () => {
 
 export const platform = getPlatform()
 
-export const getAssetDir = () => {
+const getAssetDir = () => {
   // @ts-ignore
   if (typeof ASSET_DIR !== 'undefined') {
     // @ts-ignore
@@ -126,6 +129,8 @@ export const getAssetDir = () => {
   }
   return ''
 }
+
+export const assetDir = getAssetDir()
 
 export const getRecentlyOpenedPath = () => {
   if (platform === PlatformType.Web) {
@@ -143,12 +148,10 @@ export const getCachePath = () => {
 }
 
 export const getExtensionHostWorkerUrl = () => {
-  const assetDir = getAssetDir()
   return `${assetDir}/packages/extension-host-worker/src/extensionHostWorkerMain.js`
 }
 
 export const getWebExtensionsUrl = () => {
-  const assetDir = getAssetDir()
   return `${assetDir}/config/webExtensions.json`
 }
 
@@ -165,7 +168,6 @@ const getTestPathRemote = () => {
 }
 
 const getTestPathWeb = () => {
-  const assetDir = getAssetDir()
   return `${assetDir}/packages/extension-host-worker-tests`
 }
 

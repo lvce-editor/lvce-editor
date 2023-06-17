@@ -9,14 +9,31 @@ export const state = {
 }
 
 export const set = (key, value) => {
+  // TODO separate factories from state
   Assert.object(value)
   Assert.object(value.factory)
   Assert.object(value.state)
+  Assert.object(value.renderedState)
   state.instances[key] = value
 }
 
 export const getInstance = (key) => {
-  return state.instances[key]
+  const fast = state.instances[key]
+  if (fast) {
+    return fast
+  }
+  if (key === 'Editor') {
+    key = 'EditorText'
+  }
+  if (key === 'EditorText') {
+    key = 'Editor'
+  }
+  for (const value of Object.values(state.instances)) {
+    if (value.moduleId === key) {
+      return value
+    }
+  }
+  return undefined
 }
 
 export const hasInstance = (key) => {
@@ -39,6 +56,10 @@ export const getAllInstances = () => {
   return state.instances
 }
 
+export const getValues = () => {
+  return Object.values(state.instances)
+}
+
 export const getState = (key) => {
   const instance = getInstance(key)
   if (!instance) {
@@ -48,9 +69,21 @@ export const getState = (key) => {
 }
 
 export const setState = (key, newState) => {
-  Assert.string(key)
+  if (typeof key !== 'string' && typeof key !== 'number') {
+    throw new Error('key must be defined')
+  }
   Assert.object(newState)
   const instance = getInstance(key)
+  instance.state = newState
+}
+
+export const setRenderedState = (key, newState) => {
+  if (typeof key !== 'string' && typeof key !== 'number') {
+    throw new Error('key must be defined')
+  }
+  Assert.object(newState)
+  const instance = getInstance(key)
+  instance.renderedState = newState
   instance.state = newState
 }
 

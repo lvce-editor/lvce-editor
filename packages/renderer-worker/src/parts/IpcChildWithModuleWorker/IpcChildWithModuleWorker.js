@@ -6,6 +6,10 @@ export const listen = () => {
   return globalThis
 }
 
+const getMessage = (event) => {
+  return event.data
+}
+
 export const wrap = (global) => {
   return {
     global,
@@ -19,7 +23,11 @@ export const wrap = (global) => {
       return this.global.onmessage
     },
     set onmessage(listener) {
-      this.global.onmessage = listener
+      const wrappedListener = (event) => {
+        const message = getMessage(event)
+        listener(message)
+      }
+      this.global.onmessage = wrappedListener
     },
   }
 }

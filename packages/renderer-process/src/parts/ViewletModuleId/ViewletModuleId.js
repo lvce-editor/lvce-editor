@@ -18,7 +18,7 @@ export const EditorImage = 'EditorImage'
 
 export const EditorPlainText = 'EditorPlainText'
 
-export const EditorText = 'EditorText'
+export const EditorText = 'Editor'
 
 export const Empty = 'Empty'
 
@@ -79,3 +79,7 @@ export const TitleBarIcon = 'TitleBarIcon'
 export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const Video = 'Video'
+
+export const Terminals = 'Terminals'
+
+export const EditorHover = 'EditorHover'

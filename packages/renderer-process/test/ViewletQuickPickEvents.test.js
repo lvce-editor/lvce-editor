@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
 beforeAll(() => {
@@ -32,25 +33,19 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(),
-    }
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
+  return {
+    executeViewletCommand: jest.fn(() => {}),
   }
-)
+})
 
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
-
-const ViewletQuickPick = await import(
-  '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
-)
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
+const ViewletQuickPick = await import('../src/parts/ViewletQuickPick/ViewletQuickPick.js')
 
 test.skip('event - mousedown', () => {
   const state = ViewletQuickPick.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletQuickPick.setPicks(state, [
     {
       posInSet: 1,
@@ -70,12 +65,15 @@ test.skip('event - mousedown', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(['QuickPick.selectIndex', 1])
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(['QuickPick.selectIndex', 1])
 })
 
 test('event - pointerdown - on focused item', () => {
   const state = ViewletQuickPick.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
+  ViewletQuickPick.attachEvents(state)
   ViewletQuickPick.setPicks(state, [
     {
       posInSet: 1,
@@ -91,16 +89,15 @@ test('event - pointerdown - on focused item', () => {
     cancelable: true,
   })
   $QuickPickItemOne.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'QuickPick.handleClickAt',
-    0,
-    0
-  )
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClickAt', 0, 0)
 })
 
 test.skip('event - beforeinput', () => {
   const state = ViewletQuickPick.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
+  ViewletQuickPick.attachEvents(state)
   ViewletQuickPick.setPicks(state, [
     {
       posInSet: 1,
@@ -121,20 +118,20 @@ test.skip('event - beforeinput', () => {
       data: 'a',
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    'QuickPick.handleInput',
-    '>a',
-  ])
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleInput', '>a')
 })
 
 test('event - wheel', () => {
   const state = ViewletQuickPick.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
+  ViewletQuickPick.attachEvents(state)
   const event = new WheelEvent('wheel', {
     deltaY: 53,
     deltaMode: WheelEventType.DomDeltaLine,
   })
   const { $QuickPickItems } = state
   $QuickPickItems.dispatchEvent(event)
-  // expect(RendererWorker.send).toHaveBeenCalledTimes(1) // TODO
-  expect(RendererWorker.send).toHaveBeenCalledWith('QuickPick.handleWheel', 53)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleWheel', 1, 53)
 })

@@ -1,7 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Id from '../Id/Id.js'
+import * as Logger from '../Logger/Logger.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import { VError } from '../VError/VError.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -82,7 +85,7 @@ export const refresh = async (id) => {
  * @deprecated
  */
 export const send = (id, method, ...args) => {
-  console.trace(`viewlet.send is deprecated`)
+  // console.trace(`viewlet.send is deprecated`)
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
     console.info('instance disposed', { id, method, args })
@@ -106,6 +109,7 @@ export const dispose = async (id) => {
     console.info('instance may already be disposed')
     return
   }
+  const instanceUid = instance.state.uid
   // TODO status should have enum
   instance.status = 'disposing'
   try {
@@ -113,9 +117,9 @@ export const dispose = async (id) => {
       throw new Error(`${id} is missing a factory function`)
     }
     instance.factory.dispose(instance.state)
-    await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id)
+    await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
     if (instance.factory.getKeyBindings) {
-      await RendererProcess.invoke('Viewlet.removeKeyBindings', id)
+      await RendererProcess.invoke('Viewlet.removeKeyBindings', instanceUid)
     }
   } catch (error) {
     console.error(error)
@@ -135,7 +139,7 @@ export const disposeFunctional = (id) => {
     }
     const instance = ViewletStates.getInstance(id)
     if (!instance) {
-      console.info('instance may already be disposed')
+      Logger.warn(`cannot dispose instance ${id} because it may already be disposed`)
       return []
     }
     // TODO status should have enum
@@ -146,19 +150,24 @@ export const disposeFunctional = (id) => {
     if (instance.factory.dispose) {
       instance.factory.dispose(instance.state)
     }
-    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id]]
+    const uid = instance.state.uid
+    Assert.number(uid)
+    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
 
     if (instance.factory.getKeyBindings) {
-      commands.push(['Viewlet.removeKeyBindings', id])
+      commands.push(['Viewlet.removeKeyBindings', uid])
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
       for (const child of children) {
-        commands.push(...disposeFunctional(child.id))
+        if (child.id) {
+          commands.push(...disposeFunctional(child.id))
+        }
       }
     }
     instance.status = 'disposed'
     ViewletStates.remove(id)
+    ViewletStates.remove(uid)
     return commands
   } catch (error) {
     console.error(error)
@@ -173,6 +182,8 @@ export const disposeFunctional = (id) => {
 export const replace = () => {}
 
 export const resize = (id, dimensions) => {
+  Assert.number(id)
+  Assert.object(dimensions)
   const instance = ViewletStates.getInstance(id)
   if (!instance || !instance.factory || !instance.factory.resize) {
     console.warn('cannot resize', id)
@@ -257,6 +268,7 @@ export const openWidget = async (id, ...args) => {
     }
     return ViewletElectron.openElectronQuickPick(...args)
   }
+  const childUid = Id.create()
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
     id,
@@ -266,6 +278,7 @@ export const openWidget = async (id, ...args) => {
     show: false,
     focus: true,
     args,
+    uid: childUid,
   })
   if (!commands) {
     throw new Error('expected commands to be of type array')
@@ -274,8 +287,9 @@ export const openWidget = async (id, ...args) => {
   if (hasInstance) {
     commands.unshift(['Viewlet.dispose', id])
   }
-  commands.push(['Viewlet.append', 'Layout', id])
-  commands.push(['Viewlet.focus', id])
+  const layout = ViewletStates.getState(ViewletModuleId.Layout)
+  commands.push(['Viewlet.append', layout.uid, childUid])
+  commands.push(['Viewlet.focus', childUid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // TODO commands should be like this
   // viewlet.create quickpick
@@ -287,22 +301,43 @@ export const openWidget = async (id, ...args) => {
 }
 
 export const closeWidget = async (id) => {
-  if (ElectronBrowserView.isOpen() && id === ViewletElectron.isQuickPickOpen()) {
-    return ViewletElectron.closeWidgetElectronQuickPick()
+  try {
+    if (ElectronBrowserView.isOpen() && id === ViewletElectron.isQuickPickOpen()) {
+      return ViewletElectron.closeWidgetElectronQuickPick()
+    }
+    if (!ViewletStates.hasInstance(id)) {
+      return
+    }
+    const child = ViewletStates.getState(id)
+    const childUid = child.uid
+    const commands = disposeFunctional(childUid)
+    await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
+    // TODO restore focus
+  } catch (error) {
+    throw new VError(error, `Failed to close widget ${id}`)
   }
-  ViewletStates.remove(id)
-  await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id)
-  // TODO restore focus
+}
+
+const getLazyImport = (module, fnName) => {
+  if (module.LazyCommands && module.LazyCommands[fnName]) {
+    return module.LazyCommands[fnName]
+  }
+  if (module.CommandsWithSideEffectsLazy && module.CommandsWithSideEffectsLazy[fnName]) {
+    return module.CommandsWithSideEffectsLazy[fnName]
+  }
+  return undefined
 }
 
 const getFn = async (module, fnName) => {
-  const fn = module.Commands[fnName]
-  if (fn) {
-    return fn
+  if (module.Commands && module.Commands[fnName]) {
+    return module.Commands[fnName]
   }
-  const lazyImport = module.LazyCommands[fnName]
+  if (module.CommandsWithSideEffects && module.CommandsWithSideEffects[fnName]) {
+    return module.CommandsWithSideEffects[fnName]
+  }
+  const lazyImport = getLazyImport(module, fnName)
   if (!lazyImport) {
-    throw new Error(`Command not found ${module.name}.${fnName}`)
+    throw new Error(`Command ${module.name}.${fnName} not found in renderer worker`)
   }
   const importedModule = await lazyImport()
   const lazyFn = importedModule[fnName]
@@ -312,17 +347,29 @@ const getFn = async (module, fnName) => {
   return lazyFn
 }
 
-export const executeViewletCommand = async (moduleId, uidKey, uidValue, fnName, ...args) => {
-  const instances = ViewletStates.state.instances
-  for (const instance of Object.values(instances)) {
-    if (instance.factory.name === moduleId && instance.state[uidKey] === uidValue) {
-      const fn = await getFn(instance.factory, fnName)
-      const oldState = instance.state
-      const newState = await fn(oldState, ...args)
-      const commands = ViewletManager.render(instance.factory, oldState, newState)
-      ViewletStates.setState(moduleId, newState)
-      await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
-      return
-    }
+export const executeViewletCommand = async (uid, fnName, ...args) => {
+  const instance = ViewletStates.getInstance(uid)
+  if (!instance) {
+    Logger.warn(`cannot execute ${fnName} instance not found ${uid}`)
+    return
   }
+  const fn = await getFn(instance.factory, fnName)
+  const oldState = instance.state
+  const newState = await fn(oldState, ...args)
+  const actualNewState = 'newState' in newState ? newState.newState : newState
+  if (oldState === actualNewState) {
+    return
+  }
+  if (!ViewletStates.hasInstance(uid)) {
+    return
+  }
+  const commands = ViewletManager.render(instance.factory, instance.renderedState, actualNewState)
+  if ('newState' in newState) {
+    commands.push(...newState.commands)
+  }
+  ViewletStates.setRenderedState(uid, actualNewState)
+  if (commands.length === 0) {
+    return
+  }
+  await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
 }

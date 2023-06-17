@@ -1,28 +1,6 @@
-#Main {
+.Main {
   background: var(--MainBackground);
-  display: flex;
-  flex-direction: column;
   position: absolute;
-}
-
-.MainContent,
-#MainContent {
-  contain: strict;
-  flex: 1;
-  display: flex;
-}
-
-.EditorText {
-  color: white;
-  white-space: pre;
-}
-
-.EditorImage {
-  max-width: 100%;
-}
-
-.Clock {
-  color: white;
 }
 
 .DragOverlay {
@@ -32,4 +10,9 @@
   pointer-events: none;
   transition: all 100ms;
   contain: strict;
+}
+
+/* TODO make all error viewlets position absolute? */
+.Main .Error {
+  position: absolute;
 }

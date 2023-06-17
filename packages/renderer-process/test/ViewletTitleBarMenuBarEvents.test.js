@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import * as MouseEventTypes from '../src/parts/MouseEventType/MouseEventType.js'
 
@@ -42,18 +43,19 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
   return {
-    send: jest.fn(),
+    executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
-
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletTitleBarMenuBar = await import('../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
 
 test('event - click on menu', () => {
   const state = ViewletTitleBarMenuBar.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletTitleBarMenuBar.attachEvents(state)
   ViewletTitleBarMenuBar.setEntries(state, [
     {
@@ -81,12 +83,14 @@ test('event - click on menu', () => {
   const { $TitleBarMenuBar } = state
   $TitleBarMenuBar.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('TitleBarMenuBar.handleClick', 0, -1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 0, -1)
 })
 
 test('event - click on menu item', () => {
   const state = ViewletTitleBarMenuBar.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletTitleBarMenuBar.attachEvents(state)
   ViewletTitleBarMenuBar.setEntries(state, [
     {
@@ -114,12 +118,14 @@ test('event - click on menu item', () => {
   })
   $TitleBarMenuBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('TitleBarMenuBar.handleClick', 0, 1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 0, 1)
 })
 
 test('event - mouseover on menu item', () => {
   const state = ViewletTitleBarMenuBar.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletTitleBarMenuBar.attachEvents(state)
   ViewletTitleBarMenuBar.setEntries(state, [
     {
@@ -147,12 +153,14 @@ test('event - mouseover on menu item', () => {
   })
   $TitleBarMenuBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('TitleBarMenuBar.handleMouseOver', 1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleMouseOver', 1)
 })
 
 test('event - right click on menu item', () => {
   const state = ViewletTitleBarMenuBar.create()
+  const { $Viewlet } = state
+  ComponentUid.set($Viewlet, 1)
   ViewletTitleBarMenuBar.attachEvents(state)
   ViewletTitleBarMenuBar.setEntries(state, [
     {
@@ -181,8 +189,8 @@ test('event - right click on menu item', () => {
   })
   $TitleBarMenuBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('TitleBarMenuBar.handleClick', 2, 1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 2, 1)
 })
 
 // TODO test pageup/pagedown

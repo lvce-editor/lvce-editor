@@ -6,16 +6,13 @@ beforeEach(() => {
   GlobalEventBus.state.listenerMap = Object.create(null)
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   return {
@@ -60,22 +57,14 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
   }
 })
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
-const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
-)
-const ViewletExplorerHandlePaste = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerHandlePaste.js'
-)
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
+const ViewletExplorerHandlePaste = await import('../src/parts/ViewletExplorer/ViewletExplorerHandlePaste.js')
 
-const GlobalEventBus = await import(
-  '../src/parts/GlobalEventBus/GlobalEventBus.js'
-)
+const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
 
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
@@ -84,7 +73,7 @@ const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 test('handlePaste - copied gnome files', async () => {
   const state1 = {
-    ...ViewletExplorer.create('', 0, 0, 0, 0),
+    ...ViewletExplorer.create(1, 0, 0, 0, 0),
     root: '/test',
   }
   let i = 0
@@ -141,7 +130,7 @@ test('handlePaste - copied gnome files', async () => {
 })
 
 test('handlePaste - cut gnome files', async () => {
-  const state = ViewletExplorer.create('', 0, 0, 0, 0)
+  const state = ViewletExplorer.create(1, 0, 0, 0, 0)
   // @ts-ignore
   FileSystem.rename.mockImplementation(() => {})
   // @ts-ignore
@@ -163,7 +152,7 @@ test('handlePaste - cut gnome files', async () => {
 })
 
 test('handlePaste - not supported', async () => {
-  const state = ViewletExplorer.create('', 0, 0, 0, 0)
+  const state = ViewletExplorer.create(1, 0, 0, 0, 0)
   // @ts-ignore
   Command.execute.mockImplementation((method, ...params) => {
     switch (method) {
@@ -182,22 +171,16 @@ test('handlePaste - not supported', async () => {
   const spy = jest.spyOn(console, 'info').mockImplementation(() => {})
   await ViewletExplorerHandlePaste.handlePaste(state)
   expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(
-    '[ViewletExplorer/handlePaste] no paths detected'
-  )
+  expect(spy).toHaveBeenCalledWith('[ViewletExplorer/handlePaste] no paths detected')
 })
 
 test('handlePaste - unexpected result', async () => {
-  const state = ViewletExplorer.create('', 0, 0, 0, 0)
+  const state = ViewletExplorer.create(1, 0, 0, 0, 0)
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   // @ts-ignore
   Command.execute.mockImplementation(() => {
     throw new Error('unexpected native paste type: non-existing')
   })
-  await expect(
-    ViewletExplorerHandlePaste.handlePaste(state)
-  ).rejects.toThrowError(
-    new Error('unexpected native paste type: non-existing')
-  )
+  await expect(ViewletExplorerHandlePaste.handlePaste(state)).rejects.toThrowError(new Error('unexpected native paste type: non-existing'))
 })

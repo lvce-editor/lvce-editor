@@ -6,6 +6,7 @@ const Root = require('../Root/Root.js')
 const Path = require('../Path/Path.js')
 const PendingPorts = require('../PendingPorts/PendingPorts.js')
 const Logger = require('../Logger/Logger.js')
+const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
 
 exports.disposeBrowserViewQuickPick = () => {
   const browserWindow = BrowserWindow.getFocusedWindow()
@@ -40,7 +41,7 @@ exports.createBrowserViewQuickPick = async (x, y, width, height) => {
       view.webContents.closeDevTools()
       browserWindow.removeBrowserView(view)
     }
-    browserWindow.webContents.on('did-finish-load', handleNavigate)
+    browserWindow.webContents.on(ElectronWebContentsEventType.DidNavigate, handleNavigate)
     await view.webContents.loadURL(quickPickUrl)
     const pendingPort = PendingPorts.get('quickPick')
     if (pendingPort) {

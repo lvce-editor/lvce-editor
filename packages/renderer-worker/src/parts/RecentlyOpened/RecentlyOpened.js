@@ -1,39 +1,14 @@
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetRecentlyOpened from '../GetRecentlyOpened/GetRecentlyOpened.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Json from '../Json/Json.js'
-import * as Workspace from '../Workspace/Workspace.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
+import * as Workspace from '../Workspace/Workspace.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
-// TODO maybe put this together with workspace
-
-const isValid = (recentlyOpened) => {
-  return recentlyOpened && Array.isArray(recentlyOpened)
-}
-
-export const getRecentlyOpened = async () => {
-  try {
-    const content = await FileSystem.readFile('app://recently-opened.json')
-    const parsed = Json.parse(content)
-    if (!isValid(parsed)) {
-      return []
-    }
-    // TODO handle error gracefully if this is not an array of strings
-    return parsed
-  } catch (error) {
-    // TODO should check for error.code
-    if (error.message.includes('File not found')) {
-      // ignore
-    } else if (error.message.includes('failed to parse json')) {
-      // ignore
-    } else {
-      error.message = `Failed to read recently opened: ${error.message}`
-      console.warn(error)
-    }
-    return []
-  }
-}
+export const getRecentlyOpened = GetRecentlyOpened.getRecentlyOpened
 
 const setRecentlyOpened = async (newRecentlyOpened) => {
   const stringified = Json.stringify(newRecentlyOpened)
@@ -64,10 +39,10 @@ const addToRecentlyOpenedRemote = async (path) => {
 
 export const addToRecentlyOpened = async (path) => {
   switch (Platform.platform) {
-    case 'electron':
-    case 'remote':
+    case PlatformType.Electron:
+    case PlatformType.Remote:
       return addToRecentlyOpenedRemote(path)
-    case 'web':
+    case PlatformType.Web:
       return addToRecentlyOpenedWeb(path)
     default:
       return

@@ -2,13 +2,13 @@
 
 import { ChildProcess, fork } from 'node:child_process'
 import { createReadStream } from 'node:fs'
-import { readdir, readFile, stat } from 'node:fs/promises'
-import { createServer, IncomingMessage, ServerResponse } from 'node:http'
-import { dirname, extname, join, resolve } from 'node:path'
+import { readFile, readdir, stat } from 'node:fs/promises'
+import { IncomingMessage, ServerResponse, createServer } from 'node:http'
+import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
-import { fileURLToPath, parse as parseUrl } from 'node:url'
+import { fileURLToPath } from 'node:url'
+import { Worker } from 'node:worker_threads'
 
-// @ts-ignore
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
 const STATIC = resolve(__dirname, '../../../static')
@@ -93,6 +93,7 @@ const CrossOriginEmbedderPolicy = {
 const textMimeType = {
   '.html': 'text/html',
   '.js': 'text/javascript',
+  '.ts': 'text/javascript',
   '.mjs': 'text/javascript',
   '.json': 'application/json',
   '.css': 'text/css',
@@ -107,6 +108,9 @@ const textMimeType = {
   '.webp': 'image/webp',
 }
 
+/**
+ * @enum {string}
+ */
 const ErrorCodes = {
   ERR_STREAM_PREMATURE_CLOSE: 'ERR_STREAM_PREMATURE_CLOSE',
   EISDIR: 'EISDIR',
@@ -114,6 +118,27 @@ const ErrorCodes = {
   ENOENT: 'ENOENT',
   EADDRINUSE: 'EADDRINUSE',
 }
+
+/**
+ * @enum {string}
+ */
+const CachingHeaders = {
+  Empty: '',
+  NoCache: 'public, max-age=0, must-revalidate',
+  OneYear: 'public, max-age=31536000, immutable',
+}
+
+/**
+ * @enum {number}
+ */
+const StatusCode = {
+  NotFound: 404,
+  ServerError: 500,
+  Ok: 200,
+  MultipleChoices: 300,
+  NotModified: 304,
+}
+
 const getPath = (url) => {
   return url.split(/[?#]/)[0]
 }
@@ -122,14 +147,126 @@ const getContentType = (filePath) => {
   return textMimeType[extname(filePath)] || 'text/plain'
 }
 
+const getPathName = (request) => {
+  const { pathname } = new URL(request.url || '', `https://${request.headers.host}`)
+  return pathname
+}
+
+const isWorkerUrl = (url) => {
+  return url.endsWith('WorkerMain.js') || url.endsWith('WorkerMain.ts')
+}
+
+const getEtag = (fileStat) => {
+  return `W/"${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}"`
+}
+
+const FirstNodeWorkerEventType = {
+  Exit: 1,
+  Error: 2,
+  Message: 3,
+}
+
+const getFirstWorkerEvent = async (worker) => {
+  const { type, event } = await new Promise((resolve, reject) => {
+    const cleanup = (value) => {
+      worker.off('exit', handleExit)
+      worker.off('error', handleError)
+      worker.off('message', handleMessage)
+      resolve(value)
+    }
+    const handleExit = (event) => {
+      cleanup({ type: FirstNodeWorkerEventType.Exit, event })
+    }
+    const handleError = (event) => {
+      cleanup({ type: FirstNodeWorkerEventType.Error, event })
+    }
+    const handleMessage = (event) => {
+      cleanup({ type: FirstNodeWorkerEventType.Message, event })
+    }
+    worker.on('exit', handleExit)
+    worker.on('error', handleError)
+    worker.on('message', handleMessage)
+  })
+  return { type, event }
+}
+
+const createBabelWorkerIpc = async () => {
+  const babelWorkerPath = join(ROOT, 'packages', 'babel-worker', 'src', 'babelWorkerMain.js')
+  const worker = new Worker(babelWorkerPath, {
+    resourceLimits: {
+      maxOldGenerationSizeMb: 20,
+    },
+    argv: ['--ipc-type=node-worker'],
+  })
+  const { type, event } = await getFirstWorkerEvent(worker)
+  if (type !== FirstNodeWorkerEventType.Message || event !== 'ready') {
+    throw new Error(`Failed to start worker`)
+  }
+  return {
+    worker,
+    send(message) {
+      this.worker.postMessage(message)
+    },
+    set onmessage(listener) {
+      this.worker.on('message', listener)
+    },
+  }
+}
+
+const Id = {
+  id: 1,
+  create() {
+    return this.id++
+  },
+}
+
+const Callback = {
+  callbacks: Object.create(null),
+  registerPromise() {
+    const id = Id.create()
+    const promise = new Promise((resolve) => {
+      this.callbacks[id] = resolve
+    })
+    return { id, promise }
+  },
+  resolve(id, message) {
+    console.log(message)
+    this.callbacks[id](message)
+    delete this.callbacks[id]
+  },
+}
+
+const createRpc = (ipc) => {
+  const handleMessage = (message) => {
+    console.log({ message })
+    Callback.resolve(message.id, message)
+  }
+  ipc.onmessage = handleMessage
+  return {
+    ipc,
+    invoke(method, ...params) {
+      const { id, promise } = Callback.registerPromise()
+      const message = {
+        jsonrpc: '2.0',
+        id,
+        method,
+        params,
+      }
+      this.ipc.send(message)
+      return promise
+    },
+  }
+}
+
 const serveStatic = (root, skip = '') =>
   async function serveStatic(req, res, next) {
-    const parsedUrl = parseUrl(req.url)
-    const pathName = parsedUrl.pathname || ''
+    const pathName = getPathName(req)
     let relativePath = getPath(pathName.slice(skip.length))
     if (relativePath.endsWith('/')) {
       relativePath += 'index.html'
     }
+    const isTypeScript = relativePath.endsWith('.ts')
+
     // TODO on linux this could be more optimized because it is already encoded correctly (no backslashes)
     const filePath = fileURLToPath(`file://${root}${relativePath}`)
     let fileStat
@@ -138,12 +275,18 @@ const serveStatic = (root, skip = '') =>
     } catch {
       return next()
     }
-    const etag = `W/"${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}"`
+    const etag = getEtag(fileStat)
     if (req.headers['if-none-match'] === etag) {
-      res.writeHead(304)
+      res.writeHead(StatusCode.NotModified)
       return res.end()
     }
-    const cachingHeader = isImmutable && root === STATIC ? 'public, max-age=31536000, immutable' : ''
+    const isHtml = relativePath.endsWith('index.html')
+    let cachingHeader = CachingHeaders.NoCache
+    if (isHtml) {
+      cachingHeader = CachingHeaders.NoCache
+    } else if (isImmutable && root === STATIC) {
+      cachingHeader = CachingHeaders.OneYear
+    }
     const contentType = getContentType(filePath)
     const headers = {
       'Content-Type': contentType,
@@ -156,11 +299,21 @@ const serveStatic = (root, skip = '') =>
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[CrossOriginOpenerPolicy.key] = CrossOriginOpenerPolicy.value
     }
-    if (filePath.endsWith('WorkerMain.js')) {
+    if (isWorkerUrl(filePath)) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
     }
-    res.writeHead(200, headers)
+    if (isTypeScript) {
+      const ipc = await createBabelWorkerIpc()
+      const rpc = createRpc(ipc)
+      const inputPath = filePath
+      const outputPath = join(root, '.cache', `${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}.js`)
+      await rpc.invoke('TranspileFile.transpileFile', inputPath, outputPath)
+      res.writeHead(StatusCode.Ok, headers)
+      await pipeline(createReadStream(outputPath), res)
+      return
+    }
+    res.writeHead(StatusCode.Ok, headers)
     try {
       await pipeline(createReadStream(filePath), res)
     } catch (error) {
@@ -170,7 +323,7 @@ const serveStatic = (root, skip = '') =>
       }
       // @ts-ignore
       if (error && error.code === ErrorCodes.EISDIR) {
-        res.writeHead(404)
+        res.writeHead(StatusCode.NotFound)
         res.end()
         return
       }
@@ -181,15 +334,15 @@ const serveStatic = (root, skip = '') =>
 
 const serve404 = () =>
   function serve404(req, res, next) {
-    console.info(`[web] Failed to serve static file "${req.url}"`)
+    console.info(`[server] Failed to serve static file "${req.url}"`)
     const headers = {
       'Content-Type': 'text/plain',
     }
-    if (req.url.endsWith('WorkerMain.js')) {
+    if (isWorkerUrl(req.url)) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
     }
-    res.writeHead(404, headers)
+    res.writeHead(StatusCode.NotFound, headers)
     return res.end('Not found')
   }
 
@@ -238,6 +391,9 @@ const serveGitHub = async (req, res) => {
 const getTestPath = () => {
   if (process.env.TEST_PATH) {
     const testPath = process.env.TEST_PATH
+    if (isAbsolute(testPath)) {
+      return testPath
+    }
     return join(process.cwd(), testPath)
   }
   return join(ROOT, 'packages', 'extension-host-worker-tests')
@@ -285,10 +441,9 @@ const createTestOverview = async (testPathSrc) => {
  * @param {ServerResponse} res
  */
 const serveTests = async (req, res, next) => {
-  const parsedUrl = parseUrl(req.url || '')
-  const pathName = parsedUrl.pathname || ''
+  const pathName = getPathName(req)
   if (pathName.endsWith('.html')) {
-    res.writeHead(200, {
+    res.writeHead(StatusCode.Ok, {
       'Content-Type': 'text/html',
       [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
       [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
@@ -303,12 +458,12 @@ const serveTests = async (req, res, next) => {
       }
       // @ts-ignore
       if (error && error.code === ErrorCodes.EISDIR) {
-        res.statusCode = 404
+        res.statusCode = StatusCode.NotFound
         res.end()
         return
       }
       console.info('failed to send request', error)
-      res.statusCode = 500
+      res.statusCode = StatusCode.ServerError
       // TODO escape error html
       res.end(`${error}`)
     }
@@ -320,18 +475,18 @@ const serveTests = async (req, res, next) => {
 
     try {
       const testOverview = await createTestOverview(testPathSrc)
-      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate')
-      res.statusCode = 300
+      res.setHeader('Cache-Control', CachingHeaders.NoCache)
+      res.statusCode = StatusCode.MultipleChoices
       res.end(testOverview)
     } catch (error) {
       // @ts-ignore
       if (error && error.code === ErrorCodes.ENOENT) {
-        res.statusCode = 404
+        res.statusCode = StatusCode.NotFound
         // TODO escape path for html
         res.end(`No test files found at ${testPathSrc}`)
         return
       }
-      res.statusCode = 500
+      res.statusCode = StatusCode.ServerError
       // TODO escape error html
       res.end(`${error}`)
     }
@@ -388,12 +543,12 @@ const sendFile = async (path, res) => {
     }
     // @ts-ignore
     if (error && error.code === ErrorCodes.EISDIR) {
-      res.statusCode = 404
+      res.statusCode = StatusCode.NotFound
       res.end()
       return
     }
     console.info('failed to send request', error)
-    res.statusCode = 500
+    res.statusCode = StatusCode.ServerError
     // TODO escape error html
     res.end(`${error}`)
   }
@@ -401,11 +556,10 @@ const sendFile = async (path, res) => {
 }
 
 const serveConfig = async (req, res, next) => {
-  const parsedUrl = parseUrl(req.url || '')
-  const pathName = parsedUrl.pathname || ''
+  const pathName = getPathName(req)
   if (pathName === '/config/languages.json') {
     const languagesJson = await getLanguagesJson()
-    res.statusCode = 200
+    res.statusCode = StatusCode.Ok
     res.end(JSON.stringify(languagesJson, null, 2))
     return
   }
@@ -445,7 +599,6 @@ const state = {
 
 const handleMessage = (message) => {
   if (!process.send) {
-    console.log('send not available (2)')
     return
   }
   process.send(message)
@@ -479,23 +632,20 @@ const handleExit = (code) => {
   process.exit(code)
 }
 
-const handleDisconnect = () => {
-  console.info('[web] shared process disconnected')
+const handleSharedProcessDisconnect = () => {
+  console.info('[server] shared process disconnected')
 }
 
 const launchSharedProcess = () => {
   state.sharedProcessState = /* launching */ 1
-  delete process.env.ELECTRON_RUN_AS_NODE
-
   const sharedProcess = fork(
     sharedProcessPath,
     // execArgv: ['--trace-deopt'],
-    ['--enable-source-maps', ...argvSliced],
+    ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced],
     {
       stdio: 'inherit',
       env: {
         ...process.env,
-        ELECTRON_RUN_AS_NODE: '1', // TODO only needed when server is run inside electron app
       },
     }
   )
@@ -509,7 +659,7 @@ const launchSharedProcess = () => {
   }
   sharedProcess.once('message', handleFirstMessage)
   sharedProcess.on('exit', handleExit)
-  sharedProcess.on('disconnect', handleDisconnect)
+  sharedProcess.on('disconnect', handleSharedProcessDisconnect)
   state.sharedProcess = sharedProcess
 }
 
@@ -537,7 +687,16 @@ const handleUpgrade = (request, socket) => {
       state.onSharedProcessReady.push(() => {
         // @ts-ignore
         state.sharedProcess.send(
-          { headers: request.headers, method: request.method },
+          {
+            jsonrpc: '2.0',
+            method: 'HandleWebSocket.handleWebSocket',
+            params: [
+              {
+                headers: request.headers,
+                method: request.method,
+              },
+            ],
+          },
           // @ts-ignore
           socket
         )
@@ -552,7 +711,16 @@ const handleUpgrade = (request, socket) => {
     case /* on */ 2:
       // @ts-ignore
       state.sharedProcess.send(
-        { headers: request.headers, method: request.method },
+        {
+          jsonrpc: '2.0',
+          method: 'HandleWebSocket.handleWebSocket',
+          params: [
+            {
+              headers: request.headers,
+              method: request.method,
+            },
+          ],
+        },
         // @ts-ignore
         socket
       )
@@ -573,8 +741,7 @@ app.on('error', (error) => {
   }
 })
 
-const handleProcessExit = (code) => {
-  console.info(`[server] Process will exit with code ${code}`)
+const cleanup = () => {
   app.close()
   if (state.sharedProcess && !state.sharedProcess.killed) {
     state.sharedProcess.kill()
@@ -582,9 +749,13 @@ const handleProcessExit = (code) => {
   }
 }
 
+const handleProcessExit = (code) => {
+  console.info(`[server] Process will exit with code ${code}`)
+  cleanup()
+}
+
 const handleAppReady = () => {
   if (process.send) {
-    console.log('send ready')
     process.send('ready')
   } else {
     console.info(`[server] listening on http://localhost:${PORT}`)
@@ -596,9 +767,15 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
   console.info(error)
 }
 
+const handleDisconnect = () => {
+  console.info(`[server] disconnected`)
+  cleanup()
+}
+
 const main = () => {
-  process.on('message', handleMessageFromParent)
+  process.on('disconnect', handleDisconnect)
   process.on('exit', handleProcessExit)
+  process.on('message', handleMessageFromParent)
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
   app.on('listening', handleAppReady)
   if (isPublic) {

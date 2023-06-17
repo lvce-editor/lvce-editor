@@ -47,16 +47,14 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronApplicationMenu
     case 'About':
       return ModuleId.About
-    case 'ListProcessesWithMemoryUsage':
-      return ModuleId.ListProcessesWithMemoryUsage
-    case 'ProcessExplorerContextMenu':
-      return ModuleId.ProcessExplorerContextMenu
     case 'Process':
       return ModuleId.Process
     case 'ElectronNet':
       return ModuleId.ElectronNet
     case 'ElectronBrowserViewSuggestions':
       return ModuleId.ElectronBrowserViewSuggestions
+    case 'CreatePidMap':
+      return ModuleId.CreatePidMap
     default:
       throw new CommandNotFoundError(commandId)
   }

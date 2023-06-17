@@ -12,7 +12,11 @@ const shouldLogError = (error) => {
   return true
 }
 
-export const getErrorResponse = (message, error) => {
+export const getErrorResponse = (message, error, ipc) => {
+  const prettyError = PrettyError.prepare(error)
+  if (shouldLogError(error) && (!ipc || ipc.shouldLogError !== false)) {
+    PrintPrettyError.printPrettyError(prettyError, `[shared-process] `)
+  }
   if (error && error instanceof CommandNotFoundError) {
     return {
       jsonrpc: JsonRpcVersion.Two,
@@ -37,8 +41,6 @@ export const getErrorResponse = (message, error) => {
       },
     }
   }
-  const prettyError = PrettyError.prepare(error)
-  PrintPrettyError.printPrettyError(prettyError, `[shared-process] `)
   return {
     jsonrpc: JsonRpcVersion.Two,
     id: message.id,
@@ -49,6 +51,7 @@ export const getErrorResponse = (message, error) => {
         stack: prettyError.stack,
         codeFrame: prettyError.codeFrame,
         type: prettyError.type,
+        code: prettyError.code,
       },
     },
   }

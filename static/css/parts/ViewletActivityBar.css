@@ -1,8 +1,8 @@
-#ActivityBar {
+.ActivityBar {
   color: var(--ActivityBarForeground);
 }
 
-#ActivityBar {
+.ActivityBar {
   /* display: grid; */
   /* align-content: space-between; */
   display: flex;

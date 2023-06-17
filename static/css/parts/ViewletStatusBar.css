@@ -1,9 +1,9 @@
-#StatusBar {
+.StatusBar {
   display: flex;
   justify-content: space-between;
 }
 
-#StatusBar {
+.StatusBar {
   height: 23px; /* 22px content + 1px border top */
   border-top: 1px solid var(--StatusBarBorderTopColor);
   display: flex;
@@ -12,18 +12,18 @@
   justify-content: space-between;
 }
 
-#StatusBarItemsLeft,
-#StatusBarItemsRight {
+.StatusBarItemsLeft,
+.StatusBarItemsRight {
   /* contain: content; */
   margin: 0;
   display: flex;
 }
 
-#StatusBarItemsLeft {
+.StatusBarItemsLeft {
   padding-left: 7px;
 }
 
-#StatusBarItemsRight {
+.StatusBarItemsRight {
   padding-right: 7px;
 }
 

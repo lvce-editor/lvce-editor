@@ -50,27 +50,27 @@ test('restoreJsonRpcError - ReferenceError', () => {
 
 test('restoreJsonRpcError - null', () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError(null)
-  expect(error.message).toBe('JsonRpc Error: null')
+  expect(error.message).toBe('JsonRpc Error: Unknown Error')
 })
 
 test('restoreJsonRpcError - empty object', async () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError({})
-  expect(error.message).toBe(`JsonRpc Error: [object Object]`)
+  expect(error.message).toBe(`JsonRpc Error: Unknown Error`)
 })
 
 test('restoreJsonRpcError - empty array', async () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError([])
-  expect(error.message).toBe(`JsonRpc Error: `)
+  expect(error.message).toBe(`JsonRpc Error: Unknown Error`)
 })
 
 test('restoreJsonRpcError - empty weakmap', async () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError(new WeakMap())
-  expect(error.message).toBe(`JsonRpc Error: [object WeakMap]`)
+  expect(error.message).toBe(`JsonRpc Error: Unknown Error`)
 })
 
 test('restoreJsonRpcError - empty set', async () => {
   const error = RestoreJsonRpcError.restoreJsonRpcError(new Set())
-  expect(error.message).toBe(`JsonRpc Error: [object Set]`)
+  expect(error.message).toBe(`JsonRpc Error: Unknown Error`)
 })
 
 test('restoreJsonRpcError - DOMException', () => {
@@ -251,7 +251,7 @@ test('restoreJsonRpcError - object', () => {
     },
   })
   expect(error).toBeInstanceOf(Error)
-  expect(error.message).toBe('JsonRpc Error: [object Object]')
+  expect(error.message).toBe('JsonRpc Error: Unknown Error')
 })
 
 test('restoreJsonRpcError - AssertionError', () => {
@@ -354,4 +354,17 @@ test('restoreJsonRpcError - ReferenceError', () => {
     at Receiver.receiverOnMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/websocket.js:1180:20)
     at Receiver.dataMessage (/test/packages/extension-host-helper-process/node_modules/ws/lib/receiver.js:541:14)`)
   expect(error.name).toBe('ReferenceError')
+})
+
+test('restoreJsonRpcError - object', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    code: -32001,
+    message: undefined,
+    data: {},
+  })
+  expect(error).toBeInstanceOf(Error)
+  expect(error.message).toBe('JsonRpc Error: Unknown Error')
+  expect(error.stack).toMatch(`Error: JsonRpc Error: Unknown Error
+    at Module.restoreJsonRpcError `)
+  expect(error.name).toBe('Error')
 })

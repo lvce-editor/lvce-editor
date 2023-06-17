@@ -27,7 +27,6 @@ const getPaths = async () => {
 }
 
 const testFile = async (page, name) => {
-  console.info(`[starting] ${name}`)
   const relativePath = getRelativePath(name)
   const url = `http://localhost:3000${relativePath}`
   await page.goto(url)
@@ -42,7 +41,6 @@ const testFile = async (page, name) => {
       break
     case 'fail':
       throw new Error(`Test Failed: ${name}: ${text}`)
-      break
     default:
       throw new Error(`unexpected test state: ${state}`)
   }

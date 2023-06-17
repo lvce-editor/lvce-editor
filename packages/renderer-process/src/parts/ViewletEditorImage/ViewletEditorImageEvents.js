@@ -1,16 +1,18 @@
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletEditorImageFunctions from './ViewletEditorImageFunctions.js'
-import * as Event from '../Event/Event.js'
 
 /**
  * @param {PointerEvent} event
  */
 export const handlePointerMove = (event) => {
   const { pointerId, clientX, clientY } = event
-  ViewletEditorImageFunctions.handlePointerMove(pointerId, clientX, clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletEditorImageFunctions.handlePointerMove(uid, pointerId, clientX, clientY)
 }
 
 /**
@@ -21,14 +23,13 @@ export const handlePointerUp = (event) => {
   if (button !== MouseEventType.LeftClick) {
     return
   }
-  ViewletEditorImageFunctions.handlePointerUp(pointerId, clientX, clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletEditorImageFunctions.handlePointerUp(uid, pointerId, clientX, clientY)
 }
 
 export const handlePointerCaptureLost = (event) => {
   const { target } = event
-  // @ts-ignore
   target.removeEventListener(DomEventType.PointerMove, handlePointerMove)
-  // @ts-ignore
   target.removeEventListener(DomEventType.PointerUp, handlePointerUp)
 }
 
@@ -47,7 +48,8 @@ export const handlePointerDown = (event) => {
   // @ts-ignore
   target.addEventListener(DomEventType.PointerUp, handlePointerUp)
   target.addEventListener(DomEventType.LostPointerCapture, handlePointerCaptureLost)
-  ViewletEditorImageFunctions.handlePointerDown(pointerId, clientX, clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletEditorImageFunctions.handlePointerDown(uid, pointerId, clientX, clientY)
 }
 
 /**
@@ -55,7 +57,8 @@ export const handlePointerDown = (event) => {
  */
 export const handleWheel = (event) => {
   const { clientX, clientY, deltaX, deltaY } = event
-  ViewletEditorImageFunctions.handleWheel(clientX, clientY, deltaX, deltaY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletEditorImageFunctions.handleWheel(uid, clientX, clientY, deltaX, deltaY)
 }
 
 /**
@@ -65,11 +68,13 @@ export const handleWheel = (event) => {
 export const handleContextMenu = (event) => {
   Event.preventDefault(event)
   const { button, clientX, clientY } = event
-  ViewletEditorImageFunctions.handleContextMenu(button, clientX, clientY)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletEditorImageFunctions.handleContextMenu(uid, button, clientX, clientY)
 }
 
 export const handleError = (event) => {
-  ViewletEditorImageFunctions.handleImageError()
+  const uid = ComponentUid.fromEvent(event)
+  ViewletEditorImageFunctions.handleImageError(uid)
 }
 
 export const handleFocus = () => {

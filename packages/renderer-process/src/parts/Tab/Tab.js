@@ -1,9 +1,13 @@
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as Label from '../Label/Label.js'
+import * as FileIcon from '../FileIcon/FileIcon.js'
 
-export const create = (label, title, background) => {
-  const $TabLabel = Label.create(label)
+export const create = (label, title, icon, tabWidth, preview, background) => {
+  const $TabIcon = FileIcon.create(icon)
+
+  const $TabLabel = document.createElement('div')
+  $TabLabel.className = 'TabLabel'
+  $TabLabel.textContent = label
 
   const $TabCloseButton = document.createElement('button')
   $TabCloseButton.className = 'EditorTabCloseButton'
@@ -13,11 +17,13 @@ export const create = (label, title, background) => {
   const $Tab = document.createElement('div')
   $Tab.title = title
   $Tab.draggable = true
-  if (!background) {
-    $Tab.ariaSelected = AriaBoolean.True
-  }
+  $Tab.ariaSelected = background ? AriaBoolean.False : AriaBoolean.True
   $Tab.role = AriaRoles.Tab
   $Tab.className = 'MainTab'
-  $Tab.append($TabLabel, $TabCloseButton)
+  if (preview) {
+    $Tab.classList.add('MainTabPreview')
+  }
+  $Tab.style.width = `${tabWidth}px`
+  $Tab.append($TabIcon, $TabLabel, $TabCloseButton)
   return $Tab
 }

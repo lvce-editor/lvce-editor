@@ -84,7 +84,11 @@ export const load = (moduleId) => {
       return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
     case ViewletModuleId.Video:
       return import('../ViewletVideo/ViewletVideo.js')
+    case ViewletModuleId.Terminals:
+      return import('../ViewletTerminals/ViewletTerminals.js')
+    case ViewletModuleId.EditorHover:
+      return import('../ViewletEditorHover/ViewletEditorHover.js')
     default:
-      throw new Error(`unknown module ${moduleId}`)
+      throw new Error(`${moduleId} module not found in renderer process`)
   }
 }

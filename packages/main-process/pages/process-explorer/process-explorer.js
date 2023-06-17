@@ -5,7 +5,6 @@ const state = {
   collapsed: [],
   processes: [],
   $Tbody: undefined,
-  ipc: undefined,
 }
 
 const formatMemory = (memory) => {
@@ -364,19 +363,42 @@ const handleMouseDown = (event) => {
   }
 }
 
-const processExplorerShowContextMenu = async (pid) => {
-  JsonRpc.invoke(state.ipc, 'ProcessExplorerContextMenu.showContextMenu', pid)
+const IsDebuggable = {
+  isDebuggable(command) {
+    return command.includes('node ') || command.includes('node.exe') || command.includes('node.mojom.NodeService')
+  },
+}
+
+const getMenuItems = (displayProcess) => {
+  const menuItems = [
+    {
+      label: 'Kill Process',
+    },
+  ]
+  if (IsDebuggable.isDebuggable(displayProcess.cmd)) {
+    menuItems.push({
+      label: 'Debug Process',
+    })
+  }
+  return menuItems
+}
+
+const processExplorerShowContextMenu = async (displayProcess, x, y) => {
+  const menuItems = getMenuItems(displayProcess)
+  const customData = displayProcess
+  await ElectronProcess.invoke('ElectronContextMenu.openContextMenu', menuItems, x, y, customData)
 }
 
 const handleContextMenu = async (event) => {
   event.preventDefault()
+  const { clientX, clientY } = event
   const $Target = event.target
 
   const $Row = $Target.parentNode
   const index = getNodeIndex($Row)
 
   const displayProcess = state.displayProcesses[index]
-  await processExplorerShowContextMenu(displayProcess.pid)
+  await processExplorerShowContextMenu(displayProcess, clientX, clientY)
 }
 
 /**
@@ -416,17 +438,35 @@ const handleKeyDown = (event) => {
   }
 }
 
+const ProcessFlag = {
+  None: 0,
+  Collapsed: 1,
+  Expanded: 2,
+}
+
+const getPaddingLeft = (process) => {
+  if (process.depth === 1) {
+    return '0'
+  }
+  const depthCh = (process.depth - 1) * 1.5
+  if (process.flags === ProcessFlag.None) {
+    return `calc(${depthCh}ch + 17px)`
+  }
+  return `${depthCh}ch`
+}
+
 const render$Process = ($Process, process) => {
   $Process.ariaLevel = process.depth
+  $Process.firstChild.style.paddingLeft = getPaddingLeft(process)
   $Process.title = process.cmd
   switch (process.flags) {
-    case /* none */ 0:
+    case ProcessFlag.None:
       $Process.removeAttribute('aria-expanded')
       break
-    case /* collapsed */ 1:
+    case ProcessFlag.Collapsed:
       $Process.ariaExpanded = false
       break
-    case /* expanded */ 2:
+    case ProcessFlag.Expanded:
       $Process.ariaExpanded = true
       break
     default:
@@ -549,6 +589,7 @@ const Callback = {
   },
   resolve(id, message) {
     callbacks[id].resolve(message)
+    delete callbacks[id]
   },
 }
 
@@ -679,8 +720,34 @@ const JsonRpc = {
   },
 }
 
+const SharedProcess = {
+  /**
+   * @type {any}
+   */
+  ipc: undefined,
+  async invoke(method, ...params) {
+    return JsonRpc.invoke(this.ipc, method, ...params)
+  },
+  async listen() {
+    this.ipc = await IpcChild.listen({ module: IpcChildWithSharedProcess })
+  },
+}
+
+const ElectronProcess = {
+  /**
+   * @type {any}
+   */
+  ipc: undefined,
+  async invoke(method, ...params) {
+    return JsonRpc.invoke(this.ipc, method, ...params)
+  },
+  async listen() {
+    this.ipc = await IpcChild.listen({ module: IpcChildWithElectron })
+  },
+}
+
 const listProcessesWithMemoryUsage = (rootPid) => {
-  return JsonRpc.invoke(state.ipc, 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage', rootPid)
+  return SharedProcess.invoke('ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage', rootPid)
 }
 
 const handleMessageFromWindow = (event) => {
@@ -717,8 +784,39 @@ const getPort = async (type) => {
 }
 
 const IpcChildWithElectron = {
-  async listen() {
+  async create() {
     const port = await getPort('electron-process')
+    return port
+  },
+  wrap(port) {
+    return {
+      port,
+      /**
+       * @type {any}
+       */
+      wrappedListener: null,
+      send(message) {
+        this.port.postMessage(message)
+      },
+      set onmessage(listener) {
+        this.wrappedListener = (event) => {
+          listener(event.data)
+        }
+        this.port.onmessage = this.wrappedListener
+      },
+      get onmessage() {
+        return this.wrappedListener
+      },
+    }
+  },
+}
+
+const IpcChildWithSharedProcess = {
+  async create() {
+    const port = await getPort('shared-process')
+    return port
+  },
+  wrap(port) {
     return {
       port,
       /**
@@ -742,8 +840,11 @@ const IpcChildWithElectron = {
 }
 
 const IpcChild = {
-  listen() {
-    return IpcChildWithElectron.listen()
+  async listen({ module }) {
+    const rawIpc = await module.create()
+    const ipc = module.wrap(rawIpc)
+    HandleIpc.handleIpc(ipc)
+    return ipc
   },
 }
 
@@ -765,31 +866,95 @@ const isErrorMessage = (message) => {
   return 'error' in message
 }
 
+const Signal = {
+  SIGTERM: 'SIGTERM',
+}
+
+const Process = {
+  kill(pid) {
+    return SharedProcess.invoke('Process.kill', pid, Signal.SIGTERM)
+  },
+  debug(pid) {
+    // TODO
+    console.log({ pid })
+  },
+}
+
+const getContextMenuFn = (label) => {
+  switch (label) {
+    case 'Kill Process':
+      return Process.kill
+    case 'Debug Process':
+      return Process.debug
+    default:
+      throw new Error(`context menu function not found ${label}`)
+  }
+}
+
+const ElectronContextMenu = {
+  handleSelect(label, customData) {
+    const pid = customData.pid
+    const fn = getContextMenuFn(label)
+    return fn(pid)
+  },
+}
+
+const CommandMap = {
+  commandMap: {
+    'ElectronContextMenu.handleSelect': ElectronContextMenu.handleSelect,
+  },
+}
+
+const Command = {
+  execute(method, ...params) {
+    const fn = CommandMap.commandMap[method]
+    if (!fn) {
+      return
+    }
+    return fn(...params)
+  },
+}
+
 const handleMessage = (message) => {
   if (message.id) {
     if (isResultMessage(message) || isErrorMessage(message)) {
       Callback.resolve(message.id, message)
+      return
     }
   }
+  if (message.method) {
+    return Command.execute(message.method, ...message.params)
+  }
+  console.log({ message })
 }
 
 const getPid = () => {
-  return JsonRpc.invoke(state.ipc, 'Process.getPid')
+  return ElectronProcess.invoke('Process.getPid')
+}
+
+const sleep = (timeout) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeout)
+  })
+}
+
+const HandleIpc = {
+  handleIpc(ipc) {
+    ipc.onmessage = handleMessage
+  },
 }
 
 const main = async () => {
   onerror = handleError
   onunhandledrejection = handleUnhandledRejection
-  const ipc = await IpcChild.listen()
-  ipc.onmessage = handleMessage
-  state.ipc = ipc
+  await ElectronProcess.listen()
+  await SharedProcess.listen()
   const pid = await getPid()
+  const refreshInterval = 1000
   while (true) {
     const processesWithMemoryUsage = await listProcessesWithMemoryUsage(pid)
     renderProcesses(processesWithMemoryUsage)
-    await new Promise((resolve) => {
-      setTimeout(resolve, 1000)
-    })
+    await sleep(refreshInterval)
   }
 }
 

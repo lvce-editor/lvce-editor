@@ -29,17 +29,17 @@ const getDebPackageArch = (arch) => {
   }
 }
 
-const bundleElectronMaybe = async ({ product, version }) => {
+const bundleElectronMaybe = async ({ product, version, shouldRemoveUnusedLocales }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
   //   console.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product, version })
+  await build({ product, version, shouldRemoveUnusedLocales })
 }
 
 const copyElectronResult = async ({ product, version }) => {
-  await bundleElectronMaybe({ product, version })
+  await bundleElectronMaybe({ product, version, shouldRemoveUnusedLocales: true })
   const debArch = 'amd64'
   await Copy.copy({
     from: `build/.tmp/electron-bundle/x64`,

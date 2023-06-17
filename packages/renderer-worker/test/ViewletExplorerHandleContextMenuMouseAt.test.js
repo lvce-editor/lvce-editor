@@ -22,7 +22,7 @@ test('handleContextMenuMouse', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     focusedIndex: -1,
     y: 0,
   }
@@ -35,7 +35,7 @@ test('handleContextMenuMouse', async () => {
 
 test('event - issue with blur event after context menu event', async () => {
   const state = {
-    ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
+    ...ViewletExplorer.create(1, '/test', 0, 0, 0, 0),
     pathSeparator: '/',
     focusedIndex: 2,
     items: [

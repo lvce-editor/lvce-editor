@@ -1,5 +1,6 @@
 import { BabelParseError } from '../BabelParseError/BabelParseError.js'
 import * as BabelParser from '../BabelParser/BabelParser.js'
+import * as BabelSourceType from '../BabelSourceType/BabelSourceType.js'
 import { ContentSecurityPolicyError } from '../ContentSecurityPolicyError/ContentSecurityPolicyError.js'
 import * as ContentSecurityPolicyErrorState from '../ContentSecurityPolicyErrorState/ContentSecurityPolicyErrorState.js'
 import { DependencyNotFoundError } from '../DependencyNotFoundError/DependencyNotFoundError.js'
@@ -18,18 +19,19 @@ const isExternal = (url) => {
   return true
 }
 
-const getErrorInDependencies = async (url, dependencies) => {
+const getErrorInDependencies = async (url, dependencies, seenUrls) => {
   for (const dependency of dependencies) {
     const dependencyUrl = Url.getAbsoluteUrl(dependency.relativePath, url)
-    if (isExternal(dependencyUrl)) {
+    if (isExternal(dependencyUrl) || seenUrls.includes(dependencyUrl)) {
       continue
     }
+    seenUrls.push(dependencyUrl)
     // let dependencyResponse
     // try {
     const dependencyResponse = await fetch(dependencyUrl)
     // } catch (error) {}
     if (dependencyResponse.ok) {
-      await tryToGetActualErrorMessage(null, dependencyUrl, dependencyResponse)
+      await tryToGetActualErrorMessage(null, dependencyUrl, dependencyResponse, seenUrls)
     } else {
       switch (dependencyResponse.status) {
         case HttpStatusCode.NotFound:
@@ -48,7 +50,7 @@ const getErrorInDependencies = async (url, dependencies) => {
  * @param {Response} response
  * @returns
  */
-export const tryToGetActualErrorMessage = async (error, url, response) => {
+export const tryToGetActualErrorMessage = async (error, url, response, seenUrls = []) => {
   let text
   try {
     text = await response.text()
@@ -57,8 +59,8 @@ export const tryToGetActualErrorMessage = async (error, url, response) => {
   }
   let ast
   try {
-    ast = BabelParser.parse(text, {
-      sourceType: 'module',
+    ast = await BabelParser.parse(text, {
+      sourceType: BabelSourceType.Module,
     })
   } catch (error) {
     if (IsBabelParseError.isBabelError(error)) {
@@ -67,7 +69,7 @@ export const tryToGetActualErrorMessage = async (error, url, response) => {
     throw error
   }
   const dependencies = GetBabelAstDependencies.getBabelAstDependencies(text, ast)
-  await getErrorInDependencies(url, dependencies)
+  await getErrorInDependencies(url, dependencies, seenUrls)
   if (ContentSecurityPolicyErrorState.hasRecentErrors()) {
     const recentError = ContentSecurityPolicyErrorState.getRecentError()
     throw new ContentSecurityPolicyError(recentError.violatedDirective, recentError.sourceFile, recentError.lineNumber, recentError.columnNumber)

@@ -2,6 +2,7 @@ const Electron = require('electron')
 const { readFileSync } = require('node:fs')
 const { join } = require('node:path')
 const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.js')
+const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
 const HttpMethod = require('../HttpMethod/HttpMethod.js')
 
 const getBeforeRequestResponseMainFrame = (method, url) => {
@@ -110,20 +111,14 @@ exports.filter = {
 
 /**
  *
- * @param {Electron.Event} event
- */
-const handleDidNavigate = (event) => {
-  const webContents = event.sender
-  const blockJs = readFileSync(join(__dirname, './block.js'), 'utf8')
-  webContents.executeJavaScript(blockJs)
-  const blockCss = readFileSync(join(__dirname, './block.css'), 'utf8')
-  webContents.insertCSS(blockCss)
-}
-
-/**
- *
  * @param {Electron.WebContents} webContents
  */
 exports.enableForWebContents = (webContents) => {
-  webContents.on('did-navigate', handleDidNavigate)
+  const handleDidNavigate = () => {
+    const blockJs = readFileSync(join(__dirname, './block.js'), 'utf8')
+    webContents.executeJavaScript(blockJs)
+    const blockCss = readFileSync(join(__dirname, './block.css'), 'utf8')
+    webContents.insertCSS(blockCss)
+  }
+  webContents.on(ElectronWebContentsEventType.DidNavigate, handleDidNavigate)
 }

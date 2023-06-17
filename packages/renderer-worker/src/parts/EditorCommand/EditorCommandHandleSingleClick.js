@@ -8,11 +8,15 @@ import * as EditorGoToDefinition from './EditorCommandGoToDefinition.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
+// TODO first change cursor position, then run go to definition
+// cursor should appear at mousedown position immediately
 const handleSingleClickWithAlt = async (editor, position) => {
+  const { rowIndex, columnIndex } = position
+  const newEditor = { ...editor, selections: new Uint32Array([rowIndex, columnIndex, rowIndex, columnIndex]) }
   // TODO rectangular selection with alt click,
   // but also go to definition with alt click
-  const newEditor = await EditorGoToDefinition.goToDefinition(editor, position, /* explicit */ false)
-  return newEditor
+  const newEditor2 = await EditorGoToDefinition.goToDefinition(newEditor)
+  return newEditor2
 }
 
 const handleSingleClickWithCtrl = async (editor, position) => {

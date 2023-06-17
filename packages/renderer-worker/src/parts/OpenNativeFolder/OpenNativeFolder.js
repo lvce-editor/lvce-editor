@@ -11,7 +11,7 @@ const openNativeFolderWeb = (absolutePath) => {
 
 const openNativeFolderRemote = async (absolutePath) => {
   try {
-    await SharedProcess.invoke(SharedProcessCommandType.NativeOpenFolder, /* path */ absolutePath)
+    await SharedProcess.invoke(SharedProcessCommandType.OpenNativeFolder, /* path */ absolutePath)
   } catch (error) {
     throw new VError(error, `Failed to open folder ${absolutePath}`)
   }

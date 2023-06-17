@@ -18,13 +18,8 @@ const getRendererProcessCacheHash = async (extraContents) => {
 }
 
 export const getRendererProcessCachePath = async (extraContents) => {
-  const rendererProcessCacheHash = await getRendererProcessCacheHash(
-    extraContents
-  )
-  const rendererProcessCachePath = Path.join(
-    Path.absolute('build/.tmp/cachedSources/renderer-process'),
-    rendererProcessCacheHash
-  )
+  const rendererProcessCacheHash = await getRendererProcessCacheHash(extraContents)
+  const rendererProcessCachePath = Path.join(Path.absolute('build/.tmp/cachedSources/renderer-process'), rendererProcessCacheHash)
   return rendererProcessCachePath
 }
 
@@ -45,13 +40,8 @@ const getRendererWorkerCacheHash = async (extraContents) => {
 }
 
 export const getRendererWorkerCachePath = async (extraContents) => {
-  const rendererWorkerCacheHash = await getRendererWorkerCacheHash(
-    extraContents
-  )
-  const rendererWorkerCachePath = Path.join(
-    Path.absolute('build/.tmp/cachedSources/renderer-worker'),
-    rendererWorkerCacheHash
-  )
+  const rendererWorkerCacheHash = await getRendererWorkerCacheHash(extraContents)
+  const rendererWorkerCachePath = Path.join(Path.absolute('build/.tmp/cachedSources/renderer-worker'), rendererWorkerCacheHash)
   return rendererWorkerCachePath
 }
 
@@ -72,12 +62,13 @@ const getExtensionHostWorkerCacheHash = async (extraContents) => {
 }
 
 export const getExtensionHostWorkerCachePath = async (extraContents) => {
-  const extensionHostWorkerCacheHash = await getExtensionHostWorkerCacheHash(
-    extraContents
-  )
-  const extensionHostWorkerCachePath = Path.join(
-    Path.absolute('build/.tmp/cachedSources/extension-host-worker'),
-    extensionHostWorkerCacheHash
-  )
+  const extensionHostWorkerCacheHash = await getExtensionHostWorkerCacheHash(extraContents)
+  const extensionHostWorkerCachePath = Path.join(Path.absolute('build/.tmp/cachedSources/extension-host-worker'), extensionHostWorkerCacheHash)
+  return extensionHostWorkerCachePath
+}
+
+export const getExtensionHostSubWorkerCachePath = async (extraContents) => {
+  const extensionHostWorkerCacheHash = await getExtensionHostWorkerCacheHash(extraContents)
+  const extensionHostWorkerCachePath = Path.join(Path.absolute('build/.tmp/cachedSources/extension-host-sub-worker'), extensionHostWorkerCacheHash)
   return extensionHostWorkerCachePath
 }

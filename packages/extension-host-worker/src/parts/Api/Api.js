@@ -13,9 +13,11 @@ import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHo
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostGetOffset from '../ExtensionHostGetOffset/ExtensionHostGetOffset.js'
 import * as ExtensionHostGetPosition from '../ExtensionHostGetPosition/ExtensionHostGetPosition.js'
+import * as ExtensionHostHover from '../ExtensionHostHover/ExtensionHostHover.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
-import * as ExtensionHostNodeIpc from '../ExtensionHostNodeIpc/ExtensionHostNodeIpc.js'
+import * as ExtensionHostNodeIpc from '../ExtensionHostNodeRpc/ExtensionHostNodeRpc.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
+import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
@@ -23,16 +25,9 @@ import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHo
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
+import { FormattingError } from '../FormattingError/FormattingError.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import { VError } from '../VError/VError.js'
-
-class FormattingError extends Error {
-  constructor(message, codeFrame) {
-    super(message)
-    this.codeFrame = codeFrame
-    this.name = 'FormattingError'
-  }
-}
 
 // prettier-ignore
 export const api = {
@@ -89,7 +84,12 @@ export const api = {
   // Get Position
   getPosition: ExtensionHostGetPosition.getPosition,
 
-  // Node Rpc
+  // Hover
+  registerHoverProvider: ExtensionHostHover.registerHoverProvider,
+  executeHoverProvider: ExtensionHostHover.executeHoverProvider,
+
+  // Rpc
+  createRpc: ExtensionHostRpc.createRpc,
   createNodeRpc: ExtensionHostNodeIpc.createNodeRpc,
 
   // Implementation

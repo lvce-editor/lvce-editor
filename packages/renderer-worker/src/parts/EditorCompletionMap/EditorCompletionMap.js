@@ -13,6 +13,8 @@ export const getSymbolName = (item) => {
       return SymbolName.SymbolVariable
     case EditorCompletionType.Keyword:
       return SymbolName.SymbolKeyword
+    case EditorCompletionType.Field:
+      return SymbolName.SymbolField
     default:
       return SymbolName.SymbolDefault
   }

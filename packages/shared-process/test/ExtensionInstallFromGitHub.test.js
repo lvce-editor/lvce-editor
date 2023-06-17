@@ -34,6 +34,9 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   rename: jest.fn(() => {
     throw new Error('not implemented')
   }),
+  mkdir: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
 }))
 
 const ExtensionInstallFromGitHub = await import('../src/parts/ExtensionInstallFromGitHub/ExtensionInstallFromGitHub.js')
@@ -129,6 +132,8 @@ test('install', async () => {
   FileSystem.remove.mockImplementation(() => {})
   // @ts-ignore
   FileSystem.rename.mockImplementation(() => {})
+  // @ts-ignore
+  FileSystem.mkdir.mockImplementation(() => {})
   // @ts-ignore
   FileSystem.readFile.mockImplementation(() => {
     return `{

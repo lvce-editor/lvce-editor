@@ -5,8 +5,7 @@ export const showOpenDialog = (title, properties) => {
   return ElectronProcess.invoke('ElectronDialog.showOpenDialog', title, properties)
 }
 
-export const showMessageBox = (message, buttons, type) => {
-  Assert.string(message)
-  Assert.array(buttons)
-  return ElectronProcess.invoke('ElectronDialog.showMessageBox', message, buttons, type)
+export const showMessageBox = (options) => {
+  Assert.object(options)
+  return ElectronProcess.invoke('ElectronDialog.showMessageBox', options)
 }

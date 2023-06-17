@@ -1,4 +1,5 @@
 import * as FilterCompletionItem from '../FilterCompletionItem/FilterCompletionItem.js'
+import * as Character from '../Character/Character.js'
 
 const addEmptyMatch = (item) => {
   return {
@@ -8,7 +9,7 @@ const addEmptyMatch = (item) => {
 }
 
 export const filterCompletionItems = (completionItems, word) => {
-  if (word === '') {
+  if (word === Character.EmptyString) {
     return completionItems.map(addEmptyMatch)
   }
   const filteredCompletions = []

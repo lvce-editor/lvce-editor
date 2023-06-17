@@ -2,7 +2,7 @@
    for quickpick to open (3.3ms recalculcate style vs 4.2ms now)  */
 
 /* TODO recalculate style is really slow in chrome for unknown reasons */
-#QuickPick {
+.QuickPick {
   position: absolute;
   width: 600px;
   top: 50px;
@@ -25,7 +25,7 @@
   box-shadow: rgb(0 0 0 / 15%) 0px 0px 8px 2px;
 }
 
-#QuickPickHeader {
+.QuickPickHeader {
   /* width: 100%; */
   display: flex;
   /* margin: 6px 6px 0; */
@@ -36,7 +36,7 @@
   /* margin-bottom: -2px; */
 }
 
-#QuickPickItems {
+.QuickPickItems {
   outline: 0;
   margin: 0;
   padding: 0;
@@ -68,6 +68,7 @@
   padding: 0 6px;
   contain: strict;
   gap: 4px;
+  line-height: 22px;
 }
 
 .QuickPickItem:hover {
@@ -81,13 +82,14 @@
 }
 
 .QuickPickItemDescription {
-  font-size: 0.8rem;
+  font-size: 0.9em;
   opacity: 0.7;
   pointer-events: none;
+  contain: content;
 }
 
 /* TODO use aria annouce for this */
-#QuickPickCount {
+.QuickPickCount {
   /* Screen Reader Only */
   position: absolute;
   left: -10000px;
@@ -111,4 +113,12 @@
 /* TODO remove icon from dom when it is not needed */
 .Iconundefined {
   display: none;
+}
+
+.QuickPickLabel {
+  white-space: nowrap;
+  contain: content;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }

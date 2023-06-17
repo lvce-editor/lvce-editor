@@ -1,21 +1,27 @@
-import * as IsChromeExtensionError from '../IsChromeExtensionError/IsChromeExtensionError.js'
-import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerError.js'
-import * as Logger from '../Logger/Logger.js'
+import * as PrettyError from '../PrettyError/PrettyError.js'
 
-export const handleError = (error) => {
-  if (IsChromeExtensionError.isChromeExtensionError(error)) {
-    // ignore errors from chrome extensions
-    return
-  }
-  if (IsFirefoxWorkerError.isFirefoxWorkerError(error)) {
-    // ignore firefox worker errors
-    return
-  }
-  Logger.info(`[renderer-process] Unhandled Error: ${error}`)
-  alert(error)
+export const state = {
+  /**
+   * @type {string[]}
+   */
+  seenWarnings: [],
 }
 
-export const handleUnhandledRejection = (event) => {
-  Logger.info(`[renderer-process] Unhandled Rejection: ${event.reason}`)
-  alert(event.reason)
+export const logError = async (error, prefix = '') => {
+  const prettyError = await PrettyError.prepare(error)
+  PrettyError.print(prettyError, prefix)
+  return prettyError
+}
+
+export const handleError = async (error, notify = true, prefix = '') => {
+  try {
+    const prettyError = await logError(error, prefix)
+    if (notify) {
+      alert(PrettyError.getMessage(prettyError))
+    }
+  } catch (otherError) {
+    console.warn(`ErrorHandling error`)
+    console.warn(otherError)
+    console.error(error)
+  }
 }

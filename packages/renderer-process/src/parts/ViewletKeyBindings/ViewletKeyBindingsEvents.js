@@ -1,27 +1,21 @@
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletKeyBindingsFunctions from './ViewletKeyBindingsFunctions.js'
 
 export const handleInput = (event) => {
   const { target } = event
   const { value } = target
-  ViewletKeyBindingsFunctions.handleInput(value)
-}
-
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
+  const uid = ComponentUid.fromEvent(event)
+  ViewletKeyBindingsFunctions.handleInput(uid, value)
 }
 
 const getTableRowIndex = ($Target) => {
   const { className } = $Target
   switch (className) {
     case 'KeyBindingsTableCell':
-      return getNodeIndex($Target.parentNode)
+      return GetNodeIndex.getNodeIndex($Target.parentNode)
     default:
       return -1
   }
@@ -30,26 +24,17 @@ const getTableRowIndex = ($Target) => {
 export const handleTableClick = (event) => {
   const { target } = event
   const index = getTableRowIndex(target)
+  const uid = ComponentUid.fromEvent(event)
   if (index === -1) {
     return
   }
-  ViewletKeyBindingsFunctions.handleClick(index)
-}
-
-export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
-  switch (deltaMode) {
-    case WheelEventType.DomDeltaLine:
-    case WheelEventType.DomDeltaPixel:
-      return ViewletKeyBindingsFunctions.handleWheel(deltaY)
-    default:
-      break
-  }
+  ViewletKeyBindingsFunctions.handleClick(uid, index)
 }
 
 export const handleResizerPointerMove = (event) => {
   const { clientX } = event
-  ViewletKeyBindingsFunctions.handleResizerMove(clientX)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletKeyBindingsFunctions.handleResizerMove(uid, clientX)
 }
 
 // TODO use lostpointercapture event instead
@@ -67,7 +52,8 @@ export const handleResizerPointerDown = (event) => {
   target.addEventListener(DomEventType.PointerMove, handleResizerPointerMove, DomEventOptions.Active)
   target.addEventListener(DomEventType.PointerUp, handleResizerPointerUp)
   const id = target.nextSibling ? 1 : 2
-  ViewletKeyBindingsFunctions.handlResizerClick(id, clientX)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletKeyBindingsFunctions.handleResizerClick(uid, id, clientX)
 }
 
 const getPointerDownFunction = (event) => {
@@ -89,3 +75,5 @@ export const handlePointerDown = (event) => {
   }
   pointerDownFunction(event)
 }
+
+export * from '../VirtualListEvents/VirtualListEvents.js'

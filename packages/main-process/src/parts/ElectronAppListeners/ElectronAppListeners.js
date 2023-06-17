@@ -1,9 +1,14 @@
 const AppWindow = require('../AppWindow/AppWindow.js')
 const Cli = require('../Cli/Cli.js')
-const Command = require('../Command/Command.js')
+const ParseCliArgs = require('../ParseCliArgs/ParseCliArgs.js')
 const Debug = require('../Debug/Debug.js')
 const ElectronApp = require('../ElectronApp/ElectronApp.js')
+const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
+const ElectronShell = require('../ElectronShell/ElectronShell.js')
+const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
+const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
+const Logger = require('../Logger/Logger.js')
 const Platform = require('../Platform/Platform.js')
 const Preferences = require('../Preferences/Preferences.js')
 
@@ -40,11 +45,36 @@ exports.handleSecondInstance = async (
   additionalData // additionalData is the actual process.argv https://github.com/electron/electron/pull/30891
 ) => {
   Debug.debug('[info] second instance')
-  const parsedArgs = Cli.parseCliArgs(additionalData)
+  const parsedArgs = ParseCliArgs.parseCliArgs(additionalData)
   Debug.debug('[info] second instance args', additionalData, parsedArgs)
   const handled = Cli.handleFastCliArgsMaybe(parsedArgs) // TODO don't like the side effect here
   if (handled) {
     return
   }
   await this.handleReady(parsedArgs, workingDirectory)
+}
+
+const handleWebContentsNavigate = (event) => {
+  if (ElectronBrowserViewState.hasWebContents(event.sender.id)) {
+    return
+  }
+  Logger.error('[main-process] Prevented webcontent navigation')
+  event.preventDefault()
+}
+
+const handleWebContentsWindowOpen = ({ url }) => {
+  ElectronShell.openExternal(url)
+  return {
+    action: ElectronWindowOpenActionType.Deny,
+  }
+}
+
+/**
+ *
+ * @param {*} event
+ * @param {Electron.WebContents} webContents
+ */
+exports.handleWebContentsCreated = (event, webContents) => {
+  webContents.on(ElectronWebContentsEventType.WillNavigate, handleWebContentsNavigate)
+  webContents.setWindowOpenHandler(handleWebContentsWindowOpen)
 }

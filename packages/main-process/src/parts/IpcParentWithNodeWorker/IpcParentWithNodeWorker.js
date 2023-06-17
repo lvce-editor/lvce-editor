@@ -4,16 +4,27 @@ const Assert = require('../Assert/Assert.js')
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 const GetFirstNodeWorkerEvent = require('../GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js')
 
-exports.create = async ({ path, argv, env, execArgv }) => {
+exports.create = async ({ path, argv = [], env = process.env, execArgv = [] }) => {
   Assert.string(path)
+  const actualArgv = ['--ipc-type=node-worker', ...argv]
+  const actualEnv = {
+    ...env,
+    ELECTRON_RUN_AS_NODE: '1',
+  }
   const worker = new Worker(path, {
-    argv,
-    env,
+    argv: actualArgv,
+    env: actualEnv,
     execArgv,
   })
   const { type, event } = await GetFirstNodeWorkerEvent.getFirstNodeWorkerEvent(worker)
   if (type === FirstNodeWorkerEventType.Exit) {
     throw new IpcError(`Worker exited before ipc connection was established`)
+  }
+  if (type === FirstNodeWorkerEventType.Error) {
+    throw new IpcError(`Worker threw an error before ipc connection was established: ${event}`)
+  }
+  if (event !== 'ready') {
+    throw new IpcError('unexpected first message from worker')
   }
   return worker
 }
@@ -28,6 +39,7 @@ exports.wrap = (worker) => {
       this.worker.postMessage(message)
     },
     sendAndTransfer(message, transfer) {
+      Assert.array(transfer)
       this.worker.postMessage(message, transfer)
     },
     dispose() {

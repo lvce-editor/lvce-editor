@@ -1,9 +1,10 @@
-const { MessageChannel } = require('node:worker_threads')
-const SharedProcess = require('../SharedProcess/SharedProcess.js')
-const Performance = require('../Performance/Performance.js')
 const AppWindow = require('../AppWindow/AppWindow.js')
+const ConnectIpc = require('../ConnectIpc/ConnectIpc.js')
+const IpcParentType = require('../IpcParentType/IpcParentType.js')
 const Logger = require('../Logger/Logger.js')
+const Performance = require('../Performance/Performance.js')
 const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
+const SharedProcess = require('../SharedProcess/SharedProcess.js')
 
 // TODO maybe handle critical (first render) request via ipcMain
 // and spawn shared process when page is idle/loaded
@@ -20,12 +21,16 @@ const getFolder = (args) => {
   return args._[0]
 }
 
+// TODO when shared process is a utility process
+// can just send browserWindowPort to shared process
+// else need proxy events through this process
+
 /**
  *
  * @param {import('electron').IpcMainEvent} event
  * @returns
  */
-exports.handlePort = async (event, browserWindowPort) => {
+exports.handlePort = async (event, browserWindowPort, type, name) => {
   const config = AppWindow.findById(event.sender.id)
   if (!config) {
     Logger.warn('port event - config expected')
@@ -33,37 +38,12 @@ exports.handlePort = async (event, browserWindowPort) => {
   }
   const folder = getFolder(config.parsedArgs)
   Performance.mark(PerformanceMarkerType.WillStartSharedProcess)
+  const method = IpcParentType.NodeWorker
   const sharedProcess = await SharedProcess.hydrate({
-    FOLDER: folder,
-  })
-  const messageChannel = new MessageChannel()
-  const { port1 } = messageChannel
-  const { port2 } = messageChannel
-  Performance.mark(PerformanceMarkerType.DidStartSharedProcess)
-  browserWindowPort.on('message', (event) => {
-    // console.log('got message from browser window', event.data)
-    port2.postMessage(event.data)
-  })
-  port2.on('message', (message) => {
-    // console.log('send message to browser window', message)
-    browserWindowPort.postMessage(message)
-  })
-  sharedProcess.postMessage(
-    {
-      initialize: {
-        port: port1,
-        folder,
-      },
+    method,
+    env: {
+      FOLDER: folder,
     },
-    [port1]
-  )
-  // SharedProcess.sendPort(port1)
-  // SharedProcess.send({ command: 'setFolder', folder })
-
-  // windowConfigMap.set(event.sender, port1)
-
-  // SharedProcess.setOnMessage((message) => {
-  //   browserWindowPort.postMessage(message)
-  // })
-  browserWindowPort.start()
+  })
+  await ConnectIpc.connectIpc(method, sharedProcess, browserWindowPort, folder)
 }

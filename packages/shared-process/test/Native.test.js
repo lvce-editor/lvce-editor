@@ -9,7 +9,7 @@ jest.unstable_mockModule('open', () => {
 })
 
 const open = await import('open')
-const Native = await import('../src/parts/Native/Native.js')
+const Native = await import('../src/parts/OpenNativeFolder/OpenNativeFolder.js')
 
 test('openFolder', async () => {
   // @ts-ignore

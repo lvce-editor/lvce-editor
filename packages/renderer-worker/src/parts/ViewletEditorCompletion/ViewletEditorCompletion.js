@@ -12,6 +12,7 @@ import * as VirtualList from '../VirtualList/VirtualList.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
+    uid: id,
     id,
     isOpened: false,
     openingReason: 0,
@@ -124,6 +125,7 @@ export const dispose = (state) => {
 
 const disposeWithEditor = (state, editor) => {
   editor.completionState = EditorCompletionState.None
+  editor.completionUid = 0
   return dispose(state)
 }
 

@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs'
 import * as Assert from '../Assert/Assert.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
+import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
@@ -8,14 +9,17 @@ import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
+import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
+import * as Tag from '../Tag/Tag.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate }) => {
@@ -24,6 +28,8 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/shared-process/package-lock.json',
     'packages/pty-host/package-lock.json',
     'packages/extension-host/package-lock.json',
+    'packages/extension-host-worker/package-lock.json',
+    'packages/extension-host-sub-worker/package-lock.json',
     'packages/extension-host-helper-process/package-lock.json',
     'build/src/parts/BundleElectronApp/BundleElectronApp.js',
     'build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.js',
@@ -84,6 +90,19 @@ const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion
       from: `build/.tmp/electron-bundle/${arch}/electron`,
       to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}`,
     })
+  }
+}
+
+const shouldLocaleBeRemoved = (locale) => {
+  return locale !== 'en-US.pak'
+}
+
+const removeUnusedLocales = async ({ arch }) => {
+  const localesPath = `build/.tmp/electron-bundle/${arch}/locales`
+  const dirents = await ReadDir.readDir(localesPath)
+  const toRemove = dirents.filter(shouldLocaleBeRemoved)
+  for (const dirent of toRemove) {
+    await Remove.remove(`build/.tmp/electron-bundle/${arch}/locales/${dirent}`)
   }
 }
 
@@ -149,22 +168,22 @@ const copyMainProcessSources = async ({ arch, commitHash, product, version }) =>
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
-    occurrence: `exports.productName = 'Lvce-OSS'`,
-    replacement: `exports.productName = '${product.nameShort}'`,
+    occurrence: `exports.productNameLong = 'Lvce Editor - OSS'`,
+    replacement: `exports.productNameLong = '${product.nameLong}'`,
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
-    occurrence: `exports.isLinux = process.platform === 'linux'`,
+    occurrence: `exports.isLinux = platform === 'linux'`,
     replacement: `exports.isLinux = ${Platform.isLinux()}`,
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
-    occurrence: `exports.isWindows = process.platform === 'win32'`,
+    occurrence: `exports.isWindows = platform === 'win32'`,
     replacement: `exports.isWindows = ${Platform.isWindows()}`,
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
-    occurrence: `exports.isMacOs = process.platform === 'darwin'`,
+    occurrence: `exports.isMacOs = platform === 'darwin'`,
     replacement: `exports.isMacOs = ${Platform.isMacos()}`,
   })
   await Replace.replace({
@@ -258,7 +277,21 @@ const copyCss = async ({ arch }) => {
   })
 }
 
-export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate = false }) => {
+const addRootPackageJson = async ({ cachePath, electronVersion, product }) => {
+  const tag = await Tag.getGitTag()
+  await JsonFile.writeJson({
+    to: `${cachePath}/package.json`,
+    value: {
+      name: product.applicationName,
+      productName: product.nameLong,
+      version: tag,
+      electronVersion,
+      main: 'packages/main-process/src/mainProcessMain.js',
+    },
+  })
+}
+
+export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate = false, shouldRemoveUnusedLocales = false }) => {
   Assert.object(product)
   Assert.string(version)
   const arch = process.arch
@@ -306,6 +339,12 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
     product,
   })
   console.timeEnd('copyElectron')
+
+  if (shouldRemoveUnusedLocales) {
+    console.time('removeUnusedLocales')
+    await removeUnusedLocales({ arch })
+    console.timeEnd('removeUnusedLocales')
+  }
 
   console.time('copyDependencies')
   await copyDependencies({
@@ -391,9 +430,31 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   })
   console.timeEnd('copyExtensionHostWorkerFiles')
 
+  const extensionHostSubWorkerCachePath = await BundleExtensionHostSubWorkerCached.bundleExtensionHostSubWorkerCached({
+    commitHash,
+    platform: 'electron',
+    assetDir: `../../../../..`,
+  })
+
+  console.time('copyExtensionHostSubWorkerFiles')
+  await Copy.copy({
+    from: extensionHostSubWorkerCachePath,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host-sub-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyExtensionHostSubWorkerFiles')
+
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ arch })
   console.timeEnd('copyPlaygroundFiles')
+
+  console.time('addRootPackageJson')
+  await addRootPackageJson({
+    electronVersion,
+    product,
+    cachePath: Path.absolute(`build/.tmp/electron-bundle/${arch}/resources/app`),
+  })
+  console.timeEnd('addRootPackageJson')
 
   await WriteFile.writeFile({
     to: dependencyCachePathFinished,

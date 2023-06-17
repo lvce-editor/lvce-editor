@@ -1,8 +1,12 @@
+import * as Event from '../Event/Event.js'
 import * as FirstWorkerEventType from '../FirstWorkerEventType/FirstWorkerEventType.js'
 import * as GetFirstWorkerEvent from '../GetFirstWorkerEvent/GetFirstWorkerEvent.js'
+import { IpcError } from '../IpcError/IpcError.js'
+import * as IsErrorEvent from '../IsErrorEvent/IsErrorEvent.js'
+import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerError.js'
 import { ModuleWorkersAreNotSupportedInFirefoxError } from '../ModuleWorkersAreNotSupportedInFirefoxError/ModuleWorkersAreNotSupportedInFirefoxError.js'
+import { WorkerError } from '../WorkerError/WorkerError.js'
 import * as WorkerType from '../WorkerType/WorkerType.js'
-import * as Event from '../Event/Event.js'
 
 export const create = async ({ url, name }) => {
   try {
@@ -14,14 +18,16 @@ export const create = async ({ url, name }) => {
     switch (type) {
       case FirstWorkerEventType.Message:
         if (event.data !== 'ready') {
-          throw new Error('unexpected first message from worker')
+          throw new IpcError('unexpected first message from worker')
         }
         break
       case FirstWorkerEventType.Error:
-        const IsFirefoxWorkerError = await import('../IsFirefoxWorkerError/IsFirefoxWorkerError.js')
         if (IsFirefoxWorkerError.isFirefoxWorkerError(event.message)) {
           Event.preventDefault(event)
           throw new ModuleWorkersAreNotSupportedInFirefoxError()
+        }
+        if (IsErrorEvent.isErrorEvent(event)) {
+          throw new WorkerError(event)
         }
         const TryToGetActualWorkerErrorMessage = await import('../TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js')
         const actualErrorMessage = await TryToGetActualWorkerErrorMessage.tryToGetActualErrorMessage({

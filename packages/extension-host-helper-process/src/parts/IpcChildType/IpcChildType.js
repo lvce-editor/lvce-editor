@@ -6,6 +6,7 @@ export const Parent = 3
 export const ElectronMessagePort = 4
 export const ElectronUtilityProcess = 5
 export const ElectronUtilityProcessMessagePort = 6
+export const NodeForkedProcess = 7
 
 const getRawIpcType = () => {
   const { argv } = process
@@ -29,6 +30,8 @@ export const Auto = () => {
       return ElectronUtilityProcess
     case 'electron-utility-process-message-port':
       return ElectronUtilityProcessMessagePort
+    case 'node-forked-process':
+      return NodeForkedProcess
     default:
       throw new Error(`[extension-host-helper-process] unknown ipc type ${ipcType}`)
   }

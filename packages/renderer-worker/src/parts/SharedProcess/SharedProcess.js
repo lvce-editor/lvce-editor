@@ -5,6 +5,7 @@ import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as SharedProcessIpc from '../SharedProcessIpc/SharedProcessIpc.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const state = {
   /**
@@ -23,8 +24,10 @@ export const handleMessageFromSharedProcess = async (message) => {
         result,
       })
     }
-  } else {
+  } else if (message.id) {
     Callback.resolve(message.id, message)
+  } else {
+    Logger.warn(`unexpected message from shared process`, message)
   }
 }
 

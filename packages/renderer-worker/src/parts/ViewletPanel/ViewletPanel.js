@@ -1,8 +1,13 @@
+import * as Assert from '../Assert/Assert.js'
+import * as Command from '../Command/Command.js'
+import * as GetPanelViews from '../GetPanelViews/GetPanelViews.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletActions from '../ViewletActions/ViewletActions.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -16,6 +21,14 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
+    actions: [],
+  }
+}
+
+export const saveState = (state) => {
+  const { currentViewletId } = state
+  return {
+    currentViewletId,
   }
 }
 
@@ -26,10 +39,18 @@ const getSavedViewletId = (savedState) => {
   return ViewletModuleId.Problems
 }
 
+const getSelectedIndex = (views, savedViewletId) => {
+  const index = views.indexOf(savedViewletId)
+  if (index === -1) {
+    return 0
+  }
+  return index
+}
+
 export const loadContent = (state, savedState) => {
   const savedViewletId = getSavedViewletId(savedState)
-  const views = [ViewletModuleId.Problems, ViewletModuleId.Output, ViewletModuleId.DebugConsole, ViewletModuleId.Terminal]
-  const selectedIndex = views.indexOf(savedViewletId)
+  const views = GetPanelViews.getPanelViews()
+  const selectedIndex = getSelectedIndex(views, savedViewletId)
   return {
     ...state,
     views,
@@ -39,10 +60,11 @@ export const loadContent = (state, savedState) => {
 }
 
 export const contentLoaded = (state) => {
-  const { currentViewletId } = state
+  const { currentViewletId, uid } = state
   const commands = []
   const actions = ViewletActions.getActions(currentViewletId)
-  commands.push(['Viewlet.send', ViewletModuleId.Panel, 'setActions', actions])
+  state.actions = actions
+  commands.push(['Viewlet.send', uid, 'setActions', actions])
   return commands
 }
 
@@ -93,21 +115,29 @@ export const openViewlet = async (state, id, focus = false) => {
     x: childDimensions.x,
     y: childDimensions.y,
     width: childDimensions.width,
-    parentId: ViewletModuleId.Panel,
+    parentUid: state.uid,
     height: childDimensions.height,
     append: true,
   })
-  console.log({ commands })
+  const uid = state.uid
   if (commands) {
-    commands.unshift(['Viewlet.dispose', currentViewletId])
+    const currentViewletState = ViewletStates.getState(currentViewletId)
+    const currentViewletUid = currentViewletState.uid
+    Assert.number(currentViewletUid)
+    commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
     const actions = ViewletActions.getActions(id)
-    commands.push(['Viewlet.send', ViewletModuleId.Panel, 'setActions', actions])
+    commands.push(['Viewlet.send', uid, 'setActions', actions])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     if (commands[commands.length - 1].includes(ViewletModuleId.Error)) {
       state.currentViewletId = ViewletModuleId.Error
     }
   }
   return { ...state }
+}
+
+export const hidePanel = async (state) => {
+  await Command.execute('Layout.hidePanel')
+  return state
 }
 
 export const selectIndex = async (state, index) => {
@@ -117,3 +147,5 @@ export const selectIndex = async (state, index) => {
     selectedIndex: index,
   }
 }
+
+export * from '../HandleClickAction/HandleClickAction.js'

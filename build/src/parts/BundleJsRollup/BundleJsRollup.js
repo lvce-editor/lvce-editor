@@ -1,13 +1,32 @@
 import { basename, join } from 'node:path'
 import * as rollup from 'rollup'
+import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Process from '../Process/Process.js'
+
+const getExternal = (babelExternal) => {
+  const external = []
+  if (babelExternal) {
+    external.push(/babel-parser\.js$/)
+  }
+  return external
+}
 
 /**
  *
- * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean,
+ * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean, babelExternal?:boolean
  * allowCyclicDependencies?:boolean }} param0
  */
-export const bundleJs = async ({ cwd, from, platform, exclude, minify = false, codeSplitting = false, allowCyclicDependencies = false }) => {
+export const bundleJs = async ({
+  cwd,
+  from,
+  platform,
+  exclude,
+  minify = false,
+  codeSplitting = false,
+  allowCyclicDependencies = false,
+  babelExternal = false,
+}) => {
+  const external = getExternal(babelExternal)
   /**
    * @type {import('rollup').RollupOptions}
    */
@@ -28,12 +47,13 @@ export const bundleJs = async ({ cwd, from, platform, exclude, minify = false, c
         } else {
           console.error(`RollupError: Cyclic dependency detected`)
           console.error(message.message)
-          Process.exit(1)
+          Process.exit(ExitCode.Error)
         }
       } else {
         console.error(message.message)
       }
     },
+    external,
   }
   const result = await rollup.rollup(inputOptions)
   if (result.getTimings) {

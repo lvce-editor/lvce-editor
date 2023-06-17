@@ -1,3 +1,5 @@
+import * as Character from '../Character/Character.js'
+
 /**
  *
  * @param {string} string
@@ -5,5 +7,5 @@
  * @returns
  */
 export const getNewLineIndex = (string, startIndex = undefined) => {
-  return string.indexOf('\n', startIndex)
+  return string.indexOf(Character.NewLine, startIndex)
 }

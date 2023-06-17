@@ -14,9 +14,7 @@ export const downloadAndExtractTarGz = async ({ url, outDir, strip }) => {
       })
     )
   } catch (error) {
-    // console.log({ error })
     if (error && error instanceof RequestError) {
-      console.log('is req error')
       throw new VError(`Failed to download ${url}: ${error.message}`)
     }
     throw error

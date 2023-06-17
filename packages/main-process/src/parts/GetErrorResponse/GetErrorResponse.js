@@ -1,17 +1,18 @@
 const { CommandNotFoundError } = require('../CommandNotFoundError/CommandNotFoundError.js')
-const JsonRpc = require('../JsonRpc/JsonRpc.js')
+const JsonRpcErrorCode = require('../JsonRpcErrorCode/JsonRpcErrorCode.js')
 const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
 const PrettyError = require('../PrettyError/PrettyError.js')
+const PrintPrettyError = require('../PrintPrettyError/PrintPrettyError.js')
 
 exports.getErrorResponse = async (message, error) => {
   const prettyError = await PrettyError.prepare(error)
-  PrettyError.print(prettyError)
+  PrintPrettyError.printPrettyError(prettyError, '[main-process] ')
   if (error && error instanceof CommandNotFoundError) {
     return {
       jsonrpc: JsonRpcVersion.Two,
       id: message.id,
       error: {
-        code: JsonRpc.ErrorMethodNotFound,
+        code: JsonRpcErrorCode.MethodNotFound,
         message: error.message,
         data: error.stack,
       },

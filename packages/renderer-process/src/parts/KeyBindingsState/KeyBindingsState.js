@@ -9,7 +9,6 @@ export const state = {
 }
 
 export const addKeyBindings = (id, keyBindings) => {
-  Assert.string(id)
   Assert.array(keyBindings)
   if (id in state.keyBindingSets) {
     Logger.warn(`cannot add keybindings multiple times: ${id}`)
@@ -20,7 +19,6 @@ export const addKeyBindings = (id, keyBindings) => {
 }
 
 export const removeKeyBindings = (id) => {
-  Assert.string(id)
   const { keyBindingSets } = state
   if (!(id in keyBindingSets)) {
     Logger.warn(`cannot remove keybindings that are not registered: ${id}`)

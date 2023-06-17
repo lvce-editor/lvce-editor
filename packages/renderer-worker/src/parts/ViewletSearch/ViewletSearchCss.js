@@ -6,4 +6,5 @@ export const Css = [
   '/css/parts/ViewletSearch.css',
   '/css/parts/TreeItem.css',
   '/css/parts/ScrollBar.css',
+  '/css/parts/FileIcon.css',
 ]

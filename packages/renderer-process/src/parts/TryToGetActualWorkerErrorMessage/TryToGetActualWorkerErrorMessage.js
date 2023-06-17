@@ -1,26 +1,34 @@
 import * as GetWorkerDisplayName from '../GetWorkerDisplayName/GetWorkerDisplayName.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
+import * as TryToGetActualErrorMessageWhenNetworkRequestSucceeds from '../TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js'
 
 export const tryToGetActualErrorMessage = async ({ url, name }) => {
   const displayName = GetWorkerDisplayName.getWorkerDisplayName(name)
+  let response
   try {
-    globalThis.DONT_EXECUTE = 1
-    await import(url)
-    return `Failed to start ${displayName}: Unknown Error`
+    response = await fetch(url)
   } catch (error) {
-    if (error && error instanceof Error && error.message.startsWith('Failed to fetch dynamically imported module')) {
-      try {
-        const response = await fetch(url)
-        switch (response.status) {
-          case HttpStatusCode.NotFound:
-            return `Failed to start ${displayName}: Not found (404)`
-          default:
-            return `Failed to start ${displayName}: Unknown Network Error`
-        }
-      } catch {
-        return `Failed to start ${displayName}: Unknown Network Error`
-      }
-    }
     return `Failed to start ${displayName}: ${error}`
+  }
+  if (response.ok) {
+    const contentType = response.headers.get('Content-Type')
+    if (contentType !== 'application/javascript') {
+      return `Failed to start ${displayName}: Content type for worker must be application/javascript`
+    }
+    const crossOriginEmbedderPolicy = response.headers.get('Cross-Origin-Embedder-Policy')
+    if (!crossOriginEmbedderPolicy) {
+      return `Failed to start ${displayName}: Cross Origin Embedder Policy header is missing`
+    }
+    return await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage({
+      url,
+      response,
+      workerName: displayName,
+    })
+  }
+  switch (response.status) {
+    case HttpStatusCode.NotFound:
+      throw new Error(`Failed to start ${displayName}: Not found (404)`)
+    default:
+      return `Failed to start ${displayName}: Unknown Network Error`
   }
 }

@@ -1,5 +1,3 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const handleAudioError = (code, message) => {
-  RendererWorker.send('Audio.handleAudioError', code, message)
-}
+export const handleAudioError = ForwardViewletCommand.forwardViewletCommand('handleAudioError')

@@ -1,11 +1,13 @@
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as Menu from '../OldMenu/Menu.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 
@@ -14,6 +16,7 @@ const activeId = 'TitleBarEntryActive'
 export const create = () => {
   const $TitleBarMenuBar = document.createElement('div')
   $TitleBarMenuBar.id = 'TitleBarMenuBar'
+  $TitleBarMenuBar.className = 'Viewlet TitleBarMenuBar'
   $TitleBarMenuBar.role = AriaRoles.MenuBar
   $TitleBarMenuBar.tabIndex = 0
   return {
@@ -93,10 +96,16 @@ const create$TopLevelEntry = (item) => {
   $TitleBarTopLevelEntry.ariaHasPopup = AriaBoolean.True
   $TitleBarTopLevelEntry.ariaExpanded = AriaBoolean.False
   $TitleBarTopLevelEntry.role = AriaRoles.MenuItem
+  $TitleBarTopLevelEntry.style.width = `${item.width}px`
   if (item.keyboardShortCut) {
     $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
   }
-  $TitleBarTopLevelEntry.textContent = item.label
+  if (item.label) {
+    $TitleBarTopLevelEntry.textContent = item.label
+  } else {
+    const $Icon = MaskIcon.create(item.icon)
+    $TitleBarTopLevelEntry.append($Icon)
+  }
   return $TitleBarTopLevelEntry
 }
 
@@ -110,14 +119,17 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, 
     $Child.ariaExpanded = AriaBoolean.False
     $Child.removeAttribute(DomAttributeType.AriaOwns)
     $Child.removeAttribute('id')
-    $Child.textContent = $Child.textContent
+    const $Wrapper = $Child.firstChild
+    $Wrapper.remove()
+    $Child.append($Wrapper.firstChild)
   }
   if (focusIndex !== -1) {
     const $Child = $TitleBarMenuBar.children[focusIndex]
+    const $Node = $Child.firstChild
     $Child.id = activeId
     const $Label = document.createElement('div')
     $Label.className = 'TitleBarTopLevelEntryLabel'
-    $Label.textContent = $Child.textContent
+    $Label.append($Node)
     $Child.replaceChildren($Label)
 
     $TitleBarMenuBar.focus()
@@ -190,7 +202,7 @@ export const closeMenu = (state, unFocusIndex, index) => {
 
 export const setEntries = (state, titleBarEntries) => {
   const { $TitleBarMenuBar } = state
-  $TitleBarMenuBar.append(...titleBarEntries.map(create$TopLevelEntry))
+  $TitleBarMenuBar.replaceChildren(...titleBarEntries.map(create$TopLevelEntry))
 }
 
 const create$Menu = () => {
@@ -219,7 +231,9 @@ const create$Menu = () => {
 }
 
 // TODO recycle menus
-export const setMenus = (state, changes) => {
+export const setMenus = (state, changes, uid) => {
+  Assert.array(changes)
+  Assert.number(uid)
   const { $$Menus } = state
   for (const change of changes) {
     const type = change[0]
@@ -227,6 +241,7 @@ export const setMenus = (state, changes) => {
       case 'addMenu': {
         const menu = change[1]
         const $Menu = create$Menu()
+        ComponentUid.set($Menu, uid)
         $Menu.onmouseover = ViewletTitleBarMenuBarEvents.handleMenuMouseOver
         $Menu.onclick = ViewletTitleBarMenuBarEvents.handleMenuClick
         const { x, y, width, height, level, focusedIndex } = menu

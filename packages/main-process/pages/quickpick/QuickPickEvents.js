@@ -37,10 +37,7 @@ export const handleMouseDown = (event) => {
   const $Item = getItem(target)
   const index = getNodeIndex($Item)
   console.log({ $Item, index })
-  RendererWorker.send(
-    /* selectIndex */ 'QuickPick.selectIndex',
-    /* index */ index
-  )
+  RendererWorker.send(/* selectIndex */ 'QuickPick.selectIndex', /* index */ index)
 }
 
 const getIdentifier = (event) => {

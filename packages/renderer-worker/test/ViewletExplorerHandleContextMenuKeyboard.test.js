@@ -20,7 +20,7 @@ const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplor
 
 test('handleContextMenuKeyboard', async () => {
   const state = {
-    ...ViewletExplorer.create(),
+    ...ViewletExplorer.create(1),
     focusedIndex: 2,
     x: 10,
     y: 20,

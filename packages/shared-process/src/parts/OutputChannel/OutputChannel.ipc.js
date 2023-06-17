@@ -1,11 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Command from '../Command/Command.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
+import * as OutputChannelState from '../OutputChannelState/OutputChannelState.js'
 import * as OutputChannel from './OutputChannel.js'
-
-export const state = {
-  outputChannels: Object.create(null),
-}
 
 const open = (socket, id, path) => {
   console.log({ path })
@@ -16,31 +12,26 @@ const open = (socket, id, path) => {
     console.warn('socket not available')
     return
   }
-  if (state.outputChannels[id]) {
-    OutputChannel.dispose(state.outputChannels[id])
+  if (OutputChannelState.has(id)) {
+    OutputChannel.dispose(OutputChannelState.get(id))
   }
   const onData = (data) => {
     console.log('send data', data)
-    socket.send({
-      jsonrpc: JsonRpcVersion.Two,
-      method: 2133,
-      params: ['Output', 'handleData', data],
-    })
+    const message = JsonRpcEvent.create('Output.handleData', [data])
+    socket.send(message)
   }
   const onError = (error) => {
     console.info(`[shared process] output channel error: ${error}`)
-    socket.send({
-      jsonrpc: JsonRpcVersion.Two,
-      method: 2133,
-      params: ['Output', 'handleError', error],
-    })
+    const message = JsonRpcEvent.create('Output.handleError', [error])
+    socket.send(message)
   }
-  state.outputChannels[id] = OutputChannel.open(path, onData, onError)
+  const outputChannel = OutputChannel.open(path, onData, onError)
+  OutputChannelState.set(id, outputChannel)
 }
 
 const close = (socket, id) => {
-  OutputChannel.dispose(state.outputChannels[id])
-  delete state.outputChannels[id]
+  OutputChannel.dispose(OutputChannelState.get(id))
+  OutputChannelState.remove(id)
 }
 
 export const name = 'OutputChannel'

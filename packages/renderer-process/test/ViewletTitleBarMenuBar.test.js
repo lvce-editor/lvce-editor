@@ -166,33 +166,37 @@ test.skip('openMenu - focus on menu', () => {
 
 test('setMenus - add one menu', () => {
   const state = ViewletTitleBarMenuBar.create()
-  ViewletTitleBarMenuBar.setMenus(state, [
+  ViewletTitleBarMenuBar.setMenus(
+    state,
     [
-      'addMenu',
-      {
-        x: 0,
-        y: 0,
-        width: 150,
-        height: 150,
-        focusedIndex: -1,
-        level: 0,
-        items: [
-          {
-            flags: MenuItemFlags.Disabled,
-            label: 'New File',
-          },
-          {
-            flags: MenuItemFlags.Disabled,
-            label: 'New Window',
-          },
-          {
-            flags: MenuItemFlags.SubMenu,
-            label: 'Open Recent',
-          },
-        ],
-      },
+      [
+        'addMenu',
+        {
+          x: 0,
+          y: 0,
+          width: 150,
+          height: 150,
+          focusedIndex: -1,
+          level: 0,
+          items: [
+            {
+              flags: MenuItemFlags.Disabled,
+              label: 'New File',
+            },
+            {
+              flags: MenuItemFlags.Disabled,
+              label: 'New Window',
+            },
+            {
+              flags: MenuItemFlags.SubMenu,
+              label: 'Open Recent',
+            },
+          ],
+        },
+      ],
     ],
-  ])
+    1
+  )
   const { $$Menus } = state
   expect($$Menus.length).toBe(1)
   expect($$Menus[0].outerHTML).toBe(
@@ -202,81 +206,89 @@ test('setMenus - add one menu', () => {
 
 test('setMenus - open sub menu', () => {
   const state = ViewletTitleBarMenuBar.create()
-  ViewletTitleBarMenuBar.setMenus(state, [
+  ViewletTitleBarMenuBar.setMenus(
+    state,
     [
-      'addMenu',
-      {
-        x: 0,
-        y: 0,
-        width: 150,
-        height: 150,
-        focusedIndex: -1,
-        level: 0,
-        items: [
-          {
-            flags: MenuItemFlags.Disabled,
-            label: 'New File',
-          },
-          {
-            flags: MenuItemFlags.Disabled,
-            label: 'New Window',
-          },
-          {
-            flags: MenuItemFlags.SubMenu,
-            label: 'Open Recent',
-          },
-        ],
-      },
+      [
+        'addMenu',
+        {
+          x: 0,
+          y: 0,
+          width: 150,
+          height: 150,
+          focusedIndex: -1,
+          level: 0,
+          items: [
+            {
+              flags: MenuItemFlags.Disabled,
+              label: 'New File',
+            },
+            {
+              flags: MenuItemFlags.Disabled,
+              label: 'New Window',
+            },
+            {
+              flags: MenuItemFlags.SubMenu,
+              label: 'Open Recent',
+            },
+          ],
+        },
+      ],
     ],
-  ])
-  ViewletTitleBarMenuBar.setMenus(state, [
+    1
+  )
+  ViewletTitleBarMenuBar.setMenus(
+    state,
     [
-      'updateMenu',
-      {
-        x: 0,
-        y: 0,
-        width: 150,
-        height: 150,
-        focusedIndex: 2,
-        level: 0,
-        items: [
-          {
-            flags: MenuItemFlags.Disabled,
-            label: 'New File',
-          },
-          {
-            flags: MenuItemFlags.Disabled,
-            label: 'New Window',
-          },
-          {
-            flags: MenuItemFlags.SubMenu,
-            label: 'Open Recent',
-          },
-        ],
-      },
+      [
+        'updateMenu',
+        {
+          x: 0,
+          y: 0,
+          width: 150,
+          height: 150,
+          focusedIndex: 2,
+          level: 0,
+          items: [
+            {
+              flags: MenuItemFlags.Disabled,
+              label: 'New File',
+            },
+            {
+              flags: MenuItemFlags.Disabled,
+              label: 'New Window',
+            },
+            {
+              flags: MenuItemFlags.SubMenu,
+              label: 'Open Recent',
+            },
+          ],
+        },
+      ],
+      [
+        'addMenu',
+        {
+          x: 150,
+          y: 0,
+          width: 150,
+          height: 150,
+          focusedIndex: -1,
+          level: 1,
+          items: [
+            {
+              flags: MenuItemFlags.None,
+              label: 'file-1.txt',
+            },
+            {
+              flags: MenuItemFlags.None,
+              label: 'file-2.txt',
+            },
+          ],
+        },
+      ],
     ],
-    [
-      'addMenu',
-      {
-        x: 150,
-        y: 0,
-        width: 150,
-        height: 150,
-        focusedIndex: -1,
-        level: 1,
-        items: [
-          {
-            flags: MenuItemFlags.None,
-            label: 'file-1.txt',
-          },
-          {
-            flags: MenuItemFlags.None,
-            label: 'file-2.txt',
-          },
-        ],
-      },
-    ],
-  ])
+    1
+  )
   const { $$Menus } = state
   expect($$Menus.length).toBe(2)
   expect($$Menus[0].outerHTML).toBe(

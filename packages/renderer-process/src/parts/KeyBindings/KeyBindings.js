@@ -15,21 +15,15 @@ import * as Platform from '../Platform/Platform.js'
 // TODO should toggle terminal, not only open
 
 export const addKeyBindings = (id, keyBindings) => {
-  Assert.string(id)
+  if (!id) {
+    throw new Error('id must be defined')
+  }
   Assert.array(keyBindings)
   KeyBindingsState.addKeyBindings(id, keyBindings)
 }
 
 export const removeKeyBindings = (id) => {
   KeyBindingsState.removeKeyBindings(id)
-}
-
-export const hydrate = (keyBindings) => {
-  // TODO is this the right place for browser context ?
-  // maybe in env file / env service
-  const browser = Platform.getBrowser()
-  Context.set(`browser.${browser}`, true)
-  addKeyBindings('initial', keyBindings)
 }
 
 // TODO should be in renderer worker

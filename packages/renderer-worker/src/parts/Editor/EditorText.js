@@ -4,6 +4,7 @@ import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as NormalizeText from '../NormalizeText/NormalizeText.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
+
 // const getTokens = (editor) => {
 //   const tokens = []
 //   const lines = editor.lines
@@ -301,21 +302,17 @@ const getLineInfosViewport = (editor, tokens, embeddedResults, minLineY, maxLine
   }
 }
 
-const getAverageCharWidthOrDefault = (deltaX, fontWeight, fontSize, fontFamily, letterSpacing) => {
-  return MeasureTextWidth.measureTextWidth('a', fontWeight, fontSize, fontFamily, letterSpacing)
-}
-
 export const getVisible = (editor) => {
   // console.log({ editor })
   // TODO should separate rendering from business logic somehow
   // currently hard to test because need to mock editor height, top, left,
   // invalidStartIndex, lineCache, etc. just for testing editorType
   // editor.invalidStartIndex = changes[0].start.rowIndex
-  const { minLineY, numberOfVisibleLines, lines, width, deltaX, fontWeight, fontSize, fontFamily, letterSpacing } = editor
+  const { minLineY, numberOfVisibleLines, lines, width, deltaX, fontWeight, fontSize, fontFamily, letterSpacing, charWidth } = editor
   const maxLineY = Math.min(minLineY + numberOfVisibleLines, lines.length)
   const { tokens, tokenizersToLoad, embeddedResults } = GetTokensViewport.getTokensViewport(editor, minLineY, maxLineY)
   const minLineOffset = TextDocument.offsetAt(editor, minLineY, 0)
-  const averageCharWidth = getAverageCharWidthOrDefault(deltaX, fontWeight, fontSize, fontFamily, letterSpacing)
+  const averageCharWidth = charWidth
   const { result, differences } = getLineInfosViewport(
     editor,
     tokens,

@@ -76,10 +76,10 @@ const handleClick = (event) => {
 
 export const create = (statusBarItemsLeft, statusBarItemsRight) => {
   const $StatusBarItemsLeft = document.createElement('ul')
-  $StatusBarItemsLeft.id = 'StatusBarItemsLeft'
+  $StatusBarItemsLeft.className = 'StatusBarItemsLeft'
 
   const $StatusBarItemsRight = document.createElement('ul')
-  $StatusBarItemsRight.id = 'StatusBarItemsRight'
+  $StatusBarItemsRight.className = 'StatusBarItemsRight'
 
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'StatusBar'

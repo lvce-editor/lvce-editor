@@ -1,17 +1,6 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletCommand.js'
 
-export const handleInput = (value) => {
-  RendererWorker.send('FindWidget.handleInput', value)
-}
-
-export const close = () => {
-  RendererWorker.send('Viewlet.closeWidget', 'FindWidget')
-}
-
-export const focusPrevious = () => {
-  RendererWorker.send('FindWidget.focusPrevious')
-}
-
-export const focusNext = () => {
-  RendererWorker.send('FindWidget.focusNext')
-}
+export const handleInput = ForwardViewletCommand.forwardViewletCommand('handleInput')
+export const close = ForwardViewletCommand.forwardViewletCommand('close')
+export const focusPrevious = ForwardViewletCommand.forwardViewletCommand('focusPrevious')
+export const focusNext = ForwardViewletCommand.forwardViewletCommand('focusNext')

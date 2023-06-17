@@ -1,30 +1,14 @@
-const { ipcMain } = require('electron')
-const { writeFile } = require('node:fs/promises')
-const { BrowserWindow, Menu } = require('electron')
-const VError = require('verror')
-const Platform = require('../Platform/Platform.js')
-const Session = require('../ElectronSession/ElectronSession.js')
-const ColorTheme = require('../ColorTheme/ColorTheme.js')
-const Path = require('../Path/Path.js')
-const Root = require('../Root/Root.js')
-const GetResponse = require('../GetResponse/GetResponse.js')
+const { BrowserWindow } = require('electron')
 const { join } = require('node:path')
 const { tmpdir } = require('node:os')
-
-/**
- *
- * @param {Electron.Event} event
- * @param {Electron.Input} input
- */
-const handleBeforeInput = (event, input) => {
-  if (input.control && input.key.toLowerCase() === 'i') {
-    event.preventDefault()
-    // console.log(event.sender)
-    // console.log(event.sender)
-    event.sender.openDevTools()
-    // event.sender.webContents.openDevTools()
-  }
-}
+const { writeFile } = require('node:fs/promises')
+const ColorTheme = require('../ColorTheme/ColorTheme.js')
+const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
+const Path = require('../Path/Path.js')
+const Platform = require('../Platform/Platform.js')
+const Root = require('../Root/Root.js')
+const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
+const Session = require('../ElectronSession/ElectronSession.js')
 
 exports.open = async () => {
   const colorThemeJson = await ColorTheme.getColorThemeJson()
@@ -40,9 +24,36 @@ exports.open = async () => {
       additionalArguments: ['--lvce-window-kind=process-explorer'],
     },
   })
-  processExplorerWindow.setMenuBarVisibility(false)
+  const id = processExplorerWindow.webContents.id
+  AppWindowStates.add({
+    parsedArgs: [],
+    workingDirectort: '',
+    id,
+  })
+  const handleWindowClose = () => {
+    processExplorerWindow.off('close', handleWindowClose)
+    AppWindowStates.remove(id)
+  }
+  /**
+   *
+   * @param {Electron.Event} event
+   * @param {Electron.Input} input
+   */
+  const handleBeforeInput = (event, input) => {
+    if (input.control && input.key.toLowerCase() === 'i') {
+      event.preventDefault()
+      processExplorerWindow.webContents.openDevTools()
+    }
+    if (input.code && input.key.toLowerCase() === 'r') {
+      event.preventDefault()
+      processExplorerWindow.reload()
+    }
+  }
 
-  processExplorerWindow.webContents.on('before-input-event', handleBeforeInput)
+  processExplorerWindow.on('close', handleWindowClose)
+  processExplorerWindow.setMenuBarVisibility(false)
+  processExplorerWindow.webContents.on(ElectronWebContentsEventType.BeforeInputEvent, handleBeforeInput)
+
   // TODO get actual process explorer theme css from somewhere
   const processExplorerThemeCss = ColorTheme.toCss(colorThemeJson)
   const processExporerThemeCssPath = join(tmpdir(), 'process-explorer-theme.css')

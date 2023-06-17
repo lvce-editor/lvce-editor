@@ -1,9 +1,12 @@
+import * as Assert from '../Assert/Assert.js'
+
 export const state = {
   /**
    * @type {any[]}
    */
   pendingTests: [],
   mockExec: undefined,
+  mockRpcs: Object.create(null),
 }
 
 export const addTest = (name, fn) => {
@@ -22,4 +25,14 @@ export const setMockExec = (fn) => {
 
 export const getMockExec = () => {
   return state.mockExec
+}
+
+export const setMockRpc = (mockRpc) => {
+  Assert.object(mockRpc)
+  Assert.string(mockRpc.name)
+  state.mockRpcs[mockRpc.name] = mockRpc
+}
+
+export const getMockRpc = (name) => {
+  return state.mockRpcs[name]
 }

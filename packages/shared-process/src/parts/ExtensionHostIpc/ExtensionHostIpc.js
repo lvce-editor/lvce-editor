@@ -1,4 +1,4 @@
-import * as ExtensionHostIpcWithChildProcess from './ExtensionHostIpcWithChildProcess.js'
+import * as ExtensionHostIpcWithChildProcess from '../ExtensionHostIpcWithChildProcess/ExtensionHostIpcWithChildProcess.js'
 
 export const create = () => {
   return ExtensionHostIpcWithChildProcess.create()

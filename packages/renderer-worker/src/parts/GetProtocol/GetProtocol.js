@@ -1,3 +1,5 @@
+import * as Character from '../Character/Character.js'
+
 const RE_PROTOCOL = /^([a-z\-]+):\/\//
 
 export const getProtocol = (uri) => {
@@ -11,7 +13,7 @@ export const getProtocol = (uri) => {
 const PROTOCOL_POST_FIX_LENGTH = 3
 
 export const getPath = (protocol, uri) => {
-  if (protocol === '') {
+  if (protocol === Character.EmptyString) {
     return uri
   }
   return uri.slice(protocol.length + PROTOCOL_POST_FIX_LENGTH)

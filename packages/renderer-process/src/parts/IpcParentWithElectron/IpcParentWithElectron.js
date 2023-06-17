@@ -1,6 +1,6 @@
 import * as Callback from '../Callback/Callback.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
-import * as RestoreJsonRpcError from '../RestoreJsonRpcError/RestoreJsonRpcError.js'
+import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.js'
+import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
 const handleMessageFromWindow = (event) => {
   const { data } = event
@@ -10,14 +10,8 @@ const handleMessageFromWindow = (event) => {
 // @ts-ignore
 window.addEventListener('message', handleMessageFromWindow)
 
-export const create = async ({ type }) => {
-  const { id, promise } = Callback.registerPromise()
-  const message = {
-    jsonrpc: JsonRpcVersion.Two,
-    id,
-    method: 'CreateMessagePort.createMessagePort',
-    params: [type],
-  }
+export const create = async ({ type, name }) => {
+  const { message, promise } = JsonRpcRequest.create('CreateMessagePort.createMessagePort', [type, name])
   // @ts-ignore
   if (typeof window.myApi === 'undefined') {
     throw new Error('Electron api was requested but is not available')
@@ -25,12 +19,6 @@ export const create = async ({ type }) => {
   // @ts-ignore
   window.myApi.ipcConnect(message)
   const responseMessage = await promise
-  if ('error' in responseMessage) {
-    const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
-    throw restoredError
-  }
-  if ('result' in responseMessage) {
-    return responseMessage.result
-  }
-  return responseMessage
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
+  return result
 }

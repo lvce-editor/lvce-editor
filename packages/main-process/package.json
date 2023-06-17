@@ -19,14 +19,14 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "@electron/rebuild": "^3.2.10",
-    "@types/debug": "^4.1.7",
+    "@electron/rebuild": "^3.2.13",
+    "@types/debug": "^4.1.8",
     "@types/verror": "^1.10.6",
-    "electron": "^24.0.0"
+    "electron": "^25.1.1"
   },
   "dependencies": {
-    "@babel/code-frame": "^7.21.4",
-    "clean-stack": "^5.0.1",
+    "@babel/code-frame": "^7.22.5",
+    "clean-stack": "^5.2.0",
     "debug": "^4.3.4",
     "electron-unhandled": "^4.0.1",
     "lines-and-columns": "^2.0.3",
@@ -34,8 +34,7 @@
     "verror": "^1.10.1"
   },
   "optionalDependencies": {
-    "electron-updater": "^5.3.0",
-    "windows-process-tree": "^0.4.0"
+    "electron-updater": "^5.3.0"
   },
   "jest": {
     "moduleFileExtensions": [

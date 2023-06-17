@@ -7,9 +7,10 @@ export const handleTouchStart = (state, timeStamp, touches) => {
     return state
   }
   const touch = touches[0]
-  const { clientY } = touch
+  const { y } = touch
+  Assert.number(y)
   return {
     ...state,
-    touchOffsetY: clientY,
+    touchOffsetY: y,
   }
 }

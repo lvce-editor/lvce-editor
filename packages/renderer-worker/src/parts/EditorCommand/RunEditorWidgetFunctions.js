@@ -1,11 +1,11 @@
-// import * as EditorCompletion from '../EditorCompletion/EditorCompletion.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const runEditorWidgetFunctions = (editor, fnName, ...args) => {
   const allCommands = []
-  if (editor.widgets) {
-    for (const widget of editor.widgets) {
+  const { widgets } = editor
+  if (widgets) {
+    for (const widget of widgets) {
       const instance = ViewletStates.getInstance(widget)
       if (!instance) {
         return []

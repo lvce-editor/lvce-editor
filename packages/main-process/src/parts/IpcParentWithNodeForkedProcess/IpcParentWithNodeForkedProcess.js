@@ -1,9 +1,15 @@
 const Assert = require('../Assert/Assert.js')
 const { fork } = require('node:child_process')
 
-exports.create = async ({ path, argv, env, execArgv, stdio }) => {
+/**
+ *
+ * @param {{path:string, argv?:string[], env?:any, execArgv?:string[], stdio?:'inherit'}} param0
+ * @returns
+ */
+exports.create = async ({ path, argv = [], env = process.env, execArgv = [], stdio = 'inherit' }) => {
   Assert.string(path)
-  const childProcess = fork(path, argv, {
+  const actualArgv = ['--ipc-type=node-forked-process', ...argv]
+  const childProcess = fork(path, actualArgv, {
     env,
     execArgv,
     stdio,
@@ -26,5 +32,6 @@ exports.wrap = (childProcess) => {
     dispose() {
       this.childProcess.kill()
     },
+    pid: childProcess.pid,
   }
 }

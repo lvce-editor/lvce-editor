@@ -3,6 +3,8 @@ import * as Logger from '../Logger/Logger.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   instances: Object.create(null),
@@ -15,7 +17,7 @@ export const mount = ($Parent, state) => {
   $Parent.replaceChildren(state.$Viewlet)
 }
 
-export const create = (id) => {
+export const create = (id, uid = id) => {
   const module = state.modules[id]
   if (!module) {
     throw new Error(`module not found: ${id}`)
@@ -24,10 +26,11 @@ export const create = (id) => {
     state.instances[id].state.$Viewlet.remove()
   }
   const instanceState = module.create()
+  ComponentUid.set(instanceState.$Viewlet, uid)
   if (module.attachEvents) {
     module.attachEvents(instanceState)
   }
-  state.instances[id] = {
+  state.instances[uid] = {
     state: instanceState,
     factory: module,
   }
@@ -42,14 +45,19 @@ export const removeKeyBindings = (id) => {
 }
 
 export const loadModule = async (id) => {
-  const module = await ViewletModule.load(id)
-  state.modules[id] = module
+  try {
+    const module = await ViewletModule.load(id)
+    state.modules[id] = module
+  } catch (error) {
+    throw new VError(error, `Failed to load ${id}`)
+  }
 }
 
 export const invoke = (viewletId, method, ...args) => {
+  Assert.string(method)
   const instance = state.instances[viewletId]
   if (!instance || !instance.factory) {
-    Logger.warn(`viewlet instance ${viewletId} not found`)
+    Logger.warn(`cannot execute ${method} viewlet instance ${viewletId} not found`)
     return
   }
   if (typeof instance.factory[method] !== 'function') {
@@ -61,7 +69,9 @@ export const invoke = (viewletId, method, ...args) => {
 
 export const focus = (viewletId) => {
   const instance = state.instances[viewletId]
-  if (instance && instance.factory && instance.factory.focus) {
+  if (instance.factory && instance.factory.setFocused) {
+    instance.factory.setFocused(instance.state, true)
+  } else if (instance && instance.factory && instance.factory.focus) {
     instance.factory.focus(instance.state)
   } else {
     // TODO push focusContext
@@ -132,7 +142,7 @@ export const sendMultiple = (commands) => {
         break
       }
       case 'Viewlet.create': {
-        create(viewletId)
+        create(viewletId, method)
 
         break
       }
@@ -172,6 +182,9 @@ export const sendMultiple = (commands) => {
       case 'Viewlet.removeKeyBindings':
         removeKeyBindings(viewletId)
         break
+      case 'Viewlet.send':
+        invoke(viewletId, method, ...args)
+        break
       default: {
         invoke(viewletId, method, ...args)
       }
@@ -181,7 +194,7 @@ export const sendMultiple = (commands) => {
 
 export const dispose = (id) => {
   try {
-    Assert.string(id)
+    Assert.number(id)
     const { instances } = state
     const instance = instances[id]
     if (!instance) {
@@ -241,6 +254,9 @@ export const appendViewlet = (parentId, childId, focus) => {
   if (!childInstance) {
     throw new Error(`child instance ${childId} must be defined to be appended to parent ${parentId}`)
   }
+  if (!parentModule) {
+    throw new Error(`parent module ${parentId} must be defined to append child components`)
+  }
   parentModule.appendViewlet(parentInstanceState.state, childInstance.factory.name, childInstance.state.$Viewlet)
   if (focus && childInstance.factory.focus) {
     childInstance.factory.focus(childInstance.state)
@@ -253,9 +269,17 @@ const ariaAnnounce = async (message) => {
 }
 
 const append = (parentId, childId, referenceNodes) => {
+  Assert.number(parentId)
+  Assert.number(childId)
   const parentInstance = state.instances[parentId]
+  if (!parentInstance) {
+    throw new Error(`cannot append child: instance ${parentId} not found`)
+  }
   const $Parent = parentInstance.state.$Viewlet
   const childInstance = state.instances[childId]
+  if (!childInstance) {
+    throw new Error(`cannot append child: child instance not found ${childId}`)
+  }
   const $Child = childInstance.state.$Viewlet
   if (referenceNodes) {
     // TODO this might be too inefficient
@@ -288,7 +312,7 @@ const append = (parentId, childId, referenceNodes) => {
   } else {
     $Parent.append($Child)
   }
-  if (childInstance.factory.postAppend) {
+  if (childInstance.factory && childInstance.factory.postAppend) {
     childInstance.factory.postAppend(childInstance.state)
   }
 }

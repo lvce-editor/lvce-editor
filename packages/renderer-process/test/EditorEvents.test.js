@@ -2,12 +2,13 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 import * as DomEventOptions from '../src/parts/DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../src/parts/DomEventType/DomEventType.js'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
+import * as ModifierKey from '../src/parts/ModifierKey/ModifierKey.js'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
-import * as ModifierKey from '../src/parts/ModifierKey/ModifierKey.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -41,16 +42,13 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/RendererWorker/RendererWorker.js', () => {
+jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js', () => {
   return {
-    send: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
+    executeViewletCommand: jest.fn(() => {}),
   }
 })
 
-const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.js')
-
+const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const Editor = await import('../src/parts/Editor/Editor.js')
 const EditorEvents = await import('../src/parts/Editor/EditorEvents.js')
 const Platform = await import('../src/parts/Platform/Platform.js')
@@ -76,6 +74,7 @@ const create$Token = (text, className) => {
 
 test('event - mousedown - left', () => {
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   const $Token = document.createElement('span')
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
@@ -89,11 +88,13 @@ test('event - mousedown - left', () => {
     }
   }
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 1, clientX: 8, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', ModifierKey.None, 8, 5, 1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleMouseDown', ModifierKey.None, 8, 5, 1)
 })
 
 test('event - mousedown - right', () => {
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   const $Token = document.createElement('span')
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
@@ -114,11 +115,12 @@ test('event - mousedown - right', () => {
       button: 2,
     })
   )
-  expect(RendererWorker.send).not.toHaveBeenCalled()
+  expect(ExecuteViewletCommand.executeViewletCommand).not.toHaveBeenCalled()
 })
 
 test('event - mousedown - left - out of viewport', () => {
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   const $Token = document.createElement('span')
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
@@ -135,12 +137,13 @@ test('event - mousedown - left - out of viewport', () => {
       clientY: -10,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', ModifierKey.None, -10, -10, 1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleMouseDown', ModifierKey.None, -10, -10, 1)
 })
 
 test('event - double click', () => {
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   const $Token = document.createElement('span')
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
@@ -156,7 +159,8 @@ test('event - double click', () => {
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 2, clientX: 8, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', ModifierKey.None, 8, 5, 2)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleMouseDown', ModifierKey.None, 8, 5, 2)
 })
 
 test.skip('event - double click and move mouse to create selection', () => {
@@ -168,7 +172,7 @@ test.skip('event - double click and move mouse to create selection', () => {
   })
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 2, clientX: 10, clientY: 5 }))
   document.dispatchEvent(new MouseEvent('mousemove', { clientX: 15, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith([
     363,
     {
       columnIndex: 3,
@@ -176,7 +180,7 @@ test.skip('event - double click and move mouse to create selection', () => {
     },
   ])
   document.dispatchEvent(new MouseEvent('mousemove', { clientX: 20, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith([
     363,
     {
       columnIndex: 4,
@@ -187,6 +191,7 @@ test.skip('event - double click and move mouse to create selection', () => {
 
 test('event - triple click', () => {
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   const $Token = document.createElement('span')
   $Token.textContent = 'abcde'
   const $EditorRow = document.createElement('div')
@@ -200,7 +205,8 @@ test('event - triple click', () => {
     }
   }
   state.$LayerText.dispatchEvent(new MouseEvent('mousedown', { detail: 3, clientX: 8, clientY: 5 }))
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleMouseDown', ModifierKey.None, 8, 5, 3)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleMouseDown', ModifierKey.None, 8, 5, 3)
 })
 
 test.skip('event - touchstart - single touch', () => {
@@ -221,7 +227,7 @@ test.skip('event - touchstart - single touch', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith([
     404,
     {
       touches: [
@@ -253,7 +259,7 @@ test.skip('event - touchmove - single touch', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith([
     405,
     {
       touches: [
@@ -288,8 +294,8 @@ test.skip('event - touchend - single touch', () => {
   })
   state.$Editor.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleTouchEnd', {
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith('Editor.handleTouchEnd', {
     touches: [
       {
         x: 10,
@@ -321,8 +327,8 @@ test.skip('event - touchend - single touch - not cancelable', () => {
   })
   state.$Editor.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleTouchEnd', {
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith('Editor.handleTouchEnd', {
     touches: [
       {
         x: 10,
@@ -342,7 +348,7 @@ test.skip('event - paste', () => {
     lines: ['file1 content'],
   })
   state.$EditorInput.dispatchEvent(new Event('paste', { bubbles: true }))
-  expect(RendererWorker.send).toHaveBeenCalledWith(['Editor.handleSingleClick', 0, 2])
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(['Editor.handleSingleClick', 0, 2])
 })
 
 test('event - context menu', () => {
@@ -350,6 +356,7 @@ test('event - context menu', () => {
     return false
   }
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
   state.$LayerText.dispatchEvent(
@@ -359,8 +366,8 @@ test('event - context menu', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleContextMenu', 0, 15, 30, MenuEntryId.Editor)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleContextMenu', 0, 15, 30)
 })
 
 test.skip('event - beforeinput on contenteditable on mobile - no selection', () => {
@@ -375,7 +382,7 @@ test.skip('event - beforeinput on contenteditable on mobile - no selection', () 
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).not.toHaveBeenCalled()
+  expect(ExecuteViewletCommand.executeViewletCommand).not.toHaveBeenCalled()
   expect(spy).toHaveBeenCalledWith('[Editor] cannot handle input event without selection')
 })
 
@@ -383,6 +390,7 @@ test('event - wheel - on vertical scroll bar', () => {
   // TODO mock platform module instead
   Platform.state.isMobileOrTablet = () => false
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   state.$ScrollBarThumbVertical.dispatchEvent(
     new WheelEvent('wheel', {
       deltaX: 1,
@@ -392,12 +400,13 @@ test('event - wheel - on vertical scroll bar', () => {
       deltaMode: WheelEventType.DomDeltaPixel,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.setDelta', WheelEventType.DomDeltaPixel, 1, 42)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'setDelta', WheelEventType.DomDeltaPixel, 1, 42)
 })
 
 test('event - pointerdown - on vertical scroll bar thumb', () => {
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   const { $ScrollBarThumbVertical } = state
   const event = new PointerEvent('pointerdown', {
     bubbles: true,
@@ -407,12 +416,13 @@ test('event - pointerdown - on vertical scroll bar thumb', () => {
     button: MouseEventType.LeftClick,
   })
   $ScrollBarThumbVertical.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleScrollBarPointerDown', 20)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleScrollBarVerticalPointerDown', 20)
 })
 
 test('event - pointermove after pointerdown - on vertical scroll bar thumb', () => {
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   const { $ScrollBarThumbVertical } = state
   const pointerDownEvent = new PointerEvent('pointerdown', {
     bubbles: true,
@@ -430,9 +440,9 @@ test('event - pointermove after pointerdown - on vertical scroll bar thumb', () 
     button: MouseEventType.LeftClick,
   })
   $ScrollBarThumbVertical.dispatchEvent(pointerMoveEvent)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(1, 'Editor.handleScrollBarPointerDown', 20)
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(2, 'Editor.handleScrollBarMove', 40)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(2)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenNthCalledWith(1, 1, 'handleScrollBarVerticalPointerDown', 20)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenNthCalledWith(2, 1, 'handleScrollBarMove', 40)
 })
 
 test('event - pointerup after pointerdown - on vertical scroll bar thumb', () => {
@@ -511,6 +521,7 @@ test('event - pointerup after pointerdown - on horizontal scroll bar thumb', () 
 
 test('event - context menu - on vertical scroll bar', () => {
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   const { $ScrollBarThumbVertical } = state
   const event = new MouseEvent('contextmenu', {
     bubbles: true,
@@ -521,7 +532,7 @@ test('event - context menu - on vertical scroll bar', () => {
   })
   $ScrollBarThumbVertical.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).not.toHaveBeenCalled()
+  expect(ExecuteViewletCommand.executeViewletCommand).not.toHaveBeenCalled()
 })
 
 test('event - pointerup after pointerdown - on editor', () => {
@@ -591,7 +602,7 @@ test.skip('event - beforeinput on contenteditable on mobile - cursor in middle',
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleBeforeInputFromContentEditable', 'a', {
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith('Editor.handleBeforeInputFromContentEditable', 'a', {
     startColumnIndex: 6,
     startRowIndex: 0,
     endColumnIndex: 6,
@@ -602,6 +613,7 @@ test.skip('event - beforeinput on contenteditable on mobile - cursor in middle',
 test('event - composition', () => {
   Platform.state.isMobileOrTablet = () => false
   const state = Editor.create()
+  ComponentUid.set(state.$Viewlet, 1)
   EditorHelper.setState(1, state)
   const $Row1 = create$EditorRow()
   state.$LayerText.append($Row1)
@@ -620,9 +632,9 @@ test('event - composition', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(1, 'Editor.compositionStart', 'a')
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(2, 'Editor.compositionEnd', 'ñ')
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(2)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenNthCalledWith(1, 1, 'compositionStart', 'a')
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenNthCalledWith(2, 1, 'compositionEnd', 'ñ')
 })
 
 test.skip('event - beforeinput on contenteditable on mobile - word in middle selected', () => {
@@ -649,7 +661,7 @@ test.skip('event - beforeinput on contenteditable on mobile - word in middle sel
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleBeforeInputFromContentEditable', 'a', {
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith('Editor.handleBeforeInputFromContentEditable', 'a', {
     startColumnIndex: 2,
     startRowIndex: 0,
     endColumnIndex: 12,
@@ -684,7 +696,7 @@ test.skip('event - native selection change', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith([
     408,
     {
       endColumnIndex: 13,

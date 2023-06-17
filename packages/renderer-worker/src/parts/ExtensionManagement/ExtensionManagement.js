@@ -1,6 +1,8 @@
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as InstallExtension from '../InstallExtension/InstallExtension.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const install = (id) => {
   return InstallExtension.install(id)
@@ -19,6 +21,9 @@ export const enable = async (id) => {
 }
 
 export const getAllExtensions = async () => {
+  if (Platform.platform === PlatformType.Web) {
+    return []
+  }
   return SharedProcess.invoke(/* ExtensionManagement.getAllExtensions */ 'ExtensionManagement.getAllExtensions')
 }
 

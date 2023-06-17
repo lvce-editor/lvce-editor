@@ -4,9 +4,11 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetExplorerMaxLineY from '../GetExplorerMaxLineY/GetExplorerMaxLineY.js'
 import * as GetFileExtension from '../GetFileExtension/GetFileExtension.js'
 import * as Height from '../Height/Height.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
@@ -14,6 +16,7 @@ import * as RendererWorkerCommandType from '../RendererWorkerCommandType/Rendere
 import * as SortExplorerItems from '../SortExplorerItems/SortExplorerItems.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Character from '../Character/Character.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEndIndex, getParentStartIndex } from './ViewletExplorerShared.js'
 // TODO viewlet should only have create and refresh functions
@@ -26,7 +29,9 @@ import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEnd
 // TODO instead of root string, there should be a root dirent
 
 export const create = (id, uri, x, y, width, height) => {
+  Assert.number(id)
   return {
+    uid: id,
     root: '',
     items: [],
     focusedIndex: -1,
@@ -138,7 +143,7 @@ const restoreExpandedState = async (savedState, root, pathSeparator, excluded) =
   // merge all dirents
   // restore scroll location
   const expandedPaths = getSavedExpandedPaths(savedState, root)
-  if (root === '') {
+  if (root === Character.EmptyString) {
     return []
   }
   const expandedDirentPaths = [root, ...expandedPaths]
@@ -192,10 +197,7 @@ export const loadContent = async (state, savedState) => {
   if (savedState && typeof savedState.deltaY === 'number') {
     deltaY = savedState.deltaY
   }
-  let maxLineY = Math.round(height / itemHeight)
-  if (savedState && typeof savedState.maxLineY === 'number') {
-    maxLineY = savedState.maxLineY
-  }
+  let maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, restoredDirents.length)
   return {
     ...state,
     root,
@@ -256,7 +258,7 @@ export const setDeltaY = (state, deltaY) => {
   }
 }
 
-export const handleWheel = (state, deltaY) => {
+export const handleWheel = (state, deltaMode, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
 }
 
@@ -542,7 +544,7 @@ const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   dirent.icon = IconTheme.getIcon(dirent)
   const { height, itemHeight, minLineY } = state2
   // TODO when focused index has changed while expanding, don't update it
-  const maxLineY = minLineY + Math.min(Math.ceil(height / itemHeight), newDirents.length)
+  const maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, newDirents.length)
   return {
     ...state,
     items: newDirents,
@@ -635,7 +637,10 @@ export const handleClick = (state, index, keepFocus = false) => {
   return clickFn(state, dirent, actualIndex, keepFocus)
 }
 
-export const handleClickAt = (state, x, y) => {
+export const handleClickAt = (state, button, x, y) => {
+  if (button !== MouseEventType.LeftClick) {
+    return state
+  }
   const index = getIndexFromPosition(state, x, y)
   return handleClick(state, index)
 }
@@ -665,31 +670,33 @@ const handleClickSymLink = async (state, dirent, index) => {
 }
 
 const handleArrowRightDirectoryExpanded = (state, dirent) => {
-  if (state.focusedIndex === state.items.length - 1) {
+  const { items, focusedIndex } = state
+  if (focusedIndex === items.length - 1) {
     return state
   }
-  const nextDirent = state.items[state.focusedIndex + 1]
+  const nextDirent = items[focusedIndex + 1]
   if (nextDirent.depth === dirent.depth + 1) {
-    return focusIndex(state, state.focusedIndex + 1)
+    return focusIndex(state, focusedIndex + 1)
   }
 }
 
 export const handleArrowRight = async (state) => {
-  if (state.focusedIndex === -1) {
+  const { items, focusedIndex } = state
+  if (focusedIndex === -1) {
     return state
   }
-  const dirent = state.items[state.focusedIndex]
+  const dirent = items[focusedIndex]
   switch (dirent.type) {
     case DirentType.File:
     case DirentType.SymLinkFile:
       return state
     case DirentType.Directory:
     case DirentType.SymLinkFolder:
-      return handleClickDirectory(state, dirent, state.focusedIndex)
+      return handleClickDirectory(state, dirent, focusedIndex)
     case DirentType.DirectoryExpanded:
       return handleArrowRightDirectoryExpanded(state, dirent)
     case DirentType.Symlink:
-      return handleClickSymLink(state, dirent, state.focusedIndex)
+      return handleClickSymLink(state, dirent, focusedIndex)
     default:
       throw new Error(`unsupported file type ${dirent.type}`)
   }
@@ -704,17 +711,18 @@ const focusParentFolder = (state) => {
 }
 
 export const handleArrowLeft = (state) => {
-  if (state.focusedIndex === -1) {
+  const { items, focusedIndex } = state
+  if (focusedIndex === -1) {
     return state
   }
-  const dirent = state.items[state.focusedIndex]
+  const dirent = items[focusedIndex]
   switch (dirent.type) {
     case DirentType.Directory:
     case DirentType.File:
     case DirentType.SymLinkFile:
       return focusParentFolder(state)
     case DirentType.DirectoryExpanded:
-      return handleClickDirectoryExpanded(state, dirent, state.focusedIndex)
+      return handleClickDirectoryExpanded(state, dirent, focusedIndex)
     default:
       // TODO handle expanding directory and cancel file system call to read child dirents
       return state
@@ -722,6 +730,7 @@ export const handleArrowLeft = (state) => {
 }
 
 export const handleUpload = async (state, dirents) => {
+  const { root, pathSeparator } = state
   for (const dirent of dirents) {
     // TODO switch
     // TODO symlink might not be possible to be copied
@@ -730,7 +739,7 @@ export const handleUpload = async (state, dirents) => {
       // TODO reading text might be inefficient for binary files
       // but not sure how else to send them via jsonrpc
       const content = await dirent.file.text()
-      const absolutePath = [state.root, dirent.file.name].join(state.pathSeparator)
+      const absolutePath = [root, dirent.file.name].join(pathSeparator)
       await FileSystem.writeFile(absolutePath, content)
     }
   }
@@ -764,7 +773,8 @@ const isImage = (dirent) => {
 }
 
 export const handleMouseEnter = async (state, index) => {
-  const dirent = state.items[index]
+  const { items } = state
+  const dirent = items[index]
   if (!isImage(dirent)) {
     // TODO preload content maybe when it is a long hover
     return state
@@ -782,17 +792,6 @@ export const handleMouseEnter = async (state, index) => {
 export const handleMouseLeave = async (state) => {
   // await Command.execute(/* ImagePreview.hide */ 9082)
   return state
-}
-
-// TODO on windows this would be different
-const RE_PATH = /^\/[a-z]+/
-
-const isProbablyPath = (line) => {
-  return RE_PATH.test(line)
-}
-
-const getBaseName = (path, pathSeparator) => {
-  return path.slice(path.lastIndexOf(pathSeparator) + 1)
 }
 
 export const handleCopy = async (state) => {
@@ -822,7 +821,7 @@ export const resize = (state, dimensions) => {
 }
 
 export const expandAll = async (state) => {
-  const { items, focusedIndex } = state
+  const { items, focusedIndex, pathSeparator, minLineY, height, itemHeight } = state
   if (focusedIndex === -1) {
     return state
   }
@@ -837,7 +836,7 @@ export const expandAll = async (state) => {
       dirent.type = DirentType.DirectoryExpanding
       // TODO handle error
       // TODO race condition
-      const childDirents = await getChildDirents(state.pathSeparator, dirent)
+      const childDirents = await getChildDirents(pathSeparator, dirent)
       const newIndex = newDirents.indexOf(dirent)
       if (newIndex === -1) {
         continue
@@ -848,9 +847,11 @@ export const expandAll = async (state) => {
       // await expand(state, dirent.index)
     }
   }
+  const maxLineY = GetExplorerMaxLineY.getExplorerMaxLineY(minLineY, height, itemHeight, newDirents.length)
   return {
     ...state,
     items: newDirents,
+    maxLineY,
   }
 }
 
@@ -929,7 +930,6 @@ const getPathPartChildren = (pathPart) => {
 }
 
 const mergeVisibleWithHiddenItems = (visibleItems, hiddenItems) => {
-  const hiddenItemRoot = hiddenItems[0].path
   const merged = [...hiddenItems]
   const seen = Object.create(null)
   const unique = []
@@ -1045,6 +1045,9 @@ const scrollInto = (index, minLineY, maxLineY) => {
 const revealItemHidden = async (state, uri) => {
   const { root, pathSeparator, items, minLineY, maxLineY } = state
   const pathParts = getPathParts(root, uri, pathSeparator)
+  if (pathParts.length === 0) {
+    return state
+  }
   const pathPartsToReveal = getPathPartsToReveal(root, pathParts, items)
   const pathPartsChildren = await Promise.all(pathPartsToReveal.map(getPathPartChildren))
   const pathPartsChildrenFlat = pathPartsChildren.flat(1)
@@ -1086,12 +1089,4 @@ export const revealItem = async (state, uri) => {
     return revealItemHidden(state, uri)
   }
   return revealItemVisible(state, index)
-}
-
-export const shouldApplyNewState = (newState, fn) => {
-  if (newState.root !== Workspace.state.workspacePath) {
-    console.log('root does not match', `${newState.root} !== ${Workspace.state.workspacePath}`)
-    return false
-  }
-  return true
 }

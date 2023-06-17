@@ -45,9 +45,9 @@ the module (for instance, using \`npm rebuild\` or \`npm install\`).
 
 Node.js v18.12.1
 `
-  const error = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
-  expect(error).toBe(
-    `incompatible native node module: The module '/test/packages/pty-host/node_modules/node-pty/build/Release/pty.node' was compiled against a different Node.js version using NODE_MODULE_VERSION 108. This version of Node.js requires NODE_MODULE_VERSION 113. Please try re-compiling or re-installing the module (for instance, using \`npm rebuild\` or \`npm install\`).`
+  const { message } = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
+  expect(message).toBe(
+    `Incompatible native node module: The module '/test/packages/pty-host/node_modules/node-pty/build/Release/pty.node' was compiled against a different Node.js version using NODE_MODULE_VERSION 108. This version of Node.js requires NODE_MODULE_VERSION 113. Please try re-compiling or re-installing the module (for instance, using \`npm rebuild\` or \`npm install\`).`
   )
 })
 
@@ -68,6 +68,6 @@ SyntaxError: Cannot use import statement outside a module
     at node:electron/js2c/utility_init:2:5965
 
 Node.js v18.12.1`
-  const error = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
-  expect(error).toBe(`ES Modules are not supported in electron`)
+  const { message } = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
+  expect(message).toBe(`ES Modules are not supported in electron`)
 })

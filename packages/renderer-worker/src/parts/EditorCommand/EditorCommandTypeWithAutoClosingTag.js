@@ -1,4 +1,3 @@
-// import * as EditorCompletion from '../EditorCompletion/EditorCompletion.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as ExtensionHostClosingTag from '../ExtensionHost/ExtensionHostClosingTagCompletion.js'
