@@ -13,6 +13,7 @@
     "asar": false,
     "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",
+    "icon": "./build/icons/",
     "linux": {
       "category": "Utility;TextEditor;Development;IDE;",
       "desktop": {
