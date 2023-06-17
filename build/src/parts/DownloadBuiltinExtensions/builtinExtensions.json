@@ -82,7 +82,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "0.0.23"
+    "version": "0.0.24"
   },
   {
     "name": "builtin.language-basics-java",
@@ -92,7 +92,7 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.29"
+    "version": "0.0.30"
   },
   {
     "name": "builtin.language-basics-json",
@@ -182,7 +182,7 @@
   {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "0.0.20"
+    "version": "0.0.21"
   },
   {
     "name": "builtin.language-basics-svelte",
@@ -232,7 +232,7 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "0.4.4"
+    "version": "0.4.5"
   },
   {
     "name": "builtin.prettier",
@@ -252,7 +252,7 @@
   {
     "name": "builtin.theme-cobalt2",
     "repository": "github.com/lvce-editor/theme-cobalt2",
-    "version": "0.0.11"
+    "version": "0.0.12"
   },
   {
     "name": "builtin.theme-gruvbox",
