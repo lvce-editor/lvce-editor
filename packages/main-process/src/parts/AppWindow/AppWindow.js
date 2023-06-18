@@ -1,6 +1,7 @@
 const { VError } = require('../VError/VError.js')
 const { WindowLoadError } = require('../WindowLoadError/WindowLoadError.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
+const DefaultUrl = require('../DefaultUrl/DefaultUrl.js')
 const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
 const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
@@ -30,10 +31,8 @@ const loadUrl = async (browserWindow, url) => {
   Performance.mark(PerformanceMarkerType.DidLoadUrl)
 }
 
-const defaultUrl = `${Platform.scheme}://-`
-
 // TODO avoid mixing BrowserWindow, childprocess and various lifecycle methods in one file -> separate concerns
-exports.createAppWindow = async (preferences, parsedArgs, workingDirectory, url = defaultUrl) => {
+exports.createAppWindow = async (preferences, parsedArgs, workingDirectory, url = DefaultUrl.defaultUrl) => {
   const titleBarPreference = Preferences.get(preferences, 'window.titleBarStyle')
   const frame = titleBarPreference !== 'custom'
   const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
