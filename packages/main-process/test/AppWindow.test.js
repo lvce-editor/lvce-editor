@@ -76,10 +76,10 @@ test('createAppWindow', async () => {
 test('createAppWindow - error', async () => {
   // @ts-ignore
   electron.BrowserWindow.prototype.loadURL.mockImplementation(() => {
-    throw new Error(`ERR_FAILED (-2) loading 'lvce-oss://-'`)
+    throw new Error(`ERR_FAILED (-2) loading 'lvce-oss://-/'`)
   })
   // TODO error message should be improved
   await expect(AppWindow.createAppWindow([], '')).rejects.toThrowError(
-    new Error("Failed to load url lvce-oss://-: ERR_FAILED (-2) loading 'lvce-oss://-'")
+    new Error("Failed to load url lvce-oss://-/: ERR_FAILED (-2) loading 'lvce-oss://-/'")
   )
 })
