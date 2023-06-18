@@ -67,6 +67,11 @@ const handleWebContentsWindowOpen = ({ url }) => {
  * @param {Electron.WebContents} webContents
  */
 exports.handleWebContentsCreated = (event, webContents) => {
+  /**
+   *
+   * @param {import('electron').Event<import('electron').WebContentsWillNavigateEventParams>} event
+   * @returns
+   */
   const handleWebContentsNavigate = (event) => {
     if (ElectronBrowserViewState.hasWebContents(webContents.id)) {
       return
