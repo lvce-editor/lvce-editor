@@ -37,7 +37,9 @@ test('handleCliArgs - install - error', async () => {
   CliInstall.handleCliArgs.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await Cli.handleCliArgs(['install'])
+  await Cli.handleCliArgs({
+    _: ['install'],
+  })
   expect(Logger.error).toHaveBeenCalledTimes(1)
   expect(Logger.error).toHaveBeenCalledWith(new TypeError('x is not a function'))
   expect(Process.setExitCode).toHaveBeenCalledTimes(1)
@@ -47,7 +49,9 @@ test('handleCliArgs - install - error', async () => {
 test('handleCliArgs - install', async () => {
   // @ts-ignore
   CliInstall.handleCliArgs.mockImplementation(() => {})
-  await Cli.handleCliArgs(['install'])
+  await Cli.handleCliArgs({
+    _: ['install'],
+  })
   expect(CliInstall.handleCliArgs).toHaveBeenCalledTimes(1)
   expect(CliInstall.handleCliArgs).toHaveBeenCalledWith(['install'])
 })
@@ -55,7 +59,9 @@ test('handleCliArgs - install', async () => {
 test('handleCliArgs - list', async () => {
   // @ts-ignore
   CliList.handleCliArgs.mockImplementation(() => {})
-  await Cli.handleCliArgs(['list'])
+  await Cli.handleCliArgs({
+    _: ['list'],
+  })
   expect(CliList.handleCliArgs).toHaveBeenCalledTimes(1)
   expect(CliList.handleCliArgs).toHaveBeenCalledWith(['list'])
 })
