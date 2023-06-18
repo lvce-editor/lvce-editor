@@ -8,6 +8,16 @@ export const listen = async () => {
   return process
 }
 
+const getActualData = (message, handle) => {
+  if (handle) {
+    return {
+      ...message,
+      params: [...message.params, handle],
+    }
+  }
+  return message
+}
+
 export const wrap = (process) => {
   return {
     process,
@@ -15,12 +25,12 @@ export const wrap = (process) => {
       this.process.send(message)
     },
     on(event, listener) {
-      switch (event) {
-        case 'message':
-          this.process.on('message', listener)
-          break
-        default:
-          throw new Error('unknown event listener type')
+      if (event === 'message') {
+        const wrappedListener = (message, handle) => {
+          const actualData = getActualData(message, handle)
+          listener(actualData)
+        }
+        this.process.on(event, wrappedListener)
       }
     },
     off(event, listener) {

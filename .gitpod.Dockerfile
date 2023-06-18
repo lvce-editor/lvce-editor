@@ -28,6 +28,12 @@ RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
         libwayland-client0 \
         fakeroot
 
+# Install AppImage dependencies
+RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        fuse \
+        libfuse2
+
+
 # Install nodeJs
 RUN bash -c ". .nvm/nvm.sh \
     && nvm install 18.16.0 \

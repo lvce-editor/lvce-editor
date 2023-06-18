@@ -20,7 +20,7 @@
     "node": ">=16"
   },
   "dependencies": {
-    "@babel/code-frame": "^7.21.4",
+    "@babel/code-frame": "^7.22.5",
     "debug": "^4.3.4",
     "execa": "^7.1.1",
     "exit-hook": "^3.2.0",
@@ -42,15 +42,16 @@
     "symlink-dir": "^5.1.1",
     "tmp-promise": "^3.0.3",
     "trash": "^8.1.1",
-    "tail": "^2.2.6"
+    "tail": "^2.2.6",
+    "@vscode/windows-process-tree": "^0.5.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.8",
     "@types/is-object": "^1.0.2",
     "@types/tail": "^2.2.1",
     "@types/tar-fs": "^2.0.1",
-    "@types/ws": "^8.5.4",
-    "get-port": "^6.1.2"
+    "@types/ws": "^8.5.5",
+    "get-port": "^7.0.0"
   },
   "xo": {
     "rules": {
@@ -95,6 +96,14 @@
     },
     "ignores": [
       "distmin"
+    ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "@vscode/windows-process-tree": "<rootDir>/mocks/windows-process-tree.js"
+    },
+    "testMatch": [
+      "**/test/**/*.js"
     ]
   }
 }

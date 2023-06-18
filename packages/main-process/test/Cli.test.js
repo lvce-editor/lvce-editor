@@ -12,19 +12,6 @@ jest.mock('electron', () => {
 
 const Cli = require('../src/parts/Cli/Cli.js')
 
-test('parseCliArgs', () => {
-  expect(Cli.parseCliArgs(['/usr/lib/lvce-oss/lvce-oss', '/test/'])).toEqual({
-    _: ['/test/'],
-    help: false,
-    v: false,
-    version: false,
-    wait: false,
-    'built-in-self-test': false,
-    web: false,
-    sandbox: false,
-  })
-})
-
 test('handleFastCliArgsMaybe - nothing matches', () => {
   const spy = jest.spyOn(console, 'info')
   expect(

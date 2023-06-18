@@ -4,6 +4,7 @@ import { jest } from '@jest/globals'
 
 test('getDirentType - file', () => {
   const dirent = {
+    path: '',
     isFile() {
       return true
     },
@@ -32,6 +33,7 @@ test('getDirentType - file', () => {
 
 test('getDirentType - directory', () => {
   const dirent = {
+    path: '',
     isFile() {
       return false
     },
@@ -60,6 +62,7 @@ test('getDirentType - directory', () => {
 
 test('getDirentType - symlink', () => {
   const dirent = {
+    path: '',
     isFile() {
       return false
     },
@@ -88,6 +91,7 @@ test('getDirentType - symlink', () => {
 
 test('getDirentType - socket', () => {
   const dirent = {
+    path: '',
     isFile() {
       return false
     },
@@ -116,6 +120,7 @@ test('getDirentType - socket', () => {
 
 test('getDirentType - block device', () => {
   const dirent = {
+    path: '',
     isFile() {
       return false
     },
@@ -144,6 +149,7 @@ test('getDirentType - block device', () => {
 
 test('getDirentType - character device', () => {
   const dirent = {
+    path: '',
     isFile() {
       return false
     },
@@ -172,6 +178,7 @@ test('getDirentType - character device', () => {
 
 test('getDirentType - unknown', () => {
   const dirent = {
+    path: '',
     isFile() {
       return false
     },
@@ -195,8 +202,5 @@ test('getDirentType - unknown', () => {
     },
     name: '',
   }
-  const spy = jest.spyOn(console, 'log').mockImplementation(() => {})
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.Unknown)
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith({ dirent })
 })

@@ -1,3 +1,5 @@
+import { VError } from '../VError/VError.js'
+
 export const crash = (message) => {
   throw new Error(message)
 }
@@ -29,7 +31,11 @@ export const isConnected = () => {
 }
 
 export const kill = (pid, signal) => {
-  process.kill(pid, signal)
+  try {
+    process.kill(pid, signal)
+  } catch (error) {
+    throw new VError(error, `Failed to kill process ${pid} with signal ${signal}`)
+  }
 }
 
 export const getPid = () => {

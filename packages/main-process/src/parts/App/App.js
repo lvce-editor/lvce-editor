@@ -1,5 +1,6 @@
 const { spawn } = require('node:child_process')
 const Cli = require('../Cli/Cli.js')
+const ParseCliArgs = require('../ParseCliArgs/ParseCliArgs.js')
 const CommandLineSwitches = require('../CommandLineSwitches/CommandLineSwitches.js')
 const Debug = require('../Debug/Debug.js')
 const Electron = require('electron')
@@ -46,7 +47,7 @@ exports.hydrate = async () => {
   // see https://github.com/microsoft/playwright/issues/12345
   const { argv } = process
 
-  const parsedCliArgs = Cli.parseCliArgs(argv)
+  const parsedCliArgs = ParseCliArgs.parseCliArgs(argv)
   const handled = Cli.handleFastCliArgsMaybe(parsedCliArgs) // TODO don't like the side effect here
   if (handled) {
     return

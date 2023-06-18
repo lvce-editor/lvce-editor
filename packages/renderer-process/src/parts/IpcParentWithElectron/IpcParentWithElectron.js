@@ -1,5 +1,5 @@
 import * as Callback from '../Callback/Callback.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.js'
 import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
 const handleMessageFromWindow = (event) => {
@@ -11,13 +11,7 @@ const handleMessageFromWindow = (event) => {
 window.addEventListener('message', handleMessageFromWindow)
 
 export const create = async ({ type, name }) => {
-  const { id, promise } = Callback.registerPromise()
-  const message = {
-    jsonrpc: JsonRpcVersion.Two,
-    id,
-    method: 'CreateMessagePort.createMessagePort',
-    params: [type, name],
-  }
+  const { message, promise } = JsonRpcRequest.create('CreateMessagePort.createMessagePort', [type, name])
   // @ts-ignore
   if (typeof window.myApi === 'undefined') {
     throw new Error('Electron api was requested but is not available')

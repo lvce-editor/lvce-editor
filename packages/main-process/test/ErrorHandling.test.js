@@ -21,6 +21,16 @@ jest.mock('../src/parts/PrettyError/PrettyError.js', () => {
   }
 })
 
+jest.mock('electron', () => {
+  return {
+    BrowserWindow: {
+      getAllWindows() {
+        return []
+      },
+    },
+  }
+})
+
 const ErrorHandling = require('../src/parts/ErrorHandling/ErrorHandling.js')
 const Logger = require('../src/parts/Logger/Logger.js')
 const Process = require('../src/parts/Process/Process.js')

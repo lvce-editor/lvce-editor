@@ -81,3 +81,5 @@ export const TitleBarMenuBar = 'TitleBarMenuBar'
 export const Video = 'Video'
 
 export const Terminals = 'Terminals'
+
+export const EditorHover = 'EditorHover'

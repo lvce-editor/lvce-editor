@@ -23,6 +23,9 @@ exports.setMenu = (menu) => {
 
 const click = (menuItem, browserWindow, keys) => {
   const { port } = AppWindowStates.findById(browserWindow.webContents.id)
+  if (!port) {
+    return
+  }
   port.postMessage({
     jsonrpc: JsonRpcVersion.Two,
     method: 'ElectronApplicationMenu.handleClick',

@@ -1,0 +1,20 @@
+{
+  "name": "@lvce-editor/babel-worker",
+  "version": "0.0.0-dev",
+  "description": "",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --max-old-space-size=4096 --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
+    "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/code-frame": "^7.22.5",
+    "@babel/core": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
+    "lines-and-columns": "^2.0.3"
+  }
+}

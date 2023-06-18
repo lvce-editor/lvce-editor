@@ -5,3 +5,4 @@ export const Variable = 4
 export const Keyword = 5
 export const Folder = 6
 export const File = 7
+export const Field = 8

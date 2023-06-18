@@ -45,6 +45,9 @@ export const handleMouseOver = (event) => {
 
 export const handleMouseOut = (event) => {
   const { target, relatedTarget } = event
+  if (!relatedTarget) {
+    return
+  }
   const $Parent = relatedTarget.closest('.SourceControlItems')
   const uid = ComponentUid.fromEvent(event)
   if (!$Parent) {

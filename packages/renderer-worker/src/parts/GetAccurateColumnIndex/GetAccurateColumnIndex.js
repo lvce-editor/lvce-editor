@@ -83,9 +83,20 @@ export const getAccurateColumnIndex = (line, fontWeight, fontSize, fontFamily, l
   const isAscii = IsAscii.isAscii(line)
   if (isAscii) {
     if (Math.abs(eventX - actual) < charWidth / 2) {
-      return guess
+      return normalizedGuess
     }
-    return getAccurateColumnIndexAscii(line, guess, charWidth, eventX, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth)
+    return getAccurateColumnIndexAscii(
+      line,
+      normalizedGuess,
+      charWidth,
+      eventX,
+      fontWeight,
+      fontSize,
+      fontFamily,
+      letterSpacing,
+      isMonospaceFont,
+      charWidth
+    )
   }
-  return getAccurateColumnIndexUnicode(line, guess, charWidth, eventX, fontWeight, fontSize, fontFamily, letterSpacing)
+  return getAccurateColumnIndexUnicode(line, normalizedGuess, charWidth, eventX, fontWeight, fontSize, fontFamily, letterSpacing)
 }

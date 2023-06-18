@@ -175,6 +175,7 @@ export const selectCurrentIndex = (state) => {
 //
 // })
 
+// TODO merge this with virtual list
 export const handleClickAt = (state, x, y) => {
   const { top, headerHeight, itemHeight } = state
   const relativeY = y - top - headerHeight

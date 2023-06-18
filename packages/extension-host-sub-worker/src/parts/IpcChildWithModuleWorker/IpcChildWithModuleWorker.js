@@ -9,6 +9,10 @@ export const listen = async () => {
   return globalThis
 }
 
+const getActualData = (event) => {
+  return event.data
+}
+
 export const wrap = (port) => {
   return {
     port,
@@ -28,8 +32,8 @@ export const wrap = (port) => {
     set onmessage(listener) {
       if (listener) {
         this.wrappedListener = (event) => {
-          console.log({ event })
-          listener(event.data)
+          const actualData = getActualData(event)
+          listener(actualData)
         }
       } else {
         this.wrappedListener = undefined

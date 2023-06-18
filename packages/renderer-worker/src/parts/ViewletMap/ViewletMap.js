@@ -3,6 +3,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const mapExtToEditorType = {
   '.png': ViewletModuleId.EditorImage,
+  '.DirIcon': ViewletModuleId.EditorImage,
   '.svg': ViewletModuleId.EditorImage,
   '.avif': ViewletModuleId.EditorImage,
   '.gif': ViewletModuleId.EditorImage,

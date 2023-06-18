@@ -15,10 +15,10 @@ export const createRpc = async ({ url, name, execute = defaultExecute }) => {
     Assert.string(url)
     Assert.string(name)
     Assert.fn(execute)
-    const helperProcessUrl = GetExtensionHostSubWorkerUrl.getExtensionHostSubWorkerUrl()
+    const subWorkerUrl = GetExtensionHostSubWorkerUrl.getExtensionHostSubWorkerUrl()
     const ipc = await IpcParent.create({
       method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
-      url: helperProcessUrl,
+      url: subWorkerUrl,
       name,
     })
     const rpc = await RpcParent.create({
@@ -26,7 +26,7 @@ export const createRpc = async ({ url, name, execute = defaultExecute }) => {
       method: RpcParentType.JsonRpc,
       execute,
     })
-    await rpc.invoke('setUrl', url)
+    await rpc.invoke('LoadFile.loadFile', url)
     return rpc
   } catch (error) {
     throw new VError(error, `Failed to create rpc`)

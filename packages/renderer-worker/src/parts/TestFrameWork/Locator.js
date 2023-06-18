@@ -11,12 +11,7 @@ const Locator = function (selector, { nth = -1, hasText = '' } = {}) {
 }
 
 const performAction = async (locator, fnName, options) => {
-  return RendererProcess.invoke(
-    'TestFrameWork.performAction',
-    locator,
-    fnName,
-    options
-  )
+  return RendererProcess.invoke('TestFrameWork.performAction', locator, fnName, options)
 }
 
 const toButtonNumber = (buttonType) => {
@@ -57,6 +52,9 @@ Locator.prototype.first = function () {
 }
 
 Locator.prototype.locator = function (subSelector) {
+  if (this._nth !== -1) {
+    return create(`${this._selector}:nth-of-type(${this._nth + 1}) ${subSelector}`)
+  }
   return create(`${this._selector} ${subSelector}`)
 }
 

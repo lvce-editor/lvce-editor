@@ -9,8 +9,10 @@ import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHo
 import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
+import * as ExtensionHostHover from '../ExtensionHostHover/ExtensionHostHover.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
 import * as ExtensionHostMockExec from '../ExtensionHostMockExec/ExtensionHostMockExec.js'
+import * as ExtensionHostMockRpc from '../ExtensionHostMockRpc/ExtensionHostMockRpc.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
 import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
@@ -27,6 +29,8 @@ export const getFn = (method) => {
       return ExtensionHostReference.executeReferenceProvider
     case ExtensionHostCommandType.CompletionExecute:
       return ExtensionHostCompletion.executeCompletionProvider
+    case ExtensionHostCommandType.CompletionResolveExecute:
+      return ExtensionHostCompletion.executeresolveCompletionItemProvider
     case ExtensionHostCommandType.TextDocumentSyncFull:
       return TextDocument.syncFull
     case ExtensionHostCommandType.TextDocumentSetLanguageId:
@@ -55,6 +59,8 @@ export const getFn = (method) => {
       return ExtensionHostFormatting.executeFormattingProvider
     case ExtensionHostCommandType.MockExec:
       return ExtensionHostMockExec.mockExec
+    case ExtensionHostCommandType.MockRpc:
+      return ExtensionHostMockRpc.mockRpc
     case ExtensionHostCommandType.FileSystemReadFile:
       return ExtensionHostFileSystem.readFile
     case ExtensionHostCommandType.FileSystemReadDirWithFileTypes:
@@ -95,6 +101,8 @@ export const getFn = (method) => {
       return ExtensionHostClosingTag.executeClosingTagProvider
     case ExtensionHostCommandType.ImplementationExecuteImplementationProvider:
       return ExtensionHostImplementation.executeImplementationProvider
+    case ExtensionHostCommandType.HoverExecute:
+      return ExtensionHostHover.executeHoverProvider
     default:
       throw new CommandNotFoundError(method)
   }

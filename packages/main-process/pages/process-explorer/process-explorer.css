@@ -59,6 +59,9 @@ h1 {
 }
 
 .Cell {
+  max-width: 50vw;
+  contain: content;
+  text-overflow: ellipsis;
 }
 
 .Row:focus,

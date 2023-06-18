@@ -96,7 +96,7 @@ export const attachEvents = (state) => {
 // TODO show should be passed active cursor position
 // this would make this function easier to test as it would avoid dependency on globals of other files
 
-const render$ExtensionsLess = ($ListItems, items) => {
+const render$CompletionsLess = ($ListItems, items) => {
   for (let i = 0; i < $ListItems.children.length; i++) {
     render$CompletionItem($ListItems.children[i], items[i])
   }
@@ -109,13 +109,13 @@ const render$ExtensionsLess = ($ListItems, items) => {
   $ListItems.append(fragment)
 }
 
-const render$ExtensionsEqual = ($ListItems, items) => {
+const render$CompletionsEqual = ($ListItems, items) => {
   for (let i = 0; i < items.length; i++) {
     render$CompletionItem($ListItems.children[i], items[i])
   }
 }
 
-const render$ExtensionsMore = ($ListItems, items) => {
+const render$CompletionsMore = ($ListItems, items) => {
   for (let i = 0; i < items.length; i++) {
     render$CompletionItem($ListItems.children[i], items[i])
   }
@@ -127,11 +127,11 @@ const render$ExtensionsMore = ($ListItems, items) => {
 
 const render$Items = ($ListItems, items) => {
   if ($ListItems.children.length < items.length) {
-    render$ExtensionsLess($ListItems, items)
+    render$CompletionsLess($ListItems, items)
   } else if ($ListItems.children.length === items.length) {
-    render$ExtensionsEqual($ListItems, items)
+    render$CompletionsEqual($ListItems, items)
   } else {
-    render$ExtensionsMore($ListItems, items)
+    render$CompletionsMore($ListItems, items)
   }
 }
 

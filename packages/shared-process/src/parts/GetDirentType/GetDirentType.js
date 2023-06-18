@@ -22,6 +22,8 @@ export const getDirentType = (dirent) => {
   if (dirent.isCharacterDevice()) {
     return DirentType.CharacterDevice
   }
-  console.log({ dirent })
+  if (dirent.isFIFO()) {
+    return DirentType.Fifo
+  }
   return DirentType.Unknown
 }
