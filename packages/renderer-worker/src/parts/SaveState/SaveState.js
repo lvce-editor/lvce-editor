@@ -42,6 +42,10 @@ export const saveViewletState = async (id) => {
   const instance = ViewletStates.getInstance(id)
   const savedState = serializeInstance(instance)
   await LocalStorage.setJson(id, savedState)
+  if (instance.factory.saveChildState) {
+    const childIds = instance.factory.saveChildState(instance.state)
+    await Promise.all(childIds.map(saveViewletState))
+  }
 }
 
 export const handleVisibilityChange = async (visibilityState) => {
