@@ -78,9 +78,21 @@ export const setDirty = (state, index, dirty) => {
   const { $MainTabs } = state
   const $Child = $MainTabs.children[index]
   if (dirty) {
-    $Child.classList.add(ClassNames.Dirty)
+    if ($Child.lastChild.className === 'Circle') {
+      return
+    }
+    const $MaskIcon = document.createElement('div')
+    $MaskIcon.className = 'MaskIcon TabDirtyIcon'
+    const $Circle = document.createElement('div')
+    $Circle.append($MaskIcon)
+    $Circle.className = 'Circle'
+    $Child.append($Circle)
+    // $Child.classList.add(ClassNames.Dirty)
   } else {
-    $Child.classList.remove(ClassNames.Dirty)
+    if ($Child.lastChild.className === 'Circle') {
+      $Child.lastChild.remove()
+      return
+    }
   }
 }
 
