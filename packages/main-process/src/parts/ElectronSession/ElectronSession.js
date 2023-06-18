@@ -1,14 +1,14 @@
 const Electron = require('electron')
-const Platform = require('../Platform/Platform.js')
-const Protocol = require('../Protocol/Protocol.js')
 const HandleHeadersReceived = require('../HandleHeadersReceived/HandleHeadersReceived.js')
 const HandlePermission = require('../HandlePermission/HandlePermission.js')
 const HandleRequest = require('../HandleRequest/HandleRequest.js')
+const IsSessionCacheEnabled = require('../IsSessionCacheEnabled/IsSessionCacheEnabled.js')
+const Platform = require('../Platform/Platform.js')
 
 const createSession = () => {
   const sessionId = Platform.getSessionId()
   const session = Electron.session.fromPartition(sessionId, {
-    cache: Platform.isProduction,
+    cache: IsSessionCacheEnabled.isSessionCacheEnabled,
   })
   session.webRequest.onHeadersReceived(HandleHeadersReceived.handleHeadersReceived)
   session.setPermissionRequestHandler(HandlePermission.handlePermissionRequest)
