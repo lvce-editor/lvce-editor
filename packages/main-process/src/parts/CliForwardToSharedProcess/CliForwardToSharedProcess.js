@@ -16,8 +16,7 @@ const handleCliArgs = async (parsedArgs) => {
       path: sharedProcessPath,
     })
     HandleIpc.handleIpc(ipc)
-    const argv = parsedArgs._
-    await JsonRpc.invoke(ipc, 'HandleCliArgs.handleCliArgs', argv)
+    await JsonRpc.invoke(ipc, 'HandleCliArgs.handleCliArgs', parsedArgs)
   } catch (error) {
     Process.setExitCode(ExitCode.Error)
     if (error && error instanceof Error && error.stack && error.stack.includes('shared-process')) {
