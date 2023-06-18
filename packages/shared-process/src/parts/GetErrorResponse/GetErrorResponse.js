@@ -43,7 +43,7 @@ const getErrorProperty = (error, prettyError) => {
 
 export const getErrorResponse = (message, error, ipc) => {
   const prettyError = PrettyError.prepare(error)
-  if (shouldLogError(error) && (!ipc || ipc.shouldLogError !== false)) {
+  if (shouldLogError(error)) {
     PrintPrettyError.printPrettyError(prettyError, `[shared-process] `)
   }
   const errorProperty = getErrorProperty(error, prettyError)
