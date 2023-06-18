@@ -1,8 +1,12 @@
 import * as Assert from '../Assert/Assert.js'
 import * as CliCommandType from '../CliCommandType/CliCommandType.js'
 
-export const getModule = (argv0) => {
-  Assert.string(argv0)
+export const getModule = (parsedArgs) => {
+  Assert.object(parsedArgs)
+  if (parsedArgs[CliCommandType.Status]) {
+    return import('../CliStatus/CliStatus.js')
+  }
+  const argv0 = parsedArgs._[0]
   switch (argv0) {
     case CliCommandType.Install:
       return import('../CliInstall/CliInstall.js')
@@ -12,8 +16,6 @@ export const getModule = (argv0) => {
       return import('../CliLink/CliLink.js')
     case CliCommandType.Unlink:
       return import('../CliUnlink/CliUnlink.js')
-    case CliCommandType.Status:
-      return import('../CliStatus/CliStatus.js')
     default:
       throw new Error(`command not found ${argv0}`)
   }

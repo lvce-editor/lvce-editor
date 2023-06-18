@@ -11,7 +11,13 @@ const getModule = (parsedArgs) => {
   if (parsedArgs[CliCommandType.Web]) {
     return require('../CliWeb/CliWeb.js')
   }
-  if (arg0 === CliCommandType.Install || arg0 === CliCommandType.List || arg0 === CliCommandType.Link || arg0 === CliCommandType.Unlink) {
+  if (
+    arg0 === CliCommandType.Install ||
+    arg0 === CliCommandType.List ||
+    arg0 === CliCommandType.Link ||
+    arg0 === CliCommandType.Unlink ||
+    parsedArgs[CliCommandType.Status]
+  ) {
     return require('../CliForwardToSharedProcess/CliForwardToSharedProcess.js')
   }
   if (parsedArgs[CliCommandType.BuiltinSelfTest]) {
