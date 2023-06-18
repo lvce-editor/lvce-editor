@@ -15,7 +15,7 @@ const createSession = () => {
   session.webRequest.onHeadersReceived(HandleHeadersReceived.handleHeadersReceived)
   session.setPermissionRequestHandler(HandlePermission.handlePermissionRequest)
   session.setPermissionCheckHandler(HandlePermission.handlePermissionCheck)
-  Protocol.handle(session.protocol, Platform.scheme, ElectronProtocolType.File, HandleRequest.handleRequest)
+  Protocol.handle(session.protocol, Platform.scheme, ElectronProtocolType.File, HandleRequest.handleRequest, HandleRequest.handleRequestFile)
   return session
 }
 
