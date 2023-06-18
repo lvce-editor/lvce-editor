@@ -1,9 +1,8 @@
 const Electron = require('electron')
 const Clamp = require('../Clamp/Clamp.js')
-const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const Preferences = require('../Preferences/Preferences.js')
-const Root = require('../Root/Root.js')
+const GetIcon = require('../GetIcon/GetIcon.js')
 
 exports.wrapWindowCommand = (fn) => () => {
   const browserWindow = Electron.BrowserWindow.getFocusedWindow()
@@ -59,18 +58,6 @@ exports.getFocusedWindow = () => {
   return Electron.BrowserWindow.getFocusedWindow() || undefined
 }
 
-const getIcon = () => {
-  if (!Platform.isProduction && Platform.isLinux) {
-    return Path.join(Root.root, 'build', 'files', 'icon.png')
-  }
-  if (!Platform.isProduction && Platform.isWindows) {
-    return Path.join(Root.root, 'build', 'files', 'icon.png')
-  }
-  if (Platform.isProduction && Platform.isArchLinux) {
-    return Path.join(Root.root, 'static', 'icons', 'icon.png')
-  }
-  return undefined
-}
 
 /**
  *
@@ -104,6 +91,7 @@ exports.create = ({
 }) => {
   // const windowControlsOverlayEnabled = Platform.isWindows
   // const titleBarOptions = getTitleBarOptions(windowControlsOverlayEnabled)
+  const icon = GetIcon.getIcon()
   const browserWindow = new Electron.BrowserWindow({
     x,
     y,
@@ -125,7 +113,7 @@ exports.create = ({
     },
     backgroundColor: background,
     show: false,
-    icon: getIcon(),
+    icon,
   })
   const handleReadyToShow = () => {
     // due to electron bug, zoom level needs to be set here,
