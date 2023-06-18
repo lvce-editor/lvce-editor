@@ -203,7 +203,8 @@ const handleEditorChange = async (editor) => {
   const { activeGroupIndex, groups } = state
   const group = groups[activeGroupIndex]
   Assert.object(group)
-  const command = ['Viewlet.send', group.tabsUid, 'setDirty', group.activeIndex, true]
+  const { tabsUid, activeIndex } = group
+  const command = ['Viewlet.send', tabsUid, 'setDirty', activeIndex, true]
   await RendererProcess.invoke(...command)
 }
 

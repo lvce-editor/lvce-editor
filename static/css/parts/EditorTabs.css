@@ -73,7 +73,15 @@
   mask-size: 50%;
 }
 
-.MainTab.Dirty .EditorTabCloseButton:before {
+.Circle {
+  position: relative;
+  width: 23px;
+  height: 23px;
+  contain: strict;
+  flex-shrink: 0;
+}
+
+.TabDirtyIcon {
   -webkit-mask-image: url(/icons/circle-filled.svg);
   mask-image: url(/icons/circle-filled.svg);
 }
@@ -108,4 +116,5 @@
   overflow: hidden;
   min-width: 0;
   flex: 1;
+  pointer-events: none;
 }
