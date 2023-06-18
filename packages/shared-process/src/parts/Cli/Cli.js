@@ -4,7 +4,6 @@ import * as Process from '../Process/Process.js'
 
 export const handleCliArgs = async (argv) => {
   const argv0 = argv[0]
-  console.log({ argv })
   const module = await CliModule.getModule(argv0)
   try {
     await module.handleCliArgs(argv)

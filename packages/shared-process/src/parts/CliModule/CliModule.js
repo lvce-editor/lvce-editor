@@ -1,6 +1,8 @@
+import * as Assert from '../Assert/Assert.js'
 import * as CliCommandType from '../CliCommandType/CliCommandType.js'
 
 export const getModule = (argv0) => {
+  Assert.string(argv0)
   switch (argv0) {
     case CliCommandType.Install:
       return import('../CliInstall/CliInstall.js')
