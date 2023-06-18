@@ -1,7 +1,6 @@
 import { IpcError } from '../IpcError/IpcError.js'
 
 export const listen = async () => {
-  // @ts-ignore
   if (typeof WorkerGlobalScope === 'undefined') {
     throw new IpcError('module is not in web worker scope')
   }
