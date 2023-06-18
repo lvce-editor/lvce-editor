@@ -160,6 +160,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workbench
     case 'Workspace':
       return ModuleId.Workspace
+    case 'Reload':
+      return ModuleId.Reload
     default:
       throw new Error(`module ${prefix} not found`)
   }
