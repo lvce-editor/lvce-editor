@@ -54,14 +54,6 @@ exports.handleSecondInstance = async (
   await this.handleReady(parsedArgs, workingDirectory)
 }
 
-const handleWebContentsNavigate = (event) => {
-  if (ElectronBrowserViewState.hasWebContents(event.sender.id)) {
-    return
-  }
-  Logger.error('[main-process] Prevented webcontent navigation')
-  event.preventDefault()
-}
-
 const handleWebContentsWindowOpen = ({ url }) => {
   ElectronShell.openExternal(url)
   return {
@@ -75,6 +67,13 @@ const handleWebContentsWindowOpen = ({ url }) => {
  * @param {Electron.WebContents} webContents
  */
 exports.handleWebContentsCreated = (event, webContents) => {
+  const handleWebContentsNavigate = (event) => {
+    if (ElectronBrowserViewState.hasWebContents(webContents.id)) {
+      return
+    }
+    Logger.error('[main-process] Prevented webcontent navigation')
+    event.preventDefault()
+  }
   webContents.on(ElectronWebContentsEventType.WillNavigate, handleWebContentsNavigate)
   webContents.setWindowOpenHandler(handleWebContentsWindowOpen)
 }
