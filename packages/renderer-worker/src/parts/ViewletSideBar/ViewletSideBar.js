@@ -29,6 +29,11 @@ export const saveState = (state) => {
   }
 }
 
+export const saveChildState = (state) => {
+  const { currentViewletId } = state
+  return [currentViewletId]
+}
+
 const getSavedViewletId = (savedState) => {
   if (savedState && savedState.currentViewletId) {
     return savedState.currentViewletId

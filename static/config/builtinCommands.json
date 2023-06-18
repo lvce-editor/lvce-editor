@@ -235,7 +235,7 @@
     "label": "Developer: Debug Shared Process"
   },
   {
-    "id": "Window.reload",
+    "id": "Reload.reload",
     "label": "Window: Reload",
     "aliases": ["Reload Window"]
   },

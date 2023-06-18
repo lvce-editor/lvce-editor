@@ -71,3 +71,4 @@ export const IpcParent = 70
 export const NativeHost = 71
 export const RebuildNodePty = 72
 export const DebugSharedProcess = 73
+export const Reload = 74

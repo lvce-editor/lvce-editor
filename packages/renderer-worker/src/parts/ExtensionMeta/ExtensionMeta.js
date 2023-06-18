@@ -1,12 +1,13 @@
+import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as Languages from '../Languages/Languages.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
-import * as Character from '../Character/Character.js'
 
 export const state = {
   /**
@@ -146,7 +147,7 @@ const handleRejectedExtension = async (extension) => {
   }
   const codeFrame = getCodeFrameFromError(reason)
   const stack = getOriginalStackFromError(reason)
-  await Command.execute(/* Dialog.showMessage */ 'Dialog.showMessage', /* error */ { message, codeFrame, stack })
+  Logger.error(`${message}\n${codeFrame}\n${stack}`)
 }
 
 export const handleRejectedExtensions = async (extensions) => {
