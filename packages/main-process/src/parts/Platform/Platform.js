@@ -14,6 +14,8 @@ exports.isProduction = false
 
 exports.isArchLinux = false
 
+exports.isAppImage = false
+
 const homeDirectory = homedir()
 
 exports.applicationName = 'lvce-oss'

@@ -12,5 +12,8 @@ exports.getIcon = () => {
   if (Platform.isProduction && Platform.isArchLinux) {
     return Path.join(Root.root, 'static', 'icons', 'icon.png')
   }
+  if (Platform.isProduction && Platform.isAppImage) {
+    return Path.join(Root.root, 'static', 'icons', 'icon.png')
+  }
   return undefined
 }
