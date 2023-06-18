@@ -23,7 +23,6 @@ const getActualData = (event) => {
 
 export const wrap = (parentPort) => {
   return {
-    shouldLogError: !IsElectron.isElectron(),
     parentPort,
     on(event, listener) {
       if (event === 'message') {
