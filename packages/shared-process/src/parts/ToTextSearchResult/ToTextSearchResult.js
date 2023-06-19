@@ -1,3 +1,4 @@
+import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 
 const CHARS_BEFORE = 20
@@ -8,7 +9,7 @@ const getLines = (parsedLineData) => {
     return parsedLineData.lines.text
   }
   if (parsedLineData.lines.bytes) {
-    return Buffer.from(parsedLineData.lines.bytes, 'base64').toString()
+    return Buffer.from(parsedLineData.lines.bytes, EncodingType.Base64).toString()
   }
   throw new Error(`unable to parse line data`)
 }
