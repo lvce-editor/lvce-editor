@@ -149,7 +149,7 @@ test('search - one result', async () => {
       type: 'match',
     },
     20_000,
-    20,
+    26,
     50
   )
 })
@@ -244,7 +244,7 @@ test('search - one result split across multiple chunks', async () => {
       type: 'match',
     },
     20_000,
-    20,
+    26,
     50
   )
 })

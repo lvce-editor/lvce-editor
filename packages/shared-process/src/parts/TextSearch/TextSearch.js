@@ -104,7 +104,7 @@ const collectStdout = async (childProcess, maxSearchResults, charsBefore, charsA
 }
 
 export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 20_000, isCaseSensitive = false } = {}) => {
-  const charsBefore = 20
+  const charsBefore = 26
   const charsAfter = 50
   const ripGrepArgs = GetTextSearchRipGrepArgs.getRipGrepArgs({
     threads,

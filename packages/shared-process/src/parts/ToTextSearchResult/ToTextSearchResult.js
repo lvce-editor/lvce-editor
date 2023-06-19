@@ -18,20 +18,41 @@ const getRemainingSubMatches = (submatches, remaining) => {
   return submatches.slice(0, remaining)
 }
 
+const RE_WORD = /\b/g
+
+const leftCut = (text, initial, charsBefore) => {
+  RE_WORD.lastIndex = 0
+  const final = text.length - initial
+  if (text.length < charsBefore) {
+    return text
+  }
+  let i = 0
+  while (RE_WORD.test(text)) {
+    if (final - RE_WORD.lastIndex < charsBefore) {
+      break
+    }
+    i = RE_WORD.lastIndex
+    RE_WORD.lastIndex++
+  }
+  return i
+}
+
 export const toTextSearchResult = (parsedLine, remaining, charsBefore, charsAfter) => {
   const results = []
   const parsedLineData = parsedLine.data
   const lines = getLines(parsedLineData)
   const lineNumber = parsedLineData.line_number
   const submatches = parsedLineData.submatches
+  const linesLength = lines.length
   for (const submatch of submatches) {
     const previewStart = Math.max(submatch.start - charsBefore, 0)
-    const previewEnd = Math.min(submatch.end + charsAfter, lines.length)
-    const previewText = lines.slice(previewStart, previewEnd)
+    const actualStart = previewStart === 0 ? previewStart : leftCut(lines, submatch.start, charsBefore)
+    const previewEnd = Math.min(submatch.end + charsAfter, linesLength)
+    const previewText = lines.slice(actualStart, previewEnd)
     results.push({
       type: TextSearchResultType.Match,
-      start: submatch.start - previewStart,
-      end: submatch.end - previewStart,
+      start: submatch.start - actualStart,
+      end: submatch.end - actualStart,
       lineNumber,
       text: previewText,
     })
