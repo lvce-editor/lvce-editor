@@ -2,12 +2,12 @@ import * as Platform from '../Platform/Platform.js'
 
 export const name = 'Platform'
 
-// prettier-ignore
 export const Commands = {
   getAppDir: Platform.getAppDir,
   getBuiltinExtensionsPath: Platform.getBuiltinExtensionsPath,
   getCachedExtensionsPath: Platform.getCachedExtensionsPath,
   getCacheDir: Platform.getCacheDir,
+  getCommit: Platform.getCommit,
   getConfigDir: Platform.getConfigDir,
   getDataDir: Platform.getDataDir,
   getDisabledExtensionsPath: Platform.getDisabledExtensionsPath,
@@ -21,5 +21,6 @@ export const Commands = {
   getTestPath: Platform.getTestPath,
   getTmpDir: Platform.getTmpDir,
   getUserSettingsPath: Platform.getUserSettingsPath,
+  getVersion: Platform.getVersion,
   setEnvironmentVariables: Platform.setEnvironmentVariables,
 }

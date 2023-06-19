@@ -160,3 +160,13 @@ export const getSetupName = () => {
 }
 
 export const version = '0.0.0-dev'
+
+export const commit = 'unknown commit'
+
+export const getVersion = () => {
+  return version
+}
+
+export const getCommit = () => {
+  return commit
+}

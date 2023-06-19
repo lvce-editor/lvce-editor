@@ -144,6 +144,8 @@ export const getModuleId = (commandId) => {
     case 'Platform.getTestPath':
     case 'Platform.getUserSettingsPath':
     case 'Platform.setEnvironmentVariables':
+    case 'Platform.getCommit':
+    case 'Platform.getVersion':
       return ModuleId.Platform
     case 'Preferences.getAll':
       return ModuleId.Preferences
