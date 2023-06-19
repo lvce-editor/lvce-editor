@@ -7,6 +7,7 @@ import * as BundleRendererProcessCached from '../BundleRendererProcessCached/Bun
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
+import * as CopySharedProcessSources from '../CopySharedProcessSources/CopySharedProcessSources.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
@@ -113,15 +114,12 @@ const copyDependencies = async ({ cachePath, arch }) => {
   })
 }
 
-const copySharedProcessSources = async ({ arch, product }) => {
-  await Copy.copy({
-    from: 'packages/shared-process/src',
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src/parts/Platform/Platform.js`,
-    occurrence: `applicationName = 'lvce-oss'`,
-    replacement: `applicationName = '${product.applicationName}'`,
+const copySharedProcessSources = async ({ arch, product, commitHash, version }) => {
+  await CopySharedProcessSources.copySharedProcessSources({
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process`,
+    product,
+    commitHash,
+    version,
   })
 }
 
@@ -366,7 +364,7 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   console.timeEnd('copyMainProcessSources')
 
   console.time('copySharedProcessSources')
-  await copySharedProcessSources({ arch, product })
+  await copySharedProcessSources({ arch, commitHash, product, version })
   console.timeEnd('copySharedProcessSources')
 
   console.time('copyExtensionHostHelperProcessSources')

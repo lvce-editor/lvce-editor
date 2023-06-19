@@ -1,14 +1,13 @@
-import { readdir } from 'node:fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
+import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
+import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
-import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
-import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
+import * as CopySharedProcessSources from '../CopySharedProcessSources/CopySharedProcessSources.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
-import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Tag from '../Tag/Tag.js'
@@ -99,100 +98,14 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
-const copySharedProcessFiles = async () => {
-  await Copy.copy({
-    from: 'packages/shared-process',
+const copySharedProcessFiles = async ({ product, version, commitHash }) => {
+  await CopySharedProcessSources.copySharedProcessSources({
     to: 'build/.tmp/server/shared-process',
-    ignore: ['node_modules', '.nvmrc', 'tsconfig.json', 'package-lock.json', 'test'],
+    target: 'server',
+    product,
+    version,
+    commitHash,
   })
-  await Copy.copyFile({
-    from: 'LICENSE',
-    to: 'build/.tmp/server/shared-process/LICENSE',
-  })
-  await Copy.copy({
-    from: 'static/config',
-    to: 'build/.tmp/server/shared-process/config',
-  })
-  await Replace.replace({
-    path: 'build/.tmp/server/shared-process/src/parts/Root/Root.js',
-    occurrence: `export const root = resolve(__dirname, '../../../../../')`,
-    replacement: `export const root = resolve(__dirname, '../../../')`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/server/shared-process/src/parts/Platform/Platform.js',
-    occurrence: `Path.join(appDir, 'static', 'config', 'defaultSettings.json')`,
-    replacement: `Path.join(Root.root, 'config', 'defaultSettings.json')`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/server/shared-process/src/parts/Env/Env.js',
-    occurrence: `return process.env.FOLDER`,
-    replacement: `return process.env.FOLDER || process.cwd()`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/server/shared-process/src/parts/Platform/Platform.js',
-    occurrence: `export const getExtensionHostHelperProcessPath = async () => {
-  return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
-}
-`,
-    replacement: `export const getExtensionHostHelperProcessPath = async () => {
-  const { extensionHostHelperProcessPath } = await import(
-    '@lvce-editor/extension-host-helper-process'
-  )
-  return extensionHostHelperProcessPath
-}
-`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/server/shared-process/src/parts/Platform/Platform.js',
-    occurrence: `export const getExtensionHostPath = async () => {
-  return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
-}
-`,
-    replacement: `export const getExtensionHostPath = async () => {
-  const { extensionHostPath } = await import(
-    '@lvce-editor/extension-host'
-  )
-  return extensionHostPath
-}
-`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/shared-process/src/parts/PtyHostPath/PtyHostPath.js`,
-    occurrence: `import * as Path from '../Path/Path.js'
-import * as Root from '../Root/Root.js'
-
-export const getPtyHostPath = async () => {
-  return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.js')
-}
-`,
-    replacement: `import * as Root from '../Root/Root.js'
-import * as Path from '../Path/Path.js'
-
-export const getPtyHostPath = async () => {
-  try {
-    const { ptyHostPath } = await import('@lvce-editor/pty-host')
-    return ptyHostPath
-  } catch {
-    return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.js')
-  }
-}
-`,
-  })
-  // TODO where should builtinExtension be located?
-  const shouldBeCopied = (extensionName) => {
-    return (
-      extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-') || extensionName.startsWith('builtin.language-basics')
-    )
-  }
-  const extensionNames = await readdir(Path.absolute('extensions'))
-  for (const extensionName of extensionNames) {
-    if (shouldBeCopied(extensionName)) {
-      await Copy.copy({
-        from: `extensions/${extensionName}`,
-        to: `build/.tmp/server/shared-process/extensions/${extensionName}`,
-      })
-    }
-  }
 }
 
 const copyServerFiles = async ({ commitHash }) => {
@@ -909,8 +822,9 @@ const copyJestEnvironment = async ({ commitHash }) => {
   })
 }
 
-export const build = async () => {
+export const build = async ({ product }) => {
   const commitHash = await CommitHash.getCommitHash()
+  const version = await Tag.getGitTag()
 
   Console.time('clean')
   await Remove.remove('build/.tmp/server')
@@ -929,7 +843,11 @@ export const build = async () => {
   console.timeEnd('bundleRendererWorkerAndRendererProcessJs')
 
   console.time('copySharedProcessFiles')
-  await copySharedProcessFiles()
+  await copySharedProcessFiles({
+    product,
+    version,
+    commitHash,
+  })
   console.timeEnd('copySharedProcessFiles')
 
   console.time('copyExtensionHostFiles')
