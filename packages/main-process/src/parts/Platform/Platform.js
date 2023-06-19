@@ -79,3 +79,15 @@ exports.getExtensionHostHelperProcessPath = () => {
 exports.getExtensionHostHelperProcessPathCjs = () => {
   return join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.cjs')
 }
+
+exports.getVersion = () => {
+  return this.version
+}
+
+exports.getCommit = () => {
+  return this.commit
+}
+
+exports.getProductNameLong = () => {
+  return this.productNameLong
+}

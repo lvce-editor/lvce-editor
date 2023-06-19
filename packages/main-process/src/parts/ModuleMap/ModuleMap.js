@@ -47,8 +47,6 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronClipBoard
     case 'ElectronApplicationMenu':
       return ModuleId.ElectronApplicationMenu
-    case 'About':
-      return ModuleId.About
     case 'Process':
       return ModuleId.Process
     case 'ElectronNet':
@@ -59,6 +57,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.CreatePidMap
     case 'OpenExternal':
       return ModuleId.OpenExternal
+    case 'Platform':
+      return ModuleId.Platform
     default:
       throw new CommandNotFoundError(commandId)
   }
