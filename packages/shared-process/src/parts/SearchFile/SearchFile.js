@@ -1,20 +1,8 @@
 import * as Assert from '../Assert/Assert.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
-import * as IsEnoentErrorWindows from '../IsEnoentErrorWindows/IsEnoentErrorWindows.js'
+import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as LimitString from '../LimitString/LimitString.js'
 import * as Logger from '../Logger/Logger.js'
 import * as RipGrep from '../RipGrep/RipGrep.js'
-
-const isEnoentErrorLinux = (error) => {
-  return error.code === ErrorCodes.ENOENT
-}
-
-const isEnoentError = (error) => {
-  if (!error) {
-    return false
-  }
-  return isEnoentErrorLinux(error) || IsEnoentErrorWindows.isEnoentErrorWindows(error)
-}
 
 // TODO don't necessarily need ripgrep to list all the files,
 // maybe also a faster c program can do it
@@ -32,8 +20,7 @@ export const searchFile = async (path, searchTerm, limit) => {
     })
     return LimitString.limitString(stdout, limit)
   } catch (error) {
-    // @ts-ignore
-    if (isEnoentError(error)) {
+    if (IsEnoentError.isEnoentError(error)) {
       Logger.info(`[shared-process] ripgrep could not be found at "${RipGrep.ripGrepPath}"`)
       return ``
     }
