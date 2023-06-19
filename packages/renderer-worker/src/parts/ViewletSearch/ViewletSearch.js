@@ -5,6 +5,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as InputSource from '../InputSource/InputSource.js'
 import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -34,6 +35,7 @@ export const create = (id, uri, x, y, width, height) => {
     matchCount: 0,
     listFocused: false,
     listFocusedIndex: -1,
+    inputSource: InputSource.User,
   }
 }
 
@@ -71,9 +73,18 @@ export const loadContent = async (state, savedState) => {
   const savedReplaceExpanded = getSavedReplaceExpanded(savedState)
   const threads = getThreads()
   if (savedValue) {
-    return ViewletSearchHandleUpdate.handleUpdate(state, { value: savedValue, threads, replaceExpanded: savedReplaceExpanded })
+    return ViewletSearchHandleUpdate.handleUpdate(state, {
+      value: savedValue,
+      threads,
+      replaceExpanded: savedReplaceExpanded,
+      inputSource: InputSource.Script,
+    })
   }
-  return { ...state, threads, replaceExpanded: savedReplaceExpanded }
+  return {
+    ...state,
+    threads,
+    replaceExpanded: savedReplaceExpanded,
+  }
 }
 
 const updateIcon = (item) => {
@@ -132,6 +143,6 @@ const getMatchStart = (preview, searchTerm) => {
 // TODO send results to renderer process
 // TODO use virtual list because there might be many results
 
-export const handleInput = (state, value) => {
-  return ViewletSearchHandleUpdate.handleUpdate(state, { value })
+export const handleInput = (state, value, inputSource = InputSource.Script) => {
+  return ViewletSearchHandleUpdate.handleUpdate(state, { value, inputSource })
 }
