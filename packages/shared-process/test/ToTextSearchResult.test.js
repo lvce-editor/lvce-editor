@@ -24,7 +24,10 @@ test('toTextSearchResult - match with bytes', () => {
       ],
     },
   }
-  expect(ToTextSearchResult.toTextSearchResult(parsedLine)).toEqual([
+  const remaining = ''
+  const charsBefore = 20
+  const charsAfter = 50
+  expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
     { end: 8, lineNumber: 220, start: 5, text: 'ApplicationsFound=A k�vetkez� alkalmaz�sok olyan f�jlokat ', type: 2 },
   ])
 })
@@ -52,7 +55,10 @@ test('toTextSearchResult - match with text', () => {
       ],
     },
   }
-  expect(ToTextSearchResult.toTextSearchResult(parsedLine)).toEqual([
+  const remaining = ''
+  const charsBefore = 20
+  const charsAfter = 50
+  expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
     { end: 23, lineNumber: 151, start: 20, text: 'elect Destination Location" wizard page\n', type: 2 },
   ])
 })
@@ -78,5 +84,35 @@ test('toTextSearchResult - match without text or bytes', () => {
       ],
     },
   }
-  expect(() => ToTextSearchResult.toTextSearchResult(parsedLine)).toThrowError(new Error('unable to parse line data'))
+  const remaining = ''
+  const charsBefore = 20
+  const charsAfter = 50
+  expect(() => ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toThrowError(
+    new Error('unable to parse line data')
+  )
+})
+
+test.skip('toTextSearchResult - match in the middle', () => {
+  const parsedLine = {
+    type: 'match',
+    data: {
+      path: { text: './languages/index.py' },
+      lines: { text: '# Program to display the Fibonacci sequence up to n-th term\\n' },
+      line_number: 1,
+      absolute_offset: 0,
+      submatches: [{ match: { text: 'cc' }, start: 31, end: 33 }],
+    },
+  }
+  const remaining = ''
+  const charsBefore = 20
+  const charsAfter = 50
+  expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
+    {
+      end: 22,
+      lineNumber: 1,
+      start: 20,
+      text: '# Program to display the Fibonacci sequence up to n-th term',
+      type: 2,
+    },
+  ])
 })
