@@ -3,8 +3,6 @@ const { ModuleNotFoundError } = require('../ModuleNotFoundError/ModuleNotFoundEr
 
 exports.load = async (moduleId) => {
   switch (moduleId) {
-    case ModuleId.About:
-      return require('../About/About.ipc.js')
     case ModuleId.App:
       return require('../App/App.ipc.js')
     case ModuleId.AppWindow:
@@ -53,6 +51,8 @@ exports.load = async (moduleId) => {
       return require('../Beep/Beep.ipc.js')
     case ModuleId.OpenExternal:
       return require('../OpenExternal/OpenExternal.ipc.js')
+    case ModuleId.Platform:
+      return require('../Platform/Platform.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }

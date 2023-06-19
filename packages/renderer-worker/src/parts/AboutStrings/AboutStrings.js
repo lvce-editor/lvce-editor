@@ -6,10 +6,10 @@ const UiStrings = {
   Copy: 'Copy',
 }
 
-exports.ok = () => {
+export const ok = () => {
   return UiStrings.Ok
 }
 
-exports.copy = () => {
+export const copy = () => {
   return UiStrings.Copy
 }
