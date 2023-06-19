@@ -59,7 +59,13 @@ test('toTextSearchResult - match with text', () => {
   const charsBefore = 20
   const charsAfter = 50
   expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
-    { end: 23, lineNumber: 151, start: 20, text: 'elect Destination Location" wizard page\n', type: 2 },
+    {
+      end: 31,
+      lineNumber: 151,
+      start: 28,
+      text: '; *** "Select Destination Location" wizard page\n',
+      type: 2,
+    },
   ])
 })
 
@@ -92,7 +98,7 @@ test('toTextSearchResult - match without text or bytes', () => {
   )
 })
 
-test.skip('toTextSearchResult - match in the middle', () => {
+test('toTextSearchResult - match in the middle', () => {
   const parsedLine = {
     type: 'match',
     data: {
@@ -104,14 +110,14 @@ test.skip('toTextSearchResult - match in the middle', () => {
     },
   }
   const remaining = ''
-  const charsBefore = 20
+  const charsBefore = 26
   const charsAfter = 50
   expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
     {
-      end: 22,
+      end: 31,
       lineNumber: 1,
-      start: 20,
-      text: '# Program to display the Fibonacci sequence up to n-th term',
+      start: 29,
+      text: 'Program to display the Fibonacci sequence up to n-th term\\n',
       type: 2,
     },
   ])
