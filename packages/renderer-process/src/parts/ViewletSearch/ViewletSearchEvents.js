@@ -3,6 +3,7 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
+import * as InputSource from '../InputSource/InputSource.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletSearchFunctions from './ViewletSearchFunctions.js'
 
@@ -10,7 +11,7 @@ export const handleInput = (event) => {
   const { target } = event
   const { value } = target
   const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleInput(uid, value)
+  ViewletSearchFunctions.handleInput(uid, value, InputSource.User)
 }
 
 export const handleFocus = (event) => {
@@ -116,5 +117,5 @@ export const handleListBlur = (event) => {
   ViewletSearchFunctions.handleListBlur(uid)
 }
 
-export * from '../VirtualListEvents/VirtualListEvents.js'
 export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../VirtualListEvents/VirtualListEvents.js'
