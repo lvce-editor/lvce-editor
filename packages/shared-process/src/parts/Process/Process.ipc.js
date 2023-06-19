@@ -7,4 +7,6 @@ export const Commands = {
   crashAsync: Process.crashAsync,
   getPid: Process.getPid,
   kill: Process.kill,
+  getV8Version: Process.getV8Version,
+  getNodeVersion: Process.getNodeVersion,
 }

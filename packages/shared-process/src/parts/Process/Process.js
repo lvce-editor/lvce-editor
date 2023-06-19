@@ -43,3 +43,11 @@ export const getPid = () => {
 }
 
 export const { platform } = process
+
+export const getV8Version = () => {
+  return process.versions.v8
+}
+
+export const getNodeVersion = () => {
+  return process.versions.node
+}
