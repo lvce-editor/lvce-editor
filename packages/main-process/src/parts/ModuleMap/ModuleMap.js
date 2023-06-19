@@ -55,6 +55,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronBrowserViewSuggestions
     case 'CreatePidMap':
       return ModuleId.CreatePidMap
+    case 'OpenExternal':
+      return ModuleId.OpenExternal
     default:
       throw new CommandNotFoundError(commandId)
   }

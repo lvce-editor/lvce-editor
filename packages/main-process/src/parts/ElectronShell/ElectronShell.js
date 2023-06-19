@@ -1,12 +1,14 @@
 const { shell } = require('electron')
+const OpenExternal = require('../OpenExternal/OpenExternal.js')
 
 exports.showItemInFolder = (fullPath) => {
   shell.showItemInFolder(fullPath)
 }
 
-exports.openExternal = async (url) => {
-  await shell.openExternal(url)
-}
+/**
+ * @deprecated use OpenExternal.openExternal function instead
+ */
+exports.openExternal = OpenExternal.openExternal
 
 exports.openPath = async (path) => {
   // TODO handle error
