@@ -11,6 +11,8 @@ exports.getModuleId = (commandId) => {
     case 'ElectronApp':
     case 'App':
       return ModuleId.App
+    case 'Beep':
+      return ModuleId.Beep
     case 'ElectronWindow':
       return ModuleId.Window
     case 'ElectronDeveloper':
