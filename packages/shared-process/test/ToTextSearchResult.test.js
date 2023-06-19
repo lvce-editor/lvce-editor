@@ -1,4 +1,5 @@
 import * as ToTextSearchResult from '../src/parts/ToTextSearchResult/ToTextSearchResult.js'
+import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 
 test('toTextSearchResult - match with bytes', () => {
   const parsedLine = {
@@ -60,11 +61,11 @@ test('toTextSearchResult - match with text', () => {
   const charsAfter = 50
   expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
     {
-      end: 31,
+      end: 24,
       lineNumber: 151,
-      start: 28,
-      text: '; *** "Select Destination Location" wizard page\n',
-      type: 2,
+      start: 21,
+      text: 'Select Destination Location" wizard page\n',
+      type: TextSearchResultType.Match,
     },
   ])
 })
@@ -118,7 +119,59 @@ test('toTextSearchResult - match in the middle', () => {
       lineNumber: 1,
       start: 29,
       text: 'Program to display the Fibonacci sequence up to n-th term\\n',
-      type: 2,
+      type: TextSearchResultType.Match,
+    },
+  ])
+})
+
+test('toTextSearchResult - match at the end', () => {
+  const parsedLine = {
+    type: 'match',
+    data: {
+      path: { text: './languages/a.txt' },
+      lines: {
+        text: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacc',
+      },
+      line_number: 1,
+      absolute_offset: 0,
+      submatches: [{ match: { text: 'cc' }, start: 311, end: 313 }],
+    },
+  }
+  const remaining = ''
+  const charsBefore = 26
+  const charsAfter = 50
+  expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
+    {
+      end: 28,
+      lineNumber: 1,
+      start: 26,
+      text: 'aaaaaaaaaaaaaaaaaaaaaaaaaacc',
+      type: TextSearchResultType.Match,
+    },
+  ])
+})
+
+test('toTextSearchResult - short match', () => {
+  const parsedLine = {
+    type: 'match',
+    data: {
+      path: { text: './short.txt' },
+      lines: { text: 'abccc' },
+      line_number: 1,
+      absolute_offset: 0,
+      submatches: [{ match: { text: 'cc' }, start: 2, end: 4 }],
+    },
+  }
+  const remaining = ''
+  const charsBefore = 26
+  const charsAfter = 50
+  expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
+    {
+      end: 4,
+      lineNumber: 1,
+      start: 2,
+      text: 'abccc',
+      type: TextSearchResultType.Match,
     },
   ])
 })
