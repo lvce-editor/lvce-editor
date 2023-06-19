@@ -1,26 +1,12 @@
 import * as Assert from '../Assert/Assert.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
-
-const getProvider = (scheme) => {
-  switch (scheme) {
-    case '':
-      return import('./TextSearchNode.js')
-    case 'web':
-      return import('./TextSearchWeb.js')
-    case 'fetch':
-      return import('./TextSearchFetch.js')
-    case 'html':
-      return import('./TextSearchHtml.js')
-    default:
-      return import('./TextSearchExtension.js')
-  }
-}
+import * as TextSearchProvider from '../TextSearchProvider/TextSearchProvider.js'
 
 export const textSearch = async (root, query, options) => {
   Assert.string(root)
   Assert.string(query)
   const scheme = GetProtocol.getProtocol(root)
-  const provider = await getProvider(scheme)
+  const provider = await TextSearchProvider.getProvider(scheme)
   const results = await provider.textSearch(scheme, root, query, options)
   return results
 }
