@@ -49,6 +49,8 @@ exports.load = async (moduleId) => {
       return require('../Process/Process.ipc.js')
     case ModuleId.CreatePidMap:
       return require('../CreatePidMap/CreatePidMap.ipc.js')
+    case ModuleId.Beep:
+      return require('../Beep/Beep.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }

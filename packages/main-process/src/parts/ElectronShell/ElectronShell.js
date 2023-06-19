@@ -13,6 +13,10 @@ exports.openPath = async (path) => {
   await shell.openPath(path)
 }
 
+/**
+ * @deprecated use Beep.beep instead
+ */
 exports.beep = () => {
-  shell.beep()
+  const Beep = require('../Beep/Beep.js')
+  Beep.beep()
 }
