@@ -18,7 +18,7 @@ import * as ToTextSearchResult from '../ToTextSearchResult/ToTextSearchResult.js
 // TODO update client
 // TODO not always run nice, maybe configure nice via flag/options
 
-const collectStdout = async (childProcess, maxSearchResults) => {
+const collectStdout = async (childProcess, maxSearchResults, charsBefore, charsAfter) => {
   const allSearchResults = Object.create(null)
   let buffer = ''
   let stats = {}
@@ -43,7 +43,7 @@ const collectStdout = async (childProcess, maxSearchResults) => {
         break
       case RipGrepParsedLineType.Match:
         const remaining = maxSearchResults - numberOfResults
-        const matches = ToTextSearchResult.toTextSearchResult(parsedLine, remaining)
+        const matches = ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)
         numberOfResults += matches.length
         allSearchResults[parsedLine.data.path.text].push(...matches)
         break
@@ -104,6 +104,8 @@ const collectStdout = async (childProcess, maxSearchResults) => {
 }
 
 export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 20_000, isCaseSensitive = false } = {}) => {
+  const charsBefore = 20
+  const charsAfter = 50
   const ripGrepArgs = GetTextSearchRipGrepArgs.getRipGrepArgs({
     threads,
     isCaseSensitive,
@@ -112,7 +114,7 @@ export const search = async (searchDir, searchString, { threads = 1, maxSearchRe
   const childProcess = RipGrep.spawn(ripGrepArgs, {
     cwd: searchDir,
   })
-  const pipeLinePromise = collectStdout(childProcess, maxSearchResults)
+  const pipeLinePromise = collectStdout(childProcess, maxSearchResults, charsBefore, charsAfter)
   const closePromise = new Promise((resolve, reject) => {
     // TODO use pipeline / transform stream maybe
     const handleClose = () => {

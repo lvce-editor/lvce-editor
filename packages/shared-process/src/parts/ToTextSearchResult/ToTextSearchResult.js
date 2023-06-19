@@ -1,8 +1,5 @@
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 
-const CHARS_BEFORE = 20
-const CHARS_AFTER = 50
-
 const getLines = (parsedLineData) => {
   if (parsedLineData.lines.text) {
     return parsedLineData.lines.text
@@ -20,15 +17,15 @@ const getRemainingSubMatches = (submatches, remaining) => {
   return submatches.slice(0, remaining)
 }
 
-export const toTextSearchResult = (parsedLine, remaining) => {
+export const toTextSearchResult = (parsedLine, remaining, charsBefore, charsAfter) => {
   const results = []
   const parsedLineData = parsedLine.data
   const lines = getLines(parsedLineData)
   const lineNumber = parsedLineData.line_number
   const submatches = parsedLineData.submatches
   for (const submatch of submatches) {
-    const previewStart = Math.max(submatch.start - CHARS_BEFORE, 0)
-    const previewEnd = Math.min(submatch.end + CHARS_AFTER, lines.length)
+    const previewStart = Math.max(submatch.start - charsBefore, 0)
+    const previewEnd = Math.min(submatch.end + charsAfter, lines.length)
     const previewText = lines.slice(previewStart, previewEnd)
     results.push({
       type: TextSearchResultType.Match,
