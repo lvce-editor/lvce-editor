@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as TabFlags from '../TabFlags/TabFlags.js'
 
 export const handleTabsPointerOver = (state, index) => {
   Assert.number(index)
@@ -9,12 +10,12 @@ export const handleTabsPointerOver = (state, index) => {
   const group = groups[activeGroupIndex]
   const { editors } = group
   const editor = editors[index]
-  if (editor.hovered) {
+  if (editor.flags & TabFlags.Hovered) {
     return state
   }
   const newEditor = {
     ...editor,
-    hovered: true,
+    flags: editor.flags | TabFlags.Hovered,
   }
   const newEditors = [...editors.slice(0, index), newEditor, ...editors.slice(index + 1)]
   const newGroup = {

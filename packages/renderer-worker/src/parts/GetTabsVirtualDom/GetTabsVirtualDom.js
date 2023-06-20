@@ -12,12 +12,13 @@ const ClassNames = {
 }
 
 const getTabDom = (tab, isActive, fixedWidth) => {
-  const { icon, tabWidth, hovered, uri, flags } = tab
+  const { icon, tabWidth, uri, flags } = tab
   let tabClassName = ClassNames.MainTab
   if (isActive) {
     tabClassName += ' ' + ClassNames.MainTabSelected
   }
   const isDirty = flags & TabFlags.Dirty
+  const isHovered = flags & TabFlags.Hovered
   const fileIconClassName = `FileIcon FileIcon${icon}`
   const actualTabWidth = fixedWidth || tabWidth
   const tabElement = div(
@@ -48,7 +49,7 @@ const getTabDom = (tab, isActive, fixedWidth) => {
     text(tab.label),
   ]
 
-  if (hovered) {
+  if (isHovered) {
     tabElement.childCount++
     dom.push(
       button(
