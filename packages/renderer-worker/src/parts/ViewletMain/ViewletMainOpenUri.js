@@ -4,6 +4,7 @@ import * as Id from '../Id/Id.js'
 import * as MeasureTabWidth from '../MeasureTabWidth/MeasureTabWidth.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as TabFlags from '../TabFlags/TabFlags.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
@@ -63,7 +64,15 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
   const tabWidth = MeasureTabWidth.measureTabWidth(tabLabel, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
   const tabTitle = PathDisplay.getTitle(uri)
   const icon = PathDisplay.getFileIcon(uri)
-  const newEditor = { uri, uid: instanceUid, label: tabLabel, title: tabTitle, icon, tabWidth, preview }
+  const newEditor = {
+    uri,
+    uid: instanceUid,
+    label: tabLabel,
+    title: tabTitle,
+    icon,
+    tabWidth,
+    flags: TabFlags.Preview,
+  }
   const newEditors = [...activeGroup.editors, newEditor]
   const newActiveIndex = newEditors.length - 1
   const newGroup = { ...activeGroup, editors: newEditors, activeIndex: newActiveIndex }
