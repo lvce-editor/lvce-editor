@@ -60,8 +60,9 @@ const getPort = (exports.getPort = (id) => {
  * @param {number} restoreId
  * @returns
  */
-exports.createBrowserView = async (restoreId) => {
+exports.createBrowserView = async (restoreId, uid) => {
   Assert.number(restoreId)
+  Assert.number(uid)
   const cached = ElectronBrowserViewState.get(restoreId)
   if (cached) {
     // console.log('[main-process] cached browser view', restoreId)
@@ -71,6 +72,7 @@ exports.createBrowserView = async (restoreId) => {
   if (!browserWindow) {
     return ElectronBrowserViewState.getAnyKey()
   }
+  const browserWindowId = browserWindow.webContents.id
   // console.log('[main-process] new browser view')
   const view = new BrowserView({
     webPreferences: {
@@ -98,7 +100,7 @@ exports.createBrowserView = async (restoreId) => {
     // console.log({ disposition, features, frameName, referrer, postBody })
     if (disposition === ElectronDispositionType.BackgroundTab) {
       // TODO open background tab
-      const port = getPort(id)
+      const port = getPort(browserWindowId)
       if (!port) {
         Logger.warn('[main process] handlwWindowOpen - no port found')
         return {
@@ -107,8 +109,8 @@ exports.createBrowserView = async (restoreId) => {
       }
       port.postMessage({
         jsonrpc: JsonRpcVersion.Two,
-        method: 'SimpleBrowser.openBackgroundTab',
-        params: [url],
+        method: 'Viewlet.executeViewletCommand',
+        params: [uid, 'openBackgroundTab', url],
       })
       return {
         action: ElectronWindowOpenActionType.Deny,
@@ -134,7 +136,7 @@ exports.createBrowserView = async (restoreId) => {
     // console.log({ event, url })
     const canGoForward = webContents.canGoForward()
     const canGoBack = webContents.canGoBack()
-    const port = getPort(id)
+    const port = getPort(browserWindowId)
     if (!port) {
       Logger.info('[main-process] view will navigate to ', url)
       return
@@ -142,7 +144,7 @@ exports.createBrowserView = async (restoreId) => {
     port.postMessage({
       jsonrpc: JsonRpcVersion.Two,
       method: 'Viewlet.executeViewletCommand',
-      params: ['SimpleBrowser', 'browserViewId', webContents.id, 'handleWillNavigate', url, canGoBack, canGoForward],
+      params: [uid, 'handleWillNavigate', url, canGoBack, canGoForward],
     })
   }
   /**
@@ -154,7 +156,7 @@ exports.createBrowserView = async (restoreId) => {
     console.log(`[main-process] did navigate to ${url}`)
     const canGoForward = webContents.canGoForward()
     const canGoBack = webContents.canGoBack()
-    const port = getPort(id)
+    const port = getPort(browserWindowId)
     if (!port) {
       Logger.info('[main-process] view did navigate to ', url)
       return
@@ -162,7 +164,7 @@ exports.createBrowserView = async (restoreId) => {
     port.postMessage({
       jsonrpc: JsonRpcVersion.Two,
       method: 'Viewlet.executeViewletCommand',
-      params: ['SimpleBrowser', 'browserViewId', webContents.id, 'handleDidNavigate', url, canGoBack, canGoForward],
+      params: [uid, 'handleDidNavigate', url, canGoBack, canGoForward],
     })
   }
 
@@ -172,19 +174,19 @@ exports.createBrowserView = async (restoreId) => {
    * @param {Electron.ContextMenuParams} params
    */
   const handleContextMenu = (event, params) => {
-    const port = getPort(id)
+    const port = getPort(browserWindowId)
     if (!port) {
       return
     }
     port.postMessage({
       jsonrpc: JsonRpcVersion.Two,
       method: 'Viewlet.executeViewletCommand',
-      params: ['SimpleBrowser', 'browserViewId', webContents.id, 'handleContextMenu', params],
+      params: [uid, 'handleContextMenu', params],
     })
   }
 
   const handlePageTitleUpdated = (event, title) => {
-    const port = getPort(id)
+    const port = getPort(browserWindowId)
     if (!port) {
       Logger.info('[main-process] view will change title to ', title)
       return
@@ -192,7 +194,7 @@ exports.createBrowserView = async (restoreId) => {
     port.postMessage({
       jsonrpc: JsonRpcVersion.Two,
       method: 'Viewlet.executeViewletCommand',
-      params: ['SimpleBrowser', 'browserViewId', webContents.id, 'handleTitleUpdated', title],
+      params: [uid, 'handleTitleUpdated', title],
     })
   }
 
@@ -205,7 +207,7 @@ exports.createBrowserView = async (restoreId) => {
       return
     }
     const falltroughKeyBindings = [] // TODO
-    const port = getPort(id)
+    const port = getPort(browserWindowId)
     const identifier = getIdentifier(input)
     for (const fallThroughKeyBinding of falltroughKeyBindings) {
       if (fallThroughKeyBinding.key === identifier) {

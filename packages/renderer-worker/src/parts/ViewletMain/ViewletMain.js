@@ -208,12 +208,54 @@ const handleEditorChange = async (editor) => {
   await RendererProcess.invoke(...command)
 }
 
+const handleTitleUpdated = async (uid, title) => {
+  const state = ViewletStates.getState(ViewletModuleId.Main)
+  const { activeGroupIndex, groups, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing } = state
+  if (activeGroupIndex === -1) {
+    return state
+  }
+  const group = groups[activeGroupIndex]
+  const { editors, activeIndex, tabsUid } = group
+  if (activeIndex === -1) {
+    return state
+  }
+  const editor = editors[activeIndex]
+  if (editor.uid !== uid) {
+    return state
+  }
+  const tabWidth = MeasureTabWidth.measureTabWidth(title, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
+  const newEditors = [
+    ...editors.slice(0, activeIndex),
+    {
+      ...editor,
+      title,
+      label: title,
+      tabWidth,
+    },
+    ...editors.slice(activeIndex + 1),
+  ]
+  const newGroups = [
+    ...groups.slice(0, activeGroupIndex),
+    {
+      ...group,
+      editors: newEditors,
+    },
+    ...groups.slice(activeGroupIndex + 1),
+  ]
+  const newState = {
+    ...state,
+    groups: newGroups,
+  }
+  await Viewlet.setState(state.uid, newState)
+}
+
 export const loadContent = async (state, savedState) => {
   // TODO get restored editors from saved state
   const { activeGroupIndex, groups } = getRestoredGroups(savedState, state)
   // @ts-ignore
   LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
   GlobalEventBus.addListener('editor.change', handleEditorChange)
+  GlobalEventBus.addListener('titleUpdated', handleTitleUpdated)
   await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
   return {
     ...state,
