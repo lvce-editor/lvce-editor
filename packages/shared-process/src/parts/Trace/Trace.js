@@ -1,3 +1,5 @@
+import * as Env from '../Env/Env.js'
+
 export const LEVEL = {
   DEFAULT: 1,
   VERBOSE: 2,
@@ -8,7 +10,7 @@ export const state = {
 }
 
 export const trace =
-  process.env.NODE_ENV === 'test'
+  Env.getNodeEnv() === 'test'
     ? () => {}
     : (...args) => {
         console.info('[Trace]', ...args)

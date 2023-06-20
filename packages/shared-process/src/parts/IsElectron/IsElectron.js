@@ -1,3 +1,5 @@
+import * as Env from '../Env/Env.js'
+
 export const isElectron = () => {
-  return Boolean(process.env.ELECTRON_RUN_AS_NODE)
+  return Boolean(Env.getElectronRunAsNode())
 }

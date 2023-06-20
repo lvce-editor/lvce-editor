@@ -1,9 +1,10 @@
 import * as NodeChildProcess from 'node:child_process'
 import * as Assert from '../Assert/Assert.js'
+import * as Env from '../Env/Env.js'
 import * as Exec from '../Exec/Exec.js'
 import * as RgPath from '../RipGrepPath/RipGrepPath.js'
 
-export const ripGrepPath = process.env.RIP_GREP_PATH || RgPath.rgPath
+export const ripGrepPath = Env.getRipGrepPath() || RgPath.rgPath
 
 export const spawn = (args, options) => {
   const childProcess = NodeChildProcess.spawn(RgPath.rgPath, args, options)
