@@ -23,4 +23,5 @@ export const Commands = {
   getUserSettingsPath: Platform.getUserSettingsPath,
   getVersion: Platform.getVersion,
   setEnvironmentVariables: Platform.setEnvironmentVariables,
+  getDate: Platform.getDate,
 }
