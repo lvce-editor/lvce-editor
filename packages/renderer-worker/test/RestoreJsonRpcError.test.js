@@ -408,3 +408,27 @@ test('restoreJsonRpcError - message string', () => {
   expect(error.stack).toMatch(`'Location.reload' wasn't found
     at Module.restoreJsonRpcError`)
 })
+
+test('restoreJsonRpcError - TextSearchError', () => {
+  const error = RestoreJsonRpcError.restoreJsonRpcError({
+    code: -32001,
+    message: 'ripgrep path not found: Error: spawn /test/bin/rg ENOENT',
+    data: {
+      stack: `    at TextSearch.search (/test/packages/shared-process/src/parts/TextSearch/TextSearch.js:124:11)
+    at async handleJsonRpcMessage (/test/packages/shared-process/src/parts/HandleJsonRpcMessage/HandleJsonRpcMessage.js:8:24)`,
+      codeFrame: `  122 |   const [pipeLineResult, exitResult] = await Promise.all([pipeLinePromise, closePromise])
+  123 |   if (exitResult.type === ProcessExitEventType.Error) {
+> 124 |     throw new TextSearchError(exitResult.event)
+      |           ^
+  125 |   }
+  126 |   return pipeLineResult
+  127 | }`,
+      type: 'TextSearchError',
+      code: 'E_RIP_GREP_NOT_FOUND',
+    },
+  })
+  expect(error.message).toBe('ripgrep path not found: Error: spawn /test/bin/rg ENOENT')
+  expect(error.stack).toMatch(`TextSearchError: ripgrep path not found: Error: spawn /test/bin/rg ENOENT
+    at TextSearch.search (/test/packages/shared-process/src/parts/TextSearch/TextSearch.js:124:11)`)
+  expect(error.name).toBe('TextSearchError')
+})
