@@ -33,7 +33,11 @@ test(
 </html>
 `
     )
-    expect(await TextSearch.search(tmpDir, 'Document')).toEqual({
+    const options = {
+      ripGrepArgs: ['--smart-case', '--stats', '--json', '--threads', '1', '--ignore-case', '--fixed-strings', '--', 'Document', '.'],
+      searchDir: tmpDir,
+    }
+    expect(await TextSearch.search(options)).toEqual({
       results: [
         {
           type: TextSearchResultType.File,

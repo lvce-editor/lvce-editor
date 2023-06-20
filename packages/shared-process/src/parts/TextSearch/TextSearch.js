@@ -105,14 +105,9 @@ const collectStdout = async (childProcess, maxSearchResults, charsBefore, charsA
   }
 }
 
-export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 20_000, isCaseSensitive = false } = {}) => {
+export const search = async ({ searchDir = '', maxSearchResults = 20_000, ripGrepArgs = [] } = {}) => {
   const charsBefore = 26
   const charsAfter = 50
-  const ripGrepArgs = GetTextSearchRipGrepArgs.getRipGrepArgs({
-    threads,
-    isCaseSensitive,
-    searchString,
-  })
   const childProcess = RipGrep.spawn(ripGrepArgs, {
     cwd: searchDir,
   })
