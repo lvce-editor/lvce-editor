@@ -28,3 +28,7 @@ export const getCommit = () => {
 export const getV8Version = () => {
   return SharedProcess.invoke('Process.getV8Version')
 }
+
+export const getDate = () => {
+  return SharedProcess.invoke('Process.getDate')
+}
