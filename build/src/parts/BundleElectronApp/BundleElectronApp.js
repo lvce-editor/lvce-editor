@@ -8,6 +8,7 @@ import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/Bundl
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as CopySharedProcessSources from '../CopySharedProcessSources/CopySharedProcessSources.js'
+import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
@@ -114,12 +115,13 @@ const copyDependencies = async ({ cachePath, arch }) => {
   })
 }
 
-const copySharedProcessSources = async ({ arch, product, commitHash, version }) => {
+const copySharedProcessSources = async ({ arch, product, commitHash, version, date }) => {
   await CopySharedProcessSources.copySharedProcessSources({
     to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process`,
     product,
     commitHash,
     version,
+    date,
   })
 }
 
@@ -302,6 +304,7 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   const dependencyCachePath = Path.join(Path.absolute('build/.tmp/cachedDependencies'), dependencyCacheHash)
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
   const commitHash = await CommitHash.getCommitHash()
+  const date = GetCommitDate.getCommitDate(commitHash)
 
   if (!isInstalled) {
     console.time('downloadElectron')
@@ -364,7 +367,7 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   console.timeEnd('copyMainProcessSources')
 
   console.time('copySharedProcessSources')
-  await copySharedProcessSources({ arch, commitHash, product, version })
+  await copySharedProcessSources({ arch, commitHash, product, version, date })
   console.timeEnd('copySharedProcessSources')
 
   console.time('copyExtensionHostHelperProcessSources')
