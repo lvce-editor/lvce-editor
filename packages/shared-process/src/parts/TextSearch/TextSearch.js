@@ -6,6 +6,7 @@ import * as GetTextSearchRipGrepArgs from '../GetTextSearchRipGrepArgs/GetTextSe
 import * as ProcessExitEventType from '../ProcessExitEventType/ProcessExitEventType.js'
 import * as RipGrep from '../RipGrep/RipGrep.js'
 import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
+import { TextSearchError } from '../TextSearchError/TextSearchError.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as ToTextSearchResult from '../ToTextSearchResult/ToTextSearchResult.js'
 import * as WaitForProcessToExit from '../WaitForProcessToExit/WaitForProcessToExit.js'
@@ -115,7 +116,7 @@ export const search = async ({ searchDir = '', maxSearchResults = 20_000, ripGre
   const closePromise = WaitForProcessToExit.waitForProcessToExit(childProcess)
   const [pipeLineResult, exitResult] = await Promise.all([pipeLinePromise, closePromise])
   if (exitResult.type === ProcessExitEventType.Error) {
-    throw new Error(`ripgrep process error: ${exitResult.event}`)
+    throw new TextSearchError(exitResult.event)
   }
   return pipeLineResult
 }

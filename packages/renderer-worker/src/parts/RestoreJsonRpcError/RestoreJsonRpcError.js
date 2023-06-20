@@ -56,6 +56,10 @@ export const restoreJsonRpcError = (error) => {
         // @ts-ignore
         restoredError.code = error.data.code
       }
+      if (error.data.type) {
+        // @ts-ignore
+        restoredError.name = error.data.type
+      }
     } else {
       if (error.stack) {
         // TODO accessing stack might be slow
