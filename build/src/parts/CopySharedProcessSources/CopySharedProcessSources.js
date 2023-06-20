@@ -3,7 +3,7 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 
-export const copySharedProcessSources = async ({ to, product, commitHash, version, target = '' }) => {
+export const copySharedProcessSources = async ({ to, product, commitHash, version, target = '', date }) => {
   await Copy.copy({
     from: 'packages/shared-process/src',
     to: `${to}/src`,
@@ -26,6 +26,11 @@ export const copySharedProcessSources = async ({ to, product, commitHash, versio
     path: `${to}/src/parts/Platform/Platform.js`,
     occurrence: `version = '0.0.0-dev'`,
     replacement: `version = '${version}'`,
+  })
+  await Replace.replace({
+    path: `${to}/src/parts/Platform/Platform.js`,
+    occurrence: `date = ''`,
+    replacement: `date = '${date}'`,
   })
 
   if (target === 'server') {

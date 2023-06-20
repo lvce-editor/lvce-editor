@@ -7,6 +7,7 @@ import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
 import * as CopySharedProcessSources from '../CopySharedProcessSources/CopySharedProcessSources.js'
+import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
@@ -98,13 +99,14 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
-const copySharedProcessFiles = async ({ product, version, commitHash }) => {
+const copySharedProcessFiles = async ({ product, version, commitHash, date }) => {
   await CopySharedProcessSources.copySharedProcessSources({
     to: 'build/.tmp/server/shared-process',
     target: 'server',
     product,
     version,
     commitHash,
+    date,
   })
 }
 
@@ -825,6 +827,7 @@ const copyJestEnvironment = async ({ commitHash }) => {
 export const build = async ({ product }) => {
   const commitHash = await CommitHash.getCommitHash()
   const version = await Tag.getGitTag()
+  const date = await GetCommitDate.getCommitDate(commitHash)
 
   Console.time('clean')
   await Remove.remove('build/.tmp/server')
@@ -847,6 +850,7 @@ export const build = async ({ product }) => {
     product,
     version,
     commitHash,
+    date,
   })
   console.timeEnd('copySharedProcessFiles')
 
