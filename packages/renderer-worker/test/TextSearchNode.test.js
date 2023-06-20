@@ -15,18 +15,14 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 
 const TextSearchNode = await import('../src/parts/TextSearch/TextSearchNode.js')
 
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 test('textSearch - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    TextSearchNode.textSearch('', '/test', 'abc')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(TextSearchNode.textSearch('', '/test', 'abc')).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('textSearch', async () => {
@@ -68,10 +64,8 @@ test('textSearch', async () => {
     },
   ])
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'TextSearch.search',
-    '/test',
-    'abc',
-    {}
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('TextSearch.search', {
+    ripGrepArgs: ['--smart-case', '--stats', '--json', '--threads', 'undefined', '--ignore-case', '--fixed-strings', '--', 'abc', '.'],
+    searchDir: '/test',
+  })
 })

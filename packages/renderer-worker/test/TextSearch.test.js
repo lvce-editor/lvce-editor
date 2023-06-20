@@ -5,16 +5,13 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostTextSearch.js',
-  () => {
-    return {
-      executeTextSearchProvider: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostTextSearch.js', () => {
+  return {
+    executeTextSearchProvider: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
@@ -25,21 +22,15 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 })
 
 const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
-const ExtensionHostTextSearch = await import(
-  '../src/parts/ExtensionHost/ExtensionHostTextSearch.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const ExtensionHostTextSearch = await import('../src/parts/ExtensionHost/ExtensionHostTextSearch.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 test('textSearch - extension search - error', async () => {
   // @ts-ignore
   ExtensionHostTextSearch.executeTextSearchProvider.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(TextSearch.textSearch('xyz://', 'abc')).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(TextSearch.textSearch('xyz://', 'abc')).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('textSearch - extension search', async () => {
@@ -64,12 +55,8 @@ test('textSearch - extension search', async () => {
       },
     ],
   ])
-  expect(
-    ExtensionHostTextSearch.executeTextSearchProvider
-  ).toHaveBeenCalledTimes(1)
-  expect(
-    ExtensionHostTextSearch.executeTextSearchProvider
-  ).toHaveBeenCalledWith('xyz', 'abc')
+  expect(ExtensionHostTextSearch.executeTextSearchProvider).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostTextSearch.executeTextSearchProvider).toHaveBeenCalledWith('xyz', 'abc')
 })
 
 test('textSearch - file - error', async () => {
@@ -77,9 +64,7 @@ test('textSearch - file - error', async () => {
   SharedProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(TextSearch.textSearch('/test', 'abc')).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(TextSearch.textSearch('/test', 'abc')).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('textSearch - file', async () => {
@@ -121,10 +106,8 @@ test('textSearch - file', async () => {
     },
   ])
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'TextSearch.search',
-    '/test',
-    'abc',
-    {}
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('TextSearch.search', {
+    ripGrepArgs: ['--smart-case', '--stats', '--json', '--threads', 'undefined', '--ignore-case', '--fixed-strings', '--', 'abc', '.'],
+    searchDir: '/test',
+  })
 })

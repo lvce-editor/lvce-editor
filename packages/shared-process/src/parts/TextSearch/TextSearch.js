@@ -2,7 +2,6 @@ import { Writable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
 import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
-import * as GetTextSearchRipGrepArgs from '../GetTextSearchRipGrepArgs/GetTextSearchRipGrepArgs.js'
 import * as ProcessExitEventType from '../ProcessExitEventType/ProcessExitEventType.js'
 import * as RipGrep from '../RipGrep/RipGrep.js'
 import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
@@ -106,14 +105,9 @@ const collectStdout = async (childProcess, maxSearchResults, charsBefore, charsA
   }
 }
 
-export const search = async (searchDir, searchString, { threads = 1, maxSearchResults = 20_000, isCaseSensitive = false } = {}) => {
+export const search = async ({ searchDir = '', maxSearchResults = 20_000, ripGrepArgs = [] } = {}) => {
   const charsBefore = 26
   const charsAfter = 50
-  const ripGrepArgs = GetTextSearchRipGrepArgs.getRipGrepArgs({
-    threads,
-    isCaseSensitive,
-    searchString,
-  })
   const childProcess = RipGrep.spawn(ripGrepArgs, {
     cwd: searchDir,
   })
