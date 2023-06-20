@@ -258,7 +258,6 @@ test('search - one result split across multiple chunks', async () => {
   )
 })
 
-// TODO when parsing line fails, function should throw an error without crashsing the process
 test('search - error with parsing line', async () => {
   // @ts-ignore
   ToTextSearchResult.toTextSearchResult.mockImplementation(() => {
@@ -297,8 +296,7 @@ test('search - error with parsing line', async () => {
   await expect(TextSearch.search('/test', 'document')).rejects.toThrowError(new TypeError('Cannot read properties of undefined (reading length)'))
 })
 
-// TODO when parsing line fails, function should throw an error without crashsing the process
-test.skip('search - error ripgrep not found', async () => {
+test('search - error ripgrep not found', async () => {
   // @ts-ignore
   ToTextSearchResult.toTextSearchResult.mockImplementation(() => {})
   // @ts-ignore
@@ -331,5 +329,5 @@ test.skip('search - error ripgrep not found', async () => {
     })
     return childProcess
   })
-  await expect(TextSearch.search('/test', 'document')).rejects.toThrowError(new TypeError('ripgrep process error: Error: spawn /test/bin/rg ENOENT'))
+  await expect(TextSearch.search('/test', 'document')).rejects.toThrowError(new TypeError('ripgrep path not found: Error: spawn /test/bin/rg ENOENT'))
 })
