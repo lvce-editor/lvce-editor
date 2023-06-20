@@ -29,7 +29,7 @@
     "lines-and-columns": "^2.0.3",
     "p-queue": "^7.3.4",
     "parse-json": "^7.0.0",
-    "tar-fs": "^2.1.1",
+    "tar-fs": "^3.0.2",
     "ws": "^8.13.0",
     "xdg-basedir": "^5.1.0"
   },
