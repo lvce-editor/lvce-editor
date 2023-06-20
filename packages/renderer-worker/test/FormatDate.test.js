@@ -1,6 +1,7 @@
 import * as FormatDate from '../src/parts/FormatDate/FormatDate.js'
 
-const second = 1000
+const millisecond = 1
+const second = 1000 * millisecond
 const minute = 60 * second
 const hour = minute * 60
 const day = hour * 24
@@ -8,6 +9,11 @@ const week = day * 7
 const month = day * 30
 const year = day * 365
 const now = new Date(0).getTime() + 10 * year
+
+test('formatDate - 1 millisecond ago', () => {
+  const date = now - millisecond
+  expect(FormatDate.formatDate(date, now)).toBe('0 seconds ago')
+})
 
 test('formatDate - 1 second ago', () => {
   const date = now - second

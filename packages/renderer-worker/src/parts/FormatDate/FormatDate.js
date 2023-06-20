@@ -14,7 +14,7 @@ const year = day * 365
  */
 export const formatDate = (date, now) => {
   const difference = now - date
-  const seconds = difference / 1000
+  const seconds = Math.round(difference / 1000)
   if (seconds < minute) {
     if (seconds === 1) {
       return FormatDateStrings.oneSecondAgo()
