@@ -40,6 +40,9 @@ test('search - no results', async () => {
       on(event, listener) {
         emitter.on(event, listener)
       },
+      off(event, listener) {
+        emitter.off(event, listener)
+      },
       once(event, listener) {
         emitter.once(event, listener)
       },
@@ -82,6 +85,9 @@ test('search - one result', async () => {
     const childProcess = {
       on(event, listener) {
         emitter.on(event, listener)
+      },
+      off(event, listener) {
+        emitter.off(event, listener)
       },
       once(event, listener) {
         emitter.once(event, listener)
@@ -177,6 +183,9 @@ test('search - one result split across multiple chunks', async () => {
       on(event, listener) {
         emitter.on(event, listener)
       },
+      off(event, listener) {
+        emitter.off(event, listener)
+      },
       once(event, listener) {
         emitter.once(event, listener)
       },
@@ -265,6 +274,9 @@ test('search - error with parsing line', async () => {
       on(event, listener) {
         emitter.on(event, listener)
       },
+      off(event, listener) {
+        emitter.off(event, listener)
+      },
       once(event, listener) {
         emitter.once(event, listener)
       },
@@ -283,4 +295,41 @@ test('search - error with parsing line', async () => {
     return childProcess
   })
   await expect(TextSearch.search('/test', 'document')).rejects.toThrowError(new TypeError('Cannot read properties of undefined (reading length)'))
+})
+
+// TODO when parsing line fails, function should throw an error without crashsing the process
+test.skip('search - error ripgrep not found', async () => {
+  // @ts-ignore
+  ToTextSearchResult.toTextSearchResult.mockImplementation(() => {})
+  // @ts-ignore
+  RipGrep.spawn.mockImplementation(() => {
+    const emitter = new EventEmitter()
+    const stdout = new Readable({
+      read() {},
+    })
+    const childProcess = {
+      on(event, listener) {
+        emitter.on(event, listener)
+      },
+      off(event, listener) {
+        emitter.off(event, listener)
+      },
+      once(event, listener) {
+        emitter.once(event, listener)
+      },
+      stdout,
+      stderr: {},
+      kill() {},
+    }
+    setTimeout(() => {
+      const error = new Error(`spawn /test/bin/rg ENOENT`)
+      // @ts-ignore
+      error.code = 'ENOENT'
+      emitter.emit('error', error)
+      stdout.emit('end')
+      stdout.emit('close')
+    })
+    return childProcess
+  })
+  await expect(TextSearch.search('/test', 'document')).rejects.toThrowError(new TypeError('ripgrep process error: Error: spawn /test/bin/rg ENOENT'))
 })

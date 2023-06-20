@@ -3,10 +3,12 @@ import { pipeline } from 'node:stream/promises'
 import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 import * as GetTextSearchRipGrepArgs from '../GetTextSearchRipGrepArgs/GetTextSearchRipGrepArgs.js'
+import * as ProcessExitEventType from '../ProcessExitEventType/ProcessExitEventType.js'
 import * as RipGrep from '../RipGrep/RipGrep.js'
 import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as ToTextSearchResult from '../ToTextSearchResult/ToTextSearchResult.js'
+import * as WaitForProcessToExit from '../WaitForProcessToExit/WaitForProcessToExit.js'
 // TODO update vscode-ripgrep when https://github.com/mhinz/vim-grepper/issues/244, https://github.com/BurntSushi/ripgrep/issues/1892 is fixed
 
 // need to use '.' as last argument for ripgrep
@@ -115,20 +117,10 @@ export const search = async (searchDir, searchString, { threads = 1, maxSearchRe
     cwd: searchDir,
   })
   const pipeLinePromise = collectStdout(childProcess, maxSearchResults, charsBefore, charsAfter)
-  const closePromise = new Promise((resolve, reject) => {
-    // TODO use pipeline / transform stream maybe
-    const handleClose = () => {
-      resolve(undefined)
-    }
-    const handleError = (error) => {
-      // TODO check type of error
-      console.error(error)
-      resolve(undefined)
-    }
-
-    childProcess.once('close', handleClose)
-    childProcess.once('error', handleError)
-  })
-  await Promise.all([pipeLinePromise, closePromise])
-  return await pipeLinePromise
+  const closePromise = WaitForProcessToExit.waitForProcessToExit(childProcess)
+  const [pipeLineResult, exitResult] = await Promise.all([pipeLinePromise, closePromise])
+  if (exitResult.type === ProcessExitEventType.Error) {
+    throw new Error(`ripgrep process error: ${exitResult.event}`)
+  }
+  return pipeLineResult
 }
