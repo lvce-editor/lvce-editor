@@ -1,8 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as Assert from '../Assert/Assert.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as Tab from '../Tab/Tab.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletMainTabEvents from './ViewletMainTabEvents.js'
 
@@ -35,16 +33,6 @@ export const attachEvents = (state) => {
   $MainTabs.onpointerout = ViewletMainTabEvents.handlePointerOut
 }
 
-export const setTabs = (state, tabs) => {
-  const { $Viewlet } = state
-  const $$Tabs = []
-  for (const tab of tabs) {
-    const $Tab = Tab.create(tab.label, tab.title, tab.icon, tab.tabWidth, tab.preview, true)
-    $$Tabs.push($Tab)
-  }
-  $Viewlet.replaceChildren(...$$Tabs)
-}
-
 export const setTabsDom = (state, dom) => {
   const { $Viewlet } = state
   VirtualDom.renderInto($Viewlet, dom)
@@ -70,30 +58,6 @@ export const setScrollBar = (state, scrollBarWidth) => {
   // }
   // const { $Viewlet, $ScrollBar, $ScrollBarThumb } = state
   // $ScrollBarThumb.style.width = `${scrollBarWidth}px`
-}
-
-export const setDirty = (state, index, dirty) => {
-  Assert.number(index)
-  Assert.boolean(dirty)
-  const { $MainTabs } = state
-  const $Child = $MainTabs.children[index]
-  if (dirty) {
-    if ($Child.lastChild.className === 'Circle') {
-      return
-    }
-    const $MaskIcon = document.createElement('div')
-    $MaskIcon.className = 'MaskIcon TabDirtyIcon'
-    const $Circle = document.createElement('div')
-    $Circle.append($MaskIcon)
-    $Circle.className = 'Circle'
-    $Child.append($Circle)
-    // $Child.classList.add(ClassNames.Dirty)
-  } else {
-    if ($Child.lastChild.className === 'Circle') {
-      $Child.lastChild.remove()
-      return
-    }
-  }
 }
 
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {

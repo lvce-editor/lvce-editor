@@ -1,4 +1,5 @@
 import { button, div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as TabFlags from '../TabFlags/TabFlags.js'
 
 /**
  * @enum {string}
@@ -7,11 +8,16 @@ const ClassNames = {
   MainTab: 'MainTab',
   FileIcon: 'FileIcon',
   TabLabel: 'TabLabel',
+  MainTabSelected: 'MainTabSelected',
 }
 
 const getTabDom = (tab, isActive, fixedWidth) => {
-  const { icon, tabWidth, hovered, uri } = tab
-  const tabClassName = isActive ? 'MainTab MainTabSelected' : ClassNames.MainTab
+  const { icon, tabWidth, hovered, uri, flags } = tab
+  let tabClassName = ClassNames.MainTab
+  if (isActive) {
+    tabClassName += ' ' + ClassNames.MainTabSelected
+  }
+  const isDirty = flags & TabFlags.Dirty
   const fileIconClassName = `FileIcon FileIcon${icon}`
   const actualTabWidth = fixedWidth || tabWidth
   const tabElement = div(
@@ -41,6 +47,7 @@ const getTabDom = (tab, isActive, fixedWidth) => {
     ),
     text(tab.label),
   ]
+
   if (hovered) {
     tabElement.childCount++
     dom.push(
@@ -48,6 +55,22 @@ const getTabDom = (tab, isActive, fixedWidth) => {
         {
           className: 'EditorTabCloseButton',
           title: 'Close',
+        },
+        0
+      )
+    )
+  } else if (isDirty) {
+    tabElement.childCount++
+    dom.push(
+      div(
+        {
+          className: 'Circle',
+        },
+        1
+      ),
+      div(
+        {
+          className: 'MaskIcon TabDirtyIcon',
         },
         0
       )

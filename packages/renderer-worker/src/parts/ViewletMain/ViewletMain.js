@@ -22,6 +22,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as TabFlags from '../TabFlags/TabFlags.js'
 import { closeEditor } from './ViewletMainCloseEditor.js'
 import { openUri } from './ViewletMainOpenUri.js'
 import * as SerializeEditorGroups from '../SerializeEditorGroups/SerializeEditorGroups.js'
@@ -201,11 +202,39 @@ export const saveState = (state) => {
 const handleEditorChange = async (editor) => {
   const state = ViewletStates.getState(ViewletModuleId.Main)
   const { activeGroupIndex, groups } = state
+  if (activeGroupIndex === -1) {
+    return state
+  }
   const group = groups[activeGroupIndex]
-  Assert.object(group)
-  const { tabsUid, activeIndex } = group
-  const command = ['Viewlet.send', tabsUid, 'setDirty', activeIndex, true]
-  await RendererProcess.invoke(...command)
+  const { editors, activeIndex, tabsUid } = group
+  if (activeIndex === -1) {
+    return state
+  }
+  const tab = editors[activeIndex]
+  if (tab.uid !== editor.uid) {
+    return state
+  }
+  const newEditors = [
+    ...editors.slice(0, activeIndex),
+    {
+      ...tab,
+      flags: TabFlags.Dirty,
+    },
+    ...editors.slice(activeIndex + 1),
+  ]
+  const newGroups = [
+    ...groups.slice(0, activeGroupIndex),
+    {
+      ...group,
+      editors: newEditors,
+    },
+    ...groups.slice(activeGroupIndex + 1),
+  ]
+  const newState = {
+    ...state,
+    groups: newGroups,
+  }
+  await Viewlet.setState(state.uid, newState)
 }
 
 export const loadContent = async (state, savedState) => {
@@ -354,9 +383,26 @@ export const save = async (state) => {
   await saveEditor(editor)
   // TODO handle different types of editors / custom editors / webviews
   // Command.execute(/* EditorSave.editorSave */ 'Editor.save')
-  const command = ['Viewlet.send', tabsUid, 'setDirty', activeIndex, false]
-  await RendererProcess.invoke(...command)
-  return state
+  const newEditors = [
+    ...editors.slice(0, activeIndex),
+    {
+      ...editor,
+      flags: editor.flags & ~TabFlags.Dirty,
+    },
+    ...editors.slice(activeIndex + 1),
+  ]
+  const newGroups = [
+    ...groups.slice(0, activeGroupIndex),
+    {
+      ...group,
+      editors: newEditors,
+    },
+    ...groups.slice(activeGroupIndex + 1),
+  ]
+  return {
+    ...state,
+    groups: newGroups,
+  }
 }
 
 export const focus = async (state) => {
