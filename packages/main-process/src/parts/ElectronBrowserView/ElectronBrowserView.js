@@ -43,11 +43,10 @@ const getIdentifier = (input) => {
 
 /**
  *
- * @param {Electron.WebContents} webContents
+ * @param {number} id
  */
-const getPort = (exports.getPort = (webContents) => {
-  const browserWindow = ElectronBrowserViewState.getWindow(webContents)
-  const state = AppWindowStates.findById(browserWindow.webContents.id)
+const getPort = (exports.getPort = (id) => {
+  const state = AppWindowStates.findById(id)
   if (!state) {
     Logger.info('[main process] no message port found')
     return undefined
@@ -99,7 +98,7 @@ exports.createBrowserView = async (restoreId) => {
     // console.log({ disposition, features, frameName, referrer, postBody })
     if (disposition === ElectronDispositionType.BackgroundTab) {
       // TODO open background tab
-      const port = getPort(webContents)
+      const port = getPort(id)
       if (!port) {
         Logger.warn('[main process] handlwWindowOpen - no port found')
         return {
@@ -135,7 +134,7 @@ exports.createBrowserView = async (restoreId) => {
     // console.log({ event, url })
     const canGoForward = webContents.canGoForward()
     const canGoBack = webContents.canGoBack()
-    const port = getPort(webContents)
+    const port = getPort(id)
     if (!port) {
       Logger.info('[main-process] view will navigate to ', url)
       return
@@ -155,7 +154,7 @@ exports.createBrowserView = async (restoreId) => {
     console.log(`[main-process] did navigate to ${url}`)
     const canGoForward = webContents.canGoForward()
     const canGoBack = webContents.canGoBack()
-    const port = getPort(webContents)
+    const port = getPort(id)
     if (!port) {
       Logger.info('[main-process] view did navigate to ', url)
       return
@@ -173,7 +172,7 @@ exports.createBrowserView = async (restoreId) => {
    * @param {Electron.ContextMenuParams} params
    */
   const handleContextMenu = (event, params) => {
-    const port = getPort(webContents)
+    const port = getPort(id)
     if (!port) {
       return
     }
@@ -185,7 +184,7 @@ exports.createBrowserView = async (restoreId) => {
   }
 
   const handlePageTitleUpdated = (event, title) => {
-    const port = getPort(webContents)
+    const port = getPort(id)
     if (!port) {
       Logger.info('[main-process] view will change title to ', title)
       return
@@ -206,7 +205,7 @@ exports.createBrowserView = async (restoreId) => {
       return
     }
     const falltroughKeyBindings = [] // TODO
-    const port = getPort(webContents)
+    const port = getPort(id)
     const identifier = getIdentifier(input)
     for (const fallThroughKeyBinding of falltroughKeyBindings) {
       if (fallThroughKeyBinding.key === identifier) {

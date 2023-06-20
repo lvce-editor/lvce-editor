@@ -40,6 +40,11 @@ exports.getAnyKey = () => {
   return Number.parseInt(keys[0])
 }
 
+/**
+ *
+ * @param {import('electron').WebContents} webContents
+ * @returns {import('electron').BrowserView|undefined}
+ */
 exports.getWindow = (webContents) => {
   for (const value of Object.values(state.browserViews)) {
     if (value.view.webContents === webContents) {
