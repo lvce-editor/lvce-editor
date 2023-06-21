@@ -5,8 +5,11 @@ const { readFileSync } = require('node:fs')
 const CleanStack = require('../CleanStack/CleanStack.js')
 const EncodingType = require('../EncodingType/EncodingType.js')
 const GetNewLineIndex = require('../GetNewLineIndex/GetNewLineIndex.js')
+const GetSourceMapMatch = require('../GetSourceMapMatch/GetSourceMapMatch.js')
 const JoinLines = require('../JoinLines/JoinLines.js')
 const Json = require('../Json/Json.js')
+const JsonFile = require('../JsonFile/JsonFile.js')
+const SourceMap = require('../SourceMap/SourceMap.js')
 
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
@@ -47,6 +50,17 @@ const getType = (error) => {
   return error.name || error.constructor.name || 'Error'
 }
 
+const getSourceMapAbsolutePath = (file, relativePath) => {
+  const folder = file.slice(0, file.lastIndexOf('/'))
+  const absolutePath = folder + '/' + relativePath
+  return absolutePath
+}
+
+const toAbsoluteUrl = (file, relativePath) => {
+  const url = new URL(relativePath, file)
+  return url.href
+}
+
 exports.prepare = (error) => {
   const message = prepareMessage(error.message)
   const lines = CleanStack.cleanStack(error.stack)
@@ -66,14 +80,34 @@ exports.prepare = (error) => {
       const [_, path, line, column] = match
       const actualPath = getActualPath(path)
       const rawLines = readFileSync(actualPath, EncodingType.Utf8) // TODO handle case when file cannot be found
-
-      const location = {
-        start: {
-          line: Number.parseInt(line),
-          column: Number.parseInt(column),
-        },
+      const sourceMapMatch = GetSourceMapMatch.getSourceMapMatch(rawLines)
+      if (sourceMapMatch) {
+        const sourceMapUrl = sourceMapMatch[1]
+        const sourceMapAbsolutePath = getSourceMapAbsolutePath(path, sourceMapUrl)
+        const sourceMap = JsonFile.readJsonSync(sourceMapAbsolutePath)
+        const { source, originalLine, originalColumn } = SourceMap.getOriginalPosition(sourceMap, parsedLine, parsedColumn)
+        const absoluteSourceUrl = toAbsoluteUrl(path, source)
+        const originalSourceContent = readFileSync(absoluteSourceUrl, EncodingType.Utf8)
+        const location = {
+          start: {
+            line: originalLine,
+            column: originalColumn,
+          },
+          end: {
+            line: originalLine,
+            column: originalColumn,
+          },
+        }
+        codeFrame = codeFrameColumns(originalSourceContent, location)
+      } else {
+        const location = {
+          start: {
+            line: Number.parseInt(line),
+            column: Number.parseInt(column),
+          },
+        }
+        codeFrame = codeFrameColumns(rawLines, location)
       }
-      codeFrame = codeFrameColumns(rawLines, location)
     }
   }
   let relevantStack = lines
