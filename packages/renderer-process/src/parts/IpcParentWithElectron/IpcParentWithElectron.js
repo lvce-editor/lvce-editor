@@ -3,6 +3,9 @@ import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.js'
 import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
 const handleMessageFromWindow = (event) => {
+  if (event.origin !== location.origin) {
+    return
+  }
   const { data } = event
   Callback.resolve(data.id, data)
 }
