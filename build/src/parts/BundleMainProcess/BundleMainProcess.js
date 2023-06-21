@@ -70,6 +70,7 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
       cwd: cachePath,
       from: `./src/mainProcessMain.js`,
       platform: 'node/cjs',
+      external: ['electron', 'electron-unhandled'],
     })
   }
 }

@@ -3,8 +3,8 @@ import * as rollup from 'rollup'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Process from '../Process/Process.js'
 
-const getExternal = (babelExternal) => {
-  const external = []
+const getExternal = (babelExternal, initialExternal) => {
+  const external = [...initialExternal]
   if (babelExternal) {
     external.push(/babel-parser\.js$/)
   }
@@ -14,7 +14,7 @@ const getExternal = (babelExternal) => {
 /**
  *
  * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean, babelExternal?:boolean
- * allowCyclicDependencies?:boolean }} param0
+ * allowCyclicDependencies?:boolean, external?:string[] }} param0
  */
 export const bundleJs = async ({
   cwd,
@@ -25,8 +25,9 @@ export const bundleJs = async ({
   codeSplitting = false,
   allowCyclicDependencies = false,
   babelExternal = false,
+  external = [],
 }) => {
-  const external = getExternal(babelExternal)
+  const allExternal = getExternal(babelExternal, external)
   const plugins = []
   if (platform === 'node/cjs') {
     const { default: commonjs } = await import('@rollup/plugin-commonjs')
@@ -50,17 +51,17 @@ export const bundleJs = async ({
       // fail build if circular dependencies are found
       if (message.code === 'CIRCULAR_DEPENDENCY') {
         if (allowCyclicDependencies) {
-          console.warn(message.message)
+          console.warn(`RollUp: ${message.message}`)
         } else {
           console.error(`RollupError: Cyclic dependency detected`)
           console.error(message.message)
           Process.exit(ExitCode.Error)
         }
       } else {
-        console.error(message.message)
+        console.error(`RollUp: ${message.message} ${message.id || ''}`)
       }
     },
-    external,
+    external: allExternal,
     plugins,
   }
   const result = await rollup.rollup(inputOptions)
