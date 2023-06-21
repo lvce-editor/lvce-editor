@@ -237,7 +237,7 @@
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   {
     "name": "builtin.theme-atom-one-dark",
@@ -287,6 +287,6 @@
   {
     "name": "builtin.vscode-icons",
     "repository": "github.com/lvce-editor/vscode-icons",
-    "version": "0.0.10"
+    "version": "0.1.0"
   }
 ]
