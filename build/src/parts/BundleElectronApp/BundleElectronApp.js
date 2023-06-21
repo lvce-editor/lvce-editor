@@ -225,16 +225,16 @@ const copyCss = async ({ arch }) => {
   })
 }
 
-const addRootPackageJson = async ({ cachePath, electronVersion, product }) => {
-  const tag = await Tag.getGitTag()
+const addRootPackageJson = async ({ cachePath, electronVersion, product, bundleMainProcess, version }) => {
+  const main = bundleMainProcess ? 'packages/main-process/dist/mainProcessMain.js' : 'packages/main-process/src/mainProcessMain.js'
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: {
       name: product.applicationName,
       productName: product.nameLong,
-      version: tag,
+      version: version,
       electronVersion,
-      main: 'packages/main-process/src/mainProcessMain.js',
+      main,
     },
   })
 }
@@ -417,6 +417,8 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
     electronVersion,
     product,
     cachePath: Path.absolute(`build/.tmp/electron-bundle/${arch}/resources/app`),
+    bundleMainProcess,
+    version,
   })
   console.timeEnd('addRootPackageJson')
 
