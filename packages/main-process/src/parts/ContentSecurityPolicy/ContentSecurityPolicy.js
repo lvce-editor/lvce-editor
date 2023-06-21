@@ -1,19 +1,16 @@
-const addSemicolon = (line) => {
-  return line + ';'
-}
+const Character = require('../Character/Character.js')
+const AddSemiColon = require('../AddSemiColon/AddSemiColon.js')
 
 exports.key = 'Content-Security-Policy'
 
 exports.value = [
   `default-src 'none'`,
-  `connect-src 'self'`,
   `font-src 'self'`,
   `frame-src *`,
   `img-src 'self' https: data:`,
   `script-src 'self'`,
   `media-src 'self'`,
-  `manifest-src 'self'`,
   `style-src 'self' 'unsafe-inline'`, // TODO remove unsafe-inline
 ]
-  .map(addSemicolon)
-  .join(' ')
+  .map(AddSemiColon.addSemicolon)
+  .join(Character.Space)
