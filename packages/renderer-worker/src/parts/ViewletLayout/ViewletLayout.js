@@ -717,11 +717,15 @@ const getFocusChangeCommands = (isFocused) => {
 
 const showAsync = async (uid, points, module) => {
   try {
+    Assert.number(uid)
     const { moduleId, kTop, kLeft, kWidth, kHeight } = module
+    const viewletUid = Id.create()
     const commands = await ViewletManager.load(
       {
         getModule: ViewletModule.load,
         id: moduleId,
+        // @ts-ignore
+        uid: viewletUid,
         type: 0,
         // @ts-ignore
         uri: '',
@@ -736,7 +740,7 @@ const showAsync = async (uid, points, module) => {
       true
     )
     if (commands) {
-      commands.push(['Viewlet.append', uid, moduleId])
+      commands.push(['Viewlet.append', uid, viewletUid])
     }
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     // TODO
