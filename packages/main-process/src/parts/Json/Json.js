@@ -1,4 +1,3 @@
-const { JsonParsingError } = require('../JsonParsingError/JsonParsingError.js')
 const Assert = require('../Assert/Assert.js')
 
 exports.parse = async (string, filePath = '') => {
@@ -6,8 +5,9 @@ exports.parse = async (string, filePath = '') => {
     Assert.string(string)
     return JSON.parse(string)
   } catch (error) {
-    const JsonError = require('../JsonError/JsonError.js')
+    const JsonError = await import('../JsonError/JsonError.js')
     const errorProps = JsonError.getErrorPropsFromError(error, string, filePath)
+    const { JsonParsingError } = await import('../JsonParsingError/JsonParsingError.js')
     throw new JsonParsingError(errorProps.message, errorProps.codeFrame, errorProps.stack)
   }
 }
