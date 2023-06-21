@@ -20,8 +20,8 @@ exports.enableSandbox = () => {
   app.enableSandbox()
 }
 
-exports.appendCommandLineSwitch = (commandLineSwitch) => {
-  app.commandLine.appendSwitch(commandLineSwitch)
+exports.appendCommandLineSwitch = (commandLineSwitch, value) => {
+  app.commandLine.appendSwitch(commandLineSwitch, value)
 }
 
 exports.exit = (code) => {
