@@ -1,9 +1,9 @@
 const { dialog, BrowserWindow } = require('electron')
 const Logger = require('../Logger/Logger.js')
 const Process = require('../Process/Process.js')
-const PrettyError = require('../PrettyError/PrettyError.js')
 const ExitCode = require('../ExitCode/ExitCode.js')
 const GetNewLineIndex = require('../GetNewLineIndex/GetNewLineIndex.js')
+const LoadPrettyError = require('../LoadPrettyError/LoadPrettyError.js')
 
 const getDisplayMessage = (error) => {
   if (!error || !error.stack) {
@@ -13,7 +13,8 @@ const getDisplayMessage = (error) => {
   return `${error.stack}`
 }
 
-exports.handleError = (error) => {
+exports.handleError = async (error) => {
+  const PrettyError = await LoadPrettyError.loadPrettyError()
   const prettyError = PrettyError.prepare(error)
   Logger.error(`[main-process] ${prettyError.type}: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}\n`)
 }
@@ -28,7 +29,8 @@ const firstErrorLine = (error) => {
   return `${error}`
 }
 
-exports.handleUncaughtExceptionMonitor = (error, origin) => {
+exports.handleUncaughtExceptionMonitor = async (error, origin) => {
+  const PrettyError = await LoadPrettyError.loadPrettyError()
   Logger.info(`[main process] uncaught exception: ${firstErrorLine(error)}`)
   const prettyError = PrettyError.prepare(error)
   Logger.error(prettyError.codeFrame)
@@ -38,7 +40,8 @@ exports.handleUncaughtExceptionMonitor = (error, origin) => {
   }
 }
 
-exports.handleUnhandledRejection = (reason, promise) => {
+exports.handleUnhandledRejection = async (reason, promise) => {
+  const PrettyError = await LoadPrettyError.loadPrettyError()
   const prettyError = PrettyError.prepare(reason)
   Logger.error(
     `[main process] unhandled rejection: ${prettyError.type}: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}\n`

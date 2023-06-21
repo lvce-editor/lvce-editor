@@ -1,10 +1,11 @@
 const { CommandNotFoundError } = require('../CommandNotFoundError/CommandNotFoundError.js')
 const JsonRpcErrorCode = require('../JsonRpcErrorCode/JsonRpcErrorCode.js')
 const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
-const PrettyError = require('../PrettyError/PrettyError.js')
 const PrintPrettyError = require('../PrintPrettyError/PrintPrettyError.js')
+const LoadPrettyError = require('../LoadPrettyError/LoadPrettyError.js')
 
 exports.getErrorResponse = async (message, error) => {
+  const PrettyError = await LoadPrettyError.loadPrettyError()
   const prettyError = await PrettyError.prepare(error)
   PrintPrettyError.printPrettyError(prettyError, '[main-process] ')
   if (error && error instanceof CommandNotFoundError) {
