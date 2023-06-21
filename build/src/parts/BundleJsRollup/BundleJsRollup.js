@@ -14,7 +14,7 @@ const getExternal = (babelExternal, initialExternal) => {
 /**
  *
  * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean, babelExternal?:boolean
- * allowCyclicDependencies?:boolean, external?:string[] }} param0
+ * allowCyclicDependencies?:boolean, external?:string[], manualChunks:import('rollup').ManualChunksOption }} param0
  */
 export const bundleJs = async ({
   cwd,
@@ -26,6 +26,7 @@ export const bundleJs = async ({
   allowCyclicDependencies = false,
   babelExternal = false,
   external = [],
+  manualChunks = {},
 }) => {
   const allExternal = getExternal(babelExternal, external)
   const plugins = []
@@ -81,6 +82,7 @@ export const bundleJs = async ({
    */
   const outputOptions = {
     paths: {},
+    manualChunks,
     sourcemap: true,
     format: outputFormat,
     name: 'rendererProcess',

@@ -69,6 +69,11 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
       from: `./src/mainProcessMain.js`,
       platform: 'node/cjs',
       external: ['electron', 'electron-unhandled'],
+      codeSplitting: true,
+      manualChunks: {
+        'npm-babel-code-frame': ['node_modules/@babel/code-frame'],
+        'npm-lines-and-columns': ['node_modules/lines-and-columns'],
+      },
     })
   }
   await Replace.replace({
