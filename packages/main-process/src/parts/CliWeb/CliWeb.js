@@ -1,6 +1,6 @@
 const { spawn } = require('node:child_process')
 const Platform = require('../Platform/Platform.js')
-const Electron = require('../Electron/Electron.js')
+const Electron = require('electron')
 const Process = require('../Process/Process.js')
 
 const handleCliArgs = (parsedArgs) => {
