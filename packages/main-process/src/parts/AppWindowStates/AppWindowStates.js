@@ -25,7 +25,7 @@ const findIndexById = (id) => {
 }
 
 const remove = (id) => {
-  const index = this.findIndexById(id)
+  const index = findIndexById(id)
   if (index === -1) {
     throw new Error(`expected window ${id} to be in windows array`)
   }
