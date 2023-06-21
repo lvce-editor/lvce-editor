@@ -1,9 +1,7 @@
 import * as Ajax from '../Ajax/Ajax.js'
-import * as Assert from '../Assert/Assert.js'
-import * as Character from '../Character/Character.js'
 import * as CleanStack from '../CleanStack/CleanStack.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
-import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
+import * as GetSourceMapMatch from '../GetSourceMapMatch/GetSourceMapMatch.js'
 import * as IsActualSourceFile from '../IsActualSourceFile/IsActualSourceFile.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Logger from '../Logger/Logger.js'
@@ -58,8 +56,6 @@ const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
 const RE_PATH_3 = /@(.*):(\d+):(\d+)$/ // Firefox
 
-const RE_SOURCE_MAP = /^\/\/# sourceMappingURL=(.*)$/
-
 /**
  *
  * @param {readonly string[]} lines
@@ -85,20 +81,6 @@ const toAbsoluteUrl = (file, relativePath) => {
   return url.href
 }
 
-const getSourceMapMatch = (text) => {
-  Assert.string(text)
-  const index = text.lastIndexOf(Character.NewLine, text.length - 2)
-  const lastLine = text.slice(index + 1, -1)
-  const lastLineMatch = lastLine.match(RE_SOURCE_MAP)
-  if (lastLineMatch) {
-    return lastLineMatch
-  }
-  const secondLastLineIndex = GetNewLineIndex.getNewLineIndex(text, index - 1)
-  const secondLastLine = text.slice(secondLastLineIndex, index)
-  const secondLastLineMatch = secondLastLine.match(RE_SOURCE_MAP)
-  return secondLastLineMatch
-}
-
 const prepareErrorMessageWithoutCodeFrame = async (error) => {
   try {
     const lines = CleanStack.cleanStack(error.stack)
@@ -118,7 +100,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       return error
     }
     const text = await Ajax.getText(path)
-    const sourceMapMatch = getSourceMapMatch(text)
+    const sourceMapMatch = GetSourceMapMatch.getSourceMapMatch(text)
     const parsedLine = parseInt(line)
     const parsedColumn = parseInt(column)
     const message = getErrorMessage(error)
