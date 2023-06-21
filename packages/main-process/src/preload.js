@@ -8,13 +8,15 @@ const ipcConnect = (message) => {
 }
 
 const handlePort = (event, message) => {
+  // @ts-ignore
+  const origin = location.origin
   if (event.ports.length === 1) {
     const port = event.ports[0]
     // @ts-ignore
-    window.postMessage({ ...message, result: port }, '*', [port])
+    window.postMessage({ ...message, result: port }, origin, [port])
   } else {
     // @ts-ignore
-    window.postMessage(message, '*')
+    window.postMessage(message, origin)
   }
 }
 
