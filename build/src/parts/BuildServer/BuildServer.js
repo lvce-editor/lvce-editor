@@ -3,6 +3,7 @@ import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWo
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
+import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
@@ -12,6 +13,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Tag from '../Tag/Tag.js'
+import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const copyStaticFiles = async ({ commitHash }) => {
@@ -828,6 +830,7 @@ export const build = async ({ product }) => {
   const commitHash = await CommitHash.getCommitHash()
   const version = await Tag.getGitTag()
   const date = await GetCommitDate.getCommitDate(commitHash)
+  const bundleSharedProcess = BundleOptions.bundleSharedProcess
 
   Console.time('clean')
   await Remove.remove('build/.tmp/server')
@@ -845,12 +848,19 @@ export const build = async ({ product }) => {
   await bundleRendererWorkerAndRendererProcessJs({ commitHash })
   console.timeEnd('bundleRendererWorkerAndRendererProcessJs')
 
-  console.time('copySharedProcessFiles')
-  await copySharedProcessFiles({
+  const sharedProcessCachePath = await BundleSharedProcessCached.bundleSharedProcessCached({
+    commitHash,
     product,
     version,
-    commitHash,
+    bundleSharedProcess,
     date,
+    target: 'server',
+  })
+
+  console.time('copySharedProcessFiles')
+  await Copy.copy({
+    from: sharedProcessCachePath,
+    to: 'build/.tmp/server/shared-process',
   })
   console.timeEnd('copySharedProcessFiles')
 
