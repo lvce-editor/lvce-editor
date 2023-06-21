@@ -1,5 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
+import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
+import * as Id from '../Id/Id.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -13,7 +15,6 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as Id from '../Id/Id.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const kWindowWidth = 0
@@ -117,15 +118,6 @@ const mPanel = {
   kHeight: kPanelHeight,
 }
 
-const getDefaultTitleBarHeight = () => {
-  switch (Platform.platform) {
-    case PlatformType.Electron:
-      return 29
-    default:
-      return 20
-  }
-}
-
 export const getPoints = (source, destination, sideBarLocation = SideBarLocationType.Right) => {
   const activityBarVisible = source[kActivityBarVisible]
   const panelVisible = source[kPanelVisible]
@@ -209,7 +201,7 @@ export const getPoints = (source, destination, sideBarLocation = SideBarLocation
     destination[kTitleBarLeft] = p6
     destination[kTitleBarTop] = p1
     destination[kTitleBarWidth] = windowWidth
-    destination[kTitleBarHeight] = getDefaultTitleBarHeight()
+    destination[kTitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
     destination[kTitleBarVisible] = titleBarVisible
   } else {
     const p1 = /* Top */ 0
@@ -341,7 +333,7 @@ export const loadContent = (state, savedState) => {
     newPoints[kTitleBarHeight] = 0
     newPoints[kTitleBarVisible] = 0
   } else {
-    newPoints[kTitleBarHeight] = getDefaultTitleBarHeight()
+    newPoints[kTitleBarHeight] = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
     newPoints[kTitleBarVisible] = 1
   }
   newPoints[kWindowHeight] = windowHeight
