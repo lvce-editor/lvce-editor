@@ -55,7 +55,7 @@ const copyElectronResult = async ({ product, version }) => {
   })
 }
 
-const copyMetaFiles = async ({ product }) => {
+const copyMetaFiles = async ({ product, version }) => {
   const debArch = 'amd64'
 
   await Template.write('linux_desktop', `build/.tmp/linux/deb/${debArch}/app/usr/share/applications/${product.applicationName}.desktop`, {
@@ -80,14 +80,13 @@ const copyMetaFiles = async ({ product }) => {
   })
 
   const installedSize = await GetInstalledSize.getInstalledSize(Path.absolute(`build/.tmp/linux/deb/${debArch}/app`))
-  const tag = await Tag.getGitTag()
   const defaultDepends = ['libnss3 (>= 2:3.26)', 'gnupg', 'apt', 'libxkbfile1', 'libsecret-1-0', 'libgtk-3-0 (>= 3.10.0)', 'libxss1', 'libgbm1']
   // TODO add options to process.argv whether or not ripgrep should be bundled or a dependency
   const additionalDepends = ['ripgrep']
   const depends = [...defaultDepends, ...additionalDepends].join(', ')
   await Template.write('debian_control', `build/.tmp/linux/deb/${debArch}/DEBIAN/control`, {
     '@@NAME@@': product.applicationName,
-    '@@VERSION@@': tag,
+    '@@VERSION@@': version,
     '@@ARCHITECTURE@@': debArch,
     '@@INSTALLED_SIZE@@': `${installedSize}`,
     '@@HOMEPAGE@@': product.homePage,
@@ -232,7 +231,7 @@ export const build = async ({ product }) => {
   console.timeEnd('copyElectronResult')
 
   console.time('copyMetaFiles')
-  await copyMetaFiles({ product })
+  await copyMetaFiles({ product, version })
   console.timeEnd('copyMetaFiles')
 
   console.time('fixPermissions')

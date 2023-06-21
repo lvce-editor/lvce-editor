@@ -697,8 +697,7 @@ const sortObject = (object) => {
   return JSON.parse(JSON.stringify(object, Object.keys(object).sort()))
 }
 
-const setVersionsAndDependencies = async () => {
-  const gitTag = await Tag.getGitTag()
+const setVersionsAndDependencies = async ({ version }) => {
   const files = [
     'build/.tmp/server/extension-host/package.json',
     'build/.tmp/server/pty-host/package.json',
@@ -718,30 +717,30 @@ const setVersionsAndDependencies = async () => {
       delete json['optionalDependencies']['@vscode/windows-process-tree']
     }
     if (file === 'build/.tmp/server/server/package.json') {
-      json.dependencies['@lvce-editor/shared-process'] = gitTag
+      json.dependencies['@lvce-editor/shared-process'] = version
     }
     if (file === 'build/.tmp/server/shared-process/package.json') {
-      json.dependencies['@lvce-editor/extension-host'] = gitTag
-      json.dependencies['@lvce-editor/extension-host-helper-process'] = gitTag
-      json.dependencies['@lvce-editor/pty-host'] = gitTag
+      json.dependencies['@lvce-editor/extension-host'] = version
+      json.dependencies['@lvce-editor/extension-host-helper-process'] = version
+      json.dependencies['@lvce-editor/pty-host'] = version
     }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
-      json.dependencies['@lvce-editor/shared-process'] = gitTag
+      json.dependencies['@lvce-editor/shared-process'] = version
     }
     if (json.dependencies && json.dependencies['@lvce-editor/pty-host']) {
-      json.dependencies['@lvce-editor/pty-host'] = gitTag
+      json.dependencies['@lvce-editor/pty-host'] = version
     }
     if (json.dependencies && json.dependencies['@lvce-editor/extension-host']) {
-      json.dependencies['@lvce-editor/extension-host'] = gitTag
+      json.dependencies['@lvce-editor/extension-host'] = version
     }
     if (json.dependencies && json.dependencies['@lvce-editor/extension-host-helper-process']) {
-      json.dependencies['@lvce-editor/extension-host-helper-process'] = gitTag
+      json.dependencies['@lvce-editor/extension-host-helper-process'] = version
     }
     if (json.dependencies) {
       json.dependencies = sortObject(json.dependencies)
     }
     if (json.version) {
-      json.version = gitTag
+      json.version = version
     }
 
     await JsonFile.writeJson({
@@ -881,7 +880,7 @@ export const build = async ({ product }) => {
   console.timeEnd('copyJestEnvironment')
 
   console.time('setVersions')
-  await setVersionsAndDependencies()
+  await setVersionsAndDependencies({ version })
   console.timeEnd('setVersions')
 
   console.time('copyPlaygroundFiles')

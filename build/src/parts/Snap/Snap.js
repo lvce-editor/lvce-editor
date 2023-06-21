@@ -16,12 +16,11 @@ const getSnapArch = (arch) => {
   }
 }
 
-const copyMetaFiles = async ({ arch, product }) => {
+const copyMetaFiles = async ({ arch, product, version }) => {
   const snapArch = getSnapArch(arch)
-  const tag = await Tag.getGitTag()
   await Template.write('linux_snapcraft_yaml', `build/.tmp/linux/snap/${arch}/snap/snapcraft.yaml`, {
     '@@NAME@@': product.applicationName,
-    '@@VERSION@@': tag,
+    '@@VERSION@@': version,
     '@@ARCHITECTURE@@': snapArch,
     '@@SUMMARY@@': product.linuxSummary,
     '@@SOURCE_CODE@@': product.repoUrl,
@@ -204,9 +203,10 @@ const printSnapSize = async ({ arch, product }) => {
 
 export const build = async ({ product }) => {
   const arch = 'x64'
+  const version = await Tag.getGitTag()
 
   console.time('copyMetaFiles')
-  await copyMetaFiles({ arch, product })
+  await copyMetaFiles({ arch, product, version })
   console.timeEnd('copyMetaFiles')
 
   console.time('copyCode')
