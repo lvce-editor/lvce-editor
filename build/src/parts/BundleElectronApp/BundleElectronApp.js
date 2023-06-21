@@ -7,9 +7,9 @@ import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainP
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
+import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
-import * as CopySharedProcessSources from '../CopySharedProcessSources/CopySharedProcessSources.js'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
@@ -117,16 +117,6 @@ const copyDependencies = async ({ cachePath, arch }) => {
   })
 }
 
-const copySharedProcessSources = async ({ arch, product, commitHash, version, date }) => {
-  await CopySharedProcessSources.copySharedProcessSources({
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process`,
-    product,
-    commitHash,
-    version,
-    date,
-  })
-}
-
 const copyPlaygroundFiles = async ({ arch }) => {
   await WriteFile.writeFile({
     to: `build/.tmp/electron-bundle/${arch}/resources/app/playground/index.html`,
@@ -148,8 +138,6 @@ const copyPlaygroundFiles = async ({ arch }) => {
     content: `h1 { color: dodgerblue; }`,
   })
 }
-
-const copyMainProcessSources = async ({ arch, commitHash, product, version }) => {}
 
 const copyPtyHostSources = async ({ arch }) => {
   await Copy.copy({
@@ -254,6 +242,7 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   const commitHash = await CommitHash.getCommitHash()
   const date = GetCommitDate.getCommitDate(commitHash)
   const bundleMainProcess = BundleOptions.bundleMainProcess
+  const bundleSharedProcess = BundleOptions.bundleSharedProcess
 
   if (!isInstalled) {
     console.time('downloadElectron')
@@ -325,13 +314,21 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   })
   console.timeEnd('copyMainProcessFiles')
 
-  console.time('copyMainProcessSources')
-  await copyMainProcessSources({ arch, commitHash, product, version })
-  console.timeEnd('copyMainProcessSources')
+  const sharedProcessCachePath = await BundleSharedProcessCached.bundleSharedProcessCached({
+    commitHash,
+    product,
+    version,
+    bundleSharedProcess,
+    date,
+    target: '',
+  })
 
-  console.time('copySharedProcessSources')
-  await copySharedProcessSources({ arch, commitHash, product, version, date })
-  console.timeEnd('copySharedProcessSources')
+  console.time('copySharedProcessFiles')
+  await Copy.copy({
+    from: sharedProcessCachePath,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process`,
+  })
+  console.timeEnd('copySharedProcessFiles')
 
   console.time('copyExtensionHostHelperProcessSources')
   await copyExtensionHostHelperProcessSources({ arch })
