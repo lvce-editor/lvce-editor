@@ -3,6 +3,11 @@ const { pathToFileURL } = require('node:url')
 const HttpStatusCode = require('../HttpStatusCode/HttpStatusCode.js')
 const IsNetFileNotFoundError = require('../IsNetFileNotFoundError/IsNetFileNotFoundError.js')
 
+/**
+ *
+ * @param {string} path
+ * @returns {Promise<GlobalResponse>}
+ */
 exports.getFileResponse = async (path) => {
   try {
     const url = pathToFileURL(path)
