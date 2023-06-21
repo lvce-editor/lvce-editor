@@ -4,55 +4,55 @@ const { ModuleNotFoundError } = require('../ModuleNotFoundError/ModuleNotFoundEr
 exports.load = async (moduleId) => {
   switch (moduleId) {
     case ModuleId.App:
-      return require('../App/App.ipc.js')
+      return import('../App/App.ipc.js')
     case ModuleId.AppWindow:
-      return require('../AppWindow/AppWindow.ipc.js')
+      return import('../AppWindow/AppWindow.ipc.js')
     case ModuleId.ElectronApplicationMenu:
-      return require('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js')
+      return import('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js')
     case ModuleId.Beep:
-      return require('../ElectronBeep/ElectronBeep.js')
+      return import('../ElectronBeep/ElectronBeep.js')
     case ModuleId.ElectronBrowserView:
-      return require('../ElectronBrowserView/ElectronBrowserView.ipc.js')
+      return import('../ElectronBrowserView/ElectronBrowserView.ipc.js')
     case ModuleId.ElectronBrowserViewFunctions:
-      return require('../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.ipc.js')
+      return import('../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.ipc.js')
     case ModuleId.ElectronBrowserViewQuickPick:
-      return require('../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.ipc.js')
+      return import('../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.ipc.js')
     case ModuleId.ElectronBrowserViewSuggestions:
-      return require('../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.ipc.js')
+      return import('../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.ipc.js')
     case ModuleId.ElectronClipBoard:
-      return require('../ElectronClipBoard/ElectronClipBoard.ipc.js')
+      return import('../ElectronClipBoard/ElectronClipBoard.ipc.js')
     case ModuleId.ElectronContentTracing:
-      return require('../ElectronContentTracing/ElectronContentTracing.ipc.js')
+      return import('../ElectronContentTracing/ElectronContentTracing.ipc.js')
     case ModuleId.ElectronContextMenu:
-      return require('../ElectronContextMenu/ElectronContextMenu.ipc.js')
+      return import('../ElectronContextMenu/ElectronContextMenu.ipc.js')
     case ModuleId.Developer:
-      return require('../ElectronDeveloper/ElectronDeveloper.ipc.js')
+      return import('../ElectronDeveloper/ElectronDeveloper.ipc.js')
     case ModuleId.Dialog:
-      return require('../ElectronDialog/ElectronDialog.ipc.js')
+      return import('../ElectronDialog/ElectronDialog.ipc.js')
     case ModuleId.ElectronNet:
-      return require('../ElectronNet/ElectronNet.ipc.js')
+      return import('../ElectronNet/ElectronNet.ipc.js')
     case ModuleId.ElectronNetLog:
-      return require('../ElectronNetLog/ElectronNetLog.ipc.js')
+      return import('../ElectronNetLog/ElectronNetLog.ipc.js')
     case ModuleId.ElectronPowerSaveBlocker:
-      return require('../ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.ipc.js')
+      return import('../ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.ipc.js')
     case ModuleId.ElectronSafeStorage:
-      return require('../ElectronSafeStorage/ElectronSafeStorage.ipc.js')
+      return import('../ElectronSafeStorage/ElectronSafeStorage.ipc.js')
     case ModuleId.ElectronShell:
-      return require('../ElectronShell/ElectronShell.ipc.js')
+      return import('../ElectronShell/ElectronShell.ipc.js')
     case ModuleId.Window:
-      return require('../ElectronWindow/ElectronWindow.ipc.js')
+      return import('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ElectronWindowProcessExplorer:
-      return require('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
+      return import('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
     case ModuleId.Process:
-      return require('../Process/Process.ipc.js')
+      return import('../Process/Process.ipc.js')
     case ModuleId.CreatePidMap:
-      return require('../CreatePidMap/CreatePidMap.ipc.js')
+      return import('../CreatePidMap/CreatePidMap.ipc.js')
     case ModuleId.Beep:
-      return require('../Beep/Beep.ipc.js')
+      return import('../Beep/Beep.ipc.js')
     case ModuleId.OpenExternal:
-      return require('../OpenExternal/OpenExternal.ipc.js')
+      return import('../OpenExternal/OpenExternal.ipc.js')
     case ModuleId.Platform:
-      return require('../Platform/Platform.ipc.js')
+      return import('../Platform/Platform.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }
