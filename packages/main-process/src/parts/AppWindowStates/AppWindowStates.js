@@ -1,11 +1,11 @@
-exports.state = {
+const state = {
   /**
    * @type {any[]}
    */
   windowStates: [],
 }
 
-exports.findById = (id) => {
+const findById = (id) => {
   for (const windowState of this.state.windowStates) {
     if (windowState.id === id) {
       return windowState
@@ -14,7 +14,7 @@ exports.findById = (id) => {
   return undefined
 }
 
-exports.findIndexById = (id) => {
+const findIndexById = (id) => {
   for (let i = 0; i < this.state.windowStates.length; i++) {
     const windowState = this.state.windowStates[i]
     if (windowState.id === id) {
@@ -24,18 +24,25 @@ exports.findIndexById = (id) => {
   return -1
 }
 
-exports.remove = (id) => {
+const remove = (id) => {
   const index = this.findIndexById(id)
   if (index === -1) {
     throw new Error(`expected window ${id} to be in windows array`)
   }
-  exports.state.windowStates.splice(index, 1)
+  state.windowStates.splice(index, 1)
 }
 
-exports.getAll = () => {
-  return this.state.windowStates
+const getAll = () => {
+  return state.windowStates
 }
 
-exports.add = (config) => {
-  exports.state.windowStates.push(config)
+const add = (config) => {
+  state.windowStates.push(config)
 }
+
+exports.state = state
+exports.findById = findById
+exports.findIndexById = findIndexById
+exports.remove = remove
+exports.getAll = getAll
+exports.add = add

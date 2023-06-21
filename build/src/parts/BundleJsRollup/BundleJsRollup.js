@@ -27,6 +27,13 @@ export const bundleJs = async ({
   babelExternal = false,
 }) => {
   const external = getExternal(babelExternal)
+  const plugins = []
+  if (platform === 'node/cjs') {
+    const { default: commonjs } = await import('@rollup/plugin-commonjs')
+    const { nodeResolve } = await import('@rollup/plugin-node-resolve')
+    // @ts-ignore
+    plugins.push(commonjs(), nodeResolve())
+  }
   /**
    * @type {import('rollup').RollupOptions}
    */
@@ -54,6 +61,7 @@ export const bundleJs = async ({
       }
     },
     external,
+    plugins,
   }
   const result = await rollup.rollup(inputOptions)
   if (result.getTimings) {
@@ -61,12 +69,19 @@ export const bundleJs = async ({
     console.log({ timings })
   }
   /**
+   * @type {import('rollup').ModuleFormat}
+   */
+  let outputFormat = 'es'
+  if (platform === 'node/cjs') {
+    outputFormat = 'commonjs'
+  }
+  /**
    * @type {import('rollup').OutputOptions}
    */
   const outputOptions = {
     paths: {},
     sourcemap: true,
-    format: 'es',
+    format: outputFormat,
     name: 'rendererProcess',
     extend: false,
     dir: codeSplitting ? join(cwd, 'dist') : undefined,

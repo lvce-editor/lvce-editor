@@ -72,3 +72,27 @@ export const getExtensionHostSubWorkerCachePath = async (extraContents) => {
   const extensionHostWorkerCachePath = Path.join(Path.absolute('build/.tmp/cachedSources/extension-host-sub-worker'), extensionHostWorkerCacheHash)
   return extensionHostWorkerCachePath
 }
+
+const getMainProcessCacheHash = async (extraContents) => {
+  const hash = await Hash.computeFolderHash(
+    'packages/main-process/src',
+    [
+      'build/src/parts/BundleElectronApp/BundleElectronApp.js',
+      'build/src/parts/BuildServer/BuildServer.js',
+      'build/src/parts/BundleJs/BundleJs.js',
+      'build/src/parts/BundleJsRollup/BundleJsRollup.js',
+      'build/src/parts/CachePaths/CachePaths.js',
+      'build/src/parts/BundleMainProcess/BundleMainProcess.js',
+      'build/src/parts/BundleMainProcessCached/BundleMainProcessCached.js',
+      'build/src/parts/BundleOptions/BundleOptions.js',
+    ],
+    extraContents
+  )
+  return hash
+}
+
+export const getMainProcessCachePath = async (extraContents) => {
+  const cacheHash = await getMainProcessCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('build/.tmp/cachedSources/main-process'), cacheHash)
+  return cachePath
+}
