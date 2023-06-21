@@ -53,13 +53,11 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
     occurrence: `exports.commit = 'unknown commit'`,
     replacement: `exports.commit = '${commitHash}'`,
   })
-  if (bundleMainProcess) {
-    await Replace.replace({
-      path: `${cachePath}/src/parts/Root/Root.js`,
-      occurrence: `exports.root = join(__dirname, '../../../../..')`,
-      replacement: `exports.root = join(__dirname, '../../..')`,
-    })
-  }
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Root/Root.js`,
+    occurrence: `exports.root = join(__dirname, '../../../../..')`,
+    replacement: `exports.root = join(__dirname, '../../..')`,
+  })
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: `exports.version = '0.0.0-dev'`,
@@ -70,6 +68,12 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
       cwd: cachePath,
       from: `./src/mainProcessMain.js`,
       platform: 'node/cjs',
+      external: ['electron', 'electron-unhandled'],
     })
   }
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Root/Root.js`,
+    occurrence: `exports.root = join(__dirname, '../../..')`,
+    replacement: `exports.root = join(__dirname, '../../../../..')`,
+  })
 }
