@@ -1,2 +1,2 @@
-export const bundleMainProcess = true
+export const bundleMainProcess = false
 export const bundleSharedProcess = false
