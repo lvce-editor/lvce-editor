@@ -6,7 +6,7 @@ const state = {
 }
 
 const findById = (id) => {
-  for (const windowState of this.state.windowStates) {
+  for (const windowState of state.windowStates) {
     if (windowState.id === id) {
       return windowState
     }
@@ -15,8 +15,8 @@ const findById = (id) => {
 }
 
 const findIndexById = (id) => {
-  for (let i = 0; i < this.state.windowStates.length; i++) {
-    const windowState = this.state.windowStates[i]
+  for (let i = 0; i < state.windowStates.length; i++) {
+    const windowState = state.windowStates[i]
     if (windowState.id === id) {
       return i
     }
