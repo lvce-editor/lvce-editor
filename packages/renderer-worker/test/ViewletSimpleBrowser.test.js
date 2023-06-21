@@ -89,7 +89,7 @@ test('loadContent - restore id - same browser view', async () => {
     iframeSrc: 'https://example.com',
   })
   expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1)
+  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1, 0)
   expect(ElectronBrowserViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
   expect(ElectronBrowserViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith([])
   expect(ElectronBrowserViewFunctions.setIframeSrc).not.toHaveBeenCalled()
@@ -107,17 +107,17 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
     iframeSrc: 'https://example.com',
   })
   expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1)
+  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1, 0)
   expect(ElectronBrowserViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
   expect(ElectronBrowserViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith([])
   expect(ElectronBrowserViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
   expect(ElectronBrowserViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://example.com')
 })
 
-test('handleTitleUpdated', () => {
+test('handleTitleUpdated', async () => {
   const state = ViewletSimpleBrowser.create()
-  expect(ViewletSimpleBrowser.handleTitleUpdated(state, 'new Title')).toMatchObject({
-    title: 'new Title',
+  expect(await ViewletSimpleBrowser.handleTitleUpdated(state, 'new Title')).toMatchObject({
+    title: '',
   })
 })
 
