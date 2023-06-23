@@ -26,7 +26,6 @@ export const downloadUpdate = async (version) => {
     await Download.download(downLoadUrl, outFile)
     return outFile
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to download new version ${version}`)
   }
 }
@@ -36,7 +35,6 @@ const installNewAppImage = async (currentAppImageFile, downloadPath) => {
     await rename(downloadPath, currentAppImageFile)
     return currentAppImageFile
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to rename AppImage file`)
   }
 }
@@ -52,7 +50,6 @@ export const installAndRestart = async (downloadPath) => {
     const installedPath = await installNewAppImage(currentAppImageFile, downloadPath)
     await Restart.restart(installedPath)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to install AppImage update`)
   }
 }
