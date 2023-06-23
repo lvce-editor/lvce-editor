@@ -25,7 +25,7 @@ exports.showOpenDialog = async (title, properties) => {
 
 /**
  *
- * @param {{message:string, buttons:string[], type:string, detail?:string, title?:string}} options
+ * @param {{message:string, buttons:string[], type:'error'|'info'|'question'|'none'|'warning', detail?:string, title?:string}} options
  * @returns
  */
 exports.showMessageBox = async ({ message, buttons, type = ElectronMessageBoxType.Error, detail, title }) => {
