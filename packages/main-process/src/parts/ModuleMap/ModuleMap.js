@@ -59,6 +59,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.OpenExternal
     case 'Platform':
       return ModuleId.Platform
+    case 'GetWindowId':
+      return ModuleId.GetWindowId
     default:
       throw new CommandNotFoundError(commandId)
   }

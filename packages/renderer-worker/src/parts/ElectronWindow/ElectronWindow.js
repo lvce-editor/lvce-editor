@@ -1,45 +1,56 @@
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 
-export const reload = () => {
-  return ElectronProcess.invoke('ElectronWindow.reload')
+export const reload = async () => {
+  const windowId = await GetWindowId.getWindowId()
+  return ElectronProcess.invoke('ElectronWindow.reload', windowId)
 }
 
-export const minimize = () => {
-  return ElectronProcess.invoke('ElectronWindow.minimize')
+export const minimize = async () => {
+  const windowId = await GetWindowId.getWindowId()
+  return ElectronProcess.invoke('ElectronWindow.minimize', windowId)
 }
 
-export const unmaximize = () => {
-  return ElectronProcess.invoke('ElectronWindow.unmaximize')
+export const unmaximize = async () => {
+  const windowId = await GetWindowId.getWindowId()
+  return ElectronProcess.invoke('ElectronWindow.unmaximize', windowId)
 }
 
-export const maximize = () => {
-  return ElectronProcess.invoke('ElectronWindow.maximize')
+export const maximize = async () => {
+  const windowId = await GetWindowId.getWindowId()
+  return ElectronProcess.invoke('ElectronWindow.maximize', windowId)
 }
 
-export const close = () => {
-  return ElectronProcess.invoke('ElectronWindow.close')
+export const close = async () => {
+  const windowId = await GetWindowId.getWindowId()
+  return ElectronProcess.invoke('ElectronWindow.close', windowId)
 }
 
-export const openNew = (url) => {
+export const openNew = async (url) => {
   return ElectronProcess.invoke('AppWindow.openNew', url)
 }
 
-export const toggleDevtools = () => {
-  return ElectronProcess.invoke('ElectronWindow.toggleDevtools')
+export const toggleDevtools = async () => {
+  const windowId = await GetWindowId.getWindowId()
+  return ElectronProcess.invoke('ElectronWindow.toggleDevtools', windowId)
 }
 
-export const zoomIn = () => {
-  return ElectronProcess.invoke('ElectronWindow.zoomIn')
+export const zoomIn = async () => {
+  const windowId = await GetWindowId.getWindowId()
+  return ElectronProcess.invoke('ElectronWindow.zoomIn', windowId)
 }
 
-export const zoomOut = () => {
-  return ElectronProcess.invoke('ElectronWindow.zoomOut')
+export const zoomOut = async () => {
+  const windowId = await GetWindowId.getWindowId()
+  return ElectronProcess.invoke('ElectronWindow.zoomOut', windowId)
 }
 
-export const zoomReset = () => {
-  return ElectronProcess.invoke('ElectronWindow.zoomReset')
+export const zoomReset = async () => {
+  const windowId = await GetWindowId.getWindowId()
+  return ElectronProcess.invoke('ElectronWindow.zoomReset', windowId)
 }
 
-export const focus = () => {
-  return ElectronProcess.invoke('ElectronWindow.focus')
+export const focus = async () => {
+  const windowId = await GetWindowId.getWindowId()
+  return ElectronProcess.invoke('ElectronWindow.focus', windowId)
 }

@@ -1,5 +1,6 @@
 import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
 import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'
+import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -13,7 +14,9 @@ const UiStrings = {
 }
 
 const promptElectron = async (message, confirmMessage, title) => {
+  const windowId = await GetWindowId.getWindowId()
   const result = await ElectronDialog.showMessageBox({
+    windowId,
     message,
     buttons: [UiStrings.Cancel, confirmMessage],
     type: ElectronMessageBoxType.Question,

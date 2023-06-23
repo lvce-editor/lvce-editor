@@ -6,6 +6,7 @@ export const showOpenDialog = (title, properties) => {
 }
 
 export const showMessageBox = (options) => {
+  // TODO maybe request window id here instead of at caller
   Assert.object(options)
   return ElectronProcess.invoke('ElectronDialog.showMessageBox', options)
 }

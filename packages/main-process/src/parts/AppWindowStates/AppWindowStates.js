@@ -40,9 +40,19 @@ const add = (config) => {
   state.windowStates.push(config)
 }
 
+const findByPort = (port) => {
+  for (const config of state.windowStates) {
+    if (config.port === port) {
+      return config
+    }
+  }
+  return undefined
+}
+
 exports.state = state
 exports.findById = findById
 exports.findIndexById = findIndexById
 exports.remove = remove
 exports.getAll = getAll
 exports.add = add
+exports.findByPort = findByPort

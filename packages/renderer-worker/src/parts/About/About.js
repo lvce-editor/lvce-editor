@@ -3,6 +3,7 @@ import * as ClipBoard from '../ClipBoard/ClipBoard.js'
 import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
 import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'
 import * as GetAboutDetailString from '../GetAboutDetailString/GetAboutDetailString.js'
+import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -12,9 +13,11 @@ const showAboutDefault = async () => {
 }
 
 const showAboutElectron = async () => {
+  const windowId = await GetWindowId.getWindowId()
   const detail = await GetAboutDetailString.getDetailString()
   const productNameLong = await GetAboutDetailString.getProductNameLong()
   const options = {
+    windowId,
     message: productNameLong,
     buttons: [AboutStrings.copy(), AboutStrings.ok()],
     type: ElectronMessageBoxType.Info,
