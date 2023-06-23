@@ -240,7 +240,7 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   const dependencyCachePath = Path.join(Path.absolute('build/.tmp/cachedDependencies'), dependencyCacheHash)
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
   const commitHash = await CommitHash.getCommitHash()
-  const date = GetCommitDate.getCommitDate(commitHash)
+  const date = await GetCommitDate.getCommitDate(commitHash)
   const bundleMainProcess = BundleOptions.bundleMainProcess
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
 
