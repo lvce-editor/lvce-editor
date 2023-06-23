@@ -1,16 +1,19 @@
-const Electron = require('electron')
+const Assert = require('../Assert/Assert.js')
 const Clamp = require('../Clamp/Clamp.js')
+const Electron = require('electron')
+const GetIcon = require('../GetIcon/GetIcon.js')
 const Platform = require('../Platform/Platform.js')
 const Preferences = require('../Preferences/Preferences.js')
-const GetIcon = require('../GetIcon/GetIcon.js')
 
-exports.wrapWindowCommand = (fn) => () => {
-  const browserWindow = Electron.BrowserWindow.getFocusedWindow()
-  if (!browserWindow) {
-    return
+exports.wrapWindowCommand =
+  (fn) =>
+  (id, ...args) => {
+    const browserWindow = Electron.BrowserWindow.fromId(id)
+    if (!browserWindow) {
+      return
+    }
+    fn(browserWindow, ...args)
   }
-  fn(browserWindow)
-}
 
 /**
  * @param {Electron. BrowserWindow} browserWindow
@@ -58,6 +61,10 @@ exports.getFocusedWindow = () => {
   return Electron.BrowserWindow.getFocusedWindow() || undefined
 }
 
+exports.findById = (windowId) => {
+  Assert.number(windowId)
+  return Electron.BrowserWindow.fromId(windowId)
+}
 
 /**
  *

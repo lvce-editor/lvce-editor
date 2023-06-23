@@ -53,6 +53,8 @@ exports.load = async (moduleId) => {
       return import('../OpenExternal/OpenExternal.ipc.js')
     case ModuleId.Platform:
       return import('../Platform/Platform.ipc.js')
+    case ModuleId.GetWindowId:
+      return import('../GetWindowId/GetWindowId.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }

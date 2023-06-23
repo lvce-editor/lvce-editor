@@ -5,6 +5,6 @@ exports.handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
     resolve(message.id, message)
     return
   }
-  const response = await GetResponse.getResponse(message, execute)
+  const response = await GetResponse.getResponse(message, execute, ipc)
   ipc.send(response)
 }

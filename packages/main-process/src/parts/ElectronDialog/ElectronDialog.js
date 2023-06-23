@@ -23,16 +23,23 @@ exports.showOpenDialog = async (title, properties) => {
   return result.filePaths
 }
 
+const getWindow = (windowId) => {
+  if (windowId === -1) {
+    return Window.getFocusedWindow()
+  }
+  return Window.findById(windowId)
+}
+
 /**
  *
- * @param {{message:string, buttons:string[], type:'error'|'info'|'question'|'none'|'warning', detail?:string, title?:string}} options
+ * @param {{message:string, buttons:string[], type:'error'|'info'|'question'|'none'|'warning', detail?:string, title?:string, windowId?:number}} options
  * @returns
  */
-exports.showMessageBox = async ({ message, buttons, type = ElectronMessageBoxType.Error, detail, title }) => {
+exports.showMessageBox = async ({ message, buttons, type = ElectronMessageBoxType.Error, detail, title, windowId = -1 }) => {
   Assert.string(message)
   Assert.array(buttons)
-  const focusedWindow = Window.getFocusedWindow()
-  if (!focusedWindow) {
+  const window = getWindow(windowId)
+  if (!window) {
     Logger.info(`[main-process] cannot show dialog message because there is no focused window`)
     return
   }
@@ -40,7 +47,7 @@ exports.showMessageBox = async ({ message, buttons, type = ElectronMessageBoxTyp
     message = message.message
   }
   const productName = Platform.productNameLong
-  const result = await Electron.dialog.showMessageBox(focusedWindow, {
+  const result = await Electron.dialog.showMessageBox(window, {
     type,
     message,
     title: title || productName,
