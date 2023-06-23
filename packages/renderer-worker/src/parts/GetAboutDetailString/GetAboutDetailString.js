@@ -1,17 +1,7 @@
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
-import * as FormatDate from '../FormatDate/FormatDate.js'
+import * as FormatAboutDate from '../FormatAboutDate/FormatAboutDate.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Process from '../Process/Process.js'
-
-const formatDate = (isoDate) => {
-  if (!isoDate) {
-    return 'unknown'
-  }
-  const date = new Date(isoDate).getTime()
-  const now = new Date().getTime()
-  const ago = FormatDate.formatDate(date, now)
-  return `${isoDate} (${ago})`
-}
 
 export const getDetailString = async () => {
   const [electronVersion, nodeVersion, chromeVersion, version, commit, v8Version, date] = await Promise.all([
@@ -23,7 +13,7 @@ export const getDetailString = async () => {
     Process.getV8Version(),
     Process.getDate(),
   ])
-  const formattedDate = formatDate(date)
+  const formattedDate = FormatAboutDate.formatAboutDate(date)
   const lines = [
     `Version: ${version}`,
     `Commit: ${commit}`,
