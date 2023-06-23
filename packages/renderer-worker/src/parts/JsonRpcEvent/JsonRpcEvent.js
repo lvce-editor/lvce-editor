@@ -4,6 +4,6 @@ export const create = (method, params) => {
   return {
     jsonrpc: JsonRpcVersion.Two,
     method,
-    params: params,
+    params,
   }
 }
