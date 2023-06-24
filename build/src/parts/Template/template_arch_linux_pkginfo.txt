@@ -9,5 +9,5 @@ size = @@SIZE@@
 arch = x86_64
 license = @@LICENSE@@
 group = default
-depend = electron19
+depend = @@ELECTRON_VERSION@@
 depend = ripgrep
