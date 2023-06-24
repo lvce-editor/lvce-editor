@@ -7,7 +7,10 @@ export const listen = () => {
 }
 
 const getMessage = (event) => {
-  return event.data
+  if (event instanceof MessageEvent) {
+    return event.data
+  }
+  return event
 }
 
 export const wrap = (global) => {
