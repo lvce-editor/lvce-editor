@@ -17,31 +17,31 @@ export const create = async ({ protocol }) => {
   return webSocket
 }
 
+const getMessage = (event) => {
+  return Json.parse(event.data)
+}
+
 export const wrap = (webSocket) => {
-  let handleMessage
   return {
+    webSocket,
+    /**
+     * @type {any}
+     */
+    listener: undefined,
     get onmessage() {
-      return handleMessage
+      return this.listener
     },
     set onmessage(listener) {
-      if (listener) {
-        handleMessage = (event) => {
-          // TODO why are some events not instance of message event?
-          if (event instanceof MessageEvent) {
-            const message = Json.parse(event.data)
-            listener(message)
-          } else {
-            listener(event)
-          }
-        }
-      } else {
-        handleMessage = null
+      this.listener = listener
+      const wrappedListener = (event) => {
+        const message = getMessage(event)
+        listener(message)
       }
-      webSocket.onmessage = handleMessage
+      this.webSocket.onmessage = wrappedListener
     },
     send(message) {
       const stringifiedMessage = Json.stringifyCompact(message)
-      webSocket.send(stringifiedMessage)
+      this.webSocket.send(stringifiedMessage)
     },
   }
 }

@@ -21,10 +21,7 @@ export const create = async (options) => {
 }
 
 const getActualData = (event) => {
-  if (event instanceof MessageEvent) {
-    return event.data
-  }
-  return event
+  return event.data
 }
 
 export const wrap = (port) => {
@@ -33,21 +30,17 @@ export const wrap = (port) => {
     /**
      * @type {any}
      */
-    handleMessage: undefined,
+    listener: undefined,
     get onmessage() {
-      return this.handleMessage
+      return this.listener
     },
     set onmessage(listener) {
-      if (listener) {
-        this.handleMessage = (event) => {
-          // TODO why are some events not instance of message event?
-          const data = getActualData(event)
-          listener(data)
-        }
-      } else {
-        this.handleMessage = null
+      this.listener = listener
+      const wrappedListener = (event) => {
+        const data = getActualData(event)
+        listener(data)
       }
-      this.port.onmessage = this.handleMessage
+      this.port.onmessage = wrappedListener
     },
     send(message) {
       this.port.postMessage(message)
