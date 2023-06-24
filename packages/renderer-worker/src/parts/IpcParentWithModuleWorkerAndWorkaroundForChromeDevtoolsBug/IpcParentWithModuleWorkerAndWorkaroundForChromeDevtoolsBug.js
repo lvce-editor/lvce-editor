@@ -35,25 +35,21 @@ export const wrap = (port) => {
     /**
      * @type {any}
      */
-    handleMessage: undefined,
+    listener: undefined,
     get onmessage() {
-      return this.handleMessage
+      return this.listener
     },
     set onmessage(listener) {
-      if (listener) {
-        this.handleMessage = (event) => {
-          // TODO why are some events not instance of message event?
-          if (event instanceof MessageEvent) {
-            const message = event.data
-            listener(message, fakeEvent)
-          } else {
-            listener(event)
-          }
+      const wrappedListener = (event) => {
+        // TODO why are some events not instance of message event?
+        if (event instanceof MessageEvent) {
+          const message = event.data
+          listener(message, fakeEvent)
+        } else {
+          listener(event)
         }
-      } else {
-        this.handleMessage = null
       }
-      this.port.onmessage = this.handleMessage
+      this.port.onmessage = wrappedListener
     },
     send(message) {
       this.port.postMessage(message)
