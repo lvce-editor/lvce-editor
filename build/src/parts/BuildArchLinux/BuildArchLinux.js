@@ -39,7 +39,7 @@ const copyElectronResult = async ({ product, version }) => {
   })
   // because of using system electron, argv will be /usr/lib/electron /usr/lib/appName <path>
   await Replace.replace({
-    path: `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/main-process/src/parts/Cli/Cli.js`,
+    path: `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/main-process/src/parts/ParseCliArgs/ParseCliArgs.js`,
     occurrence: `const relevantArgv = argv.slice(1)`,
     replacement: `const relevantArgv = argv.slice(2)`,
   })
