@@ -1,4 +1,5 @@
 import * as GetSearchDisplayResults from '../GetSearchDisplayResults/GetSearchDisplayResults.js'
+import * as GetSearchResultsVirtualDom from '../GetSearchResultsVirtualDom/GetSearchResultsVirtualDom.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
@@ -21,9 +22,11 @@ const renderItems = {
       newState.fileCount,
       newState.value,
       newState.minLineY,
-      newState.maxLineY
+      newState.maxLineY,
+      newState.replacement
     )
-    return [/* method */ RenderMethod.SetResults, /* results */ displayResults, /* replacement */ newState.replacement]
+    const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(displayResults)
+    return ['setDom', dom]
   },
 }
 
@@ -42,16 +45,16 @@ const renderScrollBar = {
   },
 }
 
-const renderHeight = {
-  isEqual(oldState, newState) {
-    return oldState.items.length === newState.items.length
-  },
-  apply(oldState, newState) {
-    const { itemHeight } = newState
-    const contentHeight = newState.items.length * itemHeight
-    return [/* method */ RenderMethod.SetContentHeight, /* contentHeight */ contentHeight]
-  },
-}
+// const renderHeight = {
+//   isEqual(oldState, newState) {
+//     return oldState.items.length === newState.items.length
+//   },
+//   apply(oldState, newState) {
+//     const { itemHeight } = newState
+//     const contentHeight = newState.items.length * itemHeight
+//     return [/* method */ RenderMethod.SetContentHeight, /* contentHeight */ contentHeight]
+//   },
+// }
 
 const renderMessage = {
   isEqual(oldState, newState) {
@@ -79,7 +82,8 @@ const renderNegativeMargin = {
     return oldState.deltaY === newState.deltaY
   },
   apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetNegativeMargin, /* negativeMargin */ -newState.deltaY]
+    const relative = newState.deltaY % 22
+    return [/* method */ RenderMethod.SetNegativeMargin, /* negativeMargin */ -relative]
   },
 }
 
@@ -130,7 +134,6 @@ export const render = [
   renderMessage,
   renderValue,
   renderScrollBar,
-  renderHeight,
   renderNegativeMargin,
   renderReplaceExpanded,
   renderButtonsChecked,
