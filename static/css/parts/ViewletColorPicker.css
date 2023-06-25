@@ -1,11 +1,12 @@
 .ColorPicker {
   /* TODO */
-  width: 300px;
+  width: calc(300px + 40px); /* extra space for scroll bar thumb */
   height: 200px;
   contain: strict;
   display: flex;
   flex-direction: column;
   background: var(--MainBackground);
+  padding: 0 20px;
 }
 
 .ColorPickerRectangle {
@@ -46,7 +47,7 @@
 .ColorPickerSliderThumb {
   position: absolute;
   top: calc(-15px + 2px + 5px + 150px + 20px + 2px);
-  left: calc(-15px + 2px + 5px);
+  left: calc(-15px + 2px + 5px + 20px);
   width: 20px;
   height: 20px;
   border-radius: 50%;
