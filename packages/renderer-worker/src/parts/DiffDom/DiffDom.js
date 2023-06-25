@@ -13,6 +13,18 @@ const isEqualElement = (oldDom, i, newDom, j) => {
   return false
 }
 
+const diffProps = (patches, a, b, index) => {
+  const aProps = a.props
+  const bProps = b.props
+  for (const propA in aProps) {
+    if (propA in bProps) {
+      if (aProps[propA] !== bProps[propA]) {
+        patches.push({ type: DiffDomType.UpdateProp, key: propA, value: bProps[propA], index })
+      }
+    }
+  }
+}
+
 export const diffDom = (oldDom, newDom) => {
   const lengthA = oldDom.length
   const lengthB = newDom.length
@@ -28,15 +40,7 @@ export const diffDom = (oldDom, newDom) => {
       // console.log('same', a)
     } else {
       if (a.type === b.type) {
-        const aProps = a.props
-        const bProps = b.props
-        for (const propA in aProps) {
-          if (propA in bProps) {
-            if (aProps[propA] !== bProps[propA]) {
-              patches.push({ type: DiffDomType.UpdateProp, key: propA, value: bProps[propA], index: i })
-            }
-          }
-        }
+        diffProps(patches, a, b, i)
       } else {
         // insert b
         patches.push({ type: DiffDomType.Insert, nodes: newDom.slice(j, j + b.childCount + 1), index: i })
