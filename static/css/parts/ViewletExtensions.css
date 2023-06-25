@@ -6,7 +6,7 @@
   cursor: default;
 }
 
-.Extensions[aria-busy='true']::before {
+/* .Extensions[aria-busy='true']::before {
   content: '';
   position: absolute;
   display: block;
@@ -16,7 +16,7 @@
   width: 2%;
   height: 2px;
   background: rgb(14, 112, 192);
-}
+} */
 
 /* TODO extract progress since it is used also elsewhere -> no copy paste code */
 @keyframes progress {
@@ -89,11 +89,9 @@
   height: 62px;
   align-items: center;
   contain: strict;
+  position: absolute;
   /* TODO use color from color theme */
   color: rgb(188, 190, 190);
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
 }
 

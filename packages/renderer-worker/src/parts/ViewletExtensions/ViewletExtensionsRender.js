@@ -1,54 +1,26 @@
 import * as GetVisibleExtensions from '../GetVisibleExtensions/GetVisibleExtensions.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as GetExtensionsVirtualDom from '../GetExtensionsVirtualDom/GetExtensionsVirtualDom.js'
 import { getListHeight } from './ViewletExtensionsShared.js'
 
 export const hasFunctionalRender = true
 
 const renderExtensions = {
   isEqual(oldState, newState) {
-    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
+    return (
+      oldState.items === newState.items &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY &&
+      oldState.deltaY === newState.deltaY &&
+      oldState.focusedIndex === newState.focusedIndex
+    )
   },
   apply(oldState, newState) {
     // TODO render extensions incrementally when scrolling
     const visibleExtensions = GetVisibleExtensions.getVisible(newState)
-    return [/* method */ RenderMethod.SetExtensions, /* visibleExtensions */ visibleExtensions]
-  },
-}
-
-const renderHeight = {
-  isEqual(oldState, newState) {
-    return oldState.items.length === newState.items.length
-  },
-  apply(oldState, newState) {
-    const { itemHeight } = newState
-    const contentHeight = newState.items.length * itemHeight
-    return [/* method */ RenderMethod.SetContentHeight, /* contentHeight */ contentHeight]
-  },
-}
-
-const renderNegativeMargin = {
-  isEqual(oldState, newState) {
-    return oldState.deltaY === newState.deltaY
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetNegativeMargin, /* negativeMargin */ -newState.deltaY]
-  },
-}
-
-const renderFocusedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex && oldState.minLineY === newState.minLineY
-  },
-  apply(oldState, newState) {
-    const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
-    const newFocusedIndex = newState.focusedIndex - newState.minLineY
-    return [
-      /* method */ RenderMethod.SetFocusedIndex,
-      /* oldFocusedIndex */ oldFocusedIndex,
-      /* newFocusedIndex */ newFocusedIndex,
-      /* focused */ newState.focused,
-    ]
+    const dom = GetExtensionsVirtualDom.getExtensionsVirtualDom(visibleExtensions, newState.deltaY)
+    return ['setExtensionsDom', dom]
   },
 }
 
@@ -86,15 +58,6 @@ const renderMessage = {
   },
 }
 
-const renderSize = {
-  isEqual(oldState, newState) {
-    return oldState.size === newState.size
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetSize, /* oldSize */ oldState.size, /* newSize */ newState.size]
-  },
-}
-
 const renderSearchValue = {
   isEqual(oldState, newState) {
     return oldState.searchValue === newState.searchValue
@@ -104,13 +67,4 @@ const renderSearchValue = {
   },
 }
 
-export const render = [
-  renderHeight,
-  renderFocusedIndex,
-  renderScrollBar,
-  renderNegativeMargin,
-  renderMessage,
-  renderExtensions,
-  renderSize,
-  renderSearchValue,
-]
+export const render = [renderScrollBar, renderMessage, renderExtensions, renderSearchValue]
