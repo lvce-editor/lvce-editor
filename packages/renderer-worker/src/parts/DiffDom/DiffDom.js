@@ -55,7 +55,6 @@ const diffDomInternal = (patches, oldDom, oldStartIndex, oldEndIndex, newDom, ne
             })
             i += oldTotal
           } else {
-            console.log({ a, b })
             diffDomInternal(patches, oldDom, i, i + oldTotal, newDom, j, j + newTotal)
             i += oldTotal
             j += newTotal
