@@ -24,6 +24,7 @@ test('diffDom - add a text node', () => {
   const newDom = [text('hello world')]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
+      index: 0,
       type: DiffDomType.Insert,
       nodes: [text('hello world')],
     },
@@ -86,7 +87,11 @@ test('diffDom - sub node removed at start', () => {
     },
     {
       type: DiffDomType.Remove,
-      nodes: [2, 3],
+      nodes: [2],
+    },
+    {
+      type: DiffDomType.Remove,
+      nodes: [3],
     },
   ])
 })
@@ -96,6 +101,7 @@ test('diffDom - nested nodes inserted', () => {
   const newDom = [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
+      index: 0,
       type: DiffDomType.Insert,
       nodes: [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)],
     },
@@ -107,6 +113,7 @@ test('diffDom - multiple nodes inserted', () => {
   const newDom = [div({ className: 'a' }, 0), div({ className: 'b' }, 0)]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
+      index: 0,
       type: DiffDomType.Insert,
       nodes: [div({ className: 'a' }, 0), div({ className: 'b' }, 0)],
     },
@@ -125,14 +132,49 @@ test('diffDom - multiple nodes removed', () => {
 })
 
 test('diffDom - remove and add nodes', () => {
-  const oldDom = [div({ className: 'a' }, 1), i({ className: 'b' }, 0), div({ className: 'a' })]
+  const oldDom = [div({ className: 'a' }, 1), i({ className: 'b' }, 0), div({ className: 'a' }, 0)]
   const newDom = [div({ className: 'a' }, 0), div({ className: 'a' }, 1), i({ className: 'b' }, 0)]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
-      index: 1,
-      nodes: [div({ className: 'a' }, 1), i({ className: 'b' }, 0)],
+      type: DiffDomType.Remove,
+      nodes: [1],
+    },
+    {
+      index: 2,
+      nodes: [i({ className: 'b' }, 0)],
       type: DiffDomType.Insert,
     },
+  ])
+})
+
+test('diffDom - add one node with one child node', () => {
+  const oldDom = [div({ className: 'a' }, 0)]
+  const newDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 0,
+      nodes: [div({ className: 'a' }, 1), div({ className: 'a' }, 0)],
+      type: DiffDomType.Insert,
+    },
+  ])
+})
+
+test('diffDom - add node with child nodes', () => {
+  const oldDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  const newDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 1,
+      nodes: [div({ className: 'a' }, 1), div({ className: 'a' }, 0)],
+      type: DiffDomType.Insert,
+    },
+  ])
+})
+
+test('diffDom - remove node with child nodes', () => {
+  const oldDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  const newDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
       nodes: [2],
       type: DiffDomType.Remove,

@@ -1,4 +1,5 @@
 import * as DiffDomType from '../DiffDomType/DiffDomType.js'
+import * as GetTotalChildCount from '../GetTotalChildCount/GetTotalChildCount.js'
 
 const isEqualElement = (oldDom, i, newDom, j) => {
   const oldElement = oldDom[i]
@@ -25,14 +26,10 @@ const diffProps = (patches, a, b, index) => {
   }
 }
 
-export const diffDom = (oldDom, newDom) => {
-  const lengthA = oldDom.length
-  const lengthB = newDom.length
-  const min = Math.min(lengthA, lengthB)
-  let i = 0
-  let j = 0
-  const patches = []
-  while (i < lengthA && j < lengthB) {
+const diffDomInternal = (patches, oldDom, oldStartIndex, oldEndIndex, newDom, newStartIndex, newEndIndex) => {
+  let i = oldStartIndex
+  let j = newStartIndex
+  while (i < oldEndIndex && j < newEndIndex) {
     const a = oldDom[i]
     const b = newDom[j]
     const newIndex = newDom.indexOf(a)
@@ -41,24 +38,56 @@ export const diffDom = (oldDom, newDom) => {
     } else {
       if (a.type === b.type) {
         diffProps(patches, a, b, i)
+        if (a.childCount !== b.childCount) {
+          const oldTotal = GetTotalChildCount.getTotalChildCount(oldDom, i)
+          const newTotal = GetTotalChildCount.getTotalChildCount(newDom, j)
+          if (a.childCount === 0) {
+            patches.push({
+              index: i,
+              type: DiffDomType.Insert,
+              nodes: newDom.slice(j + 1, j + newTotal + 1),
+            })
+            j += newTotal
+          } else if (b.childCount === 0) {
+            patches.push({
+              type: DiffDomType.Remove,
+              nodes: [i + 1],
+            })
+            i += oldTotal
+          } else {
+            console.log({ a, b })
+            diffDomInternal(patches, oldDom, i, i + oldTotal, newDom, j, j + newTotal)
+            i += oldTotal
+            j += newTotal
+          }
+        }
       } else {
-        // insert b
-        patches.push({ type: DiffDomType.Insert, nodes: newDom.slice(j, j + b.childCount + 1), index: i })
-        j += b.childCount
+        // console.log({ a, b })
+        // replace a with b
+        const totalChildCount = GetTotalChildCount.getTotalChildCount(newDom, j)
+        const oldTotal = GetTotalChildCount.getTotalChildCount(oldDom, i)
+        patches.push({
+          index: i,
+          type: DiffDomType.Replace,
+          nodes: [newDom.slice(j, j + totalChildCount + 1)],
+        })
+        i += oldTotal
+        j += totalChildCount
       }
     }
     i++
     j++
   }
-  if (j < lengthB) {
+  if (j < newEndIndex) {
     patches.push({
+      index: i,
       type: DiffDomType.Insert,
       nodes: newDom.slice(j),
     })
   }
-  if (i < lengthA) {
+  if (i < oldEndIndex) {
     const toRemove = []
-    while (i < lengthA) {
+    while (i < oldEndIndex) {
       toRemove.push(i)
       i += oldDom[i].childCount
       i++
@@ -68,5 +97,13 @@ export const diffDom = (oldDom, newDom) => {
       nodes: toRemove,
     })
   }
+  return patches
+}
+
+export const diffDom = (oldDom, newDom) => {
+  const lengthA = oldDom.length
+  const lengthB = newDom.length
+  const patches = []
+  diffDomInternal(patches, oldDom, 0, lengthA, newDom, 0, lengthB)
   return patches
 }
