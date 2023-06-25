@@ -11,6 +11,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as FallbackModuleId from '../FallbackModuleId/FallbackModuleId.js'
 
 export const state = {
   pendingModules: Object.create(null),
@@ -291,6 +292,29 @@ export const backgroundLoad = async ({ getModule, id, x, y, width, height, props
     uri,
   }
 }
+
+const getErrorCommands = async (viewletId, getModule, viewletUid, error) => {
+  let fallbackId = ViewletModuleId.Error
+  try {
+    fallbackId = FallbackModuleId.getFallbackModuleId(viewletId)
+    await RendererProcess.invoke(kLoadModule, fallbackId)
+    const fallbackModule = await loadModule(getModule, fallbackId)
+    const oldState = fallbackModule.create()
+    const newState = fallbackModule.setError(oldState, error)
+    const commands = getRenderCommands(fallbackModule, oldState, newState, viewletUid)
+    commands.unshift([kCreate, fallbackId, viewletUid])
+    return commands
+  } catch (outerError) {
+    console.warn(`Fallback error: ${outerError}`)
+    if (fallbackId === ViewletModuleId.Error) {
+      // this is really bad
+      // probably can only show an alert at this point
+      return []
+    }
+    return getErrorCommands(ViewletModuleId.Error, getModule, viewletUid, error)
+  }
+}
+
 /**
  *
  * @param {{getModule:()=>any, type:number, id:string, disposed:boolean }} viewlet
@@ -482,36 +506,8 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     viewlet.type = 4
     const prettyError = await PrettyError.prepare(error)
     PrettyError.print(prettyError)
-    try {
-      if (module && module.handleError) {
-        await module.handleError(error)
-        return []
-      }
-      const commands = []
-      if (state < ViewletState.RendererProcessViewletLoaded) {
-        await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.id)
-      }
-      const parentUid = viewlet.parentUid
-      await RendererProcess.invoke(kLoadModule, ViewletModuleId.Error)
-      commands.push([kCreate, ViewletModuleId.Error, viewletUid])
-      // @ts-ignore
-      if (viewlet.setBounds !== false) {
-        commands.push([kSetBounds, viewletUid, viewlet.x, viewlet.y, viewlet.width, viewlet.height])
-      }
-      commands.push(['Viewlet.send', /* id */ viewletUid, 'setMessage', /* message */ `${error}`])
-      // @ts-ignore
-      if (viewlet.append) {
-        commands.push([kAppend, parentUid, viewletUid])
-      }
-      return commands
-    } catch (error) {
-      console.error(error)
-      return []
-      // this is really bad
-      // probably can only show an alert at this point
-    }
+    return getErrorCommands(viewlet.id, viewlet.getModule, viewletUid, error)
   }
-  // console.timeEnd(`load/${viewlet.id}`)
 }
 
 export const dispose = async (id) => {

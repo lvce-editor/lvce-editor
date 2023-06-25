@@ -1,6 +1,9 @@
 import * as ViewletEditorText from './ViewletEditorText.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const name = 'EditorText'
+
+export const fallbackId = ViewletModuleId.EditorError
 
 // prettier-ignore
 export const Events = {

@@ -355,6 +355,7 @@ export const contentLoaded = async (state) => {
       /* focus */ false,
       /* restore */ true
     )
+
     // @ts-ignore
     commands.push(...extraCommands)
     commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
