@@ -1,4 +1,5 @@
 import * as GetSearchDisplayResults from '../GetSearchDisplayResults/GetSearchDisplayResults.js'
+import * as GetSearchResultsVirtualDom from '../GetSearchResultsVirtualDom/GetSearchResultsVirtualDom.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
@@ -21,9 +22,12 @@ const renderItems = {
       newState.fileCount,
       newState.value,
       newState.minLineY,
-      newState.maxLineY
+      newState.maxLineY,
+      newState.replacement
     )
-    return [/* method */ RenderMethod.SetResults, /* results */ displayResults, /* replacement */ newState.replacement]
+    const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(displayResults)
+    console.log({ dom })
+    return ['setDom', dom]
   },
 }
 

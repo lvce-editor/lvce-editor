@@ -85,3 +85,7 @@ export const i = (props, childCount) => {
 export const img = (props) => {
   return h(VirtualDomElements.Img, props, 0)
 }
+
+export const root = (props, childCount) => {
+  return h(VirtualDomElements.Root, props, childCount)
+}

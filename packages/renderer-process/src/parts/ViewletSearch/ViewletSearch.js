@@ -12,6 +12,7 @@ import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as InputType from '../InputType/InputType.js'
 import * as Label from '../Label/Label.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as MaskImage from '../MaskImage/MaskImage.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
@@ -253,6 +254,11 @@ export const setResults = (state, results, replacement) => {
   // TODO should recycle nodes when rendering only search results
   // maybe could also recycle node from noResults and vice versa
   render$Rows($ListItems, results, replacement)
+}
+
+export const setDom = (state, dom) => {
+  const { $ListItems } = state
+  VirtualDom.renderInto($ListItems, dom)
 }
 
 export const setMessage = (state, message) => {
