@@ -1,14 +1,14 @@
 import { div, img, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getExtensionVirtualDom = (extension) => {
-  const { posInSet, setSize, top, icon, name, description, publisher } = extension
-  return [
+  const { posInSet, setSize, top, icon, name, description, publisher, focused } = extension
+  const dom = [
     div(
       {
         role: 'listitem',
         ariaRoleDescription: 'Extension',
         className: 'ExtensionListItem',
-        ariaPosInset: posInSet,
+        ariaPosInSet: posInSet,
         ariaSetSize: setSize,
         top,
       },
@@ -58,9 +58,13 @@ const getExtensionVirtualDom = (extension) => {
       0
     ),
   ]
+  if (focused) {
+    dom[0].props.id = 'ExtensionActive'
+  }
+  return dom
 }
 
-export const getExtensionsVirtualDom = (visibleExtensions, height, top, scrollBarY, scrollBarHeight) => {
+export const getExtensionsVirtualDom = (visibleExtensions) => {
   const dom = []
   dom.push(
     div(
@@ -69,8 +73,6 @@ export const getExtensionsVirtualDom = (visibleExtensions, height, top, scrollBa
         tabIndex: 0,
         ariaLabel: 'Extensions',
         role: 'list',
-        height,
-        top,
         onwheelpassive: 'handleWheel',
         oncontextmenu: 'handleContextMenu',
         onpointerdown: 'handlePointerDown',
@@ -82,24 +84,24 @@ export const getExtensionsVirtualDom = (visibleExtensions, height, top, scrollBa
   for (const extension of visibleExtensions) {
     dom.push(...getExtensionVirtualDom(extension))
   }
-  if (scrollBarHeight > 0) {
-    dom.push(
-      div(
-        {
-          className: 'ScrollBarSmall',
-          onpointerdown: 'handleScrollBarPointerDown',
-        },
-        1
-      ),
-      div(
-        {
-          className: 'ScrollBarThumb',
-          translateY: scrollBarY,
-          height: scrollBarHeight,
-        },
-        0
-      )
-    )
-  }
+  // if (scrollBarHeight > 0) {
+  //   dom.push(
+  //     div(
+  //       {
+  //         className: 'ScrollBarSmall',
+  //         onpointerdown: 'handleScrollBarPointerDown',
+  //       },
+  //       1
+  //     ),
+  //     div(
+  //       {
+  //         className: 'ScrollBarThumb',
+  //         translateY: scrollBarY,
+  //         height: scrollBarHeight,
+  //       },
+  //       0
+  //     )
+  //   )
+  // }
   return dom
 }

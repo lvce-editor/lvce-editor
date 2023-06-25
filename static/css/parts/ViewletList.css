@@ -6,4 +6,5 @@
   flex: 1;
   contain: strict;
   position: relative;
+  height: 100%;
 }

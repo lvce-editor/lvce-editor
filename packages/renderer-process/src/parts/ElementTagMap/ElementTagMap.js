@@ -35,6 +35,10 @@ export const getElementTag = (type) => {
       return ElementTag.I
     case VirtualDomElements.Img:
       return ElementTag.Img
+    case VirtualDomElements.Ins:
+      return ElementTag.Ins
+    case VirtualDomElements.Del:
+      return ElementTag.Del
     default:
       throw new Error(`element tag not found ${type}`)
   }

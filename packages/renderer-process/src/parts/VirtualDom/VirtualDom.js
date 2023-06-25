@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.js'
 import * as VirtualDomElement from '../VirtualDomElement/VirtualDomElement.js'
 import * as VirtualDomElementProps from '../VirtualDomElementProps/VirtualDomElementProps.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
@@ -36,6 +37,7 @@ const clearNode = ($Node) => {
 }
 
 export const renderInto = ($Parent, dom) => {
+  Assert.array(dom)
   clearNode($Parent)
   renderInternal($Parent, dom)
 }

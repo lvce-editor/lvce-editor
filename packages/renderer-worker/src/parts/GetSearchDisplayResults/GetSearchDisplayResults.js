@@ -2,7 +2,7 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
-export const getDisplayResults = (results, itemHeight, resultCount, searchTerm, minLineY, maxLineY) => {
+export const getDisplayResults = (results, itemHeight, resultCount, searchTerm, minLineY, maxLineY, replacement) => {
   const displayResults = []
   const setSize = resultCount
   let fileIndex = 0
@@ -34,6 +34,7 @@ export const getDisplayResults = (results, itemHeight, resultCount, searchTerm, 
           lineNumber: result.lineNumber,
           matchStart: 0,
           matchLength: 0,
+          replacement: '',
         })
         break
       case TextSearchResultType.Match:
@@ -48,6 +49,7 @@ export const getDisplayResults = (results, itemHeight, resultCount, searchTerm, 
           lineNumber: result.lineNumber,
           matchStart: result.start,
           matchLength: searchTerm.length,
+          replacement,
         })
         break
       default:
