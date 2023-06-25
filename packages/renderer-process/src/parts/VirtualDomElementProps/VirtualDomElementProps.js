@@ -9,6 +9,7 @@ export const setProp = ($Element, key, value) => {
     case 'width':
     case 'height':
     case 'left':
+    case 'marginTop':
       $Element.style[key] = `${value}px`
       break
     case 'style':
