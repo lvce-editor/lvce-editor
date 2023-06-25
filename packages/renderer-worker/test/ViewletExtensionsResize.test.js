@@ -20,7 +20,7 @@ test('resize', () => {
     height: 200,
     x: 200,
     minLineY: 0,
-    maxLineY: 3,
+    maxLineY: 0,
     deltaY: 0,
     searchValue: '',
     suggestionState: 0,
