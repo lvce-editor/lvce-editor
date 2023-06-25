@@ -38,6 +38,14 @@ export const input = (props, childCount) => {
   return h(VirtualDomElements.Input, props, childCount)
 }
 
+export const ins = (props, childCount) => {
+  return h(VirtualDomElements.Ins, props, childCount)
+}
+
+export const del = (props, childCount) => {
+  return h(VirtualDomElements.Del, props, childCount)
+}
+
 export const thead = (props, childCount) => {
   return h(VirtualDomElements.THead, props, childCount)
 }
