@@ -19,7 +19,7 @@ const renderExtensions = {
   apply(oldState, newState) {
     // TODO render extensions incrementally when scrolling
     const visibleExtensions = GetVisibleExtensions.getVisible(newState)
-    const dom = GetExtensionsVirtualDom.getExtensionsVirtualDom(visibleExtensions, newState.deltaY)
+    const dom = GetExtensionsVirtualDom.getExtensionsVirtualDom(visibleExtensions)
     return ['setExtensionsDom', dom]
   },
 }
