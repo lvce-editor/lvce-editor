@@ -22,6 +22,8 @@ const diffProps = (patches, a, b, index) => {
       if (aProps[propA] !== bProps[propA]) {
         patches.push({ type: DiffDomType.UpdateProp, key: propA, value: bProps[propA], index })
       }
+    } else {
+      patches.push({ type: DiffDomType.RemoveProp, key: propA, index })
     }
   }
 }
@@ -32,9 +34,7 @@ const diffDomInternal = (patches, oldDom, oldStartIndex, oldEndIndex, newDom, ne
   while (i < oldEndIndex && j < newEndIndex) {
     const a = oldDom[i]
     const b = newDom[j]
-    const newIndex = newDom.indexOf(a)
     if (a === b) {
-      // console.log('same', a)
     } else {
       if (a.type === b.type) {
         diffProps(patches, a, b, i)
@@ -55,7 +55,7 @@ const diffDomInternal = (patches, oldDom, oldStartIndex, oldEndIndex, newDom, ne
             })
             i += oldTotal
           } else {
-            diffDomInternal(patches, oldDom, i, i + oldTotal, newDom, j, j + newTotal)
+            diffDomInternal(patches, oldDom, i + 1, i + oldTotal + 1, newDom, j + 1, j + newTotal + 1)
             i += oldTotal
             j += newTotal
           }
@@ -68,7 +68,7 @@ const diffDomInternal = (patches, oldDom, oldStartIndex, oldEndIndex, newDom, ne
         patches.push({
           index: i,
           type: DiffDomType.Replace,
-          nodes: [newDom.slice(j, j + totalChildCount + 1)],
+          nodes: newDom.slice(j, j + totalChildCount + 1),
         })
         i += oldTotal
         j += totalChildCount
