@@ -1,6 +1,6 @@
 import * as DiffDom from '../src/parts/DiffDom/DiffDom.js'
 import * as DiffDomType from '../src/parts/DiffDomType/DiffDomType.js'
-import { div, i, text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
+import { button, div, i, text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
 
 test('diffDom - empty', () => {
   const oldDom = []
@@ -24,6 +24,7 @@ test('diffDom - add a text node', () => {
   const newDom = [text('hello world')]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
+      index: 0,
       type: DiffDomType.Insert,
       nodes: [text('hello world')],
     },
@@ -86,7 +87,11 @@ test('diffDom - sub node removed at start', () => {
     },
     {
       type: DiffDomType.Remove,
-      nodes: [2, 3],
+      nodes: [2],
+    },
+    {
+      type: DiffDomType.Remove,
+      nodes: [3],
     },
   ])
 })
@@ -96,6 +101,7 @@ test('diffDom - nested nodes inserted', () => {
   const newDom = [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
+      index: 0,
       type: DiffDomType.Insert,
       nodes: [div({ className: 'List' }, 1), div({ className: 'ListItems' }, 0)],
     },
@@ -107,6 +113,7 @@ test('diffDom - multiple nodes inserted', () => {
   const newDom = [div({ className: 'a' }, 0), div({ className: 'b' }, 0)]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
+      index: 0,
       type: DiffDomType.Insert,
       nodes: [div({ className: 'a' }, 0), div({ className: 'b' }, 0)],
     },
@@ -125,14 +132,49 @@ test('diffDom - multiple nodes removed', () => {
 })
 
 test('diffDom - remove and add nodes', () => {
-  const oldDom = [div({ className: 'a' }, 1), i({ className: 'b' }, 0), div({ className: 'a' })]
+  const oldDom = [div({ className: 'a' }, 1), i({ className: 'b' }, 0), div({ className: 'a' }, 0)]
   const newDom = [div({ className: 'a' }, 0), div({ className: 'a' }, 1), i({ className: 'b' }, 0)]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
-      index: 1,
-      nodes: [div({ className: 'a' }, 1), i({ className: 'b' }, 0)],
+      type: DiffDomType.Remove,
+      nodes: [1],
+    },
+    {
+      index: 2,
+      nodes: [i({ className: 'b' }, 0)],
       type: DiffDomType.Insert,
     },
+  ])
+})
+
+test('diffDom - add one node with one child node', () => {
+  const oldDom = [div({ className: 'a' }, 0)]
+  const newDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 0,
+      nodes: [div({ className: 'a' }, 1), div({ className: 'a' }, 0)],
+      type: DiffDomType.Insert,
+    },
+  ])
+})
+
+test('diffDom - add node with child nodes', () => {
+  const oldDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  const newDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 1,
+      nodes: [div({ className: 'a' }, 1), div({ className: 'a' }, 0)],
+      type: DiffDomType.Insert,
+    },
+  ])
+})
+
+test('diffDom - remove node with child nodes', () => {
+  const oldDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  const newDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
     {
       nodes: [2],
       type: DiffDomType.Remove,
@@ -159,6 +201,415 @@ test('diffDom - remove node with child nodes', () => {
     {
       nodes: [2],
       type: DiffDomType.Remove,
+    },
+  ])
+})
+
+test('diffDom - remove child node and replace text node', () => {
+  const oldDom = [
+    div(
+      {
+        className: 'DebugSectionHeader',
+        ariaExpanded: false,
+      },
+      2
+    ),
+    div(
+      {
+        className: 'MaskIcon DebugMaskIcon',
+        maskImage: '/icons/triangle-right.svg',
+      },
+      0
+    ),
+    text('Call Stack'),
+  ]
+  const newDom = [
+    div(
+      {
+        className: 'DebugPausedMessage',
+      },
+      1
+    ),
+    text('Not Paused'),
+  ]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 0,
+      type: DiffDomType.UpdateProp,
+      key: 'className',
+      value: 'DebugPausedMessage',
+    },
+    {
+      index: 0,
+      type: DiffDomType.RemoveProp,
+      key: 'ariaExpanded',
+    },
+    {
+      index: 1,
+      type: DiffDomType.Replace,
+      nodes: [text('Not Paused')],
+    },
+    {
+      type: DiffDomType.Remove,
+      nodes: [2],
+    },
+  ])
+})
+
+test('diffDom - endless recursion bug', () => {
+  const oldDom = [
+    div(
+      {
+        className: 'DebugButtons',
+      },
+      4
+    ),
+    div(
+      {
+        className: 'IconButton DebugButton',
+        title: 'Pause',
+      },
+      1
+    ),
+    div(
+      {
+        className: 'MaskIcon',
+        maskImage: '/icons/debug-pause.svg',
+      },
+      0
+    ),
+    button(
+      {
+        className: 'IconButton DebugButton',
+        title: 'Step Over',
+      },
+      1
+    ),
+
+    div(
+      {
+        className: 'MaskIcon',
+        maskImage: '/icons/debug-step-over.svg',
+      },
+      0
+    ),
+    button(
+      {
+        className: 'IconButton DebugButton',
+        title: 'Step Into',
+      },
+      1
+    ),
+    div(
+      {
+        className: 'MaskIcon',
+        maskImage: '/icons/debug-step-into.svg',
+      },
+      0
+    ),
+    button(
+      {
+        className: 'IconButton DebugButton',
+        title: 'Step Out',
+      },
+      1
+    ),
+    div(
+      {
+        className: 'MaskIcon',
+        maskImage: '/icons/debug-step-out.svg',
+      },
+      0
+    ),
+    div(
+      {
+        className: 'DebugSectionHeader',
+        tabIndex: 0,
+      },
+      2
+    ),
+    div(
+      {
+        className: 'MaskIcon DebugMaskIcon',
+        maskImage: '/icons/triangle-right.svg',
+      },
+      0
+    ),
+    text('Watch'),
+    div(
+      {
+        className: 'DebugSectionHeader',
+        tabIndex: 0,
+      },
+      2
+    ),
+    div(
+      {
+        className: 'MaskIcon DebugMaskIcon',
+        maskImage: '/icons/triangle-right.svg',
+      },
+      0
+    ),
+    text('BreakPoints'),
+    div(
+      {
+        className: 'DebugSectionHeader',
+        role: 'treeitem',
+        ariaLevel: 1,
+        ariaExpanded: false,
+        tabIndex: 0,
+      },
+      2
+    ),
+    div(
+      {
+        className: 'MaskIcon DebugMaskIcon',
+        maskImage: '/icons/triangle-right.svg',
+      },
+      0
+    ),
+    text('Scope'),
+    div(
+      {
+        className: 'DebugSectionHeader',
+        ariaExpanded: false,
+      },
+      2
+    ),
+    div(
+      {
+        className: 'MaskIcon DebugMaskIcon',
+        maskImage: '/icons/triangle-right.svg',
+      },
+      0
+    ),
+    text('Call Stack'),
+  ]
+  const newDom = [
+    div(
+      {
+        className: 'DebugButtons',
+      },
+      4
+    ),
+    button(
+      {
+        className: 'IconButton DebugButton',
+        title: 'Pause',
+      },
+      1
+    ),
+    div(
+      {
+        className: 'MaskIcon',
+        maskImage: '/icons/debug-pause.svg',
+      },
+      0
+    ),
+    button(
+      {
+        className: 'IconButton DebugButton',
+        title: 'Step Over',
+      },
+      1
+    ),
+    div(
+      {
+        className: 'MaskIcon',
+        maskImage: '/icons/debug-step-over.svg',
+      },
+      0
+    ),
+    button(
+      {
+        className: 'IconButton DebugButton',
+        title: 'Step Into',
+      },
+      1
+    ),
+    div(
+      {
+        className: 'MaskIcon',
+        maskImage: '/icons/debug-step-into.svg',
+      },
+      0
+    ),
+    button(
+      {
+        className: 'IconButton DebugButton',
+        title: 'Step Out',
+      },
+      1
+    ),
+    div(
+      {
+        className: 'MaskIcon',
+        maskImage: '/icons/debug-step-out.svg',
+      },
+      0
+    ),
+    div(
+      {
+        className: 'DebugSectionHeader',
+        tabIndex: 0,
+      },
+      2
+    ),
+    div(
+      {
+        className: 'MaskIcon DebugMaskIcon',
+        maskImage: '/icons/triangle-right.svg',
+      },
+      0
+    ),
+    text('Watch'),
+    div(
+      {
+        className: 'DebugSectionHeader',
+        tabIndex: 0,
+      },
+      2
+    ),
+    div(
+      {
+        className: 'MaskIcon DebugMaskIcon',
+        maskImage: '/icons/triangle-right.svg',
+      },
+      0
+    ),
+    text('BreakPoints'),
+    div(
+      {
+        className: 'DebugSectionHeader',
+        role: 'treeitem',
+        ariaLevel: 1,
+        ariaExpanded: true,
+      },
+      2
+    ),
+    div(
+      {
+        className: 'MaskIcon DebugMaskIcon',
+        maskImage: '/icons/triangle-down.svg',
+      },
+      0
+    ),
+    text('Scope'),
+    div(
+      {
+        className: 'DebugPausedMessage',
+      },
+      1
+    ),
+    text('Not Paused'),
+    div(
+      {
+        className: 'DebugSectionHeader',
+        ariaExpanded: true,
+      },
+      2
+    ),
+    div(
+      {
+        className: 'MaskIcon DebugMaskIcon',
+        maskImage: '/icons/triangle-down.svg',
+      },
+      0
+    ),
+    text('Call Stack'),
+    div(
+      {
+        className: 'DebugPausedMessage',
+      },
+      1
+    ),
+    text('Not Paused'),
+  ]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 1,
+      nodes: [
+        button(
+          {
+            className: 'IconButton DebugButton',
+            title: 'Pause',
+          },
+          1
+        ),
+        div(
+          {
+            className: 'MaskIcon',
+            maskImage: '/icons/debug-pause.svg',
+          },
+          0
+        ),
+      ],
+      type: DiffDomType.Replace,
+    },
+    {
+      index: 15,
+      key: 'ariaExpanded',
+      type: DiffDomType.UpdateProp,
+      value: true,
+    },
+    {
+      index: 15,
+      key: 'tabIndex',
+      type: DiffDomType.RemoveProp,
+    },
+    {
+      index: 16,
+      key: 'maskImage',
+      type: DiffDomType.UpdateProp,
+      value: '/icons/triangle-down.svg',
+    },
+    {
+      index: 18,
+      key: 'className',
+      type: DiffDomType.UpdateProp,
+      value: 'DebugPausedMessage',
+    },
+    {
+      index: 18,
+      key: 'ariaExpanded',
+      type: DiffDomType.RemoveProp,
+    },
+    {
+      index: 19,
+      nodes: [text('Not Paused')],
+      type: DiffDomType.Replace,
+    },
+    {
+      nodes: [20],
+      type: DiffDomType.Remove,
+    },
+    {
+      index: 21,
+      nodes: [
+        div(
+          {
+            ariaExpanded: true,
+            className: 'DebugSectionHeader',
+          },
+          2
+        ),
+        div(
+          {
+            className: 'MaskIcon DebugMaskIcon',
+            maskImage: '/icons/triangle-down.svg',
+          },
+          0
+        ),
+        text('Call Stack'),
+        div(
+          {
+            className: 'DebugPausedMessage',
+          },
+          1
+        ),
+        text('Not Paused'),
+      ],
+      type: DiffDomType.Insert,
     },
   ])
 })
