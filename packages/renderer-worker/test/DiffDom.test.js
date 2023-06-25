@@ -139,3 +139,26 @@ test('diffDom - remove and add nodes', () => {
     },
   ])
 })
+
+test.skip('diffDom - add node with child nodes', () => {
+  const oldDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  const newDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 1,
+      nodes: [div({ className: 'a' }, 1), div({ className: 'a' }, 0)],
+      type: DiffDomType.Insert,
+    },
+  ])
+})
+
+test('diffDom - remove node with child nodes', () => {
+  const oldDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  const newDom = [div({ className: 'a' }, 1), div({ className: 'a' }, 0)]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      nodes: [2],
+      type: DiffDomType.Remove,
+    },
+  ])
+})
