@@ -36,7 +36,6 @@ const renderRow = (rowInfo) => {
       ariaPosInSet: posInSet,
       ariaLabel: name,
       ariaDescription: '',
-      top,
     },
     1
   )

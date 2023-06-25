@@ -26,7 +26,6 @@ const renderItems = {
       newState.replacement
     )
     const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(displayResults)
-    console.log({ dom })
     return ['setDom', dom]
   },
 }
@@ -46,16 +45,16 @@ const renderScrollBar = {
   },
 }
 
-const renderHeight = {
-  isEqual(oldState, newState) {
-    return oldState.items.length === newState.items.length
-  },
-  apply(oldState, newState) {
-    const { itemHeight } = newState
-    const contentHeight = newState.items.length * itemHeight
-    return [/* method */ RenderMethod.SetContentHeight, /* contentHeight */ contentHeight]
-  },
-}
+// const renderHeight = {
+//   isEqual(oldState, newState) {
+//     return oldState.items.length === newState.items.length
+//   },
+//   apply(oldState, newState) {
+//     const { itemHeight } = newState
+//     const contentHeight = newState.items.length * itemHeight
+//     return [/* method */ RenderMethod.SetContentHeight, /* contentHeight */ contentHeight]
+//   },
+// }
 
 const renderMessage = {
   isEqual(oldState, newState) {
@@ -83,7 +82,8 @@ const renderNegativeMargin = {
     return oldState.deltaY === newState.deltaY
   },
   apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetNegativeMargin, /* negativeMargin */ -newState.deltaY]
+    const relative = newState.deltaY % 22
+    return [/* method */ RenderMethod.SetNegativeMargin, /* negativeMargin */ -relative]
   },
 }
 
@@ -134,7 +134,6 @@ export const render = [
   renderMessage,
   renderValue,
   renderScrollBar,
-  renderHeight,
   renderNegativeMargin,
   renderReplaceExpanded,
   renderButtonsChecked,
