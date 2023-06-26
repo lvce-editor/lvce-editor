@@ -4,6 +4,8 @@ export const getFallbackModuleId = (moduleId) => {
   switch (moduleId) {
     case ViewletModuleId.EditorText:
       return ViewletModuleId.EditorError
+    case ViewletModuleId.EditorCompletion:
+      return ViewletModuleId.EditorWidgetError
     default:
       return ViewletModuleId.Error
   }

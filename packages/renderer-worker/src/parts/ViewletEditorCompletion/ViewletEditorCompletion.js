@@ -1,6 +1,5 @@
 import * as Completions from '../Completions/Completions.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
-import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.js'
 import * as GetFinalDeltaY from '../GetFinalDeltaY/GetFinalDeltaY.js'
@@ -37,15 +36,6 @@ export const create = (id, uri, x, y, width, height) => {
 
 const getEditor = () => {
   return Viewlet.getState(ViewletModuleId.EditorText)
-}
-
-const getDisplayErrorMessage = (error) => {
-  const message = `${error}`
-  const errorPrefix = 'Error: '
-  if (message.startsWith(errorPrefix)) {
-    return message.slice(errorPrefix.length)
-  }
-  return message
 }
 
 const RE_WORD = /[\w\-]+$/
@@ -165,18 +155,6 @@ export const loadContent = async (state) => {
     rowIndex,
     columnIndex,
   }
-}
-
-export const handleError = async (error) => {
-  const displayErrorMessage = getDisplayErrorMessage(error)
-  const editor = getEditor()
-  await EditorShowMessage.editorShowMessage(
-    /* editor */ editor,
-    /* rowIndex */ 0,
-    /* columnIndex */ 0,
-    /* message */ displayErrorMessage,
-    /* isError */ true
-  )
 }
 
 export const loadingContent = () => {

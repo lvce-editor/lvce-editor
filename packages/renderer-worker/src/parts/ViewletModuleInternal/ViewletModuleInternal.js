@@ -86,6 +86,8 @@ export const load = (moduleId) => {
       return import('../ViewletEditorError/ViewletEditorError.ipc.js')
     case ViewletModuleId.Error:
       return import('../ViewletError/ViewletError.ipc.js')
+    case ViewletModuleId.EditorWidgetError:
+      return import('../ViewletEditorWidgetError/ViewletEditorWidgetError.ipc.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }
