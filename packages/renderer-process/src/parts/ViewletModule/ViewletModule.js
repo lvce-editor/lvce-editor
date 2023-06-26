@@ -82,6 +82,8 @@ export const load = (moduleId) => {
       return import('../ViewletTitleBarIcon/ViewletTitleBarIcon.js')
     case ViewletModuleId.TitleBarMenuBar:
       return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
+    case ViewletModuleId.EditorWidgetError:
+      return import('../ViewletEditorWidgetError/ViewletEditorWidgetError.js')
     case ViewletModuleId.Video:
       return import('../ViewletVideo/ViewletVideo.js')
     case ViewletModuleId.Terminals:
