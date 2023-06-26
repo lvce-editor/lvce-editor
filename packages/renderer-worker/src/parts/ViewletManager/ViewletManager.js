@@ -12,6 +12,7 @@ import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as FallbackModuleId from '../FallbackModuleId/FallbackModuleId.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const state = {
   pendingModules: Object.create(null),
@@ -305,7 +306,7 @@ const getErrorCommands = async (viewletId, getModule, viewletUid, error) => {
     commands.unshift([kCreate, fallbackId, viewletUid])
     return commands
   } catch (outerError) {
-    console.warn(`Fallback error: ${outerError}`)
+    Logger.warn(`Fallback error: ${outerError}`)
     if (fallbackId === ViewletModuleId.Error) {
       // this is really bad
       // probably can only show an alert at this point
@@ -407,7 +408,6 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
     if (viewletState.version !== oldVersion) {
       newState = viewletState
-      console.log('version mismatch')
       // TODO not sure if Object.assign is a good idea
       // Object.assign(viewletState, newState)
     }
