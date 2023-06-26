@@ -41,6 +41,7 @@ jest.mock('electron', () => {
           },
           protocol: {
             registerFileProtocol() {},
+            handle() {},
           },
           setPermissionRequestHandler() {},
           setPermissionCheckHandler() {},

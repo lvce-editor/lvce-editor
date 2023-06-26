@@ -3,8 +3,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  require('../src/parts/ElectronSession/ElectronSession.js').state.session =
-    undefined
+  require('../src/parts/ElectronSession/ElectronSession.js').state.session = undefined
 })
 
 test('get', () => {
@@ -15,9 +14,11 @@ test('get', () => {
     },
     protocol: {
       registerFileProtocol() {},
+      handle() {},
     },
     setPermissionRequestHandler() {},
     setPermissionCheckHandler() {},
+    handle() {},
   }
   jest.mock('electron', () => {
     return {
@@ -61,6 +62,7 @@ test('handlePermissionCheck - allow writing to clipboard', () => {
     },
     protocol: {
       registerFileProtocol() {},
+      handle() {},
     },
     setPermissionRequestHandler() {},
     setPermissionCheckHandler(fn) {
@@ -93,6 +95,7 @@ test('handlePermissionRequests - allow reading from', () => {
     },
     protocol: {
       registerFileProtocol() {},
+      handle() {},
     },
     setPermissionRequestHandler(fn) {
       _permissionRequestHandler = fn
