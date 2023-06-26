@@ -1,27 +1,19 @@
 const Platform = require('../Platform/Platform.js')
-const ElectronProtocolType = require('../ElectronProtocolType/ElectronProtocolType.js')
 const IsProtocolHandleApiSupported = require('../IsProtocolHandleApiSupported/IsProtocolHandleApiSupported.js')
 
 /**
  *
  * @param {Electron.Protocol} protocol
  * @param {string} name
- * @param {number} type
  * @param {(request: globalThis.Electron.ProtocolRequest) => Promise<GlobalResponse>} handleRequest
  * @returns
  */
-exports.handle = (protocol, name, type, handleRequest, handleRequestFile) => {
+exports.handle = (protocol, name, handleRequest) => {
   if (IsProtocolHandleApiSupported.isProtocolHandleApiSupported(protocol)) {
     protocol.handle(name, handleRequest)
     return
   }
-  switch (type) {
-    case ElectronProtocolType.File:
-      protocol.registerFileProtocol(name, handleRequestFile)
-      break
-    default:
-      throw new Error('unsupported type')
-  }
+  throw new Error('protocol.handle api is not supported')
 }
 
 exports.enable = (protocol) => {
