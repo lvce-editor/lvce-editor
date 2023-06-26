@@ -80,6 +80,8 @@ export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const Video = 'Video'
 
+export const EditorWidgetError = 'EditorWidgetError'
+
 export const Terminals = 'Terminals'
 
 export const EditorHover = 'EditorHover'
