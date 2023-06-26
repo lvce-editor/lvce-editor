@@ -4,6 +4,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 
+// TODO move to events
 const handleBlur = () => {
   RendererWorker.send(/* EditorRename.abort */ 'EditorRename.abort')
 }

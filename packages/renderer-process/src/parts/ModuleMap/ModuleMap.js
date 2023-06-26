@@ -34,8 +34,6 @@ export const getModuleId = (commandId) => {
     case 776:
     case 777:
       return ModuleId.EditorController
-    case 'EditorError.create':
-      return ModuleId.EditorError
     case 'EditorHover.create':
       return ModuleId.EditorHover
     case 'EditorRename.create':

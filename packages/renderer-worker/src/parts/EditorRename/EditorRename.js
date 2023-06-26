@@ -6,15 +6,12 @@ import * as Rename from '../Rename/Rename.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 // TODO memory leak
 export const state = {
   editor: undefined,
-}
-
-const prepareRename = async (editor, rowIndex, columnIndex) => {
-  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
-  return Rename.prepareRename(editor, offset)
 }
 
 const rename = (editor, rowIndex, columnIndex, newName) => {
@@ -27,28 +24,7 @@ export const open = async (editor) => {
   const columnIndex = editor.selections[1]
   Assert.number(rowIndex)
   Assert.number(columnIndex)
-
-  // TODO handle error and add tests for handled error
-  const prepareRenameResult = await prepareRename(editor, rowIndex, columnIndex)
-
-  // TODO race condition, what is when editor is closed before promise resolves
-
-  if (prepareRenameResult.canRename) {
-    const x = EditorPosition.x(editor, rowIndex, columnIndex)
-    const y = EditorPosition.y(editor, rowIndex, columnIndex)
-    // const prepareRenameResult = await prepareRename(editor)
-    // console.log({ prepareRenameResult })
-    await RendererProcess.invoke(/* EditorRename.openWidget */ 4512, /* x */ x, /* y */ y)
-  } else {
-    // TODO also show error when promise rejects
-    await Command.execute(
-      /* EditorError.show */ 3900,
-      /* editor */ editor,
-      /* message */ 'You cannot rename this element',
-      /* rowIndex */ rowIndex,
-      /* columnIndex */ columnIndex
-    )
-  }
+  await Viewlet.openWidget(ViewletModuleId.EditorRename)
 }
 
 const toPositionBasedEdits = (textDocument, edits) => {

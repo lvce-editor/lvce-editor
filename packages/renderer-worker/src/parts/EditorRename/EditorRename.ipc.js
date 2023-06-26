@@ -7,3 +7,5 @@ export const Commands = {
   finish: EditorRename.finish,
   open: EditorRename.open,
 }
+
+export * from './EditorRename.js'

@@ -97,3 +97,5 @@ export const EditorHover = 'EditorHover'
 export const EditorError = 'EditorError'
 
 export const EditorWidgetError = 'EditorWidgetError'
+
+export const EditorRename = 'EditorRename'

@@ -5,6 +5,7 @@ export const getFallbackModuleId = (moduleId) => {
     case ViewletModuleId.EditorText:
       return ViewletModuleId.EditorError
     case ViewletModuleId.EditorCompletion:
+    case ViewletModuleId.EditorRename:
       return ViewletModuleId.EditorWidgetError
     default:
       return ViewletModuleId.Error

@@ -92,6 +92,8 @@ export const load = (moduleId) => {
       return import('../ViewletEditorError/ViewletEditorError.js')
     case ViewletModuleId.EditorWidgetError:
       return import('../ViewletEditorWidgetError/ViewletEditorWidgetError.js')
+    case ViewletModuleId.EditorRename:
+      return import('../ViewletEditorRename/ViewletEditorRename.js')
     default:
       throw new Error(`${moduleId} module not found in renderer process`)
   }
