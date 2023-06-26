@@ -1,6 +1,8 @@
 import { jest } from '@jest/globals'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import * as ViewletError from '../src/parts/ViewletError/ViewletError.ipc.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -29,9 +31,26 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
   }
 })
 
-const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+jest.unstable_mockModule('../src/parts/PrettyError/PrettyError.js', () => {
+  return {
+    prepare(error) {
+      return error
+    },
+    print: jest.fn(),
+  }
+})
 
+jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
+  return {
+    error: jest.fn(),
+    warn: jest.fn(),
+  }
+})
+
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+const PrettyError = await import('../src/parts/PrettyError/PrettyError.js')
+const Logger = await import('../src/parts/Logger/Logger.js')
 
 test.skip('load', async () => {
   // @ts-ignore
@@ -102,63 +121,74 @@ test('load - race condition', async () => {
 test('load - error - no create method', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  const getModule = async () => {
+  const getModule = async (id) => {
+    if (id === ViewletModuleId.Error) {
+      return ViewletError
+    }
     return {}
   }
-  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
-  expect(await ViewletManager.load(state)).toEqual([
+  const viewlet = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
+  expect(await ViewletManager.load(viewlet)).toEqual([
     ['Viewlet.create', 'Error', 1],
-    ['Viewlet.setBounds', 1, 0, 0, 0, 0],
     ['Viewlet.send', 1, 'setMessage', 'TypeError: module.create is not a function'],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', 'Error')
 })
 
 test('load - error - create method throws error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  const getModule = async () => {
+  const getModule = async (id) => {
+    if (id === ViewletModuleId.Error) {
+      return ViewletError
+    }
     return {
       create() {
         throw new TypeError('x is not a function')
       },
     }
   }
-  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
-  expect(await ViewletManager.load(state)).toEqual([
+  const viewlet = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
+  viewlet.uid = 1
+  expect(await ViewletManager.load(viewlet)).toEqual([
     ['Viewlet.create', 'Error', 1],
-    ['Viewlet.setBounds', 1, 0, 0, 0, 0],
     ['Viewlet.send', 1, 'setMessage', 'TypeError: x is not a function'],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', 'Error')
 })
 
 test('load - error - no loadContent method', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  const getModule = async () => {
+  const getModule = async (id) => {
+    if (id === ViewletModuleId.Error) {
+      return ViewletError
+    }
     return {
       create() {
         return {}
       },
     }
   }
-  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
-  expect(await ViewletManager.load(state)).toEqual([
+  const viewlet = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
+  viewlet.uid = 1
+  expect(await ViewletManager.load(viewlet)).toEqual([
     ['Viewlet.create', 'Error', 1],
-    ['Viewlet.setBounds', 1, 0, 0, 0, 0],
     ['Viewlet.send', 1, 'setMessage', 'TypeError: module.loadContent is not a function'],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', 'Error')
 })
 
 test('load - error - loadContent method throws error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  const getModule = async () => {
+  const getModule = async (id) => {
+    if (id === ViewletModuleId.Error) {
+      return ViewletError
+    }
     return {
       create() {
         return {
@@ -170,20 +200,23 @@ test('load - error - loadContent method throws error', async () => {
       },
     }
   }
-  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
-  expect(await ViewletManager.load(state)).toEqual([
+  const viewlet = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
+  viewlet.uid = 1
+  expect(await ViewletManager.load(viewlet)).toEqual([
     ['Viewlet.create', 'Error', 1],
-    ['Viewlet.setBounds', 1, 0, 0, 0, 0],
     ['Viewlet.send', 1, 'setMessage', 'TypeError: x is not a function'],
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', 'Error')
 })
 
 test('load - error - contentLoaded is not of type function', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  const getModule = async () => {
+  const getModule = async (id) => {
+    if (id === ViewletModuleId.Error) {
+      return ViewletError
+    }
     return {
       create() {
         return {}
@@ -196,20 +229,23 @@ test('load - error - contentLoaded is not of type function', async () => {
       contentLoaded: 1,
     }
   }
-  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
-  expect(await ViewletManager.load(state)).toEqual([
+  const viewlet = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
+  viewlet.uid = 1
+  expect(await ViewletManager.load(viewlet)).toEqual([
     ['Viewlet.create', 'Error', 1],
-    ['Viewlet.setBounds', 1, 0, 0, 0, 0],
     ['Viewlet.send', 1, 'setMessage', 'TypeError: module.contentLoaded is not a function'],
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(4)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
 })
 
 test('load - error - contentLoaded method throws error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  const getModule = async () => {
+  const getModule = async (id) => {
+    if (id === ViewletModuleId.Error) {
+      return ViewletError
+    }
     return {
       create() {
         return {}
@@ -224,16 +260,64 @@ test('load - error - contentLoaded method throws error', async () => {
       },
     }
   }
-  const state = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
-  expect(await ViewletManager.load(state)).toEqual([
+  const viewlet = ViewletManager.create(getModule, '', 0, '', 0, 0, 0, 0)
+  viewlet.uid = 1
+  expect(await ViewletManager.load(viewlet)).toEqual([
     ['Viewlet.create', 'Error', 1],
-    ['Viewlet.setBounds', 1, 0, 0, 0, 0],
     ['Viewlet.send', 1, 'setMessage', 'TypeError: x is not a function'],
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(4)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', '')
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, 'Viewlet.loadModule', 'Error')
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.loadModule', '')
+  expect(PrettyError.print).toHaveBeenCalledTimes(1)
+  expect(PrettyError.print).toHaveBeenCalledWith(new TypeError('x is not a function'))
+})
+
+test('load - error in fallback module', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  const getModule = async (id) => {
+    if (id === ViewletModuleId.Error) {
+      return ViewletError
+    }
+    if (id === ViewletModuleId.EditorError) {
+      return {
+        create() {
+          return {}
+        },
+        render: [],
+      }
+    }
+
+    return {
+      create() {
+        return {}
+      },
+      async loadContent(state) {
+        return {
+          ...state,
+        }
+      },
+      contentLoaded() {
+        throw new TypeError('x is not a function')
+      },
+    }
+  }
+  const viewlet = ViewletManager.create(getModule, ViewletModuleId.EditorText, 0, '', 0, 0, 0, 0)
+  viewlet.uid = 1
+  expect(await ViewletManager.load(viewlet)).toEqual([
+    ['Viewlet.create', 'Error', 1],
+    ['Viewlet.send', 1, 'setMessage', 'TypeError: x is not a function'],
+  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(6)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.loadModule', ViewletModuleId.EditorText)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(4, 'Viewlet.loadModule', ViewletModuleId.EditorError)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(5, 'Viewlet.loadModule', ViewletModuleId.Error)
+  expect(PrettyError.print).toHaveBeenCalledTimes(1)
+  expect(PrettyError.print).toHaveBeenCalledWith(new TypeError('x is not a function'))
+  expect(Logger.warn).toHaveBeenCalledTimes(1)
+  expect(Logger.warn).toHaveBeenCalledWith(`Fallback error: TypeError: fallbackModule.setError is not a function`)
 })
 
 test('load - canceled', async () => {
