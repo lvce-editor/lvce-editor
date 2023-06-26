@@ -1,5 +1,4 @@
 const Electron = require('electron')
-const ElectronProtocolType = require('../ElectronProtocolType/ElectronProtocolType.js')
 const HandleHeadersReceived = require('../HandleHeadersReceived/HandleHeadersReceived.js')
 const HandlePermission = require('../HandlePermission/HandlePermission.js')
 const HandleRequest = require('../HandleRequest/HandleRequest.js')
@@ -15,7 +14,7 @@ const createSession = () => {
   session.webRequest.onHeadersReceived(HandleHeadersReceived.handleHeadersReceived)
   session.setPermissionRequestHandler(HandlePermission.handlePermissionRequest)
   session.setPermissionCheckHandler(HandlePermission.handlePermissionCheck)
-  Protocol.handle(session.protocol, Platform.scheme, ElectronProtocolType.File, HandleRequest.handleRequest, HandleRequest.handleRequestFile)
+  Protocol.handle(session.protocol, Platform.scheme, HandleRequest.handleRequest)
   return session
 }
 
