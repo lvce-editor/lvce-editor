@@ -20,4 +20,6 @@ export const test = async ({ FileSystem, Workspace, Extension, Main, Editor, exp
   await expect(overlayMessage).toHaveText(
     `Failed to execute completion provider: VError: invalid completion result: expected completion item to be of type object but was of type undefined`
   )
+  await expect(overlayMessage).toHaveCSS('left', '0px')
+  await expect(overlayMessage).toHaveCSS('top', '75px')
 }
