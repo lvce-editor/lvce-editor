@@ -78,6 +78,8 @@ export const load = (moduleId) => {
       return import('../ViewletColorPicker/ViewletColorPicker.ipc.js')
     case ViewletModuleId.TitleBarIcon:
       return import('../ViewletTitleBarIcon/ViewletTitleBarIcon.ipc.js')
+    case ViewletModuleId.EditorWidgetError:
+      return import('../ViewletEditorWidgetError/ViewletEditorWidgetError.ipc.js')
     case ViewletModuleId.Terminals:
       return import('../ViewletTerminals/ViewletTerminals.ipc.js')
     case ViewletModuleId.EditorHover:
