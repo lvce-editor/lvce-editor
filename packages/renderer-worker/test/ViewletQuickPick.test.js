@@ -132,7 +132,6 @@ test('render - set correct height', () => {
         },
       ],
     ],
-    ['Viewlet.send', 'QuickPick', 'setCursorOffset', 0],
     ['Viewlet.send', 'QuickPick', 'setItemsHeight', 22],
   ])
 })
