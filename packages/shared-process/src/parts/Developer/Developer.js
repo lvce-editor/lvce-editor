@@ -1,8 +1,6 @@
-import { createWriteStream, writeFileSync } from 'node:fs'
 import { performance } from 'node:perf_hooks'
 import * as ExtensionHost from '../ExtensionHost/ExtensionHost.js'
 import * as Process from '../Process/Process.js'
-import * as Timeout from '../Timeout/Timeout.js'
 
 export const measureLatencyBetweenExtensionHostAndSharedProcess = async (socket, id) => {
   // TODO lazy load extension host
@@ -79,29 +77,3 @@ export const osStats = () => {
   // - cpu temperature
   // - network usage
 }
-
-export const createProfile = async () => {
-  const inspector = await import('node:inspector')
-  const session = new inspector.Session()
-  session.connect()
-
-  await new Promise((resolve) => {
-    session.post('Profiler.enable', () => {
-      session.post('Profiler.start', () => {
-        // Invoke business logic under measurement here...
-
-        Timeout.setTimeout(() => {
-          session.post('Profiler.stop', (error, { profile }) => {
-            // Write profile to disk, upload, etc.
-            if (!error) {
-              writeFileSync('/tmp/vscode-profile.cpuprofile', JSON.stringify(profile))
-            }
-          })
-        }, 15000)
-        // some time later...
-      })
-    })
-  })
-}
-
-// require('inspector').open()
