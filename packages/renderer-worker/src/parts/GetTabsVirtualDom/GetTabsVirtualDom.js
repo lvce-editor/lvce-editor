@@ -1,5 +1,6 @@
-import { button, div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as TabFlags from '../TabFlags/TabFlags.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
  * @enum {string}
@@ -21,60 +22,52 @@ const getTabDom = (tab, isActive, fixedWidth) => {
   const isHovered = flags & TabFlags.Hovered
   const fileIconClassName = `FileIcon FileIcon${icon}`
   const actualTabWidth = fixedWidth || tabWidth
-  const tabElement = div(
-    {
-      className: tabClassName,
-      role: 'tab',
-      draggable: true,
-      width: actualTabWidth,
-      ariaSelected: isActive,
-      title: uri,
-    },
-    2
-  )
+  const tabElement = {
+    type: VirtualDomElements.Div,
+    className: tabClassName,
+    role: 'tab',
+    draggable: true,
+    width: actualTabWidth,
+    ariaSelected: isActive,
+    title: uri,
+    childCount: 2,
+  }
   const dom = [
     tabElement,
-    div(
-      {
-        className: fileIconClassName,
-      },
-      0
-    ),
-    div(
-      {
-        className: ClassNames.TabLabel,
-      },
-      1
-    ),
+    {
+      type: VirtualDomElements.Div,
+      className: fileIconClassName,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.TabLabel,
+      childCount: 1,
+    },
     text(tab.label),
   ]
 
   if (isHovered) {
     tabElement.childCount++
-    dom.push(
-      button(
-        {
-          className: 'EditorTabCloseButton',
-          title: 'Close',
-        },
-        0
-      )
-    )
+    dom.push({
+      type: VirtualDomElements.Button,
+      className: 'EditorTabCloseButton',
+      title: 'Close',
+      childCount: 0,
+    })
   } else if (isDirty) {
     tabElement.childCount++
     dom.push(
-      div(
-        {
-          className: 'Circle',
-        },
-        1
-      ),
-      div(
-        {
-          className: 'MaskIcon TabDirtyIcon',
-        },
-        0
-      )
+      {
+        type: VirtualDomElements.Div,
+        className: 'Circle',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon TabDirtyIcon',
+        childCount: 0,
+      }
     )
   }
   return dom
