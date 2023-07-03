@@ -1,6 +1,5 @@
 import * as GetDecorationClassName from '../GetDecorationClassName/GetDecorationClassName.js'
 import * as GetTokensViewport from '../GetTokensViewport/GetTokensViewport.js'
-import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as NormalizeText from '../NormalizeText/NormalizeText.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
