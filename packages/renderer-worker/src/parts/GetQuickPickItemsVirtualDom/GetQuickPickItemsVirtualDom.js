@@ -1,60 +1,53 @@
-import { div, i, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-const labelWrapper = div(
-  {
-    className: 'QuickPickItemLabel',
-  },
-  1
-)
+const labelWrapper = {
+  type: VirtualDomElements.Div,
+  className: 'QuickPickItemLabel',
+  childCount: 1,
+}
 
-const descirptionWrapper = div(
-  {
-    className: 'QuickPickItemDescription',
-  },
-  1
-)
+const descriptionWrapper = {
+  type: VirtualDomElements.Div,
+  className: 'QuickPickItemDescription',
+  childCount: 1,
+}
 
 const getQuickPickItemVirtualDom = (visibleItem) => {
   const { posInSet, label, setSize, isActive, description, icon } = visibleItem
   const dom = []
-  dom.push(
-    div(
-      {
-        className: 'QuickPickItem',
-        role: 'option',
-        ariaPosInSet: posInSet,
-        ariaSetSize: setSize,
-      },
-      2
-    )
-  )
+  dom.push({
+    type: VirtualDomElements.Div,
+    className: 'QuickPickItem',
+    role: 'option',
+    ariaPosInSet: posInSet,
+    ariaSetSize: setSize,
+    childCount: 2,
+  })
   if (isActive) {
-    dom[0].props.id = 'QuickPickItemActive'
+    // @ts-ignore
+    dom[0].id = 'QuickPickItemActive'
   }
   if (icon) {
     dom[0].childCount++
-    dom.push(
-      i(
-        {
-          className: `FileIcon FileIcon${icon}`,
-        },
-        0
-      )
-    )
+    dom.push({
+      type: VirtualDomElements.I,
+      className: `FileIcon FileIcon${icon}`,
+      childCount: 0,
+    })
   }
-  dom.push(labelWrapper, text(label), descirptionWrapper, text(description))
+  dom.push(labelWrapper, text(label), descriptionWrapper, text(description))
   return dom
 }
 
 export const getQuickPickItemsVirtualDom = (visibleItems) => {
   if (visibleItems.length === 0) {
     return [
-      div(
-        {
-          className: 'QuickPickStatus',
-        },
-        1
-      ),
+      {
+        type: VirtualDomElements.Div,
+        className: 'QuickPickStatus',
+        childCount: 1,
+      },
       text('No Results'),
     ]
   }

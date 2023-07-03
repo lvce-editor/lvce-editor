@@ -1,50 +1,43 @@
-import { div } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getColorPickerVirtualDom = (color, offset) => {
   return [
-    div(
-      {
-        className: 'Viewlet ColorPicker',
-        '--ColorPickerColor': color,
-      },
-      3
-    ),
-    div(
-      {
-        className: 'ColorPickerRectangle',
-      },
-      3
-    ),
-    div(
-      {
-        className: 'ColorPickerBackgroundColor',
-      },
-      0
-    ),
-    div(
-      {
-        className: 'ColorPickerLight',
-      },
-      0
-    ),
-    div(
-      {
-        className: 'ColorPickerDark',
-      },
-      0
-    ),
-    div(
-      {
-        className: 'ColorPickerSlider',
-      },
-      0
-    ),
-    div(
-      {
-        className: 'ColorPickerSliderThumb',
-        translateX: offset,
-      },
-      0
-    ),
+    {
+      type: VirtualDomElements.Div,
+      className: 'Viewlet ColorPicker',
+      '--ColorPickerColor': color,
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'ColorPickerRectangle',
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'ColorPickerBackgroundColor',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'ColorPickerLight',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'ColorPickerDark',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'ColorPickerSlider',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'ColorPickerSliderThumb',
+      translateX: offset,
+      childCount: 0,
+    },
   ]
 }
