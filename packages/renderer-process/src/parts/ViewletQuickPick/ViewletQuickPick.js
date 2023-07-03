@@ -57,19 +57,9 @@ const Ids = {
 // TODO add test with show and slicedItems length is 0
 
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
-  const { $QuickPickItems, $QuickPickInput } = state
-  if (oldFocusedIndex >= 0) {
-    const $OldItem = $QuickPickItems.children[oldFocusedIndex]
-    if ($OldItem) {
-      $OldItem.removeAttribute('id')
-    }
-  }
+  const { $QuickPickInput } = state
   if (newFocusedIndex >= 0) {
-    const $NewItem = $QuickPickItems.children[newFocusedIndex]
-    if ($NewItem) {
-      $NewItem.id = activeId
-      $QuickPickInput.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
-    }
+    $QuickPickInput.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
   }
 }
 
