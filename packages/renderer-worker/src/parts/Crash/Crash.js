@@ -1,11 +1,11 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
-export const createSharedProcessHeapSnapshot = async () => {
-  await SharedProcess.invoke(/* Developer.createSharedProcessHeapSnapshot */ 'Developer.createSharedProcessHeapSnapshot')
+export const crashSharedProcess = () => {
+  return SharedProcess.invoke(/* Developer.crashSharedProcess */ 'Developer.crashSharedProcess')
 }
 
-export const createSharedProcessProfile = async () => {
-  await SharedProcess.invoke(/* Developer.createProfile */ 'Developer.createProfile')
+export const crashMainProcess = () => {
+  return SharedProcess.invoke(/* Electron.crashMainProcess */ 'Electron.crashMainProcess')
 }
 
 export const crashRendererProcess = () => {}
