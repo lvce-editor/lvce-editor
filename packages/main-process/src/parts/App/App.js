@@ -14,6 +14,7 @@ const HandleMessagePort = require('../HandleMessagePort/HandleMessagePort.js')
 const Performance = require('../Performance/Performance.js')
 const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
 const Process = require('../Process/Process.js')
+const Platform = require('../Platform/Platform.js')
 const Protocol = require('../Protocol/Protocol.js')
 const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
 // TODO use Platform.getScheme() instead of Product.getTheme()
@@ -58,6 +59,10 @@ exports.hydrate = async () => {
     Debug.debug('[info] quitting because no lock')
     ElectronApp.quit()
     return
+  }
+
+  if (Platform.isLinux && Platform.chromeUserDataPath) {
+    Electron.app.setPath('userData', Platform.chromeUserDataPath)
   }
 
   // TODO tree shake out the .env.DEV check: reading from env variables is expensive
