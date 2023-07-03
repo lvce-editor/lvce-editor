@@ -214,6 +214,9 @@ const handleEditorChange = async (editor) => {
   if (tab.uid !== editor.uid) {
     return state
   }
+  if (tab.flags & TabFlags.Dirty) {
+    return state
+  }
   const newEditors = [
     ...editors.slice(0, activeIndex),
     {
