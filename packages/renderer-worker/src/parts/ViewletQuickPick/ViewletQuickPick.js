@@ -89,6 +89,7 @@ export const loadContent = async (state) => {
     value,
     cursorOffset: value.length,
     provider,
+    inputSource: InputSource.Script,
   }
 }
 

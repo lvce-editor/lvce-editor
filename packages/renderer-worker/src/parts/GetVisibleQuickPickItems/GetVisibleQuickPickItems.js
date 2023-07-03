@@ -5,7 +5,7 @@ const getPickDescription = (provider, pick) => {
   return ''
 }
 
-export const getVisible = (provider, items, minLineY, maxLineY) => {
+export const getVisible = (provider, items, minLineY, maxLineY, focusedIndex) => {
   const visibleItems = []
   const setSize = items.length
   const max = Math.min(items.length, maxLineY)
@@ -20,6 +20,7 @@ export const getVisible = (provider, items, minLineY, maxLineY) => {
       icon,
       posInSet: i + 1,
       setSize,
+      isActive: i === focusedIndex,
     })
   }
   return visibleItems

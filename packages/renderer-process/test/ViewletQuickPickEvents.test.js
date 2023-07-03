@@ -46,18 +46,6 @@ test.skip('event - mousedown', () => {
   const state = ViewletQuickPick.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
-  ViewletQuickPick.setPicks(state, [
-    {
-      posInSet: 1,
-      setSize: 2,
-      label: 'item 1',
-    },
-    {
-      posInSet: 2,
-      setSize: 2,
-      label: 'item 2',
-    },
-  ])
   const $QuickPickItemTwo = state.$QuickPickItems.children[1]
   $QuickPickItemTwo.dispatchEvent(
     new MouseEvent('mousedown', {
@@ -74,21 +62,13 @@ test('event - pointerdown - on focused item', () => {
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
   ViewletQuickPick.attachEvents(state)
-  ViewletQuickPick.setPicks(state, [
-    {
-      posInSet: 1,
-      setSize: 1,
-      label: 'item 1',
-    },
-  ])
   ViewletQuickPick.setFocusedIndex(state, 0, -1)
   const { $QuickPickItems } = state
-  const $QuickPickItemOne = $QuickPickItems.children[0]
   const event = new MouseEvent('pointerdown', {
     bubbles: true,
     cancelable: true,
   })
-  $QuickPickItemOne.dispatchEvent(event)
+  $QuickPickItems.dispatchEvent(event)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClickAt', 0, 0)
 })
@@ -98,18 +78,6 @@ test.skip('event - beforeinput', () => {
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
   ViewletQuickPick.attachEvents(state)
-  ViewletQuickPick.setPicks(state, [
-    {
-      posInSet: 1,
-      setSize: 2,
-      label: 'item 1',
-    },
-    {
-      posInSet: 2,
-      setSize: 2,
-      label: 'item 2',
-    },
-  ])
   const $QuickPickInput = state.$QuickPickInput
   $QuickPickInput.dispatchEvent(
     new InputEvent('beforeinput', {
