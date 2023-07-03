@@ -70,13 +70,6 @@ export const allocateMemory = () => {
   globalThis.arr = array
 }
 
-/* istanbul ignore next */
-export const crashSharedProcess = () => {
-  Timeout.setTimeout(() => {
-    throw new Error('oops')
-  }, 0)
-}
-
 export const osStats = () => {
   // TODO stats
   // - os name
@@ -86,16 +79,3 @@ export const osStats = () => {
   // - cpu temperature
   // - network usage
 }
-
-/* istanbul ignore next */
-export const createHeapSnapshot = async () => {
-  const { getHeapSnapshot } = await import('node:v8')
-  const { pipeline } = await import('node:stream/promises')
-  await pipeline(
-    getHeapSnapshot(),
-    // TODO get tmp dir from env
-    createWriteStream(`/tmp/vscode-${Date.now()}.heapsnapshot`)
-  )
-}
-
-// require('inspector').open()
