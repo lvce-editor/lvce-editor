@@ -1,4 +1,5 @@
 import * as Developer from './Developer.js'
+import * as HeapSnapshot from '../HeapSnapshot/HeapSnapshot.js'
 
 export const name = 'Developer'
 
@@ -6,7 +7,7 @@ export const name = 'Developer'
 export const Commands = {
   allocateMemory: Developer.allocateMemory,
   crashSharedProcess: Developer.crashSharedProcess,
-  createHeapSnapshot: Developer.createHeapSnapshot,
+  createHeapSnapshot: HeapSnapshot.createHeapSnapshot,
   createProfile: Developer.createProfile,
   getNodeStartupTime: Developer.getNodeStartupTiming,
   getNodeStartupTiming: Developer.getNodeStartupTiming,

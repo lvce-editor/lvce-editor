@@ -4,19 +4,13 @@ import * as ExtensionHost from '../ExtensionHost/ExtensionHost.js'
 import * as Process from '../Process/Process.js'
 import * as Timeout from '../Timeout/Timeout.js'
 
-export const measureLatencyBetweenExtensionHostAndSharedProcess = async (
-  socket,
-  id
-) => {
+export const measureLatencyBetweenExtensionHostAndSharedProcess = async (socket, id) => {
   // TODO lazy load extension host
   const latency = await ExtensionHost.measureLatency()
   socket.send([/* callback */ id, /* latency */ latency])
 }
 
-export const measureLatencyBetweenSharedProcessAndRendererProcess = async (
-  socket,
-  id
-) => {
+export const measureLatencyBetweenSharedProcessAndRendererProcess = async (socket, id) => {
   // const start = performance.now()
   // await new Promise((resolve) => {
   //   const callbackId = Callback.register(resolve)
@@ -93,17 +87,6 @@ export const osStats = () => {
   // - network usage
 }
 
-/* istanbul ignore next */
-export const createHeapSnapshot = async () => {
-  const { getHeapSnapshot } = await import('node:v8')
-  const { pipeline } = await import('node:stream/promises')
-  await pipeline(
-    getHeapSnapshot(),
-    // TODO get tmp dir from env
-    createWriteStream(`/tmp/vscode-${Date.now()}.heapsnapshot`)
-  )
-}
-
 export const createProfile = async () => {
   const inspector = await import('node:inspector')
   const session = new inspector.Session()
@@ -118,10 +101,7 @@ export const createProfile = async () => {
           session.post('Profiler.stop', (error, { profile }) => {
             // Write profile to disk, upload, etc.
             if (!error) {
-              writeFileSync(
-                '/tmp/vscode-profile.cpuprofile',
-                JSON.stringify(profile)
-              )
+              writeFileSync('/tmp/vscode-profile.cpuprofile', JSON.stringify(profile))
             }
           })
         }, 15000)
