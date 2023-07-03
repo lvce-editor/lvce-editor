@@ -15,10 +15,13 @@ const isEqualElement = (oldDom, i, newDom, j) => {
 }
 
 const diffProps = (patches, a, b, index) => {
-  const aProps = a.props
-  const bProps = b.props
+  const aProps = a
+  const bProps = b
   for (const propA in aProps) {
     if (propA in bProps) {
+      if (propA === 'childCount' || propA === 'type') {
+        continue
+      }
       if (aProps[propA] !== bProps[propA]) {
         patches.push({ type: DiffDomType.UpdateProp, key: propA, value: bProps[propA], index })
       }

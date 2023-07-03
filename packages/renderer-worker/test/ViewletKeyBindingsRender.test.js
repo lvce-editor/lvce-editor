@@ -36,101 +36,78 @@ test.only('render - add one keybinding', () => {
       [
         {
           childCount: 3,
-          props: {
-            ariaLabel: 'KeyBindings',
-            ariaRowCount: 1,
-            className: 'KeyBindingsTable',
-          },
+          ariaLabel: 'KeyBindings',
+          ariaRowCount: 1,
+          className: 'KeyBindingsTable',
           type: VirtualDomElements.Table,
         },
         {
           childCount: 3,
-          props: {},
           type: VirtualDomElements.ColGroup,
+          className: 'KeyBindingsTableColGroup',
         },
         {
           childCount: 0,
-          props: {
-            width: 0,
-          },
+          width: 0,
           type: VirtualDomElements.Col,
+          className: 'KeyBindingsTableCol',
         },
         {
           childCount: 0,
-          props: {
-            width: 0,
-          },
+          width: 0,
           type: VirtualDomElements.Col,
+          className: 'KeyBindingsTableCol',
         },
         {
           childCount: 0,
-          props: {
-            width: 0,
-          },
+          width: 0,
           type: VirtualDomElements.Col,
+          className: 'KeyBindingsTableCol',
         },
         {
           childCount: 1,
-          props: {
-            className: 'KeyBindingsTableHead',
-          },
+          className: 'KeyBindingsTableHead',
           type: VirtualDomElements.THead,
         },
         {
           childCount: 3,
-          props: {
-            ariaRowIndex: 1,
-            className: 'KeyBindingsTableRow',
-          },
+          ariaRowIndex: 1,
+          className: 'KeyBindingsTableRow',
           type: VirtualDomElements.Tr,
         },
         {
           childCount: 1,
-          props: {
-            className: 'KeyBindingsTableCell',
-          },
+          className: 'KeyBindingsTableCell',
           type: VirtualDomElements.Th,
         },
         {
           childCount: 0,
-          props: {
-            text: 'Command',
-          },
+          text: 'Command',
           type: VirtualDomElements.Text,
         },
         {
           childCount: 1,
-          props: {
-            className: 'KeyBindingsTableCell',
-          },
+          className: 'KeyBindingsTableCell',
           type: VirtualDomElements.Th,
         },
         {
           childCount: 0,
-          props: {
-            text: 'Key',
-          },
+          text: 'Key',
           type: VirtualDomElements.Text,
         },
         {
           childCount: 1,
-          props: {
-            className: 'KeyBindingsTableCell',
-          },
+          className: 'KeyBindingsTableCell',
           type: VirtualDomElements.Th,
         },
         {
           childCount: 0,
-          props: {
-            text: 'When',
-          },
+          text: 'When',
           type: VirtualDomElements.Text,
         },
         {
           childCount: 0,
-          props: {
-            className: 'KeyBindingsTableBody',
-          },
+          className: 'KeyBindingsTableBody',
           type: VirtualDomElements.TBody,
         },
       ],
@@ -168,75 +145,55 @@ test('render - remove one keybinding', () => {
       [
         {
           childCount: 2,
-          props: {
-            ariaLabel: 'KeyBindings',
-            ariaRowCount: 0,
-            className: 'KeyBindingsTable',
-          },
+          ariaLabel: 'KeyBindings',
+          ariaRowCount: 0,
+          className: 'KeyBindingsTable',
           type: VirtualDomElements.Table,
         },
         {
           childCount: 1,
-          props: {
-            className: 'KeyBindingsTableHead',
-          },
+          className: 'KeyBindingsTableHead',
           type: VirtualDomElements.THead,
         },
         {
           childCount: 3,
-          props: {
-            ariaRowIndex: 1,
-            className: 'KeyBindingsTableRow',
-          },
+          ariaRowIndex: 1,
+          className: 'KeyBindingsTableRow',
           type: VirtualDomElements.Tr,
         },
         {
           childCount: 1,
-          props: {
-            className: 'KeyBindingsTableCell',
-          },
+          className: 'KeyBindingsTableCell',
           type: VirtualDomElements.Th,
         },
         {
           childCount: 0,
-          props: {
-            text: 'Command',
-          },
+          text: 'Command',
           type: VirtualDomElements.Text,
         },
         {
           childCount: 1,
-          props: {
-            className: 'KeyBindingsTableCell',
-          },
+          className: 'KeyBindingsTableCell',
           type: VirtualDomElements.Th,
         },
         {
           childCount: 0,
-          props: {
-            text: 'Key',
-          },
+          text: 'Key',
           type: VirtualDomElements.Text,
         },
         {
           childCount: 1,
-          props: {
-            className: 'KeyBindingsTableCell',
-          },
+          className: 'KeyBindingsTableCell',
           type: VirtualDomElements.Th,
         },
         {
           childCount: 0,
-          props: {
-            text: 'When',
-          },
+          text: 'When',
           type: VirtualDomElements.Text,
         },
         {
           childCount: 0,
-          props: {
-            className: 'KeyBindingsTableBody',
-          },
+          className: 'KeyBindingsTableBody',
           type: VirtualDomElements.TBody,
         },
       ],

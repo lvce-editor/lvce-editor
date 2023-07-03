@@ -111,7 +111,7 @@ const tableHead = {
 const tableHeadRow = {
   type: VirtualDomElements.Tr,
   className: ClassNames.KeyBindingsTableRow,
-  ariaRowIndex: 3,
+  ariaRowIndex: 1,
   childCount: 3,
 }
 
