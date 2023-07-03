@@ -125,6 +125,16 @@ export const setText = (state, textInfos, differences) => {
   LayerText3.setLineInfos(state, textInfos, differences)
 }
 
+export const setIncrementalEdits = (state, incrementalEdits) => {
+  const { $LayerText } = state
+  for (const incrementalEdit of incrementalEdits) {
+    const { rowIndex, columnIndex, text } = incrementalEdit
+    const $Row = $LayerText.children[rowIndex]
+    const $Column = $Row.children[columnIndex]
+    $Column.firstChild.nodeValue = text
+  }
+}
+
 export const setSettings = (state, fontSize, lineHeight, letterSpacing) => {
   // TODO many properties on <html> element in chrome devtools looks ugly
   // maybe put styles into a stylesheet instead of using inline styles?
