@@ -1,3 +1,4 @@
+import * as Crash from '../Crash/Crash.js'
 import * as Developer from './Developer.js'
 
 export const name = 'Developer'
@@ -7,8 +8,8 @@ export const Commands = {
   // TODO certain commands are only available in electron -> treeshake them out
   allocateMemoryInSharedProcess: Developer.allocateMemoryInSharedProcess,
   clearCache: Developer.clearCache,
-  crashMainProcess: Developer.crashMainProcess,
-  crashSharedProcess: Developer.crashSharedProcess,
+  crashMainProcess: Crash.crashMainProcess,
+  crashSharedProcess: Crash.crashSharedProcess,
   createSharedProcessHeapSnapshot: Developer.createSharedProcessHeapSnapshot,
   createSharedProcessProfile: Developer.createSharedProcessProfile,
   downloadViewletState: Developer.downloadViewletState,

@@ -350,15 +350,6 @@ test.skip('monitorPerformance', async () => {
   delete globalThis.performance
 })
 
-// TODO test crashSharedProcess error
-
-test('crashSharedProcess', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {})
-  await Developer.crashSharedProcess()
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Developer.crashSharedProcess')
-})
-
 // TODO test createSharedProcessHeapSnapshot error
 
 test('createSharedProcessHeapSnapshot', async () => {
