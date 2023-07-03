@@ -1,8 +1,6 @@
-import { createWriteStream, writeFileSync } from 'node:fs'
 import { performance } from 'node:perf_hooks'
 import * as ExtensionHost from '../ExtensionHost/ExtensionHost.js'
 import * as Process from '../Process/Process.js'
-import * as Timeout from '../Timeout/Timeout.js'
 
 export const measureLatencyBetweenExtensionHostAndSharedProcess = async (socket, id) => {
   // TODO lazy load extension host
