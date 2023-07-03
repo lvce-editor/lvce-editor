@@ -3,6 +3,7 @@ import * as Command from '../Command/Command.js'
 import * as ElectronDeveloper from '../ElectronDeveloper/ElectronDeveloper.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
@@ -10,7 +11,6 @@ import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
 // TODO vscode's version of this is shorter
 // if it is a bottleneck, check performance of this function (not very optimized now)
 
@@ -369,15 +369,6 @@ export const openExtensionsFolder = () => {
   // TODO only possible in local file system
 }
 
-export const openLogsFolder = async () => {
-  // TODO only in electron or in remote when it is the same machine
-  if (Platform.platform === PlatformType.Web) {
-    return
-  }
-  const logsFolder = await Platform.getLogsDir()
-  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ logsFolder)
-}
-
 export const toggleDeveloperTools = () => {
   return ElectronWindow.toggleDevtools()
 }
@@ -419,21 +410,6 @@ export const clearCache = async () => {
 export const editors = {
   'performance://monitor': {},
   'performance://startup': {},
-}
-
-export const openConfigFolder = async () => {
-  const configFolder = await Platform.getConfigPath()
-  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ configFolder)
-}
-
-export const openCacheFolder = async () => {
-  const cacheFolder = await Platform.getCachePath()
-  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ cacheFolder)
-}
-
-export const openDataFolder = async () => {
-  const dataFolder = await SharedProcess.invoke(/* Platform.getDataDir */ 'Platform.getDataDir')
-  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ dataFolder)
 }
 
 export const showMessageBox = () => {}

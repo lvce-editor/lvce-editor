@@ -1,3 +1,4 @@
+import * as OpenSpecialFolder from '../OpenSpecialFolder/OpenSpecialFolder.js'
 import * as Developer from './Developer.js'
 
 export const name = 'Developer'
@@ -14,10 +15,10 @@ export const Commands = {
   downloadViewletState: Developer.downloadViewletState,
   getMemoryUsageContent: Developer.getMemoryUsageContent,
   getStartupPerformanceContent: Developer.getStartupPerformanceContent,
-  openCacheFolder: Developer.openCacheFolder,
-  openConfigFolder: Developer.openConfigFolder,
-  openDataFolder: Developer.openDataFolder,
-  openLogsFolder: Developer.openLogsFolder,
+  openCacheFolder: OpenSpecialFolder.openCacheFolder,
+  openConfigFolder: OpenSpecialFolder.openConfigFolder,
+  openDataFolder: OpenSpecialFolder.openDataFolder,
+  openLogsFolder: OpenSpecialFolder.openLogsFolder,
   openProcessExplorer: Developer.openProcessExplorer,
   reloadColorTheme: Developer.reloadColorTheme,
   reloadIconTheme: Developer.reloadIconTheme,
