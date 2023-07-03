@@ -35,7 +35,13 @@ const renderItems = {
     )
   },
   apply(oldState, newState) {
-    const visibleItems = GetVisibleQuickPickItems.getVisible(newState.provider, newState.items, newState.minLineY, newState.maxLineY)
+    const visibleItems = GetVisibleQuickPickItems.getVisible(
+      newState.provider,
+      newState.items,
+      newState.minLineY,
+      newState.maxLineY,
+      newState.focusedIndex
+    )
     const dom = GetQuickPickItemsVirtualDom.getQuickPickItemsVirtualDom(visibleItems)
     return [/* method */ 'setItemsDom', dom]
   },

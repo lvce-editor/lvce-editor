@@ -48,7 +48,15 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
 
 export const getQuickPickItemsVirtualDom = (visibleItems) => {
   if (visibleItems.length === 0) {
-    return [div({}, 1), text('No Results')]
+    return [
+      div(
+        {
+          className: 'QuickPickStatus',
+        },
+        1
+      ),
+      text('No Results'),
+    ]
   }
   const dom = visibleItems.flatMap(getQuickPickItemVirtualDom)
   return dom
