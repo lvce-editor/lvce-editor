@@ -1,11 +1,12 @@
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as GetVisibleQuickPickItems from '../GetVisibleQuickPickItems/GetVisibleQuickPickItems.js'
+import * as InputSource from '../InputSource/InputSource.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
 const renderValue = {
   isEqual(oldState, newState) {
-    return oldState.value === newState.value
+    return newState.inputSource === InputSource.User || oldState.value === newState.value
   },
   apply(oldState, newState) {
     return [/* method */ RenderMethod.SetValue, /* value */ newState.value]
@@ -14,7 +15,9 @@ const renderValue = {
 
 const renderCursorOffset = {
   isEqual(oldState, newState) {
-    oldState.cursorOffset === newState.cursorOffset || newState.cursorOffset === newState.value.length
+    return (
+      newState.inputSource === InputSource.User || oldState.cursorOffset === newState.cursorOffset || newState.cursorOffset === newState.value.length
+    )
   },
   apply(oldState, newState) {
     return [/* method */ RenderMethod.SetCursorOffset, /* cursorOffset */ newState.cursorOffset]
