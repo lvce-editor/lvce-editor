@@ -54,15 +54,18 @@ exports.hydrate = async () => {
     return
   }
 
+  if (Platform.isLinux && Platform.chromeUserDataPath) {
+    Electron.app.setPath('userData', Platform.chromeUserDataPath)
+    Electron.app.setPath('sessionData', Platform.chromeUserDataPath)
+    Electron.app.setPath('crashDumps', Platform.chromeUserDataPath)
+    Electron.app.setPath('logs', Platform.chromeUserDataPath)
+  }
+
   const hasLock = ElectronApp.requestSingleInstanceLock(argv)
   if (!hasLock) {
     Debug.debug('[info] quitting because no lock')
     ElectronApp.quit()
     return
-  }
-
-  if (Platform.isLinux && Platform.chromeUserDataPath) {
-    Electron.app.setPath('userData', Platform.chromeUserDataPath)
   }
 
   // TODO tree shake out the .env.DEV check: reading from env variables is expensive
