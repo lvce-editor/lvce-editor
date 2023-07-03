@@ -5,7 +5,7 @@ import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 
 export const bundleSharedProcessCached = async ({ commitHash, product, version, bundleSharedProcess, date, target }) => {
-  const cachePath = await CachePaths.getSharedProcessCachePath([])
+  const cachePath = await CachePaths.getSharedProcessCachePath([product, version, date, commitHash])
   if (existsSync(cachePath)) {
     Logger.info('[build step skipped] bundleSharedprocess')
   } else {
