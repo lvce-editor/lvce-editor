@@ -22,6 +22,8 @@ exports.applicationName = 'lvce-oss'
 
 const xdgConfig = env.XDG_CONFIG_HOME || (homeDirectory ? join(homeDirectory, '.config') : undefined)
 
+const xdgCache = env.XDG_CACHE_HOME || (homeDirectory ? join(homeDirectory, '.cache') : undefined)
+
 const configDir = join(xdgConfig || tmpdir(), exports.applicationName)
 
 const xdgData = env.XDG_DATA_HOME || (homeDirectory ? join(homeDirectory, '.local', 'share') : undefined)
@@ -35,6 +37,8 @@ exports.getBuiltinSelfTestPath = () => {
 exports.getWebPath = () => {
   return process.env.WEB_PATH || join(Root.root, 'packages', 'web', 'src', 'web.js')
 }
+
+exports.chromeUserDataPath = xdgCache ? join(xdgCache, exports.applicationName, 'userdata') : ''
 
 exports.version = '0.0.0-dev'
 
