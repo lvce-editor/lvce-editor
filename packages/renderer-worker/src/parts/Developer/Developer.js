@@ -357,10 +357,6 @@ export const crashSharedProcess = () => {
   return SharedProcess.invoke(/* Developer.crashSharedProcess */ 'Developer.crashSharedProcess')
 }
 
-export const crashRendererProcess = () => {}
-
-export const crashRendererWorker = () => {}
-
 export const crashMainProcess = () => {
   return SharedProcess.invoke(/* Electron.crashMainProcess */ 'Electron.crashMainProcess')
 }
@@ -385,14 +381,6 @@ export const toggleDeveloperTools = () => {
 export const showIconThemeCss = async () => {
   // const iconThemeCss = await IconTheme.getIconThemeCss()
   // Main.openRawText('css://icon-theme.css', iconThemeCss)
-}
-
-export const createSharedProcessHeapSnapshot = async () => {
-  await SharedProcess.invoke(/* Developer.createSharedProcessHeapSnapshot */ 'Developer.createSharedProcessHeapSnapshot')
-}
-
-export const createSharedProcessProfile = async () => {
-  await SharedProcess.invoke(/* Developer.createProfile */ 'Developer.createProfile')
 }
 
 export const reloadIconTheme = async () => {

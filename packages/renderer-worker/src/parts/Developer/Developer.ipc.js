@@ -1,3 +1,4 @@
+import * as Crash from '../Crash/Crash.js'
 import * as Developer from './Developer.js'
 
 export const name = 'Developer'
@@ -9,8 +10,8 @@ export const Commands = {
   clearCache: Developer.clearCache,
   crashMainProcess: Developer.crashMainProcess,
   crashSharedProcess: Developer.crashSharedProcess,
-  createSharedProcessHeapSnapshot: Developer.createSharedProcessHeapSnapshot,
-  createSharedProcessProfile: Developer.createSharedProcessProfile,
+  createSharedProcessHeapSnapshot: Crash.createSharedProcessHeapSnapshot,
+  createSharedProcessProfile: Crash.createSharedProcessProfile,
   downloadViewletState: Developer.downloadViewletState,
   getMemoryUsageContent: Developer.getMemoryUsageContent,
   getStartupPerformanceContent: Developer.getStartupPerformanceContent,
