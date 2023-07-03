@@ -111,6 +111,7 @@ jobs:
           path: ./build/.tmp/dist
       - name: Clean up
         run: rm -rf node build/.tmp
+        shell: bash
 
   deploy:
     environment:

@@ -108,3 +108,4 @@ jobs:
         run: node build/bin/build.js --target=electron-builder-windows-exe
       - name: Clean up
         run: rm -rf node build/.tmp
+        shell: bash
