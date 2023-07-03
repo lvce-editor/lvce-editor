@@ -1,72 +1,69 @@
 import * as DirentType from '../DirentType/DirentType.js'
-import { del, div, ins, root, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-const deleted = del(
-  {
-    className: 'HighlightDeleted',
-  },
-  1
-)
+const deleted = {
+  type: VirtualDomElements.Del,
+  className: 'HighlightDeleted',
+  childCount: 1,
+}
 
-const inserted = ins(
-  {
-    className: 'HighlightInserted',
-  },
-  1
-)
+const inserted = {
+  type: VirtualDomElements.Ins,
+  className: 'HighlightInserted',
+  childCount: 1,
+}
 
-const highlighted = span(
-  {
-    className: 'Highlight',
-  },
-  1
-)
+const highlighted = {
+  type: VirtualDomElements.Span,
+  className: 'Highlight',
+  childCount: 1,
+}
 
 const renderRow = (rowInfo) => {
   const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement } = rowInfo
   if (matchLength) {
   }
-  const treeItem = div(
-    {
-      role: 'treeitem',
-      className: 'TreeItem',
-      title,
-      ariaSetSize: setSize,
-      ariaLevel: depth,
-      ariaPosInSet: posInSet,
-      ariaLabel: name,
-      ariaDescription: '',
-    },
-    1
-  )
+  const treeItem = {
+    type: VirtualDomElements.Div,
+    role: 'treeitem',
+    className: 'TreeItem',
+    title,
+    ariaSetSize: setSize,
+    ariaLevel: depth,
+    ariaPosInSet: posInSet,
+    ariaLabel: name,
+    ariaDescription: '',
+    childCount: 1,
+  }
   switch (type) {
     case DirentType.Directory:
-      treeItem.props.ariaExpanded = 'false'
+      treeItem.ariaExpanded = 'false'
       break
     case DirentType.DirectoryExpanded:
-      treeItem.props.ariaExpanded = 'true'
+      treeItem.ariaExpanded = 'true'
       break
     case DirentType.File:
       break
     default:
       break
   }
-  const dom = [treeItem]
+  const dom = []
 
+  dom.push(treeItem)
   if (icon) {
     treeItem.childCount++
-    dom.push(
-      div({
-        className: `FileIcon FileIcon${icon}`,
-      })
-    )
+    dom.push({
+      type: VirtualDomElements.Div,
+      className: `FileIcon FileIcon${icon}`,
+      childCount: 0,
+    })
   }
-  const label = div(
-    {
-      className: 'Label',
-    },
-    1
-  )
+  const label = {
+    type: VirtualDomElements.Div,
+    className: 'Label',
+    childCount: 1,
+  }
   dom.push(label)
   if (matchLength) {
     const before = displayText.slice(0, matchStart)
