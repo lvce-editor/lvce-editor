@@ -80,17 +80,6 @@ export const osStats = () => {
   // - network usage
 }
 
-/* istanbul ignore next */
-export const createHeapSnapshot = async () => {
-  const { getHeapSnapshot } = await import('node:v8')
-  const { pipeline } = await import('node:stream/promises')
-  await pipeline(
-    getHeapSnapshot(),
-    // TODO get tmp dir from env
-    createWriteStream(`/tmp/vscode-${Date.now()}.heapsnapshot`)
-  )
-}
-
 export const createProfile = async () => {
   const inspector = await import('node:inspector')
   const session = new inspector.Session()
