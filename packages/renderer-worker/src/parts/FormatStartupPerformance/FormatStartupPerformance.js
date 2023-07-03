@@ -25,7 +25,7 @@ const formatWebVitals = (vitals) => {
     const startTime = `${entry.startTime.toFixed(2)}ms`
     return [name, startTime]
   })
-  return toMarkdownTable(header, rows)
+  return ToMarkdownTable.toMarkdownTable(header, rows)
 }
 
 const formatNodeTiming = (nodeStartupTiming) => {
@@ -36,7 +36,7 @@ const formatNodeTiming = (nodeStartupTiming) => {
     }
     return [key, `${value}`]
   })
-  return toMarkdownTable(header, rows)
+  return ToMarkdownTable.toMarkdownTable(header, rows)
 }
 
 const getFirstTimeOrigin = ({ measureEntries, electronEntries }) => {
