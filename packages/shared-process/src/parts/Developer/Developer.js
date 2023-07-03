@@ -70,13 +70,6 @@ export const allocateMemory = () => {
   globalThis.arr = array
 }
 
-/* istanbul ignore next */
-export const crashSharedProcess = () => {
-  Timeout.setTimeout(() => {
-    throw new Error('oops')
-  }, 0)
-}
-
 export const osStats = () => {
   // TODO stats
   // - os name
