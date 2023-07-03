@@ -187,7 +187,6 @@ export const setItemsHeight = (state, itemsHeight) => {
 }
 
 export const setItemsDom = (state, dom) => {
-  console.log(JSON.stringify(dom).length)
   const { $QuickPickItems } = state
   VirtualDom.renderInto($QuickPickItems, dom)
 }
