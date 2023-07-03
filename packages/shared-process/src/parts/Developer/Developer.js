@@ -4,19 +4,13 @@ import * as ExtensionHost from '../ExtensionHost/ExtensionHost.js'
 import * as Process from '../Process/Process.js'
 import * as Timeout from '../Timeout/Timeout.js'
 
-export const measureLatencyBetweenExtensionHostAndSharedProcess = async (
-  socket,
-  id
-) => {
+export const measureLatencyBetweenExtensionHostAndSharedProcess = async (socket, id) => {
   // TODO lazy load extension host
   const latency = await ExtensionHost.measureLatency()
   socket.send([/* callback */ id, /* latency */ latency])
 }
 
-export const measureLatencyBetweenSharedProcessAndRendererProcess = async (
-  socket,
-  id
-) => {
+export const measureLatencyBetweenSharedProcessAndRendererProcess = async (socket, id) => {
   // const start = performance.now()
   // await new Promise((resolve) => {
   //   const callbackId = Callback.register(resolve)
@@ -76,13 +70,6 @@ export const allocateMemory = () => {
   globalThis.arr = array
 }
 
-/* istanbul ignore next */
-export const crashSharedProcess = () => {
-  Timeout.setTimeout(() => {
-    throw new Error('oops')
-  }, 0)
-}
-
 export const osStats = () => {
   // TODO stats
   // - os name
@@ -118,10 +105,7 @@ export const createProfile = async () => {
           session.post('Profiler.stop', (error, { profile }) => {
             // Write profile to disk, upload, etc.
             if (!error) {
-              writeFileSync(
-                '/tmp/vscode-profile.cpuprofile',
-                JSON.stringify(profile)
-              )
+              writeFileSync('/tmp/vscode-profile.cpuprofile', JSON.stringify(profile))
             }
           })
         }, 15000)
