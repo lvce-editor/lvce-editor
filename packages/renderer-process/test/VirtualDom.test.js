@@ -8,7 +8,6 @@ test('render - single tag', () => {
   const dom = VirtualDom.render([
     {
       type: VirtualDomElements.H1,
-      props: {},
       childCount: 0,
     },
   ])
@@ -19,9 +18,7 @@ test('render - single text node', () => {
   const dom = VirtualDom.render([
     {
       type: VirtualDomElements.Text,
-      props: {
-        text: 'test',
-      },
+      text: 'test',
       childCount: 0,
     },
   ])
@@ -32,17 +29,14 @@ test('render - multiple element nodes', () => {
   const dom = VirtualDom.render([
     {
       type: VirtualDomElements.Table,
-      props: {},
       childCount: 2,
     },
     {
       type: VirtualDomElements.THead,
-      props: {},
       childCount: 0,
     },
     {
       type: VirtualDomElements.TBody,
-      props: {},
       childCount: 0,
     },
   ])
@@ -53,17 +47,14 @@ test('render - nesting level 2', () => {
   const dom = VirtualDom.render([
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 0,
     },
   ])
@@ -74,22 +65,18 @@ test('render - nesting level 3', () => {
   const dom = VirtualDom.render([
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 0,
     },
   ])
@@ -100,27 +87,22 @@ test('render - nesting level 4', () => {
   const dom = VirtualDom.render([
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 0,
     },
   ])
@@ -131,32 +113,26 @@ test('render - nesting level 5', () => {
   const dom = VirtualDom.render([
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 0,
     },
   ])
@@ -167,26 +143,20 @@ test('render - trailing text node', () => {
   const dom = VirtualDom.render([
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 2,
     },
     {
       type: VirtualDomElements.Div,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Text,
-      props: {
-        text: 'abc',
-      },
+      text: 'abc',
       childCount: 0,
     },
     {
       type: VirtualDomElements.Text,
-      props: {
-        text: 'def',
-      },
+      text: 'def',
       childCount: 0,
     },
   ])
@@ -197,38 +167,29 @@ test('render - element with element children and text children', () => {
   const dom = VirtualDom.render([
     {
       type: VirtualDomElements.Td,
-      props: {},
       childCount: 3,
     },
     {
       type: VirtualDomElements.Kbd,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Text,
-      props: {
-        text: 'Ctrl',
-      },
+      text: 'Ctrl',
       childCount: 0,
     },
     {
       type: VirtualDomElements.Text,
-      props: {
-        text: '+',
-      },
+      text: '+',
       childCount: 0,
     },
     {
       type: VirtualDomElements.Kbd,
-      props: {},
       childCount: 1,
     },
     {
       type: VirtualDomElements.Text,
-      props: {
-        text: 'P',
-      },
+      text: 'P',
       childCount: 0,
     },
   ])
@@ -239,9 +200,7 @@ test('renderInto - update title', () => {
   const dom = VirtualDom.render([
     {
       type: VirtualDomElements.Button,
-      props: {
-        title: 'a',
-      },
+      title: 'a',
       childCount: 0,
     },
   ])
@@ -249,9 +208,7 @@ test('renderInto - update title', () => {
   VirtualDom.renderInto(dom, [
     {
       type: VirtualDomElements.Button,
-      props: {
-        title: 'b',
-      },
+      title: 'b',
       childCount: 0,
     },
   ])
@@ -262,9 +219,7 @@ test('renderInto - update text node', () => {
   const dom = VirtualDom.render([
     {
       type: VirtualDomElements.Text,
-      props: {
-        text: 'a',
-      },
+      text: 'a',
       childCount: 0,
     },
   ])
@@ -272,9 +227,7 @@ test('renderInto - update text node', () => {
   VirtualDom.renderInto(dom, [
     {
       type: VirtualDomElements.Text,
-      props: {
-        text: 'b',
-      },
+      text: 'b',
       childCount: 0,
     },
   ])
