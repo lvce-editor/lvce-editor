@@ -412,7 +412,7 @@ const renderLines = {
           const newTokenType = newTokens[i]
           const newTokenLength = newTokens[i + 1]
           if (oldTokenType === newTokenType && oldTokenLength !== newTokenLength) {
-            const columnTokenIndex = i % 2
+            const columnTokenIndex = i / 2
             incrementalEdits.push({
               rowIndex: relativeRowIndex,
               columnIndex: columnTokenIndex,
