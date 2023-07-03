@@ -3,14 +3,13 @@ import * as VirtualDomElementProps from '../VirtualDomElementProps/VirtualDomEle
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 const renderDomTextNode = (element) => {
-  return document.createTextNode(element.props.text)
+  return document.createTextNode(element.text)
 }
 
 const renderDomElement = (element) => {
-  const { type, props } = element
-  const tag = ElementTagMap.getElementTag(type)
+  const tag = ElementTagMap.getElementTag(element.type)
   const $Element = document.createElement(tag)
-  VirtualDomElementProps.setProps($Element, props)
+  VirtualDomElementProps.setProps($Element, element)
   return $Element
 }
 

@@ -1,5 +1,5 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
-import { div } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 const createActivityBarItem = (item, isSelected, isFocused) => {
   const { flags, title, icon } = item
@@ -13,35 +13,35 @@ const createActivityBarItem = (item, isSelected, isFocused) => {
   if (isSelected) {
     className += ' ActivityBarItemSelected'
     return [
-      div(
-        {
-          className,
-          ariaLabel: '',
-          title,
-          role,
-          ariaSelected,
-        },
-        1
-      ),
-      div({
-        className: 'MaskIcon',
-        role: 'none',
-        maskImage: icon,
-      }),
-    ]
-  }
-  return [
-    div(
       {
+        type: VirtualDomElements.Div,
         className,
         ariaLabel: '',
         title,
-        maskImage: icon,
         role,
         ariaSelected,
+        childCount: 1,
       },
-      0
-    ),
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon',
+        role: 'none',
+        maskImage: icon,
+        childCount: 0,
+      },
+    ]
+  }
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className,
+      ariaLabel: '',
+      title,
+      maskImage: icon,
+      role,
+      ariaSelected,
+      childCount: 0,
+    },
   ]
 }
 

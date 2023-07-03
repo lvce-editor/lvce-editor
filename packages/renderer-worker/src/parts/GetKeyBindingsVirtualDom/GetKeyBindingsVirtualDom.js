@@ -1,4 +1,5 @@
-import { col, colgroup, kbd, table, tbody, td, text, th, thead, tr } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
  * @enum {string}
@@ -25,12 +26,11 @@ const UiStrings = {
   SearchKeyBindings: 'Search Key Bindings',
 }
 
-const kbdDom = kbd(
-  {
-    className: ClassNames.Key,
-  },
-  1
-)
+const kbdDom = {
+  type: VirtualDomElements.Kbd,
+  className: ClassNames.Key,
+  childCount: 1,
+}
 
 const textCtrl = text('Ctrl')
 const textShift = text('Shift')
@@ -57,7 +57,11 @@ const tableCellProps = {
   className: ClassNames.KeyBindingsTableCell,
 }
 
-const tableCell = td(tableCellProps, 1)
+const tableCell = {
+  type: VirtualDomElements.Td,
+  ...tableCellProps,
+  childCount: 1,
+}
 
 const getRowClassName = (isEven, selected) => {
   let className = ''
@@ -78,39 +82,44 @@ const getTableRowDom = (keyBinding) => {
   const isEven = rowIndex % 2 === 0
   const className = getRowClassName(isEven, selected)
   return [
-    tr(
-      {
-        ariaRowIndex: keyBinding.rowIndex,
-        className,
-        key: keyBinding.rowIndex,
-      },
-      3
-    ),
+    {
+      type: VirtualDomElements.Tr,
+      ariaRowIndex: keyBinding.rowIndex,
+      className,
+      key: keyBinding.rowIndex,
+      childCount: 3,
+    },
     tableCell,
     text(keyBinding.command),
-    td(tableCellProps, childCount),
+    {
+      type: VirtualDomElements.Td,
+      ...tableCellProps,
+      childCount,
+    },
     ...children,
     tableCell,
     text(keyBinding.when || UiStrings.EmptyString),
   ]
 }
 
-const tableHead = thead(
-  {
-    className: ClassNames.KeyBindingsTableHead,
-  },
-  1
-)
+const tableHead = {
+  type: VirtualDomElements.THead,
+  className: ClassNames.KeyBindingsTableHead,
+  childCount: 1,
+}
 
-const tableHeadRow = tr(
-  {
-    className: ClassNames.KeyBindingsTableRow,
-    ariaRowIndex: 1,
-  },
-  3
-)
+const tableHeadRow = {
+  type: VirtualDomElements.Tr,
+  className: ClassNames.KeyBindingsTableRow,
+  ariaRowIndex: 3,
+  childCount: 3,
+}
 
-const tableHeading = th(tableCellProps, 1)
+const tableHeading = {
+  type: VirtualDomElements.Th,
+  ...tableCellProps,
+  childCount: 1,
+}
 
 const staticTableHeadDom = [
   tableHead,
@@ -125,45 +134,47 @@ const staticTableHeadDom = [
 
 const getTableBodyDom = (displayKeyBindings) => {
   return [
-    tbody(
-      {
-        className: ClassNames.KeyBindingsTableBody,
-      },
-      displayKeyBindings.length
-    ),
+    {
+      type: VirtualDomElements.TBody,
+      className: ClassNames.KeyBindingsTableBody,
+      childCount: displayKeyBindings.length,
+    },
     ...displayKeyBindings.flatMap(getTableRowDom),
   ]
 }
 
 export const getTableDom = (filteredKeyBindings, displayKeyBindings, columnWidth1, columnWidth2, columnWidth3) => {
   const tableDom = [
-    table(
-      {
-        className: ClassNames.KeyBindingsTable,
-        ariaLabel: UiStrings.KeyBindings,
-        ariaRowCount: filteredKeyBindings.length,
-      },
-      3
-    ),
-    colgroup({}, 3),
-    col(
-      {
-        width: columnWidth1,
-      },
-      0
-    ),
-    col(
-      {
-        width: columnWidth2,
-      },
-      0
-    ),
-    col(
-      {
-        width: columnWidth3,
-      },
-      0
-    ),
+    {
+      type: VirtualDomElements.Table,
+      className: ClassNames.KeyBindingsTable,
+      ariaLabel: UiStrings.KeyBindings,
+      ariaRowCount: filteredKeyBindings.length,
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.ColGroup,
+      className: 'KeyBindingsTableColGroup',
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.Col,
+      className: 'KeyBindingsTableCol',
+      width: columnWidth1,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Col,
+      className: 'KeyBindingsTableCol',
+      width: columnWidth2,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Col,
+      className: 'KeyBindingsTableCol',
+      width: columnWidth3,
+      childCount: 0,
+    },
     ...staticTableHeadDom,
     ...getTableBodyDom(displayKeyBindings),
   ]
