@@ -5,9 +5,20 @@ const state = {
   windowStates: [],
 }
 
-const findById = (id) => {
-  for (const windowState of state.windowStates) {
-    if (windowState.id === id) {
+const findByWindowId = (windowId) => {
+  const { windowStates } = state
+  for (const windowState of windowStates) {
+    if (windowState.windowId === windowId) {
+      return windowState
+    }
+  }
+  return undefined
+}
+
+const findByWebContentsId = (webContentsId) => {
+  const { windowStates } = state
+  for (const windowState of windowStates) {
+    if (windowState.webContentsId === webContentsId) {
       return windowState
     }
   }
@@ -15,19 +26,20 @@ const findById = (id) => {
 }
 
 const findIndexById = (id) => {
-  for (let i = 0; i < state.windowStates.length; i++) {
-    const windowState = state.windowStates[i]
-    if (windowState.id === id) {
+  const { windowStates } = state
+  for (let i = 0; i < windowStates.length; i++) {
+    const windowState = windowStates[i]
+    if (windowState.windowId === id) {
       return i
     }
   }
   return -1
 }
 
-const remove = (id) => {
-  const index = findIndexById(id)
+const remove = (windowId) => {
+  const index = findIndexById(windowId)
   if (index === -1) {
-    throw new Error(`expected window ${id} to be in windows array`)
+    throw new Error(`expected window ${windowId} to be in windows array`)
   }
   state.windowStates.splice(index, 1)
 }
@@ -50,7 +62,8 @@ const findByPort = (port) => {
 }
 
 exports.state = state
-exports.findById = findById
+exports.findByWindowId = findByWindowId
+exports.findByWebContentsId = findByWebContentsId
 exports.findIndexById = findIndexById
 exports.remove = remove
 exports.getAll = getAll

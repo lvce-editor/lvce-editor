@@ -14,7 +14,7 @@ exports.handlePort = async (event, browserWindowPort) => {
   Assert.object(browserWindowPort)
   const { sender } = event
   const { id } = sender
-  const state = AppWindowStates.findById(id)
+  const state = AppWindowStates.findByWebContentsId(id)
   if (state) {
     state.port = browserWindowPort
   }

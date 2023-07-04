@@ -1,15 +1,17 @@
-const Assert = require('../Assert/Assert.js')
 const Clamp = require('../Clamp/Clamp.js')
 const Electron = require('electron')
 const GetIcon = require('../GetIcon/GetIcon.js')
+const GetWindowById = require('../GetWindowById/GetWindowById.js')
+const Logger = require('../Logger/Logger.js')
 const Platform = require('../Platform/Platform.js')
 const Preferences = require('../Preferences/Preferences.js')
 
 exports.wrapWindowCommand =
   (fn) =>
   (id, ...args) => {
-    const browserWindow = Electron.BrowserWindow.fromId(id)
+    const browserWindow = GetWindowById.getWindowById(id)
     if (!browserWindow) {
+      Logger.info(`browser window not found ${id}`)
       return
     }
     fn(browserWindow, ...args)
@@ -62,8 +64,7 @@ exports.getFocusedWindow = () => {
 }
 
 exports.findById = (windowId) => {
-  Assert.number(windowId)
-  return Electron.BrowserWindow.fromId(windowId)
+  return GetWindowById.getWindowById(windowId)
 }
 
 /**

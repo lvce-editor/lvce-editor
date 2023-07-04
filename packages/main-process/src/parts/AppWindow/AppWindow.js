@@ -66,11 +66,12 @@ exports.createAppWindow = async (preferences, parsedArgs, workingDirectory, url 
   // window.setMenu(menu)
   window.setMenuBarVisibility(true)
   window.setAutoHideMenuBar(false)
-  const id = window.webContents.id
+  const webContentsId = window.webContents.id
+  const windowId = window.id
   const handleWindowClose = () => {
     try {
       window.off('close', handleWindowClose)
-      AppWindowStates.remove(id)
+      AppWindowStates.remove(windowId)
     } catch (error) {
       ErrorHandling.handleError(new VError(error, `Failed to run window close listener`))
     }
@@ -79,7 +80,8 @@ exports.createAppWindow = async (preferences, parsedArgs, workingDirectory, url 
   AppWindowStates.add({
     parsedArgs,
     workingDirectory,
-    id,
+    webContentsId,
+    windowId,
   })
   await loadUrl(window, url)
 }
@@ -90,5 +92,5 @@ exports.openNew = async (url) => {
 }
 
 exports.findById = (id) => {
-  return AppWindowStates.findById(id)
+  return AppWindowStates.findByWindowId(id)
 }

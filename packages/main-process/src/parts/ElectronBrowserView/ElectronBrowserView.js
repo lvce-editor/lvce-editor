@@ -46,7 +46,7 @@ const getIdentifier = (input) => {
  * @param {number} id
  */
 const getPort = (exports.getPort = (id) => {
-  const state = AppWindowStates.findById(id)
+  const state = AppWindowStates.findByWindowId(id)
   if (!state) {
     Logger.info('[main process] no message port found')
     return undefined
