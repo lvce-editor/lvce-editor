@@ -245,10 +245,6 @@ export const createSharedProcessProfile = async () => {
   await SharedProcess.invoke(/* Developer.createProfile */ 'Developer.createProfile')
 }
 
-export const toggleDeveloperTools = () => {
-  return ElectronWindow.toggleDevtools()
-}
-
 export const showIconThemeCss = async () => {
   // const iconThemeCss = await IconTheme.getIconThemeCss()
   // Main.openRawText('css://icon-theme.css', iconThemeCss)
