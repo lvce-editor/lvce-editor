@@ -1,5 +1,6 @@
 import * as Crash from '../Crash/Crash.js'
 import * as Developer from './Developer.js'
+import * as Devtools from '../Devtools/Devtools.js'
 
 export const name = 'Developer'
 
@@ -27,5 +28,5 @@ export const Commands = {
   showMemoryUsage: Developer.showMemoryUsage,
   showStartupPerformance: Developer.showStartupPerformance,
   startupPerformance: Developer.showStartupPerformance,
-  toggleDeveloperTools: Developer.toggleDeveloperTools,
+  toggleDeveloperTools: Devtools.toggleDeveloperTools,
 }

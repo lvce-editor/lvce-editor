@@ -254,10 +254,6 @@ export const openLogsFolder = async () => {
   await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ logsFolder)
 }
 
-export const toggleDeveloperTools = () => {
-  return ElectronWindow.toggleDevtools()
-}
-
 export const showIconThemeCss = async () => {
   // const iconThemeCss = await IconTheme.getIconThemeCss()
   // Main.openRawText('css://icon-theme.css', iconThemeCss)
