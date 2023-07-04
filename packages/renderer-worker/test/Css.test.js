@@ -33,14 +33,6 @@ const RendererProcess = await import('../src/parts/RendererProcess/RendererProce
 
 const Css = await import('../src/parts/Css/Css.js')
 
-test('setInlineStyle', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await Css.setInlineStyle('test', '* { height: 500px; }')
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Css.setInlineStyle', 'test', '* { height: 500px; }')
-})
-
 test('loadCssStyleSheet - error - 404', async () => {
   // @ts-ignore
   globalThis.fetch = () => {
@@ -62,7 +54,7 @@ test('loadCssStyleSheet', async () => {
   }
   await Css.loadCssStyleSheet('/test/Component.css')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Css.addCssStyleSheet', 'h1 { font-size: 20px; }')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Css.addCssStyleSheet', 'Css-test-Component', 'h1 { font-size: 20px; }')
 })
 
 test('loadCssStyleSheet - twice', async () => {
@@ -80,5 +72,5 @@ test('loadCssStyleSheet - twice', async () => {
   expect(fetch).toHaveBeenCalledTimes(1)
   expect(fetch).toHaveBeenCalledWith('/test/Component.css')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Css.addCssStyleSheet', 'h1 { font-size: 20px; }')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Css.addCssStyleSheet', 'Css-test-Component', 'h1 { font-size: 20px; }')
 })

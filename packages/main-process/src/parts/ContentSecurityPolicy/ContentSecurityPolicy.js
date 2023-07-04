@@ -10,7 +10,7 @@ exports.value = [
   `img-src 'self' https: data:`,
   `script-src 'self'`,
   `media-src 'self'`,
-  `style-src 'self' 'unsafe-inline'`, // TODO remove unsafe-inline
+  `style-src 'self'`,
 ]
   .map(AddSemiColon.addSemicolon)
   .join(Character.Space)
