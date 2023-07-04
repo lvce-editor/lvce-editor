@@ -15,7 +15,6 @@ export const getVisible = (provider, items, minLineY, maxLineY, focusedIndex) =>
     const label = provider.getPickLabel(pick)
     const description = getPickDescription(provider, pick)
     const icon = provider.getPickIcon(pick)
-    console.log(item.matches)
     visibleItems.push({
       label,
       description,
@@ -23,6 +22,7 @@ export const getVisible = (provider, items, minLineY, maxLineY, focusedIndex) =>
       posInSet: i + 1,
       setSize,
       isActive: i === focusedIndex,
+      matches: item.matches,
     })
   }
   return visibleItems

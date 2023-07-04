@@ -13,8 +13,22 @@ const descriptionWrapper = {
   childCount: 1,
 }
 
+const label1 = {
+  type: VirtualDomElements.Div,
+  className: 'Label',
+  childCount: 1,
+}
+
+const quickPickHighlight = {
+  type: VirtualDomElements.Span,
+  className: 'QuickPickHighlight',
+  childCount: 1,
+}
+
 const getQuickPickItemVirtualDom = (visibleItem) => {
-  const { posInSet, label, setSize, isActive, description, icon } = visibleItem
+  const { posInSet, label, setSize, isActive, description, icon, matches } = visibleItem
+  console.log({ visibleItem })
+  const highlights = matches.slice(1)
   const dom = []
   dom.push({
     type: VirtualDomElements.Div,
@@ -36,6 +50,32 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
       childCount: 0,
     })
   }
+
+  const labelDom = {
+    type: VirtualDomElements.Div,
+    className: 'Label',
+    childCount: 0,
+  }
+  dom.push(labelDom)
+  let position = 0
+  for (let i = 0; i < highlights.length; i += 2) {
+    const highlightStart = highlights[i]
+    const highlightEnd = highlights[i + 1]
+    if (position < highlightStart) {
+      const beforeText = label.slice(position, highlightStart)
+      labelDom.childCount++
+      dom.push(text(beforeText))
+    }
+    const highlightText = label.slice(highlightStart, highlightEnd)
+    labelDom.childCount++
+    dom.push(quickPickHighlight, text(highlightText))
+    position = highlightEnd
+  }
+  if (position < label.length) {
+    const afterText = label.slice(position)
+    labelDom.childCount++
+    dom.push(text(afterText))
+  }
   dom.push(labelWrapper, text(label), descriptionWrapper, text(description))
   return dom
 }
@@ -52,5 +92,6 @@ export const getQuickPickItemsVirtualDom = (visibleItems) => {
     ]
   }
   const dom = visibleItems.flatMap(getQuickPickItemVirtualDom)
+  console.log({ dom })
   return dom
 }

@@ -122,3 +122,10 @@
   text-overflow: ellipsis;
   min-width: 0;
 }
+
+/* TODO reuse same highlight css for completions */
+.QuickPickHighlight {
+  color: var(--CompletionHighlightForeground, #e1b974);
+  font-weight: 700;
+  contain: content;
+}

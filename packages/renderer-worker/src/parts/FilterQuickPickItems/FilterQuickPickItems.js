@@ -4,7 +4,7 @@ import * as FilterQuickPickItem from '../FilterQuickPickItem/FilterQuickPickItem
 const filterPicks = (state, picks, exclude, value, provider) => {
   const filteredItems = []
   for (const pick of picks) {
-    const filterValue = provider.getFilterValue(pick)
+    const filterValue = provider.getPickLabel(pick)
     const result = FilterQuickPickItem.filterQuickPickItem(value, filterValue)
     if (result !== FilterQuickPickItem.Empty) {
       filteredItems.push({
