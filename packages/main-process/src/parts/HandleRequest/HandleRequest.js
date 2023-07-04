@@ -22,8 +22,3 @@ exports.handleRequest = async (request) => {
   }
   return response
 }
-
-exports.handleRequestFile = (request, callback) => {
-  const path = ElectronSessionGetAbsolutePath.getAbsolutePath(request.url)
-  callback(path)
-}

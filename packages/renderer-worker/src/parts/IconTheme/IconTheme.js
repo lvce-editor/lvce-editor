@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Character from '../Character/Character.js'
+import * as Css from '../Css/Css.js'
 import * as DefaultIcon from '../DefaultIcon/DefaultIcon.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as GetIconThemeJson from '../GetIconThemeJson/GetIconThemeJson.js'
@@ -9,7 +10,6 @@ import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -164,7 +164,7 @@ export const setIconTheme = async (iconThemeId) => {
         await Viewlet.setState(factory.name, newState)
       }
     }
-    await RendererProcess.invoke(/* Css.setInlineStyle */ 'Css.setInlineStyle', /* id */ 'ContributedIconTheme', /* css */ iconThemeCss)
+    await Css.addCssStyleSheet('ContributedIconTheme', iconThemeCss)
   } catch (error) {
     if (Workspace.isTest()) {
       // ignore
@@ -183,11 +183,6 @@ export const hydrate = async () => {
   // that way there would be much less rules, but when a new file type appears (which should not happen often)
   // the css must be recalculated again
   // const iconThemeCss = await getIconThemeCss()
-  // await RendererProcess.invoke(
-  //   /* Css.setInlineStyle */ 4551,
-  //   /* id */ 'ContributedIconTheme',
-  //   /* css */ iconThemeCss
-  // )
 
   const iconThemeId = Preferences.get('icon-theme') || 'vscode-icons'
   await setIconTheme(iconThemeId)

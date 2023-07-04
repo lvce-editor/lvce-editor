@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as BeforeInput from '../BeforeInput/BeforeInput.js'
+import * as InputSource from '../InputSource/InputSource.js'
 import * as ViewletQuickPickHandleInput from './ViewletQuickPickHandleInput.js'
 
 export const handleBeforeInput = (state, inputType, data, selectionStart, selectionEnd) => {
@@ -8,5 +9,5 @@ export const handleBeforeInput = (state, inputType, data, selectionStart, select
   Assert.number(selectionEnd)
   const { value } = state
   const { newValue, cursorOffset } = BeforeInput.getNewValue(value, inputType, data, selectionStart, selectionEnd)
-  return ViewletQuickPickHandleInput.handleInput(state, newValue, cursorOffset)
+  return ViewletQuickPickHandleInput.handleInput(state, newValue, cursorOffset, InputSource.User)
 }

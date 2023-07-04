@@ -1,38 +1,35 @@
-import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getVideoVirtualDom = (src, errorMessage) => {
   if (errorMessage) {
     return [
-      div(
-        {
-          className: 'VideoContent',
-        },
-        1
-      ),
-      div(
-        {
-          className: 'VideoErrorMessage',
-        },
-        1
-      ),
+      {
+        type: VirtualDomElements.Div,
+        className: 'VideoContent',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'VideoErrorMessage',
+        childCount: 1,
+      },
       text(errorMessage),
     ]
   }
   const dom = [
-    div(
-      {
-        className: 'VideoContent',
-      },
-      1
-    ),
-    div(
-      {
-        className: 'VideoVideo',
-        src,
-        controls: true,
-      },
-      0
-    ),
+    {
+      type: VirtualDomElements.Div,
+      className: 'VideoContent',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'VideoVideo',
+      src,
+      controls: true,
+      childCount: 0,
+    },
   ]
   return dom
 }

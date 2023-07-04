@@ -24,15 +24,17 @@ exports.open = async () => {
       additionalArguments: ['--lvce-window-kind=process-explorer'],
     },
   })
-  const id = processExplorerWindow.webContents.id
+  const windowId = processExplorerWindow.id
+  const webContentsId = processExplorerWindow.webContents.id
   AppWindowStates.add({
     parsedArgs: [],
     workingDirectort: '',
-    id,
+    webContentsId,
+    windowId,
   })
   const handleWindowClose = () => {
     processExplorerWindow.off('close', handleWindowClose)
-    AppWindowStates.remove(id)
+    AppWindowStates.remove(windowId)
   }
   /**
    *

@@ -74,7 +74,7 @@ test('hydrate', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionHost.getColorThemeJson', 'slime')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Css.setInlineStyle',
+    'Css.addCssStyleSheet',
     'ContributedColorTheme',
     `:root {
   --ActivityBarBackground: rgb(41, 48, 48);

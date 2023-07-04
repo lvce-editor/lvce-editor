@@ -40,7 +40,7 @@ const applyColorTheme = async (colorThemeId) => {
     state.colorTheme = colorThemeId
     const colorThemeJson = await GetColorThemeJson.getColorThemeJson(colorThemeId)
     const colorThemeCss = await getColorThemeCss(colorThemeId, colorThemeJson)
-    await Css.setInlineStyle('ContributedColorTheme', colorThemeCss)
+    await Css.addCssStyleSheet('ContributedColorTheme', colorThemeCss)
     if (Platform.platform === PlatformType.Web) {
       const themeColor = getMetaThemeColor(colorThemeJson) || ''
       await Meta.setThemeColor(themeColor)

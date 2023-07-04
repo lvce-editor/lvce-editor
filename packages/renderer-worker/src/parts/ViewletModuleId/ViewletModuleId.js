@@ -86,6 +86,8 @@ export const TitleBarIcon = 'TitleBarIcon'
 
 export const TitleBarMenuBar = 'TitleBarMenuBar'
 
+export const EditorWidgetError = 'EditorWidgetError'
+
 export const TodoList = 'TodoList'
 
 export const Video = 'Video'

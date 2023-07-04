@@ -14,6 +14,7 @@ const HandleMessagePort = require('../HandleMessagePort/HandleMessagePort.js')
 const Performance = require('../Performance/Performance.js')
 const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
 const Process = require('../Process/Process.js')
+const Platform = require('../Platform/Platform.js')
 const Protocol = require('../Protocol/Protocol.js')
 const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
 // TODO use Platform.getScheme() instead of Product.getTheme()
@@ -51,6 +52,13 @@ exports.hydrate = async () => {
   const handled = Cli.handleFastCliArgsMaybe(parsedCliArgs) // TODO don't like the side effect here
   if (handled) {
     return
+  }
+
+  if (Platform.isLinux && Platform.chromeUserDataPath) {
+    Electron.app.setPath('userData', Platform.chromeUserDataPath)
+    Electron.app.setPath('sessionData', Platform.chromeUserDataPath)
+    Electron.app.setPath('crashDumps', Platform.chromeUserDataPath)
+    Electron.app.setPath('logs', Platform.chromeUserDataPath)
   }
 
   const hasLock = ElectronApp.requestSingleInstanceLock(argv)

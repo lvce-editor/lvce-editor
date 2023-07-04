@@ -9,6 +9,8 @@ export const setText = Editor.setText
 
 export const setSelections = Editor.setSelections
 
+export const setIncrementalEdits = Editor.setIncrementalEdits
+
 export const handleError = (state, error) => {
   state.$Viewlet.textContent = error
 }

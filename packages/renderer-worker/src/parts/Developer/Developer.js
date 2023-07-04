@@ -2,6 +2,7 @@ import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as ElectronDeveloper from '../ElectronDeveloper/ElectronDeveloper.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
+import * as FormatStartupPerformance from '../FormatStartupPerformance/FormatStartupPerformance.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -9,74 +10,11 @@ import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
 import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as ToMarkdownTable from '../ToMarkdownTable/ToMarkdownTable.js'
 // TODO vscode's version of this is shorter
 // if it is a bottleneck, check performance of this function (not very optimized now)
 
 // TODO no export, this is internal only
-const toMarkdownTable = (header, rows) => {
-  const numberOfColumns = header.length
-  const numberOfRows = rows.length
-  const maxLengths = [...new Array(numberOfColumns).fill(0)]
-  for (let i = 0; i < numberOfColumns; i++) {
-    maxLengths[i] = header[i].length
-    for (let j = 0; j < numberOfRows; j++) {
-      maxLengths[i] = Math.max(maxLengths[i], rows[j][i].length)
-    }
-  }
-  let result = ''
-  for (let i = 0; i < numberOfColumns; i++) {
-    result += '|'
-    result += ' '
-    result += header[i]
-    result += ' '.repeat(maxLengths[i] - header[i].length)
-    result += ' '
-  }
-  result += '|\n'
-  for (let i = 0; i < numberOfColumns; i++) {
-    result += '|'
-    result += '-'.repeat(maxLengths[i] + 2)
-  }
-  result += '|\n'
-  for (const row of rows) {
-    for (let i = 0; i < numberOfColumns; i++) {
-      result += '|'
-      result += ' '
-      result += row[i]
-      result += ' '.repeat(maxLengths[i] - row[i].length)
-      result += ' '
-    }
-    result += '|\n'
-  }
-  return result
-}
-
-const formatStartupPerformanceEntries = (entries, firstTimeOrigin) => {
-  const diff = entries.timeOrigin - firstTimeOrigin
-  const header = ['Name', 'Start Time', 'Duration']
-  const formatEntry = (entry) => {
-    const name = entry.name
-    if (!name) {
-      return ['n/a', 'n/a', 'n/a']
-    }
-    const startTime = `${(entry.startTime + diff).toFixed(2)}ms`
-    const duration = `${entry.duration.toFixed(2)}ms`
-    return [name, startTime, duration]
-  }
-  const rows = entries.entries.map(formatEntry)
-  return toMarkdownTable(header, rows)
-}
-
-const formatWebVitals = (vitals) => {
-  const header = ['Name', 'Start Time']
-  const rows = vitals.map((entry) => {
-    const name = entry.name
-    const startTime = `${entry.startTime.toFixed(2)}ms`
-    return [name, startTime]
-  })
-  return toMarkdownTable(header, rows)
-}
 
 const getWebVitals = async () => {
   let firstPaint = -1
@@ -120,17 +58,6 @@ const getWebVitals = async () => {
   ]
 }
 
-const formatNodeTiming = (nodeStartupTiming) => {
-  const header = ['Name', 'Value']
-  const rows = Object.entries(nodeStartupTiming).map(([key, value]) => {
-    if (typeof value === 'number' && value > 0) {
-      return [key, `${value.toFixed(2)}ms`]
-    }
-    return [key, `${value}`]
-  })
-  return toMarkdownTable(header, rows)
-}
-
 const getNodeTiming = () => {
   if (Platform.platform === PlatformType.Web) {
     return undefined
@@ -146,53 +73,6 @@ const getFirstTimeOrigin = ({ measureEntries, electronEntries }) => {
     return measureEntries.timeOrigin
   }
   return 0
-}
-
-const formatStartupPerformance = ({ measureEntries, webVitals, nodeStartupTiming, electronEntries }) => {
-  const firstTimeOrigin = getFirstTimeOrigin({
-    measureEntries,
-    electronEntries,
-  })
-  const lines = []
-  lines.push('# Startup Performance')
-  lines.push('')
-  if (electronEntries) {
-    const formattedElectronEntries = formatStartupPerformanceEntries(electronEntries, firstTimeOrigin)
-    lines.push('## main-process')
-    lines.push('')
-    lines.push(...SplitLines.splitLines(formattedElectronEntries))
-    lines.push('')
-  }
-  if (measureEntries) {
-    const formattedMeasureEntries = formatStartupPerformanceEntries(measureEntries, firstTimeOrigin)
-    if (electronEntries) {
-      const deltaTimeOrigin = (measureEntries.timeOrigin - electronEntries.timeOrigin).toFixed(2)
-      lines.push(`## renderer-worker (+${deltaTimeOrigin}ms)`)
-    } else {
-      lines.push('## renderer-worker')
-    }
-    lines.push('')
-    lines.push(...SplitLines.splitLines(formattedMeasureEntries))
-    lines.push('')
-  }
-  if (webVitals) {
-    const formattedWebVitals = formatWebVitals(webVitals)
-    lines.push('## Web Vitals')
-    lines.push('')
-    lines.push(...SplitLines.splitLines(formattedWebVitals))
-    lines.push('')
-  }
-  if (nodeStartupTiming) {
-    const formattedNodeStartupTiming = formatNodeTiming(nodeStartupTiming)
-    lines.push('## Node Startup Timing')
-    lines.push('')
-    lines.push(...SplitLines.splitLines(formattedNodeStartupTiming))
-    lines.push('')
-  }
-  lines.push('## Extension Host')
-  lines.push('')
-  const content = JoinLines.joinLines(lines)
-  return content
 }
 
 const getMeasureEntries = () => {
@@ -229,7 +109,7 @@ export const getStartupPerformanceContent = async () => {
   if (Platform.platform === 'electron') {
     electronEntries = await getElectronEntries()
   }
-  const text = formatStartupPerformance({
+  const text = FormatStartupPerformance.formatStartupPerformance({
     nodeStartupTiming,
     measureEntries,
     webVitals,
@@ -250,7 +130,7 @@ const formatNodeMemoryUsage = (memoryUsage) => {
   const rows = Object.entries(memoryUsage).map(([key, value]) => {
     return [key, PrettyBytes.formatBytes(value)]
   })
-  return toMarkdownTable(header, rows)
+  return ToMarkdownTable.toMarkdownTable(header, rows)
 }
 
 const formatRendererWorkerData = ({ userAgentSpecificMemory, sent, received }) => {
@@ -269,7 +149,7 @@ const formatRendererWorkerData = ({ userAgentSpecificMemory, sent, received }) =
         rows.push([item.types[0] || 'n/a', PrettyBytes.formatBytes(item.bytes)])
       }
     }
-    content += toMarkdownTable(header, rows)
+    content += ToMarkdownTable.toMarkdownTable(header, rows)
   }
   return content
 }
@@ -284,7 +164,7 @@ const formatRendererProcessData = ({ memoryUsage }) => {
     ['Total JS HeapSize', PrettyBytes.formatBytes(memoryUsage.totalJSHeapSize)],
     ['Used JS HeapSize', PrettyBytes.formatBytes(memoryUsage.usedJSHeapSize)],
   ]
-  return toMarkdownTable(header, rows)
+  return ToMarkdownTable.toMarkdownTable(header, rows)
 }
 
 const getSharedProcessMemoryUsage = () => {
@@ -353,38 +233,8 @@ export const allocateMemoryInSharedProcess = () => {
   return SharedProcess.invoke(/* Developer.allocateMemoryInSharedProcess */ 'Developer.allocateMemoryInSharedProcess')
 }
 
-export const crashSharedProcess = () => {
-  return SharedProcess.invoke(/* Developer.crashSharedProcess */ 'Developer.crashSharedProcess')
-}
-
-export const crashRendererProcess = () => {}
-
-export const crashRendererWorker = () => {}
-
-export const crashMainProcess = () => {
-  return SharedProcess.invoke(/* Electron.crashMainProcess */ 'Electron.crashMainProcess')
-}
-
 export const openExtensionsFolder = () => {
   // TODO only possible in local file system
-}
-
-export const openLogsFolder = async () => {
-  // TODO only in electron or in remote when it is the same machine
-  if (Platform.platform === PlatformType.Web) {
-    return
-  }
-  const logsFolder = await Platform.getLogsDir()
-  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ logsFolder)
-}
-
-export const toggleDeveloperTools = () => {
-  return ElectronWindow.toggleDevtools()
-}
-
-export const showIconThemeCss = async () => {
-  // const iconThemeCss = await IconTheme.getIconThemeCss()
-  // Main.openRawText('css://icon-theme.css', iconThemeCss)
 }
 
 export const createSharedProcessHeapSnapshot = async () => {
@@ -393,6 +243,11 @@ export const createSharedProcessHeapSnapshot = async () => {
 
 export const createSharedProcessProfile = async () => {
   await SharedProcess.invoke(/* Developer.createProfile */ 'Developer.createProfile')
+}
+
+export const showIconThemeCss = async () => {
+  // const iconThemeCss = await IconTheme.getIconThemeCss()
+  // Main.openRawText('css://icon-theme.css', iconThemeCss)
 }
 
 export const reloadIconTheme = async () => {
@@ -419,21 +274,6 @@ export const clearCache = async () => {
 export const editors = {
   'performance://monitor': {},
   'performance://startup': {},
-}
-
-export const openConfigFolder = async () => {
-  const configFolder = await Platform.getConfigPath()
-  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ configFolder)
-}
-
-export const openCacheFolder = async () => {
-  const cacheFolder = await Platform.getCachePath()
-  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ cacheFolder)
-}
-
-export const openDataFolder = async () => {
-  const dataFolder = await SharedProcess.invoke(/* Platform.getDataDir */ 'Platform.getDataDir')
-  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ dataFolder)
 }
 
 export const showMessageBox = () => {}

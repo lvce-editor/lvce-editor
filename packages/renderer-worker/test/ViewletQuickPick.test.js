@@ -118,21 +118,7 @@ test('render - set correct height', () => {
     ],
   }
   expect(render(oldState, newState)).toEqual([
-    [
-      'Viewlet.send',
-      'QuickPick',
-      'setVisiblePicks',
-      [
-        {
-          description: '',
-          icon: '',
-          label: 'index.css',
-          posInSet: 1,
-          setSize: 1,
-        },
-      ],
-    ],
-    ['Viewlet.send', 'QuickPick', 'setCursorOffset', 0],
+    ['Viewlet.send', 'QuickPick', 'setItemsDom', expect.any(Array)],
     ['Viewlet.send', 'QuickPick', 'setItemsHeight', 22],
   ])
 })

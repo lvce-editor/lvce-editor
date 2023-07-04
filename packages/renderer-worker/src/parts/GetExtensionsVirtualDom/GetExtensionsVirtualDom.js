@@ -1,86 +1,88 @@
-import { div, img, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+
+const listItemDetail = {
+  type: VirtualDomElements.Div,
+  className: 'ExtensionListItemDetail',
+  childCount: 3,
+}
+const listItemName = {
+  type: VirtualDomElements.Div,
+  className: 'ExtensionListItemName',
+  childCount: 1,
+}
+
+const listItemDescription = {
+  type: VirtualDomElements.Div,
+  className: 'ExtensionListItemDescription',
+  childCount: 1,
+}
+
+const listItemFooter = {
+  type: VirtualDomElements.Div,
+  className: 'ExtensionListItemFooter',
+  childCount: 2,
+}
+
+const listItemAuthorName = {
+  type: VirtualDomElements.Div,
+  className: 'ExtensionListItemAuthorName',
+  childCount: 1,
+}
 
 const getExtensionVirtualDom = (extension) => {
   const { posInSet, setSize, top, icon, name, description, publisher, focused } = extension
   const dom = [
-    div(
-      {
-        role: 'listitem',
-        ariaRoleDescription: 'Extension',
-        className: 'ExtensionListItem',
-        ariaPosInSet: posInSet,
-        ariaSetSize: setSize,
-        top,
-      },
-      2
-    ),
-    img({
+    {
+      type: VirtualDomElements.Div,
+      role: 'listitem',
+      ariaRoleDescription: 'Extension',
+      className: 'ExtensionListItem',
+      ariaPosInSet: posInSet,
+      ariaSetSize: setSize,
+      top,
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Img,
       src: icon,
       className: 'ExtensionListItemIcon',
-    }),
-    div(
-      {
-        className: 'ExtensionListItemDetail',
-      },
-      3
-    ),
-    div(
-      {
-        className: 'ExtensionListItemName',
-      },
-      1
-    ),
+      childCount: 0,
+    },
+    listItemDetail,
+    listItemName,
     text(name),
-    div(
-      {
-        className: 'ExtensionListItemDescription',
-      },
-      1
-    ),
+    listItemDescription,
     text(description),
-    div(
-      {
-        className: 'ExtensionListItemFooter',
-      },
-      2
-    ),
-    div(
-      {
-        className: 'ExtensionListItemAuthorName',
-      },
-      1
-    ),
+    listItemFooter,
+    listItemAuthorName,
     text(publisher),
-    div(
-      {
-        className: 'ExtensionActions',
-      },
-      0
-    ),
+    {
+      type: VirtualDomElements.Div,
+      className: 'ExtensionActions',
+      childCount: 0,
+    },
   ]
   if (focused) {
-    dom[0].props.id = 'ExtensionActive'
+    dom[0].id = 'ExtensionActive'
   }
   return dom
 }
 
 export const getExtensionsVirtualDom = (visibleExtensions) => {
   const dom = []
-  dom.push(
-    div(
-      {
-        className: 'ListItems',
-        tabIndex: 0,
-        ariaLabel: 'Extensions',
-        role: 'list',
-        onwheelpassive: 'handleWheel',
-        oncontextmenu: 'handleContextMenu',
-        onpointerdown: 'handlePointerDown',
-        ontouchstart: 'handleTouchStart',
-      },
-      visibleExtensions.length
-    )
-  )
+  dom.push({
+    type: VirtualDomElements.Div,
+    className: 'ListItems',
+    tabIndex: 0,
+    ariaLabel: 'Extensions',
+    role: 'list',
+    onwheelpassive: 'handleWheel',
+    oncontextmenu: 'handleContextMenu',
+    onpointerdown: 'handlePointerDown',
+    ontouchstart: 'handleTouchStart',
+    childCount: visibleExtensions.length,
+  })
   for (const extension of visibleExtensions) {
     dom.push(...getExtensionVirtualDom(extension))
   }

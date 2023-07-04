@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
-import * as LifeCycle from '../src/parts/LifeCycle/LifeCycle.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import * as LifeCycle from '../src/parts/LifeCycle/LifeCycle.js'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 beforeEach(() => {
@@ -34,14 +34,6 @@ jest.unstable_mockModule('../src/parts/Download/Download.js', () => {
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   return {
     getAllStates: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
-
-jest.unstable_mockModule('../src/parts/ElectronWindow/ElectronWindow.js', () => {
-  return {
-    toggleDevtools: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
@@ -350,15 +342,6 @@ test.skip('monitorPerformance', async () => {
   delete globalThis.performance
 })
 
-// TODO test crashSharedProcess error
-
-test('crashSharedProcess', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {})
-  await Developer.crashSharedProcess()
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Developer.crashSharedProcess')
-})
-
 // TODO test createSharedProcessHeapSnapshot error
 
 test('createSharedProcessHeapSnapshot', async () => {
@@ -374,89 +357,6 @@ test('createSharedProcessHeapSnapshot', async () => {
   await Developer.createSharedProcessHeapSnapshot()
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Developer.createSharedProcessHeapSnapshot')
-})
-
-// TODO test toggleDeveloperTools error
-
-test('toggleDeveloperTools', async () => {
-  // @ts-ignore
-  ElectronWindow.toggleDevtools.mockImplementation(() => {})
-  await Developer.toggleDeveloperTools()
-  expect(ElectronWindow.toggleDevtools).toHaveBeenCalledTimes(1)
-})
-
-// TODO test openConfigFolder error
-
-test('openConfigFolder', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
-    switch (method) {
-      case 'OpenNativeFolder.openFolder':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  // @ts-ignore
-  Platform.getConfigPath.mockImplementation(() => {
-    return '/test/config-folder'
-  })
-  await Developer.openConfigFolder()
-  expect(SharedProcess.invoke).toHaveBeenLastCalledWith('OpenNativeFolder.openFolder', '/test/config-folder')
-})
-
-test('openDataFolder', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
-    switch (method) {
-      case 'OpenNativeFolder.openFolder':
-        return null
-      case 'Platform.getDataDir':
-        return '/test/data-folder'
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  await Developer.openDataFolder()
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(SharedProcess.invoke).toHaveBeenLastCalledWith('OpenNativeFolder.openFolder', '/test/data-folder')
-})
-
-test('openLogsFolder', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
-    switch (method) {
-      case 'OpenNativeFolder.openFolder':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  // @ts-ignore
-  Platform.getLogsDir.mockImplementation(() => {
-    return '~/.local/state/app-name'
-  })
-  await Developer.openLogsFolder()
-  expect(SharedProcess.invoke).toHaveBeenLastCalledWith('OpenNativeFolder.openFolder', '~/.local/state/app-name')
-})
-
-test('openLogsFolder - error', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
-    switch (method) {
-      case 'OpenNativeFolder.openFolder':
-        return null
-      case 'Platform.getLogsDir':
-        throw new TypeError('x is not a function')
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  // @ts-ignore
-  Platform.getLogsDir.mockImplementation(() => {
-    throw new TypeError('x is not a function')
-  })
-  await expect(Developer.openLogsFolder()).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('open process explorer', async () => {

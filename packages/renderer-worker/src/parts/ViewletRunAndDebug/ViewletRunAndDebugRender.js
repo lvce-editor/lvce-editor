@@ -3,7 +3,9 @@ import * as DebugState from '../DebugState/DebugState.js'
 import * as DebugValueType from '../DebugValueType/DebugValueType.js'
 import * as DiffDom from '../DiffDom/DiffDom.js'
 import * as Icon from '../Icon/Icon.js'
-import { button, div, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+
 /**
  * @enum {string}
  */
@@ -45,92 +47,80 @@ const Roles = {
   None: 'none',
 }
 
-const buttonResume = button(
-  {
-    className: ClassNames.IconButton,
-    title: UiStrings.Resume,
-  },
-  1
-)
+const buttonResume = {
+  type: VirtualDomElements.Button,
+  className: ClassNames.IconButton,
+  title: UiStrings.Resume,
+  childCount: 1,
+}
 
-const iconContinue = div(
-  {
-    className: ClassNames.MaskIcon,
-    maskImage: Icon.DebugContinue,
-  },
-  0
-)
+const iconContinue = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.MaskIcon,
+  maskImage: Icon.DebugContinue,
+  childCount: 0,
+}
 
-const buttonPause = button(
-  {
-    className: ClassNames.IconButton,
-    title: UiStrings.Pause,
-  },
-  1
-)
+const buttonPause = {
+  type: VirtualDomElements.Button,
+  className: ClassNames.IconButton,
+  title: UiStrings.Pause,
+  childCount: 1,
+}
 
-const iconPause = div(
-  {
-    className: ClassNames.MaskIcon,
-    maskImage: Icon.DebugPause,
-  },
-  0
-)
+const iconPause = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.MaskIcon,
+  maskImage: Icon.DebugPause,
+  childCount: 0,
+}
 
-const buttonStepOver = button(
-  {
-    className: ClassNames.IconButton,
-    title: UiStrings.StepOver,
-  },
-  1
-)
+const buttonStepOver = {
+  type: VirtualDomElements.Button,
+  className: ClassNames.IconButton,
+  title: UiStrings.StepOver,
+  childCont: 1,
+}
 
-const iconStepOver = div(
-  {
-    className: ClassNames.MaskIcon,
-    maskImage: Icon.DebugStepOver,
-  },
-  0
-)
+const iconStepOver = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.MaskIcon,
+  maskImage: Icon.DebugStepOver,
+}
 
-const buttonStepInto = button(
-  {
-    className: ClassNames.IconButton,
-    title: UiStrings.StepInto,
-  },
-  1
-)
+const buttonStepInto = {
+  type: VirtualDomElements.Button,
+  className: ClassNames.IconButton,
+  title: UiStrings.StepInto,
+  childCount: 1,
+}
 
-const iconStepInto = div(
-  {
-    className: ClassNames.MaskIcon,
-    maskImage: Icon.DebugStepInto,
-  },
-  0
-)
+const iconStepInto = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.MaskIcon,
+  maskImage: Icon.DebugStepInto,
+  childCount: 0,
+}
 
-const buttonStepOut = button(
-  {
-    className: ClassNames.IconButton,
-    title: UiStrings.StepOut,
-  },
-  1
-)
+const buttonStepOut = {
+  type: VirtualDomElements.Button,
+  className: ClassNames.IconButton,
+  title: UiStrings.StepOut,
+  childCount: 1,
+}
 
-const iconStepOut = div(
-  {
-    className: ClassNames.MaskIcon,
-    maskImage: Icon.DebugStepOut,
-  },
-  0
-)
+const iconStepOut = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.MaskIcon,
+  maskImage: Icon.DebugStepOut,
+  childCount: 0,
+}
 
-const buttons = div(
-  {
-    className: ClassNames.DebugButtons,
-  },
-  4
-)
+const buttons = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.DebugButtons,
+  childCount: 4,
+}
 
 const renderButtons = (state) => {
   const { debugState } = state
@@ -145,21 +135,25 @@ const renderButtons = (state) => {
   return elements
 }
 
-const watchHeader = div({ className: ClassNames.DebugSectionHeader, tabIndex: 0 }, 2)
-const iconTriangleRight = div(
-  {
-    className: ClassNames.DebugMaskIcon,
-    maskImage: Icon.TriangleRight,
-  },
-  0
-)
-const iconTriangleDown = div(
-  {
-    className: ClassNames.DebugMaskIcon,
-    maskImage: Icon.TriangleDown,
-  },
-  0
-)
+const watchHeader = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.DebugSectionHeader,
+  tabIndex: 0,
+  childCount: 2,
+}
+const iconTriangleRight = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.DebugMaskIcon,
+  maskImage: Icon.TriangleRight,
+  childCount: 0,
+}
+
+const iconTriangleDown = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.DebugMaskIcon,
+  maskImage: Icon.TriangleDown,
+  childCount: 0,
+}
 
 const textWatch = text(UiStrings.Watch)
 
@@ -167,12 +161,25 @@ const renderWatch = (state) => {
   return [watchHeader, iconTriangleRight, textWatch]
 }
 
-const breakPointsHeader = div({ className: ClassNames.DebugSectionHeader, tabIndex: 0 }, 2)
+const breakPointsHeader = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.DebugSectionHeader,
+  tabIndex: 0,
+  childCount: 2,
+}
 
 const textBreakPoints = text(UiStrings.BreakPoints)
 
-const debugRow1 = div({ className: ClassNames.DebugRow }, 1)
-const debugRow3 = div({ className: ClassNames.DebugRow }, 3)
+const debugRow1 = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.DebugRow,
+  childCount: 1,
+}
+const debugRow3 = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.DebugRow,
+  childCount: 3,
+}
 
 const renderBreakPoints = (state) => {
   return [breakPointsHeader, iconTriangleRight, textBreakPoints]
@@ -189,13 +196,36 @@ const getDebugValueClassName = (valueType) => {
   }
 }
 
-const scopeHeader = div({ className: ClassNames.DebugSectionHeader, role: Roles.TreeItem, ariaLevel: 1, ariaExpanded: false, tabIndex: 0 }, 2)
-const scopeHeaderExpanded = div({ className: ClassNames.DebugSectionHeader, role: Roles.TreeItem, ariaLevel: 1, ariaExpanded: true }, 2)
+const scopeHeader = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.DebugSectionHeader,
+  role: Roles.TreeItem,
+  ariaLevel: 1,
+  ariaExpanded: false,
+  tabIndex: 0,
+  childCount: 2,
+}
+const scopeHeaderExpanded = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.DebugSectionHeader,
+  role: Roles.TreeItem,
+  ariaLevel: 1,
+  ariaExpanded: true,
+  childCount: 2,
+}
 const textScope = text(UiStrings.Scope)
 const separator = text(': ')
-const debugPropertyKey = span({ className: ClassNames.DebugPropertyKey }, 1)
+const debugPropertyKey = {
+  type: VirtualDomElements.Span,
+  className: ClassNames.DebugPropertyKey,
+  childCount: 1,
+}
 
-const debugPausedMessage = div({ className: ClassNames.DebugPausedMessage }, 1)
+const debugPausedMessage = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.DebugPausedMessage,
+  childCount: 1,
+}
 const textNotPaused = text(UiStrings.NotPaused)
 
 const renderScope = (state) => {
@@ -210,40 +240,69 @@ const renderScope = (state) => {
         switch (scope.type) {
           case DebugScopeChainType.This:
             elements.push(
-              div(
-                {
-                  className: ClassNames.DebugRow,
-                  paddingLeft: scope.indent,
-                },
-                3
-              ),
-              span({}, 1),
+              {
+                type: VirtualDomElements.Div,
+                className: ClassNames.DebugRow,
+                paddingLeft: scope.indent,
+                childCount: 3,
+              },
+              {
+                type: VirtualDomElements.Span,
+                childCount: 1,
+              },
               text(scope.key),
               separator,
-              span({}, 1),
+              {
+                type: VirtualDomElements.Span,
+                childCount: 1,
+              },
               text(scope.value)
             )
             break
           case DebugScopeChainType.Exception:
-            elements.push(debugRow3, span({}, 1), text(scope.key), separator, span({}, 1), text(scope.value))
+            elements.push(
+              debugRow3,
+              {
+                type: VirtualDomElements.Span,
+                childCount: 1,
+              },
+              text(scope.key),
+              separator,
+
+              {
+                type: VirtualDomElements.Span,
+                childCount: 1,
+              },
+              text(scope.value)
+            )
             break
           case DebugScopeChainType.Scope:
-            elements.push(debugRow1, span({}, 1), text(scope.key))
+            elements.push(
+              debugRow1,
+              {
+                type: VirtualDomElements.Span,
+                childCount: 1,
+              },
+              text(scope.key)
+            )
             break
           case DebugScopeChainType.Property:
             const className = getDebugValueClassName(scope.valueType)
             elements.push(
-              div(
-                {
-                  className: ClassNames.DebugRow,
-                  paddingLeft: scope.indent,
-                },
-                3
-              ),
+              {
+                type: VirtualDomElements.Div,
+                className: ClassNames.DebugRow,
+                paddingLeft: scope.indent,
+                childCount: 3,
+              },
               debugPropertyKey,
               text(scope.key),
               separator,
-              span({ className }, 1),
+              {
+                type: VirtualDomElements.Span,
+                className,
+                childCount: 1,
+              },
               text(scope.value)
             )
             break
@@ -257,8 +316,18 @@ const renderScope = (state) => {
   return elements
 }
 
-const headerCallStack = div({ className: ClassNames.DebugSectionHeader, ariaExpanded: false }, 2)
-const headerCallStackExpanded = div({ className: ClassNames.DebugSectionHeader, ariaExpanded: true }, 2)
+const headerCallStack = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.DebugSectionHeader,
+  ariaExpanded: false,
+  childCount: 2,
+}
+const headerCallStackExpanded = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.DebugSectionHeader,
+  ariaExpanded: true,
+  childCount: 2,
+}
 const textCallStack = text(UiStrings.CallStack)
 
 const renderCallStack = (state) => {

@@ -3,19 +3,17 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 export const h = (type, props, childCount) => {
   return {
     type,
-    props,
+    ...props,
     childCount,
   }
 }
 
 export const text = (data) => {
-  return h(
-    VirtualDomElements.Text,
-    {
-      text: data,
-    },
-    0
-  )
+  return {
+    type: VirtualDomElements.Text,
+    text: data,
+    childCount: 0,
+  }
 }
 
 export const div = (props, childCount) => {

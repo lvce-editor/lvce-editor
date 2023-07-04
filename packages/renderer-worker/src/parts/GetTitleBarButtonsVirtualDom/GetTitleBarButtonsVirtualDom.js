@@ -1,21 +1,19 @@
-import { button, i } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-const createTitleBarButton = (id, icon, label) => {
+const createTitleBarButton = (button) => {
+  const { id, icon, label } = button
   const dom = [
-    button(
-      {
-        className: `TitleBarButton TitleBarButtton${id}`,
-        ariaLabel: label,
-        id: `TitleBarButton${id}`,
-      },
-      1
-    ),
-    i(
-      {
-        className: `MaskIcon ${icon}`,
-      },
-      0
-    ),
+    {
+      type: VirtualDomElements.Button,
+      className: `TitleBarButton TitleBarButton${id}`,
+      ariaLabel: label,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.I,
+      className: `MaskIcon ${icon}`,
+      childCount: 0,
+    },
   ]
   return dom
 }

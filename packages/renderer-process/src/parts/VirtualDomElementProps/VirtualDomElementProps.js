@@ -14,6 +14,9 @@ export const setProp = ($Element, key, value) => {
       break
     case 'style':
       throw new Error('style property is not supported')
+    case 'childCount':
+    case 'type':
+      break
     default:
       $Element[key] = value
   }

@@ -198,6 +198,9 @@ jobs:
         working-directory: ./build/.tmp/server/shared-process
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - name: Clean up
+        run: rm -rf node build/.tmp
+        shell: bash
 
       # - name: Build archive
       #   shell: bash

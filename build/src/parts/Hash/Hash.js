@@ -28,11 +28,7 @@ const walkFiles = async (folder, fn) => {
   }
 }
 
-export const computeFolderHash = async (
-  folder,
-  extraFiles = [],
-  extraContents = []
-) => {
+export const computeFolderHash = async (folder, extraFiles = [], extraContents = []) => {
   try {
     const absolutePath = Path.absolute(folder)
     const hash = createHash('sha1')
@@ -45,9 +41,8 @@ export const computeFolderHash = async (
       const content = await ReadFile.readFile(extraFile)
       hash.update(content)
     }
-    for (const extraContent of extraContents) {
-      hash.update(extraContent)
-    }
+    const extraContentsString = JSON.stringify(extraContents)
+    hash.update(extraContentsString)
     return hash.digest('hex')
   } catch (error) {
     throw new Error('Failed to compute hash', {
