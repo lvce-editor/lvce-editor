@@ -1,13 +1,14 @@
 import * as RipGrep from '../RipGrep/RipGrep.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 
-const connectProcess = (ipc, id, childProcess) => {
+const maxResults = 800
+
+const connectProcess = (ipc, id, childProcess, cleanup) => {
   let count = 0
-  const cleanup = () => {
-    childProcess.kill()
-  }
+  childProcess.stdout.setEncoding(EncodingType.Utf8)
   childProcess.stdout.on('data', (data) => {
     count++
-    if (count > 20) {
+    if (count > maxResults) {
       cleanup()
       return
     }
@@ -38,12 +39,30 @@ const connectProcess = (ipc, id, childProcess) => {
   })
 }
 
+const state = {
+  searches: Object.create(null),
+}
+
 export const start = async (ipc, id, { searchDir = '', maxSearchResults = 20_000, ripGrepArgs = [] } = {}) => {
   console.log({ ipc })
-  const emitter = new EventTarget()
   const childProcess = RipGrep.spawn(ripGrepArgs, {
     cwd: searchDir,
   })
   console.log('start', { searchDir, ripGrepArgs, id })
-  connectProcess(ipc, id, childProcess)
+  const dispose = () => {
+    delete state.searches[id]
+    childProcess.kill()
+  }
+  connectProcess(ipc, id, childProcess, dispose)
+  state.searches[id] = {
+    dispose,
+  }
+}
+
+export const cancel = (id) => {
+  const search = state.searches[id]
+  if (!search) {
+    return
+  }
+  search.dispose()
 }

@@ -1,9 +1,11 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as IncrementalTextSearch from '../IncrementalTextSearch/IncrementalTextSearch.js'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Id from '../Id/Id.js'
 import * as ViewletSearchStatusMessage from './ViewletSearchStatusMessage.js'
 
 const getResultCounts = (results) => {
@@ -24,6 +26,45 @@ const getResultCounts = (results) => {
   return { fileCount, resultCount }
 }
 
+const parseLine = (line) => {
+  if (!line) {
+    return {}
+  }
+  return JSON.parse(line)
+}
+
+const parseData = (data) => {
+  const lines = data.split('\n')
+  const parsed = []
+  for (const line of lines) {
+    parsed.push(parseLine(line))
+  }
+  return parsed
+}
+
+class DataEvent extends Event {
+  constructor(parsed) {
+    super('parsedData', {})
+    this.parsed = parsed
+  }
+}
+
+class ImprovedTextSearch extends EventTarget {
+  constructor(emitter) {
+    super()
+    this.buffer = ''
+    emitter.addEventListener('data', this.handleData.bind(this))
+  }
+
+  handleData(event) {
+    console.log({ event })
+    const data = event.data
+    const parsed = parseData(data)
+    console.log('dispatch')
+    this.dispatchEvent(new DataEvent(parsed))
+  }
+}
+
 export const handleUpdate = async (state, update) => {
   const partialNewState = { ...state, ...update }
   try {
@@ -40,7 +81,25 @@ export const handleUpdate = async (state, update) => {
         message: '',
       }
     }
+    IncrementalTextSearch.cancel(state.searchId)
     const root = Workspace.state.workspacePath
+    state.searchId = Id.create()
+    const search = IncrementalTextSearch.start(state.searchId, {
+      root,
+      value,
+      threads,
+      isCaseSensitive: matchCase,
+      query: value,
+    })
+    const improvedSearch = new ImprovedTextSearch(search)
+
+    const handleResult = (event) => {
+      console.log('HANDLE RESULT')
+      const parsed = event.parsed
+      console.log({ parsed })
+    }
+    improvedSearch.addEventListener('parsedData', handleResult)
+    // improvedSearch.addEventListener('', callback)
     const results = await TextSearch.textSearch(root, value, {
       threads,
       isCaseSensitive: matchCase,

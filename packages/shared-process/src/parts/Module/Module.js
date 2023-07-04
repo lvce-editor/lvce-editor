@@ -73,7 +73,7 @@ export const load = (moduleId) => {
     case ModuleId.ListProcessesWithMemoryUsage:
       return import('../ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsage.ipc.js')
     case ModuleId.IncrementalTextSearch:
-      return import('../IncrementalTextSearch/IncremetalTextSearch.ipc.js')
+      return import('../IncrementalTextSearch/IncrementalTextSearch.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

@@ -5,9 +5,16 @@ const state = {
   searches: Object.create(null),
 }
 
+class SearchEventTarget extends EventTarget {
+  constructor() {
+    super()
+    this.buffer = ''
+  }
+}
+
 export const start = (id, options) => {
-  const emitter = new EventTarget()
-  state.searches[id] = emitter
+  const search = new SearchEventTarget()
+  state.searches[id] = search
   const ripGrepArgs = GetTextSearchRipGrepArgs.getRipGrepArgs({
     ...options,
     searchString: options.query,
@@ -17,7 +24,12 @@ export const start = (id, options) => {
     searchDir: options.root,
   }
   SharedProcess.invoke('IncrementalTextSearch.start', id, actualOptions)
-  return emitter
+  return search
+}
+
+export const cancel = (id) => {
+  delete state.searches[id]
+  SharedProcess.invoke('IncrementalTextSearch.cancel', id)
 }
 
 export const handleResult = (id, result) => {
