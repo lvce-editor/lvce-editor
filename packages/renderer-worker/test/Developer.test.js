@@ -39,14 +39,6 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/ElectronWindow/ElectronWindow.js', () => {
-  return {
-    toggleDevtools: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
-
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: 'remote',
@@ -365,15 +357,6 @@ test('createSharedProcessHeapSnapshot', async () => {
   await Developer.createSharedProcessHeapSnapshot()
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Developer.createSharedProcessHeapSnapshot')
-})
-
-// TODO test toggleDeveloperTools error
-
-test('toggleDeveloperTools', async () => {
-  // @ts-ignore
-  ElectronWindow.toggleDevtools.mockImplementation(() => {})
-  await Developer.toggleDeveloperTools()
-  expect(ElectronWindow.toggleDevtools).toHaveBeenCalledTimes(1)
 })
 
 test('open process explorer', async () => {
