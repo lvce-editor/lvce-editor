@@ -1,12 +1,6 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-const labelWrapper = {
-  type: VirtualDomElements.Div,
-  className: 'QuickPickItemLabel',
-  childCount: 1,
-}
-
 const descriptionWrapper = {
   type: VirtualDomElements.Div,
   className: 'QuickPickItemDescription',
@@ -55,7 +49,6 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
     className: 'Label',
     childCount: 0,
   }
-  dom.push(labelWrapper)
   dom.push(labelDom)
   let position = 0
   for (let i = 0; i < highlights.length; i += 2) {

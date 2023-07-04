@@ -1,8 +1,19 @@
 import * as Assert from '../Assert/Assert.js'
 import * as EmptyMatches from '../EmptyMatches/EmptyMatches.js'
 import * as FilterQuickPickItem from '../FilterQuickPickItem/FilterQuickPickItem.js'
+import * as Character from '../Character/Character.js'
+
+const addEmptyMatch = (pick) => {
+  return {
+    pick,
+    matches: EmptyMatches.EmptyMatches,
+  }
+}
 
 const filterPicks = (state, picks, exclude, value, provider) => {
+  if (value === Character.EmptyString) {
+    return picks.map(addEmptyMatch)
+  }
   const filteredItems = []
   for (const pick of picks) {
     const filterValue = provider.getPickLabel(pick)
