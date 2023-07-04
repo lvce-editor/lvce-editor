@@ -95,6 +95,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0px;
+
+  /* TODO compute mixed color in javascript once for effiency */
   color: color-mix(in oklab, var(--ListForeground), var(--QuickPickBackground) 30%);
 }
 
