@@ -110,7 +110,7 @@ const getPick = (items, index) => {
   // }
   // index -= state.recentPicks.length
   if (index < items.length) {
-    return items[index]
+    return items[index].pick
   }
   console.warn('no pick matching index', index)
 }
