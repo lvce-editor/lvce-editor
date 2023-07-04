@@ -1,3 +1,4 @@
+import * as GetCompletionItemsVirtualDom from '../GetCompletionItemsVirtualDom/GetCompletionItemsVirtualDom.js'
 import * as GetVisibleCompletionItems from '../GetVisibleCompletionItems/GetVisibleCompletionItems.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
@@ -6,7 +7,12 @@ export const hasFunctionalRender = true
 
 const renderItems = {
   isEqual(oldState, newState) {
-    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
+    return (
+      oldState.items === newState.items &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY &&
+      oldState.focusedIndex === newState.focusedIndex
+    )
   },
   apply(oldState, newState) {
     const visibleItems = GetVisibleCompletionItems.getVisibleItems(
@@ -14,9 +20,11 @@ const renderItems = {
       newState.itemHeight,
       newState.leadingWord,
       newState.minLineY,
-      newState.maxLineY
+      newState.maxLineY,
+      newState.focusedIndex
     )
-    return [/* method */ RenderMethod.SetItems, /* items */ visibleItems, /* reason */ 1]
+    const dom = GetCompletionItemsVirtualDom.getCompletionItemsVirtualDom(visibleItems)
+    return ['setDom', dom]
   },
 }
 
@@ -36,16 +44,16 @@ const renderBounds = {
   },
 }
 
-const renderFocusedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex && oldState.minLineY === newState.minLineY
-  },
-  apply(oldState, newState) {
-    const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
-    const newFocusedIndex = newState.focusedIndex - newState.minLineY
-    return [/* method */ RenderMethod.SetFocusedIndex, /* oldFocusedIndex */ oldFocusedIndex, /* newFocusedIndex */ newFocusedIndex]
-  },
-}
+// const renderFocusedIndex = {
+//   isEqual(oldState, newState) {
+//     return oldState.focusedIndex === newState.focusedIndex && oldState.minLineY === newState.minLineY
+//   },
+//   apply(oldState, newState) {
+//     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
+//     const newFocusedIndex = newState.focusedIndex - newState.minLineY
+//     return [/* method */ RenderMethod.SetFocusedIndex, /* oldFocusedIndex */ oldFocusedIndex, /* newFocusedIndex */ newFocusedIndex]
+//   },
+// }
 
 const renderHeight = {
   isEqual(oldState, newState) {
@@ -91,4 +99,4 @@ const renderScrollBar = {
   },
 }
 
-export const render = [renderItems, renderBounds, renderFocusedIndex, renderHeight, renderNegativeMargin, renderScrollBar]
+export const render = [renderItems, renderBounds, renderHeight, renderNegativeMargin, renderScrollBar]

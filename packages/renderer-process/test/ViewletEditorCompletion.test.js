@@ -7,65 +7,9 @@ const getTextContent = (node) => {
   return node.textContent
 }
 
-const getSimpleList = ($Element) => {
-  return Array.from($Element.childNodes).map(getTextContent)
-}
-
 test('create', () => {
   const state = ViewletEditorCompletion.create()
   expect(state).toBeDefined()
-})
-
-test('show', () => {
-  const state = ViewletEditorCompletion.create()
-  ViewletEditorCompletion.setItems(state, [
-    {
-      label: 'item 1',
-      highlights: [],
-    },
-    {
-      label: 'item 2',
-      highlights: [],
-    },
-    {
-      label: 'item 3',
-      highlights: [],
-    },
-  ])
-  expect(getSimpleList(state.$ListItems)).toEqual(['item 1', 'item 2', 'item 3'])
-
-  // TODO
-  //  expect(
-  //   Main.state.activeEditorState.$EditorInput.getAttribute(
-  //     'aria-activedescendant'
-  //   )
-  // ).toBe('CompletionItem-0')
-})
-
-test('show - no results', () => {
-  const state = ViewletEditorCompletion.create()
-  ViewletEditorCompletion.setItems(state, [])
-  expect(getSimpleList(state.$Viewlet)).toEqual(['No Results'])
-})
-
-test('dispose', () => {
-  const state = ViewletEditorCompletion.create()
-  ViewletEditorCompletion.setItems(state, [
-    {
-      label: 'item 1',
-      highlights: [],
-    },
-  ])
-  ViewletEditorCompletion.dispose(state)
-
-  // TODO
-  // EditorCompletion.dispose()
-  // expect(EditorCompletion.state.$Completions.isConnected).toBe(false)
-  // expect(
-  //   Main.state.activeEditorState.$EditorInput.getAttribute(
-  //     'aria-activedescendant'
-  //   )
-  // ).toBeNull()
 })
 
 test('focusIndex', () => {
