@@ -3,3 +3,4 @@ import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletC
 export const handleClickMinimize = ForwardViewletCommand.forwardViewletCommand('handleClickMinimize')
 export const handleClickToggleMaximize = ForwardViewletCommand.forwardViewletCommand('handleClickToggleMaximize')
 export const handleClickClose = ForwardViewletCommand.forwardViewletCommand('handleClickClose')
+export const handleClick = ForwardViewletCommand.forwardViewletCommand('handleClick')

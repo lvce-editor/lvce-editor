@@ -48,7 +48,6 @@ export const renderIncremental = ($Parent, dom) => {
     return
   }
   // TODO
-  console.log({ dom })
   const oldCount = $Parent.children.length
   let $Node = $Parent
   for (let i = 0; i < dom.length; i++) {

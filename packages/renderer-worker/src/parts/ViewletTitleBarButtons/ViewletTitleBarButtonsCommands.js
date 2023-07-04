@@ -8,6 +8,7 @@ export const LazyCommands = {
   handleClickClose: () => import('./ViewletTitleBarButtonsHandleClickClose.js'),
   handleClickMinimize: () => import('./ViewletTitleBarButtonsHandleClickMinimize.js'),
   handleClickToggleMaximize: () => import('./ViewletTitleBarButtonsHandleClickToggleMaximize.js'),
+  handleClick: () => import('./ViewletTitleBarButtonsHandleClick.js'),
 }
 
 export const Events = {
