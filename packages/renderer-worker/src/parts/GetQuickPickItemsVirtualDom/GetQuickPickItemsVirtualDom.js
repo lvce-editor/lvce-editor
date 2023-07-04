@@ -27,7 +27,6 @@ const quickPickHighlight = {
 
 const getQuickPickItemVirtualDom = (visibleItem) => {
   const { posInSet, label, setSize, isActive, description, icon, matches } = visibleItem
-  console.log({ visibleItem })
   const highlights = matches.slice(1)
   const dom = []
   dom.push({
@@ -56,6 +55,7 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
     className: 'Label',
     childCount: 0,
   }
+  dom.push(labelWrapper)
   dom.push(labelDom)
   let position = 0
   for (let i = 0; i < highlights.length; i += 2) {
@@ -76,7 +76,7 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
     labelDom.childCount++
     dom.push(text(afterText))
   }
-  dom.push(labelWrapper, text(label), descriptionWrapper, text(description))
+  dom.push(descriptionWrapper, text(description))
   return dom
 }
 
