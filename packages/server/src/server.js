@@ -57,7 +57,7 @@ const ContentSecurityPolicy = {
     `script-src 'self'`,
     `media-src 'self'`,
     `manifest-src 'self'`,
-    `style-src 'self' 'unsafe-inline'`, // TODO remove unsafe-inline
+    `style-src 'self'`,
   ]
     .map(addSemicolon)
     .join(' '),

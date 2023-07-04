@@ -1,17 +1,12 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Character from '../Character/Character.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
-import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Response from '../Response/Response.js'
 import { VError } from '../VError/VError.js'
 
 export const state = {
   pending: Object.create(null),
-}
-
-export const setInlineStyle = async (id, css) => {
-  await RendererProcess.invoke(/* Css.setInlineStyle */ 'Css.setInlineStyle', /* id */ id, /* css */ css)
 }
 
 const getId = (path) => {
@@ -29,14 +24,8 @@ const actuallyLoadCssStyleSheet = async (css) => {
       throw new Error(response.statusText)
     }
     const text = await Response.getText(response)
-    if (Platform.isFirefox) {
-      const id = getId(css)
-      // workaround for broken firefox devtools when using
-      // constructed style sheets
-      await RendererProcess.invoke('Css.setInlineStyle', id, text)
-    } else {
-      await RendererProcess.invoke('Css.addCssStyleSheet', text)
-    }
+    const id = getId(css)
+    await addCssStyleSheet(id, text)
   } catch (error) {
     throw new VError(error, `Failed to load css "${css}"`)
   }
@@ -53,18 +42,18 @@ export const loadCssStyleSheets = async (css) => {
   return Promise.all(css.map(loadCssStyleSheet))
 }
 
-const actuallyAddDynamicCss = async (getCss, preferences) => {
+export const addCssStyleSheet = async (id, css) => {
+  await RendererProcess.invoke('Css.addCssStyleSheet', id, css)
+}
+
+const actuallyAddDynamicCss = async (id, getCss, preferences) => {
   const css = await getCss(preferences)
-  await RendererProcess.invoke(
-    /* Css.addCssStyleSheet */
-    'Css.addCssStyleSheet',
-    /* text */ css
-  )
+  await addCssStyleSheet(id, css)
 }
 
 export const addDynamicCss = async (id, getCss, preferences) => {
   if (!state.pending[id]) {
-    state.pending[id] = actuallyAddDynamicCss(getCss, preferences)
+    state.pending[id] = actuallyAddDynamicCss(id, getCss, preferences)
   }
   return state.pending[id]
 }

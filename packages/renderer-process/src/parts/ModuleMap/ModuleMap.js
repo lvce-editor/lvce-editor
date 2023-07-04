@@ -12,7 +12,6 @@ export const getModuleId = (commandId) => {
     case 'ConfirmPrompt.prompt':
       return ModuleId.ConfirmPrompt
     case 'Css.addCssStyleSheet':
-    case 'Css.setInlineStyle':
       return ModuleId.Css
     case 'Developer.getMemoryUsage':
     case 'Developer.showState':
