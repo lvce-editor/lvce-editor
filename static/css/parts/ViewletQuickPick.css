@@ -42,6 +42,7 @@
   padding: 0;
   overflow: hidden;
   contain: strict;
+  background: var(--QuickPickBackground);
 }
 
 .ScrollWrapper {
