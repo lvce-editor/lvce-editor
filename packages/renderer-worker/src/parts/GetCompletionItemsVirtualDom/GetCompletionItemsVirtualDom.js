@@ -1,24 +1,29 @@
-import { div, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+
+const label1 = {
+  type: VirtualDomElements.Div,
+  className: 'Label',
+  childCount: 1,
+}
+
+const completionHighlight = {
+  type: VirtualDomElements.Span,
+  className: 'CompletionHighlight',
+  childCount: 1,
+}
 
 const getLabelDom = (label, highlights) => {
   if (highlights.length === 0) {
-    return [
-      div(
-        {
-          className: 'Label',
-        },
-        1
-      ),
-      text(label),
-    ]
+    return [label1, text(label)]
   }
-  const labelDom = div(
-    {
-      className: 'Label',
-    },
-    0
-  )
-  const dom = [labelDom]
+  const dom = []
+  const labelDom = {
+    type: VirtualDomElements.Div,
+    className: 'Label',
+    childCount: 0,
+  }
+  dom.push(labelDom)
   let position = 0
   for (let i = 0; i < highlights.length; i += 2) {
     const highlightStart = highlights[i]
@@ -30,15 +35,7 @@ const getLabelDom = (label, highlights) => {
     }
     const highlightText = label.slice(highlightStart, highlightEnd)
     labelDom.childCount++
-    dom.push(
-      span(
-        {
-          className: 'CompletionHighlight',
-        },
-        1
-      ),
-      text(highlightText)
-    )
+    dom.push(completionHighlight, text(highlightText))
     position = highlightEnd
   }
   if (position < label.length) {
@@ -51,9 +48,18 @@ const getLabelDom = (label, highlights) => {
 
 export const getCompletionItemsVirtualDom = (visibleItems) => {
   if (visibleItems.length === 0) {
-    return [div({}, 1), text('No Results')]
+    return [
+      {
+        type: VirtualDomElements.Div,
+        childCount: 1,
+      },
+      text('No Results'),
+    ]
   }
-  const root = div({}, visibleItems.length)
+  const root = {
+    type: VirtualDomElements.Div,
+    childCount: visibleItems.length,
+  }
   const dom = [root]
   for (const visibleItem of visibleItems) {
     const { top, label, symbolName, highlights, focused } = visibleItem
@@ -62,20 +68,18 @@ export const getCompletionItemsVirtualDom = (visibleItems) => {
       className += ' Focused'
     }
     dom.push(
-      div(
-        {
-          role: 'option',
-          className,
-          top,
-        },
-        2
-      ),
-      div(
-        {
-          className: `ColoredMaskIcon ${symbolName}`,
-        },
-        0
-      ),
+      {
+        type: VirtualDomElements.Div,
+        role: 'option',
+        className,
+        top,
+        childCount: 2,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: `ColoredMaskIcon ${symbolName}`,
+        childCount: 0,
+      },
       ...getLabelDom(label, highlights)
     )
   }

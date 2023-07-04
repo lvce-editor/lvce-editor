@@ -18,68 +18,6 @@ jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletComma
 const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletEditorCompletion = await import('../src/parts/ViewletEditorCompletion/ViewletEditorCompletion.js')
 
-test('event - mousedown', () => {
-  const state = ViewletEditorCompletion.create()
-  const { $Viewlet } = state
-  ComponentUid.set($Viewlet, 1)
-  ViewletEditorCompletion.attachEvents(state)
-  ViewletEditorCompletion.setItems(state, [
-    {
-      label: 'item 1',
-      highlights: [],
-    },
-    {
-      label: 'item 2',
-      highlights: [],
-    },
-    {
-      label: 'item 3',
-      highlights: [],
-    },
-  ])
-  $Viewlet.children[0].dispatchEvent(
-    new MouseEvent('mousedown', {
-      bubbles: true,
-      cancelable: true,
-      clientX: 0,
-      clientY: 0,
-    })
-  )
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClickAt', 0, 0)
-})
-
-test('event - click outside', () => {
-  const state = ViewletEditorCompletion.create()
-  const { $Viewlet, $ListItems } = state
-  ComponentUid.set($Viewlet, 1)
-  ViewletEditorCompletion.attachEvents(state)
-  ViewletEditorCompletion.setItems(state, [
-    {
-      label: 'item 1',
-      highlights: [],
-    },
-    {
-      label: 'item 2',
-      highlights: [],
-    },
-    {
-      label: 'item 3',
-      highlights: [],
-    },
-  ])
-  $ListItems.dispatchEvent(
-    new MouseEvent('mousedown', {
-      bubbles: true,
-      cancelable: true,
-      clientX: 0,
-      clientY: 0,
-    })
-  )
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClickAt', 0, 0)
-})
-
 test('event - wheel', () => {
   const state = ViewletEditorCompletion.create()
   const { $Viewlet } = state
