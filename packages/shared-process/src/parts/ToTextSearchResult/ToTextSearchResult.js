@@ -49,9 +49,9 @@ export const toTextSearchResult = (parsedLine, remaining, charsBefore, charsAfte
   for (const submatch of submatches) {
     const previewStart = Math.max(submatch.start - charsBefore, 0)
     let actualStart = previewStart
-    if (actualStart > 0) {
-      actualStart = leftCut(lines, submatch.start, charsBefore)
-    }
+    // if (actualStart > 0) {
+    //   actualStart = leftCut(lines, submatch.start, charsBefore)
+    // }
     const previewEnd = Math.min(submatch.end + charsAfter, linesLength)
     const previewText = lines.slice(actualStart, previewEnd)
     results.push({
