@@ -1,5 +1,9 @@
 import { jest } from '@jest/globals'
 
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -23,6 +27,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
 
 const OpenSpecialFolder = await import('../src/parts/OpenSpecialFolder/OpenSpecialFolder.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const Platform = await import('../src/parts/Platform/Platform.js')
 
 test('openConfigFolder', async () => {
   // @ts-ignore
