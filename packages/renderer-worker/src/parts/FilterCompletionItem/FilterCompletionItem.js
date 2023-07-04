@@ -5,6 +5,7 @@ import * as GetCompletionItemScore from '../GetCompletionItemScore/GetCompletion
 import * as IsPatternInWord from '../IsPatternInWord/IsPatternInWord.js'
 import * as PrintTable from '../PrintTable/PrintTable.js'
 import * as TraceHighlights from '../TraceHighlights/TraceHighlights.js'
+import * as EmptyMatches from '../EmptyMatches/EmptyMatches.js'
 
 const gridSize = 128
 
@@ -20,15 +21,13 @@ const printTables = (pattern, patternStart, word, wordStart) => {
   // console.log(printTable(_diag, pattern, pattern.length, word, word.length));
 }
 
-export const Empty = []
-
 export const filterCompletionItem = (pattern, word) => {
   const patternLength = pattern.length
   const wordLength = word.length
   const patternLower = pattern.toLowerCase()
   const wordLower = word.toLowerCase()
   if (!IsPatternInWord.isPatternInWord(patternLower, 0, patternLength, wordLower, 0, wordLength)) {
-    return Empty
+    return EmptyMatches.EmptyMatches
   }
   let strongMatch = false
   for (let row = 1; row < patternLength + 1; row++) {
@@ -70,7 +69,7 @@ export const filterCompletionItem = (pattern, word) => {
     }
   }
   if (!strongMatch) {
-    return Empty
+    return EmptyMatches.EmptyMatches
   }
   // printTables(pattern, 0, word, 0)
   const highlights = TraceHighlights.traceHighlights(table, arrows, patternLength, wordLength)

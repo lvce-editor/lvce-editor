@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as EmptyMatches from '../EmptyMatches/EmptyMatches.js'
 import * as FilterQuickPickItem from '../FilterQuickPickItem/FilterQuickPickItem.js'
 
 const filterPicks = (state, picks, exclude, value, provider) => {
@@ -6,7 +7,7 @@ const filterPicks = (state, picks, exclude, value, provider) => {
   for (const pick of picks) {
     const filterValue = provider.getPickLabel(pick)
     const result = FilterQuickPickItem.filterQuickPickItem(value, filterValue)
-    if (result !== FilterQuickPickItem.Empty) {
+    if (result !== EmptyMatches.EmptyMatches) {
       filteredItems.push({
         pick,
         matches: result,

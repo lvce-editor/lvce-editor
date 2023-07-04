@@ -92,6 +92,5 @@ export const getQuickPickItemsVirtualDom = (visibleItems) => {
     ]
   }
   const dom = visibleItems.flatMap(getQuickPickItemVirtualDom)
-  console.log({ dom })
   return dom
 }
