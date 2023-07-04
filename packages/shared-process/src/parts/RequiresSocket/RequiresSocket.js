@@ -7,6 +7,7 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'ExtensionHost.send',
   'ExtensionHost.watchColorTheme',
   'Terminal.create',
+  'IncrementalTextSearch.start',
 ])
 
 export const requiresSocket = (method) => {
