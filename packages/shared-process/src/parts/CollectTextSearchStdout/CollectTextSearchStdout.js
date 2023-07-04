@@ -27,15 +27,16 @@ export const collectStdout = async (childProcess, maxSearchResults, charsBefore,
 
   const handleLine = (line) => {
     const parsedLine = JSON.parse(line)
-    switch (parsedLine.type) {
+    const { type, data } = parsedLine
+    switch (type) {
       case RipGrepParsedLineType.Begin:
-        allSearchResults[parsedLine.data.path.text] = [
+        allSearchResults[data.path.text] = [
           {
             type: TextSearchResultType.File,
             start: 0,
             end: 0,
             lineNumber: 0,
-            text: parsedLine.data.path.text,
+            text: data.path.text,
           },
         ]
         break
@@ -43,10 +44,10 @@ export const collectStdout = async (childProcess, maxSearchResults, charsBefore,
         const remaining = maxSearchResults - numberOfResults
         const matches = ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)
         numberOfResults += matches.length
-        allSearchResults[parsedLine.data.path.text].push(...matches)
+        allSearchResults[data.path.text].push(...matches)
         break
       case RipGrepParsedLineType.Summary:
-        stats = parsedLine.data
+        stats = data
         break
       default:
         break
