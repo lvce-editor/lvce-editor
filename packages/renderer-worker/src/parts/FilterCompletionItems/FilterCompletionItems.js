@@ -1,6 +1,6 @@
-import * as FilterCompletionItem from '../FilterCompletionItem/FilterCompletionItem.js'
 import * as Character from '../Character/Character.js'
 import * as EmptyMatches from '../EmptyMatches/EmptyMatches.js'
+import * as FilterCompletionItem from '../FilterCompletionItem/FilterCompletionItem.js'
 
 const addEmptyMatch = (item) => {
   return {
