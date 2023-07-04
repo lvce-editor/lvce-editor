@@ -82,11 +82,20 @@
   background: var(--ListActiveSelectionBackground);
 }
 
+#QuickPickItemActive .QuickPickItemDescription {
+  color: color-mix(in oklab, var(--ListActiveSelectionForeground), var(--ListActiveSelectionBackground) 30%);
+}
+
 .QuickPickItemDescription {
   font-size: 0.9em;
-  opacity: 0.7;
   pointer-events: none;
   contain: content;
+  white-space: nowrap;
+  contain: content;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0px;
+  color: color-mix(in oklab, var(--ListForeground), var(--QuickPickBackground) 30%);
 }
 
 /* TODO use aria annouce for this */
