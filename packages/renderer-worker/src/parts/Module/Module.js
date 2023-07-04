@@ -144,6 +144,8 @@ export const load = (moduleId) => {
       return import('../RebuildNodePty/RebuildNodePty.ipc.js')
     case ModuleId.Reload:
       return import('../Reload/Reload.ipc.js')
+    case ModuleId.IncrementalTextSearch:
+      return import('../IncrementalTextSearch/IncrementalTextSearch.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
