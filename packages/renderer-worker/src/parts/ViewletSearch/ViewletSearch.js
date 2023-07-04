@@ -1,11 +1,11 @@
 import * as Compare from '../Compare/Compare.js'
 import * as Height from '../Height/Height.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as InputSource from '../InputSource/InputSource.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
-import * as InputSource from '../InputSource/InputSource.js'
 import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.js'
 
 export const create = (id, uri, x, y, width, height) => {

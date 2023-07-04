@@ -3,6 +3,7 @@
   app-region: no-drag;
   flex: initial;
   width: 138px;
+  contain: strict;
 }
 
 .TitleBarButton {
@@ -28,7 +29,7 @@
   mask-image: url(/icons/chrome-minimize.svg);
 }
 
-.MaskIcon.ToggleMaximize {
+.MaskIcon.Maximize {
   -webkit-mask-image: url(/icons/chrome-maximize.svg);
   mask-image: url(/icons/chrome-maximize.svg);
 }

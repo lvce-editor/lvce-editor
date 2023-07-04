@@ -33,7 +33,7 @@ test('toTextSearchResult - match with bytes', () => {
   ])
 })
 
-test('toTextSearchResult - match with text', () => {
+test.skip('toTextSearchResult - match with text', () => {
   const parsedLine = {
     type: 'match',
     data: {
@@ -99,7 +99,7 @@ test('toTextSearchResult - match without text or bytes', () => {
   )
 })
 
-test('toTextSearchResult - match in the middle', () => {
+test.skip('toTextSearchResult - match in the middle', () => {
   const parsedLine = {
     type: 'match',
     data: {

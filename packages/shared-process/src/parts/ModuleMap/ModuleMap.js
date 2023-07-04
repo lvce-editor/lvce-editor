@@ -185,6 +185,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleCliArgs
     case 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage':
       return ModuleId.ListProcessesWithMemoryUsage
+    case 'IncrementalTextSearch.start':
+      return ModuleId.IncrementalTextSearch
     default:
       throw new CommandNotFoundError(commandId)
   }

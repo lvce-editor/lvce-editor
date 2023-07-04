@@ -1,6 +1,35 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const listItemDetail = {
+  type: VirtualDomElements.Div,
+  className: 'ExtensionListItemDetail',
+  childCount: 3,
+}
+const listItemName = {
+  type: VirtualDomElements.Div,
+  className: 'ExtensionListItemName',
+  childCount: 1,
+}
+
+const listItemDescription = {
+  type: VirtualDomElements.Div,
+  className: 'ExtensionListItemDescription',
+  childCount: 1,
+}
+
+const listItemFooter = {
+  type: VirtualDomElements.Div,
+  className: 'ExtensionListItemFooter',
+  childCount: 2,
+}
+
+const listItemAuthorName = {
+  type: VirtualDomElements.Div,
+  className: 'ExtensionListItemAuthorName',
+  childCount: 1,
+}
+
 const getExtensionVirtualDom = (extension) => {
   const { posInSet, setSize, top, icon, name, description, publisher, focused } = extension
   const dom = [
@@ -20,33 +49,13 @@ const getExtensionVirtualDom = (extension) => {
       className: 'ExtensionListItemIcon',
       childCount: 0,
     },
-    {
-      type: VirtualDomElements.Div,
-      className: 'ExtensionListItemDetail',
-      childCount: 3,
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: 'ExtensionListItemName',
-      childCount: 1,
-    },
+    listItemDetail,
+    listItemName,
     text(name),
-    {
-      type: VirtualDomElements.Div,
-      className: 'ExtensionListItemDescription',
-      childCount: 1,
-    },
+    listItemDescription,
     text(description),
-    {
-      type: VirtualDomElements.Div,
-      className: 'ExtensionListItemFooter',
-      childCount: 2,
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: 'ExtensionListItemAuthorName',
-      childCount: 1,
-    },
+    listItemFooter,
+    listItemAuthorName,
     text(publisher),
     {
       type: VirtualDomElements.Div,

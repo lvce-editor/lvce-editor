@@ -162,6 +162,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workspace
     case 'Reload':
       return ModuleId.Reload
+    case 'IncrementalTextSearch':
+      return ModuleId.IncrementalTextSearch
     default:
       throw new Error(`module ${prefix} not found`)
   }
