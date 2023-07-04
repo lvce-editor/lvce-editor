@@ -5,7 +5,7 @@ const GetElectronMenuItems = require('../GetElectronMenuItems/GetElectronMenuIte
 const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
 
 const getPort = (browserWindow) => {
-  const state = AppWindowStates.findById(browserWindow.webContents.id)
+  const state = AppWindowStates.findByWindowId(browserWindow.id)
   if (!state) {
     console.log('[main-process] menu: message port not found')
     return undefined

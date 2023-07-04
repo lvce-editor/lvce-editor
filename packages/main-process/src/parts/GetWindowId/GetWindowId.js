@@ -12,7 +12,7 @@ exports.getWindowId = (ipc) => {
   if (!config) {
     throw new Error(`no matching window found`)
   }
-  const id = config.id
-  Assert.number(id)
-  return id
+  const windowId = config.windowId
+  Assert.number(windowId)
+  return windowId
 }

@@ -1,10 +1,10 @@
-const AppWindow = require('../AppWindow/AppWindow.js')
 const ConnectIpc = require('../ConnectIpc/ConnectIpc.js')
 const IpcParentType = require('../IpcParentType/IpcParentType.js')
 const Logger = require('../Logger/Logger.js')
 const Performance = require('../Performance/Performance.js')
 const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
 const SharedProcess = require('../SharedProcess/SharedProcess.js')
+const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 
 // TODO maybe handle critical (first render) request via ipcMain
 // and spawn shared process when page is idle/loaded
@@ -31,7 +31,7 @@ const getFolder = (args) => {
  * @returns
  */
 exports.handlePort = async (event, browserWindowPort, type, name) => {
-  const config = AppWindow.findById(event.sender.id)
+  const config = AppWindowStates.findByWebContentsId(event.sender.id)
   if (!config) {
     Logger.warn('port event - config expected')
     return

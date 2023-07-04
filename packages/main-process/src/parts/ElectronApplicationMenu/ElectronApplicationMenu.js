@@ -22,7 +22,7 @@ exports.setMenu = (menu) => {
 }
 
 const click = (menuItem, browserWindow, keys) => {
-  const { port } = AppWindowStates.findById(browserWindow.webContents.id)
+  const { port } = AppWindowStates.findByWindowId(browserWindow.id)
   if (!port) {
     return
   }

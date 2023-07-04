@@ -3,12 +3,12 @@ const Electron = require('electron')
 const ElectronMessageBoxType = require('../ElectronMessageBoxType/ElectronMessageBoxType.js')
 const Logger = require('../Logger/Logger.js')
 const Platform = require('../Platform/Platform.js')
-const Window = require('../ElectronWindow/ElectronWindow.js')
+const ElectronWindow = require('../ElectronWindow/ElectronWindow.js')
 
 exports.showOpenDialog = async (title, properties) => {
   Assert.string(title)
   Assert.array(properties)
-  const focusedWindow = Window.getFocusedWindow()
+  const focusedWindow = ElectronWindow.getFocusedWindow()
   if (!focusedWindow) {
     return
   }
@@ -25,9 +25,9 @@ exports.showOpenDialog = async (title, properties) => {
 
 const getWindow = (windowId) => {
   if (windowId === -1) {
-    return Window.getFocusedWindow()
+    return ElectronWindow.getFocusedWindow()
   }
-  return Window.findById(windowId)
+  return ElectronWindow.findById(windowId)
 }
 
 /**
@@ -40,7 +40,7 @@ exports.showMessageBox = async ({ message, buttons, type = ElectronMessageBoxTyp
   Assert.array(buttons)
   const window = getWindow(windowId)
   if (!window) {
-    Logger.info(`[main-process] cannot show dialog message because there is no focused window`)
+    Logger.info(`[main-process] cannot show dialog message because there is no window with id ${windowId}`)
     return
   }
   if (message.message) {
