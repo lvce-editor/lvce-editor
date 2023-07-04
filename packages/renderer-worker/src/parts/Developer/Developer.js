@@ -245,15 +245,6 @@ export const createSharedProcessProfile = async () => {
   await SharedProcess.invoke(/* Developer.createProfile */ 'Developer.createProfile')
 }
 
-export const openLogsFolder = async () => {
-  // TODO only in electron or in remote when it is the same machine
-  if (Platform.platform === PlatformType.Web) {
-    return
-  }
-  const logsFolder = await Platform.getLogsDir()
-  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ logsFolder)
-}
-
 export const toggleDeveloperTools = () => {
   return ElectronWindow.toggleDevtools()
 }
@@ -287,21 +278,6 @@ export const clearCache = async () => {
 export const editors = {
   'performance://monitor': {},
   'performance://startup': {},
-}
-
-export const openConfigFolder = async () => {
-  const configFolder = await Platform.getConfigPath()
-  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ configFolder)
-}
-
-export const openCacheFolder = async () => {
-  const cacheFolder = await Platform.getCachePath()
-  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ cacheFolder)
-}
-
-export const openDataFolder = async () => {
-  const dataFolder = await SharedProcess.invoke(/* Platform.getDataDir */ 'Platform.getDataDir')
-  await Command.execute(/* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder', /* path */ dataFolder)
 }
 
 export const showMessageBox = () => {}
