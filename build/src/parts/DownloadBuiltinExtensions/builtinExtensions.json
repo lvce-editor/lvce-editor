@@ -17,7 +17,7 @@
   {
     "name": "builtin.language-basics-cpp",
     "repository": "github.com/lvce-editor/language-basics-cpp",
-    "version": "0.0.5"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.language-basics-css",
@@ -92,7 +92,7 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.30"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.language-basics-json",
@@ -172,7 +172,7 @@
   {
     "name": "builtin.language-basics-rust",
     "repository": "github.com/lvce-editor/language-basics-rust",
-    "version": "0.0.2"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.language-basics-scss",
