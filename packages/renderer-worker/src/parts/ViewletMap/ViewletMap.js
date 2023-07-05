@@ -38,5 +38,8 @@ export const getModuleId = (uri) => {
   if (uri.startsWith('diff://')) {
     return ViewletModuleId.DiffEditor
   }
+  if (uri.startsWith('browser-view-overview://')) {
+    return ViewletModuleId.BrowserViewOverview
+  }
   return ViewletModuleId.EditorText
 }

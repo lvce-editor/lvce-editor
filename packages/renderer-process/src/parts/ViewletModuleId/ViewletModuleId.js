@@ -87,3 +87,5 @@ export const Terminals = 'Terminals'
 export const EditorHover = 'EditorHover'
 
 export const EditorError = 'EditorError'
+
+export const BrowserViewOverview = 'BrowserViewOverview'

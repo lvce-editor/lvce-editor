@@ -245,3 +245,18 @@ exports.disposeBrowserView = (id) => {
   browserWindow.removeBrowserView(view)
   DisposeWebContents.disposeWebContents(view.webContents)
 }
+
+const getBrowserViewId = (browserView) => {
+  return browserView.webContents.id
+}
+
+exports.getAll = () => {
+  const windows = BrowserWindow.getAllWindows()
+  const overview = Object.create(null)
+  for (const window of windows) {
+    const views = window.getBrowserViews()
+    const viewIds = views.map(getBrowserViewId)
+    overview[window.id] = viewIds
+  }
+  return overview
+}
