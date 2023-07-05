@@ -20,6 +20,7 @@
     "FocusOutline": "#3d5252",
 
     "InputBackground": "rgb(36, 41, 42)",
+    "InputBoxBackground": "rgb(36, 41, 42)",
     "InputForeground": "rgb(225, 225, 225)",
 
     "LinkForeground": "#3794ff",
