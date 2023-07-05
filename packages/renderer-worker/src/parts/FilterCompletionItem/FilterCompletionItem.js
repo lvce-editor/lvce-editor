@@ -6,7 +6,6 @@ import * as GetCompletionItemScore from '../GetCompletionItemScore/GetCompletion
 import * as IsPatternInWord from '../IsPatternInWord/IsPatternInWord.js'
 import * as PrintTable from '../PrintTable/PrintTable.js'
 import * as TraceHighlights from '../TraceHighlights/TraceHighlights.js'
-import * as EmptyMatches from '../EmptyMatches/EmptyMatches.js'
 
 const gridSize = 128
 
