@@ -386,6 +386,10 @@
     "label": "Developer: Open Process Explorer"
   },
   {
+    "id": "Developer.openBrowserViewOverview",
+    "label": "Developer: Open Browser View Overview"
+  },
+  {
     "id": "Explorer.collapseAll",
     "label": "Explorer: Collapse All"
   },

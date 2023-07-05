@@ -6,4 +6,5 @@ exports.name = 'ElectronBrowserView'
 exports.Commands = {
   createBrowserView: ElectronBrowserView.createBrowserView,
   disposeBrowserView: ElectronBrowserView.disposeBrowserView,
+  getAll: ElectronBrowserView.getAll
 }

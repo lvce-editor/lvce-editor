@@ -84,6 +84,8 @@ export const load = (moduleId) => {
       return import('../ViewletTerminals/ViewletTerminals.ipc.js')
     case ViewletModuleId.EditorHover:
       return import('../ViewletEditorHover/ViewletEditorHover.ipc.js')
+    case ViewletModuleId.BrowserViewOverview:
+      return import('../ViewletBrowserViewOverview/ViewletBrowserViewOverview.ipc.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }
