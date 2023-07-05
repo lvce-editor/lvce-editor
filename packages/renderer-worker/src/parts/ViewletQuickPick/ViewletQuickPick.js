@@ -117,7 +117,7 @@ const getPick = (items, index) => {
 
 const findLabelIndex = (items, label) => {
   for (let i = 0; i < items.length; i++) {
-    if (items[i].label === label) {
+    if (items[i].pick.label === label) {
       return i
     }
   }
