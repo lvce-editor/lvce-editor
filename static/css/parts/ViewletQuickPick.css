@@ -42,6 +42,7 @@
   padding: 0;
   overflow: hidden;
   contain: strict;
+  background: var(--QuickPickBackground);
 }
 
 .ScrollWrapper {
@@ -76,16 +77,23 @@
   color: var(--ListHoverForeground);
 }
 
+/* TODO use classname instead of id */
 #QuickPickItemActive {
   color: var(--ListActiveSelectionForeground);
   background: var(--ListActiveSelectionBackground);
 }
 
+/* TODO avoid nesting */
+#QuickPickItemActive .QuickPickItemDescription {
+  color: color-mix(in oklab, var(--ListActiveSelectionForeground), var(--ListActiveSelectionBackground) 30%);
+}
+
 .QuickPickItemDescription {
   font-size: 0.9em;
-  opacity: 0.7;
   pointer-events: none;
   contain: content;
+  /* TODO compute mixed color in javascript once for effiency */
+  color: color-mix(in oklab, var(--ListForeground), var(--QuickPickBackground) 30%);
 }
 
 /* TODO use aria annouce for this */
@@ -121,4 +129,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
+}
+
+/* TODO reuse same highlight css for completions */
+.QuickPickHighlight {
+  color: var(--CompletionHighlightForeground, #e1b974);
+  font-weight: 700;
+  contain: content;
+}
+
+.QuickPickItem .Label {
+  flex: initial;
 }
