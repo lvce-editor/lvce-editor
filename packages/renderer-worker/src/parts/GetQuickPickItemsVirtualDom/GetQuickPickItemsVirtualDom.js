@@ -1,20 +1,27 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-const labelWrapper = {
-  type: VirtualDomElements.Div,
-  className: 'QuickPickItemLabel',
-  childCount: 1,
-}
-
 const descriptionWrapper = {
   type: VirtualDomElements.Div,
   className: 'QuickPickItemDescription',
   childCount: 1,
 }
 
+const label1 = {
+  type: VirtualDomElements.Div,
+  className: 'Label',
+  childCount: 1,
+}
+
+const quickPickHighlight = {
+  type: VirtualDomElements.Span,
+  className: 'QuickPickHighlight',
+  childCount: 1,
+}
+
 const getQuickPickItemVirtualDom = (visibleItem) => {
-  const { posInSet, label, setSize, isActive, description, icon } = visibleItem
+  const { posInSet, label, setSize, isActive, description, icon, matches } = visibleItem
+  const highlights = matches.slice(1)
   const dom = []
   dom.push({
     type: VirtualDomElements.Div,
@@ -36,7 +43,33 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
       childCount: 0,
     })
   }
-  dom.push(labelWrapper, text(label), descriptionWrapper, text(description))
+
+  const labelDom = {
+    type: VirtualDomElements.Div,
+    className: 'Label',
+    childCount: 0,
+  }
+  dom.push(labelDom)
+  let position = 0
+  for (let i = 0; i < highlights.length; i += 2) {
+    const highlightStart = highlights[i]
+    const highlightEnd = highlights[i + 1]
+    if (position < highlightStart) {
+      const beforeText = label.slice(position, highlightStart)
+      labelDom.childCount++
+      dom.push(text(beforeText))
+    }
+    const highlightText = label.slice(highlightStart, highlightEnd)
+    labelDom.childCount++
+    dom.push(quickPickHighlight, text(highlightText))
+    position = highlightEnd
+  }
+  if (position < label.length) {
+    const afterText = label.slice(position)
+    labelDom.childCount++
+    dom.push(text(afterText))
+  }
+  dom.push(descriptionWrapper, text(description))
   return dom
 }
 
