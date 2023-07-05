@@ -77,11 +77,13 @@
   color: var(--ListHoverForeground);
 }
 
+/* TODO use classname instead of id */
 #QuickPickItemActive {
   color: var(--ListActiveSelectionForeground);
   background: var(--ListActiveSelectionBackground);
 }
 
+/* TODO avoid nesting */
 #QuickPickItemActive .QuickPickItemDescription {
   color: color-mix(in oklab, var(--ListActiveSelectionForeground), var(--ListActiveSelectionBackground) 30%);
 }
@@ -90,12 +92,6 @@
   font-size: 0.9em;
   pointer-events: none;
   contain: content;
-  white-space: nowrap;
-  contain: content;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0px;
-
   /* TODO compute mixed color in javascript once for effiency */
   color: color-mix(in oklab, var(--ListForeground), var(--QuickPickBackground) 30%);
 }
