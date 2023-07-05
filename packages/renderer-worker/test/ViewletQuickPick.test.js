@@ -106,7 +106,6 @@ test('render - set correct height', () => {
     maxLineY: 10,
     provider: {
       getPickLabel(pick) {
-        console.log({ pick })
         return pick.label
       },
       getPickIcon() {
