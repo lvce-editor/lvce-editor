@@ -70,10 +70,14 @@ test('handleClickAt - first item', async () => {
     deltaY: 22,
     items: [
       {
-        label: 'index.css',
+        pick: {
+          label: 'index.css',
+        },
       },
       {
-        label: 'index.html',
+        pick: {
+          label: 'index.html',
+        },
       },
     ],
     provider,
@@ -102,6 +106,7 @@ test('render - set correct height', () => {
     maxLineY: 10,
     provider: {
       getPickLabel(pick) {
+        console.log({ pick })
         return pick.label
       },
       getPickIcon() {
@@ -113,7 +118,10 @@ test('render - set correct height', () => {
     ...oldState,
     items: [
       {
-        label: 'index.css',
+        pick: {
+          label: 'index.css',
+        },
+        matches: [],
       },
     ],
   }
