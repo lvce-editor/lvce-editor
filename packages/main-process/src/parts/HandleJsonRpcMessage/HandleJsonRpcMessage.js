@@ -1,4 +1,5 @@
 const GetResponse = require('../GetResponse/GetResponse.js')
+const GetErrorResponse = require('../GetErrorResponse/GetErrorResponse.js')
 
 exports.handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
   if ('result' in message || 'error' in message) {
@@ -6,5 +7,10 @@ exports.handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
     return
   }
   const response = await GetResponse.getResponse(message, execute, ipc)
-  ipc.send(response)
+  console.log({ response })
+  try {
+    ipc.send(response)
+  } catch (error) {
+    console.log({ error })
+  }
 }

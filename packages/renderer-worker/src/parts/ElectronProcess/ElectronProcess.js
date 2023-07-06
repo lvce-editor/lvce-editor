@@ -19,6 +19,7 @@ const createIpc = async () => {
 }
 
 const handleMessage = async (message) => {
+  console.log({ message })
   if ('id' in message) {
     Callback.resolve(message.id, message)
   } else if ('method' in message) {
