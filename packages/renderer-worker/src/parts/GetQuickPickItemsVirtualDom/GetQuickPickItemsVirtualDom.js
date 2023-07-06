@@ -19,31 +19,7 @@ const quickPickHighlight = {
   childCount: 1,
 }
 
-const getQuickPickItemVirtualDom = (visibleItem) => {
-  const { posInSet, label, setSize, isActive, description, icon, matches } = visibleItem
-  const highlights = matches.slice(1)
-  const dom = []
-  dom.push({
-    type: VirtualDomElements.Div,
-    className: 'QuickPickItem',
-    role: 'option',
-    ariaPosInSet: posInSet,
-    ariaSetSize: setSize,
-    childCount: 2,
-  })
-  if (isActive) {
-    // @ts-ignore
-    dom[0].id = 'QuickPickItemActive'
-  }
-  if (icon) {
-    dom[0].childCount++
-    dom.push({
-      type: VirtualDomElements.I,
-      className: `FileIcon FileIcon${icon}`,
-      childCount: 0,
-    })
-  }
-
+const addHighlights = (dom, highlights, label) => {
   const labelDom = {
     type: VirtualDomElements.Div,
     className: 'Label',
@@ -69,7 +45,33 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
     labelDom.childCount++
     dom.push(text(afterText))
   }
-  dom.push(descriptionWrapper, text(description))
+}
+
+const getQuickPickItemVirtualDom = (visibleItem) => {
+  const { posInSet, label, setSize, isActive, description, icon, matches } = visibleItem
+  const highlights = matches.slice(1)
+  const dom = []
+  dom.push({
+    type: VirtualDomElements.Div,
+    className: 'QuickPickItem',
+    role: 'option',
+    ariaPosInSet: posInSet,
+    ariaSetSize: setSize,
+    childCount: 2,
+  })
+  if (isActive) {
+    // @ts-ignore
+    dom[0].id = 'QuickPickItemActive'
+  }
+  if (icon) {
+    dom[0].childCount++
+    dom.push({
+      type: VirtualDomElements.I,
+      className: `FileIcon FileIcon${icon}`,
+      childCount: 0,
+    })
+  }
+  addHighlights(dom, highlights, label)
   return dom
 }
 
