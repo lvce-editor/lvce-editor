@@ -61,6 +61,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.Platform
     case 'GetWindowId':
       return ModuleId.GetWindowId
+    case 'DesktopCapturer':
+      return ModuleId.DesktopCapturer
     default:
       throw new CommandNotFoundError(commandId)
   }

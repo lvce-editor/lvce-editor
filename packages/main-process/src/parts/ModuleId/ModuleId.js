@@ -24,3 +24,4 @@ exports.OpenExternal = 26
 exports.Beep = 27
 exports.Platform = 28
 exports.GetWindowId = 29
+exports.DesktopCapturer = 30

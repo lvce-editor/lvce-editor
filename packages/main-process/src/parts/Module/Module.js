@@ -55,6 +55,8 @@ exports.load = async (moduleId) => {
       return import('../Platform/Platform.ipc.js')
     case ModuleId.GetWindowId:
       return import('../GetWindowId/GetWindowId.ipc.js')
+    case ModuleId.DesktopCapturer:
+      return import('../DesktopCapturer/DesktopCapturer.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }
