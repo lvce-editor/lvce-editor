@@ -109,6 +109,9 @@ export const canBeRestored = async (uri) => {
   if (protocol === 'extension-detail') {
     return true
   }
+  if (protocol === 'screen-cast') {
+    return true
+  }
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   return fileSystem.canBeRestored
 }
