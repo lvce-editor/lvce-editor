@@ -1,9 +1,9 @@
 const renderMessage = {
   isEqual(oldState, newState) {
-    return oldState.message === newState.message
+    return oldState.captureId === newState.captureId
   },
   apply(oldState, newState) {
-    return ['setMessage', newState.message]
+    return ['setScreenCapture', newState.captureId]
   },
 }
 

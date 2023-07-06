@@ -1,7 +1,8 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Assert from '../Assert/Assert.js'
 
-export const getUserMedia = async (options) => {
+export const getUserMedia = async (captureId, options) => {
+  Assert.number(captureId)
   Assert.object(options)
-  await RendererProcess.invoke('ScreenCapture.start', options)
+  await RendererProcess.invoke('ScreenCapture.start', captureId, options)
 }
