@@ -4,7 +4,7 @@ import * as TabFlags from '../TabFlags/TabFlags.js'
 export const handleTabsPointerOut = (state, oldIndex, newIndex) => {
   Assert.number(oldIndex)
   Assert.number(newIndex)
-  if (oldIndex === newIndex) {
+  if (oldIndex === newIndex || oldIndex === -1) {
     return state
   }
   const { groups, activeGroupIndex } = state
