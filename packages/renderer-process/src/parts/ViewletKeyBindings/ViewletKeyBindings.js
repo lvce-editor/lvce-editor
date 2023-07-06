@@ -61,6 +61,7 @@ export const create = () => {
 export const attachEvents = (state) => {
   const { $Viewlet } = state
   $Viewlet.onpointerdown = ViewletkeyBindingsEvents.handlePointerDown
+  $Viewlet.ondblclick = ViewletkeyBindingsEvents.handleTableDoubleClick
   $Viewlet.addEventListener(DomEventType.Input, ViewletkeyBindingsEvents.handleInput, { capture: true })
   $Viewlet.addEventListener(DomEventType.Wheel, ViewletkeyBindingsEvents.handleWheel, DomEventOptions.Passive)
 }

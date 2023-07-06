@@ -7,6 +7,8 @@ import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -125,6 +127,22 @@ export const handleWheel = (state, deltaMode, deltaY) => {
 export const handleClick = (state, index) => {
   const { minLineY } = state
   const selectedIndex = minLineY + index
+  return {
+    ...state,
+    focusedIndex: selectedIndex,
+    selectedIndex,
+  }
+}
+
+const showDefineWidget = async (state, selectedIndex) => {
+  const key = await Viewlet.openWidget(ViewletModuleId.DefineKeyBinding)
+}
+
+export const handleDoubleClick = async (state, index) => {
+  const { minLineY } = state
+  const selectedIndex = minLineY + index
+  await showDefineWidget(state, selectedIndex)
+  console.log({ selectedIndex })
   return {
     ...state,
     focusedIndex: selectedIndex,

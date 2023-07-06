@@ -1,0 +1,19 @@
+.DefineKeyBinding {
+  position: absolute;
+  inset: 0;
+  place-items: center;
+  display: grid;
+}
+
+.DefineKeyBindingHeading {
+  contain: content;
+}
+
+.DefineKeyBindingContent {
+  width: 400px;
+  height: 200px;
+  contain: strict;
+  background: #282e2f;
+  display: grid;
+  place-items: center;
+}
