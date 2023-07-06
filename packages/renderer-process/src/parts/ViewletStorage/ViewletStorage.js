@@ -1,3 +1,5 @@
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Storage'
@@ -6,8 +8,7 @@ export const create = () => {
   }
 }
 
-export const setStorage = (state, localStorage) => {
-  console.log({ localStorage })
+export const setDom = (state, dom) => {
   const { $Viewlet } = state
-  $Viewlet.textContent = JSON.stringify(localStorage, null, 2) + '\n'
+  VirtualDom.renderInto($Viewlet, dom)
 }

@@ -31,6 +31,7 @@ export const getStorageViewDom = (rows) => {
     text('Local Storage'),
     {
       type: VirtualDomElements.Table,
+      className: 'StorageTable',
       childCount: 2,
     },
     {
