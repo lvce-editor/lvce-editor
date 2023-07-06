@@ -32,35 +32,59 @@ const kbdDom = {
   childCount: 1,
 }
 
+const highlight = {
+  type: VirtualDomElements.Span,
+  className: 'SearchHighlight',
+  childCount: 1,
+}
+
 const textCtrl = text('Ctrl')
 const textShift = text('Shift')
 const textPlus = text('+')
 
+const addHighlights = (tableCell, dom, highlights, label) => {
+  dom.push(tableCell)
+  let position = 0
+  for (let i = 0; i < highlights.length; i += 2) {
+    const highlightStart = highlights[i]
+    const highlightEnd = highlights[i + 1]
+    if (position < highlightStart) {
+      const beforeText = label.slice(position, highlightStart)
+      tableCell.childCount++
+      dom.push(text(beforeText))
+    }
+    const highlightText = label.slice(highlightStart, highlightEnd)
+    tableCell.childCount++
+    dom.push(highlight, text(highlightText))
+    position = highlightEnd
+  }
+  if (position < label.length) {
+    const afterText = label.slice(position)
+    tableCell.childCount++
+    dom.push(text(afterText))
+  }
+}
+
 // TODO needing childCount variable everywhere can be error prone
 const getKeyBindingCellChildren = (keyBinding) => {
+  const { isCtrl, isShift, key, keyMatches, commandMatches } = keyBinding
   const children = []
   let childCount = 0
-  if (keyBinding.isCtrl) {
+  if (isCtrl) {
     childCount += 2
     children.push(kbdDom, textCtrl, textPlus)
   }
-  if (keyBinding.isShift) {
+  if (isShift) {
     childCount += 2
     children.push(kbdDom, textShift, textPlus)
   }
   childCount++
-  children.push(kbdDom, text(keyBinding.key))
+  children.push(kbdDom, text(key))
   return { children, childCount }
 }
 
 const tableCellProps = {
   className: ClassNames.KeyBindingsTableCell,
-}
-
-const tableCell = {
-  type: VirtualDomElements.Td,
-  ...tableCellProps,
-  childCount: 1,
 }
 
 const getRowClassName = (isEven, selected) => {
@@ -78,28 +102,39 @@ const getRowClassName = (isEven, selected) => {
 
 const getTableRowDom = (keyBinding) => {
   const { children, childCount } = getKeyBindingCellChildren(keyBinding)
-  const { rowIndex, selected } = keyBinding
+  const { rowIndex, selected, commandMatches, command } = keyBinding
+  const commandHighlights = commandMatches.slice(1)
   const isEven = rowIndex % 2 === 0
   const className = getRowClassName(isEven, selected)
-  return [
-    {
-      type: VirtualDomElements.Tr,
-      ariaRowIndex: keyBinding.rowIndex,
-      className,
-      key: keyBinding.rowIndex,
-      childCount: 3,
-    },
-    tableCell,
-    text(keyBinding.command),
+  const dom = []
+  dom.push({
+    type: VirtualDomElements.Tr,
+    ariaRowIndex: rowIndex,
+    className,
+    key: rowIndex,
+    childCount: 3,
+  })
+  const tableCell = {
+    type: VirtualDomElements.Td,
+    ...tableCellProps,
+    childCount: 0,
+  }
+  addHighlights(tableCell, dom, commandHighlights, command)
+  dom.push(
     {
       type: VirtualDomElements.Td,
       ...tableCellProps,
       childCount,
     },
     ...children,
-    tableCell,
-    text(keyBinding.when || UiStrings.EmptyString),
-  ]
+    {
+      type: VirtualDomElements.Td,
+      ...tableCellProps,
+      childCount: 1,
+    },
+    text(keyBinding.when || UiStrings.EmptyString)
+  )
+  return dom
 }
 
 const tableHead = {
