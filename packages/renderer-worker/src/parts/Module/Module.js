@@ -82,6 +82,8 @@ export const load = (moduleId) => {
       return import('../IconTheme/IconTheme.ipc.js')
     case ModuleId.ImagePreview:
       return import('../ImagePreview/ImagePreview.ipc.js')
+    case ModuleId.IncrementalTextSearch:
+      return import('../IncrementalTextSearch/IncrementalTextSearch.ipc.js')
     case ModuleId.IndexedDb:
       return import('../IndexedDb/IndexedDb.ipc.js')
     case ModuleId.IpcParent:
@@ -112,8 +114,12 @@ export const load = (moduleId) => {
       return import('../PersistentFileHandle/PersistentFileHandle.ipc.js')
     case ModuleId.Preferences:
       return import('../Preferences/Preferences.ipc.js')
+    case ModuleId.RebuildNodePty:
+      return import('../RebuildNodePty/RebuildNodePty.ipc.js')
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.js')
+    case ModuleId.Reload:
+      return import('../Reload/Reload.ipc.js')
     case ModuleId.SaveFileAs:
       return import('../SaveFileAs/SaveFileAs.ipc.js')
     case ModuleId.SaveState:
@@ -140,12 +146,6 @@ export const load = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.RebuildNodePty:
-      return import('../RebuildNodePty/RebuildNodePty.ipc.js')
-    case ModuleId.Reload:
-      return import('../Reload/Reload.ipc.js')
-    case ModuleId.IncrementalTextSearch:
-      return import('../IncrementalTextSearch/IncrementalTextSearch.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

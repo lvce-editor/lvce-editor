@@ -7,9 +7,9 @@ export const name = 'Developer'
 
 export const Commands = {
   allocateMemory: Developer.allocateMemory,
-  createProfile: CpuProfile.createProfile,
-  createHeapSnapshot: HeapSnapshot.createHeapSnapshot,
   crashSharedProcess: Crash.crashSharedProcess,
+  createHeapSnapshot: HeapSnapshot.createHeapSnapshot,
+  createProfile: CpuProfile.createProfile,
   getNodeStartupTime: Developer.getNodeStartupTiming,
   getNodeStartupTiming: Developer.getNodeStartupTiming,
   sharedProcessMemoryUsage: Developer.sharedProcessMemoryUsage,

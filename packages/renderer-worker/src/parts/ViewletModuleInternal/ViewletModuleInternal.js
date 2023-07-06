@@ -6,10 +6,10 @@ export const load = (moduleId) => {
       return import('../ViewletActivityBar/ViewletActivityBar.ipc.js')
     case ViewletModuleId.Audio:
       return import('../ViewletAudio/ViewletAudio.ipc.js')
+    case ViewletModuleId.BrowserViewOverview:
+      return import('../ViewletBrowserViewOverview/ViewletBrowserViewOverview.ipc.js')
     case ViewletModuleId.Clock:
       return import('../ViewletClock/ViewletClock.ipc.js')
-    case ViewletModuleId.Storage:
-      return import('../ViewletStorage/ViewletStorage.ipc.js')
     case ViewletModuleId.DebugConsole:
       return import('../ViewletDebugConsole/ViewletDebugConsole.ipc.js')
     case ViewletModuleId.Dialog:
@@ -18,12 +18,16 @@ export const load = (moduleId) => {
       return import('../ViewletDiffEditor/ViewletDiffEditor.ipc.js')
     case ViewletModuleId.EditorCompletion:
       return import('../ViewletEditorCompletion/ViewletEditorCompletion.ipc.js')
+    case ViewletModuleId.EditorHover:
+      return import('../ViewletEditorHover/ViewletEditorHover.ipc.js')
     case ViewletModuleId.EditorImage:
       return import('../ViewletEditorImage/ViewletEditorImage.ipc.js')
     case ViewletModuleId.EditorPlainText:
       return import('../ViewletEditorPlainText/ViewletEditorPlainText.ipc.js')
     case ViewletModuleId.EditorText:
       return import('../ViewletEditorText/ViewletEditorText.ipc.js')
+    case ViewletModuleId.EditorWidgetError:
+      return import('../ViewletEditorWidgetError/ViewletEditorWidgetError.ipc.js')
     case ViewletModuleId.Explorer:
       return import('../ViewletExplorer/ViewletExplorer.ipc.js')
     case ViewletModuleId.ExtensionDetail:
@@ -56,6 +60,8 @@ export const load = (moduleId) => {
       return import('../ViewletReferences/ViewletReferences.ipc.js')
     case ViewletModuleId.RunAndDebug:
       return import('../ViewletRunAndDebug/ViewletRunAndDebug.ipc.js')
+    case ViewletModuleId.ScreenCapture:
+      return import('../ViewletScreenCapture/ViewletScreenCapture.ipc.js')
     case ViewletModuleId.Search:
       return import('../ViewletSearch/ViewletSearch.ipc.js')
     case ViewletModuleId.SideBar:
@@ -66,30 +72,22 @@ export const load = (moduleId) => {
       return import('../ViewletSourceControl/ViewletSourceControl.ipc.js')
     case ViewletModuleId.StatusBar:
       return import('../ViewletStatusBar/ViewletStatusBar.ipc.js')
+    case ViewletModuleId.Storage:
+      return import('../ViewletStorage/ViewletStorage.ipc.js')
     case ViewletModuleId.Terminal:
       return import('../ViewletTerminal/ViewletTerminal.ipc.js')
+    case ViewletModuleId.Terminals:
+      return import('../ViewletTerminals/ViewletTerminals.ipc.js')
     case ViewletModuleId.TitleBar:
       return import('../ViewletTitleBar/ViewletTitleBar.ipc.js')
     case ViewletModuleId.TitleBarButtons:
       return import('../ViewletTitleBarButtons/ViewletTitleBarButtons.ipc.js')
+    case ViewletModuleId.TitleBarIcon:
+      return import('../ViewletTitleBarIcon/ViewletTitleBarIcon.ipc.js')
     case ViewletModuleId.TitleBarMenuBar:
       return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.ipc.js')
     case ViewletModuleId.Video:
       return import('../ViewletVideo/ViewletVideo.ipc.js')
-    case ViewletModuleId.ColorPicker:
-      return import('../ViewletColorPicker/ViewletColorPicker.ipc.js')
-    case ViewletModuleId.TitleBarIcon:
-      return import('../ViewletTitleBarIcon/ViewletTitleBarIcon.ipc.js')
-    case ViewletModuleId.EditorWidgetError:
-      return import('../ViewletEditorWidgetError/ViewletEditorWidgetError.ipc.js')
-    case ViewletModuleId.Terminals:
-      return import('../ViewletTerminals/ViewletTerminals.ipc.js')
-    case ViewletModuleId.EditorHover:
-      return import('../ViewletEditorHover/ViewletEditorHover.ipc.js')
-    case ViewletModuleId.BrowserViewOverview:
-      return import('../ViewletBrowserViewOverview/ViewletBrowserViewOverview.ipc.js')
-    case ViewletModuleId.ScreenCapture:
-      return import('../ViewletScreenCapture/ViewletScreenCapture.ipc.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }
