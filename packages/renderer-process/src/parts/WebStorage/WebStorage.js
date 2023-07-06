@@ -11,6 +11,11 @@ const getStorage = (storageType) => {
   }
 }
 
+export const getAll = (storageType) => {
+  const storage = getStorage(storageType)
+  return { ...storage }
+}
+
 export const getItem = (storageType, key) => {
   const storage = getStorage(storageType)
   return storage.getItem(key) || undefined
