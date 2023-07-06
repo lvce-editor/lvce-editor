@@ -40,6 +40,7 @@ export const loadContent = async (state) => {
     })
   }
   return {
+    ...state,
     captureId,
   }
 }
