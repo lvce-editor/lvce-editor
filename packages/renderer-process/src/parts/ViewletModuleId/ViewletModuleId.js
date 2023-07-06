@@ -78,6 +78,8 @@ export const SourceControl = 'Source Control'
 
 export const StatusBar = 'StatusBar'
 
+export const Storage = 'Storage'
+
 export const Terminal = 'Terminal'
 
 export const Terminals = 'Terminals'
@@ -91,17 +93,3 @@ export const TitleBarIcon = 'TitleBarIcon'
 export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const Video = 'Video'
-
-export const EditorWidgetError = 'EditorWidgetError'
-
-export const Storage = 'Storage'
-
-export const Terminals = 'Terminals'
-
-export const EditorHover = 'EditorHover'
-
-export const EditorError = 'EditorError'
-
-export const BrowserViewOverview = 'BrowserViewOverview'
-
-export const ScreenCapture = 'ScreenCapture'

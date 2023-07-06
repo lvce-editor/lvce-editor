@@ -82,6 +82,8 @@ export const load = (moduleId) => {
       return import('../ViewletSourceControl/ViewletSourceControl.js')
     case ViewletModuleId.StatusBar:
       return import('../ViewletStatusBar/ViewletStatusBar.js')
+    case ViewletModuleId.Storage:
+      return import('../ViewletStorage/ViewletStorage.js')
     case ViewletModuleId.Terminal:
       return import('../ViewletTerminal/ViewletTerminal.js')
     case ViewletModuleId.Terminals:
@@ -96,18 +98,6 @@ export const load = (moduleId) => {
       return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
     case ViewletModuleId.Video:
       return import('../ViewletVideo/ViewletVideo.js')
-    case ViewletModuleId.Storage:
-      return import('../ViewletStorage/ViewletStorage.js')
-    case ViewletModuleId.Terminals:
-      return import('../ViewletTerminals/ViewletTerminals.js')
-    case ViewletModuleId.EditorHover:
-      return import('../ViewletEditorHover/ViewletEditorHover.js')
-    case ViewletModuleId.EditorError:
-      return import('../ViewletEditorError/ViewletEditorError.js')
-    case ViewletModuleId.BrowserViewOverview:
-      return import('../ViewletBrowseViewOverview/ViewletBrowserViewOverview.js')
-    case ViewletModuleId.ScreenCapture:
-      return import('../ViewletScreenCapture/ViewletScreenCapture.js')
     default:
       throw new Error(`${moduleId} module not found in renderer process`)
   }

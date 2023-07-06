@@ -84,6 +84,8 @@ export const SourceControl = 'Source Control'
 
 export const StatusBar = 'StatusBar'
 
+export const Storage = 'Storage'
+
 export const Terminal = 'Terminal'
 
 export const Terminals = 'Terminals'
@@ -99,13 +101,3 @@ export const TitleBarMenuBar = 'TitleBarMenuBar'
 export const TodoList = 'TodoList'
 
 export const Video = 'Video'
-
-export const Storage = 'Storage'
-
-export const Terminals = 'Terminals'
-
-export const EditorHover = 'EditorHover'
-
-export const BrowserViewOverview = 'BrowserViewOverview'
-
-export const ScreenCapture = 'ScreenCapture'
