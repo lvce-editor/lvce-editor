@@ -106,6 +106,9 @@ export const chmod = async (uri, permissions) => {
 
 export const canBeRestored = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
+  if (protocol === 'storage-overview') {
+    return true
+  }
   if (protocol === 'extension-detail') {
     return true
   }

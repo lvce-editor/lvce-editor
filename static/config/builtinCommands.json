@@ -386,6 +386,10 @@
     "label": "Developer: Open Process Explorer"
   },
   {
+    "id": "Developer.openStorageOverview",
+    "label": "Developer: Open Storage Overview"
+  },
+  {
     "id": "Developer.openBrowserViewOverview",
     "label": "Developer: Open Browser View Overview"
   },
