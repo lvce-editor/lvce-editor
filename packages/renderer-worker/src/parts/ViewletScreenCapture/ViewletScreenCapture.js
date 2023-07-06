@@ -3,8 +3,10 @@ import * as MediaDevices from '../MediaDevices/MediaDevices.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Id from '../Id/Id.js'
 
-export const create = () => {
+export const create = (id, uri) => {
   return {
+    id,
+    uid: id,
     message: '',
     captureId: 0,
   }
