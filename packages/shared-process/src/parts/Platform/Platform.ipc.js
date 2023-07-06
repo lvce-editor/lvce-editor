@@ -10,6 +10,7 @@ export const Commands = {
   getCommit: Platform.getCommit,
   getConfigDir: Platform.getConfigDir,
   getDataDir: Platform.getDataDir,
+  getDate: Platform.getDate,
   getDisabledExtensionsPath: Platform.getDisabledExtensionsPath,
   getDownloadDir: Platform.getDownloadDir,
   getExtensionsPath: Platform.getExtensionsPath,
@@ -23,5 +24,4 @@ export const Commands = {
   getUserSettingsPath: Platform.getUserSettingsPath,
   getVersion: Platform.getVersion,
   setEnvironmentVariables: Platform.setEnvironmentVariables,
-  getDate: Platform.getDate,
 }

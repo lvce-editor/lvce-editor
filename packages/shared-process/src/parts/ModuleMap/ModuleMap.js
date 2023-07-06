@@ -108,20 +108,28 @@ export const getModuleId = (commandId) => {
     case 'FileSystem.rename':
     case 'FileSystem.writeFile':
       return ModuleId.FileSystem
+    case 'GetTerminalSpawnOptions.getTerminalSpawnOptions':
+      return ModuleId.GetTerminalSpawnOptions
     case 'GitLsFiles.gitLsFiles':
     case 'GitLsFiles.gitLsFilesHash':
     case 'GitLsFiles.resolveGit':
       return ModuleId.GitLsFiles
-    case 'HandleWebSocket.handleWebSocket':
-      return ModuleId.HandleWebSocket
+    case 'HandleCliArgs.handleCliArgs':
+      return ModuleId.HandleCliArgs
     case 'HandleElectronMessagePort.handleElectronMessagePort':
       return ModuleId.HandleElectronMessagePort
     case 'HandleNodeMessagePort.handleNodeMessagePort':
       return ModuleId.HandleNodeMessagePort
+    case 'HandleWebSocket.handleWebSocket':
+      return ModuleId.HandleWebSocket
+    case 'IncrementalTextSearch.start':
+      return ModuleId.IncrementalTextSearch
     case 'InstallExtension.installExtension':
       return ModuleId.InstallExtension
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':
       return ModuleId.IsAutoUpdateSupported
+    case 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage':
+      return ModuleId.ListProcessesWithMemoryUsage
     case 'Native.openFolder':
     case 'OpenNativeFolder.openFolder':
       return ModuleId.OpenNativeFolder
@@ -132,8 +140,10 @@ export const getModuleId = (commandId) => {
     case 'Platform.getBuiltinExtensionsPath':
     case 'Platform.getCachedExtensionsPath':
     case 'Platform.getCacheDir':
+    case 'Platform.getCommit':
     case 'Platform.getConfigDir':
     case 'Platform.getDataDir':
+    case 'Platform.getDate':
     case 'Platform.getDisabledExtensionsPath':
     case 'Platform.getDownloadDir':
     case 'Platform.getExtensionsPath':
@@ -143,13 +153,18 @@ export const getModuleId = (commandId) => {
     case 'Platform.getRecentlyOpenedPath':
     case 'Platform.getTestPath':
     case 'Platform.getUserSettingsPath':
-    case 'Platform.setEnvironmentVariables':
-    case 'Platform.getCommit':
     case 'Platform.getVersion':
-    case 'Platform.getDate':
+    case 'Platform.setEnvironmentVariables':
       return ModuleId.Platform
     case 'Preferences.getAll':
       return ModuleId.Preferences
+    case 'Process.getNodeVersion':
+    case 'Process.getPid':
+    case 'Process.getV8Version':
+    case 'Process.kill':
+      return ModuleId.Process
+    case 'RebuildNodePty.rebuildNodePty':
+      return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened
     case 'TextSearch.search':
@@ -168,25 +183,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
-    case 'RebuildNodePty.rebuildNodePty':
-      return ModuleId.RebuildNodePty
-    case 'Process.getPid':
-    case 'Process.kill':
-    case 'Process.getV8Version':
-    case 'Process.getNodeVersion':
-      return ModuleId.Process
-    case 'HandleNodeMessagePort.handleNodeMessagePort':
-      return ModuleId.HandleNodeMessagePort
-    case 'HandleElectronMessagePort.handleElectronMessagePort':
-      return ModuleId.HandleElectronMessagePort
-    case 'GetTerminalSpawnOptions.getTerminalSpawnOptions':
-      return ModuleId.GetTerminalSpawnOptions
-    case 'HandleCliArgs.handleCliArgs':
-      return ModuleId.HandleCliArgs
-    case 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage':
-      return ModuleId.ListProcessesWithMemoryUsage
-    case 'IncrementalTextSearch.start':
-      return ModuleId.IncrementalTextSearch
     default:
       throw new CommandNotFoundError(commandId)
   }

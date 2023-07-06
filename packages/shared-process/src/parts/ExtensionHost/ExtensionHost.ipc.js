@@ -6,13 +6,13 @@ import * as ExtensionHostKeyBindings from './ExtensionHostKeyBindings.js'
 export const Commands = {
 
   'ExtensionHost.dispose': ExtensionHost.dispose,
-  // 'ExtensionHost.getCommands': ExtensionHostCommand.getCommandsIpc,
   'ExtensionHost.send': ExtensionHost.send,
   'ExtensionHost.start': ExtensionHost.start,
+  'ExtensionHostKeyBindings.getKeyBindings': ExtensionHostKeyBindings.getKeyBindings,
+  // 'ExtensionHost.getCommands': ExtensionHostCommand.getCommandsIpc,
   // 'ExtensionHostCompletion.execute': ExtensionHost.forward,
   // 'ExtensionHostExtension.activate': ExtensionHost.forward,
   // 'ExtensionHostExtension.disable': ExtensionHost.forward,
-  'ExtensionHostKeyBindings.getKeyBindings': ExtensionHostKeyBindings.getKeyBindings,
   // 'ExtensionHostSemanticTokens.executeSemanticTokenProvider': ExtensionHost.forward,
   // 'ExtensionHostTextDocument.setLanguageId': ExtensionHost.forward,
   // 'ExtensionHostTextDocument.syncFull': ExtensionHost.forward,

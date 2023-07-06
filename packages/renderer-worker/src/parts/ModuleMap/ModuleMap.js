@@ -99,6 +99,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.IconTheme
     case 'ImagePreview':
       return ModuleId.ImagePreview
+    case 'IncrementalTextSearch':
+      return ModuleId.IncrementalTextSearch
     case 'IndexedDb':
       return ModuleId.IndexedDb
     case 'IpcParent':
@@ -133,6 +135,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened':
       return ModuleId.RecentlyOpened
+    case 'Reload':
+      return ModuleId.Reload
     case 'SaveFileAs':
       return ModuleId.SaveFileAs
     case 'SaveState':
@@ -160,10 +164,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workbench
     case 'Workspace':
       return ModuleId.Workspace
-    case 'Reload':
-      return ModuleId.Reload
-    case 'IncrementalTextSearch':
-      return ModuleId.IncrementalTextSearch
     default:
       throw new Error(`module ${prefix} not found`)
   }

@@ -7,6 +7,12 @@ exports.load = async (moduleId) => {
       return import('../App/App.ipc.js')
     case ModuleId.AppWindow:
       return import('../AppWindow/AppWindow.ipc.js')
+    case ModuleId.Beep:
+      return import('../Beep/Beep.ipc.js')
+    case ModuleId.CreatePidMap:
+      return import('../CreatePidMap/CreatePidMap.ipc.js')
+    case ModuleId.DesktopCapturer:
+      return import('../DesktopCapturer/DesktopCapturer.ipc.js')
     case ModuleId.ElectronApplicationMenu:
       return import('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js')
     case ModuleId.Beep:
@@ -43,20 +49,14 @@ exports.load = async (moduleId) => {
       return import('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ElectronWindowProcessExplorer:
       return import('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
-    case ModuleId.Process:
-      return import('../Process/Process.ipc.js')
-    case ModuleId.CreatePidMap:
-      return import('../CreatePidMap/CreatePidMap.ipc.js')
-    case ModuleId.Beep:
-      return import('../Beep/Beep.ipc.js')
+    case ModuleId.GetWindowId:
+      return import('../GetWindowId/GetWindowId.ipc.js')
     case ModuleId.OpenExternal:
       return import('../OpenExternal/OpenExternal.ipc.js')
     case ModuleId.Platform:
       return import('../Platform/Platform.ipc.js')
-    case ModuleId.GetWindowId:
-      return import('../GetWindowId/GetWindowId.ipc.js')
-    case ModuleId.DesktopCapturer:
-      return import('../DesktopCapturer/DesktopCapturer.ipc.js')
+    case ModuleId.Process:
+      return import('../Process/Process.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }

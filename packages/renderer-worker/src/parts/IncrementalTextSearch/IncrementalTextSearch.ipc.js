@@ -4,8 +4,8 @@ export const name = 'IncrementalTextSearch'
 
 export const Commands = {
   handleCanceled: IncrementalTextSearch.handleCanceled,
-  handleError: IncrementalTextSearch.handleError,
-  handleFinished: IncrementalTextSearch.handleFinished,
-  handleExit: IncrementalTextSearch.handleExit,
   handleData: IncrementalTextSearch.handleData,
+  handleError: IncrementalTextSearch.handleError,
+  handleExit: IncrementalTextSearch.handleExit,
+  handleFinished: IncrementalTextSearch.handleFinished,
 }

@@ -1,5 +1,10 @@
 [
   {
+    "name": "builtin.git",
+    "repository": "github.com/lvce-editor/git",
+    "version": "0.4.5"
+  },
+  {
     "name": "builtin.language-basics-bat",
     "repository": "github.com/lvce-editor/language-basics-bat",
     "version": "0.0.1"
@@ -228,11 +233,6 @@
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
     "version": "0.4.0"
-  },
-  {
-    "name": "builtin.git",
-    "repository": "github.com/lvce-editor/git",
-    "version": "0.4.5"
   },
   {
     "name": "builtin.prettier",
