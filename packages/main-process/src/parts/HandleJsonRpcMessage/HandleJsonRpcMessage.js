@@ -7,7 +7,6 @@ exports.handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
     return
   }
   const response = await GetResponse.getResponse(message, execute, ipc)
-  console.log({ response })
   try {
     ipc.send(response)
   } catch (error) {
