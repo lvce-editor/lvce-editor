@@ -86,6 +86,8 @@ export const load = (moduleId) => {
       return import('../ViewletEditorWidgetError/ViewletEditorWidgetError.js')
     case ViewletModuleId.Video:
       return import('../ViewletVideo/ViewletVideo.js')
+    case ViewletModuleId.Storage:
+      return import('../ViewletStorage/ViewletStorage.js')
     case ViewletModuleId.Terminals:
       return import('../ViewletTerminals/ViewletTerminals.js')
     case ViewletModuleId.EditorHover:

@@ -82,6 +82,8 @@ export const Video = 'Video'
 
 export const EditorWidgetError = 'EditorWidgetError'
 
+export const Storage = 'Storage'
+
 export const Terminals = 'Terminals'
 
 export const EditorHover = 'EditorHover'
