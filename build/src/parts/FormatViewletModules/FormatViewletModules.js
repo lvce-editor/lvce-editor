@@ -19,6 +19,7 @@ const formatViewletModule = async (absolutePath) => {
   let state = State.Top
   const moduleMap = Object.create(null)
   let commandIds = []
+  const throwLine = lines.find((line) => line.trim().startsWith('throw'))
   outer: for (const line of lines) {
     const trimmedLine = line.trimStart()
     if (trimmedLine.startsWith('switch')) {
@@ -67,7 +68,7 @@ const formatViewletModule = async (absolutePath) => {
     newLines.push(`      return ${key}`)
   }
   newLines.push(`    default:`)
-  newLines.push(`      throw new Error(\`unknown module \${moduleId}\`)`)
+  newLines.push(throwLine)
   newLines.push(`  }`)
   newLines.push(`}`)
   newLines.push(``)
@@ -83,7 +84,7 @@ const formatViewletModule = async (absolutePath) => {
 export const formatAllViewletModules = async () => {
   const allViewletModules = [
     'packages/renderer-process/src/parts/ViewletModule/ViewletModule.js',
-    'packages/renderer-worker/src/parts/ViewletModule/ViewletModule.js',
+    'packages/renderer-worker/src/parts/ViewletModuleInternal/ViewletModuleInternal.js',
   ]
   for (const path of allViewletModules) {
     await formatViewletModule(path)
