@@ -7,4 +7,5 @@ export const Commands = {
   getItem: WebStorage.getItem,
   setItem: WebStorage.setItem,
   setJsonObjects: WebStorage.setJsonObjects,
+  getAll: WebStorage.getAll,
 }

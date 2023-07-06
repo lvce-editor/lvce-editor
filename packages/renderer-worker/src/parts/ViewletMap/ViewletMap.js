@@ -35,6 +35,9 @@ export const getModuleId = (uri) => {
   if (uri.startsWith('simple-browser://')) {
     return ViewletModuleId.SimpleBrowser
   }
+  if (uri.startsWith('storage-overview://')) {
+    return ViewletModuleId.Storage
+  }
   if (uri.startsWith('diff://')) {
     return ViewletModuleId.DiffEditor
   }
