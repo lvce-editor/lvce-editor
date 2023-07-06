@@ -373,3 +373,48 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   }
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
 }
+
+export const disposeWidgetWithValue = async (id, value) => {
+  try {
+    if (!id) {
+      console.warn('no instance to dispose')
+      return []
+    }
+    const instance = ViewletStates.getInstance(id)
+    if (!instance) {
+      Logger.warn(`cannot dispose instance ${id} because it may already be disposed`)
+      return []
+    }
+    // TODO status should have enum
+    instance.status = 'disposing'
+    if (!instance.factory) {
+      throw new Error(`${id} is missing a factory function`)
+    }
+    if (instance.factory.dispose) {
+      instance.factory.dispose(instance.state)
+    }
+    const uid = instance.state.uid
+    Assert.number(uid)
+    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
+    if (instance.factory.getKeyBindings) {
+      commands.push(['Viewlet.removeKeyBindings', uid])
+    }
+    if (instance.factory.getChildren) {
+      const children = instance.factory.getChildren(instance.state)
+      for (const child of children) {
+        if (child.id) {
+          commands.push(...disposeFunctional(child.id))
+        }
+      }
+    }
+    instance.status = 'disposed'
+    ViewletStates.remove(id)
+    ViewletStates.remove(uid)
+    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    // return commands
+  } catch (error) {
+    console.error(error)
+    // TODO use Error.cause once proper stack traces are supported by chrome
+    throw new Error(`Failed to dispose viewlet ${id}: ${error}`)
+  }
+}

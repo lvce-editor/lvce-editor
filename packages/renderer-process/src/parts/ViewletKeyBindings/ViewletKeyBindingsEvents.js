@@ -31,6 +31,16 @@ export const handleTableClick = (event) => {
   ViewletKeyBindingsFunctions.handleClick(uid, index)
 }
 
+export const handleTableDoubleClick = (event) => {
+  const { target } = event
+  const index = getTableRowIndex(target)
+  const uid = ComponentUid.fromEvent(event)
+  if (index === -1) {
+    return
+  }
+  ViewletKeyBindingsFunctions.handleDoubleClick(uid, index)
+}
+
 export const handleResizerPointerMove = (event) => {
   const { clientX } = event
   const uid = ComponentUid.fromEvent(event)

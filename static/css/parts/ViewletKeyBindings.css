@@ -5,6 +5,7 @@
 .KeyBindings {
   color: var(--KeyBindingsEditorColor);
   position: absolute;
+  background: var(--MainBackground);
 }
 
 .KeyBindingsHeader {
