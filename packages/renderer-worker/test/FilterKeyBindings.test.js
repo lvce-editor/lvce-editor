@@ -16,6 +16,8 @@ test('getFilteredKeyBindings', () => {
     {
       command: 'EditorCompletion.focusNext',
       key: 'ArrowDown',
+      keyMatches: [],
+      commandMatches: [21, 17, 26],
     },
   ])
 })
@@ -36,6 +38,8 @@ test('getFilteredKeyBindings - fuzzy search', () => {
     {
       command: 'EditorCompletion.focusPrevious',
       key: 'ArrowUp',
+      commandMatches: [26, 17, 18, 22, 24],
+      keyMatches: [],
     },
   ])
 })
