@@ -1,4 +1,5 @@
 const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
+const Logger = require('../Logger/Logger.js')
 
 const isAllowedPermission = (permission) => {
   switch (permission) {
@@ -6,6 +7,7 @@ const isAllowedPermission = (permission) => {
     case ElectronPermissionType.ClipBoardSanitizedWrite:
     case ElectronPermissionType.FullScreen:
     case ElectronPermissionType.WindowPlacement:
+    case ElectronPermissionType.Media:
       return true
     default:
       return false
@@ -13,9 +15,14 @@ const isAllowedPermission = (permission) => {
 }
 
 exports.handlePermissionRequest = (webContents, permission, callback, details) => {
-  callback(isAllowedPermission(permission))
+  const isAllowed = isAllowedPermission(permission)
+  if (!isAllowed) {
+    Logger.info(`[main-process] blocked permission request for ${permission}`)
+  }
+  callback(isAllowed)
 }
 
 exports.handlePermissionCheck = (webContents, permission, origin, details) => {
-  return isAllowedPermission(permission)
+  const isAllowed = isAllowedPermission(permission)
+  return isAllowed
 }
