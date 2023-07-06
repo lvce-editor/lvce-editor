@@ -29,6 +29,7 @@ export const Commands = {
   showMemoryUsage: Developer.showMemoryUsage,
   showStartupPerformance: Developer.showStartupPerformance,
   openBrowserViewOverview: Developer.openBrowserViewOverview,
+  openScreenCastView: Developer.openScreenCastView,
   startupPerformance: Developer.showStartupPerformance,
   toggleDeveloperTools: Devtools.toggleDeveloperTools,
 }

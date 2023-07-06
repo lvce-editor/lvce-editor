@@ -97,3 +97,5 @@ export const Terminals = 'Terminals'
 export const EditorHover = 'EditorHover'
 
 export const BrowserViewOverview = 'BrowserViewOverview'
+
+export const ScreenCapture = 'ScreenCapture'

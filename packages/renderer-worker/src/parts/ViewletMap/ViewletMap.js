@@ -41,5 +41,8 @@ export const getModuleId = (uri) => {
   if (uri.startsWith('browser-view-overview://')) {
     return ViewletModuleId.BrowserViewOverview
   }
+  if (uri.startsWith('screen-cast://')) {
+    return ViewletModuleId.ScreenCapture
+  }
   return ViewletModuleId.EditorText
 }

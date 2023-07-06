@@ -91,3 +91,5 @@ export const EditorHover = 'EditorHover'
 export const EditorError = 'EditorError'
 
 export const BrowserViewOverview = 'BrowserViewOverview'
+
+export const ScreenCapture = 'ScreenCapture'
