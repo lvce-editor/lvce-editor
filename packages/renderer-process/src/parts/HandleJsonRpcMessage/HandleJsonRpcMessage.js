@@ -14,8 +14,6 @@ export const handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
     if ('method' in message) {
       const response = await GetResponse.getResponse(message, execute)
       if (HasTransferableResult.hasTransferrableResult(message.method) && 'result' in response) {
-        console.log({ message })
-        console.log({ response })
         ipc.sendAndTransfer(response, [response.result])
       } else {
         ipc.send(response)
