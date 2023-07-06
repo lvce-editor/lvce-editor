@@ -390,6 +390,10 @@
     "label": "Developer: Open Browser View Overview"
   },
   {
+    "id": "Developer.openScreenCastView",
+    "label": "Developer: Open ScreenCast View"
+  },
+  {
     "id": "Explorer.collapseAll",
     "label": "Explorer: Collapse All"
   },

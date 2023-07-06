@@ -290,3 +290,7 @@ export const downloadViewletState = async () => {
 export const openBrowserViewOverview = async () => {
   await Command.execute('Main.openUri', 'browser-view-overview://')
 }
+
+export const openScreenCastView = async () => {
+  await Command.execute('Main.openUri', 'screen-cast://')
+}

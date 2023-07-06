@@ -34,3 +34,4 @@ export const OffscreenCanvas = 33
 export const Transferrable = 34
 export const ConfirmPrompt = 35
 export const IpcParent = 36
+export const ScreenCapture = 37
