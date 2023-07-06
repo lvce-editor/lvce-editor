@@ -4,4 +4,5 @@ export const name = 'ScreenCapture'
 
 export const Commands = {
   start: ScreenCapture.start,
+  dispose: ScreenCapture.dispose,
 }

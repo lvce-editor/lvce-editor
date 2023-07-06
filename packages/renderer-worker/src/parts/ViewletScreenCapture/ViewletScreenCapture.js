@@ -44,3 +44,9 @@ export const loadContent = async (state) => {
     captureId,
   }
 }
+
+export const dispose = async (state) => {
+  // TODO race condition
+  const { captureId } = state
+  await MediaDevices.dispose(captureId)
+}

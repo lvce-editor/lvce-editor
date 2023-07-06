@@ -20,3 +20,16 @@ export const start = async (id, options) => {
     throw new VError(error, `Failed to start screen capture`)
   }
 }
+
+export const dispose = async (id, options) => {
+  try {
+    Assert.number(id)
+    const captureStream = await state.screenCaptures[id]
+    for (const track of captureStream.getTracks()) {
+      track.stop()
+    }
+    delete state.screenCaptures[id]
+  } catch (error) {
+    throw new VError(error, `Failed to start screen capture`)
+  }
+}
