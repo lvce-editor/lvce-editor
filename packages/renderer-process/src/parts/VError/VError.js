@@ -1,9 +1,4 @@
-const getCombinedMessage = (error, message) => {
-  if (message) {
-    return `${message}: ${error}`
-  }
-  return `${error}`
-}
+import * as GetCombinedErrorMessage from '../GetCombinedErrorMessage/GetCombinedErrorMessage.js'
 
 const mergeStacks = (parent, child) => {
   if (!child) {
@@ -38,12 +33,14 @@ const getErrorStack = (error) => {
 
 export class VError extends Error {
   constructor(error, message) {
-    const combinedMessage = getCombinedMessage(error, message)
+    const combinedMessage = GetCombinedErrorMessage.getCombinedErrorMessage(error, message)
     super(combinedMessage)
     this.name = 'VError'
     if (error instanceof Error) {
       const errorStack = getErrorStack(error)
+      console.log({ before: this.stack })
       this.stack = mergeStacks(this.stack, errorStack)
+      console.log({ errorStack, th: this.stack })
     }
     if (error.codeFrame) {
       this.codeFrame = error.codeFrame
