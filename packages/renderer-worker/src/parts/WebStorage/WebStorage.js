@@ -6,6 +6,10 @@ export const clear = async (storageType) => {
   await RendererProcess.invoke(/* WebStorage.clear */ 'WebStorage.clear', /* StorageType */ storageType)
 }
 
+export const getAll = (storageType) => {
+  return RendererProcess.invoke('WebStorage.getAll', storageType)
+}
+
 export const getText = async (storageType, key) => {
   const item = await RendererProcess.invoke(/* WebStorage.getItem */ 'WebStorage.getItem', /* storageType */ storageType, /* key */ key)
   return item || ''
