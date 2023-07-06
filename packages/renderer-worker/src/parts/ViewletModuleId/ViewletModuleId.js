@@ -92,6 +92,8 @@ export const TodoList = 'TodoList'
 
 export const Video = 'Video'
 
+export const Storage = 'Storage'
+
 export const Terminals = 'Terminals'
 
 export const EditorHover = 'EditorHover'

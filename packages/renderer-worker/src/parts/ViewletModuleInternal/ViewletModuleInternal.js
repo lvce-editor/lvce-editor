@@ -8,6 +8,8 @@ export const load = (moduleId) => {
       return import('../ViewletAudio/ViewletAudio.ipc.js')
     case ViewletModuleId.Clock:
       return import('../ViewletClock/ViewletClock.ipc.js')
+    case ViewletModuleId.Storage:
+      return import('../ViewletStorage/ViewletStorage.ipc.js')
     case ViewletModuleId.DebugConsole:
       return import('../ViewletDebugConsole/ViewletDebugConsole.ipc.js')
     case ViewletModuleId.Dialog:

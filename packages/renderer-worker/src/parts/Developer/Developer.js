@@ -287,6 +287,10 @@ export const downloadViewletState = async () => {
   await Command.execute('Download.downloadJson', /* json */ states, /* fileName */ 'viewlets.json')
 }
 
+export const openStorageOverview = async () => {
+  await Command.execute('Main.openUri', 'storage-overview://')
+}
+
 export const openBrowserViewOverview = async () => {
   await Command.execute('Main.openUri', 'browser-view-overview://')
 }
