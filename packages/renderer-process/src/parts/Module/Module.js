@@ -62,6 +62,8 @@ export const load = (moduleId) => {
       return import('../WebStorage/WebStorage.ipc.js')
     case ModuleId.Window:
       return import('../Window/Window.ipc.js')
+    case ModuleId.ScreenCapture:
+      return import('../ScreenCapture/ScreenCapture.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
