@@ -8,4 +8,5 @@ export const Commands = {
   handleResizerMove: ViewletKeyBindings.handleResizerMove,
   handleWheel: ViewletKeyBindings.handleWheel,
   handleDoubleClick: ViewletKeyBindings.handleDoubleClick,
+  handleDefineKeyBindingDisposed: ViewletKeyBindings.handleDefineKeyBindingDisposed,
 }

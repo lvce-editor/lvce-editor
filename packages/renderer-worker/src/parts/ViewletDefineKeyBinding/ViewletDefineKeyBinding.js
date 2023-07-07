@@ -1,3 +1,4 @@
+import * as BrowserKey from '../BrowserKey/BrowserKey.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -24,18 +25,25 @@ const getKeyBindingString = (key, altKey, ctrlKey, shiftKey, metaKey) => {
   return string
 }
 
-export const handleKeyDown = (state, key, altKey, ctrlKey, shiftKey, metaKey) => {
+const dispose = (state, value) => {
   const { uid } = state
-  if (key === 'Control' || key === 'Shift' || key === 'Alt') {
+  Viewlet.disposeWidgetWithValue(uid, value)
+  return state
+}
+
+export const handleBlur = (state) => {
+  return dispose(state, '')
+}
+
+export const handleKeyDown = (state, key, altKey, ctrlKey, shiftKey, metaKey) => {
+  if (key === BrowserKey.Control || key === BrowserKey.Shift || key === BrowserKey.Alt) {
     return state
   }
-  if (key === 'Enter') {
-    Viewlet.disposeWidgetWithValue(uid, key)
-    return state
+  if (key === BrowserKey.Enter) {
+    return dispose(state, key)
   }
-  if (key === 'Escape') {
-    Viewlet.disposeWidgetWithValue(uid, '')
-    return state
+  if (key === BrowserKey.Escape) {
+    return dispose(state, '')
   }
   const keyBindingString = getKeyBindingString(key, altKey, ctrlKey, shiftKey, metaKey)
   return {

@@ -4,7 +4,6 @@ import * as ViewletDefineKeyBindingEvents from './ViewletDefineKeyBindingEvents.
 
 export const create = () => {
   const $Input = InputBox.create()
-  $Input.autofocus = true
 
   const $Heading = document.createElement('h3')
   $Heading.className = 'DefineKeyBindingHeading'
@@ -27,6 +26,7 @@ export const create = () => {
 export const attachEvents = (state) => {
   const { $Input } = state
   $Input.onkeydown = ViewletDefineKeyBindingEvents.handleKeyDown
+  $Input.onblur = ViewletDefineKeyBindingEvents.handleBlur
 }
 
 export const setValue = (state, value) => {

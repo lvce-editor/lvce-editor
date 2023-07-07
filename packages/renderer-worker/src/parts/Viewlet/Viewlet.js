@@ -258,10 +258,10 @@ export const getAllStates = () => {
   return states
 }
 
-export const openWidget = async (id, ...args) => {
-  const hasInstance = ViewletStates.hasInstance(id)
+export const openWidget = async (moduleId, ...args) => {
+  const hasInstance = ViewletStates.hasInstance(moduleId)
   const type = args[0]
-  if (ElectronBrowserView.isOpen() && id === ViewletModuleId.QuickPick) {
+  if (ElectronBrowserView.isOpen() && moduleId === ViewletModuleId.QuickPick) {
     // TODO recycle quickpick instance
     if (hasInstance) {
       await ViewletElectron.closeWidgetElectronQuickPick()
@@ -271,7 +271,7 @@ export const openWidget = async (id, ...args) => {
   const childUid = Id.create()
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
-    id,
+    id: moduleId,
     type: 0,
     // @ts-ignore
     uri: `quickPick://${type}`,
@@ -285,7 +285,7 @@ export const openWidget = async (id, ...args) => {
   }
 
   if (hasInstance) {
-    commands.unshift(['Viewlet.dispose', id])
+    commands.unshift(['Viewlet.dispose', moduleId])
   }
   const layout = ViewletStates.getState(ViewletModuleId.Layout)
   commands.push(['Viewlet.append', layout.uid, childUid])
@@ -412,6 +412,11 @@ export const disposeWidgetWithValue = async (id, value) => {
     ViewletStates.remove(uid)
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     // return commands
+    const parentInstance = ViewletStates.getInstance(ViewletModuleId.KeyBindings)
+    if (!parentInstance) {
+      return
+    }
+    const newState = parentInstance.factory.handleDefineKeyBindingDisposed(parentInstance.state, value)
   } catch (error) {
     console.error(error)
     // TODO use Error.cause once proper stack traces are supported by chrome
