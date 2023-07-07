@@ -305,10 +305,10 @@ export const closeWidget = async (id) => {
     if (ElectronBrowserView.isOpen() && id === ViewletElectron.isQuickPickOpen()) {
       return ViewletElectron.closeWidgetElectronQuickPick()
     }
-    if (!ViewletStates.hasInstance(id)) {
+    const child = ViewletStates.getState(id)
+    if (!child) {
       return
     }
-    const child = ViewletStates.getState(id)
     const childUid = child.uid
     const commands = disposeFunctional(childUid)
     await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
