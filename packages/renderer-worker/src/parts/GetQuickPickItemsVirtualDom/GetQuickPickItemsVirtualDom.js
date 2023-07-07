@@ -57,7 +57,7 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
     role: 'option',
     ariaPosInSet: posInSet,
     ariaSetSize: setSize,
-    childCount: 2,
+    childCount: 1,
   })
   if (isActive) {
     // @ts-ignore
