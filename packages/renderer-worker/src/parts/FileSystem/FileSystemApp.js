@@ -14,6 +14,8 @@ const getModule = (uri) => {
       return import('./FileSystemAppRecentlyOpened.js')
     case 'session.json':
       return import('./FileSystemAppSession.js')
+    case 'keybindings.json':
+      return import('./FileSystemAppKeyBindings.js')
     default:
       throw new Error(`unsupported file: ${uri}`)
   }

@@ -153,6 +153,7 @@ export const getModuleId = (commandId) => {
     case 'Platform.getRecentlyOpenedPath':
     case 'Platform.getTestPath':
     case 'Platform.getUserSettingsPath':
+    case 'Platform.getUserKeyBindingsPath':
     case 'Platform.getVersion':
     case 'Platform.setEnvironmentVariables':
       return ModuleId.Platform
