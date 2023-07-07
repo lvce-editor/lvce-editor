@@ -1,0 +1,5 @@
+export const Control = 'Control'
+export const Shift = 'Shift'
+export const Alt = 'Alt'
+export const Enter = 'Enter'
+export const Escape = 'Escape'
