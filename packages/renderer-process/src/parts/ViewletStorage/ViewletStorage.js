@@ -1,4 +1,5 @@
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as ViewletStorageEvents from './ViewletStorageEvents.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
@@ -6,6 +7,11 @@ export const create = () => {
   return {
     $Viewlet,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $Viewlet } = state
+  $Viewlet.onclick = ViewletStorageEvents.handleClick
 }
 
 export const setDom = (state, dom) => {
