@@ -94,6 +94,13 @@ export const getUserSettingsPath = () => {
   return SharedProcess.invoke(/* Platform.getUserSettingsPath */ 'Platform.getUserSettingsPath')
 }
 
+export const getUserKeyBindingsPath = () => {
+  if (platform === PlatformType.Web) {
+    return 'settings'
+  }
+  return SharedProcess.invoke(/* Platform.getUserSettingsPath */ 'Platform.getUserKeyBindingsPath')
+}
+
 /**
  * @returns {'electron'|'remote'|'web'|'test'}
  */

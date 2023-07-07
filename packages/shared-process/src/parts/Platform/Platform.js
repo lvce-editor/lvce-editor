@@ -76,6 +76,10 @@ export const getUserSettingsPath = () => {
   return Path.join(configDir, 'settings.json')
 }
 
+export const getUserKeyBindingsPath = () => {
+  return Path.join(configDir, 'keybindings.json')
+}
+
 export const getExtensionHostPath = async () => {
   return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
 }
