@@ -50,12 +50,36 @@ const getModuleSyntaxError = (stderr) => {
   }
 }
 
+const isModuleNotFoundError = (stderr) => {
+  if (!stderr) {
+    return false
+  }
+  return stderr.includes('ERR_MODULE_NOT_FOUND')
+}
+
+const isModuleNotFoundMessage = (line) => {
+  return line.includes('ERR_MODULE_NOT_FOUND')
+}
+
+const getModuleNotFoundError = (stderr) => {
+  const lines = stderr.split('\n')
+  const messageIndex = lines.findIndex(isModuleNotFoundMessage)
+  const message = lines[messageIndex]
+  return {
+    message,
+    code: ErrorCodes.ERR_MODULE_NOT_FOUND,
+  }
+}
+
 export const getHelpfulChildProcessError = (stdout, stderr) => {
   if (isUnhelpfulNativeModuleError(stderr)) {
     return getNativeModuleErrorMessage(stderr)
   }
   if (isModulesSyntaxError(stderr)) {
     return getModuleSyntaxError(stderr)
+  }
+  if (isModuleNotFoundError(stderr)) {
+    return getModuleNotFoundError(stderr)
   }
   return {
     message: `child process error: ${stderr}`,
