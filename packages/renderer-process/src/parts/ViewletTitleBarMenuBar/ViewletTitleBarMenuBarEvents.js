@@ -32,12 +32,10 @@ export const handlePointerOut = (event) => {
 }
 
 const getIndex = ($Target) => {
-  switch ($Target.className) {
-    case 'TitleBarTopLevelEntry':
-      return GetNodeIndex.getNodeIndex($Target)
-    default:
-      return -1
+  if ($Target.classList.contains('TitleBarTopLevelEntry')) {
+    return GetNodeIndex.getNodeIndex($Target)
   }
+  return -1
 }
 
 export const handleClick = (event) => {
