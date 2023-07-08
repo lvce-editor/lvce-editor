@@ -1,4 +1,4 @@
-const VError = require('verror')
+const { VError } = require('../VError/VError.js')
 
 exports.WindowLoadError = class extends VError {
   constructor(error, url) {

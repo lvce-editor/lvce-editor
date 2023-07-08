@@ -1,4 +1,4 @@
-const { VError } = require('verror')
+const { VError } = require('../VError/VError.js')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
