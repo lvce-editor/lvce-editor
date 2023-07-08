@@ -1,5 +1,5 @@
 const Electron = require('electron')
-const { VError } = require('verror')
+const { VError } = require('../VError/VError.js')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const FileSystem = require('../FileSystem/FileSystem.js')
@@ -28,12 +28,7 @@ const isAllowedPermission = (permission) => {
   }
 }
 
-const handlePermissionRequest = (
-  webContents,
-  permission,
-  callback,
-  details
-) => {
+const handlePermissionRequest = (webContents, permission, callback, details) => {
   callback(isAllowedPermission(permission))
 }
 
@@ -92,10 +87,7 @@ const createSession = () => {
   })
   session.setPermissionRequestHandler(handlePermissionRequest)
   session.setPermissionCheckHandler(handlePermissionCheck)
-  session.webRequest.onBeforeRequest(
-    ElectronBrowserViewAdBlock.filter,
-    ElectronBrowserViewAdBlock.handleBeforeRequest
-  )
+  session.webRequest.onBeforeRequest(ElectronBrowserViewAdBlock.filter, ElectronBrowserViewAdBlock.handleBeforeRequest)
   // session.webRequest.addSessionChromeExtensions(session)
   return session
 }

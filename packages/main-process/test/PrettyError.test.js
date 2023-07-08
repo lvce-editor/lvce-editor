@@ -9,7 +9,7 @@ jest.mock('node:fs', () => ({
 }))
 
 const fs = require('node:fs')
-const { VError } = require('verror')
+const { VError } = require('../src/parts/VError/VError.js')
 const PrettyError = require('../src/parts/PrettyError/PrettyError.js')
 const { IpcError } = require('../src/parts/IpcError/IpcError.js')
 

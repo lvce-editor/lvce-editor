@@ -1,5 +1,5 @@
 const { BrowserView, BrowserWindow } = require('electron')
-const { VError } = require('verror')
+const { VError } = require('../VError/VError.js')
 const ElectronSession = require('../ElectronSession/ElectronSession.js')
 const Platform = require('../Platform/Platform.js')
 const Root = require('../Root/Root.js')

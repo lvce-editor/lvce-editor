@@ -1,5 +1,5 @@
 const { BrowserView, BrowserWindow } = require('electron')
-const { VError } = require('verror')
+const { VError } = require('../VError/VError.js')
 const DisposeWebContents = require('../DisposeWebContents/DisposeWebContents.js')
 const ElectronSession = require('../ElectronSession/ElectronSession.js')
 const Logger = require('../Logger/Logger.js')
