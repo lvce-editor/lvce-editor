@@ -12,6 +12,7 @@ import * as Widget from '../Widget/Widget.js'
 import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 
 const activeId = 'TitleBarEntryActive'
+const activeClassName = 'TitleBarEntryActive'
 
 export const create = () => {
   const $TitleBarMenuBar = document.createElement('div')
@@ -96,7 +97,6 @@ const create$TopLevelEntry = (item) => {
   $TitleBarTopLevelEntry.ariaHasPopup = AriaBoolean.True
   $TitleBarTopLevelEntry.ariaExpanded = AriaBoolean.False
   $TitleBarTopLevelEntry.role = AriaRoles.MenuItem
-  $TitleBarTopLevelEntry.style.width = `${item.width}px`
   if (item.keyboardShortCut) {
     $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
   }
@@ -119,6 +119,7 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, 
     $Child.ariaExpanded = AriaBoolean.False
     $Child.removeAttribute(DomAttributeType.AriaOwns)
     $Child.removeAttribute('id')
+    $Child.classList.remove(activeClassName)
     const $Wrapper = $Child.firstChild
     $Wrapper.remove()
     $Child.append($Wrapper.firstChild)
@@ -127,6 +128,7 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, 
     const $Child = $TitleBarMenuBar.children[focusIndex]
     const $Node = $Child.firstChild
     $Child.id = activeId
+    $Child.classList.add(activeClassName)
     const $Label = document.createElement('div')
     $Label.className = 'TitleBarTopLevelEntryLabel'
     $Label.append($Node)
