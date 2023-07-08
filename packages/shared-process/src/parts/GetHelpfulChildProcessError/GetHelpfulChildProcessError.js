@@ -51,6 +51,9 @@ const getModuleSyntaxError = (stderr) => {
 }
 
 const isModuleNotFoundError = (stderr) => {
+  if (!stderr) {
+    return false
+  }
   return stderr.includes('ERR_MODULE_NOT_FOUND')
 }
 
