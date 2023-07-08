@@ -4,6 +4,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Remove from '../Remove/Remove.js'
 
 export const bundleSharedProcessDependencies = async ({ to, arch, electronVersion, exclude = [] }) => {
   const projectPath = Path.absolute('packages/shared-process')
@@ -27,5 +28,8 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
       buildPath: Path.absolute(to),
       electronVersion,
     })
+  } else {
+    await Remove.remove(Path.absolute(`${to}/node_modules/@vscode/windows-process-tree`))
+    await Remove.remove(Path.absolute(`${to}/node_modules/nan`))
   }
 }
