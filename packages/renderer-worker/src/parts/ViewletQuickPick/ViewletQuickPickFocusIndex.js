@@ -4,7 +4,7 @@ export const focusIndex = async (state, index) => {
   // @ts-ignore
   if (provider.focusPick) {
     // @ts-ignore
-    await provider.focusPick(items[index])
+    await provider.focusPick(items[index].pick)
   }
   if (index < minLineY + 1) {
     const minLineY = index
