@@ -32,4 +32,8 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
     await Remove.remove(Path.absolute(`${to}/node_modules/@vscode/windows-process-tree`))
     await Remove.remove(Path.absolute(`${to}/node_modules/nan`))
   }
+
+  await Remove.remove(Path.absolute(`${to}/node_modules/uuid/dist/esm-browser`))
+  await Remove.remove(Path.absolute(`${to}/node_modules/uuid/dist/umd`))
+  await Remove.remove(Path.absolute(`${to}/node_modules/uuid/dist/bin`))
 }
