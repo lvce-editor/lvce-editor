@@ -18,6 +18,7 @@ const copyPtyHostFiles = async ({ arch, electronVersion, cachePath }) => {
     electronVersion,
     arch,
     to: `${cachePath}/packages/pty-host`,
+    exclude: ['ws'],
   })
 }
 
@@ -38,6 +39,7 @@ const copySharedProcessFiles = async ({ cachePath, arch, electronVersion }) => {
     to: `${cachePath}/packages/shared-process`,
     arch,
     electronVersion,
+    exclude: ['ws'],
   })
 }
 
