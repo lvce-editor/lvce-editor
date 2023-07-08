@@ -4,6 +4,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Remove from '../Remove/Remove.js'
 
 export const bundleSharedProcessDependencies = async ({ to, arch, electronVersion, exclude = [] }) => {
   const projectPath = Path.absolute('packages/shared-process')
@@ -28,4 +29,8 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
       electronVersion,
     })
   }
+
+  await Remove.remove(Path.absolute(`${to}/node_modules/uuid/dist/esm-browser`))
+  await Remove.remove(Path.absolute(`${to}/node_modules/uuid/dist/umd`))
+  await Remove.remove(Path.absolute(`${to}/node_modules/uuid/dist/bin`))
 }
