@@ -1,10 +1,10 @@
-import * as Copy from '../Copy/Copy.js'
+import * as CopyDependencies from '../CopyDependencies/CopyDependencies.js'
+import * as FilterPtyHostDependencies from '../FilterPtyHostDependencies/FilterPtyHostDependencies.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Remove from '../Remove/Remove.js'
-import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
-import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
-import * as JsonFile from '../JsonFile/JsonFile.js'
 
 const getNodePtyIgnoreFiles = () => {
   const files = ['typings', 'README.md', 'scripts', 'src']
@@ -14,18 +14,14 @@ const getNodePtyIgnoreFiles = () => {
   return files
 }
 
-export const bundlePtyHostDependencies = async ({
-  to,
-  arch,
-  electronVersion,
-}) => {
+export const bundlePtyHostDependencies = async ({ to, arch, electronVersion, exclude = [] }) => {
   if (typeof arch !== 'string') {
     throw new TypeError('arch must be defined')
   }
   if (typeof electronVersion !== 'string') {
     throw new TypeError('electron version must be defined')
   }
-  const ptyHostPath = Path.absolute('packages/pty-host')
+  const projectPath = Path.absolute('packages/pty-host')
   const packageJson = await JsonFile.readJson('packages/pty-host/package.json')
   await JsonFile.writeJson({
     to: `${to}/package.json`,
@@ -36,17 +32,9 @@ export const bundlePtyHostDependencies = async ({
       optionalDependencies: packageJson.optionalDependencies,
     },
   })
-  const dependencies = await NpmDependencies.getNpmDependencies(
-    'packages/pty-host'
-  )
-  for (const dependency of dependencies) {
-    const dependencyTo = to + dependency.slice(ptyHostPath.length)
-    await Copy.copy({
-      from: dependency,
-      to: dependencyTo,
-      ignore: NodeModulesIgnoredFiles.getNodeModulesIgnoredFiles(),
-    })
-  }
+  const rawDependencies = await NpmDependencies.getNpmDependenciesRawJson('packages/pty-host')
+  const filteredDependencies = FilterPtyHostDependencies.filterDependencies(rawDependencies, exclude)
+  await CopyDependencies.copyDependencies(projectPath, to, filteredDependencies)
   const Rebuild = await import('../Rebuild/Rebuild.js')
   await Rebuild.rebuild({
     arch,
@@ -57,4 +45,5 @@ export const bundlePtyHostDependencies = async ({
   for (const file of nodePtyIgnoreFiles) {
     await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/${file}`))
   }
+  await Remove.remove(Path.absolute(`${to}/node_modules/nan`))
 }
