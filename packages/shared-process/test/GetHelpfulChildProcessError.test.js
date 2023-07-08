@@ -71,3 +71,30 @@ Node.js v18.12.1`
   const { message } = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
   expect(message).toBe(`ES Modules are not supported in electron`)
 })
+
+test('getHelpfulChildProcessError - module not found', () => {
+  const stderr = `node:internal/errors:490
+    ErrorCaptureStackTrace(err);
+    ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'ws' imported from /usr/lib/lvce-oss/esources/app/packages/pty-host/src/parts/WebSocketServer/WebSocketServer.js
+    at new NodeError (node:internal/errors:399:5)
+    at packageResolve (node:internal/modules/esm/resolve:895:9)
+    at moduleResolve (node:internal/modules/esm/resolve:944:20)
+    at defaultResolve (node:internal/modules/esm/resolve:1159:11)
+    at nextResolve (node:internal/modules/esm/loader:163:28)
+    at ESMLoader.resolve (node:internal/modules/esm/loader:838:30)
+    at ESMLoader.getModuleJob (node:internal/modules/esm/loader:424:18)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:77:40)
+    at link (node:internal/modules/esm/module_job:76:36) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+
+Node.js v18.15.0`
+
+  const { message, code } = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
+  expect(message).toBe(
+    `Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'ws' imported from /usr/lib/lvce-oss/esources/app/packages/pty-host/src/parts/WebSocketServer/WebSocketServer.js`
+  )
+  expect(code).toBe('ERR_MODULE_NOT_FOUND')
+})
