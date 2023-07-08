@@ -179,7 +179,7 @@ const copyExtensions = async ({ arch }) => {
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-features-html/html-worker/src/parts/TypeScriptPath/TypeScriptPath.js`,
     occurrence: '../../../../typescript/lib/typescript.js',
-    replacement: '../../../../../builtin.language-features-typescript/node_modules/typescript/lib/typescript.js',
+    replacement: '../../../../../builtin.language-features-typescript/node/node_modules/typescript/lib/typescript.js',
   })
 }
 
