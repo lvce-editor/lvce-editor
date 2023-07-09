@@ -17,9 +17,8 @@ export const copy = async ({ from, to, ignore = [] }) => {
       })
     )
     await fsExtra.copy(absoluteFrom, absoluteTo, {
-      recursive: true,
       overwrite: true,
-      dereference: true,
+      dereference: false,
       filter(dirent) {
         return !absoluteIgnore.has(dirent)
       },
