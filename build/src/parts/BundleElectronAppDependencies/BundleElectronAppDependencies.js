@@ -39,7 +39,7 @@ const copySharedProcessFiles = async ({ cachePath, arch, electronVersion }) => {
     to: `${cachePath}/packages/shared-process`,
     arch,
     electronVersion,
-    exclude: ['ws'],
+    exclude: ['ws', 'trash'],
   })
 }
 
