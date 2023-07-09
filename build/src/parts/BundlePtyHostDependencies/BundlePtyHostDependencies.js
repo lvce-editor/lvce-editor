@@ -47,12 +47,13 @@ export const bundlePtyHostDependencies = async ({ to, arch, electronVersion, exc
   }
   await Remove.remove(Path.absolute(`${to}/node_modules/nan`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/bin`))
+  await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/binding.gyp`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/node_gyp_bins`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/Release/.deps`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/Release/obj.target`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/Release/.forge-meta`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/binding.Makefile`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/config.gypi`))
-  await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/MakeFile`))
+  await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/Makefile`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/pty.target.mk`))
 }
