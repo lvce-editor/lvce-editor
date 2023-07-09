@@ -5,9 +5,9 @@ import VError from 'verror'
 import * as Path from '../Path/Path.js'
 
 /**
- * @param {{from:string, to:string, ignore?:string[]}} param0
+ * @param {{from:string, to:string, ignore?:string[], dereference?:boolean}} param0
  */
-export const copy = async ({ from, to, ignore = [] }) => {
+export const copy = async ({ from, to, ignore = [], dereference = false }) => {
   try {
     const absoluteFrom = Path.absolute(from)
     const absoluteTo = Path.absolute(to)
@@ -18,7 +18,7 @@ export const copy = async ({ from, to, ignore = [] }) => {
     )
     await fsExtra.copy(absoluteFrom, absoluteTo, {
       overwrite: true,
-      dereference: false,
+      dereference,
       filter(dirent) {
         return !absoluteIgnore.has(dirent)
       },

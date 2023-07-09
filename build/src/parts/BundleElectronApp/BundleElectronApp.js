@@ -174,6 +174,7 @@ const copyExtensions = async ({ arch }) => {
   await Copy.copy({
     from: 'extensions',
     to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions`,
+    dereference: true,
   })
   await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-features-html/typescript`)
   await Replace.replace({
