@@ -25,3 +25,4 @@ exports.Beep = 24
 exports.Platform = 25
 exports.GetWindowId = 26
 exports.DesktopCapturer = 27
+exports.Trash = 28

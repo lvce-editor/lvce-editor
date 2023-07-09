@@ -57,6 +57,8 @@ exports.load = async (moduleId) => {
       return import('../Platform/Platform.ipc.js')
     case ModuleId.Process:
       return import('../Process/Process.ipc.js')
+    case ModuleId.Trash:
+      return import('../Trash/Trash.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }
