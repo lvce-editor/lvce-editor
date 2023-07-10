@@ -1,4 +1,4 @@
-const Assert = require('../Assert/Assert.js')
+const Assert = require('../Assert/Assert.cjs')
 const Id = require('../Id/Id.js')
 
 const state = (exports.state = {

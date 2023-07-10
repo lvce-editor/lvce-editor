@@ -1,4 +1,4 @@
-const Assert = require('../Assert/Assert.js')
+const Assert = require('../Assert/Assert.cjs')
 const { fork } = require('node:child_process')
 
 /**

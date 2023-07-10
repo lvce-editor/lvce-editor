@@ -1,4 +1,4 @@
-const Assert = require('../Assert/Assert.js')
+const Assert = require('../Assert/Assert.cjs')
 
 const state = (exports.state = {
   all: Object.create(null),

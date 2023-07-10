@@ -1,5 +1,5 @@
 const Character = require('../Character/Character.js')
-const AddSemiColon = require('../AddSemiColon/AddSemiColon.js')
+const AddSemiColon = require('../AddSemiColon/AddSemiColon.cjs')
 
 exports.key = 'Content-Security-Policy'
 

@@ -1,4 +1,4 @@
-const AppWindow = require('../AppWindow/AppWindow.js')
+const AppWindow = require('../AppWindow/AppWindow.cjs')
 const Cli = require('../Cli/Cli.js')
 const ParseCliArgs = require('../ParseCliArgs/ParseCliArgs.js')
 const Debug = require('../Debug/Debug.js')

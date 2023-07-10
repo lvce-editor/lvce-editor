@@ -1,4 +1,4 @@
-const Assert = require('../Assert/Assert.js')
+const Assert = require('../Assert/Assert.cjs')
 
 exports.kill = (pid, signal) => {
   Assert.number(pid)

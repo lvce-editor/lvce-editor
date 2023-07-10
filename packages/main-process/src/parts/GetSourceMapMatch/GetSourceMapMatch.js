@@ -1,4 +1,4 @@
-const Assert = require('../Assert/Assert.js')
+const Assert = require('../Assert/Assert.cjs')
 const Character = require('../Character/Character.js')
 const GetNewLineIndex = require('../GetNewLineIndex/GetNewLineIndex.js')
 
