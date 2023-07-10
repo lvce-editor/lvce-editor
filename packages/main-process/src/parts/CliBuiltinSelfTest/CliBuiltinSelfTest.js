@@ -1,8 +1,8 @@
-const { fork } = require('node:child_process')
-const Electron = require('electron')
-const Platform = require('../Platform/Platform.cjs')
+import { fork } from 'node:child_process'
+import Electron from 'electron'
+import Platform from '../Platform/Platform.cjs'
 
-const handleCliArgs = (parsedArgs) => {
+export const handleCliArgs = (parsedArgs) => {
   const builtinSelfTestPath = Platform.getBuiltinSelfTestPath()
   const child = fork(builtinSelfTestPath, {
     stdio: 'inherit',
@@ -15,5 +15,3 @@ const handleCliArgs = (parsedArgs) => {
   })
   return true
 }
-
-exports.handleCliArgs = handleCliArgs

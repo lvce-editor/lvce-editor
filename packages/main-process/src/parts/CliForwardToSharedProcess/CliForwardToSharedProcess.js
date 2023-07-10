@@ -1,14 +1,14 @@
-const ElectronApp = require('../ElectronApp/ElectronApp.cjs')
-const ErrorHandling = require('../ErrorHandling/ErrorHandling.cjs')
-const ExitCode = require('../ExitCode/ExitCode.cjs')
-const HandleIpc = require('../HandleIpc/HandleIpc.js')
-const IpcParent = require('../IpcParent/IpcParent.js')
-const IpcParentType = require('../IpcParentType/IpcParentType.js')
-const JsonRpc = require('../JsonRpc/JsonRpc.js')
-const Platform = require('../Platform/Platform.cjs')
-const Process = require('../Process/Process.cjs')
+import * as ElectronApp from '../ElectronApp/ElectronApp.cjs'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.cjs'
+import * as ExitCode from '../ExitCode/ExitCode.cjs'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as Platform from '../Platform/Platform.cjs'
+import * as Process from '../Process/Process.cjs'
 
-const handleCliArgs = async (parsedArgs) => {
+export const handleCliArgs = async (parsedArgs) => {
   try {
     const sharedProcessPath = Platform.getSharedProcessPath()
     const ipc = await IpcParent.create({
@@ -28,5 +28,3 @@ const handleCliArgs = async (parsedArgs) => {
     ElectronApp.quit()
   }
 }
-
-exports.handleCliArgs = handleCliArgs

@@ -1,6 +1,6 @@
-const { desktopCapturer } = require('electron')
-const { VError } = require('../VError/VError.cjs')
-const Assert = require('../Assert/Assert.cjs')
+import { desktopCapturer } from 'electron'
+import { VError } from '../VError/VError.cjs'
+import * as Assert from '../Assert/Assert.cjs'
 
 const serializeSource = (source) => {
   return {
@@ -14,7 +14,7 @@ const serializeSources = (sources) => {
   return sources.map(serializeSource)
 }
 
-exports.getSources = async (options) => {
+export const getSources = async (options) => {
   try {
     Assert.object(options)
     const sources = await desktopCapturer.getSources(options)

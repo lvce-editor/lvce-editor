@@ -1,7 +1,7 @@
-const Beep = require('./ElectronBeep.js')
+import * as Beep from './ElectronBeep.js'
 
-exports.name = 'ElectronBeep'
+export const name = 'ElectronBeep'
 
-exports.Commands = {
+export const Commands = {
   beep: Beep.beep,
 }

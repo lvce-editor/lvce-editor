@@ -1,8 +1,7 @@
-const ElectronAplicationMenu = require('./ElectronApplicationMenu.cjs')
+import * as ElectronAplicationMenu from './ElectronApplicationMenu.cjs'
 
-exports.name = 'ElectronApplicationMenu'
+export const name = 'ElectronApplicationMenu'
 
-// prettier-ignore
-exports.Commands = {
+export const Commands = {
   setItems: ElectronAplicationMenu.setItems,
 }

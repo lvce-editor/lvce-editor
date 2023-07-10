@@ -1,10 +1,9 @@
-const ElectronBrowserView = require('./ElectronBrowserView.js')
+import * as ElectronBrowserView from './ElectronBrowserView.js'
 
-exports.name = 'ElectronBrowserView'
+export const name = 'ElectronBrowserView'
 
-// prettier-ignore
-exports.Commands = {
+export const Commands = {
   createBrowserView: ElectronBrowserView.createBrowserView,
   disposeBrowserView: ElectronBrowserView.disposeBrowserView,
-  getAll: ElectronBrowserView.getAll
+  getAll: ElectronBrowserView.getAll,
 }

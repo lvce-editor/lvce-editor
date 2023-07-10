@@ -1,7 +1,7 @@
-const DesktopCapturer = require('./DesktopCapturer.js')
+import * as DesktopCapturer from './DesktopCapturer.js'
 
-exports.name = 'DesktopCapturer'
+export const name = 'DesktopCapturer'
 
-exports.Commands = {
+export const Commands = {
   getSources: DesktopCapturer.getSources,
 }

@@ -1,8 +1,7 @@
-const CreatePidMap = require('./CreatePidMap.js')
+import * as CreatePidMap from './CreatePidMap.js'
 
-exports.name = 'CreatePidMap'
+export const name = 'CreatePidMap'
 
-// prettier-ignore
-exports.Commands = {
+export const Commands = {
   createPidMap: CreatePidMap.createPidMap,
 }

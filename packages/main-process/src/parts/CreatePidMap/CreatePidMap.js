@@ -1,8 +1,8 @@
-const { BrowserWindow } = require('electron')
-const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.cjs')
-const UtilityProcessState = require('../UtilityProcessState/UtilityProcessState.js')
+import { BrowserWindow } from 'electron'
+import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.cjs'
+import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
 
-exports.createPidMap = () => {
+export const createPidMap = () => {
   const browserWindows = BrowserWindow.getAllWindows()
   const browserViews = ElectronBrowserViewState.getAll()
   const utilityProcesses = UtilityProcessState.getAll()

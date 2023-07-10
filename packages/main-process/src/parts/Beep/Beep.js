@@ -1,5 +1,5 @@
-const { shell } = require('electron')
+import { shell } from 'electron'
 
-exports.beep = () => {
+export const beep = () => {
   shell.beep()
 }
