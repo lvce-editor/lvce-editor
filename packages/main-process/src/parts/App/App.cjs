@@ -16,7 +16,6 @@ const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarke
 const Process = require('../Process/Process.cjs')
 const Platform = require('../Platform/Platform.cjs')
 const Protocol = require('../Protocol/Protocol.cjs')
-const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
 // const handleAppReady = async () => {
@@ -33,6 +32,7 @@ const unhandled = require('electron-unhandled') // TODO this might slow down ini
 
 exports.hydrate = async () => {
   ElectronApplicationMenu.setMenu(null)
+  const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
   unhandled({
     showDialog: true,
     logger() {}, // already exists in mainProcessMain.js
