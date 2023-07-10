@@ -1,7 +1,7 @@
-const Callback = require('../Callback/Callback.js')
-const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
+import * as Callback from '../Callback/Callback.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.cjs'
 
-exports.create = (method, params) => {
+export const create = (method, params) => {
   const { id, promise } = Callback.registerPromise()
   const message = {
     jsonrpc: JsonRpcVersion.Two,

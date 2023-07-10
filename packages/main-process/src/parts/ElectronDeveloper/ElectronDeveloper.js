@@ -1,5 +1,5 @@
 const { MessageChannelMain, ipcMain } = require('electron')
-const Performance = require('../Performance/Performance.js')
+const Performance = require('../Performance/Performance.cjs')
 
 exports.getPerformanceEntries = () => {
   const entries = Performance.getEntries()

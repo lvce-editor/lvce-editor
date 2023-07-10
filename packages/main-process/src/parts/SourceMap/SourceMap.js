@@ -1,6 +1,6 @@
-const Assert = require('../Assert/Assert.js')
+const Assert = require('../Assert/Assert.cjs')
 const IsEmptyString = require('../IsEmptyString/IsEmptyString.js')
-const { VError } = require('../VError/VError.js')
+const { VError } = require('../VError/VError.cjs')
 const Vlq = require('../Vlq/Vlq.js')
 
 const getColumnMapping = (mappings, line, column) => {

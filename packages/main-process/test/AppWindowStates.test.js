@@ -1,4 +1,4 @@
-const AppWindowStates = require('../src/parts/AppWindowStates/AppWindowStates.js')
+const AppWindowStates = require('../src/parts/AppWindowStates/AppWindowStates.cjs')
 
 beforeEach(() => {
   AppWindowStates.state.windowStates = []

@@ -1,8 +1,8 @@
-const Platform = require('./Platform.js')
+import * as Platform from './Platform.cjs'
 
-exports.name = 'Platform'
+export const name = 'Platform'
 
-exports.Commands = {
+export const Commands = {
   getCommit: Platform.getCommit,
   getProductNameLong: Platform.getProductNameLong,
   getVersion: Platform.getVersion,

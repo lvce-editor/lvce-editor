@@ -1,4 +1,4 @@
-const OpenExternal = require('./OpenExternal.js')
+const OpenExternal = require('./OpenExternal.cjs')
 
 exports.name = 'OpenExternal'
 

@@ -1,4 +1,4 @@
-const ElectronShell = require('./ElectronShell.js')
+const ElectronShell = require('./ElectronShell.cjs')
 
 exports.name = 'ElectronShell'
 

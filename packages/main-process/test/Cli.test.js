@@ -10,7 +10,7 @@ jest.mock('electron', () => {
   }
 })
 
-const Cli = require('../src/parts/Cli/Cli.js')
+const Cli = require('../src/parts/Cli/Cli.cjs')
 
 test('handleFastCliArgsMaybe - nothing matches', () => {
   const spy = jest.spyOn(console, 'info')

@@ -1,14 +1,14 @@
-const { IpcError } = require('../IpcError/IpcError.js')
-const { utilityProcess } = require('electron')
-const Assert = require('../Assert/Assert.js')
-const CamelCase = require('../CamelCase/CamelCase.js')
-const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
-const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js')
-const Path = require('../Path/Path.js')
-const Root = require('../Root/Root.js')
-const UtilityProcessState = require('../UtilityProcessState/UtilityProcessState.js')
+import { utilityProcess } from 'electron'
+import * as Assert from '../Assert/Assert.cjs'
+import * as CamelCase from '../CamelCase/CamelCase.js'
+import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
+import * as GetFirstUtilityProcessEvent from '../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js'
+import { IpcError } from '../IpcError/IpcError.js'
+import * as Path from '../Path/Path.cjs'
+import * as Root from '../Root/Root.cjs'
+import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
 
-exports.create = async ({ path, argv = [], execArgv = [], name = 'electron-utility-process' }) => {
+export const create = async ({ path, argv = [], execArgv = [], name }) => {
   Assert.string(path)
   const utilityProcessEntryPoint = Path.join(
     Root.root,
@@ -17,7 +17,7 @@ exports.create = async ({ path, argv = [], execArgv = [], name = 'electron-utili
     'src',
     'parts',
     'UtilityProcessEntryPoint',
-    'UtilityProcessEntryPoint.js'
+    'UtilityProcessEntryPoint.cjs'
   )
   const actualArgv = [path, '--ipc-type=electron-utility-process', ...argv]
   const childProcess = utilityProcess.fork(utilityProcessEntryPoint, actualArgv, {
@@ -36,7 +36,7 @@ exports.create = async ({ path, argv = [], execArgv = [], name = 'electron-utili
   return childProcess
 }
 
-exports.effects = ({ rawIpc, name = 'electron-utility-process' }) => {
+export const effects = ({ rawIpc, name }) => {
   if (!rawIpc.pid) {
     return
   }
@@ -52,7 +52,7 @@ exports.effects = ({ rawIpc, name = 'electron-utility-process' }) => {
   rawIpc.on('exit', handleExit)
 }
 
-exports.wrap = (process) => {
+export const wrap = (process) => {
   return {
     process,
     on(event, listener) {

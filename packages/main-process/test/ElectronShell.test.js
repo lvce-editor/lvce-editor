@@ -14,7 +14,7 @@ jest.mock('electron', () => {
 })
 
 const electron = require('electron')
-const ElectronShell = require('../src/parts/ElectronShell/ElectronShell.js')
+const ElectronShell = require('../src/parts/ElectronShell/ElectronShell.cjs')
 
 test('showItemInFolder', () => {
   // @ts-ignore
@@ -37,9 +37,7 @@ test('openExternal', () => {
   electron.shell.openExternal.mockImplementation(() => {})
   ElectronShell.openExternal('https://example.com')
   expect(electron.shell.openExternal).toHaveBeenCalledTimes(1)
-  expect(electron.shell.openExternal).toHaveBeenCalledWith(
-    'https://example.com'
-  )
+  expect(electron.shell.openExternal).toHaveBeenCalledWith('https://example.com')
 })
 
 test('openPath', () => {

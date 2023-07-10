@@ -1,4 +1,5 @@
-const ElectronMessageBoxType = require('../src/parts/ElectronMessageBoxType/ElectronMessageBoxType.js')
+import * as ElectronMessageBoxType from '../src/parts/ElectronMessageBoxType/ElectronMessageBoxType.js'
+import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetModules()
@@ -24,7 +25,7 @@ jest.mock('../src/parts/Platform/Platform.js', () => {
   }
 })
 
-const ElectronDialog = require('../src/parts/ElectronDialog/ElectronDialog.js')
+const ElectronDialog = await import('../src/parts/ElectronDialog/ElectronDialog.js')
 const Electron = require('electron')
 
 test('showMessageBox', async () => {

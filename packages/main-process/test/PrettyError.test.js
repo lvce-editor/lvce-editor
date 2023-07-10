@@ -9,8 +9,8 @@ jest.mock('node:fs', () => ({
 }))
 
 const fs = require('node:fs')
-const { VError } = require('../src/parts/VError/VError.js')
-const PrettyError = require('../src/parts/PrettyError/PrettyError.js')
+const { VError } = require('../src/parts/VError/VError.cjs')
+const PrettyError = require('../src/parts/PrettyError/PrettyError.cjs')
 const { IpcError } = require('../src/parts/IpcError/IpcError.js')
 
 test('prepare - unknown command error', async () => {

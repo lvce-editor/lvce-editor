@@ -1,4 +1,4 @@
-const { VError } = require('../VError/VError.js')
+const { VError } = require('../VError/VError.cjs')
 const JsonRpc = require('../JsonRpc/JsonRpc.js')
 
 exports.transferMessagePort = async (ipc, port, ...params) => {

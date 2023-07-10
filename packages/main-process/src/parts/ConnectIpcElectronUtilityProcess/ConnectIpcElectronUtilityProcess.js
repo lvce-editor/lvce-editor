@@ -1,8 +1,8 @@
-const TransferMessagePortMain = require('../TransferMessagePortMain/TransferMessagePortMain.js')
-const Performance = require('../Performance/Performance.js')
-const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
+import * as TransferMessagePortMain from '../TransferMessagePortMain/TransferMessagePortMain.js'
+import * as Performance from '../Performance/Performance.cjs'
+import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.cjs'
 
-exports.connectIpc = async (ipc, browserWindowPort) => {
+export const connectIpc = async (ipc, browserWindowPort) => {
   await TransferMessagePortMain.transferMessagePortMain(ipc, browserWindowPort)
   Performance.mark(PerformanceMarkerType.DidStartSharedProcess)
 }

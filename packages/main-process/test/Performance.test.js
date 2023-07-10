@@ -1,4 +1,4 @@
-const Performance = require('../src/parts/Performance/Performance.js')
+const Performance = require('../src/parts/Performance/Performance.cjs')
 
 beforeEach(() => {
   Performance.clearMarks()

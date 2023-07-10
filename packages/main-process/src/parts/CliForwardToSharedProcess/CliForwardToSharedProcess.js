@@ -1,12 +1,12 @@
-const ElectronApp = require('../ElectronApp/ElectronApp.js')
-const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
-const ExitCode = require('../ExitCode/ExitCode.js')
+const ElectronApp = require('../ElectronApp/ElectronApp.cjs')
+const ErrorHandling = require('../ErrorHandling/ErrorHandling.cjs')
+const ExitCode = require('../ExitCode/ExitCode.cjs')
 const HandleIpc = require('../HandleIpc/HandleIpc.js')
 const IpcParent = require('../IpcParent/IpcParent.js')
 const IpcParentType = require('../IpcParentType/IpcParentType.js')
 const JsonRpc = require('../JsonRpc/JsonRpc.js')
-const Platform = require('../Platform/Platform.js')
-const Process = require('../Process/Process.js')
+const Platform = require('../Platform/Platform.cjs')
+const Process = require('../Process/Process.cjs')
 
 const handleCliArgs = async (parsedArgs) => {
   try {

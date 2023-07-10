@@ -1,4 +1,4 @@
-const AppWindow = require('./AppWindow.js')
+const AppWindow = require('./AppWindow.cjs')
 
 exports.name = 'AppWindow'
 

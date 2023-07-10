@@ -1,6 +1,6 @@
-const IpcChildType = require('../IpcChildType/IpcChildType.js')
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 
-exports.getModule = (method) => {
+export const getModule = (method) => {
   switch (method) {
     case IpcChildType.ElectronMessagePort:
       return import('../IpcChildWithElectronMessagePort/IpcChildWithElectronMessagePort.js')

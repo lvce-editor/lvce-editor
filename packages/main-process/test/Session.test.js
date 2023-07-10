@@ -3,7 +3,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  require('../src/parts/ElectronSession/ElectronSession.js').state.session = undefined
+  require('../src/parts/ElectronSession/ElectronSession.cjs').state.session = undefined
 })
 
 test('get', () => {
@@ -29,7 +29,7 @@ test('get', () => {
       },
     }
   })
-  const Session = require('../src/parts/ElectronSession/ElectronSession.js')
+  const Session = require('../src/parts/ElectronSession/ElectronSession.cjs')
   expect(Session.state.session).toBeUndefined()
   expect(Session.get()).toBe(fakeSession)
   expect(Session.state.session).toBeDefined()
@@ -46,7 +46,7 @@ test('get - error', () => {
       },
     }
   })
-  const Session = require('../src/parts/ElectronSession/ElectronSession.js')
+  const Session = require('../src/parts/ElectronSession/ElectronSession.cjs')
   expect(() => Session.get()).toThrowError(new TypeError('x is not a function'))
 })
 
@@ -78,7 +78,7 @@ test('handlePermissionCheck - allow writing to clipboard', () => {
       },
     }
   })
-  const Session = require('../src/parts/ElectronSession/ElectronSession.js')
+  const Session = require('../src/parts/ElectronSession/ElectronSession.cjs')
   Session.get()
   expect(_permissionCheckHandler({}, 'clipboard-sanitized-write')).toBe(true)
 })
@@ -111,7 +111,7 @@ test('handlePermissionRequests - allow reading from', () => {
       },
     }
   })
-  const Session = require('../src/parts/ElectronSession/ElectronSession.js')
+  const Session = require('../src/parts/ElectronSession/ElectronSession.cjs')
   Session.get()
   const callback = jest.fn()
   _permissionRequestHandler({}, 'clipboard-sanitized-write', callback)

@@ -1,6 +1,6 @@
 const { fork } = require('node:child_process')
-const Platform = require('../Platform/Platform.js')
-const Logger = require('../Logger/Logger.js')
+const Platform = require('../Platform/Platform.cjs')
+const Logger = require('../Logger/Logger.cjs')
 
 exports.handlePort = async (event, browserWindowPort) => {
   const extensionHostPath = Platform.getExtensionHostPath()

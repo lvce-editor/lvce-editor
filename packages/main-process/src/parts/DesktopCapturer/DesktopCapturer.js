@@ -1,6 +1,6 @@
 const { desktopCapturer } = require('electron')
-const { VError } = require('../VError/VError.js')
-const Assert = require('../Assert/Assert.js')
+const { VError } = require('../VError/VError.cjs')
+const Assert = require('../Assert/Assert.cjs')
 
 const serializeSource = (source) => {
   return {

@@ -1,8 +1,8 @@
 const Electron = require('electron')
 const { readFileSync } = require('node:fs')
 const { join } = require('node:path')
-const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.js')
-const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
+const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.cjs')
+const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs')
 const HttpMethod = require('../HttpMethod/HttpMethod.js')
 
 const getBeforeRequestResponseMainFrame = (method, url) => {

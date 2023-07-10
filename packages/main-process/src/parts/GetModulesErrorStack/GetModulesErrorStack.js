@@ -1,4 +1,4 @@
-const SplitLines = require('../SplitLines/SplitLines.js')
+import * as SplitLines from '../SplitLines/SplitLines.cjs'
 
 const RE_AT = /^    at /
 const RE_JUST_PATH = /^(?:file:\/\/|\/|\\).*\:\d+$/
@@ -16,7 +16,7 @@ const isPartOfMessage = (line) => {
   return RE_JUST_MESSAGE.test(line)
 }
 
-exports.getModulesErrorStack = (stderr) => {
+export const getModulesErrorStack = (stderr) => {
   const lines = SplitLines.splitLines(stderr)
   let startIndex = -1
   const extraLines = []

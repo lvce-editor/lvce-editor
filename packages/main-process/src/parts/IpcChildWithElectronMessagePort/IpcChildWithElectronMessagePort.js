@@ -1,4 +1,4 @@
-exports.listen = ({ messagePort }) => {
+export const listen = ({ messagePort }) => {
   return messagePort
 }
 
@@ -6,7 +6,7 @@ const getActualData = (event) => {
   return event.data
 }
 
-exports.wrap = (messagePort) => {
+export const wrap = (messagePort) => {
   return {
     messagePort,
     on(event, listener) {

@@ -1,13 +1,13 @@
 const { BrowserView, BrowserWindow } = require('electron')
-const { VError } = require('../VError/VError.js')
+const { VError } = require('../VError/VError.cjs')
 const DisposeWebContents = require('../DisposeWebContents/DisposeWebContents.js')
-const ElectronSession = require('../ElectronSession/ElectronSession.js')
-const Logger = require('../Logger/Logger.js')
-const Path = require('../Path/Path.js')
+const ElectronSession = require('../ElectronSession/ElectronSession.cjs')
+const Logger = require('../Logger/Logger.cjs')
+const Path = require('../Path/Path.cjs')
 const PendingPorts = require('../PendingPorts/PendingPorts.js')
-const Platform = require('../Platform/Platform.js')
-const Root = require('../Root/Root.js')
-const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
+const Platform = require('../Platform/Platform.cjs')
+const Root = require('../Root/Root.cjs')
+const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs')
 
 const state = (exports.state = {
   /**

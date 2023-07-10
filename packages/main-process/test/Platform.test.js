@@ -1,4 +1,4 @@
-const Platform = require('../src/parts/Platform/Platform.js')
+const Platform = require('../src/parts/Platform/Platform.cjs')
 
 test('isProduction', () => {
   expect(typeof Platform.isProduction).toBe('boolean')

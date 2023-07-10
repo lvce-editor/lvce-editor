@@ -1,11 +1,11 @@
 const Electron = require('electron')
-const { VError } = require('../VError/VError.js')
-const Path = require('../Path/Path.js')
-const Platform = require('../Platform/Platform.js')
+const { VError } = require('../VError/VError.cjs')
+const Path = require('../Path/Path.cjs')
+const Platform = require('../Platform/Platform.cjs')
 const FileSystem = require('../FileSystem/FileSystem.js')
-const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
-const ErrorCodes = require('../ErrorCodes/ErrorCodes.js')
-const Logger = require('../Logger/Logger.js')
+const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.cjs')
+const ErrorCodes = require('../ErrorCodes/ErrorCodes.cjs')
+const Logger = require('../Logger/Logger.cjs')
 const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
 
 const state = {

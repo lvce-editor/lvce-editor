@@ -1,4 +1,4 @@
-const ElectronWindow = require('./ElectronWindow.js')
+const ElectronWindow = require('./ElectronWindow.cjs')
 
 exports.name = 'ElectronWindow'
 

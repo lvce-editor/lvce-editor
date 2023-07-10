@@ -1,4 +1,4 @@
-const App = require('./App.js')
+const App = require('./App.cjs')
 
 exports.name = 'App'
 

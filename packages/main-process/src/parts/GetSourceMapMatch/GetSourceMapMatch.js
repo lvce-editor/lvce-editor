@@ -1,6 +1,6 @@
-const Assert = require('../Assert/Assert.js')
-const Character = require('../Character/Character.js')
-const GetNewLineIndex = require('../GetNewLineIndex/GetNewLineIndex.js')
+const Assert = require('../Assert/Assert.cjs')
+const Character = require('../Character/Character.cjs')
+const GetNewLineIndex = require('../GetNewLineIndex/GetNewLineIndex.cjs')
 
 const RE_SOURCE_MAP = /^\/\/# sourceMappingURL=(.*)$/
 

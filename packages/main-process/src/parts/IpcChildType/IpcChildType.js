@@ -1,5 +1,5 @@
-exports.NodeWorker = 1
-exports.NodeForkedProcess = 2
-exports.WebSocket = 3
-exports.ElectronUtilityProcess = 4
-exports.ElectronMessagePort = 5
+export const NodeWorker = 1
+export const NodeForkedProcess = 2
+export const WebSocket = 3
+export const ElectronUtilityProcess = 4
+export const ElectronMessagePort = 5

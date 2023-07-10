@@ -31,10 +31,10 @@ jest.mock('electron', () => {
   }
 })
 
-const ErrorHandling = require('../src/parts/ErrorHandling/ErrorHandling.js')
-const Logger = require('../src/parts/Logger/Logger.js')
-const Process = require('../src/parts/Process/Process.js')
-const PrettyError = require('../src/parts/PrettyError/PrettyError.js')
+const ErrorHandling = require('../src/parts/ErrorHandling/ErrorHandling.cjs')
+const Logger = require('../src/parts/Logger/Logger.cjs')
+const Process = require('../src/parts/Process/Process.cjs')
+const PrettyError = require('../src/parts/PrettyError/PrettyError.cjs')
 
 test('handleUncaughtExceptionMonitor', () => {
   const error = new Error('oops')

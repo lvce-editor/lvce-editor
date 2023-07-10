@@ -1,5 +1,5 @@
-const SplitLines = require('../SplitLines/SplitLines.js')
-const GetModulesErrorStack = require('../GetModulesErrorStack/GetModulesErrorStack.js')
+import * as SplitLines from '../SplitLines/SplitLines.cjs'
+import * as GetModulesErrorStack from '../GetModulesErrorStack/GetModulesErrorStack.js'
 
 const RE_NATIVE_MODULE_ERROR = /^innerError Error: Cannot find module '.*.node'/
 const RE_NATIVE_MODULE_ERROR_2 = /was compiled against a different Node.js version/
@@ -63,7 +63,7 @@ const getOtherError = (stderr) => {
   return error
 }
 
-exports.getHelpfulChildProcessError = (message, stdout, stderr) => {
+export const getHelpfulChildProcessError = (message, stdout, stderr) => {
   if (isUnhelpfulNativeModuleError(stderr)) {
     return getNativeModuleErrorMessage(stderr)
   }

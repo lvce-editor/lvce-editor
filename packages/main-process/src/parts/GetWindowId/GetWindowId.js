@@ -1,8 +1,8 @@
-const Assert = require('../Assert/Assert.js')
-const IsMessagePortMain = require('../IsMessagePortMain/IsMessagePortMain.js')
-const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
+import * as Assert from '../Assert/Assert.cjs'
+import * as IsMessagePortMain from '../IsMessagePortMain/IsMessagePortMain.js'
+import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
 
-exports.getWindowId = (ipc) => {
+export const getWindowId = (ipc) => {
   Assert.object(ipc)
   const messagePort = ipc.messagePort
   if (!IsMessagePortMain.isMessagePortMain(messagePort)) {

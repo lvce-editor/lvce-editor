@@ -1,8 +1,8 @@
-const Assert = require('../Assert/Assert.js')
+const Assert = require('../Assert/Assert.cjs')
 const IpcParent = require('../IpcParent/IpcParent.js')
 const IpcParentType = require('../IpcParentType/IpcParentType.js')
-const Path = require('../Path/Path.js')
-const Root = require('../Root/Root.js')
+const Path = require('../Path/Path.cjs')
+const Root = require('../Root/Root.cjs')
 
 const getTerminalProcessPath = () => {
   return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.js')

@@ -1,10 +1,10 @@
 const ChildProcess = require('../ChildProcess/ChildProcess.js')
-const Command = require('../Command/Command.js')
-const Path = require('../Path/Path.js')
-const Logger = require('../Logger/Logger.js')
-const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
-const ExitCode = require('../ExitCode/ExitCode.js')
-const Process = require('../Process/Process.js')
+const Command = require('../Command/Command.cjs')
+const Path = require('../Path/Path.cjs')
+const Logger = require('../Logger/Logger.cjs')
+const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.cjs')
+const ExitCode = require('../ExitCode/ExitCode.cjs')
+const Process = require('../Process/Process.cjs')
 
 const state = (exports.state = {
   /**

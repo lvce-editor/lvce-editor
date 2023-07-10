@@ -1,5 +1,5 @@
 const { BrowserWindow } = require('electron')
-const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
+const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.cjs')
 const UtilityProcessState = require('../UtilityProcessState/UtilityProcessState.js')
 
 exports.createPidMap = () => {

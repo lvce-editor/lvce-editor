@@ -1,5 +1,5 @@
-const ElectronApp = require('../ElectronApp/ElectronApp.js')
-const ExitCode = require('../ExitCode/ExitCode.js')
+const ElectronApp = require('../ElectronApp/ElectronApp.cjs')
+const ExitCode = require('../ExitCode/ExitCode.cjs')
 const GetHelpString = require('../GetHelpString/GetHelpString.js')
 
 const handleCliArgs = (parsedArgs) => {

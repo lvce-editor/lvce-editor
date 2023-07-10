@@ -1,5 +1,5 @@
 const { net } = require('electron')
-const Assert = require('../Assert/Assert.js')
+const Assert = require('../Assert/Assert.cjs')
 
 exports.getJson = async (url) => {
   Assert.string(url)

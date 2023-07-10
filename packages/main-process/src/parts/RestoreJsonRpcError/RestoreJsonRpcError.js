@@ -1,10 +1,10 @@
-const GetErrorConstructor = require('../GetErrorConstructor/GetErrorConstructor.js')
-const GetNewLineIndex = require('../GetNewLineIndex/GetNewLineIndex.js')
-const JoinLines = require('../JoinLines/JoinLines.js')
-const { JsonRpcError } = require('../JsonRpcError/JsonRpcError.js')
-const JsonRpcErrorCode = require('../JsonRpcErrorCode/JsonRpcErrorCode.js')
-const SplitLines = require('../SplitLines/SplitLines.js')
-const Character = require('../Character/Character.js')
+import * as Character from '../Character/Character.cjs'
+import * as GetErrorConstructor from '../GetErrorConstructor/GetErrorConstructor.js'
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.cjs'
+import * as JoinLines from '../JoinLines/JoinLines.cjs'
+import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
+import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.cjs'
+import * as SplitLines from '../SplitLines/SplitLines.cjs'
 
 const constructError = (message, type, name) => {
   const ErrorConstructor = GetErrorConstructor.getErrorConstructor(message, type)
@@ -21,7 +21,7 @@ const constructError = (message, type, name) => {
   return new ErrorConstructor(message)
 }
 
-exports.restoreJsonRpcError = (error) => {
+export const restoreJsonRpcError = (error) => {
   if (error && error instanceof Error) {
     return error
   }

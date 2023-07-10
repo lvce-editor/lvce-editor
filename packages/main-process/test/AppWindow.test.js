@@ -63,9 +63,9 @@ jest.mock('electron', () => {
 })
 
 const electron = require('electron')
-const AppWindowStates = require('../src/parts/AppWindowStates/AppWindowStates.js')
+const AppWindowStates = require('../src/parts/AppWindowStates/AppWindowStates.cjs')
 
-const AppWindow = require('../src/parts/AppWindow/AppWindow.js')
+const AppWindow = require('../src/parts/AppWindow/AppWindow.cjs')
 
 test('createAppWindow', async () => {
   // @ts-ignore

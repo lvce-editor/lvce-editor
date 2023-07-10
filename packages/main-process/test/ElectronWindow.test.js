@@ -1,4 +1,4 @@
-const BrowserWindow = require('../src/parts/ElectronWindow/ElectronWindow.js')
+const BrowserWindow = require('../src/parts/ElectronWindow/ElectronWindow.cjs')
 
 // TODO how to test window (highly depends on electron)
 test.skip('toggleDevtools', () => {

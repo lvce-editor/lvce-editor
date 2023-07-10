@@ -10,7 +10,7 @@ jest.mock('electron', () => {
   }
 })
 
-const ParseCliArgs = require('../src/parts/ParseCliArgs/ParseCliArgs.js')
+const ParseCliArgs = require('../src/parts/ParseCliArgs/ParseCliArgs.cjs')
 
 test('parseCliArgs', () => {
   expect(ParseCliArgs.parseCliArgs(['/usr/lib/lvce-oss/lvce-oss', '/test/'])).toEqual({

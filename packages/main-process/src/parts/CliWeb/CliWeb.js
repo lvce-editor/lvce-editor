@@ -1,7 +1,7 @@
 const { spawn } = require('node:child_process')
-const Platform = require('../Platform/Platform.js')
+const Platform = require('../Platform/Platform.cjs')
 const Electron = require('electron')
-const Process = require('../Process/Process.js')
+const Process = require('../Process/Process.cjs')
 
 const handleCliArgs = (parsedArgs) => {
   const webPath = Platform.getWebPath()

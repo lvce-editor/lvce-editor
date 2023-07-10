@@ -1,7 +1,7 @@
 const IpcParent = require('../IpcParent/IpcParent.js')
 const IpcParentType = require('../IpcParentType/IpcParentType.js')
-const Logger = require('../Logger/Logger.js')
-const Platform = require('../Platform/Platform.js')
+const Logger = require('../Logger/Logger.cjs')
+const Platform = require('../Platform/Platform.cjs')
 
 /**
  *

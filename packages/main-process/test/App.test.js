@@ -1,6 +1,6 @@
-const App = require('../src/parts/App/App.js')
-const JsonRpcErrorCode = require('../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js')
-const JsonRpcVersion = require('../src/parts/JsonRpcVersion/JsonRpcVersion.js')
+const App = require('../src/parts/App/App.cjs')
+const JsonRpcErrorCode = require('../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.cjs')
+const JsonRpcVersion = require('../src/parts/JsonRpcVersion/JsonRpcVersion.cjs')
 
 jest.mock('electron', () => {
   return {

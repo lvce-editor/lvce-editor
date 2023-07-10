@@ -1,11 +1,11 @@
-const Assert = require('../Assert/Assert.js')
-const Electron = require('electron')
-const ElectronMessageBoxType = require('../ElectronMessageBoxType/ElectronMessageBoxType.js')
-const Logger = require('../Logger/Logger.js')
-const Platform = require('../Platform/Platform.js')
-const ElectronWindow = require('../ElectronWindow/ElectronWindow.js')
+import * as Electron from 'electron'
+import * as Assert from '../Assert/Assert.cjs'
+import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'
+import * as ElectronWindow from '../ElectronWindow/ElectronWindow.cjs'
+import * as Logger from '../Logger/Logger.cjs'
+import * as Platform from '../Platform/Platform.cjs'
 
-exports.showOpenDialog = async (title, properties) => {
+export const showOpenDialog = async (title, properties) => {
   Assert.string(title)
   Assert.array(properties)
   const focusedWindow = ElectronWindow.getFocusedWindow()
@@ -35,7 +35,7 @@ const getWindow = (windowId) => {
  * @param {{message:string, buttons:string[], type:'error'|'info'|'question'|'none'|'warning', detail?:string, title?:string, windowId?:number}} options
  * @returns
  */
-exports.showMessageBox = async ({ message, buttons, type = ElectronMessageBoxType.Error, detail, title, windowId = -1 }) => {
+export const showMessageBox = async ({ message, buttons, type = ElectronMessageBoxType.Error, detail, title, windowId = -1 }) => {
   Assert.string(message)
   Assert.array(buttons)
   const window = getWindow(windowId)

@@ -1,4 +1,4 @@
-const ElectronAplicationMenu = require('./ElectronApplicationMenu.js')
+const ElectronAplicationMenu = require('./ElectronApplicationMenu.cjs')
 
 exports.name = 'ElectronApplicationMenu'
 

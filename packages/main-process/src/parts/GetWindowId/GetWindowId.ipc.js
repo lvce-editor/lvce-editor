@@ -1,7 +1,7 @@
-const GetWindowId = require('./GetWindowId.js')
+import * as GetWindowId from './GetWindowId.js'
 
-exports.name = 'GetWindowId'
+export const name = 'GetWindowId'
 
-exports.Commands = {
+export const Commands = {
   getWindowId: GetWindowId.getWindowId,
 }

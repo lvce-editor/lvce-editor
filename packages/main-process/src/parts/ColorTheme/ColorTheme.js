@@ -1,4 +1,4 @@
-const JoinLines = require('../JoinLines/JoinLines.js')
+const JoinLines = require('../JoinLines/JoinLines.cjs')
 
 const getExtensions = () => {}
 

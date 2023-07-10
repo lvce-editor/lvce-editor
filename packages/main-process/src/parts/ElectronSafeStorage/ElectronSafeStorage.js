@@ -1,5 +1,5 @@
 const { safeStorage } = require('electron')
-const EncodingType = require('../EncodingType/EncodingType.js')
+const EncodingType = require('../EncodingType/EncodingType.cjs')
 
 exports.isEncryptionAvailable = () => {
   return safeStorage.isEncryptionAvailable()

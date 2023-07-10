@@ -1,20 +1,20 @@
-const Assert = require('../Assert/Assert.js')
+import * as Assert from '../Assert/Assert.cjs'
 
-const state = (exports.state = {
+export const state = {
   all: Object.create(null),
-})
+}
 
-exports.add = (pid, name) => {
+export const add = (pid, name) => {
   Assert.number(pid)
   Assert.string(name)
   state.all[pid] = name
 }
 
-exports.remove = (pid) => {
+export const remove = (pid) => {
   Assert.number(pid)
   delete state.all[pid]
 }
 
-exports.getAll = () => {
+export const getAll = () => {
   return Object.entries(state.all)
 }

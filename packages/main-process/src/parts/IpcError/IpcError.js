@@ -1,7 +1,7 @@
-const GetHelpfulChildProcessError = require('../GetHelpfulChildProcessError/GetHelpfulChildProcessError.js')
-const { VError } = require('../VError/VError.js')
+import * as GetHelpfulChildProcessError from '../GetHelpfulChildProcessError/GetHelpfulChildProcessError.js'
+import { VError } from '../VError/VError.cjs'
 
-exports.IpcError = class extends VError {
+export class IpcError extends VError {
   constructor(message, stdout = '', stderr = '') {
     if (stdout || stderr) {
       const cause = GetHelpfulChildProcessError.getHelpfulChildProcessError(message, stdout, stderr)

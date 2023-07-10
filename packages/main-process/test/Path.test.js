@@ -1,4 +1,4 @@
-const Path = require('../src/parts/Path/Path.js')
+const Path = require('../src/parts/Path/Path.cjs')
 
 test('absolute', () => {
   // TODO need better test here

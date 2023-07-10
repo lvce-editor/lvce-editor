@@ -1,10 +1,10 @@
-const { VError } = require('../VError/VError.js')
-const Path = require('../Path/Path.js')
-const Root = require('../Root/Root.js')
-const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
-const Assert = require('../Assert/Assert.js')
+const { VError } = require('../VError/VError.cjs')
+const Path = require('../Path/Path.cjs')
+const Root = require('../Root/Root.cjs')
+const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.cjs')
+const Assert = require('../Assert/Assert.cjs')
 const LoadErrorCode = require('../LoadErrorCode/LoadErrorCode.js')
-const Debug = require('../Debug/Debug.js')
+const Debug = require('../Debug/Debug.cjs')
 
 // TODO create output channel for browser view debug logs
 

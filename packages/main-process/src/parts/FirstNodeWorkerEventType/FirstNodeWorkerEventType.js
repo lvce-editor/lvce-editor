@@ -1,5 +1,5 @@
-exports.Exit = 'exit'
+export const Exit = 'exit'
 
-exports.Error = 'error'
+export const Error = 'error'
 
-exports.Message = 'message'
+export const Message = 'message'

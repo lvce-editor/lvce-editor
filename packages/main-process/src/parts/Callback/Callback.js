@@ -1,11 +1,11 @@
-const Assert = require('../Assert/Assert.js')
-const Id = require('../Id/Id.js')
+import * as Assert from '../Assert/Assert.cjs'
+import * as Id from '../Id/Id.js'
 
-const state = (exports.state = {
+export const state = {
   callbacks: Object.create(null),
-})
+}
 
-exports.registerPromise = () => {
+export const registerPromise = () => {
   const id = Id.create()
   const promise = new Promise((resolve, reject) => {
     state.callbacks[id] = {
@@ -16,7 +16,7 @@ exports.registerPromise = () => {
   return { id, promise }
 }
 
-exports.resolve = (id, args) => {
+export const resolve = (id, args) => {
   Assert.number(id)
   const { callbacks } = state
   if (!(id in callbacks)) {
