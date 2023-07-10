@@ -1,8 +1,10 @@
+import { jest } from '@jest/globals'
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.mock('electron', () => {
+jest.unstable_mockModule('electron', () => {
   return {
     app: {
       exit() {},
@@ -10,7 +12,7 @@ jest.mock('electron', () => {
   }
 })
 
-const Cli = require('../src/parts/Cli/Cli.cjs')
+const Cli = await import('../src/parts/Cli/Cli.cjs')
 
 test('handleFastCliArgsMaybe - nothing matches', () => {
   const spy = jest.spyOn(console, 'info')

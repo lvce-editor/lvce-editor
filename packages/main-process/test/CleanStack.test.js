@@ -1,4 +1,4 @@
-const CleanStack = require('../src/parts/CleanStack/CleanStack.cjs')
+import * as CleanStack from '../src/parts/CleanStack/CleanStack.cjs'
 
 test('cleanStack - error inside node_modules', () => {
   const stack = `Error: Cannot find module 'graceful-fs'

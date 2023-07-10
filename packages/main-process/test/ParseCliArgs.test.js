@@ -1,16 +1,4 @@
-beforeEach(() => {
-  jest.resetAllMocks()
-})
-
-jest.mock('electron', () => {
-  return {
-    app: {
-      exit() {},
-    },
-  }
-})
-
-const ParseCliArgs = require('../src/parts/ParseCliArgs/ParseCliArgs.cjs')
+import * as ParseCliArgs from '../src/parts/ParseCliArgs/ParseCliArgs.cjs'
 
 test('parseCliArgs', () => {
   expect(ParseCliArgs.parseCliArgs(['/usr/lib/lvce-oss/lvce-oss', '/test/'])).toEqual({
