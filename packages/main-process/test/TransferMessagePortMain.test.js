@@ -1,8 +1,5 @@
-beforeEach(() => {
-  jest.resetModules()
-})
-
-const TransferMessagePortMain = require('../src/parts/TransferMessagePortMain/TransferMessagePortMain.js')
+import * as TransferMessagePortMain from '../src/parts/TransferMessagePortMain/TransferMessagePortMain.js'
+import { jest } from '@jest/globals'
 
 test('transferMessagePortMain - error', async () => {
   const ipc = {

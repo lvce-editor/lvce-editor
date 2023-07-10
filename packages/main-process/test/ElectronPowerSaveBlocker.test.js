@@ -1,8 +1,10 @@
+import { jest } from '@jest/globals'
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.mock('electron', () => {
+jest.unstable_mockModule('electron', () => {
   return {
     powerSaveBlocker: {
       start: jest.fn(),
@@ -11,8 +13,8 @@ jest.mock('electron', () => {
   }
 })
 
-const electron = require('electron')
-const ElectronPowerSaveBlocker = require('../src/parts/ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.js')
+const electron = await import('electron')
+const ElectronPowerSaveBlocker = await import('../src/parts/ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.js')
 
 test('start', () => {
   // @ts-ignore
@@ -21,9 +23,7 @@ test('start', () => {
   })
   expect(ElectronPowerSaveBlocker.start('prevent-app-suspension')).toBe(1)
   expect(electron.powerSaveBlocker.start).toHaveBeenCalledTimes(1)
-  expect(electron.powerSaveBlocker.start).toHaveBeenCalledWith(
-    'prevent-app-suspension'
-  )
+  expect(electron.powerSaveBlocker.start).toHaveBeenCalledWith('prevent-app-suspension')
 })
 
 test('start - error', () => {
@@ -31,9 +31,7 @@ test('start - error', () => {
   electron.powerSaveBlocker.start.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  expect(() =>
-    ElectronPowerSaveBlocker.start('prevent-app-suspension')
-  ).toThrowError(new TypeError('x is not a function'))
+  expect(() => ElectronPowerSaveBlocker.start('prevent-app-suspension')).toThrowError(new TypeError('x is not a function'))
 })
 
 test('stop', () => {
@@ -49,7 +47,5 @@ test('stop - error', () => {
   electron.powerSaveBlocker.stop.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  expect(() => ElectronPowerSaveBlocker.stop(1)).toThrowError(
-    new TypeError('x is not a function')
-  )
+  expect(() => ElectronPowerSaveBlocker.stop(1)).toThrowError(new TypeError('x is not a function'))
 })
