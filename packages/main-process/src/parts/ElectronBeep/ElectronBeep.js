@@ -1,4 +1,4 @@
-const { shell } = require('electron')
+import { shell } from 'electron'
 
 // TODO rename module to ElectronShell
 
