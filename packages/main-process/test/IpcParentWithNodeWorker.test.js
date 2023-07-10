@@ -1,23 +1,25 @@
+import { jest } from '@jest/globals'
+
 beforeEach(() => {
   jest.resetModules()
   jest.resetAllMocks()
 })
 
-jest.mock('node:worker_threads', () => {
+jest.unstable_mockModule('node:worker_threads', () => {
   return {
     Worker: jest.fn(),
   }
 })
 
-jest.mock('../src/parts/GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js', () => {
+jest.unstable_mockModule('../src/parts/GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js', () => {
   return {
     getFirstNodeWorkerEvent: jest.fn(),
   }
 })
 
-const IpcParentWithNodeWorker = require('../src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js')
-const GetFirstNodeWorkerEvent = require('../src/parts/GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js')
-const WorkerThreads = require('node:worker_threads')
+const IpcParentWithNodeWorker = await import('../src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js')
+const GetFirstNodeWorkerEvent = await import('../src/parts/GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js')
+const WorkerThreads = await import('node:worker_threads')
 
 test('create - error - module not found', async () => {
   // @ts-ignore
