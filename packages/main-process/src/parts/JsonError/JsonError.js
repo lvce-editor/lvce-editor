@@ -1,5 +1,5 @@
-const { codeFrameColumns } = require('@babel/code-frame')
-const { LinesAndColumns } = require('lines-and-columns')
+import { codeFrameColumns } from '@babel/code-frame'
+import { LinesAndColumns } from 'lines-and-columns'
 
 // parsing error handling based on https://github.com/sindresorhus/parse-json/blob/main/index.js
 
