@@ -1,7 +1,7 @@
-const { VError } = require('../VError/VError.cjs')
-const JsonRpc = require('../JsonRpc/JsonRpc.js')
+import { VError } from '../VError/VError.cjs'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
-exports.transferMessagePort = async (ipc, port, ...params) => {
+export const transferMessagePort = async (ipc, port, ...params) => {
   try {
     await JsonRpc.invokeAndTransfer(ipc, [port], 'HandleNodeMessagePort.handleNodeMessagePort', port, ...params)
   } catch (error) {

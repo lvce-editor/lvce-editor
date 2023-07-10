@@ -1,4 +1,4 @@
-exports.restoreError = (error) => {
+export const restoreError = (error) => {
   if (error && error instanceof Error) {
     return error
   }

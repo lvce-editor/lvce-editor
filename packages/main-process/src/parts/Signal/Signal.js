@@ -1,2 +1,2 @@
-exports.SIGTERM = 'SIGTERM'
-exports.SIGINT = 'SIGINT'
+export const SIGTERM = 'SIGTERM'
+export const SIGINT = 'SIGINT'
