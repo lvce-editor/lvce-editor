@@ -1,25 +1,28 @@
-const App = require('../src/parts/App/App.cjs')
-const JsonRpcErrorCode = require('../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.cjs')
-const JsonRpcVersion = require('../src/parts/JsonRpcVersion/JsonRpcVersion.cjs')
+import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.cjs'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.cjs'
+import { jest } from '@jest/globals'
 
-jest.mock('electron', () => {
+jest.unstable_mockModule('electron', () => {
   return {
     app: {
       name: '',
     },
   }
 })
-jest.mock('electron-unhandled', () => {
+
+jest.unstable_mockModule('electron-unhandled', () => {
   return {}
 })
 
-jest.mock('../src/parts/Command/Command.js', () => {
+jest.unstable_mockModule('../src/parts/Command/Command.cjs', () => {
   return {
     execute() {
       throw new Error(`method not found App.exit`)
     },
   }
 })
+
+const App = await import('../src/parts/App/App.cjs')
 
 test.skip('handlePortForMainProcess - error - command not found', async () => {
   let _listener = async (message) => {}
