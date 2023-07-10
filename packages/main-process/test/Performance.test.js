@@ -1,4 +1,4 @@
-const Performance = require('../src/parts/Performance/Performance.cjs')
+import * as Performance from '../src/parts/Performance/Performance.cjs'
 
 beforeEach(() => {
   Performance.clearMarks()
