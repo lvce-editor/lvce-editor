@@ -1,6 +1,6 @@
 const { Menu, BrowserWindow } = require('electron')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
-const Assert = require('../Assert/Assert.cjs')
+const Assert = require('../Assert/Assert.js')
 const GetElectronMenuItems = require('../GetElectronMenuItems/GetElectronMenuItems.js')
 const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
 

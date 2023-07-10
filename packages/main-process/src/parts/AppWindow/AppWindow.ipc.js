@@ -1,8 +1,8 @@
-import * as AppWindow from './AppWindow.cjs'
+const AppWindow = require('./AppWindow.js')
 
-export const name = 'AppWindow'
+exports.name = 'AppWindow'
 
-export const Commands = {
+exports.Commands = {
   createAppWindow: AppWindow.createAppWindow,
   openNew: AppWindow.openNew,
 }

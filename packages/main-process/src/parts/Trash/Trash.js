@@ -1,5 +1,5 @@
 const { shell } = require('electron')
-const Assert = require('../Assert/Assert.cjs')
+const Assert = require('../Assert/Assert.js')
 
 exports.trash = async (path) => {
   Assert.string(path)

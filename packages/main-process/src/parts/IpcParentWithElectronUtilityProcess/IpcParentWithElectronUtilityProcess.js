@@ -1,6 +1,6 @@
 const { IpcError } = require('../IpcError/IpcError.js')
 const { utilityProcess } = require('electron')
-const Assert = require('../Assert/Assert.cjs')
+const Assert = require('../Assert/Assert.js')
 const CamelCase = require('../CamelCase/CamelCase.js')
 const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
 const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js')

@@ -1,4 +1,4 @@
-const GetResponse = require('../GetResponse/GetResponse.cjs')
+const GetResponse = require('../GetResponse/GetResponse.js')
 const GetErrorResponse = require('../GetErrorResponse/GetErrorResponse.js')
 
 exports.handleJsonRpcMessage = async (ipc, message, execute, resolve) => {

@@ -1,4 +1,4 @@
-const Assert = require('../Assert/Assert.cjs')
+const Assert = require('../Assert/Assert.js')
 const Electron = require('electron')
 const ElectronMessageBoxType = require('../ElectronMessageBoxType/ElectronMessageBoxType.js')
 const Logger = require('../Logger/Logger.js')

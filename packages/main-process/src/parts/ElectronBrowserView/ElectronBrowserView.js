@@ -1,5 +1,5 @@
 const { BrowserView, BrowserWindow } = require('electron')
-const Assert = require('../Assert/Assert.cjs')
+const Assert = require('../Assert/Assert.js')
 const DisposeWebContents = require('../DisposeWebContents/DisposeWebContents.js')
 const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')

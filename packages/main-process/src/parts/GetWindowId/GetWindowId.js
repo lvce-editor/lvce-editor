@@ -1,4 +1,4 @@
-const Assert = require('../Assert/Assert.cjs')
+const Assert = require('../Assert/Assert.js')
 const IsMessagePortMain = require('../IsMessagePortMain/IsMessagePortMain.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 

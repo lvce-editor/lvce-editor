@@ -2,7 +2,7 @@ const { VError } = require('../VError/VError.js')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
-const Assert = require('../Assert/Assert.cjs')
+const Assert = require('../Assert/Assert.js')
 const LoadErrorCode = require('../LoadErrorCode/LoadErrorCode.js')
 const Debug = require('../Debug/Debug.js')
 

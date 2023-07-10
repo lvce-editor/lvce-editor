@@ -1,6 +1,6 @@
 const { BrowserWindow } = require('electron')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
-const Assert = require('../Assert/Assert.cjs')
+const Assert = require('../Assert/Assert.js')
 const HandleIpc = require('../HandleIpc/HandleIpc.js')
 const IpcChild = require('../IpcChild/IpcChild.js')
 const IpcChildType = require('../IpcChildType/IpcChildType.js')

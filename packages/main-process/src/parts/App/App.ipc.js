@@ -1,7 +1,7 @@
-import * as App from './App.cjs'
+const App = require('./App.js')
 
-export const name = 'App'
+exports.name = 'App'
 
-export const Commands = {
+exports.Commands = {
   exit: App.exit,
 }

@@ -1,4 +1,4 @@
-const Assert = require('../Assert/Assert.cjs')
+const Assert = require('../Assert/Assert.js')
 const IsEmptyString = require('../IsEmptyString/IsEmptyString.js')
 const { VError } = require('../VError/VError.js')
 const Vlq = require('../Vlq/Vlq.js')

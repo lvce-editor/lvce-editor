@@ -1,5 +1,5 @@
 const { MessageChannelMain } = require('electron')
-const Assert = require('../Assert/Assert.cjs')
+const Assert = require('../Assert/Assert.js')
 const ElectronPreloadChannelType = require('../ElectronPreloadChannelType/ElectronPreloadChannelType.js')
 const GetErrorResponse = require('../GetErrorResponse/GetErrorResponse.js')
 const GetSuccessResponse = require('../GetSuccessResponse/GetSuccessResponse.js')

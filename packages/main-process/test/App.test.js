@@ -1,4 +1,4 @@
-const App = require('../src/parts/App/App.cjs')
+const App = require('../src/parts/App/App.js')
 const JsonRpcErrorCode = require('../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js')
 const JsonRpcVersion = require('../src/parts/JsonRpcVersion/JsonRpcVersion.js')
 
