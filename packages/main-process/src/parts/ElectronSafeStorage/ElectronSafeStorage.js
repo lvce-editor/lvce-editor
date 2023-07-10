@@ -1,15 +1,15 @@
-const { safeStorage } = require('electron')
-const EncodingType = require('../EncodingType/EncodingType.cjs')
+import { safeStorage } from 'electron'
+import * as EncodingType from '../EncodingType/EncodingType.cjs'
 
-exports.isEncryptionAvailable = () => {
+export const isEncryptionAvailable = () => {
   return safeStorage.isEncryptionAvailable()
 }
 
-exports.encryptString = (plainText) => {
+export const encryptString = (plainText) => {
   return safeStorage.encryptString(plainText).toString(EncodingType.Base64)
 }
 
-exports.decryptString = (encrypted) => {
+export const decryptString = (encrypted) => {
   const buffer = Buffer.from(encrypted, EncodingType.Base64)
   return safeStorage.decryptString(buffer)
 }

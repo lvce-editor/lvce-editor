@@ -1,7 +1,7 @@
-const { extname } = require('path')
-const MimeTypes = require('../MimeTypes/MimeTypes.js')
+import { extname } from 'path'
+import * as MimeTypes from '../MimeTypes/MimeTypes.js'
 
-exports.getMime = (uri) => {
+export const getMime = (uri) => {
   const extension = extname(uri)
   return MimeTypes.mapExtToTextMimes[extension] || MimeTypes.defaultMimeType
 }

@@ -1,7 +1,7 @@
-const Trash = require('./Trash.js')
+import * as Trash from './Trash.js'
 
-exports.name = 'Trash'
+export const name = 'Trash'
 
-exports.Commands = {
+export const Commands = {
   trash: Trash.trash,
 }

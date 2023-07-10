@@ -1,6 +1,6 @@
-const Assert = require('../Assert/Assert.cjs')
-const IpcParent = require('../IpcParent/IpcParent.js')
-const IpcParentType = require('../IpcParentType/IpcParentType.js')
+import * as Assert from '../Assert/Assert.cjs'
+import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 const getPath = (data) => {
   Assert.string(data)
@@ -12,7 +12,7 @@ const getPath = (data) => {
  * @param {import('electron').IpcMainEvent} event
  * @returns
  */
-exports.handlePort = async (event, browserWindowPort, ...params) => {
+export const handlePort = async (event, browserWindowPort, ...params) => {
   if (!browserWindowPort) {
     throw new Error(`browserWindowPort must be passed`)
   }

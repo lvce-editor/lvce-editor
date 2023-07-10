@@ -1,6 +1,6 @@
 // based on https://github.com/microsoft/vscode/blob/bd782eb059e133d3a20fdb446b8feb0010a278ad/src/vs/base/common/mime.ts (License MIT)
 
-exports.mapExtToTextMimes = {
+export const mapExtToTextMimes = {
   '.css': 'text/css',
   '.csv': 'text/csv',
   '.htm': 'text/html',
@@ -12,4 +12,4 @@ exports.mapExtToTextMimes = {
   '.xml': 'text/xml',
 }
 
-exports.defaultMimeType = ''
+export const defaultMimeType = ''

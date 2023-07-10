@@ -1,12 +1,12 @@
-const Electron = require('electron')
-const { VError } = require('../VError/VError.cjs')
-const Path = require('../Path/Path.cjs')
-const Platform = require('../Platform/Platform.cjs')
-const FileSystem = require('../FileSystem/FileSystem.js')
-const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.cjs')
-const ErrorCodes = require('../ErrorCodes/ErrorCodes.cjs')
-const Logger = require('../Logger/Logger.cjs')
-const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
+import * as Electron from 'electron'
+import { VError } from '../VError/VError.cjs'
+import * as Path from '../Path/Path.cjs'
+import * as Platform from '../Platform/Platform.cjs'
+import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as ElectronPermissionType from '../ElectronPermissionType/ElectronPermissionType.cjs'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.cjs'
+import * as Logger from '../Logger/Logger.cjs'
+import * as ElectronBrowserViewAdBlock from '../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js'
 
 const state = {
   /**
@@ -92,7 +92,7 @@ const createSession = () => {
   return session
 }
 
-exports.getSession = () => {
+export const getSession = () => {
   if (!state.session) {
     state.session = createSession()
   }

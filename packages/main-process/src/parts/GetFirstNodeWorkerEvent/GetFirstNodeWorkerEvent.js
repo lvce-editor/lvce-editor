@@ -1,12 +1,12 @@
-const { Worker } = require('worker_threads')
-const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
+import { Worker } from 'worker_threads'
+import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
 
 /**
  *
  * @param {Worker} worker
  * @returns
  */
-const getFirstNodeWorkerEvent = async (worker) => {
+export const getFirstNodeWorkerEvent = async (worker) => {
   const { type, event } = await new Promise((resolve, reject) => {
     const cleanup = (value) => {
       worker.off('message', handleMessage)
@@ -38,5 +38,3 @@ const getFirstNodeWorkerEvent = async (worker) => {
   })
   return { type, event }
 }
-
-exports.getFirstNodeWorkerEvent = getFirstNodeWorkerEvent

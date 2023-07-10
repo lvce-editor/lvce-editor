@@ -47,7 +47,7 @@ export const createBrowserViewQuickPick = async (x, y, width, height) => {
     if (pendingPort) {
       console.log('[main-process] send pending quickpick port')
       view.webContents.postMessage('port', '', [pendingPort])
-      PendingPorts.delete('quickPick')
+      PendingPorts._delete('quickPick')
     }
     view.webContents.focus()
 

@@ -1,8 +1,7 @@
-const ElectronNet = require('./ElectronNet.js')
+import * as ElectronNet from './ElectronNet.js'
 
-exports.name = 'ElectronNet'
+export const name = 'ElectronNet'
 
-// prettier-ignore
-exports.Commands = {
+export const Commands = {
   getJson: ElectronNet.getJson,
 }

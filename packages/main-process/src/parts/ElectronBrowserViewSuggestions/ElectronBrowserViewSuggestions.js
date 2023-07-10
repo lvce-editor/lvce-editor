@@ -64,7 +64,7 @@ export const createBrowserView = async (x, y, width, height, openDevtools = fals
     if (pendingPort) {
       console.log('[main-process] send pending suggestions port')
       view.webContents.postMessage('port', '', [pendingPort])
-      PendingPorts.delete('suggestions')
+      PendingPorts._delete('suggestions')
     }
   } catch (error) {
     Logger.error(error)

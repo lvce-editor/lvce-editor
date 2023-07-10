@@ -1,16 +1,16 @@
-const { BrowserWindow } = require('electron')
-const { join } = require('node:path')
-const { tmpdir } = require('node:os')
-const { writeFile } = require('node:fs/promises')
-const ColorTheme = require('../ColorTheme/ColorTheme.js')
-const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs')
-const Path = require('../Path/Path.cjs')
-const Platform = require('../Platform/Platform.cjs')
-const Root = require('../Root/Root.cjs')
-const AppWindowStates = require('../AppWindowStates/AppWindowStates.cjs')
-const Session = require('../ElectronSession/ElectronSession.cjs')
+import { BrowserWindow } from 'electron'
+import { writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
+import * as ColorTheme from '../ColorTheme/ColorTheme.js'
+import * as Session from '../ElectronSession/ElectronSession.cjs'
+import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs'
+import * as Path from '../Path/Path.cjs'
+import * as Platform from '../Platform/Platform.cjs'
+import * as Root from '../Root/Root.cjs'
 
-exports.open = async () => {
+export const open = async () => {
   const colorThemeJson = await ColorTheme.getColorThemeJson()
   const backgroundColor = colorThemeJson.MainBackground
   const processExplorerWindow = new BrowserWindow({

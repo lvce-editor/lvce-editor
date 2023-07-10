@@ -1,7 +1,7 @@
-const OpenExternal = require('./OpenExternal.cjs')
+import * as OpenExternal from './OpenExternal.cjs'
 
-exports.name = 'OpenExternal'
+export const name = 'OpenExternal'
 
-exports.Commands = {
+export const Commands = {
   openExternal: OpenExternal.openExternal,
 }

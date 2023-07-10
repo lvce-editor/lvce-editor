@@ -1,1 +1,1 @@
-exports.KeyDown = 'keyDown'
+export const KeyDown = 'keyDown'

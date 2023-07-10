@@ -1,8 +1,8 @@
-const ElectronShell = require('./ElectronShell.cjs')
+import * as ElectronShell from './ElectronShell.cjs'
 
-exports.name = 'ElectronShell'
+export const name = 'ElectronShell'
 
-exports.Commands = {
+export const Commands = {
   beep: ElectronShell.beep,
   openExternal: ElectronShell.openExternal,
   openPath: ElectronShell.showItemInFolder,
