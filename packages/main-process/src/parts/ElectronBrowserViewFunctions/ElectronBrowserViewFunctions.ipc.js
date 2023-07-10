@@ -1,9 +1,8 @@
-const ElectronBrowserViewFunctions = require('./ElectronBrowserViewFunctions.js')
+import * as ElectronBrowserViewFunctions from './ElectronBrowserViewFunctions.js'
 
-exports.name = 'ElectronBrowserViewFunctions'
+export const name = 'ElectronBrowserViewFunctions'
 
-// prettier-ignore
-exports.Commands = {
+export const Commands = {
   backward: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.backward),
   cancelNavigation: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.cancelNavigation),
   copyImageAt: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.copyImageAt),

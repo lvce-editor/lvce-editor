@@ -1,8 +1,8 @@
-const { Menu, BrowserWindow } = require('electron')
-const AppWindowStates = require('../AppWindowStates/AppWindowStates.cjs')
-const Assert = require('../Assert/Assert.cjs')
-const GetElectronMenuItems = require('../GetElectronMenuItems/GetElectronMenuItems.js')
-const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.cjs')
+import { BrowserWindow, Menu } from 'electron'
+import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
+import * as Assert from '../Assert/Assert.cjs'
+import * as GetElectronMenuItems from '../GetElectronMenuItems/GetElectronMenuItems.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.cjs'
 
 const getPort = (browserWindow) => {
   const state = AppWindowStates.findByWindowId(browserWindow.id)
@@ -27,7 +27,7 @@ const click = (menuItem, browserWindow) => {
   })
 }
 
-exports.openContextMenu = (menuItems, x, y, customData) => {
+export const openContextMenu = (menuItems, x, y, customData) => {
   Assert.array(menuItems)
   Assert.number(x)
   Assert.number(y)

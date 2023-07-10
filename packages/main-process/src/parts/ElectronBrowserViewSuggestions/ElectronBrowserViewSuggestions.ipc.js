@@ -1,9 +1,8 @@
-const ElectronBrowserViewSuggestions = require('./ElectronBrowserViewSuggestions.js')
+import * as ElectronBrowserViewSuggestions from './ElectronBrowserViewSuggestions.js'
 
-exports.name = 'ElectronBrowserViewSuggestions'
+export const name = 'ElectronBrowserViewSuggestions'
 
-// prettier-ignore
-exports.Commands = {
+export const Commands = {
   createBrowserView: ElectronBrowserViewSuggestions.createBrowserView,
   disposeBrowserView: ElectronBrowserViewSuggestions.disposeBrowserView,
   setSuggestions: ElectronBrowserViewSuggestions.setSuggestions,

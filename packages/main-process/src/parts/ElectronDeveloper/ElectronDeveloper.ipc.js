@@ -1,9 +1,8 @@
-const Developer = require('./ElectronDeveloper.js')
+import * as Developer from './ElectronDeveloper.js'
 
-exports.name = 'ElectronDeveloper'
+export const name = 'ElectronDeveloper'
 
-// prettier-ignore
-exports.Commands = {
+export const Commands = {
   crashMainProcess: Developer.crashMainProcess,
   getPerformanceEntries: Developer.getPerformanceEntries,
 }
