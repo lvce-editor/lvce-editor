@@ -1,7 +1,10 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import { closeAllEditors } from './ViewletMainCloseAllEditors.js'
 
 export const closeEditor = (state, index) => {
+  Assert.object(state)
+  Assert.number(index)
   const { groups, activeGroupIndex } = state
   if (groups.length === 0) {
     return {
@@ -10,16 +13,12 @@ export const closeEditor = (state, index) => {
     }
   }
   const group = groups[activeGroupIndex]
-  if (group.editors.length === 1) {
+  const { editors, x, y, width, height, activeIndex } = group
+  if (editors.length === 1) {
     return closeAllEditors(state)
   }
-  const y = group.y
-  const x = group.x
-  const width = group.width
-  const height = group.height
-  if (index === group.activeIndex) {
-    const oldEditor = group.editors[index]
-    const editors = group.editors
+  if (index === activeIndex) {
+    const oldEditor = editors[index]
     const newEditors = [...editors.slice(0, index), ...editors.slice(index + 1)]
     const newActiveIndex = index === 0 ? index : index - 1
     const uid = oldEditor.uid
@@ -46,7 +45,6 @@ export const closeEditor = (state, index) => {
       commands,
     }
   }
-  const editors = group.editors
   const newEditors = [...editors.slice(0, index), ...editors.slice(index + 1)]
   let newActiveIndex = group.activeIndex
   if (index < newActiveIndex) {
