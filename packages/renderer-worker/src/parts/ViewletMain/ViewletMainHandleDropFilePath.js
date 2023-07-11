@@ -15,15 +15,6 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { openUri } from './ViewletMainOpenUri.js'
 
-const getTabTitle = (uri) => {
-  const homeDir = Workspace.getHomeDir()
-  // TODO tree shake this out in web
-  if (homeDir && uri.startsWith(homeDir)) {
-    return `~${uri.slice(homeDir.length)}`
-  }
-  return uri
-}
-
 const getSashModuleId = (orientation) => {
   switch (orientation) {
     case SashOrientation.Horizontal:
@@ -125,7 +116,7 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
 
     state.activeIndex = state.grid.length - 1
     const tabLabel = Workspace.pathBaseName(uri)
-    const tabTitle = getTabTitle(uri)
+    const tabTitle = PathDisplay.getTitle(uri)
     const allCommands = []
 
     const firstItem = grid[1]
