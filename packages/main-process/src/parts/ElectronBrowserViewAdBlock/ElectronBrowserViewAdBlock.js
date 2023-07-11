@@ -1,9 +1,12 @@
 import * as Electron from 'electron'
 import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import * as ElectronResourceType from '../ElectronResourceType/ElectronResourceType.cjs'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs'
 import * as HttpMethod from '../HttpMethod/HttpMethod.js'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const getBeforeRequestResponseMainFrame = (method, url) => {
   return {}
