@@ -26,6 +26,7 @@ import * as TabFlags from '../TabFlags/TabFlags.js'
 import { closeEditor } from './ViewletMainCloseEditor.js'
 import { openUri } from './ViewletMainOpenUri.js'
 import * as SerializeEditorGroups from '../SerializeEditorGroups/SerializeEditorGroups.js'
+import * as GetTabIndex from '../GetTabIndex/GetTabIndex.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -570,11 +571,16 @@ export const closeFocusedTab = (state) => {
   return closeEditor(state, state.focusedIndex)
 }
 
-export const handleTabContextMenu = async (state, index, x, y) => {
+export const handleTabContextMenu = async (state, eventX, eventY) => {
   const { groups, activeGroupIndex } = state
   const group = groups[activeGroupIndex]
+  const { editors, x, y } = group
+  const index = GetTabIndex.getTabIndex(editors, x, eventX)
+  if (index === -1) {
+    return state
+  }
   group.focusedIndex = index
-  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.Tab)
+  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ eventX, /* y */ eventY, /* id */ MenuEntryId.Tab)
   return {
     ...state,
   }
