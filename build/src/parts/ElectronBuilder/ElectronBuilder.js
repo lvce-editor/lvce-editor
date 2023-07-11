@@ -147,7 +147,7 @@ const addRootPackageJson = async ({ cachePath, version, product }) => {
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: {
-      main: 'packages/main-process/src/mainProcessMain.js',
+      main: 'packages/main-process/src/mainProcessMain.cjs',
       name: product.applicationName,
       productName: product.nameLong,
       version: version,

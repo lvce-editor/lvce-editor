@@ -224,7 +224,7 @@ const copyCss = async ({ arch }) => {
 }
 
 const addRootPackageJson = async ({ cachePath, electronVersion, product, bundleMainProcess, version }) => {
-  const main = bundleMainProcess ? 'packages/main-process/dist/mainProcessMain.js' : 'packages/main-process/src/mainProcessMain.js'
+  const main = bundleMainProcess ? 'packages/main-process/dist/mainProcessMain.js' : 'packages/main-process/src/mainProcessMain.cjs'
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: {
