@@ -1,5 +1,6 @@
 import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as Event from '../Event/Event.js'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletMainTabsFunctions from './ViewletMainTabsFunctions.js'
@@ -22,7 +23,7 @@ export const handleTabsWheel = (event) => {
 }
 
 export const handleDragStart = (event) => {
-  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
+  DataTransfer.setEffectAllowed(AllowedDragEffectType.CopyMove)
 }
 
 const getIndex = ($Target) => {
@@ -49,6 +50,7 @@ export const handleTabMouseDown = (event, index) => {
 
 export const handleTabsMouseDown = (event) => {
   const { target } = event
+  // TODO just send x and y, worker can compute index
   const index = getIndex(target)
   if (index === -1) {
     return
@@ -65,13 +67,9 @@ export const handleTabsMouseDown = (event) => {
 
 export const handleTabsContextMenu = (event) => {
   const { clientX, clientY, target } = event
-  const index = getIndex(target)
-  if (index === -1) {
-    return
-  }
   Event.preventDefault(event)
   const uid = getUid()
-  ViewletMainTabsFunctions.handleTabContextMenu(uid, index, clientX, clientY)
+  ViewletMainTabsFunctions.handleTabContextMenu(uid, clientX, clientY)
 }
 
 export const handlePointerOver = (event) => {
