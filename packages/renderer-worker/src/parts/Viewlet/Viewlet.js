@@ -85,7 +85,7 @@ export const refresh = async (id) => {
  * @deprecated
  */
 export const send = (id, method, ...args) => {
-  console.trace(`viewlet.send is deprecated`)
+  // console.trace(`viewlet.send is deprecated`)
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
     console.info('instance disposed', { id, method, args })
@@ -258,10 +258,10 @@ export const getAllStates = () => {
   return states
 }
 
-export const openWidget = async (id, ...args) => {
-  const hasInstance = ViewletStates.hasInstance(id)
+export const openWidget = async (moduleId, ...args) => {
+  const hasInstance = ViewletStates.hasInstance(moduleId)
   const type = args[0]
-  if (ElectronBrowserView.isOpen() && id === ViewletModuleId.QuickPick) {
+  if (ElectronBrowserView.isOpen() && moduleId === ViewletModuleId.QuickPick) {
     // TODO recycle quickpick instance
     if (hasInstance) {
       await ViewletElectron.closeWidgetElectronQuickPick()
@@ -271,7 +271,7 @@ export const openWidget = async (id, ...args) => {
   const childUid = Id.create()
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
-    id,
+    id: moduleId,
     type: 0,
     // @ts-ignore
     uri: `quickPick://${type}`,
@@ -285,7 +285,7 @@ export const openWidget = async (id, ...args) => {
   }
 
   if (hasInstance) {
-    commands.unshift(['Viewlet.dispose', id])
+    commands.unshift(['Viewlet.dispose', moduleId])
   }
   const layout = ViewletStates.getState(ViewletModuleId.Layout)
   commands.push(['Viewlet.append', layout.uid, childUid])
@@ -305,10 +305,11 @@ export const closeWidget = async (id) => {
     if (ElectronBrowserView.isOpen() && id === ViewletElectron.isQuickPickOpen()) {
       return ViewletElectron.closeWidgetElectronQuickPick()
     }
-    if (!ViewletStates.hasInstance(id)) {
+    const childInstance = ViewletStates.getInstance(id)
+    if (!childInstance) {
       return
     }
-    const child = ViewletStates.getState(id)
+    const child = childInstance.state
     const childUid = child.uid
     const commands = disposeFunctional(childUid)
     await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
@@ -337,7 +338,7 @@ const getFn = async (module, fnName) => {
   }
   const lazyImport = getLazyImport(module, fnName)
   if (!lazyImport) {
-    throw new Error(`Command not found ${module.name}.${fnName}`)
+    throw new Error(`Command ${module.name}.${fnName} not found in renderer worker`)
   }
   const importedModule = await lazyImport()
   const lazyFn = importedModule[fnName]
@@ -360,6 +361,9 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   if (oldState === actualNewState) {
     return
   }
+  if (!ViewletStates.hasInstance(uid)) {
+    return
+  }
   const commands = ViewletManager.render(instance.factory, instance.renderedState, actualNewState)
   if ('newState' in newState) {
     commands.push(...newState.commands)
@@ -369,4 +373,54 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
     return
   }
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
+}
+
+export const disposeWidgetWithValue = async (id, value) => {
+  try {
+    if (!id) {
+      console.warn('no instance to dispose')
+      return []
+    }
+    const instance = ViewletStates.getInstance(id)
+    if (!instance) {
+      Logger.warn(`cannot dispose instance ${id} because it may already be disposed`)
+      return []
+    }
+    // TODO status should have enum
+    instance.status = 'disposing'
+    if (!instance.factory) {
+      throw new Error(`${id} is missing a factory function`)
+    }
+    if (instance.factory.dispose) {
+      instance.factory.dispose(instance.state)
+    }
+    const uid = instance.state.uid
+    Assert.number(uid)
+    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
+    if (instance.factory.getKeyBindings) {
+      commands.push(['Viewlet.removeKeyBindings', uid])
+    }
+    if (instance.factory.getChildren) {
+      const children = instance.factory.getChildren(instance.state)
+      for (const child of children) {
+        if (child.id) {
+          commands.push(...disposeFunctional(child.id))
+        }
+      }
+    }
+    instance.status = 'disposed'
+    ViewletStates.remove(id)
+    ViewletStates.remove(uid)
+    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    // return commands
+    const parentInstance = ViewletStates.getInstance(ViewletModuleId.KeyBindings)
+    if (!parentInstance) {
+      return
+    }
+    const newState = parentInstance.factory.handleDefineKeyBindingDisposed(parentInstance.state, value)
+  } catch (error) {
+    console.error(error)
+    // TODO use Error.cause once proper stack traces are supported by chrome
+    throw new Error(`Failed to dispose viewlet ${id}: ${error}`)
+  }
 }

@@ -1,15 +1,11 @@
 import { dirname } from 'node:path'
 import * as Assert from '../Assert/Assert.js'
-import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Json from '../Json/Json.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Platform from '../Platform/Platform.js'
 import { VError } from '../VError/VError.js'
-
-const isValid = (recentlyOpened) => {
-  return recentlyOpened && Array.isArray(recentlyOpened)
-}
 
 const addToArrayUnique = (recentlyOpened, path) => {
   const index = recentlyOpened.indexOf(path)
@@ -24,10 +20,9 @@ const getRecentlyOpened = async (recentlyOpenedPath) => {
     const parsed = await JsonFile.readJson(recentlyOpenedPath)
     return parsed
   } catch (error) {
-    // TODO should check for error.code
-    if (error.message.includes('File not found')) {
+    if (error && error.code === ErrorCodes.ENOENT) {
       // ignore
-    } else if (error.message.includes('Json Parsing Error')) {
+    } else if (error && error.code === ErrorCodes.E_JSON_PARSE) {
       // ignore
     } else {
       throw new VError(error, `Failed to read recently opened`)
@@ -41,7 +36,7 @@ const setRecentlyOpened = async (recentlyOpenedPath, newRecentlyOpened) => {
   try {
     await FileSystem.writeFile(recentlyOpenedPath, stringified)
   } catch (error) {
-    if (error && error instanceof FileNotFoundError) {
+    if (error && error.code === ErrorCodes.ENOENT) {
       await FileSystem.mkdir(dirname(recentlyOpenedPath))
       await FileSystem.writeFile(recentlyOpenedPath, stringified)
       return

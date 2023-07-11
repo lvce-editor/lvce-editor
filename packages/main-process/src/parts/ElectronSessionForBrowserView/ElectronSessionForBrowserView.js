@@ -1,12 +1,12 @@
-const Electron = require('electron')
-const { VError } = require('verror')
-const Path = require('../Path/Path.js')
-const Platform = require('../Platform/Platform.js')
-const FileSystem = require('../FileSystem/FileSystem.js')
-const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
-const ErrorCodes = require('../ErrorCodes/ErrorCodes.js')
-const Logger = require('../Logger/Logger.js')
-const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
+import * as Electron from 'electron'
+import { VError } from '../VError/VError.cjs'
+import * as Path from '../Path/Path.cjs'
+import * as Platform from '../Platform/Platform.cjs'
+import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as ElectronPermissionType from '../ElectronPermissionType/ElectronPermissionType.cjs'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.cjs'
+import * as Logger from '../Logger/Logger.cjs'
+import * as ElectronBrowserViewAdBlock from '../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js'
 
 const state = {
   /**
@@ -28,12 +28,7 @@ const isAllowedPermission = (permission) => {
   }
 }
 
-const handlePermissionRequest = (
-  webContents,
-  permission,
-  callback,
-  details
-) => {
+const handlePermissionRequest = (webContents, permission, callback, details) => {
   callback(isAllowedPermission(permission))
 }
 
@@ -92,15 +87,12 @@ const createSession = () => {
   })
   session.setPermissionRequestHandler(handlePermissionRequest)
   session.setPermissionCheckHandler(handlePermissionCheck)
-  session.webRequest.onBeforeRequest(
-    ElectronBrowserViewAdBlock.filter,
-    ElectronBrowserViewAdBlock.handleBeforeRequest
-  )
+  session.webRequest.onBeforeRequest(ElectronBrowserViewAdBlock.filter, ElectronBrowserViewAdBlock.handleBeforeRequest)
   // session.webRequest.addSessionChromeExtensions(session)
   return session
 }
 
-exports.getSession = () => {
+export const getSession = () => {
   if (!state.session) {
     state.session = createSession()
   }

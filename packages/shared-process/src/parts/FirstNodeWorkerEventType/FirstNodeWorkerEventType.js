@@ -1,5 +1,3 @@
-export const Exit = 'exit'
-
-export const Error = 'error'
-
-export const Message = 'message'
+export const Exit = 1
+export const Error = 2
+export const Message = 3

@@ -1,23 +1,30 @@
-const ElectronApp = require('../ElectronApp/ElectronApp.js')
-const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
-const GetFirstNodeWorkerEvent = require('../GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js')
-const NodeWorker = require('../NodeWorker/NodeWorker.js')
-const Platform = require('../Platform/Platform.js')
+import * as ElectronApp from '../ElectronApp/ElectronApp.cjs'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.cjs'
+import * as ExitCode from '../ExitCode/ExitCode.cjs'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as Platform from '../Platform/Platform.cjs'
+import * as Process from '../Process/Process.cjs'
 
-const handleCliArgs = async (parsedArgs) => {
-  const sharedProcessPath = Platform.getSharedProcessPath()
-  const worker = NodeWorker.create(sharedProcessPath, {
-    argv: parsedArgs._,
-  })
-  worker.postMessage({ method: '' })
-  const { type, event } = await GetFirstNodeWorkerEvent.getFirstNodeWorkerEvent(worker)
-  switch (type) {
-    case FirstNodeWorkerEventType.Error:
-      throw event
-    default:
-      break
+export const handleCliArgs = async (parsedArgs) => {
+  try {
+    const sharedProcessPath = Platform.getSharedProcessPath()
+    const ipc = await IpcParent.create({
+      method: IpcParentType.NodeWorker,
+      path: sharedProcessPath,
+    })
+    HandleIpc.handleIpc(ipc)
+    await JsonRpc.invoke(ipc, 'HandleCliArgs.handleCliArgs', parsedArgs)
+  } catch (error) {
+    Process.setExitCode(ExitCode.Error)
+    if (error && error instanceof Error && error.stack && error.stack.includes('shared-process')) {
+      // ignore
+    } else {
+      ErrorHandling.handleError(error)
+    }
+  } finally {
+    ElectronApp.quit()
   }
-  ElectronApp.quit()
 }
-
-exports.handleCliArgs = handleCliArgs

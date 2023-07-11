@@ -1,17 +1,17 @@
-const ChildProcess = require('../ChildProcess/ChildProcess.js')
-const Command = require('../Command/Command.js')
-const Path = require('../Path/Path.js')
-const Logger = require('../Logger/Logger.js')
-const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
-const ExitCode = require('../ExitCode/ExitCode.js')
-const Process = require('../Process/Process.js')
+import * as ChildProcess from '../ChildProcess/ChildProcess.js'
+import * as Command from '../Command/Command.cjs'
+import * as Path from '../Path/Path.cjs'
+import * as Logger from '../Logger/Logger.cjs'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.cjs'
+import * as ExitCode from '../ExitCode/ExitCode.cjs'
+import * as Process from '../Process/Process.cjs'
 
-const state = (exports.state = {
+export const state = {
   /**
    * @type{any|undefined}
    */
   child: undefined,
-})
+}
 
 const handleChildError = (error) => {
   Logger.info('[main] Child Error')
@@ -75,7 +75,7 @@ const handleChildDisconnect = () => {
   Logger.info('[main] child disconnected')
 }
 
-exports.hydrate = async () => {
+export const hydrate = async () => {
   // console.log('hydrate server')
   // TODO spawn seems to be a lot faster than fork for unknown reasons
   // const child = fork('../../packages/web/bin/web.js', {

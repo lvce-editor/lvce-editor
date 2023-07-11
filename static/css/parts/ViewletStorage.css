@@ -1,0 +1,19 @@
+.Storage {
+  position: absolute;
+  white-space: pre;
+  padding: 20px;
+}
+
+.StorageTable {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.StorageTable th {
+  text-align: left;
+}
+
+.StorageTable td {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

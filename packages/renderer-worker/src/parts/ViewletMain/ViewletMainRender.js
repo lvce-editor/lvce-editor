@@ -1,5 +1,6 @@
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as GetTabsVirtualDom from '../GetTabsVirtualDom/GetTabsVirtualDom.js'
 
 export const hasFunctionalRender = true
 
@@ -75,8 +76,10 @@ const renderGroupTabs = {
       console.log({ insertedGroup })
       commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
       commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
-      commands.push(['Viewlet.send', tabsUid, 'setTabs', editors])
-      commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, activeIndex])
+      const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex, newState.tabsDeltax)
+      commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
+      commands.push(['Viewlet.send', tabsUid, 'setScrollLeft', tabsDeltaX])
+      // commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, activeIndex])
       commands.push(['Viewlet.append', newState.uid, tabsUid])
     }
     console.log({ insertedGroups, deletedGroups, oldGroups })

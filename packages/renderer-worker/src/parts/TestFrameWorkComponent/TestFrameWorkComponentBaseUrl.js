@@ -1,5 +1,5 @@
-import * as Platform from '../Platform/Platform.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
 
 export const getBaseUrl = () => {
-  return `${location.origin}/${Platform.getAssetDir()}`
+  return `${location.origin}/${AssetDir.assetDir}`
 }

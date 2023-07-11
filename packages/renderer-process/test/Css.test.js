@@ -21,20 +21,6 @@ beforeEach(() => {
   document.adoptedStyleSheets = []
 })
 
-test('setInlineStyle', () => {
-  Css.setInlineStyle('ContributedColorTheme', '* { font-size: 14px; }')
-  expect(document.head.children).toHaveLength(1)
-  const $FirstChild = document.head.children[0]
-  expect($FirstChild.id).toBe('ContributedColorTheme')
-  expect($FirstChild.textContent).toBe('* { font-size: 14px; }')
-})
-
-test('setInlineStyle - style sheet already exists', () => {
-  Css.setInlineStyle('ContributedColorTheme', '* { font-size: 14px; }')
-  Css.setInlineStyle('ContributedColorTheme', '* { font-size: 14px; }')
-  expect(document.head.children).toHaveLength(1)
-})
-
 test('addCssStyleSheet', async () => {
   await Css.addCssStyleSheet('* { font-size: 14px; }')
   expect(document.adoptedStyleSheets).toHaveLength(1)

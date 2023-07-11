@@ -1,9 +1,6 @@
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as JsonRpcSuccessResponse from '../JsonRpcSuccessResponse/JsonSuccessResponse.js'
 
 export const getSuccessResponse = (message, result) => {
-  return {
-    jsonrpc: JsonRpcVersion.Two,
-    id: message.id,
-    result: result ?? null,
-  }
+  const resultProperty = result ?? null
+  return JsonRpcSuccessResponse.create(message, resultProperty)
 }

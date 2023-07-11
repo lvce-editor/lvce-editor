@@ -1,7 +1,6 @@
-const { MessageChannelMain, ipcMain } = require('electron')
-const Performance = require('../Performance/Performance.js')
+import * as Performance from '../Performance/Performance.cjs'
 
-exports.getPerformanceEntries = () => {
+export const getPerformanceEntries = () => {
   const entries = Performance.getEntries()
   const { timeOrigin } = Performance
   return {
@@ -10,6 +9,6 @@ exports.getPerformanceEntries = () => {
   }
 }
 
-exports.crashMainProcess = () => {
+export const crashMainProcess = () => {
   throw new Error('oops')
 }

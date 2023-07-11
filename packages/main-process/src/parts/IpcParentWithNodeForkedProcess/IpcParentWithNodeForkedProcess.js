@@ -1,9 +1,15 @@
-const Assert = require('../Assert/Assert.js')
-const { fork } = require('node:child_process')
+import { fork } from 'node:child_process'
+import * as Assert from '../Assert/Assert.cjs'
 
-exports.create = async ({ path, argv, env, execArgv, stdio }) => {
+/**
+ *
+ * @param {{path:string, argv?:string[], env?:any, execArgv?:string[], stdio?:'inherit'}} param0
+ * @returns
+ */
+export const create = async ({ path, argv = [], env = process.env, execArgv = [], stdio = 'inherit' }) => {
   Assert.string(path)
-  const childProcess = fork(path, argv, {
+  const actualArgv = ['--ipc-type=node-forked-process', ...argv]
+  const childProcess = fork(path, actualArgv, {
     env,
     execArgv,
     stdio,
@@ -11,7 +17,7 @@ exports.create = async ({ path, argv, env, execArgv, stdio }) => {
   return childProcess
 }
 
-exports.wrap = (childProcess) => {
+export const wrap = (childProcess) => {
   return {
     childProcess,
     on(event, listener) {
@@ -26,5 +32,6 @@ exports.wrap = (childProcess) => {
     dispose() {
       this.childProcess.kill()
     },
+    pid: childProcess.pid,
   }
 }

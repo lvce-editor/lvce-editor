@@ -28,10 +28,16 @@ RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
         libwayland-client0 \
         fakeroot
 
+# Install AppImage dependencies
+RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        fuse \
+        libfuse2
+
+
 # Install nodeJs
 RUN bash -c ". .nvm/nvm.sh \
-    && nvm install 18.16.0 \
-    && nvm use 18.16.0 \
-    && nvm alias default 18.16.0"
+    && nvm install 18.16.1 \
+    && nvm use 18.16.1 \
+    && nvm alias default 18.16.1"
 
 RUN echo "nvm use default &>/dev/null" >> ~/.bashrc.d/51-nvm-fix

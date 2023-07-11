@@ -1,18 +1,17 @@
-import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
-import * as DirentType from '../DirentType/DirentType.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as EnterKeyHintType from '../EnterKeyHintType/EnterKeyHintType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Icon from '../Icon/Icon.js'
+import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as InputType from '../InputType/InputType.js'
-import * as Label from '../Label/Label.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
-import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as MaskImage from '../MaskImage/MaskImage.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 
 const activeId = 'TreeItemActive'
@@ -56,6 +55,7 @@ export const create = () => {
   $ViewletSearchInput.placeholder = 'Search'
   $ViewletSearchInput.type = InputType.Search
   $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
+  $ViewletSearchInput.name = 'search-value'
 
   const $ButtonMatchCase = create$SearchFieldButton(UiStrings.MatchCase, Icon.CaseSensitive)
   const $ButtonMatchWholeWord = create$SearchFieldButton(UiStrings.MatchWholeWord, Icon.WholeWord)
@@ -65,10 +65,9 @@ export const create = () => {
   $SearchField.className = 'SearchField'
   $SearchField.append($ViewletSearchInput, $ButtonMatchCase, $ButtonMatchWholeWord, $ButtonUseRegularExpression)
 
-  const $ToggleButton = document.createElement('button')
-  $ToggleButton.className = 'SearchToggleButton'
-  $ToggleButton.textContent = 'T'
-  $ToggleButton.title = UiStrings.ToggleReplace
+  const $ToggleButton = IconButton.create$Button(UiStrings.ToggleReplace, Icon.ChevronRight)
+  $ToggleButton.classList.add('SearchToggleButton')
+  const $ToggleButtonIcon = $ToggleButton.firstChild
 
   const $SearchStatus = document.createElement('div')
   // @ts-ignore
@@ -116,6 +115,7 @@ export const create = () => {
     $ButtonMatchCase,
     $ButtonMatchWholeWord,
     $ButtonUseRegularExpression,
+    $ToggleButtonIcon,
   }
 }
 
@@ -144,112 +144,9 @@ export const focus = (state) => {
   state.$ViewletSearchInput.focus()
 }
 
-const create$Row = () => {
-  const $Row = document.createElement('div')
-  $Row.role = AriaRoles.TreeItem
-  $Row.className = 'TreeItem'
-  const $Label = Label.create('')
-  const $Icon = document.createElement('i')
-  $Row.append($Icon, $Label)
-  return $Row
-}
-
-// TODO much duplication with explorer
-const render$Row = ($Row, rowInfo, replacement) => {
-  const { top, type, matchStart, matchLength, text, title, icon, setSize, posInSet, depth } = rowInfo
-  const $Icon = $Row.childNodes[0]
-  const $Label = $Row.childNodes[1]
-  $Icon.className = `FileIcon FileIcon${icon}`
-  if (matchLength) {
-    const before = text.slice(0, matchStart)
-    const highlight = text.slice(matchStart, matchStart + matchLength)
-    const after = text.slice(matchStart + matchLength)
-    const $Before = document.createTextNode(before)
-    const $Highlight = document.createElement('span')
-    $Highlight.textContent = highlight
-    const $After = document.createTextNode(after)
-    if (replacement) {
-      $Highlight.className = 'HighlightDeleted'
-      const $Replacement = document.createElement('ins')
-      $Replacement.className = 'HighlightInserted'
-      $Replacement.textContent = replacement
-      $Label.replaceChildren($Before, $Highlight, $Replacement, $After)
-    } else {
-      $Highlight.className = 'Highlight'
-      $Label.replaceChildren($Before, $Highlight, $After)
-    }
-  } else {
-    $Label.textContent = text
-  }
-  $Row.title = title
-  $Row.ariaSetSize = `${setSize}`
-  $Row.ariaLevel = `${depth}`
-  $Row.ariaPosInSet = `${posInSet}`
-  $Row.ariaLabel = rowInfo.name
-  $Row.ariaDescription = ''
-  SetBounds.setTop($Row, top)
-  switch (type) {
-    // TODO type should be a number for efficiency
-    case DirentType.Directory:
-      $Row.ariaExpanded = AriaBoolean.False
-      break
-    case DirentType.DirectoryExpanded:
-      $Row.ariaExpanded = AriaBoolean.True
-      break
-    case DirentType.File:
-      $Row.ariaExpanded = undefined
-      break
-    default:
-      break
-  }
-}
-
-const render$RowsLess = ($Rows, rowInfos, replacement) => {
-  for (let i = 0; i < $Rows.children.length; i++) {
-    render$Row($Rows.children[i], rowInfos[i])
-  }
-  const fragment = document.createDocumentFragment()
-  for (let i = $Rows.children.length; i < rowInfos.length; i++) {
-    const $Row = create$Row()
-    render$Row($Row, rowInfos[i], replacement)
-    fragment.append($Row)
-  }
-  $Rows.append(fragment)
-}
-
-const render$RowsEqual = ($Rows, rowInfos, replacement) => {
-  for (let i = 0; i < rowInfos.length; i++) {
-    render$Row($Rows.children[i], rowInfos[i], replacement)
-  }
-}
-
-const render$RowsMore = ($Rows, rowInfos, replacement) => {
-  for (let i = 0; i < rowInfos.length; i++) {
-    render$Row($Rows.children[i], rowInfos[i], replacement)
-  }
-  const diff = $Rows.children.length - rowInfos.length
-  for (let i = 0; i < diff; i++) {
-    $Rows.lastChild.remove()
-  }
-}
-
-const render$Rows = ($Rows, rowInfos, replacment) => {
-  if ($Rows.children.length < rowInfos.length) {
-    render$RowsLess($Rows, rowInfos, replacment)
-  } else if ($Rows.children.length === rowInfos.length) {
-    render$RowsEqual($Rows, rowInfos, replacment)
-  } else {
-    render$RowsMore($Rows, rowInfos, replacment)
-  }
-}
-
-export const setResults = (state, results, replacement) => {
-  Assert.object(state)
-  Assert.array(results)
+export const setDom = (state, dom) => {
   const { $ListItems } = state
-  // TODO should recycle nodes when rendering only search results
-  // maybe could also recycle node from noResults and vice versa
-  render$Rows($ListItems, results, replacement)
+  VirtualDom.renderInto($ListItems, dom)
 }
 
 export const setMessage = (state, message) => {
@@ -267,16 +164,6 @@ export const dispose = () => {}
 
 // TODO duplicate code with extensions list
 
-export const setContentHeight = (state, height) => {
-  const { $ListItems } = state
-  SetBounds.setHeight($ListItems, height)
-}
-
-export const setNegativeMargin = (state, negativeMargin) => {
-  const { $ListItems } = state
-  SetBounds.setTop($ListItems, negativeMargin)
-}
-
 const create$ReplaceField = () => {
   const $Row = document.createElement('div')
   $Row.className = 'SearchField'
@@ -289,6 +176,7 @@ const create$ReplaceField = () => {
   const $ViewletSearchReplaceInput = InputBox.create()
   $ViewletSearchReplaceInput.placeholder = 'Replace'
   $ViewletSearchReplaceInput.type = 'text'
+  $ViewletSearchReplaceInput.name = 'search-replace-value'
   $ViewletSearchReplaceInput.oninput = ViewletSearchEvents.handleReplaceInput
 
   const $ButtonPreserveCase = document.createElement('button')
@@ -301,75 +189,28 @@ const create$ReplaceField = () => {
 }
 
 export const setReplaceExpanded = (state, replaceExpanded) => {
-  console.log('set expanded', replaceExpanded)
-  const { $ViewletSearchReplaceInput, $ToggleButton, $SearchField, $ViewletSearchInput } = state
+  const { $ViewletSearchReplaceInput, $ToggleButton, $SearchField, $ToggleButtonIcon } = state
   if (replaceExpanded) {
     $ToggleButton.ariaExpanded = true
     const $ViewletSearchReplaceInput = create$ReplaceField()
     $SearchField.after($ViewletSearchReplaceInput)
     state.$ViewletSearchReplaceInput = $ViewletSearchReplaceInput
-    // TODO add it
+    $ToggleButton.classList.add('SearchToggleButtonExpanded')
+    MaskImage.setMaskImage($ToggleButtonIcon, Icon.ChevronDown)
   } else {
     $ToggleButton.ariaExpanded = false
     $ViewletSearchReplaceInput.remove()
     state.$ViewletSearchReplaceInput = undefined
-    // TODO remove it
+    $ToggleButton.classList.remove('SearchToggleButtonExpanded')
+    MaskImage.setMaskImage($ToggleButtonIcon, Icon.ChevronRight)
   }
 }
 
 export const setButtonsChecked = (state, matchWholeWord, useRegularExpression, matchCase) => {
-  console.log({ matchWholeWord, useRegularExpression, matchCase })
   const { $ButtonMatchWholeWord, $ButtonUseRegularExpression, $ButtonMatchCase } = state
   $ButtonMatchWholeWord.ariaChecked = matchWholeWord
   $ButtonUseRegularExpression.ariaChecked = useRegularExpression
   $ButtonMatchCase.ariaChecked = matchCase
-}
-
-export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
-  const { $List, $ListItems } = state
-  switch (oldIndex) {
-    case -2:
-      break
-    case -1:
-      $List.classList.remove(focusClassName)
-      break
-    default:
-      const $Dirent = $ListItems.children[oldIndex]
-      if ($Dirent) {
-        $Dirent.classList.remove(focusClassName)
-        $Dirent.removeAttribute('id')
-      }
-      break
-  }
-  switch (newIndex) {
-    case -2:
-      $List.classList.remove(focusClassName)
-      $List.removeAttribute(DomAttributeType.AriaActiveDescendant)
-      break
-    case -1:
-      if (focused) {
-        $List.classList.add(focusClassName)
-        $List.removeAttribute(DomAttributeType.AriaActiveDescendant)
-      }
-      break
-    default:
-      if (newIndex >= 0) {
-        const $Dirent = $ListItems.children[newIndex]
-        if (!$Dirent) {
-          break
-        }
-        $Dirent.id = activeId
-        $List.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
-        if (focused) {
-          $Dirent.classList.add(focusClassName)
-        }
-      }
-      break
-  }
-  if (focused) {
-    $List.focus()
-    Focus.setFocus('SearchResults')
-  }
 }
 
 export * from '../ViewletScrollable/ViewletScrollable.js'

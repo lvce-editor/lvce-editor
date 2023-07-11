@@ -1,16 +1,17 @@
-const LoadErrorCode = require('../src/parts/LoadErrorCode/LoadErrorCode.js')
+import * as LoadErrorCode from '../src/parts/LoadErrorCode/LoadErrorCode.js'
+import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.mock('electron', () => {
+jest.unstable_mockModule('electron', () => {
   return {
     BrowserWindow: {},
   }
 })
 
-const ElectronBrowserViewFunctions = require('../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js')
+const ElectronBrowserViewFunctions = await import('../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js')
 
 test('focus', async () => {
   const view = {
@@ -86,14 +87,11 @@ test('setIframeSrc - error - connection refused', async () => {
   expect(view.webContents.loadURL).toHaveBeenCalledTimes(1)
   expect(view.webContents.loadURL).toBeCalledWith('https://example.com')
   expect(view.webContents.loadFile).toHaveBeenCalledTimes(1)
-  expect(view.webContents.loadFile).toHaveBeenCalledWith(
-    expect.stringContaining('error.html'),
-    {
-      query: {
-        code: LoadErrorCode.ERR_CONNECTION_REFUSED,
-      },
-    }
-  )
+  expect(view.webContents.loadFile).toHaveBeenCalledWith(expect.stringContaining('error.html'), {
+    query: {
+      code: LoadErrorCode.ERR_CONNECTION_REFUSED,
+    },
+  })
 })
 
 test('setIframeSrc - error - canceled', async () => {
@@ -113,14 +111,11 @@ test('setIframeSrc - error - canceled', async () => {
   expect(view.webContents.loadURL).toHaveBeenCalledTimes(1)
   expect(view.webContents.loadURL).toBeCalledWith('https://example.com')
   expect(view.webContents.loadFile).toHaveBeenCalledTimes(1)
-  expect(view.webContents.loadFile).toHaveBeenCalledWith(
-    expect.stringContaining('error.html'),
-    {
-      query: {
-        code: LoadErrorCode.ERR_CONNECTION_REFUSED,
-      },
-    }
-  )
+  expect(view.webContents.loadFile).toHaveBeenCalledWith(expect.stringContaining('error.html'), {
+    query: {
+      code: LoadErrorCode.ERR_CONNECTION_REFUSED,
+    },
+  })
 })
 
 test('setIframeSrc - error - aborted', async () => {
@@ -157,9 +152,5 @@ test('setIframeSrc - two errors', async () => {
   await expect(
     // @ts-ignore
     ElectronBrowserViewFunctions.setIframeSrc(view, 'https://example.com')
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to set iframe src: ERR_CONNECTION_REFUSED:ERR_CONNECTION_REFUSED'
-    )
-  )
+  ).rejects.toThrowError(new Error('Failed to set iframe src: ERR_CONNECTION_REFUSED:ERR_CONNECTION_REFUSED'))
 })

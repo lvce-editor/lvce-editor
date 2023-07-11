@@ -1,6 +1,7 @@
 import VError from 'verror'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Exec from '../Exec/Exec.js'
+import * as GetElsProblemMessage from '../GetElsProblemMessage/GetElsProblemMessage.js'
 import * as Path from '../Path/Path.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
@@ -12,16 +13,6 @@ const getNodeVersionMajor = (nodeVersion) => {
     throw new Error('unable to detect node version')
   }
   return match[0]
-}
-
-const getElsProblemMessage = (message) => {
-  const lines = SplitLines.splitLines(message)
-  for (const line of lines) {
-    if (line.includes('npm ERR! invalid:')) {
-      return line
-    }
-  }
-  return message
 }
 
 const trimLine = (line) => {
@@ -43,7 +34,7 @@ const getNpmDependenciesRaw = async (root) => {
     return lines.slice(1)
   } catch (error) {
     if (error && error instanceof Error && error.message.includes(ErrorCodes.ELSPROBLEMS)) {
-      const message = getElsProblemMessage(error.message)
+      const message = GetElsProblemMessage.getElsProblemMessage(error.message)
       throw new VError(`Failed to get npm dependencies for ${root}: ${message}`)
     }
     // @ts-ignore
@@ -61,7 +52,7 @@ export const getNpmDependenciesRawJson = async (root) => {
     return json
   } catch (error) {
     if (error && error instanceof Error && error.message.includes(ErrorCodes.ELSPROBLEMS)) {
-      const message = getElsProblemMessage(error.message)
+      const message = GetElsProblemMessage.getElsProblemMessage(error.message)
       throw new VError(`Failed to get npm dependencies for ${root}: ${message}`)
     }
     // @ts-ignore

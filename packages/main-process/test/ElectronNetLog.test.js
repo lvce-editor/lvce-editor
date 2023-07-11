@@ -1,8 +1,10 @@
+import { jest } from '@jest/globals'
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.mock('electron', () => {
+jest.unstable_mockModule('electron', () => {
   return {
     netLog: {
       startLogging: jest.fn(),
@@ -11,17 +13,15 @@ jest.mock('electron', () => {
   }
 })
 
-const electron = require('electron')
-const ElectronNetLog = require('../src/parts/ElectronNetLog/ElectronNetLog.js')
+const electron = await import('electron')
+const ElectronNetLog = await import('../src/parts/ElectronNetLog/ElectronNetLog.js')
 
 test('startLogging - error', async () => {
   // @ts-ignore
   electron.netLog.startLogging.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronNetLog.startLogging()).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(ElectronNetLog.startLogging()).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('startLogging', async () => {
@@ -39,9 +39,7 @@ test('stopLogging - error', async () => {
   electron.netLog.stopLogging.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronNetLog.stopLogging()).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(ElectronNetLog.stopLogging()).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('stopLogging', async () => {

@@ -27,7 +27,7 @@
   },
   {
     "name": "@babel/parser",
-    "version": "7.21.3",
+    "version": "7.22.7",
     "type": "javascript"
   },
   {
@@ -42,7 +42,7 @@
   },
   {
     "name": "dompurify",
-    "version": "3.0.1",
+    "version": "3.0.4",
     "type": "javascript"
   },
   {
@@ -59,7 +59,7 @@
   },
   {
     "name": "modern-normalize",
-    "version": "1.1.0",
+    "version": "2.0.0",
     "type": "css",
     "path": "modern-normalize.css"
   },

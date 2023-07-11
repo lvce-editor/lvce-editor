@@ -1,9 +1,8 @@
-const ElectronSafeStorage = require('./ElectronSafeStorage.js')
+import * as ElectronSafeStorage from './ElectronSafeStorage.js'
 
-exports.name = 'ElectronSafeStorage'
+export const name = 'ElectronSafeStorage'
 
-// prettier-ignore
-exports.Commands = {
+export const Commands = {
   decryptString: ElectronSafeStorage.decryptString,
   encryptString: ElectronSafeStorage.encryptString,
   isEncryptionAvailable: ElectronSafeStorage.isEncryptionAvailable,

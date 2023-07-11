@@ -1,44 +1,56 @@
 import * as Assert from '../Assert/Assert.js'
+import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
 import * as Id from '../Id/Id.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Terminal from '../Terminal/Terminal.js'
+import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
 import * as Workspace from '../Workspace/Workspace.js'
-
 // TODO implement a functional terminal component, maybe using offscreencanvas
 
 export const create = (id) => {
   Assert.number(id)
+  const separateConnection = Preferences.get('terminal.separateConnection')
   return {
     disposed: false,
     id: 0,
     uid: id,
+    separateConnection,
+    command: '',
+    args: [],
   }
 }
 
 export const loadContent = async (state) => {
   // TODO this should be async and open a pty
+  const { command, args } = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
   return {
     ...state,
     id: Id.create(),
+    command,
+    args,
   }
 }
 
 export const contentLoadedEffects = async (state) => {
-  await SharedProcess.invoke(/* Terminal.create */ 'Terminal.create', /* id */ state.id, /* cwd */ Workspace.state.workspacePath)
+  const { uid, separateConnection, command, args } = state
+  await Terminal.create(separateConnection, uid, Workspace.state.workspacePath, command, args)
 }
 
 export const handleData = async (state, data) => {
-  const uid = state.uid
-  // Terminal.handleData(state, data)
-  const parsedData = new Uint8Array(data.data)
+  const { uid } = state
+  const parsedData = ToUint8Array.toUint8Array(data)
   await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ uid, /* method */ 'write', /* data */ parsedData)
 }
 
 export const write = async (state, input) => {
-  await SharedProcess.invoke(/* Terminal.write */ 'Terminal.write', /* id */ state.id, /* input */ input)
+  const { uid } = state
+  await Terminal.write(uid, input)
 }
 
-export const dispose = (state) => {
+export const dispose = async (state) => {
+  const { uid } = state
+  await Terminal.dispose(uid)
   return {
     ...state,
     disposed: true,
@@ -52,7 +64,7 @@ export const resize = async (state, width, height) => {
   // const columns = Math.round(width / columnWidth)
   const columns = 7
   const rows = Math.round(height / rowHeight)
-  await SharedProcess.invoke(/* Terminal.resize */ 'Terminal.resize', /* id */ state.id, /* columns */ columns, /* rows */ rows)
+  await Terminal.resize(state.id, columns, rows)
 
   // Terminal.resize(state, width, height)
 }

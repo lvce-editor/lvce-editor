@@ -1,8 +1,10 @@
+import { IpcError } from '../IpcError/IpcError.js'
+
 export const listen = () => {
   // @ts-ignore
   const parentPort = process.parentPort
   if (!parentPort) {
-    throw new Error('parent port must be defined')
+    throw new IpcError('parent port must be defined')
   }
   parentPort.postMessage('ready')
   return parentPort

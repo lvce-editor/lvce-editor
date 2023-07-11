@@ -1,6 +1,5 @@
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as ViewletState from '../ViewletStates/ViewletStates.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const setLanguageId = async (editor, languageId) => {
   const { uid } = editor

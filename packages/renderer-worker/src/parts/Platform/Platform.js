@@ -94,6 +94,13 @@ export const getUserSettingsPath = () => {
   return SharedProcess.invoke(/* Platform.getUserSettingsPath */ 'Platform.getUserSettingsPath')
 }
 
+export const getUserKeyBindingsPath = () => {
+  if (platform === PlatformType.Web) {
+    return 'settings'
+  }
+  return SharedProcess.invoke(/* Platform.getUserSettingsPath */ 'Platform.getUserKeyBindingsPath')
+}
+
 /**
  * @returns {'electron'|'remote'|'web'|'test'}
  */
@@ -118,7 +125,7 @@ const getPlatform = () => {
 
 export const platform = getPlatform()
 
-export const getAssetDir = () => {
+const getAssetDir = () => {
   // @ts-ignore
   if (typeof ASSET_DIR !== 'undefined') {
     // @ts-ignore
@@ -129,6 +136,8 @@ export const getAssetDir = () => {
   }
   return ''
 }
+
+export const assetDir = getAssetDir()
 
 export const getRecentlyOpenedPath = () => {
   if (platform === PlatformType.Web) {
@@ -146,12 +155,10 @@ export const getCachePath = () => {
 }
 
 export const getExtensionHostWorkerUrl = () => {
-  const assetDir = getAssetDir()
   return `${assetDir}/packages/extension-host-worker/src/extensionHostWorkerMain.js`
 }
 
 export const getWebExtensionsUrl = () => {
-  const assetDir = getAssetDir()
   return `${assetDir}/config/webExtensions.json`
 }
 
@@ -168,7 +175,6 @@ const getTestPathRemote = () => {
 }
 
 const getTestPathWeb = () => {
-  const assetDir = getAssetDir()
   return `${assetDir}/packages/extension-host-worker-tests`
 }
 

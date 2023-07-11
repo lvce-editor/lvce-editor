@@ -1,6 +1,8 @@
 import { IpcError } from '../IpcError/IpcError.js'
+import * as IsMessagePort from '../IsMessagePort/IsMessagePort.js'
 import * as RendererWorkerIpcParentType from '../RendererWorkerIpcParentType/RendererWorkerIpcParentType.js'
 import * as Rpc from '../Rpc/Rpc.js'
+import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.js'
 
 const getPort = async (type) => {
   const port = await Rpc.invoke('IpcParent.create', {
@@ -12,8 +14,12 @@ const getPort = async (type) => {
   if (!port) {
     throw new IpcError(`port must be defined`)
   }
-  if (!(port instanceof MessagePort)) {
+  if (!IsMessagePort.isMessagePort(port)) {
     throw new IpcError('port must be of type MessagePort')
+  }
+  const firstMessage = await WaitForFirstMessage.waitForFirstMessage(port)
+  if (firstMessage !== 'ready') {
+    throw new IpcError(`unexpected first message from message port`)
   }
   return port
 }

@@ -5,13 +5,18 @@ export const setProp = ($Element, key, value) => {
       $Element.style.webkitMaskImage = `url('${value}')`
       break
     case 'paddingLeft':
-      $Element.style.paddingLeft = `${value}px`
-      break
+    case 'top':
     case 'width':
-      $Element.style.width = `${value}px`
+    case 'height':
+    case 'left':
+    case 'marginTop':
+      $Element.style[key] = `${value}px`
       break
     case 'style':
       throw new Error('style property is not supported')
+    case 'childCount':
+    case 'type':
+      break
     default:
       $Element[key] = value
   }

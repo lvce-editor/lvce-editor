@@ -14,7 +14,6 @@ export const Commands = {
 export const CommandsWithSideEffects = {
   openUri: ViewletMainOpenUri.openUri,
   handleDrop: ViewletMain.handleDrop,
-  handleDropFilePath: ViewletMain.handleDropFilePath,
   closeFocusedTab: ViewletMain.closeFocusedTab,
 }
 
@@ -33,5 +32,8 @@ export const LazyCommands = {
   focusLast: () => import('./ViewletMainFocusIndex.js'),
   focusNext: () => import('./ViewletMainFocusIndex.js'),
   focusPrevious: () => import('./ViewletMainFocusIndex.js'),
+  handleTabsWheel: () => import('./ViewletMainHandleTabsWheel.js'),
   handleTabClick: () => import('./ViewletMainFocusIndex.js'),
+  handleTabsPointerOver: () => import('./ViewletMainHandleTabsPointerOver.js'),
+  handleTabsPointerOut: () => import('./ViewletMainHandleTabsPointerOut.js'),
 }

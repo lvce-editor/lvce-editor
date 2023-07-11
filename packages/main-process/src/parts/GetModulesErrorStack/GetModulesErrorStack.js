@@ -1,7 +1,8 @@
-const SplitLines = require('../SplitLines/SplitLines.js')
+import * as SplitLines from '../SplitLines/SplitLines.cjs'
 
 const RE_AT = /^    at /
-const RE_JUST_PATH = /^(?:\/|\\).*\:\d+$/
+const RE_JUST_PATH = /^(?:file:\/\/|\/|\\).*\:\d+$/
+const RE_JUST_MESSAGE = /^\w+/
 
 const isStackLine = (line) => {
   return RE_AT.test(line)
@@ -11,7 +12,11 @@ const isJustPath = (line) => {
   return RE_JUST_PATH.test(line)
 }
 
-exports.getModulesErrorStack = (stderr) => {
+const isPartOfMessage = (line) => {
+  return RE_JUST_MESSAGE.test(line)
+}
+
+export const getModulesErrorStack = (stderr) => {
   const lines = SplitLines.splitLines(stderr)
   let startIndex = -1
   const extraLines = []
@@ -29,6 +34,14 @@ exports.getModulesErrorStack = (stderr) => {
       break
     }
   }
+  let messageStartIndex = startIndex - 1
+  for (let i = messageStartIndex; i >= 0; i--) {
+    const line = lines[i]
+    if (!isPartOfMessage(line)) {
+      break
+    }
+    messageStartIndex = i
+  }
   if (startIndex === -1) {
     return []
   }
@@ -44,5 +57,16 @@ exports.getModulesErrorStack = (stderr) => {
     endIndex = lines.length - 1
   }
   const stackLines = lines.slice(startIndex, endIndex)
-  return [lines[startIndex - 1], ...extraLines, ...stackLines]
+  let message = lines.slice(messageStartIndex, startIndex).join(' ')
+  if (message === '') {
+    for (let i = 0; i < startIndex; i++) {
+      const line = lines[i]
+      if (line.startsWith('SyntaxError: Named export')) {
+        messageStartIndex = i
+        break
+      }
+    }
+    message = lines.slice(messageStartIndex, startIndex).join(' ').trim()
+  }
+  return [message, ...extraLines, ...stackLines]
 }

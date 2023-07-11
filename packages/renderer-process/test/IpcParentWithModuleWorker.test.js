@@ -82,7 +82,7 @@ test('create - error - not found', async () => {
       this.onerror = null
 
       setTimeout(() => {
-        const errorEvent = new ErrorEvent('error', {})
+        const errorEvent = new Event('error', {})
         this._onerror(errorEvent)
       }, 0)
     }

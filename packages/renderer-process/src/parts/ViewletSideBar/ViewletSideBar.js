@@ -2,6 +2,7 @@ import * as Actions from '../Actions/Actions.js'
 import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ViewletSideBarEvents from './ViewletSideBarEvents.js'
 
 export const create = () => {
   const $SideBarTitleAreaTitle = document.createElement('h2')
@@ -30,6 +31,11 @@ export const create = () => {
     $SideBarTitleAreaTitle,
     $Actions: undefined,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $SideBarTitleArea } = state
+  $SideBarTitleArea.onclick = ViewletSideBarEvents.handleHeaderClick
 }
 
 export const dispose = (state) => {

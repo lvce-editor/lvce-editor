@@ -1,6 +1,6 @@
-import * as ModuleId from '../ModuleId/ModuleId.js'
 import * as Character from '../Character/Character.js'
 import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
+import * as ModuleId from '../ModuleId/ModuleId.js'
 
 const getPrefix = (commandId) => {
   if (!commandId || typeof commandId !== 'string') {
@@ -39,8 +39,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Callback
     case 'Chrome':
       return ModuleId.Chrome
-    case 'ChromeExtension':
-      return ModuleId.ChromeExtension
     case 'ClipBoard':
       return ModuleId.ClipBoard
     case 'ColorPicker':
@@ -55,6 +53,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ContentTracing
     case 'ContextMenu':
       return ModuleId.ContextMenu
+    case 'DebugSharedProcess':
+      return ModuleId.DebugSharedProcess
     case 'Developer':
       return ModuleId.Developer
     case 'Dialog':
@@ -99,6 +99,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.IconTheme
     case 'ImagePreview':
       return ModuleId.ImagePreview
+    case 'IncrementalTextSearch':
+      return ModuleId.IncrementalTextSearch
     case 'IndexedDb':
       return ModuleId.IndexedDb
     case 'IpcParent':
@@ -129,8 +131,12 @@ export const getModuleId = (commandId) => {
       return ModuleId.PersistentFileHandle
     case 'Preferences':
       return ModuleId.Preferences
+    case 'RebuildNodePty':
+      return ModuleId.RebuildNodePty
     case 'RecentlyOpened':
       return ModuleId.RecentlyOpened
+    case 'Reload':
+      return ModuleId.Reload
     case 'SaveFileAs':
       return ModuleId.SaveFileAs
     case 'SaveState':

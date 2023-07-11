@@ -1,8 +1,8 @@
-const { fork } = require('node:child_process')
-const Platform = require('../Platform/Platform.js')
-const Logger = require('../Logger/Logger.js')
+import { fork } from 'node:child_process'
+import * as Platform from '../Platform/Platform.cjs'
+import * as Logger from '../Logger/Logger.cjs'
 
-exports.handlePort = async (event, browserWindowPort) => {
+export const handlePort = async (event, browserWindowPort) => {
   const extensionHostPath = Platform.getExtensionHostPath()
   const start = Date.now()
   const extensionHost = fork(extensionHostPath, ['--ipc-type=parent'], {
@@ -28,11 +28,9 @@ exports.handlePort = async (event, browserWindowPort) => {
     extensionHost.once('message', handleFirstMessage)
   })
   browserWindowPort.on('message', (event) => {
-    console.log({ event })
     extensionHost.send(event.data)
   })
   extensionHost.on('message', (event) => {
-    console.log({ event })
     browserWindowPort.postMessage(event)
   })
   browserWindowPort.start()

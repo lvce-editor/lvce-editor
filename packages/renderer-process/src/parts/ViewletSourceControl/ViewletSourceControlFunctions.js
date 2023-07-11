@@ -8,4 +8,3 @@ export const handleButtonClick = ForwardViewletCommand.forwardViewletCommand('ha
 export const handleClickAdd = ForwardViewletCommand.forwardViewletCommand('handleClickAdd')
 export const handleClickRestore = ForwardViewletCommand.forwardViewletCommand('handleClickRestore')
 export const handleClickOpenFile = ForwardViewletCommand.forwardViewletCommand('handleClickOpenFile')
-export const handleContextMenu = ForwardViewletCommand.forwardViewletCommand('handleContextMenu')

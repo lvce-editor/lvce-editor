@@ -1,21 +1,19 @@
-import * as Command from '../Command/Command.js'
+import * as Assert from '../Assert/Assert.js'
+import * as Character from '../Character/Character.js'
+import * as Css from '../Css/Css.js'
 import * as DefaultIcon from '../DefaultIcon/DefaultIcon.js'
 import * as DirentType from '../DirentType/DirentType.js'
-import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
+import * as GetIconThemeJson from '../GetIconThemeJson/GetIconThemeJson.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
-import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
-import * as Character from '../Character/Character.js'
 
 export const state = {
   seenFiles: [],
@@ -27,37 +25,8 @@ export const state = {
   iconTheme: undefined,
 }
 
-const getIconThemeUrl = (iconThemeId) => {
-  return `/extensions/builtin.${iconThemeId}/icon-theme.json`
-}
-
-const getIconThemeJson = async (iconThemeId) => {
-  if (Platform.platform === PlatformType.Web) {
-    const url = getIconThemeUrl(iconThemeId)
-    const json = await Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
-    const assetDir = Platform.getAssetDir()
-    return {
-      json,
-      extensionPath: `${assetDir}/extensions/builtin.${iconThemeId}`,
-    }
-  }
-  for (const webExtension of ExtensionMeta.state.webExtensions) {
-    if (webExtension.iconThemes) {
-      for (const iconTheme of webExtension.iconThemes) {
-        // TODO handle error when icon theme path is not of type string
-        const iconThemeUrl = `${webExtension.path}/${iconTheme.path}`
-        const json = await Command.execute('Ajax.getJson', iconThemeUrl)
-        return {
-          json,
-          extensionPath: webExtension.path,
-        }
-      }
-    }
-  }
-  return SharedProcess.invoke(SharedProcessCommandType.ExtensionHostGetIconThemeJson, /* iconThemeId */ iconThemeId)
-}
-
 export const getFileNameIcon = (file) => {
+  Assert.string(file)
   const { iconTheme } = state
   const fileNameLower = file.toLowerCase()
   if (!iconTheme) {
@@ -181,7 +150,7 @@ const getIconThemeCss2 = (iconTheme) => {
 
 export const setIconTheme = async (iconThemeId) => {
   try {
-    const iconTheme = await getIconThemeJson(iconThemeId)
+    const iconTheme = await GetIconThemeJson.getIconThemeJson(iconThemeId)
     state.iconTheme = iconTheme.json
     state.extensionPath = iconTheme.extensionPath
     const iconThemeCss = getIconThemeCss2(iconTheme)
@@ -195,7 +164,7 @@ export const setIconTheme = async (iconThemeId) => {
         await Viewlet.setState(factory.name, newState)
       }
     }
-    await RendererProcess.invoke(/* Css.setInlineStyle */ 'Css.setInlineStyle', /* id */ 'ContributedIconTheme', /* css */ iconThemeCss)
+    await Css.addCssStyleSheet('ContributedIconTheme', iconThemeCss)
   } catch (error) {
     if (Workspace.isTest()) {
       // ignore
@@ -214,11 +183,6 @@ export const hydrate = async () => {
   // that way there would be much less rules, but when a new file type appears (which should not happen often)
   // the css must be recalculated again
   // const iconThemeCss = await getIconThemeCss()
-  // await RendererProcess.invoke(
-  //   /* Css.setInlineStyle */ 4551,
-  //   /* id */ 'ContributedIconTheme',
-  //   /* css */ iconThemeCss
-  // )
 
   const iconThemeId = Preferences.get('icon-theme') || 'vscode-icons'
   await setIconTheme(iconThemeId)

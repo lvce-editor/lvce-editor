@@ -36,6 +36,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     getPlatform: jest.fn(() => {
       return 'remote'
     }),
+    assetDir: '',
   }
 })
 

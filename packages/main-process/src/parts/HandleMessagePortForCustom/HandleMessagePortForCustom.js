@@ -1,6 +1,6 @@
-const Assert = require('../Assert/Assert.js')
-const IpcParent = require('../IpcParent/IpcParent.js')
-const IpcParentType = require('../IpcParentType/IpcParentType.js')
+import * as Assert from '../Assert/Assert.cjs'
+import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 const getPath = (data) => {
   Assert.string(data)
@@ -12,10 +12,11 @@ const getPath = (data) => {
  * @param {import('electron').IpcMainEvent} event
  * @returns
  */
-exports.handlePort = async (event, browserWindowPort, data) => {
+export const handlePort = async (event, browserWindowPort, ...params) => {
   if (!browserWindowPort) {
     throw new Error(`browserWindowPort must be passed`)
   }
+  const data = params[0]
   const path = getPath(data)
   const childProcess = await IpcParent.create({
     method: IpcParentType.ElectronUtilityProcess,

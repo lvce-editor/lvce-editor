@@ -8,7 +8,8 @@ import { VError } from '../VError/VError.js'
 export const create = async ({ path, argv = [], env, execArgv = [], stdio = 'inherit', name = 'child process' }) => {
   try {
     Assert.string(path)
-    const childProcess = fork(path, argv, {
+    const actualArgv = ['--ipc-type=node-forked-process', ...argv]
+    const childProcess = fork(path, actualArgv, {
       env,
       execArgv,
       stdio: 'pipe',
@@ -36,11 +37,14 @@ export const wrap = (childProcess) => {
     on(event, listener) {
       this.childProcess.on(event, listener)
     },
+    off(event, listener) {
+      this.childProcess.off(event, listener)
+    },
     send(message) {
       this.childProcess.send(message)
     },
-    sendAndTransfer(message, transfer) {
-      throw new Error('transfer is not supported')
+    sendAndTransfer(message, handle) {
+      this.childProcess.send(message, handle)
     },
     dispose() {
       this.childProcess.kill()

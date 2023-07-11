@@ -1,4 +1,4 @@
-const GetHelpfulChildProcessError = require('../src/parts/GetHelpfulChildProcessError/GetHelpfulChildProcessError.js')
+import * as GetHelpfulChildProcessError from '../src/parts/GetHelpfulChildProcessError/GetHelpfulChildProcessError.js'
 
 test('getHelpfulChildProcessError - modules not supported in electron', () => {
   const stderr = `(node:120184) Warning: To load an ES module, set "type": "module" in the package.json or use the .mjs extension.
@@ -107,4 +107,32 @@ Node.js v18.12.1`
     at ESMLoader.getModuleJob (node:internal/modules/esm/loader:424:18)
     at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:76:40)
     at link (node:internal/modules/esm/module_job:75:36) {`)
+})
+
+test('getHelpfulChildProcessError - export not found', () => {
+  const stderr = `file:///test/packages/pty-host/src/parts/HandleElectronMessagePort/HandleElectronMessagePort.js:5
+import { MessagePortMain } from 'electron'
+         ^^^^^^^^^^^^^^^
+SyntaxError: Named export 'MessagePortMain' not found. The requested module 'electron' is a CommonJS module, which may not support all module.exports as named exports.
+CommonJS modules can always be imported via the default export, for example using:
+
+import pkg from 'electron';
+const { MessagePortMain } = pkg;
+
+    at ModuleJob._instantiate (node:internal/modules/esm/module_job:124:21)
+    at async ModuleJob.run (node:internal/modules/esm/module_job:190:5)
+
+Node.js v18.14.0
+`
+  const error = GetHelpfulChildProcessError.getHelpfulChildProcessError('', '', stderr)
+  expect(error).toBeInstanceOf(Error)
+  expect(error.message).toBe(
+    `SyntaxError: Named export 'MessagePortMain' not found. The requested module 'electron' is a CommonJS module, which may not support all module.exports as named exports. CommonJS modules can always be imported via the default export, for example using:  import pkg from 'electron'; const { MessagePortMain } = pkg;`
+  )
+  expect(error.stack).toBe(
+    `SyntaxError: Named export 'MessagePortMain' not found. The requested module 'electron' is a CommonJS module, which may not support all module.exports as named exports. CommonJS modules can always be imported via the default export, for example using:  import pkg from 'electron'; const { MessagePortMain } = pkg;
+    at file:///test/packages/pty-host/src/parts/HandleElectronMessagePort/HandleElectronMessagePort.js:5
+    at ModuleJob._instantiate (node:internal/modules/esm/module_job:124:21)
+    at async ModuleJob.run (node:internal/modules/esm/module_job:190:5)`
+  )
 })

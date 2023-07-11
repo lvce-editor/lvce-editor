@@ -1,16 +1,29 @@
-const { IpcError } = require('../IpcError/IpcError.js')
-const { utilityProcess } = require('electron')
-const Assert = require('../Assert/Assert.js')
-const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
-const GetFirstUtilityProcessEvent = require('../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js')
-const Platform = require('../Platform/Platform.js')
+import { utilityProcess } from 'electron'
+import * as Assert from '../Assert/Assert.cjs'
+import * as CamelCase from '../CamelCase/CamelCase.js'
+import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
+import * as GetFirstUtilityProcessEvent from '../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js'
+import { IpcError } from '../IpcError/IpcError.js'
+import * as Path from '../Path/Path.cjs'
+import * as Root from '../Root/Root.cjs'
+import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
 
-exports.create = async ({ path, argv, execArgv = [] }) => {
+export const create = async ({ path, argv = [], execArgv = [], name }) => {
   Assert.string(path)
-  const filePath = Platform.getExtensionHostHelperProcessPathCjs()
-  const childProcess = utilityProcess.fork(filePath, argv, {
+  const utilityProcessEntryPoint = Path.join(
+    Root.root,
+    'packages',
+    'main-process',
+    'src',
+    'parts',
+    'UtilityProcessEntryPoint',
+    'UtilityProcessEntryPoint.cjs'
+  )
+  const actualArgv = [path, '--ipc-type=electron-utility-process', ...argv]
+  const childProcess = utilityProcess.fork(utilityProcessEntryPoint, actualArgv, {
     execArgv,
     stdio: 'pipe',
+    serviceName: name,
   })
   // @ts-ignore
   childProcess.stdout.pipe(process.stdout)
@@ -23,7 +36,23 @@ exports.create = async ({ path, argv, execArgv = [] }) => {
   return childProcess
 }
 
-exports.wrap = (process) => {
+export const effects = ({ rawIpc, name }) => {
+  if (!rawIpc.pid) {
+    return
+  }
+  const camelCaseName = CamelCase.camelCase(name)
+  UtilityProcessState.add(rawIpc.pid, camelCaseName)
+  const cleanup = () => {
+    UtilityProcessState.remove(rawIpc.pid)
+    rawIpc.off('exit', handleExit)
+  }
+  const handleExit = () => {
+    cleanup()
+  }
+  rawIpc.on('exit', handleExit)
+}
+
+export const wrap = (process) => {
   return {
     process,
     on(event, listener) {
@@ -33,6 +62,7 @@ exports.wrap = (process) => {
       this.process.postMessage(message)
     },
     sendAndTransfer(message, transfer) {
+      Assert.array(transfer)
       this.process.postMessage(message, transfer)
     },
     dispose() {

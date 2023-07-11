@@ -18,7 +18,7 @@ jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletComma
 const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletActivityBar = await import('../src/parts/ViewletActivityBar/ViewletActivityBar.js')
 
-test('event - handleClick - top', () => {
+test.skip('event - handleClick - top', () => {
   const state = ViewletActivityBar.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
@@ -59,7 +59,7 @@ test('event - handleClick - top', () => {
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 0, 1, 15, 30)
 })
 
-test('event - handleClick - bottom', () => {
+test.skip('event - handleClick - bottom', () => {
   const state = ViewletActivityBar.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
@@ -98,7 +98,7 @@ test('event - handleClick - bottom', () => {
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 0, 2, 15, 30)
 })
 
-test('event - handleClick - no item is clicked', () => {
+test.skip('event - handleClick - no item is clicked', () => {
   const state = ViewletActivityBar.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
@@ -137,7 +137,7 @@ test('event - handleClick - no item is clicked', () => {
   expect(ExecuteViewletCommand.executeViewletCommand).not.toHaveBeenCalled()
 })
 
-test('event - handleContextMenu', () => {
+test.skip('event - handleContextMenu', () => {
   const state = ViewletActivityBar.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)

@@ -5,13 +5,9 @@ import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletMainTabsFunctions from './ViewletMainTabsFunctions.js'
 
 const ClassNames = {
-  Label: 'Label',
+  TabLabel: 'TabLabel',
   EditorTabCloseButton: 'EditorTabCloseButton',
   MainTab: 'MainTab',
-}
-
-export const handleDragStart = (event) => {
-  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
 }
 
 // TODO
@@ -19,10 +15,23 @@ const getUid = () => {
   return ComponentUid.get(document.getElementById('Main'))
 }
 
+export const handleTabsWheel = (event) => {
+  const uid = getUid()
+  const { deltaX, deltaY } = event
+  ViewletMainTabsFunctions.handleTabsWheel(uid, deltaX, deltaY)
+}
+
+export const handleDragStart = (event) => {
+  event.dataTransfer.effectAllowed = AllowedDragEffectType.CopyMove
+}
+
 const getIndex = ($Target) => {
+  if (!$Target) {
+    return -1
+  }
   const $Tab = $Target.closest(`.MainTab`)
   if (!$Tab) {
-    return undefined
+    return -1
   }
   return GetNodeIndex.getNodeIndex($Tab)
 }
@@ -48,11 +57,8 @@ export const handleTabsMouseDown = (event) => {
     case ClassNames.EditorTabCloseButton:
       handleTabCloseButtonMouseDown(event, index)
       break
-    case ClassNames.MainTab:
-    case ClassNames.Label:
-      handleTabMouseDown(event, index)
-      break
     default:
+      handleTabMouseDown(event, index)
       break
   }
 }
@@ -66,4 +72,19 @@ export const handleTabsContextMenu = (event) => {
   Event.preventDefault(event)
   const uid = getUid()
   ViewletMainTabsFunctions.handleTabContextMenu(uid, index, clientX, clientY)
+}
+
+export const handlePointerOver = (event) => {
+  const { target } = event
+  const index = getIndex(target)
+  const uid = getUid()
+  ViewletMainTabsFunctions.handleTabsPointerOver(uid, index)
+}
+
+export const handlePointerOut = (event) => {
+  const { target, relatedTarget } = event
+  const oldIndex = getIndex(target)
+  const newIndex = getIndex(relatedTarget)
+  const uid = getUid()
+  ViewletMainTabsFunctions.handleTabsPointerOut(uid, oldIndex, newIndex)
 }

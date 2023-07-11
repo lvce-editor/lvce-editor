@@ -1,9 +1,9 @@
-const Electron = require('electron')
-const { readFileSync } = require('node:fs')
-const { join } = require('node:path')
-const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.js')
-const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
-const HttpMethod = require('../HttpMethod/HttpMethod.js')
+import * as Electron from 'electron'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import * as ElectronResourceType from '../ElectronResourceType/ElectronResourceType.cjs'
+import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs'
+import * as HttpMethod from '../HttpMethod/HttpMethod.js'
 
 const getBeforeRequestResponseMainFrame = (method, url) => {
   return {}
@@ -92,7 +92,7 @@ const getBeforeRequestResponse = (details) => {
  * @param {Electron.OnBeforeRequestListenerDetails } details
  * @param {(response: globalThis.Electron.CallbackResponse) => void} callback
  */
-exports.handleBeforeRequest = (details, callback) => {
+export const handleBeforeRequest = (details, callback) => {
   const response = getBeforeRequestResponse(details)
   if (!response.cancel && details.resourceType === ElectronResourceType.Xhr) {
     // console.log({
@@ -104,27 +104,21 @@ exports.handleBeforeRequest = (details, callback) => {
   callback(response)
 }
 
-exports.filter = {
+export const filter = {
   // urls: ['https://*.youtube.com/*'],
   urls: ['<all_urls>'],
 }
 
 /**
  *
- * @param {Electron.Event} event
- */
-const handleDidNavigate = (event) => {
-  const webContents = event.sender
-  const blockJs = readFileSync(join(__dirname, './block.js'), 'utf8')
-  webContents.executeJavaScript(blockJs)
-  const blockCss = readFileSync(join(__dirname, './block.css'), 'utf8')
-  webContents.insertCSS(blockCss)
-}
-
-/**
- *
  * @param {Electron.WebContents} webContents
  */
-exports.enableForWebContents = (webContents) => {
+export const enableForWebContents = (webContents) => {
+  const handleDidNavigate = () => {
+    const blockJs = readFileSync(join(__dirname, './block.js'), 'utf8')
+    webContents.executeJavaScript(blockJs)
+    const blockCss = readFileSync(join(__dirname, './block.css'), 'utf8')
+    webContents.insertCSS(blockCss)
+  }
   webContents.on(ElectronWebContentsEventType.DidNavigate, handleDidNavigate)
 }

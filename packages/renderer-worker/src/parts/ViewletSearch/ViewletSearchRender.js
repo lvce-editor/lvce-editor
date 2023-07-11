@@ -1,64 +1,8 @@
-import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as GetSearchDisplayResults from '../GetSearchDisplayResults/GetSearchDisplayResults.js'
+import * as GetSearchResultsVirtualDom from '../GetSearchResultsVirtualDom/GetSearchResultsVirtualDom.js'
+import * as InputSource from '../InputSource/InputSource.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
-import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
-import * as Workspace from '../Workspace/Workspace.js'
-
-const toDisplayResults = (results, itemHeight, resultCount, searchTerm, minLineY, maxLineY) => {
-  // results.sort(compareResults)
-  const displayResults = []
-  const setSize = resultCount
-  let fileIndex = 0
-  for (let i = 0; i < minLineY; i++) {
-    const result = results[i]
-    switch (result.type) {
-      case TextSearchResultType.File:
-        fileIndex++
-        break
-      default:
-        break
-    }
-  }
-  for (let i = minLineY; i < maxLineY; i++) {
-    const result = results[i]
-    switch (result.type) {
-      case TextSearchResultType.File:
-        const path = result.text
-        const absolutePath = Workspace.getAbsolutePath(path)
-        const baseName = Workspace.pathBaseName(path)
-        displayResults.push({
-          title: absolutePath,
-          type: TextSearchResultType.File,
-          text: baseName,
-          icon: IconTheme.getFileIcon({ name: baseName }),
-          posInSet: i + 1,
-          setSize,
-          top: i * itemHeight,
-          lineNumber: result.lineNumber,
-          matchStart: 0,
-          matchLength: 0,
-        })
-        break
-      case TextSearchResultType.Match:
-        displayResults.push({
-          title: result.text,
-          type: TextSearchResultType.Match,
-          text: result.text,
-          icon: '',
-          posInSet: i + 1,
-          setSize,
-          top: i * itemHeight,
-          lineNumber: result.lineNumber,
-          matchStart: result.start,
-          matchLength: searchTerm.length,
-        })
-        break
-      default:
-        break
-    }
-  }
-  return displayResults
-}
 
 export const hasFunctionalRender = true
 
@@ -72,15 +16,17 @@ const renderItems = {
     )
   },
   apply(oldState, newState) {
-    const displayResults = toDisplayResults(
+    const displayResults = GetSearchDisplayResults.getDisplayResults(
       newState.items,
       newState.itemHeight,
       newState.fileCount,
       newState.value,
       newState.minLineY,
-      newState.maxLineY
+      newState.maxLineY,
+      newState.replacement
     )
-    return [/* method */ RenderMethod.SetResults, /* results */ displayResults, /* replacement */ newState.replacement]
+    const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(displayResults)
+    return ['setDom', dom]
   },
 }
 
@@ -99,16 +45,16 @@ const renderScrollBar = {
   },
 }
 
-const renderHeight = {
-  isEqual(oldState, newState) {
-    return oldState.items.length === newState.items.length
-  },
-  apply(oldState, newState) {
-    const { itemHeight } = newState
-    const contentHeight = newState.items.length * itemHeight
-    return [/* method */ RenderMethod.SetContentHeight, /* contentHeight */ contentHeight]
-  },
-}
+// const renderHeight = {
+//   isEqual(oldState, newState) {
+//     return oldState.items.length === newState.items.length
+//   },
+//   apply(oldState, newState) {
+//     const { itemHeight } = newState
+//     const contentHeight = newState.items.length * itemHeight
+//     return [/* method */ RenderMethod.SetContentHeight, /* contentHeight */ contentHeight]
+//   },
+// }
 
 const renderMessage = {
   isEqual(oldState, newState) {
@@ -121,6 +67,9 @@ const renderMessage = {
 
 const renderValue = {
   isEqual(oldState, newState) {
+    if (newState.inputSource === InputSource.User) {
+      return true
+    }
     return oldState.value === newState.value
   },
   apply(oldState, newState) {
@@ -133,7 +82,8 @@ const renderNegativeMargin = {
     return oldState.deltaY === newState.deltaY
   },
   apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetNegativeMargin, /* negativeMargin */ -newState.deltaY]
+    const relative = newState.deltaY % 22
+    return [/* method */ RenderMethod.SetNegativeMargin, /* negativeMargin */ -relative]
   },
 }
 
@@ -184,7 +134,6 @@ export const render = [
   renderMessage,
   renderValue,
   renderScrollBar,
-  renderHeight,
   renderNegativeMargin,
   renderReplaceExpanded,
   renderButtonsChecked,

@@ -1,11 +1,11 @@
-const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
+import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
 
 /**
  *
  * @param {import('electron').UtilityProcess} utilityProcess
  * @returns
  */
-exports.getFirstUtilityProcessEvent = async (utilityProcess) => {
+export const getFirstUtilityProcessEvent = async (utilityProcess) => {
   const { type, event, stdout, stderr } = await new Promise((resolve, reject) => {
     let stdout = ''
     let stderr = ''

@@ -18,6 +18,7 @@ const copyPtyHostFiles = async ({ arch, electronVersion, cachePath }) => {
     electronVersion,
     arch,
     to: `${cachePath}/packages/pty-host`,
+    exclude: ['ws'],
   })
 }
 
@@ -33,9 +34,12 @@ const copyExtensionHostFiles = async ({ cachePath }) => {
   })
 }
 
-const copySharedProcessFiles = async ({ cachePath }) => {
+const copySharedProcessFiles = async ({ cachePath, arch, electronVersion }) => {
   await BundleSharedProcessDependencies.bundleSharedProcessDependencies({
     to: `${cachePath}/packages/shared-process`,
+    arch,
+    electronVersion,
+    exclude: ['ws', 'trash'],
   })
 }
 
@@ -141,6 +145,8 @@ export const bundleElectronAppDependencies = async ({ cachePath, arch, electronV
   console.time('copySharedProcessFiles')
   await copySharedProcessFiles({
     cachePath,
+    arch,
+    electronVersion,
   })
   console.timeEnd('copySharedProcessFiles')
 

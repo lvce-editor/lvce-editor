@@ -1,19 +1,16 @@
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as OffscreenCanvasState from '../OffscreenCanvasState/OffscreenCanvasState.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
-export const state = {
-  canvasObjects: Object.create(null),
-}
-
 export const get = (id) => {
-  return state.canvasObjects[id]
+  return OffscreenCanvasState.get(id)
 }
 
 export const create = (canvasId, callbackId) => {
   const canvas = document.createElement('canvas')
   // @ts-ignore
   const offscreenCanvas = canvas.transferControlToOffscreen()
-  state.canvasObjects[canvasId] = canvas
+  OffscreenCanvasState.set(canvasId, canvas)
   RendererWorker.sendAndTransfer(
     {
       jsonrpc: JsonRpcVersion.Two,

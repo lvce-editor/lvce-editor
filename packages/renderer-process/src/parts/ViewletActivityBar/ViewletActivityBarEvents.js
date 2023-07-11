@@ -28,13 +28,6 @@ export const handleMousedown = (event) => {
   ViewletActivityBarFunctions.handleClick(uid, button, index, clientX, clientY)
 }
 
-export const handleContextMenu = (event) => {
-  const { button, clientX, clientY } = event
-  Event.preventDefault(event)
-  const uid = ComponentUid.fromEvent(event)
-  ViewletActivityBarFunctions.handleContextMenu(uid, button, clientX, clientY)
-}
-
 export const handleBlur = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletActivityBarFunctions.handleBlur(uid)
@@ -45,3 +38,5 @@ export const handleFocus = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletActivityBarFunctions.handleFocus(uid)
 }
+
+export * from '../ContextMenuEvents/ContextMenuEvents.js'

@@ -109,6 +109,10 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           path: ./build/.tmp/dist
+      - name: Clean up
+        run: rm -rf node build/.tmp
+        shell: bash
+
   deploy:
     environment:
       name: github-pages

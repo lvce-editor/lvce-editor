@@ -1,16 +1,14 @@
-import * as Command from '../Command/Command.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
-const getIndex = (eventX, eventY, x, y, itemHeight) => {
-  const relativeY = eventY - y
+const getIndex = (eventX, eventY, x, y, deltaY, itemHeight) => {
+  const relativeY = eventY - y + deltaY
   const index = Math.floor(relativeY / itemHeight)
   return index
 }
 
 export const handleClickAt = async (state, eventX, eventY) => {
-  const { x, y, itemHeight, id } = state
-  const index = getIndex(eventX, eventY, x, y, itemHeight)
-  const selectCommand = `${id}.selectIndex`
-  await Command.execute(selectCommand, index)
-  console.log({ itemHeight, x, y, eventX, eventY, index })
+  const { x, y, itemHeight, uid, deltaY } = state
+  const index = getIndex(eventX, eventY, x, y, deltaY, itemHeight)
+  await Viewlet.executeViewletCommand(uid, 'selectIndex', index)
   return state
 }

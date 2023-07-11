@@ -1,4 +1,7 @@
+import * as Crash from '../Crash/Crash.js'
+import * as OpenSpecialFolder from '../OpenSpecialFolder/OpenSpecialFolder.js'
 import * as Developer from './Developer.js'
+import * as Devtools from '../Devtools/Devtools.js'
 
 export const name = 'Developer'
 
@@ -7,18 +10,21 @@ export const Commands = {
   // TODO certain commands are only available in electron -> treeshake them out
   allocateMemoryInSharedProcess: Developer.allocateMemoryInSharedProcess,
   clearCache: Developer.clearCache,
-  crashMainProcess: Developer.crashMainProcess,
-  crashSharedProcess: Developer.crashSharedProcess,
+  crashMainProcess: Crash.crashMainProcess,
+  crashSharedProcess: Crash.crashSharedProcess,
   createSharedProcessHeapSnapshot: Developer.createSharedProcessHeapSnapshot,
   createSharedProcessProfile: Developer.createSharedProcessProfile,
   downloadViewletState: Developer.downloadViewletState,
   getMemoryUsageContent: Developer.getMemoryUsageContent,
   getStartupPerformanceContent: Developer.getStartupPerformanceContent,
-  openCacheFolder: Developer.openCacheFolder,
-  openConfigFolder: Developer.openConfigFolder,
-  openDataFolder: Developer.openDataFolder,
-  openLogsFolder: Developer.openLogsFolder,
+  openBrowserViewOverview: Developer.openBrowserViewOverview,
+  openCacheFolder: OpenSpecialFolder.openCacheFolder,
+  openConfigFolder: OpenSpecialFolder.openConfigFolder,
+  openDataFolder: OpenSpecialFolder.openDataFolder,
+  openLogsFolder: OpenSpecialFolder.openLogsFolder,
   openProcessExplorer: Developer.openProcessExplorer,
+  openScreenCastView: Developer.openScreenCastView,
+  openStorageOverview: Developer.openStorageOverview,
   reloadColorTheme: Developer.reloadColorTheme,
   reloadIconTheme: Developer.reloadIconTheme,
   showColorThemeCss: Developer.showColorThemeCss,
@@ -26,5 +32,5 @@ export const Commands = {
   showMemoryUsage: Developer.showMemoryUsage,
   showStartupPerformance: Developer.showStartupPerformance,
   startupPerformance: Developer.showStartupPerformance,
-  toggleDeveloperTools: Developer.toggleDeveloperTools,
+  toggleDeveloperTools: Devtools.toggleDeveloperTools,
 }

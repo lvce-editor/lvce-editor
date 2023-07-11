@@ -156,13 +156,6 @@ const getFocusedIndexFromFocusOutline = ($Viewlet) => {
   return -1
 }
 
-export const handleContextMenu = (event) => {
-  Event.preventDefault(event)
-  const uid = ComponentUid.fromEvent(event)
-  const { button, clientX, clientY } = event
-  ViewletExplorerFunctions.handleContextMenu(uid, button, clientX, clientY)
-}
-
 export const handleClick = (event) => {
   Event.preventDefault(event)
   const { button, clientX, clientY } = event
@@ -170,14 +163,9 @@ export const handleClick = (event) => {
   ViewletExplorerFunctions.handleClickAt(uid, button, clientX, clientY)
 }
 
-export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletExplorerFunctions.handleWheel(uid, deltaMode, deltaY)
-}
-
 export const handlePointerDown = (event) => {
   const { button, clientX, clientY } = event
+  Event.preventDefault(event)
   const uid = ComponentUid.fromEvent(event)
   ViewletExplorerFunctions.handlePointerDown(uid, button, clientX, clientY)
 }
@@ -212,3 +200,6 @@ export const handleEditingInput = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletExplorerFunctions.updateEditingValue(uid, value)
 }
+
+export * from '../VirtualListEvents/VirtualListEvents.js'
+export * from '../ContextMenuEvents/ContextMenuEvents.js'

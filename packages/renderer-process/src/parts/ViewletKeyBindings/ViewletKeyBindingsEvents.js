@@ -31,10 +31,14 @@ export const handleTableClick = (event) => {
   ViewletKeyBindingsFunctions.handleClick(uid, index)
 }
 
-export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
+export const handleTableDoubleClick = (event) => {
+  const { target } = event
+  const index = getTableRowIndex(target)
   const uid = ComponentUid.fromEvent(event)
-  return ViewletKeyBindingsFunctions.handleWheel(uid, deltaMode, deltaY)
+  if (index === -1) {
+    return
+  }
+  ViewletKeyBindingsFunctions.handleDoubleClick(uid, index)
 }
 
 export const handleResizerPointerMove = (event) => {
@@ -81,3 +85,5 @@ export const handlePointerDown = (event) => {
   }
   pointerDownFunction(event)
 }
+
+export * from '../VirtualListEvents/VirtualListEvents.js'

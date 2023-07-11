@@ -1,0 +1,39 @@
+:root {
+  --HoverWidgetForeground: #9ca2a0;
+  --HoverWidgetBackground: #282e2f;
+}
+
+.EditorHover {
+  background: var(--HoverWidgetBackground, #282e2f);
+  border-color: var(--CompletionListBorder, #95a29d);
+  border: 1px solid;
+  bottom: 0;
+  color: var(--HoverWidgetForeground, white);
+  contain: content;
+  cursor: text;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 20px;
+  min-width: 400px;
+  padding: 4px 8px;
+  position: absolute;
+  user-select: text;
+}
+
+.HoverDisplayString {
+  white-space: pre;
+  contain: content;
+  font-family: var(--EditorFontFamily);
+  font-size: var(--EditorFontSize);
+  letter-spacing: var(--EditorLetterSpacing);
+  font-feature-settings: var(--EditorFontFeatureSettings);
+  tab-size: var(--EditorTabSize);
+  font-display: block;
+}
+
+.HoverDocumentation {
+  contain: content;
+  font-size: 15px;
+  line-height: 1.33333;
+}

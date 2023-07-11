@@ -3,6 +3,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const mapExtToEditorType = {
   '.png': ViewletModuleId.EditorImage,
+  '.DirIcon': ViewletModuleId.EditorImage,
   '.svg': ViewletModuleId.EditorImage,
   '.avif': ViewletModuleId.EditorImage,
   '.gif': ViewletModuleId.EditorImage,
@@ -34,8 +35,17 @@ export const getModuleId = (uri) => {
   if (uri.startsWith('simple-browser://')) {
     return ViewletModuleId.SimpleBrowser
   }
+  if (uri.startsWith('storage-overview://')) {
+    return ViewletModuleId.Storage
+  }
   if (uri.startsWith('diff://')) {
     return ViewletModuleId.DiffEditor
+  }
+  if (uri.startsWith('browser-view-overview://')) {
+    return ViewletModuleId.BrowserViewOverview
+  }
+  if (uri.startsWith('screen-cast://')) {
+    return ViewletModuleId.ScreenCapture
   }
   return ViewletModuleId.EditorText
 }

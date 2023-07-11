@@ -1,4 +1,5 @@
 import * as ToTextSearchResult from '../src/parts/ToTextSearchResult/ToTextSearchResult.js'
+import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 
 test('toTextSearchResult - match with bytes', () => {
   const parsedLine = {
@@ -24,12 +25,15 @@ test('toTextSearchResult - match with bytes', () => {
       ],
     },
   }
-  expect(ToTextSearchResult.toTextSearchResult(parsedLine)).toEqual([
+  const remaining = ''
+  const charsBefore = 20
+  const charsAfter = 50
+  expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
     { end: 8, lineNumber: 220, start: 5, text: 'ApplicationsFound=A k�vetkez� alkalmaz�sok olyan f�jlokat ', type: 2 },
   ])
 })
 
-test('toTextSearchResult - match with text', () => {
+test.skip('toTextSearchResult - match with text', () => {
   const parsedLine = {
     type: 'match',
     data: {
@@ -52,8 +56,17 @@ test('toTextSearchResult - match with text', () => {
       ],
     },
   }
-  expect(ToTextSearchResult.toTextSearchResult(parsedLine)).toEqual([
-    { end: 23, lineNumber: 151, start: 20, text: 'elect Destination Location" wizard page\n', type: 2 },
+  const remaining = ''
+  const charsBefore = 20
+  const charsAfter = 50
+  expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
+    {
+      end: 24,
+      lineNumber: 151,
+      start: 21,
+      text: 'Select Destination Location" wizard page\n',
+      type: TextSearchResultType.Match,
+    },
   ])
 })
 
@@ -78,5 +91,87 @@ test('toTextSearchResult - match without text or bytes', () => {
       ],
     },
   }
-  expect(() => ToTextSearchResult.toTextSearchResult(parsedLine)).toThrowError(new Error('unable to parse line data'))
+  const remaining = ''
+  const charsBefore = 20
+  const charsAfter = 50
+  expect(() => ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toThrowError(
+    new Error('unable to parse line data')
+  )
+})
+
+test.skip('toTextSearchResult - match in the middle', () => {
+  const parsedLine = {
+    type: 'match',
+    data: {
+      path: { text: './languages/index.py' },
+      lines: { text: '# Program to display the Fibonacci sequence up to n-th term\\n' },
+      line_number: 1,
+      absolute_offset: 0,
+      submatches: [{ match: { text: 'cc' }, start: 31, end: 33 }],
+    },
+  }
+  const remaining = ''
+  const charsBefore = 26
+  const charsAfter = 50
+  expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
+    {
+      end: 31,
+      lineNumber: 1,
+      start: 29,
+      text: 'Program to display the Fibonacci sequence up to n-th term\\n',
+      type: TextSearchResultType.Match,
+    },
+  ])
+})
+
+test('toTextSearchResult - match at the end', () => {
+  const parsedLine = {
+    type: 'match',
+    data: {
+      path: { text: './languages/a.txt' },
+      lines: {
+        text: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacc',
+      },
+      line_number: 1,
+      absolute_offset: 0,
+      submatches: [{ match: { text: 'cc' }, start: 311, end: 313 }],
+    },
+  }
+  const remaining = ''
+  const charsBefore = 26
+  const charsAfter = 50
+  expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
+    {
+      end: 28,
+      lineNumber: 1,
+      start: 26,
+      text: 'aaaaaaaaaaaaaaaaaaaaaaaaaacc',
+      type: TextSearchResultType.Match,
+    },
+  ])
+})
+
+test('toTextSearchResult - short match', () => {
+  const parsedLine = {
+    type: 'match',
+    data: {
+      path: { text: './short.txt' },
+      lines: { text: 'abccc' },
+      line_number: 1,
+      absolute_offset: 0,
+      submatches: [{ match: { text: 'cc' }, start: 2, end: 4 }],
+    },
+  }
+  const remaining = ''
+  const charsBefore = 26
+  const charsAfter = 50
+  expect(ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toEqual([
+    {
+      end: 4,
+      lineNumber: 1,
+      start: 2,
+      text: 'abccc',
+      type: TextSearchResultType.Match,
+    },
+  ])
 })

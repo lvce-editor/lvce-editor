@@ -3,6 +3,8 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
+    case 'AttachDebugger.attachDebugger':
+      return ModuleId.AttachDebugger
     case 'AutoUpdater.getAutoUpdateType':
     case 'AutoUpdater.getLatestVersion':
       return ModuleId.AutoUpdater
@@ -31,6 +33,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Developer
     case 'Download.download':
       return ModuleId.Download
+    case 'ElectronInitialize.electronInitialize':
+      return ModuleId.ElectronInitialize
     case 'ExtensionHost.dispose':
     case 'ExtensionHost.enableExtension':
     case 'ExtensionHost.executeCommand':
@@ -104,14 +108,28 @@ export const getModuleId = (commandId) => {
     case 'FileSystem.rename':
     case 'FileSystem.writeFile':
       return ModuleId.FileSystem
+    case 'GetTerminalSpawnOptions.getTerminalSpawnOptions':
+      return ModuleId.GetTerminalSpawnOptions
     case 'GitLsFiles.gitLsFiles':
     case 'GitLsFiles.gitLsFilesHash':
     case 'GitLsFiles.resolveGit':
       return ModuleId.GitLsFiles
+    case 'HandleCliArgs.handleCliArgs':
+      return ModuleId.HandleCliArgs
+    case 'HandleElectronMessagePort.handleElectronMessagePort':
+      return ModuleId.HandleElectronMessagePort
+    case 'HandleNodeMessagePort.handleNodeMessagePort':
+      return ModuleId.HandleNodeMessagePort
+    case 'HandleWebSocket.handleWebSocket':
+      return ModuleId.HandleWebSocket
+    case 'IncrementalTextSearch.start':
+      return ModuleId.IncrementalTextSearch
     case 'InstallExtension.installExtension':
       return ModuleId.InstallExtension
     case 'IsAutoUpdateSupported.isAutoUpdateSupported':
       return ModuleId.IsAutoUpdateSupported
+    case 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage':
+      return ModuleId.ListProcessesWithMemoryUsage
     case 'Native.openFolder':
     case 'OpenNativeFolder.openFolder':
       return ModuleId.OpenNativeFolder
@@ -122,8 +140,10 @@ export const getModuleId = (commandId) => {
     case 'Platform.getBuiltinExtensionsPath':
     case 'Platform.getCachedExtensionsPath':
     case 'Platform.getCacheDir':
+    case 'Platform.getCommit':
     case 'Platform.getConfigDir':
     case 'Platform.getDataDir':
+    case 'Platform.getDate':
     case 'Platform.getDisabledExtensionsPath':
     case 'Platform.getDownloadDir':
     case 'Platform.getExtensionsPath':
@@ -133,10 +153,19 @@ export const getModuleId = (commandId) => {
     case 'Platform.getRecentlyOpenedPath':
     case 'Platform.getTestPath':
     case 'Platform.getUserSettingsPath':
+    case 'Platform.getUserKeyBindingsPath':
+    case 'Platform.getVersion':
     case 'Platform.setEnvironmentVariables':
       return ModuleId.Platform
     case 'Preferences.getAll':
       return ModuleId.Preferences
+    case 'Process.getNodeVersion':
+    case 'Process.getPid':
+    case 'Process.getV8Version':
+    case 'Process.kill':
+      return ModuleId.Process
+    case 'RebuildNodePty.rebuildNodePty':
+      return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened
     case 'TextSearch.search':

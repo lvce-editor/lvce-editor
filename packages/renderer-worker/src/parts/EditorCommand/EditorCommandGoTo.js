@@ -7,8 +7,9 @@ import * as EditorGetWordAt from './EditorCommandGetWordAt.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
 export const goTo = async ({ editor, getLocation, getNoLocationFoundMessage, getErrorMessage, isNoProviderFoundError }) => {
-  const rowIndex = editor.selections[0]
-  const columnIndex = editor.selections[1]
+  const { selections } = editor
+  const rowIndex = selections[0]
+  const columnIndex = selections[1]
   try {
     const definition = await getLocation(editor, rowIndex, columnIndex)
     // TODO if editor is already disposed at this point, do nothing
@@ -33,7 +34,13 @@ export const goTo = async ({ editor, getLocation, getNoLocationFoundMessage, get
     // TODO if definition.file is not of type string, show a popup that definition.file must be of type string
     // TODO open file and scroll to that position and set cursor to that position
 
-    await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ uri)
+    const context = {
+      startRowIndex: definition.startRowIndex,
+      startColumnIndex: definition.startColumnIndex,
+      endRowIndex: definition.endRowIndex,
+      endColumnIndex: definition.endColumnIndex,
+    }
+    await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ uri, /* focus */ true, context)
     return editor
   } catch (error) {
     // TODO if editor is already disposed at this point, do nothing

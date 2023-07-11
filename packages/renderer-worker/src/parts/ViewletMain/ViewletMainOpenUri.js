@@ -4,19 +4,21 @@ import * as Id from '../Id/Id.js'
 import * as MeasureTabWidth from '../MeasureTabWidth/MeasureTabWidth.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as TabFlags from '../TabFlags/TabFlags.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletMainFocusIndex from './ViewletMainFocusIndex.js'
 
-export const openUri = async (state, uri, focus = true, options = {}) => {
+export const openUri = async (state, uri, focus = true, { preview = false, ...context } = {}) => {
   Assert.object(state)
   Assert.string(uri)
-  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex } = state
+  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex, uid, tabHeight } = state
   const x = state.x
-  const y = state.y + state.tabHeight
+  const y = state.y + tabHeight
   const width = state.width
-  const contentHeight = state.height - state.tabHeight
+  const contentHeight = state.height - tabHeight
   const moduleId = ViewletMap.getModuleId(uri)
   let activeGroup = groups[activeGroupIndex]
   if (!activeGroup) {
@@ -32,44 +34,28 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       height: state.height,
     }
   }
-  const previousEditor = activeGroup.editors[activeGroup.activeIndex]
+  const { editors, activeIndex } = activeGroup
+
+  const previousEditor = editors[activeIndex]
   let disposeCommands
+  if (previousEditor) {
+    if (previousEditor.uri === uri) {
+      return {
+        newState: state,
+        commands: [],
+      }
+    }
+  }
+  for (let i = 0; i < editors.length; i++) {
+    const editor = editors[i]
+    if (editor.uri === uri) {
+      return ViewletMainFocusIndex.focusIndex(state, i)
+    }
+  }
   if (previousEditor) {
     const previousUid = previousEditor.uid
     disposeCommands = Viewlet.disposeFunctional(previousUid)
   }
-  for (const editor of activeGroup.editors) {
-    if (editor.uri === uri) {
-      if (editor === previousEditor) {
-        return {
-          newState: state,
-          commands: [],
-        }
-      }
-      const childUid = Id.create()
-      // TODO if the editor is already open, nothing needs to be done
-      const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, uri, x, y, width, contentHeight)
-      instance.show = false
-      instance.setBounds = false
-      instance.uid = childUid
-      // @ts-ignore
-      const commands = await ViewletManager.load(instance, focus, false, options)
-      if (disposeCommands) {
-        commands.unshift(...disposeCommands)
-      }
-      commands.push(['Viewlet.append', state.uid, childUid])
-      const newActiveIndex = state.editors.indexOf(editor)
-      commands.push(['Viewlet.setBounds', childUid, x, state.tabHeight, width, contentHeight])
-      commands.push(['Viewlet.send', state.tabsUid, 'setFocusedIndex', state.activeIndex, newActiveIndex])
-      state.activeIndex = newActiveIndex
-      editor.uid = childUid
-      return {
-        newState: state,
-        commands,
-      }
-    }
-  }
-
   const instanceUid = Id.create()
   const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, uri, x, y, width, contentHeight)
   instance.uid = instanceUid
@@ -77,8 +63,16 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   const tabLabel = PathDisplay.getLabel(uri)
   const tabWidth = MeasureTabWidth.measureTabWidth(tabLabel, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
   const tabTitle = PathDisplay.getTitle(uri)
-  const icon = IconTheme.getFileNameIcon(uri)
-  const newEditor = { uri, uid: instanceUid, label: tabLabel, title: tabTitle, icon, tabWidth }
+  const icon = PathDisplay.getFileIcon(uri)
+  const newEditor = {
+    uri,
+    uid: instanceUid,
+    label: tabLabel,
+    title: tabTitle,
+    icon,
+    tabWidth,
+    flags: TabFlags.Preview,
+  }
   const newEditors = [...activeGroup.editors, newEditor]
   const newActiveIndex = newEditors.length - 1
   const newGroup = { ...activeGroup, editors: newEditors, activeIndex: newActiveIndex }
@@ -92,6 +86,9 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
     groups: newGroups,
     pendingUid: instanceUid,
   })
+  if (context) {
+    instance.args = [context]
+  }
   // @ts-ignore
   const commands = await ViewletManager.load(instance, focus)
   commands.push(['Viewlet.setBounds', instanceUid, x, state.tabHeight, width, contentHeight])

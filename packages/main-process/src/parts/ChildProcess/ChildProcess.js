@@ -1,6 +1,6 @@
-const { fork, spawn } = require('node:child_process')
-const { EventEmitter } = require('node:events')
-const { Worker } = require('node:worker_threads')
+import { fork, spawn } from 'node:child_process'
+import { EventEmitter } from 'node:events'
+import { Worker } from 'node:worker_threads'
 
 const METHOD_FORK = 1
 const METHOD_SPAWN = 2
@@ -48,7 +48,7 @@ const createChild = (absolutePath, options) => {
  * @param {{stdio?: import('child_process').SpawnOptions['stdio'], env?:import('child_process').SpawnOptions['env']}} options
  * @returns
  */
-exports.create = (path, options = {}) => {
+export const create = (path, options = {}) => {
   const child = createChild(path, options)
   const emitter = new EventEmitter()
   const handleExit = (...args) => {

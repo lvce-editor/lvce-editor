@@ -7,7 +7,6 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
-    isMaximized: false,
     uid: id,
   }
 }
@@ -24,18 +23,21 @@ export const handleWindowDidMinimize = (state) => {
   return state
 }
 
-export const handleWindowDidUnmaximize = (state) => {
+const setButton = (state, button) => {
+  const { buttons } = state
+  const newButtons = [buttons[0], { ...buttons[1], icon: button, id: button }, buttons[2]]
   return {
     ...state,
-    isMaximized: false,
+    buttons: newButtons,
   }
 }
 
+export const handleWindowDidUnmaximize = (state) => {
+  return setButton(state, 'Maximize')
+}
+
 export const handleWindowDidMaximize = (state) => {
-  return {
-    ...state,
-    isMaximized: true,
-  }
+  return setButton(state, 'Restore')
 }
 
 export const dispose = (state) => {

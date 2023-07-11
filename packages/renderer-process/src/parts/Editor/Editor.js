@@ -45,6 +45,7 @@ export const create = () => {
   $EditorInput.onfocus = EditorEvents.handleFocus
   $EditorInput.onblur = EditorEvents.handleBlur
   $EditorInput.oncut = EditorEvents.handleCut
+  $EditorInput.name = 'editor'
 
   const $LayerCursor = document.createElement('div')
   $LayerCursor.className = 'LayerCursor'
@@ -122,6 +123,16 @@ export const create = () => {
 
 export const setText = (state, textInfos, differences) => {
   LayerText3.setLineInfos(state, textInfos, differences)
+}
+
+export const setIncrementalEdits = (state, incrementalEdits) => {
+  const { $LayerText } = state
+  for (const incrementalEdit of incrementalEdits) {
+    const { rowIndex, columnIndex, text } = incrementalEdit
+    const $Row = $LayerText.children[rowIndex]
+    const $Column = $Row.children[columnIndex]
+    $Column.firstChild.nodeValue = text
+  }
 }
 
 export const setSettings = (state, fontSize, lineHeight, letterSpacing) => {

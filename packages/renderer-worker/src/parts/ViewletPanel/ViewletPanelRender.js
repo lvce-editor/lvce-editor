@@ -1,13 +1,15 @@
+import * as GetPanelTabsVirtualDom from '../GetPanelTabsVirtualDom/GetPanelTabsVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
 const renderTabs = {
   isEqual(oldState, newState) {
-    return oldState.views === newState.views
+    return oldState.views === newState.views && oldState.selectedIndex === newState.selectedIndex
   },
   apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetTabs, /* tabs */ newState.views]
+    const dom = GetPanelTabsVirtualDom.getPanelTabsVirtualDom(newState.views, newState.selectedIndex)
+    return [/* method */ 'setTabsDom', /* tabs */ dom]
   },
 }
 
@@ -20,4 +22,4 @@ const renderSelectedIndex = {
   },
 }
 
-export const render = [renderTabs, renderSelectedIndex]
+export const render = [renderTabs]

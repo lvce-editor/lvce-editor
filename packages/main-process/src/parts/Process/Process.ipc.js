@@ -1,8 +1,12 @@
-const Process = require('./Process.js')
+import * as Process from './Process.cjs'
 
-exports.name = 'Process'
+export const name = 'Process'
 
-// prettier-ignore
-exports.Commands = {
+export const Commands = {
+  getChromeVersion: Process.getChromeVersion,
+  getElectronVersion: Process.getElectronVersion,
+  getNodeVersion: Process.getNodeVersion,
   getPid: Process.getPid,
+  getV8Version: Process.getV8Version,
+  kill: Process.kill,
 }

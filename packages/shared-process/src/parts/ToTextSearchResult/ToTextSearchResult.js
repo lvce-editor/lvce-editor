@@ -1,39 +1,22 @@
+import * as ParseRipGrepLines from '../ParseRipGrepLines/ParseRipGrepLines.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 
-const CHARS_BEFORE = 20
-const CHARS_AFTER = 50
-
-const getLines = (parsedLineData) => {
-  if (parsedLineData.lines.text) {
-    return parsedLineData.lines.text
-  }
-  if (parsedLineData.lines.bytes) {
-    return Buffer.from(parsedLineData.lines.bytes, 'base64').toString()
-  }
-  throw new Error(`unable to parse line data`)
-}
-
-const getRemainingSubMatches = (submatches, remaining) => {
-  if (submatches.length < remaining) {
-    return submatches
-  }
-  return submatches.slice(0, remaining)
-}
-
-export const toTextSearchResult = (parsedLine, remaining) => {
+export const toTextSearchResult = (parsedLine, remaining, charsBefore, charsAfter) => {
   const results = []
   const parsedLineData = parsedLine.data
-  const lines = getLines(parsedLineData)
+  const lines = ParseRipGrepLines.parseRipGrepLines(parsedLineData)
   const lineNumber = parsedLineData.line_number
   const submatches = parsedLineData.submatches
+  const linesLength = lines.length
   for (const submatch of submatches) {
-    const previewStart = Math.max(submatch.start - CHARS_BEFORE, 0)
-    const previewEnd = Math.min(submatch.end + CHARS_AFTER, lines.length)
-    const previewText = lines.slice(previewStart, previewEnd)
+    const previewStart = Math.max(submatch.start - charsBefore, 0)
+    let actualStart = previewStart
+    const previewEnd = Math.min(submatch.end + charsAfter, linesLength)
+    const previewText = lines.slice(actualStart, previewEnd)
     results.push({
       type: TextSearchResultType.Match,
-      start: submatch.start - previewStart,
-      end: submatch.end - previewStart,
+      start: submatch.start - actualStart,
+      end: submatch.end - actualStart,
       lineNumber,
       text: previewText,
     })

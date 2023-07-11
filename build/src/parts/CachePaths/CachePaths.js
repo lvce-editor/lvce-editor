@@ -18,13 +18,8 @@ const getRendererProcessCacheHash = async (extraContents) => {
 }
 
 export const getRendererProcessCachePath = async (extraContents) => {
-  const rendererProcessCacheHash = await getRendererProcessCacheHash(
-    extraContents
-  )
-  const rendererProcessCachePath = Path.join(
-    Path.absolute('build/.tmp/cachedSources/renderer-process'),
-    rendererProcessCacheHash
-  )
+  const rendererProcessCacheHash = await getRendererProcessCacheHash(extraContents)
+  const rendererProcessCachePath = Path.join(Path.absolute('build/.tmp/cachedSources/renderer-process'), rendererProcessCacheHash)
   return rendererProcessCachePath
 }
 
@@ -45,13 +40,8 @@ const getRendererWorkerCacheHash = async (extraContents) => {
 }
 
 export const getRendererWorkerCachePath = async (extraContents) => {
-  const rendererWorkerCacheHash = await getRendererWorkerCacheHash(
-    extraContents
-  )
-  const rendererWorkerCachePath = Path.join(
-    Path.absolute('build/.tmp/cachedSources/renderer-worker'),
-    rendererWorkerCacheHash
-  )
+  const rendererWorkerCacheHash = await getRendererWorkerCacheHash(extraContents)
+  const rendererWorkerCachePath = Path.join(Path.absolute('build/.tmp/cachedSources/renderer-worker'), rendererWorkerCacheHash)
   return rendererWorkerCachePath
 }
 
@@ -72,12 +62,61 @@ const getExtensionHostWorkerCacheHash = async (extraContents) => {
 }
 
 export const getExtensionHostWorkerCachePath = async (extraContents) => {
-  const extensionHostWorkerCacheHash = await getExtensionHostWorkerCacheHash(
+  const extensionHostWorkerCacheHash = await getExtensionHostWorkerCacheHash(extraContents)
+  const extensionHostWorkerCachePath = Path.join(Path.absolute('build/.tmp/cachedSources/extension-host-worker'), extensionHostWorkerCacheHash)
+  return extensionHostWorkerCachePath
+}
+
+export const getExtensionHostSubWorkerCachePath = async (extraContents) => {
+  const extensionHostWorkerCacheHash = await getExtensionHostWorkerCacheHash(extraContents)
+  const extensionHostWorkerCachePath = Path.join(Path.absolute('build/.tmp/cachedSources/extension-host-sub-worker'), extensionHostWorkerCacheHash)
+  return extensionHostWorkerCachePath
+}
+
+const getMainProcessCacheHash = async (extraContents) => {
+  const hash = await Hash.computeFolderHash(
+    'packages/main-process/src',
+    [
+      'build/src/parts/BundleElectronApp/BundleElectronApp.js',
+      'build/src/parts/BuildServer/BuildServer.js',
+      'build/src/parts/BundleJs/BundleJs.js',
+      'build/src/parts/BundleJsRollup/BundleJsRollup.js',
+      'build/src/parts/CachePaths/CachePaths.js',
+      'build/src/parts/BundleMainProcess/BundleMainProcess.js',
+      'build/src/parts/BundleMainProcessCached/BundleMainProcessCached.js',
+      'build/src/parts/BundleOptions/BundleOptions.js',
+    ],
     extraContents
   )
-  const extensionHostWorkerCachePath = Path.join(
-    Path.absolute('build/.tmp/cachedSources/extension-host-worker'),
-    extensionHostWorkerCacheHash
+  return hash
+}
+
+export const getMainProcessCachePath = async (extraContents) => {
+  const cacheHash = await getMainProcessCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('build/.tmp/cachedSources/main-process'), cacheHash)
+  return cachePath
+}
+
+const getSharedProcessCacheHash = async (extraContents) => {
+  const hash = await Hash.computeFolderHash(
+    'packages/shared-process/src',
+    [
+      'build/src/parts/BundleElectronApp/BundleElectronApp.js',
+      'build/src/parts/BuildServer/BuildServer.js',
+      'build/src/parts/BundleJs/BundleJs.js',
+      'build/src/parts/BundleJsRollup/BundleJsRollup.js',
+      'build/src/parts/CachePaths/CachePaths.js',
+      'build/src/parts/BundleMainProcess/BundleMainProcess.js',
+      'build/src/parts/BundleMainProcessCached/BundleMainProcessCached.js',
+      'build/src/parts/BundleOptions/BundleOptions.js',
+    ],
+    extraContents
   )
-  return extensionHostWorkerCachePath
+  return hash
+}
+
+export const getSharedProcessCachePath = async (extraContents) => {
+  const cacheHash = await getSharedProcessCacheHash(extraContents)
+  const cachePath = Path.join(Path.absolute('build/.tmp/cachedSources/shared-process'), cacheHash)
+  return cachePath
 }

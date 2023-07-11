@@ -20,6 +20,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -28,9 +29,19 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/GetTerminalSpawnOptions/GetTerminalSpawnOptions.js', () => {
+  return {
+    getTerminalSpawnOptions() {
+      return {
+        command: 'bash',
+        args: ['-i'],
+      }
+    },
+  }
+})
+
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
-
 const ViewletTerminal = await import('../src/parts/ViewletTerminal/ViewletTerminal.js')
 
 test('create', () => {
@@ -64,7 +75,7 @@ test('write', async () => {
   const state = ViewletTerminal.create(1)
   await ViewletTerminal.write(state, 'abc')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Terminal.write', 0, 'abc')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Terminal.write', 1, 'abc')
 })
 
 test('clear', async () => {
@@ -87,9 +98,9 @@ test('resize', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Terminal.resize', 0, 7, 1)
 })
 
-test('dispose', () => {
+test('dispose', async () => {
   const state = ViewletTerminal.create(1)
-  expect(ViewletTerminal.dispose(state)).toMatchObject({
+  expect(await ViewletTerminal.dispose(state)).toMatchObject({
     disposed: true,
   })
 })

@@ -1,36 +1,22 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Callback from '../Callback/Callback.js'
-import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
-import * as RestoreJsonRpcError from '../RestoreJsonRpcError/RestoreJsonRpcError.js'
+import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
+import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.js'
+import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
 export const send = (transport, method, ...params) => {
-  transport.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method,
-    params: params,
-  })
+  const message = JsonRpcEvent.create(method, params)
+  transport.send(message)
 }
 
 export const invoke = async (ipc, method, ...params) => {
   Assert.object(ipc)
   Assert.string(method)
-  const { id, promise } = Callback.registerPromise()
-  ipc.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method,
-    params,
-    id,
-  })
+  const { message, promise } = JsonRpcRequest.create(method, params)
+  ipc.send(message)
   const responseMessage = await promise
-  if ('error' in responseMessage) {
-    const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
-    throw restoredError
-  }
-  if ('result' in responseMessage) {
-    return responseMessage.result
-  }
-  throw new JsonRpcError('unexpected response message')
+  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
+  return result
 }
 
 export const handleMessage = (message) => {

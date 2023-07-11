@@ -14,28 +14,6 @@ h1 {
   user-select: none;
 }
 
-#ProcessExplorer tr[aria-level='2'] > td:first-child {
-  padding-left: 1.5ch;
-}
-
-#ProcessExplorer tr:not([aria-expanded])[aria-level='2'] > td:first-child {
-  padding-left: calc(1.5ch + 17px);
-}
-
-#ProcessExplorer tr[aria-level='3'] > td:first-child {
-  padding-left: 3ch;
-}
-#ProcessExplorer tr:not([aria-expanded])[aria-level='3'] > td:first-child {
-  padding-left: calc(3ch + 17px);
-}
-
-#ProcessExplorer tr[aria-level='4'] > td:first-child {
-  padding-left: 4.5ch;
-}
-#ProcessExplorer tr:not([aria-expanded])[aria-level='4'] > td:first-child {
-  padding-left: calc(4.5ch + 17px);
-}
-
 #ProcessExplorer tr > td:not(:first-child),
 #ProcessExplorer tr > th:not(:first-child) {
   padding-left: 3ch;
@@ -81,6 +59,9 @@ h1 {
 }
 
 .Cell {
+  max-width: 50vw;
+  contain: content;
+  text-overflow: ellipsis;
 }
 
 .Row:focus,

@@ -123,6 +123,18 @@ export const remove = async (path) => {
   }
 }
 
+export const forceRemove = async (path) => {
+  if (!isOkayToRemove(path)) {
+    console.warn('not removing path')
+    return
+  }
+  try {
+    await fs.rm(path, { force: true, recursive: true })
+  } catch (error) {
+    throw new VError(error, `Failed to remove "${path}"`)
+  }
+}
+
 export const exists = async (path) => {
   try {
     await fs.access(path)

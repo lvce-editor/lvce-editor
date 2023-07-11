@@ -5,6 +5,7 @@
 .KeyBindings {
   color: var(--KeyBindingsEditorColor);
   position: absolute;
+  background: var(--MainBackground);
 }
 
 .KeyBindingsHeader {
@@ -87,4 +88,11 @@
   height: 100%;
   /* background: red; */
   top: 0;
+}
+
+/* TODO reuse same highlight css for completions and quickpick */
+.SearchHighlight {
+  color: var(--CompletionHighlightForeground, #e1b974);
+  font-weight: 700;
+  contain: content;
 }

@@ -1,9 +1,12 @@
-const GetErrorResponse = require('../GetErrorResponse/GetErrorResponse.js')
-const GetSuccessResponse = require('../GetSuccessResponse/GetSuccessResponse.js')
+import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.cjs'
+import * as GetSuccessResponse from '../GetSuccessResponse/GetSuccessResponse.cjs'
+import * as RequiresSocket from '../RequiresSocket/RequiresSocket.js'
 
-exports.getResponse = async (message, execute) => {
+export const getResponse = async (message, execute, handle) => {
   try {
-    const result = await execute(message.method, ...message.params)
+    const result = await (RequiresSocket.requiresSocket(message.method)
+      ? execute(message.method, ...message.params, handle)
+      : execute(message.method, ...message.params))
     return GetSuccessResponse.getSuccessResponse(message, result)
   } catch (error) {
     return GetErrorResponse.getErrorResponse(message, error)

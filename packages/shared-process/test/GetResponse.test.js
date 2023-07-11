@@ -6,15 +6,6 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
-  execute: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-  invoke: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-}))
-
 jest.unstable_mockModule('../src/parts/PrettyError/PrettyError.js', () => ({
   prepare: jest.fn(() => {
     throw new Error('not implemented')
@@ -33,7 +24,6 @@ jest.unstable_mockModule('node:fs', () => ({
 }))
 
 const GetResponse = await import('../src/parts/GetResponse/GetResponse.js')
-const Command = await import('../src/parts/Command/Command.js')
 const PrettyError = await import('../src/parts/PrettyError/PrettyError.js')
 const Logger = await import('../src/parts/Logger/Logger.js')
 
@@ -45,18 +35,21 @@ class NodeError extends Error {
 }
 
 test('getResponse - error - ENOENT', async () => {
-  // @ts-ignore
-  Command.execute.mockImplementation(() => {
+  const ipc = {}
+  const execute = () => {
     throw new NodeError(ErrorCodes.ENOENT)
-  })
-
+  }
   expect(
-    await GetResponse.getResponse({
-      jsonrpc: JsonRpcVersion.Two,
-      method: 'Test.test',
-      params: [],
-      id: 1,
-    })
+    await GetResponse.getResponse(
+      {
+        jsonrpc: JsonRpcVersion.Two,
+        method: 'Test.test',
+        params: [],
+        id: 1,
+      },
+      ipc,
+      execute
+    )
   ).toEqual({
     error: {
       code: -32001,
@@ -71,10 +64,10 @@ test('getResponse - error - ENOENT', async () => {
 })
 
 test('getResponse - error - search error', async () => {
-  // @ts-ignore
-  Command.execute.mockImplementation(() => {
+  const ipc = {}
+  const execute = () => {
     throw new Error('files is not iterable')
-  })
+  }
   // @ts-ignore
   PrettyError.prepare.mockImplementation(() => {
     return {
@@ -95,12 +88,16 @@ test('getResponse - error - search error', async () => {
     }
   })
   expect(
-    await GetResponse.getResponse({
-      jsonrpc: JsonRpcVersion.Two,
-      method: 'Test.test',
-      params: [],
-      id: 1,
-    })
+    await GetResponse.getResponse(
+      {
+        jsonrpc: JsonRpcVersion.Two,
+        method: 'Test.test',
+        params: [],
+        id: 1,
+      },
+      ipc,
+      execute
+    )
   ).toEqual({
     error: {
       code: -32001,

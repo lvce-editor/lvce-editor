@@ -1,8 +1,10 @@
+import { jest } from '@jest/globals'
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.mock('electron', () => {
+jest.unstable_mockModule('electron', () => {
   return {
     app: {
       exit() {},
@@ -10,20 +12,7 @@ jest.mock('electron', () => {
   }
 })
 
-const Cli = require('../src/parts/Cli/Cli.js')
-
-test('parseCliArgs', () => {
-  expect(Cli.parseCliArgs(['/usr/lib/lvce-oss/lvce-oss', '/test/'])).toEqual({
-    _: ['/test/'],
-    help: false,
-    v: false,
-    version: false,
-    wait: false,
-    'built-in-self-test': false,
-    web: false,
-    sandbox: false,
-  })
-})
+const Cli = await import('../src/parts/Cli/Cli.cjs')
 
 test('handleFastCliArgsMaybe - nothing matches', () => {
   const spy = jest.spyOn(console, 'info')

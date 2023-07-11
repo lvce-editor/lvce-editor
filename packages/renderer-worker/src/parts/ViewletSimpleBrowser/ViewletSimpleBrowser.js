@@ -5,6 +5,7 @@ import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSe
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js'
 import * as ElectronBrowserViewSuggestions from '../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
@@ -13,6 +14,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 export const create = (id, uri, x, y, width, height) => {
   return {
     id,
+    uid: id,
     uri,
     x,
     y,
@@ -81,7 +83,7 @@ const getId = (idPart) => {
 }
 
 export const loadContent = async (state, savedState) => {
-  const { x, y, width, height, headerHeight, uri } = state
+  const { x, y, width, height, headerHeight, uri, uid } = state
   const idPart = uri.slice('simple-browser://'.length)
   const id = getId(idPart)
   const iframeSrc = getUrlFromSavedState(savedState)
@@ -93,7 +95,7 @@ export const loadContent = async (state, savedState) => {
   const browserViewWidth = width
   const browserViewHeight = height - headerHeight
   if (id) {
-    const actualId = await ElectronBrowserView.createBrowserView(id)
+    const actualId = await ElectronBrowserView.createBrowserView(id, uid)
     await ElectronBrowserViewFunctions.setFallthroughKeyBindings(keyBindings)
     await ElectronBrowserViewFunctions.resizeBrowserView(actualId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
     if (id !== actualId) {
@@ -109,7 +111,7 @@ export const loadContent = async (state, savedState) => {
   }
 
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
-  const browserViewId = await ElectronBrowserView.createBrowserView(/* restoreId */ 0)
+  const browserViewId = await ElectronBrowserView.createBrowserView(/* restoreId */ 0, uid)
   await ElectronBrowserViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
   await ElectronBrowserViewFunctions.resizeBrowserView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
@@ -206,11 +208,10 @@ export const handleDidNavigationCancel = (state, url) => {
   }
 }
 
-export const handleTitleUpdated = (state, title) => {
-  return {
-    ...state,
-    title,
-  }
+export const handleTitleUpdated = async (state, title) => {
+  const { uid } = state
+  await GlobalEventBus.emitEvent('titleUpdated', uid, title)
+  return state
 }
 
 export const dispose = async (state) => {

@@ -1,0 +1,34 @@
+.TerminalTabs {
+  position: absolute;
+  z-index: 1;
+  background: var(--PanelBackground);
+  contain: strict;
+}
+
+.TerminalTab {
+  padding: 0 10px;
+  contain: strict;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.TerminalTabIcon {
+  contain: strict;
+  width: 16px;
+  height: 16px;
+  display: block;
+  background: currentcolor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 16px;
+  mask-size: 16px;
+  -webkit-mask-position: 50% 50%;
+  mask-position: 50% 50%;
+  pointer-events: none;
+}
+
+.TerminalTabSelected {
+  background: var(--ListInactiveSelectionBackground, rgba(59, 71, 66, 0.5));
+}

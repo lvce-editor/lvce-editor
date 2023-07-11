@@ -5,9 +5,17 @@ export const listen = () => {
   return port1
 }
 
+const getMessage = (event) => {
+  return event.data
+}
+
 export const wrap = (port) => {
   return {
     port,
+    /**
+     * @type {any}
+     */
+    listener: undefined,
     send(message) {
       this.port.postMessage(message)
     },
@@ -15,10 +23,15 @@ export const wrap = (port) => {
       this.port.postMessage(message, transferables)
     },
     get onmessage() {
-      return this.port.onmessage
+      return this.listener
     },
     set onmessage(listener) {
-      this.port.onmessage = listener
+      const wrappedListener = (event) => {
+        const message = getMessage(event)
+        listener(message)
+      }
+      this.listener = listener
+      this.port.onmessage = wrappedListener
     },
   }
 }

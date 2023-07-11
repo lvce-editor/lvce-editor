@@ -1,4 +1,4 @@
-const AppWindowStates = require('../src/parts/AppWindowStates/AppWindowStates.js')
+import * as AppWindowStates from '../src/parts/AppWindowStates/AppWindowStates.cjs'
 
 beforeEach(() => {
   AppWindowStates.state.windowStates = []
@@ -9,12 +9,14 @@ test('add', () => {
     parsedArgs: [],
     workingDirectory: '',
     id: 1,
+    windowId: 2,
   })
   expect(AppWindowStates.getAll()).toEqual([
     {
       parsedArgs: [],
       workingDirectory: '',
       id: 1,
+      windowId: 2,
     },
   ])
 })
@@ -24,11 +26,13 @@ test('findById', () => {
     parsedArgs: [],
     workingDirectory: '',
     id: 1,
+    windowId: 2,
   })
-  expect(AppWindowStates.findById(1)).toEqual({
+  expect(AppWindowStates.findByWindowId(2)).toEqual({
     parsedArgs: [],
     workingDirectory: '',
     id: 1,
+    windowId: 2,
   })
 })
 
@@ -37,8 +41,9 @@ test('findById - not found', () => {
     parsedArgs: [],
     workingDirectory: '',
     id: 1,
+    windowId: 2,
   })
-  expect(AppWindowStates.findById(2)).toBeUndefined()
+  expect(AppWindowStates.findByWindowId(3)).toBeUndefined()
 })
 
 test('remove', () => {
@@ -46,7 +51,8 @@ test('remove', () => {
     parsedArgs: [],
     workingDirectory: '',
     id: 1,
+    windowId: 2,
   })
-  AppWindowStates.remove(1)
+  AppWindowStates.remove(2)
   expect(AppWindowStates.getAll()).toEqual([])
 })

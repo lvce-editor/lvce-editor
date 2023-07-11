@@ -1,4 +1,5 @@
 import VError from 'verror'
+import * as ArchLinuxElectronVersion from '../ArchLinuxElectronVersion/ArchLinuxElectronVersion.js'
 import * as ArchType from '../ArchType/ArchType.js'
 import * as Compress from '../Compress/Compress.js'
 import * as Copy from '../Copy/Copy.js'
@@ -39,7 +40,7 @@ const copyElectronResult = async ({ product, version }) => {
   })
   // because of using system electron, argv will be /usr/lib/electron /usr/lib/appName <path>
   await Replace.replace({
-    path: `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/main-process/src/parts/Cli/Cli.js`,
+    path: `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/main-process/src/parts/ParseCliArgs/ParseCliArgs.js`,
     occurrence: `const relevantArgv = argv.slice(1)`,
     replacement: `const relevantArgv = argv.slice(2)`,
   })
@@ -69,12 +70,14 @@ const copyMetaFiles = async ({ product }) => {
     '@@LICENSE@@': product.licenseName,
     '@@SIZE@@': '1000',
     '@@BUILD_DATE@@': `${buildDate}`,
+    '@@ELECTRON_VERSION@@': ArchLinuxElectronVersion.name,
   })
   await Template.write(
     'arch_linux_bin',
     `build/.tmp/arch-linux/${arch}/usr/bin/${product.applicationName}`,
     {
       '@@APPNAME@@': product.applicationName,
+      '@@ELECTRON_VERSION@@': ArchLinuxElectronVersion.name,
     },
     755
   )

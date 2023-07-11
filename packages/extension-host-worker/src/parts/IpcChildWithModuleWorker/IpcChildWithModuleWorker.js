@@ -1,49 +1,34 @@
-const getFirstMessage = () => {
-  return new Promise((resolve) => {
-    globalThis.onmessage = (event) => {
-      globalThis.onmessage = null
-      resolve(event.data)
-    }
-  })
-}
+import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.js'
 
 export const listen = async () => {
   const postMessageFn = globalThis.postMessage
   postMessageFn('ready')
-  const firstMessage = await getFirstMessage()
+  const firstMessage = await WaitForFirstMessage.waitForFirstMessage(globalThis)
   if (firstMessage.method !== 'initialize') {
     throw new Error('unexpected first message')
   }
   const type = firstMessage.params[0]
   if (type === 'message-port') {
     const port = firstMessage.params[1]
-    return {
-      send(message) {
-        port.postMessage(message)
-      },
-      sendAndTransfer(message, transferables) {
-        port.postMessage(message, transferables)
-      },
-      get onmessage() {
-        return port.onmessage
-      },
-      set onmessage(listener) {
-        port.onmessage = listener
-      },
-    }
+    return port
   }
+  return globalThis
+}
+
+export const wrap = (global) => {
   return {
+    global,
     send(message) {
-      postMessageFn(message)
+      this.global.postMessage(message)
     },
     sendAndTransfer(message, transferables) {
-      postMessageFn(message, transferables)
+      this.global.postMessage(message, transferables)
     },
     get onmessage() {
-      return onmessage
+      return this.global.onmessage
     },
     set onmessage(listener) {
-      onmessage = listener
+      this.global.onmessage = listener
     },
   }
 }

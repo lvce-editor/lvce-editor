@@ -1,8 +1,10 @@
+import { jest } from '@jest/globals'
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.mock('electron', () => {
+jest.unstable_mockModule('electron', () => {
   return {
     safeStorage: {
       isEncryptionAvailable: jest.fn(),
@@ -12,17 +14,15 @@ jest.mock('electron', () => {
   }
 })
 
-const electron = require('electron')
-const ElectronSafeStorage = require('../src/parts/ElectronSafeStorage/ElectronSafeStorage.js')
+const electron = await import('electron')
+const ElectronSafeStorage = await import('../src/parts/ElectronSafeStorage/ElectronSafeStorage.js')
 
 test('isEncryptionAvailable - error', () => {
   // @ts-ignore
   electron.safeStorage.isEncryptionAvailable.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  expect(() => ElectronSafeStorage.isEncryptionAvailable()).toThrowError(
-    new TypeError('x is not a function')
-  )
+  expect(() => ElectronSafeStorage.isEncryptionAvailable()).toThrowError(new TypeError('x is not a function'))
 })
 
 test('isEncryptionAvailable', () => {
@@ -39,9 +39,7 @@ test('encryptString - error', () => {
   electron.safeStorage.encryptString.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  expect(() => ElectronSafeStorage.encryptString('test')).toThrowError(
-    new TypeError('x is not a function')
-  )
+  expect(() => ElectronSafeStorage.encryptString('test')).toThrowError(new TypeError('x is not a function'))
 })
 
 test('encryptString', () => {

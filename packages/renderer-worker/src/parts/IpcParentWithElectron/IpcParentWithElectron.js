@@ -2,45 +2,48 @@ import * as Assert from '../Assert/Assert.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
-const getPort = async (type) => {
+const getPort = async (type, name) => {
   const port = await RendererProcess.invoke('IpcParent.create', {
     method: RendererProcessIpcParentType.Electron,
     type,
+    name,
   })
   return port
 }
 
 export const create = async (options) => {
   const type = options.type
+  const name = options.name || 'electron ipc'
   Assert.string(type)
-  const port = await getPort(type)
+  Assert.string(name)
+  const port = await getPort(type, name)
   return port
 }
 
+const getActualData = (event) => {
+  return event.data
+}
+
 export const wrap = (port) => {
-  let handleMessage
   return {
+    port,
+    /**
+     * @type {any}
+     */
+    listener: undefined,
     get onmessage() {
-      return handleMessage
+      return this.listener
     },
     set onmessage(listener) {
-      if (listener) {
-        handleMessage = (event) => {
-          // TODO why are some events not instance of message event?
-          if (event instanceof MessageEvent) {
-            listener(event.data)
-          } else {
-            listener(event)
-          }
-        }
-      } else {
-        handleMessage = null
+      this.listener = listener
+      const wrappedListener = (event) => {
+        const data = getActualData(event)
+        listener(data)
       }
-      port.onmessage = handleMessage
+      this.port.onmessage = wrappedListener
     },
     send(message) {
-      port.postMessage(message)
+      this.port.postMessage(message)
     },
-    _port: port,
   }
 }

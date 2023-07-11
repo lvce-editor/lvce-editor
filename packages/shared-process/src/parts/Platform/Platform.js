@@ -1,5 +1,5 @@
 import { homedir, tmpdir } from 'node:os'
-import { join, resolve, sep } from 'node:path'
+import { isAbsolute, join, resolve, sep } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as Path from '../Path/Path.js'
@@ -76,6 +76,10 @@ export const getUserSettingsPath = () => {
   return Path.join(configDir, 'settings.json')
 }
 
+export const getUserKeyBindingsPath = () => {
+  return Path.join(configDir, 'keybindings.json')
+}
+
 export const getExtensionHostPath = async () => {
   return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
 }
@@ -99,7 +103,8 @@ export const setEnvironmentVariables = (variables) => {
 
 export const getTestPath = () => {
   if (env.TEST_PATH) {
-    const testPath = '/remote' + pathToFileURL(Path.join(process.cwd(), env.TEST_PATH)).toString().slice(7)
+    const absolutePath = isAbsolute(env.TEST_PATH) ? env.TEST_PATH : Path.join(process.cwd(), env.TEST_PATH)
+    const testPath = '/remote' + pathToFileURL(absolutePath).toString().slice(7)
     return testPath
   }
   return '/packages/extension-host-worker-tests'
@@ -159,3 +164,19 @@ export const getSetupName = () => {
 }
 
 export const version = '0.0.0-dev'
+
+export const commit = 'unknown commit'
+
+export const date = ''
+
+export const getVersion = () => {
+  return version
+}
+
+export const getCommit = () => {
+  return commit
+}
+
+export const getDate = () => {
+  return date
+}

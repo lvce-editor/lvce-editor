@@ -1,6 +1,6 @@
-const IpcParentType = require('../IpcParentType/IpcParentType.js')
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
-exports.getModule = (method) => {
+export const getModule = (method) => {
   switch (method) {
     case IpcParentType.NodeWorker:
       return import('../IpcParentWithNodeWorker/IpcParentWithNodeWorker.js')

@@ -3,10 +3,13 @@
 // see https://github.com/microsoft/vscode/blob/6a5e3aad96929a7d35e09ed8d22e87a72bd16ff6/src/vs/workbench/contrib/preferences/browser/keybindingsEditor.ts
 
 import * as Assert from '../Assert/Assert.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -31,6 +34,7 @@ export const create = (id, uri, x, y, width, height) => {
     columnWidth3: 0,
     contentPadding: 30,
     resizerDownId: 0,
+    defineKeyBindingsId: -1,
   }
 }
 
@@ -129,6 +133,39 @@ export const handleClick = (state, index) => {
     ...state,
     focusedIndex: selectedIndex,
     selectedIndex,
+  }
+}
+
+const showDefineWidget = async (state, selectedIndex) => {
+  await Viewlet.openWidget(ViewletModuleId.DefineKeyBinding)
+}
+
+export const handleDefineKeyBindingDisposed = async (state, key) => {
+  if (key) {
+    // TODO
+    await FileSystem.writeFile(
+      'app://keybindings.json',
+      JSON.stringify([
+        {
+          key,
+        },
+      ])
+    )
+  }
+  // TODO
+  return state
+}
+
+export const handleDoubleClick = async (state, index) => {
+  const { minLineY } = state
+  const selectedIndex = minLineY + index
+  // TODO wait promise?
+  showDefineWidget(state, selectedIndex)
+  return {
+    ...state,
+    focusedIndex: selectedIndex,
+    selectedIndex,
+    defineKeyBindingsId: 1,
   }
 }
 

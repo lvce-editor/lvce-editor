@@ -12,7 +12,6 @@ export const getModuleId = (commandId) => {
     case 'ConfirmPrompt.prompt':
       return ModuleId.ConfirmPrompt
     case 'Css.addCssStyleSheet':
-    case 'Css.setInlineStyle':
       return ModuleId.Css
     case 'Developer.getMemoryUsage':
     case 'Developer.showState':
@@ -99,6 +98,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Performance
     case 'SanitizeHtml.sanitizeHtml':
       return ModuleId.SanitizeHtml
+    case 'ScreenCapture.start':
+      return ModuleId.ScreenCapture
     case 'ServiceWorker.register':
     case 'ServiceWorker.uninstall':
       return ModuleId.ServiceWorker

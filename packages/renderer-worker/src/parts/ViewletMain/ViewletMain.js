@@ -22,8 +22,10 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as TabFlags from '../TabFlags/TabFlags.js'
 import { closeEditor } from './ViewletMainCloseEditor.js'
 import { openUri } from './ViewletMainOpenUri.js'
+import * as SerializeEditorGroups from '../SerializeEditorGroups/SerializeEditorGroups.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -80,7 +82,11 @@ const getMainGroups = (savedState, state) => {
       const label = editor.label
       editor.tabWidth = MeasureTabWidth.measureTabWidth(label, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
     }
-    restoredGroups.push(group)
+    const restoredGroup = {
+      ...group,
+      tabsUid: Id.create(),
+    }
+    restoredGroups.push(restoredGroup)
   }
   // TODO check that type is string (else runtime error occurs and page is blank)
   return restoredGroups
@@ -187,16 +193,92 @@ const getRestoredGroups = (savedState, state) => {
 
 export const saveState = (state) => {
   const { groups, activeGroupIndex } = state
-  return { groups, activeGroupIndex }
+  return {
+    groups: SerializeEditorGroups.serializeEditorGroups(groups),
+    activeGroupIndex,
+  }
 }
 
 const handleEditorChange = async (editor) => {
   const state = ViewletStates.getState(ViewletModuleId.Main)
   const { activeGroupIndex, groups } = state
+  if (activeGroupIndex === -1) {
+    return state
+  }
   const group = groups[activeGroupIndex]
-  Assert.object(group)
-  const command = ['Viewlet.send', group.tabsUid, 'setDirty', group.activeIndex, true]
-  await RendererProcess.invoke(...command)
+  const { editors, activeIndex, tabsUid } = group
+  if (activeIndex === -1) {
+    return state
+  }
+  const tab = editors[activeIndex]
+  if (tab.uid !== editor.uid) {
+    return state
+  }
+  if (tab.flags & TabFlags.Dirty) {
+    return state
+  }
+  const newEditors = [
+    ...editors.slice(0, activeIndex),
+    {
+      ...tab,
+      flags: TabFlags.Dirty,
+    },
+    ...editors.slice(activeIndex + 1),
+  ]
+  const newGroups = [
+    ...groups.slice(0, activeGroupIndex),
+    {
+      ...group,
+      editors: newEditors,
+    },
+    ...groups.slice(activeGroupIndex + 1),
+  ]
+  const newState = {
+    ...state,
+    groups: newGroups,
+  }
+  await Viewlet.setState(state.uid, newState)
+}
+
+const handleTitleUpdated = async (uid, title) => {
+  const state = ViewletStates.getState(ViewletModuleId.Main)
+  const { activeGroupIndex, groups, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing } = state
+  if (activeGroupIndex === -1) {
+    return state
+  }
+  const group = groups[activeGroupIndex]
+  const { editors, activeIndex, tabsUid } = group
+  if (activeIndex === -1) {
+    return state
+  }
+  const editor = editors[activeIndex]
+  if (editor.uid !== uid) {
+    return state
+  }
+  const tabWidth = MeasureTabWidth.measureTabWidth(title, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
+  const newEditors = [
+    ...editors.slice(0, activeIndex),
+    {
+      ...editor,
+      title,
+      label: title,
+      tabWidth,
+    },
+    ...editors.slice(activeIndex + 1),
+  ]
+  const newGroups = [
+    ...groups.slice(0, activeGroupIndex),
+    {
+      ...group,
+      editors: newEditors,
+    },
+    ...groups.slice(activeGroupIndex + 1),
+  ]
+  const newState = {
+    ...state,
+    groups: newGroups,
+  }
+  await Viewlet.setState(state.uid, newState)
 }
 
 export const loadContent = async (state, savedState) => {
@@ -205,6 +287,7 @@ export const loadContent = async (state, savedState) => {
   // @ts-ignore
   LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
   GlobalEventBus.addListener('editor.change', handleEditorChange)
+  GlobalEventBus.addListener('titleUpdated', handleTitleUpdated)
   await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.MainTabs)
   return {
     ...state,
@@ -332,7 +415,12 @@ const focusEditor = (editor) => {
 }
 
 export const save = async (state) => {
-  const { editors, activeIndex } = state
+  const { groups, activeGroupIndex } = state
+  if (activeGroupIndex === -1) {
+    return state
+  }
+  const group = groups[activeGroupIndex]
+  const { editors, activeIndex, tabsUid } = group
   if (activeIndex === -1) {
     return state
   }
@@ -340,9 +428,26 @@ export const save = async (state) => {
   await saveEditor(editor)
   // TODO handle different types of editors / custom editors / webviews
   // Command.execute(/* EditorSave.editorSave */ 'Editor.save')
-  const command = ['Viewlet.send', state.tabsUid, 'setDirty', activeIndex, false]
-  await RendererProcess.invoke(...command)
-  return state
+  const newEditors = [
+    ...editors.slice(0, activeIndex),
+    {
+      ...editor,
+      flags: editor.flags & ~TabFlags.Dirty,
+    },
+    ...editors.slice(activeIndex + 1),
+  ]
+  const newGroups = [
+    ...groups.slice(0, activeGroupIndex),
+    {
+      ...group,
+      editors: newEditors,
+    },
+    ...groups.slice(activeGroupIndex + 1),
+  ]
+  return {
+    ...state,
+    groups: newGroups,
+  }
 }
 
 export const focus = async (state) => {

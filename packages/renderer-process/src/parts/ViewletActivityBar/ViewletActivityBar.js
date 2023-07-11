@@ -1,51 +1,8 @@
-import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaOrientationType from '../AriaOrientationType/AriaOrientationType.js'
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as Assert from '../Assert/Assert.js'
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-import * as Logger from '../Logger/Logger.js'
-import * as MaskIcon from '../MaskIcon/MaskIcon.js'
-import * as MaskImage from '../MaskImage/MaskImage.js'
-import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
 import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
-
-const activeId = 'ActivityBarItemActive'
-const selectedClassName = 'ActivityBarItemSelected'
-
-// TODO set aria-selected false when sidebar is collapsed
-
-const create$ActivityBarItemIcon = (icon) => {
-  return MaskIcon.create(icon)
-}
-
-// TODO assetDir might not work with non-builtin extension icons
-const create$ActivityBarItem = (item) => {
-  // const $ActivityBarItemIcon = create$ActivityBarItemIcon(`${item.icon}`)
-  const $ActivityBarItem = document.createElement('div')
-  $ActivityBarItem.className = 'ActivityBarItem'
-  $ActivityBarItem.ariaLabel = '' // aria-label is determined by content  TODO is empty aria-label necessary or can it be left off?
-  $ActivityBarItem.title = item.title
-  MaskImage.setMaskImage($ActivityBarItem, item.icon)
-  if (item.keyShortcuts) {
-    $ActivityBarItem.ariaKeyShortcuts = item.keyShortcuts
-  }
-  switch (item.flags) {
-    case ActivityBarItemFlags.Tab:
-      $ActivityBarItem.role = AriaRoles.Tab
-      $ActivityBarItem.ariaSelected = AriaBoolean.False
-      break
-    case ActivityBarItemFlags.Button:
-      $ActivityBarItem.role = AriaRoles.Button
-      $ActivityBarItem.ariaHasPopup = AriaBoolean.True
-      break
-    default:
-      Logger.warn(`unknown activity bar item flags ${item.flags}`)
-      break
-  }
-  // $ActivityBarItem.append($ActivityBarItemIcon)
-  return $ActivityBarItem
-}
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
@@ -72,52 +29,6 @@ export const attachEvents = (state) => {
 
 export const dispose = (state) => {}
 
-export const setItems = (state, activityBarItems) => {
-  Assert.object(state)
-  Assert.array(activityBarItems)
-  const $ActivityBar = state.$ActivityBar
-  $ActivityBar.replaceChildren(...activityBarItems.map(create$ActivityBarItem))
-}
-
-export const setSelectedIndex = (state, oldIndex, newIndex) => {
-  const { $ActivityBar } = state
-  if (oldIndex !== -1) {
-    const $OldItem = $ActivityBar.children[oldIndex]
-    $OldItem.ariaSelected = AriaBoolean.False
-    if ($OldItem.firstChild) {
-      MaskImage.transfer($OldItem.firstChild, $OldItem)
-      $OldItem.firstChild.remove()
-    }
-    $OldItem.classList.remove(selectedClassName)
-  }
-  if (newIndex !== -1) {
-    const $NewItem = $ActivityBar.children[newIndex]
-    $NewItem.ariaSelected = AriaBoolean.True
-    const $Icon = create$ActivityBarItemIcon('')
-    MaskImage.transfer($NewItem, $Icon)
-    $NewItem.append($Icon)
-    $NewItem.classList.add(selectedClassName)
-  }
-}
-
-export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
-  const { $ActivityBar } = state
-  if (oldIndex !== -1) {
-    const $OldItem = $ActivityBar.children[oldIndex]
-    $OldItem.removeAttribute('id')
-    $OldItem.classList.remove('FocusOutline')
-  }
-  if (newIndex !== -1) {
-    const $NewItem = $ActivityBar.children[newIndex]
-    $NewItem.id = activeId
-    $ActivityBar.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
-
-    if (focused) {
-      $NewItem.classList.add('FocusOutline')
-    }
-  }
-}
-
 export const setBadgeCount = (state, index, count) => {
   const { $ActivityBar } = state
   const $Item = $ActivityBar.children[index]
@@ -126,4 +37,9 @@ export const setBadgeCount = (state, index, count) => {
   $Badge.textContent = `${count}`
   // @ts-ignore
   $Item.append($Badge)
+}
+
+export const setDom = (state, dom) => {
+  const { $Viewlet } = state
+  VirtualDom.renderInto($Viewlet, dom)
 }

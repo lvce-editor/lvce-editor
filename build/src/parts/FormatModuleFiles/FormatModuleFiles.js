@@ -20,6 +20,7 @@ const formatModuleFile = async (absolutePath) => {
   }
   let state = State.Top
   const moduleMap = Object.create(null)
+  const throwLine = lines.find((line) => line.trim().startsWith('throw'))
   let commandIds = []
   outer: for (const line of lines) {
     const trimmedLine = line.trimStart()
@@ -69,7 +70,7 @@ const formatModuleFile = async (absolutePath) => {
     newLines.push(`      return ${key}`)
   }
   newLines.push(`    default:`)
-  newLines.push(`      throw new ModuleNotFoundError(moduleId)`)
+  newLines.push(throwLine)
   newLines.push(`  }`)
   newLines.push(`}`)
   newLines.push(``)

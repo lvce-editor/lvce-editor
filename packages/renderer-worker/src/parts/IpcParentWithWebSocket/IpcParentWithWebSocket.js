@@ -1,47 +1,47 @@
 import * as Assert from '../Assert/Assert.js'
+import * as FirstWebSocketEventType from '../FirstWebSocketEventType/FirstWebSocketEventType.js'
+import * as GetWsUrl from '../GetWsUrl/GetWsUrl.js'
+import { IpcError } from '../IpcError/IpcError.js'
 import * as Json from '../Json/Json.js'
 import * as WaitForWebSocketToBeOpen from '../WaitForWebSocketToBeOpen/WaitForWebSocketToBeOpen.js'
-import * as WebSocketProtocol from '../WebSocketProtocol/WebSocketProtocol.js'
-
-const getWsUrl = () => {
-  const wsProtocol = WebSocketProtocol.getWebSocketProtocol()
-  return `${wsProtocol}//${location.host}`
-}
 
 export const create = async ({ protocol }) => {
   Assert.string(protocol)
   // TODO replace this during build
-  const wsUrl = getWsUrl()
+  const wsUrl = GetWsUrl.getWsUrl()
   const webSocket = new WebSocket(wsUrl, [protocol])
-  await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
+  const { type, event } = await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
+  if (type === FirstWebSocketEventType.Close) {
+    throw new IpcError(`Websocket connection was immediately closed`)
+  }
   return webSocket
 }
 
+const getMessage = (event) => {
+  return Json.parse(event.data)
+}
+
 export const wrap = (webSocket) => {
-  let handleMessage
   return {
+    webSocket,
+    /**
+     * @type {any}
+     */
+    listener: undefined,
     get onmessage() {
-      return handleMessage
+      return this.listener
     },
     set onmessage(listener) {
-      if (listener) {
-        handleMessage = (event) => {
-          // TODO why are some events not instance of message event?
-          if (event instanceof MessageEvent) {
-            const message = Json.parse(event.data)
-            listener(message)
-          } else {
-            listener(event)
-          }
-        }
-      } else {
-        handleMessage = null
+      this.listener = listener
+      const wrappedListener = (event) => {
+        const message = getMessage(event)
+        listener(message)
       }
-      webSocket.onmessage = handleMessage
+      this.webSocket.onmessage = wrappedListener
     },
     send(message) {
       const stringifiedMessage = Json.stringifyCompact(message)
-      webSocket.send(stringifiedMessage)
+      this.webSocket.send(stringifiedMessage)
     },
   }
 }

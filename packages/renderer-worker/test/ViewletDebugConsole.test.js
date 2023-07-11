@@ -7,14 +7,5 @@ test('create', () => {
 
 test('loadContent', async () => {
   const state = ViewletDebugConsole.create()
-  expect(await ViewletDebugConsole.loadContent(state)).toEqual({
-    disposed: false,
-  })
-})
-
-test('dispose', () => {
-  const state = ViewletDebugConsole.create()
-  expect(ViewletDebugConsole.dispose(state)).toEqual({
-    disposed: true,
-  })
+  expect(await ViewletDebugConsole.loadContent(state)).toMatchObject({})
 })

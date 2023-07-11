@@ -17,5 +17,6 @@ export const build = async ({ product }) => {
   await ElectronBuilder.build({
     config: ElectronBuilderConfigType.WindowsExe,
     product,
+    shouldRemoveUnusedLocales: true,
   })
 }

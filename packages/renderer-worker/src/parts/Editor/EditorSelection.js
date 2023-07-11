@@ -52,8 +52,30 @@ export const applyEdit = (editor, changes) => {
 
 // TODO visible selections could also be uint16array
 // [top1, left1, width1, height1, top2, left2, width2, height2...]
+const getTabCount = (string) => {
+  let count = 0
+  for (let i = 0; i < string.length; i++) {
+    if (string[i] === '\t') {
+      count++
+    }
+  }
+  return count
+}
 
-const getX = (line, column, fontWeight, fontSize, fontFamily, letterSpacing, tabSize, halfCursorWidth, width, averageCharWidth, difference = 0) => {
+const getX = (
+  line,
+  column,
+  fontWeight,
+  fontSize,
+  fontFamily,
+  isMonospaceFont,
+  letterSpacing,
+  tabSize,
+  halfCursorWidth,
+  width,
+  averageCharWidth,
+  difference = 0
+) => {
   if (!line) {
     return 0
   }
@@ -61,6 +83,7 @@ const getX = (line, column, fontWeight, fontSize, fontFamily, letterSpacing, tab
   Assert.number(tabSize)
   Assert.number(halfCursorWidth)
   Assert.number(width)
+  Assert.boolean(isMonospaceFont)
   Assert.number(averageCharWidth)
   Assert.number(difference)
   if (column === 0) {
@@ -72,16 +95,17 @@ const getX = (line, column, fontWeight, fontSize, fontFamily, letterSpacing, tab
   }
   const normalize = NormalizeText.shouldNormalizeText(line)
   const normalizedLine = NormalizeText.normalizeText(line, normalize, tabSize)
-  const partialText = normalizedLine.slice(0, column)
-  return MeasureTextWidth.measureTextWidth(partialText, fontWeight, fontSize, fontFamily, letterSpacing) - halfCursorWidth + difference
+  const tabCount = getTabCount(line.slice(0, column))
+  const partialText = normalizedLine.slice(0, column + tabCount)
+  return (
+    MeasureTextWidth.measureTextWidth(partialText, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, averageCharWidth) -
+    halfCursorWidth +
+    difference
+  )
 }
 
 const getY = (row, minLineY, rowHeight) => {
   return (row - minLineY) * rowHeight
-}
-
-const getAverageCharWidthOrDefault = (fontWeight, fontSize, fontFamily, letterSpacing) => {
-  return MeasureTextWidth.measureTextWidth('a', fontWeight, fontSize, fontFamily, letterSpacing)
 }
 
 const emptyCursors = new Float32Array()
@@ -117,8 +141,10 @@ export const getVisible = (editor) => {
     width,
     differences,
     focused,
+    charWidth,
+    isMonospaceFont,
   } = editor
-  const averageCharWidth = getAverageCharWidthOrDefault(fontWeight, fontSize, fontFamily, letterSpacing)
+  const averageCharWidth = charWidth
   const halfCursorWidth = cursorWidth / 2
   for (let i = 0; i < selections.length; i += 4) {
     const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn, reversed] = getPairs(selections, i)
@@ -134,6 +160,7 @@ export const getVisible = (editor) => {
       fontWeight,
       fontSize,
       fontFamily,
+      isMonospaceFont,
       letterSpacing,
       tabSize,
       halfCursorWidth,
@@ -156,6 +183,7 @@ export const getVisible = (editor) => {
         fontWeight,
         fontSize,
         fontFamily,
+        isMonospaceFont,
         letterSpacing,
         tabSize,
         halfCursorWidth,
@@ -177,6 +205,7 @@ export const getVisible = (editor) => {
           fontWeight,
           fontSize,
           fontFamily,
+          isMonospaceFont,
           letterSpacing,
           tabSize,
           halfCursorWidth,
@@ -190,6 +219,7 @@ export const getVisible = (editor) => {
           fontWeight,
           fontSize,
           fontFamily,
+          isMonospaceFont,
           letterSpacing,
           tabSize,
           halfCursorWidth,
@@ -217,6 +247,7 @@ export const getVisible = (editor) => {
           fontWeight,
           fontSize,
           fontFamily,
+          isMonospaceFont,
           letterSpacing,
           tabSize,
           halfCursorWidth,

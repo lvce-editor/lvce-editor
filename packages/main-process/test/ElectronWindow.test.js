@@ -1,4 +1,5 @@
-const BrowserWindow = require('../src/parts/ElectronWindow/ElectronWindow.js')
+import * as BrowserWindow from '../src/parts/ElectronWindow/ElectronWindow.cjs'
+import { jest } from '@jest/globals'
 
 // TODO how to test window (highly depends on electron)
 test.skip('toggleDevtools', () => {

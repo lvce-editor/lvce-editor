@@ -1,6 +1,7 @@
 // parsing error handling based on https://github.com/sindresorhus/parse-json/blob/main/index.js
 
 import { JsonParsingError } from '../JsonParsingError/JsonParsingError.js'
+import * as Character from '../Character/Character.js'
 
 export const parse = async (string, filePath) => {
   try {
@@ -13,5 +14,5 @@ export const parse = async (string, filePath) => {
 }
 
 export const stringify = (value) => {
-  return JSON.stringify(value, null, 2) + '\n'
+  return JSON.stringify(value, null, 2) + Character.NewLine
 }

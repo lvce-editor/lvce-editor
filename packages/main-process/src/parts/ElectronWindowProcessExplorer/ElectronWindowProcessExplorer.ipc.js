@@ -1,8 +1,7 @@
-const ElectronWindowProcessExplorer = require('./ElectronWindowProcessExplorer.js')
+import * as ElectronWindowProcessExplorer from './ElectronWindowProcessExplorer.js'
 
-exports.name = 'ElectronWindowProcessExplorer'
+export const name = 'ElectronWindowProcessExplorer'
 
-// prettier-ignore
-exports.Commands = {
-  open: ElectronWindowProcessExplorer.open
+export const Commands = {
+  open: ElectronWindowProcessExplorer.open,
 }

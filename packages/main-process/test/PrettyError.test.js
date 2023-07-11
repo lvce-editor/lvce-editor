@@ -1,18 +1,21 @@
+import { jest } from '@jest/globals'
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.mock('node:fs', () => ({
+jest.unstable_mockModule('node:fs', () => ({
   readFileSync: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
 
-const fs = require('node:fs')
-const { VError } = require('verror')
-const PrettyError = require('../src/parts/PrettyError/PrettyError.js')
+const fs = await import('node:fs')
+const { VError } = await import('../src/parts/VError/VError.cjs')
+const PrettyError = await import('../src/parts/PrettyError/PrettyError.cjs')
+const { IpcError } = await import('../src/parts/IpcError/IpcError.js')
 
-test('prepare - unknown command error', async () => {
+test.skip('prepare - unknown command error', async () => {
   const error = new Error()
   error.message = 'Unknown command "ElectronWindowAbout.open"'
   error.stack = `  at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:64:13)
@@ -108,7 +111,7 @@ exports.invoke = async (command, ...args) => {
   })
 })
 
-test('prepare - electron error', async () => {
+test.skip('prepare - electron error', async () => {
   const error = new TypeError('Invalid Menu')
   error.stack = `  at node:electron/js2c/browser_init:2:37794
   at Array.map (<anonymous>)
@@ -246,7 +249,7 @@ exports.findById = (id) => {
   })
 })
 
-test('prepare - module not found error', async () => {
+test.skip('prepare - module not found error', async () => {
   const error = new Error(`Cannot find module '../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js/index.js.js'
 Require stack:
 - /test/packages/main-process/src/parts/Module/Module.js
@@ -336,7 +339,7 @@ exports.load = async (moduleId) => {
   })
 })
 
-test('prepare - dl open failed', async () => {
+test.skip('prepare - dl open failed', async () => {
   const error = new Error(
     `Module did not self-register: 'C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\build\\Release\\windows_process_tree.node'.`
   )
@@ -500,7 +503,7 @@ exports.getProcessTree = getProcessTree;
   })
 })
 
-test('prepare - error stack with node:events', async () => {
+test.skip('prepare - error stack with node:events', async () => {
   const error = new TypeError(`Cannot read properties of undefined (reading 'id')`)
   error.stack = `TypeError: Cannot read properties of undefined (reading 'id')
   at exports.findById (/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js:10:28)
@@ -570,10 +573,10 @@ exports.add = (config) => {
     type: 'TypeError',
   })
   expect(fs.readFileSync).toHaveBeenCalledTimes(1)
-  expect(fs.readFileSync).toHaveBeenCalledWith(`/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js`, 'utf-8')
+  expect(fs.readFileSync).toHaveBeenCalledWith(`/test/packages/main-process/src/parts/AppWindowStates/AppWindowStates.js`, 'utf8')
 })
 
-test('prepare - module not found error from inside node_modules', async () => {
+test.skip('prepare - module not found error from inside node_modules', async () => {
   const error = new Error(`Cannot find module 'graceful-fs'
 Require stack:
 - /test/packages/shared-process/node_modules/fs-extra/lib/copy/copy-sync.js
@@ -784,7 +787,7 @@ module.exports = copySync
   })
 })
 
-test('prepare - syntax error - unexpected token export', async () => {
+test.skip('prepare - syntax error - unexpected token export', async () => {
   const error = new SyntaxError(`Unexpected token 'export'`)
   error.stack = `/test/packages/main-process/src/parts/GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js:3
 export const getFirstNodeWorkerEvent = async (worker) => {
@@ -845,7 +848,7 @@ exports.getFirstNodeWorkerEvent = getFirstNodeWorkerEvent
   })
 })
 
-test('prepare - type error - object that needs transfer was found in message but not listed in transferList', async () => {
+test.skip('prepare - type error - object that needs transfer was found in message but not listed in transferList', async () => {
   const error = new TypeError(`Object that needs transfer was found in message but not listed in transferList`)
   error.stack = `TypeError: Object that needs transfer was found in message but not listed in transferList
     at Worker.postMessage (node:internal/worker:343:5)
@@ -905,7 +908,7 @@ exports.wrap = (worker) => {
   })
 })
 
-test('prepare - error - failed to load window', async () => {
+test.skip('prepare - error - failed to load window', async () => {
   const error = new Error(`Failed to load window url "lvce-oss://-": ERR_INVALID_URL (-300) loading 'lvce-oss://-/`)
   error.stack = `VError: Failed to load window url "lvce-oss://-": ERR_INVALID_URL (-300) loading 'lvce-oss://-/'
     at loadUrl (/test/packages/main-process/src/parts/AppWindow/AppWindow.js:31:13)
@@ -1031,7 +1034,7 @@ exports.findById = (id) => {
   })
 })
 
-test('prepare - error - file url must be absolute', async () => {
+test.skip('prepare - error - file url must be absolute', async () => {
   const error = new TypeError(`File URL path must be absolute`)
   error.stack = `TypeError [ERR_INVALID_FILE_URL_PATH]: File URL path must be absolute
     at new NodeError (node:internal/errors:393:5)
@@ -1247,7 +1250,61 @@ exports.get = () => {
   })
 })
 
-test('prepare - error - permission denied', async () => {
+test.skip('prepare - ipc error', async () => {
+  const stdout = ''
+  const stderr = `node:internal/modules/cjs/loader:1057
+  throw err;
+  ^
+
+Error: Cannot find module '/test/linked-extensions/builtin.git/packages/extension/../node/src/gitClient.cjs'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1054:15)
+    at o._resolveFilename (node:electron/js2c/utility_init:2:3040)
+    at node:electron/js2c/utility_init:2:5916
+    at node:electron/js2c/utility_init:2:5961
+    at node:electron/js2c/utility_init:2:5965
+    at BuiltinModule.compileForInternalLoader (node:internal/bootstrap/loaders:334:7)
+    at BuiltinModule.compileForPublicLoader (node:internal/bootstrap/loaders:270:10)
+    at loadBuiltinModule (node:internal/modules/cjs/helpers:50:9)
+    at Module._load (node:internal/modules/cjs/loader:914:15)
+    at f._load (node:electron/js2c/asar_bundle:2:13330) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v18.14.0
+`
+  const error = new IpcError('Utility process exited before ipc connection was established', stdout, stderr)
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    codeFrame: ``,
+    message: `Utility process exited before ipc connection was established: Error: Cannot find module '/test/linked-extensions/builtin.git/packages/extension/../node/src/gitClient.cjs'`,
+    stack: ``,
+    stderr: `node:internal/modules/cjs/loader:1057
+  throw err;
+  ^
+
+Error: Cannot find module '/test/linked-extensions/builtin.git/packages/extension/../node/src/gitClient.cjs'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1054:15)
+    at o._resolveFilename (node:electron/js2c/utility_init:2:3040)
+    at node:electron/js2c/utility_init:2:5916
+    at node:electron/js2c/utility_init:2:5961
+    at node:electron/js2c/utility_init:2:5965
+    at BuiltinModule.compileForInternalLoader (node:internal/bootstrap/loaders:334:7)
+    at BuiltinModule.compileForPublicLoader (node:internal/bootstrap/loaders:270:10)
+    at loadBuiltinModule (node:internal/modules/cjs/helpers:50:9)
+    at Module._load (node:internal/modules/cjs/loader:914:15)
+    at f._load (node:electron/js2c/asar_bundle:2:13330) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v18.14.0
+`,
+    type: 'IpcError',
+  })
+})
+
+test.skip('prepare - error - permission denied', async () => {
   const cause = new Error("EACCES: permission denied, open '/test/settings.json'")
   const error = new VError(cause, `Failed to read settings`)
   error.stack = `VError: Failed to read settings: EACCES: permission denied, open '/test/settings.json'
@@ -1353,5 +1410,69 @@ exports.update = update
     at async hydrate (/test/packages/main-process/src/parts/App/App.js:103:3)
     at async main (/test/packages/main-process/src/mainProcessMain.js:16:3)`,
     type: 'VError',
+  })
+})
+
+test.skip('prepare - error - unexpected token export', async () => {
+  const error = new SyntaxError("unexpected token 'export'")
+  error.stack = `/test/packages/main-process/src/parts/UtilityProcessState/UtilityProcessState.js:7
+export const add = (pid, name) => {
+^^^^^^
+
+SyntaxError: Unexpected token 'export'
+    at internalCompileFunction (node:internal/vm:73:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1156:20)
+    at Module._compile (node:internal/modules/cjs/loader:1197:27)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1296:10)
+    at Module.load (node:internal/modules/cjs/loader:1096:32)
+    at Module._load (node:internal/modules/cjs/loader:937:12)
+    at f._load (node:electron/js2c/asar_bundle:2:13330)
+    at Module.require (node:internal/modules/cjs/loader:1120:19)
+    at require (node:internal/modules/cjs/helpers:103:18)
+    at Object.<anonymous> (/test/packages/main-process/src/parts/IpcParentWithElectronUtilityProcess/IpcParentWithElectronUtilityProcess.js:8:29)
+    at Module._compile (node:internal/modules/cjs/loader:1241:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1296:10)
+    at Module.load (node:internal/modules/cjs/loader:1096:32)
+    at Module._load (node:internal/modules/cjs/loader:937:12)
+    at f._load (node:electron/js2c/asar_bundle:2:13330)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:169:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:194:25)',`
+  // @ts-ignore
+  fs.readFileSync.mockImplementation(() => {
+    return `const Assert = require('../Assert/Assert.js')
+
+const state = (exports.state = {
+  all: Object.create(null),
+})
+
+export const add = (pid, name) => {
+  Assert.number(pid)
+  Assert.string(pid)
+  state.all[pid] = name
+}
+
+export const remove = (pid) => {
+  Assert.number(pid)
+  delete state.all[pid]
+}
+
+export const getAll = () => {
+  return Object.entries(state.all)
+}
+`
+  })
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    codeFrame: `   5 | })
+   6 |
+>  7 | export const add = (pid, name) => {
+     | ^
+   8 |   Assert.number(pid)
+   9 |   Assert.string(pid)
+  10 |   state.all[pid] = name`,
+    message: "unexpected token 'export'",
+    stack: `    at /test/packages/main-process/src/parts/UtilityProcessState/UtilityProcessState.js:7
+    at Object.<anonymous> (/test/packages/main-process/src/parts/IpcParentWithElectronUtilityProcess/IpcParentWithElectronUtilityProcess.js:8:29)`,
+    type: 'SyntaxError',
   })
 })

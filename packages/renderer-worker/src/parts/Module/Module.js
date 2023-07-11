@@ -22,8 +22,6 @@ export const load = (moduleId) => {
       return import('../Callback/Callback.ipc.js')
     case ModuleId.Chrome:
       return import('../Chrome/Chrome.ipc.js')
-    case ModuleId.ChromeExtension:
-      return import('../ChromeExtension/ChromeExtension.ipc.js')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.js')
     case ModuleId.ColorPicker:
@@ -38,6 +36,8 @@ export const load = (moduleId) => {
       return import('../ContentTracing/ContentTracing.ipc.js')
     case ModuleId.ContextMenu:
       return import('../ContextMenu/ContextMenu.ipc.js')
+    case ModuleId.DebugSharedProcess:
+      return import('../DebugSharedProcess/DebugSharedProcess.ipc.js')
     case ModuleId.Developer:
       return import('../Developer/Developer.ipc.js')
     case ModuleId.Dialog:
@@ -82,6 +82,8 @@ export const load = (moduleId) => {
       return import('../IconTheme/IconTheme.ipc.js')
     case ModuleId.ImagePreview:
       return import('../ImagePreview/ImagePreview.ipc.js')
+    case ModuleId.IncrementalTextSearch:
+      return import('../IncrementalTextSearch/IncrementalTextSearch.ipc.js')
     case ModuleId.IndexedDb:
       return import('../IndexedDb/IndexedDb.ipc.js')
     case ModuleId.IpcParent:
@@ -112,8 +114,12 @@ export const load = (moduleId) => {
       return import('../PersistentFileHandle/PersistentFileHandle.ipc.js')
     case ModuleId.Preferences:
       return import('../Preferences/Preferences.ipc.js')
+    case ModuleId.RebuildNodePty:
+      return import('../RebuildNodePty/RebuildNodePty.ipc.js')
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.js')
+    case ModuleId.Reload:
+      return import('../Reload/Reload.ipc.js')
     case ModuleId.SaveFileAs:
       return import('../SaveFileAs/SaveFileAs.ipc.js')
     case ModuleId.SaveState:

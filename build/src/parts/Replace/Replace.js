@@ -2,8 +2,10 @@ import VError from 'verror'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
+const RE_WHITESPACE = /\s+/g
+
 const snippet = (string) => {
-  return string.replaceAll(/\s+/, ' ').slice(0, 15)
+  return string.replaceAll(RE_WHITESPACE, ' ').slice(0, 15)
 }
 
 export const replace = async ({ path, occurrence, replacement }) => {

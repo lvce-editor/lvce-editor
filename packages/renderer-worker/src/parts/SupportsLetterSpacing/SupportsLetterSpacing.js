@@ -12,7 +12,9 @@ export const supportsLetterSpacing = () => {
   const fontFamily = 'serif'
   const noLetterSpacing = 0
   const largeLetterSpacing = 100
-  const normalTextWidth = MeasureTextWidth.measureTextWidth(text, fontWeight, fontSize, fontFamily, noLetterSpacing)
-  const largeTextWidth = MeasureTextWidth.measureTextWidth(text, fontWeight, fontSize, fontFamily, largeLetterSpacing)
-  return normalTextWidth === largeTextWidth
+  const isMonospaceFont = false
+  const charWidth = 0
+  const normalTextWidth = MeasureTextWidth.measureTextWidth(text, fontWeight, fontSize, fontFamily, noLetterSpacing, isMonospaceFont, charWidth)
+  const largeTextWidth = MeasureTextWidth.measureTextWidth(text, fontWeight, fontSize, fontFamily, largeLetterSpacing, isMonospaceFont, charWidth)
+  return normalTextWidth !== largeTextWidth
 }

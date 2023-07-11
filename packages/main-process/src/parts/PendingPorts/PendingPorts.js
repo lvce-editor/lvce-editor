@@ -1,17 +1,15 @@
-const state = {
+export const state = {
   ports: Object.create(null),
 }
 
-exports.state = state
-
-exports.add = (key, port) => {
+export const add = (key, port) => {
   state.ports[key] = port
 }
 
-exports.get = (key) => {
+export const get = (key) => {
   return state.ports[key]
 }
 
-exports.delete = (key) => {
+export const _delete = (key) => {
   delete state.ports[key]
 }

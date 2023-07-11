@@ -41,6 +41,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     getAssetDir: () => {
       return '/'
     },
+    assetDir: '/',
   }
 })
 jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {

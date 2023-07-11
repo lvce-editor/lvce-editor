@@ -1,12 +1,10 @@
-const ElectronApp = require('../ElectronApp/ElectronApp.js')
-const ExitCode = require('../ExitCode/ExitCode.js')
-const GetVersionString = require('../GetVersionString/GetVersionString.js')
+import * as ElectronApp from '../ElectronApp/ElectronApp.cjs'
+import * as ExitCode from '../ExitCode/ExitCode.cjs'
+import * as GetVersionString from '../GetVersionString/GetVersionString.js'
 
-const handleCliArgs = (parsedArgs) => {
+export const handleCliArgs = (parsedArgs) => {
   const versionString = GetVersionString.getVersionString()
   console.info(versionString)
   ElectronApp.exit(ExitCode.Sucess)
   return true
 }
-
-exports.handleCliArgs = handleCliArgs

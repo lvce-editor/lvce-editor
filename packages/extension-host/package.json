@@ -22,18 +22,18 @@
   },
   "devDependencies": {
     "@types/babel__code-frame": "^7.0.3",
-    "@types/lodash": "^4.14.194",
+    "@types/lodash": "^4.14.195",
     "@types/verror": "^1.10.6",
-    "@types/ws": "^8.5.4"
+    "@types/ws": "^8.5.5"
   },
   "dependencies": {
-    "@babel/code-frame": "^7.21.4",
+    "@babel/code-frame": "^7.22.5",
     "clean-stack": "^4.2.0",
     "debug": "^4.3.4",
     "exit-hook": "^3.2.0",
     "lines-and-columns": "^2.0.3",
     "ow": "^1.1.1",
-    "p-timeout": "^6.1.1",
+    "p-timeout": "^6.1.2",
     "stack-utils": "^2.0.6",
     "verror": "^1.10.1",
     "ws": "^8.13.0"

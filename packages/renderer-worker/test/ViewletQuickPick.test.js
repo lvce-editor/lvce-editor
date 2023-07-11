@@ -70,10 +70,14 @@ test('handleClickAt - first item', async () => {
     deltaY: 22,
     items: [
       {
-        label: 'index.css',
+        pick: {
+          label: 'index.css',
+        },
       },
       {
-        label: 'index.html',
+        pick: {
+          label: 'index.html',
+        },
       },
     ],
     provider,
@@ -113,26 +117,15 @@ test('render - set correct height', () => {
     ...oldState,
     items: [
       {
-        label: 'index.css',
+        pick: {
+          label: 'index.css',
+        },
+        matches: [],
       },
     ],
   }
   expect(render(oldState, newState)).toEqual([
-    [
-      'Viewlet.send',
-      'QuickPick',
-      'setVisiblePicks',
-      [
-        {
-          description: '',
-          icon: '',
-          label: 'index.css',
-          posInSet: 1,
-          setSize: 1,
-        },
-      ],
-    ],
-    ['Viewlet.send', 'QuickPick', 'setCursorOffset', 0],
+    ['Viewlet.send', 'QuickPick', 'setItemsDom', expect.any(Array)],
     ['Viewlet.send', 'QuickPick', 'setItemsHeight', 22],
   ])
 })

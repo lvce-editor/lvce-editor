@@ -1,46 +1,15 @@
-import * as Copy from '../Copy/Copy.js'
+import * as CopyDependencies from '../CopyDependencies/CopyDependencies.js'
+import * as FilterSharedProcessDependencies from '../FilterSharedProcessDependencies/FilterSharedProcessDependencies.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
-import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
-import * as WalkDependencies from '../WalkDependencies/WalkDependencies.js'
+import * as Platform from '../Platform/Platform.js'
+import * as Remove from '../Remove/Remove.js'
 
-const getNpmDependencies = (rawDependencies) => {
-  const dependencyPaths = []
-  const handleDependency = (dependency) => {
-    if (!dependency.path) {
-      return false
-    }
-    if (!dependency.name) {
-      return false
-    }
-    if (dependency.name === '@lvce-editor/extension-host') {
-      return false
-    }
-    if (dependency.name === '@lvce-editor/pty-host') {
-      return false
-    }
-    if (dependency.name === 'prebuild-install') {
-      return false
-    }
-    if (dependency.name.includes('@types')) {
-      return false
-    }
-    if (dependency.name === 'vscode-ripgrep-with-github-api-error-fix') {
-      dependencyPaths.push(dependency.path)
-      return false
-    }
-    dependencyPaths.push(dependency.path)
-    return true
-  }
-  WalkDependencies.walkDependencies(rawDependencies, handleDependency)
-  return dependencyPaths.slice(1)
-}
-
-export const bundleSharedProcessDependencies = async ({ to }) => {
+export const bundleSharedProcessDependencies = async ({ to, arch, electronVersion, exclude = [] }) => {
   const projectPath = Path.absolute('packages/shared-process')
   const npmDependenciesRaw = await NpmDependencies.getNpmDependenciesRawJson(projectPath)
-  const npmDependencies = getNpmDependencies(npmDependenciesRaw)
+  const npmDependencies = FilterSharedProcessDependencies.filterDependencies(npmDependenciesRaw, exclude)
   const packageJson = await JsonFile.readJson('packages/shared-process/package.json')
   await JsonFile.writeJson({
     to: `${to}/package.json`,
@@ -51,12 +20,20 @@ export const bundleSharedProcessDependencies = async ({ to }) => {
       optionalDependencies: packageJson.optionalDependencies,
     },
   })
-  for (const dependency of npmDependencies) {
-    const dependencyTo = to + dependency.slice(projectPath.length)
-    await Copy.copy({
-      from: dependency,
-      to: dependencyTo,
-      ignore: NodeModulesIgnoredFiles.getNodeModulesIgnoredFiles(),
+  await CopyDependencies.copyDependencies(projectPath, to, npmDependencies)
+  if (Platform.isWindows()) {
+    const Rebuild = await import('../Rebuild/Rebuild.js')
+    await Rebuild.rebuild({
+      arch,
+      buildPath: Path.absolute(to),
+      electronVersion,
     })
+  } else {
+    await Remove.remove(Path.absolute(`${to}/node_modules/@vscode/windows-process-tree`))
+    await Remove.remove(Path.absolute(`${to}/node_modules/nan`))
   }
+  await Remove.remove(Path.absolute(`${to}/node_modules/uuid/dist/esm-browser`))
+  await Remove.remove(Path.absolute(`${to}/node_modules/uuid/dist/umd`))
+  await Remove.remove(Path.absolute(`${to}/node_modules/uuid/dist/bin`))
+  await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
 }

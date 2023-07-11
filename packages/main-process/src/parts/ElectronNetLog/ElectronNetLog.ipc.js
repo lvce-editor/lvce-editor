@@ -1,9 +1,8 @@
-const ElectronNetLog = require('./ElectronNetLog.js')
+import * as ElectronNetLog from './ElectronNetLog.js'
 
-exports.name = 'ElectronNetLog'
+export const name = 'ElectronNetLog'
 
-// prettier-ignore
-exports.Commands = {
+export const Commands = {
   startLogging: ElectronNetLog.startLogging,
   stopLogging: ElectronNetLog.stopLogging,
 }

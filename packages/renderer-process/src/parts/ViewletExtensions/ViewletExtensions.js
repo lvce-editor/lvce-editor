@@ -12,8 +12,8 @@ import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
-import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 
 const activeId = 'ExtensionActive'
 
@@ -42,6 +42,7 @@ export const create = () => {
   const $InputBox = InputBox.create()
   $InputBox.type = 'search'
   $InputBox.placeholder = 'Search Extensions in Marketplace'
+  $InputBox.name = 'extensions-search-value'
 
   const $ExtensionHeader = document.createElement('div')
   $ExtensionHeader.className = 'ExtensionHeader'
@@ -161,133 +162,12 @@ export const setMessage = (state, message) => {
   state.$Message = $Message
 }
 
-const render$Extension = ($Extension, extension) => {
-  const $ExtensionDetailName = $Extension.children[1].children[0]
-  const $ExtensionDetailDescription = $Extension.children[1].children[1]
-  const $ExtensionAuthorName = $Extension.children[1].children[2].children[0]
-  const $ExtensionIcon = $Extension.children[0]
-
-  $Extension.ariaPosInSet = extension.posInSet
-  $Extension.ariaSetSize = extension.setSize
-  $Extension.dataset.state = extension.state
-  $Extension.dataset.id = extension.id
-  SetBounds.setTop($Extension, extension.top)
-
-  $ExtensionDetailName.firstChild.nodeValue = extension.name
-  $ExtensionDetailDescription.firstChild.nodeValue = extension.description
-  $ExtensionAuthorName.firstChild.nodeValue = extension.publisher
-  $ExtensionIcon.src = extension.icon
-}
-
-// TODO test that rendering and recycling text nodes works
-const create$Extension = () => {
-  const $ExtensionDetailName = document.createElement('div')
-  $ExtensionDetailName.className = 'ExtensionListItemName'
-  $ExtensionDetailName.append(document.createTextNode(''))
-  const $ExtensionDetailDescription = document.createElement('div')
-  $ExtensionDetailDescription.className = 'ExtensionListItemDescription'
-  $ExtensionDetailDescription.append(document.createTextNode(''))
-  const $ExtensionActions = document.createElement('div')
-  $ExtensionActions.className = 'ExtensionActions'
-  const $ExtensionActionInstall = document.createElement('div')
-  $ExtensionActionInstall.className = 'ExtensionActionInstall'
-  $ExtensionActionInstall.textContent = 'Install'
-  const $ExtensionActionManage = document.createElement('button')
-  $ExtensionActionManage.className = 'ExtensionListItemActionManage'
-  $ExtensionActionManage.title = 'Manage'
-  $ExtensionActionManage.ariaHasPopup = 'menu' // TODO also set this for global settings icon in activity bar
-  const $ExtensionAuthorName = document.createElement('div')
-  $ExtensionAuthorName.className = 'ExtensionListItemAuthorName'
-  $ExtensionAuthorName.append(document.createTextNode(''))
-
-  const icon = document.createElement('img')
-  icon.width = 42
-  icon.height = 42
-  icon.className = 'ExtensionListItemIcon'
-  icon.onerror = ViewletExtensionsEvents.handleIconError
-  const buttonManage = document.createElement('button')
-  buttonManage.className = 'ExtensionManage'
-  // switch (extension.state) {
-  //   case 'uninstalled':
-  //     $ExtensionActionManage.remove()
-  //     $ExtensionActions.append($ExtensionActionInstall)
-  //     break
-  //   case 'uninstalling':
-  //     buttonManage.textContent = 'uninstalling'
-  //     break
-  //   case 'installing':
-  //     buttonManage.textContent = 'installing'
-  //     break
-  //   case 'installed':
-  //     $ExtensionActions.append($ExtensionActionManage)
-  //     break
-  //   case 'disabled':
-  //     $ExtensionActions.append($ExtensionActionManage)
-  //     break
-  //   default:
-  //     break
-  // }
-  const $ExtensionFooter = document.createElement('div')
-  $ExtensionFooter.className = 'ExtensionListItemFooter'
-  $ExtensionFooter.append($ExtensionAuthorName, $ExtensionActions)
-  const $ExtensionDetail = document.createElement('div')
-  $ExtensionDetail.className = 'ExtensionListItemDetail'
-  $ExtensionDetail.append($ExtensionDetailName, $ExtensionDetailDescription, $ExtensionFooter)
-  const $ExtensionListItem = document.createElement('div')
-  $ExtensionListItem.role = AriaRoles.Article
-  $ExtensionListItem.ariaRoleDescription = AriaRoleDescriptionType.Extension
-  $ExtensionListItem.className = 'ExtensionListItem'
-  $ExtensionListItem.role = AriaRoles.ListItem
-  $ExtensionListItem.append(icon, $ExtensionDetail)
-  return $ExtensionListItem
-}
-
-const render$ExtensionsLess = ($ExtensionList, extensions) => {
-  for (let i = 0; i < $ExtensionList.children.length; i++) {
-    render$Extension($ExtensionList.children[i], extensions[i])
-  }
-  const fragment = document.createDocumentFragment()
-  for (let i = $ExtensionList.children.length; i < extensions.length; i++) {
-    const $Extension = create$Extension()
-    render$Extension($Extension, extensions[i])
-    fragment.append($Extension)
-  }
-  $ExtensionList.append(fragment)
-}
-
-const render$ExtensionsEqual = ($ExtensionList, extensions) => {
-  for (let i = 0; i < extensions.length; i++) {
-    render$Extension($ExtensionList.children[i], extensions[i])
-  }
-}
-
-const render$ExtensionsMore = ($ExtensionList, extensions) => {
-  for (let i = 0; i < extensions.length; i++) {
-    render$Extension($ExtensionList.children[i], extensions[i])
-  }
-  const diff = $ExtensionList.children.length - extensions.length
-  for (let i = 0; i < diff; i++) {
-    $ExtensionList.lastChild.remove()
-  }
-}
-
-const render$Extensions = ($ExtensionList, extensions) => {
-  if ($ExtensionList.children.length < extensions.length) {
-    render$ExtensionsLess($ExtensionList, extensions)
-  } else if ($ExtensionList.children.length === extensions.length) {
-    render$ExtensionsEqual($ExtensionList, extensions)
-  } else {
-    render$ExtensionsMore($ExtensionList, extensions)
-  }
-}
-
-// TODO a more efficient approach would be
-export const setExtensions = (state, extensions) => {
+export const setExtensionsDom = (state, dom) => {
   Assert.object(state)
-  Assert.array(extensions)
+  Assert.array(dom)
   const { $Viewlet, $ListItems } = state
-  $Viewlet.removeAttribute(DomAttributeType.AriaBusy)
-  render$Extensions($ListItems, extensions)
+  const $Root = VirtualDom.render(dom)
+  $ListItems.replaceChildren(...$Root.firstChild.childNodes)
 }
 
 export const dispose = (state) => {}

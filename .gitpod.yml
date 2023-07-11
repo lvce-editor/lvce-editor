@@ -3,7 +3,7 @@ image:
 
 tasks:
   - init: npm ci && cd packages/e2e && npx playwright install chromium && cd ../../ && cd packages/extension-host-worker-tests && npx playwright install chromium && cd ../../
-    command: npm run dev
+    command: npm run dev -- --public
 
 ports:
   - port: 3000

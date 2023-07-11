@@ -1,8 +1,8 @@
-const ElectronDialog = require('./ElectronDialog.js')
+import * as ElectronDialog from './ElectronDialog.js'
 
-exports.name = 'ElectronDialog'
+export const name = 'ElectronDialog'
 
-exports.Commands = {
+export const Commands = {
   showMessageBox: ElectronDialog.showMessageBox,
   showOpenDialog: ElectronDialog.showOpenDialog,
 }

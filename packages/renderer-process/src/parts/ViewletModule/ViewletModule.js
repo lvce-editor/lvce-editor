@@ -8,6 +8,8 @@ export const load = (moduleId) => {
       return import('../ViewletActivityBar/ViewletActivityBar.js')
     case ViewletModuleId.Audio:
       return import('../ViewletAudio/ViewletAudio.js')
+    case ViewletModuleId.BrowserViewOverview:
+      return import('../ViewletBrowseViewOverview/ViewletBrowserViewOverview.js')
     case ViewletModuleId.Clock:
       return import('../ViewletClock/ViewletClock.js')
     case ViewletModuleId.ColorPicker:
@@ -20,12 +22,18 @@ export const load = (moduleId) => {
       return import('../ViewletDiffEditor/ViewletDiffEditor.js')
     case ViewletModuleId.EditorCompletion:
       return import('../ViewletEditorCompletion/ViewletEditorCompletion.js')
+    case ViewletModuleId.EditorError:
+      return import('../ViewletEditorError/ViewletEditorError.js')
+    case ViewletModuleId.EditorHover:
+      return import('../ViewletEditorHover/ViewletEditorHover.js')
     case ViewletModuleId.EditorImage:
       return import('../ViewletEditorImage/ViewletEditorImage.js')
     case ViewletModuleId.EditorPlainText:
       return import('../ViewletEditorPlainText/ViewletEditorPlainText.js')
     case ViewletModuleId.EditorText:
       return import('../ViewletEditorText/ViewletEditorText.js')
+    case ViewletModuleId.EditorWidgetError:
+      return import('../ViewletEditorWidgetError/ViewletEditorWidgetError.js')
     case ViewletModuleId.Empty:
       return import('../ViewletEmpty/ViewletEmpty.js')
     case ViewletModuleId.Error:
@@ -62,6 +70,8 @@ export const load = (moduleId) => {
       return import('../ViewletReferences/ViewletReferences.js')
     case ViewletModuleId.RunAndDebug:
       return import('../ViewletRunAndDebug/ViewletRunAndDebug.js')
+    case ViewletModuleId.ScreenCapture:
+      return import('../ViewletScreenCapture/ViewletScreenCapture.js')
     case ViewletModuleId.Search:
       return import('../ViewletSearch/ViewletSearch.js')
     case ViewletModuleId.SideBar:
@@ -72,8 +82,12 @@ export const load = (moduleId) => {
       return import('../ViewletSourceControl/ViewletSourceControl.js')
     case ViewletModuleId.StatusBar:
       return import('../ViewletStatusBar/ViewletStatusBar.js')
+    case ViewletModuleId.Storage:
+      return import('../ViewletStorage/ViewletStorage.js')
     case ViewletModuleId.Terminal:
       return import('../ViewletTerminal/ViewletTerminal.js')
+    case ViewletModuleId.Terminals:
+      return import('../ViewletTerminals/ViewletTerminals.js')
     case ViewletModuleId.TitleBar:
       return import('../ViewletTitleBar/ViewletTitleBar.js')
     case ViewletModuleId.TitleBarButtons:
@@ -84,7 +98,9 @@ export const load = (moduleId) => {
       return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
     case ViewletModuleId.Video:
       return import('../ViewletVideo/ViewletVideo.js')
+    case ViewletModuleId.DefineKeyBinding:
+      return import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.js')
     default:
-      throw new Error(`unknown module ${moduleId}`)
+      throw new Error(`${moduleId} module not found in renderer process`)
   }
 }

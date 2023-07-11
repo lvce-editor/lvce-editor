@@ -1,6 +1,7 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as Assert from '../Assert/Assert.js'
-import * as Tab from '../Tab/Tab.js'
+import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletMainTabEvents from './ViewletMainTabEvents.js'
 
 /**
@@ -27,16 +28,19 @@ export const attachEvents = (state) => {
   $MainTabs.onmousedown = ViewletMainTabEvents.handleTabsMouseDown
   $MainTabs.oncontextmenu = ViewletMainTabEvents.handleTabsContextMenu
   $MainTabs.ondragstart = ViewletMainTabEvents.handleDragStart
+  $MainTabs.addEventListener(DomEventType.Wheel, ViewletMainTabEvents.handleTabsWheel, DomEventOptions.Passive)
+  $MainTabs.onpointerover = ViewletMainTabEvents.handlePointerOver
+  $MainTabs.onpointerout = ViewletMainTabEvents.handlePointerOut
 }
 
-export const setTabs = (state, tabs) => {
+export const setTabsDom = (state, dom) => {
   const { $Viewlet } = state
-  const $$Tabs = []
-  for (const tab of tabs) {
-    const $Tab = Tab.create(tab.label, tab.title, tab.icon, tab.tabWidth, true)
-    $$Tabs.push($Tab)
-  }
-  $Viewlet.replaceChildren(...$$Tabs)
+  VirtualDom.renderInto($Viewlet, dom)
+}
+
+export const setScrollLeft = (state, scrollLeft) => {
+  const { $Viewlet } = state
+  $Viewlet.scrollLeft = scrollLeft
 }
 
 export const setScrollBar = (state, scrollBarWidth) => {
@@ -54,17 +58,6 @@ export const setScrollBar = (state, scrollBarWidth) => {
   // }
   // const { $Viewlet, $ScrollBar, $ScrollBarThumb } = state
   // $ScrollBarThumb.style.width = `${scrollBarWidth}px`
-}
-
-export const setDirty = (state, index, dirty) => {
-  Assert.number(index)
-  Assert.boolean(dirty)
-  const { $MainTabs } = state
-  if (dirty) {
-    $MainTabs.children[index].classList.add(ClassNames.Dirty)
-  } else {
-    $MainTabs.children[index].classList.remove(ClassNames.Dirty)
-  }
 }
 
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {

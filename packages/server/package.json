@@ -6,7 +6,10 @@
   "bin": "bin/server.js",
   "type": "module",
   "scripts": {},
-  "keywords": [],
+  "keywords": [
+    "Lvce Editor",
+    "Server"
+  ],
   "author": "",
   "license": "MIT",
   "repository": {

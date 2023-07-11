@@ -1,4 +1,4 @@
-const ContentSecurityPolicy = require('../src/parts/ContentSecurityPolicy/ContentSecurityPolicy.js')
+import * as ContentSecurityPolicy from '../src/parts/ContentSecurityPolicy/ContentSecurityPolicy.cjs'
 
 test('contentSecurityPolicy - should have a strict default policy', () => {
   expect(ContentSecurityPolicy.value).toContain(`default-src 'none'`)

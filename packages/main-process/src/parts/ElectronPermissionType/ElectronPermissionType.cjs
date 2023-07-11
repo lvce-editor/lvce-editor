@@ -1,0 +1,6 @@
+exports.ClipBoardRead = 'clipboard-read'
+exports.ClipBoardSanitizedWrite = 'clipboard-sanitized-write'
+exports.FullScreen = 'fullscreen'
+exports.WindowPlacement = 'window-placement'
+exports.GeoLocation = 'geolocation'
+exports.Media = 'media'

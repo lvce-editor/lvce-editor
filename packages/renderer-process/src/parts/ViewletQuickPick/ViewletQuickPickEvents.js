@@ -26,12 +26,6 @@ const getNodeIndex = ($Node) => {
   return index
 }
 
-export const handleWheel = (event) => {
-  const { deltaMode, deltaY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ViewletQuickPickFunctions.handleWheel(uid, deltaMode, deltaY)
-}
-
 export const handlePointerDown = (event) => {
   if (Platform.isMobile) {
     // workaround to disable virtual keyboard automatically opening on android
@@ -68,3 +62,5 @@ export const handleBeforeInput = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletQuickPickFunctions.handleBeforeInput(uid, inputType, data, selectionStart, selectionEnd)
 }
+
+export * from '../VirtualListEvents/VirtualListEvents.js'

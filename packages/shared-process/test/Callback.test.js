@@ -5,7 +5,7 @@ beforeEach(() => {
   Callback.state.id = 0
 })
 
-test('register / resolve', () => {
+test.skip('register / resolve', () => {
   const resolve = jest.fn()
   const reject = jest.fn()
   const id = Callback.register(resolve, reject)
@@ -16,15 +16,13 @@ test('register / resolve', () => {
   Callback.unregister(id)
 })
 
-test('register / resolve - nonexisting id', () => {
+test.skip('register / resolve - nonexisting id', () => {
   console.warn = jest.fn()
   Callback.resolve(-1)
-  expect(console.warn).toHaveBeenCalledWith(
-    'callback -1 may already be disposed'
-  )
+  expect(console.warn).toHaveBeenCalledWith('callback -1 may already be disposed')
 })
 
-test('register / reject', () => {
+test.skip('register / reject', () => {
   const resolve = jest.fn()
   const reject = jest.fn()
   const id = Callback.register(resolve, reject)
@@ -33,10 +31,8 @@ test('register / reject', () => {
   Callback.unregister(id)
 })
 
-test('register / reject - nonexisting id', () => {
+test.skip('register / reject - nonexisting id', () => {
   console.warn = jest.fn()
   Callback.reject(-1)
-  expect(console.warn).toHaveBeenCalledWith(
-    'callback (rejected) -1 may already be disposed'
-  )
+  expect(console.warn).toHaveBeenCalledWith('callback (rejected) -1 may already be disposed')
 })

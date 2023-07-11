@@ -1,7 +1,7 @@
-const ElectronContextMenu = require('./ElectronContextMenu.js')
+import * as ElectronContextMenu from './ElectronContextMenu.js'
 
-exports.name = 'ElectronContextMenu'
+export const name = 'ElectronContextMenu'
 
-exports.Commands = {
+export const Commands = {
   openContextMenu: ElectronContextMenu.openContextMenu,
 }

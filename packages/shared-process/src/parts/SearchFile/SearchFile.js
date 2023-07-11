@@ -1,20 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
-import * as IsEnoentErrorWindows from '../IsEnoentErrorWindows/IsEnoentErrorWindows.js'
+import * as Character from '../Character/Character.js'
+import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as LimitString from '../LimitString/LimitString.js'
 import * as Logger from '../Logger/Logger.js'
 import * as RipGrep from '../RipGrep/RipGrep.js'
-
-const isEnoentErrorLinux = (error) => {
-  return error.code === ErrorCodes.ENOENT
-}
-
-const isEnoentError = (error) => {
-  if (!error) {
-    return false
-  }
-  return isEnoentErrorLinux(error) || IsEnoentErrorWindows.isEnoentErrorWindows(error)
-}
 
 // TODO don't necessarily need ripgrep to list all the files,
 // maybe also a faster c program can do it
@@ -22,26 +11,25 @@ const isEnoentError = (error) => {
 // do a delta comparison, so the first time it would send 100kB
 // but the second time only a few hundred bytes of changes
 
-export const searchFile = async (path, searchTerm, limit) => {
+export const searchFile = async ({ searchPath = '', limit = 100, ripGrepArgs = [] }) => {
   try {
-    Assert.string(path)
-    Assert.string(searchTerm)
+    Assert.string(searchPath)
+    Assert.array(ripGrepArgs)
     Assert.number(limit)
-    const { stdout, stderr } = await RipGrep.exec(['--files', '--sort-files'], {
-      cwd: path,
+    const { stdout, stderr } = await RipGrep.exec(ripGrepArgs, {
+      cwd: searchPath,
     })
     return LimitString.limitString(stdout, limit)
   } catch (error) {
-    // @ts-ignore
-    if (isEnoentError(error)) {
+    if (IsEnoentError.isEnoentError(error)) {
       Logger.info(`[shared-process] ripgrep could not be found at "${RipGrep.ripGrepPath}"`)
-      return ``
+      return Character.EmptyString
     }
     // @ts-ignore
-    if (error && error.stderr === '') {
-      return ``
+    if (error && error.stderr === Character.EmptyString) {
+      return Character.EmptyString
     }
     Logger.error(error)
-    return ``
+    return Character.EmptyString
   }
 }

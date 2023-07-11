@@ -240,7 +240,7 @@ export const getKeyBindings = () => {
     },
     {
       key: 'ctrl+r',
-      command: 'Window.reload',
+      command: 'Reload.reload',
     },
     {
       key: 'ctrl+\\',

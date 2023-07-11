@@ -4,6 +4,7 @@ import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as InputSource from '../InputSource/InputSource.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as ViewletQuickPickGetFilteredItems from './ViewletQuickPickGetFilteredItems.js'
@@ -48,6 +49,7 @@ export const create = (id, uri, x, y, width, height) => {
       headerHeight: 30,
       minimumSliderSize: Height.MinimumSliderSize,
     }),
+    inputSource: InputSource.User,
   }
 }
 
@@ -63,13 +65,11 @@ const getDefaultValue = (uri) => {
 }
 
 export const loadContent = async (state) => {
-  console.log('load')
   const uri = state.uri
   const value = getDefaultValue(uri)
   const provider = await QuickPickEntries.load(uri)
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
-  console.log({ provider, newPicks })
   // @ts-ignore
   const filterValue = provider.getFilterValue(value)
   const items = ViewletQuickPickGetFilteredItems.getFilteredItems(state, newPicks, filterValue, provider)
@@ -89,6 +89,7 @@ export const loadContent = async (state) => {
     value,
     cursorOffset: value.length,
     provider,
+    inputSource: InputSource.Script,
   }
 }
 
@@ -109,14 +110,14 @@ const getPick = (items, index) => {
   // }
   // index -= state.recentPicks.length
   if (index < items.length) {
-    return items[index]
+    return items[index].pick
   }
   console.warn('no pick matching index', index)
 }
 
 const findLabelIndex = (items, label) => {
   for (let i = 0; i < items.length; i++) {
-    if (items[i].label === label) {
+    if (items[i].pick.label === label) {
       return i
     }
   }
@@ -177,6 +178,7 @@ export const selectCurrentIndex = (state) => {
 //
 // })
 
+// TODO merge this with virtual list
 export const handleClickAt = (state, x, y) => {
   const { top, headerHeight, itemHeight } = state
   const relativeY = y - top - headerHeight

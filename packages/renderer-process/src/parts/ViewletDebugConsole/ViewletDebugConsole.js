@@ -3,7 +3,6 @@ import * as InputBox from '../InputBox/InputBox.js'
 export const create = () => {
   const $DebugConsoleTop = document.createElement('div')
   $DebugConsoleTop.className = 'DebugConsoleTop'
-  $DebugConsoleTop.textContent = 'Debug Console (not implemented)'
 
   const $Input = InputBox.create()
 
@@ -16,13 +15,9 @@ export const create = () => {
   $Viewlet.append($DebugConsoleTop, $DebugConsoleBottom)
   return {
     $Viewlet,
+    $DebugConsoleTop,
     $Input,
   }
-}
-
-export const refresh = (state, context) => {
-  const { $Viewlet } = state
-  $Viewlet.textContent = 'Debug Console - Not implemented'
 }
 
 export const focus = (state) => {
@@ -30,4 +25,7 @@ export const focus = (state) => {
   $Input.focus()
 }
 
-export const dispose = (state) => {}
+export const setText = (state, text) => {
+  const { $DebugConsoleTop } = state
+  $DebugConsoleTop.textContent = text
+}

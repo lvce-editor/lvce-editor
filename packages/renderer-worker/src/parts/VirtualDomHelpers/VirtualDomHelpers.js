@@ -3,19 +3,17 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 export const h = (type, props, childCount) => {
   return {
     type,
-    props,
+    ...props,
     childCount,
   }
 }
 
 export const text = (data) => {
-  return h(
-    VirtualDomElements.Text,
-    {
-      text: data,
-    },
-    0
-  )
+  return {
+    type: VirtualDomElements.Text,
+    text: data,
+    childCount: 0,
+  }
 }
 
 export const div = (props, childCount) => {
@@ -36,6 +34,14 @@ export const td = (props, childCount) => {
 
 export const input = (props, childCount) => {
   return h(VirtualDomElements.Input, props, childCount)
+}
+
+export const ins = (props, childCount) => {
+  return h(VirtualDomElements.Ins, props, childCount)
+}
+
+export const del = (props, childCount) => {
+  return h(VirtualDomElements.Del, props, childCount)
 }
 
 export const thead = (props, childCount) => {
@@ -72,4 +78,12 @@ export const span = (props, childCount) => {
 
 export const i = (props, childCount) => {
   return h(VirtualDomElements.I, props, childCount)
+}
+
+export const img = (props) => {
+  return h(VirtualDomElements.Img, props, 0)
+}
+
+export const root = (props, childCount) => {
+  return h(VirtualDomElements.Root, props, childCount)
 }

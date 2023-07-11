@@ -1,17 +1,12 @@
-export const setInlineStyle = (id, css) => {
-  const $ExistingStyle = document.getElementById(id)
-  if ($ExistingStyle) {
-    $ExistingStyle.textContent = css
-  } else {
-    const $Style = document.createElement('style')
-    $Style.id = id
-    $Style.textContent = css
-    document.head.append($Style)
-  }
-}
+import * as CssState from '../CssState/CssState.js'
 
-export const addCssStyleSheet = async (text) => {
-  const sheet = new CSSStyleSheet({})
-  await sheet.replace(text)
-  document.adoptedStyleSheets.push(sheet)
+export const addCssStyleSheet = async (id, text) => {
+  const existing = CssState.get(id)
+  if (existing) {
+    await existing.replace(text)
+  } else {
+    const sheet = new CSSStyleSheet({})
+    await sheet.replace(text)
+    document.adoptedStyleSheets.push(sheet)
+  }
 }

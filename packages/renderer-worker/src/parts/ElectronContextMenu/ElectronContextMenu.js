@@ -32,12 +32,7 @@ export const openContextMenu = async (x, y, id, ...args) => {
   const entries = await MenuEntries.getMenuEntries(id, ...args)
   state.pendingMenus = entries
   const electronMenuItems = convertMenuItems(entries)
-  return ElectronProcess.invoke(
-    'ElectronContextMenu.openContextMenu',
-    electronMenuItems,
-    x,
-    y
-  )
+  return ElectronProcess.invoke('ElectronContextMenu.openContextMenu', electronMenuItems, x, y)
 }
 
 export const handleMenuClose = () => {

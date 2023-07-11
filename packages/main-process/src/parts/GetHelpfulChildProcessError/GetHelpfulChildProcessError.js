@@ -1,5 +1,5 @@
-const SplitLines = require('../SplitLines/SplitLines.js')
-const GetModulesErrorStack = require('../GetModulesErrorStack/GetModulesErrorStack.js')
+import * as SplitLines from '../SplitLines/SplitLines.cjs'
+import * as GetModulesErrorStack from '../GetModulesErrorStack/GetModulesErrorStack.js'
 
 const RE_NATIVE_MODULE_ERROR = /^innerError Error: Cannot find module '.*.node'/
 const RE_NATIVE_MODULE_ERROR_2 = /was compiled against a different Node.js version/
@@ -33,14 +33,7 @@ const getMessageCodeBlock = (stderr) => {
 const getNativeModuleErrorMessage = (stderr) => {
   const message = getMessageCodeBlock(stderr)
   // TODO extract stack from stderr
-  return new Error(`incompatible native node module: ${message}`)
-}
-
-const isModulesSyntaxError = (stderr) => {
-  if (!stderr) {
-    return false
-  }
-  return stderr.includes('SyntaxError: Cannot use import statement outside a module')
+  return new Error(`Incompatible native node module: ${message}`)
 }
 
 const getErrorMessage = (firstLine) => {
@@ -48,6 +41,9 @@ const getErrorMessage = (firstLine) => {
 }
 
 const getImportPath = (firstLine) => {
+  if (!firstLine) {
+    return ''
+  }
   const match = firstLine.match(RE_IMPORTED_FROM_ERROR)
   if (!match) {
     return ''
@@ -67,7 +63,7 @@ const getOtherError = (stderr) => {
   return error
 }
 
-exports.getHelpfulChildProcessError = (message, stdout, stderr) => {
+export const getHelpfulChildProcessError = (message, stdout, stderr) => {
   if (isUnhelpfulNativeModuleError(stderr)) {
     return getNativeModuleErrorMessage(stderr)
   }

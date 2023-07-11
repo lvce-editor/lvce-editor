@@ -1,28 +1,22 @@
-const { Worker } = require('node:worker_threads')
-const Command = require('../Command/Command.js')
-const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
-const Platform = require('../Platform/Platform.js')
-const Logger = require('../Logger/Logger.js')
-const GetResponse = require('../GetResponse/GetResponse.js')
-const ExitCode = require('../ExitCode/ExitCode.js')
-const Process = require('../Process/Process.js')
-const RestoreError = require('../RestoreError/RestoreError.js')
+import * as Callback from '../Callback/Callback.js'
+import * as Command from '../Command/Command.cjs'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.cjs'
+import * as ExitCode from '../ExitCode/ExitCode.cjs'
+import * as GetResponse from '../GetResponse/GetResponse.js'
+import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as Logger from '../Logger/Logger.cjs'
+import * as Platform from '../Platform/Platform.cjs'
+import * as Process from '../Process/Process.cjs'
 
-const state = (exports.state = {
+export const state = {
   /**
-   * @type{Worker|undefined}
+   * @type{any|undefined}
    */
   sharedProcess: undefined,
   onMessage(message) {},
-})
-
-const handleChildError = (error) => {
-  Process.exit(ExitCode.Error)
 }
 
-const handleStdError = (error) => {
-  Logger.info('[main] Child std error')
-  Logger.error(error.toString())
+const handleChildError = (error) => {
   Process.exit(ExitCode.Error)
 }
 
@@ -34,24 +28,15 @@ const handleChildMessage = async (message) => {
     Logger.warn('invalid message', message)
     return
   }
-  if (message.result || message.error) {
-    state.onMessage(message)
-    return
-  }
-  if (!message.id && !message.params) {
-    // TODO need better way to send terminal data
-    const parsed = JSON.parse(message)
-    state.onMessage(parsed)
-    return
-  }
   if (message.id) {
-    if ('result' in message) {
+    if ('result' in message || 'error' in message) {
+      Callback.resolve(message.id, message)
       state.onMessage(message)
       return
     }
     const response = await GetResponse.getResponse(message, Command.execute)
     if (state.sharedProcess) {
-      state.sharedProcess.postMessage(response)
+      state.sharedProcess.send(response)
     }
   } else {
     try {
@@ -66,42 +51,29 @@ const handleProcessExit = async () => {
   if (state.sharedProcess) {
     // await state.sharedProcess.terminate()
     // state.sharedProcess.postMessage('terminate')
-    Logger.info('[main-process] terminating shared process')
-    await state.sharedProcess.terminate()
+    Logger.info('[main process] terminating shared process')
+    state.sharedProcess.dispose()
+    state.sharedProcess = undefined
+
     // state.sharedProcess.
   }
 }
 
 const handleChildExit = (code) => {
-  Logger.info(`[main] shared process exited with code ${code}`)
+  Logger.info(`[main process] shared process exited with code ${code}`)
   Process.exit(code)
 }
 
 const handleChildDisconnect = () => {
-  Logger.info('[main] shared process disconnected')
-}
-
-exports.send = (message) => {
-  // @ts-ignore
-  state.sharedProcess.postMessage(message)
-}
-
-exports.sendPort = (port) => {
-  console.log('send port to shared process')
-  // @ts-ignore
-  state.sharedProcess.postMessage(port, [port])
-}
-
-exports.setOnMessage = (fn) => {
-  state.onMessage = fn
+  Logger.info('[main process] shared process disconnected')
 }
 
 // TODO not possible because  TypeError [ERR_INVALID_HANDLE_TYPE]: This handle type cannot be sent
-// exports.sendPort = (port) => {
+// export const sendPort = (port) => {
 //   state.sharedProcess.send('here-is-the-port', port)
 // }
 
-exports.hydrate = async (env = {}) => {
+export const hydrate = async ({ method, env = {} }) => {
   if (state.sharedProcess) {
     return state.sharedProcess
   }
@@ -119,27 +91,28 @@ exports.hydrate = async (env = {}) => {
     // @ts-ignore
     state.sharedProcess.off('exit', handleChildExit)
     // @ts-ignore
-    state.sharedProcess.terminate()
+    state.sharedProcess.dispose()
     state.sharedProcess = undefined
   }
-  // console.log('env', process.env.ELECTRON_RUN_AS_NODE)
-  // console.log(process.env)
   // TODO inherit stdout but listen to ready event
   const sharedProcessPath = Platform.getSharedProcessPath()
-  const sharedProcess = new Worker(sharedProcessPath, {
+  const sharedProcess = await IpcParent.create({
+    method,
     env: {
       ...process.env,
-      ELECTRON_RUN_AS_NODE: '1', // TODO
       ...env,
     },
+    argv: [],
     execArgv: ['--enable-source-maps'],
+    path: sharedProcessPath,
+    name: 'shared-process',
   })
   // TODO handle all possible errors from web server process
   sharedProcess.on('error', handleChildError)
   sharedProcess.on('message', handleChildMessage)
   sharedProcess.on('exit', handleChildExit)
   sharedProcess.on('disconnect', handleChildDisconnect)
-  process.on('exit', handleProcessExit)
+  process.on('exit', handleProcessExit) // TODO
   state.sharedProcess = sharedProcess
   return sharedProcess
 }

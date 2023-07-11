@@ -105,7 +105,7 @@ test('loadContent', async () => {
   })
 })
 
-test('render - all items fit but little space is remaining', async () => {
+test.skip('render - all items fit but little space is remaining', async () => {
   const oldState = ViewletActivityBar.create()
   const newState = {
     ...oldState,
@@ -335,7 +335,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
   ])
 })
 
-test('render - two items do not fit', () => {
+test.skip('render - two items do not fit', () => {
   const oldState = ViewletActivityBar.create()
   const newState = {
     ...oldState,

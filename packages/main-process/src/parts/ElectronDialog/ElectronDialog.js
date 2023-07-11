@@ -1,14 +1,14 @@
-const Assert = require('../Assert/Assert.js')
-const Electron = require('electron')
-const ElectronMessageBoxType = require('../ElectronMessageBoxType/ElectronMessageBoxType.js')
-const Logger = require('../Logger/Logger.js')
-const Platform = require('../Platform/Platform.js')
-const Window = require('../ElectronWindow/ElectronWindow.js')
+import * as Electron from 'electron'
+import * as Assert from '../Assert/Assert.cjs'
+import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'
+import * as ElectronWindow from '../ElectronWindow/ElectronWindow.cjs'
+import * as Logger from '../Logger/Logger.cjs'
+import * as Platform from '../Platform/Platform.cjs'
 
-exports.showOpenDialog = async (title, properties) => {
+export const showOpenDialog = async (title, properties) => {
   Assert.string(title)
   Assert.array(properties)
-  const focusedWindow = Window.getFocusedWindow()
+  const focusedWindow = ElectronWindow.getFocusedWindow()
   if (!focusedWindow) {
     return
   }
@@ -23,29 +23,34 @@ exports.showOpenDialog = async (title, properties) => {
   return result.filePaths
 }
 
+const getWindow = (windowId) => {
+  if (windowId === -1) {
+    return ElectronWindow.getFocusedWindow()
+  }
+  return ElectronWindow.findById(windowId)
+}
+
 /**
  *
- * @param {any} message
- * @param {string[]} buttons
- * @param {string} type
+ * @param {{message:string, buttons:string[], type:'error'|'info'|'question'|'none'|'warning', detail?:string, title?:string, windowId?:number}} options
  * @returns
  */
-exports.showMessageBox = async (message, buttons, type = ElectronMessageBoxType.Error, detail) => {
+export const showMessageBox = async ({ message, buttons, type = ElectronMessageBoxType.Error, detail, title, windowId = -1 }) => {
   Assert.string(message)
   Assert.array(buttons)
-  const focusedWindow = Window.getFocusedWindow()
-  if (!focusedWindow) {
-    Logger.info(`[main-process] cannot show dialog message because there is no focused window`)
+  const window = getWindow(windowId)
+  if (!window) {
+    Logger.info(`[main-process] cannot show dialog message because there is no window with id ${windowId}`)
     return
   }
   if (message.message) {
     message = message.message
   }
   const productName = Platform.productNameLong
-  const result = await Electron.dialog.showMessageBox(focusedWindow, {
+  const result = await Electron.dialog.showMessageBox(window, {
     type,
     message,
-    title: productName,
+    title: title || productName,
     buttons,
     cancelId: 1,
     detail,

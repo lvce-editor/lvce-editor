@@ -227,7 +227,15 @@
     "label": "Developer: Toggle Developer Tools"
   },
   {
-    "id": "Window.reload",
+    "id": "RebuildNodePty.rebuildNodePty",
+    "label": "Developer: Rebuild Node Pty"
+  },
+  {
+    "id": "DebugSharedProcess.debugSharedProcess",
+    "label": "Developer: Debug Shared Process"
+  },
+  {
+    "id": "Reload.reload",
     "label": "Window: Reload",
     "aliases": ["Reload Window"]
   },
@@ -334,6 +342,10 @@
     "label": "Editor: Format Document"
   },
   {
+    "id": "Editor.showHover",
+    "label": "Editor: Show Hover"
+  },
+  {
     "id": "Editor.formatForced",
     "label": "Editor: Format Document (forced)"
   },
@@ -372,6 +384,18 @@
   {
     "id": "Developer.openProcessExplorer",
     "label": "Developer: Open Process Explorer"
+  },
+  {
+    "id": "Developer.openStorageOverview",
+    "label": "Developer: Open Storage Overview"
+  },
+  {
+    "id": "Developer.openBrowserViewOverview",
+    "label": "Developer: Open Browser View Overview"
+  },
+  {
+    "id": "Developer.openScreenCastView",
+    "label": "Developer: Open ScreenCast View"
   },
   {
     "id": "Explorer.collapseAll",

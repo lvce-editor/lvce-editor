@@ -2,7 +2,7 @@
  *
  * @param {Electron.WebContents} webContents
  */
-exports.disposeWebContents = (webContents) => {
+export const disposeWebContents = (webContents) => {
   if (webContents.close) {
     // electron v22
     webContents.close()

@@ -2,6 +2,8 @@ export const ActivityBar = 'ActivityBar'
 
 export const Audio = 'Audio'
 
+export const BrowserViewOverview = 'BrowserViewOverview'
+
 export const Clock = 'Clock'
 
 export const ColorPicker = 'ColorPicker'
@@ -14,11 +16,17 @@ export const DiffEditor = 'DiffEditor'
 
 export const EditorCompletion = 'EditorCompletion'
 
+export const EditorError = 'EditorError'
+
+export const EditorHover = 'EditorHover'
+
 export const EditorImage = 'EditorImage'
 
 export const EditorPlainText = 'EditorPlainText'
 
 export const EditorText = 'Editor'
+
+export const EditorWidgetError = 'EditorWidgetError'
 
 export const Empty = 'Empty'
 
@@ -58,6 +66,8 @@ export const References = 'References'
 
 export const RunAndDebug = 'Run And Debug'
 
+export const ScreenCapture = 'ScreenCapture'
+
 export const Search = 'Search'
 
 export const SideBar = 'SideBar'
@@ -68,7 +78,11 @@ export const SourceControl = 'Source Control'
 
 export const StatusBar = 'StatusBar'
 
+export const Storage = 'Storage'
+
 export const Terminal = 'Terminal'
+
+export const Terminals = 'Terminals'
 
 export const TitleBar = 'TitleBar'
 
@@ -79,3 +93,5 @@ export const TitleBarIcon = 'TitleBarIcon'
 export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const Video = 'Video'
+
+export const DefineKeyBinding = 'DefineKeyBinding'
