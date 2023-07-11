@@ -1,4 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as Assert from '../Assert/Assert.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
