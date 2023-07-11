@@ -1,8 +1,10 @@
+import * as Assert from '../Assert/Assert.js'
 import * as EditorSplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
 import * as SplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
 import * as GetSplitDimensions from '../GetSplitDimensions/GetSplitDimensions.js'
 import * as Id from '../Id/Id.js'
+import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SashOrientation from '../SashOrientation/SashOrientation.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -12,15 +14,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { openUri } from './ViewletMainOpenUri.js'
-
-const getTabTitle = (uri) => {
-  const homeDir = Workspace.getHomeDir()
-  // TODO tree shake this out in web
-  if (homeDir && uri.startsWith(homeDir)) {
-    return `~${uri.slice(homeDir.length)}`
-  }
-  return uri
-}
 
 const getSashModuleId = (orientation) => {
   switch (orientation) {
@@ -32,7 +25,11 @@ const getSashModuleId = (orientation) => {
 }
 
 export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
-  const { x, y, width, height, tabHeight, grid } = state
+  Assert.object(state)
+  Assert.number(eventX)
+  Assert.number(eventY)
+  Assert.string(filePath)
+  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, x, y, width, height, tabHeight, groups, activeGroupIndex, uid } = state
   const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + tabHeight, width, height - tabHeight, eventX, eventY)
   if (splitDirection === EditorSplitDirectionType.None) {
     await openUri(state, filePath)
@@ -68,7 +65,7 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     } = GetSplitDimensions.getSplitDimensions(x, y, width, height, splitDirection, sashSize, sashVisibleSize, tabHeight)
     const tabs = [
       {
-        label: Workspace.pathBaseName(filePath),
+        label: PathDisplay.getLabel(filePath),
         title: filePath,
       },
     ]
@@ -119,7 +116,7 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
 
     state.activeIndex = state.grid.length - 1
     const tabLabel = Workspace.pathBaseName(uri)
-    const tabTitle = getTabTitle(uri)
+    const tabTitle = PathDisplay.getTitle(uri)
     const allCommands = []
 
     const firstItem = grid[1]
