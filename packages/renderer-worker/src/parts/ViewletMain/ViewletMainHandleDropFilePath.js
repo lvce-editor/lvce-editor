@@ -1,8 +1,10 @@
+import * as Assert from '../Assert/Assert.js'
 import * as EditorSplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
 import * as SplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
 import * as GetSplitDimensions from '../GetSplitDimensions/GetSplitDimensions.js'
 import * as Id from '../Id/Id.js'
+import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SashOrientation from '../SashOrientation/SashOrientation.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -32,7 +34,11 @@ const getSashModuleId = (orientation) => {
 }
 
 export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
-  const { x, y, width, height, tabHeight, grid } = state
+  Assert.object(state)
+  Assert.number(eventX)
+  Assert.number(eventY)
+  Assert.string(filePath)
+  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, x, y, width, height, tabHeight, groups, activeGroupIndex, uid } = state
   const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + tabHeight, width, height - tabHeight, eventX, eventY)
   if (splitDirection === EditorSplitDirectionType.None) {
     await openUri(state, filePath)
@@ -68,7 +74,7 @@ export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
     } = GetSplitDimensions.getSplitDimensions(x, y, width, height, splitDirection, sashSize, sashVisibleSize, tabHeight)
     const tabs = [
       {
-        label: Workspace.pathBaseName(filePath),
+        label: PathDisplay.getLabel(filePath),
         title: filePath,
       },
     ]
