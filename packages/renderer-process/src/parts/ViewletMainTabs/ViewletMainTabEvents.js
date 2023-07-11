@@ -67,13 +67,9 @@ export const handleTabsMouseDown = (event) => {
 
 export const handleTabsContextMenu = (event) => {
   const { clientX, clientY, target } = event
-  const index = getIndex(target)
-  if (index === -1) {
-    return
-  }
   Event.preventDefault(event)
   const uid = getUid()
-  ViewletMainTabsFunctions.handleTabContextMenu(uid, index, clientX, clientY)
+  ViewletMainTabsFunctions.handleTabContextMenu(uid, clientX, clientY)
 }
 
 export const handlePointerOver = (event) => {
