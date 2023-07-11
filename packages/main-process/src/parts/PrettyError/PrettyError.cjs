@@ -48,7 +48,6 @@ const getType = (error) => {
 }
 
 exports.prepare = (error) => {
-  console.log({ error, stack: error.stack })
   const message = prepareMessage(error.message)
   const lines = CleanStack.cleanStack(error.stack)
   const file = getFile(lines)
