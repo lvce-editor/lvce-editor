@@ -1,12 +1,12 @@
-const { contentTracing } = require('electron')
+import { contentTracing } from 'electron'
 
 /**
  * @param { Electron.TraceConfig | Electron.TraceCategoriesAndOptions} options
  */
-exports.startRecording = async (options) => {
+export const startRecording = async (options) => {
   await contentTracing.startRecording(options)
 }
 
-exports.stopRecording = () => {
+export const stopRecording = () => {
   return contentTracing.stopRecording()
 }

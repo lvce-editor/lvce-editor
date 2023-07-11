@@ -1,5 +1,4 @@
-const electron = require('electron')
-const CreatePidMap = require('../src/parts/CreatePidMap/CreatePidMap.js')
+import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.restoreAllMocks()
@@ -7,7 +6,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.mock('electron', () => {
+jest.unstable_mockModule('electron', () => {
   return {
     BrowserWindow: {
       getAllWindows: jest.fn(() => {
@@ -16,6 +15,9 @@ jest.mock('electron', () => {
     },
   }
 })
+
+const CreatePidMap = await import('../src/parts/CreatePidMap/CreatePidMap.js')
+const electron = await import('electron')
 
 test('createPidMap - detect chrome devtools', () => {
   // @ts-ignore

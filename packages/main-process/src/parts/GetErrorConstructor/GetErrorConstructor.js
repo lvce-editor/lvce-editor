@@ -1,6 +1,6 @@
-const ErrorType = require('../ErrorType/ErrorType.js')
+import * as ErrorType from '../ErrorType/ErrorType.js'
 
-exports.getErrorConstructor = (message, type) => {
+export const getErrorConstructor = (message, type) => {
   if (type) {
     switch (type) {
       case ErrorType.DomException:

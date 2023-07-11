@@ -1,7 +1,7 @@
-const { shell } = require('electron')
+import { shell } from 'electron'
 
 // TODO rename module to ElectronShell
 
-exports.beep = () => {
+export const beep = () => {
   shell.beep()
 }

@@ -1,7 +1,7 @@
-const ElectronClipBoard = require('./ElectronClipBoard.js')
+import * as ElectronClipBoard from './ElectronClipBoard.js'
 
-exports.name = 'ElectronClipBoard'
+export const name = 'ElectronClipBoard'
 
-exports.Commands = {
+export const Commands = {
   writeText: ElectronClipBoard.writeText,
 }

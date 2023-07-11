@@ -1,6 +1,6 @@
-const Platform = require('../Platform/Platform.js')
+import * as Platform from '../Platform/Platform.cjs'
 
-exports.getVersionString = () => {
+export const getVersionString = () => {
   const version = Platform.version
   return version
 }

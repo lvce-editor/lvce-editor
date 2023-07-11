@@ -1,6 +1,6 @@
-const IpcChildModule = require('../IpcChildModule/IpcChildModule.js')
+import * as IpcChildModule from '../IpcChildModule/IpcChildModule.js'
 
-exports.listen = async ({ method, ...params }) => {
+export const listen = async ({ method, ...params }) => {
   const module = await IpcChildModule.getModule(method)
   // @ts-ignore
   const rawIpc = await module.listen(params)

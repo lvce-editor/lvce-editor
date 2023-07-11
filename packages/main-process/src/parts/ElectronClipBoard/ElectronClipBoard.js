@@ -1,5 +1,5 @@
-const { clipboard } = require('electron')
+import { clipboard } from 'electron'
 
-exports.writeText = (text) => {
+export const writeText = (text) => {
   clipboard.writeText(text)
 }

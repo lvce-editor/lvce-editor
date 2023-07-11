@@ -1,15 +1,15 @@
-const { BrowserWindow } = require('electron')
-const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
-const Assert = require('../Assert/Assert.js')
-const HandleIpc = require('../HandleIpc/HandleIpc.js')
-const IpcChild = require('../IpcChild/IpcChild.js')
-const IpcChildType = require('../IpcChildType/IpcChildType.js')
+import { BrowserWindow } from 'electron'
+import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
+import * as Assert from '../Assert/Assert.cjs'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as IpcChild from '../IpcChild/IpcChild.js'
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 
 /**
  *
  * @param {import('electron').IpcMainEvent} event
  */
-exports.handlePort = async (event, browserWindowPort) => {
+export const handlePort = async (event, browserWindowPort) => {
   Assert.object(event)
   Assert.object(browserWindowPort)
   const { sender } = event

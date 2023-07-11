@@ -1,4 +1,4 @@
-exports.getElectronMenuItems = (menuItems, click) => {
+export const getElectronMenuItems = (menuItems, click) => {
   const template = []
   for (const menuItem of menuItems) {
     template.push({

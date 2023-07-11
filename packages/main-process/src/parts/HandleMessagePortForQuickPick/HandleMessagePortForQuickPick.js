@@ -1,5 +1,5 @@
-const Electron = require('electron')
-const PendingPorts = require('../PendingPorts/PendingPorts.js')
+import * as Electron from 'electron'
+import * as PendingPorts from '../PendingPorts/PendingPorts.js'
 
 /**
  *
@@ -17,7 +17,7 @@ const getQuickPickViewFromArray = (views) => {
   return undefined
 }
 
-exports.handlePort = (event, browserWindowPort) => {
+export const handlePort = (event, browserWindowPort) => {
   const browserWindow = Electron.BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
     return

@@ -1,7 +1,7 @@
-const { net } = require('electron')
-const Assert = require('../Assert/Assert.js')
+import { net } from 'electron'
+import * as Assert from '../Assert/Assert.cjs'
 
-exports.getJson = async (url) => {
+export const getJson = async (url) => {
   Assert.string(url)
   const request = net.request({ url })
   let body = ''

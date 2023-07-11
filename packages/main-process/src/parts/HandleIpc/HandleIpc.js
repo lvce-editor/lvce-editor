@@ -1,8 +1,8 @@
-const Command = require('../Command/Command.js')
-const Callback = require('../Callback/Callback.js')
-const HandleJsonRpcMessage = require('../HandleJsonRpcMessage/HandleJsonRpcMessage.js')
+import * as Command from '../Command/Command.cjs'
+import * as Callback from '../Callback/Callback.js'
+import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.js'
 
-exports.handleIpc = (ipc) => {
+export const handleIpc = (ipc) => {
   const handleMessage = (message) => {
     return HandleJsonRpcMessage.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve)
   }

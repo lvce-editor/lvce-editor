@@ -1,9 +1,9 @@
-const { MessageChannel } = require('node:worker_threads')
-const Performance = require('../Performance/Performance.js')
-const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.js')
-const TransferMessagePort = require('../TransferMessagePort/TransferMessagePort.js')
+import { MessageChannel } from 'node:worker_threads'
+import * as Performance from '../Performance/Performance.cjs'
+import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.cjs'
+import * as TransferMessagePort from '../TransferMessagePort/TransferMessagePort.js'
 
-exports.connectIpc = async (ipc, browserWindowPort, folder = '') => {
+export const connectIpc = async (ipc, browserWindowPort, folder = '') => {
   const messageChannel = new MessageChannel()
   const { port1, port2 } = messageChannel
   Performance.mark(PerformanceMarkerType.DidStartSharedProcess)

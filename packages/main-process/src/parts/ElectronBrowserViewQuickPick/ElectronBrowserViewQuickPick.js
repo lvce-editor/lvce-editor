@@ -1,14 +1,14 @@
-const { BrowserView, BrowserWindow } = require('electron')
-const { VError } = require('../VError/VError.js')
-const ElectronSession = require('../ElectronSession/ElectronSession.js')
-const Platform = require('../Platform/Platform.js')
-const Root = require('../Root/Root.js')
-const Path = require('../Path/Path.js')
-const PendingPorts = require('../PendingPorts/PendingPorts.js')
-const Logger = require('../Logger/Logger.js')
-const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
+import { BrowserView, BrowserWindow } from 'electron'
+import * as ElectronSession from '../ElectronSession/ElectronSession.cjs'
+import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs'
+import * as Logger from '../Logger/Logger.cjs'
+import * as Path from '../Path/Path.cjs'
+import * as PendingPorts from '../PendingPorts/PendingPorts.js'
+import * as Platform from '../Platform/Platform.cjs'
+import * as Root from '../Root/Root.cjs'
+import { VError } from '../VError/VError.cjs'
 
-exports.disposeBrowserViewQuickPick = () => {
+export const disposeBrowserViewQuickPick = () => {
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
     return
@@ -21,7 +21,7 @@ exports.disposeBrowserViewQuickPick = () => {
   browserWindow.removeBrowserView(quickPickView)
 }
 
-exports.createBrowserViewQuickPick = async (x, y, width, height) => {
+export const createBrowserViewQuickPick = async (x, y, width, height) => {
   try {
     const browserWindow = BrowserWindow.getFocusedWindow()
     if (!browserWindow) {
@@ -47,7 +47,7 @@ exports.createBrowserViewQuickPick = async (x, y, width, height) => {
     if (pendingPort) {
       console.log('[main-process] send pending quickpick port')
       view.webContents.postMessage('port', '', [pendingPort])
-      PendingPorts.delete('quickPick')
+      PendingPorts._delete('quickPick')
     }
     view.webContents.focus()
 

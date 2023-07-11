@@ -1,4 +1,4 @@
-exports.Get = 'GET'
-exports.Head = 'HEAD'
-exports.Options = 'OPTIONS'
-exports.Post = 'POST'
+export const Get = 'GET'
+export const Head = 'HEAD'
+export const Options = 'OPTIONS'
+export const Post = 'POST'

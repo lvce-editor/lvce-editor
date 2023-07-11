@@ -1,7 +1,7 @@
-const JoinLines = require('../JoinLines/JoinLines.js')
-const SplitLines = require('../SplitLines/SplitLines.js')
+import * as JoinLines from '../JoinLines/JoinLines.cjs'
+import * as SplitLines from '../SplitLines/SplitLines.cjs'
 
-exports.JsonParsingError = class JsonParsingError extends Error {
+export class JsonParsingError extends Error {
   constructor(message, codeFrame, stack) {
     super(message)
     this.name = 'JsonParsingError'

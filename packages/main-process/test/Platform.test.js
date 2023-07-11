@@ -1,4 +1,4 @@
-const Platform = require('../src/parts/Platform/Platform.js')
+import * as Platform from '../src/parts/Platform/Platform.cjs'
 
 test('isProduction', () => {
   expect(typeof Platform.isProduction).toBe('boolean')

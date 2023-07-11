@@ -1,9 +1,9 @@
-const { netLog } = require('electron')
+import { netLog } from 'electron'
 
-exports.startLogging = async (path) => {
+export const startLogging = async (path) => {
   await netLog.startLogging(path)
 }
 
-exports.stopLogging = async () => {
+export const stopLogging = async () => {
   await netLog.stopLogging()
 }

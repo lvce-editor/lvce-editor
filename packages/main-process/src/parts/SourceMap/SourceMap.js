@@ -1,7 +1,7 @@
-const Assert = require('../Assert/Assert.js')
-const IsEmptyString = require('../IsEmptyString/IsEmptyString.js')
-const { VError } = require('../VError/VError.js')
-const Vlq = require('../Vlq/Vlq.js')
+import * as Assert from '../Assert/Assert.cjs'
+import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
+import { VError } from '../VError/VError.cjs'
+import * as Vlq from '../Vlq/Vlq.js'
 
 const getColumnMapping = (mappings, line, column) => {
   Assert.string(mappings)

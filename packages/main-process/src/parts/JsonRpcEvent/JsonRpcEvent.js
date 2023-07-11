@@ -1,6 +1,6 @@
-const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.cjs'
 
-exports.create = (method, params) => {
+export const create = (method, params) => {
   return {
     jsonrpc: JsonRpcVersion.Two,
     method,

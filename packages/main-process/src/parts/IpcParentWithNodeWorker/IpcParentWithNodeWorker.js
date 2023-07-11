@@ -1,10 +1,10 @@
-const { IpcError } = require('../IpcError/IpcError.js')
-const { Worker } = require('node:worker_threads')
-const Assert = require('../Assert/Assert.js')
-const FirstNodeWorkerEventType = require('../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js')
-const GetFirstNodeWorkerEvent = require('../GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js')
+import { IpcError } from '../IpcError/IpcError.js'
+import { Worker } from 'node:worker_threads'
+import * as Assert from '../Assert/Assert.cjs'
+import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
+import * as GetFirstNodeWorkerEvent from '../GetFirstNodeWorkerEvent/GetFirstNodeWorkerEvent.js'
 
-exports.create = async ({ path, argv = [], env = process.env, execArgv = [] }) => {
+export const create = async ({ path, argv = [], env = process.env, execArgv = [] }) => {
   Assert.string(path)
   const actualArgv = ['--ipc-type=node-worker', ...argv]
   const actualEnv = {
@@ -29,7 +29,7 @@ exports.create = async ({ path, argv = [], env = process.env, execArgv = [] }) =
   return worker
 }
 
-exports.wrap = (worker) => {
+export const wrap = (worker) => {
   return {
     worker,
     on(event, listener) {

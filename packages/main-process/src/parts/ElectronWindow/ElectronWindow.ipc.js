@@ -1,9 +1,8 @@
-const ElectronWindow = require('./ElectronWindow.js')
+import * as ElectronWindow from './ElectronWindow.cjs'
 
-exports.name = 'ElectronWindow'
+export const name = 'ElectronWindow'
 
-// prettier-ignore
-exports.Commands = {
+export const Commands = {
   close: ElectronWindow.wrapWindowCommand(ElectronWindow.close),
   focus: ElectronWindow.wrapWindowCommand(ElectronWindow.focus),
   maximize: ElectronWindow.wrapWindowCommand(ElectronWindow.maximize),

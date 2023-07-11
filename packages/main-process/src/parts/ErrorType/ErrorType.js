@@ -1,4 +1,4 @@
-exports.DomException = 'DOMException'
-exports.ReferenceError = 'ReferenceError'
-exports.SyntaxError = 'SyntaxError'
-exports.TypeError = 'TypeError'
+export const DomException = 'DOMException'
+export const ReferenceError = 'ReferenceError'
+export const SyntaxError = 'SyntaxError'
+export const TypeError = 'TypeError'

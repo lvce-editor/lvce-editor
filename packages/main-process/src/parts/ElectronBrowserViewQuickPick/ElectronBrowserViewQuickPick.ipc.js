@@ -1,9 +1,8 @@
-const ElectronBrowserViewQuickPick = require('./ElectronBrowserViewQuickPick.js')
+import * as ElectronBrowserViewQuickPick from './ElectronBrowserViewQuickPick.js'
 
-exports.name = 'ElectronBrowserViewQuickPick'
+export const name = 'ElectronBrowserViewQuickPick'
 
-// prettier-ignore
-exports.Commands = {
+export const Commands = {
   createBrowserViewQuickPick: ElectronBrowserViewQuickPick.createBrowserViewQuickPick,
   disposeBrowserViewQuickPick: ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick,
 }

@@ -1,20 +1,20 @@
-const Callback = require('../Callback/Callback.js')
-const Command = require('../Command/Command.js')
-const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
-const ExitCode = require('../ExitCode/ExitCode.js')
-const GetResponse = require('../GetResponse/GetResponse.js')
-const IpcParent = require('../IpcParent/IpcParent.js')
-const Logger = require('../Logger/Logger.js')
-const Platform = require('../Platform/Platform.js')
-const Process = require('../Process/Process.js')
+import * as Callback from '../Callback/Callback.js'
+import * as Command from '../Command/Command.cjs'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.cjs'
+import * as ExitCode from '../ExitCode/ExitCode.cjs'
+import * as GetResponse from '../GetResponse/GetResponse.js'
+import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as Logger from '../Logger/Logger.cjs'
+import * as Platform from '../Platform/Platform.cjs'
+import * as Process from '../Process/Process.cjs'
 
-const state = (exports.state = {
+export const state = {
   /**
    * @type{any|undefined}
    */
   sharedProcess: undefined,
   onMessage(message) {},
-})
+}
 
 const handleChildError = (error) => {
   Process.exit(ExitCode.Error)
@@ -69,11 +69,11 @@ const handleChildDisconnect = () => {
 }
 
 // TODO not possible because  TypeError [ERR_INVALID_HANDLE_TYPE]: This handle type cannot be sent
-// exports.sendPort = (port) => {
+// export const sendPort = (port) => {
 //   state.sharedProcess.send('here-is-the-port', port)
 // }
 
-exports.hydrate = async ({ method, env = {} }) => {
+export const hydrate = async ({ method, env = {} }) => {
   if (state.sharedProcess) {
     return state.sharedProcess
   }

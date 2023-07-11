@@ -12,7 +12,7 @@ let integer_to_char = {}
 })
 
 /** @param {string} string */
-exports.decode = (string) => {
+export const decode = (string) => {
   /** @type {number[]} */
   let result = []
 

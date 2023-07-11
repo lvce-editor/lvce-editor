@@ -1,14 +1,14 @@
-const { VError } = require('../VError/VError.js')
-const Path = require('../Path/Path.js')
-const Root = require('../Root/Root.js')
-const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
-const Assert = require('../Assert/Assert.js')
-const LoadErrorCode = require('../LoadErrorCode/LoadErrorCode.js')
-const Debug = require('../Debug/Debug.js')
+import * as Assert from '../Assert/Assert.cjs'
+import * as Debug from '../Debug/Debug.cjs'
+import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.cjs'
+import * as LoadErrorCode from '../LoadErrorCode/LoadErrorCode.js'
+import * as Path from '../Path/Path.cjs'
+import * as Root from '../Root/Root.cjs'
+import { VError } from '../VError/VError.cjs'
 
 // TODO create output channel for browser view debug logs
 
-exports.wrapBrowserViewCommand = (fn) => {
+export const wrapBrowserViewCommand = (fn) => {
   const wrappedCommand = (id, ...args) => {
     const state = ElectronBrowserViewState.get(id)
     if (!state) {
@@ -29,7 +29,7 @@ exports.wrapBrowserViewCommand = (fn) => {
  * @param {number} width
  * @param {number} height
  */
-exports.resizeBrowserView = (view, x, y, width, height) => {
+export const resizeBrowserView = (view, x, y, width, height) => {
   view.setBounds({ x, y, width, height })
 }
 
@@ -58,7 +58,7 @@ const getTitle = (webContents) => {
  * @param {Electron.BrowserView} view
  * @param {string} iframeSrc
  */
-exports.setIframeSrc = async (view, iframeSrc) => {
+export const setIframeSrc = async (view, iframeSrc) => {
   const { webContents } = view
   try {
     await webContents.loadURL(iframeSrc)
@@ -85,7 +85,7 @@ exports.setIframeSrc = async (view, iframeSrc) => {
  *
  * @param {Electron.BrowserView} view
  */
-exports.focus = (view) => {
+export const focus = (view) => {
   const { webContents } = view
   webContents.focus()
 }
@@ -94,7 +94,7 @@ exports.focus = (view) => {
  *
  * @param {Electron.BrowserView} view
  */
-exports.openDevtools = (view) => {
+export const openDevtools = (view) => {
   const { webContents } = view
   // TODO return promise that resolves once devtools are actually open
   webContents.openDevTools()
@@ -103,7 +103,7 @@ exports.openDevtools = (view) => {
  *
  * @param {Electron.BrowserView} view
  */
-exports.reload = (view) => {
+export const reload = (view) => {
   const { webContents } = view
   webContents.reload()
 }
@@ -111,7 +111,7 @@ exports.reload = (view) => {
  *
  * @param {Electron.BrowserView} view
  */
-exports.forward = (view) => {
+export const forward = (view) => {
   const { webContents } = view
   webContents.goForward()
 }
@@ -120,7 +120,7 @@ exports.forward = (view) => {
  *
  * @param {Electron.BrowserView} view
  */
-exports.backward = (view) => {
+export const backward = (view) => {
   // TODO return promise that resolves once devtools are actually open
   const { webContents } = view
   webContents.goBack()
@@ -130,7 +130,7 @@ exports.backward = (view) => {
  *
  * @param {Electron.BrowserView} view
  */
-exports.cancelNavigation = (view) => {
+export const cancelNavigation = (view) => {
   const { webContents } = view
   ElectronBrowserViewState.setCanceled(webContents.id)
   Debug.debug(`[main process] canceled navigation to ${webContents.getURL()}`)
@@ -140,7 +140,7 @@ exports.cancelNavigation = (view) => {
   }
 }
 
-exports.show = (id) => {
+export const show = (id) => {
   // console.log('[main-process] show browser view', id)
   const state = ElectronBrowserViewState.get(id)
   if (!state) {
@@ -153,7 +153,7 @@ exports.show = (id) => {
   view.setBounds(view.getBounds())
 }
 
-exports.hide = (id) => {
+export const hide = (id) => {
   const state = ElectronBrowserViewState.get(id)
   if (!state) {
     Debug.debug('[main-process] failed to hide browser view', id)
@@ -169,7 +169,7 @@ exports.hide = (id) => {
  * @param {number} x
  * @param {number} y
  */
-exports.inspectElement = (view, x, y) => {
+export const inspectElement = (view, x, y) => {
   Assert.number(x)
   Assert.number(y)
   const { webContents } = view
@@ -182,14 +182,14 @@ exports.inspectElement = (view, x, y) => {
  * @param {number} x
  * @param {number} y
  */
-exports.copyImageAt = (view, x, y) => {
+export const copyImageAt = (view, x, y) => {
   Assert.number(x)
   Assert.number(y)
   const { webContents } = view
   webContents.copyImageAt(x, y)
 }
 
-exports.setFallThroughKeyBindings = (fallthroughKeyBindings) => {
+export const setFallThroughKeyBindings = (fallthroughKeyBindings) => {
   ElectronBrowserViewState.setFallthroughKeyBindings(fallthroughKeyBindings)
 }
 
@@ -198,7 +198,7 @@ exports.setFallThroughKeyBindings = (fallthroughKeyBindings) => {
 /**
  * @param {Electron.BrowserView} view
  */
-exports.getStats = (view) => {
+export const getStats = (view) => {
   const { webContents } = view
   const canGoBack = webContents.canGoBack()
   const canGoForward = webContents.canGoForward()

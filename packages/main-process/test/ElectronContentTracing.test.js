@@ -1,8 +1,10 @@
+import { jest } from '@jest/globals'
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.mock('electron', () => {
+jest.unstable_mockModule('electron', () => {
   return {
     contentTracing: {
       stopRecording: jest.fn(),
@@ -12,8 +14,8 @@ jest.mock('electron', () => {
   }
 })
 
-const electron = require('electron')
-const ElectronContentTracing = require('../src/parts/ElectronContentTracing/ElectronContentTracing.js')
+const electron = await import('electron')
+const ElectronContentTracing = await import('../src/parts/ElectronContentTracing/ElectronContentTracing.js')
 
 test('startRecording - error', async () => {
   // @ts-ignore
@@ -46,9 +48,7 @@ test('stopRecording - error', async () => {
   electron.contentTracing.stopRecording.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronContentTracing.stopRecording()).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(ElectronContentTracing.stopRecording()).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('stopRecording', async () => {

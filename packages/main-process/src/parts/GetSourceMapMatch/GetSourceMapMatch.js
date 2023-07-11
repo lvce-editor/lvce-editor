@@ -1,10 +1,10 @@
-const Assert = require('../Assert/Assert.js')
-const Character = require('../Character/Character.js')
-const GetNewLineIndex = require('../GetNewLineIndex/GetNewLineIndex.js')
+import * as Assert from '../Assert/Assert.cjs'
+import * as Character from '../Character/Character.cjs'
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.cjs'
 
 const RE_SOURCE_MAP = /^\/\/# sourceMappingURL=(.*)$/
 
-exports.getSourceMapMatch = (text) => {
+export const getSourceMapMatch = (text) => {
   Assert.string(text)
   const index = text.lastIndexOf(Character.NewLine, text.length - 2)
   const lastLine = text.slice(index + 1, -1)

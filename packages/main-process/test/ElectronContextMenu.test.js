@@ -1,4 +1,6 @@
-jest.mock('electron', () => {
+import { jest } from '@jest/globals'
+
+jest.unstable_mockModule('electron', () => {
   return {
     clipboard: {
       writeText: jest.fn(),
@@ -6,8 +8,8 @@ jest.mock('electron', () => {
   }
 })
 
-const electron = require('electron')
-const ElectronClipBoard = require('../src/parts/ElectronClipBoard/ElectronClipBoard.js')
+const electron = await import('electron')
+const ElectronClipBoard = await import('../src/parts/ElectronClipBoard/ElectronClipBoard.js')
 
 test('writeText', () => {
   // @ts-ignore
@@ -22,7 +24,5 @@ test('writeText - error', () => {
   electron.clipboard.writeText.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  expect(() => ElectronClipBoard.writeText('abc')).toThrowError(
-    new TypeError('x is not a function')
-  )
+  expect(() => ElectronClipBoard.writeText('abc')).toThrowError(new TypeError('x is not a function'))
 })

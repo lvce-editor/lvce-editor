@@ -1,5 +1,5 @@
-const Character = require('../Character/Character.js')
+import * as Character from '../Character/Character.cjs'
 
-exports.isEmptyString = (string) => {
+export const isEmptyString = (string) => {
   return string === Character.EmptyString
 }

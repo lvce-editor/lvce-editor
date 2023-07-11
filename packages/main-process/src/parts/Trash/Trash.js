@@ -1,7 +1,7 @@
-const { shell } = require('electron')
-const Assert = require('../Assert/Assert.js')
+import { shell } from 'electron'
+import * as Assert from '../Assert/Assert.cjs'
 
-exports.trash = async (path) => {
+export const trash = async (path) => {
   Assert.string(path)
   await shell.trashItem(path)
 }

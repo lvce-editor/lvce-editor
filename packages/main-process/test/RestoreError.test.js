@@ -1,4 +1,4 @@
-const RestoreError = require('../src/parts/RestoreError/RestoreError.js')
+import * as RestoreError from '../src/parts/RestoreError/RestoreError.js'
 
 test('restoreError - VError', () => {
   const cause = new Error('child process exited with code 1')

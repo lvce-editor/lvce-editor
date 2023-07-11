@@ -1,17 +1,17 @@
-const { BrowserView, BrowserWindow } = require('electron')
-const Assert = require('../Assert/Assert.js')
-const DisposeWebContents = require('../DisposeWebContents/DisposeWebContents.js')
-const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
-const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
-const ElectronSessionForBrowserView = require('../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js')
-const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
-const ElectronDispositionType = require('../ElectronDispositionType/ElectronDispositionType.js')
-const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
-const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
-const ElectronInputType = require('../ElectronInputType/ElectronInputType.js')
-const Debug = require('../Debug/Debug.js')
-const Logger = require('../Logger/Logger.js')
-const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
+import { BrowserView, BrowserWindow } from 'electron'
+import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
+import * as Assert from '../Assert/Assert.cjs'
+import * as Debug from '../Debug/Debug.cjs'
+import * as DisposeWebContents from '../DisposeWebContents/DisposeWebContents.js'
+import * as ElectronBrowserViewAdBlock from '../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js'
+import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.cjs'
+import * as ElectronDispositionType from '../ElectronDispositionType/ElectronDispositionType.js'
+import * as ElectronInputType from '../ElectronInputType/ElectronInputType.js'
+import * as ElectronSessionForBrowserView from '../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js'
+import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs'
+import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.cjs'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.cjs'
+import * as Logger from '../Logger/Logger.cjs'
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -45,7 +45,7 @@ const getIdentifier = (input) => {
  *
  * @param {number} id
  */
-const getPort = (exports.getPort = (id) => {
+export const getPort = (id) => {
   const state = AppWindowStates.findByWindowId(id)
   if (!state) {
     Logger.info('[main process] no message port found')
@@ -53,14 +53,14 @@ const getPort = (exports.getPort = (id) => {
   }
   const { port } = state
   return port
-})
+}
 
 /**
  *
  * @param {number} restoreId
  * @returns
  */
-exports.createBrowserView = async (restoreId, uid) => {
+export const createBrowserView = async (restoreId, uid) => {
   Assert.number(restoreId)
   Assert.number(uid)
   const cached = ElectronBrowserViewState.get(restoreId)
@@ -238,7 +238,7 @@ exports.createBrowserView = async (restoreId, uid) => {
   return id
 }
 
-exports.disposeBrowserView = (id) => {
+export const disposeBrowserView = (id) => {
   console.log('[main process] dispose browser view', id)
   const { view, browserWindow } = ElectronBrowserViewState.get(id)
   ElectronBrowserViewState.remove(id)
@@ -250,7 +250,7 @@ const getBrowserViewId = (browserView) => {
   return browserView.webContents.id
 }
 
-exports.getAll = () => {
+export const getAll = () => {
   const windows = BrowserWindow.getAllWindows()
   const overview = Object.create(null)
   for (const window of windows) {

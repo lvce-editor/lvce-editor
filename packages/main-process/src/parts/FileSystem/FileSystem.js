@@ -1,5 +1,5 @@
-const fs = require('node:fs/promises')
+import * as fs from 'node:fs/promises'
 
-exports.readDir = (path) => {
+export const readDir = (path) => {
   return fs.readdir(path)
 }

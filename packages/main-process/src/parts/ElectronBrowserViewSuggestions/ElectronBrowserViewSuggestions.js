@@ -1,23 +1,23 @@
-const { BrowserView, BrowserWindow } = require('electron')
-const { VError } = require('../VError/VError.js')
-const DisposeWebContents = require('../DisposeWebContents/DisposeWebContents.js')
-const ElectronSession = require('../ElectronSession/ElectronSession.js')
-const Logger = require('../Logger/Logger.js')
-const Path = require('../Path/Path.js')
-const PendingPorts = require('../PendingPorts/PendingPorts.js')
-const Platform = require('../Platform/Platform.js')
-const Root = require('../Root/Root.js')
-const ElectronWebContentsEventType = require('../ElectronWebContentsEventType/ElectronWebContentsEventType.js')
+import { BrowserView, BrowserWindow } from 'electron'
+import * as DisposeWebContents from '../DisposeWebContents/DisposeWebContents.js'
+import * as ElectronSession from '../ElectronSession/ElectronSession.cjs'
+import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs'
+import * as Logger from '../Logger/Logger.cjs'
+import * as Path from '../Path/Path.cjs'
+import * as PendingPorts from '../PendingPorts/PendingPorts.js'
+import * as Platform from '../Platform/Platform.cjs'
+import * as Root from '../Root/Root.cjs'
+import { VError } from '../VError/VError.cjs'
 
-const state = (exports.state = {
+export const state = {
   /**
    * @type {any}
    */
   browserView: undefined,
   port: undefined,
-})
+}
 
-exports.disposeBrowserView = () => {
+export const disposeBrowserView = () => {
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
     return
@@ -31,7 +31,7 @@ exports.disposeBrowserView = () => {
   state.port = undefined
 }
 
-exports.createBrowserView = async (x, y, width, height, openDevtools = false) => {
+export const createBrowserView = async (x, y, width, height, openDevtools = false) => {
   try {
     if (state.browserView) {
       throw new Error('browser view already exists')
@@ -64,7 +64,7 @@ exports.createBrowserView = async (x, y, width, height, openDevtools = false) =>
     if (pendingPort) {
       console.log('[main-process] send pending suggestions port')
       view.webContents.postMessage('port', '', [pendingPort])
-      PendingPorts.delete('suggestions')
+      PendingPorts._delete('suggestions')
     }
   } catch (error) {
     Logger.error(error)
@@ -84,7 +84,7 @@ const getSuggestionsHtml = (suggestions) => {
   return html
 }
 
-exports.setSuggestions = async (suggestions) => {
+export const setSuggestions = async (suggestions) => {
   const browserView = state.browserView
   if (!browserView) {
     return

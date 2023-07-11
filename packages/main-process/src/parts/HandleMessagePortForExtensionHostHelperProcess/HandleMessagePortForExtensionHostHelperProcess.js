@@ -1,14 +1,14 @@
-const IpcParent = require('../IpcParent/IpcParent.js')
-const IpcParentType = require('../IpcParentType/IpcParentType.js')
-const Logger = require('../Logger/Logger.js')
-const Platform = require('../Platform/Platform.js')
+import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as Logger from '../Logger/Logger.cjs'
+import * as Platform from '../Platform/Platform.cjs'
 
 /**
  *
  * @param {any} event
  * @param {import('electron').MessagePortMain} browserWindowPort
  */
-exports.handlePort = async (event, browserWindowPort) => {
+export const handlePort = async (event, browserWindowPort) => {
   const extensionHostHelperProcessPath = Platform.getExtensionHostHelperProcessPath()
   const start = performance.now()
   const ipc = await IpcParent.create({

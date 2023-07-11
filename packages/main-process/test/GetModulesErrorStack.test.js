@@ -1,4 +1,4 @@
-const GetModulesErrorStack = require('../src/parts/GetModulesErrorStack/GetModulesErrorStack.js')
+import * as GetModulesErrorStack from '../src/parts/GetModulesErrorStack/GetModulesErrorStack.js'
 
 test('getModulesErrorStack - esm error', () => {
   const stderr = `node:internal/modules/cjs/loader:1293

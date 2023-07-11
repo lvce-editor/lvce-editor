@@ -1,8 +1,8 @@
-const Assert = require('../Assert/Assert.js')
-const IpcParent = require('../IpcParent/IpcParent.js')
-const IpcParentType = require('../IpcParentType/IpcParentType.js')
-const Path = require('../Path/Path.js')
-const Root = require('../Root/Root.js')
+import * as Assert from '../Assert/Assert.cjs'
+import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as Path from '../Path/Path.cjs'
+import * as Root from '../Root/Root.cjs'
 
 const getTerminalProcessPath = () => {
   return Path.join(Root.root, 'packages', 'pty-host', 'src', 'ptyHostMain.js')
@@ -12,7 +12,7 @@ const getTerminalProcessPath = () => {
  * @param {import('electron').IpcMainEvent} event
  * @returns
  */
-exports.handlePort = async (event, browserWindowPort, type, name) => {
+export const handlePort = async (event, browserWindowPort, type, name) => {
   Assert.object(event)
   Assert.object(browserWindowPort)
   Assert.string(type)

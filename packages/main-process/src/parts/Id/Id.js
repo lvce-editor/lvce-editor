@@ -1,7 +1,7 @@
-exports.state = {
+export const state = {
   id: 0,
 }
 
-exports.create = () => {
-  return ++exports.state.id
+export const create = () => {
+  return ++state.id
 }

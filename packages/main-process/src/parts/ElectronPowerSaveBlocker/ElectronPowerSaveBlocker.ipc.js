@@ -1,8 +1,8 @@
-const ElectronPowerSaveBlocker = require('./ElectronPowerSaveBlocker.js')
+import * as ElectronPowerSaveBlocker from './ElectronPowerSaveBlocker.js'
 
-exports.name = 'ElectronPowerSaveBlocker'
+export const name = 'ElectronPowerSaveBlocker'
 
-exports.Commands = {
+export const Commands = {
   start: ElectronPowerSaveBlocker.start,
   stop: ElectronPowerSaveBlocker.stop,
 }
