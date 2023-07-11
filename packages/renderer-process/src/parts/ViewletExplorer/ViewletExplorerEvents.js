@@ -145,17 +145,6 @@ export const handleDrop = async (event) => {
   ViewletExplorerFunctions.handleDrop(uid, clientX, clientY, handles)
 }
 
-// TODO maybe use aria active descendant instead
-const getFocusedIndexFromFocusOutline = ($Viewlet) => {
-  for (let i = 0; i < $Viewlet.children.length; i++) {
-    const $Child = $Viewlet.children[i]
-    if ($Child.classList.contains('FocusOutline')) {
-      return i
-    }
-  }
-  return -1
-}
-
 export const handleClick = (event) => {
   Event.preventDefault(event)
   const { button, clientX, clientY } = event
@@ -165,7 +154,6 @@ export const handleClick = (event) => {
 
 export const handlePointerDown = (event) => {
   const { button, clientX, clientY } = event
-  Event.preventDefault(event)
   const uid = ComponentUid.fromEvent(event)
   ViewletExplorerFunctions.handlePointerDown(uid, button, clientX, clientY)
 }
@@ -201,5 +189,5 @@ export const handleEditingInput = (event) => {
   ViewletExplorerFunctions.updateEditingValue(uid, value)
 }
 
-export * from '../VirtualListEvents/VirtualListEvents.js'
 export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../VirtualListEvents/VirtualListEvents.js'
