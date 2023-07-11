@@ -58,22 +58,27 @@ const ViewletMainCloseTabsRight = await import('../src/parts/ViewletMain/Viewlet
 test('closeTabsRight - 0 0 - first tab is focused and first tab is selected', async () => {
   const state = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
-    editors: [
+    activeGroupIndex: 0,
+    groups: [
       {
-        uri: '/test/file-1.txt',
-        uid: 1,
-      },
-      {
-        uri: '/test/file-2.txt',
-        uid: 2,
-      },
-      {
-        uri: '/test/file-3.txt',
-        uid: 3,
+        editors: [
+          {
+            uri: '/test/file-1.txt',
+            uid: 1,
+          },
+          {
+            uri: '/test/file-2.txt',
+            uid: 2,
+          },
+          {
+            uri: '/test/file-3.txt',
+            uid: 3,
+          },
+        ],
+        activeIndex: 0,
+        focusedIndex: 0,
       },
     ],
-    activeIndex: 0,
-    focusedIndex: 0,
   }
   ViewletStates.set('EditorText', {
     factory: {
@@ -84,7 +89,7 @@ test('closeTabsRight - 0 0 - first tab is focused and first tab is selected', as
     renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
-  expect(newState.editors).toEqual([
+  expect(newState.groups[0].editors).toEqual([
     {
       uri: '/test/file-1.txt',
       uid: 1,
@@ -95,22 +100,27 @@ test('closeTabsRight - 0 0 - first tab is focused and first tab is selected', as
 test('closeTabsRight - 0 1 - first tab is focused and second tab is selected', async () => {
   const state = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
-    editors: [
+    activeGroupIndex: 0,
+    groups: [
       {
-        uri: '/test/file-1.txt',
-        uid: 1,
-      },
-      {
-        uri: '/test/file-2.txt',
-        uid: 2,
-      },
-      {
-        uri: '/test/file-3.txt',
-        uid: 3,
+        editors: [
+          {
+            uri: '/test/file-1.txt',
+            uid: 1,
+          },
+          {
+            uri: '/test/file-2.txt',
+            uid: 2,
+          },
+          {
+            uri: '/test/file-3.txt',
+            uid: 3,
+          },
+        ],
+        activeIndex: 1,
+        focusedIndex: 0,
       },
     ],
-    activeIndex: 1,
-    focusedIndex: 0,
   }
   ViewletStates.set('EditorText', {
     factory: {
@@ -121,7 +131,7 @@ test('closeTabsRight - 0 1 - first tab is focused and second tab is selected', a
     renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
-  expect(newState.editors).toEqual([
+  expect(newState.groups[0].editors).toEqual([
     {
       uri: '/test/file-1.txt',
       uid: 1,
@@ -132,22 +142,27 @@ test('closeTabsRight - 0 1 - first tab is focused and second tab is selected', a
 test('closeTabsRight - 0 2 - first tab is focused and third tab is selected', async () => {
   const state = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
-    editors: [
+    activeGroupIndex: 0,
+    groups: [
       {
-        uri: '/test/file-1.txt',
-        uid: 1,
-      },
-      {
-        uri: '/test/file-2.txt',
-        uid: 2,
-      },
-      {
-        uri: '/test/file-3.txt',
-        uid: 3,
+        editors: [
+          {
+            uri: '/test/file-1.txt',
+            uid: 1,
+          },
+          {
+            uri: '/test/file-2.txt',
+            uid: 2,
+          },
+          {
+            uri: '/test/file-3.txt',
+            uid: 3,
+          },
+        ],
+        activeIndex: 2,
+        focusedIndex: 0,
       },
     ],
-    activeIndex: 2,
-    focusedIndex: 0,
   }
   ViewletStates.set('EditorText', {
     factory: {
@@ -158,7 +173,7 @@ test('closeTabsRight - 0 2 - first tab is focused and third tab is selected', as
     renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
-  expect(newState.editors).toEqual([
+  expect(newState.groups[0].editors).toEqual([
     {
       uri: '/test/file-1.txt',
       uid: 1,
@@ -169,22 +184,27 @@ test('closeTabsRight - 0 2 - first tab is focused and third tab is selected', as
 test('closeTabsRight - 1 0 - second tab is focused and first tab is selected', async () => {
   const state = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
-    editors: [
+    activeGroupIndex: 0,
+    groups: [
       {
-        uri: '/test/file-1.txt',
-        uid: 1,
-      },
-      {
-        uri: '/test/file-2.txt',
-        uid: 2,
-      },
-      {
-        uri: '/test/file-3.txt',
-        uid: 3,
+        editors: [
+          {
+            uri: '/test/file-1.txt',
+            uid: 1,
+          },
+          {
+            uri: '/test/file-2.txt',
+            uid: 2,
+          },
+          {
+            uri: '/test/file-3.txt',
+            uid: 3,
+          },
+        ],
+        activeIndex: 0,
+        focusedIndex: 1,
       },
     ],
-    activeIndex: 0,
-    focusedIndex: 1,
   }
   ViewletStates.set('EditorText', {
     factory: {
@@ -195,7 +215,7 @@ test('closeTabsRight - 1 0 - second tab is focused and first tab is selected', a
     renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
-  expect(newState.editors).toEqual([
+  expect(newState.groups[0].editors).toEqual([
     {
       uri: '/test/file-1.txt',
       uid: 1,
@@ -210,22 +230,27 @@ test('closeTabsRight - 1 0 - second tab is focused and first tab is selected', a
 test('closeTabsRight - 1 1 - second tab is focused and second tab is selected', async () => {
   const state = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
-    editors: [
+    activeGroupIndex: 0,
+    groups: [
       {
-        uri: '/test/file-1.txt',
-        uid: 1,
-      },
-      {
-        uri: '/test/file-2.txt',
-        uid: 2,
-      },
-      {
-        uri: '/test/file-3.txt',
-        uid: 3,
+        editors: [
+          {
+            uri: '/test/file-1.txt',
+            uid: 1,
+          },
+          {
+            uri: '/test/file-2.txt',
+            uid: 2,
+          },
+          {
+            uri: '/test/file-3.txt',
+            uid: 3,
+          },
+        ],
+        activeIndex: 1,
+        focusedIndex: 1,
       },
     ],
-    activeIndex: 1,
-    focusedIndex: 1,
   }
   ViewletStates.set('EditorText', {
     factory: {
@@ -236,7 +261,7 @@ test('closeTabsRight - 1 1 - second tab is focused and second tab is selected', 
     renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
-  expect(newState.editors).toEqual([
+  expect(newState.groups[0].editors).toEqual([
     {
       uri: '/test/file-1.txt',
       uid: 1,
@@ -251,22 +276,27 @@ test('closeTabsRight - 1 1 - second tab is focused and second tab is selected', 
 test('closeTabsRight - 1 2 - second tab is focused and third tab is selected', async () => {
   const state = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
-    editors: [
+    activeGroupIndex: 0,
+    groups: [
       {
-        uri: '/test/file-1.txt',
-        uid: 1,
-      },
-      {
-        uri: '/test/file-2.txt',
-        uid: 2,
-      },
-      {
-        uri: '/test/file-3.txt',
-        uid: 3,
+        editors: [
+          {
+            uri: '/test/file-1.txt',
+            uid: 1,
+          },
+          {
+            uri: '/test/file-2.txt',
+            uid: 2,
+          },
+          {
+            uri: '/test/file-3.txt',
+            uid: 3,
+          },
+        ],
+        activeIndex: 2,
+        focusedIndex: 1,
       },
     ],
-    activeIndex: 2,
-    focusedIndex: 1,
   }
   ViewletStates.set('EditorText', {
     factory: {
@@ -277,7 +307,7 @@ test('closeTabsRight - 1 2 - second tab is focused and third tab is selected', a
     renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
-  expect(newState.editors).toEqual([
+  expect(newState.groups[0].editors).toEqual([
     {
       uri: '/test/file-1.txt',
       uid: 1,
@@ -292,22 +322,27 @@ test('closeTabsRight - 1 2 - second tab is focused and third tab is selected', a
 test('closeTabsRight - 2 0 - third tab is focused and first tab is selected', async () => {
   const state = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
-    editors: [
+    activeGroupIndex: 0,
+    groups: [
       {
-        uri: '/test/file-1.txt',
-        uid: 1,
-      },
-      {
-        uri: '/test/file-2.txt',
-        uid: 2,
-      },
-      {
-        uri: '/test/file-3.txt',
-        uid: 3,
+        editors: [
+          {
+            uri: '/test/file-1.txt',
+            uid: 1,
+          },
+          {
+            uri: '/test/file-2.txt',
+            uid: 2,
+          },
+          {
+            uri: '/test/file-3.txt',
+            uid: 3,
+          },
+        ],
+        activeIndex: 0,
+        focusedIndex: 2,
       },
     ],
-    activeIndex: 0,
-    focusedIndex: 2,
   }
   ViewletStates.set('EditorText', {
     factory: {
@@ -318,7 +353,7 @@ test('closeTabsRight - 2 0 - third tab is focused and first tab is selected', as
     renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
-  expect(newState.editors).toEqual([
+  expect(newState.groups[0].editors).toEqual([
     {
       uri: '/test/file-1.txt',
       uid: 1,
@@ -337,22 +372,27 @@ test('closeTabsRight - 2 0 - third tab is focused and first tab is selected', as
 test('closeTabsRight - 2 1 - third tab is focused and second tab is selected', async () => {
   const state = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
-    editors: [
+    activeGroupIndex: 0,
+    groups: [
       {
-        uri: '/test/file-1.txt',
-        uid: 1,
-      },
-      {
-        uri: '/test/file-2.txt',
-        uid: 2,
-      },
-      {
-        uri: '/test/file-3.txt',
-        uid: 3,
+        editors: [
+          {
+            uri: '/test/file-1.txt',
+            uid: 1,
+          },
+          {
+            uri: '/test/file-2.txt',
+            uid: 2,
+          },
+          {
+            uri: '/test/file-3.txt',
+            uid: 3,
+          },
+        ],
+        activeIndex: 1,
+        focusedIndex: 2,
       },
     ],
-    activeIndex: 1,
-    focusedIndex: 2,
   }
   ViewletStates.set('EditorText', {
     factory: {
@@ -363,7 +403,7 @@ test('closeTabsRight - 2 1 - third tab is focused and second tab is selected', a
     renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
-  expect(newState.editors).toEqual([
+  expect(newState.groups[0].editors).toEqual([
     {
       uri: '/test/file-1.txt',
       uid: 1,
@@ -382,22 +422,27 @@ test('closeTabsRight - 2 1 - third tab is focused and second tab is selected', a
 test('closeTabsRight - 2 2 - third tab is focused and third tab is selected', async () => {
   const state = {
     ...ViewletMain.create(1, '', 0, 0, 100, 100),
-    editors: [
+    activeGroupIndex: 0,
+    groups: [
       {
-        uri: '/test/file-1.txt',
-        uid: 1,
-      },
-      {
-        uri: '/test/file-2.txt',
-        uid: 2,
-      },
-      {
-        uri: '/test/file-3.txt',
-        uid: 3,
+        editors: [
+          {
+            uri: '/test/file-1.txt',
+            uid: 1,
+          },
+          {
+            uri: '/test/file-2.txt',
+            uid: 2,
+          },
+          {
+            uri: '/test/file-3.txt',
+            uid: 3,
+          },
+        ],
+        activeIndex: 1,
+        focusedIndex: 2,
       },
     ],
-    activeIndex: 1,
-    focusedIndex: 2,
   }
   ViewletStates.set('EditorText', {
     factory: {
@@ -408,7 +453,7 @@ test('closeTabsRight - 2 2 - third tab is focused and third tab is selected', as
     renderedState: {},
   })
   const { newState, commands } = await ViewletMainCloseTabsRight.closeTabsRight(state)
-  expect(newState.editors).toEqual([
+  expect(newState.groups[0].editors).toEqual([
     {
       uri: '/test/file-1.txt',
       uid: 1,
