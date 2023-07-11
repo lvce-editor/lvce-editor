@@ -201,14 +201,14 @@ const copyElectronResult = async ({ config, version, product, electronVersion, s
   }
   if (config === ElectronBuilderConfigType.ArchLinux) {
     await Replace.replace({
-      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
+      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.cjs`,
       occurrence: `exports.isArchLinux = false`,
       replacement: `exports.isArchLinux = true`,
     })
   }
   if (config === ElectronBuilderConfigType.AppImage) {
     await Replace.replace({
-      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
+      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.cjs`,
       occurrence: `exports.isAppImage = false`,
       replacement: `exports.isAppImage = true`,
     })
