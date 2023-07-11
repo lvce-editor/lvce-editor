@@ -1,4 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as Assert from '../Assert/Assert.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
@@ -61,6 +62,8 @@ export const setScrollBar = (state, scrollBarWidth) => {
 }
 
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
+  Assert.number(oldFocusedIndex)
+  Assert.number(newFocusedIndex)
   const { $Viewlet } = state
   if (oldFocusedIndex !== -1) {
     const $OldItem = $Viewlet.children[oldFocusedIndex]
