@@ -1,4 +1,5 @@
 .Storage {
+  user-select: text;
   position: absolute;
   white-space: pre;
   padding: 20px;
