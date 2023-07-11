@@ -567,10 +567,6 @@ export const handleClickClose = (state, button, index) => {
   return closeEditor(state, index)
 }
 
-export const closeFocusedTab = (state) => {
-  return closeEditor(state, state.focusedIndex)
-}
-
 export const handleTabContextMenu = async (state, eventX, eventY) => {
   const { groups, activeGroupIndex } = state
   const group = groups[activeGroupIndex]
