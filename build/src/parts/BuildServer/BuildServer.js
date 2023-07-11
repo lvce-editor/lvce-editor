@@ -23,7 +23,11 @@ const copyStaticFiles = async ({ commitHash }) => {
   })
   await Copy.copy({
     from: 'static/js',
-    to: `build/.tmp/server/server/static/${commitHash}/static/js`,
+    to: `build/.tmp/server/server/static/${commitHash}/js`,
+  })
+  await Copy.copy({
+    from: 'static/lib-css',
+    to: `build/.tmp/server/server/static/${commitHash}/lib-css`,
   })
   await Copy.copyFile({
     from: 'static/favicon.ico',
