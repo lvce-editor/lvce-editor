@@ -4,7 +4,12 @@ import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 
 export const closeTabsRight = async (state) => {
-  const { editors, activeIndex, focusedIndex } = state
+  const { groups, activeGroupIndex } = state
+  if (activeGroupIndex === -1) {
+    return state
+  }
+  const group = groups[activeGroupIndex]
+  const { editors, activeIndex, focusedIndex } = group
   const commands = []
   const newEditors = editors.slice(0, focusedIndex + 1)
   if (focusedIndex >= activeIndex) {
@@ -38,11 +43,19 @@ export const closeTabsRight = async (state) => {
     commands.push(['Viewlet.setBounds', uid, x, state.tabHeight, width, contentHeight])
     commands.push(['Viewlet.append', state.uid, uid])
   }
+  const newGroups = [
+    ...groups.slice(0, activeGroupIndex),
+    {
+      ...group,
+      editors: newEditors,
+      activeIndex: focusedIndex,
+    },
+    ...groups.slice(activeGroupIndex + 1),
+  ]
   return {
     newState: {
       ...state,
-      editors: newEditors,
-      activeIndex: focusedIndex,
+      groups: newGroups,
     },
     commands,
   }
