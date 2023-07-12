@@ -26,11 +26,11 @@ export const getModuleId = (commandId) => {
     case 'Developer.crashSharedProcess':
     case 'Developer.createHeapSnapshot':
     case 'Developer.createProfile':
-    case 'Developer.getNodeStartupTime':
-    case 'Developer.getNodeStartupTiming':
     case 'Developer.sharedProcessMemoryUsage':
     case 'Developer.sharedProcessStartupPerformance':
       return ModuleId.Developer
+    case 'Performance.getNodeStartupTiming':
+      return ModuleId.Performance
     case 'Download.download':
       return ModuleId.Download
     case 'ElectronInitialize.electronInitialize':

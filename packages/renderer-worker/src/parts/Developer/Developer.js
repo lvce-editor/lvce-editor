@@ -62,7 +62,7 @@ const getNodeTiming = () => {
   if (Platform.platform === PlatformType.Web) {
     return undefined
   }
-  return SharedProcess.invoke(/* command */ 'Developer.getNodeStartupTime')
+  return SharedProcess.invoke(/* command */ 'Performance.getNodeStartupTiming')
 }
 
 const getFirstTimeOrigin = ({ measureEntries, electronEntries }) => {
