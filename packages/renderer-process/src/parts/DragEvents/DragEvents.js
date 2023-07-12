@@ -5,8 +5,13 @@ import * as DragFunctions from '../DragFunctions/DragFunctions.js'
 import * as Event from '../Event/Event.js'
 
 export const handleDragStart = (event) => {
-  const { dataTransfer } = event
+  const { dataTransfer, target } = event
   DataTransfer.setEffectAllowed(dataTransfer, AllowedDragEffectType.CopyMove)
+  if (target.classList.contains('TreeItem')) {
+    const filePath = target.title
+    const fileName = target.textContent
+    DataTransfer.setFilePath(dataTransfer, filePath, fileName)
+  }
 }
 
 export const handleDragOver = (event) => {
