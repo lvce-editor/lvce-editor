@@ -18,7 +18,7 @@ export const oneResultInOneFile = () => {
   return I18nString.i18nString(UiStrings.OneResultInOneFile)
 }
 
-export const ManyResultsInOneFile = (resultCount) => {
+export const manyResultsInOneFile = (resultCount) => {
   return I18nString.i18nString(UiStrings.ManyResultsInOneFile, {
     PH1: resultCount,
   })
