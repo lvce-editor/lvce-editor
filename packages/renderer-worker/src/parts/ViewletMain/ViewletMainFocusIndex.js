@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as GetTabIndex from '../GetTabIndex/GetTabIndex.js'
 import * as Id from '../Id/Id.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -101,7 +102,33 @@ export const focusNext = (state) => {
   return focus(state, getNextIndex)
 }
 
-export const handleTabClick = (state, button, index) => {
+// TODO make computation more efficient
+const getIsCloseButton = (tabs, index, eventX, x) => {
+  let total = 0
+  for (let i = 0; i <= index; i++) {
+    total += tabs[index].tabWidth
+  }
+  const tab = tabs[index]
+  const offset = eventX - x - total
+  const closeButtonWidth = 23
+  return -offset < closeButtonWidth
+}
+
+export const handleTabClick = (state, button, eventX, eventY) => {
+  Assert.number(button)
+  Assert.number(eventX)
+  Assert.number(eventY)
+  const { groups, activeGroupIndex } = state
+  const group = groups[activeGroupIndex]
+  const { editors, x, y } = group
+  const index = GetTabIndex.getTabIndex(editors, x, eventX)
+  if (index === -1) {
+    return state
+  }
+  const isCloseButton = getIsCloseButton(editors, index, eventX, x)
+  if (isCloseButton) {
+    return closeEditor(state, index)
+  }
   switch (button) {
     case MouseEventType.LeftClick:
       return focusIndex(state, index)

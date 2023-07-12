@@ -1,14 +1,17 @@
 import * as Assert from '../Assert/Assert.js'
 import * as TabFlags from '../TabFlags/TabFlags.js'
+import * as GetTabIndex from '../GetTabIndex/GetTabIndex.js'
 
-export const handleTabsPointerOver = (state, index) => {
-  Assert.number(index)
+export const handleTabsPointerOver = (state, eventX, eventY) => {
+  Assert.number(eventX)
+  Assert.number(eventY)
+  const { groups, activeGroupIndex } = state
+  const group = groups[activeGroupIndex]
+  const { editors, x, y } = group
+  const index = GetTabIndex.getTabIndex(editors, x, eventX)
   if (index === -1) {
     return state
   }
-  const { groups, activeGroupIndex } = state
-  const group = groups[activeGroupIndex]
-  const { editors } = group
   const editor = editors[index]
   if (editor.flags & TabFlags.Hovered) {
     return state

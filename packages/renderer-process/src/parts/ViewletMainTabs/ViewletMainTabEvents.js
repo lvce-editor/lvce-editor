@@ -2,14 +2,7 @@ import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffe
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as Event from '../Event/Event.js'
-import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletMainTabsFunctions from './ViewletMainTabsFunctions.js'
-
-const ClassNames = {
-  TabLabel: 'TabLabel',
-  EditorTabCloseButton: 'EditorTabCloseButton',
-  MainTab: 'MainTab',
-}
 
 // TODO
 const getUid = () => {
@@ -26,63 +19,27 @@ export const handleDragStart = (event) => {
   DataTransfer.setEffectAllowed(AllowedDragEffectType.CopyMove)
 }
 
-const getIndex = ($Target) => {
-  if (!$Target) {
-    return -1
-  }
-  const $Tab = $Target.closest(`.MainTab`)
-  if (!$Tab) {
-    return -1
-  }
-  return GetNodeIndex.getNodeIndex($Tab)
-}
-
-export const handleTabCloseButtonMouseDown = (event, index) => {
-  const uid = getUid()
-  ViewletMainTabsFunctions.closeEditor(uid, index)
-}
-
-export const handleTabMouseDown = (event, index) => {
-  const { button } = event
-  const uid = getUid()
-  ViewletMainTabsFunctions.handleTabClick(uid, button, index)
-}
-
 export const handleTabsMouseDown = (event) => {
-  const { target } = event
-  // TODO just send x and y, worker can compute index
-  const index = getIndex(target)
-  if (index === -1) {
-    return
-  }
-  switch (target.className) {
-    case ClassNames.EditorTabCloseButton:
-      handleTabCloseButtonMouseDown(event, index)
-      break
-    default:
-      handleTabMouseDown(event, index)
-      break
-  }
+  const { clientX, clientY, button } = event
+  const uid = getUid()
+  ViewletMainTabsFunctions.handleTabClick(uid, button, clientX, clientY)
 }
 
 export const handleTabsContextMenu = (event) => {
-  const { clientX, clientY, target } = event
+  const { clientX, clientY } = event
   Event.preventDefault(event)
   const uid = getUid()
   ViewletMainTabsFunctions.handleTabContextMenu(uid, clientX, clientY)
 }
 
 export const handlePointerOver = (event) => {
-  const { target } = event
-  const index = getIndex(target)
+  const { clientX, clientY } = event
   const uid = getUid()
-  ViewletMainTabsFunctions.handleTabsPointerOver(uid, index)
+  ViewletMainTabsFunctions.handleTabsPointerOver(uid, clientX, clientY)
 }
 
 export const handlePointerOut = (event) => {
-  const { target, relatedTarget } = event
-  const oldIndex = getIndex(target)
-  const newIndex = getIndex(relatedTarget)
+  const { clientX, clientY } = event
   const uid = getUid()
-  ViewletMainTabsFunctions.handleTabsPointerOut(uid, oldIndex, newIndex)
+  ViewletMainTabsFunctions.handleTabsPointerOut(uid, clientX, clientY)
 }
