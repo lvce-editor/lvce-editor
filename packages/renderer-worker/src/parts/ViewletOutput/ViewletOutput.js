@@ -1,7 +1,6 @@
 import * as OutputChannel from '../OutputChannel/OutputChannel.js'
 import * as OutputChannels from '../OutputChannels/OutputChannels.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const create = (uid) => {
   return {
@@ -83,16 +82,3 @@ export const closeFindWidget = async (state) => {}
 // export const handleError = (state, error) => {
 //   console.error(error)
 // }
-
-const renderText = {
-  isEqual(oldState, newState) {
-    return oldState.text === newState.text
-  },
-  apply(oldState, newState) {
-    return [RenderMethod.SetText, newState.text]
-  },
-}
-
-export const hasFunctionalRender = true
-
-export const render = [renderText]
