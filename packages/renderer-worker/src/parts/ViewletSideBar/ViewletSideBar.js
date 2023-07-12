@@ -8,6 +8,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Character from '../Character/Character.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -19,6 +20,7 @@ export const create = (id, uri, x, y, width, height) => {
     height,
     titleAreaHeight: 35,
     actions: [],
+    title: Character.EmptyString,
   }
 }
 
@@ -90,22 +92,23 @@ export const getChildren = (state) => {
 }
 
 // TODO no default parameter -> monomorphism
-export const openViewlet = async (state, id, focus = false) => {
-  console.assert(typeof id === 'string')
+export const openViewlet = async (state, moduleId, focus = false) => {
+  console.assert(typeof moduleId === 'string')
   // if (state.currentViewletId) {
   //   console.log('dispose current viewlet', state.currentViewletId)
   //   Viewlet.dispose(state.currentViewletId)
   // }
   const { currentViewletId, titleAreaHeight } = state
   const savePromise = SaveState.saveViewletState(currentViewletId)
-  state.currentViewletId = id
+  state.currentViewletId = moduleId
 
   const childDimensions = getContentDimensions(state, titleAreaHeight)
   const uid = state.uid
+
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
-      id,
+      id: moduleId,
       type: 0,
       // @ts-ignore
       uri: '',
@@ -130,12 +133,12 @@ export const openViewlet = async (state, id, focus = false) => {
     const activityBar = ViewletStates.getInstance(ViewletModuleId.ActivityBar)
     if (activityBar) {
       const oldState = activityBar.state
-      const newState = activityBar.factory.handleSideBarViewletChange(oldState, id)
+      const newState = activityBar.factory.handleSideBarViewletChange(oldState, moduleId)
       const extraCommands = ViewletManager.render(activityBar.factory, oldState, newState, newState.uid)
       activityBar.state = newState
       commands.push(...extraCommands)
     }
-    const actions = ViewletActions.getActions(id)
+    const actions = ViewletActions.getActions(moduleId)
     commands.push(['Viewlet.send', uid, 'setActions', actions])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     state.actions = actions

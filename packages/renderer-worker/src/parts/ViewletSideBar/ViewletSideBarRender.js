@@ -7,7 +7,7 @@ const renderTitle = {
     return false
   },
   apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetTitle, /* name */ newState.currentViewletId]
+    return [/* method */ RenderMethod.SetTitle, /* name */ newState.title || newState.currentViewletId]
   },
 }
 
