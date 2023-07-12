@@ -25,36 +25,6 @@ export const sharedProcessStartupPerformance = () => {
   // performance.eventLoopUtilization
 }
 
-export const getNodeStartupTiming = () => {
-  const {
-    name,
-    entryType,
-    startTime,
-    duration,
-    // @ts-ignore
-    nodeStart,
-    v8Start,
-    bootstrapComplete,
-    environment,
-    loopStart,
-    loopExit,
-    idleTime,
-  } = performance.nodeTiming
-  return {
-    name,
-    entryType,
-    startTime,
-    duration,
-    nodeStart,
-    v8Start,
-    bootstrapComplete,
-    environment,
-    loopStart,
-    loopExit,
-    idleTime,
-  }
-}
-
 export const sharedProcessMemoryUsage = () => {
   // TODO also print out number of watched files
   return Process.memoryUsage()

@@ -10,8 +10,6 @@ export const Commands = {
   crashSharedProcess: Crash.crashSharedProcess,
   createHeapSnapshot: HeapSnapshot.createHeapSnapshot,
   createProfile: CpuProfile.createProfile,
-  getNodeStartupTime: Developer.getNodeStartupTiming,
-  getNodeStartupTiming: Developer.getNodeStartupTiming,
   sharedProcessMemoryUsage: Developer.sharedProcessMemoryUsage,
   sharedProcessStartupPerformance: Developer.sharedProcessStartupPerformance,
 }
