@@ -131,7 +131,11 @@ export const setIncrementalEdits = (state, incrementalEdits) => {
     const { rowIndex, columnIndex, text } = incrementalEdit
     const $Row = $LayerText.children[rowIndex]
     const $Column = $Row.children[columnIndex]
-    $Column.firstChild.nodeValue = text
+    if ($Column.firstChild) {
+      $Column.firstChild.nodeValue = text
+    } else {
+      $Column.textContent = text
+    }
   }
 }
 
