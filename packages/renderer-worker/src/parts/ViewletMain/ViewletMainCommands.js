@@ -14,7 +14,6 @@ export const Commands = {
 export const CommandsWithSideEffects = {
   openUri: ViewletMainOpenUri.openUri,
   handleDrop: ViewletMain.handleDrop,
-  handleDropFilePath: ViewletMain.handleDropFilePath,
 }
 
 export const CommandsWithSideEffectsLazy = {
@@ -29,6 +28,7 @@ export const CommandsWithSideEffectsLazy = {
   focusLast: () => import('./ViewletMainFocusIndex.js'),
   focusNext: () => import('./ViewletMainFocusIndex.js'),
   focusPrevious: () => import('./ViewletMainFocusIndex.js'),
+  handleDropFilePath: () => import('./ViewletMainHandleDropFilePath.js'),
 }
 
 export const LazyCommands = {
