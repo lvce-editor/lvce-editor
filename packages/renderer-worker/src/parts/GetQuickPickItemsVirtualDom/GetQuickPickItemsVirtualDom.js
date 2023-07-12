@@ -59,12 +59,14 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
     ariaSetSize: setSize,
     childCount: 1,
   })
+  const parent = dom[0]
   if (isActive) {
     // @ts-ignore
-    dom[0].id = 'QuickPickItemActive'
+    parent.id = 'QuickPickItemActive'
+    parent.className += ' QuickPickItemActive'
   }
   if (icon) {
-    dom[0].childCount++
+    parent.childCount++
     dom.push({
       type: VirtualDomElements.I,
       className: `FileIcon FileIcon${icon}`,
