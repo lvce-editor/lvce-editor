@@ -11,7 +11,7 @@ export const getMessage = (resultCount, fileCount) => {
     return LocationStrings.oneResultInOneFile()
   }
   if (fileCount === 1) {
-    return LocationStrings.manyResultsInManyFiles(resultCount)
+    return LocationStrings.manyResultsInOneFile(resultCount)
   }
   return LocationStrings.manyResultsInManyFiles(resultCount, fileCount)
 }
