@@ -10,7 +10,11 @@ export const setProp = ($Element, key, value) => {
     case 'height':
     case 'left':
     case 'marginTop':
-      $Element.style[key] = `${value}px`
+      if (typeof value === 'number') {
+        $Element.style[key] = `${value}px`
+      } else {
+        $Element.style[key] = value
+      }
       break
     case 'style':
       throw new Error('style property is not supported')
