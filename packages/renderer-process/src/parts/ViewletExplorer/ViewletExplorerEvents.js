@@ -1,73 +1,11 @@
-import * as AllowedDragEffectType from '../AllowedDragEffectType/AllowedDragEffectType.js'
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as DataTransfer from '../DataTransfer/DataTransfer.js'
-import * as DropEffectType from '../DropEffectType/DropEffectType.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
-import * as GetFileHandlesFromDataTransferItems from '../GetFileHandlesFromDataTransferItems/GetFileHandlesFromDataTransferItems.js'
-import * as IsHtmlElement from '../IsHtmlElement/IsHtmlElement.js'
-import * as Platform from '../Platform/Platform.js'
 import * as ViewletExplorerFunctions from './ViewletExplorerFunctions.js'
 
 // TODO put drop into separate module and use executeCommand to call it
 
 // TODO drag and drop should be loaded on demand
-const getAllEntries = async (dataTransfer) => {
-  const topLevelEntries = Array.from(dataTransfer.items).map((item) => item.webkitGetAsEntry())
-  const allEntries = await new Promise((resolve, reject) => {
-    const result = []
-    let finished = 0
-    let total = 0
-
-    const fileCallback = (file) => {
-      finished++
-      result.push({
-        type: 1,
-        // path: entry.fullPath,
-        file,
-      })
-      if (finished === total) {
-        resolve(result)
-      }
-    }
-
-    const handleEntryFile = (entry) => {
-      entry.file(fileCallback)
-    }
-
-    const entriesCallback = (childEntries) => {
-      handleEntries(childEntries)
-      finished++
-      if (finished === total) {
-        resolve(result)
-      }
-    }
-
-    const handleEntryDirectory = (entry) => {
-      result.push({
-        type: 2,
-        path: entry.fullPath,
-      })
-      const dirReader = entry.createReader()
-      dirReader.readEntries(entriesCallback)
-    }
-
-    const handleEntries = (entries) => {
-      total += entries.length
-      for (const entry of entries) {
-        if (entry.isFile) {
-          handleEntryFile(entry)
-        } else if (entry.isDirectory) {
-          handleEntryDirectory(entry)
-        } else {
-        }
-      }
-    }
-
-    handleEntries(topLevelEntries)
-  })
-  return allEntries
-}
 
 export const handleFocus = (event) => {
   const { target, isTrusted } = event
@@ -82,67 +20,6 @@ export const handleFocus = (event) => {
 export const handleBlur = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletExplorerFunctions.handleBlur(uid)
-}
-
-/**
- *
- * @param {DragEvent} event
- */
-export const handleDragOver = (event) => {
-  Event.preventDefault(event)
-  const uid = ComponentUid.fromEvent(event)
-  const { dataTransfer, clientX, clientY } = event
-  DataTransfer.setEffectAllowed(dataTransfer, AllowedDragEffectType.CopyMove)
-  DataTransfer.setDropEffect(dataTransfer, DropEffectType.Copy)
-  ViewletExplorerFunctions.handleDragOver(uid, clientX, clientY)
-}
-
-/**
- * @param {DragEvent} event
- */
-export const handleDragStart = (event) => {
-  const { target, dataTransfer } = event
-  if (!IsHtmlElement.isHtmlElement(target)) {
-    return
-  }
-  const filePath = target.title
-  const fileName = target.textContent
-  DataTransfer.setEffectAllowed(dataTransfer, AllowedDragEffectType.CopyMove)
-  DataTransfer.setFilePath(dataTransfer, filePath, fileName)
-}
-
-const getPath = (file) => {
-  return file.path
-}
-
-const getFilePaths = (dataTransfer) => {
-  const { files } = dataTransfer
-  if (Platform.isElectron()) {
-    return files.map(getPath)
-  }
-  const filePaths = DataTransfer.getFilePaths(dataTransfer)
-  return filePaths
-}
-
-/**
- *
- * @param {DragEvent} event
- */
-export const handleDrop = async (event) => {
-  Event.preventDefault(event)
-  Event.stopPropagation(event)
-  const uid = ComponentUid.fromEvent(event)
-  const { clientX, clientY, dataTransfer } = event
-  const { items } = dataTransfer
-  const filePaths = getFilePaths(dataTransfer)
-  if (filePaths.length > 0) {
-    ViewletExplorerFunctions.handleDrop(uid, clientX, clientY, filePaths)
-    return
-  }
-  // unfortunately, DataTransferItem cannot be transferred to web worker
-  // therefore the file system handles are sent to the web worker
-  const handles = await GetFileHandlesFromDataTransferItems.getFileHandles(items)
-  ViewletExplorerFunctions.handleDrop(uid, clientX, clientY, handles)
 }
 
 export const handleClick = (event) => {
@@ -190,4 +67,5 @@ export const handleEditingInput = (event) => {
 }
 
 export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../DragEvents/DragEvents.js'
 export * from '../VirtualListEvents/VirtualListEvents.js'

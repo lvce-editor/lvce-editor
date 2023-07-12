@@ -5,6 +5,7 @@ export const Commands = {
   focus: ViewletMain.focus,
   handleDragEnd: ViewletMain.handleDragEnd,
   handleDragOver: ViewletMain.handleDragOver,
+  handleDragLeave: ViewletMain.handleDragLeave,
   handleTabContextMenu: ViewletMain.handleTabContextMenu,
   openBackgroundTab: ViewletMain.openBackgroundTab,
   save: ViewletMain.save,

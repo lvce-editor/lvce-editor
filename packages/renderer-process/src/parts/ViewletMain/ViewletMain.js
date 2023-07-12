@@ -30,6 +30,7 @@ export const attachEvents = (state) => {
   $Viewlet.ondrop = ViewletMainEvents.handleDrop
   $Viewlet.ondragover = ViewletMainEvents.handleDragOver
   $Viewlet.ondragend = ViewletMainEvents.handleDragEnd
+  $Viewlet.ondragleave = ViewletMainEvents.handleDragLeave
 }
 
 export const dispose = (state) => {}

@@ -537,6 +537,11 @@ export const handleDragEnd = async (state, x, y) => {
   }
 }
 
+export const handleDragLeave = (state, x, y) => {
+  // TODO issue with drag leave event firing for child components
+  return state
+}
+
 export const handleDragOver = (state, eventX, eventY) => {
   const { x, y, width, height, tabHeight } = state
   const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + tabHeight, width, height - tabHeight, eventX, eventY)
