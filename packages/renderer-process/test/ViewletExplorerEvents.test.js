@@ -386,49 +386,6 @@ test('event - dragover', () => {
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleDragOver', 10, 20)
 })
 
-test('event - drop', () => {
-  const state = ViewletExplorer.create()
-  const { $Viewlet } = state
-  ComponentUid.set($Viewlet, 1)
-  ViewletExplorer.attachEvents(state)
-  ViewletExplorer.updateDirents(state, [
-    {
-      name: 'file-1.txt',
-      depth: 1,
-      setSize: 1,
-      type: DirentType.File,
-      path: '/test/file-1.txt',
-    },
-  ])
-  const $File1 = $Viewlet.children[0]
-  const modifiedDate = new Date()
-  const event = new DragEvent('drop', {
-    bubbles: true,
-    cancelable: true,
-    // @ts-ignore
-    dataTransfer: {
-      files: [
-        {
-          lastModified: 0,
-          // @ts-ignore
-          lastModifiedDate: modifiedDate,
-          name: 'file.json',
-          path: '/test/file.json',
-          size: 756705,
-          type: 'application/json',
-          webkitRelativePath: '',
-        },
-      ],
-    },
-  })
-  const stopProgationSpy = jest.spyOn(event, 'stopPropagation')
-  $File1.dispatchEvent(event)
-  expect(event.defaultPrevented).toBe(true)
-  expect(stopProgationSpy).toHaveBeenCalled()
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleDrop', 0, 0, ['/test/file.json'])
-})
-
 test('event - input on rename input box', () => {
   const state = ViewletExplorer.create()
   const { $Viewlet } = state

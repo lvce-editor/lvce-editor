@@ -39,7 +39,7 @@
 .QuickPickItems {
   outline: 0;
   margin: 0;
-  padding: 0;
+  padding: 0 5px;
   overflow: hidden;
   contain: strict;
   background: var(--QuickPickBackground);
@@ -70,6 +70,7 @@
   contain: strict;
   gap: 4px;
   line-height: 22px;
+  border-radius: 3px;
 }
 
 .QuickPickItem:hover {
@@ -77,14 +78,14 @@
   color: var(--ListHoverForeground);
 }
 
-/* TODO use classname instead of id */
-#QuickPickItemActive {
-  color: var(--ListActiveSelectionForeground);
-  background: var(--ListActiveSelectionBackground);
+.QuickPickItemActive {
+  /* TODO avoid using important */
+  color: var(--ListActiveSelectionForeground) !important;
+  background: var(--ListActiveSelectionBackground) !important;
 }
 
 /* TODO avoid nesting */
-#QuickPickItemActive .QuickPickItemDescription {
+.QuickPickItemActive .QuickPickItemDescription {
   color: color-mix(in oklab, var(--ListActiveSelectionForeground), var(--ListActiveSelectionBackground) 30%);
 }
 

@@ -163,6 +163,7 @@ const handleDropFilePathSplit = async (state, eventX, eventY, filePath, splitDir
 }
 
 export const handleDropFilePath = async (state, eventX, eventY, filePath) => {
+  console.log({ filePath })
   Assert.object(state)
   Assert.number(eventX)
   Assert.number(eventY)

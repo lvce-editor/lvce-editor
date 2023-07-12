@@ -1,19 +1,24 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const defaultIndent = 1
+
 const getItemVirtualDom = (item) => {
-  const { posInSet, setSize, title, level, icon, label } = item
+  const { posInSet, setSize, icon, name, path, depth } = item
   return [
     {
       type: VirtualDomElements.Div,
       role: 'treeitem',
       className: 'TreeItem',
       draggable: true,
-      title,
-      ariaPosInset: posInSet,
+      title: path,
+      ariaPosInSet: posInSet,
       ariaSetSize: setSize,
-      ariaLevel: level,
+      ariaLevel: depth,
       childCount: 2,
+      paddingLeft: `${depth * defaultIndent}rem`,
+      ariaLabel: name,
+      ariaDescription: '',
     },
     {
       type: VirtualDomElements.Div,
@@ -25,7 +30,7 @@ const getItemVirtualDom = (item) => {
       className: 'Label',
       childCount: 1,
     },
-    text(label),
+    text(name),
   ]
 }
 

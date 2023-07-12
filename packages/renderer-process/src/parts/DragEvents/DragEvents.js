@@ -41,7 +41,6 @@ export const handleDrop = (event) => {
   Event.preventDefault(event)
   const { dataTransfer, clientX, clientY } = event
   const { files } = dataTransfer
-  const item = dataTransfer.items[0]
   const uid = ComponentUid.fromEvent(event)
   if (files.length > 0) {
     return DragFunctions.handleDropFiles(uid, files)
