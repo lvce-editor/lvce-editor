@@ -62,20 +62,6 @@ export const dispose = (state) => {
   Focus.removeAdditionalFocus('editorCompletions')
 }
 
-export const setFocusedIndex = (state, oldIndex, newIndex) => {
-  const { $ListItems } = state
-  if (oldIndex >= 0) {
-    const $OldItem = $ListItems.children[oldIndex]
-    $OldItem.classList.remove('Focused')
-  }
-  if (newIndex >= 0) {
-    const $NewItem = $ListItems.children[newIndex]
-    $NewItem.classList.add('Focused')
-  }
-  Focus.setAdditionalFocus('editorCompletions')
-  // state.$EditorInput.setAttribute('aria-activedescendant', $NewItem.id) // TODO use idl once supported
-}
-
 export const showLoading = (state, x, y) => {
   const { $Viewlet } = state
   SetBounds.setXAndYTransform($Viewlet, x, y)
