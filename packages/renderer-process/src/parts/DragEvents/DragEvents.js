@@ -41,15 +41,12 @@ export const handleDrop = (event) => {
   Event.preventDefault(event)
   const { dataTransfer, clientX, clientY } = event
   const { files } = dataTransfer
-  const item = dataTransfer.items[0]
   const uid = ComponentUid.fromEvent(event)
   if (files.length > 0) {
-    DragFunctions.handleDropFiles(uid, files)
-    return
+    return DragFunctions.handleDropFiles(uid, files)
   }
   const filePath = DataTransfer.getFilePath(dataTransfer)
   if (filePath) {
-    DragFunctions.handleDropFilePath(uid, clientX, clientY, filePath)
-    return
+    return DragFunctions.handleDropFilePath(uid, clientX, clientY, filePath)
   }
 }
