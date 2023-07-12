@@ -73,16 +73,13 @@ export const handleTabsContextMenu = (event) => {
 }
 
 export const handlePointerOver = (event) => {
-  const { target } = event
-  const index = getIndex(target)
+  const { clientX, clientY } = event
   const uid = getUid()
-  ViewletMainTabsFunctions.handleTabsPointerOver(uid, index)
+  ViewletMainTabsFunctions.handleTabsPointerOver(uid, clientX, clientY)
 }
 
 export const handlePointerOut = (event) => {
-  const { target, relatedTarget } = event
-  const oldIndex = getIndex(target)
-  const newIndex = getIndex(relatedTarget)
+  const { clientX, clientY } = event
   const uid = getUid()
-  ViewletMainTabsFunctions.handleTabsPointerOut(uid, oldIndex, newIndex)
+  ViewletMainTabsFunctions.handleTabsPointerOut(uid, clientX, clientY)
 }
