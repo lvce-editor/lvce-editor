@@ -82,7 +82,12 @@ export const getQuickPickItemsVirtualDom = (visibleItems) => {
     return [
       {
         type: VirtualDomElements.Div,
-        className: 'QuickPickStatus',
+        className: 'QuickPickItem QuickPickItemActive QuickPickStatus',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'Label',
         childCount: 1,
       },
       text('No Results'),
