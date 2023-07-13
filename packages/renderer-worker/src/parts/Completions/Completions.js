@@ -12,14 +12,16 @@ export const getCompletions = async (editor) => {
   return completions
 }
 
-export const resolveCompletion = async (editor, name) => {
+// TODO don't send unnecessary parts of completion item like matches
+export const resolveCompletion = async (editor, name, completionItem) => {
   try {
     Assert.object(editor)
     Assert.string(name)
+    Assert.object(completionItem)
     const rowIndex = editor.selections[0]
     const columnIndex = editor.selections[1]
     const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
-    const resolvedCompletionItem = await ExtensionHostCompletion.executeResolveCompletionItem(editor, offset, name)
+    const resolvedCompletionItem = await ExtensionHostCompletion.executeResolveCompletionItem(editor, offset, name, completionItem)
     return resolvedCompletionItem
   } catch {
     return undefined

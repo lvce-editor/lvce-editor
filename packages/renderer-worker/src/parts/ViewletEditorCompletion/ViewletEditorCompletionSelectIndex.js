@@ -12,7 +12,7 @@ const getEditor = () => {
 const getEdits = async (state, editor, completionItem) => {
   const { leadingWord, uid } = state
   const word = completionItem.label
-  const resolvedItem = await Completions.resolveCompletion(editor, word)
+  const resolvedItem = await Completions.resolveCompletion(editor, word, completionItem)
   const inserted = resolvedItem ? resolvedItem.snippet : word
   // TODO type and dispose commands should be sent to renderer process at the same time
   const { selections } = editor
