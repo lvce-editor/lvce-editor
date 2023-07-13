@@ -97,7 +97,7 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   {
     "name": "builtin.language-basics-json",
@@ -202,7 +202,7 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "0.0.12"
+    "version": "0.0.13"
   },
   {
     "name": "builtin.language-basics-vue",
@@ -237,7 +237,7 @@
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   {
     "name": "builtin.theme-atom-one-dark",
