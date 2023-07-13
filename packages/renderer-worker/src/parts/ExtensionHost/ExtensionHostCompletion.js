@@ -22,12 +22,12 @@ const combineResultsResolve = (items) => {
   return items[0] ?? undefined
 }
 
-export const executeResolveCompletionItem = (editor, offset, completionItem) => {
+export const executeResolveCompletionItem = (editor, offset, name, completionItem) => {
   return ExtensionHostEditor.execute({
     editor,
     event: ExtensionHostActivationEvent.OnCompletion,
     method: ExtensionHostCommandType.CompletionResolveExecute,
-    args: [offset, completionItem],
+    args: [offset, name, completionItem],
     noProviderFoundMessage: 'no completion provider found',
     noProviderFoundResult: [],
     combineResults: combineResultsResolve,
