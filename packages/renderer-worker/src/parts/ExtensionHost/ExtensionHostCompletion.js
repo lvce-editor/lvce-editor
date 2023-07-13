@@ -18,6 +18,10 @@ export const executeCompletionProvider = (editor, offset) => {
   })
 }
 
+const combineResultsResolve = (items) => {
+  return items[0] ?? undefined
+}
+
 export const executeResolveCompletionItem = (editor, offset, completionItem) => {
   return ExtensionHostEditor.execute({
     editor,
@@ -26,6 +30,6 @@ export const executeResolveCompletionItem = (editor, offset, completionItem) => 
     args: [offset, completionItem],
     noProviderFoundMessage: 'no completion provider found',
     noProviderFoundResult: [],
-    combineResults,
+    combineResults: combineResultsResolve,
   })
 }
