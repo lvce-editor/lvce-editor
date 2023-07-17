@@ -1,3 +1,4 @@
+import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.js'
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
 import * as TokenizePlainText from '../TokenizePlainText/TokenizePlainText.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
@@ -19,7 +20,7 @@ const getTokensViewportEmbedded = (langageId, lines, lineCache, linesWithEmbed) 
           langageId,
           embeddedTokenizer.tokenizeLine,
           partialLine,
-          topContext || embeddedTokenizer.initialLineState,
+          topContext || GetInitialLineState.getInitialLineState(embeddedTokenizer.initialLineState),
           embeddedTokenizer.hasArrayReturn
         )
         topContext = embedResult
@@ -72,7 +73,7 @@ export const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   const embeddedResults = []
   const linesWithEmbed = []
   for (let i = tokenizeStartIndex; i < tokenizeEndIndex; i++) {
-    const lineState = i === 0 ? initialLineState : lineCache[i]
+    const lineState = i === 0 ? GetInitialLineState.getInitialLineState(initialLineState) : lineCache[i]
     const line = lines[i]
     const result = SafeTokenizeLine.safeTokenizeLine(languageId, tokenizeLine, line, lineState, hasArrayReturn)
     // TODO if lineCacheEnd matches the one before, skip tokenizing lines after

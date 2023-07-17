@@ -1,4 +1,5 @@
 import * as EscapeHtml from '../EscapeHtml/EscapeHtml.js'
+import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.js'
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
@@ -41,7 +42,7 @@ const getLineInfosHtml = (lineInfos) => {
 const getLineInfos = (lines, tokenizer, languageId) => {
   const lineInfos = []
   const { tokenizeLine, initialLineState, hasArrayReturn, TokenMap } = tokenizer
-  let currentLineState = initialLineState
+  let currentLineState = GetInitialLineState.getInitialLineState(initialLineState)
   for (const line of lines) {
     const result = SafeTokenizeLine.safeTokenizeLine(languageId, tokenizeLine, line, currentLineState, hasArrayReturn)
     const { tokens } = result
