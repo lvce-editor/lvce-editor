@@ -59,3 +59,21 @@ test('element with disallowed attribute', () => {
     },
   ])
 })
+
+test('nested element with id', () => {
+  const html = '<p>some text<a href="#">link</a></p>'
+  const allowedAttributes = ['href']
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
+    {
+      type: VirtualDomElements.P,
+      childCount: 2,
+    },
+    text('some text'),
+    {
+      type: VirtualDomElements.A,
+      childCount: 1,
+      href: '#',
+    },
+    text('link'),
+  ])
+})
