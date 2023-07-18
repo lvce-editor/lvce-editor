@@ -6,6 +6,7 @@ import * as EagerLoadedCss from '../EagerLoadedCss/EagerLoadedCss.js'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
+import { pathToFileURL } from 'url'
 
 const isEagerLoaded = (cssDeclaration) => {
   for (const eagerLoaded of EagerLoadedCss.eagerLoadedCss) {
@@ -56,7 +57,8 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
     })
     const cssDeclarationFiles = await GetCssDeclarationFiles.getCssDeclarationFiles(cachePath)
     for (const file of cssDeclarationFiles) {
-      const module = await import(file)
+      const url = pathToFileURL(file).toString()
+      const module = await import(url)
       const Css = module.Css
       if (Css) {
         const content = await readFile(file, 'utf8')
