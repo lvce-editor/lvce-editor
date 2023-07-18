@@ -5,6 +5,16 @@ export const getElementTag = (type) => {
   switch (type) {
     case VirtualDomElements.H1:
       return ElementTag.H1
+    case VirtualDomElements.H2:
+      return ElementTag.H2
+    case VirtualDomElements.H3:
+      return ElementTag.H3
+    case VirtualDomElements.H4:
+      return ElementTag.H4
+    case VirtualDomElements.H5:
+      return ElementTag.H5
+    case VirtualDomElements.H6:
+      return ElementTag.H6
     case VirtualDomElements.Div:
       return ElementTag.Div
     case VirtualDomElements.Kbd:
