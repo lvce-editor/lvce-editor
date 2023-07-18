@@ -1,9 +1,11 @@
+import * as Assert from '../Assert/Assert.js'
 import * as GetVirtualDomTag from '../GetVirtualDomTag/GetVirtualDomTag.js'
 import * as HtmlTokenType from '../HtmlTokenType/HtmlTokenType.js'
 import * as TokenizeHtml from '../TokenizeHtml/TokenizeHtml.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const parseHtml = (html) => {
+  Assert.string(html)
   const tokens = TokenizeHtml.tokenizeHtml(html)
   const dom = []
   const root = {

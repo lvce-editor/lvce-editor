@@ -1,5 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as SetInnerHtml from '../SetInnerHtml/SetInnerHtml.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletExtensionDetailEvents from './ViewletExtensionDetailEvents.js'
 
 export const create = () => {
@@ -58,6 +59,11 @@ export const setName = (state, name) => {
 export const setReadmeHtml = (state, sanitizedHtml) => {
   const { $ReadmeHtml } = state
   SetInnerHtml.setInnerHtml($ReadmeHtml, sanitizedHtml)
+}
+
+export const setReadmeDom = (state, dom) => {
+  const { $ReadmeHtml } = state
+  VirtualDom.renderInto($ReadmeHtml, dom)
 }
 
 export const setIconSrc = (state, src) => {
