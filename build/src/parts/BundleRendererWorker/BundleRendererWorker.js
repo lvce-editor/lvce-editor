@@ -17,6 +17,9 @@ const isEagerLoaded = (cssDeclaration) => {
 }
 
 const getFilteredCssDeclarations = (cssDeclarations) => {
+  if (typeof cssDeclarations === 'string') {
+    cssDeclarations = [cssDeclarations]
+  }
   const filtered = []
   for (const cssDeclaration of cssDeclarations) {
     if (!isEagerLoaded(cssDeclaration)) {
