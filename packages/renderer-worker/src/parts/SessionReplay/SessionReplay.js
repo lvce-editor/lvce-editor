@@ -8,21 +8,11 @@ import * as Assert from '../Assert/Assert.js'
 import { VError } from '../VError/VError.js'
 import * as Json from '../Json/Json.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
-
-export const state = {
-  sessionId: '',
-}
-
-const getSessionId = () => {
-  if (!state.sessionId) {
-    state.sessionId = `session-${new Date().toISOString()}`
-  }
-  return state.sessionId
-}
+import * as GetSessionId from '../GetSessionId/GetSessionId.js'
 
 export const handleMessage = async (source, timestamp, message) => {
   try {
-    const sessionId = getSessionId()
+    const sessionId = GetSessionId.getSessionId()
     await IndexedDb.saveValue(sessionId, {
       source,
       timestamp,
@@ -42,12 +32,12 @@ export const handleMessage = async (source, timestamp, message) => {
 
 const addSearchParam = (href, key, value) => {
   const parsedUrl = new URL(href)
-  parsedUrl.searchParams.set('replayId', state.sessionId)
+  parsedUrl.searchParams.set('replayId', GetSessionId.getSessionId())
   return parsedUrl.toString()
 }
 
 export const replayCurrentSession = async () => {
-  if (!state.sessionId) {
+  if (!GetSessionId.state.sessionId) {
     throw new VError(`session replay is disabled in settings`)
   }
   // TODO
@@ -56,12 +46,12 @@ export const replayCurrentSession = async () => {
   // 3. replay ui with commands from indexeddb
 
   const href = await Location.getHref()
-  const replayUrl = addSearchParam(href, 'replayId', state.sessionId)
+  const replayUrl = addSearchParam(href, 'replayId', GetSessionId.getSessionId())
   await Command.execute('Open.openUrl', /* url */ replayUrl)
 }
 
 export const getSessionContent = async () => {
-  const sessionId = state.sessionId
+  const sessionId = GetSessionId.getSessionId()
   const events = await getEvents(sessionId)
   return Json.stringify(events)
 }
@@ -124,10 +114,7 @@ export const replaySession = async (sessionId) => {
   }
   let now = 0
   for (const event of events) {
-    if (
-      event.source === 'to-renderer-process' &&
-      !DONT_REPLAY.has(event.method)
-    ) {
+    if (event.source === 'to-renderer-process' && !DONT_REPLAY.has(event.method)) {
       // console.log(event.timestamp)
       const timeDifference = event.timestamp - now
       await new Promise((resolve, reject) => {
@@ -146,11 +133,7 @@ export const replaySession = async (sessionId) => {
 export const getEvents = async (sessionId) => {
   try {
     const timestamp = Timestamp.now()
-    const events = await IndexedDb.getValuesByIndexName(
-      'session',
-      'sessionId',
-      sessionId
-    )
+    const events = await IndexedDb.getValuesByIndexName('session', 'sessionId', sessionId)
     return events
   } catch (error) {
     throw new VError(error, `failed to get session replay events`)
@@ -159,14 +142,10 @@ export const getEvents = async (sessionId) => {
 
 export const downloadSession = async () => {
   try {
-    const sessionId = getSessionId()
+    const sessionId = GetSessionId.getSessionId()
     const events = await getEvents(sessionId)
     const fileName = `${sessionId}.json`
-    await Command.execute(
-      /* Download.downloadJson */ 'Download.downloadJson',
-      /* json */ events,
-      /* fileName */ fileName
-    )
+    await Command.execute(/* Download.downloadJson */ 'Download.downloadJson', /* json */ events, /* fileName */ fileName)
   } catch (error) {
     throw new VError(error, 'Failed to download session')
   }
@@ -208,21 +187,10 @@ const wrapIpc = (ipc, name, getData) => {
 }
 
 export const startRecording = () => {
-  RendererProcess.state.ipc = wrapIpc(
-    RendererProcess.state.ipc,
-    'renderer-process',
-    (event) => event.data
-  )
-  SharedProcess.state.ipc = wrapIpc(
-    SharedProcess.state.ipc,
-    'shared-process',
-    (event) => event
-  )
+  RendererProcess.state.ipc = wrapIpc(RendererProcess.state.ipc, 'renderer-process', (event) => event.data)
+  SharedProcess.state.ipc = wrapIpc(SharedProcess.state.ipc, 'shared-process', (event) => event)
 }
 
 export const openSession = async () => {
-  await Command.execute(
-    /* Main.openUri */ 'Main.openUri',
-    /* uri */ 'app://session.json'
-  )
+  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ 'app://session.json')
 }
