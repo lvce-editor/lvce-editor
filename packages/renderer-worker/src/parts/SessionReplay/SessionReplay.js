@@ -71,11 +71,10 @@ const DONT_REPLAY = new Set(['Open.openUrl', 'Download.downloadFile'])
 export const replaySession = async (sessionId) => {
   const events = await getEvents(sessionId)
   const originalIpc = RendererProcess.state.ipc
-  const originalSend = originalIpc.send
-  const originalOnMessage = originalIpc.onmessage
+  const originalSend = originalIpc.send.bind(originalIpc)
+  const originalOnMessage = originalIpc.onmessage.bind(originalIpc)
   const wrappedSend = () => {}
-  const wrappedOnMessage = async (event) => {
-    const data = event.data
+  const wrappedOnMessage = async (data) => {
     if (typeof data === 'string') {
       return
     }
@@ -124,10 +123,7 @@ export const replaySession = async (sessionId) => {
   }
   let now = 0
   for (const event of events) {
-    if (
-      event.source === 'to-renderer-process' &&
-      !DONT_REPLAY.has(event.method)
-    ) {
+    if (event.source === 'to-renderer-process' && !DONT_REPLAY.has(event.method)) {
       // console.log(event.timestamp)
       const timeDifference = event.timestamp - now
       await new Promise((resolve, reject) => {
@@ -146,11 +142,7 @@ export const replaySession = async (sessionId) => {
 export const getEvents = async (sessionId) => {
   try {
     const timestamp = Timestamp.now()
-    const events = await IndexedDb.getValuesByIndexName(
-      'session',
-      'sessionId',
-      sessionId
-    )
+    const events = await IndexedDb.getValuesByIndexName('session', 'sessionId', sessionId)
     return events
   } catch (error) {
     throw new VError(error, `failed to get session replay events`)
@@ -162,11 +154,7 @@ export const downloadSession = async () => {
     const sessionId = getSessionId()
     const events = await getEvents(sessionId)
     const fileName = `${sessionId}.json`
-    await Command.execute(
-      /* Download.downloadJson */ 'Download.downloadJson',
-      /* json */ events,
-      /* fileName */ fileName
-    )
+    await Command.execute(/* Download.downloadJson */ 'Download.downloadJson', /* json */ events, /* fileName */ fileName)
   } catch (error) {
     throw new VError(error, 'Failed to download session')
   }
@@ -208,21 +196,10 @@ const wrapIpc = (ipc, name, getData) => {
 }
 
 export const startRecording = () => {
-  RendererProcess.state.ipc = wrapIpc(
-    RendererProcess.state.ipc,
-    'renderer-process',
-    (event) => event.data
-  )
-  SharedProcess.state.ipc = wrapIpc(
-    SharedProcess.state.ipc,
-    'shared-process',
-    (event) => event
-  )
+  RendererProcess.state.ipc = wrapIpc(RendererProcess.state.ipc, 'renderer-process', (event) => event.data)
+  SharedProcess.state.ipc = wrapIpc(SharedProcess.state.ipc, 'shared-process', (event) => event)
 }
 
 export const openSession = async () => {
-  await Command.execute(
-    /* Main.openUri */ 'Main.openUri',
-    /* uri */ 'app://session.json'
-  )
+  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ 'app://session.json')
 }
