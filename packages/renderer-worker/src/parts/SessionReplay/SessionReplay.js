@@ -1,14 +1,13 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as GetSessionId from '../GetSessionId/GetSessionId.js'
 import * as IndexedDb from '../IndexedDb/IndexedDb.js'
+import * as Json from '../Json/Json.js'
 import * as Location from '../Location/Location.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as Assert from '../Assert/Assert.js'
-import { VError } from '../VError/VError.js'
-import * as Json from '../Json/Json.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
-import * as GetSessionId from '../GetSessionId/GetSessionId.js'
+import { VError } from '../VError/VError.js'
 
 export const handleMessage = async (source, timestamp, message) => {
   try {
@@ -61,11 +60,10 @@ const DONT_REPLAY = new Set(['Open.openUrl', 'Download.downloadFile'])
 export const replaySession = async (sessionId) => {
   const events = await getEvents(sessionId)
   const originalIpc = RendererProcess.state.ipc
-  const originalSend = originalIpc.send
-  const originalOnMessage = originalIpc.onmessage
+  const originalSend = originalIpc.send.bind(originalIpc)
+  const originalOnMessage = originalIpc.onmessage.bind(originalIpc)
   const wrappedSend = () => {}
-  const wrappedOnMessage = async (event) => {
-    const data = event.data
+  const wrappedOnMessage = async (data) => {
     if (typeof data === 'string') {
       return
     }
