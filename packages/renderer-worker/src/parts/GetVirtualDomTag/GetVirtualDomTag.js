@@ -15,6 +15,52 @@ export const getVirtualDomTag = (text) => {
       return VirtualDomElements.H5
     case ElementTags.Div:
       return VirtualDomElements.Div
+    case ElementTags.Article:
+      return VirtualDomElements.Article
+    case ElementTags.Aside:
+      return VirtualDomElements.Aside
+    case ElementTags.Footer:
+      return VirtualDomElements.Footer
+    case ElementTags.Header:
+      return VirtualDomElements.Header
+    case ElementTags.Nav:
+      return VirtualDomElements.Nav
+    case ElementTags.Section:
+      return VirtualDomElements.Section
+    case ElementTags.Search:
+      return VirtualDomElements.Search
+    case ElementTags.Dd:
+      return VirtualDomElements.Dd
+    case ElementTags.Dl:
+      return VirtualDomElements.Dl
+    case ElementTags.Figcaption:
+      return VirtualDomElements.Figcaption
+    case ElementTags.Figure:
+      return VirtualDomElements.Figure
+    case ElementTags.Hr:
+      return VirtualDomElements.Hr
+    case ElementTags.Li:
+      return VirtualDomElements.Li
+    case ElementTags.Ol:
+      return VirtualDomElements.Ol
+    case ElementTags.P:
+      return VirtualDomElements.P
+    case ElementTags.Pre:
+      return VirtualDomElements.Pre
+    case ElementTags.A:
+      return VirtualDomElements.A
+    case ElementTags.Abbr:
+      return VirtualDomElements.Abbr
+    case ElementTags.Br:
+      return VirtualDomElements.Br
+    case ElementTags.Cite:
+      return VirtualDomElements.Cite
+    case ElementTags.Data:
+      return VirtualDomElements.Data
+    case ElementTags.Time:
+      return VirtualDomElements.Time
+    case ElementTags.Tfoot:
+      return VirtualDomElements.Tfoot
     default:
       return VirtualDomElements.Div
   }
