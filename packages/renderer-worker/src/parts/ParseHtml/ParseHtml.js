@@ -1,5 +1,6 @@
 import * as GetVirtualDomTag from '../GetVirtualDomTag/GetVirtualDomTag.js'
 import * as HtmlTokenType from '../HtmlTokenType/HtmlTokenType.js'
+import * as IsSelfClosingTag from '../IsSelfClosingTag/IsSelfClosingTag.js'
 import * as TokenizeHtml from '../TokenizeHtml/TokenizeHtml.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as Assert from '../Assert/Assert.js'
@@ -14,6 +15,7 @@ export const parseHtml = (html, allowedAttributes) => {
     childCount: 0,
   }
   let current = root
+  const stack = [root]
   let attributeName = ''
   for (const token of tokens) {
     switch (token.type) {
@@ -24,8 +26,13 @@ export const parseHtml = (html, allowedAttributes) => {
           childCount: 0,
         }
         dom.push(current)
+        if (!IsSelfClosingTag.isSelfClosingTag(token.text)) {
+          stack.push(current)
+        }
         break
       case HtmlTokenType.TagNameEnd:
+        stack.pop()
+        current = stack.at(-1) || root
         break
       case HtmlTokenType.Content:
         current.childCount++

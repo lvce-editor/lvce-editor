@@ -49,6 +49,48 @@ test('element with with image', () => {
   ])
 })
 
+test('element with two child elements', () => {
+  const html = `<div><div></div><div></div></div>`
+  const allowedAttributes = []
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
+    {
+      type: VirtualDomElements.Div,
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+  ])
+})
+
+test('deeply nested tags', () => {
+  const html = `<div><div><div></div></div><div></div></div>`
+  const allowedAttributes = []
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
+    {
+      type: VirtualDomElements.Div,
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+  ])
+})
+
 test('element with disallowed attribute', () => {
   const html = '<h1 onerror="alert(1)"></h1>'
   const allowedAttributes = []
