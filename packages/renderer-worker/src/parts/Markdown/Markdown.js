@@ -1,7 +1,8 @@
 import { marked } from '../../../../../static/js/marked.js'
 
-export const toHtml = (html, { baseUrl = '' } = {}) => {
-  return marked(html, {
+export const toHtml = (markdown, { baseUrl = '' } = {}) => {
+  const html = marked(markdown, {
     baseUrl,
   })
+  return html
 }
