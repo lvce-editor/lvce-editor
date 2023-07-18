@@ -5,6 +5,8 @@ const GetWindowById = require('../GetWindowById/GetWindowById.cjs')
 const Logger = require('../Logger/Logger.cjs')
 const Platform = require('../Platform/Platform.cjs')
 const Preferences = require('../Preferences/Preferences.cjs')
+const Performance = require('../Performance/Performance.cjs')
+const PerformanceMarkerType = require('../PerformanceMarkerType/PerformanceMarkerType.cjs')
 
 exports.wrapWindowCommand =
   (fn) =>
@@ -69,6 +71,39 @@ exports.findById = (windowId) => {
 
 /**
  *
+ * @returns {globalThis.Electron.BrowserWindowConstructorOptions}
+ */
+const getBrowserWindowOptions = ({ x, y, width, height, titleBarStyle, titleBarOverlay, frame, session, background }) => {
+  // const windowControlsOverlayEnabled = Platform.isWindows
+  // const titleBarOptions = getTitleBarOptions(windowControlsOverlayEnabled)
+  const icon = GetIcon.getIcon()
+  return {
+    x,
+    y,
+    width,
+    height,
+    autoHideMenuBar: true,
+    titleBarStyle,
+    titleBarOverlay,
+    frame,
+    webPreferences: {
+      enableWebSQL: false,
+      spellcheck: false,
+      sandbox: true,
+      contextIsolation: true,
+      v8CacheOptions: 'bypassHeatCheck', // TODO this is what vscode uses, but it doesn't work properly in electron https://github.com/electron/electron/issues/27075
+      preload: Platform.getPreloadUrl(),
+      session,
+      additionalArguments: ['--lvce-window-kind'],
+    },
+    backgroundColor: background,
+    show: false,
+    icon,
+  }
+}
+
+/**
+ *
  * @param {{
  *  x:number,
  *  y:number,
@@ -97,32 +132,20 @@ exports.create = ({
   frame,
   zoomLevel = 0,
 }) => {
-  // const windowControlsOverlayEnabled = Platform.isWindows
-  // const titleBarOptions = getTitleBarOptions(windowControlsOverlayEnabled)
-  const icon = GetIcon.getIcon()
-  const browserWindow = new Electron.BrowserWindow({
+  const options = getBrowserWindowOptions({
     x,
     y,
     width,
     height,
-    autoHideMenuBar: true,
+    background,
+    session,
     titleBarStyle,
     titleBarOverlay,
     frame,
-    webPreferences: {
-      enableWebSQL: false,
-      spellcheck: false,
-      sandbox: true,
-      contextIsolation: true,
-      v8CacheOptions: 'bypassHeatCheck', // TODO this is what vscode uses, but it doesn't work properly in electron https://github.com/electron/electron/issues/27075
-      preload: Platform.getPreloadUrl(),
-      session,
-      additionalArguments: ['--lvce-window-kind'],
-    },
-    backgroundColor: background,
-    show: false,
-    icon,
   })
+  Performance.mark(PerformanceMarkerType.WillCreateCodeWindow)
+  const browserWindow = new Electron.BrowserWindow(options)
+  Performance.mark(PerformanceMarkerType.DidCreateCodeWindow)
   const handleReadyToShow = () => {
     // due to electron bug, zoom level needs to be set here,
     // cannot be set when creating the browser window
