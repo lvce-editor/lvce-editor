@@ -28,7 +28,6 @@ const toSorted = (array) => {
 
 export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pathPrefix = '' }) => {
   try {
-    console.log({ outDir })
     let css = ``
     const cssLibNormalize = Path.join(Root.root, 'static', 'lib-css', 'modern-normalize.css')
     if (additionalCss) {
@@ -63,7 +62,6 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
       css += `/* ${part} */\n`
       css += `/*************/\n`
       css += content
-      console.log('exists', existsSync(absolutePath), absolutePath)
     }
 
     await Replace.replace({
