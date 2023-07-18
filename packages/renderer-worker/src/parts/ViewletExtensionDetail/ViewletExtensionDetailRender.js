@@ -1,4 +1,5 @@
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as GetMarkdownVirtualDom from '../GetMarkdownVirtualDom/GetMarkdownVirtualDom.js'
 
 export const hasFunctionalRender = true
 
@@ -25,7 +26,8 @@ const renderReadme = {
     return oldState.sanitizedReadmeHtml === newState.sanitizedReadmeHtml
   },
   apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetReadmeHtml, /* sanizedHtml */ newState.sanitizedReadmeHtml]
+    const dom = GetMarkdownVirtualDom.getMarkdownVirtualDom(newState.sanitizedReadmeHtml)
+    return ['setReadmeDom', dom]
   },
 }
 

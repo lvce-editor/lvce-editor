@@ -1,9 +1,9 @@
+import * as Assert from '../Assert/Assert.js'
 import * as GetVirtualDomTag from '../GetVirtualDomTag/GetVirtualDomTag.js'
 import * as HtmlTokenType from '../HtmlTokenType/HtmlTokenType.js'
 import * as IsSelfClosingTag from '../IsSelfClosingTag/IsSelfClosingTag.js'
 import * as TokenizeHtml from '../TokenizeHtml/TokenizeHtml.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-import * as Assert from '../Assert/Assert.js'
 
 export const parseHtml = (html, allowedAttributes) => {
   Assert.string(html)

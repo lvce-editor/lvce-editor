@@ -1,5 +1,6 @@
 import * as TokenType from '../HtmlTokenType/HtmlTokenType.js'
 import { UnexpectedTokenError } from '../UnexpectedTokenError/UnexpectedTokenError.js'
+import * as Assert from '../Assert/Assert.js'
 
 const State = {
   TopLevelContent: 1,
@@ -46,6 +47,7 @@ const RE_SELF_CLOSING = /^\/>/
  * @param {string} text
  */
 export const tokenizeHtml = (text) => {
+  Assert.string(text)
   let state = State.TopLevelContent
   let index = 0
   let next
