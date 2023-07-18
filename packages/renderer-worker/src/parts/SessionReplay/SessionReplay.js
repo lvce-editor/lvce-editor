@@ -1,10 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as GetSessionId from '../GetSessionId/GetSessionId.js'
-import * as IndexedDb from '../IndexedDb/IndexedDb.js'
 import * as Json from '../Json/Json.js'
 import * as Location from '../Location/Location.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SessionReplayStorage from '../SessionReplayStorage/SessionReplayStorage.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
 import { VError } from '../VError/VError.js'
@@ -12,7 +12,7 @@ import { VError } from '../VError/VError.js'
 export const handleMessage = async (source, timestamp, message) => {
   try {
     const sessionId = GetSessionId.getSessionId()
-    await IndexedDb.saveValue(sessionId, {
+    await SessionReplayStorage.saveValue(sessionId, {
       source,
       timestamp,
       sessionId,
@@ -130,8 +130,7 @@ export const replaySession = async (sessionId) => {
 
 export const getEvents = async (sessionId) => {
   try {
-    const timestamp = Timestamp.now()
-    const events = await IndexedDb.getValuesByIndexName('session', 'sessionId', sessionId)
+    const events = await SessionReplayStorage.getValuesByIndexName('session', 'sessionId', sessionId)
     return events
   } catch (error) {
     throw new VError(error, `failed to get session replay events`)
