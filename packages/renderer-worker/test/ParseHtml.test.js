@@ -33,7 +33,9 @@ test('element with id', () => {
 })
 
 test('element with with image', () => {
-  expect(ParseHtml.parseHtml('<p><img alt="demo" src="./demo.png"></p>')).toEqual([
+  const html = '<p><img alt="demo" src="./demo.png"></p>'
+  const allowedAttributes = ['alt', 'src']
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {
       type: VirtualDomElements.P,
       childCount: 1,
