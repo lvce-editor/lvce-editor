@@ -1,0 +1,18 @@
+export const eagerLoadedCss = [
+  'Actions.css',
+  'Drag.css',
+  'EditorTabs.css',
+  'FileIcon.css',
+  'IconButton.css',
+  'InputBox.css',
+  'Label.css',
+  'MaskIcon.css',
+  'ScrollBar.css',
+  'TreeItem.css',
+  'ViewletActivityBar.css',
+  'ViewletEditor.css',
+  'ViewletExplorer.css',
+  'ViewletMain.css',
+  'ViewletSideBar.css',
+  'ViewletStatusBar.css',
+]

@@ -1,4 +1,4 @@
-import { readdir, readFile } from 'node:fs/promises'
+import { readdir, readFile, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import * as Copy from '../Copy/Copy.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
@@ -7,6 +7,7 @@ import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as EagerLoadedCss from '../EagerLoadedCss/EagerLoadedCss.js'
 
 const getParts = (appCss) => {
   const lines = SplitLines.splitLines(appCss)
@@ -41,7 +42,6 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
   const cwd = join(Root.root, 'static', 'css', 'parts')
   const dirents = await readdir(cwd)
   const sortedDirents = toSorted(dirents)
-  console.log({ sortedDirents })
   for (const dirent of sortedDirents) {
     if (parts.includes(dirent)) {
       // ignore
@@ -62,17 +62,6 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
     css += content
   }
 
-  const appCssPath = Path.join(outDir, 'App.css')
-  await WriteFile.writeFile({
-    to: appCssPath,
-    content: css,
-  })
-
-  await Replace.replace({
-    path: appCssPath,
-    occurrence: `url(/icons/`,
-    replacement: `url(${assetDir}/icons/`,
-  })
   await Replace.replace({
     path: Path.join(outDir, 'parts', 'ViewletTitleBarButtons.css'),
     occurrence: `url(/icons/`,
@@ -93,6 +82,30 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
     occurrence: `url(/icons/`,
     replacement: `url(${assetDir}/icons/`,
   })
+
+  for (const part of EagerLoadedCss.eagerLoadedCss) {
+    const absolutePath = join(outDir, 'parts', part)
+    const content = await readFile(absolutePath, EncodingType.Utf8)
+    css += `/*************/\n`
+    css += `/* ${part} */\n`
+    css += `/*************/\n`
+    css += content
+    await rm(absolutePath, { recursive: true, force: true })
+  }
+
+  const appCssPath = Path.join(outDir, 'App.css')
+
+  await WriteFile.writeFile({
+    to: appCssPath,
+    content: css,
+  })
+
+  await Replace.replace({
+    path: appCssPath,
+    occurrence: `url(/icons/`,
+    replacement: `url(${assetDir}/icons/`,
+  })
+
   await Replace.replace({
     path: appCssPath,
     occurrence: `url(/fonts/`,
