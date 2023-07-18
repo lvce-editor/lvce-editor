@@ -3,8 +3,11 @@ import * as HtmlTokenType from '../HtmlTokenType/HtmlTokenType.js'
 import * as IsSelfClosingTag from '../IsSelfClosingTag/IsSelfClosingTag.js'
 import * as TokenizeHtml from '../TokenizeHtml/TokenizeHtml.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as Assert from '../Assert/Assert.js'
 
-export const parseHtml = (html) => {
+export const parseHtml = (html, allowedAttributes) => {
+  Assert.string(html)
+  Assert.array(allowedAttributes)
   const tokens = TokenizeHtml.tokenizeHtml(html)
   const dom = []
   const root = {
@@ -39,7 +42,9 @@ export const parseHtml = (html) => {
         attributeName = token.text
         break
       case HtmlTokenType.AttributeValue:
-        current[attributeName] = token.text
+        if (allowedAttributes.includes(attributeName)) {
+          current[attributeName] = token.text
+        }
         attributeName = ''
         break
       default:
