@@ -1,22 +1,7 @@
+import * as FormatStartupPerformanceEntries from '../FormatStartupPerformanceEntries/FormatStartupPerformanceEntries.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as ToMarkdownTable from '../ToMarkdownTable/ToMarkdownTable.js'
-
-const formatStartupPerformanceEntries = (entries, firstTimeOrigin) => {
-  const diff = entries.timeOrigin - firstTimeOrigin
-  const header = ['Name', 'Start Time', 'Duration']
-  const formatEntry = (entry) => {
-    const name = entry.name
-    if (!name) {
-      return ['n/a', 'n/a', 'n/a']
-    }
-    const startTime = `${(entry.startTime + diff).toFixed(2)}ms`
-    const duration = `${entry.duration.toFixed(2)}ms`
-    return [name, startTime, duration]
-  }
-  const rows = entries.entries.map(formatEntry)
-  return ToMarkdownTable.toMarkdownTable(header, rows)
-}
 
 const formatWebVitals = (vitals) => {
   const header = ['Name', 'Start Time']
@@ -58,14 +43,14 @@ export const formatStartupPerformance = ({ measureEntries, webVitals, nodeStartu
   lines.push('# Startup Performance')
   lines.push('')
   if (electronEntries) {
-    const formattedElectronEntries = formatStartupPerformanceEntries(electronEntries, firstTimeOrigin)
+    const formattedElectronEntries = FormatStartupPerformanceEntries.formatStartupPerformanceEntries(electronEntries, firstTimeOrigin)
     lines.push('## main-process')
     lines.push('')
     lines.push(...SplitLines.splitLines(formattedElectronEntries))
     lines.push('')
   }
   if (measureEntries) {
-    const formattedMeasureEntries = formatStartupPerformanceEntries(measureEntries, firstTimeOrigin)
+    const formattedMeasureEntries = FormatStartupPerformanceEntries.formatStartupPerformanceEntries(measureEntries, firstTimeOrigin)
     if (electronEntries) {
       const deltaTimeOrigin = (measureEntries.timeOrigin - electronEntries.timeOrigin).toFixed(2)
       lines.push(`## renderer-worker (+${deltaTimeOrigin}ms)`)
