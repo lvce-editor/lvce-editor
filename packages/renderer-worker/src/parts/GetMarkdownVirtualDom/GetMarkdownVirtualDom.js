@@ -1,5 +1,10 @@
+import * as ParseHtml from '../ParseHtml/ParseHtml.js'
+import * as Assert from '../Assert/Assert.js'
+
+const allowedAttributes = ['src', 'id', 'class', 'title', 'alt', 'href', 'target', 'rel']
+
 export const getMarkdownVirtualDom = (html) => {
-  // TODO
-  // - tokenize html
-  // - parse into virtual dom
+  Assert.string(html)
+  const dom = ParseHtml.parseHtml(html, allowedAttributes)
+  return dom
 }
