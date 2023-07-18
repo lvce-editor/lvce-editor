@@ -26,6 +26,21 @@ test('element with id', () => {
   ])
 })
 
+test('element with with image', () => {
+  expect(ParseHtml.parseHtml('<p><img alt="demo" src="./demo.png"></p>')).toEqual([
+    {
+      type: VirtualDomElements.P,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Img,
+      childCount: 0,
+      alt: 'demo',
+      src: './demo.png',
+    },
+  ])
+})
+
 test('nested element with id', () => {
   expect(ParseHtml.parseHtml('<p>some text<a href="#">link</a></p>')).toEqual([
     {
