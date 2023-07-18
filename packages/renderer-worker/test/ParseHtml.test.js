@@ -49,6 +49,28 @@ test('element with with image', () => {
   ])
 })
 
+test('element with with image and sibling tag', () => {
+  const html = '<p><img alt="demo" src="./demo.png"></p><p>more text</p>'
+  const allowedAttributes = ['alt', 'src']
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
+    {
+      type: VirtualDomElements.P,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Img,
+      childCount: 0,
+      alt: 'demo',
+      src: './demo.png',
+    },
+    {
+      type: VirtualDomElements.P,
+      childCount: 1,
+    },
+    text('more text'),
+  ])
+})
+
 test('element with two child elements', () => {
   const html = `<div><div></div><div></div></div>`
   const allowedAttributes = []
