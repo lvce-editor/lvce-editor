@@ -33,6 +33,8 @@ const getRendererWorkerCacheHash = async (extraContents) => {
       'build/src/parts/CachePaths/CachePaths.js',
       'build/src/parts/BundleRendererWorker/BundleRendererWorker.js',
       'build/src/parts/BundleRendererWorkerCached/BundleRendererWorkerCached.js',
+      'build/src/parts/EagerLoadedCss/EagerLoadedCss.js',
+      'build/src/parts/GetCssDeclarationFiles/GetCssDeclarationFiles.js',
     ],
     extraContents
   )
