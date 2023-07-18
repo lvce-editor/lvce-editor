@@ -28,7 +28,8 @@ export const parseHtml = (html) => {
         }
         break
       case HtmlTokenType.TagNameEnd:
-        current = stack.pop() || root
+        stack.pop()
+        current = stack.at(-1) || root
         break
       case HtmlTokenType.Content:
         current.childCount++

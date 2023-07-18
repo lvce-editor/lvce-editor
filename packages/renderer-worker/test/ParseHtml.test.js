@@ -41,6 +41,46 @@ test('element with with image', () => {
   ])
 })
 
+test('element with two child elements', () => {
+  const html = `<div><div></div><div></div></div>`
+  expect(ParseHtml.parseHtml(html)).toEqual([
+    {
+      type: VirtualDomElements.Div,
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+  ])
+})
+
+test('deeply nested tags', () => {
+  const html = `<div><div><div></div></div><div></div></div>`
+  expect(ParseHtml.parseHtml(html)).toEqual([
+    {
+      type: VirtualDomElements.Div,
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+  ])
+})
+
 test('nested element with id', () => {
   expect(ParseHtml.parseHtml('<p>some text<a href="#">link</a></p>')).toEqual([
     {
