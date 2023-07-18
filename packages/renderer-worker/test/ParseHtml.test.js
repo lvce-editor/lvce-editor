@@ -15,3 +15,13 @@ test('heading', () => {
     text('Hello World'),
   ])
 })
+
+test('element with id', () => {
+  expect(ParseHtml.parseHtml('<h1 id="hello-world"></h1>')).toEqual([
+    {
+      type: VirtualDomElements.H1,
+      childCount: 0,
+      id: 'hello-world',
+    },
+  ])
+})
