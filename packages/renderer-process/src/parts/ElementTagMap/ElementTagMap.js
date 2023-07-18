@@ -49,6 +49,50 @@ export const getElementTag = (type) => {
       return ElementTag.Ins
     case VirtualDomElements.Del:
       return ElementTag.Del
+    case VirtualDomElements.Article:
+      return ElementTag.Article
+    case VirtualDomElements.Aside:
+      return ElementTag.Aside
+    case VirtualDomElements.Footer:
+      return ElementTag.Footer
+    case VirtualDomElements.Header:
+      return ElementTag.Header
+    case VirtualDomElements.Nav:
+      return ElementTag.Nav
+    case VirtualDomElements.Section:
+      return ElementTag.Section
+    case VirtualDomElements.Search:
+      return ElementTag.Search
+    case VirtualDomElements.Dd:
+      return ElementTag.Dd
+    case VirtualDomElements.Dl:
+      return ElementTag.Dl
+    case VirtualDomElements.Figcaption:
+      return ElementTag.Figcaption
+    case VirtualDomElements.Figure:
+      return ElementTag.Figure
+    case VirtualDomElements.Hr:
+      return ElementTag.Hr
+    case VirtualDomElements.Li:
+      return ElementTag.Li
+    case VirtualDomElements.Ol:
+      return ElementTag.Ol
+    case VirtualDomElements.P:
+      return ElementTag.P
+    case VirtualDomElements.Pre:
+      return ElementTag.Pre
+    case VirtualDomElements.A:
+      return ElementTag.A
+    case VirtualDomElements.Br:
+      return ElementTag.Br
+    case VirtualDomElements.Cite:
+      return ElementTag.Cite
+    case VirtualDomElements.Data:
+      return ElementTag.Data
+    case VirtualDomElements.Time:
+      return ElementTag.Time
+    case VirtualDomElements.Tfoot:
+      return ElementTag.Tfoot
     default:
       throw new Error(`element tag not found ${type}`)
   }

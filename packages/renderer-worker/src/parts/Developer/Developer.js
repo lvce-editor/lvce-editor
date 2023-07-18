@@ -1,9 +1,10 @@
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as ElectronDeveloper from '../ElectronDeveloper/ElectronDeveloper.js'
-import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as FormatStartupPerformance from '../FormatStartupPerformance/FormatStartupPerformance.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as Performance from '../Performance/Performance.js'
+import * as PerformanceEntryType from '../PerformanceEntryType/PerformanceEntryType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
@@ -20,7 +21,7 @@ const getWebVitals = async () => {
   let firstPaint = -1
   let firstContentfulPaint = -1
   let largestContentfulPaint = -1
-  const paintEntries = performance.getEntriesByType('paint')
+  const paintEntries = Performance.getEntriesByType(PerformanceEntryType.Paint)
   for (const paintEntry of paintEntries) {
     switch (paintEntry.name) {
       case 'first-paint':
@@ -76,8 +77,8 @@ const getFirstTimeOrigin = ({ measureEntries, electronEntries }) => {
 }
 
 const getMeasureEntries = () => {
-  const measureEntries = performance.getEntriesByType('measure')
-  const timeOrigin = performance.timeOrigin
+  const measureEntries = Performance.getEntriesByType(PerformanceEntryType.Measure)
+  const timeOrigin = Performance.timeOrigin
   return {
     entries: measureEntries,
     timeOrigin,
