@@ -61,6 +61,8 @@ export const getVirtualDomTag = (text) => {
       return VirtualDomElements.Time
     case ElementTags.Tfoot:
       return VirtualDomElements.Tfoot
+    case ElementTags.Img:
+      return VirtualDomElements.Img
     default:
       return VirtualDomElements.Div
   }
