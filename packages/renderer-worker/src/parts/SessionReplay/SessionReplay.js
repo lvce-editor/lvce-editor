@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
+import * as GetSessionId from '../GetSessionId/GetSessionId.js'
 import * as Json from '../Json/Json.js'
 import * as Location from '../Location/Location.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -8,20 +9,9 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
 import { VError } from '../VError/VError.js'
 
-export const state = {
-  sessionId: '',
-}
-
-const getSessionId = () => {
-  if (!state.sessionId) {
-    state.sessionId = `session-${new Date().toISOString()}`
-  }
-  return state.sessionId
-}
-
 export const handleMessage = async (source, timestamp, message) => {
   try {
-    const sessionId = getSessionId()
+    const sessionId = GetSessionId.getSessionId()
     await SessionReplayStorage.saveValue(sessionId, {
       source,
       timestamp,
@@ -41,12 +31,12 @@ export const handleMessage = async (source, timestamp, message) => {
 
 const addSearchParam = (href, key, value) => {
   const parsedUrl = new URL(href)
-  parsedUrl.searchParams.set('replayId', state.sessionId)
+  parsedUrl.searchParams.set('replayId', GetSessionId.getSessionId())
   return parsedUrl.toString()
 }
 
 export const replayCurrentSession = async () => {
-  if (!state.sessionId) {
+  if (!GetSessionId.state.sessionId) {
     throw new VError(`session replay is disabled in settings`)
   }
   // TODO
@@ -55,12 +45,12 @@ export const replayCurrentSession = async () => {
   // 3. replay ui with commands from indexeddb
 
   const href = await Location.getHref()
-  const replayUrl = addSearchParam(href, 'replayId', state.sessionId)
+  const replayUrl = addSearchParam(href, 'replayId', GetSessionId.getSessionId())
   await Command.execute('Open.openUrl', /* url */ replayUrl)
 }
 
 export const getSessionContent = async () => {
-  const sessionId = state.sessionId
+  const sessionId = GetSessionId.getSessionId()
   const events = await getEvents(sessionId)
   return Json.stringify(events)
 }
@@ -149,7 +139,7 @@ export const getEvents = async (sessionId) => {
 
 export const downloadSession = async () => {
   try {
-    const sessionId = getSessionId()
+    const sessionId = GetSessionId.getSessionId()
     const events = await getEvents(sessionId)
     const fileName = `${sessionId}.json`
     await Command.execute(/* Download.downloadJson */ 'Download.downloadJson', /* json */ events, /* fileName */ fileName)
