@@ -3,11 +3,15 @@ import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomE
 import { text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
 
 test('text', () => {
-  expect(ParseHtml.parseHtml('Hello World')).toEqual([text('Hello World')])
+  const html = 'Hello World'
+  const allowedAttributes = []
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([text('Hello World')])
 })
 
 test('heading', () => {
-  expect(ParseHtml.parseHtml('<h1>Hello World</h1>')).toEqual([
+  const html = '<h1>Hello World</h1>'
+  const allowedAttributes = []
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {
       type: VirtualDomElements.H1,
       childCount: 1,
@@ -17,11 +21,24 @@ test('heading', () => {
 })
 
 test('element with id', () => {
-  expect(ParseHtml.parseHtml('<h1 id="hello-world"></h1>')).toEqual([
+  const html = '<h1 id="hello-world"></h1>'
+  const allowedAttributes = ['id']
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {
       type: VirtualDomElements.H1,
       childCount: 0,
       id: 'hello-world',
+    },
+  ])
+})
+
+test('element with disallowed attribute', () => {
+  const html = '<h1 onerror="alert(1)"></h1>'
+  const allowedAttributes = []
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
+    {
+      type: VirtualDomElements.H1,
+      childCount: 0,
     },
   ])
 })
