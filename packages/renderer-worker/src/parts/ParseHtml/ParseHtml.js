@@ -13,6 +13,7 @@ export const parseHtml = (html) => {
     childCount: 0,
   }
   let current = root
+  let attributeName = ''
   for (const token of tokens) {
     switch (token.type) {
       case HtmlTokenType.TagNameStart:
@@ -28,6 +29,13 @@ export const parseHtml = (html) => {
       case HtmlTokenType.Content:
         current.childCount++
         dom.push(text(token.text))
+        break
+      case HtmlTokenType.AttributeName:
+        attributeName = token.text
+        break
+      case HtmlTokenType.AttributeValue:
+        current[attributeName] = token.text
+        attributeName = ''
         break
       default:
         break

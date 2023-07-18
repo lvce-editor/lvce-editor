@@ -11,7 +11,7 @@ const BYTE_UNITS = [
 ];
 const BIBYTE_UNITS = [
   "B",
-  "kiB",
+  "KiB",
   "MiB",
   "GiB",
   "TiB",
