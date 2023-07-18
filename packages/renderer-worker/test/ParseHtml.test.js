@@ -3,11 +3,15 @@ import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomE
 import { text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
 
 test('text', () => {
-  expect(ParseHtml.parseHtml('Hello World')).toEqual([text('Hello World')])
+  const html = 'Hello World'
+  const allowedAttributes = []
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([text('Hello World')])
 })
 
 test('heading', () => {
-  expect(ParseHtml.parseHtml('<h1>Hello World</h1>')).toEqual([
+  const html = '<h1>Hello World</h1>'
+  const allowedAttributes = []
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {
       type: VirtualDomElements.H1,
       childCount: 1,
@@ -17,7 +21,9 @@ test('heading', () => {
 })
 
 test('element with id', () => {
-  expect(ParseHtml.parseHtml('<h1 id="hello-world"></h1>')).toEqual([
+  const html = '<h1 id="hello-world"></h1>'
+  const allowedAttributes = ['id']
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {
       type: VirtualDomElements.H1,
       childCount: 0,
@@ -27,7 +33,9 @@ test('element with id', () => {
 })
 
 test('element with with image', () => {
-  expect(ParseHtml.parseHtml('<p><img alt="demo" src="./demo.png"></p>')).toEqual([
+  const html = '<p><img alt="demo" src="./demo.png"></p>'
+  const allowedAttributes = ['alt', 'src']
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {
       type: VirtualDomElements.P,
       childCount: 1,
@@ -41,9 +49,10 @@ test('element with with image', () => {
   ])
 })
 
-test.skip('element with with image and sibling tag', () => {
+test('element with with image and sibling tag', () => {
   const html = '<p><img alt="demo" src="./demo.png"></p><p>more text</p>'
-  expect(ParseHtml.parseHtml(html)).toEqual([
+  const allowedAttributes = ['alt', 'src']
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {
       type: VirtualDomElements.P,
       childCount: 1,
@@ -62,9 +71,29 @@ test.skip('element with with image and sibling tag', () => {
   ])
 })
 
-test.skip('deeply nested tags', () => {
+test('element with two child elements', () => {
+  const html = `<div><div></div><div></div></div>`
+  const allowedAttributes = []
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
+    {
+      type: VirtualDomElements.Div,
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+  ])
+})
+
+test('deeply nested tags', () => {
   const html = `<div><div><div></div></div><div></div></div>`
-  expect(ParseHtml.parseHtml(html)).toEqual([
+  const allowedAttributes = []
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {
       type: VirtualDomElements.Div,
       childCount: 2,
@@ -84,8 +113,21 @@ test.skip('deeply nested tags', () => {
   ])
 })
 
+test('element with disallowed attribute', () => {
+  const html = '<h1 onerror="alert(1)"></h1>'
+  const allowedAttributes = []
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
+    {
+      type: VirtualDomElements.H1,
+      childCount: 0,
+    },
+  ])
+})
+
 test('nested element with id', () => {
-  expect(ParseHtml.parseHtml('<p>some text<a href="#">link</a></p>')).toEqual([
+  const html = '<p>some text<a href="#">link</a></p>'
+  const allowedAttributes = ['href']
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
     {
       type: VirtualDomElements.P,
       childCount: 2,
