@@ -32,14 +32,14 @@
   },
   "dependencies": {
     "bytes": "^3.1.2",
-    "esbuild": "^0.18.13",
+    "esbuild": "^0.18.14",
     "fs-extra": "^11.1.1",
     "got": "^13.0.0",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.8",
     "p-map": "^6.0.0",
     "pretty-bytes": "^6.1.1",
-    "rollup": "^3.26.2",
+    "rollup": "^3.26.3",
     "tar-fs": "^3.0.4",
     "verdaccio": "^5.26.0",
     "verror": "^1.10.1"
