@@ -2,11 +2,12 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetRecentlyOpened from '../GetRecentlyOpened/GetRecentlyOpened.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Json from '../Json/Json.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const getRecentlyOpened = GetRecentlyOpened.getRecentlyOpened
 
@@ -57,8 +58,8 @@ const addWorkspacePathToRecentlyOpened = async () => {
   // TODO add event listener that listens for workspace changes
   try {
     await addToRecentlyOpened(workspacePath)
-  } catch {
-    // ignore
+  } catch (error) {
+    Logger.error(error)
   }
 }
 
