@@ -1,21 +1,14 @@
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as IsString from '../IsString/IsString.js'
+import * as IsValidRecentlyOpened from '../IsValidRecentlyOpened/IsValidRecentlyOpened.js'
 import * as Json from '../Json/Json.js'
 import * as Logger from '../Logger/Logger.js'
 import { VError } from '../VError/VError.js'
-
-const isValid = (recentlyOpened) => {
-  if (!recentlyOpened || !Array.isArray(recentlyOpened)) {
-    return []
-  }
-  return recentlyOpened && Array.isArray(recentlyOpened) && recentlyOpened.every(IsString.isString)
-}
 
 export const getRecentlyOpened = async () => {
   try {
     const content = await FileSystem.readFile('app://recently-opened.json')
     const parsed = Json.parse(content)
-    if (!isValid(parsed)) {
+    if (!IsValidRecentlyOpened.isValid(parsed)) {
       return []
     }
     // TODO handle error gracefully if this is not an array of strings

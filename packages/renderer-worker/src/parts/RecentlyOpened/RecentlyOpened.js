@@ -1,5 +1,6 @@
 import * as AddToRecentlyOpened from '../AddToRecentlyOpened/AddToRecentlyOpened.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 export * from '../AddToRecentlyOpened/AddToRecentlyOpened.js'
@@ -15,8 +16,8 @@ const addWorkspacePathToRecentlyOpened = async () => {
   // TODO add event listener that listens for workspace changes
   try {
     await AddToRecentlyOpened.addToRecentlyOpened(workspacePath)
-  } catch {
-    // ignore
+  } catch (error) {
+    Logger.error(error)
   }
 }
 
