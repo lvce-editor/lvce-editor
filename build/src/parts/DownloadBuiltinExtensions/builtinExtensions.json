@@ -25,6 +25,11 @@
     "version": "0.1.0"
   },
   {
+    "name": "builtin.language-basics-cson",
+    "repository": "github.com/lvce-editor/language-basics-cson",
+    "version": "0.1.0"
+  },
+  {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
     "version": "0.1.0"
@@ -102,7 +107,7 @@
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.0.21"
+    "version": "0.0.22"
   },
   {
     "name": "builtin.language-basics-json5",
