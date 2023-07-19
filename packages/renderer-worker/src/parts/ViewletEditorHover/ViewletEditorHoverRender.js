@@ -1,6 +1,5 @@
-import * as GetVisibleCompletionItems from '../GetVisibleCompletionItems/GetVisibleCompletionItems.js'
+import * as GetHoverVirtualDom from '../GetHoverVirtualDom/GetHoverVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
-import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 export const hasFunctionalRender = true
 
@@ -11,7 +10,8 @@ const renderHover = {
     )
   },
   apply(oldState, newState) {
-    return [/* method */ 'setHover', newState.sanitzedHtml, newState.documentation]
+    const dom = GetHoverVirtualDom.getHoverVirtualDom(newState.sanitzedHtml, newState.documentation)
+    return [/* method */ 'setDom', dom]
   },
 }
 
