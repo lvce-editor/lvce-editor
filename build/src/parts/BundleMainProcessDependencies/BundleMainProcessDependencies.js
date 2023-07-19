@@ -1,9 +1,12 @@
+import { readdir } from 'fs/promises'
 import * as CopyDependencies from '../CopyDependencies/CopyDependencies.js'
 import * as FilterMainProcessDependencies from '../FilterMainProcessDependencies/FilterMainProcessDependencies.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Remove from '../Remove/Remove.js'
+import * as Replace from '../Replace/Replace.js'
 
 export const bundleMainProcessDependencies = async ({ to, arch, electronVersion, supportsAutoUpdate }) => {
   const mainProcessPath = Path.absolute('packages/main-process')
@@ -26,5 +29,24 @@ export const bundleMainProcessDependencies = async ({ to, arch, electronVersion,
       buildPath: Path.absolute(to),
       electronVersion,
     })
+  }
+  await Remove.remove(`${to}/node_modules/debug/src/browser.js`)
+  await Remove.remove(`${to}/node_modules/clean-stack/home-directory-browser.js`)
+  for (const dependency of ['@babel/code-frame', '@babel/helper-validator-identifier', '@babel/highlight']) {
+    const absolutePath = Path.join(to, 'node_modules', dependency)
+    const dirents = await readdir(absolutePath, { recursive: true })
+    for (const dirent of dirents) {
+      const absoluteDirentPath = Path.join(to, 'node_modules', dependency, dirent)
+      if (dirent.endsWith('.js')) {
+        const sourceMapPath = absoluteDirentPath + '.map'
+        await Remove.remove(sourceMapPath)
+        const baseName = Path.baseName(sourceMapPath)
+        await Replace.replace({
+          path: absoluteDirentPath,
+          occurrence: `//# sourceMappingURL=${baseName}`,
+          replacement: '',
+        })
+      }
+    }
   }
 }
