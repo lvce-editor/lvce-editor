@@ -40,6 +40,9 @@ export const parseHtml = (html, allowedAttributes) => {
         break
       case HtmlTokenType.AttributeName:
         attributeName = token.text
+        if (attributeName === 'class') {
+          attributeName = 'className'
+        }
         break
       case HtmlTokenType.AttributeValue:
         if (allowedAttributes.includes(attributeName)) {
