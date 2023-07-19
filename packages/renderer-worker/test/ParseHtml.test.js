@@ -141,3 +141,15 @@ test('nested element with id', () => {
     text('link'),
   ])
 })
+
+test('element with class', () => {
+  const html = '<div class="EditorRow"></div>'
+  const allowedAttributes = ['className']
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+      className: 'EditorRow',
+    },
+  ])
+})
