@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
@@ -10,12 +9,8 @@ import * as Workspace from '../Workspace/Workspace.js'
 import * as FileSystem from './FileSystem.js'
 
 const readFileWeb = async (path, defaultContent) => {
-  const settingsJsonContent = await LocalStorage.getText(path)
-  if (settingsJsonContent) {
-    return settingsJsonContent
-  }
-  const url = `${AssetDir.assetDir}/config/defaultSettings.json`
-  return Command.execute(/* Ajax.getText */ 'Ajax.getText', /* url */ url)
+  const content = await LocalStorage.getText(path)
+  return content ?? defaultContent
 }
 
 const readFileNode = async (path, defaultContent) => {
