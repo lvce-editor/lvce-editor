@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as GetVirtualDomTag from '../GetVirtualDomTag/GetVirtualDomTag.js'
 import * as HtmlTokenType from '../HtmlTokenType/HtmlTokenType.js'
 import * as IsSelfClosingTag from '../IsSelfClosingTag/IsSelfClosingTag.js'
+import * as ParseText from '../ParseText/ParseText.js'
 import * as TokenizeHtml from '../TokenizeHtml/TokenizeHtml.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -36,7 +37,7 @@ export const parseHtml = (html, allowedAttributes) => {
         break
       case HtmlTokenType.Content:
         current.childCount++
-        dom.push(text(token.text))
+        dom.push(text(ParseText.parseText(token.text)))
         break
       case HtmlTokenType.AttributeName:
         attributeName = token.text
