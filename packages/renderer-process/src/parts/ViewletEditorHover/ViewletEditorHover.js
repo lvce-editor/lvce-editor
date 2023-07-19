@@ -1,6 +1,7 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as SetInnerHtml from '../SetInnerHtml/SetInnerHtml.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
@@ -24,6 +25,11 @@ export const setHover = (state, sanitzedHtml, documentation) => {
   $Documentation.className = 'HoverDocumentation'
   $Documentation.textContent = documentation
   $Viewlet.append($DisplayString, $Documentation)
+}
+
+export const setDom = (state, dom) => {
+  const { $Viewlet } = state
+  VirtualDom.renderInto($Viewlet, dom)
 }
 
 export const setBounds = (state, x, y) => {
