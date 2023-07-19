@@ -63,6 +63,8 @@ export const getVirtualDomTag = (text) => {
       return VirtualDomElements.Tfoot
     case ElementTags.Img:
       return VirtualDomElements.Img
+    case ElementTags.Span:
+      return VirtualDomElements.Span
     default:
       return VirtualDomElements.Div
   }

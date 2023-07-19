@@ -153,3 +153,15 @@ test('element with class', () => {
     },
   ])
 })
+
+test('text with angle bracket', () => {
+  const html = '<div>&gt;</div>'
+  const allowedAttributes = []
+  expect(ParseHtml.parseHtml(html, allowedAttributes)).toEqual([
+    {
+      type: VirtualDomElements.Div,
+      childCount: 1,
+    },
+    text('>'),
+  ])
+})
