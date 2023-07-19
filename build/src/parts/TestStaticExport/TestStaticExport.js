@@ -33,6 +33,7 @@ const main = async () => {
       extensionPath,
       testPath,
       root: tmpDir,
+      pathPrefix: '/test',
     })
   } catch (error) {
     // @ts-ignore
