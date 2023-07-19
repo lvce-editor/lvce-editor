@@ -33,11 +33,24 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
     platform: 'webworker',
     allowCyclicDependencies: false,
   })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/Ajax/Ajax.js`,
-    occurrence: `../../../static/`,
-    replacement: `../../../../../static/`,
-  })
+  if (platform === 'remote') {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Ajax/Ajax.js`,
+      occurrence: `../../../static/`,
+      replacement: `../../../../../`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/BabelParser/BabelParser.js`,
+      occurrence: `../../../static/`,
+      replacement: `../../../../../`,
+    })
+  } else {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Ajax/Ajax.js`,
+      occurrence: `../../../static/`,
+      replacement: `../../../../../static/`,
+    })
+  }
   // workaround for firefox bug
   await Replace.replace({
     path: `${cachePath}/dist/extensionHostWorkerMain.js`,
