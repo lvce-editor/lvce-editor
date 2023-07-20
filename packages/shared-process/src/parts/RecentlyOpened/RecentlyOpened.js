@@ -5,6 +5,7 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Json from '../Json/Json.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Platform from '../Platform/Platform.js'
+import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import { VError } from '../VError/VError.js'
 
 const addToArrayUnique = (recentlyOpened, path) => {
@@ -20,7 +21,7 @@ const getRecentlyOpened = async (recentlyOpenedPath) => {
     const parsed = await JsonFile.readJson(recentlyOpenedPath)
     return parsed
   } catch (error) {
-    if (error && error.code === ErrorCodes.ENOENT) {
+    if (IsEnoentError.isEnoentError(error)) {
       // ignore
     } else if (error && error.code === ErrorCodes.E_JSON_PARSE) {
       // ignore
@@ -36,7 +37,7 @@ const setRecentlyOpened = async (recentlyOpenedPath, newRecentlyOpened) => {
   try {
     await FileSystem.writeFile(recentlyOpenedPath, stringified)
   } catch (error) {
-    if (error && error.code === ErrorCodes.ENOENT) {
+    if (IsEnoentError.isEnoentError(error)) {
       await FileSystem.mkdir(dirname(recentlyOpenedPath))
       await FileSystem.writeFile(recentlyOpenedPath, stringified)
       return

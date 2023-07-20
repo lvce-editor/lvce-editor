@@ -14,7 +14,7 @@ const getContent = async (pid) => {
     return content
   } catch (error) {
     if (IsEnoentError.isEnoentError(error) || IsEsrchError.isEsrchError(error)) {
-      return ''
+      return -1
     }
     throw error
   }
