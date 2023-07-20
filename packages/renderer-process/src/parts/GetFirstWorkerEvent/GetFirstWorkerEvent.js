@@ -1,26 +1,14 @@
 import * as FirstWorkerEventType from '../FirstWorkerEventType/FirstWorkerEventType.js'
+import * as GetFirstEvent from '../GetFirstEvent/GetFirstEvent.js'
 
 /**
  *
  * @param {Worker} worker
  * @returns
  */
-export const getFirstWorkerEvent = async (worker) => {
-  const { type, event } = await new Promise((resolve, reject) => {
-    const cleanup = (value) => {
-      worker.onmessage = null
-      worker.onerror = null
-      resolve(value)
-    }
-    const handleFirstMessage = (event) => {
-      cleanup({ type: FirstWorkerEventType.Message, event })
-    }
-    const handleFirstError = (event) => {
-      event.preventDefault()
-      cleanup({ type: FirstWorkerEventType.Error, event })
-    }
-    worker.onmessage = handleFirstMessage
-    worker.onerror = handleFirstError
+export const getFirstWorkerEvent = (worker) => {
+  return GetFirstEvent.getFirstEvent(worker, {
+    message: FirstWorkerEventType.Message,
+    error: FirstWorkerEventType.Error,
   })
-  return { type, event }
 }
