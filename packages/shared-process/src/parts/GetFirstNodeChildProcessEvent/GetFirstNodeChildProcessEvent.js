@@ -5,8 +5,10 @@ export const getFirstNodeChildProcessEvent = async (childProcess) => {
     let stderr = ''
     let stdout = ''
     const cleanup = (value) => {
-      childProcess.stderr.off('data', handleStdErrData)
-      childProcess.stdout.off('data', handleStdoutData)
+      if (childProcess.stdout && childProcess.stderr) {
+        childProcess.stderr.off('data', handleStdErrData)
+        childProcess.stdout.off('data', handleStdoutData)
+      }
       childProcess.off('message', handleMessage)
       childProcess.off('exit', handleExit)
       childProcess.off('error', handleError)
@@ -27,8 +29,10 @@ export const getFirstNodeChildProcessEvent = async (childProcess) => {
     const handleError = (event) => {
       cleanup({ type: FirstNodeWorkerEventType.Error, event, stdout, stderr })
     }
-    childProcess.stderr.on('data', handleStdErrData)
-    childProcess.stdout.on('data', handleStdoutData)
+    if (childProcess.stdout && childProcess.stderr) {
+      childProcess.stderr.on('data', handleStdErrData)
+      childProcess.stdout.on('data', handleStdoutData)
+    }
     childProcess.on('message', handleMessage)
     childProcess.on('exit', handleExit)
     childProcess.on('error', handleError)
