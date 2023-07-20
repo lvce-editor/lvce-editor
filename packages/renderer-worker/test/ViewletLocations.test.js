@@ -55,7 +55,7 @@ test('loadContent - error - location provider throws error', async () => {
   const provideLocations = () => {
     throw new Error('Failed to execute reference provider: TypeError: x is not a function')
   }
-  await expect(ViewletLocations.loadContent(state, provideLocations)).rejects.toThrowError(
+  await expect(ViewletLocations.loadContentInternal(state, provideLocations)).rejects.toThrowError(
     new Error('Failed to execute reference provider: TypeError: x is not a function')
   )
 })
@@ -65,7 +65,7 @@ test('loadContent - no locations found', async () => {
   const provideLocations = () => {
     return []
   }
-  expect(await ViewletLocations.loadContent(state, provideLocations)).toMatchObject({
+  expect(await ViewletLocations.loadContentInternal(state, provideLocations)).toMatchObject({
     references: [],
   })
 })
@@ -82,7 +82,7 @@ test('loadContent - one result in one file', async () => {
       },
     ]
   }
-  expect(await ViewletLocations.loadContent(state, provideLocations)).toMatchObject({
+  expect(await ViewletLocations.loadContentInternal(state, provideLocations)).toMatchObject({
     displayReferences: [
       {
         depth: 1,
@@ -125,7 +125,7 @@ test('loadContent - multiple results in one file', async () => {
       },
     ]
   }
-  expect(await ViewletLocations.loadContent(state, provideLocations)).toMatchObject({
+  expect(await ViewletLocations.loadContentInternal(state, provideLocations)).toMatchObject({
     displayReferences: [
       {
         depth: 1,
@@ -189,7 +189,7 @@ test('loadContent - multiple results in multiple file', async () => {
       },
     ]
   }
-  expect(await ViewletLocations.loadContent(state, provideLocations)).toMatchObject({
+  expect(await ViewletLocations.loadContentInternal(state, provideLocations)).toMatchObject({
     displayReferences: [
       {
         depth: 1,
