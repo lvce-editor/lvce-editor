@@ -63,8 +63,18 @@ test('create', () => {
 test('loadContent - no restored editors', async () => {
   const state = ViewletMain.create(1)
   expect(await ViewletMain.loadContent(state, {})).toMatchObject({
-    activeGroupIndex: -1,
-    groups: [],
+    activeGroupIndex: 0,
+    groups: [
+      {
+        editors: [],
+        height: undefined,
+        tabsUid: 0,
+        uid: 1,
+        width: undefined,
+        x: undefined,
+        y: 0,
+      },
+    ],
   })
 })
 
@@ -92,7 +102,7 @@ test('loadContent - one restored editor', async () => {
         editors: [
           {
             uri: '/test/some-file.txt',
-            uid: 1,
+            uid: 2,
           },
         ],
       },
