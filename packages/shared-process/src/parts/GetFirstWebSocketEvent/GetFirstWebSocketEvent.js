@@ -1,14 +1,14 @@
 import * as FirstWebSocketEventType from '../FirstWebSocketEventType/FirstWebSocketEventType.js'
-import { WebSocket } from 'ws'
+import * as WebSocketReadyState from '../WebSocketReadyState/WebSocketReadyState.js'
 
 export const getFirstWebSocketEvent = async (webSocket) => {
   switch (webSocket.readyState) {
-    case WebSocket.OPEN:
+    case WebSocketReadyState.Open:
       return {
         type: FirstWebSocketEventType.Open,
         event: undefined,
       }
-    case WebSocket.CLOSED:
+    case WebSocketReadyState.Closed:
       return {
         type: FirstWebSocketEventType.Close,
         event: undefined,

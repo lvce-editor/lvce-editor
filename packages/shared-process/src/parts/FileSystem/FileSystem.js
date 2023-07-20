@@ -1,14 +1,15 @@
 // TODO lazyload chokidar and trash (but doesn't work currently because of bug with jest)
 import * as fs from 'node:fs/promises'
 import * as os from 'node:os'
+import * as Assert from '../Assert/Assert.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
-import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
 import * as GetDirentType from '../GetDirentType/GetDirentType.js'
+import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Trash from '../Trash/Trash.js'
-import * as Assert from '../Assert/Assert.js'
 import { VError } from '../VError/VError.js'
 
 export const state = {
@@ -46,7 +47,7 @@ export const readFile = async (path, encoding = EncodingType.Utf8) => {
     // console.timeEnd(`read ${path}`)
     return content
   } catch (error) {
-    if (error && error.code === ErrorCodes.ENOENT) {
+    if (IsEnoentError.isEnoentError(error)) {
       throw new FileNotFoundError(path)
     }
     throw new VError(error, `Failed to read file "${path}"`)
@@ -67,7 +68,7 @@ export const writeFile = async (path, content, encoding = EncodingType.Utf8) => 
     // Queue.add(`writeFile/${path}`, () =>
     await fs.writeFile(path, content, encoding)
   } catch (error) {
-    if (error && error.code === ErrorCodes.ENOENT) {
+    if (IsEnoentError.isEnoentError(error)) {
       throw new FileNotFoundError(path)
     }
     throw new VError(error, `Failed to write to file "${path}"`)
@@ -173,7 +174,7 @@ export const readDir = async (path) => {
     const dirents = await fs.readdir(path)
     return dirents
   } catch (error) {
-    if (error && error.code === ErrorCodes.ENOENT) {
+    if (IsEnoentError.isEnoentError(error)) {
       throw new FileNotFoundError(path)
     }
     throw new VError(error, `Failed to read directory "${path}"`)

@@ -2,6 +2,7 @@ import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as JsoncFile from '../JsoncFile/JsoncFile.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
+import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import { VError } from '../VError/VError.js'
 // TODO need jsonc parser for settings with comments
 
@@ -12,7 +13,7 @@ export const getUserPreferences = async () => {
     try {
       json = await JsoncFile.readJsonc(userSettingsPath)
     } catch (error) {
-      if (error && error.code === ErrorCodes.ENOENT) {
+      if (IsEnoentError.isEnoentError(error)) {
         return {}
       }
       throw error
