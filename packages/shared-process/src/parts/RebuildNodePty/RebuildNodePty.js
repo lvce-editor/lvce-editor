@@ -1,5 +1,7 @@
 import { spawn } from 'node:child_process'
+import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
 import * as GetElectronRebuildPath from '../GetElectronRebuildPath/GetElectronRebuildPath.js'
+import * as GetFirstNodeChildProcessEvent from '../GetFirstNodeChildProcessEvent/GetFirstNodeChildProcessEvent.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
@@ -18,7 +20,10 @@ const rebuildNodePtyElectron = async (cwd) => {
     cwd,
     stdio: 'inherit',
   })
-  // TODO wait for child process to be finished
+  const { type, event } = await GetFirstNodeChildProcessEvent.getFirstNodeChildProcessEvent(childProcess)
+  if (type === FirstNodeWorkerEventType.Error) {
+    throw new Error(`Failed to rebuild native module: ${event}`)
+  }
 }
 
 /**
@@ -29,6 +34,10 @@ const rebuildNodePtyNode = async (cwd) => {
     cwd,
     stdio: 'inherit',
   })
+  const { type, event } = await GetFirstNodeChildProcessEvent.getFirstNodeChildProcessEvent(childProcess)
+  if (type === FirstNodeWorkerEventType.Error) {
+    throw new Error(`Failed to rebuild native module: ${event}`)
+  }
 }
 
 const getFn = () => {
