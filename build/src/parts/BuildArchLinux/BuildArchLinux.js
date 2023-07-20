@@ -40,7 +40,7 @@ const copyElectronResult = async ({ product, version }) => {
   })
   // because of using system electron, argv will be /usr/lib/electron /usr/lib/appName <path>
   await Replace.replace({
-    path: `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/main-process/src/parts/ParseCliArgs/ParseCliArgs.js`,
+    path: `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/main-process/src/parts/ParseCliArgs/ParseCliArgs.cjs`,
     occurrence: `const relevantArgv = argv.slice(1)`,
     replacement: `const relevantArgv = argv.slice(2)`,
   })
@@ -61,8 +61,9 @@ const copyMetaFiles = async ({ product }) => {
   await Template.write('bash_completion', `build/.tmp/arch-linux/${arch}/usr/share/bash-completion/completions/${product.applicationName}`, {
     '@@APPNAME@@': product.applicationName,
   })
-  const version = (await Tag.getSemverVersion()) + '-1'
-  const buildDate = new Date().getTime()
+  const tag = await Tag.getSemverVersion()
+  const version = tag + '-1'
+  const buildDate = new Date().getTime() // TODO use commit info
   await Template.write('arch_linux_pkginfo', `build/.tmp/arch-linux/${arch}/.PKGINFO`, {
     '@@APPNAME@@': product.applicationName,
     '@@VERSION@@': version,
