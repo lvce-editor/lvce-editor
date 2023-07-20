@@ -20,5 +20,9 @@ export const getKeyBindings = () => {
       key: 'ctrl+s',
       command: 'Main.save',
     },
+    {
+      key: 'ctrl+\\',
+      command: 'Main.splitRight',
+    },
   ]
 }
