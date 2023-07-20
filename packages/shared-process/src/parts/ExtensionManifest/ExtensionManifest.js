@@ -3,6 +3,7 @@ import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
+import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import { VError } from '../VError/VError.js'
 
 const RE_EXTENSION_FRAGMENT = /.+(\/|\\)(.+)$/
@@ -32,7 +33,7 @@ export const get = async (path) => {
   } catch (error) {
     const id = inferExtensionId(path)
     const enhancedError = new VError(error, `Failed to load extension manifest for ${id}`)
-    if (error.code === ErrorCodes.ENOENT) {
+    if (IsEnoentError.isEnoentError(error)) {
       try {
         const monoRepoPath = Path.join(path, `packages`, 'extension', 'extension.json')
         const json = await ReadJson.readJson(monoRepoPath)

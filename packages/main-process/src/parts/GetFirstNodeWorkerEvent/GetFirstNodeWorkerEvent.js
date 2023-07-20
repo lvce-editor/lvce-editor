@@ -1,40 +1,15 @@
-import { Worker } from 'worker_threads'
 import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
+import * as GetFirstEvent from '../GetFirstEvent/GetFirstEvent.js'
 
 /**
  *
- * @param {Worker} worker
+ * @param {import('worker_threads').Worker} worker
  * @returns
  */
-export const getFirstNodeWorkerEvent = async (worker) => {
-  const { type, event } = await new Promise((resolve, reject) => {
-    const cleanup = (value) => {
-      worker.off('message', handleMessage)
-      worker.off('exit', handleExit)
-      worker.off('error', handleError)
-      resolve(value)
-    }
-    const handleMessage = (event) => {
-      cleanup({
-        type: FirstNodeWorkerEventType.Message,
-        event,
-      })
-    }
-    const handleExit = (event) => {
-      cleanup({
-        ype: FirstNodeWorkerEventType.Exit,
-        event,
-      })
-    }
-    const handleError = (event) => {
-      cleanup({
-        type: FirstNodeWorkerEventType.Error,
-        event,
-      })
-    }
-    worker.on('message', handleMessage)
-    worker.on('exit', handleExit)
-    worker.on('error', handleError)
+export const getFirstNodeWorkerEvent = (worker) => {
+  return GetFirstEvent.getFirstEvent(worker, {
+    message: FirstNodeWorkerEventType.Message,
+    exit: FirstNodeWorkerEventType.Exit,
+    error: FirstNodeWorkerEventType.Error,
   })
-  return { type, event }
 }

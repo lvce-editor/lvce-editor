@@ -3,7 +3,8 @@ import { join } from 'node:path'
 import * as Assert from '../Assert/Assert.js'
 import * as Character from '../Character/Character.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
+import * as IsEsrchError from '../IsEsrchError/IsEsrchError.js'
 import { VError } from '../VError/VError.js'
 
 export const getAccurateMemoryUsage = async (pid) => {
@@ -14,13 +15,7 @@ export const getAccurateMemoryUsage = async (pid) => {
     try {
       content = await readFile(filePath, EncodingType.Utf8)
     } catch (error) {
-      if (
-        error &&
-        // @ts-ignore
-        (error.code === ErrorCodes.ENOENT ||
-          // @ts-ignore
-          error.code === ErrorCodes.ESRCH)
-      ) {
+      if (IsEnoentError.isEnoentError(error) || IsEsrchError.isEsrchError(error)) {
         return -1
       }
       throw error
