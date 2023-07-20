@@ -1,6 +1,5 @@
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as GetTabsVirtualDom from '../GetTabsVirtualDom/GetTabsVirtualDom.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const hasFunctionalRender = true
 
@@ -47,7 +46,9 @@ const renderGroupTabs = {
     const oldUids = []
     const newUids = []
     for (const oldGroup of oldGroups) {
-      oldUids.push(oldGroup.uid)
+      if (oldGroup.editors.length > 0) {
+        oldUids.push(oldGroup.uid)
+      }
     }
     for (const newGroup of newGroups) {
       newUids.push(newGroup.uid)
@@ -75,13 +76,14 @@ const renderGroupTabs = {
     }
     for (const insertedGroup of insertedGroups) {
       const { tabsUid, editors, x, y, width, height, activeIndex, tabsDeltaX } = insertedGroup
-      commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
-      commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
-      const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex, newState.tabsDeltax)
-      commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
-      commands.push(['Viewlet.send', tabsUid, 'setScrollLeft', tabsDeltaX])
-      // commands.push(['Viewlet.send', tabsUid, 'setFocusedIndex', -1, activeIndex])
-      commands.push(['Viewlet.append', newState.uid, tabsUid])
+      if (editors.length > 0) {
+        commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
+        commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
+        const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex, newState.tabsDeltax)
+        commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
+        commands.push(['Viewlet.send', tabsUid, 'setScrollLeft', tabsDeltaX])
+        commands.push(['Viewlet.append', newState.uid, tabsUid])
+      }
     }
     for (const group of deletedGroups) {
       commands.push(['Viewlet.dispose', group.tabsUid])
