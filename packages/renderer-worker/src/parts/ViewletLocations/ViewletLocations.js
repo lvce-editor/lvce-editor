@@ -16,7 +16,7 @@ export const create = (id, uri) => {
 
 // TODO speed up this function by 130% by not running activation event (onReferences) again and again
 // e.g. (21ms activation event, 11ms getReferences) => (11ms getReferences)
-export const loadContent = async (state, getReferences) => {
+export const loadContentInternal = async (state, getReferences) => {
   const references = await getReferences()
   const displayReferences = GetDisplayReferences.getDisplayReferences(references)
   const fileCount = GetReferencesFileCount.getFileCount(references)
@@ -122,40 +122,3 @@ export const selectCurrent = (state) => {
   }
   return selectIndex(state, state.focusedIndex)
 }
-
-export const hasFunctionalRender = true
-
-const renderLocations = {
-  isEqual(oldState, newState) {
-    return oldState.displayReferences === newState.displayReferences
-  },
-  apply(oldState, newState) {
-    return [/* Viewlet.invoke */ 'Viewlet.send', /* id */ newState.id, /* method */ 'setLocations', /* references */ newState.displayReferences]
-  },
-}
-
-const renderMessage = {
-  isEqual(oldState, newState) {
-    return oldState.message === newState.message
-  },
-  apply(oldState, newState) {
-    return [/* Viewlet.invoke */ 'Viewlet.send', /* id */ newState.id, /* method */ 'setMessage', /* message */ newState.message]
-  },
-}
-
-const renderFocusedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex
-  },
-  apply(oldState, newState) {
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ newState.id,
-      /* method */ 'setFocusedIndex',
-      /* oldFocusedIndex */ oldState.focusedIndex,
-      /* newFocusedIndex */ newState.focusedIndex,
-    ]
-  },
-}
-
-export const render = [renderFocusedIndex, renderLocations, renderMessage]
