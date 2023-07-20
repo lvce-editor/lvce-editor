@@ -6,11 +6,12 @@ export const getBulkReplacementEdits = (matches) => {
   const ranges = []
   let currentRanges = []
   for (const match of matches) {
-    switch (match.type) {
+    const { type, title, text } = match
+    switch (type) {
       case TextSearchResultType.File:
         ranges.push(currentRanges.length)
         Arrays.push(ranges, currentRanges)
-        files.push(match.title)
+        files.push(title || text) // TODO
         currentRanges = []
         break
       case TextSearchResultType.Match:
