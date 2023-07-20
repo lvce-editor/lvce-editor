@@ -29,33 +29,15 @@ const IpcParentWithModuleWorker = await import('../src/parts/IpcParentWithModule
 
 test('create - error - not supported in firefox', async () => {
   // @ts-ignore
-  globalThis.Worker = class {
+  globalThis.Worker = class extends EventTarget {
     constructor() {
-      this.onmessage = null
-      this.onerror = null
-
+      super()
       setTimeout(() => {
         const errorEvent = new ErrorEvent('error', {
           message: 'SyntaxError: import declarations may only appear at top level of a module',
         })
-        this._onerror(errorEvent)
+        this.dispatchEvent(errorEvent)
       }, 0)
-    }
-
-    get onerror() {
-      return this._onerror
-    }
-
-    set onerror(listener) {
-      this._onerror = listener
-    }
-
-    get onmessage() {
-      return this._onmessage
-    }
-
-    set onmessage(listener) {
-      this._onmessage = listener
     }
   }
   // @ts-ignore
@@ -76,31 +58,13 @@ test('create - error - not supported in firefox', async () => {
 
 test('create - error - not found', async () => {
   // @ts-ignore
-  globalThis.Worker = class {
+  globalThis.Worker = class extends EventTarget {
     constructor() {
-      this.onmessage = null
-      this.onerror = null
-
+      super()
       setTimeout(() => {
         const errorEvent = new Event('error', {})
-        this._onerror(errorEvent)
+        this.dispatchEvent(errorEvent)
       }, 0)
-    }
-
-    get onerror() {
-      return this._onerror
-    }
-
-    set onerror(listener) {
-      this._onerror = listener
-    }
-
-    get onmessage() {
-      return this._onmessage
-    }
-
-    set onmessage(listener) {
-      this._onmessage = listener
     }
   }
   // @ts-ignore
@@ -123,33 +87,15 @@ test('create - error - not found', async () => {
 
 test('create', async () => {
   // @ts-ignore
-  globalThis.Worker = class {
+  globalThis.Worker = class extends EventTarget {
     constructor() {
-      this.onmessage = null
-      this.onerror = null
-
+      super()
       setTimeout(() => {
         const dataEvent = new MessageEvent('message', {
           data: 'ready',
         })
-        this._onmessage(dataEvent)
+        this.dispatchEvent(dataEvent)
       }, 0)
-    }
-
-    get onerror() {
-      return this._onerror
-    }
-
-    set onerror(listener) {
-      this._onerror = listener
-    }
-
-    get onmessage() {
-      return this._onmessage
-    }
-
-    set onmessage(listener) {
-      this._onmessage = listener
     }
   }
 

@@ -1,29 +1,9 @@
 import * as FirstWebSocketEventType from '../FirstWebSocketEventType/FirstWebSocketEventType.js'
+import * as GetFirstEvent from '../GetFirstEvent/GetFirstEvent.js'
 
-export const waitForWebSocketToBeOpen = async (webSocket) => {
-  const { type, event } = await new Promise((resolve) => {
-    const cleanup = (value) => {
-      webSocket.onopen = null
-      webSocket.onclose = null
-      resolve(value)
-    }
-    const handleOpen = (event) => {
-      cleanup({
-        type: FirstWebSocketEventType.Open,
-        event,
-      })
-    }
-    const handleClose = (event) => {
-      cleanup({
-        type: FirstWebSocketEventType.Close,
-        event,
-      })
-    }
-    webSocket.onopen = handleOpen
-    webSocket.onclose = handleClose
+export const waitForWebSocketToBeOpen = (webSocket) => {
+  return GetFirstEvent.getFirstEvent(webSocket, {
+    open: FirstWebSocketEventType.Open,
+    close: FirstWebSocketEventType.Close,
   })
-  return {
-    type,
-    event,
-  }
 }
