@@ -173,20 +173,69 @@ const getSavedActiveIndex = (savedState, restoredGroups) => {
 }
 
 const getRestoredGroups = (savedState, state) => {
+  const { x, y, width, height } = state
   if (Workspace.isTest()) {
-    return { groups: [], activeGroupIndex: -1 }
+    return {
+      groups: [
+        {
+          x,
+          y: 0,
+          width,
+          height,
+          editors: [],
+          tabsUid: 0,
+          uid: Id.create(),
+        },
+      ],
+      activeGroupIndex: 0,
+    }
   }
   const restoredGroups = getMainGroups(savedState, state)
   if (restoredGroups.length === 0) {
-    return { groups: [], activeGroupIndex: -1 }
+    return {
+      groups: [
+        {
+          x,
+          y: 0,
+          width,
+          height,
+          editors: [],
+          tabsUid: 0,
+          uid: Id.create(),
+        },
+      ],
+      activeGroupIndex: 0,
+    }
   }
   const savedActiveIndex = getSavedActiveIndex(savedState, restoredGroups)
   if (savedActiveIndex === -1) {
-    return { groups: [], activeGroupIndex: -1 }
+    return {
+      groups: [
+        {
+          x,
+          y: 0,
+          width,
+          height,
+          editors: [],
+          tabsUid: 0,
+          uid: Id.create(),
+        },
+      ],
+      activeGroupIndex: 0,
+    }
   }
   // TODO support restoring multiple groups
+  const group = restoredGroups[0]
+  const newGroup = {
+    ...group,
+    x,
+    y: 0,
+    width,
+    height,
+    uid: Id.create(),
+  }
   return {
-    groups: [restoredGroups[0]],
+    groups: [newGroup],
     activeGroupIndex: 0,
   }
 }
@@ -317,6 +366,9 @@ export const contentLoaded = async (state) => {
   }
   const commands = []
   for (const group of state.groups) {
+    if (group.editors.length === 0) {
+      continue
+    }
     const editor = Arrays.last(group.editors)
     const x = state.x
     const y = state.y + state.tabHeight
