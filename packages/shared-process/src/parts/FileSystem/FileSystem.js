@@ -8,6 +8,7 @@ import * as GetDirentType from '../GetDirentType/GetDirentType.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Trash from '../Trash/Trash.js'
+import * as Assert from '../Assert/Assert.js'
 import { VError } from '../VError/VError.js'
 
 export const state = {
@@ -36,6 +37,7 @@ export const copy = async (source, target) => {
 export const readFile = async (path, encoding = EncodingType.Utf8) => {
   // console.info('[shared-process] read file', path)
   try {
+    Assert.string(path)
     // const start = performance.now()
     // console.time(`read ${path}`)
     const content = await fs.readFile(path, encoding)
@@ -59,6 +61,8 @@ export const readFile = async (path, encoding = EncodingType.Utf8) => {
  */
 export const writeFile = async (path, content, encoding = EncodingType.Utf8) => {
   try {
+    Assert.string(path)
+    Assert.string(content)
     // queue would be more correct for concurrent writes but also slower
     // Queue.add(`writeFile/${path}`, () =>
     await fs.writeFile(path, content, encoding)
