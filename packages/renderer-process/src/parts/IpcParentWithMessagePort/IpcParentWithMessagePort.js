@@ -4,10 +4,11 @@ import * as IsMessagePort from '../IsMessagePort/IsMessagePort.js'
 
 export const create = async ({ url }) => {
   Assert.string(url)
-  const port = await new Promise((resolve) => {
+  const portPromise = await new Promise((resolve) => {
     globalThis.acceptPort = resolve
-    import(url)
   })
+  await import(url)
+  const port = await portPromise
   delete globalThis.acceptPort
   if (!port) {
     throw new IpcError('port must be defined')
