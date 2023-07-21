@@ -49,6 +49,10 @@
   background: rgb(36, 41, 42);
 }
 
+.SearchFieldReplace {
+  margin-top: 6px;
+}
+
 /* .SearchField */
 
 .SearchFieldInput {

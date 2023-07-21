@@ -166,7 +166,7 @@ export const dispose = () => {}
 
 const create$ReplaceField = () => {
   const $Row = document.createElement('div')
-  $Row.className = 'SearchField'
+  $Row.className = 'SearchField SearchFieldReplace'
   const $ButtonReplaceAllIcon = MaskIcon.create(Icon.ReplaceAll)
   const $ButtonReplaceAll = document.createElement('button')
   $ButtonReplaceAll.title = UiStrings.ReplaceAll
