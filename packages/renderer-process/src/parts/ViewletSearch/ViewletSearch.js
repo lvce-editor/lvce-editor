@@ -51,7 +51,7 @@ export const create = () => {
   // This way the text area always has the smallest
   // necessary height value.
   const $ViewletSearchInput = InputBox.create()
-  $ViewletSearchInput.classList.add('SearchFieldInput')
+  $ViewletSearchInput.className = 'SearchFieldInput'
   $ViewletSearchInput.placeholder = 'Search'
   $ViewletSearchInput.type = InputType.Search
   $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
@@ -174,6 +174,7 @@ const create$ReplaceField = () => {
   $ButtonReplaceAll.append($ButtonReplaceAllIcon)
 
   const $ViewletSearchReplaceInput = InputBox.create()
+  $ViewletSearchReplaceInput.className = 'SearchFieldInput'
   $ViewletSearchReplaceInput.placeholder = 'Replace'
   $ViewletSearchReplaceInput.type = 'text'
   $ViewletSearchReplaceInput.name = 'search-replace-value'
