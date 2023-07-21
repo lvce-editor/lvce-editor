@@ -81,8 +81,8 @@ export const validate = (item, schema) => {
   const actualType = getType(item)
   const expectedType = schema.type
   if (actualType !== expectedType) {
-    if (schema.allowUndefined && item === undefined) {
-      return undefined
+    if (schema.allowUndefined && (item === undefined || item === null)) {
+      return item
     }
     const preview = getPreview(item)
     return `item must be of type ${expectedType} but is ${preview}`
