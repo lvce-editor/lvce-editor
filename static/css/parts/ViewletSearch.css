@@ -47,6 +47,10 @@
   display: flex;
 }
 
+.SearchFieldReplace {
+  margin-top: 6px;
+}
+
 /* .SearchField */
 
 .SearchFieldInput {
