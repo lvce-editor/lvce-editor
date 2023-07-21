@@ -76,6 +76,8 @@ export const load = (moduleId) => {
       return import('../Workspace/Workspace.ipc.js')
     case ModuleId.Performance:
       return import('../Performance/Performance.ipc.js')
+    case ModuleId.Window:
+      return import('../Window/Window.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

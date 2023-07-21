@@ -184,6 +184,13 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
+    case 'Window.minimize':
+    case 'Window.maximize':
+    case 'Window.toggleDevtools':
+    case 'Window.unmaximize':
+    case 'Window.close':
+    case 'Window.reload':
+      return ModuleId.Window
     default:
       throw new CommandNotFoundError(commandId)
   }

@@ -1,29 +1,30 @@
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 
 export const reload = async () => {
   const windowId = await GetWindowId.getWindowId()
-  return ElectronProcess.invoke('ElectronWindow.reload', windowId)
+  return SharedProcess.invoke('Window.reload', windowId)
 }
 
 export const minimize = async () => {
   const windowId = await GetWindowId.getWindowId()
-  return ElectronProcess.invoke('ElectronWindow.minimize', windowId)
+  return SharedProcess.invoke('Window.minimize', windowId)
 }
 
 export const unmaximize = async () => {
   const windowId = await GetWindowId.getWindowId()
-  return ElectronProcess.invoke('ElectronWindow.unmaximize', windowId)
+  return SharedProcess.invoke('Window.unmaximize', windowId)
 }
 
 export const maximize = async () => {
   const windowId = await GetWindowId.getWindowId()
-  return ElectronProcess.invoke('ElectronWindow.maximize', windowId)
+  return SharedProcess.invoke('Window.maximize', windowId)
 }
 
 export const close = async () => {
   const windowId = await GetWindowId.getWindowId()
-  return ElectronProcess.invoke('ElectronWindow.close', windowId)
+  return SharedProcess.invoke('Window.close', windowId)
 }
 
 export const openNew = async (url) => {
@@ -32,7 +33,7 @@ export const openNew = async (url) => {
 
 export const toggleDevtools = async () => {
   const windowId = await GetWindowId.getWindowId()
-  return ElectronProcess.invoke('ElectronWindow.toggleDevtools', windowId)
+  return SharedProcess.invoke('Window.toggleDevtools', windowId)
 }
 
 export const zoomIn = async () => {
