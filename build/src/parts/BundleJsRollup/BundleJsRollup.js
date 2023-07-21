@@ -13,7 +13,7 @@ const getExternal = (babelExternal, initialExternal) => {
 
 /**
  *
- * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean, babelExternal?:boolean
+ * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean, babelExternal?:boolean, typescript?:boolean
  * allowCyclicDependencies?:boolean, external?:string[] }} param0
  */
 export const bundleJs = async ({
@@ -26,6 +26,7 @@ export const bundleJs = async ({
   allowCyclicDependencies = false,
   babelExternal = false,
   external = [],
+  typescript = false,
 }) => {
   const allExternal = getExternal(babelExternal, external)
   const plugins = []
@@ -34,6 +35,17 @@ export const bundleJs = async ({
     const { nodeResolve } = await import('@rollup/plugin-node-resolve')
     // @ts-ignore
     plugins.push(commonjs(), nodeResolve())
+  }
+  if (typescript) {
+    const { babel } = await import('@rollup/plugin-babel')
+    const { default: pluginTypeScript } = await import('@babel/preset-typescript')
+    plugins.push(
+      babel({
+        babelHelpers: 'bundled',
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        presets: [pluginTypeScript],
+      })
+    )
   }
   /**
    * @type {import('rollup').RollupOptions}
