@@ -1,0 +1,15 @@
+.MultilineInputBox {
+  width: 100%;
+  margin: 0;
+  border: none;
+  outline: none;
+  flex: 1;
+  background: var(--InputBoxBackground);
+  padding: 4px;
+  color: var(--InputBoxForeground);
+  font-size: 13px;
+  height: 24px;
+  contain: strict;
+  resize: none;
+  overflow: hidden;
+}
