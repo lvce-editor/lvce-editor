@@ -16,6 +16,8 @@ export const load = (moduleId) => {
       return import('../ChromeExtension/ChromeExtension.ipc.js')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.js')
+    case ModuleId.ElectronWindowProcessExplorer:
+      return import('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
     case ModuleId.Developer:
       return import('../Developer/Developer.ipc.js')
     case ModuleId.Download:

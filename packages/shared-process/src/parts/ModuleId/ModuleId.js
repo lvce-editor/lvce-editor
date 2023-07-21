@@ -9,6 +9,7 @@ export const Platform = 8
 export const Preferences = 9
 export const RecentlyOpened = 10
 export const Search = 11
+export const ElectronWindowProcessExplorer = 90
 export const SearchFile = 12
 export const Terminal = 13
 export const TextDocument = 14
