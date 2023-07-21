@@ -58,6 +58,8 @@ export const load = (moduleId) => {
       return import('../Platform/Platform.ipc.js')
     case ModuleId.Preferences:
       return import('../Preferences/Preferences.ipc.js')
+    case ModuleId.ElectronProcess:
+      return import('../ElectronProcess/ElectronProcess.ipc.js')
     case ModuleId.Process:
       return import('../Process/Process.ipc.js')
     case ModuleId.RebuildNodePty:
