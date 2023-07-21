@@ -177,6 +177,9 @@ export const getModuleId = (commandId) => {
     case 'Terminal.resize':
     case 'Terminal.write':
       return ModuleId.Terminal
+    case 'ElectronProcess.getChromeVersion':
+    case 'ElectronProcess.getElectronVersion':
+      return ModuleId.ElectronProcess
     case 4820:
       return ModuleId.TextDocument
     case 'WebSocketServer.handleUpgrade':
