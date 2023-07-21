@@ -22,7 +22,6 @@ const highlighted = {
 
 const renderRow = (rowInfo) => {
   const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement } = rowInfo
-  console.log({ depth })
   const treeItem = {
     type: VirtualDomElements.Div,
     role: 'treeitem',
