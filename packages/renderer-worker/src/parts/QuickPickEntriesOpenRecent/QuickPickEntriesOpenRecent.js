@@ -1,5 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 /**
  * @enum {string}
@@ -68,5 +70,6 @@ export const getPickLabel = (pick) => {
 }
 
 export const getPickIcon = (pick) => {
-  return ''
+  const baseName = Workspace.pathBaseName(pick)
+  return IconTheme.getFolderIcon({ name: baseName })
 }
