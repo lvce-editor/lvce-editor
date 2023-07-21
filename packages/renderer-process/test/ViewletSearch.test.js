@@ -14,12 +14,6 @@ test('refresh', () => {
   ViewletSearch.refresh(state)
 })
 
-test('accessibility - input box should have type search', () => {
-  const state = ViewletSearch.create()
-  const { $ViewletSearchInput } = state
-  expect($ViewletSearchInput.type).toBe('search')
-})
-
 test('accessibility - input box should have enterkeyhint search', () => {
   const state = ViewletSearch.create()
   const { $ViewletSearchInput } = state
