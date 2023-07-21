@@ -22,6 +22,10 @@ export const getModuleId = (commandId) => {
     case 'ClipBoard.readFiles':
     case 'ClipBoard.writeFiles':
       return ModuleId.ClipBoard
+    case 'ElectronSafeStorage.encryptString':
+    case 'ElectronSafeStorage.decryptString':
+    case 'ElectronSafeStorage.isEncryptionAvailable':
+      return ModuleId.ElectronSafeStorage
     case 'Developer.allocateMemory':
     case 'Developer.crashSharedProcess':
     case 'Developer.createHeapSnapshot':
