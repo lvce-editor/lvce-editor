@@ -5,7 +5,7 @@ const IsProtocolHandleApiSupported = require('../IsProtocolHandleApiSupported/Is
  *
  * @param {Electron.Protocol} protocol
  * @param {string} name
- * @param {(request: globalThis.Electron.ProtocolRequest) => Promise<GlobalResponse>} handleRequest
+ * @param {(request: GlobalRequest) => Promise<GlobalResponse>} handleRequest
  * @returns
  */
 exports.handle = (protocol, name, handleRequest) => {

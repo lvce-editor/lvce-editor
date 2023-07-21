@@ -4,7 +4,7 @@ const Platform = require('../Platform/Platform.cjs')
 
 /**
  *
- * @param {globalThis.Electron.ProtocolRequest} request
+ * @param {GlobalRequest} request
  */
 
 exports.handleRequest = async (request) => {
