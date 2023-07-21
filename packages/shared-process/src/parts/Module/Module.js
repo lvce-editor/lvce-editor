@@ -70,6 +70,8 @@ export const load = (moduleId) => {
       return import('../TextDocument/TextDocument.ipc.js')
     case ModuleId.Search:
       return import('../TextSearch/TextSearch.ipc.js')
+    case ModuleId.ElectronContextMenu:
+      return import('../ElectronContextMenu/ElectronContextMenu.ipc.js')
     case ModuleId.WebSocketServer:
       return import('../WebSocketServer/WebSocketServer.ipc.js')
     case ModuleId.Workspace:
