@@ -1,4 +1,5 @@
-import { div, img, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getLabelClassName = (decorationStrikeThrough) => {
   let className = 'Label'
@@ -13,91 +14,82 @@ const createItem = (item) => {
   const labelClassName = getLabelClassName(decorationStrikeThrough)
   if (item.type === 'directory-expanded') {
     return [
-      div(
-        {
-          className: 'TreeItem',
-          role: 'treeitem',
-          ariaExpanded: true,
-          ariaPosInSet: posInSet,
-          ariaSetSize: setSize,
-        },
-        3
-      ),
-      div(
-        {
-          className: 'Chevron',
-        },
-        1
-      ),
-      div(
-        {
-          className: 'MaskIcon',
-          role: 'none',
-          maskImage: icon,
-        },
-        0
-      ),
-      div(
-        {
-          className: labelClassName,
-        },
-        1
-      ),
+      {
+        type: VirtualDomElements.Div,
+        className: 'TreeItem',
+        role: 'treeitem',
+        ariaExpanded: true,
+        ariaPosInSet: posInSet,
+        ariaSetSize: setSize,
+        childCount: 3,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'Chevron',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon',
+        role: 'none',
+        maskImage: icon,
+        childCount: 0,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: labelClassName,
+        childCount: 1,
+      },
       text(label),
-      div(
-        {
-          className: 'SourceControlBadge',
-        },
-        1
-      ),
+      {
+        type: VirtualDomElements.Div,
+        className: 'SourceControlBadge',
+        childCount: 1,
+      },
       text(badgeCount),
     ]
   }
   const dom = []
   dom.push(
-    div(
-      {
-        className: 'TreeItem',
-        role: 'treeitem',
-        ariaPosInSet: posInSet,
-        ariaSetSize: setSize,
-        title: file,
-      },
-      3
-    ),
-    div(
-      {
-        className: `FileIcon FileIcon${icon}`,
-      },
-      0
-    )
-  )
-  const labelDom = div(
     {
-      className: labelClassName,
+      type: VirtualDomElements.Div,
+      className: 'TreeItem',
+      role: 'treeitem',
+      ariaPosInSet: posInSet,
+      ariaSetSize: setSize,
+      title: file,
+      childCount: 3,
     },
-    1
+    {
+      type: VirtualDomElements.Div,
+      className: `FileIcon FileIcon${icon}`,
+      childCount: 0,
+    }
   )
+  const labelDom = {
+    type: VirtualDomElements.Div,
+    className: labelClassName,
+    childCount: 1,
+  }
   dom.push(labelDom, text(label))
   if (detail) {
     labelDom.childCount++
     dom.push(
-      span(
-        {
-          className: 'LabelDetail',
-        },
-        1
-      ),
+      {
+        type: VirtualDomElements.Span,
+        className: 'LabelDetail',
+        childCount: 1,
+      },
       text(detail)
     )
   }
-  dom.push(
-    img({
-      className: 'DecorationIcon',
-      title: decorationIconTitle,
-      src: decorationIcon,
-    })
-  )
+  dom.push({
+    type: VirtualDomElements.Img,
+    className: 'DecorationIcon',
+    title: decorationIconTitle,
+    src: decorationIcon,
+    childCount: 0,
+  })
   return dom
 }
 
