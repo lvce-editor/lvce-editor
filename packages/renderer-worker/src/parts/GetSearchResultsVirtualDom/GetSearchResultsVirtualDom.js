@@ -22,8 +22,6 @@ const highlighted = {
 
 const renderRow = (rowInfo) => {
   const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement } = rowInfo
-  if (matchLength) {
-  }
   const treeItem = {
     type: VirtualDomElements.Div,
     role: 'treeitem',
@@ -35,6 +33,7 @@ const renderRow = (rowInfo) => {
     ariaLabel: name,
     ariaDescription: '',
     childCount: 1,
+    paddingLeft: `${depth * 1 + 1}rem`,
   }
   switch (type) {
     case DirentType.Directory:
