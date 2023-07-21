@@ -35,3 +35,4 @@ export const Transferrable = 34
 export const ConfirmPrompt = 35
 export const IpcParent = 36
 export const ScreenCapture = 37
+export const MeasureTextHeight = 38
