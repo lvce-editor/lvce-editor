@@ -1,5 +1,5 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as IsChromeExtensionError from '../IsChromeExtensionError/IsChromeExtensionError.js'
+import * as IsChromeExtensionError from '../IsChromeExtensionError/IsChromeExtensionError.ts'
 import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerError.js'
 
 export const handleUnhandledRejection = (event) => {
