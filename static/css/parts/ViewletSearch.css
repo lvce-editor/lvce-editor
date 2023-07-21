@@ -60,6 +60,10 @@
   resize: none;
   color: var(--InputBoxForeground);
   border: none;
+  font-size: 13px;
+  height: 24px;
+  contain: strict;
+  line-height: 24px;
 }
 
 .SearchFieldInput {
