@@ -582,6 +582,7 @@ const bundleJs = async ({ commitHash }) => {
     codeSplitting: true,
     minify: true,
     babelExternal: true,
+    typescript: true,
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/renderer-worker`),

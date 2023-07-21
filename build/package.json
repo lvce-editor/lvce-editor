@@ -16,8 +16,10 @@
     "node": ">=16"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.22.5",
     "@electron/get": "^2.0.2",
     "@electron/rebuild": "^3.2.13",
+    "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^25.0.3",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@types/bytes": "^3.1.1",
