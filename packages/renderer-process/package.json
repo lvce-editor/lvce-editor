@@ -13,8 +13,8 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "devDependencies": {},
   "jest": {
+    "preset": "ts-jest/presets/default-esm",
     "moduleNameMapper": {
       "^/static/(.*)$": "<rootDir>/../../static/$1"
     },
