@@ -8,12 +8,9 @@ export const create = () => {
   const $SideBarTitleAreaTitle = document.createElement('h2')
   $SideBarTitleAreaTitle.className = 'SideBarTitleAreaTitle'
 
-  const $SideBarTitleAreaButtons = document.createElement('div')
-  $SideBarTitleAreaButtons.className = 'SideBarTitleAreaButtons'
-
   const $SideBarTitleArea = document.createElement('div')
   $SideBarTitleArea.className = 'SideBarTitleArea'
-  $SideBarTitleArea.append($SideBarTitleAreaTitle, $SideBarTitleAreaButtons)
+  $SideBarTitleArea.append($SideBarTitleAreaTitle)
 
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'SideBar'
@@ -26,7 +23,6 @@ export const create = () => {
     $Viewlet,
     $SideBar: $Viewlet,
     $SideBarTitleArea,
-    $SideBarTitleAreaButtons,
     $SideBarContent: undefined,
     $SideBarTitleAreaTitle,
     $Actions: undefined,

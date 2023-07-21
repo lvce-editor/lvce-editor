@@ -7,11 +7,10 @@
 
 .SideBarTitleArea {
   contain: strict;
-  padding: 0 8px;
-  line-height: 35px;
-  display: grid;
+  display: flex;
   height: 35px;
-  grid-template-columns: auto 1fr;
+  line-height: 35px;
+  padding: 0 8px;
 }
 
 .SideBarTitleAreaTitle {
@@ -24,11 +23,6 @@
   text-overflow: ellipsis;
   text-transform: uppercase;
   padding-left: 12px;
-}
-
-/* TODO */
-.SideBarTitleAreaButtons {
-  display: none;
 }
 
 .SideBarContent {
