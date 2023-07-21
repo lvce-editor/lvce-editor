@@ -179,6 +179,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Terminal
     case 4820:
       return ModuleId.TextDocument
+    case 'ElectronContextMenu.openContextMenu':
+      return ModuleId.ElectronContextMenu
     case 'WebSocketServer.handleUpgrade':
       return ModuleId.WebSocketServer
     case 'Workspace.getHomeDir':

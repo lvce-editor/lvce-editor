@@ -1,8 +1,8 @@
+import * as Command from '../Command/Command.js'
 import * as ElectronMenuItemFlags from '../ElectronMenuItemFlags/ElectronMenuItemFlags.js'
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-import * as Command from '../Command/Command.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 const EMPTY_MENU = []
 
@@ -32,7 +32,7 @@ export const openContextMenu = async (x, y, id, ...args) => {
   const entries = await MenuEntries.getMenuEntries(id, ...args)
   state.pendingMenus = entries
   const electronMenuItems = convertMenuItems(entries)
-  return ElectronProcess.invoke('ElectronContextMenu.openContextMenu', electronMenuItems, x, y)
+  return SharedProcess.invoke('ElectronContextMenu.openContextMenu', electronMenuItems, x, y)
 }
 
 export const handleMenuClose = () => {
