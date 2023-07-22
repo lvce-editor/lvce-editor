@@ -62,10 +62,13 @@ export const getCompletionItemsVirtualDom = (visibleItems) => {
   }
   const dom = [root]
   for (const visibleItem of visibleItems) {
-    const { top, label, symbolName, highlights, focused } = visibleItem
+    const { top, label, symbolName, highlights, focused, deprecated } = visibleItem
     let className = 'EditorCompletionItem'
     if (focused) {
       className += ' Focused'
+    }
+    if (deprecated) {
+      className += ' Deprecated'
     }
     dom.push(
       {
