@@ -133,6 +133,8 @@ export const handleEditorClick = disposeWithEditor
 
 export const handleEditorBlur = disposeWithEditor
 
+export const handleCursorMove = disposeWithEditor
+
 export const loadContent = async (state) => {
   const { itemHeight, maxHeight } = state
   const editor = getEditor()

@@ -1,5 +1,7 @@
 import * as Editor from '../Editor/Editor.js'
+import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
 import * as EditorGetPositionRight from './EditorCommandGetPositionRight.js'
+import * as RunEditorWidgetFunctions from './RunEditorWidgetFunctions.js'
 
 const getNewSelections = (selections, lines, getDelta) => {
   const newSelections = new Uint32Array(selections.length)
@@ -8,18 +10,8 @@ const getNewSelections = (selections, lines, getDelta) => {
     const selectionStartColumn = selections[i + 1]
     const selectionEndRow = selections[i + 2]
     const selectionEndColumn = selections[i + 3]
-    if (
-      selectionStartRow === selectionEndRow &&
-      selectionStartColumn === selectionEndColumn
-    ) {
-      EditorGetPositionRight.moveToPositionRight(
-        newSelections,
-        i,
-        selectionStartRow,
-        selectionStartColumn,
-        lines,
-        getDelta
-      )
+    if (selectionStartRow === selectionEndRow && selectionStartColumn === selectionEndColumn) {
+      EditorGetPositionRight.moveToPositionRight(newSelections, i, selectionStartRow, selectionStartColumn, lines, getDelta)
     } else {
       newSelections[i] = newSelections[i + 2] = selectionEndRow
       newSelections[i + 1] = newSelections[i + 3] = selectionEndColumn
@@ -31,5 +23,9 @@ const getNewSelections = (selections, lines, getDelta) => {
 export const editorCursorHorizontalRight = (editor, getDelta) => {
   const { lines, selections } = editor
   const newSelections = getNewSelections(selections, lines, getDelta)
-  return Editor.scheduleSelections(editor, newSelections)
+  const newEditor = Editor.scheduleSelections(editor, newSelections)
+  return {
+    newState: newEditor,
+    commands: RunEditorWidgetFunctions.runEditorWidgetFunctions(newEditor, EditorFunctionType.HandleCursorMove),
+  }
 }
