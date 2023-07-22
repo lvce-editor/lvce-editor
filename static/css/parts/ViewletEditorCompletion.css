@@ -71,3 +71,7 @@
   background: rgb(37, 35, 35);
   pointer-events: auto;
 }
+
+.Deprecated {
+  text-decoration: line-through;
+}

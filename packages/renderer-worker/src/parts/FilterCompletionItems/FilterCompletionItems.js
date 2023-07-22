@@ -1,6 +1,7 @@
 import * as Character from '../Character/Character.js'
 import * as EmptyMatches from '../EmptyMatches/EmptyMatches.js'
 import * as FilterCompletionItem from '../FilterCompletionItem/FilterCompletionItem.js'
+import * as CompletionItemFlags from '../CompletionItemFlags/CompletionItemFlags.js'
 
 const addEmptyMatch = (item) => {
   return {
@@ -14,14 +15,24 @@ export const filterCompletionItems = (completionItems, word) => {
     return completionItems.map(addEmptyMatch)
   }
   const filteredCompletions = []
+  const deprecated = []
   for (const completionItem of completionItems) {
-    const { label } = completionItem
+    const { label, flags } = completionItem
     const result = FilterCompletionItem.filterCompletionItem(word, label)
     if (result !== EmptyMatches.EmptyMatches) {
-      // TODO avoid mutation
-      completionItem.matches = result
-      filteredCompletions.push(completionItem)
+      if (flags & CompletionItemFlags.Deprecated) {
+        // TODO avoid mutation
+        completionItem.matches = EmptyMatches.EmptyMatches
+        deprecated.push(completionItem)
+      } else {
+        // TODO avoid mutation
+        completionItem.matches = result
+        filteredCompletions.push(completionItem)
+      }
     }
+  }
+  if (deprecated.length > 0) {
+    filteredCompletions.push(...deprecated)
   }
   return filteredCompletions
 }
