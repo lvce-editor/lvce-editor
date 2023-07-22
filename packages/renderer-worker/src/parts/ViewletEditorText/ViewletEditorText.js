@@ -19,6 +19,7 @@ import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
 import * as CssVariable from '../CssVariable/CssVariable.js'
+import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -179,7 +180,8 @@ export const loadContent = async (state, savedState, context) => {
 }
 
 export const contentLoaded = async (state) => {
-  // Editor.renderText(state)
+  const { languageId } = state
+  ExtensionHostLanguages.load(languageId)
   return []
 }
 
