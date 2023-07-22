@@ -4,10 +4,11 @@ import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
-import * as IsWhitespace from '../IsWhitespace/IsWhitespace.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Quote from '../Quote/Quote.js'
+import * as ShouldAutoTriggerSuggest from '../ShouldAutoTriggerSuggest/ShouldAutoTriggerSuggest.js'
 import * as CommandOpenCompletion from './EditorCommandCompletion.js'
+import * as EditorCommandGetWordAt from './EditorCommandGetWordAt.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 import * as EditorType from './EditorCommandType.js'
 import * as EditorTypeWithAutoClosingBracket from './EditorCommandTypeWithAutoClosingBracket.js'
@@ -42,7 +43,11 @@ const isAutoClosingTagsEnabled = () => {
 }
 
 const openCompletion = async (editor, text) => {
-  if (IsWhitespace.isWhitespace(text)) {
+  const { selections } = editor
+  const rowIndex = selections[0]
+  const columnIndex = selections[1]
+  const word = EditorCommandGetWordAt.getWordAt(editor, rowIndex, columnIndex)
+  if (!ShouldAutoTriggerSuggest.shouldAutoTriggerSuggest(word)) {
     return
   }
   editor.completionState = EditorCompletionState.Loading
