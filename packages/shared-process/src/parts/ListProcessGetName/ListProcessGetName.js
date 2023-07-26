@@ -50,5 +50,8 @@ export const getName = (pid, cmd, rootPid, pidMap) => {
   if (cmd.startsWith(`/opt/sublime_text/sublime_text `)) {
     return 'sublime-text'
   }
+  if(cmd.includes('\\conhost.exe')){
+    return 'conhost.exe'
+  }
   return `${cmd}`
 }
