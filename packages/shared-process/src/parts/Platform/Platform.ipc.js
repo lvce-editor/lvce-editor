@@ -21,8 +21,8 @@ export const Commands = {
   getRecentlyOpenedPath: Platform.getRecentlyOpenedPath,
   getTestPath: Platform.getTestPath,
   getTmpDir: Platform.getTmpDir,
+  getUserKeyBindingsPath: Platform.getUserKeyBindingsPath,
   getUserSettingsPath: Platform.getUserSettingsPath,
   getVersion: Platform.getVersion,
   setEnvironmentVariables: Platform.setEnvironmentVariables,
-  getUserKeyBindingsPath: Platform.getUserKeyBindingsPath,
 }

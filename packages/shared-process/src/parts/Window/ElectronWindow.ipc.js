@@ -3,10 +3,10 @@ import * as ElectronWindow from './ElectronWindow.js'
 export const name = 'ElectronWindow'
 
 export const Commands = {
-  minimize: ElectronWindow.minimize,
+  close: ElectronWindow.close,
   maximize: ElectronWindow.maximize,
+  minimize: ElectronWindow.minimize,
+  reload: ElectronWindow.reload,
   toggleDevtools: ElectronWindow.toggleDevtools,
   unmaximize: ElectronWindow.unmaximize,
-  close: ElectronWindow.close,
-  reload: ElectronWindow.reload,
 }
