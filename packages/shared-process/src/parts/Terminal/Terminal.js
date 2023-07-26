@@ -37,9 +37,11 @@ export const create = async (ipc, id, cwd, command, args) => {
     const ptyHost = await PtyHost.getOrCreate()
     const terminal = createTerminal(ptyHost, ipc)
     TerminalState.add(id, terminal)
-    // TODO use invoke
-    const message = JsonRpcEvent.create('Terminal.create', [id, cwd, command, args])
-    ptyHost.send(message)
+    // TODO improve ipc error handling and await promise
+    // current can't await promise because when process exits
+    // because of native module error, promise is not resolved
+    // causing application which waits on this promise to hang
+    PtyHost.invoke('Terminal.create', id, cwd, command, args)
   } catch (error) {
     throw new VError(error, `Failed to create terminal`)
   }

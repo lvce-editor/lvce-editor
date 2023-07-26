@@ -3,12 +3,13 @@ import * as Debug from '../Debug/Debug.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as PtyHostPath from '../PtyHostPath/PtyHostPath.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 export const state = {
   /**
    * @type {any}
    */
-  ptyHost: undefined,
+  ipc: undefined,
   /**
    * @type {any}
    */
@@ -23,9 +24,9 @@ export const state = {
 }
 
 const cleanUpAll = () => {
-  if (state.ptyHost) {
-    state.ptyHost.dispose()
-    state.ptyHost = undefined
+  if (state.ipc) {
+    state.ipc.dispose()
+    state.ipc = undefined
   }
 }
 
@@ -46,11 +47,11 @@ const createPtyHost = async () => {
   })
   const handleClose = () => {
     ptyHost.off('close', handleClose)
-    state.ptyHost = undefined
+    state.ipc = undefined
     state.ptyHostPromise = undefined
   }
   ptyHost.on('close', handleClose)
-  state.ptyHost = ptyHost
+  state.ipc = ptyHost
   return ptyHost
 }
 
@@ -63,19 +64,23 @@ export const getOrCreate = () => {
 }
 
 export const getCurrentInstance = () => {
-  return state.ptyHost
+  return state.ipc
 }
 
 export const disposeAll = () => {
-  if (state.ptyHost) {
-    state.ptyHost.removeAllListeners()
-    if (state.ptyHost) {
-      state.ptyHost.dispose()
-      state.ptyHost = undefined
+  if (state.ipc) {
+    state.ipc.removeAllListeners()
+    if (state.ipc) {
+      state.ipc.dispose()
+      state.ipc = undefined
     }
     state.ptyHostState = /* None */ 0
     state.send = (message) => {
       state.pendingMessages.push(message)
     }
   }
+}
+
+export const invoke = (method, ...params) => {
+  return JsonRpc.invoke(state.ipc, method, ...params)
 }
