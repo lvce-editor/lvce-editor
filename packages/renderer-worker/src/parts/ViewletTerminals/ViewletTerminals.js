@@ -126,3 +126,13 @@ export const focusIndex = async (state, index) => {
 export const handleClickTab = (state, index) => {
   return focusIndex(state, index)
 }
+
+export const resize = (state, dimensions) => {
+  const { tabs } = state
+  const uid = tabs[0].uid
+  const commands = Viewlet.resize(uid, dimensions)
+  return {
+    newState: state,
+    commands,
+  }
+}
