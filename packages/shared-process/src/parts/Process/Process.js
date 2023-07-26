@@ -1,4 +1,5 @@
 import { VError } from '../VError/VError.js'
+import * as IsEsrchError from '../IsEsrchError/IsEsrchError.js'
 
 export const crash = (message) => {
   throw new Error(message)
@@ -34,6 +35,9 @@ export const kill = (pid, signal) => {
   try {
     process.kill(pid, signal)
   } catch (error) {
+    if (IsEsrchError.isEsrchError(error)) {
+      return
+    }
     throw new VError(error, `Failed to kill process ${pid} with signal ${signal}`)
   }
 }
