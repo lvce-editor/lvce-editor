@@ -57,14 +57,25 @@ export const dispose = async (state) => {
   }
 }
 
-export const resize = async (state, width, height) => {
+export const hasFunctionalResize = true
+
+export const resize = (state, dimensions) => {
+  return {
+    ...state,
+    ...dimensions,
+  }
+}
+
+export const resizeEffect = async (state) => {
+  const { width, height } = state
+  const { uid } = state
   // TODO columnWidth etc. should be in renderer process
   const columnWidth = 8.43332
   const rowHeight = 14
   // const columns = Math.round(width / columnWidth)
   const columns = 7
   const rows = Math.round(height / rowHeight)
-  await Terminal.resize(state.id, columns, rows)
+  await Terminal.resize(uid, columns, rows)
 
   // Terminal.resize(state, width, height)
 }
