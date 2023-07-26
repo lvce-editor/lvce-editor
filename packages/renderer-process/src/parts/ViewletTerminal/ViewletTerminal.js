@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Terminal from '../Terminal/Terminal.js'
+import * as IsUint8Array from '../IsUint8Array/IsUint8Array.js'
 import * as ViewletTerminalEvents from './ViewletTerminalEvents.js'
 
 export const create = () => {
@@ -55,6 +56,9 @@ export const reduce = (state, action) => {
 }
 
 export const write = (state, data) => {
+  if (!IsUint8Array.isUint8Array(data)) {
+    throw new TypeError(`data must be of type Uint8Array`)
+  }
   const { terminal } = state
   Terminal.write(terminal, data)
 }
