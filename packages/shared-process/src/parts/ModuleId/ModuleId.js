@@ -39,3 +39,4 @@ export const ElectronContextMenu = 40
 export const IncrementalTextSearch = 36
 export const Performance = 37
 export const Window = 38
+export const PassThroughElectronMessagePort = 39
