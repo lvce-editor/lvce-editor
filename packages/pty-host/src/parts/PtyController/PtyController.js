@@ -16,6 +16,7 @@ export const create = (id, cwd, command, args, ipc) => {
   Debug.debug(`create ${id} ${cwd}`)
   const pty = Pty.create({ cwd, command, args })
   const handleData = (data) => {
+    console.log({ data })
     ipc.send({
       jsonrpc: '2.0',
       method: 'Viewlet.send',
