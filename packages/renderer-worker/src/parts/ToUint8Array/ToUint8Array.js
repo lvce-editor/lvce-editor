@@ -1,5 +1,6 @@
 // electron sends uint8arrays directly
 // websocket sends the data as an object with data property
+// conpty sends the data as a string
 
 export const toUint8Array = (data) => {
   if (data instanceof Uint8Array) {
