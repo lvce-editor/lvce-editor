@@ -1,14 +1,12 @@
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as Logger from '../Logger/Logger.cjs'
-import * as Platform from '../Platform/Platform.cjs'
+import * as Logger from '../Logger/Logger.js'
+import * as Platform from '../Platform/Platform.js'
 
 /**
  *
- * @param {any} event
- * @param {import('electron').MessagePortMain} browserWindowPort
  */
-export const handlePort = async (event, browserWindowPort) => {
+export const handlePort = async (browserWindowPort) => {
   const extensionHostHelperProcessPath = Platform.getExtensionHostHelperProcessPath()
   const start = performance.now()
   const ipc = await IpcParent.create({
@@ -25,7 +23,7 @@ export const handlePort = async (event, browserWindowPort) => {
     if (ipc.off) {
       ipc.off('message', handleIpcMessage)
     }
-    webContents.off('destroyed', handleWebContentsDestroyed)
+    // webContents.off('destroyed', handleWebContentsDestroyed)
     browserWindowPort.close()
     ipc.dispose()
   }
@@ -41,14 +39,15 @@ export const handlePort = async (event, browserWindowPort) => {
   const handlePortClosed = () => {
     cleanup()
   }
-  const webContents = event.sender
+  // TODO handle webcontents destroyed event
+  // const webContents = event.sender
   browserWindowPort.on('message', handlePortMessage)
   browserWindowPort.on('close', handlePortClosed)
   ipc.on('message', handleIpcMessage)
-  webContents.on('destroyed', handleWebContentsDestroyed)
-  if (webContents.isDestroyed()) {
-    cleanup()
-    return
-  }
+  // webContents.on('destroyed', handleWebContentsDestroyed)
+  // if (webContents.isDestroyed()) {
+  //   cleanup()
+  //   return
+  // }
   browserWindowPort.start()
 }

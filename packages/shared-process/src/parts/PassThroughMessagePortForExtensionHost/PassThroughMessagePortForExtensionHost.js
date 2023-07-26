@@ -1,8 +1,8 @@
 import { fork } from 'node:child_process'
-import * as Platform from '../Platform/Platform.cjs'
-import * as Logger from '../Logger/Logger.cjs'
+import * as Platform from '../Platform/Platform.js'
+import * as Logger from '../Logger/Logger.js'
 
-export const handlePort = async (event, browserWindowPort) => {
+export const handlePort = async (browserWindowPort) => {
   const extensionHostPath = Platform.getExtensionHostPath()
   const start = Date.now()
   const extensionHost = fork(extensionHostPath, ['--ipc-type=parent'], {
@@ -17,6 +17,7 @@ export const handlePort = async (event, browserWindowPort) => {
   const forkTime = end - start
   Logger.info(`[main-process] Starting extension host with pid ${pid} (fork took ${forkTime} ms).`)
 
+  // TODO
   await new Promise((resolve, reject) => {
     const handleFirstMessage = (event) => {
       if (event === 'ready') {

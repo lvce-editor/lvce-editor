@@ -1,29 +1,15 @@
 import * as Assert from '../Assert/Assert.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
-// TODO cyclic dependency
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
-const getPortForSharedProcess = async (type, name) => {
-  const port = await RendererProcess.invoke('IpcParent.create', {
+const getPort = async (type, name) => {
+  const port = await SharedProcess.invoke('IpcParent.create', {
     method: RendererProcessIpcParentType.Electron,
     type,
     name,
   })
   return port
-}
-
-const getPortDefault = async (type, name) => {
-  console.log({ type, name })
-  const port = await SharedProcess.invoke('PassThroughElectronMessagePort.passThroughElectronMessagePort', name)
-  return port
-}
-
-const getPort = async (type, name) => {
-  if (type === 'shared-process') {
-    return getPortForSharedProcess(type, name)
-  }
-  return getPortDefault(type, name)
 }
 
 export const create = async (options) => {

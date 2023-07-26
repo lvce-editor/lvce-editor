@@ -3,6 +3,8 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
+    case 'PassThroughElectronMessagePort.passThroughElectronMessagePort':
+      return ModuleId.PassThroughElectronMessagePort
     case 'AttachDebugger.attachDebugger':
       return ModuleId.AttachDebugger
     case 'AutoUpdater.getAutoUpdateType':

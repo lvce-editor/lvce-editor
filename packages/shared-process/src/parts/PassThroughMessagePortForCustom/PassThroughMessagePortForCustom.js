@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
@@ -9,10 +9,9 @@ const getPath = (data) => {
 
 /**
  *
- * @param {import('electron').IpcMainEvent} event
  * @returns
  */
-export const handlePort = async (event, browserWindowPort, ...params) => {
+export const handlePort = async (browserWindowPort, ...params) => {
   if (!browserWindowPort) {
     throw new Error(`browserWindowPort must be passed`)
   }
@@ -24,5 +23,5 @@ export const handlePort = async (event, browserWindowPort, ...params) => {
     argv: ['--ipc-type=electron-utility-process-message-port'],
   })
   console.log('created utility process')
-  childProcess.sendAndTransfer({}, [browserWindowPort])
+  return browserWindowPort
 }

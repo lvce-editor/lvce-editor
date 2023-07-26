@@ -84,6 +84,8 @@ export const load = (moduleId) => {
       return import('../Performance/Performance.ipc.js')
     case ModuleId.Window:
       return import('../Window/ElectronWindow.ipc.js')
+    case ModuleId.PassThroughElectronMessagePort:
+      return import('../PassThroughElectronMessagePort/PassThroughElectronMessagePort.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

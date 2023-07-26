@@ -1,15 +1,13 @@
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 import * as GetTerminalProcessPath from '../GetTerminalProcessPath/GetTerminalProcessPath.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 /**
  *
- * @param {import('electron').IpcMainEvent} event
  * @returns
  */
-export const handlePort = async (event, browserWindowPort, type, name) => {
-  Assert.object(event)
+export const handlePort = async (browserWindowPort, type, name) => {
   Assert.object(browserWindowPort)
   Assert.string(type)
   Assert.string(name)
