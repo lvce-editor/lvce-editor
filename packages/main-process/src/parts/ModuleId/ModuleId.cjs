@@ -26,3 +26,4 @@ exports.Platform = 25
 exports.GetWindowId = 26
 exports.DesktopCapturer = 27
 exports.Trash = 28
+exports.IpcParent = 29

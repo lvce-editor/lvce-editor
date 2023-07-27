@@ -65,6 +65,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.DesktopCapturer
     case 'Trash':
       return ModuleId.Trash
+    case 'IpcParent':
+      return ModuleId.IpcParent
     default:
       throw new CommandNotFoundError(commandId)
   }
