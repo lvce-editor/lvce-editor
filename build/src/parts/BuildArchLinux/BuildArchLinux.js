@@ -13,6 +13,7 @@ import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
+import * as Version from '../Version/Version.js'
 import * as Template from '../Template/Template.js'
 
 const bundleElectronMaybe = async ({ product, version }) => {
@@ -160,7 +161,7 @@ export const build = async ({ product }) => {
     return
   }
 
-  const version = await Tag.getGitTag()
+  const version = await Version.getVersion()
 
   console.time('copyElectronResult')
   await copyElectronResult({ product, version })

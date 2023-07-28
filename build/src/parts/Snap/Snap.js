@@ -3,6 +3,7 @@ import * as Exec from '../Exec/Exec.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Tag from '../Tag/Tag.js'
+import * as Version from '../Version/Version.js'
 import * as Template from '../Template/Template.js'
 import * as ArchType from '../ArchType/ArchType.js'
 // TODO get rid of no-sandbox somehow https://github.com/electron/electron/issues/17972
@@ -191,11 +192,10 @@ const createSnap = async (arch) => {
   })
 }
 
-const printSnapSize = async ({ arch, product }) => {
+const printSnapSize = async ({ arch, product, version }) => {
   const Stat = await import('../Stat/Stat.js')
   const snapArch = getSnapArch(arch)
-  const tag = await Tag.getGitTag()
-  const size = await Stat.getFileSize(`build/.tmp/linux/snap/${arch}/${product.applicationName}_${tag}_${snapArch}.snap`)
+  const size = await Stat.getFileSize(`build/.tmp/linux/snap/${arch}/${product.applicationName}_${version}_${snapArch}.snap`)
   Logger.info(`snap size: ${size}`)
 }
 
@@ -203,7 +203,7 @@ const printSnapSize = async ({ arch, product }) => {
 
 export const build = async ({ product }) => {
   const arch = 'x64'
-  const version = await Tag.getGitTag()
+  const version = await Version.getVersion()
 
   console.time('copyMetaFiles')
   await copyMetaFiles({ arch, product, version })
@@ -217,5 +217,5 @@ export const build = async ({ product }) => {
   await createSnap(arch)
   console.timeEnd('createSnap')
 
-  await printSnapSize({ arch, product })
+  await printSnapSize({ arch, product, version })
 }
