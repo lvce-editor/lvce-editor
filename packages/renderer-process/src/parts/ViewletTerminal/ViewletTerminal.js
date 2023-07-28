@@ -9,6 +9,8 @@ export const create = () => {
   const terminal = Terminal.create({
     $Element: $Viewlet,
     handleInput: ViewletTerminalEvents.handleInput,
+    background: `#1b2020`,
+    foreground: 'white',
   })
 
   $Viewlet.addEventListener('focusin', ViewletTerminalEvents.handleFocus)
