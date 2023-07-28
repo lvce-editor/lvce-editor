@@ -36,7 +36,6 @@ const createDrawCursor = (canvas) => {
 };
 const CHAR_WIDTH$1 = 12;
 const CHAR_HEIGHT$1 = 15;
-const BACKGROUND$1 = "#000000";
 const supportsOffscreenCanvas = (() => {
   try {
     const canvas = new OffscreenCanvas(CHAR_WIDTH$1, CHAR_HEIGHT$1);
@@ -63,7 +62,6 @@ const supportsTransferToImageBitMap = (() => {
     return false;
   }
 })();
-self.supportsTransferToImageBitMap = supportsTransferToImageBitMap;
 const tmpCanvas = supportsOffscreenCanvas ? new OffscreenCanvas(CHAR_WIDTH$1, CHAR_HEIGHT$1) : (() => {
   const canvas = document.createElement("canvas");
   canvas.width = CHAR_WIDTH$1;
@@ -74,13 +72,13 @@ const tmpCtx = tmpCanvas.getContext("2d", {
   alpha: false
 });
 const bitmapCache = Object.create(null);
-const createDrawLines = (canvas, lines, bufferLines, offsets, attributes, rows, cols) => {
+const createDrawLines = (canvas, lines, bufferLines, offsets, attributes, rows, cols, defaultBackground, defaultForeground) => {
   const ctx = canvas.getContext("2d", {
     alpha: false
   });
-  ctx.fillStyle = BACKGROUND$1;
+  ctx.fillStyle = defaultBackground;
   const drawChar = (char, x, y, background, foreground) => {
-    if (char === " " && background === "#000000") {
+    if (char === " " && background === defaultBackground) {
       return;
     }
     const cacheKey = `${char}${background}${foreground}`;
@@ -104,14 +102,14 @@ const createDrawLines = (canvas, lines, bufferLines, offsets, attributes, rows, 
     const chars = getChars(bufferY);
     const attributesOnLine = attributes[bufferY] || {};
     let currentAttributes = {
-      foreground: "#ffffff",
-      background: "#000000"
+      foreground: defaultForeground,
+      background: defaultBackground
     };
     while (++x < chars.length) {
       currentAttributes = attributesOnLine[x] || currentAttributes;
       const char = chars[x];
-      const background = currentAttributes.background || "#000000";
-      const foreground = currentAttributes.foreground || "#ffffff";
+      const background = currentAttributes.background || defaultBackground;
+      const foreground = currentAttributes.foreground || defaultForeground;
       drawChar(char, x, positionY, background, foreground);
     }
   };
@@ -135,25 +133,21 @@ const createDrawLines = (canvas, lines, bufferLines, offsets, attributes, rows, 
   };
   return drawLines;
 };
-const State = {
-  TopLevelContent: 1,
-  Escaped: 2,
-  Csi: 3,
-  AfterEscape3: 4,
-  Charset: 5,
-  AfterEscape3AfterSemicolon: 6,
-  Osc: 8,
-  Dcs: 9,
-  AfterQuestionMark: 10,
-  AfterQuestionMark2: 11,
-  AfterExclamationMark: 12,
-  AfterExclamationMark2: 13,
-  AfterSpace: 14,
-  AfterSpace2: 15,
-  Osc2: 16,
-  Osc3: 17
-};
-const parse = (array, {
+const TopLevelContent = 1;
+const Escaped = 2;
+const Csi = 3;
+const AfterEscape3 = 4;
+const Charset = 5;
+const AfterEscape3AfterSemicolon = 6;
+const Osc = 8;
+const Dcs = 9;
+const AfterQuestionMark = 10;
+const AfterQuestionMark2 = 11;
+const AfterExclamationMark = 12;
+const AfterSpace = 14;
+const Osc2 = 16;
+const Osc3 = 17;
+const parseArray = (array, {
   eraseInDisplay,
   eraseToEndOfLine,
   goToHome,
@@ -213,16 +207,17 @@ const parse = (array, {
   if (!(array instanceof Uint8Array)) {
     throw new Error("invalid data, must be of type Uint8Array");
   }
-  let state = State.TopLevelContent;
+  let state = TopLevelContent;
   let i = 0;
   let currentParam = 0;
   let params = [];
   let printStartIndex = -1;
   while (i < array.length) {
+    const value = array[i];
     switch (state) {
-      case State.TopLevelContent:
+      case TopLevelContent:
         middle:
-          switch (array[i]) {
+          switch (value) {
             case 1:
             case 2:
             case 3:
@@ -270,7 +265,7 @@ const parse = (array, {
               i++;
               break;
             case 27:
-              state = State.Escaped;
+              state = Escaped;
               i++;
               break;
             case 28:
@@ -385,26 +380,26 @@ const parse = (array, {
                 switch (element) {
                   case 27:
                     print(array, printStartIndex, i);
-                    state = State.Escaped;
+                    state = Escaped;
                     i++;
                     break middle;
                   case 7:
                     print(array, printStartIndex, i);
                     bell();
                     i++;
-                    state = State.TopLevelContent;
+                    state = TopLevelContent;
                     break middle;
                   case 8:
                     print(array, printStartIndex, i);
                     backspace();
                     i++;
-                    state = State.TopLevelContent;
+                    state = TopLevelContent;
                     break middle;
                   case 13:
                     print(array, printStartIndex, i);
                     carriageReturn();
                     i++;
-                    state = State.TopLevelContent;
+                    state = TopLevelContent;
                     break middle;
                   default:
                     i++;
@@ -417,20 +412,20 @@ const parse = (array, {
               throw new Error("no");
           }
         break;
-      case State.Escaped:
-        switch (array[i]) {
+      case Escaped:
+        switch (value) {
           case 40:
-            state = State.Charset;
+            state = Charset;
             break;
           case 91:
             params = [];
-            state = State.Csi;
+            state = Csi;
             break;
           case 93:
-            state = State.Osc;
+            state = Osc;
             break;
           case 80:
-            state = State.Dcs;
+            state = Dcs;
             break;
           case 95:
             break;
@@ -445,31 +440,31 @@ const parse = (array, {
             break;
           case 55:
             saveCursor();
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 56:
             backspace();
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 72:
             tabSet();
             break;
           default:
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
         }
         i++;
         break;
-      case State.Charset:
+      case Charset:
         i++;
         break;
-      case State.Csi:
-        switch (array[i]) {
+      case Csi:
+        switch (value) {
           case 32:
-            state = State.AfterSpace;
+            state = AfterSpace;
             break;
           case 33:
-            state = State.AfterExclamationMark;
+            state = AfterExclamationMark;
             break;
           case 48:
           case 49:
@@ -481,148 +476,148 @@ const parse = (array, {
           case 55:
           case 56:
           case 57:
-            currentParam = array[i] - 48;
-            state = State.AfterEscape3;
+            currentParam = value - 48;
+            state = AfterEscape3;
             break;
           case 63:
-            state = State.AfterQuestionMark;
+            state = AfterQuestionMark;
             break;
           case 64:
             insertBlankCharacters(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 65:
             cursorUp(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 66:
             cursorDown(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 67:
             cursorRight(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 68:
             cursorLeft(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 69:
             cursorNextLine(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 70:
             cursorPrecedingLine(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 71:
             cursorCharacterAbsolute(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 72:
             cursorPosition(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 73:
             cursorForwardTabulation(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 74:
             eraseInDisplay(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 75:
             eraseInLine(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 76:
             insertLines(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 77:
             deleteLines(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 80:
             deleteCharacters(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 83:
             scrollUp(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 84:
             scrollDown(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 88:
             eraseCharacters(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 90:
             cursorBackwardTabulation(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 94:
             scrollDown(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 96:
             characterPositionAbsolute(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 97:
             characterPositionRelative(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 98:
             repeatPrecedingGraphicCharacter(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 100:
             linePositionAbsolute(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 101:
             linePositionRelative(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 102:
             horizontalAndVerticalPosition(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 103:
             tabClear(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 104:
             setMode(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 108:
             resetMode(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 109:
             setCharAttributes(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 117:
             restoreCursor();
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
         }
         i++;
         break;
-      case State.AfterEscape3:
-        switch (array[i]) {
+      case AfterEscape3:
+        switch (value) {
           case 32:
             params.push(currentParam);
-            state = State.AfterSpace;
+            state = AfterSpace;
             break;
           case 59:
             params.push(currentParam);
-            state = State.AfterEscape3AfterSemicolon;
+            state = AfterEscape3AfterSemicolon;
             break;
           case 48:
           case 49:
@@ -634,166 +629,166 @@ const parse = (array, {
           case 55:
           case 56:
           case 57:
-            currentParam = currentParam * 10 + array[i] - 48;
+            currentParam = currentParam * 10 + value - 48;
             break;
           case 64:
             params.push(currentParam);
             insertBlankCharacters(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 65:
             params.push(currentParam);
             cursorUp(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 66:
             params.push(currentParam);
             cursorDown(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 67:
             params.push(currentParam);
             cursorRight(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 68:
             params.push(currentParam);
             cursorLeft(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 69:
             params.push(currentParam);
             cursorNextLine(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 70:
             params.push(currentParam);
             cursorPrecedingLine(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 71:
             params.push(currentParam);
             cursorCharacterAbsolute(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 72:
             params.push(currentParam);
             cursorPosition(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 73:
             params.push(currentParam);
             cursorForwardTabulation(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 74:
             params.push(currentParam);
             eraseInDisplay(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 75:
             params.push(currentParam);
             eraseInLine(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 76:
             params.push(currentParam);
             insertLines(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 77:
             params.push(currentParam);
             deleteLines(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 80:
             params.push(currentParam);
             deleteCharacters(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 83:
             params.push(currentParam);
             scrollUp(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 84:
             params.push(currentParam);
             scrollDown(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 88:
             params.push(currentParam);
             eraseCharacters(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 90:
             params.push(currentParam);
             cursorBackwardTabulation(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 94:
             params.push(currentParam);
             scrollDown(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 96:
             params.push(currentParam);
             characterPositionAbsolute(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 97:
             params.push(currentParam);
             characterPositionRelative(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 98:
             params.push(currentParam);
             repeatPrecedingGraphicCharacter(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 100:
             params.push(currentParam);
             linePositionAbsolute(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 101:
             params.push(currentParam);
             linePositionRelative(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 102:
             params.push(currentParam);
             horizontalAndVerticalPosition(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 103:
             params.push(currentParam);
             tabClear(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 104:
             params.push(currentParam);
             setMode(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 108:
             params.push(currentParam);
             resetMode(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 109:
             params.push(currentParam);
             setCharAttributes(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           default:
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
         }
         i++;
         break;
-      case State.AfterEscape3AfterSemicolon:
-        switch (array[i]) {
+      case AfterEscape3AfterSemicolon:
+        switch (value) {
           case 48:
           case 49:
           case 50:
@@ -804,14 +799,14 @@ const parse = (array, {
           case 55:
           case 56:
           case 57:
-            currentParam = array[i] - 48;
-            state = State.AfterEscape3;
+            currentParam = value - 48;
+            state = AfterEscape3;
             break;
         }
         i++;
         break;
-      case State.AfterQuestionMark:
-        switch (array[i]) {
+      case AfterQuestionMark:
+        switch (value) {
           case 48:
           case 49:
           case 50:
@@ -822,30 +817,30 @@ const parse = (array, {
           case 55:
           case 56:
           case 57:
-            currentParam = array[i] - 48;
-            state = State.AfterQuestionMark2;
+            currentParam = value - 48;
+            state = AfterQuestionMark2;
             break;
           case 74:
             eraseInDisplay(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 75:
             eraseInLine(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 104:
             privateModeSet(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 108:
             privateModeReset(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
         }
         i++;
         break;
-      case State.AfterQuestionMark2:
-        switch (array[i]) {
+      case AfterQuestionMark2:
+        switch (value) {
           case 48:
           case 49:
           case 50:
@@ -856,62 +851,62 @@ const parse = (array, {
           case 55:
           case 56:
           case 57:
-            currentParam = currentParam * 10 + array[i] - 48;
+            currentParam = currentParam * 10 + value - 48;
             break;
           case 59:
             params.push(currentParam);
-            state = State.AfterQuestionMark;
+            state = AfterQuestionMark;
             break;
           case 74:
             params.push(currentParam);
             eraseInDisplay(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 75:
             params.push(currentParam);
             eraseInLine(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 104:
             params.push(currentParam);
             privateModeSet(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 108:
             params.push(currentParam);
             privateModeReset(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
         }
         i++;
         break;
-      case State.AfterExclamationMark:
-        switch (array[i]) {
+      case AfterExclamationMark:
+        switch (value) {
           case 112:
             softTerminalReset();
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
         }
         i++;
         break;
-      case State.AfterSpace:
-        switch (array[i]) {
+      case AfterSpace:
+        switch (value) {
           case 64:
             shiftLeftColumns(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 113:
             setCursorStyle(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           case 116:
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
         }
         i++;
         break;
-      case State.Osc:
-        switch (array[i]) {
+      case Osc:
+        switch (value) {
           case 48:
           case 49:
           case 50:
@@ -922,18 +917,18 @@ const parse = (array, {
           case 55:
           case 56:
           case 57:
-            currentParam = array[i] - 48;
-            state = State.Osc2;
+            currentParam = value - 48;
+            state = Osc2;
             break;
           case 7:
             setTextParameters(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
         }
         i++;
         break;
-      case State.Osc2:
-        switch (array[i]) {
+      case Osc2:
+        switch (value) {
           case 48:
           case 49:
           case 50:
@@ -944,23 +939,23 @@ const parse = (array, {
           case 55:
           case 56:
           case 57:
-            currentParam = currentParam * 10 + array[i] - 48;
+            currentParam = currentParam * 10 + value - 48;
             break;
           case 59:
             params.push(currentParam);
-            state = State.Osc3;
+            state = Osc3;
             break;
         }
         i++;
         break;
-      case State.Osc3:
-        switch (array[i]) {
+      case Osc3:
+        switch (value) {
           case 7:
             setTextParameters(params);
-            state = State.TopLevelContent;
+            state = TopLevelContent;
             break;
           default:
-            params.push(array[i]);
+            params.push(value);
         }
         i++;
     }
@@ -1214,14 +1209,19 @@ const transformKey = (event) => {
 };
 const CHAR_WIDTH$2 = 13;
 const CHAR_HEIGHT$2 = 15;
-const BACKGROUND$2 = "#000000";
-const FOREGROUND = "#ffffff";
 const COLS = 80;
 const ROWS = 25;
 const BUFFER_LINES = 200;
 const noop = () => {
 };
-const createTerminal = (root, {handleInput, bell = noop, setWindowTitle = noop}) => {
+const createTerminal = (root, {
+  background = "#000000",
+  foreground = "#ffffff",
+  handleInput,
+  bell = noop,
+  setWindowTitle = noop,
+  handleFocus = noop
+}) => {
   let focused = false;
   const handleKeyDown = (event) => {
     const transformedKey = transformKey(event);
@@ -1238,6 +1238,7 @@ const createTerminal = (root, {handleInput, bell = noop, setWindowTitle = noop})
     requestAnimationFrame(render);
   };
   const focus = () => {
+    handleFocus();
     if (focused) {
       return;
     }
@@ -1251,9 +1252,10 @@ const createTerminal = (root, {handleInput, bell = noop, setWindowTitle = noop})
   const canvasCursor = document.createElement("canvas");
   canvasCursor.className = "TerminalCanvasCursor";
   const $Layers = document.createElement("div");
-  $Layers.className = "Layers";
+  $Layers.className = "TerminalLayers";
   const textarea = document.createElement("textarea");
   textarea.className = "TerminalTextArea";
+  textarea.name = "terminal-input";
   $Layers.append(canvasText, canvasCursor);
   root.append(textarea, $Layers);
   textarea.onkeydown = handleKeyDown;
@@ -1270,8 +1272,8 @@ const createTerminal = (root, {handleInput, bell = noop, setWindowTitle = noop})
   let bufferYEnd = ROWS;
   let cursorYRelative = -ROWS;
   let cursorXRelative = -COLS;
-  let foreground = "#ffffff";
-  let background = "#000000";
+  let cellForeground = "#ffffff";
+  let cellBackground = "#000000";
   let cursorVisible = true;
   let cursorStyle = 2;
   const dirty = {
@@ -1314,22 +1316,22 @@ const createTerminal = (root, {handleInput, bell = noop, setWindowTitle = noop})
     },
     setCharAttributes(params) {
       if (params[1] === 7) {
-        [foreground, background] = [background, foreground];
+        [cellForeground, cellBackground] = [cellBackground, cellForeground];
       } else if (params[1] === 35) {
-        foreground = "#8000ff";
+        cellForeground = "#8000ff";
       } else if (params[1] === 32) {
-        foreground = "#09f900";
+        cellForeground = "#09f900";
       } else if (params[1] === 34) {
-        foreground = "#0090ff";
+        cellForeground = "#0090ff";
       } else {
-        foreground = FOREGROUND;
-        background = BACKGROUND$2;
+        cellForeground = foreground;
+        cellBackground = background;
       }
       const y = bufferYEnd + cursorYRelative;
       attributes[y] = attributes[y] || {};
       attributes[y][offsets[y]] = {
-        foreground,
-        background
+        foreground: cellForeground,
+        background: cellBackground
       };
     },
     cursorUp() {
@@ -1372,8 +1374,8 @@ const createTerminal = (root, {handleInput, bell = noop, setWindowTitle = noop})
       } else {
         cursorYRelative++;
       }
-      foreground = FOREGROUND;
-      background = BACKGROUND$2;
+      cellForeground = foreground;
+      cellBackground = background;
     },
     carriageReturn() {
       cursorXRelative = -COLS;
@@ -1476,7 +1478,7 @@ const createTerminal = (root, {handleInput, bell = noop, setWindowTitle = noop})
     insertBlankCharacters() {
     }
   };
-  const drawLines = createDrawLines(canvasText, lines, BUFFER_LINES, offsets, attributes, ROWS, COLS);
+  const drawLines = createDrawLines(canvasText, lines, BUFFER_LINES, offsets, attributes, ROWS, COLS, background, foreground);
   const drawCursor = createDrawCursor(canvasCursor);
   let scheduled = false;
   const render = () => {
@@ -1488,7 +1490,7 @@ const createTerminal = (root, {handleInput, bell = noop, setWindowTitle = noop})
     dirtyClear();
   };
   const write = (array) => {
-    parse(array, callbackFns);
+    parseArray(array, callbackFns);
     if (!scheduled) {
       scheduled = true;
       requestAnimationFrame(render);

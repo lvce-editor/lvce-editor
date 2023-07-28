@@ -32,8 +32,14 @@
   },
   {
     "name": "termterm",
-    "version": "0.0.22",
+    "version": "0.1.2",
     "type": "javascript"
+  },
+  {
+    "name": "termterm",
+    "version": "0.1.2",
+    "type": "css",
+    "path": "css/termterm.css"
   },
   {
     "name": "marked",
@@ -51,12 +57,7 @@
     "type": "file-collection",
     "urls": ["https://unpkg.com/pdfjs-dist@3.2.146/build/pdf.js", "https://unpkg.com/pdfjs-dist@3.2.146/build/pdf.worker.js"]
   },
-  {
-    "name": "termterm",
-    "version": "0.0.22",
-    "type": "css",
-    "path": "css/termterm.css"
-  },
+
   {
     "name": "modern-normalize",
     "version": "2.0.0",
