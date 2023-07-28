@@ -225,6 +225,11 @@
     "version": "0.0.27"
   },
   {
+    "name": "builtin.language-basics-wgsl",
+    "repository": "github.com/lvce-editor/language-basics-wgsl",
+    "version": "0.0.2"
+  },
+  {
     "name": "builtin.language-features-css",
     "repository": "github.com/lvce-editor/language-features-css",
     "version": "0.0.10"
