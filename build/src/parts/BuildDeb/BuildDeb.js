@@ -13,8 +13,8 @@ import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
-import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
+import * as Version from '../Version/Version.js'
 
 const getDebPackageArch = (arch) => {
   switch (arch) {
@@ -220,7 +220,7 @@ export const build = async ({ product }) => {
     await Exec.exec('fakeroot', Process.argv, { stdio: 'inherit' })
     return
   }
-  const version = await Tag.getGitTag()
+  const version = await Version.getVersion()
 
   console.time('cleanup')
   await cleanup()

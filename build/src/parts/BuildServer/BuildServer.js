@@ -13,6 +13,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Tag from '../Tag/Tag.js'
+import * as Version from '../Version/Version.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
@@ -831,7 +832,7 @@ const copyJestEnvironment = async ({ commitHash }) => {
 
 export const build = async ({ product }) => {
   const commitHash = await CommitHash.getCommitHash()
-  const version = await Tag.getGitTag()
+  const version = await Version.getVersion()
   const date = await GetCommitDate.getCommitDate(commitHash)
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
 
