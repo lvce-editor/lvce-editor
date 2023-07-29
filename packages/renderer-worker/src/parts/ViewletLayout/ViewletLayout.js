@@ -320,7 +320,7 @@ export const loadContent = (state, savedState) => {
   newPoints[kActivityBarVisible] = 1
   newPoints[kActivityBarWidth] = 48
   newPoints[kMainVisible] = 1
-  newPoints[kPanelHeight] = 160
+  newPoints[kPanelHeight] ||= 160
   newPoints[kPanelMaxHeight] = 600
   newPoints[kPanelMinHeight] = 150
   newPoints[kSideBarMaxWidth] = 9999999
@@ -348,6 +348,7 @@ export const loadContent = (state, savedState) => {
 }
 
 const show = async (state, module, currentViewletId) => {
+  console.log({ module })
   const { points } = state
   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
   const newPoints = new Uint16Array(points)
