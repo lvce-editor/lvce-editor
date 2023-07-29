@@ -32,6 +32,9 @@ export const bundleMainProcessDependencies = async ({ to, arch, electronVersion,
   }
   await Remove.remove(`${to}/node_modules/debug/src/browser.js`)
   await Remove.remove(`${to}/node_modules/clean-stack/home-directory-browser.js`)
+  await Remove.remove(`${to}/node_modules/minimist/example`)
+  await Remove.remove(`${to}/node_modules/lines-and-columns/index.d.ts`)
+  await Remove.remove(`${to}/node_modules/supports-color/browser.js`)
   for (const dependency of ['@babel/code-frame', '@babel/helper-validator-identifier', '@babel/highlight']) {
     const absolutePath = Path.join(to, 'node_modules', dependency)
     const dirents = await readdir(absolutePath, { recursive: true })
