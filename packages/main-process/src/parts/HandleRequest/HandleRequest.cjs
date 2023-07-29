@@ -14,7 +14,7 @@ exports.handleRequest = async (request) => {
   if (!Platform.isProduction) {
     if (request.url === `${Platform.scheme}://-/`) {
       const text = await response.text()
-      const modifiedText = text.replace('    <link rel="manifest" href="/manifest.json" />\n', '')
+      const modifiedText = text.replace('    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />\n', '')
       // @ts-ignore
       const modifiedResponse = new Response(modifiedText, response)
       return modifiedResponse
