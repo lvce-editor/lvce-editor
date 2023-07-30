@@ -6,20 +6,19 @@ import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Session from '../ElectronSession/ElectronSession.cjs'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs'
-import * as Path from '../Path/Path.cjs'
-import * as Platform from '../Platform/Platform.cjs'
-import * as Root from '../Root/Root.cjs'
+import * as GetProcessExplorerUrl from '../GetProcessExplorerUrl/GetProcessExplorerUrl.js'
 
 export const open = async () => {
   const colorThemeJson = await ColorTheme.getColorThemeJson()
   const backgroundColor = colorThemeJson.MainBackground
+  const preload = GetProcessExplorerUrl.getProcessExplorerPreloadUrl()
   const processExplorerWindow = new BrowserWindow({
     width: 800,
     height: 500,
     backgroundColor,
     webPreferences: {
       session: Session.get(),
-      preload: Path.join(Root.root, 'packages', 'main-process', 'pages', 'process-explorer', 'process-explorer-preload.js'),
+      preload,
       sandbox: true,
       additionalArguments: ['--lvce-window-kind=process-explorer'],
     },
@@ -60,8 +59,9 @@ export const open = async () => {
   const processExplorerThemeCss = ColorTheme.toCss(colorThemeJson)
   const processExporerThemeCssPath = join(tmpdir(), 'process-explorer-theme.css')
   await writeFile(processExporerThemeCssPath, processExplorerThemeCss)
+  const url = GetProcessExplorerUrl.getProcessExplorerUrl()
   try {
-    await processExplorerWindow.loadURL(`${Platform.scheme}://-/packages/main-process/pages/process-explorer/process-explorer.html`)
+    await processExplorerWindow.loadURL(url)
   } catch (error) {
     console.error(error)
     // @ts-ignore
