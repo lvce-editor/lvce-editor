@@ -270,6 +270,10 @@
     {
       "name": "MarkdownLinkUrl",
       "foreground": "#B2885F"
+    },
+    {
+      "name": "CssPseudoSelector",
+      "foreground": "#7A8D5C"
     }
   ]
 }
