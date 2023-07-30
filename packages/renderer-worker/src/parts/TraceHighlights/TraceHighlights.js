@@ -25,8 +25,6 @@ export const traceHighlights = (table, arrows, patternLength, wordLength) => {
       }
       const end = column
       matches.unshift(end, start)
-    } else if (arrow === undefined) {
-      break
     }
   }
   matches.unshift(table[patternLength][wordLength - 1])
