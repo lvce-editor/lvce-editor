@@ -22,8 +22,8 @@ const printTables = (pattern, patternStart, word, wordStart) => {
 }
 
 export const filterCompletionItem = (pattern, word) => {
-  const patternLength = pattern.length
-  const wordLength = word.length
+  const patternLength = Math.min(pattern.length, gridSize - 1)
+  const wordLength = Math.min(word.length, gridSize - 1)
   const patternLower = pattern.toLowerCase()
   const wordLower = word.toLowerCase()
   if (!IsPatternInWord.isPatternInWord(patternLower, 0, patternLength, wordLower, 0, wordLength)) {
