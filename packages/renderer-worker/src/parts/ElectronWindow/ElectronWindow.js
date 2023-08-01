@@ -28,7 +28,7 @@ export const close = async () => {
 }
 
 export const openNew = async (url) => {
-  return ElectronProcess.invoke('AppElectronWindow.openNew', url)
+  return ElectronProcess.invoke('AppWindow.openNew', url)
 }
 
 export const toggleDevtools = async () => {
