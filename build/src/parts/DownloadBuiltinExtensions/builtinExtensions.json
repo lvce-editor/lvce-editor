@@ -32,7 +32,7 @@
   {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   {
     "name": "builtin.language-basics-dart",
@@ -52,7 +52,7 @@
   {
     "name": "builtin.language-basics-dotenv",
     "repository": "github.com/lvce-editor/language-basics-dotenv",
-    "version": "0.0.8"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.language-basics-editorconfig",
@@ -107,7 +107,7 @@
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.0.22"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.language-basics-json5",
@@ -207,7 +207,7 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "0.5.0"
+    "version": "0.6.0"
   },
   {
     "name": "builtin.language-basics-vue",
@@ -217,7 +217,7 @@
   {
     "name": "builtin.language-basics-xml",
     "repository": "github.com/lvce-editor/language-basics-xml",
-    "version": "0.0.10"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.language-basics-yaml",
