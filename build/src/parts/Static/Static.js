@@ -418,82 +418,6 @@ Disallow: /
   })
 }
 
-/**
- * Configure caching for netlify
- * - static assets are cached for one year
- * - manifest.json is cached for one week (thats what github and reddit do, seems pretty reasonable)
- * - favicon.ico is also cached for one week
- * - index.html is cached for 10min
- */
-const TEMPLATE_NETLIFY_HEADERS = `/COMMIT_HASH/*
-  Cache-Control: public, max-age=31536000, immutable
-  Cross-Origin-Embedder-Policy: require-corp
-  X-Content-Type-Options: nosniff
-
-/fonts/*
-  Cache-Control: public, max-age=31536000, immutable
-  X-Content-Type-Options: nosniff
-
-/sounds/*
-  Cache-Control: public, max-age=31536000, immutable
-  X-Content-Type-Options: nosniff
-
-/file-icons/*
-  Cache-Control: public, max-age=31536000, immutable
-  X-Content-Type-Options: nosniff
-
-/tests/*
-  Cache-Control: public, max-age=31536000, immutable
-  X-Content-Type-Options: nosniff
-
-/manifest.json
-  Cache-Control: public, max-age=604800, immutable
-  X-Content-Type-Options: nosniff
-
-/favicon.ico
-  Cache-Control: public, max-age=604800, immutable
-  X-Content-Type-Options: nosniff
-
-/
-  Cache-Control: public, max-age=600, immutable
-  X-Content-Type-Options: nosniff
-  Cross-Origin-Embedder-Policy: require-corp
-  Cross-Origin-Opener-Policy: same-origin
-`
-
-const TEMPLATE_NETLIFY_REDIRECTS = `/github/*   /index.html   200
-`
-
-const TEMPLATE_NETLIFY_NOT_FOUND_PAGE = `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Not Found</title>
-  </head>
-  <body>
-    <h1>404 - Page Not Found</h1>
-  </body>
-</html>
-`
-
-const addNetlifyConfigFiles = async () => {
-  const commitHash = await CommitHash.getCommitHash()
-  const netlifyHeaders = TEMPLATE_NETLIFY_HEADERS.replaceAll('COMMIT_HASH', commitHash)
-  await WriteFile.writeFile({
-    to: `build/.tmp/dist/_headers`,
-    content: netlifyHeaders,
-  })
-  await WriteFile.writeFile({
-    to: `build/.tmp/dist/_redirects`,
-    content: TEMPLATE_NETLIFY_REDIRECTS,
-  })
-  await WriteFile.writeFile({
-    to: `build/.tmp/dist/404.html`,
-    content: TEMPLATE_NETLIFY_NOT_FOUND_PAGE,
-  })
-}
-
 const addVersionFile = async ({ commitHash }) => {
   const commitMessage = await CommitHash.getCommitMessage()
   await JsonFile.writeJson({
@@ -750,10 +674,6 @@ export const build = async () => {
   Console.time('addRobotsTxt')
   await addRobotsTxt()
   Console.timeEnd('addRobotsTxt')
-
-  Console.time('addNetlifyHeaders')
-  await addNetlifyConfigFiles()
-  Console.timeEnd('addNetlifyHeaders')
 
   Console.time('copyTestFiles')
   await copyTestFiles({ pathPrefix, commitHash })
