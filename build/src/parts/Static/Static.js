@@ -1,11 +1,14 @@
+import { readFile, writeFile } from 'fs/promises'
 import { existsSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
+import { pathToFileURL } from 'url'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
 import * as InlineDynamicImportsFile from '../InlineDynamicImportsFile/InlineDynamicImportsFile.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
@@ -16,6 +19,8 @@ import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
+import * as GetNewCssDeclarationFile from '../GetNewCssDeclarationFile/GetNewCssDeclarationFile.js'
 
 const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
@@ -208,6 +213,18 @@ export const getModule = (method) => {
     ],
     ipcPostFix: true,
   })
+  const cssDeclarationFiles = await GetCssDeclarationFiles.getCssDeclarationFiles(`build/.tmp/dist/${commitHash}/packages/renderer-worker`)
+  for (const file of cssDeclarationFiles) {
+    const url = pathToFileURL(file).toString()
+    const module = await import(url)
+    const Css = module.Css
+    if (Css) {
+      const content = await readFile(file, 'utf8')
+      const filteredDeclarations = GetFilteredCssDeclarations.getFilteredCssDeclarations(Css)
+      const newContent = GetNewCssDeclarationFile.getNewCssDeclarationFile(content, filteredDeclarations)
+      await writeFile(file, newContent)
+    }
+  }
 }
 
 const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
