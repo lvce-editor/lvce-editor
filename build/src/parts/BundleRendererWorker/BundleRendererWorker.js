@@ -1,34 +1,12 @@
 import { readFile, writeFile } from 'fs/promises'
+import { pathToFileURL } from 'url'
 import VError from 'verror'
 import * as BundleJs from '../BundleJs/BundleJs.js'
 import * as Copy from '../Copy/Copy.js'
-import * as EagerLoadedCss from '../EagerLoadedCss/EagerLoadedCss.js'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
+import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
-import { pathToFileURL } from 'url'
-
-const isEagerLoaded = (cssDeclaration) => {
-  for (const eagerLoaded of EagerLoadedCss.eagerLoadedCss) {
-    if (cssDeclaration.endsWith(`/${eagerLoaded}`)) {
-      return true
-    }
-  }
-  return false
-}
-
-const getFilteredCssDeclarations = (cssDeclarations) => {
-  if (typeof cssDeclarations === 'string') {
-    cssDeclarations = [cssDeclarations]
-  }
-  const filtered = []
-  for (const cssDeclaration of cssDeclarations) {
-    if (!isEagerLoaded(cssDeclaration)) {
-      filtered.push(cssDeclaration)
-    }
-  }
-  return filtered
-}
 
 const getNewCssDeclarionFile = (content, filteredCss) => {
   const lines = content.split('\n')
@@ -62,7 +40,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       const Css = module.Css
       if (Css) {
         const content = await readFile(file, 'utf8')
-        const filteredDeclarations = getFilteredCssDeclarations(Css)
+        const filteredDeclarations = GetFilteredCssDeclarations.getFilteredCssDeclarations(Css)
         const newContent = getNewCssDeclarionFile(content, filteredDeclarations)
         await writeFile(file, newContent)
       }
