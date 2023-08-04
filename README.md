@@ -1,5 +1,7 @@
 # LVCE Editor
 
+VS Code inspired text editor that mostly runs in a webworker.
+
 ## Contributing
 
 ```sh

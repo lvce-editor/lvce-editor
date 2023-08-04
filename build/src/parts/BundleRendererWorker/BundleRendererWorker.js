@@ -8,7 +8,7 @@ import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFi
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 
-const getNewCssDeclarionFile = (content, filteredCss) => {
+const getNewCssDeclarationFile = (content, filteredCss) => {
   const lines = content.split('\n')
   const newLines = []
   let skip = false
@@ -41,7 +41,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       if (Css) {
         const content = await readFile(file, 'utf8')
         const filteredDeclarations = GetFilteredCssDeclarations.getFilteredCssDeclarations(Css)
-        const newContent = getNewCssDeclarionFile(content, filteredDeclarations)
+        const newContent = getNewCssDeclarationFile(content, filteredDeclarations)
         await writeFile(file, newContent)
       }
     }
