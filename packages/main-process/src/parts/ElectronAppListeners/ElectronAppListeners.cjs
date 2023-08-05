@@ -51,7 +51,7 @@ exports.handleSecondInstance = async (
   if (handled) {
     return
   }
-  await this.handleReady(parsedArgs, workingDirectory)
+  await exports.handleReady(parsedArgs, workingDirectory)
 }
 
 const handleWebContentsWindowOpen = ({ url }) => {
