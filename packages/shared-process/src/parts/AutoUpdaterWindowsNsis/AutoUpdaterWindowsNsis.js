@@ -1,21 +1,14 @@
 import { spawn } from 'node:child_process'
-import { tmpdir } from 'node:os'
-import { join } from 'node:path'
 import * as Assert from '../Assert/Assert.js'
 import * as Download from '../Download/Download.js'
 import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
 import * as GetFirstSpawnedProcessEvent from '../GetFirstSpawnedProcessEvent/GetFirstSpawnedProcessEvent.js'
 import * as GetNsisUpdateArgs from '../GetNsisUpdateArgs/GetNsisUpdateArgs.js'
+import * as GetNsisDownloadPath from '../GetNsisUpdateDownloadPath/GetNsisUpdateDownloadPath.js'
 import * as GetWindowsNsisDownloadUrl from '../GetWindowsNsisDownloadUrl/GetWindowsNsisDownloadUrl.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import { VError } from '../VError/VError.js'
-
-const getOutfilePath = (version) => {
-  Assert.string(version)
-  const outFile = join(tmpdir(), `nsis-update-${version}`)
-  return outFile
-}
 
 export const downloadUpdate = async (version) => {
   try {
@@ -24,7 +17,7 @@ export const downloadUpdate = async (version) => {
     const setupName = Platform.getSetupName()
     const fileName = `${setupName}-v${version}.exe`
     const downLoadUrl = GetWindowsNsisDownloadUrl.getDownloadUrl(repository, version, fileName)
-    const outFile = getOutfilePath(version)
+    const outFile = GetNsisDownloadPath.getNsisUpdateDownloadPath(version)
     Logger.info(`[shared-process] downloading nsis update: ${downLoadUrl} -> ${outFile}`)
     await Download.download(downLoadUrl, outFile)
     Logger.info(`[shared-process] downloaded nsis update: ${outFile}`)
