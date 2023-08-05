@@ -34,6 +34,9 @@ export const link = async (path) => {
     const to = Path.join(linkedExtensionsPath, manifest.id)
     await SymLink.createSymLink(path, to)
   } catch (error) {
+    if (error && error.code === ErrorCodes.E_MANIFEST_NOT_FOUND) {
+      throw new VError(`Failed to link extension: Extension manifest not found '${error.path}'`)
+    }
     if (error && error.code === ErrorCodes.EEXIST) {
       return linkFallBack(path)
     }
