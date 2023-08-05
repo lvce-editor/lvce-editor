@@ -9,8 +9,8 @@ import { VError } from '../VError/VError.js'
 
 // TODO json parsing and error handling should happen in renderer process
 export const get = async (path) => {
+  const absolutePath = Path.join(path, 'extension.json')
   try {
-    const absolutePath = Path.join(path, 'extension.json')
     const json = await ReadJson.readJson(absolutePath)
     if (!isObject(json)) {
       // TODO should include stack of extension json file here
@@ -38,6 +38,8 @@ export const get = async (path) => {
           status: ExtensionManifestStatus.Resolved,
         }
       } catch {}
+      // @ts-ignore
+      enhancedError.path = absolutePath
       // @ts-ignore
       enhancedError.code = ErrorCodes.E_MANIFEST_NOT_FOUND
     } else {
