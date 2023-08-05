@@ -41,7 +41,7 @@ export const createPlaceholderElectronApp = async ({ config, product, version, e
   await copyElectronBuilderConfig({ config, product, version, electronVersion })
 
   await WriteFile.writeFile({
-    to: 'build/.tmp/electron-builder-placeholder-app/packages/main-process/dist/mainProcessMain.js',
+    to: 'build/.tmp/electron-builder-placeholder-app/packages/main-process/dist/mainProcessMain.cjs',
     content: '',
   })
 
