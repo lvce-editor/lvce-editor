@@ -32,7 +32,10 @@ export const installAndRestart = async (downloadPath) => {
     Assert.string(downloadPath)
     const args = GetNsisUpdateArgs.getNsisUpdateArgs()
     Logger.info(`[shared-process] spawning nsis update: ${downloadPath}`)
-    const child = spawn(downloadPath, args, { stdio: 'inherit' })
+    const child = spawn(downloadPath, args, {
+      stdio: 'inherit',
+      detached: true,
+    })
     const { type, event } = await GetFirstSpawnedProcessEvent.getFirstSpawnedProcessEvent(child)
     if (type === FirstNodeWorkerEventType.Error) {
       throw new Error(`Child process error: ${event}`)
