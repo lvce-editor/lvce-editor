@@ -1,7 +1,7 @@
 {
   "name": "@@NAME@@",
   "productName": "@@WINDOWS_EXECUTABLE_NAME@@",
-  "main": "packages/main-process/dist/mainProcessMain.js",
+  "main": "@@MAIN@@",
   "author": "@@AUTHOR@@",
   "description": "@@NAME_LONG@@",
   "version": "@@VERSION@@",

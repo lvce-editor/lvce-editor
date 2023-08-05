@@ -13,6 +13,7 @@ import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
+import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 
 // TODO don't need to include whole node-pty module
 // TODO maybe don't need to include nan module
@@ -38,6 +39,8 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
   // if (config === 'electron_builder_arch_linux') {
   //   version = version.replaceAll('-', '_') // https://wiki.archlinux.org/title/creating_packages#pkgver()
   // }
+  const bundleMainProcess = BundleOptions.bundleMainProcess
+  const mainProcessPath = bundleMainProcess ? `packages/main-process/dist/mainProcessMain.cjs` : `packages/main-process/src/mainProcessMain.cjs`
   await Template.write(config, 'build/.tmp/electron-builder/package.json', {
     '@@NAME@@': product.applicationName,
     '@@AUTHOR@@': product.linuxMaintainer,
@@ -48,6 +51,7 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
     '@@LICENSE@@': product.licenseName,
     '@@PRODUCT_NAME@@': product.nameLong,
     '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
+    '@@MAIN@@': mainProcessPath,
   })
 }
 
