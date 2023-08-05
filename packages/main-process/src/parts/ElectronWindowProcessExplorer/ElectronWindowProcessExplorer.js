@@ -21,6 +21,7 @@ export const open = async () => {
       preload,
       sandbox: true,
       additionalArguments: ['--lvce-window-kind=process-explorer'],
+      spellcheck: false,
     },
   })
   const windowId = processExplorerWindow.id
