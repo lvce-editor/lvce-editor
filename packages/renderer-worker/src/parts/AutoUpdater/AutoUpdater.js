@@ -1,20 +1,13 @@
 import * as AutoUpdaterModule from '../AutoUpdaterModule/AutoUpdaterModule.js'
 import * as AutoUpdaterStrings from '../AutoUpdaterStrings/AutoUpdaterStrings.js'
 import * as Command from '../Command/Command.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-
-const getLatestVersion = () => {
-  return SharedProcess.invoke('AutoUpdater.getLatestVersion')
-}
-
-const getAutoUpdateType = () => {
-  return SharedProcess.invoke('AutoUpdater.getAutoUpdateType')
-}
+import * as GetAutoUpdateType from '../GetAutoUpdateType/GetAutoUpdateType.js'
+import * as GetLatestVersion from '../GetLatestVersion/GetLatestVersion.js'
 
 export const checkForUpdates = async () => {
-  const info = await getLatestVersion()
+  const info = await GetLatestVersion.getLatestVersion()
   if (info && info.version) {
-    const type = await getAutoUpdateType()
+    const type = await GetAutoUpdateType.getAutoUpdateType()
     const message = AutoUpdaterStrings.promptMessage(info.version)
     const shouldUpdate = await Command.execute('ConfirmPrompt.prompt', message)
     if (!shouldUpdate) {
