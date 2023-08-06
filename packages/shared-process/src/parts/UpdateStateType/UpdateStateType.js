@@ -1,0 +1,9 @@
+export const Uninitialized = 1
+export const Idle = 2
+export const Disabled = 3
+export const CheckingForUpdates = 3
+export const AvailableForDownload = 4
+export const Downloading = 5
+export const Downloaded = 6
+export const Updating = 7
+export const Ready = 8
