@@ -8,8 +8,11 @@ import * as GetNsisDownloadPath from '../GetNsisUpdateDownloadPath/GetNsisUpdate
 import * as GetWindowsNsisDownloadUrl from '../GetWindowsNsisDownloadUrl/GetWindowsNsisDownloadUrl.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
+import * as UpdateState from '../UpdateState/UpdateState.js'
+import * as UpdateStateType from '../UpdateStateType/UpdateStateType.js'
 import { VError } from '../VError/VError.js'
 
+// TODO make it possible to cancel downloading updates
 export const downloadUpdate = async (version) => {
   try {
     Assert.string(version)
@@ -19,7 +22,9 @@ export const downloadUpdate = async (version) => {
     const downLoadUrl = GetWindowsNsisDownloadUrl.getDownloadUrl(repository, version, fileName)
     const outFile = GetNsisDownloadPath.getNsisUpdateDownloadPath(version)
     Logger.info(`[shared-process] downloading nsis update: ${downLoadUrl} -> ${outFile}`)
+    UpdateState.set(UpdateStateType.Downloading)
     await Download.download(downLoadUrl, outFile)
+    UpdateState.set(UpdateStateType.Downloaded)
     Logger.info(`[shared-process] downloaded nsis update: ${outFile}`)
     return outFile
   } catch (error) {
@@ -32,6 +37,7 @@ export const installAndRestart = async (downloadPath) => {
     Assert.string(downloadPath)
     const args = GetNsisUpdateArgs.getNsisUpdateArgs()
     Logger.info(`[shared-process] spawning nsis update: ${downloadPath}`)
+    UpdateState.set(UpdateStateType.Updating)
     const child = spawn(downloadPath, args, {
       stdio: 'inherit',
       detached: true,
