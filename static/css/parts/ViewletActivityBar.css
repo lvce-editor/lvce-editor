@@ -43,6 +43,10 @@
   background: var(--ActivityBarActiveBackground);
 }
 
+.ActivityBarItemNested {
+  background: var(--ActivityBarBackground);
+}
+
 .ActivityBarItem:focus-visible {
   /* background: var(--ActivityBarActiveBackground); */
   color: var(--ActivityBarActiveForeground);
