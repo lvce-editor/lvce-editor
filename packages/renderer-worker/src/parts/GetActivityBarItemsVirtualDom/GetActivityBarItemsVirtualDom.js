@@ -1,11 +1,13 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as Icon from '../Icon/Icon.js'
 
 const createActivityBarItem = (item) => {
   const { flags, title, icon } = item
   const isTab = flags & ActivityBarItemFlags.Tab
   const isSelected = flags & ActivityBarItemFlags.Selected
   const isFocused = flags & ActivityBarItemFlags.Focused
+  const isProgress = flags & ActivityBarItemFlags.Progress
   const role = isTab ? 'tab' : 'button'
   const ariaSelected = isTab ? isSelected : undefined
   let className = 'ActivityBarItem'
@@ -33,6 +35,45 @@ const createActivityBarItem = (item) => {
       },
     ]
   }
+
+  // TODO support progress on selected activity bar item
+  if (isProgress) {
+    className += ' ActivityBarItemNested'
+    return [
+      {
+        type: VirtualDomElements.Div,
+        className,
+        ariaLabel: '',
+        title,
+        role,
+        ariaSelected,
+        childCount: 2,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon',
+        role: 'none',
+        childCount: 0,
+        maskImage: icon,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'Badge',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'BadgeContent',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon',
+        maskImage: Icon.Progress,
+      },
+    ]
+  }
+
   return [
     {
       type: VirtualDomElements.Div,
