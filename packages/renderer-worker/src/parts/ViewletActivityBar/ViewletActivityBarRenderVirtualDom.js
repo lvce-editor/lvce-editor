@@ -1,13 +1,6 @@
 import * as GetActivityBarItemsVirtualDom from '../GetActivityBarItemsVirtualDom/GetActivityBarItemsVirtualDom.js'
 import * as GetVisibleActivityBarItems from '../GetVisibleActivityBarItems/GetVisibleActivityBarItems.js'
 
-/**
- * @enum {string}
- */
-const ClassNames = {
-  KeyBindingsTableRow: 'KeyBindingsTableRow',
-}
-
 const renderItems = {
   isEqual(oldState, newState) {
     return (
@@ -19,7 +12,7 @@ const renderItems = {
   },
   apply(oldState, newState) {
     const visibleItems = GetVisibleActivityBarItems.getVisibleActivityBarItems(newState)
-    const dom = GetActivityBarItemsVirtualDom.getVirtualDom(visibleItems, newState.selectedIndex, newState.focusedIndex)
+    const dom = GetActivityBarItemsVirtualDom.getVirtualDom(visibleItems)
     return ['setDom', dom]
   },
 }

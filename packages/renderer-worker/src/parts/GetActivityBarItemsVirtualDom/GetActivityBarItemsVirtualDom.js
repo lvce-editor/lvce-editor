@@ -1,9 +1,11 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-const createActivityBarItem = (item, isSelected, isFocused) => {
+const createActivityBarItem = (item) => {
   const { flags, title, icon } = item
-  const isTab = flags === ActivityBarItemFlags.Tab
+  const isTab = flags & ActivityBarItemFlags.Tab
+  const isSelected = flags & ActivityBarItemFlags.Selected
+  const isFocused = flags & ActivityBarItemFlags.Focused
   const role = isTab ? 'tab' : 'button'
   const ariaSelected = isTab ? isSelected : undefined
   let className = 'ActivityBarItem'
@@ -45,13 +47,7 @@ const createActivityBarItem = (item, isSelected, isFocused) => {
   ]
 }
 
-export const getVirtualDom = (visibleItems, selectedIndex, focusedIndex) => {
-  const dom = []
-  for (let i = 0; i < visibleItems.length; i++) {
-    const isSelected = i === selectedIndex
-    const isFocused = i === focusedIndex
-    const item = visibleItems[i]
-    dom.push(...createActivityBarItem(item, isSelected, isFocused))
-  }
+export const getVirtualDom = (visibleItems) => {
+  const dom = visibleItems.flatMap(createActivityBarItem)
   return dom
 }
