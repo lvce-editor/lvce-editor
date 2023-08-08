@@ -1,11 +1,12 @@
+import * as ArchType from '../ArchType/ArchType.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Exec from '../Exec/Exec.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
-import * as Tag from '../Tag/Tag.js'
-import * as Version from '../Version/Version.js'
 import * as Template from '../Template/Template.js'
-import * as ArchType from '../ArchType/ArchType.js'
+import * as Version from '../Version/Version.js'
+import * as CreateSnap from '../CreateSnap/CreateSnap.js'
+
 // TODO get rid of no-sandbox somehow https://github.com/electron/electron/issues/17972
 
 const getSnapArch = (arch) => {
@@ -160,37 +161,9 @@ const copyCode = async (arch) => {
     from: 'packages/shared-process/src',
     to: `build/.tmp/linux/snap/${arch}/files/packages/shared-process/src`,
   })
-
-  // web
-  await Copy.copyFile({
-    from: 'packages/web/package.json',
-    to: `build/.tmp/linux/snap/${arch}/files/packages/web/package.json`,
-  })
-  await Copy.copyFile({
-    from: 'packages/web/package-lock.json',
-    to: `build/.tmp/linux/snap/${arch}/files/packages/web/package-lock.json`,
-  })
-  await Copy.copy({
-    from: 'packages/web/src',
-    to: `build/.tmp/linux/snap/${arch}/files/packages/web/src`,
-  })
 }
 
 const copyExtensions = async (arch) => {}
-
-const createSnap = async (arch) => {
-  if (process.env.SKIP_SNAP) {
-    return
-  }
-  await Exec.exec('snapcraft', [], {
-    cwd: Path.absolute(`build/.tmp/linux/snap/${arch}`),
-    stdio: 'inherit',
-    shell: true,
-    env: {
-      ...process.env,
-    },
-  })
-}
 
 const printSnapSize = async ({ arch, product, version }) => {
   const Stat = await import('../Stat/Stat.js')
@@ -214,7 +187,7 @@ export const build = async ({ product }) => {
   console.timeEnd('copyCode')
 
   console.time('createSnap')
-  await createSnap(arch)
+  await CreateSnap.createSnap(arch)
   console.timeEnd('createSnap')
 
   await printSnapSize({ arch, product, version })
