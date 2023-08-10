@@ -109,6 +109,9 @@ jobs:
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2022'
         run: node build/bin/build.js --target=electron-builder-windows-exe
+      - name: Build Electron App (snap, x64)
+        if: matrix.os == 'ubuntu-22.04'
+        run: node build/bin/build.js --target=electron-builder-snap
       - name: Clean up
         run: rm -rf node build/.tmp
         shell: bash
