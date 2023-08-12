@@ -24,6 +24,9 @@
           "target": "snap"
         }
       ]
+    },
+    "snap": {
+      "publish": []
     }
   }
 }
