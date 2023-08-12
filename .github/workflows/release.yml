@@ -120,7 +120,7 @@ jobs:
           echo "ASSET_SNAP_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (snap, x64)
         uses: actions/upload-release-asset@v1.0.1
-        if: matrix.os == 'ubuntu-22.04-12'
+        if: matrix.os == 'ubuntu-22.04'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
