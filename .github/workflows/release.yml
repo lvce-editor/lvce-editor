@@ -110,7 +110,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (snap, x64)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --target=electron-builder-snap
+        run: node build/bin/build.js --product=lvce --target=electron-builder-snap
       - name: Rename Electron App (snap, x64)
         if: matrix.os == 'ubuntu-22.04'
         shell: bash
