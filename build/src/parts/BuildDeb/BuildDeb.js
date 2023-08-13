@@ -47,7 +47,7 @@ const bundleElectronMaybe = async ({ product, version, shouldRemoveUnusedLocales
 const copyElectronResult = async ({ product, version, arch, debArch }) => {
   await bundleElectronMaybe({ product, version, shouldRemoveUnusedLocales: true, arch })
   await Copy.copy({
-    from: `build/.tmp/electron-bundle/${debArch}`,
+    from: `build/.tmp/electron-bundle/${arch}`,
     to: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}`,
   })
   await Remove.remove(
