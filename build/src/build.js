@@ -63,6 +63,7 @@ const getBuildModule = (target) => {
 const main = async () => {
   const argv = minimist(Process.argv.slice(2))
   const target = argv.target
+  const arch = argv.arch || process.arch
   if (!target) {
     console.error('Error: target not specified')
     console.error(`Hint: Try using "node build.js --target=static"`)
@@ -71,7 +72,8 @@ const main = async () => {
   const product = await getProduct(argv.product)
   const module = await getBuildModule(target)
   try {
-    await module.build({ product })
+    // @ts-ignore
+    await module.build({ product, arch })
   } catch (error) {
     console.error(`Build failed:`)
     console.error(error)

@@ -23,7 +23,6 @@ import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
-import * as Tag from '../Tag/Tag.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate }) => {
@@ -57,7 +56,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
 }
 
 const downloadElectron = async ({ platform, arch, electronVersion }) => {
-  const outDir = Path.join(Root.root, 'build', '.tmp', 'electron', electronVersion)
+  const outDir = Path.join(Root.root, 'build', '.tmp', 'cachedElectronVersions', `electron-${electronVersion}-${platform}-${arch}`)
   const DownloadElectron = await import('../DownloadElectron/DownloadElectron.js')
   await DownloadElectron.downloadElectron({
     electronVersion,
@@ -237,11 +236,16 @@ const addRootPackageJson = async ({ cachePath, electronVersion, product, bundleM
   })
 }
 
-export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate = false, shouldRemoveUnusedLocales = false }) => {
+export const build = async ({
+  product,
+  version = '0.0.0-dev',
+  supportsAutoUpdate = false,
+  shouldRemoveUnusedLocales = false,
+  arch = process.arch,
+}) => {
   Assert.object(product)
   Assert.string(version)
-  const arch = process.arch
-  const { electronVersion, isInstalled } = await GetElectronVersion.getElectronVersion()
+  const { electronVersion, isInstalled, installedArch } = await GetElectronVersion.getElectronVersion()
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
     arch,
@@ -254,7 +258,8 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   const bundleMainProcess = BundleOptions.bundleMainProcess
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
 
-  if (!isInstalled) {
+  const useInstalledElectronVersion = isInstalled && installedArch === arch
+  if (!useInstalledElectronVersion) {
     console.time('downloadElectron')
     await downloadElectron({
       arch,
@@ -284,7 +289,7 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   await copyElectron({
     arch,
     electronVersion,
-    useInstalledElectronVersion: isInstalled,
+    useInstalledElectronVersion,
     product,
   })
   console.timeEnd('copyElectron')

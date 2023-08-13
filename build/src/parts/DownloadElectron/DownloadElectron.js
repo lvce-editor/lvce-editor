@@ -3,14 +3,9 @@ import VError from 'verror'
 import * as ExtractZip from '../ExtractZip/ExtractZip.js'
 import * as Logger from '../Logger/Logger.js'
 
-export const downloadElectron = async ({
-  electronVersion,
-  outDir,
-  platform,
-  arch,
-}) => {
+export const downloadElectron = async ({ electronVersion, outDir, platform, arch }) => {
   try {
-    Logger.info(`downloading electron ${electronVersion}`)
+    Logger.info(`downloading electron ${electronVersion} ${arch}`)
     const zipFilePath = await ElectronGet.downloadArtifact({
       version: electronVersion,
       platform,
