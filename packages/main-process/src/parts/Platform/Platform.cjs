@@ -85,13 +85,13 @@ exports.getExtensionHostHelperProcessPathCjs = () => {
 }
 
 exports.getVersion = () => {
-  return this.version
+  return exports.version
 }
 
 exports.getCommit = () => {
-  return this.commit
+  return exports.commit
 }
 
 exports.getProductNameLong = () => {
-  return this.productNameLong
+  return exports.productNameLong
 }
