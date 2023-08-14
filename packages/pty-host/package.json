@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@babel/code-frame": "^7.22.10",
+    "@lvce-editor/pretty-error": "^1.0.0",
     "debug": "^4.3.4",
     "lines-and-columns": "^2.0.3",
     "verror": "^1.10.1",
