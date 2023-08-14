@@ -3,8 +3,8 @@ import VError from 'verror'
 import * as ArchType from '../ArchType/ArchType.js'
 import * as Compress from '../Compress/Compress.js'
 import * as Copy from '../Copy/Copy.js'
-import * as DebArchType from '../DebArchType/DebArchType.js'
 import * as Exec from '../Exec/Exec.js'
+import * as GetDebPackageArch from '../GetDebPackageArch/GetDebPackageArch.js'
 import * as GetInstalledSize from '../GetInstalledSize/GetInstalledSize.js'
 import * as IsFakeRoot from '../IsFakeRoot/IsFakeRoot.js'
 import * as LinuxDependencies from '../LinuxDependencies/LinuxDependencies.js'
@@ -19,20 +19,6 @@ import * as Stat from '../Stat/Stat.js'
 import * as Symlink from '../Symlink/Symlink.js'
 import * as Template from '../Template/Template.js'
 import * as Version from '../Version/Version.js'
-
-const getDebPackageArch = (arch) => {
-  switch (arch) {
-    case ArchType.X64:
-    case ArchType.Amd64:
-      return DebArchType.Amd64
-    case ArchType.ArmHf:
-      return DebArchType.ArmHf
-    case ArchType.Arm64:
-      return DebArchType.Arm64
-    default:
-      throw new Error(`unsupported arch "${arch}"`)
-  }
-}
 
 const bundleElectronMaybe = async ({ product, version, shouldRemoveUnusedLocales, arch = ArchType.Amd64 }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
@@ -205,7 +191,10 @@ const cleanup = async ({ debArch }) => {
 }
 
 export const build = async ({ product, arch }) => {
-  const debArch = getDebPackageArch(arch)
+  if (arch === ArchType.ArmHf) {
+    arch = ArchType.Armv7l
+  }
+  const debArch = GetDebPackageArch.getDebPackageArch(arch)
   if (!IsFakeRoot.isFakeRoot()) {
     Logger.info('[info] enabling fakeroot')
     await Exec.exec('fakeroot', Process.argv, { stdio: 'inherit' })
