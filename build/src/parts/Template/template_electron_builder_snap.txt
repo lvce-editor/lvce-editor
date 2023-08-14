@@ -27,8 +27,7 @@
     },
     "snap": {
       "publish": [],
-      "confinement": "classic",
-      "compression": "lzo"
+      "confinement": "classic"
     }
   }
 }
