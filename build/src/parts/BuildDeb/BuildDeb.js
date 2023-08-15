@@ -20,18 +20,18 @@ import * as Symlink from '../Symlink/Symlink.js'
 import * as Template from '../Template/Template.js'
 import * as Version from '../Version/Version.js'
 
-const bundleElectronMaybe = async ({ product, version, shouldRemoveUnusedLocales, arch = ArchType.Amd64 }) => {
+const bundleElectronMaybe = async ({ product, version, shouldRemoveUnusedLocales, arch = ArchType.Amd64, platform }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
   //   console.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
   // @ts-ignore
-  await build({ product, version, shouldRemoveUnusedLocales, arch })
+  await build({ product, version, shouldRemoveUnusedLocales, arch, platform })
 }
 
-const copyElectronResult = async ({ product, version, arch, debArch }) => {
-  await bundleElectronMaybe({ product, version, shouldRemoveUnusedLocales: true, arch })
+const copyElectronResult = async ({ product, version, arch, debArch, platform }) => {
+  await bundleElectronMaybe({ product, version, shouldRemoveUnusedLocales: true, arch, platform })
   await Copy.copy({
     from: `build/.tmp/electron-bundle/${arch}`,
     to: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}`,
@@ -191,6 +191,7 @@ const cleanup = async ({ debArch }) => {
 }
 
 export const build = async ({ product, arch }) => {
+  const platform = 'linux'
   if (arch === ArchType.ArmHf) {
     arch = ArchType.Armv7l
   }
@@ -207,7 +208,7 @@ export const build = async ({ product, arch }) => {
   console.timeEnd('cleanup')
 
   console.time('copyElectronResult')
-  await copyElectronResult({ product, version, arch, debArch })
+  await copyElectronResult({ product, version, arch, debArch, platform })
   console.timeEnd('copyElectronResult')
 
   console.time('copyMetaFiles')
