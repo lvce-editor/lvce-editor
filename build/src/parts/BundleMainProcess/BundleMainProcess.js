@@ -25,11 +25,6 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.cjs`,
-    occurrence: `exports.productNameLong = 'Lvce Editor - OSS'`,
-    replacement: `exports.productNameLong = '${product.nameLong}'`,
-  })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.cjs`,
     occurrence: `exports.isLinux = platform === 'linux'`,
     replacement: `exports.isLinux = ${Platform.isLinux()}`,
   })

@@ -20,6 +20,11 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `productNameLong = 'Lvce Editor - OSS'`,
+    replacement: `productNameLong = '${product.nameLong}'`,
+  })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: `commit = 'unknown commit'`,
     replacement: `commit = '${commitHash}'`,
   })

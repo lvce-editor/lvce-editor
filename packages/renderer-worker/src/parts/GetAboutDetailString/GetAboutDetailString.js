@@ -1,4 +1,3 @@
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
 import * as FormatAboutDate from '../FormatAboutDate/FormatAboutDate.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Process from '../Process/Process.js'
@@ -24,8 +23,4 @@ export const getDetailString = async () => {
     `V8: ${v8Version}`,
   ]
   return JoinLines.joinLines(lines)
-}
-
-export const getProductNameLong = () => {
-  return ElectronProcess.invoke('Platform.getProductNameLong')
 }

@@ -162,6 +162,7 @@ export const getModuleId = (commandId) => {
     case 'Platform.getUserKeyBindingsPath':
     case 'Platform.getVersion':
     case 'Platform.setEnvironmentVariables':
+    case 'Platform.getProductNameLong':
       return ModuleId.Platform
     case 'Preferences.getAll':
       return ModuleId.Preferences
