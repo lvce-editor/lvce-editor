@@ -66,10 +66,10 @@ const downloadElectron = async ({ platform, arch, electronVersion }) => {
   })
 }
 
-const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion, product }) => {
+const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion, product, platform }) => {
   const outDir = useInstalledElectronVersion
     ? Path.join(Root.root, 'packages', 'main-process', 'node_modules', 'electron', 'dist')
-    : Path.join(Root.root, 'build', '.tmp', 'electron', electronVersion)
+    : Path.join(Root.root, 'build', '.tmp', 'cachedElectronVersions', `electron-${electronVersion}-${platform}-${arch}`)
   await Copy.copy({
     from: outDir,
     to: `build/.tmp/electron-bundle/${arch}`,
@@ -242,6 +242,7 @@ export const build = async ({
   supportsAutoUpdate = false,
   shouldRemoveUnusedLocales = false,
   arch = process.arch,
+  platform = process.platform,
 }) => {
   Assert.object(product)
   Assert.string(version)
@@ -264,7 +265,7 @@ export const build = async ({
     await downloadElectron({
       arch,
       electronVersion,
-      platform: process.platform,
+      platform,
     })
     console.timeEnd('downloadElectron')
   }
@@ -291,6 +292,7 @@ export const build = async ({
     electronVersion,
     useInstalledElectronVersion,
     product,
+    platform,
   })
   console.timeEnd('copyElectron')
 
