@@ -135,7 +135,7 @@ jobs:
         if: matrix.os == 'ubuntu-22.04'
         shell: bash
         run: |
-          staging="lvce-${{ needs.create-release.outputs.rg_version }}_arm64.deb"
+          staging="lvce-${{ needs.create-release.outputs.rg_version }}_armhf.deb"
           mv "build/.tmp/releases/lvce-armhf.deb" "$staging"
           echo "ASSET_DEB_ARMHF=$staging" >> $GITHUB_ENV
       - name: Release Electron App (deb, armhf)
