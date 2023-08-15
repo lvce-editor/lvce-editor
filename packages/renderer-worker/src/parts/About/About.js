@@ -7,6 +7,7 @@ import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as Product from '../Product/Product.js'
 
 const showAboutDefault = async () => {
   Logger.warn('show about - not implemented')
@@ -15,7 +16,7 @@ const showAboutDefault = async () => {
 const showAboutElectron = async () => {
   const windowId = await GetWindowId.getWindowId()
   const detail = await GetAboutDetailString.getDetailString()
-  const productNameLong = await GetAboutDetailString.getProductNameLong()
+  const productNameLong = await Product.getProductNameLong()
   const options = {
     windowId,
     message: productNameLong,

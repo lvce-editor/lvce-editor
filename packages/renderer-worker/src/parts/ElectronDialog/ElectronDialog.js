@@ -1,12 +1,18 @@
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Product from '../Product/Product.js'
 
 export const showOpenDialog = (title, properties) => {
   return ElectronProcess.invoke('ElectronDialog.showOpenDialog', title, properties)
 }
 
-export const showMessageBox = (options) => {
+export const showMessageBox = async (options) => {
   // TODO maybe request window id here instead of at caller
   Assert.object(options)
-  return ElectronProcess.invoke('ElectronDialog.showMessageBox', options)
+  const productName = await Product.getProductNameLong()
+  const finalOptions = {
+    ...options,
+    productName,
+  }
+  return ElectronProcess.invoke('ElectronDialog.showMessageBox', finalOptions)
 }
