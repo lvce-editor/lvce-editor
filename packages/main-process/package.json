@@ -22,7 +22,7 @@
   "devDependencies": {
     "@electron/rebuild": "^3.2.13",
     "@types/debug": "^4.1.8",
-    "electron": "^25.5.0"
+    "electron": "^26.0.0"
   },
   "dependencies": {
     "@babel/code-frame": "^7.22.10",
