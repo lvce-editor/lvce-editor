@@ -3,6 +3,7 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletKeyBindingsFunctions from './ViewletKeyBindingsFunctions.js'
+import * as PointerEvents from '../PointerEvents/PointerEvents.js'
 
 export const handleInput = (event) => {
   const { target } = event
@@ -50,17 +51,12 @@ export const handleResizerPointerMove = (event) => {
 // TODO use lostpointercapture event instead
 export const handleResizerPointerUp = (event) => {
   const { target, pointerId } = event
-  target.releasePointerCapture(pointerId)
-  target.removeEventListener(DomEventType.PointerMove, handleResizerPointerMove)
-  target.removeEventListener(DomEventType.PointerUp, handleResizerPointerUp)
+  PointerEvents.stopTracking(target, pointerId, handleResizerPointerMove, handleResizerPointerUp)
 }
 
 export const handleResizerPointerDown = (event) => {
   const { target, pointerId, clientX } = event
-  console.log({ target })
-  target.setPointerCapture(pointerId)
-  target.addEventListener(DomEventType.PointerMove, handleResizerPointerMove, DomEventOptions.Active)
-  target.addEventListener(DomEventType.PointerUp, handleResizerPointerUp)
+  PointerEvents.startTracking(target, pointerId, handleResizerPointerMove, handleResizerPointerUp)
   const id = target.nextSibling ? 1 : 2
   const uid = ComponentUid.fromEvent(event)
   ViewletKeyBindingsFunctions.handleResizerClick(uid, id, clientX)

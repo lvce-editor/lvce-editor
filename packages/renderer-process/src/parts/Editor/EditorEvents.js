@@ -11,6 +11,7 @@ import * as InputEventType from '../InputEventType/InputEventType.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as TouchEvent from '../TouchEvent/TouchEvent.js'
 import * as EditorFunctions from './EditorFunctions.js'
+import * as PointerEvents from '../PointerEvents/PointerEvents.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -167,12 +168,7 @@ export const handleScrollBarThumbVerticalPointerMove = (event) => {
  */
 export const handleScrollBarVerticalPointerUp = (event) => {
   const { target, pointerId } = event
-  // @ts-ignore
-  target.releasePointerCapture(pointerId)
-  // @ts-ignore
-  target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbVerticalPointerMove)
-  // @ts-ignore
-  target.removeEventListener(DomEventType.PointerUp, handleScrollBarVerticalPointerUp)
+  PointerEvents.stopTracking(target, pointerId, handleScrollBarThumbVerticalPointerMove, handleScrollBarVerticalPointerUp)
 }
 
 /**
@@ -182,13 +178,7 @@ export const handleScrollBarVerticalPointerUp = (event) => {
 export const handleScrollBarVerticalPointerDown = (event) => {
   const uid = ComponentUid.fromEvent(event)
   const { target, pointerId, clientY } = event
-  // @ts-ignore
-  target.setPointerCapture(pointerId)
-  // @ts-ignore
-  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbVerticalPointerMove, DomEventOptions.Active)
-  // TODO use pointerlost event instead
-  // @ts-ignore
-  target.addEventListener(DomEventType.PointerUp, handleScrollBarVerticalPointerUp)
+  PointerEvents.startTracking(target, pointerId, handleScrollBarThumbVerticalPointerMove, handleScrollBarVerticalPointerUp)
   EditorFunctions.handleScrollBarVerticalPointerDown(uid, clientY)
 }
 
@@ -208,12 +198,7 @@ export const handleScrollBarThumbHorizontalPointerMove = (event) => {
  */
 export const handleScrollBarHorizontalPointerUp = (event) => {
   const { target, pointerId } = event
-  // @ts-ignore
-  target.releasePointerCapture(pointerId)
-  // @ts-ignore
-  target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbHorizontalPointerMove)
-  // @ts-ignore
-  target.removeEventListener(DomEventType.PointerUp, handleScrollBarHorizontalPointerUp)
+  PointerEvents.stopTracking(target, pointerId, handleScrollBarThumbHorizontalPointerMove, handleScrollBarHorizontalPointerUp)
 }
 
 /**
@@ -222,13 +207,7 @@ export const handleScrollBarHorizontalPointerUp = (event) => {
  */
 export const handleScrollBarHorizontalPointerDown = (event) => {
   const { target, pointerId, clientX } = event
-  // @ts-ignore
-  target.setPointerCapture(pointerId)
-  // @ts-ignore
-  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbHorizontalPointerMove, DomEventOptions.Active)
-  // TODO use pointerlost event instead
-  // @ts-ignore
-  target.addEventListener(DomEventType.PointerUp, handleScrollBarHorizontalPointerUp)
+  PointerEvents.startTracking(target, pointerId, handleScrollBarThumbHorizontalPointerMove, handleScrollBarHorizontalPointerUp)
   EditorFunctions.handleScrollBarHorizontalPointerDown(clientX)
 }
 

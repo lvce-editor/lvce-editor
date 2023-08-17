@@ -1,10 +1,9 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as PointerEvents from '../PointerEvents/PointerEvents.js'
 import * as ViewletSearchFunctions from './ViewletSearchFunctions.js'
 
 export const handleInput = (event) => {
@@ -55,16 +54,12 @@ export const handleScrollBarThumbPointerMove = (event) => {
 
 export const handleScrollBarPointerUp = (event) => {
   const { target, pointerId } = event
-  target.releasePointerCapture(pointerId)
-  target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove)
-  target.removeEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
+  PointerEvents.stopTracking(target, pointerId, handleScrollBarThumbPointerMove, handleScrollBarPointerUp)
 }
 
 export const handleScrollBarPointerDown = (event) => {
   const { target, pointerId, clientY } = event
-  target.setPointerCapture(pointerId)
-  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, DomEventOptions.Active)
-  target.addEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
+  PointerEvents.startTracking(target, pointerId, handleScrollBarThumbPointerMove, handleScrollBarPointerUp)
   const uid = ComponentUid.fromEvent(event)
   ViewletSearchFunctions.handleScrollBarClick(uid, clientY)
 }
