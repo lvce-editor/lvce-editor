@@ -1,18 +1,12 @@
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletSashFunctions from './ViewletSashFunctions.js'
 
-// export const handleResize = (event) => {
-//   RendererWorker.send(
-//     /* Layout.handleResize */ 'Layout.handleResize',
-//     /* bounds */ getBounds()
-//   )
-// }
-
 const getSashId = ($Target) => {
-  if ($Target.id === 'SashPanel') {
+  console.log($Target.classList)
+  if ($Target.classList.contains('SashHorizontal')) {
     return 'Panel'
   }
-  if ($Target.id === 'SashSideBar') {
+  if ($Target.classList.contains('SashVertical')) {
     return 'SideBar'
   }
   return ''
@@ -31,11 +25,11 @@ export const handleSashPointerUp = (event) => {
 }
 
 export const handleSashPointerDown = (event) => {
+  console.log('down')
   const { target, pointerId } = event
   target.setPointerCapture(pointerId)
   target.addEventListener(DomEventType.PointerMove, handleSashPointerMove)
   target.addEventListener(DomEventType.PointerUp, handleSashPointerUp)
-  const $Target = event.target
-  const id = getSashId($Target)
+  const id = getSashId(target)
   ViewletSashFunctions.handleSashPointerDown(id)
 }

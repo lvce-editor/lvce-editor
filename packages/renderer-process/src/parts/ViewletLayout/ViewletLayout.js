@@ -9,15 +9,12 @@ export const create = () => {
   // TODO use aria role splitter once supported https://github.com/w3c/aria/issues/1348
   const $SashSideBar = document.createElement('div')
   $SashSideBar.className = 'Viewlet SashVertical'
-  $SashSideBar.id = 'SashSideBar'
 
   // TODO use aria role splitter once supported https://github.com/w3c/aria/issues/1348
   const $SashPanel = document.createElement('div')
   $SashPanel.className = 'Viewlet SashHorizontal'
-  $SashPanel.id = 'SashPanel'
 
   const $Viewlet = document.createElement('div')
-  $Viewlet.id = 'Workbench'
   $Viewlet.className = 'Viewlet Layout Workbench'
   $Viewlet.role = AriaRoles.Application
   $Viewlet.append($SashSideBar, $SashPanel)

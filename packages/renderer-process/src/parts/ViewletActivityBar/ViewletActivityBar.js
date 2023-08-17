@@ -6,7 +6,6 @@ import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
-  $Viewlet.id = 'ActivityBar'
   $Viewlet.className = 'Viewlet ActivityBar'
   // @ts-ignore
   $Viewlet.role = AriaRoles.ToolBar

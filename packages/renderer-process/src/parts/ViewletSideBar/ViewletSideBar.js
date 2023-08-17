@@ -13,7 +13,6 @@ export const create = () => {
   $SideBarTitleArea.append($SideBarTitleAreaTitle)
 
   const $Viewlet = document.createElement('div')
-  $Viewlet.id = 'SideBar'
   $Viewlet.className = 'Viewlet SideBar'
   $Viewlet.role = AriaRoles.Complementary
   $Viewlet.ariaRoleDescription = AriaRoleDescriptionType.SideBar

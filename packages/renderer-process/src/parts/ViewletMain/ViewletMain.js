@@ -5,7 +5,6 @@ import * as ViewletMainEvents from './ViewletMainEvents.js'
 // TODO Main should not be bound to Editor -> Lazy load Editor
 export const create = () => {
   const $Viewlet = document.createElement('div')
-  $Viewlet.id = 'Main'
   $Viewlet.className = 'Viewlet Main'
   $Viewlet.role = AriaRoles.Main
 
