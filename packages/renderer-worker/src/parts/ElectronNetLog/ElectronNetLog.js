@@ -1,12 +1,12 @@
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 /**
  * @param {string} path
  */
 export const startLogging = (path) => {
-  return ElectronProcess.invoke('ElectronNetLog.startLogging', path)
+  return SharedProcess.invoke('ElectronNetLog.startLogging', path)
 }
 
 export const stopLogging = () => {
-  return ElectronProcess.invoke('ElectronNetLog.stopLogging')
+  return SharedProcess.invoke('ElectronNetLog.stopLogging')
 }

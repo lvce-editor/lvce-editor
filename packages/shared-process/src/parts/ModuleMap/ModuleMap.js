@@ -184,6 +184,9 @@ export const getModuleId = (commandId) => {
     case 'Terminal.resize':
     case 'Terminal.write':
       return ModuleId.Terminal
+    case 'ElectronNetLog.startLogging':
+    case 'ElectronNetLog.stopLogging':
+      return ModuleId.ElectronNetLog
     case 'ElectronProcess.getChromeVersion':
     case 'ElectronProcess.getElectronVersion':
       return ModuleId.ElectronProcess
