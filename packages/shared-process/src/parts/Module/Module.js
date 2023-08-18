@@ -86,6 +86,8 @@ export const load = (moduleId) => {
       return import('../Window/ElectronWindow.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
+    case ModuleId.Exit:
+      return import('../Exit/Exit.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
