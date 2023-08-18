@@ -41,7 +41,7 @@ export const close = () => {
 export const exit = () => {
   switch (Platform.platform) {
     case PlatformType.Electron:
-      return Command.execute('ElectronApp.exit')
+      return Command.execute('Exit.exit')
     default:
       throw new Error('not implemented')
   }
