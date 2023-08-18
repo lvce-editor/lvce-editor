@@ -69,6 +69,8 @@ export const getModuleId = (commandId) => {
     case 'Location.hydrate':
     case 'Location.setPathName':
       return ModuleId.Location
+    case 'MeasureTextHeight.measureTextHeight':
+      return ModuleId.MeasureTextHeight
     case 'Menu.focusIndex':
     case 'Menu.hide':
     case 'Menu.hideSubMenu':
@@ -142,8 +144,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Window
     case 33111:
       return ModuleId.Workbench
-    case 'MeasureTextHeight.measureTextHeight':
-      return ModuleId.MeasureTextHeight
     default:
       throw new Error(`command ${commandId} not found`)
   }
