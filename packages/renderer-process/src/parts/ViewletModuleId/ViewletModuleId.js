@@ -10,6 +10,8 @@ export const ColorPicker = 'ColorPicker'
 
 export const DebugConsole = 'Debug Console'
 
+export const DefineKeyBinding = 'DefineKeyBinding'
+
 export const Dialog = 'Dialog'
 
 export const DiffEditor = 'DiffEditor'
@@ -93,5 +95,3 @@ export const TitleBarIcon = 'TitleBarIcon'
 export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const Video = 'Video'
-
-export const DefineKeyBinding = 'DefineKeyBinding'

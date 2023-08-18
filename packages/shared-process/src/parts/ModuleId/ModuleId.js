@@ -41,3 +41,4 @@ export const Performance = 37
 export const Window = 38
 export const PassThroughElectronMessagePort = 39
 export const Exit = 43
+export const DesktopCapturer = 44

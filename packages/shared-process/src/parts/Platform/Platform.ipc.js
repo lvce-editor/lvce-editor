@@ -18,6 +18,7 @@ export const Commands = {
   getLogsDir: Platform.getLogsDir,
   getMarketplaceUrl: Platform.getMarketplaceUrl,
   getNodePath: Platform.getNodePath,
+  getProductNameLong: Platform.getProductNameLong,
   getRecentlyOpenedPath: Platform.getRecentlyOpenedPath,
   getTestPath: Platform.getTestPath,
   getTmpDir: Platform.getTmpDir,
@@ -25,5 +26,4 @@ export const Commands = {
   getUserSettingsPath: Platform.getUserSettingsPath,
   getVersion: Platform.getVersion,
   setEnvironmentVariables: Platform.setEnvironmentVariables,
-  getProductNameLong: Platform.getProductNameLong,
 }

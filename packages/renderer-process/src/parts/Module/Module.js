@@ -36,6 +36,8 @@ export const load = (moduleId) => {
       return import('../Layout/Layout.ipc.js')
     case ModuleId.Location:
       return import('../Location/Location.ipc.js')
+    case ModuleId.MeasureTextHeight:
+      return import('../MeasureTextHeight/MeasureTextHeight.ipc.js')
     case ModuleId.Meta:
       return import('../Meta/Meta.ipc.js')
     case ModuleId.Notification:
@@ -64,8 +66,6 @@ export const load = (moduleId) => {
       return import('../WebStorage/WebStorage.ipc.js')
     case ModuleId.Window:
       return import('../Window/Window.ipc.js')
-    case ModuleId.MeasureTextHeight:
-      return import('../MeasureTextHeight/MeasureTextHeight.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
