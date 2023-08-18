@@ -86,7 +86,7 @@ const formatModuleFile = async (absolutePath) => {
 export const formatAllModuleFiles = async () => {
   const moduleFiles = [
     'packages/shared-process/src/parts/Module/Module.js',
-    'packages/main-process/src/parts/Module/Module.js',
+    'packages/main-process/src/parts/Module/Module.cjs',
     'packages/renderer-process/src/parts/Module/Module.js',
     'packages/renderer-worker/src/parts/Module/Module.js',
   ]
