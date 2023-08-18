@@ -84,6 +84,8 @@ export const load = (moduleId) => {
       return import('../Window/ElectronWindow.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
+    case ModuleId.DesktopCapturer:
+      return import('../DesktopCapturer/DesktopCapturer.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

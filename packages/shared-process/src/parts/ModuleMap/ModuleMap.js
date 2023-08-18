@@ -203,6 +203,8 @@ export const getModuleId = (commandId) => {
     case 'ElectronWindow.close':
     case 'ElectronWindow.reload':
       return ModuleId.Window
+    case 'DesktopCapturer.getSources':
+      return ModuleId.DesktopCapturer
     default:
       throw new CommandNotFoundError(commandId)
   }
