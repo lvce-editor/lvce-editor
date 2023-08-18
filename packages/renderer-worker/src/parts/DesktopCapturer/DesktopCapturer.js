@@ -1,6 +1,6 @@
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const getSources = async (options) => {
-  const sources = await ElectronProcess.invoke('DesktopCapturer.getSources', options)
+  const sources = await SharedProcess.invoke('DesktopCapturer.getSources', options)
   return sources
 }

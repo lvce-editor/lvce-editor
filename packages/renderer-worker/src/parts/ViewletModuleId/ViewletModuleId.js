@@ -12,6 +12,8 @@ export const Counter = 'Counter'
 
 export const DebugConsole = 'Debug Console'
 
+export const DefineKeyBinding = 'DefineKeyBinding'
+
 export const Dialog = 'Dialog'
 
 export const DiffEditor = 'DiffEditor'
@@ -101,5 +103,3 @@ export const TitleBarMenuBar = 'TitleBarMenuBar'
 export const TodoList = 'TodoList'
 
 export const Video = 'Video'
-
-export const DefineKeyBinding = 'DefineKeyBinding'
