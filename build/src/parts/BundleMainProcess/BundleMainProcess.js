@@ -3,17 +3,15 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Replace from '../Replace/Replace.js'
+import * as Remove from '../Remove/Remove.js'
+import { join } from 'path'
 
 export const bundleMainProcess = async ({ cachePath, commitHash, product, version, bundleMainProcess }) => {
   await Copy.copy({
     from: 'packages/main-process/src',
     to: Path.join(cachePath, 'src'),
   })
-  await Copy.copy({
-    from: 'packages/main-process/node_modules',
-    to: Path.join(cachePath, 'node_modules'),
-    ignore: ['electron', '@electron', 'rxjs', '@types', 'node-gyp', 'cacache', '.bin'],
-  })
+
   await Copy.copy({
     from: `packages/main-process/pages`,
     to: `${cachePath}/pages`,
@@ -64,12 +62,18 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
     replacement: `exports.version = '${version}'`,
   })
   if (bundleMainProcess) {
+    await Copy.copy({
+      from: 'packages/main-process/node_modules',
+      to: Path.join(cachePath, 'node_modules'),
+      ignore: ['electron', '@electron', 'rxjs', '@types', 'node-gyp', 'cacache', '.bin'],
+    })
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/mainProcessMain.cjs`,
       platform: 'node/cjs',
       external: ['electron'],
     })
+    await Remove.remove(join(cachePath, 'node_modules'))
   }
   await Replace.replace({
     path: `${cachePath}/src/parts/Root/Root.cjs`,
