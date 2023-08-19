@@ -1,3 +1,4 @@
+export const Crash = 100
 export const ClipBoard = 1
 export const Developer = 2
 export const ExtensionHost = 3

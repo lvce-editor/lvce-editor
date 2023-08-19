@@ -175,6 +175,9 @@ export const getModuleId = (commandId) => {
     case 'Platform.getVersion':
     case 'Platform.setEnvironmentVariables':
       return ModuleId.Platform
+    case 'Crash.crashMainProcess':
+    case 'Crash.crashSharedProcess':
+      return ModuleId.Crash
     case 'Preferences.getAll':
       return ModuleId.Preferences
     case 'Process.getNodeVersion':
