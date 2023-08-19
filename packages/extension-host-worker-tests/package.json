@@ -13,7 +13,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.37.0"
+    "@playwright/test": "^1.37.1"
   },
   "xo": {
     "rules": {

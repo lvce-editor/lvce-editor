@@ -62,7 +62,7 @@
   "dependencies": {
     "@babel/code-frame": "^7.22.10",
     "clean-stack": "^5.0.1",
-    "execa": "^7.2.0",
+    "execa": "^8.0.0",
     "got": "^13.0.0",
     "lines-and-columns": "^2.0.3",
     "minimist": "^1.2.8",
