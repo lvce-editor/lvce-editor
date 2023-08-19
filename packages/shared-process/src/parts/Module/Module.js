@@ -93,7 +93,7 @@ export const load = (moduleId) => {
     case ModuleId.WebSocketServer:
       return import('../WebSocketServer/WebSocketServer.ipc.js')
     case ModuleId.Window:
-      return import('../Window/ElectronWindow.ipc.js')
+      return import('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
     case ModuleId.ElectronNetLog:
