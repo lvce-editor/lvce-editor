@@ -22,7 +22,7 @@ export const downloadUpdate = async (version) => {
   const applicationName = await Platform.getRepository()
   const arch = await Process.getArch()
   const debArch = GetDebArch.getDebArch(arch)
-  const downloadUrl = GetDebDownloadUrl.getDebDownloadUrl(repository, version, applicationName, debArch)
+  const downloadUrl = GetDebDownloadUrl.getDownloadUrl(repository, version, applicationName, debArch)
   const tmpDir = await Os.getTmpDir()
   const outFilePath = getOutFilePath(tmpDir, applicationName, debArch, version)
   await Download.downloadUrl(downloadUrl, outFilePath)
