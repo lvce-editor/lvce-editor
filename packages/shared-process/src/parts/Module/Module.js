@@ -2,40 +2,52 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const load = (moduleId) => {
   switch (moduleId) {
-    case ModuleId.ElectronWindowAbout:
-      return import('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
     case ModuleId.AttachDebugger:
       return import('../AttachDebugger/AttachDebugger.ipc.js')
     case ModuleId.AutoUpdater:
       return import('../AutoUpdater/AutoUpdater.ipc.js')
-    case ModuleId.ProcessId:
-      return import('../ProcessId/ProcessId.ipc.js')
     case ModuleId.AutoUpdaterAppImage:
       return import('../AutoUpdaterAppImage/AutoUpdaterAppImage.ipc.js')
     case ModuleId.AutoUpdaterWindowsNsis:
       return import('../AutoUpdaterWindowsNsis/AutoUpdaterWindowsNsis.ipc.js')
     case ModuleId.BulkReplacement:
       return import('../BulkReplacement/BulkReplacement.ipc.js')
-    case ModuleId.ElectronApplicationMenu:
-      return import('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js')
     case ModuleId.ChromeExtension:
       return import('../ChromeExtension/ChromeExtension.ipc.js')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.js')
+    case ModuleId.Crash:
+      return import('../Crash/Crash.ipc.js')
     case ModuleId.DesktopCapturer:
       return import('../DesktopCapturer/DesktopCapturer.ipc.js')
     case ModuleId.Developer:
       return import('../Developer/Developer.ipc.js')
     case ModuleId.Download:
       return import('../Download/Download.ipc.js')
+    case ModuleId.ElectronApplicationMenu:
+      return import('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js')
+    case ModuleId.ElectronBrowserView:
+      return import('../ElectronBrowserView/ElectronBrowserView.ipc.js')
+    case ModuleId.ElectronContentTracing:
+      return import('../ElectronContentTracing/ElectronContentTracing.js')
     case ModuleId.ElectronContextMenu:
       return import('../ElectronContextMenu/ElectronContextMenu.ipc.js')
+    case ModuleId.ElectronDialog:
+      return import('../ElectronDialog/ElectronDialog.ipc.js')
     case ModuleId.ElectronInitialize:
       return import('../ElectronInitialize/ElectronInitialize.ipc.js')
+    case ModuleId.ElectronNetLog:
+      return import('../ElectronNetLog/ElectronNetLog.ipc.js')
     case ModuleId.ElectronProcess:
       return import('../ElectronProcess/ElectronProcess.ipc.js')
     case ModuleId.ElectronSafeStorage:
       return import('../ElectronSafeStorage/ElectronSafeStorage.ipc.js')
+    case ModuleId.Window:
+      return import('../ElectronWindow/ElectronWindow.ipc.js')
+    case ModuleId.ElectronWindowAbout:
+      return import('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
+    case ModuleId.Exit:
+      return import('../Exit/Exit.ipc.js')
     case ModuleId.ExtensionHost:
       return import('../ExtensionHost/ExtensionHost.ipc.js')
     case ModuleId.ExtensionManagement:
@@ -46,12 +58,8 @@ export const load = (moduleId) => {
       return import('../GetTerminalSpawnOptions/GetTerminalSpawnOptions.ipc.js')
     case ModuleId.GitLsFiles:
       return import('../GitLsFiles/GitLsFiles.ipc.js')
-    case ModuleId.ElectronBrowserView:
-      return import('../ElectronBrowserView/ElectronBrowserView.ipc.js')
     case ModuleId.HandleCliArgs:
       return import('../HandleCliArgs/HandleCliArgs.ipc.js')
-    case ModuleId.OpenExternal:
-      return import('../OpenExternal/OpenExternal.ipc.js')
     case ModuleId.HandleElectronMessagePort:
       return import('../HandleElectronMessagePort/HandleElectronMessagePort.ipc.js')
     case ModuleId.HandleNodeMessagePort:
@@ -66,6 +74,8 @@ export const load = (moduleId) => {
       return import('../IsAutoUpdateSupported/IsAutoUpdateSupported.ipc.js')
     case ModuleId.ListProcessesWithMemoryUsage:
       return import('../ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsage.ipc.js')
+    case ModuleId.OpenExternal:
+      return import('../OpenExternal/OpenExternal.ipc.js')
     case ModuleId.OpenNativeFolder:
       return import('../OpenNativeFolder/OpenNativeFolder.ipc.js')
     case ModuleId.OutputChannel:
@@ -78,10 +88,10 @@ export const load = (moduleId) => {
       return import('../Preferences/Preferences.ipc.js')
     case ModuleId.Process:
       return import('../Process/Process.ipc.js')
+    case ModuleId.ProcessId:
+      return import('../ProcessId/ProcessId.ipc.js')
     case ModuleId.RebuildNodePty:
       return import('../RebuildNodePty/RebuildNodePty.ipc.js')
-    case ModuleId.ElectronDialog:
-      return import('../ElectronDialog/ElectronDialog.ipc.js')
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.js')
     case ModuleId.SearchFile:
@@ -94,16 +104,8 @@ export const load = (moduleId) => {
       return import('../TextSearch/TextSearch.ipc.js')
     case ModuleId.WebSocketServer:
       return import('../WebSocketServer/WebSocketServer.ipc.js')
-    case ModuleId.Window:
-      return import('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.ElectronNetLog:
-      return import('../ElectronNetLog/ElectronNetLog.ipc.js')
-    case ModuleId.Exit:
-      return import('../Exit/Exit.ipc.js')
-    case ModuleId.Crash:
-      return import('../Crash/Crash.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

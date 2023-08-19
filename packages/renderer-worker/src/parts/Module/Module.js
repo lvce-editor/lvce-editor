@@ -50,8 +50,6 @@ export const load = (moduleId) => {
       return import('../EditorError/EditorError.ipc.js')
     case ModuleId.EditorRename:
       return import('../EditorRename/EditorRename.ipc.js')
-    case ModuleId.Exit:
-      return import('../Exit/Exit.ipc.js')
     case ModuleId.ElectronApplicationMenu:
       return import('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js')
     case ModuleId.ElectronBrowserView:
@@ -66,6 +64,8 @@ export const load = (moduleId) => {
       return import('../ErrorHandling/ErrorHandling.ipc.js')
     case ModuleId.Eval:
       return import('../Eval/Eval.ipc.js')
+    case ModuleId.Exit:
+      return import('../Exit/Exit.ipc.js')
     case ModuleId.ExtensionHostCode:
       return import('../ExtensionHost/ExtensionHostCore.ipc.js')
     case ModuleId.ExtensionMeta:
