@@ -1,5 +1,6 @@
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
-export const exit = async () => {
-  await ParentIpc.invoke('App.exit')
+export const exit = () => {
+  // TODO rename to Exit.exit
+  return ParentIpc.invoke('App.exit')
 }

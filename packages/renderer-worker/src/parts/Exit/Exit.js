@@ -1,5 +1,5 @@
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
-export const exit = async () => {
-  await ElectronProcess.invoke('App.exit')
+export const exit = () => {
+  return SharedProcess.invoke('Exit.exit')
 }
