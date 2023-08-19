@@ -44,6 +44,8 @@ export const load = (moduleId) => {
       return import('../GetTerminalSpawnOptions/GetTerminalSpawnOptions.ipc.js')
     case ModuleId.GitLsFiles:
       return import('../GitLsFiles/GitLsFiles.ipc.js')
+    case ModuleId.ElectronBrowserView:
+      return import('../ElectronBrowserView/ElectronBrowserView.ipc.js')
     case ModuleId.HandleCliArgs:
       return import('../HandleCliArgs/HandleCliArgs.ipc.js')
     case ModuleId.OpenExternal:
