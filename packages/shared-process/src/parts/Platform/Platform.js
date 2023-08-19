@@ -24,6 +24,8 @@ export const homeDir = isWindows ? '' : homedir()
 
 export const appDir = Root.root
 
+export const isDeb = false
+
 export const isAppImage = () => {
   return Boolean(env.APPIMAGE)
 }
