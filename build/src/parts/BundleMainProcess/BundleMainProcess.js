@@ -63,7 +63,7 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
       cwd: cachePath,
       from: `./src/mainProcessMain.cjs`,
       platform: 'node/cjs',
-      external: ['electron', 'electron-unhandled'],
+      external: ['electron'],
     })
   }
   await Replace.replace({

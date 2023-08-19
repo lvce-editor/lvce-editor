@@ -18,6 +18,9 @@ export const filterDependencies = (rawDependencies, supportsAutoUpdate) => {
     if (dependency.name === 'type-fest') {
       return false
     }
+    if (dependency.name === 'electron-unhandled') {
+      return false
+    }
     dependencyPaths.push(dependency.path)
     return true
   }
