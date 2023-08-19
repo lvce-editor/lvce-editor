@@ -386,7 +386,7 @@ const getMenuItems = (displayProcess) => {
 const processExplorerShowContextMenu = async (displayProcess, x, y) => {
   const menuItems = getMenuItems(displayProcess)
   const customData = displayProcess
-  await ElectronProcess.invoke('ElectronContextMenu.openContextMenu', menuItems, x, y, customData)
+  await SharedProcess.invoke('ElectronContextMenu.openContextMenu', menuItems, x, y, customData)
 }
 
 const handleContextMenu = async (event) => {
@@ -733,19 +733,6 @@ const SharedProcess = {
   },
 }
 
-const ElectronProcess = {
-  /**
-   * @type {any}
-   */
-  ipc: undefined,
-  async invoke(method, ...params) {
-    return JsonRpc.invoke(this.ipc, method, ...params)
-  },
-  async listen() {
-    this.ipc = await IpcChild.listen({ module: IpcChildWithElectron })
-  },
-}
-
 const listProcessesWithMemoryUsage = (rootPid) => {
   return SharedProcess.invoke('ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage', rootPid)
 }
@@ -781,34 +768,6 @@ const getPort = async (type) => {
     return responseMessage.result
   }
   return responseMessage
-}
-
-const IpcChildWithElectron = {
-  async create() {
-    const port = await getPort('electron-process')
-    return port
-  },
-  wrap(port) {
-    return {
-      port,
-      /**
-       * @type {any}
-       */
-      wrappedListener: null,
-      send(message) {
-        this.port.postMessage(message)
-      },
-      set onmessage(listener) {
-        this.wrappedListener = (event) => {
-          listener(event.data)
-        }
-        this.port.onmessage = this.wrappedListener
-      },
-      get onmessage() {
-        return this.wrappedListener
-      },
-    }
-  },
 }
 
 const IpcChildWithSharedProcess = {
@@ -929,7 +888,7 @@ const handleMessage = (message) => {
 }
 
 const getPid = () => {
-  return ElectronProcess.invoke('Process.getPid')
+  return SharedProcess.invoke('ProcessId.getMainProcessId')
 }
 
 const sleep = (timeout) => {
@@ -947,7 +906,6 @@ const HandleIpc = {
 const main = async () => {
   onerror = handleError
   onunhandledrejection = handleUnhandledRejection
-  await ElectronProcess.listen()
   await SharedProcess.listen()
   const pid = await getPid()
   const refreshInterval = 1000
