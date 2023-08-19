@@ -110,6 +110,7 @@ const getSharedProcessCacheHash = async (extraContents) => {
       'build/src/parts/CachePaths/CachePaths.js',
       'build/src/parts/BundleMainProcess/BundleMainProcess.js',
       'build/src/parts/BundleMainProcessCached/BundleMainProcessCached.js',
+      'build/src/parts/FilterMainProcessDependencies/FilterMainProcessDependencies.js',
       'build/src/parts/BundleOptions/BundleOptions.js',
     ],
     extraContents

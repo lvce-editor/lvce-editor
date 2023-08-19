@@ -10,6 +10,11 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
     to: Path.join(cachePath, 'src'),
   })
   await Copy.copy({
+    from: 'packages/main-process/node_modules',
+    to: Path.join(cachePath, 'node_modules'),
+    ignore: ['electron', '@electron', 'rxjs', '@types', 'node-gyp', 'cacache'],
+  })
+  await Copy.copy({
     from: `packages/main-process/pages`,
     to: `${cachePath}/pages`,
   })
