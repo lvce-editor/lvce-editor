@@ -6,6 +6,9 @@ import { VError } from '../VError/VError.js'
 
 export const getAutoUpdateType = async () => {
   try {
+    if (Platform.isDeb) {
+      return AutoUpdateType.Deb
+    }
     if (Platform.isWindows) {
       return AutoUpdateType.WindowsNsis
     }
