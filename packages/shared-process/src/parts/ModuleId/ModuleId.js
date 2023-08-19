@@ -25,6 +25,7 @@ export const AutoUpdaterAppImage = 24
 export const AutoUpdaterWindowsNsis = 25
 export const RebuildNodePty = 26
 export const ElectronNetLog = 50
+export const OpenExternal = 321
 export const ElectronSafeStorage = 80
 export const ElectronInitialize = 27
 export const HandleWebSocket = 28

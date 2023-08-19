@@ -104,6 +104,9 @@ export const getModuleId = (commandId) => {
     case 'ExtensionManagement.install':
     case 'ExtensionManagement.uninstall':
       return ModuleId.ExtensionManagement
+    case 'OpenExternal.openExternal':
+    case 'OpenExternal.showItemInFolder':
+      return ModuleId.OpenExternal
     case 'FileSystem.chmod':
     case 'FileSystem.copy':
     case 'FileSystem.createFile':

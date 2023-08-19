@@ -1,5 +1,5 @@
-import * as ElectronShell from '../ElectronShell/ElectronShell.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
+import * as OpenExternal from '../OpenExternal/OpenExternal.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -7,10 +7,7 @@ import { VError } from '../VError/VError.js'
 
 const openUrlWeb = async (url) => {
   try {
-    await RendererProcess.invoke(
-      /* Open.openUrl */ 'Open.openUrl',
-      /* url */ url
-    )
+    await RendererProcess.invoke(/* Open.openUrl */ 'Open.openUrl', /* url */ url)
   } catch (error) {
     throw new VError(error, `Failed to open url ${url}`)
   }
@@ -29,15 +26,4 @@ export const openUrl = async (url) => {
   }
 }
 
-const openExternalElectron = async (url) => {
-  await ElectronShell.openExternal(url)
-}
-
-export const openExternal = (url) => {
-  switch (Platform.platform) {
-    case PlatformType.Electron:
-      return openExternalElectron(url)
-    default:
-      throw new Error('not implemented')
-  }
-}
+export const openExternal = OpenExternal.openExternal
