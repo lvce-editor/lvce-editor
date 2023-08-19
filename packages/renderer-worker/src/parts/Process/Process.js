@@ -31,3 +31,7 @@ export const getV8Version = () => {
 export const getDate = () => {
   return SharedProcess.invoke('Platform.getDate')
 }
+
+export const getArch = () => {
+  return SharedProcess.invoke('Process.getArch')
+}
