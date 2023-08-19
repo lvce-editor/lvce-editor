@@ -35,3 +35,9 @@ export const downloadJson = async (json, fileName) => {
     Url.revokeObjectUrl(url)
   }
 }
+
+export const downloadUrl = (url, outFile) => {
+  Assert.string(url)
+  Assert.string(outFile)
+  return SharedProcess.invoke('Download.download', url, outFile)
+}
