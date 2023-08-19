@@ -17,7 +17,7 @@ const OpenExternal = await import('../src/parts/OpenExternal/OpenExternal.js')
 
 test('showItemInFolder - error', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {
+  SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(OpenExternal.showItemInFolder('/test/file.txt')).rejects.toThrowError(new TypeError('x is not a function'))
