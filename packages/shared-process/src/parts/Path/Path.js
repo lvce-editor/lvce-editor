@@ -1,13 +1,5 @@
 import * as NodePath from 'node:path'
 
-export const getHomeDir = () => {}
-
-export const getTmpDir = () => {}
-
-export const getBuiltinExtensionDir = () => {}
-
-export const getMarketplaceExtensionDir = () => {}
-
 export const join = (...parts) => {
   return NodePath.join(...parts)
 }
