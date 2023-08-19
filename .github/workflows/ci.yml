@@ -39,6 +39,11 @@ jobs:
           path: '~/.electron-gyp'
           key: ${{ runner.os }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
       - uses: actions/cache@v3
+        id: electron-builder-cache
+        with:
+          path: '~/.cache/electron-builder'
+          key: ${{ runner.os }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v3
         id: build-cache
         with:
           path: 'build/.tmp/cachedDependencies'
