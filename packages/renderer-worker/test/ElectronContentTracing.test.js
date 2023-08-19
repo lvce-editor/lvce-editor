@@ -4,27 +4,20 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ElectronProcess/ElectronProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ElectronProcess = await import(
-  '../src/parts/ElectronProcess/ElectronProcess.js'
-)
-const ElectronContentTracing = await import(
-  '../src/parts/ElectronContentTracing/ElectronContentTracing.js'
-)
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const ElectronContentTracing = await import('../src/parts/ElectronContentTracing/ElectronContentTracing.js')
 
 test('startRecording - error', async () => {
   // @ts-ignore
-  ElectronProcess.invoke.mockImplementation(async () => {
+  SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
@@ -36,7 +29,7 @@ test('startRecording - error', async () => {
 
 test('startRecording', async () => {
   // @ts-ignore
-  ElectronProcess.invoke.mockImplementation(() => {
+  SharedProcess.invoke.mockImplementation(() => {
     return 1
   })
   expect(
@@ -44,31 +37,24 @@ test('startRecording', async () => {
       included_categories: ['*'],
     })
   ).toBe(1)
-  expect(ElectronProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(ElectronProcess.invoke).toHaveBeenCalledWith(
-    'ElectronContentTracing.startRecording',
-    { included_categories: ['*'] }
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ElectronContentTracing.startRecording', { included_categories: ['*'] })
 })
 
 test('stopRecording - error', async () => {
   // @ts-ignore
-  ElectronProcess.invoke.mockImplementation(async () => {
+  SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronContentTracing.stopRecording()).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(ElectronContentTracing.stopRecording()).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('stopRecording', async () => {
   // @ts-ignore
-  ElectronProcess.invoke.mockImplementation(() => {
+  SharedProcess.invoke.mockImplementation(() => {
     return '/test/records.txt'
   })
   expect(await ElectronContentTracing.stopRecording()).toBe('/test/records.txt')
-  expect(ElectronProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(ElectronProcess.invoke).toHaveBeenCalledWith(
-    'ElectronContentTracing.stopRecording'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ElectronContentTracing.stopRecording')
 })
