@@ -88,6 +88,8 @@ export const load = (moduleId) => {
       return import('../Workspace/Workspace.ipc.js')
     case ModuleId.ElectronNetLog:
       return import('../ElectronNetLog/ElectronNetLog.ipc.js')
+    case ModuleId.Exit:
+      return import('../Exit/Exit.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

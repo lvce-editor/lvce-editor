@@ -50,8 +50,8 @@ export const load = (moduleId) => {
       return import('../EditorError/EditorError.ipc.js')
     case ModuleId.EditorRename:
       return import('../EditorRename/EditorRename.ipc.js')
-    case ModuleId.ElectronApp:
-      return import('../ElectronApp/ElectronApp.ipc.js')
+    case ModuleId.Exit:
+      return import('../Exit/Exit.ipc.js')
     case ModuleId.ElectronApplicationMenu:
       return import('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js')
     case ModuleId.ElectronBrowserView:

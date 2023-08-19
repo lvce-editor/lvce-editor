@@ -67,8 +67,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.EditorError
     case 'EditorRename':
       return ModuleId.EditorRename
-    case 'ElectronApp':
-      return ModuleId.ElectronApp
+    case 'Exit':
+      return ModuleId.Exit
     case 'ElectronApplicationMenu':
       return ModuleId.ElectronApplicationMenu
     case 'ElectronBrowserView':

@@ -211,6 +211,15 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
+    case 'ElectronWindow.minimize':
+    case 'ElectronWindow.maximize':
+    case 'ElectronWindow.toggleDevtools':
+    case 'ElectronWindow.unmaximize':
+    case 'ElectronWindow.close':
+    case 'ElectronWindow.reload':
+      return ModuleId.Window
+    case 'Exit.exit':
+      return ModuleId.Exit
     default:
       throw new CommandNotFoundError(commandId)
   }
