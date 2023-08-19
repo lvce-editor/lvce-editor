@@ -156,6 +156,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.PassThroughElectronMessagePort
     case 'Performance.getNodeStartupTiming':
       return ModuleId.Performance
+    case 'ElectronWindowAbout.open':
+      return ModuleId.ElectronWindowAbout
     case 'Platform.getAppDir':
     case 'Platform.getBuiltinExtensionsPath':
     case 'Platform.getCachedExtensionsPath':

@@ -2,6 +2,8 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const load = (moduleId) => {
   switch (moduleId) {
+    case ModuleId.ElectronWindowAbout:
+      return import('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
     case ModuleId.AttachDebugger:
       return import('../AttachDebugger/AttachDebugger.ipc.js')
     case ModuleId.AutoUpdater:
