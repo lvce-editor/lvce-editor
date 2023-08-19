@@ -8,6 +8,8 @@ const getPrefix = (commandId) => {
 exports.getModuleId = (commandId) => {
   const prefix = getPrefix(commandId)
   switch (prefix) {
+    case 'Crash':
+      return ModuleId.Crash
     case 'ElectronApp':
     case 'App':
       return ModuleId.App
