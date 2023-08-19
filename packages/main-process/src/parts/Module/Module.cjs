@@ -9,6 +9,8 @@ exports.load = async (moduleId) => {
       return import('../AppWindow/AppWindow.ipc.js')
     case ModuleId.Beep:
       return import('../Beep/Beep.ipc.js')
+    case ModuleId.Crash:
+      return import('../Crash/Crash.ipc.js')
     case ModuleId.CreatePidMap:
       return import('../CreatePidMap/CreatePidMap.ipc.js')
     case ModuleId.DesktopCapturer:
@@ -61,8 +63,6 @@ exports.load = async (moduleId) => {
       return import('../Process/Process.ipc.js')
     case ModuleId.Trash:
       return import('../Trash/Trash.ipc.js')
-    case ModuleId.Crash:
-      return import('../Crash/Crash.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }
