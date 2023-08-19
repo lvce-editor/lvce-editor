@@ -203,3 +203,11 @@ export const getTmpDir = () => {
 }
 
 export const browserViewZindexWorkaroundEnabled = true
+
+export const getRepository = () => {
+  return SharedProcess.invoke('Platform.getRepository')
+}
+
+export const getApplicationName = () => {
+  return SharedProcess.invoke('Platform.getApplicationName')
+}

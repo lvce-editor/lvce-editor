@@ -39,6 +39,13 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
     replacement: `date = '${date}'`,
   })
 
+  if (target === 'electron-deb' || target === 'electron-builder-deb') {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      occurrence: `isDeb = false`,
+      replacement: `isDeb = true`,
+    })
+  }
   if (target === 'server') {
     await Copy.copy({
       from: 'packages/shared-process/bin',

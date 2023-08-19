@@ -24,6 +24,8 @@ export const homeDir = isWindows ? '' : homedir()
 
 export const appDir = Root.root
 
+export const isDeb = false
+
 export const isAppImage = () => {
   return Boolean(env.APPIMAGE)
 }
@@ -153,6 +155,10 @@ export const getDownloadDir = () => {
 
 export const getRepository = () => {
   return `lvce-editor/lvce-editor`
+}
+
+export const getApplicationName = () => {
+  return applicationName
 }
 
 export const getAppImageName = () => {
