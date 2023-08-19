@@ -52,3 +52,4 @@ export const PassThroughElectronMessagePort = 51
 export const Exit = 52
 export const DesktopCapturer = 53
 export const ElectronContentTracing = 54
+export const Os = 55
