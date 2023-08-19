@@ -157,6 +157,10 @@ export const getRepository = () => {
   return `lvce-editor/lvce-editor`
 }
 
+export const getApplicationName = () => {
+  return applicationName
+}
+
 export const getAppImageName = () => {
   return 'Lvce'
 }
