@@ -121,7 +121,7 @@ const copyResults = async () => {
   }
 }
 
-export const bundleElectronAppDependencies = async ({ cachePath, arch, electronVersion, product, supportsAutoUpdate }) => {
+export const bundleElectronAppDependencies = async ({ cachePath, arch, electronVersion, product, supportsAutoUpdate, bundleMainProcess }) => {
   console.time('copyPtyHostFiles')
   await copyPtyHostFiles({
     arch,
@@ -150,12 +150,14 @@ export const bundleElectronAppDependencies = async ({ cachePath, arch, electronV
   })
   console.timeEnd('copySharedProcessFiles')
 
-  console.time('copyMainProcessFiles')
-  await copyMainProcessFiles({
-    arch,
-    electronVersion,
-    cachePath,
-    supportsAutoUpdate,
-  })
-  console.timeEnd('copyMainProcessFiles')
+  if (!bundleMainProcess) {
+    console.time('copyMainProcessFiles')
+    await copyMainProcessFiles({
+      arch,
+      electronVersion,
+      cachePath,
+      supportsAutoUpdate,
+    })
+    console.timeEnd('copyMainProcessFiles')
+  }
 }

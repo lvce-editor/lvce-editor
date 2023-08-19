@@ -282,6 +282,7 @@ export const build = async ({
       electronVersion,
       product,
       supportsAutoUpdate,
+      bundleMainProcess,
     })
     console.timeEnd('bundleElectronAppDependencies')
   }
