@@ -11,6 +11,7 @@ export const RecentlyOpened = 10
 export const Search = 11
 export const SearchFile = 12
 export const Terminal = 13
+export const ProcessId = 377
 export const TextDocument = 14
 export const WebSocketServer = 15
 export const Workspace = 16

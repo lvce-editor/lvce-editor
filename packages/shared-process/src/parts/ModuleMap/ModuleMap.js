@@ -33,6 +33,9 @@ export const getModuleId = (commandId) => {
       return ModuleId.Developer
     case 'Download.download':
       return ModuleId.Download
+    case 'ProcessId.getSharedProcessId':
+    case 'ProcessId.getMainProcessId':
+      return ModuleId.ProcessId
     case 'ElectronContextMenu.openContextMenu':
       return ModuleId.ElectronContextMenu
     case 'ElectronInitialize.electronInitialize':
