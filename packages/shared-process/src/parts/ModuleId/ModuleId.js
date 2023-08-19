@@ -6,6 +6,7 @@ export const FileSystem = 5
 export const OpenNativeFolder = 6
 export const OutputChannel = 7
 export const Platform = 8
+export const ElectronClipBoard = 320
 export const Preferences = 9
 export const RecentlyOpened = 10
 export const Search = 11

@@ -123,6 +123,8 @@ export const getModuleId = (commandId) => {
     case 'GitLsFiles.gitLsFilesHash':
     case 'GitLsFiles.resolveGit':
       return ModuleId.GitLsFiles
+    case 'ElectronClipBoard.writeText':
+      return ModuleId.ElectronClipBoard
     case 'HandleCliArgs.handleCliArgs':
       return ModuleId.HandleCliArgs
     case 'HandleElectronMessagePort.handleElectronMessagePort':
