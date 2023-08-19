@@ -203,6 +203,7 @@ export const getModuleId = (commandId) => {
     case 'Process.getPid':
     case 'Process.getV8Version':
     case 'Process.kill':
+    case 'Process.getArch':
       return ModuleId.Process
     case 'ProcessId.getMainProcessId':
     case 'ProcessId.getSharedProcessId':

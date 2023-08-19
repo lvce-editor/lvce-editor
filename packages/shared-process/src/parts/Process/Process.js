@@ -55,3 +55,7 @@ export const getV8Version = () => {
 export const getNodeVersion = () => {
   return process.versions.node
 }
+
+export const getArch = () => {
+  return process.arch
+}

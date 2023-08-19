@@ -9,4 +9,5 @@ export const Commands = {
   getPid: Process.getPid,
   getV8Version: Process.getV8Version,
   kill: Process.kill,
+  getArch: Process.getArch,
 }
