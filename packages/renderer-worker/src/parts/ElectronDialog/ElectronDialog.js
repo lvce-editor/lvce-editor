@@ -1,9 +1,9 @@
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Product from '../Product/Product.js'
 
 export const showOpenDialog = (title, properties) => {
-  return ElectronProcess.invoke('ElectronDialog.showOpenDialog', title, properties)
+  return SharedProcess.invoke('ElectronDialog.showOpenDialog', title, properties)
 }
 
 export const showMessageBox = async (options) => {
@@ -14,5 +14,5 @@ export const showMessageBox = async (options) => {
     ...options,
     productName,
   }
-  return ElectronProcess.invoke('ElectronDialog.showMessageBox', finalOptions)
+  return SharedProcess.invoke('ElectronDialog.showMessageBox', finalOptions)
 }

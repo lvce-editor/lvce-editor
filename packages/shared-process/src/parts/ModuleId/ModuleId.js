@@ -6,6 +6,7 @@ export const ExtensionManagement = 4
 export const FileSystem = 5
 export const ElectronApplicationMenu = 99
 export const OpenNativeFolder = 6
+export const ElectronDialog = 3278
 export const OutputChannel = 7
 export const Platform = 8
 export const ElectronClipBoard = 320
