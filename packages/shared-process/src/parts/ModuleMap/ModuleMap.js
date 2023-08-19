@@ -234,6 +234,8 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
+    case 'Os.getTmpDir':
+      return ModuleId.Os
     default:
       throw new CommandNotFoundError(commandId)
   }
