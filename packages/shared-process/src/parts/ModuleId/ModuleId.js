@@ -38,6 +38,7 @@ export const ListProcessesWithMemoryUsage = 35
 export const ElectronContextMenu = 40
 export const IncrementalTextSearch = 36
 export const Performance = 37
+export const ElectronBrowserView = 328
 export const Window = 38
 export const PassThroughElectronMessagePort = 39
 export const Exit = 43

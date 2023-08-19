@@ -1,4 +1,4 @@
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const state = {
   openCount: 0,
@@ -6,16 +6,12 @@ export const state = {
 
 export const createBrowserView = (restoreId, fallThroughKeyBindings) => {
   state.openCount++
-  return ElectronProcess.invoke(
-    'ElectronBrowserView.createBrowserView',
-    restoreId,
-    fallThroughKeyBindings
-  )
+  return SharedProcess.invoke('ElectronBrowserView.createBrowserView', restoreId, fallThroughKeyBindings)
 }
 
 export const disposeBrowserView = (id) => {
   state.openCount--
-  return ElectronProcess.invoke('ElectronBrowserView.disposeBrowserView', id)
+  return SharedProcess.invoke('ElectronBrowserView.disposeBrowserView', id)
 }
 
 export const getOpenCount = () => {

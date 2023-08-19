@@ -182,6 +182,9 @@ export const getModuleId = (commandId) => {
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened
+    case 'ElectronBrowserView.createBrowserView':
+    case 'ElectronBrowserView.disposeBrowserView':
+      return ModuleId.ElectronBrowserView
     case 'TextSearch.search':
       return ModuleId.Search
     case 'SearchFile.searchFile':
