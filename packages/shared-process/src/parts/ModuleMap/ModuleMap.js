@@ -19,6 +19,8 @@ export const getModuleId = (commandId) => {
     case 'ChromeExtension.install':
     case 'ChromeExtension.uninstall':
       return ModuleId.ChromeExtension
+    case 'ElectronApplicationMenu.setItems':
+      return ModuleId.ElectronApplicationMenu
     case 'ClipBoard.readFiles':
     case 'ClipBoard.writeFiles':
       return ModuleId.ClipBoard

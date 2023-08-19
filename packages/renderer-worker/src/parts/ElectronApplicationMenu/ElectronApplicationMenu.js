@@ -1,5 +1,5 @@
 import * as Command from '../Command/Command.js'
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ToElectronMenu from '../ToElectronMenu/ToElectronMenu.js'
@@ -9,7 +9,7 @@ export const state = {
 }
 
 const setItems = (items) => {
-  return ElectronProcess.invoke('ElectronApplicationMenu.setItems', items)
+  return SharedProcess.invoke('ElectronApplicationMenu.setItems', items)
 }
 
 const getEntries = (ids) => {
@@ -41,10 +41,7 @@ export const hydrate = async () => {
   ]
   const entries = await getEntries(ids)
   const map = getEntryMap(ids, entries)
-  const { electronMenu, commandMap } = ToElectronMenu.toElectronMenu(
-    map,
-    MenuEntryId.TitleBar
-  )
+  const { electronMenu, commandMap } = ToElectronMenu.toElectronMenu(map, MenuEntryId.TitleBar)
   state.commandMap = commandMap
   // console.log({ electronMenu })
   await setItems(electronMenu)

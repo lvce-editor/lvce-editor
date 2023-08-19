@@ -3,6 +3,7 @@ export const Developer = 2
 export const ExtensionHost = 3
 export const ExtensionManagement = 4
 export const FileSystem = 5
+export const ElectronApplicationMenu = 99
 export const OpenNativeFolder = 6
 export const OutputChannel = 7
 export const Platform = 8
