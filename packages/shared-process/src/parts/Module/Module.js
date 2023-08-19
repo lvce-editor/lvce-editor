@@ -88,6 +88,8 @@ export const load = (moduleId) => {
       return import('../Workspace/Workspace.ipc.js')
     case ModuleId.Exit:
       return import('../Exit/Exit.ipc.js')
+    case ModuleId.Crash:
+      return import('../Crash/Crash.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
