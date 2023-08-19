@@ -4,6 +4,7 @@ export const ExtensionHost = 3
 export const ExtensionManagement = 4
 export const FileSystem = 5
 export const OpenNativeFolder = 6
+export const ElectronDialog = 3278
 export const OutputChannel = 7
 export const Platform = 8
 export const Preferences = 9

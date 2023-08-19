@@ -195,6 +195,9 @@ export const getModuleId = (commandId) => {
       return ModuleId.TextDocument
     case 'WebSocketServer.handleUpgrade':
       return ModuleId.WebSocketServer
+    case 'ElectronDialog.showOpenDialog':
+    case 'ElectronDialog.showMessageBox':
+      return ModuleId.ElectronDialog
     case 'ElectronWindow.close':
     case 'ElectronWindow.maximize':
     case 'ElectronWindow.minimize':

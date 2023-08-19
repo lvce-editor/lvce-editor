@@ -70,6 +70,8 @@ export const load = (moduleId) => {
       return import('../Process/Process.ipc.js')
     case ModuleId.RebuildNodePty:
       return import('../RebuildNodePty/RebuildNodePty.ipc.js')
+    case ModuleId.ElectronDialog:
+      return import('../ElectronDialog/ElectronDialog.ipc.js')
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.js')
     case ModuleId.SearchFile:
