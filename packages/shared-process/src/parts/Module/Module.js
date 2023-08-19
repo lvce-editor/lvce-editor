@@ -46,6 +46,8 @@ export const load = (moduleId) => {
       return import('../GitLsFiles/GitLsFiles.ipc.js')
     case ModuleId.HandleCliArgs:
       return import('../HandleCliArgs/HandleCliArgs.ipc.js')
+    case ModuleId.OpenExternal:
+      return import('../OpenExternal/OpenExternal.ipc.js')
     case ModuleId.HandleElectronMessagePort:
       return import('../HandleElectronMessagePort/HandleElectronMessagePort.ipc.js')
     case ModuleId.HandleNodeMessagePort:
