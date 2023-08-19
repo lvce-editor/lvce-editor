@@ -86,6 +86,8 @@ export const load = (moduleId) => {
       return import('../Window/ElectronWindow.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
+    case ModuleId.ElectronNetLog:
+      return import('../ElectronNetLog/ElectronNetLog.ipc.js')
     case ModuleId.Exit:
       return import('../Exit/Exit.ipc.js')
     default:
