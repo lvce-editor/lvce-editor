@@ -6,6 +6,8 @@ export const load = (moduleId) => {
       return import('../AttachDebugger/AttachDebugger.ipc.js')
     case ModuleId.AutoUpdater:
       return import('../AutoUpdater/AutoUpdater.ipc.js')
+    case ModuleId.ProcessId:
+      return import('../ProcessId/ProcessId.ipc.js')
     case ModuleId.AutoUpdaterAppImage:
       return import('../AutoUpdaterAppImage/AutoUpdaterAppImage.ipc.js')
     case ModuleId.AutoUpdaterWindowsNsis:
