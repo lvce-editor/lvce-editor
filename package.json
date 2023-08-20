@@ -56,6 +56,6 @@
     "exec": "node packages/server/bin/server.js"
   },
   "dependencies": {
-    "execa": "^8.0.0"
+    "execa": "^8.0.1"
   }
 }
