@@ -27,7 +27,7 @@
     "@types/tar-fs": "^2.0.1",
     "@types/verror": "^1.10.6",
     "electron-builder": "^24.6.3",
-    "execa": "^8.0.0",
+    "execa": "^8.0.1",
     "extract-zip": "^2.0.1",
     "glob": "^10.3.3",
     "xdg-basedir": "^5.1.0"

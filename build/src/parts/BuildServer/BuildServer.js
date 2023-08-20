@@ -1,6 +1,7 @@
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
+import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
@@ -12,9 +13,7 @@ import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
-import * as Tag from '../Tag/Tag.js'
 import * as Version from '../Version/Version.js'
-import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const copyStaticFiles = async ({ commitHash }) => {

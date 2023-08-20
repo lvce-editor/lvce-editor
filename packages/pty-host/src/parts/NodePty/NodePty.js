@@ -1,5 +1,5 @@
 import { spawn } from 'node-pty'
-import VError from 'verror'
+import { VError } from '../VError/VError.js'
 import * as Assert from '../Assert/Assert.js'
 
 export const create = ({ env = {}, cwd, command, args } = {}) => {
@@ -15,7 +15,6 @@ export const create = ({ env = {}, cwd, command, args } = {}) => {
     })
     return pty
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to create terminal`)
   }
 }
@@ -30,7 +29,6 @@ export const write = (pty, data) => {
     Assert.object(pty)
     pty.write(data)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to write data to terminal`)
   }
 }
