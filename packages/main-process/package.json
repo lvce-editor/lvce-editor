@@ -20,7 +20,7 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "@electron/rebuild": "^3.2.13",
+    "@electron/rebuild": "^3.3.0",
     "@types/debug": "^4.1.8",
     "electron": "^26.0.0"
   },
