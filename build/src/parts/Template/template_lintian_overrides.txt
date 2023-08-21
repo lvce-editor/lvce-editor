@@ -35,7 +35,6 @@
 @@NAME@@: desktop-command-not-in-package @@NAME@@ [usr/share/applications/@@NAME@@.desktop]
 
 # too much effort to create another changelog file, skip this
-@@NAME@@: no-changelog usr/share/doc/@@NAME@@/changelog.gz (native package)
 @@NAME@@: no-changelog usr/share/doc/@@NAME@@/changelog.Debian.gz (non-native package)
 
 # node modules
