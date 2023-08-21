@@ -1,3 +1,14 @@
+# electron libraries
+
+@@NAME@@: embedded-library freetype [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library lcms2 [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library libjpeg [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library libjsoncpp [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library libpng [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library openjpeg [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library srtp [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library tiff [usr/lib/@@NAME@@/@@NAME@@]
+
 # electron executables
 @@NAME@@: shared-library-is-executable 0755 [usr/lib/@@NAME@@/libEGL.so]
 @@NAME@@: shared-library-is-executable 0755 [usr/lib/@@NAME@@/libGLESv2.so]
@@ -24,6 +35,7 @@
 @@NAME@@: desktop-command-not-in-package @@NAME@@ [usr/share/applications/@@NAME@@.desktop]
 
 # too much effort to create another changelog file, skip this
+@@NAME@@: no-changelog usr/share/doc/@@NAME@@/changelog.gz (native package)
 @@NAME@@: no-changelog usr/share/doc/@@NAME@@/changelog.Debian.gz (non-native package)
 
 # node modules
@@ -42,7 +54,6 @@
 @@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/is-wsl/node_modules/is-docker/cli.js]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/@types/http-cache-semantics/package.json]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/nan/tools/1to2.js]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-113/node-pty.node]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
