@@ -1,6 +1,6 @@
 import * as ElectronBuilder from 'electron-builder'
 import { readdir } from 'node:fs/promises'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Copy from '../Copy/Copy.js'
 import * as CreatePlaceholderElectronApp from '../CreatePlaceholderElectronApp/CreatePlaceholderElectronApp.js'

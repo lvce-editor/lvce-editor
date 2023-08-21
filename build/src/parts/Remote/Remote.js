@@ -1,7 +1,7 @@
 import { mkdir } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import cpy from 'cpy'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import execa from 'execa'
 import { getTmpDir, root } from '../Shared/Shared.js'
 
@@ -90,10 +90,7 @@ const copySources = async () => {
   await mkdir(join(root, 'build/.tmp/playground'))
 }
 
-const TO_INSTALL_DEPENDENCIES = [
-  'build/.tmp/packages/extension-host',
-  'build/.tmp/packages/shared-process',
-]
+const TO_INSTALL_DEPENDENCIES = ['build/.tmp/packages/extension-host', 'build/.tmp/packages/shared-process']
 
 const installDependencies = async () => {
   for (const to of TO_INSTALL_DEPENDENCIES) {

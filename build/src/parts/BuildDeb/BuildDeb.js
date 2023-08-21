@@ -1,5 +1,5 @@
 import { chmod, writeFile } from 'node:fs/promises'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as ArchType from '../ArchType/ArchType.js'
 import * as Compress from '../Compress/Compress.js'
 import * as Copy from '../Copy/Copy.js'

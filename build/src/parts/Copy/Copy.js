@@ -1,7 +1,7 @@
 import * as fs from 'node:fs/promises'
 import { join } from 'node:path'
 import fsExtra from 'fs-extra'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Path from '../Path/Path.js'
 
 /**

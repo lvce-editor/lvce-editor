@@ -1,4 +1,4 @@
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Nodefs from 'node:fs/promises'
 
 export const symlink = async (from, to) => {

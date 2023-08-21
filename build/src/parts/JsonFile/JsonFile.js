@@ -1,4 +1,4 @@
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 

@@ -5,7 +5,7 @@ import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 
 const main = async () => {
   const indexPath = join(Root.root, 'build', '.tmp', 'server', 'shared-process', 'index.js')

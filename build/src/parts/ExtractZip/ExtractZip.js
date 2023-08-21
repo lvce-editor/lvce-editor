@@ -1,6 +1,6 @@
 import extract from 'extract-zip'
 import { mkdir } from 'node:fs/promises'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 
 export const extractZip = async ({ inFile, outDir }) => {
   try {

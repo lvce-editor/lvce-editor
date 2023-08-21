@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'fs/promises'
 import { pathToFileURL } from 'url'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as BundleJs from '../BundleJs/BundleJs.js'
 import * as Copy from '../Copy/Copy.js'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'

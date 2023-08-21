@@ -1,5 +1,5 @@
 import * as fs from 'node:fs/promises'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Path from '../Path/Path.js'
 
 /**
@@ -18,7 +18,6 @@ export const readDirWithFileTypes = async (relativePath) => {
   }
 }
 
-
 /**
  *
  * @param {string} relativePath
@@ -34,4 +33,3 @@ export const readDir = async (relativePath) => {
     throw new VError(error, `Failed to read directory ${relativePath}`)
   }
 }
-

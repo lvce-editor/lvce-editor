@@ -1,13 +1,9 @@
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Exec from '../Exec/Exec.js'
 
 export const getCommitHash = async () => {
   try {
-    const { stdout } = await Exec.exec('git', [
-      'rev-parse',
-      '--short=7',
-      'HEAD',
-    ])
+    const { stdout } = await Exec.exec('git', ['rev-parse', '--short=7', 'HEAD'])
     return stdout
   } catch (error) {
     // @ts-ignore

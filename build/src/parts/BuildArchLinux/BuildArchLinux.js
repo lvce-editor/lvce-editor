@@ -1,4 +1,4 @@
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as ArchLinuxElectronVersion from '../ArchLinuxElectronVersion/ArchLinuxElectronVersion.js'
 import * as ArchType from '../ArchType/ArchType.js'
 import * as Compress from '../Compress/Compress.js'

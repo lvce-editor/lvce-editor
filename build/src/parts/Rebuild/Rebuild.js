@@ -1,5 +1,5 @@
 import * as ElectronRebuild from '@electron/rebuild'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Process from '../Process/Process.js'
 
 export const rebuild = async ({ electronVersion, buildPath, arch }) => {

@@ -1,4 +1,4 @@
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Exec from '../Exec/Exec.js'
 import * as GetElsProblemMessage from '../GetElsProblemMessage/GetElsProblemMessage.js'
