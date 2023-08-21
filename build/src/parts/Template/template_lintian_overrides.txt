@@ -49,7 +49,6 @@
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/extract-zip/cli.js]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/symlink-dir/dist/cli.js]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/trash/lib/macos-trash]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/which/bin/node-which]
 @@NAME@@: script-not-executable [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/node-addon-api/tools/clang-format.js]
 @@NAME@@: script-not-executable [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/node-addon-api/tools/eslint-format.js]
