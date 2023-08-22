@@ -2,6 +2,7 @@ import * as ElectronBuilder from 'electron-builder'
 import { readdir } from 'node:fs/promises'
 import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
+import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as Copy from '../Copy/Copy.js'
 import * as CreatePlaceholderElectronApp from '../CreatePlaceholderElectronApp/CreatePlaceholderElectronApp.js'
 import * as ElectronBuilderConfigType from '../ElectronBuilderConfigType/ElectronBuilderConfigType.js'
@@ -13,7 +14,6 @@ import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
-import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 
 // TODO don't need to include whole node-pty module
 // TODO maybe don't need to include nan module
@@ -35,11 +35,10 @@ const getElectronVersion = async () => {
   return parsedVersion
 }
 
-const copyElectronBuilderConfig = async ({ config, version, product, electronVersion }) => {
+const copyElectronBuilderConfig = async ({ config, version, product, electronVersion, bundleMainProcess }) => {
   // if (config === 'electron_builder_arch_linux') {
   //   version = version.replaceAll('-', '_') // https://wiki.archlinux.org/title/creating_packages#pkgver()
   // }
-  const bundleMainProcess = BundleOptions.bundleMainProcess
   const mainProcessPath = bundleMainProcess ? `packages/main-process/dist/mainProcessMain.cjs` : `packages/main-process/src/mainProcessMain.cjs`
   await Template.write(config, 'build/.tmp/electron-builder/package.json', {
     '@@NAME@@': product.applicationName,
@@ -147,11 +146,12 @@ const printFinalSize = async (releaseFilePath) => {
   }
 }
 
-const addRootPackageJson = async ({ cachePath, version, product }) => {
+const addRootPackageJson = async ({ cachePath, version, product, bundleMainProcess }) => {
+  const main = bundleMainProcess ? 'packages/main-process/dist/mainProcessMain.cjs' : 'packages/main-process/src/mainProcessMain.cjs'
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: {
-      main: 'packages/main-process/src/mainProcessMain.cjs',
+      main,
       name: product.applicationName,
       productName: product.nameLong,
       version: version,
@@ -171,7 +171,15 @@ const getRepositoryInfo = (url) => {
   }
 }
 
-const copyElectronResult = async ({ config, version, product, electronVersion, supportsAutoUpdate, shouldRemoveUnusedLocales }) => {
+const copyElectronResult = async ({
+  config,
+  version,
+  product,
+  electronVersion,
+  supportsAutoUpdate,
+  shouldRemoveUnusedLocales,
+  bundleMainProcess,
+}) => {
   await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales })
   const debArch = 'amd64'
   await Copy.copy({
@@ -182,6 +190,7 @@ const copyElectronResult = async ({ config, version, product, electronVersion, s
     cachePath: `build/.tmp/linux/snap/${debArch}/app/resources/app`,
     version,
     product,
+    bundleMainProcess,
   })
   if (supportsAutoUpdate) {
     await Replace.replace({
@@ -252,16 +261,17 @@ export const build = async ({ config, product, shouldRemoveUnusedLocales = false
   process.env.USE_HARD_LINKS = false
   const version = await Tag.getSemverVersion()
   const electronVersion = await getElectronVersion()
+  const bundleMainProcess = BundleOptions.bundleMainProcess
 
   const supportsAutoUpdate =
     product.supportsAutoUpdate && (config === ElectronBuilderConfigType.AppImage || config === ElectronBuilderConfigType.WindowsExe)
 
   console.time('copyElectronResult')
-  await copyElectronResult({ version, config, product, electronVersion, supportsAutoUpdate, shouldRemoveUnusedLocales })
+  await copyElectronResult({ version, config, product, electronVersion, supportsAutoUpdate, shouldRemoveUnusedLocales, bundleMainProcess })
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')
-  await copyElectronBuilderConfig({ config, version, product, electronVersion })
+  await copyElectronBuilderConfig({ config, version, product, electronVersion, bundleMainProcess })
   console.timeEnd('copyElectronBuilderConfig')
 
   console.time('copyBuildResources')
