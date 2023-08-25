@@ -16,12 +16,12 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.11",
     "@electron/get": "^2.0.2",
     "@electron/rebuild": "^3.3.0",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^25.0.4",
-    "@rollup/plugin-node-resolve": "^15.2.0",
+    "@rollup/plugin-node-resolve": "^15.2.1",
     "@types/bytes": "^3.1.1",
     "@types/fs-extra": "^11.0.1",
     "@types/tar-fs": "^2.0.1",
@@ -41,7 +41,7 @@
     "minimist": "^1.2.8",
     "p-map": "^6.0.0",
     "pretty-bytes": "^6.1.1",
-    "rollup": "^3.28.0",
+    "rollup": "^3.28.1",
     "tar-fs": "^3.0.4",
     "verdaccio": "^5.26.1",
     "verror": "^1.10.1"
