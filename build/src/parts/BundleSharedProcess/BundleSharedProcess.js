@@ -4,6 +4,28 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Remove from '../Remove/Remove.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
+
+const createNewPackageJson = (oldPackageJson, bundleSharedProcess) => {
+  const newPackageJson = {
+    ...oldPackageJson,
+  }
+  delete newPackageJson.scripts
+  delete newPackageJson.description
+  delete newPackageJson.scripts
+  delete newPackageJson.keywords
+  delete newPackageJson.author
+  delete newPackageJson.license
+  delete newPackageJson.repository
+  delete newPackageJson.engines
+  delete newPackageJson.devDependencies
+  delete newPackageJson.xo
+  delete newPackageJson.jest
+  if (bundleSharedProcess) {
+    newPackageJson.main = 'dist/sharedProcessMain.js'
+  }
+  return newPackageJson
+}
 
 export const bundleSharedProcess = async ({ cachePath, commitHash, product, version, bundleSharedProcess, date, target }) => {
   await Copy.copy({
@@ -156,4 +178,10 @@ export const getPtyHostPath = async () => {
     await Remove.remove(`${cachePath}/dist/renderer-process.modern.js`)
     await Remove.remove(`${cachePath}/dist/renderer-process.modern.js.map`)
   }
+  const oldPackageJson = await JsonFile.readJson(`${cachePath}/package.json`)
+  const newPackageJson = createNewPackageJson(oldPackageJson, bundleSharedProcess)
+  await JsonFile.writeJson({
+    to: `${cachePath}/package.json`,
+    value: newPackageJson,
+  })
 }
