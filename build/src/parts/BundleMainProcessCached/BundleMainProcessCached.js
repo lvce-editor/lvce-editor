@@ -4,8 +4,8 @@ import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 
-export const bundleMainProcessCached = async ({ commitHash, product, version, bundleMainProcess }) => {
-  const cachePath = await CachePaths.getMainProcessCachePath([])
+export const bundleMainProcessCached = async ({ commitHash, product, version, bundleMainProcess, bundleSharedProcess }) => {
+  const cachePath = await CachePaths.getMainProcessCachePath([bundleMainProcess, bundleSharedProcess])
   if (existsSync(cachePath)) {
     Logger.info('[build step skipped] bundleMainProcess')
   } else {
@@ -18,6 +18,7 @@ export const bundleMainProcessCached = async ({ commitHash, product, version, bu
       product,
       version,
       bundleMainProcess,
+      bundleSharedProcess,
     })
     console.timeEnd('bundleMainProcess')
   }

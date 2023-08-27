@@ -386,6 +386,7 @@ export const build = async ({
     product,
     version,
     bundleMainProcess,
+    bundleSharedProcess,
   })
 
   console.time('copyMainProcessFiles')

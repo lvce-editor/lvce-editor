@@ -3,6 +3,29 @@ import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
+import * as Remove from '../Remove/Remove.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
+
+const createNewPackageJson = (oldPackageJson, bundleSharedProcess) => {
+  const newPackageJson = {
+    ...oldPackageJson,
+  }
+  delete newPackageJson.scripts
+  delete newPackageJson.description
+  delete newPackageJson.scripts
+  delete newPackageJson.keywords
+  delete newPackageJson.author
+  delete newPackageJson.license
+  delete newPackageJson.repository
+  delete newPackageJson.engines
+  delete newPackageJson.devDependencies
+  delete newPackageJson.xo
+  delete newPackageJson.jest
+  if (bundleSharedProcess) {
+    newPackageJson.main = 'dist/sharedProcessMain.js'
+  }
+  return newPackageJson
+}
 
 export const bundleSharedProcess = async ({ cachePath, commitHash, product, version, bundleSharedProcess, date, target }) => {
   await Copy.copy({
@@ -145,11 +168,36 @@ export const getPtyHostPath = async () => {
     }
   }
   if (bundleSharedProcess) {
+    await Copy.copy({
+      from: 'packages/shared-process/node_modules',
+      to: Path.join(cachePath, 'node_modules'),
+      ignore: ['vscode-ripgrep-with-github-api-error-fix', '@types', 'type-fest', '.bin', 'is-docker'],
+      dereference: true,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Root/Root.js`,
+      occurrence: `resolve(__dirname, '../../../../../')`,
+      replacement: `resolve(__dirname, '../../../')`,
+    })
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/sharedProcessMain.js`,
       platform: 'node',
-      external: ['tmp-promise'],
+      external: ['tmp-promise', '@lvce-editor/pretty-error', '@vscode/windows-process-tree'],
+      codeSplitting: true,
+    })
+    await Remove.remove(`${cachePath}/dist/renderer-process.modern.js`)
+    await Remove.remove(`${cachePath}/dist/renderer-process.modern.js.map`)
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Root/Root.js`,
+      occurrence: `resolve(__dirname, '../../../')`,
+      replacement: `resolve(__dirname, '../../../../../')`,
     })
   }
+  const oldPackageJson = await JsonFile.readJson(`${cachePath}/package.json`)
+  const newPackageJson = createNewPackageJson(oldPackageJson, bundleSharedProcess)
+  await JsonFile.writeJson({
+    to: `${cachePath}/package.json`,
+    value: newPackageJson,
+  })
 }

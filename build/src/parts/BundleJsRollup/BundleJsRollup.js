@@ -30,11 +30,16 @@ export const bundleJs = async ({
 }) => {
   const allExternal = getExternal(babelExternal, external)
   const plugins = []
-  if (platform === 'node/cjs') {
+  if (platform === 'node/cjs' || platform === 'node') {
     const { default: commonjs } = await import('@rollup/plugin-commonjs')
     const { nodeResolve } = await import('@rollup/plugin-node-resolve')
-    // @ts-ignore
-    plugins.push(commonjs(), nodeResolve())
+    plugins.push(
+      // @ts-ignore
+      commonjs(),
+      nodeResolve({
+        preferBuiltins: true,
+      })
+    )
   }
   if (typescript) {
     const { babel } = await import('@rollup/plugin-babel')
@@ -56,12 +61,16 @@ export const bundleJs = async ({
     preserveEntrySignatures: 'strict',
     treeshake: {
       propertyReadSideEffects: false,
+
       // moduleSideEffects: false,
     },
     perf: true,
     onwarn: (message) => {
       // fail build if circular dependencies are found
       if (message.code === 'CIRCULAR_DEPENDENCY') {
+        if (message.ids && message.ids[0].includes('node_modules')) {
+          return
+        }
         if (allowCyclicDependencies) {
           console.warn(`RollUp: ${message.message}`)
         } else {
