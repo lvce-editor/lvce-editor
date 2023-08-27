@@ -168,6 +168,12 @@ export const getPtyHostPath = async () => {
     }
   }
   if (bundleSharedProcess) {
+    await Copy.copy({
+      from: 'packages/shared-process/node_modules',
+      to: Path.join(cachePath, 'node_modules'),
+      ignore: ['vscode-ripgrep-with-github-api-error-fix', '@types', 'type-fest', '.bin', 'is-docker'],
+      dereference: true,
+    })
     await Replace.replace({
       path: `${cachePath}/src/parts/Root/Root.js`,
       occurrence: `resolve(__dirname, '../../../../../')`,
@@ -177,7 +183,7 @@ export const getPtyHostPath = async () => {
       cwd: cachePath,
       from: `./src/sharedProcessMain.js`,
       platform: 'node',
-      external: ['tmp-promise'],
+      external: ['tmp-promise', '@lvce-editor/pretty-error', '@vscode/windows-process-tree'],
       codeSplitting: true,
     })
     await Remove.remove(`${cachePath}/dist/renderer-process.modern.js`)
