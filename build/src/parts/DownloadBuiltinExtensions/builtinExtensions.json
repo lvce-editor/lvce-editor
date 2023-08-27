@@ -207,7 +207,7 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "0.7.0"
+    "version": "0.8.0"
   },
   {
     "name": "builtin.language-basics-vue",
@@ -237,7 +237,7 @@
   {
     "name": "builtin.language-features-html",
     "repository": "github.com/lvce-editor/language-features-html",
-    "version": "0.0.13"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.language-features-typescript",
