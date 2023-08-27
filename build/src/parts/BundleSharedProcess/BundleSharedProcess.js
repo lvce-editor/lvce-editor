@@ -3,6 +3,7 @@ import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
+import * as Remove from '../Remove/Remove.js'
 
 export const bundleSharedProcess = async ({ cachePath, commitHash, product, version, bundleSharedProcess, date, target }) => {
   await Copy.copy({
@@ -150,6 +151,9 @@ export const getPtyHostPath = async () => {
       from: `./src/sharedProcessMain.js`,
       platform: 'node',
       external: ['tmp-promise'],
+      codeSplitting: true,
     })
+    await Remove.remove(`${cachePath}/dist/renderer-process.modern.js`)
+    await Remove.remove(`${cachePath}/dist/renderer-process.modern.js.map`)
   }
 }
