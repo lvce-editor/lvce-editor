@@ -169,7 +169,24 @@ const copyPdfWorkerSources = async ({ arch }) => {
   })
 }
 
-const copyExtensions = async ({ arch }) => {
+const quickJoinPath = (prefix, postfix) => {
+  if (postfix.startsWith('./')) {
+    return prefix + '/' + postfix.slice('./'.length)
+  }
+  return prefix + '/' + postfix
+}
+
+const removeSrcPrefix = (postfix) => {
+  if (postfix.startsWith('./src')) {
+    return postfix.slice('./src'.length)
+  }
+  if (postfix.startsWith('src')) {
+    return postfix.slice('src'.length)
+  }
+  return postfix
+}
+
+const copyExtensions = async ({ arch, optimizeLanguageBasics }) => {
   await Copy.copy({
     from: 'extensions',
     to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions`,
@@ -181,6 +198,51 @@ const copyExtensions = async ({ arch }) => {
     occurrence: '../../../../typescript/lib/typescript.js',
     replacement: '../../../../../builtin.language-features-typescript/node/node_modules/typescript/lib/typescript.js',
   })
+  if (optimizeLanguageBasics) {
+    const dirents = await ReadDir.readDir(`build/.tmp/electron-bundle/${arch}/resources/app/extensions`)
+    const allLanguages = []
+    for (const dirent of dirents) {
+      if (!dirent.startsWith('builtin.language-basics-')) {
+        continue
+      }
+      const postfix = dirent.slice('builtin.language-basics-'.length)
+      const extensionJson = await JsonFile.readJson(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}/extension.json`)
+      if (extensionJson && extensionJson.languages && Array.isArray(extensionJson.languages)) {
+        for (const language of extensionJson.languages) {
+          if (language.configuration) {
+            language.configuration = quickJoinPath(postfix, language.configuration)
+          }
+          if (language.tokenize) {
+            language.tokenize = quickJoinPath(postfix, removeSrcPrefix(language.tokenize))
+          }
+          allLanguages.push(language)
+        }
+      }
+      await Copy.copy({
+        from: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}/src`,
+        to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-basics/${postfix}`,
+      })
+      await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}`)
+    }
+    await JsonFile.writeJson({
+      to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-basics/extension.json`,
+      value: {
+        id: 'builtin.language-basics',
+        name: 'Language Basics',
+        description: 'Provides syntax highlighting and bracket matching in files.',
+        languages: allLanguages,
+      },
+    })
+    await WriteFile.writeFile({
+      to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-basics/README.md`,
+      content: `# Language Basics
+
+Syntax highlighting for Lvce Editor.
+
+For performance reason, all languages extensions are bundled into one during build.
+`,
+    })
+  }
 }
 
 const copyStaticFiles = async ({ arch }) => {
@@ -258,6 +320,7 @@ export const build = async ({
   const date = await GetCommitDate.getCommitDate(commitHash)
   const bundleMainProcess = BundleOptions.bundleMainProcess
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
+  const optimizeLanguageBasics = true
 
   const useInstalledElectronVersion = isInstalled && installedArch === arch
   if (!useInstalledElectronVersion) {
@@ -357,7 +420,7 @@ export const build = async ({
   console.timeEnd('copyPdfWorkerSources')
 
   console.time('copyExtensions')
-  await copyExtensions({ arch })
+  await copyExtensions({ arch, optimizeLanguageBasics })
   console.timeEnd('copyExtensions')
 
   console.time('copyStaticFiles')
