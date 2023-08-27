@@ -319,7 +319,7 @@ export const build = async ({
   const commitHash = await CommitHash.getCommitHash()
   const date = await GetCommitDate.getCommitDate(commitHash)
   const bundleMainProcess = BundleOptions.bundleMainProcess
-  const bundleSharedProcess = true
+  const bundleSharedProcess = BundleOptions.bundleSharedProcess
   const optimizeLanguageBasics = true
 
   const useInstalledElectronVersion = isInstalled && installedArch === arch
