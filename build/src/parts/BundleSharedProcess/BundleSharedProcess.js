@@ -168,6 +168,11 @@ export const getPtyHostPath = async () => {
     }
   }
   if (bundleSharedProcess) {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Root/Root.js`,
+      occurrence: `resolve(__dirname, '../../../../../')`,
+      replacement: `resolve(__dirname, '../../../')`,
+    })
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/sharedProcessMain.js`,
@@ -177,6 +182,11 @@ export const getPtyHostPath = async () => {
     })
     await Remove.remove(`${cachePath}/dist/renderer-process.modern.js`)
     await Remove.remove(`${cachePath}/dist/renderer-process.modern.js.map`)
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Root/Root.js`,
+      occurrence: `resolve(__dirname, '../../../')`,
+      replacement: `resolve(__dirname, '../../../../../')`,
+    })
   }
   const oldPackageJson = await JsonFile.readJson(`${cachePath}/package.json`)
   const newPackageJson = createNewPackageJson(oldPackageJson, bundleSharedProcess)
