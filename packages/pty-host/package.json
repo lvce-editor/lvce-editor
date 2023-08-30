@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@lvce-editor/pretty-error": "^1.1.1",
-    "@lvce-editor/verror": "^1.0.1",
+    "@lvce-editor/verror": "^1.1.0",
     "debug": "^4.3.4",
     "ws": "^8.13.0"
   },
