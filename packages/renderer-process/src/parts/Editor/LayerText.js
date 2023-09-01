@@ -73,7 +73,7 @@ const render$Line = ($Line, lineInfo, difference) => {
   } else {
     render$LineMore($Line, lineInfo)
   }
-  SetBounds.setX($Line, difference)
+  SetBounds.setXAndYTransform($Line, difference, 100)
 }
 
 const render$LinesLess = ($Lines, lineInfos, differences) => {
@@ -121,5 +121,6 @@ export const setLineInfos = (state, lineInfos, differences) => {
   Assert.object(state)
   Assert.array(lineInfos)
   Assert.array(differences)
+  console.log({ lineInfos, differences })
   render$Lines(state.$LayerText, lineInfos, differences)
 }

@@ -5,6 +5,8 @@ import * as Widget from '../Widget/Widget.js'
 
 export const create = Editor.create
 
+export const setDeltaY = Editor.setDeltaY
+
 export const setText = Editor.setText
 
 export const setSelections = Editor.setSelections

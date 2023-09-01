@@ -487,4 +487,13 @@ const renderFocus = {
   },
 }
 
-export const render = [renderLines, renderSelections, renderScrollBarX, renderScrollBarY, renderFocus]
+const renderY = {
+  isEqual(oldState, newState) {
+    return oldState.deltaY === newState.deltaY
+  },
+  apply(oldState, newState) {
+    return ['setDeltaY', newState.deltaY]
+  },
+}
+
+export const render = [renderLines, renderSelections, renderScrollBarX, renderScrollBarY, renderFocus, renderY]

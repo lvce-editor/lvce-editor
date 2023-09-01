@@ -213,3 +213,12 @@ export const renderDiagnostics = (state, diagnostics, scrollBarDiagnostics) => {
   LayerDiagnostics.setDiagnostics(state, diagnostics)
   LayerScrollBar.setDiagnostics(state, scrollBarDiagnostics)
 }
+
+export const setDeltaY = (state, deltaY) => {
+  const relative = deltaY % 20
+  const { $LayerText } = state
+  console.log({ state })
+  const first = $LayerText.children[0]
+  first.style.translate = `0 ${relative}px`
+  console.log({ first })
+}
