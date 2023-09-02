@@ -2,8 +2,11 @@ export const listen = async () => {
   if (!process.send) {
     throw new Error('process.send must be defined')
   }
-  process.send('ready')
   return process
+}
+
+export const signal = (process) => {
+  process.send('ready')
 }
 
 const getActualData = (message, handle) => {
