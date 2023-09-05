@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "@babel/code-frame": "^7.22.13",
-    "@lvce-editor/verror": "^1.1.0",
+    "@lvce-editor/verror": "^1.1.1",
     "clean-stack": "^5.0.1",
     "execa": "^8.0.1",
     "got": "^13.0.0",
