@@ -24,7 +24,7 @@
     "@rollup/plugin-node-resolve": "^15.2.1",
     "@types/bytes": "^3.1.1",
     "@types/fs-extra": "^11.0.1",
-    "@types/tar-fs": "^2.0.1",
+    "@types/tar-fs": "^2.0.2",
     "@types/verror": "^1.10.6",
     "electron-builder": "^24.6.4",
     "execa": "^8.0.1",
@@ -41,7 +41,7 @@
     "minimist": "^1.2.8",
     "p-map": "^6.0.0",
     "pretty-bytes": "^6.1.1",
-    "rollup": "^3.28.1",
+    "rollup": "^3.29.1",
     "tar-fs": "^3.0.4",
     "verdaccio": "^5.26.2",
     "verror": "^1.10.1"
