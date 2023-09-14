@@ -37,7 +37,6 @@ export const Preferences = 35
 export const QuickPick = 36
 export const RecentlyOpened = 37
 export const SaveState = 38
-export const ServiceWorker = 39
 export const SessionReplay = 40
 export const SessionStorage = 41
 export const Test = 42

@@ -124,8 +124,6 @@ export const load = (moduleId) => {
       return import('../SaveFileAs/SaveFileAs.ipc.js')
     case ModuleId.SaveState:
       return import('../SaveState/SaveState.ipc.js')
-    case ModuleId.ServiceWorker:
-      return import('../ServiceWorker/ServiceWorker.ipc.js')
     case ModuleId.SessionReplay:
       return import('../SessionReplay/SessionReplay.ipc.js')
     case ModuleId.SessionStorage:
