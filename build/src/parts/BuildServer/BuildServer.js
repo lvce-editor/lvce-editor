@@ -33,10 +33,6 @@ const copyStaticFiles = async ({ commitHash }) => {
     from: 'static/favicon.ico',
     to: `build/.tmp/server/server/static/favicon.ico`,
   })
-  await Copy.copyFile({
-    from: 'static/serviceWorker.js',
-    to: `build/.tmp/server/server/static/serviceWorker.js`,
-  })
   await Copy.copy({
     from: 'static/fonts',
     to: `build/.tmp/server/server/static/${commitHash}/fonts`,
@@ -57,11 +53,6 @@ const copyStaticFiles = async ({ commitHash }) => {
     path: `build/.tmp/server/server/static/manifest.json`,
     occurrence: '/icons',
     replacement: `/${commitHash}/icons`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/serviceWorker.js`,
-    occurrence: `const CACHE_STATIC_NAME = 'static-v4'`,
-    replacement: `const CACHE_STATIC_NAME = 'static-${commitHash}'`,
   })
   await Copy.copyFile({
     from: 'static/index.html',

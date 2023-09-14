@@ -285,10 +285,6 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
     from: 'static/favicon.ico',
     to: `build/.tmp/dist/favicon.ico`,
   })
-  await Copy.copyFile({
-    from: 'static/serviceWorker.js',
-    to: `build/.tmp/dist/serviceWorker.js`,
-  })
   await Copy.copy({
     from: 'static/fonts',
     to: `build/.tmp/dist/${commitHash}/fonts`,
@@ -317,11 +313,6 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
       replacement: `"start_url": "${pathPrefix}/"`,
     })
   }
-  await Replace.replace({
-    path: `build/.tmp/dist/serviceWorker.js`,
-    occurrence: `const CACHE_STATIC_NAME = 'static-v4'`,
-    replacement: `const CACHE_STATIC_NAME = 'static-${commitHash}'`,
-  })
   await Copy.copyFile({
     from: 'static/index.html',
     to: `build/.tmp/dist/index.html`,

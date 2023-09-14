@@ -16,7 +16,6 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
-import * as ServiceWorker from '../ServiceWorker/ServiceWorker.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as UnhandledErrorHandling from '../UnhandledErrorHandling/UnhandledErrorHandling.js'
@@ -185,10 +184,6 @@ export const startup = async () => {
   Performance.mark(PerformanceMarkerType.DidLoadRecentlyOpened)
 
   // TODO tree shake out service worker in electron build
-
-  Performance.mark(PerformanceMarkerType.WillLoadServiceWorker)
-  await ServiceWorker.hydrate()
-  Performance.mark(PerformanceMarkerType.DidLoadServiceWorker)
 
   Performance.mark(PerformanceMarkerType.WillLoadLocation)
   await Location.hydrate()

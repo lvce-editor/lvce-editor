@@ -17,7 +17,6 @@ export const Meta = 16
 export const Notification = 17
 export const Open = 18
 export const Panel = 19
-export const ServiceWorker = 20
 export const Test = 21
 export const TestFrameWork = 22
 export const Viewlet = 23
