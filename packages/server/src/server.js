@@ -7,7 +7,6 @@ import { IncomingMessage, ServerResponse, createServer } from 'node:http'
 import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { fileURLToPath } from 'node:url'
-import { Worker } from 'node:worker_threads'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
@@ -190,29 +189,6 @@ const getFirstWorkerEvent = async (worker) => {
   return { type, event }
 }
 
-const createBabelWorkerIpc = async () => {
-  const babelWorkerPath = join(ROOT, 'packages', 'babel-worker', 'src', 'babelWorkerMain.js')
-  const worker = new Worker(babelWorkerPath, {
-    resourceLimits: {
-      maxOldGenerationSizeMb: 20,
-    },
-    argv: ['--ipc-type=node-worker'],
-  })
-  const { type, event } = await getFirstWorkerEvent(worker)
-  if (type !== FirstNodeWorkerEventType.Message || event !== 'ready') {
-    throw new Error(`Failed to start worker`)
-  }
-  return {
-    worker,
-    send(message) {
-      this.worker.postMessage(message)
-    },
-    set onmessage(listener) {
-      this.worker.on('message', listener)
-    },
-  }
-}
-
 const Id = {
   id: 1,
   create() {
@@ -302,16 +278,6 @@ const serveStatic = (root, skip = '') =>
     if (isWorkerUrl(filePath)) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
-    }
-    if (isTypeScript) {
-      const ipc = await createBabelWorkerIpc()
-      const rpc = createRpc(ipc)
-      const inputPath = filePath
-      const outputPath = join(root, '.cache', `${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}.js`)
-      await rpc.invoke('TranspileFile.transpileFile', inputPath, outputPath)
-      res.writeHead(StatusCode.Ok, headers)
-      await pipeline(createReadStream(outputPath), res)
-      return
     }
     res.writeHead(StatusCode.Ok, headers)
     try {
