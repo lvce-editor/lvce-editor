@@ -7,9 +7,11 @@ import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
+import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
+import * as GetNewCssDeclarationFile from '../GetNewCssDeclarationFile/GetNewCssDeclarationFile.js'
 import * as InlineDynamicImportsFile from '../InlineDynamicImportsFile/InlineDynamicImportsFile.js'
+import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
@@ -19,8 +21,6 @@ import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
-import * as GetNewCssDeclarationFile from '../GetNewCssDeclarationFile/GetNewCssDeclarationFile.js'
 
 const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
@@ -474,8 +474,7 @@ const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
     try {
       manifest = await JsonFile.readJson(Path.absolute(`extensions/${languageFeature}/extension.json`))
     } catch (error) {
-      // @ts-ignore
-      if (error && error.code === ErrorCodes.ENOENT) {
+      if (IsEnoentError.isEnoentError(error)) {
         continue
       }
       throw error
