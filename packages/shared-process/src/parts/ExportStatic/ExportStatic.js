@@ -139,11 +139,6 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     `return \`\${extensionPath}\${value}\``,
     `return \`${pathPrefix}/${commitHash}/file-icons/\${value.slice(7)}\``
   )
-  await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'extension-host-worker', 'dist', 'extensionHostWorkerMain.js'),
-    `/${commitHash}/packages/extension-host-sub-worker`,
-    `/${pathPrefix}/${commitHash}/packages/extension-host-sub-worker`
-  )
 
   // workaround for firefox bug
   await replace(
