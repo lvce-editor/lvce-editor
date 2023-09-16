@@ -198,6 +198,9 @@ const copyExtensions = async ({ arch, optimizeLanguageBasics }) => {
     occurrence: '../../../../typescript/lib/typescript.js',
     replacement: '../../../../../builtin.language-features-typescript/node/node_modules/typescript/lib/typescript.js',
   })
+  await Remove.remove(
+    `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-features-typescript/node/node_modules/typescript/lib/tsserverlibrary.js`
+  )
   if (optimizeLanguageBasics) {
     const dirents = await ReadDir.readDir(`build/.tmp/electron-bundle/${arch}/resources/app/extensions`)
     const allLanguages = []
