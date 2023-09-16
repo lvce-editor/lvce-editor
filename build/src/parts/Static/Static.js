@@ -227,7 +227,7 @@ export const getModule = (method) => {
   }
 }
 
-const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
+const copyExtensionHostWorkerFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
     from: 'packages/extension-host-worker/src',
     to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
@@ -240,7 +240,7 @@ const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/GetExtensionHostSubWorkerUrl/GetExtensionHostSubWorkerUrl.js`,
     occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
-    replacement: `'/${commitHash}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
+    replacement: `'${pathPrefix}/${commitHash}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
   })
   // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
   await Replace.replace({
@@ -642,7 +642,7 @@ export const build = async () => {
   Console.timeEnd('copyRendererWorkerFiles')
 
   Console.time('copyExtensionHostWorkerFiles')
-  await copyExtensionHostWorkerFiles({ commitHash })
+  await copyExtensionHostWorkerFiles({ pathPrefix, commitHash })
   Console.timeEnd('copyExtensionHostWorkerFiles')
 
   Console.time('copyExtensionHostSubWorkerFiles')
