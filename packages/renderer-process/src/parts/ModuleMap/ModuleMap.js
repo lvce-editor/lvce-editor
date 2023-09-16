@@ -1,3 +1,4 @@
+import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
 import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
@@ -102,9 +103,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.SanitizeHtml
     case 'ScreenCapture.start':
       return ModuleId.ScreenCapture
-    case 'ServiceWorker.register':
-    case 'ServiceWorker.uninstall':
-      return ModuleId.ServiceWorker
     case 'TestFrameWork.checkMultiElementCondition':
     case 'TestFrameWork.checkSingleElementCondition':
     case 'TestFrameWork.performAction':
@@ -145,6 +143,6 @@ export const getModuleId = (commandId) => {
     case 33111:
       return ModuleId.Workbench
     default:
-      throw new Error(`command ${commandId} not found`)
+      throw new CommandNotFoundError(commandId)
   }
 }
