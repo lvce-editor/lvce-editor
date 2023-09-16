@@ -58,8 +58,8 @@ test('openFolder - electron', async () => {
   })
 
   const ElectronDialog = await import('../src/parts/ElectronDialog/ElectronDialog.js')
-  const Dialog = await import('../src/parts/Dialog/Dialog.js')
-  await Dialog.openFolder()
+  const OpenFolder = await import('../src/parts/OpenFolder/OpenFolder.js')
+  await OpenFolder.openFolder()
   expect(ElectronDialog.showOpenDialog).toHaveBeenCalledTimes(1)
   expect(ElectronDialog.showOpenDialog).toHaveBeenCalledWith('Open Folder', ['openDirectory', 'dontAddToRecent', 'showHiddenFiles'])
 })
