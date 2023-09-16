@@ -29,6 +29,6 @@ export const createRpc = async ({ url, name, execute = defaultExecute }) => {
     await rpc.invoke('LoadFile.loadFile', url)
     return rpc
   } catch (error) {
-    throw new VError(error, `Failed to create rpc`)
+    throw new VError(error, `Failed to create webworker rpc`)
   }
 }
