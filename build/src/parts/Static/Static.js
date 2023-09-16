@@ -496,6 +496,19 @@ const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
     to: `build/.tmp/dist/${commitHash}/config/webExtensions.json`,
     value: webExtensions,
   })
+
+  if (existsSync(Path.absolute(`build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript`))) {
+    await Copy.copy({
+      from: `build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/node/node_modules/typescript`,
+      to: `build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/typescript`,
+    })
+    await Remove.remove(`build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/node`)
+    await Replace.replace({
+      path: `build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/src/parts/IsWeb/IsWeb.js`,
+      occurrence: 'false',
+      replacement: 'true',
+    })
+  }
 }
 
 const copyIconThemes = async ({ commitHash }) => {
