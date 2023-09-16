@@ -21,7 +21,7 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "@types/babel__code-frame": "^7.0.3",
+    "@types/babel__code-frame": "^7.0.4",
     "@types/lodash": "^4.14.198",
     "@types/verror": "^1.10.6",
     "@types/ws": "^8.5.5"
