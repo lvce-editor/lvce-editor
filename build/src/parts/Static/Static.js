@@ -9,6 +9,8 @@ import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
+import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
+import * as GetNewCssDeclarationFile from '../GetNewCssDeclarationFile/GetNewCssDeclarationFile.js'
 import * as InlineDynamicImportsFile from '../InlineDynamicImportsFile/InlineDynamicImportsFile.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
@@ -19,8 +21,6 @@ import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
-import * as GetNewCssDeclarationFile from '../GetNewCssDeclarationFile/GetNewCssDeclarationFile.js'
 
 const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
@@ -497,6 +497,19 @@ const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
     to: `build/.tmp/dist/${commitHash}/config/webExtensions.json`,
     value: webExtensions,
   })
+
+  if (existsSync(Path.absolute(`build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript`))) {
+    await Copy.copy({
+      from: `build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/node/node_modules/typescript`,
+      to: `build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/typescript`,
+    })
+    await Remove.remove(`build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/node`)
+    await Replace.replace({
+      path: `build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/src/parts/IsWeb/IsWeb.js`,
+      occurrence: 'false',
+      replacement: 'true',
+    })
+  }
 }
 
 const copyIconThemes = async ({ commitHash }) => {
