@@ -14,55 +14,6 @@ export const state = {
   dialog: undefined,
 }
 
-const openFolderWeb = async () => {
-  try {
-    const result = await Command.execute('FilePicker.showDirectoryPicker', {
-      startIn: 'pictures',
-      mode: 'readwrite',
-    })
-    await Command.execute('PersistentFileHandle.addHandle', result.name, result)
-    await Command.execute('Workspace.setPath', `html://${result.name}`)
-  } catch (error) {
-    if (IsAbortError.isAbortError(error)) {
-      return
-    }
-    throw new VError(error, `Failed to open folder`)
-  }
-}
-
-const openFolderRemote = async () => {
-  const path = await RendererProcess.invoke(/* Dialog.prompt */ 'Dialog.prompt', /* message */ 'Choose path:')
-  if (!path) {
-    return
-  }
-  await Command.execute(/* Workspace.setPath */ 'Workspace.setPath', /* path */ path)
-}
-
-const openFolderElectron = async () => {
-  const folders = await ElectronDialog.showOpenDialog(
-    /* title */ 'Open Folder',
-    /* properties */ ['openDirectory', 'dontAddToRecent', 'showHiddenFiles']
-  )
-  if (!folders || folders.length === 0) {
-    return
-  }
-  const path = folders[0]
-  await Command.execute(/* Workspace.setPath */ 'Workspace.setPath', /* path */ path)
-}
-
-export const openFolder = () => {
-  switch (Platform.platform) {
-    case PlatformType.Web:
-      return openFolderWeb()
-    case PlatformType.Remote:
-      return openFolderRemote()
-    case PlatformType.Electron:
-      return openFolderElectron()
-    default:
-      return
-  }
-}
-
 const openFileWeb = () => {
   Logger.warn('open file - not implemented')
 }
