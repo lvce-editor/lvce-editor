@@ -5,6 +5,7 @@ const RE_AT = /^\s+at/
 const RE_AT_PROMISE_INDEX = /^\s*at async Promise.all \(index \d+\)$/
 const RE_OBJECT_AS = /^\s*at Object\.\w+ \[as ([\w\.]+)\]/
 const RE_OBJECT = /^\s*at Object\.(\w+)/
+const RE_ASYNC_OBJECT = /^\s*at async Object\.(\w+)/
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
 const RE_PATH_3 = /@(.*):(\d+):(\d+)$/ // Firefox
@@ -60,6 +61,10 @@ const cleanLine = (line) => {
   const objectMatch = line.match(RE_OBJECT)
   if (objectMatch) {
     return '    at ' + objectMatch[1] + line.slice(objectMatch[0].length)
+  }
+  const asyncObjectMatch = line.match(RE_ASYNC_OBJECT)
+  if (asyncObjectMatch) {
+    return '    at async ' + asyncObjectMatch[1] + line.slice(asyncObjectMatch[0].length)
   }
   return line
 }
