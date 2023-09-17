@@ -1,6 +1,6 @@
 import * as Platform from '../Platform/Platform.cjs'
 
 export const getVersionString = () => {
-  const version = Platform.version
+  const {version} = Platform
   return version
 }

@@ -1,5 +1,5 @@
-import * as LoadErrorCode from '../src/parts/LoadErrorCode/LoadErrorCode.js'
 import { jest } from '@jest/globals'
+import * as LoadErrorCode from '../src/parts/LoadErrorCode/LoadErrorCode.js'
 
 beforeEach(() => {
   jest.resetAllMocks()

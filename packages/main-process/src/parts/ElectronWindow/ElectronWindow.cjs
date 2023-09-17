@@ -1,5 +1,5 @@
-const Clamp = require('../Clamp/Clamp.cjs')
 const Electron = require('electron')
+const Clamp = require('../Clamp/Clamp.cjs')
 const GetIcon = require('../GetIcon/GetIcon.cjs')
 const GetWindowById = require('../GetWindowById/GetWindowById.cjs')
 const Logger = require('../Logger/Logger.cjs')

@@ -10,5 +10,5 @@ exports.value = [
   `script-src 'self'`,
   `font-src 'self'`,
 ]
-  .map(AddSemiColon.  addSemicolon)
+  .map(AddSemiColon.addSemicolon)
   .join(Character.Space)
