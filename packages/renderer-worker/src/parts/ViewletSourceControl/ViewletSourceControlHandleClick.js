@@ -11,8 +11,7 @@ const handleClickFile = async (state, item) => {
   // TODO handle error
   const [fileBefore, fileNow] = await Promise.all([SourceControl.getFileBefore(providerId, item.file), FileSystem.readFile(absolutePath)])
   console.log({ fileBefore, fileNow })
-  const content = `\nbefore:\n${fileBefore}\n\n\nnow:\n${fileNow}`
-  await Command.execute(`Main.openUri`, `data://${content}`)
+  await Command.execute(`Main.openUri`, `diff://data://${fileBefore}<->${absolutePath}`)
   return state
 }
 
