@@ -44,6 +44,10 @@ exports.getPid = () => {
   return process.pid
 }
 
+exports.getArgv = () => {
+  return process.argv
+}
+
 exports.pid = process.pid
 
 exports.execPath = process.execPath

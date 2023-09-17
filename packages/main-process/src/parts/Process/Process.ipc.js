@@ -3,6 +3,7 @@ import * as Process from './Process.cjs'
 export const name = 'Process'
 
 export const Commands = {
+  getArgv: Process.getArgv,
   getChromeVersion: Process.getChromeVersion,
   getElectronVersion: Process.getElectronVersion,
   getNodeVersion: Process.getNodeVersion,
