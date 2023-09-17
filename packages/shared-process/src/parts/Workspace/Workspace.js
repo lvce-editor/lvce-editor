@@ -1,12 +1,14 @@
 import { createHash } from 'node:crypto'
-import { readFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
-import { join, resolve } from 'node:path'
+import { isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as Env from '../Env/Env.js'
 import * as IsAbsolutePath from '../IsAbsolutePath/IsAbsolutePath.js'
+import * as IsElectron from '../IsElectron/IsElectron.js'
+import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Root from '../Root/Root.js'
+import * as WorkspaceSource from '../WorkspaceSource/WorkspaceSource.js'
 
 const getAbsolutePath = (path) => {
   if (IsAbsolutePath.isAbsolutePath(path)) {
@@ -19,15 +21,6 @@ const getAbsolutePath = (path) => {
   }
   path = resolve(path)
   return path
-}
-
-const getWorkspaceStorage = async (workspaceId) => {
-  try {
-    const workspaceStorage = JSON.parse(await readFile(`/tmp/config/${workspaceId}`, 'utf-8'))
-    return workspaceStorage
-  } catch {
-    return {}
-  }
 }
 
 /**
@@ -45,22 +38,26 @@ const getWorkspaceId = (absolutePath) => {
   return createHash('sha256').update(absolutePath).digest('hex').slice(0, 16)
 }
 
-const configs = {
-  messagePort1: {
-    folder: '/tmp',
-  },
-  messagePort2: {
-    folder: '~',
-  },
-}
-
 const toUri = (path) => {
   return pathToFileURL(path).toString()
 }
 
 export const resolveRoot = async () => {
-  // TODO ask electron, electron can do mapping
-  // await
+  if (IsElectron.isElectron()) {
+    const argv = await ParentIpc.invoke('Process.getArgv')
+    const relevantArgv = argv.slice(2)
+    const last = relevantArgv.at(-1)
+    if (last && isAbsolute(last)) {
+      return {
+        path: last,
+        uri: toUri(last),
+        workspaceId: getWorkspaceId(last),
+        homeDir: Platform.getHomeDir(),
+        pathSeparator: Platform.getPathSeparator(),
+        source: 'shared-process-default',
+      }
+    }
+  }
 
   // TODO shared process should have no logic, this should probably be somewhere else
   const folder = Env.getFolder()
@@ -72,7 +69,7 @@ export const resolveRoot = async () => {
       workspaceId: getWorkspaceId(path),
       homeDir: Platform.getHomeDir(),
       pathSeparator: Platform.getPathSeparator(),
-      source: 'shared-process-env',
+      source: WorkspaceSource.SharedProcessEnv,
     }
   }
   const absolutePath = getAbsolutePath(folder)
@@ -85,7 +82,7 @@ export const resolveRoot = async () => {
     workspaceId,
     homeDir: Platform.getHomeDir(),
     pathSeparator: Platform.getPathSeparator(),
-    source: 'shared-process-default',
+    source: WorkspaceSource.SharedProcessDefault,
   }
 }
 
