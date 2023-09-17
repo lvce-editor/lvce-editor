@@ -1,13 +1,18 @@
 import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as SourceControl from '../SourceControl/SourceControl.js'
+import * as Command from '../Command/Command.js'
 import { getDisplayItems } from './ViewletSourceControlGetDisplayItems.js'
 
 const handleClickFile = async (state, item) => {
-  const absolutePath = `${state.gitRoot}/${item.file}`
+  const { enabledProviderIds, gitRoot, root } = state
+  const providerId = enabledProviderIds[0]
+  const absolutePath = `${root}/${item.file}`
   // TODO handle error
-  const [fileBefore, fileNow] = await Promise.all([SourceControl.getFileBefore(item.file), FileSystem.readFile(absolutePath)])
-  const content = `before:\n${fileBefore}\n\n\nnow:\n${fileNow}`
+  const [fileBefore, fileNow] = await Promise.all([SourceControl.getFileBefore(providerId, item.file), FileSystem.readFile(absolutePath)])
+  console.log({ fileBefore, fileNow })
+  const content = `\nbefore:\n${fileBefore}\n\n\nnow:\n${fileNow}`
+  await Command.execute(`Main.openUri`, `data://${content}`)
   return state
 }
 

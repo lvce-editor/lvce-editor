@@ -18,6 +18,7 @@ export const create = (id) => {
     enabledProviderIds: [],
     isExpanded: true,
     buttons: [],
+    providerId: '',
   }
 }
 
