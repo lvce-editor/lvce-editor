@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const descriptionWrapper = {
@@ -54,7 +55,7 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
   dom.push({
     type: VirtualDomElements.Div,
     className: 'QuickPickItem',
-    role: 'option',
+    role: AriaRoles.Option,
     ariaPosInSet: posInSet,
     ariaSetSize: setSize,
     childCount: 1,

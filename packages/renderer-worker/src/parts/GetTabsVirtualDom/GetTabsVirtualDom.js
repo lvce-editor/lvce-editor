@@ -1,5 +1,6 @@
 import * as TabFlags from '../TabFlags/TabFlags.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
@@ -25,7 +26,7 @@ const getTabDom = (tab, isActive, fixedWidth) => {
   const tabElement = {
     type: VirtualDomElements.Div,
     className: tabClassName,
-    role: 'tab',
+    role: AriaRoles.Tab,
     draggable: true,
     width: actualTabWidth,
     ariaSelected: isActive,

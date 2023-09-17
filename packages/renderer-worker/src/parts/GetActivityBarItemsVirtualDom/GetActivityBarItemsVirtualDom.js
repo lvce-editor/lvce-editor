@@ -1,6 +1,7 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as Icon from '../Icon/Icon.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 const createActivityBarItem = (item) => {
   const { flags, title, icon } = item
@@ -29,7 +30,7 @@ const createActivityBarItem = (item) => {
       {
         type: VirtualDomElements.Div,
         className: 'MaskIcon',
-        role: 'none',
+        role: AriaRoles.None,
         maskImage: icon,
         childCount: 0,
       },
@@ -52,7 +53,7 @@ const createActivityBarItem = (item) => {
       {
         type: VirtualDomElements.Div,
         className: 'MaskIcon',
-        role: 'none',
+        role: AriaRoles.None,
         childCount: 0,
         maskImage: icon,
       },

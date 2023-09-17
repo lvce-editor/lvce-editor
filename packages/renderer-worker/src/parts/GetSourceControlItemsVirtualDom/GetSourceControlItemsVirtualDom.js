@@ -1,5 +1,6 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 const getLabelClassName = (decorationStrikeThrough) => {
   let className = 'Label'
@@ -17,7 +18,7 @@ const createItem = (item) => {
       {
         type: VirtualDomElements.Div,
         className: 'TreeItem',
-        role: 'treeitem',
+        role: AriaRoles.TreeItem,
         ariaExpanded: true,
         ariaPosInSet: posInSet,
         ariaSetSize: setSize,
@@ -31,7 +32,7 @@ const createItem = (item) => {
       {
         type: VirtualDomElements.Div,
         className: 'MaskIcon',
-        role: 'none',
+        role: AriaRoles.None,
         maskImage: icon,
         childCount: 0,
       },
@@ -54,7 +55,7 @@ const createItem = (item) => {
     {
       type: VirtualDomElements.Div,
       className: 'TreeItem',
-      role: 'treeitem',
+      role: AriaRoles.TreeItem,
       ariaPosInSet: posInSet,
       ariaSetSize: setSize,
       title: file,

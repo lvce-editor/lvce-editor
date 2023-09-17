@@ -1,4 +1,5 @@
 import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 const createPanelTab = (tab, isSelected) => {
   const label = tab
@@ -10,7 +11,7 @@ const createPanelTab = (tab, isSelected) => {
     div(
       {
         className,
-        role: 'tab',
+        role: AriaRoles.Tab,
         ariaSelected: isSelected,
       },
       1

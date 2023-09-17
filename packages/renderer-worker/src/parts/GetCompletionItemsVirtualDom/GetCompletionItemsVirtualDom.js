@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const label1 = {
@@ -73,7 +74,7 @@ export const getCompletionItemsVirtualDom = (visibleItems) => {
     dom.push(
       {
         type: VirtualDomElements.Div,
-        role: 'option',
+        role: AriaRoles.Option,
         className,
         top,
         childCount: 2,
