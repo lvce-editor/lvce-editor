@@ -4,17 +4,12 @@ import { homedir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as Env from '../Env/Env.js'
+import * as IsAbsolutePath from '../IsAbsolutePath/IsAbsolutePath.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Root from '../Root/Root.js'
 
-const RE_ABSOLUTE_URI = /^[a-z]+:\/\//
-
-const isAbsoluteUri = (path) => {
-  return RE_ABSOLUTE_URI.test(path)
-}
-
 const getAbsolutePath = (path) => {
-  if (isAbsoluteUri(path)) {
+  if (IsAbsolutePath.isAbsolutePath(path)) {
     return path
   }
   if (path.startsWith('${cwd}')) {
@@ -28,9 +23,7 @@ const getAbsolutePath = (path) => {
 
 const getWorkspaceStorage = async (workspaceId) => {
   try {
-    const workspaceStorage = JSON.parse(
-      await readFile(`/tmp/config/${workspaceId}`, 'utf-8')
-    )
+    const workspaceStorage = JSON.parse(await readFile(`/tmp/config/${workspaceId}`, 'utf-8'))
     return workspaceStorage
   } catch {
     return {}
