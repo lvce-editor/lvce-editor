@@ -4,6 +4,7 @@ import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as Character from '../Character/Character.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -26,7 +27,7 @@ const getContents = (left, right) => {
 export const loadContent = async (state) => {
   const { uri, top, left, width, height, minimumSliderSize, itemHeight } = state
   const uriContentPart = uri.slice('diff://'.length)
-  const [uriLeft, uriRight] = uriContentPart.split('<->')
+  const [uriLeft, uriRight] = uriContentPart.split(Character.DiffSeparator)
   const [contentLeft, contentRight] = await getContents(uriLeft, uriRight)
   const linesLeft = SplitLines.splitLines(contentLeft)
   const linesRight = SplitLines.splitLines(contentRight)
