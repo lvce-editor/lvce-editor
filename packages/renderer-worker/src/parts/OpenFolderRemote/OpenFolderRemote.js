@@ -1,8 +1,8 @@
 import * as Command from '../Command/Command.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Prompt from '../Prompt/Prompt.js'
 
 export const openFolder = async () => {
-  const path = await RendererProcess.invoke(/* Dialog.prompt */ 'Dialog.prompt', /* message */ 'Choose path:')
+  const path = await Prompt.prompt('Choose Path:', '/home')
   if (!path) {
     return
   }

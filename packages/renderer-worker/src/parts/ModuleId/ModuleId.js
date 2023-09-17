@@ -72,3 +72,4 @@ export const RebuildNodePty = 71
 export const DebugSharedProcess = 72
 export const Reload = 73
 export const IncrementalTextSearch = 74
+export const Prompt = 75
