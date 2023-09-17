@@ -1,5 +1,5 @@
-import * as TransferMessagePort from '../src/parts/TransferMessagePort/TransferMessagePort.js'
 import { jest } from '@jest/globals'
+import * as TransferMessagePort from '../src/parts/TransferMessagePort/TransferMessagePort.js'
 
 test('transferMessagePort - error', async () => {
   const ipc = {

@@ -9,7 +9,7 @@ const ipcConnect = (message) => {
 
 const handlePort = (event, message) => {
   // @ts-ignore
-  const origin = location.origin
+  const { origin } = location
   if (event.ports.length === 1) {
     const port = event.ports[0]
     // @ts-ignore

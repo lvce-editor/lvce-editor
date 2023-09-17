@@ -47,7 +47,7 @@ const createWebContentsIpc = (webContents) => {
 exports.handlePort = async (event, message) => {
   Assert.object(event)
   Assert.object(message)
-  const sender = event.sender
+  const {sender} = event
   const data = message.params[0]
   const ipc = createWebContentsIpc(sender)
   try {

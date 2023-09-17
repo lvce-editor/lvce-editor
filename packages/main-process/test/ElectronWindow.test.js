@@ -1,5 +1,5 @@
-import * as BrowserWindow from '../src/parts/ElectronWindow/ElectronWindow.cjs'
 import { jest } from '@jest/globals'
+import * as BrowserWindow from '../src/parts/ElectronWindow/ElectronWindow.cjs'
 
 // TODO how to test window (highly depends on electron)
 test.skip('toggleDevtools', () => {
