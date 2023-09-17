@@ -1,8 +1,10 @@
 import { createHash } from 'node:crypto'
 import { homedir } from 'node:os'
-import { join, resolve } from 'node:path'
+import { isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as Env from '../Env/Env.js'
+import * as IsElectron from '../IsElectron/IsElectron.js'
+import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Root from '../Root/Root.js'
 import * as WorkspaceSource from '../WorkspaceSource/WorkspaceSource.js'
@@ -46,8 +48,21 @@ const toUri = (path) => {
 }
 
 export const resolveRoot = async () => {
-  // TODO ask electron, electron can do mapping
-  // await
+  if (IsElectron.isElectron()) {
+    const argv = await ParentIpc.invoke('Process.getArgv')
+    const relevantArgv = argv.slice(2)
+    const last = relevantArgv.at(-1)
+    if (last && isAbsolute(last)) {
+      return {
+        path: last,
+        uri: toUri(last),
+        workspaceId: getWorkspaceId(last),
+        homeDir: Platform.getHomeDir(),
+        pathSeparator: Platform.getPathSeparator(),
+        source: 'shared-process-default',
+      }
+    }
+  }
 
   // TODO shared process should have no logic, this should probably be somewhere else
   const folder = Env.getFolder()

@@ -59,6 +59,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.CreatePidMap
     case 'OpenExternal':
       return ModuleId.OpenExternal
+    case 'Process':
+      return ModuleId.Process
     case 'Platform':
       return ModuleId.Platform
     case 'GetWindowId':
