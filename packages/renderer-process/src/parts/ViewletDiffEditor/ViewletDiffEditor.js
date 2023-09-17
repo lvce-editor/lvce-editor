@@ -1,7 +1,8 @@
-import * as ViewletSash from '../ViewletSash/ViewletSash.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as ViewletDiffEditorEvents from './ViewletDiffEditorEvents.js'
+import * as DiffType from '../DiffType/DiffType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as ViewletSash from '../ViewletSash/ViewletSash.js'
+import * as ViewletDiffEditorEvents from './ViewletDiffEditorEvents.js'
 
 export const create = () => {
   const $ContentLeft = document.createElement('div')
@@ -58,7 +59,7 @@ export const setChanges = (state, changes) => {
   const { $ContentLeft, $ContentRight } = state
   const { changesLeft, changesRight } = changes
   for (const change of changesLeft) {
-    if (change.type === 'delete') {
+    if (change.type === DiffType.Deletion) {
       const $Row = $ContentLeft.children[change.index]
       if ($Row) {
         $Row.classList.add('Deletion')
@@ -66,7 +67,7 @@ export const setChanges = (state, changes) => {
     }
   }
   for (const change of changesRight) {
-    if (change.type === 'insert') {
+    if (change.type === DiffType.Insertion) {
       const $Row = $ContentRight.children[change.index]
       if ($Row) {
         $Row.classList.add('Insertion')
