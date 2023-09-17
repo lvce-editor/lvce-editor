@@ -12,7 +12,6 @@ const getLabelClassName = (decorationStrikeThrough) => {
 }
 
 const createItem = (item) => {
-  console.log({ item })
   const { type, posInSet, setSize, icon, file, label, badgeCount, title, decorationIcon, decorationIconTitle, decorationStrikeThrough, detail } = item
   const labelClassName = getLabelClassName(decorationStrikeThrough)
   if (item.type === DirentType.DirectoryExpanded) {
