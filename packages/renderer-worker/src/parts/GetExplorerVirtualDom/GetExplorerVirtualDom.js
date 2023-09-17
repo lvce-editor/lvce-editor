@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const defaultIndent = 1
@@ -8,7 +9,7 @@ const getItemVirtualDom = (item) => {
   return [
     {
       type: VirtualDomElements.Div,
-      role: 'treeitem',
+      role: AriaRoles.TreeItem,
       className: 'TreeItem',
       draggable: true,
       title: path,
@@ -40,7 +41,7 @@ export const getExplorerVirtualDom = (visibleItems) => {
     type: VirtualDomElements.Div,
     className: 'Viewlet Explorer',
     tabIndex: 0,
-    role: 'tree',
+    role: AriaRoles.Tree,
     ariaLabel: 'Files Explorer',
     childCount: visibleItems.length,
   })

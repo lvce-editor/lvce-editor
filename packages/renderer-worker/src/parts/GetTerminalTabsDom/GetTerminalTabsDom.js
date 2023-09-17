@@ -1,5 +1,6 @@
 import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as Assert from '../Assert/Assert.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 const getTabClassName = (isSelected) => {
   let className = 'TerminalTab'
@@ -16,7 +17,7 @@ const createTabDom = (tab, isSelected) => {
     div(
       {
         className,
-        role: 'listitem',
+        role: AriaRoles.ListItem,
       },
       2
     ),
@@ -44,7 +45,7 @@ export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex) => 
         left: x,
         width,
         height,
-        role: 'list',
+        role: AriaRoles.List,
         ariaLabel: 'Terminal tabs',
       },
       tabs.length

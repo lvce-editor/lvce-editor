@@ -1,5 +1,6 @@
 import * as DirentType from '../DirentType/DirentType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const deleted = {
@@ -24,7 +25,7 @@ const renderRow = (rowInfo) => {
   const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement } = rowInfo
   const treeItem = {
     type: VirtualDomElements.Div,
-    role: 'treeitem',
+    role: AriaRoles.TreeItem,
     className: 'TreeItem',
     title,
     ariaSetSize: setSize,

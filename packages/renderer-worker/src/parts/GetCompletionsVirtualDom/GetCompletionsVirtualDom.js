@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 const createCompletion = (item) => {
   return []
@@ -15,7 +16,7 @@ export const getCompletionsVirtualDom = (items) => {
     {
       type: VirtualDomElements.Div,
       className: 'ListItems',
-      role: 'listbox',
+      role: AriaRoles.ListBox,
       ariaLabel: 'Suggest',
       childCount: items.length,
     },
