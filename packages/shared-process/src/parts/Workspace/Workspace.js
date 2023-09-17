@@ -1,5 +1,4 @@
 import { createHash } from 'node:crypto'
-import { readFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -8,6 +7,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as Root from '../Root/Root.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as WorkspaceSource from '../WorkspaceSource/WorkspaceSource.js'
 
 const RE_ABSOLUTE_URI = /^[a-z]+:\/\//
 
@@ -28,15 +28,6 @@ const getAbsolutePath = (path) => {
   return path
 }
 
-const getWorkspaceStorage = async (workspaceId) => {
-  try {
-    const workspaceStorage = JSON.parse(await readFile(`/tmp/config/${workspaceId}`, 'utf-8'))
-    return workspaceStorage
-  } catch {
-    return {}
-  }
-}
-
 /**
  * @deprecated use platform instead
  */
@@ -50,15 +41,6 @@ export const getHomeDir = () => {
 
 const getWorkspaceId = (absolutePath) => {
   return createHash('sha256').update(absolutePath).digest('hex').slice(0, 16)
-}
-
-const configs = {
-  messagePort1: {
-    folder: '/tmp',
-  },
-  messagePort2: {
-    folder: '~',
-  },
 }
 
 const toUri = (path) => {
@@ -92,7 +74,7 @@ export const resolveRoot = async () => {
       workspaceId: getWorkspaceId(path),
       homeDir: Platform.getHomeDir(),
       pathSeparator: Platform.getPathSeparator(),
-      source: 'shared-process-env',
+      source: WorkspaceSource.SharedProcessEnv,
     }
   }
   const absolutePath = getAbsolutePath(folder)
@@ -105,7 +87,7 @@ export const resolveRoot = async () => {
     workspaceId,
     homeDir: Platform.getHomeDir(),
     pathSeparator: Platform.getPathSeparator(),
-    source: 'shared-process-default',
+    source: WorkspaceSource.SharedProcessDefault,
   }
 }
 
