@@ -1,5 +1,6 @@
 // Based on https://johnresig.com/projects/javascript-diff-algorithm/ by John Resig (License MIT)
 
+import * as DiffType from '../DiffType/DiffType.js'
 import * as MakeDiffMap from '../MakeDiffMap/MakeDiffMap.js'
 
 /**
@@ -47,7 +48,7 @@ export const diff = (linesA, linesB) => {
     if (typeof j === 'number') {
       // stayed the same
     } else {
-      changesRight.push({ type: 'insert', index: i })
+      changesRight.push({ type: DiffType.Insertion, index: i })
     }
   }
 
@@ -56,7 +57,7 @@ export const diff = (linesA, linesB) => {
     if (typeof j === 'number') {
       // stayed the same
     } else {
-      changesLeft.push({ type: 'delete', index: i })
+      changesLeft.push({ type: DiffType.Deletion, index: i })
     }
   }
 
