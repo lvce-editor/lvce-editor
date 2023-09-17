@@ -1,8 +1,8 @@
-import { createHash } from 'node:crypto'
 import { homedir } from 'node:os'
 import { isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as Env from '../Env/Env.js'
+import * as GetWorkspaceId from '../GetWorkspaceId/GetWorkspaceId.js'
 import * as IsAbsolutePath from '../IsAbsolutePath/IsAbsolutePath.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
@@ -34,10 +34,6 @@ export const getHomeDir = () => {
   return homeDir
 }
 
-const getWorkspaceId = (absolutePath) => {
-  return createHash('sha256').update(absolutePath).digest('hex').slice(0, 16)
-}
-
 const toUri = (path) => {
   return pathToFileURL(path).toString()
 }
@@ -51,7 +47,7 @@ export const resolveRoot = async () => {
       return {
         path: last,
         uri: toUri(last),
-        workspaceId: getWorkspaceId(last),
+        workspaceId: GetWorkspaceId.getWorkspaceId(last),
         homeDir: Platform.getHomeDir(),
         pathSeparator: Platform.getPathSeparator(),
         source: 'shared-process-default',
@@ -66,14 +62,14 @@ export const resolveRoot = async () => {
     return {
       path,
       uri: toUri(path),
-      workspaceId: getWorkspaceId(path),
+      workspaceId: GetWorkspaceId.getWorkspaceId(path),
       homeDir: Platform.getHomeDir(),
       pathSeparator: Platform.getPathSeparator(),
       source: WorkspaceSource.SharedProcessEnv,
     }
   }
   const absolutePath = getAbsolutePath(folder)
-  const workspaceId = getWorkspaceId(absolutePath)
+  const workspaceId = GetWorkspaceId.getWorkspaceId(absolutePath)
   // TODO this slows down startup a lot (~30-50ms)
   // const workspaceStorage = await getWorkspaceStorage(workspaceId)
   return {
