@@ -3,20 +3,15 @@ import { isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as Env from '../Env/Env.js'
 import * as GetWorkspaceId from '../GetWorkspaceId/GetWorkspaceId.js'
+import * as IsAbsolutePath from '../IsAbsolutePath/IsAbsolutePath.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Root from '../Root/Root.js'
 import * as WorkspaceSource from '../WorkspaceSource/WorkspaceSource.js'
 
-const RE_ABSOLUTE_URI = /^[a-z]+:\/\//
-
-const isAbsoluteUri = (path) => {
-  return RE_ABSOLUTE_URI.test(path)
-}
-
 const getAbsolutePath = (path) => {
-  if (isAbsoluteUri(path)) {
+  if (IsAbsolutePath.isAbsolutePath(path)) {
     return path
   }
   if (path.startsWith('${cwd}')) {

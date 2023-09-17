@@ -1,6 +1,6 @@
 import { join } from 'node:path'
-import * as Root from '../Root/Root.cjs'
 import { stat } from 'node:fs/promises'
+import * as Root from '../Root/Root.cjs'
 
 export const getTypeScriptCachePath = async (path) => {
   const fileStat = await stat(path)

@@ -1,4 +1,4 @@
-import { join } from 'path'
+import { join } from 'node:path'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as Root from '../Root/Root.cjs'

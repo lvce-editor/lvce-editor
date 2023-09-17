@@ -1,9 +1,9 @@
-const Path = require('../Path/Path.cjs')
-const Platform = require('../Platform/Platform.cjs')
 const { fileURLToPath } = require('node:url')
-const Root = require('../Root/Root.cjs')
 const { join } = require('node:path')
 const { tmpdir } = require('node:os')
+const Path = require('../Path/Path.cjs')
+const Platform = require('../Platform/Platform.cjs')
+const Root = require('../Root/Root.cjs')
 
 exports.getAbsolutePath = (requestUrl) => {
   const decoded = decodeURI(requestUrl)

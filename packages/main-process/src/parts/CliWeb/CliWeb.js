@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process'
-import * as Platform from '../Platform/Platform.cjs'
 import * as Electron from 'electron'
+import * as Platform from '../Platform/Platform.cjs'
 import * as Process from '../Process/Process.cjs'
 
 export const handleCliArgs = (parsedArgs) => {

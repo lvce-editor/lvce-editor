@@ -1,4 +1,4 @@
-import { extname } from 'path'
+import { extname } from 'node:path'
 import * as MimeTypes from '../MimeTypes/MimeTypes.js'
 
 export const getMime = (uri) => {
