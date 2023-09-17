@@ -5,7 +5,7 @@ export const copy = (source, target) => {
 }
 
 export const readFile = (path) => {
-  return path.slice('data://'.length + 3)
+  return path
 }
 
 export const remove = (path) => {
