@@ -142,6 +142,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Window
     case 33111:
       return ModuleId.Workbench
+    case 'Prompt.prompt':
+      return ModuleId.Prompt
     default:
       throw new CommandNotFoundError(commandId)
   }
