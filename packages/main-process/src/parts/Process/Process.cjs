@@ -1,11 +1,5 @@
 const Assert = require('../Assert/Assert.cjs')
 
-exports.kill = (pid, signal) => {
-  Assert.number(pid)
-  Assert.string(signal)
-  process.kill(pid)
-}
-
 exports.setExitCode = (code) => {
   Assert.number(code)
   process.exitCode = code
@@ -42,6 +36,10 @@ exports.cwd = () => {
 
 exports.getPid = () => {
   return process.pid
+}
+
+exports.getArgv = () => {
+  return process.argv
 }
 
 exports.pid = process.pid
