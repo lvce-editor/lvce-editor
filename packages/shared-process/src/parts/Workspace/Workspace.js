@@ -3,10 +3,10 @@ import { homedir } from 'node:os'
 import { isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as Env from '../Env/Env.js'
-import * as Platform from '../Platform/Platform.js'
-import * as Root from '../Root/Root.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as Platform from '../Platform/Platform.js'
+import * as Root from '../Root/Root.js'
 import * as WorkspaceSource from '../WorkspaceSource/WorkspaceSource.js'
 
 const RE_ABSOLUTE_URI = /^[a-z]+:\/\//
