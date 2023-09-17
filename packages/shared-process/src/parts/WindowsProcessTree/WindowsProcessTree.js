@@ -1,4 +1,5 @@
 import * as LoadWindowsProcessTree from '../LoadWindowsProcessTree/LoadWindowsProcessTree.js'
+import * as Promises from '../Promises/Promises.js'
 
 /**
  *
@@ -8,9 +9,9 @@ import * as LoadWindowsProcessTree from '../LoadWindowsProcessTree/LoadWindowsPr
  */
 export const getProcessList = async (rootPid, flags) => {
   const WindowsProcessTree = await LoadWindowsProcessTree.loadWindowProcessTree()
-  return new Promise((resolve, reject) => {
-    WindowsProcessTree.getProcessList(rootPid, resolve, flags)
-  })
+  const { resolve, promise } = Promises.withResolvers()
+  WindowsProcessTree.getProcessList(rootPid, resolve, flags)
+  return promise
 }
 
 /**
@@ -20,7 +21,7 @@ export const getProcessList = async (rootPid, flags) => {
  */
 export const addCpuUsage = async (processList) => {
   const WindowsProcessTree = await LoadWindowsProcessTree.loadWindowProcessTree()
-  return new Promise((resolve) => {
-    WindowsProcessTree.getProcessCpuUsage(processList, resolve)
-  })
+  const { resolve, promise } = Promises.withResolvers()
+  WindowsProcessTree.getProcessCpuUsage(processList, resolve)
+  return promise
 }
