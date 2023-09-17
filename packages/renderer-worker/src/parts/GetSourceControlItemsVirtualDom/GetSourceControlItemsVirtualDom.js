@@ -1,3 +1,4 @@
+import * as DirentType from '../DirentType/DirentType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
@@ -11,9 +12,10 @@ const getLabelClassName = (decorationStrikeThrough) => {
 }
 
 const createItem = (item) => {
+  console.log({ item })
   const { type, posInSet, setSize, icon, file, label, badgeCount, title, decorationIcon, decorationIconTitle, decorationStrikeThrough, detail } = item
   const labelClassName = getLabelClassName(decorationStrikeThrough)
-  if (item.type === 'directory-expanded') {
+  if (item.type === DirentType.DirectoryExpanded) {
     return [
       {
         type: VirtualDomElements.Div,
