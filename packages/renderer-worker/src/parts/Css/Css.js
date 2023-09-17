@@ -19,7 +19,7 @@ const actuallyLoadCssStyleSheet = async (css) => {
     const response = await fetch(url)
     if (!response.ok) {
       if (response.status === HttpStatusCode.NotFound) {
-        throw new Error(`file not found ${url}`)
+        throw new Error(`File not found ${url}`)
       }
       throw new Error(response.statusText)
     }
