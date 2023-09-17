@@ -1,3 +1,4 @@
+import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as SourceControl from '../SourceControl/SourceControl.js'
 import { getDisplayItems } from './ViewletSourceControlGetDisplayItems.js'
@@ -34,13 +35,12 @@ const handleClickDirectoryExpanded = (state, item) => {
 export const handleClick = async (state, index) => {
   const { displayItems } = state
   const item = displayItems[index]
-  console.log('type', item.type)
   switch (item.type) {
-    case 'directory':
+    case DirentType.Directory:
       return handleClickDirectory(state)
-    case 'directory-expanded':
+    case DirentType.DirectoryExpanded:
       return handleClickDirectoryExpanded(state)
-    case 'file':
+    case DirentType.File:
       return handleClickFile(state, item)
     default:
       console.warn(`unknown item type: ${item.type}`)
