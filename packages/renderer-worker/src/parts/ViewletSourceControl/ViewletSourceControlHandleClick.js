@@ -4,9 +4,11 @@ import * as SourceControl from '../SourceControl/SourceControl.js'
 import { getDisplayItems } from './ViewletSourceControlGetDisplayItems.js'
 
 const handleClickFile = async (state, item) => {
-  const absolutePath = `${state.gitRoot}/${item.file}`
+  const { enabledProviderIds, gitRoot, root } = state
+  const providerId = enabledProviderIds[0]
+  const absolutePath = `${root}/${item.file}`
   // TODO handle error
-  const [fileBefore, fileNow] = await Promise.all([SourceControl.getFileBefore(item.file), FileSystem.readFile(absolutePath)])
+  const [fileBefore, fileNow] = await Promise.all([SourceControl.getFileBefore(providerId, absolutePath), FileSystem.readFile(absolutePath)])
   const content = `before:\n${fileBefore}\n\n\nnow:\n${fileNow}`
   return state
 }

@@ -35,7 +35,6 @@ export const loadContent = async (state) => {
   const { allGroups, gitRoot } = await getGroups(enabledProviderIds)
   const isExpanded = true
   const displayItems = getDisplayItems(allGroups, isExpanded)
-  console.log({ displayItems, allGroups })
   const buttons = await getNewButtons(displayItems, state.providerId, state.buttonIndex)
   return {
     ...state,
@@ -45,5 +44,6 @@ export const loadContent = async (state) => {
     enabledProviderIds,
     isExpanded,
     buttons,
+    root,
   }
 }

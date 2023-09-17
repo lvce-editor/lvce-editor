@@ -57,6 +57,8 @@ export const getFn = (method) => {
       return ExtensionHostSourceControl.acceptInput
     case ExtensionHostCommandType.FormattingExecuteFormmattingProvider:
       return ExtensionHostFormatting.executeFormattingProvider
+    case ExtensionHostCommandType.SourceControlGetFileBefore:
+      return ExtensionHostSourceControl.getFileBefore
     case ExtensionHostCommandType.MockExec:
       return ExtensionHostMockExec.mockExec
     case ExtensionHostCommandType.MockRpc:

@@ -22,6 +22,16 @@ export const getChangedFiles = async (providerId) => {
   return flattenedChangedFiles
 }
 
+export const getFileBefore = async (providerId, uri) => {
+  Assert.string(providerId)
+  Assert.string(uri)
+  const provider = state.providers[providerId]
+  if (!provider) {
+    throw new Error('no source control provider found')
+  }
+  return provider.getFileBefore(uri)
+}
+
 const getGroupsFromProvider = async (provider, cwd) => {
   if (provider.getGroups) {
     return provider.getGroups(cwd)
