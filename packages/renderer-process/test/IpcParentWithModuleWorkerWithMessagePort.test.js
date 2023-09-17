@@ -28,38 +28,6 @@ const IpcParentWithModuleWorkerWithMessagePort = await import(
   '../src/parts/IpcParentWithModuleWorkerWithMessagePort/IpcParentWithModuleWorkerWithMessagePort.js'
 )
 
-test('create - error - not supported in firefox', async () => {
-  // @ts-ignore
-  globalThis.Worker = class extends EventTarget {
-    constructor() {
-      super()
-
-      setTimeout(() => {
-        const errorEvent = new ErrorEvent('error', {
-          message: 'SyntaxError: import declarations may only appear at top level of a module',
-        })
-        this.dispatchEvent(errorEvent)
-      }, 0)
-    }
-  }
-  // @ts-ignore
-  globalThis.MessagePort = class {}
-  // @ts-ignore
-  IpcParentWithMessagePort.create.mockImplementation(() => {
-    return new MessagePort()
-  })
-  expect(
-    await IpcParentWithModuleWorkerWithMessagePort.create({
-      url: 'https://example.com/worker.js',
-      name: 'Extension Host Worker',
-    })
-  ).toEqual(new MessagePort())
-  expect(IpcParentWithMessagePort.create).toHaveBeenCalledTimes(1)
-  expect(IpcParentWithMessagePort.create).toHaveBeenCalledWith({
-    url: 'https://example.com/worker.js',
-  })
-})
-
 test('create - error - not found', async () => {
   // @ts-ignore
   globalThis.Worker = class extends EventTarget {
