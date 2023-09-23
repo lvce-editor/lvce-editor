@@ -46,3 +46,5 @@ export const hydrate = async () => {
   const iconThemeId = Preferences.get('icon-theme') || 'vscode-icons'
   await setIconTheme(iconThemeId)
 }
+
+export * from '../GetIcon/GetIcon.js'
