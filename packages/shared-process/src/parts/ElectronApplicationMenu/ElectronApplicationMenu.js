@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
 export const state = {
@@ -5,8 +6,10 @@ export const state = {
 }
 
 export const setItems = (ipc, browserWindowId, items) => {
-  console.log({ ipc })
-  state.ipcMap[browserWindowId] = ipc
+  Assert.object(ipc)
+  Assert.number(browserWindowId)
+  Assert.array(items)
+  state.ipcMap[browserWindowId] = ipc // TODO memory leak
   return ParentIpc.invoke('ElectronApplicationMenu.setItems', items)
 }
 
@@ -15,5 +18,9 @@ export const handleClick = (browserWindowId, label) => {
   if (!ipc) {
     return
   }
-  console.log({ browserWindowId, label })
+  ipc.send({
+    jsonrpc: '2.0',
+    method: 'ElectronApplicationMenu.handleClick',
+    params: [label],
+  })
 }

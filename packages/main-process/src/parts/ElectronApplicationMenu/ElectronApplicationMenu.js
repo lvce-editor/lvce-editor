@@ -1,4 +1,5 @@
 import { Menu } from 'electron'
+import * as Assert from '../Assert/Assert.cjs'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.cjs'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
@@ -45,8 +46,8 @@ const addClickListener = (item) => {
 }
 
 export const setItems = (items) => {
+  Assert.array(items)
   const itemsWithClickListeners = items.map(addClickListener)
-  // console.log(JSON.stringify(items, null, 2))
   const menu = Menu.buildFromTemplate(itemsWithClickListeners)
   setMenu(menu)
 }
