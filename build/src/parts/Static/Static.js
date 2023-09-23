@@ -129,7 +129,7 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetIconThemeCss/GetIconThemeCss.js`,
     occurrence: `return \`\${extensionPath}\${value}\``,
-    replacement: `return \`${pathPrefix}/file-icons/\${value.slice(7)}\``,
+    replacement: `return \`${pathPrefix}/file-icons/\${value.slice(7)}\``, // TODO should adjust vscode-icons.json instead
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,

@@ -137,7 +137,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
     `return \`\${extensionPath}\${value}\``,
-    `return \`${pathPrefix}/${commitHash}/file-icons/\${value.slice(7)}\``
+    `return \`${pathPrefix}/${commitHash}/file-icons/\${value.slice(7)}\`` // TODO should adjust vscode-icons.json instead
   )
 
   // workaround for firefox bug
