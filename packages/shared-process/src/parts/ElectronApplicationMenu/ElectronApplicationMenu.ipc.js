@@ -4,4 +4,5 @@ export const name = 'ElectronApplicationMenu'
 
 export const Commands = {
   setItems: ElectronApplicationMenu.setItems,
+  handleClick: ElectronApplicationMenu.handleClick,
 }

@@ -1,6 +1,6 @@
-const { Menu } = require('electron')
-const AppWindowStates = require('../AppWindowStates/AppWindowStates.cjs')
-const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.cjs')
+import { Menu } from 'electron'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.cjs'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 /**
  * @enum {string}
@@ -17,19 +17,16 @@ const UiStrings = {
   Help: 'Help',
 }
 
-exports.setMenu = (menu) => {
+export const setMenu = (menu) => {
   Menu.setApplicationMenu(menu)
 }
 
 const click = (menuItem, browserWindow, keys) => {
-  const { port } = AppWindowStates.findByWindowId(browserWindow.id)
-  if (!port) {
-    return
-  }
-  port.postMessage({
+  console.log('send handle click')
+  SharedProcess.state.sharedProcess.send({
     jsonrpc: JsonRpcVersion.Two,
     method: 'ElectronApplicationMenu.handleClick',
-    params: [menuItem.label],
+    params: [browserWindow.id, menuItem.label],
   })
 }
 
@@ -47,14 +44,14 @@ const addClickListener = (item) => {
   }
 }
 
-exports.setItems = (items) => {
+export const setItems = (items) => {
   const itemsWithClickListeners = items.map(addClickListener)
   // console.log(JSON.stringify(items, null, 2))
   const menu = Menu.buildFromTemplate(itemsWithClickListeners)
-  exports.setMenu(menu)
+  setMenu(menu)
 }
 
-exports.createTitleBar = () => {
+export const createTitleBar = () => {
   const menuBar = Menu.buildFromTemplate([
     {
       label: UiStrings.File,
