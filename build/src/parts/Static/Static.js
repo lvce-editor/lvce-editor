@@ -127,7 +127,7 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
     replacement: 'const platform = PlaformType.Web',
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IconTheme/IconTheme.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetIconThemeCss/GetIconThemeCss.js`,
     occurrence: `return \`\${extensionPath}\${value}\``,
     replacement: `return \`${pathPrefix}/file-icons/\${value.slice(7)}\``,
   })
