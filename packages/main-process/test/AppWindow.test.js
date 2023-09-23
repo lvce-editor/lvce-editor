@@ -14,13 +14,6 @@ jest.unstable_mockModule('../src/parts/AppWindowStates/AppWindowStates.cjs', () 
     add: jest.fn(),
   }
 })
-jest.unstable_mockModule('../src/parts/ElectronApplicationMenu/ElectronApplicationMenu.cjs', () => {
-  return {
-    createTitleBar: jest.fn(),
-    setItems: jest.fn(),
-    setMenu: jest.fn(),
-  }
-})
 
 jest.unstable_mockModule('electron', () => {
   const BrowserWindow = class extends EventEmitter {
