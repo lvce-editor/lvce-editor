@@ -1,5 +1,7 @@
-import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { jest } from '@jest/globals'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
+import * as GetIcon from '../src/parts/GetIcon/GetIcon.js'
+import * as IconThemeState from '../src/parts/IconThemeState/IconThemeState.js'
 
 jest.unstable_mockModule('../src/parts/Languages/Languages.js', () => {
   return {
@@ -13,13 +15,13 @@ const IconTheme = await import('../src/parts/IconTheme/IconTheme.js')
 const Languages = await import('../src/parts/Languages/Languages.js')
 
 test('getIcon - match by lowerCase file name', () => {
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     fileNames: {
       license: 'f_license',
     },
   }
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.File,
       name: 'license',
     })
@@ -27,13 +29,13 @@ test('getIcon - match by lowerCase file name', () => {
 })
 
 test('getIcon - match by upperCase file name', () => {
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     fileNames: {
       license: 'f_license',
     },
   }
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.File,
       name: 'LICENSE',
     })
@@ -41,13 +43,13 @@ test('getIcon - match by upperCase file name', () => {
 })
 
 test('getIcon - match by lowerCase folder name', () => {
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     folderNames: {
       test: 'fd_test',
     },
   }
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.Directory,
       name: 'test',
     })
@@ -55,13 +57,13 @@ test('getIcon - match by lowerCase folder name', () => {
 })
 
 test('getIcon - match by upperCase folder name', () => {
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     folderNames: {
       test: 'fd_test',
     },
   }
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.Directory,
       name: 'TEST',
     })
@@ -69,7 +71,7 @@ test('getIcon - match by upperCase folder name', () => {
 })
 
 test('getIcon - match by file extension', () => {
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     fileNames: {},
     languageIds: {},
     fileExtensions: {
@@ -77,7 +79,7 @@ test('getIcon - match by file extension', () => {
     },
   }
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.File,
       name: 'abc.test',
     })
@@ -85,7 +87,7 @@ test('getIcon - match by file extension', () => {
 })
 
 test('getIcon - match by lowercase file extension', () => {
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     fileNames: {},
     languageIds: {},
     fileExtensions: {
@@ -93,7 +95,7 @@ test('getIcon - match by lowercase file extension', () => {
     },
   }
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.File,
       name: 'abc.Test',
     })
@@ -101,13 +103,13 @@ test('getIcon - match by lowercase file extension', () => {
 })
 
 test.skip('getIcon - match by file extension but icon theme has no fileNames property', () => {
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     fileExtensions: {
       test: 'f_test',
     },
   }
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.File,
       name: 'abc.test',
     })
@@ -115,13 +117,13 @@ test.skip('getIcon - match by file extension but icon theme has no fileNames pro
 })
 
 test.skip('getIcon - match by file extension but icon theme has no languages property', () => {
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     fileExtensions: {
       test: 'f_test',
     },
   }
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.File,
       name: 'abc.test',
     })
@@ -129,13 +131,13 @@ test.skip('getIcon - match by file extension but icon theme has no languages pro
 })
 
 test('getIcon - match by folder name expanded', () => {
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     folderNamesExpanded: {
       api: 'fd_api_open',
     },
   }
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.DirectoryExpanded,
       name: 'api',
     })
@@ -143,9 +145,9 @@ test('getIcon - match by folder name expanded', () => {
 })
 
 test('getIcon - error - directory not in definitions', () => {
-  IconTheme.state.iconTheme = {}
+  IconThemeState.state.iconTheme = {}
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.Directory,
       name: 'api',
     })
@@ -153,9 +155,9 @@ test('getIcon - error - directory not in definitions', () => {
 })
 
 test('getIcon - error - directory expanded not in definitions', () => {
-  IconTheme.state.iconTheme = {}
+  IconThemeState.state.iconTheme = {}
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.DirectoryExpanded,
       name: 'api',
     })
@@ -163,9 +165,9 @@ test('getIcon - error - directory expanded not in definitions', () => {
 })
 
 test('getIcon - symlink', () => {
-  IconTheme.state.iconTheme = {}
+  IconThemeState.state.iconTheme = {}
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.Symlink,
       name: 'a',
     })
@@ -173,9 +175,9 @@ test('getIcon - symlink', () => {
 })
 
 test('getIcon - socket', () => {
-  IconTheme.state.iconTheme = {}
+  IconThemeState.state.iconTheme = {}
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.Socket,
       name: 'a',
     })
@@ -187,7 +189,7 @@ test('getIcon - file extension should have priority over language id', () => {
   Languages.getLanguageId.mockImplementation(() => {
     return 'xml'
   })
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     folderNames: {
       test: 'fd_test',
     },
@@ -200,7 +202,7 @@ test('getIcon - file extension should have priority over language id', () => {
     },
   }
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.File,
       name: '/test/file.svg',
     })
@@ -212,7 +214,7 @@ test('getIcon - symbolic link to file', () => {
   Languages.getLanguageId.mockImplementation(() => {
     return ''
   })
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     folderNames: {},
     languageIds: {},
     fileNames: {
@@ -221,7 +223,7 @@ test('getIcon - symbolic link to file', () => {
     fileExtensions: {},
   }
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.SymLinkFile,
       name: '.nvmrc',
     })
@@ -229,9 +231,9 @@ test('getIcon - symbolic link to file', () => {
 })
 
 test('getIcon - no fileNames property', () => {
-  IconTheme.state.iconTheme = {}
+  IconThemeState.state.iconTheme = {}
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.File,
       name: 'test',
     })
@@ -239,9 +241,9 @@ test('getIcon - no fileNames property', () => {
 })
 
 test('getIcon - character device', () => {
-  IconTheme.state.iconTheme = {}
+  IconThemeState.state.iconTheme = {}
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.CharacterDevice,
       name: 'null',
     })
@@ -249,9 +251,9 @@ test('getIcon - character device', () => {
 })
 
 test('getIcon - block device', () => {
-  IconTheme.state.iconTheme = {}
+  IconThemeState.state.iconTheme = {}
   expect(
-    IconTheme.getIcon({
+    GetIcon.getIcon({
       type: DirentType.BlockDevice,
       name: 'null',
     })
@@ -259,15 +261,15 @@ test('getIcon - block device', () => {
 })
 
 test('getFileIcon - match by long extension', () => {
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     fileExtensions: { 'd.ts': '_f_dts', ts: '_f_ts' },
   }
-  expect(IconTheme.getFileIcon({ name: 'test.d.ts' })).toBe('_f_dts')
+  expect(GetIcon.getFileIcon({ name: 'test.d.ts' })).toBe('_f_dts')
 })
 
 test('getFileIcon - fall back to shortest extension', () => {
-  IconTheme.state.iconTheme = {
+  IconThemeState.state.iconTheme = {
     fileExtensions: { png: '_f_png' },
   }
-  expect(IconTheme.getFileIcon({ name: 'test.snap.png' })).toBe('_f_png')
+  expect(GetIcon.getFileIcon({ name: 'test.snap.png' })).toBe('_f_png')
 })
