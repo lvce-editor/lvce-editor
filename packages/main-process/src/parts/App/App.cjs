@@ -6,7 +6,6 @@ const CommandLineSwitches = require('../CommandLineSwitches/CommandLineSwitches.
 const Debug = require('../Debug/Debug.cjs')
 const ElectronApp = require('../ElectronApp/ElectronApp.cjs')
 const ElectronAppEventType = require('../ElectronAppEventType/ElectronAppEventType.cjs')
-const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.cjs')
 const ElectronAppListeners = require('../ElectronAppListeners/ElectronAppListeners.cjs')
 const ElectronIpcMain = require('../ElectronIpcMain/ElectronIpcMain.cjs')
 const ExitCode = require('../ExitCode/ExitCode.cjs')
@@ -31,7 +30,7 @@ const Protocol = require('../Protocol/Protocol.cjs')
 // const windowConfigMap = new Map()
 
 exports.hydrate = async () => {
-  ElectronApplicationMenu.setMenu(null)
+  Electron.Menu.setApplicationMenu(null) // performance
   const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
   unhandled({
     showDialog: true,

@@ -1,15 +1,17 @@
 import * as Command from '../Command/Command.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as ToElectronMenu from '../ToElectronMenu/ToElectronMenu.js'
 
 export const state = {
   commandMap: Object.create(null),
 }
 
-const setItems = (items) => {
-  return SharedProcess.invoke('ElectronApplicationMenu.setItems', items)
+const setItems = async (items) => {
+  const windowId = await GetWindowId.getWindowId()
+  return SharedProcess.invoke('ElectronApplicationMenu.setItems', windowId, items)
 }
 
 const getEntries = (ids) => {

@@ -37,6 +37,7 @@ export const getModuleId = (commandId) => {
     case 'Download.download':
       return ModuleId.Download
     case 'ElectronApplicationMenu.setItems':
+    case 'ElectronApplicationMenu.handleClick':
       return ModuleId.ElectronApplicationMenu
     case 'ElectronBrowserView.createBrowserView':
     case 'ElectronBrowserView.disposeBrowserView':
