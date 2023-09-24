@@ -96,6 +96,8 @@ jobs:
       - name: Build Electron App (deb, x64)
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --product=lvce --target=electron-deb
+        env:
+          HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (deb, x64)
         if: matrix.os == 'ubuntu-22.04'
         shell: bash
@@ -116,6 +118,8 @@ jobs:
       - name: Build Electron App (deb, arm64)
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --product=lvce --target=electron-deb --arch=arm64
+        env:
+          HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (deb, arm64)
         if: matrix.os == 'ubuntu-22.04'
         shell: bash
@@ -136,6 +140,8 @@ jobs:
       - name: Build Electron App (deb, armhf)
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --product=lvce --target=electron-deb --arch=armhf
+        env:
+          HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (deb, armhf)
         if: matrix.os == 'ubuntu-22.04'
         shell: bash
