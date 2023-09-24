@@ -188,10 +188,6 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
       Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions', iconThemeDirent, 'icon-theme.json'),
       Path.join(root, 'dist', commitHash, 'icon-themes', `${iconThemeId}.json`)
     )
-    await FileSystem.copy(
-      Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions', iconThemeDirent, 'icons'),
-      Path.join(root, 'dist', commitHash, 'file-icons')
-    )
   }
   await replace(Path.join(root, 'dist', 'index.html'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
   await replace(Path.join(root, 'dist', 'index.html'), `/manifest.json`, `${pathPrefix}/manifest.json`)
