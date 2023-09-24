@@ -1,5 +1,5 @@
 import * as ElectronBuilder from 'electron-builder'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Template from '../Template/Template.js'
@@ -30,7 +30,6 @@ const runElectronBuilder = async ({}) => {
     }
     await ElectronBuilder.build(options)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Electron builder failed to execute`)
   }
 }

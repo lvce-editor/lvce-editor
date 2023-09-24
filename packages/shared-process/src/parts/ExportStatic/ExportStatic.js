@@ -134,11 +134,6 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     `return \`\${assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
     `return \`\${assetDir}/icon-themes/\${iconThemeId}.json\``
   )
-  await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
-    `return \`\${extensionPath}\${value}\``,
-    `return \`${pathPrefix}/${commitHash}/file-icons/\${value.slice(7)}\`` // TODO should adjust vscode-icons.json instead
-  )
 
   const extensionDirents = await FileSystem.readDir(Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions'))
 
@@ -192,10 +187,6 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     await FileSystem.copy(
       Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions', iconThemeDirent, 'icon-theme.json'),
       Path.join(root, 'dist', commitHash, 'icon-themes', `${iconThemeId}.json`)
-    )
-    await FileSystem.copy(
-      Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions', iconThemeDirent, 'icons'),
-      Path.join(root, 'dist', commitHash, 'file-icons')
     )
   }
   await replace(Path.join(root, 'dist', 'index.html'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)

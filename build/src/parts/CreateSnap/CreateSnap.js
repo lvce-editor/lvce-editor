@@ -1,4 +1,4 @@
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Exec from '../Exec/Exec.js'
 import * as Path from '../Path/Path.js'
 
@@ -20,7 +20,6 @@ export const createSnap = async (arch) => {
     if (error && error.exitCode === 127) {
       throw new VError(`Failed to create snap: snapcraft is not installed`)
     }
-    // @ts-ignore
     throw new VError(error, `Failed to create snap`)
   }
 }
