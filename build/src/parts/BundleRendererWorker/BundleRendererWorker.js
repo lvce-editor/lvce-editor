@@ -76,13 +76,6 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       from: `./src/rendererWorkerMain.js`,
       platform: 'webworker',
     })
-    // workaround for firefox bug
-    await Replace.replace({
-      path: `${cachePath}/dist/rendererWorkerMain.js`,
-      occurrence: `//# sourceMappingURL`,
-      replacement: `export {}
-//# sourceMappingURL`,
-    })
   } catch (error) {
     // @ts-ignore
     throw new VError(error, `Failed to bundle renderer worker`)

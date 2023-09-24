@@ -28,11 +28,4 @@ export const bundleExtensionHostSubWorker = async ({ cachePath, commitHash, plat
     platform: 'webworker',
     allowCyclicDependencies: false,
   })
-  // workaround for firefox bug
-  await Replace.replace({
-    path: `${cachePath}/dist/extensionHostSubWorkerMain.js`,
-    occurrence: `//# sourceMappingURL`,
-    replacement: `export {}
-//# sourceMappingURL`,
-  })
 }
