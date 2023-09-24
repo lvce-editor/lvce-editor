@@ -89,6 +89,16 @@ const copyStaticFiles = async ({ commitHash }) => {
   await Remove.remove(`build/.tmp/server/server/static/images`)
   await Remove.remove(`build/.tmp/server/server/static/${commitHash}/sounds`)
   await Remove.remove(`build/.tmp/server/server/static/${commitHash}/lib-css`)
+  await Copy.copy({
+    from: `build/.tmp/server/shared-process/extensions/builtin.vscode-icons/icons`,
+    to: `build/.tmp/server/server/static/${commitHash}/file-icons`,
+  })
+  await Remove.remove(`build/.tmp/server/shared-process/extensions/builtin.vscode-icons/icons`)
+  await Replace.replace({
+    path: `build/.tmp/server/shared-process/extensions/builtin.vscode-icons/icon-theme.json`,
+    occurrence: '/icons',
+    replacement: '/file-icons',
+  })
 }
 
 const getObjectDependencies = (obj) => {
@@ -836,10 +846,6 @@ export const build = async ({ product }) => {
   await copyServerFiles({ commitHash })
   console.timeEnd('copyServerFiles')
 
-  console.time('copyStaticFiles')
-  await copyStaticFiles({ commitHash })
-  console.timeEnd('copyStaticFiles')
-
   console.time('bundleRendererWorkerAndRendererProcessJs')
   await bundleRendererWorkerAndRendererProcessJs({ commitHash })
   console.timeEnd('bundleRendererWorkerAndRendererProcessJs')
@@ -859,6 +865,10 @@ export const build = async ({ product }) => {
     to: 'build/.tmp/server/shared-process',
   })
   console.timeEnd('copySharedProcessFiles')
+
+  console.time('copyStaticFiles')
+  await copyStaticFiles({ commitHash })
+  console.timeEnd('copyStaticFiles')
 
   console.time('copyExtensionHostFiles')
   await copyExtensionHostFiles()
