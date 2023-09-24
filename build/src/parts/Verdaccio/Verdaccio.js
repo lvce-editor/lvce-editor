@@ -8,6 +8,7 @@ export const start = async () => {
   const cachePath = Path.absolute('build/.tmp/verdaccio-cache')
   const lvceEditorPath = Path.join(cachePath, '@lvce-editor')
   await Remove.remove(lvceEditorPath)
+  await Remove.remove(Path.join(cachePath, 'jest-environment-lvce-editor'))
   await Mkdir.mkdir(cachePath)
   // @ts-ignore
   const app = await runServer({
