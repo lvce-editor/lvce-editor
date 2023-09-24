@@ -1,4 +1,4 @@
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as ArchLinuxElectronVersion from '../ArchLinuxElectronVersion/ArchLinuxElectronVersion.js'
 import * as ArchType from '../ArchType/ArchType.js'
 import * as Compress from '../Compress/Compress.js'
@@ -149,7 +149,6 @@ const printFinalSize = async ({ product }) => {
     const size = await Stat.getFileSize(Path.absolute(`build/.tmp/releases/${product.applicationName}.tar.xz`))
     Logger.info(`tar xz size: ${size}`)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to print tar xz size`)
   }
 }

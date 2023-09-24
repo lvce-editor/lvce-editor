@@ -1,6 +1,5 @@
-import { existsSync } from 'node:fs'
+import { VError } from '@lvce-editor/verror'
 import { readdir, readFile, rm } from 'node:fs/promises'
-import VError from 'verror'
 import * as Copy from '../Copy/Copy.js'
 import * as EagerLoadedCss from '../EagerLoadedCss/EagerLoadedCss.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'

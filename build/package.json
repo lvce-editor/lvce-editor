@@ -33,6 +33,7 @@
     "xdg-basedir": "^5.1.0"
   },
   "dependencies": {
+    "@lvce-editor/verror": "^1.1.1",
     "bytes": "^3.1.2",
     "esbuild": "^0.19.3",
     "fs-extra": "^11.1.1",
