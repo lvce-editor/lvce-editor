@@ -140,13 +140,6 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     `return \`${pathPrefix}/${commitHash}/file-icons/\${value.slice(7)}\`` // TODO should adjust vscode-icons.json instead
   )
 
-  // workaround for firefox bug
-  await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
-    `//# sourceMappingURL`,
-    `export {}
-//# sourceMappingURL`
-  )
   const extensionDirents = await FileSystem.readDir(Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions'))
 
   const languageBasicsDirents = extensionDirents.filter(isLanguageBasics)
