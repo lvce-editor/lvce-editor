@@ -1,5 +1,5 @@
 import * as ElectronGet from '@electron/get'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as ExtractZip from '../ExtractZip/ExtractZip.js'
 import * as Logger from '../Logger/Logger.js'
 
@@ -17,10 +17,6 @@ export const downloadElectron = async ({ electronVersion, outDir, platform, arch
       outDir,
     })
   } catch (error) {
-    throw new VError(
-      // @ts-ignore
-      error,
-      `Failed to download electron version ${electronVersion}`
-    )
+    throw new VError(error, `Failed to download electron version ${electronVersion}`)
   }
 }

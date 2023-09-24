@@ -5,7 +5,7 @@ import { pipeline } from 'node:stream/promises'
 import { createBrotliDecompress } from 'node:zlib'
 import pMap from 'p-map'
 import tar from 'tar-fs'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Assert from '../Assert/Assert.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Path from '../Path/Path.js'
@@ -20,7 +20,6 @@ const downloadUrl = async (url, outFile) => {
     try {
       await rm(outFile)
     } catch {}
-    // @ts-ignore
     throw new VError(error, `Failed to download "${url}"`)
   }
 }
@@ -48,7 +47,6 @@ const downloadExtension = async (extension) => {
     await downloadUrl(url, cachedPath)
     await extract(cachedPath, outPath)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to download extension ${extension.name}`)
   }
 }
@@ -58,7 +56,6 @@ export const extract = async (inFile, outDir) => {
     await mkdir(outDir, { recursive: true })
     await pipeline(createReadStream(inFile), createBrotliDecompress(), tar.extract(outDir))
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to extract ${inFile}`)
   }
 }
