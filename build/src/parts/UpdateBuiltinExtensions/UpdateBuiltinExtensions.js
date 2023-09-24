@@ -1,8 +1,8 @@
+import { VError } from '@lvce-editor/verror'
 import { writeFile } from 'fs/promises'
 import got, { HTTPError } from 'got'
 import { join } from 'node:path'
 import { performance } from 'node:perf_hooks'
-import VError from 'verror'
 import builtinExtensions from '../DownloadBuiltinExtensions/builtinExtensions.json' assert { type: 'json' }
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Logger from '../Logger/Logger.js'
@@ -73,7 +73,6 @@ const getLatestReleaseVersion = async (repository) => {
       const httpErrorMessage = getHttpErrorMessage(error)
       throw new VError(`Failed to get latest release for ${repository}: ${httpErrorMessage}`)
     }
-    // @ts-ignore
     throw new VError(error, `Failed to get latest release for ${repository}`)
   }
 }

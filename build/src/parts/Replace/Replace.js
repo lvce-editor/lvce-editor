@@ -1,4 +1,4 @@
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
@@ -21,7 +21,6 @@ export const replace = async ({ path, occurrence, replacement }) => {
     })
   } catch (error) {
     const occurrenceSnippet = snippet(occurrence)
-    // @ts-ignore
     throw new VError(error, `Failed to replace occurrence ${occurrenceSnippet} in ${path}`)
   }
 }

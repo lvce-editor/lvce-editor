@@ -1,6 +1,6 @@
 import * as ElectronBuilder from 'electron-builder'
 import { readdir } from 'node:fs/promises'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Assert from '../Assert/Assert.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as Copy from '../Copy/Copy.js'
@@ -68,7 +68,6 @@ const runElectronBuilder = async ({ config }) => {
     }
     await ElectronBuilder.build(options)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Electron builder failed to execute`)
   }
 }
