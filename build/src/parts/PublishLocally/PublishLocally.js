@@ -1,3 +1,4 @@
+import { VError } from '@lvce-editor/verror'
 import * as os from 'node:os'
 import * as Exec from '../Exec/Exec.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
@@ -24,7 +25,7 @@ const publishPackage = async (name) => {
       cwd: Path.absolute(`build/.tmp/server/${name}`),
     })
   } catch (error) {
-    // @ts-ignore
+    throw new VError(error, `Failed to publish ${name}`)
   }
 }
 
