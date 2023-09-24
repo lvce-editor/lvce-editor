@@ -2,7 +2,7 @@ import { createWriteStream } from 'node:fs'
 import { readFile, rm, writeFile } from 'node:fs/promises'
 import { pipeline } from 'node:stream/promises'
 import got, { HTTPError } from 'got'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
@@ -20,7 +20,6 @@ const downloadFile = async (url, outFile) => {
     if (error && error instanceof HTTPError) {
       throw new VError(`Failed to download "${url}": ${error.message}`)
     }
-    // @ts-ignore
     throw new VError(error, `Failed to download "${url}"`)
   }
 }
@@ -39,7 +38,6 @@ const getText = async (url) => {
   try {
     return await got(url).text()
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to get text for ${url}`)
   }
 }
