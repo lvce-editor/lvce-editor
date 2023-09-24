@@ -17,10 +17,15 @@ export const start = async () => {
     max_body_size: `1000mb`,
     web: {
       enable: true,
-      title: `lvce`,
+      title: `lvce editor`,
     },
     packages: {
       '**': {
+        access: `$all`,
+        publish: `$all`,
+        proxy: `npmjs`,
+      },
+      '@*/*': {
         access: `$all`,
         publish: `$all`,
         proxy: `npmjs`,
