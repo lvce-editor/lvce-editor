@@ -82,11 +82,13 @@ const copyStaticFiles = async ({ commitHash }) => {
     outDir: `build/.tmp/server/server/static/${commitHash}/css`,
     assetDir: `/${commitHash}`,
   })
-
   await Copy.copy({
     from: 'static/icons',
     to: `build/.tmp/server/server/static/${commitHash}/icons`,
   })
+  await Remove.remove(`build/.tmp/server/server/static/images`)
+  await Remove.remove(`build/.tmp/server/server/static/${commitHash}/sounds`)
+  await Remove.remove(`build/.tmp/server/server/static/${commitHash}/lib-css`)
 }
 
 const getObjectDependencies = (obj) => {
