@@ -23,9 +23,9 @@ const getTitleBarButtonsElectron = () => {
   if (Preferences.get('window.titleBarStyle') === 'custom') {
     // TODO don't render title bar buttons on windows when electron window controls overlay is enabled
     return [
-      { label: UiStrings.Minimize, icon: 'Minimize', id: 'Minimize' },
-      { label: UiStrings.Maximize, icon: 'Maximize', id: 'ToggleMaximize' },
-      { label: UiStrings.Close, icon: 'Close', id: 'Close' },
+      { label: UiStrings.Minimize, icon: 'IconMinimize', id: 'Minimize' },
+      { label: UiStrings.Maximize, icon: 'IconMaximize', id: 'ToggleMaximize' },
+      { label: UiStrings.Close, icon: 'IconClose', id: 'Close' },
     ]
   }
   return []

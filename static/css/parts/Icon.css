@@ -1,0 +1,44 @@
+.IconSearch {
+  -webkit-mask-image: url(/icons/search.svg);
+  mask-image: url(/icons/search.svg);
+}
+
+.IconSourceControl {
+  -webkit-mask-image: url(/icons/source-control.svg);
+  mask-image: url(/icons/source-control.svg);
+}
+
+.IconDebug {
+  -webkit-mask-image: url(/icons/debug-alt-2.svg);
+  mask-image: url(/icons/debug-alt-2.svg);
+}
+
+.IconExtensions {
+  -webkit-mask-image: url(/icons/extensions.svg);
+  mask-image: url(/icons/extensions.svg);
+}
+
+.IconSettings {
+  -webkit-mask-image: url(/icons/settings.svg);
+  mask-image: url(/icons/settings.svg);
+}
+
+.IconMinimize {
+  -webkit-mask-image: url(/icons/chrome-minimize.svg);
+  mask-image: url(/icons/chrome-minimize.svg);
+}
+
+.IconMaximize {
+  -webkit-mask-image: url(/icons/chrome-maximize.svg);
+  mask-image: url(/icons/chrome-maximize.svg);
+}
+
+.IconRestore {
+  -webkit-mask-image: url(/icons/chrome-restore.svg);
+  mask-image: url(/icons/chrome-restore.svg);
+}
+
+.IconClose {
+  -webkit-mask-image: url(/icons/chrome-close.svg);
+  mask-image: url(/icons/chrome-close.svg);
+}
