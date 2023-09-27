@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.9",
-    "@types/is-object": "^1.0.2",
+    "@types/is-object": "^1.0.3",
     "@types/tail": "^2.2.1",
     "@types/tar-fs": "^2.0.2",
     "@types/ws": "^8.5.6",

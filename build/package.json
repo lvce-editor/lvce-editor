@@ -28,7 +28,7 @@
     "electron-builder": "^24.6.4",
     "execa": "^8.0.1",
     "extract-zip": "^2.0.1",
-    "glob": "^10.3.7",
+    "glob": "^10.3.10",
     "xdg-basedir": "^5.1.0"
   },
   "dependencies": {
