@@ -18,6 +18,10 @@ export const getLabel = (uri) => {
 }
 
 export const getFileIcon = (uri) => {
+  console.log({ uri })
+  if (uri.startsWith('extension-detail://')) {
+    return '/icons/extensions.svg'
+  }
   const baseName = Workspace.pathBaseName(uri)
   const icon = IconTheme.getFileIcon({ name: baseName })
   return icon

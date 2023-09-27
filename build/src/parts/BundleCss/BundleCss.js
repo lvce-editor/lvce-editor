@@ -1,9 +1,11 @@
 import { VError } from '@lvce-editor/verror'
 import { readdir, readFile, rm } from 'node:fs/promises'
+import * as BundleIconTheme from '../BundleIconTheme/BundleIconTheme.js'
 import * as Copy from '../Copy/Copy.js'
 import * as EagerLoadedCss from '../EagerLoadedCss/EagerLoadedCss.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as Path from '../Path/Path.js'
+import * as Process from '../Process/Process.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
@@ -25,7 +27,7 @@ const toSorted = (array) => {
   return [...array].sort().reverse()
 }
 
-export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pathPrefix = '' }) => {
+export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pathPrefix = '', includeIconTheme = false }) => {
   try {
     let css = ``
     const cssLibNormalize = Path.join(Root.root, 'static', 'lib-css', 'modern-normalize.css')
@@ -93,6 +95,25 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
       css += `/*************/\n`
       css += content
       await rm(absolutePath, { recursive: true, force: true })
+    }
+
+    if (includeIconTheme) {
+      try {
+        const iconThemePath = Path.absolute(`extensions/builtin.vscode-icons/icon-theme.json`)
+        const iconThemeCss = await BundleIconTheme.bundleIconTheme({
+          iconThemePath,
+        })
+        css += `/*************/\n`
+        css += `/* Icon Theme */\n`
+        css += `/*************/\n`
+        css += iconThemeCss
+      } catch (error) {
+        if (Process.argv.includes('--force')) {
+          console.warn(error)
+        } else {
+          throw error
+        }
+      }
     }
 
     const appCssPath = Path.join(outDir, 'App.css')

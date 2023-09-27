@@ -24,6 +24,7 @@ import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as BundleIconTheme from '../BundleIconTheme/BundleIconTheme.js'
 
 const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate }) => {
   const files = [
@@ -48,6 +49,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'build/src/parts/NpmDependencies/NpmDependencies.js',
     'build/src/parts/WalkDependencies/WalkDependencies.js',
     'build/src/parts/Rebuild/Rebuild.js',
+    'build/src/parts/BundleIconTheme/BundleIconTheme.js',
   ]
   const absolutePaths = files.map(Path.absolute)
   const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
@@ -186,7 +188,7 @@ const removeSrcPrefix = (postfix) => {
   return postfix
 }
 
-const copyExtensions = async ({ arch, optimizeLanguageBasics }) => {
+const copyExtensions = async ({ arch, optimizeLanguageBasics, bundleIconTheme }) => {
   await Copy.copy({
     from: 'extensions',
     to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions`,
@@ -199,7 +201,7 @@ const copyExtensions = async ({ arch, optimizeLanguageBasics }) => {
     replacement: '../../../../../builtin.language-features-typescript/node/node_modules/typescript/lib/typescript.js',
   })
   await Remove.remove(
-    `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-features-typescript/node/node_modules/typescript/lib/tsserverlibrary.js`
+    `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-features-typescript/node/node_modules/typescript/lib/tsserverlibrary.js`,
   )
   if (optimizeLanguageBasics) {
     const dirents = await ReadDir.readDir(`build/.tmp/electron-bundle/${arch}/resources/app/extensions`)
@@ -246,6 +248,14 @@ For performance reason, all languages extensions are bundled into one during bui
 `,
     })
   }
+
+  if (bundleIconTheme) {
+    await Copy.copy({
+      from: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.vscode-icons/icons`,
+      to: `build/.tmp/electron-bundle/${arch}/resources/app/static/file-icons`,
+    })
+    await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.vscode-icons`)
+  }
 }
 
 const copyStaticFiles = async ({ arch }) => {
@@ -281,9 +291,10 @@ const copyStaticFiles = async ({ arch }) => {
   })
 }
 
-const copyCss = async ({ arch }) => {
+const copyCss = async ({ arch, bundleIconTheme }) => {
   await BundleCss.bundleCss({
     outDir: `build/.tmp/electron-bundle/${arch}/resources/app/static/css`,
+    includeIconTheme: bundleIconTheme,
   })
 }
 
@@ -324,6 +335,7 @@ export const build = async ({
   const bundleMainProcess = BundleOptions.bundleMainProcess
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
   const optimizeLanguageBasics = true
+  const bundleIconTheme = true
 
   const useInstalledElectronVersion = isInstalled && installedArch === arch
   if (!useInstalledElectronVersion) {
@@ -424,7 +436,7 @@ export const build = async ({
   console.timeEnd('copyPdfWorkerSources')
 
   console.time('copyExtensions')
-  await copyExtensions({ arch, optimizeLanguageBasics })
+  await copyExtensions({ arch, optimizeLanguageBasics, bundleIconTheme })
   console.timeEnd('copyExtensions')
 
   console.time('copyStaticFiles')
@@ -432,7 +444,7 @@ export const build = async ({
   console.timeEnd('copyStaticFiles')
 
   console.time('copyCss')
-  await copyCss({ arch })
+  await copyCss({ arch, bundleIconTheme })
   console.timeEnd('copyCss')
 
   const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
@@ -453,6 +465,7 @@ export const build = async ({
     commitHash,
     platform: 'electron',
     assetDir: `../../../../..`,
+    bundleIconTheme,
   })
 
   console.time('copyRendererWorkerFiles')

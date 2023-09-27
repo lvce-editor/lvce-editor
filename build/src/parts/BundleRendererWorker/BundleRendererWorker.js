@@ -27,7 +27,7 @@ const getNewCssDeclarationFile = (content, filteredCss) => {
   return newLines.join('\n')
 }
 
-export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir }) => {
+export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir, bundleIconTheme }) => {
   try {
     await Copy.copy({
       from: 'packages/renderer-worker/src',
@@ -100,14 +100,19 @@ import * as PlatformType from '../PlatformType/PlatformType.js'`,
 }`,
       })
     }
-    console.log({ platform })
+    if (bundleIconTheme) {
+      await Replace.replace({
+        path: `${cachePath}/src/parts/IconTheme/IconTheme.js`,
+        occurrence: `await setIconTheme(iconThemeId)`,
+        replacement: `// await setIconTheme(iconThemeId)`,
+      })
+    }
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererWorkerMain.js`,
       platform: 'webworker',
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to bundle renderer worker`)
   }
 }
