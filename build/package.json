@@ -34,14 +34,14 @@
   "dependencies": {
     "@lvce-editor/verror": "^1.1.1",
     "bytes": "^3.1.2",
-    "esbuild": "^0.19.3",
+    "esbuild": "^0.19.4",
     "fs-extra": "^11.1.1",
     "got": "^13.0.0",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.8",
     "p-map": "^6.0.0",
     "pretty-bytes": "^6.1.1",
-    "rollup": "^3.29.3",
+    "rollup": "^3.29.4",
     "tar-fs": "^3.0.4",
     "verdaccio": "^5.26.3"
   },
