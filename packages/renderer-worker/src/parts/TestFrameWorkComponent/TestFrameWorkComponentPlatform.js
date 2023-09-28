@@ -1,3 +1,4 @@
+import * as IsFirefox from '../IsFirefox/IsFirefox.js'
 import * as Platform from '../Platform/Platform.js'
 
 export const getNodePath = () => {
@@ -5,5 +6,5 @@ export const getNodePath = () => {
 }
 
 export const isFirefox = () => {
-  return Platform.isFirefox
+  return IsFirefox.isFirefox
 }

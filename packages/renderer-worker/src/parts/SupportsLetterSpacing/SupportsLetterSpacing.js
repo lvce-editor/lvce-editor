@@ -1,9 +1,9 @@
+import * as IsFirefox from '../IsFirefox/IsFirefox.js'
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
-import * as Platform from '../Platform/Platform.js'
 
 // workaround for firefox not supporting letterspacing https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/letterSpacing
 export const supportsLetterSpacing = () => {
-  if (!Platform.isFirefox) {
+  if (!IsFirefox.isFirefox) {
     return true
   }
   const text = 'abc'
