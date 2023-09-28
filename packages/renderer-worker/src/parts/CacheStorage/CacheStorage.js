@@ -1,16 +1,17 @@
+import * as Character from '../Character/Character.js'
 import * as Logger from '../Logger/Logger.js'
 import * as MimeType from '../MimeType/MimeType.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Response from '../Response/Response.js'
 import * as ShouldIgnoreCacheStorageError from '../ShouldIgnoreCacheStorageError/ShouldIgnoreCacheStorageError.js'
 import { VError } from '../VError/VError.js'
-import * as Character from '../Character/Character.js'
 
 // TODO when caches is not defined -> should return undefined
 
 const getCache = async () => {
-  const cacheName = Platform.getCacheName()
+  const cacheName = PlatformPaths.getCacheName()
   return await caches.open(cacheName)
 }
 
@@ -74,7 +75,7 @@ const setResponse = async (key, value, contentType) => {
     Logger.warn(`invalid value ${value}`)
     return
   }
-  const cacheName = Platform.getCacheName()
+  const cacheName = PlatformPaths.getCacheName()
   const cache = await caches.open(cacheName)
   await cache.put(
     key,
@@ -83,7 +84,7 @@ const setResponse = async (key, value, contentType) => {
         'Content-Type': contentType,
         'Content-Length': `${value.length}`,
       }),
-    })
+    }),
   )
 }
 
@@ -114,7 +115,7 @@ export const clearCache = async () => {
     return
   }
   try {
-    const cacheName = Platform.getCacheName()
+    const cacheName = PlatformPaths.getCacheName()
     await caches.delete(cacheName)
   } catch (error) {
     if (ShouldIgnoreCacheStorageError.shouldIgnoreCacheStorageError(error)) {

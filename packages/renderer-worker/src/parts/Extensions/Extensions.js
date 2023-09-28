@@ -1,12 +1,12 @@
 import * as OpenNativeFolder from '../OpenNativeFolder/OpenNativeFolder.js'
-import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 
 export const openExtensionsFolder = async () => {
-  const extensionsFolder = await Platform.getExtensionsPath()
+  const extensionsFolder = await PlatformPaths.getExtensionsPath()
   await OpenNativeFolder.openNativeFolder(extensionsFolder)
 }
 
 export const openCachedExtensionsFolder = async () => {
-  const cachedExtensionsFolder = await Platform.getCachedExtensionsPath()
+  const cachedExtensionsFolder = await PlatformPaths.getCachedExtensionsPath()
   await OpenNativeFolder.openNativeFolder(cachedExtensionsFolder)
 }

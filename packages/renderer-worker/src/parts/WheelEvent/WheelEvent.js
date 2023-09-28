@@ -1,7 +1,7 @@
-import * as Platform from '../Platform/Platform.js'
+import * as IsFirefox from '../IsFirefox/IsFirefox.js'
 
 export const normalizeDelta = (delta) => {
-  if (Platform.isFirefox) {
+  if (IsFirefox.isFirefox) {
     return delta * (52 / 114)
   }
   return delta

@@ -1,20 +1,14 @@
-import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as FileSystemAppShared from './FileSystemAppShared.js'
 
 const defaultContent = '{}'
 
 export const readFile = () => {
-  return FileSystemAppShared.readFileInternal(
-    Platform.getUserSettingsPath,
-    defaultContent
-  )
+  return FileSystemAppShared.readFileInternal(PlatformPaths.getUserSettingsPath, defaultContent)
 }
 
 export const writeFile = (content) => {
-  return FileSystemAppShared.writeFileInternal(
-    Platform.getUserSettingsPath,
-    content
-  )
+  return FileSystemAppShared.writeFileInternal(PlatformPaths.getUserSettingsPath, content)
 }
 
 export const readJson = () => {}

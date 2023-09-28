@@ -1,11 +1,5 @@
-import * as Command from '../Command/Command.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js' // TODO use Command.execute instead
-import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketplace.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as Platform from '../Platform/Platform.js'
-import * as Assert from '../Assert/Assert.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 const SUGGESTIONS = ['@builtin', '@disabled', '@enabled', '@installed', '@outdated', '@sort:installs', '@id:', '@category']
 
@@ -40,7 +34,7 @@ export const openSuggest = async (state) => {
     /* viewletSend */ 'Viewlet.send',
     /* id */ 'Extensions',
     /* method */ 'openSuggest',
-    /* suggestions */ filteredSuggestions
+    /* suggestions */ filteredSuggestions,
   )
 }
 
