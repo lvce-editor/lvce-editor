@@ -97,42 +97,42 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist', 'rendererProcessMain.js'),
     'platform = getPlatform();',
-    'platform = "web"'
+    'platform = "web"',
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist', 'rendererProcessMain.js'),
-    `return "/${commitHash}";`,
-    `return "${pathPrefix}/${commitHash}";`
+    `/${commitHash}`,
+    `${pathPrefix}/${commitHash}`,
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
     'platform = getPlatform();',
-    'platform = "web"'
+    'platform = "web"',
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
-    `platform2 = "remote";`,
-    'platform2 = "web";'
+    `platform$1 = 'remote'`,
+    `platform$1 = 'web'`,
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
-    `return "/${commitHash}";`,
-    `return "${pathPrefix}/${commitHash}";`
+    `/${commitHash}`,
+    `${pathPrefix}/${commitHash}`,
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
     `return \`\${assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
-    `return \`\${assetDir}/themes/\${colorThemeId}.json\``
+    `return \`\${assetDir}/themes/\${colorThemeId}.json\``,
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'extension-host-worker', 'dist', 'extensionHostWorkerMain.js'),
     `/${commitHash}`,
-    `${pathPrefix}/${commitHash}`
+    `${pathPrefix}/${commitHash}`,
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
     `return \`\${assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
-    `return \`\${assetDir}/icon-themes/\${iconThemeId}.json\``
+    `return \`\${assetDir}/icon-themes/\${iconThemeId}.json\``,
   )
 
   const extensionDirents = await FileSystem.readDir(Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions'))
@@ -167,7 +167,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   for (const languageBasicsDirent of languageBasicsDirents) {
     await FileSystem.copy(
       Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions', languageBasicsDirent),
-      Path.join(root, 'dist', commitHash, 'extensions', languageBasicsDirent)
+      Path.join(root, 'dist', commitHash, 'extensions', languageBasicsDirent),
     )
   }
 
@@ -175,7 +175,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     const themeId = getThemeName(themeDirent)
     await FileSystem.copy(
       Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions', themeDirent, 'color-theme.json'),
-      Path.join(root, 'dist', commitHash, 'themes', `${themeId}.json`)
+      Path.join(root, 'dist', commitHash, 'themes', `${themeId}.json`),
     )
   }
 
@@ -186,7 +186,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     const iconThemeId = iconThemeDirent.slice('builtin.'.length)
     await FileSystem.copy(
       Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions', iconThemeDirent, 'icon-theme.json'),
-      Path.join(root, 'dist', commitHash, 'icon-themes', `${iconThemeId}.json`)
+      Path.join(root, 'dist', commitHash, 'icon-themes', `${iconThemeId}.json`),
     )
   }
   await replace(Path.join(root, 'dist', 'index.html'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
@@ -197,14 +197,14 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
       Path.join(root, 'dist', 'index.html'),
       '</title>',
       `</title>
-    <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`
+    <link rel="shortcut icon" type="image/x-icon" href="${pathPrefix}/favicon.ico">`,
     )
   } else {
     await replace(
       Path.join(root, 'dist', 'index.html'),
       '</title>',
       `</title>
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">`
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">`,
     )
   }
   if (pathPrefix) {
@@ -223,7 +223,7 @@ const addExtensionSeo = async ({ root, name, description }) => {
   await replace(
     Path.join(root, 'dist', 'index.html'),
     '<meta name="description" content="Online Code Editor" />',
-    `<meta name="description" content="${description}" />`
+    `<meta name="description" content="${description}" />`,
   )
 }
 
@@ -243,16 +243,16 @@ const addExtensionThemes = async ({ root, extensionPath, extensionJson, commitHa
     await replace(
       Path.join(root, 'dist', commitHash, 'config', 'defaultSettings.json'),
       `"workbench.colorTheme": "slime"`,
-      `"workbench.colorTheme": "${id}"`
+      `"workbench.colorTheme": "${id}"`,
     )
     await FileSystem.copyFile(Path.join(root, 'README.md'), Path.join(root, 'dist', commitHash, 'extensions', `builtin.theme-${id}`, 'README.md'))
     await FileSystem.copyFile(
       Path.join(extensionPath, 'extension.json'),
-      Path.join(root, 'dist', commitHash, 'extensions', `builtin.theme-${id}`, 'extension.json')
+      Path.join(root, 'dist', commitHash, 'extensions', `builtin.theme-${id}`, 'extension.json'),
     )
     await FileSystem.copyFile(
       Path.join(extensionPath, 'color-theme.json'),
-      Path.join(root, 'dist', commitHash, 'extensions', `builtin.theme-${id}`, 'color-theme.json')
+      Path.join(root, 'dist', commitHash, 'extensions', `builtin.theme-${id}`, 'color-theme.json'),
     )
   }
   const themesJson = await JsonFile.readJson(Path.join(root, 'dist', commitHash, 'config', 'themes.json'))

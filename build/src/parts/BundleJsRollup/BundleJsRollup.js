@@ -38,7 +38,7 @@ export const bundleJs = async ({
       commonjs(),
       nodeResolve({
         preferBuiltins: true,
-      })
+      }),
     )
   }
   if (typescript) {
@@ -49,7 +49,7 @@ export const bundleJs = async ({
         babelHelpers: 'bundled',
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
         presets: [pluginTypeScript],
-      })
+      }),
     )
   }
   /**
@@ -61,7 +61,6 @@ export const bundleJs = async ({
     preserveEntrySignatures: 'strict',
     treeshake: {
       propertyReadSideEffects: false,
-
       // moduleSideEffects: false,
     },
     perf: true,
