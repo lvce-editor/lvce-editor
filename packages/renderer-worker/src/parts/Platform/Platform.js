@@ -1,22 +1,10 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 /* istanbul ignore file */
 
 // TODO this should always be completely tree shaken out during build, maybe need to be marked as @__Pure for terser to work
 
 // TODO treeshake this function out when targeting electron
-
-export const isMobileOrTablet = () => {
-  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
-    return false
-  }
-  // @ts-ignore
-  const userAgentData = navigator.userAgentData
-  if (userAgentData && 'mobile' in userAgentData) {
-    userAgentData.mobile
-  }
-  return false
-}
 
 const getIsChrome = () => {
   if (typeof navigator === 'undefined') {
