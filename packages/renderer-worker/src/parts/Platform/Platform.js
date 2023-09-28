@@ -1,5 +1,5 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 /* istanbul ignore file */
 
 // TODO this should always be completely tree shaken out during build, maybe need to be marked as @__Pure for terser to work
@@ -17,24 +17,6 @@ export const isMobileOrTablet = () => {
   }
   return false
 }
-
-const getIsChrome = () => {
-  if (typeof navigator === 'undefined') {
-    return false
-  }
-  if (
-    // @ts-ignore
-    navigator.userAgentData &&
-    // @ts-ignore
-    navigator.userAgentData.brands
-  ) {
-    // @ts-ignore
-    return navigator.userAgentData.brands.includes('Chromium')
-  }
-  return false
-}
-
-export const isChrome = getIsChrome()
 
 const getIsFirefox = () => {
   if (typeof navigator === 'undefined') {
