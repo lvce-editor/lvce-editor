@@ -7,16 +7,13 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
 jest.unstable_mockModule('../src/parts/Url/Url.js', () => {
   return {
@@ -29,7 +26,7 @@ jest.unstable_mockModule('../src/parts/Url/Url.js', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
   return {
     async getDownloadDir() {
       return '/test/downloads'
@@ -45,12 +42,8 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 })
 
 const Download = await import('../src/parts/Download/Download.js')
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const Url = await import('../src/parts/Url/Url.js')
 
 test('downloadFile - error', async () => {
@@ -58,17 +51,13 @@ test('downloadFile - error', async () => {
   RendererProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    Download.downloadFile('test.txt', 'test://test-url')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(Download.downloadFile('test.txt', 'test://test-url')).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('downloadFile - error - fileName is not of type string', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await expect(Download.downloadFile(123, 456)).rejects.toThrowError(
-    'expected value to be of type string'
-  )
+  await expect(Download.downloadFile(123, 456)).rejects.toThrowError('expected value to be of type string')
 })
 
 test('downloadFile', async () => {
@@ -76,11 +65,7 @@ test('downloadFile', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await Download.downloadFile('test.txt', 'test://test-url')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Download.downloadFile',
-    'test.txt',
-    'test://test-url'
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Download.downloadFile', 'test.txt', 'test://test-url')
 })
 
 test('downloadJson - error with download', async () => {
@@ -93,9 +78,7 @@ test('downloadJson - error with download', async () => {
     throw new TypeError('x is not a function')
   })
 
-  await expect(Download.downloadJson([], 'test.json')).rejects.toThrowError(
-    new Error('Failed to download test.json: TypeError: x is not a function')
-  )
+  await expect(Download.downloadJson([], 'test.json')).rejects.toThrowError(new Error('Failed to download test.json: TypeError: x is not a function'))
   expect(Url.revokeObjectUrl).toHaveBeenCalledTimes(1)
   expect(Url.revokeObjectUrl).toHaveBeenCalledWith('test://test-session.json')
 })
@@ -109,11 +92,7 @@ test('downloadJson', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await Download.downloadJson([], 'test.json')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Download.downloadFile',
-    'test.json',
-    'test://test-session.json'
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Download.downloadFile', 'test.json', 'test://test-session.json')
   expect(Url.revokeObjectUrl).toHaveBeenCalledTimes(1)
   expect(Url.revokeObjectUrl).toHaveBeenCalledWith('test://test-session.json')
 })
@@ -123,9 +102,5 @@ test('downloadToDownloadsFolder', async () => {
   SharedProcess.invoke.mockImplementation(() => {})
   await Download.downloadToDownloadsFolder('file.json', 'test://file.json')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'Download.download',
-    'test://file.json',
-    '/test/downloads/file.json'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Download.download', 'test://file.json', '/test/downloads/file.json')
 })

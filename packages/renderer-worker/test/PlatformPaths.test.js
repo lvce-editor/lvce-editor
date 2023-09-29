@@ -12,11 +12,9 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
-const Platform = await import('../src/parts/Platform/Platform.js')
+const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 
 test('getLogsDir', async () => {
   // @ts-ignore
@@ -28,7 +26,7 @@ test('getLogsDir', async () => {
         throw new Error('unexpected message')
     }
   })
-  expect(await Platform.getLogsDir()).toBe('~/.local/state/app-name')
+  expect(await PlatformPaths.getLogsDir()).toBe('~/.local/state/app-name')
 })
 
 test('getLogsDir - error', async () => {
@@ -41,9 +39,7 @@ test('getLogsDir - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(Platform.getLogsDir()).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(PlatformPaths.getLogsDir()).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('getUserSettingsPath', async () => {
@@ -56,9 +52,7 @@ test('getUserSettingsPath', async () => {
         throw new Error('unexpected message')
     }
   })
-  expect(await Platform.getUserSettingsPath()).toBe(
-    '~/.config/app/settings.json'
-  )
+  expect(await PlatformPaths.getUserSettingsPath()).toBe('~/.config/app/settings.json')
 })
 
 test('getUserSettingsPath - error', async () => {
@@ -71,7 +65,5 @@ test('getUserSettingsPath - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(Platform.getUserSettingsPath()).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(PlatformPaths.getUserSettingsPath()).rejects.toThrowError(new TypeError('x is not a function'))
 })

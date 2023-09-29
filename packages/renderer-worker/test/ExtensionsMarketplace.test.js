@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getMarketPlaceUrl() {
     return 'https://example.com'
   },
@@ -15,9 +15,7 @@ jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => ({
 
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 const Command = await import('../src/parts/Command/Command.js')
-const ExtensionsMarketplace = await import(
-  '../src/parts/ExtensionMarketplace/ExtensionMarketplace.js'
-)
+const ExtensionsMarketplace = await import('../src/parts/ExtensionMarketplace/ExtensionMarketplace.js')
 
 afterEach(() => {
   jest.resetAllMocks()
@@ -103,7 +101,7 @@ test('getMarketplaceExtensions', async () => {
   expect(
     await ExtensionsMarketplace.getMarketplaceExtensions({
       q: 'abc',
-    })
+    }),
   ).toEqual([
     {
       id: 'test-author-1.test-extension-1',
@@ -171,16 +169,10 @@ test('getMarketplaceExtensions', async () => {
 test('getMarketplaceExtensions - error', async () => {
   // @ts-ignore
   Ajax.getJson.mockImplementation(() => {
-    throw new TypeError(
-      'Failed to request json from "https://example.com/api/extensions/search": x is not a function'
-    )
+    throw new TypeError('Failed to request json from "https://example.com/api/extensions/search": x is not a function')
   })
-  await expect(
-    ExtensionsMarketplace.getMarketplaceExtensions({ q: 'abc' })
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to request json from "https://example.com/api/extensions/search": x is not a function'
-    )
+  await expect(ExtensionsMarketplace.getMarketplaceExtensions({ q: 'abc' })).rejects.toThrowError(
+    new Error('Failed to request json from "https://example.com/api/extensions/search": x is not a function'),
   )
 })
 

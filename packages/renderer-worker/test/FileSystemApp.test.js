@@ -38,10 +38,15 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
+    assetDir: '',
+  }
+})
+
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
+  return {
     getUserSettingsPath: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    assetDir: '',
   }
 })
 
@@ -54,12 +59,12 @@ jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
 })
 
 const FileSystemApp = await import('../src/parts/FileSystem/FileSystemApp.js')
-const Platform = await import('../src/parts/Platform/Platform.js')
+const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 test('readFile - settings', async () => {
   // @ts-ignore
-  Platform.getUserSettingsPath.mockImplementation(() => {
+  PlatformPaths.getUserSettingsPath.mockImplementation(() => {
     return '~/.config/app/settings.json'
   })
   // @ts-ignore
@@ -71,7 +76,7 @@ test('readFile - settings', async () => {
 
 test('readFile - settings - error', async () => {
   // @ts-ignore
-  Platform.getUserSettingsPath.mockImplementation(() => {
+  PlatformPaths.getUserSettingsPath.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
   // @ts-ignore
@@ -97,7 +102,7 @@ test('mkdir - error', async () => {
 
 test('readFile - settings - error - file does not exist', async () => {
   // @ts-ignore
-  Platform.getUserSettingsPath.mockImplementation(() => {
+  PlatformPaths.getUserSettingsPath.mockImplementation(() => {
     return '~/.config/app/settings.json'
   })
   // @ts-ignore
@@ -124,7 +129,7 @@ test('readFile - settings - error - file does not exist', async () => {
 
 test('writeFile - settings - error parent folder does not exist', async () => {
   // @ts-ignore
-  Platform.getUserSettingsPath.mockImplementation(() => {
+  PlatformPaths.getUserSettingsPath.mockImplementation(() => {
     return '~/.config/app/settings.json'
   })
   // @ts-ignore
@@ -139,7 +144,7 @@ test('writeFile - settings - error parent folder does not exist', async () => {
     if (i++ === 0) {
       throw new NodeError(
         FileSytemErrorCodes.ENOENT,
-        `Failed to write to file "/test/app-name/settings.json": ENOENT: no such file or directory, open \'/test/app-name/settings.json\'`
+        `Failed to write to file "/test/app-name/settings.json": ENOENT: no such file or directory, open \'/test/app-name/settings.json\'`,
       )
     } else {
       // ignore
