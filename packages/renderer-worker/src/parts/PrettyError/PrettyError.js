@@ -7,6 +7,7 @@ import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SourceMap from '../SourceMap/SourceMap.js'
+import * as IsFirefox from '../IsFirefox/IsFirefox.js'
 
 const getErrorMessage = (error) => {
   if (!error) {
@@ -164,7 +165,7 @@ export const prepare = async (error) => {
 }
 
 export const print = (error, prefix = '') => {
-  if (Platform.isFirefox) {
+  if (IsFirefox.isFirefox) {
     // Firefox does not support printing codeframe with error stack
     if (error && error._error) {
       Logger.error(`${prefix}${error._error}`)
