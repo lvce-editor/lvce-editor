@@ -6,24 +6,6 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 // TODO treeshake this function out when targeting electron
 
-const getIsChrome = () => {
-  if (typeof navigator === 'undefined') {
-    return false
-  }
-  if (
-    // @ts-ignore
-    navigator.userAgentData &&
-    // @ts-ignore
-    navigator.userAgentData.brands
-  ) {
-    // @ts-ignore
-    return navigator.userAgentData.brands.includes('Chromium')
-  }
-  return false
-}
-
-export const isChrome = getIsChrome()
-
 export const getExtensionsPath = () => {
   return SharedProcess.invoke(/* Platform.getExtensionsPath */ 'Platform.getExtensionsPath')
 }
