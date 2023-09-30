@@ -2,10 +2,10 @@ import { dirname } from 'node:path'
 import * as Assert from '../Assert/Assert.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as Json from '../Json/Json.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
-import * as Platform from '../Platform/Platform.js'
-import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import { VError } from '../VError/VError.js'
 
 const addToArrayUnique = (recentlyOpened, path) => {
@@ -49,7 +49,7 @@ const setRecentlyOpened = async (recentlyOpenedPath, newRecentlyOpened) => {
 export const addPath = async (path) => {
   try {
     Assert.string(path)
-    const recentlyOpenedPath = Platform.getRecentlyOpenedPath()
+    const recentlyOpenedPath = PlatformPaths.getRecentlyOpenedPath()
     const parsed = await getRecentlyOpened(recentlyOpenedPath)
     const newRecentlyOpened = addToArrayUnique(parsed, path)
     await setRecentlyOpened(recentlyOpenedPath, newRecentlyOpened)

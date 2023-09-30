@@ -2,12 +2,12 @@ import * as DownloadAndExtract from '../DownloadAndExtract/DownloadAndExtract.js
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
-import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import { VError } from '../VError/VError.js'
 
 export const install = async ({ user, repo, branch }) => {
   try {
-    const cachedExtensionsPath = Platform.getCachedExtensionsPath()
+    const cachedExtensionsPath = PlatformPaths.getCachedExtensionsPath()
     const url = `https://codeload.github.com/${user}/${repo}/tar.gz/${branch}`
     const cachedExtensionPath = Path.join(cachedExtensionsPath, `github-${user}-${repo}-${branch}`)
     await DownloadAndExtract.downloadAndExtractTarGz({
@@ -15,7 +15,7 @@ export const install = async ({ user, repo, branch }) => {
       outDir: cachedExtensionPath,
       strip: 1,
     })
-    const extensionsPath = Platform.getExtensionsPath()
+    const extensionsPath = PlatformPaths.getExtensionsPath()
     const manifestPath = Path.join(cachedExtensionPath, 'extension.json')
     const manifestJson = await JsonFile.readJson(manifestPath)
     const { id } = manifestJson

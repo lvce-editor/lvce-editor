@@ -7,7 +7,7 @@ afterEach(() => {
   jest.restoreAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getExtensionHostPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
@@ -21,7 +21,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
 
 const ExtensionHost = await import('../src/parts/ExtensionHost/ExtensionHost.js')
 
-const Platform = await import('../src/parts/Platform/Platform.js')
+const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 
@@ -48,7 +48,7 @@ test.skip('activateAll', async () => {
 
 test('start - error - path not found', async () => {
   // @ts-ignore
-  Platform.getExtensionHostPath.mockImplementation(() => {
+  PlatformPaths.getExtensionHostPath.mockImplementation(() => {
     return '/test'
   })
   const socket = {
@@ -60,7 +60,7 @@ test('start - error - path not found', async () => {
 test('start - error - path is a directory', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
-  Platform.getExtensionHostPath.mockImplementation(() => {
+  PlatformPaths.getExtensionHostPath.mockImplementation(() => {
     return tmpDir
   })
   const socket = {
@@ -77,7 +77,7 @@ test.skip('start - error - syntax error', async () => {
   const extensionHostPath = join(tmpDir, 'extensionHost.js')
   await writeFile(extensionHostPath, '...')
   // @ts-ignore
-  Platform.getExtensionHostPath.mockImplementation(() => {
+  PlatformPaths.getExtensionHostPath.mockImplementation(() => {
     return extensionHostPath
   })
   const socket = {
@@ -92,7 +92,7 @@ test('start - error - uncaught exception', async () => {
   const extensionHostPath = join(tmpDir, 'extensionHost.js')
   await writeFile(extensionHostPath, "throw new Error('oops')")
   // @ts-ignore
-  Platform.getExtensionHostPath.mockImplementation(() => {
+  PlatformPaths.getExtensionHostPath.mockImplementation(() => {
     return extensionHostPath
   })
   const socket = {
@@ -107,7 +107,7 @@ test('start - error - custom exit code', async () => {
   const extensionHostPath = join(tmpDir, 'extensionHost.js')
   await writeFile(extensionHostPath, 'process.exit(123)')
   // @ts-ignore
-  Platform.getExtensionHostPath.mockImplementation(() => {
+  PlatformPaths.getExtensionHostPath.mockImplementation(() => {
     return extensionHostPath
   })
   const socket = {
@@ -121,7 +121,7 @@ test('start - child process should be closed when socket immediately is closed',
   const extensionHostPath = join(tmpDir, 'extensionHost.js')
   await writeFile(extensionHostPath, 'process.on(`message`, ()=>{})')
   // @ts-ignore
-  Platform.getExtensionHostPath.mockImplementation(() => {
+  PlatformPaths.getExtensionHostPath.mockImplementation(() => {
     return extensionHostPath
   })
   const socket = {

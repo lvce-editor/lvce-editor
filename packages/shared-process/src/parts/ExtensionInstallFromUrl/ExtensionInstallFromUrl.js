@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import * as Download from '../Download/Download.js'
 import * as Extract from '../Extract/Extract.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
-import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as TmpFile from '../TmpFile/TmpFile.js'
 import { VError } from '../VError/VError.js'
 
@@ -12,7 +12,7 @@ export const install = async ({ url }) => {
     // TODO cache extension tar br file, probably by url <cachedExtensions>/user/repo/releases/<tag>/<fileName>
     // const cachedExtensionsPath = Platform.getCachedExtensionsPath()
     // const outFile = join(cachedExtensionsPath, 'installed-extension.tar.br')
-    const extensionsPath = Platform.getExtensionsPath()
+    const extensionsPath = PlatformPaths.getExtensionsPath()
     const tmpFile = await TmpFile.getTmpFile()
     await Download.download(url, tmpFile)
     const tmpDir = await TmpFile.getTmpDir()

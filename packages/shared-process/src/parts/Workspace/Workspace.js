@@ -7,6 +7,7 @@ import * as IsAbsolutePath from '../IsAbsolutePath/IsAbsolutePath.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as Root from '../Root/Root.js'
 import * as WorkspaceSource from '../WorkspaceSource/WorkspaceSource.js'
 
@@ -48,7 +49,7 @@ export const resolveRoot = async () => {
         path: last,
         uri: toUri(last),
         workspaceId: GetWorkspaceId.getWorkspaceId(last),
-        homeDir: Platform.getHomeDir(),
+        homeDir: PlatformPaths.getHomeDir(),
         pathSeparator: Platform.getPathSeparator(),
         source: 'shared-process-default',
       }
@@ -63,7 +64,7 @@ export const resolveRoot = async () => {
       path,
       uri: toUri(path),
       workspaceId: GetWorkspaceId.getWorkspaceId(path),
-      homeDir: Platform.getHomeDir(),
+      homeDir: PlatformPaths.getHomeDir(),
       pathSeparator: Platform.getPathSeparator(),
       source: WorkspaceSource.SharedProcessEnv,
     }
@@ -76,7 +77,7 @@ export const resolveRoot = async () => {
     path: absolutePath,
     uri: toUri(absolutePath),
     workspaceId,
-    homeDir: Platform.getHomeDir(),
+    homeDir: PlatformPaths.getHomeDir(),
     pathSeparator: Platform.getPathSeparator(),
     source: WorkspaceSource.SharedProcessDefault,
   }
@@ -87,7 +88,7 @@ export const resolveUri = (uri) => {
   return {
     path,
     uri,
-    homeDir: Platform.getHomeDir(),
+    homeDir: PlatformPaths.getHomeDir(),
     pathSeparator: Platform.getPathSeparator(),
   }
 }
