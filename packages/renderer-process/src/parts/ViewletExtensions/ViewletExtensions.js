@@ -10,7 +10,7 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as Platform from '../Platform/Platform.js'
+import * as IsMobile from '../IsMobile/IsMobile.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
@@ -90,7 +90,7 @@ export const attachEvents = (state) => {
   $InputBox.oninput = ViewletExtensionsEvents.handleInput
 
   $ListItems.oncontextmenu = ViewletExtensionsEvents.handleContextMenu
-  if (Platform.isMobile) {
+  if (IsMobile.isMobile) {
     $ListItems.onclick = ViewletExtensionsEvents.handlePointerDown
   } else {
     $ListItems.onpointerdown = ViewletExtensionsEvents.handlePointerDown
