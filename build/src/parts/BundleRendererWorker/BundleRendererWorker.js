@@ -67,7 +67,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `export const platform = '${platform}'`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
       replacement: `/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
     })
