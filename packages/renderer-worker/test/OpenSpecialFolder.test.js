@@ -15,19 +15,24 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: 'remote',
+    assetDir: '',
+  }
+})
+
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
+  return {
     getLogsDir: jest.fn(() => {
       throw new Error('not implemented')
     }),
     getConfigPath: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    assetDir: '',
   }
 })
 
 const OpenSpecialFolder = await import('../src/parts/OpenSpecialFolder/OpenSpecialFolder.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
-const Platform = await import('../src/parts/Platform/Platform.js')
+const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 
 test('openConfigFolder', async () => {
   // @ts-ignore
@@ -40,7 +45,7 @@ test('openConfigFolder', async () => {
     }
   })
   // @ts-ignore
-  Platform.getConfigPath.mockImplementation(() => {
+  PlatformPaths.getConfigPath.mockImplementation(() => {
     return '/test/config-folder'
   })
   await OpenSpecialFolder.openConfigFolder()
@@ -76,7 +81,7 @@ test('openLogsFolder', async () => {
     }
   })
   // @ts-ignore
-  Platform.getLogsDir.mockImplementation(() => {
+  PlatformPaths.getLogsDir.mockImplementation(() => {
     return '~/.local/state/app-name'
   })
   await OpenSpecialFolder.openLogsFolder()
@@ -96,7 +101,7 @@ test('openLogsFolder - error', async () => {
     }
   })
   // @ts-ignore
-  Platform.getLogsDir.mockImplementation(() => {
+  PlatformPaths.getLogsDir.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
   await expect(OpenSpecialFolder.openLogsFolder()).rejects.toThrowError(new TypeError('x is not a function'))

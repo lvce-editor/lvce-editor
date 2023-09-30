@@ -6,7 +6,7 @@ import * as Exec from '../Exec/Exec.js'
 import * as GetDebArch from '../GetDebArch/GetDebArch.js'
 import * as GetDebDownloadUrl from '../GetDebDownloadUrl/GetDebDownloadUrl.js'
 import * as Os from '../Os/Os.js'
-import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as Process from '../Process/Process.js'
 import { VError } from '../VError/VError.js'
 
@@ -18,8 +18,8 @@ const getOutFilePath = (tmpDir, applicationName, debArch, version) => {
 
 export const downloadUpdate = async (version) => {
   Assert.string(version)
-  const repository = await Platform.getRepository()
-  const applicationName = await Platform.getRepository()
+  const repository = await PlatformPaths.getRepository()
+  const applicationName = await PlatformPaths.getRepository()
   const arch = await Process.getArch()
   const debArch = GetDebArch.getDebArch(arch)
   const downloadUrl = GetDebDownloadUrl.getDownloadUrl(repository, version, applicationName, debArch)
