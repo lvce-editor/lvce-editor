@@ -57,7 +57,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       })
     }
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/AssetDir/AssetDir.js`,
       occurrence: `ASSET_DIR`,
       replacement: `'${assetDir}'`,
     })
