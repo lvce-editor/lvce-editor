@@ -12,7 +12,7 @@ import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/E
 import { writeJson } from '../src/parts/JsonFile/JsonFile.js'
 import { VError } from '../src/parts/VError/VError.js'
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
