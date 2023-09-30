@@ -1,3 +1,4 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -67,11 +68,11 @@ export const getCachePath = () => {
 }
 
 export const getExtensionHostWorkerUrl = () => {
-  return `${Platform.assetDir}/packages/extension-host-worker/src/extensionHostWorkerMain.js`
+  return `${AssetDir.assetDir}/packages/extension-host-worker/src/extensionHostWorkerMain.js`
 }
 
 export const getWebExtensionsUrl = () => {
-  return `${Platform.assetDir}/config/webExtensions.json`
+  return `${AssetDir.assetDir}/config/webExtensions.json`
 }
 
 export const getGithubApiUrl = () => {
@@ -87,7 +88,7 @@ const getTestPathRemote = () => {
 }
 
 const getTestPathWeb = () => {
-  return `${Platform.assetDir}/packages/extension-host-worker-tests`
+  return `${AssetDir.assetDir}/packages/extension-host-worker-tests`
 }
 
 export const getTestPath = () => {
