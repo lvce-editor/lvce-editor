@@ -7,18 +7,18 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+jest.unstable_mockModule('../src/parts/Browser/Browser.js', () => {
   return {
     getBrowser: jest.fn(),
   }
 })
 
 const GetFileHandlesFromDataTransferItems = await import('../src/parts/GetFileHandlesFromDataTransferItems/GetFileHandlesFromDataTransferItems.js')
-const Platform = await import('../src/parts/Platform/Platform.js')
+const Browser = await import('../src/parts/Browser/Browser.js')
 
 test('getFileHandles - error - not supported on firefox', async () => {
   // @ts-ignore
-  Platform.getBrowser.mockImplementation(() => {
+  Browser.getBrowser.mockImplementation(() => {
     return 'firefox'
   })
   const items = [
@@ -29,7 +29,7 @@ test('getFileHandles - error - not supported on firefox', async () => {
     },
   ]
   await expect(GetFileHandlesFromDataTransferItems.getFileHandles(items)).rejects.toThrowError(
-    new Error('The File System Access Api is not supported on Firefox')
+    new Error('The File System Access Api is not supported on Firefox'),
   )
 })
 

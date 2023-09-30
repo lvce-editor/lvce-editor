@@ -55,36 +55,6 @@ export const state = {
   },
 }
 
-// TODO if necessary support more browser detection
-export const getBrowser = () => {
-  if (platform === 'electron') {
-    return 'electron'
-  }
-  // @ts-ignore
-  const userAgentData = navigator.userAgentData
-  if (userAgentData) {
-    for (const brand of userAgentData.brands) {
-      const actualBrand = brand.brand.toLowerCase()
-      switch (actualBrand) {
-        case 'firefox':
-          return 'firefox'
-        case 'chromium':
-          return 'chromium'
-        default:
-          break
-      }
-    }
-  }
-  const userAgent = navigator.userAgent.toLowerCase()
-  if (userAgent.includes('firefox')) {
-    return 'firefox'
-  }
-  if (userAgent.includes('Electron')) {
-    return 'electron'
-  }
-  return 'chromium'
-}
-
 export const assetDir = state.getAssetDir()
 
 export const supportsHtml5Dialog = () => {
