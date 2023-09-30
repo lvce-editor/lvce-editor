@@ -1,6 +1,5 @@
-import * as Platform from '../Platform/Platform.js'
-import * as DataTransferType from '../DataTransferType/DataTransferType.js'
 import * as Browser from '../Browser/Browser.js'
+import * as DataTransferType from '../DataTransferType/DataTransferType.js'
 
 export const setEffectAllowed = (dataTransfer, effectAllowed) => {
   dataTransfer.effectAllowed = effectAllowed
