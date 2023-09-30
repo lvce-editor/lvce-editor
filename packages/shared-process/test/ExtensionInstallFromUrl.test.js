@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getExtensionsPath: jest.fn(() => {
     return '/test/extensions'
   }),
@@ -30,12 +30,10 @@ jest.unstable_mockModule('../src/parts/TmpFile/TmpFile.js', () => ({
   }),
 }))
 
-const ExtensionInstallFromUrl = await import(
-  '../src/parts/ExtensionInstallFromUrl/ExtensionInstallFromUrl.js'
-)
+const ExtensionInstallFromUrl = await import('../src/parts/ExtensionInstallFromUrl/ExtensionInstallFromUrl.js')
 const Download = await import('../src/parts/Download/Download.js')
 const Extract = await import('../src/parts/Extract/Extract.js')
-const Platform = await import('../src/parts/Platform/Platform.js')
+const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 
 test('install - error with download', async () => {
   // @ts-ignore
@@ -47,10 +45,8 @@ test('install - error with download', async () => {
   await expect(
     ExtensionInstallFromUrl.install({
       url: 'https://example.com',
-    })
-  ).rejects.toThrowError(
-    new Error('Failed to install "https://example.com": Failed to download ')
-  )
+    }),
+  ).rejects.toThrowError(new Error('Failed to install "https://example.com": Failed to download '))
 })
 
 test('install - error with extraction', async () => {
@@ -63,10 +59,6 @@ test('install - error with extraction', async () => {
   await expect(
     ExtensionInstallFromUrl.install({
       url: 'https://example.com',
-    })
-  ).rejects.toThrowError(
-    new Error(
-      `Failed to install "https://example.com": Failed to extract file /test/tmp-file`
-    )
-  )
+    }),
+  ).rejects.toThrowError(new Error(`Failed to install "https://example.com": Failed to extract file /test/tmp-file`))
 })

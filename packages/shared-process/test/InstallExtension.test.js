@@ -9,7 +9,7 @@ import { pipeline } from 'node:stream/promises'
 import { constants, createBrotliCompress } from 'node:zlib'
 import tar from 'tar-fs'
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
@@ -62,7 +62,7 @@ export const compress = async (inDir, outFile) => {
         [constants.BROTLI_PARAM_QUALITY]: constants.BROTLI_MIN_QUALITY,
       },
     }),
-    createWriteStream(outFile)
+    createWriteStream(outFile),
   )
 }
 
@@ -140,7 +140,7 @@ test.skip('install', async () => {
 }
 `)
   expect(await readFile(join(tmpDir, 'test-author.test-extension/main.js'), 'utf-8')).toBe(
-    'export const activate = () => { console.info("hello world") }'
+    'export const activate = () => { console.info("hello world") }',
   )
   expect(await readFile(join(tmpDir, 'test-author.test-extension/package.json'), 'utf-8')).toBe('{ "type" : "module" }')
 })
@@ -162,7 +162,7 @@ test.skip('install should fail when the server sends a bad status code', async (
   // @ts-ignore
   Platform.getCachedExtensionsPath.mockImplementation(() => tmpDir2)
   await expect(InstallExtension.installExtension('test-author.test-extension')).rejects.toThrowError(
-    /Failed to install extension "test-author.test-extension": Failed to download "http:\/\/localhost:\d+\/download\/test-author.test-extension": Response code 404 \(Not Found\)/
+    /Failed to install extension "test-author.test-extension": Failed to download "http:\/\/localhost:\d+\/download\/test-author.test-extension": Response code 404 \(Not Found\)/,
   )
 })
 
@@ -199,6 +199,6 @@ test.skip('install should fail when the server sends an invalid compressed objec
   // @ts-ignore
   Platform.getExtensionsPath.mockImplementation(() => tmpDir)
   await expect(InstallExtension.installExtension('test-author.test-extension')).rejects.toThrowError(
-    /^Failed to install extension "test-author.test-extension": Failed to extract .* unexpected end of file/
+    /^Failed to install extension "test-author.test-extension": Failed to extract .* unexpected end of file/,
   )
 })

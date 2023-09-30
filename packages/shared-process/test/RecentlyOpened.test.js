@@ -34,7 +34,7 @@ jest.unstable_mockModule('node:fs/promises', () => {
     }),
   }
 })
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
   return {
     getRecentlyOpenedPath: () => {
       return '/test/recently-opened.json'
@@ -42,9 +42,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   }
 })
 
-const RecentlyOpened = await import(
-  '../src/parts/RecentlyOpened/RecentlyOpened.js'
-)
+const RecentlyOpened = await import('../src/parts/RecentlyOpened/RecentlyOpened.js')
 
 // TODO mock FileSystem module instead
 const fs = await import('node:fs/promises')
@@ -88,7 +86,7 @@ test('addPath - error - recently opened file has invalid json', async () => {
   \"/test/new-path.txt\"
 ]
 `,
-    EncodingType.Utf8
+    EncodingType.Utf8,
   )
 })
 
@@ -97,12 +95,8 @@ test('addPath - error - permission denied', async () => {
   fs.readFile.mockImplementation(() => {
     throw new NodeError(ErrorCodes.EPERM)
   })
-  await expect(
-    RecentlyOpened.addPath('/test/new-path.txt')
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to add path to recently opened: Failed to read recently opened: Failed to read file "/test/recently-opened.json": EPERM'
-    )
+  await expect(RecentlyOpened.addPath('/test/new-path.txt')).rejects.toThrowError(
+    new Error('Failed to add path to recently opened: Failed to read recently opened: Failed to read file "/test/recently-opened.json": EPERM'),
   )
 })
 
@@ -130,7 +124,7 @@ test('addPath - error - writeFile - parent folder does not exist', async () => {
   \"/test/new-path.txt\"
 ]
 `,
-    EncodingType.Utf8
+    EncodingType.Utf8,
   )
   expect(fs.mkdir).toHaveBeenCalledWith('/test', { recursive: true })
   expect(fs.writeFile).toHaveBeenNthCalledWith(
@@ -140,6 +134,6 @@ test('addPath - error - writeFile - parent folder does not exist', async () => {
   \"/test/new-path.txt\"
 ]
 `,
-    EncodingType.Utf8
+    EncodingType.Utf8,
   )
 })
