@@ -137,7 +137,7 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
     replacement: ``,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/AssetDir/AssetDir.js`,
     occurrence: `ASSET_DIR`,
     replacement: `'${pathPrefix}/${commitHash}'`,
   })
