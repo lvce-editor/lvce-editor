@@ -122,11 +122,6 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
     replacement: `return \`\${AssetDir.assetDir}/icon-themes/\${iconThemeId}.json\``,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IpcParentWithNode/IpcParentWithNode.js`,
-    occurrence: `const platform = getPlatform() `,
-    replacement: 'const platform = PlaformType.Web',
-  })
-  await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetIconThemeCss/GetIconThemeCss.js`,
     occurrence: `return \`\${extensionPath}\${value}\``,
     replacement: `return \`${pathPrefix}/file-icons/\${value.slice(7)}\``, // TODO should adjust vscode-icons.json instead
