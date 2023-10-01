@@ -277,6 +277,14 @@
     {
       "name": "CssPseudoSelector",
       "foreground": "#7A8D5C"
+    },
+    {
+      "name": "CssImportant",
+      "foreground": "#CD6564"
+    },
+    {
+      "name": "CssAttributeName",
+      "foreground": "#AB6767"
     }
   ]
 }
