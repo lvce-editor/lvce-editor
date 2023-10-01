@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -30,7 +31,7 @@ test.skip('openFolder', async () => {
 test('openFolder - electron', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
-      platform: 'electron',
+      platform: PlatformType.Electron,
       assetDir: '',
     }
   })
