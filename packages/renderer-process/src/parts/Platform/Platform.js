@@ -38,24 +38,9 @@ export const state = {
     }
     return ''
   },
-
-  isElectron() {
-    return (
-      // @ts-ignore
-      window.myApi &&
-      // @ts-ignore
-      window.myApi.ipcConnect &&
-      // @ts-ignore
-      typeof window.myApi.ipcConnect === 'function'
-    )
-  },
 }
 
 export const assetDir = state.getAssetDir()
-
-export const isElectron = () => {
-  return state.isElectron()
-}
 
 export const getRendererWorkerUrl = () => {
   const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js`
