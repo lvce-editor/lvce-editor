@@ -1,4 +1,4 @@
-/*! @license DOMPurify 3.0.5 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.0.5/LICENSE */
+/*! @license DOMPurify 3.0.6 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.0.6/LICENSE */
 const {
   entries,
   setPrototypeOf,
@@ -15,11 +15,6 @@ let {
   apply,
   construct
 } = typeof Reflect !== "undefined" && Reflect;
-if (!apply) {
-  apply = function apply2(fun, thisValue, args) {
-    return fun.apply(thisValue, args);
-  };
-}
 if (!freeze) {
   freeze = function freeze2(x) {
     return x;
@@ -28,6 +23,11 @@ if (!freeze) {
 if (!seal) {
   seal = function seal2(x) {
     return x;
+  };
+}
+if (!apply) {
+  apply = function apply2(fun, thisValue, args) {
+    return fun.apply(thisValue, args);
   };
 }
 if (!construct) {
@@ -62,9 +62,8 @@ function unconstruct(func) {
     return construct(func, args);
   };
 }
-function addToSet(set, array, transformCaseFunc) {
-  var _transformCaseFunc;
-  transformCaseFunc = (_transformCaseFunc = transformCaseFunc) !== null && _transformCaseFunc !== void 0 ? _transformCaseFunc : stringToLowerCase;
+function addToSet(set, array) {
+  let transformCaseFunc = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : stringToLowerCase;
   if (setPrototypeOf) {
     setPrototypeOf(set, null);
   }
@@ -87,7 +86,9 @@ function addToSet(set, array, transformCaseFunc) {
 function clone(object) {
   const newObject = create(null);
   for (const [property, value] of entries(object)) {
-    newObject[property] = value;
+    if (getOwnPropertyDescriptor(object, property) !== void 0) {
+      newObject[property] = value;
+    }
   }
   return newObject;
 }
@@ -142,7 +143,9 @@ var EXPRESSIONS = /* @__PURE__ */ Object.freeze({
   ATTR_WHITESPACE,
   DOCTYPE_NAME
 });
-const getGlobal = () => typeof window === "undefined" ? null : window;
+const getGlobal = function getGlobal2() {
+  return typeof window === "undefined" ? null : window;
+};
 const _createTrustedTypesPolicy = function _createTrustedTypesPolicy2(trustedTypes, purifyHostElement) {
   if (typeof trustedTypes !== "object" || typeof trustedTypes.createPolicy !== "function") {
     return null;
@@ -170,17 +173,17 @@ const _createTrustedTypesPolicy = function _createTrustedTypesPolicy2(trustedTyp
 function createDOMPurify() {
   let window2 = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : getGlobal();
   const DOMPurify = (root) => createDOMPurify(root);
-  DOMPurify.version = "3.0.5";
+  DOMPurify.version = "3.0.6";
   DOMPurify.removed = [];
   if (!window2 || !window2.document || window2.document.nodeType !== 9) {
     DOMPurify.isSupported = false;
     return DOMPurify;
   }
-  const originalDocument = window2.document;
-  const currentScript = originalDocument.currentScript;
   let {
     document
   } = window2;
+  const originalDocument = document;
+  const currentScript = originalDocument.currentScript;
   const {
     DocumentFragment,
     HTMLTemplateElement,
@@ -232,7 +235,7 @@ function createDOMPurify() {
   const DEFAULT_ALLOWED_TAGS = addToSet({}, [...html$1, ...svg$1, ...svgFilters, ...mathMl$1, ...text]);
   let ALLOWED_ATTR = null;
   const DEFAULT_ALLOWED_ATTR = addToSet({}, [...html, ...svg, ...mathMl, ...xml]);
-  let CUSTOM_ELEMENT_HANDLING = Object.seal(Object.create(null, {
+  let CUSTOM_ELEMENT_HANDLING = Object.seal(create(null, {
     tagNameCheck: {
       writable: true,
       configurable: false,
@@ -284,16 +287,17 @@ function createDOMPurify() {
   let IS_EMPTY_INPUT = false;
   let ALLOWED_NAMESPACES = null;
   const DEFAULT_ALLOWED_NAMESPACES = addToSet({}, [MATHML_NAMESPACE, SVG_NAMESPACE, HTML_NAMESPACE], stringToString);
-  let PARSER_MEDIA_TYPE;
+  let PARSER_MEDIA_TYPE = null;
   const SUPPORTED_PARSER_MEDIA_TYPES = ["application/xhtml+xml", "text/html"];
   const DEFAULT_PARSER_MEDIA_TYPE = "text/html";
-  let transformCaseFunc;
+  let transformCaseFunc = null;
   let CONFIG = null;
   const formElement = document.createElement("form");
   const isRegexOrFunction = function isRegexOrFunction2(testValue) {
     return testValue instanceof RegExp || testValue instanceof Function;
   };
-  const _parseConfig = function _parseConfig2(cfg) {
+  const _parseConfig = function _parseConfig2() {
+    let cfg = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
     if (CONFIG && CONFIG === cfg) {
       return;
     }
@@ -511,8 +515,8 @@ function createDOMPurify() {
     }
   };
   const _initDocument = function _initDocument2(dirty) {
-    let doc;
-    let leadingWhitespace;
+    let doc = null;
+    let leadingWhitespace = null;
     if (FORCE_BODY) {
       dirty = "<remove></remove>" + dirty;
     } else {
@@ -545,14 +549,14 @@ function createDOMPurify() {
     }
     return WHOLE_DOCUMENT ? doc.documentElement : body;
   };
-  const _createIterator = function _createIterator2(root) {
-    return createNodeIterator.call(root.ownerDocument || root, root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT, null, false);
+  const _createNodeIterator = function _createNodeIterator2(root) {
+    return createNodeIterator.call(root.ownerDocument || root, root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT, null);
   };
   const _isClobbered = function _isClobbered2(elm) {
     return elm instanceof HTMLFormElement && (typeof elm.nodeName !== "string" || typeof elm.textContent !== "string" || typeof elm.removeChild !== "function" || !(elm.attributes instanceof NamedNodeMap) || typeof elm.removeAttribute !== "function" || typeof elm.setAttribute !== "function" || typeof elm.namespaceURI !== "string" || typeof elm.insertBefore !== "function" || typeof elm.hasChildNodes !== "function");
   };
   const _isNode = function _isNode2(object) {
-    return typeof Node === "object" ? object instanceof Node : object && typeof object === "object" && typeof object.nodeType === "number" && typeof object.nodeName === "string";
+    return typeof Node === "function" && object instanceof Node;
   };
   const _executeHook = function _executeHook2(entryPoint, currentNode, data) {
     if (!hooks[entryPoint]) {
@@ -563,7 +567,7 @@ function createDOMPurify() {
     });
   };
   const _sanitizeElements = function _sanitizeElements2(currentNode) {
-    let content;
+    let content = null;
     _executeHook("beforeSanitizeElements", currentNode, null);
     if (_isClobbered(currentNode)) {
       _forceRemove(currentNode);
@@ -574,16 +578,18 @@ function createDOMPurify() {
       tagName,
       allowedTags: ALLOWED_TAGS
     });
-    if (currentNode.hasChildNodes() && !_isNode(currentNode.firstElementChild) && (!_isNode(currentNode.content) || !_isNode(currentNode.content.firstElementChild)) && regExpTest(/<[/\w]/g, currentNode.innerHTML) && regExpTest(/<[/\w]/g, currentNode.textContent)) {
+    if (currentNode.hasChildNodes() && !_isNode(currentNode.firstElementChild) && regExpTest(/<[/\w]/g, currentNode.innerHTML) && regExpTest(/<[/\w]/g, currentNode.textContent)) {
       _forceRemove(currentNode);
       return true;
     }
     if (!ALLOWED_TAGS[tagName] || FORBID_TAGS[tagName]) {
-      if (!FORBID_TAGS[tagName] && _basicCustomElementTest(tagName)) {
-        if (CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.tagNameCheck, tagName))
+      if (!FORBID_TAGS[tagName] && _isBasicCustomElement(tagName)) {
+        if (CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.tagNameCheck, tagName)) {
           return false;
-        if (CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.tagNameCheck(tagName))
+        }
+        if (CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.tagNameCheck(tagName)) {
           return false;
+        }
       }
       if (KEEP_CONTENT && !FORBID_CONTENTS[tagName]) {
         const parentNode = getParentNode(currentNode) || currentNode.parentNode;
@@ -608,9 +614,9 @@ function createDOMPurify() {
     }
     if (SAFE_FOR_TEMPLATES && currentNode.nodeType === 3) {
       content = currentNode.textContent;
-      content = stringReplace(content, MUSTACHE_EXPR2, " ");
-      content = stringReplace(content, ERB_EXPR2, " ");
-      content = stringReplace(content, TMPLIT_EXPR2, " ");
+      arrayForEach([MUSTACHE_EXPR2, ERB_EXPR2, TMPLIT_EXPR2], (expr) => {
+        content = stringReplace(content, expr, " ");
+      });
       if (currentNode.textContent !== content) {
         arrayPush(DOMPurify.removed, {
           element: currentNode.cloneNode()
@@ -630,7 +636,7 @@ function createDOMPurify() {
     else if (ALLOW_ARIA_ATTR && regExpTest(ARIA_ATTR2, lcName))
       ;
     else if (!ALLOWED_ATTR[lcName] || FORBID_ATTR[lcName]) {
-      if (_basicCustomElementTest(lcTag) && (CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.tagNameCheck, lcTag) || CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.tagNameCheck(lcTag)) && (CUSTOM_ELEMENT_HANDLING.attributeNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.attributeNameCheck, lcName) || CUSTOM_ELEMENT_HANDLING.attributeNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.attributeNameCheck(lcName)) || lcName === "is" && CUSTOM_ELEMENT_HANDLING.allowCustomizedBuiltInElements && (CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.tagNameCheck, value) || CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.tagNameCheck(value)))
+      if (_isBasicCustomElement(lcTag) && (CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.tagNameCheck, lcTag) || CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.tagNameCheck(lcTag)) && (CUSTOM_ELEMENT_HANDLING.attributeNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.attributeNameCheck, lcName) || CUSTOM_ELEMENT_HANDLING.attributeNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.attributeNameCheck(lcName)) || lcName === "is" && CUSTOM_ELEMENT_HANDLING.allowCustomizedBuiltInElements && (CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.tagNameCheck, value) || CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.tagNameCheck(value)))
         ;
       else {
         return false;
@@ -649,14 +655,10 @@ function createDOMPurify() {
       ;
     return true;
   };
-  const _basicCustomElementTest = function _basicCustomElementTest2(tagName) {
+  const _isBasicCustomElement = function _isBasicCustomElement2(tagName) {
     return tagName.indexOf("-") > 0;
   };
   const _sanitizeAttributes = function _sanitizeAttributes2(currentNode) {
-    let attr;
-    let value;
-    let lcName;
-    let l;
     _executeHook("beforeSanitizeAttributes", currentNode, null);
     const {
       attributes
@@ -670,15 +672,16 @@ function createDOMPurify() {
       keepAttr: true,
       allowedAttributes: ALLOWED_ATTR
     };
-    l = attributes.length;
+    let l = attributes.length;
     while (l--) {
-      attr = attributes[l];
+      const attr = attributes[l];
       const {
         name,
-        namespaceURI
+        namespaceURI,
+        value: attrValue
       } = attr;
-      value = name === "value" ? attr.value : stringTrim(attr.value);
-      lcName = transformCaseFunc(name);
+      const lcName = transformCaseFunc(name);
+      let value = name === "value" ? attrValue : stringTrim(attrValue);
       hookEvent.attrName = lcName;
       hookEvent.attrValue = value;
       hookEvent.keepAttr = true;
@@ -697,9 +700,9 @@ function createDOMPurify() {
         continue;
       }
       if (SAFE_FOR_TEMPLATES) {
-        value = stringReplace(value, MUSTACHE_EXPR2, " ");
-        value = stringReplace(value, ERB_EXPR2, " ");
-        value = stringReplace(value, TMPLIT_EXPR2, " ");
+        arrayForEach([MUSTACHE_EXPR2, ERB_EXPR2, TMPLIT_EXPR2], (expr) => {
+          value = stringReplace(value, expr, " ");
+        });
       }
       const lcTag = transformCaseFunc(currentNode.nodeName);
       if (!_isValidAttribute(lcTag, lcName, value)) {
@@ -738,8 +741,8 @@ function createDOMPurify() {
     _executeHook("afterSanitizeAttributes", currentNode, null);
   };
   const _sanitizeShadowDOM = function _sanitizeShadowDOM2(fragment) {
-    let shadowNode;
-    const shadowIterator = _createIterator(fragment);
+    let shadowNode = null;
+    const shadowIterator = _createNodeIterator(fragment);
     _executeHook("beforeSanitizeShadowDOM", fragment, null);
     while (shadowNode = shadowIterator.nextNode()) {
       _executeHook("uponSanitizeShadowNode", shadowNode, null);
@@ -755,10 +758,10 @@ function createDOMPurify() {
   };
   DOMPurify.sanitize = function(dirty) {
     let cfg = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-    let body;
-    let importedNode;
-    let currentNode;
-    let returnNode;
+    let body = null;
+    let importedNode = null;
+    let currentNode = null;
+    let returnNode = null;
     IS_EMPTY_INPUT = !dirty;
     if (IS_EMPTY_INPUT) {
       dirty = "<!-->";
@@ -812,7 +815,7 @@ function createDOMPurify() {
     if (body && FORCE_BODY) {
       _forceRemove(body.firstChild);
     }
-    const nodeIterator = _createIterator(IN_PLACE ? dirty : body);
+    const nodeIterator = _createNodeIterator(IN_PLACE ? dirty : body);
     while (currentNode = nodeIterator.nextNode()) {
       if (_sanitizeElements(currentNode)) {
         continue;
@@ -844,13 +847,14 @@ function createDOMPurify() {
       serializedHTML = "<!DOCTYPE " + body.ownerDocument.doctype.name + ">\n" + serializedHTML;
     }
     if (SAFE_FOR_TEMPLATES) {
-      serializedHTML = stringReplace(serializedHTML, MUSTACHE_EXPR2, " ");
-      serializedHTML = stringReplace(serializedHTML, ERB_EXPR2, " ");
-      serializedHTML = stringReplace(serializedHTML, TMPLIT_EXPR2, " ");
+      arrayForEach([MUSTACHE_EXPR2, ERB_EXPR2, TMPLIT_EXPR2], (expr) => {
+        serializedHTML = stringReplace(serializedHTML, expr, " ");
+      });
     }
     return trustedTypesPolicy && RETURN_TRUSTED_TYPE ? trustedTypesPolicy.createHTML(serializedHTML) : serializedHTML;
   };
-  DOMPurify.setConfig = function(cfg) {
+  DOMPurify.setConfig = function() {
+    let cfg = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
     _parseConfig(cfg);
     SET_CONFIG = true;
   };
