@@ -1,7 +1,7 @@
 [
   {
     "name": "ky",
-    "version": "0.33.3",
+    "version": "1.0.1",
     "type": "javascript"
   },
   {
@@ -48,7 +48,7 @@
   },
   {
     "name": "dompurify",
-    "version": "3.0.5",
+    "version": "3.0.6",
     "type": "javascript"
   },
   {
