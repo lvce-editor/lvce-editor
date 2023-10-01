@@ -38,7 +38,6 @@ export const bundleJs = async ({ cwd, from, platform, exclude, minify = false, c
       // splitting: platform === 'node/cjs' ? false : true,
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to bundle JS for ${from}`)
   }
 }

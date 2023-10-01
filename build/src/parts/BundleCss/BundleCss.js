@@ -114,7 +114,6 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
       replacement: `url(${assetDir}/fonts/`,
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to bundle css`)
   }
 }
