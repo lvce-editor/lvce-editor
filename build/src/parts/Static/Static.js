@@ -150,7 +150,7 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
     occurrence: 'PLATFORM',
-    replacement: `'web'`,
+    replacement: `PlatformType.Web`,
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IpcChildModule/IpcChildModule.js`,

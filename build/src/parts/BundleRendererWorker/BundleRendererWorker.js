@@ -27,6 +27,19 @@ const getNewCssDeclarationFile = (content, filteredCss) => {
   return newLines.join('\n')
 }
 
+const getPlatformCode = (platform) => {
+  switch (platform) {
+    case 'electron':
+      return `PlatformType.Electron`
+    case 'remote':
+      return `PlatformType.Remote`
+    case 'web':
+      return 'PlatformType.Web'
+    default:
+      throw new Error(`unsupported platform ${platform}`)
+  }
+}
+
 export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir }) => {
   try {
     await Copy.copy({
@@ -61,10 +74,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       occurrence: `ASSET_DIR`,
       replacement: `'${assetDir}'`,
     })
+    const platformCode = getPlatformCode(platform)
     await Replace.replace({
       path: `${cachePath}/src/parts/Platform/Platform.js`,
       occurrence: 'export const platform = getPlatform()',
-      replacement: `export const platform = '${platform}'`,
+      replacement: `export const platform = ${platformCode}`,
     })
     await Replace.replace({
       path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
@@ -107,7 +121,6 @@ import * as PlatformType from '../PlatformType/PlatformType.js'`,
       platform: 'webworker',
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to bundle renderer worker`)
   }
 }
