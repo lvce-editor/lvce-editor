@@ -92,7 +92,7 @@ const getResolvedRootFromRendererProcess = async (href) => {
     }
   }
 
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     const defaultWorkspace = Preferences.get('workspace.defaultWorkspace')
     const resolvedRoot = {
       path: defaultWorkspace,
@@ -142,7 +142,7 @@ const getPathName = (workspacePath) => {
 const onWorkspaceChange = async () => {
   const title = getTitle(state.workspacePath)
   await Window.setTitle(title)
-  if (Platform.platform === 'web' || Platform.platform === 'remote') {
+  if (Platform.platform === PlatformType.Web || Platform.platform === PlatformType.Remote) {
     const pathName = getPathName(state.workspacePath)
     await Location.setPathName(pathName)
   }

@@ -15,7 +15,7 @@ const getPlatform = () => {
     return PLATFORM
   }
   if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
-    return 'test'
+    return PlatformType.Test
   }
   if (typeof location !== 'undefined' && location.search === '?web') {
     return PlatformType.Web

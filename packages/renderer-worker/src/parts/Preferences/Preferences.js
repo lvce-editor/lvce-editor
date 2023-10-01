@@ -56,7 +56,7 @@ export const get = (key) => {
 
 export const set = async (key, value) => {
   state[key] = value
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     const preferences = { ...state, [key]: value }
     await Command.execute(/* LocalStorage.setJson */ 'LocalStorage.setJson', /* key */ 'preferences', /* value */ preferences)
     return

@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -17,7 +18,7 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
-    platform: 'web',
+    platform: PlatformType.Web,
     assetDir: '',
   }
 })
@@ -40,7 +41,7 @@ test('addToRecentlyOpened - already in list', async () => {
   "/test/folder-1",
   "/test/folder-2"
 ]
-`
+`,
   )
 })
 
@@ -60,7 +61,7 @@ test('addToRecentlyOpened - already at front of list', async () => {
   "/test/folder-1",
   "/test/folder-2"
 ]
-`
+`,
   )
 })
 
@@ -88,6 +89,6 @@ test('addToRecentlyOpened - error - invalid json when reading recently opened', 
     `[
   "/test/folder-3"
 ]
-`
+`,
   )
 })
