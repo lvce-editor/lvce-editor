@@ -37,7 +37,7 @@ const copyElectronResult = async ({ product, version, arch, debArch, platform })
     to: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}`,
   })
   await Remove.remove(
-    `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`
+    `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`,
   )
   await Replace.replace({
     path: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/src/parts/RipGrepPath/RipGrepPath.js`,
@@ -93,7 +93,7 @@ const copyMetaFiles = async ({ product, version, debArch }) => {
   await Mkdir.mkdir(`build/.tmp/linux/deb/${debArch}/app/usr/bin`)
   await Symlink.symlink(
     `../lib/${product.applicationName}/${product.applicationName}`,
-    Path.absolute(`build/.tmp/linux/deb/${debArch}/app/usr/bin/${product.applicationName}`)
+    Path.absolute(`build/.tmp/linux/deb/${debArch}/app/usr/bin/${product.applicationName}`),
   )
 }
 
@@ -106,7 +106,6 @@ const compressData = async ({ debArch }) => {
     })
     console.timeEnd('compressing data')
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, 'Failed to create deb')
   }
 }
@@ -118,7 +117,6 @@ const compressControl = async ({ debArch }) => {
       cwd,
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, 'Failed to create deb')
   }
 }
@@ -142,7 +140,6 @@ const createDeb = async ({ product, debArch }) => {
       to: Path.join(releases, `${appName}-${debArch}.deb`),
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, 'Failed to create deb')
   }
 }
@@ -152,7 +149,6 @@ const printDebSize = async ({ product, debArch }) => {
     const size = await Stat.getFileSize(Path.absolute(`build/.tmp/releases/${product.applicationName}-${debArch}.deb`))
     Logger.info(`deb size: ${size}`)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to print deb size`)
   }
 }
@@ -180,7 +176,6 @@ const fixPermissions = async ({ debArch }) => {
       await chmod(Path.absolute(extraFile), 0o755)
     }
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, 'Failed to fix permissions')
   }
 }
