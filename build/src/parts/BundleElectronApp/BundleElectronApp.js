@@ -73,12 +73,7 @@ const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion
   await Copy.copy({
     from: outDir,
     to: `build/.tmp/electron-bundle/${arch}`,
-    ignore: [
-      // TODO still include en locale, but exclude other locales
-      // 'locales',
-      'chrome_crashpad_handler',
-      'resources',
-    ],
+    ignore: ['chrome_crashpad_handler', 'resources'],
   })
 
   if (Platform.isWindows()) {
