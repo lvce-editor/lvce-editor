@@ -106,8 +106,8 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
-    'platform = "remote";',
-    'platform = "web"',
+    'platform = Remote;',
+    'platform = Web;',
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
