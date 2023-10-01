@@ -119,6 +119,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'`,
       cwd: cachePath,
       from: `./src/rendererWorkerMain.js`,
       platform: 'webworker',
+      allowCyclicDependencies: true, // TODO
     })
   } catch (error) {
     throw new VError(error, `Failed to bundle renderer worker`)
