@@ -101,8 +101,8 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist', 'rendererProcessMain.js'),
-    `return "/${commitHash}";`,
-    `return "${pathPrefix}/${commitHash}";`,
+    `/${commitHash}`,
+    `${pathPrefix}/${commitHash}`,
   )
   await replace(
     Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
