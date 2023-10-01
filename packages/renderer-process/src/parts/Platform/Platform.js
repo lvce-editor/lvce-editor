@@ -27,18 +27,6 @@ export const platform = getPlatform()
 // TODO treeshake this function out when targeting electron
 
 export const state = {
-  getAssetDir() {
-    // @ts-ignore
-    if (typeof ASSET_DIR !== 'undefined') {
-      // @ts-ignore
-      return ASSET_DIR
-    }
-    if (platform === 'electron') {
-      return '../../../../..'
-    }
-    return ''
-  },
-
   isElectron() {
     return (
       // @ts-ignore
@@ -51,13 +39,6 @@ export const state = {
   },
 }
 
-export const assetDir = state.getAssetDir()
-
 export const isElectron = () => {
   return state.isElectron()
-}
-
-export const getRendererWorkerUrl = () => {
-  const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js`
-  return urlRendererWorker
 }
