@@ -1,3 +1,4 @@
+import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
@@ -11,6 +12,7 @@ import * as Copy from '../Copy/Copy.js'
 import * as CopySharedProcessSources from '../CopySharedProcessSources/CopySharedProcessSources.js'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Version from '../Version/Version.js'
@@ -89,16 +91,6 @@ const copyStaticFiles = async ({ commitHash }) => {
   await Remove.remove(`build/.tmp/server/server/static/images`)
   await Remove.remove(`build/.tmp/server/server/static/${commitHash}/sounds`)
   await Remove.remove(`build/.tmp/server/server/static/${commitHash}/lib-css`)
-  await Copy.copy({
-    from: `build/.tmp/server/shared-process/extensions/builtin.vscode-icons/icons`,
-    to: `build/.tmp/server/server/static/${commitHash}/file-icons`,
-  })
-  await Remove.remove(`build/.tmp/server/shared-process/extensions/builtin.vscode-icons/icons`)
-  await Replace.replace({
-    path: `build/.tmp/server/shared-process/extensions/builtin.vscode-icons/icon-theme.json`,
-    occurrence: '/icons',
-    replacement: '/file-icons',
-  })
 }
 
 const getObjectDependencies = (obj) => {
@@ -832,6 +824,31 @@ const copyJestEnvironment = async ({ commitHash }) => {
   })
 }
 
+const shouldBeCopied = (extensionName) => {
+  return extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-') || extensionName.startsWith('builtin.language-basics')
+}
+const copyExtensions = async ({ commitHash }) => {
+  const extensionNames = await readdir(Path.absolute('extensions'))
+  for (const extensionName of extensionNames) {
+    if (shouldBeCopied(extensionName)) {
+      await Copy.copy({
+        from: `extensions/${extensionName}`,
+        to: `build/.tmp/server/server/static/${commitHash}/extensions/${extensionName}`,
+      })
+    }
+  }
+  await Copy.copy({
+    from: `build/.tmp/server/server/static/${commitHash}/extensions/builtin.vscode-icons/icons`,
+    to: `build/.tmp/server/server/static/${commitHash}/file-icons`,
+  })
+  await Remove.remove(`build/.tmp/server/server/static/${commitHash}/extensions/builtin.vscode-icons/icons`)
+  await Replace.replace({
+    path: `build/.tmp/server/server/static/${commitHash}/extensions/builtin.vscode-icons/icon-theme.json`,
+    occurrence: '/icons',
+    replacement: '/file-icons',
+  })
+}
+
 export const build = async ({ product }) => {
   const commitHash = await CommitHash.getCommitHash()
   const version = await Version.getVersion()
@@ -869,6 +886,10 @@ export const build = async ({ product }) => {
   console.time('copyStaticFiles')
   await copyStaticFiles({ commitHash })
   console.timeEnd('copyStaticFiles')
+
+  console.time('copyExtensions')
+  await copyExtensions({ commitHash })
+  console.timeEnd('copyExtensions')
 
   console.time('copyExtensionHostFiles')
   await copyExtensionHostFiles()
