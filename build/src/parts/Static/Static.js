@@ -28,7 +28,7 @@ const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
     to: `build/.tmp/dist/${commitHash}/packages/renderer-process/src`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/AssetDir/AssetDir.js`,
     occurrence: `ASSET_DIR`,
     replacement: `'${pathPrefix}/${commitHash}'`,
   })
@@ -81,7 +81,7 @@ export const getModule = (method) => {
 }`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/RendererWorkerUrl/RendererWorkerUrl.js`,
     occurrence: `/src/rendererWorkerMain.js`,
     replacement: '/dist/rendererWorkerMain.js',
   })

@@ -5,6 +5,7 @@ import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
 import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.js'
 import * as Platform from '../Platform/Platform.js'
+import * as RendererWorkerUrl from '../RendererWorkerUrl/RendererWorkerUrl.js'
 import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
 export const state = {
@@ -19,7 +20,7 @@ const getIpc = async () => {
   const name = isElectron ? 'Renderer Worker (Electron)' : 'Renderer Worker'
   const rendererWorker = await IpcParent.create({
     method: IpcParentType.Auto,
-    url: Platform.getRendererWorkerUrl(),
+    url: RendererWorkerUrl.rendererWorkerUrl,
     name,
   })
   return {
