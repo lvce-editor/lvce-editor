@@ -17,7 +17,7 @@ sudo pacman -Syu libxcrypt-compat make
 ## Build
 
 ```sh
-node bin/build.js --target=arch-linux --electronVersion=25.3.0
+node bin/build.js --target=arch-linux --electronVersion=25.6.0
 ```
 
 ## Build with electron-builder
