@@ -114,7 +114,6 @@ import * as PlatformType from '../PlatformType/PlatformType.js'`,
 }`,
       })
     }
-    console.log({ platform })
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererWorkerMain.js`,
