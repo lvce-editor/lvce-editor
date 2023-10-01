@@ -22,7 +22,7 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       })
     }
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/RendererWorkerUrl/RendererWorkerUrl.js`,
       occurrence: '/packages/renderer-worker/src/rendererWorkerMain.js',
       replacement: `/packages/renderer-worker/dist/rendererWorkerMain.js`,
     })
