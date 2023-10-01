@@ -3,6 +3,7 @@ import * as Callback from '../src/parts/Callback/Callback.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 import * as LifeCycle from '../src/parts/LifeCycle/LifeCycle.js'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -41,7 +42,7 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
-    platform: 'remote',
+    platform: PlatformType.Remote,
     getLogsDir: jest.fn(() => {
       throw new Error('not implemented')
     }),

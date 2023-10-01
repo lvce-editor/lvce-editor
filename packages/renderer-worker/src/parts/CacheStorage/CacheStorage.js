@@ -66,7 +66,7 @@ const setResponse = async (key, value, contentType) => {
   }
   // TODO cache the cache (maybe)
   if (
-    Platform.platform === 'electron' && // workaround for custom protocol not working with cache storage
+    Platform.platform === PlatformType.Remote && // workaround for custom protocol not working with cache storage
     key.startsWith(Character.Slash)
   ) {
     key = 'https://example.com' + key

@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -14,7 +15,7 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
-    platform: 'remote',
+    platform: PlatformType.Remote,
   }
 })
 

@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -17,7 +18,7 @@ const Command = await import('../src/parts/Command/Command.js')
 test('minimize - electron', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
-      platform: 'electron',
+      platform: PlatformType.Electron,
     }
   })
   // @ts-ignore
@@ -32,7 +33,7 @@ test('minimize - electron', async () => {
 test('maximize - electron', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
-      platform: 'electron',
+      platform: PlatformType.Electron,
     }
   })
   const Chrome = await import('../src/parts/Chrome/Chrome.js')
@@ -45,7 +46,7 @@ test('maximize - electron', async () => {
 test('unmaximize - electron', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
-      platform: 'electron',
+      platform: PlatformType.Electron,
     }
   })
   const Chrome = await import('../src/parts/Chrome/Chrome.js')
@@ -58,7 +59,7 @@ test('unmaximize - electron', async () => {
 test('close - electron', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
-      platform: 'electron',
+      platform: PlatformType.Electron,
     }
   })
   const Chrome = await import('../src/parts/Chrome/Chrome.js')
