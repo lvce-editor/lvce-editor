@@ -38,11 +38,7 @@ export const state = {
     }
     return ''
   },
-  supportsHtml5Dialog() {
-    const $Dialog = document.createElement('dialog')
-    // @ts-ignore
-    return typeof $Dialog.showModal === 'function'
-  },
+
   isElectron() {
     return (
       // @ts-ignore
@@ -56,10 +52,6 @@ export const state = {
 }
 
 export const assetDir = state.getAssetDir()
-
-export const supportsHtml5Dialog = () => {
-  return state.supportsHtml5Dialog()
-}
 
 export const isElectron = () => {
   return state.isElectron()
