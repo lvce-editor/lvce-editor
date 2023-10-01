@@ -25,10 +25,6 @@ test('video - mkv', () => {
   expect(ViewletMap.getModuleId('/test/file.mkv')).toBe(ViewletModuleId.Video)
 })
 
-test('pdf - pdf', () => {
-  expect(ViewletMap.getModuleId('/test/file.pdf')).toBe(ViewletModuleId.Pdf)
-})
-
 test('audio - opus', () => {
   expect(ViewletMap.getModuleId('/test/file.opus')).toBe(ViewletModuleId.Audio)
 })

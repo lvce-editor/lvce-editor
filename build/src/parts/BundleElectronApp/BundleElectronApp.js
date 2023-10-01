@@ -162,13 +162,6 @@ const copyExtensionHostHelperProcessSources = async ({ arch }) => {
   })
 }
 
-const copyPdfWorkerSources = async ({ arch }) => {
-  await Copy.copy({
-    from: 'packages/pdf-worker/src',
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/pdf-worker/src`,
-  })
-}
-
 const quickJoinPath = (prefix, postfix) => {
   if (postfix.startsWith('./')) {
     return prefix + '/' + postfix.slice('./'.length)
@@ -199,7 +192,7 @@ const copyExtensions = async ({ arch, optimizeLanguageBasics }) => {
     replacement: '../../../../../builtin.language-features-typescript/node/node_modules/typescript/lib/typescript.js',
   })
   await Remove.remove(
-    `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-features-typescript/node/node_modules/typescript/lib/tsserverlibrary.js`
+    `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-features-typescript/node/node_modules/typescript/lib/tsserverlibrary.js`,
   )
   if (optimizeLanguageBasics) {
     const dirents = await ReadDir.readDir(`build/.tmp/electron-bundle/${arch}/resources/app/extensions`)
@@ -418,10 +411,6 @@ export const build = async ({
   console.time('copyExtensionHostHelperProcessSources')
   await copyExtensionHostHelperProcessSources({ arch })
   console.timeEnd('copyExtensionHostHelperProcessSources')
-
-  console.time('copyPdfWorkerSources')
-  await copyPdfWorkerSources({ arch })
-  console.timeEnd('copyPdfWorkerSources')
 
   console.time('copyExtensions')
   await copyExtensions({ arch, optimizeLanguageBasics })
