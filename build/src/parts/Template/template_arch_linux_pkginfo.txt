@@ -2,7 +2,7 @@ pkgname = @@APPNAME@@
 pkgver = @@VERSION@@
 pkgdesc =
  abc
-url = https://lvce-editor.netlify.app
+url = https://github.com/lvce-editor/lvce-editor
 builddate = @@BUILD_DATE@@
 packager = @@PACKAGER@@
 size = @@SIZE@@
