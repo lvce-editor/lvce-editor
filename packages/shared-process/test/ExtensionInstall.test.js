@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getExtensionsPath: jest.fn(() => {
     return '/test/extensions'
   }),
@@ -9,33 +9,21 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   }),
 }))
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionInstallFromGitHub/ExtensionInstallFromGitHub.js',
-  () => ({
-    install: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  })
-)
+jest.unstable_mockModule('../src/parts/ExtensionInstallFromGitHub/ExtensionInstallFromGitHub.js', () => ({
+  install: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionInstallFromUrl/ExtensionInstallFromUrl.js',
-  () => ({
-    install: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  })
-)
+jest.unstable_mockModule('../src/parts/ExtensionInstallFromUrl/ExtensionInstallFromUrl.js', () => ({
+  install: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
 
-const ExtensionInstall = await import(
-  '../src/parts/ExtensionInstall/ExtensionInstall.js'
-)
-const ExtensionInstallFromGitHub = await import(
-  '../src/parts/ExtensionInstallFromGitHub/ExtensionInstallFromGitHub.js'
-)
-const ExtensionInstallFromUrl = await import(
-  '../src/parts/ExtensionInstallFromUrl/ExtensionInstallFromUrl.js'
-)
+const ExtensionInstall = await import('../src/parts/ExtensionInstall/ExtensionInstall.js')
+const ExtensionInstallFromGitHub = await import('../src/parts/ExtensionInstallFromGitHub/ExtensionInstallFromGitHub.js')
+const ExtensionInstallFromUrl = await import('../src/parts/ExtensionInstallFromUrl/ExtensionInstallFromUrl.js')
 
 test('install - from github', async () => {
   // @ts-ignore

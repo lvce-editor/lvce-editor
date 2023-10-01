@@ -84,7 +84,7 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
       replacement: `export const root = resolve(__dirname, '../../../')`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: `Path.join(appDir, 'static', 'config', 'defaultSettings.json')`,
       replacement: `Path.join(Root.root, 'config', 'defaultSettings.json')`,
     })
@@ -94,7 +94,7 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
       replacement: `return process.env.FOLDER || process.cwd()`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: `export const getExtensionHostHelperProcessPath = async () => {
   return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
 }
@@ -108,7 +108,7 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
 `,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: `export const getExtensionHostPath = async () => {
   return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
 }

@@ -7,7 +7,7 @@ afterEach(() => {
   jest.restoreAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getAppDir: jest.fn(() => {
     throw new Error('not implemented')
   }),
@@ -18,7 +18,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
 
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
-const Platform = await import('../src/parts/Platform/Platform.js')
+const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -105,9 +105,9 @@ const getTmpDir = () => {
 test('getAll - error', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
-  Platform.getDefaultSettingsPath.mockImplementation(() => join(tmpDir, 'static', 'config', 'defaultSettings.json'))
+  PlatformPaths.getDefaultSettingsPath.mockImplementation(() => join(tmpDir, 'static', 'config', 'defaultSettings.json'))
   await expect(Preferences.getAll()).rejects.toThrowError(
-    /^Failed to get all preferences: Failed to load default preferences: FileNotFoundError: File not found/
+    /^Failed to get all preferences: Failed to load default preferences: FileNotFoundError: File not found/,
   )
 })
 

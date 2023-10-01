@@ -4,6 +4,7 @@ import * as ExtractZip from '../ExtractZip/ExtractZip.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import { VError } from '../VError/VError.js'
 
 const getExtensionPath = async (tmpDir) => {
@@ -18,10 +19,10 @@ export const install = async (name, url) => {
   try {
     Assert.string(name)
     Assert.string(url)
-    const cachedChromeExtensionsPath = Platform.getCachedExtensionsPath()
+    const cachedChromeExtensionsPath = PlatformPaths.getCachedExtensionsPath()
     const tempFileCompressed = Path.join(cachedChromeExtensionsPath, `${name}.zip`)
     const tmpDir = Path.join(cachedChromeExtensionsPath, name)
-    const chromeExtensionsPath = Platform.getChromeExtensionsPath()
+    const chromeExtensionsPath = PlatformPaths.getChromeExtensionsPath()
     await Download.download(url, tempFileCompressed)
     await ExtractZip.extractZip({ inFile: tempFileCompressed, outDir: tmpDir })
     const cachedExtensionPath = await getExtensionPath(tmpDir)

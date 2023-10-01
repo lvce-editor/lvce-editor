@@ -14,7 +14,7 @@ jest.unstable_mockModule('../src/parts/SymLink/SymLink', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
   return {
     getLinkedExtensionsPath: () => {
       return '/test/linked-extensions'
@@ -110,7 +110,7 @@ test('link - error - no manifest file found', async () => {
     throw new FileNotFoundError(uri)
   })
   await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrowError(
-    new Error("Failed to link extension: Extension manifest not found '/test/my-extension/extension.json'")
+    new Error("Failed to link extension: Extension manifest not found '/test/my-extension/extension.json'"),
   )
 })
 
@@ -124,6 +124,6 @@ test('link - error - permission denied', async () => {
     throw new PermissionDeniedError(from, to)
   })
   await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrowError(
-    new Error('Failed to link extension: EPERM: operation not permittet, symlink /test/my-extension -> /test/linked-extensions/my-extension')
+    new Error('Failed to link extension: EPERM: operation not permittet, symlink /test/my-extension -> /test/linked-extensions/my-extension'),
   )
 })

@@ -5,7 +5,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
   return {
     getLinkedExtensionsPath: () => {
       return '/test/linked-extensions'
@@ -72,7 +72,7 @@ test('link - error - no manifest file found', async () => {
   })
   await expect(ExtensionUnlink.unlink('/test/documents/my-extension')).rejects.toThrowError(
     new Error(
-      "Failed to unlink extension: Failed to load extension manifest for my-extension: FileNotFoundError: File not found: '/test/documents/my-extension/extension.json'"
-    )
+      "Failed to unlink extension: Failed to load extension manifest for my-extension: FileNotFoundError: File not found: '/test/documents/my-extension/extension.json'",
+    ),
   )
 })
