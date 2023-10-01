@@ -64,8 +64,6 @@ export const Output = 'Output'
 
 export const Panel = 'Panel'
 
-export const Pdf = 'Pdf'
-
 export const Problems = 'Problems'
 
 export const QuickPick = 'QuickPick'
