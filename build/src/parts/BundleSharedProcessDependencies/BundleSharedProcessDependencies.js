@@ -47,6 +47,7 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await Remove.remove(`${to}/node_modules/eventemitter3/umd`)
   await Remove.remove(`${to}/node_modules/b4a/browser.js`)
   await Remove.remove(`${to}/node_modules/tail/.nyc_output`)
+  await Remove.remove(`${to}/node_modules/which/bin`)
   await Remove.removeMatching(`${to}/node_modules/cacheable-request`, '**/*.map')
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
   if (platform === 'win32') {
