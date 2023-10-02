@@ -30,8 +30,8 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
     })
   } else {
     await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree`)
-    await Remove.remove(`${to}/node_modules/nan`)
   }
+  await Remove.remove(`${to}/node_modules/nan`)
   await Remove.remove(`${to}/node_modules/uuid/dist/esm-browser`)
   await Remove.remove(`${to}/node_modules/uuid/dist/umd`)
   await Remove.remove(`${to}/node_modules/uuid/dist/bin`)
