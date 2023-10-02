@@ -9,6 +9,7 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Font from '../Font/Font.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
+import * as MeasureCharacterWidth from '../MeasureCharacterWidth/MeasureCharacterWidth.js'
 import * as MeasureLongestLineWidth from '../MeasureLongestLineWidth/MeasureLongestLineWidth.js'
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -137,7 +138,7 @@ export const loadContent = async (state, savedState, context) => {
     await Font.load(fontName, `url('${AssetDir.assetDir}/fonts/FiraCode-VariableFont.ttf')`)
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
-  const charWidth = MeasureTextWidth.measureTextWidth('a', newState2.fontWeight, fontSize, fontFamily, letterSpacing, false, 0)
+  const charWidth = MeasureCharacterWidth.measureCharacterWidth(newState2.fontWeight, fontSize, fontFamily, letterSpacing)
   const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(
     newState2.lines,
     newState2.fontWeight,
