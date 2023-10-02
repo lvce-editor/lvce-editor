@@ -14,7 +14,7 @@ const getNodePtyIgnoreFiles = () => {
   return files
 }
 
-export const bundlePtyHostDependencies = async ({ to, arch, electronVersion, exclude = [] }) => {
+export const bundlePtyHostDependencies = async ({ to, arch, electronVersion, exclude = [], platform }) => {
   if (typeof arch !== 'string') {
     throw new TypeError('arch must be defined')
   }
@@ -56,4 +56,15 @@ export const bundlePtyHostDependencies = async ({ to, arch, electronVersion, exc
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/config.gypi`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/Makefile`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/pty.target.mk`))
+  if (platform === 'win32') {
+    await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/deps`))
+    await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/Release/obj`))
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/Release`), '*.iobj')
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/Release`), '*.ipdb')
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/Release`), '*.lib')
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/Release`), '*.pdb')
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/`), '*.sln')
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/`), '*.vcxproj')
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/`), '*.filters')
+  }
 }
