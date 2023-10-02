@@ -19,6 +19,20 @@ const UiStrings = {
   SomeMonthsAgo: '{PH1} months ago',
   OneYearAgo: '1 year ago',
   SomeYearsAgo: '{PH1} years ago',
+  InOneSecond: 'in 1 second',
+  InSomeSeconds: 'in {PH1} seconds',
+  InOneMinute: 'in 1 minute',
+  InSomeMinutes: 'in {PH1} minutes',
+  InOneHour: 'in 1 hour',
+  InSomeHours: 'in {PH1} hours',
+  InOneDay: 'in 1 day',
+  InSomeDays: 'in {PH1} days',
+  InOneWeek: 'in 1 week',
+  InSomeWeeks: 'in {PH1} weeks',
+  InOneMonth: 'in 1 month',
+  InSomeMonths: 'in {PH1} months',
+  InOneYear: 'in 1 year',
+  InSomeYears: 'in {PH1} years',
 }
 
 export const oneSecondAgo = () => {
@@ -87,6 +101,76 @@ export const oneYearAgo = () => {
 
 export const someYearsAgo = (years) => {
   return I18nString.i18nString(UiStrings.SomeYearsAgo, {
+    PH1: years,
+  })
+}
+
+export const inOneSecond = () => {
+  return I18nString.i18nString(UiStrings.InOneSecond)
+}
+
+export const inSomeSeconds = (seconds) => {
+  return I18nString.i18nString(UiStrings.InSomeSeconds, {
+    PH1: seconds,
+  })
+}
+
+export const inOneMinute = () => {
+  return I18nString.i18nString(UiStrings.InOneMinute)
+}
+
+export const inSomeMinutes = (minutes) => {
+  return I18nString.i18nString(UiStrings.InSomeMinutes, {
+    PH1: minutes,
+  })
+}
+
+export const inOneHour = () => {
+  return I18nString.i18nString(UiStrings.InOneHour)
+}
+
+export const inSomeHours = (hours) => {
+  return I18nString.i18nString(UiStrings.InSomeHours, {
+    PH1: hours,
+  })
+}
+
+export const inOneDay = () => {
+  return I18nString.i18nString(UiStrings.InOneDay)
+}
+
+export const inSomeDays = (days) => {
+  return I18nString.i18nString(UiStrings.InSomeDays, {
+    PH1: days,
+  })
+}
+
+export const inOneWeek = () => {
+  return I18nString.i18nString(UiStrings.InOneWeek)
+}
+
+export const inSomeWeeks = (weeks) => {
+  return I18nString.i18nString(UiStrings.InSomeWeeks, {
+    PH1: weeks,
+  })
+}
+
+export const inOneMonth = () => {
+  return I18nString.i18nString(UiStrings.InOneMonth)
+}
+
+export const inSomeMonths = (months) => {
+  return I18nString.i18nString(UiStrings.InSomeMonths, {
+    PH1: months,
+  })
+}
+
+export const inOneYear = () => {
+  return I18nString.i18nString(UiStrings.InOneYear)
+}
+
+export const inSomeYears = (years) => {
+  return I18nString.i18nString(UiStrings.InSomeYears, {
     PH1: years,
   })
 }
