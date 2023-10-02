@@ -13,12 +13,13 @@ const isLanguageBasics = (name) => {
   return name.startsWith('builtin.language-basics')
 }
 
-const copyPtyHostFiles = async ({ arch, electronVersion, cachePath }) => {
+const copyPtyHostFiles = async ({ arch, electronVersion, cachePath, platform }) => {
   await BundlePtyHostDependencies.bundlePtyHostDependencies({
     electronVersion,
     arch,
     to: `${cachePath}/packages/pty-host`,
     exclude: ['ws'],
+    platform,
   })
 }
 
@@ -121,12 +122,21 @@ const copyResults = async () => {
   }
 }
 
-export const bundleElectronAppDependencies = async ({ cachePath, arch, electronVersion, product, supportsAutoUpdate, bundleMainProcess }) => {
+export const bundleElectronAppDependencies = async ({
+  cachePath,
+  arch,
+  electronVersion,
+  product,
+  supportsAutoUpdate,
+  bundleMainProcess,
+  platform,
+}) => {
   console.time('copyPtyHostFiles')
   await copyPtyHostFiles({
     arch,
     electronVersion,
     cachePath,
+    platform,
   })
   console.timeEnd('copyPtyHostFiles')
 
