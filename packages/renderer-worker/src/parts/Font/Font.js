@@ -1,5 +1,6 @@
-import { VError } from '../VError/VError.js'
 import * as Assert from '../Assert/Assert.js'
+import * as IsFirefox from '../IsFirefox/IsFirefox.js'
+import { VError } from '../VError/VError.js'
 
 const getFonts = () => {
   // @ts-ignore
@@ -7,6 +8,10 @@ const getFonts = () => {
 }
 
 export const has = (fontName, fontSize) => {
+  // workaround for firefox mistakenly reporting fonts
+  if (IsFirefox.isFirefox) {
+    return false
+  }
   const fonts = getFonts()
   return fonts.check(`${fontSize}px ${fontName}`)
 }
