@@ -57,6 +57,7 @@ export const bundlePtyHostDependencies = async ({ to, arch, electronVersion, exc
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/Makefile`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/pty.target.mk`))
   if (platform === 'win32') {
+    await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/deps`))
     await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/deps`))
     await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/Release/obj`))
     await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/Release`), '*.iobj')
