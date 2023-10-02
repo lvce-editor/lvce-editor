@@ -1,5 +1,5 @@
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 
 export const measureCharacterWidth = (fontWeight, fontSize, fontFamily, letterSpacing) => {
-  MeasureTextWidth.measureTextWidth('a', fontWeight, fontSize, fontFamily, letterSpacing, false, 0)
+  return MeasureTextWidth.measureTextWidth('a', fontWeight, fontSize, fontFamily, letterSpacing, false, 0)
 }
