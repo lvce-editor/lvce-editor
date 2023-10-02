@@ -35,12 +35,13 @@ const copyExtensionHostFiles = async ({ cachePath }) => {
   })
 }
 
-const copySharedProcessFiles = async ({ cachePath, arch, electronVersion }) => {
+const copySharedProcessFiles = async ({ cachePath, arch, electronVersion, platform }) => {
   await BundleSharedProcessDependencies.bundleSharedProcessDependencies({
     to: `${cachePath}/packages/shared-process`,
     arch,
     electronVersion,
     exclude: ['ws', 'trash', 'open'],
+    platform,
   })
 }
 
@@ -157,6 +158,7 @@ export const bundleElectronAppDependencies = async ({
     cachePath,
     arch,
     electronVersion,
+    platform,
   })
   console.timeEnd('copySharedProcessFiles')
 
