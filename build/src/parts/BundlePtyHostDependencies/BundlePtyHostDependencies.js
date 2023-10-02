@@ -59,5 +59,12 @@ export const bundlePtyHostDependencies = async ({ to, arch, electronVersion, exc
   if (platform === 'win32') {
     await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/deps`))
     await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/Release/obj`))
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/Release`), '*.iobj')
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/Release`), '*.ipdb')
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/Release`), '*.lib')
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/Release`), '*.pdb')
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/`), '*.sln')
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/`), '*.vcxproj')
+    await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/`), '*.filters')
   }
 }
