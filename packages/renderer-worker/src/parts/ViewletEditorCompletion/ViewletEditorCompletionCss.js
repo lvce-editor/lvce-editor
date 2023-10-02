@@ -1,6 +1,6 @@
 import * as JoinLines from '../JoinLines/JoinLines.js'
 
-export const Css = ['/css/parts/ViewletEditorCompletion.css', '/css/parts/Symbol.css', '/css/parts/ViewletList.css']
+export const Css = ['/css/parts/ViewletEditorCompletion.css', '/css/parts/MaskIcon.css', '/css/parts/Symbol.css', '/css/parts/ViewletList.css']
 
 export const getDynamicCss = (preferences) => {
   const styles = []
