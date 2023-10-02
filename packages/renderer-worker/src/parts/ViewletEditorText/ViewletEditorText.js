@@ -4,22 +4,20 @@ import * as Editor from '../Editor/Editor.js'
 import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
+import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Font from '../Font/Font.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
+import * as MeasureCharacterWidth from '../MeasureCharacterWidth/MeasureCharacterWidth.js'
 import * as MeasureLongestLineWidth from '../MeasureLongestLineWidth/MeasureLongestLineWidth.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
-import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
-import * as CssVariable from '../CssVariable/CssVariable.js'
-import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -145,7 +143,7 @@ export const loadContent = async (state, savedState, context) => {
     await Font.load(fontName, `url('${AssetDir.assetDir}/fonts/FiraCode-VariableFont.ttf')`)
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
-  const charWidth = MeasureTextWidth.measureTextWidth('a', newState2.fontWeight, fontSize, fontFamily, letterSpacing, false, 0)
+  const charWidth = MeasureCharacterWidth.measureCharacterWidth(newState2.fontWeight, fontSize, fontFamily, letterSpacing)
   const longestLineWidth = MeasureLongestLineWidth.measureLongestLineWidth(
     newState2.lines,
     newState2.fontWeight,
@@ -153,7 +151,7 @@ export const loadContent = async (state, savedState, context) => {
     fontFamily,
     letterSpacing,
     isMonospaceFont,
-    charWidth
+    charWidth,
   )
   if (context && context.startRowIndex) {
     const lines = newState2.lines.length
