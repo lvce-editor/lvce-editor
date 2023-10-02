@@ -32,16 +32,16 @@ export const getName = (pid, cmd, rootPid, pidMap) => {
   if (cmd.includes('--type=utility')) {
     return 'utility'
   }
-  if (cmd.includes('typescript/lib/tsserver.js')) {
+  if (cmd.includes('tsserver.js')) {
     return 'tsserver.js'
   }
-  if (cmd.includes('typescript/lib/typingsInstaller.js')) {
+  if (cmd.includes('typingsInstaller.js')) {
     return 'typingsInstaller.js'
   }
   if (cmd.includes('extensionHostHelperProcessMain.js')) {
     return 'extension-host-helper-process'
   }
-  if (cmd.includes('/bin/rg')) {
+  if (cmd.includes('/bin/rg') || cmd.includs('rg.exe')) {
     return 'ripgrep'
   }
   if (cmd.startsWith('bash')) {
@@ -50,7 +50,7 @@ export const getName = (pid, cmd, rootPid, pidMap) => {
   if (cmd.startsWith(`/opt/sublime_text/sublime_text `)) {
     return 'sublime-text'
   }
-  if(cmd.includes('\\conhost.exe')){
+  if (cmd.includes('\\conhost.exe')) {
     return 'conhost.exe'
   }
   return `${cmd}`
