@@ -41,7 +41,7 @@ export const getName = (pid, cmd, rootPid, pidMap) => {
   if (cmd.includes('extensionHostHelperProcessMain.js')) {
     return 'extension-host-helper-process'
   }
-  if (cmd.includes('/bin/rg') || cmd.includs('rg.exe')) {
+  if (cmd.includes('/bin/rg') || cmd.includes('rg.exe')) {
     return 'ripgrep'
   }
   if (cmd.startsWith('bash')) {
