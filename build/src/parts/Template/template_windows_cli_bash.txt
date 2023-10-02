@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-NAME="@@NAME@@"
+NAME="@@WINDOWS_EXECUTABLE_NAME@@"
 BASE_PATH="$(dirname "$(dirname "$(realpath "$0")")")"
 ELECTRON="$BASE_PATH/$NAME.exe"
 
