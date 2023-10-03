@@ -38,7 +38,7 @@ jobs:
       matrix:
         os: [windows-2022, macos-12, ubuntu-22.04]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 40
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -202,6 +202,8 @@ jobs:
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2022'
         run: node build/bin/build.js --product=lvce --target=electron-builder-windows-exe
+        env:
+          HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (exe)
         if: matrix.os == 'windows-2022'
         shell: bash
