@@ -122,12 +122,13 @@ import * as PlatformType from '../PlatformType/PlatformType.js'`,
       platform: 'webworker',
       allowCyclicDependencies: true, // TODO
     })
-    await Replace.replace({
-      path: `${cachePath}/dist/rendererWorkerMain.js`,
-      occurrence: `const platform = globalThis.PLATFORM = Remote;`,
-      replacement: `const platform = Remote;
-`,
-    })
+    if (platform === 'remote') {
+      await Replace.replace({
+        path: `${cachePath}/dist/rendererWorkerMain.js`,
+        occurrence: `const platform = globalThis.PLATFORM = Remote;`,
+        replacement: `const platform = Remote;`,
+      })
+    }
   } catch (error) {
     throw new VError(error, `Failed to bundle renderer worker`)
   }
