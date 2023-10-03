@@ -66,10 +66,10 @@ export const getCompletionItemsVirtualDom = (visibleItems) => {
     const { top, label, symbolName, highlights, focused, deprecated } = visibleItem
     let className = 'EditorCompletionItem'
     if (focused) {
-      className += ' Focused'
+      className += ' EditorCompletionItemFocused'
     }
     if (deprecated) {
-      className += ' Deprecated'
+      className += ' EditorCompletionItemDeprecated'
     }
     dom.push(
       {
@@ -84,7 +84,7 @@ export const getCompletionItemsVirtualDom = (visibleItems) => {
         className: `ColoredMaskIcon ${symbolName}`,
         childCount: 0,
       },
-      ...getLabelDom(label, highlights)
+      ...getLabelDom(label, highlights),
     )
   }
   return dom

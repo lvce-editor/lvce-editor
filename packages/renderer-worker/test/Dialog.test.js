@@ -1,6 +1,5 @@
 import { jest } from '@jest/globals'
 import * as ElectronMessageBoxType from '../src/parts/ElectronMessageBoxType/ElectronMessageBoxType.js'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
@@ -26,7 +25,7 @@ beforeEach(() => {
 test('showMessage - electron', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
-      platform: 'electron',
+      platform: PlatformType.Electron,
       assetDir: '',
     }
   })
@@ -45,7 +44,7 @@ test('showMessage - electron', async () => {
       codeFrame: '',
       stack: '',
     },
-    []
+    [],
   )
   expect(Dialog.state.dialog).toEqual({
     message: { codeFrame: '', message: 'Error: Oops', stack: '' },
@@ -75,7 +74,7 @@ test.skip('close - web', async () => {
       codeFrame: '',
       stack: '',
     },
-    []
+    [],
   )
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})

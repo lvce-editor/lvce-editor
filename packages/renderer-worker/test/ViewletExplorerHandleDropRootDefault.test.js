@@ -2,6 +2,7 @@ import { jest } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as EncodingType from '../src/parts/EncodingType/EncodingType.js'
 import * as FileHandleType from '../src/parts/FileHandleType/FileHandleType.js'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -39,7 +40,7 @@ jest.unstable_mockModule('../src/parts/FileSystemFileHandle/FileSystemFileHandle
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
-    platform: 'electron',
+    platform: PlatformType.Electron,
     assetDir: '',
   }
 })
@@ -64,7 +65,7 @@ test('handleDrop - single folder', async () => {
         kind: FileHandleType.Directory,
         name: 'folder-1',
       },
-    ])
+    ]),
   ).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(2)
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'PersistentFileHandle.addHandle', '/folder-1', { kind: 'directory', name: 'folder-1' })
@@ -107,7 +108,7 @@ test('handleDrop - single file', async () => {
         kind: FileHandleType.File,
         name: 'file-1.txt',
       },
-    ])
+    ]),
   ).toMatchObject({
     items: [
       {

@@ -107,7 +107,7 @@ export const getStartupPerformanceContent = async () => {
   const measureEntries = getMeasureEntries()
   const webVitals = await getWebVitals()
   let electronEntries
-  if (Platform.platform === 'electron') {
+  if (Platform.platform === PlatformType.Electron) {
     electronEntries = await getElectronEntries()
   }
   const text = FormatStartupPerformance.formatStartupPerformance({

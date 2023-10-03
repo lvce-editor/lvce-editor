@@ -226,12 +226,11 @@ const copyElectronResult = async ({
     })
   }
   if (config === ElectronBuilderConfigType.WindowsExe) {
-    await Copy.copyFile({
-      from: `build/files/windows/cli.cmd`,
-      to: `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}.cmd`,
+    await Template.write('windows_cmd', `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}.cmd`, {
+      '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
     })
     await Template.write('windows_cli_bash', `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}`, {
-      '@@NAME@@': product.applicationName,
+      '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
     })
     await CreatePlaceholderElectronApp.createPlaceholderElectronApp({ product, version, config, electronVersion })
     await Copy.copyFile({
