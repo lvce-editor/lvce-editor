@@ -1,7 +1,7 @@
-import { writeFile } from 'fs/promises'
+import { writeFile } from 'node:fs/promises'
 import got from 'got'
-import { tmpdir } from 'os'
-import { join } from 'path'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { WebSocket } from 'ws'
 import * as DevtoolsProtocolRpc from '../DevtoolsProtocolRpc/DevtoolsProtocolRpc.js'
 
