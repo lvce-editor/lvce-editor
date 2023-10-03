@@ -1,6 +1,6 @@
+import { VError } from '@lvce-editor/verror'
 import * as ElectronBuilder from 'electron-builder'
 import { readdir } from 'node:fs/promises'
-import { VError } from '@lvce-editor/verror'
 import * as Assert from '../Assert/Assert.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as Copy from '../Copy/Copy.js'
@@ -65,6 +65,11 @@ const runElectronBuilder = async ({ config }) => {
       projectDir: Path.absolute('build/.tmp/electron-builder'),
       prepackaged: Path.absolute(`build/.tmp/linux/snap/${debArch}/app`),
       // win: ['portable'],
+    }
+    if (process.env.HIGHEST_COMPRESSION) {
+      Logger.info('[info] using highest compression, this may take some time')
+      process.env.ELECTRON_BUILDER_7Z_FILTER = 'bcj2'
+      process.env.ELECTRON_BUILDER_COMPRESSION_LEVEL = '5'
     }
     await ElectronBuilder.build(options)
   } catch (error) {
