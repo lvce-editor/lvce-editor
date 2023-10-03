@@ -267,6 +267,9 @@ const copyStaticFiles = async ({ arch }) => {
     occurrence: '\n    <meta name="description" content="Online Code Editor" />',
     replacement: ``,
   })
+  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/manifest.json`)
+  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/serviceWorker.js`)
+  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/images`)
 }
 
 const copyCss = async ({ arch }) => {
