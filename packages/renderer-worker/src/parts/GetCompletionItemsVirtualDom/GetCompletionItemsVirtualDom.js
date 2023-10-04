@@ -10,7 +10,7 @@ const label1 = {
 
 const completionHighlight = {
   type: VirtualDomElements.Span,
-  className: 'CompletionHighlight',
+  className: 'EditorCompletionItemHighlight',
   childCount: 1,
 }
 
