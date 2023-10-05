@@ -33,10 +33,7 @@ export const getColorThemeJson = async (colorThemeId) => {
   const extensions = await ExtensionManagement.getExtensions()
   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
   if (!colorThemePath) {
-    throw new Error.OperationalError({
-      code: ErrorCodes.E_COLOR_THEME_NOT_FOUND,
-      message: `Color theme "${colorThemeId}" not found in extensions folder`,
-    })
+    throw new VError(`Color theme "${colorThemeId}" not found in extensions folder`)
   }
   try {
     const json = await ReadJson.readJson(colorThemePath)
