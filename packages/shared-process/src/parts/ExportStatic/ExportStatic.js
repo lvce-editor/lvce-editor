@@ -130,7 +130,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     `return \`\${assetDir}/icon-themes/\${iconThemeId}.json\``,
   )
 
-  const extensionDirents = await FileSystem.readDir(Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions'))
+  const extensionDirents = await FileSystem.readDir(Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static', commitHash, 'extensions'))
 
   const languageBasicsDirents = extensionDirents.filter(isLanguageBasics)
   const themeDirents = extensionDirents.filter(isTheme)
@@ -151,7 +151,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
    * @param {string} dirent
    */
   const getManifestPath = (dirent) => {
-    return Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions', dirent, 'extension.json')
+    return Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static', commitHash, 'extensions', dirent, 'extension.json')
   }
 
   const manifestPaths = languageBasicsDirents.map(getManifestPath)
@@ -161,7 +161,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
 
   for (const languageBasicsDirent of languageBasicsDirents) {
     await FileSystem.copy(
-      Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions', languageBasicsDirent),
+      Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static', commitHash, 'extensions', languageBasicsDirent),
       Path.join(root, 'dist', commitHash, 'extensions', languageBasicsDirent),
     )
   }
@@ -169,7 +169,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   for (const themeDirent of themeDirents) {
     const themeId = getThemeName(themeDirent)
     await FileSystem.copy(
-      Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions', themeDirent, 'color-theme.json'),
+      Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static', commitHash, 'extensions', themeDirent, 'color-theme.json'),
       Path.join(root, 'dist', commitHash, 'themes', `${themeId}.json`),
     )
   }
@@ -180,7 +180,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   for (const iconThemeDirent of iconThemeDirents) {
     const iconThemeId = iconThemeDirent.slice('builtin.'.length)
     await FileSystem.copy(
-      Path.join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions', iconThemeDirent, 'icon-theme.json'),
+      Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static', commitHash, 'extensions', iconThemeDirent, 'icon-theme.json'),
       Path.join(root, 'dist', commitHash, 'icon-themes', `${iconThemeId}.json`),
     )
   }
