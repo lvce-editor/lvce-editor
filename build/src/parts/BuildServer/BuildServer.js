@@ -141,6 +141,11 @@ const copyServerFiles = async ({ commitHash }) => {
   })
   await Replace.replace({
     path: 'build/.tmp/server/server/src/server.js',
+    occurrence: `const builtinExtensionsPath = join(ROOT, 'extensions')`,
+    replacement: `const builtinExtensionsPath = join(ROOT, 'static', '${commitHash}', 'extensions')`,
+  })
+  await Replace.replace({
+    path: 'build/.tmp/server/server/src/server.js',
     occurrence: `import { ChildProcess, fork } from 'node:child_process'`,
     replacement: `import { sharedProcessPath } from '@lvce-editor/shared-process'
 import { ChildProcess, fork } from 'node:child_process'`,
