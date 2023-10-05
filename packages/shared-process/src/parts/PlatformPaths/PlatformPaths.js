@@ -24,7 +24,7 @@ export const getExtensionsPath = () => {
 }
 
 export const getBuiltinExtensionsPath = () => {
-  return Path.join(Root.root, 'extensions')
+  return process.env.BUILTIN_EXTENSIONS_PATH || Path.join(Root.root, 'extensions')
 }
 
 export const getDisabledExtensionsPath = () => {

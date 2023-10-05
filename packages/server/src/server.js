@@ -13,6 +13,7 @@ const ROOT = resolve(__dirname, '../../../')
 const STATIC = resolve(__dirname, '../../../static')
 
 const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
+const builtinExtensionsPath = join(ROOT, 'extensions')
 
 const { argv, env } = process
 
@@ -28,6 +29,8 @@ for (const arg of argvSliced) {
     process.env['TEST_PATH'] = arg.slice('--test-path='.length)
   }
 }
+
+process.env.BUILTIN_EXTENSIONS_PATH = builtinExtensionsPath
 
 if (!argv2) {
   argv2 = resolve(__dirname, '../../../playground')
@@ -613,7 +616,7 @@ const launchSharedProcess = () => {
       env: {
         ...process.env,
       },
-    }
+    },
   )
   const handleFirstMessage = (message) => {
     state.sharedProcessState = /* on */ 2
@@ -664,7 +667,7 @@ const handleUpgrade = (request, socket) => {
             ],
           },
           // @ts-ignore
-          socket
+          socket,
         )
       })
       launchSharedProcess()
@@ -688,7 +691,7 @@ const handleUpgrade = (request, socket) => {
           ],
         },
         // @ts-ignore
-        socket
+        socket,
       )
       break
     default:
