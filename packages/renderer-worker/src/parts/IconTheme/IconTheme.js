@@ -23,7 +23,7 @@ export const setIconTheme = async (iconThemeId) => {
         await Viewlet.setState(factory.name, newState)
       }
     }
-    await Css.addCssStyleSheet('ContributedIconTheme', iconThemeCss)
+    // await Css.addCssStyleSheet('ContributedIconTheme', iconThemeCss)
   } catch (error) {
     if (Workspace.isTest()) {
       // ignore

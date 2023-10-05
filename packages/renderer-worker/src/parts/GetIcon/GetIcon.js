@@ -6,6 +6,19 @@ import * as IconThemeState from '../IconThemeState/IconThemeState.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
 
+const getResult = (iconTheme, icon) => {
+  const result = iconTheme.iconDefinitions[icon]
+  const extensionPath = IconThemeState.state.extensionPath
+  if (result) {
+    if (extensionPath.includes('\\')) {
+      const extensionUri = extensionPath.replaceAll('\\', '/')
+      return `/remote/${extensionUri}/${result}`
+    }
+    return `/remote${extensionPath}/${result}`
+  }
+  return ''
+}
+
 export const getFileNameIcon = (file) => {
   Assert.string(file)
   const { iconTheme } = IconThemeState.state
@@ -16,7 +29,7 @@ export const getFileNameIcon = (file) => {
   if (iconTheme.fileNames) {
     const fileNameIcon = iconTheme.fileNames[fileNameLower]
     if (fileNameIcon) {
-      return fileNameIcon
+      return getResult(iconTheme, fileNameIcon)
     }
   }
   if (iconTheme.fileExtensions) {
@@ -25,7 +38,7 @@ export const getFileNameIcon = (file) => {
       const shorterExtension = fileNameLower.slice(index + 1)
       const extensionIcon = iconTheme.fileExtensions[shorterExtension]
       if (extensionIcon) {
-        return extensionIcon
+        return getResult(iconTheme, extensionIcon)
       }
     }
   }
@@ -35,14 +48,14 @@ export const getFileNameIcon = (file) => {
     if (languageId === 'jsx' && fileNameLower.endsWith('.js')) {
       const alternativeFileIcon = iconTheme.languageIds['javascript']
       if (alternativeFileIcon) {
-        return alternativeFileIcon
+        return getResult(iconTheme, alternativeFileIcon)
       }
     }
     if (languageIcon) {
-      return languageIcon
+      return getResult(iconTheme, languageIcon)
     }
   }
-  return DefaultIcon.File
+  return getResult(iconTheme, DefaultIcon.File)
 }
 
 export const getFileIcon = (file) => {
@@ -52,16 +65,16 @@ export const getFileIcon = (file) => {
 export const getFolderIcon = (folder) => {
   const iconTheme = IconThemeState.state.iconTheme
   // @ts-ignore
-  if (!iconTheme || !iconTheme.folderNames) {
+  if (!iconTheme || !iconTheme.folderNames || !iconTheme.iconDefinitions) {
     return ''
   }
   const folderNameLower = folder.name.toLowerCase()
   // @ts-ignore
   const folderIcon = iconTheme.folderNames[folderNameLower]
   if (folderIcon) {
-    return folderIcon
+    return getResult(iconTheme, folderIcon)
   }
-  return DefaultIcon.Folder
+  return getResult(iconTheme, DefaultIcon.Folder)
 }
 
 const getFolderIconExpanded = (folder) => {
@@ -71,14 +84,14 @@ const getFolderIconExpanded = (folder) => {
   }
   // @ts-ignore
   if (!iconTheme.folderNamesExpanded) {
-    return DefaultIcon.FolderOpen
+    return getResult(iconTheme, DefaultIcon.FolderOpen)
   }
   // @ts-ignore
   const folderName = iconTheme.folderNamesExpanded[folder.name.toLowerCase()]
   if (folderName) {
-    return folderName
+    return getResult(iconTheme, folderName)
   }
-  return DefaultIcon.FolderOpen
+  return getResult(iconTheme, DefaultIcon.FolderOpen)
 }
 
 export const getIcon = (dirent) => {
