@@ -1,6 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Error from '../Error/Error.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as FileSystemWatch from '../FileSystemWatch/FileSystemWatch.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
@@ -33,10 +31,7 @@ export const getColorThemeJson = async (colorThemeId) => {
   const extensions = await ExtensionManagement.getExtensions()
   const colorThemePath = await getColorThemePath(extensions, colorThemeId)
   if (!colorThemePath) {
-    throw new Error.OperationalError({
-      code: ErrorCodes.E_COLOR_THEME_NOT_FOUND,
-      message: `Color theme "${colorThemeId}" not found in extensions folder`,
-    })
+    throw new VError(`Color theme "${colorThemeId}" not found in extensions folder`)
   }
   try {
     const json = await ReadJson.readJson(colorThemePath)
