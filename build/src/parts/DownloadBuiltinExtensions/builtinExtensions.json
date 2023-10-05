@@ -12,7 +12,7 @@
   {
     "name": "builtin.language-basics-c",
     "repository": "github.com/lvce-editor/language-basics-c",
-    "version": "0.0.4"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.language-basics-coffeescript",

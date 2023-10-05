@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'fs/promises'
 import { pathToFileURL } from 'url'
 import { VError } from '@lvce-editor/verror'
-import * as BundleJs from '../BundleJs/BundleJs.js'
+import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
 import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
@@ -32,7 +32,9 @@ const getPlatformCode = (platform) => {
     case 'electron':
       return `PlatformType.Electron`
     case 'remote':
-      return `PlatformType.Remote`
+      // workaround for rollup treeshaking out platform variable
+      // which is still needed for static web export
+      return `globalThis.PLATFORM = PlatformType.Remote`
     case 'web':
       return 'PlatformType.Web'
     default:
@@ -114,12 +116,19 @@ import * as PlatformType from '../PlatformType/PlatformType.js'`,
 }`,
       })
     }
-    console.log({ platform })
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererWorkerMain.js`,
       platform: 'webworker',
+      allowCyclicDependencies: true, // TODO
     })
+    if (platform === 'remote') {
+      await Replace.replace({
+        path: `${cachePath}/dist/rendererWorkerMain.js`,
+        occurrence: `const platform = globalThis.PLATFORM = Remote;`,
+        replacement: `const platform = Remote;`,
+      })
+    }
   } catch (error) {
     throw new VError(error, `Failed to bundle renderer worker`)
   }

@@ -56,7 +56,6 @@ const EditorHelper = await import('../src/parts/Editor/EditorHelper.js')
 
 afterEach(() => {
   jest.restoreAllMocks()
-  Platform.state.cachedIsMobileOrTablet = undefined
 })
 
 const create$EditorRow = () => {
@@ -113,7 +112,7 @@ test('event - mousedown - right', () => {
       clientX: 8,
       clientY: 5,
       button: 2,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).not.toHaveBeenCalled()
 })
@@ -135,7 +134,7 @@ test('event - mousedown - left - out of viewport', () => {
       detail: 1,
       clientX: -10,
       clientY: -10,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleMouseDown', ModifierKey.None, -10, -10, 1)
@@ -225,7 +224,7 @@ test.skip('event - touchstart - single touch', () => {
       ],
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith([
     404,
@@ -257,7 +256,7 @@ test.skip('event - touchmove - single touch', () => {
       ],
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith([
     405,
@@ -352,9 +351,6 @@ test.skip('event - paste', () => {
 })
 
 test('event - context menu', () => {
-  Platform.state.isMobileOrTablet = () => {
-    return false
-  }
   const state = Editor.create()
   ComponentUid.set(state.$Viewlet, 1)
   EditorHelper.setState(1, state)
@@ -364,7 +360,7 @@ test('event - context menu', () => {
       bubbles: true,
       clientX: 15,
       clientY: 30,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleContextMenu', 0, 15, 30)
@@ -380,15 +376,13 @@ test.skip('event - beforeinput on contenteditable on mobile - no selection', () 
       data: 'a',
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).not.toHaveBeenCalled()
   expect(spy).toHaveBeenCalledWith('[Editor] cannot handle input event without selection')
 })
 
 test('event - wheel - on vertical scroll bar', () => {
-  // TODO mock platform module instead
-  Platform.state.isMobileOrTablet = () => false
   const state = Editor.create()
   ComponentUid.set(state.$Viewlet, 1)
   state.$ScrollBarThumbVertical.dispatchEvent(
@@ -398,7 +392,7 @@ test('event - wheel - on vertical scroll bar', () => {
       bubbles: true,
       cancelable: true,
       deltaMode: WheelEventType.DomDeltaPixel,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'setDelta', WheelEventType.DomDeltaPixel, 1, 42)
@@ -600,7 +594,7 @@ test.skip('event - beforeinput on contenteditable on mobile - cursor in middle',
       data: 'a',
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith('Editor.handleBeforeInputFromContentEditable', 'a', {
     startColumnIndex: 6,
@@ -611,7 +605,6 @@ test.skip('event - beforeinput on contenteditable on mobile - cursor in middle',
 })
 
 test('event - composition', () => {
-  Platform.state.isMobileOrTablet = () => false
   const state = Editor.create()
   ComponentUid.set(state.$Viewlet, 1)
   EditorHelper.setState(1, state)
@@ -623,14 +616,14 @@ test('event - composition', () => {
       data: 'a',
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   state.$EditorInput.dispatchEvent(
     new CompositionEvent('compositionend', {
       data: 'ñ',
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(2)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenNthCalledWith(1, 1, 'compositionStart', 'a')
@@ -659,7 +652,7 @@ test.skip('event - beforeinput on contenteditable on mobile - word in middle sel
       data: 'a',
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith('Editor.handleBeforeInputFromContentEditable', 'a', {
     startColumnIndex: 2,
@@ -694,7 +687,7 @@ test.skip('event - native selection change', () => {
     new InputEvent('selectionchange', {
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith([
     408,

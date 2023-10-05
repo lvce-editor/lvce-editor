@@ -84,3 +84,8 @@ test('formatDate - 2 years ago', () => {
   const date = now - 2 * year
   expect(FormatDate.formatDate(date, now)).toBe('2 years ago')
 })
+
+test('formatDate - in 2 hours', () => {
+  const date = now + 2 * hour
+  expect(FormatDate.formatDate(date, now)).toBe('in 2 hours')
+})

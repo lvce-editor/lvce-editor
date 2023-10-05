@@ -4,6 +4,7 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js' // TODO use Command.execute instead
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
@@ -78,10 +79,10 @@ const getIcon = (extension) => {
   if (!extension || !extension.path || !extension.icon) {
     return ''
   }
-  if (Platform.platform === 'remote') {
+  if (Platform.platform === PlatformType.Remote) {
     return `/remote/${extension.path}/${extension.icon}` // TODO support windows paths
   }
-  if (Platform.platform === 'electron') {
+  if (Platform.platform === PlatformType.Electron) {
     return `/remote/${extension.path}/${extension.icon}` // TODO support windows paths
   }
   return ''
@@ -243,7 +244,7 @@ export const handleInstall = async (state, id) => {
     /* id */ 'Extensions',
     /* method */ 'setExtensionState',
     /* id */ id,
-    /* state */ 'installing'
+    /* state */ 'installing',
   )
   try {
     await ExtensionManagement.install(/* id */ id)
@@ -254,7 +255,7 @@ export const handleInstall = async (state, id) => {
       /* id */ 'Extensions',
       /* method */ 'setExtensionState',
       /* id */ id,
-      /* state */ 'uninstalled'
+      /* state */ 'uninstalled',
     )
     // TODO use command.execute
     ErrorHandling.handleError(error)
@@ -265,7 +266,7 @@ export const handleInstall = async (state, id) => {
     /* id */ 'Extensions',
     /* method */ 'setExtensionState',
     /* id */ id,
-    /* state */ 'installed'
+    /* state */ 'installed',
   )
 }
 
@@ -276,7 +277,7 @@ export const handleUninstall = async (state, id) => {
     /* id */ 'Extensions',
     /* method */ 'setExtensionState',
     /* id */ id,
-    /* state */ 'uninstalling'
+    /* state */ 'uninstalling',
   )
   try {
     await ExtensionManagement.uninstall(id)
@@ -286,7 +287,7 @@ export const handleUninstall = async (state, id) => {
       /* id */ 'Extensions',
       /* method */ 'setExtensionState',
       /* id */ id,
-      /* state */ 'installed'
+      /* state */ 'installed',
     )
     ErrorHandling.handleError(error)
     return
@@ -296,7 +297,7 @@ export const handleUninstall = async (state, id) => {
     /* id */ 'Extensions',
     /* method */ 'setExtensionState',
     /* id */ id,
-    /* state */ 'uninstalled'
+    /* state */ 'uninstalled',
   )
 }
 
@@ -310,7 +311,7 @@ export const handleEnable = async (state, id) => {
       /* id */ 'Extensions',
       /* method */ 'setExtensionState',
       /* id */ id,
-      /* state */ 'disabled'
+      /* state */ 'disabled',
     )
     ErrorHandling.handleError(error)
     return
@@ -320,7 +321,7 @@ export const handleEnable = async (state, id) => {
     /* id */ 'Extensions',
     /* method */ 'setExtensionState',
     /* id */ id,
-    /* state */ 'enabled'
+    /* state */ 'enabled',
   )
 }
 
@@ -338,7 +339,7 @@ export const handleDisable = async (state, id) => {
     /* id */ 'Extensions',
     /* method */ 'setExtensionState',
     /* id */ id,
-    /* state */ 'disabled'
+    /* state */ 'disabled',
   )
 }
 

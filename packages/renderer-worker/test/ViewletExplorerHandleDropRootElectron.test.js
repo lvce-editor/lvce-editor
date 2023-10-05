@@ -1,5 +1,6 @@
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { jest } from '@jest/globals'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -27,7 +28,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 })
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
-    platform: 'electron',
+    platform: PlatformType.Electron,
     assetDir: '',
   }
 })
@@ -71,7 +72,7 @@ test('handleDrop - single file', async () => {
         type: 'text/plain',
         webkitRelativePath: '',
       },
-    ])
+    ]),
   ).toMatchObject({
     items: [
       {
@@ -143,7 +144,7 @@ test('handleDrop - single file - merge with existing files', async () => {
         type: 'text/plain',
         webkitRelativePath: '',
       },
-    ])
+    ]),
   ).toMatchObject({
     items: [
       {
@@ -197,6 +198,6 @@ test('handleDrop - error', async () => {
         type: 'text/plain',
         webkitRelativePath: '',
       },
-    ])
+    ]),
   ).rejects.toThrowError(new TypeError('x is not a function'))
 })

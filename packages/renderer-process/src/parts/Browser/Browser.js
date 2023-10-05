@@ -1,8 +1,9 @@
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 // TODO if necessary support more browser detection
 export const getBrowser = () => {
-  if (Platform.platform === 'electron') {
+  if (Platform.platform === PlatformType.Electron) {
     return 'electron'
   }
   // @ts-ignore
