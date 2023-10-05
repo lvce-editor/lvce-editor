@@ -11,5 +11,5 @@ export const handleUnhandledError = (message, filename, lineno, colno, error) =>
     // ignore errors from chrome extensions
     return
   }
-  ErrorHandling.handleError(error, true, '[renderer-process] Unhandled Error: ')
+  ErrorHandling.handleError(error, Boolean(error), '[renderer-process] Unhandled Error: ')
 }
