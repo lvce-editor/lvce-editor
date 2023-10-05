@@ -1,6 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Error from '../Error/Error.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as FileSystemWatch from '../FileSystemWatch/FileSystemWatch.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
