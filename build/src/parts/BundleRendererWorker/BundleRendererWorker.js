@@ -90,7 +90,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
     })
 
     await WriteFile.writeFile({
-      to: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetAbsoluteIconPath/GetAbsoluteIconPath.js`,
+      to: `${cachePath}/src/parts/GetAbsoluteIconPath/GetAbsoluteIconPath.js`,
       content: `import * as IconThemeState from '../IconThemeState/IconThemeState.js'
 import * as AssetDir from '../AssetDir/AssetDir.js'
 
