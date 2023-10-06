@@ -1,5 +1,3 @@
-import * as Error from '../Error/Error.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import { VError } from '../VError/VError.js'
@@ -27,8 +25,5 @@ export const getIconTheme = async (iconThemeId) => {
       }
     }
   }
-  throw new Error.OperationalError({
-    code: ErrorCodes.E_ICON_THEME_NOT_FOUND,
-    message: `Icon theme "${iconThemeId}" not found in extensions folder`,
-  })
+  throw new VError(`Icon theme "${iconThemeId}" not found in extensions folder`)
 }
