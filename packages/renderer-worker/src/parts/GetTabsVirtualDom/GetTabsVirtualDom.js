@@ -21,7 +21,7 @@ const getTabDom = (tab, isActive, fixedWidth) => {
   }
   const isDirty = flags & TabFlags.Dirty
   const isHovered = flags & TabFlags.Hovered
-  const fileIconClassName = `FileIcon FileIcon${icon}`
+  const fileIconClassName = `FileIcon`
   const actualTabWidth = fixedWidth || tabWidth
   const tabElement = {
     type: VirtualDomElements.Div,
@@ -36,9 +36,10 @@ const getTabDom = (tab, isActive, fixedWidth) => {
   const dom = [
     tabElement,
     {
-      type: VirtualDomElements.Div,
+      type: VirtualDomElements.Img,
       className: fileIconClassName,
       childCount: 0,
+      src: icon,
     },
     {
       type: VirtualDomElements.Div,
@@ -68,7 +69,7 @@ const getTabDom = (tab, isActive, fixedWidth) => {
         type: VirtualDomElements.Div,
         className: 'MaskIcon TabDirtyIcon',
         childCount: 0,
-      }
+      },
     )
   }
   return dom

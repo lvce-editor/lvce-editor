@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Character from '../Character/Character.js'
 import * as DefaultIcon from '../DefaultIcon/DefaultIcon.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as GetAbsoluteIconPath from '../GetAbsoluteIconPath/GetAbsoluteIconPath.js'
 import * as IconThemeState from '../IconThemeState/IconThemeState.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
@@ -16,7 +17,7 @@ export const getFileNameIcon = (file) => {
   if (iconTheme.fileNames) {
     const fileNameIcon = iconTheme.fileNames[fileNameLower]
     if (fileNameIcon) {
-      return fileNameIcon
+      return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, fileNameIcon)
     }
   }
   if (iconTheme.fileExtensions) {
@@ -25,7 +26,7 @@ export const getFileNameIcon = (file) => {
       const shorterExtension = fileNameLower.slice(index + 1)
       const extensionIcon = iconTheme.fileExtensions[shorterExtension]
       if (extensionIcon) {
-        return extensionIcon
+        return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, extensionIcon)
       }
     }
   }
@@ -35,14 +36,14 @@ export const getFileNameIcon = (file) => {
     if (languageId === 'jsx' && fileNameLower.endsWith('.js')) {
       const alternativeFileIcon = iconTheme.languageIds['javascript']
       if (alternativeFileIcon) {
-        return alternativeFileIcon
+        return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, alternativeFileIcon)
       }
     }
     if (languageIcon) {
-      return languageIcon
+      return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, languageIcon)
     }
   }
-  return DefaultIcon.File
+  return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, DefaultIcon.File)
 }
 
 export const getFileIcon = (file) => {
@@ -52,16 +53,16 @@ export const getFileIcon = (file) => {
 export const getFolderIcon = (folder) => {
   const iconTheme = IconThemeState.state.iconTheme
   // @ts-ignore
-  if (!iconTheme || !iconTheme.folderNames) {
+  if (!iconTheme || !iconTheme.folderNames || !iconTheme.iconDefinitions) {
     return ''
   }
   const folderNameLower = folder.name.toLowerCase()
   // @ts-ignore
   const folderIcon = iconTheme.folderNames[folderNameLower]
   if (folderIcon) {
-    return folderIcon
+    return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, folderIcon)
   }
-  return DefaultIcon.Folder
+  return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, DefaultIcon.Folder)
 }
 
 const getFolderIconExpanded = (folder) => {
@@ -71,14 +72,14 @@ const getFolderIconExpanded = (folder) => {
   }
   // @ts-ignore
   if (!iconTheme.folderNamesExpanded) {
-    return DefaultIcon.FolderOpen
+    return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, DefaultIcon.FolderOpen)
   }
   // @ts-ignore
   const folderName = iconTheme.folderNamesExpanded[folder.name.toLowerCase()]
   if (folderName) {
-    return folderName
+    return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, folderName)
   }
-  return DefaultIcon.FolderOpen
+  return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, DefaultIcon.FolderOpen)
 }
 
 export const getIcon = (dirent) => {
@@ -95,7 +96,7 @@ export const getIcon = (dirent) => {
     case DirentType.CharacterDevice:
     case DirentType.BlockDevice:
     case DirentType.Socket:
-      return DefaultIcon.File
+      return GetAbsoluteIconPath.getAbsoluteIconPath(IconThemeState.state.iconTheme, DefaultIcon.File)
     default:
       Logger.warn(`unsupported type ${dirent.type}`)
       return DefaultIcon.None

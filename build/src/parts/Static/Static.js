@@ -126,6 +126,16 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
     occurrence: `return \`\${extensionPath}\${value}\``,
     replacement: `return \`${pathPrefix}/file-icons/\${value.slice(7)}\``, // TODO should adjust vscode-icons.json instead
   })
+  await WriteFile.writeFile({
+    to: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetAbsoluteIconPath/GetAbsoluteIconPath.js`,
+    content: `import * as IconThemeState from '../IconThemeState/IconThemeState.js'
+
+export const getAbsoluteIconPath = (iconTheme, icon) => {
+  const result = iconTheme.iconDefinitions[icon]
+  const extensionPath = IconThemeState.state.extensionPath || ''
+  return \`${pathPrefix}/file-icons/\${result.slice(7)}\`
+}`, // TODO should adjust vscode-icons.json instead
+  })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
     occurrence: `await SharedProcess.listen()`,
