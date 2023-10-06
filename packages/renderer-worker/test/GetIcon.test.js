@@ -11,13 +11,12 @@ jest.unstable_mockModule('../src/parts/Languages/Languages.js', () => {
   }
 })
 
-const IconTheme = await import('../src/parts/IconTheme/IconTheme.js')
 const Languages = await import('../src/parts/Languages/Languages.js')
 
 test('getIcon - match by lowerCase file name', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      f_license: '/test/file_license.svg',
+      f_license: 'test/file_license.svg',
     },
     fileNames: {
       license: 'f_license',
@@ -28,13 +27,13 @@ test('getIcon - match by lowerCase file name', () => {
       type: DirentType.File,
       name: 'license',
     }),
-  ).toBe('f_license')
+  ).toBe('/remote/test/file_license.svg')
 })
 
 test('getIcon - match by upperCase file name', () => {
   IconThemeState.state.iconTheme = {
     iconDefinitions: {
-      f_license: '/test/file_license.svg',
+      f_license: 'test/file_license.svg',
     },
     fileNames: {
       license: 'f_license',
@@ -45,11 +44,14 @@ test('getIcon - match by upperCase file name', () => {
       type: DirentType.File,
       name: 'LICENSE',
     }),
-  ).toBe('f_license')
+  ).toBe('/remote/test/file_license.svg')
 })
 
 test('getIcon - match by lowerCase folder name', () => {
   IconThemeState.state.iconTheme = {
+    iconDefinitions: {
+      fd_test: 'test/folder_test.svg',
+    },
     folderNames: {
       test: 'fd_test',
     },
@@ -59,11 +61,14 @@ test('getIcon - match by lowerCase folder name', () => {
       type: DirentType.Directory,
       name: 'test',
     }),
-  ).toBe('fd_test')
+  ).toBe('/remote/test/folder_test.svg')
 })
 
 test('getIcon - match by upperCase folder name', () => {
   IconThemeState.state.iconTheme = {
+    iconDefinitions: {
+      fd_test: 'test/folder_test.svg',
+    },
     folderNames: {
       test: 'fd_test',
     },
@@ -73,11 +78,14 @@ test('getIcon - match by upperCase folder name', () => {
       type: DirentType.Directory,
       name: 'TEST',
     }),
-  ).toBe('fd_test')
+  ).toBe('/remote/test/folder_test.svg')
 })
 
 test('getIcon - match by file extension', () => {
   IconThemeState.state.iconTheme = {
+    iconDefinitions: {
+      f_test: 'test/file_test.svg',
+    },
     fileNames: {},
     languageIds: {},
     fileExtensions: {
@@ -89,11 +97,14 @@ test('getIcon - match by file extension', () => {
       type: DirentType.File,
       name: 'abc.test',
     }),
-  ).toBe('f_test')
+  ).toBe('/remote/test/file_test.svg')
 })
 
 test('getIcon - match by lowercase file extension', () => {
   IconThemeState.state.iconTheme = {
+    iconDefinitions: {
+      f_test: 'test/file_test.svg',
+    },
     fileNames: {},
     languageIds: {},
     fileExtensions: {
@@ -105,7 +116,7 @@ test('getIcon - match by lowercase file extension', () => {
       type: DirentType.File,
       name: 'abc.Test',
     }),
-  ).toBe('f_test')
+  ).toBe('/remote/test/file_test.svg')
 })
 
 test.skip('getIcon - match by file extension but icon theme has no fileNames property', () => {
@@ -138,6 +149,9 @@ test.skip('getIcon - match by file extension but icon theme has no languages pro
 
 test('getIcon - match by folder name expanded', () => {
   IconThemeState.state.iconTheme = {
+    iconDefinitions: {
+      fd_api_open: 'test/folder_api_open.svg',
+    },
     folderNamesExpanded: {
       api: 'fd_api_open',
     },
@@ -147,11 +161,15 @@ test('getIcon - match by folder name expanded', () => {
       type: DirentType.DirectoryExpanded,
       name: 'api',
     }),
-  ).toBe('fd_api_open')
+  ).toBe('/remote/test/folder_api_open.svg')
 })
 
 test('getIcon - error - directory not in definitions', () => {
-  IconThemeState.state.iconTheme = {}
+  IconThemeState.state.iconTheme = {
+    iconDefinitions: {
+      _file: 'test/file.svg',
+    },
+  }
   expect(
     GetIcon.getIcon({
       type: DirentType.Directory,
@@ -161,23 +179,31 @@ test('getIcon - error - directory not in definitions', () => {
 })
 
 test('getIcon - error - directory expanded not in definitions', () => {
-  IconThemeState.state.iconTheme = {}
+  IconThemeState.state.iconTheme = {
+    iconDefinitions: {
+      _folder_open: 'test/folder_open.svg',
+    },
+  }
   expect(
     GetIcon.getIcon({
       type: DirentType.DirectoryExpanded,
       name: 'api',
     }),
-  ).toBe('_folder_open')
+  ).toBe('/remote/test/folder_open.svg')
 })
 
 test('getIcon - symlink', () => {
-  IconThemeState.state.iconTheme = {}
+  IconThemeState.state.iconTheme = {
+    iconDefinitions: {
+      _file: 'test/file.svg',
+    },
+  }
   expect(
     GetIcon.getIcon({
       type: DirentType.Symlink,
       name: 'a',
     }),
-  ).toBe('_file')
+  ).toBe('/remote/test/file.svg')
 })
 
 test('getIcon - socket', () => {
