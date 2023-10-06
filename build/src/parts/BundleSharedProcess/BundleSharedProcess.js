@@ -1,10 +1,9 @@
-import { readdir } from 'fs/promises'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
-import * as Path from '../Path/Path.js'
-import * as Replace from '../Replace/Replace.js'
-import * as Remove from '../Remove/Remove.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as Path from '../Path/Path.js'
+import * as Remove from '../Remove/Remove.js'
+import * as Replace from '../Replace/Replace.js'
 
 const createNewPackageJson = (oldPackageJson, bundleSharedProcess) => {
   const newPackageJson = {
@@ -151,22 +150,8 @@ export const getPtyHostPath = async () => {
       from: 'static/config',
       to: `${cachePath}/config`,
     })
-    // TODO where should builtinExtension be located?
-    const shouldBeCopied = (extensionName) => {
-      return (
-        extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-') || extensionName.startsWith('builtin.language-basics')
-      )
-    }
-    const extensionNames = await readdir(Path.absolute('extensions'))
-    for (const extensionName of extensionNames) {
-      if (shouldBeCopied(extensionName)) {
-        await Copy.copy({
-          from: `extensions/${extensionName}`,
-          to: `${cachePath}/extensions/${extensionName}`,
-        })
-      }
-    }
   }
+
   if (bundleSharedProcess) {
     await Copy.copy({
       from: 'packages/shared-process/node_modules',
