@@ -96,7 +96,7 @@ import * as AssetDir from '../AssetDir/AssetDir.js'
 
 export const getAbsoluteIconPath = (iconTheme, icon) => {
   const result = iconTheme.iconDefinitions[icon]
-  return \`\${AssetDir.assetDir}/file-icons/\${result.slice(7)}\`
+  return \`\${AssetDir.assetDir}/file-icons/\${result.slice(12)}\`
 }`, // TODO should adjust vscode-icons.json instead
     })
 
