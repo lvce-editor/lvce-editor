@@ -8,7 +8,8 @@ import * as Logger from '../Logger/Logger.js'
 
 const getResult = (iconTheme, icon) => {
   const result = iconTheme.iconDefinitions[icon]
-  const extensionPath = IconThemeState.state.extensionPath
+  const extensionPath = IconThemeState.state.extensionPath || ''
+  console.log({ result, def: iconTheme.iconDefinitions, icon })
   if (result) {
     if (extensionPath.includes('\\')) {
       const extensionUri = extensionPath.replaceAll('\\', '/')
@@ -108,7 +109,7 @@ export const getIcon = (dirent) => {
     case DirentType.CharacterDevice:
     case DirentType.BlockDevice:
     case DirentType.Socket:
-      return DefaultIcon.File
+      return getResult(IconThemeState.state.iconTheme, DefaultIcon.File)
     default:
       Logger.warn(`unsupported type ${dirent.type}`)
       return DefaultIcon.None
