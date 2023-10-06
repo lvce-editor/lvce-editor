@@ -2,23 +2,10 @@ import * as Assert from '../Assert/Assert.js'
 import * as Character from '../Character/Character.js'
 import * as DefaultIcon from '../DefaultIcon/DefaultIcon.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as GetAbsoluteIconPath from '../GetAbsoluteIconPath/GetAbsoluteIconPath.js'
 import * as IconThemeState from '../IconThemeState/IconThemeState.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
-
-const getResult = (iconTheme, icon) => {
-  const result = iconTheme.iconDefinitions[icon]
-  const extensionPath = IconThemeState.state.extensionPath || ''
-  console.log({ result, def: iconTheme.iconDefinitions, icon })
-  if (result) {
-    if (extensionPath.includes('\\')) {
-      const extensionUri = extensionPath.replaceAll('\\', '/')
-      return `/remote/${extensionUri}/${result}`
-    }
-    return `/remote${extensionPath}/${result}`
-  }
-  return ''
-}
 
 export const getFileNameIcon = (file) => {
   Assert.string(file)
@@ -30,7 +17,7 @@ export const getFileNameIcon = (file) => {
   if (iconTheme.fileNames) {
     const fileNameIcon = iconTheme.fileNames[fileNameLower]
     if (fileNameIcon) {
-      return getResult(iconTheme, fileNameIcon)
+      return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, fileNameIcon)
     }
   }
   if (iconTheme.fileExtensions) {
@@ -39,7 +26,7 @@ export const getFileNameIcon = (file) => {
       const shorterExtension = fileNameLower.slice(index + 1)
       const extensionIcon = iconTheme.fileExtensions[shorterExtension]
       if (extensionIcon) {
-        return getResult(iconTheme, extensionIcon)
+        return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, extensionIcon)
       }
     }
   }
@@ -49,14 +36,14 @@ export const getFileNameIcon = (file) => {
     if (languageId === 'jsx' && fileNameLower.endsWith('.js')) {
       const alternativeFileIcon = iconTheme.languageIds['javascript']
       if (alternativeFileIcon) {
-        return getResult(iconTheme, alternativeFileIcon)
+        return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, alternativeFileIcon)
       }
     }
     if (languageIcon) {
-      return getResult(iconTheme, languageIcon)
+      return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, languageIcon)
     }
   }
-  return getResult(iconTheme, DefaultIcon.File)
+  return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, DefaultIcon.File)
 }
 
 export const getFileIcon = (file) => {
@@ -73,9 +60,9 @@ export const getFolderIcon = (folder) => {
   // @ts-ignore
   const folderIcon = iconTheme.folderNames[folderNameLower]
   if (folderIcon) {
-    return getResult(iconTheme, folderIcon)
+    return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, folderIcon)
   }
-  return getResult(iconTheme, DefaultIcon.Folder)
+  return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, DefaultIcon.Folder)
 }
 
 const getFolderIconExpanded = (folder) => {
@@ -85,14 +72,14 @@ const getFolderIconExpanded = (folder) => {
   }
   // @ts-ignore
   if (!iconTheme.folderNamesExpanded) {
-    return getResult(iconTheme, DefaultIcon.FolderOpen)
+    return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, DefaultIcon.FolderOpen)
   }
   // @ts-ignore
   const folderName = iconTheme.folderNamesExpanded[folder.name.toLowerCase()]
   if (folderName) {
-    return getResult(iconTheme, folderName)
+    return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, folderName)
   }
-  return getResult(iconTheme, DefaultIcon.FolderOpen)
+  return GetAbsoluteIconPath.getAbsoluteIconPath(iconTheme, DefaultIcon.FolderOpen)
 }
 
 export const getIcon = (dirent) => {
@@ -109,7 +96,7 @@ export const getIcon = (dirent) => {
     case DirentType.CharacterDevice:
     case DirentType.BlockDevice:
     case DirentType.Socket:
-      return getResult(IconThemeState.state.iconTheme, DefaultIcon.File)
+      return GetAbsoluteIconPath.getAbsoluteIconPath(IconThemeState.state.iconTheme, DefaultIcon.File)
     default:
       Logger.warn(`unsupported type ${dirent.type}`)
       return DefaultIcon.None
