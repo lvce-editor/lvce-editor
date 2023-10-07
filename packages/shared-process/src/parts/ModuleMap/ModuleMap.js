@@ -3,8 +3,6 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
-    case 'ElectronWindowProcessExplorer.open':
-      return ModuleId.ElectronWindowProcessExplorer
     case 'AttachDebugger.attachDebugger':
       return ModuleId.AttachDebugger
     case 'AutoUpdater.getAutoUpdateType':
@@ -68,6 +66,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronSafeStorage
     case 'ElectronWindowAbout.open':
       return ModuleId.ElectronWindowAbout
+    case 'ElectronWindowProcessExplorer.open':
+      return ModuleId.ElectronWindowProcessExplorer
     case 'Exit.exit':
       return ModuleId.Exit
     case 'ExtensionHost.dispose':

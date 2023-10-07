@@ -16,8 +16,6 @@ export const load = (moduleId) => {
       return import('../ChromeExtension/ChromeExtension.ipc.js')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.js')
-    case ModuleId.ElectronWindowProcessExplorer:
-      return import('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
     case ModuleId.Crash:
       return import('../Crash/Crash.ipc.js')
     case ModuleId.DesktopCapturer:
@@ -48,6 +46,8 @@ export const load = (moduleId) => {
       return import('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ElectronWindowAbout:
       return import('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
+    case ModuleId.ElectronWindowProcessExplorer:
+      return import('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
     case ModuleId.Exit:
       return import('../Exit/Exit.ipc.js')
     case ModuleId.ExtensionHost:
