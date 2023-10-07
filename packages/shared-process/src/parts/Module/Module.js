@@ -78,6 +78,8 @@ export const load = (moduleId) => {
       return import('../OpenExternal/OpenExternal.ipc.js')
     case ModuleId.OpenNativeFolder:
       return import('../OpenNativeFolder/OpenNativeFolder.ipc.js')
+    case ModuleId.Os:
+      return import('../Os/Os.ipc.js')
     case ModuleId.OutputChannel:
       return import('../OutputChannel/OutputChannel.ipc.js')
     case ModuleId.Performance:
@@ -106,8 +108,6 @@ export const load = (moduleId) => {
       return import('../WebSocketServer/WebSocketServer.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.Os:
-      return import('../Os/Os.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

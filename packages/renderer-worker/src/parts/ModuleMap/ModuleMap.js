@@ -131,6 +131,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.PersistentFileHandle
     case 'Preferences':
       return ModuleId.Preferences
+    case 'Prompt':
+      return ModuleId.Prompt
     case 'RebuildNodePty':
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened':
@@ -164,8 +166,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workbench
     case 'Workspace':
       return ModuleId.Workspace
-    case 'Prompt':
-      return ModuleId.Prompt
     default:
       throw new Error(`module ${prefix} not found`)
   }
