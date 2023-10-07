@@ -1,5 +1,6 @@
 import * as Icon from '../Icon/Icon.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const getIcon = (extension) => {
   if (!extension) {
@@ -14,10 +15,10 @@ export const getIcon = (extension) => {
     }
     return Icon.ExtensionDefaultIcon
   }
-  if (Platform.platform === 'remote') {
+  if (Platform.platform === PlatformType.Remote) {
     return `/remote/${extension.path}/${extension.icon}` // TODO support windows paths
   }
-  if (Platform.platform === 'electron') {
+  if (Platform.platform === PlatformType.Electron) {
     return `/remote/${extension.path}/${extension.icon}` // TODO support windows paths
   }
   return ''

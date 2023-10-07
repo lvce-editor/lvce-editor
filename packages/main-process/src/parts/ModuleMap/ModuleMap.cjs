@@ -8,6 +8,8 @@ const getPrefix = (commandId) => {
 exports.getModuleId = (commandId) => {
   const prefix = getPrefix(commandId)
   switch (prefix) {
+    case 'Crash':
+      return ModuleId.Crash
     case 'ElectronApp':
     case 'App':
       return ModuleId.App
@@ -57,6 +59,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.CreatePidMap
     case 'OpenExternal':
       return ModuleId.OpenExternal
+    case 'Process':
+      return ModuleId.Process
     case 'Platform':
       return ModuleId.Platform
     case 'GetWindowId':
@@ -65,6 +69,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.DesktopCapturer
     case 'Trash':
       return ModuleId.Trash
+    case 'IpcParent':
+      return ModuleId.IpcParent
     default:
       throw new CommandNotFoundError(commandId)
   }

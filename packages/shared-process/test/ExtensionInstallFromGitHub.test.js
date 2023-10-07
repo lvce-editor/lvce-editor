@@ -4,7 +4,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getExtensionsPath: () => {
     return '/test/extensions'
   },
@@ -54,7 +54,7 @@ test('install - error with download', async () => {
       user: 'user',
       repo: 'repo',
       branch: 'HEAD',
-    })
+    }),
   ).rejects.toThrowError(new Error('Failed to install user/repo: Failed to download'))
 })
 
@@ -68,7 +68,7 @@ test('install - error with extraction', async () => {
       user: 'user',
       repo: 'repo',
       branch: 'HEAD',
-    })
+    }),
   ).rejects.toThrowError(new Error(`Failed to install user/repo: Failed to extract file`))
 })
 
@@ -92,7 +92,7 @@ test('install - error - missing id in extension manifest', async () => {
       user: 'user',
       repo: 'repo',
       branch: 'HEAD',
-    })
+    }),
   ).rejects.toThrowError(new Error(`Failed to install user/repo: missing id in extension manifest`))
 })
 
@@ -117,7 +117,7 @@ test('install - error - manifest contains null', async () => {
       user: 'user',
       repo: 'repo',
       branch: 'HEAD',
-    })
+    }),
   ).rejects.toThrowError(new Error("Failed to install user/repo: TypeError: Cannot destructure property 'id' of 'manifestJson' as it is null."))
 })
 

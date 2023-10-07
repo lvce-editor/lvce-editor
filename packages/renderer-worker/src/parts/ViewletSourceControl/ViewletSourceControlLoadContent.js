@@ -44,5 +44,6 @@ export const loadContent = async (state) => {
     enabledProviderIds,
     isExpanded,
     buttons,
+    root,
   }
 }

@@ -1,36 +1,15 @@
 import { readFile, writeFile } from 'fs/promises'
-import VError from 'verror'
-import * as BundleJs from '../BundleJs/BundleJs.js'
-import * as Copy from '../Copy/Copy.js'
-import * as EagerLoadedCss from '../EagerLoadedCss/EagerLoadedCss.js'
-import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
-import * as Path from '../Path/Path.js'
-import * as Replace from '../Replace/Replace.js'
 import { pathToFileURL } from 'url'
+import { VError } from '@lvce-editor/verror'
+import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
+import * as Copy from '../Copy/Copy.js'
+import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
+import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
+import * as Path from '../Path/Path.js'
+import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as Replace from '../Replace/Replace.js'
 
-const isEagerLoaded = (cssDeclaration) => {
-  for (const eagerLoaded of EagerLoadedCss.eagerLoadedCss) {
-    if (cssDeclaration.endsWith(`/${eagerLoaded}`)) {
-      return true
-    }
-  }
-  return false
-}
-
-const getFilteredCssDeclarations = (cssDeclarations) => {
-  if (typeof cssDeclarations === 'string') {
-    cssDeclarations = [cssDeclarations]
-  }
-  const filtered = []
-  for (const cssDeclaration of cssDeclarations) {
-    if (!isEagerLoaded(cssDeclaration)) {
-      filtered.push(cssDeclaration)
-    }
-  }
-  return filtered
-}
-
-const getNewCssDeclarionFile = (content, filteredCss) => {
+const getNewCssDeclarationFile = (content, filteredCss) => {
   const lines = content.split('\n')
   const newLines = []
   let skip = false
@@ -49,6 +28,21 @@ const getNewCssDeclarionFile = (content, filteredCss) => {
   return newLines.join('\n')
 }
 
+const getPlatformCode = (platform) => {
+  switch (platform) {
+    case 'electron':
+      return `PlatformType.Electron`
+    case 'remote':
+      // workaround for rollup treeshaking out platform variable
+      // which is still needed for static web export
+      return `globalThis.PLATFORM = PlatformType.Remote`
+    case 'web':
+      return 'PlatformType.Web'
+    default:
+      throw new Error(`unsupported platform ${platform}`)
+  }
+}
+
 export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir }) => {
   try {
     await Copy.copy({
@@ -62,8 +56,8 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       const Css = module.Css
       if (Css) {
         const content = await readFile(file, 'utf8')
-        const filteredDeclarations = getFilteredCssDeclarations(Css)
-        const newContent = getNewCssDeclarionFile(content, filteredDeclarations)
+        const filteredDeclarations = GetFilteredCssDeclarations.getFilteredCssDeclarations(Css)
+        const newContent = getNewCssDeclarationFile(content, filteredDeclarations)
         await writeFile(file, newContent)
       }
     }
@@ -79,34 +73,47 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       })
     }
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/AssetDir/AssetDir.js`,
       occurrence: `ASSET_DIR`,
       replacement: `'${assetDir}'`,
     })
+    const platformCode = getPlatformCode(platform)
     await Replace.replace({
       path: `${cachePath}/src/parts/Platform/Platform.js`,
       occurrence: 'export const platform = getPlatform()',
-      replacement: `export const platform = '${platform}'`,
+      replacement: `export const platform = ${platformCode}`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
       replacement: `/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
     })
+
+    await WriteFile.writeFile({
+      to: `${cachePath}/src/parts/GetAbsoluteIconPath/GetAbsoluteIconPath.js`,
+      content: `import * as IconThemeState from '../IconThemeState/IconThemeState.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
+
+export const getAbsoluteIconPath = (iconTheme, icon) => {
+  const result = iconTheme.iconDefinitions[icon]
+  return \`\${AssetDir.assetDir}/file-icons/\${result.slice(12)}\`
+}`, // TODO should adjust vscode-icons.json instead
+    })
+
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererWorkerMain.js`,
       platform: 'webworker',
+      allowCyclicDependencies: true, // TODO
     })
-    // workaround for firefox bug
-    await Replace.replace({
-      path: `${cachePath}/dist/rendererWorkerMain.js`,
-      occurrence: `//# sourceMappingURL`,
-      replacement: `export {}
-//# sourceMappingURL`,
-    })
+    if (platform === 'remote') {
+      await Replace.replace({
+        path: `${cachePath}/dist/rendererWorkerMain.js`,
+        occurrence: `const platform = globalThis.PLATFORM = Remote;`,
+        replacement: `const platform = Remote;`,
+      })
+    }
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to bundle renderer worker`)
   }
 }

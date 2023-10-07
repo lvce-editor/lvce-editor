@@ -2,7 +2,6 @@ const { VError } = require('../VError/VError.cjs')
 const { WindowLoadError } = require('../WindowLoadError/WindowLoadError.cjs')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.cjs')
 const DefaultUrl = require('../DefaultUrl/DefaultUrl.cjs')
-const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.cjs')
 const ErrorHandling = require('../ErrorHandling/ErrorHandling.cjs')
 const LifeCycle = require('../LifeCycle/LifeCycle.cjs')
 const Logger = require('../Logger/Logger.cjs')
@@ -60,6 +59,7 @@ exports.createAppWindow = async (preferences, parsedArgs, workingDirectory, url 
     zoomLevel,
     titleBarOverlay,
   })
+  const ElectronApplicationMenu = await import('../ElectronApplicationMenu/ElectronApplicationMenu.js')
   const menu = ElectronApplicationMenu.createTitleBar()
   ElectronApplicationMenu.setMenu(menu)
 

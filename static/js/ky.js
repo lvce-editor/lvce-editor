@@ -45,7 +45,7 @@ class TimeoutError extends Error {
 const isObject = (value) => value !== null && typeof value === "object";
 const validateAndMerge = (...sources) => {
   for (const source of sources) {
-    if ((!isObject(source) || Array.isArray(source)) && typeof source !== "undefined") {
+    if ((!isObject(source) || Array.isArray(source)) && source !== void 0) {
       throw new TypeError("The `options` argument must be an object");
     }
   }
@@ -94,7 +94,7 @@ const supportsRequestStreams = (() => {
   const supportsReadableStream = typeof globalThis.ReadableStream === "function";
   const supportsRequest = typeof globalThis.Request === "function";
   if (supportsReadableStream && supportsRequest) {
-    hasContentType = new globalThis.Request("https://a.com", {
+    hasContentType = new globalThis.Request("https://empty.invalid", {
       body: new globalThis.ReadableStream(),
       method: "POST",
       get duplex() {
@@ -162,31 +162,18 @@ async function timeout(request, abortController, options) {
     });
   });
 }
-const isDomExceptionSupported = Boolean(globalThis.DOMException);
-function composeAbortError(signal) {
-  var _a, _b;
-  if (isDomExceptionSupported) {
-    return new DOMException((_a = signal == null ? void 0 : signal.reason) != null ? _a : "The operation was aborted.", "AbortError");
-  }
-  const error = new Error((_b = signal == null ? void 0 : signal.reason) != null ? _b : "The operation was aborted.");
-  error.name = "AbortError";
-  return error;
-}
 async function delay(ms, {signal}) {
   return new Promise((resolve, reject) => {
     if (signal) {
-      if (signal.aborted) {
-        reject(composeAbortError(signal));
-        return;
-      }
-      signal.addEventListener("abort", handleAbort, {once: true});
+      signal.throwIfAborted();
+      signal.addEventListener("abort", abortHandler, {once: true});
     }
-    function handleAbort() {
-      reject(composeAbortError(signal));
+    function abortHandler() {
       clearTimeout(timeoutId);
+      reject(signal.reason);
     }
     const timeoutId = setTimeout(() => {
-      signal == null ? void 0 : signal.removeEventListener("abort", handleAbort);
+      signal == null ? void 0 : signal.removeEventListener("abort", abortHandler);
       resolve();
     }, ms);
   });
@@ -195,7 +182,7 @@ class Ky {
   static create(input, options) {
     const ky2 = new Ky(input, options);
     const fn = async () => {
-      if (ky2._options.timeout > maxSafeTimeout) {
+      if (typeof ky2._options.timeout === "number" && ky2._options.timeout > maxSafeTimeout) {
         throw new RangeError(`The \`timeout\` option cannot be greater than ${maxSafeTimeout}`);
       }
       await Promise.resolve();
@@ -251,7 +238,7 @@ class Ky {
     return result;
   }
   constructor(input, options = {}) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     Object.defineProperty(this, "request", {
       enumerable: true,
       configurable: true,
@@ -297,8 +284,8 @@ class Ky {
       prefixUrl: String(options.prefixUrl || ""),
       retry: normalizeRetryOptions(options.retry),
       throwHttpErrors: options.throwHttpErrors !== false,
-      timeout: typeof options.timeout === "undefined" ? 1e4 : options.timeout,
-      fetch: (_b = options.fetch) != null ? _b : globalThis.fetch.bind(globalThis)
+      timeout: (_b = options.timeout) != null ? _b : 1e4,
+      fetch: (_c = options.fetch) != null ? _c : globalThis.fetch.bind(globalThis)
     };
     if (typeof this._input !== "string" && !(this._input instanceof URL || this._input instanceof globalThis.Request)) {
       throw new TypeError("`input` must be a string, URL, or Request");
@@ -337,7 +324,7 @@ class Ky {
     }
     if (this._options.json !== void 0) {
       this._options.body = JSON.stringify(this._options.json);
-      this.request.headers.set("content-type", (_c = this._options.headers.get("content-type")) != null ? _c : "application/json");
+      this.request.headers.set("content-type", (_d = this._options.headers.get("content-type")) != null ? _d : "application/json");
       this.request = new globalThis.Request(this.request, {body: this._options.body});
     }
   }
@@ -356,7 +343,7 @@ class Ky {
           } else {
             after *= 1e3;
           }
-          if (typeof this._options.retry.maxRetryAfter !== "undefined" && after > this._options.retry.maxRetryAfter) {
+          if (this._options.retry.maxRetryAfter !== void 0 && after > this._options.retry.maxRetryAfter) {
             return 0;
           }
           return after;

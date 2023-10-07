@@ -12,6 +12,8 @@ export const load = (moduleId) => {
       return import('../ViewletClock/ViewletClock.ipc.js')
     case ViewletModuleId.DebugConsole:
       return import('../ViewletDebugConsole/ViewletDebugConsole.ipc.js')
+    case ViewletModuleId.DefineKeyBinding:
+      return import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.ipc.js')
     case ViewletModuleId.Dialog:
       return import('../ViewletDialog/ViewletDialog.ipc.js')
     case ViewletModuleId.DiffEditor:
@@ -50,8 +52,6 @@ export const load = (moduleId) => {
       return import('../ViewletOutput/ViewletOutput.ipc.js')
     case ViewletModuleId.Panel:
       return import('../ViewletPanel/ViewletPanel.ipc.js')
-    case ViewletModuleId.Pdf:
-      return import('../ViewletPdf/ViewletPdf.ipc.js')
     case ViewletModuleId.Problems:
       return import('../ViewletProblems/ViewletProblems.ipc.js')
     case ViewletModuleId.QuickPick:
@@ -88,8 +88,6 @@ export const load = (moduleId) => {
       return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.ipc.js')
     case ViewletModuleId.Video:
       return import('../ViewletVideo/ViewletVideo.ipc.js')
-    case ViewletModuleId.DefineKeyBinding:
-      return import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.ipc.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }

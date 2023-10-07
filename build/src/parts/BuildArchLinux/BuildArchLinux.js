@@ -1,4 +1,4 @@
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as ArchLinuxElectronVersion from '../ArchLinuxElectronVersion/ArchLinuxElectronVersion.js'
 import * as ArchType from '../ArchType/ArchType.js'
 import * as Compress from '../Compress/Compress.js'
@@ -13,6 +13,7 @@ import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
+import * as Version from '../Version/Version.js'
 import * as Template from '../Template/Template.js'
 
 const bundleElectronMaybe = async ({ product, version }) => {
@@ -148,7 +149,6 @@ const printFinalSize = async ({ product }) => {
     const size = await Stat.getFileSize(Path.absolute(`build/.tmp/releases/${product.applicationName}.tar.xz`))
     Logger.info(`tar xz size: ${size}`)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to print tar xz size`)
   }
 }
@@ -160,7 +160,7 @@ export const build = async ({ product }) => {
     return
   }
 
-  const version = await Tag.getGitTag()
+  const version = await Version.getVersion()
 
   console.time('copyElectronResult')
   await copyElectronResult({ product, version })

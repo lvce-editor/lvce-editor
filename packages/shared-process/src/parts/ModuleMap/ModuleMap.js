@@ -24,6 +24,11 @@ export const getModuleId = (commandId) => {
     case 'ClipBoard.readFiles':
     case 'ClipBoard.writeFiles':
       return ModuleId.ClipBoard
+    case 'Crash.crashMainProcess':
+    case 'Crash.crashSharedProcess':
+      return ModuleId.Crash
+    case 'DesktopCapturer.getSources':
+      return ModuleId.DesktopCapturer
     case 'Developer.allocateMemory':
     case 'Developer.crashSharedProcess':
     case 'Developer.createHeapSnapshot':
@@ -31,12 +36,40 @@ export const getModuleId = (commandId) => {
     case 'Developer.sharedProcessMemoryUsage':
     case 'Developer.sharedProcessStartupPerformance':
       return ModuleId.Developer
-    case 'Performance.getNodeStartupTiming':
-      return ModuleId.Performance
     case 'Download.download':
       return ModuleId.Download
+    case 'ElectronApplicationMenu.setItems':
+    case 'ElectronApplicationMenu.handleClick':
+      return ModuleId.ElectronApplicationMenu
+    case 'ElectronBrowserView.createBrowserView':
+    case 'ElectronBrowserView.disposeBrowserView':
+      return ModuleId.ElectronBrowserView
+    case 'ElectronClipBoard.writeText':
+      return ModuleId.ElectronClipBoard
+    case 'ElectronContentTracing.startRecording':
+    case 'ElectronContentTracing.stopRecording':
+      return ModuleId.ElectronContentTracing
+    case 'ElectronContextMenu.openContextMenu':
+      return ModuleId.ElectronContextMenu
+    case 'ElectronDialog.showMessageBox':
+    case 'ElectronDialog.showOpenDialog':
+      return ModuleId.ElectronDialog
     case 'ElectronInitialize.electronInitialize':
       return ModuleId.ElectronInitialize
+    case 'ElectronNetLog.startLogging':
+    case 'ElectronNetLog.stopLogging':
+      return ModuleId.ElectronNetLog
+    case 'ElectronProcess.getChromeVersion':
+    case 'ElectronProcess.getElectronVersion':
+      return ModuleId.ElectronProcess
+    case 'ElectronSafeStorage.decryptString':
+    case 'ElectronSafeStorage.encryptString':
+    case 'ElectronSafeStorage.isEncryptionAvailable':
+      return ModuleId.ElectronSafeStorage
+    case 'ElectronWindowAbout.open':
+      return ModuleId.ElectronWindowAbout
+    case 'Exit.exit':
+      return ModuleId.Exit
     case 'ExtensionHost.dispose':
     case 'ExtensionHost.enableExtension':
     case 'ExtensionHost.executeCommand':
@@ -132,12 +165,19 @@ export const getModuleId = (commandId) => {
       return ModuleId.IsAutoUpdateSupported
     case 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage':
       return ModuleId.ListProcessesWithMemoryUsage
+    case 'OpenExternal.openExternal':
+    case 'OpenExternal.showItemInFolder':
+      return ModuleId.OpenExternal
     case 'Native.openFolder':
     case 'OpenNativeFolder.openFolder':
       return ModuleId.OpenNativeFolder
     case 'OutputChannel.close':
     case 'OutputChannel.open':
       return ModuleId.OutputChannel
+    case 'PassthroughElectronMessagePort.passThroughElectronMessagePort':
+      return ModuleId.PassThroughElectronMessagePort
+    case 'Performance.getNodeStartupTiming':
+      return ModuleId.Performance
     case 'Platform.getAppDir':
     case 'Platform.getBuiltinExtensionsPath':
     case 'Platform.getCachedExtensionsPath':
@@ -152,12 +192,14 @@ export const getModuleId = (commandId) => {
     case 'Platform.getHomeDir':
     case 'Platform.getLogsDir':
     case 'Platform.getMarketplaceUrl':
+    case 'Platform.getProductNameLong':
     case 'Platform.getRecentlyOpenedPath':
     case 'Platform.getTestPath':
-    case 'Platform.getUserSettingsPath':
     case 'Platform.getUserKeyBindingsPath':
+    case 'Platform.getUserSettingsPath':
     case 'Platform.getVersion':
     case 'Platform.setEnvironmentVariables':
+    case 'Platform.getApplicationName':
       return ModuleId.Platform
     case 'Preferences.getAll':
       return ModuleId.Preferences
@@ -165,7 +207,11 @@ export const getModuleId = (commandId) => {
     case 'Process.getPid':
     case 'Process.getV8Version':
     case 'Process.kill':
+    case 'Process.getArch':
       return ModuleId.Process
+    case 'ProcessId.getMainProcessId':
+    case 'ProcessId.getSharedProcessId':
+      return ModuleId.ProcessId
     case 'RebuildNodePty.rebuildNodePty':
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':
@@ -183,9 +229,18 @@ export const getModuleId = (commandId) => {
       return ModuleId.TextDocument
     case 'WebSocketServer.handleUpgrade':
       return ModuleId.WebSocketServer
+    case 'ElectronWindow.close':
+    case 'ElectronWindow.maximize':
+    case 'ElectronWindow.minimize':
+    case 'ElectronWindow.reload':
+    case 'ElectronWindow.toggleDevtools':
+    case 'ElectronWindow.unmaximize':
+      return ModuleId.Window
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
+    case 'Os.getTmpDir':
+      return ModuleId.Os
     default:
       throw new CommandNotFoundError(commandId)
   }

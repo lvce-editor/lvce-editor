@@ -1,12 +1,17 @@
+import { readFile, writeFile } from 'fs/promises'
 import { existsSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
+import { pathToFileURL } from 'url'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
+import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
+import * as GetNewCssDeclarationFile from '../GetNewCssDeclarationFile/GetNewCssDeclarationFile.js'
 import * as InlineDynamicImportsFile from '../InlineDynamicImportsFile/InlineDynamicImportsFile.js'
+import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
@@ -23,7 +28,7 @@ const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
     to: `build/.tmp/dist/${commitHash}/packages/renderer-process/src`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/AssetDir/AssetDir.js`,
     occurrence: `ASSET_DIR`,
     replacement: `'${pathPrefix}/${commitHash}'`,
   })
@@ -76,7 +81,7 @@ export const getModule = (method) => {
 }`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/RendererWorkerUrl/RendererWorkerUrl.js`,
     occurrence: `/src/rendererWorkerMain.js`,
     replacement: '/dist/rendererWorkerMain.js',
   })
@@ -116,15 +121,15 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
     occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
     replacement: `return \`\${AssetDir.assetDir}/icon-themes/\${iconThemeId}.json\``,
   })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IpcParentWithNode/IpcParentWithNode.js`,
-    occurrence: `const platform = getPlatform() `,
-    replacement: 'const platform = PlaformType.Web',
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IconTheme/IconTheme.js`,
-    occurrence: `return \`\${extensionPath}\${value}\``,
-    replacement: `return \`${pathPrefix}/file-icons/\${value.slice(7)}\``,
+  await WriteFile.writeFile({
+    to: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetAbsoluteIconPath/GetAbsoluteIconPath.js`,
+    content: `import * as IconThemeState from '../IconThemeState/IconThemeState.js'
+
+export const getAbsoluteIconPath = (iconTheme, icon) => {
+  const result = iconTheme.iconDefinitions[icon]
+  const extensionPath = IconThemeState.state.extensionPath || ''
+  return \`${pathPrefix}/file-icons/\${result.slice(7)}\`
+}`, // TODO should adjust vscode-icons.json instead
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
@@ -137,20 +142,20 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
     replacement: ``,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/AssetDir/AssetDir.js`,
     occurrence: `ASSET_DIR`,
     replacement: `'${pathPrefix}/${commitHash}'`,
   })
   // TODO enable loading themes from extension folder in production, just like language basics extensions
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetColorThemeJson/GetColorThemeJson.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetColorThemeJsonWeb/GetColorThemeJsonWeb.js`,
     occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
     replacement: `return \`\${AssetDir.assetDir}/themes/\${colorThemeId}.json\``,
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
     occurrence: 'PLATFORM',
-    replacement: `'web'`,
+    replacement: `PlatformType.Web`,
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IpcChildModule/IpcChildModule.js`,
@@ -208,28 +213,34 @@ export const getModule = (method) => {
     ],
     ipcPostFix: true,
   })
+  const cssDeclarationFiles = await GetCssDeclarationFiles.getCssDeclarationFiles(`build/.tmp/dist/${commitHash}/packages/renderer-worker`)
+  for (const file of cssDeclarationFiles) {
+    const url = pathToFileURL(file).toString()
+    const module = await import(url)
+    const Css = module.Css
+    if (Css) {
+      const content = await readFile(file, 'utf8')
+      const filteredDeclarations = GetFilteredCssDeclarations.getFilteredCssDeclarations(Css)
+      const newContent = GetNewCssDeclarationFile.getNewCssDeclarationFile(content, filteredDeclarations)
+      await writeFile(file, newContent)
+    }
+  }
 }
 
-const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
+const copyExtensionHostWorkerFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
     from: 'packages/extension-host-worker/src',
     to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/PlatformPaths/PlatformPaths.js`,
     occurrence: `/src/extensionHostWorkerMain.js`,
     replacement: '/dist/extensionHostWorkerMain.js',
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/GetExtensionHostSubWorkerUrl/GetExtensionHostSubWorkerUrl.js`,
     occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
-    replacement: `'/${commitHash}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
-  })
-  // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/extensionHostWorkerMain.js`,
-    occurrence: `main()`,
-    replacement: `main()\n\nexport const x = 42`,
+    replacement: `'${pathPrefix}/${commitHash}/packages/extension-host-sub-worker/dist/extensionHostSubWorkerMain.js'`,
   })
 }
 
@@ -247,15 +258,7 @@ const copyExtensionHostSubWorkerFiles = async ({ commitHash }) => {
   // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
 }
 
-const copyPdfWorkerFiles = async ({ commitHash }) => {
-  await Copy.copy({
-    from: 'packages/pdf-worker/src',
-    to: `build/.tmp/dist/${commitHash}/packages/pdf-worker/src`,
-  })
-}
-
-const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
-  const commitHash = await CommitHash.getCommitHash()
+const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   await Copy.copy({
     from: 'static/config',
     to: `build/.tmp/dist/${commitHash}/config`,
@@ -268,17 +271,9 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
     from: 'static/favicon.ico',
     to: `build/.tmp/dist/favicon.ico`,
   })
-  await Copy.copyFile({
-    from: 'static/serviceWorker.js',
-    to: `build/.tmp/dist/serviceWorker.js`,
-  })
   await Copy.copy({
     from: 'static/fonts',
     to: `build/.tmp/dist/${commitHash}/fonts`,
-  })
-  await Copy.copy({
-    from: 'static/images',
-    to: `build/.tmp/dist/images`,
   })
   await Copy.copy({
     from: 'static/sounds',
@@ -300,11 +295,6 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
       replacement: `"start_url": "${pathPrefix}/"`,
     })
   }
-  await Replace.replace({
-    path: `build/.tmp/dist/serviceWorker.js`,
-    occurrence: `const CACHE_STATIC_NAME = 'static-v4'`,
-    replacement: `const CACHE_STATIC_NAME = 'static-${commitHash}'`,
-  })
   await Copy.copyFile({
     from: 'static/index.html',
     to: `build/.tmp/dist/index.html`,
@@ -418,82 +408,6 @@ Disallow: /
   })
 }
 
-/**
- * Configure caching for netlify
- * - static assets are cached for one year
- * - manifest.json is cached for one week (thats what github and reddit do, seems pretty reasonable)
- * - favicon.ico is also cached for one week
- * - index.html is cached for 10min
- */
-const TEMPLATE_NETLIFY_HEADERS = `/COMMIT_HASH/*
-  Cache-Control: public, max-age=31536000, immutable
-  Cross-Origin-Embedder-Policy: require-corp
-  X-Content-Type-Options: nosniff
-
-/fonts/*
-  Cache-Control: public, max-age=31536000, immutable
-  X-Content-Type-Options: nosniff
-
-/sounds/*
-  Cache-Control: public, max-age=31536000, immutable
-  X-Content-Type-Options: nosniff
-
-/file-icons/*
-  Cache-Control: public, max-age=31536000, immutable
-  X-Content-Type-Options: nosniff
-
-/tests/*
-  Cache-Control: public, max-age=31536000, immutable
-  X-Content-Type-Options: nosniff
-
-/manifest.json
-  Cache-Control: public, max-age=604800, immutable
-  X-Content-Type-Options: nosniff
-
-/favicon.ico
-  Cache-Control: public, max-age=604800, immutable
-  X-Content-Type-Options: nosniff
-
-/
-  Cache-Control: public, max-age=600, immutable
-  X-Content-Type-Options: nosniff
-  Cross-Origin-Embedder-Policy: require-corp
-  Cross-Origin-Opener-Policy: same-origin
-`
-
-const TEMPLATE_NETLIFY_REDIRECTS = `/github/*   /index.html   200
-`
-
-const TEMPLATE_NETLIFY_NOT_FOUND_PAGE = `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Not Found</title>
-  </head>
-  <body>
-    <h1>404 - Page Not Found</h1>
-  </body>
-</html>
-`
-
-const addNetlifyConfigFiles = async () => {
-  const commitHash = await CommitHash.getCommitHash()
-  const netlifyHeaders = TEMPLATE_NETLIFY_HEADERS.replaceAll('COMMIT_HASH', commitHash)
-  await WriteFile.writeFile({
-    to: `build/.tmp/dist/_headers`,
-    content: netlifyHeaders,
-  })
-  await WriteFile.writeFile({
-    to: `build/.tmp/dist/_redirects`,
-    content: TEMPLATE_NETLIFY_REDIRECTS,
-  })
-  await WriteFile.writeFile({
-    to: `build/.tmp/dist/404.html`,
-    content: TEMPLATE_NETLIFY_NOT_FOUND_PAGE,
-  })
-}
-
 const addVersionFile = async ({ commitHash }) => {
   const commitMessage = await CommitHash.getCommitMessage()
   await JsonFile.writeJson({
@@ -542,8 +456,7 @@ const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
     try {
       manifest = await JsonFile.readJson(Path.absolute(`extensions/${languageFeature}/extension.json`))
     } catch (error) {
-      // @ts-ignore
-      if (error && error.code === ErrorCodes.ENOENT) {
+      if (IsEnoentError.isEnoentError(error)) {
         continue
       }
       throw error
@@ -565,6 +478,19 @@ const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
     to: `build/.tmp/dist/${commitHash}/config/webExtensions.json`,
     value: webExtensions,
   })
+
+  if (existsSync(Path.absolute(`build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript`))) {
+    await Copy.copy({
+      from: `build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/node/node_modules/typescript`,
+      to: `build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/typescript`,
+    })
+    await Remove.remove(`build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/node`)
+    await Replace.replace({
+      path: `build/.tmp/dist/${commitHash}/extensions/builtin.language-features-typescript/src/parts/IsWeb/IsWeb.js`,
+      occurrence: 'false',
+      replacement: 'true',
+    })
+  }
 }
 
 const copyIconThemes = async ({ commitHash }) => {
@@ -582,6 +508,7 @@ const bundleJs = async ({ commitHash }) => {
     codeSplitting: true,
     minify: true,
     babelExternal: true,
+    typescript: true,
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/renderer-worker`),
@@ -697,7 +624,7 @@ export const build = async () => {
   Console.timeEnd('clean')
 
   Console.time('copyStaticFiles')
-  await copyStaticFiles({ pathPrefix, ignoreIconTheme })
+  await copyStaticFiles({ pathPrefix, ignoreIconTheme, commitHash })
   Console.timeEnd('copyStaticFiles')
 
   Console.time('copyRendererProcessFiles')
@@ -709,16 +636,12 @@ export const build = async () => {
   Console.timeEnd('copyRendererWorkerFiles')
 
   Console.time('copyExtensionHostWorkerFiles')
-  await copyExtensionHostWorkerFiles({ commitHash })
+  await copyExtensionHostWorkerFiles({ pathPrefix, commitHash })
   Console.timeEnd('copyExtensionHostWorkerFiles')
 
   Console.time('copyExtensionHostSubWorkerFiles')
   await copyExtensionHostSubWorkerFiles({ commitHash })
   Console.timeEnd('copyExtensionHostSubWorkerFiles')
-
-  Console.time('copyPdfWorkerFiles')
-  await copyPdfWorkerFiles({ commitHash })
-  Console.timeEnd('copyPdfWorkerFiles')
 
   Console.time('applyJsOverrides')
   await applyJsOverrides({ pathPrefix, commitHash })
@@ -749,10 +672,6 @@ export const build = async () => {
   Console.time('addRobotsTxt')
   await addRobotsTxt()
   Console.timeEnd('addRobotsTxt')
-
-  Console.time('addNetlifyHeaders')
-  await addNetlifyConfigFiles()
-  Console.timeEnd('addNetlifyHeaders')
 
   Console.time('copyTestFiles')
   await copyTestFiles({ pathPrefix, commitHash })

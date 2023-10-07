@@ -6,8 +6,11 @@
     "ActivityBarActiveBackground": "#1f2727",
     "ActivityBarActiveForeground": "rgb(135, 143, 140)",
 
-    "BadgeBackground": "#90599b",
-    "BadgeForeground": "#eeeeee",
+    "BadgeBackground": "rgb(160, 63, 155)",
+    "BadgeForeground": "#fff",
+
+    "BadgeSecondaryBackground": "#90599b",
+    "BadgeSecondaryForeground": "#eeeeee",
 
     "DropDownBackground": "#3c3c3c",
     "DropDownForeground": "#f0f0f0",
@@ -270,6 +273,18 @@
     {
       "name": "MarkdownLinkUrl",
       "foreground": "#B2885F"
+    },
+    {
+      "name": "CssPseudoSelector",
+      "foreground": "#7A8D5C"
+    },
+    {
+      "name": "CssImportant",
+      "foreground": "#CD6564"
+    },
+    {
+      "name": "CssAttributeName",
+      "foreground": "#AB6767"
     }
   ]
 }

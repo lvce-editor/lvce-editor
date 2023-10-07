@@ -20,15 +20,13 @@
     "node": ">=16"
   },
   "dependencies": {
-    "@babel/code-frame": "^7.22.5",
+    "@lvce-editor/pretty-error": "^1.2.0",
+    "@lvce-editor/verror": "^1.1.1",
     "debug": "^4.3.4",
-    "lines-and-columns": "^2.0.3",
-    "verror": "^1.10.1",
-    "ws": "^8.13.0"
+    "ws": "^8.14.2"
   },
   "devDependencies": {
-    "@types/verror": "^1.10.6",
-    "@types/ws": "^8.5.5"
+    "@types/ws": "^8.5.6"
   },
   "optionalDependencies": {
     "node-pty": "^1.0.0"

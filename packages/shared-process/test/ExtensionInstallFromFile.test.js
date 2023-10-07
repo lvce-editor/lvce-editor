@@ -4,7 +4,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getExtensionsPath: () => {
     return '/test/extensions'
   },
@@ -39,9 +39,7 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   }),
 }))
 
-const ExtensionInstallFromFile = await import(
-  '../src/parts/ExtensionInstallFromFile/ExtensionInstallFromFile.js'
-)
+const ExtensionInstallFromFile = await import('../src/parts/ExtensionInstallFromFile/ExtensionInstallFromFile.js')
 const Extract = await import('../src/parts/Extract/Extract.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 const Path = await import('../src/parts/Path/Path.js')
@@ -54,10 +52,8 @@ test('install - error with extraction', async () => {
   await expect(
     ExtensionInstallFromFile.install({
       path: './extension.tar.br',
-    })
-  ).rejects.toThrowError(
-    new Error('Failed to install ./extension.tar.br: Failed to extract')
-  )
+    }),
+  ).rejects.toThrowError(new Error('Failed to install ./extension.tar.br: Failed to extract'))
 })
 
 test('install - error - missing id in extension manifest', async () => {
@@ -74,12 +70,8 @@ test('install - error - missing id in extension manifest', async () => {
   await expect(
     ExtensionInstallFromFile.install({
       path: './extension.tar.br',
-    })
-  ).rejects.toThrowError(
-    new Error(
-      `Failed to install ./extension.tar.br: missing id in extension manifest`
-    )
-  )
+    }),
+  ).rejects.toThrowError(new Error(`Failed to install ./extension.tar.br: missing id in extension manifest`))
 })
 
 test('install', async () => {
@@ -99,17 +91,9 @@ test('install', async () => {
     path: './extension.tar.br',
   })
   expect(Extract.extractTarBr).toHaveBeenCalledTimes(1)
-  expect(Extract.extractTarBr).toHaveBeenCalledWith(
-    './extension.tar.br',
-    '/test/cached-extensions/file-extension'
-  )
+  expect(Extract.extractTarBr).toHaveBeenCalledWith('./extension.tar.br', '/test/cached-extensions/file-extension')
   expect(FileSystem.readFile).toHaveBeenCalledTimes(1)
-  expect(FileSystem.readFile).toHaveBeenCalledWith(
-    '/test/cached-extensions/file-extension/extension.json'
-  )
+  expect(FileSystem.readFile).toHaveBeenCalledWith('/test/cached-extensions/file-extension/extension.json')
   expect(FileSystem.rename).toHaveBeenCalledTimes(1)
-  expect(FileSystem.rename).toHaveBeenCalledWith(
-    '/test/cached-extensions/file-extension',
-    '/test/extensions/test.test-extension'
-  )
+  expect(FileSystem.rename).toHaveBeenCalledWith('/test/cached-extensions/file-extension', '/test/extensions/test.test-extension')
 })

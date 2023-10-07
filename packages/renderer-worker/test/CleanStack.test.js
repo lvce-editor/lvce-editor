@@ -43,3 +43,28 @@ test('cleanStack - clean Object prefix from stack trace', () => {
     '    at createNodeIpc (http://localhost:3000/packages/extension-host-worker/src/parts/ExtensionHostNodeIpc/ExtensionHostNodeIpc.js:4:9)',
   ])
 })
+
+test('cleanStack - clean async Object prefix from stack trace', () => {
+  const stack = `VError: Failed to save file "/test/index.html": Failed to write to file "/test/index.html": EACCES: permission denied, open '/test/index.html'
+    at FileSystem.writeFile (/test/packages/shared-process/src/parts/FileSystem/FileSystem.js:74:11)
+    at async handleJsonRpcMessage (/test/packages/shared-process/src/parts/HandleJsonRpcMessage/HandleJsonRpcMessage.js:8:24)
+    at invoke (JsonRpc.js:14:38)
+    at async invoke3 (SharedProcess.js:45:18)
+    at async Object.writeFile14 (FileSystemDisk.js:30:3)
+    at async writeFile4 (FileSystem.js:39:3)
+    at async save (EditorCommandSave.js:26:5)
+    at async executeViewletCommand (Viewlet.js:359:20)
+    at async executeEditorCommand (ViewletMain.js:458:3)
+    at async save2 (ViewletMain.js:480:3)`
+  expect(CleanStack.cleanStack(stack)).toEqual([
+    '    at FileSystem.writeFile (/test/packages/shared-process/src/parts/FileSystem/FileSystem.js:74:11)',
+    '    at async handleJsonRpcMessage (/test/packages/shared-process/src/parts/HandleJsonRpcMessage/HandleJsonRpcMessage.js:8:24)',
+    '    at async invoke3 (SharedProcess.js:45:18)',
+    '    at async writeFile14 (FileSystemDisk.js:30:3)',
+    '    at async writeFile4 (FileSystem.js:39:3)',
+    '    at async save (EditorCommandSave.js:26:5)',
+    '    at async executeViewletCommand (Viewlet.js:359:20)',
+    '    at async executeEditorCommand (ViewletMain.js:458:3)',
+    '    at async save2 (ViewletMain.js:480:3)',
+  ])
+})

@@ -1,7 +1,7 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as Browser from '../Browser/Browser.js'
 import * as Context from '../Context/Context.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as Platform from '../Platform/Platform.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletLayoutEvents from './ViewletLayoutEvents.js'
 
@@ -24,7 +24,7 @@ export const create = () => {
 
   // TODO is this the right place for browser context ?
   // maybe in env file / env service
-  const browser = Platform.getBrowser()
+  const browser = Browser.getBrowser()
   Context.set(`browser.${browser}`, true)
   return {
     $Viewlet,

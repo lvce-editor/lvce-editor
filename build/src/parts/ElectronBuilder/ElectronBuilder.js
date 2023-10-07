@@ -1,7 +1,8 @@
+import { VError } from '@lvce-editor/verror'
 import * as ElectronBuilder from 'electron-builder'
 import { readdir } from 'node:fs/promises'
-import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
+import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as Copy from '../Copy/Copy.js'
 import * as CreatePlaceholderElectronApp from '../CreatePlaceholderElectronApp/CreatePlaceholderElectronApp.js'
 import * as ElectronBuilderConfigType from '../ElectronBuilderConfigType/ElectronBuilderConfigType.js'
@@ -34,10 +35,11 @@ const getElectronVersion = async () => {
   return parsedVersion
 }
 
-const copyElectronBuilderConfig = async ({ config, version, product, electronVersion }) => {
+const copyElectronBuilderConfig = async ({ config, version, product, electronVersion, bundleMainProcess }) => {
   // if (config === 'electron_builder_arch_linux') {
   //   version = version.replaceAll('-', '_') // https://wiki.archlinux.org/title/creating_packages#pkgver()
   // }
+  const mainProcessPath = bundleMainProcess ? `packages/main-process/dist/mainProcessMain.cjs` : `packages/main-process/src/mainProcessMain.cjs`
   await Template.write(config, 'build/.tmp/electron-builder/package.json', {
     '@@NAME@@': product.applicationName,
     '@@AUTHOR@@': product.linuxMaintainer,
@@ -48,6 +50,7 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
     '@@LICENSE@@': product.licenseName,
     '@@PRODUCT_NAME@@': product.nameLong,
     '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
+    '@@MAIN@@': mainProcessPath,
   })
 }
 
@@ -63,9 +66,13 @@ const runElectronBuilder = async ({ config }) => {
       prepackaged: Path.absolute(`build/.tmp/linux/snap/${debArch}/app`),
       // win: ['portable'],
     }
+    // if (process.env.HIGHEST_COMPRESSION) {
+    //   Logger.info('[info] using highest compression, this may take some time')
+    //   process.env.ELECTRON_BUILDER_7Z_FILTER = 'bcj2'
+    //   process.env.ELECTRON_BUILDER_COMPRESSION_LEVEL = '5'
+    // }
     await ElectronBuilder.build(options)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Electron builder failed to execute`)
   }
 }
@@ -143,11 +150,12 @@ const printFinalSize = async (releaseFilePath) => {
   }
 }
 
-const addRootPackageJson = async ({ cachePath, version, product }) => {
+const addRootPackageJson = async ({ cachePath, version, product, bundleMainProcess }) => {
+  const main = bundleMainProcess ? 'packages/main-process/dist/mainProcessMain.cjs' : 'packages/main-process/src/mainProcessMain.cjs'
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: {
-      main: 'packages/main-process/src/mainProcessMain.cjs',
+      main,
       name: product.applicationName,
       productName: product.nameLong,
       version: version,
@@ -167,7 +175,15 @@ const getRepositoryInfo = (url) => {
   }
 }
 
-const copyElectronResult = async ({ config, version, product, electronVersion, supportsAutoUpdate, shouldRemoveUnusedLocales }) => {
+const copyElectronResult = async ({
+  config,
+  version,
+  product,
+  electronVersion,
+  supportsAutoUpdate,
+  shouldRemoveUnusedLocales,
+  bundleMainProcess,
+}) => {
   await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales })
   const debArch = 'amd64'
   await Copy.copy({
@@ -178,6 +194,7 @@ const copyElectronResult = async ({ config, version, product, electronVersion, s
     cachePath: `build/.tmp/linux/snap/${debArch}/app/resources/app`,
     version,
     product,
+    bundleMainProcess,
   })
   if (supportsAutoUpdate) {
     await Replace.replace({
@@ -214,12 +231,11 @@ const copyElectronResult = async ({ config, version, product, electronVersion, s
     })
   }
   if (config === ElectronBuilderConfigType.WindowsExe) {
-    await Copy.copyFile({
-      from: `build/files/windows/cli.cmd`,
-      to: `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}.cmd`,
+    await Template.write('windows_cmd', `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}.cmd`, {
+      '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
     })
     await Template.write('windows_cli_bash', `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}`, {
-      '@@NAME@@': product.applicationName,
+      '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
     })
     await CreatePlaceholderElectronApp.createPlaceholderElectronApp({ product, version, config, electronVersion })
     await Copy.copyFile({
@@ -248,16 +264,17 @@ export const build = async ({ config, product, shouldRemoveUnusedLocales = false
   process.env.USE_HARD_LINKS = false
   const version = await Tag.getSemverVersion()
   const electronVersion = await getElectronVersion()
+  const bundleMainProcess = BundleOptions.bundleMainProcess
 
   const supportsAutoUpdate =
     product.supportsAutoUpdate && (config === ElectronBuilderConfigType.AppImage || config === ElectronBuilderConfigType.WindowsExe)
 
   console.time('copyElectronResult')
-  await copyElectronResult({ version, config, product, electronVersion, supportsAutoUpdate, shouldRemoveUnusedLocales })
+  await copyElectronResult({ version, config, product, electronVersion, supportsAutoUpdate, shouldRemoveUnusedLocales, bundleMainProcess })
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')
-  await copyElectronBuilderConfig({ config, version, product, electronVersion })
+  await copyElectronBuilderConfig({ config, version, product, electronVersion, bundleMainProcess })
   console.timeEnd('copyElectronBuilderConfig')
 
   console.time('copyBuildResources')

@@ -27,35 +27,6 @@ jest.unstable_mockModule('https://example.com/not-found.js', () => {}, {
 const IpcParentWithMessagePort = await import('../src/parts/IpcParentWithMessagePort/IpcParentWithMessagePort.js')
 const IpcParentWithModuleWorker = await import('../src/parts/IpcParentWithModuleWorker/IpcParentWithModuleWorker.js')
 
-test('create - error - not supported in firefox', async () => {
-  // @ts-ignore
-  globalThis.Worker = class extends EventTarget {
-    constructor() {
-      super()
-      setTimeout(() => {
-        const errorEvent = new ErrorEvent('error', {
-          message: 'SyntaxError: import declarations may only appear at top level of a module',
-        })
-        this.dispatchEvent(errorEvent)
-      }, 0)
-    }
-  }
-  // @ts-ignore
-  IpcParentWithMessagePort.create.mockImplementation(() => {
-    return {}
-  })
-  expect(
-    await IpcParentWithModuleWorker.create({
-      url: 'https://example.com/worker.js',
-      name: 'Renderer Worker',
-    })
-  ).toEqual({})
-  expect(IpcParentWithMessagePort.create).toHaveBeenCalledTimes(1)
-  expect(IpcParentWithMessagePort.create).toHaveBeenCalledWith({
-    url: 'https://example.com/worker.js',
-  })
-})
-
 test('create - error - not found', async () => {
   // @ts-ignore
   globalThis.Worker = class extends EventTarget {

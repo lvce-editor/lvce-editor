@@ -1,5 +1,5 @@
-import * as ElectronMessageBoxType from '../src/parts/ElectronMessageBoxType/ElectronMessageBoxType.js'
 import { jest } from '@jest/globals'
+import * as ElectronMessageBoxType from '../src/parts/ElectronMessageBoxType/ElectronMessageBoxType.js'
 
 beforeEach(() => {
   jest.resetModules()

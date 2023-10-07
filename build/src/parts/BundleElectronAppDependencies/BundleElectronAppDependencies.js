@@ -13,12 +13,13 @@ const isLanguageBasics = (name) => {
   return name.startsWith('builtin.language-basics')
 }
 
-const copyPtyHostFiles = async ({ arch, electronVersion, cachePath }) => {
+const copyPtyHostFiles = async ({ arch, electronVersion, cachePath, platform }) => {
   await BundlePtyHostDependencies.bundlePtyHostDependencies({
     electronVersion,
     arch,
     to: `${cachePath}/packages/pty-host`,
     exclude: ['ws'],
+    platform,
   })
 }
 
@@ -34,12 +35,13 @@ const copyExtensionHostFiles = async ({ cachePath }) => {
   })
 }
 
-const copySharedProcessFiles = async ({ cachePath, arch, electronVersion }) => {
+const copySharedProcessFiles = async ({ cachePath, arch, electronVersion, platform }) => {
   await BundleSharedProcessDependencies.bundleSharedProcessDependencies({
     to: `${cachePath}/packages/shared-process`,
     arch,
     electronVersion,
     exclude: ['ws', 'trash', 'open'],
+    platform,
   })
 }
 
@@ -121,12 +123,21 @@ const copyResults = async () => {
   }
 }
 
-export const bundleElectronAppDependencies = async ({ cachePath, arch, electronVersion, product, supportsAutoUpdate }) => {
+export const bundleElectronAppDependencies = async ({
+  cachePath,
+  arch,
+  electronVersion,
+  product,
+  supportsAutoUpdate,
+  bundleMainProcess,
+  platform,
+}) => {
   console.time('copyPtyHostFiles')
   await copyPtyHostFiles({
     arch,
     electronVersion,
     cachePath,
+    platform,
   })
   console.timeEnd('copyPtyHostFiles')
 
@@ -147,15 +158,18 @@ export const bundleElectronAppDependencies = async ({ cachePath, arch, electronV
     cachePath,
     arch,
     electronVersion,
+    platform,
   })
   console.timeEnd('copySharedProcessFiles')
 
-  console.time('copyMainProcessFiles')
-  await copyMainProcessFiles({
-    arch,
-    electronVersion,
-    cachePath,
-    supportsAutoUpdate,
-  })
-  console.timeEnd('copyMainProcessFiles')
+  if (!bundleMainProcess) {
+    console.time('copyMainProcessFiles')
+    await copyMainProcessFiles({
+      arch,
+      electronVersion,
+      cachePath,
+      supportsAutoUpdate,
+    })
+    console.timeEnd('copyMainProcessFiles')
+  }
 }

@@ -1,5 +1,5 @@
 import * as ElectronBuilder from 'electron-builder'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Template from '../Template/Template.js'
@@ -16,6 +16,7 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
     '@@LICENSE@@': product.licenseName,
     '@@PRODUCT_NAME@@': product.nameLong,
     '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
+    '@@MAIN@@': 'packages/main-process/dist/mainProcessMain.cjs',
   })
 }
 
@@ -29,7 +30,6 @@ const runElectronBuilder = async ({}) => {
     }
     await ElectronBuilder.build(options)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Electron builder failed to execute`)
   }
 }
@@ -41,7 +41,7 @@ export const createPlaceholderElectronApp = async ({ config, product, version, e
   await copyElectronBuilderConfig({ config, product, version, electronVersion })
 
   await WriteFile.writeFile({
-    to: 'build/.tmp/electron-builder-placeholder-app/packages/main-process/dist/mainProcessMain.js',
+    to: 'build/.tmp/electron-builder-placeholder-app/packages/main-process/dist/mainProcessMain.cjs',
     content: '',
   })
 

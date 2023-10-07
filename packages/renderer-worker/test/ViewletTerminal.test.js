@@ -92,10 +92,10 @@ test('resize', async () => {
   SharedProcess.invoke.mockImplementation(() => {
     return null
   })
-  const state = ViewletTerminal.create(1)
-  await ViewletTerminal.resize(state, 10, 10)
+  const state = { ...ViewletTerminal.create(1), width: 10, height: 10 }
+  await ViewletTerminal.resizeEffect(state)
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Terminal.resize', 0, 7, 1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Terminal.resize', 1, 7, 1)
 })
 
 test('dispose', async () => {

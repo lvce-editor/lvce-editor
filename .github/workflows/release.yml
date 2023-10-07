@@ -38,7 +38,7 @@ jobs:
       matrix:
         os: [windows-2022, macos-12, ubuntu-22.04]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 40
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -57,6 +57,11 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
           restore-keys: ${{ runner.os }}-cacheNodeModules-
+      - uses: actions/cache@v3
+        id: electron-builder-cache
+        with:
+          path: '~/.cache/electron-builder'
+          key: ${{ runner.os }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
       - uses: actions/cache@v3
         id: build-cache
         with:
@@ -91,6 +96,8 @@ jobs:
       - name: Build Electron App (deb, x64)
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --product=lvce --target=electron-deb
+        env:
+          HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (deb, x64)
         if: matrix.os == 'ubuntu-22.04'
         shell: bash
@@ -107,6 +114,70 @@ jobs:
           upload_url: ${{ needs.create-release.outputs.upload_url }}
           asset_path: ${{ env.ASSET_DEB_X64 }}
           asset_name: ${{ env.ASSET_DEB_X64 }}
+          asset_content_type: application/octet-stream
+      - name: Build Electron App (deb, arm64)
+        if: matrix.os == 'ubuntu-22.04'
+        run: node build/bin/build.js --product=lvce --target=electron-deb --arch=arm64
+        env:
+          HIGHEST_COMPRESSION: 1
+      - name: Rename Electron App (deb, arm64)
+        if: matrix.os == 'ubuntu-22.04'
+        shell: bash
+        run: |
+          staging="lvce-${{ needs.create-release.outputs.rg_version }}_arm64.deb"
+          mv "build/.tmp/releases/lvce-arm64.deb" "$staging"
+          echo "ASSET_DEB_ARM64=$staging" >> $GITHUB_ENV
+      - name: Release Electron App (deb, arm64)
+        uses: actions/upload-release-asset@v1.0.1
+        if: matrix.os == 'ubuntu-22.04'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.ASSET_DEB_ARM64 }}
+          asset_name: ${{ env.ASSET_DEB_ARM64 }}
+          asset_content_type: application/octet-stream
+      - name: Build Electron App (deb, armhf)
+        if: matrix.os == 'ubuntu-22.04'
+        run: node build/bin/build.js --product=lvce --target=electron-deb --arch=armhf
+        env:
+          HIGHEST_COMPRESSION: 1
+      - name: Rename Electron App (deb, armhf)
+        if: matrix.os == 'ubuntu-22.04'
+        shell: bash
+        run: |
+          staging="lvce-${{ needs.create-release.outputs.rg_version }}_armhf.deb"
+          mv "build/.tmp/releases/lvce-armhf.deb" "$staging"
+          echo "ASSET_DEB_ARMHF=$staging" >> $GITHUB_ENV
+      - name: Release Electron App (deb, armhf)
+        uses: actions/upload-release-asset@v1.0.1
+        if: matrix.os == 'ubuntu-22.04'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.ASSET_DEB_ARMHF }}
+          asset_name: ${{ env.ASSET_DEB_ARMHF }}
+          asset_content_type: application/octet-stream
+      - name: Build Electron App (snap, x64)
+        if: matrix.os == 'ubuntu-22.04'
+        run: node build/bin/build.js --product=lvce --target=electron-builder-snap
+      - name: Rename Electron App (snap, x64)
+        if: matrix.os == 'ubuntu-22.04'
+        shell: bash
+        run: |
+          staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.snap"
+          mv "build/.tmp/releases/lvce.snap" "$staging"
+          echo "ASSET_SNAP_X64=$staging" >> $GITHUB_ENV
+      - name: Release Electron App (snap, x64)
+        uses: actions/upload-release-asset@v1.0.1
+        if: matrix.os == 'ubuntu-22.04'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.ASSET_SNAP_X64 }}
+          asset_name: ${{ env.ASSET_SNAP_X64 }}
           asset_content_type: application/octet-stream
       - name: Build Electron App (Macos dmg, x64)
         if: matrix.os == 'macos-12'
@@ -131,6 +202,8 @@ jobs:
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2022'
         run: node build/bin/build.js --product=lvce --target=electron-builder-windows-exe
+        env:
+          HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (exe)
         if: matrix.os == 'windows-2022'
         shell: bash

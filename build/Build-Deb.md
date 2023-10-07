@@ -18,4 +18,6 @@ sudo dpkg -i .tmp/releases/lvce-oss-amd64.deb
 
 When installing the deb locally, it might show the error `.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)`. As a workaround, run `sudo chown _apt /var/lib/update-notifier/package-data-downloads/partial/` (see https://askubuntu.com/questions/954862/couldnt-be-accessed-by-user-apt-pkgacquirerun-13-permission-denied)
 
-Tip: Use [lintian](http://manpages.ubuntu.com/manpages/trusty/man1/lintian.1.html) to check the deb for errors/warnings
+## Linting
+
+Use [lintian](http://manpages.ubuntu.com/manpages/trusty/man1/lintian.1.html) to check the deb for errors/warnings

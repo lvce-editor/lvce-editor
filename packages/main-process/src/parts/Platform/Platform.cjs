@@ -46,8 +46,6 @@ exports.commit = 'unknown commit'
 
 exports.scheme = 'lvce-oss'
 
-exports.productNameLong = 'Lvce Editor - OSS'
-
 exports.getSessionId = () => {
   return process.env.SESSION_ID || `persist:${exports.scheme}`
 }
@@ -85,13 +83,9 @@ exports.getExtensionHostHelperProcessPathCjs = () => {
 }
 
 exports.getVersion = () => {
-  return this.version
+  return exports.version
 }
 
 exports.getCommit = () => {
-  return this.commit
-}
-
-exports.getProductNameLong = () => {
-  return this.productNameLong
+  return exports.commit
 }

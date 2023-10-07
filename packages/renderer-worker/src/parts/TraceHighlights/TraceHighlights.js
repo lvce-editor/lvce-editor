@@ -9,8 +9,7 @@ export const traceHighlights = (table, arrows, patternLength, wordLength) => {
     const arrow = arrows[row][column]
     if (arrow === Arrow.Left) {
       column--
-    }
-    if (arrow === Arrow.Diagonal) {
+    } else if (arrow === Arrow.Diagonal) {
       row--
       column--
       const start = column + 1

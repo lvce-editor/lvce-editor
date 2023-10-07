@@ -1,6 +1,8 @@
+import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
+import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
@@ -10,10 +12,10 @@ import * as Copy from '../Copy/Copy.js'
 import * as CopySharedProcessSources from '../CopySharedProcessSources/CopySharedProcessSources.js'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
-import * as Tag from '../Tag/Tag.js'
-import * as BundleOptions from '../BundleOptions/BundleOptions.js'
+import * as Version from '../Version/Version.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const copyStaticFiles = async ({ commitHash }) => {
@@ -32,10 +34,6 @@ const copyStaticFiles = async ({ commitHash }) => {
   await Copy.copyFile({
     from: 'static/favicon.ico',
     to: `build/.tmp/server/server/static/favicon.ico`,
-  })
-  await Copy.copyFile({
-    from: 'static/serviceWorker.js',
-    to: `build/.tmp/server/server/static/serviceWorker.js`,
   })
   await Copy.copy({
     from: 'static/fonts',
@@ -57,11 +55,6 @@ const copyStaticFiles = async ({ commitHash }) => {
     path: `build/.tmp/server/server/static/manifest.json`,
     occurrence: '/icons',
     replacement: `/${commitHash}/icons`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/serviceWorker.js`,
-    occurrence: `const CACHE_STATIC_NAME = 'static-v4'`,
-    replacement: `const CACHE_STATIC_NAME = 'static-${commitHash}'`,
   })
   await Copy.copyFile({
     from: 'static/index.html',
@@ -91,11 +84,13 @@ const copyStaticFiles = async ({ commitHash }) => {
     outDir: `build/.tmp/server/server/static/${commitHash}/css`,
     assetDir: `/${commitHash}`,
   })
-
   await Copy.copy({
     from: 'static/icons',
     to: `build/.tmp/server/server/static/${commitHash}/icons`,
   })
+  await Remove.remove(`build/.tmp/server/server/static/images`)
+  await Remove.remove(`build/.tmp/server/server/static/${commitHash}/sounds`)
+  await Remove.remove(`build/.tmp/server/server/static/${commitHash}/lib-css`)
 }
 
 const getObjectDependencies = (obj) => {
@@ -135,6 +130,11 @@ const copyServerFiles = async ({ commitHash }) => {
     path: 'build/.tmp/server/server/src/server.js',
     occurrence: `const ROOT = resolve(__dirname, '../../../')`,
     replacement: `const ROOT = resolve(__dirname, '../')`,
+  })
+  await Replace.replace({
+    path: 'build/.tmp/server/server/src/server.js',
+    occurrence: `const builtinExtensionsPath = join(ROOT, 'extensions')`,
+    replacement: `const builtinExtensionsPath = join(ROOT, 'static', '${commitHash}', 'extensions')`,
   })
   await Replace.replace({
     path: 'build/.tmp/server/server/src/server.js',
@@ -829,9 +829,34 @@ const copyJestEnvironment = async ({ commitHash }) => {
   })
 }
 
+const shouldBeCopied = (extensionName) => {
+  return extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-') || extensionName.startsWith('builtin.language-basics')
+}
+const copyExtensions = async ({ commitHash }) => {
+  const extensionNames = await readdir(Path.absolute('extensions'))
+  for (const extensionName of extensionNames) {
+    if (shouldBeCopied(extensionName)) {
+      await Copy.copy({
+        from: `extensions/${extensionName}`,
+        to: `build/.tmp/server/server/static/${commitHash}/extensions/${extensionName}`,
+      })
+    }
+  }
+  await Copy.copy({
+    from: `build/.tmp/server/server/static/${commitHash}/extensions/builtin.vscode-icons/icons`,
+    to: `build/.tmp/server/server/static/${commitHash}/file-icons`,
+  })
+  await Remove.remove(`build/.tmp/server/server/static/${commitHash}/extensions/builtin.vscode-icons/icons`)
+  await Replace.replace({
+    path: `build/.tmp/server/server/static/${commitHash}/extensions/builtin.vscode-icons/icon-theme.json`,
+    occurrence: '/icons',
+    replacement: '/file-icons',
+  })
+}
+
 export const build = async ({ product }) => {
   const commitHash = await CommitHash.getCommitHash()
-  const version = await Tag.getGitTag()
+  const version = await Version.getVersion()
   const date = await GetCommitDate.getCommitDate(commitHash)
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
 
@@ -842,10 +867,6 @@ export const build = async ({ product }) => {
   console.time('copyServerFiles')
   await copyServerFiles({ commitHash })
   console.timeEnd('copyServerFiles')
-
-  console.time('copyStaticFiles')
-  await copyStaticFiles({ commitHash })
-  console.timeEnd('copyStaticFiles')
 
   console.time('bundleRendererWorkerAndRendererProcessJs')
   await bundleRendererWorkerAndRendererProcessJs({ commitHash })
@@ -866,6 +887,14 @@ export const build = async ({ product }) => {
     to: 'build/.tmp/server/shared-process',
   })
   console.timeEnd('copySharedProcessFiles')
+
+  console.time('copyStaticFiles')
+  await copyStaticFiles({ commitHash })
+  console.timeEnd('copyStaticFiles')
+
+  console.time('copyExtensions')
+  await copyExtensions({ commitHash })
+  console.timeEnd('copyExtensions')
 
   console.time('copyExtensionHostFiles')
   await copyExtensionHostFiles()

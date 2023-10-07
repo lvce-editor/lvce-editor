@@ -1,8 +1,30 @@
-import { readdir } from 'fs/promises'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
+import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
+
+const createNewPackageJson = (oldPackageJson, bundleSharedProcess) => {
+  const newPackageJson = {
+    ...oldPackageJson,
+  }
+  delete newPackageJson.scripts
+  delete newPackageJson.description
+  delete newPackageJson.scripts
+  delete newPackageJson.keywords
+  delete newPackageJson.author
+  delete newPackageJson.license
+  delete newPackageJson.repository
+  delete newPackageJson.engines
+  delete newPackageJson.devDependencies
+  delete newPackageJson.xo
+  delete newPackageJson.jest
+  if (bundleSharedProcess) {
+    newPackageJson.main = 'dist/sharedProcessMain.js'
+  }
+  return newPackageJson
+}
 
 export const bundleSharedProcess = async ({ cachePath, commitHash, product, version, bundleSharedProcess, date, target }) => {
   await Copy.copy({
@@ -20,6 +42,11 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `productNameLong = 'Lvce Editor - OSS'`,
+    replacement: `productNameLong = '${product.nameLong}'`,
+  })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: `commit = 'unknown commit'`,
     replacement: `commit = '${commitHash}'`,
   })
@@ -34,6 +61,13 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
     replacement: `date = '${date}'`,
   })
 
+  if (target === 'electron-deb' || target === 'electron-builder-deb') {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      occurrence: `isDeb = false`,
+      replacement: `isDeb = true`,
+    })
+  }
   if (target === 'server') {
     await Copy.copy({
       from: 'packages/shared-process/bin',
@@ -49,7 +83,7 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
       replacement: `export const root = resolve(__dirname, '../../../')`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: `Path.join(appDir, 'static', 'config', 'defaultSettings.json')`,
       replacement: `Path.join(Root.root, 'config', 'defaultSettings.json')`,
     })
@@ -59,7 +93,7 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
       replacement: `return process.env.FOLDER || process.cwd()`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: `export const getExtensionHostHelperProcessPath = async () => {
   return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
 }
@@ -73,7 +107,7 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
 `,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: `export const getExtensionHostPath = async () => {
   return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
 }
@@ -116,28 +150,39 @@ export const getPtyHostPath = async () => {
       from: 'static/config',
       to: `${cachePath}/config`,
     })
-    // TODO where should builtinExtension be located?
-    const shouldBeCopied = (extensionName) => {
-      return (
-        extensionName === 'builtin.vscode-icons' || extensionName.startsWith('builtin.theme-') || extensionName.startsWith('builtin.language-basics')
-      )
-    }
-    const extensionNames = await readdir(Path.absolute('extensions'))
-    for (const extensionName of extensionNames) {
-      if (shouldBeCopied(extensionName)) {
-        await Copy.copy({
-          from: `extensions/${extensionName}`,
-          to: `${cachePath}/extensions/${extensionName}`,
-        })
-      }
-    }
   }
+
   if (bundleSharedProcess) {
+    await Copy.copy({
+      from: 'packages/shared-process/node_modules',
+      to: Path.join(cachePath, 'node_modules'),
+      ignore: ['vscode-ripgrep-with-github-api-error-fix', '@types', 'type-fest', '.bin', 'is-docker'],
+      dereference: true,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Root/Root.js`,
+      occurrence: `resolve(__dirname, '../../../../../')`,
+      replacement: `resolve(__dirname, '../../../')`,
+    })
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/sharedProcessMain.js`,
       platform: 'node',
-      external: ['tmp-promise'],
+      external: ['tmp-promise', '@lvce-editor/pretty-error', '@vscode/windows-process-tree'],
+      codeSplitting: true,
+    })
+    await Remove.remove(`${cachePath}/dist/renderer-process.modern.js`)
+    await Remove.remove(`${cachePath}/dist/renderer-process.modern.js.map`)
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Root/Root.js`,
+      occurrence: `resolve(__dirname, '../../../')`,
+      replacement: `resolve(__dirname, '../../../../../')`,
     })
   }
+  const oldPackageJson = await JsonFile.readJson(`${cachePath}/package.json`)
+  const newPackageJson = createNewPackageJson(oldPackageJson, bundleSharedProcess)
+  await JsonFile.writeJson({
+    to: `${cachePath}/package.json`,
+    value: newPackageJson,
+  })
 }

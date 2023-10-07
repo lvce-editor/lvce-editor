@@ -1,5 +1,6 @@
 import * as TabFlags from '../TabFlags/TabFlags.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
@@ -20,12 +21,12 @@ const getTabDom = (tab, isActive, fixedWidth) => {
   }
   const isDirty = flags & TabFlags.Dirty
   const isHovered = flags & TabFlags.Hovered
-  const fileIconClassName = `FileIcon FileIcon${icon}`
+  const fileIconClassName = `FileIcon`
   const actualTabWidth = fixedWidth || tabWidth
   const tabElement = {
     type: VirtualDomElements.Div,
     className: tabClassName,
-    role: 'tab',
+    role: AriaRoles.Tab,
     draggable: true,
     width: actualTabWidth,
     ariaSelected: isActive,
@@ -35,9 +36,10 @@ const getTabDom = (tab, isActive, fixedWidth) => {
   const dom = [
     tabElement,
     {
-      type: VirtualDomElements.Div,
+      type: VirtualDomElements.Img,
       className: fileIconClassName,
       childCount: 0,
+      src: icon,
     },
     {
       type: VirtualDomElements.Div,
@@ -67,7 +69,7 @@ const getTabDom = (tab, isActive, fixedWidth) => {
         type: VirtualDomElements.Div,
         className: 'MaskIcon TabDirtyIcon',
         childCount: 0,
-      }
+      },
     )
   }
   return dom

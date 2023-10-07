@@ -1,10 +1,8 @@
-import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
+import * as GetActivityBarItems from '../GetActivityBarItems/GetActivityBarItems.js'
 import * as Height from '../Height/Height.js'
-import * as Icon from '../Icon/Icon.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { focusIndex } from './ViewletActivityBarFocusIndex.js'
-import * as ViewletActivityBarStrings from './ViewletActivityBarStrings.js'
 
 // TODO rename viewlet parameter to something else (e.g. clicking settings opens context menu not settings viewlet)
 // TODO should just pass index
@@ -38,64 +36,9 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
-const getActivityBarItems = () => {
-  return [
-    // Top
-    {
-      id: ViewletModuleId.Explorer,
-      title: ViewletActivityBarStrings.explorer(),
-      icon: Icon.Files,
-      enabled: true,
-      flags: ActivityBarItemFlags.Tab,
-      keyShortcuts: 'Control+Shift+E',
-    },
-    {
-      id: ViewletModuleId.Search,
-      title: ViewletActivityBarStrings.search(),
-      icon: Icon.Search,
-      enabled: true,
-      flags: ActivityBarItemFlags.Tab,
-      keyShortcuts: 'Control+Shift+F',
-    },
-    {
-      id: ViewletModuleId.SourceControl,
-      title: ViewletActivityBarStrings.sourceControl(),
-      icon: Icon.SourceControl,
-      enabled: true,
-      flags: ActivityBarItemFlags.Tab,
-      keyShortcuts: 'Control+Shift+G',
-    },
-    {
-      id: ViewletModuleId.RunAndDebug,
-      title: ViewletActivityBarStrings.runAndDebug(),
-      icon: Icon.DebugAlt2,
-      enabled: true,
-      flags: ActivityBarItemFlags.Tab,
-      keyShortcuts: 'Control+Shift+D',
-    },
-    {
-      id: ViewletModuleId.Extensions,
-      title: ViewletActivityBarStrings.extensions(),
-      icon: Icon.Extensions,
-      enabled: true,
-      flags: ActivityBarItemFlags.Tab,
-      keyShortcuts: 'Control+Shift+X',
-    },
-    // Bottom
-    {
-      id: 'Settings',
-      title: ViewletActivityBarStrings.settings(),
-      icon: Icon.SettingsGear,
-      enabled: true,
-      flags: ActivityBarItemFlags.Button,
-      keyShortcuts: '',
-    },
-  ]
-}
-
 export const loadContent = async (state) => {
-  const activityBarItems = getActivityBarItems()
-  const sideBar = ViewletStates.getInstance('SideBar')
+  const activityBarItems = GetActivityBarItems.getActivityBarItems()
+  const sideBar = ViewletStates.getInstance(ViewletModuleId.SideBar)
   const viewletId = sideBar && sideBar.state ? sideBar.state.currentViewletId : ''
   const selectedIndex = findIndex(activityBarItems, viewletId)
   return {

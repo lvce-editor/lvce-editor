@@ -1,15 +1,13 @@
 {
   "name": "@@NAME@@",
-  "main": "packages/main-process/dist/mainProcessMain.js",
+  "main": "@@MAIN@@",
   "author": "@@AUTHOR@@",
   "description": "abc",
   "version": "@@VERSION@@",
-  "dependencies": {
-    "node-pty": "^0.10.1",
-    "vscode-ripgrep-with-github-api-error-fix": "^2.0.4"
-  },
+  "dependencies": {},
   "homepage": "@@HOMEPAGE@@",
   "build": {
+    "publish": [],
     "asar": false,
     "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",

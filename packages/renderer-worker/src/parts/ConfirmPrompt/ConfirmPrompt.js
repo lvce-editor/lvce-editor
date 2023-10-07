@@ -1,9 +1,7 @@
-import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
-import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'
-import * as GetWindowId from '../GetWindowId/GetWindowId.js'
+import * as ConfirmPromptElectron from '../ConfirmPromptElectron/ConfirmPromptElectron.js'
+import * as ConfirmPromptWeb from '../ConfirmPromptWeb/ConfirmPromptWeb.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 /**
  * @enum {string}
@@ -13,26 +11,9 @@ const UiStrings = {
   Ok: 'Ok',
 }
 
-const promptElectron = async (message, confirmMessage, title) => {
-  const windowId = await GetWindowId.getWindowId()
-  const result = await ElectronDialog.showMessageBox({
-    windowId,
-    message,
-    buttons: [UiStrings.Cancel, confirmMessage],
-    type: ElectronMessageBoxType.Question,
-    title,
-  })
-  return result === 1
-}
-
-const promptWeb = async (message, confirmMessage, title) => {
-  const result = await RendererProcess.invoke('ConfirmPrompt.prompt', message)
-  return result
-}
-
-export const prompt = async (message, { confirmMessage = UiStrings.Ok, title = '' } = {}) => {
+export const prompt = async (message, { confirmMessage = UiStrings.Ok, title = '', cancelMessage = UiStrings.Cancel } = {}) => {
   if (Platform.platform === PlatformType.Electron) {
-    return promptElectron(message, confirmMessage, title)
+    return ConfirmPromptElectron.prompt(message, confirmMessage, title, cancelMessage)
   }
-  return promptWeb(message, confirmMessage, title)
+  return ConfirmPromptWeb.prompt(message, confirmMessage, title)
 }

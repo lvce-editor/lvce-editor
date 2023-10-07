@@ -1,9 +1,14 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as Icon from '../Icon/Icon.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
-const createActivityBarItem = (item, isSelected, isFocused) => {
+const createActivityBarItem = (item) => {
   const { flags, title, icon } = item
-  const isTab = flags === ActivityBarItemFlags.Tab
+  const isTab = flags & ActivityBarItemFlags.Tab
+  const isSelected = flags & ActivityBarItemFlags.Selected
+  const isFocused = flags & ActivityBarItemFlags.Focused
+  const isProgress = flags & ActivityBarItemFlags.Progress
   const role = isTab ? 'tab' : 'button'
   const ariaSelected = isTab ? isSelected : undefined
   let className = 'ActivityBarItem'
@@ -25,12 +30,51 @@ const createActivityBarItem = (item, isSelected, isFocused) => {
       {
         type: VirtualDomElements.Div,
         className: 'MaskIcon',
-        role: 'none',
+        role: AriaRoles.None,
         maskImage: icon,
         childCount: 0,
       },
     ]
   }
+
+  // TODO support progress on selected activity bar item
+  if (isProgress) {
+    className += ' ActivityBarItemNested'
+    return [
+      {
+        type: VirtualDomElements.Div,
+        className,
+        ariaLabel: '',
+        title,
+        role,
+        ariaSelected,
+        childCount: 2,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon',
+        role: AriaRoles.None,
+        childCount: 0,
+        maskImage: icon,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'Badge',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'BadgeContent',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon',
+        maskImage: Icon.Progress,
+      },
+    ]
+  }
+
   return [
     {
       type: VirtualDomElements.Div,
@@ -45,13 +89,7 @@ const createActivityBarItem = (item, isSelected, isFocused) => {
   ]
 }
 
-export const getVirtualDom = (visibleItems, selectedIndex, focusedIndex) => {
-  const dom = []
-  for (let i = 0; i < visibleItems.length; i++) {
-    const isSelected = i === selectedIndex
-    const isFocused = i === focusedIndex
-    const item = visibleItems[i]
-    dom.push(...createActivityBarItem(item, isSelected, isFocused))
-  }
+export const getVirtualDom = (visibleItems) => {
+  const dom = visibleItems.flatMap(createActivityBarItem)
   return dom
 }

@@ -107,7 +107,7 @@ export const getStartupPerformanceContent = async () => {
   const measureEntries = getMeasureEntries()
   const webVitals = await getWebVitals()
   let electronEntries
-  if (Platform.platform === 'electron') {
+  if (Platform.platform === PlatformType.Electron) {
     electronEntries = await getElectronEntries()
   }
   const text = FormatStartupPerformance.formatStartupPerformance({
@@ -244,11 +244,6 @@ export const createSharedProcessHeapSnapshot = async () => {
 
 export const createSharedProcessProfile = async () => {
   await SharedProcess.invoke(/* Developer.createProfile */ 'Developer.createProfile')
-}
-
-export const showIconThemeCss = async () => {
-  // const iconThemeCss = await IconTheme.getIconThemeCss()
-  // Main.openRawText('css://icon-theme.css', iconThemeCss)
 }
 
 export const reloadIconTheme = async () => {

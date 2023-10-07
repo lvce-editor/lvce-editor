@@ -1,50 +1,35 @@
 import * as FirstWorkerEventType from '../FirstWorkerEventType/FirstWorkerEventType.js'
 import * as GetFirstWorkerEvent from '../GetFirstWorkerEvent/GetFirstWorkerEvent.js'
 import { IpcError } from '../IpcError/IpcError.js'
-import * as IsFirefoxWorkerError from '../IsFirefoxWorkerError/IsFirefoxWorkerError.js'
 import { ModuleWorkersAreNotSupportedInFirefoxError } from '../ModuleWorkersAreNotSupportedInFirefoxError/ModuleWorkersAreNotSupportedInFirefoxError.js'
 import * as TryToGetActualWorkerErrorMessage from '../TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js'
 import * as WorkerType from '../WorkerType/WorkerType.js'
 
 export const create = async ({ url, name }) => {
-  try {
-    const worker = new Worker(url, {
-      type: WorkerType.Module,
-      name,
-    })
-    const { type, event } = await GetFirstWorkerEvent.getFirstWorkerEvent(worker)
-    switch (type) {
-      case FirstWorkerEventType.Message:
-        if (event.data !== 'ready') {
-          throw new IpcError('unexpected first message from worker')
-        }
-        break
-      case FirstWorkerEventType.Error:
-        if (IsFirefoxWorkerError.isFirefoxWorkerError(event.message)) {
-          event.preventDefault()
-          throw new ModuleWorkersAreNotSupportedInFirefoxError()
-        }
-        const actualErrorMessage = await TryToGetActualWorkerErrorMessage.tryToGetActualErrorMessage({
-          url,
-          name,
-        })
-        throw new Error(actualErrorMessage)
-      default:
-        break
-    }
-    return worker
-  } catch (error) {
-    if (error && error instanceof ModuleWorkersAreNotSupportedInFirefoxError) {
-      const IpcParentWithMessagePort = await import('../IpcParentWithMessagePort/IpcParentWithMessagePort.js')
-      return IpcParentWithMessagePort.create({ url })
-    }
-    throw error
+  const worker = new Worker(url, {
+    type: WorkerType.Module,
+    name,
+  })
+  const { type, event } = await GetFirstWorkerEvent.getFirstWorkerEvent(worker)
+  switch (type) {
+    case FirstWorkerEventType.Message:
+      if (event.data !== 'ready') {
+        throw new IpcError('unexpected first message from worker')
+      }
+      break
+    case FirstWorkerEventType.Error:
+      const actualErrorMessage = await TryToGetActualWorkerErrorMessage.tryToGetActualErrorMessage({
+        url,
+        name,
+      })
+      throw new Error(actualErrorMessage)
+    default:
+      break
   }
+  return worker
 }
 
-const getMessage = (event) => {
-  return event.data
-}
+const getMessage = (event) => {}
 
 export const wrap = (worker) => {
   return {

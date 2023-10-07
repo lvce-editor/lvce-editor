@@ -32,10 +32,10 @@ const getWindow = (windowId) => {
 
 /**
  *
- * @param {{message:string, buttons:string[], type:'error'|'info'|'question'|'none'|'warning', detail?:string, title?:string, windowId?:number}} options
+ * @param {{message:string, buttons:string[], type:'error'|'info'|'question'|'none'|'warning', detail?:string, title?:string, windowId?:number, productName?:string }} options
  * @returns
  */
-export const showMessageBox = async ({ message, buttons, type = ElectronMessageBoxType.Error, detail, title, windowId = -1 }) => {
+export const showMessageBox = async ({ message, buttons, type = ElectronMessageBoxType.Error, detail, title, windowId = -1, productName }) => {
   Assert.string(message)
   Assert.array(buttons)
   const window = getWindow(windowId)
@@ -46,7 +46,6 @@ export const showMessageBox = async ({ message, buttons, type = ElectronMessageB
   if (message.message) {
     message = message.message
   }
-  const productName = Platform.productNameLong
   const result = await Electron.dialog.showMessageBox(window, {
     type,
     message,

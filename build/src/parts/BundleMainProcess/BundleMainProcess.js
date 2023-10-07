@@ -3,12 +3,15 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Replace from '../Replace/Replace.js'
+import * as Remove from '../Remove/Remove.js'
+import { join } from 'path'
 
-export const bundleMainProcess = async ({ cachePath, commitHash, product, version, bundleMainProcess }) => {
+export const bundleMainProcess = async ({ cachePath, commitHash, product, version, bundleMainProcess, bundleSharedProcess }) => {
   await Copy.copy({
     from: 'packages/main-process/src',
     to: Path.join(cachePath, 'src'),
   })
+
   await Copy.copy({
     from: `packages/main-process/pages`,
     to: `${cachePath}/pages`,
@@ -22,11 +25,6 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
     path: `${cachePath}/src/parts/Platform/Platform.cjs`,
     occurrence: `exports.applicationName = 'lvce-oss'`,
     replacement: `exports.applicationName = '${product.applicationName}'`,
-  })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.cjs`,
-    occurrence: `exports.productNameLong = 'Lvce Editor - OSS'`,
-    replacement: `exports.productNameLong = '${product.nameLong}'`,
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.cjs`,
@@ -63,13 +61,26 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
     occurrence: `exports.version = '0.0.0-dev'`,
     replacement: `exports.version = '${version}'`,
   })
+  if (bundleSharedProcess) {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Platform/Platform.cjs`,
+      occurrence: `join(Root.root, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')`,
+      replacement: `join(Root.root, 'packages', 'shared-process', 'dist', 'sharedProcessMain.js')`,
+    })
+  }
   if (bundleMainProcess) {
+    await Copy.copy({
+      from: 'packages/main-process/node_modules',
+      to: Path.join(cachePath, 'node_modules'),
+      ignore: ['electron', '@electron', 'rxjs', '@types', 'node-gyp', 'cacache', '.bin'],
+    })
     await BundleJs.bundleJs({
       cwd: cachePath,
-      from: `./src/mainProcessMain.js`,
+      from: `./src/mainProcessMain.cjs`,
       platform: 'node/cjs',
-      external: ['electron', 'electron-unhandled'],
+      external: ['electron'],
     })
+    await Remove.remove(join(cachePath, 'node_modules'))
   }
   await Replace.replace({
     path: `${cachePath}/src/parts/Root/Root.cjs`,

@@ -38,9 +38,7 @@ export class VError extends Error {
     this.name = 'VError'
     if (error instanceof Error) {
       const errorStack = getErrorStack(error)
-      console.log({ before: this.stack })
       this.stack = mergeStacks(this.stack, errorStack)
-      console.log({ errorStack, th: this.stack })
     }
     if (error.codeFrame) {
       this.codeFrame = error.codeFrame

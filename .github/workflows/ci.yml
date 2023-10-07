@@ -39,6 +39,11 @@ jobs:
           path: '~/.electron-gyp'
           key: ${{ runner.os }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
       - uses: actions/cache@v3
+        id: electron-builder-cache
+        with:
+          path: '~/.cache/electron-builder'
+          key: ${{ runner.os }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v3
         id: build-cache
         with:
           path: 'build/.tmp/cachedDependencies'
@@ -86,6 +91,9 @@ jobs:
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --target=electron-deb
+      - name: Build Electron App (snap)
+        if: matrix.os == 'ubuntu-22.04'
+        run: node build/bin/build.js --target=electron-builder-snap
       - name: Build Electron App (Macos)
         if: matrix.os == 'macos-12'
         run: node build/bin/build.js --target=electron-builder-mac

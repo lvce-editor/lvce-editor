@@ -1,3 +1,14 @@
+# electron libraries
+
+@@NAME@@: embedded-library freetype [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library lcms2 [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library libjpeg [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library libjsoncpp [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library libpng [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library openjpeg [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library srtp [usr/lib/@@NAME@@/@@NAME@@]
+@@NAME@@: embedded-library tiff [usr/lib/@@NAME@@/@@NAME@@]
+
 # electron executables
 @@NAME@@: shared-library-is-executable 0755 [usr/lib/@@NAME@@/libEGL.so]
 @@NAME@@: shared-library-is-executable 0755 [usr/lib/@@NAME@@/libGLESv2.so]
@@ -15,7 +26,7 @@
 @@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/@@NAME@@]
 
 # electron missing dependencies
-@@NAME@@: missing-dependency-on-libc needed by usr/lib/@@NAME@@/chrome-sandbox and 11 others
+@@NAME@@: missing-dependency-on-libc needed by usr/lib/@@NAME@@/chrome-sandbox and 7 others
 
 # ripgrep - how to resolve this error?
 @@NAME@@: statically-linked-binary usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/bin/rg
@@ -28,45 +39,20 @@
 
 # node modules
 @@NAME@@: executable-not-elf-or-script [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/@types/http-cache-semantics/package.json]
-@@NAME@@: executable-not-elf-or-script [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/trash/lib/macos-trash]
 @@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/nan/tools/1to2.js]
 @@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/extract-zip/cli.js]
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/is-docker/cli.js]
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/node-addon-api/tools/conversion.js]
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/rimraf/bin.js]
 @@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/symlink-dir/dist/cli.js]
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/uuid/dist/bin/uuid]
 @@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/which/bin/node-which]
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/is-inside-container/cli.js]
-@@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any) [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/is-wsl/node_modules/is-docker/cli.js]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/@types/http-cache-semantics/package.json]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/nan/tools/1to2.js]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-113/node-pty.node]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/extract-zip/cli.js]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/is-docker/cli.js]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/keytar/build/Release/keytar.node]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/node-addon-api/tools/conversion.js]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/open/xdg-open]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/rimraf/bin.js]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/symlink-dir/dist/cli.js]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/trash/lib/macos-trash]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/uuid/dist/bin/uuid]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/which/bin/node-which]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/is-inside-container/cli.js]
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/is-wsl/node_modules/is-docker/cli.js]
 @@NAME@@: script-not-executable [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/node-addon-api/tools/clang-format.js]
 @@NAME@@: script-not-executable [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/node-addon-api/tools/eslint-format.js]
 @@NAME@@: script-not-executable [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/symlink-dir/dist/cli.d.ts]
-@@NAME@@: shared-library-is-executable 0775 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-113/node-pty.node]
-@@NAME@@: shared-library-is-executable 0775 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node]
 @@NAME@@: shared-library-is-executable 0775 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
-@@NAME@@: shared-library-is-executable 0775 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/keytar/build/Release/keytar.node]
-@@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-113/node-pty.node]
-@@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node]
 @@NAME@@: unstripped-binary-or-object [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
 
 # extensions

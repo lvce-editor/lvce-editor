@@ -50,8 +50,6 @@ export const load = (moduleId) => {
       return import('../EditorError/EditorError.ipc.js')
     case ModuleId.EditorRename:
       return import('../EditorRename/EditorRename.ipc.js')
-    case ModuleId.ElectronApp:
-      return import('../ElectronApp/ElectronApp.ipc.js')
     case ModuleId.ElectronApplicationMenu:
       return import('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js')
     case ModuleId.ElectronBrowserView:
@@ -66,6 +64,8 @@ export const load = (moduleId) => {
       return import('../ErrorHandling/ErrorHandling.ipc.js')
     case ModuleId.Eval:
       return import('../Eval/Eval.ipc.js')
+    case ModuleId.Exit:
+      return import('../Exit/Exit.ipc.js')
     case ModuleId.ExtensionHostCode:
       return import('../ExtensionHost/ExtensionHostCore.ipc.js')
     case ModuleId.ExtensionMeta:
@@ -124,8 +124,6 @@ export const load = (moduleId) => {
       return import('../SaveFileAs/SaveFileAs.ipc.js')
     case ModuleId.SaveState:
       return import('../SaveState/SaveState.ipc.js')
-    case ModuleId.ServiceWorker:
-      return import('../ServiceWorker/ServiceWorker.ipc.js')
     case ModuleId.SessionReplay:
       return import('../SessionReplay/SessionReplay.ipc.js')
     case ModuleId.SessionStorage:
@@ -146,6 +144,8 @@ export const load = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
+    case ModuleId.Prompt:
+      return import('../Prompt/Prompt.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

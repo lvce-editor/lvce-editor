@@ -1,5 +1,7 @@
-export const Web = 'web'
+export const Web = 1
 
-export const Electron = 'electron'
+export const Electron = 2
 
-export const Remote = 'remote'
+export const Remote = 3
+
+export const Test = 4

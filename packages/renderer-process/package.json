@@ -13,14 +13,23 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "devDependencies": {},
   "jest": {
     "moduleNameMapper": {
       "^/static/(.*)$": "<rootDir>/../../static/$1"
     },
     "testMatch": [
       "**/test/**/*.js"
-    ]
+    ],
+    "transform": {
+      "^.+\\.ts$": [
+        "ts-jest",
+        {
+          "isolatedModules": true,
+          "useESM": true,
+          "diagnostics": false
+        }
+      ]
+    }
   },
   "xo": {
     "rules": {

@@ -28,7 +28,6 @@ export const Commands = {
   reloadColorTheme: Developer.reloadColorTheme,
   reloadIconTheme: Developer.reloadIconTheme,
   showColorThemeCss: Developer.showColorThemeCss,
-  showIconThemeCss: Developer.showIconThemeCss,
   showMemoryUsage: Developer.showMemoryUsage,
   showStartupPerformance: Developer.showStartupPerformance,
   startupPerformance: Developer.showStartupPerformance,

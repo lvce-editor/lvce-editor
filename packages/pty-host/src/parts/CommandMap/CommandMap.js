@@ -9,6 +9,7 @@ export const commandMap = {
   [TerminalProcessCommandType.HandleNodeMessagePort]: HandleNodeMessagePort.handleNodeMessagePort,
   [TerminalProcessCommandType.HandleWebSocket]: HandleWebSocket.handleWebSocket,
   [TerminalProcessCommandType.TerminalCreate]: PtyController.create,
+  [TerminalProcessCommandType.TerminalResize]: PtyController.resize,
   [TerminalProcessCommandType.TerminalWrite]: PtyController.write,
   [TerminalProcessCommandType.TerminalDispose]: PtyController.dispose,
 }

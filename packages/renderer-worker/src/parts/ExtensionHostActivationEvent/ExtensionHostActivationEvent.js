@@ -14,6 +14,8 @@ export const OnFileSystem = 'onFileSystem'
 
 export const OnHover = 'onHover'
 
+export const OnLanguage = 'onLanguage'
+
 export const OnReferences = 'onReferences'
 
 export const OnSemanticTokens = 'onSemanticTokens'

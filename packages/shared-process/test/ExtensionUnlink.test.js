@@ -5,7 +5,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
   return {
     getLinkedExtensionsPath: () => {
       return '/test/linked-extensions'
@@ -34,8 +34,15 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/RemoveSymlink/RemoveSymlink.js', () => {
+  return {
+    removeSymlink: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 
-const SymLink = await import('../src/parts/SymLink/SymLink.js')
+const RemoveSymlink = await import('../src/parts/RemoveSymlink/RemoveSymlink.js')
 const ExtensionUnlink = await import('../src/parts/ExtensionUnlink/ExtensionUnlink.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
@@ -52,10 +59,10 @@ test('unlink', async () => {
     return '{ "id": "my-extension" }'
   })
   // @ts-ignore
-  FileSystem.remove.mockImplementation(() => {})
+  RemoveSymlink.removeSymlink.mockImplementation(() => {})
   await ExtensionUnlink.unlink('/test/documents/my-extension')
-  expect(FileSystem.remove).toHaveBeenCalledTimes(1)
-  expect(FileSystem.remove).toHaveBeenCalledWith('/test/linked-extensions/my-extension')
+  expect(RemoveSymlink.removeSymlink).toHaveBeenCalledTimes(1)
+  expect(RemoveSymlink.removeSymlink).toHaveBeenCalledWith('/test/linked-extensions/my-extension')
 })
 
 test('link - error - no manifest file found', async () => {
@@ -65,7 +72,7 @@ test('link - error - no manifest file found', async () => {
   })
   await expect(ExtensionUnlink.unlink('/test/documents/my-extension')).rejects.toThrowError(
     new Error(
-      "Failed to unlink extension: Failed to load extension manifest for my-extension: FileNotFoundError: File not found: '/test/documents/my-extension/extension.json'"
-    )
+      "Failed to unlink extension: Failed to load extension manifest for my-extension: FileNotFoundError: File not found: '/test/documents/my-extension/extension.json'",
+    ),
   )
 })

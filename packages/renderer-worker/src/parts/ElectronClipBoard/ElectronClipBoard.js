@@ -1,5 +1,5 @@
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const writeText = (text) => {
-  return ElectronProcess.invoke('ElectronClipBoard.writeText', text)
+  return SharedProcess.invoke('ElectronClipBoard.writeText', text)
 }

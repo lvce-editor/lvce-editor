@@ -13,6 +13,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as IsMobile from '../IsMobile/IsMobile.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 
 // TODO use another virtual list that just appends elements and
@@ -64,7 +65,7 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
 }
 
 const focusElement = ($Element) => {
-  if (Platform.isMobile) {
+  if (IsMobile.isMobile) {
     // workaround to disable virtual keyboard automatically opening on android
     // see https://stackoverflow.com/questions/48635501/how-to-hide-soft-keyboard-and-keep-input-on-focus#answer-53104238
     $Element.readOnly = true

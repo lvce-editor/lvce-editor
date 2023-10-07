@@ -1,11 +1,12 @@
 {
   "name": "@@NAME@@",
-  "main": "packages/main-process/dist/mainProcessMain.js",
+  "main": "@@MAIN@@",
   "author": "@@AUTHOR@@",
   "description": "abc",
   "version": "@@VERSION@@",
   "homepage": "@@HOMEPAGE@@",
   "build": {
+    "publish": [],
     "asar": false,
     "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",

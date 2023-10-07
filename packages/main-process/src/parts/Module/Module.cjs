@@ -9,6 +9,8 @@ exports.load = async (moduleId) => {
       return import('../AppWindow/AppWindow.ipc.js')
     case ModuleId.Beep:
       return import('../Beep/Beep.ipc.js')
+    case ModuleId.Crash:
+      return import('../Crash/Crash.ipc.js')
     case ModuleId.CreatePidMap:
       return import('../CreatePidMap/CreatePidMap.ipc.js')
     case ModuleId.DesktopCapturer:
@@ -51,6 +53,8 @@ exports.load = async (moduleId) => {
       return import('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
     case ModuleId.GetWindowId:
       return import('../GetWindowId/GetWindowId.ipc.js')
+    case ModuleId.IpcParent:
+      return import('../IpcParent/IpcParent.ipc.js')
     case ModuleId.OpenExternal:
       return import('../OpenExternal/OpenExternal.ipc.js')
     case ModuleId.Platform:

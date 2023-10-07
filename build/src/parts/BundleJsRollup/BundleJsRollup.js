@@ -13,7 +13,7 @@ const getExternal = (babelExternal, initialExternal) => {
 
 /**
  *
- * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean, babelExternal?:boolean
+ * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean, babelExternal?:boolean, typescript?:boolean
  * allowCyclicDependencies?:boolean, external?:string[] }} param0
  */
 export const bundleJs = async ({
@@ -26,14 +26,31 @@ export const bundleJs = async ({
   allowCyclicDependencies = false,
   babelExternal = false,
   external = [],
+  typescript = false,
 }) => {
   const allExternal = getExternal(babelExternal, external)
   const plugins = []
-  if (platform === 'node/cjs') {
+  if (platform === 'node/cjs' || platform === 'node') {
     const { default: commonjs } = await import('@rollup/plugin-commonjs')
     const { nodeResolve } = await import('@rollup/plugin-node-resolve')
-    // @ts-ignore
-    plugins.push(commonjs(), nodeResolve())
+    plugins.push(
+      // @ts-ignore
+      commonjs(),
+      nodeResolve({
+        preferBuiltins: true,
+      })
+    )
+  }
+  if (typescript) {
+    const { babel } = await import('@rollup/plugin-babel')
+    const { default: pluginTypeScript } = await import('@babel/preset-typescript')
+    plugins.push(
+      babel({
+        babelHelpers: 'bundled',
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        presets: [pluginTypeScript],
+      })
+    )
   }
   /**
    * @type {import('rollup').RollupOptions}
@@ -44,12 +61,16 @@ export const bundleJs = async ({
     preserveEntrySignatures: 'strict',
     treeshake: {
       propertyReadSideEffects: false,
+
       // moduleSideEffects: false,
     },
     perf: true,
     onwarn: (message) => {
       // fail build if circular dependencies are found
       if (message.code === 'CIRCULAR_DEPENDENCY') {
+        if (message.ids && message.ids[0].includes('node_modules')) {
+          return
+        }
         if (allowCyclicDependencies) {
           console.warn(`RollUp: ${message.message}`)
         } else {

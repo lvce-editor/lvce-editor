@@ -34,6 +34,14 @@ export const write = (id, data) => {
   Pty.write(pty, data)
 }
 
+export const resize = (id, columns, rows) => {
+  const pty = state.ptyMap[id]
+  if (!pty) {
+    throw new Error(`pty ${id} not found`)
+  }
+  Pty.resize(pty, columns, rows)
+}
+
 export const dispose = (id) => {
   const { ptyMap } = state
   const pty = ptyMap[id]

@@ -1,12 +1,17 @@
+import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as SourceControl from '../SourceControl/SourceControl.js'
+import * as Command from '../Command/Command.js'
 import { getDisplayItems } from './ViewletSourceControlGetDisplayItems.js'
 
 const handleClickFile = async (state, item) => {
-  const absolutePath = `${state.gitRoot}/${item.file}`
+  const { enabledProviderIds, gitRoot, root } = state
+  const providerId = enabledProviderIds[0]
+  const absolutePath = `${root}/${item.file}`
   // TODO handle error
-  const [fileBefore, fileNow] = await Promise.all([SourceControl.getFileBefore(item.file), FileSystem.readFile(absolutePath)])
-  const content = `before:\n${fileBefore}\n\n\nnow:\n${fileNow}`
+  const [fileBefore, fileNow] = await Promise.all([SourceControl.getFileBefore(providerId, item.file), FileSystem.readFile(absolutePath)])
+  console.log({ fileBefore, fileNow })
+  await Command.execute(`Main.openUri`, `diff://data://${fileBefore}<->${absolutePath}`)
   return state
 }
 
@@ -34,13 +39,12 @@ const handleClickDirectoryExpanded = (state, item) => {
 export const handleClick = async (state, index) => {
   const { displayItems } = state
   const item = displayItems[index]
-  console.log('type', item.type)
   switch (item.type) {
-    case 'directory':
+    case DirentType.Directory:
       return handleClickDirectory(state)
-    case 'directory-expanded':
+    case DirentType.DirectoryExpanded:
       return handleClickDirectoryExpanded(state)
-    case 'file':
+    case DirentType.File:
       return handleClickFile(state, item)
     default:
       console.warn(`unknown item type: ${item.type}`)

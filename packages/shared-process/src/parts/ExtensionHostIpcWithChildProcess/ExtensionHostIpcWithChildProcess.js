@@ -1,18 +1,18 @@
 import * as ChildProcess from '../ChildProcess/ChildProcess.js'
-import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 
 export const create = async () => {
-  const extensionHostPath = await Platform.getExtensionHostPath()
+  const extensionHostPath = await PlatformPaths.getExtensionHostPath()
   const childProcess = ChildProcess.fork(
     extensionHostPath,
     ['--ipc-type=websocket', '--experimental-json-modules', '--max-old-space-size=60', '--enable-source-maps'],
     {
       env: {
         ...process.env,
-        LOGS_DIR: Platform.getLogsDir(),
-        CONFIG_DIR: Platform.getConfigDir(),
+        LOGS_DIR: PlatformPaths.getLogsDir(),
+        CONFIG_DIR: PlatformPaths.getConfigDir(),
       },
-    }
+    },
   )
   return {
     on(event, listener) {

@@ -5,10 +5,6 @@ import * as Editor from '../src/parts/Editor/Editor.js'
 import * as EditorHelper from '../src/parts/Editor/EditorHelper.js'
 import * as Platform from '../src/parts/Platform/Platform.js'
 
-afterEach(() => {
-  Platform.state.cachedIsMobileOrTablet = undefined
-})
-
 const create$EditorRow = () => {
   const $EditorRow = document.createElement('div')
   $EditorRow.className = 'EditorRow'
@@ -136,7 +132,7 @@ test.skip('renderTextAndCursorsAndSelections - beforeinput on contenteditable on
     0,
     [['  ', 'Whitespace', 'back ground', 'CssPropertyName', ':', 'Punctuation', ' ', 'Whitespace']],
     [{ rowIndex: 0, columnIndex: 7 }],
-    []
+    [],
   )
   expect(document.getSelection().anchorNode).toBe($Row1.children[1].firstChild)
   expect(document.getSelection().anchorOffset).toBe(5)
@@ -174,7 +170,7 @@ test.skip('renderTextAndCursorsAndSelections - native selection - word in middle
         columnIndex: 3,
       },
     ],
-    []
+    [],
   )
   expect(document.getSelection().anchorNode).toBe($Row1.children[1].firstChild)
   expect(document.getSelection().anchorOffset).toBe(1)
@@ -213,7 +209,7 @@ test.skip('renderTextAndCursorsAndSelections - bug with multiple tokens', () => 
         columnIndex: 14,
       },
     ],
-    []
+    [],
   )
   expect(document.getSelection().anchorNode).toBe($Row1.children[3].firstChild)
   expect(document.getSelection().anchorOffset).toBe(1)

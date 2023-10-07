@@ -1,12 +1,11 @@
 const { spawn } = require('node:child_process')
+const Electron = require('electron')
 const Cli = require('../Cli/Cli.cjs')
 const ParseCliArgs = require('../ParseCliArgs/ParseCliArgs.cjs')
 const CommandLineSwitches = require('../CommandLineSwitches/CommandLineSwitches.cjs')
 const Debug = require('../Debug/Debug.cjs')
-const Electron = require('electron')
 const ElectronApp = require('../ElectronApp/ElectronApp.cjs')
 const ElectronAppEventType = require('../ElectronAppEventType/ElectronAppEventType.cjs')
-const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.cjs')
 const ElectronAppListeners = require('../ElectronAppListeners/ElectronAppListeners.cjs')
 const ElectronIpcMain = require('../ElectronIpcMain/ElectronIpcMain.cjs')
 const ExitCode = require('../ExitCode/ExitCode.cjs')
@@ -31,7 +30,7 @@ const Protocol = require('../Protocol/Protocol.cjs')
 // const windowConfigMap = new Map()
 
 exports.hydrate = async () => {
-  ElectronApplicationMenu.setMenu(null)
+  Electron.Menu.setApplicationMenu(null) // performance
   const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
   unhandled({
     showDialog: true,

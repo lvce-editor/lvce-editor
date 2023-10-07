@@ -5,8 +5,11 @@ export const listen = async () => {
   if (!parentPort) {
     throw new Error('parentPort is required')
   }
-  parentPort.postMessage('ready')
   return parentPort
+}
+
+export const signal = (parentPort) => {
+  parentPort.postMessage('ready')
 }
 
 const getActualData = (message) => {

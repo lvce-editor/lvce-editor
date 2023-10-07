@@ -1,6 +1,6 @@
+import { jest } from '@jest/globals'
 import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.cjs'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.cjs'
-import { jest } from '@jest/globals'
 
 jest.unstable_mockModule('electron', () => {
   return {

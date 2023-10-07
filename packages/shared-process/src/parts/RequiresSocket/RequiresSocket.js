@@ -8,6 +8,7 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'ExtensionHost.watchColorTheme',
   'Terminal.create',
   'IncrementalTextSearch.start',
+  'ElectronApplicationMenu.setItems',
 ])
 
 export const requiresSocket = (method) => {

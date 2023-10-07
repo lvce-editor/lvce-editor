@@ -1,8 +1,8 @@
 import { basename } from 'node:path'
 import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.js'
-import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js'
-import * as Platform from '../Platform/Platform.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
+import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import { VError } from '../VError/VError.js'
 
 const getManifestVersion = (json) => {
@@ -51,15 +51,15 @@ export const list = async () => {
     const manifests = await ExtensionManifests.getAll([
       {
         type: ExtensionManifestInputType.LinkedExtensionsFolder,
-        path: Platform.getLinkedExtensionsPath(),
+        path: PlatformPaths.getLinkedExtensionsPath(),
       },
       {
         type: ExtensionManifestInputType.Folder,
-        path: Platform.getExtensionsPath(),
+        path: PlatformPaths.getExtensionsPath(),
       },
       {
         type: ExtensionManifestInputType.Folder,
-        path: Platform.getBuiltinExtensionsPath(),
+        path: PlatformPaths.getBuiltinExtensionsPath(),
       },
     ])
     const infos = getManifestInfos(manifests)

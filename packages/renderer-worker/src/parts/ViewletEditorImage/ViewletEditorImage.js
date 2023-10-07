@@ -1,6 +1,7 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
 import * as BlobSrc from '../BlobSrc/BlobSrc.js'
+import * as Distance from '../Distance/Distance.js'
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as WheelEvent from '../WheelEvent/WheelEvent.js'
@@ -62,15 +63,9 @@ export const handlePointerDown = (state, pointerId, x, y) => {
   }
 }
 
-const distance = (point1, point2) => {
-  const dx = point1.x - point2.x
-  const dy = point1.y - point2.y
-  return Math.hypot(dx + dy)
-}
-
 const handleZoom = (state) => {
   const { domMatrix, eventCache, previousDiff, touchZoomFactor } = state
-  const currentDiff = distance(eventCache[0], eventCache[1])
+  const currentDiff = Distance.distance(eventCache[0], eventCache[1])
   if (previousDiff !== 0) {
     const delta = 1 + Math.abs(previousDiff - currentDiff) / 300
     if (currentDiff > previousDiff) {

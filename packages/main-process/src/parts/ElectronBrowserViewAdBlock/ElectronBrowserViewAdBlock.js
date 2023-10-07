@@ -4,6 +4,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as ElectronResourceType from '../ElectronResourceType/ElectronResourceType.cjs'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs'
+import * as Root from '../Root/Root.cjs'
 import * as HttpMethod from '../HttpMethod/HttpMethod.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -118,9 +119,10 @@ export const filter = {
  */
 export const enableForWebContents = (webContents) => {
   const handleDidNavigate = () => {
-    const blockJs = readFileSync(join(__dirname, './block.js'), 'utf8')
+    const resourcesPath = join(Root.root, 'packages', 'main-process', 'src', 'parts', 'ElectronBrowserViewAdBlock')
+    const blockJs = readFileSync(join(resourcesPath, './block.js'), 'utf8')
     webContents.executeJavaScript(blockJs)
-    const blockCss = readFileSync(join(__dirname, './block.css'), 'utf8')
+    const blockCss = readFileSync(join(resourcesPath, './block.css'), 'utf8')
     webContents.insertCSS(blockCss)
   }
   webContents.on(ElectronWebContentsEventType.DidNavigate, handleDidNavigate)

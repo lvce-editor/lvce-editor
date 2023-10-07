@@ -16,8 +16,8 @@ export const getChangedFiles = (providerId) => {
   return ExtensionHostSourceControl.getChangedFiles(providerId)
 }
 
-export const getFileBefore = (file) => {
-  return ExtensionHostSourceControl.getFileBefore(file)
+export const getFileBefore = (providerId, file) => {
+  return ExtensionHostSourceControl.getFileBefore(providerId, file)
 }
 
 export const add = (file) => {

@@ -12,5 +12,5 @@ const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js'
 test('crashSharedProcess', async () => {
   await Crash.crashSharedProcess()
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Developer.crashSharedProcess')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Crash.crashSharedProcess')
 })

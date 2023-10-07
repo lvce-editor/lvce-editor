@@ -23,7 +23,6 @@ import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
-import * as Tag from '../Tag/Tag.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate }) => {
@@ -57,7 +56,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
 }
 
 const downloadElectron = async ({ platform, arch, electronVersion }) => {
-  const outDir = Path.join(Root.root, 'build', '.tmp', 'electron', electronVersion)
+  const outDir = Path.join(Root.root, 'build', '.tmp', 'cachedElectronVersions', `electron-${electronVersion}-${platform}-${arch}`)
   const DownloadElectron = await import('../DownloadElectron/DownloadElectron.js')
   await DownloadElectron.downloadElectron({
     electronVersion,
@@ -67,19 +66,14 @@ const downloadElectron = async ({ platform, arch, electronVersion }) => {
   })
 }
 
-const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion, product }) => {
+const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion, product, platform }) => {
   const outDir = useInstalledElectronVersion
     ? Path.join(Root.root, 'packages', 'main-process', 'node_modules', 'electron', 'dist')
-    : Path.join(Root.root, 'build', '.tmp', 'electron', electronVersion)
+    : Path.join(Root.root, 'build', '.tmp', 'cachedElectronVersions', `electron-${electronVersion}-${platform}-${arch}`)
   await Copy.copy({
     from: outDir,
     to: `build/.tmp/electron-bundle/${arch}`,
-    ignore: [
-      // TODO still include en locale, but exclude other locales
-      // 'locales',
-      'chrome_crashpad_handler',
-      'resources',
-    ],
+    ignore: ['chrome_crashpad_handler', 'resources'],
   })
 
   if (Platform.isWindows()) {
@@ -163,14 +157,24 @@ const copyExtensionHostHelperProcessSources = async ({ arch }) => {
   })
 }
 
-const copyPdfWorkerSources = async ({ arch }) => {
-  await Copy.copy({
-    from: 'packages/pdf-worker/src',
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/pdf-worker/src`,
-  })
+const quickJoinPath = (prefix, postfix) => {
+  if (postfix.startsWith('./')) {
+    return prefix + '/' + postfix.slice('./'.length)
+  }
+  return prefix + '/' + postfix
 }
 
-const copyExtensions = async ({ arch }) => {
+const removeSrcPrefix = (postfix) => {
+  if (postfix.startsWith('./src')) {
+    return postfix.slice('./src'.length)
+  }
+  if (postfix.startsWith('src')) {
+    return postfix.slice('src'.length)
+  }
+  return postfix
+}
+
+const copyExtensions = async ({ arch, optimizeLanguageBasics }) => {
   await Copy.copy({
     from: 'extensions',
     to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions`,
@@ -182,6 +186,64 @@ const copyExtensions = async ({ arch }) => {
     occurrence: '../../../../typescript/lib/typescript.js',
     replacement: '../../../../../builtin.language-features-typescript/node/node_modules/typescript/lib/typescript.js',
   })
+  await Remove.remove(
+    `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-features-typescript/node/node_modules/typescript/lib/tsserverlibrary.js`,
+  )
+  await Copy.copy({
+    from: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.vscode-icons/icons`,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/static/file-icons`,
+  })
+  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.vscode-icons/icons`)
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.vscode-icons/icon-theme.json`,
+    occurrence: '/icons',
+    replacement: '/file-icons',
+  })
+  if (optimizeLanguageBasics) {
+    const dirents = await ReadDir.readDir(`build/.tmp/electron-bundle/${arch}/resources/app/extensions`)
+    const allLanguages = []
+    for (const dirent of dirents) {
+      if (!dirent.startsWith('builtin.language-basics-')) {
+        continue
+      }
+      const postfix = dirent.slice('builtin.language-basics-'.length)
+      const extensionJson = await JsonFile.readJson(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}/extension.json`)
+      if (extensionJson && extensionJson.languages && Array.isArray(extensionJson.languages)) {
+        for (const language of extensionJson.languages) {
+          if (language.configuration) {
+            language.configuration = quickJoinPath(postfix, language.configuration)
+          }
+          if (language.tokenize) {
+            language.tokenize = quickJoinPath(postfix, removeSrcPrefix(language.tokenize))
+          }
+          allLanguages.push(language)
+        }
+      }
+      await Copy.copy({
+        from: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}/src`,
+        to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-basics/${postfix}`,
+      })
+      await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}`)
+    }
+    await JsonFile.writeJson({
+      to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-basics/extension.json`,
+      value: {
+        id: 'builtin.language-basics',
+        name: 'Language Basics',
+        description: 'Provides syntax highlighting and bracket matching in files.',
+        languages: allLanguages,
+      },
+    })
+    await WriteFile.writeFile({
+      to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-basics/README.md`,
+      content: `# Language Basics
+
+Syntax highlighting for Lvce Editor.
+
+For performance reason, all languages extensions are bundled into one during build.
+`,
+    })
+  }
 }
 
 const copyStaticFiles = async ({ arch }) => {
@@ -197,7 +259,7 @@ const copyStaticFiles = async ({ arch }) => {
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
-    occurrence: '\n    <link rel="manifest" href="/manifest.json" />',
+    occurrence: '\n    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />',
     replacement: ``,
   })
   await Replace.replace({
@@ -215,6 +277,9 @@ const copyStaticFiles = async ({ arch }) => {
     occurrence: '\n    <meta name="description" content="Online Code Editor" />',
     replacement: ``,
   })
+  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/manifest.json`)
+  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/serviceWorker.js`)
+  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/images`)
 }
 
 const copyCss = async ({ arch }) => {
@@ -224,7 +289,7 @@ const copyCss = async ({ arch }) => {
 }
 
 const addRootPackageJson = async ({ cachePath, electronVersion, product, bundleMainProcess, version }) => {
-  const main = bundleMainProcess ? 'packages/main-process/dist/mainProcessMain.js' : 'packages/main-process/src/mainProcessMain.cjs'
+  const main = bundleMainProcess ? 'packages/main-process/dist/mainProcessMain.cjs' : 'packages/main-process/src/mainProcessMain.cjs'
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: {
@@ -237,11 +302,17 @@ const addRootPackageJson = async ({ cachePath, electronVersion, product, bundleM
   })
 }
 
-export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate = false, shouldRemoveUnusedLocales = false }) => {
+export const build = async ({
+  product,
+  version = '0.0.0-dev',
+  supportsAutoUpdate = false,
+  shouldRemoveUnusedLocales = false,
+  arch = process.arch,
+  platform = process.platform,
+}) => {
   Assert.object(product)
   Assert.string(version)
-  const arch = process.arch
-  const { electronVersion, isInstalled } = await GetElectronVersion.getElectronVersion()
+  const { electronVersion, isInstalled, installedArch } = await GetElectronVersion.getElectronVersion()
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
     arch,
@@ -253,13 +324,15 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   const date = await GetCommitDate.getCommitDate(commitHash)
   const bundleMainProcess = BundleOptions.bundleMainProcess
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
+  const optimizeLanguageBasics = true
 
-  if (!isInstalled) {
+  const useInstalledElectronVersion = isInstalled && installedArch === arch
+  if (!useInstalledElectronVersion) {
     console.time('downloadElectron')
     await downloadElectron({
       arch,
       electronVersion,
-      platform: process.platform,
+      platform,
     })
     console.timeEnd('downloadElectron')
   }
@@ -276,6 +349,8 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
       electronVersion,
       product,
       supportsAutoUpdate,
+      bundleMainProcess,
+      platform,
     })
     console.timeEnd('bundleElectronAppDependencies')
   }
@@ -284,8 +359,9 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   await copyElectron({
     arch,
     electronVersion,
-    useInstalledElectronVersion: isInstalled,
+    useInstalledElectronVersion,
     product,
+    platform,
   })
   console.timeEnd('copyElectron')
 
@@ -315,6 +391,7 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
     product,
     version,
     bundleMainProcess,
+    bundleSharedProcess,
   })
 
   console.time('copyMainProcessFiles')
@@ -344,12 +421,8 @@ export const build = async ({ product, version = '0.0.0-dev', supportsAutoUpdate
   await copyExtensionHostHelperProcessSources({ arch })
   console.timeEnd('copyExtensionHostHelperProcessSources')
 
-  console.time('copyPdfWorkerSources')
-  await copyPdfWorkerSources({ arch })
-  console.timeEnd('copyPdfWorkerSources')
-
   console.time('copyExtensions')
-  await copyExtensions({ arch })
+  await copyExtensions({ arch, optimizeLanguageBasics })
   console.timeEnd('copyExtensions')
 
   console.time('copyStaticFiles')

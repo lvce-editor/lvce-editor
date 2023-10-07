@@ -1,4 +1,5 @@
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getMenuItemSeparatorDom = (menuItem) => {
@@ -6,7 +7,7 @@ const getMenuItemSeparatorDom = (menuItem) => {
     div(
       {
         className: 'MenuItemSeparator',
-        role: 'seperator',
+        role: AriaRoles.Separator,
       },
       0
     ),
@@ -19,7 +20,7 @@ const getMenuItemUncheckedDom = (menuItem) => {
     div(
       {
         className: 'MenuItem',
-        role: 'menuitemcheckbox',
+        role: AriaRoles.MenuItemCheckBox,
         ariaChecked: false,
         tabIndex: -1,
       },
@@ -35,7 +36,7 @@ const getMenuItemDisabledDom = (menuItem) => {
     div(
       {
         className: 'MenuItem',
-        role: 'menuitem',
+        role: AriaRoles.MenuItem,
         tabIndex: -1,
         disabled: true,
       },
@@ -65,7 +66,7 @@ export const getMenuVirtualDom = (menuItems) => {
     div(
       {
         className: 'Menu',
-        role: 'menu',
+        role: AriaRoles.Menu,
         tabIndex: -1,
       },
       menuItems.length

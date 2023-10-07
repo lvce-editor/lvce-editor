@@ -16,6 +16,8 @@ export const load = (moduleId) => {
       return import('../ViewletColorPicker/ViewletColorPicker.js')
     case ViewletModuleId.DebugConsole:
       return import('../ViewletDebugConsole/ViewletDebugConsole.js')
+    case ViewletModuleId.DefineKeyBinding:
+      return import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.js')
     case ViewletModuleId.Dialog:
       return import('../ViewletDialog/ViewletDialog.js')
     case ViewletModuleId.DiffEditor:
@@ -60,8 +62,6 @@ export const load = (moduleId) => {
       return import('../ViewletOutput/ViewletOutput.js')
     case ViewletModuleId.Panel:
       return import('../ViewletPanel/ViewletPanel.js')
-    case ViewletModuleId.Pdf:
-      return import('../ViewletPdf/ViewletPdf.js')
     case ViewletModuleId.Problems:
       return import('../ViewletProblems/ViewletProblems.js')
     case ViewletModuleId.QuickPick:
@@ -98,8 +98,6 @@ export const load = (moduleId) => {
       return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
     case ViewletModuleId.Video:
       return import('../ViewletVideo/ViewletVideo.js')
-    case ViewletModuleId.DefineKeyBinding:
-      return import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.js')
     default:
       throw new Error(`${moduleId} module not found in renderer process`)
   }

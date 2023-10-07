@@ -45,6 +45,12 @@
 
 .SearchField {
   display: flex;
+  border: 1px solid rgb(55, 65, 63);
+  background: rgb(36, 41, 42);
+}
+
+.SearchFieldReplace {
+  margin-top: 6px;
 }
 
 /* .SearchField */
@@ -52,6 +58,16 @@
 .SearchFieldInput {
   flex: 1;
   resize: none;
+  color: var(--InputBoxForeground);
+  border: none;
+  font-size: 13px;
+  height: 24px;
+  contain: strict;
+  line-height: 24px;
+}
+
+.SearchFieldInput {
+  background: transparent;
 }
 
 .SearchFieldButton {

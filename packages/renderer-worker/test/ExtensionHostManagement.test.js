@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as ExtensionHostCommandType from '../src/parts/ExtensionHostCommandType/ExtensionHostCommandType.js'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetModules()
@@ -26,7 +27,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 })
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
-    platform: 'remote',
+    platform: PlatformType.Remote,
     assetDir: '',
   }
 })

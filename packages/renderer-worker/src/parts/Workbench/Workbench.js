@@ -11,12 +11,12 @@ import * as Module from '../Module/Module.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
-import * as ServiceWorker from '../ServiceWorker/ServiceWorker.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as UnhandledErrorHandling from '../UnhandledErrorHandling/UnhandledErrorHandling.js'
@@ -94,7 +94,7 @@ export const startup = async () => {
     },
     false,
     false,
-    { ...initData, ...layoutState }
+    { ...initData, ...layoutState },
   )
   commands.splice(1, 1)
   const layoutModule = ViewletStates.getInstance(ViewletModuleId.Layout)
@@ -165,7 +165,7 @@ export const startup = async () => {
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
   if (Workspace.isTest()) {
-    const testPath = await Platform.getTestPath()
+    const testPath = await PlatformPaths.getTestPath()
     const href = initData.Location.href
     const fileName = href.slice(href.lastIndexOf('/') + 1)
     const jsfileName = fileName.replace(/\.html$/, '.js')
@@ -185,10 +185,6 @@ export const startup = async () => {
   Performance.mark(PerformanceMarkerType.DidLoadRecentlyOpened)
 
   // TODO tree shake out service worker in electron build
-
-  Performance.mark(PerformanceMarkerType.WillLoadServiceWorker)
-  await ServiceWorker.hydrate()
-  Performance.mark(PerformanceMarkerType.DidLoadServiceWorker)
 
   Performance.mark(PerformanceMarkerType.WillLoadLocation)
   await Location.hydrate()

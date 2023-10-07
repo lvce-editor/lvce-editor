@@ -1,16 +1,14 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as EnterKeyHintType from '../EnterKeyHintType/EnterKeyHintType.js'
-import * as Focus from '../Focus/Focus.js'
 import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as InputType from '../InputType/InputType.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as MaskImage from '../MaskImage/MaskImage.js'
+import * as MultilineInputBox from '../MultilineInputBox/MultilineInputBox.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 
@@ -50,10 +48,8 @@ export const create = () => {
   // is measured and in turn applied to the text area.
   // This way the text area always has the smallest
   // necessary height value.
-  const $ViewletSearchInput = InputBox.create()
-  $ViewletSearchInput.classList.add('SearchFieldInput')
+  const $ViewletSearchInput = MultilineInputBox.create()
   $ViewletSearchInput.placeholder = 'Search'
-  $ViewletSearchInput.type = InputType.Search
   $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
   $ViewletSearchInput.name = 'search-value'
 
@@ -166,7 +162,7 @@ export const dispose = () => {}
 
 const create$ReplaceField = () => {
   const $Row = document.createElement('div')
-  $Row.className = 'SearchField'
+  $Row.className = 'SearchField SearchFieldReplace'
   const $ButtonReplaceAllIcon = MaskIcon.create(Icon.ReplaceAll)
   const $ButtonReplaceAll = document.createElement('button')
   $ButtonReplaceAll.title = UiStrings.ReplaceAll
@@ -174,6 +170,7 @@ const create$ReplaceField = () => {
   $ButtonReplaceAll.append($ButtonReplaceAllIcon)
 
   const $ViewletSearchReplaceInput = InputBox.create()
+  $ViewletSearchReplaceInput.className = 'SearchFieldInput'
   $ViewletSearchReplaceInput.placeholder = 'Replace'
   $ViewletSearchReplaceInput.type = 'text'
   $ViewletSearchReplaceInput.name = 'search-replace-value'

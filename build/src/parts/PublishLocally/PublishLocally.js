@@ -1,3 +1,4 @@
+import { VError } from '@lvce-editor/verror'
 import * as os from 'node:os'
 import * as Exec from '../Exec/Exec.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
@@ -24,7 +25,7 @@ const publishPackage = async (name) => {
       cwd: Path.absolute(`build/.tmp/server/${name}`),
     })
   } catch (error) {
-    // @ts-ignore
+    throw new VError(error, `Failed to publish ${name}`)
   }
 }
 
@@ -32,13 +33,26 @@ const getName = (object) => {
   return object.name
 }
 
+// https://stackoverflow.com/questions/48728714/how-to-set-env-var-for-npmrc-use#answer-53783077
+const addNpmrcFile = async () => {
+  await WriteFile.writeFile({
+    to: 'build/.tmp/server/.npmrc',
+    content: `//localhost:4873/:_authToken="test"`,
+  })
+}
+
+const isFolder = (dirent) => {
+  return dirent.isDirectory()
+}
+
 const publishPackages = async () => {
   await Exec.exec('node', ['build/bin/build.js', '--target=server'], {
     cwd: Root.root,
     stdio: 'inherit',
   })
+  await addNpmrcFile()
   const packages = await ReadDir.readDirWithFileTypes('build/.tmp/server')
-  await Promise.all(packages.map(getName).map(publishPackage))
+  await Promise.all(packages.filter(isFolder).map(getName).map(publishPackage))
 }
 
 const installPackagesLocally = async () => {

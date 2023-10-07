@@ -13,7 +13,8 @@
     "assumeChangesOnlyAffectDirectDependencies": true,
     "strict": true,
     "noImplicitAny": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "allowImportingTsExtensions": true
   },
   "include": ["src", "test"]
 }

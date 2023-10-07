@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const label1 = {
@@ -9,7 +10,7 @@ const label1 = {
 
 const completionHighlight = {
   type: VirtualDomElements.Span,
-  className: 'CompletionHighlight',
+  className: 'EditorCompletionItemHighlight',
   childCount: 1,
 }
 
@@ -62,15 +63,18 @@ export const getCompletionItemsVirtualDom = (visibleItems) => {
   }
   const dom = [root]
   for (const visibleItem of visibleItems) {
-    const { top, label, symbolName, highlights, focused } = visibleItem
+    const { top, label, symbolName, highlights, focused, deprecated } = visibleItem
     let className = 'EditorCompletionItem'
     if (focused) {
-      className += ' Focused'
+      className += ' EditorCompletionItemFocused'
+    }
+    if (deprecated) {
+      className += ' EditorCompletionItemDeprecated'
     }
     dom.push(
       {
         type: VirtualDomElements.Div,
-        role: 'option',
+        role: AriaRoles.Option,
         className,
         top,
         childCount: 2,
@@ -80,7 +84,7 @@ export const getCompletionItemsVirtualDom = (visibleItems) => {
         className: `ColoredMaskIcon ${symbolName}`,
         childCount: 0,
       },
-      ...getLabelDom(label, highlights)
+      ...getLabelDom(label, highlights),
     )
   }
   return dom

@@ -1,4 +1,4 @@
-import * as ElectronShell from '../ElectronShell/ElectronShell.js'
+import * as OpenExternal from '../OpenExternal/OpenExternal.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -18,7 +18,7 @@ const openNativeFolderRemote = async (absolutePath) => {
 }
 
 const openNativeFolderElectron = async (absolutePath) => {
-  await ElectronShell.showItemInFolder(absolutePath)
+  await OpenExternal.showItemInFolder(absolutePath)
 }
 
 export const openNativeFolder = async (absolutePath) => {

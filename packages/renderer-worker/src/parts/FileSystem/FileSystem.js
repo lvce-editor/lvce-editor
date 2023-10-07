@@ -115,6 +115,9 @@ export const canBeRestored = async (uri) => {
   if (protocol === 'screen-cast') {
     return true
   }
+  if (protocol === 'diff') {
+    return true
+  }
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   return fileSystem.canBeRestored
 }

@@ -1,5 +1,5 @@
-import { jest } from '@jest/globals'
 import EventEmitter from 'node:events'
+import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetModules()
@@ -12,13 +12,6 @@ jest.unstable_mockModule('../src/parts/AppWindowStates/AppWindowStates.cjs', () 
       windows: [],
     },
     add: jest.fn(),
-  }
-})
-jest.unstable_mockModule('../src/parts/ElectronApplicationMenu/ElectronApplicationMenu.cjs', () => {
-  return {
-    createTitleBar: jest.fn(),
-    setItems: jest.fn(),
-    setMenu: jest.fn(),
   }
 })
 

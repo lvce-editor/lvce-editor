@@ -1,15 +1,16 @@
 import * as OpenNativeFolder from '../OpenNativeFolder/OpenNativeFolder.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const openConfigFolder = async () => {
-  const configFolder = await Platform.getConfigPath()
+  const configFolder = await PlatformPaths.getConfigPath()
   await OpenNativeFolder.openNativeFolder(configFolder)
 }
 
 export const openCacheFolder = async () => {
-  const cacheFolder = await Platform.getCachePath()
+  const cacheFolder = await PlatformPaths.getCachePath()
   await OpenNativeFolder.openNativeFolder(cacheFolder)
 }
 
@@ -23,6 +24,6 @@ export const openLogsFolder = async () => {
   if (Platform.platform === PlatformType.Web) {
     return
   }
-  const logsFolder = await Platform.getLogsDir()
+  const logsFolder = await PlatformPaths.getLogsDir()
   await OpenNativeFolder.openNativeFolder(logsFolder)
 }

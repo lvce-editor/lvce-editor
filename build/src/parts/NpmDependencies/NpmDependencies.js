@@ -1,4 +1,4 @@
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Exec from '../Exec/Exec.js'
 import * as GetElsProblemMessage from '../GetElsProblemMessage/GetElsProblemMessage.js'
@@ -37,7 +37,6 @@ const getNpmDependenciesRaw = async (root) => {
       const message = GetElsProblemMessage.getElsProblemMessage(error.message)
       throw new VError(`Failed to get npm dependencies for ${root}: ${message}`)
     }
-    // @ts-ignore
     throw new VError(error, `Failed to get npm dependencies for ${root}`)
   }
 }
@@ -55,7 +54,6 @@ export const getNpmDependenciesRawJson = async (root) => {
       const message = GetElsProblemMessage.getElsProblemMessage(error.message)
       throw new VError(`Failed to get npm dependencies for ${root}: ${message}`)
     }
-    // @ts-ignore
     throw new VError(error, `Failed to get npm dependencies for ${root}`)
   }
 }

@@ -11,12 +11,8 @@ test('sample.icon-theme', async () => {
 
   // assert
   const iconFile = Locator('.TreeItem[aria-label="test.xyz"] .FileIcon')
-  await expect(iconFile).toHaveClass('FileIcon_file')
   const baseUrl = BaseUrl.getBaseUrl()
-  await expect(iconFile).toHaveCSS(
-    'background-image',
-    `url("${baseUrl}packages/extension-host-worker-tests/fixtures/sample.icon-theme/icons/default_file.svg")`
-  )
+  await expect(iconFile).toHaveAttribute('src', `${baseUrl}packages/extension-host-worker-tests/fixtures/sample.icon-theme/icons/default_file.svg`)
 })
 
 export {}

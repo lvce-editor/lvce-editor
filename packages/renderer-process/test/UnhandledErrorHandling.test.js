@@ -60,17 +60,3 @@ test('handleError - null', async () => {
   expect(Logger.error).toHaveBeenCalledTimes(1)
   expect(Logger.error).toHaveBeenCalledWith(`[renderer-process] Unhandled Error: null`)
 })
-
-test('handleError - firefox worker error', async () => {
-  const message = `SyntaxError: import declarations may only appear at top level of a module`
-  const filename = ''
-  const lineno = 1
-  const colno = 1
-  const mockError = `SyntaxError: import declarations may only appear at top level of a module`
-  const promise = new Promise((resolve) => {
-    setTimeout(resolve, 0)
-  })
-  UnhandledErrorHandling.handleUnhandledError(message, filename, lineno, colno, mockError)
-  await promise
-  expect(Logger.error).not.toHaveBeenCalled()
-})

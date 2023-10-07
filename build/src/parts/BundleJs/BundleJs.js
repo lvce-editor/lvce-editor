@@ -1,5 +1,5 @@
 import esbuild from 'esbuild'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 
 const getEsBuildPlatform = (platform) => {
   switch (platform) {
@@ -18,14 +18,7 @@ const getEsBuildPlatform = (platform) => {
  *
  * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean }} param0
  */
-export const bundleJs = async ({
-  cwd,
-  from,
-  platform,
-  exclude,
-  minify = false,
-  codeSplitting = false,
-}) => {
+export const bundleJs = async ({ cwd, from, platform, exclude, minify = false, codeSplitting = false }) => {
   const esbuildPlatform = getEsBuildPlatform(platform)
   try {
     await esbuild.build({
@@ -45,7 +38,6 @@ export const bundleJs = async ({
       // splitting: platform === 'node/cjs' ? false : true,
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to bundle JS for ${from}`)
   }
 }

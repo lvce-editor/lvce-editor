@@ -6,8 +6,11 @@ export const listen = () => {
   if (!parentPort) {
     throw new Error('parent port must be defined')
   }
-  parentPort.postMessage('ready')
   return parentPort
+}
+
+export const signal = (parentPort) => {
+  parentPort.postMessage('ready')
 }
 
 const getActualData = (event) => {

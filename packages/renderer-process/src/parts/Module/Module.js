@@ -36,6 +36,8 @@ export const load = (moduleId) => {
       return import('../Layout/Layout.ipc.js')
     case ModuleId.Location:
       return import('../Location/Location.ipc.js')
+    case ModuleId.MeasureTextHeight:
+      return import('../MeasureTextHeight/MeasureTextHeight.ipc.js')
     case ModuleId.Meta:
       return import('../Meta/Meta.ipc.js')
     case ModuleId.Notification:
@@ -52,8 +54,6 @@ export const load = (moduleId) => {
       return import('../SanitizeHtml/SanitizeHtml.ipc.js')
     case ModuleId.ScreenCapture:
       return import('../ScreenCapture/ScreenCapture.ipc.js')
-    case ModuleId.ServiceWorker:
-      return import('../ServiceWorker/ServiceWorker.ipc.js')
     case ModuleId.TestFrameWork:
       return import('../TestFrameWork/TestFrameWork.ipc.js')
     case ModuleId.Transferrable:
@@ -64,6 +64,8 @@ export const load = (moduleId) => {
       return import('../WebStorage/WebStorage.ipc.js')
     case ModuleId.Window:
       return import('../Window/Window.ipc.js')
+    case ModuleId.Prompt:
+      return import('../Prompt/Prompt.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

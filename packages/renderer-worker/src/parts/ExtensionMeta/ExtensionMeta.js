@@ -5,6 +5,7 @@ import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionMa
 import * as Languages from '../Languages/Languages.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
@@ -58,7 +59,7 @@ const getSharedProcessExtensions = () => {
 }
 
 const getStaticWebExtensions = () => {
-  const webExtensionsUrl = Platform.getWebExtensionsUrl()
+  const webExtensionsUrl = PlatformPaths.getWebExtensionsUrl()
   return Command.execute('Ajax.getJson', webExtensionsUrl)
 }
 

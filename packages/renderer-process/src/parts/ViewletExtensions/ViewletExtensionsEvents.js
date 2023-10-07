@@ -32,42 +32,15 @@ export const handleFocus = (event) => {
   Focus.setFocus('Extensions')
 }
 
-const handlePointerDownExtension = (uid, $Target) => {
-  const index = GetNodeIndex.getNodeIndex($Target)
-  ViewletExtensionsFunctions.handleClick(uid, index)
-}
-
-const handlePointerDownExtensionDetail = (uid, $Target) => {
-  const index = GetNodeIndex.getNodeIndex($Target.parentNode.parentNode)
-  ViewletExtensionsFunctions.handleClick(uid, index)
-}
-
-const handlePointerDownExtensionAuthorName = (uid, $Target) => {
-  const index = GetNodeIndex.getNodeIndex($Target.parentNode.parentNode.parentNode)
-  ViewletExtensionsFunctions.handleClick(uid, index)
-}
-
 export const handlePointerDown = (event) => {
   const { target, button } = event
   const uid = ComponentUid.fromEvent(event)
   if (button !== MouseEventType.LeftClick) {
     return
   }
-  switch (target.className) {
-    case 'ExtensionListItem':
-      handlePointerDownExtension(uid, target)
-      break
-    case 'ExtensionListItemName':
-    case 'ExtensionListItemDescription':
-    case 'ExtensionListItemFooter':
-      handlePointerDownExtensionDetail(uid, target)
-      break
-    case 'ExtensionListItemAuthorName':
-      handlePointerDownExtensionAuthorName(uid, target)
-      break
-    default:
-      break
-  }
+  const $Extension = target.closest('.ExtensionListItem')
+  const index = GetNodeIndex.getNodeIndex($Extension)
+  ViewletExtensionsFunctions.handleClick(uid, index)
 }
 
 export const handleInput = (event) => {
@@ -120,5 +93,5 @@ export const handleTouchEnd = (event) => {
   ViewletExtensionsFunctions.handleTouchEnd(uid, changedTouches)
 }
 
-export * from '../VirtualListEvents/VirtualListEvents.js'
 export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../VirtualListEvents/VirtualListEvents.js'

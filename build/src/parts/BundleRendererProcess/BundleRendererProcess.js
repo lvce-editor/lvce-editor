@@ -1,5 +1,5 @@
-import VError from 'verror'
-import * as BundleJs from '../BundleJs/BundleJs.js'
+import { VError } from '@lvce-editor/verror'
+import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
@@ -22,12 +22,12 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       })
     }
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/RendererWorkerUrl/RendererWorkerUrl.js`,
       occurrence: '/packages/renderer-worker/src/rendererWorkerMain.js',
       replacement: `/packages/renderer-worker/dist/rendererWorkerMain.js`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      path: `${cachePath}/src/parts/AssetDir/AssetDir.js`,
       occurrence: `ASSET_DIR`,
       replacement: `'${assetDir}'`,
     })
@@ -36,18 +36,13 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       occurrence: `PLATFORM`,
       replacement: `'${platform}'`,
     })
-    // await Replace.replace({
-    //   path: `${cachePath}/src/parts/RendererWorker/RendererWorker.js`,
-    //   occurrence: `/src/rendererWorkerMain.js`,
-    //   replacement: '/dist/rendererWorkerMain.js',
-    // })
+
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererProcessMain.js`,
       platform: 'web',
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to bundle renderer process`)
   }
 }

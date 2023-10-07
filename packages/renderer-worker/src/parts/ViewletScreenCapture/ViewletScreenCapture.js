@@ -1,7 +1,8 @@
 import * as DesktopCapturer from '../DesktopCapturer/DesktopCapturer.js'
+import * as Id from '../Id/Id.js'
 import * as MediaDevices from '../MediaDevices/MediaDevices.js'
 import * as Platform from '../Platform/Platform.js'
-import * as Id from '../Id/Id.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const create = (id, uri) => {
   return {
@@ -14,7 +15,7 @@ export const create = (id, uri) => {
 
 export const loadContent = async (state) => {
   const captureId = Id.create()
-  if (Platform.platform === 'electron') {
+  if (Platform.platform === PlatformType.Electron) {
     const sources = await DesktopCapturer.getSources({
       types: ['screen'],
     })

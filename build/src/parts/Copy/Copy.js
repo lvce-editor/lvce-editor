@@ -1,7 +1,7 @@
 import * as fs from 'node:fs/promises'
 import { join } from 'node:path'
 import fsExtra from 'fs-extra'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Path from '../Path/Path.js'
 
 /**
@@ -24,7 +24,6 @@ export const copy = async ({ from, to, ignore = [], dereference = false }) => {
       },
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to copy ${from} to ${to}`)
   }
 }
@@ -39,7 +38,6 @@ export const copyFile = async ({ from, to }) => {
     await fs.mkdir(Path.dirname(absoluteTo), { recursive: true })
     await fs.copyFile(absoluteFrom, absoluteTo)
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to copy ${from} to ${to}`)
   }
 }

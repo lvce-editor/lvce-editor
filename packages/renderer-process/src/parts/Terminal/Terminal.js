@@ -1,8 +1,8 @@
 import { createTerminal } from '../../../../../static/js/termterm.js'
 
-export const create = ({ $Element, handleInput }) => {
+export const create = ({ $Element, ...options }) => {
   const state = {
-    terminal: createTerminal($Element, { handleInput }),
+    terminal: createTerminal($Element, options),
   }
   return state
 }

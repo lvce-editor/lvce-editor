@@ -23,7 +23,7 @@
 }
 
 /* TODO reuse same highlight css for quickpick */
-.CompletionHighlight {
+.EditorCompletionItemHighlight {
   color: var(--CompletionHighlightForeground, #e1b974);
   font-weight: 700;
   contain: content;
@@ -33,21 +33,7 @@
   background: var(--CompletionListItemHoverBackground, rgba(64, 92, 80, 0.2));
 }
 
-.ColoredMaskIcon {
-  width: 20px;
-  height: 20px;
-  contain: strict;
-  display: block;
-  background: currentColor;
-  color: var(--TitleBarForeground, rgb(204, 204, 204));
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 16px;
-  -webkit-mask-position: 50% 50%;
-  pointer-events: none;
-}
-
-.EditorCompletionItem.Focused,
-#CompletionListItemActive {
+.EditorCompletionItem.EditorCompletionItemFocused {
   background: var(--CompletionListItemActiveBackground, #405c50);
   color: var(--CompletionListItemActiveForeground);
 }
@@ -70,4 +56,8 @@
   color: white;
   background: rgb(37, 35, 35);
   pointer-events: auto;
+}
+
+.EditorCompletionItemDeprecated {
+  text-decoration: line-through;
 }

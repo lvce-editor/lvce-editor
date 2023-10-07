@@ -5,7 +5,7 @@ import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 
 const main = async () => {
   const indexPath = join(Root.root, 'build', '.tmp', 'server', 'shared-process', 'index.js')
@@ -28,6 +28,10 @@ const main = async () => {
     from: `build/.tmp/server`,
     to: join(tmpDir, 'node_modules', `@lvce-editor`),
   })
+  await Copy.copy({
+    from: `packages/shared-process/node_modules/@lvce-editor/verror`,
+    to: `build/.tmp/server/shared-process/node_modules/@lvce-editor/verror`,
+  })
   try {
     await module.exportStatic({
       extensionPath,
@@ -39,6 +43,7 @@ const main = async () => {
     // @ts-ignore
     throw new VError(error, `static export failed`)
   }
+  await Remove.remove(`build/.tmp/server/shared_process/node_modules`)
 }
 
 main()

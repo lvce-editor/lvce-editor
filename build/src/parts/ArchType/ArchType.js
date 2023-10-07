@@ -1,1 +1,5 @@
 export const X64 = 'x64'
+export const Amd64 = 'amd64'
+export const Arm64 = 'arm64'
+export const ArmHf = 'armhf'
+export const Armv7l = 'armv7l'

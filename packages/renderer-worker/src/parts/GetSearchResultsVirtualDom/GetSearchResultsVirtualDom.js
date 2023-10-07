@@ -1,3 +1,4 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -22,11 +23,9 @@ const highlighted = {
 
 const renderRow = (rowInfo) => {
   const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement } = rowInfo
-  if (matchLength) {
-  }
   const treeItem = {
     type: VirtualDomElements.Div,
-    role: 'treeitem',
+    role: AriaRoles.TreeItem,
     className: 'TreeItem',
     title,
     ariaSetSize: setSize,
@@ -35,6 +34,7 @@ const renderRow = (rowInfo) => {
     ariaLabel: name,
     ariaDescription: '',
     childCount: 1,
+    paddingLeft: `${depth * 1 + 1}rem`,
   }
   switch (type) {
     case DirentType.Directory:
@@ -51,14 +51,13 @@ const renderRow = (rowInfo) => {
   const dom = []
 
   dom.push(treeItem)
-  if (icon) {
-    treeItem.childCount++
-    dom.push({
-      type: VirtualDomElements.Div,
-      className: `FileIcon FileIcon${icon}`,
-      childCount: 0,
-    })
-  }
+  treeItem.childCount++
+  dom.push({
+    type: VirtualDomElements.Img,
+    className: `FileIcon`,
+    childCount: 0,
+    src: icon,
+  })
   const label = {
     type: VirtualDomElements.Div,
     className: 'Label',

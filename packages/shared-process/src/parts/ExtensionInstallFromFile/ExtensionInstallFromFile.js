@@ -2,7 +2,7 @@ import * as Extract from '../Extract/Extract.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
-import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import { VError } from '../VError/VError.js'
 
 const getCachedExtensionFolderName = (path) => {
@@ -15,11 +15,11 @@ const getCachedExtensionFolderName = (path) => {
 
 export const install = async ({ path }) => {
   try {
-    const cachedExtensionsPath = Platform.getCachedExtensionsPath()
+    const cachedExtensionsPath = PlatformPaths.getCachedExtensionsPath()
     const cachedExtensionFolderName = getCachedExtensionFolderName(path)
     const cachedExtensionPath = Path.join(cachedExtensionsPath, cachedExtensionFolderName)
     await Extract.extractTarBr(path, cachedExtensionPath)
-    const extensionsPath = Platform.getExtensionsPath()
+    const extensionsPath = PlatformPaths.getExtensionsPath()
     const manifestPath = Path.join(cachedExtensionPath, 'extension.json')
     const manifestJson = await JsonFile.readJson(manifestPath)
     const { id } = manifestJson

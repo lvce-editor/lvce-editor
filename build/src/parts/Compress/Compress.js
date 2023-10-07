@@ -1,4 +1,4 @@
-import VError from 'verror'
+import { VError } from '@lvce-editor/verror'
 import * as Exec from '../Exec/Exec.js'
 import * as Logger from '../Logger/Logger.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
@@ -45,7 +45,6 @@ export const tarXzFolders = async (inDirs, outFile, options) => {
       },
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `Failed to compress folders`)
   }
 }
@@ -123,7 +122,6 @@ export const createMTree = async (cwd, dirents) => {
     if (error && error.code === ErrorCodes.ENOENT && error.syscall === 'spawn bsdtar') {
       throw new VError(`Failed to create mtree: Command bsdtar not found`)
     }
-    // @ts-ignore
     throw new VError(error, `Failed to create mtree`)
   }
 }

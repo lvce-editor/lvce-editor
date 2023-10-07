@@ -1,14 +1,13 @@
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
-import * as JsoncFile from '../JsoncFile/JsoncFile.js'
-import * as Platform from '../Platform/Platform.js'
-import * as Process from '../Process/Process.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
+import * as JsoncFile from '../JsoncFile/JsoncFile.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
+import * as Process from '../Process/Process.js'
 import { VError } from '../VError/VError.js'
 // TODO need jsonc parser for settings with comments
 
 export const getUserPreferences = async () => {
   try {
-    const userSettingsPath = Platform.getUserSettingsPath()
+    const userSettingsPath = PlatformPaths.getUserSettingsPath()
     let json
     try {
       json = await JsoncFile.readJsonc(userSettingsPath)
@@ -27,7 +26,7 @@ export const getUserPreferences = async () => {
 // TODO handle error
 export const getDefaultPreferences = async () => {
   try {
-    const defaultSettingsPath = Platform.getDefaultSettingsPath()
+    const defaultSettingsPath = PlatformPaths.getDefaultSettingsPath()
     return await JsoncFile.readJsonc(defaultSettingsPath)
   } catch (error) {
     throw new VError(error, 'Failed to load default preferences')

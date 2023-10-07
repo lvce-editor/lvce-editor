@@ -1,4 +1,3 @@
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const getPid = () => {
@@ -6,7 +5,7 @@ export const getPid = () => {
 }
 
 export const getElectronVersion = () => {
-  return ElectronProcess.invoke('Process.getElectronVersion')
+  return SharedProcess.invoke('ElectronProcess.getElectronVersion')
 }
 
 export const getNodeVersion = () => {
@@ -14,7 +13,7 @@ export const getNodeVersion = () => {
 }
 
 export const getChromeVersion = () => {
-  return ElectronProcess.invoke('Process.getChromeVersion')
+  return SharedProcess.invoke('ElectronProcess.getChromeVersion')
 }
 
 export const getVersion = () => {
@@ -31,4 +30,8 @@ export const getV8Version = () => {
 
 export const getDate = () => {
   return SharedProcess.invoke('Platform.getDate')
+}
+
+export const getArch = () => {
+  return SharedProcess.invoke('Process.getArch')
 }

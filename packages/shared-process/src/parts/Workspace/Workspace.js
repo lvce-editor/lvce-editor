@@ -1,20 +1,18 @@
-import { createHash } from 'node:crypto'
-import { readFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
-import { join, resolve } from 'node:path'
+import { isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as Env from '../Env/Env.js'
+import * as GetWorkspaceId from '../GetWorkspaceId/GetWorkspaceId.js'
+import * as IsAbsolutePath from '../IsAbsolutePath/IsAbsolutePath.js'
+import * as IsElectron from '../IsElectron/IsElectron.js'
+import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as Root from '../Root/Root.js'
-
-const RE_ABSOLUTE_URI = /^[a-z]+:\/\//
-
-const isAbsoluteUri = (path) => {
-  return RE_ABSOLUTE_URI.test(path)
-}
+import * as WorkspaceSource from '../WorkspaceSource/WorkspaceSource.js'
 
 const getAbsolutePath = (path) => {
-  if (isAbsoluteUri(path)) {
+  if (IsAbsolutePath.isAbsolutePath(path)) {
     return path
   }
   if (path.startsWith('${cwd}')) {
@@ -24,17 +22,6 @@ const getAbsolutePath = (path) => {
   }
   path = resolve(path)
   return path
-}
-
-const getWorkspaceStorage = async (workspaceId) => {
-  try {
-    const workspaceStorage = JSON.parse(
-      await readFile(`/tmp/config/${workspaceId}`, 'utf-8')
-    )
-    return workspaceStorage
-  } catch {
-    return {}
-  }
 }
 
 /**
@@ -48,26 +35,26 @@ export const getHomeDir = () => {
   return homeDir
 }
 
-const getWorkspaceId = (absolutePath) => {
-  return createHash('sha256').update(absolutePath).digest('hex').slice(0, 16)
-}
-
-const configs = {
-  messagePort1: {
-    folder: '/tmp',
-  },
-  messagePort2: {
-    folder: '~',
-  },
-}
-
 const toUri = (path) => {
   return pathToFileURL(path).toString()
 }
 
 export const resolveRoot = async () => {
-  // TODO ask electron, electron can do mapping
-  // await
+  if (IsElectron.isElectron()) {
+    const argv = await ParentIpc.invoke('Process.getArgv')
+    const relevantArgv = argv.slice(2)
+    const last = relevantArgv.at(-1)
+    if (last && isAbsolute(last)) {
+      return {
+        path: last,
+        uri: toUri(last),
+        workspaceId: GetWorkspaceId.getWorkspaceId(last),
+        homeDir: PlatformPaths.getHomeDir(),
+        pathSeparator: Platform.getPathSeparator(),
+        source: 'shared-process-default',
+      }
+    }
+  }
 
   // TODO shared process should have no logic, this should probably be somewhere else
   const folder = Env.getFolder()
@@ -76,23 +63,23 @@ export const resolveRoot = async () => {
     return {
       path,
       uri: toUri(path),
-      workspaceId: getWorkspaceId(path),
-      homeDir: Platform.getHomeDir(),
+      workspaceId: GetWorkspaceId.getWorkspaceId(path),
+      homeDir: PlatformPaths.getHomeDir(),
       pathSeparator: Platform.getPathSeparator(),
-      source: 'shared-process-env',
+      source: WorkspaceSource.SharedProcessEnv,
     }
   }
   const absolutePath = getAbsolutePath(folder)
-  const workspaceId = getWorkspaceId(absolutePath)
+  const workspaceId = GetWorkspaceId.getWorkspaceId(absolutePath)
   // TODO this slows down startup a lot (~30-50ms)
   // const workspaceStorage = await getWorkspaceStorage(workspaceId)
   return {
     path: absolutePath,
     uri: toUri(absolutePath),
     workspaceId,
-    homeDir: Platform.getHomeDir(),
+    homeDir: PlatformPaths.getHomeDir(),
     pathSeparator: Platform.getPathSeparator(),
-    source: 'shared-process-default',
+    source: WorkspaceSource.SharedProcessDefault,
   }
 }
 
@@ -101,7 +88,7 @@ export const resolveUri = (uri) => {
   return {
     path,
     uri,
-    homeDir: Platform.getHomeDir(),
+    homeDir: PlatformPaths.getHomeDir(),
     pathSeparator: Platform.getPathSeparator(),
   }
 }
