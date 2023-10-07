@@ -69,8 +69,9 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
   if (icon) {
     parent.childCount++
     dom.push({
-      type: VirtualDomElements.I,
-      className: `FileIcon FileIcon${icon}`,
+      type: VirtualDomElements.Img,
+      className: `FileIcon`,
+      src: icon,
       childCount: 0,
     })
   }
