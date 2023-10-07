@@ -1,6 +1,7 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as TabFlags from '../TabFlags/TabFlags.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
@@ -8,7 +9,6 @@ import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
  */
 const ClassNames = {
   MainTab: 'MainTab',
-  FileIcon: 'FileIcon',
   TabLabel: 'TabLabel',
   MainTabSelected: 'MainTabSelected',
 }
@@ -21,7 +21,6 @@ const getTabDom = (tab, isActive, fixedWidth) => {
   }
   const isDirty = flags & TabFlags.Dirty
   const isHovered = flags & TabFlags.Hovered
-  const fileIconClassName = `FileIcon`
   const actualTabWidth = fixedWidth || tabWidth
   const tabElement = {
     type: VirtualDomElements.Div,
@@ -35,12 +34,7 @@ const getTabDom = (tab, isActive, fixedWidth) => {
   }
   const dom = [
     tabElement,
-    {
-      type: VirtualDomElements.Img,
-      className: fileIconClassName,
-      childCount: 0,
-      src: icon,
-    },
+    GetFileIconVirtualDom.getFileIconVirtualDom(icon),
     {
       type: VirtualDomElements.Div,
       className: ClassNames.TabLabel,
