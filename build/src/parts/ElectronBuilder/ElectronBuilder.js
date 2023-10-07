@@ -66,11 +66,11 @@ const runElectronBuilder = async ({ config }) => {
       prepackaged: Path.absolute(`build/.tmp/linux/snap/${debArch}/app`),
       // win: ['portable'],
     }
-    if (process.env.HIGHEST_COMPRESSION) {
-      Logger.info('[info] using highest compression, this may take some time')
-      process.env.ELECTRON_BUILDER_7Z_FILTER = 'bcj2'
-      process.env.ELECTRON_BUILDER_COMPRESSION_LEVEL = '5'
-    }
+    // if (process.env.HIGHEST_COMPRESSION) {
+    //   Logger.info('[info] using highest compression, this may take some time')
+    //   process.env.ELECTRON_BUILDER_7Z_FILTER = 'bcj2'
+    //   process.env.ELECTRON_BUILDER_COMPRESSION_LEVEL = '5'
+    // }
     await ElectronBuilder.build(options)
   } catch (error) {
     throw new VError(error, `Electron builder failed to execute`)
