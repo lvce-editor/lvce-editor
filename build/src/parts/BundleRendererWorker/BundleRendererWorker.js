@@ -6,6 +6,7 @@ import * as Copy from '../Copy/Copy.js'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
 import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
 import * as Path from '../Path/Path.js'
+import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as Replace from '../Replace/Replace.js'
 
 const getNewCssDeclarationFile = (content, filteredCss) => {
@@ -86,6 +87,17 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
       replacement: `/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
+    })
+
+    await WriteFile.writeFile({
+      to: `${cachePath}/src/parts/GetAbsoluteIconPath/GetAbsoluteIconPath.js`,
+      content: `import * as IconThemeState from '../IconThemeState/IconThemeState.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
+
+export const getAbsoluteIconPath = (iconTheme, icon) => {
+  const result = iconTheme.iconDefinitions[icon]
+  return \`\${AssetDir.assetDir}/file-icons/\${result.slice(12)}\`
+}`, // TODO should adjust vscode-icons.json instead
     })
 
     if (platform === 'remote') {
