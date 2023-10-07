@@ -114,6 +114,8 @@ export const load = (moduleId) => {
       return import('../PersistentFileHandle/PersistentFileHandle.ipc.js')
     case ModuleId.Preferences:
       return import('../Preferences/Preferences.ipc.js')
+    case ModuleId.Prompt:
+      return import('../Prompt/Prompt.ipc.js')
     case ModuleId.RebuildNodePty:
       return import('../RebuildNodePty/RebuildNodePty.ipc.js')
     case ModuleId.RecentlyOpened:
@@ -144,8 +146,6 @@ export const load = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.Prompt:
-      return import('../Prompt/Prompt.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
