@@ -258,8 +258,7 @@ const copyExtensionHostSubWorkerFiles = async ({ commitHash }) => {
   // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
 }
 
-const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
-  const commitHash = await CommitHash.getCommitHash()
+const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   await Copy.copy({
     from: 'static/config',
     to: `build/.tmp/dist/${commitHash}/config`,
@@ -629,7 +628,7 @@ export const build = async () => {
   Console.timeEnd('clean')
 
   Console.time('copyStaticFiles')
-  await copyStaticFiles({ pathPrefix, ignoreIconTheme })
+  await copyStaticFiles({ pathPrefix, ignoreIconTheme, commitHash })
   Console.timeEnd('copyStaticFiles')
 
   Console.time('copyRendererProcessFiles')
