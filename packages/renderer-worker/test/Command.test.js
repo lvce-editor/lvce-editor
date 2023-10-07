@@ -6,7 +6,7 @@ test('execute - error - failed to load module', async () => {
   }
   await expect(Command.execute('Test.execute')).rejects.toThrowError(
     new Error(
-      'failed to load module 42: TypeError: Failed to fetch dynamically imported module: http://localhost:3000/packages/renderer-worker/src/parts/Test/Test.ipc.js'
-    )
+      'failed to load module 41: TypeError: Failed to fetch dynamically imported module: http://localhost:3000/packages/renderer-worker/src/parts/Test/Test.ipc.js',
+    ),
   )
 })

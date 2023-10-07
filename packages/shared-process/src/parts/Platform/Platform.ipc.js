@@ -5,10 +5,10 @@ export const name = 'Platform'
 
 export const Commands = {
   getAppDir: PlatformPaths.getAppDir,
+  getApplicationName: Platform.getApplicationName,
   getBuiltinExtensionsPath: PlatformPaths.getBuiltinExtensionsPath,
   getCachedExtensionsPath: PlatformPaths.getCachedExtensionsPath,
   getCacheDir: PlatformPaths.getCacheDir,
-  getApplicationName: Platform.getApplicationName,
   getCommit: Platform.getCommit,
   getConfigDir: PlatformPaths.getConfigDir,
   getDataDir: PlatformPaths.getDataDir,

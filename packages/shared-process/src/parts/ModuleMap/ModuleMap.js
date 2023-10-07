@@ -38,8 +38,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Developer
     case 'Download.download':
       return ModuleId.Download
-    case 'ElectronApplicationMenu.setItems':
     case 'ElectronApplicationMenu.handleClick':
+    case 'ElectronApplicationMenu.setItems':
       return ModuleId.ElectronApplicationMenu
     case 'ElectronBrowserView.createBrowserView':
     case 'ElectronBrowserView.disposeBrowserView':
@@ -171,6 +171,8 @@ export const getModuleId = (commandId) => {
     case 'Native.openFolder':
     case 'OpenNativeFolder.openFolder':
       return ModuleId.OpenNativeFolder
+    case 'Os.getTmpDir':
+      return ModuleId.Os
     case 'OutputChannel.close':
     case 'OutputChannel.open':
       return ModuleId.OutputChannel
@@ -179,6 +181,7 @@ export const getModuleId = (commandId) => {
     case 'Performance.getNodeStartupTiming':
       return ModuleId.Performance
     case 'Platform.getAppDir':
+    case 'Platform.getApplicationName':
     case 'Platform.getBuiltinExtensionsPath':
     case 'Platform.getCachedExtensionsPath':
     case 'Platform.getCacheDir':
@@ -199,15 +202,14 @@ export const getModuleId = (commandId) => {
     case 'Platform.getUserSettingsPath':
     case 'Platform.getVersion':
     case 'Platform.setEnvironmentVariables':
-    case 'Platform.getApplicationName':
       return ModuleId.Platform
     case 'Preferences.getAll':
       return ModuleId.Preferences
+    case 'Process.getArch':
     case 'Process.getNodeVersion':
     case 'Process.getPid':
     case 'Process.getV8Version':
     case 'Process.kill':
-    case 'Process.getArch':
       return ModuleId.Process
     case 'ProcessId.getMainProcessId':
     case 'ProcessId.getSharedProcessId':
@@ -239,8 +241,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
-    case 'Os.getTmpDir':
-      return ModuleId.Os
     default:
       throw new CommandNotFoundError(commandId)
   }

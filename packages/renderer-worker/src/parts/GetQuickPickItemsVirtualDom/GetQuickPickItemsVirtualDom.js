@@ -1,5 +1,6 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const descriptionWrapper = {
@@ -68,11 +69,7 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
   }
   if (icon) {
     parent.childCount++
-    dom.push({
-      type: VirtualDomElements.I,
-      className: `FileIcon FileIcon${icon}`,
-      childCount: 0,
-    })
+    dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(icon))
   }
   addHighlights(dom, highlights, label)
   return dom

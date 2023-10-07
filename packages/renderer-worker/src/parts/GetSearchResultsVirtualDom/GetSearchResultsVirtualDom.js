@@ -1,5 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -52,12 +53,7 @@ const renderRow = (rowInfo) => {
 
   dom.push(treeItem)
   treeItem.childCount++
-  dom.push({
-    type: VirtualDomElements.Img,
-    className: `FileIcon`,
-    childCount: 0,
-    src: icon,
-  })
+  dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(icon))
   const label = {
     type: VirtualDomElements.Div,
     className: 'Label',
