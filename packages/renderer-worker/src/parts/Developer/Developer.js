@@ -246,11 +246,6 @@ export const createSharedProcessProfile = async () => {
   await SharedProcess.invoke(/* Developer.createProfile */ 'Developer.createProfile')
 }
 
-export const showIconThemeCss = async () => {
-  // const iconThemeCss = await IconTheme.getIconThemeCss()
-  // Main.openRawText('css://icon-theme.css', iconThemeCss)
-}
-
 export const reloadIconTheme = async () => {
   await IconTheme.hydrate()
 }
