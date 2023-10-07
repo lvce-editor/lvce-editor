@@ -63,10 +63,11 @@ const createItem = (item) => {
       childCount: 3,
     },
     {
-      type: VirtualDomElements.Div,
-      className: `FileIcon FileIcon${icon}`,
+      type: VirtualDomElements.Img,
+      className: `FileIcon`,
       childCount: 0,
-    }
+      src: icon,
+    },
   )
   const labelDom = {
     type: VirtualDomElements.Div,
@@ -82,7 +83,7 @@ const createItem = (item) => {
         className: 'LabelDetail',
         childCount: 1,
       },
-      text(detail)
+      text(detail),
     )
   }
   dom.push({

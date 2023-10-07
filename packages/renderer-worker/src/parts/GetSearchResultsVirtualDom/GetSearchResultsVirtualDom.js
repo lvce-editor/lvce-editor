@@ -1,6 +1,6 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const deleted = {
@@ -51,14 +51,13 @@ const renderRow = (rowInfo) => {
   const dom = []
 
   dom.push(treeItem)
-  if (icon) {
-    treeItem.childCount++
-    dom.push({
-      type: VirtualDomElements.Div,
-      className: `FileIcon FileIcon${icon}`,
-      childCount: 0,
-    })
-  }
+  treeItem.childCount++
+  dom.push({
+    type: VirtualDomElements.Img,
+    className: `FileIcon`,
+    childCount: 0,
+    src: icon,
+  })
   const label = {
     type: VirtualDomElements.Div,
     className: 'Label',
