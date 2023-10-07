@@ -5,6 +5,7 @@ import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Remove from '../Remove/Remove.js'
+import * as RemoveSourceMaps from '../RemoveSourceMaps/RemoveSourceMaps.js'
 
 const getNodePtyIgnoreFiles = () => {
   const files = ['typings', 'README.md', 'scripts', 'src']
@@ -58,6 +59,7 @@ export const bundlePtyHostDependencies = async ({ to, arch, electronVersion, exc
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/pty.target.mk`))
   await Remove.removeMatching(`${to}/node_modules/node-pty`, '**/*.test.js')
   await Remove.removeMatching(`${to}/node_modules/node-pty`, '**/*.test.js.map')
+  await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/node-pty`)
   if (platform === 'win32') {
     await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/deps`))
     await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/deps`))
