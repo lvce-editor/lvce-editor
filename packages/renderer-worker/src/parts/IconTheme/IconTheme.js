@@ -1,5 +1,3 @@
-import * as Css from '../Css/Css.js'
-import * as GetIconThemeCss from '../GetIconThemeCss/GetIconThemeCss.js'
 import * as GetIconThemeJson from '../GetIconThemeJson/GetIconThemeJson.js'
 import * as IconThemeState from '../IconThemeState/IconThemeState.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -13,7 +11,6 @@ export const setIconTheme = async (iconThemeId) => {
     const iconTheme = await GetIconThemeJson.getIconThemeJson(iconThemeId)
     IconThemeState.state.iconTheme = iconTheme.json
     IconThemeState.state.extensionPath = iconTheme.extensionPath
-    const iconThemeCss = GetIconThemeCss.getIconThemeCss(iconTheme)
     const instances = ViewletStates.getAllInstances()
     // TODO have one recalculate style and one paint
     for (const [key, value] of Object.entries(instances)) {

@@ -100,34 +100,6 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
 }`, // TODO should adjust vscode-icons.json instead
     })
 
-    if (platform === 'remote') {
-      await Replace.replace({
-        path: `${cachePath}/src/parts/GetIconThemeCss/GetIconThemeCss.js`,
-        occurrence: `import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'`,
-        replacement: `import * as AssetDir from '../AssetDir/AssetDir.js'`,
-      })
-      await Replace.replace({
-        path: `${cachePath}/src/parts/GetIconThemeCss/GetIconThemeCss.js`,
-        occurrence: `const getBackgroundUrl = (extensionPath, value) => {
-  if (Platform.platform === PlatformType.Web) {
-    return \`\${extensionPath}\${value}\`
-  }
-  if (extensionPath.startsWith('http://')) {
-    return \`\${extensionPath}\${value}\`
-  }
-  // TODO what if the file in on linux and includes a backslash?
-  if (extensionPath.includes('\\\\')) {
-    const extensionUri = extensionPath.replaceAll('\\\\', '/')
-    return \`/remote/\${extensionUri}/\${value}\`
-  }
-  return \`/remote\${extensionPath}/\${value}\`
-}`,
-        replacement: `const getBackgroundUrl = (extensionPath, value) => {
-  return \`\${AssetDir.assetDir}\${value}\`
-}`,
-      })
-    }
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererWorkerMain.js`,
