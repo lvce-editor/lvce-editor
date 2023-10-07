@@ -193,6 +193,13 @@ export const getModule = (method) => {
 }
 `,
   })
+
+  const iconTheme = await JsonFile.readJson(`extensions/builtin.vscode-icons/icon-theme.json`)
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/InitialIconTheme/InitialIconTheme.js`,
+    occurrence: `export const initialIconTheme = undefined`,
+    replacement: `export const initialIconTheme = ${JSON.stringify(iconTheme, null, 2)}`,
+  })
   await InlineDynamicImportsFile.inlineDynamicModules({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Module/Module.js`,
     eagerlyLoadedModules: [
