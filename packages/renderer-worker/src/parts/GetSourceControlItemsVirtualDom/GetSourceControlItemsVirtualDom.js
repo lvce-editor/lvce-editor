@@ -1,7 +1,8 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 const getLabelClassName = (decorationStrikeThrough) => {
   let className = 'Label'
@@ -62,12 +63,7 @@ const createItem = (item) => {
       title: file,
       childCount: 3,
     },
-    {
-      type: VirtualDomElements.Img,
-      className: `FileIcon`,
-      childCount: 0,
-      src: icon,
-    },
+    GetFileIconVirtualDom.getFileIconVirtualDom(icon),
   )
   const labelDom = {
     type: VirtualDomElements.Div,
