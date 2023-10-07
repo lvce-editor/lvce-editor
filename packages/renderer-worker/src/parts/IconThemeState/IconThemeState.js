@@ -1,3 +1,5 @@
+import * as InitialIconTheme from '../InitialIconTheme/InitialIconTheme.js'
+
 export const state = {
   seenFiles: [],
   seenFolders: [],
@@ -5,5 +7,5 @@ export const state = {
   /**
    * @type{any}
    */
-  iconTheme: undefined,
+  iconTheme: InitialIconTheme.initialIconTheme,
 }
