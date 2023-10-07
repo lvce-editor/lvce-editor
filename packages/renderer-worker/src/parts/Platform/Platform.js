@@ -6,7 +6,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 // TODO treeshake this function out when targeting electron
 
 /**
- * @returns {'electron'|'remote'|'web'|'test'}
+ * @returns {number}
  */
 const getPlatform = () => {
   // @ts-ignore
