@@ -54,8 +54,6 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await Remove.remove(`${to}/node_modules/vscode-ripgrep-with-github-api-error-fix/src/postinstall.js`)
   await Remove.removeMatching(`${to}/node_modules/cacheable-request`, '**/*.map')
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
-  await Remove.removeMatching(`${to}/node_modules/node-pty`, '**/*.test.js')
-  await Remove.removeMatching(`${to}/node_modules/node-pty`, '**/*.test.js.map')
   if (platform === 'win32') {
     await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/src`)
     await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/typings`)
