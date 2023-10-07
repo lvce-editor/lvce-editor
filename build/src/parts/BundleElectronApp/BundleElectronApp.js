@@ -189,6 +189,16 @@ const copyExtensions = async ({ arch, optimizeLanguageBasics }) => {
   await Remove.remove(
     `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-features-typescript/node/node_modules/typescript/lib/tsserverlibrary.js`,
   )
+  await Copy.copy({
+    from: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.vscode-icons/icons`,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/static/file-icons`,
+  })
+  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.vscode-icons/icons`)
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.vscode-icons/icon-theme.json`,
+    occurrence: '/icons',
+    replacement: '/file-icons',
+  })
   if (optimizeLanguageBasics) {
     const dirents = await ReadDir.readDir(`build/.tmp/electron-bundle/${arch}/resources/app/extensions`)
     const allLanguages = []
