@@ -121,11 +121,6 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
     occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
     replacement: `return \`\${AssetDir.assetDir}/icon-themes/\${iconThemeId}.json\``,
   })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetIconThemeCss/GetIconThemeCss.js`,
-    occurrence: `return \`\${extensionPath}\${value}\``,
-    replacement: `return \`${pathPrefix}/file-icons/\${value.slice(7)}\``, // TODO should adjust vscode-icons.json instead
-  })
   await WriteFile.writeFile({
     to: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetAbsoluteIconPath/GetAbsoluteIconPath.js`,
     content: `import * as IconThemeState from '../IconThemeState/IconThemeState.js'
