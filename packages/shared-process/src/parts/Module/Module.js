@@ -46,6 +46,8 @@ export const load = (moduleId) => {
       return import('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ElectronWindowAbout:
       return import('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
+    case ModuleId.ElectronWindowProcessExplorer:
+      return import('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
     case ModuleId.Exit:
       return import('../Exit/Exit.ipc.js')
     case ModuleId.ExtensionHost:

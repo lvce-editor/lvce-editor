@@ -66,6 +66,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronSafeStorage
     case 'ElectronWindowAbout.open':
       return ModuleId.ElectronWindowAbout
+    case 'ElectronWindowProcessExplorer.open':
+      return ModuleId.ElectronWindowProcessExplorer
     case 'Exit.exit':
       return ModuleId.Exit
     case 'ExtensionHost.dispose':
