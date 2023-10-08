@@ -114,7 +114,9 @@ Node.js v18.16.1
 
   const { message, stack } = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
   expect(message).toBe(`ReferenceError: ProcessListeners is not defined`)
-  expect(stack).toBe(`    at Module.main (/test/packages/pty-host/src/parts/Main/Main.js:9:42)
-    at /test/packages/pty-host/src/ptyHostMain.js:3:6
-    at ModuleJob.run (node:internal/modules/esm/module_job:194:25)`)
+  expect(stack).toEqual([
+    `    at Module.main (/test/packages/pty-host/src/parts/Main/Main.js:9:42)`,
+    `    at /test/packages/pty-host/src/ptyHostMain.js:3:6`,
+    `    at ModuleJob.run (node:internal/modules/esm/module_job:194:25)`,
+  ])
 })
