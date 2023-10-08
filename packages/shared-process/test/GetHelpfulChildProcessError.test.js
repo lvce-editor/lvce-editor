@@ -47,7 +47,7 @@ Node.js v18.12.1
 `
   const { message } = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
   expect(message).toBe(
-    `Incompatible native node module: The module '/test/packages/pty-host/node_modules/node-pty/build/Release/pty.node' was compiled against a different Node.js version using NODE_MODULE_VERSION 108. This version of Node.js requires NODE_MODULE_VERSION 113. Please try re-compiling or re-installing the module (for instance, using \`npm rebuild\` or \`npm install\`).`
+    `Incompatible native node module: The module '/test/packages/pty-host/node_modules/node-pty/build/Release/pty.node' was compiled against a different Node.js version using NODE_MODULE_VERSION 108. This version of Node.js requires NODE_MODULE_VERSION 113. Please try re-compiling or re-installing the module (for instance, using \`npm rebuild\` or \`npm install\`).`,
   )
 })
 
@@ -94,7 +94,29 @@ Node.js v18.15.0`
 
   const { message, code } = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
   expect(message).toBe(
-    `Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'ws' imported from /usr/lib/lvce-oss/esources/app/packages/pty-host/src/parts/WebSocketServer/WebSocketServer.js`
+    `Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'ws' imported from /usr/lib/lvce-oss/esources/app/packages/pty-host/src/parts/WebSocketServer/WebSocketServer.js`,
   )
   expect(code).toBe('ERR_MODULE_NOT_FOUND')
+})
+
+test('getHelpfulChildProcessError - ReferenceError', () => {
+  const stderr = `/test/packages/pty-host/src/parts/Main/Main.js:9
+  process.on('uncaughtExceptionMonitor', ProcessListeners.handleUncaughtExceptionMonitor)
+                                         ^
+
+ReferenceError: ProcessListeners is not defined
+    at Module.main (/test/packages/pty-host/src/parts/Main/Main.js:9:42)
+    at /test/packages/pty-host/src/ptyHostMain.js:3:6
+    at ModuleJob.run (node:internal/modules/esm/module_job:194:25)
+
+Node.js v18.16.1
+`
+
+  const { message, stack } = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
+  expect(message).toBe(`ReferenceError: ProcessListeners is not defined`)
+  expect(stack).toEqual([
+    `    at Module.main (/test/packages/pty-host/src/parts/Main/Main.js:9:42)`,
+    `    at /test/packages/pty-host/src/ptyHostMain.js:3:6`,
+    `    at ModuleJob.run (node:internal/modules/esm/module_job:194:25)`,
+  ])
 })

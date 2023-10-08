@@ -1,11 +1,15 @@
-import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 
 const RE_NATIVE_MODULE_ERROR = /^innerError Error: Cannot find module '.*.node'/
 const RE_NATIVE_MODULE_ERROR_2 = /was compiled against a different Node.js version/
 
 const RE_MESSAGE_CODE_BLOCK_START = /^Error: The module '.*'$/
 const RE_MESSAGE_CODE_BLOCK_END = /^\s* at/
+
+const RE_AT = /^\s+at/
+const RE_AT_PROMISE_INDEX = /^\s*at async Promise.all \(index \d+\)$/
 
 const isUnhelpfulNativeModuleError = (stderr) => {
   return RE_NATIVE_MODULE_ERROR.test(stderr) && RE_NATIVE_MODULE_ERROR_2.test(stderr)
@@ -62,12 +66,36 @@ const isModuleNotFoundMessage = (line) => {
 }
 
 const getModuleNotFoundError = (stderr) => {
-  const lines = stderr.split('\n')
+  const lines = SplitLines.splitLines(stderr)
   const messageIndex = lines.findIndex(isModuleNotFoundMessage)
   const message = lines[messageIndex]
   return {
     message,
     code: ErrorCodes.ERR_MODULE_NOT_FOUND,
+  }
+}
+
+const isNormalStackLine = (line) => {
+  return RE_AT.test(line) && !RE_AT_PROMISE_INDEX.test(line)
+}
+
+const getDetails = (lines) => {
+  const index = lines.findIndex(isNormalStackLine)
+  if (index === -1) {
+    return {
+      actualMessage: JoinLines.joinLines(lines),
+      rest: [],
+    }
+  }
+  let lastIndex = index - 1
+  while (++lastIndex < lines.length) {
+    if (!isNormalStackLine(lines[lastIndex])) {
+      break
+    }
+  }
+  return {
+    actualMessage: lines[index - 1],
+    rest: lines.slice(index, lastIndex),
   }
 }
 
@@ -81,8 +109,11 @@ export const getHelpfulChildProcessError = (stdout, stderr) => {
   if (isModuleNotFoundError(stderr)) {
     return getModuleNotFoundError(stderr)
   }
+  const lines = SplitLines.splitLines(stderr)
+  const { actualMessage, rest } = getDetails(lines)
   return {
-    message: `child process error: ${stderr}`,
+    message: `${actualMessage}`,
     code: '',
+    stack: rest,
   }
 }
