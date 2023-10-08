@@ -17,7 +17,7 @@ export const create = async ({ path, argv = [], execArgv = [], name }) => {
     'src',
     'parts',
     'UtilityProcessEntryPoint',
-    'UtilityProcessEntryPoint.cjs'
+    'UtilityProcessEntryPoint.cjs',
   )
   const actualArgv = [path, '--ipc-type=electron-utility-process', ...argv]
   const childProcess = utilityProcess.fork(utilityProcessEntryPoint, actualArgv, {

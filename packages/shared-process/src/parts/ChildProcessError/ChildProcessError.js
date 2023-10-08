@@ -2,11 +2,13 @@ import * as GetHelpfulChildProcessError from '../GetHelpfulChildProcessError/Get
 
 export class ChildProcessError extends Error {
   constructor(stderr) {
-    const { message, code } = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
+    const { message, code, stack } = GetHelpfulChildProcessError.getHelpfulChildProcessError('', stderr)
     super(message)
     this.name = 'ChildProcessError'
     if (code) {
       this.code = code
+    }
+    if (stack) {
     }
   }
 }
