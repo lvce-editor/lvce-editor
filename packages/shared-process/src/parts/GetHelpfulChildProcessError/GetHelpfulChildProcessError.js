@@ -1,5 +1,6 @@
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 
 const RE_NATIVE_MODULE_ERROR = /^innerError Error: Cannot find module '.*.node'/
 const RE_NATIVE_MODULE_ERROR_2 = /was compiled against a different Node.js version/
@@ -65,7 +66,7 @@ const isModuleNotFoundMessage = (line) => {
 }
 
 const getModuleNotFoundError = (stderr) => {
-  const lines = stderr.split('\n')
+  const lines = SplitLines.splitLines(stderr)
   const messageIndex = lines.findIndex(isModuleNotFoundMessage)
   const message = lines[messageIndex]
   return {
@@ -81,9 +82,21 @@ const isNormalStackLine = (line) => {
 const getDetails = (lines) => {
   const index = lines.findIndex(isNormalStackLine)
   if (index === -1) {
-    return lines.join('\n')
+    return {
+      actualMessage: JoinLines.joinLines(lines),
+      rest: [],
+    }
   }
-  return lines[index - 1]
+  let lastIndex = index - 1
+  while (++lastIndex < lines.length) {
+    if (!isNormalStackLine(lines[lastIndex])) {
+      break
+    }
+  }
+  return {
+    actualMessage: lines[index - 1],
+    rest: lines.slice(index, lastIndex),
+  }
 }
 
 export const getHelpfulChildProcessError = (stdout, stderr) => {
@@ -97,9 +110,10 @@ export const getHelpfulChildProcessError = (stdout, stderr) => {
     return getModuleNotFoundError(stderr)
   }
   const lines = SplitLines.splitLines(stderr)
-  const actualMessage = getDetails(lines)
+  const { actualMessage, rest } = getDetails(lines)
   return {
-    message: `child process error: ${actualMessage}`,
+    message: `${actualMessage}`,
     code: '',
+    stack: rest,
   }
 }
