@@ -18,14 +18,16 @@ export const computeHash = (contents) => {
 
 const walkFiles = async (folder, fn) => {
   const dirents = await readdir(folder, { withFileTypes: true })
+  const promises = []
   for (const dirent of dirents) {
     const absolutePath = join(folder, dirent.name)
     if (dirent.isFile()) {
-      await fn(absolutePath)
+      promises.push(fn(absolutePath))
     } else if (dirent.isDirectory()) {
-      await walkFiles(absolutePath, fn)
+      promises.push(walkFiles(absolutePath, fn))
     }
   }
+  await Promise.all(promises)
 }
 
 export const computeFolderHash = async (folder, extraFiles = [], extraContents = []) => {
