@@ -13,10 +13,6 @@ export const isMacOs = platform === 'darwin'
 
 export const isDeb = false
 
-export const isAppImage = () => {
-  return Boolean(env.APPIMAGE)
-}
-
 export const getPathSeparator = () => {
   return sep
 }
