@@ -1,6 +1,7 @@
 import * as AutoUpdateType from '../AutoUpdateType/AutoUpdateType.js'
 import * as CompareVersion from '../CompareVersion/CompareVersion.js'
 import * as GetLatestReleaseVersion from '../GetLatestReleaseVersion/GetLatestReleaseVersion.js'
+import * as IsAppImage from '../IsAppImage/IsAppImage.js'
 import * as Platform from '../Platform/Platform.js'
 import { VError } from '../VError/VError.js'
 
@@ -12,7 +13,7 @@ export const getAutoUpdateType = async () => {
     if (Platform.isWindows) {
       return AutoUpdateType.WindowsNsis
     }
-    if (Platform.isAppImage()) {
+    if (IsAppImage.isAppImage()) {
       return AutoUpdateType.AppImage
     }
     return AutoUpdateType.None
