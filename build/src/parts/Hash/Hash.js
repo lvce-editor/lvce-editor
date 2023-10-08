@@ -17,12 +17,14 @@ export const computeHash = (contents) => {
 }
 
 const walkFiles = async (folder, fn) => {
-  const dirents = await readdir(folder, { withFileTypes: true, recursive: true })
+  const dirents = await readdir(folder, { withFileTypes: true })
   const promises = []
   for (const dirent of dirents) {
     const absolutePath = join(folder, dirent.name)
     if (dirent.isFile()) {
       promises.push(fn(absolutePath))
+    } else if (dirent.isDirectory()) {
+      promises.push(walkFiles(absolutePath, fn))
     }
   }
   await Promise.all(promises)
