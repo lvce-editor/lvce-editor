@@ -1,17 +1,16 @@
-import { spawn } from 'node:child_process'
-import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
-import * as GetFirstNodeChildProcessEvent from '../GetFirstNodeChildProcessEvent/GetFirstNodeChildProcessEvent.js'
+import { VError } from '@lvce-editor/verror'
+import * as Exec from '../Exec/Exec.js'
 
 /**
  * @param {string} cwd
  */
 export const rebuild = async (cwd) => {
-  const childProcess = spawn('npm', ['rebuild'], {
-    cwd,
-    stdio: 'inherit',
-  })
-  const { type, event } = await GetFirstNodeChildProcessEvent.getFirstNodeChildProcessEvent(childProcess)
-  if (type === FirstNodeWorkerEventType.Error) {
-    throw new Error(`Failed to rebuild native module: ${event}`)
+  try {
+    await Exec.exec('npm', ['rebuild'], {
+      cwd,
+      stdio: 'inherit',
+    })
+  } catch (error) {
+    throw new VError(error, `Failed to rebuild native module`)
   }
 }
