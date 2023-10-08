@@ -5,21 +5,22 @@ import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 
-const createNewPackageJson = (oldPackageJson, bundleSharedProcess) => {
+const createNewPackageJson = (oldPackageJson, bundleSharedProcess, target) => {
   const newPackageJson = {
     ...oldPackageJson,
   }
   delete newPackageJson.scripts
   delete newPackageJson.description
-  delete newPackageJson.scripts
-  delete newPackageJson.keywords
-  delete newPackageJson.author
-  delete newPackageJson.license
-  delete newPackageJson.repository
-  delete newPackageJson.engines
   delete newPackageJson.devDependencies
   delete newPackageJson.xo
   delete newPackageJson.jest
+  if (target !== 'server') {
+    delete newPackageJson.keywords
+    delete newPackageJson.author
+    delete newPackageJson.license
+    delete newPackageJson.repository
+    delete newPackageJson.engines
+  }
   if (bundleSharedProcess) {
     newPackageJson.main = 'dist/sharedProcessMain.js'
   }
@@ -180,7 +181,7 @@ export const getPtyHostPath = async () => {
     })
   }
   const oldPackageJson = await JsonFile.readJson(`${cachePath}/package.json`)
-  const newPackageJson = createNewPackageJson(oldPackageJson, bundleSharedProcess)
+  const newPackageJson = createNewPackageJson(oldPackageJson, bundleSharedProcess, target)
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: newPackageJson,
