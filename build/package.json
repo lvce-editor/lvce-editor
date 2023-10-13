@@ -16,7 +16,7 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.23.0",
+    "@babel/preset-typescript": "^7.23.2",
     "@electron/get": "^2.0.3",
     "@electron/rebuild": "^3.3.0",
     "@rollup/plugin-babel": "^6.0.4",
