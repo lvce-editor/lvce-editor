@@ -7,3 +7,7 @@ export const createBrowserView = (restoreId, fallthroughKeyBindings) => {
 export const disposeBrowserView = (id) => {
   return ParentIpc.invoke('ElectronBrowserView.disposeBrowserView', id)
 }
+
+export const getAll = () => {
+  return ParentIpc.invoke('ElectronBrowserView.getAll')
+}
