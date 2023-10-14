@@ -17,6 +17,7 @@ export const WebSocketServer = 16
 export const Workspace = 17
 export const ChromeExtension = 18
 export const Download = 19
+export const ElectronPowerSaveBlocker = 222
 export const GitLsFiles = 20
 export const BulkReplacement = 21
 export const InstallExtension = 22

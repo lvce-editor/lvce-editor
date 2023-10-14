@@ -1,4 +1,4 @@
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 /**
  *
@@ -6,12 +6,12 @@ import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
  * @returns
  */
 export const start = (type) => {
-  return ElectronProcess.invoke('ElectronPowerSaveBlocker.start', type)
+  return SharedProcess.invoke('ElectronPowerSaveBlocker.start', type)
 }
 
 /**
  * @param {number} id
  */
 export const stop = (id) => {
-  return ElectronProcess.invoke('ElectronPowerSaveBlocker.stop', id)
+  return SharedProcess.invoke('ElectronPowerSaveBlocker.stop', id)
 }
