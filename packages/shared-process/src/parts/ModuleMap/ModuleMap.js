@@ -143,6 +143,10 @@ export const getModuleId = (commandId) => {
     case 'FileSystem.rename':
     case 'FileSystem.writeFile':
       return ModuleId.FileSystem
+    case 'ElectronBrowserViewSuggestions.createBrowserView':
+    case 'ElectronBrowserViewSuggestions.disposeBrowserView':
+    case 'ElectronBrowserViewSuggestions.setSuggestions':
+      return ModuleId.ElectronBrowserViewSuggestions
     case 'GetTerminalSpawnOptions.getTerminalSpawnOptions':
       return ModuleId.GetTerminalSpawnOptions
     case 'GitLsFiles.gitLsFiles':
