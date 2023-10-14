@@ -44,6 +44,8 @@ export const load = (moduleId) => {
       return import('../ElectronSafeStorage/ElectronSafeStorage.ipc.js')
     case ModuleId.Window:
       return import('../ElectronWindow/ElectronWindow.ipc.js')
+    case ModuleId.ElectronBrowserViewQuickPick:
+      return import('../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.ipc.js')
     case ModuleId.ElectronWindowAbout:
       return import('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
     case ModuleId.ElectronWindowProcessExplorer:

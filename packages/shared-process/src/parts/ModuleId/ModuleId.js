@@ -19,6 +19,7 @@ export const ChromeExtension = 18
 export const Download = 19
 export const GitLsFiles = 20
 export const BulkReplacement = 21
+export const ElectronBrowserViewQuickPick = 999
 export const InstallExtension = 22
 export const AutoUpdater = 23
 export const IsAutoUpdateSupported = 24
