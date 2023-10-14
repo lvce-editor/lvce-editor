@@ -37,11 +37,11 @@ const copyElectronResult = async ({ product, version, arch, debArch, platform })
     to: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}`,
   })
   await Remove.remove(
-    `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`,
+    `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep`,
   )
   await Replace.replace({
     path: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/src/parts/RipGrepPath/RipGrepPath.js`,
-    occurrence: `export { rgPath } from 'vscode-ripgrep-with-github-api-error-fix'`,
+    occurrence: `export { rgPath } from '@lvce-editor/ripgrep'`,
     replacement: `export const rgPath = 'rg'`,
   })
 }

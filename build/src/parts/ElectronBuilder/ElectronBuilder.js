@@ -17,7 +17,7 @@ import * as Template from '../Template/Template.js'
 
 // TODO don't need to include whole node-pty module
 // TODO maybe don't need to include nan module
-// TODO don't need to include whole vscode-ripgrep-with-github-api-error-fix module (only path)
+// TODO don't need to include whole @lvce-editor/ripgrep module (only path)
 
 const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {

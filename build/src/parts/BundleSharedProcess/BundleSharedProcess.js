@@ -157,7 +157,7 @@ export const getPtyHostPath = async () => {
     await Copy.copy({
       from: 'packages/shared-process/node_modules',
       to: Path.join(cachePath, 'node_modules'),
-      ignore: ['vscode-ripgrep-with-github-api-error-fix', '@types', 'type-fest', '.bin', 'is-docker'],
+      ignore: ['@lvce-editor/ripgrep', '@types', 'type-fest', '.bin', 'is-docker'],
       dereference: true,
     })
     await Replace.replace({

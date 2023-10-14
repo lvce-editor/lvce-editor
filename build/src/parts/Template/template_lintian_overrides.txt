@@ -29,7 +29,7 @@
 @@NAME@@: missing-dependency-on-libc needed by usr/lib/@@NAME@@/chrome-sandbox and 7 others
 
 # ripgrep - how to resolve this error?
-@@NAME@@: statically-linked-binary usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/bin/rg
+@@NAME@@: statically-linked-binary usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep/bin/rg
 
 # binary is symlinked in postinstall script
 @@NAME@@: desktop-command-not-in-package @@NAME@@ [usr/share/applications/@@NAME@@.desktop]

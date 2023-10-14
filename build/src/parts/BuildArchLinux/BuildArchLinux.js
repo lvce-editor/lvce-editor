@@ -28,15 +28,11 @@ const copyElectronResult = async ({ product, version }) => {
     to: `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}`,
   })
   await Remove.remove(`build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/keytar`)
-  await Remove.remove(
-    `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`
-  )
-  await Remove.remove(
-    `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`
-  )
+  await Remove.remove(`build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/@lvce-editor/ripgrep`)
+  await Remove.remove(`build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/node_modules/@lvce-editor/ripgrep`)
   await Replace.replace({
     path: `build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/shared-process/src/parts/RipGrepPath/RipGrepPath.js`,
-    occurrence: `export { rgPath } from 'vscode-ripgrep-with-github-api-error-fix'`,
+    occurrence: `export { rgPath } from '@lvce-editor/ripgrep'`,
     replacement: `export const rgPath = 'rg'`,
   })
   // because of using system electron, argv will be /usr/lib/electron /usr/lib/appName <path>
@@ -81,7 +77,7 @@ const copyMetaFiles = async ({ product }) => {
       '@@APPNAME@@': product.applicationName,
       '@@ELECTRON_VERSION@@': ArchLinuxElectronVersion.name,
     },
-    755
+    755,
   )
   await Template.write('arch_linux_install', `build/.tmp/arch-linux/${arch}/.INSTALL`, {})
   await Copy.copyFile({
@@ -140,7 +136,7 @@ const compress = async ({ product }) => {
     outFile,
     {
       cwd,
-    }
+    },
   )
 }
 

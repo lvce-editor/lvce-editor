@@ -47,7 +47,7 @@
     "tail": "^2.2.6",
     "tmp-promise": "^3.0.3",
     "trash": "^8.1.1",
-    "vscode-ripgrep-with-github-api-error-fix": "^2.10.0"
+    "@lvce-editor/ripgrep": "^1.0.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.9",
