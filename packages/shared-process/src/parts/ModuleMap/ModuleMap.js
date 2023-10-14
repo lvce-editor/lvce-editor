@@ -41,6 +41,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronApplicationMenu
     case 'ElectronBrowserView.createBrowserView':
     case 'ElectronBrowserView.disposeBrowserView':
+    case 'ElectronBrowserView.getAll':
       return ModuleId.ElectronBrowserView
     case 'ElectronClipBoard.writeText':
       return ModuleId.ElectronClipBoard
@@ -130,6 +131,20 @@ export const getModuleId = (commandId) => {
     case 'ExtensionManagement.install':
     case 'ExtensionManagement.uninstall':
       return ModuleId.ExtensionManagement
+    case 'ElectronBrowserViewFunctions.resizeBrowserView':
+    case 'ElectronBrowserViewFunctions.setIframeSrc':
+    case 'ElectronBrowserViewFunctions.focus':
+    case 'ElectronBrowserViewFunctions.openDevtools':
+    case 'ElectronBrowserViewFunctions.reload':
+    case 'ElectronBrowserViewFunctions.forward':
+    case 'ElectronBrowserViewFunctions.backward':
+    case 'ElectronBrowserViewFunctions.cancelNavigation':
+    case 'ElectronBrowserViewFunctions.hide':
+    case 'ElectronBrowserViewFunctions.inspectElement':
+    case 'ElectronBrowserViewFunctions.copyImageAt':
+    case 'ElectronBrowserViewFunctions.setFallthroughKeyBindings':
+    case 'ElectronBrowserViewFunctions.getStats':
+      return ModuleId.ElectronBrowserViewFunctions
     case 'FileSystem.chmod':
     case 'FileSystem.copy':
     case 'FileSystem.createFile':

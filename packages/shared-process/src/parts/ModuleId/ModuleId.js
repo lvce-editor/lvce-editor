@@ -28,6 +28,7 @@ export const RebuildNodePty = 27
 export const ElectronInitialize = 28
 export const HandleWebSocket = 29
 export const Process = 30
+export const ElectronBrowserViewFunctions = 200
 export const AttachDebugger = 31
 export const HandleElectronMessagePort = 32
 export const HandleNodeMessagePort = 33
