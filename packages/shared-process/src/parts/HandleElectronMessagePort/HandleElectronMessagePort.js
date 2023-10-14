@@ -3,7 +3,7 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 
-export const handleElectronMessagePort = async (messagePort) => {
+export const handleElectronMessagePort = async (messagePort, ...params) => {
   Assert.object(messagePort)
   const ipc = await IpcChild.listen({
     method: IpcChildType.ElectronMessagePort,
@@ -11,4 +11,6 @@ export const handleElectronMessagePort = async (messagePort) => {
   })
   HandleIpc.handleIpc(ipc)
   messagePort.start()
+  // TODO find better way to associate configuration with ipc
+  ipc.windowId = params[1]
 }

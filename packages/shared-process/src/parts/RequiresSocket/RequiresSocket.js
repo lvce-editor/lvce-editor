@@ -9,6 +9,7 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'Terminal.create',
   'IncrementalTextSearch.start',
   'ElectronApplicationMenu.setItems',
+  'GetWindowId.getWindowId',
 ])
 
 export const requiresSocket = (method) => {

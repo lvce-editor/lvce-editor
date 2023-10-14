@@ -4,7 +4,7 @@ import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
 
 export const getWindowId = (ipc) => {
   Assert.object(ipc)
-  const {messagePort} = ipc
+  const { messagePort } = ipc
   if (!IsMessagePortMain.isMessagePortMain(messagePort)) {
     throw new Error(`messagePort must be of type MessagePortMain`)
   }
@@ -12,7 +12,7 @@ export const getWindowId = (ipc) => {
   if (!config) {
     throw new Error(`no matching window found`)
   }
-  const {windowId} = config
+  const { windowId } = config
   Assert.number(windowId)
   return windowId
 }

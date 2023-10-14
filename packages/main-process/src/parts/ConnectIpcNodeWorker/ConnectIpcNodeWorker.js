@@ -3,7 +3,7 @@ import * as Performance from '../Performance/Performance.cjs'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.cjs'
 import * as TransferMessagePort from '../TransferMessagePort/TransferMessagePort.js'
 
-export const connectIpc = async (ipc, browserWindowPort, folder = '') => {
+export const connectIpc = async (ipc, browserWindowPort, ...params) => {
   const messageChannel = new MessageChannel()
   const { port1, port2 } = messageChannel
   Performance.mark(PerformanceMarkerType.DidStartSharedProcess)
@@ -15,6 +15,6 @@ export const connectIpc = async (ipc, browserWindowPort, folder = '') => {
     // console.log('send message to browser window', message)
     browserWindowPort.postMessage(message)
   })
-  await TransferMessagePort.transferMessagePort(ipc, port1, folder)
+  await TransferMessagePort.transferMessagePort(ipc, port1, ...params)
   browserWindowPort.start()
 }
