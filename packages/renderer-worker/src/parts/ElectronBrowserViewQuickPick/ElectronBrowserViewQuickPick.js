@@ -1,9 +1,9 @@
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const createBrowserViewQuickPick = (x, y, width, height) => {
-  return ElectronProcess.invoke('ElectronBrowserViewQuickPick.createBrowserViewQuickPick', x, y, width, height)
+  return SharedProcess.invoke('ElectronBrowserViewQuickPick.createBrowserViewQuickPick', x, y, width, height)
 }
 
 export const disposeBrowserViewQuickPick = () => {
-  return ElectronProcess.invoke('ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick')
+  return SharedProcess.invoke('ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick')
 }

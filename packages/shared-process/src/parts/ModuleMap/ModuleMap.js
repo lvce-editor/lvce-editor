@@ -74,6 +74,9 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronWindowProcessExplorer
     case 'Exit.exit':
       return ModuleId.Exit
+    case 'ElectronBrowserViewQuickPick.createBrowserViewQuickPick':
+    case 'ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick':
+      return ModuleId.ElectronBrowserViewQuickPick
     case 'ExtensionHost.dispose':
     case 'ExtensionHost.enableExtension':
     case 'ExtensionHost.executeCommand':
