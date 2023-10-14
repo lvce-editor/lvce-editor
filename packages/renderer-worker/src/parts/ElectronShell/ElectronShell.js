@@ -1,5 +1,5 @@
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
-export const beep = async () => {
-  await ElectronProcess.invoke('ElectronShell.beep')
+export const beep = () => {
+  return SharedProcess.invoke('ElectronShell.beep')
 }
