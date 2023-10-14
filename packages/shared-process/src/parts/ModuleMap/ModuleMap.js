@@ -203,6 +203,8 @@ export const getModuleId = (commandId) => {
     case 'Platform.getVersion':
     case 'Platform.setEnvironmentVariables':
       return ModuleId.Platform
+    case 'ElectronDeveloper.getPerformanceEntries':
+      return ModuleId.ElectronDeveloper
     case 'Preferences.getAll':
       return ModuleId.Preferences
     case 'Process.getArch':

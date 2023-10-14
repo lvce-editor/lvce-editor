@@ -1,5 +1,5 @@
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const getPerformanceEntries = () => {
-  return ElectronProcess.invoke('ElectronDeveloper.getPerformanceEntries')
+  return SharedProcess.invoke('ElectronDeveloper.getPerformanceEntries')
 }
