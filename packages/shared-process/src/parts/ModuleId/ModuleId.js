@@ -9,6 +9,7 @@ export const OutputChannel = 7
 export const Platform = 8
 export const Preferences = 9
 export const RecentlyOpened = 10
+export const GetWindowId = 377
 export const Search = 11
 export const ElectronWindowProcessExplorer = 12
 export const SearchFile = 13

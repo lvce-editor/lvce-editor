@@ -45,5 +45,5 @@ export const handlePort = async (event, browserWindowPort, type, name) => {
       FOLDER: folder,
     },
   })
-  await ConnectIpc.connectIpc(method, sharedProcess, browserWindowPort, folder)
+  await ConnectIpc.connectIpc(method, sharedProcess, browserWindowPort, folder, event.sender.id)
 }

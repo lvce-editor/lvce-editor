@@ -10,6 +10,8 @@ export const load = (moduleId) => {
       return import('../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.ipc.js')
     case ModuleId.AutoUpdaterAppImage:
       return import('../AutoUpdaterAppImage/AutoUpdaterAppImage.ipc.js')
+    case ModuleId.GetWindowId:
+      return import('../GetWindowId/GetWindowId.ipc.js')
     case ModuleId.AutoUpdaterWindowsNsis:
       return import('../AutoUpdaterWindowsNsis/AutoUpdaterWindowsNsis.ipc.js')
     case ModuleId.BulkReplacement:
