@@ -1,9 +1,4 @@
-export const editorGetPositionLeft = (
-  rowIndex,
-  columnIndex,
-  lines,
-  getDelta
-) => {
+export const editorGetPositionLeft = (rowIndex, columnIndex, lines, getDelta) => {
   if (columnIndex === 0) {
     if (rowIndex === 0) {
       return { rowIndex: 0, columnIndex: 0 }
@@ -30,14 +25,7 @@ export const moveRangeToPosition = (selections, i, rowIndex, columnIndex) => {
   selections[i + 1] = selections[i + 3] = columnIndex
 }
 
-export const moveToPositionLeft = (
-  selections,
-  i,
-  rowIndex,
-  columnIndex,
-  lines,
-  getDelta
-) => {
+export const moveToPositionLeft = (selections, i, rowIndex, columnIndex, lines, getDelta) => {
   if (columnIndex === 0) {
     if (rowIndex === 0) {
       selections[i] = 0
