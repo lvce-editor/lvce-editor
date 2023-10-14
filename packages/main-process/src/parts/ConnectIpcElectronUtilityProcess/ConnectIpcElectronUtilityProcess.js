@@ -2,7 +2,7 @@ import * as TransferMessagePortMain from '../TransferMessagePortMain/TransferMes
 import * as Performance from '../Performance/Performance.cjs'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.cjs'
 
-export const connectIpc = async (ipc, browserWindowPort) => {
-  await TransferMessagePortMain.transferMessagePortMain(ipc, browserWindowPort)
+export const connectIpc = async (ipc, browserWindowPort, ...params) => {
+  await TransferMessagePortMain.transferMessagePortMain(ipc, browserWindowPort, ...params)
   Performance.mark(PerformanceMarkerType.DidStartSharedProcess)
 }

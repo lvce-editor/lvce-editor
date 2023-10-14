@@ -20,7 +20,7 @@ const getActualData = (event) => {
   }
   return {
     ...data,
-    params: [...data.params, ...ports],
+    params: [...ports, ...data.params],
   }
 }
 
