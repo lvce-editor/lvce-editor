@@ -54,3 +54,4 @@ export const Exit = 53
 export const DesktopCapturer = 54
 export const ElectronContentTracing = 55
 export const Os = 56
+export const ElectronNet = 57
