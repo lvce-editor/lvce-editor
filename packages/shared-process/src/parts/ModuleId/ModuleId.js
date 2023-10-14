@@ -45,6 +45,7 @@ export const ProcessId = 44
 export const ElectronNetLog = 45
 export const OpenExternal = 46
 export const ElectronSafeStorage = 47
+export const ElectronDeveloper = 100
 export const ElectronProcess = 48
 export const ElectronContextMenu = 49
 export const ElectronBrowserView = 50
