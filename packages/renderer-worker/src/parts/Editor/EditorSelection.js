@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as NormalizeText from '../NormalizeText/NormalizeText.js'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 
 const getSelectionFromChange = (change) => {
   const { start, inserted, end } = change
@@ -74,7 +75,7 @@ const getX = (
   halfCursorWidth,
   width,
   averageCharWidth,
-  difference = 0
+  difference = 0,
 ) => {
   if (!line) {
     return 0
@@ -110,17 +111,6 @@ const getY = (row, minLineY, rowHeight) => {
 
 const emptyCursors = new Float32Array()
 
-const getPairs = (selections, i) => {
-  const first = selections[i]
-  const second = selections[i + 1]
-  const third = selections[i + 2]
-  const fourth = selections[i + 3]
-  if (first > third || (first === third && second >= fourth)) {
-    return [third, fourth, first, second, 1]
-  }
-  return [first, second, third, fourth, 0]
-}
-
 export const getVisible = (editor) => {
   const visibleCursors = []
   const visibleSelections = []
@@ -144,10 +134,14 @@ export const getVisible = (editor) => {
     charWidth,
     isMonospaceFont,
   } = editor
+
   const averageCharWidth = charWidth
   const halfCursorWidth = cursorWidth / 2
   for (let i = 0; i < selections.length; i += 4) {
-    const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn, reversed] = getPairs(selections, i)
+    const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn, reversed] = GetSelectionPairs.getSelectionPairs(
+      selections,
+      i,
+    )
     if (selectionEndRow < minLineY || selectionStartRow > maxLineY) {
       continue
     }
@@ -166,7 +160,7 @@ export const getVisible = (editor) => {
       halfCursorWidth,
       width,
       averageCharWidth,
-      endLineDifference
+      endLineDifference,
     )
     const endLineY = getY(selectionEndRow, minLineY, rowHeight)
     if (EditorSelection.isEmpty(selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) && endLineEndX > 0) {
@@ -189,9 +183,11 @@ export const getVisible = (editor) => {
         halfCursorWidth,
         width,
         averageCharWidth,
-        startLineDifference
+        startLineDifference,
       )
-      if (endLineEndX >= 0) {
+      if (reversed) {
+        visibleCursors.push(startX, endLineY)
+      } else if (endLineEndX >= 0) {
         visibleCursors.push(endLineEndX, endLineY)
       }
       const selectionWidth = endLineEndX - startX
@@ -211,7 +207,7 @@ export const getVisible = (editor) => {
           halfCursorWidth,
           width,
           averageCharWidth,
-          startLineDifference
+          startLineDifference,
         )
         const startLineEndX = getX(
           startLine,
@@ -225,7 +221,7 @@ export const getVisible = (editor) => {
           halfCursorWidth,
           width,
           averageCharWidth,
-          startLineDifference
+          startLineDifference,
         )
         const startLineStartY = getY(selectionStartRow, minLineY, rowHeight)
         const selectionWidth = startLineEndX - startLineStartX
@@ -253,7 +249,7 @@ export const getVisible = (editor) => {
           halfCursorWidth,
           width,
           averageCharWidth,
-          difference
+          difference,
         )
         visibleSelections.push(0, currentLineY, selectionWidth, rowHeight)
       }

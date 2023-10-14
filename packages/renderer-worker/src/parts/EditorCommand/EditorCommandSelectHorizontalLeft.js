@@ -1,6 +1,8 @@
 import * as Editor from '../Editor/Editor.js'
 import * as EditorGetPositionLeft from './EditorCommandGetPositionLeft.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
+
 // TODO interleave cursors and selection
 // then loop over selections
 // apply edit
@@ -11,36 +13,23 @@ import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 const getNewSelections = (selections, lines, getDelta) => {
   const newSelections = EditorSelection.clone(selections)
   for (let i = 0; i < selections.length; i += 4) {
-    const selectionStartRow = selections[i]
-    const selectionStartColumn = selections[i + 1]
-    const selectionEndRow = selections[i + 2]
-    const selectionEndColumn = selections[i + 3]
-    if (
-      selectionStartRow === selectionEndRow &&
-      selectionStartColumn === selectionEndColumn
-    ) {
-      EditorGetPositionLeft.moveToPositionLeft(
-        newSelections,
-        i,
-        selectionStartRow,
-        selectionStartColumn,
-        lines,
-        getDelta
-      )
-      EditorGetPositionLeft.moveToPositionEqual(
-        newSelections,
-        i + 2,
-        selectionEndRow,
-        selectionEndColumn
-      )
+    const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn, reversed] = GetSelectionPairs.getSelectionPairs(
+      selections,
+      i,
+    )
+    if (selectionStartRow === selectionEndRow && selectionStartColumn === selectionEndColumn) {
+      EditorGetPositionLeft.moveToPositionLeft(newSelections, i + 2, selectionStartRow, selectionStartColumn, lines, getDelta)
+      EditorGetPositionLeft.moveToPositionEqual(newSelections, i, selectionEndRow, selectionEndColumn)
+    } else {
+      EditorGetPositionLeft.moveToPositionLeft(newSelections, i + 2, selectionStartRow, selectionStartColumn, lines, getDelta)
+      EditorGetPositionLeft.moveToPositionEqual(newSelections, i, selectionEndRow, selectionEndColumn)
     }
   }
   return newSelections
 }
 
 export const editorSelectHorizontalLeft = (editor, getDelta) => {
-  const lines = editor.lines
-  const selections = editor.selections
+  const { lines, selections } = editor
   const newSelections = getNewSelections(selections, lines, getDelta)
   return Editor.scheduleSelections(editor, newSelections)
 }
