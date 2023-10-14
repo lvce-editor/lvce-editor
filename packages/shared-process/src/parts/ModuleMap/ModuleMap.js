@@ -3,6 +3,9 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
+    case 'ElectronPowerSaveBlocker.start':
+    case 'ElectronPowerSaveBlocker.stop':
+      return ModuleId.ElectronPowerSaveBlocker
     case 'AttachDebugger.attachDebugger':
       return ModuleId.AttachDebugger
     case 'AutoUpdater.getAutoUpdateType':

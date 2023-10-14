@@ -80,6 +80,8 @@ export const load = (moduleId) => {
       return import('../OpenExternal/OpenExternal.ipc.js')
     case ModuleId.OpenNativeFolder:
       return import('../OpenNativeFolder/OpenNativeFolder.ipc.js')
+    case ModuleId.ElectronPowerSaveBlocker:
+      return import('../ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.ipc.js')
     case ModuleId.Os:
       return import('../Os/Os.ipc.js')
     case ModuleId.OutputChannel:
