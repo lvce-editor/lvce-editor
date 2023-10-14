@@ -14,6 +14,5 @@ export const compareStringNumeric = (a, b) => {
   if (RE_CHARACTERS.test(a) && RE_CHARACTERS.test(b)) {
     return a < b
   }
-  console.log([a, b])
   return a.localeCompare(b, 'en', { numeric: true })
 }
