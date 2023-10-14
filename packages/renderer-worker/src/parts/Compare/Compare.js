@@ -12,7 +12,7 @@ export const compareString = (a, b) => {
  */
 export const compareStringNumeric = (a, b) => {
   if (RE_CHARACTERS.test(a) && RE_CHARACTERS.test(b)) {
-    return a < b
+    return a < b ? -1 : 1
   }
   return a.localeCompare(b, 'en', { numeric: true })
 }
