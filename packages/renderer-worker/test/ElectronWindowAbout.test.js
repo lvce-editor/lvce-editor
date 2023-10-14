@@ -17,7 +17,7 @@ const ElectronWindowAbout = await import('../src/parts/ElectronWindowAbout/Elect
 
 test('open - error', async () => {
   // @ts-ignore
-  ElectronProcess.invoke.mockImplementation(() => {
+  SharedProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
   await expect(ElectronWindowAbout.open()).rejects.toThrowError(new Error('Failed to open about window: TypeError: x is not a function'))
