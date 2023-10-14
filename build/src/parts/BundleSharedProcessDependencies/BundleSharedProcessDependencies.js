@@ -50,8 +50,8 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await Remove.remove(`${to}/node_modules/b4a/browser.js`)
   await Remove.remove(`${to}/node_modules/tail/.nyc_output`)
   await Remove.remove(`${to}/node_modules/which/bin`)
-  await Remove.remove(`${to}/node_modules/vscode-ripgrep-with-github-api-error-fix/src/downloadRipGrep.js`)
-  await Remove.remove(`${to}/node_modules/vscode-ripgrep-with-github-api-error-fix/src/postinstall.js`)
+  await Remove.remove(`${to}/node_modules/@lvce-editor/ripgrep/src/downloadRipGrep.js`)
+  await Remove.remove(`${to}/node_modules/@lvce-editor/ripgrep/src/postinstall.js`)
   await Remove.removeMatching(`${to}/node_modules/cacheable-request`, '**/*.map')
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
   if (platform === 'win32') {

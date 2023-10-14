@@ -27,7 +27,7 @@ export const filterDependencies = (rawDependencies, exclude = []) => {
     if (exclude.includes(dependency.name)) {
       return false
     }
-    if (dependency.name === 'vscode-ripgrep-with-github-api-error-fix') {
+    if (dependency.name === '@lvce-editor/ripgrep') {
       dependencyPaths.push(dependency.path)
       return false
     }
