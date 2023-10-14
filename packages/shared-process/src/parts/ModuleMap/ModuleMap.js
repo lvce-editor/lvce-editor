@@ -241,6 +241,8 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
+    case 'ElectronNet.getJson':
+      return ModuleId.ElectronNet
     default:
       throw new CommandNotFoundError(commandId)
   }
