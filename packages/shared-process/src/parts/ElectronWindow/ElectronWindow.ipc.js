@@ -9,4 +9,9 @@ export const Commands = {
   reload: ElectronWindow.reload,
   toggleDevtools: ElectronWindow.toggleDevtools,
   unmaximize: ElectronWindow.unmaximize,
+  zoomIn: ElectronWindow.zoomIn,
+  zoomOut: ElectronWindow.zoomOut,
+  zoomReset: ElectronWindow.zoomReset,
+  openNew: ElectronWindow.openNew,
+  focus: ElectronWindow.focus,
 }

@@ -264,6 +264,11 @@ export const getModuleId = (commandId) => {
     case 'ElectronWindow.reload':
     case 'ElectronWindow.toggleDevtools':
     case 'ElectronWindow.unmaximize':
+    case 'ElectronWindow.zoomIn':
+    case 'ElectronWindow.zoomOut':
+    case 'ElectronWindow.zoomReset':
+    case 'ElectronWindow.focus':
+    case 'ElectronWindow.openNew':
       return ModuleId.Window
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
