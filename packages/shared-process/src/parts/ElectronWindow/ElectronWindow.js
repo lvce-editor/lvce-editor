@@ -1,6 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
+export const openNew = () => {
+  return ParentIpc.invoke('AppWindow.openNew')
+}
+
 export const minimize = (windowId) => {
   Assert.number(windowId)
   return ParentIpc.invoke('ElectronWindow.minimize', windowId)
@@ -29,4 +33,20 @@ export const close = (windowId) => {
 export const reload = (windowId) => {
   Assert.number(windowId)
   return ParentIpc.invoke('ElectronWindow.reload', windowId)
+}
+
+export const zoomIn = (windowId) => {
+  return ParentIpc.invoke('ElectronWindow.zoomIn', windowId)
+}
+
+export const zoomOut = (windowId) => {
+  return ParentIpc.invoke('ElectronWindow.zoomOut', windowId)
+}
+
+export const zoomReset = (windowId) => {
+  return ParentIpc.invoke('ElectronWindow.zoomReset', windowId)
+}
+
+export const focus = (windowId) => {
+  return ParentIpc.invoke('ElectronWindow.focus', windowId)
 }
