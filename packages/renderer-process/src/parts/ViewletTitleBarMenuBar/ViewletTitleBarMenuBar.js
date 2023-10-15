@@ -16,7 +16,6 @@ const activeClassName = 'TitleBarEntryActive'
 
 export const create = () => {
   const $TitleBarMenuBar = document.createElement('div')
-  $TitleBarMenuBar.id = 'TitleBarMenuBar'
   $TitleBarMenuBar.className = 'Viewlet TitleBarMenuBar'
   $TitleBarMenuBar.role = AriaRoles.MenuBar
   $TitleBarMenuBar.tabIndex = 0

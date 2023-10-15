@@ -19,7 +19,7 @@ export const name = 'viewlet.title-bar-menu-bar-keyboard-navigation'
 
 export const test = async ({ TitleBarMenuBar, Locator, expect }) => {
   // assert
-  const titleBarMenuBar = Locator('#TitleBarMenuBar')
+  const titleBarMenuBar = Locator('.TitleBarMenuBar')
   await expect(titleBarMenuBar).toHaveAttribute('role', 'menubar')
   await expect(titleBarMenuBar).toHaveAttribute('tabindex', '0')
 
