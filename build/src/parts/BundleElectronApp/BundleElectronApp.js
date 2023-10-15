@@ -456,7 +456,7 @@ export const build = async ({
   const rendererWorkerCachePath = await BundleRendererWorkerCached.bundleRendererWorkerCached({
     commitHash,
     platform: 'electron',
-    assetDir: `../../../../..`,
+    assetDir: ``,
   })
 
   console.time('copyRendererWorkerFiles')
