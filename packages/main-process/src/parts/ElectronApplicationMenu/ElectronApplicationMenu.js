@@ -1,6 +1,6 @@
 import { Menu } from 'electron'
 import * as Assert from '../Assert/Assert.cjs'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.cjs'
+import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 /**
@@ -24,11 +24,8 @@ export const setMenu = (menu) => {
 
 const click = (menuItem, browserWindow, keys) => {
   console.log('send handle click')
-  SharedProcess.state.sharedProcess.send({
-    jsonrpc: JsonRpcVersion.Two,
-    method: 'ElectronApplicationMenu.handleClick',
-    params: [browserWindow.id, menuItem.label],
-  })
+  const message = JsonRpcEvent.create('ElectronApplicationMenu.handleClick', [browserWindow.id, menuItem.label])
+  SharedProcess.state.sharedProcess.send(message)
 }
 
 const addClickListener = (item) => {

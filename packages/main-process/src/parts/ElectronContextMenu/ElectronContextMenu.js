@@ -2,7 +2,7 @@ import { BrowserWindow, Menu } from 'electron'
 import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
 import * as Assert from '../Assert/Assert.cjs'
 import * as GetElectronMenuItems from '../GetElectronMenuItems/GetElectronMenuItems.js'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.cjs'
+import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
 
 const getPort = (browserWindow) => {
   const state = AppWindowStates.findByWindowId(browserWindow.id)
@@ -20,11 +20,8 @@ const click = (menuItem, browserWindow) => {
     return
   }
   const customData = menuItem.menu.customData || undefined
-  port.postMessage({
-    jsonrpc: JsonRpcVersion.Two,
-    method: 'ElectronContextMenu.handleSelect',
-    params: [label, customData],
-  })
+  const message = JsonRpcEvent.create('ElectronContextMenu.handleSelect', [label, customData])
+  port.postMessage(message)
 }
 
 export const openContextMenu = (menuItems, x, y, customData) => {
@@ -44,11 +41,8 @@ export const openContextMenu = (menuItems, x, y, customData) => {
     if (!port) {
       return
     }
-    port.postMessage({
-      jsonrpc: JsonRpcVersion.Two,
-      method: 'ElectronContextMenu.handleMenuClose',
-      params: [],
-    })
+    const message = JsonRpcEvent.create('ElectronContextMenu.handleMenuClose', [])
+    port.postMessage(message)
   }
   menu.popup({ window, x, y, callback })
 }

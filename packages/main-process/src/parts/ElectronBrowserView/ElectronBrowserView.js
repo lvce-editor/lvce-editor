@@ -2,7 +2,6 @@ import { BrowserView, BrowserWindow } from 'electron'
 import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
 import * as Assert from '../Assert/Assert.cjs'
 import * as Debug from '../Debug/Debug.cjs'
-import * as DisposeWebContents from '../DisposeWebContents/DisposeWebContents.js'
 import * as ElectronBrowserViewAdBlock from '../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.cjs'
 import * as ElectronDispositionType from '../ElectronDispositionType/ElectronDispositionType.js'
@@ -10,7 +9,7 @@ import * as ElectronInputType from '../ElectronInputType/ElectronInputType.js'
 import * as ElectronSessionForBrowserView from '../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs'
 import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.cjs'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.cjs'
+import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
 import * as Logger from '../Logger/Logger.cjs'
 
 const normalizeKey = (key) => {
@@ -107,11 +106,8 @@ export const createBrowserView = async (restoreId, uid) => {
           action: ElectronWindowOpenActionType.Deny,
         }
       }
-      port.postMessage({
-        jsonrpc: JsonRpcVersion.Two,
-        method: 'Viewlet.executeViewletCommand',
-        params: [uid, 'openBackgroundTab', url],
-      })
+      const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [uid, 'updateBackgroundTab', url])
+      port.postMessage(message)
       return {
         action: ElectronWindowOpenActionType.Deny,
       }
@@ -141,11 +137,8 @@ export const createBrowserView = async (restoreId, uid) => {
       Logger.info('[main-process] view will navigate to ', url)
       return
     }
-    port.postMessage({
-      jsonrpc: JsonRpcVersion.Two,
-      method: 'Viewlet.executeViewletCommand',
-      params: [uid, 'handleWillNavigate', url, canGoBack, canGoForward],
-    })
+    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [uid, 'handleWillNavigate', url, canGoBack, canGoForward])
+    port.postMessage(message)
   }
   /**
    * @param {Electron.Event} event
@@ -161,11 +154,8 @@ export const createBrowserView = async (restoreId, uid) => {
       Logger.info('[main-process] view did navigate to ', url)
       return
     }
-    port.postMessage({
-      jsonrpc: JsonRpcVersion.Two,
-      method: 'Viewlet.executeViewletCommand',
-      params: [uid, 'handleDidNavigate', url, canGoBack, canGoForward],
-    })
+    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [uid, 'handleDidNavigate', url, canGoBack, canGoForward])
+    port.postMessage(message)
   }
 
   /**
@@ -178,11 +168,8 @@ export const createBrowserView = async (restoreId, uid) => {
     if (!port) {
       return
     }
-    port.postMessage({
-      jsonrpc: JsonRpcVersion.Two,
-      method: 'Viewlet.executeViewletCommand',
-      params: [uid, 'handleContextMenu', params],
-    })
+    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [uid, 'handleContextMenu', params])
+    port.postMessage(message)
   }
 
   const handlePageTitleUpdated = (event, title) => {
@@ -191,11 +178,8 @@ export const createBrowserView = async (restoreId, uid) => {
       Logger.info('[main-process] view will change title to ', title)
       return
     }
-    port.postMessage({
-      jsonrpc: JsonRpcVersion.Two,
-      method: 'Viewlet.executeViewletCommand',
-      params: [uid, 'handleTitleUpdated', title],
-    })
+    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [uid, 'handleTitleUpdated', title])
+    port.postMessage(message)
   }
 
   /**
@@ -212,11 +196,8 @@ export const createBrowserView = async (restoreId, uid) => {
     for (const fallThroughKeyBinding of falltroughKeyBindings) {
       if (fallThroughKeyBinding.key === identifier) {
         event.preventDefault()
-        port.postMessage({
-          jsonrpc: JsonRpcVersion.Two,
-          method: fallThroughKeyBinding.command,
-          params: fallThroughKeyBinding.args || [],
-        })
+        const message = JsonRpcEvent.create(fallThroughKeyBinding.command, fallThroughKeyBinding.args || [])
+        port.postMessage(message)
         return
       }
     }
@@ -236,27 +217,4 @@ export const createBrowserView = async (restoreId, uid) => {
   webContents.setWindowOpenHandler(handleWindowOpen)
   ElectronBrowserViewAdBlock.enableForWebContents(webContents)
   return id
-}
-
-export const disposeBrowserView = (id) => {
-  console.log('[main process] dispose browser view', id)
-  const { view, browserWindow } = ElectronBrowserViewState.get(id)
-  ElectronBrowserViewState.remove(id)
-  browserWindow.removeBrowserView(view)
-  DisposeWebContents.disposeWebContents(view.webContents)
-}
-
-const getBrowserViewId = (browserView) => {
-  return browserView.webContents.id
-}
-
-export const getAll = () => {
-  const windows = BrowserWindow.getAllWindows()
-  const overview = Object.create(null)
-  for (const window of windows) {
-    const views = window.getBrowserViews()
-    const viewIds = views.map(getBrowserViewId)
-    overview[window.id] = viewIds
-  }
-  return overview
 }
