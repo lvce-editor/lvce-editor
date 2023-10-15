@@ -1,6 +1,7 @@
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 export const getModule = (method) => {
+  console.log({ method })
   switch (method) {
     case IpcParentType.NodeWorker:
       return import('../IpcParentWithNodeWorker/IpcParentWithNodeWorker.js')

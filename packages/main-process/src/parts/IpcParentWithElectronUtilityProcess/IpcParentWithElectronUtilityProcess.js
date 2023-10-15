@@ -59,6 +59,7 @@ export const wrap = (process) => {
       this.process.on(event, listener)
     },
     send(message) {
+      console.log({ message })
       this.process.postMessage(message)
     },
     sendAndTransfer(message, transfer) {

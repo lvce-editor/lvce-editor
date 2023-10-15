@@ -22,7 +22,7 @@ const createPtyHost = async () => {
   exitHook(handleProcessExit)
   const ptyHostPath = await PtyHostPath.getPtyHostPath()
   const ptyHost = await IpcParent.create({
-    method: IpcParentType.NodeForkedProcess,
+    method: IpcParentType.ElectronUtilityProcess,
     path: ptyHostPath,
     argv: [],
     stdio: 'inherit',
