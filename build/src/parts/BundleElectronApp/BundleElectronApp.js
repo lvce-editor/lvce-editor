@@ -442,7 +442,7 @@ export const build = async ({
   const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
     commitHash,
     platform: 'electron',
-    assetDir: `../../../../..`,
+    assetDir: ``,
   })
 
   console.time('copyRendererProcessFiles')
