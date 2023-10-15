@@ -1,9 +1,10 @@
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as Editor from '../Editor/Editor.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorGetPositionRight from './EditorCommandGetPositionRight.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
-import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 
 const getChanges = (editor, getDelta) => {
   const selections = editor.selections
@@ -11,19 +12,12 @@ const getChanges = (editor, getDelta) => {
     const changes = []
     const lines = editor.lines
     for (let i = 0; i < selections.length; i += 4) {
-      const selectionStartRow = selections[i]
-      const selectionStartColumn = selections[i + 1]
-      const selectionEndRow = selections[i + 2]
-      const selectionEndColumn = selections[i + 3]
+      const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
       const start = {
         rowIndex: selectionStartRow,
         columnIndex: selectionStartColumn,
       }
-      const positionRight = EditorGetPositionRight.editorGetPositionRight(
-        start,
-        lines,
-        getDelta
-      )
+      const positionRight = EditorGetPositionRight.editorGetPositionRight(start, lines, getDelta)
       changes.push({
         start: start,
         end: positionRight,
@@ -37,11 +31,7 @@ const getChanges = (editor, getDelta) => {
     }
     return changes
   }
-  const changes = editorReplaceSelections(
-    editor,
-    [''],
-    EditOrigin.DeleteHorizontalRight
-  )
+  const changes = editorReplaceSelections(editor, [''], EditOrigin.DeleteHorizontalRight)
   return changes
 }
 

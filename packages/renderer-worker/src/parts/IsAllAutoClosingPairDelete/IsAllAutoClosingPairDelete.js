@@ -1,12 +1,18 @@
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as IsAutoClosingPairDelete from '../IsAutoClosingPairDelete/IsAutoClosingPairDelete.js'
 
 export const isAllAutoClosingPairDelete = (autoClosingRanges, selections) => {
   for (let i = 0; i < selections.length; i += 4) {
-    const startRowIndex = selections[i]
-    const startColumnIndex = selections[i + 1]
-    const endRowIndex = selections[i + 2]
-    const endColumnIndex = selections[i + 3]
-    if (!IsAutoClosingPairDelete.isAutoClosingPairDelete(autoClosingRanges, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)) {
+    const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
+    if (
+      !IsAutoClosingPairDelete.isAutoClosingPairDelete(
+        autoClosingRanges,
+        selectionStartRow,
+        selectionStartColumn,
+        selectionEndRow,
+        selectionEndColumn,
+      )
+    ) {
       return false
     }
   }

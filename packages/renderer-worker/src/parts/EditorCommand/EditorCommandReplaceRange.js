@@ -1,13 +1,11 @@
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 
 export const replaceRange = (editor, ranges, replacement, origin) => {
   const changes = []
   const rangesLength = ranges.length
   for (let i = 0; i < rangesLength; i += 4) {
-    const selectionStartRow = ranges[i]
-    const selectionStartColumn = ranges[i + 1]
-    const selectionEndRow = ranges[i + 2]
-    const selectionEndColumn = ranges[i + 3]
+    const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(ranges, i)
     const start = {
       rowIndex: selectionStartRow,
       columnIndex: selectionStartColumn,

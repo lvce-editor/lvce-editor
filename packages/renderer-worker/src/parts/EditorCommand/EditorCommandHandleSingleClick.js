@@ -3,6 +3,7 @@ import * as Editor from '../Editor/Editor.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as EditorFunctionType from '../EditorFunctionType/EditorFunctionType.js'
 import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorState/EditorMoveSelectionAnchorState.js'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as ModifierKey from '../ModifierKey/ModifierKey.js'
 import * as EditorGoToDefinition from './EditorCommandGoToDefinition.js'
 import * as EditorPosition from './EditorCommandPosition.js'
@@ -22,10 +23,7 @@ const handleSingleClickWithAlt = async (editor, position) => {
 const handleSingleClickWithCtrl = async (editor, position) => {
   const selections = editor.selections
   for (let i = 0; i < selections.length; i += 4) {
-    const selectionStartRow = selections[i]
-    const selectionStartColumn = selections[i + 1]
-    const selectionEndRow = selections[i + 2]
-    const selectionEndColumn = selections[i + 3]
+    const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
     if (
       selectionStartRow === position.rowIndex &&
       selectionStartColumn === position.columnIndex &&
