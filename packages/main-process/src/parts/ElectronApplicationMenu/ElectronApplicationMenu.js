@@ -23,7 +23,6 @@ export const setMenu = (menu) => {
 }
 
 const click = (menuItem, browserWindow, keys) => {
-  console.log('send handle click')
   const message = JsonRpcEvent.create('ElectronApplicationMenu.handleClick', [browserWindow.id, menuItem.label])
   SharedProcess.state.sharedProcess.send(message)
 }
