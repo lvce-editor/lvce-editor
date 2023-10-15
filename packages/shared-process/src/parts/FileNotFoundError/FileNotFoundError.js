@@ -11,7 +11,6 @@ const getDisplayPath = (path) => {
 export class FileNotFoundError extends VError {
   constructor(path) {
     super(`File not found: '${getDisplayPath(path)}'`)
-    this.name = 'FileNotFoundError'
     this.code = ErrorCodes.ENOENT
   }
 }
