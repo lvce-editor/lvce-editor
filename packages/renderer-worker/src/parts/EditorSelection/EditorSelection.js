@@ -1,15 +1,7 @@
-export const fromRange = (
-  startRowIndex,
-  startColumnIndex,
-  endRowIndex,
-  endColumnIndex
-) => {
-  return new Uint32Array([
-    startRowIndex,
-    startColumnIndex,
-    endRowIndex,
-    endColumnIndex,
-  ])
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
+
+export const fromRange = (startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
+  return new Uint32Array([startRowIndex, startColumnIndex, endRowIndex, endColumnIndex])
 }
 
 export const fromRanges = (...items) => {
@@ -31,18 +23,8 @@ export const clone = (selections) => {
 export const map = (selections, fn) => {
   const newSelections = clone(selections)
   for (let i = 0; i < newSelections.length; i += 4) {
-    const selectionStartRow = selections[i]
-    const selectionStartColumn = selections[i + 1]
-    const selectionEndRow = selections[i + 2]
-    const selectionEndColumn = selections[i + 3]
-    fn(
-      newSelections,
-      i,
-      selectionStartRow,
-      selectionStartColumn,
-      selectionEndRow,
-      selectionEndColumn
-    )
+    const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
+    fn(newSelections, i, selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn)
   }
   return newSelections
 }
@@ -53,12 +35,7 @@ export const forEach = (selections, fn) => {
     const selectionStartColumn = selections[i + 1]
     const selectionEndRow = selections[i + 2]
     const selectionEndColumn = selections[i + 3]
-    fn(
-      selectionStartRow,
-      selectionStartColumn,
-      selectionEndRow,
-      selectionEndColumn
-    )
+    fn(selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn)
   }
 }
 
@@ -67,24 +44,11 @@ export const moveRangeToPosition = (selections, i, rowIndex, columnIndex) => {
   selections[i + 1] = selections[i + 3] = columnIndex
 }
 
-export const isEmpty = (
-  selectionStartRow,
-  selectionStartColumn,
-  selectionEndRow,
-  selectionEndColumn
-) => {
-  return (
-    selectionStartRow === selectionEndRow &&
-    selectionStartColumn === selectionEndColumn
-  )
+export const isEmpty = (selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) => {
+  return selectionStartRow === selectionEndRow && selectionStartColumn === selectionEndColumn
 }
 
-const isSelectionSingleLine = (
-  selectionStartRow,
-  selectionStartColumn,
-  selectionEndRow,
-  selectionEndColumn
-) => {
+const isSelectionSingleLine = (selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) => {
   return selectionStartRow === selectionEndRow
 }
 
@@ -94,14 +58,7 @@ export const isEverySelection = (selections, fn) => {
     const selectionStartColumn = selections[i + 1]
     const selectionEndRow = selections[i + 2]
     const selectionEndColumn = selections[i + 3]
-    if (
-      !fn(
-        selectionStartRow,
-        selectionStartColumn,
-        selectionEndRow,
-        selectionEndColumn
-      )
-    ) {
+    if (!fn(selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn)) {
       return false
     }
   }
@@ -129,13 +86,7 @@ export const from = (array, getSelection) => {
   return newSelections
 }
 
-export const push = (
-  selections,
-  startRowIndex,
-  startColumnIndex,
-  endRowIndex,
-  endColumnIndex
-) => {
+export const push = (selections, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
   const oldLength = selections.length
   const newSelections = alloc(oldLength + 4)
   newSelections.set(selections)

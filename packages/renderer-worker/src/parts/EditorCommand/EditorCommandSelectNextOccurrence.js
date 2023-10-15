@@ -1,5 +1,6 @@
 import * as Editor from '../Editor/Editor.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 // TODO handle virtual space
 
 // TODO editors behave differently when selecting next occurrence, for example:
@@ -166,22 +167,19 @@ const getSelectNextOccurrenceResult = (editor) => {
   if (EditorSelection.isEverySelectionEmpty(selections)) {
     const newSelections = new Uint32Array(selections.length)
     for (let i = 0; i < selections.length; i += 4) {
-      const startRowIndex = selections[i]
-      const startColumnIndex = selections[i + 1]
-      const endRowIndex = selections[i + 2]
-      const endColumnIndex = selections[i + 3]
+      const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
 
-      const wordMatch = getWordMatchAtPosition(lines, startRowIndex, startColumnIndex)
+      const wordMatch = getWordMatchAtPosition(lines, selectionStartRow, selectionStartColumn)
       wordMatch //?
       if (wordMatch.start === wordMatch.end) {
-        newSelections[i] = startRowIndex
-        newSelections[i + 1] = startColumnIndex
-        newSelections[i + 2] = endRowIndex
-        newSelections[i + 3] = endColumnIndex
+        newSelections[i] = selectionStartRow
+        newSelections[i + 1] = selectionStartColumn
+        newSelections[i + 2] = selectionEndRow
+        newSelections[i + 3] = selectionEndColumn
       } else {
-        newSelections[i] = startRowIndex
+        newSelections[i] = selectionStartRow
         newSelections[i + 1] = wordMatch.start
-        newSelections[i + 2] = startRowIndex
+        newSelections[i + 2] = selectionStartRow
         newSelections[i + 3] = wordMatch.end
       }
     }

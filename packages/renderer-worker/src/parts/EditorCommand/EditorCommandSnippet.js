@@ -1,5 +1,6 @@
-import * as Editor from '../Editor/Editor.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as Editor from '../Editor/Editor.js'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 
@@ -9,10 +10,7 @@ const getChanges = (lines, selections, snippet) => {
   const changes = []
   const selectionChanges = []
   for (let i = 0; i < selections.length; i += 4) {
-    const selectionStartRow = selections[i]
-    const selectionStartColumn = selections[i + 1]
-    const selectionEndRow = selections[i + 2]
-    const selectionEndColumn = selections[i + 3]
+    const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
     if (insertedLines.length > 1) {
       const line = TextDocument.getLine({ lines }, selectionStartRow)
       const indent = TextDocument.getIndent(line)
@@ -36,7 +34,7 @@ const getChanges = (lines, selections, snippet) => {
         selectionEndRow + insertedLines.length - deleted.length,
         selectionEndColumn + lastInsertedLine.length,
         selectionEndRow + insertedLines.length - deleted.length,
-        selectionEndColumn + lastInsertedLine.length
+        selectionEndColumn + lastInsertedLine.length,
       )
     } else {
       const line = insertedLines[0]
