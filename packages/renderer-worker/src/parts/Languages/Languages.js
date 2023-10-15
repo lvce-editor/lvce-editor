@@ -125,7 +125,7 @@ const warnFileNames = (languageId, language) => {
   Logger.warn(
     `Please use "fileNames" instead of "filenames" for language ${languageId}
 ${codeFrame}
-`
+`,
   )
 }
 
@@ -216,7 +216,12 @@ export const getLanguageConfiguration = async (editor) => {
   if (!hasLoaded()) {
     throw new Error('languages must be loaded before requesting language configuration')
   }
-  editor.languageId = getLanguageId(editor.uri)
-  const languageConfiguration = ExtensionHostLanguages.getLanguageConfiguration(editor.languageId)
-  return languageConfiguration
+  try {
+    editor.languageId = getLanguageId(editor.uri)
+    const languageConfiguration = await ExtensionHostLanguages.getLanguageConfiguration(editor.languageId)
+    return languageConfiguration
+  } catch (error) {
+    Logger.error(error)
+    return {}
+  }
 }
