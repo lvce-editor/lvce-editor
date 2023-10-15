@@ -1,7 +1,14 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as Icon from '../Icon/Icon.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as Icon from '../Icon/Icon.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+
+const getAriaSelected = (isTab, isSelected) => {
+  if (!isTab) {
+    return undefined
+  }
+  return Boolean(isSelected)
+}
 
 const createActivityBarItem = (item) => {
   const { flags, title, icon } = item
@@ -9,8 +16,8 @@ const createActivityBarItem = (item) => {
   const isSelected = flags & ActivityBarItemFlags.Selected
   const isFocused = flags & ActivityBarItemFlags.Focused
   const isProgress = flags & ActivityBarItemFlags.Progress
-  const role = isTab ? 'tab' : 'button'
-  const ariaSelected = isTab ? isSelected : undefined
+  const role = isTab ? AriaRoles.Tab : AriaRoles.Button
+  const ariaSelected = getAriaSelected(isTab, isSelected)
   let className = 'ActivityBarItem'
   if (isFocused) {
     className += ' FocusOutline'
