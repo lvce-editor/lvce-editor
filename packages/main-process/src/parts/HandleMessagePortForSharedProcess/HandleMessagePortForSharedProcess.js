@@ -1,3 +1,4 @@
+import { BrowserWindow } from 'electron'
 import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
 import * as ConnectIpc from '../ConnectIpc/ConnectIpc.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
@@ -45,5 +46,10 @@ export const handlePort = async (event, browserWindowPort, type, name) => {
       FOLDER: folder,
     },
   })
-  await ConnectIpc.connectIpc(method, sharedProcess, browserWindowPort, folder, event.sender.id)
+  const browserWindow = BrowserWindow.fromWebContents(event.sender)
+  if (!browserWindow) {
+    return
+  }
+  const browserWindowId = browserWindow.id
+  await ConnectIpc.connectIpc(method, sharedProcess, browserWindowPort, folder, browserWindowId)
 }
