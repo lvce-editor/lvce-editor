@@ -1,6 +1,9 @@
 import * as IconThemeState from '../IconThemeState/IconThemeState.js'
 
 export const getAbsoluteIconPath = (iconTheme, icon) => {
+  if (!iconTheme) {
+    return ''
+  }
   const result = iconTheme.iconDefinitions[icon]
   const extensionPath = IconThemeState.state.extensionPath || ''
   if (result) {
