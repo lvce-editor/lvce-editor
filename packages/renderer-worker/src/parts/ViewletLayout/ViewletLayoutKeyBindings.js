@@ -169,7 +169,7 @@ export const getKeyBindings = () => {
     },
     {
       key: 'ctrl+shift+n',
-      command: 'Workbench.newWindow',
+      command: 'ElectronWindow.openNew',
       when: 'browser.electron',
     },
     {
