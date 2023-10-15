@@ -13,7 +13,7 @@ exports.wrapWindowCommand =
   (id, ...args) => {
     const browserWindow = GetWindowById.getWindowById(id)
     if (!browserWindow) {
-      Logger.info(`browser window not found ${id}`)
+      Logger.info(`[main-process] browser window not found ${id}`)
       return
     }
     fn(browserWindow, ...args)
