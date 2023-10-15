@@ -223,6 +223,12 @@ const copyExtensions = async ({ arch, optimizeLanguageBasics }) => {
         from: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}/src`,
         to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-basics/${postfix}`,
       })
+      if (existsSync(Path.absolute(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}/languageConfiguration.json`))) {
+        await Copy.copy({
+          from: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}/languageConfiguration.json`,
+          to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-basics/${postfix}/languageConfiguration.json`,
+        })
+      }
       await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}`)
     }
     await JsonFile.writeJson({
