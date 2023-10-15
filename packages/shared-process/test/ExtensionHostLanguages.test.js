@@ -145,7 +145,7 @@ test('getLanguageConfiguration', async () => {
       "blockComment": ["/*", "*/"]
     }
 }
-`
+`,
   )
 
   // @ts-ignore
@@ -196,7 +196,7 @@ test('getLanguageConfiguration - error - language configuration file not found',
   })
   const languageConfigurationPath = join(tmpDir, 'languageConfiguration.json')
   await expect(ExtensionHostLanguages.getLanguageConfiguration('javascript')).rejects.toThrowError(
-    new Error(`Failed to load language configuration for javascript: FileNotFoundError: File not found: '${languageConfigurationPath}'`)
+    new Error(`Failed to load language configuration for javascript: File not found: '${languageConfigurationPath}'`),
   )
 })
 
@@ -223,7 +223,7 @@ test('getLanguageConfiguration - error - language configuration has invalid json
   })
   // TODO should display path as well
   await expect(ExtensionHostLanguages.getLanguageConfiguration('javascript')).rejects.toThrowError(
-    new Error('Failed to load language configuration for javascript: JsonParsingError: Json Parsing Error')
+    new Error('Failed to load language configuration for javascript: JsonParsingError: Json Parsing Error'),
   )
 })
 
@@ -257,6 +257,6 @@ test('getLanguageConfiguration - error - language is null', async () => {
     ]
   })
   await expect(ExtensionHostLanguages.getLanguageConfiguration('test')).rejects.toThrowError(
-    new Error("Failed to load language configuration for test: TypeError: Cannot read properties of null (reading 'id')")
+    new Error("Failed to load language configuration for test: TypeError: Cannot read properties of null (reading 'id')"),
   )
 })

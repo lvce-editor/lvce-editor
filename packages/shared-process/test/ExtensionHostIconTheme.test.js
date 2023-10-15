@@ -52,7 +52,7 @@ test('getIconTheme - wrong/invalid path', async () => {
   })
   const iconThemeJsonPath = join(tmpDir, 'icon-theme.json')
   await expect(ExtensionHostIconTheme.getIconTheme('test')).rejects.toThrowError(
-    `Failed to load icon theme "test": FileNotFoundError: File not found: '${iconThemeJsonPath}'`
+    `Failed to load icon theme "test": File not found: '${iconThemeJsonPath}'`,
   )
 })
 
@@ -78,6 +78,6 @@ test('getIconTheme - invalid json', async () => {
   const iconThemeJsonPath = join(tmpDir, 'icon-theme.json')
   await writeFile(iconThemeJsonPath, '{ 2 }')
   await expect(ExtensionHostIconTheme.getIconTheme('test')).rejects.toThrowError(
-    'Failed to load icon theme "test": JsonParsingError: Json Parsing Error'
+    'Failed to load icon theme "test": JsonParsingError: Json Parsing Error',
   )
 })
