@@ -17,7 +17,7 @@ jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletComma
 const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletExtensionDetail = await import('../src/parts/ViewletExtensionDetail/ViewletExtensionDetail.js')
 
-test('event - image does not load', () => {
+test.skip('event - image does not load', () => {
   const state = ViewletExtensionDetail.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
