@@ -32,7 +32,7 @@ const renderRow = (rowInfo) => {
     ariaSetSize: setSize,
     ariaLevel: depth,
     ariaPosInSet: posInSet,
-    ariaLabel: name,
+    ariaLabel: title,
     ariaDescription: '',
     childCount: 1,
     paddingLeft: `${depth * 1 + 1}rem`,
