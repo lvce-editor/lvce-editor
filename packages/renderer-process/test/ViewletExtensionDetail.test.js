@@ -9,19 +9,6 @@ test('create', () => {
   expect(state).toBeDefined()
 })
 
-test('setName', () => {
-  const state = ViewletExtensionDetail.create()
-  ViewletExtensionDetail.setName(state, 'test name')
-  const { $NameText } = state
-  expect($NameText.nodeValue).toBe('test name')
-})
-
-test('accessibility - icon should have empty alt attribute', () => {
-  const state = ViewletExtensionDetail.create()
-  const { $ExtensionDetailIcon } = state
-  expect($ExtensionDetailIcon.getAttribute('alt')).toBe('')
-})
-
 test('setSize - normal', () => {
   const state = ViewletExtensionDetail.create()
   const { $Viewlet } = state

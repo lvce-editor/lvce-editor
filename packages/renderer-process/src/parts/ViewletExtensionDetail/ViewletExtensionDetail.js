@@ -3,56 +3,28 @@ import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletExtensionDetailEvents from './ViewletExtensionDetailEvents.js'
 
 export const create = () => {
-  const $NameText = document.createTextNode('')
-
   const $ReadmeHtml = document.createElement('div')
   $ReadmeHtml.className = 'Markdown'
   $ReadmeHtml.role = AriaRoles.Document
 
-  const $ExtensionDetailIcon = document.createElement('img')
-  $ExtensionDetailIcon.className = 'ExtensionDetailIcon'
-  $ExtensionDetailIcon.alt = ''
-  $ExtensionDetailIcon.draggable = false
-  $ExtensionDetailIcon.width = 150
-  $ExtensionDetailIcon.height = 150
-
-  const $Name = document.createElement('h3')
-  $Name.className = 'ExtensionDetailName'
-  $Name.append($NameText)
-
-  const $Description = document.createElement('div')
-  $Description.className = 'ExtensionDetailDescription'
-
-  const $ExtensionDetailHeaderDetails = document.createElement('div')
-  $ExtensionDetailHeaderDetails.className = 'ExtensionDetailHeaderDetails'
-  $ExtensionDetailHeaderDetails.append($Name, $Description)
-
   const $ExtensionDetailHeader = document.createElement('div')
   $ExtensionDetailHeader.className = 'ExtensionDetailHeader'
-  $ExtensionDetailHeader.append($ExtensionDetailIcon, $ExtensionDetailHeaderDetails)
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet ExtensionDetail'
   $Viewlet.append($ExtensionDetailHeader, $ReadmeHtml)
   return {
     $Viewlet,
-    $Name,
-    $NameText,
     $ReadmeHtml,
-    $ExtensionDetailIcon,
-    $Description,
+    $ExtensionDetailHeader,
   }
 }
 
 export const attachEvents = (state) => {
-  const { $ReadmeHtml, $ExtensionDetailIcon } = state
+  const { $ReadmeHtml } = state
   $ReadmeHtml.oncontextmenu = ViewletExtensionDetailEvents.handleReadmeContextMenu
-  $ExtensionDetailIcon.onerror = ViewletExtensionDetailEvents.handleIconError
-}
-
-export const setName = (state, name) => {
-  const { $NameText } = state
-  $NameText.nodeValue = name
+  // TODO
+  // $ExtensionDetailIcon.onerror = ViewletExtensionDetailEvents.handleIconError
 }
 
 export const setReadmeDom = (state, dom) => {
@@ -60,15 +32,9 @@ export const setReadmeDom = (state, dom) => {
   VirtualDom.renderInto($ReadmeHtml, dom)
 }
 
-export const setIconSrc = (state, src) => {
-  const { $ExtensionDetailIcon } = state
-  // TODO handle error and load fallback icon
-  $ExtensionDetailIcon.src = src
-}
-
-export const setDescription = (state, description) => {
-  const { $Description } = state
-  $Description.textContent = description
+export const setHeaderDom = (state, dom) => {
+  const { $ExtensionDetailHeader } = state
+  VirtualDom.renderInto($ExtensionDetailHeader, dom)
 }
 
 export * from '../ViewletSizable/ViewletSizable.js'
