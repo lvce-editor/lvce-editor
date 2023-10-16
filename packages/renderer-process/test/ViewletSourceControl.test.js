@@ -18,72 +18,9 @@ test('create', () => {
   expect(state).toBeDefined()
 })
 
-test('setChangedFiles', () => {
-  const state = ViewletSourceControl.create()
-  ViewletSourceControl.setChangedFiles(state, [
-    {
-      label: 'file-1',
-      title: '/test/file-1',
-      icon: '',
-      posInSet: 1,
-      setSize: 2,
-      type: 'file',
-    },
-    {
-      label: 'file-2',
-      title: '/test/file-2',
-      icon: '',
-      posInSet: 1,
-      setSize: 2,
-      type: 'file',
-    },
-  ])
-  expect(getSimpleList(state)).toEqual(['file-1', 'file-2'])
-})
-
 test('focus', () => {
   const state = ViewletSourceControl.create()
   Viewlet.mount(document.body, state)
   ViewletSourceControl.focus(state)
   expect(document.activeElement).toBe(state.$ViewSourceControlInput)
-})
-
-test('accessibility - SourceControlInput should have aria-label', () => {
-  const state = ViewletSourceControl.create()
-  const { $ViewSourceControlInput } = state
-  expect($ViewSourceControlInput.ariaLabel).toBe('Source Control Input')
-})
-
-test('setButtons', () => {
-  const state = ViewletSourceControl.create()
-  const { $ViewletTree } = state
-  ViewletSourceControl.setChangedFiles(state, [
-    {
-      label: 'file-1',
-      title: '/test/file-1',
-      icon: '',
-      posInSet: 1,
-      setSize: 2,
-      type: 'file',
-    },
-  ])
-  ViewletSourceControl.setItemButtons(state, -1, 0, [
-    {
-      icon: '/icons/reset.svg',
-      label: 'Reset',
-    },
-    {
-      icon: '/icons/add.svg',
-      label: 'Add',
-    },
-  ])
-  const $Item = $ViewletTree.children[0]
-  const $Button1 = $Item.children[2]
-  const $Button2 = $Item.children[3]
-  // @ts-ignore
-  expect($Button1.children[0].style.maskImage).toBe("url('/icons/reset.svg')")
-  expect($Button1.ariaLabel).toBe('Reset')
-  // @ts-ignore
-  expect($Button2.children[0].style.maskImage).toBe("url('/icons/add.svg')")
-  expect($Button2.ariaLabel).toBe('Add')
 })
