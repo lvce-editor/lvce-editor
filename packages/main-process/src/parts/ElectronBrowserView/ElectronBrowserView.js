@@ -2,6 +2,7 @@ import { BrowserView, BrowserWindow } from 'electron'
 import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
 import * as Assert from '../Assert/Assert.cjs'
 import * as Debug from '../Debug/Debug.cjs'
+import * as DisposeWebContents from '../DisposeWebContents/DisposeWebContents.js'
 import * as ElectronBrowserViewAdBlock from '../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.cjs'
 import * as ElectronDispositionType from '../ElectronDispositionType/ElectronDispositionType.js'
@@ -217,4 +218,27 @@ export const createBrowserView = async (restoreId, uid) => {
   webContents.setWindowOpenHandler(handleWindowOpen)
   ElectronBrowserViewAdBlock.enableForWebContents(webContents)
   return id
+}
+
+export const disposeBrowserView = (id) => {
+  console.log('[main process] dispose browser view', id)
+  const { view, browserWindow } = ElectronBrowserViewState.get(id)
+  ElectronBrowserViewState.remove(id)
+  browserWindow.removeBrowserView(view)
+  DisposeWebContents.disposeWebContents(view.webContents)
+}
+
+const getBrowserViewId = (browserView) => {
+  return browserView.webContents.id
+}
+
+export const getAll = () => {
+  const windows = BrowserWindow.getAllWindows()
+  const overview = Object.create(null)
+  for (const window of windows) {
+    const views = window.getBrowserViews()
+    const viewIds = views.map(getBrowserViewId)
+    overview[window.id] = viewIds
+  }
+  return overview
 }
