@@ -8,6 +8,7 @@ export const create = () => {
   $ReadmeHtml.role = AriaRoles.Document
 
   const $ExtensionDetailHeader = document.createElement('div')
+  $ExtensionDetailHeader.className = 'ExtensionDetailHeader'
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet ExtensionDetail'

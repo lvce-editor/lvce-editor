@@ -5,11 +5,6 @@ export const getExtensionDetailVirtualDom = (extensionDetail) => {
   const { name, iconSrc, description } = extensionDetail
   const dom = [
     {
-      type: VirtualDomElements.Div,
-      className: 'ExtensionDetailHeader',
-      childCount: 2,
-    },
-    {
       type: VirtualDomElements.Img,
       className: 'ExtensionDetailIcon',
       alt: '',

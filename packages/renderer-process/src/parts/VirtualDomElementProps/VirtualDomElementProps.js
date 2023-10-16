@@ -6,11 +6,19 @@ export const setProp = ($Element, key, value) => {
       break
     case 'paddingLeft':
     case 'top':
-    case 'width':
-    case 'height':
     case 'left':
     case 'marginTop':
       if (typeof value === 'number') {
+        $Element.style[key] = `${value}px`
+      } else {
+        $Element.style[key] = value
+      }
+      break
+    case 'width':
+    case 'height':
+      if ($Element instanceof HTMLImageElement) {
+        $Element[key] = value
+      } else if (typeof value === 'number') {
         $Element.style[key] = `${value}px`
       } else {
         $Element.style[key] = value
