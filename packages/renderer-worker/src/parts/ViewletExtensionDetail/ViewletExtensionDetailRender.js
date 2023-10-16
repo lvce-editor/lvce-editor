@@ -1,25 +1,8 @@
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as GetExtensionDetailVirtualDom from '../GetExtensionDetailVirtualDom/GetExtensionDetailVirtualDom.js'
 import * as GetMarkdownVirtualDom from '../GetMarkdownVirtualDom/GetMarkdownVirtualDom.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
-
-const renderName = {
-  isEqual(oldState, newState) {
-    return oldState.name === newState.name
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetName, /* name */ newState.name]
-  },
-}
-
-const renderDescription = {
-  isEqual(oldState, newState) {
-    return oldState.description === newState.description
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetDescription, /* description */ newState.description]
-  },
-}
 
 const renderReadme = {
   isEqual(oldState, newState) {
@@ -31,12 +14,13 @@ const renderReadme = {
   },
 }
 
-const renderIcon = {
+const renderHeader = {
   isEqual(oldState, newState) {
-    return oldState.iconSrc === newState.iconSrc
+    return oldState.name === newState.name && oldState.description === newState.description && oldState.iconSrc === newState.iconSrc
   },
   apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetIconSrc, /* src */ newState.iconSrc]
+    const headerDom = GetExtensionDetailVirtualDom.getExtensionDetailVirtualDom(newState)
+    return ['setHeaderDom', headerDom]
   },
 }
 
@@ -49,4 +33,4 @@ const renderSize = {
   },
 }
 
-export const render = [renderName, renderReadme, renderDescription, renderIcon, renderSize]
+export const render = [renderHeader, renderReadme, renderSize]
