@@ -23,23 +23,3 @@
   background-color: rgba(232, 17, 35, 0.9);
   color: var(--TitleBarButtonCloseHoverForeground, currentColor);
 }
-
-.MaskIcon.Minimize {
-  -webkit-mask-image: url(/icons/chrome-minimize.svg);
-  mask-image: url(/icons/chrome-minimize.svg);
-}
-
-.MaskIcon.Maximize {
-  -webkit-mask-image: url(/icons/chrome-maximize.svg);
-  mask-image: url(/icons/chrome-maximize.svg);
-}
-
-.MaskIcon.Restore {
-  -webkit-mask-image: url(/icons/chrome-restore.svg);
-  mask-image: url(/icons/chrome-restore.svg);
-}
-
-.MaskIcon.Close {
-  -webkit-mask-image: url(/icons/chrome-close.svg);
-  mask-image: url(/icons/chrome-close.svg);
-}
