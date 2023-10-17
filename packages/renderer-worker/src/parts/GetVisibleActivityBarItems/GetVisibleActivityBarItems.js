@@ -1,5 +1,4 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as Icon from '../Icon/Icon.js'
 import { getNumberOfVisibleItems } from '../ViewletActivityBar/ViewletActivityBarGetHiddenItems.js'
 import * as ViewletActivityBarStrings from '../ViewletActivityBar/ViewletActivityBarStrings.js'
 
@@ -34,7 +33,7 @@ export const getVisibleActivityBarItems = (state) => {
   const showMoreItem = {
     id: 'Additional Views',
     title: ViewletActivityBarStrings.additionalViews(),
-    icon: Icon.Ellipsis,
+    icon: 'Ellipsis',
     enabled: true,
     flags: ActivityBarItemFlags.Button,
     keyShortCuts: '',

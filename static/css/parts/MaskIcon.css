@@ -44,3 +44,33 @@
   -webkit-mask-image: url(/icons/chrome-close.svg);
   mask-image: url(/icons/chrome-close.svg);
 }
+
+.MaskIconFiles {
+  -webkit-mask-image: url(/icons/files.svg);
+  mask-image: url(/icons/files.svg);
+}
+
+.MaskIconSearch {
+  -webkit-mask-image: url(/icons/search.svg);
+  mask-image: url(/icons/search.svg);
+}
+
+.MaskIconSourceControl {
+  -webkit-mask-image: url(/icons/source-control.svg);
+  mask-image: url(/icons/source-control.svg);
+}
+
+.MaskIconDebugAlt2 {
+  -webkit-mask-image: url(/icons/debug-alt-2.svg);
+  mask-image: url(/icons/debug-alt-2.svg);
+}
+
+.MaskIconExtensions {
+  -webkit-mask-image: url(/icons/extensions.svg);
+  mask-image: url(/icons/extensions.svg);
+}
+
+.MaskIconSettingsGear {
+  -webkit-mask-image: url(/icons/settings-gear.svg);
+  mask-image: url(/icons/settings-gear.svg);
+}
