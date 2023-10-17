@@ -64,7 +64,7 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
     }
 
     await Replace.replace({
-      path: Path.join(outDir, 'parts', 'ViewletTitleBarButtons.css'),
+      path: Path.join(outDir, 'parts', 'MaskIcon.css'),
       occurrence: `url(/icons/`,
       replacement: `url(${assetDir}/icons/`,
     })
