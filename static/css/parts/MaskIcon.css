@@ -24,3 +24,23 @@
   -webkit-mask-position: 50% 50%;
   pointer-events: none;
 }
+
+.MaskIconMinimize {
+  -webkit-mask-image: url(/icons/chrome-minimize.svg);
+  mask-image: url(/icons/chrome-minimize.svg);
+}
+
+.MaskIconMaximize {
+  -webkit-mask-image: url(/icons/chrome-maximize.svg);
+  mask-image: url(/icons/chrome-maximize.svg);
+}
+
+.MaskIconRestore {
+  -webkit-mask-image: url(/icons/chrome-restore.svg);
+  mask-image: url(/icons/chrome-restore.svg);
+}
+
+.MaskIconClose {
+  -webkit-mask-image: url(/icons/chrome-close.svg);
+  mask-image: url(/icons/chrome-close.svg);
+}

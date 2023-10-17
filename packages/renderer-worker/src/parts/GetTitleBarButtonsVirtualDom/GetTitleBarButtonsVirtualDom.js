@@ -11,7 +11,7 @@ const createTitleBarButton = (button) => {
     },
     {
       type: VirtualDomElements.I,
-      className: `MaskIcon ${icon}`,
+      className: `MaskIcon MaskIcon${icon}`,
       childCount: 0,
     },
   ]
