@@ -1,7 +1,6 @@
 import { jest } from '@jest/globals'
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
-import * as Icon from '../src/parts/Icon/Icon.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeEach(() => {
@@ -49,7 +48,7 @@ test('loadContent', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.Files,
+        icon: 'Files',
         id: ViewletModuleId.Explorer,
         title: 'Explorer',
         keyShortcuts: 'Control+Shift+E',
@@ -57,7 +56,7 @@ test('loadContent', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.Search,
+        icon: 'Search',
         id: ViewletModuleId.Search,
         title: 'Search',
         keyShortcuts: 'Control+Shift+F',
@@ -65,7 +64,7 @@ test('loadContent', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.SourceControl,
+        icon: 'SourceControl',
         id: ViewletModuleId.SourceControl,
         title: 'Source Control',
         keyShortcuts: 'Control+Shift+G',
@@ -73,7 +72,7 @@ test('loadContent', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.DebugAlt2,
+        icon: 'DebugAlt2',
         id: ViewletModuleId.RunAndDebug,
         title: 'Run and Debug',
         keyShortcuts: 'Control+Shift+D',
@@ -81,7 +80,7 @@ test('loadContent', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.Extensions,
+        icon: 'Extensions',
         id: ViewletModuleId.Extensions,
         title: 'Extensions',
         keyShortcuts: 'Control+Shift+X',
@@ -89,7 +88,7 @@ test('loadContent', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Button,
-        icon: Icon.SettingsGear,
+        icon: 'SettingsGear',
         id: 'Settings',
         title: 'Settings',
         keyShortcuts: '',
@@ -115,7 +114,7 @@ test.skip('render - all items fit but little space is remaining', async () => {
       {
         id: ViewletModuleId.Explorer,
         title: 'Explorer',
-        icon: Icon.Files,
+        icon: 'Files',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+E',
@@ -123,7 +122,7 @@ test.skip('render - all items fit but little space is remaining', async () => {
       {
         id: ViewletModuleId.Search,
         title: 'Search',
-        icon: Icon.Search,
+        icon: 'Search',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+F',
@@ -131,7 +130,7 @@ test.skip('render - all items fit but little space is remaining', async () => {
       {
         id: ViewletModuleId.SourceControl,
         title: 'Source Control',
-        icon: Icon.SourceControl,
+        icon: 'SourceControl',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+G',
@@ -139,7 +138,7 @@ test.skip('render - all items fit but little space is remaining', async () => {
       {
         id: ViewletModuleId.RunAndDebug,
         title: 'Run and Debug',
-        icon: Icon.DebugAlt2,
+        icon: 'DebugAlt2',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+D',
@@ -147,7 +146,7 @@ test.skip('render - all items fit but little space is remaining', async () => {
       {
         id: ViewletModuleId.Extensions,
         title: 'Extensions',
-        icon: Icon.Extensions,
+        icon: 'Extensions',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+X',
@@ -156,7 +155,7 @@ test.skip('render - all items fit but little space is remaining', async () => {
       {
         id: 'Settings',
         title: 'Settings',
-        icon: Icon.SettingsGear,
+        icon: 'SettingsGear',
         enabled: true,
         flags: ActivityBarItemFlags.Button,
         keyShortcuts: '',
@@ -173,7 +172,7 @@ test.skip('render - all items fit but little space is remaining', async () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: Icon.Files,
+          icon: 'Files',
           id: ViewletModuleId.Explorer,
           title: 'Explorer',
           keyShortcuts: 'Control+Shift+E',
@@ -181,7 +180,7 @@ test.skip('render - all items fit but little space is remaining', async () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: Icon.Search,
+          icon: 'Search',
           id: ViewletModuleId.Search,
           title: 'Search',
           keyShortcuts: 'Control+Shift+F',
@@ -189,7 +188,7 @@ test.skip('render - all items fit but little space is remaining', async () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: Icon.SourceControl,
+          icon: 'SourceControl',
           id: ViewletModuleId.SourceControl,
           title: 'Source Control',
           keyShortcuts: 'Control+Shift+G',
@@ -197,7 +196,7 @@ test.skip('render - all items fit but little space is remaining', async () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: Icon.DebugAlt2,
+          icon: 'DebugAlt2',
           id: ViewletModuleId.RunAndDebug,
           title: 'Run and Debug',
           keyShortcuts: 'Control+Shift+D',
@@ -205,7 +204,7 @@ test.skip('render - all items fit but little space is remaining', async () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: Icon.Extensions,
+          icon: 'Extensions',
           id: ViewletModuleId.Extensions,
           title: 'Extensions',
           keyShortcuts: 'Control+Shift+X',
@@ -213,7 +212,7 @@ test.skip('render - all items fit but little space is remaining', async () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Button,
-          icon: Icon.SettingsGear,
+          icon: 'SettingsGear',
           id: 'Settings',
           title: 'Settings',
           keyShortcuts: '',
@@ -233,7 +232,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         id: ViewletModuleId.Explorer,
         title: 'Explorer',
-        icon: Icon.Files,
+        icon: 'Files',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+E',
@@ -241,7 +240,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         id: ViewletModuleId.Search,
         title: 'Search',
-        icon: Icon.Search,
+        icon: 'Search',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+F',
@@ -249,7 +248,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         id: ViewletModuleId.SourceControl,
         title: 'Source Control',
-        icon: Icon.SourceControl,
+        icon: 'SourceControl',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+G',
@@ -257,7 +256,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         id: ViewletModuleId.RunAndDebug,
         title: 'Run and Debug',
-        icon: Icon.DebugAlt2,
+        icon: 'DebugAlt2',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+D',
@@ -265,7 +264,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         id: ViewletModuleId.Extensions,
         title: 'Extensions',
-        icon: Icon.Extensions,
+        icon: 'Extensions',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+X',
@@ -274,7 +273,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         id: 'Settings',
         title: 'Settings',
-        icon: Icon.SettingsGear,
+        icon: 'SettingsGear',
         enabled: true,
         flags: ActivityBarItemFlags.Button,
         keyShortcuts: '',
@@ -293,7 +292,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.Files,
+        icon: 'Files',
         id: ViewletModuleId.Explorer,
         title: 'Explorer',
         keyShortcuts: 'Control+Shift+E',
@@ -301,7 +300,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.Search,
+        icon: 'Search',
         id: ViewletModuleId.Search,
         title: 'Search',
         keyShortcuts: 'Control+Shift+F',
@@ -309,7 +308,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.SourceControl,
+        icon: 'SourceControl',
         id: ViewletModuleId.SourceControl,
         title: 'Source Control',
         keyShortcuts: 'Control+Shift+G',
@@ -317,7 +316,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Button,
-        icon: Icon.Ellipsis,
+        icon: 'Ellipsis',
         id: 'Additional Views',
         title: 'Additional Views',
         keyShortCuts: '',
@@ -325,7 +324,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Button,
-        icon: Icon.SettingsGear,
+        icon: 'SettingsGear',
         id: 'Settings',
         title: 'Settings',
         keyShortcuts: '',
@@ -345,7 +344,7 @@ test.skip('render - two items do not fit', () => {
       {
         id: ViewletModuleId.Explorer,
         title: 'Explorer',
-        icon: Icon.Files,
+        icon: 'Files',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+E',
@@ -353,7 +352,7 @@ test.skip('render - two items do not fit', () => {
       {
         id: ViewletModuleId.Search,
         title: 'Search',
-        icon: Icon.Search,
+        icon: 'Search',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+F',
@@ -361,7 +360,7 @@ test.skip('render - two items do not fit', () => {
       {
         id: ViewletModuleId.SourceControl,
         title: 'Source Control',
-        icon: Icon.SourceControl,
+        icon: 'SourceControl',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+G',
@@ -369,7 +368,7 @@ test.skip('render - two items do not fit', () => {
       {
         id: ViewletModuleId.RunAndDebug,
         title: 'Run and Debug',
-        icon: Icon.DebugAlt2,
+        icon: 'DebugAlt2',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+D',
@@ -377,7 +376,7 @@ test.skip('render - two items do not fit', () => {
       {
         id: ViewletModuleId.Extensions,
         title: 'Extensions',
-        icon: Icon.Extensions,
+        icon: 'Extensions',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+X',
@@ -386,7 +385,7 @@ test.skip('render - two items do not fit', () => {
       {
         id: 'Settings',
         title: 'Settings',
-        icon: Icon.SettingsGear,
+        icon: 'SettingsGear',
         enabled: true,
         flags: ActivityBarItemFlags.Button,
         keyShortcuts: '',
@@ -403,7 +402,7 @@ test.skip('render - two items do not fit', () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: Icon.Files,
+          icon: 'Files',
           id: ViewletModuleId.Explorer,
           title: 'Explorer',
           keyShortcuts: 'Control+Shift+E',
@@ -411,7 +410,7 @@ test.skip('render - two items do not fit', () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: Icon.Search,
+          icon: 'Search',
           id: ViewletModuleId.Search,
           title: 'Search',
           keyShortcuts: 'Control+Shift+F',
@@ -419,7 +418,7 @@ test.skip('render - two items do not fit', () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: Icon.SourceControl,
+          icon: 'SourceControl',
           id: ViewletModuleId.SourceControl,
           title: 'Source Control',
           keyShortcuts: 'Control+Shift+G',
@@ -427,7 +426,7 @@ test.skip('render - two items do not fit', () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Button,
-          icon: Icon.Ellipsis,
+          icon: 'Ellipsis',
           id: 'Additional Views',
           title: 'Additional Views',
           keyShortCuts: '',
@@ -435,7 +434,7 @@ test.skip('render - two items do not fit', () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Button,
-          icon: Icon.SettingsGear,
+          icon: 'SettingsGear',
           id: 'Settings',
           title: 'Settings',
           keyShortcuts: '',
