@@ -50,11 +50,11 @@
     "@lvce-editor/ripgrep": "^1.0.0"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.9",
-    "@types/is-object": "^1.0.3",
-    "@types/tail": "^2.2.1",
-    "@types/tar-fs": "^2.0.2",
-    "@types/ws": "^8.5.7",
+    "@types/debug": "^4.1.10",
+    "@types/is-object": "^1.0.4",
+    "@types/tail": "^2.2.2",
+    "@types/tar-fs": "^2.0.3",
+    "@types/ws": "^8.5.8",
     "get-port": "^7.0.0"
   },
   "xo": {

@@ -21,10 +21,10 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "@types/babel__code-frame": "^7.0.4",
-    "@types/lodash": "^4.14.199",
-    "@types/verror": "^1.10.7",
-    "@types/ws": "^8.5.7"
+    "@types/babel__code-frame": "^7.0.5",
+    "@types/lodash": "^4.14.200",
+    "@types/verror": "^1.10.8",
+    "@types/ws": "^8.5.8"
   },
   "dependencies": {
     "@babel/code-frame": "^7.22.13",
