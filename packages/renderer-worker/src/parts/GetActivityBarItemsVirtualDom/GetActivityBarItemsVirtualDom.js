@@ -36,9 +36,8 @@ const createActivityBarItem = (item) => {
       },
       {
         type: VirtualDomElements.Div,
-        className: 'MaskIcon',
+        className: `MaskIcon MaskIcon${icon}`,
         role: AriaRoles.None,
-        maskImage: icon,
         childCount: 0,
       },
     ]
@@ -85,10 +84,9 @@ const createActivityBarItem = (item) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className,
+      className: `${className} MaskIcon${icon}`,
       ariaLabel: '',
       title,
-      maskImage: icon,
       role,
       ariaSelected,
       childCount: 0,

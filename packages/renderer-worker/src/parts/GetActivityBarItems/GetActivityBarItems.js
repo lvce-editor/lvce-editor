@@ -9,7 +9,7 @@ export const getActivityBarItems = () => {
     {
       id: ViewletModuleId.Explorer,
       title: ViewletActivityBarStrings.explorer(),
-      icon: Icon.Files,
+      icon: 'Files',
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+E',
@@ -17,7 +17,7 @@ export const getActivityBarItems = () => {
     {
       id: ViewletModuleId.Search,
       title: ViewletActivityBarStrings.search(),
-      icon: Icon.Search,
+      icon: 'Search',
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+F',
@@ -25,7 +25,7 @@ export const getActivityBarItems = () => {
     {
       id: ViewletModuleId.SourceControl,
       title: ViewletActivityBarStrings.sourceControl(),
-      icon: Icon.SourceControl,
+      icon: 'SourceControl',
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+G',
@@ -33,7 +33,7 @@ export const getActivityBarItems = () => {
     {
       id: ViewletModuleId.RunAndDebug,
       title: ViewletActivityBarStrings.runAndDebug(),
-      icon: Icon.DebugAlt2,
+      icon: 'DebugAlt2',
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+D',
@@ -41,7 +41,7 @@ export const getActivityBarItems = () => {
     {
       id: ViewletModuleId.Extensions,
       title: ViewletActivityBarStrings.extensions(),
-      icon: Icon.Extensions,
+      icon: 'Extensions',
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+X',
@@ -50,7 +50,7 @@ export const getActivityBarItems = () => {
     {
       id: 'Settings',
       title: ViewletActivityBarStrings.settings(),
-      icon: Icon.SettingsGear,
+      icon: 'SettingsGear',
       enabled: true,
       flags: ActivityBarItemFlags.Button,
       keyShortcuts: '',
