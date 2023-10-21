@@ -209,7 +209,6 @@ const copyElectronResult = async ({
       '@@REPO_NAME@@': repoName,
     })
   } else {
-    // TODO also remove electron-updater dependency and its dependencies
     await Replace.replace({
       path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/shared-process/src/parts/IsAutoUpdateSupported/IsAutoUpdateSupported.js`,
       occurrence: `return Platform.isWindows || Platform.isMacOs`,

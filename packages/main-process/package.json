@@ -32,9 +32,6 @@
     "lines-and-columns": "^2.0.3",
     "minimist": "^1.2.8"
   },
-  "optionalDependencies": {
-    "electron-updater": "^6.1.4"
-  },
   "jest": {
     "moduleFileExtensions": [
       "js",

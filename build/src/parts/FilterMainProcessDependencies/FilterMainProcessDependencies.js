@@ -9,9 +9,6 @@ export const filterDependencies = (rawDependencies, supportsAutoUpdate) => {
     if (!dependency.name) {
       return false
     }
-    if (dependency.name === 'electron-updater' && !supportsAutoUpdate) {
-      return false
-    }
     if (dependency.name.includes('@types')) {
       return false
     }
