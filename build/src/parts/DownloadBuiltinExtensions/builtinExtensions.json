@@ -145,6 +145,11 @@
     "version": "0.0.1"
   },
   {
+    "name": "builtin.language-basics-terraform",
+    "repository": "github.com/lvce-editor/language-basics-terraform",
+    "version": "0.1.0"
+  },
+  {
     "name": "builtin.language-basics-nvmrc",
     "repository": "github.com/lvce-editor/language-basics-nvmrc",
     "version": "0.0.1"
