@@ -1,3 +1,4 @@
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ViewletFindWidgetStrings from './ViewletFindWidgetStrings.js'
 
 export const hasFunctionalRender = true
@@ -7,7 +8,7 @@ const renderValue = {
     return oldState.value === newState.value
   },
   apply(oldState, newState) {
-    return [/* method */ 'setValue', /* value */ newState.value]
+    return [RenderMethod.SetValue, /* value */ newState.value]
   },
 }
 
