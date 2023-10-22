@@ -52,6 +52,7 @@ export const getChildren = (state) => {
       y,
       height,
       width: remainingWidth,
+      setBounds: false,
     })
   }
   if (titleBarButtonsEnabled) {

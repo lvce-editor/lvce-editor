@@ -1,8 +1,9 @@
 import * as Command from '../Command/Command.js'
 import * as FindMatches from '../FindMatches/FindMatches.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as GetMatchCount from '../GetMatchCount/GetMatchCount.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const create = (uid) => {
   return {
@@ -39,10 +40,6 @@ export const getPosition = () => {
   }
 }
 
-const getMatchCount = (matches) => {
-  return matches.length / 2
-}
-
 export const loadContent = (state) => {
   const editor = ViewletStates.getState(ViewletModuleId.EditorText)
   if (!editor) {
@@ -56,7 +53,7 @@ export const loadContent = (state) => {
   const line = lines[startRowIndex]
   const value = line.slice(startColumnIndex, endColumnIndex)
   const matches = FindMatches.findMatches(lines, value)
-  const matchCount = getMatchCount(matches)
+  const matchCount = GetMatchCount.getMatchCount(matches)
   return {
     ...state,
     value,
@@ -72,7 +69,7 @@ export const handleInput = (state, value) => {
   const editor = ViewletStates.getState(ViewletModuleId.EditorText)
   const { lines } = editor
   const matches = FindMatches.findMatches(lines, value)
-  const matchCount = getMatchCount(matches)
+  const matchCount = GetMatchCount.getMatchCount(matches)
   return {
     ...state,
     matches,
