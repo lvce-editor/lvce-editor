@@ -25,7 +25,7 @@ const getTitleBarButtonsElectron = () => {
     return [
       { label: UiStrings.Minimize, icon: 'Minimize', id: 'Minimize' },
       { label: UiStrings.Maximize, icon: 'Maximize', id: 'ToggleMaximize' },
-      { label: UiStrings.Close, icon: 'Close', id: 'Close' },
+      { label: UiStrings.Close, icon: 'ChromeClose', id: 'Close' },
     ]
   }
   return []
