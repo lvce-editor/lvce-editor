@@ -1,5 +1,5 @@
 import * as Command from '../Command/Command.js'
-import * as FindMatches from '../FindMatches/FindMatches.js'
+import * as FindMatchesCaseInsensitive from '../FindMatchesCaseInsensitive/FindMatchesCaseInsensitive.js'
 import * as GetMatchCount from '../GetMatchCount/GetMatchCount.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -52,7 +52,7 @@ export const loadContent = (state) => {
   const endColumnIndex = selections[3]
   const line = lines[startRowIndex]
   const value = line.slice(startColumnIndex, endColumnIndex)
-  const matches = FindMatches.findMatches(lines, value)
+  const matches = FindMatchesCaseInsensitive.findMatchesCaseInsensitive(lines, value)
   const matchCount = GetMatchCount.getMatchCount(matches)
   return {
     ...state,
@@ -68,7 +68,7 @@ export const handleInput = (state, value) => {
   // highlight locations that match value
   const editor = ViewletStates.getState(ViewletModuleId.EditorText)
   const { lines } = editor
-  const matches = FindMatches.findMatches(lines, value)
+  const matches = FindMatchesCaseInsensitive.findMatchesCaseInsensitive(lines, value)
   const matchCount = GetMatchCount.getMatchCount(matches)
   return {
     ...state,
