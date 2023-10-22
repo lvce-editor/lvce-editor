@@ -24,10 +24,3 @@
   text-transform: uppercase;
   padding-left: 12px;
 }
-
-.SideBarContent {
-  contain: strict;
-  /* padding: 10px; */
-  /* height: 100%; */
-  flex: 1;
-}
