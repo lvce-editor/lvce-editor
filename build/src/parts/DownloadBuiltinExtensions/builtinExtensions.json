@@ -37,7 +37,7 @@
   {
     "name": "builtin.language-basics-dart",
     "repository": "github.com/lvce-editor/language-basics-dart",
-    "version": "0.0.3"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.language-basics-desktop",
@@ -147,7 +147,7 @@
   {
     "name": "builtin.language-basics-terraform",
     "repository": "github.com/lvce-editor/language-basics-terraform",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   {
     "name": "builtin.language-basics-nvmrc",
