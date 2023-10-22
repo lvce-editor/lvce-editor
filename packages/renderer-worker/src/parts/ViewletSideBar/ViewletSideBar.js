@@ -87,6 +87,7 @@ export const getChildren = (state) => {
     {
       id: currentViewletId,
       ...getContentDimensions(state, titleAreaHeight),
+      setBounds: false,
     },
   ]
 }
@@ -123,7 +124,7 @@ export const openViewlet = async (state, moduleId, focus = false) => {
       append: true,
     },
     false,
-    true
+    true,
   )
   if (commands) {
     const currentViewletState = ViewletStates.getState(currentViewletId)
