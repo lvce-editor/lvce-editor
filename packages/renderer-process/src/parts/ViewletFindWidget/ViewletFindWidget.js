@@ -25,9 +25,9 @@ export const create = () => {
   $MatchCount.className = 'FindWidgetMatchCount'
   $MatchCount.append($MatchCountText)
 
-  const $ButtonFocusNext = IconButton.create$Button(UiStrings.NextMatch, Icon.NextMatch)
-  const $ButtonFocusPrevious = IconButton.create$Button(UiStrings.PreviousMatch, Icon.PreviousMatch)
-  const $ButtonClose = IconButton.create$Button(UiStrings.Close, Icon.Close)
+  const $ButtonFocusNext = IconButton.create$Button(UiStrings.NextMatch, 'ArrowDown')
+  const $ButtonFocusPrevious = IconButton.create$Button(UiStrings.PreviousMatch, 'ArrowUp')
+  const $ButtonClose = IconButton.create$Button(UiStrings.Close, 'Close')
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet FindWidget'

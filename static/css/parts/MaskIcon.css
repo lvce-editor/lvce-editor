@@ -40,7 +40,7 @@
   mask-image: url(/icons/chrome-restore.svg);
 }
 
-.MaskIconClose {
+.MaskIconChromeClose {
   -webkit-mask-image: url(/icons/chrome-close.svg);
   mask-image: url(/icons/chrome-close.svg);
 }
@@ -78,4 +78,19 @@
 .MaskIconEllipsis {
   -webkit-mask-image: url(/icons/ellipsis.svg);
   mask-image: url(/icons/ellipsis.svg);
+}
+
+.MaskIconArrowDown {
+  -webkit-mask-image: url(/icons/arrow-down.svg);
+  mask-image: url(/icons/arrow-down.svg);
+}
+
+.MaskIconArrowUp {
+  -webkit-mask-image: url(/icons/arrow-up.svg);
+  mask-image: url(/icons/arrow-up.svg);
+}
+
+.MaskIconClose {
+  -webkit-mask-image: url(/icons/close.svg);
+  mask-image: url(/icons/close.svg);
 }
