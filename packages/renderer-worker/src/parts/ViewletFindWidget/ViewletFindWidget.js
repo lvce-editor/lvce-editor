@@ -1,5 +1,5 @@
 import * as Command from '../Command/Command.js'
-import * as TextDocumentSearch from '../TextDocumentSearch/TextDocumentSearch.js'
+import * as FindMatches from '../FindMatches/FindMatches.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -55,7 +55,7 @@ export const loadContent = (state) => {
   const endColumnIndex = selections[3]
   const line = lines[startRowIndex]
   const value = line.slice(startColumnIndex, endColumnIndex)
-  const matches = TextDocumentSearch.findMatches(lines, value)
+  const matches = FindMatches.findMatches(lines, value)
   const matchCount = getMatchCount(matches)
   return {
     ...state,
@@ -71,7 +71,7 @@ export const handleInput = (state, value) => {
   // highlight locations that match value
   const editor = ViewletStates.getState(ViewletModuleId.EditorText)
   const { lines } = editor
-  const matches = TextDocumentSearch.findMatches(lines, value)
+  const matches = FindMatches.findMatches(lines, value)
   const matchCount = getMatchCount(matches)
   return {
     ...state,
