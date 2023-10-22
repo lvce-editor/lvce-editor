@@ -372,6 +372,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
           focus: false,
           parentId: viewletUid,
           parentUid: viewletUid,
+          setBounds: child.setBounds,
         }
         const childCommands = await load(childViewlet, false, true, undefined)
         // @ts-ignore
