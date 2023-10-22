@@ -74,3 +74,8 @@
   -webkit-mask-image: url(/icons/settings-gear.svg);
   mask-image: url(/icons/settings-gear.svg);
 }
+
+.MaskIconEllipsis {
+  -webkit-mask-image: url(/icons/ellipsis.svg);
+  mask-image: url(/icons/ellipsis.svg);
+}
