@@ -4,7 +4,7 @@ import * as MaskImage from '../MaskImage/MaskImage.js'
 export const create = (icon) => {
   const $Icon = document.createElement('div')
   $Icon.className = 'MaskIcon'
-  if (icon.includes('/icons')) {
+  if (!icon || icon.includes('/icons')) {
     MaskImage.setMaskImage($Icon, icon)
   } else {
     $Icon.classList.add(`MaskIcon${icon}`)
