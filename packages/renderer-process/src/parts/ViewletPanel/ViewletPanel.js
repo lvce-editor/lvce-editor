@@ -6,6 +6,8 @@ import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletPanelEvents from './ViewletPanelEvents.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 /**
  * @enum {string}
@@ -54,9 +56,15 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $ButtonMaximize, $ButtonClose, $PanelHeader } = state
-  $PanelHeader.onclick = ViewletPanelEvents.handleHeaderClick
-  $ButtonMaximize.onclick = ViewletPanelEvents.handleClickMaximize
-  $ButtonClose.onclick = ViewletPanelEvents.handleClickClose
+  AttachEvents.attachEvents($PanelHeader, {
+    [DomEventType.Click]: ViewletPanelEvents.handleHeaderClick,
+  })
+  AttachEvents.attachEvents($ButtonMaximize, {
+    [DomEventType.Click]: ViewletPanelEvents.handleClickMaximize,
+  })
+  AttachEvents.attachEvents($ButtonClose, {
+    [DomEventType.Click]: ViewletPanelEvents.handleClickClose,
+  })
 }
 
 export const setTabsDom = (state, dom) => {

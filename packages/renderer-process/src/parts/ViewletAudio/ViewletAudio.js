@@ -1,4 +1,6 @@
 // based on the audio editor by vscode
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletAudioEvents from './ViewletAudioEvents.js'
 
 export const create = () => {
@@ -22,7 +24,9 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $Audio } = state
-  $Audio.onerror = ViewletAudioEvents.handleAudioError
+  AttachEvents.attachEvents($Audio, {
+    [DomEventType.Error]: ViewletAudioEvents.handleAudioError,
+  })
 }
 
 export const setSrc = (state, src) => {

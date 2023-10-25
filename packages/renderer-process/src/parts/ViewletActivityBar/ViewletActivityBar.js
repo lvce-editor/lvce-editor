@@ -1,6 +1,8 @@
 import * as AriaOrientationType from '../AriaOrientationType/AriaOrientationType.js'
 import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
 
@@ -21,10 +23,12 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $Viewlet } = state
-  $Viewlet.onmousedown = ViewletActivityBarEvents.handleMousedown
-  $Viewlet.oncontextmenu = ViewletActivityBarEvents.handleContextMenu
-  $Viewlet.onfocus = ViewletActivityBarEvents.handleFocus
-  $Viewlet.onblur = ViewletActivityBarEvents.handleBlur
+  AttachEvents.attachEvents($Viewlet, {
+    [DomEventType.MouseDown]: ViewletActivityBarEvents.handleMousedown,
+    [DomEventType.ContextMenu]: ViewletActivityBarEvents.handleContextMenu,
+    [DomEventType.Focus]: ViewletActivityBarEvents.handleFocus,
+    [DomEventType.Blur]: ViewletActivityBarEvents.handleBlur,
+  })
 }
 
 export const dispose = (state) => {}
