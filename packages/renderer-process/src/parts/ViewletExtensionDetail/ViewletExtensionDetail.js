@@ -1,6 +1,8 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletExtensionDetailEvents from './ViewletExtensionDetailEvents.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 export const create = () => {
   const $ReadmeHtml = document.createElement('div')
@@ -22,7 +24,9 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $ReadmeHtml } = state
-  $ReadmeHtml.oncontextmenu = ViewletExtensionDetailEvents.handleReadmeContextMenu
+  AttachEvents.attachEvents($ReadmeHtml, {
+    [DomEventType.ContextMenu]: ViewletExtensionDetailEvents.handleReadmeContextMenu,
+  })
   // TODO
   // $ExtensionDetailIcon.onerror = ViewletExtensionDetailEvents.handleIconError
 }

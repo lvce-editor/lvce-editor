@@ -1,13 +1,14 @@
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as Menu from '../OldMenu/Menu.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
-import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 
@@ -28,11 +29,13 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $TitleBarMenuBar } = state
-  $TitleBarMenuBar.onmousedown = ViewletTitleBarMenuBarEvents.handleClick
-  $TitleBarMenuBar.addEventListener(DomEventType.FocusOut, ViewletTitleBarMenuBarEvents.handleFocusOut)
-  $TitleBarMenuBar.addEventListener(DomEventType.FocusIn, ViewletTitleBarMenuBarEvents.handleFocus)
-  $TitleBarMenuBar.onpointerover = ViewletTitleBarMenuBarEvents.handlePointerOver
-  $TitleBarMenuBar.onpointerout = ViewletTitleBarMenuBarEvents.handlePointerOut
+  AttachEvents.attachEvents($TitleBarMenuBar, {
+    [DomEventType.MouseDown]: ViewletTitleBarMenuBarEvents.handleClick,
+    [DomEventType.FocusOut]: ViewletTitleBarMenuBarEvents.handleFocusOut,
+    [DomEventType.FocusIn]: ViewletTitleBarMenuBarEvents.handleFocus,
+    [DomEventType.PointerOver]: ViewletTitleBarMenuBarEvents.handlePointerOver,
+    [DomEventType.PointerOut]: ViewletTitleBarMenuBarEvents.handlePointerOut,
+  })
 }
 
 export const dispose = (state) => {}

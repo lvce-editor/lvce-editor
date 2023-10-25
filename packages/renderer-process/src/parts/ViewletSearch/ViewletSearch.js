@@ -1,5 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as EnterKeyHintType from '../EnterKeyHintType/EnterKeyHintType.js'
@@ -117,17 +118,26 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $ViewletSearchInput, $ScrollBar, $SearchHeader, $List } = state
-  $ViewletSearchInput.oninput = ViewletSearchEvents.handleInput
-  $ViewletSearchInput.onfocus = ViewletSearchEvents.handleFocus
+  AttachEvents.attachEvents($ViewletSearchInput, {
+    [DomEventType.Input]: ViewletSearchEvents.handleInput,
+    [DomEventType.Focus]: ViewletSearchEvents.handleFocus,
+  })
 
-  $ScrollBar.onpointerdown = ViewletSearchEvents.handleScrollBarPointerDown
+  AttachEvents.attachEvents($ScrollBar, {
+    [DomEventType.PointerDown]: ViewletSearchEvents.handleScrollBarPointerDown,
+  })
 
-  $SearchHeader.onclick = ViewletSearchEvents.handleHeaderClick
+  AttachEvents.attachEvents($SearchHeader, {
+    [DomEventType.Click]: ViewletSearchEvents.handleHeaderClick,
+  })
 
-  $List.onfocus = ViewletSearchEvents.handleListFocus
-  $List.onblur = ViewletSearchEvents.handleListBlur
-  $List.onmousedown = ViewletSearchEvents.handleClick
-  $List.oncontextmenu = ViewletSearchEvents.handleContextMenu
+  AttachEvents.attachEvents($List, {
+    [DomEventType.Focus]: ViewletSearchEvents.handleListFocus,
+    [DomEventType.Blur]: ViewletSearchEvents.handleListBlur,
+    [DomEventType.MouseDown]: ViewletSearchEvents.handleClick,
+    [DomEventType.ContextMenu]: ViewletSearchEvents.handleContextMenu,
+  })
+
   $List.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
 }
 

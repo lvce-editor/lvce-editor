@@ -1,4 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
@@ -33,14 +35,16 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $ViewletTree, $ViewSourceControlInput } = state
-
-  $ViewSourceControlInput.onfocus = ViewletSourceControlEvents.handleFocus
-  $ViewSourceControlInput.oninput = ViewletSourceControlEvents.handleInput
-
-  $ViewletTree.onclick = ViewletSourceControlEvents.handleClick
-  $ViewletTree.oncontextmenu = ViewletSourceControlEvents.handleContextMenu
-  $ViewletTree.onmouseover = ViewletSourceControlEvents.handleMouseOver
-  $ViewletTree.onmouseout = ViewletSourceControlEvents.handleMouseOut
+  AttachEvents.attachEvents($ViewSourceControlInput, {
+    [DomEventType.Focus]: ViewletSourceControlEvents.handleFocus,
+    [DomEventType.Input]: ViewletSourceControlEvents.handleInput,
+  })
+  AttachEvents.attachEvents($ViewletTree, {
+    [DomEventType.Click]: ViewletSourceControlEvents.handleClick,
+    [DomEventType.ContextMenu]: ViewletSourceControlEvents.handleContextMenu,
+    [DomEventType.MouseOver]: ViewletSourceControlEvents.handleMouseOver,
+    [DomEventType.MouseOut]: ViewletSourceControlEvents.handleMouseOut,
+  })
 }
 
 export const dispose = () => {}
