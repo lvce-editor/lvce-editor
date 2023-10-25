@@ -1,5 +1,6 @@
 import * as Logger from '../Logger/Logger.js'
 import * as Id from '../Id/Id.js'
+import * as Promises from '../Promises/Promises.js'
 
 const callbacks = Object.create(null)
 
@@ -14,9 +15,8 @@ export const register = (resolve, reject) => {
 
 export const registerPromise = () => {
   const id = Id.create()
-  const promise = new Promise((resolve, reject) => {
-    callbacks[id] = { resolve, reject }
-  })
+  const { resolve, reject, promise } = Promises.withResolvers()
+  callbacks[id] = { resolve, reject }
   return { id, promise }
 }
 
