@@ -1,8 +1,39 @@
 import * as Assert from '../Assert/Assert.js'
 
+const focusIndexScrollUp = (state, index, listHeight, itemHeight, itemsLength) => {
+  const newMinLineY = index
+  const fittingItems = Math.ceil(listHeight / itemHeight)
+  const newMaxLineY = Math.min(newMinLineY + fittingItems, itemsLength)
+  const newDeltaY = newMinLineY * itemHeight
+  return {
+    ...state,
+    focusedIndex: index,
+    minLineY: newMinLineY,
+    maxLineY: newMaxLineY,
+    focused: true,
+    deltaY: newDeltaY,
+  }
+}
+
+const focusIndexScrollDown = (state, index, listHeight, itemHeight, itemsLength) => {
+  const newMaxLineY = Math.min(index + 1, itemsLength)
+  const fittingItems = Math.ceil(listHeight / itemHeight)
+  const newMinLineY = Math.max(newMaxLineY - fittingItems, 0)
+  const newDeltaY = itemsLength < fittingItems ? 0 : newMinLineY * itemHeight - (listHeight % itemHeight) + itemHeight
+  return {
+    ...state,
+    focusedIndex: index,
+    minLineY: newMinLineY,
+    maxLineY: newMaxLineY,
+    focused: true,
+    deltaY: newDeltaY,
+  }
+}
+
 export const focusIndex = (state, index) => {
   const { itemHeight, minLineY, maxLineY, headerHeight, height, items } = state
-  if (items.length === 0) {
+  const itemsLength = items.length
+  if (itemsLength === 0) {
     return state
   }
   Assert.number(itemHeight)
@@ -15,33 +46,10 @@ export const focusIndex = (state, index) => {
   }
   const listHeight = height - headerHeight
   if (index < minLineY + 1) {
-    // scroll up
-    const newMinLineY = index
-    const newMaxLineY = newMinLineY + Math.ceil(listHeight / itemHeight)
-    const newDeltaY = newMinLineY * itemHeight
-    return {
-      ...state,
-      focusedIndex: index,
-      minLineY: newMinLineY,
-      maxLineY: newMaxLineY,
-      focused: true,
-      deltaY: newDeltaY,
-    }
+    return focusIndexScrollUp(state, index, listHeight, itemHeight, itemsLength)
   }
   if (index >= maxLineY - 1) {
-    //  scroll down
-    const newMaxLineY = index + 1
-    const newMinLineY = newMaxLineY - Math.ceil(listHeight / itemHeight)
-    const newDeltaY =
-      newMinLineY * itemHeight - (listHeight % itemHeight) + itemHeight
-    return {
-      ...state,
-      focusedIndex: index,
-      minLineY: newMinLineY,
-      maxLineY: newMaxLineY,
-      focused: true,
-      deltaY: newDeltaY,
-    }
+    return focusIndexScrollDown(state, index, listHeight, itemHeight, itemsLength)
   }
   return {
     ...state,
