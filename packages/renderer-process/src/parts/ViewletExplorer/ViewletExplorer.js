@@ -1,6 +1,7 @@
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
@@ -28,18 +29,20 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $Viewlet } = state
-  $Viewlet.onclick = ViewletExplorerEvents.handleClick
-  $Viewlet.oncontextmenu = ViewletExplorerEvents.handleContextMenu
   // TODO use the other mouse events that capture automatically
   $Viewlet.addEventListener(DomEventType.MouseEnter, ViewletExplorerEvents.handleMouseEnter, DomEventOptions.Capture)
   $Viewlet.addEventListener(DomEventType.MouseLeave, ViewletExplorerEvents.handleMouseLeave, DomEventOptions.Capture)
   $Viewlet.addEventListener(DomEventType.Wheel, ViewletExplorerEvents.handleWheel, DomEventOptions.Passive)
-  $Viewlet.onblur = ViewletExplorerEvents.handleBlur
-  $Viewlet.ondragover = ViewletExplorerEvents.handleDragOver
-  $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart
-  $Viewlet.ondrop = ViewletExplorerEvents.handleDrop
-  $Viewlet.onfocus = ViewletExplorerEvents.handleFocus
-  $Viewlet.onpointerdown = ViewletExplorerEvents.handlePointerDown
+  AttachEvents.attachEvents($Viewlet, {
+    [DomEventType.Blur]: ViewletExplorerEvents.handleBlur,
+    [DomEventType.Click]: ViewletExplorerEvents.handleClick,
+    [DomEventType.ContextMenu]: ViewletExplorerEvents.handleContextMenu,
+    [DomEventType.DragOver]: ViewletExplorerEvents.handleDragOver,
+    [DomEventType.DragStart]: ViewletExplorerEvents.handleDragStart,
+    [DomEventType.Drop]: ViewletExplorerEvents.handleDrop,
+    [DomEventType.Focus]: ViewletExplorerEvents.handleFocus,
+    [DomEventType.PointerDown]: ViewletExplorerEvents.handlePointerDown,
+  })
 }
 
 const create$Row = () => {

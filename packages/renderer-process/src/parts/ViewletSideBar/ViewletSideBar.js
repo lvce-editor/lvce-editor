@@ -2,6 +2,8 @@ import * as Actions from '../Actions/Actions.js'
 import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletSideBarEvents from './ViewletSideBarEvents.js'
 
 export const create = () => {
@@ -31,7 +33,9 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $SideBarTitleArea } = state
-  $SideBarTitleArea.onclick = ViewletSideBarEvents.handleHeaderClick
+  AttachEvents.attachEvents($SideBarTitleArea, {
+    [DomEventType.Click]: ViewletSideBarEvents.handleHeaderClick,
+  })
 }
 
 export const dispose = (state) => {
