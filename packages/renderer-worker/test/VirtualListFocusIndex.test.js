@@ -50,7 +50,7 @@ test('focusIndex - partially in view - causes scrolling down', () => {
   })
 })
 
-test('focusIndex - less items', () => {
+test('focusIndex - less items - at start', () => {
   const state = {
     items: [1, 2, 3],
     focusedIndex: -1,
@@ -64,6 +64,26 @@ test('focusIndex - less items', () => {
   }
   expect(VirtualListFocusIndex.focusIndex(state, 0)).toMatchObject({
     focusedIndex: 0,
+    minLineY: 0,
+    maxLineY: 3,
+    deltaY: 0,
+  })
+})
+
+test('focusIndex - less items - at end', () => {
+  const state = {
+    items: [1, 2, 3],
+    focusedIndex: -1,
+    minLineY: 0,
+    maxLineY: 3,
+    height: 558,
+    deltaY: 0,
+    headerHeight: 0,
+    finalDeltaY: 0,
+    itemHeight: 62,
+  }
+  expect(VirtualListFocusIndex.focusIndex(state, 2)).toMatchObject({
+    focusedIndex: 2,
     minLineY: 0,
     maxLineY: 3,
     deltaY: 0,

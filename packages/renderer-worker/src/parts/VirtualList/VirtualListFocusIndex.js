@@ -16,10 +16,10 @@ const focusIndexScrollUp = (state, index, listHeight, itemHeight, itemsLength) =
 }
 
 const focusIndexScrollDown = (state, index, listHeight, itemHeight, itemsLength) => {
-  const newMaxLineY = index + 1
+  const newMaxLineY = Math.min(index + 1, itemsLength)
   const fittingItems = Math.ceil(listHeight / itemHeight)
-  const newMinLineY = newMaxLineY - fittingItems
-  const newDeltaY = newMinLineY * itemHeight - (listHeight % itemHeight) + itemHeight
+  const newMinLineY = Math.max(newMaxLineY - fittingItems, 0)
+  const newDeltaY = itemsLength < fittingItems ? 0 : newMinLineY * itemHeight - (listHeight % itemHeight) + itemHeight
   return {
     ...state,
     focusedIndex: index,
