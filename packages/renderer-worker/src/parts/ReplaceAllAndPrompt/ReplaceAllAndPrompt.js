@@ -4,7 +4,8 @@ import * as GetReplaceAllConfirmText from '../GetReplaceAllConfirmText/GetReplac
 import * as TextSearchReplaceAll from '../TextSearchReplaceAll/TextSearchReplaceAll.js'
 import * as ViewletSearchStrings from '../ViewletSearch/ViewletSearchStrings.js'
 
-export const replaceAllAndPrompt = async (items, replacement, matchCount, fileCount) => {
+export const replaceAllAndPrompt = async (workspacePath, items, replacement, matchCount, fileCount) => {
+  Assert.string(workspacePath)
   Assert.array(items)
   Assert.string(replacement)
   Assert.number(matchCount)
@@ -16,6 +17,6 @@ export const replaceAllAndPrompt = async (items, replacement, matchCount, fileCo
   if (!shouldReplace) {
     return false
   }
-  await TextSearchReplaceAll.replaceAll(items, replacement)
+  await TextSearchReplaceAll.replaceAll(workspacePath, items, replacement)
   return true
 }

@@ -2,8 +2,8 @@ import * as GetReplacedAllMessage from '../GetReplacedAllMessage/GetReplacedAllM
 import * as ReplaceAllAndPrompt from '../ReplaceAllAndPrompt/ReplaceAllAndPrompt.js'
 
 export const replaceAll = async (state) => {
-  const { items, replacement, matchCount, fileCount } = state
-  const replaced = await ReplaceAllAndPrompt.replaceAllAndPrompt(items, replacement, matchCount, fileCount)
+  const { items, replacement, matchCount, fileCount, workspacePath } = state
+  const replaced = await ReplaceAllAndPrompt.replaceAllAndPrompt(workspacePath, items, replacement, matchCount, fileCount)
   if (!replaced) {
     return state
   }
@@ -14,5 +14,7 @@ export const replaceAll = async (state) => {
     matchCount: 0,
     items: [],
     message: replacedAllMessage,
+    minLineY: 0,
+    maxLineY: 0,
   }
 }

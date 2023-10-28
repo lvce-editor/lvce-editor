@@ -4,6 +4,7 @@ import * as InputSource from '../InputSource/InputSource.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as Workspace from '../Workspace/Workspace.js'
 import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -34,6 +35,7 @@ export const create = (id, uri, x, y, width, height) => {
     listFocused: false,
     listFocusedIndex: -1,
     inputSource: InputSource.User,
+    workspacePath: Workspace.state.workspacePath,
   }
 }
 

@@ -2,10 +2,11 @@ import * as GetBulkReplacementEdits from '../src/parts/GetBulkReplacementEdits/G
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 
 test('getBulkReplacementEdits', () => {
+  const workspacePath = '/test'
   const matches = [
     {
       type: TextSearchResultType.File,
-      title: '/test/file.txt',
+      text: './file.txt',
     },
     {
       type: TextSearchResultType.Match,
@@ -15,5 +16,5 @@ test('getBulkReplacementEdits', () => {
       matchStart: 0,
     },
   ]
-  expect(GetBulkReplacementEdits.getBulkReplacementEdits(matches)).toEqual({ files: ['/test/file.txt'], ranges: [4, 0, 0, 0, 1] })
+  expect(GetBulkReplacementEdits.getBulkReplacementEdits(workspacePath, matches)).toEqual({ files: ['/test/file.txt'], ranges: [4, 0, 0, 0, 1] })
 })
