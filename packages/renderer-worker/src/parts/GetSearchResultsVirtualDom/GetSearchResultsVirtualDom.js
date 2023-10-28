@@ -52,8 +52,10 @@ const renderRow = (rowInfo) => {
   const dom = []
 
   dom.push(treeItem)
-  treeItem.childCount++
-  dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(icon))
+  if (icon) {
+    treeItem.childCount++
+    dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(icon))
+  }
   const label = {
     type: VirtualDomElements.Div,
     className: 'Label',
