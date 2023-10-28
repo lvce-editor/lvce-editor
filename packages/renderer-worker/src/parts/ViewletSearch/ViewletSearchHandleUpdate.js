@@ -1,4 +1,5 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
@@ -55,7 +56,7 @@ export const handleUpdate = async (state, update) => {
     const contentHeight = total * itemHeight
     const listHeight = height - headerHeight
     const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(height, contentHeight, minimumSliderSize)
-    const numberOfVisible = Math.ceil(listHeight / itemHeight)
+    const numberOfVisible = GetNumberOfVisibleItems.getNumberOfVisibleItems(listHeight, itemHeight)
     const maxLineY = Math.min(numberOfVisible, total)
     const finalDeltaY = Math.max(contentHeight - listHeight, 0)
     return {

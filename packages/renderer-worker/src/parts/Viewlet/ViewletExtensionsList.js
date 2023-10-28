@@ -6,7 +6,7 @@ import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-
+import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 export const ITEM_HEIGHT = 62
@@ -158,7 +158,7 @@ export const focusIndex = (state, index) => {
   if (index < state.minLineY + 1) {
     // scroll up
     const minLineY = index
-    const maxLineY = minLineY + Math.ceil(listHeight / ITEM_HEIGHT)
+    const maxLineY = minLineY + GetNumberOfVisibleItems.getNumberOfVisibleItems(listHeight, ITEM_HEIGHT)
     const negativeMargin = -minLineY * ITEM_HEIGHT
     return {
       ...state,
@@ -171,7 +171,7 @@ export const focusIndex = (state, index) => {
   if (index >= state.maxLineY - 1) {
     //  scroll down
     const maxLineY = index + 1
-    const minLineY = maxLineY - Math.ceil(listHeight / ITEM_HEIGHT)
+    const minLineY = maxLineY - GetNumberOfVisibleItems.getNumberOfVisibleItems(listHeight, ITEM_HEIGHT)
     const negativeMargin = -minLineY * ITEM_HEIGHT + (listHeight % ITEM_HEIGHT) - ITEM_HEIGHT
     return {
       ...state,
@@ -351,7 +351,7 @@ export const handleContextMenu = async (state, x, y, extensionId) => {
 export const resize = (state, dimensions) => {
   // TODO should just return new state, render function can take old state and new state and return render commands
   const listHeight = dimensions.height
-  const maxLineY = state.minLineY + Math.ceil(listHeight / ITEM_HEIGHT)
+  const maxLineY = state.minLineY + GetNumberOfVisibleItems.getNumberOfVisibleItems(listHeight, ITEM_HEIGHT)
   return {
     newState: {
       ...state,

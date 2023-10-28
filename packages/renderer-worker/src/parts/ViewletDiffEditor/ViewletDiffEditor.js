@@ -1,10 +1,10 @@
+import * as Character from '../Character/Character.js'
 import * as Diff from '../Diff/Diff.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
-import * as Character from '../Character/Character.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -38,7 +38,7 @@ export const loadContent = async (state) => {
 
   const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(height, contentHeight, minimumSliderSize)
 
-  const numberOfVisible = Math.ceil(height / itemHeight)
+  const numberOfVisible = GetNumberOfVisibleItems.getNumberOfVisibleItems(height, itemHeight)
   const maxLineY = Math.min(numberOfVisible, total)
 
   const finalDeltaY = Math.max(contentHeight - height, 0)
