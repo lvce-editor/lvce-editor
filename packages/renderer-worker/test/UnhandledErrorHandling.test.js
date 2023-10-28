@@ -109,7 +109,7 @@ export const parse = (content) => {
 
     at JSON.parse (<anonymous>)
     at parse (/test/packages/renderer-worker/src/parts/Json/Json.js:15:17)
-    at WebSocket.handleMessage (/test/packages/renderer-worker/src/parts/IpcParentWithWebSocket/IpcParentWithWebSocket.js:31:34)`
+    at WebSocket.handleMessage (/test/packages/renderer-worker/src/parts/IpcParentWithWebSocket/IpcParentWithWebSocket.js:31:34)`,
   )
 })
 
@@ -143,6 +143,52 @@ test('handleUnhandledRejection - prevent default', async () => {
     `[renderer-worker] Unhandled Rejection: TypeError: Cannot read properties of undefined (reading 'hovered')
     at handleTabsPointerOut (/test/packages/renderer-worker/src/parts/ViewletMain/ViewletMainHandleTabsPointerOut.js:13:15)
     at executeViewletCommand (/test/packages/renderer-worker/src/parts/Viewlet/Viewlet.js:358:26)
-    at async handleMessageFromRendererProcess (/test/packages/renderer-worker/src/parts/HandleIpc/HandleIpc.js:33:5)`
+    at async handleMessageFromRendererProcess (/test/packages/renderer-worker/src/parts/HandleIpc/HandleIpc.js:33:5)`,
+  )
+})
+
+test('handleUnhandledRejection - bulk replacement error', async () => {
+  const error = new Error()
+  error.message = `VError: Bulk replacement failed: File not found: './test.txt'`
+  error.stack = `Error: VError: Bulk replacement failed: File not found: './test.txt'
+    at constructError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:15:19)
+    at Module.restoreJsonRpcError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:44:27)
+    at Module.unwrapJsonRpcResult (http://localhost:3000/packages/renderer-worker/src/parts/UnwrapJsonRpcResult/UnwrapJsonRpcResult.js:6:47)
+    at Module.invoke (http://localhost:3000/packages/renderer-worker/src/parts/JsonRpc/JsonRpc.js:14:38)
+    at async Module.invoke (http://localhost:3000/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js:45:18)
+    at async applyBulkReplacement (http://localhost:3000/packages/renderer-worker/src/parts/BulkReplacement/BulkReplacement.js:8:3)
+    at async Module.replaceAll (http://localhost:3000/packages/renderer-worker/src/parts/TextSearchReplaceAll/TextSearchReplaceAll.js:6:3)
+    at async Module.replaceAllAndPrompt (http://localhost:3000/packages/renderer-worker/src/parts/ReplaceAllAndPrompt/ReplaceAllAndPrompt.js:28:3)
+    at async replaceAll (http://localhost:3000/packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchReplaceAll.js:6:20)
+    at async executeViewletCommand (http://localhost:3000/packages/renderer-worker/src/parts/Viewlet/Viewlet.js:359:20)`
+  const event = new PromiseRejectionEvent('unhandledrejection', {
+    reason: error,
+  })
+  let _resolve
+  const promise = new Promise((r) => {
+    _resolve = r
+  })
+  // @ts-ignore
+  Ajax.getText.mockImplementation(async () => {
+    setTimeout(() => {
+      _resolve(``)
+    }, 0)
+    return ``
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  UnhandledErrorHandling.handleUnhandledRejection(event)
+  await promise
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(
+    `[renderer-worker] Unhandled Rejection: Error: VError: Bulk replacement failed: File not found: './test.txt'
+    at constructError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:15:19)
+    at async invoke (http://localhost:3000/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js:45:18)
+    at async applyBulkReplacement (http://localhost:3000/packages/renderer-worker/src/parts/BulkReplacement/BulkReplacement.js:8:3)
+    at async replaceAll (http://localhost:3000/packages/renderer-worker/src/parts/TextSearchReplaceAll/TextSearchReplaceAll.js:6:3)
+    at async replaceAllAndPrompt (http://localhost:3000/packages/renderer-worker/src/parts/ReplaceAllAndPrompt/ReplaceAllAndPrompt.js:28:3)
+    at async replaceAll (http://localhost:3000/packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchReplaceAll.js:6:20)
+    at async executeViewletCommand (http://localhost:3000/packages/renderer-worker/src/parts/Viewlet/Viewlet.js:359:20)`,
   )
 })
