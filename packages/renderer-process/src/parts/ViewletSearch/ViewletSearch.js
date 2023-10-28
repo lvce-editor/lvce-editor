@@ -71,9 +71,17 @@ export const create = () => {
   $SearchStatus.role = AriaRoles.Status
   $SearchStatus.className = 'ViewletSearchMessage'
 
+  const $SearchHeaderTopRight = document.createElement('div')
+  $SearchHeaderTopRight.className = 'SearchHeaderTopRight'
+  $SearchHeaderTopRight.append($SearchField)
+
+  const $Div = document.createElement('div')
+  $Div.className = 'SearchHeaderTop'
+  $Div.append($ToggleButton, $SearchHeaderTopRight)
+
   const $SearchHeader = document.createElement('div')
   $SearchHeader.className = 'SearchHeader'
-  $SearchHeader.append($ToggleButton, $SearchField, $SearchStatus)
+  $SearchHeader.append($Div, $SearchStatus)
 
   const $ListItems = document.createElement('div')
   $ListItems.className = 'ListItems'
