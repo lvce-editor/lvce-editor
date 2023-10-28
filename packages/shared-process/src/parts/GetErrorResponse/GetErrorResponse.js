@@ -19,7 +19,10 @@ const getErrorProperty = (error, prettyError) => {
       code: JsonRpcErrorCode.Custom,
       message: `${error}`,
       data: {
-        code: error.code,
+        stack: prettyError.stack,
+        codeFrame: prettyError.codeFrame,
+        type: prettyError.type,
+        code: prettyError.code,
       },
     }
   }
