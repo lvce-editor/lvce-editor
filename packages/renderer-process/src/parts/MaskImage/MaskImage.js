@@ -1,6 +1,16 @@
 export const setMaskImage = ($Element, icon) => {
-  $Element.style.maskImage = `url('${icon}')`
-  $Element.style.webkitMaskImage = `url('${icon}')`
+  if (!icon || icon.includes('/icons')) {
+    $Element.style.maskImage = `url('${icon}')`
+    $Element.style.webkitMaskImage = `url('${icon}')`
+  } else {
+    $Element.classList.add(`MaskIcon${icon}`)
+  }
+}
+export const unsetMaskImage = ($Element, icon) => {
+  if (!icon || icon.includes('/icons')) {
+    return
+  }
+  $Element.classList.remove(`MaskIcon${icon}`)
 }
 
 export const transfer = ($From, $To) => {

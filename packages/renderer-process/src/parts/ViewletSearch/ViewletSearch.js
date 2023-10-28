@@ -54,15 +54,15 @@ export const create = () => {
   $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
   $ViewletSearchInput.name = 'search-value'
 
-  const $ButtonMatchCase = create$SearchFieldButton(UiStrings.MatchCase, Icon.CaseSensitive)
-  const $ButtonMatchWholeWord = create$SearchFieldButton(UiStrings.MatchWholeWord, Icon.WholeWord)
-  const $ButtonUseRegularExpression = create$SearchFieldButton(UiStrings.UseRegularExpression, Icon.Regex)
+  const $ButtonMatchCase = create$SearchFieldButton(UiStrings.MatchCase, 'CaseSensitive')
+  const $ButtonMatchWholeWord = create$SearchFieldButton(UiStrings.MatchWholeWord, 'WholeWord')
+  const $ButtonUseRegularExpression = create$SearchFieldButton(UiStrings.UseRegularExpression, 'Regex')
 
   const $SearchField = document.createElement('div')
   $SearchField.className = 'SearchField'
   $SearchField.append($ViewletSearchInput, $ButtonMatchCase, $ButtonMatchWholeWord, $ButtonUseRegularExpression)
 
-  const $ToggleButton = IconButton.create$Button(UiStrings.ToggleReplace, Icon.ChevronRight)
+  const $ToggleButton = IconButton.create$Button(UiStrings.ToggleReplace, 'ChevronRight')
   $ToggleButton.classList.add('SearchToggleButton')
   const $ToggleButtonIcon = $ToggleButton.firstChild
 
@@ -203,13 +203,15 @@ export const setReplaceExpanded = (state, replaceExpanded) => {
     $SearchField.after($ViewletSearchReplaceInput)
     state.$ViewletSearchReplaceInput = $ViewletSearchReplaceInput
     $ToggleButton.classList.add('SearchToggleButtonExpanded')
-    MaskImage.setMaskImage($ToggleButtonIcon, Icon.ChevronDown)
+    MaskImage.unsetMaskImage($ToggleButtonIcon, 'ChevronRight')
+    MaskImage.setMaskImage($ToggleButtonIcon, 'ChevronDown')
   } else {
     $ToggleButton.ariaExpanded = false
     $ViewletSearchReplaceInput.remove()
     state.$ViewletSearchReplaceInput = undefined
     $ToggleButton.classList.remove('SearchToggleButtonExpanded')
-    MaskImage.setMaskImage($ToggleButtonIcon, Icon.ChevronRight)
+    MaskImage.unsetMaskImage($ToggleButtonIcon, 'ChevronDown')
+    MaskImage.setMaskImage($ToggleButtonIcon, 'ChevronRight')
   }
 }
 

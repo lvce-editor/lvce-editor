@@ -94,3 +94,28 @@
   -webkit-mask-image: url(/icons/close.svg);
   mask-image: url(/icons/close.svg);
 }
+
+.MaskIconCaseSensitive {
+  -webkit-mask-image: url(/icons/case-sensitive.svg);
+  mask-image: url(/icons/case-sensitive.svg);
+}
+
+.MaskIconWholeWord {
+  -webkit-mask-image: url(/icons/whole-word.svg);
+  mask-image: url(/icons/whole-word.svg);
+}
+
+.MaskIconRegex {
+  -webkit-mask-image: url(/icons/regex.svg);
+  mask-image: url(/icons/regex.svg);
+}
+
+.MaskIconChevronRight {
+  -webkit-mask-image: url(/icons/chevron-right.svg);
+  mask-image: url(/icons/chevron-right.svg);
+}
+
+.MaskIconChevronDown {
+  -webkit-mask-image: url(/icons/chevron-down.svg);
+  mask-image: url(/icons/chevron-down.svg);
+}
