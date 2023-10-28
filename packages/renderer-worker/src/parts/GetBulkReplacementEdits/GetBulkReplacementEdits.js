@@ -1,7 +1,10 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
+import * as Assert from '../Assert/Assert.js'
 
-export const getBulkReplacementEdits = (matches) => {
+export const getBulkReplacementEdits = (workspacePath, matches) => {
+  Assert.string(workspacePath)
+  Assert.array(matches)
   const files = []
   const ranges = []
   let currentRanges = []
@@ -11,7 +14,8 @@ export const getBulkReplacementEdits = (matches) => {
       case TextSearchResultType.File:
         ranges.push(currentRanges.length)
         Arrays.push(ranges, currentRanges)
-        files.push(title || text) // TODO
+        const absolutePath = `${workspacePath}/${text.slice(2)}`
+        files.push(absolutePath) // TODO
         currentRanges = []
         break
       case TextSearchResultType.Match:

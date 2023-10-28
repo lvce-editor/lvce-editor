@@ -33,6 +33,9 @@ jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
     getAbsolutePath: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    state: {
+      workspacePath: '',
+    },
   }
 })
 
