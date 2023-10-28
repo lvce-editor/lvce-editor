@@ -9,8 +9,6 @@ export const getExtensionDetailVirtualDom = (extensionDetail) => {
       className: 'ExtensionDetailIcon',
       alt: '',
       draggable: false,
-      width: 150,
-      height: 150,
       childCount: 0,
       src: iconSrc,
     },
