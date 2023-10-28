@@ -13,8 +13,11 @@ const UiStrings = {
   Replace: 'Replace',
   ConfirmReplaceAll: 'Replace All?',
   ConfirmReplaceOneOccurrenceInOneFile: "Replace 1 occurrence across 1 file with '{PH1}'",
+  ConfirmReplaceOneOccurrenceInOneFileNoValue: 'Replace 1 occurrence across 1 file',
   ConfirmReplaceManyOccurrencesInOneFile: "Replace {PH1} occurrences across 1 file with '{PH2}'",
+  ConfirmReplaceManyOccurrencesInOneFileNoValue: 'Replace {PH1} occurrences across 1 file',
   ConfirmReplaceManyOccurrencesInManyFiles: "Replace {PH1} occurrences across {PH2} files with '{PH3}'",
+  ConfirmReplaceManyOccurrencesInManyFilesNoValue: 'Replace {PH1} occurrences across {PH2} files',
   ReplacedOneOccurrenceInOneFile: "Replaced 1 occurrence across 1 file with '{PH1}'",
   ReplacedManyOccurrencesInOneFile: "Replaced {PH1} occurrences across 1 file with '{PH2}'",
   ReplacedManyOccurrencesInManyFiles: "Replaced {PH1} occurrences across {PH2} files with '{PH3}'",
@@ -47,10 +50,20 @@ export const confirmReplaceOneOccurrenceInOneFile = (replacement) => {
   })
 }
 
+export const confirmReplaceOneOccurrenceInOneFileNoValue = () => {
+  return I18nString.i18nString(UiStrings.ConfirmReplaceOneOccurrenceInOneFileNoValue)
+}
+
 export const confirmReplaceManyOccurrencesInOneFile = (matchCount, replacement) => {
   return I18nString.i18nString(UiStrings.ConfirmReplaceManyOccurrencesInOneFile, {
     PH1: matchCount,
     PH2: replacement,
+  })
+}
+
+export const confirmReplaceManyOccurrencesInOneFileNoValue = (matchCount) => {
+  return I18nString.i18nString(UiStrings.ConfirmReplaceManyOccurrencesInOneFileNoValue, {
+    PH1: matchCount,
   })
 }
 
@@ -62,6 +75,15 @@ export const confirmReplaceManyOccurrencesInManyFiles = (matchCount, fileCount, 
     PH1: matchCount,
     PH2: fileCount,
     PH3: replacement,
+  })
+}
+
+export const confirmReplaceManyOccurrencesInManyFilesNoValue = (matchCount, fileCount) => {
+  Assert.number(matchCount)
+  Assert.number(fileCount)
+  return I18nString.i18nString(UiStrings.ConfirmReplaceManyOccurrencesInManyFilesNoValue, {
+    PH1: matchCount,
+    PH2: fileCount,
   })
 }
 
