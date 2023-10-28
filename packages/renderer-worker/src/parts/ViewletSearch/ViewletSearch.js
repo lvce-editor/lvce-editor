@@ -1,10 +1,8 @@
 import * as Compare from '../Compare/Compare.js'
 import * as Height from '../Height/Height.js'
-import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
-import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.js'
 
@@ -87,21 +85,9 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
-const updateIcon = (item) => {
-  switch (item.type) {
-    case TextSearchResultType.File:
-      return {
-        ...item,
-        icon: IconTheme.getFileIcon({ name: item.text }),
-      }
-    default:
-      return item
-  }
-}
-
 export const handleIconThemeChange = (state) => {
   const { items } = state
-  const newItems = items.map(updateIcon)
+  const newItems = [...items]
   return {
     ...state,
     items: newItems,
