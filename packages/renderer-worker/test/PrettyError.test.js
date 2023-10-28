@@ -1260,3 +1260,68 @@ export const parse = (content) => {
   expect(Ajax.getText).toHaveBeenCalledTimes(1)
   expect(Ajax.getText).toHaveBeenCalledWith('/test/packages/renderer-worker/src/parts/Json/Json.js')
 })
+
+test('prepare - bulk replacement error', async () => {
+  const error = new Error()
+  error.message = `VError: Bulk replacement failed: File not found: './test.txt'`
+  error.stack = `Error: VError: Bulk replacement failed: File not found: './test.txt'
+    at constructError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:15:19)
+    at Module.restoreJsonRpcError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:44:27)
+    at Module.unwrapJsonRpcResult (http://localhost:3000/packages/renderer-worker/src/parts/UnwrapJsonRpcResult/UnwrapJsonRpcResult.js:6:47)
+    at Module.invoke (http://localhost:3000/packages/renderer-worker/src/parts/JsonRpc/JsonRpc.js:14:38)
+    at async Module.invoke (http://localhost:3000/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js:45:18)
+    at async applyBulkReplacement (http://localhost:3000/packages/renderer-worker/src/parts/BulkReplacement/BulkReplacement.js:8:3)
+    at async Module.replaceAll (http://localhost:3000/packages/renderer-worker/src/parts/TextSearchReplaceAll/TextSearchReplaceAll.js:6:3)
+    at async Module.replaceAllAndPrompt (http://localhost:3000/packages/renderer-worker/src/parts/ReplaceAllAndPrompt/ReplaceAllAndPrompt.js:28:3)
+    at async replaceAll (http://localhost:3000/packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchReplaceAll.js:6:20)
+    at async executeViewletCommand (http://localhost:3000/packages/renderer-worker/src/parts/Viewlet/Viewlet.js:359:20)`
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    return `import * as GetErrorConstructor from '../GetErrorConstructor/GetErrorConstructor.js'
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
+import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
+import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as Character from '../Character/Character.js'
+
+const constructError = (message, type, name) => {
+  const ErrorConstructor = GetErrorConstructor.getErrorConstructor(message, type)
+  if (ErrorConstructor === DOMException && name) {
+    return new ErrorConstructor(message, name)
+  }
+  if (ErrorConstructor === Error) {
+    const error = new Error(message)
+    if (name && name !== 'VError') {
+      error.name = name
+    }
+    return error
+  }
+  return new ErrorConstructor(message)
+}
+`
+  })
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    _error: error,
+    codeFrame: `  13 |   }
+  14 |   if (ErrorConstructor === Error) {
+> 15 |     const error = new Error(message)
+     |                   ^
+  16 |     if (name && name !== 'VError') {
+  17 |       error.name = name
+  18 |     }`,
+    message: `VError: Bulk replacement failed: File not found: './test.txt'`,
+    stack: `    at constructError (http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js:15:19)
+    at async invoke (http://localhost:3000/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js:45:18)
+    at async applyBulkReplacement (http://localhost:3000/packages/renderer-worker/src/parts/BulkReplacement/BulkReplacement.js:8:3)
+    at async replaceAll (http://localhost:3000/packages/renderer-worker/src/parts/TextSearchReplaceAll/TextSearchReplaceAll.js:6:3)
+    at async replaceAllAndPrompt (http://localhost:3000/packages/renderer-worker/src/parts/ReplaceAllAndPrompt/ReplaceAllAndPrompt.js:28:3)
+    at async replaceAll (http://localhost:3000/packages/renderer-worker/src/parts/ViewletSearch/ViewletSearchReplaceAll.js:6:20)
+    at async executeViewletCommand (http://localhost:3000/packages/renderer-worker/src/parts/Viewlet/Viewlet.js:359:20)`,
+    type: 'Error',
+  })
+  expect(Logger.warn).not.toHaveBeenCalled()
+  expect(Ajax.getText).toHaveBeenCalledTimes(1)
+  expect(Ajax.getText).toHaveBeenCalledWith('http://localhost:3000/packages/renderer-worker/src/parts/RestoreJsonRpcError/RestoreJsonRpcError.js')
+})
