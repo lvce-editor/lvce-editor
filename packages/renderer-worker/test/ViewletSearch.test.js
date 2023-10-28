@@ -59,7 +59,7 @@ test('loadContent - restore value', async () => {
   expect(
     await ViewletSearch.loadContent(state, {
       value: 'test search',
-    })
+    }),
   ).toMatchObject({
     value: 'test search',
   })
@@ -123,7 +123,7 @@ test('setValue - one match in one file', async () => {
         lineNumber: 0,
       },
     ],
-    message: 'Found 1 result in 1 file',
+    message: '1 result in 1 file',
   })
 })
 
@@ -180,7 +180,7 @@ test('setValue - two matches in one file', async () => {
         lineNumber: 0,
       },
     ],
-    message: 'Found 2 results in 1 file',
+    message: '2 results in 1 file',
   })
 })
 
@@ -251,7 +251,7 @@ test('setValue - two matches in two files', async () => {
         lineNumber: 0,
       },
     ],
-    message: 'Found 2 results in 2 files',
+    message: '2 results in 2 files',
   })
 })
 
