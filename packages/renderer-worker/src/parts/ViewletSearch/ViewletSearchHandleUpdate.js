@@ -5,24 +5,7 @@ import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as ViewletSearchStatusMessage from './ViewletSearchStatusMessage.js'
-
-const getResultCounts = (results) => {
-  let resultCount = 0
-  let fileCount = 0
-  for (const result of results) {
-    switch (result.type) {
-      case TextSearchResultType.File:
-        fileCount++
-        break
-      case TextSearchResultType.Match:
-        resultCount++
-        break
-      default:
-        break
-    }
-  }
-  return { fileCount, resultCount }
-}
+import * as GetTextSearchResultCounts from '../GetTextSearchResultCounts/GetTextSearchResultCounts.js'
 
 export const handleUpdate = async (state, update) => {
   const partialNewState = { ...state, ...update }
@@ -48,7 +31,7 @@ export const handleUpdate = async (state, update) => {
     if (!Array.isArray(results)) {
       throw new Error(`results must be of type array`)
     }
-    const { fileCount, resultCount } = getResultCounts(results)
+    const { fileCount, resultCount } = GetTextSearchResultCounts.getTextSearchResultCounts(results)
     // const displayResults = toDisplayResults(results, itemHeight, resultCount, value)
     const message = ViewletSearchStatusMessage.getStatusMessage(resultCount, fileCount)
     const total = results.length
