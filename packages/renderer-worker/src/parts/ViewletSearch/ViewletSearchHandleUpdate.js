@@ -1,11 +1,10 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as GetTextSearchResultCounts from '../GetTextSearchResultCounts/GetTextSearchResultCounts.js'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
-import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as ViewletSearchStatusMessage from './ViewletSearchStatusMessage.js'
-import * as GetTextSearchResultCounts from '../GetTextSearchResultCounts/GetTextSearchResultCounts.js'
 
 export const handleUpdate = async (state, update) => {
   const partialNewState = { ...state, ...update }
