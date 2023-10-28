@@ -43,7 +43,7 @@ test('dismissItem - remove one match', () => {
     listFocusedIndex: 2,
     matchCount: 1,
     fileCount: 1,
-    message: 'Found 1 result in 1 file',
+    message: '1 result in 1 file',
   })
 })
 
@@ -86,7 +86,7 @@ test('dismissItem - remove one file', () => {
     listFocusedIndex: 1,
     matchCount: 1,
     fileCount: 1,
-    message: 'Found 1 result in 1 file',
+    message: '1 result in 1 file',
   })
 })
 
@@ -129,7 +129,7 @@ test('dismissItem - remove first file', () => {
     listFocusedIndex: 0,
     matchCount: 1,
     fileCount: 1,
-    message: 'Found 1 result in 1 file',
+    message: '1 result in 1 file',
   })
 })
 
@@ -236,6 +236,6 @@ test('dismissItem - remove one file in the middle', () => {
     listFocusedIndex: 2,
     matchCount: 2,
     fileCount: 2,
-    message: 'Found 2 results in 2 files',
+    message: '2 results in 2 files',
   })
 })

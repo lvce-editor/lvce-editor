@@ -6,9 +6,9 @@ import * as I18nString from '../I18NString/I18NString.js'
  */
 const UiStrings = {
   NoResults: 'No results found',
-  Oneresult: 'Found 1 result in 1 file',
-  ManyResultsInOneFile: `Found {PH1} results in 1 file`,
-  ManyResultsInManyFiles: `Found {PH1} results in {PH2} files`,
+  Oneresult: '1 result in 1 file',
+  ManyResultsInOneFile: `{PH1} results in 1 file`,
+  ManyResultsInManyFiles: `{PH1} results in {PH2} files`,
   ReplaceAll: 'Replace All',
   Replace: 'Replace',
   ConfirmReplaceAll: 'Replace All?',
