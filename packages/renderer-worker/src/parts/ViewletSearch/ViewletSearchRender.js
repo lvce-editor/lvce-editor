@@ -45,17 +45,6 @@ const renderScrollBar = {
   },
 }
 
-// const renderHeight = {
-//   isEqual(oldState, newState) {
-//     return oldState.items.length === newState.items.length
-//   },
-//   apply(oldState, newState) {
-//     const { itemHeight } = newState
-//     const contentHeight = newState.items.length * itemHeight
-//     return [/* method */ RenderMethod.SetContentHeight, /* contentHeight */ contentHeight]
-//   },
-// }
-
 const renderMessage = {
   isEqual(oldState, newState) {
     return oldState.message === newState.message
