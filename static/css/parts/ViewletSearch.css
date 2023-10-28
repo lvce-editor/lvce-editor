@@ -15,8 +15,8 @@
 .SearchHeaderTopRight {
   display: flex;
   flex-direction: column;
-  /* contain: strict; */
   flex: 1;
+  contain: content;
 }
 
 .SearchToggleButton {
@@ -51,6 +51,7 @@
   display: flex;
   border: 1px solid rgb(55, 65, 63);
   background: rgb(36, 41, 42);
+  contain: content;
 }
 
 .SearchFieldReplace {
@@ -68,6 +69,7 @@
   height: 24px;
   contain: strict;
   line-height: 24px;
+  width: 100%;
 }
 
 .SearchFieldInput {
