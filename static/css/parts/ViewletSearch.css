@@ -22,9 +22,9 @@
 .SearchToggleButton {
   background: transparent;
   border: none;
-  flex: 1;
   padding: 0;
   position: relative;
+  height: auto;
 }
 
 .SearchToggleButton:hover {
