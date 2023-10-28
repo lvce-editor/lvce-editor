@@ -23,7 +23,7 @@ const renderItems = {
       newState.value,
       newState.minLineY,
       newState.maxLineY,
-      newState.replacement
+      newState.replacement,
     )
     const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(displayResults)
     return ['setDom', dom]
@@ -39,7 +39,7 @@ const renderScrollBar = {
       newState.deltaY,
       newState.finalDeltaY,
       newState.height - newState.headerHeight,
-      newState.scrollBarHeight
+      newState.scrollBarHeight,
     )
     return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
   },
