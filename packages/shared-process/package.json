@@ -33,7 +33,7 @@
     "is-object": "^1.0.2",
     "lines-and-columns": "^2.0.3",
     "p-queue": "^7.4.1",
-    "parse-json": "^7.1.0",
+    "parse-json": "^7.1.1",
     "tar-fs": "^3.0.4",
     "ws": "^8.14.2",
     "xdg-basedir": "^5.1.0"
