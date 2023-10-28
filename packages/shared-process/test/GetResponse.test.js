@@ -39,6 +39,13 @@ test('getResponse - error - ENOENT', async () => {
   const execute = () => {
     throw new NodeError(ErrorCodes.ENOENT)
   }
+  // @ts-ignore
+  PrettyError.prepare.mockImplementation((error) => {
+    return {
+      message: error.message,
+      code: error.code,
+    }
+  })
   expect(
     await GetResponse.getResponse(
       {
@@ -48,8 +55,8 @@ test('getResponse - error - ENOENT', async () => {
         id: 1,
       },
       ipc,
-      execute
-    )
+      execute,
+    ),
   ).toEqual({
     error: {
       code: -32001,
@@ -96,8 +103,8 @@ test('getResponse - error - search error', async () => {
         id: 1,
       },
       ipc,
-      execute
-    )
+      execute,
+    ),
   ).toEqual({
     error: {
       code: -32001,
