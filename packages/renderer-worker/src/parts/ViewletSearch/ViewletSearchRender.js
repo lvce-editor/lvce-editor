@@ -23,7 +23,7 @@ const renderItems = {
       newState.value,
       newState.minLineY,
       newState.maxLineY,
-      newState.replacement
+      newState.replacement,
     )
     const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(displayResults)
     return ['setDom', dom]
@@ -39,22 +39,11 @@ const renderScrollBar = {
       newState.deltaY,
       newState.finalDeltaY,
       newState.height - newState.headerHeight,
-      newState.scrollBarHeight
+      newState.scrollBarHeight,
     )
     return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
   },
 }
-
-// const renderHeight = {
-//   isEqual(oldState, newState) {
-//     return oldState.items.length === newState.items.length
-//   },
-//   apply(oldState, newState) {
-//     const { itemHeight } = newState
-//     const contentHeight = newState.items.length * itemHeight
-//     return [/* method */ RenderMethod.SetContentHeight, /* contentHeight */ contentHeight]
-//   },
-// }
 
 const renderMessage = {
   isEqual(oldState, newState) {
