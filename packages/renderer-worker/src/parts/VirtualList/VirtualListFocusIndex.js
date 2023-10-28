@@ -1,8 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
+import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
 
 const focusIndexScrollUp = (state, index, listHeight, itemHeight, itemsLength) => {
   const newMinLineY = index
-  const fittingItems = Math.ceil(listHeight / itemHeight)
+  const fittingItems = GetNumberOfVisibleItems.getNumberOfVisibleItems(listHeight, itemHeight)
   const newMaxLineY = Math.min(newMinLineY + fittingItems, itemsLength)
   const newDeltaY = newMinLineY * itemHeight
   return {
@@ -17,7 +18,7 @@ const focusIndexScrollUp = (state, index, listHeight, itemHeight, itemsLength) =
 
 const focusIndexScrollDown = (state, index, listHeight, itemHeight, itemsLength) => {
   const newMaxLineY = Math.min(index + 1, itemsLength)
-  const fittingItems = Math.ceil(listHeight / itemHeight)
+  const fittingItems = GetNumberOfVisibleItems.getNumberOfVisibleItems(listHeight, itemHeight)
   const newMinLineY = Math.max(newMaxLineY - fittingItems, 0)
   const newDeltaY = itemsLength < fittingItems ? 0 : newMinLineY * itemHeight - (listHeight % itemHeight) + itemHeight
   return {

@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
+import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
 
 export const setDeltaY = (state, value) => {
   Assert.object(state)
@@ -12,7 +13,7 @@ export const setDeltaY = (state, value) => {
   }
   // TODO when it only moves by one px, extensions don't need to be rerendered, only negative margin
   const minLineY = Math.floor(newDeltaY / itemHeight)
-  const maxLineY = minLineY + Math.ceil(listHeight / itemHeight)
+  const maxLineY = minLineY + GetNumberOfVisibleItems.getNumberOfVisibleItems(listHeight, itemHeight)
   return {
     ...state,
     deltaY: newDeltaY,

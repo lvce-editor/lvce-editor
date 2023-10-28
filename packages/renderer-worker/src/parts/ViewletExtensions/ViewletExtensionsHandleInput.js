@@ -1,5 +1,6 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as GetFinalDeltaY from '../GetFinalDeltaY/GetFinalDeltaY.js'
+import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SearchExtensions from '../SearchExtensions/SearchExtensions.js'
 import { getListHeight } from './ViewletExtensionsShared.js'
@@ -30,7 +31,7 @@ export const handleInput = async (state, value) => {
     const total = items.length
     const contentHeight = total * itemHeight
     const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(height, contentHeight, minimumSliderSize)
-    const numberOfVisible = Math.ceil(listHeight / itemHeight)
+    const numberOfVisible = GetNumberOfVisibleItems.getNumberOfVisibleItems(listHeight, itemHeight)
     const maxLineY = Math.min(numberOfVisible, total)
     const finalDeltaY = GetFinalDeltaY.getFinalDeltaY(listHeight, itemHeight, total)
     return {
