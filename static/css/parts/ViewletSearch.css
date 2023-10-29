@@ -4,6 +4,7 @@
 }
 
 .SearchHeader {
+  padding-top: 5px;
 }
 
 .SearchHeaderTop {
@@ -25,6 +26,8 @@
   padding: 0;
   position: relative;
   height: auto;
+  width: 16px;
+  margin: 0 2px;
 }
 
 .SearchToggleButton:hover {
