@@ -1,6 +1,5 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as Icon from '../Icon/Icon.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 const getAriaSelected = (isTab, isSelected) => {
@@ -76,7 +75,7 @@ const createActivityBarItem = (item) => {
       {
         type: VirtualDomElements.Div,
         className: 'MaskIcon',
-        maskImage: Icon.Progress,
+        maskImage: 'Progress',
       },
     ]
   }

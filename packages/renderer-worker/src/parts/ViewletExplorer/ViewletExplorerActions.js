@@ -1,5 +1,4 @@
 import * as ActionType from '../ActionType/ActionType.js'
-import * as Icon from '../Icon/Icon.js'
 
 /**
  * @enum {string}
