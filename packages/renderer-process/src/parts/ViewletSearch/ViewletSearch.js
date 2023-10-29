@@ -226,8 +226,11 @@ export const setReplaceExpanded = (state, replaceExpanded) => {
 export const setButtonsChecked = (state, matchWholeWord, useRegularExpression, matchCase) => {
   const { $ButtonMatchWholeWord, $ButtonUseRegularExpression, $ButtonMatchCase } = state
   $ButtonMatchWholeWord.ariaChecked = matchWholeWord
+  $ButtonMatchWholeWord.classList.toggle('SearchFieldButtonChecked', matchWholeWord)
   $ButtonUseRegularExpression.ariaChecked = useRegularExpression
+  $ButtonUseRegularExpression.classList.toggle('SearchFieldButtonChecked', useRegularExpression)
   $ButtonMatchCase.ariaChecked = matchCase
+  $ButtonMatchCase.classList.toggle('SearchFieldButtonChecked', matchCase)
 }
 
 export * from '../ViewletScrollable/ViewletScrollable.js'

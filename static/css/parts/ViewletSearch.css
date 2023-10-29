@@ -93,7 +93,7 @@
   background: rgba(90, 93, 94, 0.31);
 }
 
-.SearchFieldButton[aria-checked='true'] {
+.SearchFieldButtonChecked {
   border: 1px solid #a03f9b;
 }
 
