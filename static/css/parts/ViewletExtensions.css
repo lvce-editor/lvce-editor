@@ -35,7 +35,7 @@
 
 .ExtensionHeader {
   display: grid;
-  padding: 5px 12px 6px 16px;
+  padding: 5px 12px 6px 20px;
 }
 
 .ExtensionInput {
@@ -62,7 +62,7 @@
 .ViewletExtensionMessage {
   color: rgb(188, 190, 190);
   font-size: 13px;
-  padding: 5px 9px 5px 16px;
+  padding: 5px 9px 5px 20px;
 }
 
 .ExtensionListWrapper {
