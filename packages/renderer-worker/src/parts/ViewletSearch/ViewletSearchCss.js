@@ -7,5 +7,5 @@ export const Css = [
   '/css/parts/TreeItem.css',
   '/css/parts/ScrollBar.css',
   '/css/parts/FileIcon.css',
-  '/css/parts/MultilineInputBox.css',
+  '/css/parts/InputBox.css',
 ]
