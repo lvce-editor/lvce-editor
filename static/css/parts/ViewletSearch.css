@@ -61,24 +61,6 @@
   margin-top: 6px;
 }
 
-/* .SearchField */
-
-.SearchFieldInput {
-  flex: 1;
-  resize: none;
-  color: var(--InputBoxForeground);
-  border: none;
-  font-size: 13px;
-  height: 24px;
-  contain: strict;
-  line-height: 24px;
-  width: 100%;
-}
-
-.SearchFieldInput {
-  background: transparent;
-}
-
 .SearchFieldButton {
   position: relative;
   background: transparent;
