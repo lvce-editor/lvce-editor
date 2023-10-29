@@ -119,3 +119,48 @@
   -webkit-mask-image: url(/icons/chevron-down.svg);
   mask-image: url(/icons/chevron-down.svg);
 }
+
+.MaskIconRefresh {
+  -webkit-mask-image: url(/icons/refresh.svg);
+  mask-image: url(/icons/refresh.svg);
+}
+
+.MaskIconClearAll {
+  -webkit-mask-image: url(/icons/clear-all.svg);
+  mask-image: url(/icons/clear-all.svg);
+}
+
+.MaskIconNewFile {
+  -webkit-mask-image: url(/icons/new-file.svg);
+  mask-image: url(/icons/new-file.svg);
+}
+
+.MaskIconNewFolder {
+  -webkit-mask-image: url(/icons/new-file.svg);
+  mask-image: url(/icons/new-file.svg);
+}
+
+.MaskIconListFlat {
+  -webkit-mask-image: url(/icons/list-flat.svg);
+  mask-image: url(/icons/list-flat.svg);
+}
+
+.MaskIconCollapseAll {
+  -webkit-mask-image: url(/icons/collapse-all.svg);
+  mask-image: url(/icons/collapse-all.svg);
+}
+
+.MaskIconFilter {
+  -webkit-mask-image: url(/icons/filter.svg);
+  mask-image: url(/icons/filter.svg);
+}
+
+.MaskIconBlank {
+  -webkit-mask-image: url(/icons/blank.svg);
+  mask-image: url(/icons/blank.svg);
+}
+
+.MaskIconCheck {
+  -webkit-mask-image: url(/icons/check.svg);
+  mask-image: url(/icons/check.svg);
+}
