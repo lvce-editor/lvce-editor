@@ -1,6 +1,7 @@
 import { runServer } from 'verdaccio'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
+import * as Promises from '../Promises/Promises.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Root from '../Root/Root.js'
 
@@ -44,9 +45,9 @@ export const start = async () => {
       level: 'http',
     },
   })
-  await new Promise((resolve) => {
-    app.listen(4873, (event) => {
-      resolve(undefined)
-    })
+  const { resolve, promise } = Promises.withResolvers()
+  app.listen(4873, (event) => {
+    resolve(undefined)
   })
+  await promise
 }
