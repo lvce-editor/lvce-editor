@@ -1,7 +1,6 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as Icon from '../Icon/Icon.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletActivityBarStrings from '../ViewletActivityBar/ViewletActivityBarStrings.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const getActivityBarItems = () => {
   return [

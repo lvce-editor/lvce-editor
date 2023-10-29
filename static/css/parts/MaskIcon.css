@@ -164,3 +164,21 @@
   -webkit-mask-image: url(/icons/check.svg);
   mask-image: url(/icons/check.svg);
 }
+
+.MaskIconEllipsis {
+  -webkit-mask-image: url(/icons/ellipsis.svg);
+  mask-image: url(/icons/ellipsis.svg);
+}
+
+.MaskIconAdd {
+  -webkit-mask-image: url(/icons/add.svg);
+  mask-image: url(/icons/add.svg);
+}
+.MaskIconTrash {
+  -webkit-mask-image: url(/icons/trash.svg);
+  mask-image: url(/icons/trash.svg);
+}
+.MaskIconSplitHorizontal {
+  -webkit-mask-image: url(/icons/split-horizontal.svg);
+  mask-image: url(/icons/split-horizontal.svg);
+}

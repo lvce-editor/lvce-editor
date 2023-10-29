@@ -1,4 +1,3 @@
-import * as Icon from '../Icon/Icon.js'
 import * as ActionType from '../ActionType/ActionType.js'
 
 export const getActions = () => {
@@ -10,12 +9,12 @@ export const getActions = () => {
     {
       type: ActionType.Button,
       id: 'Collapse All',
-      icon: Icon.CollapseAll,
+      icon: 'CollapseAll',
     },
     {
       type: ActionType.Button,
       id: 'View as table',
-      icon: Icon.ListFlat,
+      icon: 'ListFlat',
     },
   ]
 }
