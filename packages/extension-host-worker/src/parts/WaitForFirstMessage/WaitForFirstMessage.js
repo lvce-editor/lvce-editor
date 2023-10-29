@@ -1,13 +1,15 @@
+import * as Promises from '../Promises/Promises.js'
+
 export const waitForFirstMessage = async (port) => {
-  const event = await new Promise((resolve) => {
-    const cleanup = (value) => {
-      port.onmessage = null
-      resolve(value)
-    }
-    const handleMessage = (event) => {
-      cleanup(event)
-    }
-    port.onmessage = handleMessage
-  })
+  const { resolve, promise } = Promises.withResolvers()
+  const cleanup = (value) => {
+    port.onmessage = null
+    resolve(value)
+  }
+  const handleMessage = (event) => {
+    cleanup(event)
+  }
+  port.onmessage = handleMessage
+  const event = await promise
   return event.data
 }
