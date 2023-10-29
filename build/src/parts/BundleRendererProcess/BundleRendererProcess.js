@@ -36,7 +36,13 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       occurrence: `PLATFORM`,
       replacement: `'${platform}'`,
     })
-
+    if (platform === 'electron') {
+      await Replace.replace({
+        path: `${cachePath}/src/parts/IsFirefox/IsFirefox.js`,
+        occurrence: `export const isFirefox = getIsFirefox()`,
+        replacement: `export const isFirefox = false`,
+      })
+    }
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererProcessMain.js`,
