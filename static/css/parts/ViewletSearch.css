@@ -10,7 +10,7 @@
 .SearchHeaderTop {
   display: flex;
   contain: content;
-  /* height: 58px; */
+  padding-right: 12px;
 }
 
 .SearchHeaderTopRight {
