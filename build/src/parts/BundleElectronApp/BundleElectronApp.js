@@ -284,7 +284,6 @@ const copyStaticFiles = async ({ arch }) => {
     replacement: ``,
   })
   await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/manifest.json`)
-  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/serviceWorker.js`)
   await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/images`)
 }
 
