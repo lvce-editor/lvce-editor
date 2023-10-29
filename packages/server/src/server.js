@@ -349,14 +349,6 @@ const createApp = () => {
 
 const app = createApp()
 
-const serveGitHub = async (req, res) => {
-  try {
-    await pipeline(createReadStream(join(ROOT, 'static', 'index.html')), res)
-  } catch (error) {
-    console.info('failed to send request', error)
-  }
-}
-
 const getTestPath = () => {
   if (process.env.TEST_PATH) {
     const testPath = process.env.TEST_PATH
@@ -545,7 +537,6 @@ const serveConfig = async (req, res, next) => {
   next()
 }
 
-app.use('/github', serveGitHub, serve404())
 app.use('/remote', serveStatic('', '/remote'), serve404())
 app.use('/tests', serveTests, serve404())
 app.use('/config', serveConfig, serve404())
