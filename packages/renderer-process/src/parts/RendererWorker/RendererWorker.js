@@ -4,7 +4,6 @@ import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
 import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.js'
-import * as Platform from '../Platform/Platform.js'
 import * as RendererWorkerUrl from '../RendererWorkerUrl/RendererWorkerUrl.js'
 import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
