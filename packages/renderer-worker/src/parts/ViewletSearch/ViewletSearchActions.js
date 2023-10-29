@@ -1,5 +1,4 @@
 import * as ActionType from '../ActionType/ActionType.js'
-import * as Icon from '../Icon/Icon.js'
 
 /**
  * @enum {string}
@@ -17,29 +16,29 @@ export const getActions = () => {
     {
       type: ActionType.Button,
       id: UiStrings.Refresh,
-      icon: Icon.Refresh,
+      icon: 'Refresh',
       command: 'refresh',
     },
     {
       type: ActionType.Button,
       id: UiStrings.ClearSearchResults,
-      icon: Icon.ClearAll,
+      icon: 'ClearAll',
       command: 'clearSearchResults',
     },
     {
       type: ActionType.Button,
       id: UiStrings.NewSearchEditor,
-      icon: Icon.NewFile,
+      icon: 'NewFile',
     },
     {
       type: ActionType.Button,
       id: UiStrings.ViewAsTree,
-      icon: Icon.ListFlat,
+      icon: 'ListFlat',
     },
     {
       type: ActionType.Button,
       id: UiStrings.CollapseAll,
-      icon: Icon.CollapseAll,
+      icon: 'CollapseAll',
     },
   ]
 }

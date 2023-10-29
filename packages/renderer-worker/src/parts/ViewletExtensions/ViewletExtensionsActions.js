@@ -15,17 +15,17 @@ export const getActions = () => {
     {
       type: ActionType.Button,
       id: UiStrings.Filter,
-      icon: Icon.Filter,
+      icon: 'Filter',
     },
     {
       type: ActionType.Button,
       id: UiStrings.Refresh,
-      icon: Icon.Refresh,
+      icon: 'Refresh',
     },
     {
       type: ActionType.Button,
       id: UiStrings.ClearExtensionSearchResults,
-      icon: Icon.ClearAll,
+      icon: 'ClearAll',
       command: 'Extensions.clearSearchResults',
     },
   ]
