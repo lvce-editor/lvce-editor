@@ -38,6 +38,7 @@ const copyMetaFiles = async ({ arch, product, version }) => {
     '@@URLPROTOCOL@@': product.applicationName,
     '@@SUMMARY@@': product.linuxSummary,
     '@@KEYWORDS@@': `${product.applicationName};`,
+    '@@APPLICATION_NAME@@': product.applicationName,
   })
 }
 

@@ -28,6 +28,7 @@ const copyMetaFiles = async ({ arch, product }) => {
     '@@URLPROTOCOL@@': product.applicationName,
     '@@SUMMARY@@': product.linuxSummary,
     '@@KEYWORDS@@': `${product.applicationName};`,
+    '@@APPLICATION_NAME@@': product.applicationName,
   })
   await Template.write(
     'linux_app_data_xml',
@@ -38,7 +39,7 @@ const copyMetaFiles = async ({ arch, product }) => {
       '@@LICENSE@@': product.licenseName,
       '@@HOMEPAGE@@': product.homePage,
       '@@SUMMARY@@': product.linuxSummary,
-    }
+    },
   )
   await Copy.copyFile({
     from: 'build/files/icon.png',

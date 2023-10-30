@@ -11,3 +11,8 @@ StartupWMClass=@@NAME_LONG@@
 Categories=Utility;TextEditor;Development;IDE;
 Actions=new-empty-window;
 Keywords=@@KEYWORDS@@
+
+[Desktop Action new-empty-window]
+Name=New Empty Window
+Exec=/usr/lib/@@APPLICATION_NAME@@/@@APPLICATION_NAME@@ --new-window %F
+Icon=@@APPLICATION_NAME@@

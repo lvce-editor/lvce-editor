@@ -54,6 +54,7 @@ const copyMetaFiles = async ({ product }) => {
     '@@URL_PROTOCOL@@': product.applicationName,
     '@@SUMMARY@@': product.linuxSummary,
     '@@KEYWORDS@@': `${product.applicationName};`,
+    '@@APPLICATION_NAME@@': product.applicationName,
   })
   await Template.write('bash_completion', `build/.tmp/arch-linux/${arch}/usr/share/bash-completion/completions/${product.applicationName}`, {
     '@@APPNAME@@': product.applicationName,
