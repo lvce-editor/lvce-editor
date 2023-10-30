@@ -56,6 +56,7 @@ const copyMetaFiles = async ({ product, version, debArch }) => {
     '@@URL_PROTOCOL@@': product.applicationName,
     '@@SUMMARY@@': product.linuxSummary,
     '@@KEYWORDS@@': `${product.applicationName};`,
+    '@@APPLICATION_NAME@@': product.applicationName,
   })
   await Template.write('bash_completion', `build/.tmp/linux/deb/${debArch}/app/usr/share/bash-completion/completions/${product.applicationName}`, {
     '@@APPNAME@@': product.applicationName,
