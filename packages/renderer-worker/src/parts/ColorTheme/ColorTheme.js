@@ -3,6 +3,7 @@ import * as Command from '../Command/Command.js'
 import * as Css from '../Css/Css.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as GetColorThemeJson from '../GetColorThemeJson/GetColorThemeJson.js'
+import * as GetMetaThemeColor from '../GetMetaThemeColor/GetMetaThemeColor.js'
 import * as Meta from '../Meta/Meta.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -25,7 +26,7 @@ export const getColorThemeCss = async (colorThemeId, colorThemeJson) => {
   const colorThemeCss = await Command.execute(
     /* ColorThemeFromJson.createColorThemeFromJson */ 'ColorThemeFromJson.createColorThemeFromJson',
     /* colorThemeId */ colorThemeId,
-    /* colorThemeJson */ colorThemeJson
+    /* colorThemeJson */ colorThemeJson,
   )
   return colorThemeCss
   // TODO generate color theme from jsonc
@@ -42,7 +43,7 @@ const applyColorTheme = async (colorThemeId) => {
     const colorThemeCss = await getColorThemeCss(colorThemeId, colorThemeJson)
     await Css.addCssStyleSheet('ContributedColorTheme', colorThemeCss)
     if (Platform.platform === PlatformType.Web) {
-      const themeColor = getMetaThemeColor(colorThemeJson) || ''
+      const themeColor = GetMetaThemeColor.getMetaThemeColor(colorThemeJson) || ''
       await Meta.setThemeColor(themeColor)
     }
     if (Platform.platform !== PlatformType.Web && Preferences.get('development.watchColorTheme')) {
