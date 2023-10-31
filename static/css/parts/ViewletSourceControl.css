@@ -15,8 +15,7 @@
 }
 
 .SourceControlHeader {
-  display: grid;
-  padding: 5px 12px 6px 16px;
+  padding: 5px 12px 6px 20px;
 }
 
 .ViewSourceControlInput[aria-busy] {
