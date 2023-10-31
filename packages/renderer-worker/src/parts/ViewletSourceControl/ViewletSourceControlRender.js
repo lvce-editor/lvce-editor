@@ -13,21 +13,12 @@ const renderValue = {
 
 const renderChangedFiles = {
   isEqual(oldState, newState) {
-    return oldState.displayItems === newState.displayItems
+    return oldState.displayItems === newState.displayItems && oldState.buttonIndex === newState.buttonIndex && oldState.buttons === newState.buttons
   },
   apply(oldState, newState) {
-    const dom = GetSourceControlItemsVirtualDom.getSourceControlItemsVirtualDom(newState.displayItems)
+    const dom = GetSourceControlItemsVirtualDom.getSourceControlItemsVirtualDom(newState.displayItems, newState.buttonIndex, newState.buttons)
     return [/* method */ 'setItemsDom', dom]
   },
 }
 
-const renderButtons = {
-  isEqual(oldState, newState) {
-    return oldState.displayItems === newState.displayItems && oldState.buttonIndex === newState.buttonIndex && oldState.buttons === newState.buttons
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setItemButtons', /* oldIndex */ oldState.buttonIndex, /* index */ newState.buttonIndex, /* buttons */ newState.buttons]
-  },
-}
-
-export const render = [renderValue, renderChangedFiles, renderButtons]
+export const render = [renderValue, renderChangedFiles]
