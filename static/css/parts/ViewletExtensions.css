@@ -89,19 +89,17 @@
   align-items: center;
   contain: strict;
   position: absolute;
-  /* TODO use color from color theme */
-  color: rgb(188, 190, 190);
+  color: var(--WorkbenchForeground, rgb(188, 190, 190));
   width: 100%;
 }
 
 .ExtensionListItem:hover {
-  background: rgba(64, 92, 80, 0.2);
+  background: var(--ListHoverBackground, rgba(64, 92, 80, 0.2));
 }
 
 #ExtensionActive {
-  /* background: rgba(64, 92, 80, 0.2); */
-  background: var(--ExtensionListItemActive, #515f59);
-  color: white;
+  background: var(--ListActiveSelectionBackground, #515f59);
+  color: var(--ListActiveSelectionForeground, white);
 }
 
 .ExtensionListItem[data-state='disabled'] {
