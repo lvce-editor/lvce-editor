@@ -102,7 +102,7 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
 
     if (platform === 'electron') {
       await Replace.replace({
-        path: `${cachePath}/src/IsFirefox/IsFirefox`,
+        path: `${cachePath}/src/IsFirefox/IsFirefox.js`,
         occurrence: `export const isFirefox = getIsFirefox()`,
         replacement: `export const isFirefox = false`,
       })
