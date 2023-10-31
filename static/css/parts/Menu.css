@@ -35,7 +35,7 @@
   border-radius: 4px;
 }
 
-.MenuItem.Focused {
+.MenuItemFocused {
   background: var(--MenuItemHoverBackground, #687f7b33);
   color: var(--MenuItemHoverForeground, inherit);
   outline: none;
