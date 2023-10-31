@@ -32,8 +32,7 @@
   height: 160px;
   width: 100%;
   contain: strict;
-  display: grid;
-  grid-template-columns: auto 1fr;
+  display: flex;
   gap: 1rem;
   flex-shrink: 0;
   padding: 20px 20px;
