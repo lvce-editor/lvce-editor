@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as Css from '../src/parts/Css/Css.js'
+import { jest } from '@jest/globals'
 
 beforeAll(() => {
   // @ts-ignore
@@ -19,9 +19,42 @@ beforeEach(() => {
     document.head.firstChild.remove()
   }
   document.adoptedStyleSheets = []
+  jest.resetAllMocks()
 })
 
-test('addCssStyleSheet', async () => {
-  await Css.addCssStyleSheet('* { font-size: 14px; }')
+jest.unstable_mockModule('../src/parts/CssState/CssState.js', () => ({
+  get: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+  set: jest.fn(() => {
+    throw new Error(`not implemented`)
+  }),
+}))
+
+const Css = await import('../src/parts/Css/Css.js')
+const CssState = await import('../src/parts/CssState/CssState.js')
+
+test('addCssStyleSheet - add', async () => {
+  const id = '1'
+  const text = '* { font-size: 14px; }'
+  // @ts-ignore
+  CssState.get.mockImplementation(() => {
+    return undefined
+  })
+  await Css.addCssStyleSheet(id, text)
   expect(document.adoptedStyleSheets).toHaveLength(1)
+})
+
+test('addCssStyleSheet - replace', async () => {
+  const id = '1'
+  const text = '* { font-size: 14px; }'
+  const existing = new CSSStyleSheet()
+  document.adoptedStyleSheets.push(existing)
+  // @ts-ignore
+  CssState.get.mockImplementation(() => {
+    return existing
+  })
+  await Css.addCssStyleSheet(id, text)
+  expect(document.adoptedStyleSheets).toHaveLength(1)
+  expect(document.adoptedStyleSheets[0]).toBe(existing)
 })
