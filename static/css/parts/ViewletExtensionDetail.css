@@ -66,11 +66,7 @@
   width: 140px;
   height: 140px;
   contain: strict;
-}
-
-.Normal .ExtensionDetailIcon {
-  /* width: 100px; */
-  /* height: 100px; */
+  flex-shrink: 0;
 }
 
 .ExtensionDetail .Markdown {
