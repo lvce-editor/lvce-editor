@@ -1,4 +1,5 @@
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as ExtensionListItemHeight from '../ExtensionListItemHeight/ExtensionListItemHeight.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js' // TODO use Command.execute instead
 import * as GetViewletSize from '../GetViewletSize/GetViewletSize.js'
 import * as Height from '../Height/Height.js'
@@ -34,7 +35,7 @@ export const create = (id, uri, x, y, width, height) => {
     focused: false,
     size: ViewletSize.None,
     ...VirtualList.create({
-      itemHeight: Height.ExtensionListItem,
+      itemHeight: ExtensionListItemHeight.ExtensionListItemHeight,
       minimumSliderSize: Height.MinimumSliderSize,
       headerHeight: 35,
     }),
@@ -71,7 +72,7 @@ export const handleInstall = async (state, id) => {
     /* id */ ViewletModuleId.Extensions,
     /* method */ 'setExtensionState',
     /* id */ id,
-    /* state */ 'installing'
+    /* state */ 'installing',
   )
   try {
     await ExtensionManagement.install(/* id */ id)
@@ -82,7 +83,7 @@ export const handleInstall = async (state, id) => {
       /* id */ ViewletModuleId.Extensions,
       /* method */ 'setExtensionState',
       /* id */ id,
-      /* state */ 'uninstalled'
+      /* state */ 'uninstalled',
     )
     // TODO use command.execute
     ErrorHandling.handleError(error)
@@ -93,7 +94,7 @@ export const handleInstall = async (state, id) => {
     /* id */ ViewletModuleId.Extensions,
     /* method */ 'setExtensionState',
     /* id */ id,
-    /* state */ 'installed'
+    /* state */ 'installed',
   )
 }
 
@@ -104,7 +105,7 @@ export const handleUninstall = async (state, id) => {
     /* id */ ViewletModuleId.Extensions,
     /* method */ 'setExtensionState',
     /* id */ id,
-    /* state */ 'uninstalling'
+    /* state */ 'uninstalling',
   )
   try {
     await ExtensionManagement.uninstall(id)
@@ -114,7 +115,7 @@ export const handleUninstall = async (state, id) => {
       /* id */ ViewletModuleId.Extensions,
       /* method */ 'setExtensionState',
       /* id */ id,
-      /* state */ 'installed'
+      /* state */ 'installed',
     )
     ErrorHandling.handleError(error)
     return
@@ -124,7 +125,7 @@ export const handleUninstall = async (state, id) => {
     /* id */ ViewletModuleId.Extensions,
     /* method */ 'setExtensionState',
     /* id */ id,
-    /* state */ 'uninstalled'
+    /* state */ 'uninstalled',
   )
 }
 
@@ -138,7 +139,7 @@ export const handleEnable = async (state, id) => {
       /* id */ ViewletModuleId.Extensions,
       /* method */ 'setExtensionState',
       /* id */ id,
-      /* state */ 'disabled'
+      /* state */ 'disabled',
     )
     ErrorHandling.handleError(error)
     return
@@ -148,7 +149,7 @@ export const handleEnable = async (state, id) => {
     /* id */ ViewletModuleId.Extensions,
     /* method */ 'setExtensionState',
     /* id */ id,
-    /* state */ 'enabled'
+    /* state */ 'enabled',
   )
 }
 
@@ -166,7 +167,7 @@ export const handleDisable = async (state, id) => {
     /* id */ ViewletModuleId.Extensions,
     /* method */ 'setExtensionState',
     /* id */ id,
-    /* state */ 'disabled'
+    /* state */ 'disabled',
   )
 }
 
@@ -177,7 +178,7 @@ export const openSuggest = async (state) => {
     /* viewletSend */ 'Viewlet.send',
     /* id */ ViewletModuleId.Extensions,
     /* method */ 'openSuggest',
-    /* suggestions */ filteredSuggestions
+    /* suggestions */ filteredSuggestions,
   )
 }
 

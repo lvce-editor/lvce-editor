@@ -56,5 +56,5 @@
 
 .InputBox::placeholder,
 .MultilineInputBox::placeholder {
-  color: var(--InputBoxPlaceholderForeground, currentColor);
+  color: var(--InputBoxPlaceholderForeground, rgba(255, 255, 255, 0.3));
 }
