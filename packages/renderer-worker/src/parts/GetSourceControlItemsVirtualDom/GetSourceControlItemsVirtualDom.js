@@ -12,7 +12,7 @@ const getLabelClassName = (decorationStrikeThrough) => {
   return className
 }
 
-const createItem = (item) => {
+const createItem = (item, index, buttonIndex, buttons) => {
   const { type, posInSet, setSize, icon, file, label, badgeCount, title, decorationIcon, decorationIconTitle, decorationStrikeThrough, detail } = item
   const labelClassName = getLabelClassName(decorationStrikeThrough)
   if (item.type === DirentType.DirectoryExpanded) {
@@ -71,6 +71,7 @@ const createItem = (item) => {
     childCount: 1,
   }
   dom.push(labelDom, text(label))
+
   if (detail) {
     labelDom.childCount++
     dom.push(
@@ -82,6 +83,26 @@ const createItem = (item) => {
       text(detail),
     )
   }
+  if (index === buttonIndex) {
+    dom[0].childCount += buttons.length
+    for (const button of buttons) {
+      const { icon, label } = button
+      dom.push(
+        {
+          type: VirtualDomElements.Button,
+          className: 'SourceControlButton',
+          title: label,
+          ariaLabel: label,
+          childCount: 1,
+        },
+        {
+          type: VirtualDomElements.Span,
+          className: 'MaskIcon',
+          maskImage: icon,
+        },
+      )
+    }
+  }
   dom.push({
     type: VirtualDomElements.Img,
     className: 'DecorationIcon',
@@ -92,6 +113,11 @@ const createItem = (item) => {
   return dom
 }
 
-export const getSourceControlItemsVirtualDom = (items) => {
-  return [...items.flatMap(createItem)]
+export const getSourceControlItemsVirtualDom = (items, buttonIndex, buttons) => {
+  const result = []
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i]
+    result.push(...createItem(item, i, buttonIndex, buttons))
+  }
+  return result
 }
