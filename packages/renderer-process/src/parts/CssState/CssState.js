@@ -2,8 +2,8 @@ export const state = {
   styleSheets: Object.create(null),
 }
 
-export const add = (id, sheet) => {
-  state.styleSheets = id = sheet
+export const set = (id, sheet) => {
+  state.styleSheets[id] = sheet
 }
 
 export const get = (id) => {
