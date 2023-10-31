@@ -3,9 +3,22 @@ import { jest } from '@jest/globals'
 beforeEach(() => {
   // @ts-ignore
   globalThis.fetch = jest.fn()
+  jest.resetAllMocks()
 })
 
+jest.unstable_mockModule(
+  '../src/parts/TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js',
+  () => ({
+    tryToGetActualErrorMessage: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }),
+)
+
 const TryToGetActualWorkerErrorMessage = await import('../src/parts/TryToGetActualWorkerErrorMessage/TryToGetActualWorkerErrorMessage.js')
+const TryToGetActualErrorMessageWhenNetworkRequestSucceeds = await import(
+  '../src/parts/TryToGetActualErrorMessageWhenNetworkRequestSucceeds/TryToGetActualErrorMessageWhenNetworkRequestSucceeds.js'
+)
 
 test('getActualErrorMessage - missing content type header', async () => {
   const url = '/test/file.ts'
@@ -20,6 +33,43 @@ test('getActualErrorMessage - missing content type header', async () => {
     })
   }
   expect(await TryToGetActualWorkerErrorMessage.tryToGetActualErrorMessage({ url, name })).toBe(
-    `Failed to start test worker: Content type for worker must be application/javascript`
+    `Failed to start test worker: Content type for worker must be application/javascript`,
   )
+})
+
+test('getActualErrorMessage - cross origin embedder policy header missing', async () => {
+  const url = '/test/file.ts'
+  const name = 'test worker'
+  // @ts-ignore
+  globalThis.fetch = () => {
+    return new Response('', {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/javascript',
+      },
+    })
+  }
+  expect(await TryToGetActualWorkerErrorMessage.tryToGetActualErrorMessage({ url, name })).toBe(
+    `Failed to start test worker: Cross Origin Embedder Policy header is missing`,
+  )
+})
+
+test('getActualErrorMessage - content type text/javascript - other error', async () => {
+  const url = '/test/file.ts'
+  const name = 'test worker'
+  // @ts-ignore
+  globalThis.fetch = () => {
+    return new Response('', {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/javascript',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+      },
+    })
+  }
+  // @ts-ignore
+  TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage.mockImplementation(() => {
+    return 'Network error'
+  })
+  expect(await TryToGetActualWorkerErrorMessage.tryToGetActualErrorMessage({ url, name })).toBe(`Network error`)
 })

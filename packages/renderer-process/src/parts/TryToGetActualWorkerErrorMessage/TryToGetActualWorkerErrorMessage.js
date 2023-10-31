@@ -12,7 +12,7 @@ export const tryToGetActualErrorMessage = async ({ url, name }) => {
   }
   if (response.ok) {
     const contentType = response.headers.get('Content-Type')
-    if (contentType !== 'application/javascript') {
+    if (contentType !== 'application/javascript' && contentType !== 'text/javascript') {
       return `Failed to start ${displayName}: Content type for worker must be application/javascript`
     }
     const crossOriginEmbedderPolicy = response.headers.get('Cross-Origin-Embedder-Policy')
