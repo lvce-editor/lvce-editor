@@ -34,7 +34,9 @@
 /* TODO use html element as placeholder so that it can be trimmed and has other size as input text */
 
 .ExtensionHeader {
-  padding: 5px 12px 6px 20px;
+  padding: 5px 12px 0 20px;
+  height: 41px;
+  contain: strict;
 }
 
 .ExtensionInput {
@@ -82,10 +84,10 @@
 
 .ExtensionListItem {
   text-decoration: none;
-  padding: 0 1rem;
+  padding-left: 16px;
   display: flex;
   gap: 14px;
-  height: 62px;
+  height: 72px;
   align-items: center;
   contain: strict;
   position: absolute;
@@ -116,6 +118,9 @@
   height: 100%;
   overflow: hidden;
   contain: strict;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .ExtensionListItemIcon {
@@ -132,6 +137,7 @@
   font-weight: 700;
   font-size: 13px;
   padding-right: 11px;
+  contain: content;
 }
 
 .ExtensionListItemDescription {
@@ -141,6 +147,7 @@
   overflow: hidden;
   white-space: nowrap;
   padding-right: 11px;
+  contain: strict;
 }
 
 .ExtensionListItemFooter {
