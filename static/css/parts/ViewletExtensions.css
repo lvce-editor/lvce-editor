@@ -34,7 +34,6 @@
 /* TODO use html element as placeholder so that it can be trimmed and has other size as input text */
 
 .ExtensionHeader {
-  display: grid;
   padding: 5px 12px 6px 20px;
 }
 
