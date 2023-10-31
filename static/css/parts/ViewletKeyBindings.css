@@ -11,7 +11,7 @@
 .KeyBindingsHeader {
   height: 50px;
   contain: strict;
-  display: grid;
+  display: flex;
   place-items: center;
   padding: 0 15px;
 }
