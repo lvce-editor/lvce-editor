@@ -149,7 +149,7 @@ export const handleDefineKeyBindingDisposed = async (state, key) => {
         {
           key,
         },
-      ])
+      ]),
     )
   }
   // TODO

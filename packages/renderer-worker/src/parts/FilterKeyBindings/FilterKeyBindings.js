@@ -1,7 +1,22 @@
 import * as EmptyMatches from '../EmptyMatches/EmptyMatches.js'
 import * as FilterCompletionItem from '../FilterCompletionItem/FilterCompletionItem.js'
 
+const withEmptyMatch = (keyBinding) => {
+  return {
+    ...keyBinding,
+    commandMatches: [],
+    keyMatches: [],
+  }
+}
+
+const withEmptyMatches = (keyBindings) => {
+  return keyBindings.map(withEmptyMatch)
+}
+
 export const getFilteredKeyBindings = (keyBindings, value) => {
+  if (!value) {
+    return withEmptyMatches(keyBindings)
+  }
   const filteredKeyBindings = []
   for (const keyBinding of keyBindings) {
     const { command, key } = keyBinding
