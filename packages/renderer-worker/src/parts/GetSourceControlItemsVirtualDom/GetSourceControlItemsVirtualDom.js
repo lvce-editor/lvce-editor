@@ -15,7 +15,7 @@ const getLabelClassName = (decorationStrikeThrough) => {
 const createItem = (item, index, buttonIndex, buttons) => {
   const { type, posInSet, setSize, icon, file, label, badgeCount, title, decorationIcon, decorationIconTitle, decorationStrikeThrough, detail } = item
   const labelClassName = getLabelClassName(decorationStrikeThrough)
-  if (item.type === DirentType.DirectoryExpanded) {
+  if (type === DirentType.DirectoryExpanded) {
     return [
       {
         type: VirtualDomElements.Div,
@@ -33,9 +33,8 @@ const createItem = (item, index, buttonIndex, buttons) => {
       },
       {
         type: VirtualDomElements.Div,
-        className: 'MaskIcon',
+        className: `MaskIcon MaskIcon${icon}`,
         role: AriaRoles.None,
-        maskImage: icon,
         childCount: 0,
       },
       {
@@ -52,6 +51,9 @@ const createItem = (item, index, buttonIndex, buttons) => {
       text(badgeCount),
     ]
   }
+  /**
+   * @type {any[]}
+   */
   const dom = []
   dom.push(
     {
@@ -63,7 +65,21 @@ const createItem = (item, index, buttonIndex, buttons) => {
       title: file,
       childCount: 3,
     },
-    GetFileIconVirtualDom.getFileIconVirtualDom(icon),
+    ...(icon === 'ChevronRight'
+      ? [
+          {
+            type: VirtualDomElements.Div,
+            className: 'Chevron',
+            childCount: 1,
+          },
+          {
+            type: VirtualDomElements.Div,
+            className: `MaskIcon MaskIcon${icon}`,
+            role: AriaRoles.None,
+            childCount: 0,
+          },
+        ]
+      : [GetFileIconVirtualDom.getFileIconVirtualDom(icon)]),
   )
   const labelDom = {
     type: VirtualDomElements.Div,

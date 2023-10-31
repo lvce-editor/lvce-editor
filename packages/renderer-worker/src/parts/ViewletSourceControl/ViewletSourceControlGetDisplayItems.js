@@ -1,5 +1,4 @@
 import * as DirentType from '../DirentType/DirentType.js'
-import * as Icon from '../Icon/Icon.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -11,7 +10,7 @@ const getDisplayItemsGroup = (group, isExpanded) => {
   }
   const length = items.length
   const type = isExpanded ? DirentType.DirectoryExpanded : DirentType.Directory
-  const icon = isExpanded ? Icon.ChevronDown : Icon.ChevronRight
+  const icon = isExpanded ? 'ChevronDown' : 'ChevronRight'
   if (length > 0) {
     displayItems.push({
       file: '',
