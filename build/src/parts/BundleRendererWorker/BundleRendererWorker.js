@@ -100,6 +100,13 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
 }`, // TODO should adjust vscode-icons.json instead
     })
 
+    if (platform === 'electron') {
+      await Replace.replace({
+        path: `${cachePath}/src/parts/IsFirefox/IsFirefox.js`,
+        occurrence: `export const isFirefox = getIsFirefox()`,
+        replacement: `export const isFirefox = false`,
+      })
+    }
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererWorkerMain.js`,
