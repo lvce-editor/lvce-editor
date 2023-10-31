@@ -31,19 +31,19 @@ const actuallyLoadCssStyleSheet = async (css) => {
   }
 }
 
-export const loadCssStyleSheet = async (css) => {
+export const loadCssStyleSheet = (css) => {
   if (!state.pending[css]) {
     state.pending[css] = actuallyLoadCssStyleSheet(css)
   }
   return state.pending[css]
 }
 
-export const loadCssStyleSheets = async (css) => {
+export const loadCssStyleSheets = (css) => {
   return Promise.all(css.map(loadCssStyleSheet))
 }
 
-export const addCssStyleSheet = async (id, css) => {
-  await RendererProcess.invoke('Css.addCssStyleSheet', id, css)
+export const addCssStyleSheet = (id, css) => {
+  return RendererProcess.invoke('Css.addCssStyleSheet', id, css)
 }
 
 const actuallyAddDynamicCss = async (id, getCss, preferences) => {
