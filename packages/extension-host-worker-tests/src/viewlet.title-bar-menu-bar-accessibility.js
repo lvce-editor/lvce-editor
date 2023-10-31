@@ -61,7 +61,7 @@ export const test = async ({ TitleBarMenuBar, Locator, expect }) => {
 
   // assert
   const menu1 = Locator('#Menu-1')
-  const menuItem1 = menu1.locator('.MenuItem.Focused')
+  const menuItem1 = menu1.locator('.MenuItemFocused')
   await expect(menuItem1).toBeFocused()
   await expect(menuItemOpenRecent).toHaveAttribute('aria-expanded', 'true')
   await expect(menuItemOpenRecent).toHaveAttribute('aria-owns', 'Menu-1')

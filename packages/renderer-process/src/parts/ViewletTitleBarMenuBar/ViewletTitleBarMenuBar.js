@@ -255,7 +255,7 @@ export const setMenus = (state, changes, uid) => {
         Widget.append($Menu)
         if (focusedIndex !== -1) {
           const $Child = $Menu.children[focusedIndex]
-          $Child.classList.add('Focused')
+          $Child.classList.add('MenuItemFocused')
           // @ts-ignore
           $Child.focus()
         }
@@ -274,7 +274,9 @@ export const setMenus = (state, changes, uid) => {
         const $$Children = items.map(MenuItem.create$MenuItem)
         if (focusedIndex !== -1) {
           const $Child = $$Children[focusedIndex]
-          $Child.classList.add('Focused')
+          if (!$Child.classList.contains('MenuItemSeparator')) {
+            $Child.classList.add('MenuItemFocused')
+          }
           if (expanded) {
             $Child.ariaExpanded = true
             $Child.setAttribute(DomAttributeType.AriaOwns, `Menu-${level + 1}`)

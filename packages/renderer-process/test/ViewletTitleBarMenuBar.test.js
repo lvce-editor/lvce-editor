@@ -195,12 +195,12 @@ test('setMenus - add one menu', () => {
         },
       ],
     ],
-    1
+    1,
   )
   const { $$Menus } = state
   expect($$Menus.length).toBe(1)
   expect($$Menus[0].outerHTML).toBe(
-    '<div class="Menu" tabindex="-1" style="top: 0px; left: 0px; width: 150px; height: 150px;" id="Menu-0"><div class="MenuItem" tabindex="-1" disabled="true">New File</div><div class="MenuItem" tabindex="-1" disabled="true">New Window</div><div class="MenuItem" tabindex="-1">Open Recent</div></div>'
+    '<div class="Menu" tabindex="-1" style="top: 0px; left: 0px; width: 150px; height: 150px;" id="Menu-0"><div class="MenuItem" tabindex="-1" disabled="true">New File</div><div class="MenuItem" tabindex="-1" disabled="true">New Window</div><div class="MenuItem" tabindex="-1">Open Recent</div></div>',
   )
 })
 
@@ -235,7 +235,7 @@ test('setMenus - open sub menu', () => {
         },
       ],
     ],
-    1
+    1,
   )
   ViewletTitleBarMenuBar.setMenus(
     state,
@@ -287,14 +287,14 @@ test('setMenus - open sub menu', () => {
         },
       ],
     ],
-    1
+    1,
   )
   const { $$Menus } = state
   expect($$Menus.length).toBe(2)
   expect($$Menus[0].outerHTML).toBe(
-    '<div class="Menu" tabindex="-1" style="top: 0px; left: 0px; width: 150px; height: 150px;" id="Menu-0"><div class="MenuItem" tabindex="-1" disabled="true">New File</div><div class="MenuItem" tabindex="-1" disabled="true">New Window</div><div class="MenuItem Focused" tabindex="-1">Open Recent</div></div>'
+    '<div class="Menu" tabindex="-1" style="top: 0px; left: 0px; width: 150px; height: 150px;" id="Menu-0"><div class="MenuItem" tabindex="-1" disabled="true">New File</div><div class="MenuItem" tabindex="-1" disabled="true">New Window</div><div class="MenuItem MenuItemFocused" tabindex="-1">Open Recent</div></div>',
   )
   expect($$Menus[1].outerHTML).toBe(
-    '<div class="Menu" tabindex="-1" style="top: 0px; left: 150px; width: 150px; height: 150px;" id="Menu-1"><div class="MenuItem" tabindex="-1">file-1.txt</div><div class="MenuItem" tabindex="-1">file-2.txt</div></div>'
+    '<div class="Menu" tabindex="-1" style="top: 0px; left: 150px; width: 150px; height: 150px;" id="Menu-1"><div class="MenuItem" tabindex="-1">file-1.txt</div><div class="MenuItem" tabindex="-1">file-2.txt</div></div>',
   )
 })

@@ -109,7 +109,7 @@ const handleMouseEnter = (event) => {
     /* index */ index,
     /* x */ clientX,
     /* y */ clientY,
-    /* timeStamp */ timeStamp
+    /* timeStamp */ timeStamp,
   )
 }
 
@@ -163,10 +163,10 @@ const create$Menu = () => {
 export const focusIndex = (level, oldFocusedIndex, newFocusedIndex) => {
   const $Menu = state.$$Menus[level]
   if (oldFocusedIndex !== -1) {
-    $Menu.children[oldFocusedIndex].classList.remove('Focused')
+    $Menu.children[oldFocusedIndex].classList.remove('MenuItemFocused')
   }
   if (newFocusedIndex !== -1) {
-    $Menu.children[newFocusedIndex].classList.add('Focused')
+    $Menu.children[newFocusedIndex].classList.add('MenuItemFocused')
     $Menu.children[newFocusedIndex].focus()
   }
 }
