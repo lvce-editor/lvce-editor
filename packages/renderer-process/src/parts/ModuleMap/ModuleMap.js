@@ -139,11 +139,12 @@ export const getModuleId = (commandId) => {
     case 'Window.minimize':
     case 'Window.onVisibilityChange':
     case 'Window.reload':
-    case 'Window.setTitle':
     case 'Window.unmaximize':
       return ModuleId.Window
     case 33111:
       return ModuleId.Workbench
+    case 'WindowTitle.set':
+      return ModuleId.WindowTitle
     default:
       throw new CommandNotFoundError(commandId)
   }

@@ -1,16 +1,16 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Location from '../Location/Location.js'
-import * as Platform from '../Platform/Platform.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as Window from '../Window/Window.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
-import * as Character from '../Character/Character.js'
+import * as WindowTitle from '../WindowTitle/WindowTitle.js'
 
 export const state = {
   workspacePath: '',
@@ -141,7 +141,7 @@ const getPathName = (workspacePath) => {
 
 const onWorkspaceChange = async () => {
   const title = getTitle(state.workspacePath)
-  await Window.setTitle(title)
+  await WindowTitle.set(title)
   if (Platform.platform === PlatformType.Web || Platform.platform === PlatformType.Remote) {
     const pathName = getPathName(state.workspacePath)
     await Location.setPathName(pathName)

@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
-import * as Window from '../src/parts/Window/Window.js'
+import * as WindowTitle from '../src/parts/WindowTitle/WindowTitle.js'
 
 test('setTitle', () => {
-  Window.setTitle('test')
+  WindowTitle.set('test')
   expect(document.title).toBe('test')
 })

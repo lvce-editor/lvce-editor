@@ -21,10 +21,10 @@ test('setTitle', async () => {
       platform: PlatformType.Web,
     }
   })
-  const Window = await import('../src/parts/Window/Window.js')
+  const WindowTitle = await import('../src/parts/WindowTitle/WindowTitle.js')
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await Window.setTitle('test')
+  await WindowTitle.set('test')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Window.setTitle', 'test')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('WindowTitle.set', 'test')
 })

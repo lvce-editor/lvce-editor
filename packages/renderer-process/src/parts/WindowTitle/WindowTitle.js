@@ -14,6 +14,10 @@ export const close = () => {
   // window.close()
 }
 
+export const set = (title) => {
+  document.title = title
+}
+
 const sendVisibilityChangeHint = () => {
   RendererWorker.send(/* SaveState.handleVisibilityChange */ 'SaveState.handleVisibilityChange', /* visibilityState */ 'hidden')
 }

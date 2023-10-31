@@ -8,30 +8,24 @@ beforeEach(() => {
   Workspace.state.workspacePath = ''
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostRename.js',
-  () => {
-    return {
-      executePrepareRenameProvider: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-      executeRenameProvider: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostRename.js', () => {
+  return {
+    executePrepareRenameProvider: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    executeRenameProvider: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
@@ -41,12 +35,8 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 const Command = await import('../src/parts/Command/Command.js')
 
@@ -83,11 +73,7 @@ test('hydrate', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    2,
-    'Window.setTitle',
-    '/tmp/some-folder'
-  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'WindowTitle.set', '/tmp/some-folder')
 })
 
 test('hydrate - path changed in the meantime', async () => {
@@ -136,9 +122,7 @@ test('hydrate - error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   // TODO should handle error gracefully
-  await expect(
-    Workspace.hydrate({ href: 'http://localhost:3000' })
-  ).rejects.toThrowError(new Error('x is not a function'))
+  await expect(Workspace.hydrate({ href: 'http://localhost:3000' })).rejects.toThrowError(new Error('x is not a function'))
 })
 
 test.skip('setPath', async () => {
@@ -147,11 +131,7 @@ test.skip('setPath', async () => {
     switch (message[0]) {
       case 909090:
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
+        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
         break
       default:
         throw new Error('unexpected message')
@@ -162,12 +142,7 @@ test.skip('setPath', async () => {
   expect(listener).toBeCalledTimes(1)
   expect(listener).toHaveBeenCalledWith('/test')
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    'Window.setTitle',
-    '/test',
-  ])
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([909090, expect.any(Number), 'WindowTitle.set', '/test'])
 })
 
 test.skip('pathBaseName - linux', () => {
