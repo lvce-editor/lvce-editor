@@ -8,6 +8,5 @@ export const Commands = {
   minimize: Window.minimize,
   onVisibilityChange: Window.onVisibilityChange,
   reload: Window.reload,
-  setTitle: Window.setTitle,
   unmaximize: Window.unmaximize,
 }
