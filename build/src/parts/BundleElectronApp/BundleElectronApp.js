@@ -285,8 +285,8 @@ const copyStaticFiles = async ({ arch }) => {
   })
   await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/manifest.json`)
   await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/images`)
-  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/sounds`)
-  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/lib-css/modern-normalize.css`)
+  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/sounds`)
+  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/lib-css/modern-normalize.css`)
 }
 
 const copyCss = async ({ arch }) => {
