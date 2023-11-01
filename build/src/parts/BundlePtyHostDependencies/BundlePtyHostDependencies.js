@@ -57,6 +57,9 @@ export const bundlePtyHostDependencies = async ({ to, arch, electronVersion, exc
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/config.gypi`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/Makefile`))
   await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/build/pty.target.mk`))
+  await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/lib/types.js`))
+  await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/lib/interfaces.js`))
+  await Remove.remove(Path.absolute(`${to}/node_modules/supports-color/browser.js`))
   await Remove.removeMatching(`${to}/node_modules/node-pty`, '**/*.test.js')
   await Remove.removeMatching(`${to}/node_modules/node-pty`, '**/*.test.js.map')
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/node-pty`)
@@ -71,5 +74,12 @@ export const bundlePtyHostDependencies = async ({ to, arch, electronVersion, exc
     await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/`), '*.sln')
     await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/`), '*.vcxproj')
     await Remove.removeMatching(Path.absolute(`${to}/node_modules/node-pty/build/`), '*.filters')
+  } else {
+    await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/lib/shared`))
+    await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/lib/worker`))
+    await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/lib/conpty_console_list_agent.js`))
+    await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/lib/windowsPtyAgent.js`))
+    await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/lib/windowsTerminal.js`))
+    await Remove.remove(Path.absolute(`${to}/node_modules/node-pty/lib/windowsConoutConnection.js`))
   }
 }
