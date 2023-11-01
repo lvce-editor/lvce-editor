@@ -90,7 +90,7 @@ const copyStaticFiles = async ({ commitHash }) => {
   })
   await Remove.remove(`build/.tmp/server/server/static/images`)
   await Remove.remove(`build/.tmp/server/server/static/${commitHash}/sounds`)
-  await Remove.remove(`build/.tmp/server/server/static/${commitHash}/lib-css`)
+  await Remove.remove(`build/.tmp/server/server/static/${commitHash}/lib-css/modern-normalize.css`)
 }
 
 const getObjectDependencies = (obj) => {
