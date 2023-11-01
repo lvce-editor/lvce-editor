@@ -5,6 +5,7 @@ import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Remove from '../Remove/Remove.js'
+import * as RemoveSourceMaps from '../RemoveSourceMaps/RemoveSourceMaps.js'
 
 export const bundleSharedProcessDependencies = async ({ to, arch, electronVersion, exclude = [], platform = process.platform }) => {
   const projectPath = Path.absolute('packages/shared-process')
@@ -52,7 +53,8 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await Remove.remove(`${to}/node_modules/which/bin`)
   await Remove.remove(`${to}/node_modules/@lvce-editor/ripgrep/src/downloadRipGrep.js`)
   await Remove.remove(`${to}/node_modules/@lvce-editor/ripgrep/src/postinstall.js`)
-  await Remove.removeMatching(`${to}/node_modules/cacheable-request`, '**/*.map')
+  await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/cacheable-request`)
+  await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/symlink-dir`)
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
   if (platform === 'win32') {
     await Remove.remove(`${to}/node_modules/@vscode/windows-process-tree/src`)
