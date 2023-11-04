@@ -2,7 +2,6 @@ import * as Actions from '../Actions/Actions.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletPanelEvents from './ViewletPanelEvents.js'
@@ -23,8 +22,8 @@ export const create = () => {
   $PanelTabs.role = AriaRoles.TabList
   $PanelTabs.tabIndex = -1
 
-  const $ButtonClose = IconButton.create$Button(UiStrings.Close, Icon.Close)
-  const $ButtonMaximize = IconButton.create$Button(UiStrings.Maximize, Icon.ChevronUp)
+  const $ButtonClose = IconButton.create$Button(UiStrings.Close, 'Close')
+  const $ButtonMaximize = IconButton.create$Button(UiStrings.Maximize, 'ChevronUp')
   // TODO use event delegation
 
   const $PanelToolBar = document.createElement('div')
