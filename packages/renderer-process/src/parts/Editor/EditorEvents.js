@@ -12,13 +12,14 @@ import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as TouchEvent from '../TouchEvent/TouchEvent.js'
 import * as EditorFunctions from './EditorFunctions.js'
 import * as PointerEvents from '../PointerEvents/PointerEvents.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
 // TODO tree shake out mobile support when targeting electron -> less code -> less event listeners -> less memory -> less cpu
 
 export const handleFocus = (event) => {
-  Focus.setFocus('EditorText')
+  Focus.setFocus(FocusKey.EditorText)
 }
 
 export const handleBlur = (event) => {

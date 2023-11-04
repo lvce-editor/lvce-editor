@@ -7,6 +7,7 @@ import * as Icon from '../Icon/Icon.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as TouchEvent from '../TouchEvent/TouchEvent.js'
 import * as ViewletExtensionsFunctions from './ViewletExtensionsFunctions.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
@@ -29,7 +30,7 @@ export const handleScrollBarPointerDown = (event) => {
 }
 
 export const handleFocus = (event) => {
-  Focus.setFocus('Extensions')
+  Focus.setFocus(FocusKey.Extensions)
 }
 
 export const handlePointerDown = (event) => {

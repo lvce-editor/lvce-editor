@@ -15,6 +15,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as IsMobile from '../IsMobile/IsMobile.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -82,7 +83,7 @@ const focusElement = ($Element) => {
 export const focus = (state) => {
   const { $QuickPickInput } = state
   focusElement($QuickPickInput)
-  Focus.setFocus('quickPickInput')
+  Focus.setFocus(FocusKey.QuickPickInput)
 }
 
 // TODO

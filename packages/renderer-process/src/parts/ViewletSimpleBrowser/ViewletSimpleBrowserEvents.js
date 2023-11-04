@@ -1,5 +1,6 @@
 import * as Focus from '../Focus/Focus.js'
 import * as ViewletSimpleBrowserFunctions from './ViewletSimpleBrowserFunctions.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 export const handleInput = (event) => {
   const { target } = event
@@ -9,7 +10,7 @@ export const handleInput = (event) => {
 
 export const handleFocus = (event) => {
   const { target } = event
-  Focus.setFocus('SimpleBrowserInput')
+  Focus.setFocus(FocusKey.SimpleBrowserInput)
   setTimeout(() => {
     target.select()
   })

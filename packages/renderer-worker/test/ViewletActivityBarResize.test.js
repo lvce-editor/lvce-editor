@@ -1,5 +1,4 @@
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as Icon from '../src/parts/Icon/Icon.js'
 import * as ViewletActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.ipc.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
@@ -15,7 +14,7 @@ test('resize', () => {
       {
         id: ViewletModuleId.Explorer,
         title: 'Explorer',
-        icon: Icon.Files,
+        icon: 'Files',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+E',
@@ -23,7 +22,7 @@ test('resize', () => {
       {
         id: ViewletModuleId.Search,
         title: 'Search',
-        icon: Icon.Search,
+        icon: 'Search',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+F',
@@ -31,7 +30,7 @@ test('resize', () => {
       {
         id: ViewletModuleId.SourceControl,
         title: 'Source Control',
-        icon: Icon.SourceControl,
+        icon: 'SourceControl',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+G',
@@ -39,7 +38,7 @@ test('resize', () => {
       {
         id: ViewletModuleId.RunAndDebug,
         title: 'Run and Debug',
-        icon: Icon.DebugAlt2,
+        icon: 'DebugAlt2',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+D',
@@ -47,7 +46,7 @@ test('resize', () => {
       {
         id: ViewletModuleId.Extensions,
         title: 'Extensions',
-        icon: Icon.Extensions,
+        icon: 'Extensions',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+X',
@@ -56,7 +55,7 @@ test('resize', () => {
       {
         id: 'Settings',
         title: 'Settings',
-        icon: Icon.SettingsGear,
+        icon: 'SettingsGear',
         enabled: true,
         flags: ActivityBarItemFlags.Button,
         keyShortcuts: '',
@@ -75,7 +74,7 @@ test('resize', () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.Files,
+        icon: 'Files',
         id: ViewletModuleId.Explorer,
         title: 'Explorer',
         keyShortcuts: 'Control+Shift+E',
@@ -83,7 +82,7 @@ test('resize', () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.Search,
+        icon: 'Search',
         id: ViewletModuleId.Search,
         title: 'Search',
         keyShortcuts: 'Control+Shift+F',
@@ -91,7 +90,7 @@ test('resize', () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.SourceControl,
+        icon: 'SourceControl',
         id: ViewletModuleId.SourceControl,
         title: 'Source Control',
         keyShortcuts: 'Control+Shift+G',
@@ -99,7 +98,7 @@ test('resize', () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.DebugAlt2,
+        icon: 'DebugAlt2',
         id: ViewletModuleId.RunAndDebug,
         title: 'Run and Debug',
         keyShortcuts: 'Control+Shift+D',
@@ -107,7 +106,7 @@ test('resize', () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: Icon.Extensions,
+        icon: 'Extensions',
         id: ViewletModuleId.Extensions,
         title: 'Extensions',
         keyShortcuts: 'Control+Shift+X',
@@ -115,7 +114,7 @@ test('resize', () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Button,
-        icon: Icon.SettingsGear,
+        icon: 'SettingsGear',
         id: 'Settings',
         title: 'Settings',
         keyShortcuts: '',

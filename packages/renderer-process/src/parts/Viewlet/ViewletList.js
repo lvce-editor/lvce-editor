@@ -8,6 +8,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 const handleWheel = (event) => {
   switch (event.deltaMode) {
@@ -42,7 +43,7 @@ const handleFocus = (event) => {
   const $Target = event.target
   $Target.classList.add('FocusOutline')
   // TODO maybe have one focus listener inside Viewlet.js instead of each viewlet
-  Focus.setFocus('ViewletList')
+  Focus.setFocus(FocusKey.ViewletList)
 
   // RendererWorker.send(/* ViewletExtensions.focusIndex */ 868, /* index */ -1)
 }
