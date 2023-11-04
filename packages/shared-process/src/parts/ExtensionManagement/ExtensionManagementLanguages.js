@@ -4,6 +4,7 @@ import { pathToFileURL } from 'node:url'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import { VError } from '../VError/VError.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 
 const getExtensionLanguages = (extension) => {
   if (!extension.languages) {
@@ -17,11 +18,21 @@ const toRemoteUrl = (path) => {
   return `/remote/${url}`
 }
 
+const getTokenizePath = (extensionPath, builtinExtensionPath, tokenize) => {
+  if (extensionPath.startsWith(builtinExtensionPath)) {
+    console.log({ builtinExtensionPath })
+    const remainingPrefix = extensionPath.slice(builtinExtensionPath.length)
+    return '/extensions' + remainingPrefix.replaceAll('\\', '/') + '/' + tokenize
+  }
+  return toRemoteUrl(join(extensionPath, tokenize))
+}
+
 const getLanguagesFromExtension = (extension) => {
   // TODO what if extension is null? should not crash process, handle error gracefully
   if (!extension.languages) {
     return []
   }
+  const builtinExtensionPath = PlatformPaths.getBuiltinExtensionsPath()
   const extensionPath = extension.path
   const getLanguageFromExtension = (language) => {
     if (language.tokenize) {
@@ -36,7 +47,7 @@ const getLanguagesFromExtension = (extension) => {
       return {
         ...language,
         extensionPath,
-        tokenize: toRemoteUrl(join(extensionPath, language.tokenize)),
+        tokenize: getTokenizePath(extensionPath, builtinExtensionPath, language.tokenize),
       }
     }
     return language
