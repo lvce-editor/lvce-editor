@@ -27,7 +27,3 @@ export const contentLoaded = (state) => {
 }
 
 export const dispose = ViewletLocations.dispose
-
-export const hasFunctionalRender = ViewletLocations.hasFunctionalRender
-
-export const render = ViewletLocations.render
