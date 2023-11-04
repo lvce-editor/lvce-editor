@@ -1,5 +1,4 @@
 import * as ActionType from '../ActionType/ActionType.js'
-import * as Icon from '../Icon/Icon.js'
 
 /**
  * @enum {string}
@@ -30,17 +29,17 @@ export const getActions = (state) => {
     {
       type: ActionType.Button,
       id: UiStrings.ClearOutput,
-      icon: Icon.ClearAll,
+      icon: 'ClearAll',
     },
     {
       type: ActionType.Button,
       id: UiStrings.TurnOffAutoScroll,
-      icon: Icon.Blank,
+      icon: 'Blank',
     },
     {
       type: ActionType.Button,
       id: UiStrings.OpenLogFile,
-      icon: Icon.Blank,
+      icon: 'Blank',
     },
   ]
 }

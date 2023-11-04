@@ -1,7 +1,6 @@
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
 import { jest } from '@jest/globals'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
-import * as Icon from '../src/parts/Icon/Icon.js'
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
 
@@ -17,13 +16,9 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const ViewletActivityBar = await import(
-  '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
-)
+const ViewletActivityBar = await import('../src/parts/ViewletActivityBar/ViewletActivityBar.js')
 
-const ViewletActivityBarSelectCurrent = await import(
-  '../src/parts/ViewletActivityBar/ViewletActivityBarSelectCurrent.js'
-)
+const ViewletActivityBarSelectCurrent = await import('../src/parts/ViewletActivityBar/ViewletActivityBarSelectCurrent.js')
 const Command = await import('../src/parts/Command/Command.js')
 
 test('selectCurrent - settings', async () => {
@@ -41,7 +36,7 @@ test('selectCurrent - settings', async () => {
       {
         id: 'Explorer',
         title: 'Explorer',
-        icon: Icon.Files,
+        icon: 'Files',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+E',
@@ -49,7 +44,7 @@ test('selectCurrent - settings', async () => {
       {
         id: 'Search',
         title: 'Search',
-        icon: Icon.Search,
+        icon: 'Search',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+F',
@@ -57,7 +52,7 @@ test('selectCurrent - settings', async () => {
       {
         id: 'Source Control',
         title: 'Source Control',
-        icon: Icon.SourceControl,
+        icon: 'SourceControl',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+G',
@@ -65,7 +60,7 @@ test('selectCurrent - settings', async () => {
       {
         id: 'Run and Debug',
         title: 'Run and Debug',
-        icon: Icon.DebugAlt2,
+        icon: 'DebugAlt2',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+D',
@@ -73,7 +68,7 @@ test('selectCurrent - settings', async () => {
       {
         id: 'Extensions',
         title: 'Extensions',
-        icon: Icon.Extensions,
+        icon: 'Extensions',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+X',
@@ -82,7 +77,7 @@ test('selectCurrent - settings', async () => {
       {
         id: 'Settings',
         title: 'Settings',
-        icon: Icon.SettingsGear,
+        icon: 'SettingsGear',
         enabled: true,
         flags: ActivityBarItemFlags.Button,
         keyShortcuts: '',
@@ -93,12 +88,7 @@ test('selectCurrent - settings', async () => {
   Command.execute.mockImplementation(() => {})
   expect(await ViewletActivityBarSelectCurrent.selectCurrent(state)).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'ContextMenu.show',
-    750,
-    408,
-    MenuEntryId.Settings
-  )
+  expect(Command.execute).toHaveBeenCalledWith('ContextMenu.show', 750, 408, MenuEntryId.Settings)
 })
 
 test('selectCurrent - no item focused', async () => {
@@ -111,7 +101,7 @@ test('selectCurrent - no item focused', async () => {
       {
         id: 'Explorer',
         title: 'Explorer',
-        icon: Icon.Files,
+        icon: 'Files',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+E',
@@ -119,7 +109,7 @@ test('selectCurrent - no item focused', async () => {
       {
         id: 'Search',
         title: 'Search',
-        icon: Icon.Search,
+        icon: 'Search',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+F',
@@ -127,7 +117,7 @@ test('selectCurrent - no item focused', async () => {
       {
         id: 'Source Control',
         title: 'Source Control',
-        icon: Icon.SourceControl,
+        icon: 'SourceControl',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+G',
@@ -135,7 +125,7 @@ test('selectCurrent - no item focused', async () => {
       {
         id: 'Run and Debug',
         title: 'Run and Debug',
-        icon: Icon.DebugAlt2,
+        icon: 'DebugAlt2',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+D',
@@ -143,7 +133,7 @@ test('selectCurrent - no item focused', async () => {
       {
         id: 'Extensions',
         title: 'Extensions',
-        icon: Icon.Extensions,
+        icon: 'Extensions',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+X',
@@ -152,7 +142,7 @@ test('selectCurrent - no item focused', async () => {
       {
         id: 'Settings',
         title: 'Settings',
-        icon: Icon.SettingsGear,
+        icon: 'SettingsGear',
         enabled: true,
         flags: ActivityBarItemFlags.Button,
         keyShortcuts: '',
