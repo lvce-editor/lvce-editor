@@ -263,6 +263,22 @@ export const hideEditBox = (state, index) => {
   $InputBox.remove()
 }
 
+export const setEditingIcon = (state, index, icon) => {
+  Assert.object(state)
+  Assert.number(index)
+  Assert.string(icon)
+  const { $Viewlet } = state
+  const $Dirent = $Viewlet.children[index]
+  if (!$Dirent) {
+    return
+  }
+  const $Icon = $Dirent.children[0]
+  if (!$Icon) {
+    return
+  }
+  $Icon.src = icon
+}
+
 export const replaceEditBox = (state, index, dirent) => {
   Assert.object(state)
   Assert.number(index)
