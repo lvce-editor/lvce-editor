@@ -38,7 +38,7 @@ test('getVisible', () => {
     charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual(new Float32Array([/*x */ 48, /* y */ 40, /* x */ 24, /* y */ 80]))
+  expect(cursorInfos).toEqual([`48px 40px`, `24px 80px`])
   expect(selectionInfos).toEqual(
     // prettier-ignore
     new Float32Array([
@@ -46,7 +46,7 @@ test('getVisible', () => {
       /* x */ 0,  /* y */ 20, /* width */ 48, /* height */ 20,
       /* x */ 0,  /* y */ 40, /* width */ 48, /* height */ 20,
       /* x */ 16, /* y */ 80, /* width */ 8,  /* height */ 20,
-    ])
+    ]),
   )
 })
 
@@ -73,13 +73,13 @@ test('getVisible - bug with two lines', () => {
     charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual(new Float32Array([/*x */ 32, /* y */ 20]))
+  expect(cursorInfos).toEqual([`32px 20px`])
   expect(selectionInfos).toEqual(
     // prettier-ignore
     new Float32Array([
       /* x */ 32, /* y */ 0, /* width */ 16, /* height */ 20,
       /* x */ 0, /* y */ 20, /* width */ 32,  /* height */ 20,
-    ])
+    ]),
   )
 })
 
@@ -106,7 +106,7 @@ test('getVisible - cursors should be treated separately', () => {
     charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual(new Float32Array([/*x */ 32, /* y */ 0]))
+  expect(cursorInfos).toEqual([`32px 0px`])
   expect(selectionInfos).toEqual(new Float32Array([]))
 })
 
@@ -133,14 +133,14 @@ test('getVisible - bug with multiple lines', () => {
     charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual(new Float32Array([/* x */ 24, /* y */ 40]))
+  expect(cursorInfos).toEqual([`24px 40px`])
   expect(selectionInfos).toEqual(
     // prettier-ignore
     new Float32Array([
       /* x */ 24,/* y */ 0,  /* width */ 24, /* height */ 20,
       /* x */ 0, /* y */ 20, /* width */ 48, /* height */ 20,
       /* x */ 0, /* y */ 40, /* width */ 24, /* height */ 20,
-    ])
+    ]),
   )
 })
 
@@ -266,7 +266,7 @@ test('getVisible - only start of selection visible', () => {
     charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual(new Float32Array([]))
+  expect(cursorInfos).toEqual([])
   expect(selectionInfos).toEqual(
     // prettier-ignore
     new Float32Array([
@@ -278,7 +278,7 @@ test('getVisible - only start of selection visible', () => {
      /* x */ 0, /* y */ 100, /* width */ 48, /* height */ 20,
      /* x */ 0, /* y */ 120, /* width */ 48, /* height */ 20,
      /* x */ 0, /* y */ 140, /* width */ 48, /* height */ 20,
-    ])
+    ]),
   )
 })
 
@@ -305,6 +305,6 @@ test('getVisible - selection out of range', () => {
     charWidth: 9,
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  expect(cursorInfos).toEqual(new Float32Array([0, 0, 0, 140]))
+  expect(cursorInfos).toEqual([`0px 0px`, '0px 140px'])
   expect(selectionInfos).toEqual(new Float32Array([0, 0, 0, 20, 0, 140, 0, 20]))
 })
