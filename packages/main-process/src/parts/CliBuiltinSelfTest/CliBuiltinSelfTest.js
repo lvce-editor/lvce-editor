@@ -1,6 +1,6 @@
 import { fork } from 'node:child_process'
-import Electron from 'electron'
-import Platform from '../Platform/Platform.js'
+import * as Electron from 'electron'
+import * as Platform from '../Platform/Platform.js'
 
 export const handleCliArgs = (parsedArgs) => {
   const builtinSelfTestPath = Platform.getBuiltinSelfTestPath()
