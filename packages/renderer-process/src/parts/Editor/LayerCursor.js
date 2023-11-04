@@ -9,14 +9,12 @@ const create$Cursor = () => {
 }
 
 const render$Cursor = ($Cursor, cursors, i) => {
-  const x = cursors[i]
-  const y = cursors[i + 1]
-  SetBounds.setXAndYTransform($Cursor, x, y)
+  $Cursor.style.translate = cursors[i]
 }
 
 const render$CursorsLess = ($Cursors, childCount, cursors, cursorCount) => {
-  for (let i = 0, j = 0; i < childCount; i++, j += 2) {
-    render$Cursor($Cursors.children[i], cursors, j)
+  for (let i = 0; i < childCount; i++) {
+    render$Cursor($Cursors.children[i], cursors, i)
   }
   const fragment = document.createDocumentFragment()
   for (let i = childCount; i < cursorCount; i++) {
@@ -44,7 +42,7 @@ const render$CursorsMore = ($Cursors, childCount, cursors, cursorCount) => {
 }
 
 const render$Cursors = ($Cursors, cursors) => {
-  const cursorCount = cursors.length / 2
+  const cursorCount = cursors.length
   const childCount = $Cursors.children.length
   if (childCount < cursorCount) {
     render$CursorsLess($Cursors, childCount, cursors, cursorCount)
@@ -100,6 +98,6 @@ const renderCursorsNative = (state, cursors) => {
 }
 
 export const setCursors = (state, cursors) => {
-  Assert.float32Array(cursors)
+  Assert.array(cursors)
   render$Cursors(state.$LayerCursor, cursors)
 }
