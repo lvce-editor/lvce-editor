@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@babel/code-frame": "^7.22.13",
-    "clean-stack": "^4.2.0",
+    "clean-stack": "^5.2.0",
     "debug": "^4.3.4",
     "exit-hook": "^4.0.0",
     "lines-and-columns": "^2.0.3",
