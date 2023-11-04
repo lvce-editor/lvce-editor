@@ -5,6 +5,7 @@ import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletEditorImageFunctions from './ViewletEditorImageFunctions.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 /**
  * @param {PointerEvent} event
@@ -78,5 +79,5 @@ export const handleError = (event) => {
 }
 
 export const handleFocus = () => {
-  Focus.setFocus('EditorImage')
+  Focus.setFocus(FocusKey.EditorImage)
 }
