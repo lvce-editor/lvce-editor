@@ -7,6 +7,12 @@ jest.unstable_mockModule('electron', () => {
     app: {
       name: '',
     },
+    screen: {},
+    net: {},
+    BrowserWindow: class {},
+    shell: {},
+    ipcMain: {},
+    MessageChannelMain: class {},
   }
 })
 
@@ -14,7 +20,7 @@ jest.unstable_mockModule('electron-unhandled', () => {
   return {}
 })
 
-jest.unstable_mockModule('../src/parts/Command/Command.cjs', () => {
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
     execute() {
       throw new Error(`method not found App.exit`)

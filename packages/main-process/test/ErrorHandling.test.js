@@ -4,20 +4,20 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Logger/Logger.cjs', () => {
+jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
   return {
     info: jest.fn(),
     error: jest.fn(),
   }
 })
 
-jest.unstable_mockModule('../src/parts/Process/Process.cjs', () => {
+jest.unstable_mockModule('../src/parts/Process/Process.js', () => {
   return {
     exit: jest.fn(),
   }
 })
 
-jest.unstable_mockModule('../src/parts/PrettyError/PrettyError.cjs', () => {
+jest.unstable_mockModule('../src/parts/PrettyError/PrettyError.js', () => {
   return {
     prepare: jest.fn(),
   }

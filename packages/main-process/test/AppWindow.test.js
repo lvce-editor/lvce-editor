@@ -6,7 +6,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/AppWindowStates/AppWindowStates.cjs', () => {
+jest.unstable_mockModule('../src/parts/AppWindowStates/AppWindowStates.js', () => {
   return {
     state: {
       windows: [],
@@ -54,6 +54,7 @@ jest.unstable_mockModule('electron', () => {
       },
     },
     BrowserWindow,
+    net: {},
   }
 })
 
