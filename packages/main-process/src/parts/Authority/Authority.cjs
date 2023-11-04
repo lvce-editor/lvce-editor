@@ -1,1 +1,1 @@
-export const Authority = '-'
+exports.Authority = '-'
