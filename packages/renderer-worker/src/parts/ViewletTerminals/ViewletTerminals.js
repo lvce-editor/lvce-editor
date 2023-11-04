@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Icon from '../Icon/Icon.js'
 import * as Id from '../Id/Id.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -46,7 +45,7 @@ export const loadContent = async (state) => {
     tabs: [
       {
         label: 'tab 1',
-        icon: Icon.Terminal,
+        icon: 'Terminal',
         uid: Id.create(),
       },
     ],
@@ -60,7 +59,7 @@ export const addTerminal = async (state) => {
   const childUid = Id.create()
   const newTab = {
     label: `tab ${tabs.length + 1}`,
-    icon: Icon.Terminal,
+    icon: 'Terminal',
     uid: childUid,
   }
   const newTabs = [...tabs, newTab]

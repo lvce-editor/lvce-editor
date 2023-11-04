@@ -1,5 +1,4 @@
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as ViewletDialogEvents from './ViewletDialogEvents.js'
 
@@ -7,7 +6,7 @@ export const create = () => {
   const $DialogTitle = document.createElement('h2')
   $DialogTitle.id = 'DialogTitle'
 
-  const $DialogCloseButton = IconButton.create$Button('Close', Icon.Close)
+  const $DialogCloseButton = IconButton.create$Button('Close', 'Close')
 
   const $DialogHeader = document.createElement('div')
   $DialogHeader.className = 'DialogHeader'

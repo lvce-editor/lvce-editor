@@ -1,6 +1,4 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as Focus from '../Focus/Focus.js'
-import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as ViewletFindWidgetEvents from './ViewletFindWidgetEvents.js'

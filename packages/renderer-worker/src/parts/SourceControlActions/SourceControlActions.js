@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Icon from '../Icon/Icon.js'
 
 /**
  * @enum {string}
@@ -52,12 +51,12 @@ const getSourceControlActionsWorkingTree = () => {
     {
       command: Commands.DiscardAll,
       label: UiStrings.DiscardAll,
-      icon: Icon.Discard,
+      icon: 'Discard',
     },
     {
       command: Commands.StageAll,
       label: UiStrings.StageAll,
-      icon: Icon.Add,
+      icon: 'Add',
     },
   ]
 }
@@ -67,17 +66,17 @@ const getSourceControlActionsWorkingTreeItem = () => {
     {
       command: Commands.OpenFile,
       label: UiStrings.OpenFile,
-      icon: Icon.GoToFile,
+      icon: 'GoToFile',
     },
     {
       command: Commands.Discard,
       label: UiStrings.Discard,
-      icon: Icon.Discard,
+      icon: 'Discard',
     },
     {
       command: Commands.Stage,
       label: UiStrings.Stage,
-      icon: Icon.Add,
+      icon: 'Add',
     },
   ]
 }
@@ -87,7 +86,7 @@ const getSourceControlActionsIndex = () => {
     {
       command: Commands.UnstageAll,
       label: UiStrings.UnstageAll,
-      icon: Icon.Remove,
+      icon: 'Remove',
     },
   ]
 }
@@ -97,12 +96,12 @@ const getSourceControlIndexItem = () => {
     {
       command: Commands.OpenFile,
       label: UiStrings.OpenFile,
-      icon: Icon.GoToFile,
+      icon: 'GoToFile',
     },
     {
       command: Commands.Unstage,
       label: UiStrings.Unstage,
-      icon: Icon.Remove,
+      icon: 'Remove',
     },
   ]
 }

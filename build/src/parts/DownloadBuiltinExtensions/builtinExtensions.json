@@ -237,17 +237,17 @@
   {
     "name": "builtin.language-features-css",
     "repository": "github.com/lvce-editor/language-features-css",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   {
     "name": "builtin.language-features-html",
     "repository": "github.com/lvce-editor/language-features-html",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "0.10.3"
+    "version": "0.11.0"
   },
   {
     "name": "builtin.prettier",
