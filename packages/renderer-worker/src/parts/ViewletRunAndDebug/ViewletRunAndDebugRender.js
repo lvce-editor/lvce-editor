@@ -2,7 +2,6 @@ import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType
 import * as DebugState from '../DebugState/DebugState.js'
 import * as DebugValueType from '../DebugValueType/DebugValueType.js'
 import * as DiffDom from '../DiffDom/DiffDom.js'
-import * as Icon from '../Icon/Icon.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
@@ -57,7 +56,7 @@ const buttonResume = {
 const iconContinue = {
   type: VirtualDomElements.Div,
   className: ClassNames.MaskIcon,
-  maskImage: Icon.DebugContinue,
+  maskImage: 'DebugContinue',
   childCount: 0,
 }
 
@@ -71,7 +70,7 @@ const buttonPause = {
 const iconPause = {
   type: VirtualDomElements.Div,
   className: ClassNames.MaskIcon,
-  maskImage: Icon.DebugPause,
+  maskImage: 'DebugPause',
   childCount: 0,
 }
 
@@ -85,7 +84,7 @@ const buttonStepOver = {
 const iconStepOver = {
   type: VirtualDomElements.Div,
   className: ClassNames.MaskIcon,
-  maskImage: Icon.DebugStepOver,
+  maskImage: 'DebugStepOver',
 }
 
 const buttonStepInto = {
@@ -98,7 +97,7 @@ const buttonStepInto = {
 const iconStepInto = {
   type: VirtualDomElements.Div,
   className: ClassNames.MaskIcon,
-  maskImage: Icon.DebugStepInto,
+  maskImage: 'DebugStepInto',
   childCount: 0,
 }
 
@@ -112,7 +111,7 @@ const buttonStepOut = {
 const iconStepOut = {
   type: VirtualDomElements.Div,
   className: ClassNames.MaskIcon,
-  maskImage: Icon.DebugStepOut,
+  maskImage: 'DebugStepOut',
   childCount: 0,
 }
 
@@ -144,14 +143,14 @@ const watchHeader = {
 const iconTriangleRight = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugMaskIcon,
-  maskImage: Icon.TriangleRight,
+  maskImage: 'TriangleRight',
   childCount: 0,
 }
 
 const iconTriangleDown = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugMaskIcon,
-  maskImage: Icon.TriangleDown,
+  maskImage: 'TriangleDown',
   childCount: 0,
 }
 
@@ -256,7 +255,7 @@ const renderScope = (state) => {
                 type: VirtualDomElements.Span,
                 childCount: 1,
               },
-              text(scope.value)
+              text(scope.value),
             )
             break
           case DebugScopeChainType.Exception:
@@ -273,7 +272,7 @@ const renderScope = (state) => {
                 type: VirtualDomElements.Span,
                 childCount: 1,
               },
-              text(scope.value)
+              text(scope.value),
             )
             break
           case DebugScopeChainType.Scope:
@@ -283,7 +282,7 @@ const renderScope = (state) => {
                 type: VirtualDomElements.Span,
                 childCount: 1,
               },
-              text(scope.key)
+              text(scope.key),
             )
             break
           case DebugScopeChainType.Property:
@@ -303,7 +302,7 @@ const renderScope = (state) => {
                 className,
                 childCount: 1,
               },
-              text(scope.value)
+              text(scope.value),
             )
             break
         }
