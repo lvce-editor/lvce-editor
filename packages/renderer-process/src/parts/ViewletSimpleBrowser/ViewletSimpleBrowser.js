@@ -1,5 +1,4 @@
 import * as EnterKeyHintType from '../EnterKeyHintType/EnterKeyHintType.js'
-import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as InputType from '../InputType/InputType.js'
@@ -18,13 +17,13 @@ const UiStrings = {
 }
 
 export const create = () => {
-  const $ButtonBack = IconButton.create$Button(UiStrings.Back, Icon.ArrowLeft)
+  const $ButtonBack = IconButton.create$Button(UiStrings.Back, 'ArrowLeft')
   $ButtonBack.onclick = ViewletSimpleBrowserEvents.handleClickBackward
 
-  const $ButtonForward = IconButton.create$Button(UiStrings.Forward, Icon.ArrowRight)
+  const $ButtonForward = IconButton.create$Button(UiStrings.Forward, 'ArrowRight')
   $ButtonForward.onclick = ViewletSimpleBrowserEvents.handleClickForward
 
-  const $ButtonReload = IconButton.create$Button(UiStrings.Reload, Icon.Refresh)
+  const $ButtonReload = IconButton.create$Button(UiStrings.Reload, 'Refresh')
   $ButtonReload.onclick = ViewletSimpleBrowserEvents.handleClickReload
 
   const $InputBox = InputBox.create()
@@ -34,7 +33,7 @@ export const create = () => {
   $InputBox.onfocus = ViewletSimpleBrowserEvents.handleFocus
   $InputBox.onblur = ViewletSimpleBrowserEvents.handleBlur
 
-  const $ButtonOpenExternal = IconButton.create$Button(UiStrings.OpenExternal, Icon.LinkExternal)
+  const $ButtonOpenExternal = IconButton.create$Button(UiStrings.OpenExternal, 'LinkExternal')
   $ButtonOpenExternal.onclick = ViewletSimpleBrowserEvents.handleClickOpenExternal
 
   const $SimpleBrowserHeader = document.createElement('div')
@@ -72,10 +71,10 @@ export const setLoading = (state, loading) => {
   const $Icon = $ButtonReload.firstChild
   if (loading) {
     $ButtonReload.title = UiStrings.Cancel
-    MaskImage.setMaskImage($Icon, Icon.Close)
+    MaskImage.setMaskImage($Icon, 'Close')
   } else {
     $ButtonReload.title = UiStrings.Reload
-    MaskImage.setMaskImage($Icon, Icon.Refresh)
+    MaskImage.setMaskImage($Icon, 'Refresh')
   }
 }
 
