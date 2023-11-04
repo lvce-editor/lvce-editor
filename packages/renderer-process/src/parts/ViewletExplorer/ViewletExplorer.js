@@ -268,7 +268,13 @@ export const setEditingIcon = (state, index, icon) => {
   Assert.string(icon)
   const { $Viewlet } = state
   const $Dirent = $Viewlet.children[index]
+  if (!$Dirent) {
+    return
+  }
   const $Icon = $Dirent.children[0]
+  if (!$Icon) {
+    return
+  }
   $Icon.src = icon
 }
 
