@@ -29,7 +29,7 @@
     "@types/ws": "^8.5.8"
   },
   "optionalDependencies": {
-    "node-pty": "^1.0.0"
+    "node-pty": "1.1.0-beta5"
   },
   "xo": {
     "rules": {
