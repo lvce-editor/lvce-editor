@@ -54,7 +54,7 @@ test('setCursor - renderCursorsLess', () => {
     $LayerCursor,
     $LayerText,
   }
-  const cursors = new Float32Array([/*x */ 20, /* y */ 10])
+  const cursors = ['20px 10px']
   const spy = jest.spyOn(document, 'createElement')
   LayerCursor.setCursors(state, cursors)
   expect(state.$LayerCursor.innerHTML).toBe('<div class="EditorCursor" style="translate: 20px 10px;"></div>')
@@ -74,7 +74,7 @@ test('setCursor - renderCursorsEqual', () => {
     $LayerCursor,
     $LayerText,
   }
-  const cursors = new Float32Array([/* x */ 20, /* y */ 10])
+  const cursors = ['20px 10px']
   const spy = jest.spyOn(document, 'createElement')
   LayerCursor.setCursors(state, cursors)
   expect(state.$LayerCursor.innerHTML).toBe('<div class="EditorCursor" style="translate: 20px 10px;"></div>')
@@ -93,7 +93,7 @@ test('setCursor - renderCursorsEqual - Node without text', () => {
     $LayerCursor,
     $LayerText,
   }
-  const cursors = new Float32Array([/* x */ 0, /*y */ 10])
+  const cursors = [`0px 10px`]
   const spy = jest.spyOn(document, 'createElement')
   LayerCursor.setCursors(state, cursors)
   expect(state.$LayerCursor.innerHTML).toBe('<div class="EditorCursor" style="translate: 0px 10px;"></div>')
@@ -114,7 +114,7 @@ test('setCursor - renderCursorsMore', () => {
     $LayerCursor,
     $LayerText,
   }
-  const cursors = new Float32Array([/* x */ 20, /* y */ 10])
+  const cursors = [`20px 10px`]
   const spy = jest.spyOn(document, 'createElement')
   LayerCursor.setCursors(state, cursors)
   expect(state.$LayerCursor.innerHTML).toBe('<div class="EditorCursor" style="translate: 20px 10px;"></div>')
@@ -134,7 +134,7 @@ test('setCursor - emoji - 👮🏽‍♀️', () => {
     $LayerCursor,
     $LayerText,
   }
-  const cursors = new Float32Array([/* x */ 8, /* y */ 10])
+  const cursors = [`8px 10px`]
   LayerCursor.setCursors(state, cursors)
   expect(state.$LayerCursor.innerHTML).toBe('<div class="EditorCursor" style="translate: 8px 10px;"></div>')
 })

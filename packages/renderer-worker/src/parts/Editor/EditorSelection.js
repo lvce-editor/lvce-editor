@@ -109,7 +109,20 @@ const getY = (row, minLineY, rowHeight) => {
   return (row - minLineY) * rowHeight
 }
 
-const emptyCursors = new Float32Array()
+const emptyCursors = []
+
+const getCursorArray = (visibleCursors, isFocused) => {
+  if (!isFocused) {
+    return emptyCursors
+  }
+  const cursorArray = []
+  for (let i = 0; i < visibleCursors.length; i += 2) {
+    const x = visibleCursors[i]
+    const y = visibleCursors[i + 1]
+    cursorArray.push(`${x}px ${y}px`)
+  }
+  return cursorArray
+}
 
 export const getVisible = (editor) => {
   const visibleCursors = []
@@ -264,7 +277,7 @@ export const getVisible = (editor) => {
   }
   // TODO maybe use Uint32array or Float64Array?
   return {
-    cursorInfos: focused ? new Float32Array(visibleCursors) : emptyCursors,
+    cursorInfos: getCursorArray(visibleCursors, focused),
     selectionInfos: new Float32Array(visibleSelections),
   }
 }
