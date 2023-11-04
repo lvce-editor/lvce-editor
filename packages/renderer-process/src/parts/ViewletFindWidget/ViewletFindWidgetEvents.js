@@ -2,6 +2,7 @@ import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as ViewletFindWidgetFunctions from './ViewletFindWidgetFunctions.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 export const handleInput = (event) => {
   const { target } = event
@@ -45,9 +46,9 @@ export const handleClick = (event) => {
 }
 
 export const handleInputBlur = (event) => {
-  Focus.setFocus('')
+  Focus.setFocus(FocusKey.Empty)
 }
 
 export const handleFocus = (event) => {
-  Focus.setFocus('FindWidget')
+  Focus.setFocus(FocusKey.FindWidget)
 }

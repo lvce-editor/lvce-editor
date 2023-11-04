@@ -11,6 +11,7 @@ import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at star
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
@@ -189,7 +190,7 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
   }
   if (focused) {
     $Viewlet.focus()
-    Focus.setFocus('Explorer')
+    Focus.setFocus(FocusKey.Explorer)
   }
 }
 
@@ -225,7 +226,7 @@ export const replaceWithEditBox = (state, index, value) => {
   $InputBox.select()
   $InputBox.setSelectionRange(0, value.length)
   $InputBox.focus()
-  Focus.setFocus('ExplorerEditBox')
+  Focus.setFocus(FocusKey.ExplorerEditBox)
 }
 
 export const insertEditBox = (state, index, value) => {
@@ -246,7 +247,7 @@ export const insertEditBox = (state, index, value) => {
   $InputBox.select()
   $InputBox.setSelectionRange(0, value.length)
   $InputBox.focus()
-  Focus.setFocus('ExplorerEditBox')
+  Focus.setFocus(FocusKey.ExplorerEditBox)
 }
 
 export const hideEditBox = (state, index) => {
@@ -272,7 +273,7 @@ export const replaceEditBox = (state, index, dirent) => {
   render$Row($Dirent, dirent)
   $OldRow.replaceWith($Dirent)
   $Viewlet.focus()
-  Focus.setFocus('Explorer')
+  Focus.setFocus(FocusKey.Explorer)
 }
 
 export const setDropTargets = (state, oldDropTargets, newDropTargets) => {

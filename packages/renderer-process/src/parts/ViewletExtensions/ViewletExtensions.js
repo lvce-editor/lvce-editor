@@ -14,6 +14,7 @@ import * as IsMobile from '../IsMobile/IsMobile.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 const activeId = 'ExtensionActive'
 
@@ -128,7 +129,7 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex, focused
   }
   if (focused) {
     $ListItems.focus()
-    Focus.setFocus('Extensions')
+    Focus.setFocus(FocusKey.Extensions)
   }
 }
 

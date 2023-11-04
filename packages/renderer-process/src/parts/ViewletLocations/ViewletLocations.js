@@ -2,6 +2,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as Focus from '../Focus/Focus.js'
 import * as ViewletLocationsEvents from './ViewletLocationsEvents.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 export const create = () => {
   const $Message = document.createElement('div')
@@ -107,5 +108,5 @@ export const focus = (state) => {
   const { $Locations } = state
   $Locations.classList.add('FocusOutline')
   $Locations.focus()
-  Focus.setFocus('locationList')
+  Focus.setFocus(FocusKey.LocationList)
 }
