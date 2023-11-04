@@ -4,7 +4,6 @@ import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as EnterKeyHintType from '../EnterKeyHintType/EnterKeyHintType.js'
-import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
@@ -181,7 +180,7 @@ export const dispose = () => {}
 const create$ReplaceField = () => {
   const $Row = document.createElement('div')
   $Row.className = 'SearchField SearchFieldReplace'
-  const $ButtonReplaceAllIcon = MaskIcon.create(Icon.ReplaceAll)
+  const $ButtonReplaceAllIcon = MaskIcon.create('ReplaceAll')
   const $ButtonReplaceAll = document.createElement('button')
   $ButtonReplaceAll.title = UiStrings.ReplaceAll
   $ButtonReplaceAll.className = 'SearchFieldButton'
@@ -196,7 +195,7 @@ const create$ReplaceField = () => {
 
   const $ButtonPreserveCase = document.createElement('button')
   $ButtonPreserveCase.title = UiStrings.PreserveCase
-  const $IconPreserveCase = MaskIcon.create(Icon.ArrowDown)
+  const $IconPreserveCase = MaskIcon.create('ArrowDown')
   $ButtonPreserveCase.append($IconPreserveCase)
 
   $Row.append($ViewletSearchReplaceInput, $ButtonReplaceAll)

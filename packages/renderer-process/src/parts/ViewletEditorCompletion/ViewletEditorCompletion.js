@@ -77,13 +77,4 @@ export const handleError = (state, error) => {
   $Viewlet.textContent = `${error}`
 }
 
-export const setBounds = (state, x, y, width, height) => {
-  Assert.number(x)
-  Assert.number(y)
-  Assert.number(width)
-  Assert.number(height)
-  const { $Viewlet } = state
-  SetBounds.setBounds($Viewlet, x, y, width, height)
-}
-
 export * from '../ViewletList/ViewletList.js'

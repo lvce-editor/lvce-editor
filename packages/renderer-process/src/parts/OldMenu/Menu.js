@@ -166,8 +166,12 @@ export const focusIndex = (level, oldFocusedIndex, newFocusedIndex) => {
     $Menu.children[oldFocusedIndex].classList.remove('MenuItemFocused')
   }
   if (newFocusedIndex !== -1) {
-    $Menu.children[newFocusedIndex].classList.add('MenuItemFocused')
-    $Menu.children[newFocusedIndex].focus()
+    const $New = $Menu.children[newFocusedIndex]
+    if ($New.classList.contains('MenuItemSeparator')) {
+      return
+    }
+    $New.classList.add('MenuItemFocused')
+    $New.focus()
   }
 }
 

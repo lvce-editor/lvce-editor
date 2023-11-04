@@ -1,7 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
+import * as PointerEvents from '../PointerEvents/PointerEvents.js'
 import * as ViewletEditorCompletionFunctions from './ViewletEditorCompletionFunctions.js'
 
 export const handleMousedown = (event) => {
@@ -18,16 +17,14 @@ export const handleScrollBarThumbPointerMove = (event) => {
 }
 
 const handlePointerCaptureLost = (event) => {
-  const { target } = event
-  target.removeEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove)
+  const { target, pointerId } = event
+  PointerEvents.stopTracking(target, pointerId, handleScrollBarThumbPointerMove, handlePointerCaptureLost)
 }
 
 export const handleScrollBarPointerDown = (event) => {
   Event.preventDefault(event)
   const { target, pointerId, clientY } = event
-  target.setPointerCapture(pointerId)
-  target.addEventListener(DomEventType.PointerMove, handleScrollBarThumbPointerMove, DomEventOptions.Active)
-  target.addEventListener(DomEventType.LostPointerCapture, handlePointerCaptureLost)
+  PointerEvents.startTracking(target, pointerId, handleScrollBarThumbPointerMove, handlePointerCaptureLost)
   const uid = ComponentUid.fromEvent(event)
   ViewletEditorCompletionFunctions.handleScrollBarClick(uid, clientY)
 }
