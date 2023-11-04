@@ -3,6 +3,7 @@ import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletActivityBarFunctions from './ViewletActivityBarFunctions.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 const get$ItemFromEvent = (event) => {
   const $Target = event.target
@@ -34,7 +35,7 @@ export const handleBlur = (event) => {
 }
 
 export const handleFocus = (event) => {
-  Focus.setFocus('activityBar')
+  Focus.setFocus(FocusKey.ActivityBar)
   const uid = ComponentUid.fromEvent(event)
   ViewletActivityBarFunctions.handleFocus(uid)
 }

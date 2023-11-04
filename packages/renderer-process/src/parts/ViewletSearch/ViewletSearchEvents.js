@@ -5,6 +5,7 @@ import * as InputSource from '../InputSource/InputSource.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as PointerEvents from '../PointerEvents/PointerEvents.js'
 import * as ViewletSearchFunctions from './ViewletSearchFunctions.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 export const handleInput = (event) => {
   const { target } = event
@@ -14,7 +15,7 @@ export const handleInput = (event) => {
 }
 
 export const handleFocus = (event) => {
-  Focus.setFocus('SearchInput')
+  Focus.setFocus(FocusKey.SearchInput)
 }
 
 const getIndexTreeItem = ($Target) => {

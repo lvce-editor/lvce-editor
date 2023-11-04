@@ -3,6 +3,7 @@ import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Focus from '../Focus/Focus.js'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as ViewletTitleBarMenuBarFunctions from './ViewletTitleBarMenuBarFunctions.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 const isInsideTitleBarMenu = ($Element) => {
   return $Element.classList.contains('MenuItem') || $Element.classList.contains('Menu') || $Element.classList.contains('TitleBarTopLevelEntry')
@@ -71,5 +72,5 @@ export const handleMenuClick = (event) => {
 }
 
 export const handleFocus = () => {
-  Focus.setFocus('TitleBarMenuBar')
+  Focus.setFocus(FocusKey.TitleBarMenuBar)
 }
