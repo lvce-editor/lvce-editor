@@ -51,6 +51,7 @@ export const create = (id, uri, x, y, width, height) => {
     excluded: [],
     editingValue: '',
     editingType: ExplorerEditingType.None,
+    editingIcon: '',
   }
 }
 
@@ -505,9 +506,11 @@ export const newFile = (state) => {
 }
 
 export const updateEditingValue = (state, value) => {
+  const editingIcon = IconTheme.getFileIcon({ name: value })
   return {
     ...state,
     editingValue: value,
+    editingIcon,
   }
 }
 

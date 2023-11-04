@@ -59,4 +59,13 @@ const renderEditingIndex = {
   },
 }
 
-export const render = [renderEditingIndex, renderItems, renderDropTargets, renderFocusedIndex]
+const renderEditingIcon = {
+  isEqual(oldState, newState) {
+    return oldState.editingValue === newState.editingValue
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setEditingIcon', /* index */ newState.editingIndex, /* value */ newState.editingIcon]
+  },
+}
+
+export const render = [renderEditingIndex, renderItems, renderDropTargets, renderFocusedIndex, renderEditingIcon]

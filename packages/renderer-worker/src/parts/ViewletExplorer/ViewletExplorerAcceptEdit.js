@@ -114,6 +114,7 @@ const computeRenamedDirent = (dirents, index, newName) => {
     ...oldDirent,
     name: newName,
     path: oldDirent.path.slice(0, -oldDirent.name.length) + newName,
+    icon: IconTheme.getFileIcon({ name: newName }),
   }
   const depth = newDirent.depth
   // TODO
@@ -219,6 +220,7 @@ export const acceptRename = async (state) => {
     ...state,
     editingIndex: -1,
     editingValue: '',
+    editingIcon: '',
     focusedIndex,
     focused: true,
   }
