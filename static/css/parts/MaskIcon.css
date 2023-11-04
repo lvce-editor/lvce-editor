@@ -193,3 +193,18 @@
   -webkit-mask-image: url(/icons/chevron-up.svg);
   mask-image: url(/icons/chevron-up.svg);
 }
+
+.MaskIconArrowLeft {
+  -webkit-mask-image: url(/icons/arrow-left.svg);
+  mask-image: url(/icons/arrow-left.svg);
+}
+
+.MaskIconArrowRight {
+  -webkit-mask-image: url(/icons/arrow-right.svg);
+  mask-image: url(/icons/arrow-right.svg);
+}
+
+.MaskIconLinkExternal {
+  -webkit-mask-image: url(/icons/link-external.svg);
+  mask-image: url(/icons/link-external.svg);
+}
