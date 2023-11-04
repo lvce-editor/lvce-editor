@@ -28,3 +28,4 @@ exports.DesktopCapturer = 27
 exports.Trash = 28
 exports.IpcParent = 29
 exports.Crash = 30
+exports.Exit = 31

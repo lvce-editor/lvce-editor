@@ -71,6 +71,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.Trash
     case 'IpcParent':
       return ModuleId.IpcParent
+    case 'Exit':
+      return ModuleId.Exit
     default:
       throw new CommandNotFoundError(commandId)
   }
