@@ -146,6 +146,7 @@ test('loadContent', async () => {
     editingIndex: -1,
     excluded: [],
     editingValue: '',
+    editingIcon: '',
     editingType: ExplorerEditingType.None,
   })
 })
@@ -218,6 +219,7 @@ test('loadContent - root', async () => {
     editingIndex: -1,
     excluded: [],
     editingValue: '',
+    editingIcon: '',
     editingType: ExplorerEditingType.None,
   })
 })
@@ -293,6 +295,7 @@ test('loadContent - restore from saved state - root', async () => {
     editingIndex: -1,
     excluded: [],
     editingValue: '',
+    editingIcon: '',
     editingType: ExplorerEditingType.None,
   })
 })
@@ -3799,7 +3802,7 @@ test('resize - same height', () => {
     expect.objectContaining({
       minLineY: 0,
       maxLineY: 3,
-    })
+    }),
   )
 })
 
@@ -3818,8 +3821,8 @@ test('computeRenamedDirents - file', () => {
         },
       ],
       0,
-      'file 2'
-    )
+      'file 2',
+    ),
   ).toEqual({
     focusedIndex: 0,
     newDirents: [
@@ -3869,8 +3872,8 @@ test('computeRenamedDirents - file moves to the top', () => {
         },
       ],
       2,
-      'a'
-    )
+      'a',
+    ),
   ).toEqual({
     focusedIndex: 0,
     newDirents: [
@@ -3956,8 +3959,8 @@ test('computeRenamedDirents - file moves to the top - open directories are in be
         },
       ],
       4,
-      'a'
-    )
+      'a',
+    ),
   ).toEqual({
     focusedIndex: 0,
     newDirents: [
@@ -4043,8 +4046,8 @@ test('computeRenamedDirents - file moves to the bottom', () => {
         },
       ],
       0,
-      'd'
-    )
+      'd',
+    ),
   ).toEqual({
     focusedIndex: 2,
     newDirents: [
@@ -4130,8 +4133,8 @@ test('computeRenamedDirents - file moves to the bottom - open directories are in
         },
       ],
       0,
-      'd'
-    )
+      'd',
+    ),
   ).toEqual({
     focusedIndex: 4,
     newDirents: [
@@ -4217,8 +4220,8 @@ test('computeRenamedDirents - directory', () => {
         },
       ],
       0,
-      'folder-2'
-    )
+      'folder-2',
+    ),
   ).toEqual({
     focusedIndex: 0,
     newDirents: [
