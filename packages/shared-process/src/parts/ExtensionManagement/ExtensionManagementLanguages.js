@@ -1,21 +1,9 @@
 // TODO rename file to languageConfiguration.js
 import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import * as GetRemoteUrl from '../GetRemoteUrl/GetRemoteUrl.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import { VError } from '../VError/VError.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
-
-const getExtensionLanguages = (extension) => {
-  if (!extension.languages) {
-    return []
-  }
-  return extension.languages.map((language) => ({}))
-}
-
-const toRemoteUrl = (path) => {
-  const url = pathToFileURL(path).toString().slice(8)
-  return `/remote/${url}`
-}
 
 const getLanguagesFromExtension = (extension) => {
   // TODO what if extension is null? should not crash process, handle error gracefully
@@ -36,7 +24,7 @@ const getLanguagesFromExtension = (extension) => {
       return {
         ...language,
         extensionPath,
-        tokenize: toRemoteUrl(join(extensionPath, language.tokenize)),
+        tokenize: GetRemoteUrl.getRemoteUrl(join(extensionPath, language.tokenize)),
       }
     }
     return language
