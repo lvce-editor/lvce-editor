@@ -29,9 +29,9 @@ import * as Protocol from '../Protocol/Protocol.js'
 // map windows to folders and ports
 // const windowConfigMap = new Map()
 
-exports.hydrate = async () => {
+export const hydrate = async () => {
   Electron.Menu.setApplicationMenu(null) // performance
-  const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
+  const { default: unhandled } = await import('electron-unhandled') // TODO this might slow down initial startup
   unhandled({
     showDialog: true,
     logger() {}, // already exists in mainProcessMain.js
@@ -99,6 +99,6 @@ exports.hydrate = async () => {
   Debug.debug('[info] app window created')
 }
 
-exports.exit = () => {
+export const exit = () => {
   ElectronApp.quit()
 }

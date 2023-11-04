@@ -1,5 +1,5 @@
-const { ipcMain } = require('electron')
+import { ipcMain } from 'electron'
 
-exports.on = (event, listener) => {
+export const on = (event, listener) => {
   ipcMain.on(event, listener)
 }

@@ -1,22 +1,22 @@
 const PHASE_DEFAULT = 0
 const PHASE_SHUTDOWN = -1
 
-exports.state = {
+export const state = {
   phase: PHASE_DEFAULT,
 }
 
-exports.isShutDown = () => {
-  return exports.state.phase === PHASE_SHUTDOWN
+export const isShutDown = () => {
+  return state.phase === PHASE_SHUTDOWN
 }
 
-exports.isDefault = () => {
-  return exports.state.phase === PHASE_DEFAULT
+export const isDefault = () => {
+  return state.phase === PHASE_DEFAULT
 }
 
-exports.setShutDown = () => {
-  exports.state.phase = PHASE_SHUTDOWN
+export const setShutDown = () => {
+  state.phase = PHASE_SHUTDOWN
 }
 
-exports.getPhase = () => {
-  return exports.state.phase
+export const getPhase = () => {
+  return state.phase
 }

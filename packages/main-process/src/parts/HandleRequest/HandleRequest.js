@@ -7,7 +7,7 @@ import * as Platform from '../Platform/Platform.js'
  * @param {GlobalRequest} request
  */
 
-exports.handleRequest = async (request) => {
+export const handleRequest = async (request) => {
   const path = ElectronSessionGetAbsolutePath.getAbsolutePath(request.url)
   // console.time(url.toString())
   const response = await GetFileResponse.getFileResponse(path)

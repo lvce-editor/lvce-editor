@@ -1,4 +1,4 @@
-exports.mark = (key) => {
+export const mark = (key) => {
   performance.mark(key)
 }
 
@@ -12,14 +12,14 @@ const toUiEntry = (performanceEntry) => {
   }
 }
 
-exports.getEntries = () => {
+export const getEntries = () => {
   const entries = performance.getEntries()
   const uiEntries = entries.map(toUiEntry)
   return uiEntries
 }
 
-exports.clearMarks = () => {
+export const clearMarks = () => {
   performance.clearMarks()
 }
 
-exports.timeOrigin = performance.timeOrigin
+export const timeOrigin = performance.timeOrigin

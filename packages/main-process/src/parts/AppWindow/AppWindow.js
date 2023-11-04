@@ -88,7 +88,7 @@ export const createAppWindow = async (preferences, parsedArgs, workingDirectory,
 
 export const openNew = async (url) => {
   const preferences = await Preferences.load()
-  return export const createAppWindow(preferences, [], '', url)
+  return createAppWindow(preferences, [], '', url)
 }
 
 export const findById = (id) => {
