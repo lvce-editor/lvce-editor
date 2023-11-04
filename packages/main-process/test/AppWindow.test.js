@@ -58,8 +58,8 @@ jest.unstable_mockModule('electron', () => {
 })
 
 const electron = await import('electron')
-const AppWindowStates = await import('../src/parts/AppWindowStates/AppWindowStates.cjs')
-const AppWindow = await import('../src/parts/AppWindow/AppWindow.cjs')
+const AppWindowStates = await import('../src/parts/AppWindowStates/AppWindowStates.js')
+const AppWindow = await import('../src/parts/AppWindow/AppWindow.js')
 
 test.skip('createAppWindow', async () => {
   // @ts-ignore
@@ -75,6 +75,6 @@ test.skip('createAppWindow - error', async () => {
   })
   // TODO error message should be improved
   await expect(AppWindow.createAppWindow([], '')).rejects.toThrowError(
-    new Error("Failed to load url lvce-oss://-/: ERR_FAILED (-2) loading 'lvce-oss://-/'")
+    new Error("Failed to load url lvce-oss://-/: ERR_FAILED (-2) loading 'lvce-oss://-/'"),
   )
 })

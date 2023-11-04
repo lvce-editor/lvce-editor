@@ -1,4 +1,4 @@
-import * as ElectronShell from './ElectronShell.cjs'
+import * as ElectronShell from './ElectronShell.js'
 
 export const name = 'ElectronShell'
 

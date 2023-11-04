@@ -1,4 +1,4 @@
-import * as Platform from '../src/parts/Platform/Platform.cjs'
+import * as Platform from '../src/parts/Platform/Platform.js'
 
 test('isProduction', () => {
   expect(typeof Platform.isProduction).toBe('boolean')

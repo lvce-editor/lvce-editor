@@ -33,10 +33,10 @@ jest.unstable_mockModule('electron', () => {
   }
 })
 
-const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.cjs')
-const Logger = await import('../src/parts/Logger/Logger.cjs')
-const Process = await import('../src/parts/Process/Process.cjs')
-const PrettyError = await import('../src/parts/PrettyError/PrettyError.cjs')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
+const Logger = await import('../src/parts/Logger/Logger.js')
+const Process = await import('../src/parts/Process/Process.js')
+const PrettyError = await import('../src/parts/PrettyError/PrettyError.js')
 
 test.skip('handleUncaughtExceptionMonitor', () => {
   const error = new Error('oops')
@@ -66,7 +66,7 @@ test.skip('handleUncaughtExceptionMonitor', () => {
      |           ^
   20 |   }
   21 | }
-  22 |`
+  22 |`,
   )
   expect(Logger.error).toHaveBeenNthCalledWith(2, `at main (/test/packages/main-process/src/mainProcessMain.js:19:11)`)
   expect(Process.exit).toHaveBeenCalledTimes(1)
@@ -105,7 +105,7 @@ test.skip('handleUnhandledRejection', () => {
     22 |
 
 at main (/test/packages/main-process/src/mainProcessMain.js:19:11)
-`
+`,
   )
   expect(Process.exit).toHaveBeenCalledTimes(1)
   expect(Process.exit).toHaveBeenCalledWith(1)
@@ -156,7 +156,7 @@ SyntaxError: Cannot use import statement outside a module
 
     at/test/packages/main-process/src/parts/IpcParentWithNodeWorker/IpcParentWithNodeWorker.js:1
     at async Promise.all (index 0)
-`
+`,
   )
   expect(Process.exit).toHaveBeenCalledTimes(1)
   expect(Process.exit).toHaveBeenCalledWith(1)

@@ -1,6 +1,6 @@
 import { fork } from 'node:child_process'
-import * as Platform from '../Platform/Platform.cjs'
-import * as Logger from '../Logger/Logger.cjs'
+import * as Platform from '../Platform/Platform.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const handlePort = async (event, browserWindowPort) => {
   const extensionHostPath = Platform.getExtensionHostPath()

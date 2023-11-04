@@ -1,5 +1,5 @@
 import { safeStorage } from 'electron'
-import * as EncodingType from '../EncodingType/EncodingType.cjs'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 
 export const isEncryptionAvailable = () => {
   return safeStorage.isEncryptionAvailable()

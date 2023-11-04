@@ -1,4 +1,4 @@
-import * as Assert from '../src/parts/Assert/Assert.cjs'
+import * as Assert from '../src/parts/Assert/Assert.js'
 
 test('object', () => {
   expect(() => Assert.object('')).toThrowError(new Error('expected value to be of type object'))

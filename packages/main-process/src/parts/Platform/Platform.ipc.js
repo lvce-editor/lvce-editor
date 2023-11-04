@@ -1,4 +1,4 @@
-import * as Platform from './Platform.cjs'
+import * as Platform from './Platform.js'
 
 export const name = 'Platform'
 

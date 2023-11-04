@@ -1,4 +1,4 @@
-import * as Command from '../Command/Command.cjs'
+import * as Command from '../Command/Command.js'
 import * as Callback from '../Callback/Callback.js'
 import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.js'
 

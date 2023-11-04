@@ -1,4 +1,4 @@
-import * as ParseCliArgs from '../src/parts/ParseCliArgs/ParseCliArgs.cjs'
+import * as ParseCliArgs from '../src/parts/ParseCliArgs/ParseCliArgs.js'
 
 test('parseCliArgs', () => {
   expect(ParseCliArgs.parseCliArgs(['/usr/lib/lvce-oss/lvce-oss', '/test/'])).toEqual({

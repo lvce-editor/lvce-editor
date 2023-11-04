@@ -16,7 +16,7 @@ jest.unstable_mockModule('electron', () => {
 })
 
 const electron = await import('electron')
-const ElectronShell = await import('../src/parts/ElectronShell/ElectronShell.cjs')
+const ElectronShell = await import('../src/parts/ElectronShell/ElectronShell.js')
 
 test.skip('showItemInFolder', () => {
   // @ts-ignore

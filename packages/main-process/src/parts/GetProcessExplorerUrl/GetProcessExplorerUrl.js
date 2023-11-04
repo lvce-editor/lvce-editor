@@ -1,6 +1,6 @@
-import * as Path from '../Path/Path.cjs'
-import * as Platform from '../Platform/Platform.cjs'
-import * as Root from '../Root/Root.cjs'
+import * as Path from '../Path/Path.js'
+import * as Platform from '../Platform/Platform.js'
+import * as Root from '../Root/Root.js'
 
 export const getProcessExplorerUrl = () => {
   return `${Platform.scheme}://-/packages/main-process/pages/process-explorer/process-explorer.html`

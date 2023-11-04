@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
-import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.cjs'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.cjs'
+import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 jest.unstable_mockModule('electron', () => {
   return {
@@ -22,7 +22,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.cjs', () => {
   }
 })
 
-const App = await import('../src/parts/App/App.cjs')
+const App = await import('../src/parts/App/App.js')
 
 test.skip('handlePortForMainProcess - error - command not found', async () => {
   let _listener = async (message) => {}
