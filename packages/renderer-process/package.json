@@ -15,7 +15,8 @@
   "license": "MIT",
   "jest": {
     "moduleNameMapper": {
-      "^/static/(.*)$": "<rootDir>/../../static/$1"
+      "^/static/(.*)$": "<rootDir>/../../static/$1",
+      "^/js/(.*)$": "<rootDir>/../../static/js/$1"
     },
     "testMatch": [
       "**/test/**/*.js"
