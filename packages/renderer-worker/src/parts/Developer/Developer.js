@@ -2,6 +2,7 @@ import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as ElectronDeveloper from '../ElectronDeveloper/ElectronDeveloper.js'
 import * as FormatStartupPerformance from '../FormatStartupPerformance/FormatStartupPerformance.js'
+import * as GetWebVitals from '../GetWebVitals/GetWebVitals.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceEntryType from '../PerformanceEntryType/PerformanceEntryType.js'
@@ -17,63 +18,11 @@ import * as ToMarkdownTable from '../ToMarkdownTable/ToMarkdownTable.js'
 
 // TODO no export, this is internal only
 
-const getWebVitals = async () => {
-  let firstPaint = -1
-  let firstContentfulPaint = -1
-  let largestContentfulPaint = -1
-  const paintEntries = Performance.getEntriesByType(PerformanceEntryType.Paint)
-  for (const paintEntry of paintEntries) {
-    switch (paintEntry.name) {
-      case 'first-paint':
-        firstPaint = paintEntry.startTime
-        break
-      case 'first-contentful-paint':
-        firstContentfulPaint = paintEntry.startTime
-        break
-    }
-  }
-  const performanceObserver = new PerformanceObserver(() => {})
-  performanceObserver.observe({
-    type: 'largest-contentful-paint',
-    buffered: true,
-  })
-  const records = performanceObserver.takeRecords()
-  performanceObserver.disconnect()
-  if (records.length > 0) {
-    largestContentfulPaint = records[0].startTime
-  }
-
-  return [
-    {
-      name: 'first-paint',
-      startTime: firstPaint,
-    },
-    {
-      name: 'firstContentfulPaint',
-      startTime: firstContentfulPaint,
-    },
-    {
-      name: 'largestContentfulPaint',
-      startTime: largestContentfulPaint,
-    },
-  ]
-}
-
 const getNodeTiming = () => {
   if (Platform.platform === PlatformType.Web) {
     return undefined
   }
   return SharedProcess.invoke(/* command */ 'Performance.getNodeStartupTiming')
-}
-
-const getFirstTimeOrigin = ({ measureEntries, electronEntries }) => {
-  if (electronEntries) {
-    return electronEntries.timeOrigin
-  }
-  if (measureEntries) {
-    return measureEntries.timeOrigin
-  }
-  return 0
 }
 
 const getMeasureEntries = () => {
@@ -105,7 +54,7 @@ export const getStartupPerformanceContent = async () => {
     nodeStartupTiming = await getNodeTiming()
   }
   const measureEntries = getMeasureEntries()
-  const webVitals = await getWebVitals()
+  const webVitals = await GetWebVitals.getWebVitals()
   let electronEntries
   if (Platform.platform === PlatformType.Electron) {
     electronEntries = await getElectronEntries()
