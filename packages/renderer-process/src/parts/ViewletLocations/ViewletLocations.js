@@ -1,91 +1,35 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as Assert from '../Assert/Assert.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as Focus from '../Focus/Focus.js'
-import * as ViewletLocationsEvents from './ViewletLocationsEvents.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as ViewletLocationsEvents from './ViewletLocationsEvents.js'
 
 export const create = () => {
-  const $Message = document.createElement('div')
-  $Message.className = 'LocationsMessage'
-  $Message.id = 'LocationsMessage'
-  $Message.role = AriaRoles.Status
-  const $Locations = document.createElement('div')
-  $Locations.className = 'LocationList'
-  $Locations.role = AriaRoles.Tree
-  $Locations.ariaLabel = 'Locations'
-  $Locations.tabIndex = 0
-  $Locations.setAttribute(DomAttributeType.AriaDescribedBy, 'LocationsMessage')
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Locations'
-  $Viewlet.append($Message, $Locations)
   return {
     $Viewlet,
-    $Message,
-    $Locations,
   }
 }
 
 export const attachEvents = (state) => {
-  const { $Locations } = state
-  $Locations.onmousedown = ViewletLocationsEvents.handleLocationsMouseDown
+  const { $Viewlet } = state
+  $Viewlet.onmousedown = ViewletLocationsEvents.handleLocationsMouseDown
 }
 
-const create$Location = () => {
-  // TODO reuse logic from tree view
-  const $Location = document.createElement('div')
-  $Location.className = 'TreeItem'
-  $Location.role = AriaRoles.TreeItem
-  return $Location
-}
-
-const render$Location = ($Location, location) => {
-  switch (location.type) {
-    case 'leaf':
-      $Location.className = 'TreeItem'
-      $Location.textContent = location.lineText || '(empty line)'
-      $Location.ariaExpanded = undefined
-      $Location.id = `Reference-${location.index}`
-      break
-    case 'collapsed':
-      $Location.className = `TreeItem Icon${location.icon}`
-      $Location.textContent = location.name
-      $Location.ariaExpanded = false
-      $Location.id = `Reference-${location.index}`
-    case 'expanded':
-      $Location.className = `TreeItem Icon${location.icon}`
-      $Location.ariaExpanded = true
-      $Location.textContent = location.name
-      $Location.id = `Reference-${location.index}`
-    default:
-      break
-  }
-
-  // TODO
-}
-
-const render$Locations = ($Locations, locations) => {
-  $Locations.textContent = ''
-  const fragment = document.createDocumentFragment()
-  for (const location of locations) {
-    const $Location = create$Location()
-    render$Location($Location, location)
-    fragment.append($Location)
-  }
-  $Locations.append(fragment)
-}
-
-export const setLocations = (state, locations) => {
-  const { $Locations } = state
-  render$Locations($Locations, locations)
-}
-
-export const setMessage = (state, message) => {
-  const { $Message } = state
-  $Message.textContent = message
+export const setLocationsDom = (state, dom) => {
+  Assert.object(state)
+  Assert.array(dom)
+  const { $Viewlet } = state
+  const $Root = VirtualDom.render(dom)
+  $Viewlet.replaceChildren(...$Root.childNodes)
 }
 
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
-  const { $Locations } = state
+  const { $Viewlet } = state
+  const $Locations = $Viewlet.children[1]
   if (oldFocusedIndex === -1) {
     $Locations.classList.remove('FocusOutline')
   } else {

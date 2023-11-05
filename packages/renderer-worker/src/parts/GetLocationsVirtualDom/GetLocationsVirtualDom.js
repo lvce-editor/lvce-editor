@@ -64,5 +64,6 @@ export const getLocationsVirtualDom = (locations, message) => {
     },
     ...locations.flatMap(getLocationVirtualDom),
   )
+  console.log({ dom, locations })
   return dom
 }
