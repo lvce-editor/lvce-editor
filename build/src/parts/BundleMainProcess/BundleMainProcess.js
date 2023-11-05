@@ -77,7 +77,7 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/mainProcessMain.js`,
-      platform: 'node/cjs',
+      platform: 'node',
       external: ['electron'],
     })
     await Remove.remove(join(cachePath, 'node_modules'))
