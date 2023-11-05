@@ -12,7 +12,8 @@
     "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",
     "nsis": {
-      "warningsAsErrors": false
+      "warningsAsErrors": false,
+      "differentialPackage": false
     },
     "win": {
       "target": "nsis",
