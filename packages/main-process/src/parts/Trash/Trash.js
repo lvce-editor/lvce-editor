@@ -1,5 +1,5 @@
 import { shell } from 'electron'
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 
 export const trash = async (path) => {
   Assert.string(path)

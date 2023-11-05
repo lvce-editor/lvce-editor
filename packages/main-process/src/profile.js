@@ -9,7 +9,7 @@ session.post('Profiler.enable', () => {
     // Invoke business logic under measurement here...
 
     console.log('start require')
-    require('./mainProcessMain.cjs')
+    require('./mainProcessMain.js')
     console.log('finish require')
     // some time later...
     session.post('Profiler.stop', (error, { profile }) => {

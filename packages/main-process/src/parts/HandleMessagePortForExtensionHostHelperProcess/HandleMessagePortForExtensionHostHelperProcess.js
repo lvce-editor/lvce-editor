@@ -1,7 +1,7 @@
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as Logger from '../Logger/Logger.cjs'
-import * as Platform from '../Platform/Platform.cjs'
+import * as Logger from '../Logger/Logger.js'
+import * as Platform from '../Platform/Platform.js'
 
 /**
  *

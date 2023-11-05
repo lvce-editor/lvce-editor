@@ -1,11 +1,11 @@
 import * as Electron from 'electron'
-import { VError } from '../VError/VError.cjs'
-import * as Path from '../Path/Path.cjs'
-import * as Platform from '../Platform/Platform.cjs'
+import { VError } from '../VError/VError.js'
+import * as Path from '../Path/Path.js'
+import * as Platform from '../Platform/Platform.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as ElectronPermissionType from '../ElectronPermissionType/ElectronPermissionType.cjs'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.cjs'
-import * as Logger from '../Logger/Logger.cjs'
+import * as ElectronPermissionType from '../ElectronPermissionType/ElectronPermissionType.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as Logger from '../Logger/Logger.js'
 import * as ElectronBrowserViewAdBlock from '../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js'
 
 const state = {

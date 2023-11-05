@@ -1,5 +1,5 @@
 import { net } from 'electron'
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 
 export const getJson = async (url) => {
   Assert.string(url)

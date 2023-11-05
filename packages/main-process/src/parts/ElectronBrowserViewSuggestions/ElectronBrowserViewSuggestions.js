@@ -1,13 +1,13 @@
 import { BrowserView, BrowserWindow } from 'electron'
 import * as DisposeWebContents from '../DisposeWebContents/DisposeWebContents.js'
-import * as ElectronSession from '../ElectronSession/ElectronSession.cjs'
-import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs'
-import * as Logger from '../Logger/Logger.cjs'
-import * as Path from '../Path/Path.cjs'
+import * as ElectronSession from '../ElectronSession/ElectronSession.js'
+import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
+import * as Logger from '../Logger/Logger.js'
+import * as Path from '../Path/Path.js'
 import * as PendingPorts from '../PendingPorts/PendingPorts.js'
-import * as Platform from '../Platform/Platform.cjs'
-import * as Root from '../Root/Root.cjs'
-import { VError } from '../VError/VError.cjs'
+import * as Platform from '../Platform/Platform.js'
+import * as Root from '../Root/Root.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   /**
@@ -85,12 +85,12 @@ const getSuggestionsHtml = (suggestions) => {
 }
 
 export const setSuggestions = async (suggestions) => {
-  const {browserView} = state
+  const { browserView } = state
   if (!browserView) {
     return
   }
-  const {port} = state
-  const {webContents} = browserView
+  const { port } = state
+  const { webContents } = browserView
   const suggestionsHtml = getSuggestionsHtml(suggestions)
   const execString = `document.body.innerHTML = \`${suggestionsHtml}\``
   try {

@@ -1,5 +1,5 @@
 import * as GetResponse from '../GetResponse/GetResponse.js'
-import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.cjs'
+import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
 
 export const handleJsonRpcMessage = async (ipc, message, execute, resolve) => {
   if ('result' in message || 'error' in message) {

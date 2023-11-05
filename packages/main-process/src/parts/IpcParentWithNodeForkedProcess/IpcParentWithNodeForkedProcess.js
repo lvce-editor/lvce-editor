@@ -1,5 +1,5 @@
 import { fork } from 'node:child_process'
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 
 /**
  *

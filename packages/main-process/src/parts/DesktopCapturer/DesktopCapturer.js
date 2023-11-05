@@ -1,6 +1,6 @@
 import { desktopCapturer } from 'electron'
-import { VError } from '../VError/VError.cjs'
-import * as Assert from '../Assert/Assert.cjs'
+import { VError } from '../VError/VError.js'
+import * as Assert from '../Assert/Assert.js'
 
 const serializeSource = (source) => {
   return {

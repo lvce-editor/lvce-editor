@@ -11,8 +11,8 @@ jest.unstable_mockModule('node:fs', () => ({
 }))
 
 const fs = await import('node:fs')
-const { VError } = await import('../src/parts/VError/VError.cjs')
-const PrettyError = await import('../src/parts/PrettyError/PrettyError.cjs')
+const { VError } = await import('../src/parts/VError/VError.js')
+const PrettyError = await import('../src/parts/PrettyError/PrettyError.js')
 const { IpcError } = await import('../src/parts/IpcError/IpcError.js')
 
 test.skip('prepare - unknown command error', async () => {
@@ -341,7 +341,7 @@ exports.load = async (moduleId) => {
 
 test.skip('prepare - dl open failed', async () => {
   const error = new Error(
-    `Module did not self-register: 'C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\build\\Release\\windows_process_tree.node'.`
+    `Module did not self-register: 'C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\build\\Release\\windows_process_tree.node'.`,
   )
   error.stack = `Error: Module did not self-register: 'C:\\test\\packages\\main-process\\node_modules\\windows-process-tree\\build\\Release\\windows_process_tree.node'.
     at process.func [as dlopen] (node:electron/js2c/asar_bundle:2:1822)

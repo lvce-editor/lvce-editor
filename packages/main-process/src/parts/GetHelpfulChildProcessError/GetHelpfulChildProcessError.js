@@ -1,4 +1,4 @@
-import * as SplitLines from '../SplitLines/SplitLines.cjs'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as GetModulesErrorStack from '../GetModulesErrorStack/GetModulesErrorStack.js'
 
 const RE_NATIVE_MODULE_ERROR = /^innerError Error: Cannot find module '.*.node'/

@@ -1,5 +1,5 @@
-import * as JoinLines from '../JoinLines/JoinLines.cjs'
-import * as SplitLines from '../SplitLines/SplitLines.cjs'
+import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 export class JsonParsingError extends Error {
   constructor(message, codeFrame, stack) {

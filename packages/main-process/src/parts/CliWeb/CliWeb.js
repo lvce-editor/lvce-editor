@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process'
 import * as Electron from 'electron'
-import * as Platform from '../Platform/Platform.cjs'
-import * as Process from '../Process/Process.cjs'
+import * as Platform from '../Platform/Platform.js'
+import * as Process from '../Process/Process.js'
 
 export const handleCliArgs = (parsedArgs) => {
   const webPath = Platform.getWebPath()

@@ -1,5 +1,5 @@
 import { BrowserWindow } from 'electron'
-import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.cjs'
+import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
 import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
 
 export const createPidMap = () => {
