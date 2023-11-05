@@ -1,5 +1,6 @@
-import * as BabelParse from '../../../../../static/js/babel-parser.js'
+import * as LoadBabelParser from '../LoadBabelParser/LoadBabelParser.js'
 
-export const parse = (code, options) => {
+export const parse = async (code, options) => {
+  const BabelParse = await LoadBabelParser.loadBabelParser()
   return BabelParse.parse(code, options)
 }
