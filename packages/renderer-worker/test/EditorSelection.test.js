@@ -267,19 +267,18 @@ test('getVisible - only start of selection visible', () => {
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual([])
+  // prettier-ignore
   expect(selectionInfos).toEqual(
-    // prettier-ignore
-    new Float32Array([
-     /* x */ 0, /* y */ 0, /* width */ 48, /* height */ 20,
-     /* x */ 0, /* y */ 20, /* width */ 48, /* height */ 20,
-     /* x */ 0, /* y */ 40, /* width */ 48, /* height */ 20,
-     /* x */ 0, /* y */ 60, /* width */ 48, /* height */ 20,
-     /* x */ 0, /* y */ 80, /* width */ 48, /* height */ 20,
-     /* x */ 0, /* y */ 100, /* width */ 48, /* height */ 20,
-     /* x */ 0, /* y */ 120, /* width */ 48, /* height */ 20,
-     /* x */ 0, /* y */ 140, /* width */ 48, /* height */ 20,
-    ]),
-  )
+    [
+     /* x */ `0px`, /* y */ `0px`, /* width */ `48px`, /* height */ `20px`,
+     /* x */ `0px`, /* y */ `20px`, /* width */ `48px`, /* height */ `20px`,
+     /* x */ `0px`, /* y */ `40px`, /* width */ `48px`, /* height */ `20px`,
+     /* x */ `0px`, /* y */ `60px`, /* width */ `48px`, /* height */ `20px`,
+     /* x */ `0px`, /* y */ `80px`, /* width */ `48px`, /* height */ `20px`,
+     /* x */ `0px`, /* y */ `100px`, /* width */ `48px`, /* height */ `20px`,
+     /* x */ `0px`, /* y */ `120px`, /* width */ `48px`, /* height */ `20px`,
+     /* x */ `0px`, /* y */ `140px`, /* width */ `48px`, /* height */ `20px`,
+    ])
 })
 
 test('getVisible - selection out of range', () => {
@@ -306,5 +305,5 @@ test('getVisible - selection out of range', () => {
   }
   const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
   expect(cursorInfos).toEqual([`0px 0px`, '0px 140px'])
-  expect(selectionInfos).toEqual(new Float32Array([0, 0, 0, 20, 0, 140, 0, 20]))
+  expect(selectionInfos).toEqual([`0px`, `0px`, `0px`, `20px`, `0px`, `140px`, `0px`, `20px`])
 })
