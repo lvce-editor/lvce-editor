@@ -1,4 +1,3 @@
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as Focus from '../Focus/Focus.js'
