@@ -1,10 +1,10 @@
 import * as ChildProcess from '../ChildProcess/ChildProcess.js'
-import * as Command from '../Command/Command.cjs'
-import * as Path from '../Path/Path.cjs'
-import * as Logger from '../Logger/Logger.cjs'
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.cjs'
-import * as ExitCode from '../ExitCode/ExitCode.cjs'
-import * as Process from '../Process/Process.cjs'
+import * as Command from '../Command/Command.js'
+import * as Path from '../Path/Path.js'
+import * as Logger from '../Logger/Logger.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as ExitCode from '../ExitCode/ExitCode.js'
+import * as Process from '../Process/Process.js'
 
 export const state = {
   /**

@@ -1,7 +1,7 @@
 import { join } from 'node:path'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as Root from '../Root/Root.cjs'
+import * as Root from '../Root/Root.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 
 const state = {

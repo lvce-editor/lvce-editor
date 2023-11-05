@@ -1,6 +1,6 @@
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
-import { VError } from '../VError/VError.cjs'
+import { VError } from '../VError/VError.js'
 import * as Vlq from '../Vlq/Vlq.js'
 
 const getColumnMapping = (mappings, line, column) => {

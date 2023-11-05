@@ -2,10 +2,10 @@ import { BrowserWindow } from 'electron'
 import { writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
+import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
-import * as Session from '../ElectronSession/ElectronSession.cjs'
-import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs'
+import * as Session from '../ElectronSession/ElectronSession.js'
+import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
 import * as GetProcessExplorerUrl from '../GetProcessExplorerUrl/GetProcessExplorerUrl.js'
 
 export const open = async () => {

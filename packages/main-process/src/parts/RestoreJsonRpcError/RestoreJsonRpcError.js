@@ -1,10 +1,10 @@
-import * as Character from '../Character/Character.cjs'
+import * as Character from '../Character/Character.js'
 import * as GetErrorConstructor from '../GetErrorConstructor/GetErrorConstructor.js'
-import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.cjs'
-import * as JoinLines from '../JoinLines/JoinLines.cjs'
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
-import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.cjs'
-import * as SplitLines from '../SplitLines/SplitLines.cjs'
+import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const constructError = (message, type, name) => {
   const ErrorConstructor = GetErrorConstructor.getErrorConstructor(message, type)

@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 import * as BabelWorker from '../BabelWorker/BabelWorker.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 

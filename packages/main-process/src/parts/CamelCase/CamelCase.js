@@ -1,4 +1,4 @@
-import * as Character from '../Character/Character.cjs'
+import * as Character from '../Character/Character.js'
 
 const firstLetterLowerCase = (string) => {
   return string[0].toLowerCase() + string.slice(1)

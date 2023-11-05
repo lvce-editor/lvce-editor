@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 

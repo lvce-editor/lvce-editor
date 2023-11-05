@@ -1,11 +1,11 @@
 import { utilityProcess } from 'electron'
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 import * as CamelCase from '../CamelCase/CamelCase.js'
 import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
 import * as GetFirstUtilityProcessEvent from '../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js'
 import { IpcError } from '../IpcError/IpcError.js'
-import * as Path from '../Path/Path.cjs'
-import * as Root from '../Root/Root.cjs'
+import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
 import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
 
 export const create = async ({ path, argv = [], execArgv = [], name }) => {

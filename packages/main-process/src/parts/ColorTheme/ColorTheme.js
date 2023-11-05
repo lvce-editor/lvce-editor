@@ -1,4 +1,4 @@
-import * as JoinLines from '../JoinLines/JoinLines.cjs'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 
 const getExtensions = () => {}
 
