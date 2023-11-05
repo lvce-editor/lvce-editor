@@ -12,6 +12,9 @@
     "electronVersion": "@@ELECTRON_VERSION@@",
     "mac": {
       "target": "dmg"
-    }
+    },
+    "dmg": {
+			"writeUpdateInfo": false
+		}
   }
 }

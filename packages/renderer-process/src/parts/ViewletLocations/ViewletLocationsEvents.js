@@ -1,6 +1,3 @@
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-import * as Focus from '../Focus/Focus.js'
 import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
