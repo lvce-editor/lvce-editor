@@ -180,7 +180,7 @@ export const renderTextAndCursors = (state, textInfos, cursorInfos) => {
 
 export const setSelections = (state, cursorInfos, selectionInfos) => {
   Assert.array(cursorInfos)
-  Assert.float32Array(selectionInfos)
+  Assert.array(selectionInfos)
   LayerCursor.setCursors(state, cursorInfos)
   LayerSelections.setSelections(state, selectionInfos)
 }

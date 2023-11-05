@@ -5,6 +5,13 @@ export const setBounds = ($Element, x, y, width, height) => {
   $Element.style.height = `${height}px`
 }
 
+export const setBoundsPixelString = ($Element, x, y, width, height) => {
+  $Element.style.top = y
+  $Element.style.left = x
+  $Element.style.width = width
+  $Element.style.height = height
+}
+
 export const setX = ($Element, x) => {
   $Element.style.translate = `${x}px 0`
 }
