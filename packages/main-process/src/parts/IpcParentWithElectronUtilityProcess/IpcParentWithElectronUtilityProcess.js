@@ -4,23 +4,12 @@ import * as CamelCase from '../CamelCase/CamelCase.js'
 import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
 import * as GetFirstUtilityProcessEvent from '../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js'
 import { IpcError } from '../IpcError/IpcError.js'
-import * as Path from '../Path/Path.js'
-import * as Root from '../Root/Root.js'
 import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
 
 export const create = async ({ path, argv = [], execArgv = [], name }) => {
   Assert.string(path)
-  const utilityProcessEntryPoint = Path.join(
-    Root.root,
-    'packages',
-    'main-process',
-    'src',
-    'parts',
-    'UtilityProcessEntryPoint',
-    'UtilityProcessEntryPoint.cjs',
-  )
-  const actualArgv = [path, '--ipc-type=electron-utility-process', ...argv]
-  const childProcess = utilityProcess.fork(utilityProcessEntryPoint, actualArgv, {
+  const actualArgv = ['--ipc-type=electron-utility-process', ...argv]
+  const childProcess = utilityProcess.fork(path, actualArgv, {
     execArgv,
     stdio: 'pipe',
     serviceName: name,
