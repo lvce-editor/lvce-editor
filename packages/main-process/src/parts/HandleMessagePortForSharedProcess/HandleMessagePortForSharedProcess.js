@@ -1,10 +1,10 @@
 import { BrowserWindow } from 'electron'
-import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
+import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 import * as ConnectIpc from '../ConnectIpc/ConnectIpc.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as Logger from '../Logger/Logger.cjs'
-import * as Performance from '../Performance/Performance.cjs'
-import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.cjs'
+import * as Logger from '../Logger/Logger.js'
+import * as Performance from '../Performance/Performance.js'
+import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 // TODO maybe handle critical (first render) request via ipcMain

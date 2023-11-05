@@ -1,12 +1,18 @@
 import { jest } from '@jest/globals'
-import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.cjs'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.cjs'
+import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 jest.unstable_mockModule('electron', () => {
   return {
     app: {
       name: '',
     },
+    screen: {},
+    net: {},
+    BrowserWindow: class {},
+    shell: {},
+    ipcMain: {},
+    MessageChannelMain: class {},
   }
 })
 
@@ -14,7 +20,7 @@ jest.unstable_mockModule('electron-unhandled', () => {
   return {}
 })
 
-jest.unstable_mockModule('../src/parts/Command/Command.cjs', () => {
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
     execute() {
       throw new Error(`method not found App.exit`)
@@ -22,7 +28,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.cjs', () => {
   }
 })
 
-const App = await import('../src/parts/App/App.cjs')
+const App = await import('../src/parts/App/App.js')
 
 test.skip('handlePortForMainProcess - error - command not found', async () => {
   let _listener = async (message) => {}

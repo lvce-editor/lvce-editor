@@ -1,4 +1,4 @@
-import * as Performance from '../src/parts/Performance/Performance.cjs'
+import * as Performance from '../src/parts/Performance/Performance.js'
 
 beforeEach(() => {
   Performance.clearMarks()

@@ -2,9 +2,9 @@ import * as Electron from 'electron'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import * as ElectronResourceType from '../ElectronResourceType/ElectronResourceType.cjs'
-import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.cjs'
-import * as Root from '../Root/Root.cjs'
+import * as ElectronResourceType from '../ElectronResourceType/ElectronResourceType.js'
+import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
+import * as Root from '../Root/Root.js'
 import * as HttpMethod from '../HttpMethod/HttpMethod.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))

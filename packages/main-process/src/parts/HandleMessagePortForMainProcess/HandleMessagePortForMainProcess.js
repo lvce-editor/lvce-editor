@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron'
-import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
-import * as Assert from '../Assert/Assert.cjs'
+import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
+import * as Assert from '../Assert/Assert.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'

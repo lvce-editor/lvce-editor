@@ -18,7 +18,7 @@ jest.unstable_mockModule('electron', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.cjs', () => {
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     applicationName: 'test-app',
     productNameLong: 'Test App',
@@ -52,6 +52,6 @@ test.skip('showMessageBox', async () => {
       noLink: true,
       title: 'Test App',
       type: 'info',
-    }
+    },
   )
 })

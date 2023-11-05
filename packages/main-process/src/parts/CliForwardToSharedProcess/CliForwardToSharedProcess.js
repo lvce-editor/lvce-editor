@@ -1,12 +1,12 @@
-import * as ElectronApp from '../ElectronApp/ElectronApp.cjs'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.cjs'
-import * as ExitCode from '../ExitCode/ExitCode.cjs'
+import * as ElectronApp from '../ElectronApp/ElectronApp.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as Platform from '../Platform/Platform.cjs'
-import * as Process from '../Process/Process.cjs'
+import * as Platform from '../Platform/Platform.js'
+import * as Process from '../Process/Process.js'
 
 export const handleCliArgs = async (parsedArgs) => {
   try {

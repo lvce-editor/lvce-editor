@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 import * as GetTerminalProcessPath from '../GetTerminalProcessPath/GetTerminalProcessPath.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
@@ -26,6 +26,6 @@ export const handlePort = async (event, browserWindowPort, type, name) => {
       method: 'HandleElectronMessagePort.handleElectronMessagePort',
       params: [],
     },
-    [browserWindowPort]
+    [browserWindowPort],
   )
 }

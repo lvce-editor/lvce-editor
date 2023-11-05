@@ -17,53 +17,53 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
     to: `${cachePath}/pages`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.cjs`,
-    occurrence: `exports.isProduction = false`,
-    replacement: `exports.isProduction = true`,
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `export const isProduction = false`,
+    replacement: `export const isProduction = true`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.cjs`,
-    occurrence: `exports.applicationName = 'lvce-oss'`,
-    replacement: `exports.applicationName = '${product.applicationName}'`,
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `export const applicationName = 'lvce-oss'`,
+    replacement: `export const applicationName = '${product.applicationName}'`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.cjs`,
-    occurrence: `exports.isLinux = platform === 'linux'`,
-    replacement: `exports.isLinux = ${Platform.isLinux()}`,
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `export const isLinux = platform === 'linux'`,
+    replacement: `export const isLinux = ${Platform.isLinux()}`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.cjs`,
-    occurrence: `exports.isWindows = platform === 'win32'`,
-    replacement: `exports.isWindows = ${Platform.isWindows()}`,
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `export const isWindows = platform === 'win32'`,
+    replacement: `export const isWindows = ${Platform.isWindows()}`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.cjs`,
-    occurrence: `exports.isMacOs = platform === 'darwin'`,
-    replacement: `exports.isMacOs = ${Platform.isMacos()}`,
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `export const isMacOs = platform === 'darwin'`,
+    replacement: `export const isMacOs = ${Platform.isMacos()}`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.cjs`,
-    occurrence: `exports.scheme = 'lvce-oss'`,
-    replacement: `exports.scheme = '${product.applicationName}'`,
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `export const scheme = 'lvce-oss'`,
+    replacement: `export const scheme = '${product.applicationName}'`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.cjs`,
-    occurrence: `exports.commit = 'unknown commit'`,
-    replacement: `exports.commit = '${commitHash}'`,
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `export const commit = 'unknown commit'`,
+    replacement: `export const commit = '${commitHash}'`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Root/Root.cjs`,
-    occurrence: `exports.root = join(__dirname, '../../../../..')`,
-    replacement: `exports.root = join(__dirname, '../../..')`,
+    path: `${cachePath}/src/parts/Root/Root.js`,
+    occurrence: `export const root = join(__dirname, '../../../../..')`,
+    replacement: `export const root = join(__dirname, '../../..')`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.cjs`,
-    occurrence: `exports.version = '0.0.0-dev'`,
-    replacement: `exports.version = '${version}'`,
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `export const version = '0.0.0-dev'`,
+    replacement: `export const version = '${version}'`,
   })
   if (bundleSharedProcess) {
     await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.cjs`,
+      path: `${cachePath}/src/parts/Platform/Platform.js`,
       occurrence: `join(Root.root, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')`,
       replacement: `join(Root.root, 'packages', 'shared-process', 'dist', 'sharedProcessMain.js')`,
     })
@@ -76,15 +76,15 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
     })
     await BundleJs.bundleJs({
       cwd: cachePath,
-      from: `./src/mainProcessMain.cjs`,
+      from: `./src/mainProcessMain.js`,
       platform: 'node/cjs',
       external: ['electron'],
     })
     await Remove.remove(join(cachePath, 'node_modules'))
   }
   await Replace.replace({
-    path: `${cachePath}/src/parts/Root/Root.cjs`,
-    occurrence: `exports.root = join(__dirname, '../../..')`,
-    replacement: `exports.root = join(__dirname, '../../../../..')`,
+    path: `${cachePath}/src/parts/Root/Root.js`,
+    occurrence: `export const root = join(__dirname, '../../..')`,
+    replacement: `export const root = join(__dirname, '../../../../..')`,
   })
 }

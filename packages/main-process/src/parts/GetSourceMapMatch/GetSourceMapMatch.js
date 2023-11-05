@@ -1,6 +1,6 @@
-import * as Assert from '../Assert/Assert.cjs'
-import * as Character from '../Character/Character.cjs'
-import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.cjs'
+import * as Assert from '../Assert/Assert.js'
+import * as Character from '../Character/Character.js'
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 
 const RE_SOURCE_MAP = /^\/\/# sourceMappingURL=(.*)$/
 

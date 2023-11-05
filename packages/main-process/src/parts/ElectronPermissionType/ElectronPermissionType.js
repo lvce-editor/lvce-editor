@@ -1,0 +1,6 @@
+export const ClipBoardRead = 'clipboard-read'
+export const ClipBoardSanitizedWrite = 'clipboard-sanitized-write'
+export const FullScreen = 'fullscreen'
+export const WindowPlacement = 'window-placement'
+export const GeoLocation = 'geolocation'
+export const Media = 'media'

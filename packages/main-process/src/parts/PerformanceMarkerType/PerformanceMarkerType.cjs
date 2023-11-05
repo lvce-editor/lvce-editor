@@ -1,7 +1,0 @@
-exports.WillLoadUrl = 'code/willLoadUrl'
-exports.DidLoadUrl = 'code/didLoadUrl'
-exports.AppReady = 'code/appReady'
-exports.WillStartSharedProcess = 'code/willStartSharedProcess'
-exports.DidStartSharedProcess = 'code/didStartSharedProcess'
-exports.WillCreateCodeWindow = 'code/willCreateCodeWindow'
-exports.DidCreateCodeWindow = 'code/didCreateCodeWindow'

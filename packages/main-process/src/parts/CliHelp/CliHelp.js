@@ -1,5 +1,5 @@
-import * as ElectronApp from '../ElectronApp/ElectronApp.cjs'
-import * as ExitCode from '../ExitCode/ExitCode.cjs'
+import * as ElectronApp from '../ElectronApp/ElectronApp.js'
+import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as GetHelpString from '../GetHelpString/GetHelpString.js'
 
 export const handleCliArgs = (parsedArgs) => {

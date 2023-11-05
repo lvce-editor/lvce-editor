@@ -1,4 +1,4 @@
-import * as App from './App.cjs'
+import * as App from './App.js'
 
 export const name = 'App'
 

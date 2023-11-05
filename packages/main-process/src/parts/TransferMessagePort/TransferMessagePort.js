@@ -1,4 +1,4 @@
-import { VError } from '../VError/VError.cjs'
+import { VError } from '../VError/VError.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 export const transferMessagePort = async (ipc, port, ...params) => {

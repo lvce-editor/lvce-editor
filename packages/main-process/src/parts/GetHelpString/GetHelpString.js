@@ -1,4 +1,4 @@
-import * as Platform from '../Platform/Platform.cjs'
+import * as Platform from '../Platform/Platform.js'
 
 export const getHelpString = () => {
   return `${Platform.applicationName} v${Platform.version}
