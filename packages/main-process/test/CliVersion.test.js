@@ -12,7 +12,7 @@ jest.unstable_mockModule('electron', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.cjs', () => {
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     productNameLong: 'Test',
     version: '0.0.0-dev',

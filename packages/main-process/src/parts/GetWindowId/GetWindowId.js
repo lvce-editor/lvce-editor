@@ -1,6 +1,6 @@
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 import * as IsMessagePortMain from '../IsMessagePortMain/IsMessagePortMain.js'
-import * as AppWindowStates from '../AppWindowStates/AppWindowStates.cjs'
+import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 
 export const getWindowId = (ipc) => {
   Assert.object(ipc)

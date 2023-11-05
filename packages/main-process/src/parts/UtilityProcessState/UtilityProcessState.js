@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 
 export const state = {
   all: Object.create(null),

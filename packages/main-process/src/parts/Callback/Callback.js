@@ -1,4 +1,4 @@
-import * as Assert from '../Assert/Assert.cjs'
+import * as Assert from '../Assert/Assert.js'
 import * as Id from '../Id/Id.js'
 import * as Promises from '../Promises/Promises.js'
 

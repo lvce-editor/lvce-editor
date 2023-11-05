@@ -1,10 +1,10 @@
-import * as Assert from '../Assert/Assert.cjs'
-import * as Debug from '../Debug/Debug.cjs'
-import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.cjs'
+import * as Assert from '../Assert/Assert.js'
+import * as Debug from '../Debug/Debug.js'
+import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
 import * as LoadErrorCode from '../LoadErrorCode/LoadErrorCode.js'
-import * as Path from '../Path/Path.cjs'
-import * as Root from '../Root/Root.cjs'
-import { VError } from '../VError/VError.cjs'
+import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+import { VError } from '../VError/VError.js'
 
 // TODO create output channel for browser view debug logs
 

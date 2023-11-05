@@ -1,0 +1,7 @@
+export const WillLoadUrl = 'code/willLoadUrl'
+export const DidLoadUrl = 'code/didLoadUrl'
+export const AppReady = 'code/appReady'
+export const WillStartSharedProcess = 'code/willStartSharedProcess'
+export const DidStartSharedProcess = 'code/didStartSharedProcess'
+export const WillCreateCodeWindow = 'code/willCreateCodeWindow'
+export const DidCreateCodeWindow = 'code/didCreateCodeWindow'

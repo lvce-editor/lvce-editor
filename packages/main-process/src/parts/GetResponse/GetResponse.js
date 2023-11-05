@@ -1,5 +1,5 @@
-import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.cjs'
-import * as GetSuccessResponse from '../GetSuccessResponse/GetSuccessResponse.cjs'
+import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
+import * as GetSuccessResponse from '../GetSuccessResponse/GetSuccessResponse.js'
 import * as RequiresSocket from '../RequiresSocket/RequiresSocket.js'
 
 export const getResponse = async (message, execute, handle) => {

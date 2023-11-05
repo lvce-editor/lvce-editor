@@ -1,12 +1,12 @@
 import * as Callback from '../Callback/Callback.js'
-import * as Command from '../Command/Command.cjs'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.cjs'
-import * as ExitCode from '../ExitCode/ExitCode.cjs'
+import * as Command from '../Command/Command.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
-import * as Logger from '../Logger/Logger.cjs'
-import * as Platform from '../Platform/Platform.cjs'
-import * as Process from '../Process/Process.cjs'
+import * as Logger from '../Logger/Logger.js'
+import * as Platform from '../Platform/Platform.js'
+import * as Process from '../Process/Process.js'
 
 export const state = {
   /**

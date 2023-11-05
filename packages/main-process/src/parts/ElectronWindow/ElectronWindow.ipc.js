@@ -1,4 +1,4 @@
-import * as ElectronWindow from './ElectronWindow.cjs'
+import * as ElectronWindow from './ElectronWindow.js'
 
 export const name = 'ElectronWindow'
 

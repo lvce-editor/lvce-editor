@@ -1,6 +1,6 @@
 import { MessageChannel } from 'node:worker_threads'
-import * as Performance from '../Performance/Performance.cjs'
-import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.cjs'
+import * as Performance from '../Performance/Performance.js'
+import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as TransferMessagePort from '../TransferMessagePort/TransferMessagePort.js'
 
 export const connectIpc = async (ipc, browserWindowPort, ...params) => {

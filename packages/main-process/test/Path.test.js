@@ -1,4 +1,4 @@
-import * as Path from '../src/parts/Path/Path.cjs'
+import * as Path from '../src/parts/Path/Path.js'
 
 test('absolute', () => {
   // TODO need better test here
