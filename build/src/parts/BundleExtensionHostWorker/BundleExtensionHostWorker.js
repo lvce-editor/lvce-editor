@@ -18,9 +18,9 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
     replacement: `../../../static/`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/BabelParser/BabelParser.js`,
-    occurrence: `../../../../../static/`,
-    replacement: `../../../static/`,
+    path: `${cachePath}/src/parts/AssetDir/AssetDir.js`,
+    occurrence: `ASSET_DIR`,
+    replacement: `'${assetDir}'`,
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/GetExtensionHostSubWorkerUrl/GetExtensionHostSubWorkerUrl.js`,
@@ -36,11 +36,6 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
   if (platform === 'remote') {
     await Replace.replace({
       path: `${cachePath}/src/parts/Ajax/Ajax.js`,
-      occurrence: `../../../static/`,
-      replacement: `../../../../../`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/BabelParser/BabelParser.js`,
       occurrence: `../../../static/`,
       replacement: `../../../../../`,
     })
