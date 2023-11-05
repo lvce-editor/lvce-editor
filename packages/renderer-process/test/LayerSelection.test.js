@@ -23,13 +23,20 @@ test('setSelections - renderSelectionsLess', () => {
   const state = {
     $LayerSelections,
   }
-  const selections = new Uint32Array([
-    /* x */ 0, /* y */ 10, /* width */ 27, /* height */ 20 /*  */, /* x */ 0, /* y */ 10, /* width */ 27, /* height */ 20,
-  ])
+  const selections = [
+    /* x */ '0px',
+    /* y */ '10px',
+    /* width */ '27px',
+    /* height */ '20px',
+    /*  */ /* x */ '0px',
+    /* y */ '10px',
+    /* width */ '27px',
+    /* height */ '20px',
+  ]
   const spy = jest.spyOn(document, 'createElement')
   LayerSelection.setSelections(state, selections)
   expect(state.$LayerSelections.innerHTML).toBe(
-    '<div class="Selection" style="top: 10px; left: 0px; width: 27px; height: 20px;"></div><div class="EditorSelection" style="top: 10px; left: 0px; width: 27px; height: 20px;"></div>'
+    '<div class="Selection" style="top: 10px; left: 0px; width: 27px; height: 20px;"></div><div class="EditorSelection" style="top: 10px; left: 0px; width: 27px; height: 20px;"></div>',
   )
   expect(spy).toHaveBeenCalledTimes(1)
 })
@@ -39,7 +46,7 @@ test('setSelections - renderSelectionsEqual', () => {
   const state = {
     $LayerSelections,
   }
-  const selections = new Uint32Array([/* x */ 0, /* y */ 10, /* width */ 27, /* height */ 20])
+  const selections = [/* x */ '0px', /* y */ '10px', /* width */ '27px', /* height */ '20px']
   const spy = jest.spyOn(document, 'createElement')
   LayerSelection.setSelections(state, selections)
   expect(state.$LayerSelections.innerHTML).toBe('<div class="Selection" style="top: 10px; left: 0px; width: 27px; height: 20px;"></div>')
@@ -50,7 +57,7 @@ test('setCursor - renderSelectionsMore', () => {
   const state = {
     $LayerSelections: createLayerSelection(2),
   }
-  const selections = new Uint32Array([/* x */ 0, /* y */ 10, /* width */ 27, /* height */ 20])
+  const selections = [/* x */ '0px', /* y */ '10px', /* width */ '27px', /* height */ '20px']
   const spy = jest.spyOn(document, 'createElement')
   LayerSelection.setSelections(state, selections)
   expect(state.$LayerSelections.innerHTML).toBe('<div class="Selection" style="top: 10px; left: 0px; width: 27px; height: 20px;"></div>')

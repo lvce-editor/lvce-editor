@@ -18,7 +18,7 @@ const render$Selection = ($Selection, selections, i) => {
   const height = selections[i * 4 + 3]
   // TODO have many decorations per row
   // no absolute positioning
-  SetBounds.setBounds($Selection, x, y, width, height)
+  SetBounds.setBoundsPixelString($Selection, x, y, width, height)
 }
 
 const render$SelectionsLess = ($Selections, childCount, selections, selectionCount) => {

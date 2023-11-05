@@ -124,6 +124,18 @@ const getCursorArray = (visibleCursors, isFocused) => {
   return cursorArray
 }
 
+const getSelectionArray = (visibleSelections) => {
+  const selectionsArray = []
+  for (let i = 0; i < visibleSelections.length; i += 4) {
+    const x = visibleSelections[i]
+    const y = visibleSelections[i + 1]
+    const width = visibleSelections[i + 2]
+    const height = visibleSelections[i + 3]
+    selectionsArray.push(`${x}px`, `${y}px`, `${width}px`, `${height}px`)
+  }
+  return selectionsArray
+}
+
 export const getVisible = (editor) => {
   const visibleCursors = []
   const visibleSelections = []
@@ -278,6 +290,6 @@ export const getVisible = (editor) => {
   // TODO maybe use Uint32array or Float64Array?
   return {
     cursorInfos: getCursorArray(visibleCursors, focused),
-    selectionInfos: new Float32Array(visibleSelections),
+    selectionInfos: getSelectionArray(visibleSelections),
   }
 }
