@@ -46,7 +46,7 @@ export const loadContent = async (state) => {
   const extension = await ExtensionManagement.getExtension(id)
   const readmeContent = await GetExtensionReadme.loadReadmeContent(extension.path)
   const baseUrl = getBaseUrl(extension.path)
-  const readmeHtml = MarkDown.toHtml(readmeContent, {
+  const readmeHtml = await MarkDown.toHtml(readmeContent, {
     baseUrl,
   })
   const sanitizedReadmeHtml = await SanitizeHtml.sanitizeHtml(readmeHtml)
