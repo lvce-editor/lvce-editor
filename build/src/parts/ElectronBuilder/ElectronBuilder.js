@@ -217,16 +217,16 @@ const copyElectronResult = async ({
   }
   if (config === ElectronBuilderConfigType.ArchLinux) {
     await Replace.replace({
-      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.cjs`,
-      occurrence: `exports.isArchLinux = false`,
-      replacement: `exports.isArchLinux = true`,
+      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
+      occurrence: `export const isArchLinux = false`,
+      replacement: `export const isArchLinux = true`,
     })
   }
   if (config === ElectronBuilderConfigType.AppImage) {
     await Replace.replace({
-      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.cjs`,
-      occurrence: `exports.isAppImage = false`,
-      replacement: `exports.isAppImage = true`,
+      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
+      occurrence: `export const isAppImage = false`,
+      replacement: `export const isAppImage = true`,
     })
   }
   if (config === ElectronBuilderConfigType.WindowsExe) {
