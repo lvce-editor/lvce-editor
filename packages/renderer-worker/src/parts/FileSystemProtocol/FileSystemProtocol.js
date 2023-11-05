@@ -1,7 +1,5 @@
 export const App = 'app'
 
-export const GitHub = 'github'
-
 export const Web = 'web'
 
 export const Data = 'data'
