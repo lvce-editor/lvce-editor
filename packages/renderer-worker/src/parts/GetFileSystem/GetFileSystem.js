@@ -17,8 +17,6 @@ const loadFileSystem = (procotol) => {
       return import('../ExtensionHost/ExtensionHostFileSystem.js')
     case FileSystemProtocol.App:
       return import('../FileSystem/FileSystemApp.js')
-    case FileSystemProtocol.GitHub:
-      return import('../FileSystem/FileSystemGitHub.js')
     case FileSystemProtocol.Data:
       return import('../FileSystem/FileSystemData.js')
     case FileSystemProtocol.Memfs:
