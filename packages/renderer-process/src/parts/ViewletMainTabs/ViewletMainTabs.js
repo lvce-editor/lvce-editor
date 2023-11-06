@@ -1,5 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
@@ -26,12 +27,14 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $MainTabs } = state
-  $MainTabs.onmousedown = ViewletMainTabEvents.handleTabsMouseDown
-  $MainTabs.oncontextmenu = ViewletMainTabEvents.handleTabsContextMenu
-  $MainTabs.ondragstart = ViewletMainTabEvents.handleDragStart
+  AttachEvents.attachEvents($MainTabs, {
+    [DomEventType.MouseDown]: ViewletMainTabEvents.handleTabsMouseDown,
+    [DomEventType.ContextMenu]: ViewletMainTabEvents.handleTabsContextMenu,
+    [DomEventType.DragStart]: ViewletMainTabEvents.handleDragStart,
+    [DomEventType.PointerOver]: ViewletMainTabEvents.handlePointerOver,
+    [DomEventType.PointerOut]: ViewletMainTabEvents.handlePointerOut,
+  })
   $MainTabs.addEventListener(DomEventType.Wheel, ViewletMainTabEvents.handleTabsWheel, DomEventOptions.Passive)
-  $MainTabs.onpointerover = ViewletMainTabEvents.handlePointerOver
-  $MainTabs.onpointerout = ViewletMainTabEvents.handlePointerOut
 }
 
 export const setTabsDom = (state, dom) => {
