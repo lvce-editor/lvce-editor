@@ -44,23 +44,6 @@ export const setScrollLeft = (state, scrollLeft) => {
   $Viewlet.scrollLeft = scrollLeft
 }
 
-export const setScrollBar = (state, scrollBarWidth) => {
-  // TODO
-  // if (!state.$ScrollBar) {
-  //   const $ScrollBarThumb = document.createElement('div')
-  //   $ScrollBarThumb.className = 'ScrollBarThumbHorizontal'
-  //   const $ScrollBar = document.createElement('div')
-  //   $ScrollBar.className = 'ScrollBarHorizontalSmall'
-  //   $ScrollBar.append($ScrollBarThumb)
-  //   $ScrollBar.style.width = `100%`
-  //   state.$ScrollBar = $ScrollBar
-  //   state.$ScrollBarThumb = $ScrollBarThumb
-  //   state.$Viewlet.append($ScrollBar)
-  // }
-  // const { $Viewlet, $ScrollBar, $ScrollBarThumb } = state
-  // $ScrollBarThumb.style.width = `${scrollBarWidth}px`
-}
-
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   Assert.number(oldFocusedIndex)
   Assert.number(newFocusedIndex)
