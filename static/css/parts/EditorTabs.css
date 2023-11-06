@@ -56,54 +56,12 @@
   display: flex;
   margin-left: 4px;
   flex-shrink: 0;
-}
-
-.EditorTabCloseButton::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--TabActiveForeground);
-  -webkit-mask-image: url(/icons/icon-close.svg);
-  mask-image: url(/icons/icon-close.svg);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 50%;
-  mask-size: 50%;
-}
-
-.Circle {
-  position: relative;
-  width: 23px;
-  height: 23px;
-  contain: strict;
-  flex-shrink: 0;
-}
-
-.TabDirtyIcon {
-  -webkit-mask-image: url(/icons/circle-filled.svg);
-  mask-image: url(/icons/circle-filled.svg);
+  color: var(--TabForeground);
 }
 
 .EditorTabCloseButton:hover {
   background: rgba(255, 255, 255, 0.05);
   transition: all 0.1s;
-}
-
-.EditorTabStatus {
-  width: 22px;
-  height: 15px;
-}
-
-/* TODO investigate whether classNames vs data-attribute makes a difference here (performance-wise) */
-.EditorTabStatus[data-status='1'] /* default */ {
-  display: none;
-}
-
-.EditorTabStatus[data-status='2'] /* modified */ {
-  background: white;
-  -webkit-mask: url(/packages/renderer-process/assets/icons/circle-filled.svg) 100% 50% / 15px no-repeat;
 }
 
 .DragOver {

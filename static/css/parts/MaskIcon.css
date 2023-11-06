@@ -211,3 +211,8 @@
   -webkit-mask-image: url(/icons/link-external.svg);
   mask-image: url(/icons/link-external.svg);
 }
+
+.MaskIconCircleFilled {
+  -webkit-mask-image: url(/icons/circle-filled.svg);
+  mask-image: url(/icons/circle-filled.svg);
+}
