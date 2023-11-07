@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@electron/rebuild": "^3.3.0",
-    "@types/debug": "^4.1.10",
+    "@types/debug": "^4.1.11",
     "electron": "^28.0.0-beta.2"
   },
   "dependencies": {
@@ -30,7 +30,7 @@
     "@lvce-editor/verror": "^1.1.1",
     "debug": "^4.3.4",
     "electron-unhandled": "^4.0.1",
-    "lines-and-columns": "^2.0.3",
+    "lines-and-columns": "^2.0.4",
     "minimist": "^1.2.8"
   },
   "jest": {

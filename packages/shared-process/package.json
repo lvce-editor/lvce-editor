@@ -31,7 +31,7 @@
     "exit-hook": "^4.0.0",
     "got": "^13.0.0",
     "is-object": "^1.0.2",
-    "lines-and-columns": "^2.0.3",
+    "lines-and-columns": "^2.0.4",
     "p-queue": "^7.4.1",
     "parse-json": "^8.0.0",
     "tar-fs": "^3.0.4",
@@ -50,10 +50,10 @@
     "@lvce-editor/ripgrep": "^1.0.1"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.10",
-    "@types/is-object": "^1.0.4",
-    "@types/tail": "^2.2.2",
-    "@types/tar-fs": "^2.0.3",
+    "@types/debug": "^4.1.11",
+    "@types/is-object": "^1.0.5",
+    "@types/tail": "^2.2.3",
+    "@types/tar-fs": "^2.0.4",
     "@types/ws": "^8.5.8",
     "get-port": "^7.0.0"
   },
