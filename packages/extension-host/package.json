@@ -21,7 +21,7 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "@types/babel__code-frame": "^7.0.5",
+    "@types/babel__code-frame": "^7.0.6",
     "@types/lodash": "^4.14.200",
     "@types/verror": "^1.10.8",
     "@types/ws": "^8.5.8"
@@ -31,7 +31,7 @@
     "clean-stack": "^5.2.0",
     "debug": "^4.3.4",
     "exit-hook": "^4.0.0",
-    "lines-and-columns": "^2.0.3",
+    "lines-and-columns": "^2.0.4",
     "ow": "^1.1.1",
     "p-timeout": "^6.1.2",
     "stack-utils": "^2.0.6",
