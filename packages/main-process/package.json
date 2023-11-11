@@ -21,13 +21,13 @@
   },
   "devDependencies": {
     "@electron/rebuild": "^3.3.0",
-    "@types/debug": "^4.1.11",
-    "electron": "^28.0.0-beta.2"
+    "@types/debug": "^4.1.12",
+    "electron": "^28.0.0-beta.4"
   },
   "dependencies": {
     "@babel/code-frame": "^7.22.13",
     "@lvce-editor/pretty-error": "^1.2.2",
-    "@lvce-editor/verror": "^1.1.1",
+    "@lvce-editor/verror": "^1.1.2",
     "debug": "^4.3.4",
     "electron-unhandled": "^4.0.1",
     "lines-and-columns": "^2.0.4",

@@ -22,9 +22,9 @@
   },
   "devDependencies": {
     "@types/babel__code-frame": "^7.0.6",
-    "@types/lodash": "^4.14.200",
-    "@types/verror": "^1.10.8",
-    "@types/ws": "^8.5.8"
+    "@types/lodash": "^4.14.201",
+    "@types/verror": "^1.10.9",
+    "@types/ws": "^8.5.9"
   },
   "dependencies": {
     "@babel/code-frame": "^7.22.13",
