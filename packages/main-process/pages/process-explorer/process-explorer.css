@@ -37,13 +37,9 @@ h1 {
   aspect-ratio: 1;
   background: currentColor;
   display: inline-block;
-  -webkit-mask-image: url(../../../../static/icons/chevron-down.svg);
   mask-image: url(../../../../static/icons/chevron-down.svg);
-  -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  -webkit-mask-position: center;
   mask-position: center;
-  -webkit-mask-size: 85%;
   mask-size: 85%;
   vertical-align: middle;
   line-height: normal;
@@ -51,7 +47,7 @@ h1 {
 }
 
 .Row[aria-expanded='false'] td:first-child::before {
-  -webkit-mask-image: url(../../../../static/icons/chevron-right.svg);
+  mask-image: url(../../../../static/icons/chevron-right.svg);
 }
 
 .Row {

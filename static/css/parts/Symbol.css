@@ -10,36 +10,30 @@
 .SymbolValue,
 .SymbolDefault {
   color: var(--SymbolValueForeground);
-  -webkit-mask-image: url(/icons/symbol-enum.svg);
   mask-image: url(/icons/symbol-enum.svg);
 }
 
 .SymbolProperty {
   color: var(--SymbolPropertyForeground);
-  -webkit-mask-image: url(/icons/symbol-property.svg);
   mask-image: url(/icons/symbol-property.svg);
 }
 
 .SymbolFunction {
   color: var(--SymbolFunctionForeground);
-  -webkit-mask-image: url(/icons/symbol-method.svg);
   mask-image: url(/icons/symbol-method.svg);
 }
 
 .SymbolVariable {
   color: var(--SymbolVariableForeground);
-  -webkit-mask-image: url(/icons/symbol-variable.svg);
   mask-image: url(/icons/symbol-variable.svg);
 }
 
 .SymbolKeyword {
   color: var(--SymbolKeywordForeground);
-  -webkit-mask-image: url(/icons/symbol-keyword.svg);
   mask-image: url(/icons/symbol-keyword.svg);
 }
 
 .SymbolField {
   color: var(--SymbolFieldForeground);
-  -webkit-mask-image: url(/icons/symbol-field.svg);
   mask-image: url(/icons/symbol-field.svg);
 }

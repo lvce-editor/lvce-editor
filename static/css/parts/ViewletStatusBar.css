@@ -50,11 +50,8 @@
 
 .StatusBarIcon {
   outline: none;
-  -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  -webkit-mask-position: center;
   mask-position: center;
-  -webkit-mask-size: 1em;
   mask-size: 1em;
   background: currentColor;
 

@@ -28,13 +28,9 @@
   inset: 0 6px 0 auto;
   background: currentColor;
   mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
   mask-size: var(--MaskIconSize);
-  -webkit-mask-size: var(--MaskIconSize);
   mask-position: 50% 50%;
-  -webkit-mask-position: 50% 50%;
   mask-image: url(/icons/chevron-down.svg);
-  -webkit-mask-image: url(/icons/chevron-down.svg);
   pointer-events: none;
   width: 16px;
   height: 16px;

@@ -188,7 +188,6 @@
   height: 16px;
   contain: strict;
   background: #c5c5c5;
-  -webkit-mask: url(/icons/settings-gear.svg) 50% 50% / 16px no-repeat;
   mask: url(/icons/settings-gear.svg) 50% 50% / 16px no-repeat;
 }
 

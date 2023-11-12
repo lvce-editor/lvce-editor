@@ -20,11 +20,8 @@
   height: 16px;
   display: block;
   background: currentcolor;
-  -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  -webkit-mask-size: 16px;
   mask-size: 16px;
-  -webkit-mask-position: 50% 50%;
   mask-position: 50% 50%;
   pointer-events: none;
 }

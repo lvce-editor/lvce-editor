@@ -4,11 +4,8 @@
   inset: 0;
   background: currentColor;
   mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
   mask-size: var(--MaskIconSize);
-  -webkit-mask-size: var(--MaskIconSize);
   mask-position: 50% 50%;
-  -webkit-mask-position: 50% 50%;
   pointer-events: none;
 }
 
@@ -20,194 +17,154 @@
   background: currentColor;
   color: var(--TitleBarForeground, rgb(204, 204, 204));
   mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
   mask-size: 16px;
-  -webkit-mask-size: 16px;
   mask-position: 50% 50%;
-  -webkit-mask-position: 50% 50%;
   pointer-events: none;
 }
 
 .MaskIconMinimize {
-  -webkit-mask-image: url(/icons/chrome-minimize.svg);
   mask-image: url(/icons/chrome-minimize.svg);
 }
 
 .MaskIconMaximize {
-  -webkit-mask-image: url(/icons/chrome-maximize.svg);
   mask-image: url(/icons/chrome-maximize.svg);
 }
 
 .MaskIconRestore {
-  -webkit-mask-image: url(/icons/chrome-restore.svg);
   mask-image: url(/icons/chrome-restore.svg);
 }
 
 .MaskIconChromeClose {
-  -webkit-mask-image: url(/icons/chrome-close.svg);
   mask-image: url(/icons/chrome-close.svg);
 }
 
 .MaskIconFiles {
-  -webkit-mask-image: url(/icons/files.svg);
   mask-image: url(/icons/files.svg);
 }
 
 .MaskIconSearch {
-  -webkit-mask-image: url(/icons/search.svg);
   mask-image: url(/icons/search.svg);
 }
 
 .MaskIconSourceControl {
-  -webkit-mask-image: url(/icons/source-control.svg);
   mask-image: url(/icons/source-control.svg);
 }
 
 .MaskIconDebugAlt2 {
-  -webkit-mask-image: url(/icons/debug-alt-2.svg);
   mask-image: url(/icons/debug-alt-2.svg);
 }
 
 .MaskIconExtensions {
-  -webkit-mask-image: url(/icons/extensions.svg);
   mask-image: url(/icons/extensions.svg);
 }
 
 .MaskIconSettingsGear {
-  -webkit-mask-image: url(/icons/settings-gear.svg);
   mask-image: url(/icons/settings-gear.svg);
 }
 
 .MaskIconEllipsis {
-  -webkit-mask-image: url(/icons/ellipsis.svg);
   mask-image: url(/icons/ellipsis.svg);
 }
 
 .MaskIconArrowDown {
-  -webkit-mask-image: url(/icons/arrow-down.svg);
   mask-image: url(/icons/arrow-down.svg);
 }
 
 .MaskIconArrowUp {
-  -webkit-mask-image: url(/icons/arrow-up.svg);
   mask-image: url(/icons/arrow-up.svg);
 }
 
 .MaskIconClose {
-  -webkit-mask-image: url(/icons/close.svg);
   mask-image: url(/icons/close.svg);
 }
 
 .MaskIconCaseSensitive {
-  -webkit-mask-image: url(/icons/case-sensitive.svg);
   mask-image: url(/icons/case-sensitive.svg);
 }
 
 .MaskIconWholeWord {
-  -webkit-mask-image: url(/icons/whole-word.svg);
   mask-image: url(/icons/whole-word.svg);
 }
 
 .MaskIconRegex {
-  -webkit-mask-image: url(/icons/regex.svg);
   mask-image: url(/icons/regex.svg);
 }
 
 .MaskIconChevronRight {
-  -webkit-mask-image: url(/icons/chevron-right.svg);
   mask-image: url(/icons/chevron-right.svg);
 }
 
 .MaskIconChevronDown {
-  -webkit-mask-image: url(/icons/chevron-down.svg);
   mask-image: url(/icons/chevron-down.svg);
 }
 
 .MaskIconRefresh {
-  -webkit-mask-image: url(/icons/refresh.svg);
   mask-image: url(/icons/refresh.svg);
 }
 
 .MaskIconClearAll {
-  -webkit-mask-image: url(/icons/clear-all.svg);
   mask-image: url(/icons/clear-all.svg);
 }
 
 .MaskIconNewFile {
-  -webkit-mask-image: url(/icons/new-file.svg);
   mask-image: url(/icons/new-file.svg);
 }
 
 .MaskIconNewFolder {
-  -webkit-mask-image: url(/icons/new-file.svg);
   mask-image: url(/icons/new-file.svg);
 }
 
 .MaskIconListFlat {
-  -webkit-mask-image: url(/icons/list-flat.svg);
   mask-image: url(/icons/list-flat.svg);
 }
 
 .MaskIconCollapseAll {
-  -webkit-mask-image: url(/icons/collapse-all.svg);
   mask-image: url(/icons/collapse-all.svg);
 }
 
 .MaskIconFilter {
-  -webkit-mask-image: url(/icons/filter.svg);
   mask-image: url(/icons/filter.svg);
 }
 
 .MaskIconBlank {
-  -webkit-mask-image: url(/icons/blank.svg);
   mask-image: url(/icons/blank.svg);
 }
 
 .MaskIconCheck {
-  -webkit-mask-image: url(/icons/check.svg);
   mask-image: url(/icons/check.svg);
 }
 
 .MaskIconEllipsis {
-  -webkit-mask-image: url(/icons/ellipsis.svg);
   mask-image: url(/icons/ellipsis.svg);
 }
 
 .MaskIconAdd {
-  -webkit-mask-image: url(/icons/add.svg);
   mask-image: url(/icons/add.svg);
 }
 .MaskIconTrash {
-  -webkit-mask-image: url(/icons/trash.svg);
   mask-image: url(/icons/trash.svg);
 }
 
 .MaskIconSplitHorizontal {
-  -webkit-mask-image: url(/icons/split-horizontal.svg);
   mask-image: url(/icons/split-horizontal.svg);
 }
 
 .MaskIconReplaceAll {
-  -webkit-mask-image: url(/icons/replace-all.svg);
   mask-image: url(/icons/replace-all.svg);
 }
 
 .MaskIconChevronUp {
-  -webkit-mask-image: url(/icons/chevron-up.svg);
   mask-image: url(/icons/chevron-up.svg);
 }
 
 .MaskIconArrowLeft {
-  -webkit-mask-image: url(/icons/arrow-left.svg);
   mask-image: url(/icons/arrow-left.svg);
 }
 
 .MaskIconArrowRight {
-  -webkit-mask-image: url(/icons/arrow-right.svg);
   mask-image: url(/icons/arrow-right.svg);
 }
 
 .MaskIconLinkExternal {
-  -webkit-mask-image: url(/icons/link-external.svg);
   mask-image: url(/icons/link-external.svg);
 }
