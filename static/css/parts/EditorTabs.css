@@ -63,13 +63,9 @@
   position: absolute;
   inset: 0;
   background: var(--TabActiveForeground);
-  -webkit-mask-image: url(/icons/icon-close.svg);
   mask-image: url(/icons/icon-close.svg);
-  -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  -webkit-mask-position: center;
   mask-position: center;
-  -webkit-mask-size: 50%;
   mask-size: 50%;
 }
 
@@ -82,7 +78,6 @@
 }
 
 .TabDirtyIcon {
-  -webkit-mask-image: url(/icons/circle-filled.svg);
   mask-image: url(/icons/circle-filled.svg);
 }
 
@@ -103,7 +98,7 @@
 
 .EditorTabStatus[data-status='2'] /* modified */ {
   background: white;
-  -webkit-mask: url(/packages/renderer-process/assets/icons/circle-filled.svg) 100% 50% / 15px no-repeat;
+  mask: url(/packages/renderer-process/assets/icons/circle-filled.svg) 100% 50% / 15px no-repeat;
 }
 
 .DragOver {

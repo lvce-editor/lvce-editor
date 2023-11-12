@@ -49,12 +49,9 @@
   width: 0.75rem;
   height: 0.75rem;
   background: orchid;
-  -webkit-mask-image: url(/icons/check.svg);
-  -webkit-mask-repeat: no-repeat;
+  mask-image: url(/icons/check.svg);
   mask-repeat: no-repeat;
-  -webkit-mask-position: center;
   mask-position: center;
-  -webkit-mask-size: 0.75rem;
   mask-size: 0.75rem;
   background: currentColor;
 }
@@ -64,12 +61,9 @@
   height: 16px;
   content: '';
   display: block;
-  -webkit-mask-image: url(/icons/chevron-right.svg);
-  -webkit-mask-repeat: no-repeat;
+  mask-image: url(/icons/chevron-right.svg);
   mask-repeat: no-repeat;
-  -webkit-mask-position: center;
   mask-position: center;
-  -webkit-mask-size: 100%;
   mask-size: 100%;
   background: currentColor;
   margin-left: auto;
