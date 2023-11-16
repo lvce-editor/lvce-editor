@@ -9,13 +9,12 @@ import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
-import * as InputBox from '../InputBox/InputBox.js'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as Platform from '../Platform/Platform.js'
-import * as SetBounds from '../SetBounds/SetBounds.js'
-import * as IsMobile from '../IsMobile/IsMobile.js'
-import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
+import * as InputBox from '../InputBox/InputBox.js'
+import * as IsMobile from '../IsMobile/IsMobile.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
