@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as CssState from '../src/parts/CssState/CssState.js'
 
 beforeAll(() => {
   // @ts-ignore
@@ -19,7 +20,7 @@ beforeEach(() => {
   globalThis.fetch = async () => {
     throw new Error('not implemented')
   }
-  Css.state.pending = Object.create(null)
+  CssState.state.pending = Object.create(null)
 })
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {

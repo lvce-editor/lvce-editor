@@ -16,6 +16,8 @@ import * as RendererWorkerCommandType from '../RendererWorkerCommandType/Rendere
 import * as SortExplorerItems from '../SortExplorerItems/SortExplorerItems.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Focus from '../Focus/Focus.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as Character from '../Character/Character.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import { getChildDirents, getChildDirentsRaw, getIndexFromPosition, getParentEndIndex, getParentStartIndex } from './ViewletExplorerShared.js'
@@ -328,6 +330,7 @@ export const removeDirent = async (state) => {
 export const renameDirent = (state) => {
   const { focusedIndex, items } = state
   const item = items[focusedIndex]
+  Focus.setFocus(FocusKey.ExplorerEditBox)
   return {
     ...state,
     editingIndex: focusedIndex,
@@ -483,6 +486,7 @@ export const openContainingFolder = async (state) => {
 }
 
 const newDirent = async (state, editingType) => {
+  Focus.setFocus(FocusKey.ExplorerEditBox)
   // TODO do it like vscode, select position between folders and files
   const { focusedIndex, items } = state
   if (focusedIndex >= 0) {
@@ -512,6 +516,11 @@ export const updateEditingValue = (state, value) => {
     editingValue: value,
     editingIcon,
   }
+}
+
+export const handleFocus = (state) => {
+  Focus.setFocus(FocusKey.Explorer)
+  return state
 }
 
 export const newFolder = (state) => {

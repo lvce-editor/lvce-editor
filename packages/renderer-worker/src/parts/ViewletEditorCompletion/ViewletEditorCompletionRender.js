@@ -21,7 +21,7 @@ const renderItems = {
       newState.leadingWord,
       newState.minLineY,
       newState.maxLineY,
-      newState.focusedIndex
+      newState.focusedIndex,
     )
     const dom = GetCompletionItemsVirtualDom.getCompletionItemsVirtualDom(visibleItems)
     return ['setDom', dom]
@@ -43,17 +43,6 @@ const renderBounds = {
     return [/* method */ RenderMethod.SetBounds, /* x */ x, /* y */ y, /* width */ width, /* height */ height]
   },
 }
-
-// const renderFocusedIndex = {
-//   isEqual(oldState, newState) {
-//     return oldState.focusedIndex === newState.focusedIndex && oldState.minLineY === newState.minLineY
-//   },
-//   apply(oldState, newState) {
-//     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
-//     const newFocusedIndex = newState.focusedIndex - newState.minLineY
-//     return [/* method */ RenderMethod.SetFocusedIndex, /* oldFocusedIndex */ oldFocusedIndex, /* newFocusedIndex */ newFocusedIndex]
-//   },
-// }
 
 const renderHeight = {
   isEqual(oldState, newState) {
@@ -93,7 +82,7 @@ const renderScrollBar = {
       newState.deltaY,
       newState.finalDeltaY,
       newState.height - newState.headerHeight,
-      scrollBarHeight
+      scrollBarHeight,
     )
     return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ scrollBarHeight]
   },
