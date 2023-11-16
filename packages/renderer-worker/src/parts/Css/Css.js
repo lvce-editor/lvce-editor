@@ -6,10 +6,6 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Response from '../Response/Response.js'
 import { VError } from '../VError/VError.js'
 
-export const state = {
-  pending: Object.create(null),
-}
-
 const getId = (path) => {
   return 'Css' + path.replace('/css/parts/', '').replaceAll(Character.Slash, Character.Dash).replace('.css', Character.EmptyString)
 }
