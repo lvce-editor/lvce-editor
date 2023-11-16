@@ -5,6 +5,8 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Path from '../Path/Path.js'
 import * as SortExplorerItems from '../SortExplorerItems/SortExplorerItems.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
+import * as Focus from '../Focus/Focus.js'
 
 export const renameDirent = (state) => {
   const { focusedIndex, items } = state

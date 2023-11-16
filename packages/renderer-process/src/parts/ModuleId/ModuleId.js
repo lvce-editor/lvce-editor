@@ -37,3 +37,4 @@ export const ScreenCapture = 36
 export const MeasureTextHeight = 37
 export const Prompt = 38
 export const WindowTitle = 39
+export const Focus = 40

@@ -4,6 +4,8 @@ import * as GetMatchCount from '../GetMatchCount/GetMatchCount.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
+import * as Focus from '../Focus/Focus.js'
 
 export const create = (uid) => {
   return {
@@ -77,6 +79,16 @@ export const handleInput = (state, value) => {
     matchCount,
     value,
   }
+}
+
+export const handleFocus = (state) => {
+  Focus.setFocus(FocusKey.FindWidget)
+  return state
+}
+
+export const handleBlur = (state) => {
+  Focus.setFocus(FocusKey.Empty)
+  return state
 }
 
 // TODO this function should be synchronous

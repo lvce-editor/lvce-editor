@@ -2,6 +2,7 @@ import * as ForwardViewletCommand from '../ForwardViewletCommand/ForwardViewletC
 
 export const focus = ForwardViewletCommand.forwardViewletCommand('focus')
 export const handleBlur = ForwardViewletCommand.forwardViewletCommand('handleBlur')
+export const handleFocus = ForwardViewletCommand.forwardViewletCommand('handleFocus')
 export const handleDragOver = ForwardViewletCommand.forwardViewletCommand('handleDragOver')
 export const handleDrop = ForwardViewletCommand.forwardViewletCommand('handleDrop')
 export const handleClickAt = ForwardViewletCommand.forwardViewletCommand('handleClickAt')

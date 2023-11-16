@@ -5,21 +5,20 @@ import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
-import * as Focus from '../Focus/Focus.js'
 import * as GetModifierKey from '../GetModifierKey/GetModifierKey.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as PointerEvents from '../PointerEvents/PointerEvents.js'
 import * as TouchEvent from '../TouchEvent/TouchEvent.js'
 import * as EditorFunctions from './EditorFunctions.js'
-import * as PointerEvents from '../PointerEvents/PointerEvents.js'
-import * as FocusKey from '../FocusKey/FocusKey.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
 // TODO tree shake out mobile support when targeting electron -> less code -> less event listeners -> less memory -> less cpu
 
 export const handleFocus = (event) => {
-  Focus.setFocus(FocusKey.EditorText)
+  const uid = ComponentUid.fromEvent(event)
+  EditorFunctions.handleFocus(uid)
 }
 
 export const handleBlur = (event) => {

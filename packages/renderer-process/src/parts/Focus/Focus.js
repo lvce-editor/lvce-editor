@@ -1,25 +1,13 @@
 import * as Context from '../Context/Context.js'
-
-// TODO not sure if its worth to have a separate module for this or keep it inside Context.js
-// export const setFocus = (item) => {
-//   if (Context.state.currentFocus) {
-//     Context.remove(Context.state.currentFocus)
-//   }
-//   Context.set(`focus.${item}`, true)
-// }
-
-export const state = {
-  $PreviousFocusElement: undefined,
-  currentFocus: '',
-}
+import * as FocusState from '../FocusState/FocusState.js'
 
 export const setFocus = (key) => {
-  if (state.currentFocus) {
-    Context.remove(state.currentFocus)
+  if (FocusState.get()) {
+    Context.remove(FocusState.get())
   }
   // TODO could make focus key numeric enum which would be more efficient
-  state.currentFocus = `focus.${key}`
-  Context.set(state.currentFocus, true)
+  FocusState.set(`focus. ${key}`)
+  Context.set(FocusState.get(), true)
 }
 
 export const setAdditionalFocus = (key) => {
@@ -35,13 +23,14 @@ export const focus = ($Element, key) => {
   if ($Element === document.activeElement) {
     return
   }
-  state.$PreviousFocusElement = document.activeElement
+  FocusState.setElement(document.activeElement)
   $Element.focus({ preventScroll: true })
   setFocus(key)
 }
 
 export const focusPrevious = () => {
-  if (state.$PreviousFocusElement) {
-    state.$PreviousFocusElement.focus()
+  const $Element = FocusState.getElement()
+  if ($Element) {
+    $Element.focus()
   }
 }

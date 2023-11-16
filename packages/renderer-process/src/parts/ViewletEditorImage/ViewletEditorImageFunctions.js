@@ -5,4 +5,5 @@ export const handlePointerUp = ForwardViewletCommand.forwardViewletCommand('hand
 export const handlePointerDown = ForwardViewletCommand.forwardViewletCommand('handlePointerDown')
 export const handleWheel = ForwardViewletCommand.forwardViewletCommand('handleWheel')
 export const handleImageError = ForwardViewletCommand.forwardViewletCommand('handleImageError')
+export const handleFocus = ForwardViewletCommand.forwardViewletCommand('handleFocus')
 export const handleContextMenu = ForwardViewletCommand.forwardViewletCommand('handleContextMenu')
