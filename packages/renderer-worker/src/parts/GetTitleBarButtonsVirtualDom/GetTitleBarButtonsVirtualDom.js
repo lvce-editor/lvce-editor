@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
 
 const createTitleBarButton = (button) => {
   const { id, icon, label } = button
@@ -9,11 +10,7 @@ const createTitleBarButton = (button) => {
       ariaLabel: label,
       childCount: 1,
     },
-    {
-      type: VirtualDomElements.I,
-      className: `MaskIcon MaskIcon${icon}`,
-      childCount: 0,
-    },
+    GetIconVirtualDom.getIconVirtualDom(icon, VirtualDomElements.I),
   ]
   return dom
 }

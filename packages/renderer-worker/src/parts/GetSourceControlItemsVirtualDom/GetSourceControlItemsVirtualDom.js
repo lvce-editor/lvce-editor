@@ -2,6 +2,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getLabelClassName = (decorationStrikeThrough) => {
@@ -31,12 +32,7 @@ const createItem = (item, index, buttonIndex, buttons) => {
         className: 'Chevron',
         childCount: 1,
       },
-      {
-        type: VirtualDomElements.Div,
-        className: `MaskIcon MaskIcon${icon}`,
-        role: AriaRoles.None,
-        childCount: 0,
-      },
+      GetIconVirtualDom.getIconVirtualDom(icon)
       {
         type: VirtualDomElements.Div,
         className: labelClassName,
@@ -72,12 +68,7 @@ const createItem = (item, index, buttonIndex, buttons) => {
             className: 'Chevron',
             childCount: 1,
           },
-          {
-            type: VirtualDomElements.Div,
-            className: `MaskIcon MaskIcon${icon}`,
-            role: AriaRoles.None,
-            childCount: 0,
-          },
+          GetIconVirtualDom.getIconVirtualDom(icon)
         ]
       : [GetFileIconVirtualDom.getFileIconVirtualDom(icon)]),
   )
