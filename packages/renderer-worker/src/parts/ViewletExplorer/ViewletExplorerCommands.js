@@ -30,6 +30,7 @@ export const Commands = {
   scrollUp:                       ViewletExplorer.scrollUp,
   setDeltaY:                      ViewletExplorer.setDeltaY,
   updateEditingValue:             ViewletExplorer.updateEditingValue,
+  handleFocus:                    ViewletExplorer.handleFocus,
 }
 
 // prettier-ignore

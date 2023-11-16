@@ -226,7 +226,6 @@ export const replaceWithEditBox = (state, index, value) => {
   $InputBox.select()
   $InputBox.setSelectionRange(0, value.length)
   $InputBox.focus()
-  Focus.setFocus(FocusKey.ExplorerEditBox)
 }
 
 export const insertEditBox = (state, index, value) => {
@@ -247,7 +246,6 @@ export const insertEditBox = (state, index, value) => {
   $InputBox.select()
   $InputBox.setSelectionRange(0, value.length)
   $InputBox.focus()
-  Focus.setFocus(FocusKey.ExplorerEditBox)
 }
 
 export const hideEditBox = (state, index) => {
@@ -289,7 +287,6 @@ export const replaceEditBox = (state, index, dirent) => {
   render$Row($Dirent, dirent)
   $OldRow.replaceWith($Dirent)
   $Viewlet.focus()
-  Focus.setFocus(FocusKey.Explorer)
 }
 
 export const setDropTargets = (state, oldDropTargets, newDropTargets) => {
