@@ -1,5 +1,6 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 const getAriaSelected = (isTab, isSelected) => {
@@ -33,12 +34,7 @@ const createActivityBarItem = (item) => {
         ariaSelected,
         childCount: 1,
       },
-      {
-        type: VirtualDomElements.Div,
-        className: `MaskIcon MaskIcon${icon}`,
-        role: AriaRoles.None,
-        childCount: 0,
-      },
+      GetIconVirtualDom.getIconVirtualDom(icon),
     ]
   }
 
