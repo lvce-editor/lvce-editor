@@ -78,7 +78,7 @@
 .KeyBindingsTableCell {
   overflow: hidden;
   text-overflow: ellipsis;
-  contain: content;
+  contain: strict;
 }
 
 .Resizer {
