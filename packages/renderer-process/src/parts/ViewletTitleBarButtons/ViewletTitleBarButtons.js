@@ -1,3 +1,5 @@
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletTitleBarButtonEvents from './ViewletTitleBarButtonsEvents.js'
 
@@ -12,7 +14,9 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $Viewlet } = state
-  $Viewlet.onmousedown = ViewletTitleBarButtonEvents.handleTitleBarButtonsClick
+  AttachEvents.attachEvents($Viewlet, {
+    [DomEventType.MouseDown]: ViewletTitleBarButtonEvents.handleTitleBarButtonsClick,
+  })
 }
 
 export const setDom = (state, dom) => {
