@@ -5,6 +5,7 @@ import * as AriaAutoCompleteType from '../AriaAutoCompleteType/AriaAutoCompleteT
 import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
@@ -129,11 +130,14 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $QuickPickItems, $QuickPickInput } = state
-  $QuickPickItems.onpointerdown = ViewletQuickPickEvents.handlePointerDown
+  AttachEvents.attachEvents($QuickPickItems, {
+    [DomEventType.PointerDown]: ViewletQuickPickEvents.handlePointerDown,
+  })
   $QuickPickItems.addEventListener(DomEventType.Wheel, ViewletQuickPickEvents.handleWheel, DomEventOptions.Passive)
-
-  $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
-  $QuickPickInput.addEventListener(DomEventType.BeforeInput, ViewletQuickPickEvents.handleBeforeInput)
+  AttachEvents.attachEvents($QuickPickInput, {
+    [DomEventType.Blur]: ViewletQuickPickEvents.handleBlur,
+    [DomEventType.BeforeInput]: ViewletQuickPickEvents.handleBeforeInput,
+  })
 }
 
 const create$QuickPickStatus = () => {
