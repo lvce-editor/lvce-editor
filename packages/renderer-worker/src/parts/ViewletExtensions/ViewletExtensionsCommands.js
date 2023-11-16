@@ -18,5 +18,6 @@ export const LazyCommands = {
   handleContextMenu: () => import('./ViewletExtensionsHandleContextMenu.js'),
   clearSearchResults: () => import('./ViewletExtensionsClearSearchResults.js'),
   handleInput: () => import('./ViewletExtensionsHandleInput.js'),
+  handleFocus: () => import('./ViewletExtensionsHandleFocus.js'),
   ...VirtualList.LazyCommands
 }
