@@ -1,5 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as Assert from '../Assert/Assert.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Focus from '../Focus/Focus.js'
@@ -38,10 +38,12 @@ export const create = () => {
 export const attachEvents = (state) => {
   const { $Viewlet, $ListItems, $ScrollBar } = state
   $Viewlet.addEventListener(DomEventType.Wheel, ViewletEditorCompletionEvents.handleWheel, DomEventOptions.Passive)
-
-  $ListItems.onmousedown = ViewletEditorCompletionEvents.handleMousedown
-
-  $ScrollBar.onpointerdown = ViewletEditorCompletionEvents.handleScrollBarPointerDown
+  AttachEvents.attachEvents($ListItems, {
+    [DomEventType.MouseDown]: ViewletEditorCompletionEvents.handleMousedown,
+  })
+  AttachEvents.attachEvents($ScrollBar, {
+    [DomEventType.PointerDown]: ViewletEditorCompletionEvents.handleScrollBarPointerDown,
+  })
 }
 // TODO show should be passed active cursor position
 // this would make this function easier to test as it would avoid dependency on globals of other files
