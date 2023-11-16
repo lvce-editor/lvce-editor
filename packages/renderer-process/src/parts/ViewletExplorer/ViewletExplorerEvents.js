@@ -1,8 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
-import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as ViewletExplorerFunctions from './ViewletExplorerFunctions.js'
-import * as FocusKey from '../FocusKey/FocusKey.js'
 
 // TODO put drop into separate module and use executeCommand to call it
 
@@ -10,12 +8,11 @@ import * as FocusKey from '../FocusKey/FocusKey.js'
 
 export const handleFocus = (event) => {
   const { target, isTrusted } = event
-  Focus.setFocus(FocusKey.Explorer)
   if (!isTrusted || target.className === 'InputBox') {
     return
   }
   const uid = ComponentUid.fromEvent(event)
-  ViewletExplorerFunctions.focus(uid)
+  ViewletExplorerFunctions.handleFocus(uid)
 }
 
 export const handleBlur = (event) => {
