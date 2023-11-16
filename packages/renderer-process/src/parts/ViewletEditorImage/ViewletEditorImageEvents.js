@@ -2,10 +2,8 @@ import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
-import * as Focus from '../Focus/Focus.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as ViewletEditorImageFunctions from './ViewletEditorImageFunctions.js'
-import * as FocusKey from '../FocusKey/FocusKey.js'
 
 /**
  * @param {PointerEvent} event
@@ -78,6 +76,7 @@ export const handleError = (event) => {
   ViewletEditorImageFunctions.handleImageError(uid)
 }
 
-export const handleFocus = () => {
-  Focus.setFocus(FocusKey.EditorImage)
+export const handleFocus = (event) => {
+  const uid = ComponentUid.fromEvent(event)
+  ViewletEditorImageFunctions.handleFocus(uid)
 }

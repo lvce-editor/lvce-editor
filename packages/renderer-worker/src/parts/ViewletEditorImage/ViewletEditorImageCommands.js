@@ -2,6 +2,7 @@ import * as ViewletEditorImage from './ViewletEditorImage.js'
 
 // prettier-ignore
 export const Commands = {
+  handleFocus: ViewletEditorImage.handleFocus,
   handleImageError: ViewletEditorImage.handleImageError,
   handlePointerDown: ViewletEditorImage.handlePointerDown,
   handlePointerMove: ViewletEditorImage.handlePointerMove,
