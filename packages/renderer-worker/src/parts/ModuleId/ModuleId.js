@@ -74,3 +74,4 @@ export const Reload = 72
 export const IncrementalTextSearch = 73
 export const Prompt = 74
 export const WindowTitle = 75
+export const Focus = 76

@@ -1,6 +1,7 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const create$Option = (option) => {
   const $Option = document.createElement('option')
@@ -48,7 +49,8 @@ export const handleError = (state, error) => {
 
 export const focus = (state) => {
   Assert.object(state)
-  Focus.focus(state.$ViewletOutputContent, 'output')
+  Focus.focus(state.$ViewletOutputContent)
+  RendererWorker.send('Focus.setFocus', 'output')
 }
 
 // TODO handle case when output is opened -> find widget is opened -> output is disposed before find widget is ready

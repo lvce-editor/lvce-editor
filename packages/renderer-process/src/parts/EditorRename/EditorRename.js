@@ -17,7 +17,8 @@ export const create = (x, y) => {
   $RenameWidget.append($RenameWidgetInputBox)
   SetBounds.setXAndY($RenameWidget, x, y)
   Widget.append($RenameWidget)
-  Focus.focus($RenameWidgetInputBox, 'editorRename')
+  Focus.focus($RenameWidgetInputBox)
+  RendererWorker.send('Focus.setFocus', 'editorRename')
   return {
     $RenameWidget,
     $RenameWidgetInputBox,

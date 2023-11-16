@@ -82,6 +82,8 @@ export const load = (moduleId) => {
       return import('../IconTheme/IconTheme.ipc.js')
     case ModuleId.ImagePreview:
       return import('../ImagePreview/ImagePreview.ipc.js')
+    case ModuleId.Focus:
+      return import('../Focus/Focus.ipc.js')
     case ModuleId.IncrementalTextSearch:
       return import('../IncrementalTextSearch/IncrementalTextSearch.ipc.js')
     case ModuleId.IndexedDb:

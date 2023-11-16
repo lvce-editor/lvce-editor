@@ -1,6 +1,11 @@
 import * as Context from '../Context/Context.js'
 import * as FocusState from '../FocusState/FocusState.js'
 
+export const setContext = (contexts, current) => {
+  Context.state.contexts = contexts
+  FocusState.set(current)
+}
+
 export const setFocus = (key) => {
   if (FocusState.get()) {
     Context.remove(FocusState.get())
@@ -19,13 +24,12 @@ export const removeAdditionalFocus = (key) => {
   Context.remove(`focus.${key}`)
 }
 
-export const focus = ($Element, key) => {
+export const focus = ($Element) => {
   if ($Element === document.activeElement) {
     return
   }
   FocusState.setElement(document.activeElement)
   $Element.focus({ preventScroll: true })
-  setFocus(key)
 }
 
 export const focusPrevious = () => {
