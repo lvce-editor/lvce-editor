@@ -32,7 +32,7 @@ const createItem = (item, index, buttonIndex, buttons) => {
         className: 'Chevron',
         childCount: 1,
       },
-      GetIconVirtualDom.getIconVirtualDom(icon)
+      GetIconVirtualDom.getIconVirtualDom(icon),
       {
         type: VirtualDomElements.Div,
         className: labelClassName,
@@ -68,7 +68,7 @@ const createItem = (item, index, buttonIndex, buttons) => {
             className: 'Chevron',
             childCount: 1,
           },
-          GetIconVirtualDom.getIconVirtualDom(icon)
+          GetIconVirtualDom.getIconVirtualDom(icon),
         ]
       : [GetFileIconVirtualDom.getFileIconVirtualDom(icon)]),
   )
