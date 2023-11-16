@@ -1,5 +1,6 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Character from '../Character/Character.js'
+import * as CssState from '../CssState/CssState.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Response from '../Response/Response.js'
@@ -31,11 +32,11 @@ const actuallyLoadCssStyleSheet = async (css) => {
   }
 }
 
-export const loadCssStyleSheet = (css) => {
-  if (!state.pending[css]) {
-    state.pending[css] = actuallyLoadCssStyleSheet(css)
+export const loadCssStyleSheet = (id) => {
+  if (!CssState.has(id)) {
+    CssState.set(id, actuallyLoadCssStyleSheet(id))
   }
-  return state.pending[css]
+  return CssState.get(id)
 }
 
 export const loadCssStyleSheets = (css) => {
@@ -51,9 +52,9 @@ const actuallyAddDynamicCss = async (id, getCss, preferences) => {
   await addCssStyleSheet(id, css)
 }
 
-export const addDynamicCss = async (id, getCss, preferences) => {
-  if (!state.pending[id]) {
-    state.pending[id] = actuallyAddDynamicCss(id, getCss, preferences)
+export const addDynamicCss = (id, getCss, preferences) => {
+  if (!CssState.has(id)) {
+    CssState.set(id, actuallyAddDynamicCss(id, getCss, preferences))
   }
-  return state.pending[id]
+  return CssState.get(id)
 }
