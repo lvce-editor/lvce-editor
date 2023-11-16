@@ -5,6 +5,8 @@ import * as Distance from '../Distance/Distance.js'
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as WheelEvent from '../WheelEvent/WheelEvent.js'
+import * as Focus from '../Focus/Focus.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as ViewletEditorImageStrings from './ViewletEditorImageStrings.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -136,6 +138,11 @@ export const moveUp = (state) => {
     ...state,
     domMatrix: newDomMatrix,
   }
+}
+
+export const handleFocus = (state) => {
+  Focus.setFocus(FocusKey.EditorImage)
+  return state
 }
 
 export const moveDown = (state) => {
