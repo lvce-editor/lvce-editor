@@ -9,8 +9,11 @@ import * as Height from '../Height/Height.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as Focus from '../Focus/Focus.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 
 export const create = (id, uri, x, y, width, height) => {
+  Focus.setAdditionalFocus(FocusKey.EditorCompletion)
   return {
     uid: id,
     id,
@@ -126,6 +129,7 @@ export const dispose = (state) => {
 const disposeWithEditor = (state, editor) => {
   editor.completionState = EditorCompletionState.None
   editor.completionUid = 0
+  Focus.removeAdditionalFocus(FocusKey.EditorCompletion)
   return dispose(state)
 }
 
@@ -175,7 +179,7 @@ export const handleError = async (error) => {
     /* rowIndex */ 0,
     /* columnIndex */ 0,
     /* message */ displayErrorMessage,
-    /* isError */ true
+    /* isError */ true,
   )
 }
 
