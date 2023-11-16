@@ -1,22 +1,8 @@
-import * as Command from '../Command/Command.js'
+import * as FocusState from '../FocusState/FocusState.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
-export const focusTerminal = () => {}
-
-export const focusExtensions = () => {}
-
-// TODO are these wrapper functions useful?
-export const focusActivityBar = async () => {
-  await Command.execute(/* ActivityBar.focus */ 8003)
+export const setFocus = async (focusKey) => {
+  FocusState.set(focusKey)
+  // TODO send matching keybindings to renderer process?
+  await RendererProcess.invoke('Focus.setFocus', focusKey)
 }
-
-export const focusStatusBar = () => {}
-
-export const focusProblems = () => {}
-
-export const focusExplorer = () => {}
-
-export const focusPreviousTerminal = () => {}
-
-export const focusNextTerminal = () => {}
-
-export const focusDebugConsole = () => {}

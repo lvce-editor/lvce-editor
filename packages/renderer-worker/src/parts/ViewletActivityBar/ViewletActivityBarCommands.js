@@ -18,6 +18,7 @@ export const LazyCommands={
   focusNext: () => import('./ViewletActivityBarFocusNext.js'),
   focusPrevious: () => import('./ViewletActivityBarFocusPrevious.js'),
   selectCurrent: () => import('./ViewletActivityBarSelectCurrent.js'),
+  handleFocus: () => import('./ViewletActivityBarHandleFocus.js'),
   handleClick: () => import('./ViewletActivityBarHandleClick.js'),
   handleContextMenu: () => import('./ViewletActivityBarHandleContextMenu.js'),
   getHiddenItems: () => import('./ViewletActivityBarGetHiddenItems.js')
