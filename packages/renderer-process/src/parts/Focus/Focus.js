@@ -11,7 +11,7 @@ export const setFocus = (key) => {
     Context.remove(FocusState.get())
   }
   // TODO could make focus key numeric enum which would be more efficient
-  FocusState.set(`focus. ${key}`)
+  FocusState.set(`focus.${key}`)
   Context.set(FocusState.get(), true)
 }
 
