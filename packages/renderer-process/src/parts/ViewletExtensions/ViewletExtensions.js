@@ -8,13 +8,12 @@ import * as Assert from '../Assert/Assert.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as IsMobile from '../IsMobile/IsMobile.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
-import * as FocusKey from '../FocusKey/FocusKey.js'
 
 const activeId = 'ExtensionActive'
 
@@ -129,7 +128,7 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex, focused
   }
   if (focused) {
     $ListItems.focus()
-    Focus.setFocus(FocusKey.Extensions)
+    RendererWorker.send('Focus.setFocus', 'Extensions')
   }
 }
 

@@ -3,6 +3,5 @@ import * as Focus from './Focus.js'
 export const name = 'Focus'
 
 export const Commands = {
-  setFocus: Focus.setFocus,
   setContext: Focus.setContext,
 }

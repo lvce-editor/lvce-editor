@@ -1,7 +1,6 @@
 import * as Event from '../Event/Event.js'
-import * as Focus from '../Focus/Focus.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletRunAndDebugFunctions from './ViewletRunAndDebugFunctions.js'
-import * as FocusKey from '../FocusKey/FocusKey.js'
 
 // TODO rename to resume
 const handleClickContinue = () => {
@@ -99,7 +98,7 @@ export const handlePointerDown = (event) => {
 }
 
 export const handleDebugInputFocus = () => {
-  Focus.setFocus(FocusKey.DebugInput)
+  RendererWorker.send('Focus.setFocus', 'DebugInput')
 }
 
 export const handleDebugInput = (event) => {

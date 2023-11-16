@@ -1,6 +1,5 @@
-import * as Focus from '../Focus/Focus.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletSimpleBrowserFunctions from './ViewletSimpleBrowserFunctions.js'
-import * as FocusKey from '../FocusKey/FocusKey.js'
 
 export const handleInput = (event) => {
   const { target } = event
@@ -10,7 +9,7 @@ export const handleInput = (event) => {
 
 export const handleFocus = (event) => {
   const { target } = event
-  Focus.setFocus(FocusKey.SimpleBrowserInput)
+  RendererWorker.send('Focus.setFocus', 'SimpleBrowserInput')
   setTimeout(() => {
     target.select()
   })

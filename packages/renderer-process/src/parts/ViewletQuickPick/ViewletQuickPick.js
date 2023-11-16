@@ -9,10 +9,9 @@ import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as Focus from '../Focus/Focus.js'
-import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as IsMobile from '../IsMobile/IsMobile.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
@@ -83,7 +82,7 @@ const focusElement = ($Element) => {
 export const focus = (state) => {
   const { $QuickPickInput } = state
   focusElement($QuickPickInput)
-  Focus.setFocus(FocusKey.QuickPickInput)
+  RendererWorker.send('Focus.setFocus', 'quickPickInput')
 }
 
 // TODO
