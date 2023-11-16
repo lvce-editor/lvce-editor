@@ -33,7 +33,6 @@ export const LazyCommands = {
   deleteAllLeft: () => import('../EditorCommand/EditorCommandDeleteAllLeft.js'),
   deleteAllRight: () => import('../EditorCommand/EditorCommandDeleteAllRight.js'),
   deleteRight: () => import('../EditorCommand/EditorCommandDeleteCharacterRight.js'),
-
   deleteWordPartRight: () => import('../EditorCommand/EditorCommandDeleteWordPartRight.js'),
   deleteWordRight: () => import('../EditorCommand/EditorCommandDeleteWordRight.js'),
   format: () => import('../EditorCommand/EditorCommandFormat.js'),
@@ -41,7 +40,7 @@ export const LazyCommands = {
   goToTypeDefinition: () => import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
   handleBeforeInputFromContentEditable: () => import('../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'),
   handleContextMenu: () => import('../EditorCommand/EditorCommandHandleContextMenu.js'),
-
+  handleFocus: () => import('../EditorCommand/EditorCommandHandleFocus.js'),
   handleMouseMove: () => import('../EditorCommand/EditorCommandHandleMouseMove.js'),
   handleMouseMoveWithAltKey: () => import('../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.js'),
   handleNativeSelectionChange: () => import('../EditorCommand/EditorCommandHandleNativeSelectionChange.js'),

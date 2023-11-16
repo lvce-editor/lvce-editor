@@ -6,6 +6,7 @@ export const compositionUpdate = ForwardViewletCommand.forwardViewletCommand('co
 export const cut = ForwardViewletCommand.forwardViewletCommand('cut')
 export const handleBeforeInputFromContentEditable = ForwardViewletCommand.forwardViewletCommand('handleBeforeInputFromContentEditable')
 export const handleBlur = ForwardViewletCommand.forwardViewletCommand('blur')
+export const handleFocus = ForwardViewletCommand.forwardViewletCommand('handleFocus')
 export const handleMouseDown = ForwardViewletCommand.forwardViewletCommand('handleMouseDown')
 export const handlePointerCaptureLost = ForwardViewletCommand.forwardViewletCommand('handlePointerCaptureLost')
 export const handleScrollBarHorizontalMove = ForwardViewletCommand.forwardViewletCommand('handleScrollBarHorizontalMove')
