@@ -7,11 +7,10 @@ import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as FileIcon from '../FileIcon/FileIcon.js'
-import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
-import * as FocusKey from '../FocusKey/FocusKey.js'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
@@ -190,7 +189,7 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
   }
   if (focused) {
     $Viewlet.focus()
-    Focus.setFocus(FocusKey.Explorer)
+    RendererWorker.send('Focus.setFocus', 'Explorer')
   }
 }
 

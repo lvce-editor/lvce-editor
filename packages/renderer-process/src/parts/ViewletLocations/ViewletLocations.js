@@ -1,7 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-import * as Focus from '../Focus/Focus.js'
-import * as FocusKey from '../FocusKey/FocusKey.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletLocationsEvents from './ViewletLocationsEvents.js'
 
@@ -51,5 +50,5 @@ export const focus = (state) => {
   const { $Locations } = state
   $Locations.classList.add('FocusOutline')
   $Locations.focus()
-  Focus.setFocus(FocusKey.LocationList)
+  RendererWorker.send('Focus.setFocus', 'locationList')
 }

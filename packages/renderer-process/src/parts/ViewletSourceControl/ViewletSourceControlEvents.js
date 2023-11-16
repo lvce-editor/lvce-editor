@@ -1,11 +1,10 @@
 import { findIndex } from '../../shared/findIndex.js'
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
-import * as Focus from '../Focus/Focus.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletSourceControlFunctions from './ViewletSourceControlFunctions.js'
-import * as FocusKey from '../FocusKey/FocusKey.js'
 
 export const handleFocus = () => {
-  Focus.setFocus(FocusKey.SourceControlInput)
+  RendererWorker.send('Focus.setFocus', 'sourceControlInput')
 }
 
 const getButtonIndex = ($Node) => {
