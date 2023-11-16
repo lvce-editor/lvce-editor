@@ -253,7 +253,7 @@ test('showMenu - with sub menu', () => {
       },
     ],
     0,
-    -1
+    -1,
   )
   Menu.showMenu(
     100,
@@ -283,7 +283,7 @@ test('showMenu - with sub menu', () => {
       },
     ],
     1,
-    5
+    5,
   )
   const $Menu = Menu.state.$$Menus[0]
   const $SubMenu = Menu.state.$$Menus[1]
@@ -310,7 +310,7 @@ test('event - click', () => {
     new Event('mousedown', {
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledWith('Menu.selectIndex', 0, 0)
 })
@@ -333,7 +333,7 @@ test('event - click - outside', () => {
     new Event('mousedown', {
       bubbles: true,
       cancelable: true,
-    })
+    }),
   )
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
@@ -356,7 +356,7 @@ test('event - right click outside', () => {
     ],
     0,
     -1,
-    true
+    true,
   )
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
@@ -366,9 +366,9 @@ test('event - right click outside', () => {
       bubbles: true,
       cancelable: true,
       button: MenuItemFlags.Checked,
-    })
+    }),
   )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(2)
   expect(RendererWorker.send).toHaveBeenCalledWith('Menu.hide')
 })
 
@@ -393,7 +393,7 @@ test('event - mouseleave - outside', () => {
       bubbles: true,
       cancelable: true,
       relatedTarget: $RelatedTarget,
-    })
+    }),
   )
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
@@ -417,7 +417,7 @@ test.skip('event - mouseleave - outside', () => {
       bubbles: true,
       cancelable: true,
       relatedTarget: document.createElement('div'),
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith('Menu.handleMouseLeave')
@@ -464,7 +464,7 @@ test('event - context menu - outside', () => {
     ],
     0,
     -1,
-    true
+    true,
   )
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
@@ -475,7 +475,8 @@ test('event - context menu - outside', () => {
   const $BackDrop = document.querySelector('.BackDrop')
   $BackDrop.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Focus.setFocus', 'menu')
 })
 
 // TODO test pageup/pagedown

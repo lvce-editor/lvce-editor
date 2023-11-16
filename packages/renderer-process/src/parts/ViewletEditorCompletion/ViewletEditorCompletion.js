@@ -2,7 +2,6 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as Focus from '../Focus/Focus.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as Widget from '../Widget/Widget.js'
@@ -49,7 +48,6 @@ export const attachEvents = (state) => {
 // this would make this function easier to test as it would avoid dependency on globals of other files
 
 export const setDom = (state, dom) => {
-  Focus.setAdditionalFocus('editorCompletions')
   const { $ListItems, $Viewlet } = state
   const $Root = VirtualDom.render(dom)
   $ListItems.replaceChildren(...$Root.firstChild.childNodes)
@@ -61,7 +59,6 @@ export const setDom = (state, dom) => {
 export const dispose = (state) => {
   Widget.remove(state.$Viewlet)
   // state.$EditorInput.removeAttribute('aria-activedescendant')
-  Focus.removeAdditionalFocus('editorCompletions')
 }
 
 export const showLoading = (state, x, y) => {
@@ -71,7 +68,6 @@ export const showLoading = (state, x, y) => {
   $Loading.textContent = 'Loading'
   $Viewlet.append($Loading)
   Widget.append($Viewlet)
-  Focus.setAdditionalFocus('editorCompletions')
 }
 
 export const handleError = (state, error) => {

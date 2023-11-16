@@ -212,7 +212,8 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, mo
   Widget.append($Menu)
 
   if (level === 0) {
-    Focus.focus($Menu, 'menu')
+    Focus.focus($Menu)
+    RendererWorker.send('Focus.setFocus', 'menu')
   }
 }
 

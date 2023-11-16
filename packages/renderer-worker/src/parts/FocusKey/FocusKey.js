@@ -1,5 +1,6 @@
 export const ActivityBar = 'activityBar'
 export const DebugInput = 'DebugInput'
+export const EditorCompletion = 'editorCompletion'
 export const EditorImage = 'EditorImage'
 export const EditorText = 'EditorText'
 export const Empty = ''

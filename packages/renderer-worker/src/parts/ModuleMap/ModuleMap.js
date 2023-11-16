@@ -95,6 +95,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.FileSystem
     case 'Format':
       return ModuleId.Format
+    case 'Focus':
+      return ModuleId.Focus
     case 'IconTheme':
       return ModuleId.IconTheme
     case 'ImagePreview':

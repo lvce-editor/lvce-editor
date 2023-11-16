@@ -3,10 +3,15 @@
  */
 import * as ViewletOutput from '../src/parts/ViewletOutput/ViewletOutput.js'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
+import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
 
 const getSimpleList = (state) => {
   return state.content.textContent
 }
+
+beforeAll(() => {
+  RendererWorker.state.ipc = { send() {} }
+})
 
 test('create', () => {
   const state = ViewletOutput.create()
