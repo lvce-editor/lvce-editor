@@ -6,7 +6,7 @@ const parseKey = (rawKey) => {
   Assert.number(rawKey)
   const isCtrl = rawKey & KeyModifier.CtrlCmd
   const isShift = rawKey & KeyModifier.Shift
-  const keyCode = rawKey & 1024
+  const keyCode = rawKey & 0x0000ffff
   const key = GetKeyCodeString.getKeyCodeString(keyCode)
   return {
     key,
