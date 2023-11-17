@@ -1,6 +1,6 @@
+import * as GetKeyCode from '../src/parts/GetKeyCode/GetKeyCode.js'
 import * as Key from '../src/parts/Key/Key.js'
 import * as KeyCode from '../src/parts/KeyCode/KeyCode.js'
-import * as GetKeyCode from '../src/parts/GetKeyCode/GetKeyCode.js'
 
 test('KeyA', () => {
   expect(GetKeyCode.getKeyCode(Key.KeyA)).toBe(KeyCode.KeyA)
