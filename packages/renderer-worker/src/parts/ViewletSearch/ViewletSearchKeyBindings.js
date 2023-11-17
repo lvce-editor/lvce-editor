@@ -1,32 +1,35 @@
+import * as KeyCode from '../KeyCode/KeyCode.js'
+import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+
 export const getKeyBindings = () => {
   return [
     {
-      key: 'ArrowDown',
+      key: KeyCode.DownArrow,
       command: 'Search.focusNext',
       when: 'focus.SearchResults',
     },
     {
-      key: 'ArrowUp',
+      key: KeyCode.UpArrow,
       command: 'Search.focusPrevious',
       when: 'focus.SearchResults',
     },
     {
-      key: 'Delete',
+      key: KeyCode.Delete,
       command: 'Search.dismissItem',
       when: 'focus.SearchResults',
     },
     {
-      key: 'Home',
+      key: KeyCode.Home,
       command: 'Search.focusFirst',
       when: 'focus.SearchResults',
     },
     {
-      key: 'End',
+      key: KeyCode.End,
       command: 'Search.focusLast',
       when: 'focus.SearchResults',
     },
     {
-      key: 'ctrl+c',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyC,
       command: 'Search.copy',
       when: 'focus.SearchResults',
     },
