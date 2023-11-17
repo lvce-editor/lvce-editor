@@ -58,6 +58,46 @@ test('Delete', () => {
   expect(GetKeyCode.getKeyCode(Key.Delete)).toBe(KeyCode.Delete)
 })
 
+test('Digit0', () => {
+  expect(GetKeyCode.getKeyCode(Key.Digit0)).toBe(KeyCode.Digit0)
+})
+
+test('Digit1', () => {
+  expect(GetKeyCode.getKeyCode(Key.Digit1)).toBe(KeyCode.Digit1)
+})
+
+test('Digit2', () => {
+  expect(GetKeyCode.getKeyCode(Key.Digit2)).toBe(KeyCode.Digit2)
+})
+
+test('Digit3', () => {
+  expect(GetKeyCode.getKeyCode(Key.Digit3)).toBe(KeyCode.Digit3)
+})
+
+test('Digit4', () => {
+  expect(GetKeyCode.getKeyCode(Key.Digit4)).toBe(KeyCode.Digit4)
+})
+
+test('Digit5', () => {
+  expect(GetKeyCode.getKeyCode(Key.Digit5)).toBe(KeyCode.Digit5)
+})
+
+test('Digit6', () => {
+  expect(GetKeyCode.getKeyCode(Key.Digit6)).toBe(KeyCode.Digit6)
+})
+
+test('Digit7', () => {
+  expect(GetKeyCode.getKeyCode(Key.Digit7)).toBe(KeyCode.Digit7)
+})
+
+test('Digit8', () => {
+  expect(GetKeyCode.getKeyCode(Key.Digit8)).toBe(KeyCode.Digit8)
+})
+
+test('Digit9', () => {
+  expect(GetKeyCode.getKeyCode(Key.Digit9)).toBe(KeyCode.Digit9)
+})
+
 test('KeyA', () => {
   expect(GetKeyCode.getKeyCode(Key.KeyA)).toBe(KeyCode.KeyA)
 })

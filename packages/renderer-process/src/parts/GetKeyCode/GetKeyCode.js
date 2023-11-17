@@ -31,6 +31,26 @@ export const getKeyCode = (key) => {
       return KeyCode.Insert
     case Key.Delete:
       return KeyCode.Delete
+    case Key.Digit0:
+      return KeyCode.Digit0
+    case Key.Digit1:
+      return KeyCode.Digit1
+    case Key.Digit2:
+      return KeyCode.Digit2
+    case Key.Digit3:
+      return KeyCode.Digit3
+    case Key.Digit4:
+      return KeyCode.Digit4
+    case Key.Digit5:
+      return KeyCode.Digit5
+    case Key.Digit6:
+      return KeyCode.Digit6
+    case Key.Digit7:
+      return KeyCode.Digit7
+    case Key.Digit8:
+      return KeyCode.Digit8
+    case Key.Digit9:
+      return KeyCode.Digit9
     case Key.KeyA:
       return KeyCode.KeyA
     case Key.KeyB:
