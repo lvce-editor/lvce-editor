@@ -1,4 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as Browser from '../Browser/Browser.js'
 import * as Context from '../Context/Context.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
@@ -35,17 +36,23 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $SashSideBar, $SashPanel } = state
-  $SashSideBar.onpointerdown = ViewletLayoutEvents.handleSashPointerDown
-  $SashSideBar.ondblclick = ViewletLayoutEvents.handleSashDoubleClick
+  AttachEvents.attachEvents($SashSideBar, {
+    [DomEventType.PointerDown]: ViewletLayoutEvents.handleSashPointerDown,
+    [DomEventType.DoubleClick]: ViewletLayoutEvents.handleSashDoubleClick,
+  })
 
-  $SashPanel.onpointerdown = ViewletLayoutEvents.handleSashPointerDown
-  $SashPanel.ondblclick = ViewletLayoutEvents.handleSashDoubleClick
+  AttachEvents.attachEvents($SashPanel, {
+    [DomEventType.PointerDown]: ViewletLayoutEvents.handleSashPointerDown,
+    [DomEventType.DoubleClick]: ViewletLayoutEvents.handleSashDoubleClick,
+  })
 
-  window.addEventListener(DomEventType.Resize, ViewletLayoutEvents.handleResize)
-  window.addEventListener(DomEventType.Focus, ViewletLayoutEvents.handleFocus)
-  window.addEventListener(DomEventType.Blur, ViewletLayoutEvents.handleBlur)
-  window.addEventListener(DomEventType.KeyDown, ViewletLayoutEvents.handleKeyDown)
-  window.addEventListener(DomEventType.KeyUp, ViewletLayoutEvents.handleKeyUp)
+  AttachEvents.attachEvents(window, {
+    [DomEventType.Resize]: ViewletLayoutEvents.handleResize,
+    [DomEventType.Focus]: ViewletLayoutEvents.handleFocus,
+    [DomEventType.Blur]: ViewletLayoutEvents.handleBlur,
+    [DomEventType.KeyDown]: ViewletLayoutEvents.handleKeyDown,
+    [DomEventType.KeyUp]: ViewletLayoutEvents.handleKeyUp,
+  })
 }
 
 export const setSashes = (state, sashSideBar, sashPanel) => {
