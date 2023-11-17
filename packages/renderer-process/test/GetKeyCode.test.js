@@ -202,6 +202,50 @@ test('KeyZ', () => {
   expect(GetKeyCode.getKeyCode(Key.KeyZ)).toBe(KeyCode.KeyZ)
 })
 
+test('SemiColon', () => {
+  expect(GetKeyCode.getKeyCode(Key.SemiColon)).toBe(KeyCode.SemiColon)
+})
+
+test('Equal', () => {
+  expect(GetKeyCode.getKeyCode(Key.Equal)).toBe(KeyCode.Equal)
+})
+
+test('Comma', () => {
+  expect(GetKeyCode.getKeyCode(Key.Comma)).toBe(KeyCode.Comma)
+})
+
+test('Minus', () => {
+  expect(GetKeyCode.getKeyCode(Key.Minus)).toBe(KeyCode.Minus)
+})
+
+test('Period', () => {
+  expect(GetKeyCode.getKeyCode(Key.Period)).toBe(KeyCode.Period)
+})
+
+test('Slash', () => {
+  expect(GetKeyCode.getKeyCode(Key.Slash)).toBe(KeyCode.Slash)
+})
+
+test('Backquote', () => {
+  expect(GetKeyCode.getKeyCode(Key.Backquote)).toBe(KeyCode.Backquote)
+})
+
+test('BracketLeft', () => {
+  expect(GetKeyCode.getKeyCode(Key.BracketLeft)).toBe(KeyCode.BracketLeft)
+})
+
+test('Backslash', () => {
+  expect(GetKeyCode.getKeyCode(Key.Backslash)).toBe(KeyCode.Backslash)
+})
+
+test('BracketRight', () => {
+  expect(GetKeyCode.getKeyCode(Key.BracketRight)).toBe(KeyCode.BracketRight)
+})
+
+test('Quote', () => {
+  expect(GetKeyCode.getKeyCode(Key.Quote)).toBe(KeyCode.Quote)
+})
+
 test('Star', () => {
   expect(GetKeyCode.getKeyCode(Key.Star)).toBe(KeyCode.Star)
 })

@@ -103,6 +103,28 @@ export const getKeyCode = (key) => {
       return KeyCode.KeyY
     case Key.KeyZ:
       return KeyCode.KeyZ
+    case Key.SemiColon:
+      return KeyCode.SemiColon
+    case Key.Equal:
+      return KeyCode.Equal
+    case Key.Comma:
+      return KeyCode.Comma
+    case Key.Minus:
+      return KeyCode.Minus
+    case Key.Period:
+      return KeyCode.Period
+    case Key.Slash:
+      return KeyCode.Slash
+    case Key.Backquote:
+      return KeyCode.Backquote
+    case Key.BracketLeft:
+      return KeyCode.BracketLeft
+    case Key.Backslash:
+      return KeyCode.Backslash
+    case Key.BracketRight:
+      return KeyCode.BracketRight
+    case Key.Quote:
+      return KeyCode.Quote
     case Key.Star:
       return KeyCode.Star
     case Key.Plus:
