@@ -144,3 +144,5 @@ export const LaunchApp2 = 128
 
 export const Clear = 129
 export const MaxValue = 130
+
+export const Star = 131

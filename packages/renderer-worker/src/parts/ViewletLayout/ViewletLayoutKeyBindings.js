@@ -1,51 +1,54 @@
+import * as KeyCode from '../KeyCode/KeyCode.js'
+import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+
 export const getKeyBindings = () => {
   return [
     {
-      key: 'Escape',
+      key: KeyCode.Escape,
       command: 'Viewlet.closeWidget',
       when: 'focus.FindWidget',
       args: ['FindWidget'],
     },
     {
-      key: 'Enter',
+      key: KeyCode.Enter,
       command: 'EditorRename.finish',
       when: 'focus.editorRename',
     },
     {
-      key: 'Escape',
+      key: KeyCode.Escape,
       command: 'EditorRename.abort',
       when: 'focus.editorRename',
     },
 
     {
-      key: 'ctrl+b',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyB,
       command: 'Layout.toggleSideBar',
     },
     {
-      key: 'ctrl+m',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyM,
       command: 'Layout.toggleActivityBar',
     },
     {
-      key: 'ctrl+`',
+      key: KeyModifier.CtrlCmd | KeyCode.Backquote,
       command: 'Layout.togglePanel',
       args: ['Terminal'],
     },
     {
-      key: 'ctrl+shift+m',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyM,
       command: 'ViewService.toggleView',
       args: ['Output'],
     },
     {
-      key: 'ctrl+Enter',
+      key: KeyModifier.CtrlCmd | KeyCode.Enter,
       command: 'Source Control.acceptInput',
       when: 'focus.sourceControlInput',
     },
     {
-      key: 'ctrl+n',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyN,
       command: 'Explorer.newFile',
     },
     {
-      key: 'ctrl+p',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyP,
       command: 'Viewlet.openWidget',
       args: ['QuickPick', 'file'],
     },

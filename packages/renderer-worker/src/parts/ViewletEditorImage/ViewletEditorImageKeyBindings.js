@@ -1,22 +1,24 @@
+import * as KeyCode from '../KeyCode/KeyCode.js'
+
 export const getKeyBindings = () => {
   return [
     {
-      key: 'ArrowLeft',
+      key: KeyCode.LeftArrow,
       command: 'EditorImage.moveLeft',
       when: 'focus.EditorImage',
     },
     {
-      key: 'ArrowRight',
+      key: KeyCode.RightArrow,
       command: 'EditorImage.moveRight',
       when: 'focus.EditorImage',
     },
     {
-      key: 'ArrowUp',
+      key: KeyCode.UpArrow,
       command: 'EditorImage.moveUp',
       when: 'focus.EditorImage',
     },
     {
-      key: 'ArrowDown',
+      key: KeyCode.DownArrow,
       command: 'EditorImage.moveDown',
       when: 'focus.EditorImage',
     },

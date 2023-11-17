@@ -1,22 +1,24 @@
+import * as KeyCode from '../KeyCode/KeyCode.js'
+
 export const getKeyBindings = () => {
   return [
     {
-      key: 'ArrowDown',
+      key: KeyCode.DownArrow,
       command: 'EditorCompletion.focusNext',
       when: 'focus.editorCompletions',
     },
     {
-      key: 'ArrowUp',
+      key: KeyCode.UpArrow,
       command: 'EditorCompletion.focusPrevious',
       when: 'focus.editorCompletions',
     },
     {
-      key: 'Enter',
+      key: KeyCode.Enter,
       command: 'EditorCompletion.selectCurrent',
       when: 'focus.editorCompletions',
     },
     {
-      key: 'Escape',
+      key: KeyCode.Escape,
       command: 'Editor.closeCompletion',
       when: 'focus.editorCompletions',
     },
