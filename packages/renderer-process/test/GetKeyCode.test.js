@@ -2,6 +2,62 @@ import * as GetKeyCode from '../src/parts/GetKeyCode/GetKeyCode.js'
 import * as Key from '../src/parts/Key/Key.js'
 import * as KeyCode from '../src/parts/KeyCode/KeyCode.js'
 
+test('Backspace', () => {
+  expect(GetKeyCode.getKeyCode(Key.Backspace)).toBe(KeyCode.Backspace)
+})
+
+test('Tab', () => {
+  expect(GetKeyCode.getKeyCode(Key.Tab)).toBe(KeyCode.Tab)
+})
+
+test('Escape', () => {
+  expect(GetKeyCode.getKeyCode(Key.Escape)).toBe(KeyCode.Escape)
+})
+
+test('Space', () => {
+  expect(GetKeyCode.getKeyCode(Key.Space)).toBe(KeyCode.Space)
+})
+
+test('PageUp', () => {
+  expect(GetKeyCode.getKeyCode(Key.PageUp)).toBe(KeyCode.PageUp)
+})
+
+test('PageDown', () => {
+  expect(GetKeyCode.getKeyCode(Key.PageDown)).toBe(KeyCode.PageDown)
+})
+
+test('End', () => {
+  expect(GetKeyCode.getKeyCode(Key.End)).toBe(KeyCode.End)
+})
+
+test('Home', () => {
+  expect(GetKeyCode.getKeyCode(Key.Home)).toBe(KeyCode.Home)
+})
+
+test('LeftArrow', () => {
+  expect(GetKeyCode.getKeyCode(Key.LeftArrow)).toBe(KeyCode.LeftArrow)
+})
+
+test('UpArrow', () => {
+  expect(GetKeyCode.getKeyCode(Key.UpArrow)).toBe(KeyCode.UpArrow)
+})
+
+test('RightArrow', () => {
+  expect(GetKeyCode.getKeyCode(Key.RightArrow)).toBe(KeyCode.RightArrow)
+})
+
+test('DownArrow', () => {
+  expect(GetKeyCode.getKeyCode(Key.DownArrow)).toBe(KeyCode.DownArrow)
+})
+
+test('Insert', () => {
+  expect(GetKeyCode.getKeyCode(Key.Insert)).toBe(KeyCode.Insert)
+})
+
+test('Delete', () => {
+  expect(GetKeyCode.getKeyCode(Key.Delete)).toBe(KeyCode.Delete)
+})
+
 test('KeyA', () => {
   expect(GetKeyCode.getKeyCode(Key.KeyA)).toBe(KeyCode.KeyA)
 })

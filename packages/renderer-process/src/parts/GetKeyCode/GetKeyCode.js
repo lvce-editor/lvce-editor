@@ -3,6 +3,34 @@ import * as KeyCode from '../KeyCode/KeyCode.js'
 
 export const getKeyCode = (key) => {
   switch (key) {
+    case Key.Backspace:
+      return KeyCode.Backspace
+    case Key.Tab:
+      return KeyCode.Tab
+    case Key.Escape:
+      return KeyCode.Escape
+    case Key.Space:
+      return KeyCode.Space
+    case Key.PageUp:
+      return KeyCode.PageUp
+    case Key.PageDown:
+      return KeyCode.PageDown
+    case Key.End:
+      return KeyCode.End
+    case Key.Home:
+      return KeyCode.Home
+    case Key.LeftArrow:
+      return KeyCode.LeftArrow
+    case Key.UpArrow:
+      return KeyCode.UpArrow
+    case Key.RightArrow:
+      return KeyCode.RightArrow
+    case Key.DownArrow:
+      return KeyCode.DownArrow
+    case Key.Insert:
+      return KeyCode.Insert
+    case Key.Delete:
+      return KeyCode.Delete
     case Key.KeyA:
       return KeyCode.KeyA
     case Key.KeyB:
