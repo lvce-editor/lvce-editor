@@ -53,209 +53,203 @@ export const getKeyBindings = () => {
       args: ['QuickPick', 'file'],
     },
     {
-      key: 'ctrl+shift+p',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyP,
       command: 'Viewlet.openWidget',
       args: ['QuickPick', 'everything'],
     },
     {
-      key: 'F1',
+      key: KeyCode.F1,
       command: 'Viewlet.openWidget',
       args: ['QuickPick', 'everything'],
     },
 
     {
-      key: 'ctrl+shift+x',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyX,
       command: 'Focus.set',
       args: ['Extensions'],
     },
     {
-      key: 'ctrl+shift+g',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyG,
       command: 'Focus.set',
       args: ['Source Control'],
     },
     {
-      key: 'ctrl+shift+e',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyE,
       command: 'Focus.set',
       args: ['Explorer'],
     },
     {
-      key: 'ctrl+shift+f',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyF,
       command: 'Focus.set',
       args: ['Search'],
     },
     {
-      key: 'ctrl+shift+Y',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyY,
       command: 'Focus.set',
       args: ['Debug Console'],
     },
     {
-      key: 'ctrl+shift+m',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyM,
       command: 'Focus.set',
       args: ['Problems'],
     },
 
     {
-      key: 'ctrl+,',
+      key: KeyModifier.CtrlCmd | KeyCode.Comma,
       command: 'Preferences.openSettingsJson',
     },
 
     {
-      key: 'ctrl+shift+d',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyD,
       command: 'Focus.set',
       args: ['Run and Debug'],
     },
 
     {
-      key: 'ctrl+shift+i',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyI,
       command: 'Developer.toggleDeveloperTools',
       when: 'browser.electron',
     },
     {
-      key: 'F6',
+      key: KeyCode.F6,
       command: 'Navigation.focusNextPart',
     },
     {
-      key: 'shift+F6',
+      key: KeyModifier.Shift | KeyCode.F6,
       command: 'Navigation.focusPreviousPart',
     },
-
     {
-      key: 'ctrl+g',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyG,
       command: 'QuickPick.openGoToLine',
     },
     {
-      key: 'ctrl+shift+Space',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Space,
       command: 'Editor.selectInsideString',
       when: 'focus.editor',
     },
-
     {
-      key: 'Escape',
+      key: KeyCode.Escape,
       command: 'dialog.close',
       when: 'focus.dialog',
     },
-
     {
-      key: 'ArrowDown',
+      key: KeyCode.DownArrow,
       command: 'Menu.focusNext',
       when: 'focus.menu',
     },
     {
-      key: 'ArrowUp',
+      key: KeyCode.UpArrow,
       command: 'Menu.focusPrevious',
       when: 'focus.menu',
     },
     {
-      key: 'Enter',
+      key: KeyCode.Enter,
       command: 'Menu.selectCurrent',
       when: 'focus.menu',
     },
     {
-      key: 'Space',
+      key: KeyCode.Space,
       command: 'Menu.selectCurrent',
       when: 'focus.menu',
     },
     {
-      key: 'Home',
+      key: KeyCode.Home,
       command: 'Menu.focusFirst',
       when: 'focus.menu',
     },
     {
-      key: 'End',
+      key: KeyCode.End,
       command: 'Menu.focusLast',
       when: 'focus.menu',
     },
     {
-      key: 'Escape',
+      key: KeyCode.Escape,
       command: 'Menu.hide',
       when: 'focus.menu',
     },
     {
-      key: 'ctrl+shift+n',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyN,
       command: 'ElectronWindow.openNew',
       when: 'browser.electron',
     },
     {
-      key: 'Tab',
+      key: KeyCode.Tab,
       command: 'Menu.noop',
       when: 'focus.menu',
     },
     {
-      key: 'Shift+Tab',
+      key: KeyModifier.Shift | KeyCode.Tab,
       command: 'Menu.noop',
       when: 'focus.menu',
     },
     {
-      key: 'ctrl+shift+r',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyR,
       command: 'Viewlet.openWidget',
       args: ['QuickPick', 'recent'],
     },
-
     {
-      key: 'ctrl+0',
+      key: KeyModifier.CtrlCmd | KeyCode.Digit0,
       command: 'SideBar.focus',
     },
-
     {
-      key: 'shift+ArrowUp',
+      key: KeyModifier.Shift | KeyCode.UpArrow,
       command: 'Editor.selectUp',
     },
     {
-      key: 'shift+ArrowDown',
+      key: KeyModifier.Shift | KeyCode.DownArrow,
       command: 'Editor.selectDown',
     },
     {
-      key: 'ctrl+f',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyF,
       command: 'Editor.openFind',
     },
     {
-      key: 'Enter',
+      key: KeyCode.Enter,
       command: 'FindWidget.focusNext',
       when: 'focus.FindWidget',
     },
     {
-      key: 'shift+F4',
+      key: KeyModifier.Shift | KeyCode.F4,
       command: 'FindWidget.focusPrevious',
       when: 'focus.FindWidget',
     },
     {
-      key: 'F4',
+      key: KeyCode.F4,
       command: 'FindWidget.focusNext',
       when: 'focus.FindWidget',
     },
     {
-      key: 'ctrl+=',
+      key: KeyModifier.CtrlCmd | KeyCode.Equal,
       command: 'Window.zoomIn',
     },
     {
-      key: 'ctrl++',
+      key: KeyModifier.CtrlCmd | KeyCode.Plus,
       command: 'Window.zoomIn',
     },
     {
-      key: 'ctrl+-',
+      key: KeyModifier.CtrlCmd | KeyCode.Minus,
       command: 'Window.zoomOut',
     },
-
     {
-      key: 'Enter',
+      key: KeyCode.Enter,
       command: 'SimpleBrowser.go',
       when: 'focus.SimpleBrowserInput',
     },
     {
-      key: 'ctrl+r',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyR,
       command: 'Reload.reload',
     },
     {
-      key: 'ctrl+\\',
+      key: KeyModifier.CtrlCmd | KeyCode.Backslash,
       command: 'Run And Debug.togglePause',
     },
     {
-      key: 'Enter',
+      key: KeyCode.Enter,
       command: 'Run And Debug.handleEvaluate',
       when: 'focus.DebugInput',
     },
     {
-      key: 'ctrl+j',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyJ,
       command: 'Viewlet.openWidget',
       args: ['ColorPicker'],
     },
