@@ -1,26 +1,20 @@
 import { jest } from '@jest/globals'
+import * as KeyCode from '../src/parts/KeyCode/KeyCode.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/KeyBindingsInitial/KeyBindingsInitial.js',
-  () => {
-    return {
-      getKeyBindings: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/KeyBindingsInitial/KeyBindingsInitial.js', () => {
+  return {
+    getKeyBindings: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ViewletKeyBindings = await import(
-  '../src/parts/ViewletKeyBindings/ViewletKeyBindings.js'
-)
-const KeyBindingsInitial = await import(
-  '../src/parts/KeyBindingsInitial/KeyBindingsInitial.js'
-)
+const ViewletKeyBindings = await import('../src/parts/ViewletKeyBindings/ViewletKeyBindings.js')
+const KeyBindingsInitial = await import('../src/parts/KeyBindingsInitial/KeyBindingsInitial.js')
 
 test('create', () => {
   expect(ViewletKeyBindings.create()).toBeDefined()
@@ -31,7 +25,7 @@ test('loadContent', async () => {
   KeyBindingsInitial.getKeyBindings.mockImplementation(() => {
     return [
       {
-        key: 'Enter',
+        key: KeyCode.Enter,
         command: 'EditorCompletion.selectCurrent',
         when: 'focus.editorCompletions',
       },
@@ -41,7 +35,7 @@ test('loadContent', async () => {
   expect(await ViewletKeyBindings.loadContent(state)).toMatchObject({
     parsedKeyBindings: [
       {
-        rawKey: 'Enter',
+        rawKey: KeyCode.Enter,
         isCtrl: false,
         isShift: false,
         key: 'Enter',

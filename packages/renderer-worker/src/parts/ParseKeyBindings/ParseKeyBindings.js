@@ -4,8 +4,8 @@ import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 
 const parseKey = (rawKey) => {
   Assert.number(rawKey)
-  const isCtrl = rawKey & KeyModifier.CtrlCmd
-  const isShift = rawKey & KeyModifier.Shift
+  const isCtrl = Boolean(rawKey & KeyModifier.CtrlCmd)
+  const isShift = Boolean(rawKey & KeyModifier.Shift)
   const keyCode = rawKey & 0x0000ffff
   const key = GetKeyCodeString.getKeyCodeString(keyCode)
   return {
