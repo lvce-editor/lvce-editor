@@ -1,9 +1,13 @@
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+import * as GetKeyCodeString from '../GetKeyCodeString/GetKeyCodeString.js'
+import * as Assert from '../Assert/Assert.js'
 
 const parseKey = (rawKey) => {
+  Assert.number(rawKey)
   const isCtrl = rawKey & KeyModifier.CtrlCmd
   const isShift = rawKey & KeyModifier.Shift
-  const key = `${rawKey & 1024}`
+  const keyCode = rawKey & 1024
+  const key = GetKeyCodeString.getKeyCodeString(keyCode)
   return {
     key,
     isCtrl,
