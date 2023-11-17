@@ -13,6 +13,14 @@ export const getKeyCode = (key) => {
       return KeyCode.KeyD
     case Key.KeyE:
       return KeyCode.KeyE
+    case Key.KeyF:
+      return KeyCode.KeyF
+    case Key.KeyG:
+      return KeyCode.KeyG
+    case Key.KeyH:
+      return KeyCode.KeyH
+    case Key.KeyI:
+      return KeyCode.KeyI
     default:
       return KeyCode.Unknown
   }

@@ -21,3 +21,19 @@ test('KeyD', () => {
 test('KeyE', () => {
   expect(GetKeyCode.getKeyCode(Key.KeyE)).toBe(KeyCode.KeyE)
 })
+
+test('KeyF', () => {
+  expect(GetKeyCode.getKeyCode(Key.KeyF)).toBe(KeyCode.KeyF)
+})
+
+test('KeyG', () => {
+  expect(GetKeyCode.getKeyCode(Key.KeyG)).toBe(KeyCode.KeyG)
+})
+
+test('KeyH', () => {
+  expect(GetKeyCode.getKeyCode(Key.KeyH)).toBe(KeyCode.KeyH)
+})
+
+test('KeyI', () => {
+  expect(GetKeyCode.getKeyCode(Key.KeyI)).toBe(KeyCode.KeyI)
+})
