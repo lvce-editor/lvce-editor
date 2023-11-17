@@ -1,25 +1,17 @@
-const normalizeKey = (key) => {
-  if (key === ' ') {
-    return 'Space'
-  }
-  if (key.length === 1) {
-    return key.toLowerCase()
-  }
-  return key
-}
+import * as GetKeyCode from '../GetKeyCode/GetKeyCode.js'
+import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 
 export const getKeyBindingIdentifier = (event) => {
-  let identifier = ''
+  let identifier = 0
   if (event.ctrlKey) {
-    identifier += 'ctrl+'
+    identifier |= KeyModifier.CtrlCmd
   }
   if (event.shiftKey) {
-    identifier += 'shift+'
+    identifier |= KeyModifier.Shift
   }
   if (event.altKey) {
-    identifier += 'alt+'
+    identifier |= KeyModifier.Alt
   }
-  const key = normalizeKey(event.key)
-  identifier += key
+  identifier |= GetKeyCode.getKeyCode(event.key.toLowerCase())
   return identifier
 }
