@@ -103,6 +103,10 @@ export const getKeyCode = (key) => {
       return KeyCode.KeyY
     case Key.KeyZ:
       return KeyCode.KeyZ
+    case Key.Star:
+      return KeyCode.Star
+    case Key.Plus:
+      return KeyCode.Plus
     default:
       return KeyCode.Unknown
   }

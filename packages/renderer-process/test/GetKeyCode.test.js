@@ -201,3 +201,11 @@ test('KeyY', () => {
 test('KeyZ', () => {
   expect(GetKeyCode.getKeyCode(Key.KeyZ)).toBe(KeyCode.KeyZ)
 })
+
+test('Star', () => {
+  expect(GetKeyCode.getKeyCode(Key.Star)).toBe(KeyCode.Star)
+})
+
+test('Plus', () => {
+  expect(GetKeyCode.getKeyCode(Key.Plus)).toBe(KeyCode.Plus)
+})

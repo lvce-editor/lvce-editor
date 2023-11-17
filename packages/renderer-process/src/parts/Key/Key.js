@@ -51,3 +51,6 @@ export const KeyW = 'w'
 export const KeyX = 'x'
 export const KeyY = 'y'
 export const KeyZ = 'z'
+
+export const Star = '*'
+export const Plus = '+'
