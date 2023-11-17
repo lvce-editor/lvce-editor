@@ -1,33 +1,8 @@
 import * as Context from '../Context/Context.js'
 import * as Event from '../Event/Event.js'
+import * as GetKeyBindingIdentifier from '../GetKeyBindingIdentifier/GetKeyBindingIdentifier.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-
-const normalizeKey = (key) => {
-  if (key === ' ') {
-    return 'Space'
-  }
-  if (key.length === 1) {
-    return key.toLowerCase()
-  }
-  return key
-}
-
-const getIdentifier = (event) => {
-  let identifier = ''
-  if (event.ctrlKey) {
-    identifier += 'ctrl+'
-  }
-  if (event.shiftKey) {
-    identifier += 'shift+'
-  }
-  if (event.altKey) {
-    identifier += 'alt+'
-  }
-  const key = normalizeKey(event.key)
-  identifier += key
-  return identifier
-}
 
 // TODO store keybindings as json somewhere
 
@@ -93,7 +68,7 @@ const handleMatchingKeyBinding = (matchingKeyBinding) => {
 }
 
 export const handleKeyDown = (event) => {
-  const identifier = getIdentifier(event)
+  const identifier = GetKeyBindingIdentifier.getKeyBindingIdentifier(event)
   const matchingKeyBinding = getMatchingKeyBinding(identifier)
   if (!matchingKeyBinding) {
     return
