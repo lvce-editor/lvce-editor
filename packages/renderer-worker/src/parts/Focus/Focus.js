@@ -1,3 +1,4 @@
+import * as Browser from '../Browser/Browser.js'
 import * as Context from '../Context/Context.js'
 import * as FocusState from '../FocusState/FocusState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -19,4 +20,12 @@ export const setAdditionalFocus = (key) => {
 
 export const removeAdditionalFocus = (key) => {
   Context.remove(`focus.${key}`)
+}
+
+export const hydrate = async () => {
+  // TODO is this the right place for browser context ?
+  // maybe in env file / env service
+  const browser = Browser.getBrowser()
+  Context.set(`browser.${browser}`, true)
+  await RendererProcess.invoke('Focus.setContext', Context.getAll(), FocusState.get())
 }

@@ -19,7 +19,6 @@ export const getKeyBindings = () => {
       command: 'EditorRename.abort',
       when: 'focus.editorRename',
     },
-
     {
       key: KeyModifier.CtrlCmd | KeyCode.KeyB,
       command: 'Layout.toggleSideBar',

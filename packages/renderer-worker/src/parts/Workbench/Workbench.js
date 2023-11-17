@@ -1,5 +1,6 @@
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
+import * as Focus from '../Focus/Focus.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
 import * as InitData from '../InitData/InitData.js'
@@ -68,6 +69,8 @@ export const startup = async () => {
   Performance.mark(PerformanceMarkerType.WillOpenWorkspace)
   await Workspace.hydrate(initData.Location)
   Performance.mark(PerformanceMarkerType.DidOpenWorkspace)
+
+  await Focus.hydrate()
 
   LifeCycle.mark(LifeCyclePhase.Three)
 
