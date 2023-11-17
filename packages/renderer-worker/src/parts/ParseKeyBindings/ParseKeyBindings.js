@@ -1,6 +1,6 @@
-import * as KeyModifier from '../KeyModifier/KeyModifier.js'
-import * as GetKeyCodeString from '../GetKeyCodeString/GetKeyCodeString.js'
 import * as Assert from '../Assert/Assert.js'
+import * as GetKeyCodeString from '../GetKeyCodeString/GetKeyCodeString.js'
+import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 
 const parseKey = (rawKey) => {
   Assert.number(rawKey)
