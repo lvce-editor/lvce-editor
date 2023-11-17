@@ -103,6 +103,54 @@ export const getKeyCode = (key) => {
       return KeyCode.KeyY
     case Key.KeyZ:
       return KeyCode.KeyZ
+    case Key.F1:
+      return KeyCode.F1
+    case Key.F2:
+      return KeyCode.F2
+    case Key.F3:
+      return KeyCode.F3
+    case Key.F4:
+      return KeyCode.F4
+    case Key.F5:
+      return KeyCode.F5
+    case Key.F6:
+      return KeyCode.F6
+    case Key.F7:
+      return KeyCode.F7
+    case Key.F8:
+      return KeyCode.F8
+    case Key.F9:
+      return KeyCode.F9
+    case Key.F10:
+      return KeyCode.F10
+    case Key.F11:
+      return KeyCode.F11
+    case Key.F12:
+      return KeyCode.F12
+    case Key.F13:
+      return KeyCode.F13
+    case Key.F14:
+      return KeyCode.F14
+    case Key.F15:
+      return KeyCode.F15
+    case Key.F16:
+      return KeyCode.F16
+    case Key.F17:
+      return KeyCode.F17
+    case Key.F18:
+      return KeyCode.F18
+    case Key.F19:
+      return KeyCode.F19
+    case Key.F20:
+      return KeyCode.F20
+    case Key.F21:
+      return KeyCode.F21
+    case Key.F22:
+      return KeyCode.F22
+    case Key.F23:
+      return KeyCode.F23
+    case Key.F24:
+      return KeyCode.F24
     case Key.SemiColon:
       return KeyCode.SemiColon
     case Key.Equal:

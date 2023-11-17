@@ -202,6 +202,102 @@ test('KeyZ', () => {
   expect(GetKeyCode.getKeyCode(Key.KeyZ)).toBe(KeyCode.KeyZ)
 })
 
+test('F1', () => {
+  expect(GetKeyCode.getKeyCode(Key.F1)).toBe(KeyCode.F1)
+})
+
+test('F2', () => {
+  expect(GetKeyCode.getKeyCode(Key.F2)).toBe(KeyCode.F2)
+})
+
+test('F3', () => {
+  expect(GetKeyCode.getKeyCode(Key.F3)).toBe(KeyCode.F3)
+})
+
+test('F4', () => {
+  expect(GetKeyCode.getKeyCode(Key.F4)).toBe(KeyCode.F4)
+})
+
+test('F5', () => {
+  expect(GetKeyCode.getKeyCode(Key.F5)).toBe(KeyCode.F5)
+})
+
+test('F6', () => {
+  expect(GetKeyCode.getKeyCode(Key.F6)).toBe(KeyCode.F6)
+})
+
+test('F7', () => {
+  expect(GetKeyCode.getKeyCode(Key.F7)).toBe(KeyCode.F7)
+})
+
+test('F8', () => {
+  expect(GetKeyCode.getKeyCode(Key.F8)).toBe(KeyCode.F8)
+})
+
+test('F9', () => {
+  expect(GetKeyCode.getKeyCode(Key.F9)).toBe(KeyCode.F9)
+})
+
+test('F10', () => {
+  expect(GetKeyCode.getKeyCode(Key.F10)).toBe(KeyCode.F10)
+})
+
+test('F11', () => {
+  expect(GetKeyCode.getKeyCode(Key.F11)).toBe(KeyCode.F11)
+})
+
+test('F12', () => {
+  expect(GetKeyCode.getKeyCode(Key.F12)).toBe(KeyCode.F12)
+})
+
+test('F13', () => {
+  expect(GetKeyCode.getKeyCode(Key.F13)).toBe(KeyCode.F13)
+})
+
+test('F14', () => {
+  expect(GetKeyCode.getKeyCode(Key.F14)).toBe(KeyCode.F14)
+})
+
+test('F15', () => {
+  expect(GetKeyCode.getKeyCode(Key.F15)).toBe(KeyCode.F15)
+})
+
+test('F16', () => {
+  expect(GetKeyCode.getKeyCode(Key.F16)).toBe(KeyCode.F16)
+})
+
+test('F17', () => {
+  expect(GetKeyCode.getKeyCode(Key.F17)).toBe(KeyCode.F17)
+})
+
+test('F18', () => {
+  expect(GetKeyCode.getKeyCode(Key.F18)).toBe(KeyCode.F18)
+})
+
+test('F19', () => {
+  expect(GetKeyCode.getKeyCode(Key.F19)).toBe(KeyCode.F19)
+})
+
+test('F20', () => {
+  expect(GetKeyCode.getKeyCode(Key.F20)).toBe(KeyCode.F20)
+})
+
+test('F21', () => {
+  expect(GetKeyCode.getKeyCode(Key.F21)).toBe(KeyCode.F21)
+})
+
+test('F22', () => {
+  expect(GetKeyCode.getKeyCode(Key.F22)).toBe(KeyCode.F22)
+})
+
+test('F23', () => {
+  expect(GetKeyCode.getKeyCode(Key.F23)).toBe(KeyCode.F23)
+})
+
+test('F24', () => {
+  expect(GetKeyCode.getKeyCode(Key.F24)).toBe(KeyCode.F24)
+})
+
 test('SemiColon', () => {
   expect(GetKeyCode.getKeyCode(Key.SemiColon)).toBe(KeyCode.SemiColon)
 })
