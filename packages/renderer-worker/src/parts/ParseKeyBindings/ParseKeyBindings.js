@@ -1,20 +1,9 @@
+import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+
 const parseKey = (rawKey) => {
-  const parts = rawKey.split('+')
-  let isCtrl = false
-  let isShift = false
-  let key = ''
-  for (const part of parts) {
-    switch (part) {
-      case 'shift':
-        isShift = true
-        break
-      case 'ctrl':
-        isCtrl = true
-      default:
-        key = part
-        break
-    }
-  }
+  const isCtrl = rawKey & KeyModifier.CtrlCmd
+  const isShift = rawKey & KeyModifier.Shift
+  const key = `${rawKey & 1024}`
   return {
     key,
     isCtrl,
