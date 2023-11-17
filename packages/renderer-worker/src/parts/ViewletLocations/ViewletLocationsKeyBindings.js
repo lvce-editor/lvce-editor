@@ -1,27 +1,29 @@
+import * as KeyCode from '../KeyCode/KeyCode.js'
+
 export const getKeyBindings = () => {
   return [
     {
-      key: 'ArrowDown',
+      key: KeyCode.DownArrow,
       command: 'Locations.focusNext',
       when: 'focus.locationList',
     },
     {
-      key: 'ArrowUp',
+      key: KeyCode.UpArrow,
       command: 'Locations.focusPrevious',
       when: 'focus.locationList',
     },
     {
-      key: 'Home',
+      key: KeyCode.Home,
       command: 'Locations.focusFirst',
       when: 'focus.locationList',
     },
     {
-      key: 'End',
+      key: KeyCode.End,
       command: 'Locations.focusLast',
       when: 'focus.locationList',
     },
     {
-      key: 'Enter',
+      key: KeyCode.Enter,
       command: 'Locations.selectCurrent',
       when: 'focus.locationList',
     },

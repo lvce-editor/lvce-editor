@@ -1,92 +1,95 @@
+import * as KeyCode from '../KeyCode/KeyCode.js'
+import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+
 export const getKeyBindings = () => {
   return [
     {
-      key: 'ArrowRight',
+      key: KeyCode.RightArrow,
       command: 'Explorer.handleArrowRight',
       when: 'focus.Explorer',
     },
     {
-      key: 'ArrowLeft',
+      key: KeyCode.LeftArrow,
       command: 'Explorer.handleArrowLeft',
       when: 'focus.Explorer',
     },
     {
-      key: 'Home',
+      key: KeyCode.Home,
       command: 'Explorer.focusFirst',
       when: 'focus.Explorer',
     },
     {
-      key: 'End',
+      key: KeyCode.End,
       command: 'Explorer.focusLast',
       when: 'focus.Explorer',
     },
     {
-      key: 'ArrowUp',
+      key: KeyCode.UpArrow,
       command: 'Explorer.focusPrevious',
       when: 'focus.Explorer',
     },
     {
-      key: 'ArrowDown',
+      key: KeyCode.DownArrow,
       command: 'Explorer.focusNext',
       when: 'focus.Explorer',
     },
     {
-      key: 'shift+*',
+      key: KeyModifier.CtrlCmd | KeyCode.Star,
       command: 'Explorer.expandAll',
       when: 'focus.Explorer',
     },
     {
-      key: 'alt+ArrowRight',
+      key: KeyModifier.Alt | KeyCode.RightArrow,
       command: 'Explorer.expandRecursively',
       when: 'focus.Explorer',
     },
     {
-      key: 'ctrl+ArrowLeft',
+      key: KeyModifier.CtrlCmd | KeyCode.LeftArrow,
       command: 'Explorer.collapseAll',
       when: 'focus.Explorer',
     },
     {
-      key: 'ctrl+v',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyV,
       command: 'Explorer.handlePaste',
       when: 'focus.Explorer',
     },
     {
-      key: 'ctrl+c',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyC,
       command: 'Explorer.handleCopy',
       when: 'focus.Explorer',
     },
     {
-      key: 'F2',
+      key: KeyCode.F2,
       command: 'Explorer.rename',
       when: 'focus.Explorer',
     },
     {
-      key: 'Escape',
+      key: KeyCode.Escape,
       command: 'Explorer.cancelEdit',
       when: 'focus.ExplorerEditBox',
     },
     {
-      key: 'Enter',
+      key: KeyCode.Enter,
       command: 'Explorer.acceptEdit',
       when: 'focus.ExplorerEditBox',
     },
     {
-      key: 'Delete',
+      key: KeyCode.Delete,
       command: 'Explorer.removeDirent',
       when: 'focus.Explorer',
     },
     {
-      key: 'Escape',
+      key: KeyCode.Escape,
       command: 'Explorer.focusNone',
       when: 'focus.Explorer',
     },
     {
-      key: 'Space',
+      key: KeyCode.Space,
       command: 'Explorer.handleClickCurrentButKeepFocus',
       when: 'focus.Explorer',
     },
     {
-      key: 'Enter',
+      key: KeyCode.Enter,
       command: 'Explorer.handleClickCurrent',
       when: 'focus.Explorer',
     },
