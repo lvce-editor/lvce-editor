@@ -1,4 +1,6 @@
 import * as Command from '../Command/Command.js'
+import * as Assert from '../Assert/Assert.js'
+import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 
 // TODO where to store keybindings? need them here and in renderer process
 // how to avoid duplicate loading / where to store them and keep them in sync?
@@ -11,11 +13,16 @@ export const lookupKeyBinding = (commandId) => {
   }
 }
 
-export const handleKeyBinding = async (keyBinding) => {
+export const handleKeyBinding = async (identifier) => {
+  Assert.number(identifier)
+  const keyBinding = KeyBindingsState.getKeyBinding(identifier)
+  if (!keyBinding) {
+    throw new Error(`keybinding not found for identifier ${identifier}`)
+  }
   await Command.execute(
     /* command */ keyBinding.command,
     // TODO should args always be defined? (probably yes -> monomorphism & simpler code since all objects are the same)
-    ...(keyBinding.args || [])
+    ...(keyBinding.args || []),
   )
   // TODO
   // else if (typeof keyBinding.command === 'string') {

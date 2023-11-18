@@ -148,6 +148,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workbench
     case 'WindowTitle.set':
       return ModuleId.WindowTitle
+    case 'KeyBindings.setIdentifiers':
+      return ModuleId.KeyBindings
     default:
       throw new CommandNotFoundError(commandId)
   }

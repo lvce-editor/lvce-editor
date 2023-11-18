@@ -2,12 +2,11 @@ import * as Assert from '../Assert/Assert.js'
 import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 
 const getPlaceHolderText = () => {
-  return `Message (${KeyBindings.lookupKeyBinding('scm.acceptInput')} to commit on 'master'`
+  return `Message (Enter) to commit on 'master'`
 }
 
 export const create = () => {

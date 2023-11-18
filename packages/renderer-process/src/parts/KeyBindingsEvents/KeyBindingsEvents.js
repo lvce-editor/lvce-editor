@@ -1,6 +1,5 @@
 import * as Event from '../Event/Event.js'
 import * as GetKeyBindingIdentifier from '../GetKeyBindingIdentifier/GetKeyBindingIdentifier.js'
-import * as GetMatchingKeyBinding from '../GetMatchingKeyBinding/GetMatchingKeyBinding.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
@@ -15,30 +14,7 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 // TODO ui should only have keys -> commands get resolved inside renderer worker
 // TODO should toggle terminal, not only open
 
-const getModifier = (event) => {
-  switch (event.key) {
-    case 'Control':
-      return 'ctrl'
-    case 'Shift':
-      return 'shift'
-    case 'Alt':
-      return 'alt'
-  }
-  return ''
-}
-
-const clearModifier = () => {
-  if (!KeyBindingsState.hasModifier()) {
-    return
-  }
-  if (KeyBindingsState.getModifierTimeout() !== -1) {
-    clearTimeout(KeyBindingsState.getModifierTimeout())
-    KeyBindingsState.setModifier('')
-    KeyBindingsState.setModifierTimeout(-1)
-  }
-}
-
-const handleMatchingKeyBinding = (matchingKeyBinding) => {
+const handleMatchingKeyBinding = (identifier) => {
   // TODO execute command directly or -> executeCommand -> keybindings -> executeCommand
   // better directly
   // TODO always should be number
@@ -46,34 +22,18 @@ const handleMatchingKeyBinding = (matchingKeyBinding) => {
   // TODO should args always be defined? (probably yes -> monomorphism & simpler code since all objects are the same)
 
   // TODO matchingKeyBinding.command should always be number
-  RendererWorker.send(/* KeyBindings.handleKeyBinding */ 'KeyBindings.handleKeyBinding', /* keyBinding */ matchingKeyBinding)
+  RendererWorker.send(/* KeyBindings.handleKeyBinding */ 'KeyBindings.handleKeyBinding', /* keyBinding */ identifier)
 }
 
 export const handleKeyDown = (event) => {
   const identifier = GetKeyBindingIdentifier.getKeyBindingIdentifier(event)
-  const matchingKeyBinding = GetMatchingKeyBinding.getMatchingKeyBinding(identifier)
+  const identifiers = KeyBindingsState.getIdentifiers()
+  const matchingKeyBinding = identifiers.includes(identifier)
   if (!matchingKeyBinding) {
     return
   }
   Event.preventDefault(event)
-  handleMatchingKeyBinding(matchingKeyBinding)
+  handleMatchingKeyBinding(identifier)
 }
 
-export const handleKeyUp = (event) => {
-  const modifier = getModifier(event)
-  if (!modifier) {
-    clearModifier()
-    return
-  }
-  if (KeyBindingsState.isModifier(modifier)) {
-    clearModifier()
-    const identifier = `${modifier} ${modifier}`
-    const matchingKeyBinding = GetMatchingKeyBinding.getMatchingKeyBinding(identifier)
-    if (matchingKeyBinding) {
-      handleMatchingKeyBinding(matchingKeyBinding)
-    }
-    return
-  }
-  KeyBindingsState.setModifier(modifier)
-  KeyBindingsState.setModifierTimeout(setTimeout(clearModifier, 300))
-}
+export const handleKeyUp = (event) => {}
