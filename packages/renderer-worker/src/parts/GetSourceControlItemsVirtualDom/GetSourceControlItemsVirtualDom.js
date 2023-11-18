@@ -104,8 +104,7 @@ const createItem = (item, index, buttonIndex, buttons) => {
         },
         {
           type: VirtualDomElements.Span,
-          className: 'MaskIcon',
-          maskImage: icon,
+          className: `MaskIcon MaskIcon${icon}`,
         },
       )
     }
