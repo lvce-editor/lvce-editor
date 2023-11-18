@@ -7,6 +7,7 @@ import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHo
 import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.js'
 import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
+import * as ExtensionHostDiagnostic from '../ExtensionHostDiagnostic/ExtensionHostDiagnostic.js'
 import * as ExtensionHostEnv from '../ExtensionHostEnv/ExtensionHostEnv.js'
 import * as ExtensionHostExec from '../ExtensionHostExec/ExtensionHostExec.js'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
@@ -60,6 +61,10 @@ export const api = {
   // Definition
   registerDefinitionProvider: ExtensionHostDefinition.registerDefinitionProvider,
   executeDefinitionProvider: ExtensionHostDefinition.executeDefinitionProvider,
+
+  // Diagnostic
+  registerDiagnosticProvider: ExtensionHostDiagnostic.registerDiagnosticProvider,
+  executeDiagnosticProvider: ExtensionHostDiagnostic.executeDiagnosticProvider,
 
   // Env
   env: ExtensionHostEnv.env,

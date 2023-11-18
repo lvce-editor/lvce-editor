@@ -3,6 +3,7 @@ import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as ExtensionHostDiagnostic from '../ExtensionHost/ExtensionHostDiagnostic.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
 import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
@@ -11,7 +12,6 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
 import * as MeasureCharacterWidth from '../MeasureCharacterWidth/MeasureCharacterWidth.js'
 import * as MeasureLongestLineWidth from '../MeasureLongestLineWidth/MeasureLongestLineWidth.js'
-import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
@@ -179,8 +179,12 @@ export const contentLoaded = async (state) => {
 }
 
 const updateSemanticTokens = async (state) => {
+  if (!Preferences.get('editor.semanticTokens')) {
+    return
+  }
   try {
     const newSemanticTokens = await ExtensionHostSemanticTokens.executeSemanticTokenProvider(state)
+    console.log({ newSemanticTokens })
     await Command.execute(/* Editor.setDecorations */ 'Editor.setDecorations', /* decorations */ newSemanticTokens)
     // TODO apply semantic tokens to editor and rerender
     // TODO possibly overlay semantic tokens as decorations
@@ -196,10 +200,30 @@ const updateSemanticTokens = async (state) => {
   }
 }
 
+const getDiagnosticDecorations = (diagnostics) => {
+  return []
+}
+
+const updateDiagnostics = async (state) => {
+  if (!Preferences.get('editor.diagnostics')) {
+    return
+  }
+  try {
+    const diagnostics = await ExtensionHostDiagnostic.executeDiagnosticProvider(state)
+    const decorations = getDiagnosticDecorations(diagnostics)
+    await Command.execute('Editor.setDecorations', decorations)
+    console.log({ diagnostics })
+  } catch (error) {
+    console.log({ error })
+    // ignore
+  }
+}
+
 export const handleEditorChange = async (editor, changes) => {
   // await ExtensionHostTextDocument.handleEditorChange(editor, changes)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(editor)
+  await updateDiagnostics(editor)
   return editor
 }
 
@@ -214,6 +238,7 @@ export const contentLoadedEffects = async (state) => {
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
+  await updateDiagnostics(state)
   GlobalEventBus.emitEvent('editor.create', state)
   Tokenizer.addConnectedEditor(state.uid)
 }
