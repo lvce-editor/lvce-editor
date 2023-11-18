@@ -1,4 +1,5 @@
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 
 const create$Diagnostic = () => {
   const $Diagnostic = document.createElement('div')
@@ -51,4 +52,9 @@ const render$Diagnostics = ($Diagnostics, diagnostics) => {
 
 export const setDiagnostics = (state, diagnostics) => {
   render$Diagnostics(state.$LayerDiagnostics, diagnostics)
+}
+
+export const setDecorationsDom = (state, decorations) => {
+  const { $LayerDiagnostics } = state
+  VirtualDom.renderInto($LayerDiagnostics, decorations)
 }
