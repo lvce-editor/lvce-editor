@@ -256,7 +256,7 @@ const copyStaticFiles = async ({ arch }) => {
   await Copy.copy({
     from: 'static',
     to: `build/.tmp/electron-bundle/${arch}/resources/app/static`,
-    ignore: ['css', 'js'],
+    ignore: ['css'],
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
