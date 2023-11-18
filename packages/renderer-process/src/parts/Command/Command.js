@@ -19,9 +19,7 @@ const initializeModule = (module) => {
     }
     return
   }
-  throw new Error(
-    `module ${module.name} is missing an initialize function and commands`
-  )
+  throw new Error(`module ${module.name} is missing an initialize function and commands`)
 }
 
 const loadModule = async (moduleId) => {
@@ -29,11 +27,7 @@ const loadModule = async (moduleId) => {
     const module = await state.load(moduleId)
     initializeModule(module)
   } catch (error) {
-    if (
-      error &&
-      error instanceof SyntaxError &&
-      error.stack === `SyntaxError: ${error.message}`
-    ) {
+    if (error && error instanceof SyntaxError && error.stack === `SyntaxError: ${error.message}`) {
       Error.captureStackTrace(error, loadModule)
     }
     throw new VError(error, `failed to load module ${moduleId}`)
@@ -75,7 +69,11 @@ const executeCommandAsync = async (command, ...args) => {
 
 export const execute = (command, ...args) => {
   if (command in state.commands) {
-    return state.commands[command](...args)
+    const fn = state.commands[command]
+    if (typeof fn !== 'function') {
+      throw new Error(`[renderer-worker] Command ${command} is not a function`)
+    }
+    return fn(...args)
   }
   return executeCommandAsync(command, ...args)
 }

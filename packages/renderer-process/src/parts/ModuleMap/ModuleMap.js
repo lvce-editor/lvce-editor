@@ -44,9 +44,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.EditorRename
     case 'Eval.evalCode':
       return ModuleId.Eval
-    case 'Focus.setFocus':
-    case 'Focus.setContext':
-      return ModuleId.Focus
     case 'FilePicker.showDirectoryPicker':
     case 'FilePicker.showFilePicker':
     case 'FilePicker.showSaveFilePicker':
@@ -148,6 +145,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workbench
     case 'WindowTitle.set':
       return ModuleId.WindowTitle
+    case 'KeyBindings.setIdentifiers':
+      return ModuleId.KeyBindings
     default:
       throw new CommandNotFoundError(commandId)
   }

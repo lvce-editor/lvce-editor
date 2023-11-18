@@ -9,6 +9,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as ViewletElectron from './ViewletElectron.js'
 
 export const focus = async (id) => {
@@ -119,7 +120,7 @@ export const dispose = async (id) => {
     instance.factory.dispose(instance.state)
     await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
     if (instance.factory.getKeyBindings) {
-      await RendererProcess.invoke('Viewlet.removeKeyBindings', instanceUid)
+      KeyBindingsState.removeKeyBindings(instanceUid)
     }
   } catch (error) {
     console.error(error)
@@ -155,7 +156,7 @@ export const disposeFunctional = (id) => {
     const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
 
     if (instance.factory.getKeyBindings) {
-      commands.push(['Viewlet.removeKeyBindings', uid])
+      KeyBindingsState.removeKeyBindings(uid)
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
@@ -398,7 +399,7 @@ export const disposeWidgetWithValue = async (id, value) => {
     Assert.number(uid)
     const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
     if (instance.factory.getKeyBindings) {
-      commands.push(['Viewlet.removeKeyBindings', uid])
+      KeyBindingsState.removeKeyBindings(uid)
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)

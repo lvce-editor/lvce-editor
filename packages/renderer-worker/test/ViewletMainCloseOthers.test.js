@@ -446,7 +446,6 @@ test('closeOthers - 2 2 - third tab is focused and third tab is selected', async
   ])
   expect(commands).toEqual([
     ['Viewlet.create', 'Editor', 1],
-    ['Viewlet.addKeyBindings', 1, expect.anything()],
     ['Viewlet.setBounds', 1, 0, 35, 100, 65],
     ['Viewlet.append', 1, 1],
   ])

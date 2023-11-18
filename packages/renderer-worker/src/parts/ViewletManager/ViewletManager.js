@@ -11,6 +11,8 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Focus from '../Focus/Focus.js'
+import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 
 export const state = {
   pendingModules: Object.create(null),
@@ -350,7 +352,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     if (module.getKeyBindings) {
       const keyBindings = module.getKeyBindings()
-      extraCommands.push(['Viewlet.addKeyBindings', viewletUid, keyBindings])
+      KeyBindingsState.addKeyBindings(viewletUid, keyBindings)
     }
 
     if (module.getChildren) {
