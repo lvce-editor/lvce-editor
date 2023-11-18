@@ -9,16 +9,10 @@ const normalizeKey = (key) => {
 }
 
 export const getKeyBindingIdentifier = (event) => {
-  let identifier = 0
-  if (event.ctrlKey) {
-    identifier |= KeyModifier.CtrlCmd
-  }
-  if (event.shiftKey) {
-    identifier |= KeyModifier.Shift
-  }
-  if (event.altKey) {
-    identifier |= KeyModifier.Alt
-  }
-  identifier |= GetKeyCode.getKeyCode(normalizeKey(event.key))
+  const modifierControl = event.ctrlKey ? KeyModifier.CtrlCmd : 0
+  const modifierShift = event.shiftKey ? KeyModifier.Shift : 0
+  const modifierAlt = event.altKey ? KeyModifier.Alt : 0
+  const keyCode = GetKeyCode.getKeyCode(normalizeKey(event.key))
+  const identifier = modifierControl | modifierShift | modifierAlt | keyCode
   return identifier
 }
