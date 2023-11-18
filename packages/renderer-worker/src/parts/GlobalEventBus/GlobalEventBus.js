@@ -28,9 +28,7 @@ export const addListener = (event, fn) => {
 export const removeListener = (event, fn) => {
   const listeners = state.listenerMap[event]
   if (!listeners) {
-    console.info(
-      `[info] listener for event ${event} is not registered and cannot be unregistered`
-    )
+    console.info(`[info] listener for event ${event} is not registered and cannot be unregistered`)
     return
   }
   const index = listeners.indexOf(fn)

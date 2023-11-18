@@ -237,6 +237,7 @@ export const contentLoadedEffects = async (state) => {
   await updateSemanticTokens(state)
   await updateDiagnostics(state)
   GlobalEventBus.emitEvent('editor.create', state)
+  GlobalEventBus.addListener('editor.change', handleEditorChange)
   Tokenizer.addConnectedEditor(state.uid)
 }
 
