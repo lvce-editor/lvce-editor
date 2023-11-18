@@ -10,6 +10,10 @@ test('Tab', () => {
   expect(GetKeyCodeString.getKeyCodeString(KeyCode.Tab)).toBe(KeyCodeString.Tab)
 })
 
+test('Escape', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.Escape)).toBe(KeyCodeString.Escape)
+})
+
 test('Enter', () => {
   expect(GetKeyCodeString.getKeyCodeString(KeyCode.Enter)).toBe(KeyCodeString.Enter)
 })
@@ -200,4 +204,51 @@ test('KeyY', () => {
 
 test('KeyZ', () => {
   expect(GetKeyCodeString.getKeyCodeString(KeyCode.KeyZ)).toBe(KeyCodeString.KeyZ)
+})
+
+test('F1', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.F1)).toBe(KeyCodeString.F1)
+})
+
+test('F2', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.F2)).toBe(KeyCodeString.F2)
+})
+
+test('F3', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.F3)).toBe(KeyCodeString.F3)
+})
+
+test('F4', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.F4)).toBe(KeyCodeString.F4)
+})
+
+test('F5', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.F5)).toBe(KeyCodeString.F5)
+})
+
+test('F6', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.F6)).toBe(KeyCodeString.F6)
+})
+
+test('Backslash', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.Backslash)).toBe(KeyCodeString.Backslash)
+})
+
+test('Equal', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.Equal)).toBe(KeyCodeString.Equal)
+})
+test('Comma', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.Comma)).toBe(KeyCodeString.Comma)
+})
+test('Backquote', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.Backquote)).toBe(KeyCodeString.Backquote)
+})
+test('Plus', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.Plus)).toBe(KeyCodeString.Plus)
+})
+test('Star', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.Star)).toBe(KeyCodeString.Star)
+})
+test('Minus', () => {
+  expect(GetKeyCodeString.getKeyCodeString(KeyCode.Minus)).toBe(KeyCodeString.Minus)
 })

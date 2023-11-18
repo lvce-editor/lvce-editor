@@ -7,6 +7,8 @@ export const getKeyCodeString = (keyCode) => {
       return KeyCodeString.Backspace
     case KeyCode.Tab:
       return KeyCodeString.Tab
+    case KeyCode.Escape:
+      return KeyCodeString.Escape
     case KeyCode.Enter:
       return KeyCodeString.Enter
     case KeyCode.Space:
@@ -103,6 +105,32 @@ export const getKeyCodeString = (keyCode) => {
       return KeyCodeString.KeyY
     case KeyCode.KeyZ:
       return KeyCodeString.KeyZ
+    case KeyCode.F1:
+      return KeyCodeString.F1
+    case KeyCode.F2:
+      return KeyCodeString.F2
+    case KeyCode.F3:
+      return KeyCodeString.F3
+    case KeyCode.F4:
+      return KeyCodeString.F4
+    case KeyCode.F5:
+      return KeyCodeString.F5
+    case KeyCode.F6:
+      return KeyCodeString.F6
+    case KeyCode.Backslash:
+      return KeyCodeString.Backslash
+    case KeyCode.Equal:
+      return KeyCodeString.Equal
+    case KeyCode.Comma:
+      return KeyCodeString.Comma
+    case KeyCode.Backquote:
+      return KeyCodeString.Backquote
+    case KeyCode.Plus:
+      return KeyCodeString.Plus
+    case KeyCode.Star:
+      return KeyCodeString.Star
+    case KeyCode.Minus:
+      return KeyCodeString.Minus
     default:
       return KeyCodeString.Unknown
   }
