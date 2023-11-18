@@ -1,47 +1,50 @@
+import * as KeyCode from '../KeyCode/KeyCode.js'
+import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+
 export const getKeyBindings = () => {
   return [
     {
-      key: 'Home',
+      key: KeyCode.Home,
       command: 'Extensions.focusFirst',
       when: 'focus.Extensions',
     },
     {
-      key: 'End',
+      key: KeyCode.End,
       command: 'Extensions.focusLast',
       when: 'focus.Extensions',
     },
     {
-      key: 'PageUp',
+      key: KeyCode.PageUp,
       command: 'Extensions.focusPreviousPage',
       when: 'focus.Extensions',
     },
     {
-      key: 'PageDown',
+      key: KeyCode.PageDown,
       command: 'Extensions.focusNextPage',
       when: 'focus.Extensions',
     },
     {
-      key: 'ArrowUp',
+      key: KeyCode.UpArrow,
       command: 'Extensions.focusPrevious',
       when: 'focus.Extensions',
     },
     {
-      key: 'ArrowDown',
+      key: KeyCode.DownArrow,
       command: 'Extensions.focusNext',
       when: 'focus.Extensions',
     },
     {
-      key: 'Space',
+      key: KeyCode.Space,
       command: 'Extensions.handleClickCurrentButKeepFocus',
       when: 'focus.Extensions',
     },
     {
-      key: 'Enter',
+      key: KeyCode.Enter,
       command: 'Extensions.handleClickCurrent',
       when: 'focus.Extensions',
     },
     {
-      key: 'ctrl+Space',
+      key: KeyModifier.CtrlCmd | KeyCode.Space,
       command: 'Extensions.toggleSuggest',
       when: 'focus.Extensions',
     },

@@ -1,6 +1,6 @@
-import * as Context from '../Context/Context.js'
 import * as Event from '../Event/Event.js'
 import * as GetKeyBindingIdentifier from '../GetKeyBindingIdentifier/GetKeyBindingIdentifier.js'
+import * as GetMatchingKeyBinding from '../GetMatchingKeyBinding/GetMatchingKeyBinding.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
@@ -14,24 +14,6 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 // TODO ui should only have keys -> commands get resolved inside renderer worker
 // TODO should toggle terminal, not only open
-
-const matchesContext = (keybinding) => {
-  if (!keybinding.when) {
-    return true
-  }
-  return Context.get(keybinding.when)
-}
-
-const getMatchingKeyBinding = (identifier) => {
-  // TODO this could be more efficient in O(N) instead of O(2N)
-  const matchesIdentifier = (keyBinding) => {
-    return keyBinding.key === identifier
-  }
-  const keyBindings = KeyBindingsState.getKeyBindings()
-  const matchingKeyBindings = keyBindings.filter(matchesIdentifier)
-  const matchingKeyBinding = matchingKeyBindings.find(matchesContext)
-  return matchingKeyBinding
-}
 
 const getModifier = (event) => {
   switch (event.key) {
@@ -69,7 +51,7 @@ const handleMatchingKeyBinding = (matchingKeyBinding) => {
 
 export const handleKeyDown = (event) => {
   const identifier = GetKeyBindingIdentifier.getKeyBindingIdentifier(event)
-  const matchingKeyBinding = getMatchingKeyBinding(identifier)
+  const matchingKeyBinding = GetMatchingKeyBinding.getMatchingKeyBinding(identifier)
   if (!matchingKeyBinding) {
     return
   }
@@ -86,7 +68,7 @@ export const handleKeyUp = (event) => {
   if (KeyBindingsState.isModifier(modifier)) {
     clearModifier()
     const identifier = `${modifier} ${modifier}`
-    const matchingKeyBinding = getMatchingKeyBinding(identifier)
+    const matchingKeyBinding = GetMatchingKeyBinding.getMatchingKeyBinding(identifier)
     if (matchingKeyBinding) {
       handleMatchingKeyBinding(matchingKeyBinding)
     }

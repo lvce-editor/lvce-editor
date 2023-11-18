@@ -1,52 +1,54 @@
+import * as KeyCode from '../KeyCode/KeyCode.js'
+
 export const getKeyBindings = () => {
   return [
     {
-      key: 'ArrowDown',
+      key: KeyCode.DownArrow,
       command: 'ActivityBar.focusNext',
       when: 'focus.activityBar',
     },
     {
-      key: 'ArrowUp',
+      key: KeyCode.UpArrow,
       command: 'ActivityBar.focusPrevious',
       when: 'focus.activityBar',
     },
     {
-      key: 'Home',
+      key: KeyCode.Home,
       command: 'ActivityBar.focusFirst',
       when: 'focus.activityBar',
     },
     {
-      key: 'PageUp',
+      key: KeyCode.PageUp,
       command: 'ActivityBar.focusFirst',
       when: 'focus.activityBar',
     },
     {
-      key: 'PageDown',
+      key: KeyCode.PageDown,
       command: 'ActivityBar.focusLast',
       when: 'focus.activityBar',
     },
     {
-      key: 'End',
+      key: KeyCode.End,
       command: 'ActivityBar.focusLast',
       when: 'focus.activityBar',
     },
     {
-      key: 'Space',
+      key: KeyCode.Space,
       command: 'ActivityBar.selectCurrent',
       when: 'focus.activityBar',
     },
     {
-      key: 'Enter',
+      key: KeyCode.Enter,
       command: 'ActivityBar.selectCurrent',
       when: 'focus.activityBar',
     },
     {
-      key: 'Home',
+      key: KeyCode.Home,
       command: 'ActivityBar.focusFirst',
       when: 'focus.activityBar',
     },
     {
-      key: 'End',
+      key: KeyCode.End,
       command: 'ActivityBar.focusLast',
       when: 'focus.activityBar',
     },

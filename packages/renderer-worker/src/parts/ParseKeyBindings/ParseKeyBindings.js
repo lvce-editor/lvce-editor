@@ -1,20 +1,13 @@
+import * as Assert from '../Assert/Assert.js'
+import * as GetKeyCodeString from '../GetKeyCodeString/GetKeyCodeString.js'
+import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+
 const parseKey = (rawKey) => {
-  const parts = rawKey.split('+')
-  let isCtrl = false
-  let isShift = false
-  let key = ''
-  for (const part of parts) {
-    switch (part) {
-      case 'shift':
-        isShift = true
-        break
-      case 'ctrl':
-        isCtrl = true
-      default:
-        key = part
-        break
-    }
-  }
+  Assert.number(rawKey)
+  const isCtrl = Boolean(rawKey & KeyModifier.CtrlCmd)
+  const isShift = Boolean(rawKey & KeyModifier.Shift)
+  const keyCode = rawKey & 0x0000ffff
+  const key = GetKeyCodeString.getKeyCodeString(keyCode)
   return {
     key,
     isCtrl,

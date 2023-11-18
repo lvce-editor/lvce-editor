@@ -1,27 +1,30 @@
+import * as KeyCode from '../KeyCode/KeyCode.js'
+import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+
 export const getKeyBindings = () => {
   return [
     {
-      key: 'ctrl+w',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyW,
       command: 'Main.closeActiveEditor',
     },
     {
-      key: 'ctrl+Tab',
+      key: KeyModifier.CtrlCmd | KeyCode.Tab,
       command: 'Main.focusNext',
     },
     {
-      key: 'ctrl+shift+Tab',
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab,
       command: 'Main.focusPrevious',
     },
     {
-      key: 'ctrl+1',
+      key: KeyModifier.CtrlCmd | KeyCode.Digit1,
       command: 'Main.focus',
     },
     {
-      key: 'ctrl+s',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyS,
       command: 'Main.save',
     },
     {
-      key: 'ctrl+\\',
+      key: KeyModifier.CtrlCmd | KeyCode.Backslash,
       command: 'Main.splitRight',
     },
   ]

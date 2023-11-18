@@ -1,42 +1,45 @@
+import * as KeyCode from '../KeyCode/KeyCode.js'
+import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+
 export const getKeyBindings = () => {
   return [
     {
-      key: 'ArrowDown',
+      key: KeyCode.DownArrow,
       command: 'TitleBarMenuBar.handleKeyArrowDown',
       when: 'focus.TitleBarMenuBar',
     },
     {
-      key: 'ArrowUp',
+      key: KeyCode.UpArrow,
       command: 'TitleBarMenuBar.handleKeyArrowUp',
       when: 'focus.TitleBarMenuBar',
     },
     {
-      key: 'ArrowRight',
+      key: KeyCode.RightArrow,
       command: 'TitleBarMenuBar.handleKeyArrowRight',
       when: 'focus.TitleBarMenuBar',
     },
     {
-      key: 'ArrowLeft',
+      key: KeyCode.LeftArrow,
       command: 'TitleBarMenuBar.handleKeyArrowLeft',
       when: 'focus.TitleBarMenuBar',
     },
     {
-      key: 'Space',
+      key: KeyCode.Space,
       command: 'TitleBarMenuBar.handleKeySpace',
       when: 'focus.TitleBarMenuBar',
     },
     {
-      key: 'Home',
+      key: KeyCode.Home,
       command: 'TitleBarMenuBar.handleKeyHome',
       when: 'focus.TitleBarMenuBar',
     },
     {
-      key: 'End',
+      key: KeyCode.End,
       command: 'TitleBarMenuBar.handleKeyEnd',
       when: 'focus.TitleBarMenuBar',
     },
     {
-      key: 'Escape',
+      key: KeyCode.Escape,
       command: 'TitleBarMenuBar.handleKeyEscape',
       when: 'focus.TitleBarMenuBar',
     },

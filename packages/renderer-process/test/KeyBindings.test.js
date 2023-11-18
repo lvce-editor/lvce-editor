@@ -2,6 +2,8 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as KeyCode from '../src/parts/KeyCode/KeyCode.js'
+import * as KeyModifier from '../src/parts/KeyModifier/KeyModifier.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -33,32 +35,32 @@ beforeEach(() => {
 test('addKeyBindings', () => {
   KeyBindings.addKeyBindings(1, [
     {
-      key: 'a',
+      key: KeyCode.KeyA,
       command: 14,
     },
   ])
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'a',
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledWith('KeyBindings.handleKeyBinding', {
     command: 14,
-    key: 'a',
+    key: KeyCode.KeyA,
   })
 })
 
 test('addKeyBindings - dispatch event with no matching keyBinding', () => {
   KeyBindings.addKeyBindings(1, [
     {
-      key: 'a',
+      key: KeyCode.KeyA,
       command: 14,
     },
   ])
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'b',
-    })
+    }),
   )
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
@@ -66,7 +68,7 @@ test('addKeyBindings - dispatch event with no matching keyBinding', () => {
 test('addKeyBindings - dispatch Event with context not matching', () => {
   KeyBindings.addKeyBindings(1, [
     {
-      key: 'a',
+      key: KeyCode.KeyA,
       command: 14,
       when: 'testContext',
     },
@@ -74,7 +76,7 @@ test('addKeyBindings - dispatch Event with context not matching', () => {
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'a',
-    })
+    }),
   )
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
@@ -82,7 +84,7 @@ test('addKeyBindings - dispatch Event with context not matching', () => {
 test('addKeyBindings - dispatch Event with context matching', () => {
   KeyBindings.addKeyBindings(1, [
     {
-      key: 'a',
+      key: KeyCode.KeyA,
       command: 14,
       when: 'testContext',
     },
@@ -91,11 +93,11 @@ test('addKeyBindings - dispatch Event with context matching', () => {
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'a',
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledWith('KeyBindings.handleKeyBinding', {
     command: 14,
-    key: 'a',
+    key: KeyCode.KeyA,
     when: 'testContext',
   })
 })
@@ -103,25 +105,25 @@ test('addKeyBindings - dispatch Event with context matching', () => {
 test('addKeyBindings - dispatch Event with Arrow Key', () => {
   KeyBindings.addKeyBindings(1, [
     {
-      key: 'ArrowLeft',
+      key: KeyCode.LeftArrow,
       command: 14,
     },
   ])
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'ArrowLeft',
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledWith('KeyBindings.handleKeyBinding', {
     command: 14,
-    key: 'ArrowLeft',
+    key: KeyCode.LeftArrow,
   })
 })
 
 test('addKeyBindings - dispatch event with ctrl modifier', () => {
   KeyBindings.addKeyBindings(1, [
     {
-      key: 'ctrl+a',
+      key: KeyModifier.CtrlCmd | KeyCode.KeyA,
       command: 14,
     },
   ])
@@ -129,18 +131,18 @@ test('addKeyBindings - dispatch event with ctrl modifier', () => {
     new KeyboardEvent('keydown', {
       key: 'a',
       ctrlKey: true,
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledWith('KeyBindings.handleKeyBinding', {
     command: 14,
-    key: 'ctrl+a',
+    key: KeyModifier.CtrlCmd | KeyCode.KeyA,
   })
 })
 
 test('addKeyBindings - dispatch event with shift modifier', () => {
   KeyBindings.addKeyBindings(1, [
     {
-      key: 'shift+a',
+      key: KeyModifier.Shift | KeyCode.KeyA,
       command: 14,
     },
   ])
@@ -148,18 +150,18 @@ test('addKeyBindings - dispatch event with shift modifier', () => {
     new KeyboardEvent('keydown', {
       key: 'a',
       shiftKey: true,
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledWith('KeyBindings.handleKeyBinding', {
     command: 14,
-    key: 'shift+a',
+    key: KeyModifier.Shift | KeyCode.KeyA,
   })
 })
 
 test('addKeyBindings - dispatch event with alt modifier', () => {
   KeyBindings.addKeyBindings(1, [
     {
-      key: 'alt+a',
+      key: KeyModifier.Alt | KeyCode.KeyA,
       command: 14,
     },
   ])
@@ -167,29 +169,29 @@ test('addKeyBindings - dispatch event with alt modifier', () => {
     new KeyboardEvent('keydown', {
       key: 'a',
       altKey: true,
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledWith('KeyBindings.handleKeyBinding', {
     command: 14,
-    key: 'alt+a',
+    key: KeyModifier.Alt | KeyCode.KeyA,
   })
 })
 
 test('addKeyBindings - dispatch event with space key', () => {
   KeyBindings.addKeyBindings(1, [
     {
-      key: 'Space',
+      key: KeyCode.Space,
       command: 14,
     },
   ])
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: ' ',
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledWith('KeyBindings.handleKeyBinding', {
     command: 14,
-    key: 'Space',
+    key: KeyCode.Space,
   })
 })
 
@@ -204,26 +206,26 @@ test('addKeyBindings - dispatch event with double shift key', () => {
     new KeyboardEvent('keydown', {
       key: 'Shift',
       shiftKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Shift',
       shiftKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Shift',
       shiftKey: true,
-    })
+    }),
   )
   expect(RendererWorker.send).not.toHaveBeenCalled()
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Shift',
       shiftKey: true,
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledWith('KeyBindings.handleKeyBinding', {
     command: 14,
@@ -242,26 +244,26 @@ test('addKeyBindings - dispatch event with double alt key', () => {
     new KeyboardEvent('keydown', {
       key: 'Alt',
       altKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Alt',
       altKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Alt',
       altKey: true,
-    })
+    }),
   )
   expect(RendererWorker.send).not.toBeCalled()
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Alt',
       altKey: true,
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledWith('KeyBindings.handleKeyBinding', {
     command: 14,
@@ -280,26 +282,26 @@ test('addKeyBindings - dispatch event with double ctrl key', () => {
     new KeyboardEvent('keydown', {
       key: 'Control',
       ctrlKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Control',
       ctrlKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Control',
       ctrlKey: true,
-    })
+    }),
   )
   expect(RendererWorker.send).not.toHaveBeenCalled()
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Control',
       ctrlKey: true,
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledWith('KeyBindings.handleKeyBinding', {
     command: 14,
@@ -318,37 +320,37 @@ test('addKeyBindings - dispatch event with ctrl alt ctrl key should not trigger 
     new KeyboardEvent('keydown', {
       key: 'Control',
       ctrlKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Control',
       ctrlKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Alt',
       altKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Alt',
       altKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Control',
       ctrlKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Control',
       ctrlKey: true,
-    })
+    }),
   )
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
@@ -364,49 +366,49 @@ test('addKeyBindings - dispatch event with ctrl alt shift shift key should trigg
     new KeyboardEvent('keydown', {
       key: 'Control',
       ctrlKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Control',
       ctrlKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Alt',
       altKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Alt',
       altKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Shift',
       shiftKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Shift',
       shiftKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyDown(
     new KeyboardEvent('keydown', {
       key: 'Shift',
       shiftKey: true,
-    })
+    }),
   )
   KeyBindingsEvents.handleKeyUp(
     new KeyboardEvent('keyup', {
       key: 'Shift',
       shiftKey: true,
-    })
+    }),
   )
   expect(RendererWorker.send).toHaveBeenCalledWith('KeyBindings.handleKeyBinding', {
     command: 14,
