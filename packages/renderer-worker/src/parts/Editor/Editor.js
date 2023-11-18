@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+import * as GetDiagnosticsVirtualDom from '../GetDiagnosticsVirtualDom/GetDiagnosticsVirtualDom.js'
 import * as GetIncrementalEdits from '../GetIncrementalEdits/GetIncrementalEdits.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Height from '../Height/Height.js'
@@ -436,4 +437,14 @@ const renderFocus = {
   },
 }
 
-export const render = [renderLines, renderSelections, renderScrollBarX, renderScrollBarY, renderFocus]
+const renderDecorations = {
+  isEqual(oldState, newState) {
+    return oldState.decorations === newState.decorations
+  },
+  apply(oldState, newState) {
+    const dom = GetDiagnosticsVirtualDom.getDiagnosticsVirtualDom(newState.decorations)
+    return ['setDecorationsDom', dom]
+  },
+}
+
+export const render = [renderLines, renderSelections, renderScrollBarX, renderScrollBarY, renderFocus, renderDecorations]
