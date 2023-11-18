@@ -68,8 +68,6 @@ export const load = (moduleId) => {
       return import('../Window/Window.ipc.js')
     case ModuleId.WindowTitle:
       return import('../WindowTitle/WindowTitle.ipc.js')
-    case ModuleId.Focus:
-      return import('../Focus/Focus.ipc.js')
     case ModuleId.KeyBindings:
       return import('../KeyBindings/KeyBindings.ipc.js')
     default:
