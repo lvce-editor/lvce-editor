@@ -59,32 +59,15 @@ var lib = createCommonjsModule(function(module, exports) {
     } = position;
     return new Position(line, column + columnOffset, index + columnOffset);
   }
-  var ParseErrorCode = {
-    SyntaxError: "BABEL_PARSER_SYNTAX_ERROR",
-    SourceTypeModuleError: "BABEL_PARSER_SOURCETYPE_MODULE_REQUIRED"
-  };
-  const reflect = (keys, last = keys.length - 1) => ({
-    get() {
-      return keys.reduce((object, key) => object[key], this);
-    },
-    set(value) {
-      keys.reduce((item, key, i) => i === last ? item[key] = value : item[key], this);
-    }
-  });
-  const instantiate = (constructor, properties, descriptors) => Object.keys(descriptors).map((key) => [key, descriptors[key]]).filter(([, descriptor]) => !!descriptor).map(([key, descriptor]) => [key, typeof descriptor === "function" ? {
-    value: descriptor,
-    enumerable: false
-  } : typeof descriptor.reflect === "string" ? Object.assign({}, descriptor, reflect(descriptor.reflect.split("."))) : descriptor]).reduce((instance, [key, descriptor]) => Object.defineProperty(instance, key, Object.assign({
-    configurable: true
-  }, descriptor)), Object.assign(new constructor(), properties));
+  const code = "BABEL_PARSER_SOURCETYPE_MODULE_REQUIRED";
   var ModuleErrors = {
     ImportMetaOutsideModule: {
       message: `import.meta may appear only with 'sourceType: "module"'`,
-      code: ParseErrorCode.SourceTypeModuleError
+      code
     },
     ImportOutsideModule: {
       message: `'import' and 'export' may appear only with 'sourceType: "module"'`,
-      code: ParseErrorCode.SourceTypeModuleError
+      code
     }
   };
   const NodeDescriptions = {
@@ -146,6 +129,7 @@ var lib = createCommonjsModule(function(module, exports) {
     DecoratorExportClass: "Decorators must be placed *after* the 'export' keyword. Remove the 'decoratorsBeforeExport: false' option to use the '@decorator export class {}' syntax.",
     DecoratorSemicolon: "Decorators must not be followed by a semicolon.",
     DecoratorStaticBlock: "Decorators can't be used with a static block.",
+    DeferImportRequiresNamespace: 'Only `import defer * as x from "./module"` is valid.',
     DeletePrivateField: "Deleting a private field is not allowed.",
     DestructureNamedImport: "ES2015 named imports do not destructure. Use another statement for destructuring after the import.",
     DuplicateConstructor: "Duplicate constructor in the same class.",
@@ -155,6 +139,9 @@ var lib = createCommonjsModule(function(module, exports) {
     }) => `\`${exportName}\` has already been exported. Exported identifiers must be unique.`,
     DuplicateProto: "Redefinition of __proto__ property.",
     DuplicateRegExpFlags: "Duplicate regular expression flag.",
+    DynamicImportPhaseRequiresImportExpressions: ({
+      phase
+    }) => `'import.${phase}(...)' can only be parsed when using the 'createImportExpressions' option.`,
     ElementAfterRest: "Rest element must be last element.",
     EscapedCharNotAnIdentifier: "Invalid Unicode escape.",
     ExportBindingIsString: ({
@@ -211,6 +198,9 @@ var lib = createCommonjsModule(function(module, exports) {
     InvalidLhsBinding: ({
       ancestor
     }) => `Binding invalid left-hand side in ${toNodeDescription(ancestor)}.`,
+    InvalidLhsOptionalChaining: ({
+      ancestor
+    }) => `Invalid optional chaining in the left-hand side of ${toNodeDescription(ancestor)}.`,
     InvalidNumber: "Invalid number.",
     InvalidOrMissingExponent: "Floating-point numbers require a valid exponent after the 'e'.",
     InvalidOrUnexpectedToken: ({
@@ -226,7 +216,7 @@ var lib = createCommonjsModule(function(module, exports) {
     LabelRedeclaration: ({
       labelName
     }) => `Label '${labelName}' is already declared.`,
-    LetInLexicalBinding: "'let' is not allowed to be used as a name in 'let' or 'const' declarations.",
+    LetInLexicalBinding: "'let' is disallowed as a lexically bound name.",
     LineTerminatorBeforeArrow: "No line break is allowed before '=>'.",
     MalformedRegExpFlags: "Invalid regular expression flag.",
     MissingClassName: "A class name is required.",
@@ -276,6 +266,7 @@ var lib = createCommonjsModule(function(module, exports) {
     RestTrailingComma: "Unexpected trailing comma after rest element.",
     SloppyFunction: "In non-strict mode code, functions can only be declared at top level or inside a block.",
     SloppyFunctionAnnexB: "In non-strict mode code, functions can only be declared at top level, inside a block, or as the body of an if statement.",
+    SourcePhaseImportRequiresDefault: 'Only `import source x from "./module"` is valid.',
     StaticPrototype: "Classes may not have static property named prototype.",
     SuperNotAllowed: "`super()` is only valid inside a class constructor of a subclass. Maybe a typo in the method name ('constructor') or not extending another class?",
     SuperPrivateField: "Private fields can't be accessed on super.",
@@ -363,6 +354,13 @@ var lib = createCommonjsModule(function(module, exports) {
     PrimaryTopicRequiresSmartPipeline: 'Topic reference is used, but the pipelineOperator plugin was not passed a "proposal": "hack" or "smart" option.'
   };
   const _excluded$1 = ["toMessage"], _excluded2$1 = ["message"];
+  function defineHidden(obj, key, value) {
+    Object.defineProperty(obj, key, {
+      enumerable: false,
+      configurable: true,
+      value
+    });
+  }
   function toParseErrorConstructor(_ref) {
     let {
       toMessage
@@ -371,39 +369,44 @@ var lib = createCommonjsModule(function(module, exports) {
       loc,
       details
     }) {
-      return instantiate(SyntaxError, Object.assign({}, properties, {
-        loc
-      }), {
-        clone(overrides = {}) {
-          const loc2 = overrides.loc || {};
-          return constructor({
-            loc: new Position("line" in loc2 ? loc2.line : this.loc.line, "column" in loc2 ? loc2.column : this.loc.column, "index" in loc2 ? loc2.index : this.loc.index),
-            details: Object.assign({}, this.details, overrides.details)
+      const error = new SyntaxError();
+      Object.assign(error, properties, {
+        loc,
+        pos: loc.index
+      });
+      if ("missingPlugin" in details) {
+        Object.assign(error, {
+          missingPlugin: details.missingPlugin
+        });
+      }
+      defineHidden(error, "clone", function clone(overrides = {}) {
+        var _overrides$loc;
+        const {
+          line,
+          column,
+          index
+        } = (_overrides$loc = overrides.loc) != null ? _overrides$loc : loc;
+        return constructor({
+          loc: new Position(line, column, index),
+          details: Object.assign({}, details, overrides.details)
+        });
+      });
+      defineHidden(error, "details", details);
+      Object.defineProperty(error, "message", {
+        configurable: true,
+        get() {
+          const message = `${toMessage(details)} (${loc.line}:${loc.column})`;
+          this.message = message;
+          return message;
+        },
+        set(value) {
+          Object.defineProperty(this, "message", {
+            value,
+            writable: true
           });
-        },
-        details: {
-          value: details,
-          enumerable: false
-        },
-        message: {
-          get() {
-            return `${toMessage(this.details)} (${this.loc.line}:${this.loc.column})`;
-          },
-          set(value) {
-            Object.defineProperty(this, "message", {
-              value
-            });
-          }
-        },
-        pos: {
-          reflect: "loc.index",
-          enumerable: true
-        },
-        missingPlugin: "missingPlugin" in details && {
-          reflect: "details.missingPlugin",
-          enumerable: true
         }
       });
+      return error;
     };
   }
   function ParseErrorEnum(argument, syntaxPlugin) {
@@ -422,7 +425,7 @@ var lib = createCommonjsModule(function(module, exports) {
       } = _ref2, rest = _objectWithoutPropertiesLoose(_ref2, _excluded2$1);
       const toMessage = typeof message === "string" ? () => message : message;
       ParseErrorConstructors[reasonCode] = toParseErrorConstructor(Object.assign({
-        code: ParseErrorCode.SyntaxError,
+        code: "BABEL_PARSER_SYNTAX_ERROR",
         reasonCode,
         toMessage
       }, syntaxPlugin ? {
@@ -682,8 +685,9 @@ var lib = createCommonjsModule(function(module, exports) {
         node.type = "ImportExpression";
         node.source = node.arguments[0];
         if (this.hasPlugin("importAttributes") || this.hasPlugin("importAssertions")) {
-          var _node$arguments$;
-          node.attributes = (_node$arguments$ = node.arguments[1]) != null ? _node$arguments$ : null;
+          var _node$arguments$, _node$arguments$2;
+          node.options = (_node$arguments$ = node.arguments[1]) != null ? _node$arguments$ : null;
+          node.attributes = (_node$arguments$2 = node.arguments[1]) != null ? _node$arguments$2 : null;
         }
         delete node.arguments;
         delete node.callee;
@@ -738,6 +742,12 @@ var lib = createCommonjsModule(function(module, exports) {
         node.optional = false;
       }
       return node;
+    }
+    isOptionalMemberExpression(node) {
+      if (node.type === "ChainExpression") {
+        return node.expression.type === "MemberExpression";
+      }
+      return super.isOptionalMemberExpression(node);
     }
     hasPropertyAsPrivateName(node) {
       if (node.type === "ChainExpression") {
@@ -1112,6 +1122,9 @@ var lib = createCommonjsModule(function(module, exports) {
     _await: createKeywordLike("await", {
       startsExpr
     }),
+    _defer: createKeywordLike("defer", {
+      startsExpr
+    }),
     _from: createKeywordLike("from", {
       startsExpr
     }),
@@ -1131,6 +1144,9 @@ var lib = createCommonjsModule(function(module, exports) {
       startsExpr
     }),
     _set: createKeywordLike("set", {
+      startsExpr
+    }),
+    _source: createKeywordLike("source", {
       startsExpr
     }),
     _static: createKeywordLike("static", {
@@ -1246,16 +1262,16 @@ var lib = createCommonjsModule(function(module, exports) {
     })
   };
   function tokenIsIdentifier(token) {
-    return token >= 93 && token <= 130;
+    return token >= 93 && token <= 132;
   }
   function tokenKeywordOrIdentifierIsKeyword(token) {
     return token <= 92;
   }
   function tokenIsKeywordOrIdentifier(token) {
-    return token >= 58 && token <= 130;
+    return token >= 58 && token <= 132;
   }
   function tokenIsLiteralPropertyName(token) {
-    return token >= 58 && token <= 134;
+    return token >= 58 && token <= 136;
   }
   function tokenComesBeforeExpression(token) {
     return tokenBeforeExprs[token];
@@ -1267,7 +1283,7 @@ var lib = createCommonjsModule(function(module, exports) {
     return token >= 29 && token <= 33;
   }
   function tokenIsFlowInterfaceOrTypeOrOpaque(token) {
-    return token >= 127 && token <= 129;
+    return token >= 129 && token <= 131;
   }
   function tokenIsLoop(token) {
     return token >= 90 && token <= 92;
@@ -1285,10 +1301,10 @@ var lib = createCommonjsModule(function(module, exports) {
     return tokenPrefixes[token];
   }
   function tokenIsTSTypeOperator(token) {
-    return token >= 119 && token <= 121;
+    return token >= 121 && token <= 123;
   }
   function tokenIsTSDeclarationStart(token) {
-    return token >= 122 && token <= 128;
+    return token >= 124 && token <= 130;
   }
   function tokenLabelName(token) {
     return tokenLabels[token];
@@ -1319,60 +1335,60 @@ var lib = createCommonjsModule(function(module, exports) {
         context.push(types.template);
       }
     };
-    tokenTypes[140].updateContext = (context) => {
+    tokenTypes[142].updateContext = (context) => {
       context.push(types.j_expr, types.j_oTag);
     };
   }
   let nonASCIIidentifierStartChars = "\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0560-\u0588\u05D0-\u05EA\u05EF-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u0860-\u086A\u0870-\u0887\u0889-\u088E\u08A0-\u08C9\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u09FC\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C5D\u0C60\u0C61\u0C80\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D04-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D54-\u0D56\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E86-\u0E8A\u0E8C-\u0EA3\u0EA5\u0EA7-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16EE-\u16F8\u1700-\u1711\u171F-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1878\u1880-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4C\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1C80-\u1C88\u1C90-\u1CBA\u1CBD-\u1CBF\u1CE9-\u1CEC\u1CEE-\u1CF3\u1CF5\u1CF6\u1CFA\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2118-\u211D\u2124\u2126\u2128\u212A-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2160-\u2188\u2C00-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u3005-\u3007\u3021-\u3029\u3031-\u3035\u3038-\u303C\u3041-\u3096\u309B-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312F\u3131-\u318E\u31A0-\u31BF\u31F0-\u31FF\u3400-\u4DBF\u4E00-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6EF\uA717-\uA71F\uA722-\uA788\uA78B-\uA7CA\uA7D0\uA7D1\uA7D3\uA7D5-\uA7D9\uA7F2-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA8FE\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB69\uAB70-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC";
-  let nonASCIIidentifierChars = "\u200C\u200D\xB7\u0300-\u036F\u0387\u0483-\u0487\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u0610-\u061A\u064B-\u0669\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED\u06F0-\u06F9\u0711\u0730-\u074A\u07A6-\u07B0\u07C0-\u07C9\u07EB-\u07F3\u07FD\u0816-\u0819\u081B-\u0823\u0825-\u0827\u0829-\u082D\u0859-\u085B\u0898-\u089F\u08CA-\u08E1\u08E3-\u0903\u093A-\u093C\u093E-\u094F\u0951-\u0957\u0962\u0963\u0966-\u096F\u0981-\u0983\u09BC\u09BE-\u09C4\u09C7\u09C8\u09CB-\u09CD\u09D7\u09E2\u09E3\u09E6-\u09EF\u09FE\u0A01-\u0A03\u0A3C\u0A3E-\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A66-\u0A71\u0A75\u0A81-\u0A83\u0ABC\u0ABE-\u0AC5\u0AC7-\u0AC9\u0ACB-\u0ACD\u0AE2\u0AE3\u0AE6-\u0AEF\u0AFA-\u0AFF\u0B01-\u0B03\u0B3C\u0B3E-\u0B44\u0B47\u0B48\u0B4B-\u0B4D\u0B55-\u0B57\u0B62\u0B63\u0B66-\u0B6F\u0B82\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCD\u0BD7\u0BE6-\u0BEF\u0C00-\u0C04\u0C3C\u0C3E-\u0C44\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C62\u0C63\u0C66-\u0C6F\u0C81-\u0C83\u0CBC\u0CBE-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCD\u0CD5\u0CD6\u0CE2\u0CE3\u0CE6-\u0CEF\u0CF3\u0D00-\u0D03\u0D3B\u0D3C\u0D3E-\u0D44\u0D46-\u0D48\u0D4A-\u0D4D\u0D57\u0D62\u0D63\u0D66-\u0D6F\u0D81-\u0D83\u0DCA\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DE6-\u0DEF\u0DF2\u0DF3\u0E31\u0E34-\u0E3A\u0E47-\u0E4E\u0E50-\u0E59\u0EB1\u0EB4-\u0EBC\u0EC8-\u0ECE\u0ED0-\u0ED9\u0F18\u0F19\u0F20-\u0F29\u0F35\u0F37\u0F39\u0F3E\u0F3F\u0F71-\u0F84\u0F86\u0F87\u0F8D-\u0F97\u0F99-\u0FBC\u0FC6\u102B-\u103E\u1040-\u1049\u1056-\u1059\u105E-\u1060\u1062-\u1064\u1067-\u106D\u1071-\u1074\u1082-\u108D\u108F-\u109D\u135D-\u135F\u1369-\u1371\u1712-\u1715\u1732-\u1734\u1752\u1753\u1772\u1773\u17B4-\u17D3\u17DD\u17E0-\u17E9\u180B-\u180D\u180F-\u1819\u18A9\u1920-\u192B\u1930-\u193B\u1946-\u194F\u19D0-\u19DA\u1A17-\u1A1B\u1A55-\u1A5E\u1A60-\u1A7C\u1A7F-\u1A89\u1A90-\u1A99\u1AB0-\u1ABD\u1ABF-\u1ACE\u1B00-\u1B04\u1B34-\u1B44\u1B50-\u1B59\u1B6B-\u1B73\u1B80-\u1B82\u1BA1-\u1BAD\u1BB0-\u1BB9\u1BE6-\u1BF3\u1C24-\u1C37\u1C40-\u1C49\u1C50-\u1C59\u1CD0-\u1CD2\u1CD4-\u1CE8\u1CED\u1CF4\u1CF7-\u1CF9\u1DC0-\u1DFF\u203F\u2040\u2054\u20D0-\u20DC\u20E1\u20E5-\u20F0\u2CEF-\u2CF1\u2D7F\u2DE0-\u2DFF\u302A-\u302F\u3099\u309A\uA620-\uA629\uA66F\uA674-\uA67D\uA69E\uA69F\uA6F0\uA6F1\uA802\uA806\uA80B\uA823-\uA827\uA82C\uA880\uA881\uA8B4-\uA8C5\uA8D0-\uA8D9\uA8E0-\uA8F1\uA8FF-\uA909\uA926-\uA92D\uA947-\uA953\uA980-\uA983\uA9B3-\uA9C0\uA9D0-\uA9D9\uA9E5\uA9F0-\uA9F9\uAA29-\uAA36\uAA43\uAA4C\uAA4D\uAA50-\uAA59\uAA7B-\uAA7D\uAAB0\uAAB2-\uAAB4\uAAB7\uAAB8\uAABE\uAABF\uAAC1\uAAEB-\uAAEF\uAAF5\uAAF6\uABE3-\uABEA\uABEC\uABED\uABF0-\uABF9\uFB1E\uFE00-\uFE0F\uFE20-\uFE2F\uFE33\uFE34\uFE4D-\uFE4F\uFF10-\uFF19\uFF3F";
+  let nonASCIIidentifierChars = "\u200C\u200D\xB7\u0300-\u036F\u0387\u0483-\u0487\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u0610-\u061A\u064B-\u0669\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED\u06F0-\u06F9\u0711\u0730-\u074A\u07A6-\u07B0\u07C0-\u07C9\u07EB-\u07F3\u07FD\u0816-\u0819\u081B-\u0823\u0825-\u0827\u0829-\u082D\u0859-\u085B\u0898-\u089F\u08CA-\u08E1\u08E3-\u0903\u093A-\u093C\u093E-\u094F\u0951-\u0957\u0962\u0963\u0966-\u096F\u0981-\u0983\u09BC\u09BE-\u09C4\u09C7\u09C8\u09CB-\u09CD\u09D7\u09E2\u09E3\u09E6-\u09EF\u09FE\u0A01-\u0A03\u0A3C\u0A3E-\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A66-\u0A71\u0A75\u0A81-\u0A83\u0ABC\u0ABE-\u0AC5\u0AC7-\u0AC9\u0ACB-\u0ACD\u0AE2\u0AE3\u0AE6-\u0AEF\u0AFA-\u0AFF\u0B01-\u0B03\u0B3C\u0B3E-\u0B44\u0B47\u0B48\u0B4B-\u0B4D\u0B55-\u0B57\u0B62\u0B63\u0B66-\u0B6F\u0B82\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCD\u0BD7\u0BE6-\u0BEF\u0C00-\u0C04\u0C3C\u0C3E-\u0C44\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C62\u0C63\u0C66-\u0C6F\u0C81-\u0C83\u0CBC\u0CBE-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCD\u0CD5\u0CD6\u0CE2\u0CE3\u0CE6-\u0CEF\u0CF3\u0D00-\u0D03\u0D3B\u0D3C\u0D3E-\u0D44\u0D46-\u0D48\u0D4A-\u0D4D\u0D57\u0D62\u0D63\u0D66-\u0D6F\u0D81-\u0D83\u0DCA\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DE6-\u0DEF\u0DF2\u0DF3\u0E31\u0E34-\u0E3A\u0E47-\u0E4E\u0E50-\u0E59\u0EB1\u0EB4-\u0EBC\u0EC8-\u0ECE\u0ED0-\u0ED9\u0F18\u0F19\u0F20-\u0F29\u0F35\u0F37\u0F39\u0F3E\u0F3F\u0F71-\u0F84\u0F86\u0F87\u0F8D-\u0F97\u0F99-\u0FBC\u0FC6\u102B-\u103E\u1040-\u1049\u1056-\u1059\u105E-\u1060\u1062-\u1064\u1067-\u106D\u1071-\u1074\u1082-\u108D\u108F-\u109D\u135D-\u135F\u1369-\u1371\u1712-\u1715\u1732-\u1734\u1752\u1753\u1772\u1773\u17B4-\u17D3\u17DD\u17E0-\u17E9\u180B-\u180D\u180F-\u1819\u18A9\u1920-\u192B\u1930-\u193B\u1946-\u194F\u19D0-\u19DA\u1A17-\u1A1B\u1A55-\u1A5E\u1A60-\u1A7C\u1A7F-\u1A89\u1A90-\u1A99\u1AB0-\u1ABD\u1ABF-\u1ACE\u1B00-\u1B04\u1B34-\u1B44\u1B50-\u1B59\u1B6B-\u1B73\u1B80-\u1B82\u1BA1-\u1BAD\u1BB0-\u1BB9\u1BE6-\u1BF3\u1C24-\u1C37\u1C40-\u1C49\u1C50-\u1C59\u1CD0-\u1CD2\u1CD4-\u1CE8\u1CED\u1CF4\u1CF7-\u1CF9\u1DC0-\u1DFF\u200C\u200D\u203F\u2040\u2054\u20D0-\u20DC\u20E1\u20E5-\u20F0\u2CEF-\u2CF1\u2D7F\u2DE0-\u2DFF\u302A-\u302F\u3099\u309A\u30FB\uA620-\uA629\uA66F\uA674-\uA67D\uA69E\uA69F\uA6F0\uA6F1\uA802\uA806\uA80B\uA823-\uA827\uA82C\uA880\uA881\uA8B4-\uA8C5\uA8D0-\uA8D9\uA8E0-\uA8F1\uA8FF-\uA909\uA926-\uA92D\uA947-\uA953\uA980-\uA983\uA9B3-\uA9C0\uA9D0-\uA9D9\uA9E5\uA9F0-\uA9F9\uAA29-\uAA36\uAA43\uAA4C\uAA4D\uAA50-\uAA59\uAA7B-\uAA7D\uAAB0\uAAB2-\uAAB4\uAAB7\uAAB8\uAABE\uAABF\uAAC1\uAAEB-\uAAEF\uAAF5\uAAF6\uABE3-\uABEA\uABEC\uABED\uABF0-\uABF9\uFB1E\uFE00-\uFE0F\uFE20-\uFE2F\uFE33\uFE34\uFE4D-\uFE4F\uFF10-\uFF19\uFF3F\uFF65";
   const nonASCIIidentifierStart = new RegExp("[" + nonASCIIidentifierStartChars + "]");
   const nonASCIIidentifier = new RegExp("[" + nonASCIIidentifierStartChars + nonASCIIidentifierChars + "]");
   nonASCIIidentifierStartChars = nonASCIIidentifierChars = null;
-  const astralIdentifierStartCodes = [0, 11, 2, 25, 2, 18, 2, 1, 2, 14, 3, 13, 35, 122, 70, 52, 268, 28, 4, 48, 48, 31, 14, 29, 6, 37, 11, 29, 3, 35, 5, 7, 2, 4, 43, 157, 19, 35, 5, 35, 5, 39, 9, 51, 13, 10, 2, 14, 2, 6, 2, 1, 2, 10, 2, 14, 2, 6, 2, 1, 68, 310, 10, 21, 11, 7, 25, 5, 2, 41, 2, 8, 70, 5, 3, 0, 2, 43, 2, 1, 4, 0, 3, 22, 11, 22, 10, 30, 66, 18, 2, 1, 11, 21, 11, 25, 71, 55, 7, 1, 65, 0, 16, 3, 2, 2, 2, 28, 43, 28, 4, 28, 36, 7, 2, 27, 28, 53, 11, 21, 11, 18, 14, 17, 111, 72, 56, 50, 14, 50, 14, 35, 349, 41, 7, 1, 79, 28, 11, 0, 9, 21, 43, 17, 47, 20, 28, 22, 13, 52, 58, 1, 3, 0, 14, 44, 33, 24, 27, 35, 30, 0, 3, 0, 9, 34, 4, 0, 13, 47, 15, 3, 22, 0, 2, 0, 36, 17, 2, 24, 20, 1, 64, 6, 2, 0, 2, 3, 2, 14, 2, 9, 8, 46, 39, 7, 3, 1, 3, 21, 2, 6, 2, 1, 2, 4, 4, 0, 19, 0, 13, 4, 159, 52, 19, 3, 21, 2, 31, 47, 21, 1, 2, 0, 185, 46, 42, 3, 37, 47, 21, 0, 60, 42, 14, 0, 72, 26, 38, 6, 186, 43, 117, 63, 32, 7, 3, 0, 3, 7, 2, 1, 2, 23, 16, 0, 2, 0, 95, 7, 3, 38, 17, 0, 2, 0, 29, 0, 11, 39, 8, 0, 22, 0, 12, 45, 20, 0, 19, 72, 264, 8, 2, 36, 18, 0, 50, 29, 113, 6, 2, 1, 2, 37, 22, 0, 26, 5, 2, 1, 2, 31, 15, 0, 328, 18, 16, 0, 2, 12, 2, 33, 125, 0, 80, 921, 103, 110, 18, 195, 2637, 96, 16, 1071, 18, 5, 4026, 582, 8634, 568, 8, 30, 18, 78, 18, 29, 19, 47, 17, 3, 32, 20, 6, 18, 689, 63, 129, 74, 6, 0, 67, 12, 65, 1, 2, 0, 29, 6135, 9, 1237, 43, 8, 8936, 3, 2, 6, 2, 1, 2, 290, 16, 0, 30, 2, 3, 0, 15, 3, 9, 395, 2309, 106, 6, 12, 4, 8, 8, 9, 5991, 84, 2, 70, 2, 1, 3, 0, 3, 1, 3, 3, 2, 11, 2, 0, 2, 6, 2, 64, 2, 3, 3, 7, 2, 6, 2, 27, 2, 3, 2, 4, 2, 0, 4, 6, 2, 339, 3, 24, 2, 24, 2, 30, 2, 24, 2, 30, 2, 24, 2, 30, 2, 24, 2, 30, 2, 24, 2, 7, 1845, 30, 7, 5, 262, 61, 147, 44, 11, 6, 17, 0, 322, 29, 19, 43, 485, 27, 757, 6, 2, 3, 2, 1, 2, 14, 2, 196, 60, 67, 8, 0, 1205, 3, 2, 26, 2, 1, 2, 0, 3, 0, 2, 9, 2, 3, 2, 0, 2, 0, 7, 0, 5, 0, 2, 0, 2, 0, 2, 2, 2, 1, 2, 0, 3, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 1, 2, 0, 3, 3, 2, 6, 2, 3, 2, 3, 2, 0, 2, 9, 2, 16, 6, 2, 2, 4, 2, 16, 4421, 42719, 33, 4153, 7, 221, 3, 5761, 15, 7472, 3104, 541, 1507, 4938, 6, 4191];
+  const astralIdentifierStartCodes = [0, 11, 2, 25, 2, 18, 2, 1, 2, 14, 3, 13, 35, 122, 70, 52, 268, 28, 4, 48, 48, 31, 14, 29, 6, 37, 11, 29, 3, 35, 5, 7, 2, 4, 43, 157, 19, 35, 5, 35, 5, 39, 9, 51, 13, 10, 2, 14, 2, 6, 2, 1, 2, 10, 2, 14, 2, 6, 2, 1, 68, 310, 10, 21, 11, 7, 25, 5, 2, 41, 2, 8, 70, 5, 3, 0, 2, 43, 2, 1, 4, 0, 3, 22, 11, 22, 10, 30, 66, 18, 2, 1, 11, 21, 11, 25, 71, 55, 7, 1, 65, 0, 16, 3, 2, 2, 2, 28, 43, 28, 4, 28, 36, 7, 2, 27, 28, 53, 11, 21, 11, 18, 14, 17, 111, 72, 56, 50, 14, 50, 14, 35, 349, 41, 7, 1, 79, 28, 11, 0, 9, 21, 43, 17, 47, 20, 28, 22, 13, 52, 58, 1, 3, 0, 14, 44, 33, 24, 27, 35, 30, 0, 3, 0, 9, 34, 4, 0, 13, 47, 15, 3, 22, 0, 2, 0, 36, 17, 2, 24, 20, 1, 64, 6, 2, 0, 2, 3, 2, 14, 2, 9, 8, 46, 39, 7, 3, 1, 3, 21, 2, 6, 2, 1, 2, 4, 4, 0, 19, 0, 13, 4, 159, 52, 19, 3, 21, 2, 31, 47, 21, 1, 2, 0, 185, 46, 42, 3, 37, 47, 21, 0, 60, 42, 14, 0, 72, 26, 38, 6, 186, 43, 117, 63, 32, 7, 3, 0, 3, 7, 2, 1, 2, 23, 16, 0, 2, 0, 95, 7, 3, 38, 17, 0, 2, 0, 29, 0, 11, 39, 8, 0, 22, 0, 12, 45, 20, 0, 19, 72, 264, 8, 2, 36, 18, 0, 50, 29, 113, 6, 2, 1, 2, 37, 22, 0, 26, 5, 2, 1, 2, 31, 15, 0, 328, 18, 16, 0, 2, 12, 2, 33, 125, 0, 80, 921, 103, 110, 18, 195, 2637, 96, 16, 1071, 18, 5, 4026, 582, 8634, 568, 8, 30, 18, 78, 18, 29, 19, 47, 17, 3, 32, 20, 6, 18, 689, 63, 129, 74, 6, 0, 67, 12, 65, 1, 2, 0, 29, 6135, 9, 1237, 43, 8, 8936, 3, 2, 6, 2, 1, 2, 290, 16, 0, 30, 2, 3, 0, 15, 3, 9, 395, 2309, 106, 6, 12, 4, 8, 8, 9, 5991, 84, 2, 70, 2, 1, 3, 0, 3, 1, 3, 3, 2, 11, 2, 0, 2, 6, 2, 64, 2, 3, 3, 7, 2, 6, 2, 27, 2, 3, 2, 4, 2, 0, 4, 6, 2, 339, 3, 24, 2, 24, 2, 30, 2, 24, 2, 30, 2, 24, 2, 30, 2, 24, 2, 30, 2, 24, 2, 7, 1845, 30, 7, 5, 262, 61, 147, 44, 11, 6, 17, 0, 322, 29, 19, 43, 485, 27, 757, 6, 2, 3, 2, 1, 2, 14, 2, 196, 60, 67, 8, 0, 1205, 3, 2, 26, 2, 1, 2, 0, 3, 0, 2, 9, 2, 3, 2, 0, 2, 0, 7, 0, 5, 0, 2, 0, 2, 0, 2, 2, 2, 1, 2, 0, 3, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 1, 2, 0, 3, 3, 2, 6, 2, 3, 2, 3, 2, 0, 2, 9, 2, 16, 6, 2, 2, 4, 2, 16, 4421, 42719, 33, 4153, 7, 221, 3, 5761, 15, 7472, 16, 621, 2467, 541, 1507, 4938, 6, 4191];
   const astralIdentifierCodes = [509, 0, 227, 0, 150, 4, 294, 9, 1368, 2, 2, 1, 6, 3, 41, 2, 5, 0, 166, 1, 574, 3, 9, 9, 370, 1, 81, 2, 71, 10, 50, 3, 123, 2, 54, 14, 32, 10, 3, 1, 11, 3, 46, 10, 8, 0, 46, 9, 7, 2, 37, 13, 2, 9, 6, 1, 45, 0, 13, 2, 49, 13, 9, 3, 2, 11, 83, 11, 7, 0, 3, 0, 158, 11, 6, 9, 7, 3, 56, 1, 2, 6, 3, 1, 3, 2, 10, 0, 11, 1, 3, 6, 4, 4, 193, 17, 10, 9, 5, 0, 82, 19, 13, 9, 214, 6, 3, 8, 28, 1, 83, 16, 16, 9, 82, 12, 9, 9, 84, 14, 5, 9, 243, 14, 166, 9, 71, 5, 2, 1, 3, 3, 2, 0, 2, 1, 13, 9, 120, 6, 3, 6, 4, 0, 29, 9, 41, 6, 2, 3, 9, 0, 10, 10, 47, 15, 406, 7, 2, 7, 17, 9, 57, 21, 2, 13, 123, 5, 4, 0, 2, 1, 2, 6, 2, 0, 9, 9, 49, 4, 2, 1, 2, 4, 9, 9, 330, 3, 10, 1, 2, 0, 49, 6, 4, 4, 14, 9, 5351, 0, 7, 14, 13835, 9, 87, 9, 39, 4, 60, 6, 26, 9, 1014, 0, 2, 54, 8, 3, 82, 0, 12, 1, 19628, 1, 4706, 45, 3, 22, 543, 4, 4, 5, 9, 7, 3, 6, 31, 3, 149, 2, 1418, 49, 513, 54, 5, 49, 9, 0, 15, 0, 23, 4, 2, 14, 1361, 6, 2, 16, 3, 6, 2, 1, 2, 4, 101, 0, 161, 6, 10, 9, 357, 0, 62, 13, 499, 13, 983, 6, 110, 6, 6, 9, 4759, 9, 787719, 239];
-  function isInAstralSet(code, set) {
+  function isInAstralSet(code2, set) {
     let pos = 65536;
     for (let i = 0, length = set.length; i < length; i += 2) {
       pos += set[i];
-      if (pos > code)
+      if (pos > code2)
         return false;
       pos += set[i + 1];
-      if (pos >= code)
+      if (pos >= code2)
         return true;
     }
     return false;
   }
-  function isIdentifierStart(code) {
-    if (code < 65)
-      return code === 36;
-    if (code <= 90)
+  function isIdentifierStart(code2) {
+    if (code2 < 65)
+      return code2 === 36;
+    if (code2 <= 90)
       return true;
-    if (code < 97)
-      return code === 95;
-    if (code <= 122)
+    if (code2 < 97)
+      return code2 === 95;
+    if (code2 <= 122)
       return true;
-    if (code <= 65535) {
-      return code >= 170 && nonASCIIidentifierStart.test(String.fromCharCode(code));
+    if (code2 <= 65535) {
+      return code2 >= 170 && nonASCIIidentifierStart.test(String.fromCharCode(code2));
     }
-    return isInAstralSet(code, astralIdentifierStartCodes);
+    return isInAstralSet(code2, astralIdentifierStartCodes);
   }
-  function isIdentifierChar(code) {
-    if (code < 48)
-      return code === 36;
-    if (code < 58)
+  function isIdentifierChar(code2) {
+    if (code2 < 48)
+      return code2 === 36;
+    if (code2 < 58)
       return true;
-    if (code < 65)
+    if (code2 < 65)
       return false;
-    if (code <= 90)
+    if (code2 <= 90)
       return true;
-    if (code < 97)
-      return code === 95;
-    if (code <= 122)
+    if (code2 < 97)
+      return code2 === 95;
+    if (code2 <= 122)
       return true;
-    if (code <= 65535) {
-      return code >= 170 && nonASCIIidentifier.test(String.fromCharCode(code));
+    if (code2 <= 65535) {
+      return code2 >= 170 && nonASCIIidentifier.test(String.fromCharCode(code2));
     }
-    return isInAstralSet(code, astralIdentifierStartCodes) || isInAstralSet(code, astralIdentifierCodes);
+    return isInAstralSet(code2, astralIdentifierStartCodes) || isInAstralSet(code2, astralIdentifierCodes);
   }
   const reservedWords = {
     keyword: ["break", "case", "catch", "continue", "debugger", "default", "do", "else", "finally", "for", "function", "if", "return", "switch", "throw", "try", "var", "const", "while", "with", "new", "this", "super", "class", "extends", "export", "import", "null", "true", "false", "in", "instanceof", "typeof", "void", "delete"],
@@ -1404,11 +1420,6 @@ var lib = createCommonjsModule(function(module, exports) {
   function canBeReservedWord(word) {
     return reservedWordLikeSet.has(word);
   }
-  const SCOPE_OTHER = 0, SCOPE_PROGRAM = 1, SCOPE_FUNCTION = 2, SCOPE_ARROW = 4, SCOPE_SIMPLE_CATCH = 8, SCOPE_SUPER = 16, SCOPE_DIRECT_SUPER = 32, SCOPE_CLASS = 64, SCOPE_STATIC_BLOCK = 128, SCOPE_TS_MODULE = 256, SCOPE_VAR = SCOPE_PROGRAM | SCOPE_FUNCTION | SCOPE_STATIC_BLOCK | SCOPE_TS_MODULE;
-  const BIND_KIND_VALUE = 1, BIND_KIND_TYPE = 2, BIND_SCOPE_VAR = 4, BIND_SCOPE_LEXICAL = 8, BIND_SCOPE_FUNCTION = 16, BIND_FLAGS_NONE = 64, BIND_FLAGS_CLASS = 128, BIND_FLAGS_TS_ENUM = 256, BIND_FLAGS_TS_CONST_ENUM = 512, BIND_FLAGS_TS_EXPORT_ONLY = 1024, BIND_FLAGS_FLOW_DECLARE_FN = 2048, BIND_FLAGS_TS_IMPORT = 4096, BIND_FLAGS_NO_LET_IN_LEXICAL = 8192;
-  const BIND_CLASS = BIND_KIND_VALUE | BIND_KIND_TYPE | BIND_SCOPE_LEXICAL | BIND_FLAGS_CLASS | BIND_FLAGS_NO_LET_IN_LEXICAL, BIND_LEXICAL = BIND_KIND_VALUE | 0 | BIND_SCOPE_LEXICAL | BIND_FLAGS_NO_LET_IN_LEXICAL, BIND_CATCH_PARAM = BIND_KIND_VALUE | 0 | BIND_SCOPE_LEXICAL | 0, BIND_VAR = BIND_KIND_VALUE | 0 | BIND_SCOPE_VAR | 0, BIND_FUNCTION = BIND_KIND_VALUE | 0 | BIND_SCOPE_FUNCTION | 0, BIND_TS_INTERFACE = 0 | BIND_KIND_TYPE | 0 | BIND_FLAGS_CLASS, BIND_TS_TYPE = 0 | BIND_KIND_TYPE | 0 | 0, BIND_TS_ENUM = BIND_KIND_VALUE | BIND_KIND_TYPE | BIND_SCOPE_LEXICAL | BIND_FLAGS_TS_ENUM | BIND_FLAGS_NO_LET_IN_LEXICAL, BIND_TS_AMBIENT = 0 | 0 | 0 | BIND_FLAGS_TS_EXPORT_ONLY, BIND_NONE = 0 | 0 | 0 | BIND_FLAGS_NONE, BIND_OUTSIDE = BIND_KIND_VALUE | 0 | 0 | BIND_FLAGS_NONE, BIND_TS_CONST_ENUM = BIND_TS_ENUM | BIND_FLAGS_TS_CONST_ENUM, BIND_TS_NAMESPACE = 0 | 0 | 0 | BIND_FLAGS_TS_EXPORT_ONLY, BIND_TS_TYPE_IMPORT = 0 | BIND_KIND_TYPE | 0 | BIND_FLAGS_TS_IMPORT, BIND_FLOW_DECLARE_FN = BIND_FLAGS_FLOW_DECLARE_FN;
-  const CLASS_ELEMENT_FLAG_STATIC = 4, CLASS_ELEMENT_KIND_GETTER = 2, CLASS_ELEMENT_KIND_SETTER = 1, CLASS_ELEMENT_KIND_ACCESSOR = CLASS_ELEMENT_KIND_GETTER | CLASS_ELEMENT_KIND_SETTER;
-  const CLASS_ELEMENT_STATIC_GETTER = CLASS_ELEMENT_KIND_GETTER | CLASS_ELEMENT_FLAG_STATIC, CLASS_ELEMENT_STATIC_SETTER = CLASS_ELEMENT_KIND_SETTER | CLASS_ELEMENT_FLAG_STATIC, CLASS_ELEMENT_INSTANCE_GETTER = CLASS_ELEMENT_KIND_GETTER, CLASS_ELEMENT_INSTANCE_SETTER = CLASS_ELEMENT_KIND_SETTER, CLASS_ELEMENT_OTHER = 0;
   class Scope {
     constructor(flags) {
       this.var = new Set();
@@ -1427,39 +1438,39 @@ var lib = createCommonjsModule(function(module, exports) {
       this.inModule = inModule;
     }
     get inTopLevel() {
-      return (this.currentScope().flags & SCOPE_PROGRAM) > 0;
+      return (this.currentScope().flags & 1) > 0;
     }
     get inFunction() {
-      return (this.currentVarScopeFlags() & SCOPE_FUNCTION) > 0;
+      return (this.currentVarScopeFlags() & 2) > 0;
     }
     get allowSuper() {
-      return (this.currentThisScopeFlags() & SCOPE_SUPER) > 0;
+      return (this.currentThisScopeFlags() & 16) > 0;
     }
     get allowDirectSuper() {
-      return (this.currentThisScopeFlags() & SCOPE_DIRECT_SUPER) > 0;
+      return (this.currentThisScopeFlags() & 32) > 0;
     }
     get inClass() {
-      return (this.currentThisScopeFlags() & SCOPE_CLASS) > 0;
+      return (this.currentThisScopeFlags() & 64) > 0;
     }
     get inClassAndNotInNonArrowFunction() {
       const flags = this.currentThisScopeFlags();
-      return (flags & SCOPE_CLASS) > 0 && (flags & SCOPE_FUNCTION) === 0;
+      return (flags & 64) > 0 && (flags & 2) === 0;
     }
     get inStaticBlock() {
       for (let i = this.scopeStack.length - 1; ; i--) {
         const {
           flags
         } = this.scopeStack[i];
-        if (flags & SCOPE_STATIC_BLOCK) {
+        if (flags & 128) {
           return true;
         }
-        if (flags & (SCOPE_VAR | SCOPE_CLASS)) {
+        if (flags & (387 | 64)) {
           return false;
         }
       }
     }
     get inNonArrowFunction() {
-      return (this.currentThisScopeFlags() & SCOPE_FUNCTION) > 0;
+      return (this.currentThisScopeFlags() & 2) > 0;
     }
     get treatFunctionsAsVar() {
       return this.treatFunctionsAsVarInScope(this.currentScope());
@@ -1475,36 +1486,36 @@ var lib = createCommonjsModule(function(module, exports) {
       return scope.flags;
     }
     treatFunctionsAsVarInScope(scope) {
-      return !!(scope.flags & (SCOPE_FUNCTION | SCOPE_STATIC_BLOCK) || !this.parser.inModule && scope.flags & SCOPE_PROGRAM);
+      return !!(scope.flags & (2 | 128) || !this.parser.inModule && scope.flags & 1);
     }
     declareName(name, bindingType, loc) {
       let scope = this.currentScope();
-      if (bindingType & BIND_SCOPE_LEXICAL || bindingType & BIND_SCOPE_FUNCTION) {
+      if (bindingType & 8 || bindingType & 16) {
         this.checkRedeclarationInScope(scope, name, bindingType, loc);
-        if (bindingType & BIND_SCOPE_FUNCTION) {
+        if (bindingType & 16) {
           scope.functions.add(name);
         } else {
           scope.lexical.add(name);
         }
-        if (bindingType & BIND_SCOPE_LEXICAL) {
+        if (bindingType & 8) {
           this.maybeExportDefined(scope, name);
         }
-      } else if (bindingType & BIND_SCOPE_VAR) {
+      } else if (bindingType & 4) {
         for (let i = this.scopeStack.length - 1; i >= 0; --i) {
           scope = this.scopeStack[i];
           this.checkRedeclarationInScope(scope, name, bindingType, loc);
           scope.var.add(name);
           this.maybeExportDefined(scope, name);
-          if (scope.flags & SCOPE_VAR)
+          if (scope.flags & 387)
             break;
         }
       }
-      if (this.parser.inModule && scope.flags & SCOPE_PROGRAM) {
+      if (this.parser.inModule && scope.flags & 1) {
         this.undefinedExports.delete(name);
       }
     }
     maybeExportDefined(scope, name) {
-      if (this.parser.inModule && scope.flags & SCOPE_PROGRAM) {
+      if (this.parser.inModule && scope.flags & 1) {
         this.undefinedExports.delete(name);
       }
     }
@@ -1517,15 +1528,15 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
     isRedeclaredInScope(scope, name, bindingType) {
-      if (!(bindingType & BIND_KIND_VALUE))
+      if (!(bindingType & 1))
         return false;
-      if (bindingType & BIND_SCOPE_LEXICAL) {
+      if (bindingType & 8) {
         return scope.lexical.has(name) || scope.functions.has(name) || scope.var.has(name);
       }
-      if (bindingType & BIND_SCOPE_FUNCTION) {
+      if (bindingType & 16) {
         return scope.lexical.has(name) || !this.treatFunctionsAsVarInScope(scope) && scope.var.has(name);
       }
-      return scope.lexical.has(name) && !(scope.flags & SCOPE_SIMPLE_CATCH && scope.lexical.values().next().value === name) || !this.treatFunctionsAsVarInScope(scope) && scope.functions.has(name);
+      return scope.lexical.has(name) && !(scope.flags & 8 && scope.lexical.values().next().value === name) || !this.treatFunctionsAsVarInScope(scope) && scope.functions.has(name);
     }
     checkLocalExport(id) {
       const {
@@ -1544,7 +1555,7 @@ var lib = createCommonjsModule(function(module, exports) {
         const {
           flags
         } = this.scopeStack[i];
-        if (flags & SCOPE_VAR) {
+        if (flags & 387) {
           return flags;
         }
       }
@@ -1554,7 +1565,7 @@ var lib = createCommonjsModule(function(module, exports) {
         const {
           flags
         } = this.scopeStack[i];
-        if (flags & (SCOPE_VAR | SCOPE_CLASS) && !(flags & SCOPE_ARROW)) {
+        if (flags & (387 | 64) && !(flags & 4)) {
           return flags;
         }
       }
@@ -1572,7 +1583,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     declareName(name, bindingType, loc) {
       const scope = this.currentScope();
-      if (bindingType & BIND_FLAGS_FLOW_DECLARE_FN) {
+      if (bindingType & 2048) {
         this.checkRedeclarationInScope(scope, name, bindingType, loc);
         this.maybeExportDefined(scope, name);
         scope.declareFunctions.add(name);
@@ -1583,7 +1594,7 @@ var lib = createCommonjsModule(function(module, exports) {
     isRedeclaredInScope(scope, name, bindingType) {
       if (super.isRedeclaredInScope(scope, name, bindingType))
         return true;
-      if (bindingType & BIND_FLAGS_FLOW_DECLARE_FN) {
+      if (bindingType & 2048) {
         return !scope.declareFunctions.has(name) && (scope.lexical.has(name) || scope.functions.has(name));
       }
       return false;
@@ -1806,8 +1817,8 @@ var lib = createCommonjsModule(function(module, exports) {
   }
   const lineBreak = /\r\n?|[\n\u2028\u2029]/;
   const lineBreakG = new RegExp(lineBreak.source, "g");
-  function isNewLine(code) {
-    switch (code) {
+  function isNewLine(code2) {
+    switch (code2) {
       case 10:
       case 13:
       case 8232:
@@ -1820,8 +1831,8 @@ var lib = createCommonjsModule(function(module, exports) {
   const skipWhiteSpace = /(?:\s|\/\/.*|\/\*[^]*?\*\/)*/g;
   const skipWhiteSpaceInLine = /(?:[^\S\n\r\u2028\u2029]|\/\/.*|\/\*.*?\*\/)*/g;
   const skipWhiteSpaceToLineBreak = new RegExp("(?=(" + skipWhiteSpaceInLine.source + "))\\1" + /(?=[\n\r\u2028\u2029]|\/\*(?!.*?\*\/)|$)/.source, "y");
-  function isWhitespace(code) {
-    switch (code) {
+  function isWhitespace(code2) {
+    switch (code2) {
       case 9:
       case 11:
       case 12:
@@ -1876,7 +1887,7 @@ var lib = createCommonjsModule(function(module, exports) {
       this.comments = [];
       this.commentStack = [];
       this.pos = 0;
-      this.type = 137;
+      this.type = 139;
       this.value = null;
       this.start = 0;
       this.end = 0;
@@ -1918,8 +1929,8 @@ var lib = createCommonjsModule(function(module, exports) {
       return state;
     }
   }
-  var _isDigit = function isDigit(code) {
-    return code >= 48 && code <= 57;
+  var _isDigit = function isDigit(code2) {
+    return code2 >= 48 && code2 <= 57;
   };
   const forbiddenNumericSeparatorSiblings = {
     decBinOct: new Set([46, 66, 69, 79, 95, 98, 101, 111]),
@@ -2021,20 +2032,20 @@ var lib = createCommonjsModule(function(module, exports) {
       case 114:
         return res("\r");
       case 120: {
-        let code;
+        let code2;
         ({
-          code,
+          code: code2,
           pos
         } = readHexChar(input, pos, lineStart, curLine, 2, false, throwOnInvalid, errors));
-        return res(code === null ? null : String.fromCharCode(code));
+        return res(code2 === null ? null : String.fromCharCode(code2));
       }
       case 117: {
-        let code;
+        let code2;
         ({
-          code,
+          code: code2,
           pos
         } = readCodePoint(input, pos, lineStart, curLine, throwOnInvalid, errors));
-        return res(code === null ? null : String.fromCodePoint(code));
+        return res(code2 === null ? null : String.fromCodePoint(code2));
       }
       case 116:
         return res("	");
@@ -2111,9 +2122,9 @@ var lib = createCommonjsModule(function(module, exports) {
     let invalid = false;
     let total = 0;
     for (let i = 0, e = len == null ? Infinity : len; i < e; ++i) {
-      const code = input.charCodeAt(pos);
+      const code2 = input.charCodeAt(pos);
       let val;
-      if (code === 95 && allowNumSeparator !== "bail") {
+      if (code2 === 95 && allowNumSeparator !== "bail") {
         const prev = input.charCodeAt(pos - 1);
         const next = input.charCodeAt(pos + 1);
         if (!allowNumSeparator) {
@@ -2134,12 +2145,12 @@ var lib = createCommonjsModule(function(module, exports) {
         ++pos;
         continue;
       }
-      if (code >= 97) {
-        val = code - 97 + 10;
-      } else if (code >= 65) {
-        val = code - 65 + 10;
-      } else if (_isDigit(code)) {
-        val = code - 48;
+      if (code2 >= 97) {
+        val = code2 - 97 + 10;
+      } else if (code2 >= 65) {
+        val = code2 - 65 + 10;
+      } else if (_isDigit(code2)) {
+        val = code2 - 48;
       } else {
         val = Infinity;
       }
@@ -2174,15 +2185,15 @@ var lib = createCommonjsModule(function(module, exports) {
   }
   function readCodePoint(input, pos, lineStart, curLine, throwOnInvalid, errors) {
     const ch = input.charCodeAt(pos);
-    let code;
+    let code2;
     if (ch === 123) {
       ++pos;
       ({
-        code,
+        code: code2,
         pos
       } = readHexChar(input, pos, lineStart, curLine, input.indexOf("}", pos) - pos, true, throwOnInvalid, errors));
       ++pos;
-      if (code !== null && code > 1114111) {
+      if (code2 !== null && code2 > 1114111) {
         if (throwOnInvalid) {
           errors.invalidCodePoint(pos, lineStart, curLine);
         } else {
@@ -2194,12 +2205,12 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     } else {
       ({
-        code,
+        code: code2,
         pos
       } = readHexChar(input, pos, lineStart, curLine, 4, false, throwOnInvalid, errors));
     }
     return {
-      code,
+      code: code2,
       pos
     };
   }
@@ -2365,7 +2376,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (!this.isLookahead)
         this.state.startLoc = this.state.curPosition();
       if (this.state.pos >= this.length) {
-        this.finishToken(137);
+        this.finishToken(139);
         return;
       }
       this.getTokenFromCode(this.codePointAtPos(this.state.pos));
@@ -2558,10 +2569,10 @@ var lib = createCommonjsModule(function(module, exports) {
         }
       } else if (isIdentifierStart(next)) {
         ++this.state.pos;
-        this.finishToken(136, this.readWord1(next));
+        this.finishToken(138, this.readWord1(next));
       } else if (next === 92) {
         ++this.state.pos;
-        this.finishToken(136, this.readWord1());
+        this.finishToken(138, this.readWord1());
       } else {
         this.finishOp(27, 1);
       }
@@ -2603,32 +2614,32 @@ var lib = createCommonjsModule(function(module, exports) {
       this.finishToken(28, value);
       return true;
     }
-    readToken_mult_modulo(code) {
-      let type = code === 42 ? 55 : 54;
+    readToken_mult_modulo(code2) {
+      let type = code2 === 42 ? 55 : 54;
       let width = 1;
       let next = this.input.charCodeAt(this.state.pos + 1);
-      if (code === 42 && next === 42) {
+      if (code2 === 42 && next === 42) {
         width++;
         next = this.input.charCodeAt(this.state.pos + 2);
         type = 57;
       }
       if (next === 61 && !this.state.inType) {
         width++;
-        type = code === 37 ? 33 : 30;
+        type = code2 === 37 ? 33 : 30;
       }
       this.finishOp(type, width);
     }
-    readToken_pipe_amp(code) {
+    readToken_pipe_amp(code2) {
       const next = this.input.charCodeAt(this.state.pos + 1);
-      if (next === code) {
+      if (next === code2) {
         if (this.input.charCodeAt(this.state.pos + 2) === 61) {
           this.finishOp(30, 3);
         } else {
-          this.finishOp(code === 124 ? 41 : 42, 2);
+          this.finishOp(code2 === 124 ? 41 : 42, 2);
         }
         return;
       }
-      if (code === 124) {
+      if (code2 === 124) {
         if (next === 62) {
           this.finishOp(39, 2);
           return;
@@ -2658,7 +2669,7 @@ var lib = createCommonjsModule(function(module, exports) {
         this.finishOp(30, 2);
         return;
       }
-      this.finishOp(code === 124 ? 43 : 45, 1);
+      this.finishOp(code2 === 124 ? 43 : 45, 1);
     }
     readToken_caret() {
       const next = this.input.charCodeAt(this.state.pos + 1);
@@ -2688,9 +2699,9 @@ var lib = createCommonjsModule(function(module, exports) {
         this.finishOp(26, 1);
       }
     }
-    readToken_plus_min(code) {
+    readToken_plus_min(code2) {
       const next = this.input.charCodeAt(this.state.pos + 1);
-      if (next === code) {
+      if (next === code2) {
         this.finishOp(34, 2);
         return;
       }
@@ -2739,18 +2750,18 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       this.finishOp(48, 1);
     }
-    readToken_eq_excl(code) {
+    readToken_eq_excl(code2) {
       const next = this.input.charCodeAt(this.state.pos + 1);
       if (next === 61) {
         this.finishOp(46, this.input.charCodeAt(this.state.pos + 2) === 61 ? 3 : 2);
         return;
       }
-      if (code === 61 && next === 62) {
+      if (code2 === 61 && next === 62) {
         this.state.pos += 2;
         this.finishToken(19);
         return;
       }
-      this.finishOp(code === 61 ? 29 : 35, 1);
+      this.finishOp(code2 === 61 ? 29 : 35, 1);
     }
     readToken_question() {
       const next = this.input.charCodeAt(this.state.pos + 1);
@@ -2769,8 +2780,8 @@ var lib = createCommonjsModule(function(module, exports) {
         this.finishToken(17);
       }
     }
-    getTokenFromCode(code) {
-      switch (code) {
+    getTokenFromCode(code2) {
+      switch (code2) {
         case 46:
           this.readToken_dot();
           return;
@@ -2868,25 +2879,25 @@ var lib = createCommonjsModule(function(module, exports) {
           return;
         case 34:
         case 39:
-          this.readString(code);
+          this.readString(code2);
           return;
         case 47:
           this.readToken_slash();
           return;
         case 37:
         case 42:
-          this.readToken_mult_modulo(code);
+          this.readToken_mult_modulo(code2);
           return;
         case 124:
         case 38:
-          this.readToken_pipe_amp(code);
+          this.readToken_pipe_amp(code2);
           return;
         case 94:
           this.readToken_caret();
           return;
         case 43:
         case 45:
-          this.readToken_plus_min(code);
+          this.readToken_plus_min(code2);
           return;
         case 60:
           this.readToken_lt();
@@ -2896,7 +2907,7 @@ var lib = createCommonjsModule(function(module, exports) {
           return;
         case 61:
         case 33:
-          this.readToken_eq_excl(code);
+          this.readToken_eq_excl(code2);
           return;
         case 126:
           this.finishOp(36, 1);
@@ -2911,14 +2922,14 @@ var lib = createCommonjsModule(function(module, exports) {
           this.readWord();
           return;
         default:
-          if (isIdentifierStart(code)) {
-            this.readWord(code);
+          if (isIdentifierStart(code2)) {
+            this.readWord(code2);
             return;
           }
       }
       throw this.raise(Errors.InvalidOrUnexpectedToken, {
         at: this.state.curPosition(),
-        unexpected: String.fromCodePoint(code)
+        unexpected: String.fromCodePoint(code2)
       });
     }
     finishOp(type, size) {
@@ -2995,7 +3006,7 @@ var lib = createCommonjsModule(function(module, exports) {
         mods += char;
       }
       this.state.pos = pos;
-      this.finishToken(135, {
+      this.finishToken(137, {
         pattern: content,
         flags: mods
       });
@@ -3035,10 +3046,10 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       if (isBigInt) {
         const str = this.input.slice(startLoc.index, this.state.pos).replace(/[_n]/g, "");
-        this.finishToken(133, str);
+        this.finishToken(135, str);
         return;
       }
-      this.finishToken(132, val);
+      this.finishToken(134, val);
     }
     readNumber(startsWithDot) {
       const start = this.state.pos;
@@ -3116,23 +3127,23 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       const str = this.input.slice(start, this.state.pos).replace(/[_mn]/g, "");
       if (isBigInt) {
-        this.finishToken(133, str);
+        this.finishToken(135, str);
         return;
       }
       if (isDecimal) {
-        this.finishToken(134, str);
+        this.finishToken(136, str);
         return;
       }
       const val = isOctal ? parseInt(str, 8) : parseFloat(str);
-      this.finishToken(132, val);
+      this.finishToken(134, val);
     }
     readCodePoint(throwOnInvalid) {
       const {
-        code,
+        code: code2,
         pos
       } = readCodePoint(this.input, this.state.pos, this.state.lineStart, this.state.curLine, throwOnInvalid, this.errorHandlers_readCodePoint);
       this.state.pos = pos;
-      return code;
+      return code2;
     }
     readString(quote) {
       const {
@@ -3144,7 +3155,7 @@ var lib = createCommonjsModule(function(module, exports) {
       this.state.pos = pos + 1;
       this.state.lineStart = lineStart;
       this.state.curLine = curLine;
-      this.finishToken(131, str);
+      this.finishToken(133, str);
     }
     readTemplateContinuation() {
       if (!this.match(8)) {
@@ -3234,7 +3245,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (type !== void 0) {
         this.finishToken(type, tokenLabelName(type));
       } else {
-        this.finishToken(130, word);
+        this.finishToken(132, word);
       }
     }
     checkKeywordEscapes() {
@@ -3359,13 +3370,13 @@ var lib = createCommonjsModule(function(module, exports) {
         undefinedPrivateNames
       } = this.current();
       let redefined = privateNames.has(name);
-      if (elementType & CLASS_ELEMENT_KIND_ACCESSOR) {
+      if (elementType & 3) {
         const accessor = redefined && loneAccessors.get(name);
         if (accessor) {
-          const oldStatic = accessor & CLASS_ELEMENT_FLAG_STATIC;
-          const newStatic = elementType & CLASS_ELEMENT_FLAG_STATIC;
-          const oldKind = accessor & CLASS_ELEMENT_KIND_ACCESSOR;
-          const newKind = elementType & CLASS_ELEMENT_KIND_ACCESSOR;
+          const oldStatic = accessor & 4;
+          const newStatic = elementType & 4;
+          const oldKind = accessor & 3;
+          const newKind = elementType & 3;
           redefined = oldKind === newKind || oldStatic !== newStatic;
           if (!redefined)
             loneAccessors.delete(name);
@@ -3398,17 +3409,15 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
   }
-  const kExpression = 0, kMaybeArrowParameterDeclaration = 1, kMaybeAsyncArrowParameterDeclaration = 2, kParameterDeclaration = 3;
   class ExpressionScope {
-    constructor(type = kExpression) {
-      this.type = void 0;
+    constructor(type = 0) {
       this.type = type;
     }
     canBeArrowParameterDeclaration() {
-      return this.type === kMaybeAsyncArrowParameterDeclaration || this.type === kMaybeArrowParameterDeclaration;
+      return this.type === 2 || this.type === 1;
     }
     isCertainlyParameterDeclaration() {
-      return this.type === kParameterDeclaration;
+      return this.type === 3;
     }
   }
   class ArrowHeadParsingScope extends ExpressionScope {
@@ -3489,7 +3498,7 @@ var lib = createCommonjsModule(function(module, exports) {
       let i = stack.length - 1;
       let scope = stack[i];
       while (scope.canBeArrowParameterDeclaration()) {
-        if (scope.type === kMaybeAsyncArrowParameterDeclaration) {
+        if (scope.type === 2) {
           scope.recordDeclarationError(Errors.AwaitBindingIdentifier, {
             at
           });
@@ -3518,18 +3527,17 @@ var lib = createCommonjsModule(function(module, exports) {
     }
   }
   function newParameterDeclarationScope() {
-    return new ExpressionScope(kParameterDeclaration);
+    return new ExpressionScope(3);
   }
   function newArrowHeadScope() {
-    return new ArrowHeadParsingScope(kMaybeArrowParameterDeclaration);
+    return new ArrowHeadParsingScope(1);
   }
   function newAsyncArrowScope() {
-    return new ArrowHeadParsingScope(kMaybeAsyncArrowParameterDeclaration);
+    return new ArrowHeadParsingScope(2);
   }
   function newExpressionScope() {
     return new ExpressionScope();
   }
-  const PARAM = 0, PARAM_YIELD = 1, PARAM_AWAIT = 2, PARAM_RETURN = 4, PARAM_IN = 8;
   class ProductionParameterHandler {
     constructor() {
       this.stacks = [];
@@ -3544,20 +3552,20 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.stacks[this.stacks.length - 1];
     }
     get hasAwait() {
-      return (this.currentFlags() & PARAM_AWAIT) > 0;
+      return (this.currentFlags() & 2) > 0;
     }
     get hasYield() {
-      return (this.currentFlags() & PARAM_YIELD) > 0;
+      return (this.currentFlags() & 1) > 0;
     }
     get hasReturn() {
-      return (this.currentFlags() & PARAM_RETURN) > 0;
+      return (this.currentFlags() & 4) > 0;
     }
     get hasIn() {
-      return (this.currentFlags() & PARAM_IN) > 0;
+      return (this.currentFlags() & 8) > 0;
     }
   }
   function functionFlags(isAsync, isGenerator) {
-    return (isAsync ? PARAM_AWAIT : 0) | (isGenerator ? PARAM_YIELD : 0);
+    return (isAsync ? 2 : 0) | (isGenerator ? 1 : 0);
   }
   class UtilParser extends Tokenizer {
     addExtra(node, key, value, enumerable = true) {
@@ -3606,7 +3614,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
     canInsertSemicolon() {
-      return this.match(137) || this.match(8) || this.hasPrecedingLineBreak();
+      return this.match(139) || this.match(8) || this.hasPrecedingLineBreak();
     }
     hasPrecedingLineBreak() {
       return lineBreak.test(this.input.slice(this.state.lastTokEndLoc.index, this.state.start));
@@ -3757,11 +3765,11 @@ var lib = createCommonjsModule(function(module, exports) {
       };
     }
     enterInitialScopes() {
-      let paramFlags = PARAM;
+      let paramFlags = 0;
       if (this.inModule) {
-        paramFlags |= PARAM_AWAIT;
+        paramFlags |= 2;
       }
-      this.scope.enter(SCOPE_PROGRAM);
+      this.scope.enter(1);
       this.prodParam.enter(paramFlags);
     }
     checkDestructuringPrivate(refExpressionErrors) {
@@ -3948,7 +3956,7 @@ var lib = createCommonjsModule(function(module, exports) {
       enumName,
       memberName
     }) => `Number enum members need to be initialized, e.g. \`${memberName} = 1\` in enum \`${enumName}\`.`,
-    EnumStringMemberInconsistentlyInitailized: ({
+    EnumStringMemberInconsistentlyInitialized: ({
       enumName
     }) => `String enum members need to consistently either all use initializers, or use no initializers, in enum \`${enumName}\`.`,
     GetterMayNotHaveThisParam: "A getter cannot have a `this` parameter.",
@@ -4028,7 +4036,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return !!this.getPluginOption("flow", "enums");
     }
     finishToken(type, val) {
-      if (type !== 131 && type !== 13 && type !== 28) {
+      if (type !== 133 && type !== 13 && type !== 28) {
         if (this.flowPragma === void 0) {
           this.flowPragma = null;
         }
@@ -4062,7 +4070,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const node = this.startNode();
       const moduloLoc = this.state.startLoc;
       this.next();
-      this.expectContextual(108);
+      this.expectContextual(110);
       if (this.state.lastTokStart > moduloLoc.index + 1) {
         this.raise(FlowErrors.UnexpectedSpaceBetweenModuloChecks, {
           at: moduloLoc
@@ -4120,7 +4128,7 @@ var lib = createCommonjsModule(function(module, exports) {
       id.typeAnnotation = this.finishNode(typeContainer, "TypeAnnotation");
       this.resetEndLocation(id);
       this.semicolon();
-      this.scope.declareName(node.id.name, BIND_FLOW_DECLARE_FN, node.id.loc.start);
+      this.scope.declareName(node.id.name, 2048, node.id.loc.start);
       return this.finishNode(node, "DeclareFunction");
     }
     flowParseDeclare(node, insideModule) {
@@ -4130,7 +4138,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return this.flowParseDeclareFunction(node);
       } else if (this.match(74)) {
         return this.flowParseDeclareVariable(node);
-      } else if (this.eatContextual(125)) {
+      } else if (this.eatContextual(127)) {
         if (this.match(16)) {
           return this.flowParseDeclareModuleExports(node);
         } else {
@@ -4141,11 +4149,11 @@ var lib = createCommonjsModule(function(module, exports) {
           }
           return this.flowParseDeclareModule(node);
         }
-      } else if (this.isContextual(128)) {
+      } else if (this.isContextual(130)) {
         return this.flowParseDeclareTypeAlias(node);
-      } else if (this.isContextual(129)) {
+      } else if (this.isContextual(131)) {
         return this.flowParseDeclareOpaqueType(node);
-      } else if (this.isContextual(127)) {
+      } else if (this.isContextual(129)) {
         return this.flowParseDeclareInterface(node);
       } else if (this.match(82)) {
         return this.flowParseDeclareExportDeclaration(node, insideModule);
@@ -4156,13 +4164,13 @@ var lib = createCommonjsModule(function(module, exports) {
     flowParseDeclareVariable(node) {
       this.next();
       node.id = this.flowParseTypeAnnotatableIdentifier(true);
-      this.scope.declareName(node.id.name, BIND_VAR, node.id.loc.start);
+      this.scope.declareName(node.id.name, 5, node.id.loc.start);
       this.semicolon();
       return this.finishNode(node, "DeclareVariable");
     }
     flowParseDeclareModule(node) {
-      this.scope.enter(SCOPE_OTHER);
-      if (this.match(131)) {
+      this.scope.enter(0);
+      if (this.match(133)) {
         node.id = super.parseExprAtom();
       } else {
         node.id = this.parseIdentifier();
@@ -4174,14 +4182,14 @@ var lib = createCommonjsModule(function(module, exports) {
         let bodyNode2 = this.startNode();
         if (this.match(83)) {
           this.next();
-          if (!this.isContextual(128) && !this.match(87)) {
+          if (!this.isContextual(130) && !this.match(87)) {
             this.raise(FlowErrors.InvalidNonTypeImportInDeclareModule, {
               at: this.state.lastTokStartLoc
             });
           }
           super.parseImport(bodyNode2);
         } else {
-          this.expectContextual(123, FlowErrors.UnsupportedStatementInDeclareModule);
+          this.expectContextual(125, FlowErrors.UnsupportedStatementInDeclareModule);
           bodyNode2 = this.flowParseDeclare(bodyNode2, true);
         }
         body.push(bodyNode2);
@@ -4229,7 +4237,7 @@ var lib = createCommonjsModule(function(module, exports) {
         node.default = true;
         return this.finishNode(node, "DeclareExportDeclaration");
       } else {
-        if (this.match(75) || this.isLet() || (this.isContextual(128) || this.isContextual(127)) && !insideModule) {
+        if (this.match(75) || this.isLet() || (this.isContextual(130) || this.isContextual(129)) && !insideModule) {
           const label = this.state.value;
           throw this.raise(FlowErrors.UnsupportedDeclareExportKind, {
             at: this.state.startLoc,
@@ -4237,11 +4245,11 @@ var lib = createCommonjsModule(function(module, exports) {
             suggestion: exportSuggestions[label]
           });
         }
-        if (this.match(74) || this.match(68) || this.match(80) || this.isContextual(129)) {
+        if (this.match(74) || this.match(68) || this.match(80) || this.isContextual(131)) {
           node.declaration = this.flowParseDeclare(this.startNode());
           node.default = false;
           return this.finishNode(node, "DeclareExportDeclaration");
-        } else if (this.match(55) || this.match(5) || this.isContextual(127) || this.isContextual(128) || this.isContextual(129)) {
+        } else if (this.match(55) || this.match(5) || this.isContextual(129) || this.isContextual(130) || this.isContextual(131)) {
           node = this.parseExport(node, null);
           if (node.type === "ExportNamedDeclaration") {
             node.type = "ExportDeclaration";
@@ -4256,7 +4264,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     flowParseDeclareModuleExports(node) {
       this.next();
-      this.expectContextual(109);
+      this.expectContextual(111);
       node.typeAnnotation = this.flowParseTypeAnnotation();
       this.semicolon();
       return this.finishNode(node, "DeclareModuleExports");
@@ -4280,7 +4288,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     flowParseInterfaceish(node, isClass) {
       node.id = this.flowParseRestrictedIdentifier(!isClass, true);
-      this.scope.declareName(node.id.name, isClass ? BIND_FUNCTION : BIND_LEXICAL, node.id.loc.start);
+      this.scope.declareName(node.id.name, isClass ? 17 : 8201, node.id.loc.start);
       if (this.match(47)) {
         node.typeParameters = this.flowParseTypeParameterDeclaration();
       } else {
@@ -4295,12 +4303,12 @@ var lib = createCommonjsModule(function(module, exports) {
       if (isClass) {
         node.implements = [];
         node.mixins = [];
-        if (this.eatContextual(115)) {
+        if (this.eatContextual(117)) {
           do {
             node.mixins.push(this.flowParseInterfaceExtends());
           } while (this.eat(12));
         }
-        if (this.eatContextual(111)) {
+        if (this.eatContextual(113)) {
           do {
             node.implements.push(this.flowParseInterfaceExtends());
           } while (this.eat(12));
@@ -4349,7 +4357,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     flowParseTypeAlias(node) {
       node.id = this.flowParseRestrictedIdentifier(false, true);
-      this.scope.declareName(node.id.name, BIND_LEXICAL, node.id.loc.start);
+      this.scope.declareName(node.id.name, 8201, node.id.loc.start);
       if (this.match(47)) {
         node.typeParameters = this.flowParseTypeParameterDeclaration();
       } else {
@@ -4360,9 +4368,9 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, "TypeAlias");
     }
     flowParseOpaqueType(node, declare) {
-      this.expectContextual(128);
+      this.expectContextual(130);
       node.id = this.flowParseRestrictedIdentifier(true, true);
-      this.scope.declareName(node.id.name, BIND_LEXICAL, node.id.loc.start);
+      this.scope.declareName(node.id.name, 8201, node.id.loc.start);
       if (this.match(47)) {
         node.typeParameters = this.flowParseTypeParameterDeclaration();
       } else {
@@ -4404,7 +4412,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const node = this.startNode();
       node.params = [];
       this.state.inType = true;
-      if (this.match(47) || this.match(140)) {
+      if (this.match(47) || this.match(142)) {
         this.next();
       } else {
         this.unexpected();
@@ -4461,7 +4469,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     flowParseInterfaceType() {
       const node = this.startNode();
-      this.expectContextual(127);
+      this.expectContextual(129);
       node.extends = [];
       if (this.eat(81)) {
         do {
@@ -4478,7 +4486,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, "InterfaceTypeAnnotation");
     }
     flowParseObjectPropertyKey() {
-      return this.match(132) || this.match(131) ? super.parseExprAtom() : this.parseIdentifier(true);
+      return this.match(134) || this.match(133) ? super.parseExprAtom() : this.parseIdentifier(true);
     }
     flowParseObjectTypeIndexer(node, isStatic, variance) {
       node.static = isStatic;
@@ -4579,7 +4587,7 @@ var lib = createCommonjsModule(function(module, exports) {
         let protoStartLoc = null;
         let inexactStartLoc = null;
         const node = this.startNode();
-        if (allowProto && this.isContextual(116)) {
+        if (allowProto && this.isContextual(118)) {
           const lookahead = this.lookahead();
           if (lookahead.type !== 14 && lookahead.type !== 17) {
             this.next();
@@ -4587,7 +4595,7 @@ var lib = createCommonjsModule(function(module, exports) {
             allowStatic = false;
           }
         }
-        if (allowStatic && this.isContextual(104)) {
+        if (allowStatic && this.isContextual(106)) {
           const lookahead = this.lookahead();
           if (lookahead.type !== 14 && lookahead.type !== 17) {
             this.next();
@@ -4617,7 +4625,7 @@ var lib = createCommonjsModule(function(module, exports) {
           nodeStart.callProperties.push(this.flowParseObjectTypeCallProperty(node, isStatic));
         } else {
           let kind = "init";
-          if (this.isContextual(98) || this.isContextual(103)) {
+          if (this.isContextual(99) || this.isContextual(104)) {
             const lookahead = this.lookahead();
             if (tokenIsLiteralPropertyName(lookahead.type)) {
               kind = this.state.value;
@@ -4942,7 +4950,7 @@ var lib = createCommonjsModule(function(module, exports) {
           node.returnType = this.flowParseType();
           node.typeParameters = null;
           return this.finishNode(node, "FunctionTypeAnnotation");
-        case 131:
+        case 133:
           return this.parseLiteral(this.state.value, "StringLiteralTypeAnnotation");
         case 85:
         case 86:
@@ -4952,10 +4960,10 @@ var lib = createCommonjsModule(function(module, exports) {
         case 53:
           if (this.state.value === "-") {
             this.next();
-            if (this.match(132)) {
+            if (this.match(134)) {
               return this.parseLiteralAtNode(-this.state.value, "NumberLiteralTypeAnnotation", node);
             }
-            if (this.match(133)) {
+            if (this.match(135)) {
               return this.parseLiteralAtNode(-this.state.value, "BigIntLiteralTypeAnnotation", node);
             }
             throw this.raise(FlowErrors.UnexpectedSubtractionOperand, {
@@ -4964,9 +4972,9 @@ var lib = createCommonjsModule(function(module, exports) {
           }
           this.unexpected();
           return;
-        case 132:
+        case 134:
           return this.parseLiteral(this.state.value, "NumberLiteralTypeAnnotation");
-        case 133:
+        case 135:
           return this.parseLiteral(this.state.value, "BigIntLiteralTypeAnnotation");
         case 88:
           this.next();
@@ -4988,7 +4996,7 @@ var lib = createCommonjsModule(function(module, exports) {
             this.next();
             return super.createIdentifier(node, label);
           } else if (tokenIsIdentifier(this.state.type)) {
-            if (this.isContextual(127)) {
+            if (this.isContextual(129)) {
               return this.flowParseInterfaceType();
             }
             return this.flowIdentToTypeAnnotation(startLoc, node, this.parseIdentifier());
@@ -5073,7 +5081,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return type;
     }
     flowParseTypeOrImplicitInstantiation() {
-      if (this.state.type === 130 && this.state.value === "_") {
+      if (this.state.type === 132 && this.state.value === "_") {
         const startLoc = this.state.startLoc;
         const node = this.parseIdentifier();
         return this.flowParseGenericType(startLoc, node);
@@ -5129,14 +5137,14 @@ var lib = createCommonjsModule(function(module, exports) {
       return super.parseFunctionBodyAndFinish(node, type, isMethod);
     }
     parseStatementLike(flags) {
-      if (this.state.strict && this.isContextual(127)) {
+      if (this.state.strict && this.isContextual(129)) {
         const lookahead = this.lookahead();
         if (tokenIsKeywordOrIdentifier(lookahead.type)) {
           const node = this.startNode();
           this.next();
           return this.flowParseInterface(node);
         }
-      } else if (this.shouldParseEnums() && this.isContextual(124)) {
+      } else if (this.shouldParseEnums() && this.isContextual(126)) {
         const node = this.startNode();
         this.next();
         return this.flowParseEnumDeclaration(node);
@@ -5169,7 +5177,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const {
         type
       } = this.state;
-      if (tokenIsFlowInterfaceOrTypeOrOpaque(type) || this.shouldParseEnums() && type === 124) {
+      if (tokenIsFlowInterfaceOrTypeOrOpaque(type) || this.shouldParseEnums() && type === 126) {
         return !this.state.containsEsc;
       }
       return super.shouldParseExportDeclaration();
@@ -5178,13 +5186,13 @@ var lib = createCommonjsModule(function(module, exports) {
       const {
         type
       } = this.state;
-      if (tokenIsFlowInterfaceOrTypeOrOpaque(type) || this.shouldParseEnums() && type === 124) {
+      if (tokenIsFlowInterfaceOrTypeOrOpaque(type) || this.shouldParseEnums() && type === 126) {
         return this.state.containsEsc;
       }
       return super.isExportDefaultSpecifier();
     }
     parseExportDefaultExpression() {
-      if (this.shouldParseEnums() && this.isContextual(124)) {
+      if (this.shouldParseEnums() && this.isContextual(126)) {
         const node = this.startNode();
         this.next();
         return this.flowParseEnumDeclaration(node);
@@ -5283,7 +5291,7 @@ var lib = createCommonjsModule(function(module, exports) {
     finishArrowValidation(node) {
       var _node$extra;
       this.toAssignableList(node.params, (_node$extra = node.extra) == null ? void 0 : _node$extra.trailingCommaLoc, false);
-      this.scope.enter(SCOPE_FUNCTION | SCOPE_ARROW);
+      this.scope.enter(2 | 4);
       super.checkParams(node, false, true);
       this.scope.exit();
     }
@@ -5319,7 +5327,7 @@ var lib = createCommonjsModule(function(module, exports) {
       super.assertModuleNodeAllowed(node);
     }
     parseExportDeclaration(node) {
-      if (this.isContextual(128)) {
+      if (this.isContextual(130)) {
         node.exportKind = "type";
         const declarationNode = this.startNode();
         this.next();
@@ -5330,17 +5338,17 @@ var lib = createCommonjsModule(function(module, exports) {
         } else {
           return this.flowParseTypeAlias(declarationNode);
         }
-      } else if (this.isContextual(129)) {
+      } else if (this.isContextual(131)) {
         node.exportKind = "type";
         const declarationNode = this.startNode();
         this.next();
         return this.flowParseOpaqueType(declarationNode, false);
-      } else if (this.isContextual(127)) {
+      } else if (this.isContextual(129)) {
         node.exportKind = "type";
         const declarationNode = this.startNode();
         this.next();
         return this.flowParseInterface(declarationNode);
-      } else if (this.shouldParseEnums() && this.isContextual(124)) {
+      } else if (this.shouldParseEnums() && this.isContextual(126)) {
         node.exportKind = "value";
         const declarationNode = this.startNode();
         this.next();
@@ -5352,7 +5360,7 @@ var lib = createCommonjsModule(function(module, exports) {
     eatExportStar(node) {
       if (super.eatExportStar(node))
         return true;
-      if (this.isContextual(128) && this.lookahead().type === 55) {
+      if (this.isContextual(130) && this.lookahead().type === 55) {
         node.exportKind = "type";
         this.next();
         this.next();
@@ -5380,7 +5388,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const {
         startLoc
       } = this.state;
-      if (this.isContextual(123)) {
+      if (this.isContextual(125)) {
         if (super.parseClassMemberFromModifier(classBody, member)) {
           return;
         }
@@ -5411,25 +5419,25 @@ var lib = createCommonjsModule(function(module, exports) {
           identifierName: fullWord
         });
       }
-      this.finishToken(130, fullWord);
+      this.finishToken(132, fullWord);
     }
-    getTokenFromCode(code) {
+    getTokenFromCode(code2) {
       const next = this.input.charCodeAt(this.state.pos + 1);
-      if (code === 123 && next === 124) {
+      if (code2 === 123 && next === 124) {
         this.finishOp(6, 2);
-      } else if (this.state.inType && (code === 62 || code === 60)) {
-        this.finishOp(code === 62 ? 48 : 47, 1);
-      } else if (this.state.inType && code === 63) {
+      } else if (this.state.inType && (code2 === 62 || code2 === 60)) {
+        this.finishOp(code2 === 62 ? 48 : 47, 1);
+      } else if (this.state.inType && code2 === 63) {
         if (next === 46) {
           this.finishOp(18, 2);
         } else {
           this.finishOp(17, 1);
         }
-      } else if (isIteratorStart(code, next, this.input.charCodeAt(this.state.pos + 2))) {
+      } else if (isIteratorStart(code2, next, this.input.charCodeAt(this.state.pos + 2))) {
         this.state.pos += 2;
         this.readIterator();
       } else {
-        super.getTokenFromCode(code);
+        super.getTokenFromCode(code2);
       }
     }
     isAssignable(node, isBinding) {
@@ -5537,7 +5545,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (node.superClass && this.match(47)) {
         node.superTypeParameters = this.flowParseTypeParameterInstantiation();
       }
-      if (this.isContextual(111)) {
+      if (this.isContextual(113)) {
         this.next();
         const implemented = node.implements = [];
         do {
@@ -5641,7 +5649,7 @@ var lib = createCommonjsModule(function(module, exports) {
     isPotentialImportPhase(isExport) {
       if (super.isPotentialImportPhase(isExport))
         return true;
-      if (this.isContextual(128)) {
+      if (this.isContextual(130)) {
         if (!isExport)
           return true;
         const ch = this.lookaheadCharCode();
@@ -5757,7 +5765,7 @@ var lib = createCommonjsModule(function(module, exports) {
       var _jsx;
       let state = null;
       let jsx2;
-      if (this.hasPlugin("jsx") && (this.match(140) || this.match(47))) {
+      if (this.hasPlugin("jsx") && (this.match(142) || this.match(47))) {
         state = this.state.clone();
         jsx2 = this.tryParse(() => super.parseMaybeAssign(refExpressionErrors, afterLeftParse), state);
         if (!jsx2.error)
@@ -5946,23 +5954,23 @@ var lib = createCommonjsModule(function(module, exports) {
         return;
       return super.parseArrowExpression(node, void 0, true);
     }
-    readToken_mult_modulo(code) {
+    readToken_mult_modulo(code2) {
       const next = this.input.charCodeAt(this.state.pos + 1);
-      if (code === 42 && next === 47 && this.state.hasFlowComment) {
+      if (code2 === 42 && next === 47 && this.state.hasFlowComment) {
         this.state.hasFlowComment = false;
         this.state.pos += 2;
         this.nextToken();
         return;
       }
-      super.readToken_mult_modulo(code);
+      super.readToken_mult_modulo(code2);
     }
-    readToken_pipe_amp(code) {
+    readToken_pipe_amp(code2) {
       const next = this.input.charCodeAt(this.state.pos + 1);
-      if (code === 124 && next === 125) {
+      if (code2 === 124 && next === 125) {
         this.finishOp(9, 2);
         return;
       }
-      super.readToken_pipe_amp(code);
+      super.readToken_pipe_amp(code2);
     }
     parseTopLevel(file, program) {
       const fileNode = super.parseTopLevel(file, program);
@@ -6044,10 +6052,10 @@ var lib = createCommonjsModule(function(module, exports) {
         memberName
       });
     }
-    flowEnumErrorStringMemberInconsistentlyInitailized(node, {
+    flowEnumErrorStringMemberInconsistentlyInitialized(node, {
       enumName
     }) {
-      this.raise(FlowErrors.EnumStringMemberInconsistentlyInitailized, {
+      this.raise(FlowErrors.EnumStringMemberInconsistentlyInitialized, {
         at: node,
         enumName
       });
@@ -6056,7 +6064,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const startLoc = this.state.startLoc;
       const endOfInit = () => this.match(12) || this.match(8);
       switch (this.state.type) {
-        case 132: {
+        case 134: {
           const literal = this.parseNumericLiteral(this.state.value);
           if (endOfInit()) {
             return {
@@ -6070,7 +6078,7 @@ var lib = createCommonjsModule(function(module, exports) {
             loc: startLoc
           };
         }
-        case 131: {
+        case 133: {
           const literal = this.parseStringLiteral(this.state.value);
           if (endOfInit()) {
             return {
@@ -6230,14 +6238,14 @@ var lib = createCommonjsModule(function(module, exports) {
         return initializedMembers;
       } else if (defaultedMembers.length > initializedMembers.length) {
         for (const member of initializedMembers) {
-          this.flowEnumErrorStringMemberInconsistentlyInitailized(member, {
+          this.flowEnumErrorStringMemberInconsistentlyInitialized(member, {
             enumName
           });
         }
         return defaultedMembers;
       } else {
         for (const member of defaultedMembers) {
-          this.flowEnumErrorStringMemberInconsistentlyInitailized(member, {
+          this.flowEnumErrorStringMemberInconsistentlyInitialized(member, {
             enumName
           });
         }
@@ -6247,7 +6255,7 @@ var lib = createCommonjsModule(function(module, exports) {
     flowEnumParseExplicitType({
       enumName
     }) {
-      if (!this.eatContextual(101))
+      if (!this.eatContextual(102))
         return null;
       if (!tokenIsIdentifier(this.state.type)) {
         throw this.raise(FlowErrors.EnumInvalidExplicitTypeUnknownSupplied, {
@@ -6675,14 +6683,14 @@ var lib = createCommonjsModule(function(module, exports) {
             if (this.state.pos === this.state.start) {
               if (ch === 60 && this.state.canStartJSXElement) {
                 ++this.state.pos;
-                this.finishToken(140);
+                this.finishToken(142);
               } else {
                 super.getTokenFromCode(ch);
               }
               return;
             }
             out += this.input.slice(chunkStart, this.state.pos);
-            this.finishToken(139, out);
+            this.finishToken(141, out);
             return;
           case 38:
             out += this.input.slice(chunkStart, this.state.pos);
@@ -6741,7 +6749,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
       }
       out += this.input.slice(chunkStart, this.state.pos++);
-      this.finishToken(131, out);
+      this.finishToken(133, out);
     }
     jsxReadEntity() {
       const startPos = ++this.state.pos;
@@ -6781,11 +6789,11 @@ var lib = createCommonjsModule(function(module, exports) {
       do {
         ch = this.input.charCodeAt(++this.state.pos);
       } while (isIdentifierChar(ch) || ch === 45);
-      this.finishToken(138, this.input.slice(start, this.state.pos));
+      this.finishToken(140, this.input.slice(start, this.state.pos));
     }
     jsxParseIdentifier() {
       const node = this.startNode();
-      if (this.match(138)) {
+      if (this.match(140)) {
         node.name = this.state.value;
       } else if (tokenIsKeyword(this.state.type)) {
         node.name = tokenLabelName(this.state.type);
@@ -6833,8 +6841,8 @@ var lib = createCommonjsModule(function(module, exports) {
             });
           }
           return node;
-        case 140:
-        case 131:
+        case 142:
+        case 133:
           return this.parseExprAtom();
         default:
           throw this.raise(JsxErrors.UnsupportedJsxValue, {
@@ -6884,7 +6892,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     jsxParseOpeningElementAt(startLoc) {
       const node = this.startNodeAt(startLoc);
-      if (this.eat(141)) {
+      if (this.eat(143)) {
         return this.finishNode(node, "JSXOpeningFragment");
       }
       node.name = this.jsxParseElementName();
@@ -6892,21 +6900,21 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     jsxParseOpeningElementAfterName(node) {
       const attributes = [];
-      while (!this.match(56) && !this.match(141)) {
+      while (!this.match(56) && !this.match(143)) {
         attributes.push(this.jsxParseAttribute());
       }
       node.attributes = attributes;
       node.selfClosing = this.eat(56);
-      this.expect(141);
+      this.expect(143);
       return this.finishNode(node, "JSXOpeningElement");
     }
     jsxParseClosingElementAt(startLoc) {
       const node = this.startNodeAt(startLoc);
-      if (this.eat(141)) {
+      if (this.eat(143)) {
         return this.finishNode(node, "JSXClosingFragment");
       }
       node.name = this.jsxParseElementName();
-      this.expect(141);
+      this.expect(143);
       return this.finishNode(node, "JSXClosingElement");
     }
     jsxParseElementAt(startLoc) {
@@ -6918,7 +6926,7 @@ var lib = createCommonjsModule(function(module, exports) {
         contents:
           for (; ; ) {
             switch (this.state.type) {
-              case 140:
+              case 142:
                 startLoc = this.state.startLoc;
                 this.next();
                 if (this.eat(56)) {
@@ -6927,7 +6935,7 @@ var lib = createCommonjsModule(function(module, exports) {
                 }
                 children.push(this.jsxParseElementAt(startLoc));
                 break;
-              case 139:
+              case 141:
                 children.push(this.parseExprAtom());
                 break;
               case 5: {
@@ -6990,12 +6998,12 @@ var lib = createCommonjsModule(function(module, exports) {
       context[context.length - 1] = newContext;
     }
     parseExprAtom(refExpressionErrors) {
-      if (this.match(139)) {
+      if (this.match(141)) {
         return this.parseLiteral(this.state.value, "JSXText");
-      } else if (this.match(140)) {
+      } else if (this.match(142)) {
         return this.jsxParseElement();
       } else if (this.match(47) && this.input.charCodeAt(this.state.pos) !== 33) {
-        this.replaceToken(140);
+        this.replaceToken(142);
         return this.jsxParseElement();
       } else {
         return super.parseExprAtom(refExpressionErrors);
@@ -7006,45 +7014,45 @@ var lib = createCommonjsModule(function(module, exports) {
       if (!curContext.preserveSpace)
         super.skipSpace();
     }
-    getTokenFromCode(code) {
+    getTokenFromCode(code2) {
       const context = this.curContext();
       if (context === types.j_expr) {
         this.jsxReadToken();
         return;
       }
       if (context === types.j_oTag || context === types.j_cTag) {
-        if (isIdentifierStart(code)) {
+        if (isIdentifierStart(code2)) {
           this.jsxReadWord();
           return;
         }
-        if (code === 62) {
+        if (code2 === 62) {
           ++this.state.pos;
-          this.finishToken(141);
+          this.finishToken(143);
           return;
         }
-        if ((code === 34 || code === 39) && context === types.j_oTag) {
-          this.jsxReadString(code);
+        if ((code2 === 34 || code2 === 39) && context === types.j_oTag) {
+          this.jsxReadString(code2);
           return;
         }
       }
-      if (code === 60 && this.state.canStartJSXElement && this.input.charCodeAt(this.state.pos + 1) !== 33) {
+      if (code2 === 60 && this.state.canStartJSXElement && this.input.charCodeAt(this.state.pos + 1) !== 33) {
         ++this.state.pos;
-        this.finishToken(140);
+        this.finishToken(142);
         return;
       }
-      super.getTokenFromCode(code);
+      super.getTokenFromCode(code2);
     }
     updateContext(prevType) {
       const {
         context,
         type
       } = this.state;
-      if (type === 56 && prevType === 140) {
+      if (type === 56 && prevType === 142) {
         context.splice(-2, 2, types.j_cTag);
         this.state.canStartJSXElement = false;
-      } else if (type === 140) {
+      } else if (type === 142) {
         context.push(types.j_oTag);
-      } else if (type === 141) {
+      } else if (type === 143) {
         const out = context[context.length - 1];
         if (out === types.j_oTag && prevType === 56 || out === types.j_cTag) {
           context.pop();
@@ -7078,14 +7086,14 @@ var lib = createCommonjsModule(function(module, exports) {
       return new TypeScriptScope(flags);
     }
     enter(flags) {
-      if (flags == SCOPE_TS_MODULE) {
+      if (flags == 256) {
         this.importsStack.push(new Set());
       }
       super.enter(flags);
     }
     exit() {
       const flags = super.exit();
-      if (flags == SCOPE_TS_MODULE) {
+      if (flags == 256) {
         this.importsStack.pop();
       }
       return flags;
@@ -7104,7 +7112,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return false;
     }
     declareName(name, bindingType, loc) {
-      if (bindingType & BIND_FLAGS_TS_IMPORT) {
+      if (bindingType & 4096) {
         if (this.hasImport(name, true)) {
           this.parser.raise(Errors.VarRedeclaration, {
             at: loc,
@@ -7115,43 +7123,44 @@ var lib = createCommonjsModule(function(module, exports) {
         return;
       }
       const scope = this.currentScope();
-      if (bindingType & BIND_FLAGS_TS_EXPORT_ONLY) {
+      if (bindingType & 1024) {
         this.maybeExportDefined(scope, name);
         scope.exportOnlyBindings.add(name);
         return;
       }
       super.declareName(name, bindingType, loc);
-      if (bindingType & BIND_KIND_TYPE) {
-        if (!(bindingType & BIND_KIND_VALUE)) {
+      if (bindingType & 2) {
+        if (!(bindingType & 1)) {
           this.checkRedeclarationInScope(scope, name, bindingType, loc);
           this.maybeExportDefined(scope, name);
         }
         scope.types.add(name);
       }
-      if (bindingType & BIND_FLAGS_TS_ENUM)
+      if (bindingType & 256)
         scope.enums.add(name);
-      if (bindingType & BIND_FLAGS_TS_CONST_ENUM)
+      if (bindingType & 512) {
         scope.constEnums.add(name);
-      if (bindingType & BIND_FLAGS_CLASS)
+      }
+      if (bindingType & 128)
         scope.classes.add(name);
     }
     isRedeclaredInScope(scope, name, bindingType) {
       if (scope.enums.has(name)) {
-        if (bindingType & BIND_FLAGS_TS_ENUM) {
-          const isConst = !!(bindingType & BIND_FLAGS_TS_CONST_ENUM);
+        if (bindingType & 256) {
+          const isConst = !!(bindingType & 512);
           const wasConst = scope.constEnums.has(name);
           return isConst !== wasConst;
         }
         return true;
       }
-      if (bindingType & BIND_FLAGS_CLASS && scope.classes.has(name)) {
+      if (bindingType & 128 && scope.classes.has(name)) {
         if (scope.lexical.has(name)) {
-          return !!(bindingType & BIND_KIND_VALUE);
+          return !!(bindingType & 1);
         } else {
           return false;
         }
       }
-      if (bindingType & BIND_KIND_TYPE && scope.types.has(name)) {
+      if (bindingType & 2 && scope.types.has(name)) {
         return true;
       }
       return super.isRedeclaredInScope(scope, name, bindingType);
@@ -7186,7 +7195,7 @@ var lib = createCommonjsModule(function(module, exports) {
             this.expressionScope.recordArrowParameterBindingError(Errors.InvalidParenthesizedAssignment, {
               at: node
             });
-          } else if (parenthesized.type !== "MemberExpression") {
+          } else if (parenthesized.type !== "MemberExpression" && !this.isOptionalMemberExpression(parenthesized)) {
             this.raise(Errors.InvalidParenthesizedAssignment, {
               at: node
             });
@@ -7413,7 +7422,7 @@ var lib = createCommonjsModule(function(module, exports) {
       } = this.state;
       if (type === 21) {
         return this.parseBindingRestProperty(prop);
-      } else if (type === 136) {
+      } else if (type === 138) {
         this.expectPlugin("destructuringPrivate", startLoc);
         this.classScope.usePrivateName(this.state.value, startLoc);
         prop.key = this.parsePrivateName();
@@ -7456,9 +7465,12 @@ var lib = createCommonjsModule(function(module, exports) {
         ObjectPattern: "properties"
       }, type);
     }
+    isOptionalMemberExpression(expression) {
+      return expression.type === "OptionalMemberExpression";
+    }
     checkLVal(expression, {
       in: ancestor,
-      binding = BIND_NONE,
+      binding = 64,
       checkClashes = false,
       strictModeChanged = false,
       hasParenthesizedAncestor = false
@@ -7467,8 +7479,18 @@ var lib = createCommonjsModule(function(module, exports) {
       const type = expression.type;
       if (this.isObjectMethod(expression))
         return;
-      if (type === "MemberExpression") {
-        if (binding !== BIND_NONE) {
+      const isOptionalMemberExpression = this.isOptionalMemberExpression(expression);
+      if (isOptionalMemberExpression || type === "MemberExpression") {
+        if (isOptionalMemberExpression) {
+          this.expectPlugin("optionalChainingAssign", expression.loc.start);
+          if (ancestor.type !== "AssignmentExpression") {
+            this.raise(Errors.InvalidLhsOptionalChaining, {
+              at: expression,
+              ancestor
+            });
+          }
+        }
+        if (binding !== 64) {
           this.raise(Errors.InvalidPropertyBindingPattern, {
             at: expression
           });
@@ -7495,7 +7517,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (validity === true)
         return;
       if (validity === false) {
-        const ParseErrorClass = binding === BIND_NONE ? Errors.InvalidLhs : Errors.InvalidLhsBinding;
+        const ParseErrorClass = binding === 64 ? Errors.InvalidLhs : Errors.InvalidLhsBinding;
         this.raise(ParseErrorClass, {
           at: expression,
           ancestor
@@ -7503,7 +7525,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return;
       }
       const [key, isParenthesizedExpression] = Array.isArray(validity) ? validity : [validity, type === "ParenthesizedExpression"];
-      const nextAncestor = type === "ArrayPattern" || type === "ObjectPattern" || type === "ParenthesizedExpression" ? {
+      const nextAncestor = type === "ArrayPattern" || type === "ObjectPattern" ? {
         type
       } : ancestor;
       for (const child of [].concat(expression[key])) {
@@ -7520,7 +7542,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     checkIdentifier(at, bindingType, strictModeChanged = false) {
       if (this.state.strict && (strictModeChanged ? isStrictBindReservedWord(at.name, this.inModule) : isStrictBindOnlyReservedWord(at.name))) {
-        if (bindingType === BIND_NONE) {
+        if (bindingType === 64) {
           this.raise(Errors.StrictEvalArguments, {
             at,
             referenceName: at.name
@@ -7532,12 +7554,12 @@ var lib = createCommonjsModule(function(module, exports) {
           });
         }
       }
-      if (bindingType & BIND_FLAGS_NO_LET_IN_LEXICAL && at.name === "let") {
+      if (bindingType & 8192 && at.name === "let") {
         this.raise(Errors.LetInLexicalBinding, {
           at
         });
       }
-      if (!(bindingType & BIND_NONE)) {
+      if (!(bindingType & 64)) {
         this.declareNameFromIdentifier(at, bindingType);
       }
     }
@@ -7643,7 +7665,6 @@ var lib = createCommonjsModule(function(module, exports) {
     InvalidPropertyAccessAfterInstantiationExpression: "Invalid property access after an instantiation expression. You can either wrap the instantiation expression in parentheses, or delete the type arguments.",
     InvalidTupleMemberLabel: "Tuple members must be labeled with a simple identifier.",
     MissingInterfaceName: "'interface' declarations must be followed by an identifier.",
-    MixedLabeledAndUnlabeledElements: "Tuple members must all have names or all not have names.",
     NonAbstractClassHasAbstractMethod: "Abstract methods can only appear within an abstract class.",
     NonClassMethodPropertyHasAbstractModifer: "'abstract' modifier can only appear on a class, method, or property declaration.",
     OptionalTypeBeforeRequired: "A required element cannot follow an optional element.",
@@ -7736,7 +7757,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return tokenIsIdentifier(this.state.type);
     }
     tsTokenCanFollowModifier() {
-      return (this.match(0) || this.match(5) || this.match(55) || this.match(21) || this.match(136) || this.isLiteralPropertyName()) && !this.hasPrecedingLineBreak();
+      return (this.match(0) || this.match(5) || this.match(55) || this.match(21) || this.match(138) || this.isLiteralPropertyName()) && !this.hasPrecedingLineBreak();
     }
     tsNextTokenCanFollowModifier() {
       this.next();
@@ -7904,7 +7925,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const node = this.startNode();
       this.expect(83);
       this.expect(10);
-      if (!this.match(131)) {
+      if (!this.match(133)) {
         this.raise(TSErrors.UnsupportedImportTypeArgument, {
           at: this.state.startLoc
         });
@@ -7978,7 +7999,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     tsParseTypeParameters(parseModifiers) {
       const node = this.startNode();
-      if (this.match(47) || this.match(140)) {
+      if (this.match(47) || this.match(142)) {
         this.next();
       } else {
         this.unexpected();
@@ -8177,9 +8198,9 @@ var lib = createCommonjsModule(function(module, exports) {
     tsIsStartOfMappedType() {
       this.next();
       if (this.eat(53)) {
-        return this.isContextual(120);
+        return this.isContextual(122);
       }
-      if (this.isContextual(120)) {
+      if (this.isContextual(122)) {
         this.next();
       }
       if (!this.match(0)) {
@@ -8204,8 +8225,8 @@ var lib = createCommonjsModule(function(module, exports) {
       if (this.match(53)) {
         node.readonly = this.state.value;
         this.next();
-        this.expectContextual(120);
-      } else if (this.eatContextual(120)) {
+        this.expectContextual(122);
+      } else if (this.eatContextual(122)) {
         node.readonly = true;
       }
       this.expect(0);
@@ -8228,9 +8249,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const node = this.startNode();
       node.elementTypes = this.tsParseBracketedList("TupleElementTypes", this.tsParseTupleElementType.bind(this), true, false);
       let seenOptionalElement = false;
-      let labeledElements = null;
       node.elementTypes.forEach((elementNode) => {
-        var _labeledElements;
         const {
           type
         } = elementNode;
@@ -8240,18 +8259,6 @@ var lib = createCommonjsModule(function(module, exports) {
           });
         }
         seenOptionalElement || (seenOptionalElement = type === "TSNamedTupleMember" && elementNode.optional || type === "TSOptionalType");
-        let checkType = type;
-        if (type === "TSRestType") {
-          elementNode = elementNode.typeAnnotation;
-          checkType = elementNode.type;
-        }
-        const isLabeled = checkType === "TSNamedTupleMember";
-        (_labeledElements = labeledElements) != null ? _labeledElements : labeledElements = isLabeled;
-        if (labeledElements !== isLabeled) {
-          this.raise(TSErrors.MixedLabeledAndUnlabeledElements, {
-            at: elementNode
-          });
-        }
       });
       return this.finishNode(node, "TSTupleType");
     }
@@ -8349,9 +8356,9 @@ var lib = createCommonjsModule(function(module, exports) {
     tsParseLiteralTypeNode() {
       const node = this.startNode();
       switch (this.state.type) {
-        case 132:
+        case 134:
+        case 135:
         case 133:
-        case 131:
         case 85:
         case 86:
           node.literal = super.parseExprAtom();
@@ -8373,7 +8380,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     tsParseThisTypeOrThisTypePredicate() {
       const thisKeyword = this.tsParseThisTypeNode();
-      if (this.isContextual(114) && !this.hasPrecedingLineBreak()) {
+      if (this.isContextual(116) && !this.hasPrecedingLineBreak()) {
         return this.tsParseThisTypePredicate(thisKeyword);
       } else {
         return thisKeyword;
@@ -8381,9 +8388,9 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     tsParseNonArrayType() {
       switch (this.state.type) {
-        case 131:
-        case 132:
         case 133:
+        case 134:
+        case 135:
         case 85:
         case 86:
           return this.tsParseLiteralTypeNode();
@@ -8391,7 +8398,7 @@ var lib = createCommonjsModule(function(module, exports) {
           if (this.state.value === "-") {
             const node = this.startNode();
             const nextToken = this.lookahead();
-            if (nextToken.type !== 132 && nextToken.type !== 133) {
+            if (nextToken.type !== 134 && nextToken.type !== 135) {
               this.unexpected();
             }
             node.literal = this.parseMaybeUnary();
@@ -8472,7 +8479,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     tsParseInferType() {
       const node = this.startNode();
-      this.expectContextual(113);
+      this.expectContextual(115);
       const typeParameter = this.startNode();
       typeParameter.name = this.tsParseTypeParameterName();
       typeParameter.constraint = this.tsTryParse(() => this.tsParseConstraintForInferType());
@@ -8489,7 +8496,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     tsParseTypeOperatorOrHigher() {
       const isTypeOperator = tokenIsTSTypeOperator(this.state.type) && !this.state.containsEsc;
-      return isTypeOperator ? this.tsParseTypeOperator() : this.isContextual(113) ? this.tsParseInferType() : this.tsInAllowConditionalTypesContext(() => this.tsParseArrayTypeOrHigher());
+      return isTypeOperator ? this.tsParseTypeOperator() : this.isContextual(115) ? this.tsParseInferType() : this.tsInAllowConditionalTypesContext(() => this.tsParseArrayTypeOrHigher());
     }
     tsParseUnionOrIntersectionType(kind, parseConstituentType, operator) {
       const node = this.startNode();
@@ -8620,13 +8627,13 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     tsParseTypePredicatePrefix() {
       const id = this.parseIdentifier();
-      if (this.isContextual(114) && !this.hasPrecedingLineBreak()) {
+      if (this.isContextual(116) && !this.hasPrecedingLineBreak()) {
         this.next();
         return id;
       }
     }
     tsParseTypePredicateAsserts() {
-      if (this.state.type !== 107) {
+      if (this.state.type !== 109) {
         return false;
       }
       const containsEsc = this.state.containsEsc;
@@ -8666,7 +8673,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, "TSConditionalType");
     }
     isAbstractConstructorSignature() {
-      return this.isContextual(122) && this.lookahead().type === 77;
+      return this.isContextual(124) && this.lookahead().type === 77;
     }
     tsParseNonConditionalType() {
       if (this.tsIsStartOfFunctionType()) {
@@ -8715,12 +8722,12 @@ var lib = createCommonjsModule(function(module, exports) {
     tsParseInterfaceDeclaration(node, properties = {}) {
       if (this.hasFollowingLineBreak())
         return null;
-      this.expectContextual(127);
+      this.expectContextual(129);
       if (properties.declare)
         node.declare = true;
       if (tokenIsIdentifier(this.state.type)) {
         node.id = this.parseIdentifier();
-        this.checkIdentifier(node.id, BIND_TS_INTERFACE);
+        this.checkIdentifier(node.id, 130);
       } else {
         node.id = null;
         this.raise(TSErrors.MissingInterfaceName, {
@@ -8738,11 +8745,11 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     tsParseTypeAliasDeclaration(node) {
       node.id = this.parseIdentifier();
-      this.checkIdentifier(node.id, BIND_TS_TYPE);
+      this.checkIdentifier(node.id, 2);
       node.typeAnnotation = this.tsInType(() => {
         node.typeParameters = this.tsTryParseTypeParameters(this.tsParseInOutModifiers);
         this.expect(29);
-        if (this.isContextual(112) && this.lookahead().type !== 16) {
+        if (this.isContextual(114) && this.lookahead().type !== 16) {
           const node2 = this.startNode();
           this.next();
           return this.finishNode(node2, "TSIntrinsicKeyword");
@@ -8807,7 +8814,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     tsParseEnumMember() {
       const node = this.startNode();
-      node.id = this.match(131) ? super.parseStringLiteral(this.state.value) : this.parseIdentifier(true);
+      node.id = this.match(133) ? super.parseStringLiteral(this.state.value) : this.parseIdentifier(true);
       if (this.eat(29)) {
         node.initializer = super.parseMaybeAssignAllowIn();
       }
@@ -8818,9 +8825,9 @@ var lib = createCommonjsModule(function(module, exports) {
         node.const = true;
       if (properties.declare)
         node.declare = true;
-      this.expectContextual(124);
+      this.expectContextual(126);
       node.id = this.parseIdentifier();
-      this.checkIdentifier(node.id, node.const ? BIND_TS_CONST_ENUM : BIND_TS_ENUM);
+      this.checkIdentifier(node.id, node.const ? 8971 : 8459);
       this.expect(5);
       node.members = this.tsParseDelimitedList("EnumMembers", this.tsParseEnumMember.bind(this));
       this.expect(8);
@@ -8828,7 +8835,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     tsParseModuleBlock() {
       const node = this.startNode();
-      this.scope.enter(SCOPE_OTHER);
+      this.scope.enter(0);
       this.expect(5);
       super.parseBlockOrModuleBlockBody(node.body = [], void 0, true, 8);
       this.scope.exit();
@@ -8837,15 +8844,15 @@ var lib = createCommonjsModule(function(module, exports) {
     tsParseModuleOrNamespaceDeclaration(node, nested = false) {
       node.id = this.parseIdentifier();
       if (!nested) {
-        this.checkIdentifier(node.id, BIND_TS_NAMESPACE);
+        this.checkIdentifier(node.id, 1024);
       }
       if (this.eat(16)) {
         const inner = this.startNode();
         this.tsParseModuleOrNamespaceDeclaration(inner, true);
         node.body = inner;
       } else {
-        this.scope.enter(SCOPE_TS_MODULE);
-        this.prodParam.enter(PARAM);
+        this.scope.enter(256);
+        this.prodParam.enter(0);
         node.body = this.tsParseModuleBlock();
         this.prodParam.exit();
         this.scope.exit();
@@ -8853,17 +8860,17 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, "TSModuleDeclaration");
     }
     tsParseAmbientExternalModuleDeclaration(node) {
-      if (this.isContextual(110)) {
+      if (this.isContextual(112)) {
         node.global = true;
         node.id = this.parseIdentifier();
-      } else if (this.match(131)) {
+      } else if (this.match(133)) {
         node.id = super.parseStringLiteral(this.state.value);
       } else {
         this.unexpected();
       }
       if (this.match(5)) {
-        this.scope.enter(SCOPE_TS_MODULE);
-        this.prodParam.enter(PARAM);
+        this.scope.enter(256);
+        this.prodParam.enter(0);
         node.body = this.tsParseModuleBlock();
         this.prodParam.exit();
         this.scope.exit();
@@ -8875,7 +8882,7 @@ var lib = createCommonjsModule(function(module, exports) {
     tsParseImportEqualsDeclaration(node, maybeDefaultIdentifier, isExport) {
       node.isExport = isExport || false;
       node.id = maybeDefaultIdentifier || this.parseIdentifier();
-      this.checkIdentifier(node.id, BIND_FLAGS_TS_IMPORT);
+      this.checkIdentifier(node.id, 4096);
       this.expect(29);
       const moduleReference = this.tsParseModuleReference();
       if (node.importKind === "type" && moduleReference.type !== "TSExternalModuleReference") {
@@ -8888,16 +8895,16 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, "TSImportEqualsDeclaration");
     }
     tsIsExternalModuleReference() {
-      return this.isContextual(117) && this.lookaheadCharCode() === 40;
+      return this.isContextual(119) && this.lookaheadCharCode() === 40;
     }
     tsParseModuleReference() {
       return this.tsIsExternalModuleReference() ? this.tsParseExternalModuleReference() : this.tsParseEntityName(false);
     }
     tsParseExternalModuleReference() {
       const node = this.startNode();
-      this.expectContextual(117);
+      this.expectContextual(119);
       this.expect(10);
-      if (!this.match(131)) {
+      if (!this.match(133)) {
         this.unexpected();
       }
       node.expression = super.parseExprAtom();
@@ -8933,7 +8940,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       let startType = this.state.type;
       let kind;
-      if (this.isContextual(99)) {
+      if (this.isContextual(100)) {
         startType = 74;
         kind = "let";
       }
@@ -8945,11 +8952,11 @@ var lib = createCommonjsModule(function(module, exports) {
           case 80:
             nany.declare = true;
             return this.parseClass(nany, true, false);
-          case 124:
+          case 126:
             return this.tsParseEnumDeclaration(nany, {
               declare: true
             });
-          case 110:
+          case 112:
             return this.tsParseAmbientExternalModuleDeclaration(nany);
           case 75:
           case 74:
@@ -8962,7 +8969,7 @@ var lib = createCommonjsModule(function(module, exports) {
               const: true,
               declare: true
             });
-          case 127: {
+          case 129: {
             const result = this.tsParseInterfaceDeclaration(nany, {
               declare: true
             });
@@ -8990,8 +8997,8 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         case "global":
           if (this.match(5)) {
-            this.scope.enter(SCOPE_TS_MODULE);
-            this.prodParam.enter(PARAM);
+            this.scope.enter(256);
+            this.prodParam.enter(0);
             const mod = node;
             mod.global = true;
             mod.id = expr;
@@ -9014,7 +9021,7 @@ var lib = createCommonjsModule(function(module, exports) {
           break;
         case "module":
           if (this.tsCheckLineTerminator(next)) {
-            if (this.match(131)) {
+            if (this.match(133)) {
               return this.tsParseAmbientExternalModuleDeclaration(node);
             } else if (tokenIsIdentifier(this.state.type)) {
               return this.tsParseModuleOrNamespaceDeclaration(node);
@@ -9167,7 +9174,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     registerFunctionStatementId(node) {
       if (!node.body && node.id) {
-        this.checkIdentifier(node.id, BIND_TS_AMBIENT);
+        this.checkIdentifier(node.id, 1024);
       } else {
         super.registerFunctionStatementId(node);
       }
@@ -9277,7 +9284,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseExprOp(left, leftStartLoc, minPrec) {
       let isSatisfies;
-      if (tokenOperatorPrecedence(58) > minPrec && !this.hasPrecedingLineBreak() && (this.isContextual(93) || (isSatisfies = this.isContextual(118)))) {
+      if (tokenOperatorPrecedence(58) > minPrec && !this.hasPrecedingLineBreak() && (this.isContextual(93) || (isSatisfies = this.isContextual(120)))) {
         const node = this.startNodeAt(leftStartLoc);
         node.expression = left;
         node.typeAnnotation = this.tsInType(() => {
@@ -9317,7 +9324,7 @@ var lib = createCommonjsModule(function(module, exports) {
     isPotentialImportPhase(isExport) {
       if (super.isPotentialImportPhase(isExport))
         return true;
-      if (this.isContextual(128)) {
+      if (this.isContextual(130)) {
         const ch = this.lookaheadCharCode();
         return isExport ? ch === 123 || ch === 42 : ch !== 61;
       }
@@ -9332,7 +9339,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
     parseImport(node) {
-      if (this.match(131)) {
+      if (this.match(133)) {
         node.importKind = "value";
         return super.parseImport(node);
       }
@@ -9340,7 +9347,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (tokenIsIdentifier(this.state.type) && this.lookaheadCharCode() === 61) {
         node.importKind = "value";
         return this.tsParseImportEqualsDeclaration(node);
-      } else if (this.isContextual(128)) {
+      } else if (this.isContextual(130)) {
         const maybeDefaultIdentifier = this.parseMaybeImportPhase(node, false);
         if (this.lookaheadCharCode() === 61) {
           return this.tsParseImportEqualsDeclaration(node, maybeDefaultIdentifier);
@@ -9361,7 +9368,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (this.match(83)) {
         this.next();
         let maybeDefaultIdentifier = null;
-        if (this.isContextual(128) && this.isPotentialImportPhase(false)) {
+        if (this.isContextual(130) && this.isPotentialImportPhase(false)) {
           maybeDefaultIdentifier = this.parseMaybeImportPhase(node, false);
         } else {
           node.importKind = "value";
@@ -9375,7 +9382,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return this.finishNode(assign, "TSExportAssignment");
       } else if (this.eatContextual(93)) {
         const decl = node;
-        this.expectContextual(126);
+        this.expectContextual(128);
         decl.id = this.parseIdentifier();
         this.semicolon();
         return this.finishNode(decl, "TSNamespaceExportDeclaration");
@@ -9384,7 +9391,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
     isAbstractClass() {
-      return this.isContextual(122) && this.lookahead().type === 80;
+      return this.isContextual(124) && this.lookahead().type === 80;
     }
     parseExportDefaultExpression() {
       if (this.isAbstractClass()) {
@@ -9393,7 +9400,7 @@ var lib = createCommonjsModule(function(module, exports) {
         cls.abstract = true;
         return this.parseClass(cls, true, true);
       }
-      if (this.match(127)) {
+      if (this.match(129)) {
         const result = this.tsParseInterfaceDeclaration(this.startNode());
         if (result)
           return result;
@@ -9433,10 +9440,10 @@ var lib = createCommonjsModule(function(module, exports) {
           const: true
         });
       }
-      if (this.isContextual(124)) {
+      if (this.isContextual(126)) {
         return this.tsParseEnumDeclaration(this.startNode());
       }
-      if (this.isContextual(127)) {
+      if (this.isContextual(129)) {
         const result = this.tsParseInterfaceDeclaration(this.startNode());
         if (result)
           return result;
@@ -9455,7 +9462,7 @@ var lib = createCommonjsModule(function(module, exports) {
       });
     }
     tsIsStartOfStaticBlocks() {
-      return this.isContextual(104) && this.lookaheadCharCode() === 123;
+      return this.isContextual(106) && this.lookaheadCharCode() === 123;
     }
     parseClassMember(classBody, member, state) {
       const modifiers = ["declare", "private", "public", "protected", "override", "abstract", "readonly", "static"];
@@ -9580,12 +9587,12 @@ var lib = createCommonjsModule(function(module, exports) {
       return node;
     }
     parseExportDeclaration(node) {
-      if (!this.state.isAmbientContext && this.isContextual(123)) {
+      if (!this.state.isAmbientContext && this.isContextual(125)) {
         return this.tsInAmbientContext(() => this.parseExportDeclaration(node));
       }
       const startLoc = this.state.startLoc;
-      const isDeclare = this.eatContextual(123);
-      if (isDeclare && (this.isContextual(123) || !this.shouldParseExportDeclaration())) {
+      const isDeclare = this.eatContextual(125);
+      if (isDeclare && (this.isContextual(125) || !this.shouldParseExportDeclaration())) {
         throw this.raise(TSErrors.ExpectedAmbientAfterExportDeclare, {
           at: this.state.startLoc
         });
@@ -9604,10 +9611,10 @@ var lib = createCommonjsModule(function(module, exports) {
       return declaration;
     }
     parseClassId(node, isStatement, optionalId, bindingType) {
-      if ((!isStatement || optionalId) && this.isContextual(111)) {
+      if ((!isStatement || optionalId) && this.isContextual(113)) {
         return;
       }
-      super.parseClassId(node, isStatement, optionalId, node.declare ? BIND_TS_AMBIENT : BIND_CLASS);
+      super.parseClassId(node, isStatement, optionalId, node.declare ? 1024 : 8331);
       const typeParameters = this.tsTryParseTypeParameters(this.tsParseInOutConstModifiers);
       if (typeParameters)
         node.typeParameters = typeParameters;
@@ -9705,7 +9712,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (node.superClass && (this.match(47) || this.match(51))) {
         node.superTypeParameters = this.tsParseTypeArgumentsInExpression();
       }
-      if (this.eatContextual(111)) {
+      if (this.eatContextual(113)) {
         node.implements = this.tsParseHeritageClause("implements");
       }
     }
@@ -9743,7 +9750,7 @@ var lib = createCommonjsModule(function(module, exports) {
       let state;
       let jsx2;
       let typeCast;
-      if (this.hasPlugin("jsx") && (this.match(140) || this.match(47))) {
+      if (this.hasPlugin("jsx") && (this.match(142) || this.match(47))) {
         state = this.state.clone();
         jsx2 = this.tryParse(() => super.parseMaybeAssign(refExpressionErrors, afterLeftParse), state);
         if (!jsx2.error)
@@ -9914,9 +9921,9 @@ var lib = createCommonjsModule(function(module, exports) {
         TSTypeCastExpression: true,
         TSParameterProperty: "parameter",
         TSNonNullExpression: "expression",
-        TSAsExpression: (binding !== BIND_NONE || !isUnparenthesizedInAssign) && ["expression", true],
-        TSSatisfiesExpression: (binding !== BIND_NONE || !isUnparenthesizedInAssign) && ["expression", true],
-        TSTypeAssertion: (binding !== BIND_NONE || !isUnparenthesizedInAssign) && ["expression", true]
+        TSAsExpression: (binding !== 64 || !isUnparenthesizedInAssign) && ["expression", true],
+        TSSatisfiesExpression: (binding !== 64 || !isUnparenthesizedInAssign) && ["expression", true],
+        TSTypeAssertion: (binding !== 64 || !isUnparenthesizedInAssign) && ["expression", true]
       }, type) || super.isValidLVal(type, isUnparenthesizedInAssign, binding);
     }
     parseBindingAtom() {
@@ -9959,18 +9966,18 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       return node;
     }
-    getTokenFromCode(code) {
+    getTokenFromCode(code2) {
       if (this.state.inType) {
-        if (code === 62) {
+        if (code2 === 62) {
           this.finishOp(48, 1);
           return;
         }
-        if (code === 60) {
+        if (code2 === 60) {
           this.finishOp(47, 1);
           return;
         }
       }
-      super.getTokenFromCode(code);
+      super.getTokenFromCode(code2);
     }
     reScan_lt_gt() {
       const {
@@ -10067,7 +10074,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (this.match(80)) {
         node.abstract = true;
         return this.maybeTakeDecorators(decorators, this.parseClass(node, true, false));
-      } else if (this.isContextual(127)) {
+      } else if (this.isContextual(129)) {
         if (!this.hasFollowingLineBreak()) {
           node.abstract = true;
           this.raise(TSErrors.NonClassMethodPropertyHasAbstractModifer, {
@@ -10128,7 +10135,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return this.finishNode(specifier, "ImportSpecifier");
       }
       specifier.importKind = "value";
-      return super.parseImportSpecifier(specifier, importedIsString, isInTypeOnlyImport, isMaybeTypeOnly, isInTypeOnlyImport ? BIND_TS_TYPE_IMPORT : BIND_FLAGS_TS_IMPORT);
+      return super.parseImportSpecifier(specifier, importedIsString, isInTypeOnlyImport, isMaybeTypeOnly, isInTypeOnlyImport ? 4098 : 4096);
     }
     parseTypeOnlyImportExportSpecifier(node, isImport, isInTypeOnlyImportExport) {
       const leftOfAsKey = isImport ? "imported" : "local";
@@ -10185,7 +10192,7 @@ var lib = createCommonjsModule(function(module, exports) {
         node[rightOfAsKey] = cloneIdentifier(node[leftOfAsKey]);
       }
       if (isImport) {
-        this.checkIdentifier(node[rightOfAsKey], hasTypeSpecifier ? BIND_TS_TYPE_IMPORT : BIND_FLAGS_TS_IMPORT);
+        this.checkIdentifier(node[rightOfAsKey], hasTypeSpecifier ? 4098 : 4096);
       }
     }
   };
@@ -10266,13 +10273,13 @@ var lib = createCommonjsModule(function(module, exports) {
   });
   var placeholders = (superClass) => class PlaceholdersParserMixin extends superClass {
     parsePlaceholder(expectedNode) {
-      if (this.match(142)) {
+      if (this.match(144)) {
         const node = this.startNode();
         this.next();
         this.assertNoSpace();
         node.name = super.parseIdentifier(true);
         this.assertNoSpace();
-        this.expect(142);
+        this.expect(144);
         return this.finishPlaceholder(node, expectedNode);
       }
     }
@@ -10281,11 +10288,11 @@ var lib = createCommonjsModule(function(module, exports) {
       node.expectedNode = expectedNode;
       return isFinished ? node : this.finishNode(node, "Placeholder");
     }
-    getTokenFromCode(code) {
-      if (code === 37 && this.input.charCodeAt(this.state.pos + 1) === 37) {
-        this.finishOp(142, 2);
+    getTokenFromCode(code2) {
+      if (code2 === 37 && this.input.charCodeAt(this.state.pos + 1) === 37) {
+        this.finishOp(144, 2);
       } else {
-        super.getTokenFromCode(code);
+        super.getTokenFromCode(code2);
       }
     }
     parseExprAtom(refExpressionErrors) {
@@ -10317,7 +10324,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return true;
       }
       const nextToken = this.lookahead();
-      if (nextToken.type === 142) {
+      if (nextToken.type === 144) {
         return true;
       }
       return false;
@@ -10328,7 +10335,8 @@ var lib = createCommonjsModule(function(module, exports) {
       super.verifyBreakContinue(node, isBreak);
     }
     parseExpressionStatement(node, expr) {
-      if (expr.type !== "Placeholder" || expr.extra && expr.extra.parenthesized) {
+      var _expr$extra;
+      if (expr.type !== "Placeholder" || (_expr$extra = expr.extra) != null && _expr$extra.parenthesized) {
         return super.parseExpressionStatement(node, expr);
       }
       if (this.match(14)) {
@@ -10354,7 +10362,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const oldStrict = this.state.strict;
       const placeholder = this.parsePlaceholder("Identifier");
       if (placeholder) {
-        if (this.match(81) || this.match(142) || this.match(5)) {
+        if (this.match(81) || this.match(144) || this.match(5)) {
           node.id = placeholder;
         } else if (optionalId || !isStatement) {
           node.id = null;
@@ -10376,7 +10384,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const placeholder = this.parsePlaceholder("Identifier");
       if (!placeholder)
         return super.parseExport(node, decorators);
-      if (!this.isContextual(97) && !this.match(12)) {
+      if (!this.isContextual(98) && !this.match(12)) {
         node.specifiers = [];
         node.source = null;
         node.declaration = this.finishPlaceholder(placeholder, "Declaration");
@@ -10392,7 +10400,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (this.match(65)) {
         const next = this.nextTokenStart();
         if (this.isUnparsedContextual(next, "from")) {
-          if (this.input.startsWith(tokenLabelName(142), this.nextTokenStartSince(next + 4))) {
+          if (this.input.startsWith(tokenLabelName(144), this.nextTokenStartSince(next + 4))) {
             return true;
           }
         }
@@ -10421,7 +10429,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (!placeholder)
         return super.parseImport(node);
       node.specifiers = [];
-      if (!this.isContextual(97) && !this.match(12)) {
+      if (!this.isContextual(98) && !this.match(12)) {
         node.source = this.finishPlaceholder(placeholder, "StringLiteral");
         this.semicolon();
         return this.finishNode(node, "ImportDeclaration");
@@ -10434,7 +10442,7 @@ var lib = createCommonjsModule(function(module, exports) {
         if (!hasStarImport)
           this.parseNamedImportSpecifiers(node);
       }
-      this.expectContextual(97);
+      this.expectContextual(98);
       node.source = this.parseImportSource();
       this.semicolon();
       return this.finishNode(node, "ImportDeclaration");
@@ -10578,6 +10586,9 @@ var lib = createCommonjsModule(function(module, exports) {
       error.missingPlugins = "doExpressions";
       throw error;
     }
+    if (hasPlugin(plugins, "optionalChainingAssign") && getPluginOption(plugins, "optionalChainingAssign", "version") !== "2023-07") {
+      throw new Error("The 'optionalChainingAssign' plugin requires a 'version' option, representing the last proposal update. Currently, the only supported value is '2023-07'.");
+    }
   }
   const mixinPlugins = {
     estree,
@@ -10603,18 +10614,23 @@ var lib = createCommonjsModule(function(module, exports) {
     strictMode: null,
     ranges: false,
     tokens: false,
+    createImportExpressions: false,
     createParenthesizedExpressions: false,
     errorRecovery: false,
     attachComment: true,
     annexB: true
   };
   function getOptions(opts) {
-    if (opts && opts.annexB != null && opts.annexB !== false) {
+    if (opts == null) {
+      return Object.assign({}, defaultOptions);
+    }
+    if (opts.annexB != null && opts.annexB !== false) {
       throw new Error("The `annexB` option can only be set to `false`.");
     }
     const options = {};
     for (const key of Object.keys(defaultOptions)) {
-      options[key] = opts && opts[key] != null ? opts[key] : defaultOptions[key];
+      var _opts$key;
+      options[key] = (_opts$key = opts[key]) != null ? _opts$key : defaultOptions[key];
     }
     return options;
   }
@@ -10653,7 +10669,7 @@ var lib = createCommonjsModule(function(module, exports) {
       this.enterInitialScopes();
       this.nextToken();
       const expr = this.parseExpression();
-      if (!this.match(137)) {
+      if (!this.match(139)) {
         this.unexpected();
       }
       this.finalizeRemainingComments();
@@ -10696,7 +10712,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseMaybeAssign(refExpressionErrors, afterLeftParse) {
       const startLoc = this.state.startLoc;
-      if (this.isContextual(106)) {
+      if (this.isContextual(108)) {
         if (this.prodParam.hasYield) {
           let left2 = this.parseYield();
           if (afterLeftParse) {
@@ -10775,7 +10791,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return expr;
     }
     parseMaybeUnaryOrPrivate(refExpressionErrors) {
-      return this.match(136) ? this.parsePrivateName() : this.parseMaybeUnary(refExpressionErrors);
+      return this.match(138) ? this.parsePrivateName() : this.parseMaybeUnary(refExpressionErrors);
     }
     parseExprOps(refExpressionErrors) {
       const startLoc = this.state.startLoc;
@@ -10850,7 +10866,7 @@ var lib = createCommonjsModule(function(module, exports) {
               });
             case "smart":
               return this.withTopicBindingContext(() => {
-                if (this.prodParam.hasYield && this.isContextual(106)) {
+                if (this.prodParam.hasYield && this.isContextual(108)) {
                   throw this.raise(Errors.PipeBodyIsTighter, {
                     at: this.state.startLoc
                   });
@@ -11040,7 +11056,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (computed) {
         node.property = this.parseExpression();
         this.expect(3);
-      } else if (this.match(136)) {
+      } else if (this.match(138)) {
         if (base.type === "Super") {
           this.raise(Errors.SuperPrivateField, {
             at: startLoc
@@ -11217,12 +11233,18 @@ var lib = createCommonjsModule(function(module, exports) {
           if (this.match(16)) {
             return this.parseImportMetaProperty(node);
           }
-          if (!this.match(10)) {
+          if (this.match(10)) {
+            if (this.options.createImportExpressions) {
+              return this.parseImportCall(node);
+            } else {
+              return this.finishNode(node, "Import");
+            }
+          } else {
             this.raise(Errors.UnsupportedImport, {
               at: this.state.lastTokStartLoc
             });
+            return this.finishNode(node, "Import");
           }
-          return this.finishNode(node, "Import");
         case 78:
           node = this.startNode();
           this.next();
@@ -11235,13 +11257,13 @@ var lib = createCommonjsModule(function(module, exports) {
           this.readRegexp();
           return this.parseRegExpLiteral(this.state.value);
         }
-        case 132:
-          return this.parseNumericLiteral(this.state.value);
-        case 133:
-          return this.parseBigIntLiteral(this.state.value);
         case 134:
+          return this.parseNumericLiteral(this.state.value);
+        case 135:
+          return this.parseBigIntLiteral(this.state.value);
+        case 136:
           return this.parseDecimalLiteral(this.state.value);
-        case 131:
+        case 133:
           return this.parseStringLiteral(this.state.value);
         case 84:
           return this.parseNullLiteral();
@@ -11291,7 +11313,7 @@ var lib = createCommonjsModule(function(module, exports) {
             });
           }
         }
-        case 136: {
+        case 138: {
           this.raise(Errors.PrivateInExpectedIn, {
             at: this.state.startLoc,
             identifierName: this.state.value
@@ -11329,7 +11351,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         default:
           if (tokenIsIdentifier(type)) {
-            if (this.isContextual(125) && this.lookaheadInLineCharCode() === 123) {
+            if (this.isContextual(127) && this.lookaheadInLineCharCode() === 123) {
               return this.parseModuleExpression();
             }
             const canBeArrow = this.state.potentialArrowAt === this.state.start;
@@ -11438,7 +11460,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const oldLabels = this.state.labels;
       this.state.labels = [];
       if (isAsync) {
-        this.prodParam.enter(PARAM_AWAIT);
+        this.prodParam.enter(2);
         node.body = this.parseBlock();
         this.prodParam.exit();
       } else {
@@ -11480,7 +11502,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (this.prodParam.hasYield && this.match(16)) {
         const meta = this.createIdentifier(this.startNodeAtNode(node), "function");
         this.next();
-        if (this.match(102)) {
+        if (this.match(103)) {
           this.expectPlugin("functionSent");
         } else if (!this.hasPlugin("functionSent")) {
           this.unexpected();
@@ -11505,13 +11527,27 @@ var lib = createCommonjsModule(function(module, exports) {
     parseImportMetaProperty(node) {
       const id = this.createIdentifier(this.startNodeAtNode(node), "import");
       this.next();
-      if (this.isContextual(100)) {
+      if (this.isContextual(101)) {
         if (!this.inModule) {
           this.raise(Errors.ImportMetaOutsideModule, {
             at: id
           });
         }
         this.sawUnambiguousESM = true;
+      } else if (this.isContextual(105) || this.isContextual(97)) {
+        const isSource = this.isContextual(105);
+        if (!isSource)
+          this.unexpected();
+        this.expectPlugin(isSource ? "sourcePhaseImports" : "deferredImportEvaluation");
+        if (!this.options.createImportExpressions) {
+          throw this.raise(Errors.DynamicImportPhaseRequiresImportExpressions, {
+            at: this.state.startLoc,
+            phase: this.state.value
+          });
+        }
+        this.next();
+        node.phase = isSource ? "source" : "defer";
+        return this.parseImportCall(node);
       }
       return this.parseMetaProperty(node, id, "meta");
     }
@@ -11673,10 +11709,12 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, "NewExpression");
     }
     parseNewCallee(node) {
-      node.callee = this.parseNoCallExpr();
-      if (node.callee.type === "Import") {
+      const isImport = this.match(83);
+      const callee = this.parseNoCallExpr();
+      node.callee = callee;
+      if (isImport && (callee.type === "Import" || callee.type === "ImportExpression")) {
         this.raise(Errors.ImportCallNotNewExpression, {
-          at: node.callee
+          at: callee
         });
       }
     }
@@ -11922,19 +11960,19 @@ var lib = createCommonjsModule(function(module, exports) {
           key = this.parseIdentifier(true);
         } else {
           switch (type) {
-            case 132:
+            case 134:
               key = this.parseNumericLiteral(value);
               break;
-            case 131:
+            case 133:
               key = this.parseStringLiteral(value);
               break;
-            case 133:
+            case 135:
               key = this.parseBigIntLiteral(value);
               break;
-            case 134:
+            case 136:
               key = this.parseDecimalLiteral(value);
               break;
-            case 136: {
+            case 138: {
               const privateKeyLoc = this.state.startLoc;
               if (refExpressionErrors != null) {
                 if (refExpressionErrors.privateKeyLoc === null) {
@@ -11953,7 +11991,7 @@ var lib = createCommonjsModule(function(module, exports) {
           }
         }
         prop.key = key;
-        if (type !== 136) {
+        if (type !== 138) {
           prop.computed = false;
         }
       }
@@ -11967,7 +12005,7 @@ var lib = createCommonjsModule(function(module, exports) {
     parseMethod(node, isGenerator, isAsync, isConstructor, allowDirectSuper, type, inClassScope = false) {
       this.initFunction(node, isAsync);
       node.generator = isGenerator;
-      this.scope.enter(SCOPE_FUNCTION | SCOPE_SUPER | (inClassScope ? SCOPE_CLASS : 0) | (allowDirectSuper ? SCOPE_DIRECT_SUPER : 0));
+      this.scope.enter(2 | 16 | (inClassScope ? 64 : 0) | (allowDirectSuper ? 32 : 0));
       this.prodParam.enter(functionFlags(isAsync, node.generator));
       this.parseFunctionParams(node, isConstructor);
       const finishedNode = this.parseFunctionBodyAndFinish(node, type, true);
@@ -11988,10 +12026,10 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, isTuple ? "TupleExpression" : "ArrayExpression");
     }
     parseArrowExpression(node, params, isAsync, trailingCommaLoc) {
-      this.scope.enter(SCOPE_FUNCTION | SCOPE_ARROW);
+      this.scope.enter(2 | 4);
       let flags = functionFlags(isAsync, false);
       if (!this.match(5) && this.prodParam.hasIn) {
-        flags |= PARAM_IN;
+        flags |= 8;
       }
       this.prodParam.enter(flags);
       this.initFunction(node, isAsync);
@@ -12025,7 +12063,7 @@ var lib = createCommonjsModule(function(module, exports) {
         const oldStrict = this.state.strict;
         const oldLabels = this.state.labels;
         this.state.labels = [];
-        this.prodParam.enter(this.prodParam.currentFlags() | PARAM_RETURN);
+        this.prodParam.enter(this.prodParam.currentFlags() | 4);
         node.body = this.parseBlock(true, false, (hasStrictModeDirective) => {
           const nonSimple = !this.isSimpleParamList(node.params);
           if (hasStrictModeDirective && nonSimple) {
@@ -12036,7 +12074,7 @@ var lib = createCommonjsModule(function(module, exports) {
           const strictModeChanged = !oldStrict && this.state.strict;
           this.checkParams(node, !this.state.strict && !allowExpression && !isMethod && !nonSimple, allowExpression, strictModeChanged);
           if (this.state.strict && node.id) {
-            this.checkIdentifier(node.id, BIND_OUTSIDE, strictModeChanged);
+            this.checkIdentifier(node.id, 65, strictModeChanged);
           }
         });
         this.prodParam.exit();
@@ -12062,7 +12100,7 @@ var lib = createCommonjsModule(function(module, exports) {
       for (const param of node.params) {
         this.checkLVal(param, {
           in: formalParameters,
-          binding: BIND_VAR,
+          binding: 5,
           checkClashes,
           strictModeChanged
         });
@@ -12140,7 +12178,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const tokenIsKeyword2 = tokenKeywordOrIdentifierIsKeyword(type);
       if (liberal) {
         if (tokenIsKeyword2) {
-          this.replaceToken(130);
+          this.replaceToken(132);
         }
       } else {
         this.checkReservedWord(name, startLoc, tokenIsKeyword2, false);
@@ -12237,7 +12275,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const {
         type
       } = this.state;
-      return type === 53 || type === 10 || type === 0 || tokenIsTemplate(type) || type === 101 && !this.state.containsEsc || type === 135 || type === 56 || this.hasPlugin("v8intrinsic") && type === 54;
+      return type === 53 || type === 10 || type === 0 || tokenIsTemplate(type) || type === 102 && !this.state.containsEsc || type === 137 || type === 56 || this.hasPlugin("v8intrinsic") && type === 54;
     }
     parseYield() {
       const node = this.startNode();
@@ -12251,7 +12289,7 @@ var lib = createCommonjsModule(function(module, exports) {
         delegating = this.eat(55);
         switch (this.state.type) {
           case 13:
-          case 137:
+          case 139:
           case 8:
           case 11:
           case 3:
@@ -12267,6 +12305,22 @@ var lib = createCommonjsModule(function(module, exports) {
       node.delegate = delegating;
       node.argument = argument;
       return this.finishNode(node, "YieldExpression");
+    }
+    parseImportCall(node) {
+      this.next();
+      node.source = this.parseMaybeAssignAllowIn();
+      if (this.hasPlugin("importAttributes") || this.hasPlugin("importAssertions")) {
+        node.options = null;
+      }
+      if (this.eat(12)) {
+        this.expectImportAttributesPlugin();
+        if (!this.match(11)) {
+          node.options = this.parseMaybeAssignAllowIn();
+          this.eat(12);
+        }
+      }
+      this.expect(11);
+      return this.finishNode(node, "ImportExpression");
     }
     checkPipelineAtInfixOperator(left, leftStartLoc) {
       if (this.hasPlugin(["pipelineOperator", {
@@ -12354,9 +12408,9 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     allowInAnd(callback) {
       const flags = this.prodParam.currentFlags();
-      const prodParamToSet = PARAM_IN & ~flags;
+      const prodParamToSet = 8 & ~flags;
       if (prodParamToSet) {
-        this.prodParam.enter(flags | PARAM_IN);
+        this.prodParam.enter(flags | 8);
         try {
           return callback();
         } finally {
@@ -12367,9 +12421,9 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     disallowInAnd(callback) {
       const flags = this.prodParam.currentFlags();
-      const prodParamToClear = PARAM_IN & flags;
+      const prodParamToClear = 8 & flags;
       if (prodParamToClear) {
-        this.prodParam.enter(flags & ~PARAM_IN);
+        this.prodParam.enter(flags & ~8);
         try {
           return callback();
         } finally {
@@ -12432,7 +12486,7 @@ var lib = createCommonjsModule(function(module, exports) {
       } = token;
       if (typeof type === "number") {
         {
-          if (type === 136) {
+          if (type === 138) {
             const {
               loc,
               start,
@@ -12449,7 +12503,7 @@ var lib = createCommonjsModule(function(module, exports) {
               startLoc: loc.start,
               endLoc: hashEndLoc
             }), new Token({
-              type: getExportedToken(130),
+              type: getExportedToken(132),
               value,
               start: hashEndPos,
               end,
@@ -12540,7 +12594,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       return this.finishNode(file, "File");
     }
-    parseProgram(program, end = 137, sourceType = this.options.sourceType) {
+    parseProgram(program, end = 139, sourceType = this.options.sourceType) {
       program.sourceType = sourceType;
       program.interpreter = this.parseInterpreterDirective();
       this.parseBlockBody(program, true, true, end);
@@ -12553,7 +12607,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
       }
       let finishedProgram;
-      if (end === 137) {
+      if (end === 139) {
         finishedProgram = this.finishNode(program, "Program");
       } else {
         finishedProgram = this.finishNodeAt(program, "Program", createPositionWithColumnOffset(this.state.startLoc, -1));
@@ -12585,7 +12639,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, "InterpreterDirective");
     }
     isLet() {
-      if (!this.isContextual(99)) {
+      if (!this.isContextual(100)) {
         return false;
       }
       return this.hasFollowingBindingAtom();
@@ -12624,7 +12678,7 @@ var lib = createCommonjsModule(function(module, exports) {
         type,
         containsEsc
       } = this.lookahead();
-      if (type === 101 && !containsEsc) {
+      if (type === 102 && !containsEsc) {
         return false;
       } else if (tokenIsIdentifier(type) && !this.hasFollowingLineBreak()) {
         this.expectPlugin("explicitResourceManagement");
@@ -12724,7 +12778,7 @@ var lib = createCommonjsModule(function(module, exports) {
             return this.parseVarStatement(node, "await using");
           }
           break;
-        case 105:
+        case 107:
           if (this.state.containsEsc || !this.hasInLineFollowingBindingIdentifier()) {
             break;
           }
@@ -12739,7 +12793,7 @@ var lib = createCommonjsModule(function(module, exports) {
             });
           }
           return this.parseVarStatement(node, "using");
-        case 99: {
+        case 100: {
           if (this.state.containsEsc) {
             break;
           }
@@ -12899,7 +12953,7 @@ var lib = createCommonjsModule(function(module, exports) {
           while (this.eat(16)) {
             const node2 = this.startNodeAt(startLoc);
             node2.object = expr;
-            if (this.match(136)) {
+            if (this.match(138)) {
               this.classScope.usePrivateName(this.state.value, this.state.startLoc);
               node2.property = this.parsePrivateName();
             } else {
@@ -12983,7 +13037,7 @@ var lib = createCommonjsModule(function(module, exports) {
       if (this.isAwaitAllowed() && this.eatContextual(96)) {
         awaitAt = this.state.lastTokStartLoc;
       }
-      this.scope.enter(SCOPE_OTHER);
+      this.scope.enter(0);
       this.expect(10);
       if (this.match(13)) {
         if (awaitAt !== null) {
@@ -12991,10 +13045,10 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         return this.parseFor(node, null);
       }
-      const startsWithLet = this.isContextual(99);
+      const startsWithLet = this.isContextual(100);
       {
         const startsWithAwaitUsing = this.isContextual(96) && this.startsAwaitUsing();
-        const starsWithUsingDeclaration = startsWithAwaitUsing || this.isContextual(105) && this.startsUsingForOf();
+        const starsWithUsingDeclaration = startsWithAwaitUsing || this.isContextual(107) && this.startsUsingForOf();
         const isLetOrUsing = startsWithLet && this.hasFollowingBindingAtom() || starsWithUsingDeclaration;
         if (this.match(74) || this.match(75) || isLetOrUsing) {
           const initNode = this.startNode();
@@ -13019,7 +13073,7 @@ var lib = createCommonjsModule(function(module, exports) {
               at: init2
             });
           }
-          if ((isForIn || this.isContextual(101)) && init2.declarations.length === 1) {
+          if ((isForIn || this.isContextual(102)) && init2.declarations.length === 1) {
             return this.parseForIn(node, init2, awaitAt);
           }
           if (awaitAt !== null) {
@@ -13031,7 +13085,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const startsWithAsync = this.isContextual(95);
       const refExpressionErrors = new ExpressionErrors();
       const init = this.parseExpression(true, refExpressionErrors);
-      const isForOf = this.isContextual(101);
+      const isForOf = this.isContextual(102);
       if (isForOf) {
         if (startsWithLet) {
           this.raise(Errors.ForOfLet, {
@@ -13094,7 +13148,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const cases = node.cases = [];
       this.expect(5);
       this.state.labels.push(switchLabel);
-      this.scope.enter(SCOPE_OTHER);
+      this.scope.enter(0);
       let cur;
       for (let sawDefault; !this.match(8); ) {
         if (this.match(61) || this.match(65)) {
@@ -13144,12 +13198,12 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseCatchClauseParam() {
       const param = this.parseBindingAtom();
-      this.scope.enter(this.options.annexB && param.type === "Identifier" ? SCOPE_SIMPLE_CATCH : 0);
+      this.scope.enter(this.options.annexB && param.type === "Identifier" ? 8 : 0);
       this.checkLVal(param, {
         in: {
           type: "CatchClause"
         },
-        binding: BIND_CATCH_PARAM
+        binding: 9
       });
       return param;
     }
@@ -13166,7 +13220,7 @@ var lib = createCommonjsModule(function(module, exports) {
           this.expect(11);
         } else {
           clause.param = null;
-          this.scope.enter(SCOPE_OTHER);
+          this.scope.enter(0);
         }
         clause.body = this.withSmartMixTopicForbiddingContext(() => this.parseBlock(false, false));
         this.scope.exit();
@@ -13250,7 +13304,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       this.expect(5);
       if (createNewLexicalScope) {
-        this.scope.enter(SCOPE_OTHER);
+        this.scope.enter(0);
       }
       this.parseBlockBody(node, allowDirectives, false, 8, afterBlockParse);
       if (createNewLexicalScope) {
@@ -13287,7 +13341,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         body.push(stmt);
       }
-      afterBlockParse == null ? void 0 : afterBlockParse.call(this, hasStrictModeDirective);
+      afterBlockParse == null || afterBlockParse.call(this, hasStrictModeDirective);
       if (!oldStrict) {
         this.setStrict(false);
       }
@@ -13344,12 +13398,12 @@ var lib = createCommonjsModule(function(module, exports) {
         this.parseVarId(decl, kind);
         decl.init = !this.eat(29) ? null : isFor ? this.parseMaybeAssignDisallowIn() : this.parseMaybeAssignAllowIn();
         if (decl.init === null && !allowMissingInitializer) {
-          if (decl.id.type !== "Identifier" && !(isFor && (this.match(58) || this.isContextual(101)))) {
+          if (decl.id.type !== "Identifier" && !(isFor && (this.match(58) || this.isContextual(102)))) {
             this.raise(Errors.DeclarationMissingInitializer, {
               at: this.state.lastTokEndLoc,
               kind: "destructuring"
             });
-          } else if (kind === "const" && !(this.match(58) || this.isContextual(101))) {
+          } else if (kind === "const" && !(this.match(58) || this.isContextual(102))) {
             this.raise(Errors.DeclarationMissingInitializer, {
               at: this.state.lastTokEndLoc,
               kind: "const"
@@ -13368,7 +13422,7 @@ var lib = createCommonjsModule(function(module, exports) {
         in: {
           type: "VariableDeclarator"
         },
-        binding: kind === "var" ? BIND_VAR : BIND_LEXICAL
+        binding: kind === "var" ? 5 : 8201
       });
       decl.id = id;
     }
@@ -13395,7 +13449,7 @@ var lib = createCommonjsModule(function(module, exports) {
       }
       const oldMaybeInArrowParameters = this.state.maybeInArrowParameters;
       this.state.maybeInArrowParameters = false;
-      this.scope.enter(SCOPE_FUNCTION);
+      this.scope.enter(2);
       this.prodParam.enter(functionFlags(isAsync, node.generator));
       if (!isDeclaration) {
         node.id = this.parseFunctionId();
@@ -13424,7 +13478,7 @@ var lib = createCommonjsModule(function(module, exports) {
     registerFunctionStatementId(node) {
       if (!node.id)
         return;
-      this.scope.declareName(node.id.name, !this.options.annexB || this.state.strict || node.generator || node.async ? this.scope.treatFunctionsAsVar ? BIND_VAR : BIND_LEXICAL : BIND_FUNCTION, node.id.loc.start);
+      this.scope.declareName(node.id.name, !this.options.annexB || this.state.strict || node.generator || node.async ? this.scope.treatFunctionsAsVar ? 5 : 8201 : 17, node.id.loc.start);
     }
     parseClass(node, isStatement, optionalId) {
       this.next();
@@ -13514,7 +13568,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return false;
     }
     parseClassMember(classBody, member, state) {
-      const isStatic = this.isContextual(104);
+      const isStatic = this.isContextual(106);
       if (isStatic) {
         if (this.parseClassMemberFromModifier(classBody, member)) {
           return;
@@ -13538,7 +13592,7 @@ var lib = createCommonjsModule(function(module, exports) {
       this.parsePropertyNamePrefixOperator(member);
       if (this.eat(55)) {
         method.kind = "method";
-        const isPrivateName = this.match(136);
+        const isPrivateName = this.match(138);
         this.parseClassElementName(method);
         if (isPrivateName) {
           this.pushClassPrivateMethod(classBody, privateMethod, true, false);
@@ -13553,7 +13607,7 @@ var lib = createCommonjsModule(function(module, exports) {
         return;
       }
       const isContextual = tokenIsIdentifier(this.state.type) && !this.state.containsEsc;
-      const isPrivate = this.match(136);
+      const isPrivate = this.match(138);
       const key = this.parseClassElementName(member);
       const maybeQuestionTokenStartLoc = this.state.startLoc;
       this.parsePostMemberNameModifiers(publicMember);
@@ -13594,7 +13648,7 @@ var lib = createCommonjsModule(function(module, exports) {
           this.unexpected(maybeQuestionTokenStartLoc);
         }
         method.kind = "method";
-        const isPrivate2 = this.match(136);
+        const isPrivate2 = this.match(138);
         this.parseClassElementName(method);
         this.parsePostMemberNameModifiers(publicMember);
         if (isPrivate2) {
@@ -13610,7 +13664,7 @@ var lib = createCommonjsModule(function(module, exports) {
       } else if (isContextual && (key.name === "get" || key.name === "set") && !(this.match(55) && this.isLineTerminator())) {
         this.resetPreviousNodeTrailingComments(key);
         method.kind = key.name;
-        const isPrivate2 = this.match(136);
+        const isPrivate2 = this.match(138);
         this.parseClassElementName(publicMethod);
         if (isPrivate2) {
           this.pushClassPrivateMethod(classBody, privateMethod, false, false);
@@ -13626,7 +13680,7 @@ var lib = createCommonjsModule(function(module, exports) {
       } else if (isContextual && key.name === "accessor" && !this.isLineTerminator()) {
         this.expectPlugin("decoratorAutoAccessors");
         this.resetPreviousNodeTrailingComments(key);
-        const isPrivate2 = this.match(136);
+        const isPrivate2 = this.match(138);
         this.parseClassElementName(publicProp);
         this.pushClassAccessorProperty(classBody, accessorProp, isPrivate2);
       } else if (this.isLineTerminator()) {
@@ -13644,12 +13698,12 @@ var lib = createCommonjsModule(function(module, exports) {
         type,
         value
       } = this.state;
-      if ((type === 130 || type === 131) && member.static && value === "prototype") {
+      if ((type === 132 || type === 133) && member.static && value === "prototype") {
         this.raise(Errors.StaticPrototype, {
           at: this.state.startLoc
         });
       }
-      if (type === 136) {
+      if (type === 138) {
         if (value === "constructor") {
           this.raise(Errors.ConstructorClassPrivateField, {
             at: this.state.startLoc
@@ -13663,10 +13717,10 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     parseClassStaticBlock(classBody, member) {
       var _member$decorators;
-      this.scope.enter(SCOPE_CLASS | SCOPE_STATIC_BLOCK | SCOPE_SUPER);
+      this.scope.enter(64 | 128 | 16);
       const oldLabels = this.state.labels;
       this.state.labels = [];
-      this.prodParam.enter(PARAM);
+      this.prodParam.enter(0);
       const body = member.body = [];
       this.parseBlockOrModuleBlockBody(body, void 0, false, 8);
       this.prodParam.exit();
@@ -13690,7 +13744,7 @@ var lib = createCommonjsModule(function(module, exports) {
     pushClassPrivateProperty(classBody, prop) {
       const node = this.parseClassPrivateProperty(prop);
       classBody.body.push(node);
-      this.classScope.declarePrivateName(this.getPrivateNameSV(node.key), CLASS_ELEMENT_OTHER, node.key.loc.start);
+      this.classScope.declarePrivateName(this.getPrivateNameSV(node.key), 0, node.key.loc.start);
     }
     pushClassAccessorProperty(classBody, prop, isPrivate) {
       if (!isPrivate && !prop.computed) {
@@ -13704,7 +13758,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const node = this.parseClassAccessorProperty(prop);
       classBody.body.push(node);
       if (isPrivate) {
-        this.classScope.declarePrivateName(this.getPrivateNameSV(node.key), CLASS_ELEMENT_OTHER, node.key.loc.start);
+        this.classScope.declarePrivateName(this.getPrivateNameSV(node.key), 0, node.key.loc.start);
       }
     }
     pushClassMethod(classBody, method, isGenerator, isAsync, isConstructor, allowsDirectSuper) {
@@ -13713,7 +13767,7 @@ var lib = createCommonjsModule(function(module, exports) {
     pushClassPrivateMethod(classBody, method, isGenerator, isAsync) {
       const node = this.parseMethod(method, isGenerator, isAsync, false, false, "ClassPrivateMethod", true);
       classBody.body.push(node);
-      const kind = node.kind === "get" ? node.static ? CLASS_ELEMENT_STATIC_GETTER : CLASS_ELEMENT_INSTANCE_GETTER : node.kind === "set" ? node.static ? CLASS_ELEMENT_STATIC_SETTER : CLASS_ELEMENT_INSTANCE_SETTER : CLASS_ELEMENT_OTHER;
+      const kind = node.kind === "get" ? node.static ? 6 : 2 : node.kind === "set" ? node.static ? 5 : 1 : 0;
       this.declareClassPrivateMethodInScope(node, kind);
     }
     declareClassPrivateMethodInScope(node, kind) {
@@ -13737,15 +13791,15 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, "ClassAccessorProperty");
     }
     parseInitializer(node) {
-      this.scope.enter(SCOPE_CLASS | SCOPE_SUPER);
+      this.scope.enter(64 | 16);
       this.expressionScope.enter(newExpressionScope());
-      this.prodParam.enter(PARAM);
+      this.prodParam.enter(0);
       node.value = this.eat(29) ? this.parseMaybeAssignAllowIn() : null;
       this.expressionScope.exit();
       this.prodParam.exit();
       this.scope.exit();
     }
-    parseClassId(node, isStatement, optionalId, bindingType = BIND_CLASS) {
+    parseClassId(node, isStatement, optionalId, bindingType = 8331) {
       if (tokenIsIdentifier(this.state.type)) {
         node.id = this.parseIdentifier();
         if (isStatement) {
@@ -13788,7 +13842,7 @@ var lib = createCommonjsModule(function(module, exports) {
         this.unexpected(null, 5);
       }
       if (hasNamespace && parseAfterNamespace) {
-        this.unexpected(null, 97);
+        this.unexpected(null, 98);
       }
       let hasDeclaration;
       if (isFromRequired || hasSpecifiers) {
@@ -13932,14 +13986,14 @@ var lib = createCommonjsModule(function(module, exports) {
         type
       } = this.state;
       if (tokenIsIdentifier(type)) {
-        if (type === 95 && !this.state.containsEsc || type === 99) {
+        if (type === 95 && !this.state.containsEsc || type === 100) {
           return false;
         }
-        if ((type === 128 || type === 127) && !this.state.containsEsc) {
+        if ((type === 130 || type === 129) && !this.state.containsEsc) {
           const {
             type: nextType
           } = this.lookahead();
-          if (tokenIsIdentifier(nextType) && nextType !== 97 || nextType === 5) {
+          if (tokenIsIdentifier(nextType) && nextType !== 98 || nextType === 5) {
             this.expectOnePlugin(["flow", "typescript"]);
             return false;
           }
@@ -13959,7 +14013,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return false;
     }
     parseExportFrom(node, expect) {
-      if (this.eatContextual(97)) {
+      if (this.eatContextual(98)) {
         node.source = this.parseImportSource();
         this.checkExport(node);
         this.maybeParseImportAttributes(node);
@@ -13988,6 +14042,7 @@ var lib = createCommonjsModule(function(module, exports) {
     }
     checkExport(node, checkNames, isDefault, isFrom) {
       if (checkNames) {
+        var _node$specifiers;
         if (isDefault) {
           this.checkDuplicateExports(node, "default");
           if (this.hasPlugin("exportDefaultFrom")) {
@@ -13999,7 +14054,7 @@ var lib = createCommonjsModule(function(module, exports) {
               });
             }
           }
-        } else if (node.specifiers && node.specifiers.length) {
+        } else if ((_node$specifiers = node.specifiers) != null && _node$specifiers.length) {
           for (const specifier of node.specifiers) {
             const {
               exported
@@ -14084,8 +14139,8 @@ var lib = createCommonjsModule(function(module, exports) {
           if (this.eat(8))
             break;
         }
-        const isMaybeTypeOnly = this.isContextual(128);
-        const isString = this.match(131);
+        const isMaybeTypeOnly = this.isContextual(130);
+        const isString = this.match(133);
         const node = this.startNode();
         node.local = this.parseModuleExportName();
         nodes.push(this.parseExportSpecifier(node, isString, isInTypeExport, isMaybeTypeOnly));
@@ -14103,7 +14158,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, "ExportSpecifier");
     }
     parseModuleExportName() {
-      if (this.match(131)) {
+      if (this.match(133)) {
         const result = this.parseStringLiteral(this.state.value);
         const surrogate = result.value.match(loneSurrogate);
         if (surrogate) {
@@ -14128,11 +14183,27 @@ var lib = createCommonjsModule(function(module, exports) {
       return false;
     }
     checkImportReflection(node) {
-      if (node.module) {
+      const {
+        specifiers
+      } = node;
+      const singleBindingType = specifiers.length === 1 ? specifiers[0].type : null;
+      if (node.phase === "source") {
+        if (singleBindingType !== "ImportDefaultSpecifier") {
+          this.raise(Errors.SourcePhaseImportRequiresDefault, {
+            at: specifiers[0].loc.start
+          });
+        }
+      } else if (node.phase === "defer") {
+        if (singleBindingType !== "ImportNamespaceSpecifier") {
+          this.raise(Errors.DeferImportRequiresNamespace, {
+            at: specifiers[0].loc.start
+          });
+        }
+      } else if (node.module) {
         var _node$assertions;
-        if (node.specifiers.length !== 1 || node.specifiers[0].type !== "ImportDefaultSpecifier") {
+        if (singleBindingType !== "ImportDefaultSpecifier") {
           this.raise(Errors.ImportReflectionNotBinding, {
-            at: node.specifiers[0].loc.start
+            at: specifiers[0].loc.start
           });
         }
         if (((_node$assertions = node.assertions) == null ? void 0 : _node$assertions.length) > 0) {
@@ -14168,7 +14239,9 @@ var lib = createCommonjsModule(function(module, exports) {
       }
     }
     isPotentialImportPhase(isExport) {
-      return !isExport && this.isContextual(125);
+      if (isExport)
+        return false;
+      return this.isContextual(105) || this.isContextual(97) || this.isContextual(127);
     }
     applyImportPhase(node, isExport, phase, loc) {
       if (isExport) {
@@ -14180,6 +14253,15 @@ var lib = createCommonjsModule(function(module, exports) {
       } else if (this.hasPlugin("importReflection")) {
         node.module = false;
       }
+      if (phase === "source") {
+        this.expectPlugin("sourcePhaseImports", loc);
+        node.phase = "source";
+      } else if (phase === "defer") {
+        this.expectPlugin("deferredImportEvaluation", loc);
+        node.phase = "defer";
+      } else if (this.hasPlugin("sourcePhaseImports")) {
+        node.phase = null;
+      }
     }
     parseMaybeImportPhase(node, isExport) {
       if (!this.isPotentialImportPhase(isExport)) {
@@ -14190,7 +14272,7 @@ var lib = createCommonjsModule(function(module, exports) {
       const {
         type
       } = this.state;
-      const isImportPhase = tokenIsKeywordOrIdentifier(type) ? type !== 97 || this.lookaheadCharCode() === 102 : type !== 12;
+      const isImportPhase = tokenIsKeywordOrIdentifier(type) ? type !== 98 || this.lookaheadCharCode() === 102 : type !== 12;
       if (isImportPhase) {
         this.resetPreviousIdentifierLeadingComments(phaseIdentifier);
         this.applyImportPhase(node, isExport, phaseIdentifier.name, phaseIdentifier.loc.start);
@@ -14204,10 +14286,10 @@ var lib = createCommonjsModule(function(module, exports) {
       const {
         type
       } = this.state;
-      return tokenIsIdentifier(type) ? type !== 97 || this.lookaheadCharCode() === 102 : type !== 12;
+      return tokenIsIdentifier(type) ? type !== 98 || this.lookaheadCharCode() === 102 : type !== 12;
     }
     parseImport(node) {
-      if (this.match(131)) {
+      if (this.match(133)) {
         return this.parseImportSourceAndAttributes(node);
       }
       return this.parseImportSpecifiersAndAfter(node, this.parseMaybeImportPhase(node, false));
@@ -14219,12 +14301,12 @@ var lib = createCommonjsModule(function(module, exports) {
       const hasStar = parseNext && this.maybeParseStarImportSpecifier(node);
       if (parseNext && !hasStar)
         this.parseNamedImportSpecifiers(node);
-      this.expectContextual(97);
+      this.expectContextual(98);
       return this.parseImportSourceAndAttributes(node);
     }
     parseImportSourceAndAttributes(node) {
-      var _node$specifiers;
-      (_node$specifiers = node.specifiers) != null ? _node$specifiers : node.specifiers = [];
+      var _node$specifiers2;
+      (_node$specifiers2 = node.specifiers) != null ? _node$specifiers2 : node.specifiers = [];
       node.source = this.parseImportSource();
       this.maybeParseImportAttributes(node);
       this.checkImportReflection(node);
@@ -14233,7 +14315,7 @@ var lib = createCommonjsModule(function(module, exports) {
       return this.finishNode(node, "ImportDeclaration");
     }
     parseImportSource() {
-      if (!this.match(131))
+      if (!this.match(133))
         this.unexpected();
       return this.parseExprAtom();
     }
@@ -14241,7 +14323,7 @@ var lib = createCommonjsModule(function(module, exports) {
       specifier.local = this.parseIdentifier();
       node.specifiers.push(this.finishImportSpecifier(specifier, type));
     }
-    finishImportSpecifier(specifier, type, bindingType = BIND_LEXICAL) {
+    finishImportSpecifier(specifier, type, bindingType = 8201) {
       this.checkLVal(specifier.local, {
         in: {
           type
@@ -14267,13 +14349,13 @@ var lib = createCommonjsModule(function(module, exports) {
           });
         }
         attrNames.add(keyName);
-        if (this.match(131)) {
+        if (this.match(133)) {
           node.key = this.parseStringLiteral(keyName);
         } else {
           node.key = this.parseIdentifier(true);
         }
         this.expect(14);
-        if (!this.match(131)) {
+        if (!this.match(133)) {
           throw this.raise(Errors.ModuleAttributeInvalidValue, {
             at: this.state.startLoc
           });
@@ -14303,7 +14385,7 @@ var lib = createCommonjsModule(function(module, exports) {
         }
         attributes.add(node.key.name);
         this.expect(14);
-        if (!this.match(131)) {
+        if (!this.match(133)) {
           throw this.raise(Errors.ModuleAttributeInvalidValue, {
             at: this.state.startLoc
           });
@@ -14396,8 +14478,8 @@ var lib = createCommonjsModule(function(module, exports) {
             break;
         }
         const specifier = this.startNode();
-        const importedIsString = this.match(131);
-        const isMaybeTypeOnly = this.isContextual(128);
+        const importedIsString = this.match(133);
+        const isMaybeTypeOnly = this.isContextual(130);
         specifier.imported = this.parseModuleExportName();
         const importSpecifier = this.parseImportSpecifier(specifier, importedIsString, node.importKind === "type" || node.importKind === "typeof", isMaybeTypeOnly, void 0);
         node.specifiers.push(importSpecifier);
