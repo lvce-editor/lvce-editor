@@ -6,6 +6,7 @@ import * as ExtensionHostCommandType from '../ExtensionHostCommandType/Extension
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
+import * as ExtensionHostDiagnostic from '../ExtensionHostDiagnostic/ExtensionHostDiagnostic.js'
 import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
@@ -47,6 +48,8 @@ export const getFn = (method) => {
       return ExtensionHostTextSearch.executeTextSearchProvider
     case ExtensionHostCommandType.CommandExecute:
       return ExtensionHostCommand.executeCommand
+    case ExtensionHostCommandType.DiagnosticExecuteDiagnosticProvider:
+      return ExtensionHostDiagnostic.executeDiagnosticProvider
     case ExtensionHostCommandType.WorkspaceSetPath:
       return ExtensionHostWorkspace.setWorkspacePath
     case ExtensionHostCommandType.DefinitionExecuteDefinitionProvider:
