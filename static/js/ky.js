@@ -118,6 +118,35 @@ const responseTypes = {
 };
 const maxSafeTimeout = 2147483647;
 const stop = Symbol("stop");
+const kyOptionKeys = {
+  json: true,
+  parseJson: true,
+  searchParams: true,
+  prefixUrl: true,
+  retry: true,
+  timeout: true,
+  hooks: true,
+  throwHttpErrors: true,
+  onDownloadProgress: true,
+  fetch: true
+};
+const requestOptionsRegistry = {
+  method: true,
+  headers: true,
+  body: true,
+  mode: true,
+  credentials: true,
+  cache: true,
+  redirect: true,
+  referrer: true,
+  referrerPolicy: true,
+  integrity: true,
+  keepalive: true,
+  signal: true,
+  window: true,
+  dispatcher: true,
+  duplex: true
+};
 const normalizeRequestMethod = (input) => requestMethods.includes(input) ? input.toUpperCase() : input;
 const retryMethods = ["get", "put", "head", "delete", "options", "trace"];
 const retryStatusCodes = [408, 413, 429, 500, 502, 503, 504];
@@ -128,7 +157,8 @@ const defaultRetryOptions = {
   statusCodes: retryStatusCodes,
   afterStatusCodes: retryAfterStatusCodes,
   maxRetryAfter: Number.POSITIVE_INFINITY,
-  backoffLimit: Number.POSITIVE_INFINITY
+  backoffLimit: Number.POSITIVE_INFINITY,
+  delay: (attemptCount) => 0.3 * 2 ** (attemptCount - 1) * 1e3
 };
 const normalizeRetryOptions = (retry = {}) => {
   if (typeof retry === "number") {
@@ -149,7 +179,7 @@ const normalizeRetryOptions = (retry = {}) => {
     afterStatusCodes: retryAfterStatusCodes
   };
 };
-async function timeout(request, abortController, options) {
+async function timeout(request, init, abortController, options) {
   return new Promise((resolve, reject) => {
     const timeoutId = setTimeout(() => {
       if (abortController) {
@@ -157,7 +187,7 @@ async function timeout(request, abortController, options) {
       }
       reject(new TimeoutError(request));
     }, options.timeout);
-    void options.fetch(request).then(resolve).catch(reject).then(() => {
+    void options.fetch(request, init).then(resolve).catch(reject).then(() => {
       clearTimeout(timeoutId);
     });
   });
@@ -178,6 +208,15 @@ async function delay(ms, {signal}) {
     }, ms);
   });
 }
+const findUnknownOptions = (request, options) => {
+  const unknownOptions = {};
+  for (const key in options) {
+    if (!(key in requestOptionsRegistry) && !(key in kyOptionKeys) && !(key in request)) {
+      unknownOptions[key] = options[key];
+    }
+  }
+  return unknownOptions;
+};
 class Ky {
   static create(input, options) {
     const ky2 = new Ky(input, options);
@@ -352,8 +391,8 @@ class Ky {
           return 0;
         }
       }
-      const BACKOFF_FACTOR = 0.3;
-      return Math.min(this._options.retry.backoffLimit, BACKOFF_FACTOR * 2 ** (this._retryCount - 1) * 1e3);
+      const retryDelay = this._options.retry.delay(this._retryCount);
+      return Math.min(this._options.retry.backoffLimit, retryDelay);
     }
     return 0;
   }
@@ -397,10 +436,11 @@ class Ky {
         return result;
       }
     }
+    const nonRequestOptions = findUnknownOptions(this.request, this._options);
     if (this._options.timeout === false) {
-      return this._options.fetch(this.request.clone());
+      return this._options.fetch(this.request.clone(), nonRequestOptions);
     }
-    return timeout(this.request.clone(), this.abortController, this._options);
+    return timeout(this.request.clone(), nonRequestOptions, this.abortController, this._options);
   }
   _stream(response, onDownloadProgress) {
     const totalBytes = Number(response.headers.get("content-length")) || 0;
