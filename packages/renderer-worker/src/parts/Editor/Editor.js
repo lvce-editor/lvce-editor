@@ -8,7 +8,6 @@ import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as GetDiagnosticsVirtualDom from '../GetDiagnosticsVirtualDom/GetDiagnosticsVirtualDom.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.js'
 import * as EditorScrolling from './EditorScrolling.js'
@@ -97,7 +96,7 @@ export const renderText = (editor) => {
     /* textInfos */ textInfos,
     /* fontSize */ editor.fontSize, // TODO only send these properties once on first render
     /* lineHeight */ editor.rowHeight,
-    /* letterSpacing */ editor.letterSpacing,
+    /* letterSpacing */ editor.letterSpacing
   )
 }
 
@@ -366,14 +365,14 @@ const getIncrementalEdits = (oldState, newState) => {
         newState.tokenizer.tokenizeLine,
         oldLine,
         initialLineState,
-        newState.tokenizer.hasArrayReturn,
+        newState.tokenizer.hasArrayReturn
       )
       const { tokens: newTokens, lineState } = SafeTokenizeLine.safeTokenizeLine(
         newState.languageId,
         newState.tokenizer.tokenizeLine,
         newLine,
         initialLineState,
-        newState.tokenizer.hasArrayReturn,
+        newState.tokenizer.hasArrayReturn
       )
       const incrementalEdits = []
       let offset = 0
@@ -488,14 +487,4 @@ const renderFocus = {
   },
 }
 
-const renderDecorations = {
-  isEqual(oldState, newState) {
-    return oldState.decorations === newState.decorations
-  },
-  apply(oldState, newState) {
-    const dom = GetDiagnosticsVirtualDom.getDiagnosticsVirtualDom(newState.decorations)
-    return ['setDecorationsDom', dom]
-  },
-}
-
-export const render = [renderLines, renderSelections, renderScrollBarX, renderScrollBarY, renderFocus, renderDecorations]
+export const render = [renderLines, renderSelections, renderScrollBarX, renderScrollBarY, renderFocus]
