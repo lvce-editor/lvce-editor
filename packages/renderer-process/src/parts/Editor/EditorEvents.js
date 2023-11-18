@@ -75,7 +75,8 @@ export const handleCompositionEnd = (event) => {
 
 export const handleCut = (event) => {
   Event.preventDefault(event)
-  EditorFunctions.cut()
+  const uid = ComponentUid.fromEvent(event)
+  EditorFunctions.cut(uid)
 }
 
 const isRightClick = (event) => {
