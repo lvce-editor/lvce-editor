@@ -3,6 +3,7 @@ import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as NormalizeText from '../NormalizeText/NormalizeText.js'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
+import * as GetX from '../GetX/GetX.js'
 
 const getSelectionFromChange = (change) => {
   const { start, inserted, end } = change
@@ -49,64 +50,6 @@ export const applyEdit = (editor, changes) => {
   const newSelections = EditorSelection.from(changes, getSelectionFromChange)
   // setSelections(editor, newSelections)
   return newSelections
-}
-
-// TODO visible selections could also be uint16array
-// [top1, left1, width1, height1, top2, left2, width2, height2...]
-const getTabCount = (string) => {
-  let count = 0
-  for (let i = 0; i < string.length; i++) {
-    if (string[i] === '\t') {
-      count++
-    }
-  }
-  return count
-}
-
-const getX = (
-  line,
-  column,
-  fontWeight,
-  fontSize,
-  fontFamily,
-  isMonospaceFont,
-  letterSpacing,
-  tabSize,
-  halfCursorWidth,
-  width,
-  averageCharWidth,
-  difference = 0,
-) => {
-  if (!line) {
-    return 0
-  }
-  Assert.string(line)
-  Assert.number(tabSize)
-  Assert.number(halfCursorWidth)
-  Assert.number(width)
-  Assert.boolean(isMonospaceFont)
-  Assert.number(averageCharWidth)
-  Assert.number(difference)
-  if (column === 0) {
-    return 0
-  }
-  // TODO support non-monospace font, emoji, tab character, zero width characters
-  if (column * averageCharWidth > width) {
-    return width
-  }
-  const normalize = NormalizeText.shouldNormalizeText(line)
-  const normalizedLine = NormalizeText.normalizeText(line, normalize, tabSize)
-  const tabCount = getTabCount(line.slice(0, column))
-  const partialText = normalizedLine.slice(0, column + tabCount)
-  return (
-    MeasureTextWidth.measureTextWidth(partialText, fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, averageCharWidth) -
-    halfCursorWidth +
-    difference
-  )
-}
-
-const getY = (row, minLineY, rowHeight) => {
-  return (row - minLineY) * rowHeight
 }
 
 const emptyCursors = []
@@ -173,7 +116,7 @@ export const getVisible = (editor) => {
     const relativeEndLineRow = selectionEndRow - minLineY
     const endLineDifference = differences[relativeEndLineRow]
     const endLine = lines[selectionEndRow]
-    const endLineEndX = getX(
+    const endLineEndX = GetX.getX(
       endLine,
       selectionEndColumn,
       fontWeight,
@@ -187,16 +130,16 @@ export const getVisible = (editor) => {
       averageCharWidth,
       endLineDifference,
     )
-    const endLineY = getY(selectionEndRow, minLineY, rowHeight)
+    const endLineY = GetX.getY(selectionEndRow, minLineY, rowHeight)
     if (EditorSelection.isEmpty(selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn) && endLineEndX > 0) {
       visibleCursors.push(endLineEndX, endLineY)
       continue
     }
-    const startLineY = getY(selectionStartRow, minLineY, rowHeight)
+    const startLineY = GetX.getY(selectionStartRow, minLineY, rowHeight)
     const startLineYRelative = selectionStartRow - minLineY
     const startLineDifference = differences[startLineYRelative]
     if (selectionStartRow === selectionEndRow) {
-      const startX = getX(
+      const startX = GetX.getX(
         endLine,
         selectionStartColumn,
         fontWeight,
@@ -220,7 +163,7 @@ export const getVisible = (editor) => {
     } else {
       if (selectionStartRow >= minLineY) {
         const startLine = lines[selectionStartRow]
-        const startLineStartX = getX(
+        const startLineStartX = GetX.getX(
           startLine,
           selectionStartColumn,
           fontWeight,
@@ -234,7 +177,7 @@ export const getVisible = (editor) => {
           averageCharWidth,
           startLineDifference,
         )
-        const startLineEndX = getX(
+        const startLineEndX = GetX.getX(
           startLine,
           startLine.length,
           fontWeight,
@@ -248,7 +191,7 @@ export const getVisible = (editor) => {
           averageCharWidth,
           startLineDifference,
         )
-        const startLineStartY = getY(selectionStartRow, minLineY, rowHeight)
+        const startLineStartY = GetX.getY(selectionStartRow, minLineY, rowHeight)
         const selectionWidth = startLineEndX - startLineStartX
         if (reversed) {
           visibleCursors.push(startLineStartX, startLineStartY)
@@ -259,10 +202,10 @@ export const getVisible = (editor) => {
       const iMax = Math.min(selectionEndRow, maxLineY)
       for (let i = iMin; i < iMax; i++) {
         const currentLine = lines[i]
-        const currentLineY = getY(i, minLineY, rowHeight)
+        const currentLineY = GetX.getY(i, minLineY, rowHeight)
         const relativeLine = i - minLineY
         const difference = differences[relativeLine]
-        const selectionWidth = getX(
+        const selectionWidth = GetX.getX(
           currentLine,
           currentLine.length,
           fontWeight,
