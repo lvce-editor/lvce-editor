@@ -14,6 +14,10 @@ test('Escape', () => {
   expect(GetKeyCode.getKeyCode(Key.Escape)).toBe(KeyCode.Escape)
 })
 
+test('Enter', () => {
+  expect(GetKeyCode.getKeyCode(Key.Enter)).toBe(KeyCode.Enter)
+})
+
 test('Space', () => {
   expect(GetKeyCode.getKeyCode(Key.Space)).toBe(KeyCode.Space)
 })

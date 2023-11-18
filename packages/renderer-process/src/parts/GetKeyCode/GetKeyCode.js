@@ -9,6 +9,8 @@ export const getKeyCode = (key) => {
       return KeyCode.Tab
     case Key.Escape:
       return KeyCode.Escape
+    case Key.Enter:
+      return KeyCode.Enter
     case Key.Space:
       return KeyCode.Space
     case Key.PageUp:
