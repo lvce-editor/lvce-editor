@@ -75,4 +75,8 @@ export const handleError = (state, error) => {
   $Viewlet.textContent = `${error}`
 }
 
+export const setBounds = (state, x, y, width, height) => {
+  const { $Viewlet } = state
+  SetBounds.setBounds($Viewlet, x, y, width, height)
+}
 export * from '../ViewletList/ViewletList.js'
