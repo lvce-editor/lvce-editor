@@ -72,6 +72,17 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
     dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(icon))
   }
   addHighlights(dom, highlights, label)
+  if (description) {
+    parent.childCount++
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'QuickPickItemDescription',
+        childCount: 1,
+      },
+      text(description),
+    )
+  }
   return dom
 }
 
