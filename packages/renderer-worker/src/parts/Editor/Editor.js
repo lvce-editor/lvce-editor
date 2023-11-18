@@ -1,16 +1,15 @@
 import * as Assert from '../Assert/Assert.js'
-import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+import * as GetDiagnosticsVirtualDom from '../GetDiagnosticsVirtualDom/GetDiagnosticsVirtualDom.js'
+import * as GetIncrementalEdits from '../GetIncrementalEdits/GetIncrementalEdits.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Height from '../Height/Height.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as GetDiagnosticsVirtualDom from '../GetDiagnosticsVirtualDom/GetDiagnosticsVirtualDom.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
-import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.js'
 import * as EditorScrolling from './EditorScrolling.js'
 import * as EditorSelection from './EditorSelection.js'
 import * as EditorText from './EditorText.js'
@@ -351,56 +350,6 @@ export const setBounds = (editor, x, y, width, height, columnWidth) => {
   }
 }
 
-const getIncrementalEdits = (oldState, newState) => {
-  const lastChanges = newState.undoStack[newState.undoStack.length - 1]
-  if (lastChanges && lastChanges.length === 1) {
-    const lastChange = lastChanges[0]
-    if (lastChange.origin === EditOrigin.EditorType) {
-      const rowIndex = lastChange.start.rowIndex
-      const lines = newState.lines
-      const oldLine = oldState.lines[rowIndex]
-      const newLine = lines[rowIndex]
-      const initialLineState = newState.lineCache[rowIndex] || GetInitialLineState.getInitialLineState(newState.tokenizer.initialLineState)
-      const { tokens: oldTokens } = SafeTokenizeLine.safeTokenizeLine(
-        newState.languageId,
-        newState.tokenizer.tokenizeLine,
-        oldLine,
-        initialLineState,
-        newState.tokenizer.hasArrayReturn,
-      )
-      const { tokens: newTokens, lineState } = SafeTokenizeLine.safeTokenizeLine(
-        newState.languageId,
-        newState.tokenizer.tokenizeLine,
-        newLine,
-        initialLineState,
-        newState.tokenizer.hasArrayReturn,
-      )
-      const incrementalEdits = []
-      let offset = 0
-      const relativeRowIndex = rowIndex - newState.minLineY
-      for (let i = 0; i < oldTokens.length; i += 2) {
-        const oldTokenType = oldTokens[i]
-        const oldTokenLength = oldTokens[i + 1]
-        const newTokenType = newTokens[i]
-        const newTokenLength = newTokens[i + 1]
-        if (oldTokenType === newTokenType && oldTokenLength !== newTokenLength && oldTokenLength > 0) {
-          const columnTokenIndex = i / 2
-          incrementalEdits.push({
-            rowIndex: relativeRowIndex,
-            columnIndex: columnTokenIndex,
-            text: newLine.slice(offset, offset + newTokenLength),
-          })
-        }
-        offset += newTokenLength
-      }
-      if (incrementalEdits.length === 1) {
-        return incrementalEdits
-      }
-    }
-  }
-  return undefined
-}
-
 export const setText = (editor, text) => {
   const lines = SplitLines.splitLines(text)
   const { itemHeight, numberOfVisibleLines, minimumSliderSize } = editor
@@ -433,7 +382,7 @@ const renderLines = {
     )
   },
   apply(oldState, newState) {
-    const incrementalEdits = getIncrementalEdits(oldState, newState)
+    const incrementalEdits = GetIncrementalEdits.getIncrementalEdits(oldState, newState)
     if (incrementalEdits) {
       return [/* method */ 'setIncrementalEdits', /* incrementalEdits */ incrementalEdits]
     }
