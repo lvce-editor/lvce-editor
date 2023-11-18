@@ -8,7 +8,6 @@ import * as Assert from '../Assert/Assert.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Logger from '../Logger/Logger.js'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as EditorEvents from './EditorEvents.js'
 import * as LayerCursor from './LayerCursor.js'
 import * as LayerDiagnostics from './LayerDiagnostics.js'
@@ -224,8 +223,4 @@ export const setLanguageId = async (state, languageId) => {
 export const renderDiagnostics = (state, diagnostics, scrollBarDiagnostics) => {
   LayerDiagnostics.setDiagnostics(state, diagnostics)
   LayerScrollBar.setDiagnostics(state, scrollBarDiagnostics)
-}
-
-export const setDecorationsDom = (state, decorations) => {
-  LayerDiagnostics.setDecorationsDom(state, decorations)
 }
