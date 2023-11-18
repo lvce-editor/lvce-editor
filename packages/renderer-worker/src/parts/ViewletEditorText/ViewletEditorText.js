@@ -209,7 +209,6 @@ const updateDiagnostics = async (state) => {
     const diagnostics = await ExtensionHostDiagnostic.executeDiagnosticProvider(state)
     const decorations = GetDiagnosticDecorations.getDiagnosticDecorations(state, diagnostics)
     await Command.execute('Editor.setDecorations', decorations)
-    console.log({ decorations })
   } catch (error) {
     console.log({ error })
     // ignore
