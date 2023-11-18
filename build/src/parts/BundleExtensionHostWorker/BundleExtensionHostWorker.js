@@ -13,11 +13,6 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
     to: Path.join(cachePath, 'static', 'js'),
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Ajax/Ajax.js`,
-    occurrence: `../../../../../static/`,
-    replacement: `../../../static/`,
-  })
-  await Replace.replace({
     path: `${cachePath}/src/parts/AssetDir/AssetDir.js`,
     occurrence: `ASSET_DIR`,
     replacement: `'${assetDir}'`,
@@ -33,17 +28,4 @@ export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platfor
     platform: 'webworker',
     allowCyclicDependencies: false,
   })
-  if (platform === 'remote') {
-    await Replace.replace({
-      path: `${cachePath}/src/parts/Ajax/Ajax.js`,
-      occurrence: `../../../static/`,
-      replacement: `../../../../../`,
-    })
-  } else {
-    await Replace.replace({
-      path: `${cachePath}/src/parts/Ajax/Ajax.js`,
-      occurrence: `../../../static/`,
-      replacement: `../../../../../static/`,
-    })
-  }
 }

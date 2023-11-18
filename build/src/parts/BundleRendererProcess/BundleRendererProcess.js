@@ -14,7 +14,7 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       from: 'static/js',
       to: Path.join(cachePath, 'static', 'js'),
     })
-    for (const file of ['Ajax', 'Terminal']) {
+    for (const file of ['Terminal']) {
       await Replace.replace({
         path: `${cachePath}/src/parts/${file}/${file}.js`,
         occurrence: `../../../../../static/`,

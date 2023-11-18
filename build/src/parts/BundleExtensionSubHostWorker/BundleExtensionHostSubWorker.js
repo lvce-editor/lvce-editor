@@ -13,9 +13,9 @@ export const bundleExtensionHostSubWorker = async ({ cachePath, commitHash, plat
     to: Path.join(cachePath, 'static', 'js'),
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Ajax/Ajax.js`,
-    occurrence: `../../../../../static/`,
-    replacement: `../../../static/`,
+    path: `${cachePath}/src/parts/AssetDir/AssetDir.js`,
+    occurrence: `ASSET_DIR`,
+    replacement: `'${assetDir}'`,
   })
   await BundleJs.bundleJs({
     cwd: cachePath,
