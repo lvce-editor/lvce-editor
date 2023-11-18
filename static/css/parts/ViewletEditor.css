@@ -135,8 +135,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background: red;
-  background: url(/icons/squiggly-error.svg);
+  background: url(/icons/squiggly-error.svg) repeat-x bottom left;
 }
 
 .Token.EditorGoToDefinitionLink {
