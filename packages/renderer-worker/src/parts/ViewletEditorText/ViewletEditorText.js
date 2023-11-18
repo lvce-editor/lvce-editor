@@ -8,7 +8,6 @@ import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSema
 import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Font from '../Font/Font.js'
-import * as GetDiagnosticDecorations from '../GetDiagnosticDecorations/GetDiagnosticDecorations.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
 import * as MeasureCharacterWidth from '../MeasureCharacterWidth/MeasureCharacterWidth.js'
@@ -201,15 +200,19 @@ const updateSemanticTokens = async (state) => {
   }
 }
 
+const getDiagnosticDecorations = (diagnostics) => {
+  return []
+}
+
 const updateDiagnostics = async (state) => {
   if (!Preferences.get('editor.diagnostics')) {
     return
   }
   try {
     const diagnostics = await ExtensionHostDiagnostic.executeDiagnosticProvider(state)
-    const decorations = GetDiagnosticDecorations.getDiagnosticDecorations(state, diagnostics)
+    const decorations = getDiagnosticDecorations(diagnostics)
     await Command.execute('Editor.setDecorations', decorations)
-    console.log({ decorations })
+    console.log({ diagnostics })
   } catch (error) {
     console.log({ error })
     // ignore
