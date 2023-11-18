@@ -124,15 +124,10 @@
   contain: content;
 }
 
-.LayerCursor,
-.LayerDiagnostics {
+.LayerCursor {
   position: absolute;
   inset: 0;
   pointer-events: none;
-}
-
-.Diagnostic {
-  position: absolute;
 }
 
 .Token.EditorGoToDefinitionLink {
