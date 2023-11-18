@@ -1,9 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
-import * as LoadKey from '../LoadKy/LoadKy.js'
+import * as LoadKy from '../LoadKy/LoadKy.js'
 import { VError } from '../VError/VError.js'
 
 export const getJson = async (url, options = {}) => {
-  const { default: ky, HTTPError } = await LoadKey.loadKy()
+  const { default: ky, HTTPError } = await LoadKy.loadKy()
   try {
     Assert.string(url)
     // cannot use ky(url).json() because it sets "accept: application/json"
@@ -40,7 +40,7 @@ export const getJsonLocal = (url) => {
 
 export const getText = async (url, options = {}) => {
   try {
-    const { default: ky } = await LoadKey.loadKy()
+    const { default: ky } = await LoadKy.loadKy()
     return await ky(url, options).text()
   } catch (error) {
     if (error && error instanceof TypeError && error.message === 'Failed to fetch') {
@@ -52,7 +52,7 @@ export const getText = async (url, options = {}) => {
 
 export const getBlob = async (url, options = {}) => {
   try {
-    const { default: ky } = await LoadKey.loadKy()
+    const { default: ky } = await LoadKy.loadKy()
     return await ky(url, options).blob()
   } catch (error) {
     throw new VError(error, `Failed to request blob from "${url}"`)
@@ -61,7 +61,7 @@ export const getBlob = async (url, options = {}) => {
 
 export const getResponse = async (url, options) => {
   try {
-    const { default: ky } = await LoadKey.loadKy()
+    const { default: ky } = await LoadKy.loadKy()
     return await ky(url, options)
   } catch (error) {
     throw new VError(error, `Failed to request response from "${url}"`)
