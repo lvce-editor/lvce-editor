@@ -50,5 +50,3 @@ export const hideOverlayMessage = (state) => {
 export const setFocused = Editor.setFocused
 
 export const focus = Editor.setFocused
-
-export const setDecorationsDom = Editor.setDecorationsDom
