@@ -1,4 +1,6 @@
 import * as GetProblems from '../GetProblems/GetProblems.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Command from '../Command/Command.js'
 import * as ViewletProblemsStrings from './ViewletProblemsStrings.js'
 
 export const create = (uid) => {
@@ -13,12 +15,23 @@ export const create = (uid) => {
 
 export const loadContent = async (state) => {
   const problems = await GetProblems.getProblems()
-  const message = ViewletProblemsStrings.getMessage(problems)
+  console.log({ problems })
+  const message = ViewletProblemsStrings.getMessage(problems.length)
   return {
     ...state,
     problems,
     message,
   }
+}
+
+const handleEditorChange = async (editor) => {
+  console.log('editor change', editor)
+  const problems = await GetProblems.getProblems()
+  await Command.execute('Problems.setProblems', problems)
+}
+
+export const contentLoadedEffects = (state) => {
+  GlobalEventBus.addListener('editor.change', handleEditorChange)
 }
 
 export const focusIndex = (state, index) => {

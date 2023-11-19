@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletProblemsEvents from './ViewletProblemsEvents.js'
 
 export const create = () => {
@@ -23,10 +24,11 @@ export const setFocusedIndex = (state, focusedIndex) => {
   }
 }
 
-export const setProblems = (state, problems) => {
+export const setProblemsDom = (state, dom) => {
   Assert.object(state)
-  Assert.array(problems)
-  // TODO
+  Assert.array(dom)
+  const { $Viewlet } = state
+  VirtualDom.renderInto($Viewlet, dom)
 }
 
 export const setMessage = (state, message) => {

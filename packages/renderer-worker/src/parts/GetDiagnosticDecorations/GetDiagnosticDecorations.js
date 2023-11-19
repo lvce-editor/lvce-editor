@@ -1,6 +1,9 @@
 import * as GetX from '../GetX/GetX.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const getDiagnosticDecorations = (editor, diagnostics) => {
+  Assert.object(editor)
+  Assert.array(diagnostics)
   const decorations = []
   const { minLineY, rowHeight, lines, fontSize, fontFamily, fontWeight, letterSpacing, cursorWidth, tabSize, width, charWidth, isMonospaceFont } =
     editor
