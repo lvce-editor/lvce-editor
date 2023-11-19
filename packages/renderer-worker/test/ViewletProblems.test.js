@@ -53,7 +53,19 @@ test('render', () => {
     ...oldState,
     problems: [],
   }
-  expect(render(oldState, newState)).toEqual([['Viewlet.send', 'Problems', 'setProblems', []]])
+  expect(render(oldState, newState)).toEqual([
+    [
+      'Viewlet.send',
+      'Problems',
+
+      'setProblemsDom',
+      {
+        childCount: 0,
+        text: 'No problems have been detected in the workspace.',
+        type: 12,
+      },
+    ],
+  ])
 })
 
 test('setFocusedIndex', () => {
