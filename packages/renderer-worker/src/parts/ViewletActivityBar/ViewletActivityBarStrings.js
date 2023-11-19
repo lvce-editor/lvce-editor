@@ -11,6 +11,7 @@ const UiStrings = {
   Extensions: 'Extensions',
   Settings: 'Settings',
   AdditionalViews: 'Additional Views',
+  ActivityBar: 'Activity Bar',
 }
 
 export const explorer = () => {
@@ -39,4 +40,8 @@ export const settings = () => {
 
 export const additionalViews = () => {
   return I18nString.i18nString(UiStrings.AdditionalViews)
+}
+
+export const activityBar = () => {
+  return I18nString.i18nString(UiStrings.ActivityBar)
 }
