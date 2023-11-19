@@ -1,3 +1,4 @@
+import * as GetProblemsVirtualDom from '../GetProblemsVirtualDom/GetProblemsVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
@@ -7,7 +8,8 @@ const renderProblems = {
     return oldState.problems === newState.problems
   },
   apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetProblems, /* problems */ newState.problems]
+    const dom = GetProblemsVirtualDom.getProblemsVirtualDom(newState.problems)
+    return ['setProblemsDom', dom]
   },
 }
 
@@ -20,13 +22,4 @@ const renderFocusedIndex = {
   },
 }
 
-const renderMessage = {
-  isEqual(oldState, newState) {
-    return oldState.message === newState.message
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetMessage, /* focusedIndex */ newState.message]
-  },
-}
-
-export const render = [renderProblems, renderFocusedIndex, renderMessage]
+export const render = [renderProblems, renderFocusedIndex]

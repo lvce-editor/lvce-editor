@@ -93,6 +93,8 @@ export const getElementTag = (type) => {
       return ElementTag.Time
     case VirtualDomElements.Tfoot:
       return ElementTag.Tfoot
+    case VirtualDomElements.Ul:
+      return ElementTag.Ul
     default:
       throw new Error(`element tag not found ${type}`)
   }

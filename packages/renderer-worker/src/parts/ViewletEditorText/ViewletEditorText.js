@@ -207,7 +207,7 @@ const updateDiagnostics = async (state) => {
   }
   try {
     const diagnostics = await ExtensionHostDiagnostic.executeDiagnosticProvider(state)
-    const decorations = GetDiagnosticDecorations.getDiagnosticDecorations(state, diagnostics)
+    const decorations = GetDiagnosticDecorations.getDiagnosticDecorations(state, diagnostics || [])
     await Command.execute('Editor.setDecorations', decorations)
   } catch (error) {
     console.log({ error })

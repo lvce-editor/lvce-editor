@@ -1,4 +1,3 @@
-import * as Diagnostics from '../Diagnostics/Diagnostics.js'
 import * as I18NString from '../I18NString/I18NString.js'
 
 /**
@@ -9,8 +8,12 @@ const UiStrings = {
   ProblemsDetected: 'Some problems have been detected in the workspace.',
 }
 
-export const getMessage = (problems) => {
-  if (problems.length === 0) {
+export const noProblemsDetected = () => {
+  return I18NString.i18nString(UiStrings.NoProblemsDetected)
+}
+
+export const getMessage = (problemsCount) => {
+  if (problemsCount === 0) {
     return I18NString.i18nString(UiStrings.NoProblemsDetected)
   }
   return I18NString.i18nString(UiStrings.ProblemsDetected)

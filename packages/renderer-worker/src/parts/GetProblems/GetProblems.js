@@ -1,4 +1,5 @@
 import * as Diagnostics from '../Diagnostics/Diagnostics.js'
+import * as ToProblems from '../ToProblems/ToProblems.js'
 
 export const create = (uid) => {
   return {
@@ -10,17 +11,9 @@ export const create = (uid) => {
   }
 }
 
-const toProblem = (diagnostic) => {
-  const { message } = diagnostic
-  return message
-}
-
-const toProblems = (diagnoatics) => {
-  return diagnoatics.map(toProblem)
-}
-
 export const getProblems = async (state) => {
   const diagnostics = await Diagnostics.getDiagnostics()
-  const problems = toProblems(diagnostics)
+  console.log({ diagnostics })
+  const problems = ToProblems.toProblems(diagnostics)
   return problems
 }
