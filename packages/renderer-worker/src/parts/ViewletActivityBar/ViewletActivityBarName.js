@@ -1,12 +1,5 @@
-import * as I18NString from '../I18NString/I18NString.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  ActivityBar: 'Activity Bar',
-}
+import * as ViewletActivityBarStrings from './ViewletActivityBarStrings.js'
 
 export const getDisplayName = () => {
-  return I18NString.i18nString(UiStrings.ActivityBar)
+  return ViewletActivityBarStrings.activityBar()
 }
