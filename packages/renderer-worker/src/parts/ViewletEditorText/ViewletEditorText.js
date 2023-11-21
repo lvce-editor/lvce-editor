@@ -134,9 +134,10 @@ export const loadContent = async (state, savedState, context) => {
   const savedDeltaY = getSavedDeltaY(savedState)
   let newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
   const isFiraCode = fontFamily === 'Fira Code' || fontFamily === `'Fira Code'`
-  if (isFiraCode && !Font.has(fontFamily, fontSize)) {
+  if (isFiraCode) {
     const fontName = UnquoteString.unquoteString(fontFamily)
-    await Font.load(fontName, `url('${AssetDir.assetDir}/fonts/FiraCode-VariableFont.ttf')`)
+    const fontUrl = `url('${AssetDir.assetDir}/fonts/FiraCode-VariableFont.ttf')`
+    await Font.ensure(fontName, fontUrl)
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
   const charWidth = MeasureCharacterWidth.measureCharacterWidth(newState2.fontWeight, fontSize, fontFamily, letterSpacing)
