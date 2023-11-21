@@ -1,0 +1,10 @@
+{
+  "main": "main.js",
+  "activation": ["onLanguage:javascript"],
+  "languages": [
+    {
+      "id": "javascript",
+      "extensions": [".js"]
+    }
+  ]
+}
