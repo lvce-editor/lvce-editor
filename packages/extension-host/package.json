@@ -22,12 +22,12 @@
   },
   "devDependencies": {
     "@types/babel__code-frame": "^7.0.6",
-    "@types/lodash": "^4.14.201",
+    "@types/lodash": "^4.14.202",
     "@types/verror": "^1.10.9",
-    "@types/ws": "^8.5.9"
+    "@types/ws": "^8.5.10"
   },
   "dependencies": {
-    "@babel/code-frame": "^7.22.13",
+    "@babel/code-frame": "^7.23.4",
     "clean-stack": "^5.2.0",
     "debug": "^4.3.4",
     "exit-hook": "^4.0.0",
