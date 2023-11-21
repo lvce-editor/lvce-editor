@@ -18,7 +18,7 @@ const getProblemVirtualDom = (problem) => {
 
 export const getProblemsVirtualDom = (problems) => {
   if (problems.length === 0) {
-    return text(ViewletProblemsStrings.noProblemsDetected())
+    return [text(ViewletProblemsStrings.noProblemsDetected())]
   }
   const dom = [
     {
