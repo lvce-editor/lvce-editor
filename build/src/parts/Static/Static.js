@@ -265,6 +265,10 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   })
   await Copy.copy({
     from: 'static/js',
+    to: `build/.tmp/dist/${commitHash}/static/js`,
+  })
+  await Copy.copy({
+    from: 'static/js',
     to: `build/.tmp/dist/${commitHash}/js`,
   })
   await Copy.copyFile({
