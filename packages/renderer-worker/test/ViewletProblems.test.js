@@ -59,11 +59,13 @@ test('render', () => {
       'Problems',
 
       'setProblemsDom',
-      {
-        childCount: 0,
-        text: 'No problems have been detected in the workspace.',
-        type: 12,
-      },
+      [
+        {
+          childCount: 0,
+          text: 'No problems have been detected in the workspace.',
+          type: 12,
+        },
+      ],
     ],
   ])
 })
