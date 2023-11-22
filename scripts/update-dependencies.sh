@@ -18,7 +18,7 @@ fi
 
 function updateDependencies {
   echo "updating dependencies..."
-  OUTPUT=`ncu -u -x msw -x clean-stack -x @types/node -x electron -x @playwright/test`
+  OUTPUT=`ncu -u -x msw -x @types/node -x @types/jest -x electron`
   SUB='All dependencies match the latest package versions'
   if [[ "$OUTPUT" == *"$SUB"* ]]; then
     echo "$OUTPUT"
