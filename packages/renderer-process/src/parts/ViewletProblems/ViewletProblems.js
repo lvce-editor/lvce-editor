@@ -31,11 +31,6 @@ export const setProblemsDom = (state, dom) => {
   VirtualDom.renderInto($Viewlet, dom)
 }
 
-export const setMessage = (state, message) => {
-  const { $Viewlet } = state
-  $Viewlet.textContent = message
-}
-
 export const focus = (state) => {
   const { $Viewlet } = state
   $Viewlet.focus()
