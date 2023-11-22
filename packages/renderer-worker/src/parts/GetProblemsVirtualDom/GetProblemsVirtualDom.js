@@ -8,9 +8,14 @@ import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 const getProblemVirtualDom = (problem) => {
   return [
     {
-      type: VirtualDomElements.Li,
+      type: VirtualDomElements.Div,
       className: 'Problem',
-      childCount: 1,
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIconError ProblemsErrorIcon',
+      childCount: 0,
     },
     text(problem),
   ]
@@ -22,7 +27,7 @@ export const getProblemsVirtualDom = (problems) => {
   }
   const dom = [
     {
-      type: VirtualDomElements.Ul,
+      type: VirtualDomElements.Div,
       className: 'ProblemsList',
       childCount: problems.length,
     },

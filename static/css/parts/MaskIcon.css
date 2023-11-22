@@ -168,6 +168,11 @@
 .MaskIconLinkExternal {
   mask-image: url(/icons/link-external.svg);
 }
+
 .MaskIconDiscard {
   mask-image: url(/icons/discard.svg);
+}
+
+.MaskIconError {
+  mask-image: url(/icons/error.svg);
 }
