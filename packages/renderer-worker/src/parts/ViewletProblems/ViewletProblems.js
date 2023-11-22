@@ -30,6 +30,11 @@ const handleEditorChange = async (editor) => {
   await Command.execute('Problems.setProblems', problems)
 }
 
+export const handleContextMenu = (state, eventX, eventY) => {
+  console.log('open context menu', eventX, eventY)
+  return state
+}
+
 export const contentLoadedEffects = (state) => {
   GlobalEventBus.addListener('editor.change', handleEditorChange)
 }

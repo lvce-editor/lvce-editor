@@ -1,4 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletProblemsEvents from './ViewletProblemsEvents.js'
 
@@ -13,7 +15,10 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $Viewlet } = state
-  $Viewlet.onpointerdown = ViewletProblemsEvents.handlePointerDown
+  AttachEvents.attachEvents($Viewlet, {
+    [DomEventType.PointerDown]: ViewletProblemsEvents.handlePointerDown,
+    [DomEventType.ContextMenu]: ViewletProblemsEvents.handleContextMenu,
+  })
 }
 
 export const setFocusedIndex = (state, focusedIndex) => {
