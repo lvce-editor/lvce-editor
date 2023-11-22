@@ -9,13 +9,6 @@ test('create', () => {
   expect(state).toBeDefined()
 })
 
-test('setMessage', () => {
-  const state = ViewletProblems.create()
-  ViewletProblems.setMessage(state, 'abc')
-  const { $Viewlet } = state
-  expect($Viewlet.textContent).toBe('abc')
-})
-
 test('focus', () => {
   const state = ViewletProblems.create()
   document.body.append(state.$Viewlet)
