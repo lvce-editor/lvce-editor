@@ -5,5 +5,6 @@ import * as ViewletProblemsSetProblems from './ViewletProblemsSetProblems.js'
 export const Commands = {
   focusIndex: ViewletProblems.focusIndex,
   handleClickAt: ViewletProblems.handleClickAt,
+  handleContextMenu: ViewletProblems.handleContextMenu,
   setProblems: ViewletProblemsSetProblems.setProblems,
 }

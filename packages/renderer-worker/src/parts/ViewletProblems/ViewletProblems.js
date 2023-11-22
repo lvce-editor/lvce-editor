@@ -1,8 +1,8 @@
+import * as Command from '../Command/Command.js'
+import * as GetListIndex from '../GetListIndex/GetListIndex.js'
 import * as GetProblems from '../GetProblems/GetProblems.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Command from '../Command/Command.js'
 import * as ViewletProblemsStrings from './ViewletProblemsStrings.js'
-import * as GetListIndex from '../GetListIndex/GetListIndex.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -34,6 +34,11 @@ const handleEditorChange = async (editor) => {
   console.log('editor change', editor)
   const problems = await GetProblems.getProblems()
   await Command.execute('Problems.setProblems', problems)
+}
+
+export const handleContextMenu = (state, eventX, eventY) => {
+  console.log('open context menu', eventX, eventY)
+  return state
 }
 
 export const contentLoadedEffects = (state) => {

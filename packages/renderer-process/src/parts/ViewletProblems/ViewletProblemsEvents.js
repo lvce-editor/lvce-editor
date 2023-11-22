@@ -8,3 +8,9 @@ export const handlePointerDown = (event) => {
   const { clientX, clientY } = event
   ViewletProblemsFunctions.handleClickAt(uid, clientX, clientY)
 }
+
+export const handleContextMenu = (event) => {
+  const uid = ComponentUid.fromEvent(event)
+  const { clientX, clientY } = event
+  ViewletProblemsFunctions.handleContextMenu(uid, clientX, clientY)
+}
