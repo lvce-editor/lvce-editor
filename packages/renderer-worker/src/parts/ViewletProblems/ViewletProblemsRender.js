@@ -1,14 +1,16 @@
 import * as GetProblemsVirtualDom from '../GetProblemsVirtualDom/GetProblemsVirtualDom.js'
+import * as GetVisibleProblems from '../GetVisibleProblems/GetVisibleProblems.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
 const renderProblems = {
   isEqual(oldState, newState) {
-    return oldState.problems === newState.problems
+    return oldState.problems === newState.problems && oldState.focusedIndex === newState.focusedIndex
   },
   apply(oldState, newState) {
-    const dom = GetProblemsVirtualDom.getProblemsVirtualDom(newState.problems)
+    const visible = GetVisibleProblems.getVisibleProblems(newState.problems, newState.focusedIndex)
+    const dom = GetProblemsVirtualDom.getProblemsVirtualDom(visible)
     return ['setProblemsDom', dom]
   },
 }

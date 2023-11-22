@@ -63,8 +63,11 @@ export const handleClickAt = (state, eventX, eventY) => {
   }
   const problem = problems[index]
   const { rowIndex, columnIndex } = problem
-  console.log('click, ', rowIndex, columnIndex)
-  return state
+  console.log('open', rowIndex, columnIndex)
+  return {
+    ...state,
+    focusedIndex: index,
+  }
 }
 
 export const dispose = (state) => {

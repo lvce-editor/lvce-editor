@@ -17,6 +17,11 @@
   align-items: center;
 }
 
+.ProblemSelected {
+  background: var(--ListActiveSelectionBackground);
+  color: var(--ListActiveSelectionForeground);
+}
+
 .ProblemsErrorIcon {
   width: 16px;
   height: 16px;

@@ -3,12 +3,16 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getProblemVirtualDom = (problem) => {
-  const { message, rowIndex, columnIndex } = problem
+  const { message, rowIndex, columnIndex, isActive } = problem
   const lineColumn = ViewletProblemsStrings.atLineColumn(rowIndex, columnIndex)
+  let className = 'Problem'
+  if (isActive) {
+    className += ' ProblemSelected'
+  }
   return [
     {
       type: VirtualDomElements.Div,
-      className: 'Problem',
+      className,
       childCount: 3,
     },
     {
