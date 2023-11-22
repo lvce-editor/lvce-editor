@@ -1,5 +1,7 @@
 import * as ViewletColorPickerEvents from './ViewletColorPickerEvents.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 export const create = () => {
   const $BackgroundColor = document.createElement('div')
@@ -35,8 +37,12 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $ColorPickerSliderThumb, $ColorPickerSlider } = state
-  $ColorPickerSliderThumb.onpointerdown = ViewletColorPickerEvents.handleSliderPointerDown
-  $ColorPickerSlider.onpointerdown = ViewletColorPickerEvents.handleSliderPointerDown
+  AttachEvents.attachEvents($ColorPickerSliderThumb, {
+    [DomEventType.PointerDown]: ViewletColorPickerEvents.handleSliderPointerDown,
+  })
+  AttachEvents.attachEvents($ColorPickerSlider, {
+    [DomEventType.PointerDown]: ViewletColorPickerEvents.handleSliderPointerDown,
+  })
 }
 
 export const setColor = (state, color) => {
