@@ -6,6 +6,7 @@ import * as I18NString from '../I18NString/I18NString.js'
 const UiStrings = {
   NoProblemsDetected: 'No problems have been detected in the workspace.',
   ProblemsDetected: 'Some problems have been detected in the workspace.',
+  LineColumn: '[Ln {PH1}, Col {PH2}]',
 }
 
 export const noProblemsDetected = () => {
@@ -17,4 +18,11 @@ export const getMessage = (problemsCount) => {
     return I18NString.i18nString(UiStrings.NoProblemsDetected)
   }
   return I18NString.i18nString(UiStrings.ProblemsDetected)
+}
+
+export const atLineColumn = (line, column) => {
+  return I18NString.i18nString(UiStrings.LineColumn, {
+    PH1: line,
+    PH2: column,
+  })
 }

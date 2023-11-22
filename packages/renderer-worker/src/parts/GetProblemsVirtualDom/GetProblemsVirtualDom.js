@@ -1,23 +1,28 @@
-import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getProblemVirtualDom = (problem) => {
+  const { message, rowIndex, columnIndex } = problem
+  const lineColumn = ViewletProblemsStrings.atLineColumn(rowIndex, columnIndex)
   return [
     {
       type: VirtualDomElements.Div,
       className: 'Problem',
-      childCount: 2,
+      childCount: 3,
     },
     {
       type: VirtualDomElements.Div,
       className: 'MaskIconError ProblemsErrorIcon',
       childCount: 0,
     },
-    text(problem),
+    text(message),
+    {
+      type: VirtualDomElements.Span,
+      className: 'ProblemAt',
+      childCount: 1,
+    },
+    text(lineColumn),
   ]
 }
 

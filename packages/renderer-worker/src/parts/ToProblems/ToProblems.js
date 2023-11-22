@@ -1,6 +1,10 @@
 const toProblem = (diagnostic) => {
-  const { message } = diagnostic
-  return message
+  const { message, rowIndex, columnIndex } = diagnostic
+  return {
+    message,
+    rowIndex,
+    columnIndex,
+  }
 }
 
 export const toProblems = (diagnoatics) => {
