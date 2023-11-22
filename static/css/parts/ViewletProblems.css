@@ -18,8 +18,8 @@
 }
 
 .ProblemsErrorIcon {
-  width: 17px;
-  height: 17px;
+  width: 16px;
+  height: 16px;
   contain: strict;
   color: var(--ProblemsErrorIconForeground, #b64e4e);
   mask-repeat: no-repeat;
