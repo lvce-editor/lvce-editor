@@ -2,14 +2,20 @@ import * as GetProblems from '../GetProblems/GetProblems.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Command from '../Command/Command.js'
 import * as ViewletProblemsStrings from './ViewletProblemsStrings.js'
+import * as GetListIndex from '../GetListIndex/GetListIndex.js'
 
-export const create = (uid) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
-    uid,
+    uid: id,
     problems: [],
     disposed: false,
     focusedIndex: -2,
     message: '',
+    itemHeight: 20,
+    x,
+    y,
+    width,
+    height,
   }
 }
 
@@ -39,6 +45,21 @@ export const focusIndex = (state, index) => {
     ...state,
     focusedIndex: index,
   }
+}
+
+export const handleClickAt = (state, eventX, eventY) => {
+  const { problems, x, y, itemHeight } = state
+  if (problems.length === 0) {
+    return focusIndex(state, -1)
+  }
+  const index = GetListIndex.getListIndex(eventX, eventY, x, y, 0, itemHeight)
+  if (index > problems.length) {
+    return focusIndex(state, -1)
+  }
+  const problem = problems[index]
+  const { rowIndex, columnIndex } = problem
+  console.log('click, ', rowIndex, columnIndex)
+  return state
 }
 
 export const dispose = (state) => {
