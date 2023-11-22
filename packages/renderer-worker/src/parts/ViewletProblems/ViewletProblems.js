@@ -30,7 +30,7 @@ const handleEditorChange = async (editor) => {
   await Command.execute('Problems.setProblems', problems)
 }
 
-export const handleContextMenu = (state) => {
+export const handleContextMenu = (state, eventX, eventY) => {
   console.log('open context menu')
   return state
 }
