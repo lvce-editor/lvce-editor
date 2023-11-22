@@ -7,3 +7,9 @@ export const handlePointerDown = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ViewletProblemsFunctions.focusIndex(uid, -1)
 }
+
+export const handleContextMenu = (event) => {
+  const uid = ComponentUid.fromEvent(event)
+  const { clientX, clientY } = event
+  ViewletProblemsFunctions.handleContextMenu(uid, clientX, clientY)
+}
