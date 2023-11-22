@@ -31,7 +31,7 @@ const handleEditorChange = async (editor) => {
 }
 
 export const handleContextMenu = (state, eventX, eventY) => {
-  console.log('open context menu')
+  console.log('open context menu', eventX, eventY)
   return state
 }
 
