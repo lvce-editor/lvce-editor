@@ -1,4 +1,5 @@
 import * as ActionType from '../ActionType/ActionType.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 
 /**
  * @enum {string}
@@ -15,25 +16,25 @@ export const getActions = () => {
     {
       type: ActionType.Button,
       id: UiStrings.ViewAsTree,
-      icon: 'ListFlat',
+      icon: MaskIcon.ListFlat,
       command: '',
     },
     {
       type: ActionType.Button,
       id: UiStrings.CreatePullRequest,
-      icon: 'Blank',
+      icon: MaskIcon.Blank,
       command: '',
     },
     {
       type: ActionType.Button,
       id: UiStrings.CommitAndPush,
-      icon: 'Check',
+      icon: MaskIcon.Check,
       command: '',
     },
     {
       type: ActionType.Button,
       id: UiStrings.Refresh,
-      icon: 'Refresh',
+      icon: MaskIcon.Refresh,
       command: '',
     },
   ]
