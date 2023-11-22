@@ -1,5 +1,5 @@
 .Problems {
-  color: white;
+  color: var(--WorkbenchForeground);
 }
 
 .ProblemList {
@@ -26,4 +26,12 @@
   mask-size: 100%;
   mask-position: 50% 50%;
   background: currentColor;
+}
+
+.Message {
+  padding-left: 20px;
+  line-height: 22px;
+  width: 100%;
+  height: 100%;
+  contain: strict;
 }

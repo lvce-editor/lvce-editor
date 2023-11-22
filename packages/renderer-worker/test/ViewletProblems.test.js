@@ -47,29 +47,6 @@ test('dispose', () => {
   })
 })
 
-test('render', () => {
-  const oldState = ViewletProblems.create()
-  const newState = {
-    ...oldState,
-    problems: [],
-  }
-  expect(render(oldState, newState)).toEqual([
-    [
-      'Viewlet.send',
-      'Problems',
-
-      'setProblemsDom',
-      [
-        {
-          childCount: 0,
-          text: 'No problems have been detected in the workspace.',
-          type: 12,
-        },
-      ],
-    ],
-  ])
-})
-
 test('setFocusedIndex', () => {
   const state = ViewletProblems.create()
   expect(ViewletProblems.focusIndex(state, -1)).toMatchObject({

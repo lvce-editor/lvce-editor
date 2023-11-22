@@ -23,7 +23,14 @@ const getProblemVirtualDom = (problem) => {
 
 export const getProblemsVirtualDom = (problems) => {
   if (problems.length === 0) {
-    return [text(ViewletProblemsStrings.noProblemsDetected())]
+    return [
+      {
+        type: VirtualDomElements.Div,
+        className: 'Message',
+        childCount: 1,
+      },
+      text(ViewletProblemsStrings.noProblemsDetected()),
+    ]
   }
   const dom = [
     {
