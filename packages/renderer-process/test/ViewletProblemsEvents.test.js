@@ -58,6 +58,6 @@ test('event - pointerdown', () => {
   })
   $Viewlet.dispatchEvent(event)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
-  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'focusIndex', -1)
+  expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClickAt', 15, 30)
   expect(event.defaultPrevented).toBe(true)
 })

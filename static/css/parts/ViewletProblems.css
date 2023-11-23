@@ -18,6 +18,11 @@
   padding-left: 20px;
 }
 
+.ProblemSelected {
+  background: var(--ListActiveSelectionBackground);
+  color: var(--ListActiveSelectionForeground);
+}
+
 .ProblemsErrorIcon {
   width: 16px;
   height: 16px;

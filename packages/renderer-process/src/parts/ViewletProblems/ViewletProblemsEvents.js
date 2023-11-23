@@ -5,7 +5,8 @@ import * as ViewletProblemsFunctions from './ViewletProblemsFunctions.js'
 export const handlePointerDown = (event) => {
   Event.preventDefault(event)
   const uid = ComponentUid.fromEvent(event)
-  ViewletProblemsFunctions.focusIndex(uid, -1)
+  const { clientX, clientY } = event
+  ViewletProblemsFunctions.handleClickAt(uid, clientX, clientY)
 }
 
 export const handleContextMenu = (event) => {
