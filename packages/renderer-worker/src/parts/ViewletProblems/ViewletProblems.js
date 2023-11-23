@@ -2,6 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as GetListIndex from '../GetListIndex/GetListIndex.js'
 import * as GetProblems from '../GetProblems/GetProblems.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletProblemsStrings from './ViewletProblemsStrings.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -36,8 +37,8 @@ const handleEditorChange = async (editor) => {
   await Command.execute('Problems.setProblems', problems)
 }
 
-export const handleContextMenu = (state, eventX, eventY) => {
-  console.log('open context menu', eventX, eventY)
+export const handleContextMenu = async (state, eventX, eventY) => {
+  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ eventX, /* y */ eventY, /* id */ MenuEntryId.Problems)
   return state
 }
 
