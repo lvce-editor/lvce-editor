@@ -32,6 +32,7 @@
     "xdg-basedir": "^5.1.0"
   },
   "dependencies": {
+    "@lvce-editor/assert": "^1.0.0",
     "@lvce-editor/verror": "^1.1.2",
     "bytes": "^3.1.2",
     "esbuild": "^0.19.7",
