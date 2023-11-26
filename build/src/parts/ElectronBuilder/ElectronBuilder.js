@@ -19,13 +19,13 @@ import * as Template from '../Template/Template.js'
 // TODO maybe don't need to include nan module
 // TODO don't need to include whole @lvce-editor/ripgrep module (only path)
 
-const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales }) => {
+const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
   //   Logger.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales })
+  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos })
 }
 
 const getElectronVersion = async () => {
@@ -183,8 +183,9 @@ const copyElectronResult = async ({
   supportsAutoUpdate,
   shouldRemoveUnusedLocales,
   bundleMainProcess,
+  isMacos,
 }) => {
-  await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales })
+  await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos })
   const debArch = 'amd64'
   await Copy.copy({
     from: `build/.tmp/electron-bundle/x64`,
@@ -255,6 +256,13 @@ const renameReleaseFile = async ({ config, version, product }) => {
   return releaseFilePath
 }
 
+const getResourcesPath = (platform, arch) => {
+  if (platform === 'darwin') {
+    return `build/.tmp/electron-bundle/${arch}/resources`
+  }
+  return `build/.tmp/electron-bundle/${arch}/resources`
+}
+
 export const build = async ({ config, product, shouldRemoveUnusedLocales = false }) => {
   Assert.string(config)
   Assert.object(product)
@@ -268,8 +276,10 @@ export const build = async ({ config, product, shouldRemoveUnusedLocales = false
   const supportsAutoUpdate =
     product.supportsAutoUpdate && (config === ElectronBuilderConfigType.AppImage || config === ElectronBuilderConfigType.WindowsExe)
 
+  const isMacos = config === ElectronBuilderConfigType.Mac
+
   console.time('copyElectronResult')
-  await copyElectronResult({ version, config, product, electronVersion, supportsAutoUpdate, shouldRemoveUnusedLocales, bundleMainProcess })
+  await copyElectronResult({ version, config, product, electronVersion, supportsAutoUpdate, shouldRemoveUnusedLocales, bundleMainProcess, isMacos })
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')
