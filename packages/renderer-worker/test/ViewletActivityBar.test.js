@@ -53,7 +53,6 @@ test('loadContent', async () => {
         keyShortcuts: 'Control+Shift+E',
       },
       {
-        enabled: true,
         flags: ActivityBarItemFlags.Tab | ActivityBarItemFlags.Enabled,
         icon: 'Search',
         id: ViewletModuleId.Search,
