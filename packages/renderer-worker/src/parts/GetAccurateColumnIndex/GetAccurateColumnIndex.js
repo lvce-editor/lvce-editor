@@ -1,52 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Character from '../Character/Character.js'
+import * as GetAccurateColumnIndexAscii from '../GetAccurateColumnIndexAscii/GetAccurateColumnIndexAscii.js'
+import * as GetAccurateColumnIndexUnicode from '../GetAccurateColumnIndexUnicode/GetAccurateColumnIndexUnicode.js'
 import * as IsAscii from '../IsAscii/IsAscii.js'
 import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
 import * as NormalizeText from '../NormalizeText/NormalizeText.js'
-import * as TextSegmenter from '../TextSegmenter/TextSegmenter.js'
-
-const getAccurateColumnIndexAscii = (
-  line,
-  guess,
-  averageCharWidth,
-  eventX,
-  fontWeight,
-  fontSize,
-  fontFamily,
-  letterSpacing,
-  isMonospaceFont,
-  charWidth
-) => {
-  for (let i = guess; i < line.length; i++) {
-    const width = MeasureTextWidth.measureTextWidth(line.slice(0, i), fontWeight, fontSize, fontFamily, letterSpacing, isMonospaceFont, charWidth)
-    if (eventX - width < averageCharWidth / 2) {
-      return i
-    }
-  }
-  return line.length
-}
-
-const getAccurateColumnIndexUnicode = (line, guess, averageCharWidth, eventX, fontWeight, fontSize, fontFamily, letterSpacing) => {
-  const segmenter = TextSegmenter.create()
-  const segments = segmenter.getSegments(line)
-  const isMonospaceFont = false
-  const charWidth = 0
-  for (const segment of segments) {
-    const width = MeasureTextWidth.measureTextWidth(
-      line.slice(0, segment.index),
-      fontWeight,
-      fontSize,
-      fontFamily,
-      letterSpacing,
-      isMonospaceFont,
-      charWidth
-    )
-    if (eventX - width < averageCharWidth) {
-      return segment.index
-    }
-  }
-  return line.length
-}
 
 const guessOffset = (eventX, averageCharWidth) => {
   const guess = Math.round(eventX / averageCharWidth)
@@ -85,7 +43,7 @@ export const getAccurateColumnIndex = (line, fontWeight, fontSize, fontFamily, l
     if (Math.abs(eventX - actual) < charWidth / 2) {
       return normalizedGuess
     }
-    return getAccurateColumnIndexAscii(
+    return GetAccurateColumnIndexAscii.getAccurateColumnIndexAscii(
       line,
       normalizedGuess,
       charWidth,
@@ -95,8 +53,17 @@ export const getAccurateColumnIndex = (line, fontWeight, fontSize, fontFamily, l
       fontFamily,
       letterSpacing,
       isMonospaceFont,
-      charWidth
+      charWidth,
     )
   }
-  return getAccurateColumnIndexUnicode(line, normalizedGuess, charWidth, eventX, fontWeight, fontSize, fontFamily, letterSpacing)
+  return GetAccurateColumnIndexUnicode.getAccurateColumnIndexUnicode(
+    line,
+    normalizedGuess,
+    charWidth,
+    eventX,
+    fontWeight,
+    fontSize,
+    fontFamily,
+    letterSpacing,
+  )
 }
