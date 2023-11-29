@@ -18,7 +18,7 @@
     "node": ">=16"
   },
   "dependencies": {
-    "@babel/code-frame": "^7.23.4",
+    "@babel/code-frame": "^7.23.5",
     "@lvce-editor/jsonc-parser": "^1.1.0",
     "@lvce-editor/pretty-error": "^1.2.2",
     "@lvce-editor/verror": "^1.1.2",
