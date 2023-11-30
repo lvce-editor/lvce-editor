@@ -21,6 +21,6 @@ export const resolve = (id, args) => {
     Logger.warn(`callback ${id} may already be disposed`)
     return
   }
-  state.callbacks[id].resolve(args)
+  state.callbacks[id](args)
   delete state.callbacks[id]
 }
