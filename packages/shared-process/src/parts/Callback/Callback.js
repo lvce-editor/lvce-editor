@@ -1,39 +1,26 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Id from '../Id/Id.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Promises from '../Promises/Promises.js'
 
 export const state = {
   callbacks: Object.create(null),
-  onceListeners: new Set(),
 }
 
 export const registerPromise = () => {
   const id = Id.create()
-  const { resolve, reject, promise } = Promises.withResolvers()
-  state.callbacks[id] = { resolve, reject }
+  const { resolve, promise } = Promises.withResolvers()
+  state.callbacks[id] = resolve
   return { id, promise }
 }
 
-// TODO merge resolve and resolveEmpty
 export const resolve = (id, args) => {
-  const { callbacks } = state
-  if (!(id in callbacks)) {
-    console.warn(`callback ${id} may already be disposed`)
+  Assert.number(id)
+  if (!(id in state.callbacks)) {
+    console.log(args)
+    Logger.warn(`callback ${id} may already be disposed`)
     return
   }
-  callbacks[id].resolve(args)
-  delete callbacks[id]
-}
-
-export const reject = (id, error) => {
-  const { callbacks } = state
-  if (!(id in callbacks)) {
-    console.warn(`callback (rejected) ${id} may already be disposed`)
-    return
-  }
-  callbacks[id].reject(error)
-  delete callbacks[id]
-}
-
-export const isAllEmpty = () => {
-  return Object.keys(state.callbacks).length === 0 && state.onceListeners.size === 0
+  state.callbacks[id](args)
+  delete state.callbacks[id]
 }
