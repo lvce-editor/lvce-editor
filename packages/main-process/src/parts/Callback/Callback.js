@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Id from '../Id/Id.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Promises from '../Promises/Promises.js'
 
 export const state = {
@@ -8,22 +9,18 @@ export const state = {
 
 export const registerPromise = () => {
   const id = Id.create()
-  const { resolve, reject, promise } = Promises.withResolvers()
-  state.callbacks[id] = {
-    resolve,
-    reject,
-  }
+  const { resolve, promise } = Promises.withResolvers()
+  state.callbacks[id] = resolve
   return { id, promise }
 }
 
 export const resolve = (id, args) => {
   Assert.number(id)
-  const { callbacks } = state
-  if (!(id in callbacks)) {
+  if (!(id in state.callbacks)) {
     console.log(args)
-    console.warn(`callback ${id} may already be disposed`)
+    Logger.warn(`callback ${id} may already be disposed`)
     return
   }
-  callbacks[id].resolve(args)
-  delete callbacks[id]
+  state.callbacks[id](args)
+  delete state.callbacks[id]
 }
