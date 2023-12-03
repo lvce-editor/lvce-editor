@@ -1,12 +1,14 @@
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
-import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PrettyError from '../PrettyError/PrettyError.js'
+import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.js'
 import * as Process from '../Process/Process.js'
+import * as RequiresSocket from '../RequiresSocket/RequiresSocket.js'
 
 export const state = {
   /**
@@ -20,6 +22,10 @@ const handleChildError = (error) => {
   Process.exit(ExitCode.Error)
 }
 
+const logError = (error, prettyError) => {
+  PrintPrettyError.printPrettyError(prettyError, '[main-process] ')
+}
+
 const handleChildMessage = async (message) => {
   if (message === 'ready') {
     return
@@ -28,23 +34,15 @@ const handleChildMessage = async (message) => {
     Logger.warn('invalid message', message)
     return
   }
-  if (message.id) {
-    if ('result' in message || 'error' in message) {
-      Callback.resolve(message.id, message)
-      state.onMessage(message)
-      return
-    }
-    const response = await GetResponse.getResponse(message, Command.execute)
-    if (state.sharedProcess) {
-      state.sharedProcess.send(response)
-    }
-  } else {
-    try {
-      await Command.execute(message.method, ...message.params)
-    } catch (error) {
-      ErrorHandling.handleError(error)
-    }
-  }
+  await JsonRpc.handleJsonRpcMessage(
+    state.sharedProcess,
+    message,
+    Command.execute,
+    Callback.resolve,
+    PrettyError.prepare,
+    logError,
+    RequiresSocket.requiresSocket,
+  )
 }
 
 const handleProcessExit = async () => {
