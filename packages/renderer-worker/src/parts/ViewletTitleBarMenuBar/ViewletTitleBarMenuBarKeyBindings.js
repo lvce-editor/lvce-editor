@@ -1,47 +1,47 @@
 import * as KeyCode from '../KeyCode/KeyCode.js'
-import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const getKeyBindings = () => {
   return [
     {
       key: KeyCode.DownArrow,
       command: 'TitleBarMenuBar.handleKeyArrowDown',
-      when: 'focus.TitleBarMenuBar',
+      when: WhenExpression.FocusTitleBarMenuBar,
     },
     {
       key: KeyCode.UpArrow,
       command: 'TitleBarMenuBar.handleKeyArrowUp',
-      when: 'focus.TitleBarMenuBar',
+      when: WhenExpression.FocusTitleBarMenuBar,
     },
     {
       key: KeyCode.RightArrow,
       command: 'TitleBarMenuBar.handleKeyArrowRight',
-      when: 'focus.TitleBarMenuBar',
+      when: WhenExpression.FocusTitleBarMenuBar,
     },
     {
       key: KeyCode.LeftArrow,
       command: 'TitleBarMenuBar.handleKeyArrowLeft',
-      when: 'focus.TitleBarMenuBar',
+      when: WhenExpression.FocusTitleBarMenuBar,
     },
     {
       key: KeyCode.Space,
       command: 'TitleBarMenuBar.handleKeySpace',
-      when: 'focus.TitleBarMenuBar',
+      when: WhenExpression.FocusTitleBarMenuBar,
     },
     {
       key: KeyCode.Home,
       command: 'TitleBarMenuBar.handleKeyHome',
-      when: 'focus.TitleBarMenuBar',
+      when: WhenExpression.FocusTitleBarMenuBar,
     },
     {
       key: KeyCode.End,
       command: 'TitleBarMenuBar.handleKeyEnd',
-      when: 'focus.TitleBarMenuBar',
+      when: WhenExpression.FocusTitleBarMenuBar,
     },
     {
       key: KeyCode.Escape,
       command: 'TitleBarMenuBar.handleKeyEscape',
-      when: 'focus.TitleBarMenuBar',
+      when: WhenExpression.FocusTitleBarMenuBar,
     },
   ]
 }
