@@ -433,11 +433,11 @@ export const build = async ({
   console.timeEnd('copyExtensionHostHelperProcessSources')
 
   console.time('copyExtensions')
-  await copyExtensions({ arch, optimizeLanguageBasics })
+  await copyExtensions({ arch, optimizeLanguageBasics, resourcesPath })
   console.timeEnd('copyExtensions')
 
   console.time('copyStaticFiles')
-  await copyStaticFiles({ arch })
+  await copyStaticFiles({ arch, resourcesPath })
   console.timeEnd('copyStaticFiles')
 
   console.time('copyCss')
