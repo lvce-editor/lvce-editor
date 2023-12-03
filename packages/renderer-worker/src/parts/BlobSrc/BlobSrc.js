@@ -1,6 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as Procotol from '../Protocol/Protocol.js'
+import * as Protocol from '../Protocol/Protocol.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as Character from '../Character/Character.js'
 
@@ -30,7 +30,7 @@ export const getSrc = (uri) => {
 }
 
 export const disposeSrc = async (src) => {
-  if (src.startsWith(Procotol.Blob)) {
+  if (src.startsWith(Protocol.Blob)) {
     await Command.execute('Url.revokeObjectUrl', src)
   }
 }

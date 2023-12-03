@@ -1,5 +1,5 @@
 .Problems {
-  color: var(--WorkbenchForeground);
+  color: var(--WorkbenchForeground, white);
 }
 
 .ProblemList {
@@ -16,6 +16,11 @@
   gap: 5px;
   align-items: center;
   padding-left: 20px;
+}
+
+.Problem:hover {
+  color: var(--ListHoverForeground);
+  background: var(--ListHoverBackground);
 }
 
 .ProblemSelected {

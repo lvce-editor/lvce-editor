@@ -4,28 +4,58 @@ import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as RendererWorkerCommandType from '../RendererWorkerCommandType/RendererWorkerCommandType.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 
-// TODO add test
+const getSelectionRange = (lines, copyFullLine, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
+  if (copyFullLine) {
+    const lineLength = lines[endRowIndex].length
+    return {
+      start: {
+        rowIndex: startRowIndex,
+        columnIndex: 0,
+      },
+      end: {
+        rowIndex: startRowIndex,
+        columnIndex: lineLength,
+      },
+    }
+  }
+  return {
+    start: {
+      rowIndex: startRowIndex,
+      columnIndex: startColumnIndex,
+    },
+    end: {
+      rowIndex: endRowIndex,
+      columnIndex: endColumnIndex,
+    },
+  }
+}
+
+const shouldCopyFullLine = (startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
+  return startRowIndex === endRowIndex && startColumnIndex === endColumnIndex
+}
+
 export const copy = async (editor) => {
   if (!Editor.hasSelection(editor)) {
     // TODO copy line where cursor is
     return editor
   }
-  const selectionStartRowIndex = editor.selections[0]
-  const selectionStartColumnIndex = editor.selections[1]
-  const selectionEndRowIndex = editor.selections[2]
-  const selectionEndColumnIndex = editor.selections[3]
-  const range = {
-    start: {
-      rowIndex: selectionStartRowIndex,
-      columnIndex: selectionStartColumnIndex,
-    },
-    end: {
-      rowIndex: selectionEndRowIndex,
-      columnIndex: selectionEndColumnIndex,
-    },
-  }
+  const { lines, selections } = editor
+  const selectionStartRowIndex = selections[0]
+  const selectionStartColumnIndex = selections[1]
+  const selectionEndRowIndex = selections[2]
+  const selectionEndColumnIndex = selections[3]
+  const copyFullLine = shouldCopyFullLine(selectionStartRowIndex, selectionStartColumnIndex, selectionEndRowIndex, selectionEndColumnIndex)
+  const range = getSelectionRange(
+    lines,
+    copyFullLine,
+    selectionStartRowIndex,
+    selectionStartColumnIndex,
+    selectionEndRowIndex,
+    selectionEndColumnIndex,
+  )
   const selectedLines = TextDocument.getSelectionText(editor, range)
   const text = JoinLines.joinLines(selectedLines)
-  await Command.execute(RendererWorkerCommandType.ClipBoardWriteText, /* text */ text)
+  const fullText = copyFullLine ? '\n' + text : text
+  await Command.execute(RendererWorkerCommandType.ClipBoardWriteText, fullText)
   return editor
 }

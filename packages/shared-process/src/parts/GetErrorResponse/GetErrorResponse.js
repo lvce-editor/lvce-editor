@@ -1,9 +1,6 @@
 import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcErrorResponse from '../JsonRpcErrorResponse/JsonRpcErrorResponse.js'
-import * as PrettyError from '../PrettyError/PrettyError.js'
-import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.js'
 import * as ShouldLogError from '../ShouldLogError/ShouldLogError.js'
 
 const getErrorProperty = (error, prettyError) => {
@@ -38,11 +35,9 @@ const getErrorProperty = (error, prettyError) => {
   }
 }
 
-export const getErrorResponse = (message, error, ipc) => {
-  const prettyError = PrettyError.prepare(error)
-  if (ShouldLogError.shouldLogError(error)) {
-    PrintPrettyError.printPrettyError(prettyError, `[shared-process] `)
-  }
+export const getErrorResponse = (message, error, ipc, preparePrettyError, logError) => {
+  const prettyError = preparePrettyError(error)
+
   const errorProperty = getErrorProperty(error, prettyError)
   return JsonRpcErrorResponse.create(message, errorProperty)
 }
