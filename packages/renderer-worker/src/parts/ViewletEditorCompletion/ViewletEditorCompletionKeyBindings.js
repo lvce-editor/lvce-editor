@@ -23,5 +23,15 @@ export const getKeyBindings = () => {
       command: 'Editor.closeCompletion',
       when: WhenExpression.FocusEditorCompletions,
     },
+    {
+      key: KeyCode.End,
+      command: 'EditorCompletion.focusLast',
+      when: WhenExpression.FocusEditorCompletions,
+    },
+    {
+      key: KeyCode.Home,
+      command: 'EditorCompletion.focusFirst',
+      when: WhenExpression.FocusEditorCompletions,
+    },
   ]
 }
