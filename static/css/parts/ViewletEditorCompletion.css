@@ -29,11 +29,11 @@
   contain: content;
 }
 
-.EditorCompletionItem:hover {
+.EditorCompletionItem:where(:hover) {
   background: var(--CompletionListItemHoverBackground, rgba(64, 92, 80, 0.2));
 }
 
-.EditorCompletionItem.EditorCompletionItemFocused {
+.EditorCompletionItemFocused {
   background: var(--CompletionListItemActiveBackground, #405c50);
   color: var(--CompletionListItemActiveForeground);
 }

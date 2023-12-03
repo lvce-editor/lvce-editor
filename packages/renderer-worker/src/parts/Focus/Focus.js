@@ -15,6 +15,7 @@ export const setFocus = async (focusKey) => {
 export const setAdditionalFocus = (key) => {
   // TODO key should be numeric
   Context.set(`focus.${key}`, true)
+  KeyBindingsState.update()
 }
 
 export const removeAdditionalFocus = (key) => {
