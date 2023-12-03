@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 jest.unstable_mockModule('electron', () => {
@@ -54,7 +53,7 @@ test.skip('handlePortForMainProcess - error - command not found', async () => {
     id: 1,
     error: {
       message: 'method not found App.exit',
-      code: JsonRpcErrorCode.MethodNotFound,
+      code: -32001,
       data: expect.stringMatching('Error: method not found App.exit'),
     },
   })

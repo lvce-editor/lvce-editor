@@ -1,8 +1,13 @@
 import { MessageChannelMain } from 'electron'
 import * as Assert from '../Assert/Assert.js'
 import * as ElectronPreloadChannelType from '../ElectronPreloadChannelType/ElectronPreloadChannelType.js'
-import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
 import * as GetSuccessResponse from '../GetSuccessResponse/GetSuccessResponse.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as PrettyError from '../PrettyError/PrettyError.js'
+
+const logError = (error, prettyError) => {
+  // ignore
+}
 
 const getModule = (type) => {
   switch (type) {
@@ -61,7 +66,7 @@ export const handlePort = async (event, message) => {
     const response = GetSuccessResponse.getSuccessResponse(message, null)
     ipc.sendAndTransfer(response, [port2])
   } catch (error) {
-    const response = await GetErrorResponse.getErrorResponse(message, error)
+    const response = await JsonRpc.getErrorResponse(message, error, ipc, PrettyError.prepare, logError)
     const isDestroyed = ipc.isDisposed()
     if (isDestroyed) {
       return
