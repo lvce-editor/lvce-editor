@@ -1,26 +1,27 @@
 import * as KeyCode from '../KeyCode/KeyCode.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const getKeyBindings = () => {
   return [
     {
       key: KeyCode.LeftArrow,
       command: 'EditorImage.moveLeft',
-      when: 'focus.EditorImage',
+      when: WhenExpression.FocusEditorImage,
     },
     {
       key: KeyCode.RightArrow,
       command: 'EditorImage.moveRight',
-      when: 'focus.EditorImage',
+      when: WhenExpression.FocusEditorImage,
     },
     {
       key: KeyCode.UpArrow,
       command: 'EditorImage.moveUp',
-      when: 'focus.EditorImage',
+      when: WhenExpression.FocusEditorImage,
     },
     {
       key: KeyCode.DownArrow,
       command: 'EditorImage.moveDown',
-      when: 'focus.EditorImage',
+      when: WhenExpression.FocusEditorImage,
     },
   ]
 }
