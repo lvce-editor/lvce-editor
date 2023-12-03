@@ -453,7 +453,7 @@ export const build = async ({
   console.time('copyRendererProcessFiles')
   await Copy.copy({
     from: rendererProcessCachePath,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/renderer-process`,
+    to: `${resourcesPath}/app/packages/renderer-process`,
     ignore: ['static'],
   })
   console.timeEnd('copyRendererProcessFiles')
@@ -467,7 +467,7 @@ export const build = async ({
   console.time('copyRendererWorkerFiles')
   await Copy.copy({
     from: rendererWorkerCachePath,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/renderer-worker`,
+    to: `${resourcesPath}/app/packages/renderer-worker`,
     ignore: ['static'],
   })
   console.timeEnd('copyRendererWorkerFiles')
@@ -480,7 +480,7 @@ export const build = async ({
   console.time('copyExtensionHostWorkerFiles')
   await Copy.copy({
     from: extensionHostWorkerCachePath,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host-worker`,
+    to: `${resourcesPath}/app/packages/extension-host-worker`,
     ignore: ['static'],
   })
   console.timeEnd('copyExtensionHostWorkerFiles')
@@ -494,20 +494,20 @@ export const build = async ({
   console.time('copyExtensionHostSubWorkerFiles')
   await Copy.copy({
     from: extensionHostSubWorkerCachePath,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host-sub-worker`,
+    to: `${resourcesPath}/app/packages/extension-host-sub-worker`,
     ignore: ['static'],
   })
   console.timeEnd('copyExtensionHostSubWorkerFiles')
 
   console.time('copyPlaygroundFiles')
-  await copyPlaygroundFiles({ arch })
+  await copyPlaygroundFiles({ arch, resourcesPath })
   console.timeEnd('copyPlaygroundFiles')
 
   console.time('addRootPackageJson')
   await addRootPackageJson({
     electronVersion,
     product,
-    cachePath: Path.absolute(`build/.tmp/electron-bundle/${arch}/resources/app`),
+    cachePath: Path.absolute(`${resourcesPath}/app`),
     bundleMainProcess,
     version,
   })
