@@ -23,7 +23,7 @@ const UiStrings = {
   When: 'When',
   Key: 'Key',
   EmptyString: '',
-  SearchKeyBindings: 'Search Key Bindings',
+  TypeToSearchKeyBindings: 'Type to search in keybindings',
 }
 
 const kbdDom = {
@@ -132,7 +132,7 @@ const getTableRowDom = (keyBinding) => {
       ...tableCellProps,
       childCount: 1,
     },
-    text(keyBinding.when || UiStrings.EmptyString)
+    text(keyBinding.when || UiStrings.EmptyString),
   )
   return dom
 }
