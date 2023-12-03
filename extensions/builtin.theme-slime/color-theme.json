@@ -63,7 +63,7 @@
     "TitleBarColor": "#cccccc",
     "TitleBarColorInactive": "rgba(204, 204, 204, 0.6)",
 
-    "WorkbenchForeground": "#cccccc"
+    "WorkbenchForeground": "#9ca2a0"
   },
   "tokenColors": [
     {
