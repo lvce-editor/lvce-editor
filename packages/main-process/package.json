@@ -27,7 +27,7 @@
   "dependencies": {
     "@babel/code-frame": "^7.23.5",
     "@lvce-editor/assert": "^1.0.1",
-    "@lvce-editor/json-rpc": "^0.2.1",
+    "@lvce-editor/json-rpc": "^0.3.0",
     "@lvce-editor/pretty-error": "^1.2.2",
     "@lvce-editor/verror": "^1.1.2",
     "debug": "^4.3.4",
