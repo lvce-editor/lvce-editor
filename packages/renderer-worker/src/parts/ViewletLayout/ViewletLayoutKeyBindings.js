@@ -1,23 +1,24 @@
 import * as KeyCode from '../KeyCode/KeyCode.js'
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const getKeyBindings = () => {
   return [
     {
       key: KeyCode.Escape,
       command: 'Viewlet.closeWidget',
-      when: 'focus.FindWidget',
+      when: WhenExpression.FocusFindWidget,
       args: ['FindWidget'],
     },
     {
       key: KeyCode.Enter,
       command: 'EditorRename.finish',
-      when: 'focus.editorRename',
+      when: WhenExpression.FocusEditorRename,
     },
     {
       key: KeyCode.Escape,
       command: 'EditorRename.abort',
-      when: 'focus.editorRename',
+      when: WhenExpression.FocusEditorRename,
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.KeyB,
@@ -40,7 +41,7 @@ export const getKeyBindings = () => {
     {
       key: KeyModifier.CtrlCmd | KeyCode.Enter,
       command: 'Source Control.acceptInput',
-      when: 'focus.sourceControlInput',
+      when: WhenExpression.FocusSourceControlInput,
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.KeyN,
@@ -107,7 +108,7 @@ export const getKeyBindings = () => {
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyI,
       command: 'Developer.toggleDeveloperTools',
-      when: 'browser.electron',
+      when: WhenExpression.BrowserElectron,
     },
     {
       key: KeyCode.F6,
@@ -124,62 +125,62 @@ export const getKeyBindings = () => {
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Space,
       command: 'Editor.selectInsideString',
-      when: 'focus.editor',
+      when: WhenExpression.FocusEditor,
     },
     {
       key: KeyCode.Escape,
       command: 'dialog.close',
-      when: 'focus.dialog',
+      when: WhenExpression.FocusDialog,
     },
     {
       key: KeyCode.DownArrow,
       command: 'Menu.focusNext',
-      when: 'focus.menu',
+      when: WhenExpression.FocusMenu,
     },
     {
       key: KeyCode.UpArrow,
       command: 'Menu.focusPrevious',
-      when: 'focus.menu',
+      when: WhenExpression.FocusMenu,
     },
     {
       key: KeyCode.Enter,
       command: 'Menu.selectCurrent',
-      when: 'focus.menu',
+      when: WhenExpression.FocusMenu,
     },
     {
       key: KeyCode.Space,
       command: 'Menu.selectCurrent',
-      when: 'focus.menu',
+      when: WhenExpression.FocusMenu,
     },
     {
       key: KeyCode.Home,
       command: 'Menu.focusFirst',
-      when: 'focus.menu',
+      when: WhenExpression.FocusMenu,
     },
     {
       key: KeyCode.End,
       command: 'Menu.focusLast',
-      when: 'focus.menu',
+      when: WhenExpression.FocusMenu,
     },
     {
       key: KeyCode.Escape,
       command: 'Menu.hide',
-      when: 'focus.menu',
+      when: WhenExpression.FocusMenu,
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyN,
       command: 'ElectronWindow.openNew',
-      when: 'browser.electron',
+      when: WhenExpression.BrowserElectron,
     },
     {
       key: KeyCode.Tab,
       command: 'Menu.noop',
-      when: 'focus.menu',
+      when: WhenExpression.FocusMenu,
     },
     {
       key: KeyModifier.Shift | KeyCode.Tab,
       command: 'Menu.noop',
-      when: 'focus.menu',
+      when: WhenExpression.FocusMenu,
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyR,
@@ -205,17 +206,17 @@ export const getKeyBindings = () => {
     {
       key: KeyCode.Enter,
       command: 'FindWidget.focusNext',
-      when: 'focus.FindWidget',
+      when: WhenExpression.FocusFindWidget,
     },
     {
       key: KeyModifier.Shift | KeyCode.F4,
       command: 'FindWidget.focusPrevious',
-      when: 'focus.FindWidget',
+      when: WhenExpression.FocusFindWidget,
     },
     {
       key: KeyCode.F4,
       command: 'FindWidget.focusNext',
-      when: 'focus.FindWidget',
+      when: WhenExpression.FocusFindWidget,
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.Equal,
@@ -232,7 +233,7 @@ export const getKeyBindings = () => {
     {
       key: KeyCode.Enter,
       command: 'SimpleBrowser.go',
-      when: 'focus.SimpleBrowserInput',
+      when: WhenExpression.FocusSimpleBrowserInput,
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.KeyR,
@@ -245,7 +246,7 @@ export const getKeyBindings = () => {
     {
       key: KeyCode.Enter,
       command: 'Run And Debug.handleEvaluate',
-      when: 'focus.DebugInput',
+      when: WhenExpression.FocusDebugInput,
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.KeyJ,
