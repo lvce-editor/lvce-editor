@@ -1,31 +1,32 @@
 import * as KeyCode from '../KeyCode/KeyCode.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const getKeyBindings = () => {
   return [
     {
       key: KeyCode.DownArrow,
       command: 'Locations.focusNext',
-      when: 'focus.locationList',
+      when: WhenExpression.FocusLocationList,
     },
     {
       key: KeyCode.UpArrow,
       command: 'Locations.focusPrevious',
-      when: 'focus.locationList',
+      when: WhenExpression.FocusLocationList,
     },
     {
       key: KeyCode.Home,
       command: 'Locations.focusFirst',
-      when: 'focus.locationList',
+      when: WhenExpression.FocusLocationList,
     },
     {
       key: KeyCode.End,
       command: 'Locations.focusLast',
-      when: 'focus.locationList',
+      when: WhenExpression.FocusLocationList,
     },
     {
       key: KeyCode.Enter,
       command: 'Locations.selectCurrent',
-      when: 'focus.locationList',
+      when: WhenExpression.FocusLocationList,
     },
   ]
 }

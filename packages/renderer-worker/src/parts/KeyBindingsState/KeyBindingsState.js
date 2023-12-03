@@ -36,7 +36,7 @@ const getMatchingKeyBindings = (keyBindingSets) => {
     }
     return Context.get(keyBinding.when)
   }
-  return Object.values(keyBindingSets).flat(1).filter(matchesContext)
+  return Object.values(keyBindingSets).reverse().flat(1).filter(matchesContext)
 }
 
 const getAvailableKeyBindings = (keyBindings) => {

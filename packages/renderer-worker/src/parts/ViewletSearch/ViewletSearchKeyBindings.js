@@ -1,37 +1,38 @@
 import * as KeyCode from '../KeyCode/KeyCode.js'
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const getKeyBindings = () => {
   return [
     {
       key: KeyCode.DownArrow,
       command: 'Search.focusNext',
-      when: 'focus.SearchResults',
+      when: WhenExpression.FocusSearchResults,
     },
     {
       key: KeyCode.UpArrow,
       command: 'Search.focusPrevious',
-      when: 'focus.SearchResults',
+      when: WhenExpression.FocusSearchResults,
     },
     {
       key: KeyCode.Delete,
       command: 'Search.dismissItem',
-      when: 'focus.SearchResults',
+      when: WhenExpression.FocusSearchResults,
     },
     {
       key: KeyCode.Home,
       command: 'Search.focusFirst',
-      when: 'focus.SearchResults',
+      when: WhenExpression.FocusSearchResults,
     },
     {
       key: KeyCode.End,
       command: 'Search.focusLast',
-      when: 'focus.SearchResults',
+      when: WhenExpression.FocusSearchResults,
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.KeyC,
       command: 'Search.copy',
-      when: 'focus.SearchResults',
+      when: WhenExpression.FocusSearchResults,
     },
   ]
 }
