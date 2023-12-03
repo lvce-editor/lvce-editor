@@ -1,4 +1,5 @@
 import * as KeyCode from '../KeyCode/KeyCode.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const getKeyBindings = () => {
   return [
@@ -6,32 +7,32 @@ export const getKeyBindings = () => {
       key: KeyCode.Escape,
       command: 'Viewlet.closeWidget',
       args: ['QuickPick'],
-      when: 'focus.quickPickInput',
+      when: WhenExpression.FocusQuickPickInput,
     },
     {
       key: KeyCode.UpArrow,
       command: 'QuickPick.focusPrevious',
-      when: 'focus.quickPickInput',
+      when: WhenExpression.FocusQuickPickInput,
     },
     {
       key: KeyCode.DownArrow,
       command: 'QuickPick.focusNext',
-      when: 'focus.quickPickInput',
+      when: WhenExpression.FocusQuickPickInput,
     },
     {
       key: KeyCode.PageUp,
       command: 'QuickPick.focusFirst',
-      when: 'focus.quickPickInput',
+      when: WhenExpression.FocusQuickPickInput,
     },
     {
       key: KeyCode.PageDown,
       command: 'QuickPick.focusLast',
-      when: 'focus.quickPickInput',
+      when: WhenExpression.FocusQuickPickInput,
     },
     {
       key: KeyCode.Enter,
       command: 'QuickPick.selectCurrentIndex',
-      when: 'focus.quickPickInput',
+      when: WhenExpression.FocusQuickPickInput,
     },
   ]
 }
