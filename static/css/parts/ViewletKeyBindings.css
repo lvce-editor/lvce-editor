@@ -51,7 +51,7 @@
 .KeyBindingsTableBody {
   white-space: pre;
   overflow-y: auto;
-  user-select: text;
+  user-select: none;
   contain: content;
 }
 
