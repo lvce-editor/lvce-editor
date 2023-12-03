@@ -7,7 +7,7 @@ export const state = {
 }
 
 // TODO maybe merge pty and pty controller
-export const create = (id, cwd, command, args, ipc) => {
+export const create = (ipc, id, cwd, command, args) => {
   Assert.number(id)
   Assert.string(cwd)
   Assert.string(command)
