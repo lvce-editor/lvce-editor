@@ -174,7 +174,7 @@ const removeSrcPrefix = (postfix) => {
   return postfix
 }
 
-const copyExtensions = async ({ arch, optimizeLanguageBasics, resourcesPath }) => {
+const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath }) => {
   await Copy.copy({
     from: 'extensions',
     to: `${resourcesPath}/app/extensions`,
@@ -250,7 +250,7 @@ For performance reason, all languages extensions are bundled into one during bui
   }
 }
 
-const copyStaticFiles = async ({ arch, resourcesPath }) => {
+const copyStaticFiles = async ({ resourcesPath }) => {
   await Copy.copy({
     from: 'static',
     to: `${resourcesPath}/app/static`,
@@ -288,9 +288,9 @@ const copyStaticFiles = async ({ arch, resourcesPath }) => {
   await Remove.remove(`${resourcesPath}/app/static/lib-css/modern-normalize.css`)
 }
 
-const copyCss = async ({ arch }) => {
+const copyCss = async ({ resourcesPath }) => {
   await BundleCss.bundleCss({
-    outDir: `build/.tmp/electron-bundle/${arch}/resources/app/static/css`,
+    outDir: `${resourcesPath}/app/static/css`,
   })
 }
 
@@ -408,7 +408,7 @@ export const build = async ({
   console.time('copyMainProcessFiles')
   await Copy.copy({
     from: mainProcessCachePath,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process`,
+    to: `${resourcesPath}/app/packages/main-process`,
   })
   console.timeEnd('copyMainProcessFiles')
 
@@ -433,15 +433,15 @@ export const build = async ({
   console.timeEnd('copyExtensionHostHelperProcessSources')
 
   console.time('copyExtensions')
-  await copyExtensions({ arch, optimizeLanguageBasics, resourcesPath })
+  await copyExtensions({ optimizeLanguageBasics, resourcesPath })
   console.timeEnd('copyExtensions')
 
   console.time('copyStaticFiles')
-  await copyStaticFiles({ arch, resourcesPath })
+  await copyStaticFiles({ resourcesPath })
   console.timeEnd('copyStaticFiles')
 
   console.time('copyCss')
-  await copyCss({ arch })
+  await copyCss({ resourcesPath })
   console.timeEnd('copyCss')
 
   const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
