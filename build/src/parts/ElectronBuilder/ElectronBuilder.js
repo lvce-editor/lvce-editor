@@ -186,20 +186,23 @@ const copyElectronResult = async ({
   isMacos,
 }) => {
   await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos })
+  const arch = 'x64'
   const debArch = 'amd64'
+  const resourcesPath = isMacos ? `build/.tmp/linux/snap/${debArch}/app/Contents/Resources` : `build/.tmp/linux/snap/${debArch}/app/resources`
+
   await Copy.copy({
-    from: `build/.tmp/electron-bundle/x64`,
+    from: `build/.tmp/electron-bundle/${arch}`,
     to: `build/.tmp/linux/snap/${debArch}/app`,
   })
   await addRootPackageJson({
-    cachePath: `build/.tmp/linux/snap/${debArch}/app/resources/app`,
+    cachePath: `${resourcesPath}/app`,
     version,
     product,
     bundleMainProcess,
   })
   if (supportsAutoUpdate) {
     await Replace.replace({
-      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/shared-process/src/parts/IsAutoUpdateSupported/IsAutoUpdateSupported.js`,
+      path: `${resourcesPath}/app/packages/shared-process/src/parts/IsAutoUpdateSupported/IsAutoUpdateSupported.js`,
       occurrence: `return Platform.isWindows || Platform.isMacOs`,
       replacement: `return true`,
     })
@@ -211,21 +214,21 @@ const copyElectronResult = async ({
     })
   } else {
     await Replace.replace({
-      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/shared-process/src/parts/IsAutoUpdateSupported/IsAutoUpdateSupported.js`,
+      path: `${resourcesPath}/app/packages/shared-process/src/parts/IsAutoUpdateSupported/IsAutoUpdateSupported.js`,
       occurrence: `return Platform.isWindows || Platform.isMacOs`,
       replacement: `return false`,
     })
   }
   if (config === ElectronBuilderConfigType.ArchLinux) {
     await Replace.replace({
-      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
+      path: `${resourcesPath}/app/packages/main-process/src/parts/Platform/Platform.js`,
       occurrence: `export const isArchLinux = false`,
       replacement: `export const isArchLinux = true`,
     })
   }
   if (config === ElectronBuilderConfigType.AppImage) {
     await Replace.replace({
-      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
+      path: `${resourcesPath}/app/packages/main-process/src/parts/Platform/Platform.js`,
       occurrence: `export const isAppImage = false`,
       replacement: `export const isAppImage = true`,
     })
@@ -254,13 +257,6 @@ const renameReleaseFile = async ({ config, version, product }) => {
     to: releaseFilePath,
   })
   return releaseFilePath
-}
-
-const getResourcesPath = (platform, arch) => {
-  if (platform === 'darwin') {
-    return `build/.tmp/electron-bundle/${arch}/resources`
-  }
-  return `build/.tmp/electron-bundle/${arch}/resources`
 }
 
 export const build = async ({ config, product, shouldRemoveUnusedLocales = false }) => {
