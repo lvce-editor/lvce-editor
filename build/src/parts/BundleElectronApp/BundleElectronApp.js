@@ -25,7 +25,7 @@ import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
-const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate }) => {
+const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate, isMacos }) => {
   const files = [
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
@@ -51,7 +51,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
   ]
   const absolutePaths = files.map(Path.absolute)
   const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
-  const hash = Hash.computeHash(contents + electronVersion + arch + String(supportsAutoUpdate))
+  const hash = Hash.computeHash(contents + electronVersion + arch + String(supportsAutoUpdate) + String(isMacos))
   return hash
 }
 
@@ -98,7 +98,7 @@ const shouldLocaleBeRemoved = (locale) => {
   return locale !== 'en-US.pak'
 }
 
-const removeUnusedLocales = async ({ arch }) => {
+const removeUnusedLocales = async ({ arch, isMacos }) => {
   const localesPath = `build/.tmp/electron-bundle/${arch}/locales`
   const dirents = await ReadDir.readDir(localesPath)
   const toRemove = dirents.filter(shouldLocaleBeRemoved)
@@ -107,16 +107,16 @@ const removeUnusedLocales = async ({ arch }) => {
   }
 }
 
-const copyDependencies = async ({ cachePath, arch }) => {
+const copyDependencies = async ({ cachePath, resourcesPath }) => {
   await Copy.copy({
     from: cachePath,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app`,
+    to: `${resourcesPath}/app`,
   })
 }
 
-const copyPlaygroundFiles = async ({ arch }) => {
+const copyPlaygroundFiles = async ({ arch, resourcesPath }) => {
   await WriteFile.writeFile({
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/playground/index.html`,
+    to: `${resourcesPath}/app/playground/index.html`,
     content: `<!DOCTYPE html>
 <html>
   <head>
@@ -131,29 +131,29 @@ const copyPlaygroundFiles = async ({ arch }) => {
 `,
   })
   await WriteFile.writeFile({
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/playground/index.css`,
+    to: `${resourcesPath}/app/playground/index.css`,
     content: `h1 { color: dodgerblue; }`,
   })
 }
 
-const copyPtyHostSources = async ({ arch }) => {
+const copyPtyHostSources = async ({ resourcesPath }) => {
   await Copy.copy({
     from: 'packages/pty-host/src',
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/pty-host/src`,
+    to: `${resourcesPath}/app/packages/pty-host/src`,
   })
 }
 
-const copyExtensionHostSources = async ({ arch }) => {
+const copyExtensionHostSources = async ({ resourcesPath }) => {
   await Copy.copy({
     from: 'packages/extension-host/src',
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host/src`,
+    to: `${resourcesPath}/app/packages/extension-host/src`,
   })
 }
 
-const copyExtensionHostHelperProcessSources = async ({ arch }) => {
+const copyExtensionHostHelperProcessSources = async ({ resourcesPath }) => {
   await Copy.copy({
     from: 'packages/extension-host-helper-process/src',
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host-helper-process/src`,
+    to: `${resourcesPath}/app/packages/extension-host-helper-process/src`,
   })
 }
 
@@ -174,40 +174,38 @@ const removeSrcPrefix = (postfix) => {
   return postfix
 }
 
-const copyExtensions = async ({ arch, optimizeLanguageBasics }) => {
+const copyExtensions = async ({ optimizeLanguageBasics, resourcesPath }) => {
   await Copy.copy({
     from: 'extensions',
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions`,
+    to: `${resourcesPath}/app/extensions`,
     dereference: true,
   })
-  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-features-html/typescript`)
+  await Remove.remove(`${resourcesPath}/app/extensions/builtin.language-features-html/typescript`)
   await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-features-html/html-worker/src/parts/TypeScriptPath/TypeScriptPath.js`,
+    path: `${resourcesPath}/app/extensions/builtin.language-features-html/html-worker/src/parts/TypeScriptPath/TypeScriptPath.js`,
     occurrence: '../../../../typescript/lib/typescript.js',
     replacement: '../../../../../builtin.language-features-typescript/node/node_modules/typescript/lib/typescript.js',
   })
-  await Remove.remove(
-    `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-features-typescript/node/node_modules/typescript/lib/tsserverlibrary.js`,
-  )
+  await Remove.remove(`${resourcesPath}/app/extensions/builtin.language-features-typescript/node/node_modules/typescript/lib/tsserverlibrary.js`)
   await Copy.copy({
-    from: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.vscode-icons/icons`,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/static/file-icons`,
+    from: `${resourcesPath}/app/extensions/builtin.vscode-icons/icons`,
+    to: `${resourcesPath}/app/static/file-icons`,
   })
-  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.vscode-icons/icons`)
+  await Remove.remove(`${resourcesPath}/app/extensions/builtin.vscode-icons/icons`)
   await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.vscode-icons/icon-theme.json`,
+    path: `${resourcesPath}/app/extensions/builtin.vscode-icons/icon-theme.json`,
     occurrence: '/icons',
     replacement: '/file-icons',
   })
   if (optimizeLanguageBasics) {
-    const dirents = await ReadDir.readDir(`build/.tmp/electron-bundle/${arch}/resources/app/extensions`)
+    const dirents = await ReadDir.readDir(`${resourcesPath}/app/extensions`)
     const allLanguages = []
     for (const dirent of dirents) {
       if (!dirent.startsWith('builtin.language-basics-')) {
         continue
       }
       const postfix = dirent.slice('builtin.language-basics-'.length)
-      const extensionJson = await JsonFile.readJson(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}/extension.json`)
+      const extensionJson = await JsonFile.readJson(`${resourcesPath}/app/extensions/${dirent}/extension.json`)
       if (extensionJson && extensionJson.languages && Array.isArray(extensionJson.languages)) {
         for (const language of extensionJson.languages) {
           if (language.configuration) {
@@ -220,19 +218,19 @@ const copyExtensions = async ({ arch, optimizeLanguageBasics }) => {
         }
       }
       await Copy.copy({
-        from: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}/src`,
-        to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-basics/${postfix}`,
+        from: `${resourcesPath}/app/extensions/${dirent}/src`,
+        to: `${resourcesPath}/app/extensions/builtin.language-basics/${postfix}`,
       })
-      if (existsSync(Path.absolute(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}/languageConfiguration.json`))) {
+      if (existsSync(Path.absolute(`${resourcesPath}/app/extensions/${dirent}/languageConfiguration.json`))) {
         await Copy.copy({
-          from: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}/languageConfiguration.json`,
-          to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-basics/${postfix}/languageConfiguration.json`,
+          from: `${resourcesPath}/app/extensions/${dirent}/languageConfiguration.json`,
+          to: `${resourcesPath}/app/extensions/builtin.language-basics/${postfix}/languageConfiguration.json`,
         })
       }
-      await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/extensions/${dirent}`)
+      await Remove.remove(`${resourcesPath}/app/extensions/${dirent}`)
     }
     await JsonFile.writeJson({
-      to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-basics/extension.json`,
+      to: `${resourcesPath}/app/extensions/builtin.language-basics/extension.json`,
       value: {
         id: 'builtin.language-basics',
         name: 'Language Basics',
@@ -241,7 +239,7 @@ const copyExtensions = async ({ arch, optimizeLanguageBasics }) => {
       },
     })
     await WriteFile.writeFile({
-      to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions/builtin.language-basics/README.md`,
+      to: `${resourcesPath}/app/extensions/builtin.language-basics/README.md`,
       content: `# Language Basics
 
 Syntax highlighting for Lvce Editor.
@@ -252,47 +250,47 @@ For performance reason, all languages extensions are bundled into one during bui
   }
 }
 
-const copyStaticFiles = async ({ arch }) => {
+const copyStaticFiles = async ({ resourcesPath }) => {
   await Copy.copy({
     from: 'static',
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/static`,
+    to: `${resourcesPath}/app/static`,
     ignore: ['css'],
   })
   await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    path: `${resourcesPath}/app/static/index.html`,
     occurrence: 'packages/renderer-process/src/rendererProcessMain.js',
     replacement: `packages/renderer-process/dist/rendererProcessMain.js`,
   })
   await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    path: `${resourcesPath}/app/static/index.html`,
     occurrence: '\n    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />',
     replacement: ``,
   })
   await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    path: `${resourcesPath}/app/static/index.html`,
     occurrence: '\n    <link rel="apple-touch-icon" href="/icons/pwa-icon-192.png" />',
     replacement: ``,
   })
   await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    path: `${resourcesPath}/app/static/index.html`,
     occurrence: '\n    <meta name="theme-color" content="#282e2f" />',
     replacement: ``,
   })
   await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    path: `${resourcesPath}/app/static/index.html`,
     occurrence: '\n    <meta name="description" content="Online Code Editor" />',
     replacement: ``,
   })
-  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/manifest.json`)
-  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/favicon.ico`)
-  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/images`)
-  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/sounds`)
-  await Remove.remove(`build/.tmp/electron-bundle/${arch}/resources/app/static/lib-css/modern-normalize.css`)
+  await Remove.remove(`${resourcesPath}/app/static/manifest.json`)
+  await Remove.remove(`${resourcesPath}/app/static/favicon.ico`)
+  await Remove.remove(`${resourcesPath}/app/static/images`)
+  await Remove.remove(`${resourcesPath}/app/static/sounds`)
+  await Remove.remove(`${resourcesPath}/app/static/lib-css/modern-normalize.css`)
 }
 
-const copyCss = async ({ arch }) => {
+const copyCss = async ({ resourcesPath }) => {
   await BundleCss.bundleCss({
-    outDir: `build/.tmp/electron-bundle/${arch}/resources/app/static/css`,
+    outDir: `${resourcesPath}/app/static/css`,
   })
 }
 
@@ -319,6 +317,7 @@ export const build = async ({
   shouldRemoveUnusedLocales = false,
   arch = process.arch,
   platform = process.platform,
+  isMacos = process.platform === 'darwin',
 }) => {
   Assert.object(product)
   Assert.string(version)
@@ -327,6 +326,7 @@ export const build = async ({
     electronVersion,
     arch,
     supportsAutoUpdate,
+    isMacos,
   })
   const dependencyCachePath = Path.join(Path.absolute('build/.tmp/cachedDependencies'), dependencyCacheHash)
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
@@ -335,6 +335,7 @@ export const build = async ({
   const bundleMainProcess = BundleOptions.bundleMainProcess
   const bundleSharedProcess = BundleOptions.bundleSharedProcess
   const optimizeLanguageBasics = true
+  const resourcesPath = isMacos ? `build/.tmp/electron-bundle/${arch}/Contents/Resources` : `build/.tmp/electron-bundle/${arch}/resources`
 
   const useInstalledElectronVersion = isInstalled && installedArch === arch
   if (!useInstalledElectronVersion) {
@@ -377,23 +378,23 @@ export const build = async ({
 
   if (shouldRemoveUnusedLocales) {
     console.time('removeUnusedLocales')
-    await removeUnusedLocales({ arch })
+    await removeUnusedLocales({ arch, isMacos })
     console.timeEnd('removeUnusedLocales')
   }
 
   console.time('copyDependencies')
   await copyDependencies({
     cachePath: dependencyCachePath,
-    arch,
+    resourcesPath,
   })
   console.timeEnd('copyDependencies')
 
   console.time('copyExtensionHostSources')
-  await copyExtensionHostSources({ arch })
+  await copyExtensionHostSources({ resourcesPath })
   console.timeEnd('copyExtensionHostSources')
 
   console.time('copyPtyHostSources')
-  await copyPtyHostSources({ arch })
+  await copyPtyHostSources({ resourcesPath })
   console.timeEnd('copyPtyHostSources')
 
   const mainProcessCachePath = await BundleMainProcessCached.bundleMainProcessCached({
@@ -407,7 +408,7 @@ export const build = async ({
   console.time('copyMainProcessFiles')
   await Copy.copy({
     from: mainProcessCachePath,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process`,
+    to: `${resourcesPath}/app/packages/main-process`,
   })
   console.timeEnd('copyMainProcessFiles')
 
@@ -423,24 +424,24 @@ export const build = async ({
   console.time('copySharedProcessFiles')
   await Copy.copy({
     from: sharedProcessCachePath,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process`,
+    to: `${resourcesPath}/app/packages/shared-process`,
   })
   console.timeEnd('copySharedProcessFiles')
 
   console.time('copyExtensionHostHelperProcessSources')
-  await copyExtensionHostHelperProcessSources({ arch })
+  await copyExtensionHostHelperProcessSources({ resourcesPath })
   console.timeEnd('copyExtensionHostHelperProcessSources')
 
   console.time('copyExtensions')
-  await copyExtensions({ arch, optimizeLanguageBasics })
+  await copyExtensions({ optimizeLanguageBasics, resourcesPath })
   console.timeEnd('copyExtensions')
 
   console.time('copyStaticFiles')
-  await copyStaticFiles({ arch })
+  await copyStaticFiles({ resourcesPath })
   console.timeEnd('copyStaticFiles')
 
   console.time('copyCss')
-  await copyCss({ arch })
+  await copyCss({ resourcesPath })
   console.timeEnd('copyCss')
 
   const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
@@ -452,7 +453,7 @@ export const build = async ({
   console.time('copyRendererProcessFiles')
   await Copy.copy({
     from: rendererProcessCachePath,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/renderer-process`,
+    to: `${resourcesPath}/app/packages/renderer-process`,
     ignore: ['static'],
   })
   console.timeEnd('copyRendererProcessFiles')
@@ -466,7 +467,7 @@ export const build = async ({
   console.time('copyRendererWorkerFiles')
   await Copy.copy({
     from: rendererWorkerCachePath,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/renderer-worker`,
+    to: `${resourcesPath}/app/packages/renderer-worker`,
     ignore: ['static'],
   })
   console.timeEnd('copyRendererWorkerFiles')
@@ -479,7 +480,7 @@ export const build = async ({
   console.time('copyExtensionHostWorkerFiles')
   await Copy.copy({
     from: extensionHostWorkerCachePath,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host-worker`,
+    to: `${resourcesPath}/app/packages/extension-host-worker`,
     ignore: ['static'],
   })
   console.timeEnd('copyExtensionHostWorkerFiles')
@@ -493,20 +494,20 @@ export const build = async ({
   console.time('copyExtensionHostSubWorkerFiles')
   await Copy.copy({
     from: extensionHostSubWorkerCachePath,
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host-sub-worker`,
+    to: `${resourcesPath}/app/packages/extension-host-sub-worker`,
     ignore: ['static'],
   })
   console.timeEnd('copyExtensionHostSubWorkerFiles')
 
   console.time('copyPlaygroundFiles')
-  await copyPlaygroundFiles({ arch })
+  await copyPlaygroundFiles({ arch, resourcesPath })
   console.timeEnd('copyPlaygroundFiles')
 
   console.time('addRootPackageJson')
   await addRootPackageJson({
     electronVersion,
     product,
-    cachePath: Path.absolute(`build/.tmp/electron-bundle/${arch}/resources/app`),
+    cachePath: Path.absolute(`${resourcesPath}/app`),
     bundleMainProcess,
     version,
   })
