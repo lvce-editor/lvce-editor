@@ -8,6 +8,7 @@ import * as Height from '../Height/Height.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as GetSelectionsVirtualDom from '../GetSelectionsVirtualDom/GetSelectionsVirtualDom.js'
+import * as GetCursorsVirtualDom from '../GetCursorsVirtualDom/GetCursorsVirtualDom.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
@@ -404,8 +405,9 @@ const renderSelections = {
   },
   apply(oldState, newState) {
     const { cursorInfos, selectionInfos } = EditorSelection.getVisible(newState)
+    const cursorsDom = GetCursorsVirtualDom.getCursorsVirtualDom(cursorInfos)
     const selectionsDom = GetSelectionsVirtualDom.getSelectionsVirtualDom(selectionInfos)
-    return [/* method */ 'setSelections', /* cursorInfos */ cursorInfos, /* selectionInfos */ selectionsDom]
+    return [/* method */ 'setSelections', cursorsDom, selectionsDom]
   },
 }
 
