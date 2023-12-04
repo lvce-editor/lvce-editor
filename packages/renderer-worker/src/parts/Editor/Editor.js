@@ -2,7 +2,9 @@ import * as Assert from '../Assert/Assert.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as GetDiagnosticsVirtualDom from '../GetDiagnosticsVirtualDom/GetDiagnosticsVirtualDom.js'
+import * as GetEditorRowsVirtualDom from '../GetEditorRowsVirtualDom/GetEditorRowsVirtualDom.js'
 import * as GetIncrementalEdits from '../GetIncrementalEdits/GetIncrementalEdits.js'
+import * as GetSelectionsVirtualDom from '../GetSelectionsVirtualDom/GetSelectionsVirtualDom.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Height from '../Height/Height.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -390,7 +392,8 @@ const renderLines = {
     }
     const { textInfos, differences } = EditorText.getVisible(newState)
     newState.differences = differences
-    return [/* method */ 'setText', /* textInfos */ textInfos, /* differences */ differences]
+    const dom = GetEditorRowsVirtualDom.getEditorRowsVirtualDom(textInfos, differences)
+    return [/* method */ 'setText', dom]
   },
 }
 
