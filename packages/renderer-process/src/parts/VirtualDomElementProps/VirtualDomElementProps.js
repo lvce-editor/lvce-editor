@@ -14,6 +14,9 @@ export const setProp = ($Element, key, value) => {
         $Element.style[key] = value
       }
       break
+    case 'translate':
+      $Element.style[key] = value
+      break
     case 'width':
     case 'height':
       if ($Element instanceof HTMLImageElement) {
