@@ -13,8 +13,8 @@ export const getEditorRowsVirtualDom = (textInfos, differences) => {
       childCount: textInfo.length / 2,
     })
     for (let j = 0; j < textInfo.length; j += 2) {
-      const tokenText = textInfos[j]
-      const className = textInfos[j + 1]
+      const tokenText = textInfo[j]
+      const className = textInfo[j + 1]
       dom.push(
         {
           type: VirtualDomElements.Span,
