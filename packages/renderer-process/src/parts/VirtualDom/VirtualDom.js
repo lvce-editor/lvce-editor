@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ClearNode from '../ClearNode/ClearNode.js'
 import * as VirtualDomElement from '../VirtualDomElement/VirtualDomElement.js'
-import * as VirtualDomElementProps from '../VirtualDomElementProps/VirtualDomElementProps.js'
+import * as VirtualDomElementProp from '../VirtualDomElementProp/VirtualDomElementProp.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 /**
  *
@@ -32,11 +32,9 @@ const isEqualNodeName = ($Node, node) => {
   return false
 }
 
-
-
 export const renderInto = ($Parent, dom) => {
   Assert.array(dom)
-  ClearNode. clearNode($Parent)
+  ClearNode.clearNode($Parent)
   renderInternal($Parent, dom)
 }
 
@@ -96,7 +94,7 @@ export const renderDiff = ($Root, diff) => {
     }
     switch (diffItem.type) {
       case 'updateProp':
-        VirtualDomElementProps.setProp($Node, diffItem.key, diffItem.value)
+        VirtualDomElementProp.setProp($Node, diffItem.key, diffItem.value)
         break
       case 'insert':
         insert($Node, diffItem)
