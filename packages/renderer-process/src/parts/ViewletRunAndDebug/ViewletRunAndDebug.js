@@ -1,6 +1,6 @@
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
-import * as VirtualDomElementProps from '../VirtualDomElementProps/VirtualDomElementProps.js'
+import * as VirtualDomElementProp from '../VirtualDomElementProp/VirtualDomElementProp.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
@@ -31,7 +31,7 @@ export const setPatches = (state, diff) => {
     }
     switch (diffItem.type) {
       case 'updateProp':
-        VirtualDomElementProps.setProp(node, diffItem.key, diffItem.value)
+        VirtualDomElementProp.setProp(node, diffItem.key, diffItem.value)
         break
       default:
         break
