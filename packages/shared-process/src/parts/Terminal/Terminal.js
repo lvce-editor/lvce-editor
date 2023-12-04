@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
-import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
+import { JsonRpcEvent } from '../JsonRpc/JsonRpc.js'
 import * as PtyHost from '../PtyHost/PtyHost.js'
 import * as TerminalState from '../TerminalState/TerminalState.js'
 import { VError } from '../VError/VError.js'
