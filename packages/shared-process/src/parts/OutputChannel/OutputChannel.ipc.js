@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
-import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
+import { JsonRpcEvent } from '../JsonRpc/JsonRpc.js'
 import * as OutputChannelState from '../OutputChannelState/OutputChannelState.js'
 import * as OutputChannel from './OutputChannel.js'
 
