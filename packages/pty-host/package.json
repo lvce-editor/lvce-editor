@@ -20,7 +20,7 @@
     "node": ">=16"
   },
   "dependencies": {
-    "@lvce-editor/json-rpc": "^0.3.0",
+    "@lvce-editor/json-rpc": "^0.4.0",
     "@lvce-editor/pretty-error": "^1.2.2",
     "@lvce-editor/verror": "^1.1.2",
     "debug": "^4.3.4",
