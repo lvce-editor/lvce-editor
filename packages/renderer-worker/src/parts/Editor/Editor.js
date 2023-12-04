@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
+import * as GetCursorsVirtualDom from '../GetCursorsVirtualDom/GetCursorsVirtualDom.js'
 import * as GetDiagnosticsVirtualDom from '../GetDiagnosticsVirtualDom/GetDiagnosticsVirtualDom.js'
 import * as GetEditorRowsVirtualDom from '../GetEditorRowsVirtualDom/GetEditorRowsVirtualDom.js'
 import * as GetIncrementalEdits from '../GetIncrementalEdits/GetIncrementalEdits.js'
@@ -406,8 +407,9 @@ const renderSelections = {
   },
   apply(oldState, newState) {
     const { cursorInfos, selectionInfos } = EditorSelection.getVisible(newState)
+    const cursorsDom = GetCursorsVirtualDom.getCursorsVirtualDom(cursorInfos)
     const selectionsDom = GetSelectionsVirtualDom.getSelectionsVirtualDom(selectionInfos)
-    return [/* method */ 'setSelections', /* cursorInfos */ cursorInfos, /* selectionInfos */ selectionsDom]
+    return [/* method */ 'setSelections', cursorsDom, selectionsDom]
   },
 }
 
