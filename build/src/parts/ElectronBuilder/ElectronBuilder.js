@@ -188,7 +188,9 @@ const copyElectronResult = async ({
   await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos })
   const arch = 'x64'
   const debArch = 'amd64'
-  const resourcesPath = isMacos ? `build/.tmp/linux/snap/${debArch}/app/Contents/Resources` : `build/.tmp/linux/snap/${debArch}/app/resources`
+  const resourcesPath = isMacos
+    ? `build/.tmp/linux/snap/${debArch}/app/${product.applicationName}.app/Contents/Resources`
+    : `build/.tmp/linux/snap/${debArch}/app/resources`
 
   await Copy.copy({
     from: `build/.tmp/electron-bundle/${arch}`,
