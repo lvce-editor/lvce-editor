@@ -5,6 +5,7 @@ import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Logger from '../Logger/Logger.js'
@@ -15,7 +16,6 @@ import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
-import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -56,6 +56,9 @@ export const create = () => {
 
   const $LayerText = document.createElement('div')
   $LayerText.className = 'EditorRows'
+
+  const $LayerGutter = document.createElement('div')
+  $LayerGutter.className = 'Gutter'
 
   AttachEvents.attachEvents($LayerText, {
     [DomEventType.MouseDown]: EditorEvents.handleMouseDown,
@@ -106,21 +109,27 @@ export const create = () => {
 
   const $EditorLayers = document.createElement('div')
   $EditorLayers.className = 'EditorLayers'
+
   $EditorLayers.append($LayerSelections, $LayerText, $LayerCursor, $LayerDiagnostics)
+
+  const $EditorContent = document.createElement('div')
+  $EditorContent.className = 'EditorContent'
+  $EditorContent.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBarVertical, $ScrollBarHorizontal)
 
   const $Editor = document.createElement('div')
   $Editor.className = 'Viewlet Editor'
   $Editor.role = AriaRoles.Code
-  $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBarVertical, $ScrollBarHorizontal)
+  $Editor.append($LayerGutter, $EditorContent)
   AttachEvents.attachEvents($Editor, {
     [DomEventType.ContextMenu]: EditorEvents.handleContextMenu,
   })
   $Editor.addEventListener(DomEventType.Wheel, EditorEvents.handleWheel, DomEventOptions.Passive)
-  $Editor.addEventListener(DomEventType.MouseMove, EditorEvents.handlePointerMove, DomEventOptions.Passive)
+  // $Editor.addEventListener(DomEventType.MouseMove, EditorEvents.handlePointerMove, DomEventOptions.Passive)
   return {
     $LayerCursor,
     $LayerSelections,
     $LayerText,
+    $LayerGutter,
     $EditorLayers,
     $Editor,
     $EditorInput,
@@ -133,8 +142,8 @@ export const create = () => {
   }
 }
 
-export const setText = (state, textInfos, differences) => {
-  LayerText3.setLineInfos(state, textInfos, differences)
+export const setText = (state, dom) => {
+  LayerText3.setLineInfos(state, dom)
 }
 
 export const setIncrementalEdits = (state, incrementalEdits) => {
@@ -168,6 +177,11 @@ export const setScrollBarHorizontal = LayerScrollBar.setScrollBarHorizontal
 
 export const renderCursors = (state, cursorInfos) => {
   LayerCursor.setCursors(state, cursorInfos)
+}
+
+export const renderGutter = (state, dom) => {
+  const { $LayerGutter } = state
+  VirtualDom.renderInto($LayerGutter, dom)
 }
 
 export const renderSelections = (state, selectionInfos) => {
@@ -213,12 +227,6 @@ export const setFocused = (state, isFocused) => {
   if (isFocused) {
     $EditorInput.focus()
   }
-}
-
-export const setLanguageId = async (state, languageId) => {
-  // state.languageId = languageId
-  // state.$Editor.dataset.languageId = languageId
-  // loadTokenizer(languageId)
 }
 
 export const renderDiagnostics = (state, diagnostics, scrollBarDiagnostics) => {

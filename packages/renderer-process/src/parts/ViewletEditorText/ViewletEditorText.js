@@ -17,6 +17,8 @@ export const handleError = (state, error) => {
 
 export const setScrollBar = Editor.setScrollBar
 
+export const renderGutter = Editor.renderGutter
+
 export const setScrollBarHorizontal = Editor.setScrollBarHorizontal
 
 export const highlightAsLink = (state, relativeY, tokenIndex) => {
