@@ -8,6 +8,7 @@ import * as GetIncrementalEdits from '../GetIncrementalEdits/GetIncrementalEdits
 import * as GetSelectionsVirtualDom from '../GetSelectionsVirtualDom/GetSelectionsVirtualDom.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Height from '../Height/Height.js'
+import * as GetEditorGutterVirtualDom from '../GetEditorGutterVirtualDom/GetEditorGutterVirtualDom.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
@@ -80,6 +81,7 @@ export const create = (id, uri, languageId, content) => {
     differences: [],
     width: 0,
     completionUid: 0,
+    lineNumbers: false,
   }
 }
 
@@ -453,4 +455,21 @@ const renderDecorations = {
   },
 }
 
-export const render = [renderLines, renderSelections, renderScrollBarX, renderScrollBarY, renderFocus, renderDecorations]
+const renderGutterInfo = {
+  isEqual(oldState, newState) {
+    return oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
+  },
+  apply(oldState, newState) {
+    const { minLineY, maxLineY, lineNumbers } = newState
+    const gutterInfos = []
+    if (lineNumbers) {
+      for (let i = minLineY; i < maxLineY; i++) {
+        gutterInfos.push(i + 1)
+      }
+    }
+    const dom = GetEditorGutterVirtualDom.getEditorGutterVirtualDom(gutterInfos)
+    return ['renderGutter', dom]
+  },
+}
+
+export const render = [renderLines, renderSelections, renderScrollBarX, renderScrollBarY, renderFocus, renderDecorations, renderGutterInfo]

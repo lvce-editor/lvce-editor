@@ -1,7 +1,7 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-export const getEditorRowsVirtualDom = (textInfos, differences) => {
+export const getEditorRowsVirtualDom = (textInfos, differences, lineNumbers = true) => {
   const dom = []
   for (let i = 0; i < textInfos.length; i++) {
     const textInfo = textInfos[i]

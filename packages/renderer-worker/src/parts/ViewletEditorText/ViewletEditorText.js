@@ -110,6 +110,7 @@ const kFontFamily = 'editor.fontFamily'
 const kLetterSpacing = 'editor.letterSpacing'
 const kLinks = 'editor.links'
 const kTabSize = 'editor.tabSize'
+const kLineNumbers = 'editor.lineNumbers'
 
 const getLetterSpacing = () => {
   if (!SupportsLetterSpacing.supportsLetterSpacing()) {
@@ -126,6 +127,7 @@ export const loadContent = async (state, savedState, context) => {
   const letterSpacing = getLetterSpacing()
   const tabSize = Preferences.get(kTabSize) || 2
   const links = Preferences.get(kLinks) || false
+  const lineNumbers = Preferences.get(kLineNumbers) ?? false
   const content = await getContent(uri)
   const newState1 = Editor.setText(state, content)
   const languageId = getLanguageId(newState1)
@@ -171,6 +173,7 @@ export const loadContent = async (state, savedState, context) => {
     longestLineWidth,
     charWidth,
     isMonospaceFont,
+    lineNumbers,
   }
 }
 
