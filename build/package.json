@@ -18,7 +18,7 @@
   "devDependencies": {
     "@babel/preset-typescript": "^7.23.3",
     "@electron/get": "^3.0.0",
-    "@electron/rebuild": "^3.4.0",
+    "@electron/rebuild": "^3.4.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
@@ -40,7 +40,7 @@
     "got": "^13.0.0",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.8",
-    "p-map": "^6.0.0",
+    "p-map": "^7.0.0",
     "pretty-bytes": "^6.1.1",
     "rollup": "^4.6.1",
     "tar-fs": "^3.0.4",
