@@ -38,6 +38,7 @@ export const loadContent = async (state) => {
     return state
   }
   const { displayString, documentation } = hover
+  // TODO
   const languageId = 'typescript'
   const html = await TokenizeCodeBlock.tokenizeCodeBlock(displayString, languageId)
   const sanitzedHtml = await SanitizeHtml.sanitizeHtml(html)
