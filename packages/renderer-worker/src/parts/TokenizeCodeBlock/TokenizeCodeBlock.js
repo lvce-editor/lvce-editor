@@ -1,4 +1,3 @@
-import * as EscapeHtml from '../EscapeHtml/EscapeHtml.js'
 import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState.js'
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
@@ -22,23 +21,6 @@ const getLineInfo = (line, tokens, TokenMap) => {
   return lineInfo
 }
 
-const getLineInfoHtml = (lineInfo) => {
-  let html = '<div class="EditorRow">'
-  for (let i = 0; i < lineInfo.length; i += 2) {
-    const text = lineInfo[i]
-    const className = lineInfo[i + 1]
-    const escapedText = EscapeHtml.escapeHtml(text)
-    html += `<span class="${className}">${escapedText}</span>`
-  }
-  html += '</div>'
-  return html
-}
-
-const getLineInfosHtml = (lineInfos) => {
-  const lineInfosHtml = lineInfos.map(getLineInfoHtml)
-  return lineInfosHtml.join('')
-}
-
 const getLineInfos = (lines, tokenizer, languageId) => {
   const lineInfos = []
   const { tokenizeLine, initialLineState, hasArrayReturn, TokenMap } = tokenizer
@@ -54,13 +36,9 @@ const getLineInfos = (lines, tokenizer, languageId) => {
 }
 
 export const tokenizeCodeBlock = async (codeBlock, languageId) => {
-  console.time('tokenize')
   await Tokenizer.loadTokenizer(languageId)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const lines = SplitLines.splitLines(codeBlock)
   const lineInfos = getLineInfos(lines, tokenizer, languageId)
-  const html = getLineInfosHtml(lineInfos)
-  console.log({ lineInfos })
-  console.timeEnd('tokenize')
-  return html
+  return lineInfos
 }
