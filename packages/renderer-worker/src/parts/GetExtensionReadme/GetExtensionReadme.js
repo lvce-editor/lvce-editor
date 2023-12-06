@@ -1,5 +1,5 @@
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as Path from '../Path/Path.js'
 
 export const loadReadmeContent = async (path) => {
@@ -8,8 +8,7 @@ export const loadReadmeContent = async (path) => {
     const readmeContent = await FileSystem.readFile(readmeUrl)
     return readmeContent
   } catch (error) {
-    // @ts-ignore
-    if (error && error.code === ErrorCodes.ENOENT) {
+    if (IsEnoentError.isEnoentError(error)) {
       return ''
     }
     console.error(error)
