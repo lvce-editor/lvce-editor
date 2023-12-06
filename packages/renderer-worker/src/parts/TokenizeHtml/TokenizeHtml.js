@@ -1,6 +1,6 @@
+import * as Assert from '../Assert/Assert.js'
 import * as TokenType from '../HtmlTokenType/HtmlTokenType.js'
 import { UnexpectedTokenError } from '../UnexpectedTokenError/UnexpectedTokenError.js'
-import * as Assert from '../Assert/Assert.js'
 
 const State = {
   TopLevelContent: 1,
