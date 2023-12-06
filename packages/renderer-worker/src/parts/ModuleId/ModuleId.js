@@ -75,3 +75,4 @@ export const IncrementalTextSearch = 73
 export const Prompt = 74
 export const WindowTitle = 75
 export const Focus = 76
+export const PointerCapture = 77

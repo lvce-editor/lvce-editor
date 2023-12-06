@@ -147,6 +147,9 @@ export const getModuleId = (commandId) => {
       return ModuleId.WindowTitle
     case 'KeyBindings.setIdentifiers':
       return ModuleId.KeyBindings
+    case 'PointerCapture.mock':
+    case 'PointerCapture.unmock':
+      return ModuleId.PointerCapture
     default:
       throw new CommandNotFoundError(commandId)
   }
