@@ -150,6 +150,8 @@ export const load = (moduleId) => {
       return import('../Workspace/Workspace.ipc.js')
     case ModuleId.WindowTitle:
       return import('../WindowTitle/WindowTitle.ipc.js')
+    case ModuleId.PointerCapture:
+      return import('../PointerCapture/PointerCapture.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

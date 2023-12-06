@@ -1,11 +1,11 @@
 export const name = 'viewlet.editor-image'
 
-export const test = async ({ FileSystem, Workspace, Main, Locator, Eval, expect }) => {
+export const test = async ({ FileSystem, Workspace, Main, Locator, Command, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
     `${tmpDir}/file1.svg`,
-    `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="50" fill="blue"/></svg>`
+    `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="50" fill="blue"/></svg>`,
   )
 
   await Workspace.setPath(tmpDir)
@@ -32,13 +32,7 @@ export const test = async ({ FileSystem, Workspace, Main, Locator, Eval, expect 
 
   // workaround for not being setPointerCapture() not working on
   // synthetic events
-  await Eval.evalInRendererProcess(`
-globalThis._originalSetPointerCapture = Element.prototype.setPointerCapture
-globalThis._originalReleasePointerCapture = Element.prototype.releasePointerCapture
-
-Element.prototype.setPointerCapture = () => {}
-Element.prototype.releasePointerCapture = () => {}
-`)
+  await Command.execute('PointerCapture.mock')
 
   // act
   await viewletImage.dispatchEvent('pointerdown', {
@@ -60,8 +54,5 @@ Element.prototype.releasePointerCapture = () => {}
   // assert
   await expect(imageWrapper).toHaveCSS('transform', 'matrix(1.13, 0, 0, 1.13, 1, 7.15)')
 
-  await Eval.evalInRendererProcess(`
-Element.prototype.setPointerCapture = globalThis._originalSetPointerCapture
-Element.prototype.releasePointerCapture = globalThis._originalReleasePointerCapture
-`)
+  await Command.execute('PointerCapture.unmock')
 }

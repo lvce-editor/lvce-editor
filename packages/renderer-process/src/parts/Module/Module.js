@@ -68,6 +68,8 @@ export const load = (moduleId) => {
       return import('../WindowTitle/WindowTitle.ipc.js')
     case ModuleId.KeyBindings:
       return import('../KeyBindings/KeyBindings.ipc.js')
+    case ModuleId.PointerCapture:
+      return import('../PointerCapture/PointerCapture.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
