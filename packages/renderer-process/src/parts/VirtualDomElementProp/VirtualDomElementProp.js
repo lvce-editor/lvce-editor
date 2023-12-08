@@ -5,6 +5,7 @@ export const setProp = ($Element, key, value) => {
       $Element.style.webkitMaskImage = `url('${value}')`
       break
     case 'paddingLeft':
+    case 'paddingRight':
     case 'top':
     case 'left':
     case 'marginTop':

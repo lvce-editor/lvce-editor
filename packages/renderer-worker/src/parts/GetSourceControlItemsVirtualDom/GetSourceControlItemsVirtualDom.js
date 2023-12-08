@@ -26,6 +26,8 @@ const createItem = (item, index, buttonIndex, buttons) => {
         ariaPosInSet: posInSet,
         ariaSetSize: setSize,
         childCount: 3,
+        paddingLeft: '0.5rem',
+        paddingRight: '12px',
       },
       {
         type: VirtualDomElements.Div,
@@ -60,6 +62,8 @@ const createItem = (item, index, buttonIndex, buttons) => {
       ariaSetSize: setSize,
       title: file,
       childCount: 3,
+      paddingLeft: '1rem',
+      paddingRight: '12px',
     },
     ...(icon === 'ChevronRight'
       ? [
