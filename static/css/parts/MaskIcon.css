@@ -169,7 +169,8 @@
   mask-image: url(/icons/link-external.svg);
 }
 
-.MaskIconDiscard {
+.MaskIconDiscard,
+.MaskIconRemove {
   mask-image: url(/icons/discard.svg);
 }
 
