@@ -30,7 +30,7 @@ const toColorRule = ([key, value]) => {
 }
 
 const toTokenColorRule = (tokenColor) => {
-  return `.Token.${tokenColor.name} { color: ${tokenColor.foreground} }`
+  return `.${tokenColor.name} { color: ${tokenColor.foreground} }`
 }
 
 const addFallbackColors = (colors) => {
@@ -83,11 +83,11 @@ export const createColorThemeFromJson = (colorThemeId, colorThemeJson) => {
 }`,
       `#QuickPick {
   border: 1px solid var(--ContrastBorder);
-}`
+}`,
     )
   }
   const colorThemeCss = `:root {\n${colorRules.join(Character.NewLine)}\n}\n\n${tokenColorRules.join(Character.NewLine)}\n\n${extraRules.join(
-    Character.NewLine
+    Character.NewLine,
   )}`
   return colorThemeCss
 }
