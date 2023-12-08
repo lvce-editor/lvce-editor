@@ -12,4 +12,5 @@ export const LazyCommands = {
   handleClick: () => import('./ViewletSourceControlHandleClick.js'),
   handleButtonClick: () => import('./ViewletSourceControlHandleButtonClick.js'),
   acceptInput: () => import('./ViewletSourceControlAcceptInput.js'),
+  handleFocus: () => import('./ViewletSourceControlHandleFocus.js'),
 }
