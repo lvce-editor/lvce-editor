@@ -1,7 +1,6 @@
 import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as Event from '../Event/Event.js'
 import * as ViewletExplorerFunctions from './ViewletExplorerFunctions.js'
-
 // TODO put drop into separate module and use executeCommand to call it
 
 // TODO drag and drop should be loaded on demand
