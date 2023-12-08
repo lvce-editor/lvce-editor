@@ -112,7 +112,7 @@ test.skip('close on blur', async () => {
   })
   setActiveEditor(EMPTY_EDITOR)
   await EditorCompletion.openCompletion()
-  EditorBlur.blur(EMPTY_EDITOR)
+  EditorBlur.handleBlur(EMPTY_EDITOR)
   expect(RendererProcess.state.send).toHaveBeenCalledWith([835])
 })
 
