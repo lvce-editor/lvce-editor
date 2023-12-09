@@ -24,7 +24,7 @@ const sourceControlProvider = {
   },
   statusBarItems: [
     {
-      label: 'test',
+      text: 'test',
     },
   ],
 }
