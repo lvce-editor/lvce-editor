@@ -1,3 +1,5 @@
+import * as ExtensionHostActivationEvent from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as Listener from '../Listener/Listener.js'
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
@@ -22,8 +24,8 @@ const combineResults = (results) => {
 
 export const getStatusBarItems = () => {
   return ExtensionHostShared.executeProviders({
-    event: 'onStatusBarItem',
-    method: 'ExtensionHost.getStatusBarItems',
+    event: ExtensionHostActivationEvent.OnStatusBarItem,
+    method: ExtensionHostCommandType.GetStatusBarItems,
     params: [],
     noProviderFoundMessage: 'No status bar item provider found',
     noProviderFoundResult: [],
@@ -35,7 +37,7 @@ export const getStatusBarItems = () => {
 export const onChange = (listener) => {
   const id = Listener.register(listener)
   return ExtensionHostShared.execute({
-    method: 'ExtensionHostStatusBar.registerChangeListener',
+    method: ExtensionHostCommandType.RegisterStatusBarChangeListener,
     params: [id],
   })
 }

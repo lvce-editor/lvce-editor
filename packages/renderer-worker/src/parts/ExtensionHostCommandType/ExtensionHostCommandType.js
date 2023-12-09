@@ -35,3 +35,5 @@ export const TextDocumentSyncIncremental = 'ExtensionHostTextDocument.syncIncrem
 export const TextSearchExecuteTextSearchProvider = 'ExtensionHostTextSearch.executeTextSearchProvider'
 export const TypeDefinitionExecuteTypeDefinitionProvider = 'ExtensionHostTypeDefinition.executeTypeDefinitionProvider'
 export const WorkspaceSetPath = 'Workspace.setWorkspacePath'
+export const GetStatusBarItems = 'ExtensionHost.getStatusBarItems'
+export const RegisterStatusBarChangeListener = 'ExtensionHostStatusBar.registerChangeListener'
