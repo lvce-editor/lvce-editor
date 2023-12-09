@@ -2,10 +2,10 @@ import * as ExtensionHostStatusBarItems from '../ExtensionHost/ExtensionHostStat
 
 const toUiStatusBarItem = (extensionHostStatusBarItem) => {
   return {
-    name: extensionHostStatusBarItem.id,
-    text: extensionHostStatusBarItem.id,
-    tooltip: '',
-    command: -1,
+    name: extensionHostStatusBarItem.id || '',
+    text: extensionHostStatusBarItem.text || '',
+    tooltip: extensionHostStatusBarItem.tooltip || '',
+    command: extensionHostStatusBarItem.command || '',
     icon: extensionHostStatusBarItem.icon || '',
   }
 }
@@ -19,7 +19,6 @@ const toUiStatusBarItems = (statusBarItems) => {
 
 export const getStatusBarItems = async (state) => {
   const extensionStatusBarItems = await ExtensionHostStatusBarItems.getStatusBarItems()
-
   const uiStatusBarItems = toUiStatusBarItems(extensionStatusBarItems)
   return uiStatusBarItems
 }

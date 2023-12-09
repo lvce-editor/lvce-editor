@@ -4,8 +4,8 @@ export const getStatusBarItems = async () => {
   const providers = Object.values(ExtensionHostSourceControl.state.providers)
   const statusBarItems = []
   for (const provider of providers) {
-    if (provider && provider.statusBarItems) {
-      statusBarItems.push(...provider.statusBarItems)
+    if (provider && provider.statusBarCommands) {
+      statusBarItems.push(...provider.statusBarCommands)
     }
   }
   return statusBarItems
