@@ -1,4 +1,6 @@
 import * as ExtensionHostStatusBarItems from '../ExtensionHost/ExtensionHostStatusBarItems.js'
+import * as GetStatusBarItems from '../GetStatusBarItems/GetStatusBarItems.js'
+import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
 
 export const create = () => {
   return {
@@ -7,38 +9,13 @@ export const create = () => {
   }
 }
 
-const toUiStatusBarItem = (extensionHostStatusBarItem) => {
-  return {
-    name: extensionHostStatusBarItem.id,
-    text: extensionHostStatusBarItem.id,
-    tooltip: '',
-    command: -1,
-    icon: extensionHostStatusBarItem.icon || '',
-  }
-}
-
-const toUiStatusBarItems = (statusBarItems) => {
-  if (!statusBarItems) {
-    return []
-  }
-  return statusBarItems.map(toUiStatusBarItems)
-}
-
 export const loadContent = async (state) => {
-  const extensionStatusBarItems = await ExtensionHostStatusBarItems.getStatusBarItems()
+  await ExtensionHostManagement.activateByEvent('onSourceControl')
+  const statusBarItems = await GetStatusBarItems.getStatusBarItems()
 
-  const uiStatusBarItems = toUiStatusBarItems(extensionStatusBarItems)
   return {
     ...state,
-    statusBarItemsLeft: [
-      // {
-      //   name: 'RunTests',
-      //   text: 'Run Tests',
-      //   tooltip: '',
-      //   command: 909021,
-      // },
-      ...uiStatusBarItems,
-    ],
+    statusBarItemsLeft: [...statusBarItems],
   }
 }
 
