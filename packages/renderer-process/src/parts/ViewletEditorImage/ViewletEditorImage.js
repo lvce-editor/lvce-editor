@@ -1,3 +1,4 @@
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletEditorImageEvents from './ViewletEditorImageEvents.js'
@@ -25,13 +26,17 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $Image, $ImageWrapper, $Viewlet } = state
-  $Image.onerror = ViewletEditorImageEvents.handleError
-
-  $ImageWrapper.onfocus = ViewletEditorImageEvents.handleFocus
-
-  $Viewlet.onpointerdown = ViewletEditorImageEvents.handlePointerDown
-  $Viewlet.onpointerup = ViewletEditorImageEvents.handlePointerUp
-  $Viewlet.oncontextmenu = ViewletEditorImageEvents.handleContextMenu
+  AttachEvents.attachEvents($Image, {
+    [DomEventType.Error]: ViewletEditorImageEvents.handleError,
+  })
+  AttachEvents.attachEvents($ImageWrapper, {
+    [DomEventType.Focus]: ViewletEditorImageEvents.handleFocus,
+  })
+  AttachEvents.attachEvents($Viewlet, {
+    [DomEventType.PointerDown]: ViewletEditorImageEvents.handlePointerDown,
+    [DomEventType.PointerUp]: ViewletEditorImageEvents.handlePointerUp,
+    [DomEventType.ContextMenu]: ViewletEditorImageEvents.handleContextMenu,
+  })
   $Viewlet.addEventListener(DomEventType.Wheel, ViewletEditorImageEvents.handleWheel, DomEventOptions.Passive)
 }
 

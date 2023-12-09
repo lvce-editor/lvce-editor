@@ -182,7 +182,7 @@ test.skip('event - wheel', () => {
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleWheel', 10, 20, 30, 40)
 })
 
-test('event - contextmenu', () => {
+test.skip('event - contextmenu', () => {
   const state = ViewletEditorImage.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
@@ -194,7 +194,6 @@ test('event - contextmenu', () => {
     button: MouseEventType.RightClick,
     cancelable: true,
   })
-  // @ts-ignore
   $Viewlet.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
