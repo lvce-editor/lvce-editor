@@ -16,6 +16,7 @@ import * as ExtensionHostMockExec from '../ExtensionHostMockExec/ExtensionHostMo
 import * as ExtensionHostMockRpc from '../ExtensionHostMockRpc/ExtensionHostMockRpc.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
 import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
+import * as ExtensionHostStatusBar from '../ExtensionHostStatusBar/ExtensionHostStatusBar.js'
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
@@ -108,6 +109,10 @@ export const getFn = (method) => {
       return ExtensionHostImplementation.executeImplementationProvider
     case ExtensionHostCommandType.HoverExecute:
       return ExtensionHostHover.executeHoverProvider
+    case ExtensionHostCommandType.StatusBarGetStatusBarItems:
+      return ExtensionHostStatusBar.getStatusBarItems
+    case ExtensionHostCommandType.StatusBarRegisterChangeListener:
+      return ExtensionHostStatusBar.registerChangeListener
     default:
       throw new CommandNotFoundError(method)
   }

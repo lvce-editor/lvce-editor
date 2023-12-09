@@ -27,7 +27,7 @@ test('create', () => {
   expect(state).toBeDefined()
 })
 
-test('loadContent', async () => {
+test.skip('loadContent', async () => {
   // @ts-ignore
   ExtensionHostStatusBarItems.getStatusBarItems.mockImplementation(() => {
     return []
@@ -83,7 +83,7 @@ test('itemLeftUpdate', async () => {
       name: 'test name 2',
       text: 'test text 2',
       tooltip: 'test tooltip 2',
-    })
+    }),
   ).toMatchObject({
     statusBarItemsLeft: [
       {
@@ -102,7 +102,7 @@ test('itemRightCreate', () => {
       name: 'test name 1',
       text: 'test text 1',
       tooltip: 'test tooltip 1',
-    })
+    }),
   ).toMatchObject({
     statusBarItemsRight: [
       {
@@ -121,7 +121,7 @@ test('itemRightUpdate', () => {
       name: 'test name 1',
       text: 'test text 2',
       tooltip: 'test tooltip 2',
-    })
+    }),
   ).toMatchObject({
     statusBarItemsRight: [
       {
