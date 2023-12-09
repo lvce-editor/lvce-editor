@@ -1,4 +1,4 @@
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as GetStatusBarVirtualDom from '../GetStatusBarVirtualDom/GetStatusBarVirtualDom.js'
 
 export const hasFunctionalRender = true
 
@@ -7,11 +7,8 @@ const renderItems = {
     return oldState.statusBarItemsLeft === newState.statusBarItemsLeft && oldState.statusBarItemsRight === newState.statusBarItemsRight
   },
   apply(oldState, newState) {
-    return [
-      /* method */ RenderMethod.SetItems,
-      /* statusBarItemsLeft */ newState.statusBarItemsLeft,
-      /* statusBarItemsRight */ newState.statusBarItemsRight,
-    ]
+    const dom = GetStatusBarVirtualDom.getStatusBarVirtualDom(newState.statusBarItemsLeft, newState.statusBarItemsRight)
+    return [/* method */ 'setDom', dom]
   },
 }
 

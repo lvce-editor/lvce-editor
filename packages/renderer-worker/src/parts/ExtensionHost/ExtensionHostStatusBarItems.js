@@ -7,19 +7,8 @@ export const state = {
   changeListeners: [],
 }
 
-const getStatusBarItemsFromExtension = (extension) => {
-  if (!extension.statusBarItems) {
-    return []
-  }
-  return extension.statusBarItems
-}
-
-const getStatusBarItemsFromExtensions = (extensions) => {
-  return extensions.flatMap(getStatusBarItemsFromExtension)
-}
-
 const combineResults = (results) => {
-  return []
+  return results.flat(1)
 }
 
 export const getStatusBarItems = () => {

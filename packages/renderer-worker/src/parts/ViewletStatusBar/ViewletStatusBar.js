@@ -12,7 +12,6 @@ export const create = () => {
 export const loadContent = async (state) => {
   await ExtensionHostManagement.activateByEvent('onSourceControl')
   const statusBarItems = await GetStatusBarItems.getStatusBarItems()
-
   return {
     ...state,
     statusBarItemsLeft: [...statusBarItems],
