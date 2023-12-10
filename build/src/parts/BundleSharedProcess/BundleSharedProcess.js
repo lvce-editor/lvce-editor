@@ -61,7 +61,11 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
     occurrence: `date = ''`,
     replacement: `date = '${date}'`,
   })
-
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `export const scheme = 'lvce-oss'`,
+    replacement: `export const scheme = '${product.applicationName}'`,
+  })
   if (target === 'electron-deb' || target === 'electron-builder-deb') {
     await Replace.replace({
       path: `${cachePath}/src/parts/Platform/Platform.js`,
