@@ -24,7 +24,7 @@
     "@lvce-editor/pretty-error": "^1.2.2",
     "@lvce-editor/verror": "^1.1.2",
     "debug": "^4.3.4",
-    "ws": "^8.14.2"
+    "ws": "^8.15.0"
   },
   "devDependencies": {
     "@types/ws": "^8.5.10"
