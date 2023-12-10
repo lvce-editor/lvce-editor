@@ -209,5 +209,15 @@ export const getKeyBindings = () => {
       command: 'Editor.selectAllOccurrences',
       when: WhenExpression.FocusEditorText,
     },
+    {
+      key: KeyModifier.Alt | KeyModifier.Shift | KeyCode.UpArrow,
+      command: 'Editor.addCursorAbove',
+      when: WhenExpression.FocusEditorText,
+    },
+    {
+      key: KeyModifier.Alt | KeyModifier.Shift | KeyCode.DownArrow,
+      command: 'Editor.addCursorBelow',
+      when: WhenExpression.FocusEditorText,
+    },
   ]
 }
