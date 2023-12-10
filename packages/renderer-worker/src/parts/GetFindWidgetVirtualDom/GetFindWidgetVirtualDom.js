@@ -3,9 +3,9 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getIconButtonVirtualDom = (iconButton) => {
-  const { label, icon, enabled } = iconButton
+  const { label, icon, disabled } = iconButton
   let className = 'IconButton'
-  if (!enabled) {
+  if (disabled) {
     className += ' IconButtonDisabled'
   }
   return [
@@ -15,11 +15,11 @@ const getIconButtonVirtualDom = (iconButton) => {
       title: label,
       ariaLanel: label,
       childCount: 1,
+      disabled: disabled ? true : undefined,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'MaskIcon',
-      maskImage: icon,
+      className: `MaskIcon MaskIcon${icon}`,
       role: AriaRoles.None,
       childCount: 0,
     },
@@ -29,11 +29,6 @@ const getIconButtonVirtualDom = (iconButton) => {
 export const getFindWidgetVirtualDom = (matchCountText, buttons) => {
   const dom = []
   dom.push(
-    {
-      type: VirtualDomElements.Div,
-      className: 'FindWidgetDetails',
-      childCount: 1 + buttons.length,
-    },
     {
       type: VirtualDomElements.Div,
       classname: 'FindWidgetMatchCount',

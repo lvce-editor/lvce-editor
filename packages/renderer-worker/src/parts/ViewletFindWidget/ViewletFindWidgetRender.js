@@ -1,3 +1,4 @@
+import * as GetFindWidgetVirtualDom from '../GetFindWidgetVirtualDom/GetFindWidgetVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ViewletFindWidgetStrings from './ViewletFindWidgetStrings.js'
 
@@ -19,23 +20,32 @@ const getMatchCountText = (matchIndex, matchCount) => {
   return ViewletFindWidgetStrings.matchOf(matchIndex + 1, matchCount)
 }
 
-const renderMatchCount = {
+const renderDetails = {
   isEqual(oldState, newState) {
     return oldState.matchIndex === newState.matchIndex && oldState.matchCount === newState.matchCount
   },
   apply(oldState, newState) {
     const matchCountText = getMatchCountText(newState.matchIndex, newState.matchCount)
-    return [/* method */ 'setMatchCountText', /* value */ matchCountText]
-  },
-}
-
-const renderButtonsEnabled = {
-  isEqual(oldState, newState) {
-    return oldState.matchCount === newState.matchCount
-  },
-  apply(oldState, newState) {
-    const enabled = newState.matchCount > 0
-    return [/* method */ 'setButtonsEnabled', /* enabled */ enabled]
+    const buttonsEnabled = newState.matchCount > 0
+    const buttons = [
+      {
+        label: ViewletFindWidgetStrings.previousMatch(),
+        icon: 'ArrowUp',
+        disabled: !buttonsEnabled,
+      },
+      {
+        label: ViewletFindWidgetStrings.nextMatch(),
+        icon: 'ArrowDown',
+        disabled: !buttonsEnabled,
+      },
+      {
+        label: ViewletFindWidgetStrings.close(),
+        icon: 'Close',
+        disabled: false,
+      },
+    ]
+    const dom = GetFindWidgetVirtualDom.getFindWidgetVirtualDom(matchCountText, buttons)
+    return [/* method */ 'setDom', /* enabled */ dom]
   },
 }
 
@@ -59,4 +69,4 @@ const renderAriaAnnouncement = {
   },
 }
 
-export const render = [renderValue, renderMatchCount, renderAriaAnnouncement, renderButtonsEnabled]
+export const render = [renderValue, renderAriaAnnouncement, renderDetails]

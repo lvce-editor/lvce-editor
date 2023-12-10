@@ -7,6 +7,10 @@ const UiStrings = {
   MatchesFoundFor: `{PH1} of {PH2} found for {PH3}`,
   MatchOf: `{PH1} of {PH2}`,
   NoResults: 'No Results',
+  Close: 'Close',
+  PreviousMatch: 'Previous Match',
+  NextMatch: 'Next Match',
+  Find: 'Find',
 }
 
 export const noResults = () => {
@@ -26,4 +30,16 @@ export const matchesFoundFor = (matchIndex, matchCount, value) => {
     PH2: matchCount,
     PH3: value,
   })
+}
+
+export const previousMatch = () => {
+  return I18nString.i18nString(UiStrings.PreviousMatch)
+}
+
+export const nextMatch = () => {
+  return I18nString.i18nString(UiStrings.NextMatch)
+}
+
+export const close = () => {
+  return I18nString.i18nString(UiStrings.Close)
 }

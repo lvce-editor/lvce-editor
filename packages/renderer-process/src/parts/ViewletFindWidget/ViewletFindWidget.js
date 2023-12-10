@@ -1,44 +1,30 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletFindWidgetEvents from './ViewletFindWidgetEvents.js'
 
 /**
  * @enum {string}
  */
 const UiStrings = {
-  Close: 'Close',
-  PreviousMatch: 'Previous Match',
-  NextMatch: 'Next Match',
   Find: 'Find',
 }
 
 export const create = () => {
-  // TODO recycle nodes
   const $InputBox = InputBox.create()
   $InputBox.ariaLabel = UiStrings.Find
 
-  const $MatchCountText = document.createTextNode('')
-  const $MatchCount = document.createElement('div')
-  $MatchCount.className = 'FindWidgetMatchCount'
-  $MatchCount.append($MatchCountText)
-
-  const $ButtonFocusNext = IconButton.create$Button(UiStrings.NextMatch, 'ArrowDown')
-  const $ButtonFocusPrevious = IconButton.create$Button(UiStrings.PreviousMatch, 'ArrowUp')
-  const $ButtonClose = IconButton.create$Button(UiStrings.Close, 'Close')
+  const $Details = document.createElement('div')
+  $Details.className = 'FindWidgetDetails'
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet FindWidget'
   $Viewlet.role = AriaRoles.Group
-  $Viewlet.append($InputBox, $MatchCount, $ButtonFocusPrevious, $ButtonFocusNext, $ButtonClose)
+  $Viewlet.append($InputBox, $Details)
   return {
     $Viewlet,
     $InputBox,
-    $MatchCount,
-    $MatchCountText,
-    $ButtonClose,
-    $ButtonFocusNext,
-    $ButtonFocusPrevious,
+    $Details,
   }
 }
 
@@ -72,4 +58,7 @@ export const setButtonsEnabled = (state, enabled) => {
   $ButtonFocusPrevious.disabled = !enabled
 }
 
-export const dispose = () => {}
+export const setDom = (state, dom) => {
+  const { $Details } = state
+  VirtualDom.renderInto($Details, dom)
+}
