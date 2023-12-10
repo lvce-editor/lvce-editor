@@ -17,7 +17,10 @@ const toUiStatusBarItems = (statusBarItems) => {
   return statusBarItems.map(toUiStatusBarItem)
 }
 
-export const getStatusBarItems = async (state) => {
+export const getStatusBarItems = async (showItems) => {
+  if (!showItems) {
+    return []
+  }
   const extensionStatusBarItems = await ExtensionHostStatusBarItems.getStatusBarItems()
   const uiStatusBarItems = toUiStatusBarItems(extensionStatusBarItems)
   return uiStatusBarItems
