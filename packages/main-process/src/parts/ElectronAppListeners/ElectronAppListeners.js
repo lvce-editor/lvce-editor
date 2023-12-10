@@ -34,6 +34,7 @@ export const handleBeforeQuit = () => {
 // const windowConfigMap = new Map()
 
 export const handleReady = async (parsedArgs, workingDirectory) => {
+  // TODO move preferences loading and window creation to shared process
   const preferences = await Preferences.load()
   await AppWindow.createAppWindow(preferences, parsedArgs, workingDirectory)
 }
