@@ -52,17 +52,6 @@ export const setValue = (state, value) => {
   $InputBox.value = value
 }
 
-export const setMatchCountText = (state, value) => {
-  const { $MatchCountText } = state
-  $MatchCountText.nodeValue = value
-}
-
-export const setButtonsEnabled = (state, enabled) => {
-  const { $ButtonFocusNext, $ButtonFocusPrevious } = state
-  $ButtonFocusNext.disabled = !enabled
-  $ButtonFocusPrevious.disabled = !enabled
-}
-
 export const setDom = (state, dom) => {
   const { $Details } = state
   VirtualDom.renderInto($Details, dom)
