@@ -74,7 +74,7 @@ export const hydrate = async () => {
       detached: true,
       stdio: 'ignore',
     })
-    Process.exit(ExitCode.Sucess)
+    Process.exit(ExitCode.Success)
   }
 
   // command line switches
