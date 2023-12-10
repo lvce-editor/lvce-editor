@@ -13,7 +13,7 @@ const getIconButtonVirtualDom = (iconButton) => {
       type: VirtualDomElements.Button,
       className,
       title: label,
-      ariaLanel: label,
+      ariaLaBel: label,
       childCount: 1,
       disabled: disabled ? true : undefined,
     },
@@ -31,7 +31,7 @@ export const getFindWidgetVirtualDom = (matchCountText, buttons) => {
   dom.push(
     {
       type: VirtualDomElements.Div,
-      classname: 'FindWidgetMatchCount',
+      className: 'FindWidgetMatchCount',
       childCount: 1,
     },
     text(matchCountText),
