@@ -1,7 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
-import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
-import * as NormalizeText from '../NormalizeText/NormalizeText.js'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
 import * as GetX from '../GetX/GetX.js'
 
