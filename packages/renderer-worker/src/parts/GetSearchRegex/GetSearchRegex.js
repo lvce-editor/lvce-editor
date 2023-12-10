@@ -1,5 +1,8 @@
+import * as EscapeRegex from '../EscapeRegex/EscapeRegex.js'
+
 const regexFlags = 'gi'
 
 export const getSearchRegex = (searchString) => {
-  return new RegExp(searchString, regexFlags)
+  const escaped = EscapeRegex.escapeRegExpCharacters(searchString)
+  return new RegExp(escaped, regexFlags)
 }
