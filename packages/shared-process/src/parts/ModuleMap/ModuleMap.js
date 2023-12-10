@@ -277,6 +277,10 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workspace
     case 'ElectronNet.getJson':
       return ModuleId.ElectronNet
+    case 'Screen.getWidth':
+    case 'Screen.getHeight':
+    case 'Screen.getBounds':
+      return ModuleId.Screen
     default:
       throw new CommandNotFoundError(commandId)
   }
