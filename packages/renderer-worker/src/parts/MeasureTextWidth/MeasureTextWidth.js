@@ -1,12 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
 import * as GetTextMeasureContext from '../GetTextMeasureContext/GetTextMeasureContext.js'
+import * as GetFontString from '../GetFontString/GetFontString.js'
 
 const getLetterSpacingString = (letterSpacing) => {
   return `${letterSpacing}px`
-}
-
-const getFontString = (fontWeight, fontSize, fontFamily) => {
-  return `${fontWeight} ${fontSize}px ${fontFamily}`
 }
 
 export const measureTextWidth = (text, fontWeight, fontSize, fontFamily, letterSpacing, isMonoSpaceFont, charWidth) => {
@@ -23,7 +20,7 @@ export const measureTextWidth = (text, fontWeight, fontSize, fontFamily, letterS
     throw new Error('letterSpacing must be of type number')
   }
   const letterSpacingString = getLetterSpacingString(letterSpacing)
-  const fontString = getFontString(fontWeight, fontSize, fontFamily)
+  const fontString = GetFontString.getFontString(fontWeight, fontSize, fontFamily)
   const ctx = GetTextMeasureContext.getContext()
   // @ts-ignore
   ctx.letterSpacing = letterSpacingString
