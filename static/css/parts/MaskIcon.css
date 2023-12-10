@@ -111,7 +111,7 @@
 }
 
 .MaskIconNewFolder {
-  mask-image: url(/icons/new-file.svg);
+  mask-image: url(/icons/new-folder.svg);
 }
 
 .MaskIconListFlat {
