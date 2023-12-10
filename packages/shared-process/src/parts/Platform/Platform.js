@@ -13,6 +13,8 @@ export const isMacOs = platform === 'darwin'
 
 export const isDeb = false
 
+export const scheme = 'lvce-oss'
+
 export const getPathSeparator = () => {
   return sep
 }
