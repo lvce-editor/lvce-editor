@@ -12,7 +12,7 @@ export const create = (uid) => {
     value: '',
     ariaAnnouncement: '',
     matches: new Uint32Array(),
-    matchIndex: 0,
+    matchIndex: -1,
     matchCount: 0,
     uid,
   }
