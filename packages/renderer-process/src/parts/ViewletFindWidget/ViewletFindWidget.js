@@ -1,4 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as ViewletFindWidgetEvents from './ViewletFindWidgetEvents.js'
@@ -44,11 +46,14 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $InputBox, $Viewlet } = state
-  $InputBox.oninput = ViewletFindWidgetEvents.handleInput
-  $InputBox.onblur = ViewletFindWidgetEvents.handleInputBlur
-  $InputBox.onfocus = ViewletFindWidgetEvents.handleFocus
-
-  $Viewlet.onclick = ViewletFindWidgetEvents.handleClick
+  AttachEvents.attachEvents($InputBox, {
+    [DomEventType.Input]: ViewletFindWidgetEvents.handleInput,
+    [DomEventType.Blur]: ViewletFindWidgetEvents.handleInputBlur,
+    [DomEventType.Focus]: ViewletFindWidgetEvents.handleFocus,
+  })
+  AttachEvents.attachEvents($Viewlet, {
+    [DomEventType.Click]: ViewletFindWidgetEvents.handleClick,
+  })
 }
 
 export const focus = (state) => {
