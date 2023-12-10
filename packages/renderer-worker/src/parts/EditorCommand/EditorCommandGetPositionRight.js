@@ -17,14 +17,10 @@ export const editorGetPositionRight = (position, lines, getDelta) => {
   }
 }
 
-export const moveToPositionRight = (
-  selections,
-  i,
-  rowIndex,
-  columnIndex,
-  lines,
-  getDelta
-) => {
+export const moveToPositionRight = (selections, i, rowIndex, columnIndex, lines, getDelta) => {
+  if (rowIndex >= lines.length) {
+    return
+  }
   const line = lines[rowIndex]
   if (columnIndex >= line.length) {
     selections[i] = selections[i + 2] = rowIndex + 1
