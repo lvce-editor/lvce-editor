@@ -86,6 +86,42 @@ export const createAppWindow = async (preferences, parsedArgs, workingDirectory,
   await loadUrl(window, url)
 }
 
+// TODO avoid mixing BrowserWindow, childprocess and various lifecycle methods in one file -> separate concerns
+export const createAppWindow2 = async (windowOptions, parsedArgs, workingDirectory, url = DefaultUrl.defaultUrl) => {
+  const session = Session.get()
+  const window = Window.create({
+    ...windowOptions,
+    session,
+  })
+  // TODO query applicarion menu items from shared process
+  const ElectronApplicationMenu = await import('../ElectronApplicationMenu/ElectronApplicationMenu.js')
+  const menu = ElectronApplicationMenu.createTitleBar()
+  ElectronApplicationMenu.setMenu(menu)
+
+  // window.setMenu(menu)
+  window.setMenuBarVisibility(true)
+  window.setAutoHideMenuBar(false)
+  const webContentsId = window.webContents.id
+  const windowId = window.id
+  // TODO send event to shared process
+  const handleWindowClose = () => {
+    try {
+      window.off('close', handleWindowClose)
+      AppWindowStates.remove(windowId)
+    } catch (error) {
+      ErrorHandling.handleError(new VError(error, `Failed to run window close listener`))
+    }
+  }
+  window.on('close', handleWindowClose)
+  AppWindowStates.add({
+    parsedArgs,
+    workingDirectory,
+    webContentsId,
+    windowId,
+  })
+  await loadUrl(window, url)
+}
+
 export const openNew = async (url) => {
   const preferences = await Preferences.load()
   return createAppWindow(preferences, [], '', url)
