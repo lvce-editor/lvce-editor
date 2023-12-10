@@ -5,6 +5,8 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
+  addCursorAbove: () => import('../EditorCommand/EditorCommandAddCursorAbove.js'),
+  addCursorBelow: () => import('../EditorCommand/EditorCommandAddCursorBelow.js'),
   applyEdit: () => import('../EditorCommand/EditorCommandApplyEdit.js'),
   braceCompletion: () => import('../EditorCommand/EditorCommandBraceCompletion.js'),
   cancelSelection: () => import('../EditorCommand/EditorCommandCancelSelection.js'),
