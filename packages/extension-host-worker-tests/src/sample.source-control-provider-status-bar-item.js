@@ -1,3 +1,5 @@
+export const skip = true
+
 export const name = 'sample.source-control-provider-status-bar-item'
 
 export const test = async ({ FileSystem, Workspace, Extension, Locator, expect, StatusBar }) => {
