@@ -12,6 +12,8 @@
 .FindWidgetDetails {
   display: flex;
   contain: content;
+  align-items: center;
+  height: 100%;
 }
 
 .FindWidgetMatchCount {
