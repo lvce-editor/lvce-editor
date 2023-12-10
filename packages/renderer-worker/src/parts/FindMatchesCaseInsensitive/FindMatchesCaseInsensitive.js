@@ -1,14 +1,10 @@
-const regexFlags = 'gi'
-
-const getSearchRegex = (searchString) => {
-  return new RegExp(searchString, regexFlags)
-}
+import * as GetSearchRegex from '../GetSearchRegex/GetSearchRegex.js'
 
 export const findMatchesCaseInsensitive = (lines, searchString) => {
   if (searchString.length === 0) {
     return new Uint32Array([])
   }
-  const regex = getSearchRegex(searchString)
+  const regex = GetSearchRegex.getSearchRegex(searchString)
   const { length } = lines
   const matches = []
   for (let i = 0; i < length; i++) {
