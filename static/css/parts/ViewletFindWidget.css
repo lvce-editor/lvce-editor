@@ -9,6 +9,13 @@
   --MaskIconSize: 16px;
 }
 
+.FindWidgetDetails {
+  display: flex;
+  contain: content;
+  align-items: center;
+  height: 100%;
+}
+
 .FindWidgetMatchCount {
   width: 70px;
   white-space: nowrap;
