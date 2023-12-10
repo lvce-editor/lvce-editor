@@ -177,3 +177,7 @@
 .MaskIconError {
   mask-image: url(/icons/error.svg);
 }
+
+.MaskIconCircleFilled {
+  mask-image: url(/icons/circle-filled.svg);
+}
