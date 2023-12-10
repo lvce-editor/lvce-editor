@@ -1,9 +1,18 @@
+import * as IsElectronUserAgentSpecificMemoryError from '../IsElectronUserAgentSpecificMemoryError/IsElectronUserAgentSpecificMemoryError.js'
+
 export const measureUserAgentSpecificMemory = async () => {
-  // @ts-ignore
-  if (performance && performance.measureUserAgentSpecificMemory) {
+  try {
     // @ts-ignore
-    const memory = await performance.measureUserAgentSpecificMemory()
-    return memory
+    if (performance && performance.measureUserAgentSpecificMemory) {
+      // @ts-ignore
+      const memory = await performance.measureUserAgentSpecificMemory()
+      return memory
+    }
+  } catch (error) {
+    if (IsElectronUserAgentSpecificMemoryError.isElectronUserAgentSpecificMemoryError(error)) {
+      return undefined
+    }
+    throw error
   }
   return undefined
 }
