@@ -1,29 +1,17 @@
 import { BrowserWindow } from 'electron'
-import { writeFile } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import { join } from 'node:path'
 import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
-import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Session from '../ElectronSession/ElectronSession.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
-import * as GetProcessExplorerUrl from '../GetProcessExplorerUrl/GetProcessExplorerUrl.js'
 
-export const open = async () => {
-  const colorThemeJson = await ColorTheme.getColorThemeJson()
-  const backgroundColor = colorThemeJson.MainBackground
-  const preload = GetProcessExplorerUrl.getProcessExplorerPreloadUrl()
-  const processExplorerWindow = new BrowserWindow({
-    width: 800,
-    height: 500,
-    backgroundColor,
+export const open2 = async (options, url) => {
+  const allOptions = {
+    ...options,
     webPreferences: {
+      ...options.webPreferences,
       session: Session.get(),
-      preload,
-      sandbox: true,
-      additionalArguments: ['--lvce-window-kind=process-explorer'],
-      spellcheck: false,
     },
-  })
+  }
+  const processExplorerWindow = new BrowserWindow(allOptions)
   const windowId = processExplorerWindow.id
   const webContentsId = processExplorerWindow.webContents.id
   AppWindowStates.add({
@@ -56,11 +44,6 @@ export const open = async () => {
   processExplorerWindow.setMenuBarVisibility(false)
   processExplorerWindow.webContents.on(ElectronWebContentsEventType.BeforeInputEvent, handleBeforeInput)
 
-  // TODO get actual process explorer theme css from somewhere
-  const processExplorerThemeCss = ColorTheme.toCss(colorThemeJson)
-  const processExporerThemeCssPath = join(tmpdir(), 'process-explorer-theme.css')
-  await writeFile(processExporerThemeCssPath, processExplorerThemeCss)
-  const url = GetProcessExplorerUrl.getProcessExplorerUrl()
   try {
     await processExplorerWindow.loadURL(url)
   } catch (error) {

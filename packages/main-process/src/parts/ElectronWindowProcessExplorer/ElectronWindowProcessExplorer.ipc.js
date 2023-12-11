@@ -3,5 +3,5 @@ import * as ElectronWindowProcessExplorer from './ElectronWindowProcessExplorer.
 export const name = 'ElectronWindowProcessExplorer'
 
 export const Commands = {
-  open: ElectronWindowProcessExplorer.open,
+  open2: ElectronWindowProcessExplorer.open2,
 }
