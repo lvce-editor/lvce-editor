@@ -1,13 +1,13 @@
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
 export const getWidth = () => {
-  return ParentIpc.invoke('Screen.getWidth')
+  return ParentIpc.invoke('ElectronScreen.getWidth')
 }
 
 export const getHeight = () => {
-  return ParentIpc.invoke('Screen.getHeight')
+  return ParentIpc.invoke('ElectronScreen.getHeight')
 }
 
 export const getBounds = () => {
-  return ParentIpc.invoke('Screen.getBounds')
+  return ParentIpc.invoke('ElectronScreen.getBounds')
 }

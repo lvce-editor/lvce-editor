@@ -62,3 +62,4 @@ export const ElectronContentTracing = 55
 export const Os = 56
 export const ElectronNet = 57
 export const Screen = 58
+export const HandleElectronReady = 59
