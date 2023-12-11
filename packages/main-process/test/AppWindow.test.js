@@ -55,6 +55,7 @@ jest.unstable_mockModule('electron', () => {
     },
     BrowserWindow,
     net: {},
+    Menu: class {},
   }
 })
 

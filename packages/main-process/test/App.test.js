@@ -12,6 +12,8 @@ jest.unstable_mockModule('electron', () => {
     shell: {},
     ipcMain: {},
     MessageChannelMain: class {},
+    ApplicationMenu: class {},
+    Menu: class {},
   }
 })
 
