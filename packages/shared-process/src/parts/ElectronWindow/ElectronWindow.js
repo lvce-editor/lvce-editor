@@ -1,8 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as AppWindow from '../AppWindow/AppWindow.js'
 
 export const openNew = () => {
-  return ParentIpc.invoke('AppWindow.openNew')
+  return AppWindow.openNew()
 }
 
 export const minimize = (windowId) => {
@@ -49,4 +50,8 @@ export const zoomReset = (windowId) => {
 
 export const focus = (windowId) => {
   return ParentIpc.invoke('ElectronWindow.focus', windowId)
+}
+
+export const handleClose = (windowId) => {
+  // TODO
 }
