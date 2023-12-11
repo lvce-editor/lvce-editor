@@ -1,5 +1,3 @@
-import * as IsElectron from '../IsElectron/IsElectron.js'
-
 export const listen = () => {
   // @ts-ignore
   const parentPort = process.parentPort
@@ -44,6 +42,7 @@ export const wrap = (parentPort) => {
       this.parentPort.off(event, listener)
     },
     send(message) {
+      console.log({ message })
       this.parentPort.postMessage(message)
     },
     dispose() {

@@ -4,7 +4,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Screen from '../Screen/Screen.js'
 
-const getWindowOptions = async (preferencs, screenWidth, screenHeight) => {
+const getWindowOptions = (preferencs, screenWidth, screenHeight) => {
   const titleBarPreference = preferencs['window.titleBarStyle']
   const frame = titleBarPreference !== 'custom'
   const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
