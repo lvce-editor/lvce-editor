@@ -128,6 +128,8 @@ export const load = (moduleId) => {
       return import('../Screen/Screen.ipc.js')
     case ModuleId.HandleElectronReady:
       return import('../HandleElectronReady/HandleElectronReady.ipc.js')
+    case ModuleId.HandleWindowAllClosed:
+      return import('../HandleWindowAllClosed/HandleWindowAllClosed.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
