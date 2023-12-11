@@ -4,6 +4,8 @@ import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Logger from '../Logger/Logger.js'
+import * as Performance from '../Performance/Performance.js'
+import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.js'
@@ -75,6 +77,8 @@ export const hydrate = async ({ method, env = {} }) => {
   if (state.sharedProcess) {
     return state.sharedProcess
   }
+  Performance.mark(PerformanceMarkerType.WillStartSharedProcess)
+
   // console.log('hydrate server')
   // TODO spawn seems to be a lot faster than fork for unknown reasons
   // const child = fork('../../packages/web/bin/web.js', {
@@ -112,5 +116,6 @@ export const hydrate = async ({ method, env = {} }) => {
   sharedProcess.on('disconnect', handleChildDisconnect)
   process.on('exit', handleProcessExit) // TODO
   state.sharedProcess = sharedProcess
+  Performance.mark(PerformanceMarkerType.DidStartSharedProcess)
   return sharedProcess
 }

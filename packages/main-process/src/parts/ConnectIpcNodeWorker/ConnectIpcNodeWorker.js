@@ -6,7 +6,6 @@ import * as TransferMessagePort from '../TransferMessagePort/TransferMessagePort
 export const connectIpc = async (ipc, browserWindowPort, ...params) => {
   const messageChannel = new MessageChannel()
   const { port1, port2 } = messageChannel
-  Performance.mark(PerformanceMarkerType.DidStartSharedProcess)
   browserWindowPort.on('message', (event) => {
     // console.log('got message from browser window', event.data)
     port2.postMessage(event.data)
