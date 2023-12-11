@@ -1,7 +1,7 @@
 import { Menu } from 'electron'
 import * as Assert from '../Assert/Assert.js'
+import { JsonRpcEvent } from '../JsonRpc/JsonRpc.js'
 import * as GetTitleBarItems from '../GetTitleBarItems/GetTitleBarItems.js'
-import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const setMenu = (menu) => {

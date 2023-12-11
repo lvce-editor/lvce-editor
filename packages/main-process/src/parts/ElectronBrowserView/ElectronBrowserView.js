@@ -10,7 +10,7 @@ import * as ElectronInputType from '../ElectronInputType/ElectronInputType.js'
 import * as ElectronSessionForBrowserView from '../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
 import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js'
-import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
+import { JsonRpcEvent } from '../JsonRpc/JsonRpc.js'
 import * as Logger from '../Logger/Logger.js'
 
 const normalizeKey = (key) => {
