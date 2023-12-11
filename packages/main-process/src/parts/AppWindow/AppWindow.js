@@ -1,5 +1,6 @@
 import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 import * as DefaultUrl from '../DefaultUrl/DefaultUrl.js'
+import * as ElectronApplicationMenu from '../ElectronApplicationMenu/ElectronApplicationMenu.js'
 import * as Screen from '../ElectronScreen/ElectronScreen.js'
 import * as Session from '../ElectronSession/ElectronSession.js'
 import * as Window from '../ElectronWindow/ElectronWindow.js'
@@ -59,7 +60,6 @@ export const createAppWindow = async (preferences, parsedArgs, workingDirectory,
     zoomLevel,
     titleBarOverlay,
   })
-  const ElectronApplicationMenu = await import('../ElectronApplicationMenu/ElectronApplicationMenu.js')
   const menu = ElectronApplicationMenu.createTitleBar()
   ElectronApplicationMenu.setMenu(menu)
 
