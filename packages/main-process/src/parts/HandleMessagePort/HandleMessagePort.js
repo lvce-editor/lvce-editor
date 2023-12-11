@@ -15,14 +15,8 @@ const getModule = (type) => {
       return import('../HandleMessagePortForSharedProcess/HandleMessagePortForSharedProcess.js')
     case 'extension-host':
       return import('../HandleMessagePortForExtensionHost/HandleMessagePortForExtensionHost.js')
-    case 'electron-process':
-      return import('../HandleMessagePortForMainProcess/HandleMessagePortForMainProcess.js')
-    case 'quickpick':
-      return import('../HandleMessagePortForQuickPick/HandleMessagePortForQuickPick.js')
     case 'extension-host-helper-process':
       return import('../HandleMessagePortForExtensionHostHelperProcess/HandleMessagePortForExtensionHostHelperProcess.js')
-    case 'terminal-process':
-      return import('../HandleMessagePortForTerminalProcess/HandleMessagePortForTerminalProcess.js')
     default:
       if (type.startsWith('custom:')) {
         return import('../HandleMessagePortForCustom/HandleMessagePortForCustom.js')
