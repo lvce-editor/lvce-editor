@@ -65,6 +65,8 @@ export const load = async (moduleId) => {
       return import('../Trash/Trash.ipc.js')
     case ModuleId.Exit:
       return import('../Exit/Exit.ipc.js')
+    case ModuleId.ElectronScreen:
+      return import('../ElectronScreen/ElectronScreen.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }
