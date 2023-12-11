@@ -12,14 +12,7 @@ import * as ParseCliArgs from '../ParseCliArgs/ParseCliArgs.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 
-// TODO move this function to shared process
-export const handleWindowAllClosed = () => {
-  Debug.debug('[info] all windows closed')
-  if (!Platform.isMacOs) {
-    Debug.debug('[info] quitting')
-    ElectronApp.quit()
-  }
-}
+export { handleWindowAllClosed } from '../HandleWindowAllClosed/HandleWindowAllClosed.js'
 
 // TODO move this function to shared process
 export const handleBeforeQuit = () => {
