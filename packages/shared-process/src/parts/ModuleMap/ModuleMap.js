@@ -283,6 +283,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Screen
     case 'HandleElectronReady.handleElectronReady':
       return ModuleId.HandleElectronReady
+    case 'HandleWindowAllClosed.handleWindowAllClosed':
+      return ModuleId.HandleWindowAllClosed
     default:
       throw new CommandNotFoundError(commandId)
   }
