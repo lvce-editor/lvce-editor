@@ -37,7 +37,7 @@ export const createAppWindow = async (preferences, parsedArgs, workingDirectory,
   const screenWidth = await Screen.getWidth()
   const screenHeight = await Screen.getHeight()
   const windowOptions = getWindowOptions(preferences, screenWidth, screenHeight)
-  return ParentIpc.invoke('Appwindow.createAppWindow2', windowOptions, parsedArgs, workingDirectory, url)
+  return ParentIpc.invoke('AppWindow.createAppWindow2', windowOptions, parsedArgs, workingDirectory, url)
 }
 
 export const openNew = async (url) => {
