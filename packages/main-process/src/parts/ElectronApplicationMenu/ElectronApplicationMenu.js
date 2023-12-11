@@ -1,22 +1,8 @@
 import { Menu } from 'electron'
 import * as Assert from '../Assert/Assert.js'
+import * as GetTitleBarItems from '../GetTitleBarItems/GetTitleBarItems.js'
 import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  File: 'File',
-  Edit: 'Edit',
-  Selection: 'Selection',
-  View: 'View',
-  Go: 'Go',
-  Run: 'Run',
-  Terminal: 'Terminal',
-  Window: 'Window',
-  Help: 'Help',
-}
 
 export const setMenu = (menu) => {
   Menu.setApplicationMenu(menu)
@@ -49,34 +35,7 @@ export const setItems = (items) => {
 }
 
 export const createTitleBar = () => {
-  const menuBar = Menu.buildFromTemplate([
-    {
-      label: UiStrings.File,
-    },
-    {
-      label: UiStrings.Edit,
-    },
-    {
-      label: UiStrings.Selection,
-    },
-    {
-      label: UiStrings.View,
-    },
-    {
-      label: UiStrings.Go,
-    },
-    {
-      label: UiStrings.Run,
-    },
-    {
-      label: UiStrings.Terminal,
-    },
-    {
-      label: UiStrings.Window,
-    },
-    {
-      label: UiStrings.Help,
-    },
-  ])
+  const titleBarItems = GetTitleBarItems.getTitleBarItems()
+  const menuBar = Menu.buildFromTemplate(titleBarItems)
   return menuBar
 }
