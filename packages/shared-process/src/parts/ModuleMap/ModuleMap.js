@@ -281,6 +281,8 @@ export const getModuleId = (commandId) => {
     case 'Screen.getHeight':
     case 'Screen.getBounds':
       return ModuleId.Screen
+    case 'HandleElectronReady.handleElectronReady':
+      return ModuleId.HandleElectronReady
     default:
       throw new CommandNotFoundError(commandId)
   }

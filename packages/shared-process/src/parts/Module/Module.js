@@ -126,6 +126,8 @@ export const load = (moduleId) => {
       return import('../ElectronNet/ElectronNet.ipc.js')
     case ModuleId.Screen:
       return import('../Screen/Screen.ipc.js')
+    case ModuleId.HandleElectronReady:
+      return import('../HandleElectronReady/HandleElectronReady.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
