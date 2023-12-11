@@ -42,7 +42,6 @@ export const wrap = (parentPort) => {
       this.parentPort.off(event, listener)
     },
     send(message) {
-      console.log({ message })
       this.parentPort.postMessage(message)
     },
     dispose() {
