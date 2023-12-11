@@ -73,6 +73,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.IpcParent
     case 'Exit':
       return ModuleId.Exit
+    case 'ElectronScreen':
+      return ModuleId.ElectronScreen
     default:
       throw new CommandNotFoundError(commandId)
   }
