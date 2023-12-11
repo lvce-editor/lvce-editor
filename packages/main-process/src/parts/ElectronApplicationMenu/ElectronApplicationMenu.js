@@ -1,6 +1,6 @@
 import { Menu } from 'electron'
 import * as Assert from '../Assert/Assert.js'
-import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
+import { JsonRpcEvent } from '../JsonRpc/JsonRpc.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 /**

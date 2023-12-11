@@ -2,7 +2,7 @@ import { BrowserWindow, Menu } from 'electron'
 import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 import * as Assert from '../Assert/Assert.js'
 import * as GetElectronMenuItems from '../GetElectronMenuItems/GetElectronMenuItems.js'
-import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
+import { JsonRpcEvent } from '../JsonRpc/JsonRpc.js'
 
 const getPort = (browserWindow) => {
   const state = AppWindowStates.findByWindowId(browserWindow.id)
