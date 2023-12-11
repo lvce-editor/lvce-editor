@@ -1,4 +1,3 @@
-import * as AppWindow from '../AppWindow/AppWindow.js'
 import * as Cli from '../Cli/Cli.js'
 import * as Debug from '../Debug/Debug.js'
 import * as ElectronApp from '../ElectronApp/ElectronApp.js'
@@ -6,11 +5,11 @@ import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronB
 import * as ElectronShell from '../ElectronShell/ElectronShell.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
 import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js'
+import * as HandleElectronReady from '../HandleElectronReady/HandleElectronReady.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as Logger from '../Logger/Logger.js'
 import * as ParseCliArgs from '../ParseCliArgs/ParseCliArgs.js'
 import * as Platform from '../Platform/Platform.js'
-import * as Preferences from '../Preferences/Preferences.js'
 
 // TODO move this function to shared process
 export const handleWindowAllClosed = () => {
@@ -35,12 +34,6 @@ export const handleBeforeQuit = () => {
 // map windows to folders and ports
 // const windowConfigMap = new Map()
 
-export const handleReady = async (parsedArgs, workingDirectory) => {
-  // TODO move preferences loading and window creation to shared process
-  const preferences = await Preferences.load()
-  await AppWindow.createAppWindow(preferences, parsedArgs, workingDirectory)
-}
-
 export const handleSecondInstance = async (
   event,
   commandLine,
@@ -54,7 +47,7 @@ export const handleSecondInstance = async (
   if (handled) {
     return
   }
-  await handleReady(parsedArgs, workingDirectory)
+  await HandleElectronReady.handleReady(parsedArgs, workingDirectory)
 }
 
 const handleWebContentsWindowOpen = ({ url }) => {
@@ -83,5 +76,6 @@ export const handleWebContentsCreated = (event, webContents) => {
     event.preventDefault()
   }
   webContents.on(ElectronWebContentsEventType.WillNavigate, handleWebContentsNavigate)
+  // @ts-ignore
   webContents.setWindowOpenHandler(handleWebContentsWindowOpen)
 }

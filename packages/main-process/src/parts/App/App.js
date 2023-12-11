@@ -8,6 +8,7 @@ import * as ElectronAppEventType from '../ElectronAppEventType/ElectronAppEventT
 import * as ElectronAppListeners from '../ElectronAppListeners/ElectronAppListeners.js'
 import * as ElectronIpcMain from '../ElectronIpcMain/ElectronIpcMain.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
+import * as HandleElectronReady from '../HandleElectronReady/HandleElectronReady.js'
 import * as HandleMessagePort from '../HandleMessagePort/HandleMessagePort.js'
 import * as ParseCliArgs from '../ParseCliArgs/ParseCliArgs.js'
 import * as Performance from '../Performance/Performance.js'
@@ -95,7 +96,7 @@ export const hydrate = async () => {
   await ElectronApp.whenReady()
   Performance.mark(PerformanceMarkerType.AppReady)
 
-  await ElectronAppListeners.handleReady(parsedCliArgs, Process.cwd())
+  await HandleElectronReady.handleReady(parsedCliArgs, Process.cwd())
   Debug.debug('[info] app window created')
 }
 
