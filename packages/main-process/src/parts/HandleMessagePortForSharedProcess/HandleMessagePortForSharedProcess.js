@@ -3,8 +3,6 @@ import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 import * as ConnectIpc from '../ConnectIpc/ConnectIpc.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as Logger from '../Logger/Logger.js'
-import * as Performance from '../Performance/Performance.js'
-import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 // TODO maybe handle critical (first render) request via ipcMain
@@ -38,7 +36,6 @@ export const handlePort = async (event, browserWindowPort, type, name) => {
     return
   }
   const folder = getFolder(config.parsedArgs)
-  Performance.mark(PerformanceMarkerType.WillStartSharedProcess)
   const method = IpcParentType.ElectronUtilityProcess
   const sharedProcess = await SharedProcess.hydrate({
     method,
