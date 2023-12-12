@@ -3,7 +3,7 @@ import * as ElectronSafeStorage from './ElectronSafeStorage.js'
 export const name = 'ElectronSafeStorage'
 
 export const Commands = {
-  decryptString: ElectronSafeStorage.decryptString,
-  encryptString: ElectronSafeStorage.encryptString,
+  decrypt: ElectronSafeStorage.decrypt,
+  encrypt: ElectronSafeStorage.encrypt,
   isEncryptionAvailable: ElectronSafeStorage.isEncryptionAvailable,
 }
