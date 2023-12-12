@@ -369,24 +369,44 @@ const IsDebuggable = {
   },
 }
 
+const UiStrings = {
+  KillProcess: 'Kill Process',
+  DebugProcess: 'Debug Process',
+}
+
 const getMenuItems = (displayProcess) => {
   const menuItems = [
     {
-      label: 'Kill Process',
+      label: UiStrings.KillProcess,
     },
   ]
   if (IsDebuggable.isDebuggable(displayProcess.cmd)) {
     menuItems.push({
-      label: 'Debug Process',
+      label: UiStrings.DebugProcess,
     })
   }
   return menuItems
 }
 
+const handleContextMenuSelect = (label, displayProcess) => {
+  switch (label) {
+    case UiStrings.DebugProcess:
+      return SharedProcess.invoke('AttachDebugger.attachDebugger', displayProcess.pid)
+    case UiStrings.KillProcess:
+      return SharedProcess.invoke('Process.kill', displayProcess.pid)
+    default:
+      break
+  }
+}
+
 const processExplorerShowContextMenu = async (displayProcess, x, y) => {
   const menuItems = getMenuItems(displayProcess)
   const customData = displayProcess
-  await SharedProcess.invoke('ElectronContextMenu.openContextMenu', menuItems, x, y, customData)
+  const event = await SharedProcess.invoke('ElectronContextMenu.openContextMenu', menuItems, x, y, customData)
+  if (event.type === 'close') {
+    return
+  }
+  handleContextMenuSelect(event.data, displayProcess)
 }
 
 const handleContextMenu = async (event) => {
