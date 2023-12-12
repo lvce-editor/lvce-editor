@@ -1,13 +1,8 @@
 import * as Command from '../Command/Command.js'
 import * as ElectronMenuItemFlags from '../ElectronMenuItemFlags/ElectronMenuItemFlags.js'
-import * as EmptyMenu from '../EmptyMenu/EmptyMenu.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-
-export const state = {
-  pendingMenus: EmptyMenu.EmptyMenu,
-}
 
 const convertMenuItem = (menuItem) => {
   const { flags, label } = menuItem
@@ -27,17 +22,6 @@ const convertMenuItems = (menuItems) => {
   return menuItems.map(convertMenuItem)
 }
 
-export const openContextMenu = async (x, y, id, ...args) => {
-  const entries = await MenuEntries.getMenuEntries(id, ...args)
-  state.pendingMenus = entries
-  const electronMenuItems = convertMenuItems(entries)
-  return SharedProcess.invoke('ElectronContextMenu.openContextMenu', electronMenuItems, x, y)
-}
-
-export const handleMenuClose = () => {
-  state.pendingMenus = EmptyMenu.EmptyMenu
-}
-
 const getItem = (items, label) => {
   for (const item of items) {
     if (item.label === label) {
@@ -47,13 +31,17 @@ const getItem = (items, label) => {
   return undefined
 }
 
-export const handleSelect = async (label) => {
-  const items = state.pendingMenus
-  state.pendingMenus = EmptyMenu.EmptyMenu
-  const item = getItem(items, label)
+export const openContextMenu = async (x, y, id, ...args) => {
+  const entries = await MenuEntries.getMenuEntries(id, ...args)
+  const electronMenuItems = convertMenuItems(entries)
+  const event = await SharedProcess.invoke('ElectronContextMenu.openContextMenu', electronMenuItems, x, y)
+  if (event.type === 'close') {
+    return
+  }
+  const item = getItem(entries, event.data)
   if (!item) {
     return
   }
-  const args = item.args || []
-  await Command.execute(item.command, ...args)
+  const commandArgs = item.args || []
+  await Command.execute(item.command, ...commandArgs)
 }

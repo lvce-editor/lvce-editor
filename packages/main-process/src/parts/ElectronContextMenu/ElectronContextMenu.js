@@ -1,48 +1,55 @@
 import { BrowserWindow, Menu } from 'electron'
-import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 import * as Assert from '../Assert/Assert.js'
 import * as GetElectronMenuItems from '../GetElectronMenuItems/GetElectronMenuItems.js'
-import { JsonRpcEvent } from '../JsonRpc/JsonRpc.js'
+import * as Promises from '../Promises/Promises.js'
 
-const getPort = (browserWindow) => {
-  const state = AppWindowStates.findByWindowId(browserWindow.id)
-  if (!state) {
-    console.log('[main-process] menu: message port not found')
-    return undefined
+const getCallbacks = () => {
+  const { resolve, promise } = Promises.withResolvers()
+  const handleClick = (menuItem) => {
+    resolve({
+      type: 'click',
+      data: menuItem,
+    })
   }
-  return state.port
+  const handleClose = () => {
+    resolve({
+      type: 'close',
+      data: undefined,
+    })
+  }
+  return {
+    handleClick,
+    handleClose,
+    promise,
+  }
 }
 
-const click = (menuItem, browserWindow) => {
-  const { label } = menuItem
-  const port = getPort(browserWindow)
-  if (!port) {
-    return
-  }
-  const customData = menuItem.menu.customData || undefined
-  const message = JsonRpcEvent.create('ElectronContextMenu.handleSelect', [label, customData])
-  port.postMessage(message)
-}
-
-export const openContextMenu = (menuItems, x, y, customData) => {
+export const openContextMenu = async (menuItems, x, y) => {
   Assert.array(menuItems)
   Assert.number(x)
   Assert.number(y)
-  const template = GetElectronMenuItems.getElectronMenuItems(menuItems, click)
+  const { promise, handleClick, handleClose } = getCallbacks()
+  const template = GetElectronMenuItems.getElectronMenuItems(menuItems, handleClick)
   const menu = Menu.buildFromTemplate(template)
-  // @ts-ignore
-  menu.customData = customData
   const window = BrowserWindow.getFocusedWindow()
   if (!window) {
-    return
-  }
-  const callback = () => {
-    const port = getPort(window)
-    if (!port) {
-      return
+    return {
+      type: 'close',
+      data: undefined,
     }
-    const message = JsonRpcEvent.create('ElectronContextMenu.handleMenuClose', [])
-    port.postMessage(message)
   }
-  menu.popup({ window, x, y, callback })
+  menu.popup({ window, x, y, callback: handleClose })
+  const event = await promise
+  if (event.type === 'click') {
+    return {
+      type: 'click',
+      data: event.data.label,
+    }
+  }
+  if (event.type === 'close') {
+    return {
+      type: 'close',
+      data: undefined,
+    }
+  }
 }
