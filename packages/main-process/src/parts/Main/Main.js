@@ -5,6 +5,7 @@ import * as Module from '../Module/Module.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as App from '../App/App.js'
 import * as SetStackTraceLimit from '../SetStackTraceLimit/SetStackTraceLimit.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Process from '../Process/Process.js'
 
 export const main = async () => {

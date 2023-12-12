@@ -12,10 +12,13 @@ import * as HandleElectronReady from '../HandleElectronReady/HandleElectronReady
 import * as HandleMessagePort from '../HandleMessagePort/HandleMessagePort.js'
 import * as ParseCliArgs from '../ParseCliArgs/ParseCliArgs.js'
 import * as Performance from '../Performance/Performance.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
 import * as Protocol from '../Protocol/Protocol.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
 // const handleAppReady = async () => {
@@ -77,6 +80,11 @@ export const hydrate = async () => {
     })
     Process.exit(ExitCode.Success)
   }
+
+  // start shared process
+  SharedProcess.hydrate({
+    method: IpcParentType.ElectronUtilityProcess,
+  })
 
   // command line switches
   CommandLineSwitches.enable(parsedCliArgs)
