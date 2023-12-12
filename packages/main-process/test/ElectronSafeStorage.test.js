@@ -39,7 +39,7 @@ test('encryptString - error', () => {
   electron.safeStorage.encryptString.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  expect(() => ElectronSafeStorage.encryptString('test')).toThrowError(new TypeError('x is not a function'))
+  expect(() => ElectronSafeStorage.encrypt('test')).toThrowError(new TypeError('x is not a function'))
 })
 
 test('encryptString', () => {
@@ -47,7 +47,7 @@ test('encryptString', () => {
   electron.safeStorage.encryptString.mockImplementation(() => {
     return 'encrypted'
   })
-  expect(ElectronSafeStorage.encryptString('test')).toBe('encrypted')
+  expect(ElectronSafeStorage.encrypt('test')).toBe('encrypted')
   expect(electron.safeStorage.encryptString).toHaveBeenCalledTimes(1)
   expect(electron.safeStorage.encryptString).toHaveBeenCalledWith('test')
 })
