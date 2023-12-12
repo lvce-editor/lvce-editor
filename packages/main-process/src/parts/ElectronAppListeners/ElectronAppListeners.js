@@ -1,6 +1,5 @@
 import * as Cli from '../Cli/Cli.js'
 import * as Debug from '../Debug/Debug.js'
-import * as ElectronApp from '../ElectronApp/ElectronApp.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
 import * as ElectronShell from '../ElectronShell/ElectronShell.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
@@ -9,7 +8,6 @@ import * as HandleElectronReady from '../HandleElectronReady/HandleElectronReady
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as Logger from '../Logger/Logger.js'
 import * as ParseCliArgs from '../ParseCliArgs/ParseCliArgs.js'
-import * as Platform from '../Platform/Platform.js'
 
 export { handleWindowAllClosed } from '../HandleWindowAllClosed/HandleWindowAllClosed.js'
 

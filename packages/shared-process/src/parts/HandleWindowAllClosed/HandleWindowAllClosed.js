@@ -6,6 +6,6 @@ export const handleWindowAllClosed = async () => {
   Debug.debug('[info] all windows closed')
   if (!Platform.isMacOs) {
     Debug.debug('[info] quitting')
-    await ParentIpc.invoke('ElectronApp.quit')
+    await ParentIpc.invoke('Exit.exit')
   }
 }

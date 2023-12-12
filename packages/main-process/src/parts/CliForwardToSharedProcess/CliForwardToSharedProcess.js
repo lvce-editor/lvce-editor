@@ -1,5 +1,5 @@
-import * as ElectronApp from '../ElectronApp/ElectronApp.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as Exit from '../Exit/Exit.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
@@ -25,6 +25,6 @@ export const handleCliArgs = async (parsedArgs) => {
       ErrorHandling.handleError(error)
     }
   } finally {
-    ElectronApp.quit()
+    Exit.exit()
   }
 }

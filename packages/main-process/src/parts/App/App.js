@@ -8,6 +8,7 @@ import * as ElectronAppEventType from '../ElectronAppEventType/ElectronAppEventT
 import * as ElectronAppListeners from '../ElectronAppListeners/ElectronAppListeners.js'
 import * as ElectronIpcMain from '../ElectronIpcMain/ElectronIpcMain.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
+import * as Exit from '../Exit/Exit.js'
 import * as HandleElectronReady from '../HandleElectronReady/HandleElectronReady.js'
 import * as HandleMessagePort from '../HandleMessagePort/HandleMessagePort.js'
 import * as ParseCliArgs from '../ParseCliArgs/ParseCliArgs.js'
@@ -64,7 +65,7 @@ export const hydrate = async () => {
   const hasLock = ElectronApp.requestSingleInstanceLock(argv)
   if (!hasLock) {
     Debug.debug('[info] quitting because no lock')
-    ElectronApp.quit()
+    Exit.exit()
     return
   }
 
@@ -98,8 +99,4 @@ export const hydrate = async () => {
 
   await HandleElectronReady.handleReady(parsedCliArgs, Process.cwd())
   Debug.debug('[info] app window created')
-}
-
-export const exit = () => {
-  ElectronApp.quit()
 }
