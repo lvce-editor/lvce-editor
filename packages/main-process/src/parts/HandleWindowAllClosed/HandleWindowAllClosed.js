@@ -1,12 +1,12 @@
-import * as Debug from '../Debug/Debug.js'
-import * as ElectronApp from '../ElectronApp/ElectronApp.js'
-import * as Platform from '../Platform/Platform.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
-// TODO move this function to shared process
-export const handleWindowAllClosed = () => {
-  Debug.debug('[info] all windows closed')
-  if (!Platform.isMacOs) {
-    Debug.debug('[info] quitting')
-    ElectronApp.quit()
-  }
+export const handleWindowAllClosed = async () => {
+  const method = IpcParentType.ElectronUtilityProcess
+  const sharedProcess = await SharedProcess.hydrate({
+    method,
+    env: {},
+  })
+  JsonRpc.send(sharedProcess, 'HandleWindowAllClosed.handleWindowAllClosed')
 }
