@@ -1,4 +1,5 @@
 import * as ExtensionHostStatusBarItems from '../ExtensionHost/ExtensionHostStatusBarItems.js'
+import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
 
 const toUiStatusBarItem = (extensionHostStatusBarItem) => {
   return {
@@ -21,6 +22,8 @@ export const getStatusBarItems = async (showItems) => {
   if (!showItems) {
     return []
   }
+  await ExtensionHostManagement.activateByEvent('onSourceControl')
+
   const extensionStatusBarItems = await ExtensionHostStatusBarItems.getStatusBarItems()
   const uiStatusBarItems = toUiStatusBarItems(extensionStatusBarItems)
   return uiStatusBarItems

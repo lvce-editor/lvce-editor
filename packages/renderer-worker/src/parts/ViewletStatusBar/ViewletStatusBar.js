@@ -1,6 +1,5 @@
 import * as ExtensionHostStatusBarItems from '../ExtensionHost/ExtensionHostStatusBarItems.js'
 import * as GetStatusBarItems from '../GetStatusBarItems/GetStatusBarItems.js'
-import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
 import * as Preferences from '../Preferences/Preferences.js'
 
 export const create = () => {
@@ -11,7 +10,6 @@ export const create = () => {
 }
 
 export const loadContent = async (state) => {
-  await ExtensionHostManagement.activateByEvent('onSourceControl')
   const statusBarItemsPreference = Preferences.get('statusBar.itemsVisible') ?? false
   const statusBarItems = await GetStatusBarItems.getStatusBarItems(statusBarItemsPreference)
   return {
