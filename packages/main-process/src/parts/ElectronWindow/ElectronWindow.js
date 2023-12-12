@@ -19,46 +19,22 @@ export const wrapWindowCommand =
     fn(browserWindow, ...args)
   }
 
-/**
- * @param {Electron. BrowserWindow} browserWindow
- */
-export const toggleDevtools = (browserWindow) => {
-  browserWindow.webContents.toggleDevTools()
+export const executeWindowFunction = (browserWindowId, key) => {
+  const browserWindow = GetWindowById.getWindowById(browserWindowId)
+  if (!browserWindow) {
+    Logger.info(`[main-process] browser window not found ${browserWindow}`)
+    return
+  }
+  browserWindow[key]()
 }
 
-/**
- * @param {Electron. BrowserWindow} browserWindow
- */
-export const minimize = (browserWindow) => {
-  browserWindow.minimize()
-}
-
-/**
- * @param {Electron.BrowserWindow} browserWindow
- */
-export const maximize = (browserWindow) => {
-  browserWindow.maximize()
-}
-
-/**
- * @param {Electron.BrowserWindow} browserWindow
- */
-export const unmaximize = (browserWindow) => {
-  browserWindow.unmaximize()
-}
-
-/**
- * @param {Electron.BrowserWindow} browserWindow
- */
-export const close = (browserWindow) => {
-  browserWindow.close()
-}
-
-/**
- * @param {Electron.BrowserWindow} browserWindow
- */
-export const reload = (browserWindow) => {
-  browserWindow.reload()
+export const executeWebContentsFunction = (browserWindowId, key) => {
+  const browserWindow = GetWindowById.getWindowById(browserWindowId)
+  if (!browserWindow) {
+    Logger.info(`[main-process] browser window not found ${browserWindow}`)
+    return
+  }
+  browserWindow.webContents[key]()
 }
 
 export const getFocusedWindow = () => {
@@ -217,11 +193,4 @@ export const zoomOut = (browserWindow) => {
  */
 export const zoomReset = (browserWindow) => {
   return setZoom(browserWindow, getDefaultZoomLevel(), getMinZoomLevel(), getMaxZoomLevel())
-}
-
-/**
- * @param {Electron.BrowserWindow} browserWindow
- */
-export const focus = (browserWindow) => {
-  browserWindow.webContents.focus()
 }

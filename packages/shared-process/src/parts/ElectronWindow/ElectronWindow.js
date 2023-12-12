@@ -8,32 +8,32 @@ export const openNew = () => {
 
 export const minimize = (windowId) => {
   Assert.number(windowId)
-  return ParentIpc.invoke('ElectronWindow.minimize', windowId)
+  return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'minimize')
 }
 
 export const toggleDevtools = (windowId) => {
   Assert.number(windowId)
-  return ParentIpc.invoke('ElectronWindow.toggleDevtools', windowId)
+  return ParentIpc.invoke('ElectronWindow.executeWebContentsFunction', windowId, 'toggleDevTools')
 }
 
 export const maximize = (windowId) => {
   Assert.number(windowId)
-  return ParentIpc.invoke('ElectronWindow.maximize', windowId)
+  return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'maximize')
 }
 
 export const unmaximize = (windowId) => {
   Assert.number(windowId)
-  return ParentIpc.invoke('ElectronWindow.unmaximize')
+  return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'unmaximize')
 }
 
 export const close = (windowId) => {
   Assert.number(windowId)
-  return ParentIpc.invoke('ElectronWindow.close', windowId)
+  return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'close')
 }
 
 export const reload = (windowId) => {
   Assert.number(windowId)
-  return ParentIpc.invoke('ElectronWindow.reload', windowId)
+  return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'reload')
 }
 
 export const zoomIn = (windowId) => {
@@ -49,7 +49,7 @@ export const zoomReset = (windowId) => {
 }
 
 export const focus = (windowId) => {
-  return ParentIpc.invoke('ElectronWindow.focus', windowId)
+  return ParentIpc.invoke('ElectronWindow.executeWebContentsFunction', windowId, 'focus')
 }
 
 export const handleClose = (windowId) => {
