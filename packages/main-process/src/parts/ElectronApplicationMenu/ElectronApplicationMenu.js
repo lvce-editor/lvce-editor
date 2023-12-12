@@ -1,6 +1,5 @@
 import { Menu } from 'electron'
 import * as Assert from '../Assert/Assert.js'
-import { JsonRpcEvent } from '../JsonRpc/JsonRpc.js'
 import * as GetTitleBarItems from '../GetTitleBarItems/GetTitleBarItems.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
@@ -9,8 +8,7 @@ export const setMenu = (menu) => {
 }
 
 const click = (menuItem, browserWindow, keys) => {
-  const message = JsonRpcEvent.create('ElectronApplicationMenu.handleClick', [browserWindow.id, menuItem.label])
-  SharedProcess.state.sharedProcess.send(message)
+  SharedProcess.send('ElectronApplicationMenu.handleClick', browserWindow.id, menuItem.label)
 }
 
 const addClickListener = (item) => {
