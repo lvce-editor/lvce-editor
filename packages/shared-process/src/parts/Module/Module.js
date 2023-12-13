@@ -130,6 +130,8 @@ export const load = (moduleId) => {
       return import('../HandleElectronReady/HandleElectronReady.ipc.js')
     case ModuleId.HandleWindowAllClosed:
       return import('../HandleWindowAllClosed/HandleWindowAllClosed.ipc.js')
+    case ModuleId.HandleMessagePortForTerminalProcess:
+      return import('../HandleMessagePortForTerminalProcess/HandleMessagePortForTerminalProcess.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

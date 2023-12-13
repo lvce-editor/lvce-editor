@@ -64,3 +64,4 @@ export const ElectronNet = 57
 export const Screen = 58
 export const HandleElectronReady = 59
 export const HandleWindowAllClosed = 60
+export const HandleMessagePortForTerminalProcess = 61
