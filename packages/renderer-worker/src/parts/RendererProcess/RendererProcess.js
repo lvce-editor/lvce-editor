@@ -35,6 +35,10 @@ export const invoke = async (method, ...params) => {
   return JsonRpc.invoke(state.ipc, method, ...params)
 }
 
+export const invokeAndTransfer = async (transfer, method, ...params) => {
+  return JsonRpc.invokeAndTransfer(state.ipc, transfer, method, ...params)
+}
+
 export const sendAndTransfer = (message, transferables) => {
   state.ipc.sendAndTransfer(message, transferables)
 }

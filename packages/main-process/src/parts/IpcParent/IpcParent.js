@@ -12,6 +12,9 @@ export const create = async ({ method, ...options }) => {
       ...options,
     })
   }
+  if (options.noReturn) {
+    return undefined
+  }
   const ipc = module.wrap(rawIpc)
   return ipc
 }
