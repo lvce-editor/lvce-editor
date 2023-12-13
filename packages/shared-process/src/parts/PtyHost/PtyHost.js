@@ -18,11 +18,11 @@ const handleProcessExit = () => {
   cleanUpAll()
 }
 
-const createPtyHost = async () => {
+const createPtyHost = async (method) => {
   exitHook(handleProcessExit)
   const ptyHostPath = await PtyHostPath.getPtyHostPath()
   const ptyHost = await IpcParent.create({
-    method: IpcParentType.NodeForkedProcess,
+    method,
     path: ptyHostPath,
     argv: [],
     stdio: 'inherit',
@@ -38,10 +38,10 @@ const createPtyHost = async () => {
   return ptyHost
 }
 
-export const getOrCreate = () => {
+export const getOrCreate = (method = IpcParentType.NodeForkedProcess) => {
   Debug.debug('creating pty host')
   if (!PtyHostState.state.ptyHostPromise) {
-    PtyHostState.state.ptyHostPromise = createPtyHost()
+    PtyHostState.state.ptyHostPromise = createPtyHost(method)
   }
   return PtyHostState.state.ptyHostPromise
 }
