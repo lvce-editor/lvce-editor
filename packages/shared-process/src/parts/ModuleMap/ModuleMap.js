@@ -285,6 +285,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleElectronReady
     case 'HandleWindowAllClosed.handleWindowAllClosed':
       return ModuleId.HandleWindowAllClosed
+    case 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess':
+      return ModuleId.HandleMessagePortForTerminalProcess
     default:
       throw new CommandNotFoundError(commandId)
   }
