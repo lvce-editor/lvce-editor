@@ -9,7 +9,14 @@ export const listen = ({ messagePort }) => {
 }
 
 const getActualData = (event) => {
-  return event.data
+  const { data, ports } = event
+  if (ports.length === 0) {
+    return data
+  }
+  return {
+    ...data,
+    params: [...ports, ...data.params],
+  }
 }
 
 export const wrap = (messagePort) => {
