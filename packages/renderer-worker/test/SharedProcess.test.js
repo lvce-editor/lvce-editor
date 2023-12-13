@@ -1,9 +1,10 @@
 import { jest } from '@jest/globals'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import * as SharedProcessState from '../src/parts/SharedProcessState/SharedProcessState.js'
 
 test('invoke - error', async () => {
-  SharedProcess.state.ipc = {
+  SharedProcessState.state.ipc = {
     send: jest.fn((message) => {
       switch (message.method) {
         case 123456:
@@ -25,13 +26,13 @@ test('invoke - error', async () => {
   }
   await expect(SharedProcess.invoke(123456, 42)).rejects.toThrowError(
     new Error(
-      'OperationalError: Failed to read directory "/test/playground,languages": ENOENT: no such file or directory, scandir \'/test/playground,languages\''
-    )
+      'OperationalError: Failed to read directory "/test/playground,languages": ENOENT: no such file or directory, scandir \'/test/playground,languages\'',
+    ),
   )
 })
 
 test('invoke - error stack', async () => {
-  SharedProcess.state.ipc = {
+  SharedProcessState.state.ipc = {
     send: jest.fn((message) => {
       switch (message.method) {
         case 123456:
@@ -54,7 +55,7 @@ test('invoke - error stack', async () => {
   const error = await SharedProcess.invoke(123456, 42).catch((error) => error)
   expect(error.stack).toEqual(
     expect.stringMatching(
-      'Error: OperationalError: Failed to read directory "/test/playground,languages": ENOENT: no such file or directory, scandir \'/test/playground,languages\''
-    )
+      'Error: OperationalError: Failed to read directory "/test/playground,languages": ENOENT: no such file or directory, scandir \'/test/playground,languages\'',
+    ),
   )
 })
