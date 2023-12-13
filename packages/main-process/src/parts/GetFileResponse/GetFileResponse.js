@@ -10,12 +10,11 @@ import * as IsNetFileNotFoundError from '../IsNetFileNotFoundError/IsNetFileNotF
  */
 export const getFileResponse = async (path) => {
   try {
-    const url = pathToFileURL(path)
+    const url = pathToFileURL(path).toString()
     const response = await net.fetch(url)
     return response
   } catch (error) {
     if (IsNetFileNotFoundError.isNetFileNotFoundError(error)) {
-      // @ts-ignore
       return new Response('not-found', {
         status: HttpStatusCode.NotFound,
         statusText: 'not-found',
