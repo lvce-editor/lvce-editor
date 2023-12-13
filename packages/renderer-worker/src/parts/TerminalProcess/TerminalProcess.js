@@ -18,7 +18,7 @@ export const state = {
 
 const actuallyListen = async () => {
   try {
-    const ipc = await TerminalProcessIpc.listen(IpcParentType.Node)
+    const ipc = await TerminalProcessIpc.listen(IpcParentType.NodeAlternate)
     HandleIpc.handleIpc(ipc, 'terminal process')
     state.ipc = ipc
   } catch (error) {

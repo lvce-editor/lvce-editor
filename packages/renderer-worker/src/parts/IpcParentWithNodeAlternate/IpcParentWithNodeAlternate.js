@@ -1,4 +1,4 @@
-import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
@@ -18,10 +18,8 @@ export const create = async (options) => {
       }
     case PlatformType.Electron:
       const ipc = SharedProcessState.state.ipc
-      const { message, promise } = JsonRpcRequest.create('HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess', [])
       const { port1, port2 } = new MessageChannel()
-      ipc.sendAndTransfer(message, port2)
-      const result = await promise
+      const result = await JsonRpc.invokeAndTransfer(ipc, [port2], 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess')
       console.log({ result })
       return {}
     default:
