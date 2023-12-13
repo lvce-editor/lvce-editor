@@ -1,12 +1,10 @@
 import * as Electron from 'electron'
-import * as Clamp from '../Clamp/Clamp.js'
 import * as GetIcon from '../GetIcon/GetIcon.js'
 import * as GetWindowById from '../GetWindowById/GetWindowById.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as Platform from '../Platform/Platform.js'
-import * as Preferences from '../Preferences/Preferences.js'
 
 export const wrapWindowCommand =
   (fn) =>
@@ -28,13 +26,13 @@ export const executeWindowFunction = (browserWindowId, key) => {
   browserWindow[key]()
 }
 
-export const executeWebContentsFunction = (browserWindowId, key) => {
+export const executeWebContentsFunction = (browserWindowId, key, ...args) => {
   const browserWindow = GetWindowById.getWindowById(browserWindowId)
   if (!browserWindow) {
     Logger.info(`[main-process] browser window not found ${browserWindow}`)
     return
   }
-  browserWindow.webContents[key]()
+  browserWindow.webContents[key](...args)
 }
 
 export const getFocusedWindow = () => {
@@ -130,67 +128,4 @@ export const create = ({
   }
   browserWindow.once('ready-to-show', handleReadyToShow)
   return browserWindow
-}
-
-const setZoom = async (browserWindow, zoomFactor, minZoomLevel, maxZoomLevel) => {
-  const newZoomFactor = Clamp.clamp(zoomFactor, minZoomLevel, maxZoomLevel)
-  browserWindow.webContents.setZoomLevel(newZoomFactor)
-  await Preferences.update('window.zoomLevel', newZoomFactor)
-}
-
-/**
- *
- * @param {Electron.BrowserWindow} browserWindow
- * @param {*} getDelta
- * @param {*} getMinZoomLevel
- * @param {*} getMaxZoomLevel
- * @returns
- */
-const setZoomDelta = (browserWindow, getDelta, getMinZoomLevel, getMaxZoomLevel) => {
-  const delta = getDelta()
-  const minZoomLevel = getMinZoomLevel()
-  const maxZoomLevel = getMaxZoomLevel()
-  const currentZoomLevel = browserWindow.webContents.getZoomLevel()
-  return setZoom(browserWindow, currentZoomLevel + delta, minZoomLevel, maxZoomLevel)
-}
-
-const getMinZoomLevel = () => {
-  return -3
-}
-
-const getMaxZoomLevel = () => {
-  return 3
-}
-
-const getZoomInDelta = () => {
-  return 0.2
-}
-
-const getZoomOutDelta = () => {
-  return -0.2
-}
-
-const getDefaultZoomLevel = () => {
-  return 0
-}
-
-/**
- * @param {Electron.BrowserWindow} browserWindow
- */
-export const zoomIn = (browserWindow) => {
-  return setZoomDelta(browserWindow, getZoomInDelta, getMinZoomLevel, getMaxZoomLevel)
-}
-
-/**
- * @param {Electron.BrowserWindow} browserWindow
- */
-export const zoomOut = (browserWindow) => {
-  return setZoomDelta(browserWindow, getZoomOutDelta, getMinZoomLevel, getMaxZoomLevel)
-}
-
-/**
- * @param {Electron.BrowserWindow} browserWindow
- */
-export const zoomReset = (browserWindow) => {
-  return setZoom(browserWindow, getDefaultZoomLevel(), getMinZoomLevel(), getMaxZoomLevel())
 }

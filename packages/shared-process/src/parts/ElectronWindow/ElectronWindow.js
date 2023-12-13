@@ -1,6 +1,7 @@
-import * as Assert from '../Assert/Assert.js'
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as AppWindow from '../AppWindow/AppWindow.js'
+import * as Assert from '../Assert/Assert.js'
+import * as Clamp from '../Clamp/Clamp.js'
+import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
 export const openNew = () => {
   return AppWindow.openNew()
@@ -36,16 +37,59 @@ export const reload = (windowId) => {
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'reload')
 }
 
+const setZoom = async (windowId, zoomFactor, minZoomLevel, maxZoomLevel) => {
+  const newZoomFactor = Clamp.clamp(zoomFactor, minZoomLevel, maxZoomLevel)
+  await ParentIpc.invoke('ElectronWindow.executeWebContentsFunction', windowId, 'setZoomLevel', newZoomFactor)
+  // TODO
+  // await Preferences.update('window.zoomLevel', newZoomFactor)
+}
+
+/**
+ *
+ * @param {number} windowId
+ * @param {*} getDelta
+ * @param {*} getMinZoomLevel
+ * @param {*} getMaxZoomLevel
+ * @returns
+ */
+const setZoomDelta = async (windowId, getDelta, getMinZoomLevel, getMaxZoomLevel) => {
+  const delta = getDelta()
+  const minZoomLevel = getMinZoomLevel()
+  const maxZoomLevel = getMaxZoomLevel()
+  const currentZoomLevel = await ParentIpc.invoke('ElectronWindow.executeWebContentsFunction', windowId, 'getZoomLevel')
+  return setZoom(windowId, currentZoomLevel + delta, minZoomLevel, maxZoomLevel)
+}
+
+const getMinZoomLevel = () => {
+  return -3
+}
+
+const getMaxZoomLevel = () => {
+  return 3
+}
+
+const getZoomInDelta = () => {
+  return 0.2
+}
+
+const getZoomOutDelta = () => {
+  return -0.2
+}
+
+const getDefaultZoomLevel = () => {
+  return 0
+}
+
 export const zoomIn = (windowId) => {
-  return ParentIpc.invoke('ElectronWindow.zoomIn', windowId)
+  return setZoomDelta(windowId, getZoomInDelta, getMinZoomLevel, getMaxZoomLevel)
 }
 
 export const zoomOut = (windowId) => {
-  return ParentIpc.invoke('ElectronWindow.zoomOut', windowId)
+  return setZoomDelta(windowId, getZoomOutDelta, getMinZoomLevel, getMaxZoomLevel)
 }
 
 export const zoomReset = (windowId) => {
-  return ParentIpc.invoke('ElectronWindow.zoomReset', windowId)
+  return setZoom(windowId, getDefaultZoomLevel(), getMinZoomLevel(), getMaxZoomLevel())
 }
 
 export const focus = (windowId) => {
