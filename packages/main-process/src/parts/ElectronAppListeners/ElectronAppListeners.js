@@ -1,14 +1,12 @@
-import * as Cli from '../Cli/Cli.js'
 import * as Debug from '../Debug/Debug.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
 import * as ElectronShell from '../ElectronShell/ElectronShell.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
 import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js'
-import * as HandleElectronReady from '../HandleElectronReady/HandleElectronReady.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as Logger from '../Logger/Logger.js'
-import * as ParseCliArgs from '../ParseCliArgs/ParseCliArgs.js'
 
+export { handleSecondInstance } from '../HandleSecondInstance/HandleSecondInstance.js'
 export { handleWindowAllClosed } from '../HandleWindowAllClosed/HandleWindowAllClosed.js'
 
 // TODO move this function to shared process
@@ -24,22 +22,6 @@ export const handleBeforeQuit = () => {
 
 // map windows to folders and ports
 // const windowConfigMap = new Map()
-
-export const handleSecondInstance = async (
-  event,
-  commandLine,
-  workingDirectory,
-  additionalData, // additionalData is the actual process.argv https://github.com/electron/electron/pull/30891
-) => {
-  Debug.debug('[info] second instance')
-  const parsedArgs = ParseCliArgs.parseCliArgs(additionalData)
-  Debug.debug('[info] second instance args', additionalData, parsedArgs)
-  const handled = Cli.handleFastCliArgsMaybe(parsedArgs) // TODO don't like the side effect here
-  if (handled) {
-    return
-  }
-  await HandleElectronReady.handleReady(parsedArgs, workingDirectory)
-}
 
 const handleWebContentsWindowOpen = ({ url }) => {
   ElectronShell.openExternal(url)
