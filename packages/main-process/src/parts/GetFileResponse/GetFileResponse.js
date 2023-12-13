@@ -10,11 +10,6 @@ import * as IsNetFileNotFoundError from '../IsNetFileNotFoundError/IsNetFileNotF
  */
 export const getFileResponse = async (path) => {
   try {
-    const isTypeScript = path.endsWith('.ts')
-    if (isTypeScript) {
-      const GetFileResponseTypeScript = await import('../GetFileResponseTypeScript/GetFileResponseTypeScript.js')
-      return await GetFileResponseTypeScript.getFileResponseTypeScript(path)
-    }
     const url = pathToFileURL(path)
     const response = await net.fetch(url)
     return response
