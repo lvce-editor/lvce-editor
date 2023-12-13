@@ -3,7 +3,7 @@ import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 export const getModule = (method) => {
   switch (method) {
     case IpcParentType.ElectronMessagePort:
-      return import('../IpcParentWithElectron/IpcParentWithElectron.js')
+      return import('../IpcParentWithElectronMessagePort/IpcParentWithElectronMessagePort.js')
     case IpcParentType.MessagePort:
       return import('../IpcParentWithMessagePort/IpcParentWithMessagePort.js')
     case IpcParentType.ModuleWorker:
