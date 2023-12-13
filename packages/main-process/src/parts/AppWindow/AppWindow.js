@@ -38,7 +38,7 @@ export const createAppWindow2 = async (windowOptions, parsedArgs, workingDirecto
   const ElectronApplicationMenu = await import('../ElectronApplicationMenu/ElectronApplicationMenu.js')
   const menu = ElectronApplicationMenu.createTitleBar()
   ElectronApplicationMenu.setMenu(menu)
-
+  window.webContents.openDevTools()
   // window.setMenu(menu)
   window.setMenuBarVisibility(true)
   window.setAutoHideMenuBar(false)

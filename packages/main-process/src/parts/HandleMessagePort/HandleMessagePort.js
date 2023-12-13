@@ -46,7 +46,8 @@ const createWebContentsIpc = (webContents) => {
 export const handlePort = async (event, message) => {
   Assert.object(event)
   Assert.object(message)
-  const { sender } = event
+
+  const { sender, ports } = event
   const data = message.params[0]
   const ipc = createWebContentsIpc(sender)
   try {
@@ -54,11 +55,10 @@ export const handlePort = async (event, message) => {
     if (!module) {
       throw new Error(`Unexpected port type ${data}`)
     }
-    const channel = new MessageChannelMain()
-    const { port1, port2 } = channel
-    await module.handlePort(event, port1, ...message.params)
+    const port = ports[0]
+    await module.handlePort(event, port, ...message.params)
     const response = getSuccessResponse(message, null)
-    ipc.sendAndTransfer(response, [port2])
+    ipc.send(response)
   } catch (error) {
     const response = await JsonRpc.getErrorResponse(message, error, ipc, PrettyError.prepare, logError)
     const isDestroyed = ipc.isDisposed()
