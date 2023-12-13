@@ -18,7 +18,9 @@ jest.unstable_mockModule('electron', () => {
 })
 
 jest.unstable_mockModule('electron-unhandled', () => {
-  return {}
+  return {
+    default() {},
+  }
 })
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
