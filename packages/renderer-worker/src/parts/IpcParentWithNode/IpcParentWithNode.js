@@ -7,7 +7,7 @@ const getModule = () => {
     case PlatformType.Remote:
       return import('../IpcParentWithWebSocket/IpcParentWithWebSocket.js')
     case PlatformType.Electron:
-      return import('../IpcParentWithElectron/IpcParentWithElectron.js')
+      return import('../IpcParentWithElectronMessagePort/IpcParentWithElectronMessagePort.js')
     default:
       throw new Error('unsupported platform')
   }
