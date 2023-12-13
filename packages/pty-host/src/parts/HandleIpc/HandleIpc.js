@@ -15,7 +15,6 @@ const logError = (error, prettyError) => {
 export const handleIpc = (ipc) => {
   Assert.object(ipc)
   const handleMessage = (message) => {
-    // @ts-ignore
     return JsonRpc.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve, preparePrettyError, logError, RequiresSocket.requiresSocket)
   }
   ipc.on('message', handleMessage)
