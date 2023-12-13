@@ -1,4 +1,5 @@
 import * as Electron from 'electron'
+import unhandled from 'electron-unhandled' // TODO this might slow down initial startup
 import { spawn } from 'node:child_process'
 import * as Cli from '../Cli/Cli.js'
 import * as CommandLineSwitches from '../CommandLineSwitches/CommandLineSwitches.js'
@@ -7,18 +8,18 @@ import * as ElectronApp from '../ElectronApp/ElectronApp.js'
 import * as ElectronAppEventType from '../ElectronAppEventType/ElectronAppEventType.js'
 import * as ElectronAppListeners from '../ElectronAppListeners/ElectronAppListeners.js'
 import * as ElectronIpcMain from '../ElectronIpcMain/ElectronIpcMain.js'
-import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as Exit from '../Exit/Exit.js'
+import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as HandleElectronReady from '../HandleElectronReady/HandleElectronReady.js'
 import * as HandleMessagePort from '../HandleMessagePort/HandleMessagePort.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as ParseCliArgs from '../ParseCliArgs/ParseCliArgs.js'
 import * as Performance from '../Performance/Performance.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
 import * as Protocol from '../Protocol/Protocol.js'
-import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
@@ -36,7 +37,6 @@ import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 export const hydrate = async () => {
   Electron.Menu.setApplicationMenu(null) // performance
-  const { default: unhandled } = await import('electron-unhandled') // TODO this might slow down initial startup
   unhandled({
     showDialog: true,
     logger() {}, // already exists in mainProcessMain.js
