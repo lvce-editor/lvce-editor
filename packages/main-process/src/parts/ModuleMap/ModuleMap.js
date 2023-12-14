@@ -77,6 +77,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronScreen
     case 'ElectronUtilityProcess':
       return ModuleId.ElectronUtilityProcess
+    case 'TemporaryMessagePort':
+      return ModuleId.TemporaryMessagePort
     default:
       throw new CommandNotFoundError(commandId)
   }

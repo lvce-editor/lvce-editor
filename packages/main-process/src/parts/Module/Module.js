@@ -69,6 +69,8 @@ export const load = async (moduleId) => {
       return import('../ElectronScreen/ElectronScreen.ipc.js')
     case ModuleId.ElectronUtilityProcess:
       return import('../ElectronUtilityProcess/ElectronUtilityProcess.ipc.js')
+    case ModuleId.TemporaryMessagePort:
+      return import('../TemporaryMessagePort/TemporaryMessagePort.ipc.js')
     default:
       throw new ModuleNotFoundError(moduleId)
   }
