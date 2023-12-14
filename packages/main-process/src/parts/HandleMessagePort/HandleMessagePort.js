@@ -1,6 +1,5 @@
-import { MessageChannelMain } from 'electron'
 import * as Assert from '../Assert/Assert.js'
-import * as ElectronPreloadChannelType from '../ElectronPreloadChannelType/ElectronPreloadChannelType.js'
+import * as CreateWebContentsIpc from '../CreateWebContentsIpc/CreateWebContentsIpc.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import { getSuccessResponse } from '../JsonRpc/JsonRpc.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
@@ -25,40 +24,24 @@ const getModule = (type) => {
   }
 }
 
-const createWebContentsIpc = (webContents) => {
-  return {
-    webContents,
-    send(message) {
-      this.webContents.postMessage(ElectronPreloadChannelType.Port, message)
-    },
-    sendAndTransfer(message, transfer) {
-      this.webContents.postMessage(ElectronPreloadChannelType.Port, message, transfer)
-    },
-    isDisposed() {
-      return this.webContents.isDestroyed()
-    },
-  }
-}
-
 /**
  * @param {import('electron').IpcMainEvent} event
  */
 export const handlePort = async (event, message) => {
   Assert.object(event)
   Assert.object(message)
-  const { sender } = event
+  const { sender, ports } = event
+  const port = ports[0]
   const data = message.params[0]
-  const ipc = createWebContentsIpc(sender)
+  const ipc = CreateWebContentsIpc.createWebContentsIpc(sender)
   try {
     const module = await getModule(data)
     if (!module) {
       throw new Error(`Unexpected port type ${data}`)
     }
-    const channel = new MessageChannelMain()
-    const { port1, port2 } = channel
-    await module.handlePort(event, port1, ...message.params)
+    await module.handlePort(event, port, ...message.params)
     const response = getSuccessResponse(message, null)
-    ipc.sendAndTransfer(response, [port2])
+    ipc.sendAndTransfer(response)
   } catch (error) {
     const response = await JsonRpc.getErrorResponse(message, error, ipc, PrettyError.prepare, logError)
     const isDestroyed = ipc.isDisposed()
