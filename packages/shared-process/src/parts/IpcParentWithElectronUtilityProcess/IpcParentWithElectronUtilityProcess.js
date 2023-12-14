@@ -30,10 +30,18 @@ export const wrap = (port) => {
         case 'close':
           this.port.on(event, listener)
           break
+        case 'message':
+          const wrapped = (event) => {
+            listener(event.data)
+          }
+          this.port.on(event, wrapped)
+          break
         default:
           break
       }
-      console.log({ event, listener })
+    },
+    dispose() {
+      this.port.close()
     },
   }
 }
