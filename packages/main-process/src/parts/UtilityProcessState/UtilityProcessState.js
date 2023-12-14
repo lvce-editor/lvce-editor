@@ -4,10 +4,14 @@ export const state = {
   all: Object.create(null),
 }
 
-export const add = (pid, name) => {
+export const add = (pid, process, name) => {
   Assert.number(pid)
+  Assert.object(process)
   Assert.string(name)
-  state.all[pid] = name
+  state.all[pid] = {
+    process,
+    name,
+  }
 }
 
 export const remove = (pid) => {
@@ -21,8 +25,8 @@ export const getAll = () => {
 
 export const getByName = (name) => {
   for (const value of Object.values(state.all)) {
-    if (value === name) {
-      return name
+    if (value.name === name) {
+      return value.process
     }
   }
   return undefined

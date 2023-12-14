@@ -23,7 +23,6 @@ export const wrap = (name) => {
     },
     async sendAndTransfer(message, transfer) {
       await ParentIpc.invokeAndTransfer('ElectronUtilityProcess.invokeAndTransfer', transfer, name, message)
-      console.log({ message, transfer })
     },
     on(event, listener) {
       // TODO
