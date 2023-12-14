@@ -7,5 +7,5 @@ export const getProcessExplorerUrl = () => {
 }
 
 export const getProcessExplorerPreloadUrl = () => {
-  return Path.join(Root.root, 'packages', 'main-process', 'pages', 'process-explorer', 'process-explorer-preload.js')
+  return Path.join(Root.root, 'packages', 'main-process', 'src', 'preload.js')
 }
