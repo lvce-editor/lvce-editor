@@ -759,12 +759,16 @@ const listProcessesWithMemoryUsage = (rootPid) => {
 
 const handleMessageFromWindow = (event) => {
   const { data } = event
+  if ('method' in data) {
+    return
+  }
   Callback.resolve(data.id, data)
+  window.removeEventListener('message', handleMessageFromWindow)
 }
 
 const getPort = async (type) => {
   // @ts-ignore
-  window.addEventListener('message', handleMessageFromWindow, { once: true })
+  window.addEventListener('message', handleMessageFromWindow)
 
   const { id, promise } = Callback.registerPromise()
   const message = {
@@ -774,11 +778,10 @@ const getPort = async (type) => {
     params: [type],
   }
   // @ts-ignore
-  if (typeof window.myApi === 'undefined') {
+  if (!globalThis.isElectron) {
     throw new Error('Electron api was requested but is not available')
   }
-  // @ts-ignore
-  window.myApi.ipcConnect(message)
+  window.postMessage(message, '*')
   const responseMessage = await promise
   if ('error' in responseMessage) {
     const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
