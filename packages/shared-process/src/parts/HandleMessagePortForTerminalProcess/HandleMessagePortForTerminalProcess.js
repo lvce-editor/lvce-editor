@@ -6,5 +6,5 @@ import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 export const handleMessagePortForTerminalProcess = async (port) => {
   Assert.object(port)
   const ptyHost = await PtyHost.getOrCreate(IpcParentType.ElectronUtilityProcess)
-  await JsonRpc.invokeAndTransfer(ptyHost, port, 'HandleElectronMessagePort.handleElectronMessagePort')
+  await JsonRpc.invokeAndTransfer(ptyHost, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
 }

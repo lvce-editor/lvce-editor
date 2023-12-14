@@ -44,6 +44,9 @@ export const wrap = (parentPort) => {
     send(message) {
       this.parentPort.postMessage(message)
     },
+    sendAndTransfer(message, transfer) {
+      this.parentPort.postMessage(message, transfer)
+    },
     dispose() {
       this.parentPort.close()
     },

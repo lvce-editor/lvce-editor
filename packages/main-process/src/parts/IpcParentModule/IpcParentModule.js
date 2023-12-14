@@ -9,6 +9,6 @@ export const getModule = (method) => {
     case IpcParentType.ElectronUtilityProcess:
       return import('../IpcParentWithElectronUtilityProcess/IpcParentWithElectronUtilityProcess.js')
     default:
-      throw new Error('unexpected ipc type')
+      throw new Error(`unexpected ipc type ${method}`)
   }
 }
