@@ -287,6 +287,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleWindowAllClosed
     case 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess':
       return ModuleId.HandleMessagePortForTerminalProcess
+    case 'TemporaryMessagePort.handlePort':
+      return ModuleId.TemporaryMessagePort
     default:
       throw new CommandNotFoundError(commandId)
   }
