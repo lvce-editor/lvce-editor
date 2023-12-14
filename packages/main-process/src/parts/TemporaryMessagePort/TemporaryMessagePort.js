@@ -1,3 +1,11 @@
+import { MessageChannelMain } from 'electron'
+import * as Assert from '../Assert/Assert.js'
+import * as Callback from '../Callback/Callback.js'
+import * as FormatUtilityProcessName from '../FormatUtilityProcessName/FormatUtilityProcessName.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
+import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
+
 // TODO
 // In order to create utility process from shared process
 // create a message channel in the main process and
@@ -8,6 +16,21 @@
 // that was created in the main process to the new utility process
 // The message ports in main process only exist temporarily
 // because they are sent to the shared process/utility process
-export const create = () => {
-  console.log('create temporary message port')
+export const create = async (name) => {
+  Assert.string(name)
+  const formattedName = FormatUtilityProcessName.formatUtilityProcessName(name)
+  const utilityProcess = UtilityProcessState.getByName(formattedName)
+  const { port1, port2 } = new MessageChannelMain()
+  await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port1], 'TemporaryMessagePort.handlePort', name)
+  const utilityProcessIpc = {
+    sendAndTransfer(message, transfer) {
+      utilityProcess.postMessage(message, transfer)
+    },
+  }
+  const handleUtilityProcessMessage = (message) => {
+    Callback.resolve(message.id, message)
+    utilityProcess.off('message', handleUtilityProcessMessage)
+  }
+  utilityProcess.on('message', handleUtilityProcessMessage)
+  await JsonRpc.invokeAndTransfer(utilityProcessIpc, [port2], 'HandleElectronMessagePort.handleElectronMessagePort')
 }

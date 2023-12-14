@@ -1,31 +1,47 @@
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as TemporaryMessagePort from '../TemporaryMessagePort/TemporaryMessagePort.js'
 
 const ElectronUtilityProcess = 3
 
 export const create = async (options) => {
   // TODO how to launch process without race condition?
   // when promise resolves, process might have already exited
-  const messagePort = await ParentIpc.invoke('IpcParent.create', {
+  await ParentIpc.invoke('IpcParent.create', {
     ...options,
     method: ElectronUtilityProcess,
     noReturn: true,
   })
-  // TODO return uuid, use uuid to send messages to process
-  console.log({ options })
-  return options.name
+  // TODO use uuid instead of name
+  const port = await TemporaryMessagePort.create(options.name)
+  return port
 }
 
-export const wrap = (name) => {
-  console.log({ name })
+export const wrap = (port) => {
   return {
+    port,
     send(message) {
-      console.log({ message })
+      this.port.postMessage(message)
     },
     async sendAndTransfer(message, transfer) {
-      await ParentIpc.invokeAndTransfer('ElectronUtilityProcess.invokeAndTransfer', transfer, name, message)
+      this.port.postMessage(message, transfer)
     },
     on(event, listener) {
-      // TODO
+      switch (event) {
+        case 'close':
+          this.port.on(event, listener)
+          break
+        case 'message':
+          const wrapped = (event) => {
+            listener(event.data)
+          }
+          this.port.on(event, wrapped)
+          break
+        default:
+          break
+      }
+    },
+    dispose() {
+      this.port.close()
     },
   }
 }

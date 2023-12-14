@@ -11,8 +11,6 @@ export const invokeAndTransfer = (name, message, transfer) => {
   if (!utilityProcess) {
     throw new Error(`utility process not found ${formattedName}`)
   }
-  console.log({ message, transfer })
+  // TODO
   utilityProcess.postMessage(message, transfer)
-  // console.log({ x, name, formattedName })
-  // console.log(UtilityProcessState.state.all)
 }

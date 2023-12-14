@@ -1,5 +1,6 @@
 import exitHook from 'exit-hook'
 import * as Debug from '../Debug/Debug.js'
+import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
@@ -28,6 +29,7 @@ const createPtyHost = async (method) => {
     stdio: 'inherit',
     name: 'Terminal Process',
   })
+  HandleIpc.handleIpc(ptyHost)
   const handleClose = () => {
     ptyHost.off('close', handleClose)
     PtyHostState.state.ipc = undefined

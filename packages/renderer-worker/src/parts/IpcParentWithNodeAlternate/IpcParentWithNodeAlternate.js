@@ -19,14 +19,40 @@ export const create = async (options) => {
     case PlatformType.Electron:
       const ipc = SharedProcessState.state.ipc
       const { port1, port2 } = new MessageChannel()
-      const result = await JsonRpc.invokeAndTransfer(ipc, [port2], 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess')
-      console.log({ result })
-      return {}
+      await JsonRpc.invokeAndTransfer(ipc, [port2], 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess')
+      return port1
     default:
       throw new Error('unsupported platform')
   }
 }
 
-export const wrap = ({ rawIpc, module }) => {
-  return module.wrap(rawIpc)
+const getActualData = (event) => {
+  return event.data
+}
+
+export const wrap = (port) => {
+  return {
+    port,
+    /**
+     * @type {any}
+     */
+    listener: undefined,
+    get onmessage() {
+      return this.listener
+    },
+    set onmessage(listener) {
+      this.listener = listener
+      const wrappedListener = (event) => {
+        const data = getActualData(event)
+        listener(data)
+      }
+      this.port.onmessage = wrappedListener
+    },
+    send(message) {
+      this.port.postMessage(message)
+    },
+    sendAndTransfer(message, transfer) {
+      this.port.postMessage(message, transfer)
+    },
+  }
 }
