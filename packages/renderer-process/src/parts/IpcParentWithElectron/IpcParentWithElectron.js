@@ -1,12 +1,16 @@
 import * as Callback from '../Callback/Callback.js'
+import * as IsElectron from '../IsElectron/IsElectron.js'
 import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.js'
 import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
 const handleMessageFromWindow = (event) => {
-  if (event.origin !== location.origin) {
+  const { origin, data } = event
+  if (origin !== location.origin) {
     return
   }
-  const { data } = event
+  if ('method' in data) {
+    return
+  }
   Callback.resolve(data.id, data)
 }
 
@@ -15,12 +19,10 @@ window.addEventListener('message', handleMessageFromWindow)
 
 export const create = async ({ type, name }) => {
   const { message, promise } = JsonRpcRequest.create('CreateMessagePort.createMessagePort', [type, name])
-  // @ts-ignore
-  if (typeof window.myApi === 'undefined') {
+  if (!IsElectron.isElectron()) {
     throw new Error('Electron api was requested but is not available')
   }
-  // @ts-ignore
-  window.myApi.ipcConnect(message)
+  window.postMessage(message, '*')
   const responseMessage = await promise
   const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
   return result
