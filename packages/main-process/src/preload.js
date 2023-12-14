@@ -26,6 +26,7 @@ const main = () => {
   contextBridge.exposeInMainWorld('myApi', {
     ipcConnect,
   })
+  contextBridge.exposeInMainWorld('isElectron', true)
 }
 
 main()
