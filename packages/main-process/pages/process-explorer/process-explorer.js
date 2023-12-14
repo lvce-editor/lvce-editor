@@ -766,11 +766,22 @@ const handleMessageFromWindow = (event) => {
   window.removeEventListener('message', handleMessageFromWindow)
 }
 
+const unwrapJsonRpcResult = (responseMessage) => {
+  if ('error' in responseMessage) {
+    const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
+    throw restoredError
+  }
+  if ('result' in responseMessage) {
+    return responseMessage.result
+  }
+  return undefined
+}
+
 const getPort = async (type) => {
   // @ts-ignore
   window.addEventListener('message', handleMessageFromWindow)
-
   const { id, promise } = Callback.registerPromise()
+  const { port1, port2 } = new MessageChannel()
   const message = {
     jsonrpc: JsonRpcVersion.Two,
     id,
@@ -781,16 +792,10 @@ const getPort = async (type) => {
   if (!globalThis.isElectron) {
     throw new Error('Electron api was requested but is not available')
   }
-  window.postMessage(message, '*')
+  window.postMessage(message, '*', [port1])
   const responseMessage = await promise
-  if ('error' in responseMessage) {
-    const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
-    throw restoredError
-  }
-  if ('result' in responseMessage) {
-    return responseMessage.result
-  }
-  return responseMessage
+  unwrapJsonRpcResult(responseMessage)
+  return port2
 }
 
 const IpcChildWithSharedProcess = {
