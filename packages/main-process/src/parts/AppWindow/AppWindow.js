@@ -1,8 +1,8 @@
+import { BrowserWindow } from 'electron'
 import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 import * as DefaultUrl from '../DefaultUrl/DefaultUrl.js'
 import * as ElectronApplicationMenu from '../ElectronApplicationMenu/ElectronApplicationMenu.js'
 import * as Session from '../ElectronSession/ElectronSession.js'
-import * as Window from '../ElectronWindow/ElectronWindow.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as Logger from '../Logger/Logger.js'
@@ -31,10 +31,23 @@ const loadUrl = async (browserWindow, url) => {
 // TODO avoid mixing BrowserWindow, childprocess and various lifecycle methods in one file -> separate concerns
 export const createAppWindow2 = async (windowOptions, parsedArgs, workingDirectory, url = DefaultUrl.defaultUrl) => {
   const session = Session.get()
-  const window = Window.create({
+  Performance.mark(PerformanceMarkerType.WillCreateCodeWindow)
+  const window = new BrowserWindow({
     ...windowOptions,
-    session,
+    webPreferences: {
+      ...windowOptions.webPreferences,
+      session,
+    },
   })
+  Performance.mark(PerformanceMarkerType.DidCreateCodeWindow)
+
+  const handleReadyToShow = () => {
+    // due to electron bug, zoom level needs to be set here,
+    // cannot be set when creating the browser window
+    // window .webContents.setZoomLevel(zoomLevel)
+    window.show()
+  }
+  window.once('ready-to-show', handleReadyToShow)
   // TODO query applicarion menu items from shared process
   const menu = ElectronApplicationMenu.createTitleBar()
   ElectronApplicationMenu.setMenu(menu)

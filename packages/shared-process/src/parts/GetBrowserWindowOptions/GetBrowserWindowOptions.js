@@ -5,7 +5,7 @@ import * as GetPreloadUrl from '../GetPreloadUrl/GetPreloadUrl.js'
  *
  * @returns {any}
  */
-export const getBrowserWindowOptions = ({ x, y, width, height, titleBarStyle, titleBarOverlay, frame, session, background }) => {
+export const getBrowserWindowOptions = ({ x, y, width, height, titleBarStyle, titleBarOverlay, frame, background }) => {
   const icon = GetIcon.getIcon()
   return {
     x,
@@ -23,7 +23,6 @@ export const getBrowserWindowOptions = ({ x, y, width, height, titleBarStyle, ti
       contextIsolation: true,
       v8CacheOptions: 'bypassHeatCheck', // TODO this is what vscode uses, but it doesn't work properly in electron https://github.com/electron/electron/issues/27075
       preload: GetPreloadUrl.getPreloadUrl(),
-      session,
       additionalArguments: ['--lvce-window-kind'],
     },
     backgroundColor: background,
