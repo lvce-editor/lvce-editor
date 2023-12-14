@@ -1,17 +1,17 @@
+import { IpcError } from '../IpcError/IpcError.js'
 import * as IpcParentWithModuleWorker from '../IpcParentWithModuleWorker/IpcParentWithModuleWorker.js'
+import * as IsWorker from '../IsWorker/IsWorker.js'
 import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
 
-export const create = async ({ url, name }) => {
+export const create = async ({ url, name, port }) => {
   const worker = await IpcParentWithModuleWorker.create({
     url,
     name,
   })
-  if (worker instanceof Worker) {
-    const channel = new MessageChannel()
-    const { port1, port2 } = channel
-    const message = JsonRpcEvent.create('initialize', ['message-port', port1])
-    worker.postMessage(message, [port1])
-    return port2
+  if (!IsWorker.isWorker(worker)) {
+    throw new IpcError(`worker must be of type Worker`)
   }
-  return worker
+  const message = JsonRpcEvent.create('initialize', ['message-port', port])
+  worker.postMessage(message, [port])
+  return undefined
 }

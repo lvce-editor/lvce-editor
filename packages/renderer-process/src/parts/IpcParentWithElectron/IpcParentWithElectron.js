@@ -17,14 +17,13 @@ const handleMessageFromWindow = (event) => {
 // @ts-ignore
 window.addEventListener('message', handleMessageFromWindow)
 
-export const create = async ({ type, name }) => {
+export const create = async ({ type, name, port }) => {
   const { message, promise } = JsonRpcRequest.create('CreateMessagePort.createMessagePort', [type, name])
   if (!IsElectron.isElectron()) {
     throw new Error('Electron api was requested but is not available')
   }
-  const { port1, port2 } = new MessageChannel()
-  window.postMessage(message, '*', [port1])
+  window.postMessage(message, '*', [port])
   const responseMessage = await promise
   UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
-  return port2
+  return undefined
 }
