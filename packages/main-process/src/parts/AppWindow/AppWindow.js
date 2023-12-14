@@ -1,5 +1,6 @@
 import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 import * as DefaultUrl from '../DefaultUrl/DefaultUrl.js'
+import * as ElectronApplicationMenu from '../ElectronApplicationMenu/ElectronApplicationMenu.js'
 import * as Session from '../ElectronSession/ElectronSession.js'
 import * as Window from '../ElectronWindow/ElectronWindow.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
@@ -35,7 +36,6 @@ export const createAppWindow2 = async (windowOptions, parsedArgs, workingDirecto
     session,
   })
   // TODO query applicarion menu items from shared process
-  const ElectronApplicationMenu = await import('../ElectronApplicationMenu/ElectronApplicationMenu.js')
   const menu = ElectronApplicationMenu.createTitleBar()
   ElectronApplicationMenu.setMenu(menu)
 
