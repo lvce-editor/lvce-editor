@@ -8,6 +8,7 @@ import * as ElectronApp from '../ElectronApp/ElectronApp.js'
 import * as ElectronAppEventType from '../ElectronAppEventType/ElectronAppEventType.js'
 import * as ElectronAppListeners from '../ElectronAppListeners/ElectronAppListeners.js'
 import * as ElectronIpcMain from '../ElectronIpcMain/ElectronIpcMain.js'
+import * as ElectronPreloadChannelType from '../ElectronPreloadChannelType/ElectronPreloadChannelType.js'
 import * as Exit from '../Exit/Exit.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as HandleElectronReady from '../HandleElectronReady/HandleElectronReady.js'
@@ -94,7 +95,7 @@ export const hydrate = async () => {
   Protocol.enable(Electron.protocol)
 
   // ipcMain
-  ElectronIpcMain.on('port', HandleMessagePort.handlePort)
+  ElectronIpcMain.on(ElectronPreloadChannelType.Port, HandleMessagePort.handlePort)
 
   // app
   ElectronApp.on(ElectronAppEventType.WindowAllClosed, ElectronAppListeners.handleWindowAllClosed)

@@ -22,8 +22,9 @@ export const create = async ({ type, name }) => {
   if (!IsElectron.isElectron()) {
     throw new Error('Electron api was requested but is not available')
   }
-  window.postMessage(message, '*')
+  const { port1, port2 } = new MessageChannel()
+  window.postMessage(message, '*', [port1])
   const responseMessage = await promise
-  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
-  return result
+  UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
+  return port2
 }

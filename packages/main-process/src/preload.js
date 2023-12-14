@@ -2,11 +2,11 @@ const { ipcRenderer, contextBridge } = require('electron')
 
 const channelName = 'port'
 
-const ipcConnect = (message) => {
+const ipcConnect = (message, transfer) => {
   if (typeof message !== 'object') {
     throw new TypeError('[preload] message must be of type object')
   }
-  ipcRenderer.postMessage(channelName, message)
+  ipcRenderer.postMessage(channelName, message, transfer)
 }
 
 const handlePort = (event, message) => {
@@ -23,11 +23,11 @@ const handlePort = (event, message) => {
 }
 
 const handleWindowMessage = (event) => {
-  const { data } = event
+  const { data, ports } = event
   if ('result' in data || 'error' in data) {
     return
   }
-  ipcConnect(data)
+  ipcConnect(data, ports)
 }
 
 const main = () => {
