@@ -3,12 +3,14 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
 const getPort = async (type, name) => {
-  const port = await RendererProcess.invoke('IpcParent.create', {
+  const { port1, port2 } = new MessageChannel()
+  await RendererProcess.invokeAndTransfer('IpcParent.create', [port1], {
     method: RendererProcessIpcParentType.Electron,
     type,
     name,
+    port: port1,
   })
-  return port
+  return port2
 }
 
 export const create = async (options) => {
