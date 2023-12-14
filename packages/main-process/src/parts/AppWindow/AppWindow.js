@@ -35,6 +35,7 @@ export const createAppWindow2 = async (windowOptions, parsedArgs, workingDirecto
     ...windowOptions,
     session,
   })
+  window.webContents.openDevTools()
   // TODO query applicarion menu items from shared process
   const menu = ElectronApplicationMenu.createTitleBar()
   ElectronApplicationMenu.setMenu(menu)
