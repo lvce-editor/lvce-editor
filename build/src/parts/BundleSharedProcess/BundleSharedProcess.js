@@ -4,6 +4,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
+import * as Platform from '../Platform/Platform.js'
 
 const createNewPackageJson = (oldPackageJson, bundleSharedProcess, target) => {
   const newPackageJson = {
@@ -71,6 +72,21 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
       path: `${cachePath}/src/parts/Platform/Platform.js`,
       occurrence: `isDeb = false`,
       replacement: `isDeb = true`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      occurrence: `export const isLinux = platform === 'linux'`,
+      replacement: `export const isLinux = ${Platform.isLinux()}`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      occurrence: `export const isWindows = platform === 'win32'`,
+      replacement: `export const isWindows = ${Platform.isWindows()}`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      occurrence: `export const isMacOs = platform === 'darwin'`,
+      replacement: `export const isMacOs = ${Platform.isMacos()}`,
     })
   }
   if (target === 'server') {

@@ -38,4 +38,6 @@ const main = () => {
   contextBridge.exposeInMainWorld('isElectron', true)
 }
 
+console.log('hello from preload')
+
 main()

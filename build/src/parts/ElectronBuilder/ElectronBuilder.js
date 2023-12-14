@@ -227,10 +227,20 @@ const copyElectronResult = async ({
       occurrence: `export const isArchLinux = false`,
       replacement: `export const isArchLinux = true`,
     })
+    await Replace.replace({
+      path: `${resourcesPath}/app/packages/shared-process/src/parts/Platform/Platform.js`,
+      occurrence: `export const isArchLinux = false`,
+      replacement: `export const isArchLinux = true`,
+    })
   }
   if (config === ElectronBuilderConfigType.AppImage) {
     await Replace.replace({
       path: `${resourcesPath}/app/packages/main-process/src/parts/Platform/Platform.js`,
+      occurrence: `export const isAppImage = false`,
+      replacement: `export const isAppImage = true`,
+    })
+    await Replace.replace({
+      path: `${resourcesPath}/app/packages/shared-process/src/parts/Platform/Platform.js`,
       occurrence: `export const isAppImage = false`,
       replacement: `export const isAppImage = true`,
     })
