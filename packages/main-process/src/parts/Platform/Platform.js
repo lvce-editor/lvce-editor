@@ -58,18 +58,6 @@ export const getExtensionHostPath = () => {
   return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
 }
 
-export const getDefaultSettingsPath = () => {
-  return join(Root.root, 'static', 'config', 'defaultSettings.json')
-}
-
-export const getUserSettingsPath = () => {
-  return join(configDir, 'settings.json')
-}
-
-export const getPreloadUrl = () => {
-  return join(Root.root, 'packages', 'main-process', 'src', 'preload.js')
-}
-
 export const getChromeExtensionsPath = () => {
   return join(dataDir, 'electron-browser-view-chrome-extensions')
 }
