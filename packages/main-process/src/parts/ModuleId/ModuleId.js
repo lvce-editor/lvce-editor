@@ -29,3 +29,4 @@ export const IpcParent = 29
 export const Crash = 30
 export const Exit = 31
 export const ElectronScreen = 32
+export const ElectronUtilityProcess = 33

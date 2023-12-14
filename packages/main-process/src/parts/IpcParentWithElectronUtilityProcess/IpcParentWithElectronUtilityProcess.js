@@ -1,7 +1,7 @@
 import { utilityProcess } from 'electron'
 import * as Assert from '../Assert/Assert.js'
-import * as CamelCase from '../CamelCase/CamelCase.js'
 import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.js'
+import * as FormatUtilityProcessName from '../FormatUtilityProcessName/FormatUtilityProcessName.js'
 import * as GetFirstUtilityProcessEvent from '../GetFirstUtilityProcessEvent/GetFirstUtilityProcessEvent.js'
 import { IpcError } from '../IpcError/IpcError.js'
 import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
@@ -29,8 +29,8 @@ export const effects = ({ rawIpc, name }) => {
   if (!rawIpc.pid) {
     return
   }
-  const camelCaseName = CamelCase.camelCase(name)
-  UtilityProcessState.add(rawIpc.pid, camelCaseName)
+  const formattedName = FormatUtilityProcessName.formatUtilityProcessName(name)
+  UtilityProcessState.add(rawIpc.pid, formattedName)
   const cleanup = () => {
     UtilityProcessState.remove(rawIpc.pid)
     rawIpc.off('exit', handleExit)

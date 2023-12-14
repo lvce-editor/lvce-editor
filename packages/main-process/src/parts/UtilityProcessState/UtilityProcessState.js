@@ -18,3 +18,12 @@ export const remove = (pid) => {
 export const getAll = () => {
   return Object.entries(state.all)
 }
+
+export const getByName = (name) => {
+  for (const value of Object.values(state.all)) {
+    if (value === name) {
+      return name
+    }
+  }
+  return undefined
+}

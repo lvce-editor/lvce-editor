@@ -75,6 +75,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Exit
     case 'ElectronScreen':
       return ModuleId.ElectronScreen
+    case 'ElectronUtilityProcess':
+      return ModuleId.ElectronUtilityProcess
     default:
       throw new CommandNotFoundError(commandId)
   }

@@ -28,3 +28,6 @@ export const listen = async () => {
 export const invoke = (method, ...params) => {
   return JsonRpc.invoke(state.ipc, method, ...params)
 }
+export const invokeAndTransfer = (method, transfer, ...params) => {
+  return JsonRpc.invokeAndTransfer(state.ipc, transfer, method, ...params)
+}
