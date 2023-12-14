@@ -66,10 +66,6 @@ export const getUserSettingsPath = () => {
   return join(configDir, 'settings.json')
 }
 
-export const getPreloadUrl = () => {
-  return join(Root.root, 'packages', 'main-process', 'src', 'preload.js')
-}
-
 export const getChromeExtensionsPath = () => {
   return join(dataDir, 'electron-browser-view-chrome-extensions')
 }
