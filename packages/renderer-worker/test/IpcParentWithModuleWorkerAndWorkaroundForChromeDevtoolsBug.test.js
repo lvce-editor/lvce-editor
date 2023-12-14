@@ -4,6 +4,12 @@ import * as RendererProcessIpcParentType from '../src/parts/RendererProcessIpcPa
 beforeAll(() => {
   // @ts-ignore
   globalThis.MessagePort = class {}
+  globalThis.MessageChannel = class {
+    constructor() {
+      this.port1 = new MessagePort()
+      this.port2 = new MessagePort()
+    }
+  }
 })
 
 beforeEach(() => {
@@ -12,7 +18,7 @@ beforeEach(() => {
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
   return {
-    invoke: jest.fn(),
+    invokeAndTransfer: jest.fn(),
   }
 })
 
@@ -22,21 +28,21 @@ const IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug = await import(
 )
 
 test('create', async () => {
-  const port = new MessagePort()
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {
-    return port
+  RendererProcess.invokeAndTransfer.mockImplementation(() => {
+    return undefined
   })
   const ipc = await IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.create({
     url: 'https://example.com/worker.js',
     name: 'test worker',
   })
-  expect(ipc).toBe(port)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('IpcParent.create', {
+  expect(ipc).toBeInstanceOf(MessagePort)
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('IpcParent.create', [new MessagePort()], {
     method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
     name: 'test worker',
     raw: true,
     url: 'https://example.com/worker.js',
+    port: new MessagePort(),
   })
 })
