@@ -62,7 +62,3 @@ export const createAppWindow2 = async (windowOptions, parsedArgs, workingDirecto
   })
   await loadUrl(window, url)
 }
-
-export const findById = (id) => {
-  return AppWindowStates.findByWindowId(id)
-}
