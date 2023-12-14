@@ -1,22 +1,16 @@
-import { IpcError } from '../IpcError/IpcError.js'
-import * as IsMessagePort from '../IsMessagePort/IsMessagePort.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
 export const create = async ({ url, name }) => {
-  const port = await RendererProcess.invoke('IpcParent.create', {
+  const { port1, port2 } = new MessageChannel()
+  await RendererProcess.invokeAndTransfer('IpcParent.create', [port1], {
     method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
     url,
     name,
     raw: true,
+    port: port1,
   })
-  if (!port) {
-    throw new IpcError('port must be defined')
-  }
-  if (!IsMessagePort.isMessagePort(port)) {
-    throw new IpcError('port must be of type MessagePort')
-  }
-  return port
+  return port2
 }
 
 export const wrap = (port) => {
