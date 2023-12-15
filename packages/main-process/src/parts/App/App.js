@@ -13,6 +13,7 @@ import * as Exit from '../Exit/Exit.js'
 import * as ExitCode from '../ExitCode/ExitCode.js'
 import * as HandleElectronReady from '../HandleElectronReady/HandleElectronReady.js'
 import * as HandleMessagePort from '../HandleMessagePort/HandleMessagePort.js'
+import * as HandleSecondInstance from '../HandleSecondInstance/HandleSecondInstance.js'
 import * as HandleWindowAllClosed from '../HandleWindowAllClosed/HandleWindowAllClosed.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as ParseCliArgs from '../ParseCliArgs/ParseCliArgs.js'
@@ -103,8 +104,7 @@ export const hydrate = async () => {
   ElectronApp.on(ElectronAppEventType.WindowAllClosed, HandleWindowAllClosed.handleWindowAllClosed)
   ElectronApp.on(ElectronAppEventType.BeforeQuit, ElectronAppListeners.handleBeforeQuit)
   ElectronApp.on(ElectronAppEventType.WebContentsCreated, ElectronAppListeners.handleWebContentsCreated)
-  // Electron.app.on('ready', handleAppReady)
-  ElectronApp.on(ElectronAppEventType.SecondInstance, ElectronAppListeners.handleSecondInstance)
+  ElectronApp.on(ElectronAppEventType.SecondInstance, HandleSecondInstance.handleSecondInstance)
   await ElectronApp.whenReady()
   Performance.mark(PerformanceMarkerType.AppReady)
 

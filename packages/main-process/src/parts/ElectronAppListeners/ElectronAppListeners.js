@@ -6,8 +6,6 @@ import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/E
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as Logger from '../Logger/Logger.js'
 
-export { handleSecondInstance } from '../HandleSecondInstance/HandleSecondInstance.js'
-
 // TODO move this function to shared process
 export const handleBeforeQuit = () => {
   LifeCycle.setShutDown()
