@@ -21,6 +21,7 @@ export const ElectronNet = 20
 export const ElectronBrowserViewSuggestions = 21
 export const CreatePidMap = 22
 export const OpenExternal = 23
+export const Platform = 25
 export const GetWindowId = 26
 export const DesktopCapturer = 27
 export const Trash = 28

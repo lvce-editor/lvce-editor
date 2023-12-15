@@ -1,5 +1,4 @@
 import { BrowserWindow } from 'electron'
-import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 import * as Session from '../ElectronSession/ElectronSession.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
 
@@ -14,16 +13,7 @@ export const open2 = async (options, url) => {
   const processExplorerWindow = new BrowserWindow(allOptions)
   const windowId = processExplorerWindow.id
   const webContentsId = processExplorerWindow.webContents.id
-  AppWindowStates.add({
-    parsedArgs: [],
-    workingDirectort: '',
-    webContentsId,
-    windowId,
-  })
-  const handleWindowClose = () => {
-    processExplorerWindow.off('close', handleWindowClose)
-    AppWindowStates.remove(windowId)
-  }
+
   /**
    *
    * @param {Electron.Event} event
@@ -40,7 +30,6 @@ export const open2 = async (options, url) => {
     }
   }
 
-  processExplorerWindow.on('close', handleWindowClose)
   processExplorerWindow.setMenuBarVisibility(false)
   processExplorerWindow.webContents.on(ElectronWebContentsEventType.BeforeInputEvent, handleBeforeInput)
 

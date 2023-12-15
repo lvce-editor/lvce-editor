@@ -61,6 +61,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.OpenExternal
     case 'Process':
       return ModuleId.Process
+    case 'Platform':
+      return ModuleId.Platform
     case 'GetWindowId':
       return ModuleId.GetWindowId
     case 'DesktopCapturer':

@@ -51,8 +51,6 @@ export const load = async (moduleId) => {
       return import('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ElectronWindowProcessExplorer:
       return import('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
-    case ModuleId.GetWindowId:
-      return import('../GetWindowId/GetWindowId.ipc.js')
     case ModuleId.IpcParent:
       return import('../IpcParent/IpcParent.ipc.js')
     case ModuleId.OpenExternal:
