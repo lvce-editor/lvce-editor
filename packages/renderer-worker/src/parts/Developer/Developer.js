@@ -2,7 +2,6 @@ import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as ElectronDeveloper from '../ElectronDeveloper/ElectronDeveloper.js'
 import * as FormatStartupPerformance from '../FormatStartupPerformance/FormatStartupPerformance.js'
-import * as GetWebVitals from '../GetWebVitals/GetWebVitals.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceEntryType from '../PerformanceEntryType/PerformanceEntryType.js'
@@ -54,7 +53,6 @@ export const getStartupPerformanceContent = async () => {
     nodeStartupTiming = await getNodeTiming()
   }
   const measureEntries = getMeasureEntries()
-  const webVitals = await GetWebVitals.getWebVitals()
   let electronEntries
   if (Platform.platform === PlatformType.Electron) {
     electronEntries = await getElectronEntries()
@@ -62,7 +60,6 @@ export const getStartupPerformanceContent = async () => {
   const text = FormatStartupPerformance.formatStartupPerformance({
     nodeStartupTiming,
     measureEntries,
-    webVitals,
     electronEntries,
   })
   return text
