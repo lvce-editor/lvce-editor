@@ -21,6 +21,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as Process from '../Process/Process.js'
 import * as Protocol from '../Protocol/Protocol.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SingleInstanceLock from '../SingleInstanceLock/SingleInstanceLock.js'
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
@@ -66,7 +67,7 @@ export const hydrate = async () => {
     Electron.app.setPath('logs', Platform.chromeUserDataPath)
   }
 
-  const hasLock = ElectronApp.requestSingleInstanceLock(argv)
+  const hasLock = SingleInstanceLock.requestSingleInstanceLock(argv)
   if (!hasLock) {
     Debug.debug('[info] quitting because no lock')
     Exit.exit()
