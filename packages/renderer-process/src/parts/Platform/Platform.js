@@ -13,7 +13,7 @@ const getPlatform = () => {
     return PlatformType.Remote
   }
   // @ts-ignore
-  if (typeof myApi !== 'undefined') {
+  if (globalThis.isElectron) {
     return PlatformType.Electron
   }
   return PlatformType.Remote
