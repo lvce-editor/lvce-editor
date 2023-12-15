@@ -1,3 +1,4 @@
+import * as Preferences from '../Preferences/Preferences.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -14,13 +15,16 @@ export const create = (id, uri, x, y, width, height) => {
     titleBarMenuBarEnabled: true,
     titleBarButtonsEnabled: true,
     titleBarButtonsWidth: 46 * 3,
+    titleBarTitleEnabled: true,
   }
 }
 
 export const loadContent = (state) => {
+  const titleBarTitleEnabled = Preferences.get('titleBar.titleEnabled') ?? false
   return {
     ...state,
     isFocused: true,
+    titleBarTitleEnabled,
   }
 }
 
@@ -35,7 +39,18 @@ const getTitleBarMenuBarWidth = (width, menuBarX, titleBarButtonsWidth) => {
 
 export const getChildren = (state) => {
   const children = []
-  const { x, y, width, height, titleBarIconWidth, titleBarIconEnabled, titleBarMenuBarEnabled, titleBarButtonsEnabled, titleBarButtonsWidth } = state
+  const {
+    x,
+    y,
+    width,
+    height,
+    titleBarIconWidth,
+    titleBarTitleEnabled,
+    titleBarIconEnabled,
+    titleBarMenuBarEnabled,
+    titleBarButtonsEnabled,
+    titleBarButtonsWidth,
+  } = state
   let menuBarX = x
 
   if (titleBarIconEnabled) {
@@ -54,6 +69,12 @@ export const getChildren = (state) => {
       width: remainingWidth,
       setBounds: false,
     })
+  }
+  if (titleBarTitleEnabled) {
+    children.push({
+      id: ViewletModuleId.TitleBarTitle,
+    })
+    console.log('title enabled')
   }
   if (titleBarButtonsEnabled) {
     children.push({

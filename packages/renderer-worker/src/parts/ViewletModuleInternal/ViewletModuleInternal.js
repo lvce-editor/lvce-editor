@@ -90,6 +90,8 @@ export const load = (moduleId) => {
       return import('../ViewletVideo/ViewletVideo.ipc.js')
     case ViewletModuleId.ColorPicker:
       return import('../ViewletColorPicker/ViewletColorPicker.ipc.js')
+    case ViewletModuleId.TitleBarTitle:
+      return import('../ViewletTitleBarTitle/ViewletTitleBarTitle.ipc.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }
