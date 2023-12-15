@@ -134,8 +134,8 @@ export const getMemoryUsageContent = async () => {
   const sharedProcessMemoryUsage = await getSharedProcessMemoryUsage()
   const formattedSharedProcessMemoryUsage = formatNodeMemoryUsage(sharedProcessMemoryUsage)
   const userAgentSpecificMemory = await getPerformanceUserAgentSpecificMemory()
-  const totalSent = SharedProcess.state.totalSent
-  const totalReceived = SharedProcess.state.totalReceived
+  const totalSent = 0
+  const totalReceived = 0
   const formattedRendererWorkerMemoryUsage = formatRendererWorkerData({
     userAgentSpecificMemory,
     sent: totalSent,
