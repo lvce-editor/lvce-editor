@@ -17,7 +17,7 @@
     "directory": "packages/extension-host-sub-worker"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "xo": {
     "rules": {
