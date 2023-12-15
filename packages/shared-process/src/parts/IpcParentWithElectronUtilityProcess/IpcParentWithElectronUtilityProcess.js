@@ -40,6 +40,7 @@ export const wrap = (port) => {
           break
       }
     },
+    off(event, listener) {},
     dispose() {
       this.port.close()
     },
