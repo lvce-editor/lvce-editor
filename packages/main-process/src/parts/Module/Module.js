@@ -55,8 +55,6 @@ export const load = async (moduleId) => {
       return import('../IpcParent/IpcParent.ipc.js')
     case ModuleId.OpenExternal:
       return import('../OpenExternal/OpenExternal.ipc.js')
-    case ModuleId.Platform:
-      return import('../Platform/Platform.ipc.js')
     case ModuleId.Process:
       return import('../Process/Process.ipc.js')
     case ModuleId.Trash:
@@ -65,8 +63,6 @@ export const load = async (moduleId) => {
       return import('../Exit/Exit.ipc.js')
     case ModuleId.ElectronScreen:
       return import('../ElectronScreen/ElectronScreen.ipc.js')
-    case ModuleId.ElectronUtilityProcess:
-      return import('../ElectronUtilityProcess/ElectronUtilityProcess.ipc.js')
     case ModuleId.TemporaryMessagePort:
       return import('../TemporaryMessagePort/TemporaryMessagePort.ipc.js')
     default:

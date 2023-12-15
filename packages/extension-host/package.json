@@ -18,7 +18,7 @@
     "directory": "packages/extension-host"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "devDependencies": {
     "@types/babel__code-frame": "^7.0.6",

@@ -69,11 +69,3 @@ export const getExtensionHostHelperProcessPath = () => {
 export const getExtensionHostHelperProcessPathCjs = () => {
   return join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.cjs')
 }
-
-export const getVersion = () => {
-  return version
-}
-
-export const getCommit = () => {
-  return commit
-}

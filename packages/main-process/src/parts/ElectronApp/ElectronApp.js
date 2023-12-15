@@ -4,10 +4,6 @@ export const quit = () => {
   app.quit()
 }
 
-export const requestSingleInstanceLock = (argv) => {
-  return app.requestSingleInstanceLock(argv)
-}
-
 export const on = (event, listener) => {
   app.on(event, listener)
 }
