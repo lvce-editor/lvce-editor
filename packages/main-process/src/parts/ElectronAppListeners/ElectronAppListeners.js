@@ -7,7 +7,6 @@ import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as Logger from '../Logger/Logger.js'
 
 export { handleSecondInstance } from '../HandleSecondInstance/HandleSecondInstance.js'
-export { handleWindowAllClosed } from '../HandleWindowAllClosed/HandleWindowAllClosed.js'
 
 // TODO move this function to shared process
 export const handleBeforeQuit = () => {
