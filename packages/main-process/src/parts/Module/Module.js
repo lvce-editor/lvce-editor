@@ -57,8 +57,6 @@ export const load = async (moduleId) => {
       return import('../IpcParent/IpcParent.ipc.js')
     case ModuleId.OpenExternal:
       return import('../OpenExternal/OpenExternal.ipc.js')
-    case ModuleId.Platform:
-      return import('../Platform/Platform.ipc.js')
     case ModuleId.Process:
       return import('../Process/Process.ipc.js')
     case ModuleId.Trash:
