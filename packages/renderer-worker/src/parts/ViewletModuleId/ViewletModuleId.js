@@ -94,6 +94,8 @@ export const TitleBar = 'TitleBar'
 
 export const TitleBarButtons = 'TitleBarButtons'
 
+export const TitleBarTitle = 'TitleBarTitle'
+
 export const TitleBarIcon = 'TitleBarIcon'
 
 export const TitleBarMenuBar = 'TitleBarMenuBar'

@@ -93,3 +93,5 @@ export const TitleBarIcon = 'TitleBarIcon'
 export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const Video = 'Video'
+
+export const TitleBarTitle = 'TitleBarTitle'

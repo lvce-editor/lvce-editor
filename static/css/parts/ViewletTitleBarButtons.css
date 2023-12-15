@@ -1,9 +1,9 @@
 .TitleBarButtons {
   margin-left: auto;
   app-region: no-drag;
-  flex: initial;
-  width: 138px;
   contain: strict;
+  flex-grow: 2;
+  display: flex;
 }
 
 .TitleBarButton {
@@ -17,6 +17,10 @@
 
 .TitleBarButton:hover {
   background-color: hsla(0, 0%, 100%, 0.1);
+}
+
+.TitleBarButtonMinimize {
+  margin-left: auto;
 }
 
 .TitleBarButtonClose:hover {

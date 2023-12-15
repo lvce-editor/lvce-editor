@@ -6,7 +6,7 @@
   -webkit-app-region: no-drag;
   app-region: no-drag;
   contain: content;
-  flex-grow: 0;
+  flex-grow: 2;
 }
 
 .TitleBarTopLevelEntry {
