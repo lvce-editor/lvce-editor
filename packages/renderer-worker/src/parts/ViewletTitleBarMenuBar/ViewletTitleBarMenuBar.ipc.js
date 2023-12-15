@@ -25,6 +25,7 @@ export const LazyCommands = {
   toggleIndex: () => import('./ViewletTitleBarMenuBarToggleIndex.js'),
   toggleMenu: () => import('./ViewletTitleBarMenuBarToggleMenu.js'),
   handleClick: () => import('./ViewletTitleBarMenuBarHandleClick.js'),
+  handleFocus: () => import('./ViewletTitleBarMenuBarHandleFocus.js'),
 }
 
 export * from './ViewletTitleBarMenuBar.js'
