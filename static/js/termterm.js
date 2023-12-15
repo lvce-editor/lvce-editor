@@ -36,15 +36,7 @@ const createDrawCursor = (canvas) => {
 };
 const CHAR_WIDTH$1 = 12;
 const CHAR_HEIGHT$1 = 15;
-const supportsOffscreenCanvas = (() => {
-  try {
-    const canvas = new OffscreenCanvas(CHAR_WIDTH$1, CHAR_HEIGHT$1);
-    canvas.getContext("2d");
-    return true;
-  } catch {
-    return false;
-  }
-})();
+const supportsOffscreenCanvas = true;
 const supportsTransferToImageBitMap = (() => {
   try {
     supportsOffscreenCanvas ? (() => {
@@ -62,12 +54,7 @@ const supportsTransferToImageBitMap = (() => {
     return false;
   }
 })();
-const tmpCanvas = supportsOffscreenCanvas ? new OffscreenCanvas(CHAR_WIDTH$1, CHAR_HEIGHT$1) : (() => {
-  const canvas = document.createElement("canvas");
-  canvas.width = CHAR_WIDTH$1;
-  canvas.height = CHAR_HEIGHT$1;
-  return canvas;
-})();
+const tmpCanvas = new OffscreenCanvas(CHAR_WIDTH$1, CHAR_HEIGHT$1);
 const tmpCtx = tmpCanvas.getContext("2d", {
   alpha: false
 });
