@@ -70,6 +70,7 @@ export const handleMenuClick = (event) => {
   ViewletTitleBarMenuBarFunctions.handleMenuClick(uid, level, index)
 }
 
-export const handleFocus = () => {
-  RendererWorker.send('Focus.setFocus', 'TitleBarMenuBar')
+export const handleFocus = (event) => {
+  const uid = ComponentUid.fromEvent(event)
+  ViewletTitleBarMenuBarFunctions.handleFocus(uid)
 }
