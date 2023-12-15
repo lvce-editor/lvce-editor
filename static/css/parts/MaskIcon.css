@@ -7,6 +7,7 @@
   mask-size: var(--MaskIconSize);
   mask-position: 50% 50%;
   pointer-events: none;
+  contain: strict;
 }
 
 .ColoredMaskIcon {
@@ -20,6 +21,7 @@
   mask-size: 16px;
   mask-position: 50% 50%;
   pointer-events: none;
+  contain: strict;
 }
 
 .MaskIconMinimize {
