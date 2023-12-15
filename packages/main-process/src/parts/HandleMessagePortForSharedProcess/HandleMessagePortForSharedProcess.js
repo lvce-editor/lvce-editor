@@ -1,8 +1,6 @@
 import { BrowserWindow } from 'electron'
-import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 import * as ConnectIpc from '../ConnectIpc/ConnectIpc.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as Logger from '../Logger/Logger.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 // TODO maybe handle critical (first render) request via ipcMain
@@ -30,17 +28,11 @@ const getFolder = (args) => {
  * @returns
  */
 export const handlePort = async (event, browserWindowPort, type, name) => {
-  const config = AppWindowStates.findByWebContentsId(event.sender.id)
-  if (!config) {
-    Logger.warn('port event - config expected')
-    return
-  }
-  const folder = getFolder(config.parsedArgs)
   const method = IpcParentType.ElectronUtilityProcess
   const sharedProcess = await SharedProcess.hydrate({
     method,
     env: {
-      FOLDER: folder,
+      FOLDER: '',
     },
   })
   const browserWindow = BrowserWindow.fromWebContents(event.sender)
@@ -48,5 +40,5 @@ export const handlePort = async (event, browserWindowPort, type, name) => {
     return
   }
   const browserWindowId = browserWindow.id
-  await ConnectIpc.connectIpc(method, sharedProcess, browserWindowPort, folder, browserWindowId)
+  await ConnectIpc.connectIpc(method, sharedProcess, browserWindowPort, '', browserWindowId)
 }

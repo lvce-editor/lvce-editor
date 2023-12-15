@@ -1,5 +1,4 @@
 import { BrowserWindow } from 'electron'
-import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 import * as DefaultUrl from '../DefaultUrl/DefaultUrl.js'
 import * as ElectronApplicationMenu from '../ElectronApplicationMenu/ElectronApplicationMenu.js'
 import * as Session from '../ElectronSession/ElectronSession.js'
@@ -55,23 +54,14 @@ export const createAppWindow2 = async (windowOptions, parsedArgs, workingDirecto
   // window.setMenu(menu)
   window.setMenuBarVisibility(true)
   window.setAutoHideMenuBar(false)
-  const webContentsId = window.webContents.id
-  const windowId = window.id
   // TODO send event to shared process
   const handleWindowClose = () => {
     try {
       window.off('close', handleWindowClose)
-      AppWindowStates.remove(windowId)
     } catch (error) {
       ErrorHandling.handleError(new VError(error, `Failed to run window close listener`))
     }
   }
   window.on('close', handleWindowClose)
-  AppWindowStates.add({
-    parsedArgs,
-    workingDirectory,
-    webContentsId,
-    windowId,
-  })
   await loadUrl(window, url)
 }

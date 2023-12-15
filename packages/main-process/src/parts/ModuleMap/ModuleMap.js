@@ -63,8 +63,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Process
     case 'Platform':
       return ModuleId.Platform
-    case 'GetWindowId':
-      return ModuleId.GetWindowId
     case 'DesktopCapturer':
       return ModuleId.DesktopCapturer
     case 'Trash':

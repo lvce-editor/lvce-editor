@@ -1,5 +1,4 @@
 import { BrowserView, BrowserWindow } from 'electron'
-import * as AppWindowStates from '../AppWindowStates/AppWindowStates.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as DisposeWebContents from '../DisposeWebContents/DisposeWebContents.js'
@@ -44,15 +43,11 @@ const getIdentifier = (input) => {
 /**
  *
  * @param {number} id
+ * @returns {any}
  */
 export const getPort = (id) => {
-  const state = AppWindowStates.findByWindowId(id)
-  if (!state) {
-    Logger.info('[main process] no message port found')
-    return undefined
-  }
-  const { port } = state
-  return port
+  Logger.info('[main process] no message port found')
+  return undefined
 }
 
 /**

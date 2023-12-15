@@ -6,15 +6,6 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/AppWindowStates/AppWindowStates.js', () => {
-  return {
-    state: {
-      windows: [],
-    },
-    add: jest.fn(),
-  }
-})
-
 jest.unstable_mockModule('electron', () => {
   const BrowserWindow = class extends EventEmitter {
     constructor() {
@@ -60,7 +51,6 @@ jest.unstable_mockModule('electron', () => {
 })
 
 const electron = await import('electron')
-const AppWindowStates = await import('../src/parts/AppWindowStates/AppWindowStates.js')
 const AppWindow = await import('../src/parts/AppWindow/AppWindow.js')
 
 test.skip('createAppWindow', async () => {
