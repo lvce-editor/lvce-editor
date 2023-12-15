@@ -9,6 +9,7 @@ export const main = async () => {
   Command.setLoad(Module.load)
   process.on('disconnect', ProcessListeners.handleDisconnect)
   process.on(Signal.SIGTERM, ProcessListeners.handleSigTerm)
-  process.on('uncaughtExceptionMonitor', HandleUncaughtExceptionMonitor.handleUncaughtExceptionMonitor)
+  process.on('uncaughtException', HandleUncaughtExceptionMonitor.handleUncaughtException)
+  process.on('unhandledRejection', HandleUncaughtExceptionMonitor.handleUnhandledRejection)
   await ParentIpc.listen()
 }

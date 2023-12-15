@@ -58,7 +58,7 @@ const firstErrorLine = (error) => {
 }
 
 export const handleUncaughtExceptionMonitor = (error, origin) => {
-  Logger.info(`[shared process] uncaught exception: ${firstErrorLine(error)}`)
+  Logger.info(`[shared process] Uncaught exception: ${firstErrorLine(error)}`)
   if (IsIgnoredError.isIgnoredError(error)) {
     return
   }
