@@ -1,6 +1,7 @@
 import * as Electron from 'electron'
 import unhandled from 'electron-unhandled' // TODO this might slow down initial startup
 import { spawn } from 'node:child_process'
+import * as Argv from '../Argv/Argv.js'
 import * as Cli from '../Cli/Cli.js'
 import * as CommandLineSwitches from '../CommandLineSwitches/CommandLineSwitches.js'
 import * as Debug from '../Debug/Debug.js'
@@ -25,19 +26,10 @@ import * as Protocol from '../Protocol/Protocol.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SingleInstanceLock from '../SingleInstanceLock/SingleInstanceLock.js'
 
-// TODO use Platform.getScheme() instead of Product.getTheme()
-
-// const handleAppReady = async () => {
-
-// }
-
 // TODO maybe handle critical (first render) request via ipcMain
 // and spawn shared process when page is idle/loaded
 // currently launching shared process takes 170ms
 // which means first paint is delayed by a lot
-
-// map windows to folders and ports
-// const windowConfigMap = new Map()
 
 export const hydrate = async () => {
   Electron.Menu.setApplicationMenu(null) // performance
@@ -54,9 +46,8 @@ export const hydrate = async () => {
   // TODO need to wait for playwright bugs to be resolved
   // before being able to test multi-window behavior
   // see https://github.com/microsoft/playwright/issues/12345
-  const { argv } = process
 
-  const parsedCliArgs = ParseCliArgs.parseCliArgs(argv)
+  const parsedCliArgs = ParseCliArgs.parseCliArgs(Argv.argv)
   const handled = Cli.handleFastCliArgsMaybe(parsedCliArgs) // TODO don't like the side effect here
   if (handled) {
     return
@@ -69,7 +60,7 @@ export const hydrate = async () => {
     Electron.app.setPath('logs', Platform.chromeUserDataPath)
   }
 
-  const hasLock = SingleInstanceLock.requestSingleInstanceLock(argv)
+  const hasLock = SingleInstanceLock.requestSingleInstanceLock(Argv.argv)
   if (!hasLock) {
     Debug.debug('[info] quitting because no lock')
     Exit.exit()
@@ -78,8 +69,7 @@ export const hydrate = async () => {
 
   // TODO tree shake out the .env.DEV check: reading from env variables is expensive
   if (process.stdout.isTTY && !parsedCliArgs.wait && !process.env.DEV) {
-    spawn(Process.execPath, argv.slice(1), {
-      // env: { ...process.env },
+    spawn(Process.execPath, Argv.argv.slice(1), {
       detached: true,
       stdio: 'ignore',
     })
