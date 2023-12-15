@@ -46,7 +46,7 @@ test('handleUncaughtExceptionMonitor', () => {
   })
   ErrorHandling.handleUncaughtExceptionMonitor(error)
   expect(Logger.info).toHaveBeenCalledTimes(1)
-  expect(Logger.info).toHaveBeenCalledWith('[shared process] uncaught exception: Error: oops')
+  expect(Logger.info).toHaveBeenCalledWith('[shared process] Uncaught exception: Error: oops')
   expect(Logger.error).toHaveBeenCalledTimes(1)
   expect(Logger.error).toHaveBeenNthCalledWith(
     1,
@@ -58,7 +58,7 @@ test('handleUncaughtExceptionMonitor', () => {
   21 | }
   22 |
     at main (/test/packages/shared-process/src/sharedProcessMain.js:19:11)
-`
+`,
   )
   expect(Process.setExitCode).toHaveBeenCalledTimes(1)
   expect(Process.setExitCode).toHaveBeenCalledWith(1)
