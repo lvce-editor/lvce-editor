@@ -5,9 +5,8 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as Screen from '../Screen/Screen.js'
 
 export const createAppWindow = async (preferences, parsedArgs, workingDirectory, url = DefaultUrl.defaultUrl) => {
-  const screenWidth = await Screen.getWidth()
-  const screenHeight = await Screen.getHeight()
-  const windowOptions = GetAppWindowOptions.getAppWindowOptions(preferences, screenWidth, screenHeight)
+  const { width, height } = await Screen.getBounds()
+  const windowOptions = GetAppWindowOptions.getAppWindowOptions(preferences, width, height)
   return ParentIpc.invoke('AppWindow.createAppWindow2', windowOptions, parsedArgs, workingDirectory, url)
 }
 
