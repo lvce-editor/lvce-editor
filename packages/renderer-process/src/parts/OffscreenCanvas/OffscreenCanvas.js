@@ -8,7 +8,6 @@ export const get = (id) => {
 
 export const create = (canvasId, callbackId) => {
   const canvas = document.createElement('canvas')
-  // @ts-ignore
   const offscreenCanvas = canvas.transferControlToOffscreen()
   OffscreenCanvasState.set(canvasId, canvas)
   RendererWorker.sendAndTransfer(
@@ -17,6 +16,6 @@ export const create = (canvasId, callbackId) => {
       id: callbackId,
       params: [offscreenCanvas],
     },
-    [offscreenCanvas]
+    [offscreenCanvas],
   )
 }
