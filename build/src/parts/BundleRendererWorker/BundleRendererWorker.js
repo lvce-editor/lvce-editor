@@ -1,13 +1,13 @@
-import { readFile, writeFile } from 'fs/promises'
-import { pathToFileURL } from 'url'
 import { VError } from '@lvce-editor/verror'
+import { readFile, writeFile } from 'node:fs/promises'
+import { pathToFileURL } from 'node:url'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
 import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
 import * as Path from '../Path/Path.js'
-import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as Replace from '../Replace/Replace.js'
+import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const getNewCssDeclarationFile = (content, filteredCss) => {
   const lines = content.split('\n')
@@ -65,7 +65,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       from: 'static/js',
       to: Path.join(cachePath, 'static', 'js'),
     })
-    for (const file of ['PrettyBytes', 'Blob', 'IndexedDb']) {
+    for (const file of ['PrettyBytes', 'Blob', 'IndexedDb', 'TerminalEmulator']) {
       await Replace.replace({
         path: `${cachePath}/src/parts/${file}/${file}.js`,
         occurrence: `../../../../../static/`,
