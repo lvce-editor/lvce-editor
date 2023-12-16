@@ -81,6 +81,11 @@ export const dispose = async (state) => {
   }
 }
 
+export const handleKeyDown = (state) => {
+  const { terminal } = state
+  terminal
+}
+
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {

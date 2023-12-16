@@ -9,7 +9,9 @@ export const create = () => {
   $Viewlet.className = 'Viewlet Terminal'
   const terminal = Terminal.create({
     $Element: $Viewlet,
-    handleInput: ViewletTerminalEvents.handleInput,
+    handleKeyDown: (...args) => ViewletTerminalEvents.handleKeyDown({ target: $Viewlet }, ...args),
+    handleBlur: (...args) => ViewletTerminalEvents.handleBlur({ target: $Viewlet }, ...args),
+    handleMouseDown: (...args) => ViewletTerminalEvents.handleMouseDown({ target: $Viewlet }, ...args),
     background: `#1b2020`,
     foreground: 'white',
   })
