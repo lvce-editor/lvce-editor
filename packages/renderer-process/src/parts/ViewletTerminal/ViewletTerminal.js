@@ -16,8 +16,6 @@ export const create = () => {
     foreground: 'white',
   })
 
-  $Viewlet.addEventListener('focusin', ViewletTerminalEvents.handleFocus)
-
   return {
     $Viewlet,
     terminal,
@@ -27,7 +25,6 @@ export const create = () => {
 export const transferCanvases = (state, id) => {
   const { terminal } = state
   const { offscreenCanvasCursor, offscreenCanvasText } = terminal
-  console.log({ terminal })
   const message = {
     jsonrpc: '2.0',
     id,
@@ -38,6 +35,11 @@ export const transferCanvases = (state, id) => {
   }
   const transfer = [offscreenCanvasCursor, offscreenCanvasText]
   RendererWorker.sendAndTransfer(message, transfer)
+}
+
+export const focusTextArea = (state) => {
+  const { terminal } = state
+  terminal.focusTextArea()
 }
 
 export const refresh = (state, context) => {

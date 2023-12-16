@@ -4,4 +4,7 @@ import * as ViewletTerminal from './ViewletTerminal.js'
 export const Commands = {
   clear: ViewletTerminal.clear,
   write: ViewletTerminal.write,
+  handleBlur: ViewletTerminal.handleBlur,
+  handleKeyDown: ViewletTerminal.handleKeyDown,
+  handleMouseDown: ViewletTerminal.handleMouseDown,
 }

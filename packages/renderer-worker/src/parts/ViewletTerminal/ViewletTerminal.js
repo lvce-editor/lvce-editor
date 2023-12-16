@@ -49,6 +49,12 @@ export const contentLoadedEffects = async (state) => {
     const terminal = TerminalEmulator.create({
       offscreenCanvasCursor,
       offscreenCanvasText,
+      async focusTextArea() {
+        await RendererProcess.invoke('Viewlet.send', uid, 'focusTextArea')
+      },
+      handleInput(transformedKey) {
+        Terminal.write(uid, transformedKey)
+      },
     })
     console.log('set terminal')
     ViewletStates.setState(uid, {
@@ -57,6 +63,12 @@ export const contentLoadedEffects = async (state) => {
     })
     await Terminal.create(separateConnection, uid, Workspace.state.workspacePath, command, args)
   })
+}
+
+export const handleBlur = (state) => {
+  const { terminal } = state
+  terminal.handleBlur()
+  return state
 }
 
 export const handleData = async (state, data) => {
@@ -81,9 +93,17 @@ export const dispose = async (state) => {
   }
 }
 
-export const handleKeyDown = (state) => {
+export const handleKeyDown = (state, key) => {
   const { terminal } = state
-  terminal
+  console.log({ key })
+  terminal.handleKeyDown(key)
+  return state
+}
+
+export const handleMouseDown = (state) => {
+  const { terminal } = state
+  terminal.handleMouseDown()
+  return state
 }
 
 export const hasFunctionalResize = true

@@ -6,12 +6,13 @@ export const handleBlur = (event) => {
   ForwardCommand.handleBlur(uid)
 }
 
-export const handleMouseDown = (event) => {
+export const handleMouseDown = (event, ...args) => {
   const uid = ComponentUid.fromEvent(event)
-  ForwardCommand.handleMouseDown(uid)
+  ForwardCommand.handleMouseDown(uid, ...args)
 }
 
-export const handleKeyDown = (event) => {
+export const handleKeyDown = (event, ...args) => {
+  console.log({ event, args })
   const uid = ComponentUid.fromEvent(event)
-  ForwardCommand.handleKeyDown(uid)
+  ForwardCommand.handleKeyDown(uid, ...args)
 }
