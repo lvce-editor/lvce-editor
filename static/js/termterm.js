@@ -1499,5 +1499,335 @@ const createTerminal = (root, {
     lines
   };
 };
-export {createTerminal};
+const CHAR_WIDTH$3 = 13;
+const CHAR_HEIGHT$3 = 15;
+const COLS$1 = 80;
+const ROWS$1 = 25;
+const BUFFER_LINES$1 = 200;
+const noop$1 = () => {
+};
+const createOffscreenTerminalDom = (root, {handleMouseDown = noop$1, handleKeyDown = noop$1, handleBlur = noop$1}) => {
+  root.onmousedown = (event) => {
+    event.preventDefault();
+    textarea.focus();
+    handleMouseDown();
+  };
+  const canvasText = document.createElement("canvas");
+  canvasText.className = "TerminalCanvasText";
+  const canvasCursor = document.createElement("canvas");
+  canvasCursor.className = "TerminalCanvasCursor";
+  const $Layers = document.createElement("div");
+  $Layers.className = "TerminalLayers";
+  const textarea = document.createElement("textarea");
+  textarea.className = "TerminalTextArea";
+  textarea.name = "terminal-input";
+  $Layers.append(canvasText, canvasCursor);
+  root.append(textarea, $Layers);
+  const wrappedKeyDown = (event) => {
+    handleKeyDown({
+      key: event.key,
+      shiftKey: event.shiftKey,
+      altKey: event.altKey,
+      ctrlKey: event.ctrlKey,
+      metaKey: event.metaKey
+    });
+  };
+  textarea.onkeydown = wrappedKeyDown;
+  const handleBeforeInput = (event) => {
+    event.preventDefault();
+  };
+  textarea.addEventListener("beforeinput", handleBeforeInput);
+  textarea.onblur = handleBlur;
+  const offscreenCanvasText = canvasText.transferControlToOffscreen();
+  const offscreenCanvasCursor = canvasCursor.transferControlToOffscreen();
+  const focusTextArea = () => {
+    textarea.focus();
+  };
+  return {
+    offscreenCanvasCursor,
+    offscreenCanvasText,
+    focusTextArea
+  };
+};
+const createOffscreenTerminal = ({
+  background = "#000000",
+  foreground = "#ffffff",
+  handleInput,
+  bell = noop$1,
+  setWindowTitle = noop$1,
+  handleFocus = noop$1,
+  canvasText,
+  canvasCursor,
+  focusTextArea = noop$1
+}) => {
+  let focused = false;
+  const handleKeyDown = (event) => {
+    const transformedKey = transformKey(event);
+    if (transformedKey) {
+      handleInput(transformedKey);
+    }
+  };
+  const handleBlur = () => {
+    focused = false;
+    cursorStyle = 4;
+    requestAnimationFrame(render);
+  };
+  const focus = () => {
+    handleFocus();
+    if (focused) {
+      return;
+    }
+    focused = true;
+    cursorStyle = 2;
+    focusTextArea();
+    requestAnimationFrame(render);
+  };
+  const WIDTH = COLS$1 * CHAR_WIDTH$3;
+  const HEIGHT = ROWS$1 * (CHAR_HEIGHT$3 + 10);
+  canvasText.width = canvasCursor.width = WIDTH;
+  canvasText.height = canvasCursor.height = HEIGHT;
+  let bufferYEnd = ROWS$1;
+  let cursorYRelative = -ROWS$1;
+  let cursorXRelative = -COLS$1;
+  let cellForeground = "#ffffff";
+  let cellBackground = "#000000";
+  let cursorVisible = true;
+  let cursorStyle = 2;
+  const dirty = {
+    start: 0,
+    end: 0
+  };
+  const lines = [];
+  const offsets = new Uint8Array(BUFFER_LINES$1);
+  let attributes = {};
+  for (let y = 0; y < BUFFER_LINES$1; y++) {
+    lines.push(new Uint8Array(300));
+  }
+  const textDecoder = new TextDecoder();
+  const dirtyMark = (y) => {
+    if (y < dirty.start) {
+      dirty.start = y;
+    } else if (y > dirty.end) {
+      dirty.end = y;
+    }
+  };
+  const dirtyClear = () => {
+    dirty.start = dirty.end = bufferYEnd + cursorYRelative;
+  };
+  const callbackFns = {
+    eraseInLine() {
+      const y = bufferYEnd + cursorYRelative;
+      const x = COLS$1 + cursorXRelative;
+      offsets[y] = x;
+    },
+    eraseInDisplay() {
+      offsets.fill(0);
+      cursorYRelative = -ROWS$1 + 1;
+      cursorXRelative = -COLS$1;
+      bufferYEnd = ROWS$1;
+      for (const key of Object.keys(attributes)) {
+        delete attributes[key];
+      }
+      dirtyMark(0);
+      dirtyMark(ROWS$1);
+    },
+    setCharAttributes(params) {
+      if (params[1] === 7) {
+        [cellForeground, cellBackground] = [cellBackground, cellForeground];
+      } else if (params[1] === 35) {
+        cellForeground = "#8000ff";
+      } else if (params[1] === 32) {
+        cellForeground = "#09f900";
+      } else if (params[1] === 34) {
+        cellForeground = "#0090ff";
+      } else {
+        cellForeground = foreground;
+        cellBackground = background;
+      }
+      const y = bufferYEnd + cursorYRelative;
+      attributes[y] = attributes[y] || {};
+      attributes[y][offsets[y]] = {
+        foreground: cellForeground,
+        background: cellBackground
+      };
+    },
+    cursorUp() {
+      console.log("cursor up");
+    },
+    cursorDown() {
+    },
+    cursorRight() {
+      cursorXRelative++;
+    },
+    cursorLeft() {
+      console.log("cursor left");
+    },
+    backspace() {
+      cursorXRelative--;
+    },
+    deleteChars(numberOfChars) {
+      const y = bufferYEnd + cursorYRelative;
+      const x = COLS$1 + cursorXRelative;
+      offsets[y] = x;
+    },
+    bell,
+    print(array, start, end) {
+      const subArray = array.subarray(start, end);
+      const y = bufferYEnd + cursorYRelative;
+      const x = COLS$1 + cursorXRelative;
+      lines[y].set(subArray, x);
+      cursorXRelative += end - start;
+      offsets[y] = COLS$1 + cursorXRelative;
+      dirtyMark(y);
+      if (x >= COLS$1 - 1) {
+        callbackFns.lineFeed();
+      }
+    },
+    lineFeed() {
+      if (cursorYRelative === 0) {
+        bufferYEnd = (bufferYEnd + 1) % BUFFER_LINES$1;
+        offsets[bufferYEnd] = 0;
+        delete attributes[bufferYEnd];
+      } else {
+        cursorYRelative++;
+      }
+      cellForeground = foreground;
+      cellBackground = background;
+    },
+    carriageReturn() {
+      cursorXRelative = -COLS$1;
+    },
+    setWindowTitle,
+    cursorPosition(params) {
+      if (params.length === 2) {
+        const row = params[0];
+        const column = params[1];
+        cursorYRelative = -ROWS$1 + row;
+        cursorXRelative = -COLS$1 + column;
+      }
+    },
+    cursorShow() {
+      cursorVisible = true;
+    },
+    cursorHide() {
+      cursorVisible = false;
+    },
+    insertLines() {
+    },
+    deleteLines() {
+    },
+    setTextParameters() {
+    },
+    privateModeSet() {
+    },
+    privateModeReset() {
+    },
+    eraseToEndOfLine() {
+    },
+    goToHome() {
+    },
+    setGLevel() {
+    },
+    saveCursor() {
+    },
+    restoreCursor() {
+    },
+    index() {
+    },
+    tabSet() {
+    },
+    reverseIndex() {
+    },
+    keypadApplicationMode() {
+    },
+    keypadNumericMode() {
+    },
+    fullReset() {
+    },
+    nextLine() {
+    },
+    deleteCharacters() {
+    },
+    softTerminalReset() {
+    },
+    cursorNextLine() {
+    },
+    cursorPrecedingLine() {
+    },
+    cursorCharacterAbsolute() {
+    },
+    cursorForwardTabulation() {
+    },
+    cursorBackwardTabulation() {
+    },
+    scrollUp() {
+    },
+    scrollDown() {
+    },
+    eraseCharacters() {
+    },
+    characterPositionAbsolute() {
+    },
+    characterPositionRelative() {
+    },
+    repeatPrecedingGraphicCharacter() {
+    },
+    sendDeviceAttributesPrimary() {
+    },
+    sendDeviceAttributesTertiary() {
+    },
+    linePositionAbsolute() {
+    },
+    linePositionRelative() {
+    },
+    horizontalAndVerticalPosition() {
+    },
+    tabClear() {
+    },
+    setMode() {
+    },
+    resetMode() {
+    },
+    setCursorStyle() {
+    },
+    shiftLeftColumns() {
+    },
+    insertBlankCharacters() {
+    }
+  };
+  const drawLines = createDrawLines(canvasText, lines, BUFFER_LINES$1, offsets, attributes, ROWS$1, COLS$1, background, foreground);
+  const drawCursor = createDrawCursor(canvasCursor);
+  let scheduled = false;
+  const render = () => {
+    drawLines(dirty.start, dirty.end + 1, bufferYEnd);
+    const y = ROWS$1 + cursorYRelative;
+    const x = COLS$1 + cursorXRelative;
+    drawCursor(x, y, cursorVisible, cursorStyle);
+    scheduled = false;
+    dirtyClear();
+  };
+  const write = (array) => {
+    parseArray(array, callbackFns);
+    if (!scheduled) {
+      scheduled = true;
+      requestAnimationFrame(render);
+    }
+  };
+  const pasteText = (text) => {
+    const fixedText = "\n" + text.replaceAll("\n", "\r\n");
+    const array = new TextEncoder().encode(fixedText);
+    write(array);
+  };
+  return {
+    write,
+    focus,
+    pasteText,
+    writeText: pasteText,
+    lines,
+    handleKeyDown,
+    handleBlur,
+    handleMouseDown: focus
+  };
+};
+export {createOffscreenTerminal, createOffscreenTerminalDom, createTerminal};
 export default null;
