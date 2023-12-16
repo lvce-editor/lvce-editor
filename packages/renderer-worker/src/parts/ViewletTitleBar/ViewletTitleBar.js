@@ -74,7 +74,6 @@ export const getChildren = (state) => {
     children.push({
       id: ViewletModuleId.TitleBarTitle,
     })
-    console.log('title enabled')
   }
   if (titleBarButtonsEnabled) {
     children.push({
