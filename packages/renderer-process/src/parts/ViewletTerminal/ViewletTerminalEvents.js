@@ -12,7 +12,6 @@ export const handleMouseDown = (event, ...args) => {
 }
 
 export const handleKeyDown = (event, ...args) => {
-  console.log({ event, args })
   const uid = ComponentUid.fromEvent(event)
   ForwardCommand.handleKeyDown(uid, ...args)
 }

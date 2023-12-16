@@ -56,7 +56,6 @@ export const contentLoadedEffects = async (state) => {
         Terminal.write(uid, transformedKey)
       },
     })
-    console.log('set terminal')
     ViewletStates.setState(uid, {
       ...ViewletStates.getState(uid),
       terminal,
@@ -73,8 +72,6 @@ export const handleBlur = (state) => {
 
 export const handleData = async (state, data) => {
   const { uid, terminal } = state
-  console.log({ state })
-  console.log(ViewletStates.getState(state.uid))
   const parsedData = ToUint8Array.toUint8Array(data)
   terminal.write(parsedData)
 }
@@ -95,7 +92,6 @@ export const dispose = async (state) => {
 
 export const handleKeyDown = (state, key) => {
   const { terminal } = state
-  console.log({ key })
   terminal.handleKeyDown(key)
   return state
 }
