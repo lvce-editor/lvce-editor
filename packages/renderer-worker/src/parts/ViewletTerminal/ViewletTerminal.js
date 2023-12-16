@@ -6,6 +6,11 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Terminal from '../Terminal/Terminal.js'
 import * as ToUint8Array from '../ToUint8Array/ToUint8Array.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Callback from '../Callback/Callback.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
+import * as TerminalEmulator from '../TerminalEmulator/TerminalEmulator.js'
+
 // TODO implement a functional terminal component, maybe using offscreencanvas
 
 export const create = (id) => {
@@ -34,13 +39,32 @@ export const loadContent = async (state) => {
 
 export const contentLoadedEffects = async (state) => {
   const { uid, separateConnection, command, args } = state
-  await Terminal.create(separateConnection, uid, Workspace.state.workspacePath, command, args)
+  const { id, promise } = Callback.registerPromise()
+
+  setTimeout(async () => {
+    await RendererProcess.invoke('Viewlet.send', uid, 'transferCanvases', id)
+    const response = await promise
+    const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(response)
+    const { offscreenCanvasCursor, offscreenCanvasText } = result
+    const terminal = TerminalEmulator.create({
+      offscreenCanvasCursor,
+      offscreenCanvasText,
+    })
+    console.log('set terminal')
+    ViewletStates.setState(uid, {
+      ...ViewletStates.getState(uid),
+      terminal,
+    })
+    await Terminal.create(separateConnection, uid, Workspace.state.workspacePath, command, args)
+  })
 }
 
 export const handleData = async (state, data) => {
-  const { uid } = state
+  const { uid, terminal } = state
+  console.log({ state })
+  console.log(ViewletStates.getState(state.uid))
   const parsedData = ToUint8Array.toUint8Array(data)
-  await RendererProcess.invoke(/* Viewlet.send */ 'Viewlet.send', /* id */ uid, /* method */ 'write', /* data */ parsedData)
+  terminal.write(parsedData)
 }
 
 export const write = async (state, input) => {

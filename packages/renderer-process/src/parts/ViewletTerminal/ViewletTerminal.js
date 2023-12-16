@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Terminal from '../Terminal/Terminal.js'
 import * as IsUint8Array from '../IsUint8Array/IsUint8Array.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletTerminalEvents from './ViewletTerminalEvents.js'
 
 export const create = () => {
@@ -19,6 +20,22 @@ export const create = () => {
     $Viewlet,
     terminal,
   }
+}
+
+export const transferCanvases = (state, id) => {
+  const { terminal } = state
+  const { offscreenCanvasCursor, offscreenCanvasText } = terminal
+  console.log({ terminal })
+  const message = {
+    jsonrpc: '2.0',
+    id,
+    result: {
+      offscreenCanvasCursor,
+      offscreenCanvasText,
+    },
+  }
+  const transfer = [offscreenCanvasCursor, offscreenCanvasText]
+  RendererWorker.sendAndTransfer(message, transfer)
 }
 
 export const refresh = (state, context) => {
