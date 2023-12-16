@@ -31,6 +31,9 @@ const getActualData = (event) => {
 }
 
 export const wrap = (port) => {
+  if (!(port instanceof MessagePort)) {
+    return port.module.wrap(port.rawIpc)
+  }
   return {
     port,
     /**
