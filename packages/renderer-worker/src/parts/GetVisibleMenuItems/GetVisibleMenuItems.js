@@ -1,4 +1,4 @@
-export const getVisible = (items, focusedIndex) => {
+export const getVisible = (items, focusedIndex, expanded, level) => {
   const visibleItems = []
   const length = items.length
   for (let i = 0; i < length; i++) {
@@ -8,6 +8,8 @@ export const getVisible = (items, focusedIndex) => {
       label,
       flags,
       isFocused: i === focusedIndex,
+      isExpanded: i === focusedIndex && expanded,
+      level,
     })
   }
   return visibleItems

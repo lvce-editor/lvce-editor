@@ -74,7 +74,7 @@ const getMenuItemDefaultDom = (menuItem) => {
 }
 
 const getMenuItemSubMenuDom = (menuItem) => {
-  const { label, isFocused } = menuItem
+  const { label, isFocused, isExpanded, level } = menuItem
   let className = ClassNames.MenuItem
   if (isFocused) {
     className += ' ' + ClassNames.MenuItemFocused
@@ -86,7 +86,8 @@ const getMenuItemSubMenuDom = (menuItem) => {
         role: AriaRoles.MenuItem,
         tabIndex: -1,
         ariaHasPopup: true,
-        ariaExpanded: true,
+        ariaExpanded: isExpanded,
+        ariaOwns: isExpanded ? `Menu-${level + 1}` : undefined,
       },
       1,
     ),

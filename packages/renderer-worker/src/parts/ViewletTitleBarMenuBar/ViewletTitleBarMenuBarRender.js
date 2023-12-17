@@ -45,7 +45,7 @@ const renderMenus = {
       const oldMenu = oldMenus[i]
       const newMenu = newMenus[i]
       if (oldMenu !== newMenu) {
-        const visible = GetVisibleMenuItems.getVisible(newMenu.items, newMenu.focusedIndex)
+        const visible = GetVisibleMenuItems.getVisible(newMenu.items, newMenu.focusedIndex, newMenu.expanded, newMenu.level)
         const dom = GetMenuVirtualDom.getMenuVirtualDom(visible).slice(1)
         changes.push([/* method */ 'updateMenu', newMenu, /* newLength */ newLength, dom])
       }
@@ -53,7 +53,7 @@ const renderMenus = {
     const difference = newLength - oldLength
     if (difference > 0) {
       const newMenu = newMenus.at(-1)
-      const visible = GetVisibleMenuItems.getVisible(newMenu.items, newMenu.focusedIndex)
+      const visible = GetVisibleMenuItems.getVisible(newMenu.items, newMenu.focusedIndex, newMenu.expanded, newMenu.level)
       const dom = GetMenuVirtualDom.getMenuVirtualDom(visible).slice(1)
       changes.push(['addMenu', newMenu, dom])
     } else if (difference < 0) {
