@@ -2,11 +2,17 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const ClassNames = {
+  MenuItemSeparator: 'MenuItemSeparator',
+  MenuItem: 'MenuItem',
+  Menu: 'Menu',
+}
+
 const getMenuItemSeparatorDom = (menuItem) => {
   return [
     div(
       {
-        className: 'MenuItemSeparator',
+        className: ClassNames.MenuItemSeparator,
         role: AriaRoles.Separator,
       },
       0,
@@ -19,7 +25,7 @@ const getMenuItemUncheckedDom = (menuItem) => {
   return [
     div(
       {
-        className: 'MenuItem',
+        className: ClassNames.MenuItem,
         role: AriaRoles.MenuItemCheckBox,
         ariaChecked: false,
         tabIndex: -1,
@@ -35,7 +41,7 @@ const getMenuItemDisabledDom = (menuItem) => {
   return [
     div(
       {
-        className: 'MenuItem',
+        className: ClassNames.MenuItem,
         role: AriaRoles.MenuItem,
         tabIndex: -1,
         disabled: true,
@@ -51,7 +57,7 @@ const getMenuItemDefaultDom = (menuItem) => {
   return [
     div(
       {
-        className: 'MenuItem',
+        className: ClassNames.MenuItem,
         role: AriaRoles.MenuItem,
         tabIndex: -1,
         disabled: true,
@@ -67,7 +73,7 @@ const getMenuItemSubMenuDom = (menuItem) => {
   return [
     div(
       {
-        className: 'MenuItem',
+        className: ClassNames.MenuItem,
         role: AriaRoles.MenuItem,
         tabIndex: -1,
         ariaHasPopup: true,
@@ -79,7 +85,7 @@ const getMenuItemSubMenuDom = (menuItem) => {
   ]
 }
 
-const getMenuItemVirtualDom = (menuItem) => {
+const getMenuItemVirtualDom = (menuItem, isFocused) => {
   const { flags, label } = menuItem
   switch (flags) {
     case MenuItemFlags.None:
@@ -99,21 +105,19 @@ const getMenuItemVirtualDom = (menuItem) => {
   }
 }
 
-export const getMenuVirtualDom = (menuItems, focusedIndex) => {
+export const getMenuVirtualDom = (menuItems) => {
   const dom = []
   console.log({ menuItems })
   dom.push(
     div(
       {
-        className: 'Menu',
+        className: ClassNames.Menu,
         role: AriaRoles.Menu,
         tabIndex: -1,
       },
       menuItems.length,
     ),
   )
-  for (const menuItem of menuItems) {
-    dom.push(...getMenuItemVirtualDom(menuItem))
-  }
+  dom.push(...menuItems.flatMap(getMenuItemVirtualDom))
   return dom
 }
