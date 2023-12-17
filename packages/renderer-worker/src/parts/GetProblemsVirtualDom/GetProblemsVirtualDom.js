@@ -1,8 +1,8 @@
+import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
+import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
-import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 
 const getProblemVirtualDom = (problem) => {
   const { message, rowIndex, columnIndex, isActive, uri, icon } = problem
@@ -15,11 +15,17 @@ const getProblemVirtualDom = (problem) => {
       {
         type: VirtualDomElements.Div,
         className,
-        childCount: 2,
+        childCount: 3,
         paddingLeft: GetTreeItemIndent.getTreeItemIndent(1),
       },
       GetFileIconVirtualDom.getFileIconVirtualDom(icon),
       text(uri),
+      {
+        type: VirtualDomElements.Div,
+        className: 'Badge ProblemBadge',
+        childCount: 1,
+      },
+      text(`${problem.count}`),
     ]
   }
   const lineColumn = ViewletProblemsStrings.atLineColumn(rowIndex, columnIndex)
