@@ -1,6 +1,6 @@
 .TitleBarButtons {
   margin-left: auto;
-  app-region: no-drag;
+  app-region: drag;
   contain: strict;
   flex-grow: 2;
   display: flex;
@@ -13,6 +13,7 @@
   background: transparent;
   border: none;
   color: currentColor;
+  app-region: no-drag;
 }
 
 .TitleBarButton:hover {
