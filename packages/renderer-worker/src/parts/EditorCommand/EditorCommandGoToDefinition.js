@@ -8,7 +8,7 @@ import * as EditorGoTo from './EditorCommandGoTo.js'
  */
 const UiStrings = {
   NoDefinitionFound: 'No definition found',
-  NoDefinitionFoundFor: `No definition found for '{PH1}'`,
+  NoDefinitionFoundFor: 'No definition found for \'{PH1}\'',
 }
 
 // TODO race condition, check that editor hasn't been closed in the meantime

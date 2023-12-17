@@ -6,7 +6,7 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 const getTokensViewportEmbedded = (langageId, lines, lineCache, linesWithEmbed) => {
   const tokenizersToLoad = []
   const embeddedResults = []
-  let topContext = undefined
+  let topContext
   for (const index of linesWithEmbed) {
     const result = lineCache[index + 1]
     const line = lines[index]

@@ -5,7 +5,7 @@ import * as I18nString from '../I18NString/I18NString.js'
  */
 const UiStrings = {
   NoTypeDefinitionFound: 'No type definition found',
-  NoTypeDefinitionFoundFor: `No type definition found for '{PH1}'`,
+  NoTypeDefinitionFoundFor: 'No type definition found for \'{PH1}\'',
 }
 
 export const getNoLocationFoundMessage = (info) => {

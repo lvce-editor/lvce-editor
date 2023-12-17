@@ -8,7 +8,7 @@ export const create = (moduleName, importFn, key) => {
     // editor might have changed during import, need to apply function to latest editor
     const latestEditor = ViewletStates.getState(moduleName)
     if (typeof fn !== 'function') {
-      throw new Error(`${moduleName}.${key} is not a function`)
+      throw new TypeError(`${moduleName}.${key} is not a function`)
     }
     return fn(latestEditor, ...args)
   }

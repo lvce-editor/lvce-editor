@@ -41,7 +41,7 @@ export const saveValue = async (storeId, value) => {
     await db.add('session', value)
   } catch (error) {
     // @ts-ignore
-    if (error && error.name === `DataCloneError`) {
+    if (error && error.name === 'DataCloneError') {
       // TODO
       return
     }

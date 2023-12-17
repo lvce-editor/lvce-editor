@@ -1,7 +1,7 @@
+import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditorIndent from './EditorCommandIndentMore.js'
 import * as EditorTabCompletion from './EditorCommandTabCompletion.js'
 import * as EditorType from './EditorCommandType.js'
-import * as EditorIndent from './EditorCommandIndentMore.js'
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
 // TODO tab doesn't work well with configurable keybindings
 export const handleTab = async (editor) => {

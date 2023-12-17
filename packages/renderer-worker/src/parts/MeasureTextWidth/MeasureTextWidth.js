@@ -17,7 +17,7 @@ export const measureTextWidth = (text, fontWeight, fontSize, fontFamily, letterS
     return text.length * charWidth
   }
   if (typeof letterSpacing !== 'number') {
-    throw new Error('letterSpacing must be of type number')
+    throw new TypeError('letterSpacing must be of type number')
   }
   const letterSpacingString = getLetterSpacingString(letterSpacing)
   const fontString = GetFontString.getFontString(fontWeight, fontSize, fontFamily)

@@ -3,10 +3,10 @@ import * as Format from '../Format/Format.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as EditorShowMessage from './EditorCommandShowMessage.js'
 import * as Logger from '../Logger/Logger.js'
+import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
-const expectedErrorMessage = `Failed to execute formatting provider: FormattingError:`
+const expectedErrorMessage = 'Failed to execute formatting provider: FormattingError:'
 
 const isFormattingError = (error) => {
   return error && error instanceof Error && error.message.startsWith(expectedErrorMessage)
@@ -41,7 +41,7 @@ export const format = async (editor) => {
   } catch (error) {
     if (isFormattingError(error)) {
       console.error(
-        `Formatting Error:`,
+        'Formatting Error:',
         // @ts-ignore
         error.message.slice(expectedErrorMessage.length)
       )

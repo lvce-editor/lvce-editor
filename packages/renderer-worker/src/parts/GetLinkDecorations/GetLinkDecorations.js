@@ -4,8 +4,7 @@ export const getAllLinkDecorations = (editor) => {
   const { lines } = editor
   const decorations = []
   let offset = 0
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
+  for (const line of lines) {
 
     const links = ComputeLinks.computeLinks(line, offset)
     decorations.push(...links)

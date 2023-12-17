@@ -3,9 +3,9 @@ import * as EditorMoveSelectionAnchorState from '../EditorMoveSelectionAnchorSta
 import * as EditorSelectionAutoMoveState from '../EditorSelectionAutoMoveState/EditorSelectionAutoMoveState.js'
 import * as RequestAnimationFrame from '../RequestAnimationFrame/RequestAnimationFrame.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 import * as EditorPosition from './EditorCommandPosition.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const getNewEditor = (editor, position) => {
   const { minLineY, maxLineY, rowHeight } = editor

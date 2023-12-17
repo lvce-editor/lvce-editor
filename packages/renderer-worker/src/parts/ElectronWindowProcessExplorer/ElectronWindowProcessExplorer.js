@@ -5,6 +5,6 @@ export const open = async () => {
   try {
     await SharedProcess.invoke('ElectronWindowProcessExplorer.open')
   } catch (error) {
-    throw new VError(error, `Failed to open process explorer`)
+    throw new VError(error, 'Failed to open process explorer')
   }
 }

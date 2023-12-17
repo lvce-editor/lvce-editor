@@ -1,5 +1,5 @@
-import * as ExtensionHostShared from './ExtensionHostShared.js'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 const combineResults = (results) => {
   return results[0]

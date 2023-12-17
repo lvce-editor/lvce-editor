@@ -20,7 +20,7 @@ export const getRecentlyOpened = async () => {
     } else if (error && error instanceof Error && error.message.includes('failed to parse json')) {
       // ignore
     } else {
-      const vError = new VError(error, `Failed to read recently opened`)
+      const vError = new VError(error, 'Failed to read recently opened')
       Logger.warn(vError)
     }
     return []
