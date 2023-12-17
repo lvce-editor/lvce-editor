@@ -7,7 +7,7 @@ export const base64StringToBlob = (base64String) => {
     return BlobUtil.base64StringToBlob(base64String)
   } catch (error) {
     const normalizedError = NormalizeBlobError.normalizeBlobError(error)
-    throw new VError(normalizedError, `Failed to convert base64 string to blob`)
+    throw new VError(normalizedError, 'Failed to convert base64 string to blob')
   }
 }
 
@@ -16,7 +16,7 @@ export const binaryStringToBlob = async (string, type) => {
     return await BlobUtil.binaryStringToBlob(string, type)
   } catch (error) {
     const normalizedError = NormalizeBlobError.normalizeBlobError(error)
-    throw new VError(normalizedError, `Failed to convert binary string to blob`)
+    throw new VError(normalizedError, 'Failed to convert binary string to blob')
   }
 }
 
@@ -25,6 +25,6 @@ export const blobToBinaryString = async (blob) => {
     return await BlobUtil.blobToBinaryString(blob)
   } catch (error) {
     const normalizedError = NormalizeBlobError.normalizeBlobError(error)
-    throw new VError(normalizedError, `Failed to convert blob to binary string`)
+    throw new VError(normalizedError, 'Failed to convert blob to binary string')
   }
 }

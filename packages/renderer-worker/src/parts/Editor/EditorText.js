@@ -141,7 +141,7 @@ const getLineInfoEmbeddedFull = (embeddedResults, tokenResults, line, normalize,
   for (let i = startIndex; i < tokensLength; i += 2) {
     const tokenType = embeddedTokens[i]
     const tokenLength = embeddedTokens[i + 1]
-    let extraClassName = ''
+    const extraClassName = ''
     end += tokenLength
     const className = `Token ${extraClassName || embeddedTokenMap[tokenType] || 'Unknown'}`
     const text = line.slice(start, end)

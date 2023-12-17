@@ -32,8 +32,8 @@ export const downloadUpdate = async (version) => {
 export const installAndRestart = async (downloadPath) => {
   try {
     Assert.string(downloadPath)
-    await Exec.exec(`sudo`, ['dpkg', '-i', downloadPath])
+    await Exec.exec('sudo', ['dpkg', '-i', downloadPath])
   } catch (error) {
-    throw new VError(error, `Failed to install deb update`)
+    throw new VError(error, 'Failed to install deb update')
   }
 }
