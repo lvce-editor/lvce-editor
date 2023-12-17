@@ -116,7 +116,6 @@ const getMenuItemVirtualDom = (menuItem, isFocused) => {
 
 export const getMenuVirtualDom = (menuItems) => {
   const dom = []
-  console.log({ menuItems })
   dom.push(
     div(
       {
