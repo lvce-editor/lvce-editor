@@ -1,7 +1,7 @@
 import * as PlatformType from '../PlatformType/PlatformType.js'
 
 /**
- * @returns {'electron'|'remote'|'web'}
+ * @returns {number}
  */
 const getPlatform = () => {
   // @ts-ignore
