@@ -31,8 +31,6 @@ export const attachEvents = (state) => {
     [DomEventType.MouseDown]: ViewletMainTabEvents.handleTabsMouseDown,
     [DomEventType.ContextMenu]: ViewletMainTabEvents.handleTabsContextMenu,
     [DomEventType.DragStart]: ViewletMainTabEvents.handleDragStart,
-    [DomEventType.PointerOver]: ViewletMainTabEvents.handlePointerOver,
-    [DomEventType.PointerOut]: ViewletMainTabEvents.handlePointerOut,
   })
   $MainTabs.addEventListener(DomEventType.Wheel, ViewletMainTabEvents.handleTabsWheel, DomEventOptions.Passive)
 }

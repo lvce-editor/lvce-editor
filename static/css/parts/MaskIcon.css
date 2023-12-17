@@ -76,7 +76,8 @@
   mask-image: url(/icons/arrow-up.svg);
 }
 
-.MaskIconClose {
+.MaskIconClose,
+.EditorTabCloseButton:hover .MaskIconCircleFilled {
   mask-image: url(/icons/close.svg);
 }
 
