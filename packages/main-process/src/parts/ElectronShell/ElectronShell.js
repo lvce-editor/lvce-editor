@@ -8,7 +8,7 @@ export const showItemInFolder = (fullPath) => {
 /**
  * @deprecated use OpenExternal.openExternal function instead
  */
-export const openExternal = OpenExternal.openExternal
+export const { openExternal } = OpenExternal
 
 export const openPath = async (path) => {
   // TODO handle error

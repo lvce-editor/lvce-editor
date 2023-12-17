@@ -42,8 +42,8 @@ export const getArgv = () => {
   return process.argv
 }
 
-export const pid = process.pid
+export const { pid } = process
 
-export const execPath = process.execPath
+export const { execPath } = process
 
-export const argv = process.argv
+export const { argv } = process

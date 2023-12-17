@@ -22,4 +22,4 @@ export const clearMarks = () => {
   performance.clearMarks()
 }
 
-export const timeOrigin = performance.timeOrigin
+export const { timeOrigin } = performance

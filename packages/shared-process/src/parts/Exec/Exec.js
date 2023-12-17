@@ -1,5 +1,5 @@
-import * as Assert from '../Assert/Assert.js'
 import { execa } from 'execa'
+import * as Assert from '../Assert/Assert.js'
 
 /**
  *

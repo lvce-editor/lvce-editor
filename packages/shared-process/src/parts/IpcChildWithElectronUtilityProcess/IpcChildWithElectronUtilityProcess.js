@@ -1,6 +1,6 @@
 export const listen = () => {
   // @ts-ignore
-  const parentPort = process.parentPort
+  const { parentPort } = process
   if (!parentPort) {
     throw new Error('parent port must be defined')
   }

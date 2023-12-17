@@ -1,6 +1,6 @@
+import * as Os from 'node:os'
 import * as Platform from '../Platform/Platform.js'
 import * as ByteSize from '../ByteSize/ByteSize.js'
-import * as Os from 'node:os'
 
 const UiStrings = {
   OsVersion: 'Os Version',
@@ -11,7 +11,7 @@ const UiStrings = {
 const visitVersion = {
   key: UiStrings.OsVersion,
   getValue() {
-    const version = Platform.version
+    const { version } = Platform
     return version
   },
 }
@@ -24,9 +24,9 @@ const visitCpus = {
       return ''
     }
     const firstCpu = cpus[0]
-    const model = firstCpu.model
+    const { model } = firstCpu
     const cpuLength = cpus.length
-    const speed = firstCpu.speed
+    const { speed } = firstCpu
     return `${model} (${cpuLength} x ${speed})`
   },
 }
@@ -56,7 +56,7 @@ const combineVisitors = (visitors) => {
   const longestKeyLength = getLongestKeyLength(visitors)
   const result = []
   for (const visitor of visitors) {
-    const key = visitor.key
+    const { key } = visitor
     const value = visitor.getValue()
     result.push(`${key}: ${value}`)
   }
