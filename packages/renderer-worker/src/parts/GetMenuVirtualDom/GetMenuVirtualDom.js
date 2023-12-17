@@ -1,5 +1,5 @@
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const ClassNames = {
