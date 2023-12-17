@@ -1,4 +1,5 @@
 import * as GetVisibleTitleBarEntries from '../GetVisibleTitleBarEntries/GetVisibleTitleBarEntries.js'
+import * as GetMenuVirtualDom from '../GetMenuVirtualDom/GetMenuVirtualDom.js'
 
 export const hasFunctionalRender = true
 
@@ -42,12 +43,15 @@ const renderMenus = {
       const oldMenu = oldMenus[i]
       const newMenu = newMenus[i]
       if (oldMenu !== newMenu) {
-        changes.push([/* method */ 'updateMenu', /* newMenu */ newMenu, /* newLength */ newLength])
+        const dom = GetMenuVirtualDom.getMenuVirtualDom(newMenu.items).slice(1)
+        changes.push([/* method */ 'updateMenu', newMenu, /* newLength */ newLength, dom])
       }
     }
     const difference = newLength - oldLength
     if (difference > 0) {
-      changes.push(['addMenu', newMenus.at(-1)])
+      const dom = GetMenuVirtualDom.getMenuVirtualDom(newMenus.at(-1).items).slice(1)
+      console.log({ dom })
+      changes.push(['addMenu', newMenus.at(-1), dom])
     } else if (difference < 0) {
       changes.push(['closeMenus', newLength])
     }

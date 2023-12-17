@@ -9,7 +9,7 @@ const getMenuItemSeparatorDom = (menuItem) => {
         className: 'MenuItemSeparator',
         role: AriaRoles.Separator,
       },
-      0
+      0,
     ),
   ]
 }
@@ -24,7 +24,7 @@ const getMenuItemUncheckedDom = (menuItem) => {
         ariaChecked: false,
         tabIndex: -1,
       },
-      1
+      1,
     ),
     text(label),
   ]
@@ -40,7 +40,40 @@ const getMenuItemDisabledDom = (menuItem) => {
         tabIndex: -1,
         disabled: true,
       },
-      1
+      1,
+    ),
+    text(label),
+  ]
+}
+
+const getMenuItemDefaultDom = (menuItem) => {
+  const { label } = menuItem
+  return [
+    div(
+      {
+        className: 'MenuItem',
+        role: AriaRoles.MenuItem,
+        tabIndex: -1,
+        disabled: true,
+      },
+      1,
+    ),
+    text(label),
+  ]
+}
+
+const getMenuItemSubMenuDom = (menuItem) => {
+  const { label } = menuItem
+  return [
+    div(
+      {
+        className: 'MenuItem',
+        role: AriaRoles.MenuItem,
+        tabIndex: -1,
+        ariaHasPopup: true,
+        ariaExpanded: true,
+      },
+      1,
     ),
     text(label),
   ]
@@ -49,19 +82,26 @@ const getMenuItemDisabledDom = (menuItem) => {
 const getMenuItemVirtualDom = (menuItem) => {
   const { flags, label } = menuItem
   switch (flags) {
+    case MenuItemFlags.None:
+    case MenuItemFlags.RestoreFocus:
+    case MenuItemFlags.Ignore:
+      return getMenuItemDefaultDom(menuItem)
     case MenuItemFlags.Separator:
       return getMenuItemSeparatorDom(menuItem)
     case MenuItemFlags.Unchecked:
       return getMenuItemUncheckedDom(menuItem)
     case MenuItemFlags.Disabled:
       return getMenuItemDisabledDom(menuItem)
+    case MenuItemFlags.SubMenu:
+      return getMenuItemSubMenuDom(menuItem)
     default:
       return []
   }
 }
 
-export const getMenuVirtualDom = (menuItems) => {
+export const getMenuVirtualDom = (menuItems, focusedIndex) => {
   const dom = []
+  console.log({ menuItems })
   dom.push(
     div(
       {
@@ -69,8 +109,8 @@ export const getMenuVirtualDom = (menuItems) => {
         role: AriaRoles.Menu,
         tabIndex: -1,
       },
-      menuItems.length
-    )
+      menuItems.length,
+    ),
   )
   for (const menuItem of menuItems) {
     dom.push(...getMenuItemVirtualDom(menuItem))
