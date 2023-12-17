@@ -7,21 +7,31 @@ const toProblem = (diagnostic) => {
     rowIndex,
     columnIndex,
     uri: '',
+    count: 0,
   }
 }
 
 export const toProblems = (diagnostics) => {
-  let uri = ''
   const problems = []
+  let problem = {
+    message: '',
+    rowIndex: 0,
+    columnIndex: 0,
+    uri: '',
+    count: 0,
+  }
   for (const diagnostic of diagnostics) {
-    if (diagnostic.uri !== uri) {
-      problems.push({
+    if (diagnostic.uri === problem) {
+      problem.count++
+    } else {
+      problem = {
         message: '',
         rowIndex: 0,
         columnIndex: 0,
         uri: Workspace.pathBaseName(diagnostic.uri),
-      })
-      uri = diagnostic.uri
+        count: 1,
+      }
+      problems.push(problem)
     }
     problems.push(toProblem(diagnostic))
   }

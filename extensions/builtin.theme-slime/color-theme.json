@@ -6,7 +6,7 @@
     "ActivityBarActiveBackground": "#1f2727",
     "ActivityBarActiveForeground": "rgb(135, 143, 140)",
 
-    "BadgeBackground": "rgb(160, 63, 155)",
+    "BadgeBackground": "#90599b",
     "BadgeForeground": "#fff",
 
     "BadgeSecondaryBackground": "#90599b",

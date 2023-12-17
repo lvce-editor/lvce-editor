@@ -18,6 +18,10 @@
   padding-left: 20px;
 }
 
+.ProblemBadge {
+  margin-left: 5px;
+}
+
 .Problem:where(:hover) {
   color: var(--ListHoverForeground);
   background: var(--ListHoverBackground);
