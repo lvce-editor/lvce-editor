@@ -43,7 +43,21 @@ const getTabDom = (tab, isActive, fixedWidth) => {
     text(tab.label),
   ]
 
-  if (isHovered) {
+  if (isDirty) {
+    tabElement.childCount++
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'EditorTabCloseButton',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon MaskIconCircleFilled',
+        childCount: 0,
+      },
+    )
+  } else {
     tabElement.childCount++
     dom.push(
       {
@@ -55,20 +69,6 @@ const getTabDom = (tab, isActive, fixedWidth) => {
       {
         type: VirtualDomElements.Div,
         className: 'MaskIcon MaskIconClose',
-        childCount: 0,
-      },
-    )
-  } else if (isDirty) {
-    tabElement.childCount++
-    dom.push(
-      {
-        type: VirtualDomElements.Div,
-        className: 'EditorTabCloseButton',
-        childCount: 1,
-      },
-      {
-        type: VirtualDomElements.Div,
-        className: 'MaskIcon MaskIconCircleFilled',
         childCount: 0,
       },
     )
