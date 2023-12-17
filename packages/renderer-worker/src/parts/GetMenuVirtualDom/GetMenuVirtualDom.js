@@ -6,6 +6,7 @@ const ClassNames = {
   MenuItemSeparator: 'MenuItemSeparator',
   MenuItem: 'MenuItem',
   Menu: 'Menu',
+  MenuItemFocused: 'MenuItemFocused',
 }
 
 const getMenuItemSeparatorDom = (menuItem) => {
@@ -53,11 +54,15 @@ const getMenuItemDisabledDom = (menuItem) => {
 }
 
 const getMenuItemDefaultDom = (menuItem) => {
-  const { label } = menuItem
+  const { label, isFocused } = menuItem
+  let className = ClassNames.MenuItem
+  if (isFocused) {
+    className += ' ' + ClassNames.MenuItemFocused
+  }
   return [
     div(
       {
-        className: ClassNames.MenuItem,
+        className,
         role: AriaRoles.MenuItem,
         tabIndex: -1,
         disabled: true,
@@ -69,11 +74,15 @@ const getMenuItemDefaultDom = (menuItem) => {
 }
 
 const getMenuItemSubMenuDom = (menuItem) => {
-  const { label } = menuItem
+  const { label, isFocused } = menuItem
+  let className = ClassNames.MenuItem
+  if (isFocused) {
+    className += ' ' + ClassNames.MenuItemFocused
+  }
   return [
     div(
       {
-        className: ClassNames.MenuItem,
+        className,
         role: AriaRoles.MenuItem,
         tabIndex: -1,
         ariaHasPopup: true,
