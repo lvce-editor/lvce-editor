@@ -13,7 +13,6 @@ export const create = (uid) => {
 
 export const getProblems = async (state) => {
   const diagnostics = await Diagnostics.getDiagnostics()
-  console.log({ diagnostics })
   const problems = ToProblems.toProblems(diagnostics)
   return problems
 }

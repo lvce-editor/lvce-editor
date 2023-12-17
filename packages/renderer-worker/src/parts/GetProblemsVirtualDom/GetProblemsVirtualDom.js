@@ -1,14 +1,26 @@
 import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 
 const getProblemVirtualDom = (problem) => {
-  const { message, rowIndex, columnIndex, isActive } = problem
-  const lineColumn = ViewletProblemsStrings.atLineColumn(rowIndex, columnIndex)
+  const { message, rowIndex, columnIndex, isActive, uri, icon } = problem
   let className = 'Problem'
   if (isActive) {
     className += ' ProblemSelected'
   }
+  if (uri) {
+    return [
+      {
+        type: VirtualDomElements.Div,
+        className,
+        childCount: 2,
+      },
+      GetFileIconVirtualDom.getFileIconVirtualDom(icon),
+      text(uri),
+    ]
+  }
+  const lineColumn = ViewletProblemsStrings.atLineColumn(rowIndex, columnIndex)
   return [
     {
       type: VirtualDomElements.Div,
