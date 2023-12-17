@@ -1,7 +1,7 @@
 import { writeFile } from 'node:fs/promises'
-import got from 'got'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import got from 'got'
 import { WebSocket } from 'ws'
 import * as DevtoolsProtocolRpc from '../DevtoolsProtocolRpc/DevtoolsProtocolRpc.js'
 
@@ -29,7 +29,7 @@ export const createCpuProfile = async (pid) => {
   // AttachDebugger.attachDebugger(pid)
   const response = await got('http://localhost:9229/json/list').json()
   const first = response[0]
-  const webSocketDebuggerUrl = first.webSocketDebuggerUrl
+  const { webSocketDebuggerUrl } = first
   const ipc = createConnection(webSocketDebuggerUrl)
 
   await new Promise((r) => {
@@ -37,7 +37,7 @@ export const createCpuProfile = async (pid) => {
   })
   const rpc = DevtoolsProtocolRpc.create(ipc)
   const result = await rpc.invoke('Debugger.enable')
-  const debuggerId = result.result.debuggerId
+  const { debuggerId } = result.result
   console.log({ debuggerId })
   const p = await rpc.invoke('Profiler.enable')
   await rpc.invoke('Profiler.start')
@@ -46,7 +46,7 @@ export const createCpuProfile = async (pid) => {
   })
   const profileResult = await rpc.invoke('Profiler.stop')
   console.log({ profileResult })
-  const profile = profileResult.result.profile
+  const { profile } = profileResult.result
   const profilePath = join(tmpdir(), 'node-profile.cpuprofile')
   const profileString = JSON.stringify(profile)
   await writeFile(profilePath, profileString)

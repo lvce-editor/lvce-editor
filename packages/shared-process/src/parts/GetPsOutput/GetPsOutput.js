@@ -1,7 +1,7 @@
-import { VError } from '../VError/VError.js'
 import { execFile as _execFile } from 'node:child_process'
-import * as Signal from '../Signal/Signal.js'
 import { promisify } from 'node:util'
+import * as Signal from '../Signal/Signal.js'
+import { VError } from '../VError/VError.js'
 
 const execFile = promisify(_execFile)
 
@@ -14,7 +14,6 @@ export const getPsOutput = async () => {
     if (error && error.signal === Signal.SIGINT) {
       return ''
     }
-    // @ts-ignore
     throw new VError(error, `Failed to execute ps`)
   }
 }
