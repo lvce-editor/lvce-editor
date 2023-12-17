@@ -1,8 +1,6 @@
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
-import * as JsonRpcEvent from '../JsonRpcEvent/JsonRpcEvent.js'
-import * as JsonRpcRequest from '../JsonRpcRequest/JsonRpcRequest.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as LaunchRendererWorker from '../LaunchRendererWorker/LaunchRendererWorker.js'
-import * as UnwrapJsonRpcResult from '../UnwrapJsonRpcResult/UnwrapJsonRpcResult.js'
 
 export const state = {
   /**
@@ -25,16 +23,11 @@ export const dispose = () => {
 }
 
 export const send = (method, ...params) => {
-  const message = JsonRpcEvent.create(method, params)
-  state.ipc.send(message)
+  JsonRpc.send(state.ipc, method, ...params)
 }
 
-export const invoke = async (method, ...params) => {
-  const { message, promise } = JsonRpcRequest.create(method, params)
-  state.ipc.send(message)
-  const responseMessage = await promise
-  const result = UnwrapJsonRpcResult.unwrapJsonRpcResult(responseMessage)
-  return result
+export const invoke = (method, ...params) => {
+  return JsonRpc.invoke(state.ipc, method, ...params)
 }
 
 export const sendAndTransfer = (message, transfer) => {
