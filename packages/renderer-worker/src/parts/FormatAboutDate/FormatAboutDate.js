@@ -8,7 +8,7 @@ export const formatAboutDate = (isoDate) => {
   if (isNaN(date)) {
     return `Invalid Date: ${isoDate}`
   }
-  const now = new Date().getTime()
+  const now = Date.now()
   const ago = FormatDate.formatDate(date, now)
   return `${isoDate} (${ago})`
 }

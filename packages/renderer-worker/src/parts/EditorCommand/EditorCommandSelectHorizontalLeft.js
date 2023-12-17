@@ -1,7 +1,7 @@
 import * as Editor from '../Editor/Editor.js'
-import * as EditorGetPositionLeft from './EditorCommandGetPositionLeft.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
+import * as EditorGetPositionLeft from './EditorCommandGetPositionLeft.js'
 
 // TODO interleave cursors and selection
 // then loop over selections

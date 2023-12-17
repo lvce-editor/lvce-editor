@@ -1,6 +1,6 @@
 export const getPossibleLinkDecoration = (editor, position) => {
   const { decorations, lines } = editor
-  let rowIndex = 0
+  const rowIndex = 0
   let offset = 0
   let lineIndex = 0
   for (let i = 0; i < decorations.length; i += 4) {

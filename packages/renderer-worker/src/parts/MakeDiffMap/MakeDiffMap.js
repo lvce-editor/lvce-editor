@@ -4,8 +4,7 @@ export const makeDiffMap = (linesA, linesB) => {
   const map = Object.create(null)
   // pass one
   const na = []
-  for (let i = 0; i < linesB.length; i++) {
-    const line = linesB[i]
+  for (const line of linesB) {
     if (line in map) {
       map[line].nc++
     } else {
@@ -19,8 +18,7 @@ export const makeDiffMap = (linesA, linesB) => {
   }
   // pass two
   const oa = []
-  for (let i = 0; i < linesA.length; i++) {
-    const line = linesA[i]
+  for (const [i, line] of linesA.entries()) {
     if (line in map) {
       map[line].oc++
     } else {

@@ -24,7 +24,7 @@ export const setIconTheme = async (iconThemeId) => {
     if (Workspace.isTest()) {
       // ignore
     } else {
-      console.error(new VError(error, `Failed to load icon theme`))
+      console.error(new VError(error, 'Failed to load icon theme'))
     }
   }
 }

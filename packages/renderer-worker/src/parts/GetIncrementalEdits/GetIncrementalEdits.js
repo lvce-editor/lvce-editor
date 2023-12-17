@@ -3,7 +3,7 @@ import * as GetInitialLineState from '../GetInitialLineState/GetInitialLineState
 import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
 
 export const getIncrementalEdits = (oldState, newState) => {
-  const lastChanges = newState.undoStack[newState.undoStack.length - 1]
+  const lastChanges = newState.undoStack.at(-1)
   if (lastChanges && lastChanges.length === 1) {
     const lastChange = lastChanges[0]
     if (lastChange.origin === EditOrigin.EditorType) {

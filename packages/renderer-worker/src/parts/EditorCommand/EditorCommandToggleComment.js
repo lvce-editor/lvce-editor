@@ -1,7 +1,7 @@
+import * as Logger from '../Logger/Logger.js'
 import * as EditorToggleBlockComment from './EditorCommandToggleBlockComment.js'
 import * as EditorToggleLineComment from './EditorCommandToggleLineComment.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
-import * as Logger from '../Logger/Logger.js'
 
 // TODO rename file
 // TODO when handle case when editor has selection

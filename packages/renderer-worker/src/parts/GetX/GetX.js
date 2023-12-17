@@ -6,8 +6,8 @@ import * as NormalizeText from '../NormalizeText/NormalizeText.js'
 // [top1, left1, width1, height1, top2, left2, width2, height2...]
 const getTabCount = (string) => {
   let count = 0
-  for (let i = 0; i < string.length; i++) {
-    if (string[i] === '\t') {
+  for (const element of string) {
+    if (element === '\t') {
       count++
     }
   }

@@ -21,7 +21,7 @@ export const handleError = async (error, notify = true, prefix = '') => {
       await Command.execute(/* Notification.create */ 'Notification.create', /* type */ 'error', /* text */ PrettyError.getMessage(prettyError))
     }
   } catch (otherError) {
-    console.warn(`ErrorHandling error`)
+    console.warn('ErrorHandling error')
     console.warn(otherError)
     console.error(error)
   }

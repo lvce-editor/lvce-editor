@@ -1,6 +1,6 @@
 export const listen = () => {
   if (typeof WorkerGlobalScope === 'undefined') {
-    throw new Error('module is not in web worker scope')
+    throw new TypeError('module is not in web worker scope')
   }
   return globalThis
 }

@@ -41,7 +41,7 @@ export const executeTest = async (name, fn, globals = {}) => {
     if (
       error &&
       // @ts-ignore
-      error.message.startsWith(`Failed to load command TestFrameWork.`)
+      error.message.startsWith('Failed to load command TestFrameWork.')
     ) {
       await ErrorHandling.handleError(error)
       return

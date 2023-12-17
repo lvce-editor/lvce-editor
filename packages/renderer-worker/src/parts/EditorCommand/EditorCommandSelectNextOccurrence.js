@@ -88,8 +88,8 @@ const getSelectionEditsSingleLineWord = (lines, selections) => {
         }
       }
       startRowIndex = selections[selectionIndex]
-      let startColumnIndex = selections[selectionIndex + 1]
-      let endColumnIndex = selections[selectionIndex + 3]
+      const startColumnIndex = selections[selectionIndex + 1]
+      const endColumnIndex = selections[selectionIndex + 3]
       if (startRowIndex === i && startColumnIndex <= columnIndex && columnIndex <= endColumnIndex) {
         continue
       }
@@ -170,7 +170,7 @@ const getSelectNextOccurrenceResult = (editor) => {
       const [selectionStartRow, selectionStartColumn, selectionEndRow, selectionEndColumn] = GetSelectionPairs.getSelectionPairs(selections, i)
 
       const wordMatch = getWordMatchAtPosition(lines, selectionStartRow, selectionStartColumn)
-      wordMatch //?
+      wordMatch // ?
       if (wordMatch.start === wordMatch.end) {
         newSelections[i] = selectionStartRow
         newSelections[i + 1] = selectionStartColumn

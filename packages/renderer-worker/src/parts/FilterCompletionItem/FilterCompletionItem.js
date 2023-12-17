@@ -14,8 +14,8 @@ const arrows = CreateTable.createTable(gridSize)
 const diag = CreateTable.createTable(gridSize)
 
 const printTables = (pattern, patternStart, word, wordStart) => {
-  pattern = pattern.substr(patternStart)
-  word = word.substr(wordStart)
+  pattern = pattern.slice(patternStart)
+  word = word.slice(wordStart)
   console.log(PrintTable.printTable(table, pattern, pattern.length, word, word.length))
   console.log(PrintTable.printTable(arrows, pattern, pattern.length, word, word.length))
   // console.log(printTable(_diag, pattern, pattern.length, word, word.length));
@@ -58,7 +58,7 @@ export const filterCompletionItem = (pattern, word) => {
       if (isDiagonalMatch && score !== -1) {
         diagonalScore += 2
       }
-      let leftScore = table[row][column - 1]
+      const leftScore = table[row][column - 1]
       if (leftScore > diagonalScore) {
         table[row][column] = leftScore
         arrows[row][column] = Arrow.Left

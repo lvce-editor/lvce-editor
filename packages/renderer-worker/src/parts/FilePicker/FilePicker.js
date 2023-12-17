@@ -12,7 +12,7 @@ export const showDirectoryPicker = async (options) => {
       // @ts-ignore
       error.message === 'window.showDirectoryPicker is not a function'
     ) {
-      throw new Error(`showDirectoryPicker not supported on this browser`)
+      throw new Error('showDirectoryPicker not supported on this browser')
     }
     throw error
   }
@@ -34,7 +34,7 @@ export const showSaveFilePicker = async (options) => {
       // @ts-ignore
       error.message === 'window.showSaveFilePicker is not a function'
     ) {
-      throw new Error(`showSaveFilePicker not supported on this browser`)
+      throw new Error('showSaveFilePicker not supported on this browser')
     }
     throw error
   }

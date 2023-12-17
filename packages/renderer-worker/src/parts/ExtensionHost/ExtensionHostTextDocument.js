@@ -1,6 +1,6 @@
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as ExtensionHostShared from './ExtensionHostShared.js'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 // TODO instead of sending full document from
 // shared process to renderer-worker to shared process

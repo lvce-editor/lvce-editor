@@ -11,8 +11,8 @@ export const load = async (fontName, fontUrl) => {
   try {
     Assert.string(fontName)
     Assert.string(fontUrl)
-    if (fontName.startsWith(`'`)) {
-      throw new Error(`font name is not allowed start with quotes`)
+    if (fontName.startsWith('\'')) {
+      throw new Error('font name is not allowed start with quotes')
     }
     const fontFace = new FontFace(fontName, fontUrl, {})
     await fontFace.load()

@@ -18,7 +18,7 @@ export const get = async (cacheKey) => {
     const text = await CacheStorage.getTextFromCache(normalizedCacheKey)
     return text
   } catch (error) {
-    throw new VError(error, `Failed to get value from file search cache`)
+    throw new VError(error, 'Failed to get value from file search cache')
   }
 }
 
@@ -27,6 +27,6 @@ export const set = async (cacheKey, value) => {
     const normalizedCacheKey = normalizeCacheKey(cacheKey)
     await CacheStorage.setText(normalizedCacheKey, value, MimeType.TextPlain)
   } catch (error) {
-    throw new VError(error, `Failed to put value into file search cache`)
+    throw new VError(error, 'Failed to put value into file search cache')
   }
 }
