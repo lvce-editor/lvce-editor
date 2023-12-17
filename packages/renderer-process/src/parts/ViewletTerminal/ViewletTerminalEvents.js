@@ -1,10 +1,17 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as ViewletTerminalFunctions from './ViewletTerminalFunctions.js'
+import * as ComponentUid from '../ComponentUid/ComponentUid.js'
+import * as ForwardCommand from '../ForwardCommand/ForwardCommand.js'
 
-export const handleInput = (input) => {
-  ViewletTerminalFunctions.handleInput(input)
+export const handleBlur = (event) => {
+  const uid = ComponentUid.fromEvent(event)
+  ForwardCommand.handleBlur(uid)
 }
 
-export const handleFocus = () => {
-  RendererWorker.send('Focus.setFocus', 'terminal')
+export const handleMouseDown = (event, ...args) => {
+  const uid = ComponentUid.fromEvent(event)
+  ForwardCommand.handleMouseDown(uid, ...args)
+}
+
+export const handleKeyDown = (event, ...args) => {
+  const uid = ComponentUid.fromEvent(event)
+  ForwardCommand.handleKeyDown(uid, ...args)
 }

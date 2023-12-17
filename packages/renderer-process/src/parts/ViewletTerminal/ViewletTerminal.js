@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Terminal from '../Terminal/Terminal.js'
 import * as IsUint8Array from '../IsUint8Array/IsUint8Array.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletTerminalEvents from './ViewletTerminalEvents.js'
 
 export const create = () => {
@@ -8,17 +9,37 @@ export const create = () => {
   $Viewlet.className = 'Viewlet Terminal'
   const terminal = Terminal.create({
     $Element: $Viewlet,
-    handleInput: ViewletTerminalEvents.handleInput,
+    handleKeyDown: (...args) => ViewletTerminalEvents.handleKeyDown({ target: $Viewlet }, ...args),
+    handleBlur: (...args) => ViewletTerminalEvents.handleBlur({ target: $Viewlet }, ...args),
+    handleMouseDown: (...args) => ViewletTerminalEvents.handleMouseDown({ target: $Viewlet }, ...args),
     background: `#1b2020`,
     foreground: 'white',
   })
-
-  $Viewlet.addEventListener('focusin', ViewletTerminalEvents.handleFocus)
 
   return {
     $Viewlet,
     terminal,
   }
+}
+
+export const transferCanvases = (state, id) => {
+  const { terminal } = state
+  const { offscreenCanvasCursor, offscreenCanvasText } = terminal
+  const message = {
+    jsonrpc: '2.0',
+    id,
+    result: {
+      offscreenCanvasCursor,
+      offscreenCanvasText,
+    },
+  }
+  const transfer = [offscreenCanvasCursor, offscreenCanvasText]
+  RendererWorker.sendAndTransfer(message, transfer)
+}
+
+export const focusTextArea = (state) => {
+  const { terminal } = state
+  terminal.focusTextArea()
 }
 
 export const refresh = (state, context) => {
