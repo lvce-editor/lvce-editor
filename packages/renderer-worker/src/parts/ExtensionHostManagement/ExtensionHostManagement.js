@@ -57,6 +57,10 @@ const getManagersWithExtensionsToActivate = (extensionHostManagers, extensions) 
 }
 
 const startSynching = async (extensionHost) => {
+  if (extensionHost.ipc.isSynching) {
+    return
+  }
+  extensionHost.ipc.isSynching = true
   const handleEditorCreate = (editor) => {
     const text = TextDocument.getText(editor)
     return extensionHost.ipc.invoke('ExtensionHostTextDocument.syncFull', editor.uri, editor.uid, editor.languageId, text)
@@ -126,7 +130,7 @@ const actuallyActivateByEvent = async (event) => {
   for (const managerWithExtensions of extensionHostsWithExtensions) {
     const extensionHost = await ExtensionHostManagementShared.startExtensionHost(
       managerWithExtensions.manager.name,
-      managerWithExtensions.manager.ipc
+      managerWithExtensions.manager.ipc,
     )
     // TODO register text document change listener and sync text documents
     await startSynching(extensionHost)
