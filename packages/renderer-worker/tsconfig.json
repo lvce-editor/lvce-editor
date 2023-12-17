@@ -2,7 +2,6 @@
   "compilerOptions": {
     "lib": ["esnext", "webworker"],
     "checkJs": true,
-    "module": "NodeNext",
     "target": "esnext",
     "types": ["jest"],
     "moduleResolution": "NodeNext",

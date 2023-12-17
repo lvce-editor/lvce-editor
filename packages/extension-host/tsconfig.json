@@ -3,7 +3,6 @@
     "lib": ["esnext"],
     "target": "esnext",
     "checkJs": true,
-    "module": "esnext",
     "types": ["node", "jest"],
     "moduleResolution": "nodenext",
     "isolatedModules": true,
