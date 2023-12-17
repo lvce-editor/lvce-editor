@@ -1,4 +1,7 @@
+import * as GetMenuVirtualDom from '../GetMenuVirtualDom/GetMenuVirtualDom.js'
+import * as GetVisibleMenuItems from '../GetVisibleMenuItems/GetVisibleMenuItems.js'
 import * as GetVisibleTitleBarEntries from '../GetVisibleTitleBarEntries/GetVisibleTitleBarEntries.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
@@ -8,7 +11,7 @@ const renderTitleBarEntries = {
   },
   apply(oldState, newState) {
     const visibleEntries = GetVisibleTitleBarEntries.getVisibleTitleBarEntries(newState.titleBarEntries, newState.width)
-    return [/* method */ 'setEntries', /* titleBarEntries */ visibleEntries]
+    return [/* method */ RenderMethod.SetEntries, /* titleBarEntries */ visibleEntries]
   },
 }
 
@@ -18,7 +21,7 @@ const renderFocusedIndex = {
   },
   apply(oldState, newState) {
     return [
-      /* method */ 'setFocusedIndex',
+      /* method */ RenderMethod.SetFocusedIndex,
       /* oldFocusedIndex */ oldState.focusedIndex,
       /* newfocusedIndex */ newState.focusedIndex,
       /* oldIsMenuOpen */ oldState.isMenuOpen,
@@ -42,16 +45,21 @@ const renderMenus = {
       const oldMenu = oldMenus[i]
       const newMenu = newMenus[i]
       if (oldMenu !== newMenu) {
-        changes.push([/* method */ 'updateMenu', /* newMenu */ newMenu, /* newLength */ newLength])
+        const visible = GetVisibleMenuItems.getVisible(newMenu.items, newMenu.focusedIndex, newMenu.expanded, newMenu.level)
+        const dom = GetMenuVirtualDom.getMenuVirtualDom(visible).slice(1)
+        changes.push([/* method */ 'updateMenu', newMenu, /* newLength */ newLength, dom])
       }
     }
     const difference = newLength - oldLength
     if (difference > 0) {
-      changes.push(['addMenu', newMenus.at(-1)])
+      const newMenu = newMenus.at(-1)
+      const visible = GetVisibleMenuItems.getVisible(newMenu.items, newMenu.focusedIndex, newMenu.expanded, newMenu.level)
+      const dom = GetMenuVirtualDom.getMenuVirtualDom(visible).slice(1)
+      changes.push(['addMenu', newMenu, dom])
     } else if (difference < 0) {
       changes.push(['closeMenus', newLength])
     }
-    return [/* method */ 'setMenus', /* changes */ changes, newState.uid]
+    return [/* method */ RenderMethod.SetMenus, /* changes */ changes, newState.uid]
   },
 }
 

@@ -1,15 +1,15 @@
 import * as FindIndex from '../../shared/findIndex.js'
+import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as BackDrop from '../BackDrop/BackDrop.js'
+import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Event from '../Event/Event.js'
 import * as Focus from '../Focus/Focus.js'
 import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Widget from '../Widget/Widget.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
-import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
-import * as Event from '../Event/Event.js'
+import * as Widget from '../Widget/Widget.js'
 // TODO when pressing tab -> focus next element in tab order and close menu
 
 // TODO menu and contextmenu should have own keybinding logic

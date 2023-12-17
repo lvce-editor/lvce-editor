@@ -6,9 +6,9 @@ import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
-import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as Menu from '../OldMenu/Menu.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 
@@ -244,45 +244,32 @@ export const setMenus = (state, changes, uid) => {
     switch (type) {
       case 'addMenu': {
         const menu = change[1]
+        const dom = change[2]
         const $Menu = create$Menu()
         ComponentUid.set($Menu, uid)
         $Menu.onmouseover = ViewletTitleBarMenuBarEvents.handleMenuMouseOver
         $Menu.onclick = ViewletTitleBarMenuBarEvents.handleMenuClick
         const { x, y, width, height, level, focusedIndex } = menu
         SetBounds.setBounds($Menu, x, y, width, height)
-        $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
+        VirtualDom.renderInto($Menu, dom)
         $Menu.id = `Menu-${level}`
         Widget.append($Menu)
         if (focusedIndex !== -1) {
           const $Child = $Menu.children[focusedIndex]
-          $Child.classList.add('MenuItemFocused')
           // @ts-ignore
           $Child.focus()
         }
         $$Menus.push($Menu)
-
         break
       }
       case 'updateMenu': {
         const menu = change[1]
         const newLength = change[2]
-        const replaceItems = change[3]
+        const dom = change[3]
         const { level, x, y, width, height, focusedIndex, items, expanded } = menu
         const $Menu = $$Menus[level]
         SetBounds.setBounds($Menu, x, y, width, height)
-        // TODO recycle menu item nodes
-        const $$Children = items.map(MenuItem.create$MenuItem)
-        if (focusedIndex !== -1) {
-          const $Child = $$Children[focusedIndex]
-          if (!$Child.classList.contains('MenuItemSeparator')) {
-            $Child.classList.add('MenuItemFocused')
-          }
-          if (expanded) {
-            $Child.ariaExpanded = true
-            $Child.setAttribute(DomAttributeType.AriaOwns, `Menu-${level + 1}`)
-          }
-        }
-        $Menu.replaceChildren(...$$Children)
+        VirtualDom.renderInto($Menu, dom)
         if (level === newLength - 1) {
           if (focusedIndex === -1) {
             $Menu.focus()
