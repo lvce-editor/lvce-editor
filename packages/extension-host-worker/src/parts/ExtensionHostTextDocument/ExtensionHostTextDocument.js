@@ -190,7 +190,6 @@ const runListenersSafe = (listeners, ...args) => {
 }
 
 export const syncFull = (uri, textDocumentId, languageId, text) => {
-  console.log('sync full', text)
   const textDocument = {
     uri,
     documentId: textDocumentId,

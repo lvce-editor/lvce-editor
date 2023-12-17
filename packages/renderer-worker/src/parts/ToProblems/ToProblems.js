@@ -21,19 +21,23 @@ export const toProblems = (diagnostics) => {
     count: 0,
   }
   for (const diagnostic of diagnostics) {
-    if (diagnostic.uri === problem) {
+    console.log({ diagnostic, problem })
+    if (diagnostic.uri === problem.uri) {
       problem.count++
     } else {
       problem = {
         message: '',
         rowIndex: 0,
         columnIndex: 0,
-        uri: Workspace.pathBaseName(diagnostic.uri),
+        uri: diagnostic.uri,
         count: 1,
       }
       problems.push(problem)
     }
     problems.push(toProblem(diagnostic))
+  }
+  for (const problem of problems) {
+    problem.uri = Workspace.pathBaseName(problem.uri)
   }
   return problems
 }
