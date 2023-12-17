@@ -29,7 +29,7 @@ export const push = (array, newItems) => {
 }
 
 export const last = (array) => {
-  return array[array.length - 1]
+  return array.at(-1)
 }
 
 export const first = (array) => {
@@ -55,8 +55,7 @@ export const fromAsync = async (asyncIterable) => {
 }
 
 export const findObjectIndex = (array, key, value) => {
-  for (let i = 0; i < array.length; i++) {
-    const element = array[i]
+  for (const [i, element] of array.entries()) {
     if (element[key] === value) {
       return i
     }

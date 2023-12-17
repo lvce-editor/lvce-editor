@@ -1,7 +1,7 @@
 import * as Crash from '../Crash/Crash.js'
+import * as Devtools from '../Devtools/Devtools.js'
 import * as OpenSpecialFolder from '../OpenSpecialFolder/OpenSpecialFolder.js'
 import * as Developer from './Developer.js'
-import * as Devtools from '../Devtools/Devtools.js'
 
 export const name = 'Developer'
 
