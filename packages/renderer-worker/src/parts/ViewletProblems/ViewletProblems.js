@@ -69,6 +69,12 @@ export const handleClickAt = (state, eventX, eventY) => {
     focusedIndex: index,
   }
 }
+export const handleIconThemeChange = (state) => {
+  return {
+    ...state,
+    problems: [...state.problems],
+  }
+}
 
 export const dispose = (state) => {
   return {
