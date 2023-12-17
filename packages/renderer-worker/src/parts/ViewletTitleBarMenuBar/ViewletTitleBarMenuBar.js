@@ -1,6 +1,5 @@
-import * as MeasureTextWidth from '../MeasureTextWidth/MeasureTextWidth.js'
-import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
 import * as MeasureTitleBarEntryWidth from '../MeasureTitleBarEntryWidth/MeasureTitleBarEntryWidth.js'
+import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
