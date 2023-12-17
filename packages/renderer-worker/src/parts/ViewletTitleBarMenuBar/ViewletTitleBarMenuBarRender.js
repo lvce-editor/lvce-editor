@@ -54,7 +54,6 @@ const renderMenus = {
       const newMenu = newMenus.at(-1)
       const visible = GetVisibleMenuItems.getVisible(newMenu.items, newMenu.focusedIndex)
       const dom = GetMenuVirtualDom.getMenuVirtualDom(visible).slice(1)
-      console.log({ newMenu })
       changes.push(['addMenu', newMenu, dom])
     } else if (difference < 0) {
       changes.push(['closeMenus', newLength])
