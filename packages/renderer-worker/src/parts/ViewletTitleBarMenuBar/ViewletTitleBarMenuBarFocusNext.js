@@ -1,5 +1,5 @@
-import { focusIndex } from './ViewletTitleBarMenuBarFocusIndex.js'
 import * as ListIndex from '../ListIndex/ListIndex.js'
+import { focusIndex } from './ViewletTitleBarMenuBarFocusIndex.js'
 
 export const focusNext = (state) => {
   const { titleBarEntries, focusedIndex } = state

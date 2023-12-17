@@ -1,3 +1,2 @@
-import { focusLast } from './ViewletTitleBarMenuBarFocusLast.js'
 
-export const handleKeyEndMenuClosed = focusLast
+export {focusLast as handleKeyEndMenuClosed} from './ViewletTitleBarMenuBarFocusLast.js'

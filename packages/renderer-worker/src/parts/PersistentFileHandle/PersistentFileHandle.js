@@ -39,6 +39,6 @@ export const getHandle = async (uri) => {
     const handle = await Command.execute('IndexedDb.getHandle', uri)
     return handle
   } catch (error) {
-    throw new VError(error, `Failed to get handle`)
+    throw new VError(error, 'Failed to get handle')
   }
 }

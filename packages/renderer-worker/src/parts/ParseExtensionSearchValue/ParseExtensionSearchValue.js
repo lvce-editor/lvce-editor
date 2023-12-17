@@ -7,7 +7,7 @@ const RE_PARAM = /@\w+/g
 export const parseValue = (value) => {
   const parameters = Object.create(null)
   // TODO this is not very functional code (assignment)
-  const replaced = value.replace(RE_PARAM, (match, by, order) => {
+  const replaced = value.replaceAll(RE_PARAM, (match, by, order) => {
     if (match.startsWith(ExtensionFilterParameter.Installed)) {
       parameters.installed = true
     }

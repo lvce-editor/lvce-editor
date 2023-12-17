@@ -4,8 +4,8 @@ import * as I18nString from '../I18NString/I18NString.js'
  * @enum {string}
  */
 const UiStrings = {
-  MatchesFoundFor: `{PH1} of {PH2} found for {PH3}`,
-  MatchOf: `{PH1} of {PH2}`,
+  MatchesFoundFor: '{PH1} of {PH2} found for {PH3}',
+  MatchOf: '{PH1} of {PH2}',
   NoResults: 'No Results',
   Close: 'Close',
   PreviousMatch: 'Previous Match',

@@ -5,7 +5,7 @@ export const handleKeyArrowUpMenuOpen = (state) => {
   const menu = menus.at(-1)
   const previousIndex = Menu.getIndexToFocusPrevious(menu)
   const newMenus = [
-    ...menus.slice(0, menus.length - 1),
+    ...menus.slice(0, -1),
     {
       ...menu,
       focusedIndex: previousIndex,

@@ -5,7 +5,7 @@ import { loadContent } from './ViewletSourceControlLoadContent.js'
 export const acceptInput = async (state) => {
   const { inputValue, enabledProviderIds } = state
   if (enabledProviderIds.length === 0) {
-    Logger.info(`[ViewletSourceControl] no source control provider found`)
+    Logger.info('[ViewletSourceControl] no source control provider found')
     return state
   }
   const providerId = enabledProviderIds[0]

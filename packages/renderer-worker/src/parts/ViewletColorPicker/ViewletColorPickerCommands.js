@@ -7,6 +7,4 @@ export const Commands = {
 }
 
 // prettier-ignore
-export const LazyCommands = {
-
-}
+export const LazyCommands = {}

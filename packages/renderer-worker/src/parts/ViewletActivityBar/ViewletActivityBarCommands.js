@@ -2,15 +2,15 @@ import * as ViewletActivityBar from './ViewletActivityBar.js'
 
 // prettier-ignore
 export const Commands = {
-  handleBlur:  ViewletActivityBar.handleBlur,
+  handleBlur: ViewletActivityBar.handleBlur,
   handleSideBarHidden: ViewletActivityBar.handleSideBarHidden,
   handleSideBarViewletChange: ViewletActivityBar.handleSideBarViewletChange,
   toggleItem: ViewletActivityBar.toggleItem,
-  updateSourceControlCount:  ViewletActivityBar.updateSourceControlCount,
+  updateSourceControlCount: ViewletActivityBar.updateSourceControlCount,
 }
 
 // prettier-ignore
-export const LazyCommands={
+export const LazyCommands = {
   focus: () => import('./ViewletActivityBarFocus.js'),
   focusFirst: () => import('./ViewletActivityBarFocusFirst.js'),
   focusIndex: () => import('./ViewletActivityBarFocusIndex.js'),

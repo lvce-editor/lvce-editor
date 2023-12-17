@@ -175,11 +175,10 @@ export const startup = async () => {
     const jsPath = `${testPath}/src/${jsfileName}`
     await Command.execute('Test.execute', jsPath)
     return
-  } else {
+  }
     Performance.mark(PerformanceMarkerType.WillLoadSaveState)
     await SaveState.hydrate()
     Performance.mark(PerformanceMarkerType.DidLoadSaveState)
-  }
 
   LifeCycle.mark(LifeCyclePhase.Sixteen)
 

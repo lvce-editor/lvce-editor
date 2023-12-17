@@ -1,5 +1,5 @@
-import * as ViewletQuickPickGetFilteredItems from './ViewletQuickPickGetFilteredItems.js'
 import * as InputSource from '../InputSource/InputSource.js'
+import * as ViewletQuickPickGetFilteredItems from './ViewletQuickPickGetFilteredItems.js'
 
 // TODO when user types letters -> no need to query provider again -> just filter existing results
 export const handleInput = async (state, newValue, cursorOffset, inputSource = InputSource.Script) => {

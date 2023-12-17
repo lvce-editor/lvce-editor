@@ -1,3 +1,2 @@
-import { noop } from './ViewletTitleBarMenuBarNoop.js'
 
-export const handleKeyArrowUpMenuClosed = noop
+export {noop as handleKeyArrowUpMenuClosed} from './ViewletTitleBarMenuBarNoop.js'

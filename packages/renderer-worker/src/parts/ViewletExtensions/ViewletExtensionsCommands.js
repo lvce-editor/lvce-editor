@@ -1,5 +1,5 @@
-import * as ViewletExtensions from './ViewletExtensions.js'
 import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
+import * as ViewletExtensions from './ViewletExtensions.js'
 
 // prettier-ignore
 export const Commands = {

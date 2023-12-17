@@ -2,7 +2,7 @@ import * as ViewletExtensionDetail from './ViewletExtensionDetail.js'
 
 // prettier-ignore
 export const Commands = {
-  handleIconError:  ViewletExtensionDetail.handleIconError,
+  handleIconError: ViewletExtensionDetail.handleIconError,
 }
 
 // prettier-ignore

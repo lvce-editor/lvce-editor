@@ -6,7 +6,7 @@ export const getDynamicCss = (preferences) => {
   const styles = []
   const useLayer = preferences['completion.useLayer']
   if (useLayer) {
-    styles.push(`  will-change: transform;`)
+    styles.push('  will-change: transform;')
   }
   if (styles.length === 0) {
     return ''

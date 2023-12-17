@@ -1,10 +1,10 @@
-import * as ViewletEditorCompletion from './ViewletEditorCompletion.js'
 import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
+import * as ViewletEditorCompletion from './ViewletEditorCompletion.js'
 
 // prettier-ignore
 export const Commands = {
   // 'EditorCompletion.selectCurrent': Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.selectCurrent),
-  dispose:  ViewletEditorCompletion.dispose,
+  dispose: ViewletEditorCompletion.dispose,
   handleEditorType: ViewletEditorCompletion.handleEditorType,
   handleEditorDeleteLeft: ViewletEditorCompletion.handleEditorDeleteLeft,
   handleEditorClick: ViewletEditorCompletion.handleEditorClick

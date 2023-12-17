@@ -4,8 +4,8 @@ import * as I18nString from '../I18NString/I18NString.js'
  * @enum {string}
  */
 const UiStrings = {
-  ImageCouldNotBeLoaded: `Image could not be loaded`,
-  ImageNotFound: `Image could not be loaded: Not Found`,
+  ImageCouldNotBeLoaded: 'Image could not be loaded',
+  ImageNotFound: 'Image could not be loaded: Not Found',
 }
 
 export const imageCouldNotBeLoaded = () => {

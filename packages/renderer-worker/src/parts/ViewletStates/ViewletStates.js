@@ -70,7 +70,7 @@ export const getState = (key) => {
 
 export const setState = (key, newState) => {
   if (typeof key !== 'string' && typeof key !== 'number') {
-    throw new Error('key must be defined')
+    throw new TypeError('key must be defined')
   }
   Assert.object(newState)
   const instance = getInstance(key)
@@ -79,7 +79,7 @@ export const setState = (key, newState) => {
 
 export const setRenderedState = (key, newState) => {
   if (typeof key !== 'string' && typeof key !== 'number') {
-    throw new Error('key must be defined')
+    throw new TypeError('key must be defined')
   }
   Assert.object(newState)
   const instance = getInstance(key)

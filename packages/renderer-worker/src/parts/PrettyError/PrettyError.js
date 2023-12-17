@@ -64,7 +64,7 @@ const RE_PATH_3 = /@(.*):(\d+):(\d+)$/ // Firefox
  */
 const getFile = (lines) => {
   for (const line of lines) {
-    if (line.match(RE_PATH_1) || line.match(RE_PATH_2) || line.match(RE_PATH_3)) {
+    if (RE_PATH_1.test(line) || RE_PATH_2.test(line) || RE_PATH_3.test(line)) {
       return line
     }
   }
@@ -102,8 +102,8 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     }
     const text = await Ajax.getText(path)
     const sourceMapMatch = GetSourceMapMatch.getSourceMapMatch(text)
-    const parsedLine = parseInt(line)
-    const parsedColumn = parseInt(column)
+    const parsedLine = Number.parseInt(line)
+    const parsedColumn = Number.parseInt(column)
     const message = getErrorMessage(error)
     const relevantStack = JoinLines.joinLines(lines)
     if (sourceMapMatch) {
