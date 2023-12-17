@@ -1,6 +1,7 @@
-import * as GetVisibleTitleBarEntries from '../GetVisibleTitleBarEntries/GetVisibleTitleBarEntries.js'
 import * as GetMenuVirtualDom from '../GetMenuVirtualDom/GetMenuVirtualDom.js'
 import * as GetVisibleMenuItems from '../GetVisibleMenuItems/GetVisibleMenuItems.js'
+import * as GetVisibleTitleBarEntries from '../GetVisibleTitleBarEntries/GetVisibleTitleBarEntries.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
@@ -10,7 +11,7 @@ const renderTitleBarEntries = {
   },
   apply(oldState, newState) {
     const visibleEntries = GetVisibleTitleBarEntries.getVisibleTitleBarEntries(newState.titleBarEntries, newState.width)
-    return [/* method */ 'setEntries', /* titleBarEntries */ visibleEntries]
+    return [/* method */ RenderMethod.SetEntries, /* titleBarEntries */ visibleEntries]
   },
 }
 
@@ -20,7 +21,7 @@ const renderFocusedIndex = {
   },
   apply(oldState, newState) {
     return [
-      /* method */ 'setFocusedIndex',
+      /* method */ RenderMethod.SetFocusedIndex,
       /* oldFocusedIndex */ oldState.focusedIndex,
       /* newfocusedIndex */ newState.focusedIndex,
       /* oldIsMenuOpen */ oldState.isMenuOpen,
@@ -58,7 +59,7 @@ const renderMenus = {
     } else if (difference < 0) {
       changes.push(['closeMenus', newLength])
     }
-    return [/* method */ 'setMenus', /* changes */ changes, newState.uid]
+    return [/* method */ RenderMethod.SetMenus, /* changes */ changes, newState.uid]
   },
 }
 
