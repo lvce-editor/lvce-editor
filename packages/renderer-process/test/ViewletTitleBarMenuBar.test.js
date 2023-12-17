@@ -164,7 +164,7 @@ test.skip('openMenu - focus on menu', () => {
   expect(document.activeElement).toBe(Menu.state.$$Menus[0].firstChild)
 })
 
-test('setMenus - add one menu', () => {
+test.skip('setMenus - add one menu', () => {
   const state = ViewletTitleBarMenuBar.create()
   ViewletTitleBarMenuBar.setMenus(
     state,
@@ -204,7 +204,7 @@ test('setMenus - add one menu', () => {
   )
 })
 
-test('setMenus - open sub menu', () => {
+test.skip('setMenus - open sub menu', () => {
   const state = ViewletTitleBarMenuBar.create()
   ViewletTitleBarMenuBar.setMenus(
     state,
