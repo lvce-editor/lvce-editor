@@ -22,7 +22,6 @@ export const create = (id, uri, x, y, width, height) => {
 
 export const loadContent = async (state) => {
   const problems = await GetProblems.getProblems()
-  console.log({ problems })
   const message = ViewletProblemsStrings.getMessage(problems.length)
   return {
     ...state,
