@@ -9,6 +9,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as Widget from '../Widget/Widget.js'
 // TODO when pressing tab -> focus next element in tab order and close menu
 
@@ -187,7 +188,8 @@ const handleContextMenu = (event) => {
   Event.preventDefault(event)
 }
 
-export const showMenu = (x, y, width, height, items, level, parentIndex = -1, mouseBlocking = false) => {
+export const showMenu = (x, y, width, height, items, level, parentIndex = -1, dom, mouseBlocking = false) => {
+  console.log('SHW MENU')
   if (mouseBlocking) {
     const $BackDrop = BackDrop.create$BackDrop()
     $BackDrop.onmousedown = handleBackDropMouseDown
@@ -197,7 +199,7 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, mo
   }
 
   const $Menu = create$Menu()
-  $Menu.append(...items.map(MenuItem.create$MenuItem))
+  VirtualDom.renderInto($Menu, dom)
   SetBounds.setXAndY($Menu, x, y)
   $Menu.id = `Menu-${level}`
 
