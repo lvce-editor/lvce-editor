@@ -31,7 +31,6 @@ export const loadContent = async (state) => {
 }
 
 const handleEditorChange = async (editor) => {
-  console.log('editor change', editor)
   const problems = await GetProblems.getProblems()
   await Command.execute('Problems.setProblems', problems)
 }

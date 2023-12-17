@@ -1,36 +1,16 @@
 import * as Assert from '../Assert/Assert.js'
-
-// TODO when using textDocument.create sync with renderer worker only if necessary
-// e.g. when is virtual file system -> need to get from renderer worker
-// else just create it
-
-export const state = {
-  /** @type{any[]} */
-  onDidOpenEditorListeners: [],
-  /** @type{any[]} */
-  onWillChangeEditorListeners: [],
-  /** @type{any[]} */
-  onDidChangeTextDocumentListeners: [],
-  /** @type{any[]} */
-  onDidSaveTextDocumentListeners: [],
-  textDocuments: Object.create(null),
-}
+import * as TextDocumentState from '../TextDocumentState/TextDocumentState.js'
 
 export const onWillChangeTextDocument = (listener) => {
-  state.onWillChangeEditorListeners.push(listener)
+  TextDocumentState.addWillChangeListener(listener)
 }
 
 export const onDidChangeTextDocument = (listener) => {
-  state.onDidChangeTextDocumentListeners.push(listener)
-  // SharedProcess.send({
-  //   jsonrpc: '2.0',
-  //   method: 'onChangeDocumentListener',
-  //   params: [],
-  // })
+  TextDocumentState.addDidChangeListener(listener)
 }
 
 export const onDidSaveTextDocument = (listener) => {
-  state.onDidSaveTextDocumentListeners.push(listener)
+  TextDocumentState.addDidSaveListener(listener)
 }
 
 const applyEdits = (state, edits) => {
@@ -40,9 +20,7 @@ const applyEdits = (state, edits) => {
     switch (edit.type) {
       case /* singleLineEdit */ 1:
         state.lines[edit.rowIndex] =
-          state.lines[edit.rowIndex].slice(0, edit.columnIndex - edit.deleted) +
-          edit.inserted +
-          state.lines[edit.rowIndex].slice(edit.columnIndex)
+          state.lines[edit.rowIndex].slice(0, edit.columnIndex - edit.deleted) + edit.inserted + state.lines[edit.rowIndex].slice(edit.columnIndex)
         break
       case /* splice */ 2:
         state.lines.splice(edit.rowIndex, edit.count, ...edit.newLines)
@@ -212,14 +190,15 @@ const runListenersSafe = (listeners, ...args) => {
 }
 
 export const syncFull = (uri, textDocumentId, languageId, text) => {
+  console.log('sync full', text)
   const textDocument = {
     uri,
     documentId: textDocumentId,
     languageId,
     text,
   }
-  state.textDocuments[textDocumentId] = textDocument
-  runListenersSafe(state.onDidOpenEditorListeners, textDocument)
+  TextDocumentState.setDocument(textDocumentId, textDocument)
+  runListenersSafe(TextDocumentState.getDidOpenListeners(), textDocument)
 }
 
 const getSyntheticChanges = (textDocument, changes) => {
@@ -243,33 +222,23 @@ const getSyntheticChanges = (textDocument, changes) => {
 export const syncIncremental = (textDocumentId, changes) => {
   Assert.number(textDocumentId)
   Assert.array(changes)
-  const textDocument = state.textDocuments[textDocumentId]
+  const textDocument = TextDocumentState.getDocument(textDocumentId)
   if (!textDocument) {
-    console.warn(
-      `sync not possible, no matching textDocument with id ${textDocumentId}`
-    )
+    console.warn(`sync not possible, no matching textDocument with id ${textDocumentId}`)
     return
   }
   const syntheticChanges = getSyntheticChanges(textDocument, changes)
-  runListenersSafe(
-    state.onWillChangeEditorListeners,
-    textDocument,
-    syntheticChanges
-  )
+  runListenersSafe(TextDocumentState.getWillChangeListeners(), textDocument, syntheticChanges)
   const syntheticChange = syntheticChanges[0]
   const oldText = textDocument.text
   const before = oldText.slice(0, syntheticChange.startOffset)
   const after = oldText.slice(syntheticChange.endOffset)
   textDocument.text = before + syntheticChange.inserted + after
-  runListenersSafe(
-    state.onDidChangeTextDocumentListeners,
-    textDocument,
-    syntheticChanges
-  )
+  runListenersSafe(TextDocumentState.getDidChangeListeners(), textDocument, syntheticChanges)
 }
 
 export const get = (textDocumentId) => {
-  const textDocument = state.textDocuments[textDocumentId]
+  const textDocument = TextDocumentState.getDocument(textDocumentId)
   return textDocument
 }
 
@@ -317,35 +286,35 @@ export const applyEdit = async (textDocument, edit) => {
 }
 
 export const onDidOpenTextDocument = (listener) => {
-  state.onDidOpenEditorListeners.push(listener)
-  for (const textDocument of Object.values(state.textDocuments)) {
+  TextDocumentState.addDidOpenListener(listener)
+  for (const textDocument of TextDocumentState.getDocuments()) {
     runListenerSafe(listener, textDocument)
   }
 }
 
 export const onWillChangeEditor = (listener) => {
-  state.onWillChangeEditorListeners.push(listener)
+  TextDocumentState.addWillChangeListener(listener)
 }
 
 export const setLanguageId = (textDocumentId, languageId) => {
   const newTextDocument = {
-    ...state.textDocuments[textDocumentId],
+    ...TextDocumentState.getDocument(textDocumentId),
     languageId,
   }
-  state.textDocuments[textDocumentId] = newTextDocument
-  runListenersSafe(state.onDidOpenEditorListeners, newTextDocument)
+  TextDocumentState.setDocument(textDocumentId, newTextDocument)
+  runListenersSafe(TextDocumentState.getDidOpenListeners(), newTextDocument)
 }
 
 export const getTextDocuments = () => {
-  return Object.values(state.textDocuments)
+  return TextDocumentState.getDocuments()
 }
 
 export const setFiles = (files) => {
   for (const file of files) {
-    state.textDocuments[file.id] = file
+    TextDocumentState.setDocument(file.id, file)
   }
 }
 
 export const getAll = () => {
-  return Object.values(state.textDocuments)
+  return TextDocumentState.getDocuments()
 }
