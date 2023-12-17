@@ -222,7 +222,6 @@ const getSyntheticChanges = (textDocument, changes) => {
 export const syncIncremental = (textDocumentId, changes) => {
   Assert.number(textDocumentId)
   Assert.array(changes)
-  console.log({ textDocumentId, changes })
   const textDocument = TextDocumentState.getDocument(textDocumentId)
   if (!textDocument) {
     console.warn(`sync not possible, no matching textDocument with id ${textDocumentId}`)
