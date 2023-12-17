@@ -94,7 +94,7 @@ const getMenuItemSubMenuDom = (menuItem) => {
   ]
 }
 
-const getMenuItemVirtualDom = (menuItem, isFocused) => {
+const getMenuItemVirtualDom = (menuItem) => {
   const { flags, label } = menuItem
   switch (flags) {
     case MenuItemFlags.None:
