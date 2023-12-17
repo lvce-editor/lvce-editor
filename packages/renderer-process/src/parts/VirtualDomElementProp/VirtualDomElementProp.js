@@ -33,6 +33,13 @@ export const setProp = ($Element, key, value) => {
     case 'childCount':
     case 'type':
       break
+    case 'ariaOwns': // TODO remove this once idl is supported
+      if (value) {
+        $Element.setAttribute('aria-owns', value)
+      } else {
+        $Element.removeAttribute('aria-owns')
+      }
+      break
     default:
       $Element[key] = value
   }
