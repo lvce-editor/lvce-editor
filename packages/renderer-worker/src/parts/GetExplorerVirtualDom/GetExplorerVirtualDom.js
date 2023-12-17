@@ -1,8 +1,7 @@
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-
-const defaultIndent = 1
 
 const getItemVirtualDom = (item) => {
   const { posInSet, setSize, icon, name, path, depth } = item
@@ -17,7 +16,7 @@ const getItemVirtualDom = (item) => {
       ariaSetSize: setSize,
       ariaLevel: depth,
       childCount: 2,
-      paddingLeft: `${depth * defaultIndent}rem`,
+      paddingLeft: GetTreeItemIndent.getTreeItemIndent(depth),
       ariaLabel: name,
       ariaDescription: '',
     },

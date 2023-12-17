@@ -2,6 +2,7 @@ import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrin
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
+import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 
 const getProblemVirtualDom = (problem) => {
   const { message, rowIndex, columnIndex, isActive, uri, icon } = problem
@@ -15,6 +16,7 @@ const getProblemVirtualDom = (problem) => {
         type: VirtualDomElements.Div,
         className,
         childCount: 2,
+        paddingLeft: GetTreeItemIndent.getTreeItemIndent(1),
       },
       GetFileIconVirtualDom.getFileIconVirtualDom(icon),
       text(uri),
@@ -26,6 +28,7 @@ const getProblemVirtualDom = (problem) => {
       type: VirtualDomElements.Div,
       className,
       childCount: 3,
+      paddingLeft: GetTreeItemIndent.getTreeItemIndent(2),
     },
     {
       type: VirtualDomElements.Div,
