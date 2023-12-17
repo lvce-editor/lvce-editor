@@ -4,7 +4,7 @@ import * as I18nString from '../I18NString/I18NString.js'
  * @enum {string}
  */
 const UiStrings = {
-  FailedToLoadVideo: `Failed to load video: {PH1}`,
+  FailedToLoadVideo: 'Failed to load video: {PH1}',
 }
 
 export const failedToLoadVideo = (message) => {

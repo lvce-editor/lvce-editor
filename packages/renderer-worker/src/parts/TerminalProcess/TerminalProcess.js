@@ -22,7 +22,7 @@ const actuallyListen = async () => {
     HandleIpc.handleIpc(ipc, 'terminal process')
     state.ipc = ipc
   } catch (error) {
-    throw new VError(error, `Failed to create terminal connection`)
+    throw new VError(error, 'Failed to create terminal connection')
   }
 }
 

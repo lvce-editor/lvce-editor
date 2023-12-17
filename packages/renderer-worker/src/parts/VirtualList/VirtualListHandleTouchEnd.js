@@ -5,7 +5,7 @@ import { setDeltaY } from './VirtualListSetDeltaY.js'
 
 const applyInertia = async (touchDifference) => {
   let inertia = touchDifference
-  let i = 0
+  const i = 0
   while (Math.abs(inertia) > 1.5) {
     inertia /= 1.03
     await Timeout.sleep(10)

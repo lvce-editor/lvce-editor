@@ -33,7 +33,7 @@ const select = async (state, completionItem) => {
     editor.completionState = EditorCompletionState.None
     editor.completionUid = 0
   }
-  await Command.execute(`Editor.applyEdit`, changes)
+  await Command.execute('Editor.applyEdit', changes)
   await Viewlet.dispose(uid)
   return state
 }

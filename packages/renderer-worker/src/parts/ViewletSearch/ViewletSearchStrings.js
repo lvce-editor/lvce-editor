@@ -7,20 +7,20 @@ import * as I18nString from '../I18NString/I18NString.js'
 const UiStrings = {
   NoResults: 'No results found',
   Oneresult: '1 result in 1 file',
-  ManyResultsInOneFile: `{PH1} results in 1 file`,
-  ManyResultsInManyFiles: `{PH1} results in {PH2} files`,
+  ManyResultsInOneFile: '{PH1} results in 1 file',
+  ManyResultsInManyFiles: '{PH1} results in {PH2} files',
   ReplaceAll: 'Replace All',
   Replace: 'Replace',
   ConfirmReplaceAll: 'Replace All?',
-  ConfirmReplaceOneOccurrenceInOneFile: "Replace 1 occurrence across 1 file with '{PH1}'",
+  ConfirmReplaceOneOccurrenceInOneFile: 'Replace 1 occurrence across 1 file with \'{PH1}\'',
   ConfirmReplaceOneOccurrenceInOneFileNoValue: 'Replace 1 occurrence across 1 file',
-  ConfirmReplaceManyOccurrencesInOneFile: "Replace {PH1} occurrences across 1 file with '{PH2}'",
+  ConfirmReplaceManyOccurrencesInOneFile: 'Replace {PH1} occurrences across 1 file with \'{PH2}\'',
   ConfirmReplaceManyOccurrencesInOneFileNoValue: 'Replace {PH1} occurrences across 1 file',
-  ConfirmReplaceManyOccurrencesInManyFiles: "Replace {PH1} occurrences across {PH2} files with '{PH3}'",
+  ConfirmReplaceManyOccurrencesInManyFiles: 'Replace {PH1} occurrences across {PH2} files with \'{PH3}\'',
   ConfirmReplaceManyOccurrencesInManyFilesNoValue: 'Replace {PH1} occurrences across {PH2} files',
-  ReplacedOneOccurrenceInOneFile: "Replaced 1 occurrence across 1 file with '{PH1}'",
-  ReplacedManyOccurrencesInOneFile: "Replaced {PH1} occurrences across 1 file with '{PH2}'",
-  ReplacedManyOccurrencesInManyFiles: "Replaced {PH1} occurrences across {PH2} files with '{PH3}'",
+  ReplacedOneOccurrenceInOneFile: 'Replaced 1 occurrence across 1 file with \'{PH1}\'',
+  ReplacedManyOccurrencesInOneFile: 'Replaced {PH1} occurrences across 1 file with \'{PH2}\'',
+  ReplacedManyOccurrencesInManyFiles: 'Replaced {PH1} occurrences across {PH2} files with \'{PH3}\'',
 }
 
 export const noResults = () => {

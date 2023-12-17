@@ -1,5 +1,5 @@
-import { focusIndex } from './VirtualListFocusIndex.js'
 import * as Arrays from '../Arrays/Arrays.js'
+import { focusIndex } from './VirtualListFocusIndex.js'
 
 export const focusNextPage = (state) => {
   const { focusedIndex, items, maxLineY, minLineY } = state

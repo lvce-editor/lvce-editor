@@ -6,7 +6,7 @@ const getDisplayItemsGroup = (group, isExpanded) => {
   const displayItems = []
   const { id, label, items } = group
   if (!items) {
-    throw new Error(`Source control group is missing an items property`)
+    throw new Error('Source control group is missing an items property')
   }
   const length = items.length
   const type = isExpanded ? DirentType.DirectoryExpanded : DirentType.Directory

@@ -1,5 +1,5 @@
-import { setDeltaY } from './VirtualListSetDeltaY.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import { setDeltaY } from './VirtualListSetDeltaY.js'
 
 export const handleScrollBarClick = (state, eventY) => {
   const { y, deltaY, headerHeight, finalDeltaY, scrollBarHeight, height } = state

@@ -1,6 +1,6 @@
 import * as GetViewletSize from '../GetViewletSize/GetViewletSize.js'
-import { getListHeight } from './ViewletExtensionsShared.js'
 import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
+import { getListHeight } from './ViewletExtensionsShared.js'
 
 export const hasFunctionalResize = true
 

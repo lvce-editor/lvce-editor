@@ -25,6 +25,6 @@ export const saveFileAs = async (fileName, url) => {
     if (IsAbortError.isAbortError(error)) {
       return
     }
-    throw new VError(error, `Failed to save file`)
+    throw new VError(error, 'Failed to save file')
   }
 }

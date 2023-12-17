@@ -58,7 +58,7 @@ const getColumnMapping = (mappings, line, column) => {
     }
     index = newLineIndex
   }
-  throw new Error(`no mapping found`)
+  throw new Error('no mapping found')
 }
 
 export const getOriginalPosition = (sourceMap, line, column) => {
@@ -81,6 +81,6 @@ export const getOriginalPosition = (sourceMap, line, column) => {
       originalColumn,
     }
   } catch (error) {
-    throw new VError(error, `Failed to get original sourcemap position`)
+    throw new VError(error, 'Failed to get original sourcemap position')
   }
 }

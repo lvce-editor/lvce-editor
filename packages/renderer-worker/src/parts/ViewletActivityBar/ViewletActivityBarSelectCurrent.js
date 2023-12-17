@@ -1,5 +1,5 @@
-import { handleClick } from './ViewletActivityBarHandleClick.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import { handleClick } from './ViewletActivityBarHandleClick.js'
 
 const getPosition = (state, index) => {
   const { activityBarItems, x, y, height, itemHeight } = state

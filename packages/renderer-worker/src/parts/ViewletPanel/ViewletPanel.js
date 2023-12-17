@@ -128,7 +128,7 @@ export const openViewlet = async (state, id, focus = false) => {
     const actions = ViewletActions.getActions(id)
     commands.push(['Viewlet.send', uid, 'setActions', actions])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
-    if (commands[commands.length - 1].includes(ViewletModuleId.Error)) {
+    if (commands.at(-1).includes(ViewletModuleId.Error)) {
       state.currentViewletId = ViewletModuleId.Error
     }
   }

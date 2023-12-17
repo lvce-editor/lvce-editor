@@ -8,6 +8,6 @@ export const searchExtensions = async (extensions, value) => {
     const filteredExtensions = await SearchExtensionsLocal.getExtensions(extensions, parsedValue)
     return filteredExtensions
   } catch (error) {
-    throw new VError(error, `Failed to search for extensions`)
+    throw new VError(error, 'Failed to search for extensions')
   }
 }

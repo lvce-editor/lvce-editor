@@ -13,5 +13,5 @@ export const toUint8Array = (data) => {
     const actualData = data.data
     return new Uint8Array(actualData)
   }
-  throw new Error(`unexpected data type`)
+  throw new Error('unexpected data type')
 }

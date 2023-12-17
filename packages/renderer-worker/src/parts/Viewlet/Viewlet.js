@@ -24,13 +24,11 @@ export const focus = async (id) => {
     commands.push(...ViewletManager.render(instance.factory, oldState, newState))
   }
   const oldInstance = ViewletStates.getFocusedInstance()
-  if (oldInstance) {
-    if (oldInstance && oldInstance.factory.handleBlur) {
+  if (oldInstance && oldInstance && oldInstance.factory.handleBlur) {
       const oldState = oldInstance.state
       const newState = oldInstance.factory.handleBlur(oldState)
       commands.push(...ViewletManager.render(oldInstance.factory, oldState, newState))
     }
-  }
   ViewletStates.setFocusedInstance(instance)
   await RendererProcess.invoke('Viewlet.sendMultiple', commands)
 }

@@ -21,7 +21,7 @@ export const handleMessageFromSharedProcess = async (message) => {
   } else if (message.id) {
     Callback.resolve(message.id, message)
   } else {
-    Logger.warn(`unexpected message from shared process`, message)
+    Logger.warn('unexpected message from shared process', message)
   }
 }
 

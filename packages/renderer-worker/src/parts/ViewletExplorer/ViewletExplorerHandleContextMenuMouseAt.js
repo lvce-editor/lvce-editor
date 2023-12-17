@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
-import { getIndexFromPosition } from './ViewletExplorerShared.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import { getIndexFromPosition } from './ViewletExplorerShared.js'
 
 export const handleContextMenuMouseAt = async (state, x, y) => {
   Assert.number(x)

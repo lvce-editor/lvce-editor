@@ -1,5 +1,5 @@
-import { setDeltaY } from './VirtualListSetDeltaY.js'
 import * as Assert from '../Assert/Assert.js'
+import { setDeltaY } from './VirtualListSetDeltaY.js'
 
 export const handleWheel = (state, deltaMode, deltaY) => {
   Assert.number(deltaMode)

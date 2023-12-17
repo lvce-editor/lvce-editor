@@ -1,6 +1,5 @@
 // prettier-ignore
-export const Commands = {
-}
+export const Commands = {}
 
 // prettier-ignore
 export const LazyCommands = {

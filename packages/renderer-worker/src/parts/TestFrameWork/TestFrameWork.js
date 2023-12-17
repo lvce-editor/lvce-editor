@@ -1,10 +1,11 @@
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TestState from '../TestState/TestState.js'
+
 export { create as Locator } from './Locator.js'
 
 export const getTmpDir = async () => {
-  return `memfs://`
+  return 'memfs://'
 }
 
 export const test = async (name, fn) => {
@@ -27,12 +28,12 @@ test.skip = async (id, fn) => {
 const Assert = {
   string(value, message) {
     if (typeof value !== 'string') {
-      throw new Error(message)
+      throw new TypeError(message)
     }
   },
   number(value, message) {
     if (typeof value !== 'number' || isNaN(value)) {
-      throw new Error(message)
+      throw new TypeError(message)
     }
   },
 }
@@ -58,7 +59,7 @@ export const expect = (locator) => {
     },
     async toBeVisible() {
       if (this.negated) {
-        throw new Error(`use toBeHidden instead of not.toBeVisible`)
+        throw new Error('use toBeHidden instead of not.toBeVisible')
       }
       return this.checkSingleElementCondition('toBeVisible', {})
     },

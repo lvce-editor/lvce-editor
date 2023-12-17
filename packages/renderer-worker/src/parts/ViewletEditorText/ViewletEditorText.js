@@ -65,7 +65,7 @@ export const create = (id, uri, x, y, width, height) => {
 export const saveState = (state) => {
   const { selections, focused, deltaY, minLineY, differences } = state
   return {
-    selections: [...Array.from(selections)],
+    selections: Array.from(selections),
     focused,
     deltaY,
   }
@@ -135,7 +135,7 @@ export const loadContent = async (state, savedState, context) => {
   let savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
   let newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
-  const isFiraCode = fontFamily === 'Fira Code' || fontFamily === `'Fira Code'`
+  const isFiraCode = fontFamily === 'Fira Code' || fontFamily === '\'Fira Code\''
   if (isFiraCode) {
     const fontName = UnquoteString.unquoteString(fontFamily)
     const fontUrl = `url('${AssetDir.assetDir}/fonts/FiraCode-VariableFont.ttf')`

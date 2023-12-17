@@ -50,7 +50,7 @@ export const execute = async (href) => {
 export const executeMockExecFunction = async (...args) => {
   const fn = TestState.getMockExec()
   if (!fn) {
-    throw new Error(`mockExec does not exist`)
+    throw new Error('mockExec does not exist')
   }
   // @ts-ignore
   const result = await fn(...args)
