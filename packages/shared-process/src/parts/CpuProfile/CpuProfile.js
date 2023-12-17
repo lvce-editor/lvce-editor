@@ -1,6 +1,6 @@
+import { writeFileSync } from 'node:fs'
 import { Session } from 'node:inspector'
 import * as Timeout from '../Timeout/Timeout.js'
-import { writeFileSync } from 'node:fs'
 
 export const createProfile = async () => {
   const session = new Session()

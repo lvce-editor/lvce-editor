@@ -1,4 +1,4 @@
-import { readlink } from 'fs/promises'
+import { readlink } from 'node:fs/promises'
 import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
@@ -20,7 +20,7 @@ const readSymlinks = (absolutePaths) => {
 }
 
 const mergeWithSymLinks = (manifests, symlinks) => {
-  const length = manifests.length
+  const {length} = manifests
   const merged = []
   for (let i = 0; i < length; i++) {
     const manifest = manifests[i]

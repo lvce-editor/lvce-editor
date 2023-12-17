@@ -1,8 +1,8 @@
-import { isAbsolute, join } from 'path'
+import { existsSync } from 'node:fs'
+import { isAbsolute, join } from 'node:path'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
-import { existsSync } from 'fs'
 
 // TODO
 // - implement this for syntax highlighting projects

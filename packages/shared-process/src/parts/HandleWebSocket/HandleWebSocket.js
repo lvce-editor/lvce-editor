@@ -7,7 +7,7 @@ export const handleWebSocket = async (message, handle) => {
   try {
     Assert.object(message)
     Assert.object(handle)
-    const headers = message.headers
+    const { headers } = message
     if (!headers) {
       throw new VError('missing websocket headers')
     }
