@@ -12,15 +12,17 @@ const UiStrings = {
   ReplaceAll: 'Replace All',
   Replace: 'Replace',
   ConfirmReplaceAll: 'Replace All?',
-  ConfirmReplaceOneOccurrenceInOneFile: 'Replace 1 occurrence across 1 file with \'{PH1}\'',
+  ConfirmReplaceOneOccurrenceInOneFile: "Replace 1 occurrence across 1 file with '{PH1}'",
   ConfirmReplaceOneOccurrenceInOneFileNoValue: 'Replace 1 occurrence across 1 file',
-  ConfirmReplaceManyOccurrencesInOneFile: 'Replace {PH1} occurrences across 1 file with \'{PH2}\'',
+  ConfirmReplaceManyOccurrencesInOneFile: "Replace {PH1} occurrences across 1 file with '{PH2}'",
   ConfirmReplaceManyOccurrencesInOneFileNoValue: 'Replace {PH1} occurrences across 1 file',
-  ConfirmReplaceManyOccurrencesInManyFiles: 'Replace {PH1} occurrences across {PH2} files with \'{PH3}\'',
+  ConfirmReplaceManyOccurrencesInManyFiles: "Replace {PH1} occurrences across {PH2} files with '{PH3}'",
   ConfirmReplaceManyOccurrencesInManyFilesNoValue: 'Replace {PH1} occurrences across {PH2} files',
-  ReplacedOneOccurrenceInOneFile: 'Replaced 1 occurrence across 1 file with \'{PH1}\'',
-  ReplacedManyOccurrencesInOneFile: 'Replaced {PH1} occurrences across 1 file with \'{PH2}\'',
-  ReplacedManyOccurrencesInManyFiles: 'Replaced {PH1} occurrences across {PH2} files with \'{PH3}\'',
+  ReplacedOneOccurrenceInOneFile: "Replaced 1 occurrence across 1 file with '{PH1}'",
+  ReplacedManyOccurrencesInOneFile: "Replaced {PH1} occurrences across 1 file with '{PH2}'",
+  ReplacedManyOccurrencesInManyFiles: "Replaced {PH1} occurrences across {PH2} files with '{PH3}'",
+  CopyPath: 'Copy Path',
+  Dismiss: 'Dismiss',
 }
 
 export const noResults = () => {
@@ -114,4 +116,12 @@ export const replaceAll = () => {
 
 export const replace = () => {
   return I18nString.i18nString(UiStrings.Replace)
+}
+
+export const dismiss = () => {
+  return I18nString.i18nString(UiStrings.Dismiss)
+}
+
+export const copyPath = () => {
+  return I18nString.i18nString(UiStrings.CopyPath)
 }
