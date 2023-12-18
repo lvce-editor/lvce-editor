@@ -3,6 +3,7 @@ import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as DragFunctions from '../DragFunctions/DragFunctions.js'
 import * as Event from '../Event/Event.js'
+import * as ForwardCommand from '../ForwardCommand/ForwardCommand.js'
 
 export const handleDragStart = (event) => {
   const { dataTransfer, target } = event
@@ -49,4 +50,11 @@ export const handleDrop = (event) => {
   if (filePath) {
     return DragFunctions.handleDropFilePath(uid, clientX, clientY, filePath)
   }
+}
+
+export const handleContextMenu = (event) => {
+  Event.preventDefault(event)
+  const { clientX, clientY } = event
+  const uid = ComponentUid.fromEvent(event)
+  ForwardCommand.handleContextMenu(uid, clientX, clientY)
 }
