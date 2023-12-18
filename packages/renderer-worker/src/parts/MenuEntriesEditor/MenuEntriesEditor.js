@@ -1,62 +1,49 @@
-import * as I18nString from '../I18NString/I18NString.js'
+import * as EditorStrings from '../EditorStrings/EditorStrings.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  GoToTypeDefinition: 'Go to Type Definition',
-  GoToDefinition: 'Go to Definition',
-  FindAllReferences: 'Find All References',
-  FindAllImplementations: 'Find All Implementations',
-  Cut: 'Cut',
-  Copy: 'Copy',
-  Paste: 'Paste',
-}
 
 export const getMenuEntries = () => {
   return [
     {
       id: 'go-to-definition',
-      label: I18nString.i18nString(UiStrings.GoToDefinition),
+      label: EditorStrings.goToDefinition(),
       flags: MenuItemFlags.None,
       command: 'Editor.goToDefinition',
     },
     {
       id: 'go-to-type-definition',
-      label: I18nString.i18nString(UiStrings.GoToTypeDefinition),
+      label: EditorStrings.goToTypeDefinition(),
       flags: MenuItemFlags.None,
       command: /* Editor.goToTypeDefinition */ 'Editor.goToTypeDefinition',
     },
     {
       id: 'find-all-references',
-      label: I18nString.i18nString(UiStrings.FindAllReferences),
+      label: EditorStrings.findAllReferences(),
       flags: MenuItemFlags.None,
       command: /* ViewletSideBar.show */ 'SideBar.show',
       args: [/* id */ 'References', /* focus */ true],
     },
     {
       id: 'find-all-implementations',
-      label: I18nString.i18nString(UiStrings.FindAllImplementations),
+      label: EditorStrings.findAllImplementations(),
       flags: MenuItemFlags.None,
       command: /* ViewletSideBar.show */ 'SideBar.show',
       args: [/* id */ 'Implementations', /* focus */ true],
     },
     {
       id: 'cut',
-      label: I18nString.i18nString(UiStrings.Cut),
+      label: EditorStrings.cut(),
       flags: MenuItemFlags.None,
       command: /* Editor.cut */ 'Editor.cut',
     },
     {
       id: 'copy',
-      label: I18nString.i18nString(UiStrings.Copy),
+      label: EditorStrings.copy(),
       flags: MenuItemFlags.None,
       command: /* Editor.copy */ 'Editor.copy',
     },
     {
       id: 'paste',
-      label: I18nString.i18nString(UiStrings.Paste),
+      label: EditorStrings.paste(),
       flags: MenuItemFlags.None,
       command: /* Editor.paste */ 'Editor.paste',
     },
