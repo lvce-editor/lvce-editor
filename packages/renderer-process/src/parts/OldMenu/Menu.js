@@ -188,7 +188,6 @@ const handleContextMenu = (event) => {
 }
 
 export const showMenu = (x, y, width, height, items, level, parentIndex = -1, dom, mouseBlocking = false) => {
-  console.log('SHW MENU')
   if (mouseBlocking) {
     const $BackDrop = BackDrop.create$BackDrop()
     $BackDrop.onmousedown = handleBackDropMouseDown
