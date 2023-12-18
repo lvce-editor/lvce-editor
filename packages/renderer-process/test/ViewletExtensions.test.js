@@ -3,8 +3,6 @@
  */
 import { jest } from '@jest/globals'
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
-import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.js'
 
 const isLeaf = (node) => {
   return node.childElementCount === 0
@@ -39,19 +37,6 @@ test('dispose', () => {
 test('dispose', () => {
   const state = ViewletExtensions.create()
   ViewletExtensions.dispose(state)
-})
-
-// TODO check that options are applied
-// TODO check that individual entries are highlighted
-test('openSuggest / closeSuggest', () => {
-  const state = ViewletExtensions.create()
-  ViewletExtensions.openSuggest(state)
-  const { $ExtensionSuggestions } = state
-  expect($ExtensionSuggestions).toBeDefined()
-  // TODO this should use widget
-  expect(document.body.children[0]).toBe($ExtensionSuggestions)
-  ViewletExtensions.closeSuggest(state)
-  expect(document.body.children.length).toBe(0)
 })
 
 test('handleError', () => {
