@@ -5,13 +5,10 @@ import * as AriaBoolean from '../AriaBoolean/AriaBoolean.js'
 import * as AriaLiveType from '../AriaLiveType/AriaLiveType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
-import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as IsMobile from '../IsMobile/IsMobile.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 
@@ -132,7 +129,7 @@ export const setMessage = (state, message) => {
 export const setExtensionsDom = (state, dom) => {
   Assert.object(state)
   Assert.array(dom)
-  const { $Viewlet, $ListItems } = state
+  const { $ListItems } = state
   const $Root = VirtualDom.render(dom)
   $ListItems.replaceChildren(...$Root.firstChild.childNodes)
 }
