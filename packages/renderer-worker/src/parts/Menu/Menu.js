@@ -1,6 +1,8 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 // TODO lazyload menuEntries and use Command.execute (maybe)
 import * as ExecuteMenuItemCommand from '../ExecuteMenuItemCommand/ExecuteMenuItemCommand.js'
+import * as GetMenuVirtualDom from '../GetMenuVirtualDom/GetMenuVirtualDom.js'
+import * as GetVisibleMenuItems from '../GetVisibleMenuItems/GetVisibleMenuItems.js'
 import * as Logger from '../Logger/Logger.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
@@ -97,6 +99,8 @@ export const show = async (x, y, id, mouseBlocking = false, ...args) => {
     x: bounds.x,
     y: bounds.y,
   })
+  const visible = GetVisibleMenuItems.getVisible(menu.items, -1, false, menu.level)
+  const dom = GetMenuVirtualDom.getMenuVirtualDom(visible).slice(1)
   await RendererProcess.invoke(
     /* Menu.show */ 'Menu.showMenu',
     /* x */ bounds.x,
@@ -106,7 +110,8 @@ export const show = async (x, y, id, mouseBlocking = false, ...args) => {
     /* items */ menu.items,
     /* level */ menu.level,
     /* parentIndex */ -1,
-    /* mouseBlocking */ mouseBlocking
+    /* dom */ dom,
+    /* mouseBlocking */ mouseBlocking,
   )
 }
 
@@ -134,6 +139,8 @@ const showSubMenuAtEnter = async (level, index, enterX, enterY) => {
   })
   const width = getMenuWidth()
   const height = getMenuHeight(subMenuItems)
+  const visible = GetVisibleMenuItems.getVisible(subMenu.items, -1, false, subMenu.level)
+  const dom = GetMenuVirtualDom.getMenuVirtualDom(visible).slice(1)
   RendererProcess.invoke(
     /* Menu.showMenu */ 'Menu.showMenu',
     /* x */ subMenu.x,
@@ -142,7 +149,8 @@ const showSubMenuAtEnter = async (level, index, enterX, enterY) => {
     /* height */ height,
     /* items */ subMenu.items,
     /* level */ subMenu.level,
-    /* parentIndex */ index
+    /* parentIndex */ index,
+    /* dom */ dom,
   )
 }
 
@@ -281,7 +289,7 @@ export const handleMouseLeave = async () => {
     /* Menu.focusIndex */ 'Menu.focusIndex',
     /* level */ menu.level,
     /* oldFocusedIndex */ oldFocusedIndex,
-    /* newFocusedIndex */ -1
+    /* newFocusedIndex */ -1,
   )
 }
 
@@ -295,7 +303,7 @@ export const focusIndex = async (menu, index) => {
     /* Menu.focusIndex */ 'Menu.focusIndex',
     /* level */ menu.level,
     /* oldFocusedIndex */ oldFocusedIndex,
-    /* newFocusedIndex */ index
+    /* newFocusedIndex */ index,
   )
 }
 

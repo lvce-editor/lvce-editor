@@ -12,6 +12,10 @@ const UiStrings = {
   Settings: 'Settings',
   AdditionalViews: 'Additional Views',
   ActivityBar: 'Activity Bar',
+  Seperator: 'Separator',
+  MoveSideBarLeft: 'Move Side Bar Left',
+  MoveSideBarRight: 'Move Side Bar Right',
+  HideActivityBar: 'Hide Activity Bar',
 }
 
 export const explorer = () => {
@@ -44,4 +48,20 @@ export const additionalViews = () => {
 
 export const activityBar = () => {
   return I18nString.i18nString(UiStrings.ActivityBar)
+}
+
+export const moveSideBarRight = () => {
+  return I18nString.i18nString(UiStrings.MoveSideBarRight)
+}
+
+export const moveSideBarLeft = () => {
+  return I18nString.i18nString(UiStrings.MoveSideBarLeft)
+}
+
+export const separator = () => {
+  return I18nString.i18nString(UiStrings.Seperator)
+}
+
+export const hideActivityBar = () => {
+  return I18nString.i18nString(UiStrings.HideActivityBar)
 }

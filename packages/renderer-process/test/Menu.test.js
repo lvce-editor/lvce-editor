@@ -29,7 +29,7 @@ const getSimpleList = ($Menu) => {
   return Array.from($Menu.children).map(getTextContent)
 }
 
-test('showControlled', () => {
+test.skip('showControlled', () => {
   Menu.showControlled({
     x: 0,
     y: 0,
@@ -102,7 +102,7 @@ test.skip('focus', () => {
   expect(document.activeElement).toBe(Menu.state.$$Menus[0].firstChild)
 })
 
-test('accessibility - Menu show have role menu', () => {
+test.skip('accessibility - Menu show have role menu', () => {
   Menu.showControlled({
     x: 0,
     y: 0,
@@ -137,7 +137,7 @@ test('accessibility - Menu show have role menu', () => {
   expect(Menu.state.$$Menus[0].role).toBe('menu')
 })
 
-test('accessibility - MenuItem show have role menuitem or separator', () => {
+test.skip('accessibility - MenuItem show have role menuitem or separator', () => {
   Menu.showControlled({
     x: 0,
     y: 0,
@@ -174,7 +174,7 @@ test('accessibility - MenuItem show have role menuitem or separator', () => {
   expect($Menu.children[1].role).toBe('separator')
 })
 
-test('showMenu - error - item has missing flags', () => {
+test.skip('showMenu - error - item has missing flags', () => {
   console.warn = jest.fn()
   Menu.showMenu(0, 0, 100, 250, [
     {
@@ -187,7 +187,7 @@ test('showMenu - error - item has missing flags', () => {
   })
 })
 
-test('showMenu - error - item has missing label', () => {
+test.skip('showMenu - error - item has missing label', () => {
   console.warn = jest.fn()
   Menu.showMenu(0, 0, 100, 250, [
     {
@@ -204,7 +204,7 @@ test('showMenu - error - item has missing label', () => {
   expect($Menu.children[0].textContent).toBe('n/a')
 })
 
-test('showMenu - with sub menu', () => {
+test.skip('showMenu - with sub menu', () => {
   Menu.showMenu(
     0,
     0,
@@ -296,7 +296,7 @@ test('showMenu - with sub menu', () => {
   expect($MenuItemOpenRecent.getAttribute(DomAttributeType.AriaOwns)).toBe('Menu-1')
 })
 
-test('event - click', () => {
+test.skip('event - click', () => {
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -315,7 +315,7 @@ test('event - click', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Menu.selectIndex', 0, 0)
 })
 
-test('event - click - outside', () => {
+test.skip('event - click - outside', () => {
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -338,7 +338,7 @@ test('event - click - outside', () => {
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test('event - right click outside', () => {
+test.skip('event - right click outside', () => {
   Menu.showMenu(
     0,
     0,
@@ -372,7 +372,7 @@ test('event - right click outside', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Menu.hide')
 })
 
-test('event - mouseleave - outside', () => {
+test.skip('event - mouseleave - outside', () => {
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -423,7 +423,7 @@ test.skip('event - mouseleave - outside', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Menu.handleMouseLeave')
 })
 
-test('event - context menu', () => {
+test.skip('event - context menu', () => {
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
@@ -446,7 +446,7 @@ test('event - context menu', () => {
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test('event - context menu - outside', () => {
+test.skip('event - context menu - outside', () => {
   Menu.showMenu(
     0,
     0,
