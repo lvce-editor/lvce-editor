@@ -51,10 +51,3 @@ export const handleDrop = (event) => {
     return DragFunctions.handleDropFilePath(uid, clientX, clientY, filePath)
   }
 }
-
-export const handleContextMenu = (event) => {
-  Event.preventDefault(event)
-  const { clientX, clientY } = event
-  const uid = ComponentUid.fromEvent(event)
-  ForwardCommand.handleContextMenu(uid, clientX, clientY)
-}
