@@ -1,4 +1,5 @@
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletMainStrings from '../ViewletMain/ViewletMainStrings.js'
 
 export const getMenuEntries = () => {
@@ -7,7 +8,8 @@ export const getMenuEntries = () => {
       id: 'openFile',
       label: ViewletMainStrings.openFile(),
       flags: MenuItemFlags.None,
-      command: /* TODO */ -1,
+      command: 'Viewlet.openWidget',
+      args: [ViewletModuleId.QuickPick, 'file'],
     },
   ]
 }
