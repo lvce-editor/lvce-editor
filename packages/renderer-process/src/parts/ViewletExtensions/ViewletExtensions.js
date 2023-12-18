@@ -11,21 +11,13 @@ import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as IsMobile from '../IsMobile/IsMobile.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as SetBounds from '../SetBounds/SetBounds.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 
 const activeId = 'ExtensionActive'
 
 // TODO vscode uninstall behaviour is better -> more subtle uninstall -> no cta for uninstalling
-
-const create$ExtensionSuggestions = () => {
-  const $ExtensionSuggestions = document.createElement('div')
-  $ExtensionSuggestions.className = 'ExtensionSuggestions'
-  return $ExtensionSuggestions
-}
-
-const create$ExtensionSuggestion = (item) => {}
 
 const findIndex = ($Target) => {
   if ($Target.className.includes('ExtensionListItem')) {
@@ -87,22 +79,24 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $InputBox, $ListItems, $ScrollBar } = state
-  $InputBox.oninput = ViewletExtensionsEvents.handleInput
+  AttachEvents.attachEvents($InputBox, {
+    [DomEventType.Input]: ViewletExtensionsEvents.handleInput,
+  })
+  AttachEvents.attachEvents($ListItems, {
+    [DomEventType.ContextMenu]: ViewletExtensionsEvents.handleContextMenu,
+    [DomEventType.PointerDown]: ViewletExtensionsEvents.handlePointerDown,
+    [DomEventType.Focus]: ViewletExtensionsEvents.handleFocus,
+    [DomEventType.Scroll]: ViewletExtensionsEvents.handleScroll,
+  })
 
-  $ListItems.oncontextmenu = ViewletExtensionsEvents.handleContextMenu
-  if (IsMobile.isMobile) {
-    $ListItems.onclick = ViewletExtensionsEvents.handlePointerDown
-  } else {
-    $ListItems.onpointerdown = ViewletExtensionsEvents.handlePointerDown
-  }
-  $ListItems.onfocus = ViewletExtensionsEvents.handleFocus
-  $ListItems.onscroll = ViewletExtensionsEvents.handleScroll
   $ListItems.addEventListener(DomEventType.TouchStart, ViewletExtensionsEvents.handleTouchStart, DomEventOptions.Passive)
   $ListItems.addEventListener(DomEventType.TouchMove, ViewletExtensionsEvents.handleTouchMove, DomEventOptions.Passive)
   $ListItems.addEventListener(DomEventType.TouchEnd, ViewletExtensionsEvents.handleTouchEnd, DomEventOptions.Passive)
   $ListItems.addEventListener(DomEventType.Wheel, ViewletExtensionsEvents.handleWheel, DomEventOptions.Passive)
 
-  $ScrollBar.onpointerdown = ViewletExtensionsEvents.handleScrollBarPointerDown
+  AttachEvents.attachEvents($ScrollBar, {
+    [DomEventType.PointerDown]: ViewletExtensionsEvents.handleScrollBarPointerDown,
+  })
 }
 
 // TODO possibly use aria active descendant instead
@@ -180,13 +174,6 @@ export const openSuggest = (state) => {
   const y = rect.top
   // const x = state.$InputBox.offsetLeft
   // const y = state.$InputBox.offsetTop
-  state.$ExtensionSuggestions ||= create$ExtensionSuggestions()
-  SetBounds.setBounds(state.$ExtensionSuggestions, x, y, 100, 100)
-  state.$ExtensionSuggestions.style.position = 'fixed'
-  state.$ExtensionSuggestions.style.background = 'lime'
-  // TODO check if already mounted
-  // TODO don't append to body, have separate container for widgets (https://news.ycombinator.com/item?id=28230977)
-  document.body.append(state.$ExtensionSuggestions)
 }
 
 export const closeSuggest = (state) => {
