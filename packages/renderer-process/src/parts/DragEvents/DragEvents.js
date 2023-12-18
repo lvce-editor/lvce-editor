@@ -3,7 +3,6 @@ import * as ComponentUid from '../ComponentUid/ComponentUid.js'
 import * as DataTransfer from '../DataTransfer/DataTransfer.js'
 import * as DragFunctions from '../DragFunctions/DragFunctions.js'
 import * as Event from '../Event/Event.js'
-import * as ForwardCommand from '../ForwardCommand/ForwardCommand.js'
 
 export const handleDragStart = (event) => {
   const { dataTransfer, target } = event
