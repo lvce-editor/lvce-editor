@@ -16,6 +16,12 @@ export const getMenuEntries = () => {
       command: /* Editor.goToTypeDefinition */ 'Editor.goToTypeDefinition',
     },
     {
+      id: 'separator',
+      label: EditorStrings.separator(),
+      flags: MenuItemFlags.Separator,
+      command: '',
+    },
+    {
       id: 'find-all-references',
       label: EditorStrings.findAllReferences(),
       flags: MenuItemFlags.None,
@@ -28,6 +34,12 @@ export const getMenuEntries = () => {
       flags: MenuItemFlags.None,
       command: /* ViewletSideBar.show */ 'SideBar.show',
       args: [/* id */ 'Implementations', /* focus */ true],
+    },
+    {
+      id: 'separator',
+      label: EditorStrings.separator(),
+      flags: MenuItemFlags.Separator,
+      command: '',
     },
     {
       id: 'cut',

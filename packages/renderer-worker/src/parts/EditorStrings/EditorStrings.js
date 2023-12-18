@@ -41,3 +41,6 @@ export const copy = () => {
 export const paste = () => {
   return I18nString.i18nString(UiStrings.Paste)
 }
+export const separator = () => {
+  return ''
+}
