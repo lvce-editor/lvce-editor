@@ -1,6 +1,7 @@
 import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as IsAutoUpdateSupported from '../IsAutoUpdateSupported/IsAutoUpdateSupported.js'
+import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 
 /**
  * @enum {string}
@@ -28,28 +29,18 @@ export const getMenuEntries = async () => {
       label: I18nString.i18nString(UiStrings.OpenProcessExplorer),
       flags: MenuItemFlags.RestoreFocus,
       command: 'Developer.openProcessExplorer',
-    }
+    },
   )
   if (autoUpdateSupported) {
     entries.push(
-      {
-        id: 'separator',
-        label: I18nString.i18nString(UiStrings.Separator),
-        flags: MenuItemFlags.Separator,
-        command: /* TODO */ -1,
-      },
+      MenuEntrySeparator.menuEntrySeparator,
       {
         id: 'checkForUpdates',
         label: I18nString.i18nString(UiStrings.CheckForUpdates),
         flags: MenuItemFlags.RestoreFocus,
         command: 'AutoUpdater.checkForUpdates',
       },
-      {
-        id: 'separator',
-        label: I18nString.i18nString(UiStrings.Separator),
-        flags: MenuItemFlags.Separator,
-        command: /* TODO */ -1,
-      }
+      MenuEntrySeparator.menuEntrySeparator,
     )
   }
   entries.push({

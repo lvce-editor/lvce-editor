@@ -3,6 +3,7 @@ import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
+import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 
 /**
  * @enum {string}
@@ -34,12 +35,7 @@ export const getMenuEntries = async () => {
   const itemsToShow = allItems.slice(0, MAX_MENU_RECENT_ENTRIES)
   const items = []
   if (itemsToShow.length > 0) {
-    items.push(...itemsToShow.map(toMenuItem), {
-      id: 'separator',
-      label: I18nString.i18nString(UiStrings.Separator),
-      flags: MenuItemFlags.Separator,
-      command: MenuItemFlags.None,
-    })
+    items.push(...itemsToShow.map(toMenuItem), MenuEntrySeparator.menuEntrySeparator)
   }
   items.push(
     {
@@ -49,18 +45,13 @@ export const getMenuEntries = async () => {
       command: 'Viewlet.openWidget',
       args: [ViewletModuleId.QuickPick, 'recent'],
     },
-    {
-      id: 'separator',
-      label: I18nString.i18nString(UiStrings.More),
-      flags: MenuItemFlags.Separator,
-      command: MenuItemFlags.None,
-    },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'clearRecentlyOpened',
       label: I18nString.i18nString(UiStrings.ClearRecentlyOpened),
       flags: MenuItemFlags.None,
       command: 'RecentlyOpened.clearRecentlyOpened',
-    }
+    },
   )
   return items
 }

@@ -1,5 +1,6 @@
 import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 /**
@@ -31,12 +32,7 @@ export const getMenuEntries = () => {
       flags: MenuItemFlags.None,
       command: /* Window.openNew */ 'Window.openNew',
     },
-    {
-      id: 'separator',
-      label: I18nString.i18nString(UiStrings.Separator),
-      flags: MenuItemFlags.Separator,
-      command: '',
-    },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'openFile',
       label: I18nString.i18nString(UiStrings.OpenFile),
@@ -55,12 +51,7 @@ export const getMenuEntries = () => {
       flags: MenuItemFlags.SubMenu,
       command: '',
     },
-    {
-      id: 'separator',
-      label: I18nString.i18nString(UiStrings.Separator),
-      flags: MenuItemFlags.Separator,
-      command: '',
-    },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'save',
       label: I18nString.i18nString(UiStrings.Save),
@@ -73,12 +64,7 @@ export const getMenuEntries = () => {
       flags: MenuItemFlags.None,
       command: 'Main.saveAll',
     },
-    {
-      id: 'separator',
-      label: I18nString.i18nString(UiStrings.Separator),
-      flags: MenuItemFlags.Separator,
-      command: '',
-    },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'exit',
       label: I18nString.i18nString(UiStrings.Exit),

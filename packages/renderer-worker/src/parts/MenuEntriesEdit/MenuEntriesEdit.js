@@ -1,5 +1,6 @@
 import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 
 export const UiStrings = {
   Undo: 'Undo',
@@ -26,12 +27,7 @@ export const getMenuEntries = () => {
       flags: MenuItemFlags.Disabled,
       command: /* TODO */ -1,
     },
-    {
-      id: 'separator',
-      label: I18nString.i18nString(UiStrings.Separator),
-      flags: MenuItemFlags.Separator,
-      command: /* TODO */ -1,
-    },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'cut',
       label: I18nString.i18nString(UiStrings.Cut),
@@ -50,12 +46,7 @@ export const getMenuEntries = () => {
       flags: MenuItemFlags.None,
       command: /* Editor.paste */ 'Editor.paste',
     },
-    {
-      id: 'separator',
-      label: I18nString.i18nString(UiStrings.Separator),
-      flags: MenuItemFlags.Separator,
-      command: /* TODO */ -1,
-    },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'toggle-line-comment',
       label: I18nString.i18nString(UiStrings.ToggleLineComment),
