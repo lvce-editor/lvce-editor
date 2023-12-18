@@ -1,25 +1,13 @@
-import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
+import * as ViewletActivityBarStrings from '../ViewletActivityBar/ViewletActivityBarStrings.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  Seperator: 'Separator',
-  MoveSideBarLeft: 'Move Side Bar Left',
-  MoveSideBarRight: 'Move Side Bar Right',
-  HideActivityBar: 'Hide Activity Bar',
-}
 
 const toContextMenuItem = (activityBarItem) => {
   return {
     label: activityBarItem.id,
     id: 8000, // TODO
-    flags: activityBarItem.enabled
-      ? MenuItemFlags.Checked
-      : MenuItemFlags.Unchecked,
+    flags: activityBarItem.enabled ? MenuItemFlags.Checked : MenuItemFlags.Unchecked,
   }
 }
 
@@ -28,14 +16,14 @@ const menuEntryMoveSideBar = (sideBarLocation) => {
     case SideBarLocationType.Left:
       return {
         id: 'moveSideBarRight',
-        label: I18nString.i18nString(UiStrings.MoveSideBarRight),
+        label: ViewletActivityBarStrings.moveSideBarRight(),
         flags: MenuItemFlags.None,
         command: 'Layout.moveSideBarRight',
       }
     case SideBarLocationType.Right:
       return {
         id: 'moveSideBarLeft',
-        label: I18nString.i18nString(UiStrings.MoveSideBarLeft),
+        label: ViewletActivityBarStrings.moveSideBarLeft(),
         flags: MenuItemFlags.None,
         command: 'Layout.moveSideBarLeft',
       }
@@ -51,13 +39,13 @@ export const getMenuEntries = async (layoutState, activityBarState) => {
     ...activityBarItems.map(toContextMenuItem),
     {
       id: 'separator',
-      label: I18nString.i18nString(UiStrings.Seperator),
+      label: ViewletActivityBarStrings.separator(),
       flags: MenuItemFlags.Separator,
     },
     menuEntryMoveSideBar(sideBarLocation),
     {
       id: 'hideActivityBar',
-      label: I18nString.i18nString(UiStrings.HideActivityBar),
+      label: ViewletActivityBarStrings.hideActivityBar(),
       flags: MenuItemFlags.None,
       command: /* Layout.hideActivityBar */ 'Layout.hideActivityBar',
     },
