@@ -105,33 +105,6 @@ export const attachEvents = (state) => {
   $ScrollBar.onpointerdown = ViewletExtensionsEvents.handleScrollBarPointerDown
 }
 
-// TODO possibly use aria active descendant instead
-export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex, focused) => {
-  Assert.object(state)
-  Assert.number(oldFocusedIndex)
-  Assert.number(newFocusedIndex)
-  const { $ListItems } = state
-  const { length } = $ListItems.children
-  if (oldFocusedIndex === -1) {
-    $ListItems.classList.remove('FocusOutline')
-  } else if (oldFocusedIndex >= 0 && oldFocusedIndex < length) {
-    $ListItems.children[oldFocusedIndex].removeAttribute('id')
-  }
-  if (newFocusedIndex === -1) {
-    if (focused) {
-      $ListItems.removeAttribute(DomAttributeType.AriaActiveDescendant)
-      $ListItems.classList.add('FocusOutline')
-    }
-  } else if (newFocusedIndex >= 0 && newFocusedIndex < length) {
-    $ListItems.children[newFocusedIndex].id = activeId
-    $ListItems.setAttribute(DomAttributeType.AriaActiveDescendant, activeId)
-  }
-  if (focused) {
-    $ListItems.focus()
-    RendererWorker.send('Focus.setFocus', 'Extensions')
-  }
-}
-
 export const focus = (state) => {
   Assert.object(state)
   state.$InputBox.focus()
