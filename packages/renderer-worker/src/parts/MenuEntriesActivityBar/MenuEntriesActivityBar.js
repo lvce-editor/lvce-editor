@@ -1,3 +1,4 @@
+import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as ViewletActivityBarStrings from '../ViewletActivityBar/ViewletActivityBarStrings.js'
@@ -37,11 +38,7 @@ export const getMenuEntries = async (layoutState, activityBarState) => {
   const { sideBarLocation } = layoutState
   return [
     ...activityBarItems.map(toContextMenuItem),
-    {
-      id: 'separator',
-      label: ViewletActivityBarStrings.separator(),
-      flags: MenuItemFlags.Separator,
-    },
+    MenuEntrySeparator.menuEntrySeparator,
     menuEntryMoveSideBar(sideBarLocation),
     {
       id: 'hideActivityBar',
