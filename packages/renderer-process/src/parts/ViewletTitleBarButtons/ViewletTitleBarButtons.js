@@ -15,7 +15,7 @@ export const create = () => {
 export const attachEvents = (state) => {
   const { $Viewlet } = state
   AttachEvents.attachEvents($Viewlet, {
-    [DomEventType.MouseDown]: ViewletTitleBarButtonEvents.handleTitleBarButtonsClick,
+    [DomEventType.Click]: ViewletTitleBarButtonEvents.handleTitleBarButtonsClick,
   })
 }
 
