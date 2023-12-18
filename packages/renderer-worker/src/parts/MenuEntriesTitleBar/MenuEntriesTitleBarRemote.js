@@ -1,60 +1,49 @@
-import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-
-const UiStrings = {
-  File: 'File',
-  Edit: 'Edit',
-  Selection: 'Selection',
-  View: 'View',
-  Go: 'Go',
-  Run: 'Run',
-  Terminal: 'Terminal',
-  Help: 'Help',
-}
+import * as ViewletTitleBarStrings from '../ViewletTitleBar/ViewletTitleBarStrings.js'
 
 export const getMenuEntries = () => {
   return [
     {
       id: MenuEntryId.File,
-      label: I18nString.i18nString(UiStrings.File),
+      label: ViewletTitleBarStrings.file(),
       flags: MenuItemFlags.SubMenu,
     },
     {
       id: MenuEntryId.Edit,
-      label: I18nString.i18nString(UiStrings.Edit),
+      label: ViewletTitleBarStrings.edit(),
       flags: MenuItemFlags.SubMenu,
     },
     {
       id: MenuEntryId.Selection,
-      label: I18nString.i18nString(UiStrings.Selection),
+      label: ViewletTitleBarStrings.selection(),
       flags: MenuItemFlags.SubMenu,
     },
     {
       id: MenuEntryId.View,
-      label: I18nString.i18nString(UiStrings.View),
+      label: ViewletTitleBarStrings.view(),
       flags: MenuItemFlags.SubMenu,
     },
     {
       id: MenuEntryId.Go,
-      label: I18nString.i18nString(UiStrings.Go),
+      label: ViewletTitleBarStrings.go(),
       flags: MenuItemFlags.SubMenu,
     },
     {
       id: MenuEntryId.Run,
-      label: I18nString.i18nString(UiStrings.Run),
+      label: ViewletTitleBarStrings.run(),
       keyboardShortCut: 'Alt+r',
       flags: MenuItemFlags.SubMenu,
     },
     {
       id: MenuEntryId.Terminal,
-      label: I18nString.i18nString(UiStrings.Terminal),
+      label: ViewletTitleBarStrings.terminal(),
       keyboardShortCut: 'Alt+t',
       flags: MenuItemFlags.SubMenu,
     },
     {
       id: MenuEntryId.Help,
-      label: I18nString.i18nString(UiStrings.Help),
+      label: ViewletTitleBarStrings.help(),
       keyboardShortCut: 'Alt+h',
       flags: MenuItemFlags.SubMenu,
     },

@@ -4,6 +4,7 @@
     "checkJs": true,
     "target": "esnext",
     "types": ["jest"],
+    "module": "NodeNext",
     "moduleResolution": "nodenext",
     "skipLibCheck": true,
     "noEmit": true,

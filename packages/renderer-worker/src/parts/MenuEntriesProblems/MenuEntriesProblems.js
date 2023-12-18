@@ -1,25 +1,17 @@
-import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  Copy: 'Copy',
-  CopyMessage: 'Copy Message',
-}
+import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
 
 export const getMenuEntries = () => {
   return [
     {
       id: 'copy',
-      label: I18nString.i18nString(UiStrings.Copy),
+      label: ViewletProblemsStrings.copy(),
       flags: MenuItemFlags.None,
       command: 'Problems.copy',
     },
     {
       id: 'copyMessage',
-      label: I18nString.i18nString(UiStrings.CopyMessage),
+      label: ViewletProblemsStrings.copyMessage(),
       flags: MenuItemFlags.None,
       command: 'Problems.copyMessage',
     },

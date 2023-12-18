@@ -7,6 +7,8 @@ const UiStrings = {
   NoProblemsDetected: 'No problems have been detected in the workspace.',
   ProblemsDetected: 'Some problems have been detected in the workspace.',
   LineColumn: '[Ln {PH1}, Col {PH2}]',
+  Copy: 'Copy',
+  CopyMessage: 'Copy Message',
 }
 
 export const noProblemsDetected = () => {
@@ -25,4 +27,12 @@ export const atLineColumn = (line, column) => {
     PH1: line,
     PH2: column,
   })
+}
+
+export const copy = () => {
+  return I18NString.i18nString(UiStrings.Copy)
+}
+
+export const copyMessage = () => {
+  return I18NString.i18nString(UiStrings.CopyMessage)
 }
