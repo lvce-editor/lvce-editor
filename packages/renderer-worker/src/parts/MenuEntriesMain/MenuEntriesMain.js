@@ -1,7 +1,7 @@
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as ViewletMainStrings from '../ViewletMain/ViewletMainStrings.js'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as ViewletMainStrings from '../ViewletMain/ViewletMainStrings.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const getMenuEntries = () => {
   return [
