@@ -9,7 +9,6 @@ import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js
  * @enum {string}
  */
 export const UiStrings = {
-  Separator: 'Separator',
   More: 'More ...',
   ClearRecentlyOpened: 'Clear Recently Opened',
 }

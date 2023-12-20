@@ -1,4 +1,5 @@
 import * as EditorStrings from '../EditorStrings/EditorStrings.js'
+import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const getMenuEntries = () => {
@@ -15,12 +16,7 @@ export const getMenuEntries = () => {
       flags: MenuItemFlags.None,
       command: /* Editor.goToTypeDefinition */ 'Editor.goToTypeDefinition',
     },
-    {
-      id: 'separator',
-      label: EditorStrings.separator(),
-      flags: MenuItemFlags.Separator,
-      command: '',
-    },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'find-all-references',
       label: EditorStrings.findAllReferences(),
@@ -35,12 +31,7 @@ export const getMenuEntries = () => {
       command: /* ViewletSideBar.show */ 'SideBar.show',
       args: [/* id */ 'Implementations', /* focus */ true],
     },
-    {
-      id: 'separator',
-      label: EditorStrings.separator(),
-      flags: MenuItemFlags.Separator,
-      command: '',
-    },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'cut',
       label: EditorStrings.cut(),
