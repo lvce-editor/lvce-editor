@@ -1,6 +1,7 @@
 import * as Electron from 'electron'
 import unhandled from 'electron-unhandled' // TODO this might slow down initial startup
 import { spawn } from 'node:child_process'
+import * as AppPaths from '../AppPaths/AppPaths.js'
 import * as Argv from '../Argv/Argv.js'
 import * as Cli from '../Cli/Cli.js'
 import * as CommandLineSwitches from '../CommandLineSwitches/CommandLineSwitches.js'
@@ -8,6 +9,7 @@ import * as Debug from '../Debug/Debug.js'
 import * as ElectronApp from '../ElectronApp/ElectronApp.js'
 import * as ElectronAppEventType from '../ElectronAppEventType/ElectronAppEventType.js'
 import * as ElectronAppListeners from '../ElectronAppListeners/ElectronAppListeners.js'
+import * as ElectronApplicationMenu from '../ElectronApplicationMenu/ElectronApplicationMenu.js'
 import * as ElectronIpcMain from '../ElectronIpcMain/ElectronIpcMain.js'
 import * as ElectronPreloadChannelType from '../ElectronPreloadChannelType/ElectronPreloadChannelType.js'
 import * as Exit from '../Exit/Exit.js'
@@ -32,7 +34,7 @@ import * as SingleInstanceLock from '../SingleInstanceLock/SingleInstanceLock.js
 // which means first paint is delayed by a lot
 
 export const hydrate = async () => {
-  Electron.Menu.setApplicationMenu(null) // performance
+  ElectronApplicationMenu.setMenu(null) // performance
   unhandled({
     showDialog: true,
     logger() {}, // already exists in mainProcessMain.js
@@ -54,10 +56,10 @@ export const hydrate = async () => {
   }
 
   if (Platform.isLinux && Platform.chromeUserDataPath) {
-    Electron.app.setPath('userData', Platform.chromeUserDataPath)
-    Electron.app.setPath('sessionData', Platform.chromeUserDataPath)
-    Electron.app.setPath('crashDumps', Platform.chromeUserDataPath)
-    Electron.app.setPath('logs', Platform.chromeUserDataPath)
+    AppPaths.setUserDataPath(Platform.chromeUserDataPath)
+    AppPaths.setSessionDataPath(Platform.chromeUserDataPath)
+    AppPaths.setCrashDumpsPath(Platform.chromeUserDataPath)
+    AppPaths.setLogsPath(Platform.chromeUserDataPath)
   }
 
   const hasLock = SingleInstanceLock.requestSingleInstanceLock(Argv.argv)
