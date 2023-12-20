@@ -9,7 +9,6 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 export const UiStrings = {
   NewFile: 'New File',
   NewWindow: 'New Window',
-  Separator: 'Separator',
   OpenFile: 'Open File',
   OpenFolder: 'Open Folder',
   OpenRecent: 'Open Recent',
