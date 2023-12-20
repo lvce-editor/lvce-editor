@@ -28,7 +28,7 @@ const loadUrl = async (browserWindow, url) => {
 }
 
 // TODO avoid mixing BrowserWindow, childprocess and various lifecycle methods in one file -> separate concerns
-export const createAppWindow2 = async (windowOptions, parsedArgs, workingDirectory, url = DefaultUrl.defaultUrl) => {
+export const createAppWindow2 = async (windowOptions, parsedArgs, workingDirectory, titleBarItems, url = DefaultUrl.defaultUrl) => {
   const session = Session.get()
   Performance.mark(PerformanceMarkerType.WillCreateCodeWindow)
   const window = new BrowserWindow({
@@ -48,7 +48,7 @@ export const createAppWindow2 = async (windowOptions, parsedArgs, workingDirecto
   }
   window.once('ready-to-show', handleReadyToShow)
   // TODO query applicarion menu items from shared process
-  const menu = ElectronApplicationMenu.createTitleBar()
+  const menu = ElectronApplicationMenu.createTitleBar(titleBarItems)
   ElectronApplicationMenu.setMenu(menu)
 
   // window.setMenu(menu)
