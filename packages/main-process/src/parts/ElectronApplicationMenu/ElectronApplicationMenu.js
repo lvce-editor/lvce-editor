@@ -1,6 +1,5 @@
 import { Menu } from 'electron'
 import * as Assert from '../Assert/Assert.js'
-import * as GetTitleBarItems from '../GetTitleBarItems/GetTitleBarItems.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const setMenu = (menu) => {
@@ -32,8 +31,7 @@ export const setItems = (items) => {
   setMenu(menu)
 }
 
-export const createTitleBar = () => {
-  const titleBarItems = GetTitleBarItems.getTitleBarItems()
-  const menuBar = Menu.buildFromTemplate(titleBarItems)
+export const createTitleBar = (items) => {
+  const menuBar = Menu.buildFromTemplate(items)
   return menuBar
 }
