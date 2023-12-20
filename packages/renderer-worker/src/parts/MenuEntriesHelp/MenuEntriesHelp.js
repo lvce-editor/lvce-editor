@@ -1,18 +1,7 @@
-import * as I18nString from '../I18NString/I18NString.js'
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as HelpStrings from '../HelpStrings/HelpStrings.js'
 import * as IsAutoUpdateSupported from '../IsAutoUpdateSupported/IsAutoUpdateSupported.js'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
-
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  About: 'About',
-  ToggleDeveloperTools: 'Toggle Developer Tools',
-  OpenProcessExplorer: 'Open Process Explorer',
-  CheckForUpdates: 'Check For Updates',
-  Separator: '',
-}
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const getMenuEntries = async () => {
   const autoUpdateSupported = await IsAutoUpdateSupported.isAutoUpdateSupported()
@@ -20,13 +9,13 @@ export const getMenuEntries = async () => {
   entries.push(
     {
       id: 'toggleDeveloperTools',
-      label: I18nString.i18nString(UiStrings.ToggleDeveloperTools),
+      label: HelpStrings.toggleDeveloperTools(),
       flags: MenuItemFlags.None,
       command: 'Developer.toggleDeveloperTools',
     },
     {
       id: 'openProcessExplorer',
-      label: I18nString.i18nString(UiStrings.OpenProcessExplorer),
+      label: HelpStrings.openProcessExplorer(),
       flags: MenuItemFlags.RestoreFocus,
       command: 'Developer.openProcessExplorer',
     },
@@ -36,7 +25,7 @@ export const getMenuEntries = async () => {
       MenuEntrySeparator.menuEntrySeparator,
       {
         id: 'checkForUpdates',
-        label: I18nString.i18nString(UiStrings.CheckForUpdates),
+        label: HelpStrings.checkForUpdates(),
         flags: MenuItemFlags.RestoreFocus,
         command: 'AutoUpdater.checkForUpdates',
       },
@@ -45,7 +34,7 @@ export const getMenuEntries = async () => {
   }
   entries.push({
     id: 'about',
-    label: I18nString.i18nString(UiStrings.About),
+    label: HelpStrings.about(),
     flags: MenuItemFlags.RestoreFocus,
     command: 'About.showAbout',
   })
