@@ -1,15 +1,7 @@
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  Minimize: 'Minimize',
-  Maximize: 'Maximize',
-  Close: 'Close',
-}
+import * as ViewletTitleBarButtonsStrings from '../ViewletTitleBarButtons/ViewletTitleBarButtonsStrings.js'
 
 const getTitleBarButtonsWeb = () => {
   return []
@@ -23,9 +15,9 @@ const getTitleBarButtonsElectron = () => {
   if (Preferences.get('window.titleBarStyle') === 'custom') {
     // TODO don't render title bar buttons on windows when electron window controls overlay is enabled
     return [
-      { label: UiStrings.Minimize, icon: 'Minimize', id: 'Minimize' },
-      { label: UiStrings.Maximize, icon: 'Maximize', id: 'ToggleMaximize' },
-      { label: UiStrings.Close, icon: 'ChromeClose', id: 'Close' },
+      { label: ViewletTitleBarButtonsStrings.minimize(), icon: 'Minimize', id: 'Minimize' },
+      { label: ViewletTitleBarButtonsStrings.maximize(), icon: 'Maximize', id: 'ToggleMaximize' },
+      { label: ViewletTitleBarButtonsStrings.close(), icon: 'ChromeClose', id: 'Close' },
     ]
   }
   return []
