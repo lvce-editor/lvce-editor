@@ -1,12 +1,11 @@
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as Editor from '../Editor/Editor.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Editor from '../Editor/Editor.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
 // TODO handle multiline selection
 // TODO handle multiple cursors
 
 export const copyLineDown = (editor) => {
-  const selections = editor.selections
-  const primarySelectionIndex = editor.primarySelectionIndex
+  const { selections, primarySelectionIndex } = editor
   const rowIndex = selections[primarySelectionIndex]
   Assert.number(rowIndex)
   const position = {
