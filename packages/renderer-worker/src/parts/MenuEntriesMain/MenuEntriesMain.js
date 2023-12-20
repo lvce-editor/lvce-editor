@@ -31,5 +31,18 @@ export const getMenuEntries = () => {
       flags: MenuItemFlags.None,
       command: 'Main.splitLeft',
     },
+    {
+      id: 'splitRight',
+      label: ViewletMainStrings.splitRight(),
+      flags: MenuItemFlags.None,
+      command: 'Main.splitRight',
+    },
+    MenuEntrySeparator.menuEntrySeparator,
+    {
+      id: 'newWindow',
+      label: ViewletMainStrings.newWindow(),
+      flags: MenuItemFlags.None,
+      command: 'Main.newWindow',
+    },
   ]
 }

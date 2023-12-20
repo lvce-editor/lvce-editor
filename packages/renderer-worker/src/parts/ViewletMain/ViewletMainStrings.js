@@ -3,12 +3,13 @@ import * as I18nString from '../I18NString/I18NString.js'
 /**
  * @enum {string}
  */
-export const UiStrings = {
+const UiStrings = {
   OpenFile: 'Open File',
   SplitUp: 'Split Up',
   SplitDown: 'Split Down',
   SplitLeft: 'Split Left',
   SplitRight: 'Split Right',
+  NewWindow: 'New Window',
 }
 
 export const openFile = () => {
@@ -29,4 +30,8 @@ export const splitLeft = () => {
 
 export const splitRight = () => {
   return I18nString.i18nString(UiStrings.SplitRight)
+}
+
+export const newWindow = () => {
+  return I18nString.i18nString(UiStrings.NewWindow)
 }
