@@ -1,5 +1,6 @@
 import * as EditorStrings from '../EditorStrings/EditorStrings.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 
 export const getMenuEntries = () => {
   return [
@@ -15,12 +16,7 @@ export const getMenuEntries = () => {
       flags: MenuItemFlags.Disabled,
       command: /* TODO */ -1,
     },
-    {
-      id: 'separator',
-      label: '',
-      flags: MenuItemFlags.Separator,
-      command: /* TODO */ -1,
-    },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'cut',
       label: EditorStrings.cut(),

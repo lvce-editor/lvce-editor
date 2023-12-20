@@ -43,3 +43,5 @@ export const SimpleBrowser = 21
 export const SourceControl = 22
 
 export const Problems = 23
+
+export const Main = 24

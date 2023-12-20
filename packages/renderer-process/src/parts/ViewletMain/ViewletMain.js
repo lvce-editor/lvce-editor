@@ -1,4 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
 
@@ -27,10 +29,13 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $Viewlet } = state
-  $Viewlet.ondrop = ViewletMainEvents.handleDrop
-  $Viewlet.ondragover = ViewletMainEvents.handleDragOver
-  $Viewlet.ondragend = ViewletMainEvents.handleDragEnd
-  $Viewlet.ondragleave = ViewletMainEvents.handleDragLeave
+  AttachEvents.attachEvents($Viewlet, {
+    [DomEventType.Drop]: ViewletMainEvents.handleDrop,
+    [DomEventType.DragOver]: ViewletMainEvents.handleDragOver,
+    [DomEventType.DragEnd]: ViewletMainEvents.handleDragEnd,
+    [DomEventType.DragLeave]: ViewletMainEvents.handleDragLeave,
+    [DomEventType.ContextMenu]: ViewletMainEvents.handleContextMenu,
+  })
 }
 
 export const dispose = (state) => {}

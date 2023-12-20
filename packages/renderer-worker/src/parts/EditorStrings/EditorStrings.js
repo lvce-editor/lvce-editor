@@ -61,3 +61,7 @@ export const toggleLineComment = () => {
 export const toggleBlockComment = () => {
   return I18nString.i18nString(UiStrings.ToggleBlockComment)
 }
+
+export const separator = () => {
+  return ''
+}
