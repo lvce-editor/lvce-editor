@@ -1,4 +1,3 @@
-import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
@@ -9,6 +8,7 @@ import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHost
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Font from '../Font/Font.js'
 import * as GetDiagnosticDecorations from '../GetDiagnosticDecorations/GetDiagnosticDecorations.js'
+import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
 import * as MeasureCharacterWidth from '../MeasureCharacterWidth/MeasureCharacterWidth.js'
@@ -135,10 +135,10 @@ export const loadContent = async (state, savedState, context) => {
   let savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
   let newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
-  const isFiraCode = fontFamily === 'Fira Code' || fontFamily === '\'Fira Code\''
+  const isFiraCode = fontFamily === 'Fira Code' || fontFamily === "'Fira Code'"
   if (isFiraCode) {
     const fontName = UnquoteString.unquoteString(fontFamily)
-    const fontUrl = `url('${AssetDir.assetDir}/fonts/FiraCode-VariableFont.ttf')`
+    const fontUrl = GetFontUrl.getFontUrl('/fonts/FiraCode-VariableFont.ttf')
     await Font.ensure(fontName, fontUrl)
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
