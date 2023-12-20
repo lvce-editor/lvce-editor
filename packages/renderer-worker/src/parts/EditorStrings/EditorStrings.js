@@ -1,5 +1,4 @@
 import * as I18nString from '../I18NString/I18NString.js'
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 /**
  * @enum {string}
@@ -12,6 +11,11 @@ export const UiStrings = {
   Cut: 'Cut',
   Copy: 'Copy',
   Paste: 'Paste',
+  Undo: 'Undo',
+  Redo: 'Redo',
+  Separator: 'Separator',
+  ToggleLineComment: 'Toggle Line Comment',
+  ToggleBlockComment: 'Toggle Block Comment',
 }
 
 export const goToDefinition = () => {
@@ -41,6 +45,23 @@ export const copy = () => {
 export const paste = () => {
   return I18nString.i18nString(UiStrings.Paste)
 }
+
+export const undo = () => {
+  return I18nString.i18nString(UiStrings.Undo)
+}
+
+export const redo = () => {
+  return I18nString.i18nString(UiStrings.Redo)
+}
+
+export const toggleLineComment = () => {
+  return I18nString.i18nString(UiStrings.ToggleLineComment)
+}
+
+export const toggleBlockComment = () => {
+  return I18nString.i18nString(UiStrings.ToggleBlockComment)
+}
+
 export const separator = () => {
   return ''
 }
