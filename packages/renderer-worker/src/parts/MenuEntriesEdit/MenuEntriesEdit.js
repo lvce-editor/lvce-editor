@@ -1,6 +1,6 @@
 import * as EditorStrings from '../EditorStrings/EditorStrings.js'
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const getMenuEntries = () => {
   return [
@@ -35,12 +35,7 @@ export const getMenuEntries = () => {
       flags: MenuItemFlags.None,
       command: /* Editor.paste */ 'Editor.paste',
     },
-    {
-      id: 'separator',
-      label: '',
-      flags: MenuItemFlags.Separator,
-      command: /* TODO */ -1,
-    },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'toggle-line-comment',
       label: EditorStrings.toggleLineComment(),
