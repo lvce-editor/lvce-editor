@@ -5,7 +5,6 @@ export const UiStrings = {
   NewFolder: 'New Folder',
   OpenContainingFolder: 'Open Containing Folder',
   OpenInIntegratedTerminal: 'Open in integrated Terminal',
-  Separator: 'Separator',
   Cut: 'Cut',
   Copy: 'Copy',
   Paste: 'Paste',
