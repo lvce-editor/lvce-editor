@@ -2,14 +2,19 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Editor from '../Editor/Editor.js'
 
 export const copyLineUp = (editor) => {
-  const rowIndex = editor.cursor.rowIndex
+  const { selections, primarySelectionIndex } = editor
+  const rowIndex = selections[primarySelectionIndex]
+  const position = {
+    rowIndex: rowIndex,
+    columnIndex: 0,
+  }
   const changes = [
     {
-      start: editor.cursor,
-      end: editor.cursor,
-      inserted: [TextDocument.getLine(editor.textDocument, rowIndex), ''],
+      start: position,
+      end: position,
+      inserted: [TextDocument.getLine(editor, rowIndex), ''],
       deleted: [''],
     },
   ]
-  Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
