@@ -4,8 +4,8 @@
   position: absolute;
 }
 
-.DiffEditorContentLeft,
-.DiffEditorContentRight {
+.DiffEditorContent {
+  contain: strict;
   flex: 1;
 }
 
