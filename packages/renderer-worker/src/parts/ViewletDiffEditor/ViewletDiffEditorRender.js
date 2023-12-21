@@ -1,3 +1,5 @@
+import * as GetDiffEditorVirtualDom from '../GetDiffEditorVirtualDom/GetDiffEditorVirtualDom.js'
+import * as GetVisibleDiffLines from '../GetVisibleDiffLines/GetVisibleDiffLines.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
@@ -7,32 +9,26 @@ const getVisible = (lines, minLineY, maxLineY) => {
   return lines.slice(minLineY, maxLineY)
 }
 
-const renderLeft = {
-  isEqual(oldState, newState) {
-    return oldState.linesLeft === newState.linesLeft && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
-  },
-  apply(oldState, newState) {
-    const visible = getVisible(newState.linesLeft, newState.minLineY, newState.maxLineY)
-    return [/* method */ RenderMethod.SetContentLeft, /* linesLeft */ visible]
-  },
-}
-
-const renderRight = {
-  isEqual(oldState, newState) {
-    return oldState.linesRight === newState.linesRight && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
-  },
-  apply(oldState, newState) {
-    const visible = getVisible(newState.linesRight, newState.minLineY, newState.maxLineY)
-    return [/* method */ RenderMethod.SetContentRight, /* linesRight */ visible]
-  },
-}
-
 const renderChanges = {
   isEqual(oldState, newState) {
-    return oldState.changes === newState.changes
+    return oldState.changes === newState.changes && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetChanges, /* changes */ newState.changes]
+    const leftVisible = GetVisibleDiffLines.getVisibleDiffLines(
+      newState.linesLeft,
+      newState.changes.changesLeft,
+      newState.minLineY,
+      newState.maxLineY,
+    )
+    const rightVisible = GetVisibleDiffLines.getVisibleDiffLines(
+      newState.linesRight,
+      newState.changes.changesRight,
+      newState.minLineY,
+      newState.maxLineY,
+    )
+    const leftDom = GetDiffEditorVirtualDom.getContentDom(leftVisible)
+    const rightDom = GetDiffEditorVirtualDom.getContentDom(rightVisible)
+    return ['setDom', leftDom, rightDom]
   },
 }
 
@@ -45,10 +41,10 @@ const renderScrollBar = {
       newState.deltaY,
       newState.finalDeltaY,
       newState.height - newState.headerHeight,
-      newState.scrollBarHeight
+      newState.scrollBarHeight,
     )
     return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
   },
 }
 
-export const render = [renderLeft, renderRight, renderChanges, renderScrollBar]
+export const render = [renderChanges, renderScrollBar]
