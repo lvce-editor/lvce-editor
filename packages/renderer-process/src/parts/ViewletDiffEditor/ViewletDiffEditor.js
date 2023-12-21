@@ -1,4 +1,3 @@
-import * as DiffType from '../DiffType/DiffType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletSash from '../ViewletSash/ViewletSash.js'
@@ -32,48 +31,6 @@ export const create = () => {
     $ContentRight,
     $ScrollBar,
     $ScrollBarThumb,
-  }
-}
-
-const create$Line = (line) => {
-  const $Line = document.createElement('div')
-  $Line.className = 'EditorRow'
-  $Line.textContent = line
-  return $Line
-}
-
-const setContent = ($Content, lines) => {
-  $Content.replaceChildren(...lines.map(create$Line))
-}
-
-export const setContentLeft = (state, lines) => {
-  const { $ContentLeft } = state
-  setContent($ContentLeft, lines)
-}
-
-export const setContentRight = (state, lines) => {
-  const { $ContentRight } = state
-  setContent($ContentRight, lines)
-}
-
-export const setChanges = (state, changes) => {
-  const { $ContentLeft, $ContentRight } = state
-  const { changesLeft, changesRight } = changes
-  for (const change of changesLeft) {
-    if (change.type === DiffType.Deletion) {
-      const $Row = $ContentLeft.children[change.index]
-      if ($Row) {
-        $Row.classList.add('Deletion')
-      }
-    }
-  }
-  for (const change of changesRight) {
-    if (change.type === DiffType.Insertion) {
-      const $Row = $ContentRight.children[change.index]
-      if ($Row) {
-        $Row.classList.add('Insertion')
-      }
-    }
   }
 }
 
