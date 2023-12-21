@@ -35,8 +35,8 @@ export const create = () => {
 }
 
 export const attachEvents = (state) => {
-  const { $Viewlet, $Scrollbar } = state
-  AttachEvents.attachEvents($Scrollbar, {
+  const { $Viewlet, $ScrollBar } = state
+  AttachEvents.attachEvents($ScrollBar, {
     [DomEventType.PointerDown]: ViewletDiffEditorEvents.handleScrollBarPointerDown,
   })
   $Viewlet.addEventListener(DomEventType.Wheel, ViewletDiffEditorEvents.handleWheel, DomEventOptions.Passive)
