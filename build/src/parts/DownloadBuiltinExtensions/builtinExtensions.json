@@ -52,7 +52,7 @@
   {
     "name": "builtin.language-basics-dotenv",
     "repository": "github.com/lvce-editor/language-basics-dotenv",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   {
     "name": "builtin.language-basics-editorconfig",
@@ -92,7 +92,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "0.0.24"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.language-basics-java",
@@ -137,7 +137,7 @@
   {
     "name": "builtin.language-basics-markdown",
     "repository": "github.com/lvce-editor/language-basics-markdown",
-    "version": "0.0.9"
+    "version": "0.1.0"
   },
   {
     "name": "builtin.language-basics-mdx",
@@ -202,7 +202,7 @@
   {
     "name": "builtin.language-basics-svelte",
     "repository": "github.com/lvce-editor/language-basics-svelte",
-    "version": "0.0.3"
+    "version": "0.2.0"
   },
   {
     "name": "builtin.language-basics-toml",
