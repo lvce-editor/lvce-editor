@@ -1,35 +1,34 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as DiffType from '../DiffType/DiffType.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const deletion = {
+  type: VirtualDomElements.Div,
+  className: 'EditorRow Deletion',
+  childCount: 1,
+}
+
+const insertion = {
+  type: VirtualDomElements.Div,
+  className: 'EditorRow Insertion',
+  childCount: 1,
+}
+
 const renderLineDeletion = (content) => {
-  return [
-    {
-      type: VirtualDomElements.Div,
-      className: 'EditorRow Deletion',
-      childCount: 1,
-    },
-    text(content),
-  ]
+  return [deletion, text(content)]
 }
 
 const renderLineInsertion = (content) => {
-  return [
-    {
-      type: VirtualDomElements.Div,
-      className: 'EditorRow Insertion',
-      childCount: 1,
-    },
-    text(content),
-  ]
+  return [insertion, text(content)]
 }
 
-const renderLine = (line) => {
-  const { type, text } = line
+const renderLine = (value) => {
+  const { type, line } = value
   switch (type) {
-    case 'deletion':
-      return renderLineDeletion(text)
-    case 'insertion':
-      return renderLineInsertion(text)
+    case DiffType.Deletion:
+      return renderLineDeletion(line)
+    case DiffType.Insertion:
+      return renderLineInsertion(line)
     default:
       return []
   }
@@ -50,4 +49,8 @@ export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
     },
     ...linesRight.flatMap(renderLine),
   ]
+}
+
+export const getContentDom = (linesLeft) => {
+  return linesLeft.flatMap(renderLine)
 }

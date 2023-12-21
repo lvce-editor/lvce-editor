@@ -2,6 +2,7 @@ import * as DiffType from '../DiffType/DiffType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletSash from '../ViewletSash/ViewletSash.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletDiffEditorEvents from './ViewletDiffEditorEvents.js'
 
 export const create = () => {
@@ -74,6 +75,12 @@ export const setChanges = (state, changes) => {
       }
     }
   }
+}
+
+export const setDom = (state, leftDom, rightDom) => {
+  const { $ContentLeft, $ContentRight } = state
+  VirtualDom.renderInto($ContentLeft, leftDom)
+  VirtualDom.renderInto($ContentRight, rightDom)
 }
 
 export * from '../ViewletScrollable/ViewletScrollable.js'
