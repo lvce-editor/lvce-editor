@@ -1,3 +1,4 @@
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DiffType from '../DiffType/DiffType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
@@ -23,7 +24,6 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet DiffEditor'
   $Viewlet.append($ContentLeft, $Sash, $ContentRight, $ScrollBar)
-  $Viewlet.addEventListener(DomEventType.Wheel, ViewletDiffEditorEvents.handleWheel, DomEventOptions.Passive)
 
   return {
     $Viewlet,
@@ -32,6 +32,14 @@ export const create = () => {
     $ScrollBar,
     $ScrollBarThumb,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $Viewlet, $Scrollbar } = state
+  AttachEvents.attachEvents($Scrollbar, {
+    [DomEventType.PointerDown]: ViewletDiffEditorEvents.handleScrollBarPointerDown,
+  })
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletDiffEditorEvents.handleWheel, DomEventOptions.Passive)
 }
 
 const create$Line = (line) => {
