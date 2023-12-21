@@ -1,6 +1,6 @@
 import * as Character from '../Character/Character.js'
 import * as Diff from '../Diff/Diff.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetDiffEditorContents from '../GetDiffEditorContents/GetDiffEditorContents.js'
 import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
@@ -20,15 +20,11 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
-const getContents = (left, right) => {
-  return Promise.all([FileSystem.readFile(left), FileSystem.readFile(right)])
-}
-
 export const loadContent = async (state) => {
   const { uri, top, left, width, height, minimumSliderSize, itemHeight } = state
   const uriContentPart = uri.slice('diff://'.length)
   const [uriLeft, uriRight] = uriContentPart.split(Character.DiffSeparator)
-  const [contentLeft, contentRight] = await getContents(uriLeft, uriRight)
+  const { contentLeft, contentRight } = await GetDiffEditorContents.getDiffEditorContents(uriLeft, uriRight)
   const linesLeft = SplitLines.splitLines(contentLeft)
   const linesRight = SplitLines.splitLines(contentRight)
   const changes = Diff.diff(linesLeft, linesRight)
@@ -43,23 +39,6 @@ export const loadContent = async (state) => {
 
   const finalDeltaY = Math.max(contentHeight - height, 0)
 
-  console.log({ finalDeltaY })
-  console.log({ scrollBarHeight })
-  // const editorLeft = ViewletEditorText.create(
-  //   '',
-  //   uriLeft,
-  //   left,
-  //   top,
-  //   width / 2,
-  //   height
-  // )
-  // const editorRight = ViewletEditorText.create(
-  //   '',
-  //   uriRight,
-  //   left + width / 2,
-  //   width / 2,
-  //   height
-  // )
   return {
     ...state,
     linesLeft,
