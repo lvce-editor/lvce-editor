@@ -52,7 +52,7 @@ const copyStaticFiles = async ({ commitHash }) => {
     to: `build/.tmp/server/server/static/${commitHash}/manifest.json`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/server/static/manifest.json`,
+    path: `build/.tmp/server/server/static/${commitHash}/manifest.json`,
     occurrence: '/icons',
     replacement: `/${commitHash}/icons`,
   })
