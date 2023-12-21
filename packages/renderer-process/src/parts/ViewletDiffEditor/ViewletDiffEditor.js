@@ -1,5 +1,4 @@
 import * as AttachEvents from '../AttachEvents/AttachEvents.js'
-import * as DiffType from '../DiffType/DiffType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletSash from '../ViewletSash/ViewletSash.js'
@@ -33,6 +32,14 @@ export const create = () => {
     $ScrollBar,
     $ScrollBarThumb,
   }
+}
+
+export const attachEvents = (state) => {
+  const { $Viewlet, $ScrollBar } = state
+  AttachEvents.attachEvents($ScrollBar, {
+    [DomEventType.PointerDown]: ViewletDiffEditorEvents.handleScrollBarPointerDown,
+  })
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletDiffEditorEvents.handleWheel, DomEventOptions.Passive)
 }
 
 export const setDom = (state, leftDom, rightDom) => {
