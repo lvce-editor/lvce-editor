@@ -6,9 +6,9 @@ import * as ViewletDiffEditorEvents from './ViewletDiffEditorEvents.js'
 
 export const create = () => {
   const $ContentLeft = document.createElement('div')
-  $ContentLeft.className = 'DiffEditorContentLeft'
+  $ContentLeft.className = 'DiffEditorContent DiffEditorContentLeft'
   const $ContentRight = document.createElement('div')
-  $ContentRight.className = 'DiffEditorContentRight'
+  $ContentRight.className = 'DiffEditorContent DiffEditorContentRight'
 
   const $Sash = ViewletSash.create()
 
