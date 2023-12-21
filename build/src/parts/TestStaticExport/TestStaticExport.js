@@ -40,7 +40,6 @@ const main = async () => {
       pathPrefix: '/test',
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(error, `static export failed`)
   }
   await Remove.remove(`build/.tmp/server/shared_process/node_modules`)
