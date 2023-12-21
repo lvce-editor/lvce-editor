@@ -14,12 +14,22 @@ const insertion = {
   childCount: 1,
 }
 
+const normal = {
+  type: VirtualDomElements.Div,
+  className: 'EditorRow',
+  childCount: 1,
+}
+
 const renderLineDeletion = (content) => {
   return [deletion, text(content)]
 }
 
 const renderLineInsertion = (content) => {
   return [insertion, text(content)]
+}
+
+const renderLineNormal = (content) => {
+  return [normal, text(content)]
 }
 
 const renderLine = (value) => {
@@ -29,6 +39,8 @@ const renderLine = (value) => {
       return renderLineDeletion(line)
     case DiffType.Insertion:
       return renderLineInsertion(line)
+    case DiffType.None:
+      return renderLineNormal(line)
     default:
       return []
   }

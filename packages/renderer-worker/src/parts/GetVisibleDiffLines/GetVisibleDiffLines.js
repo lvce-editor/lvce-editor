@@ -1,12 +1,17 @@
+import * as DiffType from '../DiffType/DiffType.js'
+
 export const getVisibleDiffLines = (lines, changes, minLineY, maxLineY) => {
   const visible = []
-  for (let i = minLineY; i < maxLineY; i++) {
+  const max = Math.min(lines.length, maxLineY)
+  for (let i = minLineY; i < max; i++) {
     const line = lines[i]
-    const change = changes[i]
     visible.push({
       line,
-      ...change,
+      type: DiffType.None,
     })
+  }
+  for (const change of changes) {
+    visible[change.index].type = change.type
   }
   return visible
 }
