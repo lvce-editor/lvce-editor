@@ -3,6 +3,7 @@ import { extname } from 'path'
 import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.js'
 import * as GetElectronFileResponseRelativePath from '../GetElectronFileResponseRelativePath/GetElectronFileResponseRelativePath.js'
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
+import * as Header from '../Header/Header.js'
 import * as Platform from '../Platform/Platform.js'
 
 export const getElectronFileResponse = async (url) => {
@@ -20,7 +21,7 @@ export const getElectronFileResponse = async (url) => {
     init: {
       status: 200,
       headers: {
-        'Content-Type': mime,
+        [Header.ContentType]: mime,
       },
     },
   }
