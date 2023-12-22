@@ -40,7 +40,7 @@ const createItemDirectoryExpanded = (item) => {
       ariaPosInSet: posInSet,
       ariaSetSize: setSize,
       childCount: 3,
-      paddingLeft: '0.5rem',
+      paddingLeft: '1rem',
       paddingRight: '12px',
     },
     {
