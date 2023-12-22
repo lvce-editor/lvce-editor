@@ -1,1 +1,1 @@
-export const UseSharedProcessFileResponse = true
+export const UseSharedProcessFileResponse = Boolean(process.env.LVCE_SHARED_PROCESS_FILE_RESPONSE)
