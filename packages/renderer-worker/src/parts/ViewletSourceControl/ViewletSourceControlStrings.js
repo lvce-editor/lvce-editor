@@ -21,6 +21,10 @@ export const UiStrings = {
   UnstageAll: 'Unstage All Changes',
   Discard: 'Discard Changes',
   DiscardAll: 'Discard All Changes',
+  ViewAsTree: 'View As Tree',
+  CreatePullRequest: 'Create Pull Request',
+  CommitAndPush: 'Commit and Push',
+  Refresh: 'Refresh',
 }
 
 export const openChanges = () => {
@@ -76,4 +80,20 @@ export const unstageAll = () => {
 
 export const unstage = () => {
   return I18nString.i18nString(UiStrings.Unstage)
+}
+
+export const viewAsTree = () => {
+  return I18nString.i18nString(UiStrings.ViewAsTree)
+}
+
+export const createPullRequest = () => {
+  return I18nString.i18nString(UiStrings.CreatePullRequest)
+}
+
+export const commitAndPush = () => {
+  return I18nString.i18nString(UiStrings.CommitAndPush)
+}
+
+export const refresh = () => {
+  return I18nString.i18nString(UiStrings.Refresh)
 }

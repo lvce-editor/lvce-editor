@@ -1,39 +1,30 @@
 import * as ActionType from '../ActionType/ActionType.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  ViewAsTree: 'View As Tree',
-  CreatePullRequest: 'Create Pull Request',
-  CommitAndPush: 'Commit and Push',
-  Refresh: 'Refresh',
-}
+import * as ViewletSourceControlStrings from '../ViewletSourceControl/ViewletSourceControlStrings.js'
 
 export const getActions = () => {
   return [
     {
       type: ActionType.Button,
-      id: UiStrings.ViewAsTree,
+      id: ViewletSourceControlStrings.viewAsTree(),
       icon: MaskIcon.ListFlat,
       command: '',
     },
     {
       type: ActionType.Button,
-      id: UiStrings.CreatePullRequest,
+      id: ViewletSourceControlStrings.createPullRequest(),
       icon: MaskIcon.Blank,
       command: '',
     },
     {
       type: ActionType.Button,
-      id: UiStrings.CommitAndPush,
+      id: ViewletSourceControlStrings.commitAndPush(),
       icon: MaskIcon.Check,
       command: '',
     },
     {
       type: ActionType.Button,
-      id: UiStrings.Refresh,
+      id: ViewletSourceControlStrings.refresh(),
       icon: MaskIcon.Refresh,
       command: '',
     },
