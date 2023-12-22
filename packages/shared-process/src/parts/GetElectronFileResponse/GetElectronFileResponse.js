@@ -1,9 +1,7 @@
 import { readFile } from 'fs/promises'
-import { extname } from 'path'
 import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.js'
 import * as GetElectronFileResponseRelativePath from '../GetElectronFileResponseRelativePath/GetElectronFileResponseRelativePath.js'
-import * as GetMimeType from '../GetMimeType/GetMimeType.js'
-import * as Header from '../Header/Header.js'
+import * as GetHeaders from '../GetHeaders/GetHeaders.js'
 import * as Platform from '../Platform/Platform.js'
 
 export const getElectronFileResponse = async (url) => {
@@ -14,15 +12,12 @@ export const getElectronFileResponse = async (url) => {
     // @ts-ignore
     content = content.toString().replace('    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />\n', '')
   }
-  const extension = extname(absolutePath)
-  const mime = GetMimeType.getMimeType(extension)
+  const headers = GetHeaders.getHeaders(absolutePath)
   return {
     body: content,
     init: {
       status: 200,
-      headers: {
-        [Header.ContentType]: mime,
-      },
+      headers,
     },
   }
 }
