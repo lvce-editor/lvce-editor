@@ -61,8 +61,8 @@ test('tryToGetActualErrorMessage - syntax error - identifier has already been de
 let x = 2
 
 export const activate = () => {}
-`)
-    )
+`),
+    ),
   )
   expect(error).toBeInstanceOf(SyntaxError)
   expect(error.message).toBe("Identifier 'x' has already been declared.")
@@ -83,11 +83,27 @@ test('tryToGetActualErrorMessage - syntax error - missing semicolon', async () =
       null,
       'test://extension.js',
       new Response(`[]0
-`)
-    )
+`),
+    ),
   )
   expect(error).toBeInstanceOf(SyntaxError)
   expect(error.message).toBe('SyntaxError: Missing semicolon.')
   expect(error.stack).toMatch(`SyntaxError: Missing semicolon.
   at test://extension.js:1:3`)
+})
+
+test('tryToGetActualErrorMessage - missing content type header', async () => {
+  // @ts-ignore
+  BabelParser.parse.mockImplementation(() => {
+    return {
+      program: {
+        body: [],
+      },
+    }
+  })
+  const response = new Response(``, {})
+  response.headers.delete('Content-Type')
+  expect(await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage(null, 'test://extension.js', response)).toBe(
+    'Failed to import test://extension.js: Missing Content-Type header for javascript',
+  )
 })

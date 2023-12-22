@@ -74,5 +74,9 @@ export const tryToGetActualErrorMessage = async (error, url, response, seenUrls 
     const recentError = ContentSecurityPolicyErrorState.getRecentError()
     throw new ContentSecurityPolicyError(recentError.violatedDirective, recentError.sourceFile, recentError.lineNumber, recentError.columnNumber)
   }
+  const contentType = response.headers.get('Content-Type')
+  if (url.endsWith('.js') && contentType === null) {
+    return `Failed to import ${url}: Missing Content-Type header for javascript`
+  }
   return `Failed to import ${url}: Unknown Network Error`
 }
