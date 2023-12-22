@@ -1,20 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  Add: 'Add',
-  Restore: 'Restore',
-  OpenFile: 'Open File',
-  Changes: 'Changes',
-  StageAll: 'Stage All',
-  Stage: 'Stage',
-  Unstage: 'Unstage',
-  UnstageAll: 'Unstage All Changes',
-  Discard: 'Discard Changes',
-  DiscardAll: 'Discard All Changes',
-}
+import * as ViewletSourceControlStrings from '../ViewletSourceControl/ViewletSourceControlStrings.js'
 
 /**
  * @enum {string}
@@ -50,12 +35,12 @@ const getSourceControlActionsWorkingTree = () => {
   return [
     {
       command: Commands.DiscardAll,
-      label: UiStrings.DiscardAll,
+      label: ViewletSourceControlStrings.discardAll(),
       icon: 'Discard',
     },
     {
       command: Commands.StageAll,
-      label: UiStrings.StageAll,
+      label: ViewletSourceControlStrings.stageAll(),
       icon: 'Add',
     },
   ]
@@ -65,17 +50,17 @@ const getSourceControlActionsWorkingTreeItem = () => {
   return [
     {
       command: Commands.OpenFile,
-      label: UiStrings.OpenFile,
+      label: ViewletSourceControlStrings.openFile(),
       icon: 'GoToFile',
     },
     {
       command: Commands.Discard,
-      label: UiStrings.Discard,
+      label: ViewletSourceControlStrings.discard(),
       icon: 'Discard',
     },
     {
       command: Commands.Stage,
-      label: UiStrings.Stage,
+      label: ViewletSourceControlStrings.stage(),
       icon: 'Add',
     },
   ]
@@ -85,7 +70,7 @@ const getSourceControlActionsIndex = () => {
   return [
     {
       command: Commands.UnstageAll,
-      label: UiStrings.UnstageAll,
+      label: ViewletSourceControlStrings.unstageAll(),
       icon: 'Remove',
     },
   ]
@@ -95,12 +80,12 @@ const getSourceControlIndexItem = () => {
   return [
     {
       command: Commands.OpenFile,
-      label: UiStrings.OpenFile,
+      label: ViewletSourceControlStrings.openFile(),
       icon: 'GoToFile',
     },
     {
       command: Commands.Unstage,
-      label: UiStrings.Unstage,
+      label: ViewletSourceControlStrings.unstage(),
       icon: 'Remove',
     },
   ]
