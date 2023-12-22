@@ -13,16 +13,12 @@ export const create = () => {
 }
 
 export const attachEvents = (state) => {
-  const { $Viewlet, $ScrollBar } = state
-  // AttachEvents.attachEvents($ScrollBar, {
-  //   [DomEventType.PointerDown]: ViewletDiffEditorEvents.handleScrollBarPointerDown,
-  // })
+  const { $Viewlet } = state
   $Viewlet.addEventListener(DomEventType.Wheel, ViewletDiffEditorEvents.handleWheel, DomEventOptions.Passive)
 }
 
 export const setDom = (state, dom) => {
   const { $Viewlet } = state
-  console.log({ dom })
   VirtualDom.renderInto($Viewlet, dom)
 }
 
