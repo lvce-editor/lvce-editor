@@ -1,54 +1,72 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+/**
+ * @enum {string}
+ */
+const ClassNames = {
+  Label: 'Label',
+  StrikeThrough: 'StrikeThrough',
+  TreeItem: 'TreeItem',
+  Chevron: 'Chevron',
+  SourceControlBadge: 'SourceControlBadge',
+  ChevronRight: 'ChevronRight',
+  LabelDetail: 'LabelDetail',
+  SourceControlButton: 'SourceControlButton',
+  DecorationIcon: 'DecorationIcon',
+}
+
 const getLabelClassName = (decorationStrikeThrough) => {
-  let className = 'Label'
+  let className = ClassNames.Label
   if (decorationStrikeThrough) {
-    className += ' StrikeThrough'
+    className += ` ${ClassNames.StrikeThrough}`
   }
   return className
 }
 
-const createItem = (item, index, buttonIndex, buttons) => {
-  const { type, posInSet, setSize, icon, file, label, badgeCount, title, decorationIcon, decorationIconTitle, decorationStrikeThrough, detail } = item
+const createItemDirectory = (item) => {
+  const { posInSet, setSize, icon, label, badgeCount, decorationStrikeThrough, type } = item
   const labelClassName = getLabelClassName(decorationStrikeThrough)
-  if (type === DirentType.DirectoryExpanded) {
-    return [
-      {
-        type: VirtualDomElements.Div,
-        className: 'TreeItem',
-        role: AriaRoles.TreeItem,
-        ariaExpanded: true,
-        ariaPosInSet: posInSet,
-        ariaSetSize: setSize,
-        childCount: 3,
-        paddingLeft: '0.5rem',
-        paddingRight: '12px',
-      },
-      {
-        type: VirtualDomElements.Div,
-        className: 'Chevron',
-        childCount: 1,
-      },
-      GetIconVirtualDom.getIconVirtualDom(icon),
-      {
-        type: VirtualDomElements.Div,
-        className: labelClassName,
-        childCount: 1,
-      },
-      text(label),
-      {
-        type: VirtualDomElements.Div,
-        className: 'SourceControlBadge',
-        childCount: 1,
-      },
-      text(badgeCount),
-    ]
-  }
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.TreeItem,
+      role: AriaRoles.TreeItem,
+      ariaExpanded: type === DirentType.DirectoryExpanded,
+      ariaPosInSet: posInSet,
+      ariaSetSize: setSize,
+      childCount: 3,
+      paddingLeft: '1rem',
+      paddingRight: '12px',
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.Chevron,
+      childCount: 1,
+    },
+    GetIconVirtualDom.getIconVirtualDom(icon),
+    {
+      type: VirtualDomElements.Div,
+      className: labelClassName,
+      childCount: 1,
+    },
+    text(label),
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.SourceControlBadge,
+      childCount: 1,
+    },
+    text(badgeCount),
+  ]
+}
+
+const createItemOther = (item, index, buttonIndex, buttons) => {
+  const { posInSet, setSize, icon, file, label, decorationIcon, decorationIconTitle, decorationStrikeThrough, detail } = item
+  const labelClassName = getLabelClassName(decorationStrikeThrough)
   /**
    * @type {any[]}
    */
@@ -56,7 +74,7 @@ const createItem = (item, index, buttonIndex, buttons) => {
   dom.push(
     {
       type: VirtualDomElements.Div,
-      className: 'TreeItem',
+      className: ClassNames.TreeItem,
       role: AriaRoles.TreeItem,
       ariaPosInSet: posInSet,
       ariaSetSize: setSize,
@@ -65,11 +83,11 @@ const createItem = (item, index, buttonIndex, buttons) => {
       paddingLeft: '1rem',
       paddingRight: '12px',
     },
-    ...(icon === 'ChevronRight'
+    ...(icon === ClassNames.ChevronRight
       ? [
           {
             type: VirtualDomElements.Div,
-            className: 'Chevron',
+            className: ClassNames.Chevron,
             childCount: 1,
           },
           GetIconVirtualDom.getIconVirtualDom(icon),
@@ -88,7 +106,7 @@ const createItem = (item, index, buttonIndex, buttons) => {
     dom.push(
       {
         type: VirtualDomElements.Span,
-        className: 'LabelDetail',
+        className: ClassNames.LabelDetail,
         childCount: 1,
       },
       text(detail),
@@ -101,7 +119,7 @@ const createItem = (item, index, buttonIndex, buttons) => {
       dom.push(
         {
           type: VirtualDomElements.Button,
-          className: 'SourceControlButton',
+          className: ClassNames.SourceControlButton,
           title: label,
           ariaLabel: label,
           childCount: 1,
@@ -115,12 +133,22 @@ const createItem = (item, index, buttonIndex, buttons) => {
   }
   dom.push({
     type: VirtualDomElements.Img,
-    className: 'DecorationIcon',
+    className: ClassNames.DecorationIcon,
     title: decorationIconTitle,
     src: decorationIcon,
     childCount: 0,
   })
   return dom
+}
+
+const createItem = (item, index, buttonIndex, buttons) => {
+  switch (item.type) {
+    case DirentType.DirectoryExpanded:
+    case DirentType.Directory:
+      return createItemDirectory(item)
+    default:
+      return createItemOther(item, index, buttonIndex, buttons)
+  }
 }
 
 export const getSourceControlItemsVirtualDom = (items, buttonIndex, buttons) => {
