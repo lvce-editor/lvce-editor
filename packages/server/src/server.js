@@ -625,16 +625,7 @@ const launchSharedProcess = () => {
 
 // TODO handle all possible errors from shared process
 
-const handleUpgradeSharedProcess = () => {}
-
-/**
- *
- * @param {import('http').IncomingMessage} request
- * @param {import('net').Socket} socket
- */
-const handleUpgrade = (request, socket) => {
-  const webSocketProtocol = request.headers['sec-websocket-protocol']
-
+const sendHandle = (request, socket, method) => {
   request.on('error', (error) => {
     console.info('[info]: request upgrade error', error)
   })
@@ -649,7 +640,7 @@ const handleUpgrade = (request, socket) => {
         state.sharedProcess.send(
           {
             jsonrpc: '2.0',
-            method: 'HandleWebSocket.handleWebSocket',
+            method,
             params: [
               {
                 headers: request.headers,
@@ -673,7 +664,7 @@ const handleUpgrade = (request, socket) => {
       state.sharedProcess.send(
         {
           jsonrpc: '2.0',
-          method: 'HandleWebSocket.handleWebSocket',
+          method,
           params: [
             {
               headers: request.headers,
@@ -688,6 +679,15 @@ const handleUpgrade = (request, socket) => {
     default:
       break
   }
+}
+
+/**
+ *
+ * @param {import('http').IncomingMessage} request
+ * @param {import('net').Socket} socket
+ */
+const handleUpgrade = (request, socket) => {
+  sendHandle(request, socket, 'HandleWebSocket.handleWebSocket')
 }
 
 app.on('upgrade', handleUpgrade)
