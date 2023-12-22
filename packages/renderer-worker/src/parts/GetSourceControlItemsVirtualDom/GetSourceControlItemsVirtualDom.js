@@ -28,15 +28,15 @@ const getLabelClassName = (decorationStrikeThrough) => {
   return className
 }
 
-const createItemDirectoryExpanded = (item) => {
-  const { posInSet, setSize, icon, label, badgeCount, decorationStrikeThrough } = item
+const createItemDirectory = (item) => {
+  const { posInSet, setSize, icon, label, badgeCount, decorationStrikeThrough, type } = item
   const labelClassName = getLabelClassName(decorationStrikeThrough)
   return [
     {
       type: VirtualDomElements.Div,
       className: ClassNames.TreeItem,
       role: AriaRoles.TreeItem,
-      ariaExpanded: true,
+      ariaExpanded: type === DirentType.DirectoryExpanded,
       ariaPosInSet: posInSet,
       ariaSetSize: setSize,
       childCount: 3,
@@ -142,11 +142,13 @@ const createItemOther = (item, index, buttonIndex, buttons) => {
 }
 
 const createItem = (item, index, buttonIndex, buttons) => {
-  const { type } = item
-  if (type === DirentType.DirectoryExpanded) {
-    return createItemDirectoryExpanded(item)
+  switch (item.type) {
+    case DirentType.DirectoryExpanded:
+    case DirentType.Directory:
+      return createItemDirectory(item)
+    default:
+      return createItemOther(item, index, buttonIndex, buttons)
   }
-  return createItemOther(item, index, buttonIndex, buttons)
 }
 
 export const getSourceControlItemsVirtualDom = (items, buttonIndex, buttons) => {
