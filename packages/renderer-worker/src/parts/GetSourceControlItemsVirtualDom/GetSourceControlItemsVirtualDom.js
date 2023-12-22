@@ -65,41 +65,8 @@ const createItemDirectoryExpanded = (item) => {
 }
 
 const createItemOther = (item, index, buttonIndex, buttons) => {
-  const { type, posInSet, setSize, icon, file, label, badgeCount, decorationIcon, decorationIconTitle, decorationStrikeThrough, detail } = item
+  const { posInSet, setSize, icon, file, label, decorationIcon, decorationIconTitle, decorationStrikeThrough, detail } = item
   const labelClassName = getLabelClassName(decorationStrikeThrough)
-  if (type === DirentType.DirectoryExpanded) {
-    return [
-      {
-        type: VirtualDomElements.Div,
-        className: ClassNames.TreeItem,
-        role: AriaRoles.TreeItem,
-        ariaExpanded: true,
-        ariaPosInSet: posInSet,
-        ariaSetSize: setSize,
-        childCount: 3,
-        paddingLeft: '0.5rem',
-        paddingRight: '12px',
-      },
-      {
-        type: VirtualDomElements.Div,
-        className: ClassNames.Chevron,
-        childCount: 1,
-      },
-      GetIconVirtualDom.getIconVirtualDom(icon),
-      {
-        type: VirtualDomElements.Div,
-        className: labelClassName,
-        childCount: 1,
-      },
-      text(label),
-      {
-        type: VirtualDomElements.Div,
-        className: ClassNames.SourceControlBadge,
-        childCount: 1,
-      },
-      text(badgeCount),
-    ]
-  }
   /**
    * @type {any[]}
    */
