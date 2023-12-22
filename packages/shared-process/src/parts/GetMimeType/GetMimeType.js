@@ -1,19 +1,21 @@
+import * as MimeType from '../MimeType/MimeType.js'
+
 export const getMimeType = (fileExtension) => {
   switch (fileExtension) {
     case '.html':
-      return 'text/html'
+      return MimeType.TextHtml
     case '.css':
-      return 'text/css'
+      return MimeType.TextCss
     case '.ttf':
-      return 'font/ttf'
+      return MimeType.FontTtf
     case '.js':
-      return 'text/javascript'
+      return MimeType.TextJavaScript
     case '.svg':
-      return 'image/svg+xml'
+      return MimeType.ImageSvgXml
     case '.png':
-      return 'image/png'
+      return MimeType.ImagePng
     case '.json':
-      return 'application/json'
+      return MimeType.ApplicationJson
     default:
       console.warn(`unsupported file extension: ${fileExtension}`)
       return ''
