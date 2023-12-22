@@ -5,10 +5,7 @@ import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Root from '../Root/Root.js'
 
-export const getAbsolutePath = (requestUrl) => {
-  const decoded = decodeURI(requestUrl)
-  const { scheme } = Platform
-  const pathName = decoded.slice(`${scheme}://-`.length)
+export const getAbsolutePath = (pathName) => {
   // TODO remove if/else in prod (use replacement)
   if (pathName === `/` || pathName.startsWith(`/?`)) {
     return Path.join(Root.root, 'static', 'index.html')
