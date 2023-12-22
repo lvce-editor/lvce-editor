@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as DirentType from '../DirentType/DirentType.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
 
@@ -38,7 +39,7 @@ export const handleInput = (state, text) => {
 }
 
 const updateIcon = (displayItem) => {
-  if (displayItem.type === 'file') {
+  if (displayItem.type === DirentType.File) {
     return {
       ...displayItem,
       icon: IconTheme.getFileIcon({ name: displayItem.file }),
