@@ -56,13 +56,24 @@ export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
     ...linesLeft.flatMap(renderLine),
     {
       type: VirtualDomElements.Div,
+      className: 'Sash SashVertical',
+      childcount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
       className: 'DiffEditorContent DiffEditorContentRight',
       childCount: linesRight.length,
     },
     ...linesRight.flatMap(renderLine),
+    {
+      type: VirtualDomElements.Div,
+      className: 'ScrollBar',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'ScrollBarThumb',
+      childCount: 0,
+    },
   ]
-}
-
-export const getContentDom = (linesLeft) => {
-  return linesLeft.flatMap(renderLine)
 }

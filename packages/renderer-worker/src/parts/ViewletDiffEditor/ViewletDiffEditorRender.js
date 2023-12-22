@@ -5,10 +5,6 @@ import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js
 
 export const hasFunctionalRender = true
 
-const getVisible = (lines, minLineY, maxLineY) => {
-  return lines.slice(minLineY, maxLineY)
-}
-
 const renderChanges = {
   isEqual(oldState, newState) {
     return oldState.changes === newState.changes && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
@@ -26,9 +22,8 @@ const renderChanges = {
       newState.minLineY,
       newState.maxLineY,
     )
-    const leftDom = GetDiffEditorVirtualDom.getContentDom(leftVisible)
-    const rightDom = GetDiffEditorVirtualDom.getContentDom(rightVisible)
-    return ['setDom', leftDom, rightDom]
+    const dom = GetDiffEditorVirtualDom.getDiffEditorVirtualDom(leftVisible, rightVisible)
+    return ['setDom', dom]
   },
 }
 
