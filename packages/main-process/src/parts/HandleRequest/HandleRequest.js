@@ -1,5 +1,6 @@
 import * as ElectronSessionGetAbsolutePath from '../ElectronSessionGetAbsolutePath/ElectronSessionGetAbsolutePath.js'
 import * as GetFileResponse from '../GetFileResponse/GetFileResponse.js'
+import * as GetRelativePath from '../GetRelativePath/GetRelativePath.js'
 import * as Platform from '../Platform/Platform.js'
 
 /**
@@ -8,8 +9,8 @@ import * as Platform from '../Platform/Platform.js'
  */
 
 export const handleRequest = async (request) => {
-  const path = ElectronSessionGetAbsolutePath.getAbsolutePath(request.url)
-  // console.time(url.toString())
+  const pathName = GetRelativePath.getRelativePath(request.url)
+  const path = ElectronSessionGetAbsolutePath.getAbsolutePath(pathName)
   const response = await GetFileResponse.getFileResponse(path)
   if (!Platform.isProduction && request.url === `${Platform.scheme}://-/`) {
     const text = await response.text()
