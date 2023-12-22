@@ -73,5 +73,6 @@ const getHeadersReceivedFunction = (resourceType) => {
 export const handleHeadersReceived = (details, callback) => {
   const { responseHeaders, resourceType, url } = details
   const fn = getHeadersReceivedFunction(resourceType)
-  callback(fn(responseHeaders, url))
+  const result = fn(responseHeaders, url)
+  callback(result)
 }
