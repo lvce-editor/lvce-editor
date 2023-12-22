@@ -12,6 +12,19 @@ export const UiStrings = {
   AddToGitignore: 'Add to gitignore',
   RevealInExplorerView: 'Reveal in Explorer View',
   OpenContainingFolder: 'Open Containing Folder',
+  Add: 'Add',
+  Restore: 'Restore',
+  Changes: 'Changes',
+  StageAll: 'Stage All',
+  Stage: 'Stage',
+  Unstage: 'Unstage',
+  UnstageAll: 'Unstage All Changes',
+  Discard: 'Discard Changes',
+  DiscardAll: 'Discard All Changes',
+  ViewAsTree: 'View As Tree',
+  CreatePullRequest: 'Create Pull Request',
+  CommitAndPush: 'Commit and Push',
+  Refresh: 'Refresh',
 }
 
 export const openChanges = () => {
@@ -43,4 +56,44 @@ export const revealInExplorerView = () => {
 
 export const openContainingFolder = () => {
   return I18nString.i18nString(UiStrings.OpenContainingFolder)
+}
+
+export const discardAll = () => {
+  return I18nString.i18nString(UiStrings.DiscardAll)
+}
+
+export const stageAll = () => {
+  return I18nString.i18nString(UiStrings.StageAll)
+}
+
+export const discard = () => {
+  return I18nString.i18nString(UiStrings.Discard)
+}
+
+export const stage = () => {
+  return I18nString.i18nString(UiStrings.Stage)
+}
+
+export const unstageAll = () => {
+  return I18nString.i18nString(UiStrings.UnstageAll)
+}
+
+export const unstage = () => {
+  return I18nString.i18nString(UiStrings.Unstage)
+}
+
+export const viewAsTree = () => {
+  return I18nString.i18nString(UiStrings.ViewAsTree)
+}
+
+export const createPullRequest = () => {
+  return I18nString.i18nString(UiStrings.CreatePullRequest)
+}
+
+export const commitAndPush = () => {
+  return I18nString.i18nString(UiStrings.CommitAndPush)
+}
+
+export const refresh = () => {
+  return I18nString.i18nString(UiStrings.Refresh)
 }
