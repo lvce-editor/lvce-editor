@@ -289,6 +289,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleMessagePortForTerminalProcess
     case 'TemporaryMessagePort.handlePort':
       return ModuleId.TemporaryMessagePort
+    case 'GetElectronFileResponse.getElectronFileResponse':
+      return ModuleId.GetElectronFileResponse
     default:
       throw new CommandNotFoundError(commandId)
   }
