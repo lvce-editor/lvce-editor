@@ -25,7 +25,7 @@ const UiStrings = {
   Dismiss: 'Dismiss',
   Refresh: 'Refresh',
   ClearSearchResults: 'Clear Search Results',
-  NewSearchEditor: 'New Search Editor',
+  OpenNewSearchEditor: 'Open New Search Editor',
   ViewAsTree: 'View as Tree',
   CollapseAll: 'Collapse All',
 }
@@ -139,8 +139,8 @@ export const clearSearchResults = () => {
   return I18nString.i18nString(UiStrings.ClearSearchResults)
 }
 
-export const newSearchEditor = () => {
-  return I18nString.i18nString(UiStrings.NewSearchEditor)
+export const openNewSearchEditor = () => {
+  return I18nString.i18nString(UiStrings.OpenNewSearchEditor)
 }
 
 export const viewAsTree = () => {
