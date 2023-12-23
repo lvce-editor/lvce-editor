@@ -1,14 +1,5 @@
 import * as ActionType from '../ActionType/ActionType.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  Output: 'output',
-  ClearOutput: 'clear output',
-  TurnOffAutoScroll: 'Turn auto scrolling off',
-  OpenLogFile: 'open output log file',
-}
+import * as ViewletOutputStrings from '../ViewletOutput/ViewletOutputStrings.js'
 
 const toSelectOption = (option) => {
   return option.name
@@ -23,22 +14,22 @@ export const getActions = (state) => {
   return [
     {
       type: ActionType.Select,
-      id: UiStrings.Output,
+      id: ViewletOutputStrings.output(),
       options: toSelectOptions(options),
     },
     {
       type: ActionType.Button,
-      id: UiStrings.ClearOutput,
+      id: ViewletOutputStrings.clearOutput(),
       icon: 'ClearAll',
     },
     {
       type: ActionType.Button,
-      id: UiStrings.TurnOffAutoScroll,
+      id: ViewletOutputStrings.turnOffAutoScroll(),
       icon: 'Blank',
     },
     {
       type: ActionType.Button,
-      id: UiStrings.OpenLogFile,
+      id: ViewletOutputStrings.openLogFile(),
       icon: 'Blank',
     },
   ]
