@@ -172,6 +172,10 @@
   mask-image: url(/icons/link-external.svg);
 }
 
+.MaskIconGoToFile {
+  mask-image: url(/icons/go-to-file.svg);
+}
+
 .MaskIconDiscard,
 .MaskIconRemove {
   mask-image: url(/icons/discard.svg);
