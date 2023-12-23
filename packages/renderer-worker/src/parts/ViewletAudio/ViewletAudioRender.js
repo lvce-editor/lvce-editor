@@ -1,23 +1,15 @@
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as GetAudioVirtualDom from '../GetAudioVirtualDom/GetAudioVirtualDom.js'
 
 export const hasFunctionalRender = true
 
-export const renderSrc = {
+const renderAudio = {
   isEqual(oldState, newState) {
-    return oldState.src === newState.src
+    return oldState.src === newState.src && oldState.audioErrorMessage === newState.audioErrorMessage
   },
   apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetSrc, /* src */ newState.src]
+    const dom = GetAudioVirtualDom.getAudioVirtualDom(newState.src, newState.audioErrorMessage)
+    return ['setDom', dom]
   },
 }
 
-const renderAudioErrorMessage = {
-  isEqual(oldState, newState) {
-    return oldState.audioErrorMessage === newState.audioErrorMessage
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetAudioErrorMessage, /* src */ newState.audioErrorMessage]
-  },
-}
-
-export const render = [renderSrc, renderAudioErrorMessage]
+export const render = [renderAudio]

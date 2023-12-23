@@ -3,6 +3,8 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 
 export const getElementTag = (type) => {
   switch (type) {
+    case VirtualDomElements.Audio:
+      return ElementTag.Audio
     case VirtualDomElements.H1:
       return ElementTag.H1
     case VirtualDomElements.H2:
