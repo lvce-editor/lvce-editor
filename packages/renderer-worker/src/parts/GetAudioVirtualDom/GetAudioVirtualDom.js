@@ -6,12 +6,12 @@ export const getAudioVirtualDom = (src, errorMessage) => {
     return [
       {
         type: VirtualDomElements.Div,
-        className: 'AudioContent',
+        className: 'MediaContent',
         childCount: 1,
       },
       {
         type: VirtualDomElements.Div,
-        className: 'AudioErrorMessage',
+        className: 'MediaErrorMessage',
         childCount: 1,
       },
       text(errorMessage),
@@ -20,12 +20,12 @@ export const getAudioVirtualDom = (src, errorMessage) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'AudioContent',
+      className: 'MediaContent',
       childCount: 1,
     },
     {
       type: VirtualDomElements.Audio,
-      className: 'AudioElement',
+      className: 'MediaElement',
       src,
       controls: true,
       childCount: 0,

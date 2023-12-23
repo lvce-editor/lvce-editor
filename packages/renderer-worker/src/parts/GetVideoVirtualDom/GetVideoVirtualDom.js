@@ -6,12 +6,12 @@ export const getVideoVirtualDom = (src, errorMessage) => {
     return [
       {
         type: VirtualDomElements.Div,
-        className: 'VideoContent',
+        className: 'MediaContent',
         childCount: 1,
       },
       {
         type: VirtualDomElements.Div,
-        className: 'VideoErrorMessage',
+        className: 'MediaErrorMessage',
         childCount: 1,
       },
       text(errorMessage),
@@ -20,12 +20,12 @@ export const getVideoVirtualDom = (src, errorMessage) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'VideoContent',
+      className: 'MediaContent',
       childCount: 1,
     },
     {
       type: VirtualDomElements.Video,
-      className: 'VideoElement',
+      className: 'MediaElement',
       src,
       controls: true,
       childCount: 0,
