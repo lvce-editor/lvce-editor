@@ -185,7 +185,6 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     )
   }
   await replace(Path.join(root, 'dist', 'index.html'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
-  await replace(Path.join(root, 'dist', 'index.html'), `/${commitHash}/manifest.json`, `${pathPrefix}/${commitHash}/manifest.json`)
 
   if (pathPrefix) {
     await replace(
