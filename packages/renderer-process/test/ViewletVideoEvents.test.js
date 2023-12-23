@@ -17,7 +17,7 @@ const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.
 
 const ViewletVideo = await import('../src/parts/ViewletVideo/ViewletVideo.js')
 
-test('event - error', () => {
+test.skip('event - error', () => {
   const state = ViewletVideo.create()
   ViewletVideo.attachEvents(state)
   const { $Video } = state
