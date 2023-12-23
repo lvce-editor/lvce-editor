@@ -1,4 +1,5 @@
 import * as DirentType from '../DirentType/DirentType.js'
+import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletExplorerStrings from '../ViewletExplorer/ViewletExplorerStrings.js'
@@ -28,13 +29,6 @@ const menuEntryOpenInIntegratedTerminal = {
   id: 'openInIntegratedTerminal',
   label: ViewletExplorerStrings.openInIntegratedTerminal(),
   flags: MenuItemFlags.None,
-  command: /* TODO */ -1,
-}
-
-const menuEntrySeparator = {
-  id: '',
-  label: ViewletExplorerStrings.separator(),
-  flags: MenuItemFlags.Separator,
   command: /* TODO */ -1,
 }
 
@@ -92,14 +86,14 @@ const ALL_ENTRIES = [
   menuEntryNewFolder,
   menuEntryOpenContainingFolder,
   menuEntryOpenInIntegratedTerminal,
-  menuEntrySeparator,
+  MenuEntrySeparator.menuEntrySeparator,
   menuEntryCut,
   menuEntryCopy,
   menuEntryPaste,
-  menuEntrySeparator,
+  MenuEntrySeparator.menuEntrySeparator,
   menuEntryCopyPath,
   menuEntryCopyRelativePath,
-  menuEntrySeparator,
+  MenuEntrySeparator.menuEntrySeparator,
   menuEntryRename,
   menuEntryDelete,
 ]
@@ -122,14 +116,14 @@ const getMenuEntriesFile = () => {
   return [
     menuEntryOpenContainingFolder,
     menuEntryOpenInIntegratedTerminal,
-    menuEntrySeparator,
+    MenuEntrySeparator.menuEntrySeparator,
     menuEntryCut,
     menuEntryCopy,
     menuEntryPaste,
-    menuEntrySeparator,
+    MenuEntrySeparator.menuEntrySeparator,
     menuEntryCopyPath,
     menuEntryCopyRelativePath,
-    menuEntrySeparator,
+    MenuEntrySeparator.menuEntrySeparator,
     menuEntryRename,
     menuEntryDelete,
   ]
@@ -145,9 +139,9 @@ const getMenuEntriesRoot = () => {
     menuEntryNewFolder,
     menuEntryOpenContainingFolder,
     menuEntryOpenInIntegratedTerminal,
-    menuEntrySeparator,
+    MenuEntrySeparator.menuEntrySeparator,
     menuEntryPaste,
-    menuEntrySeparator,
+    MenuEntrySeparator.menuEntrySeparator,
     menuEntryCopyPath,
     menuEntryCopyRelativePath,
   ]
