@@ -4,8 +4,8 @@ import * as I18nString from '../I18NString/I18NString.js'
  * @enum {string}
  */
 const UiStrings = {
-  NewFile: 'New File',
-  NewFolder: 'New Folder',
+  NewFile: 'New File...',
+  NewFolder: 'New Folder...',
   OpenContainingFolder: 'Open Containing Folder',
   OpenInIntegratedTerminal: 'Open in integrated Terminal',
   Cut: 'Cut',
@@ -15,8 +15,8 @@ const UiStrings = {
   CopyRelativePath: 'Copy Relative Path',
   Rename: 'Rename',
   Delete: 'Delete',
-  Refresh: 'Refresh',
-  CollapseAll: 'Collapse All',
+  RefreshExplorer: 'Refresh Explorer',
+  CollapseAllFoldersInExplorer: 'Collapse All Folders in Explorer',
 }
 
 export const newFile = () => {
@@ -64,9 +64,9 @@ export const deleteItem = () => {
 }
 
 export const refresh = () => {
-  return I18nString.i18nString(UiStrings.Refresh)
+  return I18nString.i18nString(UiStrings.RefreshExplorer)
 }
 
 export const collapseAll = () => {
-  return I18nString.i18nString(UiStrings.CollapseAll)
+  return I18nString.i18nString(UiStrings.CollapseAllFoldersInExplorer)
 }
