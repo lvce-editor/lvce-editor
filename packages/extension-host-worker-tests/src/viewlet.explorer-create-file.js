@@ -14,7 +14,7 @@ export const test = async ({ FileSystem, Workspace, Explorer, ContextMenu, Locat
   // act
   await Explorer.focusIndex(-1)
   await Explorer.openContextMenu()
-  await ContextMenu.selectItem('New File')
+  await ContextMenu.selectItem('New File...')
   // assert
   const inputBox = Locator('input')
   await expect(inputBox).toBeVisible()

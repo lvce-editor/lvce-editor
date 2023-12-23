@@ -15,16 +15,15 @@ test('getMenuEntries - no focused dirent', () => {
   const menuEntries = MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual(
     expect.objectContaining({
-      label: 'New File',
+      label: 'New File...',
       flags: MenuItemFlags.None,
-    })
+    }),
   )
   expect(menuEntries).toContainEqual(
     expect.objectContaining({
       label: 'Copy Path',
-
       flags: MenuItemFlags.RestoreFocus,
-    })
+    }),
   )
 })
 
@@ -47,10 +46,9 @@ test('getMenuEntries - focused folder', () => {
   const menuEntries = MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual(
     expect.objectContaining({
-      label: 'New File',
-
+      label: 'New File...',
       flags: MenuItemFlags.None,
-    })
+    }),
   )
 })
 
@@ -75,13 +73,13 @@ test('getMenuEntries - focused file', () => {
     expect.objectContaining({
       label: 'Copy',
       flags: MenuItemFlags.RestoreFocus,
-    })
+    }),
   )
   expect(menuEntries).not.toContainEqual(
     expect.objectContaining({
       label: 'New File',
       flags: MenuItemFlags.None,
-    })
+    }),
   )
 })
 
@@ -104,9 +102,9 @@ test('getMenuEntries - focused symlink', () => {
   const menuEntries = MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual(
     expect.objectContaining({
-      label: 'New File',
+      label: 'New File...',
       flags: MenuItemFlags.None,
-    })
+    }),
   )
 })
 
@@ -129,14 +127,14 @@ test('getMenuEntries - root', () => {
   const menuEntries = MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual(
     expect.objectContaining({
-      label: 'New File',
+      label: 'New File...',
       flags: MenuItemFlags.None,
-    })
+    }),
   )
   expect(menuEntries).not.toContainEqual(
     expect.objectContaining({
       label: 'Copy',
       flags: MenuItemFlags.RestoreFocus,
-    })
+    }),
   )
 })
