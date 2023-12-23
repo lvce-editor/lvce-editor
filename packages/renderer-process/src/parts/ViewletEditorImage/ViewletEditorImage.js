@@ -7,7 +7,6 @@ import * as ViewletEditorImageEvents from './ViewletEditorImageEvents.js'
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet EditorImage'
-
   return {
     $Viewlet,
   }
@@ -20,8 +19,8 @@ export const attachEvents = (state) => {
     [DomEventType.PointerUp]: ViewletEditorImageEvents.handlePointerUp,
     [DomEventType.ContextMenu]: ViewletEditorImageEvents.handleContextMenu,
     [DomEventType.FocusIn]: ViewletEditorImageEvents.handleFocus,
-    [DomEventType.Error]: ViewletEditorImageEvents.handleError,
   })
+  $Viewlet.addEventListener(DomEventType.Error, ViewletEditorImageEvents.handleError, DomEventOptions.Capture)
   $Viewlet.addEventListener(DomEventType.Wheel, ViewletEditorImageEvents.handleWheel, DomEventOptions.Passive)
 }
 
