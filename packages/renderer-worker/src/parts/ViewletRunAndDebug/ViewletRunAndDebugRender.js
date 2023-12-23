@@ -2,8 +2,9 @@ import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType
 import * as DebugState from '../DebugState/DebugState.js'
 import * as DebugValueType from '../DebugValueType/DebugValueType.js'
 import * as DiffDom from '../DiffDom/DiffDom.js'
-import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
  * @enum {string}
@@ -25,22 +26,6 @@ const ClassNames = {
 /**
  * @enum {string}
  */
-const UiStrings = {
-  StepInto: 'Step Into',
-  StepOver: 'Step Over',
-  StepOut: 'Step Out',
-  Pause: 'Pause',
-  Watch: 'Watch',
-  BreakPoints: 'BreakPoints',
-  Scope: 'Scope',
-  CallStack: 'Call Stack',
-  NotPaused: 'Not Paused',
-  Resume: 'Resume',
-}
-
-/**
- * @enum {string}
- */
 const Roles = {
   TreeItem: 'treeitem',
   None: 'none',
@@ -49,7 +34,7 @@ const Roles = {
 const buttonResume = {
   type: VirtualDomElements.Button,
   className: ClassNames.IconButton,
-  title: UiStrings.Resume,
+  title: ViewletRunAndDebugStrings.resume(),
   childCount: 1,
 }
 
@@ -63,7 +48,7 @@ const iconContinue = {
 const buttonPause = {
   type: VirtualDomElements.Button,
   className: ClassNames.IconButton,
-  title: UiStrings.Pause,
+  title: ViewletRunAndDebugStrings.pause(),
   childCount: 1,
 }
 
@@ -77,7 +62,7 @@ const iconPause = {
 const buttonStepOver = {
   type: VirtualDomElements.Button,
   className: ClassNames.IconButton,
-  title: UiStrings.StepOver,
+  title: ViewletRunAndDebugStrings.stepOver(),
   childCont: 1,
 }
 
@@ -90,7 +75,7 @@ const iconStepOver = {
 const buttonStepInto = {
   type: VirtualDomElements.Button,
   className: ClassNames.IconButton,
-  title: UiStrings.StepInto,
+  title: ViewletRunAndDebugStrings.stepInto(),
   childCount: 1,
 }
 
@@ -104,7 +89,7 @@ const iconStepInto = {
 const buttonStepOut = {
   type: VirtualDomElements.Button,
   className: ClassNames.IconButton,
-  title: UiStrings.StepOut,
+  title: ViewletRunAndDebugStrings.stepOut(),
   childCount: 1,
 }
 
@@ -154,7 +139,7 @@ const iconTriangleDown = {
   childCount: 0,
 }
 
-const textWatch = text(UiStrings.Watch)
+const textWatch = text(ViewletRunAndDebugStrings.watch())
 
 const renderWatch = (state) => {
   return [watchHeader, iconTriangleRight, textWatch]
@@ -167,7 +152,7 @@ const breakPointsHeader = {
   childCount: 2,
 }
 
-const textBreakPoints = text(UiStrings.BreakPoints)
+const textBreakPoints = text(ViewletRunAndDebugStrings.breakPoints())
 
 const debugRow1 = {
   type: VirtualDomElements.Div,
@@ -212,7 +197,7 @@ const scopeHeaderExpanded = {
   ariaExpanded: true,
   childCount: 2,
 }
-const textScope = text(UiStrings.Scope)
+const textScope = text(ViewletRunAndDebugStrings.scope())
 const separator = text(': ')
 const debugPropertyKey = {
   type: VirtualDomElements.Span,
@@ -225,7 +210,7 @@ const debugPausedMessage = {
   className: ClassNames.DebugPausedMessage,
   childCount: 1,
 }
-const textNotPaused = text(UiStrings.NotPaused)
+const textNotPaused = text(ViewletRunAndDebugStrings.notPaused())
 
 const renderScope = (state) => {
   const { scopeChain, scopeExpanded } = state
@@ -327,7 +312,7 @@ const headerCallStackExpanded = {
   ariaExpanded: true,
   childCount: 2,
 }
-const textCallStack = text(UiStrings.CallStack)
+const textCallStack = text(ViewletRunAndDebugStrings.callStack())
 
 const renderCallStack = (state) => {
   const { callStack, callStackExpanded } = state
