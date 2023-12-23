@@ -1,14 +1,16 @@
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
+import * as GetImageVirtualDom from '../GetImageVirtualDom/GetImageVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
-const renderSrc = {
+const renderImage = {
   isEqual(oldState, newState) {
-    return oldState.src === newState.src
+    return oldState.src === newState.src && oldState.errorMessage === newState.errorMessage
   },
   apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetSrc, /* src */ newState.src]
+    const dom = GetImageVirtualDom.getImageVirtualDom(newState.src, newState.errorMessage)
+    return ['setDom', dom]
   },
 }
 
@@ -31,13 +33,5 @@ const renderCursor = {
     return [/* method */ RenderMethod.SetDragging, /* isDragging */ isDragging]
   },
 }
-const renderErrorMessage = {
-  isEqual(oldState, newState) {
-    return oldState.errorMessage === newState.errorMessage
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetError, /* errorMessage */ newState.errorMessage]
-  },
-}
 
-export const render = [renderSrc, renderTransform, renderCursor, renderErrorMessage]
+export const render = [renderImage, renderTransform, renderCursor]
