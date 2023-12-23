@@ -1,3 +1,4 @@
+import * as ViewletKeyBindingsStrings from '../ViewletKeyBindings/ViewletKeyBindingsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -12,18 +13,6 @@ const ClassNames = {
   KeyBindingsTableHead: 'KeyBindingsTableHead',
   KeyBindingsTableBody: 'KeyBindingsTableBody',
   KeyBindingsHeader: 'KeyBindingsHeader',
-}
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  KeyBindings: 'KeyBindings',
-  Command: 'Command',
-  When: 'When',
-  Key: 'Key',
-  EmptyString: '',
-  TypeToSearchKeyBindings: 'Type to search in keybindings',
 }
 
 const kbdDom = {
@@ -132,7 +121,7 @@ const getTableRowDom = (keyBinding) => {
       ...tableCellProps,
       childCount: 1,
     },
-    text(keyBinding.when || UiStrings.EmptyString),
+    text(keyBinding.when || ''),
   )
   return dom
 }
@@ -160,11 +149,11 @@ const staticTableHeadDom = [
   tableHead,
   tableHeadRow,
   tableHeading,
-  text(UiStrings.Command),
+  text(ViewletKeyBindingsStrings.command()),
   tableHeading,
-  text(UiStrings.Key),
+  text(ViewletKeyBindingsStrings.key()),
   tableHeading,
-  text(UiStrings.When),
+  text(ViewletKeyBindingsStrings.when()),
 ]
 
 const getTableBodyDom = (displayKeyBindings) => {
@@ -183,7 +172,7 @@ export const getTableDom = (filteredKeyBindings, displayKeyBindings, columnWidth
     {
       type: VirtualDomElements.Table,
       className: ClassNames.KeyBindingsTable,
-      ariaLabel: UiStrings.KeyBindings,
+      ariaLabel: ViewletKeyBindingsStrings.keyBindings(),
       ariaRowCount: filteredKeyBindings.length,
       childCount: 3,
     },
