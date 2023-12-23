@@ -23,6 +23,11 @@ const UiStrings = {
   ReplacedManyOccurrencesInManyFiles: "Replaced {PH1} occurrences across {PH2} files with '{PH3}'",
   CopyPath: 'Copy Path',
   Dismiss: 'Dismiss',
+  Refresh: 'Refresh',
+  ClearSearchResults: 'Clear Search Results',
+  NewSearchEditor: 'New Search Editor',
+  ViewAsTree: 'View as Tree',
+  CollapseAll: 'Collapse All',
 }
 
 export const noResults = () => {
@@ -124,4 +129,24 @@ export const dismiss = () => {
 
 export const copyPath = () => {
   return I18nString.i18nString(UiStrings.CopyPath)
+}
+
+export const refresh = () => {
+  return I18nString.i18nString(UiStrings.Refresh)
+}
+
+export const clearSearchResults = () => {
+  return I18nString.i18nString(UiStrings.ClearSearchResults)
+}
+
+export const newSearchEditor = () => {
+  return I18nString.i18nString(UiStrings.NewSearchEditor)
+}
+
+export const viewAsTree = () => {
+  return I18nString.i18nString(UiStrings.ViewAsTree)
+}
+
+export const collapseAll = () => {
+  return I18nString.i18nString(UiStrings.CollapseAll)
 }
