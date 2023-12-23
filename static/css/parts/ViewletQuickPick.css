@@ -103,22 +103,6 @@
   overflow: hidden;
 }
 
-.QuickPickItem [class^='Icon'] {
-  contain: strict;
-  pointer-events: none;
-  background-size: 16px;
-  background-position: 0;
-  background-repeat: no-repeat;
-  width: 16px;
-  height: 22px;
-  flex-shrink: 0;
-}
-
-/* TODO remove icon from dom when it is not needed */
-.Iconundefined {
-  display: none;
-}
-
 .QuickPickLabel {
   white-space: nowrap;
   contain: content;
