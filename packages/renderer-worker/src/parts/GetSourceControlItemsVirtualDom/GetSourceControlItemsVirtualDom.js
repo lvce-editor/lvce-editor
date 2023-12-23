@@ -1,5 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as EmptySourceControlButtons from '../EmptySourceControlButtons/EmptySourceControlButton.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
@@ -64,8 +65,8 @@ const createItemDirectory = (item) => {
   ]
 }
 
-const createItemOther = (item, index, buttonIndex, buttons) => {
-  const { posInSet, setSize, icon, file, label, decorationIcon, decorationIconTitle, decorationStrikeThrough, detail } = item
+const createItemOther = (item) => {
+  const { posInSet, setSize, icon, file, label, decorationIcon, decorationIconTitle, decorationStrikeThrough, detail, buttons } = item
   const labelClassName = getLabelClassName(decorationStrikeThrough)
   /**
    * @type {any[]}
@@ -112,7 +113,7 @@ const createItemOther = (item, index, buttonIndex, buttons) => {
       text(detail),
     )
   }
-  if (index === buttonIndex) {
+  if (buttons !== EmptySourceControlButtons.emptySourceControlButtons) {
     dom[0].childCount += buttons.length
     for (const button of buttons) {
       const { icon, label } = button
@@ -141,21 +142,16 @@ const createItemOther = (item, index, buttonIndex, buttons) => {
   return dom
 }
 
-const createItem = (item, index, buttonIndex, buttons) => {
+const createItem = (item) => {
   switch (item.type) {
     case DirentType.DirectoryExpanded:
     case DirentType.Directory:
       return createItemDirectory(item)
     default:
-      return createItemOther(item, index, buttonIndex, buttons)
+      return createItemOther(item)
   }
 }
 
-export const getSourceControlItemsVirtualDom = (items, buttonIndex, buttons) => {
-  const result = []
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i]
-    result.push(...createItem(item, i, buttonIndex, buttons))
-  }
-  return result
+export const getSourceControlItemsVirtualDom = (items) => {
+  return items.flatMap(createItem)
 }
