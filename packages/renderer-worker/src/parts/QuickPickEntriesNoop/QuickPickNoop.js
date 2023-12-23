@@ -1,11 +1,5 @@
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
-
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  NoResults: 'No Results',
-}
+import * as ViewletQuickPickStrings from '../ViewletQuickPick/ViewletQuickPickStrings.js'
 
 export const name = 'noop'
 
@@ -18,7 +12,7 @@ export const getHelpEntries = () => {
 }
 
 export const getNoResults = () => {
-  return UiStrings.NoResults
+  return ViewletQuickPickStrings.noResults()
 }
 
 export const getPicks = async (value) => {

@@ -1,11 +1,5 @@
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
-
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  NoMatchingResults: 'No matching results',
-}
+import * as ViewletQuickPickStrings from '../ViewletQuickPick/ViewletQuickPickStrings.js'
 
 export const name = 'number'
 
@@ -19,7 +13,7 @@ export const getHelpEntries = () => {
 
 export const getNoResults = () => {
   return {
-    label: UiStrings.NoMatchingResults,
+    label: ViewletQuickPickStrings.noMatchingResults(),
   }
 }
 

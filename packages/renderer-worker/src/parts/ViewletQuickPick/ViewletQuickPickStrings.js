@@ -11,6 +11,10 @@ const UiStrings = {
   NoMatchingResults: 'No matching results',
   Files: 'Files',
   GoToFile: 'Go to file',
+  NoResults: 'No Results',
+  SelectToOpen: 'Select to open',
+  OpenRecent: 'Open Recent',
+  NoRecentlyOpenedFoldersFound: 'No recently opened folders found',
 }
 
 export const noMatchingColorThemesFound = () => {
@@ -39,4 +43,20 @@ export const files = () => {
 
 export const goToFile = () => {
   return I18NString.i18nString(UiStrings.GoToFile)
+}
+
+export const noResults = () => {
+  return I18NString.i18nString(UiStrings.NoResults)
+}
+
+export const selectToOpen = () => {
+  return I18NString.i18nString(UiStrings.SelectToOpen)
+}
+
+export const openRecent = () => {
+  return I18NString.i18nString(UiStrings.OpenRecent)
+}
+
+export const noRecentlyOpenedFoldersFound = () => {
+  return I18NString.i18nString(UiStrings.NoRecentlyOpenedFoldersFound)
 }
