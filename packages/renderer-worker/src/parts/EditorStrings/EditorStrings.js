@@ -3,7 +3,7 @@ import * as I18nString from '../I18NString/I18NString.js'
 /**
  * @enum {string}
  */
-export const UiStrings = {
+const UiStrings = {
   GoToTypeDefinition: 'Go to Type Definition',
   GoToDefinition: 'Go to Definition',
   FindAllReferences: 'Find All References',
