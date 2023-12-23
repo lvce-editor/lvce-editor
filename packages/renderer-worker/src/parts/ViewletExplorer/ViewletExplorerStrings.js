@@ -35,10 +35,6 @@ export const openInIntegratedTerminal = () => {
   return I18nString.i18nString(UiStrings.OpenInIntegratedTerminal)
 }
 
-export const separator = () => {
-  return I18nString.i18nString(UiStrings.Separator)
-}
-
 export const cut = () => {
   return I18nString.i18nString(UiStrings.Cut)
 }
