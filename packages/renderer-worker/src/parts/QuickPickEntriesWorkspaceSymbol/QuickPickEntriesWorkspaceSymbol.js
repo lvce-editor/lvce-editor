@@ -1,14 +1,5 @@
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
-
-// import * as ViewService from '../ViewService/ViewService.js'
-
-/**
- * @enum {string}
- */
-
-export const UiStrings = {
-  NoWorkspaceSymbolsFound: 'no workspace symbols found',
-}
+import * as ViewletQuickPickStrings from '../ViewletQuickPick/ViewletQuickPickStrings.js'
 
 export const name = 'workspace-symbol'
 
@@ -22,7 +13,7 @@ export const getHelpEntries = () => {
 
 export const getNoResults = () => {
   return {
-    label: UiStrings.NoWorkspaceSymbolsFound,
+    label: ViewletQuickPickStrings.noWorkspaceSymbolsFound(),
   }
 }
 

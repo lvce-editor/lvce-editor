@@ -16,6 +16,7 @@ const UiStrings = {
   OpenRecent: 'Open Recent',
   NoRecentlyOpenedFoldersFound: 'No recently opened folders found',
   NoSymbolFound: 'No symbol found',
+  NoWorkspaceSymbolsFound: 'no workspace symbols found',
 }
 
 export const noMatchingColorThemesFound = () => {
@@ -64,4 +65,8 @@ export const noRecentlyOpenedFoldersFound = () => {
 
 export const noSymbolFound = () => {
   return I18NString.i18nString(UiStrings.NoSymbolFound)
+}
+
+export const noWorkspaceSymbolsFound = () => {
+  return I18NString.i18nString(UiStrings.NoWorkspaceSymbolsFound)
 }
