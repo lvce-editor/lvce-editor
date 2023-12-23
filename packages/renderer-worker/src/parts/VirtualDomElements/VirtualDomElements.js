@@ -1,3 +1,4 @@
+export const Audio = 0
 export const Button = 1
 export const Col = 2
 export const ColGroup = 3
@@ -47,3 +48,4 @@ export const Data = 57
 export const Time = 58
 export const Tfoot = 59
 export const Ul = 60
+export const Video = 61

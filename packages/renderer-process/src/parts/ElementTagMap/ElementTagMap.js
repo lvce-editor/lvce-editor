@@ -3,6 +3,8 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 
 export const getElementTag = (type) => {
   switch (type) {
+    case VirtualDomElements.Audio:
+      return ElementTag.Audio
     case VirtualDomElements.H1:
       return ElementTag.H1
     case VirtualDomElements.H2:
@@ -95,6 +97,8 @@ export const getElementTag = (type) => {
       return ElementTag.Tfoot
     case VirtualDomElements.Ul:
       return ElementTag.Ul
+    case VirtualDomElements.Video:
+      return ElementTag.Video
     default:
       throw new Error(`element tag not found ${type}`)
   }
