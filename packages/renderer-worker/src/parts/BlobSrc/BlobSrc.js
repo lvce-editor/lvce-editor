@@ -1,8 +1,8 @@
+import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as Protocol from '../Protocol/Protocol.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
-import * as Character from '../Character/Character.js'
+import * as Protocol from '../Protocol/Protocol.js'
 
 const getSrcRemote = (uri) => {
   const src = `/remote${uri}`
