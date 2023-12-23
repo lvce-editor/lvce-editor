@@ -17,6 +17,7 @@ const UiStrings = {
   NoRecentlyOpenedFoldersFound: 'No recently opened folders found',
   NoSymbolFound: 'No symbol found',
   NoWorkspaceSymbolsFound: 'no workspace symbols found',
+  TypeTheNameOfAViewToOpen: 'Type the name of a view, output channel or terminal to open.',
 }
 
 export const noMatchingColorThemesFound = () => {
@@ -69,4 +70,8 @@ export const noSymbolFound = () => {
 
 export const noWorkspaceSymbolsFound = () => {
   return I18NString.i18nString(UiStrings.NoWorkspaceSymbolsFound)
+}
+
+export const typeTheNameOfAViewToOpen = () => {
+  return I18NString.i18nString(UiStrings.TypeTheNameOfAViewToOpen)
 }
