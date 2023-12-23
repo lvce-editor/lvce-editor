@@ -1,31 +1,23 @@
 import * as ActionType from '../ActionType/ActionType.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  Refresh: 'Refresh',
-  Clear: 'Clear',
-  CollapseAll: 'Collapse All',
-}
+import * as ViewletReferencesStrings from '../ViewletReferences/ViewletReferencesStrings.js'
 
 export const getActions = () => {
   return [
     {
       type: ActionType.Button,
-      id: UiStrings.Refresh,
+      id: ViewletReferencesStrings.refresh(),
       icon: 'Refresh',
       command: 'refresh',
     },
     {
       type: ActionType.Button,
-      id: UiStrings.Clear,
+      id: ViewletReferencesStrings.clear(),
       icon: 'ClearAll',
       command: 'clear',
     },
     {
       type: ActionType.Button,
-      id: UiStrings.CollapseAll,
+      id: ViewletReferencesStrings.collapseAll(),
       icon: 'CollapseAll',
       command: 'collapseAll',
     },
