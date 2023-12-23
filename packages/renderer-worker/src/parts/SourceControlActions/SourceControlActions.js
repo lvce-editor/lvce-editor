@@ -1,28 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
-import * as ViewletSourceControlStrings from '../ViewletSourceControl/ViewletSourceControlStrings.js'
+import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 
-/**
- * @enum {string}
- */
-const Commands = {
-  StageAll: 'git.stageAll',
-  OpenFile: 'git.openFile',
-  Stage: 'git.stage',
-  UnstageAll: 'git.unstageAll',
-  Unstage: 'git.unstage',
-  Discard: 'git.discard',
-  DiscardAll: 'git.cleanAll',
-}
-
-/**
- * @enum {string}
- */
-const ContextId = {
-  WorkingTree: 'working-tree',
-  WorkingTreeItem: 'working-tree-item',
-  Index: 'index',
-  IndexItem: 'index-item',
+export const state = {
+  cache: Object.create(null),
 }
 
 const getContextId = (groupId, type) => {
@@ -32,80 +13,24 @@ const getContextId = (groupId, type) => {
   return groupId
 }
 
-const getSourceControlActionsWorkingTree = () => {
-  return [
-    {
-      command: Commands.DiscardAll,
-      label: ViewletSourceControlStrings.discardAll(),
-      icon: 'Discard',
-    },
-    {
-      command: Commands.StageAll,
-      label: ViewletSourceControlStrings.stageAll(),
-      icon: 'Add',
-    },
-  ]
-}
-
-const getSourceControlActionsWorkingTreeItem = () => {
-  return [
-    {
-      command: Commands.OpenFile,
-      label: ViewletSourceControlStrings.openFile(),
-      icon: 'GoToFile',
-    },
-    {
-      command: Commands.Discard,
-      label: ViewletSourceControlStrings.discard(),
-      icon: 'Discard',
-    },
-    {
-      command: Commands.Stage,
-      label: ViewletSourceControlStrings.stage(),
-      icon: 'Add',
-    },
-  ]
-}
-
-const getSourceControlActionsIndex = () => {
-  return [
-    {
-      command: Commands.UnstageAll,
-      label: ViewletSourceControlStrings.unstageAll(),
-      icon: 'Remove',
-    },
-  ]
-}
-
-const getSourceControlIndexItem = () => {
-  return [
-    {
-      command: Commands.OpenFile,
-      label: ViewletSourceControlStrings.openFile(),
-      icon: 'GoToFile',
-    },
-    {
-      command: Commands.Unstage,
-      label: ViewletSourceControlStrings.unstage(),
-      icon: 'Remove',
-    },
-  ]
+const ensureActions = async () => {
+  if (Object.keys(state.cache).length > 0) {
+    return
+  }
+  const extensions = await ExtensionMeta.getExtensions()
+  for (const extension of extensions) {
+    if (extension && extension['source-control-actions']) {
+      for (const [key, value] of Object.entries(extension['source-control-actions'])) {
+        state.cache[key] = value
+      }
+    }
+  }
 }
 
 export const getSourceControlActions = async (providerId, groupId, type) => {
-  // TODO get source-control-actions from extension.json file
   Assert.string(groupId)
+  await ensureActions()
   const contextId = getContextId(groupId, type)
-  switch (contextId) {
-    case ContextId.WorkingTree:
-      return getSourceControlActionsWorkingTree()
-    case ContextId.WorkingTreeItem:
-      return getSourceControlActionsWorkingTreeItem()
-    case ContextId.Index:
-      return getSourceControlActionsIndex()
-    case ContextId.IndexItem:
-      return getSourceControlIndexItem()
-    default:
-      return []
-  }
+  const value = state.cache[contextId] || []
+  return value
 }
