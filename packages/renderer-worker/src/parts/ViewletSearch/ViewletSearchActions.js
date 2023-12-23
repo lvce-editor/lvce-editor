@@ -18,7 +18,7 @@ export const getActions = () => {
     },
     {
       type: ActionType.Button,
-      id: ViewletSearchStrings.newSearchEditor(),
+      id: ViewletSearchStrings.openNewSearchEditor(),
       icon: MaskIcon.NewFile,
     },
     {
