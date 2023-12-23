@@ -1,7 +1,4 @@
 import * as I18nString from '../I18NString/I18NString.js'
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-import * as IsAutoUpdateSupported from '../IsAutoUpdateSupported/IsAutoUpdateSupported.js'
-import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 
 /**
  * @enum {string}
