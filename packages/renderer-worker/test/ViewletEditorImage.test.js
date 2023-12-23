@@ -115,7 +115,27 @@ test('render', () => {
     ...oldState,
     src: '/test/image.png',
   }
-  expect(render(oldState, newState)).toEqual([['Viewlet.send', 'EditorImage', 'setSrc', '/test/image.png']])
+  expect(render(oldState, newState)).toEqual([
+    [
+      'Viewlet.send',
+      'EditorImage',
+      'setDom',
+      [
+        {
+          childCount: 1,
+          className: 'ImageContent',
+          type: 4,
+        },
+        {
+          childCount: 0,
+          className: 'ImageElement',
+          draggable: false,
+          src: '/test/image.png',
+          type: 17,
+        },
+      ],
+    ],
+  ])
 })
 
 test('handlePointerMove - move left', () => {
