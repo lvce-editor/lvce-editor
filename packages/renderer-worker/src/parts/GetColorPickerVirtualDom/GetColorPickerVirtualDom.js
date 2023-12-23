@@ -1,13 +1,7 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-export const getColorPickerVirtualDom = (color, offset) => {
+export const getColorPickerVirtualDom = () => {
   return [
-    {
-      type: VirtualDomElements.Div,
-      className: 'Viewlet ColorPicker',
-      '--ColorPickerColor': color,
-      childCount: 3,
-    },
     {
       type: VirtualDomElements.Div,
       className: 'ColorPickerRectangle',
@@ -36,7 +30,6 @@ export const getColorPickerVirtualDom = (color, offset) => {
     {
       type: VirtualDomElements.Div,
       className: 'ColorPickerSliderThumb',
-      translateX: offset,
       childCount: 0,
     },
   ]
