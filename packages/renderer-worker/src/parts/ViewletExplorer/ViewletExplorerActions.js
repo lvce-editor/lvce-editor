@@ -1,39 +1,30 @@
 import * as ActionType from '../ActionType/ActionType.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  NewFile: 'New File',
-  NewFolder: 'New Folder',
-  Refresh: 'Refresh',
-  CollapseAll: 'Collapse All',
-}
+import * as ViewletExplorerStrings from '../ViewletExplorer/ViewletExplorerStrings.js'
 
 export const getActions = () => {
   return [
     {
       type: ActionType.Button,
-      id: UiStrings.NewFile,
+      id: ViewletExplorerStrings.newFile(),
       icon: MaskIcon.NewFile,
       command: 'newFile',
     },
     {
       type: ActionType.Button,
-      id: UiStrings.NewFolder,
+      id: ViewletExplorerStrings.newFolder(),
       icon: MaskIcon.NewFolder,
       command: 'newFolder',
     },
     {
       type: ActionType.Button,
-      id: UiStrings.Refresh,
+      id: ViewletExplorerStrings.refresh(),
       icon: MaskIcon.Refresh,
       command: 'refresh',
     },
     {
       type: ActionType.Button,
-      id: UiStrings.CollapseAll,
+      id: ViewletExplorerStrings.collapseAll(),
       icon: MaskIcon.CollapseAll,
       command: 'collapseAll',
     },
