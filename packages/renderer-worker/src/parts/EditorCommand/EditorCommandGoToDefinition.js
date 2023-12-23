@@ -1,15 +1,7 @@
 import * as Definition from '../Definition/Definition.js'
-import * as I18nString from '../I18NString/I18NString.js'
+import * as EditorStrings from '../EditorStrings/EditorStrings.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorGoTo from './EditorCommandGoTo.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  NoDefinitionFound: 'No definition found',
-  NoDefinitionFoundFor: 'No definition found for \'{PH1}\'',
-}
 
 // TODO race condition, check that editor hasn't been closed in the meantime
 
@@ -30,11 +22,9 @@ const getLocation = async (editor, rowIndex, columnIndex) => {
 
 const getNoLocationFoundMessage = (info) => {
   if (info.word) {
-    return I18nString.i18nString(UiStrings.NoDefinitionFoundFor, {
-      PH1: info.word,
-    })
+    return EditorStrings.noDefinitionFoundFor(info.word)
   }
-  return I18nString.i18nString(UiStrings.NoDefinitionFound)
+  return EditorStrings.noDefinitionFound()
 }
 
 const getErrorMessage = (error) => {

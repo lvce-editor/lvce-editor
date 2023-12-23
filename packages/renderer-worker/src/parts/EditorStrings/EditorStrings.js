@@ -16,6 +16,8 @@ export const UiStrings = {
   Separator: 'Separator',
   ToggleLineComment: 'Toggle Line Comment',
   ToggleBlockComment: 'Toggle Block Comment',
+  NoDefinitionFound: 'No definition found',
+  NoDefinitionFoundFor: "No definition found for '{PH1}'",
 }
 
 export const goToDefinition = () => {
@@ -64,4 +66,14 @@ export const toggleBlockComment = () => {
 
 export const separator = () => {
   return ''
+}
+
+export const noDefinitionFound = () => {
+  return I18nString.i18nString(UiStrings.NoDefinitionFound)
+}
+
+export const noDefinitionFoundFor = (word) => {
+  return I18nString.i18nString(UiStrings.NoDefinitionFoundFor, {
+    PH1: word,
+  })
 }
