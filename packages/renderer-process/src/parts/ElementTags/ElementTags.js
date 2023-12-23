@@ -1,3 +1,4 @@
+export const Audio = 'audio'
 export const Button = 'button'
 export const Col = 'col'
 export const ColGroup = 'colgroup'
