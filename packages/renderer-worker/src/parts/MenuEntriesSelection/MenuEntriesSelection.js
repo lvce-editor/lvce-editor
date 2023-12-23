@@ -1,44 +1,35 @@
-import * as I18nString from '../I18NString/I18NString.js'
+import * as EditorStrings from '../EditorStrings/EditorStrings.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-
-export const UiStrings = {
-  SelectAll: 'Select All',
-  CopyLineUp: 'Copy Line Up',
-  CopyLineDown: 'Copy Line Down',
-  MoveLineUp: 'Move Line Up',
-  MoveLineDown: 'Move Line Down',
-  DuplicateSelection: 'Duplicate Selection',
-}
 
 export const getMenuEntries = () => {
   return [
     {
       id: 'selectAll',
-      label: I18nString.i18nString(UiStrings.SelectAll),
+      label: EditorStrings.selectAll(),
       flags: MenuItemFlags.None,
       command: 'Editor.selectAll',
     },
     {
       id: 'copyLineUp',
-      label: I18nString.i18nString(UiStrings.CopyLineUp),
+      label: EditorStrings.copyLineUp(),
       flags: MenuItemFlags.None,
       command: 'Editor.copyLineUp',
     },
     {
       id: 'copyLineDown',
-      label: I18nString.i18nString(UiStrings.CopyLineDown),
+      label: EditorStrings.copyLineDown(),
       flags: MenuItemFlags.None,
       command: 'Editor.copyLineDown',
     },
     {
       id: 'moveLineUp',
-      label: I18nString.i18nString(UiStrings.MoveLineUp),
+      label: EditorStrings.moveLineUp(),
       flags: MenuItemFlags.Disabled,
       command: 'Editor.moveLineUp',
     },
     {
       id: 'moveLineDown',
-      label: I18nString.i18nString(UiStrings.MoveLineDown),
+      label: EditorStrings.moveLineDown(),
       flags: MenuItemFlags.Disabled,
       command: 'Editor.moveLineDown',
     },

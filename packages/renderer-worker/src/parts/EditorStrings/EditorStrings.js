@@ -3,19 +3,29 @@ import * as I18nString from '../I18NString/I18NString.js'
 /**
  * @enum {string}
  */
-export const UiStrings = {
-  GoToTypeDefinition: 'Go to Type Definition',
-  GoToDefinition: 'Go to Definition',
-  FindAllReferences: 'Find All References',
-  FindAllImplementations: 'Find All Implementations',
-  Cut: 'Cut',
+const UiStrings = {
   Copy: 'Copy',
+  CopyLineDown: 'Copy Line Down',
+  CopyLineUp: 'Copy Line Up',
+  Cut: 'Cut',
+  DuplicateSelection: 'Duplicate Selection',
+  FindAllImplementations: 'Find All Implementations',
+  FindAllReferences: 'Find All References',
+  GoToDefinition: 'Go to Definition',
+  GoToTypeDefinition: 'Go to Type Definition',
+  MoveLineDown: 'Move Line Down',
+  MoveLineUp: 'Move Line Up',
+  NoDefinitionFound: 'No definition found',
+  NoDefinitionFoundFor: "No definition found for '{PH1}'",
+  NoTypeDefinitionFound: 'No type definition found',
+  NoTypeDefinitionFoundFor: "No type definition found for '{PH1}'",
   Paste: 'Paste',
-  Undo: 'Undo',
   Redo: 'Redo',
+  SelectAll: 'Select All',
   Separator: 'Separator',
-  ToggleLineComment: 'Toggle Line Comment',
   ToggleBlockComment: 'Toggle Block Comment',
+  ToggleLineComment: 'Toggle Line Comment',
+  Undo: 'Undo',
 }
 
 export const goToDefinition = () => {
@@ -64,4 +74,48 @@ export const toggleBlockComment = () => {
 
 export const separator = () => {
   return ''
+}
+
+export const noDefinitionFound = () => {
+  return I18nString.i18nString(UiStrings.NoDefinitionFound)
+}
+
+export const noDefinitionFoundFor = (word) => {
+  return I18nString.i18nString(UiStrings.NoDefinitionFoundFor, {
+    PH1: word,
+  })
+}
+
+export const noTypeDefinitionFoundFor = (word) => {
+  return I18nString.i18nString(UiStrings.NoTypeDefinitionFoundFor, {
+    PH1: word,
+  })
+}
+
+export const noTypeDefinitionFound = () => {
+  return I18nString.i18nString(UiStrings.NoTypeDefinitionFound)
+}
+
+export const selectAll = () => {
+  return I18nString.i18nString(UiStrings.SelectAll)
+}
+
+export const copyLineUp = () => {
+  return I18nString.i18nString(UiStrings.CopyLineUp)
+}
+
+export const copyLineDown = () => {
+  return I18nString.i18nString(UiStrings.CopyLineDown)
+}
+
+export const moveLineUp = () => {
+  return I18nString.i18nString(UiStrings.MoveLineUp)
+}
+
+export const moveLineDown = () => {
+  return I18nString.i18nString(UiStrings.MoveLineDown)
+}
+
+export const duplicateSelection = () => {
+  return I18nString.i18nString(UiStrings.DuplicateSelection)
 }
