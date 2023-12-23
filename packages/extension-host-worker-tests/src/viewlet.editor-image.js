@@ -14,7 +14,7 @@ export const test = async ({ FileSystem, Workspace, Main, Locator, Command, expe
   await Main.openUri(`${tmpDir}/file1.svg`)
 
   // assert
-  const viewletImage = Locator('.ViewletImage')
+  const viewletImage = Locator('.Viewlet.Image')
   await expect(viewletImage).toBeVisible()
 
   // act
@@ -27,7 +27,7 @@ export const test = async ({ FileSystem, Workspace, Main, Locator, Command, expe
   })
 
   // assert
-  const imageWrapper = Locator('.ImageWrapper')
+  const imageWrapper = Locator('.ImageContent')
   await expect(imageWrapper).toHaveCSS('transform', 'matrix(1.13, 0, 0, 1.13, 0, 7.15)')
 
   // workaround for not being setPointerCapture() not working on
@@ -54,5 +54,6 @@ export const test = async ({ FileSystem, Workspace, Main, Locator, Command, expe
   // assert
   await expect(imageWrapper).toHaveCSS('transform', 'matrix(1.13, 0, 0, 1.13, 1, 7.15)')
 
+  // act
   await Command.execute('PointerCapture.unmock')
 }
