@@ -24,8 +24,8 @@ export const getVideoVirtualDom = (src, errorMessage) => {
       childCount: 1,
     },
     {
-      type: VirtualDomElements.Div,
-      className: 'VideoVideo',
+      type: VirtualDomElements.Video,
+      className: 'VideoElement',
       src,
       controls: true,
       childCount: 0,

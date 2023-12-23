@@ -1,23 +1,16 @@
+import * as GetVideoVirtualDom from '../GetVideoVirtualDom/GetVideoVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
 
-export const renderSrc = {
+const renderVideo = {
   isEqual(oldState, newState) {
-    return oldState.src === newState.src
+    return oldState.src === newState.src && oldState.videoErrorMessage === newState.videoErrorMessage
   },
   apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetSrc, /* src */ newState.src]
+    const dom = GetVideoVirtualDom.getVideoVirtualDom(newState.src, newState.videoErrorMessage)
+    return [/* method */ RenderMethod.SetDom, dom]
   },
 }
 
-const renderVideoErrorMessage = {
-  isEqual(oldState, newState) {
-    return oldState.videoErrorMessage === newState.videoErrorMessage
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetVideoErrorMessage, /* src */ newState.videoErrorMessage]
-  },
-}
-
-export const render = [renderSrc, renderVideoErrorMessage]
+export const render = [renderVideo]
