@@ -18,6 +18,8 @@ const UiStrings = {
   ToggleBlockComment: 'Toggle Block Comment',
   NoDefinitionFound: 'No definition found',
   NoDefinitionFoundFor: "No definition found for '{PH1}'",
+  NoTypeDefinitionFound: 'No type definition found',
+  NoTypeDefinitionFoundFor: "No type definition found for '{PH1}'",
 }
 
 export const goToDefinition = () => {
@@ -76,4 +78,14 @@ export const noDefinitionFoundFor = (word) => {
   return I18nString.i18nString(UiStrings.NoDefinitionFoundFor, {
     PH1: word,
   })
+}
+
+export const noTypeDefinitionFoundFor = (word) => {
+  return I18nString.i18nString(UiStrings.NoTypeDefinitionFoundFor, {
+    PH1: word,
+  })
+}
+
+export const noTypeDefinitionFound = () => {
+  return I18nString.i18nString(UiStrings.NoTypeDefinitionFound)
 }
