@@ -4,19 +4,19 @@ import * as I18NString from '../I18NString/I18NString.js'
  * @enum {string}
  */
 const UiStrings = {
-  NoMatchingColorThemesFound: 'No matching color themes found',
-  SelectColorTheme: 'Select Color Theme',
-  TypeNameOfCommandToRun: 'Type the name of a command to run.',
-  ShowAndRunCommands: 'Show And Run Commands',
-  NoMatchingResults: 'No matching results',
   Files: 'Files',
   GoToFile: 'Go to file',
-  NoResults: 'No Results',
-  SelectToOpen: 'Select to open',
-  OpenRecent: 'Open Recent',
+  NoMatchingColorThemesFound: 'No matching color themes found',
+  NoMatchingResults: 'No matching results',
   NoRecentlyOpenedFoldersFound: 'No recently opened folders found',
+  NoResults: 'No Results',
   NoSymbolFound: 'No symbol found',
   NoWorkspaceSymbolsFound: 'no workspace symbols found',
+  OpenRecent: 'Open Recent',
+  SelectColorTheme: 'Select Color Theme',
+  SelectToOpen: 'Select to open',
+  ShowAndRunCommands: 'Show And Run Commands',
+  TypeNameOfCommandToRun: 'Type the name of a command to run.',
   TypeTheNameOfAViewToOpen: 'Type the name of a view, output channel or terminal to open.',
 }
 
