@@ -14,7 +14,7 @@ export const test = async ({ FileSystem, Workspace, Main, Locator, Command, expe
   await Main.openUri(`${tmpDir}/file1.svg`)
 
   // assert
-  const viewletImage = Locator('.Viewlet.Image')
+  const viewletImage = Locator('.Viewlet.EditorImage')
   await expect(viewletImage).toBeVisible()
 
   // act
