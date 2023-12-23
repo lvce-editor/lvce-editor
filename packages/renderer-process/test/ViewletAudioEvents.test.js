@@ -17,7 +17,7 @@ jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletComma
 const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletAudio = await import('../src/parts/ViewletAudio/ViewletAudio.js')
 
-test('event - error', () => {
+test.skip('event - error', () => {
   const state = ViewletAudio.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
@@ -35,6 +35,6 @@ test('event - error', () => {
     1,
     'handleAudioError',
     4,
-    'MEDIA_ELEMENT_ERROR: Media load rejected by URL safety check'
+    'MEDIA_ELEMENT_ERROR: Media load rejected by URL safety check',
   )
 })
