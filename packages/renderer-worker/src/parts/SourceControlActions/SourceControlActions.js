@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as DirentType from '../DirentType/DirentType.js'
 import * as ViewletSourceControlStrings from '../ViewletSourceControl/ViewletSourceControlStrings.js'
 
 /**
@@ -25,7 +26,7 @@ const ContextId = {
 }
 
 const getContextId = (groupId, type) => {
-  if (type === 'file') {
+  if (type === DirentType.File) {
     return `${groupId}-item`
   }
   return groupId
