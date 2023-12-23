@@ -1,3 +1,4 @@
+import * as GetColorPickerVirtualDom from '../GetColorPickerVirtualDom/GetColorPickerVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
@@ -20,4 +21,14 @@ const renderOffsetX = {
   },
 }
 
-export const render = [renderColor, renderOffsetX]
+const renderColorPicker = {
+  isEqual(oldState, newState) {
+    return oldState.min === newState.min && oldState.max === newState.max
+  },
+  apply(oldState, newState) {
+    const dom = GetColorPickerVirtualDom.getColorPickerVirtualDom()
+    return ['setDom', dom]
+  },
+}
+
+export const render = [renderColorPicker, renderColor, renderOffsetX]
