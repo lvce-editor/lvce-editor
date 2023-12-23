@@ -1,36 +1,29 @@
-import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-
-export const UiStrings = {
-  Enable: 'Enable',
-  Disable: 'Disable',
-  Uninstall: 'Uninstall',
-  InstallAnotherVersion: 'Install Another Version',
-}
+import * as ViewletExtensionsStrings from '../ViewletExtensions/ViewletExtensionsStrings.js'
 
 export const getMenuEntries = () => {
   return [
     {
       id: 'enable',
-      label: I18nString.i18nString(UiStrings.Enable),
+      label: ViewletExtensionsStrings.enable(),
       flags: MenuItemFlags.None,
       command: -1,
     },
     {
       id: 'disable',
-      label: I18nString.i18nString(UiStrings.Disable),
+      label: ViewletExtensionsStrings.disable(),
       flags: MenuItemFlags.None,
       command: -1,
     },
     {
       id: 'uninstall',
-      label: I18nString.i18nString(UiStrings.Uninstall),
+      label: ViewletExtensionsStrings.uninstall(),
       flags: MenuItemFlags.None,
       command: 'Extensions.uninstall',
     },
     {
       id: 'installAnotherVersion',
-      label: I18nString.i18nString(UiStrings.InstallAnotherVersion),
+      label: ViewletExtensionsStrings.installAnotherVersion(),
       flags: MenuItemFlags.None,
       command: -1,
     },
