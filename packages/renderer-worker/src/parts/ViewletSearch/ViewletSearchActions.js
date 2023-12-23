@@ -1,44 +1,34 @@
 import * as ActionType from '../ActionType/ActionType.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  Refresh: 'Refresh',
-  ClearSearchResults: 'Clear Search Results',
-  NewSearchEditor: 'New Search Editor',
-  ViewAsTree: 'View as Tree',
-  CollapseAll: 'Collapse All',
-}
+import * as ViewletSearchStrings from '../ViewletSearch/ViewletSearchStrings.js'
 
 export const getActions = () => {
   return [
     {
       type: ActionType.Button,
-      id: UiStrings.Refresh,
+      id: ViewletSearchStrings.refresh(),
       icon: MaskIcon.Refresh,
       command: 'refresh',
     },
     {
       type: ActionType.Button,
-      id: UiStrings.ClearSearchResults,
+      id: ViewletSearchStrings.clearSearchResults(),
       icon: MaskIcon.ClearAll,
       command: 'clearSearchResults',
     },
     {
       type: ActionType.Button,
-      id: UiStrings.NewSearchEditor,
+      id: ViewletSearchStrings.newSearchEditor(),
       icon: MaskIcon.NewFile,
     },
     {
       type: ActionType.Button,
-      id: UiStrings.ViewAsTree,
+      id: ViewletSearchStrings.viewAsTree(),
       icon: MaskIcon.ListFlat,
     },
     {
       type: ActionType.Button,
-      id: UiStrings.CollapseAll,
+      id: ViewletSearchStrings.collapseAll(),
       icon: MaskIcon.CollapseAll,
     },
   ]
