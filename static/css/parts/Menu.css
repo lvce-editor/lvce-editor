@@ -24,7 +24,6 @@
   /* TODO using px and rem -> decide */
   height: 26px;
   padding: 0 28px;
-  display: flex;
   align-items: center;
   white-space: nowrap;
   position: relative;
@@ -56,7 +55,7 @@
   background: currentColor;
 }
 
-.MenuItem[aria-haspopup='true']::after {
+.MenuItemSubMenu::after {
   width: 16px;
   height: 16px;
   content: '';
