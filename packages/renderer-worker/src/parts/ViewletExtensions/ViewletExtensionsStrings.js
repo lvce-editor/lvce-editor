@@ -8,6 +8,10 @@ const UiStrings = {
   Filter: 'Filter',
   Refresh: 'Refresh',
   ClearExtensionSearchResults: 'Clear extension search results',
+  Enable: 'Enable',
+  Disable: 'Disable',
+  Uninstall: 'Uninstall',
+  InstallAnotherVersion: 'Install Another Version',
 }
 
 export const noExtensionsFound = () => {
@@ -24,4 +28,20 @@ export const refresh = () => {
 
 export const clearExtensionSearchResults = () => {
   return I18nString.i18nString(UiStrings.ClearExtensionSearchResults)
+}
+
+export const enable = () => {
+  return I18nString.i18nString(UiStrings.Enable)
+}
+
+export const disable = () => {
+  return I18nString.i18nString(UiStrings.Disable)
+}
+
+export const uninstall = () => {
+  return I18nString.i18nString(UiStrings.Uninstall)
+}
+
+export const installAnotherVersion = () => {
+  return I18nString.i18nString(UiStrings.InstallAnotherVersion)
 }
