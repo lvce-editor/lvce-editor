@@ -7,7 +7,7 @@ import * as ViewletVideoEvents from './ViewletVideoEvents.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet Video'
+  $Viewlet.className = 'Viewlet Media Video'
   return {
     $Viewlet,
   }

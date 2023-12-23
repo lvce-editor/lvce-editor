@@ -6,7 +6,7 @@ import * as ViewletAudioEvents from './ViewletAudioEvents.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet Audio'
+  $Viewlet.className = 'Viewlet Media Audio'
   return {
     $Viewlet,
   }

@@ -1,1 +1,1 @@
-export const Css = ['/css/parts/ViewletAudio.css']
+export const Css = ['/css/parts/ViewletMedia.css']
