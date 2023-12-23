@@ -1,24 +1,14 @@
 import * as Command from '../Command/Command.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
-import * as SearchFile from '../SearchFile/SearchFile.js'
-import * as Workspace from '../Workspace/Workspace.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  Files: 'Files',
-  NoMatchingResults: 'No matching results',
-  GoToFile: 'Go to file',
-}
+import * as SearchFile from '../SearchFile/SearchFile.js'
+import * as ViewletQuickPickStrings from '../ViewletQuickPick/ViewletQuickPickStrings.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 const searchFile = async (path, value) => {
   const files = await SearchFile.searchFile(/* path */ path, /* searchTerm */ value)
   return files
 }
-
-const getIcon = (file) => {}
 
 export const name = 'file'
 
@@ -27,14 +17,14 @@ export const getPlaceholder = () => {
 }
 
 export const getLabel = () => {
-  return UiStrings.Files
+  return ViewletQuickPickStrings.files()
 }
 
 // TODO help entries should not be here
 export const getHelpEntries = () => {
   return [
     {
-      description: UiStrings.GoToFile,
+      description: ViewletQuickPickStrings.goToFile(),
       category: 'global commands',
     },
   ]
@@ -42,7 +32,7 @@ export const getHelpEntries = () => {
 
 export const getNoResults = () => {
   return {
-    label: UiStrings.NoMatchingResults,
+    label: ViewletQuickPickStrings.noMatchingResults(),
   }
 }
 

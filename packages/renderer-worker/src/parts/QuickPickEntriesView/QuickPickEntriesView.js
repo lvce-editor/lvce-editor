@@ -1,15 +1,9 @@
+import * as ViewletQuickPickStrings from '../ViewletQuickPick/ViewletQuickPickStrings.js'
+
 // TODO probably not needed
 
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  TypeTheNameOfAViewToOpen:
-    'Type the name of a view, output channel or terminal to open.',
-}
-
 export const getPlaceholder = () => {
-  return UiStrings.TypeTheNameOfAViewToOpen
+  return ViewletQuickPickStrings.typeNameofCommandToRun()
 }
 
 export const getHelpEntries = () => {

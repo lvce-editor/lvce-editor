@@ -1,11 +1,5 @@
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
-
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  NoSymbolFound: 'No symbol found',
-}
+import * as ViewletQuickPickStrings from '../ViewletQuickPick/ViewletQuickPickStrings.js'
 
 export const name = 'symbol'
 
@@ -19,7 +13,7 @@ export const getHelpEntries = () => {
 
 export const getNoResults = () => {
   return {
-    label: UiStrings.NoSymbolFound,
+    label: ViewletQuickPickStrings.noSymbolFound(),
   }
 }
 

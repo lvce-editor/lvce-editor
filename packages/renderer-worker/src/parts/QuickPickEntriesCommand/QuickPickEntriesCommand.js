@@ -3,26 +3,18 @@ import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
-
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  TypeNameOfCommandToRun: 'Type the name of a command to run.',
-  ShowAndRunCommands: 'Show And Run Commands',
-  NoMatchingResults: 'No matching results',
-}
+import * as ViewletQuickPickStrings from '../ViewletQuickPick/ViewletQuickPickStrings.js'
 
 export const name = 'command'
 
 export const getPlaceholder = () => {
-  return UiStrings.TypeNameOfCommandToRun
+  return ViewletQuickPickStrings.typeNameofCommandToRun()
 }
 
 export const helpEntries = () => {
   return [
     {
-      description: UiStrings.ShowAndRunCommands,
+      description: ViewletQuickPickStrings.showAndRunCommands(),
       category: 'global commands',
     },
   ]
@@ -34,7 +26,7 @@ export const getLabel = () => {
 
 export const getNoResults = () => {
   return {
-    label: UiStrings.NoMatchingResults,
+    label: ViewletQuickPickStrings.noMatchingResults(),
   }
 }
 

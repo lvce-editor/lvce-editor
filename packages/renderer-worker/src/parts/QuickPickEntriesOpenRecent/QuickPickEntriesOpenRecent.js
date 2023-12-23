@@ -1,16 +1,8 @@
 import * as Command from '../Command/Command.js'
-import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
+import * as ViewletQuickPickStrings from '../ViewletQuickPick/ViewletQuickPickStrings.js'
 import * as Workspace from '../Workspace/Workspace.js'
-
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  SelectToOpen: 'Select to open',
-  OpenRecent: 'Open Recent',
-  NoRecentlyOpenedFoldersFound: 'No recently opened folders found',
-}
 
 const getRecentlyOpened = () => {
   return Command.execute(/* RecentlyOpened.getRecentlyOpened */ 'RecentlyOpened.getRecentlyOpened')
@@ -21,11 +13,11 @@ const openWorkspaceFolder = (uri) => {
 }
 
 export const getPlaceholder = () => {
-  return UiStrings.SelectToOpen
+  return ViewletQuickPickStrings.selectToOpen()
 }
 
 export const getLabel = () => {
-  return UiStrings.OpenRecent
+  return ViewletQuickPickStrings.openRecent()
 }
 
 export const getHelpEntries = () => {
@@ -34,7 +26,7 @@ export const getHelpEntries = () => {
 
 export const getNoResults = () => {
   return {
-    label: UiStrings.NoRecentlyOpenedFoldersFound,
+    label: ViewletQuickPickStrings.noRecentlyOpenedFoldersFound(),
   }
 }
 
