@@ -12,12 +12,6 @@ export const getActions = () => {
     },
     {
       type: ActionType.Button,
-      id: ViewletSourceControlStrings.createPullRequest(),
-      icon: MaskIcon.Blank,
-      command: '',
-    },
-    {
-      type: ActionType.Button,
       id: ViewletSourceControlStrings.commitAndPush(),
       icon: MaskIcon.Check,
       command: '',
