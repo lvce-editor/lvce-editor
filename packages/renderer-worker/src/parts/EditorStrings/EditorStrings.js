@@ -20,6 +20,12 @@ const UiStrings = {
   NoDefinitionFoundFor: "No definition found for '{PH1}'",
   NoTypeDefinitionFound: 'No type definition found',
   NoTypeDefinitionFoundFor: "No type definition found for '{PH1}'",
+  SelectAll: 'Select All',
+  CopyLineUp: 'Copy Line Up',
+  CopyLineDown: 'Copy Line Down',
+  MoveLineUp: 'Move Line Up',
+  MoveLineDown: 'Move Line Down',
+  DuplicateSelection: 'Duplicate Selection',
 }
 
 export const goToDefinition = () => {
@@ -88,4 +94,28 @@ export const noTypeDefinitionFoundFor = (word) => {
 
 export const noTypeDefinitionFound = () => {
   return I18nString.i18nString(UiStrings.NoTypeDefinitionFound)
+}
+
+export const selectAll = () => {
+  return I18nString.i18nString(UiStrings.SelectAll)
+}
+
+export const copyLineUp = () => {
+  return I18nString.i18nString(UiStrings.CopyLineUp)
+}
+
+export const copyLineDown = () => {
+  return I18nString.i18nString(UiStrings.CopyLineDown)
+}
+
+export const moveLineUp = () => {
+  return I18nString.i18nString(UiStrings.MoveLineUp)
+}
+
+export const moveLineDown = () => {
+  return I18nString.i18nString(UiStrings.MoveLineDown)
+}
+
+export const duplicateSelection = () => {
+  return I18nString.i18nString(UiStrings.DuplicateSelection)
 }
