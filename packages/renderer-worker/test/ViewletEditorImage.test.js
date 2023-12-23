@@ -115,7 +115,27 @@ test('render', () => {
     ...oldState,
     src: '/test/image.png',
   }
-  expect(render(oldState, newState)).toEqual([['Viewlet.send', 'EditorImage', 'setSrc', '/test/image.png']])
+  expect(render(oldState, newState)).toEqual([
+    [
+      'Viewlet.send',
+      'EditorImage',
+      'setDom',
+      [
+        {
+          childCount: 1,
+          className: 'ImageContent',
+          type: 4,
+        },
+        {
+          childCount: 0,
+          className: 'ImageElement',
+          draggable: false,
+          src: '/test/image.png',
+          type: 17,
+        },
+      ],
+    ],
+  ])
 })
 
 test('handlePointerMove - move left', () => {
@@ -295,10 +315,15 @@ test('handleWheel - zoom into the middle', () => {
   expect(newState.domMatrix.f).toBe(-6.499999999999993)
 })
 
-test.skip('handleWheel - zoom out', () => {
-  const state = { ...ViewletEditorImage.create(), top: 0, left: 0 }
+test('handleWheel - zoom out', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+  }
   const newState = ViewletEditorImage.handleWheel(state, 0, 0, 0, 13)
-  expect(newState.zoom).toBe(0.9389671361502347)
   expect(newState.domMatrix.a).toBe(0.9389671361502347)
   expect(newState.domMatrix.b).toBe(0)
   expect(newState.domMatrix.c).toBe(0)

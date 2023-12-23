@@ -1,5 +1,6 @@
 import * as GetSourceControlItemsVirtualDom from '../GetSourceControlItemsVirtualDom/GetSourceControlItemsVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as GetVisibleSourceControlItems from '../GetVisibleSourceControlItems/GetVisibleSourceControlItems.js'
 
 export const hasFunctionalRender = true
 
@@ -17,7 +18,8 @@ const renderChangedFiles = {
     return oldState.displayItems === newState.displayItems && oldState.buttonIndex === newState.buttonIndex && oldState.buttons === newState.buttons
   },
   apply(oldState, newState) {
-    const dom = GetSourceControlItemsVirtualDom.getSourceControlItemsVirtualDom(newState.displayItems, newState.buttonIndex, newState.buttons)
+    const visible = GetVisibleSourceControlItems.getVisibleSourceControlItems(newState.displayItems, newState.buttons, newState.buttonIndex)
+    const dom = GetSourceControlItemsVirtualDom.getSourceControlItemsVirtualDom(visible)
     return [RenderMethod.SetItemsDom, dom]
   },
 }
