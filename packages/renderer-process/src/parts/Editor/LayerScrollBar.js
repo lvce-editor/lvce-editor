@@ -7,7 +7,7 @@ export const setPosition = (state, scrollBarY, scrollBarHeight) => {
 }
 
 export const setScrollBarHorizontal = (state, scrollBarX, scrollBarWidth, deltaX) => {
-  const { $ScrollBarThumbHorizontal, $EditorLayers } = state
+  const { $ScrollBarThumbHorizontal } = state
   SetBounds.setXAndWidth($ScrollBarThumbHorizontal, scrollBarX, scrollBarWidth)
 }
 
