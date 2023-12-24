@@ -2,13 +2,13 @@ import * as SetBounds from '../SetBounds/SetBounds.js'
 
 export const setPosition = (state, scrollBarY, scrollBarHeight) => {
   const { $ScrollBarThumbVertical } = state
-  SetBounds.setYAndHeight($ScrollBarThumbVertical, scrollBarY, scrollBarHeight)
+  $ScrollBarThumbVertical.style.translate = scrollBarY
+  $ScrollBarThumbVertical.style.height = scrollBarHeight
 }
 
 export const setScrollBarHorizontal = (state, scrollBarX, scrollBarWidth, deltaX) => {
-  const { $ScrollBarThumbHorizontal, $EditorLayers } = state
+  const { $ScrollBarThumbHorizontal } = state
   SetBounds.setXAndWidth($ScrollBarThumbHorizontal, scrollBarX, scrollBarWidth)
-  // SetBounds.setX($EditorLayers, -deltaX)
 }
 
 // TODO scrollbar decorations should be own layer maybe
