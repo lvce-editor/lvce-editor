@@ -202,8 +202,8 @@ export const setSelections = (state, cursorInfos, selectionInfos) => {
 
 export const renderTextAndCursorsAndSelections = (state, scrollBarY, scrollBarHeight, textInfos, cursorInfos, selectionInfos) => {
   Assert.object(state)
-  Assert.number(scrollBarY)
-  Assert.number(scrollBarHeight)
+  Assert.string(scrollBarY)
+  Assert.string(scrollBarHeight)
   Assert.array(textInfos)
   Assert.array(cursorInfos)
   Assert.array(selectionInfos)

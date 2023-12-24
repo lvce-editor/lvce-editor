@@ -105,30 +105,6 @@ export const renderText = (editor) => {
   )
 }
 
-export const renderTextAndCursorAndSelectionsCommands = (editor) => {
-  Assert.object(editor)
-  const { textInfos, differences } = EditorText.getVisible(editor)
-  const { cursorInfos, selectionInfos } = EditorSelection.getVisible(editor)
-  const scrollBarHeight = editor.scrollBarHeight
-  const scrollBarY = (editor.deltaY / editor.finalDeltaY) * (editor.height - editor.scrollBarHeight)
-  return [
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'EditorText',
-    /* method */ 'renderTextAndCursorsAndSelections',
-    /* scrollBarY */ scrollBarY,
-    /* scrollBarHeight */ scrollBarHeight,
-    /* textInfos */ textInfos,
-    /* differences */ differences,
-    /* cursorInfos */ cursorInfos,
-    /* selectionInfos */ selectionInfos,
-  ]
-}
-
-export const renderTextAndCursorAndSelections = (editor) => {
-  const commands = renderTextAndCursorAndSelectionsCommands(editor)
-  RendererProcess.send(commands)
-}
-
 export const setTokenizer = (editor, tokenizer) => {
   editor.tokenizer = Tokenizer.getTokenizer(editor.languageId)
   editor.invalidStartIndex = 0
@@ -137,7 +113,6 @@ export const setTokenizer = (editor, tokenizer) => {
 // TODO
 export const setDeltaYFixedValue = (editor, value) => {
   return EditorScrolling.setDeltaY(editor, value)
-  // renderTextAndCursorAndSelections(editor)
 }
 
 export const setDeltaY = (editor, value) => {
@@ -146,15 +121,6 @@ export const setDeltaY = (editor, value) => {
 
 export const scheduleSelections = (editor, selectionEdits) => {
   return EditorSelection.setSelections(editor, selectionEdits)
-  // const cursorInfos = EditorCursor.getVisible(editor)
-  // const selectionInfos = EditorSelection.getVisible(editor)
-  // RendererProcess.send([
-  //   /* Viewlet.invoke */ 'Viewlet.send',
-  //   /* id */ 'EditorText',
-  //   /* method */ 'renderCursorsAndSelections',
-  //   /* cursorInfos */ cursorInfos,
-  //   /* selectionInfos */ selectionInfos,
-  // ])
 }
 
 export const scheduleSelectionsAndScrollPosition = (editor, selectionEdits, deltaY) => {
@@ -421,7 +387,9 @@ const renderScrollBarY = {
   },
   apply(oldState, newState) {
     const scrollBarY = ScrollBarFunctions.getScrollBarY(newState.deltaY, newState.finalDeltaY, newState.height, newState.scrollBarHeight)
-    return [/* method */ 'setScrollBar', /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
+    const translate = `0 ${scrollBarY}px`
+    const heightPx = `${newState.scrollBarHeight}px`
+    return [/* method */ 'setScrollBar', translate, heightPx]
   },
 }
 
