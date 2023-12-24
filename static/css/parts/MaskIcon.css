@@ -176,9 +176,12 @@
   mask-image: url(/icons/go-to-file.svg);
 }
 
-.MaskIconDiscard,
-.MaskIconRemove {
+.MaskIconDiscard {
   mask-image: url(/icons/discard.svg);
+}
+
+.MaskIconRemove {
+  mask-image: url(/icons/remove.svg);
 }
 
 .MaskIconError {
