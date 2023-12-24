@@ -18,7 +18,7 @@ test('setPosition', () => {
   const state = {
     $ScrollBarThumbVertical: document.createElement('div'),
   }
-  LayerScrollBar.setPosition(state, 50)
+  LayerScrollBar.setPosition(state, `0 50px`)
   expect(state.$ScrollBarThumbVertical.style.translate).toBe('0 50px')
 })
 
@@ -56,7 +56,7 @@ test('setDiagnostics - renderScrollBarDiagnosticsLess - single diagnostic alread
   const spy = jest.spyOn(document, 'createElement')
   LayerScrollBar.setDiagnostics(state, scrollBarDiagnostics)
   expect(state.$ScrollBarDiagnostics.innerHTML).toBe(
-    '<div class="ScrollBarDiagnostic" style="top: 20px;"></div><div class="ScrollBarDiagnostic" style="top: 40px;"></div>'
+    '<div class="ScrollBarDiagnostic" style="top: 20px;"></div><div class="ScrollBarDiagnostic" style="top: 40px;"></div>',
   )
   expect(spy).toHaveBeenCalledTimes(1)
 })
