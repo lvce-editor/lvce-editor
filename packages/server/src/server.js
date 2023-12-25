@@ -315,31 +315,26 @@ const serve404 = () =>
 
 const createApp = () => {
   const handlerMap = Object.create(null)
-  const server = createServer(
-    {
-      keepAlive: false,
-    },
-    (req, res) => {
-      req.on('error', (error) => {
-        // @ts-ignore
-        if (error && error.code === ErrorCodes.ECONNRESET) {
-          return
-        }
-        console.info('[info: request error]', error)
-      })
+  const server = createServer((req, res) => {
+    req.on('error', (error) => {
       // @ts-ignore
-      const pathMatch = req.url.match(/^(\/[^\/]*)/)
-      // @ts-ignore
-      const path = pathMatch[1]
-      const handlers = handlerMap[path] || handlerMap['*']
-      let i = 0
-      const next = () => {
-        const fn = i < handlers.length ? handlers[i++] : serve404()
-        fn(req, res, next)
+      if (error && error.code === ErrorCodes.ECONNRESET) {
+        return
       }
-      next()
-    },
-  )
+      console.info('[info: request error]', error)
+    })
+    // @ts-ignore
+    const pathMatch = req.url.match(/^(\/[^\/]*)/)
+    // @ts-ignore
+    const path = pathMatch[1]
+    const handlers = handlerMap[path] || handlerMap['*']
+    let i = 0
+    const next = () => {
+      const fn = i < handlers.length ? handlers[i++] : serve404()
+      fn(req, res, next)
+    }
+    next()
+  })
   return {
     use(path, ...handlers) {
       handlerMap[path] = handlers
@@ -351,17 +346,6 @@ const createApp = () => {
 }
 
 const app = createApp()
-
-const getTestPath = () => {
-  if (process.env.TEST_PATH) {
-    const testPath = process.env.TEST_PATH
-    if (isAbsolute(testPath)) {
-      return testPath
-    }
-    return join(process.cwd(), testPath)
-  }
-  return join(ROOT, 'packages', 'extension-host-worker-tests')
-}
 
 const generateTestOverviewHtml = (dirents) => {
   const pre = `<!DOCTYPE html>
@@ -541,11 +525,15 @@ const serveConfig = async (req, res, next) => {
 }
 
 const handleRemote = (req, res) => {
-  console.log('remote request')
+  console.log(req.url)
+  // console.log('remote request')
+  // res.socket.pause()
+  // console.log(res.socket.server)
   sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
+  // res.destroy()
 }
 
-app.use('/remote', handleRemote, serve404())
+app.use('/remote', handleRemote)
 app.use('/tests', serveTests, serve404())
 app.use('/config', serveConfig, serve404())
 app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
@@ -637,9 +625,11 @@ const getHandleMessage = (request) => {
   return {
     headers: request.headers,
     method: request.method,
+    path: request.path,
     url: request.url,
     httpVersionMajor: request.httpVersionMajor,
     httpVersionMinor: request.httpVersionMinor,
+    query: request.query,
   }
 }
 
@@ -663,6 +653,9 @@ const sendHandle = (request, socket, method) => {
           },
           // @ts-ignore
           socket,
+          {
+            keepOpen: false,
+          },
         )
       })
       launchSharedProcess()
@@ -682,6 +675,9 @@ const sendHandle = (request, socket, method) => {
         },
         // @ts-ignore
         socket,
+        {
+          keepOpen: false,
+        },
       )
       break
     default:
