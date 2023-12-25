@@ -650,6 +650,8 @@ const sendHandle = (request, socket, method) => {
                 headers: request.headers,
                 method: request.method,
                 url: request.url,
+                httpVersionMajor: request.httpVersionMajor,
+                httpVersionMinor: request.httpVersionMinor,
               },
             ],
           },
