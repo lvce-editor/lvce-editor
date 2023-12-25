@@ -1,8 +1,13 @@
 import * as Platform from '../Platform/Platform.js'
 
+const { scheme } = Platform
+const prefix = `${scheme}://-`
+
 export const getElectronFileResponseRelativePath = (requestUrl) => {
+  if (requestUrl.startsWith('/')) {
+    return requestUrl
+  }
   const decoded = decodeURI(requestUrl)
-  const { scheme } = Platform
-  const pathName = decoded.slice(`${scheme}://-`.length)
+  const pathName = decoded.slice(prefix.length)
   return pathName
 }

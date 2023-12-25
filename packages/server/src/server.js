@@ -209,7 +209,6 @@ const Callback = {
     return { id, promise }
   },
   resolve(id, message) {
-    console.log(message)
     this.callbacks[id](message)
     delete this.callbacks[id]
   },
@@ -217,7 +216,6 @@ const Callback = {
 
 const createRpc = (ipc) => {
   const handleMessage = (message) => {
-    console.log({ message })
     Callback.resolve(message.id, message)
   }
   ipc.onmessage = handleMessage
@@ -629,6 +627,16 @@ const launchSharedProcess = () => {
 
 // TODO handle all possible errors from shared process
 
+const getHandleMessage = (request) => {
+  return {
+    headers: request.headers,
+    method: request.method,
+    url: request.url,
+    httpVersionMajor: request.httpVersionMajor,
+    httpVersionMinor: request.httpVersionMinor,
+  }
+}
+
 const sendHandle = (request, socket, method) => {
   request.on('error', (error) => {
     console.info('[info]: request upgrade error', error)
@@ -645,15 +653,7 @@ const sendHandle = (request, socket, method) => {
           {
             jsonrpc: '2.0',
             method,
-            params: [
-              {
-                headers: request.headers,
-                method: request.method,
-                url: request.url,
-                httpVersionMajor: request.httpVersionMajor,
-                httpVersionMinor: request.httpVersionMinor,
-              },
-            ],
+            params: [getHandleMessage(request)],
           },
           // @ts-ignore
           socket,
@@ -672,12 +672,7 @@ const sendHandle = (request, socket, method) => {
         {
           jsonrpc: '2.0',
           method,
-          params: [
-            {
-              headers: request.headers,
-              method: request.method,
-            },
-          ],
+          params: [getHandleMessage(request)],
         },
         // @ts-ignore
         socket,

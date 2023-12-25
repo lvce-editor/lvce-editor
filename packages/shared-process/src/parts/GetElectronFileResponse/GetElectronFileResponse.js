@@ -25,8 +25,10 @@ export const getElectronFileResponse = async (url) => {
         init: {
           status: HttpStatusCode.NotFound,
           statusText: 'not-found',
+          headers: {},
         },
       }
     }
+    throw error
   }
 }
