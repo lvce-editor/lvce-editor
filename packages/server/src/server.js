@@ -3,7 +3,7 @@
 import { ChildProcess, fork } from 'node:child_process'
 import { createReadStream } from 'node:fs'
 import { readFile, readdir, stat } from 'node:fs/promises'
-import { IncomingMessage, ServerResponse, createServer } from 'node:http'
+import { IncomingMessage, ServerResponse, createServer, request } from 'node:http'
 import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { fileURLToPath } from 'node:url'
@@ -537,7 +537,11 @@ const serveConfig = async (req, res, next) => {
   next()
 }
 
-app.use('/remote', serveStatic('', '/remote'), serve404())
+const handleRemote = (req, res) => {
+  sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
+}
+
+app.use('/remote', handleRemote, serve404())
 app.use('/tests', serveTests, serve404())
 app.use('/config', serveConfig, serve404())
 app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
@@ -645,6 +649,7 @@ const sendHandle = (request, socket, method) => {
               {
                 headers: request.headers,
                 method: request.method,
+                url: request.url,
               },
             ],
           },
