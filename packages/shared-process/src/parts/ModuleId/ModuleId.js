@@ -67,3 +67,4 @@ export const HandleWindowAllClosed = 60
 export const HandleMessagePortForTerminalProcess = 61
 export const TemporaryMessagePort = 62
 export const GetElectronFileResponse = 63
+export const HandleRemoteRequest = 64
