@@ -1,9 +1,9 @@
-import * as GetElectronFileResponseShared from '../GetElectronFileResponseShared/GetElectronFileResponseShared.js'
+import * as GetElectronFileResponse from '../GetElectronFileResponse/GetElectronFileResponse.js'
 
 /**
  *
  * @param {GlobalRequest} request
  */
 export const handleRequest = (request) => {
-  return GetElectronFileResponseShared.getElectronFileResponseShared(request.url)
+  return GetElectronFileResponse.getElectronFileResponse(request.url)
 }
