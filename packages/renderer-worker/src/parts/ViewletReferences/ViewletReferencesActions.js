@@ -1,4 +1,5 @@
 import * as ActionType from '../ActionType/ActionType.js'
+import * as Icon from '../Icon/Icon.js'
 import * as ViewletReferencesStrings from '../ViewletReferences/ViewletReferencesStrings.js'
 
 export const getActions = () => {
@@ -6,19 +7,19 @@ export const getActions = () => {
     {
       type: ActionType.Button,
       id: ViewletReferencesStrings.refresh(),
-      icon: 'Refresh',
+      icon: Icon.Refresh,
       command: 'refresh',
     },
     {
       type: ActionType.Button,
       id: ViewletReferencesStrings.clear(),
-      icon: 'ClearAll',
+      icon: Icon.ClearAll,
       command: 'clear',
     },
     {
       type: ActionType.Button,
       id: ViewletReferencesStrings.collapseAll(),
-      icon: 'CollapseAll',
+      icon: Icon.CollapseAll,
       command: 'collapseAll',
     },
   ]

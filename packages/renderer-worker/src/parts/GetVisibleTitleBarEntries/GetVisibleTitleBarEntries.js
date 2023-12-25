@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Icon from '../Icon/Icon.js'
 import * as TitleBarMenuBarStrings from '../TitleBarMenuBarStrings/TitleBarMenuBarStrings.js'
 
 export const getVisibleTitleBarEntries = (entries, width) => {
@@ -23,7 +24,7 @@ export const getVisibleTitleBarEntries = (entries, width) => {
     }
     visible.push({
       ariaLabel: TitleBarMenuBarStrings.more(),
-      icon: 'Ellipsis',
+      icon: Icon.Ellipsis,
       label: '',
       width: moreIconWidth + padding * 2,
     })

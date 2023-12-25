@@ -1,4 +1,5 @@
 import * as ActionType from '../ActionType/ActionType.js'
+import * as Icon from '../Icon/Icon.js'
 import * as ViewletOutputStrings from '../ViewletOutput/ViewletOutputStrings.js'
 
 const toSelectOption = (option) => {
@@ -20,17 +21,17 @@ export const getActions = (state) => {
     {
       type: ActionType.Button,
       id: ViewletOutputStrings.clearOutput(),
-      icon: 'ClearAll',
+      icon: Icon.ClearAll,
     },
     {
       type: ActionType.Button,
       id: ViewletOutputStrings.turnOffAutoScroll(),
-      icon: 'Blank',
+      icon: Icon.Blank,
     },
     {
       type: ActionType.Button,
       id: ViewletOutputStrings.openLogFile(),
-      icon: 'Blank',
+      icon: Icon.Blank,
     },
   ]
 }

@@ -1,4 +1,5 @@
 import * as ActionType from '../ActionType/ActionType.js'
+import * as Icon from '../Icon/Icon.js'
 
 export const getActions = () => {
   return [
@@ -9,7 +10,7 @@ export const getActions = () => {
     {
       type: ActionType.Button,
       id: 'Clear Console',
-      icon: 'ClearAll',
+      icon: Icon.ClearAll,
     },
   ]
 }
