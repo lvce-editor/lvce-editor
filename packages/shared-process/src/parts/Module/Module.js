@@ -136,6 +136,8 @@ export const load = (moduleId) => {
       return import('../TemporaryMessagePort/TemporaryMessagePort.ipc.js')
     case ModuleId.GetElectronFileResponse:
       return import('../GetElectronFileResponse/GetElectronFileResponse.ipc.js')
+    case ModuleId.HandleRemoteRequest:
+      return import('../HandleRemoteRequest/HandleRemoteRequest.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
