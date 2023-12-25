@@ -1,5 +1,6 @@
 import * as GetFindWidgetVirtualDom from '../GetFindWidgetVirtualDom/GetFindWidgetVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as Icon from '../Icon/Icon.js'
 import * as ViewletFindWidgetStrings from './ViewletFindWidgetStrings.js'
 
 export const hasFunctionalRender = true
@@ -30,17 +31,17 @@ const renderDetails = {
     const buttons = [
       {
         label: ViewletFindWidgetStrings.previousMatch(),
-        icon: 'ArrowUp',
+        icon: Icon.ArrowUp,
         disabled: !buttonsEnabled,
       },
       {
         label: ViewletFindWidgetStrings.nextMatch(),
-        icon: 'ArrowDown',
+        icon: Icon.ArrowDown,
         disabled: !buttonsEnabled,
       },
       {
         label: ViewletFindWidgetStrings.close(),
-        icon: 'Close',
+        icon: Icon.Close,
         disabled: false,
       },
     ]

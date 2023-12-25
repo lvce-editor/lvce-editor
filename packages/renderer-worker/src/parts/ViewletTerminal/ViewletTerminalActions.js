@@ -1,24 +1,25 @@
 import * as ActionType from '../ActionType/ActionType.js'
 import * as TerminalStrings from '../TerminalStrings/TerminalStrings.js'
+import * as Icon from '../Icon/Icon.js'
 
 export const getActions = (state) => {
   return [
     {
       type: ActionType.Button,
       id: TerminalStrings.newTerminal(),
-      icon: 'Add',
+      icon: Icon.Add,
       command: 'addTerminal',
     },
     {
       type: ActionType.Button,
       id: TerminalStrings.splitTerminal(),
-      icon: 'SplitHorizontal',
+      icon: Icon.SplitHorizontal,
       command: 'splitTerminal',
     },
     {
       type: ActionType.Button,
       id: TerminalStrings.killTerminal(),
-      icon: 'Trash',
+      icon: Icon.Trash,
       command: 'killTerminal',
     },
   ]
