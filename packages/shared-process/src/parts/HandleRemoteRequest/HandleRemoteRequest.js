@@ -1,4 +1,4 @@
-import { ServerResponse } from 'http'
+import { ServerResponse } from 'node:http'
 import * as Assert from '../Assert/Assert.js'
 
 export const handleRemoteRequest = (request, socket) => {
