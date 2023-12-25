@@ -9,6 +9,7 @@ export const getMimeType = (fileExtension) => {
     case '.ttf':
       return MimeType.FontTtf
     case '.js':
+    case '.ts':
       return MimeType.TextJavaScript
     case '.svg':
       return MimeType.ImageSvgXml
