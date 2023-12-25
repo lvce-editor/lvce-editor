@@ -315,26 +315,31 @@ const serve404 = () =>
 
 const createApp = () => {
   const handlerMap = Object.create(null)
-  const server = createServer((req, res) => {
-    req.on('error', (error) => {
+  const server = createServer(
+    {
+      keepAlive: false,
+    },
+    (req, res) => {
+      req.on('error', (error) => {
+        // @ts-ignore
+        if (error && error.code === ErrorCodes.ECONNRESET) {
+          return
+        }
+        console.info('[info: request error]', error)
+      })
       // @ts-ignore
-      if (error && error.code === ErrorCodes.ECONNRESET) {
-        return
+      const pathMatch = req.url.match(/^(\/[^\/]*)/)
+      // @ts-ignore
+      const path = pathMatch[1]
+      const handlers = handlerMap[path] || handlerMap['*']
+      let i = 0
+      const next = () => {
+        const fn = i < handlers.length ? handlers[i++] : serve404()
+        fn(req, res, next)
       }
-      console.info('[info: request error]', error)
-    })
-    // @ts-ignore
-    const pathMatch = req.url.match(/^(\/[^\/]*)/)
-    // @ts-ignore
-    const path = pathMatch[1]
-    const handlers = handlerMap[path] || handlerMap['*']
-    let i = 0
-    const next = () => {
-      const fn = i < handlers.length ? handlers[i++] : serve404()
-      fn(req, res, next)
-    }
-    next()
-  })
+      next()
+    },
+  )
   return {
     use(path, ...handlers) {
       handlerMap[path] = handlers
@@ -536,6 +541,7 @@ const serveConfig = async (req, res, next) => {
 }
 
 const handleRemote = (req, res) => {
+  console.log('remote request')
   sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
 }
 
