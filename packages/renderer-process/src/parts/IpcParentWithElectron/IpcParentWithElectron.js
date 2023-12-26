@@ -19,7 +19,7 @@ window.addEventListener('message', handleMessageFromWindow)
 
 export const create = async ({ type, name, port }) => {
   const { message, promise } = JsonRpcRequest.create('CreateMessagePort.createMessagePort', [type, name])
-  if (!IsElectron.isElectron()) {
+  if (!IsElectron.isElectron) {
     throw new Error('Electron api was requested but is not available')
   }
   window.postMessage(message, '*', [port])
