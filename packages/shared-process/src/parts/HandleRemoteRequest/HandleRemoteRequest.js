@@ -12,6 +12,6 @@ export const handleRemoteRequest = async (request, socket) => {
   for (const [key, value] of Object.entries(result.init.headers)) {
     response.setHeader(key, value)
   }
-  response.write(result.body)
-  response.end()
+  response.setHeader('Connection', 'close')
+  response.end(result.body)
 }
