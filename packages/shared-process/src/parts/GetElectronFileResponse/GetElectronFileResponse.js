@@ -4,6 +4,7 @@ import * as GetElectronFileResponseRelativePath from '../GetElectronFileResponse
 import * as GetHeaders from '../GetHeaders/GetHeaders.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const getElectronFileResponse = async (url) => {
   try {
@@ -27,6 +28,14 @@ export const getElectronFileResponse = async (url) => {
           statusText: 'not-found',
         },
       }
+    }
+    Logger.error(error)
+    return {
+      body: 'server-error',
+      init: {
+        status: HttpStatusCode.ServerError,
+        statusText: 'server-error',
+      },
     }
   }
 }
