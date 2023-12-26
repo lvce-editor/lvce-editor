@@ -347,6 +347,17 @@ const createApp = () => {
 
 const app = createApp()
 
+const getTestPath = () => {
+  if (process.env.TEST_PATH) {
+    const testPath = process.env.TEST_PATH
+    if (isAbsolute(testPath)) {
+      return testPath
+    }
+    return join(process.cwd(), testPath)
+  }
+  return join(ROOT, 'packages', 'extension-host-worker-tests')
+}
+
 const generateTestOverviewHtml = (dirents) => {
   const pre = `<!DOCTYPE html>
 <html lang="en">
