@@ -17,7 +17,7 @@ export const getElectronFileResponseContent = async (absolutePath, url) => {
   let content = await readFile(absolutePath)
   if (IsTypeScriptPath.isTypeScriptPath(url)) {
     const preferences = await getPreferences()
-    if (preferences['typescript.transpile']) {
+    if (preferences['typescript.transpile'] || process.env['TRANSPILE_TYPESCRIPT']) {
       const newContent = await TranspileTypeScript.transpileTypeScript(content.toString())
       content = newContent.outputText
     }
