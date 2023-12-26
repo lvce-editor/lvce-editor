@@ -1,5 +1,5 @@
 export const ApplicationFontWoff = 'application/font-woff'
-export const ApplicationJson = 'aplication/json'
+export const ApplicationJson = 'application/json'
 export const AudioMidi = 'audio/midi'
 export const AudioMpeg = 'audio/mpeg'
 export const AudioOgg = 'audio/ogg'
