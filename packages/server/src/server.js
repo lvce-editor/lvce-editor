@@ -651,7 +651,6 @@ const sendHandle = (request, socket, method) => {
             method,
             params: [getHandleMessage(request)],
           },
-          // @ts-ignore
           socket,
           {
             keepOpen: false,
@@ -673,7 +672,6 @@ const sendHandle = (request, socket, method) => {
           method,
           params: [getHandleMessage(request)],
         },
-        // @ts-ignore
         socket,
         {
           keepOpen: false,
