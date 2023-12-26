@@ -209,7 +209,6 @@ const Callback = {
     return { id, promise }
   },
   resolve(id, message) {
-    console.log(message)
     this.callbacks[id](message)
     delete this.callbacks[id]
   },
@@ -217,7 +216,6 @@ const Callback = {
 
 const createRpc = (ipc) => {
   const handleMessage = (message) => {
-    console.log({ message })
     Callback.resolve(message.id, message)
   }
   ipc.onmessage = handleMessage
@@ -537,7 +535,11 @@ const serveConfig = async (req, res, next) => {
   next()
 }
 
-app.use('/remote', serveStatic('', '/remote'), serve404())
+const handleRemote = (req, res) => {
+  sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
+}
+
+app.use('/remote', handleRemote)
 app.use('/tests', serveTests, serve404())
 app.use('/config', serveConfig, serve404())
 app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
