@@ -47,8 +47,8 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
     const platformCode = getPlatformCode(platform)
     await Replace.replace({
       path: `${cachePath}/src/parts/Platform/Platform.js`,
-      occurrence: 'export const platform = getPlatform()',
-      replacement: `export const platform = ${platformCode}`,
+      occurrence: 'PLATFORM',
+      replacement: `${platformCode}`,
     })
     if (platform === 'electron') {
       await Replace.replace({
