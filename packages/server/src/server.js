@@ -625,6 +625,18 @@ const launchSharedProcess = () => {
 
 // TODO handle all possible errors from shared process
 
+const getHandleMessage = (request) => {
+  return {
+    headers: request.headers,
+    method: request.method,
+    path: request.path,
+    url: request.url,
+    httpVersionMajor: request.httpVersionMajor,
+    httpVersionMinor: request.httpVersionMinor,
+    query: request.query,
+  }
+}
+
 const sendHandle = (request, socket, method) => {
   request.on('error', (error) => {
     console.info('[info]: request upgrade error', error)
@@ -641,15 +653,12 @@ const sendHandle = (request, socket, method) => {
           {
             jsonrpc: '2.0',
             method,
-            params: [
-              {
-                headers: request.headers,
-                method: request.method,
-              },
-            ],
+            params: [getHandleMessage(request)],
           },
-          // @ts-ignore
           socket,
+          {
+            keepOpen: false,
+          },
         )
       })
       launchSharedProcess()
@@ -665,15 +674,12 @@ const sendHandle = (request, socket, method) => {
         {
           jsonrpc: '2.0',
           method,
-          params: [
-            {
-              headers: request.headers,
-              method: request.method,
-            },
-          ],
+          params: [getHandleMessage(request)],
         },
-        // @ts-ignore
         socket,
+        {
+          keepOpen: false,
+        },
       )
       break
     default:
