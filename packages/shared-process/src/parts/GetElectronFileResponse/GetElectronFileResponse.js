@@ -36,6 +36,7 @@ export const getElectronFileResponse = async (url) => {
       init: {
         status: HttpStatusCode.ServerError,
         statusText: 'server-error',
+        headers: {},
       },
     }
   }
