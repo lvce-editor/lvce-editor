@@ -27,6 +27,8 @@ for (const arg of argvSliced) {
     process.env['ONLY_EXTENSION'] = arg.slice('--only-extension='.length)
   } else if (arg.startsWith('--test-path=')) {
     process.env['TEST_PATH'] = arg.slice('--test-path='.length)
+  } else if (argv.includes('--typescript')) {
+    process.env['TRANSPILE_TYPESCRIPT'] = '1'
   }
 }
 
