@@ -536,12 +536,7 @@ const serveConfig = async (req, res, next) => {
 }
 
 const handleRemote = (req, res) => {
-  console.log(req.url)
-  // console.log('remote request')
-  // res.socket.pause()
-  // console.log(res.socket.server)
   sendHandle(req, res.socket, 'HandleRemoteRequest.handleRemoteRequest')
-  // res.destroy()
 }
 
 app.use('/remote', handleRemote)
