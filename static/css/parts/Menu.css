@@ -40,21 +40,6 @@
   outline: none;
 }
 
-.MenuItem[aria-checked='true']::before {
-  content: '';
-  position: absolute;
-  top: calc((1.8rem - 0.75rem) / 2);
-  left: calc((1.8rem - 0.75rem) / 2);
-  width: 0.75rem;
-  height: 0.75rem;
-  background: orchid;
-  mask-image: url(/icons/check.svg);
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: 0.75rem;
-  background: currentColor;
-}
-
 .MenuItemSubMenu::after {
   width: 16px;
   height: 16px;

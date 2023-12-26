@@ -6,18 +6,6 @@
   cursor: default;
 }
 
-/* .Extensions[aria-busy='true']::before {
-  content: '';
-  position: absolute;
-  display: block;
-  top: 0;
-  left: 0;
-  animation: progress 4s linear infinite;
-  width: 2%;
-  height: 2px;
-  background: rgb(14, 112, 192);
-} */
-
 /* TODO extract progress since it is used also elsewhere -> no copy paste code */
 @keyframes progress {
   from {
