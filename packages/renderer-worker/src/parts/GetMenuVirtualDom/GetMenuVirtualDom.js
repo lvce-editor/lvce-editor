@@ -87,14 +87,19 @@ const getMenuItemSubMenuDom = (menuItem) => {
       ariaHasPopup: true,
       ariaExpanded: isExpanded,
       ariaOwns: isExpanded ? `Menu-${level + 1}` : undefined,
-      childCount: 1,
+      childCount: 2,
     },
     text(label),
+    {
+      type: VirtualDomElements.Div,
+      className: 'MenuItemSubMenuArrowRight',
+      childCount: 0,
+    },
   ]
 }
 
 const getMenuItemVirtualDom = (menuItem) => {
-  const { flags, label } = menuItem
+  const { flags } = menuItem
   switch (flags) {
     case MenuItemFlags.None:
     case MenuItemFlags.RestoreFocus:

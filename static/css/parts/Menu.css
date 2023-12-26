@@ -55,10 +55,9 @@
   background: currentColor;
 }
 
-.MenuItemSubMenu::after {
+.MenuItemSubMenuArrowRight {
   width: 16px;
   height: 16px;
-  content: '';
   display: block;
   mask-image: url(/icons/chevron-right.svg);
   mask-repeat: no-repeat;
@@ -67,6 +66,7 @@
   background: currentColor;
   margin-left: auto;
   margin-right: -20px;
+  contain: strict;
 }
 
 .MenuItem[disabled] {
