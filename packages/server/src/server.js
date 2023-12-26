@@ -3,7 +3,7 @@
 import { ChildProcess, fork } from 'node:child_process'
 import { createReadStream } from 'node:fs'
 import { readFile, readdir, stat } from 'node:fs/promises'
-import { IncomingMessage, ServerResponse, createServer, request } from 'node:http'
+import { IncomingMessage, ServerResponse, createServer } from 'node:http'
 import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { fileURLToPath } from 'node:url'
