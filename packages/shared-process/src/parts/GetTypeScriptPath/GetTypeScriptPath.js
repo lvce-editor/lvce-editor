@@ -1,4 +1,4 @@
-import { join } from 'path'
+import { join } from 'node:path'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 
 export const getTypeScriptPath = () => {
