@@ -315,32 +315,26 @@ const serve404 = () =>
 
 const createApp = () => {
   const handlerMap = Object.create(null)
-  const server = createServer(
-    {
-      keepAlive: false,
-      requestTimeout: 1000,
-    },
-    (req, res) => {
-      req.on('error', (error) => {
-        // @ts-ignore
-        if (error && error.code === ErrorCodes.ECONNRESET) {
-          return
-        }
-        console.info('[info: request error]', error)
-      })
+  const server = createServer((req, res) => {
+    req.on('error', (error) => {
       // @ts-ignore
-      const pathMatch = req.url.match(/^(\/[^\/]*)/)
-      // @ts-ignore
-      const path = pathMatch[1]
-      const handlers = handlerMap[path] || handlerMap['*']
-      let i = 0
-      const next = () => {
-        const fn = i < handlers.length ? handlers[i++] : serve404()
-        fn(req, res, next)
+      if (error && error.code === ErrorCodes.ECONNRESET) {
+        return
       }
-      next()
-    },
-  )
+      console.info('[info: request error]', error)
+    })
+    // @ts-ignore
+    const pathMatch = req.url.match(/^(\/[^\/]*)/)
+    // @ts-ignore
+    const path = pathMatch[1]
+    const handlers = handlerMap[path] || handlerMap['*']
+    let i = 0
+    const next = () => {
+      const fn = i < handlers.length ? handlers[i++] : serve404()
+      fn(req, res, next)
+    }
+    next()
+  })
   return {
     use(path, ...handlers) {
       handlerMap[path] = handlers
