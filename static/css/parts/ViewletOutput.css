@@ -9,11 +9,6 @@
   color: white;
 }
 
-.OutputContent:empty::before {
-  content: '(empty file)';
-  opacity: 0.3;
-}
-
 .OutputContent {
   white-space: pre;
   user-select: text;
