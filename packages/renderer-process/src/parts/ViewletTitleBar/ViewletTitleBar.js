@@ -1,4 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletTitleBarEvents from './ViewletTitleBarEvents.js'
 
 export const create = () => {
@@ -17,7 +19,9 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $Viewlet } = state
-  $Viewlet.oncontextmenu = ViewletTitleBarEvents.handleContextMenu
+  AttachEvents.attachEvents($Viewlet, {
+    [DomEventType.ContextMenu]: ViewletTitleBarEvents.handleContextMenu,
+  })
 }
 
 const activeClassName = 'TitleBarActive'
