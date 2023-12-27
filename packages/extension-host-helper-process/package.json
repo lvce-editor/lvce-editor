@@ -67,7 +67,7 @@
     "got": "^13.0.0",
     "lines-and-columns": "^2.0.4",
     "minimist": "^1.2.8",
-    "ws": "^8.15.1"
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@types/ws": "^8.5.10"
