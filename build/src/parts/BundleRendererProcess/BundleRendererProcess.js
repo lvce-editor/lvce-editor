@@ -4,6 +4,19 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 
+const getPlatformCode = (platform) => {
+  switch (platform) {
+    case 'electron':
+      return `PlatformType.Electron`
+    case 'remote':
+      return `PlatformType.Remote`
+    case 'web':
+      return 'PlatformType.Web'
+    default:
+      throw new Error(`unsupported platform ${platform}`)
+  }
+}
+
 export const bundleRendererProcess = async ({ cachePath, commitHash, platform, assetDir }) => {
   try {
     await Copy.copy({
@@ -31,10 +44,11 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
       occurrence: `ASSET_DIR`,
       replacement: `'${assetDir}'`,
     })
+    const platformCode = getPlatformCode(platform)
     await Replace.replace({
       path: `${cachePath}/src/parts/Platform/Platform.js`,
-      occurrence: `PLATFORM`,
-      replacement: `'${platform}'`,
+      occurrence: 'PLATFORM',
+      replacement: `${platformCode}`,
     })
     if (platform === 'electron') {
       await Replace.replace({
