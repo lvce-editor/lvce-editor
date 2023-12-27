@@ -16,6 +16,11 @@ export const handle = (protocol, name, handleRequest) => {
   throw new Error('protocol.handle api is not supported')
 }
 
+/**
+ *
+ * @param {Electron.Protocol} protocol
+ * @returns
+ */
 export const enable = (protocol) => {
   protocol.registerSchemesAsPrivileged([
     {
@@ -25,6 +30,7 @@ export const enable = (protocol) => {
         secure: true,
         supportFetchAPI: true,
         stream: true,
+        codeCache: true,
       },
     },
   ])
