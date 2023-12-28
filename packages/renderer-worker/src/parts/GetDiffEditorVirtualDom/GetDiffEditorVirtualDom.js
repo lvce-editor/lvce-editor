@@ -1,22 +1,23 @@
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DiffType from '../DiffType/DiffType.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const deletion = {
   type: VirtualDomElements.Div,
-  className: 'EditorRow Deletion',
+  className: `${ClassNames.EditorRow} ${ClassNames.Deletion}`,
   childCount: 1,
 }
 
 const insertion = {
   type: VirtualDomElements.Div,
-  className: 'EditorRow Insertion',
+  className: `${ClassNames.EditorRow} ${ClassNames.Insertion}`,
   childCount: 1,
 }
 
 const normal = {
   type: VirtualDomElements.Div,
-  className: 'EditorRow',
+  className: ClassNames.EditorRow,
   childCount: 1,
 }
 
@@ -50,7 +51,7 @@ export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: 'DiffEditorContent DiffEditorContentLeft',
+      className: `${ClassNames.DiffEditorContent} ${ClassNames.DiffEditorContentLeft}`,
       childCount: linesLeft.length,
     },
     ...linesLeft.flatMap(renderLine),
@@ -61,18 +62,18 @@ export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'DiffEditorContent DiffEditorContentRight',
+      className: `${ClassNames.DiffEditorContent} ${ClassNames.DiffEditorContentRight}`,
       childCount: linesRight.length,
     },
     ...linesRight.flatMap(renderLine),
     {
       type: VirtualDomElements.Div,
-      className: 'ScrollBar',
+      className: ClassNames.ScrollBar,
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'ScrollBarThumb',
+      className: ClassNames.ScrollBarThumb,
       childCount: 0,
     },
   ]
