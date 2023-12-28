@@ -16,10 +16,33 @@ const getLabelClassName = (decorationStrikeThrough) => {
   return className
 }
 
+const addButtons = (dom, buttons) => {
+  if (buttons === EmptySourceControlButtons.emptySourceControlButtons) {
+    return
+  }
+  dom[0].childCount += buttons.length
+  for (const button of buttons) {
+    const { icon, label } = button
+    dom.push(
+      {
+        type: VirtualDomElements.Button,
+        className: ClassNames.SourceControlButton,
+        title: label,
+        ariaLabel: label,
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Span,
+        className: `MaskIcon MaskIcon${icon}`,
+      },
+    )
+  }
+}
+
 const createItemDirectory = (item) => {
-  const { posInSet, setSize, icon, label, badgeCount, decorationStrikeThrough, type } = item
+  const { posInSet, setSize, icon, label, badgeCount, decorationStrikeThrough, type, buttons } = item
   const labelClassName = getLabelClassName(decorationStrikeThrough)
-  return [
+  const dom = [
     {
       type: VirtualDomElements.Div,
       className: ClassNames.TreeItem,
@@ -43,8 +66,10 @@ const createItemDirectory = (item) => {
       childCount: 1,
     },
     text(label),
-    ...GetBadgeVirtualDom.getBadgeVirtualDom(ClassNames.SourceControlBadge, badgeCount),
   ]
+  addButtons(dom, buttons)
+  dom.push(...GetBadgeVirtualDom.getBadgeVirtualDom(ClassNames.SourceControlBadge, badgeCount))
+  return dom
 }
 
 const createItemOther = (item) => {
@@ -95,25 +120,7 @@ const createItemOther = (item) => {
       text(detail),
     )
   }
-  if (buttons !== EmptySourceControlButtons.emptySourceControlButtons) {
-    dom[0].childCount += buttons.length
-    for (const button of buttons) {
-      const { icon, label } = button
-      dom.push(
-        {
-          type: VirtualDomElements.Button,
-          className: ClassNames.SourceControlButton,
-          title: label,
-          ariaLabel: label,
-          childCount: 1,
-        },
-        {
-          type: VirtualDomElements.Span,
-          className: `MaskIcon MaskIcon${icon}`,
-        },
-      )
-    }
-  }
+  addButtons(dom, buttons)
   dom.push({
     type: VirtualDomElements.Img,
     className: ClassNames.DecorationIcon,
