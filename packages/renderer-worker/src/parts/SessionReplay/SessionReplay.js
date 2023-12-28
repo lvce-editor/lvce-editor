@@ -4,6 +4,7 @@ import * as GetSessionId from '../GetSessionId/GetSessionId.js'
 import * as Json from '../Json/Json.js'
 import * as Location from '../Location/Location.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
 import * as SessionReplayStorage from '../SessionReplayStorage/SessionReplayStorage.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
@@ -185,7 +186,7 @@ const wrapIpc = (ipc, name, getData) => {
 
 export const startRecording = () => {
   RendererProcess.state.ipc = wrapIpc(RendererProcess.state.ipc, 'renderer-process', (event) => event.data)
-  SharedProcess.state.ipc = wrapIpc(SharedProcess.state.ipc, 'shared-process', (event) => event)
+  SharedProcessState.state.ipc = wrapIpc(SharedProcessState.state.ipc, 'shared-process', (event) => event)
 }
 
 export const openSession = async () => {
