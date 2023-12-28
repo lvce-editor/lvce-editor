@@ -5,6 +5,7 @@ import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirt
 import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
 
 /**
  * @enum {string}
@@ -56,12 +57,7 @@ const createItemDirectory = (item) => {
       childCount: 1,
     },
     text(label),
-    {
-      type: VirtualDomElements.Div,
-      className: ClassNames.SourceControlBadge,
-      childCount: 1,
-    },
-    text(badgeCount),
+    ...GetBadgeVirtualDom.getBadgeVirtualDom(ClassNames.SourceControlBadge, badgeCount),
   ]
 }
 
