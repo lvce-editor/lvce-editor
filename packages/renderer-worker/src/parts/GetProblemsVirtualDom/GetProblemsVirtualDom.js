@@ -16,8 +16,18 @@ const getProblemVirtualDom = (problem) => {
       {
         type: VirtualDomElements.Div,
         className,
-        childCount: 3,
+        childCount: 4,
         paddingLeft: GetTreeItemIndent.getTreeItemIndent(1),
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'Chevron',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon MaskIconChevronDown',
+        childCount: 0,
       },
       GetFileIconVirtualDom.getFileIconVirtualDom(icon),
       text(uri),
