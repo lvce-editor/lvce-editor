@@ -1,5 +1,6 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
@@ -18,12 +19,12 @@ const createActivityBarItem = (item) => {
   const isProgress = flags & ActivityBarItemFlags.Progress
   const role = isTab ? AriaRoles.Tab : AriaRoles.Button
   const ariaSelected = getAriaSelected(isTab, isSelected)
-  let className = 'ActivityBarItem'
+  let className = ClassNames.ActivityBarItem
   if (isFocused) {
-    className += ' FocusOutline'
+    className += ' ' + ClassNames.FocusOutline
   }
   if (isSelected) {
-    className += ' ActivityBarItemSelected'
+    className += ' ' + ClassNames.ActivityBarItemSelected
     return [
       {
         type: VirtualDomElements.Div,
@@ -40,7 +41,7 @@ const createActivityBarItem = (item) => {
 
   // TODO support progress on selected activity bar item
   if (isProgress) {
-    className += ' ActivityBarItemNested'
+    className += ' ' + ClassNames.ActivityBarItemNested
     return [
       {
         type: VirtualDomElements.Div,
@@ -53,24 +54,24 @@ const createActivityBarItem = (item) => {
       },
       {
         type: VirtualDomElements.Div,
-        className: 'MaskIcon',
+        className: ClassNames.MaskIcon,
         role: AriaRoles.None,
         childCount: 0,
         maskImage: icon,
       },
       {
         type: VirtualDomElements.Div,
-        className: 'Badge',
+        className: ClassNames.Badge,
         childCount: 1,
       },
       {
         type: VirtualDomElements.Div,
-        className: 'BadgeContent',
+        className: ClassNames.BadgeContent,
         childCount: 1,
       },
       {
         type: VirtualDomElements.Div,
-        className: 'MaskIcon',
+        className: ClassNames.MaskIcon,
         maskImage: 'Progress',
       },
     ]

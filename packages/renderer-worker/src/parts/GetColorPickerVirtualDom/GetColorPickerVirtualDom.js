@@ -1,35 +1,36 @@
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getColorPickerVirtualDom = () => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: 'ColorPickerRectangle',
+      className: ClassNames.ColorPickerRectangle,
       childCount: 3,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'ColorPickerBackgroundColor',
+      className: ClassNames.ColorPickerBackgroundColor,
       childCount: 0,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'ColorPickerLight',
+      className: ClassNames.ColorPickerLight,
       childCount: 0,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'ColorPickerDark',
+      className: ClassNames.ColorPickerDark,
       childCount: 0,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'ColorPickerSlider',
+      className: ClassNames.ColorPickerSlider,
       childCount: 0,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'ColorPickerSliderThumb',
+      className: ClassNames.ColorPickerSliderThumb,
       childCount: 0,
     },
   ]

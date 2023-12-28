@@ -1,33 +1,34 @@
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const listItemDetail = {
   type: VirtualDomElements.Div,
-  className: 'ExtensionListItemDetail',
+  className: ClassNames.ExtensionListItemDetail,
   childCount: 3,
 }
 const listItemName = {
   type: VirtualDomElements.Div,
-  className: 'ExtensionListItemName',
+  className: ClassNames.ExtensionListItemName,
   childCount: 1,
 }
 
 const listItemDescription = {
   type: VirtualDomElements.Div,
-  className: 'ExtensionListItemDescription',
+  className: ClassNames.ExtensionListItemDescription,
   childCount: 1,
 }
 
 const listItemFooter = {
   type: VirtualDomElements.Div,
-  className: 'ExtensionListItemFooter',
+  className: ClassNames.ExtensionListItemFooter,
   childCount: 2,
 }
 
 const listItemAuthorName = {
   type: VirtualDomElements.Div,
-  className: 'ExtensionListItemAuthorName',
+  className: ClassNames.ExtensionListItemAuthorName,
   childCount: 1,
 }
 
@@ -38,7 +39,7 @@ const getExtensionVirtualDom = (extension) => {
       type: VirtualDomElements.Div,
       role: AriaRoles.ListItem,
       ariaRoleDescription: 'Extension',
-      className: 'ExtensionListItem',
+      className: ClassNames.ExtensionListItem,
       ariaPosInSet: posInSet,
       ariaSetSize: setSize,
       top,
@@ -47,7 +48,7 @@ const getExtensionVirtualDom = (extension) => {
     {
       type: VirtualDomElements.Img,
       src: icon,
-      className: 'ExtensionListItemIcon',
+      className: ClassNames.ExtensionListItemIcon,
       childCount: 0,
     },
     listItemDetail,
@@ -60,7 +61,7 @@ const getExtensionVirtualDom = (extension) => {
     text(publisher),
     {
       type: VirtualDomElements.Div,
-      className: 'ExtensionActions',
+      className: ClassNames.ExtensionActions,
       childCount: 0,
     },
   ]
@@ -74,7 +75,7 @@ export const getExtensionsVirtualDom = (visibleExtensions) => {
   const dom = []
   dom.push({
     type: VirtualDomElements.Div,
-    className: 'ListItems',
+    className: ClassNames.ListItems,
     tabIndex: 0,
     ariaLabel: 'Extensions',
     role: AriaRoles.List,
@@ -91,14 +92,14 @@ export const getExtensionsVirtualDom = (visibleExtensions) => {
   //   dom.push(
   //     div(
   //       {
-  //         className: 'ScrollBarSmall',
+  //         className: ClassNames.ScrollBarSmall,
   //         onpointerdown: 'handleScrollBarPointerDown',
   //       },
   //       1
   //     ),
   //     div(
   //       {
-  //         className: 'ScrollBarThumb',
+  //         className: ClassNames.ScrollBarThumb,
   //         translateY: scrollBarY,
   //         height: scrollBarHeight,
   //       },
