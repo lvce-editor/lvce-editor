@@ -6,6 +6,7 @@ import * as GetDiagnosticsVirtualDom from '../GetDiagnosticsVirtualDom/GetDiagno
 import * as GetEditorRowsVirtualDom from '../GetEditorRowsVirtualDom/GetEditorRowsVirtualDom.js'
 import * as GetIncrementalEdits from '../GetIncrementalEdits/GetIncrementalEdits.js'
 import * as GetSelectionsVirtualDom from '../GetSelectionsVirtualDom/GetSelectionsVirtualDom.js'
+import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Height from '../Height/Height.js'
 import * as GetEditorGutterVirtualDom from '../GetEditorGutterVirtualDom/GetEditorGutterVirtualDom.js'
@@ -77,7 +78,7 @@ export const create = (id, uri, languageId, content) => {
     cursorWidth: 2,
     completionState: EditorCompletionState.None,
     longestLineWidth: 0,
-    minimumSliderSize: Height.MinimumSliderSize,
+    minimumSliderSize: MinimumSliderSize.minimumSliderSize,
     differences: [],
     width: 0,
     completionUid: 0,
