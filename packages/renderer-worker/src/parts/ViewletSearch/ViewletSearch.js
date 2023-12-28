@@ -1,6 +1,7 @@
 import * as Compare from '../Compare/Compare.js'
 import * as Height from '../Height/Height.js'
 import * as InputSource from '../InputSource/InputSource.js'
+import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
@@ -22,7 +23,7 @@ export const create = (id, uri, x, y, width, height) => {
     height,
     ...VirtualList.create({
       itemHeight: Height.ListItem,
-      minimumSliderSize: Height.MinimumSliderSize,
+      minimumSliderSize: MinimumSliderSize.minimumSliderSize,
       headerHeight: 61, // TODO
     }),
     threads: 0,

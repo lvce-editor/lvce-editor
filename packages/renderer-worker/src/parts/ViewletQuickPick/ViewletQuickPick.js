@@ -1,11 +1,11 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Height from '../Height/Height.js'
+import * as InputSource from '../InputSource/InputSource.js'
+import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as InputSource from '../InputSource/InputSource.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as ViewletQuickPickGetFilteredItems from './ViewletQuickPickGetFilteredItems.js'
 
@@ -47,7 +47,7 @@ export const create = (id, uri, x, y, width, height) => {
     ...VirtualList.create({
       itemHeight: Height.ListItem,
       headerHeight: 30,
-      minimumSliderSize: Height.MinimumSliderSize,
+      minimumSliderSize: MinimumSliderSize.minimumSliderSize,
     }),
     inputSource: InputSource.User,
   }

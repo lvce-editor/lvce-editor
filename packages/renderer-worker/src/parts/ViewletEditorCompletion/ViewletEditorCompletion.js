@@ -8,6 +8,7 @@ import * as GetListHeight from '../GetListHeight/GetListHeight.js'
 import * as Height from '../Height/Height.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusKey from '../FocusKey/FocusKey.js'
@@ -32,7 +33,7 @@ export const create = (id, uri, x, y, width, height) => {
     ...VirtualList.create({
       headerHeight: 0,
       itemHeight: Height.CompletionItem,
-      minimumSliderSize: Height.MinimumSliderSize,
+      minimumSliderSize: MinimumSliderSize.minimumSliderSize,
     }),
     maxHeight: 150,
   }

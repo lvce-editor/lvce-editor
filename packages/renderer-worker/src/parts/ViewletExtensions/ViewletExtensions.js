@@ -5,6 +5,7 @@ import * as GetViewletSize from '../GetViewletSize/GetViewletSize.js'
 import * as Height from '../Height/Height.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as ViewletExtensionsHandleInput from './ViewletExtensionsHandleInput.js'
@@ -36,7 +37,7 @@ export const create = (id, uri, x, y, width, height) => {
     size: ViewletSize.None,
     ...VirtualList.create({
       itemHeight: ExtensionListItemHeight.ExtensionListItemHeight,
-      minimumSliderSize: Height.MinimumSliderSize,
+      minimumSliderSize: MinimumSliderSize.minimumSliderSize,
       headerHeight: 35,
     }),
     allExtensions: [],
