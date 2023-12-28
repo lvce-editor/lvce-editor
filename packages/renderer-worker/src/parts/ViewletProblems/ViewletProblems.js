@@ -12,7 +12,7 @@ export const create = (id, uri, x, y, width, height) => {
     disposed: false,
     focusedIndex: -2,
     message: '',
-    itemHeight: 20,
+    itemHeight: 22,
     x,
     y,
     width,
