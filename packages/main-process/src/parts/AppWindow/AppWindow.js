@@ -1,5 +1,4 @@
 import { BrowserWindow } from 'electron'
-import * as DefaultUrl from '../DefaultUrl/DefaultUrl.js'
 import * as ElectronApplicationMenu from '../ElectronApplicationMenu/ElectronApplicationMenu.js'
 import * as Session from '../ElectronSession/ElectronSession.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
@@ -28,7 +27,7 @@ const loadUrl = async (browserWindow, url) => {
 }
 
 // TODO avoid mixing BrowserWindow, childprocess and various lifecycle methods in one file -> separate concerns
-export const createAppWindow2 = async (windowOptions, parsedArgs, workingDirectory, titleBarItems, url = DefaultUrl.defaultUrl) => {
+export const createAppWindow2 = async (windowOptions, parsedArgs, workingDirectory, titleBarItems, url) => {
   const session = Session.get()
   Performance.mark(PerformanceMarkerType.WillCreateCodeWindow)
   const window = new BrowserWindow({
