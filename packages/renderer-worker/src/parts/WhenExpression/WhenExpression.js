@@ -1,3 +1,4 @@
+// TODO use numeric enum for whenExpression
 export const BrowserElectron = 'browser.electron'
 export const FocusActivityBar = 'focus.activityBar'
 export const FocusDebugInput = 'focus.DebugInput'
@@ -18,3 +19,4 @@ export const FocusSearchResults = 'focus.SearchResults'
 export const FocusSimpleBrowserInput = 'focus.SimpleBrowserInput'
 export const FocusSourceControlInput = 'focus.sourceControlInput'
 export const FocusTitleBarMenuBar = 'focus.titleBarMenuBar'
+export const FocusProblems = 'focus.problems'

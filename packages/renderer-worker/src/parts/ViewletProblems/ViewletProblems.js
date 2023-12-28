@@ -1,4 +1,6 @@
 import * as Command from '../Command/Command.js'
+import * as Focus from '../Focus/Focus.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as GetListIndex from '../GetListIndex/GetListIndex.js'
 import * as GetProblems from '../GetProblems/GetProblems.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
@@ -51,8 +53,25 @@ export const focusIndex = (state, index) => {
   }
 }
 
+export const focusPrevious = (state) => {
+  const { focusedIndex } = state
+  return {
+    ...state,
+    focusedIndex: focusedIndex - 1,
+  }
+}
+
+export const focusNext = (state) => {
+  const { focusedIndex } = state
+  return {
+    ...state,
+    focusedIndex: focusedIndex + 1,
+  }
+}
+
 export const handleClickAt = (state, eventX, eventY) => {
   const { problems, x, y, itemHeight } = state
+  Focus.setFocus(FocusKey.Problems)
   if (problems.length === 0) {
     return focusIndex(state, -1)
   }
