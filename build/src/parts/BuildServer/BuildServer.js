@@ -719,6 +719,7 @@ const setVersionsAndDependencies = async ({ version }) => {
     if (json['optionalDependencies']) {
       delete json['optionalDependencies']['electron-clipboard-ex']
       delete json['optionalDependencies']['@vscode/windows-process-tree']
+      delete json['optionalDependencies']['symlink-dir']
     }
     if (file === 'build/.tmp/server/server/package.json') {
       json.dependencies['@lvce-editor/shared-process'] = version
