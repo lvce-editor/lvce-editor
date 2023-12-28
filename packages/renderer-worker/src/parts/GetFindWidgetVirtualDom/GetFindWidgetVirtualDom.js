@@ -1,12 +1,13 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getIconButtonVirtualDom = (iconButton) => {
   const { label, icon, disabled } = iconButton
-  let className = 'IconButton'
+  let className = ClassNames.IconButton
   if (disabled) {
-    className += ' IconButtonDisabled'
+    className += ' ' + ClassNames.IconButtonDisabled
   }
   return [
     {
@@ -31,7 +32,7 @@ export const getFindWidgetVirtualDom = (matchCountText, buttons) => {
   dom.push(
     {
       type: VirtualDomElements.Div,
-      className: 'FindWidgetMatchCount',
+      className: ClassNames.FindWidgetMatchCount,
       childCount: 1,
     },
     text(matchCountText),
