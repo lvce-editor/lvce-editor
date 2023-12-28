@@ -7,4 +7,6 @@ export const Commands = {
   handleClickAt: ViewletProblems.handleClickAt,
   handleContextMenu: ViewletProblems.handleContextMenu,
   setProblems: ViewletProblemsSetProblems.setProblems,
+  focusNext: ViewletProblems.focusNext,
+  focusPrevious: ViewletProblems.focusPrevious,
 }
