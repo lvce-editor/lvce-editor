@@ -67,6 +67,7 @@ const getExtensionVirtualDom = (extension) => {
   ]
   if (focused) {
     dom[0].id = 'ExtensionActive'
+    dom[0].className += ' ' + ClassNames.ExtensionActive
   }
   return dom
 }

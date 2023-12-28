@@ -83,11 +83,11 @@
   width: 100%;
 }
 
-.ExtensionListItem:hover {
+.ExtensionListItem:where(:hover) {
   background: var(--ListHoverBackground, rgba(64, 92, 80, 0.2));
 }
 
-#ExtensionActive {
+.ExtensionActive {
   background: var(--ListActiveSelectionBackground, #515f59);
   color: var(--ListActiveSelectionForeground, white);
 }

@@ -1,3 +1,4 @@
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetLineInfosVirtualDom from '../GetLineInfosVirtualDom/GetLineInfosVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -7,7 +8,7 @@ export const getHoverVirtualDom = (lineInfos, documentation) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'HoverDisplayString',
+      className: ClassNames.HoverDisplayString,
       childCount: lineInfos.length,
     },
     ...lineInfosDom,
@@ -16,7 +17,7 @@ export const getHoverVirtualDom = (lineInfos, documentation) => {
     dom.push(
       {
         type: VirtualDomElements.Div,
-        className: 'HoverDocumentation',
+        className: ClassNames.HoverDocumentation,
         childCount: 1,
       },
       text(documentation),
