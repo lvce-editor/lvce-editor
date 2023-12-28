@@ -62,12 +62,5 @@
   margin-right: 8px;
 }
 
-.Chevron {
-  width: 16px;
-  height: 16px;
-  contain: strict;
-  position: relative;
-}
-
 .SourceControlBadge {
 }
