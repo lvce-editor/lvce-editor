@@ -191,3 +191,10 @@
 .MaskIconCircleFilled {
   mask-image: url(/icons/circle-filled.svg);
 }
+
+.Chevron {
+  width: 16px;
+  height: 16px;
+  contain: strict;
+  position: relative;
+}
