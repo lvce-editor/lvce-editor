@@ -1,4 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
@@ -6,19 +7,19 @@ import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const deleted = {
   type: VirtualDomElements.Del,
-  className: 'HighlightDeleted',
+  className: ClassNames.HighlightDeleted,
   childCount: 1,
 }
 
 const inserted = {
   type: VirtualDomElements.Ins,
-  className: 'HighlightInserted',
+  className: ClassNames.HighlightInserted,
   childCount: 1,
 }
 
 const highlighted = {
   type: VirtualDomElements.Span,
-  className: 'Highlight',
+  className: ClassNames.Highlight,
   childCount: 1,
 }
 
@@ -27,7 +28,7 @@ const renderRow = (rowInfo) => {
   const treeItem = {
     type: VirtualDomElements.Div,
     role: AriaRoles.TreeItem,
-    className: 'TreeItem',
+    className: ClassNames.TreeItem,
     title,
     ariaSetSize: setSize,
     ariaLevel: depth,
@@ -58,7 +59,7 @@ const renderRow = (rowInfo) => {
   }
   const label = {
     type: VirtualDomElements.Div,
-    className: 'Label',
+    className: ClassNames.Label,
     childCount: 1,
   }
   dom.push(label)
