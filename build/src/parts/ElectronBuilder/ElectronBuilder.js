@@ -39,7 +39,7 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
   // if (config === 'electron_builder_arch_linux') {
   //   version = version.replaceAll('-', '_') // https://wiki.archlinux.org/title/creating_packages#pkgver()
   // }
-  const mainProcessPath = bundleMainProcess ? `packages/main-process/dist/mainProcessMain.cjs` : `packages/main-process/src/mainProcessMain.cjs`
+  const mainProcessPath = bundleMainProcess ? `packages/main-process/dist/mainProcessMain.js` : `packages/main-process/src/mainProcessMain.js`
   await Template.write(config, 'build/.tmp/electron-builder/package.json', {
     '@@NAME@@': product.applicationName,
     '@@AUTHOR@@': product.linuxMaintainer,
@@ -151,7 +151,7 @@ const printFinalSize = async (releaseFilePath) => {
 }
 
 const addRootPackageJson = async ({ cachePath, version, product, bundleMainProcess }) => {
-  const main = bundleMainProcess ? 'packages/main-process/dist/mainProcessMain.cjs' : 'packages/main-process/src/mainProcessMain.cjs'
+  const main = bundleMainProcess ? 'packages/main-process/dist/mainProcessMain.js' : 'packages/main-process/src/mainProcessMain.js'
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: {
