@@ -1,19 +1,7 @@
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as ViewletKeyBindingsStrings from '../ViewletKeyBindings/ViewletKeyBindingsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-
-/**
- * @enum {string}
- */
-const ClassNames = {
-  KeyBindingsTableRow: 'KeyBindingsTableRow',
-  KeyBindingsTableCell: 'KeyBindingsTableCell',
-  Key: 'Key',
-  KeyBindingsTable: 'KeyBindingsTable',
-  KeyBindingsTableHead: 'KeyBindingsTableHead',
-  KeyBindingsTableBody: 'KeyBindingsTableBody',
-  KeyBindingsHeader: 'KeyBindingsHeader',
-}
 
 const kbdDom = {
   type: VirtualDomElements.Kbd,
@@ -23,7 +11,7 @@ const kbdDom = {
 
 const highlight = {
   type: VirtualDomElements.Span,
-  className: 'SearchHighlight',
+  className: ClassNames.SearchHighlight,
   childCount: 1,
 }
 
@@ -79,12 +67,12 @@ const tableCellProps = {
 const getRowClassName = (isEven, selected) => {
   let className = ''
   if (isEven) {
-    className += 'KeyBindingsTableRowEven'
+    className += ' ' + ClassNames.KeyBindingsTableRowEven
   } else {
-    className += 'KeyBindingsTableRowOdd'
+    className += ' ' + ClassNames.KeyBindingsTableRowOdd
   }
   if (selected) {
-    className += ' KeyBindingsTableRowSelected'
+    className += ' ' + ClassNames.KeyBindingsTableRowSelected
   }
   return className
 }
@@ -178,24 +166,24 @@ export const getTableDom = (filteredKeyBindings, displayKeyBindings, columnWidth
     },
     {
       type: VirtualDomElements.ColGroup,
-      className: 'KeyBindingsTableColGroup',
+      className: ClassNames.KeyBindingsTableColGroup,
       childCount: 3,
     },
     {
       type: VirtualDomElements.Col,
-      className: 'KeyBindingsTableCol',
+      className: ClassNames.KeyBindingsTableCol,
       width: columnWidth1,
       childCount: 0,
     },
     {
       type: VirtualDomElements.Col,
-      className: 'KeyBindingsTableCol',
+      className: ClassNames.KeyBindingsTableCol,
       width: columnWidth2,
       childCount: 0,
     },
     {
       type: VirtualDomElements.Col,
-      className: 'KeyBindingsTableCol',
+      className: ClassNames.KeyBindingsTableCol,
       width: columnWidth3,
       childCount: 0,
     },
