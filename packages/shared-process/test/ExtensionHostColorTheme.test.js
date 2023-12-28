@@ -92,8 +92,12 @@ test('getColorThemeJson - invalid json', async () => {
   })
   const colorThemePath = join(tmpDir, 'builtin.theme-test', 'color-theme.json')
   await writeFile(colorThemePath, '{ 1 }')
-  await expect(ExtensionHostColorTheme.getColorThemeJson('test-theme')).rejects.toThrowError(
-    'Failed to load color theme "test-theme": JsonParsingError: Json Parsing Error',
+  await expect(ExtensionHostColorTheme.getColorThemeJson('test-theme')).rejects.toThrow(
+    `Failed to load color theme "test-theme": Failed to parse json at ${join(
+      tmpDir,
+      'builtin.theme-test',
+      'color-theme.json',
+    )}: SyntaxError: Unexpected number in JSON at position 2`,
   )
 })
 

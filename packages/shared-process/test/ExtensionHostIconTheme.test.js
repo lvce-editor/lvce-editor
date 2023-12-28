@@ -77,7 +77,7 @@ test('getIconTheme - invalid json', async () => {
   })
   const iconThemeJsonPath = join(tmpDir, 'icon-theme.json')
   await writeFile(iconThemeJsonPath, '{ 2 }')
-  await expect(ExtensionHostIconTheme.getIconTheme('test')).rejects.toThrowError(
-    'Failed to load icon theme "test": JsonParsingError: Json Parsing Error',
+  await expect(ExtensionHostIconTheme.getIconTheme('test')).rejects.toThrow(
+    `Failed to load icon theme "test": Failed to parse json at ${iconThemeJsonPath}: SyntaxError: Unexpected number in JSON at position 2`,
   )
 })

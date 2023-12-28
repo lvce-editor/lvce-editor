@@ -187,7 +187,13 @@ test('getExtensions - invalid extension.json', async () => {
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       path: join(tmpDir1, 'test-extension'),
-      reason: new VError('Failed to load extension manifest for test-extension: JsonParsingError: Json Parsing Error'),
+      reason: new VError(
+        `Failed to load extension manifest for test-extension: Failed to parse json at ${join(
+          tmpDir1,
+          'test-extension',
+          'extension.json',
+        )}: SyntaxError: Unexpected token i in JSON at position 1`,
+      ),
       status: ExtensionManifestStatus.Rejected,
     },
   ])
@@ -365,7 +371,13 @@ test('getExtensions - error - invalid json', async () => {
   PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      reason: new VError('Failed to load extension manifest for test-extension-1: JsonParsingError: Json Parsing Error'),
+      reason: new VError(
+        `Failed to load extension manifest for test-extension-1: Failed to parse json at ${join(
+          tmpDir1,
+          'test-extension-1',
+          'extension.json',
+        )}: SyntaxError: Unexpected end of JSON input`,
+      ),
       status: ExtensionManifestStatus.Rejected,
       path: join(tmpDir1, 'test-extension-1'),
     },
