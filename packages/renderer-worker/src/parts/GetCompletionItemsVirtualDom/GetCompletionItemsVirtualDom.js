@@ -1,16 +1,17 @@
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const label1 = {
   type: VirtualDomElements.Div,
-  className: 'Label',
+  className: ClassNames.Label,
   childCount: 1,
 }
 
 const completionHighlight = {
   type: VirtualDomElements.Span,
-  className: 'EditorCompletionItemHighlight',
+  className: ClassNames.EditorCompletionItemHighlight,
   childCount: 1,
 }
 
@@ -21,7 +22,7 @@ const getLabelDom = (label, highlights) => {
   const dom = []
   const labelDom = {
     type: VirtualDomElements.Div,
-    className: 'Label',
+    className: ClassNames.Label,
     childCount: 0,
   }
   dom.push(labelDom)
@@ -64,12 +65,12 @@ export const getCompletionItemsVirtualDom = (visibleItems) => {
   const dom = [root]
   for (const visibleItem of visibleItems) {
     const { top, label, symbolName, highlights, focused, deprecated } = visibleItem
-    let className = 'EditorCompletionItem'
+    let className = ClassNames.EditorCompletionItem
     if (focused) {
-      className += ' EditorCompletionItemFocused'
+      className += ' ' + ClassNames.EditorCompletionItemFocused
     }
     if (deprecated) {
-      className += ' EditorCompletionItemDeprecated'
+      className += ' ' + ClassNames.EditorCompletionItemDeprecated
     }
     dom.push(
       {
@@ -81,7 +82,7 @@ export const getCompletionItemsVirtualDom = (visibleItems) => {
       },
       {
         type: VirtualDomElements.Div,
-        className: `ColoredMaskIcon ${symbolName}`,
+        className: `${ClassNames.ColoredMaskIcon} ${symbolName}`,
         childCount: 0,
       },
       ...getLabelDom(label, highlights),
