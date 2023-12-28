@@ -1,13 +1,14 @@
 import * as Workspace from '../Workspace/Workspace.js'
 
 const toProblem = (diagnostic) => {
-  const { message, rowIndex, columnIndex, uri } = diagnostic
+  const { message, rowIndex, columnIndex, uri, source } = diagnostic
   return {
     message,
     rowIndex,
     columnIndex,
     uri: '',
     count: 0,
+    source,
   }
 }
 
@@ -19,6 +20,7 @@ export const toProblems = (diagnostics) => {
     columnIndex: 0,
     uri: '',
     count: 0,
+    source: '',
   }
   for (const diagnostic of diagnostics) {
     console.log({ diagnostic, problem })
@@ -31,6 +33,7 @@ export const toProblems = (diagnostics) => {
         columnIndex: 0,
         uri: diagnostic.uri,
         count: 1,
+        source: '',
       }
       problems.push(problem)
     }
