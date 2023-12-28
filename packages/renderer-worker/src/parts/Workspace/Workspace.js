@@ -198,6 +198,13 @@ export const pathBaseName = (path) => {
   return path.slice(path.lastIndexOf('/') + 1)
 }
 
+export const pathRelative = (path) => {
+  if (path.startsWith(state.workspacePath)) {
+    return path.slice(state.workspacePath.length + 1, path.lastIndexOf('/'))
+  }
+  return path
+}
+
 // TODO this should be in FileSystem module
 export const pathDirName = (path) => {
   const pathSeparator = state.pathSeparator || '/'

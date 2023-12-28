@@ -7,7 +7,7 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getProblemVirtualDom = (problem) => {
-  const { message, rowIndex, columnIndex, isActive, uri, icon, source } = problem
+  const { message, rowIndex, columnIndex, isActive, uri, icon, source, relativePath } = problem
   let className = ClassNames.Problem
   if (isActive) {
     className += ' ' + ClassNames.ProblemSelected
@@ -17,7 +17,7 @@ const getProblemVirtualDom = (problem) => {
       {
         type: VirtualDomElements.Div,
         className,
-        childCount: 4,
+        childCount: 5,
         paddingLeft: GetTreeItemIndent.getTreeItemIndent(1),
       },
       {
@@ -32,6 +32,12 @@ const getProblemVirtualDom = (problem) => {
       },
       GetFileIconVirtualDom.getFileIconVirtualDom(icon),
       text(uri),
+      {
+        type: VirtualDomElements.Div,
+        className: ClassNames.LabelDetail,
+        childCount: 1,
+      },
+      text(relativePath),
       ...GetBadgeVirtualDom.getBadgeVirtualDom(ClassNames.ProblemBadge, problem.count),
     ]
   }
