@@ -1,26 +1,12 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as EmptySourceControlButtons from '../EmptySourceControlButtons/EmptySourceControlButton.js'
+import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
-
-/**
- * @enum {string}
- */
-const ClassNames = {
-  Label: 'Label',
-  StrikeThrough: 'StrikeThrough',
-  TreeItem: 'TreeItem',
-  Chevron: 'Chevron',
-  SourceControlBadge: 'SourceControlBadge',
-  ChevronRight: 'ChevronRight',
-  LabelDetail: 'LabelDetail',
-  SourceControlButton: 'SourceControlButton',
-  DecorationIcon: 'DecorationIcon',
-}
 
 const getLabelClassName = (decorationStrikeThrough) => {
   let className = ClassNames.Label
