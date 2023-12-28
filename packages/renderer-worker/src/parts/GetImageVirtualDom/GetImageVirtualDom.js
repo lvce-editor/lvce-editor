@@ -1,3 +1,4 @@
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -6,12 +7,12 @@ export const getImageVirtualDom = (src, errorMessage) => {
     return [
       {
         type: VirtualDomElements.Div,
-        className: 'ImageContent',
+        className: ClassNames.ImageContent,
         childCount: 1,
       },
       {
         type: VirtualDomElements.Div,
-        className: 'ImageErrorMessage',
+        className: ClassNames.ImageErrorMessage,
         childCount: 1,
       },
       text(errorMessage),
@@ -20,12 +21,12 @@ export const getImageVirtualDom = (src, errorMessage) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'ImageContent',
+      className: ClassNames.ImageContent,
       childCount: 1,
     },
     {
       type: VirtualDomElements.Img,
-      className: 'ImageElement',
+      className: ClassNames.ImageElement,
       src,
       draggable: false,
       childCount: 0,
