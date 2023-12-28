@@ -34,7 +34,7 @@ const getProblemVirtualDom = (problem) => {
       text(uri),
       {
         type: VirtualDomElements.Div,
-        className: ClassNames.ProblemAt,
+        className: ClassNames.LabelDetail,
         childCount: 1,
       },
       text(relativePath),
