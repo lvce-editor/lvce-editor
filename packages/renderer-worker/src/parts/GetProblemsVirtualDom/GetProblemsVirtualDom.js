@@ -6,7 +6,7 @@ import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getProblemVirtualDom = (problem) => {
-  const { message, rowIndex, columnIndex, isActive, uri, icon } = problem
+  const { message, rowIndex, columnIndex, isActive, uri, icon, source } = problem
   let className = 'Problem'
   if (isActive) {
     className += ' ProblemSelected'
@@ -41,8 +41,9 @@ const getProblemVirtualDom = (problem) => {
     {
       type: VirtualDomElements.Span,
       className: 'ProblemAt',
-      childCount: 1,
+      childCount: 2,
     },
+    text(source + ' '),
     text(lineColumn),
   ]
 }
