@@ -11,11 +11,12 @@
 .Problem {
   display: flex;
   contain: strict;
-  height: 20px;
+  height: 22px;
   width: 100%;
   gap: 5px;
   align-items: center;
   padding-left: 20px;
+  cursor: pointer;
 }
 
 .ProblemBadge {
