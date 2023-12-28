@@ -1,15 +1,16 @@
+import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getProblemVirtualDom = (problem) => {
   const { message, rowIndex, columnIndex, isActive, uri, icon, source } = problem
-  let className = 'Problem'
+  let className = ClassNames.Problem
   if (isActive) {
-    className += ' ProblemSelected'
+    className += ' ' + ClassNames.ProblemSelected
   }
   if (uri) {
     return [
@@ -21,7 +22,7 @@ const getProblemVirtualDom = (problem) => {
       },
       GetFileIconVirtualDom.getFileIconVirtualDom(icon),
       text(uri),
-      ...GetBadgeVirtualDom.getBadgeVirtualDom('ProblemBadge', problem.count),
+      ...GetBadgeVirtualDom.getBadgeVirtualDom(ClassNames.ProblemBadge, problem.count),
     ]
   }
   const lineColumn = ViewletProblemsStrings.atLineColumn(rowIndex, columnIndex)
@@ -34,13 +35,13 @@ const getProblemVirtualDom = (problem) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'MaskIconError ProblemsErrorIcon',
+      className: `${ClassNames.MaskIconError} ${ClassNames.ProblemsErrorIcon}`,
       childCount: 0,
     },
     text(message),
     {
       type: VirtualDomElements.Span,
-      className: 'ProblemAt',
+      className: ClassNames.ProblemAt,
       childCount: 2,
     },
     text(source + ' '),
@@ -53,7 +54,7 @@ export const getProblemsVirtualDom = (problems) => {
     return [
       {
         type: VirtualDomElements.Div,
-        className: 'Message',
+        className: ClassNames.Message,
         childCount: 1,
       },
       text(ViewletProblemsStrings.noProblemsDetected()),
@@ -62,7 +63,7 @@ export const getProblemsVirtualDom = (problems) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'ProblemsList',
+      className: ClassNames.ProblemsList,
       childCount: problems.length,
     },
     ...problems.flatMap(getProblemVirtualDom),

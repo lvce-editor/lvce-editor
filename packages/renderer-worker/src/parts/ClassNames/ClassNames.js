@@ -1,0 +1,8 @@
+export const MaskIconError = 'MaskIconError'
+export const Message = 'Message'
+export const Problem = 'Problem'
+export const ProblemAt = 'ProblemAt'
+export const ProblemBadge = 'ProblemBadge'
+export const ProblemSelected = 'ProblemSelected'
+export const ProblemsErrorIcon = 'ProblemsErrorIcon'
+export const ProblemsList = 'ProblemsList'
