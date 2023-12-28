@@ -16,6 +16,7 @@
   gap: 5px;
   align-items: center;
   padding-left: 20px;
+  cursor: pointer;
 }
 
 .ProblemBadge {
