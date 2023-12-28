@@ -1,15 +1,8 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-
-const ClassNames = {
-  MenuItemSeparator: 'MenuItemSeparator',
-  MenuItem: 'MenuItem',
-  Menu: 'Menu',
-  MenuItemFocused: 'MenuItemFocused',
-  MenuItemSubMenu: 'MenuItemSubMenu',
-}
 
 const getMenuItemSeparatorDom = (menuItem) => {
   return [
@@ -92,7 +85,7 @@ const getMenuItemSubMenuDom = (menuItem) => {
     text(label),
     {
       type: VirtualDomElements.Div,
-      className: 'MenuItemSubMenuArrowRight',
+      className: ClassNames.MenuItemSubMenuArrowRight,
       childCount: 0,
     },
   ]
