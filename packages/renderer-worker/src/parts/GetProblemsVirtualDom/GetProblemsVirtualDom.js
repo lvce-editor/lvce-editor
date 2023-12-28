@@ -2,6 +2,7 @@ import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirt
 import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getProblemVirtualDom = (problem) => {
@@ -20,12 +21,7 @@ const getProblemVirtualDom = (problem) => {
       },
       GetFileIconVirtualDom.getFileIconVirtualDom(icon),
       text(uri),
-      {
-        type: VirtualDomElements.Div,
-        className: 'Badge ProblemBadge',
-        childCount: 1,
-      },
-      text(`${problem.count}`),
+      ...GetBadgeVirtualDom.getBadgeVirtualDom('ProblemBadge', problem.count),
     ]
   }
   const lineColumn = ViewletProblemsStrings.atLineColumn(rowIndex, columnIndex)
