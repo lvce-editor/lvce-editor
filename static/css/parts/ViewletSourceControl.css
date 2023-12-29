@@ -72,6 +72,7 @@
   height: 30px;
   contain: strict;
   display: flex;
+  border-radius: 2px;
 }
 
 .SplitButtonContent {
