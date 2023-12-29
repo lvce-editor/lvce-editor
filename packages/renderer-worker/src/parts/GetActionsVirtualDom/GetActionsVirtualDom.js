@@ -20,10 +20,32 @@ const getActionButtonVirtualDom = (action) => {
   ]
 }
 
+const getActionSelectVirtualDom = (action) => {
+  return []
+}
+
+const getActionFilterVirtualDom = (action) => {
+  return [
+    {
+      type: VirtualDomElements.Input,
+      className: 'InputBox',
+      childCount: 0,
+      spellcheck: false,
+      autocapitalize: 'off',
+      autocorrect: 'off',
+      placeholder: 'Filter',
+    },
+  ]
+}
+
 const getActionVirtualDom = (action) => {
   switch (action.type) {
     case ActionType.Button:
       return getActionButtonVirtualDom(action)
+    case ActionType.Select:
+      return getActionSelectVirtualDom(action)
+    case ActionType.Filter:
+      return getActionFilterVirtualDom(action)
     default:
       return []
   }

@@ -108,9 +108,9 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
   }
 }
 
-export const setActions = (state, actions) => {
+export const setActionsDom = (state, actions) => {
   const { $PanelTabs, $Actions } = state
-  const $NewActions = Actions.create(actions)
+  const $NewActions = VirtualDom.render(actions).firstChild
   if ($Actions) {
     $Actions.replaceWith($NewActions)
   } else {
