@@ -80,6 +80,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+}
+
+.SplitButtonContent:hover,
+.SplitButtonDropDown:hover {
+  background: var(--SplitButtonHoverBackground, #387674);
 }
 
 .SplitButtonSeparator {
@@ -93,4 +99,5 @@
   width: 30px;
   height: 100%;
   contain: strict;
+  cursor: pointer;
 }
