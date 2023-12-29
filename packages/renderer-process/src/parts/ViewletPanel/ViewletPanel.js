@@ -1,12 +1,11 @@
-import * as Actions from '../Actions/Actions.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletPanelEvents from './ViewletPanelEvents.js'
-import * as AttachEvents from '../AttachEvents/AttachEvents.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 
 /**
  * @enum {string}
