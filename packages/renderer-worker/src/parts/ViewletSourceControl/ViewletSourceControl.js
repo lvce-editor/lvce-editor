@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
+import * as ViewletSourceControlLoadContent from './ViewletSourceControlLoadContent.js'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
@@ -77,6 +78,10 @@ export const handleMouseOver = async (state, index) => {
     buttonIndex: index,
     buttons: actions,
   }
+}
+
+export const handleWorkspaceChange = (state) => {
+  return ViewletSourceControlLoadContent.loadContent(state)
 }
 
 export const handleMouseOut = (state, index) => {
