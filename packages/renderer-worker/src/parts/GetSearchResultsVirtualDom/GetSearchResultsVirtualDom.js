@@ -106,7 +106,7 @@ export const getSearchResultsVirtualDom = (visibleItems) => {
     {
       type: VirtualDomElements.Div,
       className: 'MaskIcon MaskIconChevronDown',
-      childCount: 1,
+      childCount: 0,
     },
     {
       type: VirtualDomElements.Div,
@@ -116,7 +116,7 @@ export const getSearchResultsVirtualDom = (visibleItems) => {
     {
       type: VirtualDomElements.Div,
       className: 'SearchField',
-      childCount: 3,
+      childCount: 4,
     },
     {
       type: VirtualDomElements.TextArea,
