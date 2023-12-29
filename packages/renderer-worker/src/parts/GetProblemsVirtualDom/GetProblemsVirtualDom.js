@@ -7,7 +7,20 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getProblemVirtualDom = (problem) => {
-  const { message, rowIndex, columnIndex, isActive, uri, icon, source, relativePath } = problem
+  const {
+    message,
+    rowIndex,
+    columnIndex,
+    isActive,
+    uri,
+    icon,
+    source,
+    relativePath,
+    uriMatchIndex,
+    sourceMatchIndex,
+    messageMatchIndex,
+    filterValueLength,
+  } = problem
   let className = ClassNames.Problem
   if (isActive) {
     className += ' ' + ClassNames.ProblemSelected
@@ -42,7 +55,15 @@ const getProblemVirtualDom = (problem) => {
     ]
   }
   const lineColumn = ViewletProblemsStrings.atLineColumn(rowIndex, columnIndex)
-  return [
+  const label = {
+    type: VirtualDomElements.Div,
+    className: ClassNames.Label,
+    childCount: 1,
+  }
+  /**
+   * @type {any}
+   */
+  const dom = [
     {
       type: VirtualDomElements.Div,
       className,
@@ -54,7 +75,27 @@ const getProblemVirtualDom = (problem) => {
       className: `${ClassNames.MaskIconError} ${ClassNames.ProblemsErrorIcon}`,
       childCount: 0,
     },
-    text(message),
+    label,
+  ]
+  if (filterValueLength) {
+    const before = message.slice(0, messageMatchIndex)
+    const middle = message.slice(messageMatchIndex, messageMatchIndex + filterValueLength)
+    const after = message.slice(messageMatchIndex + filterValueLength)
+    label.childCount += 2
+    dom.push(
+      text(before),
+      {
+        type: VirtualDomElements.Div,
+        className: ClassNames.Highlight,
+        childCount: 1,
+      },
+      text(middle),
+      text(after),
+    )
+  } else {
+    dom.push(text(message))
+  }
+  dom.push(
     {
       type: VirtualDomElements.Span,
       className: ClassNames.ProblemAt,
@@ -62,7 +103,8 @@ const getProblemVirtualDom = (problem) => {
     },
     text(source + ' '),
     text(lineColumn),
-  ]
+  )
+  return dom
 }
 
 export const getProblemsVirtualDom = (problems) => {
