@@ -68,10 +68,13 @@
 .SplitButton {
   background: var(--SplitButtonBackground, rgb(35, 112, 112));
   color: var(--SplitButtonForeground, white);
-  width: 100%;
-  height: 30px;
+  height: 28px;
   contain: strict;
   display: flex;
+  border-radius: 2px;
+  margin-right: 12px;
+  margin-left: 19px;
+  margin-bottom: 6px;
 }
 
 .SplitButtonContent {
@@ -80,6 +83,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+}
+
+.SplitButtonContent:hover,
+.SplitButtonDropDown:hover {
+  background: var(--SplitButtonHoverBackground, #387674);
 }
 
 .SplitButtonSeparator {
@@ -93,4 +102,5 @@
   width: 30px;
   height: 100%;
   contain: strict;
+  cursor: pointer;
 }
