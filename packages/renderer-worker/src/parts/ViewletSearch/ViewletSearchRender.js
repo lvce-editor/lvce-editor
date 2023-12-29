@@ -99,4 +99,4 @@ const renderFocusedIndex = {
   },
 }
 
-export const render = [renderItems, renderValue, renderScrollBar, renderNegativeMargin, renderFocusedIndex]
+export const render = [renderItems, renderValue, renderScrollBar]
