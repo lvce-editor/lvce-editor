@@ -20,6 +20,7 @@ export const create = (id) => {
     isExpanded: true,
     buttons: [],
     providerId: '',
+    splitButtonEnabled: false,
   }
 }
 

@@ -1,6 +1,7 @@
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as SourceControl from '../SourceControl/SourceControl.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { getDisplayItems } from './ViewletSourceControlGetDisplayItems.js'
 
@@ -36,6 +37,7 @@ export const loadContent = async (state) => {
   const isExpanded = true
   const displayItems = getDisplayItems(allGroups, isExpanded)
   const buttons = await getNewButtons(displayItems, state.providerId, state.buttonIndex)
+  const splitButtonEnabled = Preferences.get('sourceControl.splitButtonEnabled')
   return {
     ...state,
     allGroups,
@@ -45,5 +47,6 @@ export const loadContent = async (state) => {
     isExpanded,
     buttons,
     root,
+    splitButtonEnabled,
   }
 }

@@ -5,52 +5,36 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 
-const getPlaceHolderText = () => {
-  return `Message (Enter) to commit on 'master'`
-}
-
 export const create = () => {
-  const $ViewSourceControlInput = InputBox.create()
-  $ViewSourceControlInput.placeholder = getPlaceHolderText()
-  $ViewSourceControlInput.ariaLabel = 'Source Control Input'
-
-  const $SourceControlHeader = document.createElement('div')
-  $SourceControlHeader.className = 'SourceControlHeader'
-  $SourceControlHeader.append($ViewSourceControlInput)
-
-  const $ViewletTree = document.createElement('div')
-  $ViewletTree.className = 'SourceControlItems'
-
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet SourceControl'
   $Viewlet.tabIndex = 0
-  $Viewlet.append($SourceControlHeader, $ViewletTree)
   return {
     $Viewlet,
-    $ViewletTree,
-    $ViewSourceControlInput,
   }
 }
 
 export const attachEvents = (state) => {
-  const { $ViewletTree, $ViewSourceControlInput } = state
-  AttachEvents.attachEvents($ViewSourceControlInput, {
-    [DomEventType.Focus]: ViewletSourceControlEvents.handleFocus,
-    [DomEventType.Input]: ViewletSourceControlEvents.handleInput,
-  })
-  AttachEvents.attachEvents($ViewletTree, {
+  const { $Viewlet } = state
+  AttachEvents.attachEvents($Viewlet, {
     [DomEventType.Click]: ViewletSourceControlEvents.handleClick,
     [DomEventType.ContextMenu]: ViewletSourceControlEvents.handleContextMenu,
     [DomEventType.MouseOver]: ViewletSourceControlEvents.handleMouseOver,
     [DomEventType.MouseOut]: ViewletSourceControlEvents.handleMouseOut,
   })
+  $Viewlet.addEventListener(DomEventType.Input, ViewletSourceControlEvents.handleInput, {
+    capture: true,
+  })
+  $Viewlet.addEventListener(DomEventType.Focus, ViewletSourceControlEvents.handleFocus, {
+    capture: true,
+  })
 }
 
 export const dispose = () => {}
 
-export const setItemsDom = (state, dom) => {
-  const { $ViewletTree } = state
-  VirtualDom.renderInto($ViewletTree, dom)
+export const setDom = (state, dom) => {
+  const { $Viewlet } = state
+  VirtualDom.renderInto($Viewlet, dom)
 }
 
 export const setError = (state, error) => {
@@ -64,11 +48,11 @@ export const setError = (state, error) => {
 }
 
 export const setInputValue = (state, value) => {
-  const { $ViewSourceControlInput } = state
-  $ViewSourceControlInput.value = value
+  // const { $ViewSourceControlInput } = state
+  // $ViewSourceControlInput.value = value
 }
 
 export const focus = (state) => {
-  const { $ViewSourceControlInput } = state
-  $ViewSourceControlInput.focus()
+  const { $Viewlet } = state
+  $Viewlet.querySelector('input').focus()
 }

@@ -141,6 +141,62 @@ const createItem = (item) => {
   }
 }
 
-export const getSourceControlItemsVirtualDom = (items) => {
-  return items.flatMap(createItem)
+export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
+  const dom = []
+  dom.push(
+    {
+      type: VirtualDomElements.Div,
+      className: 'SourceControlHeader',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Input,
+      className: 'InputBox',
+      spellcheck: false,
+      autocapitalize: 'off',
+      autocorrect: 'off',
+      placeholder: `Message (Enter) to commit on 'master'`,
+      ariaLabel: 'Source Control Input',
+      childCount: 0,
+    },
+  )
+  if (splitButtonEnabled) {
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SplitButton',
+        childCount: 3,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'SplitButtonContent',
+        childCount: 1,
+      },
+      text('Commit'),
+      {
+        type: VirtualDomElements.Div,
+        className: 'SplitButtonSeparator',
+        childCount: 0,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'SplitButtonDropDown',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon MaskIconChevronDown',
+        childCount: 0,
+      },
+    )
+  }
+  dom.push(
+    {
+      type: VirtualDomElements.Div,
+      className: 'SourceControlItems',
+      childCount: items.length,
+    },
+    ...items.flatMap(createItem),
+  )
+  return dom
 }

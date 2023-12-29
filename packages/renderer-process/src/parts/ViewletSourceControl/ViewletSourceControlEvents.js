@@ -28,6 +28,9 @@ export const handleClick = (event) => {
     return
   }
   const $Parent = target.closest('.SourceControlItems')
+  if (!$Parent) {
+    return
+  }
   const index = findIndex($Parent, target)
   if (index === -1) {
     return
@@ -38,6 +41,9 @@ export const handleClick = (event) => {
 export const handleMouseOver = (event) => {
   const { target } = event
   const $Parent = target.closest('.SourceControlItems')
+  if (!$Parent) {
+    return
+  }
   const index = findIndex($Parent, target)
   const uid = ComponentUid.fromEvent(event)
   ViewletSourceControlFunctions.handleMouseOver(uid, index)
