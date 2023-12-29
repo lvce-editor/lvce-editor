@@ -165,9 +165,29 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
       {
         type: VirtualDomElements.Div,
         className: 'SplitButton',
+        childCount: 3,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'SplitButtonContent',
         childCount: 1,
       },
       text('Commit'),
+      {
+        type: VirtualDomElements.Div,
+        className: 'SplitButtonSeparator',
+        childCount: 0,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'SplitButtonDropDown',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon MaskIconChevronDown',
+        childCount: 0,
+      },
     )
   }
   dom.push(

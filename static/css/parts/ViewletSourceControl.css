@@ -71,6 +71,26 @@
   height: 30px;
   contain: strict;
   display: flex;
-  align-items: center;
+  display: flex;
+}
+
+.SplitButtonContent {
+  contain: strict;
+  flex: 1;
+  display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.SplitButtonSeparator {
+  height: 90%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.4);
+  contain: strict;
+}
+
+.SplitButtonDropDown {
+  width: 30px;
+  height: 100%;
+  contain: strict;
 }
