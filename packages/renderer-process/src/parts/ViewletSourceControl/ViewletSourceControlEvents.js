@@ -28,6 +28,9 @@ export const handleClick = (event) => {
     return
   }
   const $Parent = target.closest('.SourceControlItems')
+  if (!$Parent) {
+    return
+  }
   const index = findIndex($Parent, target)
   if (index === -1) {
     return
