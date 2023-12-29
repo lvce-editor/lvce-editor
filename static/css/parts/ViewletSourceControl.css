@@ -68,11 +68,13 @@
 .SplitButton {
   background: var(--SplitButtonBackground, rgb(35, 112, 112));
   color: var(--SplitButtonForeground, white);
-  width: 100%;
   height: 30px;
   contain: strict;
   display: flex;
   border-radius: 2px;
+  margin-right: 12px;
+  margin-left: 19px;
+  margin-bottom: 6px;
 }
 
 .SplitButtonContent {
