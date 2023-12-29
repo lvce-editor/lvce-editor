@@ -634,7 +634,7 @@ const getClickFn = (direntType) => {
   }
 }
 
-export const handleClick = (state, index, keepFocus = false) => {
+export const handleClick = (state, index, keepFocus = false, shiftKey = false) => {
   const { items, minLineY } = state
   if (index === -1) {
     return focusIndex(state, -1)
@@ -645,16 +645,20 @@ export const handleClick = (state, index, keepFocus = false) => {
     console.warn(`[explorer] dirent at index ${actualIndex} not found`, state)
     return state
   }
+  if (shiftKey) {
+    console.log('click with shift')
+    return state
+  }
   const clickFn = getClickFn(dirent.type)
   return clickFn(state, dirent, actualIndex, keepFocus)
 }
 
-export const handleClickAt = (state, button, x, y) => {
+export const handleClickAt = (state, button, x, y, shiftKey) => {
   if (button !== MouseEventType.LeftClick) {
     return state
   }
   const index = getIndexFromPosition(state, x, y)
-  return handleClick(state, index)
+  return handleClick(state, index, false, shiftKey)
 }
 
 export const handleClickCurrent = (state) => {

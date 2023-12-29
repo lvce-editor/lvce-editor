@@ -21,9 +21,9 @@ export const handleBlur = (event) => {
 
 export const handleClick = (event) => {
   Event.preventDefault(event)
-  const { button, clientX, clientY } = event
+  const { button, clientX, clientY, shiftKey } = event
   const uid = ComponentUid.fromEvent(event)
-  ViewletExplorerFunctions.handleClickAt(uid, button, clientX, clientY)
+  ViewletExplorerFunctions.handleClickAt(uid, button, clientX, clientY, shiftKey)
 }
 
 export const handlePointerDown = (event) => {
