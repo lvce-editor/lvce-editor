@@ -81,6 +81,11 @@ const renderRow = (rowInfo) => {
 }
 
 export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded) => {
+  const headerTopRight = {
+    type: VirtualDomElements.Div,
+    className: 'SearchHeaderTopRight',
+    childCount: 1,
+  }
   /**
    * @type {any[]}
    */
@@ -108,11 +113,7 @@ export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded) => {
       className: `MaskIcon ${replaceExpanded ? 'MaskIconChevronDown' : 'MaskIconChevronRight'}`,
       childCount: 0,
     },
-    {
-      type: VirtualDomElements.Div,
-      className: 'SearchHeaderTopRight',
-      childCount: 2,
-    },
+    headerTopRight,
     {
       type: VirtualDomElements.Div,
       className: 'SearchField',
@@ -164,34 +165,42 @@ export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded) => {
       className: 'MaskIcon MaskIconRegex',
       childCount: 0,
     },
-    {
-      type: VirtualDomElements.Div,
-      className: 'SearchField SearchFieldReplace',
-      childCount: 2,
-    },
-    {
-      type: VirtualDomElements.Input,
-      className: 'SearchFieldInput',
-      spellcheck: false,
-      autocapitalize: 'off',
-      inputType: 'text',
-      autocorrect: 'off',
-      placeholder: 'Replace',
-      name: 'search-replace-value',
-      childCount: 0,
-    },
-    {
-      type: VirtualDomElements.Button,
-      className: 'SearchFieldButton',
-      title: 'Replace All',
-      childCount: 1,
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: 'MaskIcon MaskIconReplaceAll',
-      role: 'none',
-      childCount: 0,
-    },
+  ]
+  if (replaceExpanded) {
+    headerTopRight.childCount++
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SearchField SearchFieldReplace',
+        childCount: 2,
+      },
+      {
+        type: VirtualDomElements.Input,
+        className: 'SearchFieldInput',
+        spellcheck: false,
+        autocapitalize: 'off',
+        inputType: 'text',
+        autocorrect: 'off',
+        placeholder: 'Replace',
+        name: 'search-replace-value',
+        childCount: 0,
+      },
+      {
+        type: VirtualDomElements.Button,
+        className: 'SearchFieldButton',
+        title: 'Replace All',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon MaskIconReplaceAll',
+        role: 'none',
+        childCount: 0,
+      },
+    )
+  }
+
+  dom.push(
     {
       type: VirtualDomElements.Div,
       className: 'ViewletSearchMessage',
@@ -200,7 +209,8 @@ export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded) => {
       childCount: 1,
     },
     text('3 results in 2 files'),
-  ]
+  )
+
   dom.push({
     type: VirtualDomElements.Div,
     className: 'Viewlet List',
