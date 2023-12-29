@@ -42,6 +42,9 @@ export const handleClick = (event) => {
     return
   }
   const command = target.dataset.command
+  if (!command) {
+    return
+  }
   const uid = ComponentUid.fromEvent(event)
   // const index = getIndex(target)
   ViewletSearchFunctions.handleCommand(uid, command)

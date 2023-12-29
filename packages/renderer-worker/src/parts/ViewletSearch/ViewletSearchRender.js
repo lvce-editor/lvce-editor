@@ -1,5 +1,5 @@
 import * as GetSearchDisplayResults from '../GetSearchDisplayResults/GetSearchDisplayResults.js'
-import * as GetSearchResultsVirtualDom from '../GetSearchResultsVirtualDom/GetSearchResultsVirtualDom.js'
+import * as GetSearchVirtualDom from '../GetSearchVirtualDom/GetSearchVirtualDom.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
@@ -30,7 +30,7 @@ const renderItems = {
       newState.maxLineY,
       newState.replacement,
     )
-    const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(
+    const dom = GetSearchVirtualDom.getSearchVirtualDom(
       displayResults,
       newState.replaceExpanded,
       newState.matchCase,
