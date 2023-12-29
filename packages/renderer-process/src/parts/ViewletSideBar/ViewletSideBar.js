@@ -1,9 +1,9 @@
-import * as Actions from '../Actions/Actions.js'
 import * as AriaRoleDescriptionType from '../AriaRoleDescriptionType/AriaRoleDescriptionType.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletSideBarEvents from './ViewletSideBarEvents.js'
 
 export const create = () => {
@@ -49,9 +49,9 @@ export const setTitle = (state, name) => {
   $SideBarTitleAreaTitle.textContent = name
 }
 
-export const setActions = (state, actions) => {
+export const setActionsDom = (state, actions) => {
   const { $SideBarTitleArea, $Actions } = state
-  const $NewActions = Actions.create(actions)
+  const $NewActions = VirtualDom.render(actions).firstChild
   if ($Actions) {
     $Actions.replaceWith($NewActions)
   } else {

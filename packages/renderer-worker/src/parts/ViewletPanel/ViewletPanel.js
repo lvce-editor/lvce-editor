@@ -7,6 +7,7 @@ import * as ViewletActions from '../ViewletActions/ViewletActions.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -64,7 +65,8 @@ export const contentLoaded = (state) => {
   const commands = []
   const actions = ViewletActions.getActions(currentViewletId)
   state.actions = actions
-  commands.push(['Viewlet.send', uid, 'setActions', actions])
+  const dom = GetActionsVirtualDom.getActionsVirtualDom(actions)
+  commands.push(['Viewlet.send', uid, 'setActionsDom', dom])
   return commands
 }
 
@@ -126,7 +128,8 @@ export const openViewlet = async (state, id, focus = false) => {
     Assert.number(currentViewletUid)
     commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
     const actions = ViewletActions.getActions(id)
-    commands.push(['Viewlet.send', uid, 'setActions', actions])
+    const dom = GetActionsVirtualDom.getActionsVirtualDom(actions)
+    commands.push(['Viewlet.send', uid, 'setActionsDom', dom])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     if (commands.at(-1).includes(ViewletModuleId.Error)) {
       state.currentViewletId = ViewletModuleId.Error

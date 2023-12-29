@@ -1,5 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
+import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -8,7 +10,6 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as Character from '../Character/Character.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -55,7 +56,8 @@ export const contentLoaded = async (state, savedState) => {
   const { currentViewletId, uid } = state
   const commands = []
   const actions = ViewletActions.getActions(currentViewletId)
-  commands.push(['Viewlet.send', uid, 'setActions', actions])
+  const dom = GetActionsVirtualDom.getActionsVirtualDom(actions)
+  commands.push(['Viewlet.send', uid, 'setActionsDom', dom])
   state.actions = actions
   return commands
 }
@@ -140,7 +142,8 @@ export const openViewlet = async (state, moduleId, focus = false) => {
       commands.push(...extraCommands)
     }
     const actions = ViewletActions.getActions(moduleId)
-    commands.push(['Viewlet.send', uid, 'setActions', actions])
+    const dom = GetActionsVirtualDom.getActionsVirtualDom(actions)
+    commands.push(['Viewlet.send', uid, 'setActionsDom', dom])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     state.actions = actions
   }
