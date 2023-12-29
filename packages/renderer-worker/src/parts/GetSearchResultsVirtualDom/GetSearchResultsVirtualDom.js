@@ -81,6 +81,133 @@ const renderRow = (rowInfo) => {
 }
 
 export const getSearchResultsVirtualDom = (visibleItems) => {
-  const dom = [...visibleItems.flatMap(renderRow)]
+  /**
+   * @type {any[]}
+   */
+  const dom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'SearchHeader',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SearchHeaderTop',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Button,
+      className: 'IconButton SearchToggleButton SearchToggleButtonExpanded',
+      title: 'Toggle Replace',
+      ariaLabel: 'Toggle Replace',
+      ariaExpanded: true,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIcon MaskIconChevronDown',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SearchHeaderTopRight',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SearchField',
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.TextArea,
+      className: 'MultilineInputBox',
+      spellcheck: false,
+      autocapitalize: 'off',
+      autocorrect: 'off',
+      placeholder: 'Search',
+      name: 'search-value',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SearchFieldButton',
+      title: 'Match Case',
+      role: 'checkbox',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIcon MaskIconCaseSensitive',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SearchFieldButton',
+      title: 'Match Case',
+      role: 'checkbox',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIcon MaskIconWholeWord',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SearchFieldButton',
+      title: 'Use Regular Expression',
+      role: 'checkbox',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIcon MaskIconRegex',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SearchField SearchFieldReplace',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Input,
+      className: 'SearchFieldInput',
+      spellcheck: false,
+      autocapitalize: 'off',
+      inputType: 'text',
+      autocorrect: 'off',
+      placeholder: 'Replace',
+      name: 'search-replace-value',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Button,
+      className: 'SearchFieldButton',
+      title: 'Replace All',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIcon MaskIconReplaceAll',
+      role: 'none',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'ViewletSearchMessage',
+      role: 'status',
+      tabIndex: 0,
+      childCount: 1,
+    },
+    text('3 results in 2 files'),
+  ]
+  dom.push({
+    type: VirtualDomElements.Div,
+    className: 'Viewlet List',
+    role: 'tree',
+    tabIndex: 0,
+    childCount: visibleItems.length,
+  })
+  dom.push(...visibleItems.flatMap(renderRow))
   return dom
 }
