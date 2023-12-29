@@ -212,14 +212,14 @@ test('diffDom - remove child node and replace text node', () => {
         className: 'DebugSectionHeader',
         ariaExpanded: false,
       },
-      2
+      2,
     ),
     div(
       {
         className: 'MaskIcon DebugMaskIcon',
         maskImage: '/icons/triangle-right.svg',
       },
-      0
+      0,
     ),
     text('Call Stack'),
   ]
@@ -228,7 +228,7 @@ test('diffDom - remove child node and replace text node', () => {
       {
         className: 'DebugPausedMessage',
       },
-      1
+      1,
     ),
     text('Not Paused'),
   ]
@@ -262,28 +262,28 @@ test('diffDom - endless recursion bug', () => {
       {
         className: 'DebugButtons',
       },
-      4
+      4,
     ),
     div(
       {
         className: 'IconButton DebugButton',
         title: 'Pause',
       },
-      1
+      1,
     ),
     div(
       {
         className: 'MaskIcon',
         maskImage: '/icons/debug-pause.svg',
       },
-      0
+      0,
     ),
     button(
       {
         className: 'IconButton DebugButton',
         title: 'Step Over',
       },
-      1
+      1,
     ),
 
     div(
@@ -291,49 +291,49 @@ test('diffDom - endless recursion bug', () => {
         className: 'MaskIcon',
         maskImage: '/icons/debug-step-over.svg',
       },
-      0
+      0,
     ),
     button(
       {
         className: 'IconButton DebugButton',
         title: 'Step Into',
       },
-      1
+      1,
     ),
     div(
       {
         className: 'MaskIcon',
         maskImage: '/icons/debug-step-into.svg',
       },
-      0
+      0,
     ),
     button(
       {
         className: 'IconButton DebugButton',
         title: 'Step Out',
       },
-      1
+      1,
     ),
     div(
       {
         className: 'MaskIcon',
         maskImage: '/icons/debug-step-out.svg',
       },
-      0
+      0,
     ),
     div(
       {
         className: 'DebugSectionHeader',
         tabIndex: 0,
       },
-      2
+      2,
     ),
     div(
       {
         className: 'MaskIcon DebugMaskIcon',
         maskImage: '/icons/triangle-right.svg',
       },
-      0
+      0,
     ),
     text('Watch'),
     div(
@@ -341,14 +341,14 @@ test('diffDom - endless recursion bug', () => {
         className: 'DebugSectionHeader',
         tabIndex: 0,
       },
-      2
+      2,
     ),
     div(
       {
         className: 'MaskIcon DebugMaskIcon',
         maskImage: '/icons/triangle-right.svg',
       },
-      0
+      0,
     ),
     text('BreakPoints'),
     div(
@@ -359,14 +359,14 @@ test('diffDom - endless recursion bug', () => {
         ariaExpanded: false,
         tabIndex: 0,
       },
-      2
+      2,
     ),
     div(
       {
         className: 'MaskIcon DebugMaskIcon',
         maskImage: '/icons/triangle-right.svg',
       },
-      0
+      0,
     ),
     text('Scope'),
     div(
@@ -374,14 +374,14 @@ test('diffDom - endless recursion bug', () => {
         className: 'DebugSectionHeader',
         ariaExpanded: false,
       },
-      2
+      2,
     ),
     div(
       {
         className: 'MaskIcon DebugMaskIcon',
         maskImage: '/icons/triangle-right.svg',
       },
-      0
+      0,
     ),
     text('Call Stack'),
   ]
@@ -390,77 +390,77 @@ test('diffDom - endless recursion bug', () => {
       {
         className: 'DebugButtons',
       },
-      4
+      4,
     ),
     button(
       {
         className: 'IconButton DebugButton',
         title: 'Pause',
       },
-      1
+      1,
     ),
     div(
       {
         className: 'MaskIcon',
         maskImage: '/icons/debug-pause.svg',
       },
-      0
+      0,
     ),
     button(
       {
         className: 'IconButton DebugButton',
         title: 'Step Over',
       },
-      1
+      1,
     ),
     div(
       {
         className: 'MaskIcon',
         maskImage: '/icons/debug-step-over.svg',
       },
-      0
+      0,
     ),
     button(
       {
         className: 'IconButton DebugButton',
         title: 'Step Into',
       },
-      1
+      1,
     ),
     div(
       {
         className: 'MaskIcon',
         maskImage: '/icons/debug-step-into.svg',
       },
-      0
+      0,
     ),
     button(
       {
         className: 'IconButton DebugButton',
         title: 'Step Out',
       },
-      1
+      1,
     ),
     div(
       {
         className: 'MaskIcon',
         maskImage: '/icons/debug-step-out.svg',
       },
-      0
+      0,
     ),
     div(
       {
         className: 'DebugSectionHeader',
         tabIndex: 0,
       },
-      2
+      2,
     ),
     div(
       {
         className: 'MaskIcon DebugMaskIcon',
         maskImage: '/icons/triangle-right.svg',
       },
-      0
+      0,
     ),
     text('Watch'),
     div(
@@ -468,14 +468,14 @@ test('diffDom - endless recursion bug', () => {
         className: 'DebugSectionHeader',
         tabIndex: 0,
       },
-      2
+      2,
     ),
     div(
       {
         className: 'MaskIcon DebugMaskIcon',
         maskImage: '/icons/triangle-right.svg',
       },
-      0
+      0,
     ),
     text('BreakPoints'),
     div(
@@ -485,21 +485,21 @@ test('diffDom - endless recursion bug', () => {
         ariaLevel: 1,
         ariaExpanded: true,
       },
-      2
+      2,
     ),
     div(
       {
         className: 'MaskIcon DebugMaskIcon',
         maskImage: '/icons/triangle-down.svg',
       },
-      0
+      0,
     ),
     text('Scope'),
     div(
       {
         className: 'DebugPausedMessage',
       },
-      1
+      1,
     ),
     text('Not Paused'),
     div(
@@ -507,21 +507,21 @@ test('diffDom - endless recursion bug', () => {
         className: 'DebugSectionHeader',
         ariaExpanded: true,
       },
-      2
+      2,
     ),
     div(
       {
         className: 'MaskIcon DebugMaskIcon',
         maskImage: '/icons/triangle-down.svg',
       },
-      0
+      0,
     ),
     text('Call Stack'),
     div(
       {
         className: 'DebugPausedMessage',
       },
-      1
+      1,
     ),
     text('Not Paused'),
   ]
@@ -534,14 +534,14 @@ test('diffDom - endless recursion bug', () => {
             className: 'IconButton DebugButton',
             title: 'Pause',
           },
-          1
+          1,
         ),
         div(
           {
             className: 'MaskIcon',
             maskImage: '/icons/debug-pause.svg',
           },
-          0
+          0,
         ),
       ],
       type: DiffDomType.Replace,
@@ -591,25 +591,280 @@ test('diffDom - endless recursion bug', () => {
             ariaExpanded: true,
             className: 'DebugSectionHeader',
           },
-          2
+          2,
         ),
         div(
           {
             className: 'MaskIcon DebugMaskIcon',
             maskImage: '/icons/triangle-down.svg',
           },
-          0
+          0,
         ),
         text('Call Stack'),
         div(
           {
             className: 'DebugPausedMessage',
           },
-          1
+          1,
         ),
         text('Not Paused'),
       ],
       type: DiffDomType.Insert,
+    },
+  ])
+})
+
+test('diffDom - toggle replace - collapse', () => {
+  const oldDom = [
+    {
+      type: 4,
+      className: 'SearchHeader',
+      childCount: 2,
+    },
+    {
+      type: 4,
+      className: 'SearchHeaderTop',
+      childCount: 2,
+    },
+    {
+      type: 1,
+      className: 'IconButton SearchToggleButton SearchToggleButtonExpanded',
+      title: 'Toggle Replace',
+      ariaLabel: 'Toggle Replace',
+      ariaExpanded: true,
+      childCount: 1,
+      'data-command': 'toggleReplace',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconChevronDown',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchHeaderTopRight',
+      childCount: 2,
+    },
+    {
+      type: 4,
+      className: 'SearchField',
+      childCount: 4,
+    },
+    {
+      type: 62,
+      className: 'MultilineInputBox',
+      spellcheck: false,
+      autocapitalize: 'off',
+      autocorrect: 'off',
+      placeholder: 'Search',
+      name: 'search-value',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchFieldButton ',
+      title: 'Match Case',
+      role: 'checkbox',
+      childCount: 1,
+      ariaChecked: false,
+      'data-command': 'toggleMatchCase',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconCaseSensitive',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchFieldButton ',
+      title: 'Match Whole Word',
+      role: 'checkbox',
+      childCount: 1,
+      ariaChecked: false,
+      'data-command': 'toggleMatchWholeWord',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconWholeWord',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchFieldButton ',
+      title: 'Use Regular Expression',
+      role: 'checkbox',
+      childCount: 1,
+      ariaChecked: false,
+      'data-command': 'toggleUseRegularExpression',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconRegex',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchField SearchFieldReplace',
+      childCount: 2,
+    },
+    {
+      type: 6,
+      className: 'SearchFieldInput',
+      spellcheck: false,
+      autocapitalize: 'off',
+      inputType: 'text',
+      autocorrect: 'off',
+      placeholder: 'Replace',
+      name: 'search-replace-value',
+      childCount: 0,
+    },
+    {
+      type: 1,
+      className: 'SearchFieldButton',
+      title: 'Replace All',
+      childCount: 1,
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconReplaceAll',
+      role: 'none',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'ViewletSearchMessage',
+      role: 'status',
+      tabIndex: 0,
+      childCount: 1,
+    },
+    {
+      type: 12,
+      text: '107 results in 12 files',
+      childCount: 0,
+    },
+  ]
+  const newDom = [
+    {
+      type: 4,
+      className: 'SearchHeader',
+      childCount: 2,
+    },
+    {
+      type: 4,
+      className: 'SearchHeaderTop',
+      childCount: 2,
+    },
+    {
+      type: 1,
+      className: 'IconButton SearchToggleButton ',
+      title: 'Toggle Replace',
+      ariaLabel: 'Toggle Replace',
+      ariaExpanded: false,
+      childCount: 1,
+      'data-command': 'toggleReplace',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconChevronRight',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchHeaderTopRight',
+      childCount: 1,
+    },
+    {
+      type: 4,
+      className: 'SearchField',
+      childCount: 4,
+    },
+    {
+      type: 62,
+      className: 'MultilineInputBox',
+      spellcheck: false,
+      autocapitalize: 'off',
+      autocorrect: 'off',
+      placeholder: 'Search',
+      name: 'search-value',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchFieldButton ',
+      title: 'Match Case',
+      role: 'checkbox',
+      childCount: 1,
+      ariaChecked: false,
+      'data-command': 'toggleMatchCase',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconCaseSensitive',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchFieldButton ',
+      title: 'Match Whole Word',
+      role: 'checkbox',
+      childCount: 1,
+      ariaChecked: false,
+      'data-command': 'toggleMatchWholeWord',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconWholeWord',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchFieldButton ',
+      title: 'Use Regular Expression',
+      role: 'checkbox',
+      childCount: 1,
+      ariaChecked: false,
+      'data-command': 'toggleUseRegularExpression',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconRegex',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'ViewletSearchMessage',
+      role: 'status',
+      tabIndex: 0,
+      childCount: 1,
+    },
+    {
+      type: 12,
+      text: '107 results in 12 files',
+      childCount: 0,
+    },
+  ]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 2,
+      key: 'className',
+      type: 'updateProp',
+      value: 'IconButton SearchToggleButton ',
+    },
+    {
+      index: 2,
+      key: 'ariaExpanded',
+      type: 'updateProp',
+      value: false,
+    },
+    {
+      index: 3,
+      key: 'className',
+      type: 'updateProp',
+      value: 'MaskIcon MaskIconChevronRight',
+    },
+    {
+      nodes: [13, 16],
+      type: 'remove',
     },
   ])
 })
