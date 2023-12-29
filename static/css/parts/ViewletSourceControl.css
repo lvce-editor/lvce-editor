@@ -64,3 +64,13 @@
 
 .SourceControlBadge {
 }
+
+.SplitButton {
+  background: rgb(35, 112, 112);
+  width: 100%;
+  height: 30px;
+  contain: strict;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -141,6 +141,42 @@ const createItem = (item) => {
   }
 }
 
-export const getSourceControlItemsVirtualDom = (items) => {
-  return items.flatMap(createItem)
+export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
+  const dom = []
+  dom.push(
+    {
+      type: VirtualDomElements.Div,
+      className: 'SourceControlHeader',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Input,
+      className: 'InputBox',
+      spellcheck: false,
+      autocapitalize: 'off',
+      autocorrect: 'off',
+      placeholder: `Message (Enter) to commit on 'master'`,
+      ariaLabel: 'Source Control Input',
+      childCount: 0,
+    },
+  )
+  if (splitButtonEnabled) {
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SplitButton',
+        childCount: 1,
+      },
+      text('Commit'),
+    )
+  }
+  dom.push(
+    {
+      type: VirtualDomElements.Div,
+      className: 'SourceControlItems',
+      childCount: items.length,
+    },
+    ...items.flatMap(createItem),
+  )
+  return dom
 }

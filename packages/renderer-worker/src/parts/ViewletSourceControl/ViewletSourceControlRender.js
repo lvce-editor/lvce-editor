@@ -19,8 +19,8 @@ const renderChangedFiles = {
   },
   apply(oldState, newState) {
     const visible = GetVisibleSourceControlItems.getVisibleSourceControlItems(newState.displayItems, newState.buttons, newState.buttonIndex)
-    const dom = GetSourceControlItemsVirtualDom.getSourceControlItemsVirtualDom(visible)
-    return [RenderMethod.SetItemsDom, dom]
+    const dom = GetSourceControlItemsVirtualDom.getSourceControlItemsVirtualDom(visible, newState.splitButtonEnabled)
+    return [RenderMethod.SetDom, dom]
   },
 }
 
