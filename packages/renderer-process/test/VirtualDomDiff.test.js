@@ -20,6 +20,76 @@ test('renderDiff - update class name', () => {
   expect($Element.innerHTML).toBe(`<div class="b"></div>`)
 })
 
+test('renderDiff - remove a text node', () => {
+  const oldHtml = `a`
+  const diff = [
+    {
+      type: 'remove',
+      nodes: [0],
+    },
+  ]
+  const $Element = document.createElement('div')
+  $Element.innerHTML = oldHtml
+  VirtualDomDiff.renderDiff($Element, diff)
+  expect($Element.innerHTML).toBe(``)
+})
+
+test('renderDiff - sub node attribute modified', () => {
+  const oldHtml = `<div class="List"><div class="ListItems"></div><div class="ScrollBar"><div class="ScrollBarThumb"></div></div>`
+  const diff = [
+    {
+      type: 'updateProp',
+      index: 3,
+      key: 'height',
+      value: 20,
+    },
+  ]
+  const $Element = document.createElement('div')
+  $Element.innerHTML = oldHtml
+  VirtualDomDiff.renderDiff($Element, diff)
+  expect($Element.innerHTML).toBe(
+    '<div class="List"><div class="ListItems"></div><div class="ScrollBar"><div class="ScrollBarThumb" style="height: 20px;"></div></div></div>',
+  )
+})
+
+test('renderDiff - sub node removed at end', () => {
+  const oldHtml = `<div class="List"><div class="ListItems"></div><div class="ScrollBar"><div class="ScrollBarThumb"></div></div>`
+  const diff = [
+    {
+      type: 'remove',
+      nodes: [2],
+    },
+  ]
+  const $Element = document.createElement('div')
+  $Element.innerHTML = oldHtml
+  VirtualDomDiff.renderDiff($Element, diff)
+  expect($Element.innerHTML).toBe('<div class="List"><div class="ListItems"></div></div>')
+})
+
+test('renderDiff - sub node removed at start', () => {
+  const oldHtml = `<div class="List"><div class="ScrollBar"><div class="ScrollBarThumb"></div><div class="ListItems"></div></div>`
+  const diff = [
+    {
+      index: 1,
+      key: 'className',
+      type: 'updateProp',
+      value: 'ListItems',
+    },
+    {
+      type: 'remove',
+      nodes: [2],
+    },
+    {
+      type: 'remove',
+      nodes: [3],
+    },
+  ]
+  const $Element = document.createElement('div')
+  $Element.innerHTML = oldHtml
+  VirtualDomDiff.renderDiff($Element, diff)
+  expect($Element.innerHTML).toBe('<div class="List"><div class="ListItems"></div></div>')
+})
+
 test.skip('renderDiff - insert node - start', () => {
   const oldHtml = `<div><div class="b"></div></div>`
   const diff = [
