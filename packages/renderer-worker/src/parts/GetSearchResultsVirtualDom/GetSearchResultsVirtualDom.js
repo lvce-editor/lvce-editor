@@ -81,6 +81,5 @@ const renderRow = (rowInfo) => {
 }
 
 export const getSearchResultsVirtualDom = (visibleItems) => {
-  const dom = [...visibleItems.flatMap(renderRow)]
-  return dom
+  return visibleItems.flatMap(renderRow)
 }
