@@ -31,10 +31,7 @@ const addButtons = (dom, buttons) => {
         ariaLabel: label,
         childCount: 1,
       },
-      {
-        type: VirtualDomElements.Span,
-        className: `MaskIcon MaskIcon${icon}`,
-      },
+      GetBadgeVirtualDom.getBadgeVirtualDom(icon, VirtualDomElements.Span),
     )
   }
 }
