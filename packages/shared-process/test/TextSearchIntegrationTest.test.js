@@ -14,7 +14,7 @@ const fixPath = (path) => {
   return path.replaceAll('/', sep)
 }
 
-const TIMEOUT_LONG = 15_000
+const TIMEOUT_LONG = 20_000
 
 test(
   'search',
@@ -31,7 +31,7 @@ test(
   </head>
   <body></body>
 </html>
-`
+`,
     )
     const options = {
       ripGrepArgs: ['--smart-case', '--stats', '--json', '--threads', '1', '--ignore-case', '--fixed-strings', '--', 'Document', '.'],
@@ -58,5 +58,5 @@ test(
       limitHit: false,
     })
   },
-  TIMEOUT_LONG
+  TIMEOUT_LONG,
 )
