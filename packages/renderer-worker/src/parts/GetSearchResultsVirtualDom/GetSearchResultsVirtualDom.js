@@ -80,7 +80,7 @@ const renderRow = (rowInfo) => {
   return dom
 }
 
-export const getSearchResultsVirtualDom = (visibleItems) => {
+export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded) => {
   /**
    * @type {any[]}
    */
@@ -97,15 +97,15 @@ export const getSearchResultsVirtualDom = (visibleItems) => {
     },
     {
       type: VirtualDomElements.Button,
-      className: 'IconButton SearchToggleButton SearchToggleButtonExpanded',
+      className: `IconButton SearchToggleButton ${replaceExpanded ? 'SearchToggleButtonExpanded' : ''}`,
       title: 'Toggle Replace',
       ariaLabel: 'Toggle Replace',
-      ariaExpanded: true,
+      ariaExpanded: replaceExpanded,
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'MaskIcon MaskIconChevronDown',
+      className: `MaskIcon ${replaceExpanded ? 'MaskIconChevronDown' : 'MaskIconChevronRight'}`,
       childCount: 0,
     },
     {

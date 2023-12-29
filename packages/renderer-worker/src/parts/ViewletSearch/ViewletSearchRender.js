@@ -12,7 +12,8 @@ const renderItems = {
       oldState.items === newState.items &&
       oldState.minLineY === newState.minLineY &&
       oldState.maxLineY === newState.maxLineY &&
-      oldState.replacement === newState.replacement
+      oldState.replacement === newState.replacement &&
+      oldState.replaceExpanded === newState.replaceExpanded
     )
   },
   apply(oldState, newState) {
@@ -25,7 +26,7 @@ const renderItems = {
       newState.maxLineY,
       newState.replacement,
     )
-    const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(displayResults)
+    const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(displayResults, false)
     return ['setDom', dom]
   },
 }
