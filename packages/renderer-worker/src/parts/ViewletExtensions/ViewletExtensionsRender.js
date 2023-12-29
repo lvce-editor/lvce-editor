@@ -73,7 +73,6 @@ const renderHeader = {
     return oldState.placeholder === newState.placeholder
   },
   apply(oldState, newState) {
-    console.log(newState.placeholder)
     const dom = GetExtensionHeaderVirtualDom.getExtensionHeaderVirtualDom(newState.placeholder)
     return ['setHeaderDom', dom]
   },
