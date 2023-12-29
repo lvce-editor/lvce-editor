@@ -59,7 +59,28 @@ export const focus = (state) => {
 
 export const setDom = (state, dom) => {
   const { $Viewlet } = state
+  // TODO implement virtual dom diffing instead
+  const $OldInputs = $Viewlet.querySelectorAll('textarea,input')
+  const map = Object.create(null)
+  let focused
+  const $Active = document.activeElement
+  for (const $Input of $OldInputs) {
+    map[$Input.name] = $Input
+    if ($Input === $Active) {
+      focused = $Input
+    }
+  }
   VirtualDom.renderInto($Viewlet, dom)
+  const $NewInputs = $Viewlet.querySelectorAll('textarea,input')
+  for (const $NewInput of $NewInputs) {
+    const $Old = map[$NewInput.name]
+    if ($Old) {
+      $NewInput.replaceWith($Old)
+      if ($Old === $Active) {
+        $Old.focus()
+      }
+    }
+  }
 }
 
 export const setMessage = (state, message) => {}
