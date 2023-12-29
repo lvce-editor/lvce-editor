@@ -9,4 +9,5 @@ export const Commands = {
   setProblems: ViewletProblemsSetProblems.setProblems,
   focusNext: ViewletProblems.focusNext,
   focusPrevious: ViewletProblems.focusPrevious,
+  handleFilterInput: ViewletProblems.handleFilterInput
 }

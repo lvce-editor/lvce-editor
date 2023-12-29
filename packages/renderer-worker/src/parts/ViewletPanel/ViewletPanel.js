@@ -151,4 +151,13 @@ export const selectIndex = async (state, index) => {
   }
 }
 
+export const handleFilterInput = async (state, value) => {
+  Assert.object(state)
+  Assert.string(value)
+  const { currentViewletId } = state
+  const fullCommand = `${currentViewletId}.handleFilterInput`
+  await Command.execute(fullCommand, value)
+  return state
+}
+
 export * from '../HandleClickAction/HandleClickAction.js'

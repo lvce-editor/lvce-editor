@@ -4,6 +4,7 @@ import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as GetListIndex from '../GetListIndex/GetListIndex.js'
 import * as GetProblems from '../GetProblems/GetProblems.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Assert from '../Assert/Assert.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletProblemsStrings from './ViewletProblemsStrings.js'
 
@@ -19,6 +20,7 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
+    filterValue: '',
   }
 }
 
@@ -91,6 +93,14 @@ export const handleIconThemeChange = (state) => {
   return {
     ...state,
     problems: [...state.problems],
+  }
+}
+
+export const handleFilterInput = (state, value) => {
+  Assert.string(value)
+  return {
+    ...state,
+    filterValue: value,
   }
 }
 

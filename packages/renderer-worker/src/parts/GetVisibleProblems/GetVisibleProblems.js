@@ -7,10 +7,28 @@ const getIcon = (uri) => {
   return IconTheme.getFileNameIcon(uri)
 }
 
-export const getVisibleProblems = (problems, focusedIndex) => {
+const matchesFilterValue = (problem, filterValueLower) => {
+  if (filterValueLower) {
+    if (!problem.message) {
+      return true
+    }
+    return (
+      problem.uri.toLowerCase().includes(filterValueLower) ||
+      problem.message.toLowerCase().includes(filterValueLower) ||
+      problem.source.toLowerCase().includes(filterValueLower)
+    )
+  }
+  return true
+}
+
+export const getVisibleProblems = (problems, focusedIndex, filterValue) => {
   const visibleItems = []
+  const filterValueLower = filterValue.toLowerCase()
   for (let i = 0; i < problems.length; i++) {
     const problem = problems[i]
+    if (!matchesFilterValue(problem, filterValueLower)) {
+      continue
+    }
     visibleItems.push({
       ...problem,
       isActive: i === focusedIndex,

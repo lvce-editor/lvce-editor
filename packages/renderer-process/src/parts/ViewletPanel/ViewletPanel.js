@@ -114,6 +114,9 @@ export const setActionsDom = (state, actions) => {
   if ($Actions) {
     $Actions.replaceWith($NewActions)
   } else {
+    $NewActions.addEventListener(DomEventType.Input, ViewletPanelEvents.handleFilterInput, {
+      capture: true,
+    })
     $PanelTabs.after($NewActions)
   }
   state.$Actions = $NewActions
