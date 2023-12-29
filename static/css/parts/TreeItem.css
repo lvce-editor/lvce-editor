@@ -10,18 +10,12 @@
   cursor: pointer;
 }
 
-/* .TreeItem:focus {
-  background: rgba(59, 71, 66, 0.5);
-} */
-
-#TreeItemActive {
-  background: var(--TreeItemActiveBackground, rgba(59, 71, 66, 0.5));
-}
-
-.TreeItem:hover {
+.TreeItem:where(:hover) {
   background: var(--TreeItemHoverBackground, rgba(64, 92, 80, 0.2));
   color: var(--TreeItemHoverForeground, #e0e0e0);
 }
 
-.SourceControlItems {
+#TreeItemActive,
+.TreeItemActive {
+  background: var(--TreeItemActiveBackground, rgba(59, 71, 66, 0.5));
 }
