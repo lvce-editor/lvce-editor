@@ -1,5 +1,5 @@
-import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -18,12 +18,7 @@ const getIconButtonVirtualDom = (iconButton) => {
       childCount: 1,
       disabled: disabled ? true : undefined,
     },
-    {
-      type: VirtualDomElements.Div,
-      className: `MaskIcon MaskIcon${icon}`,
-      role: AriaRoles.None,
-      childCount: 0,
-    },
+    GetIconVirtualDom.getIconVirtualDom(icon),
   ]
 }
 
