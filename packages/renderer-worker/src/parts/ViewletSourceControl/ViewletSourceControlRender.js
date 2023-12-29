@@ -18,7 +18,15 @@ const renderChangedFiles = {
     return oldState.displayItems === newState.displayItems && oldState.buttonIndex === newState.buttonIndex && oldState.buttons === newState.buttons
   },
   apply(oldState, newState) {
-    const visible = GetVisibleSourceControlItems.getVisibleSourceControlItems(newState.displayItems, newState.buttons, newState.buttonIndex)
+    const minLineY = 0
+    const maxLineY = Math.min(newState.displayItems.length, 100)
+    const visible = GetVisibleSourceControlItems.getVisibleSourceControlItems(
+      newState.displayItems,
+      minLineY,
+      maxLineY,
+      newState.buttons,
+      newState.buttonIndex,
+    )
     const dom = GetSourceControlItemsVirtualDom.getSourceControlItemsVirtualDom(visible, newState.splitButtonEnabled)
     return [RenderMethod.SetDom, dom]
   },
