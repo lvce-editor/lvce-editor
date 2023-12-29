@@ -6,6 +6,7 @@
   min-width: 0;
   flex: 1;
   display: flex;
+  white-space: pre;
 }
 
 .LabelDetail {
