@@ -6,6 +6,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as HandleReplaceInput from './ViewletSearchHandleReplaceInput.js'
 import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -37,6 +38,7 @@ export const create = (id, uri, x, y, width, height) => {
     listFocusedIndex: -1,
     inputSource: InputSource.User,
     workspacePath: Workspace.state.workspacePath,
+    message: '',
   }
 }
 
@@ -132,6 +134,11 @@ const getMatchStart = (preview, searchTerm) => {
 // TODO send results to renderer process
 // TODO use virtual list because there might be many results
 
-export const handleInput = (state, value, inputSource = InputSource.Script) => {
-  return ViewletSearchHandleUpdate.handleUpdate(state, { value, inputSource })
+export const handleInput = (state, name, value, inputSource = InputSource.Script) => {
+  switch (name) {
+    case 'search-replace-value':
+      return HandleReplaceInput.handleReplaceInput(state, value)
+    default:
+      return ViewletSearchHandleUpdate.handleUpdate(state, { value, inputSource })
+  }
 }

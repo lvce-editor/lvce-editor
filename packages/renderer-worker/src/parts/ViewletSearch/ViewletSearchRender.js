@@ -16,7 +16,8 @@ const renderItems = {
       oldState.replaceExpanded === newState.replaceExpanded &&
       oldState.useRegularExpression === newState.userRegularExpression &&
       oldState.matchCase === newState.matchCase &&
-      oldState.matchWholeWord === newState.matchWholeWord
+      oldState.matchWholeWord === newState.matchWholeWord &&
+      oldState.message === newState.message
     )
   },
   apply(oldState, newState) {
@@ -35,6 +36,7 @@ const renderItems = {
       newState.matchCase,
       newState.matchWholeWord,
       newState.useRegularExpression,
+      newState.message,
     )
     return ['setDom', dom]
   },

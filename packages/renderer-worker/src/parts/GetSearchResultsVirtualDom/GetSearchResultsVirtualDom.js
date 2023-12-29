@@ -80,7 +80,7 @@ const renderRow = (rowInfo) => {
   return dom
 }
 
-export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded, matchCase, matchWholeWord, useRegularExpression) => {
+export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded, matchCase, matchWholeWord, useRegularExpression, message) => {
   const headerTopRight = {
     type: VirtualDomElements.Div,
     className: 'SearchHeaderTopRight',
@@ -215,7 +215,7 @@ export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded, matchC
       tabIndex: 0,
       childCount: 1,
     },
-    text('3 results in 2 files'),
+    text(message),
   )
 
   dom.push({

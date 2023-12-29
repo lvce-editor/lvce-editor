@@ -8,9 +8,9 @@ import * as ViewletSearchFunctions from './ViewletSearchFunctions.js'
 
 export const handleInput = (event) => {
   const { target } = event
-  const { value } = target
+  const { value, name } = target
   const uid = ComponentUid.fromEvent(event)
-  ViewletSearchFunctions.handleInput(uid, value, InputSource.User)
+  ViewletSearchFunctions.handleInput(uid, name, value, InputSource.User)
 }
 
 export const handleFocus = (event) => {
