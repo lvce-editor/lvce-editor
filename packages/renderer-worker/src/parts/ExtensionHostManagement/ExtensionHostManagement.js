@@ -93,8 +93,8 @@ const startSynching = async (extensionHost) => {
     return extensionHost.ipc.invoke('Configuration.configurationChanged')
   }
 
-  GlobalEventBus.addListener('workspace.change', handleWorkspaceChange)
-  GlobalEventBus.addListener('preferences.changed', handlePreferencesChange)
+  GlobalEventBus.addListener('workspace.change', handleWorkspaceChange, { prepend: true })
+  GlobalEventBus.addListener('preferences.changed', handlePreferencesChange, { prepend: true })
 
   const instances = ViewletStates.getAllInstances()
   const editorInstance = ViewletStates.getInstance(ViewletModuleId.EditorText)

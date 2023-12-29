@@ -1,4 +1,10 @@
+import * as ViewletSourceControl from './ViewletSourceControl.js'
+
 export const name = 'Source Control'
+
+export const Events = {
+  'workspace.change': ViewletSourceControl.handleWorkspaceChange,
+}
 
 export * from './ViewletSourceControl.js'
 export * from './ViewletSourceControlActions.js'

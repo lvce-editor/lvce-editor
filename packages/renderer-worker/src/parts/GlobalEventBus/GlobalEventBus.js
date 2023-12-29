@@ -17,12 +17,16 @@ export const emitEvent = async (event, ...args) => {
   }
 }
 
-export const addListener = (event, fn) => {
+export const addListener = (event, fn, options = {}) => {
   state.listenerMap[event] ||= []
   if (state.listenerMap[event].includes(fn)) {
     return
   }
-  state.listenerMap[event].push(fn)
+  if (options.prepend) {
+    state.listenerMap[event].unshift(fn)
+  } else {
+    state.listenerMap[event].push(fn)
+  }
 }
 
 export const removeListener = (event, fn) => {
