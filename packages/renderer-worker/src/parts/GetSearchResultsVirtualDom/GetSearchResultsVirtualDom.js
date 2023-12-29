@@ -107,6 +107,7 @@ export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded) => {
       ariaLabel: 'Toggle Replace',
       ariaExpanded: replaceExpanded,
       childCount: 1,
+      'data-command': 'toggleReplace',
     },
     {
       type: VirtualDomElements.Div,

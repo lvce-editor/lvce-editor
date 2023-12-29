@@ -31,4 +31,5 @@ export const LazyCommands = {
   copy: () => import('./ViewletSearchCopy.js'),
   refresh: () => import('./ViewletSearchRefresh.js'),
   clearSearchResults: () => import('./ViewletSearchClearSearchResults.js'),
+  handleCommand: () => import('./ViewletSearchHandleClick.js')
 }

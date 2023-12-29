@@ -28,7 +28,7 @@ export const attachEvents = (state) => {
   const { $Viewlet } = state
   $Viewlet.addEventListener(DomEventType.Input, ViewletSearchEvents.handleInput, DomEventOptions.Capture)
   $Viewlet.addEventListener(DomEventType.Focus, ViewletSearchEvents.handleFocus, DomEventOptions.Capture)
-  $Viewlet.addEventListener(DomEventType.Click, ViewletSearchEvents.handleHeaderClick)
+  $Viewlet.addEventListener(DomEventType.Click, ViewletSearchEvents.handleClick)
 
   // AttachEvents.attachEvents($ScrollBar, {
   //   [DomEventType.PointerDown]: ViewletSearchEvents.handleScrollBarPointerDown,

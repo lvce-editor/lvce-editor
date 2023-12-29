@@ -37,13 +37,14 @@ const getIndex = ($Target) => {
 }
 
 export const handleClick = (event) => {
-  const { target, button } = event
+  const { target, button, clientX, clientY } = event
   if (button === MouseEventType.RightClick) {
     return
   }
+  const command = target.dataset.command
   const uid = ComponentUid.fromEvent(event)
-  const index = getIndex(target)
-  ViewletSearchFunctions.handleClick(uid, index)
+  // const index = getIndex(target)
+  ViewletSearchFunctions.handleCommand(uid, command)
 }
 
 export const handleScrollBarThumbPointerMove = (event) => {

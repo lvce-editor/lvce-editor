@@ -26,7 +26,7 @@ const renderItems = {
       newState.maxLineY,
       newState.replacement,
     )
-    const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(displayResults, false)
+    const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(displayResults, newState.replaceExpanded)
     return ['setDom', dom]
   },
 }
@@ -43,15 +43,6 @@ const renderScrollBar = {
       newState.scrollBarHeight,
     )
     return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
-  },
-}
-
-const renderMessage = {
-  isEqual(oldState, newState) {
-    return oldState.message === newState.message
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetMessage, /* message */ newState.message]
   },
 }
 
@@ -74,15 +65,6 @@ const renderNegativeMargin = {
   apply(oldState, newState) {
     const relative = newState.deltaY % 22
     return [/* method */ RenderMethod.SetNegativeMargin, /* negativeMargin */ -relative]
-  },
-}
-
-const renderReplaceExpanded = {
-  isEqual(oldState, newState) {
-    return oldState.replaceExpanded === newState.replaceExpanded
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetReplaceExpanded, newState.replaceExpanded]
   },
 }
 
@@ -119,13 +101,4 @@ const renderFocusedIndex = {
   },
 }
 
-export const render = [
-  renderItems,
-  renderMessage,
-  renderValue,
-  renderScrollBar,
-  renderNegativeMargin,
-  renderReplaceExpanded,
-  renderButtonsChecked,
-  renderFocusedIndex,
-]
+export const render = [renderItems, renderValue, renderScrollBar, renderNegativeMargin, renderButtonsChecked, renderFocusedIndex]
