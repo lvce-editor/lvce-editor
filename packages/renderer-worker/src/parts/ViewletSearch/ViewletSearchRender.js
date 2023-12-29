@@ -13,7 +13,10 @@ const renderItems = {
       oldState.minLineY === newState.minLineY &&
       oldState.maxLineY === newState.maxLineY &&
       oldState.replacement === newState.replacement &&
-      oldState.replaceExpanded === newState.replaceExpanded
+      oldState.replaceExpanded === newState.replaceExpanded &&
+      oldState.useRegularExpression === newState.userRegularExpression &&
+      oldState.matchCase === newState.matchCase &&
+      oldState.matchWholeWord === newState.matchWholeWord
     )
   },
   apply(oldState, newState) {
@@ -26,7 +29,13 @@ const renderItems = {
       newState.maxLineY,
       newState.replacement,
     )
-    const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(displayResults, newState.replaceExpanded)
+    const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(
+      displayResults,
+      newState.replaceExpanded,
+      newState.matchCase,
+      newState.matchWholeWord,
+      newState.useRegularExpression,
+    )
     return ['setDom', dom]
   },
 }
@@ -68,19 +77,6 @@ const renderNegativeMargin = {
   },
 }
 
-const renderButtonsChecked = {
-  isEqual(oldState, newState) {
-    return (
-      oldState.matchWholeWord === newState.matchWholeWord &&
-      oldState.useRegularExpression === newState.useRegularExpression &&
-      oldState.matchCase === newState.matchCase
-    )
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetButtonsChecked, newState.matchWholeWord, newState.useRegularExpression, newState.matchCase]
-  },
-}
-
 const renderFocusedIndex = {
   isEqual(oldState, newState) {
     return (
@@ -101,4 +97,4 @@ const renderFocusedIndex = {
   },
 }
 
-export const render = [renderItems, renderValue, renderScrollBar, renderNegativeMargin, renderButtonsChecked, renderFocusedIndex]
+export const render = [renderItems, renderValue, renderScrollBar, renderNegativeMargin, renderFocusedIndex]

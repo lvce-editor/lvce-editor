@@ -80,7 +80,7 @@ const renderRow = (rowInfo) => {
   return dom
 }
 
-export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded) => {
+export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded, matchCase, matchWholeWord, useRegularExpression) => {
   const headerTopRight = {
     type: VirtualDomElements.Div,
     className: 'SearchHeaderTopRight',
@@ -132,10 +132,12 @@ export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'SearchFieldButton',
+      className: `SearchFieldButton ${matchCase ? 'SearchFieldButtonChecked' : ''}`,
       title: 'Match Case',
       role: 'checkbox',
       childCount: 1,
+      ariaChecked: matchCase,
+      'data-command': 'toggleMatchCase',
     },
     {
       type: VirtualDomElements.Div,
@@ -144,10 +146,12 @@ export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'SearchFieldButton',
-      title: 'Match Case',
+      className: `SearchFieldButton ${matchWholeWord ? 'SearchFieldButtonChecked' : ''}`,
+      title: 'Match Whole Word',
       role: 'checkbox',
       childCount: 1,
+      ariaChecked: matchWholeWord,
+      'data-command': 'toggleMatchWholeWord',
     },
     {
       type: VirtualDomElements.Div,
@@ -156,10 +160,12 @@ export const getSearchResultsVirtualDom = (visibleItems, replaceExpanded) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'SearchFieldButton',
+      className: `SearchFieldButton ${useRegularExpression ? 'SearchFieldButtonChecked' : ''}`,
       title: 'Use Regular Expression',
       role: 'checkbox',
       childCount: 1,
+      ariaChecked: useRegularExpression,
+      'data-command': 'toggleUseRegularExpression',
     },
     {
       type: VirtualDomElements.Div,
