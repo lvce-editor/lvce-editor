@@ -41,6 +41,7 @@ export const create = (id, uri, x, y, width, height) => {
       headerHeight: 35,
     }),
     allExtensions: [],
+    placeholder: '',
   }
 }
 

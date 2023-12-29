@@ -40,6 +40,9 @@ export const setProp = ($Element, key, value) => {
         $Element.removeAttribute('aria-owns')
       }
       break
+    case 'inputType':
+      $Element.type = value
+      break
     default:
       if (key.startsWith('data-')) {
         $Element.dataset[key.slice('data-'.length)] = value

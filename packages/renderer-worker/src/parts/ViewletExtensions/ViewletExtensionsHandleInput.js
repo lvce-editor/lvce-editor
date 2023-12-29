@@ -45,6 +45,7 @@ export const handleInput = async (state, value) => {
       finalDeltaY,
       message: '',
       searchValue: value,
+      placeholder: `Search Extensions in Marketplace`,
     }
 
     // TODO handle out of order responses (a bit complicated)
