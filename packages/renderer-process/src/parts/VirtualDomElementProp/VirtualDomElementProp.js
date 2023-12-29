@@ -41,6 +41,10 @@ export const setProp = ($Element, key, value) => {
       }
       break
     default:
-      $Element[key] = value
+      if (key.startsWith('data-')) {
+        $Element.dataset[key.slice('data-'.length)] = value
+      } else {
+        $Element[key] = value
+      }
   }
 }
