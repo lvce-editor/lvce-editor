@@ -1,7 +1,8 @@
+import * as GetExtensionHeaderVirtualDom from '../GetExtensionHeaderVirtualDom/GetExtensionHeaderVirtualDom.js'
+import * as GetExtensionsVirtualDom from '../GetExtensionsVirtualDom/GetExtensionsVirtualDom.js'
 import * as GetVisibleExtensions from '../GetVisibleExtensions/GetVisibleExtensions.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
-import * as GetExtensionsVirtualDom from '../GetExtensionsVirtualDom/GetExtensionsVirtualDom.js'
 import { getListHeight } from './ViewletExtensionsShared.js'
 
 export const hasFunctionalRender = true
@@ -43,7 +44,7 @@ const renderScrollBar = {
       newState.deltaY,
       newState.finalDeltaY,
       newState.height - newState.headerHeight,
-      scrollBarHeight
+      scrollBarHeight,
     )
     return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ scrollBarHeight]
   },
@@ -67,4 +68,14 @@ const renderSearchValue = {
   },
 }
 
-export const render = [renderScrollBar, renderMessage, renderExtensions, renderSearchValue]
+const renderHeader = {
+  isEqual(oldState, newState) {
+    return oldState.placeholder === newState.placeholder
+  },
+  apply(oldState, newState) {
+    const dom = GetExtensionHeaderVirtualDom.getExtensionHeaderVirtualDom(newState.placeholder)
+    return ['setHeaderDom', dom]
+  },
+}
+
+export const render = [renderScrollBar, renderMessage, renderExtensions, renderSearchValue, renderHeader]

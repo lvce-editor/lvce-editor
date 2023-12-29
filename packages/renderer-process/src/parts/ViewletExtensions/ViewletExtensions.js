@@ -8,11 +8,8 @@ import * as Assert from '../Assert/Assert.js'
 import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as InputBox from '../InputBox/InputBox.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
-
-const activeId = 'ExtensionActive'
 
 // TODO vscode uninstall behaviour is better -> more subtle uninstall -> no cta for uninstalling
 
@@ -28,14 +25,8 @@ const findIndex = ($Target) => {
 }
 
 export const create = () => {
-  const $InputBox = InputBox.create()
-  $InputBox.type = 'search'
-  $InputBox.placeholder = 'Search Extensions in Marketplace'
-  $InputBox.name = 'extensions-search-value'
-
   const $ExtensionHeader = document.createElement('div')
   $ExtensionHeader.className = 'ExtensionHeader'
-  $ExtensionHeader.append($InputBox)
 
   // TODO handle error
   const $ListItems = document.createElement('div')
@@ -66,7 +57,7 @@ export const create = () => {
     $Viewlet,
     $List,
     $ListItems,
-    $InputBox,
+    $ExtensionHeader,
     $ExtensionSuggestions: undefined,
     $ScrollBarThumb,
     $ScrollBar,
@@ -75,10 +66,8 @@ export const create = () => {
 }
 
 export const attachEvents = (state) => {
-  const { $InputBox, $ListItems, $ScrollBar } = state
-  AttachEvents.attachEvents($InputBox, {
-    [DomEventType.Input]: ViewletExtensionsEvents.handleInput,
-  })
+  const { $ExtensionHeader, $ListItems, $ScrollBar } = state
+  $ExtensionHeader.addEventListener(DomEventType.Input, ViewletExtensionsEvents.handleInput, DomEventOptions.Capture)
   AttachEvents.attachEvents($ListItems, {
     [DomEventType.ContextMenu]: ViewletExtensionsEvents.handleContextMenu,
     [DomEventType.PointerDown]: ViewletExtensionsEvents.handlePointerDown,
@@ -126,6 +115,13 @@ export const setMessage = (state, message) => {
   state.$Message = $Message
 }
 
+export const setHeaderDom = (state, dom) => {
+  const { $ExtensionHeader } = state
+  console.log({ dom })
+  const $Element = VirtualDom.render(dom).firstChild.firstChild
+  $ExtensionHeader.replaceChildren($Element)
+}
+
 export const setExtensionsDom = (state, dom) => {
   Assert.object(state)
   Assert.array(dom)
@@ -158,7 +154,8 @@ export const handleError = (state, message) => {
 }
 
 export const setSearchValue = (state, oldValue, newValue) => {
-  const { $InputBox } = state
+  const { $ExtensionHeader } = state
+  const $InputBox = $ExtensionHeader.querySelector('input')
   $InputBox.value = newValue
 }
 
