@@ -147,6 +147,10 @@ export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, ma
     tabIndex: 0,
     childCount: visibleItems.length,
     onClick: 'handleClick',
+    onFocus: 'handleListFocus',
+    onBlur: 'handleListBlur',
+    onContextMenu: 'handleContextMenu',
+    onWheel: 'handleWheel',
   })
   dom.push(...GetSearchResultsVirtualDom.getSearchResultsVirtualDom(visibleItems))
   return dom
