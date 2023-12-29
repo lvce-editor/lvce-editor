@@ -1,4 +1,3 @@
-import * as Assert from '../Assert/Assert.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
@@ -48,15 +47,6 @@ export const attachEvents = (state) => {
   // $List.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
 }
 
-export const refresh = (state, context) => {
-  Assert.object(state)
-}
-
-export const focus = (state) => {
-  Assert.object(state)
-  state.$ViewletSearchInput.focus()
-}
-
 export const setDom = (state, dom) => {
   const { $Viewlet } = state
   // TODO implement virtual dom diffing instead
@@ -82,13 +72,5 @@ export const setDom = (state, dom) => {
     }
   }
 }
-
-export const setMessage = (state, message) => {}
-
-export const setValue = (state, value) => {}
-
-export const dispose = () => {}
-
-// TODO duplicate code with extensions list
 
 export * from '../ViewletScrollable/ViewletScrollable.js'
