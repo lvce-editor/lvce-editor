@@ -27,7 +27,7 @@ export const attachEvents = (state) => {
   const { $Viewlet } = state
   $Viewlet.addEventListener(DomEventType.Input, ViewletSearchEvents.handleInput, DomEventOptions.Capture)
   $Viewlet.addEventListener(DomEventType.Focus, ViewletSearchEvents.handleFocus, DomEventOptions.Capture)
-  $Viewlet.addEventListener(DomEventType.Click, ViewletSearchEvents.handleClick)
+  $Viewlet.addEventListener(DomEventType.Click, ViewletSearchEvents.handleClickHeader)
 
   // AttachEvents.attachEvents($ScrollBar, {
   //   [DomEventType.PointerDown]: ViewletSearchEvents.handleScrollBarPointerDown,
@@ -60,7 +60,7 @@ export const setDom = (state, dom) => {
       focused = $Input
     }
   }
-  VirtualDom.renderInto($Viewlet, dom)
+  VirtualDom.renderInto($Viewlet, dom, ViewletSearchEvents)
   const $NewInputs = $Viewlet.querySelectorAll('textarea,input')
   for (const $NewInput of $NewInputs) {
     const $Old = map[$NewInput.name]

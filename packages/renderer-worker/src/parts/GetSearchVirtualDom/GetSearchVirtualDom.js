@@ -146,6 +146,7 @@ export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, ma
     role: 'tree',
     tabIndex: 0,
     childCount: visibleItems.length,
+    onClick: 'handleClick',
   })
   dom.push(...GetSearchResultsVirtualDom.getSearchResultsVirtualDom(visibleItems))
   return dom

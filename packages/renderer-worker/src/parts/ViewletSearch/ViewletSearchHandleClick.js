@@ -1,13 +1,13 @@
+import * as ViewletSearchSelectIndex from './ViewletSearchSelectIndex.js'
 import * as ViewletSearchToggleMatchCase from './ViewletSearchToggleMatchCase.js'
 import * as ViewletSearchToggleMatchWholeWord from './ViewletSearchToggleMatchWholeWord.js'
-import * as ViewletSearchToggleUseRegularExpression from './ViewletSearchToggleUseRegularExpression.js'
 import * as ViewletSearchToggleReplace from './ViewletSearchToggleReplace.js'
+import * as ViewletSearchToggleUseRegularExpression from './ViewletSearchToggleUseRegularExpression.js'
 
-export const handleClick = (state, x, y) => {
+export const handleClick = (state, index) => {
   const { minLineY } = state
-  // const actualIndex = index + minLineY
-  // return ViewletSearchSelectIndex.selectIndex(state, actualIndex)
-  return state
+  const actualIndex = index + minLineY
+  return ViewletSearchSelectIndex.selectIndex(state, actualIndex)
 }
 
 export const handleCommand = (state, command) => {

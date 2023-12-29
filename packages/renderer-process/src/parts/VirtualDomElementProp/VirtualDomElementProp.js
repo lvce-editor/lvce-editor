@@ -1,4 +1,4 @@
-export const setProp = ($Element, key, value) => {
+export const setProp = ($Element, key, value, eventMap) => {
   switch (key) {
     case 'maskImage':
       $Element.style.maskImage = `url('${value}')`
@@ -42,6 +42,10 @@ export const setProp = ($Element, key, value) => {
       break
     case 'inputType':
       $Element.type = value
+      break
+    case 'onClick':
+      console.log($Element)
+      $Element.addEventListener('click', eventMap[value])
       break
     default:
       if (key.startsWith('data-')) {

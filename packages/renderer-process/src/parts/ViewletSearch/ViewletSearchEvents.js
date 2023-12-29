@@ -37,7 +37,18 @@ const getIndex = ($Target) => {
 }
 
 export const handleClick = (event) => {
-  const { target, button, clientX, clientY } = event
+  const { target, button } = event
+  console.log('click', event)
+  if (button === MouseEventType.RightClick) {
+    return
+  }
+  const uid = ComponentUid.fromEvent(event)
+  const index = getIndex(target)
+  ViewletSearchFunctions.handleClick(uid, index)
+}
+
+export const handleClickHeader = (event) => {
+  const { target, button } = event
   if (button === MouseEventType.RightClick) {
     return
   }
@@ -46,7 +57,6 @@ export const handleClick = (event) => {
     return
   }
   const uid = ComponentUid.fromEvent(event)
-  // const index = getIndex(target)
   ViewletSearchFunctions.handleCommand(uid, command)
 }
 
