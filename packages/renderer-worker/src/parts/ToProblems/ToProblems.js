@@ -3,13 +3,13 @@ import * as Workspace from '../Workspace/Workspace.js'
 const toProblem = (diagnostic) => {
   const { message, rowIndex, columnIndex, source } = diagnostic
   return {
-    message,
-    rowIndex,
-    columnIndex,
+    message: message || '',
+    rowIndex: rowIndex || 0,
+    columnIndex: columnIndex || 0,
     uri: '',
     relativePath: '',
     count: 0,
-    source,
+    source: source || '',
   }
 }
 

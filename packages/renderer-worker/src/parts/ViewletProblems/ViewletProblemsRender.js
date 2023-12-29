@@ -6,10 +6,10 @@ export const hasFunctionalRender = true
 
 const renderProblems = {
   isEqual(oldState, newState) {
-    return oldState.problems === newState.problems && oldState.focusedIndex === newState.focusedIndex
+    return oldState.problems === newState.problems && oldState.focusedIndex === newState.focusedIndex && oldState.filterValue === newState.filterValue
   },
   apply(oldState, newState) {
-    const visible = GetVisibleProblems.getVisibleProblems(newState.problems, newState.focusedIndex)
+    const visible = GetVisibleProblems.getVisibleProblems(newState.problems, newState.focusedIndex, newState.filterValue)
     const dom = GetProblemsVirtualDom.getProblemsVirtualDom(visible)
     return ['setProblemsDom', dom]
   },

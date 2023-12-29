@@ -32,3 +32,10 @@ export const handleHeaderClick = (event) => {
     return handleClickAction(target, uid)
   }
 }
+
+export const handleFilterInput = (event) => {
+  const uid = ComponentUid.fromEvent(event)
+  const { target } = event
+  const { value } = target
+  ViewletPanelFunctions.handleFilterInput(uid, value)
+}
