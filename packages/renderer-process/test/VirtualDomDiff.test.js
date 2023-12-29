@@ -161,3 +161,28 @@ test.skip('renderDiff - toggle replace - collapse', () => {
   VirtualDomDiff.renderDiff($Element, diff)
   expect($Element.innerHTML).toBe(``)
 })
+
+test('renderDiff - remove and add nodes', () => {
+  const oldHtml = `<div class="a"><i class="b"></i></div><div class="a"></div>`
+  const diff = [
+    {
+      type: 'remove',
+      nodes: [1],
+    },
+    {
+      index: 2,
+      nodes: [
+        {
+          type: VirtualDomElements.I,
+          className: 'b',
+          childCount: 0,
+        },
+      ],
+      type: 'insert',
+    },
+  ]
+  const $Element = document.createElement('div')
+  $Element.innerHTML = oldHtml
+  VirtualDomDiff.renderDiff($Element, diff)
+  expect($Element.innerHTML).toBe('<div class="a"></div><div class="a"><i class="b"></i></div>')
+})
