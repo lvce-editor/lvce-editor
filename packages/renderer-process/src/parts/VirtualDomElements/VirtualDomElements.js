@@ -49,3 +49,4 @@ export const Time = 58
 export const Tfoot = 59
 export const Ul = 60
 export const Video = 61
+export const TextArea = 62

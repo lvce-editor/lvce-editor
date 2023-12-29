@@ -99,6 +99,8 @@ export const getElementTag = (type) => {
       return ElementTag.Ul
     case VirtualDomElements.Video:
       return ElementTag.Video
+    case VirtualDomElements.TextArea:
+      return ElementTag.TextArea
     default:
       throw new Error(`element tag not found ${type}`)
   }
