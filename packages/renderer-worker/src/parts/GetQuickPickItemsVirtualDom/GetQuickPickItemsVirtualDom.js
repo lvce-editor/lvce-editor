@@ -1,30 +1,31 @@
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const descriptionWrapper = {
   type: VirtualDomElements.Div,
-  className: 'QuickPickItemDescription',
+  className: ClassNames.QuickPickItemDescription,
   childCount: 1,
 }
 
 const label1 = {
   type: VirtualDomElements.Div,
-  className: 'Label',
+  className: ClassNames.Label,
   childCount: 1,
 }
 
 const quickPickHighlight = {
   type: VirtualDomElements.Span,
-  className: 'QuickPickHighlight',
+  className: ClassNames.QuickPickHighlight,
   childCount: 1,
 }
 
 const addHighlights = (dom, highlights, label) => {
   const labelDom = {
     type: VirtualDomElements.Div,
-    className: 'Label',
+    className: ClassNames.Label,
     childCount: 0,
   }
   dom.push(labelDom)
@@ -55,7 +56,7 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
   const dom = []
   dom.push({
     type: VirtualDomElements.Div,
-    className: 'QuickPickItem',
+    className: ClassNames.QuickPickItem,
     role: AriaRoles.Option,
     ariaPosInSet: posInSet,
     ariaSetSize: setSize,
@@ -65,7 +66,7 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
   if (isActive) {
     // @ts-ignore
     parent.id = 'QuickPickItemActive'
-    parent.className += ' QuickPickItemActive'
+    parent.className += ' ' + ClassNames.QuickPickItemActive
   }
   if (icon) {
     parent.childCount++
@@ -77,7 +78,7 @@ const getQuickPickItemVirtualDom = (visibleItem) => {
     dom.push(
       {
         type: VirtualDomElements.Div,
-        className: 'QuickPickItemDescription',
+        className: ClassNames.QuickPickItemDescription,
         childCount: 1,
       },
       text(description),
@@ -96,7 +97,7 @@ export const getQuickPickItemsVirtualDom = (visibleItems) => {
       },
       {
         type: VirtualDomElements.Div,
-        className: 'Label',
+        className: ClassNames.Label,
         childCount: 1,
       },
       text('No Results'),
