@@ -985,24 +985,24 @@ test('diffDom - toggle replace - collapse', () => {
     {
       index: 2,
       key: 'className',
-      type: 'updateProp',
+      type: DiffDomType.UpdateProp,
       value: 'IconButton SearchToggleButton ',
     },
     {
       index: 2,
       key: 'ariaExpanded',
-      type: 'updateProp',
+      type: DiffDomType.UpdateProp,
       value: false,
     },
     {
       index: 3,
       key: 'className',
-      type: 'updateProp',
+      type: DiffDomType.UpdateProp,
       value: 'MaskIcon MaskIconChevronRight',
     },
     {
       nodes: [13, 16],
-      type: 'remove',
+      type: DiffDomType.Remove,
     },
   ])
 })
@@ -1240,19 +1240,19 @@ test('diffDom - toggle replace - expand', () => {
     {
       index: 2,
       key: 'className',
-      type: 'updateProp',
+      type: DiffDomType.UpdateProp,
       value: 'IconButton SearchToggleButton SearchToggleButtonExpanded',
     },
     {
       index: 2,
       key: 'ariaExpanded',
-      type: 'updateProp',
+      type: DiffDomType.UpdateProp,
       value: true,
     },
     {
       index: 3,
       key: 'className',
-      type: 'updateProp',
+      type: DiffDomType.UpdateProp,
       value: 'MaskIcon MaskIconChevronDown',
     },
     {
@@ -1299,7 +1299,7 @@ test('diffDom - toggle replace - expand', () => {
           type: 12,
         },
       ],
-      type: 'insert',
+      type: DiffDomType.Insert,
     },
   ])
 })
