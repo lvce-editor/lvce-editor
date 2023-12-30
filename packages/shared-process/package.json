@@ -32,7 +32,6 @@
     "exit-hook": "^4.0.0",
     "got": "^13.0.0",
     "is-object": "^1.0.2",
-    "lines-and-columns": "^2.0.4",
     "p-queue": "^8.0.1",
     "parse-json": "^8.1.0",
     "tar-fs": "^3.0.4",
