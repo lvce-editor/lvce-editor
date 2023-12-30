@@ -46,7 +46,9 @@ const renderScrollBar = {
       newState.height - newState.headerHeight,
       scrollBarHeight,
     )
-    return [/* method */ RenderMethod.SetScrollBar, /* scrollBarY */ scrollBarY, /* scrollBarHeight */ scrollBarHeight]
+    const heightString = `${scrollBarHeight}px`
+    const translateString = `0 ${scrollBarY}px`
+    return [/* method */ RenderMethod.SetScrollBar, translateString, heightString]
   },
 }
 
