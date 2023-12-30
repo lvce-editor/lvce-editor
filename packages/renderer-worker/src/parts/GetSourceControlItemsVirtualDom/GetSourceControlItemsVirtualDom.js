@@ -143,7 +143,7 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
   dom.push(
     {
       type: VirtualDomElements.Div,
-      className: 'SourceControlHeader',
+      className: ClassNames.SourceControlHeader,
       childCount: 1,
     },
     {
@@ -191,7 +191,7 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
   dom.push(
     {
       type: VirtualDomElements.Div,
-      className: 'SourceControlItems',
+      className: ClassNames.SourceControlItems,
       childCount: items.length,
     },
     ...items.flatMap(createItem),
