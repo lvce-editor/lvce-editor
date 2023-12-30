@@ -2,6 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as GetDisplayReferences from '../GetDisplayReferences/GetDisplayReferences.js'
 import * as GetReferencesFileCount from '../GetReferencesFileCount/GetReferencesFileCount.js'
 import * as GetReferencesMessage from '../GetReferencesMessage/GetReferencesMessage.js'
+import * as LocationType from '../LocationType/LocationType.js'
 import * as ListIndex from '../ListIndex/ListIndex.js'
 
 export const create = (id, uri) => {
@@ -70,11 +71,11 @@ const selectIndexCollapsed = (state, index) => {
 export const selectIndex = (state, index) => {
   const displayReference = state.displayReferences[index]
   switch (displayReference.type) {
-    case 'leaf':
+    case LocationType.Leaf:
       return selectIndexLead(state, index)
-    case 'expanded':
+    case LocationType.Expanded:
       return selectIndexExpanded(state, index)
-    case 'collapsed':
+    case LocationType.Collapsed:
       return selectIndexCollapsed(state, index)
     default:
       console.warn(displayReference)

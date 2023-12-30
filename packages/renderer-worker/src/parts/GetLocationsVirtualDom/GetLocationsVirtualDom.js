@@ -1,11 +1,12 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as LocationType from '../LocationType/LocationType.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getLocationVirtualDom = (location) => {
   const { type, icon, lineText, index, name } = location
   switch (type) {
-    case 'leaf':
+    case LocationType.Leaf:
       return [
         {
           type: VirtualDomElements.Div,
@@ -15,7 +16,7 @@ const getLocationVirtualDom = (location) => {
         },
         text(lineText || '(empty line)'),
       ]
-    case 'collapsed':
+    case LocationType.Collapsed:
       return [
         {
           type: VirtualDomElements.Div,
@@ -26,7 +27,7 @@ const getLocationVirtualDom = (location) => {
         },
         text(name),
       ]
-    case 'expanded':
+    case LocationType.Expanded:
       return [
         {
           type: VirtualDomElements.Div,

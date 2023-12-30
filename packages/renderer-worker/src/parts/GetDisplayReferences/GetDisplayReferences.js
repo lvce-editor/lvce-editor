@@ -1,5 +1,6 @@
 import * as DirentType from '../DirentType/DirentType.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as LocationType from '../LocationType/LocationType.js'
 
 const getName = (uri) => {
   return uri.slice(uri.lastIndexOf('/') + 1)
@@ -23,7 +24,7 @@ export const getDisplayReferences = (references) => {
         depth: 2,
         posInSet: innerPosInSet++,
         setSize: 1,
-        type: 'leaf',
+        type: LocationType.Leaf,
         uri: '',
         name: '',
         lineText: reference.lineText,
@@ -38,7 +39,7 @@ export const getDisplayReferences = (references) => {
         depth: 1,
         posInSet: outerPosInSet++,
         setSize: 1,
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: reference.uri,
         name,
         lineText: '',
@@ -53,7 +54,7 @@ export const getDisplayReferences = (references) => {
         depth: 2,
         posInSet: innerPosInSet++,
         setSize: 1,
-        type: 'leaf',
+        type: LocationType.Leaf,
         uri: '',
         name: '',
         lineText: current.lineText,
