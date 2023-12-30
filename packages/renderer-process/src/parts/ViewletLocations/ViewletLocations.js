@@ -1,5 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
+import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletLocationsEvents from './ViewletLocationsEvents.js'
@@ -14,7 +16,9 @@ export const create = () => {
 
 export const attachEvents = (state) => {
   const { $Viewlet } = state
-  $Viewlet.onmousedown = ViewletLocationsEvents.handleLocationsMouseDown
+  AttachEvents.attachEvents($Viewlet, {
+    [DomEventType.MouseDown]: ViewletLocationsEvents.handleLocationsMouseDown,
+  })
 }
 
 export const setLocationsDom = (state, dom) => {
