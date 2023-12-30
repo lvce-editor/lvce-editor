@@ -1,11 +1,11 @@
 import { renderInternal } from '../VirtualDom/VirtualDom.js'
 import * as VirtualDomElementProp from '../VirtualDomElementProp/VirtualDomElementProp.js'
 
-const insert = ($Node, diffItem) => {
-  renderInternal($Node, diffItem.nodes)
+const insert = ($Node, diffItem, eventMap) => {
+  renderInternal($Node, diffItem.nodes, eventMap)
 }
 
-export const renderDiff = ($Root, diff) => {
+export const renderDiff = ($Root, diff, eventMap = {}) => {
   const iter1 = document.createNodeIterator($Root, NodeFilter.SHOW_ALL)
   const list = []
   let $Node1
@@ -15,7 +15,6 @@ export const renderDiff = ($Root, diff) => {
   const iter = document.createNodeIterator($Root, NodeFilter.SHOW_ALL)
   let i = 0
   let $Node = iter.nextNode()
-  console.log({ diff })
   for (let diffIndex = 0; diffIndex < diff.length; diffIndex++) {
     const diffItem = diff[diffIndex]
     while (i <= diffItem.index) {
@@ -24,10 +23,10 @@ export const renderDiff = ($Root, diff) => {
     }
     switch (diffItem.type) {
       case 'updateProp':
-        VirtualDomElementProp.setProp($Node, diffItem.key, diffItem.value)
+        VirtualDomElementProp.setProp($Node, diffItem.key, diffItem.value, eventMap)
         break
       case 'insert':
-        insert($Node, diffItem)
+        insert($Node, diffItem, eventMap)
         break
       default:
         break
@@ -45,7 +44,6 @@ export const renderDiff = ($Root, diff) => {
       }
     }
   }
-  console.log({ toRemove })
   for (const $Node of toRemove) {
     $Node.remove()
   }
