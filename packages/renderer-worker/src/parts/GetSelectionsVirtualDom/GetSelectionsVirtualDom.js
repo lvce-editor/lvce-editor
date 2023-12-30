@@ -1,3 +1,4 @@
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const getSelectionsVirtualDom = (selections) => {
@@ -9,7 +10,7 @@ export const getSelectionsVirtualDom = (selections) => {
     const height = selections[i + 3]
     dom.push({
       type: VirtualDomElements.Div,
-      className: 'EditorSelection',
+      className: ClassNames.EditorSelection,
       left: x,
       top: y,
       width,

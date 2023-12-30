@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getEditorRowsVirtualDom = (textInfos, differences, lineNumbers = true) => {
@@ -8,7 +9,7 @@ export const getEditorRowsVirtualDom = (textInfos, differences, lineNumbers = tr
     const difference = differences[i]
     dom.push({
       type: VirtualDomElements.Div,
-      className: 'EditorRow',
+      className: ClassNames.EditorRow,
       translate: `${difference}px`,
       childCount: textInfo.length / 2,
     })
