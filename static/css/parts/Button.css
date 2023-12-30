@@ -24,11 +24,14 @@
   background: var(--SplitButtonHoverBackground, #387674);
 }
 
+.SplitButtonDisabled {
+  background: #2f6260;
+  opacity: 0.4;
+}
+
 .SplitButtonContentDisabled,
 .SplitButtonDropDownDisabled {
   cursor: default;
-  opacity: 0.4;
-  background: #2f6260;
 }
 
 .SplitButtonSeparator {

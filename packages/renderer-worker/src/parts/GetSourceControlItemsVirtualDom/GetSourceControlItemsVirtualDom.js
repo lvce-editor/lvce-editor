@@ -162,7 +162,7 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
     dom.push(
       {
         type: VirtualDomElements.Div,
-        className: 'SplitButton',
+        className: `SplitButton ${hasItems ? '' : 'SplitButtonDisabled'}`,
         childCount: 3,
       },
       {
