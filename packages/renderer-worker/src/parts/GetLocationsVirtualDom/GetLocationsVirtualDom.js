@@ -1,4 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -9,7 +10,7 @@ const getLocationVirtualDom = (location) => {
       return [
         {
           type: VirtualDomElements.Div,
-          className: 'TreeItem',
+          className: ClassNames.TreeItem,
           id: `Reference-${index}`,
           childCount: 1,
         },
@@ -19,7 +20,7 @@ const getLocationVirtualDom = (location) => {
       return [
         {
           type: VirtualDomElements.Div,
-          className: 'TreeItem',
+          className: ClassNames.TreeItem,
           ariaExpanded: false,
           id: `Reference-${index}`,
           childCount: 1,
@@ -30,7 +31,7 @@ const getLocationVirtualDom = (location) => {
       return [
         {
           type: VirtualDomElements.Div,
-          className: 'TreeItem',
+          className: ClassNames.TreeItem,
           ariaExpanded: true,
           id: `Reference-${index}`,
           childCount: 1,
@@ -47,7 +48,7 @@ export const getLocationsVirtualDom = (locations, message) => {
   dom.push(
     {
       type: VirtualDomElements.Div,
-      className: 'LocationsMessage',
+      className: ClassNames.LocationsMessage,
       id: 'LocationsMessage',
       role: AriaRoles.Status,
       childCount: 1,
