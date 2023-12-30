@@ -31,7 +31,7 @@ const diffProps = (patches, a, b, index) => {
   }
 }
 
-const diffDomInternal = (patches, oldDom, oldStartIndex, oldEndIndex, newDom, newStartIndex, newEndIndex) => {
+const diffDomInternal = (patches, oldNodeMap, oldDom, oldStartIndex, oldEndIndex, newNodeMap, newDom, newStartIndex, newEndIndex) => {
   let i = oldStartIndex
   let j = newStartIndex
   while (i < oldEndIndex && j < newEndIndex) {
@@ -58,23 +58,33 @@ const diffDomInternal = (patches, oldDom, oldStartIndex, oldEndIndex, newDom, ne
             })
             i += oldTotal
           } else {
-            diffDomInternal(patches, oldDom, i + 1, i + oldTotal + 1, newDom, j + 1, j + newTotal + 1)
+            diffDomInternal(patches, oldNodeMap, oldDom, i + 1, i + oldTotal + 1, newNodeMap, newDom, j + 1, j + newTotal + 1)
             i += oldTotal
             j += newTotal
           }
         }
       } else {
-        // console.log({ a, b })
-        // replace a with b
-        const totalChildCount = GetTotalChildCount.getTotalChildCount(newDom, j)
-        const oldTotal = GetTotalChildCount.getTotalChildCount(oldDom, i)
-        patches.push({
-          index: i,
-          type: DiffDomType.Replace,
-          nodes: newDom.slice(j, j + totalChildCount + 1),
-        })
-        i += oldTotal
-        j += totalChildCount
+        if (a.key in newNodeMap) {
+          const totalChildCount = GetTotalChildCount.getTotalChildCount(newDom, j)
+          patches.push({
+            index: i,
+            type: DiffDomType.Insert,
+            nodes: newDom.slice(j, j + totalChildCount + 1),
+          })
+          j += totalChildCount + 1
+        } else {
+          // console.log({ a, b })
+          // replace a with b
+          const totalChildCount = GetTotalChildCount.getTotalChildCount(newDom, j)
+          const oldTotal = GetTotalChildCount.getTotalChildCount(oldDom, i)
+          patches.push({
+            index: i,
+            type: DiffDomType.Replace,
+            nodes: newDom.slice(j, j + totalChildCount + 1),
+          })
+          i += oldTotal
+          j += totalChildCount
+        }
       }
     }
     i++
@@ -102,10 +112,22 @@ const diffDomInternal = (patches, oldDom, oldStartIndex, oldEndIndex, newDom, ne
   return patches
 }
 
+const createNodeMap = (nodes) => {
+  const nodeMap = Object.create(null)
+  for (const node of nodes) {
+    if (node.key) {
+      nodeMap[node.key] = node
+    }
+  }
+  return nodeMap
+}
+
 export const diffDom = (oldDom, newDom) => {
   const lengthA = oldDom.length
   const lengthB = newDom.length
   const patches = []
-  diffDomInternal(patches, oldDom, 0, lengthA, newDom, 0, lengthB)
+  const oldNodeMap = createNodeMap(oldDom)
+  const newNodeMap = createNodeMap(newDom)
+  diffDomInternal(patches, oldNodeMap, oldDom, 0, lengthA, newNodeMap, newDom, 0, lengthB)
   return patches
 }
