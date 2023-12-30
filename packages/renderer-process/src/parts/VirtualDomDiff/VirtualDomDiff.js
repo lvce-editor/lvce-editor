@@ -5,7 +5,7 @@ const insert = ($Node, diffItem, eventMap) => {
   renderInternal($Node, diffItem.nodes, eventMap)
 }
 
-export const renderDiff = ($Root, diff, eventMap) => {
+export const renderDiff = ($Root, diff, eventMap = {}) => {
   const iter1 = document.createNodeIterator($Root, NodeFilter.SHOW_ALL)
   const list = []
   let $Node1
@@ -15,7 +15,6 @@ export const renderDiff = ($Root, diff, eventMap) => {
   const iter = document.createNodeIterator($Root, NodeFilter.SHOW_ALL)
   let i = 0
   let $Node = iter.nextNode()
-  console.log({ diff, eventMap })
   for (let diffIndex = 0; diffIndex < diff.length; diffIndex++) {
     const diffItem = diff[diffIndex]
     while (i <= diffItem.index) {
@@ -46,7 +45,6 @@ export const renderDiff = ($Root, diff, eventMap) => {
       }
     }
   }
-  console.log({ toRemove })
   for (const $Node of toRemove) {
     $Node.remove()
   }

@@ -1,5 +1,6 @@
 import * as DiffDom from '../src/parts/DiffDom/DiffDom.js'
 import * as DiffDomType from '../src/parts/DiffDomType/DiffDomType.js'
+import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import { button, div, i, text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
 
 test('diffDom - empty', () => {
@@ -50,6 +51,143 @@ test('diffDom - sub node attribute modified', () => {
       index: 3,
       key: 'height',
       value: 20,
+    },
+  ])
+})
+
+test('diffDom - insert node - start', () => {
+  const oldDom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'b',
+      childCount: 0,
+    },
+  ]
+  const newDom = [
+    {
+      type: VirtualDomElements.Span,
+      className: 'a',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'b',
+      childCount: 0,
+    },
+  ]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 0,
+      nodes: [
+        {
+          childCount: 0,
+          className: 'a',
+          type: 8,
+        },
+      ],
+      type: 'replace',
+    },
+    {
+      index: 1,
+      nodes: [
+        {
+          childCount: 0,
+          className: 'b',
+          type: 4,
+        },
+      ],
+      type: 'insert',
+    },
+  ])
+})
+
+test('diffDom - insert node - middle', () => {
+  const oldDom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'a',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'c',
+      childCount: 0,
+    },
+  ]
+  const newDom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'a',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Span,
+      className: 'b',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'c',
+      childCount: 0,
+    },
+  ]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 1,
+      nodes: [
+        {
+          childCount: 0,
+          className: 'b',
+          type: 8,
+        },
+      ],
+      type: 'replace',
+    },
+    {
+      index: 2,
+      nodes: [
+        {
+          childCount: 0,
+          className: 'c',
+          type: 4,
+        },
+      ],
+      type: 'insert',
+    },
+  ])
+})
+
+test('diffDom - insert node - end', () => {
+  const oldDom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'a',
+      childCount: 0,
+    },
+  ]
+  const newDom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'a',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Span,
+      className: 'b',
+      childCount: 0,
+    },
+  ]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 1,
+      nodes: [
+        {
+          childCount: 0,
+          className: 'b',
+          type: 8,
+        },
+      ],
+      type: 'insert',
     },
   ])
 })
@@ -865,6 +1003,303 @@ test('diffDom - toggle replace - collapse', () => {
     {
       nodes: [13, 16],
       type: 'remove',
+    },
+  ])
+})
+
+test('diffDom - toggle replace - expand', () => {
+  const newDom = [
+    {
+      type: 4,
+      className: 'SearchHeader',
+      childCount: 2,
+    },
+    {
+      type: 4,
+      className: 'SearchHeaderTop',
+      childCount: 2,
+    },
+    {
+      type: 1,
+      className: 'IconButton SearchToggleButton SearchToggleButtonExpanded',
+      title: 'Toggle Replace',
+      ariaLabel: 'Toggle Replace',
+      ariaExpanded: true,
+      childCount: 1,
+      'data-command': 'toggleReplace',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconChevronDown',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchHeaderTopRight',
+      childCount: 2,
+    },
+    {
+      type: 4,
+      className: 'SearchField',
+      childCount: 4,
+    },
+    {
+      type: 62,
+      className: 'MultilineInputBox',
+      spellcheck: false,
+      autocapitalize: 'off',
+      autocorrect: 'off',
+      placeholder: 'Search',
+      name: 'search-value',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchFieldButton ',
+      title: 'Match Case',
+      role: 'checkbox',
+      childCount: 1,
+      ariaChecked: false,
+      'data-command': 'toggleMatchCase',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconCaseSensitive',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchFieldButton ',
+      title: 'Match Whole Word',
+      role: 'checkbox',
+      childCount: 1,
+      ariaChecked: false,
+      'data-command': 'toggleMatchWholeWord',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconWholeWord',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchFieldButton ',
+      title: 'Use Regular Expression',
+      role: 'checkbox',
+      childCount: 1,
+      ariaChecked: false,
+      'data-command': 'toggleUseRegularExpression',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconRegex',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchField SearchFieldReplace',
+      childCount: 2,
+    },
+    {
+      type: 6,
+      className: 'SearchFieldInput',
+      spellcheck: false,
+      autocapitalize: 'off',
+      inputType: 'text',
+      autocorrect: 'off',
+      placeholder: 'Replace',
+      name: 'search-replace-value',
+      childCount: 0,
+    },
+    {
+      type: 1,
+      className: 'SearchFieldButton',
+      title: 'Replace All',
+      childCount: 1,
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconReplaceAll',
+      role: 'none',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'ViewletSearchMessage',
+      role: 'status',
+      tabIndex: 0,
+      childCount: 1,
+    },
+    {
+      type: 12,
+      text: '107 results in 12 files',
+      childCount: 0,
+    },
+  ]
+  const oldDom = [
+    {
+      type: 4,
+      className: 'SearchHeader',
+      childCount: 2,
+    },
+    {
+      type: 4,
+      className: 'SearchHeaderTop',
+      childCount: 2,
+    },
+    {
+      type: 1,
+      className: 'IconButton SearchToggleButton ',
+      title: 'Toggle Replace',
+      ariaLabel: 'Toggle Replace',
+      ariaExpanded: false,
+      childCount: 1,
+      'data-command': 'toggleReplace',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconChevronRight',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchHeaderTopRight',
+      childCount: 1,
+    },
+    {
+      type: 4,
+      className: 'SearchField',
+      childCount: 4,
+    },
+    {
+      type: 62,
+      className: 'MultilineInputBox',
+      spellcheck: false,
+      autocapitalize: 'off',
+      autocorrect: 'off',
+      placeholder: 'Search',
+      name: 'search-value',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchFieldButton ',
+      title: 'Match Case',
+      role: 'checkbox',
+      childCount: 1,
+      ariaChecked: false,
+      'data-command': 'toggleMatchCase',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconCaseSensitive',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchFieldButton ',
+      title: 'Match Whole Word',
+      role: 'checkbox',
+      childCount: 1,
+      ariaChecked: false,
+      'data-command': 'toggleMatchWholeWord',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconWholeWord',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'SearchFieldButton ',
+      title: 'Use Regular Expression',
+      role: 'checkbox',
+      childCount: 1,
+      ariaChecked: false,
+      'data-command': 'toggleUseRegularExpression',
+    },
+    {
+      type: 4,
+      className: 'MaskIcon MaskIconRegex',
+      childCount: 0,
+    },
+    {
+      type: 4,
+      className: 'ViewletSearchMessage',
+      role: 'status',
+      tabIndex: 0,
+      childCount: 1,
+    },
+    {
+      type: 12,
+      text: '107 results in 12 files',
+      childCount: 0,
+    },
+  ]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 2,
+      key: 'className',
+      type: 'updateProp',
+      value: 'IconButton SearchToggleButton SearchToggleButtonExpanded',
+    },
+    {
+      index: 2,
+      key: 'ariaExpanded',
+      type: 'updateProp',
+      value: true,
+    },
+    {
+      index: 3,
+      key: 'className',
+      type: 'updateProp',
+      value: 'MaskIcon MaskIconChevronDown',
+    },
+    {
+      index: 13,
+      nodes: [
+        {
+          childCount: 2,
+          className: 'SearchField SearchFieldReplace',
+          type: 4,
+        },
+        {
+          autocapitalize: 'off',
+          autocorrect: 'off',
+          childCount: 0,
+          className: 'SearchFieldInput',
+          inputType: 'text',
+          name: 'search-replace-value',
+          placeholder: 'Replace',
+          spellcheck: false,
+          type: 6,
+        },
+        {
+          childCount: 1,
+          className: 'SearchFieldButton',
+          title: 'Replace All',
+          type: 1,
+        },
+        {
+          childCount: 0,
+          className: 'MaskIcon MaskIconReplaceAll',
+          role: 'none',
+          type: 4,
+        },
+        {
+          childCount: 1,
+          className: 'ViewletSearchMessage',
+          role: 'status',
+          tabIndex: 0,
+          type: 4,
+        },
+        {
+          childCount: 0,
+          text: '107 results in 12 files',
+          type: 12,
+        },
+      ],
+      type: 'insert',
     },
   ])
 })
