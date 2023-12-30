@@ -1,5 +1,6 @@
 import * as DiffDom from '../src/parts/DiffDom/DiffDom.js'
 import * as DiffDomType from '../src/parts/DiffDomType/DiffDomType.js'
+import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import { button, div, i, text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
 
 test('diffDom - empty', () => {
@@ -50,6 +51,143 @@ test('diffDom - sub node attribute modified', () => {
       index: 3,
       key: 'height',
       value: 20,
+    },
+  ])
+})
+
+test('diffDom - insert node - start', () => {
+  const oldDom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'b',
+      childCount: 0,
+    },
+  ]
+  const newDom = [
+    {
+      type: VirtualDomElements.Span,
+      className: 'a',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'b',
+      childCount: 0,
+    },
+  ]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 0,
+      nodes: [
+        {
+          childCount: 0,
+          className: 'a',
+          type: 8,
+        },
+      ],
+      type: 'replace',
+    },
+    {
+      index: 1,
+      nodes: [
+        {
+          childCount: 0,
+          className: 'b',
+          type: 4,
+        },
+      ],
+      type: 'insert',
+    },
+  ])
+})
+
+test('diffDom - insert node - middle', () => {
+  const oldDom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'a',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'c',
+      childCount: 0,
+    },
+  ]
+  const newDom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'a',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Span,
+      className: 'b',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'c',
+      childCount: 0,
+    },
+  ]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 1,
+      nodes: [
+        {
+          childCount: 0,
+          className: 'b',
+          type: 8,
+        },
+      ],
+      type: 'replace',
+    },
+    {
+      index: 2,
+      nodes: [
+        {
+          childCount: 0,
+          className: 'c',
+          type: 4,
+        },
+      ],
+      type: 'insert',
+    },
+  ])
+})
+
+test('diffDom - insert node - end', () => {
+  const oldDom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'a',
+      childCount: 0,
+    },
+  ]
+  const newDom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'a',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Span,
+      className: 'b',
+      childCount: 0,
+    },
+  ]
+  expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 1,
+      nodes: [
+        {
+          childCount: 0,
+          className: 'b',
+          type: 8,
+        },
+      ],
+      type: 'insert',
     },
   ])
 })
