@@ -4,45 +4,55 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const separator = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.MenuItemSeparator,
+  role: AriaRoles.Separator,
+  childCount: 1,
+}
+
+const separatorLine = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.MenuItemSeparatorLine,
+  childCount: 0,
+}
+
+const checkboxUnchecked = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.MenuItem,
+  role: AriaRoles.MenuItemCheckBox,
+  ariaChecked: false,
+  tabIndex: -1,
+  childCount: 1,
+}
+
+const disabled = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.MenuItem,
+  role: AriaRoles.MenuItem,
+  tabIndex: -1,
+  disabled: true,
+  childCount: 1,
+}
+
+const arrowRight = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.MenuItemSubMenuArrowRight,
+  childCount: 0,
+}
+
 const getMenuItemSeparatorDom = (menuItem) => {
-  return [
-    {
-      type: VirtualDomElements.Div,
-      className: ClassNames.MenuItemSeparator,
-      role: AriaRoles.Separator,
-      childCount: 0,
-    },
-  ]
+  return [separator, separatorLine]
 }
 
 const getMenuItemUncheckedDom = (menuItem) => {
   const { label } = menuItem
-  return [
-    {
-      type: VirtualDomElements.Div,
-      className: ClassNames.MenuItem,
-      role: AriaRoles.MenuItemCheckBox,
-      ariaChecked: false,
-      tabIndex: -1,
-      childCount: 1,
-    },
-    text(label),
-  ]
+  return [checkboxUnchecked, text(label)]
 }
 
 const getMenuItemDisabledDom = (menuItem) => {
   const { label } = menuItem
-  return [
-    {
-      type: VirtualDomElements.Div,
-      className: ClassNames.MenuItem,
-      role: AriaRoles.MenuItem,
-      tabIndex: -1,
-      disabled: true,
-      childCount: 1,
-    },
-    text(label),
-  ]
+  return [disabled, text(label)]
 }
 
 const getMenuItemDefaultDom = (menuItem) => {
@@ -57,7 +67,6 @@ const getMenuItemDefaultDom = (menuItem) => {
       className,
       role: AriaRoles.MenuItem,
       tabIndex: -1,
-      disabled: true,
       childCount: 1,
     },
     text(label),
@@ -83,11 +92,7 @@ const getMenuItemSubMenuDom = (menuItem) => {
       childCount: 2,
     },
     text(label),
-    {
-      type: VirtualDomElements.Div,
-      className: ClassNames.MenuItemSubMenuArrowRight,
-      childCount: 0,
-    },
+    arrowRight,
   ]
 }
 
