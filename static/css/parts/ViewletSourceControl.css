@@ -86,9 +86,16 @@
   cursor: pointer;
 }
 
-.SplitButtonContent:hover,
-.SplitButtonDropDown:hover {
+.SplitButtonContent:where(:hover),
+.SplitButtonDropDown:where(:hover) {
   background: var(--SplitButtonHoverBackground, #387674);
+}
+
+.SplitButtonContentDisabled,
+.SplitButtonDropDownDisabled {
+  cursor: default;
+  opacity: 0.4;
+  background: #2f6260;
 }
 
 .SplitButtonSeparator {

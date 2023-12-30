@@ -158,6 +158,7 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
     },
   )
   if (splitButtonEnabled) {
+    const hasItems = items.length > 0
     dom.push(
       {
         type: VirtualDomElements.Div,
@@ -166,7 +167,7 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
       },
       {
         type: VirtualDomElements.Div,
-        className: 'SplitButtonContent',
+        className: `SplitButtonContent ${hasItems ? '' : 'SplitButtonContentDisabled'}`,
         childCount: 1,
       },
       text('Commit'),
@@ -177,7 +178,7 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
       },
       {
         type: VirtualDomElements.Div,
-        className: 'SplitButtonDropDown',
+        className: `SplitButtonDropDown ${hasItems ? '' : 'SplitButtonDropDownDisabled'}`,
         childCount: 1,
       },
       {
