@@ -35,7 +35,7 @@ const getProblemVirtualDom = (problem) => {
       },
       {
         type: VirtualDomElements.Div,
-        className: 'Chevron',
+        className: ClassNames.Chevron,
         childCount: 1,
       },
       {
