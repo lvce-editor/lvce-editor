@@ -2,6 +2,7 @@ import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
+import * as VirtualDomDiff from '../VirtualDomDiff/VirtualDomDiff.js'
 
 export const create = () => {
   // TODO vscode uses a textarea instead of an input
@@ -47,30 +48,32 @@ export const attachEvents = (state) => {
   // $List.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
 }
 
-export const setDom = (state, dom) => {
+export const setDom = (state, diff) => {
   const { $Viewlet } = state
+  console.log({ diff })
+  VirtualDomDiff.renderDiff($Viewlet, diff, ViewletSearchEvents)
   // TODO implement virtual dom diffing instead
-  const $OldInputs = $Viewlet.querySelectorAll('textarea,input')
-  const map = Object.create(null)
-  let focused
-  const $Active = document.activeElement
-  for (const $Input of $OldInputs) {
-    map[$Input.name] = $Input
-    if ($Input === $Active) {
-      focused = $Input
-    }
-  }
-  VirtualDom.renderInto($Viewlet, dom, ViewletSearchEvents)
-  const $NewInputs = $Viewlet.querySelectorAll('textarea,input')
-  for (const $NewInput of $NewInputs) {
-    const $Old = map[$NewInput.name]
-    if ($Old) {
-      $NewInput.replaceWith($Old)
-      if ($Old === $Active) {
-        $Old.focus()
-      }
-    }
-  }
+  // const $OldInputs = $Viewlet.querySelectorAll('textarea,input')
+  // const map = Object.create(null)
+  // let focused
+  // const $Active = document.activeElement
+  // for (const $Input of $OldInputs) {
+  //   map[$Input.name] = $Input
+  //   if ($Input === $Active) {
+  //     focused = $Input
+  //   }
+  // }
+  // VirtualDom.renderInto($Viewlet, dom, ViewletSearchEvents)
+  // const $NewInputs = $Viewlet.querySelectorAll('textarea,input')
+  // for (const $NewInput of $NewInputs) {
+  //   const $Old = map[$NewInput.name]
+  //   if ($Old) {
+  //     $NewInput.replaceWith($Old)
+  //     if ($Old === $Active) {
+  //       $Old.focus()
+  //     }
+  //   }
+  // }
 }
 
 export * from '../ViewletScrollable/ViewletScrollable.js'

@@ -3,6 +3,7 @@ import * as GetSearchVirtualDom from '../GetSearchVirtualDom/GetSearchVirtualDom
 import * as InputSource from '../InputSource/InputSource.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as DiffDom from '../DiffDom/DiffDom.js'
 
 export const hasFunctionalRender = true
 
@@ -30,7 +31,7 @@ const renderItems = {
       newState.maxLineY,
       newState.replacement,
     )
-    const dom = GetSearchVirtualDom.getSearchVirtualDom(
+    const newDom = GetSearchVirtualDom.getSearchVirtualDom(
       displayResults,
       newState.replaceExpanded,
       newState.matchCase,
@@ -38,7 +39,12 @@ const renderItems = {
       newState.useRegularExpression,
       newState.message,
     )
-    return ['setDom', dom]
+    const oldDom = oldState.dom || []
+    newState.dom = newDom
+    console.time('diff')
+    const diff = DiffDom.diffDom(oldDom, newDom)
+    console.timeEnd('diff')
+    return ['setDom', diff]
   },
 }
 
