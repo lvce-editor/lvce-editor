@@ -61,6 +61,7 @@ test('diffDom - insert node - start', () => {
       type: VirtualDomElements.Div,
       className: 'b',
       childCount: 0,
+      key: '2',
     },
   ]
   const newDom = [
@@ -68,11 +69,13 @@ test('diffDom - insert node - start', () => {
       type: VirtualDomElements.Span,
       className: 'a',
       childCount: 0,
+      key: '1',
     },
     {
       type: VirtualDomElements.Div,
       className: 'b',
       childCount: 0,
+      key: '2',
     },
   ]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
@@ -83,17 +86,7 @@ test('diffDom - insert node - start', () => {
           childCount: 0,
           className: 'a',
           type: 8,
-        },
-      ],
-      type: 'replace',
-    },
-    {
-      index: 1,
-      nodes: [
-        {
-          childCount: 0,
-          className: 'b',
-          type: 4,
+          key: '1',
         },
       ],
       type: 'insert',
@@ -107,11 +100,13 @@ test('diffDom - insert node - middle', () => {
       type: VirtualDomElements.Div,
       className: 'a',
       childCount: 0,
+      key: '1',
     },
     {
       type: VirtualDomElements.Div,
       className: 'c',
       childCount: 0,
+      key: '3',
     },
   ]
   const newDom = [
@@ -119,16 +114,19 @@ test('diffDom - insert node - middle', () => {
       type: VirtualDomElements.Div,
       className: 'a',
       childCount: 0,
+      key: '1',
     },
     {
       type: VirtualDomElements.Span,
       className: 'b',
       childCount: 0,
+      key: '2',
     },
     {
       type: VirtualDomElements.Div,
       className: 'c',
       childCount: 0,
+      key: '3',
     },
   ]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
@@ -139,17 +137,7 @@ test('diffDom - insert node - middle', () => {
           childCount: 0,
           className: 'b',
           type: 8,
-        },
-      ],
-      type: 'replace',
-    },
-    {
-      index: 2,
-      nodes: [
-        {
-          childCount: 0,
-          className: 'c',
-          type: 4,
+          key: '2',
         },
       ],
       type: 'insert',
