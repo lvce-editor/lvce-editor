@@ -8,6 +8,12 @@ const separator = {
   type: VirtualDomElements.Div,
   className: ClassNames.MenuItemSeparator,
   role: AriaRoles.Separator,
+  childCount: 1,
+}
+
+const separatorLine = {
+  type: VirtualDomElements.Div,
+  className: ClassNames.MenuItemSeparatorLine,
   childCount: 0,
 }
 
@@ -36,7 +42,7 @@ const arrowRight = {
 }
 
 const getMenuItemSeparatorDom = (menuItem) => {
-  return [separator]
+  return [separator, separatorLine]
 }
 
 const getMenuItemUncheckedDom = (menuItem) => {
