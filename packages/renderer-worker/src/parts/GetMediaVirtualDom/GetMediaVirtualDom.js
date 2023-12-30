@@ -1,3 +1,4 @@
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -6,12 +7,12 @@ export const getMediaVirtualDom = (element, src, errorMessage) => {
     return [
       {
         type: VirtualDomElements.Div,
-        className: 'MediaContent',
+        className: ClassNames.MediaContent,
         childCount: 1,
       },
       {
         type: VirtualDomElements.Div,
-        className: 'MediaErrorMessage',
+        className: ClassNames.MediaErrorMessage,
         childCount: 1,
       },
       text(errorMessage),
@@ -20,12 +21,12 @@ export const getMediaVirtualDom = (element, src, errorMessage) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'MediaContent',
+      className: ClassNames.MediaContent,
       childCount: 1,
     },
     {
       type: element,
-      className: 'MediaElement',
+      className: ClassNames.MediaElement,
       src,
       controls: true,
       childCount: 0,
