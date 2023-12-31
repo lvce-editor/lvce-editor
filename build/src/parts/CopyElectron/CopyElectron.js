@@ -30,7 +30,7 @@ export const copyElectron = async ({ arch, electronVersion, useInstalledElectron
         to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app`,
       })
       await Remove.remove(`build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources/default_app.asar`)
-      await Template.write('macos_info_plist', `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app`, {
+      await Template.write('macos_info_plist', `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources/Info.plist`, {
         '@@NAME@@': product.nameShort,
         '@@APPLICATION_NAME@@': product.applicationName,
         '@@VERSION@@': version,
