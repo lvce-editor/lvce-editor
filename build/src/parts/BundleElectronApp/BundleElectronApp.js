@@ -88,6 +88,7 @@ const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion
       from: `build/.tmp/electron-bundle/${arch}/Electron.app`,
       to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app`,
     })
+    await Remove.remove(`build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources/default_app.asar`)
   } else {
     await Rename.rename({
       from: `build/.tmp/electron-bundle/${arch}/electron`,
