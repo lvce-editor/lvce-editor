@@ -325,7 +325,7 @@ export const build = async ({
 
   if (shouldRemoveUnusedLocales) {
     console.time('removeUnusedLocales')
-    await RemoveUnusedLocales.removeUnusedLocales({ arch, isMacos })
+    await RemoveUnusedLocales.removeUnusedLocales({ arch, isMacos, product })
     console.timeEnd('removeUnusedLocales')
   }
 
