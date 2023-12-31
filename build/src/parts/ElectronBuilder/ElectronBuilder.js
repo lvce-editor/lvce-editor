@@ -289,7 +289,17 @@ export const build = async ({ config, product, shouldRemoveUnusedLocales = false
   const isMacos = config === ElectronBuilderConfigType.Mac
 
   console.time('copyElectronResult')
-  await copyElectronResult({ version, config, product, electronVersion, supportsAutoUpdate, shouldRemoveUnusedLocales, bundleMainProcess, isMacos })
+  await copyElectronResult({
+    version,
+    config,
+    product,
+    electronVersion,
+    supportsAutoUpdate,
+    shouldRemoveUnusedLocales,
+    bundleMainProcess,
+    isMacos,
+    arch,
+  })
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')
