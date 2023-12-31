@@ -21,6 +21,7 @@ import * as Path from '../Path/Path.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
+import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
@@ -64,29 +65,6 @@ const downloadElectron = async ({ platform, arch, electronVersion }) => {
     platform,
     arch,
   })
-}
-const removeUnusedLocalesMacos = async ({ arch }) => {
-  //  TODO
-}
-
-const shouldLocaleBeRemovedOther = (locale) => {
-  return locale !== 'en-US.pak'
-}
-
-const removeUnusedLocalesOther = async ({ arch }) => {
-  const localesPath = `build/.tmp/electron-bundle/${arch}/locales`
-  const dirents = await ReadDir.readDir(localesPath)
-  const toRemove = dirents.filter(shouldLocaleBeRemovedOther)
-  for (const dirent of toRemove) {
-    await Remove.remove(`build/.tmp/electron-bundle/${arch}/locales/${dirent}`)
-  }
-}
-
-const removeUnusedLocales = async ({ arch, isMacos }) => {
-  if (isMacos) {
-    return removeUnusedLocalesMacos({ arch })
-  }
-  return removeUnusedLocalesOther({ arch })
 }
 
 const copyDependencies = async ({ cachePath, resourcesPath }) => {
@@ -347,7 +325,7 @@ export const build = async ({
 
   if (shouldRemoveUnusedLocales) {
     console.time('removeUnusedLocales')
-    await removeUnusedLocales({ arch, isMacos })
+    await RemoveUnusedLocales.removeUnusedLocales({ arch, isMacos })
     console.timeEnd('removeUnusedLocales')
   }
 
