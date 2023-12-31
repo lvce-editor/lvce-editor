@@ -5,6 +5,7 @@ import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
+import * as Template from '../Template/Template.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
@@ -66,7 +67,7 @@ const downloadElectron = async ({ platform, arch, electronVersion }) => {
   })
 }
 
-const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion, product, platform }) => {
+const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion, product, platform, version }) => {
   const outDir = useInstalledElectronVersion
     ? Path.join(Root.root, 'packages', 'main-process', 'node_modules', 'electron', 'dist')
     : Path.join(Root.root, 'build', '.tmp', 'cachedElectronVersions', `electron-${electronVersion}-${platform}-${arch}`)
@@ -89,6 +90,11 @@ const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion
       to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app`,
     })
     await Remove.remove(`build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources/default_app.asar`)
+    await Template.write('macos_info_plist', `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app`, {
+      '@@NAME@@': product.nameShort,
+      '@@APPLICATION_NAME@@': product.applicationName,
+      '@@VERSION@@': version,
+    })
   } else {
     await Rename.rename({
       from: `build/.tmp/electron-bundle/${arch}/electron`,
@@ -362,6 +368,7 @@ export const build = async ({
     useInstalledElectronVersion,
     product,
     platform,
+    version,
   })
   console.timeEnd('copyElectron')
 
