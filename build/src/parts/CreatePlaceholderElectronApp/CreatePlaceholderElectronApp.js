@@ -16,7 +16,6 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
     '@@LICENSE@@': product.licenseName,
     '@@PRODUCT_NAME@@': product.nameLong,
     '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
-    type: 'module',
     '@@MAIN@@': 'packages/main-process/dist/mainProcessMain.js',
   })
 }
