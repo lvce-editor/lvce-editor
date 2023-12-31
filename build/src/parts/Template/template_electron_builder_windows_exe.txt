@@ -1,5 +1,6 @@
 {
   "name": "@@NAME@@",
+  "type": "module",
   "productName": "@@WINDOWS_EXECUTABLE_NAME@@",
   "main": "@@MAIN@@",
   "author": "@@AUTHOR@@",

@@ -1,5 +1,6 @@
 {
   "name": "@@NAME@@",
+  "type": "module",
   "main": "@@MAIN@@",
   "author": "@@AUTHOR@@",
   "description": "abc",
