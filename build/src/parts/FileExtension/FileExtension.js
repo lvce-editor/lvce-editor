@@ -1,0 +1,6 @@
+export const AppImage = 'AppImage'
+export const Deb = 'deb'
+export const Dmg = 'dmg'
+export const Exe = 'exe'
+export const Pacman = 'pacman'
+export const Snap = 'snap'

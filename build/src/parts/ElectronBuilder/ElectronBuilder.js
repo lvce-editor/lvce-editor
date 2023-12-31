@@ -15,6 +15,7 @@ import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
+import * as FileExtension from '../FileExtension/FileExtension.js'
 
 // TODO don't need to include whole node-pty module
 // TODO maybe don't need to include nan module
@@ -106,17 +107,17 @@ const copyBuildResources = async ({ config }) => {
 const getFinalFileName = ({ config, version, product }) => {
   switch (config) {
     case ElectronBuilderConfigType.ArchLinux:
-      return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.pacman`
+      return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.Pacman}`
     case ElectronBuilderConfigType.Deb:
-      return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.deb`
+      return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.${FileExtension.Deb}`
     case ElectronBuilderConfigType.WindowsExe:
-      return `build/.tmp/electron-builder/dist/${product.windowsExecutableName} Setup ${version}.exe`
+      return `build/.tmp/electron-builder/dist/${product.windowsExecutableName} Setup ${version}.${FileExtension.Exe}`
     case ElectronBuilderConfigType.Snap:
-      return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.snap`
+      return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.${FileExtension.Snap}`
     case ElectronBuilderConfigType.Mac:
-      return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.dmg`
+      return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.Dmg}`
     case ElectronBuilderConfigType.AppImage:
-      return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.AppImage`
+      return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.AppImage}`
     default:
       throw new Error(`cannot get final file name for target ${config}`)
   }
