@@ -20,13 +20,13 @@ import * as Template from '../Template/Template.js'
 // TODO maybe don't need to include nan module
 // TODO don't need to include whole @lvce-editor/ripgrep module (only path)
 
-const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos }) => {
+const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
   //   Logger.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos })
+  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch })
 }
 
 const getElectronVersion = async () => {
@@ -185,9 +185,9 @@ const copyElectronResult = async ({
   shouldRemoveUnusedLocales,
   bundleMainProcess,
   isMacos,
+  arch = 'x64',
 }) => {
-  await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos })
-  const arch = 'x64'
+  await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch })
   const debArch = 'amd64'
   const resourcesPath = isMacos
     ? `build/.tmp/linux/snap/${debArch}/app/${product.applicationName}.app/Contents/Resources`
@@ -273,7 +273,7 @@ const renameReleaseFile = async ({ config, version, product }) => {
   return releaseFilePath
 }
 
-export const build = async ({ config, product, shouldRemoveUnusedLocales = false }) => {
+export const build = async ({ config, product, shouldRemoveUnusedLocales = false, arch }) => {
   Assert.string(config)
   Assert.object(product)
   // workaround for https://github.com/electron-userland/electron-builder/issues/4594
