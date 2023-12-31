@@ -1,4 +1,5 @@
 import { existsSync } from 'node:fs'
+import * as AddRootPackageJson from '../AddRootPackageJson/AddRootPackageJson.js'
 import * as Assert from '../Assert/Assert.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
@@ -294,22 +295,6 @@ const copyCss = async ({ resourcesPath }) => {
   })
 }
 
-const addRootPackageJson = async ({ cachePath, electronVersion, product, bundleMainProcess, version }) => {
-  const main = bundleMainProcess ? 'packages/main-process/dist/mainProcessMain.js' : 'packages/main-process/src/mainProcessMain.js'
-  const type = 'module'
-  await JsonFile.writeJson({
-    to: `${cachePath}/package.json`,
-    value: {
-      name: product.applicationName,
-      productName: product.nameLong,
-      version: version,
-      electronVersion,
-      type,
-      main,
-    },
-  })
-}
-
 export const build = async ({
   product,
   version = '0.0.0-dev',
@@ -506,7 +491,7 @@ export const build = async ({
   console.timeEnd('copyPlaygroundFiles')
 
   console.time('addRootPackageJson')
-  await addRootPackageJson({
+  await AddRootPackageJson.addRootPackageJson({
     electronVersion,
     product,
     cachePath: Path.absolute(`${resourcesPath}/app`),

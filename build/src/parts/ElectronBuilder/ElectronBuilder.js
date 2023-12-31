@@ -1,6 +1,7 @@
 import { VError } from '@lvce-editor/verror'
 import * as ElectronBuilder from 'electron-builder'
 import { readdir } from 'node:fs/promises'
+import * as AddRootPackageJson from '../AddRootPackageJson/AddRootPackageJson.js'
 import * as Assert from '../Assert/Assert.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as Copy from '../Copy/Copy.js'
@@ -196,11 +197,12 @@ const copyElectronResult = async ({
     from: `build/.tmp/electron-bundle/${arch}`,
     to: `build/.tmp/linux/snap/${debArch}/app`,
   })
-  await addRootPackageJson({
+  await AddRootPackageJson.addRootPackageJson({
     cachePath: `${resourcesPath}/app`,
     version,
     product,
     bundleMainProcess,
+    electronVersion,
   })
   if (supportsAutoUpdate) {
     await Replace.replace({
