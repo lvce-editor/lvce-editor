@@ -5,13 +5,13 @@ import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostSubWorkerCached from '../BundleExtensionHostSubWorkerCached/BundleExtensionHostSubWorkerCached.js'
 import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.js'
-import * as Template from '../Template/Template.js'
 import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
+import * as CopyElectron from '../CopyElectron/CopyElectron.js'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
@@ -21,7 +21,6 @@ import * as Path from '../Path/Path.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
-import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
@@ -66,43 +65,6 @@ const downloadElectron = async ({ platform, arch, electronVersion }) => {
     arch,
   })
 }
-
-const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion, product, platform, version }) => {
-  const outDir = useInstalledElectronVersion
-    ? Path.join(Root.root, 'packages', 'main-process', 'node_modules', 'electron', 'dist')
-    : Path.join(Root.root, 'build', '.tmp', 'cachedElectronVersions', `electron-${electronVersion}-${platform}-${arch}`)
-  await Remove.remove(`build/.tmp/electron-bundle/${arch}`)
-  await Copy.copy({
-    from: outDir,
-    to: `build/.tmp/electron-bundle/${arch}`,
-    ignore: ['chrome_crashpad_handler', 'resources'],
-    dereference: false,
-  })
-
-  if (platform === 'win32') {
-    await Rename.rename({
-      from: `build/.tmp/electron-bundle/${arch}/electron.exe`,
-      to: `build/.tmp/electron-bundle/${arch}/${product.windowsExecutableName}.exe`,
-    })
-  } else if (platform === 'darwin') {
-    await Rename.rename({
-      from: `build/.tmp/electron-bundle/${arch}/Electron.app`,
-      to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app`,
-    })
-    await Remove.remove(`build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources/default_app.asar`)
-    await Template.write('macos_info_plist', `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app`, {
-      '@@NAME@@': product.nameShort,
-      '@@APPLICATION_NAME@@': product.applicationName,
-      '@@VERSION@@': version,
-    })
-  } else {
-    await Rename.rename({
-      from: `build/.tmp/electron-bundle/${arch}/electron`,
-      to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}`,
-    })
-  }
-}
-
 const removeUnusedLocalesMacos = async ({ arch }) => {
   //  TODO
 }
@@ -373,7 +335,7 @@ export const build = async ({
   }
 
   console.time('copyElectron')
-  await copyElectron({
+  await CopyElectron.copyElectron({
     arch,
     electronVersion,
     useInstalledElectronVersion,
