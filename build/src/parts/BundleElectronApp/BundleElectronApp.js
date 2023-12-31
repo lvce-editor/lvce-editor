@@ -11,17 +11,17 @@ import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/Bundl
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
+import * as CopyElectron from '../CopyElectron/CopyElectron.js'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
-import * as Platform from '../Platform/Platform.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
-import * as Rename from '../Rename/Rename.js'
+import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
@@ -65,47 +65,6 @@ const downloadElectron = async ({ platform, arch, electronVersion }) => {
     platform,
     arch,
   })
-}
-
-const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion, product, platform }) => {
-  const outDir = useInstalledElectronVersion
-    ? Path.join(Root.root, 'packages', 'main-process', 'node_modules', 'electron', 'dist')
-    : Path.join(Root.root, 'build', '.tmp', 'cachedElectronVersions', `electron-${electronVersion}-${platform}-${arch}`)
-  await Copy.copy({
-    from: outDir,
-    to: `build/.tmp/electron-bundle/${arch}`,
-    ignore: ['chrome_crashpad_handler', 'resources'],
-  })
-
-  if (Platform.isWindows()) {
-    await Rename.rename({
-      from: `build/.tmp/electron-bundle/${arch}/electron.exe`,
-      to: `build/.tmp/electron-bundle/${arch}/${product.windowsExecutableName}.exe`,
-    })
-  } else if (Platform.isMacos()) {
-    await Rename.rename({
-      from: `build/.tmp/electron-bundle/${arch}/Electron.app`,
-      to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app`,
-    })
-  } else {
-    await Rename.rename({
-      from: `build/.tmp/electron-bundle/${arch}/electron`,
-      to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}`,
-    })
-  }
-}
-
-const shouldLocaleBeRemoved = (locale) => {
-  return locale !== 'en-US.pak'
-}
-
-const removeUnusedLocales = async ({ arch, isMacos }) => {
-  const localesPath = `build/.tmp/electron-bundle/${arch}/locales`
-  const dirents = await ReadDir.readDir(localesPath)
-  const toRemove = dirents.filter(shouldLocaleBeRemoved)
-  for (const dirent of toRemove) {
-    await Remove.remove(`build/.tmp/electron-bundle/${arch}/locales/${dirent}`)
-  }
 }
 
 const copyDependencies = async ({ cachePath, resourcesPath }) => {
@@ -306,7 +265,7 @@ export const build = async ({
 }) => {
   Assert.object(product)
   Assert.string(version)
-  const { electronVersion, isInstalled, installedArch } = await GetElectronVersion.getElectronVersion()
+  const { electronVersion, isInstalled, installedArch, installedPlatform } = await GetElectronVersion.getElectronVersion()
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
     arch,
@@ -324,7 +283,7 @@ export const build = async ({
     ? `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources`
     : `build/.tmp/electron-bundle/${arch}/resources`
 
-  const useInstalledElectronVersion = isInstalled && installedArch === arch
+  const useInstalledElectronVersion = isInstalled && installedArch === arch && installedPlatform === platform
   if (!useInstalledElectronVersion) {
     console.time('downloadElectron')
     await downloadElectron({
@@ -354,18 +313,19 @@ export const build = async ({
   }
 
   console.time('copyElectron')
-  await copyElectron({
+  await CopyElectron.copyElectron({
     arch,
     electronVersion,
     useInstalledElectronVersion,
     product,
     platform,
+    version,
   })
   console.timeEnd('copyElectron')
 
   if (shouldRemoveUnusedLocales) {
     console.time('removeUnusedLocales')
-    await removeUnusedLocales({ arch, isMacos })
+    await RemoveUnusedLocales.removeUnusedLocales({ arch, isMacos })
     console.timeEnd('removeUnusedLocales')
   }
 

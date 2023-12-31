@@ -17,5 +17,7 @@ export const build = async ({ product, arch }) => {
     config: ElectronBuilderConfigType.Mac,
     product,
     arch,
+    isMacos: true,
+    platform: 'darwin',
   })
 }

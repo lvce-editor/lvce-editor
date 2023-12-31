@@ -21,13 +21,13 @@ import * as FileExtension from '../FileExtension/FileExtension.js'
 // TODO maybe don't need to include nan module
 // TODO don't need to include whole @lvce-editor/ripgrep module (only path)
 
-const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch }) => {
+const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
   //   Logger.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch })
+  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform })
 }
 
 const getElectronVersion = async () => {
@@ -187,8 +187,9 @@ const copyElectronResult = async ({
   bundleMainProcess,
   isMacos,
   arch = 'x64',
+  platform,
 }) => {
-  await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch })
+  await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform })
   const debArch = 'amd64'
   const resourcesPath = isMacos
     ? `build/.tmp/linux/snap/${debArch}/app/${product.applicationName}.app/Contents/Resources`
@@ -274,7 +275,7 @@ const renameReleaseFile = async ({ config, version, product }) => {
   return releaseFilePath
 }
 
-export const build = async ({ config, product, shouldRemoveUnusedLocales = false, arch }) => {
+export const build = async ({ config, product, shouldRemoveUnusedLocales = false, arch, isMacos = false, platform = process.platform }) => {
   Assert.string(config)
   Assert.object(product)
   // workaround for https://github.com/electron-userland/electron-builder/issues/4594
@@ -287,8 +288,6 @@ export const build = async ({ config, product, shouldRemoveUnusedLocales = false
   const supportsAutoUpdate =
     product.supportsAutoUpdate && (config === ElectronBuilderConfigType.AppImage || config === ElectronBuilderConfigType.WindowsExe)
 
-  const isMacos = config === ElectronBuilderConfigType.Mac
-
   console.time('copyElectronResult')
   await copyElectronResult({
     version,
@@ -300,6 +299,7 @@ export const build = async ({ config, product, shouldRemoveUnusedLocales = false
     bundleMainProcess,
     isMacos,
     arch,
+    platform,
   })
   console.timeEnd('copyElectronResult')
 

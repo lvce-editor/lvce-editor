@@ -21,5 +21,6 @@ export const getElectronVersion = async () => {
     electronVersion: packageJson.version,
     isInstalled: true,
     installedArch: process.arch,
+    installedPlatform: process.platform,
   }
 }
