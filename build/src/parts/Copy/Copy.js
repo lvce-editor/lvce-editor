@@ -14,7 +14,7 @@ export const copy = async ({ from, to, ignore = [], dereference = false }) => {
     const absoluteIgnore = new Set(
       ignore.map((dirent) => {
         return join(absoluteFrom, dirent)
-      })
+      }),
     )
     await fsExtra.copy(absoluteFrom, absoluteTo, {
       overwrite: true,

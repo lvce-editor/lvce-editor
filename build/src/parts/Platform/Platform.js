@@ -1,11 +1,20 @@
+/**
+ * @deprecated
+ */
 export const isWindows = () => {
   return process.platform === 'win32'
 }
 
+/**
+ * @deprecated
+ */
 export const isMacos = () => {
   return process.platform === 'darwin'
 }
 
+/**
+ * @deprecated
+ */
 export const isLinux = () => {
   return process.platform === 'linux'
 }

@@ -17,7 +17,6 @@ import * as Hash from '../Hash/Hash.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
-import * as Platform from '../Platform/Platform.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
@@ -71,18 +70,20 @@ const copyElectron = async ({ arch, electronVersion, useInstalledElectronVersion
   const outDir = useInstalledElectronVersion
     ? Path.join(Root.root, 'packages', 'main-process', 'node_modules', 'electron', 'dist')
     : Path.join(Root.root, 'build', '.tmp', 'cachedElectronVersions', `electron-${electronVersion}-${platform}-${arch}`)
+  await Remove.remove(`build/.tmp/electron-bundle/${arch}`)
   await Copy.copy({
     from: outDir,
     to: `build/.tmp/electron-bundle/${arch}`,
     ignore: ['chrome_crashpad_handler', 'resources'],
+    dereference: false,
   })
 
-  if (Platform.isWindows()) {
+  if (platform === 'win32') {
     await Rename.rename({
       from: `build/.tmp/electron-bundle/${arch}/electron.exe`,
       to: `build/.tmp/electron-bundle/${arch}/${product.windowsExecutableName}.exe`,
     })
-  } else if (Platform.isMacos()) {
+  } else if (platform === 'darwin') {
     await Rename.rename({
       from: `build/.tmp/electron-bundle/${arch}/Electron.app`,
       to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app`,
@@ -306,7 +307,7 @@ export const build = async ({
 }) => {
   Assert.object(product)
   Assert.string(version)
-  const { electronVersion, isInstalled, installedArch } = await GetElectronVersion.getElectronVersion()
+  const { electronVersion, isInstalled, installedArch, installedPlatform } = await GetElectronVersion.getElectronVersion()
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
     arch,
@@ -324,7 +325,7 @@ export const build = async ({
     ? `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources`
     : `build/.tmp/electron-bundle/${arch}/resources`
 
-  const useInstalledElectronVersion = isInstalled && installedArch === arch
+  const useInstalledElectronVersion = isInstalled && installedArch === arch && installedPlatform === platform
   if (!useInstalledElectronVersion) {
     console.time('downloadElectron')
     await downloadElectron({
