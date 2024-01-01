@@ -124,17 +124,29 @@ const getFinalFileName = ({ config, version, product }) => {
   }
 }
 
-const getReleaseFileName = ({ config, product }) => {
+const getReleaseFileName = ({ config, product, arch }) => {
   switch (config) {
     case ElectronBuilderConfigType.ArchLinux:
       return `${product.applicationName}.pacman`
     case ElectronBuilderConfigType.Deb:
       return `${product.applicationName}-amd64.deb`
     case ElectronBuilderConfigType.WindowsExe:
+      if (arch === 'x64') {
+        return `${product.windowsExecutableName}-x64.exe`
+      }
+      if (arch === 'arm64') {
+        return `${product.windowsExecutableName}-arm64.exe`
+      }
       return `${product.windowsExecutableName}.exe`
     case ElectronBuilderConfigType.Snap:
       return `${product.applicationName}.snap`
     case ElectronBuilderConfigType.Mac:
+      if (arch === 'x64') {
+        return `${product.applicationName}-amd64.dmg`
+      }
+      if (arch === 'arm64') {
+        return `${product.applicationName}-arm64.dmg`
+      }
       return `${product.applicationName}-amd64.dmg`
     case ElectronBuilderConfigType.AppImage:
       return `${product.applicationName}.AppImage`
@@ -151,19 +163,6 @@ const printFinalSize = async (releaseFilePath) => {
     console.warn(error)
     console.log(await readdir(Path.absolute('build/.tmp/electron-builder/dist/')))
   }
-}
-
-const addRootPackageJson = async ({ cachePath, version, product, bundleMainProcess }) => {
-  const main = bundleMainProcess ? 'packages/main-process/dist/mainProcessMain.js' : 'packages/main-process/src/mainProcessMain.js'
-  await JsonFile.writeJson({
-    to: `${cachePath}/package.json`,
-    value: {
-      main,
-      name: product.applicationName,
-      productName: product.nameLong,
-      version: version,
-    },
-  })
 }
 
 const getRepositoryInfo = (url) => {
@@ -265,9 +264,9 @@ const copyElectronResult = async ({
   }
 }
 
-const renameReleaseFile = async ({ config, version, product }) => {
+const renameReleaseFile = async ({ config, version, product, arch }) => {
   const finalFileName = getFinalFileName({ config, version, product })
-  const releaseFileName = getReleaseFileName({ config, product })
+  const releaseFileName = getReleaseFileName({ config, product, arch })
   const releaseFilePath = `build/.tmp/releases/${releaseFileName}`
   await Rename.rename({
     from: finalFileName,
@@ -317,7 +316,7 @@ export const build = async ({ config, product, shouldRemoveUnusedLocales = false
   console.timeEnd('runElectronBuilder')
 
   console.time('renameReleaseFile')
-  const releaseFilePath = await renameReleaseFile({ config, version, product })
+  const releaseFilePath = await renameReleaseFile({ config, version, product, arch })
   console.timeEnd('renameReleaseFile')
 
   await printFinalSize(releaseFilePath)
