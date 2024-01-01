@@ -2,21 +2,17 @@ import * as Assert from '../Assert/Assert.js'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as TestState from '../TestState/TestState.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowser.js'
-import * as ExtensionHostManagementElectron from './ExtensionHostManagementElectron.js'
-import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
 import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
 
 export const state = {
   /**
-   * @type {any[]}
+   * @type {readonly any[]}
    */
   extensionHosts: [],
   cachedActivationEvents: Object.create(null),
@@ -26,32 +22,16 @@ export const state = {
   activatedExtensions: Object.create(null),
 }
 
-const getExtensionHostManagementTypes = () => {
-  const platform = Platform.platform
-  switch (platform) {
-    case PlatformType.Web:
-      return [ExtensionHostManagementBrowser]
-    case PlatformType.Remote:
-      return [ExtensionHostManagementBrowser, ExtensionHostManagementNode]
-    case PlatformType.Electron:
-      return [ExtensionHostManagementBrowser, ExtensionHostManagementElectron]
-    default:
-      throw new Error('unsupported platform')
-  }
-}
-
-const getManagersWithExtensionsToActivate = (extensionHostManagers, extensions) => {
+const getManagersWithExtensionsToActivate = (manager, extensions) => {
   const managersToActivate = []
-  for (const manager of extensionHostManagers) {
-    const toActivate = []
-    for (const extension of extensions) {
-      if (manager.canActivate(extension)) {
-        toActivate.push(extension)
-      }
+  const toActivate = []
+  for (const extension of extensions) {
+    if (manager.canActivate(extension)) {
+      toActivate.push(extension)
     }
-    if (toActivate.length > 0) {
-      managersToActivate.push({ manager, toActivate })
-    }
+  }
+  if (toActivate.length > 0) {
+    managersToActivate.push({ manager, toActivate })
   }
   return managersToActivate
 }
@@ -124,7 +104,7 @@ const actuallyActivateByEvent = async (event) => {
   // what happens when all of them / some of them throw error?
   // what happens when some of them take very long to activate?
 
-  const extensionHostManagerTypes = getExtensionHostManagementTypes()
+  const extensionHostManagerTypes = ExtensionHostManagementBrowser
   const extensionHostsWithExtensions = getManagersWithExtensionsToActivate(extensionHostManagerTypes, extensionsToActivate)
   const extensionHosts = []
   for (const managerWithExtensions of extensionHostsWithExtensions) {
@@ -138,7 +118,9 @@ const actuallyActivateByEvent = async (event) => {
     for (const extension of managerWithExtensions.toActivate) {
       await actuallyActivateExtension(extensionHost, extension)
     }
-    extensionHosts.push(extensionHost)
+    if (extensionHosts.length === 0) {
+      extensionHosts.push(extensionHost)
+    }
   }
 
   state.extensionHosts = extensionHosts
@@ -153,7 +135,8 @@ export const activateByEvent = async (event) => {
   Assert.string(event)
   if (event === 'none') {
     const all = await Promise.all(Object.values(state.cachedActivationEvents))
-    return all.flat(1)
+    const flatAll = all.flat(1)
+    return [flatAll[0]]
   }
   if (!(event in state.cachedActivationEvents)) {
     state.cachedActivationEvents[event] = actuallyActivateByEvent(event)
