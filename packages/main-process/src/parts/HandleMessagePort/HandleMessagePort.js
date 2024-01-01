@@ -1,7 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as CreateWebContentsIpc from '../CreateWebContentsIpc/CreateWebContentsIpc.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import { getSuccessResponse } from '../JsonRpc/JsonRpc.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 
 const logError = (error, prettyError) => {
@@ -12,15 +11,10 @@ const getModule = (type) => {
   switch (type) {
     case 'shared-process':
       return import('../HandleMessagePortForSharedProcess/HandleMessagePortForSharedProcess.js')
-    case 'extension-host':
-      return import('../HandleMessagePortForExtensionHost/HandleMessagePortForExtensionHost.js')
     case 'extension-host-helper-process':
       return import('../HandleMessagePortForExtensionHostHelperProcess/HandleMessagePortForExtensionHostHelperProcess.js')
     default:
-      if (type.startsWith('custom:')) {
-        return import('../HandleMessagePortForCustom/HandleMessagePortForCustom.js')
-      }
-      return undefined
+      throw new Error(`unsupported message port type: ${type}`)
   }
 }
 
@@ -39,8 +33,9 @@ export const handlePort = async (event, message) => {
     if (!module) {
       throw new Error(`Unexpected port type ${data}`)
     }
+    // @ts-ignore
     await module.handlePort(event, port, ...message.params)
-    const response = getSuccessResponse(message, null)
+    const response = JsonRpc.getSuccessResponse(message, null)
     ipc.sendAndTransfer(response)
   } catch (error) {
     const response = await JsonRpc.getErrorResponse(message, error, ipc, PrettyError.prepare, logError)
