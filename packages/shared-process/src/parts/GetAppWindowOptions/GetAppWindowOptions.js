@@ -7,7 +7,7 @@ export const getAppWindowOptions = (preferences, screenWidth, screenHeight) => {
   const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
   const zoomLevelPreference = preferences['window.zoomLevel']
   const zoomLevel = zoomLevelPreference
-  const windowControlsOverlayPreference = Platform.isWindows && preferences['window.controlsOverlay.enabled']
+  const windowControlsOverlayPreference = (Platform.isWindows || Platform.isMacOs) && preferences['window.controlsOverlay.enabled']
 
   const titleBarOverlay = windowControlsOverlayPreference
     ? {
