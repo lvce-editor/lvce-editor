@@ -19,5 +19,6 @@ export const build = async ({ product, arch }) => {
     product,
     shouldRemoveUnusedLocales: true,
     arch,
+    platform: 'win32',
   })
 }
