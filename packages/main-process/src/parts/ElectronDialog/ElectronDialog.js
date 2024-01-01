@@ -3,7 +3,6 @@ import * as Assert from '../Assert/Assert.js'
 import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as Logger from '../Logger/Logger.js'
-import * as Platform from '../Platform/Platform.js'
 
 export const showOpenDialog = async (title, properties) => {
   Assert.string(title)
