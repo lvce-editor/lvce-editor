@@ -1,8 +1,27 @@
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 
-const removeUnusedLocalesMacos = async ({ arch }) => {
-  //  TODO
+const shouldLocaleBeRemovedMacos = (dirent) => {
+  if (!dirent.endsWith('.lproj')) {
+    return false
+  }
+  if (dirent === 'en.lproj') {
+    return false
+  }
+  return true
+}
+
+const removeUnusedLocalesMacos = async ({ arch, product }) => {
+  const localesPath1 = `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources`
+  const localesPath2 = `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Frameworks/Electron.Framework.framework/Versions/A/Resources`
+  const localesPaths = [localesPath1, localesPath2]
+  for (const localePath of localesPaths) {
+    const dirents = await ReadDir.readDir(localePath)
+    const toRemove = dirents.filter(shouldLocaleBeRemovedMacos)
+    for (const dirent of toRemove) {
+      await Remove.remove(`${localePath}/${dirent}`)
+    }
+  }
 }
 
 const shouldLocaleBeRemovedOther = (locale) => {
@@ -18,9 +37,9 @@ const removeUnusedLocalesOther = async ({ arch }) => {
   }
 }
 
-export const removeUnusedLocales = async ({ arch, isMacos }) => {
+export const removeUnusedLocales = async ({ arch, isMacos, product }) => {
   if (isMacos) {
-    return removeUnusedLocalesMacos({ arch })
+    return removeUnusedLocalesMacos({ arch, product })
   }
   return removeUnusedLocalesOther({ arch })
 }

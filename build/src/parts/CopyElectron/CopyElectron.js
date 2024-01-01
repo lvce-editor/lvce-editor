@@ -35,6 +35,15 @@ export const copyElectron = async ({ arch, electronVersion, useInstalledElectron
         '@@APPLICATION_NAME@@': product.applicationName,
         '@@VERSION@@': version,
       })
+      await Rename.rename({
+        from: `build/.tmp/electron-bundle/${arch}/LICENSE`,
+        to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contebts/Resources/LICENSE`,
+      })
+      await Rename.rename({
+        from: `build/.tmp/electron-bundle/${arch}/LICENSES.chromium.html`,
+        to: `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contebts/Resources/LICENSES.chromium.html`,
+      })
+      await Remove.remove(`build/.tmp/electron-bundle/${arch}/version`)
     } else {
       await Rename.rename({
         from: `build/.tmp/electron-bundle/${arch}/electron`,
