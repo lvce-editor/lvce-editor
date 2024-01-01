@@ -11,6 +11,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Rename from '../Rename/Rename.js'
+import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
@@ -21,13 +22,13 @@ import * as FileExtension from '../FileExtension/FileExtension.js'
 // TODO maybe don't need to include nan module
 // TODO don't need to include whole @lvce-editor/ripgrep module (only path)
 
-const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, platform }) => {
+const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform }) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
   //   Logger.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, platform })
+  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform })
 }
 
 const getElectronVersion = async () => {
@@ -186,15 +187,15 @@ const copyElectronResult = async ({
   shouldRemoveUnusedLocales,
   bundleMainProcess,
   isMacos,
+  arch = 'x64',
   platform,
 }) => {
-  await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, platform })
-  const arch = 'x64'
+  await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform })
   const debArch = 'amd64'
   const resourcesPath = isMacos
     ? `build/.tmp/linux/snap/${debArch}/app/${product.applicationName}.app/Contents/Resources`
     : `build/.tmp/linux/snap/${debArch}/app/resources`
-
+  await Remove.remove(`build/.tmp/linux/snap/${debArch}/app`)
   await Copy.copy({
     from: `build/.tmp/electron-bundle/${arch}`,
     to: `build/.tmp/linux/snap/${debArch}/app`,
@@ -275,7 +276,7 @@ const renameReleaseFile = async ({ config, version, product }) => {
   return releaseFilePath
 }
 
-export const build = async ({ config, product, shouldRemoveUnusedLocales = false, isMacos = false, platform = process.platform }) => {
+export const build = async ({ config, product, shouldRemoveUnusedLocales = false, arch, isMacos = false, platform = process.platform }) => {
   Assert.string(config)
   Assert.object(product)
   // workaround for https://github.com/electron-userland/electron-builder/issues/4594
@@ -298,6 +299,7 @@ export const build = async ({ config, product, shouldRemoveUnusedLocales = false
     shouldRemoveUnusedLocales,
     bundleMainProcess,
     isMacos,
+    arch,
     platform,
   })
   console.timeEnd('copyElectronResult')
