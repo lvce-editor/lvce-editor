@@ -203,19 +203,39 @@ jobs:
           asset_path: ${{ env.ASSET_DMG_X64 }}
           asset_name: ${{ env.ASSET_DMG_X64 }}
           asset_content_type: application/octet-stream
-      - name: Build Electron App (exe)
+      - name: Build Electron App (Macos dmg, arm64)
+        if: matrix.os == 'macos-12'
+        run: node build/bin/build.js --product=lvce --target=electron-builder-mac --arch=arm64
+      - name: Rename Electron App (Macos dmg, arm64)
+        if: matrix.os == 'macos-12'
+        shell: bash
+        run: |
+          staging="lvce-${{ needs.create-release.outputs.rg_version }}_arm64.dmg"
+          mv "build/.tmp/releases/lvce-arm64.dmg" "$staging"
+          echo "ASSET_DMG_ARM64=$staging" >> $GITHUB_ENV
+      - name: Release Electron App (Macos dmg, x64)
+        uses: actions/upload-release-asset@v1.0.1
+        if: matrix.os == 'macos-12'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.ASSET_DMG_ARM64 }}
+          asset_name: ${{ env.ASSET_DMG_ARM64 }}
+          asset_content_type: application/octet-stream
+      - name: Build Electron App (exe, x64)
         if: matrix.os == 'windows-2022'
-        run: node build/bin/build.js --product=lvce --target=electron-builder-windows-exe
+        run: node build/bin/build.js --product=lvce --target=electron-builder-windows-exe --arch=x64
         env:
           HIGHEST_COMPRESSION: 1
-      - name: Rename Electron App (exe)
+      - name: Rename Electron App (exe, x64)
         if: matrix.os == 'windows-2022'
         shell: bash
         run: |
-          staging="Lvce-Setup-${{ needs.create-release.outputs.rg_version }}.exe"
-          mv "build/.tmp/releases/Lvce Editor.exe" "$staging"
+          staging="Lvce-Setup-${{ needs.create-release.outputs.rg_version }}-x64.exe"
+          mv "build/.tmp/releases/Lvce Editor-x64.exe" "$staging"
           echo "ASSET_WINDOWS_EXE_X64=$staging" >> $GITHUB_ENV
-      - name: Release Electron App (exe)
+      - name: Release Electron App (exe, x64)
         uses: actions/upload-release-asset@v1.0.1
         if: matrix.os == 'windows-2022'
         env:
@@ -224,6 +244,28 @@ jobs:
           upload_url: ${{ needs.create-release.outputs.upload_url }}
           asset_path: ${{ env.ASSET_WINDOWS_EXE_X64 }}
           asset_name: ${{ env.ASSET_WINDOWS_EXE_X64 }}
+          asset_content_type: application/octet-stream
+      - name: Build Electron App (exe, arm64)
+        if: matrix.os == 'windows-2022'
+        run: node build/bin/build.js --product=lvce --target=electron-builder-windows-exe --arch=arm64
+        env:
+          HIGHEST_COMPRESSION: 1
+      - name: Rename Electron App (exe, arm64)
+        if: matrix.os == 'windows-2022'
+        shell: bash
+        run: |
+          staging="Lvce-Setup-${{ needs.create-release.outputs.rg_version }}-arm64.exe"
+          mv "build/.tmp/releases/Lvce Editor-arm64.exe" "$staging"
+          echo "ASSET_WINDOWS_EXE_ARM64=$staging" >> $GITHUB_ENV
+      - name: Release Electron App (exe, arm64)
+        uses: actions/upload-release-asset@v1.0.1
+        if: matrix.os == 'windows-2022'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ env.ASSET_WINDOWS_EXE_ARM64 }}
+          asset_name: ${{ env.ASSET_WINDOWS_EXE_ARM64 }}
           asset_content_type: application/octet-stream
       - name: Build Electron App (AppImage)
         if: matrix.os == 'ubuntu-22.04'
