@@ -6,4 +6,10 @@ cd ..
 export FOLDER="$PWD/playground"
 export DEV="1"
 
-cd packages/main-process && node_modules/electron/dist/electron . "$@"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  ELECTRON="node_modules/electron/dist/Electron.app/Contents/MacOS/Electron"
+else
+  ELECTRON="node_modules/electron/dist/electron"
+fi
+
+cd packages/main-process && "$ELECTRON" . "$@"
