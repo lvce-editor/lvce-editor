@@ -4,6 +4,8 @@ import * as GetVisibleSourceControlItems from '../GetVisibleSourceControlItems/G
 
 export const hasFunctionalRender = true
 
+const maxItems = 30
+
 const renderValue = {
   isEqual(oldState, newState) {
     return oldState.inputValue === newState.inputValue
@@ -19,7 +21,7 @@ const renderChangedFiles = {
   },
   apply(oldState, newState) {
     const minLineY = 0
-    const maxLineY = Math.min(newState.displayItems.length, 100)
+    const maxLineY = Math.min(newState.displayItems.length, maxItems)
     const visible = GetVisibleSourceControlItems.getVisibleSourceControlItems(
       newState.displayItems,
       minLineY,
