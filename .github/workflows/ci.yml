@@ -105,9 +105,6 @@ jobs:
       - name: Build Electron App (Macos dmg, x64)
         if: matrix.os == 'macos-12'
         run: node build/bin/build.js --target=electron-builder-mac --arch=x64
-      - name: Build Electron App (Macos dmg, arm64)
-        if: matrix.os == 'macos-12'
-        run: node build/bin/build.js --target=electron-builder-mac --arch=arm64
       - name: Cache Electron Builder Dependencies (Windows)
         uses: actions/cache@v3
         id: electron-builder-cache-windows
