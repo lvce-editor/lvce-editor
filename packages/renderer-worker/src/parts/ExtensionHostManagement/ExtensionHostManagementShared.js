@@ -44,7 +44,6 @@ export const startExtensionHost = async (name, ipcType) => {
   const promise = ExtensionHostIpc.listen(ipcType).then(ExtensionHostRpc.listen)
   state.pendingIpcs[name] = promise
   const ipc = await promise
-  delete state.pendingIpcs[name]
   state.extensionHosts[name] = {
     state: ExtensionHostState.Running,
     ipc,

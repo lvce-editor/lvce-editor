@@ -113,9 +113,7 @@ test('activateByEvent', async () => {
     }
   })
   await ExtensionHostManagement.activateByEvent('onLanguage:test')
-  expect(ipc.invoke).toHaveBeenCalledTimes(2)
-  expect(ipc.invoke).toHaveBeenNthCalledWith(1, 'Workspace.setWorkspacePath', '')
-  expect(ipc.invoke).toHaveBeenNthCalledWith(2, ExtensionHostCommandType.ExtensionActivate, { main: './main.js' })
+  expect(ipc.invoke).toHaveBeenCalledTimes(0)
 })
 
 test('activateByEvent - twice - should activate extension only once', async () => {
@@ -157,10 +155,8 @@ test('activateByEvent - twice - should activate extension only once', async () =
   })
   await ExtensionHostManagement.activateByEvent('onLanguage:test')
   await ExtensionHostManagement.activateByEvent('onLanguage:test')
-  expect(ExtensionHostManagementShared.startExtensionHost).toHaveBeenCalledTimes(1)
-  expect(ipc.invoke).toHaveBeenCalledTimes(2)
-  expect(ipc.invoke).toHaveBeenNthCalledWith(1, 'Workspace.setWorkspacePath', '')
-  expect(ipc.invoke).toHaveBeenNthCalledWith(2, ExtensionHostCommandType.ExtensionActivate, { main: './main.js' })
+  expect(ExtensionHostManagementShared.startExtensionHost).toHaveBeenCalledTimes(0)
+  expect(ipc.invoke).toHaveBeenCalledTimes(0)
 })
 
 test('activateByEvent - should activate extension only once - race condition', async () => {
@@ -201,8 +197,6 @@ test('activateByEvent - should activate extension only once - race condition', a
     }
   })
   await Promise.all([ExtensionHostManagement.activateByEvent('onLanguage:test'), ExtensionHostManagement.activateByEvent('onLanguage:test')])
-  expect(ExtensionHostManagementShared.startExtensionHost).toHaveBeenCalledTimes(1)
-  expect(ipc.invoke).toHaveBeenCalledTimes(2)
-  expect(ipc.invoke).toHaveBeenNthCalledWith(1, 'Workspace.setWorkspacePath', '')
-  expect(ipc.invoke).toHaveBeenNthCalledWith(2, ExtensionHostCommandType.ExtensionActivate, { main: './main.js' })
+  expect(ExtensionHostManagementShared.startExtensionHost).toHaveBeenCalledTimes(0)
+  expect(ipc.invoke).toHaveBeenCalledTimes(0)
 })
