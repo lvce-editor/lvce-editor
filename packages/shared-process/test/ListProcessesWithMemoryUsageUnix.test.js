@@ -10,6 +10,11 @@ jest.unstable_mockModule('node:child_process', () => ({
     throw new Error('not implemented')
   }),
 }))
+
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+  isMacos: true,
+}))
+
 jest.unstable_mockModule('node:path', () => ({
   join: (...parts) => {
     return parts.join('/')
