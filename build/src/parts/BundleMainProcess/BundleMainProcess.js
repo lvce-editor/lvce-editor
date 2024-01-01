@@ -33,16 +33,6 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
-    occurrence: `export const isWindows = platform === 'win32'`,
-    replacement: `export const isWindows = ${Platform.isWindows()}`,
-  })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.js`,
-    occurrence: `export const isMacOs = platform === 'darwin'`,
-    replacement: `export const isMacOs = ${Platform.isMacos()}`,
-  })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: `export const scheme = 'lvce-oss'`,
     replacement: `export const scheme = '${product.applicationName}'`,
   })
