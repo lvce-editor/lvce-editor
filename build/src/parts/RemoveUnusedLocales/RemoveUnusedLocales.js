@@ -13,7 +13,7 @@ const shouldLocaleBeRemovedMacos = (dirent) => {
 
 const removeUnusedLocalesMacos = async ({ arch, product }) => {
   const localesPath1 = `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources`
-  const localesPath2 = `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Frameworks/Electron.Framework.framework/Versions/A/Resources`
+  const localesPath2 = `build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources`
   const localesPaths = [localesPath1, localesPath2]
   for (const localePath of localesPaths) {
     const dirents = await ReadDir.readDir(localePath)

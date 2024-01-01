@@ -19,5 +19,6 @@ export const build = async ({ product, arch }) => {
     arch,
     isMacos: true,
     platform: 'darwin',
+    shouldRemoveUnusedLocales: true,
   })
 }
