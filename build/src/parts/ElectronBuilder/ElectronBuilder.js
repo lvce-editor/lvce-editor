@@ -11,6 +11,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Rename from '../Rename/Rename.js'
+import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
@@ -195,6 +196,7 @@ const copyElectronResult = async ({
     ? `build/.tmp/linux/snap/${debArch}/app/${product.applicationName}.app/Contents/Resources`
     : `build/.tmp/linux/snap/${debArch}/app/resources`
 
+  await Remove.remove(`build/.tmp/linux/snap/${debArch}/app`)
   await Copy.copy({
     from: `build/.tmp/electron-bundle/${arch}`,
     to: `build/.tmp/linux/snap/${debArch}/app`,
