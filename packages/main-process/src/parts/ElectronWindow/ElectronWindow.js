@@ -2,17 +2,6 @@ import * as Electron from 'electron'
 import * as GetWindowById from '../GetWindowById/GetWindowById.js'
 import * as Logger from '../Logger/Logger.js'
 
-export const wrapWindowCommand =
-  (fn) =>
-  (id, ...args) => {
-    const browserWindow = GetWindowById.getWindowById(id)
-    if (!browserWindow) {
-      Logger.info(`[main-process] browser window not found ${id}`)
-      return
-    }
-    fn(browserWindow, ...args)
-  }
-
 export const executeWindowFunction = (browserWindowId, key) => {
   const browserWindow = GetWindowById.getWindowById(browserWindowId)
   if (!browserWindow) {
