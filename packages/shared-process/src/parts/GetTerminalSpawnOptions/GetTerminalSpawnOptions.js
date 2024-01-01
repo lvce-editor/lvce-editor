@@ -7,6 +7,12 @@ export const getTerminalSpawnOptions = () => {
       args: [],
     }
   }
+  if (Platform.isMacOs) {
+    return {
+      command: 'zsh',
+      args: ['-i'],
+    }
+  }
   return {
     command: 'bash',
     args: ['-i'],
