@@ -293,6 +293,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.GetElectronFileResponse
     case 'HandleRemoteRequest.handleRemoteRequest':
       return ModuleId.HandleRemoteRequest
+    case 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess':
+      return ModuleId.HandleMessagePortForExtensionHostHelperProcess
     default:
       throw new CommandNotFoundError(commandId)
   }
