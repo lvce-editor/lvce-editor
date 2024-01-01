@@ -6,25 +6,13 @@ const { env, platform } = process
 
 export const isLinux = platform === 'linux'
 
-export const isMacOs = platform === 'darwin'
-
-export const isWindows = platform === 'win32'
-
 export const isProduction = false
-
-export const isArchLinux = false
-
-export const isAppImage = false
 
 const homeDirectory = homedir()
 
 export const applicationName = 'lvce-oss'
 
-const xdgConfig = env.XDG_CONFIG_HOME || (homeDirectory ? join(homeDirectory, '.config') : undefined)
-
 const xdgCache = env.XDG_CACHE_HOME || (homeDirectory ? join(homeDirectory, '.cache') : undefined)
-
-const configDir = join(xdgConfig || tmpdir(), applicationName)
 
 const xdgData = env.XDG_DATA_HOME || (homeDirectory ? join(homeDirectory, '.local', 'share') : undefined)
 
@@ -64,8 +52,4 @@ export const getChromeExtensionsPath = () => {
 
 export const getExtensionHostHelperProcessPath = () => {
   return join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
-}
-
-export const getExtensionHostHelperProcessPathCjs = () => {
-  return join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.cjs')
 }

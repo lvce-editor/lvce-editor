@@ -8,10 +8,6 @@ test('isLinux', () => {
   expect(typeof Platform.isLinux).toBe('boolean')
 })
 
-test('isMacOs', () => {
-  expect(typeof Platform.isMacOs).toBe('boolean')
-})
-
 test('getBuiltinSelfTestPath', () => {
   expect(typeof Platform.getBuiltinSelfTestPath()).toBe('string')
 })
