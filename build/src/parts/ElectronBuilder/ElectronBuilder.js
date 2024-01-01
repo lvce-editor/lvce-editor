@@ -195,7 +195,6 @@ const copyElectronResult = async ({
   const resourcesPath = isMacos
     ? `build/.tmp/linux/snap/${debArch}/app/${product.applicationName}.app/Contents/Resources`
     : `build/.tmp/linux/snap/${debArch}/app/resources`
-
   await Remove.remove(`build/.tmp/linux/snap/${debArch}/app`)
   await Copy.copy({
     from: `build/.tmp/electron-bundle/${arch}`,
