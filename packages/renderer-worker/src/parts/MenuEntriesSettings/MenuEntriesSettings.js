@@ -1,16 +1,6 @@
-import * as I18nString from '../I18NString/I18NString.js'
+import * as HelpStrings from '../HelpStrings/HelpStrings.js'
+import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-
-/**
- * @enum {string}
- */
-export const UiStrings = {
-  CommandPalette: 'Command Palette',
-  Settings: 'Settings',
-  KeyboardShortcuts: 'Keyboard Shortcuts',
-  ColorTheme: 'Color Theme',
-  CheckForUpdates: 'Check For Updates',
-}
 
 const keyBindingsUri = 'app://keybindings'
 
@@ -18,34 +8,36 @@ export const getMenuEntries = () => {
   return [
     {
       id: 'commandPalette',
-      label: I18nString.i18nString(UiStrings.CommandPalette),
+      label: HelpStrings.commandPalette(),
       flags: MenuItemFlags.None,
       command: 'Viewlet.openWidget',
       args: ['QuickPick', 'everything'],
     },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'settings',
-      label: I18nString.i18nString(UiStrings.Settings),
+      label: HelpStrings.settings(),
       flags: MenuItemFlags.None,
       command: 'Preferences.openSettingsJson',
     },
     {
       id: 'keyboardShortcuts',
-      label: I18nString.i18nString(UiStrings.KeyboardShortcuts),
+      label: HelpStrings.keyboardShortcuts(),
       flags: MenuItemFlags.None,
       command: 'Main.openUri',
       args: [keyBindingsUri],
     },
     {
       id: 'colorTheme',
-      label: I18nString.i18nString(UiStrings.ColorTheme),
+      label: HelpStrings.colorTheme(),
       flags: MenuItemFlags.None,
       command: 'Viewlet.openWidget',
       args: ['QuickPick', 'color-theme'],
     },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'checkForUpdates',
-      label: I18nString.i18nString(UiStrings.CheckForUpdates),
+      label: HelpStrings.checkForUpdates(),
       flags: MenuItemFlags.None,
       command: /* TODO */ -1,
     },
