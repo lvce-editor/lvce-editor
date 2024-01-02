@@ -1,4 +1,5 @@
 import * as HelpStrings from '../HelpStrings/HelpStrings.js'
+import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 const keyBindingsUri = 'app://keybindings'
@@ -12,6 +13,7 @@ export const getMenuEntries = () => {
       command: 'Viewlet.openWidget',
       args: ['QuickPick', 'everything'],
     },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'settings',
       label: HelpStrings.settings(),
@@ -32,6 +34,7 @@ export const getMenuEntries = () => {
       command: 'Viewlet.openWidget',
       args: ['QuickPick', 'color-theme'],
     },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'checkForUpdates',
       label: HelpStrings.checkForUpdates(),
