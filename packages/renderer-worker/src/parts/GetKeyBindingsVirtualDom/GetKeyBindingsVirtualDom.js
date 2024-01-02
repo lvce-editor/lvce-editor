@@ -65,7 +65,7 @@ const tableCellProps = {
 }
 
 const getRowClassName = (isEven, selected) => {
-  let className = ''
+  let className = ClassNames.KeyBindingsTableRow
   if (isEven) {
     className += ' ' + ClassNames.KeyBindingsTableRowEven
   } else {
