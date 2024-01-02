@@ -10,6 +10,7 @@ const UiStrings = {
   Key: 'Key',
   EmptyString: '',
   TypeToSearchKeyBindings: 'Type to search in keybindings',
+  PressDesiredKeyCombinationThenPressEnter: 'Press Desired Key Combination, Then Press Enter',
 }
 
 export const keyBindings = () => {
@@ -30,4 +31,8 @@ export const key = () => {
 
 export const typeToSearchKeyBindings = () => {
   return I18nString.i18nString(UiStrings.TypeToSearchKeyBindings)
+}
+
+export const pressDesiredKeyCombinationThenPressEnter = () => {
+  return I18nString.i18nString(UiStrings.PressDesiredKeyCombinationThenPressEnter)
 }
