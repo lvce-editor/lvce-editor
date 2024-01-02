@@ -1,3 +1,4 @@
+import * as GetData from '../GetData/GetData.js'
 import { IpcError } from '../IpcError/IpcError.js'
 import * as IsMessagePortMain from '../IsMessagePortMain/IsMessagePortMain.js'
 
@@ -8,17 +9,13 @@ export const listen = ({ messagePort }) => {
   return messagePort
 }
 
-const getActualData = (event) => {
-  return event.data
-}
-
 export const wrap = (messagePort) => {
   return {
     messagePort,
     on(event, listener) {
       if (event === 'message') {
         const wrappedListener = (event) => {
-          const actualData = getActualData(event)
+          const actualData = GetData.getData(event)
           listener(actualData)
         }
         this.messagePort.on(event, wrappedListener)

@@ -1,3 +1,4 @@
+import * as GetData from '../GetData/GetData.js'
 import * as IpcChildWithModuleWorker from '../IpcChildWithModuleWorker/IpcChildWithModuleWorker.js'
 import { IpcError } from '../IpcError/IpcError.js'
 import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage.js'
@@ -15,10 +16,6 @@ export const listen = async () => {
     return port
   }
   return globalThis
-}
-
-const getActualData = (event) => {
-  return event.data
 }
 
 export const wrap = (port) => {
@@ -40,7 +37,7 @@ export const wrap = (port) => {
     set onmessage(listener) {
       if (listener) {
         this.wrappedListener = (event) => {
-          const actualData = getActualData(event)
+          const actualData = GetData.getData(event)
           listener(actualData)
         }
       } else {

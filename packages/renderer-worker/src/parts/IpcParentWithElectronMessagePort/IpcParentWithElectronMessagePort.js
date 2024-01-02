@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as GetData from '../GetData/GetData.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
@@ -22,10 +23,6 @@ export const create = async (options) => {
   return port
 }
 
-const getActualData = (event) => {
-  return event.data
-}
-
 export const wrap = (port) => {
   return {
     port,
@@ -39,7 +36,7 @@ export const wrap = (port) => {
     set onmessage(listener) {
       this.listener = listener
       const wrappedListener = (event) => {
-        const data = getActualData(event)
+        const data = GetData.getData(event)
         listener(data)
       }
       this.port.onmessage = wrappedListener
