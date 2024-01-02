@@ -2,6 +2,8 @@ import * as GetKeyBindingsVirtualDom from '../GetKeyBindingsVirtualDom/GetKeyBin
 import * as GetVisibleKeyBindings from '../GetVisibleKeyBindings/GetVisibleKeyBindings.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
+export const hasFuncionalRender = true
+
 const renderKeyBindings = {
   isEqual(oldState, newState) {
     return (
