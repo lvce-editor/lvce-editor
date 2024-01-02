@@ -20,7 +20,9 @@
 }
 
 .SplitButtonContent:where(:hover),
-.SplitButtonDropDown:where(:hover) {
+.SplitButtonContent:where(:focus),
+.SplitButtonDropDown:where(:hover),
+.SplitButtonDropDown:where(:focus) {
   background: var(--SplitButtonHoverBackground, #387674);
 }
 

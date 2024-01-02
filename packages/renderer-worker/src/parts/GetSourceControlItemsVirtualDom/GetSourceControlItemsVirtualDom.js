@@ -169,6 +169,7 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
         type: VirtualDomElements.Div,
         className: `SplitButtonContent ${hasItems ? '' : 'SplitButtonContentDisabled'}`,
         childCount: 1,
+        tabIndex: 0,
       },
       text('Commit'),
       {
@@ -180,6 +181,7 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
         type: VirtualDomElements.Div,
         className: `SplitButtonDropDown ${hasItems ? '' : 'SplitButtonDropDownDisabled'}`,
         childCount: 1,
+        tabIndex: 0,
       },
       {
         type: VirtualDomElements.Div,
