@@ -1,4 +1,5 @@
 import { IpcError } from '../IpcError/IpcError.js'
+import * as GetData from '../GetData/GetData.js'
 
 export const listen = async () => {
   if (typeof WorkerGlobalScope === 'undefined') {
@@ -6,10 +7,6 @@ export const listen = async () => {
   }
   globalThis.postMessage('ready')
   return globalThis
-}
-
-const getActualData = (event) => {
-  return event.data
 }
 
 export const wrap = (port) => {
@@ -31,7 +28,7 @@ export const wrap = (port) => {
     set onmessage(listener) {
       if (listener) {
         this.wrappedListener = (event) => {
-          const actualData = getActualData(event)
+          const actualData = GetData.getData(event)
           listener(actualData)
         }
       } else {

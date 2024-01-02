@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as GetData from '../GetData/GetData.js'
 import { IpcError } from '../IpcError/IpcError.js'
 import * as IsMessagePort from '../IsMessagePort/IsMessagePort.js'
 
@@ -19,10 +20,6 @@ export const create = async ({ url }) => {
   return port
 }
 
-const getMessage = (event) => {
-  return event.data
-}
-
 export const wrap = (port) => {
   return {
     /**
@@ -35,7 +32,7 @@ export const wrap = (port) => {
     set onmessage(listener) {
       this.listener = listener
       const wrappedListener = (event) => {
-        const message = getMessage(event)
+        const message = GetData.getData(event)
         listener(message)
       }
       this.port.onmessage = wrappedListener

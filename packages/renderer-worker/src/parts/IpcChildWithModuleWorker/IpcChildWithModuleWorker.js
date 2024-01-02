@@ -1,3 +1,5 @@
+import * as GetData from '../GetData/GetData.js'
+
 export const listen = () => {
   if (typeof WorkerGlobalScope === 'undefined') {
     throw new TypeError('module is not in web worker scope')
@@ -7,10 +9,6 @@ export const listen = () => {
 
 export const signal = (global) => {
   global.postMessage('ready')
-}
-
-const getMessage = (event) => {
-  return event.data
 }
 
 export const wrap = (global) => {
@@ -31,7 +29,7 @@ export const wrap = (global) => {
     },
     set onmessage(listener) {
       const wrappedListener = (event) => {
-        const message = getMessage(event)
+        const message = GetData.getData(event)
         listener(message)
       }
       this.listener = listener

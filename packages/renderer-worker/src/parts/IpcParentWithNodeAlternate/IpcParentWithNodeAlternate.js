@@ -1,3 +1,4 @@
+import * as GetData from '../GetData/GetData.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -26,10 +27,6 @@ export const create = async (options) => {
   }
 }
 
-const getActualData = (event) => {
-  return event.data
-}
-
 export const wrap = (port) => {
   if (!(port instanceof MessagePort)) {
     return port.module.wrap(port.rawIpc)
@@ -46,7 +43,7 @@ export const wrap = (port) => {
     set onmessage(listener) {
       this.listener = listener
       const wrappedListener = (event) => {
-        const data = getActualData(event)
+        const data = GetData.getData(event)
         listener(data)
       }
       this.port.onmessage = wrappedListener
