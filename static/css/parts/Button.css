@@ -42,8 +42,9 @@
 }
 
 .SplitButtonDropDown {
-  width: 30px;
+  width: 25px;
   height: 100%;
   contain: strict;
   cursor: pointer;
+  border-right: 1px solid transparent;
 }
