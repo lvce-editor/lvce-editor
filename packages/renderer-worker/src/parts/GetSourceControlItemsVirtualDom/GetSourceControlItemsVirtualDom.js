@@ -148,7 +148,7 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
     },
     {
       type: VirtualDomElements.Input,
-      className: 'InputBox',
+      className: ClassNames.InputBox,
       spellcheck: false,
       autocapitalize: 'off',
       autocorrect: 'off',
@@ -162,28 +162,30 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
     dom.push(
       {
         type: VirtualDomElements.Div,
-        className: `SplitButton ${hasItems ? '' : 'SplitButtonDisabled'}`,
+        className: `${ClassNames.SplitButton} ${hasItems ? '' : ClassNames.SplitButtonDisabled}`,
         childCount: 3,
       },
       {
         type: VirtualDomElements.Div,
-        className: `SplitButtonContent ${hasItems ? '' : 'SplitButtonContentDisabled'}`,
+        className: `${ClassNames.SplitButtonContent} ${hasItems ? '' : ClassNames.SplitButtonContentDisabled}`,
         childCount: 1,
+        tabIndex: 0,
       },
       text('Commit'),
       {
         type: VirtualDomElements.Div,
-        className: 'SplitButtonSeparator',
+        className: ClassNames.SplitButtonSeparator,
         childCount: 0,
       },
       {
         type: VirtualDomElements.Div,
-        className: `SplitButtonDropDown ${hasItems ? '' : 'SplitButtonDropDownDisabled'}`,
+        className: `${ClassNames.SplitButtonDropDown} ${hasItems ? '' : ClassNames.SplitButtonDropDownDisabled}`,
         childCount: 1,
+        tabIndex: 0,
       },
       {
         type: VirtualDomElements.Div,
-        className: 'MaskIcon MaskIconChevronDown',
+        className: `${ClassNames.MaskIcon} ${ClassNames.MaskIconChevronDown}`,
         childCount: 0,
       },
     )

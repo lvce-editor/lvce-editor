@@ -55,14 +55,12 @@
   contain: content;
 }
 
-.KeyBindingsTableRowEven,
-.KeyBindingsTableRowOdd {
+.KeyBindingsTableRow {
   height: 24px;
   contain: strict;
 }
 
-.KeyBindingsTableRowEven:hover,
-.KeyBindingsTableRowOdd:hover {
+.KeyBindingsTableRow:where(:hover) {
   color: #e0e0e0;
   background: rgba(64, 92, 80, 0.2);
 }
@@ -72,7 +70,7 @@
 }
 
 .KeyBindingsTableRowSelected {
-  background: #515f59 !important;
+  background: #515f59;
 }
 
 .KeyBindingsTableCell {

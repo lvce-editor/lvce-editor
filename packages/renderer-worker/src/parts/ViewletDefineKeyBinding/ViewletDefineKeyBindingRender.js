@@ -1,3 +1,5 @@
+import * as GetDefineKeyBindingsVirtualDom from '../GetDefineKeyBindingsVirtualDom/GetDefineKeyBindingsVirtualDom.js'
+
 const renderValue = {
   isEqual(oldState, newState) {
     return oldState.value === newState.value
@@ -16,6 +18,16 @@ const renderFocus = {
   },
 }
 
+const renderDom = {
+  isEqual(oldState, newState) {
+    return oldState.message === newState.message
+  },
+  apply(oldState, newState) {
+    const dom = GetDefineKeyBindingsVirtualDom.getDefineKeyBindingsVirtualDom(newState.message)
+    return ['setDom', dom]
+  },
+}
+
 export const hasFunctionalRender = true
 
-export const render = [renderValue, renderFocus]
+export const render = [renderDom, renderValue, renderFocus]

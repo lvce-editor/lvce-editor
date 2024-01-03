@@ -1,4 +1,6 @@
 import * as BrowserKey from '../BrowserKey/BrowserKey.js'
+import * as ViewletKeyBindingsStrings from '../ViewletKeyBindings/ViewletKeyBindingsStrings.js'
+import * as GetKeyBindingsString from '../GetKeyBindingsString/GetKeyBindingsString.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const create = (id, uri, x, y, width, height) => {
@@ -7,22 +9,16 @@ export const create = (id, uri, x, y, width, height) => {
     uri,
     value: '',
     focused: false,
+    message: '',
   }
 }
 
-const getKeyBindingString = (key, altKey, ctrlKey, shiftKey, metaKey) => {
-  let string = ''
-  if (ctrlKey) {
-    string += 'ctrl+'
+export const loadContent = (state) => {
+  return {
+    ...state,
+    focused: true,
+    message: ViewletKeyBindingsStrings.pressDesiredKeyCombinationThenPressEnter(),
   }
-  if (altKey) {
-    string += 'alt+'
-  }
-  if (shiftKey) {
-    string += 'shift+'
-  }
-  string += key
-  return string
 }
 
 const dispose = (state, value) => {
@@ -45,16 +41,9 @@ export const handleKeyDown = (state, key, altKey, ctrlKey, shiftKey, metaKey) =>
   if (key === BrowserKey.Escape) {
     return dispose(state, '')
   }
-  const keyBindingString = getKeyBindingString(key, altKey, ctrlKey, shiftKey, metaKey)
+  const keyBindingString = GetKeyBindingsString.getKeyBindingString(key, altKey, ctrlKey, shiftKey, metaKey)
   return {
     ...state,
     value: keyBindingString,
-  }
-}
-
-export const loadContent = (state) => {
-  return {
-    ...state,
-    focused: true,
   }
 }

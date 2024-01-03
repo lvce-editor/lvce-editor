@@ -44,8 +44,15 @@ export const setProp = ($Element, key, value, eventMap) => {
       $Element.type = value
       break
     case 'onClick':
-      console.log($Element)
-      $Element.addEventListener('click', eventMap[value])
+    case 'onFocus':
+    case 'onBlur':
+    case 'onContextMenu':
+    case 'onWheel':
+    case 'onFocus':
+    case 'onKeyDown':
+      const eventName = key.slice(2).toLowerCase()
+      const listener = eventMap[value]
+      $Element.addEventListener(eventName, listener)
       break
     default:
       if (key.startsWith('data-')) {

@@ -3,11 +3,15 @@ import * as I18nString from '../I18NString/I18NString.js'
 /**
  * @enum {string}
  */
-export const UiStrings = {
+const UiStrings = {
   About: 'About',
-  ToggleDeveloperTools: 'Toggle Developer Tools',
-  OpenProcessExplorer: 'Open Process Explorer',
   CheckForUpdates: 'Check For Updates',
+  ColorTheme: 'Color Theme',
+  CommandPalette: 'Command Palette',
+  KeyboardShortcuts: 'Keyboard Shortcuts',
+  OpenProcessExplorer: 'Open Process Explorer',
+  Settings: 'Settings',
+  ToggleDeveloperTools: 'Toggle Developer Tools',
 }
 
 export const toggleDeveloperTools = () => {
@@ -24,4 +28,20 @@ export const checkForUpdates = () => {
 
 export const about = () => {
   return I18nString.i18nString(UiStrings.About)
+}
+
+export const commandPalette = () => {
+  return I18nString.i18nString(UiStrings.CommandPalette)
+}
+
+export const settings = () => {
+  return I18nString.i18nString(UiStrings.Settings)
+}
+
+export const keyboardShortcuts = () => {
+  return I18nString.i18nString(UiStrings.KeyboardShortcuts)
+}
+
+export const colorTheme = () => {
+  return I18nString.i18nString(UiStrings.ColorTheme)
 }
