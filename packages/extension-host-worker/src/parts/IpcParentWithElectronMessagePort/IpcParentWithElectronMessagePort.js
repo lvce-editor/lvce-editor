@@ -6,10 +6,11 @@ import * as WaitForFirstMessage from '../WaitForFirstMessage/WaitForFirstMessage
 
 const getPort = async (type) => {
   const port = await Rpc.invoke('IpcParent.create', {
-    method: RendererWorkerIpcParentType.ElectronMessagePort,
+    method: RendererWorkerIpcParentType.NodeAlternate,
     type,
     raw: true,
     protocol: 'lvce.extension-host-helper-process',
+    initialCommand: 'HandleElectronMessagePort.handleElectronMessagePort',
   })
   if (!port) {
     throw new IpcError(`port must be defined`)

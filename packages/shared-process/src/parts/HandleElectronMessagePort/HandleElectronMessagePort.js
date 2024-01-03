@@ -9,6 +9,7 @@ export const handleElectronMessagePort = async (messagePort, ...params) => {
     method: IpcChildType.ElectronMessagePort,
     messagePort,
   })
+  console.log({ messagePort, params })
   HandleIpc.handleIpc(ipc)
   messagePort.start()
   // TODO find better way to associate configuration with ipc

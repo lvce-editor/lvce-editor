@@ -3,6 +3,7 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
+import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 
 export const create = async (options) => {
   switch (Platform.platform) {
@@ -18,9 +19,14 @@ export const create = async (options) => {
         module,
       }
     case PlatformType.Electron:
+      // const windowId=await GetWindowId.getWindowId()
       const ipc = SharedProcessState.state.ipc
       const { port1, port2 } = new MessageChannel()
-      await JsonRpc.invokeAndTransfer(ipc, [port2], 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess')
+      await JsonRpc.invokeAndTransfer(
+        ipc,
+        [port2],
+        options.initialCommand || 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess',
+      )
       return port1
     default:
       throw new Error('unsupported platform')

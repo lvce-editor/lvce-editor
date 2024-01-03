@@ -11,8 +11,8 @@ const getModule = (type) => {
   switch (type) {
     case 'shared-process':
       return import('../HandleMessagePortForSharedProcess/HandleMessagePortForSharedProcess.js')
-    case 'extension-host-helper-process':
-      return import('../HandleMessagePortForExtensionHostHelperProcess/HandleMessagePortForExtensionHostHelperProcess.js')
+    // case 'extension-host-helper-process':
+    //   return import('../HandleMessagePortForExtensionHostHelperProcess/HandleMessagePortForExtensionHostHelperProcess.js')
     default:
       throw new Error(`unsupported message port type: ${type}`)
   }
