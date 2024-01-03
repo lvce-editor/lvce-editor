@@ -1,5 +1,5 @@
 import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
-import * as ViewletKeyBindings from '../src/parts/ViewletKeyBindings/ViewletKeyBindings.js'
+import * as ViewletKeyBindings from '../src/parts/ViewletKeyBindings/ViewletKeyBindings.ipc.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
@@ -7,7 +7,7 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletKeyBindings, oldState, newState, ViewletModuleId.KeyBindings)
 }
 
-test.only('render - add one keybinding', () => {
+test('render - add one keybinding', () => {
   const oldState = {
     ...ViewletKeyBindings.create(),
     filteredKeyBindings: [],
@@ -144,11 +144,34 @@ test('render - remove one keybinding', () => {
       'setTableDom',
       [
         {
-          childCount: 2,
+          childCount: 3,
           ariaLabel: 'KeyBindings',
           ariaRowCount: 0,
           className: 'KeyBindingsTable',
           type: VirtualDomElements.Table,
+        },
+        {
+          childCount: 3,
+          className: 'KeyBindingsTableColGroup',
+          type: 3,
+        },
+        {
+          childCount: 0,
+          className: 'KeyBindingsTableCol',
+          type: 2,
+          width: 0,
+        },
+        {
+          childCount: 0,
+          className: 'KeyBindingsTableCol',
+          type: 2,
+          width: 0,
+        },
+        {
+          childCount: 0,
+          className: 'KeyBindingsTableCol',
+          type: 2,
+          width: 0,
         },
         {
           childCount: 1,
