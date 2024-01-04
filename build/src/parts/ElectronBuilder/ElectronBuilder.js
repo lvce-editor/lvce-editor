@@ -22,13 +22,23 @@ import * as FileExtension from '../FileExtension/FileExtension.js'
 // TODO maybe don't need to include nan module
 // TODO don't need to include whole @lvce-editor/ripgrep module (only path)
 
-const bundleElectronMaybe = async ({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform }) => {
+const bundleElectronMaybe = async ({
+  product,
+  version,
+  supportsAutoUpdate,
+  shouldRemoveUnusedLocales,
+  isMacos,
+  arch,
+  platform,
+  isArchLinux,
+  isAppImage,
+}) => {
   // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
   //   Logger.info('[electron build skipped]')
   //   return
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
-  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform })
+  await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform, isArchLinux, isAppImage })
 }
 
 const getElectronVersion = async () => {
@@ -188,8 +198,20 @@ const copyElectronResult = async ({
   isMacos,
   arch = 'x64',
   platform,
+  isArchLinux,
+  isAppImage,
 }) => {
-  await bundleElectronMaybe({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform })
+  await bundleElectronMaybe({
+    product,
+    version,
+    supportsAutoUpdate,
+    shouldRemoveUnusedLocales,
+    isMacos,
+    arch,
+    platform,
+    isArchLinux,
+    isAppImage,
+  })
   const debArch = 'amd64'
   const resourcesPath = isMacos
     ? `build/.tmp/linux/snap/${debArch}/app/${product.applicationName}.app/Contents/Resources`
@@ -225,30 +247,6 @@ const copyElectronResult = async ({
       replacement: `return false`,
     })
   }
-  if (config === ElectronBuilderConfigType.ArchLinux) {
-    await Replace.replace({
-      path: `${resourcesPath}/app/packages/main-process/src/parts/Platform/Platform.js`,
-      occurrence: `export const isArchLinux = false`,
-      replacement: `export const isArchLinux = true`,
-    })
-    await Replace.replace({
-      path: `${resourcesPath}/app/packages/shared-process/src/parts/Platform/Platform.js`,
-      occurrence: `export const isArchLinux = false`,
-      replacement: `export const isArchLinux = true`,
-    })
-  }
-  if (config === ElectronBuilderConfigType.AppImage) {
-    await Replace.replace({
-      path: `${resourcesPath}/app/packages/main-process/src/parts/Platform/Platform.js`,
-      occurrence: `export const isAppImage = false`,
-      replacement: `export const isAppImage = true`,
-    })
-    await Replace.replace({
-      path: `${resourcesPath}/app/packages/shared-process/src/parts/Platform/Platform.js`,
-      occurrence: `export const isAppImage = false`,
-      replacement: `export const isAppImage = true`,
-    })
-  }
   if (config === ElectronBuilderConfigType.WindowsExe) {
     await Template.write('windows_cmd', `build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}.cmd`, {
       '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
@@ -275,7 +273,16 @@ const renameReleaseFile = async ({ config, version, product, arch }) => {
   return releaseFilePath
 }
 
-export const build = async ({ config, product, shouldRemoveUnusedLocales = false, arch, isMacos = false, platform = process.platform }) => {
+export const build = async ({
+  config,
+  product,
+  shouldRemoveUnusedLocales = false,
+  arch,
+  isMacos = false,
+  platform = process.platform,
+  isArchLinux,
+  isAppImage,
+}) => {
   Assert.string(config)
   Assert.object(product)
   // workaround for https://github.com/electron-userland/electron-builder/issues/4594
@@ -300,6 +307,8 @@ export const build = async ({ config, product, shouldRemoveUnusedLocales = false
     isMacos,
     arch,
     platform,
+    isArchLinux,
+    isAppImage,
   })
   console.timeEnd('copyElectronResult')
 
