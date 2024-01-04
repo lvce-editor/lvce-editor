@@ -28,7 +28,17 @@ const createNewPackageJson = (oldPackageJson, bundleSharedProcess, target) => {
   return newPackageJson
 }
 
-export const bundleSharedProcess = async ({ cachePath, commitHash, product, version, bundleSharedProcess, date, target }) => {
+export const bundleSharedProcess = async ({
+  cachePath,
+  commitHash,
+  product,
+  version,
+  bundleSharedProcess,
+  date,
+  target,
+  isArchLinux,
+  isAppImage,
+}) => {
   await Copy.copy({
     from: 'packages/shared-process/src',
     to: `${cachePath}/src`,
@@ -67,6 +77,20 @@ export const bundleSharedProcess = async ({ cachePath, commitHash, product, vers
     occurrence: `export const scheme = 'lvce-oss'`,
     replacement: `export const scheme = '${product.applicationName}'`,
   })
+  if (isArchLinux) {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      occurrence: `export const isArchLinux = false`,
+      replacement: `export const isArchLinux = true`,
+    })
+  }
+  if (isAppImage) {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      occurrence: `export const isAppImage = false`,
+      replacement: `export const isAppImage = true`,
+    })
+  }
   if (target === 'electron-deb' || target === 'electron-builder-deb') {
     await Replace.replace({
       path: `${cachePath}/src/parts/Platform/Platform.js`,

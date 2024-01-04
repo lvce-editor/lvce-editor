@@ -880,6 +880,8 @@ export const build = async ({ product }) => {
     bundleSharedProcess,
     date,
     target: 'server',
+    isArchLinux: false,
+    isAppImage: false,
   })
 
   console.time('copySharedProcessFiles')

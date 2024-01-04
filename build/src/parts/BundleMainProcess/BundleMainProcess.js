@@ -6,7 +6,16 @@ import * as Replace from '../Replace/Replace.js'
 import * as Remove from '../Remove/Remove.js'
 import { join } from 'path'
 
-export const bundleMainProcess = async ({ cachePath, commitHash, product, version, bundleMainProcess, bundleSharedProcess }) => {
+export const bundleMainProcess = async ({
+  cachePath,
+  commitHash,
+  product,
+  version,
+  bundleMainProcess,
+  bundleSharedProcess,
+  isArchLinux,
+  isAppImage,
+}) => {
   await Copy.copy({
     from: 'packages/main-process/src',
     to: Path.join(cachePath, 'src'),
@@ -51,6 +60,20 @@ export const bundleMainProcess = async ({ cachePath, commitHash, product, versio
     occurrence: `export const version = '0.0.0-dev'`,
     replacement: `export const version = '${version}'`,
   })
+  if (isArchLinux) {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      occurrence: `export const isArchLinux = false`,
+      replacement: `export const isArchLinux = true`,
+    })
+  }
+  if (isAppImage) {
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Platform/Platform.js`,
+      occurrence: `export const isAppImage = false`,
+      replacement: `export const isAppImage = true`,
+    })
+  }
   if (bundleSharedProcess) {
     await Replace.replace({
       path: `${cachePath}/src/parts/Platform/Platform.js`,
