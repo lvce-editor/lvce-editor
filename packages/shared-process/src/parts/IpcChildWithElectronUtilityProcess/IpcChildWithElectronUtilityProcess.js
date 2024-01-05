@@ -1,3 +1,5 @@
+import * as GetUtilityProcessPortData from '../GetUtilityProcessPortData/GetUtilityProcessPortData.js'
+
 export const listen = () => {
   // @ts-ignore
   const { parentPort } = process
@@ -11,24 +13,13 @@ export const signal = (parentPort) => {
   parentPort.postMessage('ready')
 }
 
-const getActualData = (event) => {
-  const { data, ports } = event
-  if (ports.length === 0) {
-    return data
-  }
-  return {
-    ...data,
-    params: [...ports, ...data.params],
-  }
-}
-
 export const wrap = (parentPort) => {
   return {
     parentPort,
     on(event, listener) {
       if (event === 'message') {
         const wrappedListener = (event) => {
-          const actualData = getActualData(event)
+          const actualData = GetUtilityProcessPortData.getUtilityProcessPortData(event)
           listener(actualData)
         }
         this.parentPort.on(event, wrappedListener)
