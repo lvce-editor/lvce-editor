@@ -10,7 +10,7 @@ const getPort = async (type) => {
     type,
     raw: true,
     protocol: 'lvce.extension-host-helper-process',
-    initialCommand: 'HandleElectronMessagePort.handleElectronMessagePort',
+    initialCommand: 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess',
   })
   if (!port) {
     throw new IpcError(`port must be defined`)
