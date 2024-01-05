@@ -6,7 +6,6 @@ export const listen = ({ messagePort }) => {
   if (!IsMessagePortMain.isMessagePortMain(messagePort)) {
     throw new IpcError('port must be of type MessagePortMain')
   }
-  messagePort.postMessage('ready')
   return messagePort
 }
 
