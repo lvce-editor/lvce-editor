@@ -23,6 +23,7 @@ export const wrap = (port) => {
       this.port.postMessage(message)
     },
     async sendAndTransfer(message, transfer) {
+      console.log({ transfer })
       this.port.postMessage(message, transfer)
     },
     on(event, listener) {

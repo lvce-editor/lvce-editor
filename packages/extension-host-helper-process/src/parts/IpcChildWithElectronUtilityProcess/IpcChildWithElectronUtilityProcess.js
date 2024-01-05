@@ -18,6 +18,7 @@ export const wrap = (parentPort) => {
       if (event === 'message') {
         const wrappedListener = (event) => {
           const actualData = GetUtilityProcessPortData.getUtilityProcessPortData(event)
+          console.log({ actualData })
           listener(actualData)
         }
         this.parentPort.on(event, wrappedListener)

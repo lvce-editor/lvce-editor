@@ -1,4 +1,5 @@
 export const getUtilityProcessPortData = (event) => {
+  console.log({ event })
   const { data, ports } = event
   if (ports.length === 0) {
     return data

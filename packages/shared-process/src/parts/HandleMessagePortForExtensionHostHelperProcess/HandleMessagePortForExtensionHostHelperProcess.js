@@ -8,5 +8,6 @@ export const handleMessagePortForExtensionHostHelperProcess = async (port) => {
   const ipc = await ExtensionHostHelperProcessIpc.create({
     method: IpcParentType.ElectronUtilityProcess,
   })
+  console.log({ port })
   await JsonRpc.invokeAndTransfer(ipc, [port], 'HandleElectronMessagePort.handleElectronMessagePort')
 }
