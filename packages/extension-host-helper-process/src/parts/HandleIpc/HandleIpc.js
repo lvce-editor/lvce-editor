@@ -1,12 +1,22 @@
-import * as Assert from '../Assert/Assert.js'
-import * as Command from '../Command/Command.js'
 import * as Callback from '../Callback/Callback.js'
-import * as HandleJsonRpcMessage from '../HandleJsonRpcMessage/HandleJsonRpcMessage.js'
+import * as Command from '../Command/Command.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as PrettyError from '../PrettyError/PrettyError.js'
+import * as PrintPrettyError from '../PrintPrettyError/PrintPrettyError.js'
+
+const preparePrettyError = PrettyError.prepare
+
+const logError = (error, prettyError) => {
+  PrintPrettyError.printPrettyError(prettyError, `[extension-host-helper-process] `)
+}
+
+const requiresSocket = () => {
+  return false
+}
 
 export const handleIpc = (ipc) => {
-  Assert.object(ipc)
-  const handleMessage = async (message) => {
-    return HandleJsonRpcMessage.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve)
+  const handleMessage = (message) => {
+    return JsonRpc.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve, preparePrettyError, logError, requiresSocket)
   }
   ipc.on('message', handleMessage)
 }
