@@ -26,7 +26,7 @@ import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
-const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate, isMacos }) => {
+const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate, isMacos, isArchLinux, isAppImage }) => {
   const files = [
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
@@ -52,7 +52,9 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
   ]
   const absolutePaths = files.map(Path.absolute)
   const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
-  const hash = Hash.computeHash(contents + electronVersion + arch + String(supportsAutoUpdate) + String(isMacos))
+  const hash = Hash.computeHash(
+    contents + electronVersion + arch + String(supportsAutoUpdate) + String(isMacos) + String(isArchLinux) + String(isAppImage),
+  )
   return hash
 }
 
@@ -262,6 +264,8 @@ export const build = async ({
   arch = process.arch,
   platform = process.platform,
   isMacos = process.platform === 'darwin',
+  isArchLinux = false,
+  isAppImage = false,
 }) => {
   Assert.object(product)
   Assert.string(version)
@@ -271,6 +275,8 @@ export const build = async ({
     arch,
     supportsAutoUpdate,
     isMacos,
+    isArchLinux,
+    isAppImage,
   })
   const dependencyCachePath = Path.join(Path.absolute('build/.tmp/cachedDependencies'), dependencyCacheHash)
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
@@ -350,6 +356,8 @@ export const build = async ({
     version,
     bundleMainProcess,
     bundleSharedProcess,
+    isArchLinux,
+    isAppImage,
   })
 
   console.time('copyMainProcessFiles')
@@ -366,6 +374,8 @@ export const build = async ({
     bundleSharedProcess,
     date,
     target: '',
+    isArchLinux,
+    isAppImage,
   })
 
   console.time('copySharedProcessFiles')

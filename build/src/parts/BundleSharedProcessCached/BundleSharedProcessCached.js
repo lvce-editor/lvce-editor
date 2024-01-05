@@ -4,7 +4,7 @@ import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 
-export const bundleSharedProcessCached = async ({ commitHash, product, version, bundleSharedProcess, date, target }) => {
+export const bundleSharedProcessCached = async ({ commitHash, product, version, bundleSharedProcess, date, target, isArchLinux, isAppImage }) => {
   const cachePath = await CachePaths.getSharedProcessCachePath([product, version, date, commitHash])
   if (existsSync(cachePath)) {
     Logger.info('[build step skipped] bundleSharedprocess')
@@ -20,6 +20,8 @@ export const bundleSharedProcessCached = async ({ commitHash, product, version, 
       bundleSharedProcess,
       date,
       target,
+      isArchLinux,
+      isAppImage,
     })
     console.timeEnd('bundleSharedProcess')
   }
