@@ -42,14 +42,6 @@ export const getSharedProcessPath = () => {
   return join(Root.root, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
 }
 
-export const getExtensionHostPath = () => {
-  return join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
-}
-
 export const getChromeExtensionsPath = () => {
   return join(dataDir, 'electron-browser-view-chrome-extensions')
-}
-
-export const getExtensionHostHelperProcessPath = () => {
-  return join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
 }
