@@ -4,4 +4,5 @@ export const name = 'TemporaryMessagePort'
 
 export const Commands = {
   create: TemporaryMessagePort.create,
+  dispose: TemporaryMessagePort.dispose,
 }
