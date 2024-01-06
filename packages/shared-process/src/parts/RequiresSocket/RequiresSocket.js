@@ -10,6 +10,7 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'IncrementalTextSearch.start',
   'ElectronApplicationMenu.setItems',
   'GetWindowId.getWindowId',
+  'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess',
 ])
 
 export const requiresSocket = (method) => {
