@@ -237,7 +237,7 @@
   {
     "name": "builtin.language-features-css",
     "repository": "github.com/lvce-editor/language-features-css",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   {
     "name": "builtin.language-features-html",

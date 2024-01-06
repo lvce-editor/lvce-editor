@@ -8,5 +8,4 @@ export const handleNodeMessagePort = async (messagePort) => {
     messagePort,
   })
   HandleIpc.handleIpc(ipc)
-  messagePort.start()
 }

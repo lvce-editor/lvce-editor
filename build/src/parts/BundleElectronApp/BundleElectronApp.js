@@ -105,13 +105,6 @@ const copyPtyHostSources = async ({ resourcesPath }) => {
   })
 }
 
-const copyExtensionHostSources = async ({ resourcesPath }) => {
-  await Copy.copy({
-    from: 'packages/extension-host/src',
-    to: `${resourcesPath}/app/packages/extension-host/src`,
-  })
-}
-
 const copyExtensionHostHelperProcessSources = async ({ resourcesPath }) => {
   await Copy.copy({
     from: 'packages/extension-host-helper-process/src',
@@ -341,10 +334,6 @@ export const build = async ({
     resourcesPath,
   })
   console.timeEnd('copyDependencies')
-
-  console.time('copyExtensionHostSources')
-  await copyExtensionHostSources({ resourcesPath })
-  console.timeEnd('copyExtensionHostSources')
 
   console.time('copyPtyHostSources')
   await copyPtyHostSources({ resourcesPath })
