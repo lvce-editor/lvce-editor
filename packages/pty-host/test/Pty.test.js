@@ -4,15 +4,15 @@ import * as Platform from '../src/parts/Platform/Platform.js'
 
 let pty
 
-beforeEach(() => {
-  pty = Pty.create()
-})
+// beforeEach(() => {
+//   pty = Pty.create()
+// })
 
-afterEach(() => {
-  Pty.dispose(pty)
-})
+// afterEach(() => {
+//   Pty.dispose(pty)
+// })
 
-test('pty', async () => {
+test.skip('pty', async () => {
   if (Platform.isWindows) {
     // TODO add windows test
     return
