@@ -10,6 +10,11 @@ const UiStrings = {
   SplitLeft: 'Split Left',
   SplitRight: 'Split Right',
   NewWindow: 'New Window',
+  Close: 'Close',
+  CloseOthers: 'Close Others',
+  CloseToTheRight: 'Close To The Right',
+  CloseAll: 'Close All',
+  RevealInExplorer: 'Reveal in Explorer',
 }
 
 export const openFile = () => {
@@ -34,4 +39,24 @@ export const splitRight = () => {
 
 export const newWindow = () => {
   return I18nString.i18nString(UiStrings.NewWindow)
+}
+
+export const close = () => {
+  return I18nString.i18nString(UiStrings.Close)
+}
+
+export const closeOthers = () => {
+  return I18nString.i18nString(UiStrings.CloseOthers)
+}
+
+export const closeAll = () => {
+  return I18nString.i18nString(UiStrings.CloseAll)
+}
+
+export const revealInExplorer = () => {
+  return I18nString.i18nString(UiStrings.RevealInExplorer)
+}
+
+export const closeToTheRight = () => {
+  return I18nString.i18nString(UiStrings.CloseToTheRight)
 }

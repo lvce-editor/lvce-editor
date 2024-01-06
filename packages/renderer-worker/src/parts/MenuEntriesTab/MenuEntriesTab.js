@@ -1,19 +1,9 @@
-import * as I18nString from '../I18NString/I18NString.js'
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Assert from '../Assert/Assert.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  Close: 'Close',
-  CloseOthers: 'Close Others',
-  CloseToTheRight: 'Close To The Right',
-  CloseAll: 'Close All',
-  RevealInExplorer: 'Reveal in Explorer',
-}
+import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as ViewletMainStrings from '../ViewletMain/ViewletMainStrings.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 // TODO should pass tab uri as argument or tab index
 export const getMenuEntries = () => {
@@ -28,31 +18,32 @@ export const getMenuEntries = () => {
   return [
     {
       id: 'tabClose',
-      label: I18nString.i18nString(UiStrings.Close),
+      label: ViewletMainStrings.close(),
       flags: MenuItemFlags.None,
       command: 'Main.closeFocusedTab',
     },
     {
       id: 'tabCloseOthers',
-      label: I18nString.i18nString(UiStrings.CloseOthers),
+      label: ViewletMainStrings.closeOthers(),
       flags: MenuItemFlags.None,
       command: 'Main.closeOthers',
     },
     {
       id: 'tabCloseToTheRight',
-      label: I18nString.i18nString(UiStrings.CloseToTheRight),
+      label: ViewletMainStrings.closeToTheRight(),
       flags: MenuItemFlags.None,
       command: 'Main.closeTabsRight',
     },
     {
       id: 'tabCloseAll',
-      label: I18nString.i18nString(UiStrings.CloseAll),
+      label: ViewletMainStrings.closeAll(),
       flags: MenuItemFlags.None,
       command: 'Main.closeAllEditors',
     },
+    MenuEntrySeparator.menuEntrySeparator,
     {
       id: 'revealInExplorer',
-      label: I18nString.i18nString(UiStrings.RevealInExplorer),
+      label: ViewletMainStrings.revealInExplorer(),
       flags: MenuItemFlags.None,
       command: 'Explorer.revealItem',
       args: [uri],
