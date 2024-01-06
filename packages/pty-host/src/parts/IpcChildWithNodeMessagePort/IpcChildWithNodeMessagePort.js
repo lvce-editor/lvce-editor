@@ -23,5 +23,8 @@ export const wrap = (port) => {
     dispose() {
       this.port.close()
     },
+    start() {
+      this.port.start()
+    },
   }
 }
