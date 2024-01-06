@@ -31,51 +31,63 @@ export const disable = async (id) => {
 }
 
 export const getBuiltinExtensions = () => {
-  return ExtensionManifests.getAll([
-    {
-      type: ExtensionManifestInputType.Folder,
-      path: PlatformPaths.getBuiltinExtensionsPath(),
-    },
-  ])
+  return ExtensionManifests.getAll(
+    [
+      {
+        type: ExtensionManifestInputType.Folder,
+        path: PlatformPaths.getBuiltinExtensionsPath(),
+      },
+    ],
+    PlatformPaths.getBuiltinExtensionsPath(),
+  )
 }
 
 export const getInstalledExtensions = () => {
-  return ExtensionManifests.getAll([
-    {
-      type: ExtensionManifestInputType.Folder,
-      path: PlatformPaths.getExtensionsPath(),
-    },
-  ])
+  return ExtensionManifests.getAll(
+    [
+      {
+        type: ExtensionManifestInputType.Folder,
+        path: PlatformPaths.getExtensionsPath(),
+      },
+    ],
+    PlatformPaths.getBuiltinExtensionsPath(),
+  )
 }
 
 export const getExtensions = () => {
-  return ExtensionManifests.getAll([
-    {
-      type: ExtensionManifestInputType.OnlyExtension,
-      path: PlatformPaths.getOnlyExtensionPath(),
-    },
-    {
-      type: ExtensionManifestInputType.Folder,
-      path: PlatformPaths.getLinkedExtensionsPath(),
-    },
-    {
-      type: ExtensionManifestInputType.Folder,
-      path: PlatformPaths.getExtensionsPath(),
-    },
-    {
-      type: ExtensionManifestInputType.Folder,
-      path: PlatformPaths.getBuiltinExtensionsPath(),
-    },
-  ])
+  return ExtensionManifests.getAll(
+    [
+      {
+        type: ExtensionManifestInputType.OnlyExtension,
+        path: PlatformPaths.getOnlyExtensionPath(),
+      },
+      {
+        type: ExtensionManifestInputType.Folder,
+        path: PlatformPaths.getLinkedExtensionsPath(),
+      },
+      {
+        type: ExtensionManifestInputType.Folder,
+        path: PlatformPaths.getExtensionsPath(),
+      },
+      {
+        type: ExtensionManifestInputType.Folder,
+        path: PlatformPaths.getBuiltinExtensionsPath(),
+      },
+    ],
+    PlatformPaths.getBuiltinExtensionsPath(),
+  )
 }
 
 export const getDisabledExtensions = () => {
-  return ExtensionManifests.getAll([
-    {
-      type: ExtensionManifestInputType.Folder,
-      path: PlatformPaths.getDisabledExtensionsPath(),
-    },
-  ])
+  return ExtensionManifests.getAll(
+    [
+      {
+        type: ExtensionManifestInputType.Folder,
+        path: PlatformPaths.getDisabledExtensionsPath(),
+      },
+    ],
+    PlatformPaths.getBuiltinExtensionsPath(),
+  )
 }
 
 export * from '../ExtensionUninstall/ExtensionUninstall.js'
