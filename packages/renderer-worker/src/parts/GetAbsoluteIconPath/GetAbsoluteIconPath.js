@@ -1,4 +1,5 @@
 import * as IconThemeState from '../IconThemeState/IconThemeState.js'
+import * as PathSeparator from '../PathSeparator/PathSeparator.js'
 
 export const getAbsoluteIconPath = (iconTheme, icon) => {
   if (!iconTheme) {
@@ -10,8 +11,8 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
     if (extensionPath.startsWith('http://') || extensionPath.startsWith('https://')) {
       return `${extensionPath}${result}`
     }
-    if (extensionPath.includes('\\')) {
-      const extensionUri = extensionPath.replaceAll('\\', '/')
+    if (extensionPath.includes(PathSeparator.BackSlash)) {
+      const extensionUri = extensionPath.replaceAll(PathSeparator.BackSlash, PathSeparator.Slash)
       return `/remote/${extensionUri}/${result}`
     }
     return `/remote${extensionPath}/${result}`
