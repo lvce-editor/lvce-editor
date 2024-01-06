@@ -13,9 +13,9 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
     }
     if (extensionPath.includes('\\')) {
       const extensionUri = extensionPath.replaceAll('\\', '/')
-      return GetRemoteSrc.getRemoteSrc(`/${extensionUri}/${result}`)
+      return GetRemoteSrc.getRemoteSrc(`${extensionUri}/${result}`)
     }
-    return GetRemoteSrc.getRemoteSrc(`/${extensionPath}/${result}`)
+    return GetRemoteSrc.getRemoteSrc(`${extensionPath}/${result}`)
   }
   return ''
 }
