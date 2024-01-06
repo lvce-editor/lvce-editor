@@ -20,7 +20,11 @@ export const create = async (options) => {
     case PlatformType.Electron:
       const ipc = SharedProcessState.state.ipc
       const { port1, port2 } = new MessageChannel()
-      await JsonRpc.invokeAndTransfer(ipc, [port2], 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess')
+      await JsonRpc.invokeAndTransfer(
+        ipc,
+        [port2],
+        options.initialCommand || 'HandleMessagePortForTerminalProcess.handleMessagePortForTerminalProcess',
+      )
       return port1
     default:
       throw new Error('unsupported platform')

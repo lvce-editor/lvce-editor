@@ -7,6 +7,7 @@ export const create = async ({ method }) => {
     method,
     path: extensionHostHelperProcessPath,
     execArgv: ['--max-old-space-size=60', '--enable-source-maps'],
+    name: 'Extension Host Helper Process',
   })
   return ipc
 }
