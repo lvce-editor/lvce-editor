@@ -8,6 +8,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
+import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -25,7 +26,7 @@ const getBaseUrl = (extensionPath) => {
   switch (Platform.platform) {
     case PlatformType.Remote:
     case PlatformType.Electron:
-      return `/remote` + extensionPath + '/'
+      return GetRemoteSrc.getRemoteSrc(extensionPath + '/')
     default:
       return extensionPath
   }

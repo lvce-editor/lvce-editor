@@ -1,25 +1,34 @@
+import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
 import * as Icon from '../Icon/Icon.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+
+const isLanguageBasicsExtension = (extension) => {
+  return extension.name && extension.name.startsWith('Language Basics')
+}
+
+const isThemeExtension = (extension) => {
+  return extension.name && extension.name.endsWith(' Theme')
+}
 
 export const getIcon = (extension) => {
   if (!extension) {
     return Icon.ExtensionDefaultIcon
   }
   if (!extension.path || !extension.icon) {
-    if (extension.name && extension.name.startsWith('Language Basics')) {
+    if (isLanguageBasicsExtension(extension)) {
       return Icon.ExtensionLanguageBasics
     }
-    if (extension.name && extension.name.endsWith(' Theme')) {
+    if (isThemeExtension(extension)) {
       return Icon.ExtensionTheme
     }
     return Icon.ExtensionDefaultIcon
   }
   if (Platform.platform === PlatformType.Remote) {
-    return `/remote/${extension.path}/${extension.icon}` // TODO support windows paths
+    return GetRemoteSrc.getRemoteSrc(`/${extension.path}/${extension.icon}`) // TODO support windows paths
   }
   if (Platform.platform === PlatformType.Electron) {
-    return `/remote/${extension.path}/${extension.icon}` // TODO support windows paths
+    return GetRemoteSrc.getRemoteSrc(`/${extension.path}/${extension.icon}`) // TODO support windows paths
   }
   return ''
 }
