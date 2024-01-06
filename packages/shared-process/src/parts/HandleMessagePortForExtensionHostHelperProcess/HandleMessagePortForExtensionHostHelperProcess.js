@@ -26,6 +26,7 @@ export const handleMessagePortForExtensionHostHelperProcess = async (rendererWor
   //   rendererWorkerIpc.on('dispose', handleDispose)
   // }
   rendererWorkerIpc.messagePort.on('close', () => {
+    ipc.dispose()
     console.log('port closed')
   })
 }
