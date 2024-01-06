@@ -1,1 +1,1 @@
-export const ErrorMethodNotFound = -32601
+export * from '@lvce-editor/json-rpc'
