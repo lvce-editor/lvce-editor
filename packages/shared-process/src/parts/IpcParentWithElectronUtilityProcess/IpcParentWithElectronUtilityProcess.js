@@ -13,6 +13,7 @@ export const create = async (options) => {
   })
   // TODO use uuid instead of name
   const port = await TemporaryMessagePort.create(options.name)
+  port.name = options.name
   return port
 }
 
@@ -43,6 +44,7 @@ export const wrap = (port) => {
     off(event, listener) {},
     dispose() {
       this.port.close()
+      ParentIpc.invoke('TemporaryMessagePort.dispose', this.port.name)
     },
   }
 }
