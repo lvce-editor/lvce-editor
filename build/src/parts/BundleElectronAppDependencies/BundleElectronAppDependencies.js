@@ -18,7 +18,7 @@ const copyPtyHostFiles = async ({ arch, electronVersion, cachePath, platform }) 
     electronVersion,
     arch,
     to: `${cachePath}/packages/pty-host`,
-    exclude: ['ws'],
+    exclude: ['ws', '@lvce-editor/web-socket-server'],
     platform,
   })
 }
@@ -40,7 +40,7 @@ const copySharedProcessFiles = async ({ cachePath, arch, electronVersion, platfo
     to: `${cachePath}/packages/shared-process`,
     arch,
     electronVersion,
-    exclude: ['ws', 'trash', 'open'],
+    exclude: ['ws', 'trash', 'open', '@lvce-editor/web-socket-server'],
     platform,
   })
 }
