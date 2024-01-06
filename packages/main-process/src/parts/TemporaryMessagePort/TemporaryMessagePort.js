@@ -2,6 +2,7 @@ import { MessageChannelMain } from 'electron'
 import * as Assert from '../Assert/Assert.js'
 import * as Callback from '../Callback/Callback.js'
 import * as FormatUtilityProcessName from '../FormatUtilityProcessName/FormatUtilityProcessName.js'
+import * as IpcParentWithElectronUtilityProcess from '../IpcParentWithElectronUtilityProcess/IpcParentWithElectronUtilityProcess.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as SharedProcessState from '../SharedProcessState/SharedProcessState.js'
 import * as UtilityProcessState from '../UtilityProcessState/UtilityProcessState.js'
@@ -22,11 +23,7 @@ export const create = async (name) => {
   const utilityProcess = UtilityProcessState.getByName(formattedName)
   const { port1, port2 } = new MessageChannelMain()
   await JsonRpc.invokeAndTransfer(SharedProcessState.state.sharedProcess, [port1], 'TemporaryMessagePort.handlePort', name)
-  const utilityProcessIpc = {
-    sendAndTransfer(message, transfer) {
-      utilityProcess.postMessage(message, transfer)
-    },
-  }
+  const utilityProcessIpc = IpcParentWithElectronUtilityProcess.wrap(utilityProcess)
   const handleUtilityProcessMessage = (message) => {
     Callback.resolve(message.id, message)
     utilityProcess.off('message', handleUtilityProcessMessage)
