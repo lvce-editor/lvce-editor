@@ -18,7 +18,6 @@ export const handleWebSocket = async (message, handle) => {
     handle.pause()
     const module = await HandleWebSocketModule.load(protocol)
     await module.handleWebSocket(message, handle, protocol)
-    handle.resume()
   } catch (error) {
     DestroyWebSocket.destroySocket(handle)
     throw new VError(error, `Failed to connect to websocket`)
