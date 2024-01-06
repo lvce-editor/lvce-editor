@@ -31,3 +31,13 @@ export const create = async (name) => {
   utilityProcess.on('message', handleUtilityProcessMessage)
   await JsonRpc.invokeAndTransfer(utilityProcessIpc, [port2], 'HandleElectronMessagePort.handleElectronMessagePort')
 }
+
+export const dispose = (name) => {
+  Assert.string(name)
+  const formattedName = FormatUtilityProcessName.formatUtilityProcessName(name)
+  const utilityProcess = UtilityProcessState.getByName(formattedName)
+  if (!utilityProcess) {
+    return
+  }
+  utilityProcess.kill()
+}
