@@ -285,6 +285,7 @@ test('getExtensions - error - invalid value - null', async () => {
       status: ExtensionManifestStatus.Rejected,
       reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
       path: join(tmpDir1, 'test-extension-1'),
+      builtin: true,
     },
   ])
 })
@@ -307,6 +308,7 @@ test('getExtensions - error - invalid value - string', async () => {
       status: ExtensionManifestStatus.Rejected,
       reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
       path: join(tmpDir1, 'test-extension-1'),
+      builtin: true,
     },
   ])
 })
@@ -329,6 +331,7 @@ test('getExtensions - error - invalid value - number', async () => {
       status: ExtensionManifestStatus.Rejected,
       reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
       path: join(tmpDir1, 'test-extension-1'),
+      builtin: true,
     },
   ])
 })
@@ -351,6 +354,7 @@ test('getExtensions - error - invalid value - boolean', async () => {
       status: ExtensionManifestStatus.Rejected,
       reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
       path: join(tmpDir1, 'test-extension-1'),
+      builtin: true,
     },
   ])
 })
@@ -380,6 +384,7 @@ test('getExtensions - error - invalid json', async () => {
       ),
       status: ExtensionManifestStatus.Rejected,
       path: join(tmpDir1, 'test-extension-1'),
+      builtin: true,
     },
   ])
 })

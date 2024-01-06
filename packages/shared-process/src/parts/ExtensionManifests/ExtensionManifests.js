@@ -38,7 +38,6 @@ const deduplicateExtensions = (extensions, builtinExtensionsPath) => {
 }
 
 export const getAll = async (inputs, builtinExtensionsPath) => {
-  console.log({ inputs })
   const manifests = await Promise.all(inputs.map(get))
   const flatManifests = manifests.flat(1)
   const uniqueExtensions = deduplicateExtensions(flatManifests, builtinExtensionsPath)
