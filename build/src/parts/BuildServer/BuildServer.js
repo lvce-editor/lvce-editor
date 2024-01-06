@@ -725,7 +725,6 @@ const setVersionsAndDependencies = async ({ version }) => {
       json.dependencies['@lvce-editor/shared-process'] = version
     }
     if (file === 'build/.tmp/server/shared-process/package.json') {
-      json.dependencies['@lvce-editor/extension-host'] = version
       json.dependencies['@lvce-editor/extension-host-helper-process'] = version
       json.dependencies['@lvce-editor/pty-host'] = version
     }
