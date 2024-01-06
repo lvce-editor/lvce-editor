@@ -1,4 +1,5 @@
 import * as IconThemeState from '../IconThemeState/IconThemeState.js'
+import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
 
 export const getAbsoluteIconPath = (iconTheme, icon) => {
   if (!iconTheme) {
@@ -12,9 +13,9 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
     }
     if (extensionPath.includes('\\')) {
       const extensionUri = extensionPath.replaceAll('\\', '/')
-      return `/remote/${extensionUri}/${result}`
+      return GetRemoteSrc.getRemoteSrc(`${extensionUri}/${result}`)
     }
-    return `/remote${extensionPath}/${result}`
+    return GetRemoteSrc.getRemoteSrc(`${extensionPath}/${result}`)
   }
   return ''
 }
