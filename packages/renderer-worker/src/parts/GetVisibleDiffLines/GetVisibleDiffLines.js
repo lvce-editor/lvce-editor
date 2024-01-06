@@ -11,7 +11,9 @@ export const getVisibleDiffLines = (lines, changes, minLineY, maxLineY) => {
     })
   }
   for (const change of changes) {
-    visible[change.index].type = change.type
+    if (change.index < visible.length) {
+      visible[change.index].type = change.type
+    }
   }
   return visible
 }
