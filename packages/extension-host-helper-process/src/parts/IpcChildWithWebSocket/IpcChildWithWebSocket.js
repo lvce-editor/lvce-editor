@@ -1,16 +1,18 @@
 import * as GetFirstWebSocketEvent from '../GetFirstWebSocketEvent/GetFirstWebSocketEvent.js'
 import { IpcError } from '../IpcError/IpcError.js'
-import * as IsWebSocket from '../IsWebSocket/IsWebSocket.js'
 import * as IsWebSocketOpen from '../IsWebSocketOpen/IsWebSocketOpen.js'
 import * as WebSocketSerialization from '../WebSocketSerialization/WebSocketSerialization.js'
+import * as WebSocketServer from '../WebSocketServer/WebSocketServer.js'
 
-export const listen = async ({ webSocket }) => {
-  if (!webSocket) {
-    throw new IpcError('webSocket must be defined')
+export const listen = async ({ request, handle }) => {
+  if (!request) {
+    throw new IpcError('request must be defined')
   }
-  if (!IsWebSocket.isWebSocket(webSocket)) {
-    throw new IpcError(`webSocket must be of type WebSocket`)
+  if (!handle) {
+    throw new IpcError('handle must be defined')
   }
+  const webSocket = await WebSocketServer.handleUpgrade(request, handle)
+  webSocket.pause()
   if (!IsWebSocketOpen.isWebSocketOpen(webSocket)) {
     const { type, event } = await GetFirstWebSocketEvent.getFirstWebSocketEvent(webSocket)
     console.log({ type, event })
