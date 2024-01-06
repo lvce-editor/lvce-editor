@@ -26,6 +26,7 @@ const copyPtyHostFiles = async ({ arch, electronVersion, cachePath, platform }) 
 const copyExtensionHostHelperProcessFiles = async ({ cachePath }) => {
   await BundleExtensionHostHelperProcessDependencies.bundleExtensionHostHelperProcessDependencies({
     to: `${cachePath}/packages/extension-host-helper-process`,
+    exclude: ['ws', '@lvce-editor/web-socket-server'],
   })
 }
 
