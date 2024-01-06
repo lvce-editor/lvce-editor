@@ -60,16 +60,13 @@
     ]
   },
   "dependencies": {
-    "@babel/code-frame": "^7.23.5",
     "@lvce-editor/assert": "^1.1.0",
     "@lvce-editor/json-rpc": "^1.0.0",
     "@lvce-editor/pretty-error": "^1.4.0",
     "@lvce-editor/verror": "^1.1.2",
     "@lvce-editor/web-socket-server": "^1.1.0",
-    "clean-stack": "^5.2.0",
     "execa": "^8.0.1",
     "got": "^13.0.0",
-    "lines-and-columns": "^2.0.4",
     "minimist": "^1.2.8"
   },
   "devDependencies": {
