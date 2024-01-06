@@ -3,6 +3,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
+import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
 
 export const name = 'Disk'
 
@@ -31,7 +32,7 @@ export const writeFile = async (path, content, encoding) => {
     /* FileSystem.writeFile */ SharedProcessCommandType.FileSystemWriteFile,
     /* path */ path,
     /* content */ content,
-    /* encoding */ encoding
+    /* encoding */ encoding,
   )
 }
 
@@ -42,7 +43,7 @@ export const readDirWithFileTypes = (path) => {
 }
 
 export const getBlobUrl = (path) => {
-  return `/remote/${path}`
+  return GetRemoteSrc.getRemoteSrc(`/${path}`)
 }
 
 export const getPathSeparator = () => {

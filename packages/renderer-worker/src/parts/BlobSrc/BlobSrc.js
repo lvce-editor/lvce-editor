@@ -2,12 +2,8 @@ import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
+import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
 import * as Protocol from '../Protocol/Protocol.js'
-
-const getSrcRemote = (uri) => {
-  const src = `/remote${uri}`
-  return src
-}
 
 const getSrcWithBlobUrl = async (uri) => {
   const content = await FileSystem.readFile(uri)
@@ -24,7 +20,7 @@ const canUseRemoteLoading = (uri) => {
 
 export const getSrc = (uri) => {
   if (canUseRemoteLoading(uri)) {
-    return getSrcRemote(uri)
+    return GetRemoteSrc.getRemoteSrc(uri)
   }
   return getSrcWithBlobUrl(uri)
 }
