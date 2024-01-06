@@ -47,5 +47,8 @@ export const wrap = (webSocket) => {
     dispose() {
       this.webSocket.close()
     },
+    start() {
+      this.webSocket.resume()
+    },
   }
 }
