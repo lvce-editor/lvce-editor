@@ -14,5 +14,4 @@ export const handleWebSocket = async (request, handle) => {
     webSocket,
   })
   HandleIpc.handleIpc(ipc)
-  webSocket.resume()
 }
