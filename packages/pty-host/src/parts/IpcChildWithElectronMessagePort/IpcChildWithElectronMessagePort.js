@@ -42,5 +42,8 @@ export const wrap = (messagePort) => {
     dispose() {
       this.messagePort.close()
     },
+    start() {
+      this.messagePort.start()
+    },
   }
 }

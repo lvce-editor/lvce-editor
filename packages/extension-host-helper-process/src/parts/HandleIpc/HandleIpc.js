@@ -19,4 +19,7 @@ export const handleIpc = (ipc) => {
     return JsonRpc.handleJsonRpcMessage(ipc, message, Command.execute, Callback.resolve, preparePrettyError, logError, requiresSocket)
   }
   ipc.on('message', handleMessage)
+  if (ipc.start) {
+    ipc.start()
+  }
 }
