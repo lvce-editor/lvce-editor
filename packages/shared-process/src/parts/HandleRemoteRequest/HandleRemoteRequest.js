@@ -7,7 +7,7 @@ export const handleRemoteRequest = async (request, socket) => {
   Assert.object(socket)
   const response = new ServerResponse(request)
   response.assignSocket(socket)
-  const result = await GetElectronFileResponse.getElectronFileResponse(request.url)
+  const result = await GetElectronFileResponse.getElectronFileResponse(request.url, request)
   response.statusCode = result.init.status
   for (const [key, value] of Object.entries(result.init.headers)) {
     response.setHeader(key, value)
