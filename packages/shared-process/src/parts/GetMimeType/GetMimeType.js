@@ -17,6 +17,7 @@ export const getMimeType = (fileExtension) => {
     case '.png':
       return MimeType.ImagePng
     case '.json':
+    case '.map':
       return MimeType.ApplicationJson
     case '.mp3':
       return MimeType.AudioMpeg
