@@ -5,22 +5,22 @@ export const getAboutVirtualDom = (productName, version) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: '',
-      childCount: 1,
+      className: 'AboutContent',
+      childCount: 2,
     },
     {
       type: VirtualDomElements.Div,
       className: 'InfoRow',
       childCount: 2,
     },
-    text('Product Name'),
+    text('Product Name '),
     text(productName),
     {
       type: VirtualDomElements.Div,
       className: 'InfoRow',
       childCount: 2,
     },
-    text('Product Version'),
+    text('Product Version '),
     text(version),
   ]
   return dom

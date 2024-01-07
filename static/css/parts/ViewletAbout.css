@@ -1,0 +1,24 @@
+.About {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  place-items: center;
+  place-content: center;
+}
+
+.AboutContent {
+  width: 520px;
+  height: 280px;
+  contain: strict;
+  background: #1f1f1f;
+  display: flex;
+  place-items: center;
+  place-content: center;
+  flex-direction: column;
+}
+
+.InfoRow {
+  display: flex;
+  gap: 10px;
+}

@@ -4,13 +4,14 @@ import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
 import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'
 import * as GetAboutDetailString from '../GetAboutDetailString/GetAboutDetailString.js'
 import * as GetWindowId from '../GetWindowId/GetWindowId.js'
-import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Product from '../Product/Product.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const showAboutDefault = async () => {
-  Logger.warn('show about - not implemented')
+  await Viewlet.openWidget(ViewletModuleId.About)
 }
 
 const showAboutElectron = async () => {
