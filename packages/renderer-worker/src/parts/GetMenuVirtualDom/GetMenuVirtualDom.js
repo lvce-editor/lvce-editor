@@ -26,6 +26,15 @@ const checkboxUnchecked = {
   childCount: 1,
 }
 
+const checkboxChecked = {
+  type: VirtualDomElements.Div,
+  className: `${ClassNames.MenuItem} MenuItemCheckMark`,
+  role: AriaRoles.MenuItemCheckBox,
+  ariaChecked: true,
+  tabIndex: -1,
+  childCount: 2,
+}
+
 const disabled = {
   type: VirtualDomElements.Div,
   className: ClassNames.MenuItem,
@@ -43,6 +52,18 @@ const arrowRight = {
 
 const getMenuItemSeparatorDom = (menuItem) => {
   return [separator, separatorLine]
+}
+
+const getMenuItemCheckedDom = (menuItem) => {
+  const { label } = menuItem
+  return [
+    checkboxChecked,
+    {
+      type: VirtualDomElements.Div,
+      className: 'MenuItemCheckmarkIcon MaskIconCheck',
+    },
+    text(label),
+  ]
 }
 
 const getMenuItemUncheckedDom = (menuItem) => {
@@ -105,6 +126,8 @@ const getMenuItemVirtualDom = (menuItem) => {
       return getMenuItemDefaultDom(menuItem)
     case MenuItemFlags.Separator:
       return getMenuItemSeparatorDom(menuItem)
+    case MenuItemFlags.Checked:
+      return getMenuItemCheckedDom(menuItem)
     case MenuItemFlags.Unchecked:
       return getMenuItemUncheckedDom(menuItem)
     case MenuItemFlags.Disabled:

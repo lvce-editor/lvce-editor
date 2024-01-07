@@ -3,12 +3,14 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as ViewletActivityBarStrings from '../ViewletActivityBar/ViewletActivityBarStrings.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 
 const toContextMenuItem = (activityBarItem) => {
+  const isEnabled = activityBarItem.flags & ActivityBarItemFlags.Enabled
   return {
     label: activityBarItem.id,
     id: 8000, // TODO
-    flags: activityBarItem.enabled ? MenuItemFlags.Checked : MenuItemFlags.Unchecked,
+    flags: isEnabled ? MenuItemFlags.Checked : MenuItemFlags.Unchecked,
   }
 }
 
