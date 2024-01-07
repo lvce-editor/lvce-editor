@@ -1,10 +1,11 @@
 import * as AboutElectron from '../AboutElectron/AboutElectron.js'
-import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const showAboutDefault = async () => {
-  Logger.warn('show about - not implemented')
+  await Viewlet.openWidget(ViewletModuleId.About)
 }
 
 const getFn = () => {
