@@ -1,7 +1,10 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Browser from '../Browser/Browser.js'
 import * as DataTransferType from '../DataTransferType/DataTransferType.js'
 
 export const setEffectAllowed = (dataTransfer, effectAllowed) => {
+  Assert.object(dataTransfer)
+  Assert.string(effectAllowed)
   dataTransfer.effectAllowed = effectAllowed
 }
 
