@@ -1,6 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
 import * as CancelToken from '../CancelToken/CancelToken.js'
-import * as GetExtensionAbsolutePath from '../GetExtensionAbsolutePath/GetExtensionAbsolutePath.js'
 import * as GetExtensionId from '../GetExtensionId/GetExtensionId.js'
 import * as ImportScript from '../ImportScript/ImportScript.js'
 import * as IsImportError from '../IsImportError/IsImportError.js'
