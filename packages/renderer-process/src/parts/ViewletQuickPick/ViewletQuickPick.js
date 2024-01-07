@@ -65,6 +65,9 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
 }
 
 const focusElement = ($Element) => {
+  if (!$Element) {
+    return
+  }
   if (IsMobile.isMobile) {
     // workaround to disable virtual keyboard automatically opening on android
     // see https://stackoverflow.com/questions/48635501/how-to-hide-soft-keyboard-and-keep-input-on-focus#answer-53104238
