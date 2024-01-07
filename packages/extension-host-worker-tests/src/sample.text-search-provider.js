@@ -14,7 +14,7 @@ export const test = async ({ FileSystem, Workspace, Extension, SideBar, Search, 
   // assert
   const results = Locator(`.Search .TreeItem`)
   await expect(results).toHaveCount(2)
-  await expect(results.nth(0)).toHaveText('index.txt')
+  await expect(results.nth(0)).toHaveText('index.txt1')
   await expect(results.nth(1)).toHaveText('    <title>Document</title>')
   const highlight = Locator('.Search .Highlight')
   await expect(highlight).toHaveText('Doc')
