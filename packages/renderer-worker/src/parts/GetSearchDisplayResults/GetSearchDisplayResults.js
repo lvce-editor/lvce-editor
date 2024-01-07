@@ -4,6 +4,8 @@ import * as Workspace from '../Workspace/Workspace.js'
 
 const getDisplayResult = (result, itemHeight, i, setSize, searchTermLength, replacement) => {
   const { type, text, lineNumber, start } = result
+  const posInSet = i + 1
+  const top = i * itemHeight
   switch (type) {
     case TextSearchResultType.File:
       const path = text
@@ -14,9 +16,9 @@ const getDisplayResult = (result, itemHeight, i, setSize, searchTermLength, repl
         type: TextSearchResultType.File,
         text: baseName,
         icon: IconTheme.getFileIcon({ name: baseName }),
-        posInSet: i + 1,
+        posInSet,
         setSize,
-        top: i * itemHeight,
+        top,
         lineNumber,
         matchStart: 0,
         matchLength: 0,
@@ -30,9 +32,9 @@ const getDisplayResult = (result, itemHeight, i, setSize, searchTermLength, repl
         type: TextSearchResultType.Match,
         text: text,
         icon: '',
-        posInSet: i + 1,
+        posInSet,
         setSize,
-        top: i * itemHeight,
+        top,
         lineNumber,
         matchStart: start,
         matchLength: searchTermLength,
