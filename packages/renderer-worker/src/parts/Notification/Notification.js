@@ -6,22 +6,12 @@ export const state = {
 
 export const create = async (type, text) => {
   state.notifications.push({ type, text })
-  await RendererProcess.invoke(
-    /* Notification.create */ 'Notification.create',
-    /* type */ type,
-    /* text */ text
-  )
+  await RendererProcess.invoke(/* Notification.create */ 'Notification.create', /* type */ type, /* text */ text)
 }
 
 export const showWithOptions = async (type, text, options) => {
   state.notifications.push({ type, text, options })
-  console.log({ type, text, options })
-  await RendererProcess.invoke(
-    /* Notification.createWithOptions */ 993,
-    /* type */ type,
-    /* text */ text,
-    /* options */ options
-  )
+  await RendererProcess.invoke(/* Notification.createWithOptions */ 993, /* type */ type, /* text */ text, /* options */ options)
 }
 
 export const handleClick = (index) => {
@@ -35,8 +25,5 @@ export const handleClick = (index) => {
 }
 
 export const dispose = async (id) => {
-  await RendererProcess.invoke(
-    /* Notification.dispose */ 'Notification.dispose',
-    /* id */ id
-  )
+  await RendererProcess.invoke(/* Notification.dispose */ 'Notification.dispose', /* id */ id)
 }

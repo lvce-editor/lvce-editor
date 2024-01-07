@@ -6,6 +6,7 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import * as TreeItemPadding from '../TreeItemPadding/TreeItemPadding.js'
 import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 
 const deleted = {
   type: VirtualDomElements.Del,
@@ -42,13 +43,8 @@ const renderRow = (rowInfo) => {
     paddingRight: TreeItemPadding.PaddingRight,
   }
   switch (type) {
-    case DirentType.Directory:
-      treeItem.ariaExpanded = 'false'
-      break
-    case DirentType.DirectoryExpanded:
+    case TextSearchResultType.File:
       treeItem.ariaExpanded = 'true'
-      break
-    case DirentType.File:
       break
     default:
       break
@@ -56,6 +52,14 @@ const renderRow = (rowInfo) => {
   const dom = []
 
   dom.push(treeItem)
+  if (type === TextSearchResultType.File) {
+    treeItem.childCount++
+    dom.push({
+      type: VirtualDomElements.Div,
+      className: `${ClassNames.Chevron} MaskIconChevronDown`,
+      childCount: 0,
+    })
+  }
   if (icon) {
     treeItem.childCount++
     dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(icon))
