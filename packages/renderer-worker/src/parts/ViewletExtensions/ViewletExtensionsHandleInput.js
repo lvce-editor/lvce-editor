@@ -25,6 +25,7 @@ export const handleInput = async (state, value) => {
         finalDeltaY: 0,
         message: ViewletExtensionsStrings.noExtensionsFound(),
         searchValue: value,
+        placeholder: ViewletExtensionsStrings.searchExtensionsInMarketPlace(),
       }
     }
     const listHeight = getListHeight(state)
@@ -45,7 +46,7 @@ export const handleInput = async (state, value) => {
       finalDeltaY,
       message: '',
       searchValue: value,
-      placeholder: `Search Extensions in Marketplace`,
+      placeholder: ViewletExtensionsStrings.searchExtensionsInMarketPlace(),
     }
 
     // TODO handle out of order responses (a bit complicated)
