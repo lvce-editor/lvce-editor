@@ -1,6 +1,7 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoleDescription from '../AriaRoleDescription/AriaRoleDescription.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const listItemDetail = {
@@ -38,7 +39,7 @@ const getExtensionVirtualDom = (extension) => {
     {
       type: VirtualDomElements.Div,
       role: AriaRoles.ListItem,
-      ariaRoleDescription: 'Extension',
+      ariaRoleDescription: AriaRoleDescription.Extension,
       className: ClassNames.ExtensionListItem,
       ariaPosInSet: posInSet,
       ariaSetSize: setSize,
