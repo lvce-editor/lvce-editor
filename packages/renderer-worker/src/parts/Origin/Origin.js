@@ -1,1 +1,1 @@
-export const origin = location.origin
+export const origin = typeof location === 'undefined' ? '' : location.origin
