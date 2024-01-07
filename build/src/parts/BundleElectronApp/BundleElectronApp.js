@@ -407,6 +407,8 @@ export const build = async ({
     commitHash,
     platform: 'electron',
     assetDir: ``,
+    version,
+    date,
   })
 
   console.time('copyRendererWorkerFiles')

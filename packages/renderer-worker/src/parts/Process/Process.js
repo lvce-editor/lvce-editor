@@ -1,5 +1,11 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
+export const version = '0.0.0-dev'
+
+export const commit = 'unknown commit'
+
+export const date = ''
+
 export const getPid = () => {
   return SharedProcess.invoke('Process.getPid')
 }
@@ -17,11 +23,11 @@ export const getChromeVersion = () => {
 }
 
 export const getVersion = () => {
-  return SharedProcess.invoke('Platform.getVersion')
+  return version
 }
 
 export const getCommit = () => {
-  return SharedProcess.invoke('Platform.getCommit')
+  return commit
 }
 
 export const getV8Version = () => {
@@ -29,7 +35,7 @@ export const getV8Version = () => {
 }
 
 export const getDate = () => {
-  return SharedProcess.invoke('Platform.getDate')
+  return date
 }
 
 export const getArch = () => {
