@@ -15,7 +15,6 @@ export const listen = async ({ request, handle }) => {
   webSocket.pause()
   if (!IsWebSocketOpen.isWebSocketOpen(webSocket)) {
     const { type, event } = await GetFirstWebSocketEvent.getFirstWebSocketEvent(webSocket)
-    console.log({ type, event })
   }
   return webSocket
 }

@@ -51,7 +51,6 @@ const renderRow = (rowInfo) => {
   }
   const dom = []
 
-  console.log({ type })
   dom.push(treeItem)
   if (type === TextSearchResultType.File) {
     treeItem.childCount++
