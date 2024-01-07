@@ -60,7 +60,7 @@ const renderRow = (rowInfo) => {
       childCount: 0,
     })
   }
-  if (icon) {
+  if (type === TextSearchResultType.File) {
     treeItem.childCount++
     dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(icon))
   }
