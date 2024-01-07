@@ -1,4 +1,6 @@
-export const getExtensionAbsolutePath = (isWeb, path, relativePath, origin) => {
+import * as AssetDir from '../AssetDir/AssetDir.js'
+
+export const getExtensionAbsolutePath = (id, isWeb, isBuiltin, path, relativePath, origin) => {
   if (path.startsWith('http')) {
     if (path.endsWith('/')) {
       return new URL(relativePath, path).toString()
@@ -10,6 +12,9 @@ export const getExtensionAbsolutePath = (isWeb, path, relativePath, origin) => {
   }
   if (isWeb) {
     return path + '/' + relativePath
+  }
+  if (isBuiltin) {
+    return `${AssetDir.assetDir}/extensions/${id}/${relativePath}`
   }
   return new URL('/remote' + path + '/' + relativePath, origin).toString()
 }

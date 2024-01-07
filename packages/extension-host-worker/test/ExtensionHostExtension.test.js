@@ -31,13 +31,16 @@ test('activate - error - module not found', async () => {
     origin: '',
   }
   await expect(
-    ExtensionHostExtension.activate({
-      isWeb: true,
-      path: '/test',
-      browser: 'extension.js',
-      id: 'test',
-    })
-  ).rejects.toThrowError(new Error('Failed to activate extension test: Failed to import /test/extension.js: Not found (404)'))
+    ExtensionHostExtension.activate(
+      {
+        isWeb: true,
+        path: '/test',
+        browser: 'extension.js',
+        id: 'test',
+      },
+      '/test/extension.js',
+    ),
+  ).rejects.toThrow(new Error('Failed to activate extension test: Failed to import /test/extension.js: Not found (404)'))
 })
 
 test('activate - error', async () => {
@@ -54,13 +57,16 @@ test('activate - error', async () => {
     origin: '',
   }
   await expect(
-    ExtensionHostExtension.activate({
-      isWeb: true,
-      path: '/test',
-      browser: 'extension.js',
-      id: 'test',
-    })
-  ).rejects.toThrowError(new Error('Failed to activate extension test: TypeError: x is not a function'))
+    ExtensionHostExtension.activate(
+      {
+        isWeb: true,
+        path: '/test',
+        browser: 'extension.js',
+        id: 'test',
+      },
+      '/test/extension.js',
+    ),
+  ).rejects.toThrow(new Error('Failed to activate extension test: TypeError: x is not a function'))
 })
 
 test('activate - timeout exceeded', async () => {
@@ -76,12 +82,16 @@ test('activate - timeout exceeded', async () => {
   globalThis.location = {
     origin: '',
   }
+
   await expect(
-    ExtensionHostExtension.activate({
-      isWeb: true,
-      path: '/test',
-      browser: 'extension.js',
-      id: 'test',
-    })
-  ).rejects.toThrowError(new Error('Failed to activate extension test: Activation timeout of 10000ms exceeded'))
+    ExtensionHostExtension.activate(
+      {
+        isWeb: true,
+        path: '/test',
+        browser: 'extension.js',
+        id: 'test',
+      },
+      '/test/extension.js',
+    ),
+  ).rejects.toThrow(new Error('Failed to activate extension test: Activation timeout of 10000ms exceeded'))
 })

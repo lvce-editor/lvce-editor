@@ -1,6 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
 import * as CancelToken from '../CancelToken/CancelToken.js'
-import * as GetExtensionAbsolutePath from '../GetExtensionAbsolutePath/GetExtensionAbsolutePath.js'
 import * as GetExtensionId from '../GetExtensionId/GetExtensionId.js'
 import * as ImportScript from '../ImportScript/ImportScript.js'
 import * as IsImportError from '../IsImportError/IsImportError.js'
@@ -18,11 +17,11 @@ const rejectAfterTimeout = async (timeout, token) => {
   throw new Error(`Activation timeout of ${timeout}ms exceeded`)
 }
 
-export const activate = async (extension) => {
+export const activate = async (extension, absolutePath) => {
   try {
     Assert.string(extension.path)
     Assert.string(extension.browser)
-    const absolutePath = GetExtensionAbsolutePath.getExtensionAbsolutePath(extension.isWeb, extension.path, extension.browser, location.origin)
+    Assert.string(absolutePath)
     const module = await ImportScript.importScript(absolutePath)
     const token = CancelToken.create()
     try {

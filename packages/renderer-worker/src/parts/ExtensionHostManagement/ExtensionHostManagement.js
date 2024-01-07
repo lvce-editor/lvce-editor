@@ -1,7 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
+import * as GetExtensionAbsolutePath from '../GetExtensionAbsolutePath/GetExtensionAbsolutePath.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Origin from '../Origin/Origin.js'
 import * as TestState from '../TestState/TestState.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -87,7 +89,15 @@ const startSynching = async (extensionHost) => {
 
 const actuallyActivateExtension = async (extensionHost, extension) => {
   if (!(extension.id in state.activatedExtensions)) {
-    state.activatedExtensions[extension.id] = extensionHost.ipc.invoke(ExtensionHostCommandType.ExtensionActivate, extension)
+    const absolutePath = GetExtensionAbsolutePath.getExtensionAbsolutePath(
+      extension.id,
+      extension.isWeb,
+      extension.builtin,
+      extension.path,
+      extension.browser,
+      Origin.origin,
+    )
+    state.activatedExtensions[extension.id] = extensionHost.ipc.invoke(ExtensionHostCommandType.ExtensionActivate, extension, absolutePath)
   }
   return state.activatedExtensions[extension.id]
 }
