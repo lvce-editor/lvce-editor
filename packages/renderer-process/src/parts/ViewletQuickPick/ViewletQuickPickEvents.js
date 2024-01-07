@@ -31,8 +31,10 @@ export const handlePointerDown = (event) => {
     // workaround to disable virtual keyboard automatically opening on android
     // see https://stackoverflow.com/questions/48635501/how-to-hide-soft-keyboard-and-keep-input-on-focus#answer-53104238
     const $Input = document.querySelector('#QuickPickHeader .InputBox')
-    // @ts-ignore
-    $Input.readOnly = true
+    if ($Input) {
+      // @ts-ignore
+      $Input.readOnly = true
+    }
   }
   Event.preventDefault(event)
   const { clientX, clientY } = event
