@@ -8,7 +8,7 @@ export const handleRemoteRequest = async (request, socket) => {
   Assert.object(socket)
   const response = new ServerResponse(request)
   response.assignSocket(socket)
-  const result = await GetElectronFileResponse.getElectronFileResponse(request.url)
+  const result = await GetElectronFileResponse.getElectronFileResponse(request.url, request)
   response.statusCode = result.init.status
   SetHeaders.setHeaders(response, {
     ...result.init.headers,
