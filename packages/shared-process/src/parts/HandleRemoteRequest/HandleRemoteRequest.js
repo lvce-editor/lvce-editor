@@ -1,6 +1,7 @@
 import { ServerResponse } from 'node:http'
 import * as Assert from '../Assert/Assert.js'
 import * as GetElectronFileResponse from '../GetElectronFileResponse/GetElectronFileResponse.js'
+import * as SetHeaders from '../SetHeaders/SetHeaders.js'
 
 export const handleRemoteRequest = async (request, socket) => {
   Assert.object(request)
@@ -9,9 +10,9 @@ export const handleRemoteRequest = async (request, socket) => {
   response.assignSocket(socket)
   const result = await GetElectronFileResponse.getElectronFileResponse(request.url)
   response.statusCode = result.init.status
-  for (const [key, value] of Object.entries(result.init.headers)) {
-    response.setHeader(key, value)
-  }
-  response.setHeader('Connection', 'close')
+  SetHeaders.setHeaders(response, {
+    ...result.init.headers,
+    Connection: 'close',
+  })
   response.end(result.body)
 }
