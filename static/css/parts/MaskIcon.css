@@ -192,6 +192,10 @@
   mask-image: url(/icons/circle-filled.svg);
 }
 
+.MaskIconInfo {
+  mask-image: url(/icons/info.svg);
+}
+
 .Chevron {
   width: 16px;
   height: 16px;
