@@ -3,6 +3,7 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as TreeItemPadding from '../TreeItemPadding/TreeItemPadding.js'
 import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -38,7 +39,7 @@ const renderRow = (rowInfo) => {
     ariaDescription: '',
     childCount: 1,
     paddingLeft: `${depth * 1 + 1}rem`,
-    paddingRight: '12px',
+    paddingRight: TreeItemPadding.PaddingRight,
   }
   switch (type) {
     case DirentType.Directory:
