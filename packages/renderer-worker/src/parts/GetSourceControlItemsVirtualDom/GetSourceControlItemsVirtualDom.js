@@ -53,10 +53,9 @@ const createItemDirectory = (item) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: ClassNames.Chevron,
-      childCount: 1,
+      className: `${ClassNames.Chevron} MaskIcon${icon}`,
+      childCount: 0,
     },
-    GetIconVirtualDom.getIconVirtualDom(icon),
     {
       type: VirtualDomElements.Div,
       className: labelClassName,
