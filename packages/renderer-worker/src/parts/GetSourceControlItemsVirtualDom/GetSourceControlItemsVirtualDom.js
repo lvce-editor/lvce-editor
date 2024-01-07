@@ -4,6 +4,7 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as EmptySourceControlButtons from '../EmptySourceControlButtons/EmptySourceControlButton.js'
 import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
+import * as TreeItemPadding from '../TreeItemPadding/TreeItemPadding.js'
 import * as GetIconVirtualDom from '../GetIconVirtualDom/GetIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -48,8 +49,8 @@ const createItemDirectory = (item) => {
       ariaPosInSet: posInSet,
       ariaSetSize: setSize,
       childCount: 3,
-      paddingLeft: '1rem',
-      paddingRight: '12px',
+      paddingLeft: TreeItemPadding.PaddingLeft,
+      paddingRight: TreeItemPadding.PaddingRight,
     },
     {
       type: VirtualDomElements.Div,
