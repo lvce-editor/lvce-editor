@@ -56,6 +56,11 @@ export const bundleRendererProcess = async ({ cachePath, commitHash, platform, a
         occurrence: `export const isFirefox = getIsFirefox()`,
         replacement: `export const isFirefox = false`,
       })
+      await Replace.replace({
+        path: `${cachePath}/src/parts/IsMobile/IsMobile.js`,
+        occurrence: `export const isMobile = getIsMobile()`,
+        replacement: `export const isMobile = false`,
+      })
     }
     await BundleJs.bundleJs({
       cwd: cachePath,
