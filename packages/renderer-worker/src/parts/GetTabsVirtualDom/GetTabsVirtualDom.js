@@ -1,17 +1,9 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as TabFlags from '../TabFlags/TabFlags.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-
-/**
- * @enum {string}
- */
-const ClassNames = {
-  MainTab: 'MainTab',
-  TabLabel: 'TabLabel',
-  MainTabSelected: 'MainTabSelected',
-}
 
 const getTabDom = (tab, isActive, fixedWidth) => {
   const { icon, tabWidth, uri, flags } = tab
