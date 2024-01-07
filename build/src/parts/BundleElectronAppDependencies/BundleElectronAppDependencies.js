@@ -142,12 +142,6 @@ export const bundleElectronAppDependencies = async ({
   })
   console.timeEnd('copyPtyHostFiles')
 
-  console.time('copyExtensionHostFiles')
-  await copyExtensionHostFiles({
-    cachePath,
-  })
-  console.timeEnd('copyExtensionHostFiles')
-
   console.time('copyExtensionHostHelperProcessFiles')
   await copyExtensionHostHelperProcessFiles({
     cachePath,
