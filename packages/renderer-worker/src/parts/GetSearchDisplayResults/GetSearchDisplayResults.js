@@ -22,6 +22,7 @@ const getDisplayResult = (result, itemHeight, i, setSize, searchTermLength, repl
         matchLength: 0,
         replacement: '',
         depth: 0,
+        matchCount: 0,
       }
     case TextSearchResultType.Match:
       return {
@@ -37,6 +38,7 @@ const getDisplayResult = (result, itemHeight, i, setSize, searchTermLength, repl
         matchLength: searchTermLength,
         replacement,
         depth: 1,
+        matchCount: 0,
       }
     default:
       throw new Error('unexpected search result type')
@@ -58,10 +60,18 @@ export const getDisplayResults = (results, itemHeight, resultCount, searchTerm, 
     }
   }
   const searchTermLength = searchTerm.length
+  let fileResult = {
+    matchCount: 0,
+  }
   for (let i = minLineY; i < maxLineY; i++) {
     const result = results[i]
     const displayResult = getDisplayResult(result, itemHeight, i, setSize, searchTermLength, replacement)
     displayResults.push(displayResult)
+    if (result.type === TextSearchResultType.File) {
+      fileResult = displayResult
+    } else {
+      fileResult.matchCount++
+    }
   }
   return displayResults
 }

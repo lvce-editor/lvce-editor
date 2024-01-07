@@ -3,6 +3,7 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const deleted = {
@@ -24,7 +25,7 @@ const highlighted = {
 }
 
 const renderRow = (rowInfo) => {
-  const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement } = rowInfo
+  const { top, type, matchStart, matchLength, text: displayText, title, icon, setSize, posInSet, depth, replacement, matchCount } = rowInfo
   const treeItem = {
     type: VirtualDomElements.Div,
     role: AriaRoles.TreeItem,
@@ -37,6 +38,7 @@ const renderRow = (rowInfo) => {
     ariaDescription: '',
     childCount: 1,
     paddingLeft: `${depth * 1 + 1}rem`,
+    paddingRight: '12px',
   }
   switch (type) {
     case DirentType.Directory:
@@ -76,6 +78,10 @@ const renderRow = (rowInfo) => {
     }
   } else {
     dom.push(text(displayText))
+  }
+  if (matchCount) {
+    treeItem.childCount++
+    dom.push(...GetBadgeVirtualDom.getBadgeVirtualDom('SourceControlBadge', matchCount))
   }
   return dom
 }
