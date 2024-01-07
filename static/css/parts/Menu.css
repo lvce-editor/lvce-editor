@@ -71,3 +71,17 @@
   height: 1px;
   background: var(--MenuItemSeparatorBackground, #606060);
 }
+
+.MenuItemCheckMark {
+  padding: 0;
+}
+
+.MenuItemCheckmarkIcon {
+  width: 26px;
+  height: 26px;
+  contain: strict;
+  mask-size: 20px;
+  mask-position: 50% 50%;
+  background: currentColor;
+  mask-repeat: no-repeat;
+}
