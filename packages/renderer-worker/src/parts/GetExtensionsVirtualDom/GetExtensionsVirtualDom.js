@@ -49,6 +49,7 @@ const getExtensionVirtualDom = (extension) => {
       type: VirtualDomElements.Img,
       src: icon,
       className: ClassNames.ExtensionListItemIcon,
+      role: AriaRoles.None,
       childCount: 0,
     },
     listItemDetail,
