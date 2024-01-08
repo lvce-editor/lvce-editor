@@ -6,10 +6,10 @@ import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 const infoRow = {
   type: VirtualDomElements.Div,
   className: ClassNames.InfoRow,
-  childCount: 2,
+  childCount: 1,
 }
 
-export const getAboutVirtualDom = (productName, versionKey, versionValue, commitKey, commitValue, dateKey, dateValue, browserKey, browserValue) => {
+export const getAboutVirtualDom = (productName, message) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
@@ -50,7 +50,7 @@ export const getAboutVirtualDom = (productName, versionKey, versionValue, commit
     {
       type: VirtualDomElements.Div,
       className: ClassNames.AboutContentRight,
-      childCount: 5,
+      childCount: 2,
     },
     {
       type: VirtualDomElements.Div,
@@ -59,17 +59,7 @@ export const getAboutVirtualDom = (productName, versionKey, versionValue, commit
     },
     text(productName),
     infoRow,
-    text(`${versionKey} `),
-    text(versionValue),
-    infoRow,
-    text(`${commitKey} `),
-    text(commitValue),
-    infoRow,
-    text(`${dateKey} `),
-    text(dateValue),
-    infoRow,
-    text(`${browserKey} `),
-    text(browserValue),
+    text(message),
     {
       type: VirtualDomElements.Div,
       className: ClassNames.AboutButtons,

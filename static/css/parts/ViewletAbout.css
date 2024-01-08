@@ -71,6 +71,7 @@
 .InfoRow {
   display: flex;
   gap: 10px;
+  white-space: pre;
 }
 
 .AboutButtons {
