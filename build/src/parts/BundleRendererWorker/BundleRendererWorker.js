@@ -43,7 +43,7 @@ const getPlatformCode = (platform) => {
   }
 }
 
-export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir, version, date }) => {
+export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir, version, date, product }) => {
   try {
     await Copy.copy({
       from: 'packages/renderer-worker/src',
@@ -89,6 +89,11 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
     })
 
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Product/Product.js`,
+      occurrence: `productNameLong = 'Lvce Editor - OSS'`,
+      replacement: `productNameLong = '${product.nameLong}'`,
+    })
     await Replace.replace({
       path: `${cachePath}/src/parts/Process/Process.js`,
       occurrence: `commit = 'unknown commit'`,

@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as GetAboutDetailStringWeb from '../GetAboutDetailStringWeb/GetAboutDetailStringWeb.js'
+import * as Product from '../Product/Product.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
@@ -14,7 +15,7 @@ export const loadContent = async (state) => {
   const message = GetAboutDetailStringWeb.getDetailStringWeb()
   return {
     ...state,
-    productName: 'Lvce Editor',
+    productName: Product.productNameLong,
     message,
   }
 }

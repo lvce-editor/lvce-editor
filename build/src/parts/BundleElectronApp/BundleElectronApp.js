@@ -409,6 +409,7 @@ export const build = async ({
     assetDir: ``,
     version,
     date,
+    product,
   })
 
   console.time('copyRendererWorkerFiles')
