@@ -1,24 +1,17 @@
-import * as Process from '../Process/Process.js'
-import * as GetBrowser from '../GetBrowser/GetBrowser.js'
+import * as GetAboutDetailStringWeb from '../GetAboutDetailStringWeb/GetAboutDetailStringWeb.js'
 
 export const create = () => {
   return {
     productName: '',
-    version: '',
-    commit: '',
-    date: '',
-    browser: '',
+    message: '',
   }
 }
 
 export const loadContent = async (state) => {
-  const browser = GetBrowser.getBrowser()
+  const message = GetAboutDetailStringWeb.getDetailStringWeb()
   return {
     ...state,
     productName: 'Lvce Editor',
-    version: Process.version,
-    commit: Process.commit,
-    date: Process.date,
-    browser,
+    message,
   }
 }
