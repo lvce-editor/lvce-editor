@@ -1,9 +1,11 @@
 import * as Command from '../Command/Command.js'
+import * as Focus from '../Focus/Focus.js'
+import * as FocusKey from '../FocusKey/FocusKey.js'
 import * as GetAboutDetailStringWeb from '../GetAboutDetailStringWeb/GetAboutDetailStringWeb.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Product from '../Product/Product.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as JoinLines from '../JoinLines/JoinLines.js'
 
 export const create = () => {
   return {
@@ -37,5 +39,10 @@ export const handleClickCopy = async (state) => {
 
 export const handleClickClose = async (state) => {
   await Viewlet.closeWidget(ViewletModuleId.About)
+  return state
+}
+
+export const handleFocusIn = (state) => {
+  Focus.setFocus(FocusKey.About)
   return state
 }
