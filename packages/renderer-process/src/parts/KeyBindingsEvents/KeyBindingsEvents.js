@@ -4,7 +4,6 @@ import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const handleMatchingKeyBinding = (identifier) => {
-  console.log({ identifier })
   RendererWorker.send(/* KeyBindings.handleKeyBinding */ 'KeyBindings.handleKeyBinding', /* keyBinding */ identifier)
 }
 
