@@ -61,7 +61,7 @@
   background: var(--WidgetBackground, #1f1f1f);
   color: var(--WidgetForeground, #cccccc);
   display: flex;
-  padding: 30px;
+  padding: 10px;
   flex-direction: column;
   border-radius: 6px;
 }
@@ -70,6 +70,8 @@
   display: flex;
   gap: 24px;
   flex: 1;
+  contain: strict;
+  padding: 0 10px;
 }
 
 .DialogToolBar {
@@ -86,13 +88,11 @@
   contain: strict;
 }
 
-.DialogContentLeft {
-  display: flex;
-}
-
 .DialogContentRight {
   display: flex;
   flex-direction: column;
+  contain: strict;
+  flex: 1;
 }
 
 .DialogIcon {
@@ -119,10 +119,13 @@
   display: flex;
   gap: 10px;
   white-space: pre;
+  contain: content;
 }
 
 .DialogButtons {
   justify-content: end;
   display: flex;
   gap: 8px;
+  contain: strict;
+  height: 38px;
 }

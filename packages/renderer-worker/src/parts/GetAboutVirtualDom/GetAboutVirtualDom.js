@@ -38,11 +38,6 @@ export const getAboutVirtualDom = (productName, message) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: 'DialogContentLeft',
-      childCount: 1,
-    },
-    {
-      type: VirtualDomElements.Div,
       className: 'DialogIcon DialogInfoIcon MaskIcon MaskIconInfo',
       childCount: 0,
     },
