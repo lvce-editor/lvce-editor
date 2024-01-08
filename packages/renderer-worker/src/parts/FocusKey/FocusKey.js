@@ -1,19 +1,22 @@
-export const ActivityBar = 'activityBar'
-export const DebugInput = 'DebugInput'
-export const EditorCompletion = 'editorCompletions'
-export const EditorImage = 'EditorImage'
-export const EditorText = 'EditorText'
-export const Empty = ''
-export const Explorer = 'Explorer'
-export const ExplorerEditBox = 'ExplorerEditBox'
-export const Extensions = 'Extensions'
-export const FindWidget = 'FindWidget'
-export const LocationList = 'locationList'
-export const QuickPickInput = 'quickPickInput'
-export const SearchInput = 'SearchInput'
-export const SimpleBrowserInput = 'SimpleBrowserInput'
-export const SourceControlInput = 'sourceControlInput'
-export const Terminal = 'terminal'
-export const TitleBarMenuBar = 'titleBarMenuBar'
-export const ViewletList = 'ViewletList'
-export const Problems = 'problems'
+// TODO remove this file and merge with whenExpressions
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
+
+export const ActivityBar = WhenExpression.FocusActivityBar
+export const DebugInput = WhenExpression.FocusDebugInput
+export const EditorCompletion = WhenExpression.FocusEditorCompletions
+export const EditorImage = WhenExpression.FocusEditorImage
+export const EditorText = WhenExpression.FocusEditorText
+export const Empty = WhenExpression.Empty
+export const Explorer = WhenExpression.FocusExplorer
+export const ExplorerEditBox = WhenExpression.FocusExplorerEditBox
+export const Extensions = WhenExpression.FocusExtensions
+export const FindWidget = WhenExpression.FocusFindWidget
+export const LocationList = WhenExpression.FocusLocationList
+export const QuickPickInput = WhenExpression.FocusQuickPickInput
+export const SearchInput = WhenExpression.FocusSearchInput
+export const SimpleBrowserInput = WhenExpression.FocusSimpleBrowserInput
+export const SourceControlInput = WhenExpression.FocusSourceControlInput
+export const Terminal = WhenExpression.FocusTerminal
+export const TitleBarMenuBar = WhenExpression.FocusTitleBarMenuBar
+export const ViewletList = WhenExpression.FocusViewletList
+export const Problems = WhenExpression.FocusProblems
