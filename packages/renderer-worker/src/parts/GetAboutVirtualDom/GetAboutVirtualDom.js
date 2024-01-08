@@ -4,19 +4,27 @@ import * as TabIndex from '../TabIndex/TabIndex.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-const infoRow = {
-  type: VirtualDomElements.Div,
-  className: 'DialogMessage',
-  childCount: 1,
+const br = {
+  type: VirtualDomElements.Br,
+  childCount: 0,
 }
 
-export const getAboutVirtualDom = (productName, message, closeMessage, okMessage, copyMessage) => {
+const renderLine = (line, index) => {
+  if (index === 0) {
+    return [text(line)]
+  }
+  return [br, text(line)]
+}
+
+export const getAboutVirtualDom = (productName, lines, closeMessage, okMessage, copyMessage, infoMessage) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
       className: 'DialogContent',
       tabIndex: TabIndex.Focusable,
       role: AriaRoles.Dialog,
+      ariaModal: 'true',
+      ariaLabelledBy: 'DialogIcon DialogHeading',
       childCount: 3,
     },
     {
@@ -45,6 +53,8 @@ export const getAboutVirtualDom = (productName, message, closeMessage, okMessage
     {
       type: VirtualDomElements.Div,
       className: 'DialogIcon DialogInfoIcon MaskIcon MaskIconInfo',
+      id: 'DialogIcon',
+      ariaLabel: infoMessage,
       childCount: 0,
     },
     {
@@ -54,12 +64,17 @@ export const getAboutVirtualDom = (productName, message, closeMessage, okMessage
     },
     {
       type: VirtualDomElements.Div,
+      id: 'DialogHeading',
       className: 'DialogHeading',
       childCount: 1,
     },
     text(productName),
-    infoRow,
-    text(message),
+    {
+      type: VirtualDomElements.Div,
+      className: 'DialogMessage',
+      childCount: lines.length * 2 - 1,
+    },
+    ...lines.flatMap(renderLine),
     {
       type: VirtualDomElements.Div,
       className: 'DialogButtons',
