@@ -4,13 +4,19 @@ import * as TabIndex from '../TabIndex/TabIndex.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-const infoRow = {
-  type: VirtualDomElements.Div,
-  className: 'DialogMessage',
-  childCount: 1,
+const br = {
+  type: VirtualDomElements.Br,
+  childCount: 0,
 }
 
-export const getAboutVirtualDom = (productName, message, closeMessage, okMessage, copyMessage, infoMessage) => {
+const renderLine = (line, index) => {
+  if (index === 0) {
+    return [text(line)]
+  }
+  return [br, text(line)]
+}
+
+export const getAboutVirtualDom = (productName, lines, closeMessage, okMessage, copyMessage, infoMessage) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
@@ -63,8 +69,12 @@ export const getAboutVirtualDom = (productName, message, closeMessage, okMessage
       childCount: 1,
     },
     text(productName),
-    infoRow,
-    text(message),
+    {
+      type: VirtualDomElements.Div,
+      className: 'DialogMessage',
+      childCount: lines.length * 2 - 1,
+    },
+    ...lines.flatMap(renderLine),
     {
       type: VirtualDomElements.Div,
       className: 'DialogButtons',

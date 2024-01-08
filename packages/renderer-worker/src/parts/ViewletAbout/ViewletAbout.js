@@ -3,21 +3,22 @@ import * as GetAboutDetailStringWeb from '../GetAboutDetailStringWeb/GetAboutDet
 import * as Product from '../Product/Product.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 
 export const create = () => {
   return {
     productName: '',
-    message: '',
+    lines: [],
     focused: false,
   }
 }
 
 export const loadContent = async (state) => {
-  const message = GetAboutDetailStringWeb.getDetailStringWeb()
+  const lines = GetAboutDetailStringWeb.getDetailStringWeb()
   return {
     ...state,
     productName: Product.productNameLong,
-    message,
+    lines,
     focused: true,
   }
 }
@@ -28,7 +29,8 @@ export const handleClickOk = async (state) => {
 }
 
 export const handleClickCopy = async (state) => {
-  const { message } = state
+  const { lines } = state
+  const message = JoinLines.joinLines(lines)
   await Command.execute('ClipBoard.writeText', message)
   return state
 }
