@@ -67,6 +67,10 @@
   cursor: pointer;
 }
 
+.ButtonPrimary:where(:hover) {
+  background: var(--SplitButtonHoverBackground, #387674);
+}
+
 .ButtonSecondary {
   background: var(--ButtonSecondaryBackground, #313131);
   color: var(--ButtonSecondaryForeground, #cccccc);
