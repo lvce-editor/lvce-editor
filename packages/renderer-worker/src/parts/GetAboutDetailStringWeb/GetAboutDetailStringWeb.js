@@ -3,7 +3,7 @@ import * as GetBrowser from '../GetBrowser/GetBrowser.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as Process from '../Process/Process.js'
 
-export const getDetailStringWeb = async () => {
+export const getDetailStringWeb = () => {
   const version = Process.version
   const commit = Process.commit
   const date = Process.date
