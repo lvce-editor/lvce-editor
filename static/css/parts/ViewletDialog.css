@@ -53,3 +53,75 @@
   max-width: 100%;
   overflow-x: auto;
 }
+
+.DialogContent {
+  width: 520px;
+  height: 280px;
+  contain: strict;
+  background: var(--WidgetBackground, #1f1f1f);
+  color: var(--WidgetForeground, #cccccc);
+  display: flex;
+  padding: 30px;
+  flex-direction: column;
+  border-radius: 6px;
+}
+
+.DialogContentWrapper {
+  display: flex;
+  gap: 24px;
+  flex: 1;
+}
+
+.DialogToolBar {
+  height: 20px;
+  contain: strict;
+  justify-content: end;
+  display: flex;
+}
+
+.DialogClose {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  contain: strict;
+}
+
+.DialogContentLeft {
+  display: flex;
+}
+
+.DialogContentRight {
+  display: flex;
+  flex-direction: column;
+}
+
+.DialogIcon {
+  width: 50px;
+  height: 50px;
+  contain: strict;
+  position: relative;
+  mask-size: 50px;
+}
+
+.DialogInfoIcon {
+  background: var(--InfoIconForeground, #3794ff);
+}
+
+.DialogHeading {
+  font-size: 18px;
+  line-height: 22px;
+  contain: strict;
+  height: 35px;
+  width: 100%;
+}
+
+.DialogMessage {
+  display: flex;
+  gap: 10px;
+}
+
+.DialogButtons {
+  justify-content: end;
+  display: flex;
+  gap: 8px;
+}

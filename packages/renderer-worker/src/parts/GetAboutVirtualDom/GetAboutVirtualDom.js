@@ -13,17 +13,17 @@ export const getAboutVirtualDom = (productName, message) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: ClassNames.AboutContent,
+      className: 'DialogContent',
       childCount: 3,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'AboutToolBar',
+      className: 'DialogToolBar',
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'AboutClose',
+      className: 'DialogClose',
       ariaLabel: 'Close',
       childCount: 1,
     },
@@ -34,27 +34,27 @@ export const getAboutVirtualDom = (productName, message) => {
     },
     {
       type: VirtualDomElements.Div,
-      className: ClassNames.AboutContentWrapper,
+      className: 'DialogContentWrapper',
       childCount: 2,
     },
     {
       type: VirtualDomElements.Div,
-      className: ClassNames.AboutContentLeft,
+      className: 'DialogContentLeft',
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'AboutInfoIcon MaskIcon MaskIconInfo',
+      className: 'DialogIcon DialogInfoIcon MaskIcon MaskIconInfo',
       childCount: 0,
     },
     {
       type: VirtualDomElements.Div,
-      className: ClassNames.AboutContentRight,
+      className: 'DialogContentRight',
       childCount: 2,
     },
     {
       type: VirtualDomElements.Div,
-      className: ClassNames.AboutContentRightHeading,
+      className: 'DialogHeading',
       childCount: 1,
     },
     text(productName),
@@ -62,7 +62,7 @@ export const getAboutVirtualDom = (productName, message) => {
     text(message),
     {
       type: VirtualDomElements.Div,
-      className: ClassNames.AboutButtons,
+      className: 'DialogButtons',
       childCount: 2,
     },
     {
