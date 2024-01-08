@@ -10,6 +10,8 @@ const UiStrings = {
   Commit: 'Commit',
   Date: 'Date',
   Browser: 'Browser',
+  Info: 'Info',
+  Close: 'Close',
 }
 
 export const ok = () => {
@@ -34,4 +36,12 @@ export const date = () => {
 
 export const browser = () => {
   return I18nString.i18nString(UiStrings.Browser)
+}
+
+export const info = () => {
+  return I18nString.i18nString(UiStrings.Info)
+}
+
+export const close = () => {
+  return I18nString.i18nString(UiStrings.Close)
 }
