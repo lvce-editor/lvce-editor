@@ -7,19 +7,19 @@ export const setFocus = async (focusKey) => {
   if (FocusState.get()) {
     Context.remove(FocusState.get())
   }
-  FocusState.set(`focus.${focusKey}`)
+  FocusState.set(focusKey)
   Context.set(FocusState.get(), true)
   KeyBindingsState.update()
 }
 
 export const setAdditionalFocus = (key) => {
   // TODO key should be numeric
-  Context.set(`focus.${key}`, true)
+  Context.set(key, true)
   KeyBindingsState.update()
 }
 
 export const removeAdditionalFocus = (key) => {
-  Context.remove(`focus.${key}`)
+  Context.remove(key)
 }
 
 export const hydrate = async () => {

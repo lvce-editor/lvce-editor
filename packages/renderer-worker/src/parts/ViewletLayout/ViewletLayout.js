@@ -348,7 +348,6 @@ export const loadContent = (state, savedState) => {
 }
 
 const show = async (state, module, currentViewletId) => {
-  console.log({ module })
   const { points } = state
   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
   const newPoints = new Uint16Array(points)
@@ -378,7 +377,7 @@ const show = async (state, module, currentViewletId) => {
     },
     false,
     true,
-    undefined
+    undefined,
   )
   if (commands) {
     commands.push(['Viewlet.append', uid, childUid])
@@ -551,7 +550,7 @@ const loadIfVisible = async (state, module) => {
           uid: childUid,
         },
         false,
-        true
+        true,
       )
       if (commands) {
         const referenceNodes = getReferenceNodes(sideBarLocation)
@@ -730,7 +729,7 @@ const showAsync = async (uid, points, module) => {
         height: points[kHeight],
       },
       false,
-      true
+      true,
     )
     if (commands) {
       commands.push(['Viewlet.append', uid, viewletUid])
