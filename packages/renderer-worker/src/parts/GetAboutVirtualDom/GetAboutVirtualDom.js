@@ -6,7 +6,7 @@ import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 const infoRow = {
   type: VirtualDomElements.Div,
   className: ClassNames.InfoRow,
-  childCount: 2,
+  childCount: 1,
 }
 
 export const getAboutVirtualDom = (productName, message) => {
