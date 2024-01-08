@@ -64,9 +64,11 @@
 .ButtonPrimary {
   background: var(--SplitButtonBackground, rgb(35, 112, 112));
   color: var(--SplitButtonForeground, white);
+  cursor: pointer;
 }
 
 .ButtonSecondary {
   background: var(--ButtonSecondaryBackground, #313131);
   color: var(--ButtonSecondaryForeground, #cccccc);
+  cursor: pointer;
 }

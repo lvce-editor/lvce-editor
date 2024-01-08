@@ -66,6 +66,14 @@
   border-radius: 6px;
 }
 
+.DialogContent:focus {
+  outline-width: 1px;
+  outline-style: solid;
+  outline-offset: -1px;
+  outline-color: var(--FocusBorder);
+  opacity: 1;
+}
+
 .DialogContentWrapper {
   display: flex;
   gap: 24px;
@@ -86,6 +94,7 @@
   width: 16px;
   height: 16px;
   contain: strict;
+  cursor: pointer;
 }
 
 .DialogContentRight {
@@ -96,11 +105,11 @@
 }
 
 .DialogIcon {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   contain: strict;
   position: relative;
-  mask-size: 50px;
+  mask-size: 100%;
 }
 
 .DialogInfoIcon {
@@ -126,6 +135,6 @@
   justify-content: end;
   display: flex;
   gap: 8px;
-  contain: strict;
-  height: 38px;
+  contain: content;
+  padding: 20px 10px 10px;
 }

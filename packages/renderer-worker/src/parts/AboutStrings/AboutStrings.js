@@ -12,6 +12,7 @@ const UiStrings = {
   Browser: 'Browser',
   Info: 'Info',
   Close: 'Close',
+  CloseDialog: 'Close Dialog',
 }
 
 export const ok = () => {
@@ -44,4 +45,8 @@ export const info = () => {
 
 export const close = () => {
   return I18nString.i18nString(UiStrings.Close)
+}
+
+export const closeDialog = () => {
+  return I18nString.i18nString(UiStrings.CloseDialog)
 }

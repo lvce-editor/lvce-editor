@@ -1,5 +1,7 @@
 import * as AboutStrings from '../AboutStrings/AboutStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as TabIndex from '../TabIndex/TabIndex.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const infoRow = {
@@ -8,11 +10,13 @@ const infoRow = {
   childCount: 1,
 }
 
-export const getAboutVirtualDom = (productName, message) => {
+export const getAboutVirtualDom = (productName, message, closeMessage, okMessage, copyMessage) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
       className: 'DialogContent',
+      tabIndex: TabIndex.Focusable,
+      role: AriaRoles.Dialog,
       childCount: 3,
     },
     {
@@ -23,7 +27,8 @@ export const getAboutVirtualDom = (productName, message) => {
     {
       type: VirtualDomElements.Div,
       className: 'DialogClose',
-      ariaLabel: 'Close',
+      ariaLabel: closeMessage,
+      role: AriaRoles.Button,
       onClick: 'handleClickClose',
       childCount: 1,
     },
@@ -66,14 +71,14 @@ export const getAboutVirtualDom = (productName, message) => {
       onClick: 'handleClickOk',
       childCount: 1,
     },
-    text(AboutStrings.ok()),
+    text(okMessage),
     {
       type: VirtualDomElements.Button,
       className: 'Button ButtonPrimary',
       onClick: 'handleClickCopy',
       childCount: 1,
     },
-    text(AboutStrings.copy()),
+    text(copyMessage),
   ]
   return dom
 }
