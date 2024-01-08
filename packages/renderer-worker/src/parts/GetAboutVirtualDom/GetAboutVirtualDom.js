@@ -14,7 +14,23 @@ export const getAboutVirtualDom = (productName, versionKey, versionValue, commit
     {
       type: VirtualDomElements.Div,
       className: ClassNames.AboutContent,
-      childCount: 2,
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'AboutToolBar',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'AboutClose',
+      ariaLabel: 'Close',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIcon MaskIconClose',
+      childCount: 0,
     },
     {
       type: VirtualDomElements.Div,

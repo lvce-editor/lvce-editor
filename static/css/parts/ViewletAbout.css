@@ -7,6 +7,20 @@
   place-content: center;
 }
 
+.AboutToolBar {
+  height: 20px;
+  contain: strict;
+  justify-content: end;
+  display: flex;
+}
+
+.AboutClose {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  contain: strict;
+}
+
 .AboutContent {
   width: 520px;
   height: 280px;
