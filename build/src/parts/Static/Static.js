@@ -212,7 +212,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   if (!ignoreIconTheme) {
     await Copy.copy({
       from: 'extensions/builtin.vscode-icons/icons',
-      to: `build/.tmp/dist/file-icons`,
+      to: `build/.tmp/dist/${commitHash}/file-icons`,
     })
   }
   await BundleCss.bundleCss({
