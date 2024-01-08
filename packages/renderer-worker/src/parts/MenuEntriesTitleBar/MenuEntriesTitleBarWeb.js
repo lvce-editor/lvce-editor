@@ -29,5 +29,10 @@ export const getMenuEntries = () => {
       label: ViewletTitleBarStrings.go(),
       flags: MenuItemFlags.None,
     },
+    {
+      id: MenuEntryId.Help,
+      label: ViewletTitleBarStrings.help(),
+      flags: MenuItemFlags.None,
+    },
   ]
 }
