@@ -24,6 +24,7 @@ export const getAboutVirtualDom = (productName, message) => {
       type: VirtualDomElements.Div,
       className: 'DialogClose',
       ariaLabel: 'Close',
+      onClick: 'handleClickClose',
       childCount: 1,
     },
     {
@@ -62,13 +63,15 @@ export const getAboutVirtualDom = (productName, message) => {
     {
       type: VirtualDomElements.Button,
       className: 'Button ButtonSecondary',
+      onClick: 'handleClickOk',
       childCount: 1,
     },
     text(AboutStrings.ok()),
     {
       type: VirtualDomElements.Button,
-      childCount: 1,
       className: 'Button ButtonPrimary',
+      onClick: 'handleClickCopy',
+      childCount: 1,
     },
     text(AboutStrings.copy()),
   ]
