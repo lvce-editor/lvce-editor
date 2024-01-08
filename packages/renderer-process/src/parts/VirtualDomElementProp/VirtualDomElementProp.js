@@ -1,3 +1,10 @@
+/**
+ *
+ * @param {HTMLElement} $Element
+ * @param string} key
+ * @param {any} value
+ * @param {any} eventMap
+ */
 export const setProp = ($Element, key, value, eventMap) => {
   switch (key) {
     case 'maskImage':
@@ -41,7 +48,11 @@ export const setProp = ($Element, key, value, eventMap) => {
       }
       break
     case 'inputType':
+      // @ts-ignore
       $Element.type = value
+      break
+    case 'ariaLabelledBy':
+      $Element.setAttribute('aria-labelledby', value)
       break
     case 'onClick':
     case 'onFocus':

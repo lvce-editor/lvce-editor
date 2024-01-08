@@ -11,9 +11,19 @@ export const renderDialog = {
     const okMessage = AboutStrings.ok()
     const copyMessage = AboutStrings.copy()
     const closeMessage = AboutStrings.close()
-    const dom = GetAboutVirtualDom.getAboutVirtualDom(newState.productName, newState.message, closeMessage, okMessage, copyMessage)
+    const infoMessage = AboutStrings.info()
+    const dom = GetAboutVirtualDom.getAboutVirtualDom(newState.productName, newState.message, closeMessage, okMessage, copyMessage, infoMessage)
     return ['setDom', dom]
   },
 }
 
-export const render = [renderDialog]
+export const renderFocus = {
+  isEqual(oldState, newState) {
+    return oldState.focused === newState.focused
+  },
+  apply(oldState, newState) {
+    return ['setFocused', newState.focused]
+  },
+}
+
+export const render = [renderDialog, renderFocus]

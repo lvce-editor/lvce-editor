@@ -10,13 +10,15 @@ const infoRow = {
   childCount: 1,
 }
 
-export const getAboutVirtualDom = (productName, message, closeMessage, okMessage, copyMessage) => {
+export const getAboutVirtualDom = (productName, message, closeMessage, okMessage, copyMessage, infoMessage) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
       className: 'DialogContent',
       tabIndex: TabIndex.Focusable,
       role: AriaRoles.Dialog,
+      ariaModal: 'true',
+      ariaLabelledBy: 'DialogIcon DialogHeading',
       childCount: 3,
     },
     {
@@ -45,6 +47,8 @@ export const getAboutVirtualDom = (productName, message, closeMessage, okMessage
     {
       type: VirtualDomElements.Div,
       className: 'DialogIcon DialogInfoIcon MaskIcon MaskIconInfo',
+      id: 'DialogIcon',
+      ariaLabel: infoMessage,
       childCount: 0,
     },
     {
@@ -54,6 +58,7 @@ export const getAboutVirtualDom = (productName, message, closeMessage, okMessage
     },
     {
       type: VirtualDomElements.Div,
+      id: 'DialogHeading',
       className: 'DialogHeading',
       childCount: 1,
     },

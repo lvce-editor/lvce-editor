@@ -8,6 +8,7 @@ export const create = () => {
   return {
     productName: '',
     message: '',
+    focused: false,
   }
 }
 
@@ -17,6 +18,7 @@ export const loadContent = async (state) => {
     ...state,
     productName: Product.productNameLong,
     message,
+    focused: true,
   }
 }
 
