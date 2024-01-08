@@ -1,4 +1,5 @@
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as ViewletAboutEvents from './ViewletAboutEvents.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
@@ -10,5 +11,5 @@ export const create = () => {
 
 export const setDom = (state, dom) => {
   const { $Viewlet } = state
-  VirtualDom.renderInto($Viewlet, dom)
+  VirtualDom.renderInto($Viewlet, dom, ViewletAboutEvents)
 }

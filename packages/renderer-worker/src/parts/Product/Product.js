@@ -1,5 +1,5 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+export const productNameLong = 'Lvce Editor - OSS'
 
 export const getProductNameLong = () => {
-  return SharedProcess.invoke('Platform.getProductNameLong')
+  return productNameLong
 }
