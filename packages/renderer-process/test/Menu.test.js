@@ -476,7 +476,7 @@ test.skip('event - context menu - outside', () => {
   $BackDrop.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Focus.setFocus', 'menu')
+  expect(RendererWorker.send).toHaveBeenCalledWith('Focus.setFocus', 'focus.menu')
 })
 
 // TODO test pageup/pagedown

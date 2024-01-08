@@ -12,6 +12,7 @@ export const handleKeyDown = (event) => {
   const identifier = GetKeyBindingIdentifier.getKeyBindingIdentifier(event)
   const identifiers = KeyBindingsState.getIdentifiers()
   const matchingKeyBinding = identifiers.includes(identifier)
+  console.log({ identifier, identifiers, matchingKeyBinding })
   if (!matchingKeyBinding) {
     return
   }

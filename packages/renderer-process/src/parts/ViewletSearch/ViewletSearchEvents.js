@@ -14,7 +14,7 @@ export const handleInput = (event) => {
 }
 
 export const handleFocus = (event) => {
-  RendererWorker.send('Focus.setFocus', 'SearchInput')
+  RendererWorker.send('Focus.setFocus', 'focus.SearchInput')
 }
 
 const getIndexTreeItem = ($Target) => {

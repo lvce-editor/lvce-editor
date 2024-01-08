@@ -98,7 +98,7 @@ export const handlePointerDown = (event) => {
 }
 
 export const handleDebugInputFocus = () => {
-  RendererWorker.send('Focus.setFocus', 'DebugInput')
+  RendererWorker.send('Focus.setFocus', 'focus.DebugInput')
 }
 
 export const handleDebugInput = (event) => {

@@ -41,7 +41,7 @@ const handleFocus = (event) => {
   const $Target = event.target
   $Target.classList.add('FocusOutline')
   // TODO maybe have one focus listener inside Viewlet.js instead of each viewlet
-  RendererWorker.send('Focus.setFocus', 'ViewletList')
+  RendererWorker.send('Focus.setFocus', 'focus.ViewletList')
   // RendererWorker.send(/* ViewletExtensions.focusIndex */ 868, /* index */ -1)
 }
 

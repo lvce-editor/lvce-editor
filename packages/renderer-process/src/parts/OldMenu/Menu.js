@@ -213,7 +213,7 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, do
 
   if (level === 0) {
     Focus.focus($Menu)
-    RendererWorker.send('Focus.setFocus', 'menu')
+    RendererWorker.send('Focus.setFocus', 'focus.menu')
   }
 }
 

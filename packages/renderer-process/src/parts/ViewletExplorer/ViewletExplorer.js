@@ -191,7 +191,7 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
   }
   if (focused) {
     $Viewlet.focus()
-    RendererWorker.send('Focus.setFocus', 'Explorer')
+    RendererWorker.send('Focus.setFocus', 'focus.Explorer')
   }
 }
 
