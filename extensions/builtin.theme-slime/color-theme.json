@@ -20,7 +20,12 @@
     "EditorCursorBackground": "#a8df5a",
     "EditorSelectionBackground": "rgba(255, 255, 255, 0.15)",
 
+    "EditorWidgetBackground": "#282e2f",
+    "EditorWidgetForeground": "#9ca2a0",
+
     "FocusOutline": "#3d5252",
+
+    "InfoIconForeground": "#3794ff",
 
     "InputBackground": "rgb(36, 41, 42)",
     "InputBoxBackground": "rgb(36, 41, 42)",
