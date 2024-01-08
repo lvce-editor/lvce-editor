@@ -754,7 +754,7 @@ const setVersionsAndDependencies = async ({ version }) => {
   }
 }
 
-const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash }) => {
+const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash, version, date }) => {
   const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
     commitHash,
     platform: 'remote',
@@ -773,6 +773,8 @@ const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash }) => {
     commitHash,
     platform: 'remote',
     assetDir: `/${commitHash}`,
+    version,
+    date,
   })
 
   console.time('copyRendererWorkerFiles')
@@ -869,7 +871,7 @@ export const build = async ({ product }) => {
   console.timeEnd('copyServerFiles')
 
   console.time('bundleRendererWorkerAndRendererProcessJs')
-  await bundleRendererWorkerAndRendererProcessJs({ commitHash })
+  await bundleRendererWorkerAndRendererProcessJs({ commitHash, version, date })
   console.timeEnd('bundleRendererWorkerAndRendererProcessJs')
 
   const sharedProcessCachePath = await BundleSharedProcessCached.bundleSharedProcessCached({

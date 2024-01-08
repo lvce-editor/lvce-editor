@@ -43,7 +43,7 @@ const getPlatformCode = (platform) => {
   }
 }
 
-export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir }) => {
+export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir, version, date }) => {
   try {
     await Copy.copy({
       from: 'packages/renderer-worker/src',
@@ -87,6 +87,22 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
       occurrence: '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
       replacement: `/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
+    })
+
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Process/Process.js`,
+      occurrence: `commit = 'unknown commit'`,
+      replacement: `commit = '${commitHash}'`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Process/Process.js`,
+      occurrence: `version = '0.0.0-dev'`,
+      replacement: `version = '${version}'`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/Process/Process.js`,
+      occurrence: `date = ''`,
+      replacement: `date = '${date}'`,
     })
 
     await WriteFile.writeFile({

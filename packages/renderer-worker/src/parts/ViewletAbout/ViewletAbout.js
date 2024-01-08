@@ -1,3 +1,5 @@
+import * as Process from '../Process/Process.js'
+
 export const create = () => {
   return {
     productName: '',
@@ -12,9 +14,9 @@ export const loadContent = async (state) => {
   return {
     ...state,
     productName: 'Lvce Editor',
-    version: '0.0.0-dev',
-    commit: 'abc',
-    date: '',
+    version: Process.version,
+    commit: Process.commit,
+    date: Process.date,
     browser: '',
   }
 }
