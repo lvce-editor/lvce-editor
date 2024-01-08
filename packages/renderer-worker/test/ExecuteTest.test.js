@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import { VError } from '../src/parts/VError/VError.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -28,7 +29,7 @@ test('executeTest - error - SyntaxError in TestFramework', async () => {
   await ExecuteTest.executeTest('test', fn)
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.handleError).toHaveBeenCalledWith(
-    new Error(`Failed to load command TestFrameWork.showOverlay: VError: failed to load module 24: SyntaxError: Unexpected token ','`)
+    new Error(`Failed to load command TestFrameWork.showOverlay: VError: failed to load module 24: SyntaxError: Unexpected token ','`),
   )
 })
 
@@ -39,5 +40,5 @@ test('executeTest - error', async () => {
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   await ExecuteTest.executeTest('test', fn)
   expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(new TypeError('Test failed: test: x is not a function'))
+  expect(spy).toHaveBeenCalledWith(new VError('Test failed: test: TypeError: x is not a function'))
 })
