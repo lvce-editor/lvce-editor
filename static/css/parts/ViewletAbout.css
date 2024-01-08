@@ -11,7 +11,8 @@
   width: 520px;
   height: 280px;
   contain: strict;
-  background: #1f1f1f;
+  background: var(--WidgetBackground, #1f1f1f);
+  color: var(--WidgetForeground, #cccccc);
   display: flex;
   padding: 30px;
   flex-direction: column;
@@ -42,7 +43,8 @@
 }
 
 .AboutContentRightHeading {
-  font-size: 25px;
+  font-size: 18px;
+  line-height: 22px;
   contain: strict;
   height: 35px;
   width: 100%;
