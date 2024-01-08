@@ -1,11 +1,10 @@
 import * as AboutStrings from '../AboutStrings/AboutStrings.js'
-import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const infoRow = {
   type: VirtualDomElements.Div,
-  className: ClassNames.InfoRow,
+  className: 'DialogMessage',
   childCount: 1,
 }
 
