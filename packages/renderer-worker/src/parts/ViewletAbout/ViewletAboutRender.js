@@ -5,15 +5,25 @@ export const hasFunctionalRender = true
 
 export const renderDialog = {
   isEqual(oldState, newState) {
-    return oldState.productName === newState.productName && oldState.message === newState.message
+    return oldState.productName === newState.productName && oldState.lines === newState.lines
   },
   apply(oldState, newState) {
     const okMessage = AboutStrings.ok()
     const copyMessage = AboutStrings.copy()
     const closeMessage = AboutStrings.close()
-    const dom = GetAboutVirtualDom.getAboutVirtualDom(newState.productName, newState.message, closeMessage, okMessage, copyMessage)
+    const infoMessage = AboutStrings.info()
+    const dom = GetAboutVirtualDom.getAboutVirtualDom(newState.productName, newState.lines, closeMessage, okMessage, copyMessage, infoMessage)
     return ['setDom', dom]
   },
 }
 
-export const render = [renderDialog]
+export const renderFocus = {
+  isEqual(oldState, newState) {
+    return oldState.focused === newState.focused
+  },
+  apply(oldState, newState) {
+    return ['setFocused', newState.focused]
+  },
+}
+
+export const render = [renderDialog, renderFocus]

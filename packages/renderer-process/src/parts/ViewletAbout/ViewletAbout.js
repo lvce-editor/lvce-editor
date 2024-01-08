@@ -13,3 +13,12 @@ export const setDom = (state, dom) => {
   const { $Viewlet } = state
   VirtualDom.renderInto($Viewlet, dom, ViewletAboutEvents)
 }
+
+export const setFocused = (state, value) => {
+  if (!value) {
+    return
+  }
+  const { $Viewlet } = state
+  const $Focusable = $Viewlet.querySelector('button')
+  $Focusable.focus()
+}

@@ -127,7 +127,6 @@
 .DialogMessage {
   display: flex;
   gap: 10px;
-  white-space: pre;
   contain: content;
 }
 
