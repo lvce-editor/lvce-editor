@@ -50,3 +50,23 @@
   cursor: pointer;
   border-right: 1px solid transparent;
 }
+
+.Button {
+  contain: content;
+  display: flex;
+  border-radius: 2px;
+  border: none;
+  place-content: center;
+  place-items: center;
+  padding: 5px 10px;
+}
+
+.ButtonPrimary {
+  background: var(--SplitButtonBackground, rgb(35, 112, 112));
+  color: var(--SplitButtonForeground, white);
+}
+
+.ButtonSecondary {
+  background: var(--ButtonSecondaryBackground, #313131);
+  color: var(--ButtonSecondaryForeground, #cccccc);
+}
