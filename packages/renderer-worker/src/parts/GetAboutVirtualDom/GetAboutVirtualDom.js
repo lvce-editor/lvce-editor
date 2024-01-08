@@ -2,7 +2,7 @@ import * as AboutStrings from '../AboutStrings/AboutStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-export const getAboutVirtualDom = (productName, version) => {
+export const getAboutVirtualDom = (productName, versionKey, versionValue, commitKey, commitValue, dateKey, dateValue, browserKey, browserValue) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
@@ -27,7 +27,7 @@ export const getAboutVirtualDom = (productName, version) => {
     {
       type: VirtualDomElements.Div,
       className: 'AboutContentRight',
-      childCount: 2,
+      childCount: 5,
     },
     {
       type: VirtualDomElements.Div,
@@ -40,8 +40,29 @@ export const getAboutVirtualDom = (productName, version) => {
       className: 'InfoRow',
       childCount: 2,
     },
-    text(`${AboutStrings.version()} `),
-    text(version),
+    text(`${versionKey} `),
+    text(versionValue),
+    {
+      type: VirtualDomElements.Div,
+      className: 'InfoRow',
+      childCount: 2,
+    },
+    text(`${commitKey} `),
+    text(commitValue),
+    {
+      type: VirtualDomElements.Div,
+      className: 'InfoRow',
+      childCount: 2,
+    },
+    text(`${dateKey} `),
+    text(dateValue),
+    {
+      type: VirtualDomElements.Div,
+      className: 'InfoRow',
+      childCount: 2,
+    },
+    text(`${browserKey} `),
+    text(browserValue),
     {
       type: VirtualDomElements.Div,
       className: 'AboutButtons',
