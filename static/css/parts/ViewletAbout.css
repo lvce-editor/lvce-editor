@@ -59,4 +59,5 @@
 .AboutButtons {
   justify-content: end;
   display: flex;
+  gap: 8px;
 }

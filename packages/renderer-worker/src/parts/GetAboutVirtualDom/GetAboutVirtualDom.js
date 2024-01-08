@@ -49,12 +49,14 @@ export const getAboutVirtualDom = (productName, version) => {
     },
     {
       type: VirtualDomElements.Button,
+      className: 'Button ButtonSecondary',
       childCount: 1,
     },
     text(AboutStrings.ok()),
     {
       type: VirtualDomElements.Button,
       childCount: 1,
+      className: 'Button ButtonPrimary',
     },
     text(AboutStrings.copy()),
   ]
