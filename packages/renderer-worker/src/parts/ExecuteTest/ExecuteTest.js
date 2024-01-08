@@ -2,6 +2,7 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TestType from '../TestType/TestType.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
+import { VError } from '../VError/VError.js'
 
 const printError = (error) => {
   if (error && error.constructor.name === 'AssertionError') {
@@ -48,8 +49,10 @@ export const executeTest = async (name, fn, globals = {}) => {
     }
     // @ts-ignore
     _error = stringifyError(error)
+    if (!(error instanceof VError)) {
+      error = new VError(error, `Test failed: ${name}`)
+    }
     // @ts-ignore
-    error.message = `Test failed: ${name}: ${error.message}`
     printError(error)
   }
   let state
