@@ -380,6 +380,11 @@ const copyIconThemes = async ({ commitHash }) => {
     from: 'extensions/builtin.vscode-icons/icon-theme.json',
     to: `build/.tmp/dist/${commitHash}/icon-themes/vscode-icons.json`,
   })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/icon-themes/vscode-icons.json`,
+    occurrence: '/icons',
+    replacement: '/file-icons',
+  })
 }
 
 const bundleJs = async ({ commitHash, platform, assetDir, version, date, product }) => {
