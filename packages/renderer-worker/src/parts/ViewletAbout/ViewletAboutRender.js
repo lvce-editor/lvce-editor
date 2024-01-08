@@ -1,4 +1,5 @@
 import * as GetAboutVirtualDom from '../GetAboutVirtualDom/GetAboutVirtualDom.js'
+import * as AboutStrings from '../AboutStrings/AboutStrings.js'
 
 export const hasFunctionalRender = true
 
@@ -7,7 +8,10 @@ export const renderDialog = {
     return oldState.productName === newState.productName && oldState.message === newState.message
   },
   apply(oldState, newState) {
-    const dom = GetAboutVirtualDom.getAboutVirtualDom(newState.productName, newState.message)
+    const okMessage = AboutStrings.ok()
+    const copyMessage = AboutStrings.copy()
+    const closeMessage = AboutStrings.close()
+    const dom = GetAboutVirtualDom.getAboutVirtualDom(newState.productName, newState.message, closeMessage, okMessage, copyMessage)
     return ['setDom', dom]
   },
 }
