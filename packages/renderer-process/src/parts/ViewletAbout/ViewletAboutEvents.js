@@ -15,3 +15,8 @@ export const handleClickCopy = (event) => {
   const uid = ComponentUid.fromEvent(event)
   ForwardCommand.handleClickCopy(uid)
 }
+
+export const handleFocusIn = (event) => {
+  const uid = ComponentUid.fromEvent(event)
+  ForwardCommand.handleFocusIn(uid)
+}

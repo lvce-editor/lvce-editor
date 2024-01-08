@@ -25,6 +25,7 @@ export const getAboutVirtualDom = (productName, lines, closeMessage, okMessage, 
       role: AriaRoles.Dialog,
       ariaModal: 'true',
       ariaLabelledBy: 'DialogIcon DialogHeading',
+      onFocusIn: 'handleFocusIn',
       childCount: 3,
     },
     {
