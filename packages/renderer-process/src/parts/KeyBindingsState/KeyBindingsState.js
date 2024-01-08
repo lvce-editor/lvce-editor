@@ -1,5 +1,3 @@
-import * as Assert from '../Assert/Assert.js'
-
 export const state = {
   identifiers: [],
 }
