@@ -139,12 +139,6 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
         occurrence: `await SharedProcess.listen()`,
         replacement: ``,
       })
-      // TODO enable loading themes from extension folder in production, just like language basics extensions
-      await Replace.replace({
-        path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetColorThemeJsonWeb/GetColorThemeJsonWeb.js`,
-        occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
-        replacement: `return \`\${AssetDir.assetDir}/themes/\${colorThemeId}.json\``,
-      })
     }
     await BundleJs.bundleJs({
       cwd: cachePath,
