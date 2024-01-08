@@ -1,15 +1,12 @@
-import { readFile, writeFile } from 'fs/promises'
 import { existsSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
-import { pathToFileURL } from 'url'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
+import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
-import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.js'
-import * as GetFilteredCssDeclarations from '../GetFilteredCssDeclarations/GetFilteredCssDeclarations.js'
-import * as GetNewCssDeclarationFile from '../GetNewCssDeclarationFile/GetNewCssDeclarationFile.js'
+import * as GetCommitDate from '../GetCommitDate/GetCommitDate.js'
 import * as InlineDynamicImportsFile from '../InlineDynamicImportsFile/InlineDynamicImportsFile.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
@@ -20,6 +17,7 @@ import * as Process from '../Process/Process.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
+import * as Version from '../Version/Version.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
@@ -111,132 +109,12 @@ export const getModule = (method) => {
   })
 }
 
-const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
-  await Copy.copy({
-    from: 'packages/renderer-worker/src',
-    to: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetIconThemeJson/GetIconThemeJson.js`,
-    occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
-    replacement: `return \`\${AssetDir.assetDir}/icon-themes/\${iconThemeId}.json\``,
-  })
-  await WriteFile.writeFile({
-    to: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetAbsoluteIconPath/GetAbsoluteIconPath.js`,
-    content: `import * as IconThemeState from '../IconThemeState/IconThemeState.js'
-
-export const getAbsoluteIconPath = (iconTheme, icon) => {
-  const result = iconTheme.iconDefinitions[icon]
-  const extensionPath = IconThemeState.state.extensionPath || ''
-  return \`${pathPrefix}/file-icons/\${result.slice(7)}\`
-}`, // TODO should adjust vscode-icons.json instead
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
-    occurrence: `await SharedProcess.listen()`,
-    replacement: ``,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
-    occurrence: `import * as SharedProcess from '../SharedProcess/SharedProcess.js'`,
-    replacement: ``,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/AssetDir/AssetDir.js`,
-    occurrence: `ASSET_DIR`,
-    replacement: `'${pathPrefix}/${commitHash}'`,
-  })
-  // TODO enable loading themes from extension folder in production, just like language basics extensions
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/GetColorThemeJsonWeb/GetColorThemeJsonWeb.js`,
-    occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
-    replacement: `return \`\${AssetDir.assetDir}/themes/\${colorThemeId}.json\``,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
-    occurrence: 'PLATFORM',
-    replacement: `PlatformType.Web`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IpcChildModule/IpcChildModule.js`,
-    occurrence: `import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-
-export const getModule = (method) => {
-  switch (method) {
-    case IpcChildType.MessagePort:
-      return import('../IpcChildWithMessagePort/IpcChildWithMessagePort.js')
-    case IpcChildType.ModuleWorker:
-      return import('../IpcChildWithModuleWorker/IpcChildWithModuleWorker.js')
-    case IpcChildType.ReferencePort:
-      return import('../IpcChildWithReferencePort/IpcChildWithReferencePort.js')
-    default:
-      throw new Error('unexpected ipc type')
-  }
-}
-`,
-    replacement: `import * as IpcChildType from '../IpcChildType/IpcChildType.js'
-import * as IpcChildWithMessagePort from '../IpcChildWithMessagePort/IpcChildWithMessagePort.js'
-import * as IpcChildWithModuleWorker from '../IpcChildWithModuleWorker/IpcChildWithModuleWorker.js'
-import * as IpcChildWithReferencePort from '../IpcChildWithReferencePort/IpcChildWithReferencePort.js'
-
-export const getModule = (method) => {
-  switch (method) {
-    case IpcChildType.MessagePort:
-      return IpcChildWithMessagePort
-    case IpcChildType.ModuleWorker:
-      return IpcChildWithModuleWorker
-    case IpcChildType.ReferencePort:
-      return IpcChildWithReferencePort
-    default:
-      throw new Error('unexpected ipc type')
-  }
-}
-`,
-  })
-  await InlineDynamicImportsFile.inlineDynamicModules({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Module/Module.js`,
-    eagerlyLoadedModules: [
-      'Ajax',
-      'Callback',
-      'ColorTheme',
-      'ColorThemeFromJson',
-      'IconTheme',
-      'KeyBindings',
-      'KeyBindingsInitial',
-      'LocalStorage',
-      'RecentlyOpened',
-      'SaveState',
-      'SessionStorage',
-      'Viewlet',
-      'Workbench',
-      'Workspace',
-    ],
-    ipcPostFix: true,
-  })
-  const cssDeclarationFiles = await GetCssDeclarationFiles.getCssDeclarationFiles(`build/.tmp/dist/${commitHash}/packages/renderer-worker`)
-  for (const file of cssDeclarationFiles) {
-    const url = pathToFileURL(file).toString()
-    const module = await import(url)
-    const Css = module.Css
-    if (Css) {
-      const content = await readFile(file, 'utf8')
-      const filteredDeclarations = GetFilteredCssDeclarations.getFilteredCssDeclarations(Css)
-      const newContent = GetNewCssDeclarationFile.getNewCssDeclarationFile(content, filteredDeclarations)
-      await writeFile(file, newContent)
-    }
-  }
-}
-
 const copyExtensionHostWorkerFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
     from: 'packages/extension-host-worker/src',
     to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
   })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/PlatformPaths/PlatformPaths.js`,
-    occurrence: `/src/extensionHostWorkerMain.js`,
-    replacement: '/dist/extensionHostWorkerMain.js',
-  })
+
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/parts/GetExtensionHostSubWorkerUrl/GetExtensionHostSubWorkerUrl.js`,
     occurrence: `new URL('../../../../extension-host-sub-worker/src/extensionHostSubWorkerMain.js', import.meta.url).toString()`,
@@ -334,7 +212,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   if (!ignoreIconTheme) {
     await Copy.copy({
       from: 'extensions/builtin.vscode-icons/icons',
-      to: `build/.tmp/dist/file-icons`,
+      to: `build/.tmp/dist/${commitHash}/file-icons`,
     })
   }
   await BundleCss.bundleCss({
@@ -497,9 +375,14 @@ const copyIconThemes = async ({ commitHash }) => {
     from: 'extensions/builtin.vscode-icons/icon-theme.json',
     to: `build/.tmp/dist/${commitHash}/icon-themes/vscode-icons.json`,
   })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/icon-themes/vscode-icons.json`,
+    occurrence: '/icons',
+    replacement: '/file-icons',
+  })
 }
 
-const bundleJs = async ({ commitHash }) => {
+const bundleJs = async ({ commitHash, platform, assetDir, version, date, product }) => {
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/renderer-process`),
     from: 'src/rendererProcessMain.js',
@@ -509,13 +392,18 @@ const bundleJs = async ({ commitHash }) => {
     babelExternal: true,
     typescript: true,
   })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/renderer-worker`),
-    from: 'src/rendererWorkerMain.js',
-    platform: 'webworker',
-    codeSplitting: true,
-    allowCyclicDependencies: true, // TODO
-    babelExternal: true,
+  const rendererWorkerCachePath = await BundleRendererWorkerCached.bundleRendererWorkerCached({
+    commitHash,
+    platform,
+    assetDir,
+    version,
+    date,
+    product,
+  })
+  await Copy.copy({
+    from: rendererWorkerCachePath,
+    to: `build/.tmp/dist/${commitHash}/packages/renderer-worker`,
+    ignore: ['static'],
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-worker`),
@@ -613,10 +501,14 @@ const copyPlaygroundFiles = async ({ commitHash }) => {
   })
 }
 
-export const build = async () => {
+export const build = async ({ product }) => {
   const commitHash = await CommitHash.getCommitHash()
+  const date = await GetCommitDate.getCommitDate(commitHash)
   const pathPrefix = Platform.getPathPrefix()
   const ignoreIconTheme = Process.argv.includes('--ignore-icon-theme')
+  const assetDir = `${pathPrefix}/${commitHash}`
+  const platform = 'web'
+  const version = await Version.getVersion()
 
   Console.time('clean')
   await Remove.remove('build/.tmp/dist')
@@ -629,10 +521,6 @@ export const build = async () => {
   Console.time('copyRendererProcessFiles')
   await copyRendererProcessFiles({ pathPrefix, commitHash })
   Console.timeEnd('copyRendererProcessFiles')
-
-  Console.time('copyRendererWorkerFiles')
-  await copyRendererWorkerFiles({ pathPrefix, commitHash })
-  Console.timeEnd('copyRendererWorkerFiles')
 
   Console.time('copyExtensionHostWorkerFiles')
   await copyExtensionHostWorkerFiles({ pathPrefix, commitHash })
@@ -647,7 +535,7 @@ export const build = async () => {
   Console.timeEnd('applyJsOverrides')
 
   Console.time('bundleJs')
-  await bundleJs({ commitHash })
+  await bundleJs({ commitHash, platform, assetDir, version, date, product })
   Console.timeEnd('bundleJs')
 
   Console.time('copyColorThemes')

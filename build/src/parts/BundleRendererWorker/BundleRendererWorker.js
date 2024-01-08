@@ -128,6 +128,23 @@ export const getAbsoluteIconPath = (iconTheme, icon) => {
         replacement: `export const isFirefox = false`,
       })
     }
+    if (platform === 'web') {
+      await Replace.replace({
+        path: `${cachePath}/src/parts/GetIconThemeJson/GetIconThemeJson.js`,
+        occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.\${iconThemeId}/icon-theme.json\``,
+        replacement: `return \`\${AssetDir.assetDir}/icon-themes/\${iconThemeId}.json\``,
+      })
+      await Replace.replace({
+        path: `${cachePath}/src/parts/Workbench/Workbench.js`,
+        occurrence: `await SharedProcess.listen()`,
+        replacement: ``,
+      })
+      await Replace.replace({
+        path: `${cachePath}/src/parts/GetColorThemeJsonWeb/GetColorThemeJsonWeb.js`,
+        occurrence: `return \`\${AssetDir.assetDir}/extensions/builtin.theme-\${colorThemeId}/color-theme.json\``,
+        replacement: `return \`\${AssetDir.assetDir}/themes/\${colorThemeId}.json\``,
+      })
+    }
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererWorkerMain.js`,
