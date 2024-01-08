@@ -70,7 +70,7 @@
   outline-width: 1px;
   outline-style: solid;
   outline-offset: -1px;
-  outline-color: var(--FocusBorder);
+  outline-color: var(--FocusBorder, #3d5252);
   opacity: 1;
 }
 
