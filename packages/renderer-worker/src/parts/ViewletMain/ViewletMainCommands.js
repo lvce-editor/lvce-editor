@@ -39,4 +39,5 @@ export const LazyCommands = {
   handleTabsPointerOver: () => import('./ViewletMainHandleTabsPointerOver.js'),
   handleTabsPointerOut: () => import('./ViewletMainHandleTabsPointerOut.js'),
   handleContextMenu: () => import('./ViewletMainHandleContextMenu.js'),
+  findFileReferences: () => import('./ViewletMainFindFileReferences.js'),
 }

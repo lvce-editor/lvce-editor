@@ -331,7 +331,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       height = position.height
     }
 
-    const initialViewletState = module.create(viewletUid, viewlet.uri, x, y, width, height)
+    const initialViewletState = module.create(viewletUid, viewlet.uri, x, y, width, height, viewlet.args)
     let viewletState = initialViewletState
     if (!viewletState.uid) {
       viewletState.uid = viewletUid

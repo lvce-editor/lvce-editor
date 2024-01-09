@@ -5,13 +5,14 @@ import * as GetReferencesMessage from '../GetReferencesMessage/GetReferencesMess
 import * as LocationType from '../LocationType/LocationType.js'
 import * as ListIndex from '../ListIndex/ListIndex.js'
 
-export const create = (id, uri) => {
+export const create = (id, uri, x, y, width, height, args) => {
   return {
     references: [],
     message: '',
     displayReferences: [],
     focusedIndex: -1,
     id,
+    args,
   }
 }
 

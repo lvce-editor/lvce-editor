@@ -21,6 +21,7 @@ export const ImplementationExecuteImplementationProvider = 'ExtensionHostImpleme
 export const MockExec = 'ExtensionHostMockExec.mockExec'
 export const MockRpc = 'ExtensionHostMockRpc.mockRpc'
 export const ReferenceExecuteReferenceProvider = 'ExtensionHostReference.executeReferenceProvider'
+export const ReferenceExecuteFileReferenceProvider = 'ExtensionHostReference.executeFileReferenceProvider'
 export const RenameExecuteRename = 'ExtensionHostRename.executeRename'
 export const RenamePrepareRename = 'ExtensionHostRename.executePrepareRename'
 export const SourceControlAcceptInput = 'ExtensionHostSourceControl.acceptInput'

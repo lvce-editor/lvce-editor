@@ -53,8 +53,8 @@ export const getMenuEntries = () => {
       id: 'findFileReferences',
       label: ViewletMainStrings.findFileReferences(),
       flags: MenuItemFlags.None,
-      command: 'TODO',
-      args: [uri],
+      command: 'SideBar.show',
+      args: [/* id */ 'References', /* focus */ true, uri],
     },
   ]
 }
