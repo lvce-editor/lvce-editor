@@ -48,5 +48,13 @@ export const getMenuEntries = () => {
       command: 'Explorer.revealItem',
       args: [uri],
     },
+    MenuEntrySeparator.menuEntrySeparator,
+    {
+      id: 'findFileReferences',
+      label: ViewletMainStrings.findFileReferences(),
+      flags: MenuItemFlags.None,
+      command: 'TODO',
+      args: [uri],
+    },
   ]
 }
