@@ -7,19 +7,19 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Browser/Browser.js', () => {
+jest.unstable_mockModule('../src/parts/IsFirefox/IsFirefox.js', () => {
   return {
-    getBrowser: jest.fn(),
+    isFirefox: jest.fn(),
   }
 })
 
 const GetFileHandlesFromDataTransferItems = await import('../src/parts/GetFileHandlesFromDataTransferItems/GetFileHandlesFromDataTransferItems.js')
-const Browser = await import('../src/parts/Browser/Browser.js')
+const IsFirefox = await import('../src/parts/IsFirefox/IsFirefox.js')
 
 test('getFileHandles - error - not supported on firefox', async () => {
   // @ts-ignore
-  Browser.getBrowser.mockImplementation(() => {
-    return 'firefox'
+  IsFirefox.isFirefox.mockImplementation(() => {
+    return true
   })
   const items = [
     {

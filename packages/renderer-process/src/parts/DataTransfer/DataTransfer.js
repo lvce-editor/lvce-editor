@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Browser from '../Browser/Browser.js'
 import * as DataTransferType from '../DataTransferType/DataTransferType.js'
 
 export const setEffectAllowed = (dataTransfer, effectAllowed) => {
@@ -25,10 +24,10 @@ export const setFilePath = (dataTransfer, filePath, fileName) => {
   dataTransfer.setData(DataTransferType.Text, filePath)
   const dragImage = document.createElement('div')
   dragImage.className = 'DragImage'
-  if (Browser.getBrowser() !== 'chromium') {
-    // chrome doesn't support border radius
-    dragImage.style.borderRadius = '100px'
-  }
+  // if (Browser.getBrowser() !== 'chromium') {
+  //   // chrome doesn't support border radius
+  //   dragImage.style.borderRadius = '100px'
+  // }
   dragImage.textContent = fileName
   document.body.append(dragImage)
   dataTransfer.setDragImage(dragImage, -10, -10)
