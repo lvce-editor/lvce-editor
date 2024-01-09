@@ -9,7 +9,7 @@ export const handleInput = (event) => {
 
 export const handleFocus = (event) => {
   const { target } = event
-  RendererWorker.send('Focus.setFocus', 'SimpleBrowserInput')
+  RendererWorker.send('Focus.setFocus', 'focus.SimpleBrowserInput')
   setTimeout(() => {
     target.select()
   })

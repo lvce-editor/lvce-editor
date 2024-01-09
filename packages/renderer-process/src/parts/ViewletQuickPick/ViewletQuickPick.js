@@ -85,7 +85,7 @@ const focusElement = ($Element) => {
 export const focus = (state) => {
   const { $QuickPickInput } = state
   focusElement($QuickPickInput)
-  RendererWorker.send('Focus.setFocus', 'quickPickInput')
+  RendererWorker.send('Focus.setFocus', 'focus.quickPickInput')
 }
 
 // TODO

@@ -54,5 +54,5 @@ export const focus = (state) => {
   const { $Locations } = state
   $Locations.classList.add('FocusOutline')
   $Locations.focus()
-  RendererWorker.send('Focus.setFocus', 'locationList')
+  RendererWorker.send('Focus.setFocus', 'focus.locationList')
 }

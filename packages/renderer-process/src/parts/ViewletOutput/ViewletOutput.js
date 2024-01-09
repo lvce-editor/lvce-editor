@@ -50,7 +50,7 @@ export const handleError = (state, error) => {
 export const focus = (state) => {
   Assert.object(state)
   Focus.focus(state.$ViewletOutputContent)
-  RendererWorker.send('Focus.setFocus', 'output')
+  RendererWorker.send('Focus.setFocus', 'focus.output')
 }
 
 // TODO handle case when output is opened -> find widget is opened -> output is disposed before find widget is ready
