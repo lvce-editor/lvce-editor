@@ -2,6 +2,7 @@ import * as Browser from '../Browser/Browser.js'
 import * as Context from '../Context/Context.js'
 import * as FocusState from '../FocusState/FocusState.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const setFocus = async (focusKey) => {
   if (FocusState.get()) {
@@ -22,10 +23,24 @@ export const removeAdditionalFocus = (key) => {
   Context.remove(key)
 }
 
+const getBrowserContextString = (browser) => {
+  switch (browser) {
+    case 'electron':
+      return WhenExpression.BrowserElectron
+    case 'firefox':
+      return WhenExpression.BrowserFirefox
+    case 'chromium':
+      return WhenExpression.BrowserChromium
+    default:
+      return WhenExpression.Empty
+  }
+}
+
 export const hydrate = async () => {
   // TODO is this the right place for browser context ?
   // maybe in env file / env service
   const browser = Browser.getBrowser()
-  Context.set(`browser.${browser}`, true)
+  const key = getBrowserContextString(browser)
+  Context.set(key, true)
   KeyBindingsState.update()
 }
