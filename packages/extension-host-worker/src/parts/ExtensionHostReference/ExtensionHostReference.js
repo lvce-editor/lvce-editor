@@ -15,6 +15,9 @@ const { registerReferenceProvider, executeReferenceProvider, executefileReferenc
       methodName: 'provideFileReferences',
       resultShape: {
         type: Types.Array,
+        items: {
+          type: Types.Object,
+        },
       },
     },
   ],

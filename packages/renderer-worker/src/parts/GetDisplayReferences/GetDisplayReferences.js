@@ -3,6 +3,9 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as LocationType from '../LocationType/LocationType.js'
 
 const getName = (uri) => {
+  if (!uri) {
+    return ''
+  }
   return uri.slice(uri.lastIndexOf('/') + 1)
 }
 
