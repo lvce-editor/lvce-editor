@@ -29,13 +29,14 @@ const getKey = (keyBinding) => {
   return keyBinding.key
 }
 
-const getMatchingKeyBindings = (keyBindingSets) => {
-  const matchesContext = (keyBinding) => {
-    if (!keyBinding.when) {
-      return true
-    }
-    return Context.get(keyBinding.when)
+const matchesContext = (keyBinding) => {
+  if (!keyBinding.when) {
+    return true
   }
+  return Context.get(keyBinding.when)
+}
+
+const getMatchingKeyBindings = (keyBindingSets) => {
   return Object.values(keyBindingSets).reverse().flat(1).filter(matchesContext)
 }
 
