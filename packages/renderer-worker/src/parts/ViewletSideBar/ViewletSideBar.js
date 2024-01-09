@@ -95,7 +95,7 @@ export const getChildren = (state) => {
 }
 
 // TODO no default parameter -> monomorphism
-export const openViewlet = async (state, moduleId, focus = false) => {
+export const openViewlet = async (state, moduleId, focus = false, args) => {
   console.assert(typeof moduleId === 'string')
   // if (state.currentViewletId) {
   //   console.log('dispose current viewlet', state.currentViewletId)
@@ -124,6 +124,7 @@ export const openViewlet = async (state, moduleId, focus = false) => {
       height: childDimensions.height,
       parentUid: uid,
       append: true,
+      args,
     },
     false,
     true,

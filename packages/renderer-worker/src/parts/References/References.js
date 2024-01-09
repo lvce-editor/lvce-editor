@@ -8,3 +8,8 @@ export const getReferences = async (editor) => {
   const references = await ExtensionHostReferences.executeReferenceProvider(editor, offset)
   return references
 }
+
+export const getFileReferences = async (id, languageId) => {
+  const references = await ExtensionHostReferences.executeFileReferenceProvider(id, languageId)
+  return references
+}

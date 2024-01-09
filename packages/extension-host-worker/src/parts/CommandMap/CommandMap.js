@@ -29,6 +29,8 @@ export const getFn = (method) => {
       return ExtensionHostExtension.activate
     case ExtensionHostCommandType.ReferenceExecuteReferenceProvider:
       return ExtensionHostReference.executeReferenceProvider
+    case ExtensionHostCommandType.ReferenceExecuteFileReferenceProvider:
+      return ExtensionHostReference.executefileReferenceProvider
     case ExtensionHostCommandType.CompletionExecute:
       return ExtensionHostCompletion.executeCompletionProvider
     case ExtensionHostCommandType.CompletionResolveExecute:

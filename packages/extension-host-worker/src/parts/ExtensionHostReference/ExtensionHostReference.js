@@ -1,7 +1,7 @@
 import * as Registry from '../Registry/Registry.js'
 import * as Types from '../Types/Types.js'
 
-const { registerReferenceProvider, executeReferenceProvider, reset } = Registry.create({
+const { registerReferenceProvider, executeReferenceProvider, executefileReferenceProvider, reset } = Registry.create({
   name: 'Reference',
   resultShape: {
     type: Types.Array,
@@ -9,6 +9,15 @@ const { registerReferenceProvider, executeReferenceProvider, reset } = Registry.
       type: Types.Object,
     },
   },
+  additionalMethodNames: [
+    {
+      name: 'fileReference',
+      methodName: 'provideFileReferences',
+      resultShape: {
+        type: Types.Array,
+      },
+    },
+  ],
 })
 
-export { registerReferenceProvider, executeReferenceProvider, reset }
+export { registerReferenceProvider, executeReferenceProvider, executefileReferenceProvider, reset }
