@@ -1,6 +1,7 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 // TODO lazyload menuEntries and use Command.execute (maybe)
 import * as ExecuteMenuItemCommand from '../ExecuteMenuItemCommand/ExecuteMenuItemCommand.js'
+import * as GetMenuEntriesWithKeyBindings from '../GetMenuEntriesWithKeyBindings/GetMenuEntriesWithKeyBindings.js'
 import * as GetMenuVirtualDom from '../GetMenuVirtualDom/GetMenuVirtualDom.js'
 import * as GetVisibleMenuItems from '../GetVisibleMenuItems/GetVisibleMenuItems.js'
 import * as Logger from '../Logger/Logger.js'
@@ -89,7 +90,7 @@ const getMenuBounds = (x, y, items) => {
 }
 
 export const show = async (x, y, id, mouseBlocking = false, ...args) => {
-  const items = await MenuEntries.getMenuEntries(id, ...args)
+  const items = await GetMenuEntriesWithKeyBindings.getMenuEntriesWithKeyBindings(id, ...args)
   const bounds = getMenuBounds(x, y, items)
   const menu = addMenuInternal({
     id,
