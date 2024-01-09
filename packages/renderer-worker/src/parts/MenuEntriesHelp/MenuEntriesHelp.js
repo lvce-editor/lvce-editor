@@ -36,6 +36,9 @@ export const getMenuEntries = async () => {
       MenuEntrySeparator.menuEntrySeparator,
     )
   }
+  if (entries.length > 0) {
+    entries.push(MenuEntrySeparator.menuEntrySeparator)
+  }
   entries.push({
     id: 'about',
     label: HelpStrings.about(),
