@@ -8,6 +8,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as IsMobile from '../IsMobile/IsMobile.js'
@@ -85,7 +86,7 @@ const focusElement = ($Element) => {
 export const focus = (state) => {
   const { $QuickPickInput } = state
   focusElement($QuickPickInput)
-  RendererWorker.send('Focus.setFocus', 'focus.quickPickInput')
+  RendererWorker.send('Focus.setFocus', WhenExpression.FocusQuickPickInput)
 }
 
 // TODO

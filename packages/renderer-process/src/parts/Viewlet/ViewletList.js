@@ -4,6 +4,7 @@ import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
@@ -41,7 +42,7 @@ const handleFocus = (event) => {
   const $Target = event.target
   $Target.classList.add('FocusOutline')
   // TODO maybe have one focus listener inside Viewlet.js instead of each viewlet
-  RendererWorker.send('Focus.setFocus', 'focus.ViewletList')
+  RendererWorker.send('Focus.setFocus', WhenExpression.FocusViewletList)
   // RendererWorker.send(/* ViewletExtensions.focusIndex */ 868, /* index */ -1)
 }
 

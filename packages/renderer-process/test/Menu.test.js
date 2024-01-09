@@ -5,6 +5,7 @@ import { jest } from '@jest/globals'
 import * as AriaBoolean from '../src/parts/AriaBoolean/AriaBoolean.js'
 import * as DomAttributeType from '../src/parts/DomAttributeType/DomAttributeType.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import * as WhenExpression from '../src/parts/WhenExpression/WhenExpression.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -476,7 +477,7 @@ test.skip('event - context menu - outside', () => {
   $BackDrop.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Focus.setFocus', 'focus.menu')
+  expect(RendererWorker.send).toHaveBeenCalledWith('Focus.setFocus', WhenExpression.FocusMenu)
 })
 
 // TODO test pageup/pagedown

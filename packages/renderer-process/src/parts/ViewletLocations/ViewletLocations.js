@@ -4,6 +4,7 @@ import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as ViewletLocationsEvents from './ViewletLocationsEvents.js'
 
 export const create = () => {
@@ -54,5 +55,5 @@ export const focus = (state) => {
   const { $Locations } = state
   $Locations.classList.add('FocusOutline')
   $Locations.focus()
-  RendererWorker.send('Focus.setFocus', 'focus.locationList')
+  RendererWorker.send('Focus.setFocus', WhenExpression.FocusLocationList)
 }

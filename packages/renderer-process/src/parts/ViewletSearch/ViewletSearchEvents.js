@@ -3,6 +3,7 @@ import * as GetNodeIndex from '../GetNodeIndex/GetNodeIndex.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as PointerEvents from '../PointerEvents/PointerEvents.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletSearchFunctions from './ViewletSearchFunctions.js'
 
@@ -14,7 +15,7 @@ export const handleInput = (event) => {
 }
 
 export const handleFocus = (event) => {
-  RendererWorker.send('Focus.setFocus', 'focus.SearchInput')
+  RendererWorker.send('Focus.setFocus', WhenExpression.FocusSearchInput)
 }
 
 const getIndexTreeItem = ($Target) => {

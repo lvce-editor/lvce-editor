@@ -1,5 +1,6 @@
 import * as Event from '../Event/Event.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as ViewletRunAndDebugFunctions from './ViewletRunAndDebugFunctions.js'
 
 // TODO rename to resume
@@ -98,7 +99,7 @@ export const handlePointerDown = (event) => {
 }
 
 export const handleDebugInputFocus = () => {
-  RendererWorker.send('Focus.setFocus', 'focus.DebugInput')
+  RendererWorker.send('Focus.setFocus', WhenExpression.FocusDebugInput)
 }
 
 export const handleDebugInput = (event) => {
