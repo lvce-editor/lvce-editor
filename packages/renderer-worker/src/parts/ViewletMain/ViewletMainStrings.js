@@ -15,6 +15,7 @@ const UiStrings = {
   CloseToTheRight: 'Close To The Right',
   CloseAll: 'Close All',
   RevealInExplorer: 'Reveal in Explorer',
+  FindFileReferences: 'Find File References',
 }
 
 export const openFile = () => {
@@ -59,4 +60,8 @@ export const revealInExplorer = () => {
 
 export const closeToTheRight = () => {
   return I18nString.i18nString(UiStrings.CloseToTheRight)
+}
+
+export const findFileReferences = () => {
+  return I18nString.i18nString(UiStrings.FindFileReferences)
 }
