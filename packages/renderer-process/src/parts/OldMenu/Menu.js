@@ -5,6 +5,7 @@ import * as BackDrop from '../BackDrop/BackDrop.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as Event from '../Event/Event.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as SetBounds from '../SetBounds/SetBounds.js'
@@ -213,7 +214,7 @@ export const showMenu = (x, y, width, height, items, level, parentIndex = -1, do
 
   if (level === 0) {
     Focus.focus($Menu)
-    RendererWorker.send('Focus.setFocus', 'focus.menu')
+    RendererWorker.send('Focus.setFocus', WhenExpression.FocusMenu)
   }
 }
 

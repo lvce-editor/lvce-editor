@@ -10,6 +10,7 @@ import * as FileIcon from '../FileIcon/FileIcon.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 
 const activeId = 'TreeItemActive'
@@ -191,7 +192,7 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
   }
   if (focused) {
     $Viewlet.focus()
-    RendererWorker.send('Focus.setFocus', 'focus.Explorer')
+    RendererWorker.send('Focus.setFocus', WhenExpression.FocusExplorer)
   }
 }
 

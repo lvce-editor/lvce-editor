@@ -1,4 +1,5 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as ViewletSimpleBrowserFunctions from './ViewletSimpleBrowserFunctions.js'
 
 export const handleInput = (event) => {
@@ -9,7 +10,7 @@ export const handleInput = (event) => {
 
 export const handleFocus = (event) => {
   const { target } = event
-  RendererWorker.send('Focus.setFocus', 'focus.SimpleBrowserInput')
+  RendererWorker.send('Focus.setFocus', WhenExpression.FocusSimpleBrowserInput)
   setTimeout(() => {
     target.select()
   })
