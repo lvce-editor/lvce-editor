@@ -29,13 +29,14 @@ const getKey = (keyBinding) => {
   return keyBinding.key
 }
 
-const getMatchingKeyBindings = (keyBindingSets) => {
-  const matchesContext = (keyBinding) => {
-    if (!keyBinding.when) {
-      return true
-    }
-    return Context.get(keyBinding.when)
+const matchesContext = (keyBinding) => {
+  if (!keyBinding.when) {
+    return true
   }
+  return Context.get(keyBinding.when)
+}
+
+const getMatchingKeyBindings = (keyBindingSets) => {
   return Object.values(keyBindingSets).reverse().flat(1).filter(matchesContext)
 }
 
@@ -45,9 +46,10 @@ const getAvailableKeyBindings = (keyBindings) => {
 
 export const update = () => {
   const matchingKeyBindings = getMatchingKeyBindings(state.keyBindingSets)
-  state.matchingKeyBindings = matchingKeyBindings
-  state.keyBindingIdentifiers = getAvailableKeyBindings(matchingKeyBindings)
+  const keyBindingIdentifiers = getAvailableKeyBindings(matchingKeyBindings)
   RendererProcess.invoke('KeyBindings.setIdentifiers', state.keyBindingIdentifiers)
+  state.matchingKeyBindings = matchingKeyBindings
+  state.keyBindingIdentifiers = keyBindingIdentifiers
 }
 
 export const addKeyBindings = (id, keyBindings) => {
