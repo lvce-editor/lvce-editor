@@ -15,7 +15,7 @@ test('first line', () => {
   const startColumnIndex = 13
   const endRowIndex = 0
   const endColumnIndex = 16
-  expect(GetLineText.getLineText(content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)).toBe('add')
+  expect(GetLineText.getLineText(content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)).toBe('export const add = ')
 })
 
 test('second line', () => {
@@ -24,7 +24,7 @@ test('second line', () => {
   const startColumnIndex = 4
   const endRowIndex = 0
   const endColumnIndex = 7
-  expect(GetLineText.getLineText(content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)).toBe('add')
+  expect(GetLineText.getLineText(content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)).toBe('add.add')
 })
 
 test('third line', () => {
@@ -33,5 +33,5 @@ test('third line', () => {
   const startColumnIndex = 4
   const endRowIndex = 0
   const endColumnIndex = 7
-  expect(GetLineText.getLineText(content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)).toBe('add')
+  expect(GetLineText.getLineText(content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)).toBe('add.add')
 })

@@ -1,3 +1,4 @@
+import * as Character from '../Character/Character.js'
 import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
 
 export const getLineText = (content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
@@ -9,9 +10,13 @@ export const getLineText = (content, startRowIndex, startColumnIndex, endRowInde
     }
     newLineIndex = GetNewLineIndex.getNewLineIndex(content, newLineIndex + 1)
   }
-  if (content[newLineIndex] === '\n') {
+  if (content[newLineIndex] === Character.NewLine) {
     newLineIndex++
   }
-  const lineText = content.slice(newLineIndex + startColumnIndex, newLineIndex + endColumnIndex)
+  let nextIndex = GetNewLineIndex.getNewLineIndex(content, newLineIndex)
+  if (nextIndex === -1) {
+    nextIndex = content.length
+  }
+  const lineText = content.slice(newLineIndex, nextIndex)
   return lineText
 }
