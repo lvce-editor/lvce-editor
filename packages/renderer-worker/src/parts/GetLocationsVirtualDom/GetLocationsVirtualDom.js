@@ -5,22 +5,45 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getLeafVirtualDom = (location) => {
-  const { lineText, index } = location
-  return [
-    {
-      type: VirtualDomElements.Div,
-      className: ClassNames.TreeItem,
-      id: `Reference-${index}`,
-      childCount: 1,
-      paddingLeft: '2rem',
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: 'Label',
-      childCount: 1,
-    },
-    text(lineText || '(empty line)'),
-  ]
+  const { lineText, index, startOffset, endOffset } = location
+  const dom = []
+  dom.push({
+    type: VirtualDomElements.Div,
+    className: ClassNames.TreeItem,
+    id: `Reference-${index}`,
+    childCount: 1,
+    paddingLeft: '2rem',
+  })
+  if (startOffset === endOffset) {
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'Label',
+        childCount: 1,
+      },
+      text(lineText || '(empty line)'),
+    )
+  } else {
+    const before = lineText.slice(0, startOffset)
+    const middle = lineText.slice(startOffset, endOffset)
+    const end = lineText.slice(endOffset)
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'Label',
+        childCount: 3,
+      },
+      text(before),
+      {
+        type: VirtualDomElements.Span,
+        className: 'Highlight',
+        childCount: 1,
+      },
+      text(middle),
+      text(end),
+    )
+  }
+  return dom
 }
 
 const getCollapsedVirtualDom = (location) => {

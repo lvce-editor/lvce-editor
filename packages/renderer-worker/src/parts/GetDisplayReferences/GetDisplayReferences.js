@@ -28,6 +28,8 @@ export const getDisplayReferences = (references) => {
         lineText: reference.lineText,
         icon: '',
         index: index++,
+        startOffset: reference.startOffset,
+        endOffset: reference.endOffset,
       })
     } else {
       fileCount++
@@ -48,6 +50,8 @@ export const getDisplayReferences = (references) => {
           name,
         }),
         index: index++,
+        startOffset: 0,
+        endOffset: 0,
       })
       displayReferences.push({
         depth: 2,
@@ -59,6 +63,8 @@ export const getDisplayReferences = (references) => {
         lineText: reference.lineText,
         icon: '',
         index: index++,
+        startOffset: reference.startOffset,
+        endOffset: reference.endOffset,
       })
     }
   }
