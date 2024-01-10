@@ -4,18 +4,6 @@ import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirt
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-const descriptionWrapper = {
-  type: VirtualDomElements.Div,
-  className: ClassNames.QuickPickItemDescription,
-  childCount: 1,
-}
-
-const label1 = {
-  type: VirtualDomElements.Div,
-  className: ClassNames.Label,
-  childCount: 1,
-}
-
 const quickPickHighlight = {
   type: VirtualDomElements.Span,
   className: ClassNames.QuickPickHighlight,
