@@ -2,10 +2,11 @@ import * as References from '../References/References.js'
 import * as ViewletLocations from '../ViewletLocations/ViewletLocations.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as GetReferencesWithPreview from '../GetReferencesWithPreview/GetReferencesWithPreview.js'
 
 const getReferences = async () => {
   const editor = ViewletStates.getState(ViewletModuleId.EditorText)
-  return References.getReferences(editor)
+  return GetReferencesWithPreview.getReferencesWithPreview(editor)
 }
 
 const getFileReferences = async (id, languageId) => {
@@ -20,6 +21,7 @@ export const loadContent = async (state) => {
   const editor = ViewletStates.getState(ViewletModuleId.EditorText)
   const fn = state.args
     ? () => {
+        console.log('get file ref')
         // TODO find out language from somewhere else
         return getFileReferences(editor.uid, editor.languageId)
       }
