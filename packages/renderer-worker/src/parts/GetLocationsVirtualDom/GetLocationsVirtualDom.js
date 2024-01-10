@@ -1,6 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
-import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as LocationType from '../LocationType/LocationType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
