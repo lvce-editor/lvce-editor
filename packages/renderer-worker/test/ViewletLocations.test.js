@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as LocationType from '../src/parts/LocationType/LocationType.js'
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   execute: jest.fn(() => {
@@ -6,9 +7,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   }),
 }))
 
-const ViewletMain = await import('../src/parts/ViewletMain/ViewletMain.js')
 const Command = await import('../src/parts/Command/Command.js')
-
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 
 beforeAll(() => {
@@ -56,7 +55,7 @@ test('loadContent - error - location provider throws error', async () => {
     throw new Error('Failed to execute reference provider: TypeError: x is not a function')
   }
   await expect(ViewletLocations.loadContent(state, provideLocations)).rejects.toThrowError(
-    new Error('Failed to execute reference provider: TypeError: x is not a function')
+    new Error('Failed to execute reference provider: TypeError: x is not a function'),
   )
 })
 
@@ -88,7 +87,7 @@ test('loadContent - one result in one file', async () => {
         depth: 1,
         posInSet: 1,
         setSize: 1,
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: '/test/index.js',
         name: 'index.js',
         lineText: '',
@@ -97,7 +96,7 @@ test('loadContent - one result in one file', async () => {
         depth: 2,
         posInSet: 1,
         setSize: 1,
-        type: 'leaf',
+        type: LocationType.Leaf,
         name: '',
         uri: '',
         lineText: 'test',
@@ -131,7 +130,7 @@ test('loadContent - multiple results in one file', async () => {
         depth: 1,
         posInSet: 1,
         setSize: 1,
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: '/test/index.js',
         name: 'index.js',
         lineText: '',
@@ -140,7 +139,7 @@ test('loadContent - multiple results in one file', async () => {
         depth: 2,
         posInSet: 1,
         setSize: 1, // TODO should be 2
-        type: 'leaf',
+        type: LocationType.Leaf,
         name: '',
         uri: '',
         lineText: 'test-1',
@@ -149,7 +148,7 @@ test('loadContent - multiple results in one file', async () => {
         depth: 2,
         posInSet: 2,
         setSize: 1, // TODO should be 2
-        type: 'leaf',
+        type: LocationType.Leaf,
         name: '',
         uri: '',
         lineText: 'test-2',
@@ -197,7 +196,7 @@ test('loadContent - multiple results in multiple file', async () => {
         name: 'a.js',
         posInSet: 1,
         setSize: 1, // TODO should be 2
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: '/test/a.js',
       },
       {
@@ -206,7 +205,7 @@ test('loadContent - multiple results in multiple file', async () => {
         name: '',
         posInSet: 1,
         setSize: 1, // TODO should be 2
-        type: 'leaf',
+        type: LocationType.Leaf,
         uri: '',
       },
       {
@@ -215,7 +214,7 @@ test('loadContent - multiple results in multiple file', async () => {
         name: '',
         posInSet: 2,
         setSize: 1, // TODO should be 2
-        type: 'leaf',
+        type: LocationType.Leaf,
         uri: '',
       },
       {
@@ -224,7 +223,7 @@ test('loadContent - multiple results in multiple file', async () => {
         name: 'b.js',
         posInSet: 2,
         setSize: 1, // TODO should be 2
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: '/test/b.js',
       },
       {
@@ -233,7 +232,7 @@ test('loadContent - multiple results in multiple file', async () => {
         name: '',
         posInSet: 1,
         setSize: 1, // TODO should be 2
-        type: 'leaf',
+        type: LocationType.Leaf,
         uri: '',
       },
       {
@@ -242,7 +241,7 @@ test('loadContent - multiple results in multiple file', async () => {
         name: '',
         posInSet: 2,
         setSize: 1, // TODO should be 2
-        type: 'leaf',
+        type: LocationType.Leaf,
         uri: '',
       },
     ],
@@ -258,7 +257,7 @@ test('selectIndex - reference', async () => {
         depth: 1,
         posInSet: 1,
         setSize: 1,
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: '/test/index.js',
         name: 'index.js',
         lineText: '',
@@ -267,7 +266,7 @@ test('selectIndex - reference', async () => {
         depth: 2,
         posInSet: 1,
         setSize: 1,
-        type: 'leaf',
+        type: LocationType.Leaf,
         name: '',
         uri: '',
         lineText: 'test',
@@ -290,7 +289,7 @@ test('focusFirst', () => {
         depth: 1,
         posInSet: 1,
         setSize: 1,
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: '/test/index.js',
         name: 'index.js',
         lineText: '',
@@ -299,7 +298,7 @@ test('focusFirst', () => {
         depth: 2,
         posInSet: 1,
         setSize: 1,
-        type: 'leaf',
+        type: LocationType.Leaf,
         name: '',
         uri: '',
         lineText: 'test',
@@ -328,7 +327,7 @@ test('focusLast', () => {
         depth: 1,
         posInSet: 1,
         setSize: 1,
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: '/test/index.js',
         name: 'index.js',
         lineText: '',
@@ -337,7 +336,7 @@ test('focusLast', () => {
         depth: 2,
         posInSet: 1,
         setSize: 1,
-        type: 'leaf',
+        type: LocationType.Leaf,
         name: '',
         uri: '',
         lineText: 'test',
@@ -366,7 +365,7 @@ test('focusNext', () => {
         depth: 1,
         posInSet: 1,
         setSize: 1,
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: '/test/index.js',
         name: 'index.js',
         lineText: '',
@@ -375,7 +374,7 @@ test('focusNext', () => {
         depth: 2,
         posInSet: 1,
         setSize: 1,
-        type: 'leaf',
+        type: LocationType.Leaf,
         name: '',
         uri: '',
         lineText: 'test',
@@ -396,7 +395,7 @@ test('focusNext - already at end', () => {
         depth: 1,
         posInSet: 1,
         setSize: 1,
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: '/test/index.js',
         name: 'index.js',
         lineText: '',
@@ -405,7 +404,7 @@ test('focusNext - already at end', () => {
         depth: 2,
         posInSet: 1,
         setSize: 1,
-        type: 'leaf',
+        type: LocationType.Leaf,
         name: '',
         uri: '',
         lineText: 'test',
@@ -424,7 +423,7 @@ test('focusPrevious', () => {
         depth: 1,
         posInSet: 1,
         setSize: 1,
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: '/test/index.js',
         name: 'index.js',
         lineText: '',
@@ -433,7 +432,7 @@ test('focusPrevious', () => {
         depth: 2,
         posInSet: 1,
         setSize: 1,
-        type: 'leaf',
+        type: LocationType.Leaf,
         name: '',
         uri: '',
         lineText: 'test',
@@ -454,7 +453,7 @@ test('focusPrevious - already at start', () => {
         depth: 1,
         posInSet: 1,
         setSize: 1,
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: '/test/index.js',
         name: 'index.js',
         lineText: '',
@@ -463,7 +462,7 @@ test('focusPrevious - already at start', () => {
         depth: 2,
         posInSet: 1,
         setSize: 1,
-        type: 'leaf',
+        type: LocationType.Leaf,
         name: '',
         uri: '',
         lineText: 'test',
@@ -482,7 +481,7 @@ test('selectCurrent - no item focused', () => {
         depth: 1,
         posInSet: 1,
         setSize: 1,
-        type: 'expanded',
+        type: LocationType.Expanded,
         uri: '/test/index.js',
         name: 'index.js',
         lineText: '',
@@ -491,7 +490,7 @@ test('selectCurrent - no item focused', () => {
         depth: 2,
         posInSet: 1,
         setSize: 1,
-        type: 'leaf',
+        type: LocationType.Leaf,
         name: '',
         uri: '',
         lineText: 'test',

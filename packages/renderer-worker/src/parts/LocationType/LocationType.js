@@ -1,3 +1,3 @@
-export const Leaf = 'leaf'
-export const Expanded = 'expanded'
-export const Collapsed = 'collapsed'
+export const Leaf = 1
+export const Expanded = 2
+export const Collapsed = 3
