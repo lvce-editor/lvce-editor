@@ -1,3 +1,5 @@
+import * as GetNewLineIndex from '../GetNewLineIndex/GetNewLineIndex.js'
+
 export const getLineText = (content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex) => {
   let newLineIndex = 0
   let rowIndex = 0
@@ -5,7 +7,10 @@ export const getLineText = (content, startRowIndex, startColumnIndex, endRowInde
     if (rowIndex++ >= startRowIndex) {
       break
     }
-    newLineIndex = content.indexOf('\n', newLineIndex)
+    newLineIndex = GetNewLineIndex.getNewLineIndex(content, newLineIndex + 1)
+  }
+  if (content[newLineIndex] === '\n') {
+    newLineIndex++
   }
   const lineText = content.slice(newLineIndex + startColumnIndex, newLineIndex + endColumnIndex)
   return lineText
