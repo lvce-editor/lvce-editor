@@ -28,8 +28,8 @@ export const getDisplayReferences = (references) => {
         lineText: reference.lineText,
         icon: '',
         index: index++,
-        startOffset: reference.startOffset,
-        endOffset: reference.endOffset,
+        startOffset: reference.startColumnIndex || reference.startOffset,
+        endOffset: reference.endColumnIndex || reference.endOffset,
       })
     } else {
       fileCount++
@@ -63,10 +63,11 @@ export const getDisplayReferences = (references) => {
         lineText: reference.lineText,
         icon: '',
         index: index++,
-        startOffset: reference.startOffset,
-        endOffset: reference.endOffset,
+        startOffset: reference.startColumnIndex || reference.startOffset,
+        endOffset: reference.endColumnIndex || reference.endOffset,
       })
     }
   }
+  console.log({ references })
   return displayReferences
 }
