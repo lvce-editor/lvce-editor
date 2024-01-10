@@ -68,6 +68,5 @@ export const getDisplayReferences = (references) => {
       })
     }
   }
-  console.log({ references })
   return displayReferences
 }
