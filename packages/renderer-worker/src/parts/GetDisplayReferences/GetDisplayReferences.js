@@ -11,18 +11,13 @@ const getName = (uri) => {
 
 export const getDisplayReferences = (references) => {
   const displayReferences = []
-  let current = {
-    uri: '',
-    startOffset: 0,
-    endOffset: 0,
-    lineText: '',
-  }
+  let currentUri = ''
   let outerPosInSet = 1
   let innerPosInSet = 1
   let fileCount = 0
   let index = 0
   for (const reference of references) {
-    if (reference.uri === current.uri) {
+    if (reference.uri === currentUri) {
       displayReferences.push({
         depth: 2,
         posInSet: innerPosInSet++,
@@ -31,11 +26,14 @@ export const getDisplayReferences = (references) => {
         uri: '',
         name: '',
         lineText: reference.lineText,
+        icon: '',
         index: index++,
+        startOffset: reference.startOffset,
+        endOffset: reference.endOffset,
       })
     } else {
       fileCount++
-      current = reference
+      currentUri = reference.uri
       innerPosInSet = 1
       const name = getName(reference.uri)
       displayReferences.push({
@@ -52,6 +50,8 @@ export const getDisplayReferences = (references) => {
           name,
         }),
         index: index++,
+        startOffset: 0,
+        endOffset: 0,
       })
       displayReferences.push({
         depth: 2,
@@ -60,8 +60,11 @@ export const getDisplayReferences = (references) => {
         type: LocationType.Leaf,
         uri: '',
         name: '',
-        lineText: current.lineText,
+        lineText: reference.lineText,
+        icon: '',
         index: index++,
+        startOffset: reference.startOffset,
+        endOffset: reference.endOffset,
       })
     }
   }
