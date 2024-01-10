@@ -39,8 +39,7 @@ const getCollapsedVirtualDom = (location) => {
 }
 
 const getExpandedVirtualDom = (location) => {
-  const { index, name } = location
-  const icon = IconTheme.getFileNameIcon(name)
+  const { index, name, icon } = location
   return [
     {
       type: VirtualDomElements.Div,
