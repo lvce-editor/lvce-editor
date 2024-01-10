@@ -1,44 +1,73 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as LocationType from '../LocationType/LocationType.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const getLeafVirtualDom = (location) => {
+  const { lineText, index } = location
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.TreeItem,
+      id: `Reference-${index}`,
+      childCount: 1,
+      paddingLeft: '2rem',
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'Label',
+      childCount: 1,
+    },
+    text(lineText || '(empty line)'),
+  ]
+}
+
+const getCollapsedVirtualDom = (location) => {
+  const { index, name } = location
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.TreeItem,
+      ariaExpanded: false,
+      id: `Reference-${index}`,
+      childCount: 1,
+    },
+    text(name),
+  ]
+}
+
+const getExpandedVirtualDom = (location) => {
+  const { index, name } = location
+  const icon = IconTheme.getFileNameIcon(name)
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.TreeItem,
+      ariaExpanded: true,
+      id: `Reference-${index}`,
+      childCount: 2,
+      paddingLeft: '1rem',
+    },
+    {
+      type: VirtualDomElements.Img,
+      className: 'FileIcon',
+      src: icon,
+    },
+    text(name),
+  ]
+}
+
 const getLocationVirtualDom = (location) => {
-  const { type, icon, lineText, index, name } = location
+  const { type } = location
   switch (type) {
     case LocationType.Leaf:
-      return [
-        {
-          type: VirtualDomElements.Div,
-          className: ClassNames.TreeItem,
-          id: `Reference-${index}`,
-          childCount: 1,
-        },
-        text(lineText || '(empty line)'),
-      ]
+      return getLeafVirtualDom(location)
     case LocationType.Collapsed:
-      return [
-        {
-          type: VirtualDomElements.Div,
-          className: ClassNames.TreeItem,
-          ariaExpanded: false,
-          id: `Reference-${index}`,
-          childCount: 1,
-        },
-        text(name),
-      ]
+      return getCollapsedVirtualDom(location)
     case LocationType.Expanded:
-      return [
-        {
-          type: VirtualDomElements.Div,
-          className: ClassNames.TreeItem,
-          ariaExpanded: true,
-          id: `Reference-${index}`,
-          childCount: 1,
-        },
-        text(name),
-      ]
+      return getExpandedVirtualDom(location)
     default:
       return []
   }
