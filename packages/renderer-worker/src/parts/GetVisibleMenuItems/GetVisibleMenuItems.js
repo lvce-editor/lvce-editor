@@ -10,6 +10,7 @@ export const getVisible = (items, focusedIndex, expanded, level) => {
       isFocused: i === focusedIndex,
       isExpanded: i === focusedIndex && expanded,
       level,
+      key: item.key,
     })
   }
   return visibleItems

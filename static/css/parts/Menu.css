@@ -85,3 +85,7 @@
   background: currentColor;
   mask-repeat: no-repeat;
 }
+
+.MenuItemKeyBinding {
+  padding-left: 2em;
+}
