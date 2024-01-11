@@ -5,6 +5,8 @@ import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOf
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as Tokenizer from '../Tokenizer/Tokenizer.js'
+import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -21,6 +23,8 @@ export const create = (id, uri, x, y, width, height) => {
 }
 
 export const loadContent = async (state) => {
+  // TODO get language ids from uri
+  await LoadTokenizers.loadTokenizers(['javascript'])
   const { uri, top, left, width, height, minimumSliderSize, itemHeight } = state
   const uriContentPart = uri.slice('diff://'.length)
   const [uriLeft, uriRight] = uriContentPart.split(Character.DiffSeparator)

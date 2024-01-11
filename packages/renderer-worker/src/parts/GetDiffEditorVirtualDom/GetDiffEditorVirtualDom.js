@@ -21,61 +21,81 @@ const normal = {
   childCount: 1,
 }
 
-const renderLineDeletion = (content) => {
-  return [deletion, text(content)]
+const renderLineDeletion = (value) => {
+  const { line } = value
+  return [deletion, text(line)]
 }
 
-const renderLineInsertion = (content) => {
-  return [insertion, text(content)]
+const renderLineInsertion = (value) => {
+  const { line, lineInfo } = value
+  if (lineInfo) {
+    const dom = []
+    dom.push({
+      type: VirtualDomElements.Div,
+      className: `${ClassNames.EditorRow} ${ClassNames.Insertion}`,
+      childCount: lineInfo.length / 2,
+    })
+    for (let i = 0; i < lineInfo.length; i += 2) {
+      const tokenText = lineInfo[i]
+      const className = lineInfo[i + 1]
+      dom.push(
+        {
+          type: VirtualDomElements.Span,
+          className,
+          childCount: 1,
+        },
+        text(tokenText),
+      )
+    }
+    return dom
+  }
+  return [insertion, text(line)]
 }
 
-const renderLineNormal = (content) => {
-  return [normal, text(content)]
+const renderLineNormal = (value) => {
+  const { line } = value
+  return [normal, text(line)]
 }
 
 const renderLine = (value) => {
-  const { type, line } = value
+  const { type } = value
   switch (type) {
     case DiffType.Deletion:
-      return renderLineDeletion(line)
+      return renderLineDeletion(value)
     case DiffType.Insertion:
-      return renderLineInsertion(line)
+      return renderLineInsertion(value)
     case DiffType.None:
-      return renderLineNormal(line)
+      return renderLineNormal(value)
     default:
       return []
   }
 }
 
-export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
+const getLinesVirtualDom = (lines, className) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: `${ClassNames.DiffEditorContent} ${ClassNames.DiffEditorContentLeft}`,
+      className: `${ClassNames.DiffEditorContent} ${className}`,
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
       className: 'EditorRows',
-      childCount: linesLeft.length,
+      childCount: lines.length,
     },
-    ...linesLeft.flatMap(renderLine),
+    ...lines.flatMap(renderLine),
+  ]
+}
+
+export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
+  return [
+    ...getLinesVirtualDom(linesLeft, ClassNames.DiffEditorContentLeft),
     {
       type: VirtualDomElements.Div,
       className: 'Sash SashVertical',
       childcount: 0,
     },
-    {
-      type: VirtualDomElements.Div,
-      className: `${ClassNames.DiffEditorContent} ${ClassNames.DiffEditorContentRight}`,
-      childCount: 1,
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: 'EditorRows',
-      childCount: linesRight.length,
-    },
-    ...linesRight.flatMap(renderLine),
+    ...getLinesVirtualDom(linesRight, ClassNames.DiffEditorContentRight),
     {
       type: VirtualDomElements.Div,
       className: ClassNames.ScrollBar,
