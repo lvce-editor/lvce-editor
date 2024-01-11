@@ -352,7 +352,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     if (module.getKeyBindings) {
       const keyBindings = module.getKeyBindings()
-      KeyBindingsState.addKeyBindings(viewletUid, keyBindings)
+      KeyBindingsState.addKeyBindings(viewlet.id, keyBindings)
     }
 
     if (module.getChildren) {
