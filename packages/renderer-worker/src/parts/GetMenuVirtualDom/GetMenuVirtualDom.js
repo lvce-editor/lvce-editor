@@ -1,6 +1,8 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as GetKeyBindingsString from '../GetKeyBindingsString/GetKeyBindingsString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as ParseKey from '../ParseKey/ParseKey.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -77,12 +79,13 @@ const getMenuItemDisabledDom = (menuItem) => {
 }
 
 const getMenuItemDefaultDom = (menuItem) => {
-  const { label, isFocused } = menuItem
+  const { label, isFocused, key } = menuItem
   let className = ClassNames.MenuItem
   if (isFocused) {
     className += ' ' + ClassNames.MenuItemFocused
   }
-  return [
+  const dom = []
+  dom.push(
     {
       type: VirtualDomElements.Div,
       className,
@@ -91,7 +94,21 @@ const getMenuItemDefaultDom = (menuItem) => {
       childCount: 1,
     },
     text(label),
-  ]
+  )
+  if (key) {
+    dom[0].childCount++
+    const parsedKey = ParseKey.parseKey(key)
+    const keyBindingsString = GetKeyBindingsString.getKeyBindingString(parsedKey.key, false, parsedKey.isCtrl, parsedKey.isShift, false)
+    dom.push(
+      {
+        type: VirtualDomElements.Span,
+        className: 'MenuItemKeyBinding',
+        childCount: 1,
+      },
+      text(keyBindingsString),
+    )
+  }
+  return dom
 }
 
 const getMenuItemSubMenuDom = (menuItem) => {
