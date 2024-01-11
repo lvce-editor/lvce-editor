@@ -1,4 +1,3 @@
-// TODO use numeric enum for whenExpression
 export const Empty = 0
 export const BrowserChromium = 1
 export const BrowserElectron = 2
@@ -7,7 +6,7 @@ export const FocusAbout = 4
 export const FocusActivityBar = 5
 export const FocusDebugInput = 6
 export const FocusDialog = 7
-export const FocusEditor = 8
+export const FocusEditor = 12
 export const FocusEditorCompletions = 9
 export const FocusEditorImage = 10
 export const FocusEditorRename = 11
