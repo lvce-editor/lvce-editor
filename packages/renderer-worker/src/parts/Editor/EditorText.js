@@ -1,6 +1,7 @@
 import * as GetDecorationClassName from '../GetDecorationClassName/GetDecorationClassName.js'
 import * as GetTokensViewport from '../GetTokensViewport/GetTokensViewport.js'
 import * as NormalizeText from '../NormalizeText/NormalizeText.js'
+import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 
@@ -55,12 +56,6 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 // to implement for now
 
 // TODO only send changed lines to renderer process instead of all lines in viewport
-
-export const loadTokenizers = async (languageIds) => {
-  for (const languageId of languageIds) {
-    await Tokenizer.loadTokenizer(languageId)
-  }
-}
 
 const invalidateLine = (editor, index) => {
   editor.validLines[index] = false
@@ -194,7 +189,7 @@ const getLineInfoDefault = (
   deltaX,
   averageCharWidth,
   minOffset,
-  maxOffset
+  maxOffset,
 ) => {
   const lineInfo = []
   let decorationIndex = 0
@@ -263,7 +258,7 @@ const getLineInfo = (line, tokenResults, embeddedResults, decorations, TokenMap,
     deltaX,
     averageCharWidth,
     minOffset,
-    maxOffset
+    maxOffset,
   )
 }
 
@@ -289,7 +284,7 @@ const getLineInfosViewport = (editor, tokens, embeddedResults, minLineY, maxLine
       tabSize,
       width,
       deltaX,
-      averageCharWidth
+      averageCharWidth,
     )
     result.push(lineInfo)
     differences.push(difference)
@@ -321,10 +316,10 @@ export const getVisible = (editor) => {
     minLineOffset,
     width,
     deltaX,
-    averageCharWidth
+    averageCharWidth,
   )
   if (tokenizersToLoad.length > 0) {
-    loadTokenizers(tokenizersToLoad)
+    LoadTokenizers.loadTokenizers(tokenizersToLoad)
   }
   return {
     textInfos: result,

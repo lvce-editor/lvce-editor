@@ -1,7 +1,10 @@
 import * as GetDiffEditorVirtualDom from '../GetDiffEditorVirtualDom/GetDiffEditorVirtualDom.js'
+import * as GetTokensViewport from '../GetTokensViewport/GetTokensViewport.js'
 import * as GetVisibleDiffLines from '../GetVisibleDiffLines/GetVisibleDiffLines.js'
+import * as MergeDiffLinesWithTokens from '../MergeDiffLinesWithTokens/MergeDiffLinesWithTokens.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 
 export const hasFunctionalRender = true
 
@@ -22,7 +25,20 @@ const renderChanges = {
       newState.minLineY,
       newState.maxLineY,
     )
-    const dom = GetDiffEditorVirtualDom.getDiffEditorVirtualDom(leftVisible, rightVisible)
+    const tokenizer = Tokenizer.getTokenizer(newState.languageRight)
+    const { tokens } = GetTokensViewport.getTokensViewport(
+      {
+        invalidStartIndex: 0,
+        lineCache: [],
+        tokenizer,
+        lines: newState.linesRight,
+        languageId: newState.languageRight,
+      },
+      newState.minLineY,
+      newState.maxLineY,
+    )
+    const mergedRight = MergeDiffLinesWithTokens.mergeDiffLinesWithTokens(rightVisible, tokens, tokenizer.TokenMap)
+    const dom = GetDiffEditorVirtualDom.getDiffEditorVirtualDom(leftVisible, mergedRight)
     return ['setDom', dom]
   },
 }
