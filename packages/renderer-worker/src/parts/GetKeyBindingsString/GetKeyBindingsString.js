@@ -1,14 +1,23 @@
+/**
+ *
+ * @param {string} key
+ * @param {boolean} altKey
+ * @param {boolean} ctrlKey
+ * @param {boolean} shiftKey
+ * @param {boolean} metaKey
+ * @returns {string}
+ */
 export const getKeyBindingString = (key, altKey, ctrlKey, shiftKey, metaKey) => {
   let string = ''
   if (ctrlKey) {
-    string += 'ctrl+'
+    string += 'Ctrl+'
   }
   if (altKey) {
-    string += 'alt+'
+    string += 'Alt+'
   }
   if (shiftKey) {
-    string += 'shift+'
+    string += 'Shift+'
   }
-  string += key
+  string += key.toUpperCase()
   return string
 }

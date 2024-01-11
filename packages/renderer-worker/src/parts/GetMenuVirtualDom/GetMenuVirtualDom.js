@@ -1,5 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as GetKeyBindingsString from '../GetKeyBindingsString/GetKeyBindingsString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as ParseKey from '../ParseKey/ParseKey.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
@@ -97,23 +98,14 @@ const getMenuItemDefaultDom = (menuItem) => {
   if (key) {
     dom[0].childCount++
     const parsedKey = ParseKey.parseKey(key)
-    let fullText = ''
-    if (parsedKey.isCtrl) {
-      fullText += 'Ctrl+'
-    }
-    if (parsedKey.isShift) {
-      fullText += 'Shift+'
-    }
-    if (parsedKey.key) {
-      fullText += parsedKey.key.toUpperCase()
-    }
+    const keyBindingsString = GetKeyBindingsString.getKeyBindingString(parsedKey.key, false, parsedKey.isCtrl, parsedKey.isShift, false)
     dom.push(
       {
         type: VirtualDomElements.Span,
         className: 'MenuItemKeyBinding',
         childCount: 1,
       },
-      text(fullText),
+      text(keyBindingsString),
     )
   }
   return dom
