@@ -5,6 +5,7 @@ import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOf
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as Languages from '../Languages/Languages.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.js'
 
@@ -18,17 +19,24 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
+    languageLeft: '',
+    languageRight: '',
     ...VirtualList.create({ itemHeight: 20 }),
   }
 }
 
 export const loadContent = async (state) => {
   // TODO get language ids from uri
-  await LoadTokenizers.loadTokenizers(['javascript'])
   const { uri, top, left, width, height, minimumSliderSize, itemHeight } = state
   const uriContentPart = uri.slice('diff://'.length)
   const [uriLeft, uriRight] = uriContentPart.split(Character.DiffSeparator)
   const { contentLeft, contentRight } = await GetDiffEditorContents.getDiffEditorContents(uriLeft, uriRight)
+
+  const languageLeft = Languages.getLanguageId(uriLeft)
+  const languageRight = Languages.getLanguageId(uriRight)
+
+  await LoadTokenizers.loadTokenizers([languageLeft, languageRight])
+
   const linesLeft = SplitLines.splitLines(contentLeft)
   const linesRight = SplitLines.splitLines(contentRight)
   const changes = Diff.diff(linesLeft, linesRight)
@@ -51,5 +59,7 @@ export const loadContent = async (state) => {
     scrollBarHeight,
     finalDeltaY,
     maxLineY,
+    languageLeft,
+    languageRight,
   }
 }
