@@ -52,6 +52,11 @@ export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
     {
       type: VirtualDomElements.Div,
       className: `${ClassNames.DiffEditorContent} ${ClassNames.DiffEditorContentLeft}`,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'EditorRows',
       childCount: linesLeft.length,
     },
     ...linesLeft.flatMap(renderLine),
@@ -63,6 +68,11 @@ export const getDiffEditorVirtualDom = (linesLeft, linesRight) => {
     {
       type: VirtualDomElements.Div,
       className: `${ClassNames.DiffEditorContent} ${ClassNames.DiffEditorContentRight}`,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'EditorRows',
       childCount: linesRight.length,
     },
     ...linesRight.flatMap(renderLine),
