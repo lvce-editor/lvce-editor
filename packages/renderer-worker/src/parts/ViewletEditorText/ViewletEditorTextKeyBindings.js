@@ -65,7 +65,7 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusEditorText,
     },
     {
-      key: KeyModifier.CtrlCmd | KeyCode.LeftArrow,
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.LeftArrow,
       command: 'Editor.selectWordLeft',
       when: WhenExpression.FocusEditorText,
     },
