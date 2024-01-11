@@ -1,7 +1,7 @@
 import * as EditorStrings from '../EditorStrings/EditorStrings.js'
+import * as HelpStrings from '../HelpStrings/HelpStrings.js'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-import * as HelpStrings from '../HelpStrings/HelpStrings.js'
 
 export const getMenuEntries = () => {
   return [
