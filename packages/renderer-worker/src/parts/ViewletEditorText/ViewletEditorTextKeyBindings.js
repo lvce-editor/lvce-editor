@@ -195,6 +195,16 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusEditorText,
     },
     {
+      key: KeyModifier.CtrlCmd | KeyCode.KeyX,
+      command: 'Editor.cut',
+      when: WhenExpression.FocusEditorText,
+    },
+    {
+      key: KeyModifier.CtrlCmd | KeyCode.KeyV,
+      command: 'Editor.paste',
+      when: WhenExpression.FocusEditorText,
+    },
+    {
       key: KeyModifier.Alt | KeyCode.LeftArrow,
       command: 'Editor.cursorWordPartLeft',
       when: WhenExpression.FocusEditorText,
