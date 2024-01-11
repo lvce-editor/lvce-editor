@@ -1,4 +1,5 @@
 import * as EditorStrings from '../EditorStrings/EditorStrings.js'
+import * as HelpStrings from '../HelpStrings/HelpStrings.js'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
@@ -49,6 +50,14 @@ export const getMenuEntries = () => {
       label: EditorStrings.paste(),
       flags: MenuItemFlags.None,
       command: /* Editor.paste */ 'Editor.paste',
+    },
+    MenuEntrySeparator.menuEntrySeparator,
+    {
+      id: 'commandPalette',
+      label: HelpStrings.commandPalette(),
+      flags: MenuItemFlags.None,
+      command: 'Viewlet.openWidget',
+      args: ['QuickPick', 'everything'],
     },
   ]
 }
