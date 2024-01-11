@@ -125,7 +125,7 @@ jobs:
           PATH_PREFIX: /lvce-editor
       - name: Upload artifact
         if: matrix.os == 'ubuntu-22.04'
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./build/.tmp/dist
       - name: Clean up
@@ -141,4 +141,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
