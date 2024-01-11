@@ -47,12 +47,13 @@ const getAvailableKeyBindings = (keyBindings) => {
 export const update = () => {
   const matchingKeyBindings = getMatchingKeyBindings(state.keyBindingSets)
   const keyBindingIdentifiers = getAvailableKeyBindings(matchingKeyBindings)
-  RendererProcess.invoke('KeyBindings.setIdentifiers', state.keyBindingIdentifiers)
+  RendererProcess.invoke('KeyBindings.setIdentifiers', keyBindingIdentifiers)
   state.matchingKeyBindings = matchingKeyBindings
   state.keyBindingIdentifiers = keyBindingIdentifiers
 }
 
 export const addKeyBindings = (id, keyBindings) => {
+  Assert.string(id)
   Assert.array(keyBindings)
   if (id in state.keyBindingSets) {
     Logger.warn(`cannot add keybindings multiple times: ${id}`)

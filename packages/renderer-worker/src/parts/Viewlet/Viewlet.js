@@ -25,10 +25,10 @@ export const focus = async (id) => {
   }
   const oldInstance = ViewletStates.getFocusedInstance()
   if (oldInstance && oldInstance && oldInstance.factory.handleBlur) {
-      const oldState = oldInstance.state
-      const newState = oldInstance.factory.handleBlur(oldState)
-      commands.push(...ViewletManager.render(oldInstance.factory, oldState, newState))
-    }
+    const oldState = oldInstance.state
+    const newState = oldInstance.factory.handleBlur(oldState)
+    commands.push(...ViewletManager.render(oldInstance.factory, oldState, newState))
+  }
   ViewletStates.setFocusedInstance(instance)
   await RendererProcess.invoke('Viewlet.sendMultiple', commands)
 }
@@ -154,7 +154,7 @@ export const disposeFunctional = (id) => {
     const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
 
     if (instance.factory.getKeyBindings) {
-      KeyBindingsState.removeKeyBindings(uid)
+      KeyBindingsState.removeKeyBindings(id)
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
