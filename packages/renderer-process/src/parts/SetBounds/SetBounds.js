@@ -17,6 +17,9 @@ export const setX = ($Element, x) => {
 }
 
 export const setYAndHeight = ($Element, y, height) => {
+  if (!$Element) {
+    return
+  }
   if (typeof y === 'string') {
     $Element.style.translate = y
   } else {
