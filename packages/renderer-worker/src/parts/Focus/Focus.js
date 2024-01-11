@@ -1,10 +1,12 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Browser from '../Browser/Browser.js'
 import * as Context from '../Context/Context.js'
 import * as FocusState from '../FocusState/FocusState.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
-export const setFocus = async (focusKey) => {
+export const setFocus = (focusKey) => {
+  Assert.number(focusKey)
   if (FocusState.get()) {
     Context.remove(FocusState.get())
   }

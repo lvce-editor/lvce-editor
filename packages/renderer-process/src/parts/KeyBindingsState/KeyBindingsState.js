@@ -1,5 +1,5 @@
 export const state = {
-  identifiers: [],
+  identifiers: new Uint32Array(),
 }
 
 export const setIdentifiers = (identifiers) => {
