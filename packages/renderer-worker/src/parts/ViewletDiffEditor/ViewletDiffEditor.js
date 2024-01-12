@@ -26,14 +26,14 @@ export const create = (id, uri, x, y, width, height) => {
 }
 
 export const loadContent = async (state) => {
-  // TODO get language ids from uri
   const { uri, top, left, width, height, minimumSliderSize, itemHeight } = state
   const uriContentPart = uri.slice('diff://'.length)
   const [uriLeft, uriRight] = uriContentPart.split(Character.DiffSeparator)
   const { contentLeft, contentRight } = await GetDiffEditorContents.getDiffEditorContents(uriLeft, uriRight)
 
-  const languageLeft = Languages.getLanguageId(uriLeft)
+  // TODO query left language id somehow
   const languageRight = Languages.getLanguageId(uriRight)
+  const languageLeft = languageRight
 
   await LoadTokenizers.loadTokenizers([languageLeft, languageRight])
 

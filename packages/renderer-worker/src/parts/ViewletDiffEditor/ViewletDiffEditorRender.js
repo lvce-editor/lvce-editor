@@ -1,10 +1,7 @@
 import * as GetDiffEditorVirtualDom from '../GetDiffEditorVirtualDom/GetDiffEditorVirtualDom.js'
-import * as GetTokensViewport from '../GetTokensViewport/GetTokensViewport.js'
-import * as GetVisibleDiffLines from '../GetVisibleDiffLines/GetVisibleDiffLines.js'
-import * as MergeDiffLinesWithTokens from '../MergeDiffLinesWithTokens/MergeDiffLinesWithTokens.js'
+import * as GetVisibleDiffLinesWithTokens from '../GetVisibleDiffLinesWithTokens/GetVisibleDiffLinesWithTokens.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
-import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 
 export const hasFunctionalRender = true
 
@@ -13,32 +10,21 @@ const renderChanges = {
     return oldState.changes === newState.changes && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
-    const leftVisible = GetVisibleDiffLines.getVisibleDiffLines(
+    const mergedLeft = GetVisibleDiffLinesWithTokens.getVisibleDiffLinesWithTokens(
       newState.linesLeft,
       newState.changes.changesLeft,
       newState.minLineY,
       newState.maxLineY,
+      newState.languageLeft,
     )
-    const rightVisible = GetVisibleDiffLines.getVisibleDiffLines(
+    const mergedRight = GetVisibleDiffLinesWithTokens.getVisibleDiffLinesWithTokens(
       newState.linesRight,
       newState.changes.changesRight,
       newState.minLineY,
       newState.maxLineY,
+      newState.languageRight,
     )
-    const tokenizer = Tokenizer.getTokenizer(newState.languageRight)
-    const { tokens } = GetTokensViewport.getTokensViewport(
-      {
-        invalidStartIndex: 0,
-        lineCache: [],
-        tokenizer,
-        lines: newState.linesRight,
-        languageId: newState.languageRight,
-      },
-      newState.minLineY,
-      newState.maxLineY,
-    )
-    const mergedRight = MergeDiffLinesWithTokens.mergeDiffLinesWithTokens(rightVisible, tokens, tokenizer.TokenMap)
-    const dom = GetDiffEditorVirtualDom.getDiffEditorVirtualDom(leftVisible, mergedRight)
+    const dom = GetDiffEditorVirtualDom.getDiffEditorVirtualDom(mergedLeft, mergedRight)
     return ['setDom', dom]
   },
 }
