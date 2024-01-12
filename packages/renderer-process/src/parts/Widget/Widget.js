@@ -9,6 +9,7 @@ export const state = {
 const create$Widgets = () => {
   const $Widgets = document.createElement('div')
   $Widgets.id = 'Widgets'
+  $Widgets.className = 'Widgets'
   return $Widgets
 }
 

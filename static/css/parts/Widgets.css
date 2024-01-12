@@ -1,4 +1,4 @@
-#Widgets {
+.Widgets {
   contain: strict;
   position: fixed;
   inset: 0;
@@ -7,6 +7,6 @@
 }
 
 /* TODO maybe hide widgets container if empty*/
-#Widgets:empty {
+.Widgets:empty {
   display: none;
 }
