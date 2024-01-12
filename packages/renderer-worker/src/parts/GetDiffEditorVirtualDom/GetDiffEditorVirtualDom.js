@@ -21,18 +21,35 @@ const normal = {
   childCount: 1,
 }
 
-const renderLineDeletion = (value) => {
-  const { line } = value
-  return [deletion, text(line)]
+const getPrefix = (type) => {
+  switch (type) {
+    case DiffType.Insertion:
+      return insertion
+    case DiffType.Deletion:
+      return deletion
+    case DiffType.None:
+      return normal
+  }
 }
 
-const renderLineInsertion = (value) => {
-  const { line, lineInfo } = value
+const getClassName = (type) => {
+  switch (type) {
+    case DiffType.Deletion:
+      return ClassNames.Deletion
+    case DiffType.Insertion:
+      return ClassNames.Insertion
+    case DiffType.None:
+      return ''
+  }
+}
+
+const renderLine = (value) => {
+  const { line, lineInfo, type } = value
   if (lineInfo) {
     const dom = []
     dom.push({
       type: VirtualDomElements.Div,
-      className: `${ClassNames.EditorRow} ${ClassNames.Insertion}`,
+      className: `${ClassNames.EditorRow} ${getClassName(type)}`,
       childCount: lineInfo.length / 2,
     })
     for (let i = 0; i < lineInfo.length; i += 2) {
@@ -49,26 +66,7 @@ const renderLineInsertion = (value) => {
     }
     return dom
   }
-  return [insertion, text(line)]
-}
-
-const renderLineNormal = (value) => {
-  const { line } = value
-  return [normal, text(line)]
-}
-
-const renderLine = (value) => {
-  const { type } = value
-  switch (type) {
-    case DiffType.Deletion:
-      return renderLineDeletion(value)
-    case DiffType.Insertion:
-      return renderLineInsertion(value)
-    case DiffType.None:
-      return renderLineNormal(value)
-    default:
-      return []
-  }
+  return [getPrefix(type), text(line)]
 }
 
 const getLinesVirtualDom = (lines, className) => {
