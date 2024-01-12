@@ -18,6 +18,15 @@ test('first line', () => {
   expect(GetLineText.getLineText(content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)).toBe('export const add = ')
 })
 
+test('first line - trim', () => {
+  const content = 'export const add = '
+  const startRowIndex = 0
+  const startColumnIndex = 13
+  const endRowIndex = 0
+  const endColumnIndex = 16
+  expect(GetLineText.getLineText(content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)).toBe('export const add =')
+})
+
 test('second line', () => {
   const content = `import * as add from './add.ts'\nadd.add`
   const startRowIndex = 1
