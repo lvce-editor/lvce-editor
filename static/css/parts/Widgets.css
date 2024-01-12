@@ -4,6 +4,7 @@
   inset: 0;
   pointer-events: none;
   z-index: 1;
+  backface-visibility: hidden;
 }
 
 /* TODO maybe hide widgets container if empty*/
