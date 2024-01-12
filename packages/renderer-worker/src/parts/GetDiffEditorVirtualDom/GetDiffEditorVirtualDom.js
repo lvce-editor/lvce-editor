@@ -73,7 +73,12 @@ const getLinesVirtualDom = (lines, className) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: `${ClassNames.DiffEditorContent} ${className}`,
+      className: `Editor ${ClassNames.DiffEditorContent} ${className}`,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: `EditorContent`,
       childCount: 1,
     },
     {
