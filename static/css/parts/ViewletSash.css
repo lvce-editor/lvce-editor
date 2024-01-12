@@ -1,1 +1,20 @@
-/* TODO */
+.Sash {
+  position: fixed;
+  contain: strict;
+  z-index: 1;
+}
+
+.SashHorizontal {
+  height: 4px;
+  cursor: row-resize;
+}
+
+.SashVertical {
+  width: 4px;
+  cursor: col-resize;
+}
+
+.SashVisible {
+  display: flex;
+  justify-content: center;
+}

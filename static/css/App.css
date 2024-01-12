@@ -4,14 +4,3 @@
 /* application css */
 @import './parts/__Theme.css';
 @import './parts/_Global.css';
-@import './parts/AriaAlert.css';
-@import './parts/Menu.css';
-@import './parts/Notification.css';
-@import './parts/Viewlet.css';
-@import './parts/ContextMenu.css';
-@import './parts/Widgets.css';
-@import './parts/Mobile.css';
-@import './parts/BackDrop.css';
-
-/* focus css (can be overridden by components) */
-@import './parts/Focus.css';
