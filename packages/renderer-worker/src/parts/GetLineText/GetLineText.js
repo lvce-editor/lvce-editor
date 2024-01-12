@@ -17,6 +17,6 @@ export const getLineText = (content, startRowIndex, startColumnIndex, endRowInde
   if (nextIndex === -1) {
     nextIndex = content.length
   }
-  const lineText = content.slice(newLineIndex, nextIndex)
+  const lineText = content.slice(newLineIndex, nextIndex).trim()
   return lineText
 }

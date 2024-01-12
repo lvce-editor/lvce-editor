@@ -15,7 +15,16 @@ test('first line', () => {
   const startColumnIndex = 13
   const endRowIndex = 0
   const endColumnIndex = 16
-  expect(GetLineText.getLineText(content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)).toBe('export const add = ')
+  expect(GetLineText.getLineText(content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)).toBe('export const add =')
+})
+
+test('first line - trim', () => {
+  const content = 'export const add = '
+  const startRowIndex = 0
+  const startColumnIndex = 13
+  const endRowIndex = 0
+  const endColumnIndex = 16
+  expect(GetLineText.getLineText(content, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex)).toBe('export const add =')
 })
 
 test('second line', () => {
