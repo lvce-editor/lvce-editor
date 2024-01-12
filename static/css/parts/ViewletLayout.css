@@ -1,20 +1,82 @@
-.Sash {
-  position: fixed;
+.Workbench {
+  width: 100%;
+  height: 100%;
   contain: strict;
-  z-index: 1;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
-.SashHorizontal {
-  height: 4px;
-  cursor: row-resize;
+.TitleBar,
+.SideBar,
+.Main,
+.ActivityBar,
+.Panel,
+.StatusBar {
+  /*
+   * not sure why this works, but position fixed combined with backface
+   * visibility hidden gives great rendering performance,
+   * see also https://benfrain.com/improving-css-performance-fixed-position-elements/
+   *
+   *
+   * typing benchmark (before):
+   * 216ms scripting
+   * 62ms rendering
+   * 26ms painting
+   * 100ms system
+   *
+   * typing benchmark (after):
+   * 189ms scripting
+   * 117ms rendering
+   * 41ms painting
+   * 122ms system
+   */
+  position: fixed;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
-.SashVertical {
-  width: 4px;
-  cursor: col-resize;
+.ActivityBar {
+  background: var(--ActivityBarBackground);
 }
 
-.SashVisible {
-  display: flex;
-  justify-content: center;
+.SideBar {
+  background: var(--SideBarBackground, rgb(30, 35, 36));
+}
+
+.Main {
+  background: var(--MainBackground);
+}
+
+.StatusBar {
+  background: var(--StatusBarBackground);
+}
+
+.TitleBar {
+  background: rgb(40, 46, 47);
+  background: var(--TitleBarBackground);
+}
+
+.Panel {
+  background: var(--PanelBackground);
+}
+
+/* TODO remove this */
+.Hidden {
+  display: none !important;
+}
+
+/* TODO remove items from dom instead of hiding them with css */
+/* TODO remove this */
+[hidden] {
+  display: none !important;
+}
+
+/*
+ * Using the will-change attribute creates a separate layer.
+ * Updating that layer will be faster since only that layer needs style recalculation and repainting (instead of the whole page)
+ * However this hack should be used sparingly since too many layers can have negative impact for performance
+ */
+.TransformHack {
+  /* will-change: transform;
+  contain: strict; */
 }
