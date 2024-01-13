@@ -229,5 +229,10 @@ export const getKeyBindings = () => {
       command: 'Editor.addCursorBelow',
       when: WhenExpression.FocusEditorText,
     },
+    {
+      key: KeyModifier.Alt | KeyModifier.Shift | KeyCode.F12,
+      command: 'Editor.findAllReferences',
+      when: WhenExpression.FocusEditorText,
+    },
   ]
 }
