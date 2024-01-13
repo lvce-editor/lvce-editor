@@ -256,7 +256,6 @@ const maybeRegisterEvents = (module) => {
 }
 
 const actuallyLoadModule = async (getModule, id) => {
-  console.log({ id })
   const module = await getModule(id)
   await RendererProcess.invoke(/* Viewlet.load */ kLoadModule, /* id */ id)
   if (module.Css) {
