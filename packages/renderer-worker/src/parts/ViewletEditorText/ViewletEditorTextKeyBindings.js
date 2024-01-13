@@ -234,5 +234,10 @@ export const getKeyBindings = () => {
       command: 'Editor.findAllReferences',
       when: WhenExpression.FocusEditorText,
     },
+    {
+      key: KeyModifier.Alt | KeyModifier.Shift | KeyCode.KeyO,
+      command: 'Editor.organizeImports',
+      when: WhenExpression.FocusEditorText,
+    },
   ]
 }
