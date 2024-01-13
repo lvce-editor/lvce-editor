@@ -21,6 +21,12 @@ export const handleFocus = (event) => {
   EditorFunctions.handleFocus(uid)
 }
 
+export const handleMouseMove = (event) => {
+  const uid = ComponentUid.fromEvent(event)
+  const { clientX, clientY, altKey } = event
+  EditorFunctions.handleMouseMove(uid, clientX, clientY, altKey)
+}
+
 export const handleBlur = (event) => {
   // needed for save on blur
   // also needed to close completions on blur

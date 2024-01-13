@@ -92,3 +92,4 @@ export const updateEditingValue = ForwardViewletCommand.forwardViewletCommand('u
 export const handleClickOk = ForwardViewletCommand.forwardViewletCommand('handleClickOk')
 export const handleClickCopy = ForwardViewletCommand.forwardViewletCommand('handleClickCopy')
 export const handleFocusIn = ForwardViewletCommand.forwardViewletCommand('handleFocusIn')
+export const handleMouseMove = ForwardViewletCommand.forwardViewletCommand('handleMouseMove')
