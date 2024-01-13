@@ -12,20 +12,22 @@ export const applyDocumentEdits = (editor, edits) => {
   if (edits.length === 0) {
     return editor
   }
-  const { lines } = editor
   // TODO support multiple edits?
   const edit = edits[0]
   const start = TextDocument.positionAt(editor, edit.startOffset)
   const end = TextDocument.positionAt(editor, edit.endOffset)
+  const deleted = TextDocument.getSelectionText(editor, {
+    start,
+    end,
+  })
   const documentEdits = [
     {
       start,
       end,
       inserted: SplitLines.splitLines(edit.inserted),
-      deleted: lines,
+      deleted,
       origin: EditOrigin.Format,
     },
   ]
-  console.log({ documentEdits, edit })
   return Editor.scheduleDocumentAndCursorsSelections(editor, documentEdits)
 }
