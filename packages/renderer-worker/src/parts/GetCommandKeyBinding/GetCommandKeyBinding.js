@@ -1,5 +1,4 @@
 const matchesArgs = (a, b) => {
-  console.log({ a, b })
   if (!a && !b) {
     return true
   }
