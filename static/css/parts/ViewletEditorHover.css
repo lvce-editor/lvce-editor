@@ -37,3 +37,14 @@
   font-size: 15px;
   line-height: 1.33333;
 }
+
+.HoverProblem {
+  contain: content;
+  display: flex;
+}
+
+.HoverProblemDetail {
+  opacity: 0.6;
+  contain: content;
+  padding-left: 6px;
+}
