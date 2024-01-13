@@ -17,6 +17,7 @@ const UiStrings = {
   Delete: 'Delete',
   RefreshExplorer: 'Refresh Explorer',
   CollapseAllFoldersInExplorer: 'Collapse All Folders in Explorer',
+  Explorer: 'Explorer22',
 }
 
 export const newFile = () => {
@@ -69,4 +70,8 @@ export const refresh = () => {
 
 export const collapseAll = () => {
   return I18nString.i18nString(UiStrings.CollapseAllFoldersInExplorer)
+}
+
+export const explorer = () => {
+  return I18nString.i18nString(UiStrings.Explorer)
 }
