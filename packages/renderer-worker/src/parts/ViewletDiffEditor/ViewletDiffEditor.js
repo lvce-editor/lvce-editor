@@ -2,12 +2,11 @@ import * as Character from '../Character/Character.js'
 import * as Diff from '../Diff/Diff.js'
 import * as GetDiffEditorContents from '../GetDiffEditorContents/GetDiffEditorContents.js'
 import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
+import * as Languages from '../Languages/Languages.js'
+import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
-import * as Languages from '../Languages/Languages.js'
-import * as Tokenizer from '../Tokenizer/Tokenizer.js'
-import * as LoadTokenizers from '../LoadTokenizers/LoadTokenizers.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -25,7 +24,14 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
-export const loadContent = async (state) => {
+const getMinLineY = (savedState) => {
+  if (savedState && typeof savedState.minLineY === 'number') {
+    return savedState.minLineY
+  }
+  return 0
+}
+
+export const loadContent = async (state, savedState) => {
   const { uri, top, left, width, height, minimumSliderSize, itemHeight } = state
   const uriContentPart = uri.slice('diff://'.length)
   const [uriLeft, uriRight] = uriContentPart.split(Character.DiffSeparator)
@@ -47,7 +53,9 @@ export const loadContent = async (state) => {
   const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(height, contentHeight, minimumSliderSize)
 
   const numberOfVisible = GetNumberOfVisibleItems.getNumberOfVisibleItems(height, itemHeight)
-  const maxLineY = Math.min(numberOfVisible, total)
+  const minLineY = getMinLineY(savedState)
+  const maxLineY = Math.min(minLineY + numberOfVisible, total)
+  const deltaY = minLineY * state.itemHeight
 
   const finalDeltaY = Math.max(contentHeight - height, 0)
 
@@ -58,8 +66,10 @@ export const loadContent = async (state) => {
     changes,
     scrollBarHeight,
     finalDeltaY,
+    minLineY,
     maxLineY,
     languageLeft,
     languageRight,
+    deltaY,
   }
 }

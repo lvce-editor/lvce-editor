@@ -2,5 +2,4 @@
 @import '/static/lib-css/modern-normalize.css';
 
 /* application css */
-@import './parts/__Theme.css';
 @import './parts/_Global.css';
