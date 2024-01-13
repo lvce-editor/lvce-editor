@@ -1,3 +1,15 @@
+import * as GetTitleBarIconVirtualDom from '../GetTitleBarIconVirtualDom/GetTitleBarIconVirtualDom.js'
+
 export const hasFunctionalRender = true
 
-export const render = []
+const renderIcon = {
+  isEqual(oldState, newState) {
+    return oldState.iconSrc === newState.iconSrc
+  },
+  apply(oldState, newState) {
+    const dom = GetTitleBarIconVirtualDom.getTitleBarIconVirtualDom(newState.iconSrc)
+    return ['setDom', dom]
+  },
+}
+
+export const render = [renderIcon]
