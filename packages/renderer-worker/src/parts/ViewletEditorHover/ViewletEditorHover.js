@@ -27,11 +27,22 @@ const getEditor = () => {
   return Viewlet.getState(ViewletModuleId.EditorText)
 }
 
-export const loadContent = async (state) => {
-  const editor = getEditor()
-  const { selections, height, lines } = editor
+const getHoverPosition = (position, selections) => {
+  if (position) {
+    return position
+  }
   const rowIndex = selections[0]
   const columnIndex = selections[1]
+  return {
+    rowIndex,
+    columnIndex,
+  }
+}
+
+export const loadContent = async (state, savedState, position) => {
+  const editor = getEditor()
+  const { selections, height, lines } = editor
+  const { rowIndex, columnIndex } = getHoverPosition(position, selections)
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const hover = await Hover.getHover(editor, offset)
   if (!hover) {

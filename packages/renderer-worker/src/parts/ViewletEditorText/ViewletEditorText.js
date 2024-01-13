@@ -123,6 +123,7 @@ export const loadContent = async (state, savedState, context) => {
   const { uri } = state
   const rowHeight = Preferences.get(kLineHeight) || 20
   const fontSize = Preferences.get(kFontSize) || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
+  const hoverEnabled = Preferences.get('editor.hover') ?? false
   const fontFamily = Preferences.get(kFontFamily) || 'Fira Code'
   const letterSpacing = getLetterSpacing()
   const tabSize = Preferences.get(kTabSize) || 2
@@ -174,6 +175,7 @@ export const loadContent = async (state, savedState, context) => {
     charWidth,
     isMonospaceFont,
     lineNumbers,
+    hoverEnabled,
   }
 }
 
