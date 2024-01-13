@@ -13,6 +13,6 @@ export const create = (id, uri, x, y, width, height) => {
 export const loadContent = async (state) => {
   return {
     ...state,
-    iconSrc: `${AssetDir.assetDir}/icons/icon.png`, // TODO use svg icon
+    iconSrc: `${AssetDir.assetDir}/icons/icon.svg`,
   }
 }
