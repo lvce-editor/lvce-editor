@@ -20,9 +20,7 @@ const isOrganizeImports = (action) => {
 
 // TODO handle case when multiple organize imports providers are registered
 export const executeOrganizeImports = async (uid) => {
-  console.log({ uid })
-  const textDocument = ExtensionHostTextDocument.get(uid)
-  const actions = await executeCodeActionProvider(textDocument)
+  const actions = await executeCodeActionProvider(uid)
   // @ts-ignore
   if (!actions || actions.length === 0) {
     return []
@@ -32,6 +30,7 @@ export const executeOrganizeImports = async (uid) => {
   if (!organizeImportsAction) {
     return []
   }
+  const textDocument = ExtensionHostTextDocument.get(uid)
   const edits = await organizeImportsAction.execute(textDocument)
   return edits
 }
