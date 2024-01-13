@@ -13,7 +13,7 @@
   color: var(--ListForeground);
   box-sizing: border-box;
   /* TODO is this useful? */
-  contain: content;
+  contain: content !important;
   /* TODO is this useful? */
   /* transform: translate3d(0, 0, 0); */
   display: flex;
