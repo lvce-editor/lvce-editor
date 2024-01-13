@@ -9,7 +9,7 @@ const combineResults = (results) => {
 export const executeOrganizeImports = (editor) => {
   return ExtensionHostEditor.execute({
     editor,
-    event: `${ExtensionHostActivationEvent.OnLanguage}:${editor.languageId}`,
+    event: ExtensionHostActivationEvent.OnLanguage,
     method: ExtensionHostCommandType.OrganizeImportsExecute,
     args: [],
     noProviderFoundMessage: 'no code actions provider found',

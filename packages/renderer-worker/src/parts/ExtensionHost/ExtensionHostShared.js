@@ -12,6 +12,7 @@ export const executeProviders = async ({
   if (extensionHosts.length === 0) {
     return noProviderFoundResult ?? undefined
   }
+
   const promises = []
   for (const extensionHost of extensionHosts) {
     promises.push(extensionHost.ipc.invoke(method, ...params))

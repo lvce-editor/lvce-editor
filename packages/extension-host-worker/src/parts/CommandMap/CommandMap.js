@@ -117,7 +117,7 @@ export const getFn = (method) => {
     case ExtensionHostCommandType.StatusBarRegisterChangeListener:
       return ExtensionHostStatusBar.registerChangeListener
     case ExtensionHostCommandType.OrganizeImportsExecute:
-      return ExtensionHostCodeActions.executeOrganizeImports()
+      return ExtensionHostCodeActions.executeOrganizeImports
     default:
       throw new CommandNotFoundError(method)
   }
