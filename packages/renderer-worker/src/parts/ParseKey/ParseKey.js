@@ -8,7 +8,6 @@ export const parseKey = (rawKey) => {
   const isShift = Boolean(rawKey & KeyModifier.Shift)
   const keyCode = rawKey & 0x000000ff
   const key = GetKeyCodeString.getKeyCodeString(keyCode)
-  console.log({ keyCode, key })
   return {
     key,
     isCtrl,
