@@ -66,14 +66,14 @@ export const create = () => {
   })
 
   const $ScrollBarThumbVertical = document.createElement('div')
-  $ScrollBarThumbVertical.className = 'ScrollBarThumbVertical'
+  $ScrollBarThumbVertical.className = 'ScrollBarThumb ScrollBarThumbVertical'
 
   // TODO only create $ScrollBarDiagnostics lazily when there are actually diagnostics
   const $ScrollBarDiagnostics = document.createElement('div')
   $ScrollBarDiagnostics.className = 'EditorScrollBarDiagnostics'
 
   const $ScrollBarVertical = document.createElement('div')
-  $ScrollBarVertical.className = 'ScrollBarVertical'
+  $ScrollBarVertical.className = 'ScrollBar ScrollBarVertical'
   AttachEvents.attachEvents($ScrollBarVertical, {
     [DomEventType.PointerDown]: EditorEvents.handleScrollBarVerticalPointerDown,
     [DomEventType.ContextMenu]: EditorEvents.handleScrollBarContextMenu,
@@ -81,10 +81,10 @@ export const create = () => {
   $ScrollBarVertical.append($ScrollBarThumbVertical)
 
   const $ScrollBarThumbHorizontal = document.createElement('div')
-  $ScrollBarThumbHorizontal.className = 'ScrollBarThumbHorizontal'
+  $ScrollBarThumbHorizontal.className = 'ScrollBarThumb ScrollBarThumbHorizontal'
 
   const $ScrollBarHorizontal = document.createElement('div')
-  $ScrollBarHorizontal.className = 'ScrollBarHorizontal'
+  $ScrollBarHorizontal.className = 'ScrollBar ScrollBarHorizontal'
   $ScrollBarHorizontal.append($ScrollBarThumbHorizontal)
   AttachEvents.attachEvents($ScrollBarHorizontal, {
     [DomEventType.PointerDown]: EditorEvents.handleScrollBarHorizontalPointerDown,
