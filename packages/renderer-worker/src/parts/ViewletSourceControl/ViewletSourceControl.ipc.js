@@ -1,7 +1,5 @@
 import * as ViewletSourceControl from './ViewletSourceControl.js'
 
-export const name = 'Source Control'
-
 export const Events = {
   'workspace.change': ViewletSourceControl.handleWorkspaceChange,
 }
@@ -11,5 +9,6 @@ export * from './ViewletSourceControlActions.js'
 export * from './ViewletSourceControlCommands.js'
 export * from './ViewletSourceControlCss.js'
 export * from './ViewletSourceControlLoadContent.js'
+export * from './ViewletSourceControlName.js'
 export * from './ViewletSourceControlRender.js'
 export * from './ViewletSourceControlResize.js'
