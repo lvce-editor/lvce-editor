@@ -1,6 +1,7 @@
 :root {
   --InsertionBackground: rgba(155, 185, 85, 0.4);
   --DeletionBackground: rgba(255, 0, 0, 0.4);
+  --ScrollBarShadow: rgba(0, 0, 0, 0.14);
 }
 
 .DiffEditor {
@@ -23,4 +24,8 @@
 
 .Insertion {
   background: var(--InsertionBackground);
+}
+
+.DiffEditorContentRight {
+  box-shadow: -6px 0 5px -5px var(--ScrollBarShadow);
 }
