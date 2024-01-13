@@ -117,7 +117,6 @@ export const setMessage = (state, message) => {
 
 export const setHeaderDom = (state, dom) => {
   const { $ExtensionHeader } = state
-  console.log({ dom })
   const $Element = VirtualDom.render(dom).firstChild.firstChild
   $ExtensionHeader.replaceChildren($Element)
 }
