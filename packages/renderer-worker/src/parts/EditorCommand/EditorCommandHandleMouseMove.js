@@ -14,6 +14,9 @@ const showHover = async (editor, position) => {
 // 2. show hover info
 // 3. selection moves
 // 4. highlight go to definition
+// 5. show color picker
+// 6. show error info
+
 const onHoverIdle = async () => {
   const { x, y, editor } = EditorHoverState.get()
   const position = EditorPosition.at(editor, x, y)

@@ -51,7 +51,7 @@ export const runDiagnostics = async (editor) => {
     /* Editor.renderDiagnostics */ 770,
     /* id */ editor.id,
     /* diagnostics */ visibleDiagnostics,
-    /* scrollBarDiagnostics */ scrollBarDiagnostics
+    /* scrollBarDiagnostics */ scrollBarDiagnostics,
   )
 }
 

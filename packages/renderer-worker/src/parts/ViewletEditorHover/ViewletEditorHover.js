@@ -18,6 +18,7 @@ export const create = (id, uri, x, y, width, height) => {
     sanitzedHtml: '',
     documentation: '',
     lineInfos: [],
+    diagnostics: [],
   }
 }
 
@@ -39,6 +40,16 @@ const getHoverPosition = (position, selections) => {
   }
 }
 
+const getMatchingDiagnostics = (diagnostics, position) => {
+  const matching = []
+  for (const diagnostic of diagnostics) {
+    if (diagnostic.rowIndex === position.rowIndex) {
+      matching.push(diagnostic)
+    }
+  }
+  return matching
+}
+
 export const loadContent = async (state, savedState, position) => {
   const editor = getEditor()
   const { selections, height, lines } = editor
@@ -56,11 +67,15 @@ export const loadContent = async (state, savedState, position) => {
   const wordStart = columnIndex - wordPart.length
   const x = EditorPosition.x(editor, rowIndex, wordStart)
   const y = height - EditorPosition.y(editor, rowIndex) + editor.y + 40
+  const diagnostics = editor.diagnostics || []
+  const matchingDiagnostics = getMatchingDiagnostics(diagnostics, position)
+
   return {
     ...state,
     lineInfos,
     documentation,
     x,
     y,
+    diagnostics: matchingDiagnostics,
   }
 }
