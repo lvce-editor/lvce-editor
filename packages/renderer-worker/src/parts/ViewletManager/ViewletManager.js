@@ -4,6 +4,7 @@ import * as Css from '../Css/Css.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
+import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
@@ -11,8 +12,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as Focus from '../Focus/Focus.js'
-import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
+import * as MenuEntriesState from '../MenuEntriesState/MenuEntriesState.js'
 
 export const state = {
   pendingModules: Object.create(null),
@@ -256,6 +256,7 @@ const maybeRegisterEvents = (module) => {
 }
 
 const actuallyLoadModule = async (getModule, id) => {
+  console.log({ id })
   const module = await getModule(id)
   await RendererProcess.invoke(/* Viewlet.load */ kLoadModule, /* id */ id)
   if (module.Css) {
@@ -269,6 +270,9 @@ const actuallyLoadModule = async (getModule, id) => {
   }
   if (module.getDynamicCss) {
     await Css.addDynamicCss(id, module.getDynamicCss, Preferences.state)
+  }
+  if (module.getQuickPickMenuEntries) {
+    MenuEntriesState.add(module.getQuickPickMenuEntries())
   }
   maybeRegisterWrappedCommands(id, module)
   maybeRegisterEvents(module)
