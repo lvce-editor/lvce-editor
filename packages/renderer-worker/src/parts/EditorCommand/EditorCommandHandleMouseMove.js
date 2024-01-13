@@ -24,7 +24,7 @@ const hoverDelay = 300
 
 export const handleMouseMove = (editor, x, y) => {
   if (!editor.hoverEnabled) {
-    return
+    return editor
   }
   const oldState = EditorHoverState.get()
   if (oldState.timeout !== -1) {
