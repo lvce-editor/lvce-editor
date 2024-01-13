@@ -1,5 +1,6 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
+import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrings.js'
@@ -33,16 +34,7 @@ const getProblemVirtualDom = (problem) => {
         childCount: 5,
         paddingLeft: GetTreeItemIndent.getTreeItemIndent(1),
       },
-      {
-        type: VirtualDomElements.Div,
-        className: ClassNames.Chevron,
-        childCount: 1,
-      },
-      {
-        type: VirtualDomElements.Div,
-        className: 'MaskIcon MaskIconChevronDown',
-        childCount: 0,
-      },
+      GetChevronVirtualDom.getChevronDownVirtualDom(),
       GetFileIconVirtualDom.getFileIconVirtualDom(icon),
       text(uri),
       {
