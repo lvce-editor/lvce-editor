@@ -17,7 +17,7 @@ const UiStrings = {
   Delete: 'Delete',
   RefreshExplorer: 'Refresh Explorer',
   CollapseAllFoldersInExplorer: 'Collapse All Folders in Explorer',
-  Explorer: 'Explorer22',
+  Explorer: 'Explorer',
 }
 
 export const newFile = () => {
