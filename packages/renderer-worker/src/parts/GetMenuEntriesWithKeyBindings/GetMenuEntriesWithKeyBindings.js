@@ -6,7 +6,7 @@ const addKeyBindings = (menuEntries) => {
   const keyBindings = KeyBindingsState.state.matchingKeyBindings
   const newMenuEntries = []
   for (const menuEntry of menuEntries) {
-    const keyBinding = GetCommandKeyBinding.getCommandKeyBinding(keyBindings, menuEntry.command)
+    const keyBinding = GetCommandKeyBinding.getCommandKeyBinding(keyBindings, menuEntry.command, menuEntry.args)
     const key = keyBinding ? keyBinding.key : 0
     const newMenuEntry = {
       ...menuEntry,
