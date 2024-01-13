@@ -98,7 +98,7 @@ export const LazyCommands = {
   unIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
   showHover: () => import('../EditorCommand/EditorCommandShowHover.js'),
-  findAllReferences: () => import('../EditorCommand/EditorCommandFindAllReferences.js')
+  findAllReferences: () => import('../EditorCommand/EditorCommandFindAllReferences.js'),
 }
 
 export const CommandsWithSideEffectsLazy = {

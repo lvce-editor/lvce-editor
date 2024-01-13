@@ -115,6 +115,7 @@ export const create = () => {
   const $EditorContent = document.createElement('div')
   $EditorContent.className = 'EditorContent'
   $EditorContent.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBarVertical, $ScrollBarHorizontal)
+  $EditorContent.addEventListener('mousemove', EditorEvents.handleMouseMove, DomEventOptions.Passive)
 
   const $Editor = document.createElement('div')
   $Editor.className = 'Viewlet Editor'
