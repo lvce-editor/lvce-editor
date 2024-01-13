@@ -40,19 +40,6 @@
   background: var(--QuickPickBackground);
 }
 
-.ScrollWrapper {
-  width: 100%;
-  height: 220px;
-  /* TODO check if this makes a difference */
-  /* will-change: transform; needed for effective scrolling */
-  /* contain: strict; */
-  position: relative;
-  z-index: -1;
-}
-
-.Row {
-}
-
 .QuickPickItem {
   display: flex;
   white-space: nowrap;
@@ -68,15 +55,14 @@
   border-radius: 3px;
 }
 
-.QuickPickItem:hover {
+.QuickPickItem:where(:hover) {
   background: var(--ListHoverBackground);
   color: var(--ListHoverForeground);
 }
 
 .QuickPickItemActive {
-  /* TODO avoid using important */
-  color: var(--ListActiveSelectionForeground) !important;
-  background: var(--ListActiveSelectionBackground) !important;
+  color: var(--ListActiveSelectionForeground);
+  background: var(--ListActiveSelectionBackground);
 }
 
 /* TODO avoid nesting */
@@ -101,14 +87,6 @@
   width: 1px;
   height: 1px;
   overflow: hidden;
-}
-
-.QuickPickLabel {
-  white-space: nowrap;
-  contain: content;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
 }
 
 /* TODO reuse same highlight css for completions */
