@@ -91,24 +91,5 @@ export const getExtensionsVirtualDom = (visibleExtensions) => {
   for (const extension of visibleExtensions) {
     dom.push(...getExtensionVirtualDom(extension))
   }
-  // if (scrollBarHeight > 0) {
-  //   dom.push(
-  //     div(
-  //       {
-  //         className: ClassNames.ScrollBarSmall,
-  //         onpointerdown: 'handleScrollBarPointerDown',
-  //       },
-  //       1
-  //     ),
-  //     div(
-  //       {
-  //         className: ClassNames.ScrollBarThumb,
-  //         translateY: scrollBarY,
-  //         height: scrollBarHeight,
-  //       },
-  //       0
-  //     )
-  //   )
-  // }
   return dom
 }

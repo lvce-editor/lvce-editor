@@ -1,6 +1,4 @@
-.ScrollBarThumb,
-.ScrollBarThumbVertical,
-.ScrollBarThumbHorizontal {
+.ScrollBarThumb {
   width: 100%;
   /* height: 40px; */
   position: absolute;
@@ -13,11 +11,7 @@
   width: auto;
 }
 
-.ScrollBar,
-.ScrollBarVertical,
-.ScrollBarHorizontal,
-.ScrollBarHorizontalSmall,
-.ScrollBarSmall {
+.ScrollBar {
   position: absolute;
   right: 0;
   top: 0;

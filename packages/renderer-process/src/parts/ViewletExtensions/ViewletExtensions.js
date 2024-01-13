@@ -39,7 +39,7 @@ export const create = () => {
   $ScrollBarThumb.className = 'ScrollBarThumb'
 
   const $ScrollBar = document.createElement('div')
-  $ScrollBar.className = 'ScrollBarSmall'
+  $ScrollBar.className = 'ScrollBar ScrollBarSmall'
   $ScrollBar.append($ScrollBarThumb)
 
   const $List = document.createElement('div')
