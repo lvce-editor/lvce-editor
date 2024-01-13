@@ -6,11 +6,14 @@ export const hasFunctionalRender = true
 const renderHover = {
   isEqual(oldState, newState) {
     return (
-      oldState.sanitzedHtml === newState.lineInfos && oldState.documentation === newState.minLineY && oldState.maxLineY === newState.documentation
+      oldState.sanitzedHtml === newState.lineInfos &&
+      oldState.documentation === newState.minLineY &&
+      oldState.maxLineY === newState.documentation &&
+      oldState.diagnostics === newState.diagnostics
     )
   },
   apply(oldState, newState) {
-    const dom = GetHoverVirtualDom.getHoverVirtualDom(newState.lineInfos, newState.documentation)
+    const dom = GetHoverVirtualDom.getHoverVirtualDom(newState.lineInfos, newState.documentation, newState.diagnostics)
     return [/* method */ 'setDom', dom]
   },
 }
