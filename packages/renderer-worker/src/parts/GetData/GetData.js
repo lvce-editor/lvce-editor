@@ -1,3 +1,4 @@
 export const getData = (event) => {
-  return event.data
+  const { data } = event
+  return data
 }

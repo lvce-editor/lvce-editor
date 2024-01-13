@@ -5,11 +5,11 @@ import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getHoverVirtualDom = (lineInfos, documentation, diagnostics) => {
   const dom = []
-
+  console.log({ diagnostics })
   if (diagnostics) {
     dom.push({
       type: VirtualDomElements.Div,
-      className: 'HoverProblems',
+      className: 'HoverDisplayString',
       childCount: diagnostics.length,
     })
     for (const diagnostic of diagnostics) {
@@ -17,9 +17,15 @@ export const getHoverVirtualDom = (lineInfos, documentation, diagnostics) => {
         {
           type: VirtualDomElements.Div,
           className: 'HoverProblem',
-          childCount: 1,
+          childCount: 2,
         },
         text(diagnostic.message),
+        {
+          type: VirtualDomElements.Div,
+          className: 'HoverProblemDetail',
+          childCount: 1,
+        },
+        text(`${diagnostic.source} (${diagnostic.code})`),
       )
     }
   }

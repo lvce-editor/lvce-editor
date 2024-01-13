@@ -7,21 +7,21 @@ import * as ViewletProblemsStrings from '../ViewletProblems/ViewletProblemsStrin
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+// TODO compute detail message in getVisibleProblems
+const getDetailMessage = (source, code) => {
+  let message = ''
+  if (source) {
+    message += `${source}`
+  }
+  if (code) {
+    message += `(${code})`
+  }
+  message += ' '
+  return message
+}
+
 const getProblemVirtualDom = (problem) => {
-  const {
-    message,
-    rowIndex,
-    columnIndex,
-    isActive,
-    uri,
-    icon,
-    source,
-    relativePath,
-    uriMatchIndex,
-    sourceMatchIndex,
-    messageMatchIndex,
-    filterValueLength,
-  } = problem
+  const { message, rowIndex, columnIndex, isActive, uri, icon, source, relativePath, messageMatchIndex, filterValueLength, code } = problem
   let className = ClassNames.Problem
   if (isActive) {
     className += ' ' + ClassNames.ProblemSelected
@@ -93,7 +93,7 @@ const getProblemVirtualDom = (problem) => {
       className: ClassNames.ProblemAt,
       childCount: 2,
     },
-    text(source + ' '),
+    text(getDetailMessage(source, code)),
     text(lineColumn),
   )
   return dom

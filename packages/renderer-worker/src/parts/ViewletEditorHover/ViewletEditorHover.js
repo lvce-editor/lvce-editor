@@ -40,10 +40,10 @@ const getHoverPosition = (position, selections) => {
   }
 }
 
-const getMatchingDiagnostics = (diagnostics, position) => {
+const getMatchingDiagnostics = (diagnostics, rowIndex, columnIndex) => {
   const matching = []
   for (const diagnostic of diagnostics) {
-    if (diagnostic.rowIndex === position.rowIndex) {
+    if (diagnostic.rowIndex === rowIndex) {
       matching.push(diagnostic)
     }
   }
@@ -68,7 +68,7 @@ export const loadContent = async (state, savedState, position) => {
   const x = EditorPosition.x(editor, rowIndex, wordStart)
   const y = height - EditorPosition.y(editor, rowIndex) + editor.y + 40
   const diagnostics = editor.diagnostics || []
-  const matchingDiagnostics = getMatchingDiagnostics(diagnostics, position)
+  const matchingDiagnostics = getMatchingDiagnostics(diagnostics, rowIndex, columnIndex)
 
   return {
     ...state,
