@@ -1,12 +1,12 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
-import * as DirentType from '../DirentType/DirentType.js'
-import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as TreeItemPadding from '../TreeItemPadding/TreeItemPadding.js'
 import * as GetBadgeVirtualDom from '../GetBadgeVirtualDom/GetBadgeVirtualDom.js'
-import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
+import * as TreeItemPadding from '../TreeItemPadding/TreeItemPadding.js'
+import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const deleted = {
   type: VirtualDomElements.Del,
@@ -54,11 +54,7 @@ const renderRow = (rowInfo) => {
   dom.push(treeItem)
   if (type === TextSearchResultType.File) {
     treeItem.childCount++
-    dom.push({
-      type: VirtualDomElements.Div,
-      className: `${ClassNames.Chevron} MaskIconChevronDown`,
-      childCount: 0,
-    })
+    dom.push(GetChevronVirtualDom.getChevronDownVirtualDom())
   }
   if (type === TextSearchResultType.File) {
     treeItem.childCount++
