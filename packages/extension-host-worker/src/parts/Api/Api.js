@@ -45,7 +45,7 @@ export const api = {
   executeClosingTagProvider: ExtensionHostClosingTag.executeClosingTagProvider,
 
   // Code Action
-  registerCodeActionProvider: ExtensionHostCodeActions.registerCodeActionProvider,
+  registerCodeActionsProvider: ExtensionHostCodeActions.registerCodeActionProvider,
 
   // Command
   registerCommand: ExtensionHostCommand.registerCommand,
