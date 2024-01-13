@@ -4,6 +4,8 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 
 const showHover = async (editor, position) => {
+  // TODO race condition
+  await Viewlet.closeWidget(ViewletModuleId.EditorHover)
   await Viewlet.openWidget(ViewletModuleId.EditorHover, position)
 }
 
@@ -12,13 +14,13 @@ const showHover = async (editor, position) => {
 // 2. show hover info
 // 3. selection moves
 // 4. highlight go to definition
-const onHoverIdle = () => {
+const onHoverIdle = async () => {
   const { x, y, editor } = EditorHoverState.get()
   const position = EditorPosition.at(editor, x, y)
-  showHover(editor, position)
+  await showHover(editor, position)
 }
 
-const hoverDelay = 1000
+const hoverDelay = 300
 
 export const handleMouseMove = (editor, x, y) => {
   if (!editor.hoverEnabled) {
