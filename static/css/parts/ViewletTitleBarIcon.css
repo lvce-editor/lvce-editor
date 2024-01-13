@@ -1,12 +1,17 @@
 .TitleBarIcon {
-  background-image: url(/icons/icon.png);
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: 16px;
   contain: strict;
   flex-basis: 30px;
   flex-grow: 0;
   flex-shrink: 0;
   height: 100%;
   width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.TitleBarIconIcon {
+  width: 16px;
+  height: 16px;
+  contain: strict;
 }
