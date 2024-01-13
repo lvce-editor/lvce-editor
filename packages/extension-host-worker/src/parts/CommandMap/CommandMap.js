@@ -1,6 +1,7 @@
 import { CommandNotFoundError } from '../CommandNotFoundError/CommandNotFoundError.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostClosingTag from '../ExtensionHostClosingTag/ExtensionHostClosingTag.js'
+import * as ExtensionHostCodeActions from '../ExtensionHostCodeActions/ExtensionHostCodeActions.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
@@ -115,6 +116,8 @@ export const getFn = (method) => {
       return ExtensionHostStatusBar.getStatusBarItems
     case ExtensionHostCommandType.StatusBarRegisterChangeListener:
       return ExtensionHostStatusBar.registerChangeListener
+    case ExtensionHostCommandType.OrganizeImportsExecute:
+      return ExtensionHostCodeActions.executeOrganizeImports()
     default:
       throw new CommandNotFoundError(method)
   }

@@ -2,6 +2,7 @@ import * as EditorCompletionType from '../EditorCompletionType/EditorCompletionT
 import * as ExtensionHostAjax from '../ExtensionHostAjax/ExtensionHostAjax.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostClosingTag from '../ExtensionHostClosingTag/ExtensionHostClosingTag.js'
+import * as ExtensionHostCodeActions from '../ExtensionHostCodeActions/ExtensionHostCodeActions.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.js'
@@ -42,6 +43,9 @@ export const api = {
   // Closing Tag
   registerClosingTagProvider: ExtensionHostClosingTag.registerClosingTagProvider,
   executeClosingTagProvider: ExtensionHostClosingTag.executeClosingTagProvider,
+
+  // Code Action
+  registerCodeActionProvider: ExtensionHostCodeActions.registerCodeActionProvider,
 
   // Command
   registerCommand: ExtensionHostCommand.registerCommand,

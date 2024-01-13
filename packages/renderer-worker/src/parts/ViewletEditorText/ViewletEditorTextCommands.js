@@ -99,6 +99,7 @@ export const LazyCommands = {
   replaceRange: () => import('../EditorCommand/EditorCommandReplaceRange.js'),
   showHover: () => import('../EditorCommand/EditorCommandShowHover.js'),
   findAllReferences: () => import('../EditorCommand/EditorCommandFindAllReferences.js'),
+  organizeImports: () => import('../EditorCommand/EditorCommandOrganizeImports.js'),
 }
 
 export const CommandsWithSideEffectsLazy = {
