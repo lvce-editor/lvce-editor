@@ -2,8 +2,37 @@
   width: 200px;
   height: 200px;
   background: var(--HoverWidgetBackground, #282e2f);
-  border-color: var(--CompletionListBorder, #95a29d);
   border: 1px solid;
+  border-color: var(--EditorWidgetBorder, #454545);
   bottom: 0;
-  color: var(--HoverWidgetForeground, white);
+  color: var(--ListForeground, white);
+  border-radius: 2px;
+}
+
+.SourceActionHeading {
+  height: 26px;
+  contain: strict;
+  padding: 0 10px;
+  line-height: 26px;
+  color: var(--DescriptionForeground, rgba(156, 162, 160, 0.7));
+}
+
+.SourceActionItem {
+  height: 24px;
+  contain: strict;
+  padding: 0 10px;
+  line-height: 24px;
+  display: flex;
+}
+
+.SourceActionItem:where(:hover) {
+  background: var(--ListHoverBackground);
+  color: var(--ListHoverForeground);
+}
+
+.SourceActionIcon {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  --MaskIconSize: 14px;
 }
