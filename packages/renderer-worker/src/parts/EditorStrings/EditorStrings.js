@@ -26,6 +26,8 @@ const UiStrings = {
   ToggleBlockComment: 'Toggle Block Comment',
   ToggleLineComment: 'Toggle Line Comment',
   Undo: 'Undo',
+  FormatDocument: 'Format Document',
+  SourceActions: 'Source Actions',
 }
 
 export const goToDefinition = () => {
@@ -118,4 +120,12 @@ export const moveLineDown = () => {
 
 export const duplicateSelection = () => {
   return I18nString.i18nString(UiStrings.DuplicateSelection)
+}
+
+export const formatDocument = () => {
+  return I18nString.i18nString(UiStrings.FormatDocument)
+}
+
+export const sourceAction = () => {
+  return I18nString.i18nString(UiStrings.SourceActions)
 }

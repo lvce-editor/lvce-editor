@@ -100,6 +100,7 @@ export const LazyCommands = {
   showHover: () => import('../EditorCommand/EditorCommandShowHover.js'),
   findAllReferences: () => import('../EditorCommand/EditorCommandFindAllReferences.js'),
   organizeImports: () => import('../EditorCommand/EditorCommandOrganizeImports.js'),
+  showSourceActions: () => import('../EditorCommand/EditorCommandShowSourceActions.js'),
 }
 
 export const CommandsWithSideEffectsLazy = {
