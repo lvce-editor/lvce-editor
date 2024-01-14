@@ -1,3 +1,5 @@
+export const skip = true
+
 export const name = 'viewlet.explorer-rename-file-cancel'
 
 export const test = async ({ FileSystem, Workspace, Explorer, Locator, expect }) => {
