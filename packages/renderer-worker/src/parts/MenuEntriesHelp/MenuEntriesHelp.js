@@ -25,16 +25,12 @@ export const getMenuEntries = async () => {
     )
   }
   if (autoUpdateSupported) {
-    entries.push(
-      MenuEntrySeparator.menuEntrySeparator,
-      {
-        id: 'checkForUpdates',
-        label: HelpStrings.checkForUpdates(),
-        flags: MenuItemFlags.RestoreFocus,
-        command: 'AutoUpdater.checkForUpdates',
-      },
-      MenuEntrySeparator.menuEntrySeparator,
-    )
+    entries.push(MenuEntrySeparator.menuEntrySeparator, {
+      id: 'checkForUpdates',
+      label: HelpStrings.checkForUpdates(),
+      flags: MenuItemFlags.RestoreFocus,
+      command: 'AutoUpdater.checkForUpdates',
+    })
   }
   if (entries.length > 0) {
     entries.push(MenuEntrySeparator.menuEntrySeparator)
