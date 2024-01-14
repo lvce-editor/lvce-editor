@@ -1,4 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
@@ -11,7 +12,7 @@ const getItemVirtualDom = (item) => {
     {
       type: VirtualDomElements.Div,
       role: AriaRoles.TreeItem,
-      className: 'TreeItem',
+      className: ClassNames.TreeItem,
       draggable: true,
       title: path,
       ariaPosInSet: posInSet,
@@ -25,7 +26,7 @@ const getItemVirtualDom = (item) => {
     GetFileIconVirtualDom.getFileIconVirtualDom(icon),
     {
       type: VirtualDomElements.Div,
-      className: 'Label',
+      className: ClassNames.Label,
       childCount: 1,
     },
     text(name),
