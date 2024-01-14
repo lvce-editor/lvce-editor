@@ -312,5 +312,5 @@ export const setDropTargets = (state, oldDropTargets, newDropTargets) => {
 
 export const setDom = (state, dom) => {
   const { $Viewlet } = state
-  VirtualDom.renderInto($Viewlet, dom)
+  VirtualDom.renderInto($Viewlet, dom, ViewletExplorerEvents)
 }
