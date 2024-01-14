@@ -4,7 +4,6 @@ import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomAttributeType from '../DomAttributeType/DomAttributeType.js'
 import * as DomEventOptions from '../DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as InputBox from '../InputBox/InputBox.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
@@ -102,84 +101,13 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
   }
 }
 
+export const focusInput = (state, id) => {
+  const $Input = document.getElementById(id)
+  $Input.focus()
+  RendererWorker.send('Focus.setFocus', WhenExpression.FocusExplorerEditBox)
+}
+
 export const dispose = (state) => {}
-
-export const replaceWithEditBox = (state, index, value) => {
-  const { $Viewlet } = state
-  const $InputBox = InputBox.create()
-  $InputBox.value = value
-  $InputBox.oninput = ViewletExplorerEvents.handleEditingInput
-  const $Dirent = $Viewlet.children[index]
-  if ($Dirent) {
-    const $Label = $Dirent.children[1]
-    $Label.replaceWith($InputBox)
-  } else {
-    const $Dirent = document.createElement('div')
-    $Dirent.className = 'ExplorerItem'
-    $Dirent.append($InputBox)
-    $Viewlet.append($Dirent)
-  }
-  $InputBox.select()
-  $InputBox.setSelectionRange(0, value.length)
-  $InputBox.focus()
-}
-
-export const insertEditBox = (state, index, value) => {
-  // TODO use virtual dom for this
-  const { $Viewlet } = state
-  const $InputBox = InputBox.create()
-  $InputBox.value = value
-  $InputBox.oninput = ViewletExplorerEvents.handleEditingInput
-  if (index === -1) {
-    $Viewlet.append($InputBox)
-  } else {
-    const $Dirent = $Viewlet.children[index]
-    // TODO this should never happen
-    if (!$Dirent) {
-      throw new Error(`dirent at index ${index} should be defined`)
-    }
-    $Dirent.before($InputBox)
-  }
-  $InputBox.select()
-  $InputBox.setSelectionRange(0, value.length)
-  $InputBox.focus()
-}
-
-export const hideEditBox = (state, index) => {
-  Assert.object(state)
-  Assert.number(index)
-  const { $Viewlet } = state
-  if (index === -1) {
-    const $InputBox = $Viewlet.lastChild
-    $InputBox.remove()
-    return $InputBox.value
-  }
-  const $InputBox = $Viewlet.children[index]
-  $InputBox.remove()
-}
-
-export const setEditingIcon = (state, index, icon) => {
-  Assert.object(state)
-  Assert.number(index)
-  Assert.string(icon)
-  const { $Viewlet } = state
-  const $Dirent = $Viewlet.children[index]
-  if (!$Dirent) {
-    return
-  }
-  const $Icon = $Dirent.children[0]
-  if (!$Icon) {
-    return
-  }
-  $Icon.src = icon
-}
-
-export const replaceEditBox = (state, index, dirent) => {
-  Assert.object(state)
-  Assert.number(index)
-  const { $Viewlet } = state
-  $Viewlet.focus()
-}
 
 export const setDropTargets = (state, oldDropTargets, newDropTargets) => {
   // TODO use virtual dom for this
