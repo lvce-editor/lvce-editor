@@ -1,12 +1,12 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
+import * as DirentType from '../DirentType/DirentType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getItemVirtualDom = (item) => {
-  const { posInSet, setSize, icon, name, path, depth } = item
-  console.log({ item })
-  return [
+  const { posInSet, setSize, icon, name, path, depth, type } = item
+  const dom = [
     {
       type: VirtualDomElements.Div,
       role: AriaRoles.TreeItem,
@@ -33,6 +33,23 @@ const getItemVirtualDom = (item) => {
     },
     text(name),
   ]
+  switch (type) {
+    // TODO decide on directory vs folder
+    case DirentType.Directory:
+      dom[0].ariaExpanded = 'false'
+      break
+    case DirentType.DirectoryExpanding:
+      dom[0].ariaExpanded = 'true' // TODO tree should be aria-busy then
+      break
+    case DirentType.DirectoryExpanded:
+      dom[0].ariaExpanded = 'true'
+      break
+    case DirentType.File:
+      break
+    default:
+      break
+  }
+  return dom
 }
 
 export const getExplorerVirtualDom = (visibleItems) => {
