@@ -10,7 +10,23 @@ import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 const useChevrons = false
 
 const getItemVirtualDomFile = (item) => {
-  const { posInSet, setSize, icon, name, path, depth, isFocused } = item
+  const { posInSet, setSize, icon, name, path, depth, isFocused, isEditing } = item
+  if (isEditing) {
+    return [
+      {
+        type: VirtualDomElements.Div,
+        className: ClassNames.TreeItem,
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Input,
+        className: 'InputBox',
+        id: 'ExplorerInput',
+        onInput: 'handleEditingInput',
+        childCount: 0,
+      },
+    ]
+  }
   const dom = [
     {
       type: VirtualDomElements.Div,

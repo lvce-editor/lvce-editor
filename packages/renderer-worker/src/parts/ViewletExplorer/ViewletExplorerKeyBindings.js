@@ -67,12 +67,12 @@ export const getKeyBindings = () => {
     {
       key: KeyCode.Escape,
       command: 'Explorer.cancelEdit',
-      when: 'focus.ExplorerEditBox',
+      when: WhenExpression.FocusExplorerEditBox,
     },
     {
       key: KeyCode.Enter,
       command: 'Explorer.acceptEdit',
-      when: 'focus.ExplorerEditBox',
+      when: WhenExpression.FocusExplorerEditBox,
     },
     {
       key: KeyCode.Delete,
