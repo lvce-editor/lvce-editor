@@ -6,13 +6,22 @@ import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const getClassName = (isFocused) => {
+  let className = ClassNames.TreeItem
+  if (isFocused) {
+    className += ' ' + ClassNames.TreeItemActive
+  }
+  return className
+}
+
 const getItemVirtualDom = (item) => {
   const { posInSet, setSize, icon, name, path, depth, type, isFocused } = item
+  const className = getClassName(isFocused)
   const dom = [
     {
       type: VirtualDomElements.Div,
       role: AriaRoles.TreeItem,
-      className: ClassNames.TreeItem,
+      className,
       draggable: true,
       title: path,
       ariaPosInSet: posInSet,
