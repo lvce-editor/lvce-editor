@@ -1,4 +1,5 @@
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
+import * as GetEditorSourceActions from '../GetEditorSourceActions/GetEditorSourceActions.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -16,11 +17,7 @@ export const create = (id, uri, x, y, width, height) => {
 export const loadContent = async (state, savedState, position) => {
   const editor = GetActiveEditor.getActiveEditor()
   // TODO request source actions information from extensions
-  const sourceActions = [
-    {
-      name: 'Organize Imports',
-    },
-  ]
+  const sourceActions = await GetEditorSourceActions.getEditorSourceActions()
   return {
     ...state,
     sourceActions,
