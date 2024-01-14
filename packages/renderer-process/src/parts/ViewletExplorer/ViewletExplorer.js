@@ -103,6 +103,9 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
 
 export const focusInput = (state, id) => {
   const $Input = document.getElementById(id)
+  if (!$Input) {
+    return
+  }
   $Input.focus()
   RendererWorker.send('Focus.setFocus', WhenExpression.FocusExplorerEditBox)
 }
