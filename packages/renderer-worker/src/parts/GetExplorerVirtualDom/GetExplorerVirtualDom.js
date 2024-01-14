@@ -6,7 +6,8 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getItemVirtualDom = (item) => {
-  const { posInSet, setSize, icon, name, path, depth, type } = item
+  const { posInSet, setSize, icon, name, path, depth, type, isFocused } = item
+  console.log({ item })
   const dom = [
     {
       type: VirtualDomElements.Div,
@@ -30,6 +31,9 @@ const getItemVirtualDom = (item) => {
     },
     text(name),
   ]
+  if (isFocused) {
+    dom[0].id = 'TreeItemActive'
+  }
   switch (type) {
     // TODO decide on directory vs folder
     case DirentType.Directory:
