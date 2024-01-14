@@ -5,6 +5,7 @@ import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getItemVirtualDom = (item) => {
   const { posInSet, setSize, icon, name, path, depth } = item
+  console.log({ item })
   return [
     {
       type: VirtualDomElements.Div,
@@ -44,8 +45,6 @@ export const getExplorerVirtualDom = (visibleItems) => {
     ariaLabel: 'Files Explorer',
     childCount: visibleItems.length,
   })
-  for (const item of visibleItems) {
-    dom.push(...getItemVirtualDom(item))
-  }
+  dom.push(...visibleItems.flatMap(getItemVirtualDom))
   return dom
 }
