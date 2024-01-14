@@ -59,24 +59,3 @@
 .Panel {
   background: var(--PanelBackground);
 }
-
-/* TODO remove this */
-.Hidden {
-  display: none !important;
-}
-
-/* TODO remove items from dom instead of hiding them with css */
-/* TODO remove this */
-[hidden] {
-  display: none !important;
-}
-
-/*
- * Using the will-change attribute creates a separate layer.
- * Updating that layer will be faster since only that layer needs style recalculation and repainting (instead of the whole page)
- * However this hack should be used sparingly since too many layers can have negative impact for performance
- */
-.TransformHack {
-  /* will-change: transform;
-  contain: strict; */
-}
