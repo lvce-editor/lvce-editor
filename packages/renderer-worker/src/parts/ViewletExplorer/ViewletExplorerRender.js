@@ -13,7 +13,7 @@ const renderItems = {
   },
   apply(oldState, newState) {
     const visibleDirents = getVisible(newState)
-    const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents)
+    const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents).slice(1)
     return ['setDom', dom]
   },
 }
