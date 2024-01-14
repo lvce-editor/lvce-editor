@@ -1,67 +1,68 @@
 import * as KeyCode from '../KeyCode/KeyCode.js'
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const getKeyBindings = () => {
   return [
     {
       key: KeyCode.RightArrow,
       command: 'Explorer.handleArrowRight',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyCode.LeftArrow,
       command: 'Explorer.handleArrowLeft',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyCode.Home,
       command: 'Explorer.focusFirst',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyCode.End,
       command: 'Explorer.focusLast',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyCode.UpArrow,
       command: 'Explorer.focusPrevious',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyCode.DownArrow,
       command: 'Explorer.focusNext',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.Star,
       command: 'Explorer.expandAll',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyModifier.Alt | KeyCode.RightArrow,
       command: 'Explorer.expandRecursively',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.LeftArrow,
       command: 'Explorer.collapseAll',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.KeyV,
       command: 'Explorer.handlePaste',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.KeyC,
       command: 'Explorer.handleCopy',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyCode.F2,
       command: 'Explorer.rename',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyCode.Escape,
@@ -76,22 +77,22 @@ export const getKeyBindings = () => {
     {
       key: KeyCode.Delete,
       command: 'Explorer.removeDirent',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyCode.Escape,
       command: 'Explorer.focusNone',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyCode.Space,
       command: 'Explorer.handleClickCurrentButKeepFocus',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyCode.Enter,
       command: 'Explorer.handleClickCurrent',
-      when: 'focus.Explorer',
+      when: WhenExpression.FocusExplorer,
     },
   ]
 }
