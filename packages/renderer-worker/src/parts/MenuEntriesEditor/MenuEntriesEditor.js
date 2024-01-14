@@ -2,6 +2,7 @@ import * as EditorStrings from '../EditorStrings/EditorStrings.js'
 import * as HelpStrings from '../HelpStrings/HelpStrings.js'
 import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 export const getMenuEntries = () => {
   return [
@@ -31,6 +32,19 @@ export const getMenuEntries = () => {
       flags: MenuItemFlags.None,
       command: /* ViewletSideBar.show */ 'SideBar.show',
       args: [/* id */ 'Implementations', /* focus */ true],
+    },
+    MenuEntrySeparator.menuEntrySeparator,
+    {
+      id: 'format',
+      label: EditorStrings.formatDocument(),
+      flags: MenuItemFlags.None,
+      command: 'Editor.format',
+    },
+    {
+      id: MenuEntryId.SourceControl,
+      label: EditorStrings.sourceAction(),
+      flags: MenuItemFlags.None,
+      command: 'Editor.showSourceActions',
     },
     MenuEntrySeparator.menuEntrySeparator,
     {
