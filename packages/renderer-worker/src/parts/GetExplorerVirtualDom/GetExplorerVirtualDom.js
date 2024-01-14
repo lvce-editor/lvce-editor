@@ -7,7 +7,6 @@ import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getItemVirtualDom = (item) => {
   const { posInSet, setSize, icon, name, path, depth, type, isFocused } = item
-  console.log({ item })
   const dom = [
     {
       type: VirtualDomElements.Div,
