@@ -1,90 +1,96 @@
+import * as EditorStrings from '../EditorStrings/EditorStrings.js'
+
 export const getQuickPickMenuEntries = () => {
   return [
     {
       id: 'Editor.format',
-      label: 'Editor: Format Document',
+      label: EditorStrings.formatDocument(),
     },
     {
       id: 'Editor.showHover',
-      label: 'Editor: Show Hover',
+      label: EditorStrings.editorShowHover(),
     },
     {
       id: 'Editor.formatForced',
-      label: 'Editor: Format Document (forced)',
+      label: EditorStrings.editorFormatDocumentForced(),
     },
     {
       id: 'Editor.selectNextOccurrence',
-      label: 'Editor: Select Next Occurrence',
+      label: EditorStrings.editorSelectNextOccurrence(),
     },
     {
       id: 'Editor.selectAllOccurrences',
-      label: 'Editor: Select All Occurrences',
+      label: EditorStrings.editorSelectAllOccurrences(),
     },
     {
       id: 'Editor.goToDefinition',
-      label: 'Editor: Go To Definition',
+      label: EditorStrings.editorGoToDefinition(),
     },
     {
       id: 'Editor.goToTypeDefinition',
-      label: 'Editor: Go To Type Definition',
+      label: EditorStrings.editorGoToTypeDefinition(),
     },
     {
       id: 'Editor.selectInsideString',
-      label: 'Editor: Select Inside String',
+      label: EditorStrings.editorSelectInsideString(),
     },
     {
       id: 'Editor.indent',
-      label: 'Editor: Indent',
+      label: EditorStrings.editorIndent(),
       aliases: ['Indent More', 'DeIndent'],
     },
     {
       id: 'Editor.unindent',
-      label: 'Editor: Unindent',
+      label: EditorStrings.editorUnindent(),
       aliases: ['Indent Less', 'DeIndent'],
     },
     {
       id: 'Editor.sortLinesAscending',
-      label: 'Editor: Sort Lines Ascending',
+      label: EditorStrings.editorSortLinesAscending(),
     },
     {
       id: 'Editor.toggleComment',
-      label: 'Editor: Toggle Comment',
+      label: EditorStrings.editorToggleComment(),
     },
     {
       id: 'Editor.selectUp',
-      label: 'Editor: Select Up',
+      label: EditorStrings.editorSelectUp(),
     },
     {
       id: 'Editor.selectDown',
-      label: 'Editor: Select Down',
+      label: EditorStrings.editorSelectDown(),
     },
     {
       id: 'Editor.toggleBlockComment',
-      label: 'Editor: Toggle Block Comment',
+      label: EditorStrings.toggleBlockComment(),
     },
     {
       id: 'Editor.openColorPicker',
-      label: 'Editor: Open Color Picker',
+      label: EditorStrings.editorOpenColorPicker(),
     },
     {
       id: 'Editor.closeColorPicker',
-      label: 'Editor: Close Color Picker',
+      label: EditorStrings.editorCloseColorPicker(),
     },
     {
       id: 'Editor.copyLineDown',
-      label: 'Editor: Copy Line Down',
+      label: EditorStrings.editorCopyLineDown(),
     },
     {
       id: 'Editor.copyLineUp',
-      label: 'Editor: Copy Line Up',
+      label: EditorStrings.editorCopyLineUp(),
     },
     {
       id: 'Editor.moveLineDown',
-      label: 'Editor: Move Line Down',
+      label: EditorStrings.moveLineDown(),
     },
     {
       id: 'Editor.moveLineUp',
-      label: 'Editor: Move Line Up',
+      label: EditorStrings.moveLineUp(),
+    },
+    {
+      id: 'Editor.showSourceActions',
+      label: EditorStrings.sourceAction(),
     },
   ]
 }

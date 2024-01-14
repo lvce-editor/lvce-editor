@@ -29,6 +29,24 @@ const UiStrings = {
   Undo: 'Undo',
   FormatDocument: 'Format Document',
   SourceActions: 'Source Actions',
+  EditorShowHover: 'Show Hover',
+  EditorFormatDocumentForced: 'Editor: Format Document (forced)',
+  EditorSelectNextOccurrence: 'Editor: Select Next Occurrence',
+  EditorSelectAllOccurrences: 'Editor: Select All Occurrences',
+  EditorGoToDefinition: 'Editor: Go To Definition',
+  EditorGoToTypeDefinition: 'Editor: Go To Type Definition',
+  EditorSelectInsideString: 'Editor: Select Inside String',
+  EditorIndent: 'Editor: Indent',
+  EditorUnindent: 'Editor: Unindent',
+  EditorSortLinesAscending: 'Editor: Sort Lines Ascending',
+  EditorToggleComment: 'Editor: Toggle Comment',
+  EditorSelectUp: 'Editor: Select Up',
+  EditorSelectDown: 'Editor: Select Down',
+  EditorToggleBlockComment: 'Editor: Toggle Block Comment',
+  EditorOpenColorPicker: 'Editor: Open Color Picker',
+  EditorCloseColorPicker: 'Editor: Close Color Picker',
+  EditorCopyLineDown: 'Editor: Copy Line Down',
+  EditorCopyLineUp: 'Editor: Copy Line Up',
 }
 
 export const goToDefinition = () => {
@@ -133,4 +151,76 @@ export const formatDocument = () => {
 
 export const sourceAction = () => {
   return I18nString.i18nString(UiStrings.SourceActions)
+}
+
+export const editorShowHover = () => {
+  return I18nString.i18nString(UiStrings.EditorShowHover)
+}
+
+export const editorFormatDocumentForced = () => {
+  return I18nString.i18nString(UiStrings.EditorFormatDocumentForced)
+}
+
+export const editorSelectNextOccurrence = () => {
+  return I18nString.i18nString(UiStrings.EditorSelectNextOccurrence)
+}
+
+export const editorSelectAllOccurrences = () => {
+  return I18nString.i18nString(UiStrings.EditorSelectAllOccurrences)
+}
+
+export const editorGoToDefinition = () => {
+  return I18nString.i18nString(UiStrings.EditorGoToDefinition)
+}
+
+export const editorGoToTypeDefinition = () => {
+  return I18nString.i18nString(UiStrings.EditorGoToTypeDefinition)
+}
+
+export const editorSelectInsideString = () => {
+  return I18nString.i18nString(UiStrings.EditorSelectInsideString)
+}
+
+export const editorIndent = () => {
+  return I18nString.i18nString(UiStrings.EditorIndent)
+}
+
+export const editorUnindent = () => {
+  return I18nString.i18nString(UiStrings.EditorUnindent)
+}
+
+export const editorSortLinesAscending = () => {
+  return I18nString.i18nString(UiStrings.EditorSortLinesAscending)
+}
+
+export const editorToggleComment = () => {
+  return I18nString.i18nString(UiStrings.EditorToggleComment)
+}
+
+export const editorSelectUp = () => {
+  return I18nString.i18nString(UiStrings.EditorSelectUp)
+}
+
+export const editorSelectDown = () => {
+  return I18nString.i18nString(UiStrings.EditorSelectDown)
+}
+
+export const editorToggleBlockComment = () => {
+  return I18nString.i18nString(UiStrings.EditorToggleBlockComment)
+}
+
+export const editorOpenColorPicker = () => {
+  return I18nString.i18nString(UiStrings.EditorOpenColorPicker)
+}
+
+export const editorCloseColorPicker = () => {
+  return I18nString.i18nString(UiStrings.EditorCloseColorPicker)
+}
+
+export const editorCopyLineDown = () => {
+  return I18nString.i18nString(UiStrings.EditorCopyLineDown)
+}
+
+export const editorCopyLineUp = () => {
+  return I18nString.i18nString(UiStrings.EditorCopyLineUp)
 }
