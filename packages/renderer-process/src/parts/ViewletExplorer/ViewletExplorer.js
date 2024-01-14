@@ -11,6 +11,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 
 const activeId = 'TreeItemActive'
@@ -307,4 +308,9 @@ export const setDropTargets = (state, oldDropTargets, newDropTargets) => {
       $Viewlet.children[newIndex].classList.add('DropTarget')
     }
   }
+}
+
+export const setDom = (state, dom) => {
+  const { $Viewlet } = state
+  VirtualDom.renderInto($Viewlet, dom, ViewletExplorerEvents)
 }

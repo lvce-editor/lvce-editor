@@ -1,11 +1,13 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as DirentType from '../DirentType/DirentType.js'
+import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
 import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getItemVirtualDom = (item) => {
-  const { posInSet, setSize, icon, name, path, depth } = item
-  return [
+  const { posInSet, setSize, icon, name, path, depth, type, isFocused } = item
+  const dom = [
     {
       type: VirtualDomElements.Div,
       role: AriaRoles.TreeItem,
@@ -20,11 +22,7 @@ const getItemVirtualDom = (item) => {
       ariaLabel: name,
       ariaDescription: '',
     },
-    {
-      type: VirtualDomElements.Div,
-      className: `FileIcon FileIcon${icon}`,
-      childCount: 0,
-    },
+    GetFileIconVirtualDom.getFileIconVirtualDom(icon),
     {
       type: VirtualDomElements.Div,
       className: 'Label',
@@ -32,6 +30,26 @@ const getItemVirtualDom = (item) => {
     },
     text(name),
   ]
+  if (isFocused) {
+    dom[0].id = 'TreeItemActive'
+  }
+  switch (type) {
+    // TODO decide on directory vs folder
+    case DirentType.Directory:
+      dom[0].ariaExpanded = 'false'
+      break
+    case DirentType.DirectoryExpanding:
+      dom[0].ariaExpanded = 'true' // TODO tree should be aria-busy then
+      break
+    case DirentType.DirectoryExpanded:
+      dom[0].ariaExpanded = 'true'
+      break
+    case DirentType.File:
+      break
+    default:
+      break
+  }
+  return dom
 }
 
 export const getExplorerVirtualDom = (visibleItems) => {
@@ -44,8 +62,6 @@ export const getExplorerVirtualDom = (visibleItems) => {
     ariaLabel: 'Files Explorer',
     childCount: visibleItems.length,
   })
-  for (const item of visibleItems) {
-    dom.push(...getItemVirtualDom(item))
-  }
+  dom.push(...visibleItems.flatMap(getItemVirtualDom))
   return dom
 }

@@ -1,18 +1,27 @@
 import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
+import * as GetExplorerVirtualDom from '../GetExplorerVirtualDom/GetExplorerVirtualDom.js'
+import * as GetVisibleExplorerItems from '../GetVisibleExplorerItems/GetVisibleExplorerItems.js'
 
 export const hasFunctionalRender = true
 
-const getVisible = (state) => {
-  return state.items.slice(state.minLineY, state.maxLineY)
-}
-
 const renderItems = {
   isEqual(oldState, newState) {
-    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
+    return (
+      oldState.items === newState.items &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY &&
+      oldState.focusedIndex === newState.focusedIndex
+    )
   },
   apply(oldState, newState) {
-    const visibleDirents = getVisible(newState)
-    return [/* method */ 'updateDirents', /* visibleDirents */ visibleDirents]
+    const visibleDirents = GetVisibleExplorerItems.getVisibleExplorerItems(
+      newState.items,
+      newState.minLineY,
+      newState.maxLineY,
+      newState.focusedIndex,
+    )
+    const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents).slice(1)
+    return ['setDom', dom]
   },
 }
 
