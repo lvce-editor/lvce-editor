@@ -4,6 +4,7 @@ import * as I18nString from '../I18NString/I18NString.js'
  * @enum {string}
  */
 const UiStrings = {
+  OrganizeImports: 'Organize Imports',
   Copy: 'Copy',
   CopyLineDown: 'Copy Line Down',
   CopyLineUp: 'Copy Line Up',
@@ -32,6 +33,10 @@ const UiStrings = {
 
 export const goToDefinition = () => {
   return I18nString.i18nString(UiStrings.GoToDefinition)
+}
+
+export const organizeImports = () => {
+  return I18nString.i18nString(UiStrings.OrganizeImports)
 }
 
 export const goToTypeDefinition = () => {

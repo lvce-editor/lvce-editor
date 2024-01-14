@@ -1,10 +1,9 @@
 import * as EditorCommandGetWordAt from '../EditorCommand/EditorCommandGetWordAt.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as Hover from '../Hover/Hover.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as TokenizeCodeBlock from '../TokenizeCodeBlock/TokenizeCodeBlock.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -20,12 +19,6 @@ export const create = (id, uri, x, y, width, height) => {
     lineInfos: [],
     diagnostics: [],
   }
-}
-
-// TODO request hover information from extensions
-
-const getEditor = () => {
-  return Viewlet.getState(ViewletModuleId.EditorText)
 }
 
 const getHoverPosition = (position, selections) => {
@@ -51,7 +44,7 @@ const getMatchingDiagnostics = (diagnostics, rowIndex, columnIndex) => {
 }
 
 export const loadContent = async (state, savedState, position) => {
-  const editor = getEditor()
+  const editor = GetActiveEditor.getActiveEditor()
   const { selections, height, lines } = editor
   const { rowIndex, columnIndex } = getHoverPosition(position, selections)
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)

@@ -1,0 +1,9 @@
+.EditorSourceActions {
+  width: 200px;
+  height: 200px;
+  background: var(--HoverWidgetBackground, #282e2f);
+  border-color: var(--CompletionListBorder, #95a29d);
+  border: 1px solid;
+  bottom: 0;
+  color: var(--HoverWidgetForeground, white);
+}
