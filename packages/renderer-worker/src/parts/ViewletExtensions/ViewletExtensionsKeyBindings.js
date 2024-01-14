@@ -49,5 +49,10 @@ export const getKeyBindings = () => {
       command: 'Extensions.toggleSuggest',
       when: WhenExpression.FocusExtensions,
     },
+    {
+      key: KeyModifier.CtrlCmd | KeyCode.DownArrow,
+      command: 'Extensions.scrollDown',
+      when: WhenExpression.FocusExtensions,
+    },
   ]
 }
