@@ -1,8 +1,8 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
 import * as DirentType from '../DirentType/DirentType.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as GetFileIconVirtualDom from '../GetFileIconVirtualDom/GetFileIconVirtualDom.js'
+import * as GetTreeItemIndent from '../GetTreeItemIndent/GetTreeItemIndent.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getItemVirtualDom = (item) => {
