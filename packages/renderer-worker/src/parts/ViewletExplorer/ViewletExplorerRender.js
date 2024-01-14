@@ -1,4 +1,5 @@
 import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
+import * as GetExplorerVirtualDom from '../GetExplorerVirtualDom/GetExplorerVirtualDom.js'
 
 export const hasFunctionalRender = true
 
@@ -12,7 +13,8 @@ const renderItems = {
   },
   apply(oldState, newState) {
     const visibleDirents = getVisible(newState)
-    return [/* method */ 'updateDirents', /* visibleDirents */ visibleDirents]
+    const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents)
+    return ['setDom', dom]
   },
 }
 
