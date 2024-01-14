@@ -10,7 +10,8 @@ const renderItems = {
       oldState.items === newState.items &&
       oldState.minLineY === newState.minLineY &&
       oldState.maxLineY === newState.maxLineY &&
-      oldState.focusedIndex === newState.focusedIndex
+      oldState.focusedIndex === newState.focusedIndex &&
+      oldState.editingIndex === newState.editingIndex
     )
   },
   apply(oldState, newState) {
@@ -19,6 +20,7 @@ const renderItems = {
       newState.minLineY,
       newState.maxLineY,
       newState.focusedIndex,
+      newState.editingIndex,
     )
     const dom = GetExplorerVirtualDom.getExplorerVirtualDom(visibleDirents).slice(1)
     return ['setDom', dom]
@@ -77,4 +79,4 @@ const renderEditingIcon = {
   },
 }
 
-export const render = [renderEditingIndex, renderItems, renderDropTargets, renderFocusedIndex, renderEditingIcon]
+export const render = [renderItems, renderDropTargets, renderFocusedIndex, renderEditingIcon]
