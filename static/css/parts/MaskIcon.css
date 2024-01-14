@@ -196,6 +196,35 @@
   mask-image: url(/icons/info.svg);
 }
 
+.MaskIconSymbolValue,
+.MaskIconSymbolDefault {
+  mask-image: url(/icons/symbol-enum.svg);
+}
+
+.MaskIconSymbolProperty {
+  mask-image: url(/icons/symbol-property.svg);
+}
+
+.MaskIconSymbolFunction {
+  mask-image: url(/icons/symbol-method.svg);
+}
+
+.MaskIconSymbolVariable {
+  mask-image: url(/icons/symbol-variable.svg);
+}
+
+.MaskIconSymbolKeyword {
+  mask-image: url(/icons/symbol-keyword.svg);
+}
+
+.MaskIconSymbolField {
+  mask-image: url(/icons/symbol-field.svg);
+}
+
+.MaskIconSymbolFile {
+  mask-image: url(/icons/symbol-file.svg);
+}
+
 .Chevron {
   width: 16px;
   height: 16px;
