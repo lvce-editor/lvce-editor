@@ -17,7 +17,7 @@ export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessag
     },
     {
       type: VirtualDomElements.Div,
-      className: 'DialogToolBar',
+      className: 'DialogToolBarRow',
       childCount: 1,
     },
     {
@@ -35,7 +35,7 @@ export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessag
     },
     {
       type: VirtualDomElements.Div,
-      className: 'DialogContentWrapper',
+      className: 'DialogMessageRow',
       childCount: 2,
     },
     {
@@ -61,7 +61,7 @@ export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessag
 
     {
       type: VirtualDomElements.Div,
-      className: 'DialogButtons',
+      className: 'DialogButtonsRow',
       childCount: 2,
     },
     {

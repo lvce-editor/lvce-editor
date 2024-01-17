@@ -74,19 +74,19 @@
   opacity: 1;
 }
 
-.DialogContentWrapper {
+.DialogToolBarRow {
+  height: 26px;
+  contain: strict;
+  justify-content: end;
+  display: flex;
+}
+
+.DialogMessageRow {
   display: flex;
   gap: 24px;
   flex: 1;
   contain: strict;
   padding: 0 10px;
-}
-
-.DialogToolBar {
-  height: 26px;
-  contain: strict;
-  justify-content: end;
-  display: flex;
 }
 
 .DialogClose {
@@ -135,7 +135,7 @@
   user-select: text;
 }
 
-.DialogButtons {
+.DialogButtonsRow {
   justify-content: end;
   display: flex;
   gap: 8px;
