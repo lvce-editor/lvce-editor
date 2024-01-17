@@ -1,6 +1,7 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as TabIndex from '../TabIndex/TabIndex.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as GetButtonVirtualDom from '../GetButtonVirtualDom/GetButtonVirtualDom.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessage, copyMessage, productName) => {
@@ -17,7 +18,7 @@ export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessag
     },
     {
       type: VirtualDomElements.Div,
-      className: 'DialogToolBar',
+      className: 'DialogToolBarRow',
       childCount: 1,
     },
     {
@@ -35,7 +36,7 @@ export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessag
     },
     {
       type: VirtualDomElements.Div,
-      className: 'DialogContentWrapper',
+      className: 'DialogMessageRow',
       childCount: 2,
     },
     {
@@ -61,23 +62,11 @@ export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessag
 
     {
       type: VirtualDomElements.Div,
-      className: 'DialogButtons',
+      className: 'DialogButtonsRow',
       childCount: 2,
     },
-    {
-      type: VirtualDomElements.Button,
-      className: 'Button ButtonSecondary',
-      onClick: 'handleClickOk',
-      childCount: 1,
-    },
-    text(okMessage),
-    {
-      type: VirtualDomElements.Button,
-      className: 'Button ButtonPrimary',
-      onClick: 'handleClickCopy',
-      childCount: 1,
-    },
-    text(copyMessage),
+    ...GetButtonVirtualDom.getSecondaryButtonVirtualDom(okMessage, 'handleClickOk'),
+    ...GetButtonVirtualDom.getPrimaryButtonVirtualDom(copyMessage, 'handleClickCopy'),
   ]
   return dom
 }
