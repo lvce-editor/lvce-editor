@@ -1,4 +1,5 @@
-.MaskIcon {
+.MaskIcon,
+.Icon {
   display: block;
   position: absolute;
   inset: 0;
@@ -24,204 +25,256 @@
   contain: strict;
 }
 
-.MaskIconMinimize {
+.MaskIconMinimize,
+.IconMinimize {
   mask-image: url(/icons/chrome-minimize.svg);
 }
 
-.MaskIconMaximize {
+.MaskIconMaximize,
+.IconMaximize {
   mask-image: url(/icons/chrome-maximize.svg);
 }
 
-.MaskIconRestore {
+.MaskIconRestore,
+.IconRestore {
   mask-image: url(/icons/chrome-restore.svg);
 }
 
-.MaskIconChromeClose {
+.MaskIconChromeClose,
+.IconChromeClose {
   mask-image: url(/icons/chrome-close.svg);
 }
 
-.MaskIconFiles {
+.MaskIconFiles,
+.IconFiles {
   mask-image: url(/icons/files.svg);
 }
 
-.MaskIconSearch {
+.MaskIconSearch,
+.IconSearch {
   mask-image: url(/icons/search.svg);
 }
 
-.MaskIconSourceControl {
+.MaskIconSourceControl,
+.IconSourceControl {
   mask-image: url(/icons/source-control.svg);
 }
 
-.MaskIconDebugAlt2 {
+.MaskIconDebugAlt2,
+.IconDebugAlt2 {
   mask-image: url(/icons/debug-alt-2.svg);
 }
 
-.MaskIconExtensions {
+.MaskIconExtensions,
+.IconExtensions {
   mask-image: url(/icons/extensions.svg);
 }
 
-.MaskIconSettingsGear {
+.MaskIconSettingsGear,
+.IconSettingsGear {
   mask-image: url(/icons/settings-gear.svg);
 }
 
-.MaskIconEllipsis {
+.MaskIconEllipsis,
+.IconEllipsis {
   mask-image: url(/icons/ellipsis.svg);
 }
 
-.MaskIconArrowDown {
+.MaskIconArrowDown,
+.IconArrowDown {
   mask-image: url(/icons/arrow-down.svg);
 }
 
-.MaskIconArrowUp {
+.MaskIconArrowUp,
+.IconArrowUp {
   mask-image: url(/icons/arrow-up.svg);
 }
 
 .MaskIconClose,
-.EditorTabCloseButton:hover .MaskIconCircleFilled {
+.IconClose,
+.EditorTabCloseButton:hover .MaskIconCircleFilled,
+.IconCircleFilled {
   mask-image: url(/icons/close.svg);
 }
 
-.MaskIconCaseSensitive {
+.MaskIconCaseSensitive,
+.IconCaseSensitive {
   mask-image: url(/icons/case-sensitive.svg);
 }
 
-.MaskIconWholeWord {
+.MaskIconWholeWord,
+.IconWholeWord {
   mask-image: url(/icons/whole-word.svg);
 }
 
-.MaskIconRegex {
+.MaskIconRegex,
+.IconRegex {
   mask-image: url(/icons/regex.svg);
 }
 
-.MaskIconChevronRight {
+.MaskIconChevronRight,
+.IconChevronRight {
   mask-image: url(/icons/chevron-right.svg);
 }
 
-.MaskIconChevronDown {
+.MaskIconChevronDown,
+.IconChevronDown {
   mask-image: url(/icons/chevron-down.svg);
 }
 
-.MaskIconRefresh {
+.MaskIconRefresh,
+.IconRefresh {
   mask-image: url(/icons/refresh.svg);
 }
 
-.MaskIconClearAll {
+.MaskIconClearAll,
+.IconClearAll {
   mask-image: url(/icons/clear-all.svg);
 }
 
-.MaskIconNewFile {
+.MaskIconNewFile,
+.IconNewFile {
   mask-image: url(/icons/new-file.svg);
 }
 
-.MaskIconNewFolder {
+.MaskIconNewFolder,
+.IconNewFolder {
   mask-image: url(/icons/new-folder.svg);
 }
 
-.MaskIconListFlat {
+.MaskIconListFlat,
+.IconListFlat {
   mask-image: url(/icons/list-flat.svg);
 }
 
-.MaskIconCollapseAll {
+.MaskIconCollapseAll,
+.IconCollapseAll {
   mask-image: url(/icons/collapse-all.svg);
 }
 
-.MaskIconFilter {
+.MaskIconFilter,
+.IconFilter {
   mask-image: url(/icons/filter.svg);
 }
 
-.MaskIconBlank {
+.MaskIconBlank,
+.IconBlank {
   mask-image: url(/icons/blank.svg);
 }
 
-.MaskIconCheck {
+.MaskIconCheck,
+.IconCheck {
   mask-image: url(/icons/check.svg);
 }
 
-.MaskIconEllipsis {
+.MaskIconEllipsis,
+.IconEllipsis {
   mask-image: url(/icons/ellipsis.svg);
 }
 
-.MaskIconAdd {
+.MaskIconAdd,
+.IconAdd {
   mask-image: url(/icons/add.svg);
 }
-.MaskIconTrash {
+.MaskIconTrash,
+.IconTrash {
   mask-image: url(/icons/trash.svg);
 }
 
-.MaskIconSplitHorizontal {
+.MaskIconSplitHorizontal,
+.IconSplitHorizontal {
   mask-image: url(/icons/split-horizontal.svg);
 }
 
-.MaskIconReplaceAll {
+.MaskIconReplaceAll,
+.IconReplaceAll {
   mask-image: url(/icons/replace-all.svg);
 }
 
-.MaskIconChevronUp {
+.MaskIconChevronUp,
+.IconChevronUp {
   mask-image: url(/icons/chevron-up.svg);
 }
 
-.MaskIconArrowLeft {
+.MaskIconArrowLeft,
+.IconArrowLeft {
   mask-image: url(/icons/arrow-left.svg);
 }
 
-.MaskIconArrowRight {
+.MaskIconArrowRight,
+.IconArrowRight {
   mask-image: url(/icons/arrow-right.svg);
 }
 
-.MaskIconLinkExternal {
+.MaskIconLinkExternal,
+.IconLinkExternal {
   mask-image: url(/icons/link-external.svg);
 }
 
-.MaskIconGoToFile {
+.MaskIconGoToFile,
+.IconGoToFile {
   mask-image: url(/icons/go-to-file.svg);
 }
 
-.MaskIconDiscard {
+.MaskIconDiscard,
+.IconDiscard {
   mask-image: url(/icons/discard.svg);
 }
 
-.MaskIconRemove {
+.MaskIconRemove,
+.IconRemove {
   mask-image: url(/icons/remove.svg);
 }
 
-.MaskIconError {
+.MaskIconError,
+.IconError {
   mask-image: url(/icons/error.svg);
 }
 
-.MaskIconCircleFilled {
+.MaskIconCircleFilled,
+.IconCircleFilled {
   mask-image: url(/icons/circle-filled.svg);
 }
 
-.MaskIconInfo {
+.MaskIconInfo,
+.IconInfo {
   mask-image: url(/icons/info.svg);
 }
 
 .MaskIconSymbolValue,
-.MaskIconSymbolDefault {
+.IconSymbolValue,
+.MaskIconSymbolDefault,
+.IconSymbolDefault {
   mask-image: url(/icons/symbol-enum.svg);
 }
 
-.MaskIconSymbolProperty {
+.MaskIconSymbolProperty,
+.IconSymbolProperty {
   mask-image: url(/icons/symbol-property.svg);
 }
 
-.MaskIconSymbolFunction {
+.MaskIconSymbolFunction,
+.IconSymbolFunction {
   mask-image: url(/icons/symbol-method.svg);
 }
 
-.MaskIconSymbolVariable {
+.MaskIconSymbolVariable,
+.IconSymbolVariable {
   mask-image: url(/icons/symbol-variable.svg);
 }
 
-.MaskIconSymbolKeyword {
+.MaskIconSymbolKeyword,
+.IconSymbolKeyword {
   mask-image: url(/icons/symbol-keyword.svg);
 }
 
-.MaskIconSymbolField {
+.MaskIconSymbolField,
+.IconSymbolField {
   mask-image: url(/icons/symbol-field.svg);
 }
 
-.MaskIconSymbolFile {
+.MaskIconSymbolFile,
+.IconSymbolFile {
   mask-image: url(/icons/symbol-file.svg);
 }
 
