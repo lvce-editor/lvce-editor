@@ -58,7 +58,7 @@ const createActivityBarItem = (item) => {
       },
       {
         type: VirtualDomElements.Div,
-        className: ClassNames.MaskIcon,
+        className: ClassNames.Icon,
         role: AriaRoles.None,
         childCount: 0,
         maskImage: icon,
@@ -75,7 +75,7 @@ const createActivityBarItem = (item) => {
       },
       {
         type: VirtualDomElements.Div,
-        className: ClassNames.MaskIcon,
+        className: ClassNames.Icon,
         maskImage: 'Progress',
       },
     ]
@@ -84,7 +84,7 @@ const createActivityBarItem = (item) => {
   return [
     {
       type: VirtualDomElements.Div,
-      className: `${className} MaskIcon${icon}`,
+      className: `${className} Icon${icon}`,
       ariaLabel: '',
       title,
       role,
