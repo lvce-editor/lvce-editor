@@ -5,8 +5,7 @@ import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getHoverVirtualDom = (lineInfos, documentation, diagnostics) => {
   const dom = []
-  console.log({ diagnostics })
-  if (diagnostics) {
+  if (diagnostics && diagnostics.length > 0) {
     dom.push({
       type: VirtualDomElements.Div,
       className: 'HoverDisplayString HoverProblem',
