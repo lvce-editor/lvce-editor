@@ -19,9 +19,13 @@ const createActivityBarItem = (item) => {
   const isProgress = flags & ActivityBarItemFlags.Progress
   const role = isTab ? AriaRoles.Tab : AriaRoles.Button
   const ariaSelected = getAriaSelected(isTab, isSelected)
+  const marginTop = flags & ActivityBarItemFlags.MarginTop
   let className = ClassNames.ActivityBarItem
   if (isFocused) {
     className += ' ' + ClassNames.FocusOutline
+  }
+  if (marginTop) {
+    className += ' ' + ClassNames.MarginTopAuto
   }
   if (isSelected) {
     className += ' ' + ClassNames.ActivityBarItemSelected

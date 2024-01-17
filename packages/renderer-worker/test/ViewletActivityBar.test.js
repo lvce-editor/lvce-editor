@@ -81,7 +81,7 @@ test('loadContent', async () => {
         keyShortcuts: 'Control+Shift+X',
       },
       {
-        flags: ActivityBarItemFlags.Button | ActivityBarItemFlags.Enabled,
+        flags: ActivityBarItemFlags.Button | ActivityBarItemFlags.Enabled | ActivityBarItemFlags.MarginTop,
         icon: 'SettingsGear',
         id: 'Settings',
         title: 'Settings',
