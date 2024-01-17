@@ -9,3 +9,5 @@ export const Enabled = 1 << 3
 export const Selected = 1 << 4
 
 export const Focused = 1 << 5
+
+export const MarginTop = 1 << 6

@@ -1,7 +1,7 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
+import * as Icon from '../Icon/Icon.js'
 import * as ViewletActivityBarStrings from '../ViewletActivityBar/ViewletActivityBarStrings.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as Icon from '../Icon/Icon.js'
 
 export const getActivityBarItems = () => {
   return [
@@ -46,7 +46,7 @@ export const getActivityBarItems = () => {
       id: 'Settings',
       title: ViewletActivityBarStrings.settings(),
       icon: Icon.SettingsGear,
-      flags: ActivityBarItemFlags.Button | ActivityBarItemFlags.Enabled,
+      flags: ActivityBarItemFlags.Button | ActivityBarItemFlags.Enabled | ActivityBarItemFlags.MarginTop,
       keyShortcuts: '',
     },
   ]
