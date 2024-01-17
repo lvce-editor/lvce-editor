@@ -3,6 +3,18 @@ import * as GetLineInfosVirtualDom from '../GetLineInfosVirtualDom/GetLineInfosV
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const hoverProblemMessage = {
+  type: VirtualDomElements.Span,
+  className: 'HoverProblemMessage',
+  childCount: 1,
+}
+
+const hoverProblemDetail = {
+  type: VirtualDomElements.Span,
+  className: 'HoverProblemDetail',
+  childCount: 1,
+}
+
 export const getHoverVirtualDom = (lineInfos, documentation, diagnostics) => {
   const dom = []
   if (diagnostics && diagnostics.length > 0) {
@@ -12,20 +24,7 @@ export const getHoverVirtualDom = (lineInfos, documentation, diagnostics) => {
       childCount: diagnostics.length * 2,
     })
     for (const diagnostic of diagnostics) {
-      dom.push(
-        {
-          type: VirtualDomElements.Span,
-          className: 'HoverProblemMessage',
-          childCount: 1,
-        },
-        text(diagnostic.message),
-        {
-          type: VirtualDomElements.Span,
-          className: 'HoverProblemDetail',
-          childCount: 1,
-        },
-        text(`${diagnostic.source} (${diagnostic.code})`),
-      )
+      dom.push(hoverProblemMessage, text(diagnostic.message), hoverProblemDetail, text(`${diagnostic.source} (${diagnostic.code})`))
     }
   }
 
