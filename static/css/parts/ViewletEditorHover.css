@@ -47,6 +47,10 @@
   display: flex;
 }
 
+.HoverProblemMessage {
+  content: content;
+}
+
 .HoverProblemDetail {
   opacity: 0.6;
   contain: content;
