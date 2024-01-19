@@ -15,6 +15,8 @@ export const handleScrollBarThumbPointerMove = (event) => {
 const handleScrollBarPointerCaptureLost = (event) => {
   const { target, pointerId } = event
   PointerEvents.stopTracking(target, pointerId, handleScrollBarThumbPointerMove, handleScrollBarPointerCaptureLost)
+  const uid = ComponentUid.fromEvent(event)
+  ViewletExtensionsFunctions.handleScrollBarCaptureLost(uid)
 }
 
 export const handleScrollBarPointerDown = (event) => {
