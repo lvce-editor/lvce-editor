@@ -43,6 +43,8 @@ export const handleUpdate = async (state, update) => {
     const finalDeltaY = Math.max(contentHeight - listHeight, 0)
     return {
       ...partialNewState,
+      minLineY: 0,
+      deltaY: 0,
       value,
       items: results,
       message,
