@@ -91,10 +91,16 @@
 
 .DialogClose {
   position: relative;
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
   contain: strict;
   cursor: pointer;
+  border-radius: 5px;
+  --MaskIconSize: 16px;
+}
+
+.DialogClose:where(:hover) {
+  background: var(--ToolBarHoverBackground, rgba(90, 93, 94, 0.31));
 }
 
 .DialogContentRight {
