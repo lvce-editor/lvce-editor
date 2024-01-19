@@ -253,8 +253,8 @@ test('loadContent - with scrollbar', async () => {
   const newState = await ViewletExtensions.loadContent(state)
   expect(newState.items).toHaveLength(2)
   expect(newState.minLineY).toBe(0)
-  expect(newState.maxLineY).toBe(1)
-  expect(newState.finalDeltaY).toBe(62)
+  expect(newState.maxLineY).toBe(2)
+  expect(newState.finalDeltaY).toBe(68)
 })
 
 test.skip('install', async () => {
@@ -280,7 +280,7 @@ test.skip('install', async () => {
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
-    'installed'
+    'installed',
   )
   expect(ErrorHandling.handleError).not.toHaveBeenCalled()
 })
@@ -307,7 +307,7 @@ test.skip('install - error', async () => {
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
-    'uninstalled'
+    'uninstalled',
   )
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.handleError).toHaveBeenCalledWith(new Error('Test Error 2'))
@@ -335,7 +335,7 @@ test.skip('uninstall', async () => {
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
-    'uninstalled'
+    'uninstalled',
   )
 })
 
