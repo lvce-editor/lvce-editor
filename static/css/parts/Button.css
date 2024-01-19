@@ -76,3 +76,7 @@
   color: var(--ButtonSecondaryForeground, #cccccc);
   cursor: pointer;
 }
+
+.ButtonSecondary:where(:hover) {
+  background: var(--ButtonSecondaryHoverBackground, #45494e);
+}
