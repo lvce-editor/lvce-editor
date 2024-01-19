@@ -99,7 +99,7 @@
   --MaskIconSize: 16px;
 }
 
-.DialogClose:hover {
+.DialogClose:where(:hover) {
   background: var(--ToolBarHoverBackground, rgba(90, 93, 94, 0.31));
 }
 
