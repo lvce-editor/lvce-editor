@@ -10,10 +10,6 @@
   cursor: pointer;
 }
 
-.IconButton[disabled] {
-  color: rgba(204, 204, 204, 0.5);
-}
-
 .IconButton:enabled:hover {
   background-color: hsla(0, 0%, 100%, 0.1);
 }
