@@ -10,5 +10,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-inline: 3px;
+  padding: 3px 6px;
 }
