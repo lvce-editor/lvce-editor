@@ -1,14 +1,15 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as GetButtonVirtualDom from '../GetButtonVirtualDom/GetButtonVirtualDom.js'
 import * as TabIndex from '../TabIndex/TabIndex.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as GetButtonVirtualDom from '../GetButtonVirtualDom/GetButtonVirtualDom.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessage, copyMessage, productName) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'DialogContent',
+      className: ClassNames.DialogContent,
       tabIndex: TabIndex.Focusable,
       role: AriaRoles.Dialog,
       ariaModal: 'true',
@@ -18,12 +19,12 @@ export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessag
     },
     {
       type: VirtualDomElements.Div,
-      className: 'DialogToolBarRow',
+      className: ClassNames.DialogToolBarRow,
       childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
-      className: 'DialogClose',
+      className: ClassNames.DialogClose,
       ariaLabel: closeMessage,
       role: AriaRoles.Button,
       onClick: 'handleClickClose',
@@ -36,7 +37,7 @@ export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessag
     },
     {
       type: VirtualDomElements.Div,
-      className: 'DialogMessageRow',
+      className: ClassNames.DialogMessageRow,
       childCount: 2,
     },
     {
@@ -48,21 +49,20 @@ export const getDialogVirtualDom = (content, closeMessage, infoMessage, okMessag
     },
     {
       type: VirtualDomElements.Div,
-      className: 'DialogContentRight',
+      className: ClassNames.DialogContentRight,
       childCount: 2,
     },
     {
       type: VirtualDomElements.Div,
       id: 'DialogHeading',
-      className: 'DialogHeading',
+      className: ClassNames.DialogHeading,
       childCount: 1,
     },
     text(productName),
     ...content,
-
     {
       type: VirtualDomElements.Div,
-      className: 'DialogButtonsRow',
+      className: ClassNames.DialogButtonsRow,
       childCount: 2,
     },
     ...GetButtonVirtualDom.getSecondaryButtonVirtualDom(okMessage, 'handleClickOk'),
