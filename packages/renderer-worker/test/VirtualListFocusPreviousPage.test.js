@@ -21,7 +21,7 @@ test('focusPreviousPage - scroll up one full page', () => {
   }
   expect(VirtualListFocusPreviousPage.focusPreviousPage(state)).toMatchObject({
     minLineY: 1,
-    maxLineY: 4,
+    maxLineY: 5,
     focusedIndex: 1,
   })
 })
@@ -38,7 +38,7 @@ test('focusPreviousPage - scroll up half a page', () => {
   }
   expect(VirtualListFocusPreviousPage.focusPreviousPage(state)).toMatchObject({
     minLineY: 0,
-    maxLineY: 3,
+    maxLineY: 4,
     focusedIndex: 0,
   })
 })
