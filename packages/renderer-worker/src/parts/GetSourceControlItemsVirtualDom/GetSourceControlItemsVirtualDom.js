@@ -194,6 +194,7 @@ export const getSourceControlItemsVirtualDom = (items, splitButtonEnabled) => {
     {
       type: VirtualDomElements.Div,
       className: ClassNames.SourceControlItems,
+      role: 'tree',
       childCount: items.length,
     },
     ...items.flatMap(createItem),
