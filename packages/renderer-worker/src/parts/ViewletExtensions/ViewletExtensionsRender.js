@@ -32,7 +32,8 @@ const renderScrollBar = {
       oldState.deltaY === newState.deltaY &&
       oldState.height === newState.height &&
       oldState.finalDeltaY === newState.finalDeltaY &&
-      oldState.items.length === newState.items.length
+      oldState.items.length === newState.items.length &&
+      oldState.scrollBarActive === newState.scrollBarActive
     )
   },
   apply(oldState, newState) {
@@ -48,7 +49,11 @@ const renderScrollBar = {
     )
     const heightString = `${scrollBarHeight}px`
     const translateString = `0 ${scrollBarY}px`
-    return [/* method */ RenderMethod.SetScrollBar, translateString, heightString]
+    let className = 'ScrollBarThumb'
+    if (newState.scrollBarActive) {
+      className += ' ScrollBarThumbActive'
+    }
+    return [/* method */ RenderMethod.SetScrollBar, translateString, heightString, className]
   },
 }
 

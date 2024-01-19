@@ -11,13 +11,14 @@ export const handleScrollBarClick = (state, eventY) => {
     return {
       ...state,
       handleOffset: diff,
+      scrollBarActive: true,
     }
   }
   const { percent, handleOffset } = ScrollBarFunctions.getNewDeltaPercent(contentHeight, scrollBarHeight, relativeY)
   const newDeltaY = percent * finalDeltaY
-  console.log({ handleOffset })
   return {
     ...setDeltaY(state, newDeltaY),
     handleOffset,
+    scrollBarActive: true,
   }
 }

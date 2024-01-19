@@ -15,6 +15,7 @@ export const create = ({ itemHeight, headerHeight = 0, minimumSliderSize = 20 })
     touchTimeStamp: 0,
     touchDifference: 0,
     scrollBarHeight: 0,
+    scrollBarActive: false,
   }
 }
 
