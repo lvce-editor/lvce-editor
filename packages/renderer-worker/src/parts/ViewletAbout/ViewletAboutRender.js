@@ -10,7 +10,7 @@ export const renderDialog = {
   apply(oldState, newState) {
     const okMessage = AboutStrings.ok()
     const copyMessage = AboutStrings.copy()
-    const closeMessage = AboutStrings.close()
+    const closeMessage = AboutStrings.closeDialog()
     const infoMessage = AboutStrings.info()
     const dom = GetAboutVirtualDom.getAboutVirtualDom(newState.productName, newState.lines, closeMessage, okMessage, copyMessage, infoMessage)
     return ['setDom', dom]
