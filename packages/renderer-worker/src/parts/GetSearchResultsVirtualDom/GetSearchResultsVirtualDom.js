@@ -62,7 +62,7 @@ const renderRow = (rowInfo) => {
   }
   const label = {
     type: VirtualDomElements.Div,
-    className: ClassNames.Label,
+    className: ClassNames.Label + ' Grow',
     childCount: 1,
   }
   dom.push(label)

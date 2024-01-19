@@ -10,7 +10,7 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getLabelClassName = (decorationStrikeThrough) => {
-  let className = ClassNames.Label
+  let className = ClassNames.Label + ' Grow'
   if (decorationStrikeThrough) {
     className += ` ${ClassNames.StrikeThrough}`
   }
