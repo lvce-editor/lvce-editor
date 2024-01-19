@@ -9,7 +9,7 @@ export const create = (url, args) => {
   }
 
   const handleClose = (event) => {
-    setTimeout(reconnect, 500)
+    setTimeout(reconnect, 2000)
   }
 
   const context = {
