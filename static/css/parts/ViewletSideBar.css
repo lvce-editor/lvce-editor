@@ -23,5 +23,6 @@
   text-overflow: ellipsis;
   text-transform: uppercase;
   padding-left: 12px;
-  contain: content;
+  contain: strict;
+  flex: 1;
 }
