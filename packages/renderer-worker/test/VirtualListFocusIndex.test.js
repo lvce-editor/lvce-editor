@@ -25,7 +25,7 @@ test('focusIndex - not in view - causes scrolling down', () => {
   }
   expect(VirtualListFocusIndex.focusIndex(state, 2)).toMatchObject({
     focusedIndex: 2,
-    minLineY: 2,
+    minLineY: 1,
     maxLineY: 3,
   })
 })
@@ -44,9 +44,9 @@ test('focusIndex - partially in view - causes scrolling down', () => {
   }
   expect(VirtualListFocusIndex.focusIndex(state, 2)).toMatchObject({
     focusedIndex: 2,
-    minLineY: 1,
+    minLineY: 0,
     maxLineY: 3,
-    deltaY: 86,
+    deltaY: 24,
   })
 })
 
@@ -104,7 +104,7 @@ test('focusIndex - not in view - causes scrolling up', () => {
   expect(VirtualListFocusIndex.focusIndex(state, 0)).toMatchObject({
     focusedIndex: 0,
     minLineY: 0,
-    maxLineY: 1,
+    maxLineY: 2,
   })
 })
 
@@ -123,7 +123,7 @@ test('focusIndex - partially in view - causes scrolling up', () => {
   expect(VirtualListFocusIndex.focusIndex(state, 0)).toMatchObject({
     focusedIndex: 0,
     minLineY: 0,
-    maxLineY: 1,
+    maxLineY: 2,
     deltaY: 0,
   })
 })
