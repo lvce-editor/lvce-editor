@@ -24,6 +24,7 @@
     "WidgetForeground": "#9ca2a0",
 
     "FocusOutline": "#3d5252",
+    "FocusBorder": "#3d5252",
 
     "InfoIconForeground": "#3794ff",
 
