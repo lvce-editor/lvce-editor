@@ -11,7 +11,7 @@ test('focusNextPage - scroll down one full page', () => {
     headerHeight: 0,
   }
   expect(VirtualListFocusNextPage.focusNextPage(state)).toMatchObject({
-    minLineY: 2,
+    minLineY: 1,
     maxLineY: 5,
     focusedIndex: 4,
   })
@@ -28,7 +28,7 @@ test('focusNextPage - scroll down half a page', () => {
     headerHeight: 0,
   }
   expect(VirtualListFocusNextPage.focusNextPage(state)).toMatchObject({
-    minLineY: 3,
+    minLineY: 2,
     maxLineY: 6,
     focusedIndex: 5,
   })

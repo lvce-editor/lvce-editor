@@ -37,7 +37,7 @@ export const create = (id, uri, x, y, width, height) => {
     ...VirtualList.create({
       itemHeight: ExtensionListItemHeight.ExtensionListItemHeight,
       minimumSliderSize: MinimumSliderSize.minimumSliderSize,
-      headerHeight: 35,
+      headerHeight: 41,
     }),
     allExtensions: [],
     placeholder: '',
