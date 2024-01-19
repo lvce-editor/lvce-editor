@@ -1,5 +1,6 @@
 export const eagerLoadedCss = [
   'Actions.css',
+  'Alignment.css',
   'AriaAlert.css',
   'BackDrop.css',
   'Badge.css',

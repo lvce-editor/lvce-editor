@@ -95,7 +95,3 @@
   font-weight: 700;
   contain: content;
 }
-
-.QuickPickItem .Label {
-  flex: initial;
-}
