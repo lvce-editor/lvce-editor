@@ -18,11 +18,32 @@
   min-width: 400px;
   position: absolute;
   user-select: text;
+  max-width: 400px;
+  overflow: auto;
+}
+
+.EditorHover::-webkit-scrollbar {
+  height: 14px;
+}
+
+.EditorHover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.EditorHover::-webkit-scrollbar-thumb {
+  background: var(--EditorScrollBarBackground);
+}
+
+.HoverEditorRow {
+  display: block;
+  height: var(--EditorLineHeight);
+  line-height: var(--EditorLineHeight);
+  /* contain: strict; */
 }
 
 .HoverDisplayString {
   white-space: pre;
-  contain: content;
+  /* contain: content; */
   font-family: var(--EditorFontFamily);
   font-size: var(--EditorFontSize);
   letter-spacing: var(--EditorLetterSpacing);
