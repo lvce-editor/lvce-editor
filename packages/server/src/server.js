@@ -67,7 +67,7 @@ const ContentSecurityPolicy = {
     .join(' '),
 }
 
-const ContentSecurityPolicyWorker = {
+const ContentSecurityPolicyRendererWorker = {
   key: 'Content-Security-Policy',
   value: [
     `default-src 'none'`,
@@ -77,6 +77,11 @@ const ContentSecurityPolicyWorker = {
   ]
     .map(addSemicolon)
     .join(' '),
+}
+
+const ContentSecurityPolicyExtensionHostWorker = {
+  key: 'Content-Security-Policy',
+  value: [`default-src 'none'`, `connect-src 'self' ws:`, `script-src 'self'`, `font-src 'self'`].map(addSemicolon).join(' '),
 }
 
 const ContentSecurityPolicyTests = {
@@ -158,6 +163,14 @@ const getPathName = (request) => {
 
 const isWorkerUrl = (url) => {
   return url.endsWith('WorkerMain.js') || url.endsWith('WorkerMain.ts')
+}
+
+const isRendererWorkerUrl = (url) => {
+  return url.endsWith('rendererWorkerMain.js') || url.endsWith('rendererWorkerMain.ts')
+}
+
+const isExtensionHostWorkerUrl = (url) => {
+  return url.endsWith('extesionHostWorkerMain.js') || url.endsWith('extesionHostWorkerMain.ts')
 }
 
 const getEtag = (fileStat) => {
@@ -278,9 +291,12 @@ const serveStatic = (root, skip = '') =>
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[CrossOriginOpenerPolicy.key] = CrossOriginOpenerPolicy.value
     }
-    if (isWorkerUrl(filePath)) {
+    if (isRendererWorkerUrl(filePath)) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
-      headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
+      headers[ContentSecurityPolicyRendererWorker.key] = ContentSecurityPolicyRendererWorker.value
+    } else if (isExtensionHostWorkerUrl(filePath)) {
+      headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
+      headers[ContentSecurityPolicyExtensionHostWorker.key] = ContentSecurityPolicyExtensionHostWorker.value
     }
     res.writeHead(StatusCode.Ok, headers)
     try {
@@ -309,7 +325,7 @@ const serve404 = () =>
     }
     if (isWorkerUrl(req.url)) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
-      headers[ContentSecurityPolicyWorker.key] = ContentSecurityPolicyWorker.value
+      headers[ContentSecurityPolicyRendererWorker.key] = ContentSecurityPolicyRendererWorker.value
     }
     res.writeHead(StatusCode.NotFound, headers)
     return res.end('Not found')
