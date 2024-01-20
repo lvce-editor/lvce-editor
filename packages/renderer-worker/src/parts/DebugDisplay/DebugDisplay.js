@@ -1,53 +1,32 @@
-import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
-import * as I18nString from '../I18NString/I18NString.js'
 import * as DebugPauseReason from '../DebugPausedReason/DebugPausedReason.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  Local: 'Local',
-  Closure: 'Closure',
-  NamedClosure: 'Closure ({PH1})',
-  Global: 'Global',
-  Block: 'Block',
-  Expression: 'Expression',
-  Module: 'Module',
-  Eval: 'Eval',
-  Script: 'Script',
-  With: '`With` block',
-  Catch: '`Catch` block',
-  DebuggerPaused: 'Debugger paused',
-  DebuggerPausedOnException: 'Paused on exception',
-}
+import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
+import * as DebugStrings from '../DebugStrings/DebugStrings.js'
 
 export const getScopeLabel = (element) => {
   switch (element.type) {
     case DebugScopeType.Local:
-      return I18nString.i18nString(UiStrings.Local)
+      return DebugStrings.local()
     case DebugScopeType.Closure:
       if (element.name) {
-        return I18nString.i18nString(UiStrings.NamedClosure, {
-          PH1: element.name,
-        })
+        return DebugStrings.namedClosure(element.name)
       }
-      return I18nString.i18nString(UiStrings.Closure)
+      return DebugStrings.closure()
     case DebugScopeType.Global:
-      return I18nString.i18nString(UiStrings.Global)
+      return DebugStrings.global()
     case DebugScopeType.Block:
-      return I18nString.i18nString(UiStrings.Block)
+      return DebugStrings.block()
     case DebugScopeType.WasmExpressionStack:
-      return I18nString.i18nString(UiStrings.Expression)
+      return DebugStrings.expression()
     case DebugScopeType.Module:
-      return I18nString.i18nString(UiStrings.Module)
+      return DebugStrings.module()
     case DebugScopeType.Eval:
-      return I18nString.i18nString(UiStrings.Eval)
+      return DebugStrings.evalScope()
     case DebugScopeType.Script:
-      return I18nString.i18nString(UiStrings.Script)
+      return DebugStrings.script()
     case DebugScopeType.With:
-      return I18nString.i18nString(UiStrings.With)
+      return DebugStrings.withScope()
     case DebugScopeType.Catch:
-      return I18nString.i18nString(UiStrings.Catch)
+      return DebugStrings.catchScope()
     default:
       return element.type
   }
@@ -67,9 +46,9 @@ export const getPropertyValueLabel = (property) => {
 export const getPausedMessage = (reason) => {
   switch (reason) {
     case DebugPauseReason.Other:
-      return I18nString.i18nString(UiStrings.DebuggerPaused)
+      return DebugStrings.debuggerPaused()
     case DebugPauseReason.Exception:
-      return I18nString.i18nString(UiStrings.DebuggerPausedOnException)
+      return DebugStrings.debuggerPausedOnException()
     default:
       return `Debugger paused (${reason})`
   }
