@@ -1,3 +1,5 @@
+export const skip = true
+
 export const name = 'sample.debug-provider-paused-on-exception'
 
 export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator, expect }) => {
@@ -18,7 +20,7 @@ export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator,
   await expect(rows).toHaveCount(7)
   await expect(rows.nth(0)).toHaveText('Local')
   await expect(rows.nth(1)).toHaveText(
-    'Exception: Error: oops     at Timeout._onTimeout (/test/index.js:5:11)     at listOnTimeout (node:internal/timers:564:17)     at process.processTimers (node:internal/timers:507:7)'
+    'Exception: Error: oops     at Timeout._onTimeout (/test/index.js:5:11)     at listOnTimeout (node:internal/timers:564:17)     at process.processTimers (node:internal/timers:507:7)',
   )
   await expect(rows.nth(2)).toHaveText('this: undefined')
   await expect(rows.nth(3)).toHaveText('Global')

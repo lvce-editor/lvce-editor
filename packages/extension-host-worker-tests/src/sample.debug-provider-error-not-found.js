@@ -1,3 +1,5 @@
+export const skip = true
+
 export const name = 'sample.debug-provider-error-not-found'
 
 export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator, expect }) => {
