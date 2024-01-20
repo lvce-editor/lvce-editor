@@ -336,7 +336,6 @@ const renderDebug = {
     // console.log({ diff })
     // if (first) {
     //   first = false
-    console.log({ newDom })
     return ['setDom', newDom]
     // }
     // return ['setPatches', diff]
