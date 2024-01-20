@@ -3,7 +3,7 @@ export const getDebugPropertyValueLabel = (property) => {
     case 'number':
     case 'boolean':
     case 'symbol':
-    case 'process':
+    case 'object':
       return property.description
     case 'undefined':
       return `undefined`
