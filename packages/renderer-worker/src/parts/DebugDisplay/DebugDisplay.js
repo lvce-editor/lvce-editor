@@ -43,13 +43,4 @@ export const getPropertyValueLabel = (property) => {
   }
 }
 
-export const getPausedMessage = (reason) => {
-  switch (reason) {
-    case DebugPauseReason.Other:
-      return DebugStrings.debuggerPaused()
-    case DebugPauseReason.Exception:
-      return DebugStrings.debuggerPausedOnException()
-    default:
-      return `Debugger paused (${reason})`
-  }
-}
+export { getDebugPausedMessage as getPausedMessage } from '../GetDebugPausedMessage/GetDebugPausedMessage.js'

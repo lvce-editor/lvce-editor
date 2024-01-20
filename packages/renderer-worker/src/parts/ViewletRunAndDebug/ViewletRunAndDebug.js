@@ -1,9 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
-import * as DebugDisplay from '../DebugDisplay/DebugDisplay.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugState from '../DebugState/DebugState.js'
 import * as GetCallStack from '../GetCallStack/GetCallStack.js'
+import * as GetDebugPausedMessage from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -57,7 +57,7 @@ export const handlePaused = async (state, params) => {
     [objectId]: properties,
   })
   const pausedReason = params.reason
-  const pausedMessage = DebugDisplay.getPausedMessage(params.reason)
+  const pausedMessage = GetDebugPausedMessage.getDebugPausedMessage(params.reason)
   return {
     ...state,
     debugState: DebugState.Paused,
