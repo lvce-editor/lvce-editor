@@ -32,16 +32,7 @@ export const getScopeLabel = (element) => {
   }
 }
 
-export const getPropertyValueLabel = (property) => {
-  switch (property.type) {
-    case 'number':
-      return property.description
-    case 'undefined':
-      return `undefined`
-    default:
-      return `${JSON.stringify(property)}`
-  }
-}
+export { getDebugPropertyValueLabel as getPropertyValueLabel } from '../GetDebugPropertyValueLabel/GetDebugPropertyValueLabel.js'
 
 export const getPausedMessage = (reason) => {
   switch (reason) {
