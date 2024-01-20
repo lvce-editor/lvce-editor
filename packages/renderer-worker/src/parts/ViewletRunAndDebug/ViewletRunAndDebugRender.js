@@ -26,7 +26,7 @@ const buttonResume = {
 
 const iconContinue = {
   type: VirtualDomElements.Div,
-  className: `MaskIcon MaskIconDebugContinue`,
+  className: `MaskIcon MaskIconDebugContinue DebugContinue`,
   childCount: 0,
 }
 
@@ -39,7 +39,7 @@ const buttonPause = {
 
 const iconPause = {
   type: VirtualDomElements.Div,
-  className: 'MaskIcon MaskIconDebugPause',
+  className: 'MaskIcon MaskIconDebugPause DebugPause',
   childCount: 0,
 }
 
@@ -52,7 +52,7 @@ const buttonStepOver = {
 
 const iconStepOver = {
   type: VirtualDomElements.Div,
-  className: 'MaskIcon MaskIconDebugStepOver',
+  className: 'MaskIcon MaskIconDebugStepOver DebugStepOver',
   childCount: 0,
 }
 
@@ -65,7 +65,7 @@ const buttonStepInto = {
 
 const iconStepInto = {
   type: VirtualDomElements.Div,
-  className: 'MaskIcon MaskIconDebugStepInto',
+  className: 'MaskIcon MaskIconDebugStepInto DebugStepInto',
   childCount: 0,
 }
 
@@ -78,7 +78,7 @@ const buttonStepOut = {
 
 const iconStepOut = {
   type: VirtualDomElements.Div,
-  className: 'MaskIcon MaskIconDebugStepOut',
+  className: 'MaskIcon MaskIconDebugStepOut DebugStepOut',
   childCount: 0,
 }
 

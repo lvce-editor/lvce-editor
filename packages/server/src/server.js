@@ -69,19 +69,12 @@ const ContentSecurityPolicy = {
 
 const ContentSecurityPolicyRendererWorker = {
   key: 'Content-Security-Policy',
-  value: [
-    `default-src 'none'`,
-    `connect-src 'self' ws:`, // TODO allow connecting to websocket urls for debugging but not other websocket urls
-    `script-src 'self'`,
-    `font-src 'self'`,
-  ]
-    .map(addSemicolon)
-    .join(' '),
+  value: [`default-src 'none'`, `connect-src 'self'`, `script-src 'self'`, `font-src 'self'`].map(addSemicolon).join(' '),
 }
 
 const ContentSecurityPolicyExtensionHostWorker = {
   key: 'Content-Security-Policy',
-  value: [`default-src 'none'`, `connect-src 'self' ws:`, `script-src 'self'`, `font-src 'self'`].map(addSemicolon).join(' '),
+  value: [`default-src 'none'`, `connect-src 'self'`, `script-src 'self'`, `font-src 'self'`].map(addSemicolon).join(' '),
 }
 
 const ContentSecurityPolicyTests = {
