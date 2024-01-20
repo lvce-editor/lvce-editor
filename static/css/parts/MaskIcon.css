@@ -278,6 +278,30 @@
   mask-image: url(/icons/symbol-file.svg);
 }
 
+.MaskIconDebugPause {
+  mask-image: url(/icons/debug-pause.svg);
+}
+
+.MaskIconDebugStepOver {
+  mask-image: url(/icons/debug-step-over.svg);
+}
+
+.MaskIconDebugStepInto {
+  mask-image: url(/icons/debug-step-into.svg);
+}
+
+.MaskIconDebugStepOut {
+  mask-image: url(/icons/debug-step-out.svg);
+}
+
+.MaskIconTriangleRight {
+  mask-image: url(/icons/triangle-right.svg);
+}
+
+.MaskIconTriangleDown {
+  mask-image: url(/icons/triangle-down.svg);
+}
+
 .Chevron {
   width: 16px;
   height: 16px;
