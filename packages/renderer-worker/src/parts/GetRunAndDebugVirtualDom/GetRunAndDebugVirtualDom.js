@@ -2,7 +2,6 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugState from '../DebugState/DebugState.js'
 import * as DebugValueType from '../DebugValueType/DebugValueType.js'
-import * as DiffDom from '../DiffDom/DiffDom.js'
 import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -312,34 +311,12 @@ const renderCallStack = (state) => {
   return elements
 }
 
-const getVirtualDom = (state) => {
-  const elements = []
-  elements.push(...renderButtons(state))
-  elements.push(...renderWatch(state))
-  elements.push(...renderBreakPoints(state))
-  elements.push(...renderScope(state))
-  elements.push(...renderCallStack(state))
-  return elements
+export const getRunAndDebugVirtualDom = (state) => {
+  const dom = []
+  dom.push(...renderButtons(state))
+  dom.push(...renderWatch(state))
+  dom.push(...renderBreakPoints(state))
+  dom.push(...renderScope(state))
+  dom.push(...renderCallStack(state))
+  return dom
 }
-
-let first = true
-
-const renderDebug = {
-  isEqual(oldState, newState) {
-    return false
-  },
-  apply(oldState, newState) {
-    const oldDom = getVirtualDom(oldState)
-    const newDom = getVirtualDom(newState)
-    // console.log({ oldDom, newDom })
-    const diff = DiffDom.diffDom(oldDom, newDom)
-    // console.log({ diff })
-    // if (first) {
-    //   first = false
-    return ['setDom', newDom]
-    // }
-    // return ['setPatches', diff]
-  },
-}
-
-export const render = [renderDebug]

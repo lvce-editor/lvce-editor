@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Character from '../Character/Character.js'
 import * as Debug from '../Debug/Debug.js'
 import * as DebugDisplay from '../DebugDisplay/DebugDisplay.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
@@ -6,13 +7,11 @@ import * as DebugState from '../DebugState/DebugState.js'
 import * as DebugValueType from '../DebugValueType/DebugValueType.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
 import * as Workspace from '../Workspace/Workspace.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  NotPaused: 'Not paused',
-}
+import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
+import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
+import * as DebugState from '../DebugState/DebugState.js'
+import * as DebugValueType from '../DebugValueType/DebugValueType.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export const create = (id) => {
   return {
@@ -220,80 +219,6 @@ export const dispose = (state) => {
 export const hasFunctionalRender = true
 
 export const hasFunctionalResize = true
-
-const renderProcesses = {
-  isEqual(oldState, newState) {
-    return oldState.processes === newState.processes
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setProcesses', /* processes */ newState.processes]
-  },
-}
-
-const renderDebugState = {
-  isEqual(oldState, newState) {
-    return oldState.debugState === newState.debugState
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setDebugState', /* buttons */ newState.debugState]
-  },
-}
-
-const renderSections = {
-  isEqual(oldState, newState) {
-    return (
-      oldState.watchExpanded === newState.watchExpanded &&
-      oldState.breakpointsExpanded === newState.breakpointsExpanded &&
-      oldState.scopeExpanded === newState.scopeExpanded &&
-      oldState.callstackExpanded === newState.callstackExpanded
-    )
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setSections', newState.watchExpanded, newState.breakpointsExanded, newState.scopeExpanded, newState.callstackExpanded]
-  },
-}
-
-const renderScopeChain = {
-  isEqual(oldState, newState) {
-    return oldState.scopeChain === newState.scopeChain && oldState.debugState === newState.debugState
-  },
-  apply(oldState, newState) {
-    if (newState.debugState === DebugState.None || newState.debugState === DebugState.Default) {
-      return [/* method */ 'setScopeChainMessage', UiStrings.NotPaused]
-    }
-    return [/* method */ 'setScopeChain', newState.scopeChain]
-  },
-}
-
-const renderCallStack = {
-  isEqual(oldState, newState) {
-    return oldState.scopeChain === newState.scopeChain && oldState.debugState === newState.debugState
-  },
-  apply(oldState, newState) {
-    if (newState.debugstate === DebugState.None || newState.debugState === DebugState.Default) {
-      return [/* method */ 'setCallStackMessage', UiStrings.NotPaused]
-    }
-    return [/* method */ 'setCallStack', newState.callStack]
-  },
-}
-
-const renderPausedReason = {
-  isEqual(oldState, newState) {
-    return oldState.pausedReason === newState.pausedReason && oldState.pausedMessage === newState.pausedMessage
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setPausedReason', newState.pausedReason, newState.pausedMessage]
-  },
-}
-
-const renderOutput = {
-  isEqual(oldState, newState) {
-    return oldState.debugOutputValue === newState.debugOutputValue
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setOutputValue', newState.debugOutputValue]
-  },
-}
 
 export const resize = (state, dimensions) => {
   return { ...state, ...dimensions }
