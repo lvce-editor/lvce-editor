@@ -294,6 +294,10 @@
   mask-image: url(/icons/debug-step-out.svg);
 }
 
+.MaskIconDebugContinue {
+  mask-image: url(/icons/debug-continue.svg);
+}
+
 .MaskIconTriangleRight {
   mask-image: url(/icons/triangle-right.svg);
 }
