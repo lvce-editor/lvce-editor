@@ -1,26 +1,20 @@
 import * as Assert from '../Assert/Assert.js'
 import * as FirstWebSocketEventType from '../FirstWebSocketEventType/FirstWebSocketEventType.js'
 import * as GetFirstWebSocketEvent from '../GetFirstWebSocketEvent/GetFirstWebSocketEvent.js'
+import * as GetWebSocketUrl from '../GetWebSocketUrl/GetWebSocketUrl.js'
 import { IpcError } from '../IpcError/IpcError.js'
 import * as Json from '../Json/Json.js'
 import { VError } from '../VError/VError.js'
-import * as WebSocketProtocol from '../WebSocketProtocol/WebSocketProtocol.js'
 
-const getWsUrl = () => {
-  const wsProtocol = WebSocketProtocol.getWebSocketProtocol()
-  return `${wsProtocol}//${location.host}`
-}
-
-export const create = async ({ protocol }) => {
-  Assert.string(protocol)
-  // TODO replace this during build
-  const wsUrl = getWsUrl()
-  const webSocket = new WebSocket(wsUrl, [protocol])
-  const { type, event } = await GetFirstWebSocketEvent.waitForWebSocketToBeOpen(webSocket)
-  if (type === FirstWebSocketEventType.Error) {
+export const create = async ({ type }) => {
+  Assert.string(type)
+  const wsUrl = GetWebSocketUrl.getWsUrl(type)
+  const webSocket = new WebSocket(wsUrl)
+  const firstWebSocketEvent = await GetFirstWebSocketEvent.waitForWebSocketToBeOpen(webSocket)
+  if (firstWebSocketEvent.type === FirstWebSocketEventType.Error) {
     throw new IpcError(`WebSocket connection error`)
   }
-  if (type === FirstWebSocketEventType.Close) {
+  if (firstWebSocketEvent.type === FirstWebSocketEventType.Close) {
     throw new IpcError(`Websocket connection was closed`)
   }
   return webSocket

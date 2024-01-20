@@ -8,7 +8,6 @@ const getPort = async (type) => {
     method: RendererWorkerIpcParentType.NodeAlternate,
     type,
     raw: true,
-    protocol: 'lvce.extension-host-helper-process',
     initialCommand: 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess',
   })
   if (!port) {

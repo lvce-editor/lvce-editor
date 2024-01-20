@@ -5,6 +5,5 @@ export const listen = (method) => {
     method,
     type: 'terminal-process',
     name: 'Terminal Process',
-    protocol: 'lvce.terminal-process',
   })
 }

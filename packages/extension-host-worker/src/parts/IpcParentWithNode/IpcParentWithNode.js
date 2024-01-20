@@ -10,9 +10,9 @@ const getModule = async () => {
   }
 }
 
-export const create = async ({ type, raw, protocol }) => {
+export const create = async ({ type, raw }) => {
   const module = await getModule()
-  const rawIpc = await module.create({ type, protocol: 'lvce.extension-host-helper-process' })
+  const rawIpc = await module.create({ type })
   if (raw) {
     return rawIpc
   }
