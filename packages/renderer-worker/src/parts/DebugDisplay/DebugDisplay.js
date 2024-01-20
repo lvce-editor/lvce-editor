@@ -1,4 +1,3 @@
-import * as DebugPauseReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
 import * as DebugStrings from '../DebugStrings/DebugStrings.js'
 
@@ -29,17 +28,6 @@ export const getScopeLabel = (element) => {
       return DebugStrings.catchScope()
     default:
       return element.type
-  }
-}
-
-export const getPropertyValueLabel = (property) => {
-  switch (property.type) {
-    case 'number':
-      return property.description
-    case 'undefined':
-      return `undefined`
-    default:
-      return `${JSON.stringify(property)}`
   }
 }
 
