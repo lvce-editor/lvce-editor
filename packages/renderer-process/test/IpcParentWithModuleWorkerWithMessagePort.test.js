@@ -54,6 +54,6 @@ test('create - error - not found', async () => {
     IpcParentWithModuleWorkerWithMessagePort.create({
       url: 'https://example.com/not-found.js',
       name: 'Extension Host Worker',
-    })
-  ).rejects.toThrowError(new Error('Failed to start extension host worker: Not found (404)'))
+    }),
+  ).rejects.toThrow(new Error('Failed to start extension host worker: Not found (404)'))
 })

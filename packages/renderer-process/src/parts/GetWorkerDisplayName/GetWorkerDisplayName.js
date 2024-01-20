@@ -5,5 +5,5 @@ export const getWorkerDisplayName = (name) => {
   if (name.endsWith('Worker') || name.endsWith('worker')) {
     return name.toLowerCase()
   }
-  return `${name} worker`
+  return `${name} Worker`
 }
