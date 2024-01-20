@@ -1,4 +1,3 @@
-import * as DebugPauseReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
 import * as DebugStrings from '../DebugStrings/DebugStrings.js'
 
@@ -32,13 +31,4 @@ export const getScopeLabel = (element) => {
   }
 }
 
-export const getPausedMessage = (reason) => {
-  switch (reason) {
-    case DebugPauseReason.Other:
-      return DebugStrings.debuggerPaused()
-    case DebugPauseReason.Exception:
-      return DebugStrings.debuggerPausedOnException()
-    default:
-      return `Debugger paused (${reason})`
-  }
-}
+export { getDebugPausedMessage as getPausedMessage } from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
