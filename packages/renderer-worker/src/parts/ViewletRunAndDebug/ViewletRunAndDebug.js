@@ -30,16 +30,19 @@ export const create = (id) => {
 
 export const loadContent = async (state) => {
   const debugId = Workspace.isTest() ? 'test-debug' : 'node-debug' // TODO
-  await Debug.start(debugId)
-  const processes = await Debug.listProcesses(debugId)
   return {
     ...state,
-    processes,
     debugId,
     debugState: DebugState.Default,
     scopeExpanded: true,
     callStackExpanded: true,
   }
+}
+
+export const contentLoaded = async (state) => {
+  const debugId = Workspace.isTest() ? 'test-debug' : 'node-debug' // TODO
+  await Debug.start(debugId)
+  return []
 }
 
 export const handlePaused = async (state, params) => {

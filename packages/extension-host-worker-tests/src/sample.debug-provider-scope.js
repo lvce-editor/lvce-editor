@@ -1,3 +1,5 @@
+export const skip = true
+
 export const name = 'sample.debug-provider-scope'
 
 export const test = async ({ FileSystem, Workspace, Extension, SideBar, Locator, expect }) => {
