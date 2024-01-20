@@ -294,6 +294,14 @@
   mask-image: url(/icons/debug-step-out.svg);
 }
 
+.MaskIconTriangleRight {
+  mask-image: url(/icons/triangle-right.svg);
+}
+
+.MaskIconTriangleDown {
+  mask-image: url(/icons/triangle-down.svg);
+}
+
 .Chevron {
   width: 16px;
   height: 16px;

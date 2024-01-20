@@ -109,15 +109,13 @@ const watchHeader = {
 }
 const iconTriangleRight = {
   type: VirtualDomElements.Div,
-  className: ClassNames.DebugMaskIcon,
-  maskImage: 'TriangleRight',
+  className: ClassNames.DebugMaskIcon + ' MaskIconTriangleRight',
   childCount: 0,
 }
 
 const iconTriangleDown = {
   type: VirtualDomElements.Div,
-  className: ClassNames.DebugMaskIcon,
-  maskImage: 'TriangleDown',
+  className: ClassNames.DebugMaskIcon + ' MaskIconTriangleDown',
   childCount: 0,
 }
 
