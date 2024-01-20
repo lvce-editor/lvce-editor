@@ -54,6 +54,24 @@ test('getActualErrorMessage - cross origin embedder policy header missing', asyn
   )
 })
 
+test('getActualErrorMessage - cross origin embedder policy has wrong value', async () => {
+  const url = '/test/file.ts'
+  const name = 'test worker'
+  // @ts-ignore
+  globalThis.fetch = () => {
+    return new Response('', {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/javascript',
+        'Cross-Origin-Embedder-Policy': 'unsafe-none',
+      },
+    })
+  }
+  expect(await TryToGetActualWorkerErrorMessage.tryToGetActualErrorMessage({ url, name })).toBe(
+    `Failed to start test worker: Cross Origin Embedder Policy has wrong value`,
+  )
+})
+
 test('getActualErrorMessage - content type text/javascript - other error', async () => {
   const url = '/test/file.ts'
   const name = 'test worker'

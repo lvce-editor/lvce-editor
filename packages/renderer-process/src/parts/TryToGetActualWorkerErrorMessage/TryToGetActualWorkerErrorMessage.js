@@ -19,6 +19,9 @@ export const tryToGetActualErrorMessage = async ({ url, name }) => {
     if (!crossOriginEmbedderPolicy) {
       return `Failed to start ${displayName}: Cross Origin Embedder Policy header is missing`
     }
+    if (crossOriginEmbedderPolicy !== 'require-corp') {
+      return `Failed to start ${displayName}: Cross Origin Embedder Policy has wrong value`
+    }
     return await TryToGetActualErrorMessageWhenNetworkRequestSucceeds.tryToGetActualErrorMessage({
       url,
       response,
