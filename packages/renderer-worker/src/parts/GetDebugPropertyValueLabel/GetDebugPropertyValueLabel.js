@@ -1,4 +1,5 @@
 export const getDebugPropertyValueLabel = (property) => {
+  console.log({ property })
   switch (property.type) {
     case 'number':
     case 'boolean':

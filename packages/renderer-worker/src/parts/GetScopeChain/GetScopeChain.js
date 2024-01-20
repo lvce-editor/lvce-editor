@@ -3,19 +3,7 @@ import * as DebugDisplay from '../DebugDisplay/DebugDisplay.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
-import * as DebugValueType from '../DebugValueType/DebugValueType.js'
-
-const getPropertyValueLabel = (property) => {
-  switch (property.type) {
-    case DebugValueType.Number:
-    case DebugValueType.Object:
-      return property.description
-    case DebugValueType.Undefined:
-      return `undefined`
-    default:
-      return `${JSON.stringify(property)}`
-  }
-}
+import * as GetDebugPropertyValueLabel from '../GetDebugPropertyValueLabel/GetDebugPropertyValueLabel.js'
 
 export const getScopeChain = (params, thisObject, scopeChain, knownProperties) => {
   const elements = []
@@ -41,7 +29,7 @@ export const getScopeChain = (params, thisObject, scopeChain, knownProperties) =
           indent: 20,
         })
       }
-      const valueLabel = getPropertyValueLabel(thisObject)
+      const valueLabel = GetDebugPropertyValueLabel.getDebugPropertyValueLabel(thisObject)
       elements.push({
         type: DebugScopeChainType.This,
         key: 'this',
@@ -53,7 +41,7 @@ export const getScopeChain = (params, thisObject, scopeChain, knownProperties) =
     const children = knownProperties[scope.object.objectId]
     if (children) {
       for (const child of children.result.result) {
-        const valueLabel = getPropertyValueLabel(child.value)
+        const valueLabel = GetDebugPropertyValueLabel.getDebugPropertyValueLabel(child.value)
         elements.push({
           type: DebugScopeChainType.Property,
           key: child.name,

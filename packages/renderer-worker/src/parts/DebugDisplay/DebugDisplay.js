@@ -32,8 +32,6 @@ export const getScopeLabel = (element) => {
   }
 }
 
-export { getDebugPropertyValueLabel as getPropertyValueLabel } from '../GetDebugPropertyValueLabel/GetDebugPropertyValueLabel.js'
-
 export const getPausedMessage = (reason) => {
   switch (reason) {
     case DebugPauseReason.Other:
