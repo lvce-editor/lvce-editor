@@ -3,7 +3,7 @@ import * as Debug from '../Debug/Debug.js'
 import * as DebugDisplay from '../DebugDisplay/DebugDisplay.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugState from '../DebugState/DebugState.js'
-import * as DebugValueType from '../DebugValueType/DebugValueType.js'
+import * as GetCallStack from '../GetCallStack/GetCallStack.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -42,32 +42,8 @@ export const loadContent = async (state) => {
   }
 }
 
-const getPropertyValueLabel = (property) => {
-  switch (property.type) {
-    case DebugValueType.Number:
-    case DebugValueType.Object:
-      return property.description
-    case DebugValueType.Undefined:
-      return `undefined`
-    default:
-      return `${JSON.stringify(property)}`
-  }
-}
-
-const toDisplayCallStack = (callFrames) => {
-  Assert.array(callFrames)
-  const callStack = []
-  for (const callFrame of callFrames) {
-    callStack.push({
-      functionName: callFrame.functionName || '(anonymous)',
-      functionLocation: callFrame.functionLocation,
-    })
-  }
-  return callStack
-}
-
 export const handlePaused = async (state, params) => {
-  const callStack = toDisplayCallStack(params.callFrames)
+  const callStack = GetCallStack.getCallStack(params.callFrames)
   const objectId = params.callFrames[0].scopeChain[0].object.objectId
   const callFrameId = params.callFrames[0].callFrameId
   const { debugId } = state
