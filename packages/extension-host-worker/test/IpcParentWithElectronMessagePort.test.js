@@ -53,7 +53,6 @@ test('create', async () => {
   expect(Rpc.invoke).toHaveBeenCalledWith('IpcParent.create', {
     initialCommand: 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess',
     method: 8,
-    protocol: 'extension-host-helper-process',
     raw: true,
     type: 1,
   })
