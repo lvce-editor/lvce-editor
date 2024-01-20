@@ -1,3 +1,4 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugState from '../DebugState/DebugState.js'
@@ -7,14 +8,6 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const DebugButton = ClassNames.IconButton + ' ' + ClassNames.DebugButton
-
-/**
- * @enum {string}
- */
-const Roles = {
-  TreeItem: 'treeitem',
-  None: 'none',
-}
 
 const buttonResume = {
   type: VirtualDomElements.Button,
@@ -162,7 +155,7 @@ const getDebugValueClassName = (valueType) => {
 const scopeHeader = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugSectionHeader,
-  role: Roles.TreeItem,
+  role: AriaRoles.TreeItem,
   ariaLevel: 1,
   ariaExpanded: false,
   tabIndex: 0,
@@ -171,7 +164,7 @@ const scopeHeader = {
 const scopeHeaderExpanded = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugSectionHeader,
-  role: Roles.TreeItem,
+  role: AriaRoles.TreeItem,
   ariaLevel: 1,
   ariaExpanded: true,
   childCount: 2,
