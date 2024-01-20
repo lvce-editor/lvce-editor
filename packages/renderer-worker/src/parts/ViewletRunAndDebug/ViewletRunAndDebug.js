@@ -1,12 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Character from '../Character/Character.js'
 import * as Debug from '../Debug/Debug.js'
 import * as DebugDisplay from '../DebugDisplay/DebugDisplay.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
-import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
-import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
 import * as DebugState from '../DebugState/DebugState.js'
 import * as DebugValueType from '../DebugValueType/DebugValueType.js'
+import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 export const create = (id) => {
@@ -56,56 +54,6 @@ const getPropertyValueLabel = (property) => {
   }
 }
 
-const toDisplayScopeChain = (params, thisObject, scopeChain, knownProperties) => {
-  const elements = []
-  for (const scope of scopeChain) {
-    const label = DebugDisplay.getScopeLabel(scope)
-    elements.push({
-      type: DebugScopeChainType.Scope,
-      key: label,
-      value: '',
-      valueType: '',
-      label,
-      indent: 10,
-    })
-    // if(params.reason)
-    if (scope.type === DebugScopeType.Local) {
-      if (params.reason === DebugPausedReason.Exception) {
-        const value = params.data.description.replaceAll(Character.NewLine, Character.Space)
-        elements.push({
-          type: DebugScopeChainType.Exception,
-          key: 'Exception',
-          value,
-          valueType: '',
-          indent: 20,
-        })
-      }
-      const valueLabel = getPropertyValueLabel(thisObject)
-      elements.push({
-        type: DebugScopeChainType.This,
-        key: 'this',
-        value: valueLabel,
-        valueType: '',
-        indent: 20,
-      })
-    }
-    const children = knownProperties[scope.object.objectId]
-    if (children) {
-      for (const child of children.result.result) {
-        const valueLabel = getPropertyValueLabel(child.value)
-        elements.push({
-          type: DebugScopeChainType.Property,
-          key: child.name,
-          value: valueLabel,
-          valueType: child.value.type,
-          indent: 20,
-        })
-      }
-    }
-  }
-  return elements
-}
-
 const toDisplayCallStack = (callFrames) => {
   Assert.array(callFrames)
   const callStack = []
@@ -126,7 +74,7 @@ export const handlePaused = async (state, params) => {
   const properties = await Debug.getProperties(debugId, objectId)
   const thisObject = params.callFrames[0].this
   Assert.object(thisObject)
-  const scopeChain = toDisplayScopeChain(params, thisObject, params.callFrames[0].scopeChain, {
+  const scopeChain = GetScopeChain.getScopeChain(params, thisObject, params.callFrames[0].scopeChain, {
     [objectId]: properties,
   })
   const pausedReason = params.reason
