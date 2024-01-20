@@ -1,9 +1,9 @@
 export const getDebugPropertyValueLabel = (property) => {
-  console.log({ property })
   switch (property.type) {
     case 'number':
     case 'boolean':
     case 'symbol':
+    case 'process':
       return property.description
     case 'undefined':
       return `undefined`

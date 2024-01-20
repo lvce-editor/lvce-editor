@@ -31,6 +31,14 @@ test('getDebugPropertyValueLabel - symbol', () => {
   expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('Symbol(before)')
 })
 
+test('getDebugPropertyValueLabel - object', () => {
+  const value = {
+    type: 'object',
+    description: 'process',
+  }
+  expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('process')
+})
+
 test('getDebugPropertyValueLabel - other', () => {
   const value = {}
   expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('{}')
