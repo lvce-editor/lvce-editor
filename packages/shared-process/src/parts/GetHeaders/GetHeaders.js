@@ -21,7 +21,7 @@ const getExtraHeaders = (url, fileExtension) => {
         return GetHeadersExtensionHostWorker.getHeadersExtensionHostWorker()
       }
       if (url.endsWith('WorkerMain.js')) {
-        return GetHeadersOtherWorker.getHeadersRendererWorker()
+        return GetHeadersOtherWorker.getHeadersOtherWorker()
       }
       return getHeadersDefault()
     default:
