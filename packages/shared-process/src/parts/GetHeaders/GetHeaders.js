@@ -1,24 +1,8 @@
 import { extname } from 'path'
-import * as ContentSecurityPolicy from '../ContentSecurityPolicy/ContentSecurityPolicy.js'
-import * as ContentSecurityPolicyWorker from '../ContentSecurityPolicyWorker/ContentSecurityPolicyWorker.js'
-import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
-import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js'
+import * as GetHeadersExtensionHostWorker from '../GetHeadersExtensionHostWorker/GetHeadersExtensionHostWorker.js'
+import * as GetHeadersMainFrame from '../GetHeadersMainFrame/GetHeadersMainFrame.js'
+import * as GetHeadersRendererWorker from '../GetHeadersRendererWorker/GetHeadersRendererWorker.js'
 import * as GetMimeType from '../GetMimeType/GetMimeType.js'
-
-const getHeadersMainFrame = () => {
-  return {
-    [ContentSecurityPolicy.key]: ContentSecurityPolicy.value,
-    [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
-    [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-  }
-}
-
-const getHeadersWorker = () => {
-  return {
-    [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-    [ContentSecurityPolicyWorker.key]: ContentSecurityPolicyWorker.value,
-  }
-}
 
 const getHeadersDefault = () => {
   return {}
@@ -27,10 +11,13 @@ const getHeadersDefault = () => {
 const getExtraHeaders = (url, fileExtension) => {
   switch (fileExtension) {
     case '.html':
-      return getHeadersMainFrame()
+      return GetHeadersMainFrame.getHeadersMainFrame()
     case '.js':
-      if (url.endsWith('WorkerMain.js')) {
-        return getHeadersWorker()
+      if (url.endsWith('rendererWorkerMain.js')) {
+        return GetHeadersRendererWorker.getHeadersRendererWorker()
+      }
+      if (url.endsWith('extensionHostWorkerMain.js')) {
+        return GetHeadersExtensionHostWorker.getHeadersExtensionHostWorker()
       }
       return getHeadersDefault()
     default:
