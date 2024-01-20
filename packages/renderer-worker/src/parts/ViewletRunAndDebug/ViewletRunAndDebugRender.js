@@ -26,8 +26,7 @@ const buttonResume = {
 
 const iconContinue = {
   type: VirtualDomElements.Div,
-  className: ClassNames.MaskIcon,
-  maskImage: 'DebugContinue',
+  className: `MaskIcon MaskIconDebugContinue`,
   childCount: 0,
 }
 
@@ -40,8 +39,7 @@ const buttonPause = {
 
 const iconPause = {
   type: VirtualDomElements.Div,
-  className: ClassNames.MaskIcon,
-  maskImage: 'DebugPause',
+  className: 'MaskIcon MaskIconDebugPause',
   childCount: 0,
 }
 
@@ -54,8 +52,8 @@ const buttonStepOver = {
 
 const iconStepOver = {
   type: VirtualDomElements.Div,
-  className: ClassNames.MaskIcon,
-  maskImage: 'DebugStepOver',
+  className: 'MaskIcon MaskIconDebugStepOver',
+  childCount: 0,
 }
 
 const buttonStepInto = {
@@ -67,8 +65,7 @@ const buttonStepInto = {
 
 const iconStepInto = {
   type: VirtualDomElements.Div,
-  className: ClassNames.MaskIcon,
-  maskImage: 'DebugStepInto',
+  className: 'MaskIcon MaskIconDebugStepInto',
   childCount: 0,
 }
 
@@ -81,8 +78,7 @@ const buttonStepOut = {
 
 const iconStepOut = {
   type: VirtualDomElements.Div,
-  className: ClassNames.MaskIcon,
-  maskImage: 'DebugStepOut',
+  className: 'MaskIcon MaskIconDebugStepOut',
   childCount: 0,
 }
 
@@ -342,6 +338,7 @@ const renderDebug = {
     // console.log({ diff })
     // if (first) {
     //   first = false
+    console.log({ newDom })
     return ['setDom', newDom]
     // }
     // return ['setPatches', diff]
