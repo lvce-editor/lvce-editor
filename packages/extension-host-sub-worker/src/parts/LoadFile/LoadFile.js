@@ -11,7 +11,7 @@ export const loadFile = async (path) => {
       const commandMap = module.commandMap
       CommandState.registerCommands(commandMap)
     } else {
-      throw new Error(`missing export const execute function`)
+      throw new Error(`missing commandMap export`)
     }
   } catch (error) {
     throw new VError(error, `Failed to load ${path}`)
