@@ -43,4 +43,4 @@ export const getPropertyValueLabel = (property) => {
   }
 }
 
-export * from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
+export { getDebugPausedMessage as getPausedMessage } from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
