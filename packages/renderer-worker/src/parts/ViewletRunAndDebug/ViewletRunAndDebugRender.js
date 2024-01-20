@@ -47,7 +47,7 @@ const buttonStepOver = {
   type: VirtualDomElements.Button,
   className: DebugButton,
   title: ViewletRunAndDebugStrings.stepOver(),
-  childCont: 1,
+  childCount: 1,
 }
 
 const iconStepOver = {
