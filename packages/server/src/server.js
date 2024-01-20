@@ -170,7 +170,7 @@ const isRendererWorkerUrl = (url) => {
 }
 
 const isExtensionHostWorkerUrl = (url) => {
-  return url.endsWith('extesionHostWorkerMain.js') || url.endsWith('extesionHostWorkerMain.ts')
+  return url.endsWith('extensionHostWorkerMain.js') || url.endsWith('extensionHostWorkerMain.ts')
 }
 
 const getEtag = (fileStat) => {
@@ -297,6 +297,8 @@ const serveStatic = (root, skip = '') =>
     } else if (isExtensionHostWorkerUrl(filePath)) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[ContentSecurityPolicyExtensionHostWorker.key] = ContentSecurityPolicyExtensionHostWorker.value
+    } else if (isWorkerUrl(filePath)) {
+      headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
     }
     res.writeHead(StatusCode.Ok, headers)
     try {
