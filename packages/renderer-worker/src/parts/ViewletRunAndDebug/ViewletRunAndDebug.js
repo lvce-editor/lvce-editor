@@ -1,16 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Character from '../Character/Character.js'
 import * as Debug from '../Debug/Debug.js'
 import * as DebugDisplay from '../DebugDisplay/DebugDisplay.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugState from '../DebugState/DebugState.js'
 import * as DebugValueType from '../DebugValueType/DebugValueType.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
-import * as Workspace from '../Workspace/Workspace.js'
-import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
-import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
-import * as DebugState from '../DebugState/DebugState.js'
-import * as DebugValueType from '../DebugValueType/DebugValueType.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 export const create = (id) => {
