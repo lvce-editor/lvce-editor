@@ -98,7 +98,7 @@ export const handleScriptParsed = (state, parsedScript) => {
 const getChildScopeChain = (childScopes) => {
   const childScopeChain = []
   for (const child of childScopes.result.result) {
-    const valueLabel = GetDebugPropertyValueLabel.getDebugPropertyValueLabel(child)
+    const valueLabel = GetDebugPropertyValueLabel.getDebugPropertyValueLabel(child.value || child.get || {})
     childScopeChain.push({
       type: DebugScopeChainType.Property,
       key: child.name,
