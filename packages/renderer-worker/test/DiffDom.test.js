@@ -1397,7 +1397,7 @@ test('diffDom - source control buttons', () => {
     {
       type: 17,
       className: 'FileIcon',
-      src: '/test/extensions/builtin.vscode-icons//icons/file_type_npm.svg',
+      src: '',
       role: 'none',
       childCount: 0,
     },
@@ -1432,7 +1432,7 @@ test('diffDom - source control buttons', () => {
     {
       type: 17,
       className: 'FileIcon',
-      src: '/test/extensions/builtin.vscode-icons//icons/file_type_npm.svg',
+      src: '',
       role: 'none',
       childCount: 0,
     },
@@ -1655,6 +1655,18 @@ test('diffDom - source control buttons', () => {
     },
   ]
   expect(DiffDom.diffDom(oldDom, newDom)).toEqual([
+    {
+      index: 16,
+      key: 'src',
+      type: 'updateProp',
+      value: '/test/extensions/builtin.vscode-icons//icons/file_type_npm.svg',
+    },
+    {
+      index: 21,
+      key: 'src',
+      type: 'updateProp',
+      value: '/test/extensions/builtin.vscode-icons//icons/file_type_npm.svg',
+    },
     {
       index: 24,
       nodes: [
