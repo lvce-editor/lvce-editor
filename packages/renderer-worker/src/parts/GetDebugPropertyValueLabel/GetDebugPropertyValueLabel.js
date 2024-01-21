@@ -8,6 +8,7 @@ export const getDebugPropertyValueLabel = (property) => {
     case 'undefined':
       return `undefined`
     case 'string':
+      return `"${property.value}"`
     case 'boolean':
       return `${property.value}`
     default:
