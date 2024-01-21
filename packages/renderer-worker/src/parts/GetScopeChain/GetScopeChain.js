@@ -4,6 +4,7 @@ import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
 import * as GetDebugPropertyValueLabel from '../GetDebugPropertyValueLabel/GetDebugPropertyValueLabel.js'
+import * as GetDebugValueType from '../GetDebugValueType/GetDebugValueType.js'
 
 export const getScopeChain = (params, thisObject, scopeChain, knownProperties) => {
   const elements = []
@@ -49,7 +50,7 @@ export const getScopeChain = (params, thisObject, scopeChain, knownProperties) =
           type: DebugScopeChainType.Property,
           key: child.name,
           value: valueLabel,
-          valueType: child.value.type,
+          valueType: GetDebugValueType.getDebugValueType(child),
           objectId: child.object?.objectId || '',
           indent: 20,
         })
