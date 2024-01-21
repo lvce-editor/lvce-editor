@@ -31,11 +31,13 @@ const debugRow1 = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugRow,
   childCount: 1,
+  onPointerDown: 'handleClickScopeValue',
 }
 const debugRow3 = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugRow,
   childCount: 3,
+  onPointerDown: 'handleClickScopeValue',
 }
 
 const getDebugValueClassName = (valueType) => {
@@ -98,6 +100,7 @@ export const getRunAndDebugScopeVirtualDom = (state) => {
                 className: ClassNames.DebugRow,
                 paddingLeft: scope.indent,
                 childCount: 3,
+                onPointerDown: 'handleClickScopeValue',
               },
               {
                 type: VirtualDomElements.Span,
@@ -147,6 +150,7 @@ export const getRunAndDebugScopeVirtualDom = (state) => {
                 className: ClassNames.DebugRow,
                 paddingLeft: scope.indent,
                 childCount: 3,
+                onPointerDown: 'handleClickScopeValue',
               },
               debugPropertyKey,
               text(scope.key),

@@ -3,6 +3,7 @@ import * as ViewletRunAndDebug from './ViewletRunAndDebug.js'
 // prettier-ignore
 export const Commands = {
   continue: ViewletRunAndDebug.resume,
+  handleClickScopeValue: ViewletRunAndDebug.handleClickScopeValue,
   handleClickSectionBreakPoints: ViewletRunAndDebug.handleClickSectionBreakPoints,
   handleClickSectionCallstack: ViewletRunAndDebug.handleClickSectionCallstack,
   handleClickSectionScope: ViewletRunAndDebug.handleClickSectionScope,

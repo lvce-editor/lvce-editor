@@ -93,6 +93,18 @@ export const handleScriptParsed = (state, parsedScript) => {
   }
 }
 
+export const handleClickScopeValue = async (state, text) => {
+  const { scopeChain, debugId } = state
+  for (const element of scopeChain) {
+    if (element.key === text) {
+      const objectId = element.objectId
+      const childScopes = await Debug.getProperties(debugId, objectId)
+      console.log({ childScopes })
+    }
+  }
+  return state
+}
+
 export const resume = async (state) => {
   const { debugId } = state
   await Debug.resume(debugId)
