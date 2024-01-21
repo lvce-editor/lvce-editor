@@ -98,7 +98,7 @@ export const handleScriptParsed = (state, parsedScript) => {
 const getChildScopeChain = (childScopes) => {
   const childScopeChain = []
   for (const child of childScopes.result.result) {
-    const valueLabel = GetDebugPropertyValueLabel.getDebugPropertyValueLabel(child.value)
+    const valueLabel = GetDebugPropertyValueLabel.getDebugPropertyValueLabel(child)
     console.log({ child })
     childScopeChain.push({
       type: DebugScopeChainType.Property,
@@ -111,17 +111,27 @@ const getChildScopeChain = (childScopes) => {
   return childScopeChain
 }
 
-export const handleClickScopeValue = async (state, text) => {
-  const { scopeChain, debugId } = state
+const getNewScopeChain = async (debugId, scopeChain, text) => {
   for (const element of scopeChain) {
     if (element.key === text) {
       const objectId = element.objectId
       const childScopes = await Debug.getProperties(debugId, objectId)
       const childScopeChain = getChildScopeChain(childScopes)
-      console.log({ childScopeChain })
+      const index = scopeChain.indexOf(element)
+      const newScopeChain = [...scopeChain.slice(0, index), ...childScopeChain, ...scopeChain.slice(index)]
+      return newScopeChain
     }
   }
-  return state
+  return scopeChain
+}
+
+export const handleClickScopeValue = async (state, text) => {
+  const { scopeChain, debugId } = state
+  const newScopeChain = await getNewScopeChain(debugId, scopeChain, text)
+  return {
+    ...state,
+    scopeChain: newScopeChain,
+  }
 }
 
 export const resume = async (state) => {
