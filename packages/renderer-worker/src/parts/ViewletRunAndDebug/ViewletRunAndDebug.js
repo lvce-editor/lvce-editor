@@ -99,7 +99,6 @@ const getChildScopeChain = (childScopes) => {
   const childScopeChain = []
   for (const child of childScopes.result.result) {
     const valueLabel = GetDebugPropertyValueLabel.getDebugPropertyValueLabel(child)
-    console.log({ child })
     childScopeChain.push({
       type: DebugScopeChainType.Property,
       key: child.name,
