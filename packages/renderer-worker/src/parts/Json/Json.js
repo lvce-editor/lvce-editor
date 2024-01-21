@@ -10,6 +10,9 @@ export const stringifyCompact = (value) => {
 }
 
 export const parse = (content) => {
+  if (content === 'undefined') {
+    return null
+  }
   // TODO use better json parse to throw more helpful error messages if json is invalid
   try {
     return JSON.parse(content)
