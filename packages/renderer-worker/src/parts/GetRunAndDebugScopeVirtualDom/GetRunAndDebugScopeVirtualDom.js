@@ -113,7 +113,13 @@ const getScopeExceptionVirtualDom = (scope) => {
 const getScopeScopeVirtualDom = (scope) => {
   const { key } = scope
   return [
-    debugRow1,
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.DebugRow,
+      childCount: 2,
+      onPointerDown: 'handleClickScopeValue',
+    },
+    iconTriangleRight,
     {
       type: VirtualDomElements.Span,
       className: 'DebugValue',
