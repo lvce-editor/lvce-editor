@@ -39,6 +39,7 @@
   width: 100%;
   height: 20px;
   user-select: text;
+  color: rgb(188, 190, 190);
 }
 
 .DebugValue {
