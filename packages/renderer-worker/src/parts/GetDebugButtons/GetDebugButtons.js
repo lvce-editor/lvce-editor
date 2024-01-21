@@ -7,25 +7,30 @@ export const getDebugButtons = (debugState) => {
     debugButtons.push({
       title: ViewletRunAndDebugStrings.resume(),
       icon: 'DebugContinue',
+      fn: 'handleClickContinue',
     })
   } else {
     debugButtons.push({
       title: ViewletRunAndDebugStrings.pause(),
       icon: 'DebugPause',
+      fn: 'handleClickPause',
     })
   }
   debugButtons.push(
     {
       title: ViewletRunAndDebugStrings.stepOver(),
       icon: 'DebugStepOver',
+      fn: 'handleClickStepOver',
     },
     {
       title: ViewletRunAndDebugStrings.stepInto(),
       icon: 'DebugStepInto',
+      fn: 'handleClickStepInto',
     },
     {
       title: ViewletRunAndDebugStrings.stepOut(),
       icon: 'DebugStepOut',
+      fn: 'handleClickStepOut',
     },
   )
   return debugButtons

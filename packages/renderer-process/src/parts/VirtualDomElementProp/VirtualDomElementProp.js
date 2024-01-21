@@ -62,6 +62,7 @@ export const setProp = ($Element, key, value, eventMap) => {
     case 'onFocus':
     case 'onInput':
     case 'onKeyDown':
+    case 'onPointerDown':
     case 'onFocusIn':
       const eventName = key.slice(2).toLowerCase()
       const listener = eventMap[value]
