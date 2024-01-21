@@ -1,0 +1,12 @@
+.DebugButtons {
+  contain: strict;
+  height: 30px;
+}
+
+.DebugContinue,
+.DebugStepOver,
+.DebugPause,
+.DebugStepInto,
+.DebugStepOut {
+  background: #75beff;
+}

@@ -26,27 +26,6 @@
   --MaskIconSize: 12px;
 }
 
-.DebugPropertyKey {
-  font-weight: 500;
-  color: #be9296;
-}
-
-.DebugValueNumber {
-  color: hsl(252deg 100% 75%);
-}
-
-.DebugValueUndefined {
-  color: rgb(128, 134, 139);
-}
-
-.DebugValueString {
-  color: #8caec1;
-}
-
-.DebugValueBoolean {
-  color: #cd6564;
-}
-
 .DebugMessage,
 .DebugPausedMessage {
   font-style: italic;
@@ -60,17 +39,4 @@
   width: 100%;
   height: 20px;
   user-select: text;
-}
-
-.DebugButtons {
-  contain: strict;
-  height: 30px;
-}
-
-.DebugContinue,
-.DebugStepOver,
-.DebugPause,
-.DebugStepInto,
-.DebugStepOut {
-  background: #75beff;
 }
