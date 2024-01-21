@@ -123,7 +123,7 @@ const getScopeScopeVirtualDom = (scope) => {
     iconTriangleRight,
     {
       type: VirtualDomElements.Span,
-      className: 'DebugValue',
+      className: 'DebugValue DebugValueScopeName',
       childCount: 1,
     },
     text(key),
