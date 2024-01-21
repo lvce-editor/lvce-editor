@@ -1,6 +1,5 @@
 .DebugPropertyKey {
-  font-weight: 500;
-  color: #be9296;
+  color: #c586c0;
 }
 
 .DebugValueNumber {
@@ -8,6 +7,10 @@
 }
 
 .DebugValueUndefined {
+  color: rgb(128, 134, 139);
+}
+
+.DebugValueObject {
   color: rgb(128, 134, 139);
 }
 

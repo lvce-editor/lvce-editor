@@ -66,7 +66,8 @@ const debugPausedMessage = {
 const textNotPaused = text(ViewletRunAndDebugStrings.notPaused())
 
 const getScopeThisVirtualDom = (scope) => {
-  const { indent, key, value } = scope
+  const { indent, key, value, valueType } = scope
+  const className = GetDebugValueClassName.getDebugValueClassName(valueType)
   return [
     {
       type: VirtualDomElements.Div,
@@ -77,14 +78,14 @@ const getScopeThisVirtualDom = (scope) => {
     },
     {
       type: VirtualDomElements.Span,
-      className: 'DebugValue DebugValueKey',
+      className: 'DebugValue DebugPropertyKey',
       childCount: 1,
     },
     text(key),
     separator,
     {
       type: VirtualDomElements.Span,
-      className: 'DebugValue',
+      className: 'DebugValue ' + className,
       childCount: 1,
     },
     text(value),

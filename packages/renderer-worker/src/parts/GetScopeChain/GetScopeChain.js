@@ -36,7 +36,7 @@ export const getScopeChain = (params, thisObject, scopeChain, knownProperties) =
         type: DebugScopeChainType.This,
         key: 'this',
         value: valueLabel,
-        valueType: '',
+        valueType: thisObject.type,
         objectId: scope.object.objectId,
         indent: 20,
       })

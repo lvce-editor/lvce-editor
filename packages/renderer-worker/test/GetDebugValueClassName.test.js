@@ -12,6 +12,11 @@ test('getDebugValueClassName - number', () => {
   expect(GetDebugValueClassName.getDebugValueClassName(valueType)).toBe(ClassNames.DebugValueNumber)
 })
 
+test('getDebugValueClassName - Object', () => {
+  const valueType = DebugValueType.Object
+  expect(GetDebugValueClassName.getDebugValueClassName(valueType)).toBe(ClassNames.DebugValueObject)
+})
+
 test('getDebugValueClassName - symbol', () => {
   const valueType = DebugValueType.Symbol
   expect(GetDebugValueClassName.getDebugValueClassName(valueType)).toBe(ClassNames.DebugValueSymbol)
