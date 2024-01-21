@@ -40,3 +40,8 @@
   height: 20px;
   user-select: text;
 }
+
+.DebugValue {
+  contain: content;
+  white-space: nowrap;
+}
