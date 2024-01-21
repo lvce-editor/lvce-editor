@@ -15,6 +15,11 @@
     "version": "0.1.0"
   },
   {
+    "name": "builtin.debug-node",
+    "repository": "github.com/lvce-editor/debug-node",
+    "version": "0.1.0"
+  },
+  {
     "name": "builtin.language-basics-coffeescript",
     "repository": "github.com/lvce-editor/language-basics-coffeescript",
     "version": "0.0.5"
