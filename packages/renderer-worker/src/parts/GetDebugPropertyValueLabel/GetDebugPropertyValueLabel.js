@@ -1,7 +1,6 @@
 export const getDebugPropertyValueLabel = (property) => {
   switch (property.type) {
     case 'number':
-    case 'boolean':
     case 'symbol':
     case 'function':
     case 'object':
@@ -9,6 +8,8 @@ export const getDebugPropertyValueLabel = (property) => {
       return property.description
     case 'undefined':
       return `undefined`
+    case 'boolean':
+      return `${property.value}`
     default:
       return `${JSON.stringify(property)}`
   }

@@ -45,7 +45,6 @@ export const getScopeChain = (params, thisObject, scopeChain, knownProperties) =
     if (children) {
       for (const child of children.result.result) {
         const valueLabel = GetDebugPropertyValueLabel.getDebugPropertyValueLabel(child.value)
-        console.log({ child })
         elements.push({
           type: DebugScopeChainType.Property,
           key: child.name,

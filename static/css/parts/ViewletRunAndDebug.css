@@ -39,6 +39,10 @@
   color: rgb(128, 134, 139);
 }
 
+.DebugValueBoolean {
+  color: #cd6564;
+}
+
 .DebugMessage,
 .DebugPausedMessage {
   font-style: italic;

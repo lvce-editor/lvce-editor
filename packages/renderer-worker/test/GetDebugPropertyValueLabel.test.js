@@ -11,7 +11,7 @@ test('getDebugPropertyValueLabel = number', () => {
 test('getDebugPropertyValueLabel - boolean', () => {
   const value = {
     type: 'boolean',
-    description: 'true',
+    value: true,
   }
   expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('true')
 })
