@@ -12,9 +12,14 @@ test('getDebugValueClassName - number', () => {
   expect(GetDebugValueClassName.getDebugValueClassName(valueType)).toBe(ClassNames.DebugValueNumber)
 })
 
-test('getDebugValueClassName - Object', () => {
+test('getDebugValueClassName - object', () => {
   const valueType = DebugValueType.Object
   expect(GetDebugValueClassName.getDebugValueClassName(valueType)).toBe(ClassNames.DebugValueObject)
+})
+
+test('getDebugValueClassName - function', () => {
+  const valueType = DebugValueType.Function
+  expect(GetDebugValueClassName.getDebugValueClassName(valueType)).toBe(ClassNames.DebugValueFunction)
 })
 
 test('getDebugValueClassName - symbol', () => {
