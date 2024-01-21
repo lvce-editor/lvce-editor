@@ -50,7 +50,7 @@ export const getScopeChain = (params, thisObject, scopeChain, knownProperties) =
           key: child.name,
           value: valueLabel,
           valueType: child.value.type,
-          objectId: child.object?.objectId || '',
+          objectId: child.object?.objectId || child.value?.objectId || '',
           indent: 20,
         })
       }
