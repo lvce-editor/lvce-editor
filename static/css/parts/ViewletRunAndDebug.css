@@ -1,6 +1,19 @@
 .RunAndDebug {
   white-space: pre;
   color: var(--TitleBarForeground);
+  overflow-y: auto;
+}
+
+.RunAndDebug::-webkit-scrollbar {
+  height: 14px;
+}
+
+.RunAndDebug::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.RunAndDebug::-webkit-scrollbar-thumb {
+  background: var(--EditorScrollBarBackground);
 }
 
 .DebugSectionHeader {
