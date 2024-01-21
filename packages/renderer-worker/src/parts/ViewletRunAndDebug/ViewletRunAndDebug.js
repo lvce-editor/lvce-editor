@@ -117,7 +117,7 @@ const getNewScopeChain = async (debugId, scopeChain, text) => {
       const childScopes = await Debug.getProperties(debugId, objectId)
       const childScopeChain = getChildScopeChain(childScopes)
       const index = scopeChain.indexOf(element)
-      const newScopeChain = [...scopeChain.slice(0, index), ...childScopeChain, ...scopeChain.slice(index)]
+      const newScopeChain = [...scopeChain.slice(0, index + 1), ...childScopeChain, ...scopeChain.slice(index + 1)]
       return newScopeChain
     }
   }
