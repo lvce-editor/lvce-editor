@@ -50,7 +50,7 @@ test('getDebugPropertyValueLabel - function', () => {
 test('getDebugPropertyValueLabel - string', () => {
   const value = {
     type: 'string',
-    description: '/',
+    value: '/',
   }
   expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('/')
 })
