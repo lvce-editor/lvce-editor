@@ -10,3 +10,11 @@
 .DebugStepOut {
   color: #75beff;
 }
+
+.DebugRestart {
+  color: #89d185;
+}
+
+.DebugStop {
+  color: #f48771;
+}

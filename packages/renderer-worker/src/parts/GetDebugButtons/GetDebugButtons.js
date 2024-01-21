@@ -32,6 +32,16 @@ export const getDebugButtons = (debugState) => {
       icon: 'DebugStepOut',
       fn: 'handleClickStepOut',
     },
+    {
+      title: ViewletRunAndDebugStrings.restart(),
+      icon: 'DebugRestart',
+      fn: 'handleClickRestart',
+    },
+    {
+      title: ViewletRunAndDebugStrings.stop(),
+      icon: 'DebugStop',
+      fn: 'handleClickStop',
+    },
   )
   return debugButtons
 }
