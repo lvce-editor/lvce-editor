@@ -39,6 +39,26 @@ test('getDebugPropertyValueLabel - object', () => {
   expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('process')
 })
 
+test('getDebugPropertyValueLabel - object with preview', () => {
+  const value = {
+    type: 'object',
+    description: 'obj',
+    preview: {
+      type: 'object',
+      description: 'Object',
+      overflow: false,
+      properties: [
+        {
+          name: 'message',
+          type: 'string',
+          value: '🦄🌈✨👋🌎🌍🌏✨🌈🦄',
+        },
+      ],
+    },
+  }
+  expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe("{message:'🦄🌈✨👋🌎🌍🌏✨🌈🦄'}")
+})
+
 test('getDebugPropertyValueLabel - function', () => {
   const value = {
     type: 'function',
