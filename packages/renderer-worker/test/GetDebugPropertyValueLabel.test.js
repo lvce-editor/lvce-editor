@@ -52,7 +52,7 @@ test('getDebugPropertyValueLabel - string', () => {
     type: 'string',
     value: '/',
   }
-  expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('/')
+  expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('"/"')
 })
 
 test('getDebugPropertyValueLabel - other', () => {
