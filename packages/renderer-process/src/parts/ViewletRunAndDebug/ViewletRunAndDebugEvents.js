@@ -1,101 +1,41 @@
-import * as Event from '../Event/Event.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as ViewletRunAndDebugFunctions from './ViewletRunAndDebugFunctions.js'
 
-// TODO rename to resume
-const handleClickContinue = () => {
+export const handleClickContinue = () => {
   ViewletRunAndDebugFunctions.handleContinue()
 }
 
-const handleClickPause = (event) => {
+export const handleClickPause = (event) => {
   ViewletRunAndDebugFunctions.pause()
 }
 
-const handleClickStepOver = (event) => {
+export const handleClickStepOver = (event) => {
   ViewletRunAndDebugFunctions.stepOver()
 }
 
-const handleClickStepInto = (event) => {
+export const handleClickStepInto = (event) => {
   ViewletRunAndDebugFunctions.stepInto()
 }
 
-const handleClickStepOut = (event) => {
+export const handleClickStepOut = (event) => {
   ViewletRunAndDebugFunctions.stepOut()
 }
 
-const handleClickDebugButton = (event, target) => {
-  Event.preventDefault(event)
-  switch (target.title) {
-    case 'Pause':
-      handleClickPause()
-      break
-    case 'Resume':
-      handleClickContinue()
-      break
-    case 'Step over':
-      handleClickStepOver()
-      break
-    case 'Step into':
-      handleClickStepInto()
-      break
-    case 'Step out':
-      handleClickStepOut()
-      break
-    default:
-      console.log(target)
-      break
-  }
-}
-
-const handleClickSectionWatch = () => {
+export const handleClickSectionWatch = () => {
   ViewletRunAndDebugFunctions.handleClickSectionWatch()
 }
 
-const handleClickSectionBreakpoints = () => {
+export const handleClickSectionBreakpoints = () => {
   ViewletRunAndDebugFunctions.handleClickSectionBreakpoints()
 }
 
-const handleClickSectionScope = () => {
+export const handleClickSectionScope = () => {
   ViewletRunAndDebugFunctions.handleClickSectionScope()
 }
 
-const handleClickSectionCallstack = () => {
+export const handleClickSectionCallstack = () => {
   ViewletRunAndDebugFunctions.handleClickSectionCallstack()
-}
-
-const handleClickDebugSectionHeader = (event, target) => {
-  Event.preventDefault(event)
-  switch (target.textContent) {
-    case 'Watch':
-      handleClickSectionWatch()
-      break
-    case 'BreakPoints':
-      handleClickSectionBreakpoints()
-      break
-    case 'Scope':
-      handleClickSectionScope()
-      break
-    case 'Call Stack':
-      handleClickSectionCallstack()
-      break
-    default:
-      break
-  }
-}
-
-export const handlePointerDown = (event) => {
-  const { target } = event
-  switch (target.className) {
-    case 'IconButton DebugButton':
-      handleClickDebugButton(event, target)
-      break
-    case 'DebugSectionHeader':
-      handleClickDebugSectionHeader(event, target)
-      break
-    default:
-      break
-  }
 }
 
 export const handleDebugInputFocus = () => {

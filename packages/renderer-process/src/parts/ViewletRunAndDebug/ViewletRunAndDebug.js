@@ -1,13 +1,11 @@
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
-import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
 import * as VirtualDomElementProp from '../VirtualDomElementProp/VirtualDomElementProp.js'
+import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet RunAndDebug'
   $Viewlet.tabIndex = 0
-  $Viewlet.onpointerdown = ViewletDebugEvents.handlePointerDown
-
   return {
     $Viewlet,
   }
@@ -15,7 +13,7 @@ export const create = () => {
 
 export const setDom = (state, dom) => {
   const { $Viewlet } = state
-  VirtualDom.renderInto($Viewlet, dom)
+  VirtualDom.renderInto($Viewlet, dom, ViewletDebugEvents)
 }
 
 export const setPatches = (state, diff) => {
