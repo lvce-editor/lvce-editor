@@ -9,14 +9,14 @@ const getDebugButtonVirtualDom = (button) => {
   return [
     {
       type: VirtualDomElements.Button,
-      className: DebugButton,
+      className: DebugButton + ' ' + icon,
       title,
       childCount: 1,
       onPointerDown: fn,
     },
     {
       type: VirtualDomElements.Div,
-      className: `MaskIcon MaskIcon${icon} ${icon}`,
+      className: `MaskIcon MaskIcon${icon}`,
       childCount: 0,
     },
   ]
