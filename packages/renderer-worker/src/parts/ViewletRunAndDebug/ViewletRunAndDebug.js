@@ -6,6 +6,7 @@ import * as DebugState from '../DebugState/DebugState.js'
 import * as GetCallStack from '../GetCallStack/GetCallStack.js'
 import * as GetDebugPausedMessage from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
 import * as GetDebugPropertyValueLabel from '../GetDebugPropertyValueLabel/GetDebugPropertyValueLabel.js'
+import * as GetDebugValueType from '../GetDebugValueType/GetDebugValueType.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -105,7 +106,7 @@ const getChildScopeChain = (childScopes) => {
       type: DebugScopeChainType.Property,
       key: child.name,
       value: valueLabel,
-      valueType: child.value?.type || '',
+      valueType: GetDebugValueType.getDebugValueType(child),
       objectId: child.object?.objectId || '',
       indent: 30,
     })
