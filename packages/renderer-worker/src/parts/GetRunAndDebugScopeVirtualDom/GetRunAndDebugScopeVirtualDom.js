@@ -1,7 +1,7 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
-import * as DebugValueType from '../DebugValueType/DebugValueType.js'
+import * as GetDebugValueClassName from '../GetDebugValueClassName/GetDebugValueClassName.js'
 import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -18,15 +18,6 @@ const iconTriangleDown = {
   childCount: 0,
 }
 
-const breakPointsHeader = {
-  type: VirtualDomElements.Div,
-  className: ClassNames.DebugSectionHeader,
-  tabIndex: 0,
-  childCount: 2,
-}
-
-const textBreakPoints = text(ViewletRunAndDebugStrings.breakPoints())
-
 const debugRow1 = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugRow,
@@ -38,17 +29,6 @@ const debugRow3 = {
   className: ClassNames.DebugRow,
   childCount: 3,
   onPointerDown: 'handleClickScopeValue',
-}
-
-const getDebugValueClassName = (valueType) => {
-  switch (valueType) {
-    case DebugValueType.Undefined:
-      return ClassNames.DebugValueUndefined
-    case DebugValueType.Number:
-      return ClassNames.DebugValueNumber
-    default:
-      return ''
-  }
 }
 
 const scopeHeader = {
@@ -85,6 +65,84 @@ const debugPausedMessage = {
 }
 const textNotPaused = text(ViewletRunAndDebugStrings.notPaused())
 
+const getScopeThisVirtualDom = (scope) => {
+  const { indent, key, value } = scope
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.DebugRow,
+      paddingLeft: indent,
+      childCount: 3,
+      onPointerDown: 'handleClickScopeValue',
+    },
+    {
+      type: VirtualDomElements.Span,
+      childCount: 1,
+    },
+    text(key),
+    separator,
+    {
+      type: VirtualDomElements.Span,
+      childCount: 1,
+    },
+    text(value),
+  ]
+}
+
+const getScopeExceptionVirtualDom = (scope) => {
+  const { key, value } = scope
+  return [
+    debugRow3,
+    {
+      type: VirtualDomElements.Span,
+      childCount: 1,
+    },
+    text(key),
+    separator,
+
+    {
+      type: VirtualDomElements.Span,
+      childCount: 1,
+    },
+    text(value),
+  ]
+}
+
+const getScopeScopeVirtualDom = (scope) => {
+  const { key } = scope
+  return [
+    debugRow1,
+    {
+      type: VirtualDomElements.Span,
+      childCount: 1,
+    },
+    text(key),
+  ]
+}
+
+const getScopePropertyVirtualDom = (scope) => {
+  const { indent, key, value, valueType } = scope
+  const className = GetDebugValueClassName.getDebugValueClassName(valueType)
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: ClassNames.DebugRow,
+      paddingLeft: indent,
+      childCount: 3,
+      onPointerDown: 'handleClickScopeValue',
+    },
+    debugPropertyKey,
+    text(key),
+    separator,
+    {
+      type: VirtualDomElements.Span,
+      className,
+      childCount: 1,
+    },
+    text(value),
+  ]
+}
+
 export const getRunAndDebugScopeVirtualDom = (state) => {
   const { scopeChain, scopeExpanded } = state
   const elements = []
@@ -94,79 +152,23 @@ export const getRunAndDebugScopeVirtualDom = (state) => {
       elements.push(debugPausedMessage, textNotPaused)
     } else {
       for (const scope of scopeChain) {
-        switch (scope.type) {
+        const { type } = scope
+        switch (type) {
           case DebugScopeChainType.This:
-            elements.push(
-              {
-                type: VirtualDomElements.Div,
-                className: ClassNames.DebugRow,
-                paddingLeft: scope.indent,
-                childCount: 3,
-                onPointerDown: 'handleClickScopeValue',
-              },
-              {
-                type: VirtualDomElements.Span,
-                childCount: 1,
-              },
-              text(scope.key),
-              separator,
-              {
-                type: VirtualDomElements.Span,
-                childCount: 1,
-              },
-              text(scope.value),
-            )
+            elements.push(...getScopeThisVirtualDom(scope))
             break
           case DebugScopeChainType.Exception:
-            elements.push(
-              debugRow3,
-              {
-                type: VirtualDomElements.Span,
-                childCount: 1,
-              },
-              text(scope.key),
-              separator,
-
-              {
-                type: VirtualDomElements.Span,
-                childCount: 1,
-              },
-              text(scope.value),
-            )
+            elements.push(...getScopeExceptionVirtualDom(scope))
             break
           case DebugScopeChainType.Scope:
-            elements.push(
-              debugRow1,
-              {
-                type: VirtualDomElements.Span,
-                childCount: 1,
-              },
-              text(scope.key),
-            )
+            elements.push(...getScopeScopeVirtualDom(scope))
             break
           case DebugScopeChainType.Property:
-            const className = getDebugValueClassName(scope.valueType)
-            elements.push(
-              {
-                type: VirtualDomElements.Div,
-                className: ClassNames.DebugRow,
-                paddingLeft: scope.indent,
-                childCount: 3,
-                onPointerDown: 'handleClickScopeValue',
-              },
-              debugPropertyKey,
-              text(scope.key),
-              separator,
-              {
-                type: VirtualDomElements.Span,
-                className,
-                childCount: 1,
-              },
-              text(scope.value),
-            )
+            elements.push(...getScopePropertyVirtualDom(scope))
+            break
+          default:
             break
         }
-        // elements.push(div({ className: ClassNames.DebugRow }, 1), text(scope.key))
       }
     }
   } else {
