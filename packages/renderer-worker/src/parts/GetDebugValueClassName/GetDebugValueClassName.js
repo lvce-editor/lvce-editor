@@ -2,7 +2,6 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DebugValueType from '../DebugValueType/DebugValueType.js'
 
 export const getDebugValueClassName = (valueType) => {
-  console.log({ valueType })
   switch (valueType) {
     case DebugValueType.Undefined:
       return ClassNames.DebugValueUndefined
