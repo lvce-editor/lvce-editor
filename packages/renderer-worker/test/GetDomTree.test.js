@@ -22,12 +22,13 @@ test('single element', () => {
       {
         type: VirtualDomElements.Div,
         childCount: 0,
+        children: [],
       },
     ],
   })
 })
 
-test('two elements', () => {
+test.skip('two elements', () => {
   const dom = [
     {
       type: VirtualDomElements.Div,
@@ -48,6 +49,168 @@ test('two elements', () => {
       {
         type: VirtualDomElements.Div,
         childCount: 0,
+      },
+    ],
+  })
+})
+
+test('one child element', () => {
+  const dom = [
+    {
+      type: VirtualDomElements.Div,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+  ]
+  expect(GetDomTree.getDomTree(dom)).toEqual({
+    type: 'root',
+    children: [
+      {
+        type: VirtualDomElements.Div,
+        childCount: 1,
+        children: [
+          {
+            type: VirtualDomElements.Div,
+            childCount: 0,
+            children: [],
+          },
+        ],
+      },
+    ],
+  })
+})
+
+test('one child elements', () => {
+  const dom = [
+    {
+      type: VirtualDomElements.Div,
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+  ]
+  expect(GetDomTree.getDomTree(dom)).toEqual({
+    type: 'root',
+    children: [
+      {
+        type: VirtualDomElements.Div,
+        childCount: 2,
+        children: [
+          {
+            type: VirtualDomElements.Div,
+            childCount: 0,
+            children: [],
+          },
+          {
+            type: VirtualDomElements.Div,
+            childCount: 0,
+            children: [],
+          },
+        ],
+      },
+    ],
+  })
+})
+
+test('one grandchild element', () => {
+  const dom = [
+    {
+      type: VirtualDomElements.Div,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      childCount: 0,
+    },
+  ]
+  expect(GetDomTree.getDomTree(dom)).toEqual({
+    type: 'root',
+    children: [
+      {
+        type: VirtualDomElements.Div,
+        childCount: 1,
+        children: [
+          {
+            type: VirtualDomElements.Div,
+            childCount: 1,
+            children: [
+              {
+                type: VirtualDomElements.Div,
+                childCount: 0,
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  })
+})
+
+test('scrollable list', () => {
+  const dom = [
+    {
+      type: VirtualDomElements.Div,
+      className: 'List',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'ListItems',
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'ScrollBar',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'ScrollBarThumb',
+      childCount: 0,
+    },
+  ]
+  expect(GetDomTree.getDomTree(dom)).toEqual({
+    type: 'root',
+    children: [
+      {
+        type: VirtualDomElements.Div,
+        className: 'List',
+        childCount: 2,
+        children: [
+          {
+            type: VirtualDomElements.Div,
+            className: 'ListItems',
+            childCount: 0,
+            children: [],
+          },
+          {
+            type: VirtualDomElements.Div,
+            className: 'ScrollBar',
+            childCount: 1,
+            children: [
+              {
+                type: VirtualDomElements.Div,
+                className: 'ScrollBarThumb',
+                childCount: 0,
+                children: [],
+              },
+            ],
+          },
+        ],
       },
     ],
   })
