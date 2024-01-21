@@ -306,6 +306,14 @@
   mask-image: url(/icons/triangle-down.svg);
 }
 
+.MaskIconDebugRestart {
+  mask-image: url(/icons/debug-restart.svg);
+}
+
+.MaskIconDebugStop {
+  mask-image: url(/icons/debug-stop.svg);
+}
+
 .Chevron {
   width: 16px;
   height: 16px;

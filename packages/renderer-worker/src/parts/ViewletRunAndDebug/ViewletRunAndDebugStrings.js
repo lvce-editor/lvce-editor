@@ -14,6 +14,8 @@ const UiStrings = {
   CallStack: 'Call Stack',
   NotPaused: 'Not Paused',
   Resume: 'Resume',
+  Restart: 'Restart',
+  Stop: 'Stop',
 }
 
 export const stepInto = () => {
@@ -27,6 +29,7 @@ export const stepOver = () => {
 export const stepOut = () => {
   return I18NString.i18nString(UiStrings.StepOut)
 }
+
 export const pause = () => {
   return I18NString.i18nString(UiStrings.Pause)
 }
@@ -53,4 +56,12 @@ export const notPaused = () => {
 
 export const resume = () => {
   return I18NString.i18nString(UiStrings.Resume)
+}
+
+export const restart = () => {
+  return I18NString.i18nString(UiStrings.Restart)
+}
+
+export const stop = () => {
+  return I18NString.i18nString(UiStrings.Stop)
 }
