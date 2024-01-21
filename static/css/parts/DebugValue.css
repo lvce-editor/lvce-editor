@@ -6,11 +6,9 @@
   color: hsl(252deg 100% 75%);
 }
 
-.DebugValueUndefined {
-  color: rgb(128, 134, 139);
-}
-
-.DebugValueObject {
+.DebugValueUndefined,
+.DebugValueObject,
+.DebugValueFunction {
   color: rgb(128, 134, 139);
 }
 

@@ -103,6 +103,7 @@ const getChildScopeChain = (childScopes) => {
       type: DebugScopeChainType.Property,
       key: child.name,
       value: valueLabel,
+      valueType: child.value?.type || '',
       objectId: child.object?.objectId || '',
       indent: 30,
     })
