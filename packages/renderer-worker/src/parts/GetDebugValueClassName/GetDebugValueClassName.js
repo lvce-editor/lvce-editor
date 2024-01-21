@@ -11,6 +11,8 @@ export const getDebugValueClassName = (valueType) => {
       return ClassNames.DebugValueSymbol
     case DebugValueType.Boolean:
       return ClassNames.DebugValueBoolean
+    case DebugValueType.String:
+      return ClassNames.DebugValueString
     default:
       return ''
   }

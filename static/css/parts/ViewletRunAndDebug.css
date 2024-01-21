@@ -39,6 +39,10 @@
   color: rgb(128, 134, 139);
 }
 
+.DebugValueString {
+  color: #8caec1;
+}
+
 .DebugValueBoolean {
   color: #cd6564;
 }

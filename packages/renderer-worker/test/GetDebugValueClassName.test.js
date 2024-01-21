@@ -22,6 +22,11 @@ test('getDebugValueClassName - boolean', () => {
   expect(GetDebugValueClassName.getDebugValueClassName(valueType)).toBe(ClassNames.DebugValueBoolean)
 })
 
+test('getDebugValueClassName - string', () => {
+  const valueType = DebugValueType.String
+  expect(GetDebugValueClassName.getDebugValueClassName(valueType)).toBe(ClassNames.DebugValueString)
+})
+
 test('getDebugValueClassName - other', () => {
   const valueType = ''
   expect(GetDebugValueClassName.getDebugValueClassName(valueType)).toBe('')
