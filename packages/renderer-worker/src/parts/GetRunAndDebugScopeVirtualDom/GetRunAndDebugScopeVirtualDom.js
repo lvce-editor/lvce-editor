@@ -54,7 +54,7 @@ const textScope = text(ViewletRunAndDebugStrings.scope())
 const separator = text(': ')
 const debugPropertyKey = {
   type: VirtualDomElements.Span,
-  className: ClassNames.DebugPropertyKey,
+  className: 'DebugValue ' + ClassNames.DebugPropertyKey,
   childCount: 1,
 }
 
@@ -77,12 +77,14 @@ const getScopeThisVirtualDom = (scope) => {
     },
     {
       type: VirtualDomElements.Span,
+      className: 'DebugValue DebugValueKey',
       childCount: 1,
     },
     text(key),
     separator,
     {
       type: VirtualDomElements.Span,
+      className: 'DebugValue',
       childCount: 1,
     },
     text(value),
@@ -114,6 +116,7 @@ const getScopeScopeVirtualDom = (scope) => {
     debugRow1,
     {
       type: VirtualDomElements.Span,
+      className: 'DebugValue',
       childCount: 1,
     },
     text(key),
@@ -136,7 +139,7 @@ const getScopePropertyVirtualDom = (scope) => {
     separator,
     {
       type: VirtualDomElements.Span,
-      className,
+      className: 'DebugValue ' + className,
       childCount: 1,
     },
     text(value),
