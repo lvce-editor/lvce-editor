@@ -1,9 +1,11 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
+import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugState from '../DebugState/DebugState.js'
 import * as GetCallStack from '../GetCallStack/GetCallStack.js'
 import * as GetDebugPausedMessage from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
+import * as GetDebugPropertyValueLabel from '../GetDebugPropertyValueLabel/GetDebugPropertyValueLabel.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -93,13 +95,30 @@ export const handleScriptParsed = (state, parsedScript) => {
   }
 }
 
+const getChildScopeChain = (childScopes) => {
+  const childScopeChain = []
+  for (const child of childScopes.result.result) {
+    const valueLabel = GetDebugPropertyValueLabel.getDebugPropertyValueLabel(child.value)
+    console.log({ child })
+    childScopeChain.push({
+      type: DebugScopeChainType.Property,
+      key: child.name,
+      value: valueLabel,
+      objectId: child.object?.objectId || '',
+      indent: 30,
+    })
+  }
+  return childScopeChain
+}
+
 export const handleClickScopeValue = async (state, text) => {
   const { scopeChain, debugId } = state
   for (const element of scopeChain) {
     if (element.key === text) {
       const objectId = element.objectId
       const childScopes = await Debug.getProperties(debugId, objectId)
-      console.log({ childScopes })
+      const childScopeChain = getChildScopeChain(childScopes)
+      console.log({ childScopeChain })
     }
   }
   return state
