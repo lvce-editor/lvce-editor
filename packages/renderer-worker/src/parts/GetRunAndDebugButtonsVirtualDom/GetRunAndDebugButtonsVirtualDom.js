@@ -5,13 +5,14 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 const DebugButton = ClassNames.IconButton + ' ' + ClassNames.DebugButton
 
 const getDebugButtonVirtualDom = (button) => {
-  const { title, icon } = button
+  const { title, icon, fn } = button
   return [
     {
       type: VirtualDomElements.Button,
       className: DebugButton,
       title,
       childCount: 1,
+      onPointerDown: fn,
     },
     {
       type: VirtualDomElements.Div,

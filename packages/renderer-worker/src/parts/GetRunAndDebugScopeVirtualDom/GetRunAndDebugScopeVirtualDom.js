@@ -57,6 +57,7 @@ const scopeHeader = {
   ariaExpanded: false,
   tabIndex: 0,
   childCount: 2,
+  onPointerDown: 'handleClickSectionScope',
 }
 const scopeHeaderExpanded = {
   type: VirtualDomElements.Div,
@@ -65,6 +66,7 @@ const scopeHeaderExpanded = {
   ariaLevel: 1,
   ariaExpanded: true,
   childCount: 2,
+  onPointerDown: 'handleClickSectionScope',
 }
 const textScope = text(ViewletRunAndDebugStrings.scope())
 const separator = text(': ')

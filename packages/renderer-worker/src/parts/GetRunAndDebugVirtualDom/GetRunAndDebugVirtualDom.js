@@ -60,12 +60,14 @@ const headerCallStack = {
   className: ClassNames.DebugSectionHeader,
   ariaExpanded: false,
   childCount: 2,
+  onPointerDown: 'handleClickSectionCallstack',
 }
 const headerCallStackExpanded = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugSectionHeader,
   ariaExpanded: true,
   childCount: 2,
+  onPointerDown: 'handleClickSectionCallstack',
 }
 const textCallStack = text(ViewletRunAndDebugStrings.callStack())
 
