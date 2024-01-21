@@ -42,6 +42,12 @@ export const handleDebugInputFocus = () => {
   RendererWorker.send('Focus.setFocus', WhenExpression.FocusDebugInput)
 }
 
+export const handleClickScopeValue = (event) => {
+  const { target } = event
+  const { textContent } = target
+  ViewletRunAndDebugFunctions.handleClickScopeValue(textContent)
+}
+
 export const handleDebugInput = (event) => {
   const { target } = event
   const { value } = target

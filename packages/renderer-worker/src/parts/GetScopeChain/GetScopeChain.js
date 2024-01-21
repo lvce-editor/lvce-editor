@@ -15,6 +15,7 @@ export const getScopeChain = (params, thisObject, scopeChain, knownProperties) =
       value: '',
       valueType: '',
       label,
+      objectId: scope.object.objectId,
       indent: 10,
     })
     // if(params.reason)
@@ -26,6 +27,7 @@ export const getScopeChain = (params, thisObject, scopeChain, knownProperties) =
           key: 'Exception',
           value,
           valueType: '',
+          objectId: scope.object.objectId,
           indent: 20,
         })
       }
@@ -35,6 +37,7 @@ export const getScopeChain = (params, thisObject, scopeChain, knownProperties) =
         key: 'this',
         value: valueLabel,
         valueType: '',
+        objectId: scope.object.objectId,
         indent: 20,
       })
     }
@@ -42,11 +45,13 @@ export const getScopeChain = (params, thisObject, scopeChain, knownProperties) =
     if (children) {
       for (const child of children.result.result) {
         const valueLabel = GetDebugPropertyValueLabel.getDebugPropertyValueLabel(child.value)
+        console.log({ child })
         elements.push({
           type: DebugScopeChainType.Property,
           key: child.name,
           value: valueLabel,
           valueType: child.value.type,
+          objectId: child.object?.objectId || '',
           indent: 20,
         })
       }
