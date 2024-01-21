@@ -59,6 +59,26 @@ test('getDebugPropertyValueLabel - object with preview', () => {
   expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe("{message:'🦄🌈✨👋🌎🌍🌏✨🌈🦄'}")
 })
 
+test('getDebugPropertyValueLabel - class instance', () => {
+  const value = {
+    type: 'object',
+    description: 'IncomingMessage',
+    preview: {
+      type: 'object',
+      description: 'IncomingMessage',
+      overflow: true,
+      properties: [
+        {
+          name: '_readableState',
+          type: 'object',
+          value: 'ReadableState',
+        },
+      ],
+    },
+  }
+  expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('IncomingMessage {_readableState:ReadableState}')
+})
+
 test('getDebugPropertyValueLabel - function', () => {
   const value = {
     type: 'function',
