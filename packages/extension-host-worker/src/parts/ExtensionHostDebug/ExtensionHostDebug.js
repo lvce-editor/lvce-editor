@@ -31,7 +31,6 @@ export const start = async (protocol, path) => {
       Rpc.send('Debug.resumed')
     }
     const handleScriptParsed = (parsedScript) => {
-      console.log({ parsedScript })
       Rpc.send('Debug.scriptParsed', parsedScript)
     }
     const provider = getDebugProvider(protocol)
