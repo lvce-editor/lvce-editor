@@ -22,7 +22,7 @@ const getDebugButtonVirtualDom = (button) => {
 }
 
 export const getRunAndDebugButtonsVirtualDom = (debugState) => {
-  const debugButtons = GetDebugButtons.getDebugButtons()
+  const debugButtons = GetDebugButtons.getDebugButtons(debugState)
   const dom = [
     {
       type: VirtualDomElements.Div,

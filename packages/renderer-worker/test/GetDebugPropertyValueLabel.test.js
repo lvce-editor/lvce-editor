@@ -38,12 +38,21 @@ test('getDebugPropertyValueLabel - object', () => {
   }
   expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('process')
 })
+
 test('getDebugPropertyValueLabel - function', () => {
   const value = {
     type: 'function',
     description: '(req, res) => {}',
   }
   expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('(req, res) => {}')
+})
+
+test('getDebugPropertyValueLabel - string', () => {
+  const value = {
+    type: 'string',
+    description: '/',
+  }
+  expect(GetDebugPropertyValueLabel.getDebugPropertyValueLabel(value)).toBe('/')
 })
 
 test('getDebugPropertyValueLabel - other', () => {
