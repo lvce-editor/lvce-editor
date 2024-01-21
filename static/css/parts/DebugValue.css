@@ -11,6 +11,8 @@
 .DebugValueFunction,
 .DebugValueGetter {
   color: rgb(128, 134, 139);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .DebugValueString {

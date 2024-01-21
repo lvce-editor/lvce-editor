@@ -28,6 +28,7 @@ export const create = (id) => {
     debugInputValue: '',
     debugOutputValue: '',
     callFrameId: '',
+    expandedIds: [],
   }
 }
 
@@ -70,6 +71,7 @@ export const handlePaused = async (state, params) => {
     pausedReason,
     pausedMessage,
     callFrameId,
+    expandedIds: [objectId],
   }
 }
 
@@ -112,26 +114,40 @@ const getChildScopeChain = (childScopes) => {
   return childScopeChain
 }
 
-const getNewScopeChain = async (debugId, scopeChain, text) => {
-  for (const element of scopeChain) {
+const getElementIndex = (debugId, scopeChain, text) => {
+  for (let i = 0; i < scopeChain.length; i++) {
+    const element = scopeChain[i]
     if (element.key === text) {
-      const objectId = element.objectId
-      const childScopes = await Debug.getProperties(debugId, objectId)
-      const childScopeChain = getChildScopeChain(childScopes)
-      const index = scopeChain.indexOf(element)
-      const newScopeChain = [...scopeChain.slice(0, index + 1), ...childScopeChain, ...scopeChain.slice(index + 1)]
-      return newScopeChain
+      return i
     }
   }
-  return scopeChain
+  return -1
+}
+
+const getNewScopeChain = async (index, debugId, scopeChain) => {
+  const element = scopeChain[index]
+  const objectId = element.objectId
+  const childScopes = await Debug.getProperties(debugId, objectId)
+  const childScopeChain = getChildScopeChain(childScopes)
+  const newScopeChain = [...scopeChain.slice(0, index + 1), ...childScopeChain, ...scopeChain.slice(index + 1)]
+  return newScopeChain
 }
 
 export const handleClickScopeValue = async (state, text) => {
-  const { scopeChain, debugId } = state
-  const newScopeChain = await getNewScopeChain(debugId, scopeChain, text)
+  const { scopeChain, debugId, expandedIds } = state
+  const index = getElementIndex(debugId, scopeChain, text)
+  const element = scopeChain[index]
+  if (expandedIds.includes(element.objectId)) {
+    // TODO collapse
+    return state
+  }
+  const newScopeChain = await getNewScopeChain(index, debugId, scopeChain)
+  const objectId = scopeChain[index].objectId
+  const newExpandedIds = [...expandedIds, objectId]
   return {
     ...state,
     scopeChain: newScopeChain,
+    expandedIds: newExpandedIds,
   }
 }
 
