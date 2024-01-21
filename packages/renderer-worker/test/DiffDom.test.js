@@ -1397,7 +1397,7 @@ test('diffDom - source control buttons', () => {
     {
       type: 17,
       className: 'FileIcon',
-      src: '/remote/home/simon/Documents/levivilet/lvce-editor/extensions/builtin.vscode-icons//icons/file_type_npm.svg',
+      src: '/test/extensions/builtin.vscode-icons//icons/file_type_npm.svg',
       role: 'none',
       childCount: 0,
     },
@@ -1432,7 +1432,7 @@ test('diffDom - source control buttons', () => {
     {
       type: 17,
       className: 'FileIcon',
-      src: '/remote/home/simon/Documents/levivilet/lvce-editor/extensions/builtin.vscode-icons//icons/file_type_npm.svg',
+      src: '/test/extensions/builtin.vscode-icons//icons/file_type_npm.svg',
       role: 'none',
       childCount: 0,
     },
@@ -1558,7 +1558,7 @@ test('diffDom - source control buttons', () => {
     {
       type: 17,
       className: 'FileIcon',
-      src: '/remote/home/simon/Documents/levivilet/lvce-editor/extensions/builtin.vscode-icons//icons/file_type_npm.svg',
+      src: '/test/extensions/builtin.vscode-icons//icons/file_type_npm.svg',
       role: 'none',
       childCount: 0,
     },
@@ -1593,7 +1593,7 @@ test('diffDom - source control buttons', () => {
     {
       type: 17,
       className: 'FileIcon',
-      src: '/remote/home/simon/Documents/levivilet/lvce-editor/extensions/builtin.vscode-icons//icons/file_type_npm.svg',
+      src: '/test/extensions/builtin.vscode-icons//icons/file_type_npm.svg',
       role: 'none',
       childCount: 0,
     },
