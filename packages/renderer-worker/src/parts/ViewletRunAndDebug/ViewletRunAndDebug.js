@@ -2,12 +2,10 @@ import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
-import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugState from '../DebugState/DebugState.js'
 import * as GetCallStack from '../GetCallStack/GetCallStack.js'
+import * as GetChildScopeChain from '../GetChildScopeChain/GetChildScopeChain.js'
 import * as GetDebugPausedMessage from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
-import * as GetDebugPropertyValueLabel from '../GetDebugPropertyValueLabel/GetDebugPropertyValueLabel.js'
-import * as GetDebugValueType from '../GetDebugValueType/GetDebugValueType.js'
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -99,22 +97,6 @@ export const handleScriptParsed = (state, parsedScript) => {
   }
 }
 
-const getChildScopeChain = (childScopes) => {
-  const childScopeChain = []
-  for (const child of childScopes.result.result) {
-    const valueLabel = GetDebugPropertyValueLabel.getDebugPropertyValueLabel(child.value || child.get || {})
-    childScopeChain.push({
-      type: DebugScopeChainType.Property,
-      key: child.name,
-      value: valueLabel,
-      valueType: GetDebugValueType.getDebugValueType(child),
-      objectId: child.object?.objectId || '',
-      indent: 30,
-    })
-  }
-  return childScopeChain
-}
-
 const getElementIndex = (debugId, scopeChain, text) => {
   for (let i = 0; i < scopeChain.length; i++) {
     const element = scopeChain[i]
@@ -123,15 +105,6 @@ const getElementIndex = (debugId, scopeChain, text) => {
     }
   }
   return -1
-}
-
-const getNewScopeChain = async (index, debugId, scopeChain) => {
-  const element = scopeChain[index]
-  const objectId = element.objectId
-  const childScopes = await Debug.getProperties(debugId, objectId)
-  const childScopeChain = getChildScopeChain(childScopes)
-  const newScopeChain = [...scopeChain.slice(0, index + 1), ...childScopeChain, ...scopeChain.slice(index + 1)]
-  return newScopeChain
 }
 
 const getCollapsedScopeChain = (scopeChain, element, index) => {
@@ -161,7 +134,7 @@ export const handleClickScopeValue = async (state, text) => {
   if (expandedIds.includes(element.objectId)) {
     return collapse(state, expandedIds, scopeChain, element, index)
   }
-  const newScopeChain = await getNewScopeChain(index, debugId, scopeChain)
+  const newScopeChain = await GetChildScopeChain.getChildScopeChain(index, debugId, scopeChain)
   const objectId = scopeChain[index].objectId
   const newExpandedIds = [...expandedIds, objectId]
   return {

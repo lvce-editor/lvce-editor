@@ -4,6 +4,7 @@ import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
 import * as GetDebugPropertyValueLabel from '../GetDebugPropertyValueLabel/GetDebugPropertyValueLabel.js'
+import * as GetDebugValueObjectId from '../GetDebugValueObjectId/GetDebugValueObjectId.js'
 import * as GetDebugValueType from '../GetDebugValueType/GetDebugValueType.js'
 
 export const getScopeChain = (params, thisObject, scopeChain, knownProperties) => {
@@ -51,7 +52,7 @@ export const getScopeChain = (params, thisObject, scopeChain, knownProperties) =
           key: child.name,
           value: valueLabel,
           valueType: GetDebugValueType.getDebugValueType(child),
-          objectId: child.object?.objectId || child.value?.objectId || '',
+          objectId: GetDebugValueObjectId.getDebugValueObjectId(child),
           indent: 20,
         })
       }
