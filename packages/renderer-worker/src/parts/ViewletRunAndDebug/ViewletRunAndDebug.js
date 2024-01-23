@@ -1,3 +1,4 @@
+import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
@@ -106,13 +107,32 @@ const getElementIndex = (debugId, scopeChain, text) => {
   return -1
 }
 
+const getCollapsedScopeChain = (scopeChain, element, index) => {
+  const indent = element.indent
+  for (let i = index + 1; i < scopeChain.length; i++) {
+    if (scopeChain[i].indent <= indent) {
+      return [...scopeChain.slice(0, index + 1), ...scopeChain.slice(i)]
+    }
+  }
+  return scopeChain
+}
+
+const collapse = (state, expandedIds, scopeChain, element, index) => {
+  const newExpandedIds = Arrays.removeElement(expandedIds, element.objectId)
+  const newScopeChain = getCollapsedScopeChain(scopeChain, element, index)
+  return {
+    ...state,
+    expandedIds: newExpandedIds,
+    scopeChain: newScopeChain,
+  }
+}
+
 export const handleClickScopeValue = async (state, text) => {
   const { scopeChain, debugId, expandedIds } = state
   const index = getElementIndex(debugId, scopeChain, text)
   const element = scopeChain[index]
   if (expandedIds.includes(element.objectId)) {
-    // TODO collapse
-    return state
+    return collapse(state, expandedIds, scopeChain, element, index)
   }
   const newScopeChain = await GetChildScopeChain.getChildScopeChain(index, debugId, scopeChain)
   const objectId = scopeChain[index].objectId
