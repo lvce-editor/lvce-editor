@@ -4,7 +4,7 @@ import * as GetDebugPropertyValueLabel from '../GetDebugPropertyValueLabel/GetDe
 import * as GetDebugValueObjectId from '../GetDebugValueObjectId/GetDebugValueObjectId.js'
 import * as GetDebugValueType from '../GetDebugValueType/GetDebugValueType.js'
 
-const getInnerChildScopeChain = (childScopes) => {
+const getInnerChildScopeChain = (childScopes, indent) => {
   const childScopeChain = []
   for (const child of childScopes.result.result) {
     const valueLabel = GetDebugPropertyValueLabel.getDebugPropertyValueLabel(child.value || child.get || {})
@@ -14,7 +14,7 @@ const getInnerChildScopeChain = (childScopes) => {
       value: valueLabel,
       valueType: GetDebugValueType.getDebugValueType(child),
       objectId: GetDebugValueObjectId.getDebugValueObjectId(child),
-      indent: 30,
+      indent: indent + 10,
     })
   }
   return childScopeChain
@@ -24,7 +24,7 @@ export const getChildScopeChain = async (index, debugId, scopeChain) => {
   const element = scopeChain[index]
   const objectId = element.objectId
   const childScopes = await Debug.getProperties(debugId, objectId)
-  const childScopeChain = getInnerChildScopeChain(childScopes)
+  const childScopeChain = getInnerChildScopeChain(childScopes, element.indent)
   const newScopeChain = [...scopeChain.slice(0, index + 1), ...childScopeChain, ...scopeChain.slice(index + 1)]
   return newScopeChain
 }
