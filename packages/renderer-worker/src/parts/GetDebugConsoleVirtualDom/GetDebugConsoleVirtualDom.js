@@ -16,6 +16,7 @@ export const getVirtualDom = () => {
     {
       type: VirtualDomElements.Input,
       className: 'InputBox',
+      onInput: 'handleInput',
       childCount: 0,
     },
   )
