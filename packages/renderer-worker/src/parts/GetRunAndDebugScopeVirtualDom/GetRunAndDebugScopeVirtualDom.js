@@ -3,6 +3,7 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as GetDebugValueClassName from '../GetDebugValueClassName/GetDebugValueClassName.js'
+import * as GetVisibleScopeItems from '../GetVisibleScopeItems/GetVisibleScopeItems.js'
 import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
@@ -94,15 +95,19 @@ const getScopeExceptionVirtualDom = (scope) => {
   ]
 }
 
-const getScopeScopeVirtualDom = (scope, expandedIds) => {
-  const { key, objectId } = scope
-  const isExpanded = expandedIds.includes(objectId)
+const getScopeScopeVirtualDom = (scope) => {
+  const { key, isExpanded, isFocused } = scope
+  let className = ClassNames.DebugRow
+  if (isFocused) {
+    className += ' TreeItemActive'
+  }
   return [
     {
       type: VirtualDomElements.Div,
-      className: ClassNames.DebugRow,
+      className,
       childCount: 2,
       onPointerDown: 'handleClickScopeValue',
+      ariaExpanded: isExpanded,
     },
     isExpanded ? GetChevronVirtualDom.getChevronDownVirtualDom() : GetChevronVirtualDom.getChevronRightVirtualDom(),
     {
@@ -157,16 +162,17 @@ const getScopeRenderer = (type) => {
 }
 
 export const getRunAndDebugScopeVirtualDom = (state) => {
-  const { scopeChain, scopeExpanded, expandedIds } = state
+  const { scopeChain, scopeExpanded, expandedIds, scopeFocusedIndex } = state
   const elements = []
   if (scopeExpanded) {
     elements.push(scopeHeaderExpanded, GetChevronVirtualDom.getChevronDownVirtualDom(), textScope)
     if (scopeChain.length === 0) {
       elements.push(debugPausedMessage, textNotPaused)
     } else {
-      for (const scope of scopeChain) {
+      const visible = GetVisibleScopeItems.getVisibleScopeItems(scopeChain, expandedIds, scopeFocusedIndex)
+      for (const scope of visible) {
         const renderer = getScopeRenderer(scope.type)
-        elements.push(...renderer(scope, expandedIds))
+        elements.push(...renderer(scope))
       }
     }
   } else {
