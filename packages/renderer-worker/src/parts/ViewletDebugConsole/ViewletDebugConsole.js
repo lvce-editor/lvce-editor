@@ -1,7 +1,11 @@
+import * as Debug from '../Debug/Debug.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+
 export const create = (uid) => {
   return {
     uid,
-    text: '',
+    text: '-',
     inputValue: '',
   }
 }
@@ -9,7 +13,7 @@ export const create = (uid) => {
 export const loadContent = async (state) => {
   return {
     ...state,
-    text: 'Debug Console (not implemented)',
+    text: '',
   }
 }
 
@@ -20,9 +24,17 @@ export const handleInput = (state, value) => {
   }
 }
 
-export const evaluate = (state) => {
+export const evaluate = async (state) => {
   const { inputValue } = state
-  // TODO evaluate input value
-  console.log({ inputValue })
-  return state
+  // TODO don't depend on other component state
+  const debugState = ViewletStates.getState(ViewletModuleId.RunAndDebug)
+  if (!debugState) {
+    return state
+  }
+  const { debugId, callFrameId } = debugState
+  const result = await Debug.evaluate(debugId, inputValue, callFrameId)
+  return {
+    ...state,
+    text: `${state.text}\n${result}`,
+  }
 }
