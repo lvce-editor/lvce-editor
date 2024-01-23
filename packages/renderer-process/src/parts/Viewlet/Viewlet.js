@@ -53,9 +53,33 @@ export const loadModule = async (id) => {
   }
 }
 
+const getInstance = (viewletId) => {
+  const instance = state.instances[viewletId]
+  if (instance) {
+    if (!instance.factory) {
+      instance.factory = state.modules[viewletId]
+    }
+    if (!instance.state) {
+      instance.state = instance
+    }
+    return instance
+  }
+  const fallbackState = Object.values(state.instances).find((instance) => instance.factory === state.modules[viewletId])
+  if (fallbackState) {
+    return {
+      factory: state.modules[viewletId],
+      state: fallbackState,
+    }
+  }
+  return undefined
+}
+
 export const invoke = (viewletId, method, ...args) => {
   Assert.string(method)
-  const instance = state.instances[viewletId]
+  const instance = getInstance(viewletId)
+  if (viewletId === 'SideBar') {
+    console.log({ module: state.modules[viewletId], values: Object.values(state.instances), instance })
+  }
   if (!instance || !instance.factory) {
     Logger.warn(`cannot execute ${method} viewlet instance ${viewletId} not found`)
     return
