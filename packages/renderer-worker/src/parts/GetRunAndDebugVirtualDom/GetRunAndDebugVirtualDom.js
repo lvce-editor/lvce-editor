@@ -5,6 +5,7 @@ import * as GetRunAndDebugScopeVirtualDom from '../GetRunAndDebugScopeVirtualDom
 import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 
 const watchHeader = {
   type: VirtualDomElements.Div,
@@ -12,16 +13,11 @@ const watchHeader = {
   tabIndex: 0,
   childCount: 2,
 }
-const iconTriangleRight = {
-  type: VirtualDomElements.Div,
-  className: ClassNames.DebugMaskIcon + ' MaskIconTriangleRight',
-  childCount: 0,
-}
 
 const textWatch = text(ViewletRunAndDebugStrings.watch())
 
 const renderWatch = (state) => {
-  return [watchHeader, iconTriangleRight, textWatch]
+  return [watchHeader, GetChevronVirtualDom.getChevronRightVirtualDom(), textWatch]
 }
 
 const breakPointsHeader = {
@@ -34,7 +30,7 @@ const breakPointsHeader = {
 const textBreakPoints = text(ViewletRunAndDebugStrings.breakPoints())
 
 const renderBreakPoints = (state) => {
-  return [breakPointsHeader, iconTriangleRight, textBreakPoints]
+  return [breakPointsHeader, GetChevronVirtualDom.getChevronRightVirtualDom(), textBreakPoints]
 }
 
 export const getRunAndDebugVirtualDom = (state) => {
