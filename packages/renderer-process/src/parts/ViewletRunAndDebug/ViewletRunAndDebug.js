@@ -16,6 +16,8 @@ export const setDom = (state, dom) => {
   VirtualDom.renderInto($Viewlet, dom, ViewletDebugEvents)
 }
 
+export { ViewletDebugEvents as EventMap }
+
 export const setPatches = (state, diff) => {
   const { $Viewlet } = state
   const iter = document.createNodeIterator($Viewlet, NodeFilter.SHOW_ALL)

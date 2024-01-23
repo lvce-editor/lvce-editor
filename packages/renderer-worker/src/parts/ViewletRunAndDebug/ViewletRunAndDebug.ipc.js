@@ -9,6 +9,7 @@ export const Events = {
 }
 
 export * from './ViewletRunAndDebug.js'
+export * from './ViewletRunAndDebugActions.js'
 export * from './ViewletRunAndDebugCommands.js'
 export * from './ViewletRunAndDebugCss.js'
 export * from './ViewletRunAndDebugKeyBindings.js'

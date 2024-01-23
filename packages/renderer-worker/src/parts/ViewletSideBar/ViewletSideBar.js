@@ -55,7 +55,7 @@ export const contentLoaded = async (state, savedState) => {
   const { currentViewletId, uid } = state
   const commands = []
   const { dom, actions } = GetActionRenderers.render(currentViewletId)
-  commands.push(['Viewlet.send', uid, 'setActionsDom', dom])
+  commands.push(['Viewlet.send', uid, 'setActionsDom', currentViewletId, dom])
   state.actions = actions
   return commands
 }
@@ -141,7 +141,8 @@ export const openViewlet = async (state, moduleId, focus = false, args) => {
       commands.push(...extraCommands)
     }
     const { dom, actions } = GetActionRenderers.render(moduleId)
-    commands.push(['Viewlet.send', uid, 'setActionsDom', dom])
+    console.log({ commands })
+    commands.push(['Viewlet.send', uid, 'setActionsDom', currentViewletId, dom])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     state.actions = actions
   }
