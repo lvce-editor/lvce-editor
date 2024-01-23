@@ -1,6 +1,7 @@
 import * as Debug from '../Debug/Debug.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as GetDebugPropertyValueLabel from '../GetDebugPropertyValueLabel/GetDebugPropertyValueLabel.js'
+import * as GetDebugValueObjectId from '../GetDebugValueObjectId/GetDebugValueObjectId.js'
 import * as GetDebugValueType from '../GetDebugValueType/GetDebugValueType.js'
 
 const getInnerChildScopeChain = (childScopes) => {
@@ -12,7 +13,7 @@ const getInnerChildScopeChain = (childScopes) => {
       key: child.name,
       value: valueLabel,
       valueType: GetDebugValueType.getDebugValueType(child),
-      objectId: child.object?.objectId || '',
+      objectId: GetDebugValueObjectId.getDebugValueObjectId(child),
       indent: 30,
     })
   }
