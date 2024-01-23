@@ -94,8 +94,9 @@ const getScopeExceptionVirtualDom = (scope) => {
   ]
 }
 
-const getScopeScopeVirtualDom = (scope) => {
-  const { key } = scope
+const getScopeScopeVirtualDom = (scope, expandedIds) => {
+  const { key, objectId } = scope
+  const isExpanded = expandedIds.includes(objectId)
   return [
     {
       type: VirtualDomElements.Div,
@@ -103,7 +104,7 @@ const getScopeScopeVirtualDom = (scope) => {
       childCount: 2,
       onPointerDown: 'handleClickScopeValue',
     },
-    GetChevronVirtualDom.getChevronRightVirtualDom(),
+    isExpanded ? GetChevronVirtualDom.getChevronDownVirtualDom() : GetChevronVirtualDom.getChevronRightVirtualDom(),
     {
       type: VirtualDomElements.Span,
       className: 'DebugValue DebugValueScopeName',
@@ -136,8 +137,27 @@ const getScopePropertyVirtualDom = (scope) => {
   ]
 }
 
+const getNoopVirtualDom = () => {
+  return []
+}
+
+const getScopeRenderer = (type) => {
+  switch (type) {
+    case DebugScopeChainType.This:
+      return getScopeThisVirtualDom
+    case DebugScopeChainType.Exception:
+      return getScopeExceptionVirtualDom
+    case DebugScopeChainType.Scope:
+      return getScopeScopeVirtualDom
+    case DebugScopeChainType.Property:
+      return getScopePropertyVirtualDom
+    default:
+      return getNoopVirtualDom
+  }
+}
+
 export const getRunAndDebugScopeVirtualDom = (state) => {
-  const { scopeChain, scopeExpanded } = state
+  const { scopeChain, scopeExpanded, expandedIds } = state
   const elements = []
   if (scopeExpanded) {
     elements.push(scopeHeaderExpanded, GetChevronVirtualDom.getChevronDownVirtualDom(), textScope)
@@ -145,23 +165,8 @@ export const getRunAndDebugScopeVirtualDom = (state) => {
       elements.push(debugPausedMessage, textNotPaused)
     } else {
       for (const scope of scopeChain) {
-        const { type } = scope
-        switch (type) {
-          case DebugScopeChainType.This:
-            elements.push(...getScopeThisVirtualDom(scope))
-            break
-          case DebugScopeChainType.Exception:
-            elements.push(...getScopeExceptionVirtualDom(scope))
-            break
-          case DebugScopeChainType.Scope:
-            elements.push(...getScopeScopeVirtualDom(scope))
-            break
-          case DebugScopeChainType.Property:
-            elements.push(...getScopePropertyVirtualDom(scope))
-            break
-          default:
-            break
-        }
+        const renderer = getScopeRenderer(scope.type)
+        elements.push(...renderer(scope, expandedIds))
       }
     }
   } else {
