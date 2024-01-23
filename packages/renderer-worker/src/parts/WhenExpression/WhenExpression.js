@@ -27,4 +27,5 @@ export const FocusTerminal = 25
 export const FocusTitleBarMenuBar = 26
 export const FocusViewletList = 27
 export const FocusOutput = 28
+export const FocusDebugConsoleInput = 33
 export const FocusDebugScope = 29
