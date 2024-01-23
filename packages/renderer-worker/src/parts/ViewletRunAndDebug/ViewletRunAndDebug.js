@@ -3,6 +3,8 @@ import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugState from '../DebugState/DebugState.js'
+import * as Focus from '../Focus/Focus.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as GetCallStack from '../GetCallStack/GetCallStack.js'
 import * as GetChildScopeChain from '../GetChildScopeChain/GetChildScopeChain.js'
 import * as GetDebugPausedMessage from '../GetDebugPausedMessage/GetDebugPausedMessage.js'
@@ -28,6 +30,7 @@ export const create = (id) => {
     debugOutputValue: '',
     callFrameId: '',
     expandedIds: [],
+    scopeFocusedIndex: -1,
   }
 }
 
@@ -124,11 +127,13 @@ const collapse = (state, expandedIds, scopeChain, element, index) => {
     ...state,
     expandedIds: newExpandedIds,
     scopeChain: newScopeChain,
+    scopeFocusedIndex: index,
   }
 }
 
 export const handleClickScopeValue = async (state, text) => {
   const { scopeChain, debugId, expandedIds } = state
+  Focus.setFocus(WhenExpression.FocusDebugScope)
   const index = getElementIndex(debugId, scopeChain, text)
   const element = scopeChain[index]
   if (expandedIds.includes(element.objectId)) {
@@ -141,6 +146,7 @@ export const handleClickScopeValue = async (state, text) => {
     ...state,
     scopeChain: newScopeChain,
     expandedIds: newExpandedIds,
+    scopeFocusedIndex: index,
   }
 }
 

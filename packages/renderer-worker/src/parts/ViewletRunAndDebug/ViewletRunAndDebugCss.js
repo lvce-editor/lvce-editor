@@ -3,6 +3,7 @@ export const Css = [
   '/css/parts/DebugValue.css',
   '/css/parts/IconButton.css',
   '/css/parts/MaskIcon.css',
+  '/css/parts/TreeItem.css',
   '/css/parts/ViewletRunAndDebug.css',
 ]
 
