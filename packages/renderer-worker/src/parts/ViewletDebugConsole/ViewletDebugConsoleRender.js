@@ -1,11 +1,14 @@
+import * as GetDebugConsoleVirtualDom from '../GetDebugConsoleVirtualDom/GetDebugConsoleVirtualDom.js'
+
 export const hasFunctionalRender = true
 
 const renderText = {
   isEqual(oldState, newState) {
-    return oldState.text === newState.text
+    return oldState === newState
   },
   apply(oldState, newState) {
-    return ['setText', newState.text]
+    const dom = GetDebugConsoleVirtualDom.getVirtualDom()
+    return ['setDom', dom]
   },
 }
 
