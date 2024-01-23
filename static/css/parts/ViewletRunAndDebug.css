@@ -60,6 +60,10 @@
   align-items: center;
 }
 
+.DebugRowCallStack {
+  padding-left: 32px;
+}
+
 .DebugValue {
   contain: content;
   white-space: nowrap;

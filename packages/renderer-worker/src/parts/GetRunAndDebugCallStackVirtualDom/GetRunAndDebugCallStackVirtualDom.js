@@ -17,7 +17,7 @@ const iconTriangleDown = {
 
 const debugRow1 = {
   type: VirtualDomElements.Div,
-  className: ClassNames.DebugRow,
+  className: ClassNames.DebugRow + ' DebugRowCallStack',
   childCount: 1,
 }
 
