@@ -2,18 +2,7 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-
-const iconTriangleRight = {
-  type: VirtualDomElements.Div,
-  className: ClassNames.DebugMaskIcon + ' MaskIconTriangleRight',
-  childCount: 0,
-}
-
-const iconTriangleDown = {
-  type: VirtualDomElements.Div,
-  className: ClassNames.DebugMaskIcon + ' MaskIconTriangleDown',
-  childCount: 0,
-}
+import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 
 const debugRow1 = {
   type: VirtualDomElements.Div,
@@ -48,7 +37,7 @@ export const getRunAndDebugCallStackVirtualDom = (state) => {
   const { callStack, callStackExpanded } = state
   const elements = []
   if (callStackExpanded) {
-    elements.push(headerCallStackExpanded, iconTriangleDown, textCallStack)
+    elements.push(headerCallStackExpanded, GetChevronVirtualDom.getChevronDownVirtualDom(), textCallStack)
     if (callStack.length === 0) {
       elements.push(debugPausedMessage, textNotPaused)
     } else {
@@ -57,7 +46,7 @@ export const getRunAndDebugCallStackVirtualDom = (state) => {
       }
     }
   } else {
-    elements.push(headerCallStack, iconTriangleRight, textCallStack)
+    elements.push(headerCallStack, GetChevronVirtualDom.getChevronRightVirtualDom(), textCallStack)
   }
   return elements
 }

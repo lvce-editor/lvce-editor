@@ -1,29 +1,12 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
+import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as GetDebugValueClassName from '../GetDebugValueClassName/GetDebugValueClassName.js'
 import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-const iconTriangleRight = {
-  type: VirtualDomElements.Div,
-  className: ClassNames.DebugMaskIcon + ' MaskIconTriangleRight',
-  childCount: 0,
-}
-
-const iconTriangleDown = {
-  type: VirtualDomElements.Div,
-  className: ClassNames.DebugMaskIcon + ' MaskIconTriangleDown',
-  childCount: 0,
-}
-
-const debugRow1 = {
-  type: VirtualDomElements.Div,
-  className: ClassNames.DebugRow,
-  childCount: 1,
-  onPointerDown: 'handleClickScopeValue',
-}
 const debugRow3 = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugRow,
@@ -120,7 +103,7 @@ const getScopeScopeVirtualDom = (scope) => {
       childCount: 2,
       onPointerDown: 'handleClickScopeValue',
     },
-    iconTriangleRight,
+    GetChevronVirtualDom.getChevronRightVirtualDom(),
     {
       type: VirtualDomElements.Span,
       className: 'DebugValue DebugValueScopeName',
@@ -157,7 +140,7 @@ export const getRunAndDebugScopeVirtualDom = (state) => {
   const { scopeChain, scopeExpanded } = state
   const elements = []
   if (scopeExpanded) {
-    elements.push(scopeHeaderExpanded, iconTriangleDown, textScope)
+    elements.push(scopeHeaderExpanded, GetChevronVirtualDom.getChevronDownVirtualDom(), textScope)
     if (scopeChain.length === 0) {
       elements.push(debugPausedMessage, textNotPaused)
     } else {
@@ -182,7 +165,7 @@ export const getRunAndDebugScopeVirtualDom = (state) => {
       }
     }
   } else {
-    elements.push(scopeHeader, iconTriangleRight, textScope)
+    elements.push(scopeHeader, GetChevronVirtualDom.getChevronRightVirtualDom(), textScope)
   }
   return elements
 }
