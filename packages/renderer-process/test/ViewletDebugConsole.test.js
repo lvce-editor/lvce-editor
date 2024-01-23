@@ -9,7 +9,7 @@ test('create', () => {
   expect(state).toBeDefined()
 })
 
-test.skip('mount', () => {
+test('mount', () => {
   const state = ViewletDebugConsole.create()
   const $Parent = document.createElement('div')
   // TODO mount should be implemented on Viewlet
@@ -17,7 +17,7 @@ test.skip('mount', () => {
   expect($Parent.children.length).toBe(1)
 })
 
-test.skip('focus', () => {
+test('focus', () => {
   const state = ViewletDebugConsole.create()
   Viewlet.mount(document.body, state)
   ViewletDebugConsole.focus(state)
