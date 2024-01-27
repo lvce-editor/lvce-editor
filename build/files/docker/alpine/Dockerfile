@@ -1,6 +1,6 @@
 FROM node:18.19.0-alpine
 
-RUN npm install --global @lvce-editor/server@0.21.1
+RUN npm install --global @lvce-editor/server@0.22.5
 
 EXPOSE 3000
 
