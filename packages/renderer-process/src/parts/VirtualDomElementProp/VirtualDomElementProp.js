@@ -54,16 +54,15 @@ export const setProp = ($Element, key, value, eventMap) => {
     case 'ariaLabelledBy':
       $Element.setAttribute('aria-labelledby', value)
       break
-    case 'onClick':
-    case 'onFocus':
     case 'onBlur':
+    case 'onClick':
     case 'onContextMenu':
-    case 'onWheel':
     case 'onFocus':
+    case 'onFocusIn':
     case 'onInput':
     case 'onKeyDown':
     case 'onPointerDown':
-    case 'onFocusIn':
+    case 'onWheel':
       const eventName = key.slice(2).toLowerCase()
       const listener = eventMap[value]
       $Element.addEventListener(eventName, listener)
