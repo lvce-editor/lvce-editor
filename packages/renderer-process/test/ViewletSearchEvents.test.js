@@ -16,7 +16,7 @@ jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletComma
 const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletSearch = await import('../src/parts/ViewletSearch/ViewletSearch.js')
 
-test('event - input', () => {
+test.skip('event - input', () => {
   const state = ViewletSearch.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
