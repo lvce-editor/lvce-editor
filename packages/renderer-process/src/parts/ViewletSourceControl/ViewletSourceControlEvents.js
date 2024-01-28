@@ -72,3 +72,4 @@ export const handleInput = (event) => {
 }
 
 export * from '../ContextMenuEvents/ContextMenuEvents.js'
+export * from '../VirtualListEvents/VirtualListEvents.js'

@@ -1,10 +1,8 @@
 import * as GetSourceControlItemsVirtualDom from '../GetSourceControlItemsVirtualDom/GetSourceControlItemsVirtualDom.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as GetVisibleSourceControlItems from '../GetVisibleSourceControlItems/GetVisibleSourceControlItems.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 
 export const hasFunctionalRender = true
-
-const maxItems = 30
 
 const renderValue = {
   isEqual(oldState, newState) {
@@ -17,15 +15,20 @@ const renderValue = {
 
 const renderChangedFiles = {
   isEqual(oldState, newState) {
-    return oldState.displayItems === newState.displayItems && oldState.buttonIndex === newState.buttonIndex && oldState.buttons === newState.buttons
+    return (
+      oldState.items === newState.items &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY &&
+      oldState.deltaY === newState.deltaY &&
+      oldState.buttonIndex === newState.buttonIndex &&
+      oldState.buttons === newState.buttons
+    )
   },
   apply(oldState, newState) {
-    const minLineY = 0
-    const maxLineY = Math.min(newState.displayItems.length, maxItems)
     const visible = GetVisibleSourceControlItems.getVisibleSourceControlItems(
-      newState.displayItems,
-      minLineY,
-      maxLineY,
+      newState.items,
+      newState.minLineY,
+      newState.maxLineY,
       newState.buttons,
       newState.buttonIndex,
     )
