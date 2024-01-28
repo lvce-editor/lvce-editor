@@ -8,8 +8,9 @@ export const getSearchFieldButtonVirtualDom = (button) => {
       className: `SearchFieldButton ${checked ? 'SearchFieldButtonChecked' : ''}`,
       title,
       role: 'checkbox', // TODO use aria roles enum
-      childCount: 1,
       ariaChecked: checked,
+      tabIndex: 0,
+      childCount: 1,
     },
     {
       type: VirtualDomElements.Div,
