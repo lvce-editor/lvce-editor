@@ -62,6 +62,12 @@
   margin-top: 6px;
 }
 
+.SearchFieldButtons {
+  padding-top: 3px;
+  padding-right: 2px;
+  contain: content;
+}
+
 .SearchFieldButton {
   position: relative;
   background: transparent;
