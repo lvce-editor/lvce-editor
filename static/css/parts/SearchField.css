@@ -26,6 +26,11 @@
   padding: 1px;
 }
 
+.SearchFieldButton:focus-visible {
+  outline: 1px solid #3d5252;
+  outline-offset: -1px;
+}
+
 .SearchFieldButton:where(:hover) {
   background: rgba(90, 93, 94, 0.31);
 }
