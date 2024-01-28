@@ -8,7 +8,7 @@ const getPickDescription = (provider, pick) => {
 export const getVisible = (provider, items, minLineY, maxLineY, focusedIndex) => {
   const visibleItems = []
   const setSize = items.length
-  const max = Math.min(items.length, maxLineY)
+  const max = Math.min(setSize, maxLineY)
   for (let i = minLineY; i < max; i++) {
     const item = items[i]
     const pick = item.pick
