@@ -1,7 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as AttachEvents from '../AttachEvents/AttachEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as InputBox from '../InputBox/InputBox.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 
@@ -27,6 +26,9 @@ export const attachEvents = (state) => {
   })
   $Viewlet.addEventListener(DomEventType.Focus, ViewletSourceControlEvents.handleFocus, {
     capture: true,
+  })
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletSourceControlEvents.handleWheel, {
+    passive: true,
   })
 }
 

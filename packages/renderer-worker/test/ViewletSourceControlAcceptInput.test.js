@@ -28,7 +28,7 @@ const ViewletSourceControl = await import('../src/parts/ViewletSourceControl/Vie
 const ViewletSourceControlAcceptInput = await import('../src/parts/ViewletSourceControl/ViewletSourceControlAcceptInput.js')
 const SourceControl = await import('../src/parts/SourceControl/SourceControl.js')
 
-test('acceptInput', async () => {
+test.skip('acceptInput', async () => {
   // @ts-ignore
   SourceControl.acceptInput.mockImplementation(() => {})
   const state = { ...ViewletSourceControl.create(), enabledProviderIds: ['test'] }

@@ -1,4 +1,5 @@
 import * as ViewletSourceControl from './ViewletSourceControl.js'
+import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
 
 // prettier-ignore
 export const Commands = {
@@ -13,4 +14,5 @@ export const LazyCommands = {
   handleButtonClick: () => import('./ViewletSourceControlHandleButtonClick.js'),
   acceptInput: () => import('./ViewletSourceControlAcceptInput.js'),
   handleFocus: () => import('./ViewletSourceControlHandleFocus.js'),
+  ...VirtualList.LazyCommands,
 }
