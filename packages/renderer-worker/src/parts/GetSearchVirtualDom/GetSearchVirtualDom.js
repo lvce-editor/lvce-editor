@@ -51,6 +51,7 @@ export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, ma
       autocorrect: 'off',
       placeholder: 'Search',
       name: 'search-value',
+      onInput: 'handleInput',
       childCount: 0,
     },
     {
@@ -113,6 +114,7 @@ export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, ma
         autocorrect: 'off',
         placeholder: 'Replace',
         name: 'search-replace-value',
+        onInput: 'handleReplaceInput',
         childCount: 0,
       },
       {
