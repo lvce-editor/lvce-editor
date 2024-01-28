@@ -7,6 +7,7 @@ export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWhole
     {
       type: VirtualDomElements.Div,
       className: 'SearchHeader',
+      role: 'none',
       childCount: 2,
       onClick: 'handleHeaderClick',
       onFocusIn: 'handleHeaderFocusIn',
@@ -14,6 +15,7 @@ export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWhole
     {
       type: VirtualDomElements.Div,
       className: 'SearchHeaderTop',
+      role: 'none',
       childCount: 2,
     },
     {
@@ -33,35 +35,54 @@ export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWhole
     {
       type: VirtualDomElements.Div,
       className: 'SearchHeaderTopRight',
+      role: 'none',
       childCount: replaceExpanded ? 2 : 1,
     },
-    ...GetSearchFieldVirtualDom.getSearchFieldVirtualDom('search-value', 'Search', 'handleInput', [
-      {
-        icon: 'MaskIconCaseSensitive',
-        checked: matchCase,
-        title: 'Match Case',
-      },
-      {
-        icon: 'MaskIconWholeWord',
-        checked: matchWholeWord,
-        title: 'Match Whole Word',
-      },
-      {
-        icon: 'MaskIconRegex',
-        checked: useRegularExpression,
-        title: 'Use Regular Expression',
-      },
-    ]),
+    ...GetSearchFieldVirtualDom.getSearchFieldVirtualDom(
+      'search-value',
+      'Search',
+      'handleInput',
+      [
+        {
+          icon: 'MaskIconCaseSensitive',
+          checked: matchCase,
+          title: 'Match Case',
+        },
+        {
+          icon: 'MaskIconWholeWord',
+          checked: matchWholeWord,
+          title: 'Match Whole Word',
+        },
+        {
+          icon: 'MaskIconRegex',
+          checked: useRegularExpression,
+          title: 'Use Regular Expression',
+        },
+      ],
+      [],
+    ),
   ]
   if (replaceExpanded) {
     dom.push(
-      ...GetSearchFieldVirtualDom.getSearchFieldVirtualDom('search-replace-value', 'Replace', 'handleReplaceInput', [
-        {
-          icon: 'MaskIconReplaceAll',
-          checked: false,
-          title: 'Replace All',
-        },
-      ]),
+      ...GetSearchFieldVirtualDom.getSearchFieldVirtualDom(
+        'search-replace-value',
+        'Replace',
+        'handleReplaceInput',
+        [
+          {
+            icon: 'MaskIconPreserveCase',
+            checked: false,
+            title: 'Preserve Case',
+          },
+        ],
+        [
+          {
+            icon: 'MaskIconReplaceAll',
+            checked: false,
+            title: 'Replace All',
+          },
+        ],
+      ),
     )
   }
   if (detailsExpanded) {
