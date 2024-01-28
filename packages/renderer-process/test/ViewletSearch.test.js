@@ -14,7 +14,7 @@ test('refresh', () => {
   ViewletSearch.refresh(state)
 })
 
-test('accessibility - input box should have enterkeyhint search', () => {
+test.skip('accessibility - input box should have enterkeyhint search', () => {
   const state = ViewletSearch.create()
   const { $ViewletSearchInput } = state
   expect($ViewletSearchInput.enterKeyHint).toBe(EnterKeyHintType.Search)

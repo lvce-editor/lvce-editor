@@ -5,6 +5,7 @@
 
 .SearchHeader {
   padding-top: 5px;
+  contain: content;
 }
 
 .SearchHeaderTop {
@@ -28,9 +29,10 @@
   height: auto;
   width: 16px;
   margin: 0 2px;
+  border-radius: 0;
 }
 
-.SearchToggleButton:hover {
+.SearchToggleButton:where(:hover) {
   background: lightgray;
 }
 
@@ -39,6 +41,7 @@
   padding-bottom: 8px;
   padding-top: 5px;
   padding-left: 22px;
+  contain: content;
 }
 
 .SearchResults {
@@ -61,6 +64,12 @@
   margin-top: 6px;
 }
 
+.SearchFieldButtons {
+  padding-top: 3px;
+  padding-right: 2px;
+  contain: content;
+}
+
 .SearchFieldButton {
   position: relative;
   background: transparent;
@@ -71,7 +80,7 @@
   height: 20px;
 }
 
-.SearchFieldButton:hover {
+.SearchFieldButton:where(:hover) {
   background: rgba(90, 93, 94, 0.31);
 }
 

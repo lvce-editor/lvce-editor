@@ -20,7 +20,7 @@ export const focusIndex = async (state, index) => {
   if (index >= maxLineY - 1) {
     // TODO need to scroll down
     const maxLineY = index + 1
-    const minLineY = maxLineY - maxVisibleItems
+    const minLineY = Math.max(maxLineY - maxVisibleItems, 0)
     return {
       ...state,
       minLineY,

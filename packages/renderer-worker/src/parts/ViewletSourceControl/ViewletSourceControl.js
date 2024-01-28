@@ -1,14 +1,19 @@
 import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
 import * as ViewletSourceControlLoadContent from './ViewletSourceControlLoadContent.js'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
-export const create = (id) => {
+export const create = (id, uri, x, y, width, height) => {
   return {
     uid: id,
+    x,
+    y,
+    width,
+    height,
     merge: [],
     index: [],
     untracked: [],
@@ -22,6 +27,11 @@ export const create = (id) => {
     buttons: [],
     providerId: '',
     splitButtonEnabled: false,
+    ...VirtualList.create({
+      itemHeight: 20,
+      headerHeight: 60,
+      minimumSliderSize: 20,
+    }),
   }
 }
 
@@ -51,11 +61,11 @@ const updateIcon = (displayItem) => {
 }
 
 export const updateIcons = (state) => {
-  const { displayItems } = state
-  const newDisplayItems = displayItems.map(updateIcon)
+  const { items } = state
+  const newDisplayItems = items.map(updateIcon)
   return {
     ...state,
-    displayItems: newDisplayItems,
+    items: newDisplayItems,
   }
 }
 
@@ -64,11 +74,11 @@ export const handleIconThemeChange = (state) => {
 }
 
 export const handleMouseOver = async (state, index) => {
-  const { displayItems, providerId, buttonIndex } = state
+  const { items, providerId, buttonIndex } = state
   if (index === buttonIndex) {
     return state
   }
-  const item = displayItems[index]
+  const item = items[index]
   if (!item) {
     return state
   }

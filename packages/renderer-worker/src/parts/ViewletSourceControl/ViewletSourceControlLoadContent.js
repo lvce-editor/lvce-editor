@@ -1,7 +1,11 @@
+import * as GetFinalDeltaY from '../GetFinalDeltaY/GetFinalDeltaY.js'
+import { getListHeight } from '../GetListHeight/GetListHeight.js'
+import * as GetNumberOfVisibleItems from '../GetNumberOfVisibleItems/GetNumberOfVisibleItems.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
+import * as Preferences from '../Preferences/Preferences.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SourceControl from '../SourceControl/SourceControl.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
-import * as Preferences from '../Preferences/Preferences.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { getDisplayItems } from './ViewletSourceControlGetDisplayItems.js'
 
@@ -30,23 +34,34 @@ const getNewButtons = async (displayItems, providerId, buttonIndex) => {
 }
 
 export const loadContent = async (state) => {
+  const { itemHeight, height, minimumSliderSize } = state
   const root = Workspace.state.workspacePath
   const scheme = GetProtocol.getProtocol(root)
   const enabledProviderIds = await SourceControl.getEnabledProviderIds(scheme, root)
   const { allGroups, gitRoot } = await getGroups(enabledProviderIds)
   const isExpanded = true
-  const displayItems = getDisplayItems(allGroups, isExpanded)
-  const buttons = await getNewButtons(displayItems, state.providerId, state.buttonIndex)
+  const items = getDisplayItems(allGroups, isExpanded)
+  const buttons = await getNewButtons(items, state.providerId, state.buttonIndex)
   const splitButtonEnabled = Preferences.get('sourceControl.splitButtonEnabled')
+  const total = items.length
+  const contentHeight = total * itemHeight
+  const listHeight = getListHeight(total, itemHeight, height)
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(height, contentHeight, minimumSliderSize)
+  const numberOfVisible = GetNumberOfVisibleItems.getNumberOfVisibleItems(listHeight, itemHeight)
+  const maxLineY = Math.min(numberOfVisible, total)
+  const finalDeltaY = GetFinalDeltaY.getFinalDeltaY(listHeight, itemHeight, total)
   return {
     ...state,
     allGroups,
     gitRoot,
-    displayItems,
+    items,
     enabledProviderIds,
     isExpanded,
     buttons,
     root,
     splitButtonEnabled,
+    maxLineY,
+    scrollBarHeight,
+    finalDeltaY,
   }
 }
