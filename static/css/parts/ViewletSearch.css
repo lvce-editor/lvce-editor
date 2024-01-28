@@ -5,6 +5,7 @@
 
 .SearchHeader {
   padding-top: 5px;
+  contain: content;
 }
 
 .SearchHeaderTop {
@@ -40,6 +41,7 @@
   padding-bottom: 8px;
   padding-top: 5px;
   padding-left: 22px;
+  contain: content;
 }
 
 .SearchResults {

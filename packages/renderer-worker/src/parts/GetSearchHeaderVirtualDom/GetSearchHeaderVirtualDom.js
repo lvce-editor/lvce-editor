@@ -1,12 +1,12 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-const headerTopRight = {
-  type: VirtualDomElements.Div,
-  className: 'SearchHeaderTopRight',
-  childCount: 1,
-}
+export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWholeWord, useRegularExpression) => {
+  const headerTopRight = {
+    type: VirtualDomElements.Div,
+    className: 'SearchHeaderTopRight',
+    childCount: 1,
+  }
 
-export const getSearchHeaderVirtualDom = (visibleItems, replaceExpanded, matchCase, matchWholeWord, useRegularExpression, message) => {
   /**
    * @type {any[]}
    */
