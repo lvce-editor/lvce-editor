@@ -94,12 +94,11 @@ export const test = async ({ TitleBarMenuBar, Locator, expect }) => {
 
   // assert
   const menuItemExit = Locator('.MenuItem', {
-    hasText: 'Exit',
+    hasText: 'Save All',
   })
   await expect(menuItemExit).toBeFocused()
 
   // act
-  await TitleBarMenuBar.handleKeyArrowUp()
   await TitleBarMenuBar.handleKeyArrowUp()
   await TitleBarMenuBar.handleKeyArrowUp()
 

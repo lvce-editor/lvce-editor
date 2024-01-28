@@ -52,7 +52,6 @@ export const test = async ({ TitleBarMenuBar, Locator, expect }) => {
   await TitleBarMenuBar.handleKeyEnd()
   await TitleBarMenuBar.handleKeyArrowUp()
   await TitleBarMenuBar.handleKeyArrowUp()
-  await TitleBarMenuBar.handleKeyArrowUp()
   const menuItemOpenRecent = Locator('.MenuItem', { hasText: 'Open Recent' })
   await expect(menuItemOpenRecent).toBeFocused()
 
