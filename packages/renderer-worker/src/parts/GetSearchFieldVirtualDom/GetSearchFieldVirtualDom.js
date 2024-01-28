@@ -6,7 +6,7 @@ export const getSearchFieldVirtualDom = (name, placeholder, onInput, buttons) =>
     {
       type: VirtualDomElements.Div,
       className: 'SearchField',
-      childCount: 1 + buttons.length,
+      childCount: 2,
     },
     {
       type: VirtualDomElements.TextArea,
@@ -18,6 +18,11 @@ export const getSearchFieldVirtualDom = (name, placeholder, onInput, buttons) =>
       name,
       onInput,
       childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SearchFieldButtons',
+      childCount: buttons.length,
     },
     ...buttons.flatMap(GetSearchFieldButtonVirtualDom.getSearchFieldButtonVirtualDom),
   ]

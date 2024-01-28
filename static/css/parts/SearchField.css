@@ -1,0 +1,36 @@
+.SearchField {
+  display: flex;
+  border: 1px solid var(--InputBoxBorder, rgb(55, 65, 63));
+  background: var(--InputBoxBackground, rgb(36, 41, 42));
+  contain: strict;
+  height: 26px;
+}
+
+.SearchFieldButtons {
+  padding-top: 2px;
+  padding-right: 2px;
+  contain: content;
+  display: flex;
+}
+
+.SearchFieldButton {
+  position: relative;
+  background: transparent;
+  border: 1px solid transparent;
+  color: white;
+  contain: strict;
+  width: 20px;
+  height: 20px;
+}
+
+.SearchFieldButton:where(:hover) {
+  background: rgba(90, 93, 94, 0.31);
+}
+
+.SearchFieldButtonChecked {
+  border-color: #a03f9b;
+}
+
+.SearchButtonReplaceAll {
+  position: relative;
+}
