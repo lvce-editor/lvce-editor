@@ -38,114 +38,33 @@ const create$SearchFieldButton = (title, icon) => {
 }
 
 export const create = () => {
-  // TODO vscode uses a textarea instead of an input
-  // which is better because it supports multiline input
-  // but it is difficult to implement because the vscode
-  // textarea has a flexible max height.
-  // The implementation uses a mirror dom element,
-  // on text area input the text copied to the
-  // mirror dom element, then the mirror dom element height
-  // is measured and in turn applied to the text area.
-  // This way the text area always has the smallest
-  // necessary height value.
-  const $ViewletSearchInput = MultilineInputBox.create()
-  $ViewletSearchInput.placeholder = 'Search'
-  $ViewletSearchInput.enterKeyHint = EnterKeyHintType.Search
-  $ViewletSearchInput.name = 'search-value'
-
-  const $ButtonMatchCase = create$SearchFieldButton(UiStrings.MatchCase, 'CaseSensitive')
-  const $ButtonMatchWholeWord = create$SearchFieldButton(UiStrings.MatchWholeWord, 'WholeWord')
-  const $ButtonUseRegularExpression = create$SearchFieldButton(UiStrings.UseRegularExpression, 'Regex')
-
-  const $SearchField = document.createElement('div')
-  $SearchField.className = 'SearchField'
-  $SearchField.append($ViewletSearchInput, $ButtonMatchCase, $ButtonMatchWholeWord, $ButtonUseRegularExpression)
-
-  const $ToggleButton = IconButton.create$Button(UiStrings.ToggleReplace, 'ChevronRight')
-  $ToggleButton.classList.add('SearchToggleButton')
-  const $ToggleButtonIcon = $ToggleButton.firstChild
-
-  const $SearchStatus = document.createElement('div')
-  // @ts-ignore
-  $SearchStatus.role = AriaRoles.Status
-  $SearchStatus.className = 'ViewletSearchMessage'
-
-  const $SearchHeaderTopRight = document.createElement('div')
-  $SearchHeaderTopRight.className = 'SearchHeaderTopRight'
-  $SearchHeaderTopRight.append($SearchField)
-
-  const $Div = document.createElement('div')
-  $Div.className = 'SearchHeaderTop'
-  $Div.append($ToggleButton, $SearchHeaderTopRight)
-
-  const $SearchHeader = document.createElement('div')
-  $SearchHeader.className = 'SearchHeader'
-  $SearchHeader.append($Div, $SearchStatus)
-
-  const $ListItems = document.createElement('div')
-  $ListItems.className = 'ListItems'
-  $ListItems.role = AriaRoles.None
-  // TODO onclick vs onmousedown, should be consistent in whole application
-
-  const $ScrollBarThumb = document.createElement('div')
-  $ScrollBarThumb.className = 'ScrollBarThumb'
-
-  const $ScrollBar = document.createElement('div')
-  $ScrollBar.className = 'ScrollBarSmall'
-  $ScrollBar.append($ScrollBarThumb)
-
-  const $List = document.createElement('div')
-  $List.className = 'Viewlet List'
-  $List.role = AriaRoles.Tree
-  $List.tabIndex = 0
-  $List.append($ListItems, $ScrollBar)
-
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Search'
-  $Viewlet.append($SearchHeader, $List)
 
   return {
     $Viewlet,
-    $ViewletSearchInput,
-    $ListItems,
-    $List,
-    $SearchStatus,
-    $ScrollBar,
-    $ScrollBarThumb,
-    $ToggleButton,
-    $SearchHeader,
-    $ViewletSearchReplaceInput: undefined,
-    $SearchField,
-    $ButtonMatchCase,
-    $ButtonMatchWholeWord,
-    $ButtonUseRegularExpression,
-    $ToggleButtonIcon,
   }
 }
 
 export const attachEvents = (state) => {
-  const { $ViewletSearchInput, $ScrollBar, $SearchHeader, $List } = state
-  AttachEvents.attachEvents($ViewletSearchInput, {
-    [DomEventType.Input]: ViewletSearchEvents.handleInput,
-    [DomEventType.Focus]: ViewletSearchEvents.handleFocus,
-  })
-
-  AttachEvents.attachEvents($ScrollBar, {
-    [DomEventType.PointerDown]: ViewletSearchEvents.handleScrollBarPointerDown,
-  })
-
-  AttachEvents.attachEvents($SearchHeader, {
-    [DomEventType.Click]: ViewletSearchEvents.handleHeaderClick,
-  })
-
-  AttachEvents.attachEvents($List, {
-    [DomEventType.Focus]: ViewletSearchEvents.handleListFocus,
-    [DomEventType.Blur]: ViewletSearchEvents.handleListBlur,
-    [DomEventType.MouseDown]: ViewletSearchEvents.handleClick,
-    [DomEventType.ContextMenu]: ViewletSearchEvents.handleContextMenu,
-  })
-
-  $List.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
+  // const { $ViewletSearchInput, $ScrollBar, $SearchHeader, $List } = state
+  // AttachEvents.attachEvents($ViewletSearchInput, {
+  //   [DomEventType.Input]: ViewletSearchEvents.handleInput,
+  //   [DomEventType.Focus]: ViewletSearchEvents.handleFocus,
+  // })
+  // AttachEvents.attachEvents($ScrollBar, {
+  //   [DomEventType.PointerDown]: ViewletSearchEvents.handleScrollBarPointerDown,
+  // })
+  // AttachEvents.attachEvents($SearchHeader, {
+  //   [DomEventType.Click]: ViewletSearchEvents.handleHeaderClick,
+  // })
+  // AttachEvents.attachEvents($List, {
+  //   [DomEventType.Focus]: ViewletSearchEvents.handleListFocus,
+  //   [DomEventType.Blur]: ViewletSearchEvents.handleListBlur,
+  //   [DomEventType.MouseDown]: ViewletSearchEvents.handleClick,
+  //   [DomEventType.ContextMenu]: ViewletSearchEvents.handleContextMenu,
+  // })
+  // $List.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, DomEventOptions.Passive)
 }
 
 export const refresh = (state, context) => {
@@ -160,6 +79,11 @@ export const focus = (state) => {
 export const setDom = (state, dom) => {
   const { $ListItems } = state
   VirtualDom.renderInto($ListItems, dom)
+}
+
+export const setFullDom = (state, dom) => {
+  const { $Viewlet } = state
+  VirtualDom.renderInto($Viewlet, dom)
 }
 
 export const setMessage = (state, message) => {

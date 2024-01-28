@@ -1,5 +1,5 @@
 import * as GetSearchDisplayResults from '../GetSearchDisplayResults/GetSearchDisplayResults.js'
-import * as GetSearchResultsVirtualDom from '../GetSearchResultsVirtualDom/GetSearchResultsVirtualDom.js'
+import * as GetSearchVirtualDom from '../GetSearchVirtualDom/GetSearchVirtualDom.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
@@ -12,7 +12,12 @@ const renderItems = {
       oldState.items === newState.items &&
       oldState.minLineY === newState.minLineY &&
       oldState.maxLineY === newState.maxLineY &&
-      oldState.replacement === newState.replacement
+      oldState.replacement === newState.replacement &&
+      oldState.replaceExpanded === newState.replaceExpanded &&
+      oldState.matchCase === newState.matchCase &&
+      oldState.matchWholeWord === newState.matchWholeWord &&
+      oldState.useRegularExpression === newState.useRegularExpression &&
+      oldState.message === newState.message
     )
   },
   apply(oldState, newState) {
@@ -25,8 +30,15 @@ const renderItems = {
       newState.maxLineY,
       newState.replacement,
     )
-    const dom = GetSearchResultsVirtualDom.getSearchResultsVirtualDom(displayResults)
-    return ['setDom', dom]
+    const dom = GetSearchVirtualDom.getSearchVirtualDom(
+      displayResults,
+      newState.replaceExpanded,
+      newState.matchCase,
+      newState.matchWholeWord,
+      newState.useRegularExpression,
+      newState.message,
+    )
+    return ['setFullDom', dom]
   },
 }
 
@@ -120,11 +132,11 @@ const renderFocusedIndex = {
 
 export const render = [
   renderItems,
-  renderMessage,
-  renderValue,
-  renderScrollBar,
-  renderNegativeMargin,
-  renderReplaceExpanded,
-  renderButtonsChecked,
-  renderFocusedIndex,
+  // renderMessage,
+  // renderValue,
+  // renderScrollBar,
+  // renderNegativeMargin,
+  // renderReplaceExpanded,
+  // renderButtonsChecked,
+  // renderFocusedIndex,
 ]
