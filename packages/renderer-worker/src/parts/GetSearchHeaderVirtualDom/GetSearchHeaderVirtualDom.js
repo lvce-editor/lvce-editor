@@ -2,11 +2,6 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import * as GetSearchFieldVirtualDom from '../GetSearchFieldVirtualDom/GetSearchFieldVirtualDom.js'
 
 export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWholeWord, useRegularExpression) => {
-  const headerTopRight = {
-    type: VirtualDomElements.Div,
-    className: 'SearchHeaderTopRight',
-    childCount: 1,
-  }
   const dom = [
     {
       type: VirtualDomElements.Div,
@@ -33,7 +28,11 @@ export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWhole
       className: `MaskIcon ${replaceExpanded ? 'MaskIconChevronDown' : 'MaskIconChevronRight'}`,
       childCount: 0,
     },
-    headerTopRight,
+    {
+      type: VirtualDomElements.Div,
+      className: 'SearchHeaderTopRight',
+      childCount: replaceExpanded ? 2 : 1,
+    },
     ...GetSearchFieldVirtualDom.getSearchFieldVirtualDom('search-value', 'Search', 'handleInput', [
       {
         icon: 'MaskIconCaseSensitive',
@@ -53,7 +52,6 @@ export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWhole
     ]),
   ]
   if (replaceExpanded) {
-    headerTopRight.childCount++
     dom.push(
       ...GetSearchFieldVirtualDom.getSearchFieldVirtualDom('search-replace-value', 'Replace', 'handleReplaceInput', [
         {
