@@ -1,11 +1,12 @@
 import * as GetSearchFieldButtonVirtualDom from '../GetSearchFieldButtonVirtualDom/GetSearchFieldButtonVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-export const getSearchFieldVirtualDom = (name, placeholder, onInput, buttons) => {
+export const getSearchFieldVirtualDom = (name, placeholder, onInput, insideButtons, outsideButtons) => {
   const dom = [
     {
       type: VirtualDomElements.Div,
       className: 'SearchField',
+      role: 'none',
       childCount: 2,
     },
     {
@@ -22,9 +23,18 @@ export const getSearchFieldVirtualDom = (name, placeholder, onInput, buttons) =>
     {
       type: VirtualDomElements.Div,
       className: 'SearchFieldButtons',
-      childCount: buttons.length,
+      childCount: insideButtons.length,
     },
-    ...buttons.flatMap(GetSearchFieldButtonVirtualDom.getSearchFieldButtonVirtualDom),
+    ...insideButtons.flatMap(GetSearchFieldButtonVirtualDom.getSearchFieldButtonVirtualDom),
   ]
+  if (outsideButtons.length > 0) {
+    dom.unshift({
+      type: VirtualDomElements.Div,
+      className: 'SearchFieldContainer',
+      role: 'none',
+      childCount: 1 + outsideButtons.length,
+    })
+    dom.push(...outsideButtons.flatMap(GetSearchFieldButtonVirtualDom.getSearchFieldButtonVirtualDom))
+  }
   return dom
 }

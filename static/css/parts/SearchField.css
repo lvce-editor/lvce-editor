@@ -1,9 +1,16 @@
+.SearchFieldContainer {
+  contain: strict;
+  display: flex;
+  height: 26px;
+}
+
 .SearchField {
   display: flex;
   border: 1px solid var(--InputBoxBorder, rgb(55, 65, 63));
   background: var(--InputBoxBackground, rgb(36, 41, 42));
   contain: strict;
   height: 26px;
+  flex-grow: 1;
 }
 
 .SearchFieldButtons {
