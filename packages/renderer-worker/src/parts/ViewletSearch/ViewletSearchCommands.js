@@ -1,9 +1,17 @@
 import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
 import * as ViewletSearch from './ViewletSearch.js'
 
-// prettier-ignore
 export const Commands = {
   handleInput: ViewletSearch.handleInput,
+  handleFocusIn: ViewletSearch.handleFocusIn,
+  focusSearchValue: ViewletSearch.focusSearchValue,
+  focusReplaceValue: ViewletSearch.focusReplaceValue,
+  focusMatchCase: ViewletSearch.focusMatchCase,
+  focusMatchWholeWord: ViewletSearch.focusMatchWholeWord,
+  focusRegex: ViewletSearch.focusRegex,
+  focusReplaceAll: ViewletSearch.focusReplaceAll,
+  focusReplaceValuePrevious: ViewletSearch.focusReplaceValuePrevious,
+  focusSearchValueNext: ViewletSearch.focusSearchValueNext,
 }
 
 // prettier-ignore

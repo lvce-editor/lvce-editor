@@ -4,6 +4,8 @@ import * as InputSource from '../InputSource/InputSource.js'
 import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
+import * as Focus from '../Focus/Focus.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.js'
@@ -40,6 +42,7 @@ export const create = (id, uri, x, y, width, height) => {
     includeValue: '',
     excludeValue: '',
     detailsExpanded: false,
+    focus: WhenExpression.Empty,
   }
 }
 
@@ -137,4 +140,74 @@ const getMatchStart = (preview, searchTerm) => {
 
 export const handleInput = (state, value, inputSource = InputSource.Script) => {
   return ViewletSearchHandleUpdate.handleUpdate(state, { value, inputSource })
+}
+
+const getFocusKey = (key) => {
+  switch (key) {
+    case 'search-value':
+      return WhenExpression.FocusSearchInput
+    case 'search-replace-value':
+      return WhenExpression.FocusSearchReplaceInput
+    case 'Match Case':
+      return WhenExpression.FocusMatchCase
+    case 'Match Whole Word':
+      return WhenExpression.FocusWholeWord
+    case 'Use Regular Expression':
+      return WhenExpression.FocusRegex
+    case 'Replace All':
+      return WhenExpression.FocusReplaceAll
+    default:
+      return WhenExpression.Empty
+  }
+}
+
+export const focusSearchValue = (state) => {
+  return {
+    ...state,
+    focus: WhenExpression.FocusSearchInput,
+  }
+}
+
+export const focusSearchValueNext = (state) => {
+  const { replaceExpanded } = state
+  if (replaceExpanded) {
+    return focusReplaceValue(state)
+  }
+  return focusMatchCase(state)
+}
+
+export const focusReplaceValuePrevious = (state) => {
+  return focusSearchValue(state)
+}
+
+export const focusReplaceValue = (state) => {
+  return {
+    ...state,
+    focus: WhenExpression.FocusSearchReplaceInput,
+  }
+}
+
+export const focusMatchCase = (state) => {
+  return { ...state, focus: WhenExpression.FocusMatchCase }
+}
+
+export const focusMatchWholeWord = (state) => {
+  return { ...state, focus: WhenExpression.FocusWholeWord }
+}
+
+export const focusRegex = (state) => {
+  return { ...state, focus: WhenExpression.FocusRegex }
+}
+
+export const focusReplaceAll = (state) => {
+  return { ...state, focus: WhenExpression.FocusReplaceAll }
+}
+
+export const handleFocusIn = (state, key) => {
+  const focusKey = getFocusKey(key)
+  Focus.setFocus(focusKey)
+  return {
+    ...state,
+    focus: focusKey,
+  }
 }

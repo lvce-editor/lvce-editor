@@ -9,6 +9,7 @@ export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWhole
       className: 'SearchHeader',
       childCount: 2,
       onClick: 'handleHeaderClick',
+      onFocusIn: 'handleHeaderFocusIn',
     },
     {
       type: VirtualDomElements.Div,

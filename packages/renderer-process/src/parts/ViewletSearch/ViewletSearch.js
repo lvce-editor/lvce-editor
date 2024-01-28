@@ -64,6 +64,17 @@ export const setValue = (state, value) => {
   $ViewletSearchInput.value = value
 }
 
+export const setFocus = (state, selector) => {
+  if (!selector) {
+    return
+  }
+  const { $Viewlet } = state
+  const $Element = $Viewlet.querySelector(selector)
+  if ($Element) {
+    $Element.focus()
+  }
+}
+
 export const dispose = () => {}
 
 export * from '../ViewletScrollable/ViewletScrollable.js'

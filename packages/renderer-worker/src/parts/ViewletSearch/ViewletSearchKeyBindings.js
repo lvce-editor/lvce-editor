@@ -34,5 +34,15 @@ export const getKeyBindings = () => {
       command: 'Search.copy',
       when: WhenExpression.FocusSearchResults,
     },
+    {
+      key: KeyCode.Tab,
+      command: 'Search.focusSearchValueNext',
+      when: WhenExpression.FocusSearchInput,
+    },
+    {
+      key: KeyModifier.Shift | KeyCode.Tab,
+      command: 'Search.focusReplaceValuePrevious',
+      when: WhenExpression.FocusSearchReplaceInput,
+    },
   ]
 }
