@@ -8,7 +8,7 @@ export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, ma
    * @type {any[]}
    */
   const dom = []
-  dom.push(...GetSearchHeaderVirtualDom.getSearchHeaderVirtualDom(visibleItems, replaceExpanded, matchCase, matchWholeWord, useRegularExpression))
+  dom.push(...GetSearchHeaderVirtualDom.getSearchHeaderVirtualDom(replaceExpanded, matchCase, matchWholeWord, useRegularExpression))
   dom.push(
     {
       type: VirtualDomElements.Div,
