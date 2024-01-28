@@ -11,6 +11,7 @@
   padding-right: 2px;
   contain: content;
   display: flex;
+  gap: 2px;
 }
 
 .SearchFieldButton {
