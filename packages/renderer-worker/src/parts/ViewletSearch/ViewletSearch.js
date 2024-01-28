@@ -168,6 +168,18 @@ export const focusSearchValue = (state) => {
   }
 }
 
+export const focusSearchValueNext = (state) => {
+  const { replaceExpanded } = state
+  if (replaceExpanded) {
+    return focusReplaceValue(state)
+  }
+  return focusMatchCase(state)
+}
+
+export const focusReplaceValuePrevious = (state) => {
+  return focusSearchValue(state)
+}
+
 export const focusReplaceValue = (state) => {
   return {
     ...state,
@@ -194,5 +206,8 @@ export const focusReplaceAll = (state) => {
 export const handleFocusIn = (state, key) => {
   const focusKey = getFocusKey(key)
   Focus.setFocus(focusKey)
-  return state
+  return {
+    ...state,
+    focus: focusKey,
+  }
 }

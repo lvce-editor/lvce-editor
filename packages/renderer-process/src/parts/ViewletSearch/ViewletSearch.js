@@ -65,6 +65,9 @@ export const setValue = (state, value) => {
 }
 
 export const setFocus = (state, selector) => {
+  if (!selector) {
+    return
+  }
   const { $Viewlet } = state
   const $Element = $Viewlet.querySelector(selector)
   if ($Element) {

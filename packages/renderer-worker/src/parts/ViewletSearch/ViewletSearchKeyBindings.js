@@ -36,12 +36,12 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyCode.Tab,
-      command: 'Search.focusReplaceValue',
+      command: 'Search.focusSearchValueNext',
       when: WhenExpression.FocusSearchInput,
     },
     {
       key: KeyModifier.Shift | KeyCode.Tab,
-      command: 'Search.focusSearchValue',
+      command: 'Search.focusReplaceValuePrevious',
       when: WhenExpression.FocusSearchReplaceInput,
     },
   ]

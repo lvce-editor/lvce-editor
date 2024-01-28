@@ -10,6 +10,8 @@ export const Commands = {
   focusMatchWholeWord: ViewletSearch.focusMatchWholeWord,
   focusRegex: ViewletSearch.focusRegex,
   focusReplaceAll: ViewletSearch.focusReplaceAll,
+  focusReplaceValuePrevious: ViewletSearch.focusReplaceValuePrevious,
+  focusSearchValueNext: ViewletSearch.focusSearchValueNext,
 }
 
 // prettier-ignore
