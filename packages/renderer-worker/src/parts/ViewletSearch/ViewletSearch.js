@@ -193,7 +193,6 @@ export const focusReplaceAll = (state) => {
 
 export const handleFocusIn = (state, key) => {
   const focusKey = getFocusKey(key)
-  console.log({ focusKey })
   Focus.setFocus(focusKey)
   return state
 }
