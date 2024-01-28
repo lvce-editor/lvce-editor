@@ -2,6 +2,7 @@ import * as GetSearchDisplayResults from '../GetSearchDisplayResults/GetSearchDi
 import * as GetSearchVirtualDom from '../GetSearchVirtualDom/GetSearchVirtualDom.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 export const hasFunctionalRender = true
@@ -132,13 +133,25 @@ const renderFocusedIndex = {
   },
 }
 
-export const render = [
-  renderItems,
-  // renderMessage,
-  // renderValue,
-  // renderScrollBar,
-  // renderNegativeMargin,
-  // renderReplaceExpanded,
-  // renderButtonsChecked,
-  // renderFocusedIndex,
-]
+const getSelector = (focusKey) => {
+  switch (focusKey) {
+    case WhenExpression.FocusSearchInput:
+      return '[name="search-value"]'
+    case WhenExpression.FocusSearchReplaceInput:
+      return '[name="search-replace-value"]'
+    default:
+      return ''
+  }
+}
+
+const renderFocus = {
+  isEqual(oldState, newState) {
+    return oldState.focus === newState.focus
+  },
+  apply(oldState, newState) {
+    const selector = getSelector(newState.focus)
+    return ['setFocus', selector]
+  },
+}
+
+export const render = [renderItems, renderFocus]
