@@ -83,7 +83,7 @@ export const setDom = (state, dom) => {
 
 export const setFullDom = (state, dom) => {
   const { $Viewlet } = state
-  VirtualDom.renderInto($Viewlet, dom)
+  VirtualDom.renderInto($Viewlet, dom, ViewletSearchEvents)
 }
 
 export const setMessage = (state, message) => {

@@ -16,6 +16,7 @@ export const getSearchVirtualDom = (visibleItems, replaceExpanded, matchCase, ma
       type: VirtualDomElements.Div,
       className: 'SearchHeader',
       childCount: 2,
+      onClick: 'handleHeaderClick',
     },
     {
       type: VirtualDomElements.Div,
