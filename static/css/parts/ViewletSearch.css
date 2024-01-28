@@ -28,9 +28,10 @@
   height: auto;
   width: 16px;
   margin: 0 2px;
+  border-radius: 0;
 }
 
-.SearchToggleButton:hover {
+.SearchToggleButton:where(:hover) {
   background: lightgray;
 }
 
@@ -71,7 +72,7 @@
   height: 20px;
 }
 
-.SearchFieldButton:hover {
+.SearchFieldButton:where(:hover) {
   background: rgba(90, 93, 94, 0.31);
 }
 
