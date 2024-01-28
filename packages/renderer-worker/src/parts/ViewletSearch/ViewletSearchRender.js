@@ -17,7 +17,8 @@ const renderItems = {
       oldState.matchCase === newState.matchCase &&
       oldState.matchWholeWord === newState.matchWholeWord &&
       oldState.useRegularExpression === newState.useRegularExpression &&
-      oldState.message === newState.message
+      oldState.message === newState.message &&
+      oldState.detailsExpanded === newState.detailsExpanded
     )
   },
   apply(oldState, newState) {
@@ -37,6 +38,7 @@ const renderItems = {
       newState.matchWholeWord,
       newState.useRegularExpression,
       newState.message,
+      newState.detailsExpanded,
     )
     return ['setFullDom', dom]
   },

@@ -8,6 +8,8 @@
   color: #c5c5c5;
   border-radius: 5px;
   cursor: pointer;
+  display: flex;
+  padding: 0;
 }
 
 .IconButton:enabled:hover {
