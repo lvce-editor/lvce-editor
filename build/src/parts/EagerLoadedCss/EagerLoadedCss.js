@@ -20,6 +20,7 @@ export const eagerLoadedCss = [
   'Notification.css',
   'ScrollBar.css',
   'SearchField.css',
+  'SearchHeader.css',
   'TreeItem.css',
   'ViewletActivityBar.css',
   'ViewletEditor.css',

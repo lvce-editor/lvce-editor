@@ -1,7 +1,8 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as GetSearchFieldVirtualDom from '../GetSearchFieldVirtualDom/GetSearchFieldVirtualDom.js'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWholeWord, useRegularExpression) => {
+export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWholeWord, useRegularExpression, detailsExpanded) => {
   const headerTopRight = {
     type: VirtualDomElements.Div,
     className: 'SearchHeaderTopRight',
@@ -62,6 +63,27 @@ export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWhole
           title: 'Replace All',
         },
       ]),
+    )
+  }
+  if (detailsExpanded) {
+    console.log({ detailsExpanded })
+    dom[0].childCount++
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SearchHeaderDetails',
+        childCount: 4,
+      },
+      text('files to include'),
+      {
+        type: VirtualDomElements.Input,
+        childCount: 0,
+      },
+      text('files to exclude'),
+      {
+        type: VirtualDomElements.Input,
+        childCount: 0,
+      },
     )
   }
   return dom

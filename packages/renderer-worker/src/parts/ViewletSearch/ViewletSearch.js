@@ -37,6 +37,9 @@ export const create = (id, uri, x, y, width, height) => {
     listFocusedIndex: -1,
     inputSource: InputSource.User,
     workspacePath: Workspace.state.workspacePath,
+    includeValue: '',
+    excludeValue: '',
+    detailsExpanded: false,
   }
 }
 

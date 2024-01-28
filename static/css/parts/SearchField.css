@@ -23,6 +23,7 @@
   width: 20px;
   height: 20px;
   cursor: pointer;
+  padding: 1px;
 }
 
 .SearchFieldButton:where(:hover) {
