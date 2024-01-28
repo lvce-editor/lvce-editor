@@ -1,4 +1,5 @@
 export const Css = [
+  '/css/parts/Alignment.css',
   '/css/parts/Badge.css',
   '/css/parts/FileIcon.css',
   '/css/parts/Highlight.css',
@@ -6,8 +7,8 @@ export const Css = [
   '/css/parts/Label.css',
   '/css/parts/MaskIcon.css',
   '/css/parts/ScrollBar.css',
+  '/css/parts/SearchField.css',
   '/css/parts/TreeItem.css',
   '/css/parts/ViewletList.css',
   '/css/parts/ViewletSearch.css',
-  '/css/parts/Alignment.css',
 ]
