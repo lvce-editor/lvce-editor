@@ -143,6 +143,8 @@ const getSelector = (focusKey) => {
       return '[title="Match Case"]'
     case WhenExpression.FocusPreserveCase:
       return '[title="Preserve Case"]'
+    case WhenExpression.FocusRegex:
+      return '[title="Use Regular Expression"]'
     default:
       return ''
   }

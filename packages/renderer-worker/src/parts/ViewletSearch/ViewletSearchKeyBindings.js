@@ -49,5 +49,20 @@ export const getKeyBindings = () => {
       command: 'Search.focusReplaceValueNext',
       when: WhenExpression.FocusSearchReplaceInput,
     },
+    {
+      key: KeyModifier.Shift | KeyCode.Tab,
+      command: 'Search.focusMatchCasePrevious',
+      when: WhenExpression.FocusMatchCase,
+    },
+    {
+      key: KeyCode.Tab,
+      command: 'Search.focusRegexNext',
+      when: WhenExpression.FocusRegex,
+    },
+    {
+      key: KeyModifier.Shift | KeyCode.Tab,
+      command: 'Search.focusPreserveCasePrevious',
+      when: WhenExpression.FocusPreserveCase,
+    },
   ]
 }

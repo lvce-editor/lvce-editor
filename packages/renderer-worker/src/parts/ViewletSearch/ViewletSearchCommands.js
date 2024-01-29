@@ -3,11 +3,13 @@ import * as ViewletSearch from './ViewletSearch.js'
 
 export const Commands = {
   focusMatchCase: ViewletSearch.focusMatchCase,
+  focusMatchCasePrevious: ViewletSearch.focusMatchCasePrevious,
   focusMatchWholeWord: ViewletSearch.focusMatchWholeWord,
   focusRegex: ViewletSearch.focusRegex,
   focusRegexNext: ViewletSearch.focusRegexNext,
   focusReplaceAll: ViewletSearch.focusReplaceAll,
   focusReplaceValue: ViewletSearch.focusReplaceValue,
+  focusPreserveCasePrevious: ViewletSearch.focusPreserveCasePrevious,
   focusReplaceValueNext: ViewletSearch.focusReplaceValueNext,
   focusReplaceValuePrevious: ViewletSearch.focusReplaceValuePrevious,
   focusSearchValue: ViewletSearch.focusSearchValue,
