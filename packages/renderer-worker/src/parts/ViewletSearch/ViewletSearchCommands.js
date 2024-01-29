@@ -9,6 +9,7 @@ export const Commands = {
   focusRegexNext: ViewletSearch.focusRegexNext,
   focusReplaceAll: ViewletSearch.focusReplaceAll,
   focusReplaceValue: ViewletSearch.focusReplaceValue,
+  focusPreserveCasePrevious: ViewletSearch.focusPreserveCasePrevious,
   focusReplaceValueNext: ViewletSearch.focusReplaceValueNext,
   focusReplaceValuePrevious: ViewletSearch.focusReplaceValuePrevious,
   focusSearchValue: ViewletSearch.focusSearchValue,

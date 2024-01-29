@@ -198,6 +198,10 @@ export const focusRegexNext = (state) => {
   return focusPreserveCase(state)
 }
 
+export const focusPreserveCasePrevious = (state) => {
+  return focusRegex(state)
+}
+
 export const focusReplaceValue = (state) => {
   return {
     ...state,
