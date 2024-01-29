@@ -141,6 +141,8 @@ const getSelector = (focusKey) => {
       return '[name="search-replace-value"]'
     case WhenExpression.FocusMatchCase:
       return '[title="Match Case"]'
+    case WhenExpression.FocusPreserveCase:
+      return '[title="Preserve Case"]'
     default:
       return ''
   }
