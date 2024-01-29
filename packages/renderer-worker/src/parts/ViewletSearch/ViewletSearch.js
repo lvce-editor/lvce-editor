@@ -178,6 +178,14 @@ export const focusSearchValueNext = (state) => {
   return focusMatchCase(state)
 }
 
+export const focusMatchCasePrevious = (state) => {
+  const { replaceExpanded } = state
+  if (replaceExpanded) {
+    return focusReplaceValue(state)
+  }
+  return focusSearchValue(state)
+}
+
 export const focusReplaceValuePrevious = (state) => {
   return focusSearchValue(state)
 }
