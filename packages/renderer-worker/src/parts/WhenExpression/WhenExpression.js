@@ -34,3 +34,4 @@ export const FocusMatchCase = 31
 export const FocusRegex = 32
 export const FocusWholeWord = 33
 export const FocusReplaceAll = 34
+export const FocusPreserveCase = 35

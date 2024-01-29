@@ -156,6 +156,8 @@ const getFocusKey = (key) => {
       return WhenExpression.FocusRegex
     case 'Replace All':
       return WhenExpression.FocusReplaceAll
+    case 'Preserve Case':
+      return WhenExpression.FocusPreserveCase
     default:
       return WhenExpression.Empty
   }
@@ -180,6 +182,14 @@ export const focusReplaceValuePrevious = (state) => {
   return focusSearchValue(state)
 }
 
+export const focusReplaceValueNext = (state) => {
+  return focusMatchCase(state)
+}
+
+export const focusRegexNext = (state) => {
+  return focusPreserveCase(state)
+}
+
 export const focusReplaceValue = (state) => {
   return {
     ...state,
@@ -189,6 +199,10 @@ export const focusReplaceValue = (state) => {
 
 export const focusMatchCase = (state) => {
   return { ...state, focus: WhenExpression.FocusMatchCase }
+}
+
+export const focusPreserveCase = (state) => {
+  return { ...state, focus: WhenExpression.FocusPreserveCase }
 }
 
 export const focusMatchWholeWord = (state) => {
