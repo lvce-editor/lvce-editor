@@ -1,6 +1,5 @@
 import waitForExpect from 'wait-for-expect'
 import * as Pty from '../src/parts/Pty/Pty.js'
-import * as Platform from '../src/parts/Platform/Platform.js'
 
 let pty
 
