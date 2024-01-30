@@ -7,7 +7,7 @@ export const renderActions = {
   },
   apply(oldState, newState) {
     const actions = ViewletExplorerActions.getActions()
-    const dom = GetActionsVirtualDom.getActionsVirtualDom()
+    const dom = GetActionsVirtualDom.getActionsVirtualDom(actions)
     return dom
   },
 }
