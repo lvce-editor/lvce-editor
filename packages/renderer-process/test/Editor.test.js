@@ -2,7 +2,6 @@
  * @jest-environment jsdom
  */
 import * as Editor from '../src/parts/Editor/Editor.js'
-import * as EditorHelper from '../src/parts/Editor/EditorHelper.js'
 import * as Platform from '../src/parts/Platform/Platform.js'
 
 const create$EditorRow = () => {
@@ -29,12 +28,6 @@ test.skip('focus', () => {
   document.body.append(state.$Editor)
   Editor.setFocused(state)
   expect(state.$EditorInput).toBe(document.activeElement)
-})
-
-test('dispose', () => {
-  // TODO
-  const state = Editor.create()
-  EditorHelper.setState(1, state)
 })
 
 // TODO

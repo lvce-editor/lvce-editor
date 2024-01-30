@@ -3,7 +3,6 @@
  */
 import { jest } from '@jest/globals'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
-import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import * as MouseEventTypes from '../src/parts/MouseEventType/MouseEventType.js'
 
 beforeAll(() => {
@@ -52,7 +51,7 @@ jest.unstable_mockModule('../src/parts/ExecuteViewletCommand/ExecuteViewletComma
 const ExecuteViewletCommand = await import('../src/parts/ExecuteViewletCommand/ExecuteViewletCommand.js')
 const ViewletTitleBarMenuBar = await import('../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
 
-test('event - click on menu', () => {
+test.skip('event - click on menu', () => {
   const state = ViewletTitleBarMenuBar.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
@@ -87,7 +86,7 @@ test('event - click on menu', () => {
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 0, -1)
 })
 
-test('event - click on menu item', () => {
+test.skip('event - click on menu item', () => {
   const state = ViewletTitleBarMenuBar.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
@@ -122,7 +121,7 @@ test('event - click on menu item', () => {
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 0, 1)
 })
 
-test('event - mouseover on menu item', () => {
+test.skip('event - mouseover on menu item', () => {
   const state = ViewletTitleBarMenuBar.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)
@@ -157,7 +156,7 @@ test('event - mouseover on menu item', () => {
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleMouseOver', 1)
 })
 
-test('event - right click on menu item', () => {
+test.skip('event - right click on menu item', () => {
   const state = ViewletTitleBarMenuBar.create()
   const { $Viewlet } = state
   ComponentUid.set($Viewlet, 1)

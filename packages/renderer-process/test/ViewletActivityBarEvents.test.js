@@ -2,7 +2,6 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
 
 beforeEach(() => {
@@ -92,7 +91,7 @@ test.skip('event - handleClick - bottom', () => {
       bubbles: true,
       clientX: 15,
       clientY: 30,
-    })
+    }),
   )
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledTimes(1)
   expect(ExecuteViewletCommand.executeViewletCommand).toHaveBeenCalledWith(1, 'handleClick', 0, 2, 15, 30)
