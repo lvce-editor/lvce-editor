@@ -3,12 +3,9 @@
  */
 import { jest } from '@jest/globals'
 import * as ComponentUid from '../src/parts/ComponentUid/ComponentUid.js'
-import * as DomEventOptions from '../src/parts/DomEventOptions/DomEventOptions.js'
 import * as DomEventType from '../src/parts/DomEventType/DomEventType.js'
-import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import * as ModifierKey from '../src/parts/ModifierKey/ModifierKey.js'
 import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
-import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
