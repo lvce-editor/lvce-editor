@@ -2942,6 +2942,70 @@ test('handleWheel - up', () => {
   expect(render(state, newState)).toEqual([
     [
       'Viewlet.send',
+      undefined,
+      'setActionsDom',
+      [
+        {
+          childCount: 4,
+          className: 'Actions',
+          type: 4,
+        },
+        {
+          childCount: 1,
+          className: 'IconButton',
+          'data-command': 'newFile',
+          title: 'New File...',
+          type: 1,
+        },
+        {
+          childCount: 0,
+          className: 'MaskIcon MaskIconNewFile',
+          role: 'none',
+          type: 4,
+        },
+        {
+          childCount: 1,
+          className: 'IconButton',
+          'data-command': 'newFolder',
+          title: 'New Folder...',
+          type: 1,
+        },
+        {
+          childCount: 0,
+          className: 'MaskIcon MaskIconNewFolder',
+          role: 'none',
+          type: 4,
+        },
+        {
+          childCount: 1,
+          className: 'IconButton',
+          'data-command': 'refresh',
+          title: 'Refresh Explorer',
+          type: 1,
+        },
+        {
+          childCount: 0,
+          className: 'MaskIcon MaskIconRefresh',
+          role: 'none',
+          type: 4,
+        },
+        {
+          childCount: 1,
+          className: 'IconButton',
+          'data-command': 'collapseAll',
+          title: 'Collapse All Folders in Explorer',
+          type: 1,
+        },
+        {
+          childCount: 0,
+          className: 'MaskIcon MaskIconCollapseAll',
+          role: 'none',
+          type: 4,
+        },
+      ],
+    ],
+    [
+      'Viewlet.send',
       'Explorer',
       'setDom',
       [
