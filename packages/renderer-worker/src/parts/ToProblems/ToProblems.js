@@ -1,4 +1,5 @@
 import * as Workspace from '../Workspace/Workspace.js'
+import * as ProblemFlags from '../ProblemFlags/ProblemFlags.js'
 
 const toProblem = (diagnostic) => {
   const { message, rowIndex, columnIndex, source, code } = diagnostic
@@ -11,6 +12,7 @@ const toProblem = (diagnostic) => {
     count: 0,
     source: source || '',
     code: code || '',
+    flags: ProblemFlags.Error,
   }
 }
 
@@ -24,6 +26,8 @@ export const toProblems = (diagnostics) => {
     relativePath: '',
     count: 0,
     source: '',
+    code: '',
+    flags: ProblemFlags.Collapsed,
   }
   for (const diagnostic of diagnostics) {
     if (diagnostic.uri === problem.uri) {
@@ -37,6 +41,8 @@ export const toProblems = (diagnostics) => {
         relativePath: '',
         count: 1,
         source: '',
+        code: '',
+        flags: ProblemFlags.Collapsed,
       }
       problems.push(problem)
     }

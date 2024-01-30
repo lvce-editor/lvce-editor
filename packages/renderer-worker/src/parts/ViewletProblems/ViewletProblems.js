@@ -5,6 +5,7 @@ import * as GetListIndex from '../GetListIndex/GetListIndex.js'
 import * as GetProblems from '../GetProblems/GetProblems.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ProblemFlags from '../ProblemFlags/ProblemFlags.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletProblemsStrings from './ViewletProblemsStrings.js'
 
@@ -21,12 +22,14 @@ export const create = (id, uri, x, y, width, height) => {
     width,
     height,
     filterValue: '',
+    filteredProblems: [],
   }
 }
 
 export const loadContent = async (state) => {
   const problems = await GetProblems.getProblems()
   const message = ViewletProblemsStrings.getMessage(problems.length)
+  console.log({ problems })
   return {
     ...state,
     problems,
@@ -71,6 +74,24 @@ export const focusNext = (state) => {
   }
 }
 
+// const getChildCount =
+
+const collapse = (state, problem, index) => {
+  // TODO collapse
+  return {
+    ...state,
+    focusedIndex: index,
+  }
+}
+
+const expand = (state, problem, index) => {
+  // TODO expand
+  return {
+    ...state,
+    focusedIndex: index,
+  }
+}
+
 export const handleClickAt = (state, eventX, eventY) => {
   const { problems, x, y, itemHeight } = state
   Focus.setFocus(FocusKey.Problems)
@@ -82,7 +103,13 @@ export const handleClickAt = (state, eventX, eventY) => {
     return focusIndex(state, -1)
   }
   const problem = problems[index]
-  const { rowIndex, columnIndex } = problem
+  const { rowIndex, columnIndex, flags } = problem
+  if (flags === ProblemFlags.Expanded) {
+    return collapse(state, problem, index)
+  }
+  if (flags === ProblemFlags.Collapsed) {
+    return expand(state, problem, index)
+  }
   console.log('open', rowIndex, columnIndex)
   return {
     ...state,
