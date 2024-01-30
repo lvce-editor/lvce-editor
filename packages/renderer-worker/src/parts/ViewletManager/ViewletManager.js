@@ -195,6 +195,17 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
   return []
 }
 
+const getRenderActionCommands = (module, oldState, newState, uid = newState.uid || module.name) => {
+  console.log({ module: module.name })
+  if (module.renderActions) {
+    if (module.renderActions.isEqual(oldState, newState)) {
+      return []
+    }
+    return module.renderActions.apply(oldState, newState)
+  }
+  return []
+}
+
 const registerWrappedCommand = (moduleName, key, wrappedCommand) => {
   if (key.startsWith(moduleName)) {
     Command.register(key, wrappedCommand)
@@ -522,4 +533,8 @@ export const mutate = async (id, fn) => {
 
 export const render = (module, oldState, newState, uid = newState.uid || module.name) => {
   return getRenderCommands(module, oldState, newState, uid)
+}
+
+export const renderActions = (module, oldState, newState, uid = newState.uid || module.name) => {
+  return getRenderActionCommands(module, oldState, newState, uid)
 }
