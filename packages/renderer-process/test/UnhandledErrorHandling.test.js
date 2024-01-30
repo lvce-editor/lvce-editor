@@ -21,6 +21,7 @@ jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
 
 const UnhandledErrorHandling = await import('../src/parts/UnhandledErrorHandling/UnhandledErrorHandling.js')
 const Logger = await import('../src/parts/Logger/Logger.js')
+const Ajax = await import('../src/parts/Ajax/Ajax.js')
 
 test('handleError - normal error', async () => {
   const message = 'oops'
