@@ -168,9 +168,13 @@ const getInstanceSavedState = (savedState, id) => {
   return undefined
 }
 
-const getRenderCommands = (module, oldState, newState, uid = newState.uid || module.name) => {
+const getRenderCommands = (module, oldState, newState, uid = newState.uid || module.name, parentId) => {
+  const commands = []
+  if (module.renderActions) {
+    const actionsCommands = module.renderActions.apply(oldState, newState)
+    commands.push(['Viewlet.send', parentId, 'setActionsDom', actionsCommands])
+  }
   if (Array.isArray(module.render)) {
-    const commands = []
     for (const item of module.render) {
       if (!item.isEqual(oldState, newState)) {
         const command = item.apply(oldState, newState)
@@ -192,7 +196,7 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
   if (module.render) {
     return module.render(oldState, newState)
   }
-  return []
+  return commands
 }
 
 const getRenderActionCommands = (module, oldState, newState, uid = newState.uid || module.name) => {
@@ -319,6 +323,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     if (viewlet.disposed) {
       return
     }
+    const parentUid = viewlet.parentUid
     state = ViewletState.ModuleLoaded
     let x = viewlet.x
     let y = viewlet.y
@@ -422,7 +427,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     const instanceNow = ViewletStates.getInstance(viewletUid)
     viewletState = instanceNow.renderedState
     if (module.hasFunctionalRender) {
-      const renderCommands = getRenderCommands(module, viewletState, newState, viewletUid)
+      const renderCommands = getRenderCommands(module, viewletState, newState, viewletUid, parentUid)
       ViewletStates.setRenderedState(viewletUid, newState)
       commands.push(...renderCommands)
       if (viewlet.show === false) {
