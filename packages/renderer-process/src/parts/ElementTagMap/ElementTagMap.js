@@ -101,6 +101,10 @@ export const getElementTag = (type) => {
       return ElementTag.Video
     case VirtualDomElements.TextArea:
       return ElementTag.TextArea
+    case VirtualDomElements.Select:
+      return ElementTag.Select
+    case VirtualDomElements.Option:
+      return ElementTag.Option
     default:
       throw new Error(`element tag not found ${type}`)
   }

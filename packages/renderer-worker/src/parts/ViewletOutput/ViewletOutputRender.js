@@ -1,5 +1,6 @@
-import * as GetOutputActionsVirtualDom from '../GetOutputActionsVirtualDom/GetOutputActionsVirtualDom.js'
+import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as ViewletOutputActions from './ViewletOutputActions.js'
 
 const renderText = {
   isEqual(oldState, newState) {
@@ -15,7 +16,8 @@ export const renderActions = {
     return oldState === newState
   },
   apply(oldState, newState) {
-    const dom = GetOutputActionsVirtualDom.getOutputActionsVirtualDom()
+    const actions = ViewletOutputActions.getActions(newState)
+    const dom = GetActionsVirtualDom.getActionsVirtualDom(actions)
     return dom
   },
 }
