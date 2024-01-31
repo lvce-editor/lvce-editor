@@ -140,10 +140,7 @@ export const openViewlet = async (state, moduleId, focus = false, args) => {
       activityBar.state = newState
       commands.push(...extraCommands)
     }
-    const { dom, actions } = GetActionRenderers.render(moduleId)
-    commands.push(['Viewlet.send', uid, 'setActionsDom', dom])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
-    state.actions = actions
   }
 
   // // TODO race condition (check if disposed after created)
