@@ -1,4 +1,5 @@
 export const Css = [
+  '/css/parts/Chevron.css',
   '/css/parts/DebugButtons.css',
   '/css/parts/DebugValue.css',
   '/css/parts/IconButton.css',

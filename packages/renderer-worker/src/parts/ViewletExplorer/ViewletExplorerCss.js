@@ -5,4 +5,6 @@ export const Css = [
   '/css/parts/Drag.css',
   '/css/parts/InputBox.css',
   '/css/parts/FileIcon.css',
+  '/css/parts/MaskIcon.css',
+  '/css/parts/Chevron.css',
 ]
