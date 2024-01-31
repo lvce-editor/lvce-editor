@@ -1,8 +1,8 @@
 .DebugButtons {
-  contain: strict;
-  height: 30px;
-  flex: 1;
+  contain: content;
+  height: 100%;
   display: flex;
+  align-items: center;
 }
 
 .DebugButton {
