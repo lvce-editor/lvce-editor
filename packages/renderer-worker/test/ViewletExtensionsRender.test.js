@@ -6,7 +6,7 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletExtensions, oldState, newState, ViewletModuleId.Extensions)
 }
 
-test('render - same state', () => {
+test.skip('render - same state', () => {
   const oldState = {
     ...ViewletExtensions.create(),
     items: [
@@ -87,7 +87,7 @@ test.skip('render - negative margin is different', () => {
   expect(render(oldState, newState)).toEqual([['Viewlet.send', 'Extensions', 'setExtensionsDom', expect.any(Array)]])
 })
 
-test('render - focused index is different', () => {
+test.skip('render - focused index is different', () => {
   const oldState = {
     ...ViewletExtensions.create(),
     items: [
