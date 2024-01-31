@@ -127,9 +127,6 @@ export const openViewlet = async (state, id, focus = false) => {
     const currentViewletUid = currentViewletState.uid
     Assert.number(currentViewletUid)
     commands.unshift(...Viewlet.disposeFunctional(currentViewletUid))
-    const actions = ViewletActions.getActions(id)
-    const dom = GetActionsVirtualDom.getActionsVirtualDom(actions)
-    commands.push(['Viewlet.send', uid, 'setActionsDom', dom])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     if (commands.at(-1).includes(ViewletModuleId.Error)) {
       state.currentViewletId = ViewletModuleId.Error
