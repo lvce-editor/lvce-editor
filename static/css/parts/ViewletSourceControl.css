@@ -45,6 +45,7 @@
   color: #c5c5c5;
   background: transparent;
   cursor: pointer;
+  padding: 0;
 }
 
 .SourceControlButton[disabled] {
