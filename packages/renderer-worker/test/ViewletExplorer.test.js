@@ -2948,6 +2948,7 @@ test('handleWheel - up', () => {
         {
           childCount: 4,
           className: 'Actions',
+          role: 'toolbar',
           type: 4,
         },
         {
