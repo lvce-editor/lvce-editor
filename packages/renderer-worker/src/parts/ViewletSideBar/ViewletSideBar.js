@@ -55,7 +55,7 @@ export const contentLoaded = async (state, savedState) => {
   const { currentViewletId, uid } = state
   const commands = []
   const { dom, actions } = GetActionRenderers.render(currentViewletId)
-  commands.push(['Viewlet.send', uid, 'setActionsDom', dom])
+  commands.push(['Viewlet.send', uid, 'setActionsDom', dom, currentViewletId])
   state.actions = actions
   return commands
 }

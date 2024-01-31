@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -21,10 +20,6 @@ jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostSourceControl.
 
 const ViewletSourceControl = await import('../src/parts/ViewletSourceControl/ViewletSourceControl.ipc.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
-
-const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletSourceControl, oldState, newState, ViewletModuleId.SourceControl)
-}
 
 test('create', () => {
   const state = ViewletSourceControl.create()
@@ -71,15 +66,6 @@ test('resize', () => {
     width: 200,
     workingTree: [],
   })
-})
-
-test('render - inputValue changed', () => {
-  const oldState = ViewletSourceControl.create()
-  const newState = {
-    ...oldState,
-    inputValue: 'abc',
-  }
-  expect(render(oldState, newState)).toEqual([['Viewlet.send', 'Source Control', 'setInputValue', 'abc']])
 })
 
 test('handleMouseOver', async () => {

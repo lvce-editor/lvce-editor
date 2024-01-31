@@ -172,7 +172,7 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
   const commands = []
   if (module.renderActions) {
     const actionsCommands = module.renderActions.apply(oldState, newState)
-    commands.push(['Viewlet.send', parentId, 'setActionsDom', actionsCommands])
+    commands.push(['Viewlet.send', parentId, 'setActionsDom', actionsCommands, uid])
   }
   if (Array.isArray(module.render)) {
     for (const item of module.render) {

@@ -2948,6 +2948,7 @@ test('handleWheel - up', () => {
         {
           childCount: 4,
           className: 'Actions',
+          role: 'toolbar',
           type: 4,
         },
         {
@@ -3003,6 +3004,7 @@ test('handleWheel - up', () => {
           type: 4,
         },
       ],
+      'Explorer',
     ],
     [
       'Viewlet.send',
