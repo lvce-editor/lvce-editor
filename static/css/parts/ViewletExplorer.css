@@ -2,6 +2,10 @@
   --DropTargetBackground: #062f4a;
 }
 
+.Explorer {
+  outline: none;
+}
+
 .ListItems {
   user-select: none;
 }
