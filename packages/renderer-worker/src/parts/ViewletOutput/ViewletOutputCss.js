@@ -1,1 +1,1 @@
-export const Css = '/css/parts/ViewletOutput.css'
+export const Css = ['/css/parts/ViewletOutput.css', '/css/parts/Select.css']

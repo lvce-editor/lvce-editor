@@ -5,10 +5,12 @@ export const getActionSelectVirtualDom = (action) => {
   return [
     {
       type: VirtualDomElements.Select,
+      className: 'Select',
       childCount: 1,
     },
     {
       type: VirtualDomElements.Option,
+      className: 'Option',
       childCount: 1,
     },
     text('test'),
