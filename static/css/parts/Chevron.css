@@ -1,0 +1,10 @@
+.Chevron {
+  width: 16px;
+  height: 16px;
+  contain: strict;
+  position: relative;
+  mask-size: 16px;
+  mask-position: 50% 50%;
+  mask-repeat: no-repeat;
+  background: currentColor;
+}
