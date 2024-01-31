@@ -6,7 +6,6 @@ export const Events = {
 }
 
 export * from './ViewletExplorer.js'
-export * from './ViewletExplorerActions.js'
 export * from './ViewletExplorerCommands.js'
 export * from './ViewletExplorerCss.js'
 export * from './ViewletExplorerKeyBindings.js'
