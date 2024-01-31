@@ -53,7 +53,6 @@ export const setActionsDom = (state, actions) => {
   if (actions.length === 0) {
     return
   }
-  console.log({ actions })
   const { $SideBarTitleArea, $Actions } = state
   const $NewActions = VirtualDom.render(actions).firstChild
   if ($Actions) {
