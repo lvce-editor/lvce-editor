@@ -3003,6 +3003,7 @@ test('handleWheel - up', () => {
           type: 4,
         },
       ],
+      'Explorer',
     ],
     [
       'Viewlet.send',
