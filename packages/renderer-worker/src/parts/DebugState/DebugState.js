@@ -1,3 +1,3 @@
-export const None = ''
-export const Paused = 'paused'
-export const Default = 'default'
+export const None = 0
+export const Paused = 1
+export const Default = 2
