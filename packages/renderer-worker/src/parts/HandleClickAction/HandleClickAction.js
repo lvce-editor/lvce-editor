@@ -1,13 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 
-export const handleClickAction = async (state, index) => {
+export const handleClickAction = async (state, index, command) => {
   Assert.object(state)
   Assert.number(index)
-  const { actions, currentViewletId } = state
-  const action = actions[index]
-  Assert.object(action)
-  const command = action.command
+  const { currentViewletId } = state
   Assert.string(command)
   const fullCommand = `${currentViewletId}.${command}`
   await Command.execute(fullCommand)

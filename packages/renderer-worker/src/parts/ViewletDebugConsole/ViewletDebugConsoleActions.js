@@ -11,6 +11,7 @@ export const getActions = () => {
       type: ActionType.Button,
       id: 'Clear Console',
       icon: Icon.ClearAll,
+      command: 'clear',
     },
   ]
 }

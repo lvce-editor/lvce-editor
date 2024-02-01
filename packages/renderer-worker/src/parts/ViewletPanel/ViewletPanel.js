@@ -61,12 +61,7 @@ export const loadContent = (state, savedState) => {
 }
 
 export const contentLoaded = (state) => {
-  const { currentViewletId, uid } = state
   const commands = []
-  const actions = ViewletActions.getActions(currentViewletId)
-  state.actions = actions
-  const dom = GetActionsVirtualDom.getActionsVirtualDom(actions)
-  commands.push(['Viewlet.send', uid, 'setActionsDom', dom])
   return commands
 }
 
