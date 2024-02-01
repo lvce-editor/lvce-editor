@@ -1,4 +1,5 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as ClassNames from '../ClassNames/ClassNames.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getVirtualDom = (textContent) => {
@@ -6,19 +7,20 @@ export const getVirtualDom = (textContent) => {
   dom.push(
     {
       type: VirtualDomElements.Div,
-      className: 'DebugConsoleTop',
+      className: ClassNames.DebugConsoleTop,
       childCount: 1,
     },
     text(textContent),
     {
       type: VirtualDomElements.Div,
-      className: 'DebugConsoleBottom',
+      className: ClassNames.DebugConsoleBottom,
       childCount: 1,
     },
     {
       type: VirtualDomElements.Input,
-      className: 'InputBox',
+      className: ClassNames.InputBox,
       onInput: 'handleInput',
+      onFocus: 'handleFocus',
       childCount: 0,
     },
   )

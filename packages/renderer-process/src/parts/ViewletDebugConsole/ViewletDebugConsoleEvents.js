@@ -7,3 +7,8 @@ export const handleInput = (event) => {
   const { value } = target
   ForwardCommand.handleInput(uid, value)
 }
+
+export const handleFocus = (event) => {
+  const uid = ComponentUid.fromEvent(event)
+  ForwardCommand.handleFocus(uid)
+}
