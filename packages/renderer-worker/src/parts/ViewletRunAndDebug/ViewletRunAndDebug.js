@@ -11,9 +11,10 @@ import * as GetDebugPausedMessage from '../GetDebugPausedMessage/GetDebugPausedM
 import * as GetScopeChain from '../GetScopeChain/GetScopeChain.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
-export const create = (id) => {
+export const create = (id, uri, x, y, width, height, args, parentUid) => {
   return {
     id,
+    parentUid,
     disposed: false,
     processes: [],
     debugState: DebugState.None,
