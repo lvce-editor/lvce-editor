@@ -1,35 +1,24 @@
-const getInnerPreview = (inner) => {
-  if (inner.type === 'string') {
-    return `${inner.name}:'${inner.value}'`
-  }
-  return `${inner.name}:${inner.value}`
-}
-
-const getDebugPropertyValueLabelObject = (property) => {
-  if (property.preview) {
-    const inner = property.preview.properties.map(getInnerPreview).join(',')
-    if (property.preview.description !== 'Object') {
-      return `${property.preview.description} {${inner}}`
-    }
-    return `{${inner}}`
-  }
-  return property.description
-}
+import * as DebugValueType from '../DebugValueType/DebugValueType.js'
+import * as GetDebugPropertyValueLabelBoolean from '../GetDebugPropertyValueLabelBoolean/GetDebugPropertyValueLabelBoolean.js'
+import * as GetDebugPropertyValueLabelCommon from '../GetDebugPropertyValueLabelCommon/GetDebugPropertyValueLabelCommon.js'
+import * as GetDebugPropertyValueLabelObject from '../GetDebugPropertyValueLabelObject/GetDebugPropertyValueLabelObject.js'
+import * as GetDebugPropertyValueLabelString from '../GetDebugPropertyValueLabelString/GetDebugPropertyValueLabelString.js'
+import * as GetDebugPropertyValueLabelUndefined from '../GetDebugPropertyValueLabelUndefined/GetDebugPropertyValueLabelUndefined.js'
 
 export const getDebugPropertyValueLabel = (property) => {
   switch (property.type) {
-    case 'number':
-    case 'symbol':
-    case 'function':
-      return property.description
-    case 'object':
-      return getDebugPropertyValueLabelObject(property)
-    case 'undefined':
-      return `undefined`
-    case 'string':
-      return `"${property.value}"`
-    case 'boolean':
-      return `${property.value}`
+    case DebugValueType.Number:
+    case DebugValueType.Symbol:
+    case DebugValueType.Function:
+      return GetDebugPropertyValueLabelCommon.getDebugPropertyValueLabelCommon(property)
+    case DebugValueType.Object:
+      return GetDebugPropertyValueLabelObject.getDebugPropertyValueLabelObject(property)
+    case DebugValueType.Undefined:
+      return GetDebugPropertyValueLabelUndefined.getDebugPropertyValueLabelString(property)
+    case DebugValueType.String:
+      return GetDebugPropertyValueLabelString.getDebugPropertyValueLabelString(property)
+    case DebugValueType.Boolean:
+      return GetDebugPropertyValueLabelBoolean.getDebugPropertyValueLabelBoolean(property)
     default:
       return `${JSON.stringify(property)}`
   }
