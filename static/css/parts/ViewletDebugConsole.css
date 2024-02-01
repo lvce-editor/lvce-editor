@@ -6,4 +6,11 @@
 
 .DebugConsoleTop {
   flex: 1;
+  contain: strict;
+  white-space: pre;
+}
+
+.DebugConsoleBottom {
+  height: 30px;
+  contain: strict;
 }
