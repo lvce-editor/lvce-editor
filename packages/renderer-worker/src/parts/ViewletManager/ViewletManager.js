@@ -261,7 +261,7 @@ const maybeRegisterEvents = (module) => {
         }
         const uid = instance.uid || instance.state.uid
         Assert.number(uid)
-        const commands = render(instance.factory, instance.renderedState, newState, uid)
+        const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
         instance.state = newState
         instance.renderedState = newState
         await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
@@ -337,7 +337,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       height = position.height
     }
 
-    const initialViewletState = module.create(viewletUid, viewlet.uri, x, y, width, height, viewlet.args)
+    const initialViewletState = module.create(viewletUid, viewlet.uri, x, y, width, height, viewlet.args, parentUid)
     let viewletState = initialViewletState
     if (!viewletState.uid) {
       viewletState.uid = viewletUid
@@ -536,8 +536,8 @@ export const mutate = async (id, fn) => {
   await fn(state)
 }
 
-export const render = (module, oldState, newState, uid = newState.uid || module.name) => {
-  return getRenderCommands(module, oldState, newState, uid)
+export const render = (module, oldState, newState, uid = newState.uid || module.name, parentUid) => {
+  return getRenderCommands(module, oldState, newState, uid, parentUid)
 }
 
 export const renderActions = (module, oldState, newState, uid = newState.uid || module.name) => {
