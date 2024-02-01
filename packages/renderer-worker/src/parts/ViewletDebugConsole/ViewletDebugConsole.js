@@ -44,3 +44,10 @@ export const evaluate = async (state) => {
     text: `${state.text}\n${result}`,
   }
 }
+
+export const clear = (state) => {
+  return {
+    ...state,
+    text: '',
+  }
+}

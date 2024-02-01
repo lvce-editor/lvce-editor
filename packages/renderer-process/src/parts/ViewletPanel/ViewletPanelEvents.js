@@ -19,7 +19,7 @@ const handleClickTab = (target, uid) => {
 
 const handleClickAction = (target, uid) => {
   const index = GetNodeIndex.getNodeIndex(target)
-  ViewletPanelFunctions.handleClickAction(uid, index)
+  ViewletPanelFunctions.handleClickAction(uid, index, target.dataset.command)
 }
 
 export const handleHeaderClick = (event) => {

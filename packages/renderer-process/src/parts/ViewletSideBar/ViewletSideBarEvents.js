@@ -4,7 +4,7 @@ import * as ViewletSideBarFunctions from './ViewletSideBarFunctions.js'
 
 const handleClickAction = (target, uid) => {
   const index = GetNodeIndex.getNodeIndex(target)
-  ViewletSideBarFunctions.handleClickAction(uid, index)
+  ViewletSideBarFunctions.handleClickAction(uid, index, target.dataset.command)
 }
 
 export const handleHeaderClick = (event) => {
