@@ -1,4 +1,4 @@
-export const name = 'Debug Console'
+export const name = 'DebugConsole'
 
 export * from './ViewletDebugConsole.js'
 export * from './ViewletDebugConsoleCommands.js'

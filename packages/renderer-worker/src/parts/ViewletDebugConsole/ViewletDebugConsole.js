@@ -1,6 +1,8 @@
 import * as Debug from '../Debug/Debug.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Focus from '../Focus/Focus.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const create = (uid) => {
   return {
@@ -22,6 +24,10 @@ export const handleInput = (state, value) => {
     ...state,
     inputValue: value,
   }
+}
+export const handleFocus = (state) => {
+  Focus.setFocus(WhenExpression.FocusDebugConsoleInput)
+  return state
 }
 
 export const evaluate = async (state) => {

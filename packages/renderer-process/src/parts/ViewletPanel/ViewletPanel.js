@@ -110,7 +110,6 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
 export const setActionsDom = (state, actions) => {
   const { $PanelTabs, $Actions } = state
   const $NewActions = VirtualDom.render(actions).firstChild
-  console.log({ actions })
   if ($Actions) {
     $Actions.replaceWith($NewActions)
   } else {

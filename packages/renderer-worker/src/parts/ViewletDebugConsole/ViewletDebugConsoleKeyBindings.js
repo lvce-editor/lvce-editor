@@ -5,7 +5,7 @@ export const getKeyBindings = () => {
   return [
     {
       key: KeyCode.Enter,
-      command: 'DebugConsole.evaluate',
+      command: 'Debug Console.evaluate',
       when: WhenExpression.FocusDebugConsoleInput,
     },
   ]
