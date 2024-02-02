@@ -18,6 +18,8 @@ export const DiffEditor = 'DiffEditor'
 
 export const EditorCompletion = 'EditorCompletion'
 
+export const EmptyEditor = 'EmptyEditor'
+
 export const EditorError = 'EditorError'
 
 export const EditorHover = 'EditorHover'
