@@ -109,3 +109,5 @@ export const Video = 'Video'
 export const About = 'About'
 
 export const EditorSourceActions = 'EditorSourceActions'
+
+export const MarkDownPreview = 'MarkDownPreview'

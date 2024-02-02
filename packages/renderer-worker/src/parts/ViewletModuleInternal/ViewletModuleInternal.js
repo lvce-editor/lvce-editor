@@ -72,6 +72,8 @@ export const load = (moduleId) => {
       return import('../ViewletSourceControl/ViewletSourceControl.ipc.js')
     case ViewletModuleId.StatusBar:
       return import('../ViewletStatusBar/ViewletStatusBar.ipc.js')
+    case ViewletModuleId.MarkDownPreview:
+      return import('../ViewletMarkDownPreview/ViewletMarkDownPreview.ipc.js')
     case ViewletModuleId.Storage:
       return import('../ViewletStorage/ViewletStorage.ipc.js')
     case ViewletModuleId.Terminal:
