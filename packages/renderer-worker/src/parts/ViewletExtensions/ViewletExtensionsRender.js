@@ -86,13 +86,13 @@ const renderHeader = {
     const actions = [
       {
         type: ActionType.Button,
-        id: ViewletExtensionStrings.clearExtensionSearchResults(),
+        title: ViewletExtensionStrings.clearExtensionSearchResults(),
         icon: `MaskIcon${MaskIcon.ClearAll}`,
         command: 'Extensions.clearSearchResults',
       },
       {
         type: ActionType.Button,
-        id: ViewletExtensionStrings.filter(),
+        title: ViewletExtensionStrings.filter(),
         icon: `MaskIcon${MaskIcon.Filter}`,
       },
     ]

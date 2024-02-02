@@ -68,6 +68,7 @@ export const create = () => {
 export const attachEvents = (state) => {
   const { $ExtensionHeader, $ListItems, $ScrollBar } = state
   $ExtensionHeader.addEventListener(DomEventType.Input, ViewletExtensionsEvents.handleInput, DomEventOptions.Capture)
+  $ExtensionHeader.addEventListener(DomEventType.Click, ViewletExtensionsEvents.handleHeaderClick)
   AttachEvents.attachEvents($ListItems, {
     [DomEventType.ContextMenu]: ViewletExtensionsEvents.handleContextMenu,
     [DomEventType.PointerDown]: ViewletExtensionsEvents.handlePointerDown,
@@ -154,7 +155,14 @@ export const handleError = (state, message) => {
 
 export const setSearchValue = (state, oldValue, newValue) => {
   const { $ExtensionHeader } = state
-  const $InputBox = $ExtensionHeader.querySelector('input')
+  console.log({ newValue })
+  if (!$ExtensionHeader) {
+    return
+  }
+  const $InputBox = $ExtensionHeader.querySelector('textarea')
+  if (!$InputBox) {
+    return
+  }
   $InputBox.value = newValue
 }
 
