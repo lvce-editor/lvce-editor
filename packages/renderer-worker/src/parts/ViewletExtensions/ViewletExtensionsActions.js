@@ -9,5 +9,10 @@ export const getActions = () => {
       id: ViewletExtensionStrings.refresh(),
       icon: MaskIcon.Refresh,
     },
+    {
+      type: ActionType.Button,
+      id: ViewletExtensionStrings.viewsAndMoreActions(),
+      icon: 'Ellipsis',
+    },
   ]
 }
