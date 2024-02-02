@@ -1,5 +1,6 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as GetSearchFieldVirtualDom from '../GetSearchFieldVirtualDom/GetSearchFieldVirtualDom.js'
 
 export const getExtensionHeaderVirtualDom = (placeholder) => {
   return [
@@ -8,15 +9,6 @@ export const getExtensionHeaderVirtualDom = (placeholder) => {
       className: ClassNames.ExtensionHeader,
       childCount: 1,
     },
-    {
-      type: VirtualDomElements.Input,
-      className: ClassNames.InputBox,
-      spellcheck: false,
-      autocapitalize: 'off',
-      inputType: 'text',
-      autocorrect: 'off',
-      childCount: 0,
-      placeholder,
-    },
+    ...GetSearchFieldVirtualDom.getSearchFieldVirtualDom('extensions', placeholder, 'handleExtensionsInput', [], []),
   ]
 }
