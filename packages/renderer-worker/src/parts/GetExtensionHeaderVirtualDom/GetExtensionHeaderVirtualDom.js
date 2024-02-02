@@ -5,21 +5,7 @@ import * as ActionType from '../ActionType/ActionType.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletExtensionStrings from '../ViewletExtensions/ViewletExtensionsStrings.js'
 
-const actions = [
-  {
-    type: ActionType.Button,
-    id: ViewletExtensionStrings.clearExtensionSearchResults(),
-    icon: `MaskIcon${MaskIcon.ClearAll}`,
-    command: 'Extensions.clearSearchResults',
-  },
-  {
-    type: ActionType.Button,
-    id: ViewletExtensionStrings.filter(),
-    icon: `MaskIcon${MaskIcon.Filter}`,
-  },
-]
-
-export const getExtensionHeaderVirtualDom = (placeholder) => {
+export const getExtensionHeaderVirtualDom = (placeholder, actions) => {
   return [
     {
       type: VirtualDomElements.Div,

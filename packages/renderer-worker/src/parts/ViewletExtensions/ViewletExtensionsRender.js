@@ -1,8 +1,11 @@
+import * as ActionType from '../ActionType/ActionType.js'
 import * as GetExtensionHeaderVirtualDom from '../GetExtensionHeaderVirtualDom/GetExtensionHeaderVirtualDom.js'
 import * as GetExtensionsVirtualDom from '../GetExtensionsVirtualDom/GetExtensionsVirtualDom.js'
 import * as GetVisibleExtensions from '../GetVisibleExtensions/GetVisibleExtensions.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as ViewletExtensionStrings from '../ViewletExtensions/ViewletExtensionsStrings.js'
 import { getListHeight } from './ViewletExtensionsShared.js'
 
 export const hasFunctionalRender = true
@@ -80,7 +83,20 @@ const renderHeader = {
     return oldState.placeholder === newState.placeholder
   },
   apply(oldState, newState) {
-    const dom = GetExtensionHeaderVirtualDom.getExtensionHeaderVirtualDom(newState.placeholder)
+    const actions = [
+      {
+        type: ActionType.Button,
+        id: ViewletExtensionStrings.clearExtensionSearchResults(),
+        icon: `MaskIcon${MaskIcon.ClearAll}`,
+        command: 'Extensions.clearSearchResults',
+      },
+      {
+        type: ActionType.Button,
+        id: ViewletExtensionStrings.filter(),
+        icon: `MaskIcon${MaskIcon.Filter}`,
+      },
+    ]
+    const dom = GetExtensionHeaderVirtualDom.getExtensionHeaderVirtualDom(newState.placeholder, actions)
     return ['setHeaderDom', dom]
   },
 }
