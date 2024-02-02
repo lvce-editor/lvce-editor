@@ -92,14 +92,5 @@ export const handleTouchEnd = (event) => {
   ViewletExtensionsFunctions.handleTouchEnd(uid, changedTouches)
 }
 
-export const handleClickClear = (event) => {
-  const { target } = event
-  const command = target.dataset.command
-  if (!command) {
-    return
-  }
-  console.log({ command })
-}
-
 export * from '../ContextMenuEvents/ContextMenuEvents.js'
 export * from '../VirtualListEvents/VirtualListEvents.js'
