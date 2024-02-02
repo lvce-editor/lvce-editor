@@ -13,6 +13,7 @@ const UiStrings = {
   Uninstall: 'Uninstall',
   InstallAnotherVersion: 'Install Another Version',
   SearchExtensionsInMarketplace: `Search Extensions in Marketplace`,
+  ViewsAndMoreActions: 'Views and more Actions...',
 }
 
 export const noExtensionsFound = () => {
@@ -49,4 +50,8 @@ export const installAnotherVersion = () => {
 
 export const searchExtensionsInMarketPlace = () => {
   return I18nString.i18nString(UiStrings.SearchExtensionsInMarketplace)
+}
+
+export const viewsAndMoreActions = () => {
+  return I18nString.i18nString(UiStrings.ViewsAndMoreActions)
 }

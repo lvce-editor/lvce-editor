@@ -1,22 +1,17 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as GetSearchFieldVirtualDom from '../GetSearchFieldVirtualDom/GetSearchFieldVirtualDom.js'
+import * as ActionType from '../ActionType/ActionType.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
+import * as ViewletExtensionStrings from '../ViewletExtensions/ViewletExtensionsStrings.js'
 
-export const getExtensionHeaderVirtualDom = (placeholder) => {
+export const getExtensionHeaderVirtualDom = (placeholder, actions) => {
   return [
     {
       type: VirtualDomElements.Div,
       className: ClassNames.ExtensionHeader,
       childCount: 1,
     },
-    {
-      type: VirtualDomElements.Input,
-      className: ClassNames.InputBox,
-      spellcheck: false,
-      autocapitalize: 'off',
-      inputType: 'text',
-      autocorrect: 'off',
-      childCount: 0,
-      placeholder,
-    },
+    ...GetSearchFieldVirtualDom.getSearchFieldVirtualDom('extensions', placeholder, 'handleExtensionsInput', actions, []),
   ]
 }
