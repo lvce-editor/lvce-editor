@@ -32,6 +32,8 @@ export const EditorWidgetError = 'EditorWidgetError'
 
 export const Error = 'Error'
 
+export const EmptyEditor = 'EmptyEditor'
+
 export const Explorer = 'Explorer'
 
 export const ExtensionDetail = 'ExtensionDetail'
