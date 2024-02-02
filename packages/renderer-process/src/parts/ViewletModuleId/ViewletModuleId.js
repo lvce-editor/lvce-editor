@@ -99,3 +99,5 @@ export const TitleBarTitle = 'TitleBarTitle'
 export const About = 'About'
 
 export const EditorSourceActions = 'EditorSourceActions'
+
+export const MarkDownPreview = 'MarkDownPreview'
