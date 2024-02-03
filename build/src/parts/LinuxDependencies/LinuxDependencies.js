@@ -10,4 +10,4 @@ export const defaultDepends = [
   'libgbm1',
 ]
 
-export const additionalDepends = ['ripgrep']
+export const recommends = ['ripgrep']

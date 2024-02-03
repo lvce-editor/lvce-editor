@@ -2,6 +2,7 @@ Package: @@NAME@@
 Version: @@VERSION@@
 Section: devel
 Depends: @@DEPENDS@@
+Recommends: @@RECOMMENDS@@
 Priority: optional
 Architecture: @@ARCHITECTURE@@
 Maintainer: @@MAINTAINER@@
