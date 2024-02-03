@@ -72,8 +72,8 @@ const copyMetaFiles = async ({ product, version, debArch }) => {
   const installedSize = await GetInstalledSize.getInstalledSize(Path.absolute(`build/.tmp/linux/deb/${debArch}/app`))
   const defaultDepends = LinuxDependencies.defaultDepends
   // TODO add options to process.argv whether or not ripgrep should be bundled or a dependency
-  const additionalDepends = LinuxDependencies.additionalDepends
-  const depends = [...defaultDepends, ...additionalDepends].join(', ')
+  const recommends = LinuxDependencies.recommends
+  const depends = [...defaultDepends].join(', ')
   await Template.write('debian_control', `build/.tmp/linux/deb/${debArch}/DEBIAN/control`, {
     '@@NAME@@': product.applicationName,
     '@@VERSION@@': version,
@@ -82,6 +82,7 @@ const copyMetaFiles = async ({ product, version, debArch }) => {
     '@@HOMEPAGE@@': product.homePage,
     '@@MAINTAINER@@': product.linuxMaintainer,
     '@@DEPENDS@@': depends,
+    '@@RECOMMENDS@@': recommends,
   })
 
   // TODO include electron/chromium licenses here? They are already at <appName>/Licenses.chromium.html
