@@ -53,5 +53,5 @@ export const setFallthroughKeyBindings = (fallthroughKeyBindings) => {
 }
 
 export const getStats = (id) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.getStats', id)
+  return ParentIpc.invoke('ElectronWebContents.getStats', id)
 }

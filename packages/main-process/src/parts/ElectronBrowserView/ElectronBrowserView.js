@@ -227,6 +227,143 @@ export const createBrowserView2 = (browserViewId) => {
   return id
 }
 
+export const attachEventListeners = (webContentsId) => {
+  const webContents = Electron.webContents.fromId(webContentsId)
+  if (!webContents) {
+    return
+  }
+  /**
+   *
+   * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param1
+   * @returns
+   */
+  const handleWindowOpen = ({ url, disposition, features, frameName, referrer, postBody }) => {
+    // TODO maybe need to put this function into a closure
+    if (url === 'about:blank') {
+      return { action: ElectronWindowOpenActionType.Allow }
+    }
+    // console.log({ disposition, features, frameName, referrer, postBody })
+    if (disposition === ElectronDispositionType.BackgroundTab) {
+      // TODO open background tab
+      const port = getPort(webContentsId)
+      if (!port) {
+        Logger.warn('[main process] handlwWindowOpen - no port found')
+        return {
+          action: ElectronWindowOpenActionType.Deny,
+        }
+      }
+      const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'updateBackgroundTab', url])
+      port.postMessage(message)
+      return {
+        action: ElectronWindowOpenActionType.Deny,
+      }
+    }
+    if (disposition === ElectronDispositionType.NewWindow) {
+      return {
+        action: ElectronWindowOpenActionType.Allow,
+      }
+    }
+    Logger.info(`[main-process] blocked popup for ${url}`)
+    return {
+      action: ElectronWindowOpenActionType.Deny,
+    }
+  }
+
+  /**
+   * @param {Electron.Event} event
+   * @param {string} url
+   */
+  const handleWillNavigate = (event, url) => {
+    Debug.debug(`[main-process] will navigate to ${url}`)
+    // console.log({ event, url })
+    const canGoForward = webContents.canGoForward()
+    const canGoBack = webContents.canGoBack()
+    const port = getPort(webContentsId)
+    if (!port) {
+      Logger.info('[main-process] view will navigate to ', url)
+      return
+    }
+    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'handleWillNavigate', url, canGoBack, canGoForward])
+    port.postMessage(message)
+  }
+  /**
+   * @param {Electron.Event} event
+   * @param {string} url
+   */
+  const handleDidNavigate = (event, url) => {
+    Debug.debug(`[main-process] did navigate to ${url}`)
+    console.log(`[main-process] did navigate to ${url}`)
+    const canGoForward = webContents.canGoForward()
+    const canGoBack = webContents.canGoBack()
+    const port = getPort(webContentsId)
+    if (!port) {
+      Logger.info('[main-process] view did navigate to ', url)
+      return
+    }
+    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'handleDidNavigate', url, canGoBack, canGoForward])
+    port.postMessage(message)
+  }
+
+  /**
+   *
+   * @param {Electron.Event} event
+   * @param {Electron.ContextMenuParams} params
+   */
+  const handleContextMenu = (event, params) => {
+    const port = getPort(webContentsId)
+    if (!port) {
+      return
+    }
+    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'handleContextMenu', params])
+    port.postMessage(message)
+  }
+
+  const handlePageTitleUpdated = (event, title) => {
+    const port = getPort(webContentsId)
+    if (!port) {
+      Logger.info('[main-process] view will change title to ', title)
+      return
+    }
+    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'handleTitleUpdated', title])
+    port.postMessage(message)
+  }
+
+  /**
+   * @param {Electron.Event} event
+   * @param {Electron.Input} input
+   */
+  const handleBeforeInput = (event, input) => {
+    if (input.type !== ElectronInputType.KeyDown) {
+      return
+    }
+    const falltroughKeyBindings = [] // TODO
+    const port = getPort(webContentsId)
+    const identifier = getIdentifier(input)
+    for (const fallThroughKeyBinding of falltroughKeyBindings) {
+      if (fallThroughKeyBinding.key === identifier) {
+        event.preventDefault()
+        const message = JsonRpcEvent.create(fallThroughKeyBinding.command, fallThroughKeyBinding.args || [])
+        port.postMessage(message)
+        return
+      }
+    }
+  }
+
+  const handleDestroyed = (event) => {
+    Debug.debug(`[main process] browser view ${webContents.id} destroyed`)
+    ElectronBrowserViewState.remove(webContents.id)
+  }
+
+  webContents.on(ElectronWebContentsEventType.ContextMenu, handleContextMenu)
+  webContents.on(ElectronWebContentsEventType.WillNavigate, handleWillNavigate)
+  webContents.on(ElectronWebContentsEventType.DidNavigate, handleDidNavigate)
+  webContents.on(ElectronWebContentsEventType.PageTitleUpdated, handlePageTitleUpdated)
+  webContents.on(ElectronWebContentsEventType.Destroyed, handleDestroyed)
+  webContents.on(ElectronWebContentsEventType.BeforeInputEvent, handleBeforeInput)
+  webContents.setWindowOpenHandler(handleWindowOpen)
+  ElectronBrowserViewAdBlock.enableForWebContents(webContents)
+}
+
 export const disposeBrowserView = (browserViewId) => {
   console.log('[main process] dispose browser view', browserViewId)
   const { view, browserWindow } = ElectronBrowserViewState.get(browserViewId)
