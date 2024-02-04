@@ -9,6 +9,7 @@ import * as ElectronDispositionType from '../ElectronDispositionType/ElectronDis
 import * as ElectronInputType from '../ElectronInputType/ElectronInputType.js'
 import * as ElectronSessionForBrowserView from '../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js'
 import { JsonRpcEvent } from '../JsonRpc/JsonRpc.js'
 import * as Logger from '../Logger/Logger.js'
@@ -355,6 +356,7 @@ export const attachEventListeners = (webContentsId) => {
   const handleDestroyed = (event) => {
     Debug.debug(`[main process] browser view ${webContents.id} destroyed`)
     ElectronBrowserViewState.remove(webContents.id)
+    SharedProcess.send(JsonRpcEvent.create('ElectronBrowserView.handleBrowserViewDestroyed', webContents.id))
   }
 
   webContents.on(ElectronWebContentsEventType.ContextMenu, handleContextMenu)
@@ -372,7 +374,6 @@ export const disposeBrowserView = (browserViewId) => {
   const { view, browserWindow } = ElectronBrowserViewState.get(browserViewId)
   ElectronBrowserViewState.remove(browserViewId)
   browserWindow.removeBrowserView(view)
-  DisposeWebContents.disposeWebContents(view.webContents)
 }
 
 const getBrowserViewId = (browserView) => {

@@ -8,9 +8,10 @@ export const createBrowserView = async (restoreId, fallthroughKeyBindings) => {
   return webContentsId
 }
 
-export const disposeBrowserView = (id) => {
+export const disposeBrowserView = async (id) => {
   ElectronBrowserViewState.remove(id)
-  return ParentIpc.invoke('ElectronBrowserView.disposeBrowserView', id)
+  await ParentIpc.invoke('ElectronBrowserView.disposeBrowserView', id)
+  await ParentIpc.invoke('ElectronWebContents.dispose', id)
 }
 
 export const getAll = () => {
@@ -23,5 +24,6 @@ export const handleBrowserViewCreated = (id) => {
 }
 
 export const handleBrowserViewDestroyed = (id) => {
+  console.log('destroyed', id)
   ElectronBrowserViewState.remove(id)
 }
