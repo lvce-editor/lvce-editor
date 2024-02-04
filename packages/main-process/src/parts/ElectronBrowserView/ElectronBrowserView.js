@@ -1,4 +1,5 @@
-import { BrowserView, BrowserWindow, webContents } from 'electron'
+import * as Electron from 'electron'
+import { BrowserView, BrowserWindow } from 'electron'
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as DisposeWebContents from '../DisposeWebContents/DisposeWebContents.js'
