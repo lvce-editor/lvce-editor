@@ -3,6 +3,7 @@ import * as ElectronBrowserViewFunctions from './ElectronBrowserViewFunctions.js
 export const name = 'ElectronBrowserViewFunctions'
 
 export const Commands = {
+  addToWindow: ElectronBrowserViewFunctions.addToWindow,
   backward: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.backward),
   cancelNavigation: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.cancelNavigation),
   copyImageAt: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.copyImageAt),

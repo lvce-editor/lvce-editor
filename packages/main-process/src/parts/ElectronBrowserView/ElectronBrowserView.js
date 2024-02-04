@@ -1,7 +1,6 @@
-import { BrowserView, BrowserWindow, webContents } from 'electron'
-import * as Assert from '../Assert/Assert.js'
+import * as Electron from 'electron'
+import { BrowserView, BrowserWindow } from 'electron'
 import * as Debug from '../Debug/Debug.js'
-import * as DisposeWebContents from '../DisposeWebContents/DisposeWebContents.js'
 import * as ElectronBrowserViewAdBlock from '../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
 import * as ElectronDispositionType from '../ElectronDispositionType/ElectronDispositionType.js'
@@ -11,6 +10,7 @@ import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/E
 import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js'
 import { JsonRpcEvent } from '../JsonRpc/JsonRpc.js'
 import * as Logger from '../Logger/Logger.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -50,38 +50,25 @@ export const getPort = (id) => {
   return undefined
 }
 
-/**
- *
- * @param {number} restoreId
- * @returns
- */
-export const createBrowserView = async (restoreId, uid) => {
-  Assert.number(restoreId)
-  Assert.number(uid)
-  const cached = ElectronBrowserViewState.get(restoreId)
-  if (cached) {
-    // console.log('[main-process] cached browser view', restoreId)
-    return restoreId
-  }
-  const browserWindow = BrowserWindow.getFocusedWindow()
-  if (!browserWindow) {
-    return ElectronBrowserViewState.getAnyKey()
-  }
-  const browserWindowId = browserWindow.webContents.id
-  // console.log('[main-process] new browser view')
+export const createBrowserView2 = (browserViewId) => {
   const view = new BrowserView({
     webPreferences: {
       session: ElectronSessionForBrowserView.getSession(),
     },
   })
-
-  view.setBackgroundColor('#fff')
-
+  // TODO get browser window id from renderer worker
+  const browserWindow = BrowserWindow.getFocusedWindow()
   const { webContents } = view
   const { id } = webContents
-  // console.log('[main process] create browser view', id)
   ElectronBrowserViewState.add(id, browserWindow, view)
+  return id
+}
 
+export const attachEventListeners = (webContentsId) => {
+  const webContents = Electron.webContents.fromId(webContentsId)
+  if (!webContents) {
+    return
+  }
   /**
    *
    * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param1
@@ -95,14 +82,14 @@ export const createBrowserView = async (restoreId, uid) => {
     // console.log({ disposition, features, frameName, referrer, postBody })
     if (disposition === ElectronDispositionType.BackgroundTab) {
       // TODO open background tab
-      const port = getPort(browserWindowId)
+      const port = getPort(webContentsId)
       if (!port) {
         Logger.warn('[main process] handlwWindowOpen - no port found')
         return {
           action: ElectronWindowOpenActionType.Deny,
         }
       }
-      const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [uid, 'updateBackgroundTab', url])
+      const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'updateBackgroundTab', url])
       port.postMessage(message)
       return {
         action: ElectronWindowOpenActionType.Deny,
@@ -128,12 +115,12 @@ export const createBrowserView = async (restoreId, uid) => {
     // console.log({ event, url })
     const canGoForward = webContents.canGoForward()
     const canGoBack = webContents.canGoBack()
-    const port = getPort(browserWindowId)
+    const port = getPort(webContentsId)
     if (!port) {
       Logger.info('[main-process] view will navigate to ', url)
       return
     }
-    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [uid, 'handleWillNavigate', url, canGoBack, canGoForward])
+    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'handleWillNavigate', url, canGoBack, canGoForward])
     port.postMessage(message)
   }
   /**
@@ -145,12 +132,12 @@ export const createBrowserView = async (restoreId, uid) => {
     console.log(`[main-process] did navigate to ${url}`)
     const canGoForward = webContents.canGoForward()
     const canGoBack = webContents.canGoBack()
-    const port = getPort(browserWindowId)
+    const port = getPort(webContentsId)
     if (!port) {
       Logger.info('[main-process] view did navigate to ', url)
       return
     }
-    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [uid, 'handleDidNavigate', url, canGoBack, canGoForward])
+    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'handleDidNavigate', url, canGoBack, canGoForward])
     port.postMessage(message)
   }
 
@@ -160,21 +147,21 @@ export const createBrowserView = async (restoreId, uid) => {
    * @param {Electron.ContextMenuParams} params
    */
   const handleContextMenu = (event, params) => {
-    const port = getPort(browserWindowId)
+    const port = getPort(webContentsId)
     if (!port) {
       return
     }
-    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [uid, 'handleContextMenu', params])
+    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'handleContextMenu', params])
     port.postMessage(message)
   }
 
   const handlePageTitleUpdated = (event, title) => {
-    const port = getPort(browserWindowId)
+    const port = getPort(webContentsId)
     if (!port) {
       Logger.info('[main-process] view will change title to ', title)
       return
     }
-    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [uid, 'handleTitleUpdated', title])
+    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'handleTitleUpdated', title])
     port.postMessage(message)
   }
 
@@ -187,7 +174,7 @@ export const createBrowserView = async (restoreId, uid) => {
       return
     }
     const falltroughKeyBindings = [] // TODO
-    const port = getPort(browserWindowId)
+    const port = getPort(webContentsId)
     const identifier = getIdentifier(input)
     for (const fallThroughKeyBinding of falltroughKeyBindings) {
       if (fallThroughKeyBinding.key === identifier) {
@@ -202,6 +189,7 @@ export const createBrowserView = async (restoreId, uid) => {
   const handleDestroyed = (event) => {
     Debug.debug(`[main process] browser view ${webContents.id} destroyed`)
     ElectronBrowserViewState.remove(webContents.id)
+    SharedProcess.send(JsonRpcEvent.create('ElectronBrowserView.handleBrowserViewDestroyed', webContents.id))
   }
 
   webContents.on(ElectronWebContentsEventType.ContextMenu, handleContextMenu)
@@ -212,19 +200,6 @@ export const createBrowserView = async (restoreId, uid) => {
   webContents.on(ElectronWebContentsEventType.BeforeInputEvent, handleBeforeInput)
   webContents.setWindowOpenHandler(handleWindowOpen)
   ElectronBrowserViewAdBlock.enableForWebContents(webContents)
-  return id
-}
-
-export const createBrowserView2 = (browserViewId) => {
-  const view = new BrowserView({
-    webPreferences: {
-      session: ElectronSessionForBrowserView.getSession(),
-    },
-  })
-  ElectronBrowserViewState.add(browserViewId, null, view)
-  const { webContents } = view
-  const { id } = webContents
-  return id
 }
 
 export const disposeBrowserView = (browserViewId) => {
@@ -232,7 +207,6 @@ export const disposeBrowserView = (browserViewId) => {
   const { view, browserWindow } = ElectronBrowserViewState.get(browserViewId)
   ElectronBrowserViewState.remove(browserViewId)
   browserWindow.removeBrowserView(view)
-  DisposeWebContents.disposeWebContents(view.webContents)
 }
 
 const getBrowserViewId = (browserView) => {

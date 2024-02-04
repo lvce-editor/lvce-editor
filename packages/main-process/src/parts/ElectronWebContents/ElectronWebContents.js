@@ -1,6 +1,9 @@
 import { webContents } from 'electron'
+import * as Assert from '../Assert/Assert.js'
+import * as DisposeWebContents from '../DisposeWebContents/DisposeWebContents.js'
 
 export const getStats = (webContentsId) => {
+  Assert.number(webContentsId)
   const contents = webContents.fromId(webContentsId)
   if (!contents) {
     return undefined
@@ -15,4 +18,13 @@ export const getStats = (webContentsId) => {
     url,
     title,
   }
+}
+
+export const dispose = (webContentsId) => {
+  Assert.number(webContentsId)
+  const contents = webContents.fromId(webContentsId)
+  if (!contents) {
+    return
+  }
+  DisposeWebContents.disposeWebContents(contents)
 }

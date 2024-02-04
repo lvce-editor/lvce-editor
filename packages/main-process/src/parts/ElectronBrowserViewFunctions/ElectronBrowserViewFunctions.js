@@ -1,3 +1,4 @@
+import { BrowserWindow } from 'electron'
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
@@ -148,6 +149,18 @@ export const show = (id) => {
     return
   }
   const { view, browserWindow } = state
+  browserWindow.addBrowserView(view)
+  // workaround for electron bug, view not being shown
+  view.setBounds(view.getBounds())
+}
+
+export const addToWindow = (browserWindowId, browserViewId) => {
+  const state = ElectronBrowserViewState.get(browserViewId)
+  const { view } = state
+  const browserWindow = BrowserWindow.fromId(browserWindowId)
+  if (!browserWindow) {
+    return
+  }
   browserWindow.addBrowserView(view)
   // workaround for electron bug, view not being shown
   view.setBounds(view.getBounds())
