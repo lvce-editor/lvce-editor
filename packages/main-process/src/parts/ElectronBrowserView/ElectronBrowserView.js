@@ -1,4 +1,4 @@
-import { BrowserView, BrowserWindow } from 'electron'
+import { BrowserView, BrowserWindow, webContents } from 'electron'
 import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as DisposeWebContents from '../DisposeWebContents/DisposeWebContents.js'
@@ -215,10 +215,22 @@ export const createBrowserView = async (restoreId, uid) => {
   return id
 }
 
-export const disposeBrowserView = (id) => {
-  console.log('[main process] dispose browser view', id)
-  const { view, browserWindow } = ElectronBrowserViewState.get(id)
-  ElectronBrowserViewState.remove(id)
+export const createBrowserView2 = (browserViewId) => {
+  const view = new BrowserView({
+    webPreferences: {
+      session: ElectronSessionForBrowserView.getSession(),
+    },
+  })
+  ElectronBrowserViewState.add(browserViewId, null, view)
+  const { webContents } = view
+  const { id } = webContents
+  return id
+}
+
+export const disposeBrowserView = (browserViewId) => {
+  console.log('[main process] dispose browser view', browserViewId)
+  const { view, browserWindow } = ElectronBrowserViewState.get(browserViewId)
+  ElectronBrowserViewState.remove(browserViewId)
   browserWindow.removeBrowserView(view)
   DisposeWebContents.disposeWebContents(view.webContents)
 }

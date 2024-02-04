@@ -30,3 +30,4 @@ export const Crash = 30
 export const Exit = 31
 export const ElectronScreen = 32
 export const TemporaryMessagePort = 34
+export const ElectronWebContents = 35
