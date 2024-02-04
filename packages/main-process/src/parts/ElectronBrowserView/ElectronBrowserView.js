@@ -222,9 +222,11 @@ export const createBrowserView2 = (browserViewId) => {
       session: ElectronSessionForBrowserView.getSession(),
     },
   })
-  ElectronBrowserViewState.add(browserViewId, null, view)
+  // TODO get browser window id from renderer worker
+  const browserWindow = BrowserWindow.getFocusedWindow()
   const { webContents } = view
   const { id } = webContents
+  ElectronBrowserViewState.add(id, browserWindow, view)
   return id
 }
 
