@@ -1,14 +1,9 @@
 import * as Electron from 'electron'
 import { BrowserView, BrowserWindow } from 'electron'
-import * as Debug from '../Debug/Debug.js'
 import * as ElectronBrowserViewAdBlock from '../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js'
+import * as ElectronBrowserViewEventListeners from '../ElectronBrowserViewEventListeners/ElectronBrowserViewEventListeners.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
-import * as ElectronDispositionType from '../ElectronDispositionType/ElectronDispositionType.js'
-import * as ElectronInputType from '../ElectronInputType/ElectronInputType.js'
 import * as ElectronSessionForBrowserView from '../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js'
-import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
-import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js'
-import { JsonRpcEvent } from '../JsonRpc/JsonRpc.js'
 import * as Logger from '../Logger/Logger.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
@@ -69,136 +64,18 @@ export const attachEventListeners = (webContentsId) => {
   if (!webContents) {
     return
   }
-  /**
-   *
-   * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param1
-   * @returns
-   */
-  const handleWindowOpen = ({ url, disposition, features, frameName, referrer, postBody }) => {
-    // TODO maybe need to put this function into a closure
-    if (url === 'about:blank') {
-      return { action: ElectronWindowOpenActionType.Allow }
-    }
-    // console.log({ disposition, features, frameName, referrer, postBody })
-    if (disposition === ElectronDispositionType.BackgroundTab) {
-      // TODO open background tab
-      const port = getPort(webContentsId)
-      if (!port) {
-        Logger.warn('[main process] handlwWindowOpen - no port found')
-        return {
-          action: ElectronWindowOpenActionType.Deny,
-        }
+  const values = Object.values(ElectronBrowserViewEventListeners)
+  for (const value of values) {
+    const wrappedListener = (...args) => {
+      const { result, messages } = value.handler(...args)
+      for (const message of messages) {
+        const [key, ...rest] = message
+        SharedProcess.send(`ElectronWebContents.${key}`, ...rest)
       }
-      const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'updateBackgroundTab', url])
-      port.postMessage(message)
-      return {
-        action: ElectronWindowOpenActionType.Deny,
-      }
+      return result
     }
-    if (disposition === ElectronDispositionType.NewWindow) {
-      return {
-        action: ElectronWindowOpenActionType.Allow,
-      }
-    }
-    Logger.info(`[main-process] blocked popup for ${url}`)
-    return {
-      action: ElectronWindowOpenActionType.Deny,
-    }
+    value.attach(webContents, wrappedListener)
   }
-
-  /**
-   * @param {Electron.Event} event
-   * @param {string} url
-   */
-  const handleWillNavigate = (event, url) => {
-    Debug.debug(`[main-process] will navigate to ${url}`)
-    // console.log({ event, url })
-    const canGoForward = webContents.canGoForward()
-    const canGoBack = webContents.canGoBack()
-    const port = getPort(webContentsId)
-    if (!port) {
-      Logger.info('[main-process] view will navigate to ', url)
-      return
-    }
-    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'handleWillNavigate', url, canGoBack, canGoForward])
-    port.postMessage(message)
-  }
-  /**
-   * @param {Electron.Event} event
-   * @param {string} url
-   */
-  const handleDidNavigate = (event, url) => {
-    Debug.debug(`[main-process] did navigate to ${url}`)
-    console.log(`[main-process] did navigate to ${url}`)
-    const canGoForward = webContents.canGoForward()
-    const canGoBack = webContents.canGoBack()
-    const port = getPort(webContentsId)
-    if (!port) {
-      Logger.info('[main-process] view did navigate to ', url)
-      return
-    }
-    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'handleDidNavigate', url, canGoBack, canGoForward])
-    port.postMessage(message)
-  }
-
-  /**
-   *
-   * @param {Electron.Event} event
-   * @param {Electron.ContextMenuParams} params
-   */
-  const handleContextMenu = (event, params) => {
-    const port = getPort(webContentsId)
-    if (!port) {
-      return
-    }
-    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'handleContextMenu', params])
-    port.postMessage(message)
-  }
-
-  const handlePageTitleUpdated = (event, title) => {
-    const port = getPort(webContentsId)
-    if (!port) {
-      Logger.info('[main-process] view will change title to ', title)
-      return
-    }
-    const message = JsonRpcEvent.create('Viewlet.executeViewletCommand', [webContentsId, 'handleTitleUpdated', title])
-    port.postMessage(message)
-  }
-
-  /**
-   * @param {Electron.Event} event
-   * @param {Electron.Input} input
-   */
-  const handleBeforeInput = (event, input) => {
-    if (input.type !== ElectronInputType.KeyDown) {
-      return
-    }
-    const falltroughKeyBindings = [] // TODO
-    const port = getPort(webContentsId)
-    const identifier = getIdentifier(input)
-    for (const fallThroughKeyBinding of falltroughKeyBindings) {
-      if (fallThroughKeyBinding.key === identifier) {
-        event.preventDefault()
-        const message = JsonRpcEvent.create(fallThroughKeyBinding.command, fallThroughKeyBinding.args || [])
-        port.postMessage(message)
-        return
-      }
-    }
-  }
-
-  const handleDestroyed = (event) => {
-    Debug.debug(`[main process] browser view ${webContents.id} destroyed`)
-    ElectronBrowserViewState.remove(webContents.id)
-    SharedProcess.send(JsonRpcEvent.create('ElectronBrowserView.handleBrowserViewDestroyed', webContents.id))
-  }
-
-  webContents.on(ElectronWebContentsEventType.ContextMenu, handleContextMenu)
-  webContents.on(ElectronWebContentsEventType.WillNavigate, handleWillNavigate)
-  webContents.on(ElectronWebContentsEventType.DidNavigate, handleDidNavigate)
-  webContents.on(ElectronWebContentsEventType.PageTitleUpdated, handlePageTitleUpdated)
-  webContents.on(ElectronWebContentsEventType.Destroyed, handleDestroyed)
-  webContents.on(ElectronWebContentsEventType.BeforeInputEvent, handleBeforeInput)
-  webContents.setWindowOpenHandler(handleWindowOpen)
   ElectronBrowserViewAdBlock.enableForWebContents(webContents)
 }
 
