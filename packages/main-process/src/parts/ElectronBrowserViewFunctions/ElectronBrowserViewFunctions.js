@@ -192,6 +192,15 @@ export const inspectElement = (view, x, y) => {
 /**
  *
  * @param {Electron.BrowserView} view
+ * @param {string} backgroundColor
+ */
+export const setBackgroundColor = (view, backgroundColor) => {
+  view.setBackgroundColor(backgroundColor)
+}
+
+/**
+ *
+ * @param {Electron.BrowserView} view
  * @param {number} x
  * @param {number} y
  */

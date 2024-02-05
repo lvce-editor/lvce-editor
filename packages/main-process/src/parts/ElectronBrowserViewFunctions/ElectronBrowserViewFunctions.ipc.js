@@ -15,6 +15,7 @@ export const Commands = {
   openDevtools: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.openDevtools),
   reload: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.reload),
   resizeBrowserView: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.resizeBrowserView),
+  setBackgroundColor: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.setBackgroundColor),
   setFallthroughKeyBindings: ElectronBrowserViewFunctions.setFallThroughKeyBindings,
   setIframeSrc: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.setIframeSrc),
   show: ElectronBrowserViewFunctions.show,
