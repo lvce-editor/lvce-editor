@@ -181,22 +181,18 @@ export const go = (state) => {
   }
 }
 
-export const handleWillNavigate = (state, url, canGoBack, canGoForward) => {
+export const handleWillNavigate = (state, url) => {
   return {
     ...state,
     iframeSrc: url,
-    canGoBack,
-    canGoForward,
     isLoading: true,
   }
 }
 
-export const handleDidNavigate = (state, url, canGoBack, canGoForward) => {
+export const handleDidNavigate = (state, url) => {
   return {
     ...state,
     iframeSrc: url,
-    canGoBack,
-    canGoForward,
     isLoading: false,
   }
 }

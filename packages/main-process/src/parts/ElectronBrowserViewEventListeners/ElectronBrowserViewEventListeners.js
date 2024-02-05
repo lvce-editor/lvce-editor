@@ -1,4 +1,3 @@
-import * as Debug from '../Debug/Debug.js'
 import * as ElectronDispositionType from '../ElectronDispositionType/ElectronDispositionType.js'
 import * as ElectronInputType from '../ElectronInputType/ElectronInputType.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
@@ -42,7 +41,6 @@ export const windowOpen = {
     webContents.setWindowOpenHandler(null)
   },
   handler({ url, disposition, features, frameName, referrer, postBody }) {
-    // TODO maybe need to put this function into a closure
     if (url === 'about:blank') {
       return {
         result: {
@@ -51,7 +49,6 @@ export const windowOpen = {
         messages: [],
       }
     }
-    // console.log({ disposition, features, frameName, referrer, postBody })
     if (disposition === ElectronDispositionType.BackgroundTab) {
       return {
         result: {
@@ -103,8 +100,6 @@ export const didNavigate = {
     webContents.off(ElectronWebContentsEventType.DidNavigate, listener)
   },
   handler(event, url) {
-    Debug.debug(`[main-process] did navigate to ${url}`)
-    console.log(`[main-process] did navigate to ${url}`)
     return {
       result: undefined,
       messages: [['handleDidNavigate', url]],
