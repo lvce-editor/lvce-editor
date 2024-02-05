@@ -5,7 +5,7 @@ import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 export const createBrowserView = async (restoreId, fallthroughKeyBindings) => {
   const webContentsId = await ParentIpc.invoke('ElectronBrowserView.createBrowserView2', restoreId)
   // TODO get window id from renderer worker
-  await ParentIpc.invoke('ElectronBrowserView.attachEventListeners', restoreId)
+  await ParentIpc.invoke('ElectronBrowserView.attachEventListeners', webContentsId)
   return webContentsId
 }
 

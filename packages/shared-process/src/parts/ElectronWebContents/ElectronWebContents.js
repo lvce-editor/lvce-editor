@@ -13,10 +13,12 @@ export const handleWindowOpen = (webContentsId, url) => {
 }
 
 export const handleWillNavigate = (webContentsId, url) => {
+  console.log('will navigate', url)
   // TODO
 }
 
 export const handleDidNavigate = (webContentsId, url) => {
+  console.log('did navigate', url)
   // TODO
 }
 
@@ -24,6 +26,6 @@ export const handleContextMenu = (webContentsId, params) => {
   // TODO
 }
 
-export const handlePageTitleUpdated = (webContentsId, title) => {
+export const handleTitleUpdated = (webContentsId, title) => {
   // TODO
 }

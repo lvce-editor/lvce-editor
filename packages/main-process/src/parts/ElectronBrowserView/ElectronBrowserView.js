@@ -1,5 +1,6 @@
 import * as Electron from 'electron'
 import { BrowserView, BrowserWindow } from 'electron'
+import * as Assert from '../Assert/Assert.js'
 import * as ElectronBrowserViewAdBlock from '../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js'
 import * as ElectronBrowserViewEventListeners from '../ElectronBrowserViewEventListeners/ElectronBrowserViewEventListeners.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
@@ -32,6 +33,7 @@ export const createBrowserView2 = (browserViewId) => {
 }
 
 export const attachEventListeners = (webContentsId) => {
+  Assert.number(webContentsId)
   const webContents = Electron.webContents.fromId(webContentsId)
   if (!webContents) {
     return
