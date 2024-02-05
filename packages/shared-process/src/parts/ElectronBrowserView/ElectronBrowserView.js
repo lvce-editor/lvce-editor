@@ -1,5 +1,6 @@
-import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
+import * as ElectronWebContents from '../ElectronWebContents/ElectronWebContents.js'
+import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
 export const createBrowserView = async (restoreId, fallthroughKeyBindings) => {
   const webContentsId = await ParentIpc.invoke('ElectronBrowserView.createBrowserView2', restoreId)
@@ -11,7 +12,7 @@ export const createBrowserView = async (restoreId, fallthroughKeyBindings) => {
 export const disposeBrowserView = async (id) => {
   ElectronBrowserViewState.remove(id)
   await ParentIpc.invoke('ElectronBrowserView.disposeBrowserView', id)
-  await ParentIpc.invoke('ElectronWebContents.dispose', id)
+  await ElectronWebContents.dispose(id)
 }
 
 export const getAll = () => {
