@@ -5,20 +5,9 @@ import * as ElectronBrowserViewAdBlock from '../ElectronBrowserViewAdBlock/Elect
 import * as ElectronBrowserViewEventListeners from '../ElectronBrowserViewEventListeners/ElectronBrowserViewEventListeners.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
 import * as ElectronSessionForBrowserView from '../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js'
-import * as Logger from '../Logger/Logger.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
-/**
- *
- * @param {number} id
- * @returns {any}
- */
-export const getPort = (id) => {
-  Logger.info('[main process] no message port found')
-  return undefined
-}
-
-export const createBrowserView2 = (browserViewId) => {
+export const createBrowserView2 = () => {
   const view = new BrowserView({
     webPreferences: {
       session: ElectronSessionForBrowserView.getSession(),
@@ -60,8 +49,4 @@ export const disposeBrowserView = (browserViewId) => {
   const { view, browserWindow } = ElectronBrowserViewState.get(browserViewId)
   ElectronBrowserViewState.remove(browserViewId)
   browserWindow.removeBrowserView(view)
-}
-
-const getBrowserViewId = (browserView) => {
-  return browserView.webContents.id
 }

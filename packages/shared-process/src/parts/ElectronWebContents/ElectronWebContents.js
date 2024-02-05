@@ -6,8 +6,32 @@ export const dispose = async (id) => {
   await ParentIpc.invoke('ElectronWebContents.dispose', id)
 }
 
-export const handleKeyBinding = (id, keyBinding) => {
-  console.log('keybinding')
+export const callFunction = (webContentsId, method, ...params) => {
+  return ParentIpc.invoke(`ElectronWebContents.callFunction`, webContentsId, method, ...params)
+}
+
+export const focus = (webContentsId) => {
+  return callFunction(webContentsId, 'focus')
+}
+
+export const openDevtools = (webContentsId) => {
+  return callFunction(webContentsId, 'openDevTools')
+}
+
+export const reload = (webContentsId) => {
+  return callFunction(webContentsId, 'reload')
+}
+
+export const forward = (webContentsId) => {
+  return callFunction(webContentsId, 'goForward')
+}
+
+export const backward = (webContentsId) => {
+  return callFunction(webContentsId, 'goBack')
+}
+
+export const inspectElement = (webContentsId, x, y) => {
+  return callFunction(webContentsId, `inspectElement`, x, y)
 }
 
 export const handleWindowOpen = (webContentsId, url) => {

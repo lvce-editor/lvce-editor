@@ -1,4 +1,5 @@
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as ElectronWebContents from '../ElectronWebContents/ElectronWebContents.js'
 
 export const resizeBrowserView = (id, x, y, width, height) => {
   return ParentIpc.invoke('ElectronBrowserViewFunctions.resizeBrowserView', id, x, y, width, height)
@@ -12,25 +13,15 @@ const callFunction = (id, functionName) => {
   return ParentIpc.invoke('ElectronWebContents.callFunction', id, functionName)
 }
 
-export const focus = (id) => {
-  return callFunction(id, 'focus')
-}
+export const focus = ElectronWebContents.focus
 
-export const openDevtools = (id) => {
-  return callFunction(id, 'openDevTools')
-}
+export const openDevtools = ElectronWebContents.openDevtools
 
-export const reload = (id) => {
-  return callFunction(id, 'reload')
-}
+export const reload = ElectronWebContents.reload
 
-export const forward = (id) => {
-  return callFunction(id, 'goForward')
-}
+export const forward = ElectronWebContents.forward
 
-export const backward = (id) => {
-  return callFunction(id, 'goBack')
-}
+export const backward = ElectronWebContents.backward
 
 export const cancelNavigation = (id) => {
   return ParentIpc.invoke('ElectronBrowserViewFunctions.cancelNavigation', id)
@@ -44,9 +35,7 @@ export const hide = (id) => {
   return ParentIpc.invoke('ElectronBrowserViewFunctions.hide', id)
 }
 
-export const inspectElement = (id, x, y) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.inspectElement', id, x, y)
-}
+export const inspectElement = ElectronWebContents.inspectElement
 
 export const copyImageAt = (id, x, y) => {
   return ParentIpc.invoke('ElectronBrowserViewFunctions.copyImageAt', id, x, y)
