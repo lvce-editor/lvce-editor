@@ -1,5 +1,6 @@
 import * as Electron from 'electron'
 import { BrowserView, BrowserWindow } from 'electron'
+import * as Assert from '../Assert/Assert.js'
 import * as ElectronBrowserViewAdBlock from '../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js'
 import * as ElectronBrowserViewEventListeners from '../ElectronBrowserViewEventListeners/ElectronBrowserViewEventListeners.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
@@ -32,6 +33,7 @@ export const createBrowserView2 = (browserViewId) => {
 }
 
 export const attachEventListeners = (webContentsId) => {
+  Assert.number(webContentsId)
   const webContents = Electron.webContents.fromId(webContentsId)
   if (!webContents) {
     return
@@ -42,10 +44,12 @@ export const attachEventListeners = (webContentsId) => {
       const { result, messages } = value.handler(...args)
       for (const message of messages) {
         const [key, ...rest] = message
-        SharedProcess.send(`ElectronWebContents.${key}`, ...rest)
+        SharedProcess.send(`ElectronWebContents.${key}`, webContentsId, ...rest)
       }
       return result
     }
+    // TODO detached listeners when webcontents are disposed
+    // to avoid potential memory leaks
     value.attach(webContents, wrappedListener)
   }
   ElectronBrowserViewAdBlock.enableForWebContents(webContents)
@@ -60,15 +64,4 @@ export const disposeBrowserView = (browserViewId) => {
 
 const getBrowserViewId = (browserView) => {
   return browserView.webContents.id
-}
-
-export const getAll = () => {
-  const windows = BrowserWindow.getAllWindows()
-  const overview = Object.create(null)
-  for (const window of windows) {
-    const views = window.getBrowserViews()
-    const viewIds = views.map(getBrowserViewId)
-    overview[window.id] = viewIds
-  }
-  return overview
 }
