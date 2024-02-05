@@ -13,7 +13,6 @@ export const createBrowserView2 = () => {
       session: ElectronSessionForBrowserView.getSession(),
     },
   })
-
   // TODO get browser window id from renderer worker
   const browserWindow = BrowserWindow.getFocusedWindow()
   const { webContents } = view
