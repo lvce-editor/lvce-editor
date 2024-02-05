@@ -295,6 +295,14 @@ export const getModuleId = (commandId) => {
       return ModuleId.HandleRemoteRequest
     case 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess':
       return ModuleId.HandleMessagePortForExtensionHostHelperProcess
+    case 'ElectronWebContents.dispose':
+    case 'ElectronWebContents.handleKeyBinding':
+    case 'ElectronWebContents.handleWindowOpen':
+    case 'ElectronWebContents.handleWillNavigate':
+    case 'ElectronWebContents.handleDidNavigate':
+    case 'ElectronWebContents.handleContextMenu':
+    case 'ElectronWebContents.handlePageTitleUpdated':
+      return ModuleId.ElectronWebContents
     default:
       throw new CommandNotFoundError(commandId)
   }
