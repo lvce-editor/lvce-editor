@@ -44,10 +44,12 @@ export const attachEventListeners = (webContentsId) => {
       const { result, messages } = value.handler(...args)
       for (const message of messages) {
         const [key, ...rest] = message
-        SharedProcess.send(`ElectronWebContents.${key}`, ...rest)
+        SharedProcess.send(`ElectronWebContents.${key}`, webContentsId, ...rest)
       }
       return result
     }
+    // TODO detached listeners when webcontents are disposed
+    // to avoid potential memory leaks
     value.attach(webContents, wrappedListener)
   }
   ElectronBrowserViewAdBlock.enableForWebContents(webContents)
