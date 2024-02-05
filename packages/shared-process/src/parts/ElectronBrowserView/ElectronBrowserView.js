@@ -1,9 +1,11 @@
+import * as ElectronBrowserViewIpcState from '../ElectronBrowserViewIpcState/ElectronBrowserViewIpcState.js'
 import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
 import * as ElectronWebContents from '../ElectronWebContents/ElectronWebContents.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
-export const createBrowserView = async (restoreId, fallthroughKeyBindings) => {
+export const createBrowserView = async (ipc, restoreId, fallthroughKeyBindings) => {
   const webContentsId = await ParentIpc.invoke('ElectronBrowserView.createBrowserView2', restoreId)
+  ElectronBrowserViewIpcState.add(webContentsId, ipc)
   // TODO get window id from renderer worker
   await ParentIpc.invoke('ElectronBrowserView.attachEventListeners', webContentsId)
   return webContentsId
@@ -27,4 +29,5 @@ export const handleBrowserViewCreated = (id) => {
 export const handleBrowserViewDestroyed = (id) => {
   console.log('destroyed', id)
   ElectronBrowserViewState.remove(id)
+  ElectronBrowserViewIpcState.remove(id)
 }
