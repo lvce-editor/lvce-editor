@@ -99,3 +99,7 @@ export const focus = (windowId) => {
 export const handleClose = (windowId) => {
   // TODO
 }
+
+export const getFocusedWindowId = () => {
+  return ParentIpc.invoke('ElectronWindow.getFocusedWindowId')
+}

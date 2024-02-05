@@ -27,3 +27,14 @@ export const getFocusedWindow = () => {
 export const findById = (windowId) => {
   return GetWindowById.getWindowById(windowId)
 }
+
+/**
+ * @returns {any}
+ */
+export const getFocusedWindowId = () => {
+  const browserWindow = Electron.BrowserWindow.getFocusedWindow()
+  if (!browserWindow) {
+    return -1
+  }
+  return browserWindow.id
+}
