@@ -94,7 +94,6 @@ export const loadContent = async (state, savedState) => {
   const browserViewY = y + headerHeight
   const browserViewWidth = width
   const browserViewHeight = height - headerHeight
-  console.log({ browserViewWidth, browserViewX, browserViewY })
   if (id) {
     const actualId = await ElectronBrowserView.createBrowserView(id, uid)
     await ElectronBrowserViewFunctions.setFallthroughKeyBindings(keyBindings)
