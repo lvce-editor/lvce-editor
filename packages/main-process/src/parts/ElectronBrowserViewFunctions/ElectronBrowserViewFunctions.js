@@ -157,9 +157,6 @@ export const show = (id) => {
   browserWindow.addBrowserView(view)
   // workaround for electron bug, view not being shown
   view.setBounds(view.getBounds())
-
-  view.webContents.setZoomLevel(0.2)
-  // view.webContents.setZoomFactor(3)
 }
 
 export const addToWindow = (browserWindowId, browserViewId) => {
