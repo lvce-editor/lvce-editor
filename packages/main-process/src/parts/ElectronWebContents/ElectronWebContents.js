@@ -28,3 +28,13 @@ export const dispose = (webContentsId) => {
   }
   DisposeWebContents.disposeWebContents(contents)
 }
+
+export const callFunction = (webContentsId, functionName) => {
+  Assert.number(webContentsId)
+  Assert.string(functionName)
+  const contents = webContents.fromId(webContentsId)
+  if (!contents) {
+    return
+  }
+  contents[functionName]()
+}
