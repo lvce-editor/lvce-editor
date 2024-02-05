@@ -8,24 +8,28 @@ export const setIframeSrc = async (id, iframeSrc) => {
   return ParentIpc.invoke('ElectronBrowserViewFunctions.setIframeSrc', id, iframeSrc)
 }
 
+const callFunction = (id, functionName) => {
+  return ParentIpc.invoke('ElectronWebContents.callFunction', id, functionName)
+}
+
 export const focus = (id) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.focus', id)
+  return callFunction(id, 'focus')
 }
 
 export const openDevtools = (id) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.openDevtools', id)
+  return callFunction(id, 'openDevTools')
 }
 
 export const reload = (id) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.reload', id)
+  return callFunction(id, 'reload')
 }
 
 export const forward = (id) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.forward', id)
+  return callFunction(id, 'goForward')
 }
 
 export const backward = (id) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.backward', id)
+  return callFunction(id, 'goBack')
 }
 
 export const cancelNavigation = (id) => {

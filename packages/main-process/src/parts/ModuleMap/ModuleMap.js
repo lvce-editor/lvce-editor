@@ -75,8 +75,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Exit
     case 'ElectronScreen':
       return ModuleId.ElectronScreen
-    case 'ElectronUtilityProcess':
-      return ModuleId.ElectronUtilityProcess
     case 'TemporaryMessagePort':
       return ModuleId.TemporaryMessagePort
     case 'ElectronWebContents':
