@@ -10,4 +10,5 @@ export const Commands = {
   handleDidNavigate: ElectronWebContents.handleDidNavigate,
   handleContextMenu: ElectronWebContents.handleContextMenu,
   handleTitleUpdated: ElectronWebContents.handleTitleUpdated,
+  handleBrowserViewDestroyed: ElectronWebContents.handleBrowserViewDestroyed, // TODO rename to webcontents
 }

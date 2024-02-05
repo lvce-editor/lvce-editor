@@ -65,14 +65,3 @@ export const disposeBrowserView = (browserViewId) => {
 const getBrowserViewId = (browserView) => {
   return browserView.webContents.id
 }
-
-export const getAll = () => {
-  const windows = BrowserWindow.getAllWindows()
-  const overview = Object.create(null)
-  for (const window of windows) {
-    const views = window.getBrowserViews()
-    const viewIds = views.map(getBrowserViewId)
-    overview[window.id] = viewIds
-  }
-  return overview
-}

@@ -17,17 +17,7 @@ export const disposeBrowserView = async (id) => {
   await ElectronWebContents.dispose(id)
 }
 
-export const getAll = () => {
-  return ParentIpc.invoke('ElectronBrowserView.getAll')
-}
-
 export const handleBrowserViewCreated = (id) => {
   console.log('created', id)
   ElectronBrowserViewState.add(id)
-}
-
-export const handleBrowserViewDestroyed = (id) => {
-  console.log('destroyed', id)
-  ElectronBrowserViewState.remove(id)
-  ElectronBrowserViewIpcState.remove(id)
 }

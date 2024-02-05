@@ -1,4 +1,5 @@
 import * as ElectronBrowserViewIpcState from '../ElectronBrowserViewIpcState/ElectronBrowserViewIpcState.js'
+import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 
 export const dispose = async (id) => {
@@ -40,4 +41,9 @@ export const handleContextMenu = (...args) => {
 
 export const handleTitleUpdated = (...args) => {
   return forwardEvent('handleTitleUpdated', ...args)
+}
+
+export const handleBrowserViewDestroyed = (id) => {
+  ElectronBrowserViewState.remove(id)
+  ElectronBrowserViewIpcState.remove(id)
 }
