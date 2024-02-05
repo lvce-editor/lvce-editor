@@ -31,6 +31,11 @@ export const wrapBrowserViewCommand = (fn) => {
  * @param {number} height
  */
 export const resizeBrowserView = (view, x, y, width, height) => {
+  Assert.object(view)
+  Assert.number(x)
+  Assert.number(y)
+  Assert.number(width)
+  Assert.number(height)
   view.setBounds({ x, y, width, height })
 }
 
@@ -152,6 +157,9 @@ export const show = (id) => {
   browserWindow.addBrowserView(view)
   // workaround for electron bug, view not being shown
   view.setBounds(view.getBounds())
+
+  view.webContents.setZoomLevel(0.2)
+  // view.webContents.setZoomFactor(3)
 }
 
 export const addToWindow = (browserWindowId, browserViewId) => {

@@ -92,6 +92,11 @@ export const zoomReset = (windowId) => {
   return setZoom(windowId, getDefaultZoomLevel(), getMinZoomLevel(), getMaxZoomLevel())
 }
 
+export const getZoom = (windowId) => {
+  // TODO zoom level should be stored in shared process
+  return ParentIpc.invoke('ElectronWindow.getZoom', windowId)
+}
+
 export const focus = (windowId) => {
   return ParentIpc.invoke('ElectronWindow.executeWebContentsFunction', windowId, 'focus')
 }
