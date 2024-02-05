@@ -1,14 +1,21 @@
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as GetSimpleBrowserVirtualDom from '../GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
 import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const hasFunctionalRender = true
 
-const renderIframeSrc = {
+const renderDom = {
   isEqual(oldState, newState) {
-    return oldState.iframeSrc === newState.iframeSrc
+    return oldState.iframeSrc === newState.iframeSrc && oldState.canGoBack === newState.canGoBack && oldState.canGoForward === newState.canGoForward
   },
   apply(oldState, newState) {
-    return [RenderMethod.SetIframeSrc, newState.iframeSrc]
+    const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+      newState.canGoBack,
+      newState.canGoForward,
+      newState.isLoading,
+      newState.iframeSrc,
+    )
+    return [RenderMethod.SetDom, dom]
   },
 }
 
@@ -22,22 +29,4 @@ const renderTitle = {
   },
 }
 
-const renderButtonsEnabled = {
-  isEqual(oldState, newState) {
-    return oldState.canGoBack === newState.canGoBack && oldState.canGoForward === newState.canGoForward
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetButtonsEnabled, /* canGoBack */ newState.canGoBack, /* canGoFoward */ newState.canGoForward]
-  },
-}
-
-const renderLoading = {
-  isEqual(oldState, newState) {
-    return oldState.isLoading === newState.isLoading
-  },
-  apply(oldState, newState) {
-    return [/* method */ RenderMethod.SetLoading, /* isLoading */ newState.isLoading]
-  },
-}
-
-export const render = [renderIframeSrc, renderTitle, renderButtonsEnabled, renderLoading]
+export const render = [renderDom, renderTitle]
