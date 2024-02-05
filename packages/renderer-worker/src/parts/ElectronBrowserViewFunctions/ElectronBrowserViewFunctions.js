@@ -19,7 +19,6 @@ export const resizeBrowserView = async (id, x, y, width, height) => {
   // TODO speed up resizing by avoid too many round trips
   const windowId = await GetWindowId.getWindowId()
   const zoomLevel = await SharedProcess.invoke('ElectronWindow.getZoom', windowId)
-  console.log({ zoomLevel })
   const zoomValue = getZoomLevelToPercentValue(zoomLevel)
   const modifiedWidth = Math.round(width * zoomValue)
   const modifiedHeight = Math.round(height * zoomValue)
