@@ -31,6 +31,11 @@ export const wrapBrowserViewCommand = (fn) => {
  * @param {number} height
  */
 export const resizeBrowserView = (view, x, y, width, height) => {
+  Assert.object(view)
+  Assert.number(x)
+  Assert.number(y)
+  Assert.number(width)
+  Assert.number(height)
   view.setBounds({ x, y, width, height })
 }
 

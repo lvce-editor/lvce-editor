@@ -1,7 +1,28 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 
-export const resizeBrowserView = (id, x, y, width, height) => {
-  return SharedProcess.invoke('ElectronBrowserViewFunctions.resizeBrowserView', id, x, y, width, height)
+// TODO improve and test function
+const getZoomLevelToPercentValue = (zoomLevel) => {
+  if (zoomLevel === 0) {
+    return 1
+  }
+  if (zoomLevel === -0.2) {
+    return 0.96
+  }
+  if (zoomLevel === 0.2) {
+    return 1.04
+  }
+  return 1
+}
+
+export const resizeBrowserView = async (id, x, y, width, height) => {
+  // TODO speed up resizing by avoid too many round trips
+  const windowId = await GetWindowId.getWindowId()
+  const zoomLevel = await SharedProcess.invoke('ElectronWindow.getZoom', windowId)
+  const zoomValue = getZoomLevelToPercentValue(zoomLevel)
+  const modifiedWidth = Math.round(width * zoomValue)
+  const modifiedHeight = Math.round(height * zoomValue)
+  return SharedProcess.invoke('ElectronBrowserViewFunctions.resizeBrowserView', id, x, y, modifiedWidth, modifiedHeight)
 }
 
 export const setIframeSrc = async (id, iframeSrc) => {
