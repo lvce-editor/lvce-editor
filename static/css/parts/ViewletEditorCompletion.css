@@ -20,6 +20,7 @@
   gap: 5px;
   padding-left: 1px;
   position: absolute;
+  cursor: pointer;
 }
 
 /* TODO reuse same highlight css for quickpick */
