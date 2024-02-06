@@ -241,7 +241,7 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Space,
-      command: 'Editor.selectInsideString',
+      command: 'Editor.selectionGrow',
       when: WhenExpression.FocusEditor,
     },
   ]

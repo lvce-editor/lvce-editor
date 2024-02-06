@@ -6,7 +6,9 @@ const { registerSelectionProvider, executeSelectionProvider, reset } = Registry.
   resultShape: {
     allowUndefined: true,
     type: Types.Array,
-    properties: {},
+    items: {
+      type: 'number',
+    },
   },
 })
 
