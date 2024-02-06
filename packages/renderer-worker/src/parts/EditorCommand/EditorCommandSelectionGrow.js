@@ -4,7 +4,8 @@ import * as ExtensionHostSelection from '../ExtensionHost/ExtensionHostSelection
 const getNewSelections = async (editor, selections) => {
   const rowIndex = selections[0]
   const columnIndex = selections[1]
-  const newSelections = await ExtensionHostSelection.executeSelectionProvider(editor, [rowIndex, columnIndex])
+  const newSelections = await ExtensionHostSelection.executeGrowSelection(editor, [rowIndex, columnIndex])
+  console.log({ newSelections })
   return newSelections
 }
 
