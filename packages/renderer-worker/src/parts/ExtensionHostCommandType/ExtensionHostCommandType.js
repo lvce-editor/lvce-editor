@@ -25,6 +25,7 @@ export const ReferenceExecuteReferenceProvider = 'ExtensionHostReference.execute
 export const RegisterStatusBarChangeListener = 'ExtensionHostStatusBar.registerChangeListener'
 export const RenameExecuteRename = 'ExtensionHostRename.executeRename'
 export const RenamePrepareRename = 'ExtensionHostRename.executePrepareRename'
+export const SelectionExecuteSelectionProvider = 'ExtensionHostSelection.executeSelectionProvider'
 export const SourceControlAcceptInput = 'ExtensionHostSourceControl.acceptInput'
 export const SourceControlAdd = 'ExtensionHostSourceControl.add'
 export const SourceControlDiscard = 'ExtensionHostSourceControl.discard'
