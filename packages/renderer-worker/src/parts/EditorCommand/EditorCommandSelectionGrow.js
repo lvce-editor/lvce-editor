@@ -2,9 +2,7 @@ import * as Editor from '../Editor/Editor.js'
 import * as ExtensionHostSelection from '../ExtensionHost/ExtensionHostSelection.js'
 
 const getNewSelections = async (editor, selections) => {
-  const rowIndex = selections[2]
-  const columnIndex = selections[3]
-  const newSelections = await ExtensionHostSelection.executeGrowSelection(editor, [rowIndex, columnIndex])
+  const newSelections = await ExtensionHostSelection.executeGrowSelection(editor, selections)
   if (newSelections.length === 0) {
     return selections
   }
