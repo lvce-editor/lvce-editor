@@ -48,6 +48,32 @@ const getLabelDom = (label, highlights) => {
   return dom
 }
 
+const getCompletionItemVirtualDom = (visibleItem) => {
+  const { top, label, symbolName, highlights, focused, deprecated } = visibleItem
+  let className = ClassNames.EditorCompletionItem
+  if (focused) {
+    className += ' ' + ClassNames.EditorCompletionItemFocused
+  }
+  if (deprecated) {
+    className += ' ' + ClassNames.EditorCompletionItemDeprecated
+  }
+  return [
+    {
+      type: VirtualDomElements.Div,
+      role: AriaRoles.Option,
+      className,
+      top,
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: `${ClassNames.ColoredMaskIcon} ${symbolName}`,
+      childCount: 0,
+    },
+    ...getLabelDom(label, highlights),
+  ]
+}
+
 export const getCompletionItemsVirtualDom = (visibleItems) => {
   if (visibleItems.length === 0) {
     return [
@@ -62,31 +88,6 @@ export const getCompletionItemsVirtualDom = (visibleItems) => {
     type: VirtualDomElements.Div,
     childCount: visibleItems.length,
   }
-  const dom = [root]
-  for (const visibleItem of visibleItems) {
-    const { top, label, symbolName, highlights, focused, deprecated } = visibleItem
-    let className = ClassNames.EditorCompletionItem
-    if (focused) {
-      className += ' ' + ClassNames.EditorCompletionItemFocused
-    }
-    if (deprecated) {
-      className += ' ' + ClassNames.EditorCompletionItemDeprecated
-    }
-    dom.push(
-      {
-        type: VirtualDomElements.Div,
-        role: AriaRoles.Option,
-        className,
-        top,
-        childCount: 2,
-      },
-      {
-        type: VirtualDomElements.Div,
-        className: `${ClassNames.ColoredMaskIcon} ${symbolName}`,
-        childCount: 0,
-      },
-      ...getLabelDom(label, highlights),
-    )
-  }
+  const dom = [root, ...visibleItems.flatMap(getCompletionItemVirtualDom)]
   return dom
 }
