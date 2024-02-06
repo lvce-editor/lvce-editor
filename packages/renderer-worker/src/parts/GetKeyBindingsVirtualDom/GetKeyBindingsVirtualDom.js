@@ -1,6 +1,7 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as ViewletKeyBindingsStrings from '../ViewletKeyBindings/ViewletKeyBindingsStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const kbdDom = {
@@ -65,16 +66,11 @@ const tableCellProps = {
 }
 
 const getRowClassName = (isEven, selected) => {
-  let className = ClassNames.KeyBindingsTableRow
-  if (isEven) {
-    className += ' ' + ClassNames.KeyBindingsTableRowEven
-  } else {
-    className += ' ' + ClassNames.KeyBindingsTableRowOdd
-  }
-  if (selected) {
-    className += ' ' + ClassNames.KeyBindingsTableRowSelected
-  }
-  return className
+  return MergeClassNames.mergeClassNames(
+    ClassNames.KeyBindingsTableRow,
+    isEven ? ClassNames.KeyBindingsTableRowEven : ClassNames.KeyBindingsTableRowOdd,
+    selected ? ClassNames.KeyBindingsTableRowSelected : '',
+  )
 }
 
 const getTableRowDom = (keyBinding) => {
