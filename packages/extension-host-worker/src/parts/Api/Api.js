@@ -20,6 +20,7 @@ import * as ExtensionHostImplementation from '../ExtensionHostImplementation/Ext
 import * as ExtensionHostNodeIpc from '../ExtensionHostNodeRpc/ExtensionHostNodeRpc.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
+import * as ExtensionHostSelection from '../ExtensionHostSelection/ExtensionHostSelection.js'
 import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
@@ -108,6 +109,10 @@ export const api = {
   // Reference
   registerReferenceProvider: ExtensionHostReference.registerReferenceProvider,
   executeReferenceProvider: ExtensionHostReference.executeReferenceProvider,
+
+  // Selection
+  registerSelectionProvider:ExtensionHostSelection.registerSelectionProvider,
+  executeSelectionProvider:ExtensionHostSelection.executeSelectionProvider,
 
   // Source Control
   registerSourceControlProvider: ExtensionHostSourceControl.registerSourceControlProvider,
