@@ -7,7 +7,6 @@ const combineResults = (results) => {
 }
 
 export const executeGrowSelection = (editor, positions) => {
-  console.log('grow')
   return ExtensionHostEditor.execute({
     editor,
     event: ExtensionHostActivationEvent.OnLanguage,
