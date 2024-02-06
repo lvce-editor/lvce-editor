@@ -1,13 +1,15 @@
 import * as Editor from '../Editor/Editor.js'
+import * as ExtensionHostSelection from '../ExtensionHost/ExtensionHostSelection.js'
 
-const getNewSelections = (lines, selections) => {
-  // TODO query selections from extension host
-  return selections
+const getNewSelections = async (editor, selections) => {
+  const rowIndex = selections[0]
+  const columnIndex = selections[1]
+  const newSelections = await ExtensionHostSelection.executeSelectionProvider(editor, [rowIndex, columnIndex])
+  return newSelections
 }
 
-export const selectionGrow = (editor) => {
+export const selectionGrow = async (editor) => {
   const { selections } = editor
-  const { lines } = editor
-  const newSelections = getNewSelections(lines, selections)
+  const newSelections = await getNewSelections(editor, selections)
   return Editor.scheduleSelections(editor, newSelections)
 }
