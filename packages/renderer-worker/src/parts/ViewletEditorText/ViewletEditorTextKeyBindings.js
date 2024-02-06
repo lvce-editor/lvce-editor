@@ -239,5 +239,10 @@ export const getKeyBindings = () => {
       command: 'Editor.organizeImports',
       when: WhenExpression.FocusEditorText,
     },
+    {
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Space,
+      command: 'Editor.selectInsideString',
+      when: WhenExpression.FocusEditor,
+    },
   ]
 }

@@ -76,6 +76,7 @@ export const LazyCommands = {
   selectAllOccurrences: () => import('../EditorCommand/EditorCommandSelectAllOccurrences.js'),
   selectCharacterLeft: () => import('../EditorCommand/EditorCommandSelectCharacterLeft.js'),
   selectCharacterRight: () => import('../EditorCommand/EditorCommandSelectCharacterRight.js'),
+  selectionGrow: () => import('../EditorCommand/EditorCommandSelectionGrow.js'),
   selectDown: () => import('../EditorCommand/EditorCommandSelectDown.js'),
   selectInsideString: () => import('../EditorCommand/EditorCommandSelectInsideString.js'),
   selectLine: () => import('../EditorCommand/EditorCommandSelectLine.js'),

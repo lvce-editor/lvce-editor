@@ -122,11 +122,7 @@ export const getKeyBindings = () => {
       key: KeyModifier.CtrlCmd | KeyCode.KeyG,
       command: 'QuickPick.openGoToLine',
     },
-    {
-      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Space,
-      command: 'Editor.selectInsideString',
-      when: WhenExpression.FocusEditor,
-    },
+
     {
       key: KeyCode.Escape,
       command: 'dialog.close',
