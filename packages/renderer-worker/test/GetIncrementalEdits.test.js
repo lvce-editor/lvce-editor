@@ -6,9 +6,10 @@ test('getIncrementalEdits - whitespace issue', () => {
     lines: ['<li  >'],
     undoStack: [],
     tokenizer: {
-      tokenizeLine() {
+      tokenizeLine(state) {
         return {
-          tokens: [228, 1, 118, 2, 0, 2, 119, 1, 0, 1, 228, 1],
+          state,
+          tokens: [228, 1, 118, 2, 0, 2, 228, 1],
         }
       },
       initialLineState: {},
@@ -37,9 +38,10 @@ test('getIncrementalEdits - whitespace issue', () => {
       ],
     ],
     tokenizer: {
-      tokenizeLine() {
+      tokenizeLine(state) {
         return {
-          tokens: [228, 1, 118, 2, 0, 1, 119, 1, 0, 1, 119, 1, 0, 1, 228, 1],
+          state,
+          tokens: [228, 1, 118, 2, 0, 1, 119, 1, 0, 1, 228, 1],
         }
       },
       initialLineState: {},
@@ -50,9 +52,9 @@ test('getIncrementalEdits - whitespace issue', () => {
   }
   expect(GetIncrementalEdits.getIncrementalEdits(oldState, newState)).toEqual([
     {
-      columnIndex: 0,
+      columnIndex: 2,
       rowIndex: 0,
-      text: '<li a >',
+      text: ' ',
     },
   ])
 })
