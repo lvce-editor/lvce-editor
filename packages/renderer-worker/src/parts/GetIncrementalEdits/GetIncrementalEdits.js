@@ -14,7 +14,7 @@ export const getIncrementalEdits = (oldState, newState) => {
       const initialLineState = newState.lineCache[rowIndex] || GetInitialLineState.getInitialLineState(newState.tokenizer.initialLineState)
       const { tokens: oldTokens } = SafeTokenizeLine.safeTokenizeLine(
         newState.languageId,
-        newState.tokenizer.tokenizeLine,
+        oldState.tokenizer.tokenizeLine,
         oldLine,
         initialLineState,
         newState.tokenizer.hasArrayReturn,
@@ -26,6 +26,9 @@ export const getIncrementalEdits = (oldState, newState) => {
         initialLineState,
         newState.tokenizer.hasArrayReturn,
       )
+      if (newTokens.length !== oldTokens.length) {
+        return undefined
+      }
       const incrementalEdits = []
       let offset = 0
       const relativeRowIndex = rowIndex - newState.minLineY

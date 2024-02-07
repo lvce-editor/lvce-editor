@@ -50,11 +50,63 @@ test('getIncrementalEdits - whitespace issue', () => {
     lineCache: {},
     minLineY: 0,
   }
+  expect(GetIncrementalEdits.getIncrementalEdits(oldState, newState)).toBe(undefined)
+})
+
+test('getIncrementalEdits - whitespace issue', () => {
+  const oldState = {
+    lines: ['<li >'],
+    undoStack: [],
+    tokenizer: {
+      tokenizeLine(state) {
+        return {
+          state,
+          tokens: [228, 1, 118, 2, 0, 1, 228, 1],
+        }
+      },
+      initialLineState: {},
+      hasArrayReturn: true,
+    },
+    lineCache: {},
+    minLineY: 0,
+  }
+  const newState = {
+    lines: ['<li  >'],
+    undoStack: [
+      [
+        {
+          start: {
+            rowIndex: 0,
+            columnIndex: 3,
+          },
+          end: {
+            rowIndex: 0,
+            columnIndex: 3,
+          },
+          inserted: [''],
+          deleted: [''],
+          origin: EditOrigin.EditorType,
+        },
+      ],
+    ],
+    tokenizer: {
+      tokenizeLine(state) {
+        return {
+          state,
+          tokens: [228, 1, 118, 2, 0, 2, 228, 1],
+        }
+      },
+      initialLineState: {},
+      hasArrayReturn: true,
+    },
+    lineCache: {},
+    minLineY: 0,
+  }
   expect(GetIncrementalEdits.getIncrementalEdits(oldState, newState)).toEqual([
     {
       columnIndex: 2,
       rowIndex: 0,
-      text: ' ',
+      text: '  ',
     },
   ])
 })
