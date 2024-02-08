@@ -99,6 +99,7 @@ const selectPickExtension = async (item) => {
   try {
     await ExtensionHostCommands.executeCommand(id)
   } catch (error) {
+    console.error(error)
     await ErrorHandling.showErrorDialog(error)
   }
   return {
