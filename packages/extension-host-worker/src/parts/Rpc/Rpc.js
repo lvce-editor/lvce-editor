@@ -3,32 +3,27 @@ import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as GetErrorResponse from '../GetErrorResponse/GetErrorResponse.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
+import * as IpcState from '../IpcState/IpcState.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 
-export const state = {
-  /**
-   * @type {any}
-   */
-  ipc: undefined,
-}
-
 export const send = (method, ...params) => {
-  const { ipc } = state
+  const ipc = IpcState.get()
   JsonRpc.send(ipc, method, ...params)
 }
 
 const handleMessageFromRendererWorker = async (event) => {
   const message = event.data
+  const ipc = IpcState.get()
   if ('id' in message) {
     if ('method' in message) {
       const response = await GetResponse.getResponse(message, Command.execute)
       try {
-        state.ipc.send(response)
+        ipc.send(response)
       } catch (error) {
         await ErrorHandling.logError(error)
         const errorResponse = GetErrorResponse.getErrorResponse(message, error)
-        state.ipc.send(errorResponse)
+        ipc.send(errorResponse)
       }
       return
     }
@@ -39,10 +34,11 @@ const handleMessageFromRendererWorker = async (event) => {
 }
 
 export const invoke = (method, ...params) => {
-  return JsonRpc.invoke(state.ipc, method, ...params)
+  const ipc = IpcState.get()
+  return JsonRpc.invoke(ipc, method, ...params)
 }
 
 export const listen = (ipc) => {
   ipc.onmessage = handleMessageFromRendererWorker
-  state.ipc = ipc
+  IpcState.set(ipc)
 }
