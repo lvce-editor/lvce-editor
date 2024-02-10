@@ -1,5 +1,31 @@
-import * as ExtensionHostQuickPick from '../src/parts/ExtensionHostQuickPick/ExtensionHostQuickPick.js'
+import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/Rpc/Rpc.js', () => {
+  return {
+    invoke: jest.fn(() => {}),
+  }
+})
+
+const ExtensionHostQuickPick = await import('../src/parts/ExtensionHostQuickPick/ExtensionHostQuickPick.js')
+const Rpc = await import('../src/parts/Rpc/Rpc.js')
 
 test('showQuickPick', async () => {
-  await expect(ExtensionHostQuickPick.showQuickPick()).rejects.toThrow(new Error(`not implemented`))
+  const getPicks = () => {
+    return []
+  }
+  const toPick = (value) => {
+    return value
+  }
+  expect(
+    await ExtensionHostQuickPick.showQuickPick({
+      getPicks,
+      toPick,
+    }),
+  ).toEqual(undefined)
+  expect(Rpc.invoke).toHaveBeenCalledTimes(1)
+  expect(Rpc.invoke).toHaveBeenCalledWith('ExtensionHostQuickPick.show', [])
 })
