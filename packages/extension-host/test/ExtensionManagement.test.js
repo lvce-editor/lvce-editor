@@ -11,9 +11,7 @@ const getTmpDir = () => {
 }
 
 test('enable - no parameters', async () => {
-  await expect(ExtensionHostExtension.enable()).rejects.toThrowError(
-    new Error(`extension must be defined but is undefined`)
-  )
+  await expect(ExtensionHostExtension.enable()).rejects.toThrow(new Error(`extension must be defined but is undefined`))
 })
 
 test('enable - extension throws error on import', async () => {
@@ -22,17 +20,15 @@ test('enable - extension throws error on import', async () => {
   await writeFile(
     join(tmpDir, 'main.js'),
     `throw new Error("Oops")
-`
+`,
   )
   await expect(
     ExtensionHostExtension.enable({
       path: tmpDir,
       main: 'main.js',
       id: 'test-author.test-extension',
-    })
-  ).rejects.toThrowError(
-    new Error('Failed to load extension "test-author.test-extension": Oops')
-  )
+    }),
+  ).rejects.toThrow(new Error('Failed to load extension "test-author.test-extension": Oops'))
 })
 
 test('enable - extension has no activate method', async () => {
@@ -44,12 +40,8 @@ test('enable - extension has no activate method', async () => {
       path: tmpDir,
       main: 'main.js',
       id: 'test-author.test-extension',
-    })
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to activate extension "test-author.test-extension": TypeError: module.activate is not a function'
-    )
-  )
+    }),
+  ).rejects.toThrow(new Error('Failed to activate extension "test-author.test-extension": TypeError: module.activate is not a function'))
 })
 
 test('enable - activate is not a function', async () => {
@@ -57,24 +49,20 @@ test('enable - activate is not a function', async () => {
   await writeFile(
     join(tmpDir, 'package.json'),
     `{ "type": "module" }
-`
+`,
   )
   await writeFile(
     join(tmpDir, 'main.js'),
     `export const activate = 42
-`
+`,
   )
   await expect(
     ExtensionHostExtension.enable({
       path: tmpDir,
       main: 'main.js',
       id: 'test-author.test-extension',
-    })
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to activate extension "test-author.test-extension": TypeError: module.activate is not a function'
-    )
-  )
+    }),
+  ).rejects.toThrow(new Error('Failed to activate extension "test-author.test-extension": TypeError: module.activate is not a function'))
 })
 
 test('enable - importing extension that has wrong main file throws error', async () => {
@@ -86,11 +74,11 @@ test('enable - importing extension that has wrong main file throws error', async
       path: `${tmpDir}`,
       main: 'src/non-existent.js',
       id: 'test-author.test-extension',
-    })
-  ).rejects.toThrowError(
+    }),
+  ).rejects.toThrow(
     new Error(
-      `Failed to load extension \"test-author.test-extension\": Cannot find module '${wrongAbsolutePath}' from 'src/parts/ExtensionHostExtension/ExtensionHostExtension.js'`
-    )
+      `Failed to load extension \"test-author.test-extension\": Cannot find module '${wrongAbsolutePath}' from 'src/parts/ExtensionHostExtension/ExtensionHostExtension.js'`,
+    ),
   )
 })
 
@@ -102,19 +90,15 @@ test('enable - reference error', async () => {
     `export const activate = () => {
   vscode.registerCommand(testCommand)
 }
-`
+`,
   )
   await expect(
     ExtensionHostExtension.enable({
       path: `${tmpDir}`,
       main: 'main.js',
       id: 'test-author.test-extension',
-    })
-  ).rejects.toThrowError(
-    new Error(
-      `Failed to activate extension \"test-author.test-extension\": ReferenceError: vscode is not defined`
-    )
-  )
+    }),
+  ).rejects.toThrow(new Error(`Failed to activate extension \"test-author.test-extension\": ReferenceError: vscode is not defined`))
 })
 
 test('enable - commonjs extension', async () => {
@@ -123,7 +107,7 @@ test('enable - commonjs extension', async () => {
   await writeFile(
     join(tmpDir, 'main.js'),
     `exports.activate = () => {}
-`
+`,
   )
   await ExtensionHostExtension.enable({
     path: `${tmpDir}`,

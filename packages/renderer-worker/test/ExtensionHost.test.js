@@ -69,9 +69,7 @@ test.skip('start - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(ExtensionHost.start()).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(ExtensionHost.start()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test.skip('activateByEvent', async () => {
@@ -156,7 +154,5 @@ test.skip('activateByEvent - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(
-    ExtensionHost.activateByEvent('onFileSystem:memfs')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionHost.activateByEvent('onFileSystem:memfs')).rejects.toThrow(new TypeError('x is not a function'))
 })

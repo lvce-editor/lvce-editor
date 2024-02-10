@@ -454,7 +454,7 @@ test('loadContent - restore from saved state - error root not found', async () =
     root: '/test',
     expandedPaths: ['/test/a'],
   }
-  await expect(ViewletExplorer.loadContent(state, savedState)).rejects.toThrowError(new Error(ErrorCodes.ENOENT))
+  await expect(ViewletExplorer.loadContent(state, savedState)).rejects.toThrow(new Error(ErrorCodes.ENOENT))
 })
 
 test('loadContent - restore from saved state - sort dirents', async () => {
@@ -712,7 +712,7 @@ test.skip('loadContent - race condition - workspace changes while loading after 
         throw new Error('unexpected message')
     }
   })
-  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(new CancelationError())
+  await expect(ViewletExplorer.loadContent(state)).rejects.toThrow(new CancelationError())
 })
 
 test.skip('loadContent - race condition - workspace changes while loading after reading dirents', async () => {
@@ -745,7 +745,7 @@ test.skip('loadContent - race condition - workspace changes while loading after 
         throw new Error('unexpected message')
     }
   })
-  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(new CancelationError())
+  await expect(ViewletExplorer.loadContent(state)).rejects.toThrow(new CancelationError())
 })
 
 // TODO race conditions can happen at several locations, find good pattern/architecture
@@ -829,7 +829,7 @@ test('loadContent - error - typeError', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ViewletExplorer.loadContent(state)).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('loadContent - error - syntaxError', async () => {
@@ -840,7 +840,7 @@ test('loadContent - error - syntaxError', async () => {
     throw new SyntaxError('unexpected token x')
   })
 
-  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(new SyntaxError('unexpected token x'))
+  await expect(ViewletExplorer.loadContent(state)).rejects.toThrow(new SyntaxError('unexpected token x'))
 })
 
 test('loadContent - error - command not found', async () => {
@@ -849,7 +849,7 @@ test('loadContent - error - command not found', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new Error('command -1 not found')
   })
-  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(new Error('command -1 not found'))
+  await expect(ViewletExplorer.loadContent(state)).rejects.toThrow(new Error('command -1 not found'))
 })
 
 // TODO add test for contentLoaded with windows paths separators ('\')
@@ -1093,7 +1093,7 @@ test('handleClick - unsupported dirent type', async () => {
         throw new Error('unexpected method')
     }
   })
-  expect(() => ViewletExplorer.handleClick(state, 0)).toThrowError(new Error('unsupported dirent type abc'))
+  expect(() => ViewletExplorer.handleClick(state, 0)).toThrow(new Error('unsupported dirent type abc'))
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
@@ -1122,7 +1122,7 @@ test('handleClick - character device', async () => {
         throw new Error('unexpected method')
     }
   })
-  expect(() => ViewletExplorer.handleClick(state, 0)).toThrowError(new Error('Cannot open character device files'))
+  expect(() => ViewletExplorer.handleClick(state, 0)).toThrow(new Error('Cannot open character device files'))
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
@@ -1151,7 +1151,7 @@ test('handleClick - socket', async () => {
         throw new Error('unexpected method')
     }
   })
-  expect(() => ViewletExplorer.handleClick(state, 0)).toThrowError(new Error('Cannot open socket files'))
+  expect(() => ViewletExplorer.handleClick(state, 0)).toThrow(new Error('Cannot open socket files'))
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
@@ -1180,7 +1180,7 @@ test('handleClick - block device', async () => {
         throw new Error('unexpected method')
     }
   })
-  expect(() => ViewletExplorer.handleClick(state, 0)).toThrowError(new Error('Cannot open block device files'))
+  expect(() => ViewletExplorer.handleClick(state, 0)).toThrow(new Error('Cannot open block device files'))
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
@@ -4823,7 +4823,7 @@ test.skip('revealItem - error - not found', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new Error('File not found: /test/index.js')
   })
-  await expect(ViewletExplorer.revealItem(state, '/test/index.js')).rejects.toThrowError('File not found: /test/index.js')
+  await expect(ViewletExplorer.revealItem(state, '/test/index.js')).rejects.toThrow('File not found: /test/index.js')
 })
 
 test('revealItem - two levels deep', async () => {
@@ -5368,7 +5368,7 @@ test('handleArrowRight - symlink - error', async () => {
   FileSystem.getRealPath.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(ViewletExplorer.handleArrowRight(state)).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ViewletExplorer.handleArrowRight(state)).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('handleClickCurrent', async () => {

@@ -12,23 +12,16 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
 
@@ -47,11 +40,7 @@ test('readText - clipboard not available', async () => {
   RendererProcess.invoke.mockImplementation(() => {
     throw new TypeError('navigator.clipboard.readText is not a function')
   })
-  await expect(ClipBoard.readText()).rejects.toThrowError(
-    new Error(
-      'Failed to read text from clipboard: The Clipboard Api is not available in Firefox'
-    )
-  )
+  await expect(ClipBoard.readText()).rejects.toThrow(new Error('Failed to read text from clipboard: The Clipboard Api is not available in Firefox'))
 })
 
 test('readText - clipboard blocked', async () => {
@@ -59,11 +48,7 @@ test('readText - clipboard blocked', async () => {
   RendererProcess.invoke.mockImplementation(() => {
     throw new Error('Read permission denied.')
   })
-  await expect(ClipBoard.readText()).rejects.toThrowError(
-    new Error(
-      'Failed to read text from clipboard: The Browser disallowed reading from clipboard'
-    )
-  )
+  await expect(ClipBoard.readText()).rejects.toThrow(new Error('Failed to read text from clipboard: The Browser disallowed reading from clipboard'))
 })
 
 test('readText - other error', async () => {
@@ -71,11 +56,7 @@ test('readText - other error', async () => {
   RendererProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(ClipBoard.readText()).rejects.toThrowError(
-    new Error(
-      'Failed to read text from clipboard: TypeError: x is not a function'
-    )
-  )
+  await expect(ClipBoard.readText()).rejects.toThrow(new Error('Failed to read text from clipboard: TypeError: x is not a function'))
 })
 
 test('writeText', async () => {
@@ -83,10 +64,7 @@ test('writeText', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ClipBoard.writeText('abc')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'ClipBoard.writeText',
-    'abc'
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('ClipBoard.writeText', 'abc')
 })
 
 test('writeText - error', async () => {
@@ -94,9 +72,7 @@ test('writeText - error', async () => {
   RendererProcess.invoke.mockImplementation(() => {
     throw new Error('not allowed')
   })
-  await expect(ClipBoard.writeText('abc')).rejects.toThrowError(
-    new Error('Failed to write text to clipboard: not allowed')
-  )
+  await expect(ClipBoard.writeText('abc')).rejects.toThrow(new Error('Failed to write text to clipboard: not allowed'))
 })
 
 // TODO test readNativeFiles error
@@ -155,11 +131,7 @@ test('writeNativeFiles', async () => {
   })
   await ClipBoard.writeNativeFiles('copy', ['/test/my-folder'])
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ClipBoard.writeFiles',
-    'copy',
-    ['/test/my-folder']
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ClipBoard.writeFiles', 'copy', ['/test/my-folder'])
 })
 
 test('writeImage - error', async () => {
@@ -170,12 +142,8 @@ test('writeImage - error', async () => {
   await expect(
     ClipBoard.writeImage({
       type: 'image/avif',
-    })
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to write image to clipboard: TypeError: x is not a function'
-    )
-  )
+    }),
+  ).rejects.toThrow(new Error('Failed to write image to clipboard: TypeError: x is not a function'))
 })
 
 test('writeImage - error - format not supported', async () => {
@@ -186,12 +154,8 @@ test('writeImage - error - format not supported', async () => {
   await expect(
     ClipBoard.writeImage({
       type: 'image/avif',
-    })
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to write image to clipboard: Type image/avif not supported on write.'
-    )
-  )
+    }),
+  ).rejects.toThrow(new Error('Failed to write image to clipboard: Type image/avif not supported on write.'))
 })
 
 test('writeImage', async () => {
@@ -211,9 +175,7 @@ test('execCopy - error', async () => {
   RendererProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(ClipBoard.execCopy()).rejects.toThrowError(
-    new Error('Failed to copy selected text: TypeError: x is not a function')
-  )
+  await expect(ClipBoard.execCopy()).rejects.toThrow(new Error('Failed to copy selected text: TypeError: x is not a function'))
 })
 
 test('execCopy', async () => {

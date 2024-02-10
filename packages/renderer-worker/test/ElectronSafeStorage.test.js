@@ -20,7 +20,7 @@ test('isEncryptionAvailable - error', async () => {
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronSafeStorage.isEncryptionAvailable()).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronSafeStorage.isEncryptionAvailable()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('isEncryptionAvailable', async () => {
@@ -38,7 +38,7 @@ test('encryptString - error', async () => {
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronSafeStorage.encryptString('test')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronSafeStorage.encryptString('test')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('encryptString', async () => {
@@ -56,7 +56,7 @@ test('decryptString - error', async () => {
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronSafeStorage.decryptString('encrypted')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronSafeStorage.decryptString('encrypted')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('decryptString', async () => {

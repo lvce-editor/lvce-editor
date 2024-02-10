@@ -85,7 +85,7 @@ test('hydrate', async () => {
 
 
 
-`
+`,
   )
 })
 
@@ -120,7 +120,7 @@ test('hydrate - color theme fails to load from shared process', async () => {
   await ColorTheme.hydrate()
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.handleError).toHaveBeenCalledWith(
-    new Error('Failed to apply color theme "atom-one-dark": Color theme "atom-one-dark" not found in extensions folder')
+    new Error('Failed to apply color theme "atom-one-dark": Color theme "atom-one-dark" not found in extensions folder'),
   )
 })
 
@@ -147,13 +147,13 @@ test('hydrate - color theme fails to load and fallback color theme also fails to
   })
   // @ts-ignore
   ErrorHandling.handleError.mockImplementation(() => {})
-  await expect(ColorTheme.hydrate()).rejects.toThrowError(
-    new Error('Failed to apply color theme "slime": Color theme "slime" not found in extensions folder')
+  await expect(ColorTheme.hydrate()).rejects.toThrow(
+    new Error('Failed to apply color theme "slime": Color theme "slime" not found in extensions folder'),
   )
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.handleError).toHaveBeenNthCalledWith(
     1,
-    new Error('Failed to apply color theme "atom-one-dark": Color theme "atom-one-dark" not found in extensions folder')
+    new Error('Failed to apply color theme "atom-one-dark": Color theme "atom-one-dark" not found in extensions folder'),
   )
 })
 
@@ -175,8 +175,8 @@ test('hydrate - color id is fallback color theme id and fails to load', async ()
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
-  await expect(ColorTheme.hydrate()).rejects.toThrowError(
-    new Error('Failed to apply color theme "slime": Color theme "slime" not found in extensions folder')
+  await expect(ColorTheme.hydrate()).rejects.toThrow(
+    new Error('Failed to apply color theme "slime": Color theme "slime" not found in extensions folder'),
   )
   expect(spy).not.toHaveBeenCalled()
 })

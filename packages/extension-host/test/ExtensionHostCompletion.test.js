@@ -7,9 +7,7 @@ afterEach(() => {
 })
 
 test('registerCompletionProvider - no argument provided', () => {
-  expect(() => Completion.registerCompletionProvider()).toThrowError(
-    new Error("Cannot read properties of undefined (reading 'languageId')")
-  )
+  expect(() => Completion.registerCompletionProvider()).toThrow(new Error("Cannot read properties of undefined (reading 'languageId')"))
 })
 
 test('executeCompletionProvider - when completion provider has no result', async () => {
@@ -29,11 +27,9 @@ test('execute - when tab completion provider has wrong shape', async () => {
     abc() {},
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  await expect(Completion.executeCompletionProvider(1, 1)).rejects.toThrowError(
+  await expect(Completion.executeCompletionProvider(1, 1)).rejects.toThrow(
     // @ts-ignore
-    new VError(
-      'Failed to execute completion provider: TypeError: completionProvider.provideCompletions is not a function'
-    )
+    new VError('Failed to execute completion provider: TypeError: completionProvider.provideCompletions is not a function'),
   )
 })
 
@@ -74,8 +70,8 @@ test('executeCompletionProvider - when completion provider throws error', async 
     },
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  await expect(Completion.executeCompletionProvider(1, 1)).rejects.toThrowError(
+  await expect(Completion.executeCompletionProvider(1, 1)).rejects.toThrow(
     // @ts-ignore
-    new VError('Failed to execute completion provider: x is not a function')
+    new VError('Failed to execute completion provider: x is not a function'),
   )
 })

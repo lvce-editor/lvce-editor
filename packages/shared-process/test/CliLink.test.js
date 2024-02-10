@@ -39,13 +39,13 @@ test('handleCliArgs - error - manifest not found', async () => {
   ExtensionLink.link.mockImplementation(() => {
     throw new ErrorWithCode(
       `Error: Failed to link extension: Failed to load extension manifest for test: File not found '/test/extension.json'`,
-      ErrorCodes.E_MANIFEST_NOT_FOUND
+      ErrorCodes.E_MANIFEST_NOT_FOUND,
     )
   })
   await CliLink.handleCliArgs([])
   expect(Logger.error).toHaveBeenCalledTimes(1)
   expect(Logger.error).toHaveBeenCalledWith(
-    "Error: Failed to link extension: Failed to load extension manifest for test: File not found '/test/extension.json'"
+    "Error: Failed to link extension: Failed to load extension manifest for test: File not found '/test/extension.json'",
   )
   expect(Process.setExitCode).toHaveBeenCalledTimes(1)
   expect(Process.setExitCode).toHaveBeenCalledWith(ExitCode.ExpectedError)
@@ -56,10 +56,10 @@ test('handleCliArgs - error - permission denied', async () => {
   ExtensionLink.link.mockImplementation(() => {
     throw new ErrorWithCode(
       'Failed to link extension: EPERM: operation not permittet, symlink /test/my-extension -> /test/linked-extensions/my-extension',
-      ErrorCodes.EPERM
+      ErrorCodes.EPERM,
     )
   })
-  await expect(CliLink.handleCliArgs([])).rejects.toThrowError(
-    new Error('Failed to link extension: EPERM: operation not permittet, symlink /test/my-extension -> /test/linked-extensions/my-extension')
+  await expect(CliLink.handleCliArgs([])).rejects.toThrow(
+    new Error('Failed to link extension: EPERM: operation not permittet, symlink /test/my-extension -> /test/linked-extensions/my-extension'),
   )
 })

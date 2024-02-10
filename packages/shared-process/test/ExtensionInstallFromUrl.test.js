@@ -46,7 +46,7 @@ test('install - error with download', async () => {
     ExtensionInstallFromUrl.install({
       url: 'https://example.com',
     }),
-  ).rejects.toThrowError(new Error('Failed to install "https://example.com": Failed to download '))
+  ).rejects.toThrow(new Error('Failed to install "https://example.com": Failed to download '))
 })
 
 test('install - error with extraction', async () => {
@@ -60,5 +60,5 @@ test('install - error with extraction', async () => {
     ExtensionInstallFromUrl.install({
       url: 'https://example.com',
     }),
-  ).rejects.toThrowError(new Error(`Failed to install "https://example.com": Failed to extract file /test/tmp-file`))
+  ).rejects.toThrow(new Error(`Failed to install "https://example.com": Failed to extract file /test/tmp-file`))
 })

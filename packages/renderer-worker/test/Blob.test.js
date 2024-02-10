@@ -45,8 +45,8 @@ test('blobToBinaryString - error - progress event', async () => {
     })
     throw error
   })
-  await expect(Blob.blobToBinaryString('YWJj')).rejects.toThrowError(
-    new Error('Failed to convert blob to binary string: A requested file or directory could not be found at the time an operation was processed.')
+  await expect(Blob.blobToBinaryString('YWJj')).rejects.toThrow(
+    new Error('Failed to convert blob to binary string: A requested file or directory could not be found at the time an operation was processed.'),
   )
 })
 
@@ -61,12 +61,12 @@ test('blobToBinaryString - error - file could not be read', async () => {
       },
     })
     throw new DOMException(
-      'The requested file could not be read, typically due to permission problems that have occurred after a reference to a file was acquired.'
+      'The requested file could not be read, typically due to permission problems that have occurred after a reference to a file was acquired.',
     )
   })
-  await expect(Blob.blobToBinaryString()).rejects.toThrowError(
+  await expect(Blob.blobToBinaryString()).rejects.toThrow(
     new Error(
-      'Failed to convert blob to binary string: DOMException: The requested file could not be read, typically due to permission problems that have occurred after a reference to a file was acquired.'
-    )
+      'Failed to convert blob to binary string: DOMException: The requested file could not be read, typically due to permission problems that have occurred after a reference to a file was acquired.',
+    ),
   )
 })

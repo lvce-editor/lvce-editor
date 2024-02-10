@@ -42,7 +42,7 @@ test('listen - error - websocket expected', async () => {
   const processIpc = createFakeIpc()
   const ipcPromise = IpcChildWithWebSocket.listen(processIpc)
   processIpc.emit('message', 'abc')
-  await expect(ipcPromise).rejects.toThrowError(new Error('websocket expected'))
+  await expect(ipcPromise).rejects.toThrow(new Error('websocket expected'))
   expect(processIpc.listenerCount()).toBe(0)
 })
 

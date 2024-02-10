@@ -50,7 +50,7 @@ test('downloadSession - error with download', async () => {
   IndexedDb.getValuesByIndexName.mockImplementation(() => {
     return []
   })
-  await expect(SessionReplay.downloadSession()).rejects.toThrowError(new Error('Failed to download session: TypeError: x is not a function'))
+  await expect(SessionReplay.downloadSession()).rejects.toThrow(new Error('Failed to download session: TypeError: x is not a function'))
 })
 
 test('downloadSession', async () => {
@@ -70,8 +70,8 @@ test('getEvents - error with indexeddb', async () => {
   IndexedDb.getValuesByIndexName.mockImplementation(() => {
     throw new DOMException(`Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.`)
   })
-  await expect(SessionReplay.getEvents(``)).rejects.toThrowError(
-    new Error("failed to get session replay events: DOMException: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.")
+  await expect(SessionReplay.getEvents(``)).rejects.toThrow(
+    new Error("failed to get session replay events: DOMException: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found."),
   )
 })
 

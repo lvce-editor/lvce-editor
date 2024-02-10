@@ -21,5 +21,5 @@ test('importTest', async () => {
   ImportScript.importScript.mockImplementation((url) => {
     throw new BabelParseError(url, { message: 'Missing semicolon. (22:1)', loc: { line: 22, column: 1 } })
   })
-  await expect(ImportTest.importTest('/test/test.js')).rejects.toThrowError(new Error('Failed to import test: BabelParseError: Missing semicolon.'))
+  await expect(ImportTest.importTest('/test/test.js')).rejects.toThrow(new Error('Failed to import test: BabelParseError: Missing semicolon.'))
 })

@@ -27,10 +27,8 @@ test('extractZip - error - ENOENT', async () => {
   fsPromises.mkdir.mockImplementation((path) => {
     throw new Error(`ENOENT: no such file or directory`)
   })
-  await expect(
-    ExtractZip.extractZip({ inFile: '/test/file', outDir: '/test/folder' })
-  ).rejects.toThrowError(
-    new Error(`Failed to extract /test/file: ENOENT: no such file or directory`)
+  await expect(ExtractZip.extractZip({ inFile: '/test/file', outDir: '/test/folder' })).rejects.toThrow(
+    new Error(`Failed to extract /test/file: ENOENT: no such file or directory`),
   )
 })
 

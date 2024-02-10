@@ -28,7 +28,7 @@ test('createSymLink - error', async () => {
   symlinkDir.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(SymLink.createSymLink('/test/from', '/test/to')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(SymLink.createSymLink('/test/from', '/test/to')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('createSymLink - error - EEXIST', async () => {

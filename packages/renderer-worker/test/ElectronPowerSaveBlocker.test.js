@@ -20,7 +20,7 @@ test('start - error', async () => {
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronPowerSaveBlocker.start('prevent-app-suspension')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronPowerSaveBlocker.start('prevent-app-suspension')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('start', async () => {
@@ -38,7 +38,7 @@ test('stop - error', async () => {
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronPowerSaveBlocker.stop(1)).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronPowerSaveBlocker.stop(1)).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('stop', async () => {

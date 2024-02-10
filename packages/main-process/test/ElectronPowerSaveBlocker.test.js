@@ -31,7 +31,7 @@ test('start - error', () => {
   electron.powerSaveBlocker.start.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  expect(() => ElectronPowerSaveBlocker.start('prevent-app-suspension')).toThrowError(new TypeError('x is not a function'))
+  expect(() => ElectronPowerSaveBlocker.start('prevent-app-suspension')).toThrow(new TypeError('x is not a function'))
 })
 
 test('stop', () => {
@@ -47,5 +47,5 @@ test('stop - error', () => {
   electron.powerSaveBlocker.stop.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  expect(() => ElectronPowerSaveBlocker.stop(1)).toThrowError(new TypeError('x is not a function'))
+  expect(() => ElectronPowerSaveBlocker.stop(1)).toThrow(new TypeError('x is not a function'))
 })

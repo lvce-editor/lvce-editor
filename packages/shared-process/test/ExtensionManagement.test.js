@@ -118,7 +118,7 @@ test("uninstall should fail when extension doesn't exist", async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir)
-  await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrowError(
+  await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrow(
     /^Failed to uninstall extension "test-author.test-extension": ENOENT: no such file or directory/,
   )
 })
@@ -224,7 +224,7 @@ test('disable should fail if enabled extension path does not exist', async () =>
   PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => tmpDir2)
   const nonExistentPath1 = join(tmpDir1, 'non-existent-extension')
   const nonExistentPath2 = join(tmpDir2, 'non-existent-extension')
-  await expect(ExtensionManagement.disable('non-existent-extension')).rejects.toThrowError(
+  await expect(ExtensionManagement.disable('non-existent-extension')).rejects.toThrow(
     `Failed to disable extension non-existent-extension: ENOENT: no such file or directory, rename '${nonExistentPath1}' -> '${nonExistentPath2}'`,
   )
 })

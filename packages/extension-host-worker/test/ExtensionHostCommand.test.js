@@ -5,27 +5,27 @@ beforeEach(() => {
 })
 
 test('registerCommand - no argument provided', () => {
-  expect(() => ExtensionHostCommand.registerCommand()).toThrowError(new Error('Failed to register command: command is not defined'))
+  expect(() => ExtensionHostCommand.registerCommand()).toThrow(new Error('Failed to register command: command is not defined'))
 })
 
 test('registerCommand - missing id', () => {
   expect(() =>
     ExtensionHostCommand.registerCommand({
       execute() {},
-    })
-  ).toThrowError(new Error('Failed to register command: command is missing id'))
+    }),
+  ).toThrow(new Error('Failed to register command: command is missing id'))
 })
 
 test('registerCommand - missing execute function', () => {
   expect(() =>
     ExtensionHostCommand.registerCommand({
       id: 'test',
-    })
-  ).toThrowError(new Error('Failed to register command test: command is missing execute function'))
+    }),
+  ).toThrow(new Error('Failed to register command test: command is missing execute function'))
 })
 
 test('executeCommand - not found', async () => {
-  await expect(ExtensionHostCommand.executeCommand('xyz', 'abc')).rejects.toThrowError(new Error('Failed to execute command: command xyz not found'))
+  await expect(ExtensionHostCommand.executeCommand('xyz', 'abc')).rejects.toThrow(new Error('Failed to execute command: command xyz not found'))
 })
 
 test('executeCommand - error', async () => {
@@ -35,8 +35,8 @@ test('executeCommand - error', async () => {
       throw new TypeError('x is not a function')
     },
   })
-  await expect(ExtensionHostCommand.executeCommand('xyz', 'abc')).rejects.toThrowError(
-    new Error('Failed to execute command: TypeError: x is not a function')
+  await expect(ExtensionHostCommand.executeCommand('xyz', 'abc')).rejects.toThrow(
+    new Error('Failed to execute command: TypeError: x is not a function'),
   )
 })
 
@@ -50,11 +50,11 @@ test('executeCommand - error - command is registered multiple times', async () =
       id: 'xyz',
       execute(query) {},
     })
-  }).toThrowError(new Error(`Failed to register command xyz: command cannot be registered multiple times`))
+  }).toThrow(new Error(`Failed to register command xyz: command cannot be registered multiple times`))
 })
 
 test('executeCommand - error - command is null', async () => {
   expect(() => {
     ExtensionHostCommand.registerCommand(null)
-  }).toThrowError(new Error(`Failed to register command: command is null`))
+  }).toThrow(new Error(`Failed to register command: command is null`))
 })

@@ -49,7 +49,7 @@ test('install - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(ExtensionManagement.install('test-author.test-extension')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionManagement.install('test-author.test-extension')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('uninstall', async () => {
@@ -77,7 +77,7 @@ test('uninstall - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('disable', async () => {
@@ -105,7 +105,7 @@ test('disable - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(ExtensionManagement.disable('test-author.test-extension')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionManagement.disable('test-author.test-extension')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('enable', async () => {
@@ -133,7 +133,7 @@ test('enable - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(ExtensionManagement.enable('test-author.test-extension')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionManagement.enable('test-author.test-extension')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('getAllExtensions', async () => {
@@ -215,5 +215,5 @@ test('getAllExtensions - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(ExtensionManagement.getAllExtensions()).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionManagement.getAllExtensions()).rejects.toThrow(new TypeError('x is not a function'))
 })

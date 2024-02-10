@@ -59,22 +59,22 @@ test.skip('getPicks - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(QuickPickEntriesColorTheme.getPicks()).rejects.toThrowError(new Error('Color theme "undefined" not found in extensions folder'))
+  await expect(QuickPickEntriesColorTheme.getPicks()).rejects.toThrow(new Error('Color theme "undefined" not found in extensions folder'))
 })
 
 test.skip('selectPick', () => {
   expect(
     QuickPickEntriesColorTheme.selectPick({
       label: 'slime',
-    })
-  ).rejects.toThrowError(new Error('Color theme "undefined" not found in extensions folder'))
+    }),
+  ).rejects.toThrow(new Error('Color theme "undefined" not found in extensions folder'))
 })
 
 test.skip('selectPick - error', async () => {
   expect(
     await QuickPickEntriesColorTheme.selectPick({
       label: 'slime',
-    })
+    }),
   ).toEqual({
     command: QuickPickReturnValue.Hide,
   })

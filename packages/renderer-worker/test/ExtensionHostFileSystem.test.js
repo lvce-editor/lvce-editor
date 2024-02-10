@@ -5,32 +5,23 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js',
-  () => {
-    return {
-      executeProvider: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostShared.js', () => {
+  return {
+    executeProvider: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ExtensionHostFileSystem = await import(
-  '../src/parts/ExtensionHost/ExtensionHostFileSystem.js'
-)
-const ExtensionHostShared = await import(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js'
-)
+const ExtensionHostFileSystem = await import('../src/parts/ExtensionHost/ExtensionHostFileSystem.js')
+const ExtensionHostShared = await import('../src/parts/ExtensionHost/ExtensionHostShared.js')
 
 test('readFile', async () => {
   // @ts-ignore
   ExtensionHostShared.executeProvider.mockImplementation(async () => {
     return 'test content'
   })
-  expect(await ExtensionHostFileSystem.readFile('memfs:///test.txt')).toBe(
-    'test content'
-  )
+  expect(await ExtensionHostFileSystem.readFile('memfs:///test.txt')).toBe('test content')
 })
 
 test('readFile - error', async () => {
@@ -38,9 +29,7 @@ test('readFile - error', async () => {
   ExtensionHostShared.executeProvider.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    ExtensionHostFileSystem.readFile('memfs:///test.txt')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionHostFileSystem.readFile('memfs:///test.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('remove', async () => {
@@ -61,18 +50,13 @@ test('remove - error', async () => {
   ExtensionHostShared.executeProvider.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    ExtensionHostFileSystem.remove('memfs:///test.txt')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionHostFileSystem.remove('memfs:///test.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('rename', async () => {
   // @ts-ignore
   ExtensionHostShared.executeProvider.mockImplementation(() => {})
-  await ExtensionHostFileSystem.rename(
-    'memfs:///test.txt',
-    'memfs:///test2.txt'
-  )
+  await ExtensionHostFileSystem.rename('memfs:///test.txt', 'memfs:///test2.txt')
   expect(ExtensionHostShared.executeProvider).toHaveBeenCalledTimes(1)
   expect(ExtensionHostShared.executeProvider).toHaveBeenCalledWith({
     event: 'onFileSystem:memfs',
@@ -87,13 +71,9 @@ test('rename - error', async () => {
   ExtensionHostShared.executeProvider.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    ExtensionHostFileSystem.rename(
-      'memfs',
-      'memfs:///test.txt',
-      'memfs:///test2.txt'
-    )
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionHostFileSystem.rename('memfs', 'memfs:///test.txt', 'memfs:///test2.txt')).rejects.toThrow(
+    new TypeError('x is not a function'),
+  )
 })
 
 test('mkdir', async () => {
@@ -114,9 +94,7 @@ test('mkdir - error', async () => {
   ExtensionHostShared.executeProvider.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    ExtensionHostFileSystem.mkdir('memfs:///test-folder')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionHostFileSystem.mkdir('memfs:///test-folder')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('writeFile', async () => {
@@ -137,9 +115,7 @@ test('writeFile - error', async () => {
   ExtensionHostShared.executeProvider.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    ExtensionHostFileSystem.writeFile('memfs:///test-folder', 'test')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionHostFileSystem.writeFile('memfs:///test-folder', 'test')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('readDirWithFileTypes', async () => {
@@ -160,9 +136,7 @@ test('readDirWithFileTypes', async () => {
       },
     ]
   })
-  expect(
-    await ExtensionHostFileSystem.readDirWithFileTypes('memfs:///test-folder')
-  ).toEqual([
+  expect(await ExtensionHostFileSystem.readDirWithFileTypes('memfs:///test-folder')).toEqual([
     {
       name: 'file 1',
       type: DirentType.File,
@@ -183,7 +157,5 @@ test('readDirWithFileTypes - error', async () => {
   ExtensionHostShared.executeProvider.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    ExtensionHostFileSystem.readDirWithFileTypes('memfs:///test-folder')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionHostFileSystem.readDirWithFileTypes('memfs:///test-folder')).rejects.toThrow(new TypeError('x is not a function'))
 })

@@ -2,8 +2,7 @@ import * as ExtensionHostImplementation from '../src/parts/ExtensionHostImplemen
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
 beforeEach(() => {
-  ExtensionHostImplementation.state.implementationProviders =
-    Object.create(null)
+  ExtensionHostImplementation.state.implementationProviders = Object.create(null)
   TextDocument.state.textDocuments = Object.create(null)
 })
 
@@ -15,9 +14,7 @@ test('executeImplementationProvider - no results', async () => {
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  expect(
-    await ExtensionHostImplementation.executeImplementationProvider(1, 0)
-  ).toEqual([])
+  expect(await ExtensionHostImplementation.executeImplementationProvider(1, 0)).toEqual([])
 })
 
 test('executeImplementationProvider - single result', async () => {
@@ -35,9 +32,7 @@ test('executeImplementationProvider - single result', async () => {
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  expect(
-    await ExtensionHostImplementation.executeImplementationProvider(1, 0)
-  ).toEqual([
+  expect(await ExtensionHostImplementation.executeImplementationProvider(1, 0)).toEqual([
     {
       endOffset: 0,
       lineText: '',
@@ -55,12 +50,8 @@ test('executeImplementationProvider - error - Implementation provider throws err
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostImplementation.executeImplementationProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute implementation provider: TypeError: x is not a function'
-    )
+  await expect(ExtensionHostImplementation.executeImplementationProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute implementation provider: TypeError: x is not a function'),
   )
 })
 
@@ -71,22 +62,14 @@ test('executeImplementationProvider - error - ImplementationProvider has wrong s
     abc() {},
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostImplementation.executeImplementationProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute implementation provider: TypeError: implementationProvider.provideImplementations is not a function'
-    )
+  await expect(ExtensionHostImplementation.executeImplementationProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute implementation provider: TypeError: implementationProvider.provideImplementations is not a function'),
   )
 })
 
 test('executeImplementationProvider - error - no Implementation provider found', async () => {
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostImplementation.executeImplementationProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute implementation provider: VError: no implementation provider found for javascript'
-    )
+  await expect(ExtensionHostImplementation.executeImplementationProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute implementation provider: VError: no implementation provider found for javascript'),
   )
 })

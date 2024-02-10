@@ -54,7 +54,7 @@ test('start - error - path not found', async () => {
   const socket = {
     on() {},
   }
-  await expect(ExtensionHost.start(socket)).rejects.toThrowError(new Error('Failed to start extension host: Extension Host exited with code 1'))
+  await expect(ExtensionHost.start(socket)).rejects.toThrow(new Error('Failed to start extension host: Extension Host exited with code 1'))
 })
 
 test('start - error - path is a directory', async () => {
@@ -68,7 +68,7 @@ test('start - error - path is a directory', async () => {
   }
   await mkdir(tmpDir, { recursive: true })
   // TODO error message should include stderr of extension host
-  await expect(ExtensionHost.start(socket)).rejects.toThrowError(new Error('Failed to start extension host: Extension Host exited with code 1'))
+  await expect(ExtensionHost.start(socket)).rejects.toThrow(new Error('Failed to start extension host: Extension Host exited with code 1'))
 })
 
 // TODO test is flaky
@@ -84,7 +84,7 @@ test.skip('start - error - syntax error', async () => {
     on() {},
   }
   // TODO error message should include stderr of extension host: SyntaxError: Unexpected end of input
-  await expect(ExtensionHost.start(socket)).rejects.toThrowError(new Error('Failed to start extension host: Extension Host exited with code 1'))
+  await expect(ExtensionHost.start(socket)).rejects.toThrow(new Error('Failed to start extension host: Extension Host exited with code 1'))
 })
 
 test('start - error - uncaught exception', async () => {
@@ -99,7 +99,7 @@ test('start - error - uncaught exception', async () => {
     on() {},
   }
   // TODO error message should include stderr of extension host: SyntaxError: Unexpected end of input
-  await expect(ExtensionHost.start(socket)).rejects.toThrowError(new Error('Failed to start extension host: Extension Host exited with code 1'))
+  await expect(ExtensionHost.start(socket)).rejects.toThrow(new Error('Failed to start extension host: Extension Host exited with code 1'))
 })
 
 test('start - error - custom exit code', async () => {
@@ -113,7 +113,7 @@ test('start - error - custom exit code', async () => {
   const socket = {
     on() {},
   }
-  await expect(ExtensionHost.start(socket)).rejects.toThrowError(new Error('Failed to start extension host: Extension Host exited with code 123'))
+  await expect(ExtensionHost.start(socket)).rejects.toThrow(new Error('Failed to start extension host: Extension Host exited with code 123'))
 })
 
 test('start - child process should be closed when socket immediately is closed', async () => {

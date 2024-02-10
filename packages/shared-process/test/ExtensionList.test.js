@@ -43,7 +43,7 @@ test('list - error - permission denied', async () => {
   ExtensionManifests.getAll.mockImplementation(() => {
     throw new NodeError(ErrorCodes.EPERM)
   })
-  await expect(ExtensionList.list()).rejects.toThrowError(new Error('Failed to list extensions: EPERM'))
+  await expect(ExtensionList.list()).rejects.toThrow(new Error('Failed to list extensions: EPERM'))
 })
 
 test.skip('list - error - manifest json is null', async () => {

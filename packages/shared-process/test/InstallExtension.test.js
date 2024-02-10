@@ -161,7 +161,7 @@ test.skip('install should fail when the server sends a bad status code', async (
   Platform.getExtensionsPath.mockImplementation(() => tmpDir)
   // @ts-ignore
   Platform.getCachedExtensionsPath.mockImplementation(() => tmpDir2)
-  await expect(InstallExtension.installExtension('test-author.test-extension')).rejects.toThrowError(
+  await expect(InstallExtension.installExtension('test-author.test-extension')).rejects.toThrow(
     /Failed to install extension "test-author.test-extension": Failed to download "http:\/\/localhost:\d+\/download\/test-author.test-extension": Response code 404 \(Not Found\)/,
   )
 })
@@ -198,7 +198,7 @@ test.skip('install should fail when the server sends an invalid compressed objec
   const tmpDir = await getTmpDir()
   // @ts-ignore
   Platform.getExtensionsPath.mockImplementation(() => tmpDir)
-  await expect(InstallExtension.installExtension('test-author.test-extension')).rejects.toThrowError(
+  await expect(InstallExtension.installExtension('test-author.test-extension')).rejects.toThrow(
     /^Failed to install extension "test-author.test-extension": Failed to extract .* unexpected end of file/,
   )
 })

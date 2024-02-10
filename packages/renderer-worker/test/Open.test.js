@@ -28,7 +28,7 @@ test('openUrl - error', async () => {
   RendererProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(Open.openUrl('test://test.txt')).rejects.toThrowError(new Error('Failed to open url test://test.txt: TypeError: x is not a function'))
+  await expect(Open.openUrl('test://test.txt')).rejects.toThrow(new Error('Failed to open url test://test.txt: TypeError: x is not a function'))
 })
 
 test('openUrl', async () => {

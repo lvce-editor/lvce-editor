@@ -8,12 +8,8 @@ afterEach(() => {
 
 // TODO should have better error message
 test('registerFormattingProvider - no argument provided', () => {
-  expect(() =>
-    ExtensionHostFormatting.registerFormattingProvider()
-  ).toThrowError(
-    new VError(
-      "Failed to register formatting provider: TypeError: Cannot read properties of undefined (reading 'id')"
-    )
+  expect(() => ExtensionHostFormatting.registerFormattingProvider()).toThrow(
+    new VError("Failed to register formatting provider: TypeError: Cannot read properties of undefined (reading 'id')"),
   )
 })
 
@@ -25,9 +21,7 @@ test('executeFormattingProvider - when Formatting provider has no result', async
     },
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  expect(await ExtensionHostFormatting.executeFormattingProvider(1)).toEqual(
-    null
-  )
+  expect(await ExtensionHostFormatting.executeFormattingProvider(1)).toEqual(null)
 })
 
 test.skip('executeFormattingProvider - when Formatting provider has wrong shape', async () => {
@@ -36,12 +30,8 @@ test.skip('executeFormattingProvider - when Formatting provider has wrong shape'
     abc(textDocument, offset) {},
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  await expect(
-    ExtensionHostFormatting.executeFormattingProvider(1)
-  ).rejects.toThrowError(
-    new VError(
-      'Failed to execute Formatting provider: TypeError: provider.provideFormattings is not a function'
-    )
+  await expect(ExtensionHostFormatting.executeFormattingProvider(1)).rejects.toThrow(
+    new VError('Failed to execute Formatting provider: TypeError: provider.provideFormattings is not a function'),
   )
 })
 
@@ -64,9 +54,7 @@ test('executeFormattingProvider - when Formatting provider throws error', async 
     },
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  await expect(
-    ExtensionHostFormatting.executeFormattingProvider(1)
-  ).rejects.toThrowError(
-    new VError('Failed to execute formatting provider: x is not a function')
+  await expect(ExtensionHostFormatting.executeFormattingProvider(1)).rejects.toThrow(
+    new VError('Failed to execute formatting provider: x is not a function'),
   )
 })

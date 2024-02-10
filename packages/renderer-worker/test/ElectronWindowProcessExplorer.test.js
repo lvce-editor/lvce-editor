@@ -20,9 +20,7 @@ test('open - error', async () => {
   SharedProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronWindowProcessExplorer.open()).rejects.toThrowError(
-    new Error('Failed to open process explorer: TypeError: x is not a function'),
-  )
+  await expect(ElectronWindowProcessExplorer.open()).rejects.toThrow(new Error('Failed to open process explorer: TypeError: x is not a function'))
 })
 
 test('open', async () => {
