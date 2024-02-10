@@ -6,6 +6,7 @@ import * as ExtensionHostCodeActions from '../ExtensionHostCodeActions/Extension
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.js'
+import * as ExtensionHostQuickPick from '../ExtensionHostQuickPick/ExtensionHostQuickPick.js'
 import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
 import * as ExtensionHostDiagnostic from '../ExtensionHostDiagnostic/ExtensionHostDiagnostic.js'
@@ -105,6 +106,9 @@ export const api = {
   // Implementation
   registerImplementationProvider: ExtensionHostImplementation.registerImplementationProvider,
   executeImplementationProvider: ExtensionHostImplementation.executeImplementationProvider,
+
+  // QuickPick
+  showQuickPick: ExtensionHostQuickPick.showQuickPick,
 
   // Reference
   registerReferenceProvider: ExtensionHostReference.registerReferenceProvider,
