@@ -70,8 +70,7 @@ export const getMenuEntries = () => {
       id: 'commandPalette',
       label: HelpStrings.commandPalette(),
       flags: MenuItemFlags.None,
-      command: 'Viewlet.openWidget',
-      args: ['QuickPick', 'everything'],
+      command: 'QuickPick.showEverything',
     },
   ]
 }

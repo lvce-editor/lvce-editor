@@ -49,18 +49,15 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.KeyP,
-      command: 'Viewlet.openWidget',
-      args: ['QuickPick', 'file'],
+      command: 'QuickPick.showFile',
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyP,
-      command: 'Viewlet.openWidget',
-      args: ['QuickPick', 'everything'],
+      command: 'QuickPick.showEverything',
     },
     {
       key: KeyCode.F1,
-      command: 'Viewlet.openWidget',
-      args: ['QuickPick', 'everything'],
+      command: 'QuickPick.showEverything',
     },
 
     {
@@ -180,8 +177,7 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyR,
-      command: 'Viewlet.openWidget',
-      args: ['QuickPick', 'recent'],
+      command: 'QuickPick.showRecent',
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.Digit0,

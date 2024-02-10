@@ -5,14 +5,11 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RecentlyOpened/RecentlyOpened.js',
-  () => {
-    return {
-      getRecentlyOpened: jest.fn(),
-    }
+jest.unstable_mockModule('../src/parts/RecentlyOpened/RecentlyOpened.js', () => {
+  return {
+    getRecentlyOpened: jest.fn(),
   }
-)
+})
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
@@ -20,12 +17,8 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const MenuEntriesOpenRecent = await import(
-  '../src/parts/MenuEntriesOpenRecent/MenuEntriesOpenRecent.js'
-)
-const RecentlyOpened = await import(
-  '../src/parts/RecentlyOpened/RecentlyOpened.js'
-)
+const MenuEntriesOpenRecent = await import('../src/parts/MenuEntriesOpenRecent/MenuEntriesOpenRecent.js')
+const RecentlyOpened = await import('../src/parts/RecentlyOpened/RecentlyOpened.js')
 const Command = await import('../src/parts/Command/Command.js')
 
 test('getMenuEntries', async () => {
@@ -55,8 +48,7 @@ test('getMenuEntries - should not show separator when there are no recent items'
   })
   const menuEntries = await MenuEntriesOpenRecent.getMenuEntries()
   expect(menuEntries[0]).toEqual({
-    args: ['QuickPick', 'recent'],
-    command: 'Viewlet.openWidget',
+    command: 'QuickPick.showRecent',
     flags: 0,
     id: 'more',
     label: 'More ...',
@@ -68,7 +60,5 @@ test('getMenuEntries - error with recently opened', async () => {
   Command.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(MenuEntriesOpenRecent.getMenuEntries()).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(MenuEntriesOpenRecent.getMenuEntries()).rejects.toThrowError(new TypeError('x is not a function'))
 })
