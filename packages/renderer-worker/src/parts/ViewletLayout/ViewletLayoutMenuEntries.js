@@ -186,10 +186,9 @@ export const getQuickPickMenuEntries = () => {
       label: 'Developer: Open Data Folder',
     },
     {
-      id: 'Viewlet.openWidget',
+      id: 'QuickPick.showColorTheme',
       label: 'Preferences: Color Theme',
       aliases: ['Select Color Theme', 'Switch Color Theme', 'Theme Color'],
-      args: ['QuickPick', 'color-theme'],
     },
     {
       id: 'Developer.measureLatencyBetweenExtensionHostAndSharedProcess',

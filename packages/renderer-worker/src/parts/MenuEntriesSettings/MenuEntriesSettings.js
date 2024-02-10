@@ -10,8 +10,7 @@ export const getMenuEntries = () => {
       id: 'commandPalette',
       label: HelpStrings.commandPalette(),
       flags: MenuItemFlags.None,
-      command: 'Viewlet.openWidget',
-      args: ['QuickPick', 'everything'],
+      command: 'QuickPick.showEverything',
     },
     MenuEntrySeparator.menuEntrySeparator,
     {
@@ -31,8 +30,7 @@ export const getMenuEntries = () => {
       id: 'colorTheme',
       label: HelpStrings.colorTheme(),
       flags: MenuItemFlags.None,
-      command: 'Viewlet.openWidget',
-      args: ['QuickPick', 'color-theme'],
+      command: 'QuickPick.showColorTheme',
     },
     MenuEntrySeparator.menuEntrySeparator,
     {
