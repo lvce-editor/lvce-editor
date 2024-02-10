@@ -100,6 +100,7 @@ const selectPickExtension = async (item) => {
     await ExtensionHostCommands.executeCommand(id)
   } catch (error) {
     await ErrorHandling.handleError(error, false)
+    await ErrorHandling.showErrorDialog(error)
   }
   return {
     command: QuickPickReturnValue.Hide,
