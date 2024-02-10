@@ -135,6 +135,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Preferences
     case 'Prompt':
       return ModuleId.Prompt
+    case 'QuickPick':
+      return ModuleId.QuickPick
     case 'RebuildNodePty':
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened':
@@ -145,8 +147,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.SaveFileAs
     case 'SaveState':
       return ModuleId.SaveState
-    case 'ServiceWorker':
-      return ModuleId.ServiceWorker
     case 'SessionReplay':
       return ModuleId.SessionReplay
     case 'SessionStorage':
