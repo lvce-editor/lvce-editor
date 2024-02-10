@@ -171,7 +171,7 @@ test('getMarketplaceExtensions - error', async () => {
   Ajax.getJson.mockImplementation(() => {
     throw new TypeError('Failed to request json from "https://example.com/api/extensions/search": x is not a function')
   })
-  await expect(ExtensionsMarketplace.getMarketplaceExtensions({ q: 'abc' })).rejects.toThrowError(
+  await expect(ExtensionsMarketplace.getMarketplaceExtensions({ q: 'abc' })).rejects.toThrow(
     new Error('Failed to request json from "https://example.com/api/extensions/search": x is not a function'),
   )
 })
@@ -219,7 +219,7 @@ test('getMarketplaceExtensions - error', async () => {
 //   })
 //   await expect(
 //     ExtensionManagement.getMarketplaceExtensions()
-//   ).rejects.toThrowError(new TypeError('x is not a function'))
+//   ).rejects.toThrow(new TypeError('x is not a function'))
 // })
 
 // test('getMarketplaceExtensions - getMarketplaceUrl should only be called once', async () => {
@@ -265,7 +265,7 @@ test('getMarketplaceExtensions - error', async () => {
 //   })
 //   await expect(
 //     ExtensionManagement.getMarketplaceExtensions()
-//   ).rejects.toThrowError(
+//   ).rejects.toThrow(
 //     new Error(
 //       'Failed to request json from "https://example.com/api/extensions/search": url must be of type string'
 //     )

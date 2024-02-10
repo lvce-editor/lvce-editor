@@ -39,8 +39,8 @@ test('handleCliArgs - error - decompression error', async () => {
   ExtensionInstall.install.mockImplementation(() => {
     throw new Error(`Failed to install: Decompression failed`)
   })
-  await expect(CliInstall.handleCliArgs(['install', 'https://example.com/extension'])).rejects.toThrowError(
-    new Error(`Failed to install: Decompression failed`)
+  await expect(CliInstall.handleCliArgs(['install', 'https://example.com/extension'])).rejects.toThrow(
+    new Error(`Failed to install: Decompression failed`),
   )
 })
 
@@ -64,7 +64,7 @@ test('handleCliArgs - error - offline', async () => {
   await CliInstall.handleCliArgs(['install', 'test://test-extension'])
   expect(Logger.error).toHaveBeenCalledTimes(1)
   expect(Logger.error).toHaveBeenCalledWith(
-    'Failed to install test-extension: Failed to download test://test-extension: getaddrinfo EAI_AGAIN test://test-extension'
+    'Failed to install test-extension: Failed to download test://test-extension: getaddrinfo EAI_AGAIN test://test-extension',
   )
   expect(Process.setExitCode).toHaveBeenCalledTimes(1)
   expect(Process.setExitCode).toHaveBeenCalledWith(ExitCode.ExpectedError)

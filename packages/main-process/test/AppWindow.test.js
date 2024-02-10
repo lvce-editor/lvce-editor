@@ -66,7 +66,7 @@ test.skip('createAppWindow - error', async () => {
     throw new Error(`ERR_FAILED (-2) loading 'lvce-oss://-/'`)
   })
   // TODO error message should be improved
-  await expect(AppWindow.createAppWindow([], '')).rejects.toThrowError(
+  await expect(AppWindow.createAppWindow([], '')).rejects.toThrow(
     new Error("Failed to load url lvce-oss://-/: ERR_FAILED (-2) loading 'lvce-oss://-/'"),
   )
 })

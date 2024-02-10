@@ -70,8 +70,8 @@ test('executeImplementationProvider - error - Implementation provider throws err
       throw new TypeError('x is not a function')
     },
   })
-  await expect(ExtensionHostImplementation.executeImplementationProvider(1, 0)).rejects.toThrowError(
-    new Error('Failed to execute implementation provider: TypeError: x is not a function')
+  await expect(ExtensionHostImplementation.executeImplementationProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute implementation provider: TypeError: x is not a function'),
   )
 })
 
@@ -88,8 +88,8 @@ test('executeImplementationProvider - error - ImplementationProvider has wrong s
     languageId: 'javascript',
     abc() {},
   })
-  await expect(ExtensionHostImplementation.executeImplementationProvider(1, 0)).rejects.toThrowError(
-    new Error('Failed to execute implementation provider: VError: implementationProvider.provideImplementations is not a function')
+  await expect(ExtensionHostImplementation.executeImplementationProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute implementation provider: VError: implementationProvider.provideImplementations is not a function'),
   )
 })
 
@@ -102,7 +102,7 @@ test('executeImplementationProvider - error - no Implementation provider found',
       content: '',
     },
   ])
-  await expect(ExtensionHostImplementation.executeImplementationProvider(1, 0)).rejects.toThrowError(
-    new Error('Failed to execute implementation provider: No implementation provider found for javascript')
+  await expect(ExtensionHostImplementation.executeImplementationProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute implementation provider: No implementation provider found for javascript'),
   )
 })

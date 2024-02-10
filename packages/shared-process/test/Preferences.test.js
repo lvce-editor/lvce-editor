@@ -95,7 +95,7 @@ const getTmpDir = () => {
 //   // TODO should handle error gracefully
 //   await expect(
 //     Preferences.set('sample-key', 'sample-value')
-//   ).rejects.toThrowError(
+//   ).rejects.toThrow(
 //     new Error(
 //       `Unexpected end of JSON input while parsing "\\"" in ${settingsPath}`
 //     )
@@ -106,7 +106,7 @@ test('getAll - error', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   PlatformPaths.getDefaultSettingsPath.mockImplementation(() => join(tmpDir, 'static', 'config', 'defaultSettings.json'))
-  await expect(Preferences.getAll()).rejects.toThrowError(/^Failed to get all preferences: Failed to load default preferences: File not found/)
+  await expect(Preferences.getAll()).rejects.toThrow(/^Failed to get all preferences: Failed to load default preferences: File not found/)
 })
 
 // test('getDefaultPreferences - error', async () => {
@@ -114,7 +114,7 @@ test('getAll - error', async () => {
 //   Platform.state.getAppDir = () => {
 //     return tmpDir
 //   }
-//   await expect(Preferences.getDefaultPreferences()).rejects.toThrowError(
+//   await expect(Preferences.getDefaultPreferences()).rejects.toThrow(
 //     /^Failed to load default preferences: ENOENT/
 //   )
 // })
@@ -125,7 +125,7 @@ test('getAll - error', async () => {
 //   Platform.state.getConfigDir = () => {
 //     return tmpDir
 //   }
-//   await expect(Preferences.set('x', 42)).rejects.toThrowError(
+//   await expect(Preferences.set('x', 42)).rejects.toThrow(
 //     /^Failed to set key in user settings: failed to get user preferences: EISDIR/
 //   )
 // })
@@ -136,7 +136,7 @@ test('getAll - error', async () => {
 //   Platform.state.getConfigDir = () => {
 //     return tmpDir
 //   }
-//   await expect(Preferences.getUserSettingsContent()).rejects.toThrowError(
+//   await expect(Preferences.getUserSettingsContent()).rejects.toThrow(
 //     /^Failed to load user settings: EISDIR/
 //   )
 // })
@@ -147,7 +147,7 @@ test('getAll - error', async () => {
 //   Platform.state.getConfigDir = () => {
 //     return tmpDir
 //   }
-//   await expect(Preferences.setUserSettingsContent('')).rejects.toThrowError(
+//   await expect(Preferences.setUserSettingsContent('')).rejects.toThrow(
 //     /^Failed to write to user settings file: EISDIR/
 //   )
 // })

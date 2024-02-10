@@ -28,7 +28,7 @@ test('handleCliArgs - error', async () => {
   ExtensionList.list.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(CliList.handleCliArgs([])).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(CliList.handleCliArgs([])).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('handleCliArgs', async () => {

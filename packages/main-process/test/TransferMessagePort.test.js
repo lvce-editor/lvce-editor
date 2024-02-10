@@ -8,7 +8,7 @@ test('transferMessagePort - error', async () => {
     }),
   }
   const port = {}
-  await expect(TransferMessagePort.transferMessagePort(ipc, port)).rejects.toThrowError(
-    new Error('Failed to send message port to worker thread: TypeError: x is not a function')
+  await expect(TransferMessagePort.transferMessagePort(ipc, port)).rejects.toThrow(
+    new Error('Failed to send message port to worker thread: TypeError: x is not a function'),
   )
 })

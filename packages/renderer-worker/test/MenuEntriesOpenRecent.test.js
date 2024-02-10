@@ -60,5 +60,5 @@ test('getMenuEntries - error with recently opened', async () => {
   Command.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(MenuEntriesOpenRecent.getMenuEntries()).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(MenuEntriesOpenRecent.getMenuEntries()).rejects.toThrow(new TypeError('x is not a function'))
 })

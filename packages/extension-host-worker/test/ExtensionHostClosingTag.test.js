@@ -3,9 +3,7 @@ import * as ExtensionHostClosingTag from '../src/parts/ExtensionHostClosingTag/E
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
 test('registerClosingTagProvider - no argument provided', () => {
-  expect(() => ExtensionHostClosingTag.registerClosingTagProvider()).toThrowError(
-    new Error("Cannot read properties of undefined (reading 'languageId')")
-  )
+  expect(() => ExtensionHostClosingTag.registerClosingTagProvider()).toThrow(new Error("Cannot read properties of undefined (reading 'languageId')"))
 })
 
 test('executeClosingTagProvider - when closing tag provider has no result', async () => {
@@ -41,8 +39,8 @@ test('execute - when tab closing tag provider has wrong shape', async () => {
     languageId: 'unknown',
     abc() {},
   })
-  await expect(ExtensionHostClosingTag.executeClosingTagProvider(1, 1)).rejects.toThrowError(
-    new Error('Failed to execute closing tag provider: VError: closingTagProvider.provideClosingTag is not a function')
+  await expect(ExtensionHostClosingTag.executeClosingTagProvider(1, 1)).rejects.toThrow(
+    new Error('Failed to execute closing tag provider: VError: closingTagProvider.provideClosingTag is not a function'),
   )
 })
 
@@ -83,8 +81,8 @@ test('executeClosingTagProvider - closing tag provider throws error', async () =
       throw new TypeError('x is not a function')
     },
   })
-  await expect(ExtensionHostClosingTag.executeClosingTagProvider(1, 1)).rejects.toThrowError(
-    new Error('Failed to execute closing tag provider: TypeError: x is not a function')
+  await expect(ExtensionHostClosingTag.executeClosingTagProvider(1, 1)).rejects.toThrow(
+    new Error('Failed to execute closing tag provider: TypeError: x is not a function'),
   )
 })
 
@@ -103,8 +101,8 @@ test('executeClosingTagProvider - closing tag provider throws null error', async
       throw null
     },
   })
-  await expect(ExtensionHostClosingTag.executeClosingTagProvider(1, 1)).rejects.toThrowError(
-    new Error('Failed to execute closing tag provider: NonError: null')
+  await expect(ExtensionHostClosingTag.executeClosingTagProvider(1, 1)).rejects.toThrow(
+    new Error('Failed to execute closing tag provider: NonError: null'),
   )
 })
 
@@ -123,8 +121,8 @@ test('executeClosingTagProvider - invalid return value - array with undefined va
       return [undefined]
     },
   })
-  await expect(ExtensionHostClosingTag.executeClosingTagProvider(1, 1)).rejects.toThrowError(
-    new Error('Failed to execute closing tag provider: VError: invalid closing tag result: closingTag must be of type object but is array')
+  await expect(ExtensionHostClosingTag.executeClosingTagProvider(1, 1)).rejects.toThrow(
+    new Error('Failed to execute closing tag provider: VError: invalid closing tag result: closingTag must be of type object but is array'),
   )
 })
 
@@ -143,7 +141,7 @@ test('executeClosingTagProvider - invalid return value - number', async () => {
       return 42
     },
   })
-  await expect(ExtensionHostClosingTag.executeClosingTagProvider(1, 1)).rejects.toThrowError(
-    new Error('Failed to execute closing tag provider: VError: invalid closing tag result: closingTag must be of type object but is 42')
+  await expect(ExtensionHostClosingTag.executeClosingTagProvider(1, 1)).rejects.toThrow(
+    new Error('Failed to execute closing tag provider: VError: invalid closing tag result: closingTag must be of type object but is 42'),
   )
 })

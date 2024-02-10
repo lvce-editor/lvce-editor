@@ -5,23 +5,16 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostEditor.js',
-  () => {
-    return {
-      execute: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostEditor.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
-const ExtensionHostEditor = await import(
-  '../src/parts/ExtensionHost/ExtensionHostEditor.js'
-)
+})
+const ExtensionHostEditor = await import('../src/parts/ExtensionHost/ExtensionHostEditor.js')
 
-const ExtensionHostDiagnostic = await import(
-  '../src/parts/ExtensionHost/ExtensionHostDiagnostic.js'
-)
+const ExtensionHostDiagnostic = await import('../src/parts/ExtensionHost/ExtensionHostDiagnostic.js')
 
 test('executeDiagnosticProvider - no results', async () => {
   // @ts-ignore
@@ -29,9 +22,7 @@ test('executeDiagnosticProvider - no results', async () => {
     return []
   })
   const editor = { id: 1 }
-  expect(
-    await ExtensionHostDiagnostic.executeDiagnosticProvider(editor)
-  ).toEqual([])
+  expect(await ExtensionHostDiagnostic.executeDiagnosticProvider(editor)).toEqual([])
   expect(ExtensionHostEditor.execute).toHaveBeenCalledTimes(1)
   expect(ExtensionHostEditor.execute).toHaveBeenCalledWith({
     args: [],
@@ -49,7 +40,5 @@ test('executeDiagnosticProvider - error', async () => {
   ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    ExtensionHostDiagnostic.executeDiagnosticProvider({ id: 1 })
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ExtensionHostDiagnostic.executeDiagnosticProvider({ id: 1 })).rejects.toThrow(new TypeError('x is not a function'))
 })

@@ -26,7 +26,7 @@ test('handleDrop - error', async () => {
     y: 0,
     height: 0,
   }
-  await expect(ViewletExplorerHandleDrop.handleDrop(state, 0, 0, [])).rejects.toThrowError(
-    new Error('Failed to drop files: TypeError: x is not a function')
+  await expect(ViewletExplorerHandleDrop.handleDrop(state, 0, 0, [])).rejects.toThrow(
+    new Error('Failed to drop files: TypeError: x is not a function'),
   )
 })

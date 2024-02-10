@@ -109,7 +109,7 @@ test('link - error - no manifest file found', async () => {
   FileSystem.readFile.mockImplementation((uri) => {
     throw new FileNotFoundError(uri)
   })
-  await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrowError(
+  await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrow(
     new Error("Failed to link extension: Extension manifest not found '/test/my-extension/extension.json'"),
   )
 })
@@ -123,7 +123,7 @@ test('link - error - permission denied', async () => {
   SymLink.createSymLink.mockImplementation((from, to) => {
     throw new PermissionDeniedError(from, to)
   })
-  await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrowError(
+  await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrow(
     new Error('Failed to link extension: EPERM: operation not permittet, symlink /test/my-extension -> /test/linked-extensions/my-extension'),
   )
 })

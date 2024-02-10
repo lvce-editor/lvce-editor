@@ -11,19 +11,15 @@ test('readFile', async () => {
   expect(await FileSystemWeb.readFile('/languages/index.dart')).toEqual(
     `void main() {
   print('Hello, World!');
-}`
+}`,
   )
 })
 test('readFile - error', async () => {
-  await expect(
-    FileSystemWeb.readFile('/languages/index.dart')
-  ).rejects.toThrowError(new Error('file not found /languages/index.dart'))
+  await expect(FileSystemWeb.readFile('/languages/index.dart')).rejects.toThrow(new Error('file not found /languages/index.dart'))
 })
 
 test('rename', async () => {
-  expect(
-    FileSystemWeb.rename('/tmp/some-file.txt', '/tmp/renamed.txt')
-  ).rejects.toThrowError(new Error('not implemented'))
+  expect(FileSystemWeb.rename('/tmp/some-file.txt', '/tmp/renamed.txt')).rejects.toThrow(new Error('not implemented'))
 })
 
 test('getPathSeparator', () => {

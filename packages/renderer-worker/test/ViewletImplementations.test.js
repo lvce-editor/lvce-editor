@@ -40,7 +40,7 @@ test('loadContent - error - reference provider throws error', async () => {
   ExtensionHostImplementations.executeImplementationProvider.mockImplementation(() => {
     throw new Error('Failed to execute reference provider: TypeError: x is not a function')
   })
-  await expect(ViewletImplementations.loadContent(state)).rejects.toThrowError(
-    new Error('Failed to execute reference provider: TypeError: x is not a function')
+  await expect(ViewletImplementations.loadContent(state)).rejects.toThrow(
+    new Error('Failed to execute reference provider: TypeError: x is not a function'),
   )
 })

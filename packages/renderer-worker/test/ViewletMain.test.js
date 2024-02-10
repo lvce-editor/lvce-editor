@@ -94,7 +94,7 @@ test('loadContent - one restored editor', async () => {
           activeIndex: 0,
         },
       ],
-    })
+    }),
   ).toMatchObject({
     activeGroupIndex: 0,
     groups: [
@@ -278,7 +278,7 @@ test.skip('openUri - error reading file', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const state = ViewletMain.create(1)
-  await expect(ViewletMain.openUri(state, '/tmp/file-1.txt')).rejects.toThrowError(new Error('TypeError: x is not a function'))
+  await expect(ViewletMain.openUri(state, '/tmp/file-1.txt')).rejects.toThrow(new Error('TypeError: x is not a function'))
 })
 
 test.skip('openUri - should reuse same viewlet if it exists', async () => {

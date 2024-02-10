@@ -4,23 +4,16 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js',
-  () => {
-    return {
-      executeProvider: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostShared.js', () => {
+  return {
+    executeProvider: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ExtensionHostSourceControl = await import(
-  '../src/parts/ExtensionHost/ExtensionHostSourceControl.js'
-)
-const ExtensionHostShared = await import(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js'
-)
+const ExtensionHostSourceControl = await import('../src/parts/ExtensionHost/ExtensionHostSourceControl.js')
+const ExtensionHostShared = await import('../src/parts/ExtensionHost/ExtensionHostShared.js')
 
 test('acceptInput', async () => {
   // @ts-ignore
@@ -35,9 +28,7 @@ test('acceptInput - error', async () => {
   ExtensionHostShared.executeProvider.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ExtensionHostSourceControl.acceptInput()).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(ExtensionHostSourceControl.acceptInput()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 // TODO test getChangedFiles

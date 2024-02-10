@@ -165,8 +165,8 @@ test('readDirWithFileTypes - error', async () => {
   FileSystemDirectoryHandle.getChildHandles.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrowError(
-    new Error('failed to read directory: failed to get child handles: TypeError: x is not a function')
+  await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrow(
+    new Error('failed to read directory: failed to get child handles: TypeError: x is not a function'),
   )
 })
 
@@ -266,8 +266,8 @@ test('readDirWithFileTypes - not allowed - fallback fails', async () => {
       throw new TypeError('x is not a function')
     }
   })
-  await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrowError(
-    new TypeError('failed to read directory: TypeError: x is not a function')
+  await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrow(
+    new TypeError('failed to read directory: TypeError: x is not a function'),
   )
 })
 
@@ -308,8 +308,8 @@ test('readDirWithFileTypes - error - user activation required', async () => {
       throw new UserActivationRequiredError()
     }
   })
-  await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrowError(
-    new TypeError('failed to read directory: User activation is required to request permissions.')
+  await expect(FileSystemHtml.readDirWithFileTypes('test-folder')).rejects.toThrow(
+    new TypeError('failed to read directory: User activation is required to request permissions.'),
   )
 })
 

@@ -105,5 +105,5 @@ test('openLogsFolder - error', async () => {
   PlatformPaths.getLogsDir.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(OpenSpecialFolder.openLogsFolder()).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(OpenSpecialFolder.openLogsFolder()).rejects.toThrow(new TypeError('x is not a function'))
 })

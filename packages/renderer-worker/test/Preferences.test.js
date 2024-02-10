@@ -101,7 +101,7 @@ test.skip('hydrate - error', async () => {
     }
   })
   // TODO should handle error gracefully
-  await expect(Preferences.hydrate()).rejects.toThrowError(new Error('x is not a function'))
+  await expect(Preferences.hydrate()).rejects.toThrow(new Error('x is not a function'))
 })
 
 test('hydrate - error - permission denied', async () => {
@@ -170,7 +170,7 @@ test.skip('set - error - getUserSettingsPath', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(Preferences.set('x', 42)).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(Preferences.set('x', 42)).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test.skip('set - error - writeFile', async () => {
@@ -185,5 +185,5 @@ test.skip('set - error - writeFile', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(Preferences.set('x', 42)).rejects.toThrowError(new Error('Failed to write : x is not a function'))
+  await expect(Preferences.set('x', 42)).rejects.toThrow(new Error('Failed to write : x is not a function'))
 })

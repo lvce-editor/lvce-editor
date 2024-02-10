@@ -5,24 +5,17 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostEditor.js',
-  () => {
-    return {
-      execute: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostEditor.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const ExtensionHostEditor = await import(
-  '../src/parts/ExtensionHost/ExtensionHostEditor.js'
-)
+const ExtensionHostEditor = await import('../src/parts/ExtensionHost/ExtensionHostEditor.js')
 
-const ExtensionHostFormatting = await import(
-  '../src/parts/ExtensionHost/ExtensionHostFormatting.js'
-)
+const ExtensionHostFormatting = await import('../src/parts/ExtensionHost/ExtensionHostFormatting.js')
 
 test('executeFormattingProvider', async () => {
   // @ts-ignore
@@ -33,9 +26,7 @@ test('executeFormattingProvider', async () => {
     id: 1,
     languageId: 'test',
   }
-  expect(await ExtensionHostFormatting.executeFormattingProvider(editor)).toBe(
-    'test content'
-  )
+  expect(await ExtensionHostFormatting.executeFormattingProvider(editor)).toBe('test content')
   expect(ExtensionHostEditor.execute).toHaveBeenCalledTimes(1)
   expect(ExtensionHostEditor.execute).toHaveBeenCalledWith({
     editor,
@@ -56,6 +47,6 @@ test('executeFormattingProvider - error', async () => {
     ExtensionHostFormatting.executeFormattingProvider({
       id: 1,
       languageId: 'test',
-    })
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+    }),
+  ).rejects.toThrow(new TypeError('x is not a function'))
 })

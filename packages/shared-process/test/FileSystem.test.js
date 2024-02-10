@@ -73,8 +73,8 @@ test('copy - error - source does not exist', async () => {
   fs.cp.mockImplementation((source) => {
     throw new Error(`ENOENT: no such file or directory, lstat '${source}'`)
   })
-  await expect(FileSystem.copy('/test-1/a.txt', '/test-2/a.txt')).rejects.toThrowError(
-    new Error(`Failed to copy "/test-1/a.txt" to "/test-2/a.txt": ENOENT: no such file or directory, lstat '/test-1/a.txt'`)
+  await expect(FileSystem.copy('/test-1/a.txt', '/test-2/a.txt')).rejects.toThrow(
+    new Error(`Failed to copy "/test-1/a.txt" to "/test-2/a.txt": ENOENT: no such file or directory, lstat '/test-1/a.txt'`),
   )
 })
 
@@ -83,8 +83,8 @@ test('copy - to self', async () => {
   fs.cp.mockImplementation((source) => {
     throw new Error(`Invalid src or dest: cp returned EINVAL (src and dest cannot be the same)`)
   })
-  await expect(FileSystem.copy('/test/a.txt', '/test/a.txt')).rejects.toThrowError(
-    new Error(`Failed to copy "/test/a.txt" to "/test/a.txt": src and dest cannot be the same`)
+  await expect(FileSystem.copy('/test/a.txt', '/test/a.txt')).rejects.toThrow(
+    new Error(`Failed to copy "/test/a.txt" to "/test/a.txt": src and dest cannot be the same`),
   )
 })
 
@@ -101,9 +101,7 @@ test('createFile - should throw error if file already exists', async () => {
   fs.writeFile.mockImplementation((path) => {
     throw new Error(`EEXIST: file already exists, open '${path}'`)
   })
-  expect(FileSystem.createFile('/test/a.txt')).rejects.toThrowError(
-    `Failed to create file "/test/a.txt": EEXIST: file already exists, open '/test/a.txt'`
-  )
+  expect(FileSystem.createFile('/test/a.txt')).rejects.toThrow(`Failed to create file "/test/a.txt": EEXIST: file already exists, open '/test/a.txt'`)
 })
 
 test('create folder', async () => {
@@ -119,7 +117,7 @@ test('create folder - should fail if folder already exists', async () => {
   fs.mkdir.mockImplementation((path) => {
     throw new Error(`EEXIST: file already exists, mkdir '${path}'`)
   })
-  expect(FileSystem.createFolder('/test/a')).rejects.toThrowError(`Failed to create folder "/test/a": EEXIST: file already exists, mkdir '/test/a'`)
+  expect(FileSystem.createFolder('/test/a')).rejects.toThrow(`Failed to create folder "/test/a": EEXIST: file already exists, mkdir '/test/a'`)
 })
 
 // TODO test recursive create folder
@@ -234,7 +232,7 @@ test('rename - error - non existing old path', async () => {
     throw new Error(ErrorCodes.ENOENT)
   })
   await expect(FileSystem.rename('/test/non-existing.txt', '/test/file-has-been-moved.txt')).rejects.toThrow(
-    `Failed to rename "/test/non-existing.txt" to "/test/file-has-been-moved.txt": ENOENT`
+    `Failed to rename "/test/non-existing.txt" to "/test/file-has-been-moved.txt": ENOENT`,
   )
 })
 
@@ -262,7 +260,7 @@ test('rename - error - new path in non-existing nested directory', async () => {
     throw new Error(ErrorCodes.ENOENT)
   })
   await expect(FileSystem.rename('/test/file-to-be-moved.txt', '/test/nested/nested/nested/file-has-been-moved.txt')).rejects.toThrow(
-    `Failed to rename "/test/file-to-be-moved.txt" to "/test/nested/nested/nested/file-has-been-moved.txt": ENOENT`
+    `Failed to rename "/test/file-to-be-moved.txt" to "/test/nested/nested/nested/file-has-been-moved.txt": ENOENT`,
   )
 })
 
@@ -380,7 +378,7 @@ test('getRealPath - error - broken symlink - file not found', async () => {
   fs.readlink.mockImplementation(() => {
     return '/test/non-existing.txt'
   })
-  await expect(FileSystem.getRealPath('/test-1/a.txt')).rejects.toThrowError(new Error(`Broken symbolic link: File not found /test/non-existing.txt`))
+  await expect(FileSystem.getRealPath('/test-1/a.txt')).rejects.toThrow(new Error(`Broken symbolic link: File not found /test/non-existing.txt`))
 })
 
 test('getRealPath - error - broken symlink and error with readlink', async () => {
@@ -392,7 +390,7 @@ test('getRealPath - error - broken symlink and error with readlink', async () =>
   fs.readlink.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(FileSystem.getRealPath('/test-1/a.txt')).rejects.toThrowError(new Error(`Failed to resolve real path for /test-1/a.txt: ENOENT`))
+  await expect(FileSystem.getRealPath('/test-1/a.txt')).rejects.toThrow(new Error(`Failed to resolve real path for /test-1/a.txt: ENOENT`))
 })
 
 test('readFile - error - file not found', async () => {
@@ -400,7 +398,7 @@ test('readFile - error - file not found', async () => {
   fs.readFile.mockImplementation(() => {
     throw new NodeError(ErrorCodes.ENOENT)
   })
-  await expect(FileSystem.readFile('/test/non-existing.txt')).rejects.toThrowError(new Error(`File not found: '/test/non-existing.txt'`))
+  await expect(FileSystem.readFile('/test/non-existing.txt')).rejects.toThrow(new Error(`File not found: '/test/non-existing.txt'`))
 })
 
 test('readFile - error - permission denied', async () => {
@@ -408,7 +406,7 @@ test('readFile - error - permission denied', async () => {
   fs.readFile.mockImplementation(() => {
     throw new NodeError(ErrorCodes.EACCES, `EACCES: permission denied, open \'/test/no-permission.txt\'`)
   })
-  await expect(FileSystem.readFile('/test/no-permission.txt')).rejects.toThrowError(
-    new Error('Failed to read file "/test/no-permission.txt": EACCES: permission denied, open \'/test/no-permission.txt\'')
+  await expect(FileSystem.readFile('/test/no-permission.txt')).rejects.toThrow(
+    new Error('Failed to read file "/test/no-permission.txt": EACCES: permission denied, open \'/test/no-permission.txt\''),
   )
 })

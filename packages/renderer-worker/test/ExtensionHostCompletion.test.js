@@ -5,22 +5,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostEditor.js',
-  () => {
-    return {
-      execute: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostEditor.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
-const ExtensionHostEditor = await import(
-  '../src/parts/ExtensionHost/ExtensionHostEditor.js'
-)
-const ExtensionHostCompletion = await import(
-  '../src/parts/ExtensionHost/ExtensionHostCompletion.js'
-)
+})
+const ExtensionHostEditor = await import('../src/parts/ExtensionHost/ExtensionHostEditor.js')
+const ExtensionHostCompletion = await import('../src/parts/ExtensionHost/ExtensionHostCompletion.js')
 
 test('executeCompletionProvider - no results', async () => {
   // @ts-ignore
@@ -29,9 +22,7 @@ test('executeCompletionProvider - no results', async () => {
   })
   const editor = { id: 1, uri: '' }
 
-  expect(
-    await ExtensionHostCompletion.executeCompletionProvider(editor, 0)
-  ).toEqual([])
+  expect(await ExtensionHostCompletion.executeCompletionProvider(editor, 0)).toEqual([])
   expect(ExtensionHostEditor.execute).toHaveBeenCalledTimes(1)
   expect(ExtensionHostEditor.execute).toHaveBeenCalledWith({
     args: [0],
@@ -49,11 +40,6 @@ test('executeCompletionProvider - error', async () => {
   ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  const promise = ExtensionHostCompletion.executeCompletionProvider(
-    { id: 1, uri: '' },
-    0
-  )
-  await expect(promise).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  const promise = ExtensionHostCompletion.executeCompletionProvider({ id: 1, uri: '' }, 0)
+  await expect(promise).rejects.toThrow(new TypeError('x is not a function'))
 })

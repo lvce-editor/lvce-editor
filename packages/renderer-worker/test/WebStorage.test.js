@@ -5,36 +5,25 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
 const WebStorage = await import('../src/parts/WebStorage/WebStorage.js')
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 test('getJson - localStorage - number', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {
     return '42'
   })
-  expect(await WebStorage.getJson(WebStorageType.LocalStorage, 'item-1')).toBe(
-    42
-  )
+  expect(await WebStorage.getJson(WebStorageType.LocalStorage, 'item-1')).toBe(42)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'WebStorage.getItem',
-    1,
-    'item-1'
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('WebStorage.getItem', 1, 'item-1')
 })
 
 test('getJson - localStorage - object', async () => {
@@ -42,15 +31,9 @@ test('getJson - localStorage - object', async () => {
   RendererProcess.invoke.mockImplementation(() => {
     return '{}'
   })
-  expect(
-    await WebStorage.getJson(WebStorageType.LocalStorage, 'item-1')
-  ).toEqual({})
+  expect(await WebStorage.getJson(WebStorageType.LocalStorage, 'item-1')).toEqual({})
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'WebStorage.getItem',
-    1,
-    'item-1'
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('WebStorage.getItem', 1, 'item-1')
 })
 
 test('getJson - localStorage - invalid json', async () => {
@@ -58,15 +41,9 @@ test('getJson - localStorage - invalid json', async () => {
   RendererProcess.invoke.mockImplementation(() => {
     return '{'
   })
-  expect(
-    await WebStorage.getJson(WebStorageType.LocalStorage, 'item-1')
-  ).toBeUndefined()
+  expect(await WebStorage.getJson(WebStorageType.LocalStorage, 'item-1')).toBeUndefined()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'WebStorage.getItem',
-    1,
-    'item-1'
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('WebStorage.getItem', 1, 'item-1')
 })
 
 test('setJson - localStorage', async () => {
@@ -74,27 +51,16 @@ test('setJson - localStorage', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await WebStorage.setJson(WebStorageType.LocalStorage, 'item-1', 43)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'WebStorage.setItem',
-    1,
-    'item-1',
-    `43`
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('WebStorage.setItem', 1, 'item-1', `43`)
 })
 
 test('setJson - localStorage - storage limit exceeded', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {
-    throw new Error(
-      `Error: Failed to execute 'setItem' on 'Storage': Setting the value of 'item-1' exceeded the quota.`
-    )
+    throw new Error(`Error: Failed to execute 'setItem' on 'Storage': Setting the value of 'item-1' exceeded the quota.`)
   })
-  await expect(
-    WebStorage.setJson(WebStorageType.LocalStorage, 'item-1', 43)
-  ).rejects.toThrowError(
-    new Error(
-      `Error: Failed to execute 'setItem' on 'Storage': Setting the value of 'item-1' exceeded the quota.`
-    )
+  await expect(WebStorage.setJson(WebStorageType.LocalStorage, 'item-1', 43)).rejects.toThrow(
+    new Error(`Error: Failed to execute 'setItem' on 'Storage': Setting the value of 'item-1' exceeded the quota.`),
   )
 })
 

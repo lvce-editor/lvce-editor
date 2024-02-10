@@ -46,9 +46,7 @@ test('getJson - error', async () => {
       }
     },
   }
-  await expect(CacheStorage.getJson('sample-key-2')).rejects.toThrowError(
-    'Failed to get json from cache "sample-key-2"'
-  )
+  await expect(CacheStorage.getJson('sample-key-2')).rejects.toThrow('Failed to get json from cache "sample-key-2"')
 })
 
 test('getJson - error - firefox', async () => {
@@ -103,9 +101,7 @@ test('setJson - error', async () => {
       }
     },
   }
-  await expect(CacheStorage.setJson('sample-key-6', {})).rejects.toThrowError(
-    'Failed to put json into cache "sample-key-6"'
-  )
+  await expect(CacheStorage.setJson('sample-key-6', {})).rejects.toThrow('Failed to put json into cache "sample-key-6"')
 })
 
 test('setJson - caches are not available', async () => {
@@ -138,9 +134,7 @@ test('getText', async () => {
       }
     },
   }
-  expect(await CacheStorage.getTextFromCache('sample-key-3')).toBe(
-    'sample text'
-  )
+  expect(await CacheStorage.getTextFromCache('sample-key-3')).toBe('sample text')
 })
 
 test('getText - error', async () => {
@@ -158,9 +152,7 @@ test('getText - error', async () => {
       }
     },
   }
-  await expect(
-    CacheStorage.getTextFromCache('sample-key-4')
-  ).rejects.toThrowError('Failed to get text from cache "sample-key-4"')
+  await expect(CacheStorage.getTextFromCache('sample-key-4')).rejects.toThrow('Failed to get text from cache "sample-key-4"')
 })
 
 test('getText - error - firefox', async () => {
@@ -194,9 +186,7 @@ test('clearCache - error', async () => {
       throw new Error('not allowed')
     },
   }
-  await expect(CacheStorage.clearCache()).rejects.toThrowError(
-    'Failed to clear cache'
-  )
+  await expect(CacheStorage.clearCache()).rejects.toThrow('Failed to clear cache')
 })
 
 test('clearCache - error - firefox', async () => {

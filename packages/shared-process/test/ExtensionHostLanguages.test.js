@@ -72,7 +72,7 @@ test('getLanguages - error - property languages is not of type array', async () 
     ]
   })
   // TODO should handle error gracefully
-  await expect(ExtensionHostLanguages.getLanguages()).rejects.toThrowError(new TypeError('extension.languages.map is not a function'))
+  await expect(ExtensionHostLanguages.getLanguages()).rejects.toThrow(new TypeError('extension.languages.map is not a function'))
 })
 
 test('getLanguages - language without tokenize property', async () => {
@@ -195,7 +195,7 @@ test('getLanguageConfiguration - error - language configuration file not found',
     ]
   })
   const languageConfigurationPath = join(tmpDir, 'languageConfiguration.json')
-  await expect(ExtensionHostLanguages.getLanguageConfiguration('javascript')).rejects.toThrowError(
+  await expect(ExtensionHostLanguages.getLanguageConfiguration('javascript')).rejects.toThrow(
     new Error(`Failed to load language configuration for javascript: File not found: '${languageConfigurationPath}'`),
   )
 })
@@ -261,7 +261,7 @@ test('getLanguageConfiguration - error - language is null', async () => {
       },
     ]
   })
-  await expect(ExtensionHostLanguages.getLanguageConfiguration('test')).rejects.toThrowError(
+  await expect(ExtensionHostLanguages.getLanguageConfiguration('test')).rejects.toThrow(
     new Error("Failed to load language configuration for test: TypeError: Cannot read properties of null (reading 'id')"),
   )
 })

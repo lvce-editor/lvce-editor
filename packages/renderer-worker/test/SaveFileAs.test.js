@@ -83,8 +83,8 @@ test('saveFileAs - error', async () => {
   Ajax.getResponse.mockImplementation(() => {
     return new Response()
   })
-  await expect(SaveFileAs.saveFileAs('image.png', 'https://example.com/image.png')).rejects.toThrowError(
-    new Error('Failed to save file: TypeError: x is not a function')
+  await expect(SaveFileAs.saveFileAs('image.png', 'https://example.com/image.png')).rejects.toThrow(
+    new Error('Failed to save file: TypeError: x is not a function'),
   )
 })
 
@@ -97,8 +97,8 @@ test('saveFileAs - error - not supported', async () => {
   Ajax.getResponse.mockImplementation(() => {
     return new Response()
   })
-  await expect(SaveFileAs.saveFileAs('image.png', 'https://example.com/image.png')).rejects.toThrowError(
-    new Error('Failed to save file: showSaveFilePicker not supported on this browser')
+  await expect(SaveFileAs.saveFileAs('image.png', 'https://example.com/image.png')).rejects.toThrow(
+    new Error('Failed to save file: showSaveFilePicker not supported on this browser'),
   )
 })
 

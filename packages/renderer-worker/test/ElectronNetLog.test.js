@@ -20,7 +20,7 @@ test('startLogging - error', async () => {
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronNetLog.startLogging('/test.log.txt')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronNetLog.startLogging('/test.log.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('startLogging', async () => {
@@ -38,7 +38,7 @@ test('stopLogging - error', async () => {
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronNetLog.stopLogging()).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronNetLog.stopLogging()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('stopLogging', async () => {

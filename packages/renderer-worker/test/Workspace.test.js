@@ -122,7 +122,7 @@ test('hydrate - error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   // TODO should handle error gracefully
-  await expect(Workspace.hydrate({ href: 'http://localhost:3000' })).rejects.toThrowError(new Error('x is not a function'))
+  await expect(Workspace.hydrate({ href: 'http://localhost:3000' })).rejects.toThrow(new Error('x is not a function'))
 })
 
 test.skip('setPath', async () => {

@@ -22,7 +22,7 @@ test('textSearch - error', async () => {
   SharedProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(TextSearchNode.textSearch('', '/test', 'abc')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(TextSearchNode.textSearch('', '/test', 'abc')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('textSearch', async () => {

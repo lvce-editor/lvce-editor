@@ -29,8 +29,8 @@ test('unexpected message', async () => {
   const message = {}
   const resolve = jest.fn()
   const execute = jest.fn()
-  await expect(HandleJsonRpcMessage.handleJsonRpcMessage(ipc, message, execute, resolve)).rejects.toThrowError(
-    new Error('unexpected message from renderer worker')
+  await expect(HandleJsonRpcMessage.handleJsonRpcMessage(ipc, message, execute, resolve)).rejects.toThrow(
+    new Error('unexpected message from renderer worker'),
   )
 })
 
