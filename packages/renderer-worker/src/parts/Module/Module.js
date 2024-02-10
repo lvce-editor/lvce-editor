@@ -152,6 +152,8 @@ export const load = (moduleId) => {
       return import('../WindowTitle/WindowTitle.ipc.js')
     case ModuleId.PointerCapture:
       return import('../PointerCapture/PointerCapture.ipc.js')
+    case ModuleId.QuickPick:
+      return import('../QuickPick/QuickPick.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
