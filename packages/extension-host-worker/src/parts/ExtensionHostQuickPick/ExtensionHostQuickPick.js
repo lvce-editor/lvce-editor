@@ -1,6 +1,7 @@
-export const showQuickPick = async () => {
-  // TODO: send jsonrpc request to renderer worker
-  // to show quickpick. return the selected quickpick value
-  // or undefined if not pick is selected
-  throw new Error(`not implemented`)
+import * as Rpc from '../Rpc/Rpc.js'
+import * as RendererWorkerCommandType from '../RendererWorkerCommandType/RendererWorkerCommandType.js'
+
+export const showQuickPick = async ({ getPicks, toPick }) => {
+  const picks = getPicks().map(toPick)
+  return Rpc.invoke(RendererWorkerCommandType.ExtensionHostQuickPickShow, picks)
 }
