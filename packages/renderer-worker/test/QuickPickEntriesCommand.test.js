@@ -24,6 +24,9 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
     showErrorDialog: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    handleError: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
@@ -86,9 +89,9 @@ test('selectPick - error - selected item has no id', async () => {
     throw new TypeError('x is not a function')
   })
   // @ts-ignore
-  ErrorHandling.showErrorDialog.mockImplementation(() => {})
+  ErrorHandling.handleError.mockImplementation(() => {})
 
-  await expect(() => QuickPickEntriesCommand.selectPick({})).toThrow(new TypeError(`Cannot read properties of undefined (reading 'startsWith')`))
+  await expect(() => QuickPickEntriesCommand.selectPick({})).toThrowError(new TypeError(`Cannot read properties of undefined (reading 'startsWith')`))
 })
 
 test('selectPick - error', async () => {
@@ -97,7 +100,7 @@ test('selectPick - error', async () => {
     throw new TypeError('x is not a function')
   })
   // @ts-ignore
-  ErrorHandling.showErrorDialog.mockImplementation(() => {})
+  ErrorHandling.handleError.mockImplementation(() => {})
 
   expect(
     await QuickPickEntriesCommand.selectPick({
@@ -107,6 +110,6 @@ test('selectPick - error', async () => {
   ).toEqual({
     command: QuickPickReturnValue.Hide,
   })
-  expect(ErrorHandling.showErrorDialog).toHaveBeenCalledTimes(1)
-  expect(ErrorHandling.showErrorDialog).toHaveBeenCalledWith(new TypeError('x is not a function'))
+  expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(new TypeError('x is not a function'), false)
 })
