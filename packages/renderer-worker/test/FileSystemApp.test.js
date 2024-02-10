@@ -83,19 +83,19 @@ test('readFile - settings - error', async () => {
   FileSystem.readFile.mockImplementation(() => {
     return '{}'
   })
-  await expect(FileSystemApp.readFile('settings.json')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(FileSystemApp.readFile('settings.json')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('rename - error', async () => {
-  await expect(FileSystemApp.rename('settings.json', 'new-settings.json')).rejects.toThrowError(new Error('not allowed'))
+  await expect(FileSystemApp.rename('settings.json', 'new-settings.json')).rejects.toThrow(new Error('not allowed'))
 })
 
 test('remove - error', async () => {
-  await expect(FileSystemApp.remove('settings.json')).rejects.toThrowError(new Error('not allowed'))
+  await expect(FileSystemApp.remove('settings.json')).rejects.toThrow(new Error('not allowed'))
 })
 
 test('mkdir - error', async () => {
-  await expect(FileSystemApp.mkdir('my-folder')).rejects.toThrowError(new Error('not allowed'))
+  await expect(FileSystemApp.mkdir('my-folder')).rejects.toThrow(new Error('not allowed'))
 })
 
 // TODO test writeFile and writeFile errors

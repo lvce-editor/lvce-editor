@@ -51,7 +51,7 @@ test('execute - command already registered but throws error', async () => {
     throw new Error('Oops')
   })
   Command.register(-12, mockFn)
-  expect(() => Command.execute(-12, 'abc')).toThrowError(new Error('Oops'))
+  expect(() => Command.execute(-12, 'abc')).toThrow(new Error('Oops'))
 })
 
 test('execute - error - module has syntax error', async () => {
@@ -65,11 +65,7 @@ test('execute - error - module has syntax error', async () => {
     throw error
   }
   const error = await getError(Command.execute('test.test'))
-  expect(error.message).toBe(
-    "Failed to load command test.test: VError: failed to load module 21: SyntaxError: Unexpected token ','"
-  )
-  expect(error.stack).toMatch(
-    "VError: Failed to load command test.test: VError: failed to load module 21: SyntaxError: Unexpected token ','"
-  )
+  expect(error.message).toBe("Failed to load command test.test: VError: failed to load module 21: SyntaxError: Unexpected token ','")
+  expect(error.stack).toMatch("VError: Failed to load command test.test: VError: failed to load module 21: SyntaxError: Unexpected token ','")
   expect(error.stack).toMatch('  at loadCommand')
 })

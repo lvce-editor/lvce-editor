@@ -51,13 +51,13 @@ test('downloadFile - error', async () => {
   RendererProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(Download.downloadFile('test.txt', 'test://test-url')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(Download.downloadFile('test.txt', 'test://test-url')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('downloadFile - error - fileName is not of type string', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await expect(Download.downloadFile(123, 456)).rejects.toThrowError('expected value to be of type string')
+  await expect(Download.downloadFile(123, 456)).rejects.toThrow('expected value to be of type string')
 })
 
 test('downloadFile', async () => {
@@ -78,7 +78,7 @@ test('downloadJson - error with download', async () => {
     throw new TypeError('x is not a function')
   })
 
-  await expect(Download.downloadJson([], 'test.json')).rejects.toThrowError(new Error('Failed to download test.json: TypeError: x is not a function'))
+  await expect(Download.downloadJson([], 'test.json')).rejects.toThrow(new Error('Failed to download test.json: TypeError: x is not a function'))
   expect(Url.revokeObjectUrl).toHaveBeenCalledTimes(1)
   expect(Url.revokeObjectUrl).toHaveBeenCalledWith('test://test-session.json')
 })

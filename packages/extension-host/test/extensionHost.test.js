@@ -162,7 +162,7 @@ test.skip('activate extension throws error on import', async () => {
   await writeFile(
     join(tmpDir, 'package.json'),
     `{ "type": "module" }
-`
+`,
   )
   await writeFile(
     join(tmpDir, 'extension.json'),
@@ -170,13 +170,13 @@ test.skip('activate extension throws error on import', async () => {
   "id": "test-author.test-extension",
   "main": "src/main.js"
 }
-`
+`,
   )
   await mkdir(join(tmpDir, 'src'))
   await writeFile(
     join(tmpDir, 'src', 'main.js'),
     `throw new Error("Oops")
-`
+`,
   )
   const extension1 = await getManifest({
     path: tmpDir,
@@ -187,10 +187,8 @@ test.skip('activate extension throws error on import', async () => {
     invoke(extensionHost, {
       method: 'enableExtension',
       params: [extension1],
-    })
-  ).rejects.toThrowError(
-    `ExecutionError: Failed to load extension \"test-author.test-extension\": Oops`
-  )
+    }),
+  ).rejects.toThrow(`ExecutionError: Failed to load extension \"test-author.test-extension\": Oops`)
 })
 
 test.skip('activate extension throws error in activate', async () => {
@@ -198,7 +196,7 @@ test.skip('activate extension throws error in activate', async () => {
   await writeFile(
     join(tmpDir, 'package.json'),
     `{ "type": "module" }
-`
+`,
   )
   await writeFile(
     join(tmpDir, 'extension.json'),
@@ -206,7 +204,7 @@ test.skip('activate extension throws error in activate', async () => {
   "id": "test-author.test-extension",
   "main": "src/main.js"
 }
-`
+`,
   )
   await mkdir(join(tmpDir, 'src'))
   await writeFile(
@@ -214,7 +212,7 @@ test.skip('activate extension throws error in activate', async () => {
     `export const  activate = () => {
   throw new Error("Oops")
 }
-`
+`,
   )
   const extension1 = await getManifest({
     path: tmpDir,
@@ -225,10 +223,8 @@ test.skip('activate extension throws error in activate', async () => {
     invoke(extensionHost, {
       method: 'enableExtension',
       params: [extension1],
-    })
-  ).rejects.toThrowError(
-    `ExecutionError: Failed to activate extension \"test-author.test-extension\": Oops`
-  )
+    }),
+  ).rejects.toThrow(`ExecutionError: Failed to activate extension \"test-author.test-extension\": Oops`)
 })
 
 test.skip('executing failing tab completion provider should log error message but not crash extension host', async () => {
@@ -241,19 +237,14 @@ test.skip('executing failing tab completion provider should log error message bu
   })
   await invoke(extensionHost, {
     method: 'TextDocument.syncInitial',
-    params: [
-      /* uri */ '/tmp/index.html',
-      /* documentId */ 1,
-      /* languageId */ 'html',
-      /* text */ 'sample text',
-    ],
+    params: [/* uri */ '/tmp/index.html', /* documentId */ 1, /* languageId */ 'html', /* text */ 'sample text'],
   })
   await expect(
     invoke(extensionHost, {
       method: 'executeTabCompletionProvider',
       params: [/* documentId */ 1, /* offset */ 0],
-    })
-  ).rejects.toThrowError('some error')
+    }),
+  ).rejects.toThrow('some error')
   extensionHost.onMessage = () => {}
   expect(extensionHost.state).toBe('ready')
 })
@@ -271,7 +262,7 @@ test.skip('memory stats', async () => {
     await invoke(extensionHost, {
       method: 'Stats.getMemoryInfo',
       params: [],
-    })
+    }),
   ).toEqual({
     heapUsed: expect.any(Number),
     heapTotal: expect.any(Number),
@@ -291,7 +282,7 @@ test.skip('Api - Command.execute', async () => {
   await writeFile(
     join(tmpDir, 'package.json'),
     `{ "type": "module"}
-`
+`,
   )
   await writeFile(
     join(tmpDir, 'extension.json'),
@@ -299,7 +290,7 @@ test.skip('Api - Command.execute', async () => {
   "id": "test-author.test-extension",
   "main": "src/main.js"
 }
-`
+`,
   )
   await mkdir(join(tmpDir, 'src'))
   await writeFile(
@@ -314,7 +305,7 @@ test.skip('Api - Command.execute', async () => {
 export const activate = () => {
   vscode.registerCommand(testCommand)
 }
-`
+`,
   )
   const extension1 = await getManifest({
     path: tmpDir,
@@ -327,7 +318,7 @@ export const activate = () => {
     await invoke(extensionHost, {
       method: 'Command.execute',
       params: ['test.test', 'test'],
-    })
+    }),
   ).toBe('test')
 })
 
@@ -341,17 +332,13 @@ test.skip('Api - TabCompletion.execute', async () => {
   })
   await invoke(extensionHost, {
     method: 'TextDocument.syncInitial',
-    params: [
-      /* documentId */ 1,
-      /* languageId */ 'html',
-      /* text */ 'sample text',
-    ],
+    params: [/* documentId */ 1, /* languageId */ 'html', /* text */ 'sample text'],
   })
   expect(
     await invoke(extensionHost, {
       method: 'TabCompletionProvider.execute',
       params: [/* documentId */ 1, /* languageId */ 'html', /* offset */ 0],
-    })
+    }),
   ).toEqual({
     // TODO
   })

@@ -56,5 +56,5 @@ test('openNativeFolder - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(OpenNativeFolder.openNativeFolder('abc')).rejects.toThrowError(new Error('Failed to open folder abc: TypeError: x is not a function'))
+  await expect(OpenNativeFolder.openNativeFolder('abc')).rejects.toThrow(new Error('Failed to open folder abc: TypeError: x is not a function'))
 })

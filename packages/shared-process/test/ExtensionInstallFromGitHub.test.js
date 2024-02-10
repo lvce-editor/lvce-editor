@@ -55,7 +55,7 @@ test('install - error with download', async () => {
       repo: 'repo',
       branch: 'HEAD',
     }),
-  ).rejects.toThrowError(new Error('Failed to install user/repo: Failed to download'))
+  ).rejects.toThrow(new Error('Failed to install user/repo: Failed to download'))
 })
 
 test('install - error with extraction', async () => {
@@ -69,7 +69,7 @@ test('install - error with extraction', async () => {
       repo: 'repo',
       branch: 'HEAD',
     }),
-  ).rejects.toThrowError(new Error(`Failed to install user/repo: Failed to extract file`))
+  ).rejects.toThrow(new Error(`Failed to install user/repo: Failed to extract file`))
 })
 
 test('install - error - missing id in extension manifest', async () => {
@@ -93,7 +93,7 @@ test('install - error - missing id in extension manifest', async () => {
       repo: 'repo',
       branch: 'HEAD',
     }),
-  ).rejects.toThrowError(new Error(`Failed to install user/repo: missing id in extension manifest`))
+  ).rejects.toThrow(new Error(`Failed to install user/repo: missing id in extension manifest`))
 })
 
 // TODO improve error handling
@@ -118,7 +118,7 @@ test('install - error - manifest contains null', async () => {
       repo: 'repo',
       branch: 'HEAD',
     }),
-  ).rejects.toThrowError(new Error("Failed to install user/repo: TypeError: Cannot destructure property 'id' of 'manifestJson' as it is null."))
+  ).rejects.toThrow(new Error("Failed to install user/repo: TypeError: Cannot destructure property 'id' of 'manifestJson' as it is null."))
 })
 
 test('install', async () => {

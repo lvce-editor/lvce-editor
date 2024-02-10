@@ -92,7 +92,7 @@ test('getPicks - error', async () => {
   SearchFile.searchFile.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(QuickPickEntriesFile.getPicks('/test/file.txt')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(QuickPickEntriesFile.getPicks('/test/file.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test.skip('selectPick', async () => {
@@ -101,7 +101,7 @@ test.skip('selectPick', async () => {
   expect(
     await QuickPickEntriesFile.selectPick({
       label: 'test-file-1.txt',
-    })
+    }),
   ).toEqual({
     command: QuickPickReturnValue.Hide,
   })

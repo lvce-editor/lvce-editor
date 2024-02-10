@@ -25,7 +25,7 @@ test('create - error - module not found', async () => {
   // @ts-ignore
   GetFirstNodeWorkerEvent.getFirstNodeWorkerEvent.mockImplementation(() => {
     const error = new Error(
-      `[ERR_MODULE_NOT_FOUND]: Cannot find module '/test/packages/shared-process/src/parts/ErrorType/ErrorType.js' imported from /test/packages/shared-process/src/parts/GetErrorConstructor/GetErrorConstructor.js`
+      `[ERR_MODULE_NOT_FOUND]: Cannot find module '/test/packages/shared-process/src/parts/ErrorType/ErrorType.js' imported from /test/packages/shared-process/src/parts/GetErrorConstructor/GetErrorConstructor.js`,
     )
     error.stack = `[ERR_MODULE_NOT_FOUND]: Cannot find module '/test/packages/shared-process/src/parts/ErrorType/ErrorType.js' imported from /test/packages/shared-process/src/parts/GetErrorConstructor/GetErrorConstructor.js
   at __node_internal_captureLargerStackTrace (node:internal/errors:490:5)
@@ -49,17 +49,17 @@ test('create - error - module not found', async () => {
   await expect(
     IpcParentWithNodeWorker.create({
       path: 'not-found.js',
-    })
-  ).rejects.toThrowError(
+    }),
+  ).rejects.toThrow(
     new Error(
-      `Worker threw an error before ipc connection was established: Error: [ERR_MODULE_NOT_FOUND]: Cannot find module '/test/packages/shared-process/src/parts/ErrorType/ErrorType.js' imported from /test/packages/shared-process/src/parts/GetErrorConstructor/GetErrorConstructor.js`
-    )
+      `Worker threw an error before ipc connection was established: Error: [ERR_MODULE_NOT_FOUND]: Cannot find module '/test/packages/shared-process/src/parts/ErrorType/ErrorType.js' imported from /test/packages/shared-process/src/parts/GetErrorConstructor/GetErrorConstructor.js`,
+    ),
   )
 })
 
 test('create - error - path is not defined', async () => {
   // @ts-ignore
-  await expect(IpcParentWithNodeWorker.create({})).rejects.toThrowError(new Error('expected value to be of type string'))
+  await expect(IpcParentWithNodeWorker.create({})).rejects.toThrow(new Error('expected value to be of type string'))
 })
 
 test('create', async () => {

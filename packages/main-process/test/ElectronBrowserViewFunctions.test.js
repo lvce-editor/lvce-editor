@@ -151,6 +151,6 @@ test('setIframeSrc - two errors', async () => {
   }
   await expect(
     // @ts-ignore
-    ElectronBrowserViewFunctions.setIframeSrc(view, 'https://example.com')
-  ).rejects.toThrowError(new Error('Failed to set iframe src: ERR_CONNECTION_REFUSED:ERR_CONNECTION_REFUSED'))
+    ElectronBrowserViewFunctions.setIframeSrc(view, 'https://example.com'),
+  ).rejects.toThrow(new Error('Failed to set iframe src: ERR_CONNECTION_REFUSED:ERR_CONNECTION_REFUSED'))
 })

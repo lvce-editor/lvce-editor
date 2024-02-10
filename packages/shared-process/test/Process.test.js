@@ -22,5 +22,5 @@ test('kill - ESRCH', () => {
   process.kill.mockImplementation(() => {
     throw new Error('kill ESRCH')
   })
-  expect(() => Process.kill(pid, signal)).toThrowError(new Error('Failed to kill process 123 with signal SIGINT: kill ESRCH'))
+  expect(() => Process.kill(pid, signal)).toThrow(new Error('Failed to kill process 123 with signal SIGINT: kill ESRCH'))
 })

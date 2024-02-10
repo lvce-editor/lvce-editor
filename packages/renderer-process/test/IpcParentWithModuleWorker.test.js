@@ -52,8 +52,8 @@ test('create - error - not found', async () => {
     IpcParentWithModuleWorker.create({
       url: 'https://example.com/not-found.js',
       name: 'Renderer Worker',
-    })
-  ).rejects.toThrowError(new Error('Failed to start renderer worker: Not found (404)'))
+    }),
+  ).rejects.toThrow(new Error('Failed to start renderer worker: Not found (404)'))
 })
 
 test('create', async () => {
@@ -74,6 +74,6 @@ test('create', async () => {
     await IpcParentWithModuleWorker.create({
       url: 'https://example.com/not-found.js',
       name: 'Renderer Worker',
-    })
+    }),
   ).toEqual(new globalThis.Worker(''))
 })

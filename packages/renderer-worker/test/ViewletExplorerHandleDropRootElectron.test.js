@@ -199,5 +199,5 @@ test('handleDrop - error', async () => {
         webkitRelativePath: '',
       },
     ]),
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  ).rejects.toThrow(new TypeError('x is not a function'))
 })

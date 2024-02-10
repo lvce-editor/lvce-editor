@@ -70,7 +70,7 @@ test('link - error - no manifest file found', async () => {
   FileSystem.readFile.mockImplementation((uri) => {
     throw new FileNotFoundError(uri)
   })
-  await expect(ExtensionUnlink.unlink('/test/documents/my-extension')).rejects.toThrowError(
+  await expect(ExtensionUnlink.unlink('/test/documents/my-extension')).rejects.toThrow(
     new Error(
       "Failed to unlink extension: Failed to load extension manifest for my-extension: File not found: '/test/documents/my-extension/extension.json'",
     ),

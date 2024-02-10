@@ -18,9 +18,7 @@ test('executeDefinitionProvider', async () => {
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  expect(await ExtensionHostDefinition.executeDefinitionProvider(1, 0)).toEqual(
-    { endOffset: 22, startOffset: 15, uri: '/test/index.js' }
-  )
+  expect(await ExtensionHostDefinition.executeDefinitionProvider(1, 0)).toEqual({ endOffset: 22, startOffset: 15, uri: '/test/index.js' })
 })
 
 test('executeDefinitionProvider - definition.startOffset is zero', async () => {
@@ -35,9 +33,7 @@ test('executeDefinitionProvider - definition.startOffset is zero', async () => {
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  expect(await ExtensionHostDefinition.executeDefinitionProvider(1, 0)).toEqual(
-    { endOffset: 0, startOffset: 0, uri: '/test/index.js' }
-  )
+  expect(await ExtensionHostDefinition.executeDefinitionProvider(1, 0)).toEqual({ endOffset: 0, startOffset: 0, uri: '/test/index.js' })
 })
 
 test('executeDefinitionProvider - error - definition must be of type object but is array', async () => {
@@ -48,12 +44,8 @@ test('executeDefinitionProvider - error - definition must be of type object but 
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostDefinition.executeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute definition provider: VError: invalid definition result: definition must be of type object but is []'
-    )
+  await expect(ExtensionHostDefinition.executeDefinitionProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute definition provider: VError: invalid definition result: definition must be of type object but is []'),
   )
 })
 
@@ -65,12 +57,10 @@ test('executeDefinitionProvider - error - definition must be of type object but 
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostDefinition.executeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
+  await expect(ExtensionHostDefinition.executeDefinitionProvider(1, 0)).rejects.toThrow(
     new Error(
-      'Failed to execute definition provider: VError: invalid definition result: definition must be of type object but is [Function (anonymous)]'
-    )
+      'Failed to execute definition provider: VError: invalid definition result: definition must be of type object but is [Function (anonymous)]',
+    ),
   )
 })
 
@@ -82,12 +72,8 @@ test('executeDefinitionProvider - error - definition.uri must be of type string'
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostDefinition.executeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute definition provider: VError: invalid definition result: definition.uri must be of type string'
-    )
+  await expect(ExtensionHostDefinition.executeDefinitionProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute definition provider: VError: invalid definition result: definition.uri must be of type string'),
   )
 })
 
@@ -101,12 +87,8 @@ test('executeDefinitionProvider - error - definition.startOffset must be of type
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostDefinition.executeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute definition provider: VError: invalid definition result: definition.startOffset must be of type number'
-    )
+  await expect(ExtensionHostDefinition.executeDefinitionProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute definition provider: VError: invalid definition result: definition.startOffset must be of type number'),
   )
 })
 
@@ -121,12 +103,8 @@ test('executeDefinitionProvider - error - definition.endOffset must be of type n
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostDefinition.executeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute definition provider: VError: invalid definition result: definition.endOffset must be of type number'
-    )
+  await expect(ExtensionHostDefinition.executeDefinitionProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute definition provider: VError: invalid definition result: definition.endOffset must be of type number'),
   )
 })
 
@@ -138,12 +116,8 @@ test('executeDefinitionProvider - error - definition provider throws error', asy
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostDefinition.executeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute definition provider: TypeError: x is not a function'
-    )
+  await expect(ExtensionHostDefinition.executeDefinitionProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute definition provider: TypeError: x is not a function'),
   )
 })
 
@@ -155,7 +129,5 @@ test('executeDefinitionProvider - no definition found', async () => {
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  expect(await ExtensionHostDefinition.executeDefinitionProvider(1, 0)).toBe(
-    undefined
-  )
+  expect(await ExtensionHostDefinition.executeDefinitionProvider(1, 0)).toBe(undefined)
 })

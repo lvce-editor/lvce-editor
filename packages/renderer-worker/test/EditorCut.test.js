@@ -47,7 +47,7 @@ test('editorCut', async () => {
   expect(Command.execute).toHaveBeenCalledWith(
     'ClipBoard.writeText',
     `ine 2
-li`
+li`,
   )
 })
 
@@ -67,7 +67,7 @@ test('editorCut - error with clipboard', async () => {
     lineCache: [],
     undoStack: [],
   }
-  await expect(EditorCut.cut(editor)).rejects.toThrowError(new Error('Writing to clipboard not allowed'))
+  await expect(EditorCut.cut(editor)).rejects.toThrow(new Error('Writing to clipboard not allowed'))
 })
 
 test.skip('editorCut - no selection', async () => {

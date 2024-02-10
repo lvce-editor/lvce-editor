@@ -98,5 +98,5 @@ test('editorCopy - error from clipboard - document is not focused', async () => 
     scrollBarHeight: 0,
     undoStack: [],
   }
-  await expect(EditorCopy.copy(editor)).rejects.toThrowError(new DOMException('Document is not focused.'))
+  await expect(EditorCopy.copy(editor)).rejects.toThrow(new DOMException('Document is not focused.'))
 })

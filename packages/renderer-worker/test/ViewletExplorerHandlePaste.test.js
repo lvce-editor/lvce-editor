@@ -182,5 +182,5 @@ test('handlePaste - unexpected result', async () => {
   Command.execute.mockImplementation(() => {
     throw new Error('unexpected native paste type: non-existing')
   })
-  await expect(ViewletExplorerHandlePaste.handlePaste(state)).rejects.toThrowError(new Error('unexpected native paste type: non-existing'))
+  await expect(ViewletExplorerHandlePaste.handlePaste(state)).rejects.toThrow(new Error('unexpected native paste type: non-existing'))
 })

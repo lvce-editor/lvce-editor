@@ -372,7 +372,7 @@ test('open process explorer - error', async () => {
   ProcessExplorer.open.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(Developer.openProcessExplorer()).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(Developer.openProcessExplorer()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('getAllStates', async () => {

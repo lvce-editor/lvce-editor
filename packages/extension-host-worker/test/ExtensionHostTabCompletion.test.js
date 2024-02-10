@@ -9,8 +9,8 @@ beforeEach(() => {
 // TODO should have better error message here
 test('registerTabCompletionProvider - no argument provided', () => {
   TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
-  expect(() => ExtensionHostTabCompletion.registerTabCompletionProvider()).toThrowError(
-    new Error("Cannot read properties of undefined (reading 'languageId')")
+  expect(() => ExtensionHostTabCompletion.registerTabCompletionProvider()).toThrow(
+    new Error("Cannot read properties of undefined (reading 'languageId')"),
   )
 })
 
@@ -59,8 +59,8 @@ test('execute - when tab completion provider has invalid result of type number',
       return 42
     },
   })
-  await expect(ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).rejects.toThrowError(
-    'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42'
+  await expect(ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).rejects.toThrow(
+    'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is 42',
   )
 })
 
@@ -71,8 +71,8 @@ test('execute - when tab completion provider has wrong shape', async () => {
     languageId: 'javascript',
     abc() {},
   })
-  await expect(ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).rejects.toThrowError(
-    new Error('Failed to execute tab completion provider: VError: tabCompletionProvider.provideTabCompletion is not a function')
+  await expect(ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).rejects.toThrow(
+    new Error('Failed to execute tab completion provider: VError: tabCompletionProvider.provideTabCompletion is not a function'),
   )
 })
 
@@ -85,8 +85,8 @@ test('execute - when tab completion provider throws error', async () => {
       throw new Error('x is not a function')
     },
   })
-  await expect(ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).rejects.toThrowError(
-    new Error('Failed to execute tab completion provider: x is not a function')
+  await expect(ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).rejects.toThrow(
+    new Error('Failed to execute tab completion provider: x is not a function'),
   )
 })
 
@@ -98,9 +98,9 @@ test('execute - when tab completion provider returns a string', async () => {
       return 'resultsList'
     },
   })
-  await expect(ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).rejects.toThrowError(
+  await expect(ExtensionHostTabCompletion.executeTabCompletionProvider(1, 1)).rejects.toThrow(
     new Error(
-      'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is "resultsList"'
-    )
+      'Failed to execute tab completion provider: VError: invalid tab completion result: tabCompletion must be of type object but is "resultsList"',
+    ),
   )
 })

@@ -48,7 +48,7 @@ test('executeTabCompletionProvider - error - tabCompletionProvider throws error'
   ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ExtensionHostTabCompletion.executeTabCompletionProvider({ id: 1, languageId: 'test' }, 0)).rejects.toThrowError(
-    new TypeError('x is not a function')
+  await expect(ExtensionHostTabCompletion.executeTabCompletionProvider({ id: 1, languageId: 'test' }, 0)).rejects.toThrow(
+    new TypeError('x is not a function'),
   )
 })

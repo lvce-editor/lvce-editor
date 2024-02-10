@@ -54,7 +54,7 @@ test('loadContent - error - location provider throws error', async () => {
   const provideLocations = () => {
     throw new Error('Failed to execute reference provider: TypeError: x is not a function')
   }
-  await expect(ViewletLocations.loadContent(state, provideLocations)).rejects.toThrowError(
+  await expect(ViewletLocations.loadContent(state, provideLocations)).rejects.toThrow(
     new Error('Failed to execute reference provider: TypeError: x is not a function'),
   )
 })

@@ -20,7 +20,7 @@ test('focus - error', async () => {
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronBrowserViewFunctions.focus(1)).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronBrowserViewFunctions.focus(1)).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('focus', async () => {

@@ -25,7 +25,7 @@ jest.unstable_mockModule(
   },
   {
     virtual: true,
-  }
+  },
 )
 
 const WindowsProcessTree = await import('@vscode/windows-process-tree')
@@ -200,7 +200,7 @@ test('listProcessesWithMemoryUsage - error - rootPid not found', async () => {
     callback(undefined)
   })
   await expect(
-    ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)
+    ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666),
     // @ts-ignore
-  ).rejects.toThrowError(new VError('Failed to list processes: Root process 25666 not found'))
+  ).rejects.toThrow(new VError('Failed to list processes: Root process 25666 not found'))
 })

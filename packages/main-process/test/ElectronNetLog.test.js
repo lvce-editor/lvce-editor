@@ -21,7 +21,7 @@ test('startLogging - error', async () => {
   electron.netLog.startLogging.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronNetLog.startLogging()).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronNetLog.startLogging()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('startLogging', async () => {
@@ -39,7 +39,7 @@ test('stopLogging - error', async () => {
   electron.netLog.stopLogging.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronNetLog.stopLogging()).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronNetLog.stopLogging()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('stopLogging', async () => {

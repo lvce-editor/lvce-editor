@@ -43,7 +43,7 @@ test('getLanguageConfiguration - error - languages must be loaded before request
     await Languages.getLanguageConfiguration({
       uri: '',
       languageId: 'html',
-    })
+    }),
   ).toEqual({
     comments: {
       blockComment: ['<!--', '-->'],
@@ -65,8 +65,8 @@ test('getLanguageConfiguration - error - languages must be loaded before request
         throw new Error('unexpected message')
     }
   })
-  await expect(Languages.getLanguageConfiguration('html')).rejects.toThrowError(
-    new Error('languages must be loaded before requesting language configuration')
+  await expect(Languages.getLanguageConfiguration('html')).rejects.toThrow(
+    new Error('languages must be loaded before requesting language configuration'),
   )
 })
 
@@ -161,7 +161,7 @@ test('addLanguage - error - lower case filename property', () => {
   4 |     \"Test\"
   5 |   ]
   6 | }
-`
+`,
   )
   expect(LanguagesState.state.fileNameMap).toEqual({ test: 'test' })
 })

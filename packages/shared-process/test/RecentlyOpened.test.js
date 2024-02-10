@@ -95,7 +95,7 @@ test('addPath - error - permission denied', async () => {
   fs.readFile.mockImplementation(() => {
     throw new NodeError(ErrorCodes.EPERM)
   })
-  await expect(RecentlyOpened.addPath('/test/new-path.txt')).rejects.toThrowError(
+  await expect(RecentlyOpened.addPath('/test/new-path.txt')).rejects.toThrow(
     new Error('Failed to add path to recently opened: Failed to read recently opened: Failed to read file "/test/recently-opened.json": EPERM'),
   )
 })

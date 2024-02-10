@@ -12,9 +12,7 @@ afterEach(() => {
 
 // TODO should have better error message here
 test('registerTabCompletionProvider - no argument provided', () => {
-  expect(() => TabCompletion.registerTabCompletionProvider()).toThrowError(
-    new Error("Cannot read properties of undefined (reading 'languageId')")
-  )
+  expect(() => TabCompletion.registerTabCompletionProvider()).toThrow(new Error("Cannot read properties of undefined (reading 'languageId')"))
 })
 
 test('execute - when tab completion provider has normal result', () => {
@@ -68,10 +66,8 @@ test('execute - when tab completion provider has wrong shape', () => {
     abc() {},
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  expect(() => TabCompletion.executeTabCompletionProvider(1, 1)).toThrowError(
-    new VError(
-      'Failed to execute tab completion provider: TypeError: tabCompletionProvider.provideTabCompletion is not a function'
-    )
+  expect(() => TabCompletion.executeTabCompletionProvider(1, 1)).toThrow(
+    new VError('Failed to execute tab completion provider: TypeError: tabCompletionProvider.provideTabCompletion is not a function'),
   )
 })
 
@@ -83,9 +79,7 @@ test('execute - when tab completion provider throws error', () => {
     },
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  expect(() => TabCompletion.executeTabCompletionProvider(1, 1)).toThrowError(
-    new VError('Failed to execute tab completion provider: x is not a function')
-  )
+  expect(() => TabCompletion.executeTabCompletionProvider(1, 1)).toThrow(new VError('Failed to execute tab completion provider: x is not a function'))
 })
 
 test('execute - when no provider is registered', () => {

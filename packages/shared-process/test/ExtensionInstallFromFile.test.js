@@ -53,7 +53,7 @@ test('install - error with extraction', async () => {
     ExtensionInstallFromFile.install({
       path: './extension.tar.br',
     }),
-  ).rejects.toThrowError(new Error('Failed to install ./extension.tar.br: Failed to extract'))
+  ).rejects.toThrow(new Error('Failed to install ./extension.tar.br: Failed to extract'))
 })
 
 test('install - error - missing id in extension manifest', async () => {
@@ -71,7 +71,7 @@ test('install - error - missing id in extension manifest', async () => {
     ExtensionInstallFromFile.install({
       path: './extension.tar.br',
     }),
-  ).rejects.toThrowError(new Error(`Failed to install ./extension.tar.br: missing id in extension manifest`))
+  ).rejects.toThrow(new Error(`Failed to install ./extension.tar.br: missing id in extension manifest`))
 })
 
 test('install', async () => {

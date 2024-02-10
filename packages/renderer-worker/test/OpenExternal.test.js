@@ -20,7 +20,7 @@ test('showItemInFolder - error', async () => {
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(OpenExternal.showItemInFolder('/test/file.txt')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(OpenExternal.showItemInFolder('/test/file.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('showItemInFolder', async () => {

@@ -9,9 +9,7 @@ beforeEach(() => {
 test('registerOutputChannel - error - null', () => {
   expect(() => {
     ExtensionHostOutputChannel.registerOutputChannel(null)
-  }).toThrowError(
-    new TypeError("Cannot read properties of null (reading 'id')")
-  )
+  }).toThrow(new TypeError("Cannot read properties of null (reading 'id')"))
 })
 
 test('registerOutputChannel - error - missing property id', () => {
@@ -19,7 +17,7 @@ test('registerOutputChannel - error - missing property id', () => {
     ExtensionHostOutputChannel.registerOutputChannel({
       emitter: new EventEmitter(),
     })
-  }).toThrowError(new TypeError('expected value to be of type string'))
+  }).toThrow(new TypeError('expected value to be of type string'))
 })
 
 test('registerOutputChannel - error - missing property emitter', () => {
@@ -28,7 +26,7 @@ test('registerOutputChannel - error - missing property emitter', () => {
       id: 'test',
     })
     // TODO better error message
-  }).toThrowError(new TypeError('expected value to be of type object'))
+  }).toThrow(new TypeError('expected value to be of type object'))
 })
 
 // TODO this should also not crash extension host
@@ -38,9 +36,7 @@ test('registerOutputChannel - error - emitter.addListener is not a function', ()
       id: 'test',
       emitter: {},
     })
-  }).toThrowError(
-    new TypeError('outputChannel.emitter.addListener is not a function')
-  )
+  }).toThrow(new TypeError('outputChannel.emitter.addListener is not a function'))
 })
 
 test('handleData', () => {
@@ -63,5 +59,5 @@ test('handleData - error - null', () => {
   expect(() => {
     emitter.emit('data', null)
     // TODO error message should be better
-  }).toThrowError(new Error('expected value to be of type string'))
+  }).toThrow(new Error('expected value to be of type string'))
 })

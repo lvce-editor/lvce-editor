@@ -28,7 +28,7 @@ test('getFileHandles - error - not supported on firefox', async () => {
       },
     },
   ]
-  await expect(GetFileHandlesFromDataTransferItems.getFileHandles(items)).rejects.toThrowError(
+  await expect(GetFileHandlesFromDataTransferItems.getFileHandles(items)).rejects.toThrow(
     new Error('The File System Access Api is not supported on Firefox'),
   )
 })

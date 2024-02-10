@@ -27,9 +27,7 @@ test('getChangedFiles - error - no provider id specified', async () => {
       return [{ file: '/test/file-1.txt', status: 1 }]
     },
   })
-  await expect(
-    ExtensionHostSourceControl.getChangedFiles()
-  ).rejects.toThrowError(new Error('no source control provider found'))
+  await expect(ExtensionHostSourceControl.getChangedFiles()).rejects.toThrow(new Error('no source control provider found'))
 })
 
 test('getEnabledProviderIds', async () => {
@@ -49,9 +47,7 @@ test('getEnabledProviderIds', async () => {
     [provider1.id]: provider1,
     [provider2.id]: provider2,
   }
-  expect(
-    await ExtensionHostSourceControl.getEnabledProviderIds('', '/test/folder')
-  ).toEqual(['test-source-control-provider-2'])
+  expect(await ExtensionHostSourceControl.getEnabledProviderIds('', '/test/folder')).toEqual(['test-source-control-provider-2'])
   expect(provider1.isActive).toHaveBeenCalledTimes(1)
   expect(provider1.isActive).toHaveBeenCalledWith('', '/test/folder')
   expect(provider2.isActive).toHaveBeenCalledTimes(1)

@@ -25,8 +25,8 @@ test('startRecording - error', async () => {
   await expect(() =>
     ElectronContentTracing.startRecording({
       included_categories: ['*'],
-    })
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+    }),
+  ).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('startRecording', async () => {
@@ -48,7 +48,7 @@ test('stopRecording - error', async () => {
   electron.contentTracing.stopRecording.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronContentTracing.stopRecording()).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronContentTracing.stopRecording()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('stopRecording', async () => {

@@ -8,12 +8,8 @@ afterEach(() => {
 
 // TODO should have better error message
 test('registerDiagnosticProvider - no argument provided', () => {
-  expect(() =>
-    ExtensionHostDiagnostic.registerDiagnosticProvider()
-  ).toThrowError(
-    new VError(
-      "Failed to register diagnostic provider: TypeError: Cannot read properties of undefined (reading 'languageId')"
-    )
+  expect(() => ExtensionHostDiagnostic.registerDiagnosticProvider()).toThrow(
+    new VError("Failed to register diagnostic provider: TypeError: Cannot read properties of undefined (reading 'languageId')"),
   )
 })
 
@@ -34,12 +30,8 @@ test('executeDiagnosticProvider - when diagnostic provider has wrong shape', asy
     abc(textDocument, offset) {},
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  await expect(
-    ExtensionHostDiagnostic.executeDiagnosticProvider(1)
-  ).rejects.toThrowError(
-    new VError(
-      'Failed to execute diagnostic provider: TypeError: provider.provideDiagnostics is not a function'
-    )
+  await expect(ExtensionHostDiagnostic.executeDiagnosticProvider(1)).rejects.toThrow(
+    new VError('Failed to execute diagnostic provider: TypeError: provider.provideDiagnostics is not a function'),
   )
 })
 
@@ -76,9 +68,7 @@ test('executeDiagnosticProvider - when diagnostic provider throws error', async 
     },
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  await expect(
-    ExtensionHostDiagnostic.executeDiagnosticProvider(1)
-  ).rejects.toThrowError(
-    new VError('Failed to execute diagnostic provider: x is not a function')
+  await expect(ExtensionHostDiagnostic.executeDiagnosticProvider(1)).rejects.toThrow(
+    new VError('Failed to execute diagnostic provider: x is not a function'),
   )
 })
