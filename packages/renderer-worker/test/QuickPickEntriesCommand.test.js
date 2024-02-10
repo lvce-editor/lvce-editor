@@ -12,34 +12,28 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     }),
   }
 })
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostCommands.js',
-  () => {
-    return {
-      executeCommand: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostCommands.js', () => {
+  return {
+    executeCommand: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
   return {
     showErrorDialog: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    handleError: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
-const QuickPickEntriesCommand = await import(
-  '../src/parts/QuickPickEntriesCommand/QuickPickEntriesCommand.js'
-)
+const QuickPickEntriesCommand = await import('../src/parts/QuickPickEntriesCommand/QuickPickEntriesCommand.js')
 
-const ExtensionHostCommands = await import(
-  '../src/parts/ExtensionHost/ExtensionHostCommands.js'
-)
-const ErrorHandling = await import(
-  '../src/parts/ErrorHandling/ErrorHandling.js'
-)
+const ExtensionHostCommands = await import('../src/parts/ExtensionHost/ExtensionHostCommands.js')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 const Command = await import('../src/parts/Command/Command.js')
 
 test('name', () => {
@@ -81,7 +75,7 @@ test('selectPick', async () => {
     await QuickPickEntriesCommand.selectPick({
       id: 'ext.xyz',
       label: 'xyz',
-    })
+    }),
   ).toEqual({
     command: QuickPickReturnValue.Hide,
   })
@@ -95,11 +89,9 @@ test('selectPick - error - selected item has no id', async () => {
     throw new TypeError('x is not a function')
   })
   // @ts-ignore
-  ErrorHandling.showErrorDialog.mockImplementation(() => {})
+  ErrorHandling.handleError.mockImplementation(() => {})
 
-  await expect(() => QuickPickEntriesCommand.selectPick({})).toThrowError(
-    new TypeError(`Cannot read properties of undefined (reading 'startsWith')`)
-  )
+  await expect(() => QuickPickEntriesCommand.selectPick({})).toThrowError(new TypeError(`Cannot read properties of undefined (reading 'startsWith')`))
 })
 
 test('selectPick - error', async () => {
@@ -108,18 +100,16 @@ test('selectPick - error', async () => {
     throw new TypeError('x is not a function')
   })
   // @ts-ignore
-  ErrorHandling.showErrorDialog.mockImplementation(() => {})
+  ErrorHandling.handleError.mockImplementation(() => {})
 
   expect(
     await QuickPickEntriesCommand.selectPick({
       id: 'ext.xyz',
       label: 'xyz',
-    })
+    }),
   ).toEqual({
     command: QuickPickReturnValue.Hide,
   })
-  expect(ErrorHandling.showErrorDialog).toHaveBeenCalledTimes(1)
-  expect(ErrorHandling.showErrorDialog).toHaveBeenCalledWith(
-    new TypeError('x is not a function')
-  )
+  expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(new TypeError('x is not a function'), false)
 })
