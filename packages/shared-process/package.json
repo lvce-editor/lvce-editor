@@ -35,7 +35,7 @@
     "got": "^13.0.0",
     "is-object": "^1.0.2",
     "p-queue": "^8.0.1",
-    "tar-fs": "^3.0.4",
+    "tar-fs": "^3.0.5",
     "xdg-basedir": "^5.1.0"
   },
   "optionalDependencies": {
