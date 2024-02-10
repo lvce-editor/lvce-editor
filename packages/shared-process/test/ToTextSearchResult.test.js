@@ -94,9 +94,7 @@ test('toTextSearchResult - match without text or bytes', () => {
   const remaining = ''
   const charsBefore = 20
   const charsAfter = 50
-  expect(() => ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toThrowError(
-    new Error('unable to parse line data')
-  )
+  expect(() => ToTextSearchResult.toTextSearchResult(parsedLine, remaining, charsBefore, charsAfter)).toThrow(new Error('unable to parse line data'))
 })
 
 test.skip('toTextSearchResult - match in the middle', () => {

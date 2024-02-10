@@ -6,33 +6,25 @@ beforeEach(() => {
 })
 
 test('executeBraceCompletionProvider - true', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
   ExtensionHostBraceCompletion.registerBraceCompletionProvider({
     languageId: 'javascript',
     provideBraceCompletion() {
       return true
     },
   })
-  expect(
-    await ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0, '{')
-  ).toBe(true)
+  expect(await ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0, '{')).toBe(true)
 })
 
 test('executeBraceCompletionProvider - false', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
   ExtensionHostBraceCompletion.registerBraceCompletionProvider({
     languageId: 'javascript',
     provideBraceCompletion() {
       return false
     },
   })
-  expect(
-    await ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0, '{')
-  ).toBe(false)
+  expect(await ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0, '{')).toBe(false)
 })
 
 test('executeBraceCompletionProvider - error - result is undefined', async () => {
@@ -50,12 +42,10 @@ test('executeBraceCompletionProvider - error - result is undefined', async () =>
       return undefined
     },
   })
-  await expect(
-    ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0)
-  ).rejects.toThrowError(
+  await expect(ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0)).rejects.toThrow(
     new Error(
-      'Failed to execute brace completion provider: VError: invalid brace completion result: braceCompletion must be of type boolean but is undefined'
-    )
+      'Failed to execute brace completion provider: VError: invalid brace completion result: braceCompletion must be of type boolean but is undefined',
+    ),
   )
 })
 
@@ -74,12 +64,10 @@ test('executeBraceCompletionProvider - error - definition must be of type object
       return () => {}
     },
   })
-  await expect(
-    ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0)
-  ).rejects.toThrowError(
+  await expect(ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0)).rejects.toThrow(
     new Error(
-      'Failed to execute brace completion provider: VError: invalid brace completion result: braceCompletion must be of type boolean but is () => {}'
-    )
+      'Failed to execute brace completion provider: VError: invalid brace completion result: braceCompletion must be of type boolean but is () => {}',
+    ),
   )
 })
 
@@ -98,12 +86,8 @@ test('executeBraceCompletionProvider - error - brace completion provider throws 
       throw new TypeError('x is not a function')
     },
   })
-  await expect(
-    ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute brace completion provider: TypeError: x is not a function'
-    )
+  await expect(ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute brace completion provider: TypeError: x is not a function'),
   )
 })
 
@@ -122,9 +106,7 @@ test('executeBraceCompletionProvider - error - definition provider throws error 
       throw null
     },
   })
-  await expect(
-    ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error('Failed to execute brace completion provider: NonError: null')
+  await expect(ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute brace completion provider: NonError: null'),
   )
 })

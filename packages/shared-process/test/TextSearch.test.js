@@ -100,7 +100,7 @@ test('search - one result', async () => {
       stdout.push(
         `{"type":"begin","data":{"path":{"text":"./index.html"}}}
 {"type":"match","data":{"path":{"text":"./index.html"},"lines":{"text":"<!DOCTYPE html>\\n"},"line_number":1,"absolute_offset":0,"submatches":[{"match":{"text":"DOC"},"start":2,"end":5}]}}
-`
+`,
       )
       setTimeout(() => {
         stdout.emit('end')
@@ -156,7 +156,7 @@ test('search - one result', async () => {
     },
     20_000,
     26,
-    50
+    50,
   )
 })
 
@@ -196,11 +196,11 @@ test('search - one result split across multiple chunks', async () => {
     setTimeout(() => {
       stdout.push(
         `{"type":"begin","data":{"path":{"text":"./index.html"}}}
-{"type":"match","data":{"path":{"text":"`
+{"type":"match","data":{"path":{"text":"`,
       )
       stdout.push(
         `./index.html"},"lines":{"text":"<!DOCTYPE html>\\n"},"line_number":1,"absolute_offset":0,"submatches":[{"match":{"text":"DOC"},"start":2,"end":5}]}}
-`
+`,
       )
       stdout.emit('end')
       stdout.emit('close')
@@ -254,7 +254,7 @@ test('search - one result split across multiple chunks', async () => {
     },
     20_000,
     26,
-    50
+    50,
   )
 })
 
@@ -287,13 +287,13 @@ test('search - error with parsing line', async () => {
       stdout.push(
         `{"type":"begin","data":{"path":{"text":"./index.html"}}}
 {"type":"match","data":{"path":{"text":"./index.html"},"lines":{"text":"<!DOCTYPE html>\\n"},"line_number":1,"absolute_offset":0,"submatches":[{"match":{"text":"DOC"},"start":2,"end":5}]}}
-`
+`,
       )
       emitter.emit('close')
     })
     return childProcess
   })
-  await expect(TextSearch.search('/test', 'document')).rejects.toThrowError(new TypeError('Cannot read properties of undefined (reading length)'))
+  await expect(TextSearch.search('/test', 'document')).rejects.toThrow(new TypeError('Cannot read properties of undefined (reading length)'))
 })
 
 test('search - error ripgrep not found', async () => {
@@ -329,5 +329,5 @@ test('search - error ripgrep not found', async () => {
     })
     return childProcess
   })
-  await expect(TextSearch.search('/test', 'document')).rejects.toThrowError(new TypeError('ripgrep path not found: Error: spawn /test/bin/rg ENOENT'))
+  await expect(TextSearch.search('/test', 'document')).rejects.toThrow(new TypeError('ripgrep path not found: Error: spawn /test/bin/rg ENOENT'))
 })

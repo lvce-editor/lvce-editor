@@ -131,7 +131,7 @@ test('getColorThemeJson - wrong/invalid path', async () => {
     path: tmpDir,
   })
   const colorThemePath = join(tmpDir, 'builtin.theme-test', 'color-theme.json')
-  await expect(ExtensionHostColorTheme.getColorThemeJson('test-theme')).rejects.toThrowError(
+  await expect(ExtensionHostColorTheme.getColorThemeJson('test-theme')).rejects.toThrow(
     `Failed to load color theme "test-theme": File not found: '${colorThemePath}'`,
   )
 })
@@ -166,5 +166,5 @@ test('getColorThemes', async () => {
 test.skip('getColorThemeJson - not found', async () => {
   ExtensionHost.state.builtinExtensions = []
   ExtensionHost.state.installedExtensions = []
-  await expect(ExtensionHost.getColorThemeJson('test-theme')).rejects.toThrowError('Color theme "test-theme" not found in extensions folder')
+  await expect(ExtensionHost.getColorThemeJson('test-theme')).rejects.toThrow('Color theme "test-theme" not found in extensions folder')
 })

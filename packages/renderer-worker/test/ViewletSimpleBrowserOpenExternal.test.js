@@ -12,14 +12,10 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const ViewletSimpleBrowser = await import(
-  '../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js'
-)
+const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
 
 const Command = await import('../src/parts/Command/Command.js')
-const ViewletSimpleBrowserOpenExternal = await import(
-  '../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserOpenExternal.js'
-)
+const ViewletSimpleBrowserOpenExternal = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserOpenExternal.js')
 
 test('openExternal', async () => {
   // @ts-ignore
@@ -30,10 +26,7 @@ test('openExternal', async () => {
   }
   await ViewletSimpleBrowserOpenExternal.openExternal(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'Open.openExternal',
-    'test://example.com'
-  )
+  expect(Command.execute).toHaveBeenCalledWith('Open.openExternal', 'test://example.com')
 })
 
 test('openExternal - error', async () => {
@@ -45,7 +38,5 @@ test('openExternal - error', async () => {
     ...ViewletSimpleBrowser.create(),
     iframeSrc: 'test://example.com',
   }
-  await expect(
-    ViewletSimpleBrowserOpenExternal.openExternal(state)
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ViewletSimpleBrowserOpenExternal.openExternal(state)).rejects.toThrow(new TypeError('x is not a function'))
 })

@@ -3,9 +3,7 @@ import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.j
 
 test('editorCursorSet - invalid argument - array', () => {
   const editor = {}
-  expect(() => EditorCursorSet.cursorSet(editor, [0, 1])).toThrowError(
-    new Error('expected value to be of type number')
-  )
+  expect(() => EditorCursorSet.cursorSet(editor, [0, 1])).toThrow(new Error('expected value to be of type number'))
 })
 
 test('editorCursorSet', () => {

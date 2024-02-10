@@ -6,9 +6,7 @@ beforeEach(() => {
 })
 
 test('executeTypeDefinitionProvider', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
   ExtensionHostTypeDefinition.registerTypeDefinitionProvider({
     languageId: 'javascript',
     provideTypeDefinition() {
@@ -19,9 +17,7 @@ test('executeTypeDefinitionProvider', async () => {
       }
     },
   })
-  expect(
-    await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)
-  ).toEqual({
+  expect(await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).toEqual({
     endOffset: 22,
     startOffset: 15,
     uri: '/test/index.js',
@@ -29,9 +25,7 @@ test('executeTypeDefinitionProvider', async () => {
 })
 
 test('executeTypeDefinitionProvider - definition.startOffset is zero', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
   ExtensionHostTypeDefinition.registerTypeDefinitionProvider({
     languageId: 'javascript',
     provideTypeDefinition() {
@@ -42,9 +36,7 @@ test('executeTypeDefinitionProvider - definition.startOffset is zero', async () 
       }
     },
   })
-  expect(
-    await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)
-  ).toEqual({
+  expect(await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).toEqual({
     endOffset: 0,
     startOffset: 0,
     uri: '/test/index.js',
@@ -52,66 +44,48 @@ test('executeTypeDefinitionProvider - definition.startOffset is zero', async () 
 })
 
 test('executeTypeDefinitionProvider - error - definition must be of type object but is array', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
   ExtensionHostTypeDefinition.registerTypeDefinitionProvider({
     languageId: 'javascript',
     provideTypeDefinition() {
       return []
     },
   })
-  await expect(
-    ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute type definition provider: VError: invalid type definition result: typeDefinition must be of type object but is []'
-    )
+  await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute type definition provider: VError: invalid type definition result: typeDefinition must be of type object but is []'),
   )
 })
 
 test('executeTypeDefinitionProvider - error - definition must be of type object but is function', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
   ExtensionHostTypeDefinition.registerTypeDefinitionProvider({
     languageId: 'javascript',
     provideTypeDefinition() {
       return () => {}
     },
   })
-  await expect(
-    ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
+  await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
     new Error(
-      'Failed to execute type definition provider: VError: invalid type definition result: typeDefinition must be of type object but is () => {}'
-    )
+      'Failed to execute type definition provider: VError: invalid type definition result: typeDefinition must be of type object but is () => {}',
+    ),
   )
 })
 
 test('executeTypeDefinitionProvider - error - definition.uri must be of type string', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
   ExtensionHostTypeDefinition.registerTypeDefinitionProvider({
     languageId: 'javascript',
     provideTypeDefinition() {
       return {}
     },
   })
-  await expect(
-    ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute type definition provider: VError: invalid type definition result: typeDefinition.uri must be of type string'
-    )
+  await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute type definition provider: VError: invalid type definition result: typeDefinition.uri must be of type string'),
   )
 })
 
 test('executeTypeDefinitionProvider - error - definition.startOffset must be of type number', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
   ExtensionHostTypeDefinition.registerTypeDefinitionProvider({
     languageId: 'javascript',
     provideTypeDefinition() {
@@ -120,19 +94,15 @@ test('executeTypeDefinitionProvider - error - definition.startOffset must be of 
       }
     },
   })
-  await expect(
-    ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
+  await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
     new Error(
-      'Failed to execute type definition provider: VError: invalid type definition result: typeDefinition.startOffset must be of type number'
-    )
+      'Failed to execute type definition provider: VError: invalid type definition result: typeDefinition.startOffset must be of type number',
+    ),
   )
 })
 
 test('executeTypeDefinitionProvider - error - definition.endOffset must be of type number', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
   ExtensionHostTypeDefinition.registerTypeDefinitionProvider({
     languageId: 'javascript',
     provideTypeDefinition() {
@@ -142,62 +112,44 @@ test('executeTypeDefinitionProvider - error - definition.endOffset must be of ty
       }
     },
   })
-  await expect(
-    ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute type definition provider: VError: invalid type definition result: typeDefinition.endOffset must be of type number'
-    )
+  await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute type definition provider: VError: invalid type definition result: typeDefinition.endOffset must be of type number'),
   )
 })
 
 test('executeTypeDefinitionProvider - error - definition provider throws error', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
   ExtensionHostTypeDefinition.registerTypeDefinitionProvider({
     languageId: 'javascript',
     provideTypeDefinition() {
       throw new TypeError('x is not a function')
     },
   })
-  await expect(
-    ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute type definition provider: TypeError: x is not a function'
-    )
+  await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute type definition provider: TypeError: x is not a function'),
   )
 })
 
 test('executeTypeDefinitionProvider - error - definition provider throws error null', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
   ExtensionHostTypeDefinition.registerTypeDefinitionProvider({
     languageId: 'javascript',
     provideTypeDefinition() {
       throw null
     },
   })
-  await expect(
-    ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error('Failed to execute type definition provider: NonError: null')
+  await expect(ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute type definition provider: NonError: null'),
   )
 })
 
 test.skip('executeTypeDefinitionProvider - no type definition found', async () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+  TextDocument.setFiles([{ path: '/test.index.js', id: 1, languageId: 'javascript', content: '' }])
   ExtensionHostTypeDefinition.registerTypeDefinitionProvider({
     languageId: 'javascript',
     provideTypeDefinition() {
       return undefined
     },
   })
-  expect(
-    await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)
-  ).toBe(undefined)
+  expect(await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(1, 0)).toBe(undefined)
 })

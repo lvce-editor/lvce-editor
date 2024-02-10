@@ -33,9 +33,7 @@ test('readText - clipboard not available', async () => {
     // @ts-ignore
     clipboard: {},
   }
-  await expect(ClipBoard.readText()).rejects.toThrowError(
-    new TypeError('navigator.clipboard.readText is not a function')
-  )
+  await expect(ClipBoard.readText()).rejects.toThrow(new TypeError('navigator.clipboard.readText is not a function'))
 })
 
 test('readText - clipboard blocked', async () => {
@@ -47,9 +45,7 @@ test('readText - clipboard blocked', async () => {
       },
     },
   }
-  await expect(ClipBoard.readText()).rejects.toThrowError(
-    new Error('Read permission denied.')
-  )
+  await expect(ClipBoard.readText()).rejects.toThrow(new Error('Read permission denied.'))
 })
 
 test('readText - other error', async () => {
@@ -61,9 +57,7 @@ test('readText - other error', async () => {
       },
     },
   }
-  await expect(ClipBoard.readText()).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(ClipBoard.readText()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('writeText', async () => {
@@ -88,9 +82,7 @@ test('writeText - error', async () => {
       },
     },
   }
-  await expect(ClipBoard.writeText('abc')).rejects.toThrowError(
-    new Error('not allowed')
-  )
+  await expect(ClipBoard.writeText('abc')).rejects.toThrow(new Error('not allowed'))
 })
 
 test('writeText - error - format not supported', async () => {
@@ -106,8 +98,8 @@ test('writeText - error - format not supported', async () => {
   await expect(
     ClipBoard.writeImage({
       type: 'image/avif',
-    })
-  ).rejects.toThrowError(new Error('Type image/avif not supported on write.'))
+    }),
+  ).rejects.toThrow(new Error('Type image/avif not supported on write.'))
 })
 
 test('writeText', async () => {

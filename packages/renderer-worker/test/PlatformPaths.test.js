@@ -39,7 +39,7 @@ test('getLogsDir - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(PlatformPaths.getLogsDir()).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(PlatformPaths.getLogsDir()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('getUserSettingsPath', async () => {
@@ -65,5 +65,5 @@ test('getUserSettingsPath - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(PlatformPaths.getUserSettingsPath()).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(PlatformPaths.getUserSettingsPath()).rejects.toThrow(new TypeError('x is not a function'))
 })

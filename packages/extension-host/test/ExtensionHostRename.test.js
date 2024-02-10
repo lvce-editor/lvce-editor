@@ -9,10 +9,8 @@ import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionH
 test.skip('registerRenameProvider', () => {})
 
 test('registerRenameProvider - no argument provided', () => {
-  expect(() => Rename.registerRenameProvider()).toThrowError(
-    new Error(
-      "Failed to register rename provider: TypeError: Cannot read properties of undefined (reading 'languageId')"
-    )
+  expect(() => Rename.registerRenameProvider()).toThrow(
+    new Error("Failed to register rename provider: TypeError: Cannot read properties of undefined (reading 'languageId')"),
   )
 })
 
@@ -24,9 +22,7 @@ test('executePrepareRename - when rename provider throws error', async () => {
     },
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  await expect(Rename.executePrepareRename(1, 1)).rejects.toThrowError(
-    new VError('Failed to execute rename provider: x is not a function')
-  )
+  await expect(Rename.executePrepareRename(1, 1)).rejects.toThrow(new VError('Failed to execute rename provider: x is not a function'))
 })
 
 test('executePrepareRename - when rename provider has wrong shape', async () => {
@@ -35,10 +31,8 @@ test('executePrepareRename - when rename provider has wrong shape', async () => 
     abc() {},
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  await expect(Rename.executePrepareRename(1, 1)).rejects.toThrowError(
-    new VError(
-      'Failed to execute rename provider: TypeError: renameProvider.prepareRename is not a function'
-    )
+  await expect(Rename.executePrepareRename(1, 1)).rejects.toThrow(
+    new VError('Failed to execute rename provider: TypeError: renameProvider.prepareRename is not a function'),
   )
 })
 
@@ -50,7 +44,5 @@ test('executeRename - when rename provider throws error', async () => {
     },
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  await expect(Rename.executeRename(1, 1)).rejects.toThrowError(
-    new VError('Failed to execute rename provider: x is not a function')
-  )
+  await expect(Rename.executeRename(1, 1)).rejects.toThrow(new VError('Failed to execute rename provider: x is not a function'))
 })

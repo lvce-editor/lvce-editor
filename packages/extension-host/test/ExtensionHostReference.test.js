@@ -14,9 +14,7 @@ test('executeReferenceProvider - no results', async () => {
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  expect(await ExtensionHostReference.executeReferenceProvider(1, 0)).toEqual(
-    []
-  )
+  expect(await ExtensionHostReference.executeReferenceProvider(1, 0)).toEqual([])
 })
 
 test('executeReferenceProvider - single result', async () => {
@@ -52,12 +50,8 @@ test('executeReferenceProvider - error - reference provider throws error', async
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostReference.executeReferenceProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute reference provider: TypeError: x is not a function'
-    )
+  await expect(ExtensionHostReference.executeReferenceProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute reference provider: TypeError: x is not a function'),
   )
 })
 
@@ -68,22 +62,14 @@ test('executeReferenceProvider - error - referenceProvider has wrong shape', asy
     abc() {},
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostReference.executeReferenceProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute reference provider: TypeError: referenceProvider.provideReferences is not a function'
-    )
+  await expect(ExtensionHostReference.executeReferenceProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute reference provider: TypeError: referenceProvider.provideReferences is not a function'),
   )
 })
 
 test('executeReferenceProvider - error - no reference provider found', async () => {
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostReference.executeReferenceProvider(1, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute reference provider: VError: no reference provider found for javascript'
-    )
+  await expect(ExtensionHostReference.executeReferenceProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute reference provider: VError: no reference provider found for javascript'),
   )
 })

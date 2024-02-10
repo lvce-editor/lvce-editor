@@ -14,9 +14,7 @@ test('executeSemanticTokenProvider - no results', async () => {
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  expect(
-    await ExtensionHostSemanticTokens.executeSemanticTokenProvider(1)
-  ).toEqual([])
+  expect(await ExtensionHostSemanticTokens.executeSemanticTokenProvider(1)).toEqual([])
 })
 
 test('executeSemanticTokenProvider - error - reference provider throws error', async () => {
@@ -27,22 +25,14 @@ test('executeSemanticTokenProvider - error - reference provider throws error', a
     },
   })
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostSemanticTokens.executeSemanticTokenProvider(1)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute semantic token provider: TypeError: x is not a function'
-    )
+  await expect(ExtensionHostSemanticTokens.executeSemanticTokenProvider(1)).rejects.toThrow(
+    new Error('Failed to execute semantic token provider: TypeError: x is not a function'),
   )
 })
 
 test('executeSemanticTokenProvider - error - no semantic token provider found', async () => {
   TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostSemanticTokens.executeSemanticTokenProvider(1)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute semantic token provider: VError: no semantic token provider found for javascript'
-    )
+  await expect(ExtensionHostSemanticTokens.executeSemanticTokenProvider(1)).rejects.toThrow(
+    new Error('Failed to execute semantic token provider: VError: no semantic token provider found for javascript'),
   )
 })

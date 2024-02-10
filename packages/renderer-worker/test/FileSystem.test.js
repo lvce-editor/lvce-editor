@@ -15,9 +15,7 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 })
 
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 // TODO duplicate test code with FileSystemDisk.test.js
 
@@ -33,11 +31,7 @@ test('readFile', async () => {
   })
   expect(await FileSystem.readFile('/tmp/some-file.txt')).toEqual('sample text')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'FileSystem.readFile',
-    '/tmp/some-file.txt',
-    EncodingType.Utf8
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.readFile', '/tmp/some-file.txt', EncodingType.Utf8)
 })
 
 test('readFile - error', async () => {
@@ -50,9 +44,7 @@ test('readFile - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(FileSystem.readFile('/tmp/some-file.txt')).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(FileSystem.readFile('/tmp/some-file.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('removeFile', async () => {
@@ -67,10 +59,7 @@ test('removeFile', async () => {
   })
   await FileSystem.remove('/tmp/some-file.txt')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'FileSystem.remove',
-    '/tmp/some-file.txt'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.remove', '/tmp/some-file.txt')
 })
 
 test('removeFile - error', async () => {
@@ -83,9 +72,7 @@ test('removeFile - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(FileSystem.remove('/tmp/some-file.txt')).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(FileSystem.remove('/tmp/some-file.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('rename', async () => {
@@ -100,11 +87,7 @@ test('rename', async () => {
   })
   await FileSystem.rename('/tmp/some-file.txt', '/tmp/renamed.txt')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'FileSystem.rename',
-    '/tmp/some-file.txt',
-    '/tmp/renamed.txt'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.rename', '/tmp/some-file.txt', '/tmp/renamed.txt')
 })
 
 test('rename - error', async () => {
@@ -117,9 +100,7 @@ test('rename - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(
-    FileSystem.rename('/tmp/some-file.txt', '/tmp/renamed.txt')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(FileSystem.rename('/tmp/some-file.txt', '/tmp/renamed.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('mkdir', async () => {
@@ -134,10 +115,7 @@ test('mkdir', async () => {
   })
   await FileSystem.mkdir('/tmp/some-dir')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'FileSystem.mkdir',
-    '/tmp/some-dir'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.mkdir', '/tmp/some-dir')
 })
 
 test('mkdir - error', async () => {
@@ -150,9 +128,7 @@ test('mkdir - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(FileSystem.mkdir('/tmp/some-dir')).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(FileSystem.mkdir('/tmp/some-dir')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('writeFile', async () => {
@@ -167,12 +143,7 @@ test('writeFile', async () => {
   })
   await FileSystem.writeFile('/tmp/some-file.txt', 'sample text')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'FileSystem.writeFile',
-    '/tmp/some-file.txt',
-    'sample text',
-    EncodingType.Utf8
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.writeFile', '/tmp/some-file.txt', 'sample text', EncodingType.Utf8)
 })
 
 test('writeFile - error', async () => {
@@ -185,9 +156,7 @@ test('writeFile - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(
-    FileSystem.writeFile('/tmp/some-file.txt', 'sample text')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(FileSystem.writeFile('/tmp/some-file.txt', 'sample text')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('readDirWithFileTypes', async () => {
@@ -228,10 +197,7 @@ test('readDirWithFileTypes', async () => {
     },
   ])
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'FileSystem.readDirWithFileTypes',
-    '/tmp/some-dir'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('FileSystem.readDirWithFileTypes', '/tmp/some-dir')
 })
 
 test('readDirWithFileTypes - error', async () => {
@@ -244,9 +210,7 @@ test('readDirWithFileTypes - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(
-    FileSystem.readDirWithFileTypes('/tmp/some-dir')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(FileSystem.readDirWithFileTypes('/tmp/some-dir')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test.skip('watch', async () => {

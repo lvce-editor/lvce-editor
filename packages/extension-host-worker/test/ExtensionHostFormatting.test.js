@@ -13,8 +13,8 @@ test('executeFormattingProvider - error - result value is of type string', async
       return `b`
     },
   })
-  await expect(ExtensionHostFormatting.executeFormattingProvider(1, 0)).rejects.toThrowError(
-    new Error('Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is "b"')
+  await expect(ExtensionHostFormatting.executeFormattingProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is "b"'),
   )
 })
 
@@ -26,8 +26,8 @@ test('executeFormattingProvider - error - result value is of type object', async
       return {}
     },
   })
-  await expect(ExtensionHostFormatting.executeFormattingProvider(1, 0)).rejects.toThrowError(
-    new Error('Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is object')
+  await expect(ExtensionHostFormatting.executeFormattingProvider(1, 0)).rejects.toThrow(
+    new Error('Failed to execute formatting provider: VError: invalid formatting result: formatting must be of type array but is object'),
   )
 })
 

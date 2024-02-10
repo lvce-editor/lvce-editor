@@ -36,9 +36,7 @@ test('emitEvent - listener throws error', async () => {
     throw new Error('x is not a function')
   })
   GlobalEventBus.addListener('test.event', listener)
-  await expect(
-    GlobalEventBus.emitEvent('test.event', { x: 42 })
-  ).rejects.toThrowError(new Error('x is not a function'))
+  await expect(GlobalEventBus.emitEvent('test.event', { x: 42 })).rejects.toThrow(new Error('x is not a function'))
 })
 
 test('removeListener', async () => {

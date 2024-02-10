@@ -23,8 +23,8 @@ test('startRecording - error', async () => {
   await expect(
     ElectronContentTracing.startRecording({
       included_categories: ['*'],
-    })
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+    }),
+  ).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('startRecording', async () => {
@@ -35,7 +35,7 @@ test('startRecording', async () => {
   expect(
     await ElectronContentTracing.startRecording({
       included_categories: ['*'],
-    })
+    }),
   ).toBe(1)
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('ElectronContentTracing.startRecording', { included_categories: ['*'] })
@@ -46,7 +46,7 @@ test('stopRecording - error', async () => {
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronContentTracing.stopRecording()).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronContentTracing.stopRecording()).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('stopRecording', async () => {

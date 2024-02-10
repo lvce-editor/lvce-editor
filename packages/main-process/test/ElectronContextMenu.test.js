@@ -24,5 +24,5 @@ test('writeText - error', () => {
   electron.clipboard.writeText.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  expect(() => ElectronClipBoard.writeText('abc')).toThrowError(new TypeError('x is not a function'))
+  expect(() => ElectronClipBoard.writeText('abc')).toThrow(new TypeError('x is not a function'))
 })

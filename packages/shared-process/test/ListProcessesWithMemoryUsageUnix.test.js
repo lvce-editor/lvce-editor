@@ -150,7 +150,7 @@ test('listProcessesWithMemoryUsage - error - line could not be parsed', async ()
   childProcess.execFile.mockImplementation((command, args, callback) => {
     callback(null, { stdout: 'abc' })
   })
-  await expect(ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(1)).rejects.toThrowError(new Error('line could not be parsed: abc'))
+  await expect(ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(1)).rejects.toThrow(new Error('line could not be parsed: abc'))
 })
 
 test('listProcessesWithMemoryUsage - detect chrome devtools', async () => {

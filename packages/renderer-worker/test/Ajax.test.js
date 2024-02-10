@@ -36,7 +36,7 @@ test('getJson - error', async () => {
   // Ajax.state.getJson = jest.fn(() => {
   //   throw new SyntaxError('Unexpected token')
   // })
-  // await expect(Ajax.getJson('https://example.com')).rejects.toThrowError(
+  // await expect(Ajax.getJson('https://example.com')).rejects.toThrow(
   //   new Error(
   //     'Failed to request json from "https://example.com": Unexpected token'
   //   )
@@ -54,7 +54,7 @@ test('getJson - error - too many requests', async () => {
   //     )
   //   )
   // })
-  // await expect(Ajax.getJson('https://example.com')).rejects.toThrowError(
+  // await expect(Ajax.getJson('https://example.com')).rejects.toThrow(
   //   new Error(
   //     'Failed to request json from "https://example.com": API rate limit exceeded for 0.0.0.0. (But here\'s the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)'
   //   )
@@ -65,10 +65,8 @@ test('getJson - error - cors', async () => {
   globalThis.fetch = async () => {
     throw new TypeError('Failed to fetch')
   }
-  await expect(Ajax.getJson('https://example.com')).rejects.toThrowError(
-    new Error(
-      'Failed to request json from "https://example.com". Make sure that the server is running and has CORS enabled'
-    )
+  await expect(Ajax.getJson('https://example.com')).rejects.toThrow(
+    new Error('Failed to request json from "https://example.com". Make sure that the server is running and has CORS enabled'),
   )
 })
 
@@ -76,9 +74,9 @@ test('getText - error - cors', async () => {
   globalThis.fetch = async () => {
     throw new TypeError('Failed to fetch')
   }
-  await expect(Ajax.getText('https://example.com')).rejects.toThrowError(
+  await expect(Ajax.getText('https://example.com')).rejects.toThrow(
     new Error(
-      'Failed to request text from "https://example.com". Make sure that the server is running and has CORS enabled: TypeError: Failed to fetch'
-    )
+      'Failed to request text from "https://example.com". Make sure that the server is running and has CORS enabled: TypeError: Failed to fetch',
+    ),
   )
 })

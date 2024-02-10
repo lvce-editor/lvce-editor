@@ -24,7 +24,7 @@ test.skip('invoke - error', async () => {
       }
     }),
   }
-  await expect(SharedProcess.invoke(123456, 42)).rejects.toThrowError(
+  await expect(SharedProcess.invoke(123456, 42)).rejects.toThrow(
     new Error(
       'OperationalError: Failed to read directory "/test/playground,languages": ENOENT: no such file or directory, scandir \'/test/playground,languages\'',
     ),

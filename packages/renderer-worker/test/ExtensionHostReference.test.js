@@ -63,7 +63,7 @@ test('executeReferenceProvider - error - referenceProvider throws error', async 
   ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new Error('Failed to execute reference provider: TypeError: x is not a function')
   })
-  await expect(ExtensionHostReference.executeReferenceProvider({ id: 1, uri: '' }, 0)).rejects.toThrowError(
-    new Error('Failed to execute reference provider: TypeError: x is not a function')
+  await expect(ExtensionHostReference.executeReferenceProvider({ id: 1, uri: '' }, 0)).rejects.toThrow(
+    new Error('Failed to execute reference provider: TypeError: x is not a function'),
   )
 })

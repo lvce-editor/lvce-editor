@@ -30,7 +30,7 @@ test('textSearch - extension search - error', async () => {
   ExtensionHostTextSearch.executeTextSearchProvider.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(TextSearch.textSearch('xyz://', 'abc')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(TextSearch.textSearch('xyz://', 'abc')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('textSearch - extension search', async () => {
@@ -64,7 +64,7 @@ test('textSearch - file - error', async () => {
   SharedProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(TextSearch.textSearch('/test', 'abc')).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(TextSearch.textSearch('/test', 'abc')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('textSearch - file', async () => {

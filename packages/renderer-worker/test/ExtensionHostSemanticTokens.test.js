@@ -5,22 +5,15 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostEditor.js',
-  () => {
-    return {
-      execute: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostEditor.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
-const ExtensionHostEditor = await import(
-  '../src/parts/ExtensionHost/ExtensionHostEditor.js'
-)
-const ExtensionHostSemanticTokens = await import(
-  '../src/parts/ExtensionHost/ExtensionHostSemanticTokens.js'
-)
+})
+const ExtensionHostEditor = await import('../src/parts/ExtensionHost/ExtensionHostEditor.js')
+const ExtensionHostSemanticTokens = await import('../src/parts/ExtensionHost/ExtensionHostSemanticTokens.js')
 
 test('executeSemanticTokenProvider', async () => {
   // @ts-ignore
@@ -31,9 +24,7 @@ test('executeSemanticTokenProvider', async () => {
     id: 1,
     languageId: 'test',
   }
-  expect(
-    await ExtensionHostSemanticTokens.executeSemanticTokenProvider(editor)
-  ).toEqual([])
+  expect(await ExtensionHostSemanticTokens.executeSemanticTokenProvider(editor)).toEqual([])
   expect(ExtensionHostEditor.execute).toHaveBeenCalledTimes(1)
   expect(ExtensionHostEditor.execute).toHaveBeenCalledWith({
     editor,
@@ -55,6 +46,6 @@ test('executeSemanticTokenProvider - error', async () => {
     ExtensionHostSemanticTokens.executeSemanticTokenProvider({
       id: 1,
       languageId: 'test',
-    })
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+    }),
+  ).rejects.toThrow(new TypeError('x is not a function'))
 })

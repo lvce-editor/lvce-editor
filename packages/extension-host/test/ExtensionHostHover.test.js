@@ -7,9 +7,7 @@ afterEach(() => {
 })
 
 test('registerHoverProvider - no argument provided', () => {
-  expect(() => Hover.registerHoverProvider()).toThrowError(
-    new Error("Cannot read properties of undefined (reading 'languageId')")
-  )
+  expect(() => Hover.registerHoverProvider()).toThrow(new Error("Cannot read properties of undefined (reading 'languageId')"))
 })
 
 test('execute - when hover provider has no result', async () => {
@@ -49,9 +47,7 @@ test('execute - when hover provider throws error', async () => {
     },
   })
   TextDocument.syncFull('/tmp/some-file.txt', 1, 'unknown', 'sample text')
-  await expect(Hover.executeHoverProvider(1, 1)).rejects.toThrowError(
-    new VError('Failed to execute hover provider: x is not a function')
-  )
+  await expect(Hover.executeHoverProvider(1, 1)).rejects.toThrow(new VError('Failed to execute hover provider: x is not a function'))
 })
 
 test.skip('execute', async () => {

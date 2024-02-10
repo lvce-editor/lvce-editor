@@ -20,7 +20,7 @@ test('createBrowserView - error', async () => {
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronBrowserView.createBrowserView(0, [])).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ElectronBrowserView.createBrowserView(0, [])).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('createBrowserView', async () => {

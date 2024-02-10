@@ -33,8 +33,8 @@ test('load - import error - dependency not found', async () => {
   TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage.mockImplementation(() => {
     throw new Error(`DependencyNotFoundError: module not found "../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js"`)
   })
-  await expect(ViewletModule.load(123)).rejects.toThrowError(
-    new Error('DependencyNotFoundError: module not found "../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js"')
+  await expect(ViewletModule.load(123)).rejects.toThrow(
+    new Error('DependencyNotFoundError: module not found "../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js"'),
   )
 })
 
@@ -43,7 +43,7 @@ test('load - import error', async () => {
   ViewletModuleInternal.load.mockImplementation(() => {
     throw new TypeError(`x is not a function`)
   })
-  await expect(ViewletModule.load(123)).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(ViewletModule.load(123)).rejects.toThrow(new TypeError('x is not a function'))
 })
 
 test('load - syntax error', async () => {
@@ -55,7 +55,5 @@ test('load - syntax error', async () => {
   TryToGetActualImportErrorMessage.tryToGetActualImportErrorMessage.mockImplementation(() => {
     return `Failed to import script: SyntaxError: Unexpected token '<<'"`
   })
-  await expect(ViewletModule.load(123)).rejects.toThrowError(
-    "Failed to load 123 module: Failed to import script: SyntaxError: Unexpected token '<<'\""
-  )
+  await expect(ViewletModule.load(123)).rejects.toThrow("Failed to load 123 module: Failed to import script: SyntaxError: Unexpected token '<<'\"")
 })
