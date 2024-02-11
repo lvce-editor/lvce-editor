@@ -16,7 +16,7 @@ export const getErrorResponse = async (message, error) => {
     }
   }
   const prettyError = await PrettyError.prepare(error)
-  PrintPrettyError.printPrettyError(prettyError, `[extension-host-helper-process] `)
+  PrintPrettyError.printPrettyError(prettyError, `[extension-host-sub-worker] `)
   return {
     jsonrpc: JsonRpcVersion.Two,
     id: message.id,
