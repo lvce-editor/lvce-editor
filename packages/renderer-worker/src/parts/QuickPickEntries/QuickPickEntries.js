@@ -1,6 +1,5 @@
 import * as QuickPickEntryId from '../QuickPickEntryId/QuickPickEntryId.js'
 
-// prettier-ignore
 export const load = (moduleId) => {
   switch (moduleId) {
     case QuickPickEntryId.CommandPalette:
@@ -20,6 +19,8 @@ export const load = (moduleId) => {
       return import('../QuickPickEntriesSymbol/QuickPickEntriesSymbol.js')
     case QuickPickEntryId.View:
       return import('../QuickPickEntriesView/QuickPickEntriesView.js')
+    case QuickPickEntryId.Custom:
+      return import('../QuickPickEntriesCustom/QuickPickEntriesCustom.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }

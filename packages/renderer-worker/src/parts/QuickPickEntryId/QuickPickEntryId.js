@@ -17,3 +17,5 @@ export const Symbol = 'quickPick://symbol'
 export const View = 'quickPick://view'
 
 export const WorkspaceSymbol = 'quickPick://workspace-symbol'
+
+export const Custom = 'quickPick://custom'

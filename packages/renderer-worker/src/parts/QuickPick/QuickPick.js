@@ -1,9 +1,9 @@
 import * as Command from '../Command/Command.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const show = async (pickId) => {
+export const show = async (...args) => {
   // TODO show custom quickpick
-  await Command.execute(`Viewlet.openWidget`, ViewletModuleId.QuickPick, pickId)
+  await Command.execute(`Viewlet.openWidget`, ViewletModuleId.QuickPick, ...args)
   return undefined
 }
 
@@ -27,6 +27,6 @@ export const showCommands = () => {
   return show('commands')
 }
 
-export const showCustom = () => {
-  return show('color-theme')
+export const showCustom = (picks) => {
+  return show('custom', picks)
 }
