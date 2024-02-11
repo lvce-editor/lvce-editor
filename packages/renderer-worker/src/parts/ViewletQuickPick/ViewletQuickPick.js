@@ -27,7 +27,7 @@ const QuickPickState = {
   Finished: 2,
 }
 
-export const create = (id, uri, x, y, width, height) => {
+export const create = (id, uri, x, y, width, height, args) => {
   return {
     uid: id,
     state: QuickPickState.Default,
@@ -50,6 +50,7 @@ export const create = (id, uri, x, y, width, height) => {
       minimumSliderSize: MinimumSliderSize.minimumSliderSize,
     }),
     inputSource: InputSource.User,
+    args,
   }
 }
 
@@ -65,9 +66,14 @@ const getDefaultValue = (uri) => {
 }
 
 export const loadContent = async (state) => {
-  const uri = state.uri
+  const { uri, args } = state
   const value = getDefaultValue(uri)
   const provider = await QuickPickEntries.load(uri)
+  // @ts-ignore
+  if (provider.setArgs) {
+    // @ts-ignore
+    provider.setArgs(args)
+  }
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
   // @ts-ignore
