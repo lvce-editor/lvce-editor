@@ -4,9 +4,10 @@ export const name = 'QuickPick'
 
 export const Commands = {
   show: QuickPick.show,
-  showFile: QuickPick.showFile,
   showColorTheme: QuickPick.showColorTheme,
   showCommands: QuickPick.showCommands,
-  showRecent: QuickPick.showRecent,
+  showCustom: QuickPick.showCustom,
   showEverything: QuickPick.showEveryThing,
+  showFile: QuickPick.showFile,
+  showRecent: QuickPick.showRecent,
 }

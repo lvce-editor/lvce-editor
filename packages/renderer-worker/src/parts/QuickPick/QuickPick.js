@@ -26,3 +26,7 @@ export const showColorTheme = () => {
 export const showCommands = () => {
   return show('commands')
 }
+
+export const showCustom = () => {
+  return show('color-theme')
+}
