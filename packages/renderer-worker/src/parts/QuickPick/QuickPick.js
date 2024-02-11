@@ -27,6 +27,6 @@ export const showCommands = () => {
   return show('commands')
 }
 
-export const showCustom = (picks) => {
-  return show('custom', picks)
+export const showCustom = (picks, resolve) => {
+  return show('custom', picks, resolve)
 }

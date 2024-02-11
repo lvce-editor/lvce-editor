@@ -38,9 +38,9 @@ export const getPicks = async (searchValue) => {
 }
 
 export const selectPick = async (pick) => {
-  const workspace = Workspace.state.workspacePath
-  const absolutePath = `${workspace}/${pick}`
-  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ absolutePath)
+  const { args } = state
+  const resolve = args[2]
+  resolve(pick)
   return {
     command: QuickPickReturnValue.Hide,
   }
