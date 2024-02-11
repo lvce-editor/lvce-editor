@@ -172,6 +172,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.WindowTitle
     case 'PointerCapture':
       return ModuleId.PointerCapture
+    case 'ExtensionHostQuickPick':
+      return ModuleId.ExtensionHostQuickPick
     default:
       throw new Error(`module ${prefix} not found`)
   }
