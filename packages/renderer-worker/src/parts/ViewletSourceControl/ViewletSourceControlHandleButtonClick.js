@@ -2,9 +2,9 @@ import * as ExtensionHostCommand from '../ExtensionHost/ExtensionHostCommands.js
 import { loadContent } from './ViewletSourceControlLoadContent.js'
 
 export const handleButtonClick = async (state, clickedIndex) => {
-  const { buttonIndex, buttons, displayItems } = state
+  const { buttonIndex, buttons, items } = state
   const button = buttons[clickedIndex]
-  const item = displayItems[buttonIndex]
+  const item = items[buttonIndex]
   if (!button) {
     return
   }
