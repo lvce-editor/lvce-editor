@@ -20,3 +20,5 @@ export const SourceControl = 'SourceControl'
 export const Add = 'Add'
 export const SplitHorizontal = 'SplitHorizontal'
 export const Trash = 'Trash'
+export const SourceControl2 = `${AssetDir.assetDir}/icons/icon-source-control.svg`
+export const None = ''
