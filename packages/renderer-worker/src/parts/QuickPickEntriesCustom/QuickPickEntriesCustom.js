@@ -1,7 +1,7 @@
-import * as Command from '../Command/Command.js'
+import * as Icon from '../Icon/Icon.js'
+import * as IconType from '../IconType/IconType.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 import * as ViewletQuickPickStrings from '../ViewletQuickPick/ViewletQuickPickStrings.js'
-import * as Workspace from '../Workspace/Workspace.js'
 
 export const name = 'custom'
 
@@ -62,6 +62,15 @@ export const getPickDescription = (pick) => {
   return pick.description || ''
 }
 
+const convertIcon = (icon) => {
+  switch (icon) {
+    case IconType.SourceControl:
+      return Icon.SourceControl2
+    default:
+      return Icon.None
+  }
+}
+
 export const getPickIcon = (pick) => {
-  return ''
+  return convertIcon(pick.icon)
 }
