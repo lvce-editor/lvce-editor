@@ -1,29 +1,25 @@
 // TODO make storage configurable via settings as localstorage or indexeddb
 // also allow disabling caching via settings
 // then measure which option could be fastest
-import * as LocalStorage from '../LocalStorage/LocalStorage.js'
-import * as WebStorageType from '../WebStorageType/WebStorageType.js'
+import * as Preferences from '../Preferences/Preferences.js'
 
-const getCacheKey = (colorThemeId) => {
-  return 'lvce-color-theme-' + colorThemeId
-}
-
-const getColorThemeCssCachedLocalStorage = (colorThemeId) => {
-  const cacheKey = getCacheKey(colorThemeId)
-  return LocalStorage.getText(cacheKey)
-}
-
-const setColorThemeCssCachedLocalStorage = (colorThemeId, data) => {
-  const cacheKey = getCacheKey(colorThemeId)
-  return LocalStorage.setText(cacheKey, data)
+const getCacheFn = (config) => {
+  switch (config) {
+    case 'localStorage':
+      return import('../GetColorThemeCssCachedLocalStorage/GetColorThemeCssCachedLocalStorage.js')
+    default:
+      return import('../GetColorThemeCssCachedNoop/GetColorThemeCssCachedNoop.js')
+  }
 }
 
 export const getColorThemeCssCached = async (colorThemeId, getData) => {
-  const cachedData = await getColorThemeCssCachedLocalStorage(colorThemeId)
+  const config = Preferences.get('colorTheme.cache')
+  const module = await getCacheFn(config)
+  const cachedData = await module.get(colorThemeId)
   if (cachedData) {
     return cachedData
   }
   const newData = await getData(colorThemeId)
-  await setColorThemeCssCachedLocalStorage(colorThemeId, newData)
+  await module.set(colorThemeId, newData)
   return newData
 }

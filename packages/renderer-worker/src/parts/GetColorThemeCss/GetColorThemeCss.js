@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as GetColorThemeJson from '../GetColorThemeJson/GetColorThemeJson.js'
+import * as GetColorThemeCssCached from '../GetColorThemeCssCached/GetColorThemeCssCached.js'
 
 export const getColorThemeCssFromJson = async (colorThemeId, colorThemeJson) => {
   const colorThemeCss = await Command.execute(
@@ -11,8 +12,12 @@ export const getColorThemeCssFromJson = async (colorThemeId, colorThemeJson) => 
   // TODO generate color theme from jsonc
 }
 
-export const getColorThemeCss = async (colorThemeId) => {
+const getColorThemeCssNew = async (colorThemeId) => {
   const colorThemeJson = await GetColorThemeJson.getColorThemeJson(colorThemeId)
   const colorThemeCss = await getColorThemeCssFromJson(colorThemeId, colorThemeJson)
   return colorThemeCss
+}
+
+export const getColorThemeCss = (colorThemeId) => {
+  return GetColorThemeCssCached.getColorThemeCssCached(colorThemeId, getColorThemeCssNew)
 }
