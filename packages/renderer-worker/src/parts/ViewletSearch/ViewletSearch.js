@@ -43,6 +43,8 @@ export const create = (id, uri, x, y, width, height) => {
     excludeValue: '',
     detailsExpanded: false,
     focus: WhenExpression.Empty,
+    loaded: false,
+    message: '',
   }
 }
 
@@ -91,6 +93,7 @@ export const loadContent = async (state, savedState) => {
     ...state,
     threads,
     replaceExpanded: savedReplaceExpanded,
+    loaded: true,
   }
 }
 

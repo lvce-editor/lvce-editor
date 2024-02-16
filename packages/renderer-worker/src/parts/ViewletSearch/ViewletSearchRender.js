@@ -16,7 +16,8 @@ const renderItems = {
       oldState.matchWholeWord === newState.matchWholeWord &&
       oldState.useRegularExpression === newState.useRegularExpression &&
       oldState.message === newState.message &&
-      oldState.detailsExpanded === newState.detailsExpanded
+      oldState.detailsExpanded === newState.detailsExpanded &&
+      oldState.loaded === newState.loaded
     )
   },
   apply(oldState, newState) {

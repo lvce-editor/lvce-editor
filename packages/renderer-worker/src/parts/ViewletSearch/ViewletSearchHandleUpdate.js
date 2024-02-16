@@ -21,6 +21,7 @@ export const handleUpdate = async (state, update) => {
         matchIndex: 0,
         matchCount: 0,
         message: '',
+        loaded: true,
       }
     }
     const root = Workspace.state.workspacePath
@@ -32,7 +33,6 @@ export const handleUpdate = async (state, update) => {
       throw new Error(`results must be of type array`)
     }
     const { fileCount, resultCount } = GetTextSearchResultCounts.getTextSearchResultCounts(results)
-    // const displayResults = toDisplayResults(results, itemHeight, resultCount, value)
     const message = ViewletSearchStatusMessage.getStatusMessage(resultCount, fileCount)
     const total = results.length
     const contentHeight = total * itemHeight
@@ -54,6 +54,7 @@ export const handleUpdate = async (state, update) => {
       threads,
       fileCount,
       matchCount: resultCount,
+      loaded: true,
     }
   } catch (error) {
     ErrorHandling.logError(error)
