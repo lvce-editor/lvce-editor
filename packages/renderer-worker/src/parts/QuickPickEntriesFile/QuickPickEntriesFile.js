@@ -73,7 +73,11 @@ export const getPickDescription = (pick) => {
   return dirName
 }
 
-export const getPickIcon = (pick) => {
+export const getPickIcon = () => {
+  return ''
+}
+
+export const getPickFileIcon = (pick) => {
   const baseName = Workspace.pathBaseName(pick)
   return IconTheme.getFileIcon({ name: baseName })
 }
