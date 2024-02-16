@@ -1,8 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Command from '../Command/Command.js'
 import * as Css from '../Css/Css.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as GetColorThemeJson from '../GetColorThemeJson/GetColorThemeJson.js'
+import * as GetColorThemeCss from '../GetColorThemeCss/GetColorThemeCss.js'
 import * as GetMetaThemeColor from '../GetMetaThemeColor/GetMetaThemeColor.js'
 import * as Meta from '../Meta/Meta.js'
 import * as Platform from '../Platform/Platform.js'
@@ -22,28 +21,14 @@ const FALLBACK_COLOR_THEME_ID = 'slime'
 // TODO json parsing should also happen in renderer worker
 // so that all validation is here (json parsing errors, invalid shape, ...)
 
-export const getColorThemeCss = async (colorThemeId, colorThemeJson) => {
-  const colorThemeCss = await Command.execute(
-    /* ColorThemeFromJson.createColorThemeFromJson */ 'ColorThemeFromJson.createColorThemeFromJson',
-    /* colorThemeId */ colorThemeId,
-    /* colorThemeJson */ colorThemeJson,
-  )
-  return colorThemeCss
-  // TODO generate color theme from jsonc
-}
-
-const getMetaThemeColor = (colorThemeJson) => {
-  return colorThemeJson && colorThemeJson.colors && colorThemeJson.colors.TitleBarBackground
-}
 const applyColorTheme = async (colorThemeId) => {
   try {
     Assert.string(colorThemeId)
     state.colorTheme = colorThemeId
-    const colorThemeJson = await GetColorThemeJson.getColorThemeJson(colorThemeId)
-    const colorThemeCss = await getColorThemeCss(colorThemeId, colorThemeJson)
+    const colorThemeCss = await GetColorThemeCss.getColorThemeCss(colorThemeId)
     await Css.addCssStyleSheet('ContributedColorTheme', colorThemeCss)
     if (Platform.platform === PlatformType.Web) {
-      const themeColor = GetMetaThemeColor.getMetaThemeColor(colorThemeJson) || ''
+      const themeColor = GetMetaThemeColor.getMetaThemeColor(colorThemeId) || ''
       await Meta.setThemeColor(themeColor)
     }
     if (Platform.platform !== PlatformType.Web && Preferences.get('development.watchColorTheme')) {
