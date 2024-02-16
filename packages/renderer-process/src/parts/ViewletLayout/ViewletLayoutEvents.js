@@ -1,6 +1,6 @@
-import * as DomEventType from '../DomEventType/DomEventType.js'
-import * as ViewletLayoutFunctions from './ViewletLayoutFunctions.js'
 import * as KeyBindingsEvents from '../KeyBindingsEvents/KeyBindingsEvents.js'
+import * as PointerEvents from '../PointerEvents/PointerEvents.js'
+import * as ViewletLayoutFunctions from './ViewletLayoutFunctions.js'
 
 const getSashId = ($Target) => {
   if ($Target.id === 'SashPanel') {
@@ -18,16 +18,13 @@ export const handleSashPointerMove = (event) => {
 }
 
 export const handlePointerCaptureLost = (event) => {
-  const { target } = event
-  target.removeEventListener(DomEventType.PointerMove, handleSashPointerMove)
-  target.removeEventListener(DomEventType.LostPointerCapture, handlePointerCaptureLost)
+  const { target, pointerId } = event
+  PointerEvents.stopTracking(target, pointerId, handleSashPointerMove, handlePointerCaptureLost)
 }
 
 export const handleSashPointerDown = (event) => {
   const { target, pointerId } = event
-  target.setPointerCapture(pointerId)
-  target.addEventListener(DomEventType.PointerMove, handleSashPointerMove)
-  target.addEventListener(DomEventType.LostPointerCapture, handlePointerCaptureLost)
+  PointerEvents.startTracking(target, pointerId, handleSashPointerMove, handlePointerCaptureLost)
   const id = getSashId(target)
   ViewletLayoutFunctions.handleSashPointerDown(id)
 }
