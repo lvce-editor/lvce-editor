@@ -6,7 +6,6 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SashDirectionType from '../SashDirectionType/SashDirectionType.js'
 import * as SashType from '../SashType/SashType.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
@@ -591,9 +590,14 @@ export const loadTitleBarIfVisible = (state) => {
 }
 
 export const handleSashPointerDown = (state, sashId) => {
-  return {
+  const newState = {
     ...state,
     [kSashId]: sashId,
+  }
+  const commands = []
+  return {
+    newState,
+    commands,
   }
 }
 
@@ -931,41 +935,3 @@ export const getInitialPlaceholderCommands = (state) => {
   }
   return commands
 }
-
-export const hasFunctionalRender = true
-
-const renderSashes = {
-  isEqual(oldState, newState) {
-    return false
-  },
-  apply(oldState, newState) {
-    const { points } = newState
-    const sideBarLeft = points[kSideBarLeft]
-    const sideBarTop = points[kSideBarTop]
-    const sideBarHeight = points[kSideBarHeight]
-    const panelTop = points[kpanelTop]
-    const panelLeft = points[kPanelLeft]
-    const panelWidth = points[kPanelWidth]
-    return [
-      'setSashes',
-      {
-        id: 'SashSideBar',
-        x: sideBarLeft,
-        y: sideBarTop,
-        width: 4,
-        height: sideBarHeight,
-        direction: SashDirectionType.Horizontal,
-      },
-      {
-        id: 'SashPanel',
-        x: panelLeft,
-        y: panelTop,
-        width: panelWidth,
-        height: 4,
-        direction: SashDirectionType.Vertical,
-      },
-    ]
-  },
-}
-
-export const render = [renderSashes]

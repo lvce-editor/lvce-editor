@@ -52,5 +52,7 @@ export const attachEvents = (state) => {
 export const setSashes = (state, sashSideBar, sashPanel) => {
   const { $SashSideBar, $SashPanel } = state
   SetBounds.setBounds($SashSideBar, sashSideBar.x, sashSideBar.y, sashSideBar.width, sashSideBar.height)
+  $SashSideBar.classList.toggle('SashActive', sashSideBar.active)
   SetBounds.setBounds($SashPanel, sashPanel.x, sashPanel.y, sashPanel.width, sashPanel.height)
+  $SashPanel.classList.toggle('SashActive', sashPanel.active)
 }
