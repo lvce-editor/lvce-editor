@@ -2,7 +2,7 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "0.14.0"
+    "version": "0.16.0"
   },
   {
     "name": "builtin.language-basics-bat",
