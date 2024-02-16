@@ -140,3 +140,13 @@ export const getPickIcon = (pick) => {
   const { provider } = state
   return provider.getPickIcon(pick)
 }
+
+export const getPickFileIcon = (pick) => {
+  const { provider } = state
+  // @ts-ignore
+  if (provider.getPickFileIcon) {
+    // @ts-ignore
+    return provider.getPickFileIcon(pick)
+  }
+  return ''
+}

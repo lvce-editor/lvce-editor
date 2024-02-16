@@ -39,7 +39,7 @@ const addHighlights = (dom, highlights, label) => {
 }
 
 export const getQuickPickItemVirtualDom = (visibleItem) => {
-  const { posInSet, label, setSize, isActive, description, icon, matches } = visibleItem
+  const { posInSet, label, setSize, isActive, description, icon, matches, fileIcon } = visibleItem
   const highlights = matches.slice(1)
   const dom = []
   dom.push({
@@ -56,9 +56,16 @@ export const getQuickPickItemVirtualDom = (visibleItem) => {
     parent.id = 'QuickPickItemActive'
     parent.className += ' ' + ClassNames.QuickPickItemActive
   }
-  if (icon) {
+  if (fileIcon) {
     parent.childCount++
-    dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(icon))
+    dom.push(GetFileIconVirtualDom.getFileIconVirtualDom(fileIcon))
+  } else if (icon) {
+    parent.childCount++
+    dom.push({
+      type: VirtualDomElements.Div,
+      className: `QuickPickMaskIcon MaskIcon MaskIcon${icon}`,
+      childCount: 0,
+    })
   }
   addHighlights(dom, highlights, label)
   if (description) {

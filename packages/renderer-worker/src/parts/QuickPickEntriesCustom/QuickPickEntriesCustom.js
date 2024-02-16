@@ -65,7 +65,7 @@ export const getPickDescription = (pick) => {
 const convertIcon = (icon) => {
   switch (icon) {
     case IconType.SourceControl:
-      return Icon.SourceControl2
+      return Icon.SourceControl
     default:
       return Icon.None
   }
