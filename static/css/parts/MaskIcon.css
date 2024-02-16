@@ -132,6 +132,14 @@
   mask-image: url(/icons/clear-all.svg);
 }
 
+.MaskIconCloud {
+  mask-image: url(/icons/cloud.svg);
+}
+
+.MaskIconTag {
+  mask-image: url(/icons/tag.svg);
+}
+
 .MaskIconNewFile,
 .IconNewFile {
   mask-image: url(/icons/new-file.svg);
