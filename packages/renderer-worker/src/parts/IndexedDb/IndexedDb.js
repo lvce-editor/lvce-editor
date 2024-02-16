@@ -1,6 +1,6 @@
 // TODO high memory usage in idb because of transactionDoneMap
 
-import { openDB } from '../../../../../static/js/idb/with-async-ittr.js'
+import { openDB } from '../Idb/Idb.js'
 import { VError } from '../VError/VError.js'
 import { state } from '../IndexedDbState/IndexedDbState.js'
 import * as IsDataCloneError from '../IsDataCloneError/IsDataCloneError.js'
