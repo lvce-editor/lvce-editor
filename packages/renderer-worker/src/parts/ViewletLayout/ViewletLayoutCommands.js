@@ -2,10 +2,10 @@ import * as ViewletLayout from './ViewletLayout.js'
 
 // prettier-ignore
 export const Commands = {
-  handleSashPointerDown: ViewletLayout.handleSashPointerDown,
 }
 
 export const CommandsWithSideEffects = {
+  handleSashPointerDown: ViewletLayout.handleSashPointerDown,
   handleResize: ViewletLayout.handleResize,
   handleSashDoubleClick: ViewletLayout.handleSashDoubleClick,
   handleSashPointerMove: ViewletLayout.handleSashPointerMove,

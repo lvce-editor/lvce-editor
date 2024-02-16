@@ -18,3 +18,7 @@
   display: flex;
   justify-content: center;
 }
+
+.SashActive {
+  background: var(--SashHoverBorder, #3d5252);
+}
