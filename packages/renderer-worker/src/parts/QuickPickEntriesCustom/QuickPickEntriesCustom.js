@@ -66,6 +66,10 @@ const convertIcon = (icon) => {
   switch (icon) {
     case IconType.SourceControl:
       return Icon.SourceControl
+    case IconType.Cloud:
+      return Icon.Cloud
+    case IconType.Tag:
+      return Icon.Tag
     default:
       return Icon.None
   }
