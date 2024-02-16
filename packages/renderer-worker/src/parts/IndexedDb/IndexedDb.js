@@ -2,16 +2,10 @@
 
 import { openDB } from '../../../../../static/js/idb/with-async-ittr.js'
 import { VError } from '../VError/VError.js'
+import { state } from '../IndexedDbState/IndexedDbState.js'
+import * as IsDataCloneError from '../IsDataCloneError/IsDataCloneError.js'
 
-export const state = {
-  databases: Object.create(null),
-  eventId: 0,
-  dbVersion: 1,
-  /**
-   * @type {any}
-   */
-  cachedDb: undefined,
-}
+export { state }
 
 const getDb = async () => {
   // @ts-ignore
@@ -40,8 +34,7 @@ export const saveValue = async (storeId, value) => {
     const db = await getDbMemoized()
     await db.add('session', value)
   } catch (error) {
-    // @ts-ignore
-    if (error && error.name === 'DataCloneError') {
+    if (IsDataCloneError.isDataCloneError(error)) {
       // TODO
       return
     }
