@@ -1,6 +1,3 @@
-// TODO make storage configurable via settings as localstorage or indexeddb
-// also allow disabling caching via settings
-// then measure which option could be fastest
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 
 const getCacheKey = (colorThemeId) => {

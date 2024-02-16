@@ -7,6 +7,8 @@ const getCacheFn = (config) => {
   switch (config) {
     case 'localStorage':
       return import('../GetColorThemeCssCachedLocalStorage/GetColorThemeCssCachedLocalStorage.js')
+    case 'indexedDb':
+      return import('../GetColorThemeCssCachedIndexedDb/GetColorThemeCssCachedIndexedDb.js')
     default:
       return import('../GetColorThemeCssCachedNoop/GetColorThemeCssCachedNoop.js')
   }
