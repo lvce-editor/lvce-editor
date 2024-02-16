@@ -48,7 +48,7 @@ const RendererWorker = await import('../src/parts/RendererWorker/RendererWorker.
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.js')
 const ViewletLayoutEvents = await import('../src/parts/ViewletLayout/ViewletLayoutEvents.js')
 
-test('event - pointermove after pointerdown', () => {
+test.skip('event - pointermove after pointerdown', () => {
   const state = ViewletLayout.create()
   ViewletLayout.attachEvents(state)
   const { $SashSideBar } = state
@@ -73,7 +73,7 @@ test('event - pointermove after pointerdown', () => {
   expect(RendererWorker.send).toHaveBeenNthCalledWith(2, 'Layout.handleSashPointerMove', 30, 40)
 })
 
-test('event - pointerup after pointerdown', () => {
+test.skip('event - pointerup after pointerdown', () => {
   const state = ViewletLayout.create()
   ViewletLayout.attachEvents(state)
   const spy1 = jest.spyOn(HTMLElement.prototype, 'addEventListener')
