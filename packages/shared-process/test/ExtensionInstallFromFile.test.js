@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import { dirname } from 'path'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -18,12 +19,16 @@ jest.unstable_mockModule('../src/parts/Extract/Extract.js', () => ({
     throw new Error('not implemented')
   }),
 }))
+
 jest.unstable_mockModule('../src/parts/Path/Path.js', () => ({
   join: (...parts) => {
     return parts.join('/')
   },
   basename: (path) => {
     return path.slice(path.lastIndexOf('/') + 1)
+  },
+  dirname: (path) => {
+    return dirname(path)
   },
 }))
 
@@ -35,6 +40,9 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
     throw new Error('not implemented')
   }),
   rename: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+  mkdir: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
@@ -86,6 +94,8 @@ test('install', async () => {
   // @ts-ignore
   FileSystem.remove.mockImplementation(() => {})
   // @ts-ignore
+  FileSystem.mkdir.mockImplementation(() => {})
+  // @ts-ignore
   FileSystem.rename.mockImplementation(() => {})
   await ExtensionInstallFromFile.install({
     path: './extension.tar.br',
@@ -94,6 +104,8 @@ test('install', async () => {
   expect(Extract.extractTarBr).toHaveBeenCalledWith('./extension.tar.br', '/test/cached-extensions/file-extension')
   expect(FileSystem.readFile).toHaveBeenCalledTimes(1)
   expect(FileSystem.readFile).toHaveBeenCalledWith('/test/cached-extensions/file-extension/extension.json')
+  expect(FileSystem.mkdir).toHaveBeenCalledTimes(1)
+  expect(FileSystem.mkdir).toHaveBeenCalledWith('/test/extensions')
   expect(FileSystem.rename).toHaveBeenCalledTimes(1)
   expect(FileSystem.rename).toHaveBeenCalledWith('/test/cached-extensions/file-extension', '/test/extensions/test.test-extension')
 })
