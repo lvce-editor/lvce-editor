@@ -28,6 +28,7 @@ export const install = async ({ path }) => {
     }
     const outDir = Path.join(extensionsPath, id)
     await FileSystem.remove(outDir)
+    await FileSystem.mkdir(Path.dirname(outDir))
     await FileSystem.rename(cachedExtensionPath, outDir)
   } catch (error) {
     throw new VError(error, `Failed to install ${path}`)
