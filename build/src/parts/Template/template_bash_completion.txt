@@ -21,7 +21,7 @@ _@@APPNAME@@() {
     esac
 
     if [[ "$cur" == -* ]]; then
-        COMPREPLY=( $( compgen -W "--built-in-self-test -h --help -v --version --wait --web" -- "$cur" ) )
+        COMPREPLY=( $( compgen -W "--built-in-self-test -h --help -v --version --wait install uninstall link unlink" -- "$cur" ) )
         return
     fi
 
