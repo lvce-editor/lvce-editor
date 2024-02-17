@@ -39,6 +39,15 @@ export const parseUrlGithub = (input) => {
       }
     }
   }
+
+  if (input.includes('/releases/download')) {
+    return {
+      type: ExtensionInstallType.Url,
+      options: {
+        url: input,
+      },
+    }
+  }
   return {
     type: ExtensionInstallType.ParsingError,
     options: {
