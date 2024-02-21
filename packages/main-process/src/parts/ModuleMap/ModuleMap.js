@@ -79,6 +79,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.TemporaryMessagePort
     case 'ElectronWebContents':
       return ModuleId.ElectronWebContents
+    case 'ElectronWebContentsView':
+      return ModuleId.ElectronWebContentsView
     default:
       throw new CommandNotFoundError(commandId)
   }

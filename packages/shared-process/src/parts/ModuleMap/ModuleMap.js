@@ -304,6 +304,9 @@ export const getModuleId = (commandId) => {
     case 'ElectronWebContents.handleContextMenu':
     case 'ElectronWebContents.handlePageTitleUpdated':
       return ModuleId.ElectronWebContents
+    case 'ElectronWebContentsView.createWebContentsView':
+    case 'ElectronWebContentsView.disposeWebContentsView':
+      return ModuleId.ElectronWebContentsView
     default:
       throw new CommandNotFoundError(commandId)
   }
