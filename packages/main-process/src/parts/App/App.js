@@ -78,11 +78,6 @@ export const hydrate = async () => {
     Process.exit(ExitCode.Success)
   }
 
-  // start shared process
-  SharedProcess.hydrate({
-    method: IpcParentType.ElectronUtilityProcess,
-  })
-
   // command line switches
   CommandLineSwitches.enable(parsedCliArgs)
 
@@ -99,6 +94,11 @@ export const hydrate = async () => {
   ElectronApp.on(ElectronAppEventType.SecondInstance, HandleSecondInstance.handleSecondInstance)
   await ElectronApp.whenReady()
   Performance.mark(PerformanceMarkerType.AppReady)
+
+  // start shared process
+  await SharedProcess.hydrate({
+    method: IpcParentType.ElectronUtilityProcess,
+  })
 
   await HandleElectronReady.handleReady(parsedCliArgs, Process.cwd())
   Debug.debug('[info] app window created')
