@@ -27,7 +27,7 @@
     },
     "snap": {
       "publish": "never",
-      "confinement": "classic"
+      "confinement": "classic",
       "base": "core22"
     }
   }
