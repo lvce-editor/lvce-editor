@@ -2,11 +2,11 @@ import * as Assert from '../Assert/Assert.js'
 import * as EditorSplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
 import * as SplitDirectionType from '../EditorSplitDirectionType/EditorSplitDirectionType.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
+import * as GetSashModuleId from '../GetSashModuleId/GetSashModuleId.js'
 import * as GetSplitDimensions from '../GetSplitDimensions/GetSplitDimensions.js'
 import * as Id from '../Id/Id.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SashOrientation from '../SashOrientation/SashOrientation.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
@@ -14,15 +14,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import { openUri } from './ViewletMainOpenUri.js'
-
-const getSashModuleId = (orientation) => {
-  switch (orientation) {
-    case SashOrientation.Horizontal:
-      return ViewletModuleId.VisibleSashHorizontal
-    case SashOrientation.Vertical:
-      return ViewletModuleId.VisibleSashVertical
-  }
-}
 
 const handleDropFilePathNoSplit = async (state, filePath) => {
   const { newState, commands } = await openUri(state, filePath)
@@ -152,7 +143,7 @@ const handleDropFilePathSplit = async (state, eventX, eventY, filePath, splitDir
   ])
   // const sashOrientation = splitDirection===
   // TODO sash could be horizontal or vertical
-  const sashModuleId = getSashModuleId(sashOrientation)
+  const sashModuleId = GetSashModuleId.getSashModuleId(sashOrientation)
   await RendererProcess.invoke('Viewlet.loadModule', sashModuleId)
   allCommands.push([/* Viewlet.create */ 'Viewlet.create', /* id */ sashModuleId, sashUid])
   allCommands.push(['Viewlet.setBounds', sashUid, sashX, sashY, sashWidth, sashHeight])
