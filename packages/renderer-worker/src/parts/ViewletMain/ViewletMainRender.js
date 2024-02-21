@@ -25,14 +25,6 @@ const renderDragOverlay = {
   },
 }
 
-const getTotalTabWidth = (editors) => {
-  let total = 0
-  for (const editor of editors) {
-    total += editor.tabWidth
-  }
-  return total
-}
-
 const renderGroupTabs = {
   isEqual(oldState, newState) {
     return oldState.groups === newState.groups
