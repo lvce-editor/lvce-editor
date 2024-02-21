@@ -8,6 +8,11 @@ export const handleSashPointerDown = (id) => {
   RendererWorker.send('Layout.handleSashPointerDown', id)
 }
 
+// TODO send component uid
+export const handleSashPointerUp = (id) => {
+  RendererWorker.send('Layout.handleSashPointerUp', id)
+}
+
 export const handleSashDoubleClick = (id) => {
   RendererWorker.send('Layout.handleSashDoubleClick', id)
 }
