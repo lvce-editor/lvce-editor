@@ -20,6 +20,8 @@ export const handleSashPointerMove = (event) => {
 export const handlePointerCaptureLost = (event) => {
   const { target, pointerId } = event
   PointerEvents.stopTracking(target, pointerId, handleSashPointerMove, handlePointerCaptureLost)
+  const id = getSashId(target)
+  ViewletLayoutFunctions.handleSashPointerUp(id)
 }
 
 export const handleSashPointerDown = (event) => {
