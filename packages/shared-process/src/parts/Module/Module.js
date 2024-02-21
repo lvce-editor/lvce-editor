@@ -142,6 +142,8 @@ export const load = (moduleId) => {
       return import('../HandleMessagePortForExtensionHostHelperProcess/HandleMessagePortForExtensionHostHelperProcess.ipc.js')
     case ModuleId.ElectronWebContents:
       return import('../ElectronWebContents/ElectronWebContents.ipc.js')
+    case ModuleId.ElectronWebContentsView:
+      return import('../ElectronWebContentsView/ElectronWebContentsView.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
