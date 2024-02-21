@@ -70,7 +70,7 @@ const renderGroupTabs = {
       const { tabsUid, editors, x, y, width, height, activeIndex, tabsDeltaX } = insertedGroup
       if (editors.length > 0) {
         commands.push(['Viewlet.create', ViewletModuleId.MainTabs, tabsUid])
-        // commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
+        commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
         const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex, newState.tabsDeltax)
         commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
         commands.push(['Viewlet.send', tabsUid, 'setScrollLeft', tabsDeltaX])
