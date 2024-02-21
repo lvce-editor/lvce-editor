@@ -70,3 +70,4 @@ export const GetElectronFileResponse = 63
 export const HandleRemoteRequest = 64
 export const HandleMessagePortForExtensionHostHelperProcess = 65
 export const ElectronWebContents = 66
+export const ElectronWebContentsView = 67
