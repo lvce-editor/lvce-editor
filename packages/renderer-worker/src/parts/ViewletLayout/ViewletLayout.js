@@ -601,6 +601,18 @@ export const handleSashPointerDown = (state, sashId) => {
   }
 }
 
+export const handleSashPointerUp = (state, sashId) => {
+  const newState = {
+    ...state,
+    [kSashId]: '',
+  }
+  const commands = []
+  return {
+    newState,
+    commands,
+  }
+}
+
 const getNewStatePointerMoveSideBar = (points, x, y) => {
   const windowWidth = points[kWindowWidth]
   const activityBarWidth = points[kActivityBarWidth]
