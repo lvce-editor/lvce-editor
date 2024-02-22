@@ -19,8 +19,8 @@ const getTestPath = () => {
   return join(Root.root, 'packages', 'extension-host-worker-tests')
 }
 
-export const getTestRequestResponse = async (req) => {
-  const pathName = getPathName(req)
+export const getTestRequestResponse = async (request) => {
+  const pathName = getPathName(request)
   if (pathName.endsWith('.html')) {
     return {
       body: '',
