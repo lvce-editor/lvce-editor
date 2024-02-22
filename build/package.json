@@ -44,7 +44,7 @@
     "pretty-bytes": "^6.1.1",
     "rollup": "^4.12.0",
     "tar-fs": "^3.0.5",
-    "verdaccio": "^5.29.1"
+    "verdaccio": "^5.29.2"
   },
   "xo": {
     "rules": {
