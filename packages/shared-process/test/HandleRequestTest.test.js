@@ -1,7 +1,9 @@
 import { jest } from '@jest/globals'
+import { Writable } from 'node:stream'
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.useFakeTimers().setSystemTime(new Date('2024-01-01'))
 })
 
 jest.unstable_mockModule('../src/parts/GetTestRequestResponse/GetTestRequestResponse.js', () => ({
@@ -10,10 +12,17 @@ jest.unstable_mockModule('../src/parts/GetTestRequestResponse/GetTestRequestResp
   }),
 }))
 
+jest.unstable_mockModule('../src/parts/HttpServerResponse/HttpServerResponse.js', () => ({
+  send: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
+
 const GetTestRequestResponse = await import('../src/parts/GetTestRequestResponse/GetTestRequestResponse.js')
 const HandleRequestTest = await import('../src/parts/HandleRequestTest/HandleRequestTest.js')
+const HttpServerResponse = await import('../src/parts/HttpServerResponse/HttpServerResponse.js')
 
-test.skip('handleRequestTest', async () => {
+test('handleRequestTest', async () => {
   const request = {}
   const socket = {}
   jest.spyOn(GetTestRequestResponse, 'getTestRequestResponse').mockResolvedValue({
@@ -22,5 +31,8 @@ test.skip('handleRequestTest', async () => {
       status: 200,
     },
   })
+  jest.spyOn(HttpServerResponse, 'send').mockImplementation(() => {})
   await HandleRequestTest.handleRequestTest(request, socket)
+  expect(HttpServerResponse.send).toHaveBeenCalledTimes(1)
+  expect(HttpServerResponse.send).toHaveBeenCalledWith({}, {}, { body: 'test', init: { status: 200 } })
 })
