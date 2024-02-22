@@ -144,6 +144,8 @@ export const load = (moduleId) => {
       return import('../ElectronWebContents/ElectronWebContents.ipc.js')
     case ModuleId.ElectronWebContentsView:
       return import('../ElectronWebContentsView/ElectronWebContentsView.ipc.js')
+    case ModuleId.ElectronWebContentsViewFunctions:
+      return import('../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
