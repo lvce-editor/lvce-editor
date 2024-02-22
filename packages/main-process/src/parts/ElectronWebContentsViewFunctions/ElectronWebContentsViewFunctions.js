@@ -36,8 +36,6 @@ export const resizeBrowserView = (view, x, y, width, height) => {
   Assert.number(y)
   Assert.number(width)
   Assert.number(height)
-  console.log({ view })
-
   view.setBounds({ x, y, width, height })
 }
 
@@ -157,7 +155,6 @@ export const show = (id) => {
   }
   const { view, browserWindow } = state
   browserWindow.addBrowserView(view)
-  console.log({ view })
   // workaround for electron bug, view not being shown
   view.setBounds(view.getBounds())
 }

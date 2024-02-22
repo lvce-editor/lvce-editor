@@ -1,11 +1,10 @@
-import { BrowserWindow } from 'electron'
+import { BrowserView, BrowserWindow } from 'electron'
 import * as ElectronSessionForBrowserView from '../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js'
 import * as ElectronWebContentsViewState from '../ElectronWebContentsViewState/ElectronWebContentsViewState.js'
 
-// TODO use electron 29 webcontentsview api
+// TODO use electron 30 webcontentsview api
 export const createWebContentsView = async () => {
-  const { WebContentsView } = await import('electron')
-  const view = new WebContentsView({
+  const view = new BrowserView({
     webPreferences: {
       session: ElectronSessionForBrowserView.getSession(),
     },
@@ -22,6 +21,6 @@ export const attachEventListeners = (webContentsId) => {
   // TODO
 }
 
-export const disposeWebContentsView = (browserViewId) => {
+export const disposeWebContentsView = (webContentsId) => {
   // TODO
 }
