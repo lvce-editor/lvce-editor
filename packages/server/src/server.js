@@ -360,7 +360,10 @@ const app = createApp()
  * @param {ServerResponse} res
  */
 const serveTests = async (req, res, next) => {
-  sendHandle(req, res.socket, 'HandleRequestTest.handleRequestTest')
+  // TODO figure out if shared process can
+  // find out where the static folder is located
+  const indexHtmlPath = join(ROOT, 'static', 'index.html')
+  sendHandle(req, res.socket, 'HandleRequestTest.handleRequestTest', indexHtmlPath)
 }
 
 const getAbsolutePath = (extensionName) => {
@@ -547,7 +550,7 @@ const getHandleMessage = (request) => {
   }
 }
 
-const sendHandle = (request, socket, method) => {
+const sendHandle = (request, socket, method, ...params) => {
   request.on('error', (error) => {
     console.info('[info]: request upgrade error', error)
   })
@@ -563,7 +566,7 @@ const sendHandle = (request, socket, method) => {
           {
             jsonrpc: '2.0',
             method,
-            params: [getHandleMessage(request)],
+            params: [getHandleMessage(request), ...params],
           },
           socket,
           {
@@ -584,7 +587,7 @@ const sendHandle = (request, socket, method) => {
         {
           jsonrpc: '2.0',
           method,
-          params: [getHandleMessage(request)],
+          params: [getHandleMessage(request), ...params],
         },
         socket,
         {
