@@ -1,9 +1,7 @@
 import { jest } from '@jest/globals'
-import { Writable } from 'node:stream'
 
 beforeEach(() => {
   jest.resetAllMocks()
-  jest.useFakeTimers().setSystemTime(new Date('2024-01-01'))
 })
 
 jest.unstable_mockModule('../src/parts/GetTestRequestResponse/GetTestRequestResponse.js', () => ({
