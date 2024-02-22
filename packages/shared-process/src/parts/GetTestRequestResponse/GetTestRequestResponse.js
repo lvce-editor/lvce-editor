@@ -1,5 +1,4 @@
 import { readFile } from 'fs/promises'
-import { isAbsolute, join } from 'path'
 import { join } from 'path'
 import * as CreateTestOverview from '../CreateTestOverview/CreateTestOverview.js'
 import * as GetPathName from '../GetPathName/GetPathName.js'
@@ -7,7 +6,7 @@ import * as GetTestPath from '../GetTestPath/GetTestPath.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 
 export const getTestRequestResponse = async (req, indexHtmlPath) => {
-  const pathName = getPathName(req)
+  const pathName = GetPathName.getPathName(req)
   if (pathName.endsWith('.html')) {
     const body = await readFile(indexHtmlPath, 'utf8')
     return {
