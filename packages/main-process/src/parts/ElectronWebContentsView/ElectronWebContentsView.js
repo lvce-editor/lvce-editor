@@ -9,7 +9,6 @@ export const createWebContentsView = async () => {
       session: ElectronSessionForBrowserView.getSession(),
     },
   })
-  console.log(view)
   // TODO get browser window id from renderer worker
   const browserWindow = BrowserWindow.getFocusedWindow()
   const { webContents } = view
