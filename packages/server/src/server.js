@@ -4,7 +4,7 @@ import { ChildProcess, fork } from 'node:child_process'
 import { createReadStream } from 'node:fs'
 import { readFile, readdir, stat } from 'node:fs/promises'
 import { IncomingMessage, ServerResponse, createServer } from 'node:http'
-import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
+import { dirname, extname, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { fileURLToPath } from 'node:url'
 
@@ -71,11 +71,6 @@ const ContentSecurityPolicyRendererWorker = {
 const ContentSecurityPolicyExtensionHostWorker = {
   key: 'Content-Security-Policy',
   value: [`default-src 'none'`, `connect-src 'self'`, `script-src 'self'`, `font-src 'self'`].map(addSemicolon).join(' '),
-}
-
-const ContentSecurityPolicyTests = {
-  key: ContentSecurityPolicy.key,
-  value: ContentSecurityPolicy.value.replace(`script-src 'self'`, `script-src 'self' 'unsafe-eval'`),
 }
 
 const CrossOriginOpenerPolicy = {
@@ -164,79 +159,6 @@ const isExtensionHostWorkerUrl = (url) => {
 
 const getEtag = (fileStat) => {
   return `W/"${[fileStat.ino, fileStat.size, fileStat.mtime.getTime()].join('-')}"`
-}
-
-const FirstNodeWorkerEventType = {
-  Exit: 1,
-  Error: 2,
-  Message: 3,
-}
-
-const getFirstWorkerEvent = async (worker) => {
-  const { type, event } = await new Promise((resolve, reject) => {
-    const cleanup = (value) => {
-      worker.off('exit', handleExit)
-      worker.off('error', handleError)
-      worker.off('message', handleMessage)
-      resolve(value)
-    }
-    const handleExit = (event) => {
-      cleanup({ type: FirstNodeWorkerEventType.Exit, event })
-    }
-    const handleError = (event) => {
-      cleanup({ type: FirstNodeWorkerEventType.Error, event })
-    }
-    const handleMessage = (event) => {
-      cleanup({ type: FirstNodeWorkerEventType.Message, event })
-    }
-    worker.on('exit', handleExit)
-    worker.on('error', handleError)
-    worker.on('message', handleMessage)
-  })
-  return { type, event }
-}
-
-const Id = {
-  id: 1,
-  create() {
-    return this.id++
-  },
-}
-
-const Callback = {
-  callbacks: Object.create(null),
-  registerPromise() {
-    const id = Id.create()
-    const promise = new Promise((resolve) => {
-      this.callbacks[id] = resolve
-    })
-    return { id, promise }
-  },
-  resolve(id, message) {
-    this.callbacks[id](message)
-    delete this.callbacks[id]
-  },
-}
-
-const createRpc = (ipc) => {
-  const handleMessage = (message) => {
-    Callback.resolve(message.id, message)
-  }
-  ipc.onmessage = handleMessage
-  return {
-    ipc,
-    invoke(method, ...params) {
-      const { id, promise } = Callback.registerPromise()
-      const message = {
-        jsonrpc: '2.0',
-        id,
-        method,
-        params,
-      }
-      this.ipc.send(message)
-      return promise
-    },
-  }
 }
 
 const serveStatic = (root, skip = '') =>
