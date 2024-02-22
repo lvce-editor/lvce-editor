@@ -2,9 +2,8 @@
 
 import * as Assert from '../Assert/Assert.js'
 import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSearchSuggestions.js'
-import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
-import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js'
-import * as ElectronBrowserViewSuggestions from '../ElectronBrowserViewSuggestions/ElectronBrowserViewSuggestions.js'
+import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWebContentsView.js'
+import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
@@ -63,11 +62,11 @@ export const backgroundLoadContent = async (state, savedState) => {
   // it is not necessary to load keybindings for it
   const keyBindings = await KeyBindingsInitial.getKeyBindings()
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
-  const browserViewId = await ElectronBrowserView.createBrowserView(0)
-  await ElectronBrowserViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
+  const browserViewId = await ElectronWebContentsView.createWebContentsView(0)
+  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
   Assert.number(browserViewId)
-  await ElectronBrowserViewFunctions.resizeBrowserView(browserViewId, x, y + headerHeight, width, height - headerHeight)
-  const { newTitle } = await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+  await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
+  const { newTitle } = await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
   return {
     title: newTitle,
     uri: `simple-browser://${browserViewId}`,
@@ -95,11 +94,11 @@ export const loadContent = async (state, savedState) => {
   const browserViewWidth = width
   const browserViewHeight = height - headerHeight
   if (id) {
-    const actualId = await ElectronBrowserView.createBrowserView(id, uid)
-    await ElectronBrowserViewFunctions.setFallthroughKeyBindings(keyBindings)
-    await ElectronBrowserViewFunctions.resizeBrowserView(actualId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
+    const actualId = await ElectronWebContentsView.createWebContentsView(id, uid)
+    await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(keyBindings)
+    await ElectronWebContentsViewFunctions.resizeWebContentsView(actualId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
     if (id !== actualId) {
-      await ElectronBrowserViewFunctions.setIframeSrc(actualId, iframeSrc)
+      await ElectronWebContentsViewFunctions.setIframeSrc(actualId, iframeSrc)
     }
     return {
       ...state,
@@ -111,12 +110,12 @@ export const loadContent = async (state, savedState) => {
   }
 
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
-  const browserViewId = await ElectronBrowserView.createBrowserView(/* restoreId */ 0, uid)
-  await ElectronBrowserViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
-  await ElectronBrowserViewFunctions.resizeBrowserView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
+  const browserViewId = await ElectronWebContentsView.createWebContentsView(/* restoreId */ 0, uid)
+  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
+  await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
-  await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
-  const { title, canGoBack, canGoForward } = await ElectronBrowserViewFunctions.getStats(browserViewId)
+  await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+  const { title, canGoBack, canGoForward } = await ElectronWebContentsViewFunctions.getStats(browserViewId)
   return {
     ...state,
     iframeSrc,
@@ -131,19 +130,18 @@ export const loadContent = async (state, savedState) => {
 
 export const show = async (state) => {
   const { browserViewId } = state
-  await ElectronBrowserViewFunctions.show(browserViewId)
+  await ElectronWebContentsViewFunctions.show(browserViewId)
 }
 
 export const hide = async (state) => {
   const { browserViewId } = state
-  await ElectronBrowserViewFunctions.hide(browserViewId)
+  await ElectronWebContentsViewFunctions.hide(browserViewId)
 }
 
 export const handleInput = async (state, value) => {
   const { x, y, width, height, hasSuggestionsOverlay, suggestionsEnabled, headerHeight } = state
   if (suggestionsEnabled) {
     if (IsEmptyString.isEmptyString(value) && hasSuggestionsOverlay) {
-      await ElectronBrowserViewSuggestions.disposeBrowserView()
       return {
         ...state,
         inputValue: value,
@@ -152,10 +150,6 @@ export const handleInput = async (state, value) => {
     } else {
       // TODO maybe show autocomplete for urls like browsers do
       const suggestions = await BrowserSearchSuggestions.get(value)
-      if (!hasSuggestionsOverlay) {
-        await ElectronBrowserViewSuggestions.createBrowserView(x + 70, y + headerHeight, 400, 400)
-      }
-      await ElectronBrowserViewSuggestions.setSuggestions(suggestions)
     }
   }
   return {
@@ -169,10 +163,10 @@ export const go = (state) => {
   const { inputValue, browserViewId, suggestionsEnabled, hasSuggestionsOverlay } = state
   const iframeSrc = IframeSrc.toIframeSrc(inputValue)
   // TODO await promises
-  void ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
-  void ElectronBrowserViewFunctions.focus(browserViewId)
+  void ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+  void ElectronWebContentsViewFunctions.focus(browserViewId)
   if (suggestionsEnabled && hasSuggestionsOverlay) {
-    void ElectronBrowserViewSuggestions.disposeBrowserView()
+    // void ElectronBrowserViewSuggestions.disposeBrowserView()
   }
   return {
     ...state,
@@ -212,8 +206,8 @@ export const handleTitleUpdated = async (state, title) => {
 
 export const dispose = async (state) => {
   const { browserViewId, suggestionsEnabled, hasSuggestionsOverlay } = state
-  await ElectronBrowserView.disposeBrowserView(browserViewId)
+  await ElectronWebContentsView.disposeWebContentsView(browserViewId)
   if (suggestionsEnabled && hasSuggestionsOverlay) {
-    await ElectronBrowserViewSuggestions.disposeBrowserView()
+    // await ElectronBrowserViewSuggestions.disposeBrowserView()
   }
 }

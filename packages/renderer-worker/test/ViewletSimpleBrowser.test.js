@@ -4,7 +4,7 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js', () => {
+jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js', () => {
   return {
     reload: jest.fn(() => {
       throw new Error('not implemented')
@@ -21,7 +21,7 @@ jest.unstable_mockModule('../src/parts/ElectronBrowserViewFunctions/ElectronBrow
     setIframeSrc: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    resizeBrowserView: jest.fn(() => {
+    resizeWebContentsView: jest.fn(() => {
       throw new Error('not implemented')
     }),
     setFallthroughKeyBindings: jest.fn(() => {
@@ -37,9 +37,9 @@ jest.unstable_mockModule('../src/parts/ElectronBrowserViewFunctions/ElectronBrow
     },
   }
 })
-jest.unstable_mockModule('../src/parts/ElectronBrowserView/ElectronBrowserView.js', () => {
+jest.unstable_mockModule('../src/parts/ElectronWebContentsView/ElectronWebContentsView.js', () => {
   return {
-    createBrowserView: jest.fn(() => {
+    createWebContentsView: jest.fn(() => {
       return 1
     }),
   }
@@ -54,8 +54,8 @@ jest.unstable_mockModule('../src/parts/KeyBindingsInitial/KeyBindingsInitial.js'
 })
 
 const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
-const ElectronBrowserViewFunctions = await import('../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js')
-const ElectronBrowserView = await import('../src/parts/ElectronBrowserView/ElectronBrowserView.js')
+const ElectronWebContentsViewFunctions = await import('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js')
+const ElectronWebContentsView = await import('../src/parts/ElectronWebContentsView/ElectronWebContentsView.js')
 
 test('create', () => {
   const state = ViewletSimpleBrowser.create()
@@ -64,13 +64,13 @@ test('create', () => {
 
 test('loadContent', async () => {
   // @ts-ignore
-  ElectronBrowserView.createBrowserView.mockImplementation(() => {
+  ElectronWebContentsView.createWebContentsView.mockImplementation(() => {
     return 1
   })
   // @ts-ignore
-  ElectronBrowserViewFunctions.resizeBrowserView.mockImplementation(() => {})
+  // ElectronWebContentsViewFunctions.resizeBrowserView.mockImplementation(() => {})
   // @ts-ignore
-  ElectronBrowserViewFunctions.setIframeSrc.mockImplementation(() => {})
+  ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 0, 0)
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
     iframeSrc: 'https://example.com',
@@ -79,39 +79,39 @@ test('loadContent', async () => {
 
 test('loadContent - restore id - same browser view', async () => {
   // @ts-ignore
-  ElectronBrowserView.createBrowserView.mockImplementation(() => {
+  ElectronWebContentsView.createWebContentsView.mockImplementation(() => {
     return 1
   })
   // @ts-ignore
-  ElectronBrowserViewFunctions.setIframeSrc.mockImplementation(() => {})
+  ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 0, 0)
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
     iframeSrc: 'https://example.com',
   })
-  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1, 0)
-  expect(ElectronBrowserViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith([])
-  expect(ElectronBrowserViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith([])
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
 })
 
 test('loadContent - restore id - browser view does not exist yet', async () => {
   // @ts-ignore
-  ElectronBrowserView.createBrowserView.mockImplementation(() => {
+  ElectronWebContentsView.createWebContentsView.mockImplementation(() => {
     return 2
   })
   // @ts-ignore
-  ElectronBrowserViewFunctions.setIframeSrc.mockImplementation(() => {})
+  ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 0, 0)
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
     iframeSrc: 'https://example.com',
   })
-  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1, 0)
-  expect(ElectronBrowserViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith([])
-  expect(ElectronBrowserViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://example.com')
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith([])
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://example.com')
 })
 
 test('handleTitleUpdated', async () => {
