@@ -151,6 +151,20 @@ export const getModuleId = (commandId) => {
     case 'ElectronBrowserViewFunctions.setFallthroughKeyBindings':
     case 'ElectronBrowserViewFunctions.getStats':
       return ModuleId.ElectronBrowserViewFunctions
+    case 'ElectronWebContentsViewFunctions.resizeBrowserView':
+    case 'ElectronWebContentsViewFunctions.setIframeSrc':
+    case 'ElectronWebContentsViewFunctions.focus':
+    case 'ElectronWebContentsViewFunctions.openDevtools':
+    case 'ElectronWebContentsViewFunctions.reload':
+    case 'ElectronWebContentsViewFunctions.forward':
+    case 'ElectronWebContentsViewFunctions.backward':
+    case 'ElectronWebContentsViewFunctions.cancelNavigation':
+    case 'ElectronWebContentsViewFunctions.hide':
+    case 'ElectronWebContentsViewFunctions.inspectElement':
+    case 'ElectronWebContentsViewFunctions.copyImageAt':
+    case 'ElectronWebContentsViewFunctions.setFallthroughKeyBindings':
+    case 'ElectronWebContentsViewFunctions.getStats':
+      return ModuleId.ElectronWebContentsViewFunctions
     case 'FileSystem.chmod':
     case 'FileSystem.copy':
     case 'FileSystem.createFile':

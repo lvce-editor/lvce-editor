@@ -81,6 +81,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronWebContents
     case 'ElectronWebContentsView':
       return ModuleId.ElectronWebContentsView
+    case 'ElectronWebContentsViewFunctions':
+      return ModuleId.ElectronWebContentsViewFunctions
     default:
       throw new CommandNotFoundError(commandId)
   }
