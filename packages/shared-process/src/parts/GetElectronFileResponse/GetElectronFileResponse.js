@@ -26,7 +26,7 @@ export const getElectronFileResponse = async (url, request) => {
         }
       }
     }
-    const content = await GetElectronFileResponseContent.getElectronFileResponseContent(absolutePath, url)
+    const content = await GetElectronFileResponseContent.getElectronFileResponseContent(request, absolutePath, url)
     const headers = GetHeaders.getHeaders(absolutePath)
     headers['Cache-Control'] = 'public, max-age=0, must-revalidate'
     if (etag) {
