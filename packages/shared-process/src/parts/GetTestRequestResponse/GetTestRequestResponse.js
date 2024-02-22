@@ -6,8 +6,8 @@ import * as GetPathName from '../GetPathName/GetPathName.js'
 import * as GetTestPath from '../GetTestPath/GetTestPath.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 
-export const getTestRequestResponse = async (req, indexHtmlPath) => {
-  const pathName = getPathName(req)
+export const getTestRequestResponse = async (request, indexHtmlPath) => {
+  const pathName = getPathName(request)
   if (pathName.endsWith('.html')) {
     const body = await readFile(indexHtmlPath, 'utf8')
     return {
