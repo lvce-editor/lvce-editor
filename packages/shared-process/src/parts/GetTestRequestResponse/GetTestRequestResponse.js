@@ -4,6 +4,9 @@ import * as CreateTestOverview from '../CreateTestOverview/CreateTestOverview.js
 import * as GetPathName from '../GetPathName/GetPathName.js'
 import * as GetTestPath from '../GetTestPath/GetTestPath.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
+import * as ContentSecurityPolicy from '../ContentSecurityPolicy/ContentSecurityPolicy.js'
+import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
+import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js'
 
 export const getTestRequestResponse = async (request, indexHtmlPath) => {
   const pathName = GetPathName.getPathName(request)
@@ -27,6 +30,9 @@ export const getTestRequestResponse = async (request, indexHtmlPath) => {
         status: HttpStatusCode.MultipleChoices,
         headers: {
           'Cache-Control': 'public, max-age=0, must-revalidate',
+          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+          [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
+          'Content-Security-Policy': "default-src 'none'",
         },
       },
     }
