@@ -1,6 +1,8 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import * as CreateTestOverview from '../CreateTestOverview/CreateTestOverview.js'
+import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js'
+import * as CrossOriginOpenerPolicy from '../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js'
 import * as GetPathName from '../GetPathName/GetPathName.js'
 import * as GetTestPath from '../GetTestPath/GetTestPath.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
@@ -27,6 +29,9 @@ export const getTestRequestResponse = async (request, indexHtmlPath) => {
         status: HttpStatusCode.MultipleChoices,
         headers: {
           'Cache-Control': 'public, max-age=0, must-revalidate',
+          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+          [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
+          'Content-Security-Policy': "default-src 'none'",
         },
       },
     }
