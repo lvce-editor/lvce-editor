@@ -5,6 +5,7 @@ import * as GetElectronFileResponseRelativePath from '../GetElectronFileResponse
 import * as GetEtag from '../GetEtag/GetEtag.js'
 import * as GetHeaders from '../GetHeaders/GetHeaders.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
+import * as GetNotFoundResponse from '../GetNotFoundResponse/GetNotFoundResponse.js'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.js'
 import * as Logger from '../Logger/Logger.js'
 
@@ -41,14 +42,7 @@ export const getElectronFileResponse = async (url, request) => {
     }
   } catch (error) {
     if (IsEnoentError.isEnoentError(error)) {
-      return {
-        body: 'not-found',
-        init: {
-          status: HttpStatusCode.NotFound,
-          statusText: 'not-found',
-          headers: {},
-        },
-      }
+      return GetNotFoundResponse.getNotFoundResponse()
     }
     Logger.error(error)
     return {
