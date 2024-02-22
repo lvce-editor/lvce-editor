@@ -22,8 +22,8 @@ const HttpServerResponse = await import('../src/parts/HttpServerResponse/HttpSer
 
 test('handleRequestTest', async () => {
   const request = {}
-  const socket = {}
   const indexHtmlPath = '/test/index.html'
+  const socket = {}
   jest.spyOn(GetTestRequestResponse, 'getTestRequestResponse').mockResolvedValue({
     body: 'test',
     init: {
@@ -31,7 +31,7 @@ test('handleRequestTest', async () => {
     },
   })
   jest.spyOn(HttpServerResponse, 'send').mockImplementation(() => {})
-  await HandleRequestTest.handleRequestTest(request, socket, indexHtmlPath)
+  await HandleRequestTest.handleRequestTest(request, indexHtmlPath, socket)
   expect(HttpServerResponse.send).toHaveBeenCalledTimes(1)
   expect(HttpServerResponse.send).toHaveBeenCalledWith({}, {}, { body: 'test', init: { status: 200 } })
 })
