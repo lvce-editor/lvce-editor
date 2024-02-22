@@ -38,13 +38,9 @@ if (!argv2) {
   argv2 = resolve(__dirname, '../../../playground')
 }
 
-const FOLDER = resolve(process.cwd(), argv2)
-
 const isImmutable = argv.includes('--immutable')
 
 const isPublic = argv.includes('--public')
-
-const IS_WINDOWS = process.platform === 'win32'
 
 const addSemicolon = (line) => {
   return line + ';'
@@ -250,8 +246,6 @@ const serveStatic = (root, skip = '') =>
     if (relativePath.endsWith('/')) {
       relativePath += 'index.html'
     }
-    const isTypeScript = relativePath.endsWith('.ts')
-
     // TODO on linux this could be more optimized because it is already encoded correctly (no backslashes)
     const filePath = fileURLToPath(`file://${root}${relativePath}`)
     let fileStat
@@ -360,112 +354,13 @@ const createApp = () => {
 
 const app = createApp()
 
-const getTestPath = () => {
-  if (process.env.TEST_PATH) {
-    const testPath = process.env.TEST_PATH
-    if (isAbsolute(testPath)) {
-      return testPath
-    }
-    return join(process.cwd(), testPath)
-  }
-  return join(ROOT, 'packages', 'extension-host-worker-tests')
-}
-
-const generateTestOverviewHtml = (dirents) => {
-  const pre = `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tests</title>
-  </head>
-  <body>
-    <h1>Tests</h1>
-    <p>Available Tests</p>
-    <ul>
-`
-  let middle = ``
-  // TODO properly escape name
-  for (const dirent of dirents) {
-    if (dirent.endsWith('.js') && !dirent.startsWith('_')) {
-      const name = dirent.slice(0, -'.js'.length)
-      middle += `      <li><a href="./${name}.html">${name}</a></li>
-`
-    }
-  }
-
-  const post = `    </ul>
-  </body>
-</html>
-`
-  return pre + middle + post
-}
-
-const createTestOverview = async (testPathSrc) => {
-  const dirents = await readdir(testPathSrc)
-  const testOverviewHtml = generateTestOverviewHtml(dirents)
-  return testOverviewHtml
-}
-
 /**
  *
  * @param {IncomingMessage} req
  * @param {ServerResponse} res
  */
 const serveTests = async (req, res, next) => {
-  const pathName = getPathName(req)
-  if (pathName.endsWith('.html')) {
-    res.writeHead(StatusCode.Ok, {
-      'Content-Type': 'text/html',
-      [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-      [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
-      [ContentSecurityPolicyTests.key]: ContentSecurityPolicyTests.value,
-    })
-    try {
-      await pipeline(createReadStream(join(ROOT, 'static', 'index.html')), res)
-    } catch (error) {
-      // @ts-ignore
-      if (error && error.code === ErrorCodes.ERR_STREAM_PREMATURE_CLOSE) {
-        return
-      }
-      // @ts-ignore
-      if (error && error.code === ErrorCodes.EISDIR) {
-        res.statusCode = StatusCode.NotFound
-        res.end()
-        return
-      }
-      console.info('failed to send request', error)
-      res.statusCode = StatusCode.ServerError
-      // TODO escape error html
-      res.end(`${error}`)
-    }
-    return
-  }
-  if (pathName === '/tests/') {
-    const testPath = getTestPath()
-    const testPathSrc = join(testPath, 'src')
-
-    try {
-      const testOverview = await createTestOverview(testPathSrc)
-      res.setHeader('Cache-Control', CachingHeaders.NoCache)
-      res.statusCode = StatusCode.MultipleChoices
-      res.end(testOverview)
-    } catch (error) {
-      // @ts-ignore
-      if (error && error.code === ErrorCodes.ENOENT) {
-        res.statusCode = StatusCode.NotFound
-        // TODO escape path for html
-        res.end(`No test files found at ${testPathSrc}`)
-        return
-      }
-      res.statusCode = StatusCode.ServerError
-      // TODO escape error html
-      res.end(`${error}`)
-    }
-    return
-  }
-
-  next()
+  sendHandle(req, res.socket, 'HandleRequestTest.handleRequestTest')
 }
 
 const getAbsolutePath = (extensionName) => {
