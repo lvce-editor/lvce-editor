@@ -1,3 +1,4 @@
+import { readFile } from 'fs/promises'
 import { isAbsolute, join } from 'path'
 import * as CreateTestOverview from '../CreateTestOverview/CreateTestOverview.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
@@ -19,11 +20,12 @@ const getTestPath = () => {
   return join(Root.root, 'packages', 'extension-host-worker-tests')
 }
 
-export const getTestRequestResponse = async (req) => {
+export const getTestRequestResponse = async (req, indexHtmlPath) => {
   const pathName = getPathName(req)
   if (pathName.endsWith('.html')) {
+    const body = await readFile(indexHtmlPath, 'utf8')
     return {
-      body: '',
+      body,
       init: {
         status: HttpStatusCode.Ok,
         headers: {},
