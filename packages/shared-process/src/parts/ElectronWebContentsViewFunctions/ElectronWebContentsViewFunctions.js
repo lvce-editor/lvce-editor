@@ -2,11 +2,11 @@ import * as ParentIpc from '../ParentIpc/ParentIpc.js'
 import * as ElectronWebContents from '../ElectronWebContents/ElectronWebContents.js'
 
 export const resizeBrowserView = (id, x, y, width, height) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.resizeBrowserView', id, x, y, width, height)
+  return ParentIpc.invoke('ElectronWebContentsViewFunctions.resizeBrowserView', id, x, y, width, height)
 }
 
 export const setIframeSrc = async (id, iframeSrc) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.setIframeSrc', id, iframeSrc)
+  return ParentIpc.invoke('ElectronWebContentsViewFunctions.setIframeSrc', id, iframeSrc)
 }
 
 const callFunction = (id, functionName) => {
@@ -24,25 +24,25 @@ export const forward = ElectronWebContents.forward
 export const backward = ElectronWebContents.backward
 
 export const cancelNavigation = (id) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.cancelNavigation', id)
+  return ParentIpc.invoke('ElectronWebContentsViewFunctions.cancelNavigation', id)
 }
 
 export const show = (id) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.show', id)
+  return ParentIpc.invoke('ElectronWebContentsViewFunctions.show', id)
 }
 
 export const hide = (id) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.hide', id)
+  return ParentIpc.invoke('ElectronWebContentsViewFunctions.hide', id)
 }
 
 export const inspectElement = ElectronWebContents.inspectElement
 
 export const copyImageAt = (id, x, y) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.copyImageAt', id, x, y)
+  return ParentIpc.invoke('ElectronWebContentsViewFunctions.copyImageAt', id, x, y)
 }
 
 export const setFallthroughKeyBindings = (fallthroughKeyBindings) => {
-  return ParentIpc.invoke('ElectronBrowserViewFunctions.setFallthroughKeyBindings', fallthroughKeyBindings)
+  return ParentIpc.invoke('ElectronWebContentsViewFunctions.setFallthroughKeyBindings', fallthroughKeyBindings)
 }
 
 export const getStats = (id) => {

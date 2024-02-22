@@ -58,6 +58,8 @@ export const load = (moduleId) => {
       return import('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
     case ModuleId.Exit:
       return import('../Exit/Exit.ipc.js')
+    case ModuleId.HandleRequestTest:
+      return import('../HandleRequestTest/HandleRequestTest.ipc.js')
     case ModuleId.ExtensionHost:
       return import('../ExtensionHost/ExtensionHost.ipc.js')
     case ModuleId.ExtensionManagement:
@@ -144,6 +146,8 @@ export const load = (moduleId) => {
       return import('../ElectronWebContents/ElectronWebContents.ipc.js')
     case ModuleId.ElectronWebContentsView:
       return import('../ElectronWebContentsView/ElectronWebContentsView.ipc.js')
+    case ModuleId.ElectronWebContentsViewFunctions:
+      return import('../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

@@ -321,6 +321,8 @@ export const getModuleId = (commandId) => {
     case 'ElectronWebContentsView.createWebContentsView':
     case 'ElectronWebContentsView.disposeWebContentsView':
       return ModuleId.ElectronWebContentsView
+    case 'HandleRequestTest.handleRequestTest':
+      return ModuleId.HandleRequestTest
     default:
       throw new CommandNotFoundError(commandId)
   }
