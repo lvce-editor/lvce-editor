@@ -1,26 +1,11 @@
-import { isAbsolute, join } from 'path'
+import { join } from 'path'
 import * as CreateTestOverview from '../CreateTestOverview/CreateTestOverview.js'
+import * as GetPathName from '../GetPathName/GetPathName.js'
+import * as GetTestPath from '../GetTestPath/GetTestPath.js'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
-import * as Root from '../Root/Root.js'
-
-const getPathName = (request) => {
-  const { pathname } = new URL(request.url || '', `https://${request.headers.host}`)
-  return pathname
-}
-
-const getTestPath = () => {
-  if (process.env.TEST_PATH) {
-    const testPath = process.env.TEST_PATH
-    if (isAbsolute(testPath)) {
-      return testPath
-    }
-    return join(process.cwd(), testPath)
-  }
-  return join(Root.root, 'packages', 'extension-host-worker-tests')
-}
 
 export const getTestRequestResponse = async (req) => {
-  const pathName = getPathName(req)
+  const pathName = GetPathName.getPathName(req)
   if (pathName.endsWith('.html')) {
     return {
       body: '',
@@ -31,7 +16,7 @@ export const getTestRequestResponse = async (req) => {
     }
   }
   if (pathName === '/tests/') {
-    const testPath = getTestPath()
+    const testPath = GetTestPath.getTestPath()
     const testPathSrc = join(testPath, 'src')
     const body = await CreateTestOverview.createTestOverview(testPathSrc)
     return {
