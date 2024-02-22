@@ -10,17 +10,28 @@ jest.unstable_mockModule('../src/parts/GetTestRequestResponse/GetTestRequestResp
   }),
 }))
 
+jest.unstable_mockModule('../src/parts/HttpServerResponse/HttpServerResponse.js', () => ({
+  send: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
+
 const GetTestRequestResponse = await import('../src/parts/GetTestRequestResponse/GetTestRequestResponse.js')
 const HandleRequestTest = await import('../src/parts/HandleRequestTest/HandleRequestTest.js')
+const HttpServerResponse = await import('../src/parts/HttpServerResponse/HttpServerResponse.js')
 
-test.skip('handleRequestTest', async () => {
+test('handleRequestTest', async () => {
   const request = {}
   const socket = {}
+  const indexHtmlPath = '/test/index.html'
   jest.spyOn(GetTestRequestResponse, 'getTestRequestResponse').mockResolvedValue({
     body: 'test',
     init: {
       status: 200,
     },
   })
-  await HandleRequestTest.handleRequestTest(request, socket)
+  jest.spyOn(HttpServerResponse, 'send').mockImplementation(() => {})
+  await HandleRequestTest.handleRequestTest(request, socket, indexHtmlPath)
+  expect(HttpServerResponse.send).toHaveBeenCalledTimes(1)
+  expect(HttpServerResponse.send).toHaveBeenCalledWith({}, {}, { body: 'test', init: { status: 200 } })
 })
