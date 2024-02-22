@@ -1,5 +1,5 @@
-import { readFile } from 'fs/promises'
-import { join } from 'path'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import * as CreateTestOverview from '../CreateTestOverview/CreateTestOverview.js'
 import * as GetPathName from '../GetPathName/GetPathName.js'
 import * as GetTestPath from '../GetTestPath/GetTestPath.js'
