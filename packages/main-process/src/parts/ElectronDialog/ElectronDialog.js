@@ -31,10 +31,19 @@ const getWindow = (windowId) => {
 
 /**
  *
- * @param {{message:string, buttons:string[], type:'error'|'info'|'question'|'none'|'warning', detail?:string, title?:string, windowId?:number, productName?:string }} options
+ * @param {{message:string, buttons:string[], type:'error'|'info'|'question'|'none'|'warning', detail?:string, title?:string, windowId?:number, productName?:string, defaultId?:number  }} options
  * @returns
  */
-export const showMessageBox = async ({ message, buttons, type = ElectronMessageBoxType.Error, detail, title, windowId = -1, productName }) => {
+export const showMessageBox = async ({
+  message,
+  buttons,
+  type = ElectronMessageBoxType.Error,
+  detail,
+  title,
+  windowId = -1,
+  productName,
+  defaultId,
+}) => {
   Assert.string(message)
   Assert.array(buttons)
   const window = getWindow(windowId)
@@ -53,6 +62,7 @@ export const showMessageBox = async ({ message, buttons, type = ElectronMessageB
     cancelId: 1,
     detail,
     noLink: true,
+    defaultId,
   })
   const selectedButtonIndex = result.response
   return selectedButtonIndex
