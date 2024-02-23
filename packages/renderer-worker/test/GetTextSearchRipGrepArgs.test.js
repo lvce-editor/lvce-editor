@@ -8,7 +8,20 @@ test('getRipGrepArgs - threads', () => {
       searchString: 'test',
       useRegularExpression: false,
     }),
-  ).toEqual(['--smart-case', '--stats', '--json', '--threads', '1', '--ignore-case', '--fixed-strings', '--', 'test', '.'])
+  ).toEqual([
+    '--hidden',
+    '--no-require-git',
+    '--smart-case',
+    '--stats',
+    '--json',
+    '--threads',
+    '1',
+    '--ignore-case',
+    '--fixed-strings',
+    '--',
+    'test',
+    '.',
+  ])
 })
 
 test('getRipGrepArgs - isCaseSensitive', () => {
@@ -19,7 +32,20 @@ test('getRipGrepArgs - isCaseSensitive', () => {
       searchString: 'test',
       useRegularExpression: false,
     }),
-  ).toEqual(['--smart-case', '--stats', '--json', '--threads', '1', '--case-sensitive', '--fixed-strings', '--', 'test', '.'])
+  ).toEqual([
+    '--hidden',
+    '--no-require-git',
+    '--smart-case',
+    '--stats',
+    '--json',
+    '--threads',
+    '1',
+    '--case-sensitive',
+    '--fixed-strings',
+    '--',
+    'test',
+    '.',
+  ])
 })
 
 test('getRipGrepArgs - useRegularExpression', () => {
@@ -30,5 +56,5 @@ test('getRipGrepArgs - useRegularExpression', () => {
       searchString: 'test',
       useRegularExpression: true,
     }),
-  ).toEqual(['--smart-case', '--stats', '--json', '--threads', '1', '--ignore-case', '--regexp', 'test', '.'])
+  ).toEqual(['--hidden', '--no-require-git', '--smart-case', '--stats', '--json', '--threads', '1', '--ignore-case', '--regexp', 'test', '.'])
 })

@@ -107,7 +107,20 @@ test('textSearch - file', async () => {
   ])
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('TextSearch.search', {
-    ripGrepArgs: ['--smart-case', '--stats', '--json', '--threads', 'undefined', '--ignore-case', '--fixed-strings', '--', 'abc', '.'],
+    ripGrepArgs: [
+      '--hidden',
+      '--no-require-git',
+      '--smart-case',
+      '--stats',
+      '--json',
+      '--threads',
+      'undefined',
+      '--ignore-case',
+      '--fixed-strings',
+      '--',
+      'abc',
+      '.',
+    ],
     searchDir: '/test',
   })
 })
