@@ -1,5 +1,5 @@
 export const getRipGrepArgs = ({ threads, isCaseSensitive, searchString, useRegularExpression }) => {
-  const ripGrepArgs = ['--smart-case', '--stats', '--json']
+  const ripGrepArgs = ['--hidden', '--no-require-git', '--smart-case', '--stats', '--json']
   ripGrepArgs.push('--threads', `${threads}`)
   if (isCaseSensitive) {
     ripGrepArgs.push('--case-sensitive')
