@@ -15,8 +15,6 @@ const getModule = (moduleId) => {
   switch (moduleId) {
     case ModuleId.Help:
       return import('../CliHelp/CliHelp.js')
-    case ModuleId.Version:
-      return import('../CliVersion/CliVersion.js')
     case ModuleId.Web:
       return import('../CliWeb/CliWeb.js')
     case ModuleId.SharedProcess:
@@ -33,9 +31,6 @@ const getModuleId = (parsedArgs) => {
   if (parsedArgs[CliCommandType.Help]) {
     return ModuleId.Help
   }
-  if (parsedArgs[CliCommandType.Version]) {
-    return ModuleId.Version
-  }
   if (parsedArgs[CliCommandType.Web]) {
     return ModuleId.Web
   }
@@ -44,7 +39,8 @@ const getModuleId = (parsedArgs) => {
     arg0 === CliCommandType.List ||
     arg0 === CliCommandType.Link ||
     arg0 === CliCommandType.Unlink ||
-    parsedArgs[CliCommandType.Status]
+    parsedArgs[CliCommandType.Status] ||
+    parsedArgs[CliCommandType.Version]
   ) {
     return ModuleId.SharedProcess
   }
