@@ -1,4 +1,4 @@
-export const getRipGrepArgs = ({ threads, isCaseSensitive, searchString }) => {
+export const getRipGrepArgs = ({ threads, isCaseSensitive, searchString, useRegularExpression }) => {
   const ripGrepArgs = ['--smart-case', '--stats', '--json']
   ripGrepArgs.push('--threads', `${threads}`)
   if (isCaseSensitive) {
@@ -6,9 +6,13 @@ export const getRipGrepArgs = ({ threads, isCaseSensitive, searchString }) => {
   } else {
     ripGrepArgs.push('--ignore-case')
   }
-  ripGrepArgs.push('--fixed-strings')
-  ripGrepArgs.push('--')
-  ripGrepArgs.push(searchString)
+  if (useRegularExpression) {
+    ripGrepArgs.push('--regexp', searchString)
+  } else {
+    ripGrepArgs.push('--fixed-strings')
+    ripGrepArgs.push('--')
+    ripGrepArgs.push(searchString)
+  }
   ripGrepArgs.push('.')
   return ripGrepArgs
 }
