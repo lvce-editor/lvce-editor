@@ -10,7 +10,7 @@ import * as ViewletSearchStatusMessage from './ViewletSearchStatusMessage.js'
 export const handleUpdate = async (state, update) => {
   const partialNewState = { ...state, ...update }
   try {
-    const { height, itemHeight, minimumSliderSize, headerHeight, matchCase, value, threads } = partialNewState
+    const { height, itemHeight, minimumSliderSize, headerHeight, matchCase, value, threads, useRegularExpression } = partialNewState
     if (IsEmptyString.isEmptyString(value)) {
       return {
         ...partialNewState,
@@ -28,6 +28,7 @@ export const handleUpdate = async (state, update) => {
     const results = await TextSearch.textSearch(root, value, {
       threads,
       isCaseSensitive: matchCase,
+      useRegularExpression,
     })
     if (!Array.isArray(results)) {
       throw new Error(`results must be of type array`)
