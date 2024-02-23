@@ -1,12 +1,12 @@
 import * as Compare from '../Compare/Compare.js'
+import * as Focus from '../Focus/Focus.js'
 import * as Height from '../Height/Height.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
-import * as WhenExpression from '../WhenExpression/WhenExpression.js'
-import * as Focus from '../Focus/Focus.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as ViewletSearchHandleUpdate from './ViewletSearchHandleUpdate.js'
 
@@ -143,6 +143,10 @@ const getMatchStart = (preview, searchTerm) => {
 
 export const handleInput = (state, value, inputSource = InputSource.Script) => {
   return ViewletSearchHandleUpdate.handleUpdate(state, { value, inputSource })
+}
+
+export const submit = (state) => {
+  return ViewletSearchHandleUpdate.handleUpdate(state, { value: state.value, inputSource: InputSource.User })
 }
 
 const getFocusKey = (key) => {

@@ -64,5 +64,15 @@ export const getKeyBindings = () => {
       command: 'Search.focusPreserveCasePrevious',
       when: WhenExpression.FocusPreserveCase,
     },
+    {
+      key: KeyCode.Enter,
+      command: 'Search.submit',
+      when: WhenExpression.FocusSearchInput,
+    },
+    {
+      key: KeyCode.Enter,
+      command: 'Search.submit',
+      when: WhenExpression.FocusSearchReplaceInput,
+    },
   ]
 }

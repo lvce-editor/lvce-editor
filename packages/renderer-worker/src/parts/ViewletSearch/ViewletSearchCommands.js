@@ -16,6 +16,7 @@ export const Commands = {
   focusSearchValueNext: ViewletSearch.focusSearchValueNext,
   handleFocusIn: ViewletSearch.handleFocusIn,
   handleInput: ViewletSearch.handleInput,
+  submit: ViewletSearch.submit,
 }
 
 // prettier-ignore
