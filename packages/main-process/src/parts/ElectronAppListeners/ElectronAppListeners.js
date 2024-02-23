@@ -1,10 +1,10 @@
 import * as Debug from '../Debug/Debug.js'
-import * as ElectronBrowserViewState from '../ElectronBrowserViewState/ElectronBrowserViewState.js'
 import * as ElectronShell from '../ElectronShell/ElectronShell.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
 import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as Logger from '../Logger/Logger.js'
+import * as ShouldAllowNavigation from '../ShouldAllowNavigation/ShouldAllowNavigation.js'
 
 // TODO move this function to shared process
 export const handleBeforeQuit = () => {
@@ -39,7 +39,7 @@ export const handleWebContentsCreated = (event, webContents) => {
    * @returns
    */
   const handleWebContentsNavigate = (event) => {
-    if (ElectronBrowserViewState.hasWebContents(webContents.id)) {
+    if (ShouldAllowNavigation.shouldAllowNavigation(webContents.id)) {
       return
     }
     Logger.error('[main-process] Prevented webcontent navigation')
