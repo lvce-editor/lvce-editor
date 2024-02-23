@@ -5,7 +5,6 @@ export const createWebContentsView = async (ipc, restoreId, fallthroughKeyBindin
   const webContentsId = await ParentIpc.invoke('ElectronWebContentsView.createWebContentsView', restoreId)
   // TODO get window id from renderer worker
   await ParentIpc.invoke('ElectronWebContentsView.attachEventListeners', webContentsId)
-  console.log({ webContentsId })
   return webContentsId
 }
 
