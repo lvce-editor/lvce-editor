@@ -5,6 +5,11 @@ import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 export const getKeyBindings = () => {
   return [
     {
+      key: KeyModifier.CtrlCmd | KeyModifier.Alt | KeyCode.Enter,
+      command: 'Search.replaceAll',
+      when: WhenExpression.FocusSearchReplaceInput,
+    },
+    {
       key: KeyCode.DownArrow,
       command: 'Search.focusNext',
       when: WhenExpression.FocusSearchResults,
