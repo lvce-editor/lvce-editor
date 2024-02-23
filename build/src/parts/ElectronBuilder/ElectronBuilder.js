@@ -7,16 +7,16 @@ import * as BundleOptions from '../BundleOptions/BundleOptions.js'
 import * as Copy from '../Copy/Copy.js'
 import * as CreatePlaceholderElectronApp from '../CreatePlaceholderElectronApp/CreatePlaceholderElectronApp.js'
 import * as ElectronBuilderConfigType from '../ElectronBuilderConfigType/ElectronBuilderConfigType.js'
-import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as FileExtension from '../FileExtension/FileExtension.js'
+import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
-import * as Rename from '../Rename/Rename.js'
 import * as Remove from '../Remove/Remove.js'
+import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
-import * as FileExtension from '../FileExtension/FileExtension.js'
 
 // TODO don't need to include whole node-pty module
 // TODO maybe don't need to include nan module
@@ -39,13 +39,6 @@ const bundleElectronMaybe = async ({
   // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
   await build({ product, version, supportsAutoUpdate, shouldRemoveUnusedLocales, isMacos, arch, platform, isArchLinux, isAppImage })
-}
-
-const getElectronVersion = async () => {
-  const parsed = await JsonFile.readJson('packages/main-process/package.json')
-  const version = parsed.devDependencies.electron
-  const parsedVersion = version.startsWith('^') ? version.slice(1) : version
-  return parsedVersion
 }
 
 const copyElectronBuilderConfig = async ({ config, version, product, electronVersion, bundleMainProcess }) => {
@@ -289,7 +282,7 @@ export const build = async ({
   // @ts-ignore
   process.env.USE_HARD_LINKS = false
   const version = await Tag.getSemverVersion()
-  const electronVersion = await getElectronVersion()
+  const { electronVersion } = await GetElectronVersion.getElectronVersion()
   const bundleMainProcess = BundleOptions.bundleMainProcess
 
   const supportsAutoUpdate =
