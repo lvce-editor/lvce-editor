@@ -14,7 +14,7 @@ export const createWebContentsView = async () => {
     },
   })
   // TODO get browser window id from renderer worker
-  const browserWindow = BrowserWindow.getFocusedWindow()
+  const browserWindow = BrowserWindow.getFocusedWindow() || BrowserWindow.getAllWindows()[0]
   const { webContents } = view
   const { id } = webContents
   ElectronWebContentsViewState.add(id, browserWindow, view)
