@@ -4,7 +4,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
-  display: flex;
+  /* display: flex; */
   white-space: pre;
 }
 
