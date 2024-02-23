@@ -7,6 +7,7 @@ export const createWebContentsView = async (ipc, restoreId, fallthroughKeyBindin
   ElectronBrowserViewIpcState.add(webContentsId, ipc)
   // TODO get window id from renderer worker
   await ParentIpc.invoke('ElectronWebContentsView.attachEventListeners', webContentsId)
+  await ParentIpc.invoke('ElectronWebContentsViewFunctions.setBackgroundColor', webContentsId, 'white')
   return webContentsId
 }
 
