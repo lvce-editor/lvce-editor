@@ -2,6 +2,7 @@
   contain: strict;
   display: flex;
   height: 26px;
+  gap: 4px;
 }
 
 .SearchField {
