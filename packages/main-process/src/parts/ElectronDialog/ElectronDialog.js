@@ -3,6 +3,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as Logger from '../Logger/Logger.js'
+import * as GetElectronWindow from '../GetElectronWindow/GetElectronWindow.js'
 
 export const showOpenDialog = async (title, properties) => {
   Assert.string(title)
@@ -22,13 +23,6 @@ export const showOpenDialog = async (title, properties) => {
   return result.filePaths
 }
 
-const getWindow = (windowId) => {
-  if (windowId === -1) {
-    return ElectronWindow.getFocusedWindow()
-  }
-  return ElectronWindow.findById(windowId)
-}
-
 /**
  *
  * @param {{message:string, buttons:string[], type:'error'|'info'|'question'|'none'|'warning', detail?:string, title?:string, windowId?:number, productName?:string }} options
@@ -37,7 +31,7 @@ const getWindow = (windowId) => {
 export const showMessageBox = async ({ message, buttons, type = ElectronMessageBoxType.Error, detail, title, windowId = -1, productName }) => {
   Assert.string(message)
   Assert.array(buttons)
-  const window = getWindow(windowId)
+  const window = GetElectronWindow.getElectronWindow(windowId)
   if (!window) {
     Logger.info(`[main-process] cannot show dialog message because there is no window with id ${windowId}`)
     return
