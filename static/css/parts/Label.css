@@ -4,7 +4,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
-  /* display: flex; */
   white-space: pre;
 }
 
