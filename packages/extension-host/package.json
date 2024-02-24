@@ -18,24 +18,8 @@
   "engines": {
     "node": ">=18"
   },
-  "devDependencies": {
-    "@types/babel__code-frame": "^7.0.6",
-    "@types/lodash": "^4.14.202",
-    "@types/verror": "^1.10.9",
-    "@types/ws": "^8.5.10"
-  },
-  "dependencies": {
-    "@babel/code-frame": "^7.23.5",
-    "clean-stack": "^5.2.0",
-    "debug": "^4.3.4",
-    "exit-hook": "^4.0.0",
-    "lines-and-columns": "^2.0.4",
-    "ow": "^1.1.1",
-    "p-timeout": "^6.1.2",
-    "stack-utils": "^2.0.6",
-    "verror": "^1.10.1",
-    "ws": "^8.16.0"
-  },
+  "devDependencies": {},
+  "dependencies": {},
   "xo": {
     "rules": {
       "unicorn/filename-case": "off",
