@@ -2,18 +2,14 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
-import * as GetDebugValueClassName from '../GetDebugValueClassName/GetDebugValueClassName.js'
+import * as GetScopeExceptionVirtualDom from '../GetScopeExceptionVirtualDom/GetScopeExceptionVirtualDom.js'
+import * as GetScopePropertyVirtualDom from '../GetScopePropertyVirtualDom/GetScopePropertyVirtualDom.js'
+import * as GetScopeScopeVirtualDom from '../GetScopeScopeVirtualDom/GetScopeScopeVirtualDom.js'
+import * as GetScopeThisVirtualDom from '../GetScopeThisVirtualDom/GetScopeThisVirtualDom.js'
 import * as GetVisibleScopeItems from '../GetVisibleScopeItems/GetVisibleScopeItems.js'
 import * as ViewletRunAndDebugStrings from '../ViewletRunAndDebug/ViewletRunAndDebugStrings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-
-const debugRow3 = {
-  type: VirtualDomElements.Div,
-  className: ClassNames.DebugRow,
-  childCount: 3,
-  onPointerDown: 'handleClickScopeValue',
-}
 
 const scopeHeader = {
   type: VirtualDomElements.Div,
@@ -25,6 +21,7 @@ const scopeHeader = {
   childCount: 2,
   onPointerDown: 'handleClickSectionScope',
 }
+
 const scopeHeaderExpanded = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugSectionHeader,
@@ -34,13 +31,6 @@ const scopeHeaderExpanded = {
   childCount: 2,
   onPointerDown: 'handleClickSectionScope',
 }
-const textScope = text(ViewletRunAndDebugStrings.scope())
-const separator = text(': ')
-const debugPropertyKey = {
-  type: VirtualDomElements.Span,
-  className: 'DebugValue ' + ClassNames.DebugPropertyKey,
-  childCount: 1,
-}
 
 const debugPausedMessage = {
   type: VirtualDomElements.Div,
@@ -49,98 +39,7 @@ const debugPausedMessage = {
 }
 const textNotPaused = text(ViewletRunAndDebugStrings.notPaused())
 
-const getScopeThisVirtualDom = (scope) => {
-  const { indent, key, value, valueType } = scope
-  const className = GetDebugValueClassName.getDebugValueClassName(valueType)
-  return [
-    {
-      type: VirtualDomElements.Div,
-      className: ClassNames.DebugRow,
-      paddingLeft: indent,
-      childCount: 3,
-      onPointerDown: 'handleClickScopeValue',
-    },
-    {
-      type: VirtualDomElements.Span,
-      className: 'DebugValue DebugPropertyKey',
-      childCount: 1,
-    },
-    text(key),
-    separator,
-    {
-      type: VirtualDomElements.Span,
-      className: 'DebugValue ' + className,
-      childCount: 1,
-    },
-    text(value),
-  ]
-}
-
-const getScopeExceptionVirtualDom = (scope) => {
-  const { key, value } = scope
-  return [
-    debugRow3,
-    {
-      type: VirtualDomElements.Span,
-      childCount: 1,
-    },
-    text(key),
-    separator,
-
-    {
-      type: VirtualDomElements.Span,
-      childCount: 1,
-    },
-    text(value),
-  ]
-}
-
-const getScopeScopeVirtualDom = (scope) => {
-  const { key, isExpanded, isFocused } = scope
-  let className = ClassNames.DebugRow
-  if (isFocused) {
-    className += ' TreeItemActive'
-  }
-  return [
-    {
-      type: VirtualDomElements.Div,
-      className,
-      childCount: 2,
-      onPointerDown: 'handleClickScopeValue',
-      ariaExpanded: isExpanded,
-    },
-    isExpanded ? GetChevronVirtualDom.getChevronDownVirtualDom() : GetChevronVirtualDom.getChevronRightVirtualDom(),
-    {
-      type: VirtualDomElements.Span,
-      className: 'DebugValue DebugValueScopeName',
-      childCount: 1,
-    },
-    text(key),
-  ]
-}
-
-const getScopePropertyVirtualDom = (scope) => {
-  const { indent, key, value, valueType } = scope
-  const className = GetDebugValueClassName.getDebugValueClassName(valueType)
-  return [
-    {
-      type: VirtualDomElements.Div,
-      className: ClassNames.DebugRow,
-      paddingLeft: indent,
-      childCount: 3,
-      onPointerDown: 'handleClickScopeValue',
-    },
-    debugPropertyKey,
-    text(key),
-    separator,
-    {
-      type: VirtualDomElements.Span,
-      className: 'DebugValue ' + className,
-      childCount: 1,
-    },
-    text(value),
-  ]
-}
+const textScope = text(ViewletRunAndDebugStrings.scope())
 
 const getNoopVirtualDom = () => {
   return []
@@ -149,13 +48,13 @@ const getNoopVirtualDom = () => {
 const getScopeRenderer = (type) => {
   switch (type) {
     case DebugScopeChainType.This:
-      return getScopeThisVirtualDom
+      return GetScopeThisVirtualDom.getScopeThisVirtualDom
     case DebugScopeChainType.Exception:
-      return getScopeExceptionVirtualDom
+      return GetScopeExceptionVirtualDom.getScopeExceptionVirtualDom
     case DebugScopeChainType.Scope:
-      return getScopeScopeVirtualDom
+      return GetScopeScopeVirtualDom.getScopeScopeVirtualDom
     case DebugScopeChainType.Property:
-      return getScopePropertyVirtualDom
+      return GetScopePropertyVirtualDom.getScopePropertyVirtualDom
     default:
       return getNoopVirtualDom
   }
