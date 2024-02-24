@@ -21,6 +21,7 @@ const scopeHeader = {
   childCount: 2,
   onPointerDown: 'handleClickSectionScope',
 }
+
 const scopeHeaderExpanded = {
   type: VirtualDomElements.Div,
   className: ClassNames.DebugSectionHeader,
