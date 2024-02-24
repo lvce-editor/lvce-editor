@@ -2,35 +2,8 @@ import * as ElectronDispositionType from '../ElectronDispositionType/ElectronDis
 import * as ElectronInputType from '../ElectronInputType/ElectronInputType.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
 import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js'
+import * as GetKeyBindingIdentifier from '../GetKeyBindingIdentifier/GetKeyBindingIdentifier.js'
 import * as Logger from '../Logger/Logger.js'
-
-const normalizeKey = (key) => {
-  if (key === ' ') {
-    return 'Space'
-  }
-  if (key.length === 1) {
-    return key.toLowerCase()
-  }
-  return key
-}
-
-const getIdentifier = (input) => {
-  let identifier = ''
-  if (input.control) {
-    identifier += 'ctrl+'
-  }
-  if (input.shift) {
-    identifier += 'shift+'
-  }
-  if (input.alt) {
-    identifier += 'alt+'
-  }
-  if (input.meta) {
-    identifier += 'meta+'
-  }
-  identifier += normalizeKey(input.key)
-  return identifier
-}
 
 export const windowOpen = {
   key: 'window-open',
@@ -171,7 +144,7 @@ export const beforeInput = {
       }
     }
     const falltroughKeyBindings = [] // TODO
-    const identifier = getIdentifier(input)
+    const identifier = GetKeyBindingIdentifier.getKeyBindingIdentifier(input)
     for (const fallThroughKeyBinding of falltroughKeyBindings) {
       if (fallThroughKeyBinding.key === identifier) {
         event.preventDefault()
