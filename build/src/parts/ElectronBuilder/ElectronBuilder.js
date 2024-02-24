@@ -47,6 +47,7 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
   // }
   const mainProcessPath = bundleMainProcess ? `packages/main-process/dist/mainProcessMain.js` : `packages/main-process/src/mainProcessMain.js`
   await Template.write(config, 'build/.tmp/electron-builder/package.json', {
+    '@@SNAP_NAME@@': product.snapName,
     '@@NAME@@': product.applicationName,
     '@@AUTHOR@@': product.linuxMaintainer,
     '@@VERSION@@': version,
@@ -119,7 +120,7 @@ const getFinalFileName = ({ config, version, product }) => {
     case ElectronBuilderConfigType.WindowsExe:
       return `build/.tmp/electron-builder/dist/${product.windowsExecutableName} Setup ${version}.${FileExtension.Exe}`
     case ElectronBuilderConfigType.Snap:
-      return `build/.tmp/electron-builder/dist/${product.applicationName}_${version}_amd64.${FileExtension.Snap}`
+      return `build/.tmp/electron-builder/dist/${product.snapName}_${version}_amd64.${FileExtension.Snap}`
     case ElectronBuilderConfigType.Mac:
       return `build/.tmp/electron-builder/dist/${product.applicationName}-${version}.${FileExtension.Dmg}`
     case ElectronBuilderConfigType.AppImage:
@@ -144,7 +145,7 @@ const getReleaseFileName = ({ config, product, arch }) => {
       }
       return `${product.windowsExecutableName}.exe`
     case ElectronBuilderConfigType.Snap:
-      return `${product.applicationName}.snap`
+      return `${product.snapName}.snap`
     case ElectronBuilderConfigType.Mac:
       if (arch === 'x64') {
         return `${product.applicationName}-amd64.dmg`
