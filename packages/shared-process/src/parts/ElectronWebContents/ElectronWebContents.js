@@ -75,7 +75,3 @@ export const handleBrowserViewDestroyed = (id) => {
   ElectronBrowserViewState.remove(id)
   ElectronBrowserViewIpcState.remove(id)
 }
-
-export const handleKeyBinding = (identifier) => {
-  console.log({ identifier })
-}
