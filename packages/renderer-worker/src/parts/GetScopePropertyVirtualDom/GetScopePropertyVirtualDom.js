@@ -29,10 +29,10 @@ export const getScopePropertyVirtualDom = (scope) => {
   })
   if (isExpanded) {
     dom[0].childCount++
-    dom.push(GetChevronVirtualDom.getChevronDownVirtualDom())
+    dom.push(GetChevronVirtualDom.getChevronDownVirtualDom('DebugPropertyChevron'))
   } else if (isCollapsed) {
     dom[0].childCount++
-    dom.push(GetChevronVirtualDom.getChevronRightVirtualDom())
+    dom.push(GetChevronVirtualDom.getChevronRightVirtualDom('DebugPropertyChevron'))
   }
   dom.push(
     debugPropertyKey,
