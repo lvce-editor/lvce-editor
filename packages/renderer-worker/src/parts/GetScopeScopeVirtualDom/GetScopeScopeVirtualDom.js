@@ -1,18 +1,14 @@
 import * as ClassNames from '../ClassNames/ClassNames.js'
+import * as DebugItemFlags from '../DebugItemFlags/DebugItemFlags.js'
 import * as GetChevronVirtualDom from '../GetChevronVirtualDom/GetChevronVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
-const debugRow3 = {
-  type: VirtualDomElements.Div,
-  className: ClassNames.DebugRow,
-  childCount: 3,
-  onPointerDown: 'handleClickScopeValue',
-}
-
 export const getScopeScopeVirtualDom = (scope) => {
-  const { key, isExpanded, isFocused } = scope
+  const { key, flags } = scope
   let className = ClassNames.DebugRow
+  const isFocused = flags & DebugItemFlags.Focused
+  const isExpanded = flags & DebugItemFlags.Expanded
   if (isFocused) {
     className += ' TreeItemActive'
   }
