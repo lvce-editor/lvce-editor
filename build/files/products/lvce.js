@@ -4,6 +4,8 @@ export const nameLong = 'Lvce Editor'
 
 export const windowsExecutableName = 'Lvce Editor'
 
+export const snapName = 'lvce-editor'
+
 export const comment = 'Web Based Text Editor That Aims To Have Low Memory Usage '
 
 export const applicationName = 'lvce'

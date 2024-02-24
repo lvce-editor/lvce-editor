@@ -1,5 +1,5 @@
 {
-  "name": "@@NAME@@",
+  "name": "@@SNAP_NAME@@",
   "main": "@@MAIN@@",
   "author": "@@AUTHOR@@",
   "description": "abc",
@@ -17,7 +17,7 @@
         "GenericName": "Text Editor",
         "StartupNotify": "false",
         "StartupWMClass": "@@NAME@@",
-        "Keywords": "@@NAME@@;"
+        "Keywords": "@@SNAP_NAME@@;"
       },
       "target": [
         {
