@@ -148,15 +148,12 @@ export const beforeInput = {
     const identifier = GetKeyBindingIdentifier.getKeyBindingIdentifier(input)
     const matches = falltroughKeyBindings.includes(identifier)
     if (matches) {
-      console.log('matches')
       event.preventDefault()
       return {
         result: undefined,
         messages: [['handleKeyBinding', identifier]],
       }
     }
-    console.log({ falltroughKeyBindings })
-    console.log('not matches')
     return {
       result: undefined,
       messages: [],
