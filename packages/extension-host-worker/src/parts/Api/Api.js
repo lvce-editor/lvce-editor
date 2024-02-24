@@ -72,6 +72,9 @@ export const api = {
   registerDiagnosticProvider: ExtensionHostDiagnostic.registerDiagnosticProvider,
   executeDiagnosticProvider: ExtensionHostDiagnostic.executeDiagnosticProvider,
 
+  // Dialog
+  showInformationMessage:
+
   // Env
   env: ExtensionHostEnv.env,
 
