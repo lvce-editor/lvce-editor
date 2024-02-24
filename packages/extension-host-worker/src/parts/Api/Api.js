@@ -12,6 +12,7 @@ import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHo
 import * as ExtensionHostDiagnostic from '../ExtensionHostDiagnostic/ExtensionHostDiagnostic.js'
 import * as ExtensionHostEnv from '../ExtensionHostEnv/ExtensionHostEnv.js'
 import * as ExtensionHostExec from '../ExtensionHostExec/ExtensionHostExec.js'
+import * as ExtensionHostDialog from '../ExtensionHostDialog/ExtensionHostDialog.js'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostGetOffset from '../ExtensionHostGetOffset/ExtensionHostGetOffset.js'
@@ -71,6 +72,9 @@ export const api = {
   // Diagnostic
   registerDiagnosticProvider: ExtensionHostDiagnostic.registerDiagnosticProvider,
   executeDiagnosticProvider: ExtensionHostDiagnostic.executeDiagnosticProvider,
+
+  // Dialog
+  showInformationMessage:ExtensionHostDialog.showInformationMessage,
 
   // Env
   env: ExtensionHostEnv.env,

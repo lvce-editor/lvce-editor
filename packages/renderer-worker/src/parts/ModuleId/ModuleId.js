@@ -77,3 +77,4 @@ export const WindowTitle = 75
 export const Focus = 76
 export const PointerCapture = 77
 export const ExtensionHostQuickPick = 78
+export const ExtensionHostDialog = 79
