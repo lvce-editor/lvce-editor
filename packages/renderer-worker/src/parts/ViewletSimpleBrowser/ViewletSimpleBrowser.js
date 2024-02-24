@@ -5,6 +5,7 @@ import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSe
 import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWebContentsView.js'
 import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as GetFallThroughKeyBindings from '../GetFallThroughKeyBindings/GetFallThroughKeyBindings.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
@@ -32,14 +33,6 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
-const isFallThroughKeyBinding = (keyBinding) => {
-  return !keyBinding.when
-}
-
-const getFallThroughKeyBindings = (keyBindings) => {
-  return keyBindings.filter(isFallThroughKeyBinding)
-}
-
 export const saveState = (state) => {
   const { iframeSrc } = state
   return {
@@ -61,7 +54,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   // TODO since browser view is not visible at this point
   // it is not necessary to load keybindings for it
   const keyBindings = await KeyBindingsInitial.getKeyBindings()
-  const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
+  const fallThroughKeyBindings = GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0)
   await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
   Assert.number(browserViewId)
@@ -109,7 +102,7 @@ export const loadContent = async (state, savedState) => {
     }
   }
 
-  const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
+  const fallThroughKeyBindings = GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronWebContentsView.createWebContentsView(/* restoreId */ 0, uid)
   await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
