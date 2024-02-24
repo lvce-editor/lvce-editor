@@ -19,7 +19,6 @@ export const getScopePropertyVirtualDom = (scope) => {
   const isCollapsed = flags & DebugItemFlags.Collapsed
   const isFocused = flags & DebugItemFlags.Focused
   const dom = []
-  console.log({ scope })
   dom.push({
     type: VirtualDomElements.Div,
     className: ClassNames.DebugRow,
