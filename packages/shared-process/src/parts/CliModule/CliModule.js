@@ -9,6 +9,9 @@ export const getModule = (parsedArgs) => {
   if (parsedArgs[CliCommandType.Version]) {
     return import('../CliVersion/CliVersion.js')
   }
+  if (parsedArgs[CliCommandType.Help]) {
+    return import('../CliHelp/CliHelp.js')
+  }
   const argv0 = parsedArgs._[0]
   switch (argv0) {
     case CliCommandType.Install:
