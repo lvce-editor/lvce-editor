@@ -12,6 +12,7 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'GetWindowId.getWindowId',
   'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess',
   'ElectronBrowserView.createBrowserView',
+  'ElectronWebContentsView.createWebContentsView',
 ])
 
 export const requiresSocket = (method) => {

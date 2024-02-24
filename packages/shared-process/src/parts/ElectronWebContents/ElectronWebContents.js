@@ -41,7 +41,7 @@ export const handleWindowOpen = (webContentsId, url) => {
 const forwardEvent = (method, webContentsId, ...params) => {
   const ipc = ElectronBrowserViewIpcState.get(webContentsId)
   if (!ipc) {
-    console.log('no ipc', { webContentsId })
+    console.log(`[shared-process] no ipc for webcontents ${webContentsId}`)
     return
   }
   ipc.send({
@@ -67,11 +67,11 @@ export const handleTitleUpdated = (...args) => {
   return forwardEvent('handleTitleUpdated', ...args)
 }
 
+export const handleKeyBinding = (...args) => {
+  forwardEvent('handleKeyBinding', ...args)
+}
+
 export const handleBrowserViewDestroyed = (id) => {
   ElectronBrowserViewState.remove(id)
   ElectronBrowserViewIpcState.remove(id)
-}
-
-export const handleKeyBinding = (identifier) => {
-  console.log({ identifier })
 }

@@ -1,8 +1,11 @@
 import * as ElectronBrowserViewIpcState from '../ElectronBrowserViewIpcState/ElectronBrowserViewIpcState.js'
 import * as ElectronWebContents from '../ElectronWebContents/ElectronWebContents.js'
 import * as ParentIpc from '../ParentIpc/ParentIpc.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const createWebContentsView = async (ipc, restoreId, fallthroughKeyBindings) => {
+  Assert.object(ipc)
+  Assert.number(restoreId)
   const webContentsId = await ParentIpc.invoke('ElectronWebContentsView.createWebContentsView', restoreId)
   ElectronBrowserViewIpcState.add(webContentsId, ipc)
   // TODO get window id from renderer worker

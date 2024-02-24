@@ -1,4 +1,4 @@
-const state = {
+export const state = {
   ipcMap: Object.create(null),
 }
 
