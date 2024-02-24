@@ -27,7 +27,6 @@ export const attachEventListeners = (webContentsId) => {
   if (!webContents) {
     return
   }
-  console.log('attach listeners')
   const values = Object.values(ElectronBrowserViewEventListeners)
   for (const value of values) {
     const wrappedListener = (...args) => {

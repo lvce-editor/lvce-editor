@@ -4,10 +4,11 @@ import * as Assert from '../Assert/Assert.js'
 import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSearchSuggestions.js'
 import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWebContentsView.js'
 import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as GetFallThroughKeyBindings from '../GetFallThroughKeyBindings/GetFallThroughKeyBindings.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
+import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as Preferences from '../Preferences/Preferences.js'
 
@@ -174,6 +175,11 @@ export const handleWillNavigate = (state, url) => {
     iframeSrc: url,
     isLoading: true,
   }
+}
+
+export const handleKeyBinding = async (state, keyBinding) => {
+  await KeyBindings.handleKeyBinding(keyBinding)
+  return state
 }
 
 export const handleDidNavigate = (state, url) => {
