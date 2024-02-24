@@ -30,7 +30,6 @@ export const getVisibleScopeItems = (scopeChain, expandedIds, focusedIndex) => {
     const isExpandable = getExpandable(element.valueType)
     const isFocused = i === focusedIndex
     const flags = getFlags(isExpanded, isExpandable, isFocused)
-    console.log(element, flags)
     visible.push({
       ...element,
       flags,
