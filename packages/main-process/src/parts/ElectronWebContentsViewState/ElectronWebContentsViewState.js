@@ -58,6 +58,10 @@ export const setFallthroughKeyBindings = (fallthroughKeyBindings) => {
   state.fallThroughKeyBindings = fallthroughKeyBindings
 }
 
+export const getFallthroughKeyBindings = () => {
+  return state.fallThroughKeyBindings
+}
+
 export const isCanceled = (id) => {
   return id in state.canceled
 }

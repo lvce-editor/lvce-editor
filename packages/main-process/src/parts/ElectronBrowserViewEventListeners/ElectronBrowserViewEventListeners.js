@@ -2,6 +2,7 @@ import * as ElectronDispositionType from '../ElectronDispositionType/ElectronDis
 import * as ElectronInputType from '../ElectronInputType/ElectronInputType.js'
 import * as ElectronWebContentsEventType from '../ElectronWebContentsEventType/ElectronWebContentsEventType.js'
 import * as ElectronWindowOpenActionType from '../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js'
+import * as ElectronWebContentsViewState from '../ElectronWebContentsViewState/ElectronWebContentsViewState.js'
 import * as GetKeyBindingIdentifier from '../GetKeyBindingIdentifier/GetKeyBindingIdentifier.js'
 import * as Logger from '../Logger/Logger.js'
 
@@ -143,17 +144,19 @@ export const beforeInput = {
         messages: [],
       }
     }
-    const falltroughKeyBindings = [] // TODO
+    const falltroughKeyBindings = ElectronWebContentsViewState.getFallthroughKeyBindings()
     const identifier = GetKeyBindingIdentifier.getKeyBindingIdentifier(input)
-    for (const fallThroughKeyBinding of falltroughKeyBindings) {
-      if (fallThroughKeyBinding.key === identifier) {
-        event.preventDefault()
-        return {
-          result: undefined,
-          messages: [['handleKeyBinding', fallThroughKeyBinding.command, fallThroughKeyBinding.args || []]],
-        }
+    const matches = falltroughKeyBindings.includes(identifier)
+    if (matches) {
+      console.log('matches')
+      event.preventDefault()
+      return {
+        result: undefined,
+        messages: [['handleKeyBinding', identifier]],
       }
     }
+    console.log({ falltroughKeyBindings })
+    console.log('not matches')
     return {
       result: undefined,
       messages: [],
