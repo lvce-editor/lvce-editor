@@ -37,8 +37,8 @@ const handleClickDirectoryExpanded = (state, item) => {
 }
 
 export const handleClick = async (state, index) => {
-  const { displayItems } = state
-  const item = displayItems[index]
+  const { items } = state
+  const item = items[index]
   switch (item.type) {
     case DirentType.Directory:
       return handleClickDirectory(state)
