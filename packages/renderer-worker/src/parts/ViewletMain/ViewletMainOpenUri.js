@@ -51,9 +51,11 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
       return ViewletMainFocusIndex.focusIndex(state, i)
     }
   }
+  // TODO editor needs to be disposed when closing
+  //  other tabs and closing all tabs
   if (previousEditor) {
     const previousUid = previousEditor.uid
-    disposeCommands = Viewlet.disposeFunctional(previousUid)
+    disposeCommands = Viewlet.hideFunctional(previousUid)
   }
   const instanceUid = Id.create()
   const instance = ViewletManager.create(ViewletModule.load, moduleId, state.uid, uri, x, y, width, contentHeight)

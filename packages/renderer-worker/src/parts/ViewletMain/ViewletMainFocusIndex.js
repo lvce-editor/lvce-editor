@@ -37,6 +37,20 @@ export const focusIndex = async (state, index) => {
   const oldId = ViewletMap.getModuleId(oldEditor.uri)
   const oldInstance = ViewletStates.getInstance(oldId)
 
+  const previousUid = oldEditor.uid
+  Assert.number(previousUid)
+  const disposeCommands = Viewlet.disposeFunctional(previousUid)
+
+  const maybeHiddenEditorInstance = ViewletStates.getInstance(editor.uid)
+  if (maybeHiddenEditorInstance) {
+    const commands = Viewlet.showFunctional(editor.uid)
+    const allCommands = [...disposeCommands, ...commands]
+    return {
+      newState,
+      commands: allCommands,
+    }
+  }
+
   const instanceUid = Id.create()
   const instance = ViewletManager.create(ViewletModule.load, id, uid, editor.uri, x, y, width, contentHeight)
   instance.show = false
@@ -45,9 +59,7 @@ export const focusIndex = async (state, index) => {
   editor.uid = instanceUid
 
   const resizeCommands = ['Viewlet.setBounds', instanceUid, x, tabHeight, width, contentHeight]
-  const previousUid = oldEditor.uid
-  Assert.number(previousUid)
-  const disposeCommands = Viewlet.disposeFunctional(previousUid)
+
   // @ts-ignore
   const commands = await ViewletManager.load(instance)
   // @ts-ignore
