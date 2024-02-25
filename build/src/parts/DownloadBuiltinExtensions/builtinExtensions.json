@@ -15,6 +15,11 @@
     "version": "0.1.0"
   },
   {
+    "name": "builtin.language-basics-nix",
+    "repository": "github.com/lvce-editor/language-basics-nix",
+    "version": "0.1.0"
+  },
+  {
     "name": "builtin.debug-node",
     "repository": "github.com/lvce-editor/debug-node",
     "version": "0.1.1"
