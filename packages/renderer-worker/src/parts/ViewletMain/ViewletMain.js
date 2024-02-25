@@ -2,6 +2,7 @@ import * as Arrays from '../Arrays/Arrays.js'
 import * as BackgroundTabs from '../BackgroundTabs/BackgroundTabs.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as DeserializeEditorGroups from '../DeserializeEditorGroups/DeserializeEditorGroups.js'
 import * as GetEditorSplitDirectionType from '../GetEditorSplitDirectionType/GetEditorSplitDirectionType.js'
 import * as GetSplitOverlayDimensions from '../GetSplitOverlayDimensions/GetSplitOverlayDimensions.js'
 import * as GetTabIndex from '../GetTabIndex/GetTabIndex.js'
@@ -57,40 +58,6 @@ const COLUMN_WIDTH = 9 // TODO compute this automatically once
 //   readonly src: string
 //   readonly type: 'video'
 // }
-
-const canBeRestored = (editor) => {
-  return typeof editor.uri === 'string' && typeof editor.uid === 'number' && FileSystem.canBeRestored(editor.uri)
-}
-
-const getMainGroups = (savedState, state) => {
-  if (!savedState) {
-    return []
-  }
-  const { groups, activeGroupIndex } = savedState
-  const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing } = state
-  if (!groups || !Array.isArray(groups)) {
-    return []
-  }
-  const restoredGroups = []
-  for (const group of groups) {
-    if (!group || !group.editors) {
-      continue
-    }
-    const restoredEditors = group.editors.filter(canBeRestored)
-    for (const editor of restoredEditors) {
-      editor.uid = Id.create()
-      const label = editor.label
-      editor.tabWidth = MeasureTabWidth.measureTabWidth(label, tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing)
-    }
-    const restoredGroup = {
-      ...group,
-      tabsUid: Id.create(),
-    }
-    restoredGroups.push(restoredGroup)
-  }
-  // TODO check that type is string (else runtime error occurs and page is blank)
-  return restoredGroups
-}
 
 const hydrateLazy = async () => {
   // TODO this should be in extension host
@@ -190,7 +157,7 @@ const getRestoredGroups = (savedState, state) => {
       activeGroupIndex: 0,
     }
   }
-  const restoredGroups = getMainGroups(savedState, state)
+  const restoredGroups = DeserializeEditorGroups.deserializeEditorGroups(savedState, state)
   if (restoredGroups.length === 0) {
     return {
       groups: [
