@@ -175,6 +175,69 @@ export const disposeFunctional = (id) => {
   }
 }
 
+export const showFunctional = (id) => {
+  const instance = ViewletStates.getInstance(id)
+  const initialState = instance.factory.create()
+  // TODO resize
+  const commands = ViewletManager.render(instance.factory, initialState, instance.state)
+  // TODO avoid side effect, instead return an array of
+  // commands to send to shared process
+  const promise = instance.factory.show(instance.state)
+  return commands
+}
+
+// TODO hidden editors should not keep state in memory
+// store hidden editor state in session storage or indexeddb
+// when reopening the editor, retrieve the state from there
+export const hideFunctional = (id) => {
+  try {
+    if (!id) {
+      console.warn('no instance to dispose')
+      return []
+    }
+    const instance = ViewletStates.getInstance(id)
+    if (!instance) {
+      Logger.warn(`cannot dispose instance ${id} because it may already be disposed`)
+      return []
+    }
+    // TODO status should have enum
+    instance.status = 'disposing'
+    if (!instance.factory) {
+      throw new Error(`${id} is missing a factory function`)
+    }
+    if (instance.factory.hide) {
+      instance.factory.hide(instance.state)
+      return []
+    }
+    if (instance.factory.dispose) {
+      instance.factory.dispose(instance.state)
+    }
+    const uid = instance.state.uid
+    Assert.number(uid)
+    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
+
+    if (instance.factory.getKeyBindings) {
+      KeyBindingsState.removeKeyBindings(id)
+    }
+    if (instance.factory.getChildren) {
+      const children = instance.factory.getChildren(instance.state)
+      for (const child of children) {
+        if (child.id) {
+          commands.push(...disposeFunctional(child.id))
+        }
+      }
+    }
+    instance.status = 'disposed'
+    ViewletStates.remove(id)
+    ViewletStates.remove(uid)
+    return commands
+  } catch (error) {
+    console.error(error)
+    // TODO use Error.cause once proper stack traces are supported by chrome
+    throw new Error(`Failed to dispose viewlet ${id}: ${error}`)
+  }
+}
+
 /**
  * @deprecated
  */
