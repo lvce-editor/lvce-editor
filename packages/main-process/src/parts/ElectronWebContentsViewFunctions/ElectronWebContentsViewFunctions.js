@@ -155,8 +155,6 @@ export const show = (id) => {
   }
   const { view, browserWindow } = state
   browserWindow.addBrowserView(view)
-  // workaround for electron bug, view not being shown
-  view.setBounds(view.getBounds())
 }
 
 export const addToWindow = (browserWindowId, browserViewId) => {
