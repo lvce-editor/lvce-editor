@@ -1,4 +1,5 @@
 import * as GetTabsVirtualDom from '../GetTabsVirtualDom/GetTabsVirtualDom.js'
+import * as PartitionEditorGroups from '../PartitionEditorGroups/PartitionEditorGroups.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const hasFunctionalRender = true
@@ -33,37 +34,21 @@ const renderGroupTabs = {
     const commands = []
     const oldGroups = oldState.groups
     const newGroups = newState.groups
-    const insertedGroups = []
-    const deletedGroups = []
-    const oldUids = []
-    const newUids = []
-    for (const oldGroup of oldGroups) {
-      if (oldGroup.editors.length > 0) {
-        oldUids.push(oldGroup.uid)
-      }
-    }
-    for (const newGroup of newGroups) {
-      newUids.push(newGroup.uid)
-    }
-    for (const oldGroup of oldGroups) {
-      if (!newUids.includes(oldGroup.uid)) {
-        deletedGroups.push(oldGroup)
-      }
-    }
-    for (const newGroup of newGroups) {
-      const index = oldUids.indexOf(newGroup.uid)
-      if (index === -1) {
+    const { insertedGroups, deletedGroups, updatedGroups } = PartitionEditorGroups.partitionEditorGroups(oldGroups, newGroups)
+    for (const { oldGroup, newGroup } of updatedGroups) {
+      const { tabsUid, editors, x, y, width, height, activeIndex, tabsDeltaX } = newGroup
+      if (oldGroup.editors.length === 0) {
         insertedGroups.push(newGroup)
-      } else {
-        const oldGroup = oldGroups[index]
-        const { tabsUid, editors, x, y, width, height, activeIndex, tabsDeltaX } = newGroup
-        if (editors !== oldGroup.editors || activeIndex !== oldGroup.activeIndex) {
-          const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex)
-          commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
-        }
-        if (tabsDeltaX !== oldGroup.tabsDeltaX) {
-          commands.push(['Viewlet.send', tabsUid, 'setScrollLeft', tabsDeltaX])
-        }
+      }
+      if (editors !== oldGroup.editors || activeIndex !== oldGroup.activeIndex) {
+        const tabsDom = GetTabsVirtualDom.getTabsDom(editors, newState.width, activeIndex)
+        commands.push(['Viewlet.send', tabsUid, 'setTabsDom', tabsDom])
+      }
+      if (width !== oldGroup.width) {
+        commands.push(['Viewlet.setBounds', tabsUid, x, y, width, newState.tabHeight])
+      }
+      if (tabsDeltaX !== oldGroup.tabsDeltaX) {
+        commands.push(['Viewlet.send', tabsUid, 'setScrollLeft', tabsDeltaX])
       }
     }
     for (const insertedGroup of insertedGroups) {
