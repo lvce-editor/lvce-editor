@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 jest.unstable_mockModule('electron', () => {
   return {
@@ -49,11 +48,11 @@ test.skip('handlePortForMainProcess - error - command not found', async () => {
 
   App.handlePortForMainProcess(event)
   await _listener({
-    data: { method: 'App.exit', params: [], jsonrpc: JsonRpcVersion.Two, id: 1 },
+    data: { method: 'App.exit', params: [], jsonrpc: '2.0', id: 1 },
   })
   expect(port.postMessage).toHaveBeenCalledTimes(1)
   expect(port.postMessage).toHaveBeenCalledWith({
-    jsonrpc: JsonRpcVersion.Two,
+    jsonrpc: '2.0',
     id: 1,
     error: {
       message: 'method not found App.exit',
