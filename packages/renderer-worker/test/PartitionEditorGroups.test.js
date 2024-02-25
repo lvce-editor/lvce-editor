@@ -14,6 +14,7 @@ test('partitionEditorGroups - new group added', () => {
         uid: 1,
       },
     ],
+    updatedGroups: [],
   })
 })
 
@@ -31,5 +32,6 @@ test('partitionEditorGroups - group removed', () => {
       },
     ],
     insertedGroups: [],
+    updatedGroups: [],
   })
 })
