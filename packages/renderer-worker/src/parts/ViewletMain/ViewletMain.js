@@ -408,7 +408,7 @@ export const contentLoaded = async (state) => {
         visible: true,
       },
       /* focus */ false,
-      /* restore */ true
+      /* restore */ true,
     )
     // @ts-ignore
     commands.push(...extraCommands)
@@ -430,7 +430,7 @@ export const openBackgroundTab = async (state, initialUri, props) => {
     /* tabLabel */ tabLabel,
     /* tabTitle */ tabTitle,
     /* oldActiveIndex */ -1,
-    /* background */ true
+    /* background */ true,
   )
   const y = state.y + state.tabHeight
   const x = state.x
@@ -580,14 +580,17 @@ export const handleDragLeave = (state, x, y) => {
 }
 
 export const handleDragOver = (state, eventX, eventY) => {
-  const { x, y, width, height, tabHeight } = state
-  const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + tabHeight, width, height - tabHeight, eventX, eventY)
+  const { x, y, width, height, tabHeight, groups } = state
+  const group = groups[0]
+  const { editors } = group
+  const deltaTop = editors.length > 0 ? tabHeight : 0
+  const splitDirection = GetEditorSplitDirectionType.getEditorSplitDirectionType(x, y + deltaTop, width, height - deltaTop, eventX, eventY)
   const { overlayX, overlayY, overlayWidth, overlayHeight } = GetSplitOverlayDimensions.getSplitOverlayDimensions(
     x,
-    y + tabHeight,
+    y + deltaTop,
     width,
-    height - tabHeight,
-    splitDirection
+    height - deltaTop,
+    splitDirection,
   )
   return {
     ...state,
