@@ -104,6 +104,13 @@ export const handleFilterInput = (state, value) => {
   }
 }
 
+export const copyMessage = async (state) => {
+  const { problems, x, y, itemHeight, focusedIndex } = state
+  const problem = problems[focusedIndex]
+  await Command.execute('ClipBoard.writeText', problem.message)
+  return state
+}
+
 export const dispose = (state) => {
   return {
     ...state,
