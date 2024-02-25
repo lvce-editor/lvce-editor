@@ -6,6 +6,7 @@ import * as GetSplitDimensions from '../GetSplitDimensions/GetSplitDimensions.js
 import * as Id from '../Id/Id.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
+import * as Workspace from '../Workspace/Workspace.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import { openUri } from './ViewletMainOpenUri.js'
@@ -96,11 +97,11 @@ const handleDropFilePathSplit = async (state, eventX, eventY, filePath, splitDir
       editors: [
         {
           icon: '',
-          label: 'new-file',
+          label: Workspace.pathBaseName(filePath),
           tabWidth: 100,
-          title: 'new-file-title',
+          title: Workspace.pathBaseName(filePath),
           uid: Id.create(),
-          uri: '/test/new-file.txt',
+          uri: filePath,
         },
       ],
       height: 530,

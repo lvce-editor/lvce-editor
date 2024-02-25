@@ -224,18 +224,8 @@ const getRestoredGroups = (savedState, state) => {
       activeGroupIndex: 0,
     }
   }
-  // TODO support restoring multiple groups
-  const group = restoredGroups[0]
-  const newGroup = {
-    ...group,
-    x,
-    y: 0,
-    width,
-    height,
-    uid: Id.create(),
-  }
   return {
-    groups: [newGroup],
+    groups: restoredGroups,
     activeGroupIndex: 0,
   }
 }
