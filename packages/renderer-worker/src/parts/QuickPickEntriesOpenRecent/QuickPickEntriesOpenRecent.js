@@ -50,15 +50,19 @@ export const selectPick = async (pick) => {
 }
 
 export const getFilterValue = (value) => {
-  return value
+  return Workspace.pathBaseName(value)
 }
 
 export const getPickFilterValue = (pick) => {
-  return pick
+  return Workspace.pathBaseName(pick)
 }
 
 export const getPickLabel = (pick) => {
-  return pick
+  return Workspace.pathBaseName(pick)
+}
+
+export const getPickDescription = (pick) => {
+  return Workspace.pathDirName(pick)
 }
 
 export const getPickIcon = () => {
