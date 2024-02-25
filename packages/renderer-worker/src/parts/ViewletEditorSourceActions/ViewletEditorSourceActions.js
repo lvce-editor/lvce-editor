@@ -1,5 +1,7 @@
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as GetEditorSourceActions from '../GetEditorSourceActions/GetEditorSourceActions.js'
+import * as Focus from '../Focus/Focus.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -27,4 +29,8 @@ export const loadContent = async (state, savedState, position) => {
     height: 150,
     maxHeight: 150,
   }
+}
+
+export const handleFocus = () => {
+  Focus.setFocus(WhenExpression.FocusSourceActions)
 }
