@@ -35,7 +35,6 @@ const renderGroupTabs = {
     const oldGroups = oldState.groups
     const newGroups = newState.groups
     const { insertedGroups, deletedGroups, updatedGroups } = PartitionEditorGroups.partitionEditorGroups(oldGroups, newGroups)
-    console.log({ insertedGroups, updatedGroups })
     for (const { oldGroup, newGroup } of updatedGroups) {
       const { tabsUid, editors, x, y, width, height, activeIndex, tabsDeltaX } = newGroup
       if (oldGroup.editors.length === 0) {
