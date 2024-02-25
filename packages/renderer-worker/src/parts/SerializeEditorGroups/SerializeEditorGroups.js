@@ -1,23 +1,9 @@
-const serializeEditor = (editor) => {
-  const { preview, tabWidth, uri, uid, label, icon } = editor
-  return {
-    preview,
-    tabWidth,
-    uri,
-    uid,
-    label,
-    icon,
-  }
-}
-
-const serializeEditors = (editors) => {
-  return editors.map(serializeEditor)
-}
+import * as SerializeEditors from '../SerializeEditors/SerializeEditors.js'
 
 const serializeEditorGroup = (group) => {
   const { editors, activeIndex, tabsDeltaX, x, y, width, height } = group
   return {
-    editors: serializeEditors(editors),
+    editors: SerializeEditors.serializeEditors(editors),
     activeIndex,
     tabsDeltaX,
     x,
