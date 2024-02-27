@@ -171,7 +171,7 @@ jobs:
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.snap"
-          mv "build/.tmp/releases/lvce.snap" "$staging"
+          mv "build/.tmp/releases/lvce-editor.snap" "$staging"
           echo "ASSET_SNAP_X64=$staging" >> $GITHUB_ENV
       - name: Release Electron App (snap, x64)
         uses: actions/upload-release-asset@v1.0.1
