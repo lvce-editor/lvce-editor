@@ -119,8 +119,14 @@ const quickJoinPath = (prefix, postfix) => {
 }
 
 const removeSrcPrefix = (postfix) => {
+  if (postfix.startsWith('./src/')) {
+    return postfix.slice('./src/'.length)
+  }
   if (postfix.startsWith('./src')) {
     return postfix.slice('./src'.length)
+  }
+  if (postfix.startsWith('src/')) {
+    return postfix.slice('src/'.length)
   }
   if (postfix.startsWith('src')) {
     return postfix.slice('src'.length)
