@@ -237,7 +237,7 @@
   {
     "name": "builtin.language-basics-xml",
     "repository": "github.com/lvce-editor/language-basics-xml",
-    "version": "0.2.1"
+    "version": "1.0.0"
   },
   {
     "name": "builtin.language-basics-yaml",
