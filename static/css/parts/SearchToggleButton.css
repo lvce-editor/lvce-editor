@@ -1,0 +1,15 @@
+.SearchToggleButton {
+  background: transparent;
+  border: none;
+  padding: 0;
+  position: relative;
+  height: auto;
+  width: 16px;
+  margin: 0 2px;
+  border-radius: 0;
+  /* TODO contain */
+}
+
+.SearchToggleButton:where(:hover) {
+  background: lightgray;
+}
