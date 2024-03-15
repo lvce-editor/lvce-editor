@@ -1,5 +1,6 @@
 import * as Compare from '../Compare/Compare.js'
 import * as Focus from '../Focus/Focus.js'
+import * as GetSearchFocusKey from '../GetSearchFocusKey/GetSearchFocusKey.js'
 import * as Height from '../Height/Height.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
@@ -149,27 +150,6 @@ export const submit = (state) => {
   return ViewletSearchHandleUpdate.handleUpdate(state, { value: state.value, inputSource: InputSource.User })
 }
 
-const getFocusKey = (key) => {
-  switch (key) {
-    case 'search-value':
-      return WhenExpression.FocusSearchInput
-    case 'search-replace-value':
-      return WhenExpression.FocusSearchReplaceInput
-    case 'Match Case':
-      return WhenExpression.FocusMatchCase
-    case 'Match Whole Word':
-      return WhenExpression.FocusWholeWord
-    case 'Use Regular Expression':
-      return WhenExpression.FocusRegex
-    case 'Replace All':
-      return WhenExpression.FocusReplaceAll
-    case 'Preserve Case':
-      return WhenExpression.FocusPreserveCase
-    default:
-      return WhenExpression.Empty
-  }
-}
-
 export const focusSearchValue = (state) => {
   return {
     ...state,
@@ -237,7 +217,7 @@ export const focusReplaceAll = (state) => {
 }
 
 export const handleFocusIn = (state, key) => {
-  const focusKey = getFocusKey(key)
+  const focusKey = GetSearchFocusKey.getSearchFocusKey(key)
   Focus.setFocus(focusKey)
   return {
     ...state,
