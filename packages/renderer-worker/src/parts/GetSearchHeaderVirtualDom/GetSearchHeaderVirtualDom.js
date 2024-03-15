@@ -1,5 +1,6 @@
 import * as GetSearchFieldVirtualDom from '../GetSearchFieldVirtualDom/GetSearchFieldVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWholeWord, useRegularExpression, detailsExpanded) => {
@@ -7,7 +8,7 @@ export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWhole
     {
       type: VirtualDomElements.Div,
       className: 'SearchHeader',
-      role: 'none',
+      role: AriaRoles.None,
       childCount: 2,
       onClick: 'handleHeaderClick',
       onFocusIn: 'handleHeaderFocusIn',
@@ -15,7 +16,7 @@ export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWhole
     {
       type: VirtualDomElements.Div,
       className: 'SearchHeaderTop',
-      role: 'none',
+      role: AriaRoles.None,
       childCount: 2,
     },
     {
@@ -35,7 +36,7 @@ export const getSearchHeaderVirtualDom = (replaceExpanded, matchCase, matchWhole
     {
       type: VirtualDomElements.Div,
       className: 'SearchHeaderTopRight',
-      role: 'none',
+      role: AriaRoles.None,
       childCount: replaceExpanded ? 2 : 1,
     },
     ...GetSearchFieldVirtualDom.getSearchFieldVirtualDom(
