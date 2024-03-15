@@ -1,6 +1,7 @@
 import * as GetFindWidgetVirtualDom from '../GetFindWidgetVirtualDom/GetFindWidgetVirtualDom.js'
-import * as RenderMethod from '../RenderMethod/RenderMethod.js'
+import * as GetMatchCountText from '../GetMatchCountText/GetMatchCountText.js'
 import * as Icon from '../Icon/Icon.js'
+import * as RenderMethod from '../RenderMethod/RenderMethod.js'
 import * as ViewletFindWidgetStrings from './ViewletFindWidgetStrings.js'
 
 export const hasFunctionalRender = true
@@ -14,19 +15,12 @@ const renderValue = {
   },
 }
 
-const getMatchCountText = (matchIndex, matchCount) => {
-  if (matchCount === 0) {
-    return ViewletFindWidgetStrings.noResults()
-  }
-  return ViewletFindWidgetStrings.matchOf(matchIndex + 1, matchCount)
-}
-
 const renderDetails = {
   isEqual(oldState, newState) {
     return oldState.matchIndex === newState.matchIndex && oldState.matchCount === newState.matchCount
   },
   apply(oldState, newState) {
-    const matchCountText = getMatchCountText(newState.matchIndex, newState.matchCount)
+    const matchCountText = GetMatchCountText.getMatchCountText(newState.matchIndex, newState.matchCount)
     const buttonsEnabled = newState.matchCount > 0
     const buttons = [
       {
