@@ -71,4 +71,4 @@ const renderAriaAnnouncement = {
   },
 }
 
-export const render = [renderValue, renderAriaAnnouncement, renderDetails]
+export const render = [renderAriaAnnouncement, renderDetails, renderValue]
