@@ -4,4 +4,5 @@ export const Css = [
   '/css/parts/MaskIcon.css',
   '/css/parts/InputBox.css',
   '/css/parts/SearchToggleButton.css',
+  '/css/parts/SearchField.css',
 ]

@@ -33,63 +33,26 @@ export const getFindWidgetVirtualDom = (matchCountText, replaceExpanded, buttons
       'Search',
       'handleInput',
       [
-        {
-          icon: 'MaskIconCaseSensitive',
-          checked: matchCase,
-          title: 'Match Case',
-        },
-        {
-          icon: 'MaskIconWholeWord',
-          checked: matchWholeWord,
-          title: 'Match Whole Word',
-        },
-        {
-          icon: 'MaskIconRegex',
-          checked: useRegularExpression,
-          title: 'Use Regular Expression',
-        },
+        // {
+        //   icon: 'MaskIconCaseSensitive',
+        //   checked: matchCase,
+        //   title: 'Match Case',
+        // },
+        // {
+        //   icon: 'MaskIconWholeWord',
+        //   checked: matchWholeWord,
+        //   title: 'Match Whole Word',
+        // },
+        // {
+        //   icon: 'MaskIconRegex',
+        //   checked: useRegularExpression,
+        //   title: 'Use Regular Expression',
+        // },
       ],
       [],
     ),
-    {
-      type: VirtualDomElements.Button,
-      className: `IconButton SearchToggleButton ${replaceExpanded ? 'SearchToggleButtonExpanded' : ''}`,
-      title: 'Toggle Replace',
-      ariaLabel: 'Toggle Replace',
-      ariaExpanded: replaceExpanded,
-      childCount: 1,
-      'data-command': 'toggleReplace',
-    },
-    {
-      type: VirtualDomElements.Div,
-      className: `MaskIcon ${replaceExpanded ? 'MaskIconChevronDown' : 'MaskIconChevronRight'}`,
-      childCount: 0,
-    },
   )
   dom.push(
-    ...GetSearchFieldVirtualDom.getSearchFieldVirtualDom(
-      'search-value',
-      'Search',
-      'handleInput',
-      [
-        {
-          icon: 'MaskIconCaseSensitive',
-          checked: matchCase,
-          title: 'Match Case',
-        },
-        {
-          icon: 'MaskIconWholeWord',
-          checked: matchWholeWord,
-          title: 'Match Whole Word',
-        },
-        {
-          icon: 'MaskIconRegex',
-          checked: useRegularExpression,
-          title: 'Use Regular Expression',
-        },
-      ],
-      [],
-    ),
     {
       type: VirtualDomElements.Div,
       className: ClassNames.FindWidgetMatchCount,
