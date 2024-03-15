@@ -17,7 +17,11 @@ const renderValue = {
 
 const renderDetails = {
   isEqual(oldState, newState) {
-    return oldState.matchIndex === newState.matchIndex && oldState.matchCount === newState.matchCount
+    return (
+      oldState.matchIndex === newState.matchIndex &&
+      oldState.matchCount === newState.matchCount &&
+      oldState.replaceExpanded === newState.replaceExpanded
+    )
   },
   apply(oldState, newState) {
     const matchCountText = GetMatchCountText.getMatchCountText(newState.matchIndex, newState.matchCount)
