@@ -2,7 +2,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as GetSearchFieldButtonVirtualDom from '../GetSearchFieldButtonVirtualDom/GetSearchFieldButtonVirtualDom.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-export const getSearchFieldVirtualDom = (name, placeholder, onInput, insideButtons, outsideButtons) => {
+export const getSearchFieldVirtualDom = (name, placeholder, onInput, insideButtons, outsideButtons, onFocus = '') => {
   const dom = [
     {
       type: VirtualDomElements.Div,
@@ -19,6 +19,7 @@ export const getSearchFieldVirtualDom = (name, placeholder, onInput, insideButto
       placeholder,
       name,
       onInput,
+      onFocus,
       childCount: 0,
     },
     {
