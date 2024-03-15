@@ -70,7 +70,8 @@ export const loadContent = (state) => {
   }
 }
 
-export const handleInput = (state, value) => {
+// TODO make value required
+export const handleInput = (state, value = '') => {
   // TODO get focused editor
   // highlight locations that match value
   const editor = ViewletStates.getState(ViewletModuleId.EditorText)
