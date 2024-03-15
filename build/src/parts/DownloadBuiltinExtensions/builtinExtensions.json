@@ -42,7 +42,7 @@
   {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   {
     "name": "builtin.language-basics-dart",
