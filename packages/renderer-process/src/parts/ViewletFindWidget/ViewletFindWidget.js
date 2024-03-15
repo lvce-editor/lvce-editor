@@ -1,5 +1,5 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as RememberFocus from '../RememberFocus/RememberFocus.js'
 import * as ViewletFindWidgetEvents from './ViewletFindWidgetEvents.js'
 
 export const create = () => {
@@ -31,5 +31,5 @@ export const setValue = (state, value) => {
 
 export const setDom = (state, dom) => {
   const { $Viewlet } = state
-  VirtualDom.renderInto($Viewlet, dom, ViewletFindWidgetEvents)
+  RememberFocus.rememberFocus($Viewlet, dom, ViewletFindWidgetEvents)
 }
